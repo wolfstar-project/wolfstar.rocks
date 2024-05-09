@@ -6,7 +6,7 @@ const Email = () => {
 		<span>
 			<Box
 				component="a"
-				href="mailto:contact@skyra.pw"
+				href="mailto:contact@wolfstar.rocks"
 				sx={{
 					color: 'primary.main',
 					'&:hover': {
@@ -14,7 +14,7 @@ const Email = () => {
 					}
 				}}
 			>
-				contact@skyra.pw
+				contact@wolfstar.rocks
 			</Box>
 		</span>
 	);
@@ -52,7 +52,7 @@ const PrivacyPolicy = () => (
 				>
 					OWNER AND DATA CONTROLLER
 				</Typography>
-				<Typography component="div">Skyra Project</Typography>
+				<Typography component="div">WolfStar Project</Typography>
 				<LineSpacer />
 				<Typography component="div">
 					<Box
@@ -81,7 +81,7 @@ const PrivacyPolicy = () => (
 					WELCOME TO SKYRA PROJECT!
 				</Typography>
 				<Typography component="div">
-					Skyra Project provides a chat bot for the{' '}
+					WolfStar Project provides a chat bot for the{' '}
 					<Box
 						component="a"
 						sx={{
@@ -95,9 +95,9 @@ const PrivacyPolicy = () => (
 						Discord
 					</Box>{' '}
 					chat platform, (the "Bot"), a website that serves as a dashboard (the "Site") and various related services (collectively, the
-					"Service(s)"). The Service is operated by Skyra Project (the "Company", "we" or "us") for users of the Service ("you" or the
+					"Service(s)"). The Service is operated by WolfStar Project (the "Company", "we" or "us") for users of the Service ("you" or the
 					"user(s)"). This privacy policy sets forth our policy with respect to information that is collected from visitors to the Site and
-					users of the Bot and/or the Services. Under applicable law, Skyra Project is the "data controller" of{' '}
+					users of the Bot and/or the Services. Under applicable law, WolfStar Project is the "data controller" of{' '}
 					<Box
 						component="a"
 						sx={{
@@ -338,7 +338,7 @@ const PrivacyPolicy = () => (
 					If you are a parent or guardian of a child under the age of 13 and believe he or she has disclosed personal information to us
 					please contact us at <Email />. Note: In some countries, the age of digital consent is older than 13. If you are in those
 					countries, you must be at least that age to use the Services. For example, for residents of the EEA, where processing of personal
-					information is based on consent, Skyra Project will not knowingly engage in that processing for users under the age of consent
+					information is based on consent, WolfStar Project will not knowingly engage in that processing for users under the age of consent
 					established by applicable data protection law. If we learn that we are engaged in that processing with such users, we will halt
 					such processing and will take reasonable measures to promptly remove applicable information from our records.
 				</Typography>

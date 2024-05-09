@@ -79,7 +79,7 @@ const GeneralSettings: FC<GeneralSettingsProps> = ({ languages }) => {
 						name="prefix"
 						label="Prefix"
 						TextFieldProps={{
-							placeholder: "This is your server's prefix, use it to trigger Skyra commands."
+							placeholder: "This is your server's prefix, use it to trigger WolfStar commands."
 						}}
 					/>
 				</AutoSavingForm>

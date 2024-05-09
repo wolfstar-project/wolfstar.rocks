@@ -1,7 +1,7 @@
 import { memo, type FC } from 'react';
 import DesktopMenuItems from './DesktopMenuItems';
 import MobileNavMenu from './MobileNavMenu';
-import SkyraLogoButton from './SkyraLogoButton';
+import WolfStarLogoButton from './WolfStarLogoButton';
 
 import { AppBar, Box, Hidden, Toolbar } from '@mui/material';
 
@@ -18,7 +18,7 @@ const NavBar: FC<NavBarProps> = ({ loading = false }) => {
 						<MobileNavMenu />
 					</Hidden>
 
-					<SkyraLogoButton />
+					<WolfStarLogoButton />
 
 					<Hidden mdDown>
 						<DesktopMenuItems loading={loading} />

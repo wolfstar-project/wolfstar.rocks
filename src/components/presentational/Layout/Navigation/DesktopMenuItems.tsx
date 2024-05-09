@@ -51,7 +51,7 @@ const DesktopMenuItems: FC<DesktopMenuItemsProps> = ({ loading = false }) => {
 
 	return (
 		<>
-			<Tooltip title="Click to add Skyra to your server" placement="bottom">
+			<Tooltip title="Click to add WolfStar to your server" placement="bottom">
 				<Button
 					color="primary"
 					variant="contained"
@@ -63,15 +63,15 @@ const DesktopMenuItems: FC<DesktopMenuItemsProps> = ({ loading = false }) => {
 							boxShadow: (theme) => theme.shadows[1]
 						}
 					}}
-					onClick={navigate('https://invite.skyra.pw')}
+					onClick={navigate('https://invite.wolfstar.rocks')}
 					startIcon={<InviteIcon />}
 				>
 					<Typography variant="body2" color="textPrimary">
-						Add Skyra to server
+						Add WolfStar to server
 					</Typography>
 				</Button>
 			</Tooltip>
-			<Tooltip title="Click to join Skyra Lounge Discord server" placement="bottom">
+			<Tooltip title="Click to join WolfStar Lounge Discord server" placement="bottom">
 				<Button
 					color="primary"
 					variant="contained"
@@ -83,7 +83,7 @@ const DesktopMenuItems: FC<DesktopMenuItemsProps> = ({ loading = false }) => {
 							boxShadow: (theme) => theme.shadows[1]
 						}
 					}}
-					onClick={navigate('https://join.skyra.pw')}
+					onClick={navigate('https://join.wolfstar.rocks')}
 					startIcon={<DiscordChatIcon />}
 				>
 					<Typography variant="body2" color="textPrimary">
@@ -156,7 +156,7 @@ const DesktopMenuItems: FC<DesktopMenuItemsProps> = ({ loading = false }) => {
 											</Box>
 										</Tooltip>
 									)}
-									<Tooltip title="Click to view Skyra's commands" placement="left">
+									<Tooltip title="Click to view WolfStar's commands" placement="left">
 										<Box>
 											<MenuItemLink href="/commands" Icon={<CommandsIcon />} text="Commands" />
 										</Box>

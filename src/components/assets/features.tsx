@@ -21,7 +21,7 @@ export default [
 	{
 		name: 'Moderation',
 		text: [
-			'Skyra offers all the standard moderation commands you expect, like banning, muting, kicking, softbanning and more.',
+			'WolfStar offers all the standard moderation commands you expect, like banning, muting, kicking, softbanning and more.',
 			'However, she also includes a wide range of unique features such as logging images and reactions, and a very advanced filter.',
 			'For a full list of moderation commands, visit the commands page.'
 		].join(' '),
@@ -29,7 +29,7 @@ export default [
 			<Paper elevation={1}>
 				<DiscordMessages>
 					<DiscordMessage profile="favna">
-						Skyra, mute <DiscordMention>Kyra</DiscordMention> 10m Spamming.
+						WolfStar, mute <DiscordMention>Kyra</DiscordMention> 10m Spamming.
 					</DiscordMessage>
 					<DiscordMessage profile="skyra">
 						<DiscordEmbed slot="embeds" color="#FFD54F" authorImage="/avatars/favna.gif" authorName="Favna#0001">
@@ -54,13 +54,13 @@ export default [
 	{
 		name: 'Fun',
 		text: [
-			'Skyra can brighten up your server with many commands for adding fun and social interaction to your server.',
+			'WolfStar can brighten up your server with many commands for adding fun and social interaction to your server.',
 			'She can create a random blurb of text using markov, roll a magic eightball, generate memes, and much much more!'
 		].join(' '),
 		previewContent: (
 			<Paper elevation={1}>
 				<DiscordMessages>
-					<DiscordMessage profile="kyra">Skyra, markov</DiscordMessage>
+					<DiscordMessage profile="kyra">WolfStar, markov</DiscordMessage>
 					<DiscordMessage profile="skyra">
 						<DiscordEmbed slot="embeds" color="#FF9D01">
 							<DiscordEmbedDescription slot="description">
@@ -77,14 +77,14 @@ export default [
 	{
 		name: 'Tools',
 		text: [
-			'Skyra gives you many useful tools at your fingertips.',
+			'WolfStar gives you many useful tools at your fingertips.',
 			'From searching YouTube or Wikipedia, to looking up games on IGDB or the Nintendo eShop, or even movies on TheMovieDatabase.',
 			"She can also create polls, quote messages, get full size versions of users' avatars, and more!"
 		].join(' '),
 		previewContent: (
 			<Paper elevation={1}>
 				<DiscordMessages>
-					<DiscordMessage profile="kyra">Skyra, youtube Big Buck Bunny</DiscordMessage>
+					<DiscordMessage profile="kyra">WolfStar, youtube Big Buck Bunny</DiscordMessage>
 					<DiscordMessage profile="skyra">
 						<DiscordEmbed
 							slot="embeds"
@@ -95,7 +95,7 @@ export default [
 							url="https://youtu.be/aqz-KE-bpKQ"
 							video="https://download.blender.org/peach/bigbuckbunny_movies/big_buck_bunny_1080p_stereo.ogg"
 							embedTitle="Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film"
-							image="https://cdn.skyra.pw/dashboard/bigbuckbunny.jpg"
+							image="https://cdn.wolfstar.rocks/dashboard/bigbuckbunny.jpg"
 						></DiscordEmbed>
 						<DiscordAttachments slot="components">
 							<DiscordActionRow>
@@ -114,7 +114,7 @@ export default [
 	{
 		name: 'Pokémon',
 		text: [
-			'Skyra has a rich dataset of Pokémon data.',
+			'WolfStar has a rich dataset of Pokémon data.',
 			'You can query for data on any Pokémon, get details on items, moves and abilities.',
 			'You can find how types match up or learn whether a Pokémon can learn a certain move.',
 			'Data is (nearly) always up-to-date by using the amazing GraphQL Pokémon API!'
@@ -122,12 +122,12 @@ export default [
 		previewContent: (
 			<Paper elevation={1}>
 				<DiscordMessages>
-					<DiscordMessage profile="favna">Skyra, pokedex Dragonite</DiscordMessage>
+					<DiscordMessage profile="favna">WolfStar, pokedex Dragonite</DiscordMessage>
 					<DiscordMessage profile="skyra">
 						<DiscordEmbed
 							slot="embeds"
 							color="#A3501A"
-							authorImage="https://cdn.skyra.pw/img/pokemon/dex.png"
+							authorImage="https://cdn.wolfstar.rocks/img/pokemon/dex.png"
 							authorName="#149 - Dragonite"
 							thumbnail="https://play.pokemonshowdown.com/sprites/ani/dragonite.gif"
 						>
@@ -202,14 +202,14 @@ export default [
 	{
 		name: 'Anime',
 		text: [
-			'Skyra has many anime related commands.',
-			"You can make Skyra slap that annoying guy that likes Ram instead of Rem, or see the cutest anime cats that you just can't wait to cuddle to death.",
-			"If you're just looking for your next watch or read, then Skyra has you covered by letting you look up anime and manga on anilist.co and kitsu.io."
+			'WolfStar has many anime related commands.',
+			"You can make WolfStar slap that annoying guy that likes Ram instead of Rem, or see the cutest anime cats that you just can't wait to cuddle to death.",
+			"If you're just looking for your next watch or read, then WolfStar has you covered by letting you look up anime and manga on anilist.co and kitsu.io."
 		].join(' '),
 		previewContent: (
 			<Paper elevation={1}>
 				<DiscordMessages>
-					<DiscordMessage profile="favna">Skyra, anime Pokemon</DiscordMessage>
+					<DiscordMessage profile="favna">WolfStar, anime Pokemon</DiscordMessage>
 					<DiscordMessage profile="skyra">
 						<DiscordEmbed
 							slot="embeds"

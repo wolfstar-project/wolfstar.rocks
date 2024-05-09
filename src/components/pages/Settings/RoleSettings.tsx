@@ -29,7 +29,7 @@ const RoleSettings: FC = () => {
 				title="Roles"
 				subtitle={
 					<>
-						Here you can configure special roles known to Skyra for your server.
+						Here you can configure special roles known to WolfStar for your server.
 						{isOnMobile ? ' Long press' : ' Hover over'} a button to get more information about that particular role
 					</>
 				}

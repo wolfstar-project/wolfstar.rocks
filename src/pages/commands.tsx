@@ -7,15 +7,15 @@ const CommandsPage: NextPage = () => {
 		<>
 			<NextSeo
 				title="Commands"
-				description="Want to know what Skyra can do? You've come to the right place here. Get information about every command available in Skyra on this page."
+				description="Want to know what WolfStar can do? You've come to the right place here. Get information about every command available in WolfStar on this page."
 				openGraph={{
-					title: "Skyra's Commands"
+					title: "WolfStar's Commands"
 				}}
 				additionalMetaTags={[
 					{
 						name: 'summary',
 						content:
-							"Want to know what Skyra can do? You've come to the right place here. Get information about every command available in Skyra on this page."
+							"Want to know what WolfStar can do? You've come to the right place here. Get information about every command available in WolfStar on this page."
 					}
 				]}
 			/>

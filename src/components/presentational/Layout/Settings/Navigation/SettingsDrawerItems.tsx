@@ -1,4 +1,4 @@
-import SkyraLogo from '@assets/skyraLogo';
+import WolfStarLogo from '@assets/skyraLogo';
 import type { TransformedLoginData } from '@config/types/ApiData';
 import { FilterRoutes, GuildRoutes } from '@config/types/GuildRoutes';
 import Tooltip from '@material/Tooltip';
@@ -62,8 +62,8 @@ const SettingsDrawerItems: FC<SettingsDrawerItemsProps> = ({ guildData, guildId,
 						}
 					})}
 				>
-					<SkyraLogo />
-					<Typography variant="h5">Skyra</Typography>
+					<WolfStarLogo />
+					<Typography variant="h5">WolfStar</Typography>
 				</Box>
 			</Tooltip>
 			<Divider />

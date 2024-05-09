@@ -37,7 +37,7 @@ const GuildCard = memo<GuildCardProps>(({ guild }) => (
 		>
 			<CardHeader
 				classes={{ root: styles.headerRoot, content: styles.headerContent }}
-				subheader={!guild.skyraIsIn && 'Click to invite Skyra'}
+				subheader={!guild.skyraIsIn && 'Click to invite WolfStar'}
 				avatar={<GuildIcon guild={guild} />}
 				title={guild.name}
 			/>
@@ -49,6 +49,6 @@ export const FilteredGuildCards = (pack?: TransformedLoginData) =>
 	(pack?.transformedGuilds ?? [])
 		// Filter on manageable servers
 		.filter((g) => g.manageable)
-		// Sort by whether Skyra is in the server or not, or sort by the name of the server
+		// Sort by whether WolfStar is in the server or not, or sort by the name of the server
 		.sort((gA, gB) => (gA.skyraIsIn === gB.skyraIsIn ? gA.name.localeCompare(gB.name, 'en', { sensitivity: 'base' }) : gA.skyraIsIn ? -1 : 1))
 		.map((g, index) => cloneElement(<GuildCard guild={g} key={index} />));

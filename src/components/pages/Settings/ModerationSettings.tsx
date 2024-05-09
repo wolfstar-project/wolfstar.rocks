@@ -12,7 +12,7 @@ const ModerationSettings: FC = () => {
 
 	return (
 		<Section title="Punishment Settings">
-			<p>These settings affect what Skyra does when you're punishing (ban, kick, mute, etc) someone.</p>
+			<p>These settings affect what WolfStar does when you're punishing (ban, kick, mute, etc) someone.</p>
 			<SimpleGrid>
 				{ConfigurableModerationKeys.map(({ description, key, name }, index) => (
 					<SelectBoolean

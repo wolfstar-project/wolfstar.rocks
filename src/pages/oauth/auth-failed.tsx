@@ -48,7 +48,7 @@ const AuthFailedPage: NextPage = () => {
 						<Grid item>
 							<Box>
 								<ButtonGroup variant="contained" color="primary" size={isOnMobile ? 'small' : 'large'}>
-									<Button onClick={navigate('https://join.skyra.pw')} startIcon={<ForumIcon />}>
+									<Button onClick={navigate('https://join.wolfstar.rocks')} startIcon={<ForumIcon />}>
 										Join Support Server
 									</Button>
 									<Button onClick={navigate('/')} startIcon={<HomeIcon />}>

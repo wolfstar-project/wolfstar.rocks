@@ -9,7 +9,7 @@ const PrivacyPage: NextPage = () => {
 				title="Privacy Policy"
 				description="Want to learn how we handle your data and protect it? Read out privacy policy."
 				openGraph={{
-					title: 'Skyra Privacy Policy'
+					title: 'WolfStar Privacy Policy'
 				}}
 				additionalMetaTags={[
 					{

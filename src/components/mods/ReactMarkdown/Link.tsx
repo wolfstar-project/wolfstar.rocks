@@ -3,7 +3,7 @@ import RouterLink from '@routing/Link';
 import { forwardRef, type AnchorHTMLAttributes, type DetailedHTMLProps } from 'react';
 import type { WithReactMarkdownChildren } from './types';
 
-const SkyraPwPathRegex = /<?https:\/\/skyra\.pw(?<path>\/[a-z]+)?>?/;
+const WolfStarPwPathRegex = /<?https:\/\/skyra\.pw(?<path>\/[a-z]+)?>?/;
 
 type LinkProps = WithReactMarkdownChildren<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>;
 
@@ -20,10 +20,10 @@ const Link = forwardRef<HTMLAnchorElement, LinkProps>(({ children, href }, ref) 
 	}
 
 	// If the link starts with a / then it is an internal link
-	if (href.startsWith('https://skyra.pw')) {
+	if (href.startsWith('https://wolfstar.rocks')) {
 		return (
 			<RouterLink
-				href={href.endsWith('pw') ? '/' : SkyraPwPathRegex.exec(href)?.groups?.path ?? href}
+				href={href.endsWith('pw') ? '/' : WolfStarPwPathRegex.exec(href)?.groups?.path ?? href}
 				ref={ref}
 				text={children}
 				TextTypographyProps={{

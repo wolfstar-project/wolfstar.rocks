@@ -24,11 +24,11 @@ const AuthenticatedProvider = dynamic(() => import('@contexts/AuthenticationCont
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
 
-interface SkyraAppProps extends AppProps {
+interface WolfStarAppProps extends AppProps {
 	emotionCache?: EmotionCache;
 }
 
-const App: NextPage<SkyraAppProps> = ({ Component, pageProps, emotionCache = clientSideEmotionCache }) => {
+const App: NextPage<WolfStarAppProps> = ({ Component, pageProps, emotionCache = clientSideEmotionCache }) => {
 	useEffect(() => {
 		window.$discordMessage = {
 			avatars: {
@@ -38,7 +38,7 @@ const App: NextPage<SkyraAppProps> = ({ Component, pageProps, emotionCache = cli
 			},
 			profiles: {
 				skyra: {
-					author: 'Skyra',
+					author: 'WolfStar',
 					avatar: '/avatars/skyra.png',
 					bot: true,
 					verified: true,
@@ -78,7 +78,7 @@ const App: NextPage<SkyraAppProps> = ({ Component, pageProps, emotionCache = cli
 				'font-size: 18px; font-weight: bold; color: red;'
 			);
 			console.log(
-				'%cIf you do understand exactly what you are doing, you should join the Skyra Project team https://join.skyra.pw',
+				'%cIf you do understand exactly what you are doing, you should join the WolfStar Project team https://join.wolfstar.rocks',
 				'font-size: 16px;'
 			);
 		}

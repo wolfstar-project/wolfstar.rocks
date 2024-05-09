@@ -1,19 +1,19 @@
-import SkyraLogo from '@assets/skyraLogo';
+import WolfStarLogo from '@assets/skyraLogo';
 import Tooltip from '@material/Tooltip';
 import { navigate } from '@utils/util';
 import { memo, type FC } from 'react';
 
 import { Box, Button, Hidden, Typography } from '@mui/material';
 
-const SkyraLogoButton: FC = () => (
+const WolfStarLogoButton: FC = () => (
 	<Box flexGrow={1}>
 		<Tooltip title="Click to go home" placement="bottom">
 			<Button onClick={navigate('/')} sx={{ textAlign: 'left', textTransform: 'unset' }}>
 				<Box sx={{ minWidth: 120, display: 'flex', justifyContent: 'space-around', alignContent: 'center', alignItems: 'center' }}>
-					<SkyraLogo />
+					<WolfStarLogo />
 					<Box display="flex" flexDirection="column" ml={3}>
 						<Typography variant="h5" component="h1" color="textPrimary">
-							Skyra
+							WolfStar
 						</Typography>
 						<Hidden mdDown>
 							<Typography variant="caption" component="h1" color="textPrimary">
@@ -27,4 +27,4 @@ const SkyraLogoButton: FC = () => (
 	</Box>
 );
 
-export default memo(SkyraLogoButton);
+export default memo(WolfStarLogoButton);

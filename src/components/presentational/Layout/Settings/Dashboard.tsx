@@ -111,7 +111,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ guildId, children }) => {
 			<ErrorAlert
 				open={hasError}
 				setOpen={setHasError}
-				errorText="An error occurred getting data from Skyra's server."
+				errorText="An error occurred getting data from WolfStar's server."
 				errorSubText={
 					<Box component="span">
 						Maybe try again later, or join{' '}
@@ -121,7 +121,7 @@ const DashboardLayout: FC<DashboardLayoutProps> = ({ guildId, children }) => {
 								color: 'primary.contrastText',
 								fontWeight: 'bolder'
 							}}
-							href="https://join.skyra.pw"
+							href="https://join.wolfstar.rocks"
 						>
 							the support server
 						</Box>{' '}

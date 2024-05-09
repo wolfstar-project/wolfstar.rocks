@@ -21,7 +21,7 @@ const ChannelSettings: FC = () => {
 				title="Channels"
 				subtitle={
 					<>
-						Here you can configure different kinds of channels for Skyra. Hover over a button to get more information for that specific
+						Here you can configure different kinds of channels for WolfStar. Hover over a button to get more information for that specific
 						channel.
 					</>
 				}

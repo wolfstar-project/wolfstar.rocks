@@ -129,8 +129,8 @@ const MobileNavMenu: FC = () => {
 									{router.pathname !== '/' && <MenuItemLink href="/" Icon={<HomeIcon />} text="Go back home" />}
 									<MenuItemLink href="/commands" Icon={<CommandsIcon />} text="Commands" />
 									<MenuItemLink href="/privacy" Icon={<GavelIcon />} text="Privacy Policy" />
-									<MenuItemLink href="https://invite.skyra.pw" Icon={<InviteIcon />} text="Add Skyra to server" />
-									<MenuItemLink href="https://join.skyra.pw" Icon={<DiscordChatIcon />} text="Join our Discord" />
+									<MenuItemLink href="https://invite.wolfstar.rocks" Icon={<InviteIcon />} text="Add WolfStar to server" />
+									<MenuItemLink href="https://join.wolfstar.rocks" Icon={<DiscordChatIcon />} text="Join our Discord" />
 								</MenuList>
 							</ClickAwayListener>
 						</Paper>

@@ -86,7 +86,7 @@ const Command: FC<CommandProps> = ({ command }) => {
 								</Grid>
 								<Grid item>
 									{command.extendedHelp.usages.map((usage, key) => (
-										<ExtendedHelpBody key={key} body={`\`Skyra, ${command.name} ${usage}\``} />
+										<ExtendedHelpBody key={key} body={`\`WolfStar, ${command.name} ${usage}\``} />
 									))}
 								</Grid>
 							</>
@@ -144,7 +144,7 @@ const Command: FC<CommandProps> = ({ command }) => {
 								<Grid item>
 									<ExtendedHelpBody
 										body={command.extendedHelp.examples
-											.map((example) => `- Skyra, ${command.name}${example ? ` *${example}*` : ''}`)
+											.map((example) => `- WolfStar, ${command.name}${example ? ` *${example}*` : ''}`)
 											.join('\n')}
 									/>
 								</Grid>

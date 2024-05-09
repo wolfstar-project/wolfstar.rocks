@@ -1,4 +1,4 @@
-import SkyraLogo from '@assets/skyraLogo';
+import WolfStarLogo from '@assets/skyraLogo';
 import { Box, Container, Hidden, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Link from '@routing/Link';
 import { CLIENT_ID, inviteURL } from '@utils/constants';
@@ -6,15 +6,15 @@ import { memo } from 'react';
 
 const Left = () => (
 	<Box textAlign="left" display="flex" flexDirection="column">
-		<Link href="https://donate.skyra.pw/patreon" text="Patreon" />
-		<Link href="https://donate.skyra.pw/paypal" text="PayPal" />
-		<Link href="https://donate.skyra.pw/kofi" text="Ko-fi" />
+		<Link href="https://donate.wolfstar.rocks/patreon" text="Patreon" />
+		<Link href="https://donate.wolfstar.rocks/paypal" text="PayPal" />
+		<Link href="https://donate.wolfstar.rocks/kofi" text="Ko-fi" />
 		<Link href={`https://top.gg/bot/${CLIENT_ID}`} text="Vote" />
 	</Box>
 );
 const Right = () => (
 	<Box textAlign="right" display="flex" flexDirection="column">
-		<Link href="https://join.skyra.pw" text="Support Server" />
+		<Link href="https://join.wolfstar.rocks" text="Support Server" />
 		<Link href="/privacy" text="Privacy Policy" />
 		<Link href={inviteURL.toString()} text="Invite Link" />
 		<Link href="https://github.com/skyra-project/skyra" text="GitHub" />
@@ -23,9 +23,9 @@ const Right = () => (
 
 const Middle = () => (
 	<Box display="flex" flexDirection="column">
-		<SkyraLogo />
+		<WolfStarLogo />
 		<Typography sx={{ mt: 1.875 }} variant="caption">
-			Copyright © 2020 Skyra Project. All rights reserved.
+			Copyright © 2020 WolfStar Project. All rights reserved.
 		</Typography>
 	</Box>
 );

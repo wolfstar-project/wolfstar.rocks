@@ -14,7 +14,7 @@ on:
       - 'Dockerfile'
 
 jobs:
-  PublishSkyraPw:
+  PublishWolfStarRocks:
     name: Publish Skyra.pw image to container registries
     runs-on: ubuntu-latest
     steps:
@@ -35,4 +35,4 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/skyra-project/skyra.pw:latest
+          tags: ghcr.io/wolfstar-project/wolstar.rocks:latest

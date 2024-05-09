@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url';
 const srcDir = new URL('../src/', import.meta.url);
 
 await sitemapGenerator({
-	baseUrl: 'https://skyra.pw',
+	baseUrl: 'https://wolfstar.rocks',
 	pagesDirectory: fileURLToPath(new URL('pages/', srcDir)),
 	targetDirectory: fileURLToPath(new URL('public/', srcDir)),
 	nextConfigPath: fileURLToPath(new URL('next.config.js', srcDir)),

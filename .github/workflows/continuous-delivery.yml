@@ -15,7 +15,7 @@ on:
 
 jobs:
   PublishWolfStarRocks:
-    name: Publish Skyra.pw image to container registries
+    name: Publish WolfStar.rocks image to container registries
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Project
@@ -28,7 +28,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Skyra.pw Docker image
+      - name: Build and push WolfStar.rocks Docker image
         uses: docker/build-push-action@v5.3.0
         with:
           push: true

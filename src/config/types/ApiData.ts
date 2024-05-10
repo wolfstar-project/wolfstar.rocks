@@ -47,7 +47,7 @@ interface FlattenedGuild
 
 	roles: FlattenedRole[];
 
-	skyraIsIn: boolean;
+	wolfstarIsIn: boolean;
 }
 
 interface FlattenedEmoji {
@@ -247,5 +247,5 @@ interface OauthFlattenedGuild extends PartialOauthFlattenedGuild {
 
 	permissions: number;
 
-	skyraIsIn: boolean;
+	wolfstarIsIn: boolean;
 }

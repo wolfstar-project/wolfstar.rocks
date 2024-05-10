@@ -10,7 +10,7 @@ import ErrorAlert from '@presentational/Alerts/Error';
 import Loading from '@presentational/Loading';
 import { objectToTuples } from '@sapphire/utilities';
 import { FetchMethods, SettingsDrawerWidth } from '@utils/constants';
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { apiFetch, clearData } from '@utils/util';
 import { NextSeo } from 'next-seo';
 import { useRouter } from 'next/router';

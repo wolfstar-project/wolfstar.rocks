@@ -31,7 +31,7 @@ export default [
 					<DiscordMessage profile="favna">
 						WolfStar, mute <DiscordMention>Kyra</DiscordMention> 10m Spamming.
 					</DiscordMessage>
-					<DiscordMessage profile="skyra">
+					<DiscordMessage profile="wolfstar">
 						<DiscordEmbed slot="embeds" color="#FFD54F" authorImage="/avatars/favna.gif" authorName="Favna#0001">
 							<DiscordEmbedDescription slot="description">
 								<strong>{heavyRightPointingArrow} Type</strong>: Temporary Mute
@@ -42,7 +42,7 @@ export default [
 								<br />
 								<strong>{heavyRightPointingArrow} Expires In</strong>: 10 minutes
 							</DiscordEmbedDescription>
-							<DiscordEmbedFooter slot="footer" footerImage="/avatars/skyra.png" timestamp={new Date()}>
+							<DiscordEmbedFooter slot="footer" footerImage="/avatars/wolfstar.png" timestamp={new Date()}>
 								Case 11
 							</DiscordEmbedFooter>
 						</DiscordEmbed>
@@ -61,7 +61,7 @@ export default [
 			<Paper elevation={1}>
 				<DiscordMessages>
 					<DiscordMessage profile="kyra">WolfStar, markov</DiscordMessage>
-					<DiscordMessage profile="skyra">
+					<DiscordMessage profile="wolfstar">
 						<DiscordEmbed slot="embeds" color="#FF9D01">
 							<DiscordEmbedDescription slot="description">
 								Big mama is beyond Merlin's powers I'm basing this though i like it, and calls <code>renderToString()</code> and throw
@@ -85,7 +85,7 @@ export default [
 			<Paper elevation={1}>
 				<DiscordMessages>
 					<DiscordMessage profile="kyra">WolfStar, youtube Big Buck Bunny</DiscordMessage>
-					<DiscordMessage profile="skyra">
+					<DiscordMessage profile="wolfstar">
 						<DiscordEmbed
 							slot="embeds"
 							color="#FF0000"
@@ -123,7 +123,7 @@ export default [
 			<Paper elevation={1}>
 				<DiscordMessages>
 					<DiscordMessage profile="favna">WolfStar, pokedex Dragonite</DiscordMessage>
-					<DiscordMessage profile="skyra">
+					<DiscordMessage profile="wolfstar">
 						<DiscordEmbed
 							slot="embeds"
 							color="#A3501A"
@@ -210,7 +210,7 @@ export default [
 			<Paper elevation={1}>
 				<DiscordMessages>
 					<DiscordMessage profile="favna">WolfStar, anime Pokemon</DiscordMessage>
-					<DiscordMessage profile="skyra">
+					<DiscordMessage profile="wolfstar">
 						<DiscordEmbed
 							slot="embeds"
 							color="#80C33E"

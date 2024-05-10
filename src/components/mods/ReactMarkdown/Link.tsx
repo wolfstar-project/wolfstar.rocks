@@ -3,7 +3,7 @@ import RouterLink from '@routing/Link';
 import { forwardRef, type AnchorHTMLAttributes, type DetailedHTMLProps } from 'react';
 import type { WithReactMarkdownChildren } from './types';
 
-const WolfStarPwPathRegex = /<?https:\/\/skyra\.pw(?<path>\/[a-z]+)?>?/;
+const WolfStarPwPathRegex = /<?https:\/\/wolfstar\.pw(?<path>\/[a-z]+)?>?/;
 
 type LinkProps = WithReactMarkdownChildren<DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>>;
 

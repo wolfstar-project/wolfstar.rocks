@@ -1,4 +1,4 @@
-import WolfStarLogo from '@assets/skyraLogo';
+import WolfStarLogo from '@assets/wolfstarLogo';
 import Tooltip from '@material/Tooltip';
 import { navigate } from '@utils/util';
 import { memo, type FC } from 'react';

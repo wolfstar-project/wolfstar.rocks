@@ -11,7 +11,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LoginIcon from '@mui/icons-material/VpnKey';
 import MenuItemLink from '@routing/MenuItemLink';
 import { oauthURL } from '@utils/constants';
-import { displayAvatarURL } from '@utils/skyraUtils';
+import { displayAvatarURL } from '@utils/wolfstarUtils';
 import { clearData, logOut, syncUser } from '@utils/util';
 import { useRouter } from 'next/router';
 import { memo, MouseEvent as ReactMouseEvent, useEffect, useRef, useState, type FC } from 'react';

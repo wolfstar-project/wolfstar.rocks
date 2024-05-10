@@ -5,7 +5,7 @@ import UiSearchBar from '@material/UiSearchBar';
 import Category from '@presentational/CommandsPage/Category';
 import Loading from '@presentational/Loading';
 import { ExpirableLocalStorageStructure, LocalStorageKeys } from '@utils/constants';
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { useWindowSize } from '@utils/useWindowSize';
 import { apiFetch, loadState, saveState } from '@utils/util';
 import debounce from 'lodash/debounce';

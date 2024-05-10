@@ -13,7 +13,7 @@ interface GuildCardProps {
 }
 
 const GuildCard = memo<GuildCardProps>(({ guild }) => (
-	<Link href={guild.skyraIsIn ? `/guilds/${guild.id}` : guildAddURL(guild.id)} className={styles.link}>
+	<Link href={guild.wolfstarIsIn ? `/guilds/${guild.id}` : guildAddURL(guild.id)} className={styles.link}>
 		<Card
 			elevation={2}
 			sx={{
@@ -37,7 +37,7 @@ const GuildCard = memo<GuildCardProps>(({ guild }) => (
 		>
 			<CardHeader
 				classes={{ root: styles.headerRoot, content: styles.headerContent }}
-				subheader={!guild.skyraIsIn && 'Click to invite WolfStar'}
+				subheader={!guild.wolfstarIsIn && 'Click to invite WolfStar'}
 				avatar={<GuildIcon guild={guild} />}
 				title={guild.name}
 			/>
@@ -50,5 +50,7 @@ export const FilteredGuildCards = (pack?: TransformedLoginData) =>
 		// Filter on manageable servers
 		.filter((g) => g.manageable)
 		// Sort by whether WolfStar is in the server or not, or sort by the name of the server
-		.sort((gA, gB) => (gA.skyraIsIn === gB.skyraIsIn ? gA.name.localeCompare(gB.name, 'en', { sensitivity: 'base' }) : gA.skyraIsIn ? -1 : 1))
+		.sort((gA, gB) =>
+			gA.wolfstarIsIn === gB.wolfstarIsIn ? gA.name.localeCompare(gB.name, 'en', { sensitivity: 'base' }) : gA.wolfstarIsIn ? -1 : 1
+		)
 		.map((g, index) => cloneElement(<GuildCard guild={g} key={index} />));

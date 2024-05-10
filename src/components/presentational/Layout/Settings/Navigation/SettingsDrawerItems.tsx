@@ -1,4 +1,4 @@
-import WolfStarLogo from '@assets/skyraLogo';
+import WolfStarLogo from '@assets/wolfstarLogo';
 import type { TransformedLoginData } from '@config/types/ApiData';
 import { FilterRoutes, GuildRoutes } from '@config/types/GuildRoutes';
 import Tooltip from '@material/Tooltip';

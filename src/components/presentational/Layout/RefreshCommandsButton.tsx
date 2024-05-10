@@ -2,7 +2,7 @@ import type { FlattenedCommand } from '@config/types/ApiData';
 import Tooltip from '@material/Tooltip';
 import CachedIcon from '@mui/icons-material/Cached';
 import { ExpirableLocalStorageStructure, LocalStorageKeys } from '@utils/constants';
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { apiFetch, saveState } from '@utils/util';
 import { useCallback, useMemo, useState, type FC, type SetStateAction } from 'react';
 

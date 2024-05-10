@@ -5,7 +5,7 @@ import Router from 'next/router';
 import type { ValuesType } from 'utility-types';
 import { BASE_API_URL, FetchMethods, LocalStorageKeys } from './constants';
 import isBrowser from './isBrowser';
-import { Time } from './skyraUtils';
+import { Time } from './wolfstarUtils';
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 

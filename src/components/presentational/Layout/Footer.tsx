@@ -1,4 +1,4 @@
-import WolfStarLogo from '@assets/skyraLogo';
+import WolfStarLogo from '@assets/wolfstarLogo';
 import { Box, Container, Hidden, Typography, useMediaQuery, useTheme } from '@mui/material';
 import Link from '@routing/Link';
 import { CLIENT_ID, inviteURL } from '@utils/constants';
@@ -17,7 +17,7 @@ const Right = () => (
 		<Link href="https://join.wolfstar.rocks" text="Support Server" />
 		<Link href="/privacy" text="Privacy Policy" />
 		<Link href={inviteURL.toString()} text="Invite Link" />
-		<Link href="https://github.com/skyra-project/skyra" text="GitHub" />
+		<Link href="https://github.com/wolfstar-project/wolfstar" text="GitHub" />
 	</Box>
 );
 

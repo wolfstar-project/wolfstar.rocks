@@ -34,12 +34,12 @@ const App: NextPage<WolfStarAppProps> = ({ Component, pageProps, emotionCache = 
 			avatars: {
 				default: 'blue',
 				favna: '/avatars/favna.gif',
-				skyra: '/avatars/skyra.png'
+				wolfstar: '/avatars/wolfstar.png'
 			},
 			profiles: {
-				skyra: {
+				wolfstar: {
 					author: 'WolfStar',
-					avatar: '/avatars/skyra.png',
+					avatar: '/avatars/wolfstar.png',
 					bot: true,
 					verified: true,
 					roleColor: '#1E88E5'

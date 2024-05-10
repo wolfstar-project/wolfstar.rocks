@@ -5,7 +5,7 @@ import Tooltip from '@material/Tooltip';
 import LogoutIcon from '@mui/icons-material/Eject';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Button, ClickAwayListener, Grow, ListItemIcon, MenuItem, MenuList, Paper, Popper, Typography } from '@mui/material';
-import { displayAvatarURL } from '@utils/skyraUtils';
+import { displayAvatarURL } from '@utils/wolfstarUtils';
 import { clearData, logOut, syncUser } from '@utils/util';
 import { useRouter } from 'next/router';
 import { memo, MouseEvent as ReactMouseEvent, useEffect, useRef, useState, type FC } from 'react';

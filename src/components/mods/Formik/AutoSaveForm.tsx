@@ -1,4 +1,4 @@
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { Form, Formik, FormikHelpers } from 'formik';
 import type { PropsWithChildren } from 'react';
 import type { ObjectShape, OptionalObjectSchema, TypeOfShape } from 'yup/lib/object';

@@ -16,7 +16,7 @@ import ModerationSettings from '@pages/Settings/ModerationSettings';
 import RoleSettings from '@pages/Settings/RoleSettings';
 import Loading from '@presentational/Loading';
 import { ExpirableLocalStorageStructure, LocalStorageKeys } from '@utils/constants';
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { apiFetch, loadState, saveState } from '@utils/util';
 import { useRouter } from 'next/router';
 import { memo, useCallback, useEffect, useState, type FC } from 'react';

@@ -31,14 +31,14 @@ const PrivacyPolicy = () => (
 		<GeneralPage>
 			<Container maxWidth="lg">
 				<Typography
-					id="skyra-privacy-policy"
+					id="wolfstar-privacy-policy"
 					variant="h1"
 					align="center"
 					sx={{
 						fontSize: '50px'
 					}}
 				>
-					SKYRA PRIVACY POLICY
+					WOLFSTAR PRIVACY POLICY
 				</Typography>
 				<LineSpacer />
 				<Typography variant="body2">Last updated and effective: October 4, 2020</Typography>
@@ -70,7 +70,7 @@ const PrivacyPolicy = () => (
 				<Divider />
 				<LineSpacer />
 				<Typography
-					id="welcome-to-skyra-project"
+					id="welcome-to-wolfstar-project"
 					variant="h2"
 					sx={{
 						py: 3,
@@ -448,7 +448,7 @@ const PrivacyPolicy = () => (
 					protection, we may take steps to verify identity before responding to your request.
 				</Typography>
 				<Typography
-					id="who-is-skyra-project's-eea-representative?"
+					id="who-is-wolfstar-project's-eea-representative?"
 					variant="h2"
 					sx={{
 						py: 3,

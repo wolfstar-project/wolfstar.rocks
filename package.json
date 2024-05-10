@@ -101,10 +101,10 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/skyra-project/skyra.pw.git"
+		"url": "git+https://github.com/wolfstar-project/wolfstar.rocks.git"
 	},
 	"bugs": {
-		"url": "https://github.com/skyra-project/skyra.pw/issues"
+		"url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"
 	},
 	"prettier": "@sapphire/prettier-config",
 	"packageManager": "yarn@3.4.1"

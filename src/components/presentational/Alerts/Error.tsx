@@ -1,6 +1,6 @@
 import CancelIcon from '@mui/icons-material/Cancel';
 import { AlertTitle, Button, Grow, Snackbar } from '@mui/material';
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { Dispatch, memo, type FC, type ReactNode, type SetStateAction } from 'react';
 import BaseAlert from './Base';
 

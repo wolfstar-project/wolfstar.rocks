@@ -5,7 +5,7 @@ import Tooltip from '@material/Tooltip';
 import { Button, Dialog, DialogActions, DialogContent, List, ListItem, ListItemSecondaryAction, ListItemText, useTheme } from '@mui/material';
 import type { ButtonProps as MButtonProps } from '@mui/material/Button';
 import { toTitleCase } from '@sapphire/utilities';
-import { Time } from '@utils/skyraUtils';
+import { Time } from '@utils/wolfstarUtils';
 import { sleep } from '@utils/util';
 import { forwardRef, Fragment, useCallback, useMemo, useState, type ChangeEvent, type ReactNode } from 'react';
 import { Virtuoso, type Components } from 'react-virtuoso';

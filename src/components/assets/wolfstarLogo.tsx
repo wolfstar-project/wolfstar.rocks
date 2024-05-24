@@ -19,7 +19,7 @@ const StyledSvg = styled('svg')({
 });
 
 const WolfStarLogo: FC = (props) => (
-	<StyledSvg viewBox="0 0 259.05 518.05" {...props} height="32">
+	<StyledSvg viewBox="0 0 250 250" {...props} height="32">
 		<g>
 			<g>
 				<circle cx="125" cy="125" r="125" fill="black" />

@@ -1,13 +1,12 @@
 import { createTheme } from '@mui/material';
-import { black } from '@mui/material/colors';
 
 export default createTheme({
 	palette: {
 		mode: 'dark',
 		primary: {
-			main: black[600],
-			light: black[400],
-			dark: black[800],
+			main: '#323232',
+			light: '#050505',
+			dark: '#000000',
 			contrastText: '#FFFFFF'
 		},
 		secondary: {

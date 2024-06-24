@@ -42,7 +42,7 @@ const App: NextPage<WolfStarAppProps> = ({ Component, pageProps, emotionCache = 
 					avatar: '/avatars/wolfstar.png',
 					bot: true,
 					verified: true,
-					roleColor: '#1E88E5'
+					roleColor: '#050505'
 				},
 				favna: {
 					author: 'Favna',

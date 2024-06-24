@@ -11,7 +11,7 @@
 	"scope": "/",
 	"short_name": "WolfStar",
 	"start_url": "/",
-	"theme_color": "#1E88E5",
+	"theme_color": "#050505",
 	"icons": [
 		{
 			"src": "https://wolfstar.rocks/icons/android-chrome-36x36.png",
@@ -97,7 +97,7 @@
 	],
 	"splash_pages": {
 		"name": "WolfStar",
-		"theme_color": "#1E88E5",
+		"theme_color": "#050505",
 		"background_color": "#16171D",
 		"icons": [
 			{

@@ -78,7 +78,7 @@ const PrivacyPolicy = () => (
 						textTransform: 'uppercase'
 					}}
 				>
-					WELCOME TO SKYRA PROJECT!
+					WELCOME TO WOLFSTAR PROJECT!
 				</Typography>
 				<Typography component="div">
 					WolfStar Project provides a chat bot for the{' '}
@@ -456,7 +456,7 @@ const PrivacyPolicy = () => (
 						textTransform: 'uppercase'
 					}}
 				>
-					WHO IS SKYRA PROJECT'S EEA REPRESENTATIVE?
+					WHO IS WOLFSTAR PROJECT'S EEA REPRESENTATIVE?
 				</Typography>
 				<Typography component="div">
 					As the Company is currently exclusively based within the EEA and the Company is of such a small size that we do not have the funds

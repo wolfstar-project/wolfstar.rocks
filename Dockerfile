@@ -35,6 +35,7 @@ COPY --from=builder --chown=node:node /home/node/app/src/.next/static ./src/.nex
 ENV PORT 8281
 ENV NODE_ENV="production"
 ENV NODE_OPTIONS="--enable-source-maps"
+ENV HOSTNAME="0.0.0.0"
 
 RUN chown -R node:node /home/node/app/
 
@@ -42,4 +43,4 @@ USER node
 
 EXPOSE 8281
 
-CMD HOSTNAME="0.0.0.0" node src/server.js
+CMD ["node", "src/server.js"]

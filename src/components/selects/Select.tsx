@@ -7,7 +7,7 @@ import type { FC } from 'react';
  * Props to pass to the Select component.
  * Any additional props will be passed to the Material-UI Select component
  */
-interface SelectProps extends MSelectProps {
+interface SelectProps extends Pick<MSelectProps, keyof MSelectProps> {
 	title: string;
 	helperText?: string;
 	fullWidth?: boolean;

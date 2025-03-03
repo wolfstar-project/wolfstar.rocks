@@ -81,7 +81,7 @@
 			<div class="flex gap-2">
 				<template v-if="loggedIn">
 					<div class="dropdown dropdown-end">
-						<div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar" @click="toggleDropdown">
+						<div tabindex="0" class="btn btn-ghost btn-circle avatar">
 							<div class="w-10 rounded-full">
 								<img v-if="isDefault" :src="defaultAvatar" alt="Default Avatar" decoding="async" crossorigin="anonymous" />
 								<picture v-else>
@@ -138,12 +138,6 @@ const Apps = {
 };
 
 const { session, loggedIn } = useAuth();
-
-const isDropdownOpen = ref(false);
-
-const toggleDropdown = () => {
-	isDropdownOpen.value = !isDropdownOpen.value;
-};
 
 const router = useRouter();
 

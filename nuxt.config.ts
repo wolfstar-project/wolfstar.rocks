@@ -78,7 +78,8 @@ export default defineNuxtConfig({
 		'@vee-validate/nuxt',
 		'nuxt-security',
 		'@nuxt/icon',
-		'@nuxtjs/color-mode'
+		'@nuxtjs/color-mode',
+		'nuxt-auth-utils'
 	],
 	imports: {
 		presets: [
@@ -332,6 +333,8 @@ export default defineNuxtConfig({
 		fallback: 'light'
 	},
 	security: {
+		strict: true,
+		removeLoggers: false,
 		allowedMethodsRestricter: { methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'] },
 		headers: {
 			contentSecurityPolicy: {

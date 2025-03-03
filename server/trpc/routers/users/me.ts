@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { router, procedure } from '~~/server/trpc/trpc';
-import { requireAuthStorage } from '~~/server/utils/session';
+import { useDiscordStore } from '@/stores/discord';
 import type { TransformedLoginData } from '~~/shared/types';
 import useApi from '~~/shared/utils/api';
 
@@ -24,7 +24,13 @@ export const usersRouter = router({
 		)
 		.output(z.custom<TransformedLoginData>())
 		.query(async ({ input }) => {
-			const token = await requireAuthStorage();
+			const { token } = useDiscordStore();
+			if (!token) {
+				throw new TRPCError({
+					code: 'INTERNAL_SERVER_ERROR',
+					message: 'Missing token'
+				});
+			}
 			const rest = useRest({
 				authPrefix: 'Bearer'
 			}).setToken(token);

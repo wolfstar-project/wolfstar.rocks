@@ -1,11 +1,12 @@
 import type {
 	RESTGetAPICurrentUserResult,
-	RESTPostOAuth2AccessTokenResult,
+	// RESTPostOAuth2AccessTokenResult,
 	RESTPostOAuth2AccessTokenURLEncodedData,
-	RESTPostOAuth2RefreshTokenResult,
+	// RESTPostOAuth2RefreshTokenResult,
 	RESTPostOAuth2RefreshTokenURLEncodedData
 } from 'discord-api-types/v10';
-import { OAuth2Routes, RouteBases, Routes } from 'discord-api-types/v10';
+import { /* OAuth2Routes, */ RouteBases, Routes } from 'discord-api-types/v10';
+import useApi from '~~/shared/utils/api';
 
 const { clientId, clientSecret } = useRuntimeConfig();
 
@@ -18,7 +19,7 @@ export async function fetchAccessToken(code: string, redirectUri: string) {
 		redirect_uri: redirectUri
 	} satisfies RESTPostOAuth2AccessTokenURLEncodedData;
 
-	const result = await fetch(OAuth2Routes.tokenURL, {
+	/*const result = await fetch(OAuth2Routes.tokenURL, {
 		method: 'POST',
 		body: new URLSearchParams(data).toString(),
 		headers: {
@@ -28,7 +29,9 @@ export async function fetchAccessToken(code: string, redirectUri: string) {
 
 	const json = await result.json();
 	if (result.ok) return json as RESTPostOAuth2AccessTokenResult;
-	return null;
+	return null;*/
+	const result = await useApi().oauth2.tokenExchange(data);
+	return result;
 }
 
 export async function refreshAccessToken(refreshToken: string) {
@@ -39,7 +42,7 @@ export async function refreshAccessToken(refreshToken: string) {
 
 		refresh_token: refreshToken
 	} satisfies RESTPostOAuth2RefreshTokenURLEncodedData;
-	const result = await fetch(OAuth2Routes.tokenURL, {
+	/*const result = await fetch(OAuth2Routes.tokenURL, {
 		method: 'POST',
 		body: new URLSearchParams(data).toString(),
 		headers: {
@@ -47,7 +50,9 @@ export async function refreshAccessToken(refreshToken: string) {
 		}
 	});
 
-	return result.ok ? ((await result.json()) as RESTPostOAuth2RefreshTokenResult) : null;
+	return result.ok ? ((await result.json()) as RESTPostOAuth2RefreshTokenResult) : null;*/
+	const result = await useApi().oauth2.refreshToken(data);
+	return result;
 }
 
 export async function fetchUser(token: string) {

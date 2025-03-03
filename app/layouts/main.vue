@@ -29,6 +29,6 @@ const appName = inject(ProviderAppNameKey)!;
 }
 
 .app-layout.wolfstar {
-	--color: var(--color-primary);
+	--color: var(--color-branding-wolfstar);
 }
 </style>

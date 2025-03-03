@@ -38,7 +38,6 @@ export default createConfigForNuxt(
 					multiline: { max: 1 }
 				}
 			],
-			'vue/max-attributes-per-line': 'off',
 			'vue/singleline-html-element-content-newline': 'off'
 		}
 	}

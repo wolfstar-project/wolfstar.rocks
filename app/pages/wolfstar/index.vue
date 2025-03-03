@@ -13,7 +13,9 @@
 	</section>
 
 	<section class="join mt-16 flex items-center justify-center">
-		<nuxt-link class="btn join-item sm:btn-wide" :to="Invites.WolfStar"
+		<nuxt-link
+class="btn join-item sm:btn-wide"
+:to="Invites.WolfStar"
 			><nuxt-icon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link
 		>
 		<nuxt-link class="btn join-item sm:btn-wide" to="#explore"><nuxt-icon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
@@ -333,7 +335,7 @@ function advanceModerationIndex(value: -1 | 1) {
 @reference "../../assets/css/main.css";
 .title {
 	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem];
-	background: linear-gradient(to bottom, whitesmoke 40%, oklch(from oklch(var(--color-primary)) calc(l + 0.1) c h) 100%);
+	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(--color-branding-wolfstar) calc(l + 0.1) c h) 100%);
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }
@@ -383,12 +385,7 @@ function advanceModerationIndex(value: -1 | 1) {
 
 .invite-card::before {
 	@apply absolute left-0 top-0 -z-10 h-full w-full -rotate-2 rounded-xl drop-shadow-lg;
-	background: linear-gradient(to bottom right, oklch(var(--colors-cyan-600)) 0%, oklch(var(--colors-violet-600)) 70%);
-	background: linear-gradient(
-		to bottom right,
-		oklch(from oklch(var(--color-primary)) calc(l + 0.1) c calc(h - 30)) 0%,
-		oklch(from oklch(var(--color-primary)) calc(l - 0.1) c calc(h + 30)) 70%
-	);
+	background: linear-gradient(to bottom right in oklch, var(--color-red-600) 0%, var(--color-purple-600) 70%);
 	content: '';
 }
 </style>

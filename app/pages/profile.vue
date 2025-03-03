@@ -41,13 +41,16 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="packError" class="alert alert-error py-8">
-			<div class="flex-1">
-				<p>{{ packError }}</p>
+		<div v-if="error" class="alert alert-error py-8">
+			<h2 class="mb-6 text-2xl font-semibold">Error:</h2>
+			<div class="card card-bordered">
+				<div class="card-body items-center text-center">
+					<pre><code>{{ error }}</code></pre>
+				</div>
 			</div>
 		</div>
 		<!-- Guilds Section -->
-		<div v-if="!packError" class="py-8">
+		<div v-if="!error" class="py-8">
 			<h2 class="mb-6 text-2xl font-semibold">Your Servers</h2>
 
 			<div v-if="isLoading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -71,7 +74,7 @@ const { session } = useAuth();
 definePageMeta({ alias: ['/profile'] });
 
 const isLoading = useState(() => false);
-const packError = ref<string | null>(null);
+const error = ref<Error | null>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
@@ -83,9 +86,9 @@ onMounted(async () => {
 		guilds.value = (await useClientTrpc().users.me.query()).transformedGuilds;
 
 		isLoading.value = true;
-	} catch (error) {
-		console.error('Failed to fetch session:', error);
-		packError.value = error instanceof Error ? error.message : 'Unknown error';
+	} catch (err) {
+		console.error('Failed to fetch session:', err);
+		error.value = err instanceof Error ? err : new Error('Unknown error');
 	} finally {
 		isLoading.value = false;
 	}

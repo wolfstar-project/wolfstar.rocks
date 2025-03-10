@@ -1,29 +1,30 @@
 <template>
 	<div class="flex flex-col gap-6 p-6">
-		<PresentationalLayoutsSettingsSection>
-			<SelectsSelectBoolean
+		<layout-settings-section>
+			<SelectBoolean
 				:title="roleConfig.removeInitial.name"
 				:description="roleConfig.removeInitial.tooltip"
-				:model-value="guildSettings.rolesRemoveInitial"
-				@update:model-value="updateRoleSetting('rolesRemoveInitial', $event)"
+				:model-value="settings.rolesRemoveInitial"
+				@update:model-value="(value) => updateRoleSetting('rolesRemoveInitial', value)"
 			/>
-		</PresentationalLayoutsSettingsSection>
+		</layout-settings-section>
 
-		<PresentationalLayoutsSettingsSection title="Configurable Roles">
+		<layout-settings-section title="Configurable Roles">
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
 				<template v-for="role in roleConfig.roles" :key="role.key">
 					<component
 						:is="getRoleSelectComponent(role.key)"
 						v-bind="getRoleProps(role)"
-						@update:model-value="updateRoleSetting(role.key, $event)"
+						:model-value="settings[role.key]"
+						@update:model-value="(value: string | string[]) => updateRoleSetting(role.key, value)"
 						@reset="resetRole(role.key)"
 					/>
 				</template>
 			</div>
-		</PresentationalLayoutsSettingsSection>
+		</layout-settings-section>
 	</div>
 </template>
 
 <script setup lang="ts">
-const { roleConfig, guildSettings, updateRoleSetting, resetRole, getRoleSelectComponent, getRoleProps } = useGuildRoles();
+const { roleConfig, settings, updateRoleSetting, resetRole, getRoleSelectComponent, getRoleProps } = useGuildRoles();
 </script>

@@ -42,7 +42,7 @@
 			</div>
 
 			<div class="perspective-1000 relative mt-12 h-36">
-				<span class="animate-hang relative -top-[100%] inline-block origin-bottom text-8xl drop-shadow-lg filter"> 🦇 </span>
+				<span class="animate-hang relative -bottom-[100%] inline-block origin-bottom text-8xl drop-shadow-lg filter"> 🦇 </span>
 			</div>
 		</div>
 	</div>
@@ -54,13 +54,8 @@ import type { NuxtError } from '#app';
 const { error } = defineProps<{
 	error: NuxtError;
 }>();
-
-const errorInfo = computed(() => {
-	const statusCode = (error?.statusCode ?? ErrorType.INTERNAL_SERVER) as ErrorType;
-	return errorMessages[statusCode];
-});
-
-const statusCode = (error?.statusCode as ErrorType) ?? ErrorType.INTERNAL_SERVER;
+const statusCode = (error?.statusCode ?? ErrorType.INTERNAL_SERVER) as ErrorType;
+const errorInfo = computed(() => errorMessages[statusCode]);
 const message = error?.message ?? 'Something went wrong.';
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-	<BaseSelect
+	<SelectBase
 		:label="label"
 		:options="channelOptions"
 		:value="modelValue"
@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
 import { ChannelType } from 'discord-api-types/v10';
-import BaseSelect from './base.vue';
+import type { TransformedLoginData } from '~~/shared/types';
 
 interface Props {
 	label: string;

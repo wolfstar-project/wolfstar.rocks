@@ -15,10 +15,11 @@
 
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
+import type { TransformedLoginData } from '~~/shared/types';
 
 interface Props {
 	label: string;
-	modelValue: string | null;
+	modelValue?: string | null;
 	guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>;
 	filterEveryone?: boolean;
 	tooltipTitle?: string;

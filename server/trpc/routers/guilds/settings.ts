@@ -21,7 +21,7 @@ export const settingsRouter = router({
 		.query(
 			async ({
 				ctx: {
-					session: { data: user },
+					session: { user },
 					api
 				},
 				input: { guildid: guildId, shouldSerialize }
@@ -67,7 +67,7 @@ export const settingsRouter = router({
 		.mutation(
 			async ({
 				ctx: {
-					session: { data: user }
+					session: { user }
 				},
 				input: { guildId, data }
 			}) => {

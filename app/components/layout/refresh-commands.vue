@@ -1,14 +1,14 @@
 <template>
 	<div class="fixed right-2 bottom-2 z-50" :class="{ 'right-8': trigger }">
-		<nuxt-icon name="i-mdi-cached">
-			<button
-				class="btn btn-circle btn-primary"
-				:class="{ 'btn-disabled': disabled }"
-				:disabled="disabled"
-				:data-tip="tooltipText"
-				@click="handleClick"
-			></button>
-		</nuxt-icon>
+		<SpotlightButton
+			aria-label="Refresh commands"
+			class="text-muted flex size-14 items-center justify-center p-1 transition-all duration-200"
+			rounded
+			:disabled="disabled"
+			:data-tip="tooltipText"
+			icon="i-mdi-cached"
+			@click="handleClick"
+		/>
 	</div>
 </template>
 
@@ -54,7 +54,4 @@ const tooltipText = `
 
 <style scoped>
 @reference "../../assets/css/main.css";
-.btn-circle {
-	@apply h-14 w-14;
-}
 </style>

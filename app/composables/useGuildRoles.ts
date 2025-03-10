@@ -22,7 +22,7 @@ const useGuildRoles = () => {
 
 	const getRoleSelectComponent = (key: GuildDataKey) => {
 		const isMultiple = Array.isArray((settings.value as GuildData)?.[key]);
-		return isMultiple ? 'SelectsSelectRoles' : 'SelectsSelectRole';
+		return isMultiple ? 'SelectRoles' : 'SelectRole';
 	};
 
 	const getRoleProps = (role: (typeof ConfigurableRoles)[0]) => {

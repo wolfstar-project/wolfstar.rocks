@@ -15,8 +15,8 @@ defineProps<{ kind: 'mention' | 'app' }>();
 .tag {
 	@apply gap-1 rounded-md px-0.5 font-normal;
 	cursor: pointer;
-	background-color: hsl(235 85.6% 64.7% / 0.3);
-	color: hsl(235 86.2% 88.6% / 1);
+	background-color: hsla(235, 85.6%, 64.7%, 0.3);
+	color: hsl(235, 86.2%, 88.6%, 1);
 }
 
 .tag > .icon {
@@ -24,7 +24,7 @@ defineProps<{ kind: 'mention' | 'app' }>();
 }
 
 .tag:hover {
-	background-color: hsl(235 85.6% 64.7% / 1);
-	color: hsl(0 0 100% / 1);
+	background-color: hsl(235, 85.6%, 64.7%, 1);
+	color: hsl(0, 0%, 100%, 1);
 }
 </style>

@@ -1,100 +1,121 @@
 <template>
-	<VeeForm v-slot="{ errors, values }" :validation-schema="validationSchema" :initial-values="initialData" @submit="onSubmit">
-		<div class="flex flex-col gap-4 p-4">
-			<slot name="fields" :errors="errors" :values="values"></slot>
+	<form class="form-control w-full max-w-lg" @submit="onSubmit">
+		<div class="space-y-4 p-4">
+			<div v-for="field in schemaFields" :key="field.name" class="form-control">
+				<label :for="field.name" class="label">
+					<span class="label-text capitalize">{{ field.name }}</span>
+				</label>
 
-			<div class="flex items-center gap-2">
-				<button type="submit" class="btn btn-primary" :class="{ loading }" :disabled="loading">
-					{{ submitLabel || 'Submit' }}
-				</button>
+				<input
+					:id="field.name"
+					v-model="field.value"
+					v-bind="field.attrs"
+					class="input input-bordered w-full"
+					:class="{ 'input-error': field.errorMessage }"
+				/>
 
-				<div v-if="saveError" class="text-error text-sm">
-					{{ saveError }}
+				<label v-if="field.errorMessage" class="label">
+					<span class="label-text-alt text-error">{{ field.errorMessage }}</span>
+				</label>
+			</div>
+
+			<div class="form-control gap-2">
+				<!-- Form-level error message -->
+				<div v-if="errors.form" class="alert alert-error">
+					<nuxt-icon name="heroicons:exclamation-triangle" class="h-6 w-6" />
+					<span>{{ errors.form }}</span>
+				</div>
+
+				<!-- Action buttons -->
+				<div class="flex items-center gap-2">
+					<button type="submit" class="btn btn-primary" :class="{ loading: isSubmitting }" :disabled="isSubmitting || hasErrors">
+						{{ submitLabel }}
+					</button>
+					<button type="button" class="btn btn-ghost" :disabled="isSubmitting" @click="handleReset">Reset</button>
 				</div>
 			</div>
 		</div>
-	</VeeForm>
+	</form>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import { toTypedSchema } from '@vee-validate/zod';
-import { useDebounceFn } from '@vueuse/core';
 import type { z } from 'zod';
-import { toast } from '@/lib/toast'; // Adjust the import path as needed
 
-const props = defineProps<{
-	schema: z.ZodObject<any>;
-	initialData?: Record<string, unknown>;
-	submitLabel?: string;
-	autoSaveDelay?: number;
-}>();
+const props = withDefaults(
+	defineProps<{
+		schema: z.ZodObject<z.ZodRawShape>;
+		initialData?: Record<string, unknown>;
+		submitLabel?: string;
+		autoSaveDelay?: number;
+	}>(),
+	{
+		initialData: undefined,
+		submitLabel: 'Submit',
+		autoSaveDelay: 2000
+	}
+);
 
-// Convert Zod schema to Vee-validate compatible schema
+const { schema } = toRefs(props);
 const validationSchema = toTypedSchema(props.schema);
+type FormValues = z.infer<typeof props.schema>;
+
+const { errors, handleSubmit, isSubmitting, values, handleReset } = useForm({
+	validationSchema,
+	initialValues: props.initialData
+});
+
+// Create fields based on schema
+const schemaFields = computed(() => {
+	const fields = Object.keys(schema.value.shape).map((fieldName) => {
+		const { value, errorMessage } = useField(fieldName);
+		return {
+			name: fieldName,
+			value,
+			errorMessage,
+			attrs: { type: 'text' } // Add more attributes based on field type if needed
+		};
+	});
+	return fields;
+});
 
 const emit = defineEmits<{
-	save: [data: Record<string, any>];
-	error: [error: Error];
+	(e: 'save', data: FormValues): void;
+	(e: 'error', error: Error): void;
 }>();
 
-const loading = ref(false);
-const saveError = ref<string | null>(null);
+const hasErrors = computed(() => Object.keys(errors.value).length > 0);
 
 // Auto-save using VueUse's useDebounceFn
-const autoSave = useDebounceFn(async (values: Record<string, any>) => {
-	try {
-		loading.value = true;
-		saveError.value = null;
+const autoSave = useDebounceFn(async () => {
+	if (hasErrors.value || !values.value) return;
 
-		emit('save', values);
-
-		toast.success('Changes saved', {
-			description: 'Your changes have been saved'
-		});
-	} catch (error) {
-		saveError.value = error instanceof Error ? error.message : 'Save failed';
-		emit('error', error as Error);
-
-		toast.error('Error', {
-			description: saveError.value
-		});
-	} finally {
-		loading.value = false;
-	}
-}, props.autoSaveDelay || 2000);
+	emit('save', values.value);
+	toast.success('Changes saved', { description: 'Your changes have been saved' });
+}, props.autoSaveDelay);
 
 // Watch form values and trigger auto-save
 watch(
-	() => props.initialData,
-	(newValues) => {
-		if (props.autoSaveDelay !== undefined && newValues) {
-			autoSave(newValues);
+	values,
+	() => {
+		if (props.autoSaveDelay !== undefined) {
+			autoSave();
 		}
 	},
 	{ deep: true }
 );
 
-// Handle form submission
-async function onSubmit(values: Record<string, unknown>) {
-	try {
-		loading.value = true;
-		saveError.value = null;
-
+const onSubmit = handleSubmit(
+	(values) => {
 		emit('save', values);
-
-		toast.success('Success', {
-			description: 'Form has been submitted successfully'
-		});
-	} catch (error) {
-		saveError.value = error instanceof Error ? error.message : 'Save failed';
-		emit('error', error as Error);
-
-		toast.error('Error', {
-			description: saveError.value
-		});
-	} finally {
-		loading.value = false;
+		toast.success('Success', { description: 'Form has been submitted successfully' });
+	},
+	({ errors }) => {
+		const errorMessage = Object.keys(errors)[0];
+		if (errorMessage) {
+			emit('error', new Error(errorMessage));
+			toast.error('Error', { description: errorMessage });
+		}
 	}
-}
+);
 </script>

@@ -7,7 +7,6 @@
 
 		<sections-app-footer />
 		<div class="fle-col fixed right-4 bottom-4 z-50 flex space-x-2">
-			<layout-change-theme />
 			<layout-scroll-to-top-button />
 		</div>
 		<Toaster close-button />

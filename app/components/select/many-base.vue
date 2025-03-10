@@ -2,7 +2,7 @@
 	<div class="join">
 		<button :class="['btn', { 'btn-error': error }]" :title="tooltipTitle" type="button" @click="openDialog">
 			{{ label }}: {{ displayValue }}
-			<img v-if="imageInName" :src="imageInName" alt="nuxt-icon" class="ml-2 inline-flex h-6 w-6" />
+			<nuxt-icon v-if="icon" :name="icon" alt="nuxt-icon" class="ml-2 inline-flex h-6 w-6" />
 		</button>
 
 		<div v-if="isOpen" class="modal modal-open">
@@ -73,7 +73,7 @@ import * as z from 'zod';
 interface Option<T = string> {
 	label: string;
 	value: T;
-	iconUrl?: string;
+	[keY: string]: T | string | null;
 }
 
 interface Props<T = string> {
@@ -87,7 +87,7 @@ interface Props<T = string> {
 	required?: boolean;
 	placeholder?: string;
 	searchable?: boolean;
-	imageInName?: string;
+	icon?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -95,6 +95,7 @@ const props = withDefaults(defineProps<Props>(), {
 	name: () => `multi-select-${Math.random().toString(36).slice(2)}`,
 	tooltipTitle: undefined,
 	required: true,
+	helperText: undefined,
 	placeholder: undefined,
 	searchable: true,
 	imageInName: undefined
@@ -108,7 +109,7 @@ const isOpen = ref(false);
 const search = ref('');
 const validationSchema = toTypedSchema(props.required ? z.array(z.string()).min(1, 'At least one item must be selected') : z.array(z.string()));
 
-const { value: fieldValue, errorMessage } = useField<string[]>(props.name, validationSchema);
+const { value: fieldValue } = useField<string[]>(props.name, validationSchema);
 
 const selectedValues = computed({
 	get: () => fieldValue.value ?? [...props.value],

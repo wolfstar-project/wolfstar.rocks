@@ -15,7 +15,7 @@ export async function createContext({ req, res }: { req: IncomingMessage; res: S
 	return {
 		event: createEvent(req, res),
 		requestId,
-		session: await requireAuthSession(createEvent(req, res)),
+		session: await getUserSession(createEvent(req, res)),
 		response: res,
 		request: req,
 		api: (rest?: REST) => useApi(rest)

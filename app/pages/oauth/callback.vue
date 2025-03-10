@@ -26,14 +26,15 @@ import { promiseTimeout } from '@vueuse/core';
 
 const { code } = useRoute().query;
 
-const redirectUri = `${getOrigin()}/oauth/callback`;
-const { data, error, status, execute } = useFetch('/api/auth/callback', {
-	body: JSON.stringify({ code, redirectUri }),
-	method: 'POST',
+const { error, status, execute } = useFetch('/api/auth/discord', {
+	query: { code },
+	method: 'GET',
 	key: 'callback',
 	server: false,
 	immediate: false
 });
+
+const data = useAuth().session.value.user;
 
 if (import.meta.client && code) {
 	void performCall().catch(console.error);
@@ -41,9 +42,8 @@ if (import.meta.client && code) {
 
 async function performCall() {
 	await execute();
-	if (!data.value) return;
+	if (!data) return;
 
-	useAuth().session.value = data.value;
 	await promiseTimeout(1000);
 	await useRouter().replace(useAuth().redirectTo.value);
 }
@@ -53,6 +53,11 @@ useSeoMeta({
 	robots: { none: true },
 	ogTitle: 'OAuth Callback',
 	ogDescription: 'A landing page for the OAuth2.0 callback flow, use the Login button instead.'
+});
+defineOgImageComponent('NuxtSeo', {
+	title: 'OAuth Callback',
+	description: 'A landing page for the OAuth2.0 callback flow',
+	theme: Colors.Red
 });
 </script>
 

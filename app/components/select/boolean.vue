@@ -2,21 +2,20 @@
 	<SelectBase
 		:label="title"
 		:options="options"
-		:value="modelValue"
+		:model-value="modelValue ? 'true' : 'false'"
 		:error="error"
 		:helper-text="description"
 		:name="name"
 		:tooltip-title="tooltipTitle"
 		:required="true"
-		@update:value="handleChange"
-		@change="handleChange"
+		@update:model-value="handleChange"
 	/>
 </template>
 
 <script setup lang="ts">
 interface Props {
 	title: string;
-	modelValue: boolean;
+	modelValue: boolean | null;
 	description?: string;
 	error?: boolean;
 	name?: string;
@@ -26,7 +25,8 @@ interface Props {
 withDefaults(defineProps<Props>(), {
 	name: () => `boolean-${Math.random().toString(36).slice(2)}`,
 	tooltipTitle: undefined,
-	error: false
+	error: false,
+	description: undefined
 });
 
 const emit = defineEmits<{
@@ -34,16 +34,13 @@ const emit = defineEmits<{
 }>();
 
 const options = [
-	{ label: 'Yes', value: true },
-	{ label: 'No', value: false }
+	{ label: 'Yes', value: 'true' },
+	{ label: 'No', value: 'false' }
 ];
 
-const handleChange = (value: boolean) => {
-	emit('update:modelValue', value);
-	emit('change', value);
+const handleChange = (value: string) => {
+	const boolValue = value === 'true';
+	emit('update:modelValue', boolValue);
+	emit('change', boolValue);
 };
 </script>
-
-<style>
-@reference "../../assets/css/main.css";
-</style>

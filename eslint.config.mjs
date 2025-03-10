@@ -2,15 +2,13 @@ import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
 export default createConfigForNuxt(
-	eslintPluginPrettierRecommended,
 	{
-		ignores: ['node_modules/', 'dist/', '.nuxt/', '.output/', 'public/sw.js', 'public/workbox*', '*.d.ts']
+		ignores: ['node_modules/', 'dist/', '.nuxt/', '.output/', 'public/', '*.d.ts']
 	},
 	{
 		rules: {
 			'no-unused-vars': 'off',
-			'@typescript-eslint/prefer-literal-enum-member': 'off',
-			'vue/no-multiple-template-root': 'off'
+			'@typescript-eslint/prefer-literal-enum-member': 'off'
 		}
 	},
 	{
@@ -38,7 +36,9 @@ export default createConfigForNuxt(
 					multiline: { max: 1 }
 				}
 			],
+			'vue/no-multiple-template-root': 'off',
 			'vue/singleline-html-element-content-newline': 'off'
 		}
-	}
+	},
+	eslintPluginPrettierRecommended
 );

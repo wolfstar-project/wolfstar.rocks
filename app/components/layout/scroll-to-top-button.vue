@@ -5,10 +5,9 @@
 			class="text-muted flex size-10 items-center justify-center p-1 transition-all duration-200"
 			rounded
 			:class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
+			icon="heroicons-arrow-up"
 			@click="scrollToTop"
-		>
-			<nuxt-icon name="heroicons-arrow-up" class="z-20 size-6" />
-		</SpotlightButton>
+		/>
 	</div>
 </template>
 

@@ -1,57 +1,46 @@
 <template>
 	<div>
-		<PresentationalLoading :loading="loading" />
-		<RefreshCommandsButton :set-commands="setGuildSettingsChanges" @fresh="(newCommands) => emit('update:commands', newCommands)" />
+		<layout-refresh-commands :set-commands="setGuildSettingsChanges" @fresh="(newCommands) => emit('update:commands', newCommands)" />
 
-		<PresentationalLayoutsSettingsSection title="Commands">
-			<p class="mb-4 text-sm">On this page you can disable commands on your server</p>
+		<form-auto-save :model-value="formData" :schema="guildSettingsSchema" @submit="saveChanges">
+			<layout-settings-section title="Commands">
+				<p class="mb-4 text-sm">On this page you can disable commands on your server</p>
 
-			<div v-for="category in categories" :key="category" class="mb-4">
-				<div class="collapse-arrow bg-base-200 collapse">
-					<input type="checkbox" @change="expandedCategory = expandedCategory === category ? null : category" />
-					<div class="collapse-title text-xl font-medium">
-						{{ category }}
-					</div>
-					<div class="collapse-content">
-						<div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-							<div
-								v-for="command in Object.values(localCommands).filter((cmd) => cmd.category === category)"
-								:key="command.name"
-								class="fieldset"
-							>
-								<label class="label cursor-pointer">
-									{{ command.name }}
-									<input
-										type="checkbox"
-										class="toggle toggle-primary"
-										:checked="command.isEnabled"
-										@change="toggleCommand(command.name)"
-									/>
-								</label>
-								<span class="text-xs">{{ parseCommandDescription(command.description) }}</span>
-							</div>
+				<div v-for="category in categories" :key="category" class="mb-4">
+					<div class="collapse-arrow bg-base-200 collapse">
+						<input type="checkbox" @change="expandedCategory = expandedCategory === category ? null : category" />
+						<div class="collapse-title text-xl font-medium">
+							{{ category }}
 						</div>
-						<div class="mt-4 flex justify-end space-x-2">
-							<button class="btn btn-success btn-sm" @click="toggleCategory(category, true)">Enable all</button>
-							<button class="btn btn-warning btn-sm" @click="toggleCategory(category, false)">Disable all</button>
-							<button class="btn btn-error btn-sm" @click="parseCommandsToLocalCommands">Reset</button>
-							<button class="btn btn-primary btn-sm" @click="saveChanges">Save</button>
+						<div class="collapse-content">
+							<div class="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+								<SelectBoolean
+									v-for="command in getCommandsByCategory(category)"
+									:key="command.name"
+									:title="command.name"
+									:model-value="command.isEnabled"
+									:description="parseCommandDescription(command.description)"
+									@update:model-value="toggleCommand(command.name)"
+								/>
+							</div>
+							<div class="join-item mt-4 flex justify-end space-x-2">
+								<button class="join btn btn-success btn-sm" @click="toggleCategory(category, true)">Enable all</button>
+								<button class="join btn btn-warning btn-sm" @click="toggleCategory(category, false)">Disable all</button>
+								<button class="join btn btn-error btn-sm" @click="parseCommandsToLocalCommands">Reset</button>
+								<button class="join btn btn-primary btn-sm" @click="saveChanges">Save</button>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</PresentationalLayoutsSettingsSection>
+			</layout-settings-section>
+		</form-auto-save>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { useGuildSettings } from '@/composables/settings/useGuildSettings';
-import { useGuildSettingsChanges } from '@/composables/settings/useGuildSettingsChanges';
-import RefreshCommandsButton from '@/components/layouts/refresh-commands.vue';
-
-import type { FlattenedCommand } from '@/lib/types/types/ApiData';
-import type { DisableCommands } from '@/lib/types/types/ConfigurableData';
+import type { FlattenedCommand } from '~~/shared/types';
+import type { DisableCommands } from '~~/shared/types/ConfigurableData';
+import { z } from 'zod';
 
 const props = defineProps<{
 	commands: FlattenedCommand[];
@@ -61,12 +50,16 @@ const emit = defineEmits<{
 	(e: 'update:commands', commands: FlattenedCommand[]): void;
 }>();
 
-const { guildSettings } = useGuildSettings();
-const { setGuildSettingsChanges } = useGuildSettingsChanges();
+const { settings, changes } = useGuildSettings();
 
 const loading = ref(true);
 const localCommands = ref<Record<string, DisableCommands.Command>>({});
 const expandedCategory = ref<string | null>(null);
+
+const guildSettingsSchema = z.object({
+	disabledCommands: z.array(z.custom<FlattenedCommand>())
+});
+type FormData = z.infer<typeof guildSettingsSchema>;
 
 const parseCommandsToLocalCommands = () => {
 	loading.value = true;
@@ -76,7 +69,7 @@ const parseCommandsToLocalCommands = () => {
 		commandsForState[command.name] = {
 			name: command.name,
 			description: command.description,
-			isEnabled: !guildSettings.value.disabledCommands.includes(command.name),
+			isEnabled: !settings.value.disabledCommands?.includes(command.name) || true,
 			category: command.category
 		};
 	}
@@ -88,25 +81,33 @@ onMounted(parseCommandsToLocalCommands);
 
 const categories = computed(() => [...new Set(Object.values(localCommands.value).map((command) => command.category))]);
 
+const getCommandsByCategory = (category: string) => Object.values(localCommands.value).filter((cmd) => cmd.category === category);
+
+const parseCommandDescription = (description: string) => description;
+
 const toggleCommand = (commandName: string) => {
-	localCommands.value[commandName].isEnabled = !localCommands.value[commandName].isEnabled;
+	const command = localCommands.value[commandName];
+	if (command) {
+		command.isEnabled = !command.isEnabled;
+	}
 };
 
-const toggleCategory = (category: string, enable: boolean) => {
-	Object.values(localCommands.value).forEach((command) => {
-		if (command.category === category) {
-			command.isEnabled = enable;
-		}
-	});
-};
+const formData = computed(() => ({
+	disabledCommands: Object.entries(localCommands.value)
+		.filter(([_, command]) => !command.isEnabled)
+		.map(([name]) => name)
+}));
 
-const saveChanges = () => {
-	setGuildSettingsChanges({
-		disabledCommands: Object.values(localCommands.value)
-			.filter((cmd) => !cmd.isEnabled)
-			.map((cmd) => cmd.name)
-	});
+const saveChanges = async (event: FormData) => {
+	try {
+		const disabledCommands = event.data.disabledCommands;
+		changes({
+			disabledCommands
+		});
+		toast.success('Commands settings saved successfully');
+	} catch (error) {
+		toast.error('Failed to save commands settings');
+		console.error('Failed to save commands settings:', error);
+	}
 };
-
-const parseCommandDescription = (description: string) => description.replace(/<:(\w{2,32}):[0-9]{18}>/gi, '$1');
 </script>

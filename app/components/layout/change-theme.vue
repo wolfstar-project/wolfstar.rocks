@@ -1,18 +1,24 @@
 <template>
-	<ClientOnly v-if="!colorMode?.forced">
+	<ClientOnly v-if="!colorMode.forced">
 		<template #default>
 			<div class="fixed right-3 bottom-36 z-50 sm:bottom-20">
 				<SpotlightButton
-					class="btn btn-ghost text-base-content flex size-10 items-center justify-center p-1 transition-all duration-200"
+					aria-label="scroll to top button"
+					class="text-muted flex size-10 items-center justify-center p-1 transition-all duration-200"
 					rounded
+					:class="{ 'opacity-100': isDark, 'opacity-0': !isDark }"
+					icon="colorMode.preference === 'dark' || colorMode.preference === 'system' ? 'i-lucide-moon' : 'i-lucide-sun'"
 					@click="() => (isDark = !isDark)"
-				>
-					<nuxt-icon :name="isDark ? 'i-lucide-moon' : 'i-lucide-sun'" class="z-20 size-6" />
-				</SpotlightButton>
+				/>
 			</div>
 		</template>
 		<template #fallback>
-			<div class="size-8 h-8 w-8"></div>
+			<SpotlightButton
+				class="text-muted flex size-10 items-center justify-center p-1 opacity-100 transition-all duration-200"
+				rounded
+				disabled
+				icon="i-lucide-moon"
+			/>
 		</template>
 	</ClientOnly>
 </template>

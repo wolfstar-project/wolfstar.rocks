@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - 'app/**/*'
+      - 'server/**/*'
+      - 'lib/**/*'
       - 'nuxt.config.ts' # File config Nuxt
       - 'Dockerfile'
       - '.github/workflows/continuous-delivery.yml'

@@ -72,6 +72,7 @@ const props = withDefaults(defineProps<Props>(), {
 	value: null,
 	error: false,
 	name: () => `select-${Math.random().toString(36).slice(2)}`,
+	helperText: undefined,
 	tooltipTitle: undefined,
 	required: true,
 	placeholder: undefined

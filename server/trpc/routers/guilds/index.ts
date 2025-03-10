@@ -25,7 +25,7 @@ export const guildsRouter = router({
 		.query(
 			async ({
 				ctx: {
-					session: { data: user },
+					session: { user },
 					api
 				},
 				input: { guildid: guildId }

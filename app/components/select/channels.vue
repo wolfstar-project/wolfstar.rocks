@@ -10,13 +10,13 @@
 		:required="true"
 		:searchable="true"
 		@update:value="handleChange"
-		@change="handleChange"
 	/>
 </template>
 
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
 import { ChannelType } from 'discord-api-types/v10';
+import type { TransformedLoginData } from '~~/shared/types';
 
 interface Props {
 	label: string;
@@ -45,8 +45,7 @@ const channelOptions = computed(() =>
 		.sort((c1, c2) => c1.rawPosition - c2.rawPosition)
 		.map((c) => ({
 			label: c.name,
-			value: c.id,
-			iconUrl: c.type === ChannelType.GuildAnnouncement ? '/images/announcement.png' : '/images/text.png'
+			value: c.id
 		}))
 );
 
@@ -55,7 +54,3 @@ const handleChange = (value: string[]) => {
 	emit('change', value);
 };
 </script>
-
-<style>
-@reference "../../assets/css/main.css";
-</style>

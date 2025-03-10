@@ -9,6 +9,13 @@ import type { NuxtError } from '#app';
 
 const error = useError() as unknown as NuxtError;
 
+defineOgImageComponent('NuxtSeo', {
+	title: error.statusCode.toString(),
+	description: error.statusMessage,
+	theme: '#fcfcfc',
+	colorMode: 'dark'
+});
+
 const router = useRouter();
 const appName = ref<'wolfstar' | 'staryl'>('wolfstar');
 watch(

@@ -9,7 +9,6 @@
 		:tooltip-title="tooltipTitle"
 		:required="true"
 		:searchable="true"
-		@update:value="handleChange"
 		@change="handleChange"
 	/>
 </template>
@@ -17,6 +16,7 @@
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
 import { CDN } from '@discordjs/rest';
+import type { TransformedLoginData } from '~~/shared/types';
 
 interface Props {
 	label: string;
@@ -57,8 +57,7 @@ const handleChange = (value: string[]) => {
 	emit('change', value);
 };
 </script>
->
 
 <style>
-@reference "../../assets/css/main.css";
+@import '../../assets/css/main.css';
 </style>

@@ -25,8 +25,3 @@ export const guildAddURL = (guildID: string) => {
 	]).toString();
 	return guildAuthURL.toString();
 };
-
-export async function authLogout() {
-	await $fetch('/api/auth/logout', { method: 'POST' });
-	useAuth().session.value = undefined;
-}

@@ -1,14 +1,32 @@
 <template>
 	<layout-settings-section title="General Settings">
-		<UFormAutoSave :model-value="formData" :schema="validationSchema" @submit="onSubmit">
-			<UField label="Prefix" name="prefix" help="This is your server's prefix, use it to trigger WolfStar commands.">
-				<UInput v-model="formData.prefix" />
-			</UField>
+		<form-auto-save :model-value="formData" :schema="validationSchema" @submit="onSubmit">
+			<div class="form-control w-full">
+				<label class="label">
+					<span class="label-text">Prefix</span>
+					<span class="label-text-alt">This is your server's prefix, use it to trigger WolfStar commands.</span>
+				</label>
+				<input v-model="formData.prefix" type="text" class="input input-bordered w-full" :class="{ 'input-error': errors.prefix }" />
+				<label v-if="errors.prefix" class="label">
+					<span class="label-text-alt text-error">{{ errors.prefix }}</span>
+				</label>
+			</div>
 
-			<UField label="Language" name="language" help="Select the language you want for this guild">
-				<USelect v-model="formData.language" :options="languageOptions" option-attribute="label" />
-			</UField>
-		</UFormAutoSave>
+			<div class="form-control w-full">
+				<label class="label">
+					<span class="label-text">Language</span>
+					<span class="label-text-alt">Select the language you want for this guild</span>
+				</label>
+				<select v-model="formData.language" class="select select-bordered w-full" :class="{ 'select-error': errors.language }">
+					<option v-for="option in languageOptions" :key="option.value" :value="option.value">
+						{{ option.label }}
+					</option>
+				</select>
+				<label v-if="errors.language" class="label">
+					<span class="label-text-alt text-error">{{ errors.language }}</span>
+				</label>
+			</div>
+		</form-auto-save>
 	</layout-settings-section>
 </template>
 
@@ -16,8 +34,8 @@
 import { z } from 'zod';
 
 const guildSettingsSchema = z.object({
-	prefix: z.string().min(1, 'Prefix must be at least 1 character').max(11, 'Prefix cannot be longer than 11 characters'),
-	language: z.string()
+	prefix: z.string().min(1, 'Prefix must be at least 1 character').max(11, 'Prefix cannot be longer than 11 characters').optional(),
+	language: z.string().optional()
 });
 
 type FormData = z.infer<typeof guildSettingsSchema>;
@@ -26,15 +44,35 @@ const props = defineProps<{
 	languages: string[];
 }>();
 
-const { guildSettings } = useGuildSettings();
-const { setGuildSettingsChanges } = useGuildSettingsChanges();
+const { settings, changes } = useGuildSettings();
 
 const formData = ref<FormData>({
-	prefix: guildSettings.value.prefix,
-	language: guildSettings.value.language
+	prefix: settings.value.prefix ?? undefined,
+	language: settings.value.language ?? undefined
 });
 
 const validationSchema = guildSettingsSchema;
+
+const errors = ref<{
+	[x: string]: string[] | undefined;
+	[x: number]: string[] | undefined;
+	[x: symbol]: string[] | undefined;
+}>({});
+
+watch(
+	formData,
+	async (newValue) => {
+		try {
+			await validationSchema.parseAsync(newValue);
+			errors.value = {};
+		} catch (err) {
+			if (err instanceof z.ZodError) {
+				errors.value = err.formErrors.fieldErrors;
+			}
+		}
+	},
+	{ deep: true }
+);
 
 const mapLanguageKeysToNames = (langKey: string): [string] | [string, string] => {
 	const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
@@ -68,7 +106,7 @@ const languageOptions = computed(() =>
 );
 
 const onSubmit = (data: FormData) => {
-	setGuildSettingsChanges({
+	changes({
 		prefix: data.prefix,
 		language: data.language
 	});

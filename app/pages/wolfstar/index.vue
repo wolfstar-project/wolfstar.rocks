@@ -1,6 +1,6 @@
 <template>
 	<Head>
-		<Title>WolfStar</Title>
+		<Title>Home</Title>
 		<Meta name="description" content="WolfStar's landing page" />
 	</Head>
 
@@ -13,9 +13,7 @@
 	</section>
 
 	<section class="join mt-16 flex items-center justify-center">
-		<nuxt-link
-class="btn join-item sm:btn-wide"
-:to="Invites.WolfStar"
+		<nuxt-link class="btn join-item sm:btn-wide" :to="Invites.WolfStar"
 			><nuxt-icon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link
 		>
 		<nuxt-link class="btn join-item sm:btn-wide" to="#explore"><nuxt-icon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
@@ -199,7 +197,7 @@ class="btn join-item sm:btn-wide"
 					<discord-message name="wolfstar">
 						<discord-embed
 							:color="moderationActionRender.color"
-							:author="{ icon: '/img/avatars/wolfstar.png', name: 'WolfStar#7023 (266624760782258186)' }"
+							:author="{ icon: '/img/avatars/wolfstar.png', name: 'WolfStar#9286 (854714837388755004)' }"
 							:footer="{ icon: '/img/avatars/wolfstar.png', text: 'Case 3' }"
 							:timestamp="Date.now()"
 						>
@@ -335,7 +333,7 @@ function advanceModerationIndex(value: -1 | 1) {
 @reference "../../assets/css/main.css";
 .title {
 	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem];
-	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(--color-branding-wolfstar) calc(l + 0.1) c h) 100%);
+	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(--branding-wolfstar) calc(l + 0.1) c h) 100%);
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }

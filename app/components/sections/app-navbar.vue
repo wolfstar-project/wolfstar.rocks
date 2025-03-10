@@ -5,7 +5,7 @@
 				<div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
 					<nuxt-icon name="ph:list" class="h-5 w-5" />
 				</div>
-				<ul tabindex="0" class="menu dropdown-content menu-sm rounded-box bg-base-100 z-[1] mt-3 w-full p-2 shadow">
+				<ul tabindex="0" class="menu dropdown-content menu-sm rounded-box bg-base-100 z-[1] mt-3 w-32 p-2 shadow-lg">
 					<li>
 						<a>Features</a>
 						<ul class="p-2">
@@ -79,55 +79,58 @@
 		</div>
 		<div class="navbar-end">
 			<div class="flex gap-2">
-				<template v-if="loggedIn">
-					<div class="dropdown dropdown-end">
-						<div tabindex="0" class="btn btn-ghost btn-circle avatar">
-							<div class="w-10 rounded-full">
-								<img v-if="isDefault" :src="defaultAvatar" alt="Default Avatar" decoding="async" crossorigin="anonymous" />
-								<picture v-else>
-									<source
-										v-if="isAnimated"
-										media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
-										type="image/gif"
-										:srcset="makeSrcset('gif')"
-									/>
-									<source type="image/webp" :srcset="makeSrcset('webp')" />
-									<source type="image/png" :srcset="makeSrcset('png')" />
-									<img :src="createUrl('png', 128)" alt="Avatar" decoding="async" crossorigin="anonymous" />
-								</picture>
+				<layout-change-theme />
+			</div>
+			<div class="flex gap-2">
+				<AuthState>
+					<template #default="{ loggedIn, clear }">
+						<div v-if="loggedIn" class="dropdown dropdown-end">
+							<div tabindex="0" class="btn btn-ghost btn-circle avatar">
+								<div class="w-10 rounded-full">
+									<img v-if="isDefault" :src="defaultAvatar" alt="Default Avatar" decoding="async" crossorigin="anonymous" />
+									<picture v-else>
+										<source
+											v-if="isAnimated"
+											media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
+											type="image/gif"
+											:srcset="makeSrcset('gif')"
+										/>
+										<source type="image/webp" :srcset="makeSrcset('webp')" />
+										<source type="image/png" :srcset="makeSrcset('png')" />
+										<img :src="createUrl('png', 128)" alt="Avatar" decoding="async" crossorigin="anonymous" />
+									</picture>
+								</div>
 							</div>
+							<ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+								<li>
+									<nuxt-link to="/profile" class="justify-between">
+										Profile
+										<span class="badge badge-sm">New</span>
+									</nuxt-link>
+								</li>
+								<li><a @click="clear">Logout</a></li>
+							</ul>
 						</div>
-						<ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-							<li>
-								<nuxt-link to="/profile" class="justify-between">
-									Profile
-									<span class="badge badge-sm">New</span>
-								</nuxt-link>
-							</li>
-							<li><a @click="authLogout()">Logout</a></li>
-						</ul>
-					</div>
-				</template>
-
-				<button
-					v-else
-					class="btn bg-[#5865F2] text-white"
-					@click="
-						async () => {
-							await navigateTo(getLoginURL(), { external: true });
-						}
-					"
-				>
-					<nuxt-icon name="ic:baseline-discord" class="h-[32px] w-[32px]" />
-
-					Login
-				</button>
+						<NuxtLink v-else class="btn bg-[#5865F2] text-white" to="/login">
+							<nuxt-icon name="ic:baseline-discord" class="h-[32px] w-[32px]" />
+							Login
+						</NuxtLink>
+					</template>
+					<template #placeholder>
+						<button disabled class="btn bg-[#5865F2] text-white disabled:opacity-65">
+							<nuxt-icon name="ic:baseline-discord" class="h-[32px] w-[32px]" />
+							Login
+						</button>
+					</template>
+				</AuthState>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { useAuth } from '~/composables/auth';
+
 const { y } = useScroll(document);
 
 const appName = inject(ProviderAppNameKey)!;
@@ -137,12 +140,9 @@ const Apps = {
 	staryl: { name: 'Staryl', invite: Invites.Staryl, landing: '/staryl' }
 };
 
-const { session, loggedIn } = useAuth();
-
-const router = useRouter();
+const { session } = useAuth();
 
 const isLoadingPack = ref(false);
-const packError = ref<string | null>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
@@ -151,24 +151,20 @@ onMounted(async () => {
 	try {
 		// Fetch pack data after successful session
 		isLoadingPack.value = true;
-	} catch (error) {
-		consola.error('Failed to fetch session:', error);
-		packError.value = error instanceof Error ? error.message : 'Unknown error';
-		router.push('/');
 	} finally {
 		isLoadingPack.value = false;
 	}
 });
 
 const defaultAvatar = computed(() =>
-	session.value?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(session.value.id) % BigInt(5)}.png`
+	session.value.user?.id
+		? `https://cdn.discordapp.com/embed/avatars/${BigInt(session.value.user.id) % BigInt(5)}.png`
 		: 'https://cdn.discordapp.com/embed/avatars/0.png'
 );
 
 watch(
 	session,
-	(user) => {
+	({ user }) => {
 		if (user?.avatar) {
 			isDefault.value = false;
 			isAnimated.value = user.avatar.startsWith('a_');
@@ -181,7 +177,7 @@ watch(
 );
 
 function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-	return `https://cdn.discordapp.com/avatars/${session.value!.id}/${session.value!.avatar}.${format}?size=${size}`;
+	return `https://cdn.discordapp.com/avatars/${session.value.user!.id}/${session.value.user!.avatar}.${format}?size=${size}`;
 }
 
 function makeSrcset(format: 'webp' | 'png' | 'gif') {

@@ -14,6 +14,7 @@ import { z } from 'zod';
 import { createTRPCStoreLimiter, defaultFingerPrint } from '@trpc-limiter/memory';
 import type { Context } from '~~/server/trpc/context';
 import type { Meta } from '~~/server/trpc/meta';
+import { isNullOrUndefined } from '@sapphire/utilities';
 
 const t = initTRPC
 	.context<Context>()
@@ -38,13 +39,20 @@ const t = initTRPC
 export const router = t.router;
 export const middleware = t.middleware;
 
+/**
+ * Rate limiter configuration for tRPC endpoints
+ * - Limits requests to 15 per 20 seconds window per IP
+ * - Uses x-forwarded-for header or falls back to default fingerprint
+ * - Returns custom error message with retry time and client details
+ */
 const limiter = createTRPCStoreLimiter<typeof t>({
 	fingerprint: ({ request }) =>
 		Array.isArray(request.headers['x-forwarded-for'])
 			? request.headers['x-forwarded-for'][0]
 			: request.headers['x-forwarded-for'] || defaultFingerPrint(request),
 	windowMs: 20000,
-	message: (retryAfter, _ctx, fingerprint) => `Too many requests, please try again later. ${retryAfter}, fingerprint: ${fingerprint}`,
+	message: (retryAfter, ctx, fingerprint) =>
+		`Too many requests, please try again later. ${retryAfter}, fingerprint: ${fingerprint}, IP: ${getRequestIP(ctx.event)}`,
 	max: 15
 });
 
@@ -56,8 +64,8 @@ export const procedure = t.procedure
 	)
 	.use(
 		t.middleware(async ({ meta, next, ctx }) => {
-			const { session } = ctx;
-			if (meta?.auth && !session.data.id) {
+			const session = await getUserSession(ctx.event);
+			if (!isNullOrUndefined(meta) && !isNullOrUndefined(meta.auth) && meta.auth !== false && !session.user.id) {
 				throw new TRPCError({ message: 'Not Authorized', code: 'UNAUTHORIZED' });
 			}
 			return next({

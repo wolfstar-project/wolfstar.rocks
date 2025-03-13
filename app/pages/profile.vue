@@ -1,5 +1,9 @@
 <template>
-	<div v-if="session" class="container mx-auto max-w-7xl px-4">
+	<Head>
+		<Title>Profile</Title>
+		<Meta name="description" content="Manage your profile and servers" />
+	</Head>
+	<div v-if="user" class="container mx-auto max-w-7xl px-4">
 		<!-- Profile Header -->
 
 		<div else class="border-base-300 border-b py-8">
@@ -36,7 +40,7 @@
 				</div>
 				<div class="text-center sm:text-left">
 					<h1 class="text-4xl font-bold">
-						{{ session.name }}
+						{{ user.name }}
 					</h1>
 				</div>
 			</div>
@@ -69,9 +73,9 @@
 <script setup lang="ts">
 import type { TransformedLoginData } from '~~/shared/types';
 
-const { session } = useAuth();
+const { user } = useAuth();
 
-definePageMeta({ alias: ['/profile'] });
+definePageMeta({ alias: ['/account'] });
 
 const isLoading = useState(() => false);
 const error = ref<Error | null>(null);
@@ -80,28 +84,33 @@ const isDefault = ref(false);
 
 const guilds = useState<TransformedLoginData['transformedGuilds'] | null>(() => null);
 
-// Fetch session on mount
+// Fetch user on mount
 onMounted(async () => {
 	try {
-		guilds.value = (await useClientTrpc().users.me.query()).transformedGuilds;
+		const { data } = await useClientTrpc().users.me.useQuery();
+		if (data.value === null) throw createError('User not found');
+		guilds.value = data.value.transformedGuilds;
 
+		consola.info(`Data Fetched: ${data.value}`);
 		isLoading.value = true;
 	} catch (err) {
-		console.error('Failed to fetch session:', err);
-		error.value = err instanceof Error ? err : new Error('Unknown error');
+		if (err instanceof Error) {
+			error.value = err;
+			captureException(err);
+		}
 	} finally {
 		isLoading.value = false;
 	}
 });
 
 const defaultAvatar = computed(() =>
-	session.value?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(session.value.id) % BigInt(5)}.png`
+	user.value?.id
+		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
 		: 'https://cdn.discordapp.com/embed/avatars/0.png'
 );
 
 watch(
-	session,
+	user,
 	(user) => {
 		if (user?.avatar) {
 			isDefault.value = false;
@@ -115,7 +124,7 @@ watch(
 );
 
 function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-	return `https://cdn.discordapp.com/avatars/${session.value!.id}/${session.value!.avatar}.${format}?size=${size}`;
+	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
 function makeSrcset(format: 'webp' | 'png' | 'gif') {

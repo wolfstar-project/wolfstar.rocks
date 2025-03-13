@@ -4,10 +4,10 @@ export default defineNuxtPlugin(() => {
 
 		const messageStyles = ['color: white', 'font-size: 16px', 'padding: 5px', 'border: 2px solid black'].join(';');
 
-		consola.log('%c⚠️ WARNING! ⚠️', warningStyles);
+		console.log('%c⚠️ WARNING! ⚠️', warningStyles);
 
-		consola.log('%cIf someone told you to copy/paste something here, it is very likely a scam.', messageStyles);
+		console.log('%cIf someone told you to copy/paste something here, it is very likely a scam.', messageStyles);
 
-		consola.log('%cPasting code here could give attackers access to your account.', messageStyles);
+		console.log('%cPasting code here could give attackers access to your account.', messageStyles);
 	}
 });

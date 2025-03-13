@@ -6,9 +6,6 @@
 					<h1>Missing guild ID</h1>
 					<p>Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="underline">here</NuxtLink>.</p>
 				</template>
-				<div v-else-if="isLoading" class="h-2 w-full rounded-full bg-gray-200">
-					<div class="h-full rounded-full bg-blue-600 transition-all duration-300 ease-out" :style="{ width: `${progress}%` }"></div>
-				</div>
 			</client-only>
 		</section>
 	</div>
@@ -20,7 +17,7 @@ import { promiseTimeout } from '@vueuse/core';
 const router = useRouter();
 const guildId = ref<string | null>(null);
 
-const { progress, isLoading, start, finish } = useLoadingIndicator();
+const { start, finish } = useLoadingIndicator();
 
 onMounted(async () => {
 	const queryGuildId = useRouteParams('guildid');
@@ -46,18 +43,3 @@ useSeoMeta({
 	ogDescription: '"A landing page for the OAuth2.0 guild callback flow.'
 });
 </script>
-
-<style scoped>
-.progress {
-	animation: progressAnimation 1.5s;
-}
-
-@keyframes progressAnimation {
-	from {
-		width: 0;
-	}
-	to {
-		width: 100%;
-	}
-}
-</style>

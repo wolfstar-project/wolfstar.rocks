@@ -8,6 +8,10 @@ declare module '#auth-utils' {
 		avatar: string | null;
 	}
 
+	interface UserSession {
+		loggedAt: number;
+	}
+
 	interface SecureSessionData {
 		tokens: RESTPostOAuth2AccessTokenResult;
 	}

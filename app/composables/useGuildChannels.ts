@@ -1,7 +1,7 @@
 import useGuildData from './useGuildData';
 import useGuildSettings from './useGuildSettings';
 import type { GuildDataKey, GuildDataValue, GuildData } from '~~/lib/database';
-import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from '~~/shared/SettingsDataEntries';
+import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from '~~/shared/types/SettingsDataEntries';
 
 const useGuildChannels = () => {
 	const guildData = useGuildData();

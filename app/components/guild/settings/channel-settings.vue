@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Channels } from '~~/shared/types/ConfigurableData';
+import type { Channels } from '~~/lib/types/types/ConfigurableData';
 
 interface Channel {
 	key: keyof ChannelSettings;

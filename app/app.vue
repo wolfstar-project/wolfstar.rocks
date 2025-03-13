@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 const router = useRouter();
+const route = useRoute();
 const appName = ref<'wolfstar' | 'staryl'>('wolfstar');
 watch(
 	router.currentRoute,
@@ -17,6 +18,10 @@ watch(
 	},
 	{ immediate: true }
 );
+
+useHead({
+	meta: [{ property: 'og:title', content: `${appName.value} - ${route.meta.title}` }]
+});
 
 provide(ProviderAppNameKey, appName);
 </script>

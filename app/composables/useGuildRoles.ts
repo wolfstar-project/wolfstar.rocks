@@ -1,7 +1,7 @@
 import useGuildData from './useGuildData';
 import useGuildSettings from './useGuildSettings';
 import type { GuildDataKey, GuildDataValue, GuildData } from '~~/lib/database';
-import { ConfigurableRemoveInitialRole, ConfigurableRoles } from '~~/shared/SettingsDataEntries';
+import { ConfigurableRemoveInitialRole, ConfigurableRoles } from '~~/shared/types/SettingsDataEntries';
 
 const useGuildRoles = () => {
 	const guildData = useGuildData();

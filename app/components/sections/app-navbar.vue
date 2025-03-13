@@ -33,6 +33,9 @@
 					<li>
 						<nuxt-link :to="App.invite"><nuxt-icon name="ph:plus-circle-duotone" class="text-success" /> Invite App</nuxt-link>
 					</li>
+					<li>
+						<nuxt-link to="/commands" class="btn btn-ghost"> Commmands <nuxt-icon name="ph:list" /></nuxt-link>
+					</li>
 				</ul>
 			</div>
 			<nuxt-link class="flex items-center" :to="App.landing">
@@ -63,12 +66,12 @@
 							WolfStar
 						</nuxt-link>
 					</li>
-					<!-- 		<li>
-						<nuxt-link to="/teryl">
-							<nuxt-icon name="ph:books-duotone" class="text-branding-teryl h-4 w-4" />
+					<li>
+						<nuxt-link to="/staryl">
+							<nuxt-icon name="ph:twitch" class="text-branding-staryl h-4 w-4" />
 							Teryl
 						</nuxt-link>
-					</li> -->
+					</li>
 				</ul>
 			</div>
 
@@ -76,6 +79,7 @@
 				Invite App
 				<nuxt-icon name="ph:plus-circle-duotone" />
 			</nuxt-link>
+			<nuxt-link to="/commands" class="btn btn-ghost">Commmands <nuxt-icon name="ph:list" /> </nuxt-link>
 		</div>
 		<div class="navbar-end">
 			<div class="flex gap-2">

@@ -8,6 +8,7 @@
 			<h1 v-if="status == 'pending'" class="animate-pulse">Loading...</h1>
 			<template v-else-if="error">
 				<h1>Failed to complete authentication flow:</h1>
+				<pre v-if="errorMessage"><code> {{ errorMessage }}</code></pre>
 				<pre><code>{{ error }}</code></pre>
 			</template>
 			<template v-else-if="data">
@@ -24,15 +25,21 @@
 <script setup lang="ts">
 import { promiseTimeout } from '@vueuse/core';
 
-const { code } = useRoute().query;
+const { code, error: errorMessage } = useRoute().query;
 
-const { error, status, execute } = useFetch('/api/auth/discord', {
+const {
+	data: test,
+	error,
+	status,
+	execute
+} = useFetch('/api/auth/discord', {
 	query: { code },
 	method: 'GET',
 	key: 'callback',
 	server: false,
 	immediate: false
 });
+console.log(test);
 
 const data = useAuth().session.value.user;
 

@@ -11,20 +11,8 @@
 		/>
 		<div v-if="isLoading">
 			<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
-				<div v-for="i in 3" :key="i">
-					<div class="skeleton mb-4 h-8 w-48"></div>
-					<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-						<div v-for="j in 3" :key="j" class="card bg-base-200">
-							<div class="card-body">
-								<div class="skeleton h-6 w-32"></div>
-								<div class="skeleton h-4 w-full"></div>
-								<div class="mt-4 flex gap-2">
-									<div class="skeleton h-8 w-24"></div>
-									<div class="skeleton h-8 w-24"></div>
-								</div>
-							</div>
-						</div>
-					</div>
+				<div ref="commandsBoxRef" class="flex flex-col">
+					<commands-category :loading="isLoading" />
 				</div>
 			</div>
 		</div>
@@ -34,21 +22,27 @@
 				<div class="max-w-md">
 					<h2 class="text-lg font-bold">No commands found.</h2>
 					<p class="py-2 text-sm opacity-75">Please try again later.</p>
-					<LayoutsRefreshCommands :commands="commands" :is-loading="isLoading" :on-refresh="refresh" />
+					<layout-refresh-commands :commands="commands" :is-loading="isLoading" :on-refresh="refresh" />
+				</div>
+				<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
+					<div ref="commandsBoxRef" class="flex flex-col">
+						<commands-category :loading="true" />
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<div v-else>
-			<LayoutsRefreshCommands :commands="commands" :is-loading="isLoading" :on-refresh="refresh" />
-			<div class="container mx-auto">
+			<layout-refresh-commands :commands="commands" :is-loading="isLoading" :on-refresh="refresh" />
+			<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
 				<div ref="commandsBoxRef" class="flex flex-col">
-					<CommandsCategory
-						v-for="(categoryName, index) in categories"
-						:key="index"
-						:category-name="categoryName"
+					<commands-category
+						v-for="category in categories"
+						:key="category"
+						:category-name="category"
 						:commands="filteredCommandsBySearch"
 						:search-value="searchValue"
+						:loading="isLoading"
 					/>
 				</div>
 			</div>
@@ -61,7 +55,6 @@ import { onKeyStroke } from '@vueuse/core';
 import type { FlattenedCommand } from '~~/shared/types';
 
 const { commands, isLoading, fetchCommands } = useCommands();
-
 const searchValue = ref('');
 const selectedCommand = ref<FlattenedCommand | null>(null);
 const selectedIndex = ref(-1);
@@ -84,6 +77,7 @@ const filteredCommandsBySearch = computed(() => {
 });
 
 const refresh = async () => await fetchCommands();
+
 // Command palette methods
 const openModal = () => {
 	paletteRef.value?.modal?.showModal();
@@ -130,6 +124,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
+@reference "../../assets/css/main.css";
 .modal {
 	@apply backdrop-blur-xs;
 }

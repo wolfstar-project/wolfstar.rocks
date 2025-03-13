@@ -1,4 +1,8 @@
 <template>
+	<Head>
+		<Title>{{ guildData?.name ?? 'Guild' }} Settings</Title>
+		<Meta name="description" content="Manage your guild settings" />
+	</Head>
 	<div>
 		<div class="flex h-screen">
 			<main class="bg-base-300 text-base-content mt-16 flex flex-grow flex-col overflow-y-scroll p-4 sm:mt-0">
@@ -98,7 +102,7 @@ const submitChanges = async () => {
 		if (typeof guildId.value === 'string') {
 			const response = await useClientTrpc().guilds.settings.update.mutate({
 				guildId: guildId.value,
-				data: Object.entries(changes.value ?? {})
+				data: Object.entries(settings.value ?? {})
 			});
 
 			if (!response) {
@@ -108,7 +112,7 @@ const submitChanges = async () => {
 				});
 			}
 
-			setBaseSettings(response);
+			changes(response)
 			resetChanges();
 		}
 	} catch (error) {

@@ -1,6 +1,5 @@
 import type { H3Error } from 'h3';
 import * as Sentry from '@sentry/nuxt';
-import { defineNuxtPlugin, showError } from '#app';
 
 export default defineNuxtPlugin((nuxtApp) => {
 	// Gestione degli errori lato client
@@ -8,7 +7,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 		const error = err as Error & { statusCode?: number; response?: { status: number } };
 		const statusCode = error?.statusCode ?? error?.response?.status ?? 500;
 
-		// Send error to Sentry
 		Sentry.captureException(error, {
 			extra: {
 				componentName: instance?.$.type?.name,
@@ -17,11 +15,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 			}
 		});
 
-		showError({
-			statusCode,
-			statusMessage: error.message || 'An error occurred',
-			data: { originalError: error }
-		});
+		consola.info(`Error: ${error.message}`);
 	};
 
 	// Hook per errori Vue (opzionale)
@@ -45,12 +39,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 				extra: {
 					statusCode
 				}
-			});
-
-			showError({
-				statusCode,
-				statusMessage: error.message,
-				data: { originalError: error }
 			});
 		});
 	}

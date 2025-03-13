@@ -1,6 +1,6 @@
 import useGuildSettings from './useGuildSettings';
 import type { GuildData } from '~~/lib/database';
-import { ConfigurableModerationKeys } from '~~/shared/SettingsDataEntries';
+import { ConfigurableModerationKeys } from '~~/shared/types/SettingsDataEntries';
 
 const useGuildModeration = () => {
 	const { changes, settings } = useGuildSettings();

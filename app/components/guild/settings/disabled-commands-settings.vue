@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import type { FlattenedCommand } from '~~/shared/types';
-import type { DisableCommands } from '~~/shared/types/ConfigurableData';
+import type { DisableCommands } from '~~/lib/types/types/ConfigurableData';
 import { z } from 'zod';
 
 const props = defineProps<{

@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
-import type { TransformedLoginData } from '@/server/utils/types';
+import type { TransformedLoginData } from '~~/shared/types';
 
 interface GuildIconProps {
 	guild?: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>;
@@ -50,7 +50,7 @@ const acronym = computed(() => {
 });
 
 function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-	return `https://cdn.discordapp.com/avatars/${session.value!.id}/${session.value!.avatar}.${format}?size=${size}`;
+	return `https://cdn.discordapp.com/icons/${props.guild!.id}/${props.guild!.icon}.${format}?size=${size}`;
 }
 
 function makeSrcset(format: 'webp' | 'png' | 'gif') {

@@ -16,6 +16,11 @@
 		"source.organizeImports": "never"
 	},
 	"terminal.explorerKind": "external",
+	"github.copilot.chat.codeGeneration.instructions": [
+		{
+			"file": "./.vscode/daisyui.md"
+		}
+	],
 	"terminal.integrated.accessibleViewFocusOnCommandExecution": true,
 	"editor.defaultFormatter": "exceptionptr.vscode-prettier-eslint",
 	"editor.formatOnType": true, // required

@@ -13,11 +13,11 @@
 </template>
 
 <script setup lang="ts">
-import type { FlattenedCommand } from '~~/shared/types';
+import type { FlattenedCommand } from '~~/shared/types/discord';
 
 const props = defineProps<{
 	commands: FlattenedCommand[];
-	isLoading?: boolean;
+	loading?: boolean;
 	onRefresh: () => Promise<void>;
 }>();
 
@@ -26,7 +26,7 @@ const emit = defineEmits<{
 }>();
 
 // State
-const disabled = ref(props.isLoading || false);
+const disabled = ref(props.loading || false);
 const { y } = useScroll(window);
 const trigger = computed(() => y.value > 100);
 

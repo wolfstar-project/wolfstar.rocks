@@ -2,12 +2,16 @@
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
-	"css.lint.unknownAtRules": "ignore",
 	"editor.quickSuggestions": {
-		"strings": true
+		"strings": "on"
 	},
-	"tailwindCSS.experimental.classRegex": ["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"],
-	"tailwindCSS.experimental.configFile": "app/assets/css/main.css",
+	"tailwindCSS.experimental.classRegex": [
+		[
+			"tw`(.*?)`",
+			"tw\\('(.*?)'\\)",
+			"tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"
+		]
+	],
 	"eslint.useFlatConfig": true,
 	// Disable the default formatter, use eslint instead
 	// Auto fix
@@ -22,13 +26,15 @@
 		}
 	],
 	"terminal.integrated.accessibleViewFocusOnCommandExecution": true,
-	"editor.defaultFormatter": "exceptionptr.vscode-prettier-eslint",
 	"editor.formatOnType": true, // required
 	"editor.formatOnPaste": true, // optional
 	"editor.formatOnSave": true, // optional
 	"editor.formatOnSaveMode": "file", // required to format on save
-	"files.autoSave": "onFocusChange", // optional but recommended
-	"[javascript]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
-	} // set as "true" to run 'prettier' last not first
+	"files.autoSave": "onFocusChange", // optional but recommended,
+	// for Github Copilot
+	"github.copilot.chat.codeGeneration.instructions": [
+		{
+			"file": "./.vscode/daisyui.md"
+		}
+	]
 }

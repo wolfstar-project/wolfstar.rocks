@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { settingsRouter } from '~~/server/trpc/routers/guilds/settings';
 import { procedure, router } from '~~/server/trpc/trpc';
-import type { FlattenedGuild } from '~~/shared/types';
+import type { FlattenedGuild } from '~~/shared/types/discord';
 
 export const guildsRouter = router({
 	settings: settingsRouter,

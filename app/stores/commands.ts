@@ -1,8 +1,8 @@
 import { Time } from '@sapphire/time-utilities';
 import { defineStore } from 'pinia';
-import type { FlattenedCommand } from '~/shared/types';
 import { StorageKeys, type ExpirableLocalStorageStructure } from '@/utils/constants';
 import { useAPI } from '@/composables/externalApi';
+import type { FlattenedCommand } from '~~/shared/types/discord';
 
 export const useCommandsStore = defineStore(StorageKeys.Language, {
 	state: () => ({
@@ -37,7 +37,5 @@ export const useCommandsStore = defineStore(StorageKeys.Language, {
 				/* empty */
 			}
 		}
-	},
-
-	persist: true
+	}
 });

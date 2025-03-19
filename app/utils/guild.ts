@@ -1,4 +1,4 @@
-import type { Selfmod } from '~~/lib/types/types/ConfigurableData';
+import type { Selfmod } from '~~/shared/types/ConfigurableData';
 
 export const updateSliderValueObj = (prop: Selfmod.Union, value: number | number[], multiplier = 1) => ({
 	[prop]: Array.isArray(value) && typeof value[0] === 'number' ? value[0] * multiplier : typeof value === 'number' ? value * multiplier : 0

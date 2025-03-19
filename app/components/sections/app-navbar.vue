@@ -146,7 +146,7 @@ const Apps = {
 
 const { session } = useAuth();
 
-const isLoadingPack = ref(false);
+const loadingPack = ref(false);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
@@ -154,9 +154,9 @@ const isDefault = ref(false);
 onMounted(async () => {
 	try {
 		// Fetch pack data after successful session
-		isLoadingPack.value = true;
+		loadingPack.value = true;
 	} finally {
-		isLoadingPack.value = false;
+		loadingPack.value = false;
 	}
 });
 

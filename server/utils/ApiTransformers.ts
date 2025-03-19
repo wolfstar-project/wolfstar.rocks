@@ -38,7 +38,7 @@ import type {
 	FlattenedForumChannel,
 	FlattenedMediaChannel,
 	FlattenedStageVoiceChannel
-} from '~~/shared/types';
+} from '~~/shared/types/discord';
 import { lazy } from '@sapphire/utilities';
 
 // #region Guild

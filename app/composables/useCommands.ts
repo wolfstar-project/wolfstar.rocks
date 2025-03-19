@@ -1,9 +1,9 @@
-import type { FlattenedCommand } from '~~/shared/types';
+import type { FlattenedCommand } from '~~/shared/types/discord';
 
 export const useCommands = () => {
 	const client = useClientTrpc();
 	const commands = useState<FlattenedCommand[]>('commands', () => []);
-	const isLoading = useState<boolean>('isLoading', () => false);
+	const loading = useState<boolean>('loading', () => false);
 	const selectedCommand = shallowRef<FlattenedCommand | null>(null);
 
 	const handleError = (error: Error, context: string) => {
@@ -14,7 +14,7 @@ export const useCommands = () => {
 	};
 
 	const fetchCommands = async () => {
-		isLoading.value = true;
+		loading.value = true;
 		try {
 			await client.commands.refresh.mutate();
 			commands.value = await client.commands.getAll.query();
@@ -22,13 +22,13 @@ export const useCommands = () => {
 			handleError(error as Error, 'Fetch Commands');
 			commands.value = [];
 		} finally {
-			isLoading.value = false;
+			loading.value = false;
 		}
 	};
 
 	return {
 		commands,
-		isLoading,
+		loading,
 		selectedCommand,
 		fetchCommands
 	};

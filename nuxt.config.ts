@@ -248,6 +248,7 @@ export default defineNuxtConfig({
 		clientBundle: {
 			scan: true
 		},
+		mode: "svg",
 		componentName: 'NuxtIcon'
 	},
 	image: {

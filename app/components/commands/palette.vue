@@ -1,23 +1,23 @@
 <template>
 	<dialog ref="modal" class="modal">
-		<div class="modal-box w-11/12 max-w-2xl">
+		<div class="modal-box max-w-2xl">
 			<VeeForm :validation-schema="validationSchema" @submit="handleSearch">
-				<div class="fieldset">
+				<div class="form-control">
 					<VeeField v-slot="{ field, errorMessage }" name="search">
 						<input
 							v-bind="field"
 							ref="searchInput"
 							type="text"
 							placeholder="Search commands..."
-							class="input w-full"
+							class="input input-bordered w-full"
 							:class="{ 'input-error': errorMessage }"
 							@keydown.down.prevent="$emit('navigate', 'next')"
 							@keydown.up.prevent="$emit('navigate', 'prev')"
 							@keydown.enter.prevent="$emit('execute')"
 						/>
-						<span v-if="errorMessage" class="text-error mt-1 text-xs">
-							{{ errorMessage }}
-						</span>
+						<label v-if="errorMessage" class="label">
+							<span class="label-text text-error">{{ errorMessage }}</span>
+						</label>
 					</VeeField>
 				</div>
 
@@ -26,12 +26,12 @@
 						<div class="mb-2 text-sm font-semibold opacity-70">
 							{{ group.name }}
 						</div>
-						<div class="space-y-2">
+						<div class="menu bg-base-100 rounded-box">
 							<button
 								v-for="command in getCommandsByGroup(group.id)"
 								:key="command.name"
-								class="hover:bg-base-200 w-full rounded-lg p-2 text-left"
-								:class="{ 'bg-base-300': selectedCommand?.name === command.name }"
+								class="menu-item"
+								:class="{ 'bg-base-200': selectedCommand?.name === command.name }"
 								type="button"
 								@click="$emit('select', command)"
 							>
@@ -90,13 +90,9 @@ const emit = defineEmits<{
 	(e: 'search', value: string): void;
 }>();
 
-// Setup form with proper types and initial values
-
 const getCommandsByGroup = (groupId: string): FlattenedCommand[] => {
 	return props.commands.filter((cmd) => cmd.category === groupId);
 };
-
-// Wrap form submission with proper typing
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const handleSearch = (values: any) => {

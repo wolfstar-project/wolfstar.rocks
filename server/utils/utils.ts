@@ -10,7 +10,7 @@ import {
 	PermissionFlagsBits
 } from 'discord-api-types/v10';
 import { flattenGuild } from '~~/server/utils/ApiTransformers';
-import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from '~~/shared/types';
+import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from '~~/shared/types/discord';
 import { PermissionsBits } from '~/utils/bits';
 import { readSettings } from '~~/lib/database/settings/functions';
 import useApi from '~~/shared/utils/api';

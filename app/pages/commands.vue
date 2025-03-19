@@ -9,10 +9,10 @@
 			@search="handleSearch"
 			@close="closeModal"
 		/>
-		<div v-if="isLoading">
+		<div v-if="loading">
 			<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
 				<div ref="commandsBoxRef" class="flex flex-col">
-					<commands-category :loading="isLoading" />
+					<commands-category :loading="loading" />
 				</div>
 			</div>
 		</div>
@@ -22,7 +22,7 @@
 				<div class="max-w-md">
 					<h2 class="text-lg font-bold">No commands found.</h2>
 					<p class="py-2 text-sm opacity-75">Please try again later.</p>
-					<layout-refresh-commands :commands="commands" :is-loading="isLoading" :on-refresh="refresh" />
+					<layout-refresh-commands :commands="commands" :is-loading="loading" :on-refresh="refresh" />
 				</div>
 				<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
 					<div ref="commandsBoxRef" class="flex flex-col">
@@ -33,7 +33,7 @@
 		</div>
 
 		<div v-else>
-			<layout-refresh-commands :commands="commands" :is-loading="isLoading" :on-refresh="refresh" />
+			<layout-refresh-commands :commands="commands" :is-loading="loading" :on-refresh="refresh" />
 			<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
 				<div ref="commandsBoxRef" class="flex flex-col">
 					<commands-category
@@ -42,7 +42,7 @@
 						:category-name="category"
 						:commands="filteredCommandsBySearch"
 						:search-value="searchValue"
-						:loading="isLoading"
+						:loading="loading"
 					/>
 				</div>
 			</div>
@@ -54,7 +54,7 @@
 import { onKeyStroke } from '@vueuse/core';
 import type { FlattenedCommand } from '~~/shared/types';
 
-const { commands, isLoading, fetchCommands } = useCommands();
+const { commands, loading, fetchCommands } = useCommands();
 const searchValue = ref('');
 const selectedCommand = ref<FlattenedCommand | null>(null);
 const selectedIndex = ref(-1);

@@ -1,5 +1,5 @@
 <template>
-	<div v-if="!isLoading" class="header-container mb-2 flex items-center">
+	<div v-if="!loading" class="header-container mb-2 flex items-center">
 		<component :is="icon" class="mr-2" />
 		<div class="divider mx-2 h-full border-l border-gray-300"></div>
 		<h3 class="header-text text-lg font-semibold">{{ header }}</h3>
@@ -14,10 +14,10 @@
 interface ExtendedHelpSectionHeaderProps {
 	icon: string;
 	header: string;
-	isLoading?: boolean;
+	loading?: boolean;
 }
 
 withDefaults(defineProps<ExtendedHelpSectionHeaderProps>(), {
-	isLoading: false
+	loading: false
 });
 </script>

@@ -2,12 +2,16 @@
 	"files.associations": {
 		"*.css": "tailwindcss"
 	},
-	"css.lint.unknownAtRules": "ignore",
 	"editor.quickSuggestions": {
-		"strings": true
+		"strings": "on"
 	},
-	"tailwindCSS.experimental.classRegex": ["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"],
-	"tailwindCSS.experimental.configFile": "app/assets/css/main.css",
+	"tailwindCSS.experimental.classRegex": [
+		[
+			"tw`(.*?)`",
+			"tw\\('(.*?)'\\)",
+			"tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"
+		]
+	],
 	"eslint.useFlatConfig": true,
 	// Disable the default formatter, use eslint instead
 	// Auto fix

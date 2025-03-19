@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
 import { ChannelType } from 'discord-api-types/v10';
-import type { TransformedLoginData } from '~~/shared/types';
+import type { TransformedLoginData } from '~~/shared/types/discord';
 
 interface Props {
 	label: string;

@@ -33,7 +33,7 @@
 import { useRouteParams } from '@vueuse/router';
 import type { NuxtError } from '#app';
 import type { GuildData } from '~~/lib/database';
-import type { FlattenedCommand, FlattenedGuild } from '~~/shared/types';
+import type { FlattenedCommand, FlattenedGuild } from '~~/shared/types/discord';
 
 const route = useRoute();
 const router = useRouter();
@@ -112,7 +112,7 @@ const submitChanges = async () => {
 				});
 			}
 
-			changes(response)
+			changes(response);
 			resetChanges();
 		}
 	} catch (error) {

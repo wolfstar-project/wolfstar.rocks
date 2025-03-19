@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TransformedLoginData } from '~~/shared/types';
+import type { TransformedLoginData } from '~~/shared/types/discord';
 
 interface FilteredGuildCardsProps {
 	guilds: TransformedLoginData['transformedGuilds'] | null;

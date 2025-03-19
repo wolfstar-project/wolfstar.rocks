@@ -3,7 +3,7 @@ import { TRPCError } from '@trpc/server';
 import type { RESTPostOAuth2AccessTokenResult } from 'discord-api-types/v10';
 import { z } from 'zod';
 import { router, procedure } from '~~/server/trpc/trpc';
-import type { TransformedLoginData } from '~~/shared/types';
+import type { TransformedLoginData } from '~~/shared/types/discord';
 import useApi from '~~/shared/utils/api';
 
 export const usersRouter = router({

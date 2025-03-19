@@ -3,7 +3,7 @@
 		<div class="card bg-secondary-light">
 			<div class="card-body">
 				<div class="card-title">
-					<div v-if="!isLoading" class="flex flex-row items-center gap-4">
+					<div v-if="!loading" class="flex flex-row items-center gap-4">
 						<div class="w-full md:w-1/3">
 							<span class="text-lg font-bold">s!{{ command.name }}</span>
 						</div>
@@ -17,48 +17,48 @@
 					</div>
 				</div>
 
-				<div class="collapse-content">
+				<div v-if="loading" class="collapse-content">
 					<div class="flex flex-col">
-						<template v-if="!isLoading && command.extendedHelp.usages">
+						<template v-if="command.extendedHelp.usages">
 							<CommandsExtendedHelpSectionHeader icon="mdi-pencil" header="Command Usage" />
 							<div v-for="(usage, index) in command.extendedHelp.usages" :key="index">
 								<CommandsExtendedHelpBody :body="`\`WolfStar, ${command.name} ${usage}\``" />
 							</div>
 						</template>
-						<template v-else-if="isLoading">
+						<template v-else-if="loading">
 							<div class="flex flex-col gap-4 p-4">
 								<div v-for="i in 3" :key="i" class="skeleton h-24 w-full"></div>
 							</div>
 						</template>
 
-						<template v-if="!isLoading && command.extendedHelp.extendedHelp">
+						<template v-if="cextendedHelp">
 							<CommandsExtendedHelpSectionHeader icon="mdi-help-rhombus" header="Extended Help" />
 							<CommandsExtendedHelpBody :body="resolvedExtendedHelp!" />
 						</template>
 
-						<template v-if="!isLoading && command.extendedHelp.explainedUsage">
-							<CommandsExtendedHelSectionHeader icon="mdi-code-tags" header="Explained Usage" />
+						<template v-if="explainedUsage">
+							<CommandsExtendedHelpSectionHeader icon="mdi-code-tags" header="Explained Usage" />
 							<CommandsExtendedHelpBody :body="explainedUsage!" />
 						</template>
 
-						<template v-if="!isLoading && command.extendedHelp.possibleFormats">
+						<template v-if="possibleFormats">
 							<CommandsExtendedHelpSectionHeader icon="mdi-brush" header="Possible Formats" />
 							<CommandsExtendedHelpBody :body="possibleFormats!" />
 						</template>
 
-						<template v-if="!isLoading && command.extendedHelp.examples">
+						<template v-if="examples">
 							<CommandsExtendedHelpSectionHeader icon="mdi-lightbulb-outline" header="Examples" />
-							<CommandsExtendedHelpBody :body="examples!" />
+							<CommandsExtendedHelpBody :body="examples" />
 						</template>
 
-						<template v-if="!isLoading && command.extendedHelp.reminder">
+						<template v-if="creminder">
 							<CommandsExtendedHelpSectionHeader icon="mdi-bell-alert" header="Reminder" />
-							<CommandsExtendedHelpBody :body="command.extendedHelp.reminder" />
+							<CommandsExtendedHelpBody :body="reminder" />
 						</template>
 					</div>
 				</div>
 				<div class="card-actions justify-end border-t border-gray-200 pt-4 dark:border-gray-800">
-					<CommandsChips :command="command" :loading="isLoading" />
+					<CommandsChips :command="command" :loading="loading" />
 				</div>
 			</div>
 		</div>
@@ -68,41 +68,46 @@
 <script setup lang="ts">
 interface CommandProps {
 	command: FlattenedCommand;
-	isLoading?: boolean;
+	loading?: boolean;
 }
 
 const props = withDefaults(defineProps<CommandProps>(), {
-	isLoading: false
+	loading: false
 });
 
-const resolveContent = (content: string | string[], multiline = false): string => {
+const resolveContent = (content: string | string[], multiline = false) => {
+	if (!content) return null;
 	try {
 		return Array.isArray(content) ? content.join(multiline ? '\n\n' : ' ') : content.trim();
-	} catch (error) {
-		captureException(error);
-		return '';
+	} catch {
+		return null;
 	}
 };
 
-const resolvedExtendedHelp = computed(() => {
-	if (!props.command.extendedHelp.extendedHelp) return;
-	return resolveContent(props.command.extendedHelp.extendedHelp, true);
-}).value;
+const resolvedExtendedHelp = computed(() => resolveContent(props.command.extendedHelp.extendedHelp, true));
 
-const explainedUsage = computed(() => {
-	if (!props.command.extendedHelp.explainedUsage) return;
-	return props.command.extendedHelp.explainedUsage.map(([arg, desc]) => `- **${arg}**: ${resolveContent(desc)}`).join('\n');
-}).value;
+const explainedUsage = computed(() =>
+	resolveContent(
+		props.command.extendedHelp.explainedUsage.map(([arg, desc]) => `- **${arg}**: ${resolveContent(desc)}`),
+		true
+	)
+);
 
-const possibleFormats = computed(() => {
-	if (!props.command.extendedHelp.possibleFormats) return;
-	return props.command.extendedHelp.possibleFormats.map(([type, example]) => `- **${type}**: ${example}`).join('\n');
-}).value;
+const possibleFormats = computed(() =>
+	resolveContent(
+		props.command.extendedHelp.possibleFormats.map(([type, example]) => `- **${type}**: ${example}`),
+		true
+	)
+);
 
-const examples = computed(() => {
-	if (!props.command.extendedHelp.examples) return;
-	return props.command.extendedHelp.examples.map((example) => `- WolfStar, ${props.command.name}${example ? ` *${example}*` : ''}`).join('\n');
-}).value;
+const examples = computed(() =>
+	resolveContent(
+		props.command.extendedHelp.examples.filter((example) => example !== null).map((example) => `- WolfStar, ${props.command.name}*${example}*`),
+		true
+	)
+);
+
+const reminder = computed(() => resolveContent(props.command.extendedHelp.reminder, true));
 </script>
 
 <style scoped>

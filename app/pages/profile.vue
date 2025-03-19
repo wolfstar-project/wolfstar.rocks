@@ -57,7 +57,7 @@
 		<div v-if="!error" class="py-8">
 			<h2 class="mb-6 text-2xl font-semibold">Your Servers</h2>
 
-			<div v-if="isLoading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			<div v-if="loading" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 				<div v-for="i in 3" :key="i" class="skeleton bg-base-300 h-48 rounded-lg"></div>
 			</div>
 
@@ -71,13 +71,13 @@
 </template>
 
 <script setup lang="ts">
-import type { TransformedLoginData } from '~~/shared/types';
+import type { TransformedLoginData } from '~~/shared/types/discord';
 
 const { user } = useAuth();
 
 definePageMeta({ alias: ['/account'] });
 
-const isLoading = useState(() => false);
+const loading = useState(() => false);
 const error = ref<Error | null>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
@@ -92,14 +92,14 @@ onMounted(async () => {
 		guilds.value = data.value.transformedGuilds;
 
 		consola.info(`Data Fetched: ${data.value}`);
-		isLoading.value = true;
+		loading.value = true;
 	} catch (err) {
 		if (err instanceof Error) {
 			error.value = err;
 			captureException(err);
 		}
 	} finally {
-		isLoading.value = false;
+		loading.value = false;
 	}
 });
 

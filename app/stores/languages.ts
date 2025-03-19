@@ -35,7 +35,5 @@ export const useLanguagesStore = defineStore(StorageKeys.Language, {
 				/* empty */
 			}
 		}
-	},
-
-	persist: true
+	}
 });

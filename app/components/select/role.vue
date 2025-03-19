@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import type { ValuesType } from 'utility-types';
-import type { TransformedLoginData } from '~~/shared/types';
+import type { TransformedLoginData } from '~~/shared/types/discord';
 
 interface Props {
 	label: string;

@@ -7,7 +7,7 @@
 					:key="channel.key"
 					v-bind="getChannelProps(channel)"
 					:model-value="settings[channel.key]"
-					:disabled="isLoading"
+					:disabled="loading"
 					@update:model-value="(value) => handleChannelUpdate(channel.key, value)"
 					@reset="handleChannelReset(channel.key)"
 				/>
@@ -22,7 +22,7 @@
 					:key="channel.key"
 					v-bind="{ ...getChannelProps(channel), guild: getChannelProps(channel).guild! }"
 					:model-value="settings[channel.key]"
-					:disabled="isLoading"
+					:disabled="loading"
 					@update:model-value="(value) => handleChannelUpdate(channel.key, value)"
 					@reset="handleChannelReset(channel.key)"
 				/>
@@ -41,7 +41,7 @@ interface Channel {
 
 const { channelConfig, settings, updateChannelSetting, resetChannel, getChannelProps } = useGuildChannels();
 
-const { isLoading, start, finish } = useLoadingIndicator({
+const { loading, start, finish } = useLoadingIndicator({
 	duration: 2000,
 	throttle: 200
 });

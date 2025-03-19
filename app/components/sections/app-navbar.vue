@@ -68,7 +68,7 @@
 					</li>
 					<li>
 						<nuxt-link to="/staryl">
-							<nuxt-icon name="ph:twitch" class="text-branding-staryl h-4 w-4" />
+							<nuxt-icon name="i-lucide-twitch" class="text-branding-staryl h-4 w-4" />
 							Teryl
 						</nuxt-link>
 					</li>

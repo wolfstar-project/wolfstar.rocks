@@ -5,7 +5,7 @@
 			class="text-muted flex size-10 items-center justify-center p-1 transition-all duration-200"
 			rounded
 			:class="{ 'opacity-100': isDark, 'opacity-0': !isDark }"
-			icon="colorMode.preference === 'dark' || colorMode.preference === 'system' ? 'i-lucide-moon' : 'i-lucide-sun'"
+			:icon="colorMode.preference === 'dark' || colorMode.preference === 'system' ? 'i-lucide-moon' : 'i-lucide-sun'"
 			@click="() => (isDark = !isDark)"
 		/>
 	</div>

@@ -329,7 +329,7 @@ export interface FlattenedCommand {
 
 	preconditions: Preconditions;
 }
-export interface Command extends FlattenedCommand {
+export interface WolfCommand extends FlattenedCommand {
 	aliases: string[];
 	subCategory: string;
 }

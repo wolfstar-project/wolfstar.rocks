@@ -7,6 +7,8 @@
 			"pnpmVersion": "10"
 		}
 	},
+	"postCreateCommand": ["pnpm", "install --frozen-lockfile"],
+	"remoteUser": "node",
 	"forwardPorts": [3000],
 	"customizations": {
 		"vscode": {
@@ -15,6 +17,8 @@
 				"dbaeumer.vscode-eslint",
 				"antfu.goto-alias",
 				"Nuxtr.nuxtr-vscode",
+				"christian-kohler.npm-intellisense",
+				"christian-kohler.path-intellisense",
 				"Vue.volar",
 				"mikestead.dotenv",
 				"usernamehw.errorlens",

@@ -5,13 +5,7 @@
 	"editor.quickSuggestions": {
 		"strings": "on"
 	},
-	"tailwindCSS.experimental.classRegex": [
-		[
-			"tw`(.*?)`",
-			"tw\\('(.*?)'\\)",
-			"tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"
-		]
-	],
+	"tailwindCSS.experimental.classRegex": [["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]],
 	"eslint.useFlatConfig": true,
 	// Disable the default formatter, use eslint instead
 	// Auto fix
@@ -19,12 +13,6 @@
 		"source.fixAll.eslint": "explicit",
 		"source.organizeImports": "never"
 	},
-	"terminal.explorerKind": "external",
-	"github.copilot.chat.codeGeneration.instructions": [
-		{
-			"file": "./.vscode/daisyui.md"
-		}
-	],
 	"terminal.integrated.accessibleViewFocusOnCommandExecution": true,
 	"editor.formatOnType": true, // required
 	"editor.formatOnPaste": true, // optional

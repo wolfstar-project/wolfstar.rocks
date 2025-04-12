@@ -5,7 +5,13 @@
 	"editor.quickSuggestions": {
 		"strings": "on"
 	},
-	"tailwindCSS.experimental.classRegex": [["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]],
+	"tailwindCSS.experimental.classRegex": [
+		[
+			"tw`(.*?)`",
+			"tw\\('(.*?)'\\)",
+			"tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"
+		]
+	],
 	"eslint.useFlatConfig": true,
 	// Disable the default formatter, use eslint instead
 	// Auto fix

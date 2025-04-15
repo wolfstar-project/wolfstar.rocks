@@ -123,7 +123,7 @@ watch(
 </script>
 
 <style>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .modal-backdrop {
 	@apply bg-black/50;
 }

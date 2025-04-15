@@ -5,7 +5,7 @@
 </template>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .discord-message-button-primary {
 	@apply btn mt-1;
 	background-color: hsl(235 85.6% 64.7% / 1);

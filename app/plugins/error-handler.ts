@@ -15,7 +15,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 			}
 		});
 
-		consola.info(`Error: ${error.message}`);
+		useLogger().info(`Error: ${error.message}`);
 	};
 
 	// Hook per errori Vue (opzionale)

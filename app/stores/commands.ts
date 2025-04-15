@@ -13,11 +13,11 @@ export const useCommandsStore = defineStore(StorageKeys.Language, {
 	}),
 
 	getters: {
-		commands(): FlattenedCommand[] {
-			return this.commandsStorage.data;
+		commands(state): FlattenedCommand[] {
+			return state.commandsStorage.data;
 		},
-		expired(): boolean {
-			return this.commandsStorage.expire < Date.now();
+		expired(state): boolean {
+			return state.commandsStorage.expire < Date.now();
 		}
 	},
 	actions: {

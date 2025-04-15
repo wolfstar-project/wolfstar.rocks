@@ -151,7 +151,7 @@ const handleSubmit = (values: Record<string, number | keyof typeof unitMap>) => 
 </script>
 
 <style>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .input-error {
 	@apply border-error;

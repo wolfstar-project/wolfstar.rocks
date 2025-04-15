@@ -17,10 +17,10 @@
 				<p class="flex-grow">{{ app.description }}</p>
 				<div class="join mt-4 flex justify-end">
 					<nuxt-link class="btn join-item btn-neutral" :to="app.explore">
-						<nuxt-icon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore
+						<ShadIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore
 					</nuxt-link>
 					<nuxt-link class="btn join-item btn-neutral" :to="app.invite">
-						<nuxt-icon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
+						<ShadIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
 					</nuxt-link>
 				</div>
 			</div>

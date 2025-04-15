@@ -26,7 +26,7 @@
 				>
 					<div class="p-8">
 						<div class="relative pl-8 text-left font-mono text-red-600">
-							<nuxt-icon name="mdi:alert-circle" class="absolute top-1 left-0 h-5 w-5 animate-pulse" />
+							<ShadIcon name="mdi:alert-circle" class="absolute top-1 left-0 h-5 w-5 animate-pulse" />
 							<pre class="text-lg leading-relaxed whitespace-pre-line">{{ errorInfo.consoleMessage }}</pre>
 							<pre v-if="message" class="mt-4 rounded-lg bg-red-500/15 p-4 whitespace-pre-line shadow-inner">{{ message }}</pre>
 						</div>
@@ -37,12 +37,12 @@
 
 						<div class="mt-6 flex flex-col justify-center gap-5 border-t border-red-500/20 pt-6 sm:flex-row">
 							<NuxtButton class="group transition-all hover:scale-105" type="primary" @click="() => clearError({ redirect: '/' })">
-								<nuxt-icon name="mdi:home" class="mr-2 transition-transform group-hover:-translate-y-0.5" />
+								<ShadIcon name="mdi:home" class="mr-2 transition-transform group-hover:-translate-y-0.5" />
 								Return Home
 							</NuxtButton>
 							<NuxtLink to="https://join.wolfstar.rocks" target="_blank" class="group transition-all hover:scale-105">
 								<NuxtButton type="outline">
-									<nuxt-icon name="mdi:forum" class="mr-2 transition-transform group-hover:-translate-y-0.5" />
+									<ShadIcon name="mdi:forum" class="mr-2 transition-transform group-hover:-translate-y-0.5" />
 									Server Support
 								</NuxtButton>
 							</NuxtLink>

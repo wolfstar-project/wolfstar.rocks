@@ -39,7 +39,7 @@ const handleClick = async () => {
 		await props.onRefresh();
 		emit('refresh');
 	} catch (err) {
-		consola.error('Errore refresh:', err);
+		useLogger().error('Errore refresh:', err);
 	} finally {
 		disabled.value = false;
 	}
@@ -53,5 +53,5 @@ const tooltipText = `
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 </style>

@@ -3,7 +3,7 @@
 </template>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .discord-message-inline-code {
 	@apply rounded-md border bg-base-200 px-1 font-mono;
 	border-color: var(--colors-base-300);

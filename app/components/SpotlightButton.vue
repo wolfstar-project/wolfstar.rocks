@@ -21,7 +21,7 @@
 			:class="rounded ? 'rounded-full' : 'rounded-md'"
 		></div>
 
-		<nuxt-icon v-if="icon" :name="icon" class="z-20 size-6" />
+		<ShadIcon v-if="icon" :name="icon" class="z-20 size-6" />
 
 		<slot></slot>
 	</component>

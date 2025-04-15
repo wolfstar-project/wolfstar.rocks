@@ -3,7 +3,10 @@ export default defineNuxtPlugin(() => {
 
 	const api = $fetch.create({
 		baseURL: apiOrigin,
-		credentials: 'include'
+		credentials: 'include',
+		headers: {
+			'Content-Type': 'application/json'
+		}
 	});
 
 	return {

@@ -1,5 +1,6 @@
 @import 'tailwindcss';
-
+@import 'tw-animate-css';
+@import './keyframes.css';
 @plugin "@tailwindcss/typography";
 
 @plugin 'daisyui' {
@@ -116,6 +117,8 @@
 
 :root {
 	--branding-wolfstar: oklch(63% 0.2502 28.13);
+	--animate-accordion-down: accordion-down 0.2s ease-out;
+	--animate-accordion-up: accordion-up 0.2s ease-out;
 }
 
 @theme inline {
@@ -123,6 +126,7 @@
 }
 
 @theme {
+	--color-branding-wolfstar: oklch(var(--branding-wolfstar) / <alpha-value>);
 	--color-branding-wolfstar-content: oklch(94% 0.028 342.258);
 	--default-ring-width: 3px;
 	--default-ring-color: var(--color-blue-500);

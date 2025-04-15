@@ -74,33 +74,41 @@ export default defineNuxtConfig({
 		'@nuxt/eslint',
 		'@prisma/nuxt',
 		'@vee-validate/nuxt',
-		'nuxt-security',
 		'nuxt-auth-utils',
 		'@nuxtjs/seo',
 		'@nuxt/icon',
 		'@nuxtjs/color-mode',
 		'nuxt-authorization',
-		'@nuxt/fonts'
+		'@nuxt/fonts',
+		'shadcn-nuxt'
 	],
+
+	shadcn: {
+		componentDir: './app/components/ui',
+		prefix: 'Shad'
+	},
 	imports: {
 		presets: [
 			{
-				from: 'vue-sonner',
-				imports: ['toast']
-			},
-			{
 				from: '@sentry/nuxt',
 				imports: ['captureException']
-			},
-			{
-				from: 'consola/browser',
-				imports: ['consola']
 			}
-		],
-		dirs: ['./database']
+		]
 	},
 	devtools: {
 		enabled: true
+	},
+	$development: {
+		site: {
+			url: 'http://localhost:3000',
+			name: 'WolfStar (Development)'
+		}
+	},
+	$production: {
+		site: {
+			url: 'https://wolfstar.rocks',
+			name: 'WolfStar'
+		}
 	},
 	// App meta configuration
 	app: {
@@ -213,11 +221,13 @@ export default defineNuxtConfig({
 	},
 	// Build configuration
 	build: {
-		transpile: ['trpc-nuxt']
+		transpile: ['trpc-nuxt', 'vue-sonner']
 	},
 
 	routeRules: {
-		'/': { isr: true, prerender: true }
+		'/': { isr: true, prerender: true },
+		'/terms': { isr: true, prerender: true },
+		'/privacy': { isr: true, prerender: true }
 	},
 	sourcemap: {
 		client: 'hidden'
@@ -241,18 +251,21 @@ export default defineNuxtConfig({
 		}
 	},
 	vite: {
-		plugins: [tailwindcss()]
+		plugins: [tailwindcss()],
+		optimizeDeps: { include: ['reka-ui', 'reka-ui/namespaced', 'tailwind-variants', 'ufo', 'zod'] }
 	},
 
 	icon: {
 		clientBundle: {
 			scan: true
 		},
-		mode: "svg",
+		mode: 'svg',
 		componentName: 'NuxtIcon'
 	},
 	image: {
-		screens: {}
+		screens: {},
+		format: ['webp', 'jpeg', 'jpg', 'png', 'svg'],
+		provider: 'ipx'
 	},
 
 	ogImage: {
@@ -264,10 +277,6 @@ export default defineNuxtConfig({
 		devOptions: {
 			enabled: false,
 			type: 'module'
-		},
-		workbox: {
-			navigateFallback: '/',
-			globPatterns: ['**/*.{js,css,html,png,svg,ico,xml}']
 		},
 		manifest: {
 			background_color: '#050505',
@@ -314,66 +323,20 @@ export default defineNuxtConfig({
 			]
 		}
 	},
-	fonts: {
-		families: [
-			// specify specific font data - this will bypass any providers
-			{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Book.woff', weight: 'book' },
-			{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Medium.woff', weight: 'medium' },
-			{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Bold.woff', weight: 'bold' },
-			{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Semibold.woff', weight: 'semibold' }
-		]
-	},
+	/*fonts: {
+								families: [
+												// specify specific font data - this will bypass any providers
+												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Book.woff', weight: 'book' },
+												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Medium.woff', weight: 'medium' },
+												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Bold.woff', weight: 'bold' },
+												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Semibold.woff', weight: 'semibold' }
+								]
+				},*/
 	colorMode: {
 		preference: 'system', // default theme
 		dataValue: 'theme', // activate data-theme in <html> tag
 		classSuffix: '',
 		fallback: 'light'
-	},
-	security: {
-		strict: true,
-		removeLoggers: false,
-		allowedMethodsRestricter: { methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT'] },
-		headers: {
-			contentSecurityPolicy: {
-				'img-src': ["'self'", 'data:', 'cdn.wolfstar.rocks', 'cdn.discordapp.com', 'jsdelivr.com'],
-				'style-src': ["'self'", "'nonce-{{nonce}}'", 'sentry.io'],
-				'script-src': ["'self'", "'strict-dynamic'", "'nonce-{{nonce}}'"]
-			},
-			permissionsPolicy: {
-				accelerometer: ['()'],
-				'ambient-light-sensor': ['()'],
-				autoplay: ['()'],
-				battery: ['()'],
-				camera: ['()'],
-				'display-capture': ['()'],
-				'document-domain': ['()'],
-				'encrypted-media': ['()'],
-				fullscreen: ['()'],
-				gamepad: ['()'],
-				geolocation: ['()'],
-				gyroscope: ['()'],
-				hid: ['()'],
-				'idle-detection': ['()'],
-				'local-fonts': ['()'],
-				magnetometer: ['()'],
-				microphone: ['()'],
-				midi: ['()'],
-				payment: ['()'],
-				'picture-in-picture': ['()'],
-				'publickey-credentials-get': ['()'],
-				'screen-wake-lock': ['()'],
-				serial: ['()'],
-				'speaker-selection': ['()'],
-				usb: ['()'],
-				'web-share': ['()'],
-				'xr-spatial-tracking': ['()']
-			}
-		},
-		corsHandler: {
-			origin: process.env.NITRO_ORIGIN || '*',
-			methods: ['GET', 'POST', 'PATCH', 'DELETE', 'PUT']
-		},
-		rateLimiter: false
 	},
 	sentry: {
 		autoInjectServerSentry: 'experimental_dynamic-import'

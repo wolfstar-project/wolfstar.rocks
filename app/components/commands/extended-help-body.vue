@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import VueMarkdown from 'vue-markdown-render';
 import MarkdownItAnchor from 'markdown-it-anchor';
-import { EmojiRegexExtractName } from '@//utils/constants';
+import { EmojiRegexExtractName } from '@/utils/constants';
 
 interface ExtendedHelpBodyProps {
 	body: string;
@@ -29,7 +29,7 @@ const processedBody = computed(() => {
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 :deep(.markdown-body) {
 	@apply prose prose-stone max-w-none;
 }

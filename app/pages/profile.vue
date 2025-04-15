@@ -91,7 +91,7 @@ onMounted(async () => {
 		if (data.value === null) throw createError('User not found');
 		guilds.value = data.value.transformedGuilds;
 
-		consola.info(`Data Fetched: ${data.value}`);
+		useLogger().info(`Data Fetched: ${data.value}`);
 		loading.value = true;
 	} catch (err) {
 		if (err instanceof Error) {

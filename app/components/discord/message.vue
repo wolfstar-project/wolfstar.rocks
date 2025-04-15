@@ -13,13 +13,13 @@
 			<div class="mb-0.5 flex flex-row items-center">
 				<div class="font-whitney font-bold">{{ profile.name }}</div>
 				<span v-if="profile.app" class="app-badge">
-					<nuxt-icon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" />
+					<ShadIcon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" />
 					<span class="font-whitney">APP</span>
 				</span>
 			</div>
 			<div><slot></slot></div>
 			<div v-if="ephemeral" class="discord-message-ephemeral-footer">
-				<nuxt-icon name="ph:eye-duotone" /> Only you can see this •
+				<ShadIcon name="ph:eye-duotone" /> Only you can see this •
 				<span class="discord-message-link">Dismiss message</span>
 			</div>
 		</div>
@@ -32,7 +32,7 @@ const profile = computed(() => Profiles[props.name]);
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .app-badge {
 	@apply ml-1 flex flex-row items-center rounded-md px-1 py-0.5 font-bold text-white;
 	background-color: #5865f2;

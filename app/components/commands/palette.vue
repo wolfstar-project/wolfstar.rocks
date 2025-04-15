@@ -1,62 +1,66 @@
 <template>
-	<dialog ref="modal" class="modal">
-		<div class="modal-box max-w-2xl">
-			<VeeForm :validation-schema="validationSchema" @submit="handleSearch">
-				<div class="form-control">
-					<VeeField v-slot="{ field, errorMessage }" name="search">
-						<input
-							v-bind="field"
+	<ShadModal v-model:open="open" class="max-w-2xl">
+		<template #content>
+			<ShadForm :validation-schema="validationSchema" @submit="handleSearch">
+				<ShadFormField name="search">
+					<template #default="{ error }">
+						<Input
 							ref="searchInput"
+							v-model="searchText"
 							type="text"
 							placeholder="Search commands..."
-							class="input input-bordered w-full"
-							:class="{ 'input-error': errorMessage }"
+							:class="{ 'input-error': error }"
 							@keydown.down.prevent="$emit('navigate', 'next')"
 							@keydown.up.prevent="$emit('navigate', 'prev')"
 							@keydown.enter.prevent="$emit('execute')"
 						/>
-						<label v-if="errorMessage" class="label">
-							<span class="label-text text-error">{{ errorMessage }}</span>
-						</label>
-					</VeeField>
-				</div>
+					</template>
+				</ShadFormField>
 
-				<div class="mt-4 max-h-[60vh] overflow-y-auto">
-					<div v-for="group in groups" :key="group.id" class="mb-4">
-						<div class="mb-2 text-sm font-semibold opacity-70">
-							{{ group.name }}
+				<div class="divider"></div>
+
+				<div class="max-h-[60vh] overflow-y-auto">
+					<div v-for="group in categories" :key="group" class="collapse-arrow collapse mb-2">
+						<input type="checkbox" checked />
+						<div class="collapse-title font-medium">
+							{{ group }}
 						</div>
-						<div class="menu bg-base-100 rounded-box">
-							<button
-								v-for="command in getCommandsByGroup(group.id)"
-								:key="command.name"
-								class="menu-item"
-								:class="{ 'bg-base-200': selectedCommand?.name === command.name }"
-								type="button"
-								@click="$emit('select', command)"
-							>
-								<div class="font-medium">{{ command.name }}</div>
-								<div class="text-xs opacity-70">{{ command.description }}</div>
-							</button>
+						<div class="collapse-content">
+							<ul class="menu menu-sm bg-base-200 rounded-box w-full">
+								<li v-for="command in getCommandsByCategory(group)" :key="command.name">
+									<button :class="{ active: selectedCommand?.name === command.name }" @click="$emit('select', command)">
+										<div class="flex flex-col items-start gap-1">
+											<span class="font-medium">{{ command.name }}</span>
+											<span class="text-xs opacity-70">{{ command.description }}</span>
+										</div>
+									</button>
+								</li>
+							</ul>
 						</div>
 					</div>
 				</div>
-			</VeeForm>
-
+			</ShadForm>
+		</template>
+		<template #footer>
 			<div class="modal-action">
-				<button class="btn" @click="handleClose">Close</button>
+				<button class="btn btn-ghost" @click="handleClose">Close</button>
 			</div>
-		</div>
-		<form method="dialog" class="modal-backdrop" @submit.prevent="handleClose">
-			<button>close</button>
-		</form>
-	</dialog>
+		</template>
+	</ShadModal>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, nextTick } from 'vue';
 import { toTypedSchema } from '@vee-validate/zod';
 import { z } from 'zod';
+import Fuse from 'fuse.js';
+import type { FormSubmitEvent } from '~/types/form';
 
+defineShortcuts({
+	o: () => (open.value = !open.value)
+});
+
+const open = ref(false);
 // Define search schema with Zod and proper typing
 const searchSchema = z.object({
 	search: z
@@ -65,23 +69,44 @@ const searchSchema = z.object({
 		.transform((val) => val?.trim() || '')
 });
 
-// Convert Zod schema to vee-validate compatible schema with proper typing
 const validationSchema = toTypedSchema(searchSchema);
-
-interface Group {
-	id: string;
-	name: string;
-}
 
 interface Props {
 	commands: FlattenedCommand[];
 	selectedCommand: FlattenedCommand | null;
-	groups: Group[];
 }
 
+const categories = computed(() => {
+	return [...new Set(props.commands.map((cmd) => cmd.category))];
+});
+
 const props = defineProps<Props>();
-const modal = ref<HTMLDialogElement | null>(null);
 const searchInput = ref<HTMLInputElement | null>(null);
+const searchText = ref('');
+
+// Configure Fuse.js options
+const fuseOptions = {
+	keys: ['name', 'description', 'category'],
+	threshold: 0.4, // Adjust this value to control fuzzy matching sensitivity
+	includeScore: true
+};
+
+// Create Fuse instance
+const fuse = new Fuse(props.commands, fuseOptions);
+
+// Filtered commands using Fuse.js
+const filteredCommands = computed(() => {
+	if (!searchText.value) {
+		return props.commands;
+	}
+
+	return fuse.search(searchText.value).map((result) => result.item);
+});
+
+// Modified to use filtered results
+const getCommandsByCategory = (groupId: string): FlattenedCommand[] => {
+	return filteredCommands.value.filter((cmd) => cmd.category === groupId);
+};
 
 const emit = defineEmits<{
 	(e: 'navigate', direction: 'next' | 'prev'): void;
@@ -90,27 +115,19 @@ const emit = defineEmits<{
 	(e: 'search', value: string): void;
 }>();
 
-const getCommandsByGroup = (groupId: string): FlattenedCommand[] => {
-	return props.commands.filter((cmd) => cmd.category === groupId);
-};
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleSearch = (values: any) => {
-	emit('search', values.search);
+const handleSearch = (values: FormSubmitEvent<object>) => {
+	console.log('Search submitted:', values);
+	// searchText.value = values.search;
+	// emit('search', values.search);
 };
 
 const handleClose = () => {
 	emit('close');
-	modal.value?.close();
 };
 
 onMounted(() => {
 	nextTick(() => {
 		searchInput.value?.focus();
 	});
-});
-
-defineExpose({
-	modal
 });
 </script>

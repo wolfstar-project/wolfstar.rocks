@@ -52,7 +52,7 @@ const dtf = new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 's
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .discord-embed {
 	@apply mt-1 max-w-fit border-l-4 p-3;
 	border-radius: 0.25rem;

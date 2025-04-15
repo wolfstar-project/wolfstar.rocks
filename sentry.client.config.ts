@@ -14,9 +14,11 @@ if (useRuntimeConfig().public.sentry.dsn) {
 				tracingOptions: {
 					trackComponents: true
 				}
-			})
+			}),
+			Sentry.piniaIntegration(usePinia())
 		],
 		tracesSampleRate: 1.0,
+		normalizeDepth: 10, // Or however deep you want your state context to be.
 
 		// This sets the sample rate to be 10%. You may want this to be 100% while
 		// in development and sample at a lower rate in production
@@ -25,7 +27,6 @@ if (useRuntimeConfig().public.sentry.dsn) {
 		// If the entire session is not sampled, use the below sample rate to sample
 		// sessions when an error occurs.
 		replaysOnErrorSampleRate: 1.0,
-		debug: true,
 		environment: useRuntimeConfig().public.environment
 	});
 }

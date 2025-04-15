@@ -3,7 +3,7 @@
 		<div class="navbar-start">
 			<div class="dropdown">
 				<div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-					<nuxt-icon name="ph:list" class="h-5 w-5" />
+					<ShadIcon name="ph:list" class="h-5 w-5" />
 				</div>
 				<ul tabindex="0" class="menu dropdown-content menu-sm rounded-box bg-base-100 z-[1] mt-3 w-32 p-2 shadow-lg">
 					<li>
@@ -18,23 +18,23 @@
 						<ul class="p-2">
 							<li>
 								<nuxt-link to="/">
-									<nuxt-icon name="ph:shield-duotone" class="text-branding-wolfstar h-4 w-4" />
+									<ShadIcon name="ph:shield-duotone" class="text-branding-wolfstar h-4 w-4" />
 									WolfStar
 								</nuxt-link>
 							</li>
 							<li>
 								<nuxt-link to="/staryl">
-									<nuxt-icon name="ph:books-duotone" class="text-branding-teryl h-4 w-4" />
+									<ShadIcon name="ph:books-duotone" class="text-branding-teryl h-4 w-4" />
 									Starly
 								</nuxt-link>
 							</li>
 						</ul>
 					</li>
 					<li>
-						<nuxt-link :to="App.invite"><nuxt-icon name="ph:plus-circle-duotone" class="text-success" /> Invite App</nuxt-link>
+						<nuxt-link :to="App.invite"><ShadIcon name="ph:plus-circle-duotone" class="text-success" /> Invite App</nuxt-link>
 					</li>
 					<li>
-						<nuxt-link to="/commands" class="btn btn-ghost"> Commmands <nuxt-icon name="ph:list" /></nuxt-link>
+						<nuxt-link to="/commands" class="btn btn-ghost"><ShadIcon name="ph:list" /> Commmands </nuxt-link>
 					</li>
 				</ul>
 			</div>
@@ -47,7 +47,7 @@
 			<div class="group dropdown dropdown-hover">
 				<div tabindex="0" role="button" class="btn btn-ghost m-1 items-center transition-all group-hover:text-white">
 					Features
-					<nuxt-icon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
+					<ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
 				</div>
 				<ul tabindex="0" class="menu dropdown-content rounded-box bg-base-100 z-[1] w-52 p-2 shadow">
 					<li><a>Item 1</a></li>
@@ -57,18 +57,18 @@
 			<div class="group dropdown dropdown-hover">
 				<div tabindex="0" role="button" class="btn btn-ghost m-1 items-center transition-all group-hover:text-white">
 					Applications
-					<nuxt-icon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
+					<ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
 				</div>
 				<ul tabindex="0" class="menu dropdown-content rounded-box bg-base-100 z-[1] w-52 p-2 shadow">
 					<li>
 						<nuxt-link to="/">
-							<nuxt-icon name="ph:shield-duotone" class="text-branding-wolfstar h-4 w-4" />
+							<ShadIcon name="ph:shield-duotone" class="text-branding-wolfstar h-4 w-4" />
 							WolfStar
 						</nuxt-link>
 					</li>
 					<li>
 						<nuxt-link to="/staryl">
-							<nuxt-icon name="i-lucide-twitch" class="text-branding-staryl h-4 w-4" />
+							<ShadIcon name="i-lucide-twitch" class="text-branding-staryl h-4 w-4" />
 							Teryl
 						</nuxt-link>
 					</li>
@@ -77,9 +77,9 @@
 
 			<nuxt-link :to="App.invite" class="btn btn-ghost hover:text-success transition-colors">
 				Invite App
-				<nuxt-icon name="ph:plus-circle-duotone" />
+				<ShadIcon name="ph:plus-circle-duotone" />
 			</nuxt-link>
-			<nuxt-link to="/commands" class="btn btn-ghost">Commmands <nuxt-icon name="ph:list" /> </nuxt-link>
+			<nuxt-link to="/commands" class="btn btn-ghost">Commmands <ShadIcon name="ph:list" /> </nuxt-link>
 		</div>
 		<div class="navbar-end">
 			<div class="flex gap-2">
@@ -116,13 +116,13 @@
 							</ul>
 						</div>
 						<NuxtLink v-else class="btn bg-[#5865F2] text-white" to="/login">
-							<nuxt-icon name="ic:baseline-discord" class="h-[32px] w-[32px]" />
+							<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
 							Login
 						</NuxtLink>
 					</template>
 					<template #placeholder>
 						<button disabled class="btn bg-[#5865F2] text-white disabled:opacity-65">
-							<nuxt-icon name="ic:baseline-discord" class="h-[32px] w-[32px]" />
+							<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
 							Login
 						</button>
 					</template>
@@ -192,7 +192,7 @@ const App = computed(() => Apps[appName.value] ?? Apps.wolfstar);
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .app-navbar {
 	@apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
 	align-self: center;

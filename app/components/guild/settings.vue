@@ -72,7 +72,7 @@ const fetchData = async () => {
 			}
 		}
 	} catch (error) {
-		consola.error('Error fetching data:', error);
+		useLogger().error('Error fetching data:', error);
 		handleError(error as NuxtError<unknown>);
 	} finally {
 		loading.value = false;

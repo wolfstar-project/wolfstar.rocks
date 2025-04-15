@@ -9,8 +9,6 @@
 </template>
 
 <script setup lang="ts">
-import type { FlattenedCommand } from '@/server/utils/types';
-
 interface Props {
 	command: FlattenedCommand;
 	loading?: boolean;
@@ -42,7 +40,7 @@ const isGuildOnly = computed(() =>
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .chip {
 	@apply flex items-center justify-between rounded-lg bg-primary p-2 px-4 text-white;
 }

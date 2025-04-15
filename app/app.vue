@@ -3,6 +3,9 @@
 	<nuxt-loading-indicator />
 	<nuxt-layout name="main">
 		<nuxt-page />
+		<ClientOnly>
+			<ShadToaster />
+		</ClientOnly>
 	</nuxt-layout>
 </template>
 

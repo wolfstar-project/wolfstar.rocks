@@ -11,7 +11,7 @@ defineProps<{ kind: 'mention' | 'app' }>();
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .tag {
 	@apply gap-1 rounded-md px-0.5 font-normal;
 	cursor: pointer;

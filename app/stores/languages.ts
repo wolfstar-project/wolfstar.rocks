@@ -12,11 +12,11 @@ export const useLanguagesStore = defineStore(StorageKeys.Language, {
 	}),
 
 	getters: {
-		languages(): string[] {
-			return this.languagesStorage.data;
+		languages(state): string[] {
+			return state.languagesStorage.data;
 		},
-		expired(): boolean {
-			return this.languagesStorage.expire < Date.now();
+		expired(state): boolean {
+			return state.languagesStorage.expire < Date.now();
 		}
 	},
 	actions: {

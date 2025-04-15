@@ -12,7 +12,7 @@ const TimeFormatters = {
 </script>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .discord-message-time {
 	@apply rounded-md bg-base-content/10 px-0.5;
 }

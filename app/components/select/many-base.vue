@@ -1,72 +1,61 @@
 <template>
-	<div class="join">
-		<button :class="['btn', { 'btn-error': error }]" :title="tooltipTitle" type="button" @click="openDialog">
+	<div>
+		<Button :variant="error ? 'error' : 'default'" :title="tooltipTitle" @click="openDialog">
 			{{ label }}: {{ displayValue }}
-			<nuxt-icon v-if="icon" :name="icon" alt="nuxt-icon" class="ml-2 inline-flex h-6 w-6" />
-		</button>
+			<Icon v-if="icon" :name="icon" class="ml-2 size-6" />
+		</Button>
 
-		<div v-if="isOpen" class="modal modal-open">
-			<div class="modal-box">
+		<Modal :open="isOpen" @close="closeDialog">
+			<template #header>
 				<div class="flex items-center justify-between">
 					<h3 class="text-lg font-bold">{{ label }}</h3>
-					<button class="btn btn-sm btn-circle btn-ghost" type="button" @click="closeDialog">✕</button>
+				</div>
+			</template>
+
+			<VeeForm v-slot="{ errors }" :validation-schema="validationSchema" @submit="handleSubmit">
+				<div class="w-full">
+					<Input v-if="searchable && options.length > 10" v-model="search" name="search" type="text" class="mb-4" placeholder="Search..." />
+
+					<div class="max-h-64 overflow-y-auto">
+						<div v-for="option in filteredOptions" :key="option.value">
+							<label class="label cursor-pointer">
+								<span class="flex items-center">
+									{{ option.label }}
+									<img v-if="option.iconUrl" :src="option.iconUrl" :alt="option.label" class="ml-2 size-6" />
+								</span>
+								<ShadCheckbox
+									:name="props.name"
+									:value="option.value"
+									:checked="selectedValues.includes(option.value)"
+									@change="toggleSelection(option.value)"
+								/>
+							</label>
+						</div>
+					</div>
+
+					<ErrorMessage v-slot="{ message }" :name="props.name">
+						<Alert variant="error" class="mt-2">{{ message }}</Alert>
+					</ErrorMessage>
+
+					<Text v-if="helperText && !errors[props.name]" variant="muted" class="mt-2">
+						{{ helperText }}
+					</Text>
 				</div>
 
-				<VeeForm v-slot="{ errors }" :validation-schema="validationSchema" @submit="handleSubmit">
-					<div class="fieldset w-full">
-						<Field
-							v-if="searchable && options.length > 10"
-							v-model="search"
-							name="search"
-							type="text"
-							class="input mb-4 w-full"
-							placeholder="Search..."
-						/>
-
-						<div class="max-h-64 overflow-y-auto">
-							<div v-for="option in filteredOptions" :key="option.value" class="fieldset">
-								<label class="label cursor-pointer">
-									<span class="flex items-center">
-										{{ option.label }}
-									</span>
-									<nuxt-img v-if="option.iconUrl" :src="option.iconUrl" :alt="option.label" class="ml-2 h-6 w-6" />
-									<Field
-										type="checkbox"
-										class="checkbox checkbox-primary"
-										:name="props.name"
-										:value="option.value"
-										:checked="selectedValues.includes(option.value)"
-										@change="toggleSelection(option.value)"
-									/>
-								</label>
-							</div>
-						</div>
-
-						<ErrorMessage v-slot="{ message }" :name="props.name">
-							<span class="text-error text-sm">{{ message }}</span>
-						</ErrorMessage>
-
-						<label v-if="helperText && !errors[props.name]" class="label">
-							<span class="text-base-content/70">
-								{{ helperText }}
-							</span>
-						</label>
+				<template #footer>
+					<div class="flex justify-end gap-2">
+						<ShadButton variant="ghost" @click="clearSelection">Clear</ShadButton>
+						<ShadButton variant="default" @click="closeDialog">Cancel</ShadButton>
+						<ShadButton type="submit" variant="primary">Confirm</ShadButton>
 					</div>
-
-					<div class="modal-action">
-						<button type="button" class="btn btn-ghost" @click="clearSelection">Clear</button>
-						<button type="button" class="btn" @click="closeDialog">Cancel</button>
-						<button type="submit" class="btn btn-primary">Confirm</button>
-					</div>
-				</VeeForm>
-			</div>
-			<div class="modal-backdrop" @click="closeDialog"></div>
-		</div>
+				</template>
+			</VeeForm>
+		</Modal>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { Field, ErrorMessage, useField } from 'vee-validate';
+import { useField } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as z from 'zod';
 
@@ -169,7 +158,7 @@ watch(
 </script>
 
 <style>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .modal-backdrop {
 	@apply bg-black/50;

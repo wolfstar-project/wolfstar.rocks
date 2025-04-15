@@ -13,15 +13,15 @@
 	</section>
 
 	<section class="join mt-16">
-		<nuxt-link class="btn join-item md:btn-wide" :to="Invites.Staryl"><nuxt-icon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link>
-		<nuxt-link class="btn join-item md:btn-wide" to="#explore"><nuxt-icon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
+		<nuxt-link class="btn join-item md:btn-wide" :to="Invites.Staryl"><ShadIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link>
+		<nuxt-link class="btn join-item md:btn-wide" to="#explore"><ShadIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
 	</section>
 
 	<other-apps :apps="[OtherApps.WolfStar]" />
 </template>
 
 <style scoped>
-@reference "../../assets/css/main.css";
+@reference "@/assets/css/main.css";
 .title {
 	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem];
 	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(var(--branding-nekokai)) calc(l + 0.1) c h) 100%);

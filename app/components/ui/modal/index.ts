@@ -3,6 +3,7 @@ import type { DialogRootProps, DialogContentProps, DialogContentEmits, DialogRoo
 import { tv } from 'tailwind-variants';
 import type { EmitsToProps } from 'vue';
 import type { ButtonProps } from '../button';
+export { default as Modal } from './Modal.vue';
 
 export const modal = tv({
 	slots: {

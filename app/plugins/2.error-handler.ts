@@ -15,7 +15,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 			}
 		});
 
-		useLogger().info(`Error: ${error.message}`);
+		useLogger().error('Error:', error);
 	};
 
 	// Hook per errori Vue (opzionale)
@@ -32,14 +32,11 @@ export default defineNuxtPlugin((nuxtApp) => {
 	if (import.meta.server) {
 		nuxtApp.hooks.hook('app:error', (error: H3Error) => {
 			error.unhandled = false;
-			const statusCode = error.statusCode ?? 500;
-
 			// Send server-side error to Sentry
-			Sentry.captureException(error, {
-				extra: {
-					statusCode
-				}
-			});
+			Sentry.captureException(error);
+
+			// Log the error
+			useLogger().error('Server error:', error);
 		});
 	}
 });

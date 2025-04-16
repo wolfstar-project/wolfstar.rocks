@@ -1,10 +1,10 @@
 <template>
 	<vite-pwa-manifest />
-	<nuxt-loading-indicator />
+	<nuxt-loading-indicator color="bg-netrual" />
 	<nuxt-layout name="main">
 		<nuxt-page />
 		<ClientOnly>
-			<ShadToaster />
+			<ShadToaster position="bottom-right" />
 		</ClientOnly>
 	</nuxt-layout>
 </template>

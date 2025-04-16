@@ -65,7 +65,6 @@ export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
 		'@nuxt/image',
-		'vue-sonner/nuxt',
 		'@vueuse/nuxt',
 		'@pinia/nuxt',
 		'pinia-plugin-persistedstate/nuxt',
@@ -252,7 +251,7 @@ export default defineNuxtConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
-		optimizeDeps: { include: ['reka-ui', 'reka-ui/namespaced', 'tailwind-variants', 'ufo', 'zod'] }
+		optimizeDeps: { include: ['reka-ui', 'reka-ui/namespaced', 'tailwind-variants', 'ufo', 'zod', '@sapphire/utilities'] }
 	},
 
 	icon: {
@@ -323,15 +322,6 @@ export default defineNuxtConfig({
 			]
 		}
 	},
-	/*fonts: {
-								families: [
-												// specify specific font data - this will bypass any providers
-												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Book.woff', weight: 'book' },
-												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Medium.woff', weight: 'medium' },
-												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Bold.woff', weight: 'bold' },
-												{ name: 'Whitney', src: 'https://cdn.wolfstar.rocks/whitney-font/v2/Semibold.woff', weight: 'semibold' }
-								]
-				},*/
 	colorMode: {
 		preference: 'system', // default theme
 		dataValue: 'theme', // activate data-theme in <html> tag

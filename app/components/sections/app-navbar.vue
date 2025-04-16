@@ -31,10 +31,10 @@
 						</ul>
 					</li>
 					<li>
-						<nuxt-link :to="App.invite"><ShadIcon name="ph:plus-circle-duotone" class="text-success" /> Invite App</nuxt-link>
+						<nuxt-link to="/commands" class="btn btn-ghost"><ShadIcon name="ph:list" /> Commmands </nuxt-link>
 					</li>
 					<li>
-						<nuxt-link to="/commands" class="btn btn-ghost"><ShadIcon name="ph:list" /> Commmands </nuxt-link>
+						<nuxt-link :to="App.invite"><ShadIcon name="ph:plus-circle-duotone" class="text-success" /> Invite App</nuxt-link>
 					</li>
 				</ul>
 			</div>
@@ -79,7 +79,7 @@
 				Invite App
 				<ShadIcon name="ph:plus-circle-duotone" />
 			</nuxt-link>
-			<nuxt-link to="/commands" class="btn btn-ghost">Commmands <ShadIcon name="ph:list" /> </nuxt-link>
+			<nuxt-link to="/commands" class="btn btn-ghost"><ShadIcon name="ph:list" /> Commmands </nuxt-link>
 		</div>
 		<div class="navbar-end">
 			<div class="flex gap-2">

@@ -12,7 +12,7 @@ export type DeepPartial<T, O = any> = {
 	[key: string]: O | TightMap<O>;
 };
 
-export type DynamicSlots<T extends { slot?: string }, S extends string | undefined = undefined, D extends object = {}> = {
+export type DynamicSlots<T extends { slot?: string }, S extends string | undefined = undefined, D extends object = object> = {
 	[K in T['slot'] as K extends string ? (S extends string ? K | `${K}-${S}` : K) : never]?: (
 		props: { item: Extract<T, { slot: K extends `${infer Base}-${S}` ? Base : K }> } & D
 	) => any;

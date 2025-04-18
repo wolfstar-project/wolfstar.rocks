@@ -29,9 +29,20 @@ export default defineOAuthDiscordEventHandler({
 				maxAge: 60 * 60 * 24 * 7 // 1 week
 			}
 		);
+		// Redirect to the home page
+		sendRedirect(event, '/');
 	},
 
-	async onError(_event: H3Event, error: Error) {
+	async onError(event: H3Event, error: Error) {
 		useLogger().error('Discord OAuth error', error);
+
+		return sendError(
+			event,
+			createError({
+				statusCode: 500,
+				statusMessage: 'Discord OAuth error',
+				data: error
+			})
+		);
 	}
 });

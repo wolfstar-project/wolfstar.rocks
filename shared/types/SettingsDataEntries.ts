@@ -1,5 +1,4 @@
 import type { Channels, Events, Moderation, Roles } from './ConfigurableData';
-
 export const ConfigurableRemoveInitialRole: Roles.Role = {
 	name: 'Remove Initial',
 	tooltip: 'Whether claiming a public role should remove the initial role at the same time.',
@@ -61,16 +60,8 @@ export const ConfigurableRoles: Roles.Role[] = [
 ];
 
 export const ConfigurableModerationKeys: Moderation.Message[] = [
-	{
-		name: 'Hide Message',
-		key: 'messagesModerationAutoDelete',
-		description: 'Will delete your message to hide the mod.'
-	},
-	{
-		name: 'Message User',
-		key: 'messagesModerationDm',
-		description: "DM's the punished person with the reason/duration."
-	},
+	{ name: 'Hide Message', key: 'messagesModerationAutoDelete', description: 'Will delete your message to hide the mod.' },
+	{ name: 'Message User', key: 'messagesModerationDm', description: "DM's the punished person with the reason/duration." },
 	{
 		name: 'Send Punishment Response',
 		key: 'messagesModerationMessageDisplay',
@@ -89,16 +80,8 @@ export const ConfigurableModerationKeys: Moderation.Message[] = [
 ];
 
 export const ConfigurableModerationEvents: Events.Event[] = [
-	{
-		title: 'Ban Added',
-		key: 'eventsBanAdd',
-		description: 'This event posts anonymous moderation logs when a user gets banned.'
-	},
-	{
-		title: 'Ban Revoked',
-		key: 'eventsBanRemove',
-		description: 'This event posts anonymous moderation logs when a user gets unbanned'
-	}
+	{ title: 'Ban Added', key: 'eventsBanAdd', description: 'This event posts anonymous moderation logs when a user gets banned.' },
+	{ title: 'Ban Revoked', key: 'eventsBanRemove', description: 'This event posts anonymous moderation logs when a user gets unbanned' }
 ];
 
 export const ConfigurableMessageEvents: Events.Event[] = [
@@ -123,12 +106,12 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 	{
 		name: 'Member Nickname Update Logs',
 		description: 'The channel I will send a message to when a member changes their nickname.',
-		key: 'channelsLogsMemberNickNameUpdate'
+		key: 'channelsLogsMemberNicknameUpdate'
 	},
 	{
 		name: 'Member Username Update Logs',
 		description: 'The channel I will send a message to when a member changes their username.',
-		key: 'channelsLogsMemberUserNameUpdate'
+		key: 'channelsLogsMemberUsernameUpdate'
 	},
 	{
 		name: 'Member Role Logs',
@@ -160,11 +143,7 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		description: 'The channel for moderation logs, once enabled, I will post all my moderation cases there.',
 		key: 'channelsLogsModeration'
 	},
-	{
-		name: 'Image Logs',
-		description: 'The channel I will use to re-upload all images I see.',
-		key: 'channelsLogsImage'
-	},
+	{ name: 'Image Logs', description: 'The channel I will use to re-upload all images I see.', key: 'channelsLogsImage' },
 	{
 		name: 'Prune Logs',
 		description: 'The channel for prune logs, same requirement as normal message logs, but will only send prune messages.',
@@ -230,27 +209,22 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		key: 'channelsLogsServerUpdate'
 	}
 ];
-
 export const ConfigurableIgnoreChannels: Channels.IgnoreChannel[] = [
-	{
-		name: 'All logs',
-		description: 'Channels I should ignore for all types of logging.',
-		key: 'channelsIgnoreAll'
-	},
+	{ name: 'All logs', description: 'Channels I should ignore for all types of logging.', key: 'channelsIgnoreAll' },
 	{
 		name: 'Message delete logs',
 		description: 'Channels I should ignore when checking for deleted messages to log.',
-		key: 'channelsIgnoreMessageDeletes'
+		key: 'channelsIgnoreMessageDelete'
 	},
 	{
 		name: 'Message edit logs',
 		description: 'Channels I should ignore when checking for edited messages to log.',
-		key: 'channelsIgnoreMessageEdits'
+		key: 'channelsIgnoreMessageEdit'
 	},
 	{
 		name: 'Reaction add logs',
 		description: 'Channels I should ignore when checking for added reactions.',
-		key: 'channelsIgnoreReactionAdds'
+		key: 'channelsIgnoreReactionAdd'
 	},
 	{
 		name: 'Message Delete, Edit and Reaction Add logs',

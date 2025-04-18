@@ -1,20 +1,16 @@
 <template>
-	<div class="fixed right-2 bottom-2 z-50" :class="{ 'right-8': trigger }">
-		<SpotlightButton
-			aria-label="Refresh commands"
-			class="text-muted flex size-14 items-center justify-center p-1 transition-all duration-200"
-			rounded
-			:disabled="disabled"
-			:data-tip="tooltipText"
-			icon="i-mdi-cached"
-			@click="handleClick"
-		/>
-	</div>
+	<ShadButton
+		aria-label="Refresh commands"
+		:disabled="disabled"
+		color="neutral"
+		variant="ghost"
+		:data-tip="tooltipText"
+		icon="i-mdi-cached"
+		@click="handleClick"
+	/>
 </template>
 
 <script setup lang="ts">
-import type { FlattenedCommand } from '~~/shared/types/discord';
-
 const props = defineProps<{
 	commands: FlattenedCommand[];
 	loading?: boolean;
@@ -27,8 +23,6 @@ const emit = defineEmits<{
 
 // State
 const disabled = ref(props.loading || false);
-const { y } = useScroll(window);
-const trigger = computed(() => y.value > 100);
 
 // Gestione click
 const handleClick = async () => {
@@ -51,7 +45,3 @@ const tooltipText = `
   You can try refreshing again at a later time.
 `;
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-</style>

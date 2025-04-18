@@ -31,10 +31,10 @@
 						</ul>
 					</li>
 					<li>
-						<nuxt-link to="/commands" class="btn btn-ghost"><ShadIcon name="ph:list" /> Commmands </nuxt-link>
+						<nuxt-link to="/commands"> <ShadIcon name="ph:list" /> Commands </nuxt-link>
 					</li>
 					<li>
-						<nuxt-link :to="App.invite"><ShadIcon name="ph:plus-circle-duotone" class="text-success" /> Invite App</nuxt-link>
+						<nuxt-link :to="App.invite"> <ShadIcon name="ph:plus-circle-duotone" class="text-success" /> Invite App </nuxt-link>
 					</li>
 				</ul>
 			</div>
@@ -79,55 +79,50 @@
 				Invite App
 				<ShadIcon name="ph:plus-circle-duotone" />
 			</nuxt-link>
-			<nuxt-link to="/commands" class="btn btn-ghost"><ShadIcon name="ph:list" /> Commmands </nuxt-link>
+			<nuxt-link to="/commands" class="btn btn-ghost">
+				Commmands
+				<ShadIcon name="ph:list" />
+			</nuxt-link>
 		</div>
 		<div class="navbar-end">
-			<div class="flex gap-2">
-				<layout-change-theme />
-			</div>
-			<div class="flex gap-2">
-				<AuthState>
-					<template #default="{ loggedIn, clear }">
-						<div v-if="loggedIn" class="dropdown dropdown-end">
-							<div tabindex="0" class="btn btn-ghost btn-circle avatar">
-								<div class="w-10 rounded-full">
-									<img v-if="isDefault" :src="defaultAvatar" alt="Default Avatar" decoding="async" crossorigin="anonymous" />
-									<picture v-else>
-										<source
-											v-if="isAnimated"
-											media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
-											type="image/gif"
-											:srcset="makeSrcset('gif')"
-										/>
-										<source type="image/webp" :srcset="makeSrcset('webp')" />
-										<source type="image/png" :srcset="makeSrcset('png')" />
-										<img :src="createUrl('png', 128)" alt="Avatar" decoding="async" crossorigin="anonymous" />
-									</picture>
-								</div>
+			<AuthState>
+				<template #default="{ loggedIn, clear }">
+					<div v-if="loggedIn" class="dropdown dropdown-end">
+						<div tabindex="0" class="btn btn-ghost btn-circle avatar">
+							<div class="w-10 rounded-full">
+								<img v-if="isDefault" :src="defaultAvatar" alt="Default Avatar" decoding="async" crossorigin="anonymous" />
+								<picture v-else>
+									<source
+										v-if="isAnimated"
+										media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
+										type="image/gif"
+										:srcset="makeSrcset('gif')"
+									/>
+									<source type="image/webp" :srcset="makeSrcset('webp')" />
+									<source type="image/png" :srcset="makeSrcset('png')" />
+									<img :src="createUrl('png', 128)" alt="Avatar" decoding="async" crossorigin="anonymous" />
+								</picture>
 							</div>
-							<ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-								<li>
-									<nuxt-link to="/profile" class="justify-between">
-										Profile
-										<span class="badge badge-sm">New</span>
-									</nuxt-link>
-								</li>
-								<li><a @click="clear">Logout</a></li>
-							</ul>
 						</div>
-						<NuxtLink v-else class="btn bg-[#5865F2] text-white" to="/login">
-							<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
-							Login
-						</NuxtLink>
-					</template>
-					<template #placeholder>
-						<button disabled class="btn bg-[#5865F2] text-white disabled:opacity-65">
-							<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
-							Login
-						</button>
-					</template>
-				</AuthState>
-			</div>
+						<ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+							<li>
+								<nuxt-link to="/profile" class="justify-between">Profile</nuxt-link>
+							</li>
+							<li><a @click="clear">Logout</a></li>
+						</ul>
+					</div>
+					<button v-else class="btn bg-[#5865F2] text-white hover:bg-[#5865F2]/50" @click="$router.push('/login')">
+						<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
+						Login
+					</button>
+				</template>
+				<template #placeholder>
+					<button disabled class="btn bg-[#5865F2] text-white disabled:opacity-65">
+						<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
+						Login
+					</button>
+				</template>
+			</AuthState>
 		</div>
 	</div>
 </template>
@@ -144,7 +139,7 @@ const Apps = {
 	staryl: { name: 'Staryl', invite: Invites.Staryl, landing: '/staryl' }
 };
 
-const { session } = useAuth();
+const { user } = useAuth();
 
 const loadingPack = ref(false);
 const isAnimated = ref(false);
@@ -161,14 +156,14 @@ onMounted(async () => {
 });
 
 const defaultAvatar = computed(() =>
-	session.value.user?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(session.value.user.id) % BigInt(5)}.png`
+	user.value?.id
+		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
 		: 'https://cdn.discordapp.com/embed/avatars/0.png'
 );
 
 watch(
-	session,
-	({ user }) => {
+	user,
+	(user) => {
 		if (user?.avatar) {
 			isDefault.value = false;
 			isAnimated.value = user.avatar.startsWith('a_');
@@ -181,7 +176,7 @@ watch(
 );
 
 function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-	return `https://cdn.discordapp.com/avatars/${session.value.user!.id}/${session.value.user!.avatar}.${format}?size=${size}`;
+	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
 function makeSrcset(format: 'webp' | 'png' | 'gif') {
@@ -193,6 +188,7 @@ const App = computed(() => Apps[appName.value] ?? Apps.wolfstar);
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
 .app-navbar {
 	@apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
 	align-self: center;

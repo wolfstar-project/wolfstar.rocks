@@ -277,12 +277,14 @@ export default defineNuxtConfig({
 			enabled: false,
 			type: 'module'
 		},
+		includeAssets: './public/img/icons',
 		manifest: {
 			background_color: '#050505',
-			categories: ['discord', 'bot', 'framework', 'moderation', 'guide', 'wolfstar'],
+			categories: ['discord', 'bot', 'wolfstar', 'moderation', 'automation', 'cyborg', 'logging'],
 			description,
+			dir: 'ltr',
 			display: 'minimal-ui',
-			lang: 'en-GB',
+			lang: 'en_US',
 			name,
 			orientation: 'portrait-primary',
 			scope: '/',
@@ -296,28 +298,52 @@ export default defineNuxtConfig({
 					short_name: 'Homepage',
 					description: "Go to WolfStar's dashboard",
 					url: '/',
-					icons: manifestIcons
+					icons: [
+						{
+							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+							sizes: '96x96',
+							type: 'image/png'
+						}
+					]
 				},
 				{
 					name: 'WolfStar Commands',
 					short_name: 'Commands',
 					description: "View WolfStar's commands",
 					url: '/commands',
-					icons: manifestIcons
-				},
-				{
-					name: 'WolfStar Privacy Policy',
-					short_name: 'Privacy Policy',
-					description: "Read WolfStar's Privacy Policy",
-					url: '/privacy',
-					icons: manifestIcons
+					icons: [
+						{
+							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+							sizes: '96x96',
+							type: 'image/png'
+						}
+					]
 				},
 				{
 					name: 'WolfStar Terms of Service',
 					short_name: 'Terms of Service',
 					description: "Read WolfStar's Terms of Service",
 					url: '/terms',
-					icons: manifestIcons
+					icons: [
+						{
+							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+							sizes: '96x96',
+							type: 'image/png'
+						}
+					]
+				},
+				{
+					name: 'WolfStar Privacy Policy',
+					short_name: 'Privacy Policy',
+					description: "Read WolfStar's Privacy Policy",
+					url: '/privacy',
+					icons: [
+						{
+							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+							sizes: '96x96',
+							type: 'image/png'
+						}
+					]
 				}
 			]
 		}

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEqual } from 'ohash/utils';
+import type { GuildData, GuildDataKey } from '~~/lib/database';
 
 export function pick<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Pick<Data, Keys> {
 	const result = {} as Pick<Data, Keys>;
@@ -85,4 +86,7 @@ export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((
 
 export function isArrayOfArray<A>(item: A[] | A[][]): item is A[][] {
 	return Array.isArray(item[0]);
+}
+export default function removeNonAlphaNumeric(str: string) {
+	return str.replace(/[^0-9a-zA-Z]/gi, '');
 }

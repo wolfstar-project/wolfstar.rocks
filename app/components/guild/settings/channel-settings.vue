@@ -1,76 +1,56 @@
 <template>
-	<div>
-		<layout-settings-section title="Logging Channels">
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-				<SelectChannel
-					v-for="channel in channelConfig.logging"
-					:key="channel.key"
-					v-bind="getChannelProps(channel)"
-					:model-value="settings[channel.key]"
-					:disabled="loading"
-					@update:model-value="(value) => handleChannelUpdate(channel.key, value)"
-					@reset="handleChannelReset(channel.key)"
-				/>
-			</div>
-		</layout-settings-section>
+	<div role="region" aria-label="Channel Settings">
+		<!-- Header Section -->
+		<section>
+			<h2 class="text-2xl font-bold">Channels</h2>
+			<p class="text-base-content/80 mt-2">
+				Here you can configure different kinds of channels for WolfStar. Hover over a button to get more information for that specific
+				channel.
+			</p>
+		</section>
 
-		<layout-settings-section title="Logging Ignore Channels" class="mt-10 md:mt-20">
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-				<SelectChannels
-					v-for="channel in channelConfig.ignore"
-					v-if="getChannelProps(channel).guild"
-					:key="channel.key"
-					v-bind="{ ...getChannelProps(channel), guild: getChannelProps(channel).guild! }"
-					:model-value="settings[channel.key]"
-					:disabled="loading"
-					@update:model-value="(value) => handleChannelUpdate(channel.key, value)"
-					@reset="handleChannelReset(channel.key)"
-				/>
+		<!-- Logging Channels Section -->
+		<LayoutSettingsSection title="Logging Channels">
+			<div v-if="guildData" class="grid grid-cols-1 gap-4 md:grid-cols-3">
+				<div v-for="channel in ConfigurableLoggingChannels" :key="channel.key">
+					<SelectChannel
+						v-model="settings[channel.key]"
+						:label="channel.name"
+						:tooltip="channel.description"
+						:guild="guildData"
+						class="w-full"
+						@reset="resetChanges(channel.key)"
+					/>
+				</div>
 			</div>
-		</layout-settings-section>
+		</LayoutSettingsSection>
+
+		<!-- Ignore Channels Section -->
+		<LayoutSettingsSection title="Logging Ignore Channels" class="mt-8">
+			<div v-if="guildData" class="grid grid-cols-1 gap-4 md:grid-cols-3">
+				<div v-for="channel in ConfigurableIgnoreChannels" :key="channel.key">
+					<SelectChannels
+						v-model="settings[channel.key]"
+						:label="channel.name"
+						:tooltip="channel.description"
+						:guild="guildData"
+						class="w-full"
+						@reset="resetChanges(channel.key)"
+					/>
+				</div>
+			</div>
+		</LayoutSettingsSection>
 	</div>
 </template>
 
 <script setup lang="ts">
-import type { Channels } from '~~/lib/types/types/ConfigurableData';
-
-interface Channel {
-	key: keyof ChannelSettings;
-	guild?: boolean;
-}
-
-const { channelConfig, settings, updateChannelSetting, resetChannel, getChannelProps } = useGuildChannels();
-
-const { loading, start, finish } = useLoadingIndicator({
-	duration: 2000,
-	throttle: 200
-});
-
-const filteredIgnoreChannels = computed(() => channelConfig.ignore.filter((channel) => getChannelProps(channel).guild));
-
-const handleChannelUpdate = async (key: Channels.Channel, value: string | string[]) => {
-	try {
-		start();
-		await updateChannelSetting(key, value);
-		toast.success('Channel setting updated successfully');
-	} catch (error) {
-		console.error('Failed to update channel setting:', error);
-		toast.error('Failed to update channel setting');
-	} finally {
-		finish();
-	}
-};
-
-const handleChannelReset = async (key: keyof ChannelSettings) => {
-	try {
-		start();
-		await resetChannel(key);
-		toast.success('Channel setting reset successfully');
-	} catch (error) {
-		console.error('Failed to reset channel setting:', error);
-		toast.error('Failed to reset channel setting');
-	} finally {
-		finish();
-	}
-};
+// Get the settings data from your store
+const guildData = useGuildData();
+const { settings, resetChanges } = useGuildSettings();
 </script>
+
+<style scoped>
+.md-grid-cols-3 {
+	@apply grid-cols-3;
+}
+</style>

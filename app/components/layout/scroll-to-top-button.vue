@@ -1,14 +1,12 @@
 <template>
-	<div class="fixed right-3 bottom-36 z-50 sm:bottom-20">
-		<SpotlightButton
-			aria-label="scroll to top button"
-			class="text-muted flex size-10 items-center justify-center p-1 transition-all duration-200"
-			rounded
-			:class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
-			icon="heroicons-arrow-up"
-			@click="scrollToTop"
-		/>
-	</div>
+	<ShadButton
+		aria-label="scroll to top button"
+		:class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
+		icon="heroicons-arrow-up"
+		color="neutral"
+		variant="ghost"
+		@click="scrollToTop"
+	/>
 </template>
 
 <script setup lang="ts">

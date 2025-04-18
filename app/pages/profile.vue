@@ -61,6 +61,11 @@
 				<div v-for="i in 3" :key="i" class="skeleton bg-base-300 h-48 rounded-lg"></div>
 			</div>
 
+			<div v-else-if="guilds && guilds.length > 0" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+				<!-- Add your guilds rendering logic here -->
+				<GuildCards :guilds="guilds" />
+			</div>
+
 			<div v-else class="card card-bordered">
 				<div class="card-body items-center text-center">
 					<p class="text-base-content/60">No servers found</p>
@@ -71,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import type { TRPCClientErrorBase } from '@trpc/client';
 import type { TransformedLoginData } from '~~/shared/types/discord';
 
 const { user } = useAuth();
@@ -78,30 +84,28 @@ const { user } = useAuth();
 definePageMeta({ alias: ['/account'] });
 
 const loading = useState(() => false);
-const error = ref<Error | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const error = ref<TRPCClientErrorBase<any> | null>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
 const guilds = useState<TransformedLoginData['transformedGuilds'] | null>(() => null);
 
-// Fetch user on mount
-onMounted(async () => {
+const fetchGuilds = async () => {
+	const { data, error: errorResult } = await useClientTrpc().users.me.useQuery();
 	try {
-		const { data } = await useClientTrpc().users.me.useQuery();
-		if (data.value === null) throw createError('User not found');
-		guilds.value = data.value.transformedGuilds;
-
-		useLogger().info(`Data Fetched: ${data.value}`);
-		loading.value = true;
-	} catch (err) {
-		if (err instanceof Error) {
-			error.value = err;
-			captureException(err);
+		if (errorResult.value) {
+			error.value = errorResult.value;
+			captureException(errorResult.value);
 		}
+		guilds.value = data.value?.transformedGuilds;
 	} finally {
 		loading.value = false;
 	}
-});
+};
+
+// Fetch user on mount
+onMounted(fetchGuilds);
 
 const defaultAvatar = computed(() =>
 	user.value?.id

@@ -7,15 +7,13 @@
 				<div class="max-w-md">
 					<h2 class="text-lg font-bold">No commands found.</h2>
 					<p class="py-2 text-sm opacity-75">Please try again later.</p>
-					<layout-refresh-commands :commands="commands" :is-loading="loading" :on-refresh="refresh" />
 				</div>
 			</div>
 		</div>
 
-		<div v-else-if="loading">
-			<layout-refresh-commands :commands="commands" :is-loading="loading" :on-refresh="refresh" />
+		<div v-else-if="!loading">
 			<div class="container mx-auto flex flex-col gap-6 p-6 md:p-4">
-				<div ref="commandsBoxRef" class="flex flex-col">
+				<div class="flex flex-col">
 					<commands-category
 						v-for="category in categories"
 						:key="category"
@@ -27,6 +25,7 @@
 				</div>
 			</div>
 		</div>
+		<layout-refresh-commands :commands="commands" :is-loading="loading" :on-refresh="refresh" />
 	</div>
 </template>
 

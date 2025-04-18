@@ -1,5 +1,5 @@
 <template>
-	<div class="app-layout" :class="appName">
+	<spotlight-card from="rgba(255,255,255,0.1)" :size="300" mode="before">
 		<sections-app-navbar />
 		<main class="mx-4 flex flex-grow flex-col items-center sm:mx-auto sm:w-5/6 lg:max-w-5xl xl:max-w-7xl">
 			<slot></slot>
@@ -7,13 +7,12 @@
 
 		<sections-app-footer />
 
-		<layout-scroll-to-top-button />
-	</div>
+		<div class="join">
+			<layout-change-theme class="join-item" />
+			<layout-scroll-to-top-button class="join-item" />
+		</div>
+	</spotlight-card>
 </template>
-
-<script setup lang="ts">
-const appName = inject(ProviderAppNameKey)!;
-</script>
 
 <style scoped>
 .app-layout {

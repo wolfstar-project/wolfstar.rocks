@@ -333,7 +333,7 @@ function advanceModerationIndex(value: -1 | 1) {
 @reference "@/assets/css/main.css";
 .title {
 	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem];
-	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(--branding-wolfstar) calc(l + 0.1) c h) 100%);
+	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(--color-branding-wolfstar) calc(l + 0.1) c h) 100%);
 	background-clip: text;
 	-webkit-text-fill-color: transparent;
 }

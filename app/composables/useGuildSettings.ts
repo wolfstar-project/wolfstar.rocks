@@ -1,5 +1,5 @@
 import deepMerge, { type Options as DeepMergeOptions } from 'deepmerge';
-import type { GuildData, GuildDataValue } from '~~/lib/database';
+import type { GuildData, GuildDataKey, GuildDataValue } from '~~/lib/database';
 
 type NullablePartialGuildData = Partial<{ [K in keyof GuildData]: GuildData[K] | null }>;
 // Overwrite arrays when merging
@@ -29,19 +29,8 @@ const useGuildSettings = () => {
 		guildSettingsChanges.value = settings;
 	};
 
-	const resetChanges = (keyOrEvent?: keyof GuildData | Event) => {
+	const resetChanges = (key: GuildDataKey) => {
 		// Handle the case when the function is called from a button click
-		if (keyOrEvent instanceof Event) {
-			guildSettingsChanges.value = null;
-			return;
-		}
-
-		const key = keyOrEvent;
-
-		if (!key) {
-			guildSettingsChanges.value = null;
-			return;
-		}
 
 		if (guildSettingsChanges.value && key in guildSettingsChanges.value) {
 			Reflect.deleteProperty(guildSettingsChanges.value, key);
@@ -51,10 +40,7 @@ const useGuildSettings = () => {
 				guildSettingsChanges.value = null;
 			}
 		} else if (guildSettingsChanges.value) {
-			guildSettingsChanges.value = {
-				...guildSettingsChanges.value,
-				[key]: null
-			};
+			Reflect.set(guildSettingsChanges.value, key, null);
 		} else {
 			guildSettingsChanges.value = {
 				[key]: null

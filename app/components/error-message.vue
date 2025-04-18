@@ -3,59 +3,53 @@
 		<Title>Error {{ error.statusCode ?? 501 }}</Title>
 		<Meta name="description" content="An error occurred" />
 	</Head>
-	<nuxt-layout name="main">
-		<div class="relative flex min-h-screen items-center justify-center overflow-hidden text-white">
-			<div class="bg-gradient-radial pointer-events-none absolute inset-0 from-red-500/10 to-transparent"></div>
+	<div class="relative flex min-h-screen items-center justify-center overflow-hidden text-white">
+		<div class="bg-gradient-radial pointer-events-none absolute inset-0 from-red-500/10 to-transparent"></div>
 
-			<div class="relative z-10 container mx-auto max-w-2xl p-8 text-center">
-				<NuxtHeading level="1" class="mb-6 text-5xl font-extrabold tracking-tight text-red-500 drop-shadow-[3px_3px_0px_#2c1810] md:text-6xl">
-					{{ errorInfo.title }}
-				</NuxtHeading>
+		<div class="relative z-10 container mx-auto max-w-2xl p-8 text-center">
+			<h1 class="mb-6 text-5xl font-extrabold tracking-tight text-red-500 drop-shadow-[3px_3px_0px_#2c1810] md:text-6xl">
+				{{ errorInfo.title }}
+			</h1>
 
-				<div class="mb-8 text-2xl leading-relaxed font-medium text-red-100">
-					<NuxtBadge class="inline-block rounded-md bg-red-500/10 px-3 py-1 font-mono font-bold text-red-500">
-						Error {{ statusCode }}
-					</NuxtBadge>
-					<span class="mt-6 block font-medium">
-						{{ errorInfo.description }}
-					</span>
+			<div class="mb-8 text-2xl leading-relaxed font-medium text-red-100">
+				<div class="badge badge-error badge-lg gap-2">
+					<span class="font-mono font-bold">Error {{ statusCode }}</span>
 				</div>
+				<span class="mt-6 block font-medium">
+					{{ errorInfo.description }}
+				</span>
+			</div>
 
-				<NuxtCard
-					class="relative mx-auto max-w-lg overflow-hidden border-2 border-dashed border-red-500/80 bg-red-500/10 shadow-lg transition-all hover:border-red-600"
-				>
-					<div class="p-8">
-						<div class="relative pl-8 text-left font-mono text-red-600">
-							<ShadIcon name="mdi:alert-circle" class="absolute top-1 left-0 h-5 w-5 animate-pulse" />
-							<pre class="text-lg leading-relaxed whitespace-pre-line">{{ errorInfo.consoleMessage }}</pre>
-							<pre v-if="message" class="mt-4 rounded-lg bg-red-500/15 p-4 whitespace-pre-line shadow-inner">{{ message }}</pre>
-						</div>
-
-						<p class="mt-4 border-t border-red-500/20 pt-4 text-base text-red-500/70 italic">
-							{{ errorInfo.batMessage }}
-						</p>
-
-						<div class="mt-6 flex flex-col justify-center gap-5 border-t border-red-500/20 pt-6 sm:flex-row">
-							<NuxtButton class="group transition-all hover:scale-105" type="primary" @click="() => clearError({ redirect: '/' })">
-								<ShadIcon name="mdi:home" class="mr-2 transition-transform group-hover:-translate-y-0.5" />
-								Return Home
-							</NuxtButton>
-							<NuxtLink to="https://join.wolfstar.rocks" target="_blank" class="group transition-all hover:scale-105">
-								<NuxtButton type="outline">
-									<ShadIcon name="mdi:forum" class="mr-2 transition-transform group-hover:-translate-y-0.5" />
-									Server Support
-								</NuxtButton>
-							</NuxtLink>
-						</div>
+			<div class="card bg-base-100 mx-auto max-w-lg shadow-xl transition-all hover:shadow-2xl">
+				<div class="card-body">
+					<div class="text-error relative pl-8 text-left font-mono">
+						<ShadIcon name="mdi:alert-circle" class="absolute top-1 left-0 size-5 animate-pulse" />
+						<pre class="text-lg leading-relaxed whitespace-pre-line">{{ errorInfo.consoleMessage }}</pre>
+						<pre v-if="message" class="bg-error/15 mt-4 rounded-lg p-4 whitespace-pre-line shadow-inner">{{ message }}</pre>
 					</div>
-				</NuxtCard>
 
-				<div class="perspective-1000 relative mt-12 h-36">
-					<span class="animate-hang relative -bottom-[100%] inline-block origin-bottom text-8xl drop-shadow-lg filter"> 🦇 </span>
+					<p class="border-error/20 text-error/70 mt-4 border-t pt-4 text-base italic">
+						{{ errorInfo.batMessage }}
+					</p>
+
+					<div class="card-actions border-error/20 mt-6 justify-center border-t pt-6">
+						<button class="btn btn-error gap-2" @click="() => clearError({ redirect: '/' })">
+							<ShadIcon name="mdi:home" class="size-5" />
+							Return Home
+						</button>
+						<a href="https://join.wolfstar.rocks" target="_blank" class="btn btn-outline btn-neutral gap-2">
+							<ShadIcon name="mdi:forum" class="size-5" />
+							Server Support
+						</a>
+					</div>
 				</div>
 			</div>
+
+			<div class="perspective-1000 relative mt-12 h-36">
+				<span class="animate-hang relative -bottom-[100%] inline-block origin-bottom text-8xl drop-shadow-lg filter"> 🦇 </span>
+			</div>
 		</div>
-	</nuxt-layout>
+	</div>
 </template>
 
 <script setup lang="ts">

@@ -18,10 +18,11 @@
 <script setup lang="ts">
 import type { ComboboxContentEmits, ComboboxContentProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import { cn } from '~/app/utils';
+import { cn } from '~/utils/cn';
 import { reactiveOmit } from '@vueuse/core';
 import { ComboboxContent, ComboboxPortal, useForwardPropsEmits } from 'reka-ui';
 
+// eslint-disable-next-line vue/require-default-prop
 const props = withDefaults(defineProps<ComboboxContentProps & { class?: HTMLAttributes['class']; viewportClass?: HTMLAttributes['class'] }>(), {
 	position: 'popper',
 	align: 'center',

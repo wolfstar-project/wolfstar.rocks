@@ -11,6 +11,7 @@ import { type AvatarVariants, avatarVariant } from '.';
 
 const props = withDefaults(
 	defineProps<{
+		// eslint-disable-next-line vue/require-default-prop
 		class?: HTMLAttributes['class'];
 		size?: AvatarVariants['size'];
 		shape?: AvatarVariants['shape'];

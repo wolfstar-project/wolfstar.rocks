@@ -7,6 +7,5 @@ export const openApiDocument = generateOpenApiDocument(appRouter, {
 	description: 'OpenAPI compliant REST API for Discord integration using tRPC',
 	version: '1.0.0',
 	baseUrl: 'https://wolfstar.rocks',
-	docsUrl: 'https://wolfstar.rocks/api/docs',
 	tags: ['commands', 'guilds', 'languages']
 });

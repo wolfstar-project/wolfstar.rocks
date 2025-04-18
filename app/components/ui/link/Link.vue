@@ -72,6 +72,7 @@ const ui = computed(() =>
 	})
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isPartiallyEqual(item1: any, item2: any) {
 	const diffedKeys = diff(item1, item2).reduce((filtered, q) => {
 		if (q.type === 'added') {
@@ -86,6 +87,7 @@ function isPartiallyEqual(item1: any, item2: any) {
 	return isEqual(item1Filtered, item2Filtered);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isLinkActive({ route: linkRoute, isActive, isExactActive }: any) {
 	if (props.active !== undefined) {
 		return props.active;
@@ -112,6 +114,7 @@ function isLinkActive({ route: linkRoute, isActive, isExactActive }: any) {
 	return false;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function resolveLinkClass({ route, isActive, isExactActive }: any) {
 	const active = isLinkActive({ route, isActive, isExactActive });
 

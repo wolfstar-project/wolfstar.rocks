@@ -1,7 +1,5 @@
 import { useNitroOrigin } from '#imports';
 
-export const useClientTrpc = () => useNuxtApp().$client;
-
 export const getConfiguredOrigin = () => useNitroOrigin();
 
 export const getClientId = () => useRuntimeConfig().public.clientId;

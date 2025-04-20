@@ -5,6 +5,6 @@
 		"allowJs": true,
 		"checkJs": true
 	},
-	"include": ["app/**/*.ts", "app/**/*.vue", "nuxt.config.ts"],
+	"include": ["app/**/*.ts", "app/**/*.vue", "lib/**/*.ts", "nuxt.config.ts"],
 	"exclude": []
 }

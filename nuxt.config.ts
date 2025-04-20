@@ -214,13 +214,14 @@ export default defineNuxtConfig({
 				dsn: process.env.NITRO_SENTRY_DSN
 			}
 		},
-		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
-		clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
-		clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET
+		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
 	},
 	// Build configuration
 	build: {
-		transpile: ['trpc-nuxt', 'vue-sonner']
+		transpile: ['vue-sonner'],
+		analyze: {
+			enabled: true
+		}
 	},
 
 	routeRules: {
@@ -238,7 +239,7 @@ export default defineNuxtConfig({
 
 	experimental: {
 		inlineRouteRules: true,
-		viewTransition: true
+		typedPages: true
 	},
 	compatibilityDate: '2025-01-10',
 	// Nitro server configuration
@@ -251,7 +252,19 @@ export default defineNuxtConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
-		optimizeDeps: { include: ['reka-ui', 'reka-ui/namespaced', 'tailwind-variants', 'ufo', 'zod', '@sapphire/utilities'] }
+		optimizeDeps: {
+			include: [
+				'reka-ui',
+				'reka-ui/namespaced',
+				'@vueuse/shared',
+				'colortranslator',
+				'tailwindcss/colors',
+				'tailwind-variants',
+				'ufo',
+				'zod',
+				'@sapphire/utilities'
+			]
+		}
 	},
 
 	icon: {

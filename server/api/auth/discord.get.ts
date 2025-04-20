@@ -30,7 +30,7 @@ export default defineOAuthDiscordEventHandler({
 			}
 		);
 		// Redirect to the home page
-		sendRedirect(event, '/');
+		return sendRedirect(event, '/');
 	},
 
 	async onError(event: H3Event, error: Error) {

@@ -24,6 +24,9 @@ importers:
       '@prisma/nuxt':
         specifier: ^0.3.0
         version: 0.3.0(magicast@0.3.5)(prisma@6.6.0(typescript@5.8.3))(typescript@5.8.3)(vite@6.2.6(@types/node@20.11.5)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
+      '@sapphire/ratelimits':
+        specifier: ^2.4.11
+        version: 2.4.11
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.1.4(vite@6.2.6(@types/node@20.11.5)(jiti@2.4.2)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.1))
@@ -54,6 +57,9 @@ importers:
       consola:
         specifier: ^3.4.2
         version: 3.4.2
+      express:
+        specifier: ^5.1.0
+        version: 5.1.0
       express-rate-limit:
         specifier: ^7.5.0
         version: 7.5.0(express@5.1.0)
@@ -2113,6 +2119,10 @@ packages:
 
   '@sapphire/prettier-config@2.0.0':
     resolution: {integrity: sha512-Vie8KR5zQ6sbEP4+biW/IR7k55saGfZkTSuRlgvxCBKb4SBJdRWcOBI80i+JxMVIDDZKgXlgYnXEST+FgZiWXA==}
+    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
+
+  '@sapphire/ratelimits@2.4.11':
+    resolution: {integrity: sha512-O6FNA/P0wxU4Ve9gxL948CoZw7+sSpujyUR2CLyLLCNuNvuFGFxPCJVl5crFVLXMIyBIrc2qk+/H9bsqsyQK1Q==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   '@sapphire/result@2.7.2':
@@ -9569,6 +9579,8 @@ snapshots:
   '@sapphire/prettier-config@2.0.0':
     dependencies:
       prettier: 3.5.3
+
+  '@sapphire/ratelimits@2.4.11': {}
 
   '@sapphire/result@2.7.2': {}
 

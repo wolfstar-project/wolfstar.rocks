@@ -24,6 +24,12 @@
 	"github.copilot.chat.codeGeneration.instructions": [
 		{
 			"file": "./.vscode/daisyui.md"
+		},
+		{
+			"file": "./.vscode/shadcn-vue.md"
+		},
+		{
+			"file": "./.vscode/nuxt.md"
 		}
 	]
 }

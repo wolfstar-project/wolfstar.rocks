@@ -14,11 +14,27 @@ const settingsUpdateSchema = z.object({
 	userId: z.string().optional()
 });
 
+defineRouteMeta({
+	openAPI: {
+		tags: ['discord-api'],
+		description: 'Update guild settings',
+		parameters: [
+			{
+				in: 'path',
+				name: 'guild',
+				required: true,
+				description: 'The guild ID to update settings for'
+			}
+		]
+	}
+});
+
 export default defineEventHandler({
 	onRequest: [
 		rateLimitMiddleware({
 			max: 10,
-			time: 5
+			time: 5,
+			auth: true
 		}),
 		authMiddleware()
 	],

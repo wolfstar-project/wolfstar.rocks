@@ -1,6 +1,28 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from 'discord-api-types/v10';
 import type { H3Event } from 'h3';
 import { useLogger } from '~~/shared/utils/logger';
+
+defineRouteMeta({
+	openAPI: {
+		tags: ['discord-api'],
+		description: 'Discord OAuth2 callback',
+		parameters: [
+			{
+				in: 'query',
+				name: 'code',
+				required: true,
+				description: 'The authorization code returned by Discord'
+			},
+			{
+				in: 'query',
+				name: 'state',
+				required: true,
+				description: 'The state parameter returned by Discord'
+			}
+		]
+	}
+});
+
 export default defineOAuthDiscordEventHandler({
 	async onSuccess(
 		event: H3Event,

@@ -11,11 +11,27 @@ const querySchema = z.object({
 	userId: z.string().optional()
 });
 
+defineRouteMeta({
+	openAPI: {
+		tags: ['discord-api'],
+		description: 'Get guild settings',
+		parameters: [
+			{
+				in: 'path',
+				name: 'guild',
+				required: true,
+				description: 'The guild ID to fetch settings for'
+			}
+		]
+	}
+});
+
 export default defineEventHandler({
 	onRequest: [
 		rateLimitMiddleware({
 			max: 10,
-			time: 5
+			time: 5,
+			auth: true
 		}),
 		authMiddleware()
 	],

@@ -3,6 +3,21 @@ import useApi from '~~/shared/utils/api';
 import rateLimitMiddleware from '~~/server/middlewares/ratelimit';
 import authMiddleware from '~~/server/middlewares/auth';
 
+defineRouteMeta({
+	openAPI: {
+		tags: ['discord-api'],
+		description: 'Get the current user and their guilds',
+		parameters: [
+			{
+				in: 'query',
+				name: 'shouldSerialize',
+				required: false,
+				description: 'Whether to serialize the response or not'
+			}
+		]
+	}
+});
+
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),

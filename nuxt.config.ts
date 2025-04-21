@@ -248,6 +248,23 @@ export default defineNuxtConfig({
 		prerender: {
 			crawlLinks: true,
 			routes: ['/sitemap.xml', '/robots.txt']
+		},
+		openAPI: {
+			// OpenAPI configuration
+			meta: {
+				title: 'WolfStar API',
+				description: 'WolfStar API documentation',
+				version: '1.0.0'
+			},
+			route: '/_docs/openapi.json',
+			ui: {
+				scalar: {
+					route: '/api/docs'
+				}
+			}
+		},
+		experimental: {
+			openAPI: true
 		}
 	},
 	vite: {

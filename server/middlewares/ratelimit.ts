@@ -56,6 +56,6 @@ const defineRateLimitHandler = <T extends EventHandlerRequest>(
 	});
 };
 
-export default function rateLimitMiddleware(options: RateLimitOptions = {}) {
+export default function rateLimitMiddleware(options?: RateLimitOptions) {
 	return defineRequestMiddleware(defineRateLimitHandler(options));
 }

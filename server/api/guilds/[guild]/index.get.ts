@@ -4,11 +4,27 @@ import rateLimitMiddleware from '~~/server/middlewares/ratelimit';
 import authMiddleware from '~~/server/middlewares/auth';
 import useApi from '~~/shared/utils/api';
 
+defineRouteMeta({
+	openAPI: {
+		tags: ['discord-api'],
+		description: 'Get guild data',
+		parameters: [
+			{
+				in: 'path',
+				name: 'guild',
+				required: true,
+				description: 'The guild ID to fetch data for'
+			}
+		]
+	}
+});
+
 export default defineEventHandler({
 	onRequest: [
 		rateLimitMiddleware({
 			max: 10,
-			time: 5
+			time: 5,
+			auth: true
 		}),
 		authMiddleware()
 	],

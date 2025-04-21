@@ -1,5 +1,3 @@
-import rateLimitMiddleware from '../middlewares/ratelimit';
-
 defineRouteMeta({
 	openAPI: {
 		tags: ['test'],
@@ -8,16 +6,10 @@ defineRouteMeta({
 	}
 });
 
-export default defineEventHandler({
-	onRequest: [rateLimitMiddleware()],
-	onBeforeResponse: () => {
-		useLogger('wolfstar-debug').debug('hello world');
-	},
-	handler: (event) => {
-		const query = getQuery(event);
-		if (!query.test) {
-			return 'GET: hello world';
-		}
-		return `GET: hello world with query test=${query.test}`;
+export default defineEventHandler((event) => {
+	const query = getQuery(event);
+	if (!query.test) {
+		return 'GET: hello world';
 	}
+	return `GET: hello world with query test=${query.test}`;
 });

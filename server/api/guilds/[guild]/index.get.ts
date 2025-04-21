@@ -1,12 +1,13 @@
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish';
 import { createError } from 'h3';
-import rateLimitMiddleware from '~~/server/middlewares/ratelimit';
-import authMiddleware from '~~/server/middlewares/auth';
+import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
+import authMiddleware from '~~/server/utils/middlewares/auth';
 import useApi from '~~/shared/utils/api';
+import { seconds } from '~~/shared/utils/times';
 
 defineRouteMeta({
 	openAPI: {
-		tags: ['discord-api'],
+		tags: ['Discord Api'],
 		description: 'Get guild data',
 		parameters: [
 			{
@@ -21,12 +22,13 @@ defineRouteMeta({
 
 export default defineEventHandler({
 	onRequest: [
-		rateLimitMiddleware({
-			max: 10,
-			time: 5,
-			auth: true
-		}),
-		authMiddleware()
+		authMiddleware(),
+		async (event) =>
+			await rateLimitMiddleware(event, {
+				max: 10,
+				time: seconds(5),
+				auth: true
+			})
 	],
 	handler: async (event) => {
 		// Get guild ID from params

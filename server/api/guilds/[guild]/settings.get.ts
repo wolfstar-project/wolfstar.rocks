@@ -2,9 +2,10 @@ import { isNullOrUndefined } from '@sapphire/utilities';
 import { z } from 'zod';
 import type { GuildData } from '~~/lib/database';
 import { readSettings, serializeSettings } from '~~/lib/database';
-import rateLimitMiddleware from '~~/server/middlewares/ratelimit';
-import authMiddleware from '~~/server/middlewares/auth';
+import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
+import authMiddleware from '~~/server/utils/middlewares/auth';
 import useApi from '~~/shared/utils/api';
+import { seconds } from '~~/shared/utils/times';
 
 const querySchema = z.object({
 	shouldSerialize: z.boolean().optional(),
@@ -13,7 +14,7 @@ const querySchema = z.object({
 
 defineRouteMeta({
 	openAPI: {
-		tags: ['discord-api'],
+		tags: ['Discord Api'],
 		description: 'Get guild settings',
 		parameters: [
 			{
@@ -28,16 +29,17 @@ defineRouteMeta({
 
 export default defineEventHandler({
 	onRequest: [
-		rateLimitMiddleware({
-			max: 10,
-			time: 5,
-			auth: true
-		}),
-		authMiddleware()
+		authMiddleware(),
+		async (event) =>
+			await rateLimitMiddleware(event, {
+				max: 10,
+				time: seconds(10),
+				auth: true
+			})
 	],
 	handler: async (event) => {
 		// Get guild ID from params
-		const guildId = event.context.params?.guild;
+		const guildId = getRouterParam(event, 'guild');
 		if (isNullOrUndefined(guildId)) {
 			throw createError({
 				statusCode: 400,
@@ -47,7 +49,7 @@ export default defineEventHandler({
 
 		// Validate query parameters
 		const query = await getValidatedQuery(event, querySchema.parse);
-		const { shouldSerialize, userId: queryUserId } = query;
+		const { shouldSerialize } = query;
 
 		// Initialize API client
 
@@ -60,11 +62,17 @@ export default defineEventHandler({
 			});
 		}
 
-		// Use provided userId or fall back to guild owner
-		const userId = queryUserId ?? guild.owner_id;
+		const user = event.context.authorization.resolveServerUser();
+
+		if (!user) {
+			throw createError({
+				statusCode: 401,
+				message: 'Unauthorized'
+			});
+		}
 
 		// Fetch member data
-		const member = await useApi().guilds.getMember(guild.id, userId);
+		const member = await useApi().guilds.getMember(guild.id, user.id);
 		if (!member) {
 			throw createError({
 				statusCode: 400,

@@ -4,7 +4,7 @@ import { useLogger } from '~~/shared/utils/logger';
 
 defineRouteMeta({
 	openAPI: {
-		tags: ['discord-api'],
+		tags: ['Discord Api'],
 		description: 'Discord OAuth2 callback',
 		parameters: [
 			{

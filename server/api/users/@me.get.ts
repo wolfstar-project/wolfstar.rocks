@@ -1,11 +1,12 @@
 import { z } from 'zod';
 import useApi from '~~/shared/utils/api';
-import rateLimitMiddleware from '~~/server/middlewares/ratelimit';
-import authMiddleware from '~~/server/middlewares/auth';
+import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
+import authMiddleware from '~~/server/utils/middlewares/auth';
+import { seconds } from '~~/shared/utils/times';
 
 defineRouteMeta({
 	openAPI: {
-		tags: ['discord-api'],
+		tags: ['Discord Api'],
 		description: 'Get the current user and their guilds',
 		parameters: [
 			{
@@ -21,11 +22,12 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-		rateLimitMiddleware({
-			max: 10,
-			time: 5,
-			auth: true
-		})
+		async (event) =>
+			await rateLimitMiddleware(event, {
+				max: 2,
+				time: seconds(10),
+				auth: true
+			})
 	],
 	handler: async (event) => {
 		// Validate query parameters
@@ -37,15 +39,18 @@ export default defineEventHandler({
 		);
 
 		// Get session token
-		const session = await getUserSession(event);
 
-		if (!session.secure) {
+		const tokens = null; // event.context.$authorization.resolveServerTokens();
+
+		console.log(event.context);
+
+		if (!tokens) {
 			throw createError({
 				statusCode: 401,
-				message: 'Missing session Or secure token'
+				message: 'Or secure token'
 			});
 		}
-		const { access_token: token } = session.secure.tokens;
+		const { access_token: token } = tokens;
 
 		if (!token) {
 			throw createError({

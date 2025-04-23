@@ -41,10 +41,12 @@ export default defineOAuthDiscordEventHandler({
 			{
 				user: {
 					name: user.username ?? user.global_name,
+					globalName: user.global_name,
+					username: user.username,
 					id: user.id,
 					avatar: user.avatar ?? null
 				},
-				tokens,
+				secure: tokens,
 				loggedInAt: new Date().getTime()
 			},
 			{

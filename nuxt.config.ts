@@ -218,14 +218,10 @@ export default defineNuxtConfig({
 	},
 	// Build configuration
 	build: {
-		transpile: ['vue-sonner'],
-		analyze: {
-			enabled: true
-		}
+		transpile: ['vue-sonner']
 	},
 
 	routeRules: {
-		'/': { isr: true, prerender: true },
 		'/terms': { isr: true, prerender: true },
 		'/privacy': { isr: true, prerender: true }
 	},
@@ -236,12 +232,8 @@ export default defineNuxtConfig({
 	future: {
 		compatibilityVersion: 4
 	},
-
-	experimental: {
-		inlineRouteRules: true,
-		typedPages: true
-	},
 	compatibilityDate: '2025-01-10',
+
 	// Nitro server configuration
 	nitro: {
 		preset: 'cloudflare-pages',
@@ -257,9 +249,14 @@ export default defineNuxtConfig({
 				version: '1.0.0'
 			},
 			route: '/_docs/openapi.json',
+			production: 'runtime',
 			ui: {
 				scalar: {
-					route: '/api/docs'
+					route: '/api/docs',
+					darkMode: true,
+					hideDownloadButton: true,
+					searchHotKey: 'k',
+					showSidebar: true
 				}
 			}
 		},

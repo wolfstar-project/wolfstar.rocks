@@ -6,6 +6,7 @@ import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import useApi from '~~/shared/utils/api';
 import { seconds } from '~~/shared/utils/times';
+import { manageAbility } from '~~/shared/utils/abilities';
 
 const querySchema = z.object({
 	shouldSerialize: z.boolean().optional(),
@@ -49,6 +50,12 @@ export default defineEventHandler({
 
 		// Validate query parameters
 		const query = await getValidatedQuery(event, querySchema.parse);
+		if (isNullOrUndefined(query)) {
+			throw createError({
+				statusCode: 400,
+				message: 'Invalid query parameters'
+			});
+		}
 		const { shouldSerialize } = query;
 
 		// Initialize API client
@@ -62,8 +69,7 @@ export default defineEventHandler({
 			});
 		}
 
-		const user = event.context.authorization.resolveServerUser();
-
+		const user = await event.context.$authorization.resolveServerUser();
 		if (!user) {
 			throw createError({
 				statusCode: 401,
@@ -81,7 +87,7 @@ export default defineEventHandler({
 		}
 
 		// Check permissions
-		if (!(await canManage(guild, member))) {
+		if (await denies(event, manageAbility, guild, member)) {
 			throw createError({
 				statusCode: 403,
 				message: 'Insufficient permissions'

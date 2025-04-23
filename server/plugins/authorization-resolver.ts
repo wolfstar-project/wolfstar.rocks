@@ -7,7 +7,7 @@ export default defineNitroPlugin((nitroApp) => {
 			},
 			resolveServerTokens: async () => {
 				const session = await getUserSession(event);
-				return session.tokens ?? null;
+				return session.secure?.tokens ?? null;
 			}
 		};
 	});

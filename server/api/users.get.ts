@@ -3,6 +3,7 @@ import useApi from '~~/shared/utils/api';
 import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import { seconds } from '~~/shared/utils/times';
+import { isNullOrUndefined } from '@sapphire/utilities/isNullish';
 
 defineRouteMeta({
 	openAPI: {
@@ -40,29 +41,20 @@ export default defineEventHandler({
 
 		// Get session token
 
-		const tokens = null; // event.context.$authorization.resolveServerTokens();
+		const tokens = await event.context.$authorization.resolveServerTokens();
+		console.log('tokens', tokens);
 
-		console.log(event.context);
-
-		if (!tokens) {
+		if (isNullOrUndefined(tokens) || !('access_token' in tokens) || isNullOrUndefined(tokens.access_token)) {
 			throw createError({
 				statusCode: 401,
-				message: 'Or secure token'
-			});
-		}
-		const { access_token: token } = tokens;
-
-		if (!token) {
-			throw createError({
-				statusCode: 500,
-				message: 'Missing token'
+				message: 'None tokens OR access token not found'
 			});
 		}
 
 		// Initialize REST client
 		const rest = useRest({
 			authPrefix: 'Bearer'
-		}).setToken(token);
+		}).setToken(tokens.access_token);
 
 		// Fetch user data
 		const user = await useApi(rest)
@@ -87,7 +79,7 @@ export default defineEventHandler({
 		}
 
 		// Return transformed or raw data based on query param
-		return query?.shouldSerialize === false
+		return query?.shouldSerialize !== true
 			? {
 					user,
 					guilds

@@ -1,18 +1,21 @@
 <template>
-	<spotlight-card from="rgba(255,255,255,0.1)" :size="300" mode="before">
+	<div class="app-layout" :class="appName">
 		<sections-app-navbar />
 		<main class="mx-4 flex flex-grow flex-col items-center sm:mx-auto sm:w-5/6 lg:max-w-5xl xl:max-w-7xl">
 			<slot></slot>
 		</main>
 
 		<sections-app-footer />
-
-		<div class="join">
-			<layout-change-theme class="join-item" />
-			<layout-scroll-to-top-button class="join-item" />
+		<div class="fixed right-4 bottom-4 z-50 flex space-x-2">
+			<layout-change-theme />
+			<layout-scroll-to-top-button />
 		</div>
-	</spotlight-card>
+	</div>
 </template>
+
+<script setup lang="ts">
+const appName = inject(ProviderAppNameKey)!;
+</script>
 
 <style scoped>
 .app-layout {
@@ -25,6 +28,6 @@
 }
 
 .app-layout.wolfstar {
-	--color: var(--color-branding-wolfstar);
+	--color: var(--color-primary);
 }
 </style>

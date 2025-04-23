@@ -5,6 +5,8 @@ declare module '#auth-utils' {
 	interface User {
 		id: string;
 		name: string;
+		globalName: string;
+		username: string;
 		avatar: string | null;
 	}
 
@@ -18,3 +20,16 @@ declare module '#auth-utils' {
 }
 
 export {};
+
+declare module 'h3' {
+	interface H3EventContext {
+		$authorization: {
+			resolveServerUser(): Promise<{
+				id: string;
+				name: string;
+				avatar: string | null;
+			} | null>;
+			resolveServerTokens(): Promise<RESTPostOAuth2AccessTokenResult | null>;
+		};
+	}
+}

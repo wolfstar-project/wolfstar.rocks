@@ -4,6 +4,7 @@ import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import useApi from '~~/shared/utils/api';
 import { seconds } from '~~/shared/utils/times';
+import { manageAbility } from '~~/shared/utils/abilities';
 
 defineRouteMeta({
 	openAPI: {
@@ -32,7 +33,7 @@ export default defineEventHandler({
 	],
 	handler: async (event) => {
 		// Get guild ID from params
-		const guildId = event.context.params?.guild;
+		const guildId = getRouterParam(event, 'guild');
 		if (isNullOrUndefined(guildId)) {
 			throw createError({
 				statusCode: 400,
@@ -40,8 +41,6 @@ export default defineEventHandler({
 			});
 		}
 
-		// Validate query parameters
-		const { user } = await getUserSession(event);
 		// Fetch guild data
 		const guild = await useApi().guilds.get(guildId, { with_counts: true });
 		if (isNullOrUndefined(guild)) {
@@ -51,8 +50,9 @@ export default defineEventHandler({
 			});
 		}
 
+		const user = await event.context.$authorization.resolveServerUser();
 		// Check if user ID is provided
-		if (!user) {
+		if (isNullOrUndefined(user)) {
 			throw createError({
 				statusCode: 400,
 				message: 'User ID is required'
@@ -68,15 +68,13 @@ export default defineEventHandler({
 			});
 		}
 
-		// Check permissions
-		if (!(await canManage(guild, member))) {
+		if (await denies(event, manageAbility, guild, member)) {
 			throw createError({
 				statusCode: 403,
-				message: 'Forbidden'
+				message: 'Insufficient permissions'
 			});
 		}
 
-		// Fetch channels
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const channels = (await useApi().guilds.getChannels(guild.id)) as any;
 

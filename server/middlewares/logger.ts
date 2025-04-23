@@ -5,7 +5,6 @@ export default defineEventHandler(async (event) => {
     User-Agent: ${event.node.req.headers['user-agent']}  
     Content-Type: ${event.node.req.headers['content-type']}
     Accept: ${event.node.req.headers['accept']}
-    Body: ${JSON.stringify(await readBody(event))}
     Query: ${JSON.stringify(getQuery(event))}
     
     `);

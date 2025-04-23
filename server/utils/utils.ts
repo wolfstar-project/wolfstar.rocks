@@ -22,7 +22,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 		: hasAtLeastOneKeyInMap(new Map(roles.map((role) => [role, true])), member.roles);
 }
 
-export async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boolean> {
+async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boolean> {
 	if (guild.owner_id === member.user.id) return true;
 
 	const settings = await readSettings(guild.id);

@@ -7,6 +7,7 @@ import { serializeSettings, writeSettingsTransaction } from '~~/lib/database';
 import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import { seconds } from '~~/shared/utils/times';
+import { manageAbility } from '~~/shared/utils/abilities';
 
 // Assuming settingsUpdateSchema is imported or defined here
 const settingsUpdateSchema = z.object({
@@ -83,8 +84,7 @@ export default defineEventHandler({
 			});
 		}
 
-		const user = event.context.$authorization.resolveServerUser();
-
+		const user = await event.context.$authorization.resolveServerUser();
 		if (!user) {
 			throw createError({
 				statusCode: 401,
@@ -102,7 +102,7 @@ export default defineEventHandler({
 		}
 
 		// Check permissions
-		if (!(await canManage(guild, member))) {
+		if (await denies(event, manageAbility, guild, member)) {
 			throw createError({
 				statusCode: 403,
 				message: 'Insufficient permissions'

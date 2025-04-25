@@ -6,41 +6,33 @@ export { default } from './ColorPicker.vue';
 export const colorPicker = tv({
 	slots: {
 		root: 'opacity-100 data-[disabled]:opacity-50',
-		picker: 'join join-horizontal gap-4',
+		picker: 'join-horizontal join gap-4',
 		selector: 'rounded-box', // daisyUI box radius
-		selectorBackground: 'w-full h-full relative rounded-box',
-		selectorThumb: `
-      absolute -translate-y-1/2 -translate-x-1/2 
-      size-4 ring-2 ring-base-100 rounded-full 
-      cursor-pointer data-[disabled]:cursor-not-allowed
-    `,
-		track: 'w-2 relative rounded-box',
-		trackThumb: `
-      absolute -translate-y-1/2 -translate-x-1 rtl:translate-x-1
-      size-4 rounded-full ring-2 ring-base-100
-      cursor-pointer data-[disabled]:cursor-not-allowed
-    `
+		selectorBackground: 'relative h-full w-full rounded-box',
+		selectorThumb: `absolute size-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full ring-2 ring-base-100 data-[disabled]:cursor-not-allowed`,
+		track: 'relative w-2 rounded-box',
+		trackThumb: `absolute size-4 -translate-x-1 -translate-y-1/2 cursor-pointer rounded-full ring-2 ring-base-100 data-[disabled]:cursor-not-allowed rtl:translate-x-1`
 	},
 	variants: {
 		size: {
 			xs: {
-				selector: 'w-32 h-32',
+				selector: 'h-32 w-32',
 				track: 'h-32'
 			},
 			sm: {
-				selector: 'w-36 h-36',
+				selector: 'h-36 w-36',
 				track: 'h-36'
 			},
 			md: {
-				selector: 'w-40 h-40',
+				selector: 'h-40 w-40',
 				track: 'h-40'
 			},
 			lg: {
-				selector: 'w-44 h-44',
+				selector: 'h-44 w-44',
 				track: 'h-44'
 			},
 			xl: {
-				selector: 'w-48 h-48',
+				selector: 'h-48 w-48',
 				track: 'h-48'
 			}
 		}

@@ -1,6 +1,5 @@
 defineRouteMeta({
 	openAPI: {
-		tags: ['test'],
 		description: 'Test route description',
 		parameters: [{ in: 'query', name: 'test', required: false }]
 	}
@@ -9,7 +8,7 @@ defineRouteMeta({
 export default defineEventHandler((event) => {
 	const query = getQuery(event);
 	if (!query.test) {
-		return 'GET: hello world';
+		return { message: 'hello world' };
 	}
-	return `GET: hello world with query test=${query.test}`;
+	return { message: `GET: hello world with query test=${query.test}` };
 });

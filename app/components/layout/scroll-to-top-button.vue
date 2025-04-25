@@ -4,7 +4,9 @@
 		:class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
 		icon="heroicons-arrow-up"
 		color="neutral"
+		size="lg"
 		variant="ghost"
+		:circle="true"
 		@click="scrollToTop"
 	/>
 </template>
@@ -12,16 +14,23 @@
 <script setup lang="ts">
 const isScrolling = ref(false);
 
-onMounted(() => {
-	window.addEventListener('scroll', () => {
-		isScrolling.value = window.scrollY > 0;
-	});
-});
-
-function scrollToTop() {
+const scrollToTop = () => {
 	window.scrollTo({
 		top: 0,
+		left: 0,
 		behavior: 'smooth'
 	});
-}
+};
+
+const handleScroll = () => {
+	isScrolling.value = window.scrollY > 0;
+};
+
+onMounted(() => {
+	window.addEventListener('scroll', handleScroll);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('scroll', handleScroll);
+});
 </script>

@@ -5,6 +5,9 @@ export const Invites = {
 
 export const robotBlockingPageProps = 'nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1';
 
+export const appName = 'WolfStar Dashboard';
+export const appDescription = 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.';
+
 export enum Colors {
 	White = '#e7e7e8',
 	Amber = '#ffc107',

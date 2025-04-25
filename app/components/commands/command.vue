@@ -1,6 +1,6 @@
 <template>
 	<div class="my-2 max-w-none min-w-full flex-1 transition-all duration-200">
-		<div class="card bg-secondary-light">
+		<div class="bg-secondary-light card">
 			<div class="card-body">
 				<div class="card-title">
 					<div v-if="!loading" class="flex flex-row items-center gap-4">
@@ -8,12 +8,12 @@
 							<span class="text-lg font-bold">s!{{ command.name }}</span>
 						</div>
 						<div class="w-full md:w-2/3">
-							<span class="text-secondary text-sm">{{ command.description }}</span>
+							<span class="text-sm text-secondary">{{ command.description }}</span>
 						</div>
 					</div>
 					<div v-else class="flex flex-row gap-4">
-						<div class="skeleton h-8 w-32"></div>
-						<div class="skeleton h-6 w-64"></div>
+						<div class="h-8 w-32 skeleton"></div>
+						<div class="h-6 w-64 skeleton"></div>
 					</div>
 				</div>
 
@@ -27,7 +27,7 @@
 						</template>
 						<template v-else-if="loading">
 							<div class="flex flex-col gap-4 p-4">
-								<div v-for="i in 3" :key="i" class="skeleton h-24 w-full"></div>
+								<div v-for="i in 3" :key="i" class="h-24 w-full skeleton"></div>
 							</div>
 						</template>
 

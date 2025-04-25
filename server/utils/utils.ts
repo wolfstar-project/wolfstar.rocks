@@ -40,13 +40,14 @@ async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGu
 }
 
 async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
-	const guild =
-		(await useApi().guilds.get(data.id, {
+	const guild = await useApi()
+		.guilds.get(data.id, {
 			with_counts: true
-		})) ?? undefined;
-	const channels = await useApi().guilds.getChannels(guild.id);
+		})
+		.catch(() => undefined);
+
 	const serialized: PartialOauthFlattenedGuild =
-		typeof guild === 'undefined'
+		guild === undefined
 			? ({
 					afkChannelId: null,
 					afkTimeout: 60,
@@ -79,7 +80,7 @@ async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGui
 					verified: false
 				} as unknown as FlattenedGuild)
 			: // eslint-disable-next-line @typescript-eslint/no-explicit-any
-				flattenGuild({ ...guild, channels: channels as any });
+				flattenGuild({ ...guild, channels: (await useApi().guilds.getChannels(guild.id)) as any });
 
 	return {
 		...serialized,

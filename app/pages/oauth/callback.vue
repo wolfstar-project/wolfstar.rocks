@@ -1,5 +1,5 @@
 <template>
-	<section class="prose prose-stone dark:prose-invert max-w-none">
+	<section class="prose max-w-none prose-stone dark:prose-invert">
 		<template v-if="!code">
 			<h1>Missing code</h1>
 			<p>Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="underline">here</NuxtLink>.</p>

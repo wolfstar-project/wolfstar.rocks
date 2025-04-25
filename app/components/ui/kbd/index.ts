@@ -7,7 +7,7 @@ export const kbd = tv({
 	variants: {
 		variant: {
 			solid: 'bg-base-content text-base-100',
-			outline: 'bg-base-100 border-base-content',
+			outline: 'border-base-content bg-base-100',
 			subtle: 'bg-base-200 text-base-content'
 		},
 		size: {

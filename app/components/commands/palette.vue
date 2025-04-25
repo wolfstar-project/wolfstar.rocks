@@ -26,7 +26,7 @@
 							{{ group }}
 						</div>
 						<div class="collapse-content">
-							<ul class="menu menu-sm bg-base-200 rounded-box w-full">
+							<ul class="menu w-full menu-sm rounded-box bg-base-200">
 								<li v-for="command in getCommandsByCategory(group)" :key="command.name">
 									<button :class="{ active: selectedCommand?.name === command.name }" @click="$emit('select', command)">
 										<div class="flex flex-col items-start gap-1">

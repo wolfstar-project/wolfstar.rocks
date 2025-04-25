@@ -7,8 +7,8 @@ const colors = ['primary', 'secondary', 'success', 'error', 'info', 'warning', '
 
 export const chip = tv({
 	slots: {
-		root: 'relative inline-flex items-center justify-center shrink-0',
-		base: 'rounded-full ring ring-(--ui-bg) flex items-center justify-center text-(--ui-bg) font-medium whitespace-nowrap'
+		root: 'relative inline-flex shrink-0 items-center justify-center',
+		base: 'flex items-center justify-center rounded-full font-medium whitespace-nowrap text-(--ui-bg) ring ring-(--ui-bg)'
 	},
 	variants: {
 		color: {
@@ -28,7 +28,7 @@ export const chip = tv({
 		},
 		position: {
 			'top-right': 'top-0 right-0',
-			'bottom-right': 'bottom-0 right-0',
+			'bottom-right': 'right-0 bottom-0',
 			'top-left': 'top-0 left-0',
 			'bottom-left': 'bottom-0 left-0'
 		},
@@ -43,22 +43,22 @@ export const chip = tv({
 		{
 			position: 'top-right',
 			inset: false,
-			class: '-translate-y-1/2 translate-x-1/2 transform'
+			class: 'translate-x-1/2 -translate-y-1/2 transform'
 		},
 		{
 			position: 'bottom-right',
 			inset: false,
-			class: 'translate-y-1/2 translate-x-1/2 transform'
+			class: 'translate-x-1/2 translate-y-1/2 transform'
 		},
 		{
 			position: 'top-left',
 			inset: false,
-			class: '-translate-y-1/2 -translate-x-1/2 transform'
+			class: '-translate-x-1/2 -translate-y-1/2 transform'
 		},
 		{
 			position: 'bottom-left',
 			inset: false,
-			class: 'translate-y-1/2 -translate-x-1/2 transform'
+			class: '-translate-x-1/2 translate-y-1/2 transform'
 		}
 	],
 	defaultVariants: {

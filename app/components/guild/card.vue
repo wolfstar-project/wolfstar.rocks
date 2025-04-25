@@ -1,13 +1,15 @@
 <template>
 	<NuxtLink
 		:to="guild.wolfstarIsIn ? `/guilds/${guild.id}` : guildAddURL(guild.id)"
-		class="flex flex-col items-center rounded-lg bg-gray-700 p-4 transition-colors duration-200 hover:bg-gray-600"
+		class="card flex flex-col items-center rounded-lg p-4 transition-colors duration-200 hover:bg-base-300"
 	>
-		<div class="mb-2 h-16 w-16">
+		<div class="card-header flex items-center gap-3">
 			<guild-icon :guild="guild" size="16" />
+			<div class="text-center">
+				<h3 class="card-title text-base-content">{{ guild.name }}</h3>
+				<p v-if="!guild.wolfstarIsIn" class="card-subtitle text-base-content/60">Click to invite</p>
+			</div>
 		</div>
-		<!-- <h3 class="text-sm font-medium text-center text-white">{{ guild.name }}</h3> -->
-		<p v-if="!guild.wolfstarIsIn" class="mt-1 text-center text-xs text-gray-400">Click to invite</p>
 	</NuxtLink>
 </template>
 
@@ -21,3 +23,21 @@ interface GuildCardProps {
 
 defineProps<GuildCardProps>();
 </script>
+<style scoped>
+@reference '@/assets/css/main.css';
+.card {
+	@apply bg-base-200;
+}
+
+.card-header {
+	@apply flex items-center;
+}
+
+.card-title {
+	@apply text-sm font-medium;
+}
+
+.card-subtitle {
+	@apply mt-1 text-xs;
+}
+</style>

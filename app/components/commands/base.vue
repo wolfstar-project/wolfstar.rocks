@@ -6,12 +6,12 @@
 					<span class="text-lg font-bold">s!{{ command.name }}</span>
 				</div>
 				<div class="w-full md:w-2/3">
-					<span class="text-base-content/60 text-sm">{{ command.description }}</span>
+					<span class="text-sm text-base-content/60">{{ command.description }}</span>
 				</div>
 			</div>
 			<div v-else class="flex flex-row gap-4">
-				<div class="skeleton h-8 w-32"></div>
-				<div class="skeleton h-6 w-64"></div>
+				<div class="h-8 w-32 skeleton"></div>
+				<div class="h-6 w-64 skeleton"></div>
 			</div>
 		</template>
 
@@ -25,7 +25,7 @@
 				</template>
 				<template v-else-if="loading">
 					<div class="flex flex-col gap-4 p-4">
-						<div v-for="i in 3" :key="i" class="skeleton h-24 w-full"></div>
+						<div v-for="i in 3" :key="i" class="h-24 w-full skeleton"></div>
 					</div>
 				</template>
 
@@ -57,7 +57,7 @@
 		</template>
 
 		<template #footer>
-			<div class="border-base-200 border-t pt-4">
+			<div class="border-t border-base-200 pt-4">
 				<CommandsChips :command="command" :loading="loading" />
 			</div>
 		</template>

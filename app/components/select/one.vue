@@ -1,74 +1,50 @@
 <template>
 	<div class="relative">
-		<button
-			type="button"
-			class="btn w-full"
-			:class="{ 'btn-error': error }"
-			:title="tooltipTitle"
-			:aria-label="label"
-			:aria-expanded="isOpen"
-			@click="openDialog"
-		>
+		<ShadButton :color="error ? 'error' : 'outline'" :title="tooltipTitle" :aria-label="label" :aria-expanded="isOpen" block @click="openDialog">
 			<span class="flex items-center">
 				{{ label }}: {{ displayValue }}
 				<img v-if="imageInName" :src="imageInName" :alt="label" class="ml-2 h-8 w-8" />
 			</span>
-		</button>
+		</ShadButton>
 
-		<Transition name="fade">
-			<div
-				v-if="isOpen"
-				class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-				role="dialog"
-				aria-modal="true"
-				:aria-labelledby="`${name}-title`"
-			>
-				<div class="w-full max-w-md rounded-lg bg-white shadow-xl" @keydown.esc="closeDialog">
-					<div class="flex items-center justify-between border-b p-4">
-						<h3 :id="`${name}-title`" class="text-xl font-medium">
-							{{ label }}
-						</h3>
-						<button type="button" class="btn btn-ghost btn-sm btn-circle" aria-label="Close dialog" @click="closeDialog">✕</button>
+		<ShadModal v-model:open="isOpen" :title="label" :dismissible="true" @after:leave="onModalClose">
+			<template #content>
+				<ShadForm :validation-schema="validationSchema" @submit="handleSubmit">
+					<div class="space-y-4">
+						<ShadInput
+							v-if="searchable && options.length > 10"
+							v-model="search"
+							name="search"
+							type="search"
+							placeholder="Search..."
+							:color="error ? 'error' : 'primary'"
+						/>
+
+						<div class="max-h-64 overflow-y-auto" role="listbox" :aria-label="label">
+							<ShadList>
+								<li
+									v-for="item in filteredOptions"
+									:key="item.value"
+									class="flex cursor-pointer items-center p-2 hover:bg-base-200"
+									:class="{ 'bg-primary/10': selectedValue === item.value }"
+									role="option"
+									:aria-selected="selectedValue === item.value"
+									@click="selectItem(item.value)"
+								>
+									<span>{{ item.label }}</span>
+									<img v-if="item.iconUrl" :src="item.iconUrl" :alt="`${item.label} icon`" class="ml-2 h-8 w-8" />
+								</li>
+							</ShadList>
+						</div>
+
+						<div class="flex justify-end gap-2">
+							<ShadButton v-if="!required" type="button" variant="ghost" @click="handleReset"> Clear </ShadButton>
+							<ShadButton type="submit" color="primary"> Confirm </ShadButton>
+						</div>
 					</div>
-
-					<div class="p-4">
-						<VeeForm v-slot="{ errors }" :validation-schema="validationSchema" @submit="handleSubmit">
-							<VeeField
-								v-if="searchable && options.length > 10"
-								v-model="search"
-								name="search"
-								type="search"
-								placeholder="Search..."
-								class="input"
-								:class="{ 'input-error': errors.search }"
-							/>
-
-							<div class="mt-4 max-h-64 overflow-y-auto" role="listbox" :aria-label="label">
-								<ul class="divide-y divide-gray-100">
-									<li
-										v-for="item in filteredOptions"
-										:key="item.value"
-										class="flex cursor-pointer items-center p-2 hover:bg-gray-50"
-										:class="{ 'bg-primary/10': selectedValue === item.value }"
-										role="option"
-										:aria-selected="selectedValue === item.value"
-										@click="selectItem(item.value)"
-									>
-										<span>{{ item.label }}</span>
-										<img v-if="item.iconUrl" :src="item.iconUrl" :alt="`${item.label} icon`" class="ml-2 h-8 w-8" />
-									</li>
-								</ul>
-							</div>
-
-							<div class="mt-4 flex justify-end gap-2">
-								<button v-if="!required" type="button" class="btn btn-ghost" @click="handleReset">Clear</button>
-								<button type="submit" class="btn btn-primary">Confirm</button>
-							</div>
-						</VeeForm>
-					</div>
-				</div>
-			</div>
-		</Transition>
+				</ShadForm>
+			</template>
+		</ShadModal>
 	</div>
 </template>
 
@@ -103,6 +79,7 @@ const props = withDefaults(defineProps<Props>(), {
 	tooltipTitle: undefined,
 	required: true,
 	placeholder: undefined,
+	helperText: undefined,
 	searchable: true,
 	imageInName: undefined
 });
@@ -120,7 +97,7 @@ const selectedValue = ref<Props['value']>(props.value);
 const validationSchema = computed(() =>
 	toTypedSchema(
 		z.object({
-			[props.name]: props.required ? z.string().min(1, 'This field is required') : z.string().optional(),
+			[props.name]: props.required ? z.any().refine((val) => val !== undefined, 'This field is required') : z.any().optional(),
 			search: z.string().optional()
 		})
 	)
@@ -144,6 +121,9 @@ const openDialog = () => {
 
 const closeDialog = () => {
 	isOpen.value = false;
+};
+
+const onModalClose = () => {
 	search.value = '';
 };
 
@@ -179,15 +159,3 @@ onUnmounted(() => {
 	}
 });
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-	opacity: 0;
-}
-</style>

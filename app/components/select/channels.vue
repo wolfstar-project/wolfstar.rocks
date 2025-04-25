@@ -3,7 +3,6 @@
 		:label="label"
 		:options="channelOptions"
 		:value="modelValue"
-		:error="error"
 		:helper-text="description"
 		:name="name"
 		:tooltip-title="tooltipTitle"
@@ -20,10 +19,9 @@ import type { TransformedLoginData } from '~~/shared/types/discord';
 
 interface Props {
 	label: string;
-	modelValue: string[];
+	modelValue: string[] | null;
 	guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>;
 	tooltipTitle?: string;
-	error?: boolean;
 	description?: string;
 	name?: string;
 }
@@ -49,8 +47,11 @@ const channelOptions = computed(() =>
 		}))
 );
 
-const handleChange = (value: string[]) => {
-	emit('update:modelValue', value);
-	emit('change', value);
+const handleChange = (value: string[] | null) => {
+	if (value) {
+		emit('update:modelValue', value);
+	} else {
+		emit('update:modelValue', []);
+	}
 };
 </script>

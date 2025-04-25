@@ -102,11 +102,12 @@ const ui = computed(() =>
 			}
 		}
 	})({
-		color: props.color,
+		color: typeof props.color === 'string' ? `bg-${props.color}` : props.color,
 		variant: props.variant,
 		size: buttonSize.value,
 		loading: isLoading.value,
 		block: props.block,
+		circle: props.circle,
 		square: props.square || (!slots.default && !props.label),
 		leading: isLeading.value,
 		trailing: isTrailing.value,

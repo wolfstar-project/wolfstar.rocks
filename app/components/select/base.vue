@@ -4,11 +4,11 @@
 			{{ label }}: {{ displayValue }}
 		</button>
 
-		<div v-if="isOpen" class="modal modal-open">
+		<div v-if="isOpen" class="modal-open modal">
 			<div class="modal-box">
 				<div class="flex items-center justify-between">
 					<h3 class="text-lg font-bold">{{ label }}</h3>
-					<button class="btn btn-sm btn-circle btn-ghost" type="button" @click="closeDialog">✕</button>
+					<button class="btn btn-circle btn-ghost btn-sm" type="button" @click="closeDialog">✕</button>
 				</div>
 
 				<VeeForm v-slot="{ errors }" :validation-schema="validationSchema" @submit="handleSubmit">

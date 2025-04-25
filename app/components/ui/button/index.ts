@@ -12,10 +12,10 @@ const colors = ['primary', 'secondary', 'success', 'error', 'info', 'warning', '
 export const buttonVariants = tv({
 	slots: {
 		base: [
-			'btn', // daisyUI button base class
-			'inline-flex items-center',
-			'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
-			'disabled:opacity-75 aria-disabled:opacity-75'
+			'btn' // daisyUI button base class
+			//	'inline-flex items-center',
+			//	'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
+			//	'disabled:opacity-75 aria-disabled:opacity-75'
 		],
 		label: 'truncate',
 		leadingIcon: 'shrink-0',
@@ -28,38 +28,38 @@ export const buttonVariants = tv({
 		color: { ...Object.fromEntries(colors.map((color) => [color, `btn-${color}`])) },
 		variant: {
 			outline: 'btn-outline',
-			soft: 'btn-ghost opacity-80',
-			subtle: 'btn-ghost',
+			soft: 'btn-ghost',
+			dash: 'btn-dash',
 			ghost: 'btn-ghost',
 			link: 'btn-link'
 		},
 		size: {
 			xs: {
-				base: 'btn-xs gap-1',
+				base: 'gap-1 btn-xs',
 				leadingIcon: 'size-4',
 				leadingAvatarSize: '3xs',
 				trailingIcon: 'size-4'
 			},
 			sm: {
-				base: 'btn-sm gap-1.5',
+				base: 'gap-1.5 btn-sm',
 				leadingIcon: 'size-4',
 				leadingAvatarSize: '3xs',
 				trailingIcon: 'size-4'
 			},
 			md: {
-				base: 'btn-md gap-1.5',
+				base: 'gap-1.5 btn-md',
 				leadingIcon: 'size-5',
 				leadingAvatarSize: '2xs',
 				trailingIcon: 'size-5'
 			},
 			lg: {
-				base: 'btn-lg gap-2',
+				base: 'gap-2 btn-lg',
 				leadingIcon: 'size-5',
 				leadingAvatarSize: '2xs',
 				trailingIcon: 'size-5'
 			},
 			xl: {
-				base: 'btn-xl gap-2',
+				base: 'gap-2 btn-xl',
 				leadingIcon: 'size-6',
 				leadingAvatarSize: 'xs',
 				trailingIcon: 'size-6'
@@ -71,6 +71,9 @@ export const buttonVariants = tv({
 		square: {
 			true: 'btn-square'
 		},
+		circle: {
+			true: 'btn-circle'
+		},
 		leading: {
 			true: ''
 		},
@@ -78,7 +81,7 @@ export const buttonVariants = tv({
 			true: ''
 		},
 		loading: {
-			true: 'btn-disabled'
+			true: 'loading loading-spinner'
 		},
 		active: {
 			true: {
@@ -98,16 +101,16 @@ export const buttonVariants = tv({
 		{
 			color: 'neutral',
 			variant: 'outline',
-			class: ` disabled:btn-disabled aria-disabled:btn-disabled`
+			class: `disabled:btn-disabled aria-disabled:btn-disabled`
 		},
 		{
 			color: 'neutral',
 			variant: 'soft',
-			class: `opacity-80 disabled:btn-disabled aria-disabled:btn-disabled`
+			class: `disabled:btn-disabled aria-disabled:btn-disabled opacity-80`
 		},
 		{
 			color: 'neutral',
-			variant: 'subtle',
+			variant: 'dash',
 			class: `disabled:btn-disabled aria-disabled:btn-disabled`
 		},
 		{
@@ -123,27 +126,27 @@ export const buttonVariants = tv({
 		{
 			size: 'xs',
 			square: true,
-			class: 'p-1'
+			class: 'btn-xs'
 		},
 		{
 			size: 'sm',
 			square: true,
-			class: 'p-1.5'
+			class: 'btn-sm'
 		},
 		{
 			size: 'md',
 			square: true,
-			class: 'p-1.5'
+			class: 'btn-md'
 		},
 		{
 			size: 'lg',
 			square: true,
-			class: 'p-2'
+			class: 'btn-lg'
 		},
 		{
 			size: 'xl',
 			square: true,
-			class: 'p-2'
+			class: 'btn-xl'
 		},
 		{
 			loading: true,
@@ -163,8 +166,7 @@ export const buttonVariants = tv({
 	],
 
 	defaultVariants: {
-		color: 'primary',
-		size: 'md'
+		color: 'primary'
 	}
 });
 
@@ -179,6 +181,7 @@ export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, 'ra
 	size?: ButtonVariants['size'];
 	square?: boolean;
 	block?: boolean;
+	circle?: boolean;
 	loadingAuto?: boolean;
 	onClick?: ((event: MouseEvent) => void | Promise<void>) | Array<(event: MouseEvent) => void | Promise<void>>;
 	class?: HTMLAttributes['class'];

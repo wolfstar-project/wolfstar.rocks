@@ -8,10 +8,10 @@ export { default as Alert } from './Alert.vue';
 export const alert = tv({
 	slots: {
 		root: 'alert w-full',
-		wrapper: 'flex-1 flex flex-col',
+		wrapper: 'flex flex-1 flex-col',
 		title: 'font-medium',
 		description: 'opacity-90',
-		icon: 'shrink-0 size-5',
+		icon: 'size-5 shrink-0',
 		avatar: 'shrink-0',
 		avatarSize: '2xl',
 		actions: 'flex flex-wrap gap-2',
@@ -45,7 +45,7 @@ export const alert = tv({
 			},
 			vertical: {
 				root: 'alert-vertical',
-				actions: 'items-start mt-3'
+				actions: 'mt-3 items-start'
 			}
 		},
 		title: {

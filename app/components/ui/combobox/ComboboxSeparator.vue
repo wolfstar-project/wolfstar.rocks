@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import type { ComboboxSeparatorProps } from 'reka-ui';
-import { cn } from '~/app/utils';
+import { cn } from '@/utils/cn';
 import { ComboboxSeparator } from 'reka-ui';
 import { computed, type HTMLAttributes } from 'vue';
 

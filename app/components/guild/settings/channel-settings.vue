@@ -3,7 +3,7 @@
 		<!-- Header Section -->
 		<section>
 			<h2 class="text-2xl font-bold">Channels</h2>
-			<p class="text-base-content/80 mt-2">
+			<p class="mt-2 text-base-content/80">
 				Here you can configure different kinds of channels for WolfStar. Hover over a button to get more information for that specific
 				channel.
 			</p>

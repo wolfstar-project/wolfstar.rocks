@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import type { ComboboxViewportProps } from 'reka-ui';
-import { cn } from '~/app/utils';
+import { cn } from '@/utils/cn';
 import { ComboboxViewport, useForwardProps } from 'reka-ui';
 import { computed, type HTMLAttributes } from 'vue';
 

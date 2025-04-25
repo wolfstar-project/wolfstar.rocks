@@ -1,4 +1,3 @@
-import { z } from 'zod';
 import useApi from '~~/shared/utils/api';
 import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
 import authMiddleware from '~~/server/utils/middlewares/auth';
@@ -8,15 +7,7 @@ import { isNullOrUndefined } from '@sapphire/utilities/isNullish';
 defineRouteMeta({
 	openAPI: {
 		tags: ['Discord Api'],
-		description: 'Get the current user and their guilds',
-		parameters: [
-			{
-				in: 'query',
-				name: 'shouldSerialize',
-				required: false,
-				description: 'Whether to serialize the response or not'
-			}
-		]
+		description: 'Get the current user and their guilds'
 	}
 });
 
@@ -31,18 +22,9 @@ export default defineEventHandler({
 			})
 	],
 	handler: async (event) => {
-		// Validate query parameters
-		const query = await getValidatedQuery(
-			event,
-			z.object({
-				shouldSerialize: z.boolean().optional()
-			}).parse
-		);
-
 		// Get session token
 
 		const tokens = await event.context.$authorization.resolveServerTokens();
-		console.log('tokens', tokens);
 
 		if (isNullOrUndefined(tokens) || !('access_token' in tokens) || isNullOrUndefined(tokens.access_token)) {
 			throw createError({
@@ -79,14 +61,9 @@ export default defineEventHandler({
 		}
 
 		// Return transformed or raw data based on query param
-		return query?.shouldSerialize !== true
-			? {
-					user,
-					guilds
-				}
-			: await transformOauthGuildsAndUser({
-					user,
-					guilds
-				});
+		return await transformOauthGuildsAndUser({
+			user,
+			guilds
+		});
 	}
 });

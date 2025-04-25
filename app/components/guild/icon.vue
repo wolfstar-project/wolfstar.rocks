@@ -11,8 +11,8 @@
 			<source type="image/png" :srcset="makeSrcset('png')" />
 			<img :src="makeSrcset('png')" :alt="guild.name" class="h-full w-full object-cover" decoding="async" crossorigin="anonymous" />
 		</picture>
-		<div v-else class="flex h-full w-full items-center justify-center bg-gray-800 text-white">
-			<span class="text-lg font-bold">{{ acronym }}</span>
+		<div v-else class="flex h-full w-full items-center justify-center bg-base-300 p-2 text-base-content">
+			<span class="text-lg font-semibold">{{ acronym }}</span>
 		</div>
 	</div>
 </template>

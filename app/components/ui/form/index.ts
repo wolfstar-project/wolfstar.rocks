@@ -11,7 +11,7 @@ export const formField = tv({
 		wrapper: '',
 		labelWrapper: 'flex items-center justify-between',
 		label: 'block font-medium text-base-content',
-		container: 'mt-1 relative',
+		container: 'relative mt-1',
 		description: 'text-base-content/70',
 		error: 'mt-2 text-error',
 		hint: 'text-base-content/70',
@@ -37,7 +37,7 @@ export const formField = tv({
 		},
 		required: {
 			true: {
-				label: "after:content-['*'] after:ms-0.5 after:text-error"
+				label: "after:ms-0.5 after:text-error after:content-['*']"
 			}
 		}
 	},

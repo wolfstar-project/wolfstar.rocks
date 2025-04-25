@@ -7,7 +7,7 @@
 				<p class="mb-4 text-sm">On this page you can disable commands on your server</p>
 
 				<div v-for="category in categories" :key="category" class="mb-4">
-					<div class="collapse-arrow bg-base-200 collapse">
+					<div class="collapse-arrow collapse bg-base-200">
 						<input type="checkbox" @change="expandedCategory = expandedCategory === category ? null : category" />
 						<div class="collapse-title text-xl font-medium">
 							{{ category }}
@@ -24,10 +24,10 @@
 								/>
 							</div>
 							<div class="join-item mt-4 flex justify-end space-x-2">
-								<button class="join btn btn-success btn-sm" @click="toggleCategory(category, true)">Enable all</button>
-								<button class="join btn btn-warning btn-sm" @click="toggleCategory(category, false)">Disable all</button>
-								<button class="join btn btn-error btn-sm" @click="parseCommandsToLocalCommands">Reset</button>
-								<button class="join btn btn-primary btn-sm" @click="saveChanges">Save</button>
+								<button class="btn join btn-sm btn-success" @click="toggleCategory(category, true)">Enable all</button>
+								<button class="btn join btn-sm btn-warning" @click="toggleCategory(category, false)">Disable all</button>
+								<button class="btn join btn-sm btn-error" @click="parseCommandsToLocalCommands">Reset</button>
+								<button class="btn join btn-sm btn-primary" @click="saveChanges">Save</button>
 							</div>
 						</div>
 					</div>

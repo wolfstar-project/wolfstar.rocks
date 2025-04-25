@@ -2,7 +2,7 @@
 	<div class="discord-message-avatar-wrapper" :class="size.classes">
 		<nuxt-img v-if="profile.app" :src="`/img/avatars/${user}.png`" :width="size.dimensions" :height="size.dimensions" alt="Avatar" />
 		<ShadIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie h-full w-full" />
-		<ShadIcon v-else name="ph:shooting-star-fill" class="text-info h-full w-full" />
+		<ShadIcon v-else name="ph:shooting-star-fill" class="h-full w-full text-info" />
 	</div>
 </template>
 

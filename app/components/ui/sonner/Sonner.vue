@@ -15,7 +15,7 @@
 		}"
 	>
 		<template #loading-icon>
-			<WIcon name="i-mdi-loading" class="animate-spin" />
+			<ShadIcon name="i-mdi-loading" class="animate-spin" />
 		</template>
 	</Sonner>
 </template>

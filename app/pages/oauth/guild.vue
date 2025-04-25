@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<section class="prose prose-stone dark:prose-invert max-w-none">
+		<section class="prose max-w-none prose-stone dark:prose-invert">
 			<client-only>
 				<template v-if="!guildId">
 					<h1>Missing guild ID</h1>
@@ -12,23 +12,19 @@
 </template>
 
 <script setup lang="ts">
-import { promiseTimeout } from '@vueuse/core';
-
 const router = useRouter();
 const guildId = ref<string | null>(null);
 
-const { start, finish } = useLoadingIndicator();
+const { start, finish } = useLoadingIndicator({
+	duration: 1500
+});
 
 onMounted(async () => {
+	// Start the loading indicator
+	start();
 	const queryGuildId = useRouteParams('guildid');
 	if (queryGuildId && typeof queryGuildId.value === 'string') {
 		guildId.value = queryGuildId.value;
-
-		// Start the loading indicator
-		start();
-
-		// Wait for animation
-		await promiseTimeout(1500);
 
 		// Finish loading and redirect
 		finish();

@@ -4,7 +4,7 @@
 			<div v-if="disableTypography" v-bind="titleProps">
 				{{ title }}
 			</div>
-			<h1 v-else class="border-primary mb-3 border-b-2 pb-0.5 text-xl font-medium" v-bind="titleProps">
+			<h1 v-else class="mb-3 border-b-2 border-primary pb-0.5 text-xl font-medium" v-bind="titleProps">
 				{{ title }}
 			</h1>
 		</template>

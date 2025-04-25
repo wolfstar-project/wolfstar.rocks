@@ -42,8 +42,8 @@ export const inputNumber = tv({
 		},
 		disabled: {
 			true: {
-				increment: 'opacity-50 cursor-not-allowed',
-				decrement: 'opacity-50 cursor-not-allowed'
+				increment: 'cursor-not-allowed opacity-50',
+				decrement: 'cursor-not-allowed opacity-50'
 			}
 		},
 		orientation: {
@@ -53,8 +53,8 @@ export const inputNumber = tv({
 				decrement: 'inset-y-0 start-0 ps-1'
 			},
 			vertical: {
-				increment: 'top-0 end-0 pe-1 [&>button]:py-0 scale-80',
-				decrement: 'bottom-0 end-0 pe-1 [&>button]:py-0 scale-80'
+				increment: 'end-0 top-0 scale-80 pe-1 [&>button]:py-0',
+				decrement: 'end-0 bottom-0 scale-80 pe-1 [&>button]:py-0'
 			}
 		},
 		highlight: {
@@ -66,7 +66,7 @@ export const inputNumber = tv({
 		...(colors.map((color) => ({
 			color,
 			variant: ['bordered'],
-			class: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-${color}`
+			class: `focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-${color}`
 		})) as any),
 		...(colors.map((color) => ({
 			color,
@@ -76,7 +76,7 @@ export const inputNumber = tv({
 		{
 			color: 'neutral',
 			variant: ['bordered'],
-			class: 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-base-content'
+			class: 'focus-visible:ring-2 focus-visible:ring-base-content focus-visible:outline-none'
 		},
 		{
 			color: 'neutral',

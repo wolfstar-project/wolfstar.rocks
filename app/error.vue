@@ -1,11 +1,7 @@
 <template>
 	<vite-pwa-manifest />
-	<nuxt-loading-indicator color="bg-netrual" />
 	<nuxt-layout name="main">
 		<error-message :error="error" />
-		<ClientOnly>
-			<ShadToaster position="bottom-right" />
-		</ClientOnly>
 	</nuxt-layout>
 </template>
 

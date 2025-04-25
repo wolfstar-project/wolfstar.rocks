@@ -1,28 +1,27 @@
-import { isNullOrUndefined } from '@sapphire/utilities';
-import { z } from 'zod';
-import type { GuildData } from '~~/lib/database';
-import { readSettings, serializeSettings } from '~~/lib/database';
+import { isNullOrUndefined } from '@sapphire/utilities/isNullish';
+import { createError } from 'h3';
 import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import useApi from '~~/shared/utils/api';
 import { seconds } from '~~/shared/utils/times';
 import { manageAbility } from '~~/shared/utils/abilities';
 
-const querySchema = z.object({
-	shouldSerialize: z.boolean().optional(),
-	userId: z.string().optional()
-});
-
 defineRouteMeta({
 	openAPI: {
 		tags: ['Discord Api'],
-		description: 'Get guild settings',
+		description: 'Get guild member data',
 		parameters: [
 			{
 				in: 'path',
 				name: 'guild',
 				required: true,
-				description: 'The guild ID to fetch settings for'
+				description: 'The guild ID to fetch data for'
+			},
+			{
+				in: 'path',
+				name: 'member',
+				required: true,
+				description: 'The member ID to fetch data for'
 			}
 		]
 	}
@@ -34,7 +33,7 @@ export default defineEventHandler({
 		async (event) =>
 			await rateLimitMiddleware(event, {
 				max: 10,
-				time: seconds(10),
+				time: seconds(5),
 				auth: true
 			})
 	],
@@ -44,19 +43,13 @@ export default defineEventHandler({
 		if (isNullOrUndefined(guildId)) {
 			throw createError({
 				statusCode: 400,
-				message: 'No guild id provided'
+				message: 'Guild ID is required'
 			});
 		}
 
-		// Validate query parameters
-		const query = await getValidatedQuery(event, querySchema.parse);
-		const { shouldSerialize } = query;
-
-		// Initialize API client
-
 		// Fetch guild data
 		const guild = await useApi().guilds.get(guildId, { with_counts: true });
-		if (!guild) {
+		if (isNullOrUndefined(guild)) {
 			throw createError({
 				statusCode: 400,
 				message: 'Guild not found'
@@ -64,23 +57,23 @@ export default defineEventHandler({
 		}
 
 		const user = await event.context.$authorization.resolveServerUser();
-		if (!user) {
+		// Check if user ID is provided
+		if (isNullOrUndefined(user)) {
 			throw createError({
-				statusCode: 401,
-				message: 'Unauthorized'
+				statusCode: 400,
+				message: 'User ID is required'
 			});
 		}
 
 		// Fetch member data
 		const member = await useApi().guilds.getMember(guild.id, user.id);
-		if (!member) {
+		if (isNullOrUndefined(member)) {
 			throw createError({
 				statusCode: 400,
 				message: 'Member not found'
 			});
 		}
 
-		// Check permissions
 		if (await denies(event, manageAbility, guild, member)) {
 			throw createError({
 				statusCode: 403,
@@ -88,8 +81,23 @@ export default defineEventHandler({
 			});
 		}
 
-		// Read and return settings
-		const settings = await readSettings(guild.id);
-		return shouldSerialize ? serializeSettings(settings) : (settings as unknown as GuildData);
+		const memberId = getRouterParam(event, 'member');
+		if (isNullOrUndefined(memberId)) {
+			throw createError({
+				statusCode: 400,
+				message: 'Member ID is required'
+			});
+		}
+
+		const guildMember = await useApi().guilds.getMember(guild.id, memberId);
+
+		if (isNullOrUndefined(guildMember)) {
+			throw createError({
+				statusCode: 404,
+				message: 'Guild member not found'
+			});
+		}
+
+		return flattenMember(guildMember, guild);
 	}
 });

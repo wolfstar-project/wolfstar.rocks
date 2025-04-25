@@ -12,7 +12,7 @@
 		</p>
 	</section>
 
-	<section class="join mt-16">
+	<section class="mt-16 join">
 		<nuxt-link class="btn join-item md:btn-wide" :to="Invites.Staryl"><ShadIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link>
 		<nuxt-link class="btn join-item md:btn-wide" to="#explore"><ShadIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
 	</section>

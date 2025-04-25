@@ -1,65 +1,10 @@
 import '@vite-pwa/nuxt';
 import 'nuxt';
 import tailwindcss from '@tailwindcss/vite';
-
-const manifestIcons = [
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-36x36.png',
-		sizes: '36x36',
-		type: 'image/png',
-		purpose: 'any badge'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-48x48.png',
-		sizes: '48x48',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-72x72.png',
-		sizes: '72x72',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
-		sizes: '96x96',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-144x144.png',
-		sizes: '144x144',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-192x192.png',
-		sizes: '192x192',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-256x256.png',
-		sizes: '256x256',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-384x384.png',
-		sizes: '384x384',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/android-chrome-512x512.png',
-		sizes: '512x512',
-		type: 'image/png'
-	},
-	{
-		src: 'https://wolfstar.rocks/icons/maskable_icon.png',
-		sizes: '640x640',
-		type: 'image/png',
-		purpose: 'any maskable'
-	}
-];
+import { pwa } from './app/config/pwa';
+import { appDescription, appName } from './app/utils/constants';
 
 const baseURL = 'https://wolfstar.rocks';
-const name = 'WolfStar Dashboard';
-const description = 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.';
 
 export default defineNuxtConfig({
 	// Modules configuration
@@ -143,7 +88,7 @@ export default defineNuxtConfig({
 				// Mobile specific
 				{ name: 'mobile-web-app-capable', content: 'yes' },
 				{ name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
-				{ name: 'apple-mobile-web-app-title', content: name },
+				{ name: 'apple-mobile-web-app-title', content: appName },
 				{ name: 'HandheldFriendly', content: 'True' },
 
 				// Microsoft specific
@@ -163,9 +108,9 @@ export default defineNuxtConfig({
 				{ name: 'keywords', content: 'discord, bot, wolfstar, moderation, automation, wolfstar, cyborg' },
 				{
 					name: 'summary',
-					content: description
+					content: appDescription
 				},
-				{ name: 'subject', content: description },
+				{ name: 'subject', content: appDescription },
 
 				// Robots and indexing
 				{ name: 'robots', content: 'archive,follow,imageindex,index,odp,snippet,translate' },
@@ -188,15 +133,15 @@ export default defineNuxtConfig({
 				{ property: 'og:email', content: 'contact@wolfstar.rocks' },
 				{
 					property: 'og:description',
-					content: description
+					content: appDescription
 				},
 				{ property: 'og:image:alt', content: 'OpenGraphImage' },
 				{ property: 'og:image:height', content: '512' },
 				{ property: 'og:image:width', content: '1024' },
 				{ property: 'og:image', content: 'https://wolfstar.rocks/icons/opengraph.png' },
 				{ property: 'og:locale', content: 'en' },
-				{ property: 'og:site_name', content: name },
-				{ property: 'og:title', content: name },
+				{ property: 'og:site_name', content: appName },
+				{ property: 'og:title', content: appName },
 				{ property: 'og:type', content: 'website' },
 				{ property: 'og:url', content: baseURL }
 			]
@@ -222,13 +167,17 @@ export default defineNuxtConfig({
 	},
 
 	routeRules: {
+		'/': { prerender: true },
 		'/terms': { isr: true, prerender: true },
 		'/privacy': { isr: true, prerender: true }
 	},
 	sourcemap: {
 		client: 'hidden'
 	},
-
+	experimental: {
+		typedPages: true,
+		inlineRouteRules: true
+	},
 	future: {
 		compatibilityVersion: 4
 	},
@@ -298,83 +247,7 @@ export default defineNuxtConfig({
 		zeroRuntime: true
 	},
 	// PWA configuration
-	pwa: {
-		registerType: 'autoUpdate',
-		devOptions: {
-			enabled: false,
-			type: 'module'
-		},
-		includeAssets: './public/img/icons',
-		manifest: {
-			background_color: '#050505',
-			categories: ['discord', 'bot', 'wolfstar', 'moderation', 'automation', 'cyborg', 'logging'],
-			description,
-			dir: 'ltr',
-			display: 'minimal-ui',
-			lang: 'en_US',
-			name,
-			orientation: 'portrait-primary',
-			scope: '/',
-			short_name: 'WolfStar',
-			start_url: '/',
-			theme_color: '#fd171b',
-			icons: manifestIcons,
-			shortcuts: [
-				{
-					name,
-					short_name: 'Homepage',
-					description: "Go to WolfStar's dashboard",
-					url: '/',
-					icons: [
-						{
-							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
-							sizes: '96x96',
-							type: 'image/png'
-						}
-					]
-				},
-				{
-					name: 'WolfStar Commands',
-					short_name: 'Commands',
-					description: "View WolfStar's commands",
-					url: '/commands',
-					icons: [
-						{
-							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
-							sizes: '96x96',
-							type: 'image/png'
-						}
-					]
-				},
-				{
-					name: 'WolfStar Terms of Service',
-					short_name: 'Terms of Service',
-					description: "Read WolfStar's Terms of Service",
-					url: '/terms',
-					icons: [
-						{
-							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
-							sizes: '96x96',
-							type: 'image/png'
-						}
-					]
-				},
-				{
-					name: 'WolfStar Privacy Policy',
-					short_name: 'Privacy Policy',
-					description: "Read WolfStar's Privacy Policy",
-					url: '/privacy',
-					icons: [
-						{
-							src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
-							sizes: '96x96',
-							type: 'image/png'
-						}
-					]
-				}
-			]
-		}
-	},
+	pwa,
 	colorMode: {
 		preference: 'system', // default theme
 		dataValue: 'theme', // activate data-theme in <html> tag

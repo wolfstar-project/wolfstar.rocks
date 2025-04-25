@@ -6,7 +6,6 @@
 @plugin 'daisyui' {
 	themes: light, midnight, dark;
 	root: ':root';
-	logs: true;
 }
 
 @plugin "daisyui/theme" {

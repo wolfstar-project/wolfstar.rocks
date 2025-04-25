@@ -270,7 +270,7 @@ export const input = tv({
 		{
 			color: 'primary',
 			variant: ['bordered'],
-			class: 'focus:outline-none focus:ring-2 focus:ring-primary'
+			class: 'focus:ring-2 focus:ring-primary focus:outline-none'
 		},
 		{
 			color: 'primary',
@@ -280,7 +280,7 @@ export const input = tv({
 		{
 			color: 'neutral',
 			variant: ['bordered'],
-			class: 'focus:outline-none focus:ring-2 focus:ring-base-content'
+			class: 'focus:ring-2 focus:ring-base-content focus:outline-none'
 		},
 		{
 			color: 'neutral',

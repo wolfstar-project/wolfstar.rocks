@@ -6,7 +6,7 @@
 					<span class="label-text">Prefix</span>
 					<span class="label-text-alt">This is your server's prefix, use it to trigger WolfStar commands.</span>
 				</label>
-				<input v-model="formData.prefix" type="text" class="input input-bordered w-full" :class="{ 'input-error': errors.prefix }" />
+				<input v-model="formData.prefix" type="text" class="input-bordered input w-full" :class="{ 'input-error': errors.prefix }" />
 				<label v-if="errors.prefix" class="label">
 					<span class="label-text-alt text-error">{{ errors.prefix }}</span>
 				</label>
@@ -17,7 +17,7 @@
 					<span class="label-text">Language</span>
 					<span class="label-text-alt">Select the language you want for this guild</span>
 				</label>
-				<select v-model="formData.language" class="select select-bordered w-full" :class="{ 'select-error': errors.language }">
+				<select v-model="formData.language" class="select-bordered select w-full" :class="{ 'select-error': errors.language }">
 					<option v-for="option in languageOptions" :key="option.value" :value="option.value">
 						{{ option.label }}
 					</option>

@@ -14,7 +14,7 @@ export const checkbox = tv({
 		],
 		container: 'flex items-center',
 		wrapper: 'ms-2',
-		icon: 'shrink-0 size-full',
+		icon: 'size-full shrink-0',
 		label: 'block font-medium text-base-content',
 		description: 'text-base-content/60'
 	},
@@ -57,7 +57,7 @@ export const checkbox = tv({
 		},
 		required: {
 			true: {
-				label: "after:content-['*'] after:ms-0.5 after:text-error"
+				label: "after:ms-0.5 after:text-error after:content-['*']"
 			}
 		},
 		disabled: {
@@ -80,7 +80,7 @@ export const checkbox = tv({
 		{
 			color: 'neutral',
 			checked: true,
-			class: 'ring-2 ring-base-content bg-base-content'
+			class: 'bg-base-content ring-2 ring-base-content'
 		}
 	],
 	defaultVariants: {

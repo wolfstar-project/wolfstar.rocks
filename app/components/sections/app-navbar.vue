@@ -5,7 +5,7 @@
 				<div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
 					<ShadIcon name="ph:list" class="h-5 w-5" />
 				</div>
-				<ul tabindex="0" class="menu dropdown-content menu-sm rounded-box bg-base-100 z-[1] mt-3 w-32 p-2 shadow-lg">
+				<ul tabindex="0" class="dropdown-content menu z-[1] mt-3 w-32 menu-sm rounded-box bg-base-100 p-2 shadow-lg">
 					<li>
 						<a>Features</a>
 						<ul class="p-2">
@@ -18,7 +18,7 @@
 						<ul class="p-2">
 							<li>
 								<nuxt-link to="/">
-									<ShadIcon name="ph:shield-duotone" class="text-branding-wolfstar h-4 w-4" />
+									<ShadIcon name="ph:shield-duotone" class="h-4 w-4 text-branding-wolfstar" />
 									WolfStar
 								</nuxt-link>
 							</li>
@@ -44,25 +44,25 @@
 			</nuxt-link>
 		</div>
 		<div class="navbar-center hidden lg:flex">
-			<div class="group dropdown dropdown-hover">
-				<div tabindex="0" role="button" class="btn btn-ghost m-1 items-center transition-all group-hover:text-white">
+			<div class="group dropdown-hover dropdown">
+				<div tabindex="0" role="button" class="btn m-1 items-center btn-ghost transition-all group-hover:text-white">
 					Features
 					<ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
 				</div>
-				<ul tabindex="0" class="menu dropdown-content rounded-box bg-base-100 z-[1] w-52 p-2 shadow">
+				<ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
 					<li><a>Item 1</a></li>
 					<li><a>Item 2</a></li>
 				</ul>
 			</div>
-			<div class="group dropdown dropdown-hover">
-				<div tabindex="0" role="button" class="btn btn-ghost m-1 items-center transition-all group-hover:text-white">
+			<div class="group dropdown-hover dropdown">
+				<div tabindex="0" role="button" class="btn m-1 items-center btn-ghost transition-all group-hover:text-white">
 					Applications
 					<ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
 				</div>
-				<ul tabindex="0" class="menu dropdown-content rounded-box bg-base-100 z-[1] w-52 p-2 shadow">
+				<ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
 					<li>
 						<nuxt-link to="/">
-							<ShadIcon name="ph:shield-duotone" class="text-branding-wolfstar h-4 w-4" />
+							<ShadIcon name="ph:shield-duotone" class="h-4 w-4 text-branding-wolfstar" />
 							WolfStar
 						</nuxt-link>
 					</li>
@@ -75,7 +75,7 @@
 				</ul>
 			</div>
 
-			<nuxt-link :to="App.invite" class="btn btn-ghost hover:text-success transition-colors">
+			<nuxt-link :to="App.invite" class="btn btn-ghost transition-colors hover:text-success">
 				Invite App
 				<ShadIcon name="ph:plus-circle-duotone" />
 			</nuxt-link>
@@ -85,12 +85,32 @@
 			</nuxt-link>
 		</div>
 		<div class="navbar-end">
+			<div><layout-change-theme /></div>
 			<AuthState>
 				<template #default="{ loggedIn, clear }">
-					<div v-if="loggedIn" class="dropdown dropdown-end">
-						<div tabindex="0" class="btn btn-ghost btn-circle avatar">
-							<div class="w-10 rounded-full">
-								<img v-if="isDefault" :src="defaultAvatar" alt="Default Avatar" decoding="async" crossorigin="anonymous" />
+					<div v-if="loggedIn" class="group dropdown dropdown-end">
+						<!-- Avatar Button -->
+						<div
+							tabindex="0"
+							role="button"
+							class="group btn relative z-10 flex btn-circle h-10 w-10 items-center justify-center p-0.5 btn-ghost transition-colors hover:bg-base-200 focus-visible:bg-base-200"
+							aria-expanded="false"
+							aria-haspopup="menu"
+						>
+							<!-- Avatar Container -->
+							<div
+								class="size-full overflow-hidden rounded-full bg-base-300 ring-2 ring-base-100 transition-transform group-hover:scale-95"
+							>
+								<!-- Default Avatar -->
+								<img
+									v-if="isDefault"
+									:src="defaultAvatar"
+									alt="Default Avatar"
+									class="h-full w-full object-cover"
+									decoding="async"
+									crossorigin="anonymous"
+								/>
+								<!-- Custom Avatar -->
 								<picture v-else>
 									<source
 										v-if="isAnimated"
@@ -100,26 +120,42 @@
 									/>
 									<source type="image/webp" :srcset="makeSrcset('webp')" />
 									<source type="image/png" :srcset="makeSrcset('png')" />
-									<img :src="createUrl('png', 128)" alt="Avatar" decoding="async" crossorigin="anonymous" />
+									<img
+										:src="createUrl('png', 128)"
+										alt="User Avatar"
+										class="h-full w-full object-cover"
+										decoding="async"
+										crossorigin="anonymous"
+									/>
 								</picture>
 							</div>
 						</div>
-						<ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+
+						<!-- Dropdown Menu -->
+						<ul tabindex="0" class="dropdown-content menu z-1 w-56 translate-y-2 rounded-box bg-base-100 p-2 shadow-lg">
 							<li>
-								<nuxt-link to="/profile" class="justify-between">Profile</nuxt-link>
+								<nuxt-link to="/profile" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200">
+									<ShadIcon name="ph:user" class="h-4 w-4 opacity-70" />
+									Profile
+								</nuxt-link>
 							</li>
-							<li><a @click="clear">Logout</a></li>
+							<li>
+								<a variant="ghost" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-error hover:bg-error/10" @click="clear">
+									<ShadIcon name="ph:sign-out" class="h-4 w-4 opacity-70" />
+									Logout
+								</a>
+							</li>
 						</ul>
 					</div>
-					<button v-else class="btn bg-[#5865F2] text-white hover:bg-[#5865F2]/50" @click="$router.push('/login')">
-						<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
-						Login
+					<button v-else class="btn bg-[#5865F2] text-white hover:bg-[#5865F2]/50" @click="() => $router.push('/login')">
+						<ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
+						<span class="hidden sm:inline">Login</span>
 					</button>
 				</template>
 				<template #placeholder>
 					<button disabled class="btn bg-[#5865F2] text-white disabled:opacity-65">
-						<ShadIcon name="ic:baseline-discord" class="size-[24px]" />
-						Login
+						<ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
+						<span class="hidden sm:inline">Login</span>
 					</button>
 				</template>
 			</AuthState>
@@ -141,19 +177,8 @@ const Apps = {
 
 const { user } = useAuth();
 
-const loadingPack = ref(false);
 const isAnimated = ref(false);
 const isDefault = ref(false);
-
-// Fetch session on mount
-onMounted(async () => {
-	try {
-		// Fetch pack data after successful session
-		loadingPack.value = true;
-	} finally {
-		loadingPack.value = false;
-	}
-});
 
 const defaultAvatar = computed(() =>
 	user.value?.id

@@ -1,7 +1,7 @@
 <template>
-	<div class="rounded-lg bg-gray-800 p-6 shadow-lg">
-		<div class="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-			<PresentationalGuildCard v-for="guild in filteredGuilds" :key="guild.id" :guild="guild" />
+	<div class="rounded-lg bg-base-200 p-6 shadow-lg">
+		<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+			<guild-card v-for="guild in filteredGuilds" :key="guild.id" :guild="guild" />
 		</div>
 	</div>
 </template>

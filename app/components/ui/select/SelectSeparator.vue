@@ -1,21 +1,17 @@
-<script setup lang="ts">
-import { cn } from '@/utils/cn'
-import { SelectSeparator, type SelectSeparatorProps } from 'reka-ui'
-import { computed, type HTMLAttributes } from 'vue'
+<template>
+	<SelectSeparator data-slot="select-separator" v-bind="delegatedProps" :class="cn('bg-border pointer-events-none -mx-1 my-1 h-px', props.class)" />
+</template>
 
-const props = defineProps<SelectSeparatorProps & { class?: HTMLAttributes['class'] }>()
+<script setup lang="ts">
+import { cn } from '@/utils/cn';
+import { SelectSeparator, type SelectSeparatorProps } from 'reka-ui';
+import { computed, type HTMLAttributes } from 'vue';
+
+const props = defineProps<SelectSeparatorProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+	const { class: _, ...delegated } = props;
 
-  return delegated
-})
+	return delegated;
+});
 </script>
-
-<template>
-  <SelectSeparator
-    data-slot="select-separator"
-    v-bind="delegatedProps"
-    :class="cn('bg-border pointer-events-none -mx-1 my-1 h-px', props.class)"
-  />
-</template>

@@ -9,18 +9,18 @@ export { default as AvatarFallback } from './AvatarFallback.vue';
 export const avatarVariant = tv({
 	base: 'avatar',
 	slots: {
-		root: 'inline-flex items-center justify-center shrink-0 select-none overflow-hidden rounded-full align-middle bg-base-200',
+		root: 'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-200 align-middle select-none',
 		image: 'h-full w-full rounded-[inherit] object-cover',
-		fallback: 'font-medium leading-none text-base-content truncate',
-		icon: 'text-base-content shrink-0'
+		fallback: 'truncate leading-none font-medium text-base-content',
+		icon: 'shrink-0 text-base-content'
 	},
 	variants: {
 		size: {
-			xs: 'w-8 h-8',
-			sm: 'w-10 h-10',
-			md: 'w-16 h-16',
-			lg: 'w-24 h-24',
-			xl: 'w-32 h-32'
+			xs: 'h-8 w-8',
+			sm: 'h-10 w-10',
+			md: 'h-16 w-16',
+			lg: 'h-24 w-24',
+			xl: 'h-32 w-32'
 		},
 		status: {
 			online: 'avatar-online',

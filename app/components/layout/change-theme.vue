@@ -1,6 +1,13 @@
 <template>
-	<ClientOnly>
-		<ShadButton :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'" color="neutral" variant="ghost" @click="isDark = !isDark" />
+	<ClientOnly class="swap swap-rotate">
+		<ShadButton
+			:icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'"
+			color="neutral"
+			variant="ghost"
+			:circle="true"
+			size="lg"
+			@click="isDark = !isDark"
+		/>
 
 		<template #fallback>
 			<div class="size-8" />

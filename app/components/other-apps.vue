@@ -5,7 +5,7 @@
 	</section>
 
 	<div class="mt-8 grid w-full gap-4 xl:grid-cols-2">
-		<div v-for="app of apps" :key="app.name" class="other-apps-layout bg-base-200 rounded-xl shadow-xl">
+		<div v-for="app of apps" :key="app.name" class="other-apps-layout rounded-xl bg-base-200 shadow-xl">
 			<nuxt-img :src="app.avatar" width="256" height="256" :alt="`${app.name}'s avatar`" loading="lazy" class="other-apps-avatar" />
 			<h2 class="other-apps-title">
 				{{ app.name }}
@@ -15,7 +15,7 @@
 			</h2>
 			<div class="other-apps-description">
 				<p class="flex-grow">{{ app.description }}</p>
-				<div class="join mt-4 flex justify-end">
+				<div class="mt-4 join flex justify-end">
 					<nuxt-link class="btn join-item btn-neutral" :to="app.explore">
 						<ShadIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore
 					</nuxt-link>

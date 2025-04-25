@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { isEqual } from 'ohash/utils';
-import type { GuildData, GuildDataKey } from '~~/lib/database';
 
 export function pick<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Pick<Data, Keys> {
 	const result = {} as Pick<Data, Keys>;
@@ -89,4 +88,33 @@ export function isArrayOfArray<A>(item: A[] | A[][]): item is A[][] {
 }
 export default function removeNonAlphaNumeric(str: string) {
 	return str.replace(/[^0-9a-zA-Z]/gi, '');
+}
+
+export function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Ref<T> {
+	const raw = localStorage.getItem(key);
+	const data = ref(raw ? JSON.parse(raw) : initial);
+	for (const key2 in initial) {
+		if (data.value[key2] === void 0) data.value[key2] = initial[key2];
+	}
+	let updating = false;
+	let wrote = '';
+	watch(
+		data,
+		(value) => {
+			if (updating) return;
+			wrote = JSON.stringify(value);
+			localStorage.setItem(key, wrote);
+		},
+		{ deep: true, flush: 'post' }
+	);
+	if (listenToStorage) {
+		useEventListener(window, 'storage', (e) => {
+			if (e.key === key && e.newValue && e.newValue !== wrote) {
+				updating = true;
+				data.value = JSON.parse(e.newValue);
+				updating = false;
+			}
+		});
+	}
+	return data;
 }

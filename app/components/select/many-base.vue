@@ -1,62 +1,50 @@
 <template>
-	<div>
-		<Button :variant="error ? 'error' : 'default'" :title="tooltipTitle" @click="openDialog">
-			{{ label }}: {{ displayValue }}
-			<Icon v-if="icon" :name="icon" class="ml-2 size-6" />
-		</Button>
+	<ShadForm :validation-schema="validationSchema" :validate-on="['change', 'blur']">
+		<ShadFormField :name="name" :label="label" :required="required" :hint="tooltip">
+			<Select v-model="selectedValues" multiple>
+				<SelectTrigger :aria-label="`Select ${label}`">
+					<SelectValue>
+						<span class="flex items-center gap-2">
+							{{ displayValue }}
+							<ShadIcon v-if="icon" :name="icon" class="size-6" />
+						</span>
+					</SelectValue>
+				</SelectTrigger>
 
-		<Modal :open="isOpen" @close="closeDialog">
-			<template #header>
-				<div class="flex items-center justify-between">
-					<h3 class="text-lg font-bold">{{ label }}</h3>
-				</div>
-			</template>
+				<SelectContent>
+					<SelectGroup>
+						<SelectLabel>{{ label }}</SelectLabel>
 
-			<VeeForm v-slot="{ errors }" :validation-schema="validationSchema" @submit="handleSubmit">
-				<div class="w-full">
-					<Input v-if="searchable && options.length > 10" v-model="search" name="search" type="text" class="mb-4" placeholder="Search..." />
-
-					<div class="max-h-64 overflow-y-auto">
-						<div v-for="option in filteredOptions" :key="option.value">
-							<label class="label cursor-pointer">
-								<span class="flex items-center">
-									{{ option.label }}
-									<img v-if="option.iconUrl" :src="option.iconUrl" :alt="option.label" class="ml-2 size-6" />
-								</span>
-								<ShadCheckbox
-									:name="props.name"
-									:value="option.value"
-									:checked="selectedValues.includes(option.value)"
-									@change="toggleSelection(option.value)"
-								/>
-							</label>
+						<!-- Search input -->
+						<div v-if="searchable && options.length > 10" class="p-2">
+							<input v-model="search" type="text" :placeholder="`Search ${label.toLowerCase()}...`" class="input input-sm w-full" />
 						</div>
-					</div>
 
-					<ErrorMessage v-slot="{ message }" :name="props.name">
-						<Alert variant="error" class="mt-2">{{ message }}</Alert>
-					</ErrorMessage>
+						<!-- Options -->
+						<div class="max-h-64 overflow-y-auto">
+							<SelectItem v-for="option in filteredOptions" :key="option.value" :value="option.value" class="flex items-center gap-2">
+								<ShadCheckbox :label="option.label" @change="toggleSelection(option.value)" />
+								<img v-if="option.iconUrl" :src="option.iconUrl" :alt="option.label" class="size-6" />
+								{{ option.label }}
+							</SelectItem>
+						</div>
 
-					<Text v-if="helperText && !errors[props.name]" variant="muted" class="mt-2">
-						{{ helperText }}
-					</Text>
-				</div>
-
-				<template #footer>
-					<div class="flex justify-end gap-2">
-						<ShadButton variant="ghost" @click="clearSelection">Clear</ShadButton>
-						<ShadButton variant="default" @click="closeDialog">Cancel</ShadButton>
-						<ShadButton type="submit" variant="primary">Confirm</ShadButton>
-					</div>
-				</template>
-			</VeeForm>
-		</Modal>
-	</div>
+						<!-- Actions -->
+						<div class="flex justify-end gap-2 border-t p-2">
+							<ShadButton type="button" variant="ghost" size="sm" @click="clearSelection">Clear</ShadButton>
+							<ShadButton type="submit" size="sm" @click="handleSubmit">Confirm</ShadButton>
+						</div>
+					</SelectGroup>
+				</SelectContent>
+			</Select>
+		</ShadFormField>
+	</ShadForm>
 </template>
 
 <script setup lang="ts">
 import { useField } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
+import { useId } from 'reka-ui';
 import * as z from 'zod';
 
 interface Option<T = string> {
@@ -68,11 +56,9 @@ interface Option<T = string> {
 interface Props<T = string> {
 	label: string;
 	options: Option<T>[];
-	value: T[];
-	error?: boolean;
-	helperText?: string;
+	value: T[] | null;
 	name?: string;
-	tooltipTitle?: string;
+	tooltip?: string;
 	required?: boolean;
 	placeholder?: string;
 	searchable?: boolean;
@@ -80,18 +66,18 @@ interface Props<T = string> {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-	error: false,
-	name: () => `multi-select-${Math.random().toString(36).slice(2)}`,
+	name: () => useId(Math.random().toString(36).slice(2), 'multi-select'),
 	tooltipTitle: undefined,
 	required: true,
 	helperText: undefined,
-	placeholder: undefined,
+	tooltip: undefined,
 	searchable: true,
-	imageInName: undefined
+	placeholder: 'Select an option',
+	icon: undefined
 });
 
 const emit = defineEmits<{
-	(e: 'update:value' | 'change', value: Props['value']): void;
+	(e: 'update:value', value: Props['value'] | null): void;
 }>();
 
 const isOpen = ref(false);
@@ -101,7 +87,7 @@ const validationSchema = toTypedSchema(props.required ? z.array(z.string()).min(
 const { value: fieldValue } = useField<string[]>(props.name, validationSchema);
 
 const selectedValues = computed({
-	get: () => fieldValue.value ?? [...props.value],
+	get: () => fieldValue.value ?? (props.value ? [...props.value] : []),
 	set: (newValue) => {
 		fieldValue.value = newValue;
 	}
@@ -118,17 +104,13 @@ const displayValue = computed(() => {
 	return `${selectedValues.value.length} selected`;
 });
 
-const openDialog = () => {
-	isOpen.value = true;
-};
-
 const closeDialog = () => {
 	isOpen.value = false;
 	search.value = '';
 };
 
-const toggleSelection = (value: Props['value'][number]) => {
-	const currentValues = Array.isArray(selectedValues.value) ? [...selectedValues.value] : [];
+const toggleSelection = (value: string) => {
+	const currentValues = selectedValues.value ?? [];
 	const index = currentValues.indexOf(value);
 
 	if (index === -1) {
@@ -145,14 +127,13 @@ const clearSelection = () => {
 
 const handleSubmit = () => {
 	emit('update:value', selectedValues.value);
-	emit('change', selectedValues.value);
 	closeDialog();
 };
 
 watch(
 	() => props.value,
 	(newValue) => {
-		selectedValues.value = [...newValue];
+		selectedValues.value = newValue ? [...newValue] : [];
 	}
 );
 </script>

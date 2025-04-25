@@ -9,13 +9,13 @@ export const modal = tv({
 	slots: {
 		overlay: 'modal-backdrop',
 		content: 'modal-box flex flex-col',
-		header: 'modal-header flex items-center gap-1.5 p-4 sm:px-6 min-h-16',
+		header: 'modal-header flex min-h-16 items-center gap-1.5 p-4 sm:px-6',
 		wrapper: '',
 		body: 'flex-1 overflow-y-auto p-4 sm:p-6',
 		footer: 'modal-actions flex items-center gap-1.5 p-4 sm:px-6',
 		title: 'modal-title font-bold',
-		description: 'mt-1 text-base-content/60 text-sm',
-		close: 'btn btn-sm btn-circle absolute right-2 top-2'
+		description: 'mt-1 text-sm text-base-content/60',
+		close: 'btn absolute top-2 right-2 btn-circle btn-sm'
 	},
 	variants: {
 		transition: {

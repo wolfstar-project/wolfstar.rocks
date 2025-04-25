@@ -12,7 +12,7 @@
 		</p>
 	</section>
 
-	<section class="join mt-16 flex items-center justify-center">
+	<section class="mt-16 join flex items-center justify-center">
 		<nuxt-link class="btn join-item sm:btn-wide" :to="Invites.WolfStar"
 			><ShadIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link
 		>
@@ -32,17 +32,17 @@
 					<template v-if="featureIndex === AutomodFeature.Attachments">
 						Have you seen this????
 						<div class="grid max-w-96 grid-cols-2 gap-2">
-							<div class="bg-base-100 flex aspect-video w-full items-center justify-center rounded-lg drop-shadow-lg">
-								<ShadIcon name="ph:image-duotone" class="text-base-content/20 h-24 w-24 animate-pulse" />
+							<div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+								<ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
 							</div>
-							<div class="bg-base-100 flex aspect-video w-full items-center justify-center rounded-lg drop-shadow-lg">
-								<ShadIcon name="ph:image-duotone" class="text-base-content/20 h-24 w-24 animate-pulse" />
+							<div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+								<ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
 							</div>
-							<div class="bg-base-100 flex aspect-video w-full items-center justify-center rounded-lg drop-shadow-lg">
-								<ShadIcon name="ph:image-duotone" class="text-base-content/20 h-24 w-24 animate-pulse" />
+							<div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+								<ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
 							</div>
-							<div class="bg-base-100 flex aspect-video w-full items-center justify-center rounded-lg drop-shadow-lg">
-								<ShadIcon name="ph:image-duotone" class="text-base-content/20 h-24 w-24 animate-pulse" />
+							<div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+								<ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
 							</div>
 						</div>
 					</template>
@@ -130,11 +130,11 @@
 					<strong>Alert the user:</strong> send a message notifying the user of their infraction.
 				</li>
 				<li>
-					<ShadIcon name="ph:flag-fill" class="text-warning my-0 mr-1 h-5 w-5" />
+					<ShadIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" />
 					<strong>Post moderation log:</strong> send a message to the moderation log channel for moderators to see.
 				</li>
 				<li>
-					<ShadIcon name="ph:trash-simple-fill" class="text-error my-0 mr-1 h-5 w-5" />
+					<ShadIcon name="ph:trash-simple-fill" class="my-0 mr-1 h-5 w-5 text-error" />
 					<strong>Delete the message:</strong> delete the message that triggered the infraction, keeping your channels clean.
 				</li>
 			</ul>
@@ -209,7 +209,7 @@
 					</discord-message>
 				</discord-messages>
 
-				<div class="join mt-4">
+				<div class="mt-4 join">
 					<button
 						class="btn join-item md:btn-wide"
 						:class="{ 'btn-info': moderationTemporary }"
@@ -238,13 +238,13 @@
 		<p>WolfStar not only comes with a very complete moderation suite, but also:</p>
 		<ul>
 			<li>
-				<ShadIcon name="ph:chat-text-duotone" class="text-warning my-0 mr-1 h-5 w-5" />
+				<ShadIcon name="ph:chat-text-duotone" class="my-0 mr-1 h-5 w-5 text-warning" />
 				<strong>A large logging suite:</strong> WolfStar can log almost everything that happens in your server: moderation actions, message
 				updates and deletions, channel updates and deletions, role updates and deletions, server updates, members changing voice channels, and
 				more.
 			</li>
 			<li>
-				<ShadIcon name="ph:money-wavy-duotone" class="text-error my-0 mr-1 h-5 w-5" />
+				<ShadIcon name="ph:money-wavy-duotone" class="my-0 mr-1 h-5 w-5 text-error" />
 				<strong>No paywalls:</strong> all of WolfStar's features are <strong>available for free</strong> and all logs are sent to your server
 				as soon as they happen, without any delay. WolfStar Project <strong>will never paywall core features</strong>, and also
 				<strong>strongly believes in Open-Source Software</strong>, making all the apps' source code freely available to everyone, and will
@@ -257,8 +257,8 @@
 		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
 		<div class="join">
-			<nuxt-link :to="Invites.WolfStar" class="btn btn-ghost join-item">Invite WolfStar</nuxt-link>
-			<nuxt-link to="https://join.wolfstar.pw" class="btn btn-ghost join-item">Support Server</nuxt-link>
+			<nuxt-link :to="Invites.WolfStar" class="btn join-item btn-ghost">Invite WolfStar</nuxt-link>
+			<nuxt-link to="https://join.wolfstar.pw" class="btn join-item btn-ghost">Support Server</nuxt-link>
 		</div>
 	</section>
 

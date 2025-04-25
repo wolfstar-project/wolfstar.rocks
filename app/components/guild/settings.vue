@@ -5,7 +5,7 @@
 	</Head>
 	<div>
 		<div class="flex h-screen">
-			<main class="bg-base-300 text-base-content mt-16 flex flex-grow flex-col overflow-y-scroll p-4 sm:mt-0">
+			<main class="mt-16 flex flex-grow flex-col overflow-y-scroll bg-base-300 p-4 text-base-content sm:mt-0">
 				<component
 					:is="settingsComponent"
 					v-if="readyToRender"
@@ -18,7 +18,7 @@
 				/>
 
 				<Transition name="fade">
-					<div v-if="hasChanges" class="bg-base-300 fixed right-0 bottom-0 left-0 flex justify-end gap-4 p-4 shadow-lg">
+					<div v-if="hasChanges" class="fixed right-0 bottom-0 left-0 flex justify-end gap-4 bg-base-300 p-4 shadow-lg">
 						<button class="btn btn-outline" :class="{ loading: loading }" :disabled="loading" @click="resetChanges">Reset Changes</button>
 
 						<button class="btn btn-primary" :class="{ loading: loading }" :disabled="loading" @click="submitChanges">Save Changes</button>

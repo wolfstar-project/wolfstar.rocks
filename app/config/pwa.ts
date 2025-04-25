@@ -1,7 +1,9 @@
 import type { ModuleOptions } from '@vite-pwa/nuxt';
 import process from 'node:process';
-import { appDescription as description, appName as name } from '@/utils/constants';
 import { manifestIcons as icons } from './manifestIcons';
+
+export const appName = 'WolfStar Dashboard';
+export const appDescription = 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.';
 
 export const pwa: ModuleOptions = {
 	registerType: 'autoUpdate',
@@ -13,11 +15,11 @@ export const pwa: ModuleOptions = {
 	manifest: {
 		background_color: '#050505',
 		categories: ['discord', 'bot', 'wolfstar', 'moderation', 'automation', 'cyborg', 'logging'],
-		description,
+		description: appDescription,
 		dir: 'ltr',
 		display: 'minimal-ui',
 		lang: 'en_US',
-		name,
+		name: appName,
 		orientation: 'portrait-primary',
 		scope: '/',
 		short_name: 'WolfStar',
@@ -26,7 +28,7 @@ export const pwa: ModuleOptions = {
 		icons,
 		shortcuts: [
 			{
-				name,
+				name: appName,
 				short_name: 'Homepage',
 				description: "Go to WolfStar's dashboard",
 				url: '/',

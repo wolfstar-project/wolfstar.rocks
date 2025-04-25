@@ -1,9 +1,7 @@
 import '@vite-pwa/nuxt';
 import 'nuxt';
 import tailwindcss from '@tailwindcss/vite';
-import { pwa } from './app/config/pwa';
-import { appDescription, appName } from './app/utils/constants';
-
+import { pwa, appDescription, appName } from './app/config/pwa';
 const baseURL = 'https://wolfstar.rocks';
 
 export default defineNuxtConfig({

@@ -16140,9 +16140,9 @@ Nuxt exposes the following properties through `ssrContext`:
 - `serverRendered` (boolean) - Indicates if response is server-side-rendered.
 - `data` (object) - When you fetch the data from an API endpoint using either [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) or [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) , resulting payload can be accessed from the `payload.data`. This data is cached and helps you prevent fetching the same data in case an identical request is made more than once.
   :code-group[```vue \[app.vue\]
-      <script setup lang="ts">
-      const { data } = await useAsyncData('count', () => $fetch('/api/count'))
-      </script>
+  <script setup lang="ts">
+  const { data } = await useAsyncData('count', () => $fetch('/api/count'))
+  </script>
     ````ts [server/api/count.ts]
     export default defineEventHandler(event => {
       return { count: 1 }
@@ -31549,7 +31549,7 @@ function stateChange(state) {
 <template>
 	<ScriptYouTubePlayer ref="video" video-id="d_IFKP1Ofq0" @ready="isLoaded = true" @state-change="stateChange">
 		<template #awaitingLoad>
-			<div class="absolute left-1/2 top-1/2 h-[48px] w-[68px] -translate-x-1/2 -translate-y-1/2 transform">
+			<div class="absolute top-1/2 left-1/2 h-[48px] w-[68px] -translate-x-1/2 -translate-y-1/2 transform">
 				<svg height="100%" version="1.1" viewBox="0 0 68 48" width="100%">
 					<path
 						d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"
@@ -32726,8 +32726,8 @@ Your applications will feel snappier, build quicker, and load faster for your us
 
 ```html
 <!-- After: Semantic design tokens with automatic dark mode support -->
-<div class="bg-(--ui-background-muted) rounded-lg p-4">
-	<h2 class="text-(--ui-text-highlighted) mb-2 text-xl">User Profile</h2>
+<div class="rounded-lg bg-(--ui-background-muted) p-4">
+	<h2 class="mb-2 text-xl text-(--ui-text-highlighted)">User Profile</h2>
 	<p class="text-(--ui-text-muted)">Account settings and preferences</p>
 	<UButton color="primary" size="sm" class="mt-2">Edit Profile</UButton>
 </div>

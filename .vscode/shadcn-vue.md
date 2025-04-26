@@ -7130,7 +7130,7 @@ Given the following CSS variables:
 The `background` color of the following component will be `hsl(var(--primary))` and the `foreground` color will be `hsl(var(--primary-foreground))`.
 
 ```html
-<div class="bg-primary text-primary-foreground">Hello</div>
+<div class="text-primary-foreground bg-primary">Hello</div>
 ```
 
 <Callout>
@@ -7247,7 +7247,7 @@ module.exports = {
 You can now use the `warning` utility class in your components.
 
 ```html /bg-warning/ /text-warning-foreground/
-<div class="bg-warning text-warning-foreground" />
+<div class="text-warning-foreground bg-warning" />
 ```
 
 ### Other color formats

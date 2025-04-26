@@ -6,7 +6,6 @@
 # Dependencies
 **/node_modules
 **/dist
-**/.next
 **/.nuxt
 **/.output
 
@@ -19,5 +18,11 @@
 .gitlab-ci.yml
 .circleci
 
+# ide
+.vscode
+.idea
+
+# chore
+.DS_Store
 
 README.md

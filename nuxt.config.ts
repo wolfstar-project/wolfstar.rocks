@@ -10,7 +10,6 @@ export default defineNuxtConfig({
 		'@nuxt/image',
 		'@vueuse/nuxt',
 		'@pinia/nuxt',
-		'pinia-plugin-persistedstate/nuxt',
 		'@vite-pwa/nuxt',
 		'@sentry/nuxt/module',
 		'@nuxt/eslint',
@@ -212,12 +211,17 @@ export default defineNuxtConfig({
 		}
 	},
 	vite: {
+		build: {
+			target: 'esnext'
+		},
 		plugins: [tailwindcss()],
 		optimizeDeps: {
 			include: [
 				'reka-ui',
 				'reka-ui/namespaced',
 				'@vueuse/shared',
+				'@sapphire/utilities',
+				'@sapphire/utilities/cast',
 				'colortranslator',
 				'tailwindcss/colors',
 				'tailwind-variants',

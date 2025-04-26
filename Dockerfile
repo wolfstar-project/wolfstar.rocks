@@ -1,5 +1,5 @@
 # Base Stage
-ARG base=node:22.13.1-alpine
+ARG base=node:22-alpine
 FROM ${base} AS builder
 
 WORKDIR /app
@@ -30,7 +30,6 @@ RUN pnpm run build
 FROM scratch
 
 # Copy necessary files from builder
-COPY --from=builder /base /
 COPY --from=builder /lib /
 COPY --from=builder /app/.output /app/.output
 

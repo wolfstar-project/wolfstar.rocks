@@ -7,7 +7,7 @@
 			"pnpmVersion": "10"
 		}
 	},
-	"postCreateCommand": ["pnpm", "install --frozen-lockfile"],
+	"postCreateCommand": ["pnpm", "install", "--frozen-lockfile"],
 	"remoteUser": "node",
 	"forwardPorts": [3000],
 	"customizations": {

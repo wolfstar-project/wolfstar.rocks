@@ -5,7 +5,7 @@
 	</Head>
 
 	<div
-		v-if="error.statusCode == 401"
+		v-if="error.statusCode == ErrorType.UNAUTHORIZED"
 		class="relative flex min-h-screen items-center justify-center overflow-hidden overflow-y-auto bg-base-100 font-sans"
 	>
 		<div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,93,91,0.1)_0%,rgba(26,26,26,0)_70%)]"></div>

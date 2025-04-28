@@ -5,14 +5,14 @@
 		:class="cn('flex cursor-default items-center justify-center py-1', props.class)"
 	>
 		<slot>
-			<ChevronDown class="size-4" />
+			<Icon name="radix-icons:chevrondown" class="size-4" />
 		</slot>
 	</SelectScrollDownButton>
 </template>
 
 <script setup lang="ts">
 import { cn } from '@/utils/cn';
-import { ChevronDown } from 'lucide-vue-next';
+import { Icon } from '@/components/ui/icon';
 import { SelectScrollDownButton, type SelectScrollDownButtonProps, useForwardProps } from 'reka-ui';
 import { computed, type HTMLAttributes } from 'vue';
 

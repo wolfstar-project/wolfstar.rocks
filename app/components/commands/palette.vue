@@ -3,13 +3,13 @@
 		<template #content>
 			<ShadForm :validation-schema="validationSchema" @submit="handleSearch">
 				<ShadFormField name="search">
-					<template #default="{ error }">
-						<Input
+					<template #default>
+						<ShadInput
 							ref="searchInput"
 							v-model="searchText"
 							type="text"
 							placeholder="Search commands..."
-							:class="{ 'input-error': error }"
+							class="w-full"
 							@keydown.down.prevent="$emit('navigate', 'next')"
 							@keydown.up.prevent="$emit('navigate', 'prev')"
 							@keydown.enter.prevent="$emit('execute')"
@@ -17,22 +17,24 @@
 					</template>
 				</ShadFormField>
 
-				<div class="divider"></div>
+				<div class="divider my-4"></div>
 
-				<div class="max-h-[60vh] overflow-y-auto">
-					<div v-for="group in categories" :key="group" class="collapse-arrow collapse mb-2">
+				<div class="max-h-[60vh] space-y-4 overflow-y-auto">
+					<div v-for="group in categories" :key="group" class="collapse-arrow collapse bg-base-200">
 						<input type="checkbox" checked />
-						<div class="collapse-title font-medium">
+						<div class="collapse-title text-base font-medium">
 							{{ group }}
 						</div>
 						<div class="collapse-content">
-							<ul class="menu w-full menu-sm rounded-box bg-base-200">
+							<ul class="menu w-full menu-sm rounded-box">
 								<li v-for="command in getCommandsByCategory(group)" :key="command.name">
-									<button :class="{ active: selectedCommand?.name === command.name }" @click="$emit('select', command)">
-										<div class="flex flex-col items-start gap-1">
-											<span class="font-medium">{{ command.name }}</span>
-											<span class="text-xs opacity-70">{{ command.description }}</span>
-										</div>
+									<button
+										:class="{ active: selectedCommand?.name === command.name }"
+										class="flex flex-col items-start gap-1 p-3 transition-colors hover:bg-base-300"
+										@click="$emit('select', command)"
+									>
+										<span class="font-medium">{{ command.name }}</span>
+										<span class="text-xs text-base-content/70">{{ command.description }}</span>
 									</button>
 								</li>
 							</ul>
@@ -43,7 +45,7 @@
 		</template>
 		<template #footer>
 			<div class="modal-action">
-				<button class="btn btn-ghost" @click="handleClose">Close</button>
+				<ShadButton variant="ghost" @click="handleClose">Close</ShadButton>
 			</div>
 		</template>
 	</ShadModal>

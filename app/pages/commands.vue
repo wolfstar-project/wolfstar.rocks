@@ -30,17 +30,28 @@
 </template>
 
 <script setup lang="ts">
-const { commands, loading, fetchCommands } = useCommands();
+import { useCommandsStore } from '~/stores/commands';
+
+const commandsStore = useCommandsStore();
+const commands = computed(() => commandsStore.commands);
+const loading = ref(false);
 const selectedCommand = ref<FlattenedCommand | null>(null);
 
 // Computed properties
 const categories = computed<string[]>(() => [...new Set(commands.value.map((cmd) => cmd.category))]);
 
-const refresh = async () => await fetchCommands();
+const refresh = async () => {
+	loading.value = true;
+	try {
+		await commandsStore.fetchCommands();
+	} finally {
+		loading.value = false;
+	}
+};
 
 // Lifecycle hooks
 onMounted(() => {
-	fetchCommands();
+	refresh();
 });
 </script>
 

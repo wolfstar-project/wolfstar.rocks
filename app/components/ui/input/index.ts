@@ -2,6 +2,7 @@
 import { tv, type VariantProps } from 'tailwind-variants';
 import type { HTMLAttributes, InputHTMLAttributes } from 'vue';
 import type { PartialString } from '~/types/utils';
+import type { UseComponentIconsProps } from '~/composables/useComponentIcons';
 
 export { default as Input } from './Input.vue';
 

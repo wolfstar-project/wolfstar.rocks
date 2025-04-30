@@ -16,13 +16,10 @@ const appName = inject(ProviderAppNameKey)!;
 </script>
 
 <style scoped>
+@reference "@/assets/css/main.css";
 .app-layout {
 	@apply flex min-h-screen flex-col;
-	background-image:
-		linear-gradient(to top, oklch(var(--color-base-100) / 1) 0%, transparent 70%),
-		radial-gradient(ellipse at calc(100vw * 0.5) 0%, oklch(var(--color) / 0.2), transparent 80%);
-	background-size: max(100vw, 600px) 50rem;
-	background-repeat: no-repeat;
+	@apply bg-gradient-to-t bg-[radial-gradient(ellipse_at_calc(100vw*0.5)_0%,oklch(var(--color)/0.2),transparent_80%)] from-base-100 to-transparent bg-[length:max(100vw,600px)_50rem] bg-no-repeat;
 }
 
 .app-layout.wolfstar {

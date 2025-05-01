@@ -6,6 +6,9 @@ export default defineNuxtPlugin(() => {
 		credentials: 'include',
 		headers: {
 			'Content-Type': 'application/json'
+		},
+		onResponseError(error) {
+			useLogger().error(error);
 		}
 	});
 

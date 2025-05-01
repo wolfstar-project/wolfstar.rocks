@@ -165,6 +165,7 @@
 
 <script setup lang="ts">
 import { useAuth } from '~/composables/auth';
+import { Invites } from '~/utils/constants';
 
 const { y } = useScroll(document);
 

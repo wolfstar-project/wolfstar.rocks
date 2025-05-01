@@ -1,6 +1,4 @@
 <template>
-	<NuxtLoadingIndicator />
-
 	<Head>
 		<Title>Profile</Title>
 		<Meta name="description" content="Manage your profile and servers" />
@@ -76,8 +74,7 @@ const {
 } = await useFetch('/api/users', {
 	transform: (response) => response.transformedGuilds ?? null
 });
-console.log(guilds.value);
-// Gestiamo l'errore
+
 watch(fetchError, (newError) => {
 	if (newError) {
 		error.value = newError;
@@ -88,7 +85,6 @@ watch(fetchError, (newError) => {
 
 const pending = ref(status.value === 'pending');
 
-// Gestiamo il loading
 watch(pending, (isPending) => {
 	if (isPending) {
 		start();

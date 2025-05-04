@@ -1,5 +1,6 @@
 import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import { configs } from 'eslint-plugin-pnpm';
 
 export default createConfigForNuxt(
 	{
@@ -40,5 +41,6 @@ export default createConfigForNuxt(
 			'vue/singleline-html-element-content-newline': 'off'
 		}
 	},
+	...configs.recommended,
 	eslintPluginPrettierRecommended
 );

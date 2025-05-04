@@ -1,0 +1,113 @@
+packages: []
+catalogs:
+    build:
+        '@nuxtjs/color-mode': ^3.5.2
+        '@pinia/nuxt': ^0.11.0
+        '@prisma/nuxt': ^0.3.0
+        '@tailwindcss/vite': ^4.1.5
+        '@vee-validate/nuxt': ^4.15.0
+        '@vee-validate/zod': ^4.15.0
+        '@vite-pwa/nuxt': ^1.0.0
+        '@vueuse/nuxt': ^13.1.0
+        '@vueuse/router': ^13.1.0
+        nuxt: 3.17.1
+        shadcn-nuxt: 2.1.0
+        '@nuxt/eslint': ^1.3.0
+        '@nuxt/fonts': ^0.11.2
+        '@nuxt/icon': ^1.12.0
+        '@nuxt/image': ^1.10.0
+        '@nuxt/scripts': ^0.11.6
+        '@sentry/nuxt': ^9.15.0
+        '@nuxtjs/seo': ^3.0.3
+        reka-ui: ^2.2.0
+        nuxt-authorization: 0.3.3
+        prisma: ^6.7.0
+        prisma-json-types-generator: ^3.3.0
+        '@prisma/client': ^6.7.0
+        '@prisma/engines': latest
+        '@sentry/cli': latest
+        esbuild: latest
+        sharp: latest
+        vue-demi: latest
+    dev:
+        '@commitlint/cli': ^19.8.0
+        '@commitlint/config-conventional': ^19.8.0
+        '@discordjs/collection': ^2.1.1
+        '@discordjs/core': ^2.1.0
+        '@iconify-json/heroicons': ^1.2.2
+        '@iconify-json/ic': ^1.2.2
+        '@iconify-json/lucide': ^1.2.39
+        '@iconify-json/ph': ^1.2.2
+        '@sapphire/bitfield': ^1.2.4
+        '@sapphire/prettier-config': ^2.0.0
+        '@sapphire/result': ^2.7.2
+        '@sapphire/snowflake': ^3.5.5
+        '@sapphire/time-utilities': ^1.7.14
+        '@sapphire/ratelimits': ^2.4.11
+        '@sapphire/utilities': ^3.18.2
+        '@tailwindcss/typography': ^0.5.16
+        daisyui: 5.0.35
+        discord-api-types: ^0.38.1
+        eslint: ^9.25.1
+        eslint-plugin-pnpm: ^0.3.1
+        eslint-config-prettier: ^10.1.2
+        eslint-plugin-prettier: ^5.2.6
+        husky: ^9.1.7
+        lint-staged: ^15.5.1
+        nuxt-auth-utils: ^0.5.20
+        playwright: ^1.52.0
+        prettier: ^3.5.3
+        prettier-plugin-css-order: ^2.1.2
+        prettier-plugin-tailwindcss: ^0.6.11
+        sort-package-json: ^3.1.0
+        tailwindcss: ^4.1.5
+        typescript: ~5.8.3
+        vue-tsc: 2.2.10
+    frontend:
+        '@vueuse/core': ^13.1.0
+        pinia: ^3.0.2
+        vue-markdown-render: ^2.2.1
+        vue-sonner: ^1.3.2
+        zod: ^3.24.3
+        colortranslator: ^4.1.0
+        clsx: ^2.1.1
+        tailwind-merge: ^3.2.0
+        tailwind-variants: ^1.0.0
+        tw-animate-css: ^1.2.8
+        utility-types: ^3.11.0
+        fuse.js: ^7.1.0
+        import-in-the-middle: ^1.13.1
+        markdown-it-anchor: ^9.2.0
+        consola: ^3.4.2
+    icons:
+        '@iconify-json/heroicons': ^1.2.2
+        '@iconify-json/ic': ^1.2.2
+        '@iconify-json/lucide': ^1.2.39
+        '@iconify-json/ph': ^1.2.2
+onlyBuiltDependencies:
+    - '@parcel/watcher'
+    - '@prisma/client'
+    - '@prisma/engines'
+    - '@sentry/cli'
+    - esbuild
+    - prisma
+    - sharp
+    - vue-demi
+peerDependencyRules:
+    allowedVersions:
+        inflight: 1.0.6
+        typescript: 5.8.3
+        vue-tsc: ^2.2.10
+allowedDeprecatedVersions:
+    - glob: 7.2.3
+    - sourcemap-codec: 1.4.8
+    - inflight: 1.0.6
+overrides:
+    '@types/node': 20.11.5
+    '@vercel/nft': ^0.27.4
+    vite: ^6.2.6
+catalog:
+    '@nuxtjs/seo': ^0.0.0
+    '@sapphire/ratelimits': ^0.0.0
+    '@vueuse/router': ^0.0.0
+    eslint-plugin-pnpm: ^0.0.0

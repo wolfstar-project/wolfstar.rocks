@@ -11,10 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { cn } from '@/utils/cn';
+import type { SelectScrollDownButtonProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
 import { Icon } from '@/components/ui/icon';
-import { SelectScrollDownButton, type SelectScrollDownButtonProps, useForwardProps } from 'reka-ui';
-import { computed, type HTMLAttributes } from 'vue';
+import { cn } from '@/utils/cn';
+import { SelectScrollDownButton, useForwardProps } from 'reka-ui';
+import { computed } from 'vue';
 
 const props = defineProps<SelectScrollDownButtonProps & { class?: HTMLAttributes['class'] }>();
 

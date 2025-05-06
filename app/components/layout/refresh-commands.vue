@@ -25,7 +25,7 @@ const emit = defineEmits<{
 const disabled = ref(props.loading || false);
 
 // Gestione click
-const handleClick = async () => {
+async function handleClick() {
 	if (disabled.value) return;
 
 	try {
@@ -37,7 +37,7 @@ const handleClick = async () => {
 	} finally {
 		disabled.value = false;
 	}
-};
+}
 
 const tooltipText = `
   Click to force refresh commands

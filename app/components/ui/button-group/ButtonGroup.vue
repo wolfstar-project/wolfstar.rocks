@@ -1,24 +1,25 @@
 <template>
-	<Primitive :as="as" :class="ButtonGroupVariant({ orientation, class: props.class })">
-		<slot />
-	</Primitive>
+  <Primitive :as="as" :class="ButtonGroupVariant({ orientation, class: props.class })">
+    <slot></slot>
+  </Primitive>
 </template>
 
 <script setup lang="ts">
-import { provide, computed } from 'vue';
-import { Primitive } from 'reka-ui';
-import { ButtonGroupVariant, type ButtonGroupProps, type ButtonGroupSlots } from '.';
+import type { ButtonGroupProps, ButtonGroupSlots } from '.'
+import { Primitive } from 'reka-ui'
+import { computed, provide } from 'vue'
+import { ButtonGroupVariant } from '.'
 
 const props = withDefaults(defineProps<ButtonGroupProps>(), {
-	orientation: 'horizontal'
-});
-defineSlots<ButtonGroupSlots>();
+  orientation: 'horizontal',
+})
+defineSlots<ButtonGroupSlots>()
 
 provide(
-	ButtonGroupInjectionKey,
-	computed(() => ({
-		orientation: props.orientation,
-		size: props.size
-	}))
-);
+  ButtonGroupInjectionKey,
+  computed(() => ({
+    orientation: props.orientation,
+    size: props.size,
+  })),
+)
 </script>

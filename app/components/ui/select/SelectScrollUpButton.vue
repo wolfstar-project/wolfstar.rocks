@@ -11,10 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { cn } from '@/utils/cn';
+import type { SelectScrollUpButtonProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
 import { Icon } from '@/components/ui/icon';
-import { SelectScrollUpButton, type SelectScrollUpButtonProps, useForwardProps } from 'reka-ui';
-import { computed, type HTMLAttributes } from 'vue';
+import { cn } from '@/utils/cn';
+import { SelectScrollUpButton, useForwardProps } from 'reka-ui';
+import { computed } from 'vue';
 
 const props = defineProps<SelectScrollUpButtonProps & { class?: HTMLAttributes['class'] }>();
 

@@ -3,9 +3,11 @@
 </template>
 
 <script setup lang="ts">
+import type { SelectSeparatorProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
 import { cn } from '@/utils/cn';
-import { SelectSeparator, type SelectSeparatorProps } from 'reka-ui';
-import { computed, type HTMLAttributes } from 'vue';
+import { SelectSeparator } from 'reka-ui';
+import { computed } from 'vue';
 
 const props = defineProps<SelectSeparatorProps & { class?: HTMLAttributes['class'] }>();
 

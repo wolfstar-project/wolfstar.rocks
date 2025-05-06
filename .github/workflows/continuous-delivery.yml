@@ -9,10 +9,10 @@ on:
       - 'app/**/*'
       - 'server/**/*'
       - 'lib/**/*'
-      - 'nuxt.config.ts' # File config Nuxt
-      - 'Dockerfile'
-      - '.github/workflows/continuous-delivery.yml'
-      - 'package.json'
+      - nuxt.config.ts # File config Nuxt
+      - Dockerfile
+      - .github/workflows/continuous-delivery.yml
+      - package.json
 
 env:
   REGISTRY: ghcr.io

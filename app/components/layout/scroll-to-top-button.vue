@@ -14,17 +14,17 @@
 <script setup lang="ts">
 const isScrolling = ref(false);
 
-const scrollToTop = () => {
+function scrollToTop() {
 	window.scrollTo({
 		top: 0,
 		left: 0,
 		behavior: 'smooth'
 	});
-};
+}
 
-const handleScroll = () => {
+function handleScroll() {
 	isScrolling.value = window.scrollY > 0;
-};
+}
 
 onMounted(() => {
 	window.addEventListener('scroll', handleScroll);

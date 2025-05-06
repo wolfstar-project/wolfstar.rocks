@@ -1,7 +1,7 @@
-import { API } from '@discordjs/core/http-only';
-import type { REST } from '@discordjs/rest';
+import type { REST } from '@discordjs/rest'
+import { API } from '@discordjs/core/http-only'
 
 export default (rest?: REST) => {
-	rest ??= useRest();
-	return new API(rest);
-};
+  rest ??= useRest()
+  return new API(rest)
+}

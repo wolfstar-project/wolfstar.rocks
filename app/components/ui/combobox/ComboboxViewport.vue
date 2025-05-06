@@ -1,26 +1,27 @@
 <template>
-	<ComboboxViewport
-		data-slot="combobox-viewport"
-		v-bind="forwarded"
-		:class="cn('max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto', props.class)"
-	>
-		<slot />
-	</ComboboxViewport>
+  <ComboboxViewport
+    data-slot="combobox-viewport"
+    v-bind="forwarded"
+    :class="cn('max-h-[300px] scroll-py-1 overflow-x-hidden overflow-y-auto', props.class)"
+  >
+    <slot></slot>
+  </ComboboxViewport>
 </template>
 
 <script setup lang="ts">
-import type { ComboboxViewportProps } from 'reka-ui';
-import { cn } from '@/utils/cn';
-import { ComboboxViewport, useForwardProps } from 'reka-ui';
-import { computed, type HTMLAttributes } from 'vue';
+import type { ComboboxViewportProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { cn } from '@/utils/cn'
+import { ComboboxViewport, useForwardProps } from 'reka-ui'
+import { computed } from 'vue'
 
-const props = defineProps<ComboboxViewportProps & { class?: HTMLAttributes['class'] }>();
+const props = defineProps<ComboboxViewportProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props
 
-	return delegated;
-});
+  return delegated
+})
 
-const forwarded = useForwardProps(delegatedProps);
+const forwarded = useForwardProps(delegatedProps)
 </script>

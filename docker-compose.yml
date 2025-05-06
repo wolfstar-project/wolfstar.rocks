@@ -3,7 +3,7 @@ services:
     image: ghrc.io/wolfstar-project/wolfstar.rocks:stable
     build: .
     container_name: wolfstar.rocks
-    restart: 'no'
+    restart: no
     tty: true
     env_file:
       - .env

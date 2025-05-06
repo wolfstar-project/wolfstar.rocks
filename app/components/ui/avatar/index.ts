@@ -1,73 +1,73 @@
-import { type VariantProps, tv } from 'tailwind-variants';
-import type { HTMLAttributes } from 'vue';
+import type { VariantProps } from 'tailwind-variants'
+import type { HTMLAttributes } from 'vue'
+import { tv } from 'tailwind-variants'
 
-export { default as Avatar } from './Avatar.vue';
-export { default as AvatarBase } from './AvatarBase.vue';
-export { default as AvatarImage } from './AvatarImage.vue';
-export { default as AvatarFallback } from './AvatarFallback.vue';
+export { default as Avatar } from './Avatar.vue'
+export { default as AvatarBase } from './AvatarBase.vue'
+export { default as AvatarFallback } from './AvatarFallback.vue'
+export { default as AvatarImage } from './AvatarImage.vue'
 
 export const avatarVariant = tv({
-	base: 'avatar',
-	slots: {
-		root: 'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-200 align-middle select-none',
-		image: 'h-full w-full rounded-[inherit] object-cover',
-		fallback: 'truncate leading-none font-medium text-base-content',
-		icon: 'shrink-0 text-base-content'
-	},
-	variants: {
-		size: {
-			xs: 'h-8 w-8',
-			sm: 'h-10 w-10',
-			md: 'h-16 w-16',
-			lg: 'h-24 w-24',
-			xl: 'h-32 w-32'
-		},
-		status: {
-			online: 'avatar-online',
-			offline: 'avatar-offline'
-		},
-		shape: {
-			circle: 'mask mask-circle',
-			square: 'mask mask-squircle'
-		}
-	},
-	defaultVariants: {
-		size: 'md',
-		shape: 'circle'
-	}
-});
+  base: 'avatar',
+  slots: {
+    root: 'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-200 align-middle select-none',
+    image: 'h-full w-full rounded-[inherit] object-cover',
+    fallback: 'truncate leading-none font-medium text-base-content',
+    icon: 'shrink-0 text-base-content',
+  },
+  variants: {
+    size: {
+      xs: 'h-8 w-8',
+      sm: 'h-10 w-10',
+      md: 'h-16 w-16',
+      lg: 'h-24 w-24',
+      xl: 'h-32 w-32',
+    },
+    status: {
+      online: 'avatar-online',
+      offline: 'avatar-offline',
+    },
+    shape: {
+      circle: 'mask mask-circle',
+      square: 'mask mask-squircle',
+    },
+  },
+  defaultVariants: {
+    size: 'md',
+    shape: 'circle',
+  },
+})
 
-export type AvatarVariants = VariantProps<typeof avatarVariant>;
+export type AvatarVariants = VariantProps<typeof avatarVariant>
 
 export interface AvatarProps {
-	/**
-	 * The element or component this component should render as.
-	 * @defaultValue 'span'
-	 */
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	as?: any;
+  /**
+   * The element or component this component should render as.
+   * @defaultValue 'span'
+   */
 
-	src?: string;
-	alt?: string;
+  as?: any
 
-	fallback?: string;
+  src?: string
+  alt?: string
 
-	shape?: AvatarVariants['shape'];
+  fallback?: string
 
-	class?: HTMLAttributes['class'];
+  shape?: AvatarVariants['shape']
 
-	/**
-	 * @IconifyIcon
-	 */
-	icon?: string;
-	text?: string;
-	/**
-	 * @defaultValue 'md'
-	 */
-	size?: AvatarVariants['size'];
+  class?: HTMLAttributes['class']
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	style?: any;
+  /**
+   * @IconifyIcon
+   */
+  icon?: string
+  text?: string
+  /**
+   * @defaultValue 'md'
+   */
+  size?: AvatarVariants['size']
 
-	ui?: Partial<typeof avatarVariant.slots>;
+  style?: any
+
+  ui?: Partial<typeof avatarVariant.slots>
 }

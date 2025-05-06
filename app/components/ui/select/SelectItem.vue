@@ -16,16 +16,18 @@
 		</span>
 
 		<SelectItemText>
-			<slot />
+			<slot></slot>
 		</SelectItemText>
 	</SelectItem>
 </template>
 
 <script setup lang="ts">
+import type { SelectItemProps } from 'reka-ui';
+import type { HTMLAttributes } from 'vue';
 import { cn } from '@/utils/cn';
 import { Check } from 'lucide-vue-next';
-import { SelectItem, SelectItemIndicator, type SelectItemProps, SelectItemText, useForwardProps } from 'reka-ui';
-import { computed, type HTMLAttributes } from 'vue';
+import { SelectItem, SelectItemIndicator, SelectItemText, useForwardProps } from 'reka-ui';
+import { computed } from 'vue';
 
 const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>();
 

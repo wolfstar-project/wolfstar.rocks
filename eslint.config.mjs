@@ -15,6 +15,7 @@ export default antfu(
       'style/no-mixed-spaces-and-tabs': 'off',
       'ts/method-signature-style': 'off',
       'ts/no-use-before-define': 'off',
+      'node/prefer-global/process': 'off',
     },
   },
 ).append(nuxt()).append(

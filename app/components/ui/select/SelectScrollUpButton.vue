@@ -1,30 +1,30 @@
 <template>
-	<SelectScrollUpButton
-		data-slot="select-scroll-up-button"
-		v-bind="forwardedProps"
-		:class="cn('flex cursor-default items-center justify-center py-1', props.class)"
-	>
-		<slot>
-			<Icon name="radix-icons:chevronup" class="size-4" />
-		</slot>
-	</SelectScrollUpButton>
+  <SelectScrollUpButton
+    data-slot="select-scroll-up-button"
+    v-bind="forwardedProps"
+    :class="cn('flex cursor-default items-center justify-center py-1', props.class)"
+  >
+    <slot>
+      <Icon name="radix-icons:chevronup" class="size-4" />
+    </slot>
+  </SelectScrollUpButton>
 </template>
 
 <script setup lang="ts">
-import type { SelectScrollUpButtonProps } from 'reka-ui';
-import type { HTMLAttributes } from 'vue';
-import { Icon } from '@/components/ui/icon';
-import { cn } from '@/utils/cn';
-import { SelectScrollUpButton, useForwardProps } from 'reka-ui';
-import { computed } from 'vue';
+import type { SelectScrollUpButtonProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { Icon } from '@/components/ui/icon'
+import { cn } from '@/utils/cn'
+import { SelectScrollUpButton, useForwardProps } from 'reka-ui'
+import { computed } from 'vue'
 
-const props = defineProps<SelectScrollUpButtonProps & { class?: HTMLAttributes['class'] }>();
+const props = defineProps<SelectScrollUpButtonProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props
 
-	return delegated;
-});
+  return delegated
+})
 
-const forwardedProps = useForwardProps(delegatedProps);
+const forwardedProps = useForwardProps(delegatedProps)
 </script>

@@ -1,5 +1,5 @@
 import type { ModuleOptions } from '@vite-pwa/nuxt'
-import process from 'node:process'
+
 import { manifestIcons as icons } from './manifestIcons'
 
 export const appName = 'WolfStar Dashboard'

@@ -1,4 +1,3 @@
-import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
 import { appDescription, appName, pwa } from './app/config/pwa'
 import '@vite-pwa/nuxt'
@@ -166,7 +165,6 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vue-sonner'],
   },
-
   routeRules: {
     '/': { prerender: true },
     '/terms': { isr: true, prerender: true },

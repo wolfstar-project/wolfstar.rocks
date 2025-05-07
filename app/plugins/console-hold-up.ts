@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-import process from 'node:process'
 
 export default defineNuxtPlugin(() => {
   if (import.meta.client && process.env.NODE_ENV === 'production') {

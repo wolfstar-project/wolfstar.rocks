@@ -1,5 +1,5 @@
 import type { RESTOptions } from '@discordjs/rest'
-import process from 'node:process'
+
 import { REST } from '@discordjs/rest'
 
 export function useRest(options?: Partial<RESTOptions>) {

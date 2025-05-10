@@ -1,17 +1,17 @@
-import { BitField, enumToObject } from '@sapphire/bitfield'
-import { objectEntries, omitKeysFromObject } from '@sapphire/utilities'
-import { GuildSystemChannelFlags, PermissionFlagsBits } from 'discord-api-types/v10'
+import { BitField, enumToObject } from '@sapphire/bitfield';
+import { objectEntries, omitKeysFromObject } from '@sapphire/utilities';
+import { GuildSystemChannelFlags, PermissionFlagsBits } from 'discord-api-types/v10';
 
-export const PermissionsBits = new BitField(omitKeysFromObject(PermissionFlagsBits, 'ManageEmojisAndStickers'))
-export const PermissionsBitsList = objectEntries(PermissionsBits.flags)
+export const PermissionsBits = new BitField(omitKeysFromObject(PermissionFlagsBits, 'ManageEmojisAndStickers'));
+export const PermissionsBitsList = objectEntries(PermissionsBits.flags);
 export function toPermissionsArray(bits: bigint) {
-  return PermissionsBits.toArray(bits)
+    return PermissionsBits.toArray(bits);
 }
 
-export const SystemChannelFlag = new BitField(enumToObject(GuildSystemChannelFlags))
-export const SystemChannelFlagList = objectEntries(SystemChannelFlag.flags)
+export const SystemChannelFlag = new BitField(enumToObject(GuildSystemChannelFlags));
+export const SystemChannelFlagList = objectEntries(SystemChannelFlag.flags);
 export function toChannelsArray(bits: number) {
-  return SystemChannelFlag.toArray(bits)
+    return SystemChannelFlag.toArray(bits);
 }
 
 /**
@@ -21,7 +21,7 @@ export function toChannelsArray(bits: number) {
  * @param toggle The value to set.
  */
 export function bitwiseSet(bits: number, bit: number, toggle: boolean) {
-  return toggle ? bits | bit : bits & ~bit
+    return toggle ? bits | bit : bits & ~bit;
 }
 
 /**
@@ -30,7 +30,7 @@ export function bitwiseSet(bits: number, bit: number, toggle: boolean) {
  * @param bit The bit to check.
  */
 export function bitwiseHas(bits: number, bit: number) {
-  return (bits & bit) === bit
+    return (bits & bit) === bit;
 }
 
 /**
@@ -38,5 +38,5 @@ export function bitwiseHas(bits: number, bit: number) {
  * @param bits The bits to convert.
  */
 export function bitwiseArray(bits: readonly number[]) {
-  return bits.reduce((acc, bit) => acc | bit, 0)
+    return bits.reduce((acc, bit) => acc | bit, 0);
 }

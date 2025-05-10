@@ -1,8 +1,8 @@
-import type { OauthFlattenedGuild } from '~~/shared/types/discord'
+import type { OauthFlattenedGuild } from '~~/shared/types/discord';
 
 function useGuild() {
-  const guildData = useState<NonNullable<OauthFlattenedGuild> | null>(() => null)
+    const guildData = useState<NonNullable<OauthFlattenedGuild> | null>(() => null);
 
-  return guildData
+    return guildData;
 }
-export default useGuild
+export default useGuild;

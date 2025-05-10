@@ -1,5 +1,5 @@
 <template>
-  <div>
-    <GuildSettings />
-  </div>
+    <div>
+        <GuildSettings />
+    </div>
 </template>

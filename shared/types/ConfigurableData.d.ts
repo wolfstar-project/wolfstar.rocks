@@ -1,126 +1,126 @@
 export namespace Roles {
-  export interface Role {
-    key: `roles${
-    | 'Admin'
-    | 'Initial'
-    | 'Moderator'
-    | 'Muted'
-    | 'RestrictedReaction'
-    | 'RestrictedEmbed'
-    | 'RestrictedAttachment'
-    | 'RestrictedEmoji'
-    | 'RestrictedVoice'
-    | 'Public'
-    | 'RemoveInitial'}`
+    export interface Role {
+        key: `roles${
+        | 'Admin'
+        | 'Initial'
+        | 'Moderator'
+        | 'Muted'
+        | 'RestrictedReaction'
+        | 'RestrictedEmbed'
+        | 'RestrictedAttachment'
+        | 'RestrictedEmoji'
+        | 'RestrictedVoice'
+        | 'Public'
+        | 'RemoveInitial'}`;
 
-    name: string
+        name: string;
 
-    tooltip: string
-  }
+        tooltip: string;
+    }
 }
 
 export namespace Moderation {
-  export interface Message {
-    description: string
+    export interface Message {
+        description: string;
 
-    key: `messages${'ModerationDm' | 'ModerationReasonDisplay' | 'ModerationMessageDisplay' | 'ModerationAutoDelete' | 'ModeratorNameDisplay'}`
+        key: `messages${'ModerationDm' | 'ModerationReasonDisplay' | 'ModerationMessageDisplay' | 'ModerationAutoDelete' | 'ModeratorNameDisplay'}`;
 
-    name: string
-  }
+        name: string;
+    }
 }
 
 export namespace Events {
-  export interface Event {
-    description: string
+    export interface Event {
+        description: string;
 
-    key: `events${'BanAdd' | 'BanRemove' | 'TwemojiReactions'}`
+        key: `events${'BanAdd' | 'BanRemove' | 'TwemojiReactions'}`;
 
-    title: string
-  }
+        title: string;
+    }
 }
 
 export namespace DisableCommands {
-  export interface Command {
-    category: string
+    export interface Command {
+        category: string;
 
-    description: string
+        description: string;
 
-    isEnabled: boolean
+        isEnabled: boolean;
 
-    name: string
-  }
+        name: string;
+    }
 }
 
 export namespace General {
-  export interface Form {
-    prefix: string
-  }
+    export interface Form {
+        prefix: string;
+    }
 }
 
 export namespace Channels {
-  export interface Channel {
-    description: string
+    export interface Channel {
+        description: string;
 
-    key: `channelsLogs${
-    | 'ChannelCreate'
-    | 'ChannelDelete'
-    | 'ChannelUpdate'
-    | 'EmojiCreate'
-    | 'EmojiDelete'
-    | 'EmojiUpdate'
-    | 'Image'
-    | 'MemberAdd'
-    | 'MemberRemove'
-    | 'MemberNicknameUpdate'
-    | 'MemberUsernameUpdate'
-    | 'MemberRolesUpdate'
-    | 'MessageDelete'
-    | 'MessageDeleteNsfw'
-    | 'MessageUpdate'
-    | 'MessageUpdateNsfw'
-    | 'Moderation'
-    | 'Prune'
-    | 'Reaction'
-    | 'RoleCreate'
-    | 'RoleDelete'
-    | 'RoleUpdate'
-    | 'ServerUpdate'}`
+        key: `channelsLogs${
+        | 'ChannelCreate'
+        | 'ChannelDelete'
+        | 'ChannelUpdate'
+        | 'EmojiCreate'
+        | 'EmojiDelete'
+        | 'EmojiUpdate'
+        | 'Image'
+        | 'MemberAdd'
+        | 'MemberRemove'
+        | 'MemberNicknameUpdate'
+        | 'MemberUsernameUpdate'
+        | 'MemberRolesUpdate'
+        | 'MessageDelete'
+        | 'MessageDeleteNsfw'
+        | 'MessageUpdate'
+        | 'MessageUpdateNsfw'
+        | 'Moderation'
+        | 'Prune'
+        | 'Reaction'
+        | 'RoleCreate'
+        | 'RoleDelete'
+        | 'RoleUpdate'
+        | 'ServerUpdate'}`;
 
-    name: string
-  }
+        name: string;
+    }
 
-  export interface IgnoreChannel {
-    description: string
+    export interface IgnoreChannel {
+        description: string;
 
-    key: `channelsIgnore${'All' | 'MessageDelete' | 'MessageEdit' | 'ReactionAdd'}` | 'messagesIgnoreChannels'
+        key: `channelsIgnore${'All' | 'MessageDelete' | 'MessageEdit' | 'ReactionAdd'}` | 'messagesIgnoreChannels';
 
-    name: string
-  }
+        name: string;
+    }
 }
 
 export namespace Selfmod {
 	type SelfmodKeyHelper<P1 extends string[]> = `selfmod${Capitalize<P1[0]>}${P1[1] extends string ? Capitalize<P1[1]> : ''}${P1[2] extends string
-	  ? Capitalize<P1[2]>
-	  : ''}`
+	    ? Capitalize<P1[2]>
+	    : ''}`;
 
-	type Split<S extends string> = string extends S ? string[] : S extends '' ? [] : S extends `${infer T}.${infer U}` ? [T, ...Split<U>] : [S]
+	type Split<S extends string> = string extends S ? string[] : S extends '' ? [] : S extends `${infer T}.${infer U}` ? [T, ...Split<U>] : [S];
 
 	export type Union =
-	  | SelfmodKeyHelper<Split<'capitals.thresholdDuration'>>
-	  | SelfmodKeyHelper<Split<'capitals.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'capitals.maximum'>>
-	  | SelfmodKeyHelper<Split<'capitals.minimum'>>
-	  | SelfmodKeyHelper<Split<'invites.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'invites.thresholdDuration'>>
-	  | SelfmodKeyHelper<Split<'links.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'links.thresholdDuration'>>
-	  | SelfmodKeyHelper<Split<'messages.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'messages.thresholdDuration'>>
-	  | SelfmodKeyHelper<Split<'newlines.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'newlines.thresholdDuration'>>
-	  | SelfmodKeyHelper<Split<'newlines.maximum'>>
-	  | SelfmodKeyHelper<Split<'reactions.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'reactions.thresholdDuration'>>
-	  | SelfmodKeyHelper<Split<'filter.thresholdMaximum'>>
-	  | SelfmodKeyHelper<Split<'filter.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'capitals.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'capitals.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'capitals.maximum'>>
+	    | SelfmodKeyHelper<Split<'capitals.minimum'>>
+	    | SelfmodKeyHelper<Split<'invites.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'invites.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'links.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'links.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'messages.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'messages.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'newlines.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'newlines.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'newlines.maximum'>>
+	    | SelfmodKeyHelper<Split<'reactions.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'reactions.thresholdDuration'>>
+	    | SelfmodKeyHelper<Split<'filter.thresholdMaximum'>>
+	    | SelfmodKeyHelper<Split<'filter.thresholdDuration'>>;
 }

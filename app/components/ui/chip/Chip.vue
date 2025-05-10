@@ -1,43 +1,43 @@
 <template>
-  <Primitive :as="as" :class="ui.root({ class: [props.class, props.ui?.root] })">
-    <Slot v-bind="$attrs">
-      <slot></slot>
-    </Slot>
+    <Primitive :as="as" :class="ui.root({ class: [props.class, props.ui?.root] })">
+        <Slot v-bind="$attrs">
+            <slot></slot>
+        </Slot>
 
-    <span v-if="show" :class="ui.base({ class: props.ui?.base })">
-      <slot name="content">
-        {{ text }}
-      </slot>
-    </span>
-  </Primitive>
+        <span v-if="show" :class="ui.base({ class: props.ui?.base })">
+            <slot name="content">
+                {{ text }}
+            </slot>
+        </span>
+    </Primitive>
 </template>
 
 <script setup lang="ts">
-import type { ChipProps, ChipSlots } from '.'
-import { useAvatarGroup } from '@/composables/useAvatarGroup'
-import { Primitive, Slot } from 'reka-ui'
-import { computed } from 'vue'
-import { chip } from '.'
+import type { ChipProps, ChipSlots } from '.';
+import { useAvatarGroup } from '@/composables/useAvatarGroup';
+import { Primitive, Slot } from 'reka-ui';
+import { computed } from 'vue';
+import { chip } from '.';
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ChipProps>(), {
-  inset: false,
-  standalone: false,
-})
-defineSlots<ChipSlots>()
+    inset: false,
+    standalone: false,
+});
+defineSlots<ChipSlots>();
 
-const show = defineModel<boolean>('show', { default: true })
+const show = defineModel<boolean>('show', { default: true });
 
-const { size } = useAvatarGroup(props)
+const { size } = useAvatarGroup(props);
 
 const ui = computed(() =>
-  chip({
-    color: props.color,
-    size: size.value,
-    position: props.position,
-    inset: props.inset,
-    standalone: props.standalone,
-  }),
-)
+    chip({
+        color: props.color,
+        size: size.value,
+        position: props.position,
+        inset: props.inset,
+        standalone: props.standalone,
+    }),
+);
 </script>

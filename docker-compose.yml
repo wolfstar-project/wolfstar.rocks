@@ -1,11 +1,11 @@
 services:
-  wolfstar.rocks:
-    image: ghrc.io/wolfstar-project/wolfstar.rocks:stable
-    build: .
-    container_name: wolfstar.rocks
-    restart: no
-    tty: true
-    env_file:
-      - .env
-    ports:
-      - '8281:8281'
+    wolfstar.rocks:
+        image: ghrc.io/wolfstar-project/wolfstar.rocks:stable
+        build: .
+        container_name: wolfstar.rocks
+        restart: no
+        tty: true
+        env_file:
+            -   .env
+        ports:
+            -   '8281:8281'

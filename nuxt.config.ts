@@ -15,7 +15,6 @@ export default defineNuxtConfig({
 		'@sentry/nuxt/module',
 		'@nuxt/eslint',
 		'@prisma/nuxt',
-		'@vee-validate/nuxt',
 		'nuxt-auth-utils',
 		'@nuxtjs/seo',
 		'@nuxt/icon',

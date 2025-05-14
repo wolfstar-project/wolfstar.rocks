@@ -3,7 +3,7 @@ import type { GuildData, ReadonlyGuildData } from '~~/lib/database/settings/type
 import { maybeParseNumber } from '@/utils/parse';
 import { Collection } from '@discordjs/collection';
 import { AsyncQueue } from '@sapphire/async-queue';
-import prisma from '~~/lib/database/prisma';
+import prisma from '~~/lib/prisma';
 import { getDefaultGuildSettings } from '~~/lib/database/settings/constants';
 import { deleteSettings, getSettings, updateSettings } from '~~/lib/database/settings/context/functions';
 

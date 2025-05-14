@@ -1,5 +1,5 @@
 <template>
-    <NuxtIcon v-bind="iconProps" />
+	<NuxtIcon v-bind="iconProps" />
 </template>
 
 <script lang="ts"></script>
@@ -9,10 +9,10 @@ import { reactivePick } from '@vueuse/core';
 import { useForwardProps } from 'reka-ui';
 
 export interface IconProps {
-    name: string;
-    mode?: 'svg' | 'css';
-    size?: string | number;
-    customize?: (content: string, name?: string, prefix?: string, provider?: string) => string;
+	name: string;
+	mode?: 'svg' | 'css';
+	size?: string | number;
+	customize?: (content: string, name?: string, prefix?: string, provider?: string) => string;
 }
 
 const props = defineProps<IconProps>();

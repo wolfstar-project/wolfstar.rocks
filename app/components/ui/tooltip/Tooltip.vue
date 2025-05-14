@@ -1,7 +1,7 @@
 <template>
-    <TooltipRoot data-slot="tooltip" v-bind="forwarded">
-        <slot></slot>
-    </TooltipRoot>
+	<TooltipRoot data-slot="tooltip" v-bind="forwarded">
+		<slot></slot>
+	</TooltipRoot>
 </template>
 
 <script setup lang="ts">

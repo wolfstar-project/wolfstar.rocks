@@ -1,13 +1,13 @@
 <template>
-    <SelectScrollDownButton
-        data-slot="select-scroll-down-button"
-        v-bind="forwardedProps"
-        :class="cn('flex cursor-default items-center justify-center py-1', props.class)"
-    >
-        <slot>
-            <Icon name="radix-icons:chevrondown" class="size-4" />
-        </slot>
-    </SelectScrollDownButton>
+	<SelectScrollDownButton
+		data-slot="select-scroll-down-button"
+		v-bind="forwardedProps"
+		:class="cn('flex cursor-default items-center justify-center py-1', props.class)"
+	>
+		<slot>
+			<Icon name="radix-icons:chevrondown" class="size-4" />
+		</slot>
+	</SelectScrollDownButton>
 </template>
 
 <script setup lang="ts">
@@ -21,9 +21,9 @@ import { computed } from 'vue';
 const props = defineProps<SelectScrollDownButtonProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+	const { class: _, ...delegated } = props;
 
-    return delegated;
+	return delegated;
 });
 
 const forwardedProps = useForwardProps(delegatedProps);

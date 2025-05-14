@@ -1,7 +1,7 @@
 <template>
-    <Primitive :as="as" :class="ButtonGroupVariant({ orientation, class: props.class })">
-        <slot></slot>
-    </Primitive>
+	<Primitive :as="as" :class="ButtonGroupVariant({ orientation, class: props.class })">
+		<slot></slot>
+	</Primitive>
 </template>
 
 <script setup lang="ts">
@@ -11,15 +11,15 @@ import { computed, provide } from 'vue';
 import { ButtonGroupVariant } from '.';
 
 const props = withDefaults(defineProps<ButtonGroupProps>(), {
-    orientation: 'horizontal',
+	orientation: 'horizontal'
 });
 defineSlots<ButtonGroupSlots>();
 
 provide(
-    ButtonGroupInjectionKey,
-    computed(() => ({
-        orientation: props.orientation,
-        size: props.size,
-    })),
+	ButtonGroupInjectionKey,
+	computed(() => ({
+		orientation: props.orientation,
+		size: props.size
+	}))
 );
 </script>

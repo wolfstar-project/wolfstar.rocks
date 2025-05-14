@@ -1,27 +1,26 @@
 <template>
-    <vite-pwa-manifest />
-    <nuxt-layout name="main">
-        <error-message :error="error" />
-    </nuxt-layout>
+	<vite-pwa-manifest />
+	<nuxt-layout name="main">
+		<error-message :error="error" />
+	</nuxt-layout>
 </template>
 
 <script setup lang="ts">
 import type { NuxtError } from '#app';
 
 const { error } = defineProps<{
-    error: NuxtError;
+	error: NuxtError;
 }>();
 const router = useRouter();
 const appName = ref<'wolfstar' | 'staryl'>('wolfstar');
 
 watch(
-    router.currentRoute,
-    (v) => {
-        if (v.path.startsWith('/staryl'))
-            appName.value = 'staryl';
-        else appName.value = 'wolfstar';
-    },
-    { immediate: true },
+	router.currentRoute,
+	(v) => {
+		if (v.path.startsWith('/staryl')) appName.value = 'staryl';
+		else appName.value = 'wolfstar';
+	},
+	{ immediate: true }
 );
 
 provide(ProviderAppNameKey, appName);

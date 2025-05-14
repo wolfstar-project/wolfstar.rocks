@@ -1,7 +1,7 @@
 <template>
-    <ComboboxSeparator data-slot="combobox-separator" v-bind="delegatedProps" :class="cn('bg-border -mx-1 h-px', props.class)">
-        <slot></slot>
-    </ComboboxSeparator>
+	<ComboboxSeparator data-slot="combobox-separator" v-bind="delegatedProps" :class="cn('bg-border -mx-1 h-px', props.class)">
+		<slot></slot>
+	</ComboboxSeparator>
 </template>
 
 <script setup lang="ts">
@@ -14,8 +14,8 @@ import { computed } from 'vue';
 const props = defineProps<ComboboxSeparatorProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+	const { class: _, ...delegated } = props;
 
-    return delegated;
+	return delegated;
 });
 </script>

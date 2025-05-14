@@ -1,131 +1,133 @@
 {
-    "name": "@wolfstar-project/dashboard",
-    "type": "module",
-    "version": "1.0.0",
-    "private": true,
-    "packageManager": "pnpm@10.6.2",
-    "license": "Apache-2.0",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/wolfstar-project/wolfstar.rocks.git"
-    },
-    "bugs": {
-        "url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"
-    },
-    "engines": {
-        "node": ">=20",
-        "pnpm": ">=10"
-    },
-    "scripts": {
-        "build": "nuxi build",
-        "dev": "nuxi dev",
-        "dev:pwa": "VITE_PLUGIN_PWA=true nuxi dev",
-        "generate": "nuxt generate",
-        "postinstall": "nuxt prepare",
-        "lint": "eslint .",
-        "lint:fix": "eslint . --fix",
-        "prepare": "node .husky/install.mjs",
-        "preview": "nuxt preview",
-        "prisma:generate": "pnpm prisma generate",
-        "start": "node .output/server/index.mjs",
-        "start:generate": "npx serve .output/public",
-        "typecheck": "nuxt typecheck"
-    },
-    "commitlint": {
-        "extends": [
-            "@commitlint/config-conventional"
-        ]
-    },
-    "dependencies": {
-        "@ai-sdk/vue": "catalog:",
-        "@antfu/nip": "catalog:",
-        "@josephanson/nuxt-ai": "catalog:",
-        "@nuxtjs/color-mode": "catalog:build",
-        "@pinia/nuxt": "catalog:build",
-        "@prisma/client": "catalog:build",
-        "@prisma/nuxt": "catalog:build",
-        "@sapphire/ratelimits": "catalog:dev",
-        "@tailwindcss/vite": "catalog:build",
-        "@vee-validate/nuxt": "catalog:build",
-        "@vee-validate/zod": "catalog:build",
-        "@vite-pwa/nuxt": "catalog:build",
-        "@vueuse/core": "catalog:frontend",
-        "@vueuse/nuxt": "catalog:build",
-        "@vueuse/router": "catalog:build",
-        "clsx": "catalog:frontend",
-        "colortranslator": "catalog:frontend",
-        "consola": "catalog:frontend",
-        "fuse.js": "catalog:frontend",
-        "import-in-the-middle": "catalog:frontend",
-        "markdown-it-anchor": "catalog:frontend",
-        "nuxt": "catalog:build",
-        "nuxt-authorization": "catalog:build",
-        "pinia": "catalog:frontend",
-        "prisma": "catalog:build",
-        "prisma-json-types-generator": "catalog:build",
-        "reka-ui": "catalog:build",
-        "shadcn-nuxt": "catalog:build",
-        "tailwind-merge": "catalog:frontend",
-        "tailwind-variants": "catalog:frontend",
-        "tw-animate-css": "catalog:build",
-        "utility-types": "catalog:frontend",
-        "vue-markdown-render": "catalog:frontend",
-        "vue-sonner": "catalog:frontend",
-        "zod": "catalog:build"
-    },
-    "devDependencies": {
-        "@antfu/eslint-config": "catalog:build",
-        "@commitlint/cli": "catalog:dev",
-        "@commitlint/config-conventional": "catalog:dev",
-        "@discordjs/collection": "catalog:dev",
-        "@discordjs/core": "catalog:dev",
-        "@iconify-json/heroicons": "catalog:icons",
-        "@iconify-json/ic": "catalog:icons",
-        "@iconify-json/lucide": "catalog:icons",
-        "@iconify-json/ph": "catalog:icons",
-        "@nuxt/eslint": "catalog:build",
-        "@nuxt/fonts": "catalog:build",
-        "@nuxt/icon": "catalog:build",
-        "@nuxt/image": "catalog:build",
-        "@nuxt/scripts": "catalog:build",
-        "@nuxtjs/seo": "catalog:build",
-        "@sapphire/bitfield": "catalog:dev",
-        "@sapphire/prettier-config": "catalog:dev",
-        "@sapphire/result": "catalog:dev",
-        "@sapphire/snowflake": "catalog:dev",
-        "@sapphire/time-utilities": "catalog:dev",
-        "@sapphire/utilities": "catalog:dev",
-        "@sentry/nuxt": "catalog:build",
-        "@tailwindcss/typography": "catalog:dev",
-        "daisyui": "catalog:dev",
-        "discord-api-types": "catalog:build",
-        "eslint": "catalog:build",
-        "eslint-plugin-format": "catalog:build",
-        "eslint-plugin-package-json": "^0.31.0",
-        "husky": "catalog:dev",
-        "lint-staged": "catalog:dev",
-        "nuxt-auth-utils": "catalog:dev",
-        "playwright": "catalog:dev",
-        "prettier": "catalog:dev",
-        "prettier-plugin-css-order": "catalog:dev",
-        "prettier-plugin-tailwindcss": "catalog:dev",
-        "sort-package-json": "catalog:build",
-        "tailwindcss": "catalog:dev",
-        "typescript": "catalog:dev",
-        "vue-tsc": "catalog:dev"
-    },
-    "lint-staged": {
-        "*.@(js|ts|vue|yml|yaml|md|json)": [
-            "prettier --write"
-        ],
-        "*.@(js|ts|vue)": [
-            "eslint --fix"
-        ],
-        "package.json": [
-            "sort-package-json"
-        ]
-    },
-    "volta": {
-        "node": "20.18.3"
-    }
+	"name": "@wolfstar-project/dashboard",
+	"type": "module",
+	"version": "1.0.0",
+	"private": true,
+	"packageManager": "pnpm@10.6.2",
+	"license": "Apache-2.0",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/wolfstar-project/wolfstar.rocks.git"
+	},
+	"bugs": {
+		"url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"
+	},
+	"engines": {
+		"node": ">=20",
+		"pnpm": ">=10"
+	},
+	"scripts": {
+		"build": "nuxi build",
+		"dev": "nuxi dev",
+		"dev:pwa": "VITE_PLUGIN_PWA=true nuxi dev",
+		"generate": "nuxt generate",
+		"postinstall": "nuxt prepare",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"prepare": "node .husky/install.mjs",
+		"preview": "nuxt preview",
+		"prisma:generate": "pnpm prisma generate",
+		"start": "node .output/server/index.mjs",
+		"start:generate": "npx serve .output/public",
+		"typecheck": "nuxt typecheck"
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
+	"dependencies": {
+		"@ai-sdk/vue": "catalog:",
+		"@antfu/nip": "catalog:",
+		"@josephanson/nuxt-ai": "catalog:",
+		"@nuxtjs/color-mode": "catalog:build",
+		"@pinia/nuxt": "catalog:build",
+		"@prisma/client": "catalog:build",
+		"@prisma/nuxt": "catalog:build",
+		"@sapphire/ratelimits": "catalog:dev",
+		"@tailwindcss/vite": "catalog:build",
+		"@vee-validate/zod": "catalog:build",
+		"@vite-pwa/nuxt": "catalog:build",
+		"@vueuse/core": "catalog:frontend",
+		"@vueuse/nuxt": "catalog:build",
+		"@vueuse/router": "catalog:build",
+		"clsx": "catalog:frontend",
+		"colortranslator": "catalog:frontend",
+		"consola": "catalog:frontend",
+		"fuse.js": "catalog:frontend",
+		"import-in-the-middle": "catalog:frontend",
+		"markdown-it-anchor": "catalog:frontend",
+		"nuxt": "catalog:build",
+		"nuxt-authorization": "catalog:build",
+		"pinia": "catalog:frontend",
+		"prisma": "catalog:build",
+		"prisma-json-types-generator": "catalog:build",
+		"reka-ui": "catalog:build",
+		"shadcn-nuxt": "catalog:build",
+		"tailwind-merge": "catalog:frontend",
+		"tailwind-variants": "catalog:frontend",
+		"tw-animate-css": "catalog:build",
+		"utility-types": "catalog:frontend",
+		"vue-markdown-render": "catalog:frontend",
+		"vue-sonner": "catalog:frontend",
+		"zod": "catalog:build"
+	},
+	"devDependencies": {
+		"@antfu/eslint-config": "catalog:build",
+		"@commitlint/cli": "catalog:dev",
+		"@commitlint/config-conventional": "catalog:dev",
+		"@discordjs/collection": "catalog:dev",
+		"@discordjs/core": "catalog:dev",
+		"@iconify-json/heroicons": "catalog:icons",
+		"@iconify-json/ic": "catalog:icons",
+		"@iconify-json/lucide": "catalog:icons",
+		"@iconify-json/ph": "catalog:icons",
+		"@nuxt/eslint": "catalog:build",
+		"@nuxt/fonts": "catalog:build",
+		"@nuxt/icon": "catalog:build",
+		"@nuxt/image": "catalog:build",
+		"@nuxt/scripts": "catalog:build",
+		"@nuxtjs/seo": "catalog:build",
+		"@sapphire/bitfield": "catalog:dev",
+		"@sapphire/prettier-config": "catalog:dev",
+		"@sapphire/result": "catalog:dev",
+		"@sapphire/snowflake": "catalog:dev",
+		"@sapphire/time-utilities": "catalog:dev",
+		"@sapphire/utilities": "catalog:dev",
+		"@sentry/nuxt": "catalog:build",
+		"@tailwindcss/typography": "catalog:dev",
+		"daisyui": "catalog:dev",
+		"discord-api-types": "catalog:build",
+		"eslint": "catalog:build",
+		"eslint-config-prettier": "catalog:",
+		"eslint-plugin-format": "catalog:build",
+		"eslint-plugin-package-json": "catalog:",
+		"eslint-plugin-prettier": "catalog:",
+		"husky": "catalog:dev",
+		"lint-staged": "catalog:dev",
+		"nuxt-auth-utils": "catalog:dev",
+		"playwright": "catalog:dev",
+		"prettier": "catalog:dev",
+		"prettier-plugin-css-order": "catalog:dev",
+		"prettier-plugin-tailwindcss": "catalog:dev",
+		"sort-package-json": "catalog:build",
+		"tailwindcss": "catalog:dev",
+		"typescript": "catalog:dev",
+		"vue-tsc": "catalog:dev"
+	},
+	"lint-staged": {
+		"*.@(js|ts|vue|yml|yaml|md|json)": [
+			"prettier --write"
+		],
+		"*.@(js|ts|vue)": [
+			"eslint --fix"
+		],
+		"package.json": [
+			"sort-package-json"
+		]
+	},
+	"volta": {
+		"node": "20.18.3"
+	}
 }

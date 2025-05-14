@@ -1,7 +1,7 @@
 <template>
-    <ComboboxAnchor data-slot="combobox-anchor" v-bind="forwarded" :class="cn('w-[200px]', props.class)">
-        <slot></slot>
-    </ComboboxAnchor>
+	<ComboboxAnchor data-slot="combobox-anchor" v-bind="forwarded" :class="cn('w-[200px]', props.class)">
+		<slot></slot>
+	</ComboboxAnchor>
 </template>
 
 <script setup lang="ts">
@@ -14,9 +14,9 @@ import { computed } from 'vue';
 const props = defineProps<ComboboxAnchorProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+	const { class: _, ...delegated } = props;
 
-    return delegated;
+	return delegated;
 });
 
 const forwarded = useForwardProps(delegatedProps);

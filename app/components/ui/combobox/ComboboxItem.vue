@@ -1,16 +1,16 @@
 <template>
-    <ComboboxItem
-        data-slot="combobox-item"
-        v-bind="forwarded"
-        :class="
-            cn(
-                `data-[highlighted]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[highlighted]:bg-accent [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
-                props.class,
-            )
-        "
-    >
-        <slot></slot>
-    </ComboboxItem>
+	<ComboboxItem
+		data-slot="combobox-item"
+		v-bind="forwarded"
+		:class="
+			cn(
+				`data-[highlighted]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[highlighted]:bg-accent [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
+				props.class
+			)
+		"
+	>
+		<slot></slot>
+	</ComboboxItem>
 </template>
 
 <script setup lang="ts">
@@ -24,9 +24,9 @@ const props = defineProps<ComboboxItemProps & { class?: HTMLAttributes['class'] 
 const emits = defineEmits<ComboboxItemEmits>();
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+	const { class: _, ...delegated } = props;
 
-    return delegated;
+	return delegated;
 });
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits);

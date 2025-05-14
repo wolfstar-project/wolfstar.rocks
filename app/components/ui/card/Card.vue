@@ -1,17 +1,17 @@
 <template>
-    <Primitive :as="as" :class="ui.root({ class: [props.class, props.ui?.root] })">
-        <div v-if="!!slots.header" :class="ui.header({ class: props.ui?.header })">
-            <slot name="header"></slot>
-        </div>
+	<Primitive :as="as" :class="ui.root({ class: [props.class, props.ui?.root] })">
+		<div v-if="!!slots.header" :class="ui.header({ class: props.ui?.header })">
+			<slot name="header"></slot>
+		</div>
 
-        <div v-if="!!slots.default" :class="ui.body({ class: props.ui?.body })">
-            <slot></slot>
-        </div>
+		<div v-if="!!slots.default" :class="ui.body({ class: props.ui?.body })">
+			<slot></slot>
+		</div>
 
-        <div v-if="!!slots.footer" :class="ui.footer({ class: props.ui?.footer })">
-            <slot name="footer"></slot>
-        </div>
-    </Primitive>
+		<div v-if="!!slots.footer" :class="ui.footer({ class: props.ui?.footer })">
+			<slot name="footer"></slot>
+		</div>
+	</Primitive>
 </template>
 
 <script setup lang="ts">

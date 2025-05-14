@@ -1,7 +1,7 @@
 <template>
-    <ComboboxRoot data-slot="combobox" v-bind="forwarded">
-        <slot></slot>
-    </ComboboxRoot>
+	<ComboboxRoot data-slot="combobox" v-bind="forwarded">
+		<slot></slot>
+	</ComboboxRoot>
 </template>
 
 <script setup lang="ts">

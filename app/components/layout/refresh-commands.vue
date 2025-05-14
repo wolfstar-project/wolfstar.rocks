@@ -1,24 +1,24 @@
 <template>
-    <ShadButton
-        aria-label="Refresh commands"
-        :disabled="disabled"
-        color="neutral"
-        variant="ghost"
-        :data-tip="tooltipText"
-        icon="i-mdi-cached"
-        @click="handleClick"
-    />
+	<ShadButton
+		aria-label="Refresh commands"
+		:disabled="disabled"
+		color="neutral"
+		variant="ghost"
+		:data-tip="tooltipText"
+		icon="i-mdi-cached"
+		@click="handleClick"
+	/>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
-    commands: FlattenedCommand[];
-    loading?: boolean;
-    onRefresh: () => Promise<void>;
+	commands: FlattenedCommand[];
+	loading?: boolean;
+	onRefresh: () => Promise<void>;
 }>();
 
 const emit = defineEmits<{
-    (e: 'refresh'): void;
+	(e: 'refresh'): void;
 }>();
 
 // State
@@ -26,20 +26,17 @@ const disabled = ref(props.loading || false);
 
 // Gestione click
 async function handleClick() {
-    if (disabled.value)
-        return;
+	if (disabled.value) return;
 
-    try {
-        disabled.value = true;
-        await props.onRefresh();
-        emit('refresh');
-    }
-    catch (err) {
-        useLogger().error('Errore refresh:', err);
-    }
-    finally {
-        disabled.value = false;
-    }
+	try {
+		disabled.value = true;
+		await props.onRefresh();
+		emit('refresh');
+	} catch (err) {
+		useLogger().error('Error refresh:', err);
+	} finally {
+		disabled.value = false;
+	}
 }
 
 const tooltipText = `

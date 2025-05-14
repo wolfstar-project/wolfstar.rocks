@@ -1,7 +1,7 @@
 <template>
-    <SelectRoot data-slot="select" v-bind="forwarded">
-        <slot></slot>
-    </SelectRoot>
+	<SelectRoot data-slot="select" v-bind="forwarded">
+		<slot></slot>
+	</SelectRoot>
 </template>
 
 <script setup lang="ts">

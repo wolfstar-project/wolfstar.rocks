@@ -7,6 +7,9 @@ catalog:
     '@ai-sdk/vue': '>=1.2.5'
     '@antfu/nip': ^0.1.0
     '@josephanson/nuxt-ai': 0.1.6
+    eslint-config-prettier: ^10.1.5
+    eslint-plugin-package-json: ^0.31.0
+    eslint-plugin-prettier: ^5.4.0
 
 catalogs:
     build:

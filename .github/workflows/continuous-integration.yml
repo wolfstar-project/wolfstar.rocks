@@ -12,33 +12,33 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Project
-                uses: actions/checkout@v4
+              uses: actions/checkout@v4
             - name: Add problem matchers
-                run: echo "::add-matcher::.github/problemMatchers/eslint.json"
+              run: echo "::add-matcher::.github/problemMatchers/eslint.json"
             - name: Use Node.js v20
-                uses: actions/setup-node@v4
-                with:
-                    node-version: 20
-                    cache: yarn
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: yarn
             - name: Install Dependencies
-                run: yarn --immutable
+              run: yarn --immutable
             - name: Run ESLint
-                run: yarn lint --fix=false
+              run: yarn lint --fix=false
 
     Building:
         name: Compile source code
         runs-on: ubuntu-latest
         steps:
             - name: Checkout Project
-                uses: actions/checkout@v4
+              uses: actions/checkout@v4
             - name: Add problem matchers
-                run: echo "::add-matcher::.github/problemMatchers/tsc.json"
+              run: echo "::add-matcher::.github/problemMatchers/tsc.json"
             - name: Use Node.js v20
-                uses: actions/setup-node@v4
-                with:
-                    node-version: 20
-                    cache: yarn
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20
+                cache: yarn
             - name: Install Dependencies
-                run: yarn --immutable
+              run: yarn --immutable
             - name: Build code
-                run: yarn build
+              run: yarn build

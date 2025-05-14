@@ -1,7 +1,7 @@
 <template>
-    <SelectValue data-slot="select-value" v-bind="props">
-        <slot></slot>
-    </SelectValue>
+	<SelectValue data-slot="select-value" v-bind="props">
+		<slot></slot>
+	</SelectValue>
 </template>
 
 <script setup lang="ts">

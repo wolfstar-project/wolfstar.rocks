@@ -1,7 +1,7 @@
 <template>
-    <TooltipTrigger data-slot="tooltip-trigger" v-bind="props">
-        <slot></slot>
-    </TooltipTrigger>
+	<TooltipTrigger data-slot="tooltip-trigger" v-bind="props">
+		<slot></slot>
+	</TooltipTrigger>
 </template>
 
 <script setup lang="ts">

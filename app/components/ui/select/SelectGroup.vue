@@ -1,7 +1,7 @@
 <template>
-    <SelectGroup data-slot="select-group" v-bind="props">
-        <slot></slot>
-    </SelectGroup>
+	<SelectGroup data-slot="select-group" v-bind="props">
+		<slot></slot>
+	</SelectGroup>
 </template>
 
 <script setup lang="ts">

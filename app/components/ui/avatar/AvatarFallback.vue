@@ -1,7 +1,7 @@
 <template>
-    <AvatarFallback v-bind="props">
-        <slot></slot>
-    </AvatarFallback>
+	<AvatarFallback v-bind="props">
+		<slot></slot>
+	</AvatarFallback>
 </template>
 
 <script setup lang="ts">

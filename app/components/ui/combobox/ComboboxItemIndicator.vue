@@ -1,7 +1,7 @@
 <template>
-    <ComboboxItemIndicator data-slot="combobox-item-indicator" v-bind="forwarded" :class="cn('ml-auto', props.class)">
-        <slot></slot>
-    </ComboboxItemIndicator>
+	<ComboboxItemIndicator data-slot="combobox-item-indicator" v-bind="forwarded" :class="cn('ml-auto', props.class)">
+		<slot></slot>
+	</ComboboxItemIndicator>
 </template>
 
 <script setup lang="ts">
@@ -14,9 +14,9 @@ import { computed } from 'vue';
 const props = defineProps<ComboboxItemIndicatorProps & { class?: HTMLAttributes['class'] }>();
 
 const delegatedProps = computed(() => {
-    const { class: _, ...delegated } = props;
+	const { class: _, ...delegated } = props;
 
-    return delegated;
+	return delegated;
 });
 
 const forwarded = useForwardProps(delegatedProps);

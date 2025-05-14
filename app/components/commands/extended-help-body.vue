@@ -1,5 +1,5 @@
 <template>
-    <VueMarkdown :source="processedBody" :plugins="plugins" :options="markdownOptions" />
+	<VueMarkdown :source="processedBody" :plugins="plugins" :options="markdownOptions" />
 </template>
 
 <script setup lang="ts">
@@ -8,7 +8,7 @@ import MarkdownItAnchor from 'markdown-it-anchor';
 import VueMarkdown from 'vue-markdown-render';
 
 interface ExtendedHelpBodyProps {
-    body: string;
+	body: string;
 }
 
 const props = defineProps<ExtendedHelpBodyProps>();
@@ -18,25 +18,25 @@ const plugins = [MarkdownItAnchor];
 
 // Opzioni di configurazione markdown
 const markdownOptions = {
-    html: true,
-    linkify: true,
-    typographer: true,
+	html: true,
+	linkify: true,
+	typographer: true
 };
 
 const processedBody = computed(() => {
-    return props.body.replace(EmojiRegexExtractName, '$1');
+	return props.body.replace(EmojiRegexExtractName, '$1');
 });
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 :deep(.markdown-body) {
-    @apply prose prose-stone max-w-none;
+	@apply prose prose-stone max-w-none;
 }
 :deep(a) {
-    @apply link link-primary;
+	@apply link link-primary;
 }
 :deep(code) {
-    @apply rounded-sm bg-base-200 px-1 py-0.5;
+	@apply rounded-sm bg-base-200 px-1 py-0.5;
 }
 </style>

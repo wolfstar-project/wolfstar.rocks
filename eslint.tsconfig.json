@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"allowJs": true,
+		"checkJs": true
+	},
+	"include": ["app/**/*.ts", "app/**/*.vue", "lib/**/*.ts", "nuxt.config.ts"],
+	"exclude": []
+}

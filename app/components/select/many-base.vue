@@ -94,13 +94,15 @@ const selectedValues = computed({
 });
 
 const filteredOptions = computed(() => {
-	if (!search.value) return props.options;
+	if (!search.value) 
+return props.options;
 	const searchLower = search.value.toLowerCase();
 	return props.options.filter((item) => item.label.toLowerCase().includes(searchLower));
 });
 
 const displayValue = computed(() => {
-	if (!selectedValues.value.length) return props.placeholder || 'Select...';
+	if (!selectedValues.value.length) 
+return props.placeholder || 'Select...';
 	return `${selectedValues.value.length} selected`;
 });
 
@@ -142,10 +144,10 @@ watch(
 @reference "@/assets/css/main.css";
 
 .modal-backdrop {
-	@apply bg-black/50;
+  @apply bg-black/50;
 }
 
 .checkbox:checked {
-	@apply border-primary bg-primary;
+  @apply border-primary bg-primary;
 }
 </style>

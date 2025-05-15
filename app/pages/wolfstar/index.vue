@@ -332,55 +332,55 @@ function advanceModerationIndex(value: -1 | 1) {
 <style scoped>
 @reference "@/assets/css/main.css";
 .title {
-	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem] bg-gradient-to-b from-white to-branding-wolfstar bg-clip-text text-transparent;
+  @apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem] bg-gradient-to-b from-white to-branding-wolfstar bg-clip-text text-transparent;
 }
 
 .radio-feature-container {
-	@apply tooltip tooltip-top lg:tooltip-right;
-	display: inherit;
+  @apply tooltip tooltip-top lg:tooltip-right;
+  display: inherit;
 }
 
 .radio-feature {
-	@apply h-4 w-4 cursor-pointer appearance-none rounded-full bg-base-content/20;
+  @apply h-4 w-4 cursor-pointer appearance-none rounded-full bg-base-content/20;
 }
 
 .radio-feature-arrow {
-	@apply h-4 w-4;
+  @apply h-4 w-4;
 }
 
 @media not (hover: hover) {
-	.radio-feature {
-		@apply h-6 w-6;
-	}
+  .radio-feature {
+    @apply h-6 w-6;
+  }
 
-	.radio-feature-arrow {
-		@apply h-6 w-6;
-	}
+  .radio-feature-arrow {
+    @apply h-6 w-6;
+  }
 }
 
 .radio-feature:not(:checked):hover {
-	@apply bg-base-content/40;
+  @apply bg-base-content/40;
 }
 
 .radio-feature:checked {
-	@apply bg-base-content/80;
+  @apply bg-base-content/80;
 }
 
 .radio-feature:checked:hover {
-	@apply bg-base-content;
+  @apply bg-base-content;
 }
 
 .radio-feature {
-	transition: linear background-color 0.25s;
+  transition: linear background-color 0.25s;
 }
 
 .invite-card {
-	@apply relative p-12 text-white;
+  @apply relative p-12 text-white;
 }
 
 .invite-card::before {
-	@apply absolute left-0 top-0 -z-10 h-full w-full -rotate-2 rounded-xl drop-shadow-lg;
-	background: linear-gradient(to bottom right in oklch, var(--color-red-600) 0%, var(--color-purple-600) 70%);
-	content: '';
+  @apply absolute left-0 top-0 -z-10 h-full w-full -rotate-2 rounded-xl drop-shadow-lg;
+  background: linear-gradient(to bottom right in oklch, var(--color-red-600) 0%, var(--color-purple-600) 70%);
+  content: '';
 }
 </style>

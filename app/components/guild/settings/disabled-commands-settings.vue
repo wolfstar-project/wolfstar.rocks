@@ -65,7 +65,8 @@ function parseCommandsToLocalCommands() {
 	loading.value = true;
 	const commandsForState: Record<string, DisableCommands.Command> = {};
 	for (const command of props.commands) {
-		if (command.guarded) continue;
+		if (command.guarded) 
+continue;
 		commandsForState[command.name] = {
 			name: command.name,
 			description: command.description,

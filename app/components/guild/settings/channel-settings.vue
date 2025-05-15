@@ -51,6 +51,6 @@ const { settings, resetChanges } = useGuildSettings();
 
 <style scoped>
 .md-grid-cols-3 {
-	@apply grid-cols-3;
+  @apply grid-cols-3;
 }
 </style>

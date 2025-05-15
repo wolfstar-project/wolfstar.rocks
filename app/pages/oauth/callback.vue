@@ -42,7 +42,8 @@ if (import.meta.client && code) {
 
 async function performCall() {
 	await execute();
-	if (!data) return;
+	if (!data) 
+return;
 
 	await promiseTimeout(1000);
 	await useRouter().replace(useAuth().redirectTo.value);
@@ -63,15 +64,15 @@ defineOgImageComponent('NuxtSeo', {
 
 <style scoped>
 .progress {
-	animation: progressAnimation 1s;
+  animation: progressAnimation 1s;
 }
 
 @keyframes progressAnimation {
-	from {
-		width: 0;
-	}
-	to {
-		width: 100%;
-	}
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 </style>

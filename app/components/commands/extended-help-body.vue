@@ -31,12 +31,12 @@ const processedBody = computed(() => {
 <style scoped>
 @reference "@/assets/css/main.css";
 :deep(.markdown-body) {
-	@apply prose prose-stone max-w-none;
+  @apply prose prose-stone max-w-none;
 }
 :deep(a) {
-	@apply link link-primary;
+  @apply link link-primary;
 }
 :deep(code) {
-	@apply rounded-sm bg-base-200 px-1 py-0.5;
+  @apply rounded-sm bg-base-200 px-1 py-0.5;
 }
 </style>

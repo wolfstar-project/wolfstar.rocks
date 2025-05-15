@@ -3,9 +3,9 @@ import type { GuildData, ReadonlyGuildData } from '~~/lib/database/settings/type
 import { maybeParseNumber } from '@/utils/parse';
 import { Collection } from '@discordjs/collection';
 import { AsyncQueue } from '@sapphire/async-queue';
-import prisma from '~~/lib/prisma';
 import { getDefaultGuildSettings } from '~~/lib/database/settings/constants';
 import { deleteSettings, getSettings, updateSettings } from '~~/lib/database/settings/context/functions';
+import prisma from '~~/lib/prisma';
 
 const cache = new Collection<string, GuildData>();
 const queue = new Collection<string, Promise<GuildData>>();
@@ -153,7 +153,8 @@ async function unlockOnThrow(promise: Promise<ReadonlyGuildData>, lock: AsyncQue
 
 async function processFetch(id: string): Promise<ReadonlyGuildData> {
 	const previous = queue.get(id);
-	if (previous) return previous;
+	if (previous) 
+return previous;
 
 	try {
 		const promise = fetch(id);

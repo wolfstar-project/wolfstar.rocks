@@ -144,11 +144,11 @@ onMounted(fetchData);
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-	@apply transition-all duration-300 ease-in-out;
+  @apply transition-all duration-300 ease-in-out;
 }
 
 .fade-enter-from,
 .fade-leave-to {
-	@apply translate-y-full opacity-0;
+  @apply translate-y-full opacity-0;
 }
 </style>

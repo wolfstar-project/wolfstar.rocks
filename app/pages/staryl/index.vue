@@ -23,10 +23,14 @@
 <style scoped>
 @reference "@/assets/css/main.css";
 .title {
-	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem];
-	background: linear-gradient(to bottom in oklch, whitesmoke 40%, oklch(from oklch(var(--branding-nekokai)) calc(l + 0.1) c h) 100%);
-	background-clip: text;
-	line-height: 3.8rem;
-	-webkit-text-fill-color: transparent;
+  @apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem];
+  background: linear-gradient(
+    to bottom in oklch,
+    whitesmoke 40%,
+    oklch(from oklch(var(--branding-nekokai)) calc(l + 0.1) c h) 100%
+  );
+  background-clip: text;
+  line-height: 3.8rem;
+  -webkit-text-fill-color: transparent;
 }
 </style>

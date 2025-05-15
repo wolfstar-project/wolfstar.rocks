@@ -1,4 +1,5 @@
 import tailwindcss from '@tailwindcss/vite';
+import { isDevelopment, isWindows } from 'std-env';
 import { appDescription, appName, pwa } from './app/config/pwa';
 import '@vite-pwa/nuxt';
 import 'nuxt';
@@ -23,6 +24,7 @@ export default defineNuxtConfig({
 		'@nuxt/fonts',
 		'shadcn-nuxt',
 		'@josephanson/nuxt-ai',
+		...(isDevelopment || isWindows) ? [] : ['nuxt-security'],
 		...(process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['@nuxthub/core'] : [])
 	],
 	$development: {
@@ -187,6 +189,11 @@ export default defineNuxtConfig({
 			crawlLinks: true,
 			routes: ['/sitemap.xml', '/robots.txt']
 		},
+		esbuild: {
+			options: {
+				target: 'esnext'
+			}
+		},
 		openAPI: {
 			// OpenAPI configuration
 			meta: {
@@ -212,6 +219,9 @@ export default defineNuxtConfig({
 	},
 	vite: {
 		plugins: [tailwindcss()],
+    build: {
+      target: 'esnext',
+    },
 		optimizeDeps: {
 			include: [
 				'reka-ui',
@@ -228,6 +238,42 @@ export default defineNuxtConfig({
 			]
 		}
 	},
+	 // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-ignore nuxt-security is conditional
+  security: {
+    headers: {
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        'default-src': ['\'self\''],
+        'base-uri': ['\'self\''],
+        'connect-src': ['\'self\'', 'https:', 'http:', 'wss:', 'ws:'],
+        'font-src': ['\'self\''],
+        'form-action': ['\'none\''],
+        'frame-ancestors': ['\'none\''],
+        'frame-src': ['https:'],
+        'img-src': ['\'self\'', 'https:', 'http:', 'data:', 'blob:'],
+        'manifest-src': ['\'self\''],
+        'media-src': ['\'self\'', 'https:', 'http:'],
+        'object-src': ['\'none\''],
+        'script-src': ['\'self\'', '\'unsafe-inline\'', '\'wasm-unsafe-eval\''],
+        'script-src-attr': ['\'none\''],
+        'style-src': ['\'self\'', '\'unsafe-inline\''],
+        'upgrade-insecure-requests': true,
+      },
+      permissionsPolicy: {
+        fullscreen: '*',
+      },
+    },
+    rateLimiter: false,
+  },
+	typescript: {
+    tsConfig: {
+
+      vueCompilerOptions: {
+        target: 3.5,
+      },
+    },
+  },
 	eslint: {
 		config: {
 			standalone: false,
@@ -264,5 +310,5 @@ export default defineNuxtConfig({
 	},
 	sitemap: {
 		exclude: ['/join', '/oauth/guild', '/oauth/callback', '/[...id]']
-	}
+	},
 });

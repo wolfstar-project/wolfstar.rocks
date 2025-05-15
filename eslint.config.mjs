@@ -1,6 +1,7 @@
 // @ts-check
 import antfu from '@antfu/eslint-config';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import eslintConfigPrettier from "eslint-config-prettier/flat";
+import packageJson from 'eslint-plugin-package-json';
 import nuxt from './.nuxt/eslint.config.mjs';
 
 export default antfu(
@@ -21,16 +22,11 @@ export default antfu(
 			'ts/no-use-before-define': 'off',
 			'node/prefer-global/process': 'off'
 		}
-	}
+	},
+	packageJson.configs.recommended,
+	eslintConfigPrettier
 )
-	.append(nuxt(eslintPluginPrettierRecommended))
-	.append({
-		files: ['*.json'],
-		name: 'antfu/json/package',
-		rules: {
-			'jsonc/indent': 'off'
-		}
-	})
+	.append(nuxt())
 	.append({
 		files: ['**/*.vue'],
 		name: 'antfu/vue/recommended',

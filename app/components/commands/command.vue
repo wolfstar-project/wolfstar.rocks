@@ -76,7 +76,8 @@ const props = withDefaults(defineProps<CommandProps>(), {
 });
 
 function resolveContent(content: string | string[], multiline = false) {
-	if (!content) return null;
+	if (!content) 
+return null;
 	try {
 		return Array.isArray(content) ? content.join(multiline ? '\n\n' : ' ') : content.trim();
 	} catch {
@@ -112,22 +113,22 @@ const reminder = computed(() => resolveContent(props.command.extendedHelp.remind
 
 <style scoped>
 .chips-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .chip {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	border-radius: 0.5rem;
-	background-color: var(--primary-color);
-	padding: 0.5rem 1rem;
-	color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0.5rem;
+  background-color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  color: white;
 }
 
 .chip.secondary {
-	background-color: var(--secondary-color);
+  background-color: var(--secondary-color);
 }
 </style>

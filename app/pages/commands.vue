@@ -58,10 +58,10 @@ onMounted(() => {
 <style scoped>
 @reference "../assets/css/main.css";
 .modal {
-	@apply backdrop-blur-xs;
+  @apply backdrop-blur-xs;
 }
 
 .modal-box {
-	@apply max-h-[80vh];
+  @apply max-h-[80vh];
 }
 </style>

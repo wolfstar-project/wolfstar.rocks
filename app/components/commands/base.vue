@@ -78,7 +78,8 @@ const props = withDefaults(defineProps<CommandProps>(), {
 });
 
 function resolveContent(content: string | string[] | undefined, multiline = false) {
-	if (!content) return null;
+	if (!content) 
+return null;
 	try {
 		return Array.isArray(content) ? content.join(multiline ? '\n\n' : ' ') : content.trim();
 	} catch {

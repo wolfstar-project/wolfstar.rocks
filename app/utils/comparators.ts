@@ -13,12 +13,14 @@ export function desc(a: number | string | bigint, b: number | string | bigint): 
  * @returns The maximum value.
  */
 export function max<N extends number | bigint>(...values: readonly N[]): N {
-	if (values.length === 0) throw new TypeError('Expected at least 1 value.');
+	if (values.length === 0) 
+throw new TypeError('Expected at least 1 value.');
 
 	let lowest = values[0]!;
 	for (let i = 1; i < values.length; ++i) {
 		const value = values[i]!;
-		if (value > lowest) lowest = value;
+		if (value > lowest) 
+lowest = value;
 	}
 
 	return lowest;
@@ -81,18 +83,21 @@ export function bidirectionalReplace<T>(regex: RegExp, content: string, options:
 		results.push(options.onMatch(match));
 	}
 
-	if (previous < content.length) results.push(options.outMatch(content.slice(previous), previous, content.length));
+	if (previous < content.length) 
+results.push(options.outMatch(content.slice(previous), previous, content.length));
 	return results;
 }
 
 export type BooleanFn<ArgumentTypes extends readonly unknown[], ReturnType extends boolean = boolean> = (...args: ArgumentTypes) => ReturnType;
 
 export function andMix<T extends readonly unknown[], R extends boolean>(...fns: readonly BooleanFn<T, R>[]): BooleanFn<T, R> {
-	if (fns.length === 0) throw new Error('You must input at least one function.');
+	if (fns.length === 0) 
+throw new Error('You must input at least one function.');
 	return (...args) => {
 		let ret!: R;
 		for (const fn of fns) {
-			if (!(ret = fn(...args))) break;
+			if (!(ret = fn(...args))) 
+break;
 		}
 
 		return ret;
@@ -102,11 +107,13 @@ export function andMix<T extends readonly unknown[], R extends boolean>(...fns: 
 export function orMix<ArgumentTypes extends readonly unknown[], ReturnType extends boolean>(
 	...fns: readonly BooleanFn<ArgumentTypes, ReturnType>[]
 ): BooleanFn<ArgumentTypes, ReturnType> {
-	if (fns.length === 0) throw new Error('You must input at least one function.');
+	if (fns.length === 0) 
+throw new Error('You must input at least one function.');
 	return (...args) => {
 		let ret!: ReturnType;
 		for (const fn of fns) {
-			if ((ret = fn(...args))) break;
+			if ((ret = fn(...args))) 
+break;
 		}
 
 		return ret;

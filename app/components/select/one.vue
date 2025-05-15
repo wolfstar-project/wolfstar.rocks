@@ -104,7 +104,8 @@ const validationSchema = computed(() =>
 );
 
 const filteredOptions = computed(() => {
-	if (!search.value) return props.options;
+	if (!search.value) 
+return props.options;
 	const searchLower = search.value.toLowerCase();
 	return props.options.filter((item) => item.label.toLowerCase().includes(searchLower));
 });

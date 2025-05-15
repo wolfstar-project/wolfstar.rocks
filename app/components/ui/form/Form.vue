@@ -217,7 +217,8 @@ async function _validate(
 	const childErrors = (await Promise.all(nestedValidatePromises)).filter((val) => val !== undefined);
 
 	if (errors.value.length + childErrors.length > 0) {
-		if (opts.silent) return false;
+		if (opts.silent) 
+return false;
 		throw new FormValidationException(formId, errors.value, childErrors);
 	}
 

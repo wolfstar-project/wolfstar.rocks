@@ -42,10 +42,10 @@ const isGuildOnly = computed(() =>
 <style scoped>
 @reference "@/assets/css/main.css";
 .chip {
-	@apply flex items-center justify-between rounded-lg bg-primary p-2 px-4 text-white;
+  @apply flex items-center justify-between rounded-lg bg-primary p-2 px-4 text-white;
 }
 
 .chip.secondary {
-	@apply bg-secondary;
+  @apply bg-secondary;
 }
 </style>

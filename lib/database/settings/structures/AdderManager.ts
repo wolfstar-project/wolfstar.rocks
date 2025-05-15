@@ -42,13 +42,16 @@ export class AdderManager {
 	}
 
 	private makeAdder(maximum: number | Nullish, duration: number | Nullish) {
-		if (isNullishOrZero(maximum) || isNullishOrZero(duration)) return null;
+		if (isNullishOrZero(maximum) || isNullishOrZero(duration)) 
+return null;
 		return new Adder<string>(maximum, duration, true);
 	}
 
 	private updateAdder(adder: Adder<string> | null, maximum: number | Nullish, duration: number | Nullish) {
-		if (isNullishOrZero(maximum) || isNullishOrZero(duration)) return null;
-		if (!adder || adder.maximum !== maximum || adder.duration !== duration) return new Adder<string>(maximum, duration, true);
+		if (isNullishOrZero(maximum) || isNullishOrZero(duration)) 
+return null;
+		if (!adder || adder.maximum !== maximum || adder.duration !== duration) 
+return new Adder<string>(maximum, duration, true);
 		return adder;
 	}
 }

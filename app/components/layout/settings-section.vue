@@ -25,6 +25,6 @@ defineProps<Props>();
 
 <style scoped>
 .border-primary {
-	border-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 </style>

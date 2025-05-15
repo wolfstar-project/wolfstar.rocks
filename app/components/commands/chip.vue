@@ -32,26 +32,26 @@ const colorClass = computed(() => `chip-${props.color}`);
 <style scoped>
 @reference "@/assets/css/main.css";
 .chip {
-	@apply flex items-center justify-between rounded-lg p-2 px-4 text-white transition-all duration-200;
+  @apply flex items-center justify-between rounded-lg p-2 px-4 text-white transition-all duration-200;
 }
 
 .chip-primary {
-	@apply bg-primary hover:bg-primary/60;
+  @apply bg-primary hover:bg-primary/60;
 }
 .chip-secondary {
-	@apply bg-secondary hover:bg-secondary/60;
+  @apply bg-secondary hover:bg-secondary/60;
 }
 .chip-warning {
-	@apply bg-warning hover:bg-warning/60;
+  @apply bg-warning hover:bg-warning/60;
 }
 .chip-error {
-	@apply bg-error hover:bg-error/60;
+  @apply bg-error hover:bg-error/60;
 }
 .chip-success {
-	@apply bg-success hover:bg-success/60;
+  @apply bg-success hover:bg-success/60;
 }
 
 .chip-skeleton {
-	@apply flex items-center justify-between rounded-lg bg-gray-200 p-2 px-4 dark:bg-gray-800;
+  @apply flex items-center justify-between rounded-lg bg-gray-200 p-2 px-4 dark:bg-gray-800;
 }
 </style>

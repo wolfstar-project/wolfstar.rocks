@@ -26,7 +26,8 @@ const disabled = ref(props.loading || false);
 
 // Gestione click
 async function handleClick() {
-	if (disabled.value) return;
+	if (disabled.value) 
+return;
 
 	try {
 		disabled.value = true;

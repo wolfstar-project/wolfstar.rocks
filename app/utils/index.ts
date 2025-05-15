@@ -50,8 +50,10 @@ export function set(object: Record<string, any>, path: (string | number)[] | str
 	}
 
 	path.reduce((acc, key, i) => {
-		if (acc[key] === undefined) acc[key] = {};
-		if (i === path.length - 1) acc[key] = value;
+		if (acc[key] === undefined) 
+acc[key] = {};
+		if (i === path.length - 1) 
+acc[key] = value;
 		return acc[key];
 	}, object);
 }
@@ -92,14 +94,16 @@ export function useObjectStorage<T>(key: string, initial: T, listenToStorage = t
 	const raw = localStorage.getItem(key);
 	const data = ref(raw ? JSON.parse(raw) : initial);
 	for (const key2 in initial) {
-		if (data.value[key2] === void 0) data.value[key2] = initial[key2];
+		if (data.value[key2] === void 0) 
+data.value[key2] = initial[key2];
 	}
 	let updating = false;
 	let wrote = '';
 	watch(
 		data,
 		(value) => {
-			if (updating) return;
+			if (updating) 
+return;
 			wrote = JSON.stringify(value);
 			localStorage.setItem(key, wrote);
 		},

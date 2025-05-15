@@ -27,18 +27,18 @@ defineProps<GuildCardProps>();
 <style scoped>
 @reference '@/assets/css/main.css';
 .card {
-	@apply bg-base-200;
+  @apply bg-base-200;
 }
 
 .card-header {
-	@apply flex items-center;
+  @apply flex items-center;
 }
 
 .card-title {
-	@apply text-sm font-medium;
+  @apply text-sm font-medium;
 }
 
 .card-subtitle {
-	@apply mt-1 text-xs;
+  @apply mt-1 text-xs;
 }
 </style>

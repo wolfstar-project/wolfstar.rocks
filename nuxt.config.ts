@@ -25,7 +25,8 @@ export default defineNuxtConfig({
 		'shadcn-nuxt',
 		'@josephanson/nuxt-ai',
 		...(isDevelopment || isWindows) ? [] : ['nuxt-security'],
-		...(process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['@nuxthub/core'] : [])
+		'@nuxthub/core',
+		'stale-dep/nuxt'
 	],
 	$development: {
 		site: {
@@ -294,7 +295,6 @@ export default defineNuxtConfig({
 		format: ['webp', 'jpeg', 'jpg', 'png', 'svg'],
 		provider: 'ipx'
 	},
-
 	ogImage: {
 		zeroRuntime: true
 	},

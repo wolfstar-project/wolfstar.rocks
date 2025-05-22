@@ -10,7 +10,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 		: hasAtLeastOneKeyInMap(new Map(roles.map((role) => [role, true])), member.roles);
 }
 
-export const manageAbility = defineAbility({ allowGuest: false }, async (user, guild: APIGuild, member: APIGuildMember) => {
+export const manageAbility = defineAbility({ allowGuest: false }, async (_user: any, guild: APIGuild, member: APIGuildMember) => {
 	if (guild.owner_id === member.user.id) 
 return true;
 

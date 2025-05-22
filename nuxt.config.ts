@@ -154,7 +154,6 @@ export default defineNuxtConfig({
 	// Runtime configuration
 	runtimeConfig: {
 		public: {
-			origin: process.env.NITRO_ORIGIN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
 			environment: process.env.NODE_ENV,

@@ -22,8 +22,7 @@ logs
 !.env.example
 
 .pnpm-store
-
-.cursor/
-
 # Sentry Config File
 .env.sentry-build-plugin
+
+.data

@@ -32,6 +32,30 @@ export default defineNuxtConfig({
 		site: {
 			url: 'http://localhost:3000',
 			name: 'WolfStar (Development)'
+		},
+		nitro: {			
+		openAPI: {
+			// OpenAPI configuration
+			meta: {
+				title: 'WolfStar API',
+				description: 'WolfStar API documentation',
+				version: '1.0.0'
+			},
+			route: '/_docs/openapi.json',
+			production: 'runtime',
+			ui: {
+				scalar: {
+					route: '/api/docs',
+					darkMode: true,
+					hideDownloadButton: true,
+					searchHotKey: 'k',
+					showSidebar: true
+				}
+			}
+		},
+		experimental: {
+			openAPI: true
+		}
 		}
 	},
 	$production: {
@@ -194,28 +218,6 @@ export default defineNuxtConfig({
 				target: 'esnext'
 			}
 		},
-		openAPI: {
-			// OpenAPI configuration
-			meta: {
-				title: 'WolfStar API',
-				description: 'WolfStar API documentation',
-				version: '1.0.0'
-			},
-			route: '/_docs/openapi.json',
-			production: 'runtime',
-			ui: {
-				scalar: {
-					route: '/api/docs',
-					darkMode: true,
-					hideDownloadButton: true,
-					searchHotKey: 'k',
-					showSidebar: true
-				}
-			}
-		},
-		experimental: {
-			openAPI: true
-		}
 	},
 	vite: {
 		plugins: [tailwindcss()],

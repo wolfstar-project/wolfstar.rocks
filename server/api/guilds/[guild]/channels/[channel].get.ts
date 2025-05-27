@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish';
 import { createError } from 'h3';
 import authMiddleware from '~~/server/utils/middlewares/auth';
-import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
+import { createRateLimit } from '~~/server/utils/middlewares/ratelimit';
 import { manageAbility } from '~~/shared/utils/abilities';
 import useApi from '~~/shared/utils/api';
 import { seconds } from '~~/shared/utils/times';
@@ -30,8 +30,7 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-		async (event) =>
-			await rateLimitMiddleware(event, {
+	createRateLimit({
 				max: 10,
 				time: seconds(5),
 				auth: true

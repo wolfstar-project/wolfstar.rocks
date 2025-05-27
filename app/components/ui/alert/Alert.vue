@@ -61,14 +61,14 @@
 </template>
 
 <script setup lang="ts">
+import type { AlertEmits, AlertProps, AlertSlots } from '.';
 import type { AvatarProps } from '@/components/ui/avatar';
 import type { ButtonProps } from '@/components/ui/button';
-import type { AlertEmits, AlertProps, AlertSlots } from '.';
+import { Primitive } from 'reka-ui';
+import { computed } from 'vue';
 import { Avatar } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
-import { Primitive } from 'reka-ui';
-import { computed } from 'vue';
 import { alert } from '.';
 
 const props = withDefaults(defineProps<AlertProps>(), {

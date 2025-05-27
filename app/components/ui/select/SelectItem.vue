@@ -24,10 +24,10 @@
 <script setup lang="ts">
 import type { SelectItemProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import { cn } from '@/utils/cn';
 import { Check } from 'lucide-vue-next';
 import { SelectItem, SelectItemIndicator, SelectItemText, useForwardProps } from 'reka-ui';
 import { computed } from 'vue';
+import { cn } from '@/utils/cn';
 
 const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>();
 

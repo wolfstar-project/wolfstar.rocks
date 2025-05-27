@@ -1,5 +1,5 @@
-import type { AvatarGroupProps } from '@/components/ui/avatar-group';
 import type { ComputedRef, InjectionKey } from 'vue';
+import type { AvatarGroupProps } from '@/components/ui/avatar-group';
 import { computed, inject, provide } from 'vue';
 
 export const AvatarGroupInjectionKey: InjectionKey<ComputedRef<{ size: AvatarGroupProps['size'] }>> = Symbol('avatarGroupInjectionKey');

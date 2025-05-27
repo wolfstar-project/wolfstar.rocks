@@ -41,12 +41,12 @@
 </template>
 
 <script setup lang="ts">
-import type { AvatarProps } from '@/components/ui/avatar';
 import type { InputEmits, InputProps, InputSlots, InputVariants } from '.';
-import { Avatar } from '@/components/ui/avatar';
-import { Icon } from '@/components/ui/icon';
+import type { AvatarProps } from '@/components/ui/avatar';
 import { Primitive } from 'reka-ui';
 import { computed, onMounted, ref } from 'vue';
+import { Avatar } from '@/components/ui/avatar';
+import { Icon } from '@/components/ui/icon';
 import { useFormField } from '~/composables/useFormField';
 import { input } from '.';
 

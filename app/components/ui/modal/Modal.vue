@@ -81,9 +81,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ButtonProps } from '@/components/ui/button';
 import type { ModalEmits, ModalProps, ModalSlots } from '.';
-import { Button } from '@/components/ui/button';
+import type { ButtonProps } from '@/components/ui/button';
 import { reactivePick } from '@vueuse/core';
 import {
 	DialogClose,
@@ -98,6 +97,7 @@ import {
 	VisuallyHidden
 } from 'reka-ui';
 import { computed, toRef } from 'vue';
+import { Button } from '@/components/ui/button';
 import { modal } from '.';
 
 const props = withDefaults(defineProps<ModalProps>(), {

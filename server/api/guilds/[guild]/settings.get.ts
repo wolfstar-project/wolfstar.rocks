@@ -3,7 +3,7 @@ import { isNullOrUndefined } from '@sapphire/utilities';
 import { z } from 'zod';
 import { readSettings, serializeSettings } from '~~/lib/database';
 import authMiddleware from '~~/server/utils/middlewares/auth';
-import rateLimitMiddleware from '~~/server/utils/middlewares/ratelimit';
+import { createRateLimit } from '~~/server/utils/middlewares/ratelimit';
 import { manageAbility } from '~~/shared/utils/abilities';
 import useApi from '~~/shared/utils/api';
 import { seconds } from '~~/shared/utils/times';
@@ -31,8 +31,7 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-		async (event) =>
-			await rateLimitMiddleware(event, {
+	createRateLimit({
 				max: 10,
 				time: seconds(10),
 				auth: true

@@ -21,8 +21,8 @@
 
 <script setup lang="ts">
 import type { AvatarProps } from '.';
-import { Icon } from '@/components/ui/icon';
 import { computed, ref } from 'vue';
+import { Icon } from '@/components/ui/icon';
 import { AvatarBase, AvatarFallback, avatarVariant } from '.';
 
 defineOptions({ inheritAttrs: false });

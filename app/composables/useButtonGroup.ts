@@ -1,5 +1,5 @@
-import type { ButtonGroupProps } from '@/components/ui/button-group';
 import type { ComputedRef, InjectionKey } from 'vue';
+import type { ButtonGroupProps } from '@/components/ui/button-group';
 import type { GetObjectField } from '~/types/utils';
 import { computed, inject } from 'vue';
 

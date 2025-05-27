@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { EmojiRegexExtractName } from '@/utils/constants';
 import MarkdownItAnchor from 'markdown-it-anchor';
 import VueMarkdown from 'vue-markdown-render';
+import { EmojiRegexExtractName } from '@/utils/constants';
 
 interface ExtendedHelpBodyProps {
 	body: string;

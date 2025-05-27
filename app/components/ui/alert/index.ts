@@ -1,7 +1,7 @@
-import type { AvatarProps } from '@/components/ui/avatar';
-import type { ButtonProps } from '@/components/ui/button';
 import type { VariantProps } from 'tailwind-variants';
 import type { HTMLAttributes } from 'vue';
+import type { AvatarProps } from '@/components/ui/avatar';
+import type { ButtonProps } from '@/components/ui/button';
 import { tv } from 'tailwind-variants';
 
 export { default as Alert } from './Alert.vue';

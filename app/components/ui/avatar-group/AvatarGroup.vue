@@ -7,9 +7,9 @@
 
 <script setup lang="ts">
 import type { AvatarGroupProps, AvatarGroupSlots } from '.';
-import { Avatar } from '@/components/ui/avatar';
 import { Primitive } from 'reka-ui';
 import { computed, provide } from 'vue';
+import { Avatar } from '@/components/ui/avatar';
 import { AvatarGroupInjectionKey } from '~/composables/useAvatarGroup';
 import { avatarGroupVariants } from '.';
 

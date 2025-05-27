@@ -47,18 +47,18 @@
 </template>
 
 <script setup lang="ts">
-import type { AvatarProps } from '@/components/ui/avatar';
 import type { Ref } from 'vue';
 import type { ButtonProps, ButtonSlots } from '.';
+import type { AvatarProps } from '@/components/ui/avatar';
+import { useForwardProps } from 'reka-ui';
+import { tv } from 'tailwind-variants';
+import { computed, inject, ref } from 'vue';
 import { Avatar } from '@/components/ui/avatar';
 import { buttonVariants } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { Link, LinkBase, pickLinkProps } from '@/components/ui/link';
 import { formLoadingInjectionKey } from '@/composables/useFormField';
 import { omit } from '@/utils/index';
-import { useForwardProps } from 'reka-ui';
-import { tv } from 'tailwind-variants';
-import { computed, inject, ref } from 'vue';
 
 const props = withDefaults(defineProps<ButtonProps>(), {
 	active: undefined,

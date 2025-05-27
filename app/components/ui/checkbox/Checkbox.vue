@@ -41,12 +41,12 @@
 
 <script setup lang="ts">
 import type { CheckboxEmits, CheckboxProps, CheckboxSlots } from '.';
-import { Icon } from '@/components/ui/icon';
-import { useFormField } from '@/composables/useFormField';
-
 import { reactivePick } from '@vueuse/core';
 import { CheckboxIndicator, CheckboxRoot, Label, Primitive, useForwardProps } from 'reka-ui';
+
 import { computed, useId } from 'vue';
+import { Icon } from '@/components/ui/icon';
+import { useFormField } from '@/composables/useFormField';
 import { checkbox } from '.';
 
 defineOptions({ inheritAttrs: false });

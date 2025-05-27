@@ -51,11 +51,11 @@
 
 <script setup lang="ts">
 import type { InputNumberEmits, InputNumberProps, InputNumberSlots } from '.';
-import { Button } from '@/components/ui/button';
-import { useFormField } from '@/composables/useFormField';
 import { reactivePick } from '@vueuse/core';
 import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot, useForwardPropsEmits } from 'reka-ui';
 import { computed, onMounted, ref } from 'vue';
+import { Button } from '@/components/ui/button';
+import { useFormField } from '@/composables/useFormField';
 import { inputNumber } from '.';
 
 defineOptions({ inheritAttrs: false });

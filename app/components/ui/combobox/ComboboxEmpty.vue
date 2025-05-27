@@ -7,9 +7,9 @@
 <script setup lang="ts">
 import type { ComboboxEmptyProps } from 'reka-ui';
 import type { HTMLAttributes } from 'vue';
-import { cn } from '@/utils/cn';
 import { ComboboxEmpty } from 'reka-ui';
 import { computed } from 'vue';
+import { cn } from '@/utils/cn';
 
 const props = defineProps<ComboboxEmptyProps & { class?: HTMLAttributes['class'] }>();
 

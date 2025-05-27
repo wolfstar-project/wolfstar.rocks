@@ -26,6 +26,7 @@ export default defineNuxtConfig({
 		'@josephanson/nuxt-ai',
 		...(isDevelopment || isWindows) ? [] : ['nuxt-security'],
 		'@nuxthub/core',
+		'vue-sonner/nuxt',
 		'stale-dep/nuxt'
 	],
 	$development: {
@@ -188,9 +189,6 @@ export default defineNuxtConfig({
 		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
 	},
 	// Build configuration
-	build: {
-		transpile: ['vue-sonner']
-	},
 	routeRules: {
 		'/': { prerender: true },
 		'/terms': { isr: true, prerender: true },
@@ -240,34 +238,6 @@ export default defineNuxtConfig({
 			]
 		}
 	},
-	 // eslint-disable-next-line ts/ban-ts-comment
-  // @ts-ignore nuxt-security is conditional
-  security: {
-    headers: {
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        'default-src': ['\'self\''],
-        'base-uri': ['\'self\''],
-        'connect-src': ['\'self\'', 'https:', 'http:', 'wss:', 'ws:'],
-        'font-src': ['\'self\''],
-        'form-action': ['\'none\''],
-        'frame-ancestors': ['\'none\''],
-        'frame-src': ['https:'],
-        'img-src': ['\'self\'', 'https:', 'http:', 'data:', 'blob:'],
-        'manifest-src': ['\'self\''],
-        'media-src': ['\'self\'', 'https:', 'http:'],
-        'object-src': ['\'none\''],
-        'script-src': ['\'self\'', '\'unsafe-inline\'', '\'wasm-unsafe-eval\''],
-        'script-src-attr': ['\'none\''],
-        'style-src': ['\'self\'', '\'unsafe-inline\''],
-        'upgrade-insecure-requests': true,
-      },
-      permissionsPolicy: {
-        fullscreen: '*',
-      },
-    },
-    rateLimiter: false,
-  },
 	typescript: {
     tsConfig: {
 
@@ -301,6 +271,34 @@ export default defineNuxtConfig({
 	},
 	// PWA configuration
 	pwa,
+	 // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-ignore nuxt-security is conditional
+  security: {
+    headers: {
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        'default-src': ['\'self\''],
+        'base-uri': ['\'self\''],
+        'connect-src': ['\'self\'', 'https:', 'http:', 'wss:', 'ws:'],
+        'font-src': ['\'self\''],
+        'form-action': ['\'none\''],
+        'frame-ancestors': ['\'none\''],
+        'frame-src': ['https:'],
+        'img-src': ['\'self\'', 'https:', 'http:', 'data:', 'blob:'],
+        'manifest-src': ['\'self\''],
+        'media-src': ['\'self\'', 'https:', 'http:'],
+        'object-src': ['\'none\''],
+        'script-src': ['\'self\'', '\'unsafe-inline\'', '\'wasm-unsafe-eval\''],
+        'script-src-attr': ['\'none\''],
+        'style-src': ['\'self\'', '\'unsafe-inline\''],
+        'upgrade-insecure-requests': true,
+      },
+      permissionsPolicy: {
+        fullscreen: '*',
+      },
+    },
+    rateLimiter: false,
+  },
 	sentry: {
 		autoInjectServerSentry: 'experimental_dynamic-import'
 	},

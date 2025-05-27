@@ -14,9 +14,9 @@
 
 <script setup lang="ts">
 import type { ChipProps, ChipSlots } from '.';
-import { useAvatarGroup } from '@/composables/useAvatarGroup';
 import { Primitive, Slot } from 'reka-ui';
 import { computed } from 'vue';
+import { useAvatarGroup } from '@/composables/useAvatarGroup';
 import { chip } from '.';
 
 defineOptions({ inheritAttrs: false });

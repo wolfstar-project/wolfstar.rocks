@@ -65,8 +65,8 @@
 </template>
 
 <script setup lang="ts">
-import { Card } from '@/components/ui/card';
 import { computed } from 'vue';
+import { Card } from '@/components/ui/card';
 
 interface CommandProps {
 	command: FlattenedCommand;

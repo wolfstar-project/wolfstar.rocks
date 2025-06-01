@@ -24,7 +24,7 @@ export default defineNuxtConfig({
 		'@nuxt/fonts',
 		'shadcn-nuxt',
 		'@josephanson/nuxt-ai',
-		...(isDevelopment || isWindows) ? [] : ['nuxt-security'],
+		...(isDevelopment || isWindows ? [] : ['nuxt-security']),
 		'@nuxthub/core',
 		'vue-sonner/nuxt',
 		'stale-dep/nuxt'
@@ -33,30 +33,6 @@ export default defineNuxtConfig({
 		site: {
 			url: 'http://localhost:3000',
 			name: 'WolfStar (Development)'
-		},
-		nitro: {			
-		openAPI: {
-			// OpenAPI configuration
-			meta: {
-				title: 'WolfStar API',
-				description: 'WolfStar API documentation',
-				version: '1.0.0'
-			},
-			route: '/_docs/openapi.json',
-			production: 'runtime',
-			ui: {
-				scalar: {
-					route: '/api/docs',
-					darkMode: true,
-					hideDownloadButton: true,
-					searchHotKey: 'k',
-					showSidebar: true
-				}
-			}
-		},
-		experimental: {
-			openAPI: true
-		}
 		}
 	},
 	$production: {
@@ -216,12 +192,36 @@ export default defineNuxtConfig({
 				target: 'esnext'
 			}
 		},
+		openAPI: isDevelopment
+			? {
+					// OpenAPI configuration
+					meta: {
+						title: 'WolfStar API',
+						description: 'WolfStar API documentation',
+						version: '1.0.0'
+					},
+					route: '/_docs/openapi.json',
+					production: 'runtime',
+					ui: {
+						scalar: {
+							route: '/api/docs',
+							darkMode: true,
+							hideDownloadButton: true,
+							searchHotKey: 'k',
+							showSidebar: true
+						}
+					}
+				}
+			: undefined,
+		experimental: {
+			openAPI: isDevelopment
+		}
 	},
 	vite: {
 		plugins: [tailwindcss()],
-    build: {
-      target: 'esnext',
-    },
+		build: {
+			target: 'esnext'
+		},
 		optimizeDeps: {
 			include: [
 				'reka-ui',
@@ -239,13 +239,12 @@ export default defineNuxtConfig({
 		}
 	},
 	typescript: {
-    tsConfig: {
-
-      vueCompilerOptions: {
-        target: 3.5,
-      },
-    },
-  },
+		tsConfig: {
+			vueCompilerOptions: {
+				target: 3.5
+			}
+		}
+	},
 	eslint: {
 		config: {
 			standalone: false,
@@ -271,34 +270,34 @@ export default defineNuxtConfig({
 	},
 	// PWA configuration
 	pwa,
-	 // eslint-disable-next-line ts/ban-ts-comment
-  // @ts-ignore nuxt-security is conditional
-  security: {
-    headers: {
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        'default-src': ['\'self\''],
-        'base-uri': ['\'self\''],
-        'connect-src': ['\'self\'', 'https:', 'http:', 'wss:', 'ws:'],
-        'font-src': ['\'self\''],
-        'form-action': ['\'none\''],
-        'frame-ancestors': ['\'none\''],
-        'frame-src': ['https:'],
-        'img-src': ['\'self\'', 'https:', 'http:', 'data:', 'blob:'],
-        'manifest-src': ['\'self\''],
-        'media-src': ['\'self\'', 'https:', 'http:'],
-        'object-src': ['\'none\''],
-        'script-src': ['\'self\'', '\'unsafe-inline\'', '\'wasm-unsafe-eval\''],
-        'script-src-attr': ['\'none\''],
-        'style-src': ['\'self\'', '\'unsafe-inline\''],
-        'upgrade-insecure-requests': true,
-      },
-      permissionsPolicy: {
-        fullscreen: '*',
-      },
-    },
-    rateLimiter: false,
-  },
+	// eslint-disable-next-line ts/ban-ts-comment
+	// @ts-ignore nuxt-security is conditional
+	security: {
+		headers: {
+			crossOriginEmbedderPolicy: false,
+			contentSecurityPolicy: {
+				'default-src': ["'self'"],
+				'base-uri': ["'self'"],
+				'connect-src': ["'self'", 'https:', 'http:', 'wss:', 'ws:'],
+				'font-src': ["'self'"],
+				'form-action': ["'none'"],
+				'frame-ancestors': ["'none'"],
+				'frame-src': ['https:'],
+				'img-src': ["'self'", 'https:', 'http:', 'data:', 'blob:'],
+				'manifest-src': ["'self'"],
+				'media-src': ["'self'", 'https:', 'http:'],
+				'object-src': ["'none'"],
+				'script-src': ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"],
+				'script-src-attr': ["'none'"],
+				'style-src': ["'self'", "'unsafe-inline'"],
+				'upgrade-insecure-requests': true
+			},
+			permissionsPolicy: {
+				fullscreen: '*'
+			}
+		},
+		rateLimiter: false
+	},
 	sentry: {
 		autoInjectServerSentry: 'experimental_dynamic-import'
 	},
@@ -309,5 +308,5 @@ export default defineNuxtConfig({
 	},
 	sitemap: {
 		exclude: ['/join', '/oauth/guild', '/oauth/callback', '/[...id]']
-	},
+	}
 });

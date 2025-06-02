@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import { useAPI } from '@/composables/externalApi';
 import { StorageKeys } from '@/utils/constants';
 
-export const useLanguagesStore = defineStore(StorageKeys.Language, {
+export const LanguagesStore = defineStore(StorageKeys.Language, {
 	state: () => ({
 		languagesStorage: {
 			expire: 0,

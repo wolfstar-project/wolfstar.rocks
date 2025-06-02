@@ -29,4 +29,8 @@ const appName = inject(ProviderAppNameKey)!;
 .app-layout.wolfstar {
   --color: var(--color-branding-wolfstar);
 }
+
+.app-layout.staryl {
+  --color: var(--color-branding-staryl);
+}
 </style>

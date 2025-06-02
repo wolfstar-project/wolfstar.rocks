@@ -14,14 +14,58 @@ if (process.env.SENTRY_DSN) {
 			// Server-specific integrations
 			Sentry.prismaIntegration(),
 
-			// Performance tracking
-			Sentry.httpIntegration({ breadcrumbs: true })
+			// Enhanced performance tracking
+			Sentry.httpIntegration({
+				breadcrumbs: true
+			}),
+
+			// Node.js specific integrations
+			Sentry.nodeContextIntegration(),
+			Sentry.localVariablesIntegration({
+				captureAllExceptions: false,
+				maxExceptionsPerSecond: 5
+			})
 		],
 
-		// We recommend adjusting this value in production, or using tracesSampler
-		// for finer control
-		tracesSampleRate: 1.0
+		// Enhanced sampling configuration
+		tracesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.1,
+		profilesSampleRate: process.env.NODE_ENV === 'development' ? 1.0 : 0.1,
 
-		// Setting this option to true will print useful information to the console while you're setting up Sentry.
+		// Enhanced configuration
+		environment: process.env.NODE_ENV || 'unknown',
+		release: process.env.BUILD_VERSION || 'unknown',
+
+		// Server-specific error filtering
+		beforeSend(event, hint) {
+			// Filter out non-critical server errors
+			const error = hint.originalException;
+
+			if (error instanceof Error) {
+				// Skip certain known issues
+				if (error.message.includes('ECONNRESET')) {
+					return null;
+				}
+
+				// Skip timeout errors that are likely client-caused
+				if (error.message.includes('timeout') && error.message.includes('client')) {
+					return null;
+				}
+			}
+
+			return event;
+		},
+
+		// Enhanced server context
+		initialScope: {
+			tags: {
+				component: 'wolfstar-server',
+				runtime: 'node'
+			}
+		},
+
+		// Performance optimizations
+		maxBreadcrumbs: 50,
+		attachStacktrace: true,
+		sendDefaultPii: false
 	});
 }

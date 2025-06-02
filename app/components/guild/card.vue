@@ -1,15 +1,26 @@
 <template>
 	<NuxtLink
 		:to="guild.wolfstarIsIn ? `/guilds/${guild.id}` : guildAddURL(guild.id)"
-		class="card flex flex-col items-center rounded-lg p-4 transition-colors duration-200 hover:bg-base-300"
+		class="block transition-transform duration-200 hover:scale-105"
 	>
-		<div class="card-header flex items-center gap-3">
-			<guild-icon :guild="guild" size="16" />
-			<div class="text-center">
-				<h3 class="card-title text-base-content">{{ guild.name }}</h3>
-				<p v-if="!guild.wolfstarIsIn" class="card-subtitle text-base-content/60">Click to invite</p>
-			</div>
-		</div>
+		<ShadCard variant="soft" class="h-full">
+			<template #header>
+				<div class="flex items-center gap-3">
+					<guild-icon :guild="guild" size="16" />
+					<div class="text-center">
+						<h3 class="text-base font-medium text-base-content">{{ guild.name }}</h3>
+					</div>
+				</div>
+			</template>
+			<template v-if="guild.description" #default>
+				<p>
+					{{ guild.description }}
+				</p>
+			</template>
+			<template #footer>
+				<p v-if="!guild.wolfstarIsIn" class="mt-1 text-xs text-base-content/60">Click to invite</p>
+			</template>
+		</ShadCard>
 	</NuxtLink>
 </template>
 

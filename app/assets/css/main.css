@@ -155,15 +155,19 @@
     --animate-accordion-down: accordion-down 0.2s ease-out;
     --animate-accordion-up: accordion-up 0.2s ease-out;
     --branding-wolfstar: oklch(63% 0.2502 28.13);
+    --branding-staryl: oklch(65% 0.241 354.308);
   }
 }
 
 @theme inline {
   --color-branding-wolfstar: oklch(var(--branding-wolfstar) / <alpha-value>);
+  --color-branding-staryl: oklch(var(--branding-staryl) / <alpha-value>);
 }
 
 @theme {
   --color-branding-wolfstar: var(--branding-wolfstar);
+  --color-branding-staryl: var(--branding-staryl);
+
 }
 
 @utility container {

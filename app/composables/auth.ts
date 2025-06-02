@@ -1,4 +1,23 @@
-export const useAuth = () => useNuxtApp().$auth;
+import type { User, UserSession } from '#auth-utils';
+
+export function useAuth() {
+	return useNuxtApp().$auth as {
+		loggedIn: globalThis.ComputedRef<boolean>;
+		user: globalThis.ComputedRef<User | null>;
+		session: globalThis.Ref<UserSession | null, UserSession | null>;
+		redirectTo: globalThis.Ref<string, string>;
+		clear: () => Promise<void>;
+		ready: globalThis.ComputedRef<boolean>;
+		fetch: () => Promise<void>;
+		openInPopup: (
+			route: string,
+			size?: {
+				width?: number;
+				height?: number;
+			}
+		) => void;
+	};
+}
 
 export function getLoginURL() {
 	const DiscordOauthURL = `https://discord.com/oauth2/authorize`;

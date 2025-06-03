@@ -1,5 +1,6 @@
-import type { H3Event } from 'h3';
+import type { EventHandler, EventHandlerRequest, H3Event } from 'h3';
 import { captureException, withScope } from '@sentry/nuxt';
+import { getErrorMessage, getErrorStatusCode } from '~~/server/utils';
 
 /**
  * Utility function to handle errors manually in API routes
@@ -59,31 +60,16 @@ export function handleServerError(error: unknown, event: H3Event, context?: Reco
 /**
  * Wrapper to handle async errors in API routes
  */
-export async function withErrorHandling<T>(event: any, handler: () => Promise<T>, context?: Record<string, any>): Promise<T> {
-	try {
-		return await handler();
-	} catch (error) {
-		handleServerError(error, event, context);
-		throw error; // TypeScript placeholder, will never reach this point
-	}
-}
-
-function getErrorStatusCode(error: unknown): number | undefined {
-	if (error && typeof error === 'object' && 'statusCode' in error) {
-		return error.statusCode as number;
-	}
-	if (error && typeof error === 'object' && 'status' in error) {
-		return error.status as number;
-	}
-	return undefined;
-}
-
-function getErrorMessage(error: unknown): string {
-	if (error instanceof Error) {
-		return error.message;
-	}
-	if (typeof error === 'string') {
-		return error;
-	}
-	return 'Internal Server Error';
+export function defineWrappedHandlingError<T extends EventHandlerRequest, D>(
+	handler: EventHandler<T, D>,
+	context?: Record<string, any>
+): EventHandler<T, D> {
+	return defineEventHandler<T>(async (event) => {
+		try {
+			return await handler(event);
+		} catch (error) {
+			handleServerError(error, event, context);
+			throw error; // TypeScript placeholder, will never reach this point
+		}
+	});
 }

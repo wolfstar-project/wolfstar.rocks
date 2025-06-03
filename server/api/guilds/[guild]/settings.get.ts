@@ -31,13 +31,13 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-	createRateLimit({
-				max: 10,
-				time: seconds(10),
-				auth: true
-			})
+		createRateLimit({
+			max: 10,
+			time: seconds(10),
+			auth: true
+		})
 	],
-	handler: async (event) => {
+	handler: defineWrappedHandlingError(async (event) => {
 		// Get guild ID from params
 		const guildId = getRouterParam(event, 'guild');
 		if (isNullOrUndefined(guildId)) {
@@ -90,5 +90,5 @@ export default defineEventHandler({
 		// Read and return settings
 		const settings = await readSettings(guild.id);
 		return shouldSerialize ? serializeSettings(settings) : (settings as unknown as GuildData);
-	}
+	})
 });

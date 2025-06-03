@@ -80,4 +80,35 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 			);
 		}
 	}
+
+	if (import.meta.server) {
+		// Handle uncaught exceptions
+		process.on('uncaughtException', (error) => {
+			handleError(error, {
+				captureToSentry: true,
+				logToConsole: true,
+				level: 'error',
+				tags: {
+					errorType: 'uncaught-exception',
+					source: 'process'
+				}
+			});
+		});
+
+		// Handle unhandled promise rejections
+		process.on('unhandledRejection', (reason, promise) => {
+			handleError(reason, {
+				captureToSentry: true,
+				logToConsole: true,
+				level: 'error',
+				tags: {
+					errorType: 'unhandled-rejection',
+					source: 'process'
+				},
+				context: {
+					promise: String(promise)
+				}
+			});
+		});
+	}
 });

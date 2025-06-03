@@ -167,7 +167,6 @@
 @theme {
   --color-branding-wolfstar: var(--branding-wolfstar);
   --color-branding-staryl: var(--branding-staryl);
-
 }
 
 @utility container {

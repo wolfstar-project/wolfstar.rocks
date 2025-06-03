@@ -32,13 +32,13 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-	createRateLimit({
-				max: 10,
-				time: seconds(10),
-				auth: true
-			})
+		createRateLimit({
+			max: 10,
+			time: seconds(10),
+			auth: true
+		})
 	],
-	handler: async (event) => {
+	handler: defineWrappedHandlingError(async (event) => {
 		const guildId = getRouterParam(event, 'guild');
 		if (isNullOrUndefined(guildId)) {
 			throw createError({
@@ -121,5 +121,5 @@ export default defineEventHandler({
 				message: Array.isArray(error) ? error.join('\n') : String(error)
 			});
 		});
-	}
+	})
 });

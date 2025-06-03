@@ -238,13 +238,6 @@ export default defineNuxtConfig({
 			]
 		}
 	},
-	typescript: {
-		tsConfig: {
-			vueCompilerOptions: {
-				target: 3.5
-			}
-		}
-	},
 	eslint: {
 		config: {
 			standalone: false,
@@ -262,8 +255,6 @@ export default defineNuxtConfig({
 	},
 	image: {
 		screens: {},
-		format: ['webp', 'jpeg', 'jpg', 'png', 'svg'],
-		provider: 'ipx'
 	},
 	ogImage: {
 		zeroRuntime: true

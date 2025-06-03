@@ -70,6 +70,7 @@
     "stale-dep": "catalog:build",
     "tailwind-merge": "catalog:frontend",
     "tailwind-variants": "catalog:frontend",
+    "taze": "catalog:dev",
     "tw-animate-css": "catalog:build",
     "utility-types": "catalog:frontend",
     "vue-markdown-render": "catalog:frontend",
@@ -122,9 +123,10 @@
     "std-env": "catalog:dev",
     "tailwindcss": "catalog:dev",
     "typescript": "catalog:dev",
-    "vue-tsc": "catalog:dev"
+    "vue-tsc": "catalog:dev",
+    "wrangler": "catalog:"
   },
-  "packageManager": "pnpm@10.6.2",
+  "packageManager": "pnpm@10.11.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

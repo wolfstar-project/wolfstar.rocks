@@ -11,18 +11,16 @@ return;
 			url: event?.node?.req?.url || 'unknown',
 			method: event?.node?.req?.method || 'unknown',
 			timestamp: new Date().toISOString(),
-			userAgent:  event ? getRequestHeader(event, 'User-Agent') : 'unknown',
+			userAgent: event ? getRequestHeader(event, 'User-Agent') : 'unknown',
 			ip: event ? getClientIP(event) : 'unknown',
 			error: error instanceof Error ? error.message : String(error),
 			stack: error instanceof Error ? error.stack : undefined
 		};
 
 		// Log the error
-		useLogger().error('Unhandled Server Error:', {
-			url: errorInfo.url,
-			method: errorInfo.method,
-			error: errorInfo.error
-		});
+		useLogger().error(
+			`Unhandled Server Error: \n${errorInfo.error} \n URL: ${errorInfo.url} \n Method: ${errorInfo.method} \n User Agent: ${errorInfo.userAgent} \n IP: ${errorInfo.ip}`
+		);
 
 		// Send to Sentry
 		withScope((scope) => {
@@ -48,13 +46,12 @@ return;
 	nitroApp.hooks.hook('render:response', async (response, { event }) => {
 		if (response.statusCode && response.statusCode >= 400) {
 			const errorInfo = {
-	      url: event?.node?.req?.url || 'unknown',
-			  method: event?.node?.req?.method || 'unknown',
-			  timestamp: new Date().toISOString(),
-			  userAgent:  event ? getRequestHeader(event, 'User-Agent') : 'unknown',
-			  ip: event ? getClientIP(event) : 'unknown',
-				statusCode: response.statusCode,
-	
+				url: event?.node?.req?.url || 'unknown',
+				method: event?.node?.req?.method || 'unknown',
+				timestamp: new Date().toISOString(),
+				userAgent: event ? getRequestHeader(event, 'User-Agent') : 'unknown',
+				ip: event ? getClientIP(event) : 'unknown',
+				statusCode: response.statusCode
 			};
 
 			// Only log server errors for render responses
@@ -78,4 +75,3 @@ return;
 		}
 	});
 });
-

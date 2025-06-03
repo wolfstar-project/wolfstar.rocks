@@ -1,5 +1,5 @@
 export default defineNuxtPlugin(async (nuxtApp) => {
-	const { handleError, handleVueError, setSentryUser } = await useErrorHandler();
+	const { handleError, handleVueError } = await useErrorHandler();
 
 	// Global Vue error handler
 	nuxtApp.vueApp.config.errorHandler = (error, instance, info) => {
@@ -23,92 +23,4 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 			}
 		});
 	});
-
-	// Global unhandled promise rejection handler
-	if (import.meta.client) {
-		window.addEventListener('unhandledrejection', (event) => {
-			handleError(event.reason, {
-				captureToSentry: true,
-				logToConsole: true,
-				tags: {
-					errorType: 'unhandled-promise',
-					source: 'window'
-				},
-				context: {
-					promiseReason: String(event.reason)
-				}
-			});
-		});
-
-		// Global JavaScript error handler
-		window.addEventListener('error', (event) => {
-			handleError(event.error || event.message, {
-				captureToSentry: true,
-				logToConsole: true,
-				tags: {
-					errorType: 'javascript',
-					source: 'window',
-					filename: event.filename,
-					lineno: String(event.lineno),
-					colno: String(event.colno)
-				},
-				context: {
-					errorEvent: {
-						filename: event.filename,
-						lineno: event.lineno,
-						colno: event.colno,
-						message: event.message
-					}
-				}
-			});
-		});
-
-		// Set user context when auth state changes
-		const { user } = await useAuth();
-		if (user) {
-			watch(
-				user,
-				(user) => {
-					if (user) {
-						setSentryUser({
-							id: user.id,
-							username: user.username
-						});
-					}
-				},
-				{ immediate: true }
-			);
-		}
-	}
-
-	if (import.meta.server) {
-		// Handle uncaught exceptions
-		process.on('uncaughtException', (error) => {
-			handleError(error, {
-				captureToSentry: true,
-				logToConsole: true,
-				level: 'error',
-				tags: {
-					errorType: 'uncaught-exception',
-					source: 'process'
-				}
-			});
-		});
-
-		// Handle unhandled promise rejections
-		process.on('unhandledRejection', (reason, promise) => {
-			handleError(reason, {
-				captureToSentry: true,
-				logToConsole: true,
-				level: 'error',
-				tags: {
-					errorType: 'unhandled-rejection',
-					source: 'process'
-				},
-				context: {
-					promise: String(promise)
-				}
-			});
-		});
-	}
 });

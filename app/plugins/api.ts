@@ -1,3 +1,5 @@
+import { isDevelopment } from 'std-env';
+
 export default defineNuxtPlugin(async () => {
 	const apiOrigin = getApiOrigin();
 	const { handleApiError, handleNetworkError } = await useErrorHandler();
@@ -15,7 +17,8 @@ export default defineNuxtPlugin(async () => {
 		},
 		onResponseError({ request, response, error }) {
 			// Log for debugging
-			useLogger().error(error);
+			if (isDevelopment) 
+useLogger().debug(error);
 
 			// Handle API response errors with enhanced context
 			const endpoint = typeof request === 'string' ? request : request.toString();

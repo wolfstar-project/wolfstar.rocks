@@ -53,7 +53,7 @@ export function handleServerError(error: unknown, event: H3Event, context?: Reco
 
 	throw createError({
 		statusCode,
-		statusMessage: message
+		message
 	});
 }
 

@@ -1,10 +1,9 @@
+import { createResolver } from '@nuxt/kit';
 import tailwindcss from '@tailwindcss/vite';
 import { isDevelopment, isWindows } from 'std-env';
 import { appDescription, appName, pwa } from './app/config/pwa';
-import '@vite-pwa/nuxt';
-import 'nuxt';
 
-const baseURL = 'https://wolfstar.rocks';
+const { resolve } = createResolver(import.meta.url);
 
 export default defineNuxtConfig({
 	// Modules configuration
@@ -61,8 +60,8 @@ export default defineNuxtConfig({
 			htmlAttrs: { lang: 'en' },
 			title: 'WolfStar',
 			link: [
-				{ rel: 'alternate', href: baseURL },
-				{ rel: 'canonical', href: baseURL },
+				{ rel: 'alternate', href: 'https://wolfstar.rocks' },
+				{ rel: 'canonical', href: 'https://wolfstar.rocks' },
 				{ rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
 				{ rel: 'apple-touch-startup-image', href: '/icons/apple-startup.png' },
 				{ rel: 'icon', href: '/icons/android-chrome-192x192.png' },
@@ -100,9 +99,9 @@ export default defineNuxtConfig({
 
 				// SEO meta tags
 				{ name: 'revisit-after', content: '7 days' },
-				{ name: 'url', content: baseURL },
-				{ name: 'identifier-URL', content: baseURL },
-				{ name: 'shortlink', content: baseURL },
+				{ name: 'url', content: 'https://wolfstar.rocks' },
+				{ name: 'identifier-URL', content: 'https://wolfstar.rocks' },
+				{ name: 'shortlink', content: 'https://wolfstar.rocks' },
 				{ name: 'keywords', content: 'discord, bot, wolfstar, moderation, automation, wolfstar, cyborg' },
 				{
 					name: 'summary',
@@ -141,7 +140,7 @@ export default defineNuxtConfig({
 				{ property: 'og:site_name', content: appName },
 				{ property: 'og:title', content: appName },
 				{ property: 'og:type', content: 'website' },
-				{ property: 'og:url', content: baseURL }
+				{ property: 'og:url', content: 'https://wolfstar.rocks' }
 			]
 		}
 	},
@@ -215,7 +214,19 @@ export default defineNuxtConfig({
 			: undefined,
 		experimental: {
 			openAPI: isDevelopment
-		}
+		},
+		publicAssets: [
+			{
+				dir: resolve('./public/img/avatars'),
+				maxAge: 24 * 60 * 60 * 30, // 30 days
+				baseURL: '/avatars'
+			},
+			{
+				dir: resolve('./public/img/icons'),
+				maxAge: 24 * 60 * 60 * 30, // 30 days
+				baseURL: '/icons'
+			}
+		]
 	},
 	vite: {
 		plugins: [tailwindcss()],
@@ -254,7 +265,7 @@ export default defineNuxtConfig({
 		componentName: 'NuxtIcon'
 	},
 	image: {
-		screens: {},
+		screens: {}
 	},
 	ogImage: {
 		zeroRuntime: true

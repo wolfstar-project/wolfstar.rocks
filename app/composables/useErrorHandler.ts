@@ -5,7 +5,6 @@ import { toast } from 'vue-sonner';
 import { getEnv } from '~/config/env';
 
 export interface ErrorContext {
-	userId?: string;
 	sessionId?: string;
 	route?: string;
 	userAgent?: string;
@@ -26,7 +25,6 @@ export interface ErrorHandlerOptions {
 export async function useErrorHandler() {
 	const nuxtApp = useNuxtApp();
 	const route = useRoute();
-	const { user } = await useAuth();
 
 	/**
 	 * Enhanced error context with user and application data
@@ -36,7 +34,6 @@ export async function useErrorHandler() {
 			route: route.fullPath,
 			timestamp: new Date().toISOString(),
 			userAgent: import.meta.client ? navigator.userAgent : undefined,
-			userId: user?.value?.id ?? undefined,
 			ssrContext: nuxtApp.ssrContext
 				? {
 						url: nuxtApp.ssrContext.url,

@@ -69,7 +69,7 @@
 					</li>
 					<li>
 						<nuxt-link to="/staryl">
-							<ShadIcon name="i-lucide-twitch" class="text-branding-staryl h-4 w-4" />
+							<ShadIcon name="i-lucide-twitch" class="h-4 w-4 text-branding-staryl" />
 							Teryl
 						</nuxt-link>
 					</li>
@@ -182,16 +182,14 @@ const { user } = useAuth();
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
-const defaultAvatar = computed(() =>
-	user.value?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
-		: 'https://cdn.discordapp.com/embed/avatars/0.png'
+const defaultAvatar = computed(
+	() => `https://cdn.discordapp.com/embed/avatars/${user.value && user.value.id ? BigInt(user.value.id) % BigInt(5) : '0'}.png`
 );
 
 watch(
 	user,
 	(user) => {
-		if (user?.avatar) {
+		if (user && user.avatar) {
 			isDefault.value = false;
 			isAnimated.value = user.avatar.startsWith('a_');
 		} else {

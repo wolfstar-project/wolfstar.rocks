@@ -14,11 +14,11 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-	createRateLimit({
-				max: 2,
-				time: seconds(10),
-				auth: true
-			})
+		createRateLimit({
+			max: 2,
+			time: seconds(10),
+			auth: true
+		})
 	],
 	handler: defineWrappedHandlingError(async (event) => {
 		// Get session token

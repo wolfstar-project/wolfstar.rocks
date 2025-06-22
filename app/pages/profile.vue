@@ -5,51 +5,137 @@
 	</Head>
 
 	<div v-if="user" class="container mx-auto max-w-7xl space-y-8 px-4 py-8">
-		<section class="flex flex-col items-center justify-center space-y-4 rounded-lg bg-base-200 p-8">
-			<div class="avatar">
-				<div class="h-32 w-32 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100">
-					<img
-						v-if="isDefault"
-						:src="defaultAvatar"
-						alt="Default Avatar"
-						class="h-full w-full object-cover"
-						decoding="async"
-						crossorigin="anonymous"
+		<section class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-200 p-12 shadow-lg">
+			<ShadAvatar
+				:src="isDefault ? defaultAvatar : isAnimated ? createUrl('gif', 128) : createUrl('png', 128)"
+				:alt="isDefault ? 'Default Avatar' : 'Avatar'"
+				size="xl"
+				class="ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
+			/>
+			<div class="space-y-2 text-center">
+				<h1 class="text-4xl font-bold text-base-content">{{ user.name }}</h1>
+				<p class="text-lg font-medium text-base-content/70">@{{ user.username || user.id }}</p>
+				<p class="text-sm text-base-content/50">User ID: {{ user.id }}</p>
+			</div>
+		</section>
+
+		<section class="overflow-hidden rounded-xl bg-base-200 shadow-lg">
+			<div class="border-b border-base-300">
+				<nav class="flex" aria-label="Profile Navigation">
+					<ShadButton
+						v-for="tab in profileTabs"
+						:key="tab.id"
+						variant="ghost"
+						:color="activeTab === tab.id ? 'primary' : 'neutral'"
+						class="flex items-center space-x-3 rounded-none border-b-2 px-6 py-4 text-sm font-medium transition-all duration-200"
+						:class="[
+							activeTab === tab.id
+								? 'border-primary bg-primary/10 text-primary'
+								: 'border-transparent text-base-content/70 hover:bg-base-300/50 hover:text-base-content'
+						]"
+						:aria-selected="activeTab === tab.id"
+						role="tab"
+						@click="activeTab = tab.id"
+					>
+						<template #leading>
+							<ShadIcon :name="tab.icon" class="h-5 w-5" />
+						</template>
+						{{ tab.label }}
+						<span v-if="tab.id === 'servers' && guilds" class="rounded-full bg-base-content/20 px-2 py-1 text-xs">
+							{{ guilds.length }}
+						</span>
+					</ShadButton>
+				</nav>
+			</div>
+
+			<!-- Tab Content -->
+			<div class="p-8">
+				<!-- Servers Tab -->
+				<div v-if="activeTab === 'servers'" class="space-y-6">
+					<div class="flex items-center justify-between">
+						<div>
+							<h2 class="text-2xl font-bold text-base-content">Servers</h2>
+							<p class="mt-1 text-base-content/60">Servers you're in ({{ guilds?.length ?? 0 }} servers)</p>
+						</div>
+						<!-- Add Server Button - like Dyno's CTA -->
+						<UiButton variant="solid" color="primary" size="sm">
+							<template #leading>
+								<ShadIcon name="heroicons:plus" class="h-4 w-4" />
+							</template>
+							Add Bot to Server
+						</UiButton>
+					</div>
+
+					<ShadAlert
+						v-if="error"
+						color="error"
+						variant="soft"
+						title="Error Occurred"
+						:description="error.toString()"
+						icon="heroicons:exclamation-triangle"
 					/>
-					<picture v-else>
-						<source
-							v-if="isAnimated"
-							media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
-							type="image/gif"
-							:srcset="makeSrcset('gif')"
-						/>
-						<source type="image/webp" :srcset="makeSrcset('webp')" />
-						<source type="image/png" :srcset="makeSrcset('png')" />
-						<img :src="createUrl('png', 128)" alt="Avatar" class="h-full w-full object-cover" decoding="async" crossorigin="anonymous" />
-					</picture>
+
+					<!-- Enhanced Server Grid -->
+					<div v-else-if="guilds !== undefined" class="space-y-4">
+						<guild-cards :guilds="guilds" />
+					</div>
+					<div v-else class="flex flex-col items-center justify-center space-y-4 py-16">
+						<ShadIcon name="heroicons:server" class="h-16 w-16 text-base-content/30" />
+						<p class="text-lg text-base-content/60">No servers found</p>
+						<UiButton variant="outline" size="sm">Refresh</UiButton>
+					</div>
 				</div>
-			</div>
-			<div class="text-center">
-				<h1 class="text-3xl font-bold">{{ user.name }}</h1>
-				<p class="text-base-content/60">User ID: {{ user.id }}</p>
-			</div>
-		</section>
 
-		<section v-if="error" class="alert alert-error">
-			<h2 class="mb-4 text-xl font-semibold">Error Occurred</h2>
-			<pre class="overflow-x-auto"><code>{{ error }}</code></pre>
-		</section>
+				<!-- Settings Tab -->
+				<div v-else-if="activeTab === 'settings'" class="space-y-6">
+					<div>
+						<h2 class="text-2xl font-bold text-base-content">Settings</h2>
+						<p class="mt-1 text-base-content/60">Manage your account preferences</p>
+					</div>
+					<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+						<ShadCard class="shadow-md">
+							<template #header>
+								<h3 class="text-lg font-semibold">Theme Preferences</h3>
+							</template>
+							<p class="text-base-content/60">Customize your visual experience</p>
+							<template #footer>
+								<div class="flex justify-end">
+									<UiButton variant="solid" color="primary" size="sm">Configure</UiButton>
+								</div>
+							</template>
+						</ShadCard>
+						<ShadCard class="shadow-md">
+							<template #header>
+								<h3 class="text-lg font-semibold">Notification Settings</h3>
+							</template>
+							<p class="text-base-content/60">Control how you receive updates</p>
+							<template #footer>
+								<div class="flex justify-end">
+									<UiButton variant="solid" color="primary" size="sm">Manage</UiButton>
+								</div>
+							</template>
+						</ShadCard>
+					</div>
+				</div>
 
-		<section v-else class="space-y-4">
-			<div v-if="guilds !== undefined" class="container mx-auto pb-8">
-				<h2 class="mb-2 text-3xl font-bold">Servers</h2>
-				<p class="mb-8 text-base-content/60">Servers you're in ({{ guilds?.length ?? 0 }} servers)</p>
-
-				<!-- Server Grid -->
-				<guild-cards :guilds="guilds" />
-			</div>
-			<div v-else class="flex items-center justify-center rounded-lg bg-base-200 p-8">
-				<p class="text-base-content/60">No servers found</p>
+				<!-- Premium Tab -->
+				<div v-else-if="activeTab === 'premium'" class="space-y-6">
+					<div>
+						<h2 class="text-2xl font-bold text-base-content">Premium</h2>
+						<p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
+					</div>
+					<ShadCard class="border-2 border-primary/20 bg-gradient-to-r from-primary/10 to-secondary/10">
+						<div class="space-y-4 text-center">
+							<ShadIcon name="heroicons:star" class="mx-auto h-12 w-12 text-primary" />
+							<h3 class="text-2xl font-bold">Upgrade to Premium</h3>
+							<p class="text-base-content/70">Get access to exclusive features and priority support</p>
+							<div class="flex justify-center space-x-4">
+								<ShadButton color="primary">Get Premium</ShadButton>
+								<ShadButton variant="outline">Learn More</ShadButton>
+							</div>
+						</div>
+					</ShadCard>
+				</div>
 			</div>
 		</section>
 	</div>
@@ -63,6 +149,27 @@ const { start, finish } = useLoadingIndicator({
 	duration: 2000,
 	throttle: 200
 });
+
+// Tab Management - inspired by Dyno.gg tab system
+const activeTab = ref('servers');
+const profileTabs = [
+	{
+		id: 'servers',
+		label: 'Servers',
+		icon: 'heroicons:server'
+	},
+	{
+		id: 'premium',
+		label: 'Premium',
+		icon: 'heroicons:star'
+	},
+	{
+		id: 'settings',
+		label: 'Settings',
+		icon: 'heroicons:cog-6-tooth'
+	}
+];
+
 const error = ref<Error | null>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
@@ -115,9 +222,5 @@ watch(
 
 function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
 	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
-
-function makeSrcset(format: 'webp' | 'png' | 'gif') {
-	return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
 </script>

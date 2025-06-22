@@ -2,11 +2,13 @@
 	<vite-pwa-manifest />
 	<nuxt-layout name="main">
 		<error-message :error="error" />
+		<ShadToaster position="bottom-right" />
 	</nuxt-layout>
 </template>
 
 <script setup lang="ts">
 import type { NuxtError } from '#app';
+import 'vue-sonner/style.css';
 
 const { error } = defineProps<{
 	error: NuxtError;

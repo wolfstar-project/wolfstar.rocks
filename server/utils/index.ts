@@ -1,5 +1,5 @@
 import type { H3Event } from 'h3';
-import { captureException } from '@sentry/nuxt';
+import { captureException, withScope } from '@sentry/nuxt';
 
 /**
  * Get client IP safely

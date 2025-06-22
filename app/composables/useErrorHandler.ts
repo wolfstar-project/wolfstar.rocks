@@ -2,7 +2,7 @@ import type { User } from '@sentry/core';
 import { captureException, captureMessage, withScope } from '@sentry/nuxt';
 import { H3Error } from 'h3';
 import { toast } from 'vue-sonner';
-import { getEnv } from '~/config/env';
+import { getEnv } from '~~/config/env';
 
 export interface ErrorContext {
 	sessionId?: string;

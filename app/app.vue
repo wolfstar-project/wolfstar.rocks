@@ -3,13 +3,13 @@
 	<nuxt-loading-indicator color="bg-neutral" />
 	<nuxt-layout name="main">
 		<nuxt-page />
-		<ClientOnly>
-			<ShadToaster position="bottom-right" />
-		</ClientOnly>
+		<ShadToaster position="bottom-right" />
 	</nuxt-layout>
 </template>
 
 <script setup lang="ts">
+import 'vue-sonner/style.css';
+
 const router = useRouter();
 const route = useRoute();
 const appName = ref<'wolfstar' | 'staryl'>('wolfstar');

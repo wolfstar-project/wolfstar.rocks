@@ -24,11 +24,11 @@ defineRouteMeta({
 export default defineEventHandler({
 	onRequest: [
 		authMiddleware(),
-	createRateLimit({
-				max: 10,
-				time: seconds(5),
-				auth: true
-			})
+		createRateLimit({
+			max: 10,
+			time: seconds(5),
+			auth: true
+		})
 	],
 	handler: defineWrappedHandlingError(async (event) => {
 		// Get guild ID from params

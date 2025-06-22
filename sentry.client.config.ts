@@ -4,10 +4,10 @@ import { isDevelopment } from 'std-env';
 if (useRuntimeConfig().public.sentry.dsn) {
 	Sentry.init({
 		dsn: useRuntimeConfig().public.sentry.dsn,
+		tunnel: '/tunnel',
 		integrations: [
 			// Base client integrations
 			Sentry.browserTracingIntegration({
-				enableInp: true,
 				enableLongAnimationFrame: true
 			}),
 			Sentry.replayIntegration({
@@ -15,6 +15,19 @@ if (useRuntimeConfig().public.sentry.dsn) {
 				maskAllInputs: true,
 				maskAllText: false,
 				blockAllMedia: true
+			}),
+			Sentry.captureConsoleIntegration({
+				levels: ['error', 'warn']
+			}),
+
+			// Per HTTP requests tracking
+			Sentry.httpClientIntegration(),
+			Sentry.vueIntegration({
+				tracingOptions: {
+					trackComponents: true,
+					timeout: 2000,
+					hooks: ['activate', 'mount', 'update']
+				}
 			}),
 			Sentry.browserProfilingIntegration(),
 			Sentry.piniaIntegration(usePinia()),

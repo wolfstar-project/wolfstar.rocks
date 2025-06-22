@@ -42,8 +42,8 @@
     ]
   },
   "dependencies": {
-    "@ai-sdk/vue": "catalog:",
-    "@josephanson/nuxt-ai": "catalog:",
+    "@ai-sdk/vue": "catalog:prod",
+    "@josephanson/nuxt-ai": "catalog:prod",
     "@nuxtjs/color-mode": "catalog:build",
     "@pinia/nuxt": "catalog:build",
     "@prisma/client": "catalog:build",
@@ -75,11 +75,12 @@
     "utility-types": "catalog:frontend",
     "vue-markdown-render": "catalog:frontend",
     "vue-sonner": "catalog:frontend",
-    "zod": "catalog:build"
+    "zod": "catalog:build",
+    "@shelve/cli": "catalog:cli"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:build",
-    "@antfu/nip": "catalog:",
+    "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:dev",
     "@commitlint/config-conventional": "catalog:dev",
     "@discordjs/collection": "catalog:dev",
@@ -116,7 +117,7 @@
     "lint-staged": "catalog:dev",
     "nuxt-auth-utils": "catalog:dev",
     "playwright": "catalog:dev",
-    "pncat": "catalog:",
+    "pncat": "catalog:cli",
     "prettier": "catalog:dev",
     "prettier-plugin-css-order": "catalog:dev",
     "prettier-plugin-tailwindcss": "catalog:dev",
@@ -124,7 +125,7 @@
     "tailwindcss": "catalog:dev",
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev",
-    "wrangler": "catalog:"
+    "wrangler": "catalog:dev"
   },
   "packageManager": "pnpm@10.11.1",
   "engines": {

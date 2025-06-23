@@ -6,8 +6,9 @@ import { captureException, withScope } from '@sentry/nuxt';
  */
 export function getClientIP(event: H3Event): string {
 	const forwarded = event.node.req.headers['x-forwarded-for'];
-	if (forwarded) 
-return Array.isArray(forwarded) ? forwarded[0] : forwarded.split(',')[0];
+	if (forwarded) {
+		return Array.isArray(forwarded) ? forwarded[0] || 'Unknown' : forwarded.split(',')[0] || 'Unknown';
+	}
 
 	return event.node.req.headers['X-Real-IP']?.[0] ?? event.node.req.socket?.remoteAddress ?? 'Unknown';
 }
@@ -50,7 +51,7 @@ export async function handleApiError(error: unknown, event: any, metadata: { req
 
 	// Enhanced logging
 	const isServerError = errorInfo.statusCode && errorInfo.statusCode >= 500;
-	const logMessage = `API ${isServerError ? 'ERROR' : 'WARN'}: ${errorInfo.method} ${errorInfo.url}`;
+	const logMessage = `${isServerError ? 'ERROR' : 'WARN'}: ${errorInfo.method} ${errorInfo.url}`;
 	const logData = {
 		requestId: errorInfo.requestId,
 		statusCode: errorInfo.statusCode,
@@ -58,11 +59,7 @@ export async function handleApiError(error: unknown, event: any, metadata: { req
 		error: error instanceof Error ? error.message : String(error)
 	};
 
-	if (isServerError) {
-		useLogger().error(logMessage, logData);
-	} else {
-		useLogger().warn(logMessage, logData);
-	}
+	isServerError ? useLogger('API').error(logMessage, logData) : useLogger('API').warn(logMessage, logData);
 
 	// Send to Sentry with enhanced context
 	if (shouldSendToSentry(errorInfo.statusCode)) {

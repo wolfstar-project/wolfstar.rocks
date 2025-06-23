@@ -29,6 +29,7 @@ export default defineNuxtConfig({
 		'vue-sonner/nuxt',
 		'stale-dep/nuxt'
 	],
+	sourcemap: { client: "hidden" },
 	$development: {
 		site: {
 			url: 'http://localhost:3000',
@@ -159,7 +160,7 @@ export default defineNuxtConfig({
 			apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
 			environment: process.env.NODE_ENV,
 			sentry: {
-				dsn: process.env.NITRO_SENTRY_DSN
+				dsn: process.env.SENTRY_DSN
 			}
 		},
 		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
@@ -170,7 +171,6 @@ export default defineNuxtConfig({
 		'/terms': { isr: true, prerender: true },
 		'/privacy': { isr: true, prerender: true }
 	},
-	sourcemap: { client: true },
 	future: {
 		compatibilityVersion: 4
 	},

@@ -1,5 +1,6 @@
 import type { EventHandler, EventHandlerRequest, H3Event } from 'h3';
 import { captureException, withScope } from '@sentry/nuxt';
+import { createError, defineEventHandler } from 'h3';
 import { getErrorMessage, getErrorStatusCode } from '~~/server/utils';
 
 /**

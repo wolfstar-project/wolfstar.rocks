@@ -1,4 +1,4 @@
-import { captureException, withScope } from '@sentry/nuxt';
+
 
 export default defineNitroPlugin((nitroApp) => {
 	// Global error handler for unhandled errors
@@ -22,19 +22,7 @@ return;
 			`Unhandled Server Error: \n${errorInfo.error} \n URL: ${errorInfo.url} \n Method: ${errorInfo.method} \n User Agent: ${errorInfo.userAgent} \n IP: ${errorInfo.ip}`
 		);
 
-		// Send to Sentry
-		withScope((scope) => {
-			scope.setContext('unhandledError', errorInfo);
-			scope.setTag('errorType', 'unhandled-server');
-			scope.setTag('endpoint', errorInfo.url);
-			scope.setTag('method', errorInfo.method);
-			scope.setLevel('error');
-
-			// Set fingerprint for better grouping
-			scope.setFingerprint(['unhandled-error', errorInfo.method, errorInfo.url]);
-
-			captureException(error);
-		});
+		// Additional error processing can be added here if needed
 
 		// Mark as handled to prevent duplicate processing
 		if (event?.context) {
@@ -62,15 +50,7 @@ return;
 					statusCode: errorInfo.statusCode
 				});
 
-				withScope((scope) => {
-					scope.setContext('ssrError', errorInfo);
-					scope.setTag('errorType', 'ssr-render');
-					scope.setTag('endpoint', errorInfo.url);
-					scope.setTag('statusCode', String(errorInfo.statusCode));
-					scope.setLevel('error');
-
-					captureException(new Error(`SSR Error ${errorInfo.statusCode}: ${errorInfo.url}`));
-				});
+				// Additional SSR error processing can be added here if needed
 			}
 		}
 	});

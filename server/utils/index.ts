@@ -1,5 +1,4 @@
 import type { H3Event } from 'h3';
-import { captureException, withScope } from '@sentry/nuxt';
 
 /**
  * Get client IP safely
@@ -60,67 +59,6 @@ export async function handleApiError(error: unknown, event: any, metadata: { req
 	};
 
 	isServerError ? useLogger('API').error(logMessage, logData) : useLogger('API').warn(logMessage, logData);
-
-	// Send to Sentry with enhanced context
-	if (shouldSendToSentry(errorInfo.statusCode)) {
-		await sendToSentry(error, errorInfo);
-	}
 }
 
-/**
- * Determine if error should be sent to Sentry
- */
-export function shouldSendToSentry(statusCode?: number): boolean {
-	if (!statusCode) 
-return true;
 
-	// Send 5xx errors (server errors)
-	if (statusCode >= 500) 
-return true;
-
-	// Send 4xx errors that are likely application issues
-	const criticalClientErrors = [401, 403, 422, 429];
-	if (criticalClientErrors.includes(statusCode)) 
-return true;
-
-	return false;
-}
-
-/**
- * Send error to Sentry with proper context
- */
-async function sendToSentry(error: unknown, errorInfo: any) {
-	withScope((scope) => {
-		// Set context
-		scope.setContext('apiError', errorInfo);
-		scope.setContext('request', {
-			url: errorInfo.url,
-			method: errorInfo.method,
-			duration: errorInfo.duration,
-			userAgent: errorInfo.userAgent
-		});
-
-		// Set tags for better filtering
-		scope.setTag('errorType', 'api-middleware');
-		scope.setTag('endpoint', errorInfo.url);
-		scope.setTag('method', errorInfo.method);
-		scope.setTag('statusCode', String(errorInfo.statusCode));
-		scope.setTag('requestId', errorInfo.requestId);
-
-		// Set level based on status code
-		if (errorInfo.statusCode >= 500) {
-			scope.setLevel('error');
-		} else if (errorInfo.statusCode >= 400) {
-			scope.setLevel('warning');
-		} else {
-			scope.setLevel('info');
-		}
-
-		// Set fingerprint for better grouping
-		const fingerprint = ['api-error', errorInfo.method, errorInfo.url, String(errorInfo.statusCode)];
-		scope.setFingerprint(fingerprint);
-
-		// Capture the exception
-		captureException(error);
-	});
-}

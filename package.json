@@ -48,7 +48,7 @@
     "@pinia/nuxt": "catalog:frontend",
     "@prisma/client": "catalog:prod",
     "@prisma/nuxt": "catalog:prod",
-    "@sentry/nuxt": "catalog:dev",
+
     "@shelve/cli": "catalog:prod",
     "@tailwindcss/vite": "catalog:build",
     "@vee-validate/zod": "catalog:utils",

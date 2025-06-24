@@ -1,5 +1,4 @@
-import type { User } from '@sentry/core';
-import { captureException, captureMessage, withScope } from '@sentry/nuxt';
+
 import { H3Error } from 'h3';
 import { toast } from 'vue-sonner';
 import { getEnv } from '~~/config/env';
@@ -15,10 +14,8 @@ export interface ErrorContext {
 export interface ErrorHandlerOptions {
 	showToast?: boolean;
 	logToConsole?: boolean;
-	captureToSentry?: boolean;
 	level?: 'error' | 'warning' | 'info';
 	tags?: Record<string, string>;
-	fingerprint?: string[];
 	context?: ErrorContext;
 }
 
@@ -47,20 +44,13 @@ export async function useErrorHandler() {
 		};
 	}
 
-	/**
-	 * Set user context for Sentry
-	 */
-	function setSentryUser(user: User) {
-		withScope((scope) => {
-			scope.setUser(user);
-		});
-	}
+
 
 	/**
-	 * Main error handler with Sentry integration
+	 * Main error handler
 	 */
 	function handleError(error: unknown, options: ErrorHandlerOptions = {}): void {
-		const { showToast = false, logToConsole = true, captureToSentry = true, level = 'error', tags = {}, fingerprint, context = {} } = options;
+		const { showToast = false, logToConsole = true, level = 'error', tags = {}, context = {} } = options;
 
 		// Normalize error
 		const normalizedError = normalizeError(error);
@@ -73,34 +63,10 @@ export async function useErrorHandler() {
 
 		// Console logging
 		if (logToConsole) {
-			useLogger().error(`Error handled: ${normalizedError.message}`);
-		}
-
-		// Sentry capture
-		if (captureToSentry) {
-			withScope((scope) => {
-				// Set context
-				scope.setContext('errorHandler', errorContext);
-
-				// Set tags
-				Object.entries(tags).forEach(([key, value]) => {
-					scope.setTag(key, value);
-				});
-
-				// Set fingerprint for error grouping
-				if (fingerprint) {
-					scope.setFingerprint(fingerprint);
-				}
-
-				// Set level
-				scope.setLevel(level);
-
-				// Capture based on error type
-				if (normalizedError instanceof Error) {
-					captureException(normalizedError);
-				} else {
-					captureMessage(String(normalizedError), level);
-				}
+			useLogger().error(`Error handled: ${normalizedError.message}`, {
+				level,
+				tags,
+				context: errorContext
 			});
 		}
 
@@ -118,7 +84,6 @@ export async function useErrorHandler() {
 	 */
 	function handleVueError(error: unknown, instance: any, info: string): void {
 		handleError(error, {
-			captureToSentry: true,
 			logToConsole: true,
 			tags: {
 				errorType: 'vue',
@@ -138,7 +103,6 @@ export async function useErrorHandler() {
 	 */
 	function handleAsyncError(error: unknown, key?: string): void {
 		handleError(error, {
-			captureToSentry: true,
 			logToConsole: true,
 			showToast: true,
 			tags: {
@@ -158,7 +122,6 @@ export async function useErrorHandler() {
 		const normalizedError = normalizeError(error);
 
 		handleError(normalizedError, {
-			captureToSentry: true,
 			logToConsole: true,
 			showToast: true,
 			tags: {
@@ -178,11 +141,9 @@ export async function useErrorHandler() {
 	 * Handle form validation errors
 	 */
 	function handleFormError(error: unknown, formId?: string): void {
-		// Don't send validation errors to Sentry unless they're unexpected
 		const isValidationError = error instanceof Error && error.message.includes('validation');
 
 		handleError(error, {
-			captureToSentry: !isValidationError,
 			logToConsole: true,
 			showToast: true,
 			level: isValidationError ? 'warning' : 'error',
@@ -201,13 +162,11 @@ export async function useErrorHandler() {
 	 */
 	function handleNetworkError(error: unknown): void {
 		handleError(error, {
-			captureToSentry: true,
 			logToConsole: true,
 			showToast: true,
 			tags: {
 				errorType: 'network'
 			},
-			fingerprint: ['network-error'], // Group network errors together
 			context: {
 				connectionType: import.meta.client ? (navigator as any)?.connection?.effectiveType : undefined,
 				online: import.meta.client ? navigator.onLine : undefined
@@ -222,7 +181,6 @@ export async function useErrorHandler() {
 		handleApiError,
 		handleFormError,
 		handleNetworkError,
-		setSentryUser,
 		getErrorContext
 	};
 }

@@ -14,7 +14,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 	// Nuxt app error hook
 	nuxtApp.hook('app:error', (error) => {
 		handleError(error, {
-			captureToSentry: true,
 			logToConsole: true,
 			showToast: true,
 			tags: {

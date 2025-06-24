@@ -13,7 +13,6 @@ export default defineNuxtConfig({
 		'@vueuse/nuxt',
 		'@pinia/nuxt',
 		'@vite-pwa/nuxt',
-		'@sentry/nuxt/module',
 		'@nuxt/eslint',
 		'@prisma/nuxt',
 		'nuxt-auth-utils',
@@ -29,7 +28,6 @@ export default defineNuxtConfig({
 		'vue-sonner/nuxt',
 		'stale-dep/nuxt'
 	],
-	sourcemap: { client: "hidden" },
 	$development: {
 		site: {
 			url: 'http://localhost:3000',
@@ -42,14 +40,7 @@ export default defineNuxtConfig({
 			name: 'WolfStar'
 		}
 	},
-	imports: {
-		presets: [
-			{
-				from: '@sentry/nuxt',
-				imports: ['captureException']
-			}
-		]
-	},
+
 	devtools: {
 		enabled: true
 	},
@@ -158,10 +149,7 @@ export default defineNuxtConfig({
 		public: {
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
-			environment: process.env.NODE_ENV,
-			sentry: {
-				dsn: process.env.SENTRY_DSN
-			}
+			environment: process.env.NODE_ENV
 		},
 		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
 	},
@@ -171,6 +159,7 @@ export default defineNuxtConfig({
 		'/terms': { isr: true, prerender: true },
 		'/privacy': { isr: true, prerender: true }
 	},
+	sourcemap: { client: "hidden" },
 	future: {
 		compatibilityVersion: 4
 	},
@@ -289,9 +278,7 @@ export default defineNuxtConfig({
 		},
 		rateLimiter: false
 	},
-	sentry: {
-		autoInjectServerSentry: 'experimental_dynamic-import'
-	},
+
 
 	shadcn: {
 		componentDir: './app/components/ui',
@@ -299,5 +286,5 @@ export default defineNuxtConfig({
 	},
 	sitemap: {
 		exclude: ['/join', '/oauth/guild', '/oauth/callback', '/[...id]']
-	}
+	},
 });

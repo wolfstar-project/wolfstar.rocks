@@ -26,7 +26,7 @@ catalogs:
     '@sapphire/snowflake': ^3.5.5
     '@sapphire/time-utilities': ^1.7.14
     '@sapphire/utilities': ^3.18.2
-    '@sentry/nuxt': ^9.31.0
+  
     daisyui: 5.0.35
     discord-api-types: ^0.38.11
     nuxt-auth-utils: ^0.5.20
@@ -105,7 +105,7 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@prisma/client'
   - '@prisma/engines'
-  - '@sentry/cli'
+
   - esbuild
   - prisma
   - sharp

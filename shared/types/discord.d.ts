@@ -70,6 +70,7 @@ export interface FlattenedGuild {
 	id: APIGuild['id'];
 	joinedTimestamp: number;
 	mfaLevel: APIGuild['mfa_level'];
+	features: APIGuild['features'];
 	name: APIGuild['name'];
 	acronym: string;
 	ownerId: APIGuild['owner_id'];

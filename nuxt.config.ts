@@ -153,6 +153,9 @@ export default defineNuxtConfig({
 		},
 		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
 	},
+	build: {
+		transpile: ['node:events']
+	},
 	// Build configuration
 	routeRules: {
 		'/': { prerender: true },
@@ -181,30 +184,6 @@ export default defineNuxtConfig({
 				target: 'esnext'
 			}
 		},
-		openAPI: isDevelopment
-			? {
-					// OpenAPI configuration
-					meta: {
-						title: 'WolfStar API',
-						description: 'WolfStar API documentation',
-						version: '1.0.0'
-					},
-					route: '/_docs/openapi.json',
-					production: 'runtime',
-					ui: {
-						scalar: {
-							route: '/api/docs',
-							darkMode: true,
-							hideDownloadButton: true,
-							searchHotKey: 'k',
-							showSidebar: true
-						}
-					}
-				}
-			: undefined,
-		experimental: {
-			openAPI: isDevelopment
-		}
 	},
 	vite: {
 		plugins: [tailwindcss()],

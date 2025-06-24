@@ -37,9 +37,6 @@ export async function useErrorHandler() {
 						statusCode: nuxtApp.ssrContext.event?.node?.res?.statusCode
 					}
 				: undefined,
-			commit: getEnv().then((env) => env.commit),
-			shortCommit: getEnv().then((env) => env.shortCommit),
-			branch: getEnv().then((env) => env.branch),
 			environment: useRuntimeConfig().public.environment
 		};
 	}

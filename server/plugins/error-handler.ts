@@ -19,7 +19,15 @@ return;
 
 		// Log the error
 		useLogger().error(
-			`Unhandled Server Error: \n${errorInfo.error} \n URL: ${errorInfo.url} \n Method: ${errorInfo.method} \n User Agent: ${errorInfo.userAgent} \n IP: ${errorInfo.ip}`
+			`Unhandled Server Error: \n${errorInfo.error}`,
+			{
+				url: errorInfo.url,
+				method: errorInfo.method,
+				userAgent: errorInfo.userAgent,
+				ip: errorInfo.ip,
+				timestamp: errorInfo.timestamp,
+				stack: errorInfo.stack
+			}
 		);
 
 		// Additional error processing can be added here if needed
@@ -47,7 +55,9 @@ return;
 				useLogger().error('SSR Error:', {
 					url: errorInfo.url,
 					method: errorInfo.method,
-					statusCode: errorInfo.statusCode
+					statusCode: errorInfo.statusCode,
+					userAgent: errorInfo.userAgent,
+					ip: errorInfo.ip
 				});
 
 				// Additional SSR error processing can be added here if needed

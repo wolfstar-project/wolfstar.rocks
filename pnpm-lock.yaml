@@ -74,6 +74,9 @@ catalogs:
     nuxt-auth-utils:
       specifier: ^0.5.20
       version: 0.5.20
+    simple-git:
+      specifier: ^3.28.0
+      version: 3.28.0
     std-env:
       specifier: ^3.9.0
       version: 3.9.0
@@ -345,6 +348,9 @@ importers:
       shadcn-nuxt:
         specifier: catalog:prod
         version: 2.1.0(magicast@0.3.5)
+      simple-git:
+        specifier: catalog:dev
+        version: 3.28.0
       stale-dep:
         specifier: catalog:prod
         version: 0.8.2(@nuxt/kit@3.17.5(magicast@0.3.5))(@nuxt/schema@3.17.5)
@@ -7467,8 +7473,8 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  simple-git@3.27.0:
-    resolution: {integrity: sha512-ivHoFS9Yi9GY49ogc6/YAi3Fl9ROnF4VyubNylgCkA+RVqLaKWnDSzXOVzya8csELIaWaYNutsEuAhZrtOjozA==}
+  simple-git@3.28.0:
+    resolution: {integrity: sha512-Rs/vQRwsn1ILH1oBUy8NucJlXmnnLeLCfcvbSehkPzbv3wwoFWIdtfd6Ndo6ZPhlPsCZ60CPI4rxurnwAa+a2w==}
 
   simple-swizzle@0.2.2:
     resolution: {integrity: sha512-JA//kQgZtbuY83m+xT+tXJkmJncGMTFT+C+g2h2R9uxkYIrE2yy9sgmcLhCnw57/WSD+Eh3J97FPEDFnbXnDUg==}
@@ -10482,7 +10488,7 @@ snapshots:
       perfect-debounce: 1.0.0
       pkg-types: 2.1.0
       semver: 7.7.2
-      simple-git: 3.27.0
+      simple-git: 3.28.0
       sirv: 3.0.1
       structured-clone-es: 1.0.0
       tinyglobby: 0.2.14
@@ -17037,7 +17043,7 @@ snapshots:
       simple-concat: 1.0.1
     optional: true
 
-  simple-git@3.27.0:
+  simple-git@3.28.0:
     dependencies:
       '@kwsites/file-exists': 1.1.1
       '@kwsites/promise-deferred': 1.1.1

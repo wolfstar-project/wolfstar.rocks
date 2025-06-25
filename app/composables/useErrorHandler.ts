@@ -1,7 +1,5 @@
-
 import { H3Error } from 'h3';
 import { toast } from 'vue-sonner';
-import { getEnv } from '~~/config/env';
 
 export interface ErrorContext {
 	sessionId?: string;
@@ -40,8 +38,6 @@ export async function useErrorHandler() {
 			environment: useRuntimeConfig().public.environment
 		};
 	}
-
-
 
 	/**
 	 * Main error handler

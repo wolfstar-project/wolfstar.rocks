@@ -133,9 +133,7 @@ const errorUnauthorized = computed(() => errorMessages[ErrorType.UNAUTHORIZED]);
 
 defineOgImageComponent('NuxtSeo', {
 	title: error.statusCode.toString(),
-	description: error.statusMessage,
-	theme: '#fcfcfc',
-	colorMode: 'dark'
+	description: error.statusText
 });
 
 useHead({

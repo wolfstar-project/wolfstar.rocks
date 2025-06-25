@@ -23,14 +23,14 @@ export const LanguagesStore = defineStore(StorageKeys.Language, {
 	actions: {
 		async fetchLanguages() {
 			try {
-				if (this.expired || import.meta.env.DEV) {
+				if (!this.expired && !import.meta.env.DEV) {
 					return;
 				}
 
-				const { data: commandsData } = await useAPI<string[]>('/commands');
+				const { data: languagesData } = await useAPI<string[]>('/languages');
 				this.languagesStorage = {
 					expire: Date.now() + Time.Day * 6,
-					data: Array.isArray(commandsData.value) ? commandsData.value : []
+					data: Array.isArray(languagesData.value) ? languagesData.value : []
 				};
 			} catch {
 				/* empty */

@@ -28,7 +28,7 @@ export const CommandsStore = defineStore(StorageKeys.Language, {
 					return;
 				}
 
-				const { data: commandsData } = await useAPI<FlattenedCommand[]>('/languages');
+				const { data: commandsData } = await useAPI<FlattenedCommand[]>('/commands');
 
 				this.commandsStorage = {
 					expire: Date.now() + Time.Day * 6,

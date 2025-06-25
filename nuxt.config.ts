@@ -75,65 +75,19 @@ export default defineNuxtConfig({
 				{ 'http-equiv': 'Page-Enter', content: 'RevealTrans(Duration=2.0,Transition=2)' },
 				{ 'http-equiv': 'Page-Exit', content: 'RevealTrans(Duration=3.0,Transition=12)' },
 
-				// Mobile specific
-				{ name: 'mobile-web-app-capable', content: 'yes' },
-				{ name: 'apple-mobile-web-app-status-bar-style', content: 'black' },
-				{ name: 'apple-mobile-web-app-title', content: appName },
+				// Mobile specific (only keep if not in seo.meta)
 				{ name: 'HandheldFriendly', content: 'True' },
 
-				// Microsoft specific
+				// Microsoft specific (only keep if not in seo.meta)
 				{ name: 'application-name', content: 'WolfStar' },
-				{ name: 'msapplication-TileColor', content: '#fd171b' },
 				{ name: 'msapplication-TileImage', content: '/icons/mstile-144x144.png' },
-				{ name: 'msapplication-config', content: '/browserconfig.xml' },
 
-				// Theme and appearance
-				{ name: 'theme-color', content: '#fd171b' },
-
-				// SEO meta tags
-				{ name: 'revisit-after', content: '7 days' },
-				{ name: 'url', content: baseURL },
-				{ name: 'identifier-URL', content: baseURL },
-				{ name: 'shortlink', content: baseURL },
-				{ name: 'keywords', content: 'discord, bot, wolfstar, moderation, automation, wolfstar, cyborg' },
-				{
-					name: 'summary',
-					content: appDescription
-				},
-				{ name: 'subject', content: appDescription },
-
-				// Robots and indexing
-				{ name: 'robots', content: 'archive,follow,imageindex,index,odp,snippet,translate' },
-				{ name: 'googlebot', content: 'index,follow' },
-
-				// Authorship and ownership
-				{ name: 'author', content: 'WolfStar Project, contact@wolfstar.rocks' },
-				{ name: 'owner', content: 'Davide Trinastich, redtwoghost@gmail.com' },
-				{ name: 'designer', content: 'Davide Trinastich, redtwoghost@gmail.com' },
-				{ name: 'reply-to', content: 'contact@wolfstar.rocks' },
-
-				// Distribution and audience
+				// Distribution and audience (only keep if not in seo.meta)
 				{ name: 'target', content: 'all' },
 				{ name: 'audience', content: 'all' },
 				{ name: 'coverage', content: 'Worldwide' },
 				{ name: 'distribution', content: 'Global' },
-				{ name: 'rating', content: 'safe for kids' },
-
-				// Open Graph meta tags
-				{ property: 'og:email', content: 'contact@wolfstar.rocks' },
-				{
-					property: 'og:description',
-					content: appDescription
-				},
-				{ property: 'og:image:alt', content: 'OpenGraphImage' },
-				{ property: 'og:image:height', content: '512' },
-				{ property: 'og:image:width', content: '1024' },
-				{ property: 'og:image', content: 'https://wolfstar.rocks/icons/opengraph.png' },
-				{ property: 'og:locale', content: 'en' },
-				{ property: 'og:site_name', content: appName },
-				{ property: 'og:title', content: appName },
-				{ property: 'og:type', content: 'website' },
-				{ property: 'og:url', content: baseURL }
+				{ name: 'rating', content: 'safe for kids' }
 			]
 		}
 	},
@@ -153,16 +107,11 @@ export default defineNuxtConfig({
 		},
 		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
 	},
-	build: {
-		transpile: ['node:events']
-	},
 	// Build configuration
 	routeRules: {
-		'/': { prerender: true },
-		'/terms': { isr: true, prerender: true },
-		'/privacy': { isr: true, prerender: true }
+		'/': { prerender: true }
 	},
-	sourcemap: { client: "hidden" },
+	sourcemap: { client: 'hidden' },
 	future: {
 		compatibilityVersion: 4
 	},
@@ -177,13 +126,13 @@ export default defineNuxtConfig({
 		preset: 'cloudflare-pages',
 		prerender: {
 			crawlLinks: true,
-			routes: ['/sitemap.xml', '/robots.txt']
+			routes: ['/', '/sitemap.xml', '/robots.txt']
 		},
 		esbuild: {
 			options: {
 				target: 'esnext'
 			}
-		},
+		}
 	},
 	vite: {
 		plugins: [tailwindcss()],
@@ -222,7 +171,7 @@ export default defineNuxtConfig({
 		componentName: 'NuxtIcon'
 	},
 	image: {
-		screens: {},
+		screens: {}
 	},
 	ogImage: {
 		zeroRuntime: true
@@ -257,7 +206,32 @@ export default defineNuxtConfig({
 		},
 		rateLimiter: false
 	},
-
+	seo: {
+		meta: {
+			description: appDescription,
+			themeColor: '#fd171b',
+			author: 'WolfStar Project, contact@wolfstar.rocks',
+			colorScheme: 'dark light',
+			applicationName: appName,
+			ogSiteName: appName,
+			ogLocale: 'en',
+			ogType: 'website',
+			ogUrl: baseURL,
+			ogTitle: appName,
+			ogDescription: appDescription,
+			ogImage: 'https://wolfstar.rocks/icons/opengraph.png',
+			ogImageAlt: 'OpenGraphImage',
+			ogImageHeight: '512',
+			ogImageWidth: '1024',
+			robots: 'archive,follow,imageindex,index,odp,snippet,translate',
+			msapplicationTileColor: '#fd171b',
+			msapplicationConfig: '/browserconfig.xml',
+			keywords: 'discord, bot, wolfstar, moderation, automation, wolfstar, cyborg',
+			mobileWebAppCapable: 'yes',
+			appleMobileWebAppStatusBarStyle: 'black',
+			appleMobileWebAppTitle: appName
+		}
+	},
 
 	shadcn: {
 		componentDir: './app/components/ui',
@@ -265,5 +239,5 @@ export default defineNuxtConfig({
 	},
 	sitemap: {
 		exclude: ['/join', '/oauth/guild', '/oauth/callback', '/[...id]']
-	},
+	}
 });

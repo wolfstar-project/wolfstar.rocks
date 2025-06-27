@@ -1,4 +1,4 @@
-import type { CommandAutoDelete, DisabledCommandChannel, PermissionsNode, ReactionRole, StickyRole, UniqueRoleSet } from '@/lib/database';
+import type { CommandAutoDelete, DisabledCommandChannel, PermissionsNode, ReactionRole, StickyRole, UniqueRoleSet } from '~~/server/database';
 
 declare global {
 	namespace PrismaJson {

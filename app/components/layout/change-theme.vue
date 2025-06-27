@@ -1,11 +1,7 @@
 <template>
-	<ClientOnly class="swap swap-rotate">
+	<div class="swap swap-rotate">
 		<ShadButton :icon="isDark ? 'i-lucide-moon' : 'i-lucide-sun'" color="neutral" variant="ghost" :circle="true" size="lg" @click="toggleTheme" />
-
-		<template #fallback>
-			<div class="size-8"></div>
-		</template>
-	</ClientOnly>
+	</div>
 </template>
 
 <script setup>

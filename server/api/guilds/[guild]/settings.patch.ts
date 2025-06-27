@@ -2,7 +2,7 @@ import { Result } from '@sapphire/result';
 import { isNullOrUndefined } from '@sapphire/utilities';
 import { createError } from 'h3';
 import { z } from 'zod';
-import { serializeSettings, writeSettingsTransaction } from '~~/lib/database';
+import { serializeSettings, writeSettingsTransaction } from '~~/server/database';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import { createRateLimit } from '~~/server/utils/middlewares/ratelimit';
 import { manageAbility } from '~~/shared/utils/abilities';

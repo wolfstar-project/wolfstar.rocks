@@ -1,5 +1,5 @@
 import type { Options as DeepMergeOptions } from 'deepmerge';
-import type { GuildData, GuildDataKey, GuildDataValue } from '~~/lib/database';
+import type { GuildData, GuildDataKey, GuildDataValue } from '~~/server/database';
 import deepMerge from 'deepmerge';
 
 type NullablePartialGuildData = Partial<{ [K in keyof GuildData]: GuildData[K] | null }>;

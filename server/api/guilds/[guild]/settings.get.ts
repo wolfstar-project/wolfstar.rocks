@@ -1,7 +1,7 @@
-import type { GuildData } from '~~/lib/database';
+import type { GuildData } from '~~/server/database';
 import { isNullOrUndefined } from '@sapphire/utilities';
 import { z } from 'zod';
-import { readSettings, serializeSettings } from '~~/lib/database';
+import { readSettings, serializeSettings } from '~~/server/database';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import { createRateLimit } from '~~/server/utils/middlewares/ratelimit';
 import { manageAbility } from '~~/shared/utils/abilities';

@@ -1,11 +1,11 @@
 import type { Awaitable, PickByValue } from '@sapphire/utilities';
-import type { GuildData, ReadonlyGuildData } from '~~/lib/database/settings/types';
+import type { GuildData, ReadonlyGuildData } from '~~/server/database/settings/types';
 import { Collection } from '@discordjs/collection';
 import { AsyncQueue } from '@sapphire/async-queue';
-import { getDefaultGuildSettings } from '~~/lib/database/settings/constants';
-import { deleteSettings, getSettings, updateSettings } from '~~/lib/database/settings/context/functions';
 import prisma from '~~/lib/prisma';
-import { maybeParseNumber } from '@/utils/parse';
+import { getDefaultGuildSettings } from '~~/server/database/settings/constants';
+import { deleteSettings, getSettings, updateSettings } from '~~/server/database/settings/context/functions';
+import { maybeParseNumber } from '~~/server/utils/parse';
 
 const cache = new Collection<string, GuildData>();
 const queue = new Collection<string, Promise<GuildData>>();

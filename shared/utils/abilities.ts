@@ -1,7 +1,7 @@
 import type { APIGuild, APIGuildMember } from 'discord-api-types/v10';
 import { hasAtLeastOneKeyInMap } from '@sapphire/utilities';
 import { PermissionFlagsBits } from 'discord-api-types/v10';
-import { readSettings } from '~~/lib/database';
+import { readSettings } from '~~/server/database';
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 	const memberRolePermissions = BigInt((member as unknown as { permissions: string }).permissions);

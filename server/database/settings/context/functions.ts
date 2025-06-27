@@ -1,5 +1,5 @@
 import type { Snowflake } from 'discord-api-types/v10';
-import type { ReadonlyGuildData } from '~~/lib/database/settings/types';
+import type { ReadonlyGuildData } from '~~/server/database/settings/types';
 import { Collection } from '@discordjs/collection';
 
 const cache = new Collection<Snowflake, ReadonlyGuildData>();

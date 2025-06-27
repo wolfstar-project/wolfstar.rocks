@@ -1,6 +1,15 @@
 <!-- eslint-disable vue/no-unused-refs -->
 <template>
-	<div ref="navbar" class="app-navbar" :class="y > 100 ? 'bg-base-200/80 backdrop-blur-xs' : 'bg-transparent'">
+	<SpotlightCard 
+		ref="navbar" 
+		class="app-navbar" 
+		:class="y > 100 ? 'bg-base-200/80 backdrop-blur-xs' : 'bg-transparent'"
+		from="rgba(0, 0, 0, 0.0)"
+		via="rgba(246, 12, 12, 0.2)"
+		to="transparent"
+		:size="300"
+		mode="before"
+	>
 		<div class="navbar-start">
 			<div class="dropdown">
 				<div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -172,7 +181,7 @@
 				</template>
 			</AuthState>
 		</div>
-	</div>
+	</SpotlightCard>
 </template>
 
 <script setup lang="ts">

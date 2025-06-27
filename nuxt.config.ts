@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite';
 import { isDevelopment, isWindows } from 'std-env';
 import { appDescription, appName, pwa } from './config/pwa';
+import { generateRuntimeConfig } from './server/utils/runtimeConfig';
 import '@vite-pwa/nuxt';
 import 'nuxt';
 
@@ -9,22 +10,22 @@ const baseURL = 'https://wolfstar.rocks';
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
+		'@nuxt/fonts',
 		'@nuxt/image',
+		'@nuxt/eslint',
+		'@nuxt/icon',
+		'@nuxtjs/seo',
+		'@nuxtjs/color-mode',
 		'@vueuse/nuxt',
 		'@pinia/nuxt',
 		'@vite-pwa/nuxt',
-		'@nuxt/eslint',
 		'@prisma/nuxt',
 		'nuxt-auth-utils',
-		'@nuxtjs/seo',
-		'@nuxt/icon',
-		'@nuxtjs/color-mode',
 		'nuxt-authorization',
-		'@nuxt/fonts',
 		'shadcn-nuxt',
 		'@josephanson/nuxt-ai',
 		...(isDevelopment || isWindows ? [] : ['nuxt-security']),
-		'@nuxthub/core',
+		...(process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['@nuxthub/core'] : []),
 		'vue-sonner/nuxt',
 		'~~/modules/build-env',
 		'stale-dep/nuxt'
@@ -39,10 +40,26 @@ export default defineNuxtConfig({
 		site: {
 			url: 'https://wolfstar.rocks',
 			name: 'WolfStar'
-		}
+		},
 	},
 	devtools: {
 		enabled: true
+	},
+
+	nitro: {
+		preset: process.env.NUXT_NITRO_PRESET,
+		prerender: {
+			crawlLinks: true,
+			routes: ['/', '/sitemap.xml', '/robots.txt']
+		},
+		esbuild: {
+			options: {
+				target: 'esnext'
+			}
+		},
+		rollupConfig: {
+			external: process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['pg-native'] : undefined
+		}
 	},
 	// App meta configuration
 	app: {
@@ -99,14 +116,7 @@ export default defineNuxtConfig({
 		fallback: 'light'
 	},
 	// Runtime configuration
-	runtimeConfig: {
-		public: {
-			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
-			apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api',
-			environment: process.env.NODE_ENV
-		},
-		token: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN
-	},
+	runtimeConfig:  generateRuntimeConfig(),
 	// Build configuration
 	routeRules: {
 		'/': { prerender: true }
@@ -122,18 +132,7 @@ export default defineNuxtConfig({
 	compatibilityDate: '2025-01-10',
 
 	// Nitro server configuration
-	nitro: {
-		preset: 'cloudflare-pages',
-		prerender: {
-			crawlLinks: true,
-			routes: ['/', '/sitemap.xml', '/robots.txt']
-		},
-		esbuild: {
-			options: {
-				target: 'esnext'
-			}
-		}
-	},
+
 	vite: {
 		plugins: [tailwindcss()],
 		build: {

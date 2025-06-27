@@ -1,4 +1,4 @@
-import type { ReadonlyGuildData } from '@/lib/database/settings/types';
+import type { ReadonlyGuildData } from '~~/server/database/settings/types';
 
 let cachedDefaultGuildSettings: DefaultGuildData | null = null;
 

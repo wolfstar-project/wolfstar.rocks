@@ -1,4 +1,15 @@
+[env.development]
 name = "wolfstar-site"
 compatibility_date = "2025-04-03"
+compatibility_flags = [ "nodejs_compat" ]
 main = ".output/server/index.mjs"
 assets = { directory = "./public/", binding = "ASSETS", run_worker_first = true }
+routes = [ { pattern = "localhost:3000", custom_domain = true } ]
+
+[env.production]
+name = "wolfstar-site"
+compatibility_date = "2025-04-03"
+compatibility_flags = [ "nodejs_compat" ]
+main = "./dist/server/index.mjs"
+routes = [ { pattern = "wolfstar.rocks", custom_domain = true } ]
+assets = { directory = "./dist/public/", binding = "ASSETS", run_worker_first = true }

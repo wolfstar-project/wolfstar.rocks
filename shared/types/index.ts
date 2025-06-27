@@ -13,11 +13,10 @@ export enum Env {
 	Release = 'release'
 }
 
-
 export {};
 
 declare module 'h3' {
 	interface H3EventContext {
-			errorHandled: boolean;
+		errorHandled: boolean;
 	}
 }

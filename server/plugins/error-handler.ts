@@ -1,5 +1,3 @@
-
-
 export default defineNitroPlugin((nitroApp) => {
 	// Global error handler for unhandled errors
 	nitroApp.hooks.hook('error', async (error, { event }) => {
@@ -18,17 +16,14 @@ return;
 		};
 
 		// Log the error
-		useLogger().error(
-			`Unhandled Server Error: \n${errorInfo.error}`,
-			{
-				url: errorInfo.url,
-				method: errorInfo.method,
-				userAgent: errorInfo.userAgent,
-				ip: errorInfo.ip,
-				timestamp: errorInfo.timestamp,
-				stack: errorInfo.stack
-			}
-		);
+		useLogger().error(`Unhandled Server Error: \n${errorInfo.error}`, {
+			url: errorInfo.url,
+			method: errorInfo.method,
+			userAgent: errorInfo.userAgent,
+			ip: errorInfo.ip,
+			timestamp: errorInfo.timestamp,
+			stack: errorInfo.stack
+		});
 
 		// Additional error processing can be added here if needed
 

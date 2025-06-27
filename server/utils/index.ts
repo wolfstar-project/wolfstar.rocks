@@ -60,5 +60,3 @@ export async function handleApiError(error: unknown, event: any, metadata: { req
 
 	isServerError ? useLogger('API').error(logMessage, logData) : useLogger('API').warn(logMessage, logData);
 }
-
-

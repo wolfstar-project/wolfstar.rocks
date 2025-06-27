@@ -139,7 +139,7 @@ export default defineNuxtConfig({
 		plugins: [
 			tailwindcss(),
 			cloudflare({
-				configPath: './wrangler.toml'
+				configPath: './app/wrangler.toml'
 			})
 		],
 		build: {

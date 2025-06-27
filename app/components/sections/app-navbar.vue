@@ -10,8 +10,9 @@
 					<li>
 						<a>Features</a>
 						<ul class="p-2">
-							<li><a>Submenu 1</a></li>
-							<li><a>Submenu 2</a></li>
+							<li><a>Moderation</a></li>
+							<li><a>AutoMod</a></li>
+							<li><a>Logging</a></li>
 						</ul>
 					</li>
 					<li>
@@ -25,25 +26,32 @@
 							</li>
 							<li>
 								<nuxt-link to="/staryl">
-									<ShadIcon name="ph:books-duotone" class="text-branding-teryl h-4 w-4" />
-									Starly
+									<ShadIcon name="ph:books-duotone" class="h-4 w-4 text-branding-staryl" />
+									Staryl
 								</nuxt-link>
 							</li>
 						</ul>
 					</li>
 					<li>
-						<nuxt-link to="/commands"> <ShadIcon name="ph:list" /> Commands </nuxt-link>
+						<nuxt-link to="/commands">
+							<ShadIcon name="ph:list" class="h-4 w-4" />
+							Commands
+						</nuxt-link>
 					</li>
 					<li>
-						<nuxt-link :to="App.invite"> <ShadIcon name="ph:plus-circle-duotone" class="text-success" /> Invite App </nuxt-link>
+						<nuxt-link :to="currentApp.invite">
+							<ShadIcon name="ph:plus-circle-duotone" class="h-4 w-4 text-success" />
+							Invite App
+						</nuxt-link>
 					</li>
 				</ul>
 			</div>
-			<nuxt-link class="flex items-center" :to="App.landing">
+			<nuxt-link class="flex items-center transition-transform hover:scale-105" :to="currentApp.landing">
 				<icons-wolfstar class="h-10 w-10" />
-				<h1 class="ml-2 text-2xl font-bold">{{ App.name }}</h1>
+				<h1 class="ml-2 text-2xl font-bold">{{ currentApp.name }}</h1>
 			</nuxt-link>
 		</div>
+
 		<div class="navbar-center hidden lg:flex">
 			<div class="group dropdown-hover dropdown">
 				<div tabindex="0" role="button" class="btn m-1 items-center btn-ghost transition-all group-hover:text-white">
@@ -51,10 +59,11 @@
 					<ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
 				</div>
 				<ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
-					<li><a>Item 1</a></li>
-					<li><a>Item 2</a></li>
+					<li><a>Moderation Tools</a></li>
+					<li><a>Advanced Logging</a></li>
 				</ul>
 			</div>
+
 			<div class="group dropdown-hover dropdown">
 				<div tabindex="0" role="button" class="btn m-1 items-center btn-ghost transition-all group-hover:text-white">
 					Applications
@@ -70,21 +79,23 @@
 					<li>
 						<nuxt-link to="/staryl">
 							<ShadIcon name="i-lucide-twitch" class="h-4 w-4 text-branding-staryl" />
-							Teryl
+							Staryl
 						</nuxt-link>
 					</li>
 				</ul>
 			</div>
 
-			<nuxt-link :to="App.invite" class="btn btn-ghost transition-colors hover:text-success">
+			<nuxt-link to="/commands" class="btn btn-ghost transition-colors hover:text-primary">
+				Commands
+				<ShadIcon name="ph:list" />
+			</nuxt-link>
+
+			<nuxt-link :to="currentApp.invite" class="btn btn-ghost transition-colors hover:text-success">
 				Invite App
 				<ShadIcon name="ph:plus-circle-duotone" />
 			</nuxt-link>
-			<nuxt-link to="/commands" class="btn btn-ghost">
-				Commmands
-				<ShadIcon name="ph:list" />
-			</nuxt-link>
 		</div>
+
 		<div class="navbar-end">
 			<div><layout-change-theme /></div>
 			<AuthState>
@@ -148,7 +159,7 @@
 							</li>
 						</ul>
 					</div>
-					<button v-else class="btn bg-[#5865F2] text-white hover:bg-[#5865F2]/50" @click="() => $router.push('/login')">
+					<button v-else class="btn bg-[#5865F2] text-white transition-colors hover:bg-[#5865F2]/80" @click="() => $router.push('/login')">
 						<ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
 						<span class="hidden sm:inline">Login</span>
 					</button>
@@ -170,7 +181,8 @@ import { Invites } from '~/utils/constants';
 
 const { y } = useScroll(document);
 
-const appName = inject(ProviderAppNameKey)!;
+// Safely inject appName with fallback to prevent SSR issues
+const appName = inject(ProviderAppNameKey, ref<'wolfstar' | 'staryl'>('wolfstar'));
 
 const Apps = {
 	wolfstar: { name: 'WolfStar', invite: Invites.WolfStar, landing: '/' },
@@ -182,10 +194,17 @@ const { user } = useAuth();
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
+// Computed properties for consistent state
 const defaultAvatar = computed(
 	() => `https://cdn.discordapp.com/embed/avatars/${user.value && user.value.id ? BigInt(user.value.id) % BigInt(5) : '0'}.png`
 );
 
+const currentApp = computed(() => {
+	const appKey = unref(appName);
+	return Apps[appKey] || Apps.wolfstar;
+});
+
+// Watch user changes for avatar state
 watch(
 	user,
 	(user) => {
@@ -207,8 +226,6 @@ function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
 function makeSrcset(format: 'webp' | 'png' | 'gif') {
 	return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
-
-const App = computed(() => Apps[appName.value] ?? Apps.wolfstar);
 </script>
 
 <style scoped>

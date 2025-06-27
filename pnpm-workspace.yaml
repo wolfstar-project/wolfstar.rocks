@@ -13,6 +13,7 @@ catalogs:
     dev:
         '@ai-sdk/vue': '>=1.2.12'
         '@antfu/nip': ^0.1.0
+        '@cloudflare/vite-plugin': ^1.7.5
         '@discordjs/collection': ^2.1.1
         '@discordjs/core': ^2.1.0
         '@nuxt/fonts': ^0.11.4

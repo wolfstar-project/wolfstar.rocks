@@ -1,3 +1,4 @@
+import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { isDevelopment, isWindows } from 'std-env';
 import { appDescription, appName, pwa } from './config/pwa';
@@ -135,7 +136,12 @@ export default defineNuxtConfig({
 		}
 	},
 	vite: {
-		plugins: [tailwindcss()],
+		plugins: [
+			tailwindcss(),
+			cloudflare({
+				configPath: './wrangler.toml'
+			})
+		],
 		build: {
 			target: 'esnext'
 		},

@@ -1,4 +1,3 @@
-import { cloudflare } from '@cloudflare/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
 import { isDevelopment, isWindows } from 'std-env';
 import { appDescription, appName, pwa } from './config/pwa';
@@ -27,6 +26,7 @@ export default defineNuxtConfig({
 		...(isDevelopment || isWindows ? [] : ['nuxt-security']),
 		'@nuxthub/core',
 		'vue-sonner/nuxt',
+		'~~/modules/build-env',
 		'stale-dep/nuxt'
 	],
 	$development: {
@@ -41,7 +41,6 @@ export default defineNuxtConfig({
 			name: 'WolfStar'
 		}
 	},
-
 	devtools: {
 		enabled: true
 	},
@@ -136,12 +135,7 @@ export default defineNuxtConfig({
 		}
 	},
 	vite: {
-		plugins: [
-			tailwindcss(),
-			cloudflare({
-				configPath: './wrangler.toml'
-			})
-		],
+		plugins: [tailwindcss()],
 		build: {
 			target: 'esnext'
 		},

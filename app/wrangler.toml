@@ -1,4 +1,4 @@
-name = "wolfstar.rocks"
+name = "wolfstar-site"
 compatibility_date = "2025-04-03"
 main = ".output/server/index.mjs"
 assets = { directory = "./public/", binding = "ASSETS", run_worker_first = true }

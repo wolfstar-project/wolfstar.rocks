@@ -92,11 +92,9 @@ function isLinkActive({ route: linkRoute, isActive, isExactActive }: any) {
 	}
 
 	if (props.exactQuery === 'partial') {
-		if (!isPartiallyEqual(linkRoute.query, route.query)) 
-return false;
+		if (!isPartiallyEqual(linkRoute.query, route.query)) return false;
 	} else if (props.exactQuery === true) {
-		if (!isEqual(linkRoute.query, route.query)) 
-return false;
+		if (!isEqual(linkRoute.query, route.query)) return false;
 	}
 
 	if (props.exactHash && linkRoute.hash !== route.hash) {

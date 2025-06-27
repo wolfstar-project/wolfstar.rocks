@@ -201,8 +201,7 @@ function useColorDraggable(
 	const containerRect = useElementBounding(containerElement);
 
 	function start(event: PointerEvent) {
-		if (toValue(disabled)) 
-return event.preventDefault();
+		if (toValue(disabled)) return event.preventDefault();
 
 		const container = toValue(containerElement);
 
@@ -215,8 +214,7 @@ return event.preventDefault();
 	}
 
 	function move(event: PointerEvent) {
-		if (!pressedDelta.value) 
-return;
+		if (!pressedDelta.value) return;
 
 		const container = toValue(containerElement);
 		let { x, y } = position.value;
@@ -348,12 +346,10 @@ const trackThumbStyle = computed(() => ({
 
 <style scoped>
 [data-color-picker-background] {
-  background-image:
-    linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0) 100%),
-    linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
+	background-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0) 100%), linear-gradient(to right, #fff 0%, rgba(255, 255, 255, 0) 100%);
 }
 
 [data-color-picker-track] {
-  background-image: linear-gradient(0deg, red 0, #f0f 17%, #00f 33%, #0ff 50%, #0f0 67%, #ff0 83%, red);
+	background-image: linear-gradient(0deg, red 0, #f0f 17%, #00f 33%, #0ff 50%, #0f0 67%, #ff0 83%, red);
 }
 </style>

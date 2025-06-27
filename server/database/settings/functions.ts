@@ -153,8 +153,7 @@ async function unlockOnThrow(promise: Promise<ReadonlyGuildData>, lock: AsyncQue
 
 async function processFetch(id: string): Promise<ReadonlyGuildData> {
 	const previous = queue.get(id);
-	if (previous) 
-return previous;
+	if (previous) return previous;
 
 	try {
 		const promise = fetch(id);

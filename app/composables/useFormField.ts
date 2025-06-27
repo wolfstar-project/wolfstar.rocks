@@ -93,8 +93,7 @@ export function useFormField<T>(props?: Props<T>, opts?: FormFieldOptions) {
 		emitFormChange,
 		emitFormFocus,
 		ariaAttrs: computed(() => {
-			if (!formField?.value) 
-return;
+			if (!formField?.value) return;
 
 			const descriptiveAttrs =
 				['error' as const, 'hint' as const, 'description' as const, 'help' as const]

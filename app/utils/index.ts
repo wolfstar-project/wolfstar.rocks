@@ -63,10 +63,8 @@ export function set(object: Record<string, any>, path: (string | number)[] | str
 	}
 
 	path.reduce((acc, key, i) => {
-		if (acc[key] === undefined) 
-acc[key] = {};
-		if (i === path.length - 1) 
-acc[key] = value;
+		if (acc[key] === undefined) acc[key] = {};
+		if (i === path.length - 1) acc[key] = value;
 		return acc[key];
 	}, object);
 }
@@ -111,14 +109,12 @@ export function desc(a: number | string | bigint, b: number | string | bigint): 
  * @returns The maximum value.
  */
 export function max<N extends number | bigint>(...values: readonly N[]): N {
-	if (values.length === 0) 
-throw new TypeError('Expected at least 1 value.');
+	if (values.length === 0) throw new TypeError('Expected at least 1 value.');
 
 	let lowest = values[0]!;
 	for (let i = 1; i < values.length; ++i) {
 		const value = values[i]!;
-		if (value > lowest) 
-lowest = value;
+		if (value > lowest) lowest = value;
 	}
 
 	return lowest;
@@ -181,21 +177,18 @@ export function bidirectionalReplace<T>(regex: RegExp, content: string, options:
 		results.push(options.onMatch(match));
 	}
 
-	if (previous < content.length) 
-results.push(options.outMatch(content.slice(previous), previous, content.length));
+	if (previous < content.length) results.push(options.outMatch(content.slice(previous), previous, content.length));
 	return results;
 }
 
 export type BooleanFn<ArgumentTypes extends readonly unknown[], ReturnType extends boolean = boolean> = (...args: ArgumentTypes) => ReturnType;
 
 export function andMix<T extends readonly unknown[], R extends boolean>(...fns: readonly BooleanFn<T, R>[]): BooleanFn<T, R> {
-	if (fns.length === 0) 
-throw new Error('You must input at least one function.');
+	if (fns.length === 0) throw new Error('You must input at least one function.');
 	return (...args) => {
 		let ret!: R;
 		for (const fn of fns) {
-			if (!(ret = fn(...args))) 
-break;
+			if (!(ret = fn(...args))) break;
 		}
 
 		return ret;
@@ -205,13 +198,11 @@ break;
 export function orMix<ArgumentTypes extends readonly unknown[], ReturnType extends boolean>(
 	...fns: readonly BooleanFn<ArgumentTypes, ReturnType>[]
 ): BooleanFn<ArgumentTypes, ReturnType> {
-	if (fns.length === 0) 
-throw new Error('You must input at least one function.');
+	if (fns.length === 0) throw new Error('You must input at least one function.');
 	return (...args) => {
 		let ret!: ReturnType;
 		for (const fn of fns) {
-			if ((ret = fn(...args))) 
-break;
+			if ((ret = fn(...args))) break;
 		}
 
 		return ret;
@@ -229,16 +220,14 @@ export function useObjectStorage<T>(key: string, initial: T, listenToStorage = t
 	const raw = localStorage.getItem(key);
 	const data = ref(raw ? JSON.parse(raw) : initial);
 	for (const key2 in initial) {
-		if (data.value[key2] === void 0) 
-data.value[key2] = initial[key2];
+		if (data.value[key2] === void 0) data.value[key2] = initial[key2];
 	}
 	let updating = false;
 	let wrote = '';
 	watch(
 		data,
 		(value) => {
-			if (updating) 
-return;
+			if (updating) return;
 			wrote = JSON.stringify(value);
 			localStorage.setItem(key, wrote);
 		},

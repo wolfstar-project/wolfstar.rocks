@@ -16,8 +16,7 @@ const appName = ref<'wolfstar' | 'staryl'>('wolfstar');
 watch(
 	router.currentRoute,
 	(v) => {
-		if (v.path.startsWith('/staryl')) 
-appName.value = 'staryl';
+		if (v.path.startsWith('/staryl')) appName.value = 'staryl';
 		else appName.value = 'wolfstar';
 	},
 	{ immediate: true }

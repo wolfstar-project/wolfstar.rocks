@@ -2,8 +2,7 @@ export default defineNitroPlugin((nitroApp) => {
 	// Global error handler for unhandled errors
 	nitroApp.hooks.hook('error', async (error, { event }) => {
 		// Skip if it's already handled by middleware
-		if (event?.context?.errorHandled) 
-return;
+		if (event?.context?.errorHandled) return;
 
 		const errorInfo = {
 			url: event?.node?.req?.url || 'unknown',

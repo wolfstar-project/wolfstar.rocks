@@ -16140,9 +16140,9 @@ Nuxt exposes the following properties through `ssrContext`:
 - `serverRendered` (boolean) - Indicates if response is server-side-rendered.
 - `data` (object) - When you fetch the data from an API endpoint using either [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) or [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) , resulting payload can be accessed from the `payload.data`. This data is cached and helps you prevent fetching the same data in case an identical request is made more than once.
   :code-group[```vue \[app.vue\]
-  <script setup lang="ts">
-  const { data } = await useAsyncData('count', () => $fetch('/api/count'))
-  </script>
+    <script setup lang="ts">
+    const { data } = await useAsyncData('count', () => $fetch('/api/count'))
+    </script>
     ````ts [server/api/count.ts]
     export default defineEventHandler(event => {
       return { count: 1 }

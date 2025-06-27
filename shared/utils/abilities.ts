@@ -11,8 +11,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 }
 
 export const manageAbility = defineAbility({ allowGuest: false }, async (_user: any, guild: APIGuild, member: APIGuildMember) => {
-	if (guild.owner_id === member.user.id) 
-return true;
+	if (guild.owner_id === member.user.id) return true;
 
 	const settings = await readSettings(guild.id);
 	return isAdmin(member, settings.rolesAdmin);

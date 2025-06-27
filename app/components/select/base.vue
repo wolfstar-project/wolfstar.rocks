@@ -105,6 +105,6 @@ watch(
 <style>
 @reference "@/assets/css/main.css";
 .modal-backdrop {
-  @apply bg-black/50;
+	@apply bg-black/50;
 }
 </style>

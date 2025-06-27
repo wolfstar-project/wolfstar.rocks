@@ -17,8 +17,7 @@ export default defineNuxtPlugin(async () => {
 		},
 		onResponseError({ request, response, error }) {
 			// Log for debugging
-			if (isDevelopment) 
-useLogger().debug(error);
+			if (isDevelopment) useLogger().debug(error);
 
 			// Handle API response errors with enhanced context
 			const endpoint = typeof request === 'string' ? request : request.toString();

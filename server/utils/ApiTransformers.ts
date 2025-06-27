@@ -136,11 +136,9 @@ function transformPermissionOverwrites(
 
 export function getParentChannel(channel: APIThreadChannel | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>) {
 	const channelResult = lazy(async () => {
-		if (!channel.parent_id) 
-return null;
+		if (!channel.parent_id) return null;
 		const parentChannel = await api().channels.get(channel.parent_id);
-		if (parentChannel.type !== ChannelType.GuildCategory) 
-return null;
+		if (parentChannel.type !== ChannelType.GuildCategory) return null;
 		return flattenChannelCategory(parentChannel as APIGuildCategoryChannel);
 	});
 	return channelResult;

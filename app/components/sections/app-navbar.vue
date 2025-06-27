@@ -1,8 +1,8 @@
 <!-- eslint-disable vue/no-unused-refs -->
 <template>
-	<SpotlightCard 
-		ref="navbar" 
-		class="app-navbar" 
+	<SpotlightCard
+		ref="navbar"
+		class="app-navbar"
 		:class="y > 100 ? 'bg-base-200/80 backdrop-blur-xs' : 'bg-transparent'"
 		from="rgba(0, 0, 0, 0.0)"
 		via="rgba(246, 12, 12, 0.2)"
@@ -241,11 +241,11 @@ function makeSrcset(format: 'webp' | 'png' | 'gif') {
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-  @apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
-  align-self: center;
-  transition-duration: 250ms;
-  transition-property: background-color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  width: calc(100% - 1rem);
+	@apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
+	align-self: center;
+	transition-duration: 250ms;
+	transition-property: background-color;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	width: calc(100% - 1rem);
 }
 </style>

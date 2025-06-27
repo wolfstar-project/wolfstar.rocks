@@ -40,26 +40,10 @@ export default defineNuxtConfig({
 		site: {
 			url: 'https://wolfstar.rocks',
 			name: 'WolfStar'
-		},
+		}
 	},
 	devtools: {
 		enabled: true
-	},
-
-	nitro: {
-		preset: process.env.NUXT_NITRO_PRESET,
-		prerender: {
-			crawlLinks: true,
-			routes: ['/', '/sitemap.xml', '/robots.txt']
-		},
-		esbuild: {
-			options: {
-				target: 'esnext'
-			}
-		},
-		rollupConfig: {
-			external: process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['pg-native'] : undefined
-		}
 	},
 	// App meta configuration
 	app: {
@@ -116,7 +100,7 @@ export default defineNuxtConfig({
 		fallback: 'light'
 	},
 	// Runtime configuration
-	runtimeConfig:  generateRuntimeConfig(),
+	runtimeConfig: generateRuntimeConfig(),
 	// Build configuration
 	routeRules: {
 		'/': { prerender: true }
@@ -130,6 +114,22 @@ export default defineNuxtConfig({
 		inlineRouteRules: true
 	},
 	compatibilityDate: '2025-01-10',
+
+	nitro: {
+		preset: process.env.NUXT_NITRO_PRESET,
+		prerender: {
+			crawlLinks: true,
+			routes: ['/', '/sitemap.xml', '/robots.txt']
+		},
+		esbuild: {
+			options: {
+				target: 'esnext'
+			}
+		},
+		rollupConfig: {
+			external: process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['pg-native'] : undefined
+		}
+	},
 
 	// Nitro server configuration
 

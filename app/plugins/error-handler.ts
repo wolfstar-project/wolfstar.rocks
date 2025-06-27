@@ -16,5 +16,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 				errorType: 'app',
 				source: 'nuxt-app'
 			}
-		})	);
+		})
+	);
 });

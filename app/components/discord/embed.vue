@@ -36,24 +36,24 @@ const dtf = new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 's
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-embed {
-  @apply mt-1 max-w-fit border-l-4 p-3;
-  border-radius: 0.25rem;
+	@apply mt-1 max-w-fit border-l-4 p-3;
+	border-radius: 0.25rem;
 }
 
 /* Media features */
 .discord-embed-media {
-  @apply rounded max-w-[300px] max-h-[300px] mt-4;
+	@apply rounded max-w-[300px] max-h-[300px] mt-4;
 }
 
 .discord-embed-media-video {
-  @apply h-[225px];
+	@apply h-[225px];
 }
 
 .discord-embed-custom-emoji {
-  @apply inline-block;
+	@apply inline-block;
 }
 
 .discord-embed-custom-emoji-image {
-  @apply w-[18px] h-[18px] align-bottom;
+	@apply w-[18px] h-[18px] align-bottom;
 }
 </style>

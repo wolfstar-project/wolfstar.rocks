@@ -56,8 +56,7 @@ const showManageableOnly = ref(false);
 
 // Computed filtered guilds
 const filteredGuilds = computed(() => {
-	if (!props.guilds) 
-return [];
+	if (!props.guilds) return [];
 
 	let filtered = [...props.guilds];
 

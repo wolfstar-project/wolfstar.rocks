@@ -39,8 +39,7 @@ export default defineEventHandler({
 
 		// Fetch user data
 		const user = await useApi(rest)
-			.users
-.getCurrent()
+			.users.getCurrent()
 			.catch(() => null);
 		if (!user) {
 			throw createError({
@@ -51,8 +50,7 @@ export default defineEventHandler({
 
 		// Fetch guilds
 		const guilds = await useApi(rest)
-			.users
-.getGuilds()
+			.users.getGuilds()
 			.catch(() => null);
 		if (!guilds) {
 			throw createError({

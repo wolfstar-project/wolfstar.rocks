@@ -77,8 +77,6 @@ export async function handleApiError(error: unknown, event: any, metadata: { req
 	isServerError ? useLogger('API').error(logMessage, logData) : useLogger('API').warn(logMessage, logData);
 }
 
-
-
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 	const memberRolePermissions = BigInt((member as unknown as { permissions: string }).permissions);
 	return roles.length === 0
@@ -87,30 +85,25 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 }
 
 async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boolean> {
-	if (guild.owner_id === member.user.id) 
-return true;
+	if (guild.owner_id === member.user.id) return true;
 
 	const settings = await readSettings(guild.id);
 	return isAdmin(member, settings.rolesAdmin);
 }
 
 async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGuild, guild: APIGuild | undefined): Promise<boolean> {
-	if (oauthGuild.owner) 
-return true;
-	if (typeof guild === 'undefined') 
-return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild);
+	if (oauthGuild.owner) return true;
+	if (typeof guild === 'undefined') return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild);
 
 	const member = await useApi().guilds.getMember(guild.id, id);
-	if (!member) 
-return false;
+	if (!member) return false;
 
 	return canManage(guild, member);
 }
 
 async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
 	const guild = await useApi()
-		.guilds
-.get(data.id, {
+		.guilds.get(data.id, {
 			with_counts: true
 		})
 		.catch(() => undefined);
@@ -159,8 +152,7 @@ async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGui
 }
 
 export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): Promise<TransformedLoginData> {
-	if (!user || !guilds) 
-return { user, guilds };
+	if (!user || !guilds) return { user, guilds };
 
 	const userId = user.id;
 

@@ -154,10 +154,10 @@ function handleSubmit(values: Record<string, number | keyof typeof unitMap>) {
 @reference "@/assets/css/main.css";
 
 .input-error {
-  @apply border-error;
+	@apply border-error;
 }
 
 .text-error {
-  @apply text-error;
+	@apply text-error;
 }
 </style>

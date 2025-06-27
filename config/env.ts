@@ -1,4 +1,4 @@
-import { Env } from '#shared/types/index';
+import { Env } from '#shared/types';
 import Git from 'simple-git';
 import { isDevelopment } from 'std-env';
 

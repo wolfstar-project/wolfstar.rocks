@@ -11,19 +11,25 @@
 import 'vue-sonner/style.css';
 
 const router = useRouter();
-const route = useRoute();
 const appName = ref<'wolfstar' | 'staryl'>('wolfstar');
+
+// Watch for route changes to update appName
 watch(
 	router.currentRoute,
-	(v) => {
-		if (v.path.startsWith('/staryl')) appName.value = 'staryl';
-		else appName.value = 'wolfstar';
+	(route) => {
+		switch (route.path) {
+			case '/staryl':
+				appName.value = 'staryl';
+				break;
+			default:
+				appName.value = 'wolfstar';
+		}
 	},
 	{ immediate: true }
 );
 
-useHead({
-	meta: [{ property: 'og:title', content: `${appName.value} - ${route.meta.title}` }]
+useSeoMeta({
+	title: appName.value
 });
 
 provide(ProviderAppNameKey, appName);

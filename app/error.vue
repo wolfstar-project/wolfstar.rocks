@@ -156,11 +156,12 @@ function handleReturnHome() {
 // SEO and meta configuration
 defineOgImageComponent('NuxtSeo', {
 	title: statusCode.value.toString(),
-	description: error.statusText
+	description: error.statusMessage
 });
 
-useHead({
-	meta: [{ property: 'og:title', content: `WolfStar - ${statusCode.value}` }]
+useSeoMeta({
+	title: statusCode.value.toString(),
+	description: error.statusMessage
 });
 
 // App name provider for layout consistency
@@ -171,10 +172,12 @@ const appName = ref<'wolfstar' | 'staryl'>('wolfstar');
 watch(
 	router.currentRoute,
 	(route) => {
-		if (route.path.startsWith('/staryl')) {
-			appName.value = 'staryl';
-		} else {
-			appName.value = 'wolfstar';
+		switch (route.path) {
+			case '/staryl':
+				appName.value = 'staryl';
+				break;
+			default:
+				appName.value = 'wolfstar';
 		}
 	},
 	{ immediate: true }
@@ -188,82 +191,62 @@ provide(ProviderAppNameKey, appName);
 @reference '@/assets/css/main.css';
 
 @keyframes blink {
-	0%,
-	100% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0;
-	}
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 @keyframes hang {
-	0%,
-	100% {
-		transform: rotate(15deg) translateY(0);
-	}
-	50% {
-		transform: rotate(-15deg) translateY(-10px);
-	}
+  0%,
+  100% {
+    transform: rotate(15deg) translateY(0);
+  }
+  50% {
+    transform: rotate(-15deg) translateY(-10px);
+  }
 }
 
 @keyframes tilt {
-	0%,
-	100% {
-		transform: rotate(-5deg) scale(1);
-	}
-	50% {
-		transform: rotate(5deg) scale(1.05);
-	}
+  0%,
+  100% {
+    transform: rotate(-5deg) scale(1);
+  }
+  50% {
+    transform: rotate(5deg) scale(1.05);
+  }
 }
 
 @keyframes inspect {
-	0%,
-	100% {
-		transform: rotate(-15deg) scale(1);
-	}
-	50% {
-		transform: rotate(0deg) scale(1.1);
-	}
+  0%,
+  100% {
+    transform: rotate(-15deg) scale(1);
+  }
+  50% {
+    transform: rotate(0deg) scale(1.1);
+  }
 }
 
 @keyframes pulse {
-	0%,
-	100% {
-		transform: scale(1);
-		opacity: 1;
-	}
-	50% {
-		transform: scale(1.02);
-		opacity: 0.9;
-	}
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
 }
 
 .relative.mx-auto.max-w-\[320px\] {
-	animation: pulse 3s infinite ease-in-out;
+  animation: pulse 3s infinite ease-in-out;
 }
 
 .perspective-1000 {
-	perspective: 1000px;
-}
-
-.btn {
-	position: relative;
-	overflow: hidden;
-}
-
-.btn::after {
-	position: absolute;
-	top: 0;
-	left: -100%;
-	transition: 0.5s;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-	width: 100%;
-	height: 100%;
-	content: '';
-}
-
-.btn:hover::after {
-	left: 100%;
+  perspective: 1000px;
 }
 </style>

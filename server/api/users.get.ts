@@ -1,7 +1,9 @@
+import { Result } from '@sapphire/result';
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish';
 import authMiddleware from '~~/server/utils/middlewares/auth';
 import { createRateLimit } from '~~/server/utils/middlewares/ratelimit';
 import useApi from '~~/shared/utils/api';
+import { setRest } from '~~/shared/utils/rest';
 import { seconds } from '~~/shared/utils/times';
 
 defineRouteMeta({
@@ -33,31 +35,28 @@ export default defineEventHandler({
 		}
 
 		// Initialize REST client
-		const rest = useRest({
-			authPrefix: 'Bearer'
-		}).setToken(tokens.access_token);
+		setRest({
+			token: tokens.access_token
+		});
 
 		// Fetch user data
-		const user = await useApi(rest)
-			.users.getCurrent()
-			.catch(() => null);
-		if (!user) {
+
+		const user = (await Result.fromAsync(async () => useApi().users.getCurrent())).unwrapOrElse((error) => {
 			throw createError({
 				statusCode: 500,
-				message: 'Failed to fetch user'
+				message: 'Failed to fetch user',
+				stack: error instanceof Error ? error.stack : undefined
 			});
-		}
+		});
 
 		// Fetch guilds
-		const guilds = await useApi(rest)
-			.users.getGuilds()
-			.catch(() => null);
-		if (!guilds) {
+		const guilds = (await Result.fromAsync(async () => useApi().users.getGuilds())).unwrapOrElse((error) => {
 			throw createError({
 				statusCode: 500,
-				message: 'Failed to fetch guilds'
+				message: 'Failed to fetch guilds',
+				stack: error instanceof Error ? error.stack : undefined
 			});
-		}
+		});
 
 		// Return transformed or raw data based on query param
 		return await transformOauthGuildsAndUser({

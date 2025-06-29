@@ -1,6 +1,6 @@
 <template>
 	<div class="discord-message-avatar-wrapper" :class="size.classes">
-		<nuxt-img v-if="profile.app" :src="`/img/avatars/${user}.png`" :width="size.dimensions" :height="size.dimensions" alt="Avatar" />
+		<nuxt-img v-if="profile.app" :src="`/avatars/${user}.png`" :width="size.dimensions" :height="size.dimensions" alt="Avatar" />
 		<ShadIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie h-full w-full" />
 		<ShadIcon v-else name="ph:shooting-star-fill" class="h-full w-full text-info" />
 	</div>
@@ -20,14 +20,14 @@ const Sizes = {
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-message-avatar-wrapper {
-	@apply flex-none select-none overflow-hidden rounded-full;
+  @apply flex-none select-none overflow-hidden rounded-full;
 }
 
 .discord-message-avatar.baddie {
-	filter: drop-shadow(0 0 0.2rem oklch(var(--er) / 0.4));
+  filter: drop-shadow(0 0 0.2rem oklch(var(--er) / 0.4));
 }
 
 .discord-message-avatar.baddie :deep(path) {
-	@apply fill-error;
+  @apply fill-error;
 }
 </style>

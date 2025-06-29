@@ -34,7 +34,7 @@ export default defineOAuthDiscordEventHandler({
 			tokens: RESTPostOAuth2AccessTokenResult;
 		}
 	) {
-		useLogger('WolfStar Auth').info(`Discord OAuth success: ${user.global_name ?? user.username}`);
+		useLogger('@wolfstar/auth').info(`Discord OAuth success: ${user.global_name ?? user.username}`);
 		// Save the user and tokens to the session
 		const userSession = await setUserSession(
 			event,
@@ -55,13 +55,13 @@ export default defineOAuthDiscordEventHandler({
 				maxAge: 60 * 60 * 24 * 7 // 1 week
 			}
 		);
-		useLogger('WolfStar Auth').info(`User session set: ${userSession.id}\n${JSON.stringify(userSession)}`);
+		useLogger('@wolfstar/auth').info(`User session set: ${userSession.id}`, userSession);
 		// Redirect to the home page
 		return sendRedirect(event, '/');
 	},
 
 	async onError(event: H3Event, error: Error) {
-		useLogger('WolfStar Auth').error('Discord OAuth error', error);
+		useLogger('@wolfstar/auth').error('Discord OAuth error', error);
 
 		return sendError(
 			event,

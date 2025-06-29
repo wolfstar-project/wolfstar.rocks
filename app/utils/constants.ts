@@ -105,7 +105,7 @@ export const OtherApps = {
 	WolfStar: {
 		name: 'WolfStar',
 		explore: '/',
-		avatar: '/img/avatars/wolfstar.png',
+		avatar: '/avatars/wolfstar.png',
 		invite: Invites.WolfStar,
 		purposes: ['Moderation', 'Logging'],
 		description: "An app to help you manage your server's moderation and logging."
@@ -113,7 +113,7 @@ export const OtherApps = {
 	Staryl: {
 		name: 'Staryl',
 		explore: '/',
-		avatar: '/img/avatars/staryl.png',
+		avatar: '/avatars/staryl.png',
 		invite: Invites.WolfStar,
 		purposes: ['Social', 'Notification'],
 		description: "An app to help you manage your server's social notifications (Twitch, Instragram and etc.)."
@@ -123,7 +123,7 @@ export const OtherApps = {
 export interface OtherApp {
 	name: string;
 	explore: `/${string}`;
-	avatar: `/img/avatars/${string}`;
+	avatar: `/avatars/${string}`;
 	invite: string;
 	purposes: readonly string[];
 	description: string;

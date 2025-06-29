@@ -8,7 +8,7 @@
 			</div>
 			<slot></slot>
 			<div v-if="footer" class="mt-2 flex items-center gap-2 text-sm">
-				<nuxt-img v-if="footer.icon" src="/img/avatars/wolfstar.png" width="16" height="16" class="h-4 w-4 rounded-full" />
+				<nuxt-img v-if="footer.icon" src="/avatars/wolfstar.png" width="16" height="16" class="h-4 w-4 rounded-full" />
 				<span class="text-sm">
 					{{ footer.text }}
 					<span v-if="timestamp">• {{ dtf.format(timestamp) }}</span>
@@ -36,24 +36,24 @@ const dtf = new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 's
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-embed {
-	@apply mt-1 max-w-fit border-l-4 p-3;
-	border-radius: 0.25rem;
+  @apply mt-1 max-w-fit border-l-4 p-3;
+  border-radius: 0.25rem;
 }
 
 /* Media features */
 .discord-embed-media {
-	@apply rounded max-w-[300px] max-h-[300px] mt-4;
+  @apply rounded max-w-[300px] max-h-[300px] mt-4;
 }
 
 .discord-embed-media-video {
-	@apply h-[225px];
+  @apply h-[225px];
 }
 
 .discord-embed-custom-emoji {
-	@apply inline-block;
+  @apply inline-block;
 }
 
 .discord-embed-custom-emoji-image {
-	@apply w-[18px] h-[18px] align-bottom;
+  @apply w-[18px] h-[18px] align-bottom;
 }
 </style>

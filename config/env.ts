@@ -32,6 +32,7 @@ export async function getGitInfo() {
 
 export async function getEnv() {
 	const { commit, shortCommit, branch } = await getGitInfo();
-	const env = isDevelopment ? Env.Dev : Env.Release;
+
+	const env = isDevelopment ? Env.Dev : process.env.CF_PAGES_BRANCH === 'main' ? Env.Prod : (process.env.CF_PAGES_BRANCH ?? 'unknown');
 	return { commit, shortCommit, branch, env } as const;
 }

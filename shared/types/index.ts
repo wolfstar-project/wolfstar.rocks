@@ -4,13 +4,14 @@ export interface BuildInfo {
 	shortCommit: string;
 	time: number;
 	branch: string;
-	env: Env.Canary | Env.Dev | Env.Release;
+	env: Env.Canary | Env.Dev | Env.Release | Env.Prod;
 }
 
 export enum Env {
 	Canary = 'canary',
-	Dev = 'dev',
-	Release = 'release'
+	Dev = 'development',
+	Release = 'release',
+	Prod = 'production'
 }
 
 export {};

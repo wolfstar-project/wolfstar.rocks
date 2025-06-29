@@ -5,13 +5,11 @@ main = "./dist/server/index.mjs"
 routes = [ { pattern = "wolfstar.rocks", custom_domain = true } ]
 assets = { directory = "./dist/public/", binding = "ASSETS", run_worker_first = true }
 
-
 [env.development]
 name = "wolfstar-site"
 main = ".output/server/index.mjs"
 assets = { directory = "./public/", binding = "ASSETS", run_worker_first = true }
 routes = [ { pattern = "localhost:3000", custom_domain = true } ]
-
 
 [env.staging]
 name = "wolfstar-site"

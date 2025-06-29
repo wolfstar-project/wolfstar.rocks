@@ -41,18 +41,18 @@ npx shadcn-vue@latest add accordion
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-</script>
-
 <template>
-	<Accordion type="single" collapsible>
-		<AccordionItem value="item-1">
-			<AccordionTrigger>Is it accessible?</AccordionTrigger>
-			<AccordionContent> Yes. It adheres to the WAI-ARIA design pattern. </AccordionContent>
-		</AccordionItem>
-	</Accordion>
+  <Accordion type="single" collapsible>
+    <AccordionItem value="item-1">
+      <AccordionTrigger>Is it accessible?</AccordionTrigger>
+      <AccordionContent> Yes. It adheres to the WAI-ARIA design pattern. </AccordionContent>
+    </AccordionItem>
+  </Accordion>
 </template>
+
+<script setup lang="ts">
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+</script>
 ```
 
 ---
@@ -75,16 +75,16 @@ npx shadcn-vue@latest add alert
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-</script>
-
 <template>
-	<Alert>
-		<AlertTitle>Heads up!</AlertTitle>
-		<AlertDescription> You can add components to your app using the cli. </AlertDescription>
-	</Alert>
+  <Alert>
+    <AlertTitle>Heads up!</AlertTitle>
+    <AlertDescription> You can add components to your app using the cli. </AlertDescription>
+  </Alert>
 </template>
+
+<script setup lang="ts">
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+</script>
 ```
 
 ## Examples
@@ -119,37 +119,37 @@ npx shadcn-vue@latest add alert-dialog
 ## Usage
 
 ```vue
+<template>
+  <AlertDialog>
+    <AlertDialogTrigger>Open</AlertDialogTrigger>
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+        <AlertDialogDescription>
+          This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+        <AlertDialogAction>Continue</AlertDialogAction>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+  </AlertDialog>
+</template>
+
 <script setup lang="ts">
 import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-	AlertDialogTrigger
-} from '@/components/ui/alert-dialog';
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 </script>
-
-<template>
-	<AlertDialog>
-		<AlertDialogTrigger>Open</AlertDialogTrigger>
-		<AlertDialogContent>
-			<AlertDialogHeader>
-				<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-				<AlertDialogDescription>
-					This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-				</AlertDialogDescription>
-			</AlertDialogHeader>
-			<AlertDialogFooter>
-				<AlertDialogCancel>Cancel</AlertDialogCancel>
-				<AlertDialogAction>Continue</AlertDialogAction>
-			</AlertDialogFooter>
-		</AlertDialogContent>
-	</AlertDialog>
-</template>
 ```
 
 ---
@@ -247,17 +247,17 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { AspectRatio } from '@/components/ui/aspect-ratio';
-</script>
-
 <template>
-	<div class="w-[450px]">
-		<AspectRatio :ratio="16 / 9">
-			<img src="..." alt="Image" class="h-full w-full rounded-md object-cover" />
-		</AspectRatio>
-	</div>
+  <div class="w-[450px]">
+    <AspectRatio :ratio="16 / 9">
+      <img src="..." alt="Image" class="h-full w-full rounded-md object-cover" />
+    </AspectRatio>
+  </div>
 </template>
+
+<script setup lang="ts">
+import { AspectRatio } from '@/components/ui/aspect-ratio'
+</script>
 ```
 
 ---
@@ -408,31 +408,31 @@ We're using [`useColorMode`](https://vueuse.org/core/usecolormode/) from [`@vueu
 > Reactive color mode (dark / light / customs) with auto data persistence.
 
 ```vue
-<script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Icon } from '@iconify/vue';
-import { useColorMode } from '@vueuse/core';
-
-const mode = useColorMode();
-</script>
-
 <template>
-	<DropdownMenu>
-		<DropdownMenuTrigger as-child>
-			<Button variant="outline">
-				<Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-				<Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-				<span class="sr-only">Toggle theme</span>
-			</Button>
-		</DropdownMenuTrigger>
-		<DropdownMenuContent align="end">
-			<DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
-			<DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
-			<DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
-		</DropdownMenuContent>
-	</DropdownMenu>
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline">
+        <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+        <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        <span class="sr-only">Toggle theme</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
+      <DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
+      <DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
 </template>
+
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+import { useColorMode } from '@vueuse/core'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+
+const mode = useColorMode()
+</script>
 ```
 
 ### Display the mode toggle
@@ -480,9 +480,9 @@ The prefix to use for your Tailwind CSS utility classes. Components will be adde
 
 ```json title="components.json"
 {
-	"tailwind": {
-		"prefix": "tw-"
-	}
+  "tailwind": {
+    "prefix": "tw-"
+  }
 }
 ```
 
@@ -507,9 +507,9 @@ Import alias for your utility functions.
 
 ```json title="components.json"
 {
-	"aliases": {
-		"utils": "@/lib/utils"
-	}
+  "aliases": {
+    "utils": "@/lib/utils"
+  }
 }
 ```
 
@@ -519,9 +519,9 @@ Import alias for your components.
 
 ```json title="components.json"
 {
-	"aliases": {
-		"components": "@/components"
-	}
+  "aliases": {
+    "components": "@/components"
+  }
 }
 ```
 
@@ -533,9 +533,9 @@ The CLI will use the `aliases.ui` value to determine where to place your `ui` co
 
 ```json title="components.json"
 {
-	"aliases": {
-		"ui": "@/app/ui"
-	}
+  "aliases": {
+    "ui": "@/app/ui"
+  }
 }
 ```
 
@@ -545,9 +545,9 @@ Import alias for `lib` functions such as `cn` or `valueUpdater`.
 
 ```json title="components.json"
 {
-	"aliases": {
-		"lib": "@/lib"
-	}
+  "aliases": {
+    "lib": "@/lib"
+  }
 }
 ```
 
@@ -557,9 +557,9 @@ Import alias for `composables` such as `useMediaQuery` or `useToast`.
 
 ```json title="components.json"
 {
-	"aliases": {
-		"composables": "@/composables"
-	}
+  "aliases": {
+    "composables": "@/composables"
+  }
 }
 ```
 
@@ -585,35 +585,35 @@ npx shadcn-vue@latest add context-menu
 ## Usage
 
 ```vue
+<template>
+  <ContextMenu>
+    <ContextMenuTrigger>Right click</ContextMenuTrigger>
+    <ContextMenuContent>
+      <ContextMenuItem>Profile</ContextMenuItem>
+      <ContextMenuItem>Billing</ContextMenuItem>
+      <ContextMenuItem>Team</ContextMenuItem>
+      <ContextMenuItem>Subscription</ContextMenuItem>
+    </ContextMenuContent>
+  </ContextMenu>
+</template>
+
 <script setup lang="ts">
 import {
-	ContextMenu,
-	ContextMenuCheckboxItem,
-	ContextMenuContent,
-	ContextMenuItem,
-	ContextMenuLabel,
-	ContextMenuRadioGroup,
-	ContextMenuRadioItem,
-	ContextMenuSeparator,
-	ContextMenuShortcut,
-	ContextMenuSub,
-	ContextMenuSubContent,
-	ContextMenuSubTrigger,
-	ContextMenuTrigger
-} from '@/components/ui/context-menu';
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger
+} from '@/components/ui/context-menu'
 </script>
-
-<template>
-	<ContextMenu>
-		<ContextMenuTrigger>Right click</ContextMenuTrigger>
-		<ContextMenuContent>
-			<ContextMenuItem>Profile</ContextMenuItem>
-			<ContextMenuItem>Billing</ContextMenuItem>
-			<ContextMenuItem>Team</ContextMenuItem>
-			<ContextMenuItem>Subscription</ContextMenuItem>
-		</ContextMenuContent>
-	</ContextMenu>
-</template>
 ```
 
 ---
@@ -826,55 +826,55 @@ formatted, sorted and filtered.
 Next, we'll create a `<DataTable />` component to render our table.
 
 ```vue
-<script setup lang="ts" generic="TData, TValue">
-import type { ColumnDef } from '@tanstack/vue-table';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+<template>
+  <div class="rounded-md border">
+    <Table>
+      <TableHeader>
+        <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <TableHead v-for="header in headerGroup.headers" :key="header.id">
+            <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header" :props="header.getContext()" />
+          </TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <template v-if="table.getRowModel().rows?.length">
+          <TableRow v-for="row in table.getRowModel().rows" :key="row.id" :data-state="row.getIsSelected() ? 'selected' : undefined">
+            <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
+              <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+            </TableCell>
+          </TableRow>
+        </template>
+        <template v-else>
+          <TableRow>
+            <TableCell :colspan="columns.length" class="h-24 text-center"> No results. </TableCell>
+          </TableRow>
+        </template>
+      </TableBody>
+    </Table>
+  </div>
+</template>
 
-import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table';
+<script setup lang="ts" generic="TData, TValue">
+import type { ColumnDef } from '@tanstack/vue-table'
+import { FlexRender, getCoreRowModel, useVueTable } from '@tanstack/vue-table'
+
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 const props = defineProps<{
-	columns: ColumnDef<TData, TValue>[];
-	data: TData[];
-}>();
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+}>()
 
 const table = useVueTable({
-	get data() {
-		return props.data;
-	},
-	get columns() {
-		return props.columns;
-	},
-	getCoreRowModel: getCoreRowModel()
-});
+  get data() {
+    return props.data
+  },
+  get columns() {
+    return props.columns
+  },
+  getCoreRowModel: getCoreRowModel()
+})
 </script>
-
-<template>
-	<div class="rounded-md border">
-		<Table>
-			<TableHeader>
-				<TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
-					<TableHead v-for="header in headerGroup.headers" :key="header.id">
-						<FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header" :props="header.getContext()" />
-					</TableHead>
-				</TableRow>
-			</TableHeader>
-			<TableBody>
-				<template v-if="table.getRowModel().rows?.length">
-					<TableRow v-for="row in table.getRowModel().rows" :key="row.id" :data-state="row.getIsSelected() ? 'selected' : undefined">
-						<TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-							<FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
-						</TableCell>
-					</TableRow>
-				</template>
-				<template v-else>
-					<TableRow>
-						<TableCell :colspan="columns.length" class="h-24 text-center"> No results. </TableCell>
-					</TableRow>
-				</template>
-			</TableBody>
-		</Table>
-	</div>
-</template>
 ```
 
 <Callout>
@@ -890,37 +890,37 @@ const table = useVueTable({
 Finally, we'll render our table in our index component.
 
 ```vue
-<script setup lang="ts">
-import type { Payment } from './components/columns';
-import { onMounted, ref } from 'vue';
-import { columns } from './components/columns';
-import DataTable from './components/DataTable.vue';
+<template>
+  <div class="container mx-auto py-10">
+    <DataTable :columns="columns" :data="data" />
+  </div>
+</template>
 
-const data = ref<Payment[]>([]);
+<script setup lang="ts">
+import type { Payment } from './components/columns'
+import { onMounted, ref } from 'vue'
+import { columns } from './components/columns'
+import DataTable from './components/DataTable.vue'
+
+const data = ref<Payment[]>([])
 
 async function getData(): Promise<Payment[]> {
-	// Fetch data from your API here.
-	return [
-		{
-			id: '728ed52f',
-			amount: 100,
-			status: 'pending',
-			email: 'm@example.com'
-		}
-		// ...
-	];
+  // Fetch data from your API here.
+  return [
+    {
+      id: '728ed52f',
+      amount: 100,
+      status: 'pending',
+      email: 'm@example.com'
+    }
+    // ...
+  ]
 }
 
 onMounted(async () => {
-	data.value = await getData();
-});
+  data.value = await getData()
+})
 </script>
-
-<template>
-	<div class="container mx-auto py-10">
-		<DataTable :columns="columns" :data="data" />
-	</div>
-</template>
 ```
 
 </Steps>
@@ -936,23 +936,23 @@ Let's format the amount cell to display the dollar amount. We'll also align the 
 Update the `header` and `cell` definitions for amount as follows:
 
 ```ts
-import { h } from 'vue';
+import { h } from 'vue'
 
 export const columns: ColumnDef<Payment>[] = [
-	{
-		accessorKey: 'amount',
-		header: () => h('div', { class: 'text-right' }, 'Amount'),
-		cell: ({ row }) => {
-			const amount = Number.parseFloat(row.getValue('amount'));
-			const formatted = new Intl.NumberFormat('en-US', {
-				style: 'currency',
-				currency: 'USD'
-			}).format(amount);
+  {
+    accessorKey: 'amount',
+    header: () => h('div', { class: 'text-right' }, 'Amount'),
+    cell: ({ row }) => {
+      const amount = Number.parseFloat(row.getValue('amount'))
+      const formatted = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount)
 
-			return h('div', { class: 'text-right font-medium' }, formatted);
-		}
-	}
-];
+      return h('div', { class: 'text-right font-medium' }, formatted)
+    }
+  }
+]
 ```
 
 You can use the same approach to format other cells and headers.
@@ -967,46 +967,46 @@ Let's add row actions to our table. We'll use a `<Dropdown />` component for thi
 ### Add the following into your `DataTableDropDown.vue` component
 
 ```vue
+<template>
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="ghost" class="h-8 w-8 p-0">
+        <span class="sr-only">Open menu</span>
+        <MoreHorizontal class="h-4 w-4" />
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      <DropdownMenuItem @click="copy(payment.id)"> Copy payment ID </DropdownMenuItem>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>View customer</DropdownMenuItem>
+      <DropdownMenuItem>View payment details</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</template>
+
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
+import { MoreHorizontal } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { MoreHorizontal } from 'lucide-vue-next';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 
 defineProps<{
-	payment: {
-		id: string;
-	};
-}>();
+  payment: {
+    id: string
+  }
+}>()
 
 function copy(id: string) {
-	navigator.clipboard.writeText(id);
+  navigator.clipboard.writeText(id)
 }
 </script>
-
-<template>
-	<DropdownMenu>
-		<DropdownMenuTrigger as-child>
-			<Button variant="ghost" class="h-8 w-8 p-0">
-				<span class="sr-only">Open menu</span>
-				<MoreHorizontal class="h-4 w-4" />
-			</Button>
-		</DropdownMenuTrigger>
-		<DropdownMenuContent align="end">
-			<DropdownMenuLabel>Actions</DropdownMenuLabel>
-			<DropdownMenuItem @click="copy(payment.id)"> Copy payment ID </DropdownMenuItem>
-			<DropdownMenuSeparator />
-			<DropdownMenuItem>View customer</DropdownMenuItem>
-			<DropdownMenuItem>View payment details</DropdownMenuItem>
-		</DropdownMenuContent>
-	</DropdownMenu>
-</template>
 ```
 
 ### Update columns definition
@@ -1014,27 +1014,27 @@ function copy(id: string) {
 Update our columns definition to add a new `actions` column. The `actions` cell returns a `<Dropdown />` component.
 
 ```ts
-import DropdownAction from '@/components/DataTableDropDown.vue';
-import { ColumnDef } from '@tanstack/vue-table';
+import { ColumnDef } from '@tanstack/vue-table'
+import DropdownAction from '@/components/DataTableDropDown.vue'
 
 export const columns: ColumnDef<Payment>[] = [
-	// ...
-	{
-		id: 'actions',
-		enableHiding: false,
-		cell: ({ row }) => {
-			const payment = row.original;
+  // ...
+  {
+    id: 'actions',
+    enableHiding: false,
+    cell: ({ row }) => {
+      const payment = row.original
 
-			return h(
-				'div',
-				{ class: 'relative' },
-				h(DropdownAction, {
-					payment
-				})
-			);
-		}
-	}
-];
+      return h(
+        'div',
+        { class: 'relative' },
+        h(DropdownAction, {
+          payment
+        })
+      )
+    }
+  }
+]
 ```
 
 You can access the row data using `row.original` in the `cell` function. Use this to handle actions for your row eg. use the `id` to make a DELETE call to your API.
@@ -1072,32 +1072,32 @@ This will automatically paginate your rows into pages of 10. See the [pagination
 We can add pagination controls to our table using the `<Button />` component and the `table.previousPage()`, `table.nextPage()` API methods.
 
 ```vue
+<template>
+  <div>
+    <div class="rounded-md border">
+      <Table> { // .... } </Table>
+    </div>
+    <div class="flex items-center justify-end space-x-2 py-4">
+      <Button variant="outline" size="sm" :disabled="!table.getCanPreviousPage()" @click="table.previousPage()"> Previous </Button>
+      <Button variant="outline" size="sm" :disabled="!table.getCanNextPage()" @click="table.nextPage()"> Next </Button>
+    </div>
+  </div>
+</template>
+
 <script lang="ts" generic="TData, TValue">
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 
 const table = useVueTable({
-	get data() {
-		return props.data;
-	},
-	get columns() {
-		return props.columns;
-	},
-	getCoreRowModel: getCoreRowModel(),
-	getPaginationRowModel: getPaginationRowModel()
-});
+  get data() {
+    return props.data
+  },
+  get columns() {
+    return props.columns
+  },
+  getCoreRowModel: getCoreRowModel(),
+  getPaginationRowModel: getPaginationRowModel()
+})
 </script>
-
-<template>
-	<div>
-		<div class="rounded-md border">
-			<Table> { // .... } </Table>
-		</div>
-		<div class="flex items-center justify-end space-x-2 py-4">
-			<Button variant="outline" size="sm" :disabled="!table.getCanPreviousPage()" @click="table.previousPage()"> Previous </Button>
-			<Button variant="outline" size="sm" :disabled="!table.getCanNextPage()" @click="table.nextPage()"> Next </Button>
-		</div>
-	</div>
-</template>
 ```
 
 See [Reusable Components](#reusable-components) section for a more advanced pagination component.
@@ -1113,19 +1113,19 @@ Let's make the email column sortable.
 ### Add the following into your `utils` file
 
 ```ts
-import type { Updater } from '@tanstack/vue-table';
-import type { ClassValue } from 'clsx';
+import type { Updater } from '@tanstack/vue-table'
+import type { ClassValue } from 'clsx'
 
-import type { Ref } from 'vue';
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import type { Ref } from 'vue'
+import { clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
-	return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs))
 }
 
 export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref) {
-	ref.value = typeof updaterOrValue === 'function' ? updaterOrValue(ref.value) : updaterOrValue;
+  ref.value = typeof updaterOrValue === 'function' ? updaterOrValue(ref.value) : updaterOrValue
 }
 ```
 
@@ -2091,23 +2091,23 @@ npx shadcn-vue@latest add dialog
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-</script>
-
 <template>
-	<Dialog>
-		<DialogTrigger> Edit Profile </DialogTrigger>
-		<DialogContent>
-			<DialogHeader>
-				<DialogTitle>Edit profile</DialogTitle>
-				<DialogDescription> Make changes to your profile here. Click save when you're done. </DialogDescription>
-			</DialogHeader>
+  <Dialog>
+    <DialogTrigger> Edit Profile </DialogTrigger>
+    <DialogContent>
+      <DialogHeader>
+        <DialogTitle>Edit profile</DialogTitle>
+        <DialogDescription> Make changes to your profile here. Click save when you're done. </DialogDescription>
+      </DialogHeader>
 
-			<DialogFooter> Save changes </DialogFooter>
-		</DialogContent>
-	</Dialog>
+      <DialogFooter> Save changes </DialogFooter>
+    </DialogContent>
+  </Dialog>
 </template>
+
+<script setup lang="ts">
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+</script>
 ```
 
 ## Examples
@@ -2242,36 +2242,36 @@ npx shadcn-vue@latest add drawer
 ## Usage
 
 ```vue showLineNumbers
+<template>
+  <Drawer>
+    <DrawerTrigger>Open</DrawerTrigger>
+    <DrawerContent>
+      <DrawerHeader>
+        <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+        <DrawerDescription>This action cannot be undone.</DrawerDescription>
+      </DrawerHeader>
+      <DrawerFooter>
+        <Button>Submit</Button>
+        <DrawerClose>
+          <Button variant="outline"> Cancel </Button>
+        </DrawerClose>
+      </DrawerFooter>
+    </DrawerContent>
+  </Drawer>
+</template>
+
 <script setup lang="ts">
 import {
-	Drawer,
-	DrawerClose,
-	DrawerContent,
-	DrawerDescription,
-	DrawerFooter,
-	DrawerHeader,
-	DrawerTitle,
-	DrawerTrigger
-} from '@/components/ui/drawer';
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger
+} from '@/components/ui/drawer'
 </script>
-
-<template>
-	<Drawer>
-		<DrawerTrigger>Open</DrawerTrigger>
-		<DrawerContent>
-			<DrawerHeader>
-				<DrawerTitle>Are you absolutely sure?</DrawerTitle>
-				<DrawerDescription>This action cannot be undone.</DrawerDescription>
-			</DrawerHeader>
-			<DrawerFooter>
-				<Button>Submit</Button>
-				<DrawerClose>
-					<Button variant="outline"> Cancel </Button>
-				</DrawerClose>
-			</DrawerFooter>
-		</DrawerContent>
-	</Drawer>
-</template>
 ```
 
 ### Scale Background
@@ -2312,30 +2312,30 @@ npx shadcn-vue@latest add dropdown-menu
 ## Usage
 
 ```vue
+<template>
+  <DropdownMenu>
+    <DropdownMenuTrigger>Open</DropdownMenuTrigger>
+    <DropdownMenuContent>
+      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+      <DropdownMenuSeparator />
+      <DropdownMenuItem>Profile</DropdownMenuItem>
+      <DropdownMenuItem>Billing</DropdownMenuItem>
+      <DropdownMenuItem>Team</DropdownMenuItem>
+      <DropdownMenuItem>Subscription</DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</template>
+
 <script setup lang="ts">
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
 </script>
-
-<template>
-	<DropdownMenu>
-		<DropdownMenuTrigger>Open</DropdownMenuTrigger>
-		<DropdownMenuContent>
-			<DropdownMenuLabel>My Account</DropdownMenuLabel>
-			<DropdownMenuSeparator />
-			<DropdownMenuItem>Profile</DropdownMenuItem>
-			<DropdownMenuItem>Billing</DropdownMenuItem>
-			<DropdownMenuItem>Team</DropdownMenuItem>
-			<DropdownMenuItem>Subscription</DropdownMenuItem>
-		</DropdownMenuContent>
-	</DropdownMenu>
-</template>
 ```
 
 ## Examples
@@ -3102,16 +3102,16 @@ npx shadcn-vue@latest add hover-card
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
-</script>
-
 <template>
-	<HoverCard>
-		<HoverCardTrigger>Hover</HoverCardTrigger>
-		<HoverCardContent> The Vue Framework – created and maintained by @vuejs. </HoverCardContent>
-	</HoverCard>
+  <HoverCard>
+    <HoverCardTrigger>Hover</HoverCardTrigger>
+    <HoverCardContent> The Vue Framework – created and maintained by @vuejs. </HoverCardContent>
+  </HoverCard>
 </template>
+
+<script setup lang="ts">
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card'
+</script>
 ```
 
 ---
@@ -3152,13 +3152,13 @@ npx shadcn-vue@latest add input
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Input } from '@/components/ui/input';
-</script>
-
 <template>
-	<Input />
+  <Input />
 </template>
+
+<script setup lang="ts">
+import { Input } from '@/components/ui/input'
+</script>
 ```
 
 ## Examples
@@ -3267,18 +3267,18 @@ To opt-out of TypeScript, you can use the `typescript` flag in your `components.
 
 ```json {9} title="components.json"
 {
-	"style": "default",
-	"tailwind": {
-		"config": "tailwind.config.js",
-		"css": "src/app/globals.css",
-		"baseColor": "zinc",
-		"cssVariables": true
-	},
-	"typescript": false,
-	"aliases": {
-		"utils": "~/lib/utils",
-		"components": "~/components"
-	}
+  "style": "default",
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "src/app/globals.css",
+    "baseColor": "zinc",
+    "cssVariables": true
+  },
+  "typescript": false,
+  "aliases": {
+    "utils": "~/lib/utils",
+    "components": "~/components"
+  }
 }
 ```
 
@@ -3286,11 +3286,11 @@ To configure import aliases, you can use the following `jsconfig.json`:
 
 ```json {4} title="jsconfig.json"
 {
-	"compilerOptions": {
-		"paths": {
-			"@/*": ["./*"]
-		}
-	}
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
 }
 ```
 
@@ -3422,13 +3422,13 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Label } from '@/components/ui/label';
-</script>
-
 <template>
-	<Label for="email">Your email address</Label>
+  <Label for="email">Your email address</Label>
 </template>
+
+<script setup lang="ts">
+import { Label } from '@/components/ui/label'
+</script>
 ```
 
 ---
@@ -3468,15 +3468,15 @@ npx shadcn-vue@latest add switch
 The command above will add the `Switch` component to `resources/js/components/ui/switch`. You can then import it like this:
 
 ```vue {2,7}
-<script setup lang="ts">
-import { Switch } from '@/Components/ui/switch';
-</script>
-
 <template>
-	<div>
-		<Switch />
-	</div>
+  <div>
+    <Switch />
+  </div>
 </template>
+
+<script setup lang="ts">
+import { Switch } from '@/Components/ui/switch'
+</script>
 ```
 
 </Steps>
@@ -3791,25 +3791,25 @@ npx shadcn-vue@latest add menubar
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from '@/components/ui/menubar';
-</script>
-
 <template>
-	<Menubar>
-		<MenubarMenu>
-			<MenubarTrigger>File</MenubarTrigger>
-			<MenubarContent>
-				<MenubarItem> New Tab <MenubarShortcut>⌘T</MenubarShortcut> </MenubarItem>
-				<MenubarItem>New Window</MenubarItem>
-				<MenubarSeparator />
-				<MenubarItem>Share</MenubarItem>
-				<MenubarSeparator />
-				<MenubarItem>Print</MenubarItem>
-			</MenubarContent>
-		</MenubarMenu>
-	</Menubar>
+  <Menubar>
+    <MenubarMenu>
+      <MenubarTrigger>File</MenubarTrigger>
+      <MenubarContent>
+        <MenubarItem> New Tab <MenubarShortcut>⌘T</MenubarShortcut> </MenubarItem>
+        <MenubarItem>New Window</MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem>Share</MenubarItem>
+        <MenubarSeparator />
+        <MenubarItem>Print</MenubarItem>
+      </MenubarContent>
+    </MenubarMenu>
+  </Menubar>
 </template>
+
+<script setup lang="ts">
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarSeparator, MenubarShortcut, MenubarTrigger } from '@/components/ui/menubar'
+</script>
 ```
 
 ---
@@ -3832,31 +3832,31 @@ npx shadcn-vue@latest add navigation-menu
 ## Usage
 
 ```vue
+<template>
+  <NavigationMenu>
+    <NavigationMenuList>
+      <NavigationMenuItem>
+        <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
+        <NavigationMenuContent>
+          <NavigationMenuLink>Link</NavigationMenuLink>
+        </NavigationMenuContent>
+      </NavigationMenuItem>
+    </NavigationMenuList>
+  </NavigationMenu>
+</template>
+
 <script setup lang="ts">
 import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuIndicator,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	NavigationMenuViewport
-} from '@/components/ui/navigation-menu';
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuIndicator,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport
+} from '@/components/ui/navigation-menu'
 </script>
-
-<template>
-	<NavigationMenu>
-		<NavigationMenuList>
-			<NavigationMenuItem>
-				<NavigationMenuTrigger>Item One</NavigationMenuTrigger>
-				<NavigationMenuContent>
-					<NavigationMenuLink>Link</NavigationMenuLink>
-				</NavigationMenuContent>
-			</NavigationMenuItem>
-		</NavigationMenuList>
-	</NavigationMenu>
-</template>
 ```
 
 ## Examples
@@ -3866,16 +3866,16 @@ import {
 When using the Nuxt `<NuxtLink />` component, you can use `navigationMenuTriggerStyle()` to apply the correct styles to the trigger.
 
 ```ts
-import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+import { navigationMenuTriggerStyle } from '@/components/ui/navigation-menu'
 ```
 
 ```vue
 <template>
-	<NavigationMenuItem>
-		<NuxtLink v-slot="{ isActive, href, navigate }" to="/docs" custom>
-			<NavigationMenuLink :active="isActive" :href :class="navigationMenuTriggerStyle()" @click="navigate"> Documentation </NavigationMenuLink>
-		</NuxtLink>
-	</NavigationMenuItem>
+  <NavigationMenuItem>
+    <NuxtLink v-slot="{ isActive, href, navigate }" to="/docs" custom>
+      <NavigationMenuLink :active="isActive" :href :class="navigationMenuTriggerStyle()" @click="navigate"> Documentation </NavigationMenuLink>
+    </NuxtLink>
+  </NavigationMenuItem>
 </template>
 ```
 
@@ -3907,21 +3907,21 @@ npx shadcn-vue@latest add number-field
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Label } from '@/components/ui/label';
-import { NumberField, NumberFieldContent, NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput } from '@/components/ui/number-field';
-</script>
-
 <template>
-	<NumberField>
-		<Label>Age</Label>
-		<NumberFieldContent>
-			<NumberFieldDecrement />
-			<NumberFieldInput />
-			<NumberFieldIncrement />
-		</NumberFieldContent>
-	</NumberField>
+  <NumberField>
+    <Label>Age</Label>
+    <NumberFieldContent>
+      <NumberFieldDecrement />
+      <NumberFieldInput />
+      <NumberFieldIncrement />
+    </NumberFieldContent>
+  </NumberField>
 </template>
+
+<script setup lang="ts">
+import { Label } from '@/components/ui/label'
+import { NumberField, NumberFieldContent, NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput } from '@/components/ui/number-field'
+</script>
 ```
 
 ## Examples
@@ -3973,11 +3973,11 @@ Then, add `@nuxtjs/color-mode` to the modules section of your `nuxt.config.ts`
 
 ```ts
 export default defineNuxtConfig({
-	modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode'],
-	colorMode: {
-		classSuffix: ''
-	}
-});
+  modules: ['@nuxtjs/tailwindcss', '@nuxtjs/color-mode'],
+  colorMode: {
+    classSuffix: ''
+  }
+})
 ```
 
 ### Add a mode toggle
@@ -3993,30 +3993,30 @@ npm install -D @iconify/vue @iconify-json/radix-icons
 ```
 
 ```vue
-<script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Icon } from '@iconify/vue';
-
-const colorMode = useColorMode();
-</script>
-
 <template>
-	<DropdownMenu>
-		<DropdownMenuTrigger as-child>
-			<Button variant="outline">
-				<Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-				<Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-				<span class="sr-only">Toggle theme</span>
-			</Button>
-		</DropdownMenuTrigger>
-		<DropdownMenuContent align="end">
-			<DropdownMenuItem @click="colorMode.preference = 'light'"> Light </DropdownMenuItem>
-			<DropdownMenuItem @click="colorMode.preference = 'dark'"> Dark </DropdownMenuItem>
-			<DropdownMenuItem @click="colorMode.preference = 'system'"> System </DropdownMenuItem>
-		</DropdownMenuContent>
-	</DropdownMenu>
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline">
+        <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+        <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        <span class="sr-only">Toggle theme</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem @click="colorMode.preference = 'light'"> Light </DropdownMenuItem>
+      <DropdownMenuItem @click="colorMode.preference = 'dark'"> Dark </DropdownMenuItem>
+      <DropdownMenuItem @click="colorMode.preference = 'system'"> System </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
 </template>
+
+<script setup lang="ts">
+import { Icon } from '@iconify/vue'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+
+const colorMode = useColorMode()
+</script>
 ```
 
 </Steps>
@@ -4072,15 +4072,15 @@ Replace everything in `assets/css/tailwind.css` with the following:
 Update `nuxt.config.ts` with the following:
 
 ```ts
-import tailwindcss from '@tailwindcss/vite';
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
-	// ...
-	css: ['~/assets/css/tailwind.css'],
-	vite: {
-		plugins: [tailwindcss()]
-	}
-});
+  // ...
+  css: ['~/assets/css/tailwind.css'],
+  vite: {
+    plugins: [tailwindcss()]
+  }
+})
 ```
 
 ### Add `Nuxt` module
@@ -4220,20 +4220,20 @@ declare module '@nuxt/schema' {
 
 ```ts
 export default defineNuxtConfig({
-	// ...
-	modules: ['shadcn-nuxt'],
-	shadcn: {
-		/**
-		 * Prefix for all the imported component
-		 */
-		prefix: '',
-		/**
-		 * Directory that the component lives in.
-		 * @default "./components/ui"
-		 */
-		componentDir: './components/ui'
-	}
-});
+  // ...
+  modules: ['shadcn-nuxt'],
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: '',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './components/ui'
+  }
+})
 ```
 
 ### Run Nuxt Prepare
@@ -4270,9 +4270,9 @@ The command above will add the `Button` component to your project. Nuxt autoImpo
 
 ```vue {3}
 <template>
-	<div>
-		<Button>Click me</Button>
-	</div>
+  <div>
+    <Button>Click me</Button>
+  </div>
 </template>
 ```
 
@@ -4298,41 +4298,41 @@ npx shadcn-vue@latest add pagination
 ## Usage
 
 ```vue
+<template>
+  <Pagination v-slot="{ page }" :items-per-page="10" :total="100" :sibling-count="1" show-edges :default-page="2">
+    <PaginationList v-slot="{ items }" class="flex items-center gap-1">
+      <PaginationFirst />
+      <PaginationPrev />
+
+      <template v-for="(item, index) in items">
+        <PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
+          <Button class="h-10 w-10 p-0" :variant="item.value === page ? 'default' : 'outline'">
+            {{ item.value }}
+          </Button>
+        </PaginationListItem>
+        <PaginationEllipsis v-else :key="item.type" :index="index" />
+      </template>
+
+      <PaginationNext />
+      <PaginationLast />
+    </PaginationList>
+  </Pagination>
+</template>
+
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button'
 
 import {
-	Pagination,
-	PaginationEllipsis,
-	PaginationFirst,
-	PaginationLast,
-	PaginationList,
-	PaginationListItem,
-	PaginationNext,
-	PaginationPrev
-} from '@/components/ui/pagination';
+  Pagination,
+  PaginationEllipsis,
+  PaginationFirst,
+  PaginationLast,
+  PaginationList,
+  PaginationListItem,
+  PaginationNext,
+  PaginationPrev
+} from '@/components/ui/pagination'
 </script>
-
-<template>
-	<Pagination v-slot="{ page }" :items-per-page="10" :total="100" :sibling-count="1" show-edges :default-page="2">
-		<PaginationList v-slot="{ items }" class="flex items-center gap-1">
-			<PaginationFirst />
-			<PaginationPrev />
-
-			<template v-for="(item, index) in items">
-				<PaginationListItem v-if="item.type === 'page'" :key="index" :value="item.value" as-child>
-					<Button class="h-10 w-10 p-0" :variant="item.value === page ? 'default' : 'outline'">
-						{{ item.value }}
-					</Button>
-				</PaginationListItem>
-				<PaginationEllipsis v-else :key="item.type" :index="index" />
-			</template>
-
-			<PaginationNext />
-			<PaginationLast />
-		</PaginationList>
-	</Pagination>
-</template>
 ```
 
 ---
@@ -4390,16 +4390,16 @@ npx shadcn-vue@latest add popover
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-</script>
-
 <template>
-	<Popover>
-		<PopoverTrigger> Open popover </PopoverTrigger>
-		<PopoverContent> Some popover content </PopoverContent>
-	</Popover>
+  <Popover>
+    <PopoverTrigger> Open popover </PopoverTrigger>
+    <PopoverContent> Some popover content </PopoverContent>
+  </Popover>
 </template>
+
+<script setup lang="ts">
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+</script>
 ```
 
 ---
@@ -4448,13 +4448,13 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Progress } from '@/components/ui/progress';
-</script>
-
 <template>
-	<Progress :model-value="33" />
+  <Progress :model-value="33" />
 </template>
+
+<script setup lang="ts">
+import { Progress } from '@/components/ui/progress'
+</script>
 ```
 
 ---
@@ -4479,23 +4479,23 @@ npx shadcn-vue@latest add radio-group
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-</script>
-
 <template>
-	<RadioGroup default-value="option-one">
-		<div class="flex items-center space-x-2">
-			<RadioGroupItem id="option-one" value="option-one" />
-			<Label for="option-one">Option One</Label>
-		</div>
-		<div class="flex items-center space-x-2">
-			<RadioGroupItem id="option-two" value="option-two" />
-			<Label for="option-two">Option Two</Label>
-		</div>
-	</RadioGroup>
+  <RadioGroup default-value="option-one">
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem id="option-one" value="option-one" />
+      <Label for="option-one">Option One</Label>
+    </div>
+    <div class="flex items-center space-x-2">
+      <RadioGroupItem id="option-two" value="option-two" />
+      <Label for="option-two">Option Two</Label>
+    </div>
+  </RadioGroup>
 </template>
+
+<script setup lang="ts">
+import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+</script>
 ```
 
 ## Examples
@@ -5009,17 +5009,17 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-</script>
-
 <template>
-	<ResizablePanelGroup direction="horizontal">
-		<ResizablePanel>One</ResizablePanel>
-		<ResizableHandle />
-		<ResizablePanel>Two</ResizablePanel>
-	</ResizablePanelGroup>
+  <ResizablePanelGroup direction="horizontal">
+    <ResizablePanel>One</ResizablePanel>
+    <ResizableHandle />
+    <ResizablePanel>Two</ResizablePanel>
+  </ResizablePanelGroup>
 </template>
+
+<script setup lang="ts">
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+</script>
 ```
 
 ## Examples
@@ -5092,17 +5092,17 @@ npx shadcn-vue@latest add scroll-area
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { ScrollArea } from '@/components/ui/scroll-area';
-</script>
-
 <template>
-	<ScrollArea class="h-[200px] w-[350px] rounded-md border p-4">
-		Jokester began sneaking into the castle in the middle of the night and leaving jokes all over the place: under the king's pillow, in his soup,
-		even in the royal toilet. The king was furious, but he couldn't seem to stop Jokester. And then, one day, the people of the kingdom discovered
-		that the jokes left by Jokester were so funny that they couldn't help but laugh. And once they started laughing, they couldn't stop.
-	</ScrollArea>
+  <ScrollArea class="h-[200px] w-[350px] rounded-md border p-4">
+    Jokester began sneaking into the castle in the middle of the night and leaving jokes all over the place: under the king's pillow, in his soup,
+    even in the royal toilet. The king was furious, but he couldn't seem to stop Jokester. And then, one day, the people of the kingdom discovered
+    that the jokes left by Jokester were so funny that they couldn't help but laugh. And once they started laughing, they couldn't stop.
+  </ScrollArea>
 </template>
+
+<script setup lang="ts">
+import { ScrollArea } from '@/components/ui/scroll-area'
+</script>
 ```
 
 ## Examples
@@ -5131,23 +5131,23 @@ npx shadcn-vue@latest add select
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-</script>
-
 <template>
-	<Select>
-		<SelectTrigger>
-			<SelectValue placeholder="Select a fruit" />
-		</SelectTrigger>
-		<SelectContent>
-			<SelectGroup>
-				<SelectLabel>Fruits</SelectLabel>
-				<SelectItem value="apple"> Apple </SelectItem>
-			</SelectGroup>
-		</SelectContent>
-	</Select>
+  <Select>
+    <SelectTrigger>
+      <SelectValue placeholder="Select a fruit" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>Fruits</SelectLabel>
+        <SelectItem value="apple"> Apple </SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
 </template>
+
+<script setup lang="ts">
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
+</script>
 ```
 
 ## Examples
@@ -5204,13 +5204,13 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Separator } from '@/components/ui/separator';
-</script>
-
 <template>
-	<Separator label="Or" />
+  <Separator label="Or" />
 </template>
+
+<script setup lang="ts">
+import { Separator } from '@/components/ui/separator'
+</script>
 ```
 
 ---
@@ -5235,23 +5235,23 @@ npx shadcn-vue@latest add sheet
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-</script>
-
 <template>
-	<Sheet>
-		<SheetTrigger>Open</SheetTrigger>
-		<SheetContent>
-			<SheetHeader>
-				<SheetTitle>Are you absolutely sure?</SheetTitle>
-				<SheetDescription>
-					This action cannot be undone. This will permanently delete your account and remove your data from our servers.
-				</SheetDescription>
-			</SheetHeader>
-		</SheetContent>
-	</Sheet>
+  <Sheet>
+    <SheetTrigger>Open</SheetTrigger>
+    <SheetContent>
+      <SheetHeader>
+        <SheetTitle>Are you absolutely sure?</SheetTitle>
+        <SheetDescription>
+          This action cannot be undone. This will permanently delete your account and remove your data from our servers.
+        </SheetDescription>
+      </SheetHeader>
+    </SheetContent>
+  </Sheet>
 </template>
+
+<script setup lang="ts">
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+</script>
 ```
 
 ## Examples
@@ -5326,27 +5326,27 @@ The command above should install the colors for you. If not, copy and paste the 
 
 ```css
 @layer base {
-	:root {
-		--sidebar-background: 0 0% 98%;
-		--sidebar-foreground: 240 5.3% 26.1%;
-		--sidebar-primary: 240 5.9% 10%;
-		--sidebar-primary-foreground: 0 0% 98%;
-		--sidebar-accent: 240 4.8% 95.9%;
-		--sidebar-accent-foreground: 240 5.9% 10%;
-		--sidebar-border: 220 13% 91%;
-		--sidebar-ring: 217.2 91.2% 59.8%;
-	}
+  :root {
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 
-	.dark {
-		--sidebar-background: 240 5.9% 10%;
-		--sidebar-foreground: 240 4.8% 95.9%;
-		--sidebar-primary: 224.3 76.3% 48%;
-		--sidebar-primary-foreground: 0 0% 100%;
-		--sidebar-accent: 240 3.7% 15.9%;
-		--sidebar-accent-foreground: 240 4.8% 95.9%;
-		--sidebar-border: 240 3.7% 15.9%;
-		--sidebar-ring: 217.2 91.2% 59.8%;
-	}
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 }
 ```
 
@@ -6287,27 +6287,27 @@ We use the following CSS variables to theme the sidebar
 
 ```css
 @layer base {
-	:root {
-		--sidebar-background: 0 0% 98%;
-		--sidebar-foreground: 240 5.3% 26.1%;
-		--sidebar-primary: 240 5.9% 10%;
-		--sidebar-primary-foreground: 0 0% 98%;
-		--sidebar-accent: 240 4.8% 95.9%;
-		--sidebar-accent-foreground: 240 5.9% 10%;
-		--sidebar-border: 220 13% 91%;
-		--sidebar-ring: 217.2 91.2% 59.8%;
-	}
+  :root {
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 
-	.dark {
-		--sidebar-background: 240 5.9% 10%;
-		--sidebar-foreground: 240 4.8% 95.9%;
-		--sidebar-primary: 0 0% 98%;
-		--sidebar-primary-foreground: 240 5.9% 10%;
-		--sidebar-accent: 240 3.7% 15.9%;
-		--sidebar-accent-foreground: 240 4.8% 95.9%;
-		--sidebar-border: 240 3.7% 15.9%;
-		--sidebar-ring: 217.2 91.2% 59.8%;
-	}
+  .dark {
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
 }
 ```
 
@@ -6321,11 +6321,11 @@ Here are some tips for styling the sidebar based on different states.
 
 ```vue
 <template>
-	<Sidebar collapsible="icon">
-		<SidebarContent>
-			<SidebarGroup class="group-data-[collapsible=icon]:hidden" />
-		</SidebarContent>
-	</Sidebar>
+  <Sidebar collapsible="icon">
+    <SidebarContent>
+      <SidebarGroup class="group-data-[collapsible=icon]:hidden" />
+    </SidebarContent>
+  </Sidebar>
 </template>
 ```
 
@@ -6333,10 +6333,10 @@ Here are some tips for styling the sidebar based on different states.
 
 ```vue
 <template>
-	<SidebarMenuItem>
-		<SidebarMenuButton />
-		<SidebarMenuAction class="peer-data-[active=true]/menu-button:opacity-100" />
-	</SidebarMenuItem>
+  <SidebarMenuItem>
+    <SidebarMenuButton />
+    <SidebarMenuAction class="peer-data-[active=true]/menu-button:opacity-100" />
+  </SidebarMenuItem>
 </template>
 ```
 
@@ -6380,13 +6380,13 @@ npx shadcn-vue@latest add skeleton
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Skeleton } from '@/components/ui/skeleton';
-</script>
-
 <template>
-	<Skeleton class="h-5 w-[100px] rounded-full" />
+  <Skeleton class="h-5 w-[100px] rounded-full" />
 </template>
+
+<script setup lang="ts">
+import { Skeleton } from '@/components/ui/skeleton'
+</script>
 ```
 
 ## Examples
@@ -6415,13 +6415,13 @@ npx shadcn-vue@latest add slider
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Slider } from '@/components/ui/slider';
-</script>
-
 <template>
-	<Slider :default-value="[33]" :max="100" :step="1" />
+  <Slider :default-value="[33]" :max="100" :step="1" />
 </template>
+
+<script setup lang="ts">
+import { Slider } from '@/components/ui/slider'
+</script>
 ```
 
 ## Examples
@@ -6460,18 +6460,18 @@ npx shadcn-vue@latest add sonner
 Add the following `Toaster` component to your `App.vue` file:
 
 ```vue title="App.vue" {2,6}
-<script setup lang="ts">
-import { Toaster } from '@/components/ui/sonner';
-</script>
-
 <template>
-	<Toaster />
+  <Toaster />
 
-	<!-- Nuxt  -->
-	<ClientOnly>
-		<Toaster />
-	</ClientOnly>
+  <!-- Nuxt  -->
+  <ClientOnly>
+    <Toaster />
+  </ClientOnly>
 </template>
+
+<script setup lang="ts">
+import { Toaster } from '@/components/ui/sonner'
+</script>
 ```
 
 </Steps>
@@ -6479,29 +6479,29 @@ import { Toaster } from '@/components/ui/sonner';
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { toast } from 'vue-sonner';
-</script>
-
 <template>
-	<Button
-		variant="outline"
-		@click="
-			() => {
-				toast('Event has been created', {
-					description: 'Sunday, December 03, 2023 at 9:00 AM',
-					action: {
-						label: 'Undo',
-						onClick: () => console.log('Undo')
-					}
-				});
-			}
-		"
-	>
-		Add to calendar
-	</Button>
+  <Button
+    variant="outline"
+    @click="
+      () => {
+        toast('Event has been created', {
+          description: 'Sunday, December 03, 2023 at 9:00 AM',
+          action: {
+            label: 'Undo',
+            onClick: () => console.log('Undo'),
+          },
+        });
+      }
+    "
+  >
+    Add to calendar
+  </Button>
 </template>
+
+<script setup lang="ts">
+import { toast } from 'vue-sonner'
+import { Button } from '@/components/ui/button'
+</script>
 ```
 
 ## Examples
@@ -6513,13 +6513,13 @@ Related issue https://github.com/unovue/shadcn-vue/issues/462
 Add `pointer-events-auto` class to Toaster component in your `App.vue` file:
 
 ```vue {6}
-<script setup lang="ts">
-import { Toaster } from '@/components/ui/sonner';
-</script>
-
 <template>
-	<Toaster class="pointer-events-auto" />
+  <Toaster class="pointer-events-auto" />
 </template>
+
+<script setup lang="ts">
+import { Toaster } from '@/components/ui/sonner'
+</script>
 ```
 
 <ComponentPreview name="SonnerWithDialog" />
@@ -6546,29 +6546,29 @@ npx shadcn-vue@latest add stepper
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Stepper, StepperDescription, StepperIndicator, StepperItem, StepperSeparator, StepperTitle, StepperTrigger } from '@/components/ui/stepper';
-</script>
-
 <template>
-	<Stepper>
-		<StepperItem :step="1">
-			<StepperTrigger>
-				<StepperIndicator>1</StepperIndicator>
-				<StepperTitle>Step 1</StepperTitle>
-				<StepperDescription>This is the first step</StepperDescription>
-			</StepperTrigger>
-			<StepperSeparator />
-		</StepperItem>
-		<StepperItem :step="2">
-			<StepperTrigger>
-				<StepperIndicator>2</StepperIndicator>
-				<StepperTitle>Step 2</StepperTitle>
-				<StepperDescription>This is the second step</StepperDescription>
-			</StepperTrigger>
-		</StepperItem>
-	</Stepper>
+  <Stepper>
+    <StepperItem :step="1">
+      <StepperTrigger>
+        <StepperIndicator>1</StepperIndicator>
+        <StepperTitle>Step 1</StepperTitle>
+        <StepperDescription>This is the first step</StepperDescription>
+      </StepperTrigger>
+      <StepperSeparator />
+    </StepperItem>
+    <StepperItem :step="2">
+      <StepperTrigger>
+        <StepperIndicator>2</StepperIndicator>
+        <StepperTitle>Step 2</StepperTitle>
+        <StepperDescription>This is the second step</StepperDescription>
+      </StepperTrigger>
+    </StepperItem>
+  </Stepper>
 </template>
+
+<script setup lang="ts">
+import { Stepper, StepperDescription, StepperIndicator, StepperItem, StepperSeparator, StepperTitle, StepperTrigger } from '@/components/ui/stepper'
+</script>
 ```
 
 ## Examples
@@ -6629,25 +6629,25 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Switch } from '@/components/ui/switch';
-</script>
-
 <template>
-	<Switch />
+  <Switch />
 </template>
+
+<script setup lang="ts">
+import { Switch } from '@/components/ui/switch'
+</script>
 ```
 
 # Add icon inside switch thumb
 
 ```vue
 <template>
-	<Switch :model-value="isDark" @update:model-value="toggleTheme">
-		<template #thumb>
-			<Icon v-if="isDark" icon="lucide:moon" class="size-3" />
-			<Icon v-else icon="lucide:sun" class="size-3" />
-		</template>
-	</Switch>
+  <Switch :model-value="isDark" @update:model-value="toggleTheme">
+    <template #thumb>
+      <Icon v-if="isDark" icon="lucide:moon" class="size-3" />
+      <Icon v-else icon="lucide:sun" class="size-3" />
+    </template>
+  </Switch>
 </template>
 ```
 
@@ -6677,31 +6677,31 @@ npx shadcn-vue@latest add table
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-</script>
-
 <template>
-	<Table>
-		<TableCaption>A list of your recent invoices.</TableCaption>
-		<TableHeader>
-			<TableRow>
-				<TableHead class="w-[100px]"> Invoice </TableHead>
-				<TableHead>Status</TableHead>
-				<TableHead>Method</TableHead>
-				<TableHead class="text-right"> Amount </TableHead>
-			</TableRow>
-		</TableHeader>
-		<TableBody>
-			<TableRow>
-				<TableCell class="font-medium"> INV001 </TableCell>
-				<TableCell>Paid</TableCell>
-				<TableCell>Credit Card</TableCell>
-				<TableCell class="text-right"> $250.00 </TableCell>
-			</TableRow>
-		</TableBody>
-	</Table>
+  <Table>
+    <TableCaption>A list of your recent invoices.</TableCaption>
+    <TableHeader>
+      <TableRow>
+        <TableHead class="w-[100px]"> Invoice </TableHead>
+        <TableHead>Status</TableHead>
+        <TableHead>Method</TableHead>
+        <TableHead class="text-right"> Amount </TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      <TableRow>
+        <TableCell class="font-medium"> INV001 </TableCell>
+        <TableCell>Paid</TableCell>
+        <TableCell>Credit Card</TableCell>
+        <TableCell class="text-right"> $250.00 </TableCell>
+      </TableRow>
+    </TableBody>
+  </Table>
 </template>
+
+<script setup lang="ts">
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+</script>
 ```
 
 ## Data Table
@@ -6734,20 +6734,20 @@ npx shadcn-vue@latest add tabs
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-</script>
-
 <template>
-	<Tabs default-value="account" class="w-[400px]">
-		<TabsList>
-			<TabsTrigger value="account"> Account </TabsTrigger>
-			<TabsTrigger value="password"> Password </TabsTrigger>
-		</TabsList>
-		<TabsContent value="account"> Make changes to your account here. </TabsContent>
-		<TabsContent value="password"> Change your password here. </TabsContent>
-	</Tabs>
+  <Tabs default-value="account" class="w-[400px]">
+    <TabsList>
+      <TabsTrigger value="account"> Account </TabsTrigger>
+      <TabsTrigger value="password"> Password </TabsTrigger>
+    </TabsList>
+    <TabsContent value="account"> Make changes to your account here. </TabsContent>
+    <TabsContent value="password"> Change your password here. </TabsContent>
+  </Tabs>
 </template>
+
+<script setup lang="ts">
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+</script>
 ```
 
 ## Examples
@@ -7016,13 +7016,13 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Textarea } from '@/components/ui/textarea';
-</script>
-
 <template>
-	<Textarea />
+  <Textarea />
 </template>
+
+<script setup lang="ts">
+import { Textarea } from '@/components/ui/textarea'
+</script>
 ```
 
 ## Examples
@@ -7072,17 +7072,17 @@ To use utility classes for theming set `tailwind.cssVariables` to `false` in you
 
 ```json {7} title="components.json"
 {
-	"style": "default",
-	"tailwind": {
-		"config": "tailwind.config.js",
-		"css": "app/globals.css",
-		"baseColor": "slate",
-		"cssVariables": false
-	},
-	"aliases": {
-		"components": "@/components",
-		"utils": "@/lib/utils"
-	}
+  "style": "default",
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": false
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
 }
 ```
 
@@ -7096,17 +7096,17 @@ To use CSS variables for theming set `tailwind.cssVariables` to `true` in your `
 
 ```json {7} title="components.json"
 {
-	"style": "default",
-	"tailwind": {
-		"config": "tailwind.config.js",
-		"css": "app/globals.css",
-		"baseColor": "slate",
-		"cssVariables": true
-	},
-	"aliases": {
-		"components": "@/components",
-		"utils": "@/lib/utils"
-	}
+  "style": "default",
+  "tailwind": {
+    "config": "tailwind.config.js",
+    "css": "app/globals.css",
+    "baseColor": "slate",
+    "cssVariables": true
+  },
+  "aliases": {
+    "components": "@/components",
+    "utils": "@/lib/utils"
+  }
 }
 ```
 
@@ -7221,27 +7221,27 @@ To add new colors, you need to add them to your CSS file and to your `tailwind.c
 
 ```css title="assets/css/tailwind.css"
 :root {
-	--warning: 38 92% 50%;
-	--warning-foreground: 48 96% 89%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 48 96% 89%;
 }
 
 .dark {
-	--warning: 48 96% 89%;
-	--warning-foreground: 38 92% 50%;
+  --warning: 48 96% 89%;
+  --warning-foreground: 38 92% 50%;
 }
 ```
 
 ```js {5-6} title="tailwind.config.js"
 module.exports = {
-	theme: {
-		extend: {
-			colors: {
-				warning: 'hsl(var(--warning))',
-				'warning-foreground': 'hsl(var(--warning-foreground))'
-			}
-		}
-	}
-};
+  theme: {
+    extend: {
+      colors: {
+        'warning': 'hsl(var(--warning))',
+        'warning-foreground': 'hsl(var(--warning-foreground))'
+      }
+    }
+  }
+}
 ```
 
 You can now use the `warning` utility class in your components.
@@ -7288,18 +7288,18 @@ npx shadcn-vue@latest add toast
 Add the following `Toaster` component to your `App.vue` file:
 
 ```vue title="App.vue" {2,6}
-<script setup lang="ts">
-import Toaster from '@/components/ui/toast/Toaster.vue';
-</script>
-
 <template>
-	<Toaster />
+  <Toaster />
 
-	<!-- Nuxt  -->
-	<ClientOnly>
-		<Toaster />
-	</ClientOnly>
+  <!-- Nuxt  -->
+  <ClientOnly>
+    <Toaster />
+  </ClientOnly>
 </template>
+
+<script setup lang="ts">
+import Toaster from '@/components/ui/toast/Toaster.vue'
+</script>
 ```
 
 </Steps>
@@ -7309,33 +7309,33 @@ import Toaster from '@/components/ui/toast/Toaster.vue';
 The `useToast` hook returns a `toast` function that you can use to display a toast.
 
 ```tsx
-import { useToast } from '@/components/ui/toast/use-toast';
+import { useToast } from '@/components/ui/toast/use-toast'
 ```
 
 ```vue
-<script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { Toaster } from '@/components/ui/toast';
-import { useToast } from '@/components/ui/toast/use-toast';
-
-const { toast } = useToast();
-</script>
-
 <template>
-	<Toaster />
-	<Button
-		@click="
-			() => {
-				toast({
-					title: 'Scheduled: Catch up',
-					description: 'Friday, February 10, 2023 at 5:57 PM'
-				});
-			}
-		"
-	>
-		Add to calendar
-	</Button>
+  <Toaster />
+  <Button
+    @click="
+      () => {
+        toast({
+          title: 'Scheduled: Catch up',
+          description: 'Friday, February 10, 2023 at 5:57 PM',
+        });
+      }
+    "
+  >
+    Add to calendar
+  </Button>
 </template>
+
+<script setup lang="ts">
+import { Button } from '@/components/ui/button'
+import { Toaster } from '@/components/ui/toast'
+import { useToast } from '@/components/ui/toast/use-toast'
+
+const { toast } = useToast()
+</script>
 ```
 
 <Callout>
@@ -7408,13 +7408,13 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Toggle } from '@/components/ui/toggle';
-</script>
-
 <template>
-	<Toggle>Toggle</Toggle>
+  <Toggle>Toggle</Toggle>
 </template>
+
+<script setup lang="ts">
+import { Toggle } from '@/components/ui/toggle'
+</script>
 ```
 
 ## Examples
@@ -7487,17 +7487,17 @@ npm install reka-ui
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-</script>
-
 <template>
-	<ToggleGroup type="single">
-		<ToggleGroupItem value="a"> A </ToggleGroupItem>
-		<ToggleGroupItem value="b"> B </ToggleGroupItem>
-		<ToggleGroupItem value="c"> C </ToggleGroupItem>
-	</ToggleGroup>
+  <ToggleGroup type="single">
+    <ToggleGroupItem value="a"> A </ToggleGroupItem>
+    <ToggleGroupItem value="b"> B </ToggleGroupItem>
+    <ToggleGroupItem value="c"> C </ToggleGroupItem>
+  </ToggleGroup>
 </template>
+
+<script setup lang="ts">
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
+</script>
 ```
 
 ## Examples
@@ -7548,20 +7548,20 @@ npx shadcn-vue@latest add tooltip
 ## Usage
 
 ```vue
-<script setup lang="ts">
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-</script>
-
 <template>
-	<TooltipProvider>
-		<Tooltip>
-			<TooltipTrigger>Hover</TooltipTrigger>
-			<TooltipContent>
-				<p>Add to library</p>
-			</TooltipContent>
-		</Tooltip>
-	</TooltipProvider>
+  <TooltipProvider>
+    <Tooltip>
+      <TooltipTrigger>Hover</TooltipTrigger>
+      <TooltipContent>
+        <p>Add to library</p>
+      </TooltipContent>
+    </Tooltip>
+  </TooltipProvider>
 </template>
+
+<script setup lang="ts">
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+</script>
 ```
 
 ---
@@ -7606,18 +7606,18 @@ The `<Form />` component is a wrapper around the `vee-validate` library. It prov
 
 ```vue
 <template>
-	<Form>
-		<FormField>
-			<FormItem>
-				<FormLabel />
-				<FormControl>
-					<!-- any Form Input component or native input elements -->
-				</FormControl>
-				<FormDescription />
-				<FormMessage />
-			</FormItem>
-		</FormField>
-	</Form>
+  <Form>
+    <FormField>
+      <FormItem>
+        <FormLabel />
+        <FormControl>
+          <!-- any Form Input component or native input elements -->
+        </FormControl>
+        <FormDescription />
+        <FormMessage />
+      </FormItem>
+    </FormField>
+  </Form>
 </template>
 ```
 
@@ -7630,16 +7630,16 @@ The `<Form />` component is a wrapper around the `vee-validate` library. It prov
 
 ```vue
 <template>
-	<FormField v-slot="{ componentField }">
-		<FormItem>
-			<FormLabel>Username</FormLabel>
-			<FormControl>
-				<Input placeholder="shadcn" v-bind="componentField" />
-			</FormControl>
-			<FormDescription />
-			<FormMessage />
-		</FormItem>
-	</FormField>
+  <FormField v-slot="{ componentField }">
+    <FormItem>
+      <FormLabel>Username</FormLabel>
+      <FormControl>
+        <Input placeholder="shadcn" v-bind="componentField" />
+      </FormControl>
+      <FormDescription />
+      <FormMessage />
+    </FormItem>
+  </FormField>
 </template>
 ```
 
@@ -7942,32 +7942,32 @@ We're using [`useColorMode`](https://vueuse.org/core/usecolormode/) from [`@vueu
 > Reactive color mode (dark / light / customs) with auto data persistence.
 
 ```vue
+<template>
+  <DropdownMenu>
+    <DropdownMenuTrigger as-child>
+      <Button variant="outline">
+        <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+        <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+        <span class="sr-only">Toggle theme</span>
+      </Button>
+    </DropdownMenuTrigger>
+    <DropdownMenuContent align="end">
+      <DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
+      <DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
+      <DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
+    </DropdownMenuContent>
+  </DropdownMenu>
+</template>
+
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Icon } from '@iconify/vue';
-import { useColorMode } from '@vueuse/core';
+import { Icon } from '@iconify/vue'
+import { useColorMode } from '@vueuse/core'
+import { Button } from '@/components/ui/button'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
 // Pass { disableTransition: false } to enable transitions
-const mode = useColorMode();
+const mode = useColorMode()
 </script>
-
-<template>
-	<DropdownMenu>
-		<DropdownMenuTrigger as-child>
-			<Button variant="outline">
-				<Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-				<Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-				<span class="sr-only">Toggle theme</span>
-			</Button>
-		</DropdownMenuTrigger>
-		<DropdownMenuContent align="end">
-			<DropdownMenuItem @click="mode = 'light'"> Light </DropdownMenuItem>
-			<DropdownMenuItem @click="mode = 'dark'"> Dark </DropdownMenuItem>
-			<DropdownMenuItem @click="mode = 'auto'"> System </DropdownMenuItem>
-		</DropdownMenuContent>
-	</DropdownMenu>
-</template>
 ```
 
 </Steps>
@@ -8064,19 +8064,19 @@ npm install -D @types/node
 ```
 
 ```typescript
-import path from 'node:path';
-import tailwindcss from '@tailwindcss/vite';
-import vue from '@vitejs/plugin-vue';
-import { defineConfig } from 'vite';
+import path from 'node:path'
+import tailwindcss from '@tailwindcss/vite'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
-	plugins: [vue(), tailwindcss()],
-	resolve: {
-		alias: {
-			'@': path.resolve(__dirname, './src')
-		}
-	}
-});
+  plugins: [vue(), tailwindcss()],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
+})
 ```
 
 ### Run the CLI
@@ -8104,15 +8104,15 @@ npx shadcn-vue@latest add button
 The command above will add the `Button` component to your project. You can then import it like this:
 
 ```vue {2,7}
-<script setup lang="ts">
-import { Button } from '@/components/ui/button';
-</script>
-
 <template>
-	<div>
-		<Button>Click me</Button>
-	</div>
+  <div>
+    <Button>Click me</Button>
+  </div>
 </template>
+
+<script setup lang="ts">
+import { Button } from '@/components/ui/button'
+</script>
 ```
 
 </Steps>
@@ -8151,22 +8151,22 @@ We're using [`useToggle`](https://vueuse.org/shared/useToggle/) from [`@vueuse/c
 > A boolean switcher with utility functions.
 
 ```vue
-<script setup lang="ts">
-import { Button } from '@/registry/default/ui/button';
-import { useToggle } from '@vueuse/core';
-import { useData } from 'vitepress';
-
-const { frontmatter, isDark } = useData();
-const toggleDark = useToggle(isDark);
-</script>
-
 <template>
-	<Button variant="outline">
-		<Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-		<Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-		<span class="sr-only">Toggle theme</span>
-	</Button>
+  <Button variant="outline">
+    <Icon icon="radix-icons:moon" class="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+    <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+    <span class="sr-only">Toggle theme</span>
+  </Button>
 </template>
+
+<script setup lang="ts">
+import { useToggle } from '@vueuse/core'
+import { useData } from 'vitepress'
+import { Button } from '@/registry/default/ui/button'
+
+const { frontmatter, isDark } = useData()
+const toggleDark = useToggle(isDark)
+</script>
 ```
 
 </Steps>

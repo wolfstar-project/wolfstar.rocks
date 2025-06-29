@@ -1,19 +1,19 @@
-import type { ComputedRef, InjectionKey } from 'vue';
-import type { AvatarGroupProps } from '@/components/ui/avatar-group';
-import { computed, inject, provide } from 'vue';
+import type { ComputedRef, InjectionKey } from 'vue'
+import type { AvatarGroupProps } from '@/components/ui/avatar-group'
+import { computed, inject, provide } from 'vue'
 
-export const AvatarGroupInjectionKey: InjectionKey<ComputedRef<{ size: AvatarGroupProps['size'] }>> = Symbol('avatarGroupInjectionKey');
+export const AvatarGroupInjectionKey: InjectionKey<ComputedRef<{ size: AvatarGroupProps['size'] }>> = Symbol('avatarGroupInjectionKey')
 
 export function useAvatarGroup(props: { size: AvatarGroupProps['size'] }) {
-	const avatarGroup = inject(AvatarGroupInjectionKey, undefined);
+  const avatarGroup = inject(AvatarGroupInjectionKey, undefined)
 
-	const size = computed(() => props.size ?? avatarGroup?.value.size);
-	provide(
-		AvatarGroupInjectionKey,
-		computed(() => ({ size: size.value }))
-	);
+  const size = computed(() => props.size ?? avatarGroup?.value.size)
+  provide(
+    AvatarGroupInjectionKey,
+    computed(() => ({ size: size.value })),
+  )
 
-	return {
-		size
-	};
+  return {
+    size,
+  }
 }

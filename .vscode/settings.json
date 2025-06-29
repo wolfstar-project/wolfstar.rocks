@@ -1,70 +1,69 @@
 {
-	"css.lint.unknownAtRules": "ignore",
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit",
-		"source.organizeImports": "never"
-	},
-	"editor.formatOnPaste": true, // optional
-	"editor.formatOnSave": false,
-	"editor.formatOnSaveMode": "file", // required to format on save
-	"editor.formatOnType": true, // required
-	"editor.quickSuggestions": {
-		"strings": "on"
-	},
-	"eslint.rules.customizations": [
-		{ "rule": "style/*", "severity": "off", "fixable": true },
-		{ "rule": "format/*", "severity": "off", "fixable": true },
-		{ "rule": "*-indent", "severity": "off", "fixable": true },
-		{ "rule": "*-spacing", "severity": "off", "fixable": true },
-		{ "rule": "*-spaces", "severity": "off", "fixable": true },
-		{ "rule": "*-order", "severity": "off", "fixable": true },
-		{ "rule": "*-dangle", "severity": "off", "fixable": true },
-		{ "rule": "*-newline", "severity": "off", "fixable": true },
-		{ "rule": "*quotes", "severity": "off", "fixable": true },
-		{ "rule": "*semi", "severity": "off", "fixable": true }
-	],
-	"eslint.useFlatConfig": true,
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact",
-		"vue",
-		"html",
-		"markdown",
-		"json",
-		"json5",
-		"jsonc",
-		"yaml",
-		"toml",
-		"xml",
-		"gql",
-		"graphql",
-		"astro",
-		"svelte",
-		"css",
-		"less",
-		"scss",
-		"pcss",
-		"postcss"
-	],
-	"files.associations": {
-		"*.css": "tailwindcss"
-	},
-	"files.autoSave": "onFocusChange", // optional but recommended,
-	"github.copilot.chat.codeGeneration.instructions": [
-		{
-			"file": "./.vscode/daisyui.md"
-		},
-		{
-			"file": "./.vscode/shadcn-vue.md"
-		},
-		{
-			"file": "./.vscode/nuxt.md"
-		}
-	],
-	"prettier.enable": false,
-	"tailwindCSS.experimental.classRegex": [["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]],
-	"terminal.integrated.accessibleViewFocusOnCommandExecution": true,
-	"typescript.tsdk": "node_modules\\typescript\\lib"
+  "css.lint.unknownAtRules": "ignore",
+  // Disable the default formatter, use eslint instead
+  "prettier.enable": false,
+  "editor.formatOnSave": false,
+
+  // Auto fix
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+
+  // Stylistic rules
+  "eslint.rules.customizations": [
+    { "rule": "style/*", "fixable": true },
+    { "rule": "format/*", "fixable": true },
+    { "rule": "*-indent", "fixable": true },
+    { "rule": "*-spacing", "fixable": true },
+    { "rule": "*-spaces", "fixable": true },
+    { "rule": "*-order", "fixable": true },
+    { "rule": "*-dangle", "fixable": true },
+    { "rule": "*-newline", "fixable": true },
+    { "rule": "*quotes", "fixable": true },
+    { "rule": "*semi", "fixable": true }
+  ],
+
+  // Enable eslint for all supported languages
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "html",
+    "markdown",
+    "json",
+    "jsonc",
+    "yaml",
+    "toml",
+    "xml",
+    "gql",
+    "graphql",
+    "astro",
+    "svelte",
+    "css",
+    "less",
+    "scss",
+    "pcss",
+    "postcss"
+  ],
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "files.autoSave": "onFocusChange", // optional but recommended,
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "file": "./.vscode/daisyui.md"
+    },
+    {
+      "file": "./.vscode/shadcn-vue.md"
+    },
+    {
+      "file": "./.vscode/nuxt.md"
+    }
+  ],
+  "tailwindCSS.experimental.classRegex": [["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]],
+  "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

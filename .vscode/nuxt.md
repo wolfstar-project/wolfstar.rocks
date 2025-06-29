@@ -243,8 +243,8 @@ A minimal configuration file exports the `defineNuxtConfig` function containing 
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	// My Nuxt config
-});
+  // My Nuxt config
+})
 ```
 
 This file will often be mentioned in the documentation, for example to add custom scripts, register modules or change rendering modes.
@@ -263,20 +263,20 @@ You can configure fully typed, per-environment overrides in your nuxt.config
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	$production: {
-		routeRules: {
-			'/**': { isr: true }
-		}
-	},
-	$development: {
-		//
-	},
-	$env: {
-		staging: {
-			//
-		}
-	}
-});
+  $production: {
+    routeRules: {
+      '/**': { isr: true }
+    }
+  },
+  $development: {
+    //
+  },
+  $env: {
+    staging: {
+      //
+    }
+  }
+})
 ```
 
 To select an environment when running a Nuxt CLI command, simply pass the name to the `--envName` flag, like so: `nuxi build --envName staging`.
@@ -306,15 +306,15 @@ Those values should be defined in `nuxt.config` and can be overridden using envi
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	runtimeConfig: {
-		// The private keys which are only available server-side
-		apiSecret: '123',
-		// Keys within public are also exposed client-side
-		public: {
-			apiBase: '/api'
-		}
-	}
-});
+  runtimeConfig: {
+    // The private keys which are only available server-side
+    apiSecret: '123',
+    // Keys within public are also exposed client-side
+    public: {
+      apiBase: '/api'
+    }
+  }
+})
 ```
 
 ```ini [.env]
@@ -328,7 +328,7 @@ These variables are exposed to the rest of your application using the [`useRunti
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useRuntimeConfig()
 </script>
 ```
 
@@ -343,21 +343,21 @@ A minimal configuration file exports the `defineAppConfig` function containing a
 
 ```ts [app.config.ts]
 export default defineAppConfig({
-	title: 'Hello Nuxt',
-	theme: {
-		dark: true,
-		colors: {
-			primary: '#ff0000'
-		}
-	}
-});
+  title: 'Hello Nuxt',
+  theme: {
+    dark: true,
+    colors: {
+      primary: '#ff0000'
+    }
+  }
+})
 ```
 
 These variables are exposed to the rest of your application using the [`useAppConfig`](https://nuxt.com/docs/api/composables/use-app-config) composable.
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const appConfig = useAppConfig();
+const appConfig = useAppConfig()
 </script>
 ```
 
@@ -414,15 +414,15 @@ If you need to pass options to `@vitejs/plugin-vue` or `@vitejs/plugin-vue-jsx`,
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	vite: {
-		vue: {
-			customElement: true
-		},
-		vueJsx: {
-			mergeProps: true
-		}
-	}
-});
+  vite: {
+    vue: {
+      customElement: true
+    },
+    vueJsx: {
+      mergeProps: true
+    }
+  }
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/configuration/nuxt-config#vue"}
@@ -434,14 +434,14 @@ If you use webpack and need to configure `vue-loader`, you can do this using `we
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	webpack: {
-		loaders: {
-			vue: {
-				hotReload: true
-			}
-		}
-	}
-});
+  webpack: {
+    loaders: {
+      vue: {
+        hotReload: true
+      }
+    }
+  }
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/configuration/nuxt-config#loaders"}
@@ -453,10 +453,10 @@ You may need to enable experimental features in Vue, such as `propsDestructure`.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	vue: {
-		propsDestructure: true
-	}
-});
+  vue: {
+    propsDestructure: true
+  }
+})
 ```
 
 #### experimental `reactivityTransform` migration from Vue 3.4 and Nuxt 3.9
@@ -476,9 +476,9 @@ By default, Nuxt will treat this file as the **entrypoint** and render its conte
 
 ```vue [app.vue]
 <template>
-	<div>
-		<h1>Welcome to the homepage</h1>
-	</div>
+  <div>
+    <h1>Welcome to the homepage</h1>
+  </div>
 </template>
 ```
 
@@ -496,18 +496,18 @@ Most components are reusable pieces of the user interface, like buttons and menu
 
 ```vue [app.vue]
 <template>
-	<div>
-		<h1>Welcome to the homepage</h1>
-		<AppAlert> This is an auto-imported component. </AppAlert>
-	</div>
+  <div>
+    <h1>Welcome to the homepage</h1>
+    <AppAlert> This is an auto-imported component. </AppAlert>
+  </div>
 </template>
 ```
 
 ```vue [components/AppAlert.vue]
 <template>
-	<span>
-		<slot />
-	</span>
+  <span>
+    <slot></slot>
+  </span>
 </template>
 ```
 
@@ -525,18 +525,18 @@ To use pages, create `pages/index.vue` file and add `<NuxtPage />` component to 
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<h1>Welcome to the homepage</h1>
-		<AppAlert> This is an auto-imported component </AppAlert>
-	</div>
+  <div>
+    <h1>Welcome to the homepage</h1>
+    <AppAlert> This is an auto-imported component </AppAlert>
+  </div>
 </template>
 ```
 
 ```vue [pages/about.vue]
 <template>
-	<section>
-		<p>This page will be displayed at the /about route.</p>
-	</section>
+  <section>
+    <p>This page will be displayed at the /about route.</p>
+  </section>
 </template>
 ```
 
@@ -565,38 +565,38 @@ If you only have a single layout in your application, we recommend using [`app.v
 
 ```vue [app.vue]
 <template>
-	<div>
-		<NuxtLayout>
-			<NuxtPage />
-		</NuxtLayout>
-	</div>
+  <div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </div>
 </template>
 ```
 
 ```vue [layouts/default.vue]
 <template>
-	<div>
-		<AppHeader />
-		<slot />
-		<AppFooter />
-	</div>
+  <div>
+    <AppHeader />
+    <slot></slot>
+    <AppFooter />
+  </div>
 </template>
 ```
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<h1>Welcome to the homepage</h1>
-		<AppAlert> This is an auto-imported component </AppAlert>
-	</div>
+  <div>
+    <h1>Welcome to the homepage</h1>
+    <AppAlert> This is an auto-imported component </AppAlert>
+  </div>
 </template>
 ```
 
 ```vue [pages/about.vue]
 <template>
-	<section>
-		<p>This page will be displayed at the /about route.</p>
-	</section>
+  <section>
+    <p>This page will be displayed at the /about route.</p>
+  </section>
 </template>
 ```
 
@@ -615,16 +615,16 @@ The callback function of the `render:html` hook allows you to mutate the HTML be
 
 ```ts [server/plugins/extend-html.ts] twoslash
 export default defineNitroPlugin((nitroApp) => {
-	nitroApp.hooks.hook('render:html', (html, { event }) => {
-		// This will be an object representation of the html template.
-		console.log(html);
-		html.head.push(`<meta name="description" content="My custom description" />`);
-	});
-	// You can also intercept the response here.
-	nitroApp.hooks.hook('render:response', (response, { event }) => {
-		console.log(response);
-	});
-});
+  nitroApp.hooks.hook('render:html', (html, { event }) => {
+    // This will be an object representation of the html template.
+    console.log(html)
+    html.head.push(`<meta name="description" content="My custom description" />`)
+  })
+  // You can also intercept the response here.
+  nitroApp.hooks.hook('render:response', (response, { event }) => {
+    console.log(response)
+  })
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/going-further/hooks"}
@@ -649,7 +649,7 @@ For example, referencing an image file in the `public/img/` directory, available
 
 ```vue [app.vue]
 <template>
-	<img src="/img/nuxt.png" alt="Discover Nuxt" />
+  <img src="/img/nuxt.png" alt="Discover Nuxt" />
 </template>
 ```
 
@@ -667,7 +667,7 @@ For example, referencing an image file that will be processed if a build tool is
 
 ```vue [app.vue]
 <template>
-	<img src="~/assets/img/nuxt.png" alt="Discover Nuxt" />
+  <img src="~/assets/img/nuxt.png" alt="Discover Nuxt" />
 </template>
 ```
 
@@ -692,10 +692,10 @@ You can use a javascript import, or a css [`@import` statement](https://develope
 ```vue [pages/index.vue]
 <script>
 // Use a static import for server-side compatibility
-import '~/assets/css/first.css';
+import '~/assets/css/first.css'
 
 // Caution: Dynamic imports are not server-side compatible
-import('~/assets/css/first.css');
+import('~/assets/css/first.css')
 </script>
 
 <style>
@@ -714,8 +714,8 @@ The natural place for your stylesheets is the [`assets/` directory](https://nuxt
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	css: ['~/assets/css/main.css']
-});
+  css: ['~/assets/css/main.css']
+})
 ```
 
 ::tip
@@ -728,11 +728,11 @@ Place your local fonts files in your `~/public/` directory, for example in `~/pu
 
 ```css [assets/css/main.css]
 @font-face {
-	font-style: normal;
-	font-weight: normal;
-	src: url('/fonts/FarAwayGalaxy.woff') format('woff');
-	font-family: 'FarAwayGalaxy';
-	font-display: swap;
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/FarAwayGalaxy.woff') format('woff');
+  font-family: 'FarAwayGalaxy';
+  font-display: swap;
 }
 ```
 
@@ -741,7 +741,7 @@ Then reference your fonts by name in your stylesheets, pages or components:
 ```vue
 <style>
 h1 {
-	font-family: 'FarAwayGalaxy', sans-serif;
+  font-family: 'FarAwayGalaxy', sans-serif;
 }
 </style>
 ```
@@ -774,7 +774,7 @@ Then you can reference it directly in your pages, layouts and components:
 
 ```vue [app.vue]
 <script>
-import 'animate.css';
+import 'animate.css'
 </script>
 
 <style>
@@ -786,8 +786,8 @@ The package can also be referenced as a string in the css property of your Nuxt 
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	css: ['animate.css']
-});
+  css: ['animate.css']
+})
 ```
 
 ## External Stylesheets
@@ -798,12 +798,12 @@ You can manipulate the head with the [`app.head`](https://nuxt.com/docs/api/nuxt
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		head: {
-			link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' }]
-		}
-	}
-});
+  app: {
+    head: {
+      link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' }]
+    }
+  }
+})
 ```
 
 ### Dynamically Adding Stylesheets
@@ -815,8 +815,8 @@ You can use the useHead composable to dynamically set a value in your head in yo
 
 ```ts twoslash
 useHead({
-	link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' }]
-});
+  link: [{ rel: 'stylesheet', href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css' }]
+})
 ```
 
 Nuxt uses `unhead` under the hood, and you can refer to its full documentation [here](https://unhead.unjs.io){rel="nofollow"}.
@@ -829,10 +829,10 @@ Create a plugin in `~/server/plugins/my-plugin.ts` like this:
 
 ```ts [server/plugins/my-plugin.ts] twoslash
 export default defineNitroPlugin((nitro) => {
-	nitro.hooks.hook('render:html', (html) => {
-		html.head.push('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">');
-	});
-});
+  nitro.hooks.hook('render:html', (html) => {
+    html.head.push('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">')
+  })
+})
 ```
 
 External stylesheets are render-blocking resources: they must be loaded and processed before the browser renders the page. Web pages that contain unnecessarily large styles take longer to render. You can read more about it on [web.dev](https://web.dev/defer-non-critical-css){rel="nofollow"}.
@@ -870,8 +870,8 @@ Alternatively, you can use the `css` property of your Nuxt configuration.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	css: ['~/assets/scss/main.scss']
-});
+  css: ['~/assets/scss/main.scss']
+})
 ```
 
 ::tip
@@ -902,30 +902,30 @@ Then in your `nuxt.config` :
 
 ```ts [SCSS] twoslash
 export default defineNuxtConfig({
-	vite: {
-		css: {
-			preprocessorOptions: {
-				scss: {
-					additionalData: '@use "~/assets/_colors.scss" as *;'
-				}
-			}
-		}
-	}
-});
+  vite: {
+    css: {
+      preprocessorOptions: {
+        scss: {
+          additionalData: '@use "~/assets/_colors.scss" as *;'
+        }
+      }
+    }
+  }
+})
 ```
 
 ```ts [SASS] twoslash
 export default defineNuxtConfig({
-	vite: {
-		css: {
-			preprocessorOptions: {
-				sass: {
-					additionalData: '@use "~/assets/_colors.sass" as *\n'
-				}
-			}
-		}
-	}
-});
+  vite: {
+    css: {
+      preprocessorOptions: {
+        sass: {
+          additionalData: '@use "~/assets/_colors.sass" as *\n'
+        }
+      }
+    }
+  }
+})
 ```
 
 ::
@@ -940,12 +940,12 @@ You can enable this in your `nuxt.config`:
 
 ```ts
 export default defineNuxtConfig({
-	vite: {
-		css: {
-			preprocessorMaxWorkers: true // number of CPUs minus 1
-		}
-	}
-});
+  vite: {
+    css: {
+      preprocessorMaxWorkers: true // number of CPUs minus 1
+    }
+  }
+})
 ```
 
 ::note
@@ -965,60 +965,60 @@ You can leverage Vue SFC features to style your components with class and style 
 ::code-group
 
 ```vue [Ref and Reactive]
-<script setup lang="ts">
-const isActive = ref(true);
-const hasError = ref(false);
-const classObject = reactive({
-	active: true,
-	'text-danger': false
-});
-</script>
-
 <template>
-	<div class="static" :class="{ active: isActive, 'text-danger': hasError }"></div>
-	<div :class="classObject"></div>
+  <div class="static" :class="{ 'active': isActive, 'text-danger': hasError }"></div>
+  <div :class="classObject"></div>
 </template>
+
+<script setup lang="ts">
+const isActive = ref(true)
+const hasError = ref(false)
+const classObject = reactive({
+  'active': true,
+  'text-danger': false
+})
+</script>
 ```
 
 ```vue [Computed]
+<template>
+  <div :class="classObject"></div>
+</template>
+
 <script setup lang="ts">
-const isActive = ref(true);
-const error = ref(null);
+const isActive = ref(true)
+const error = ref(null)
 
 const classObject = computed(() => ({
-	active: isActive.value && !error.value,
-	'text-danger': error.value && error.value.type === 'fatal'
-}));
+  'active': isActive.value && !error.value,
+  'text-danger': error.value && error.value.type === 'fatal'
+}))
 </script>
-
-<template>
-	<div :class="classObject"></div>
-</template>
 ```
 
 ```vue [Array]
-<script setup lang="ts">
-const isActive = ref(true);
-const errorClass = ref('text-danger');
-</script>
-
 <template>
-	<div :class="[{ active: isActive }, errorClass]"></div>
+  <div :class="[{ active: isActive }, errorClass]"></div>
 </template>
+
+<script setup lang="ts">
+const isActive = ref(true)
+const errorClass = ref('text-danger')
+</script>
 ```
 
 ```vue [Style]
-<script setup lang="ts">
-const activeColor = ref('red');
-const fontSize = ref(30);
-const styleObject = reactive({ color: 'red', fontSize: '13px' });
-</script>
-
 <template>
-	<div :style="{ color: activeColor, fontSize: fontSize + 'px' }"></div>
-	<div :style="[baseStyles, overridingStyles]"></div>
-	<div :style="styleObject"></div>
+  <div :style="{ color: activeColor, fontSize: `${fontSize}px` }"></div>
+  <div :style="[baseStyles, overridingStyles]"></div>
+  <div :style="styleObject"></div>
 </template>
+
+<script setup lang="ts">
+const activeColor = ref('red')
+const fontSize = ref(30)
+const styleObject = reactive({ color: 'red', fontSize: '13px' })
+</script>
 ```
 
 ::
@@ -1031,17 +1031,17 @@ You can reference JavaScript variable and expression within your style blocks wi
 The binding will be dynamic, meaning that if the variable value changes, the style will be updated.
 
 ```vue
-<script setup lang="ts">
-const color = ref('red');
-</script>
-
 <template>
-	<div class="text">hello</div>
+  <div class="text">hello</div>
 </template>
+
+<script setup lang="ts">
+const color = ref('red')
+</script>
 
 <style>
 .text {
-	color: v-bind(color);
+  color: v-bind(color);
 }
 </style>
 ```
@@ -1052,12 +1052,12 @@ The scoped attribute allows you to style components in isolation. The styles dec
 
 ```vue
 <template>
-	<div class="example">hi</div>
+  <div class="example">hi</div>
 </template>
 
 <style scoped>
 .example {
-	color: red;
+  color: red;
 }
 </style>
 ```
@@ -1068,12 +1068,12 @@ You can use [CSS Modules](https://github.com/css-modules/css-modules){rel="nofol
 
 ```vue
 <template>
-	<p :class="$style.red">This should be red</p>
+  <p :class="$style.red">This should be red</p>
 </template>
 
 <style module>
 .red {
-	color: red;
+  color: red;
 }
 </style>
 ```
@@ -1119,13 +1119,13 @@ Nuxt comes with postcss built-in. You can configure it in your `nuxt.config` fil
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	postcss: {
-		plugins: {
-			'postcss-nested': {},
-			'postcss-custom-media': {}
-		}
-	}
-});
+  postcss: {
+    plugins: {
+      'postcss-nested': {},
+      'postcss-custom-media': {}
+    }
+  }
+})
 ```
 
 For proper syntax highlighting in SFC, you can use the postcss lang attribute.
@@ -1150,15 +1150,15 @@ Use different styles for different layouts.
 
 ```vue
 <template>
-	<div class="default-layout">
-		<h1>Default Layout</h1>
-		<slot />
-	</div>
+  <div class="default-layout">
+    <h1>Default Layout</h1>
+    <slot></slot>
+  </div>
 </template>
 
 <style>
 .default-layout {
-	color: red;
+  color: red;
 }
 </style>
 ```
@@ -1223,20 +1223,21 @@ You can achieve that with a hook, that you can place in a module, or in your Nux
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	hooks: {
-		'build:manifest': (manifest) => {
-			// find the app entry, css list
-			const css = Object.values(manifest).find((options) => options.isEntry)?.css;
-			if (css) {
-				// start from the end of the array and go to the beginning
-				for (let i = css.length - 1; i >= 0; i--) {
-					// if it starts with 'entry', remove it from the list
-					if (css[i].startsWith('entry')) css.splice(i, 1);
-				}
-			}
-		}
-	}
-});
+  hooks: {
+    'build:manifest': (manifest) => {
+      // find the app entry, css list
+      const css = Object.values(manifest).find(options => options.isEntry)?.css
+      if (css) {
+        // start from the end of the array and go to the beginning
+        for (let i = css.length - 1; i >= 0; i--) {
+          // if it starts with 'entry', remove it from the list
+          if (css[i].startsWith('entry'))
+            css.splice(i, 1)
+        }
+      }
+    }
+  }
+})
 ```
 
 # Routing
@@ -1261,20 +1262,20 @@ This file system routing uses naming conventions to create dynamic and nested ro
 
 ```json [Generated Router File]
 {
-	"routes": [
-		{
-			"path": "/about",
-			"component": "pages/about.vue"
-		},
-		{
-			"path": "/",
-			"component": "pages/index.vue"
-		},
-		{
-			"path": "/posts/:id",
-			"component": "pages/posts/[id].vue"
-		}
-	]
+  "routes": [
+    {
+      "path": "/about",
+      "component": "pages/about.vue"
+    },
+    {
+      "path": "/",
+      "component": "pages/index.vue"
+    },
+    {
+      "path": "/posts/:id",
+      "component": "pages/posts/[id].vue"
+    }
+  ]
 }
 ```
 
@@ -1291,15 +1292,15 @@ When a [`<NuxtLink>`](https://nuxt.com/docs/api/components/nuxt-link) enters the
 
 ```vue [pages/app.vue]
 <template>
-	<header>
-		<nav>
-			<ul>
-				<li><NuxtLink to="/about">About</NuxtLink></li>
-				<li><NuxtLink to="/posts/1">Post 1</NuxtLink></li>
-				<li><NuxtLink to="/posts/2">Post 2</NuxtLink></li>
-			</ul>
-		</nav>
-	</header>
+  <header>
+    <nav>
+      <ul>
+        <li><NuxtLink to="/about">About</NuxtLink></li>
+        <li><NuxtLink to="/posts/1">Post 1</NuxtLink></li>
+        <li><NuxtLink to="/posts/2">Post 2</NuxtLink></li>
+      </ul>
+    </nav>
+  </header>
 </template>
 ```
 
@@ -1312,10 +1313,10 @@ The [`useRoute()`](https://nuxt.com/docs/api/composables/use-route) composable c
 
 ```vue [pages/posts/[id].vue] twoslash
 <script setup lang="ts">
-const route = useRoute();
+const route = useRoute()
 
 // When accessing /posts/1, route.params.id will be 1
-console.log(route.params.id);
+console.log(route.params.id)
 </script>
 ```
 
@@ -1342,27 +1343,27 @@ Example of an `auth` middleware protecting the `/dashboard` page:
 
 ```ts [middleware/auth.ts] twoslash
 function isAuthenticated(): boolean {
-	return false;
+  return false
 }
 // ---cut---
 export default defineNuxtRouteMiddleware((to, from) => {
-	// isAuthenticated() is an example method verifying if a user is authenticated
-	if (isAuthenticated() === false) {
-		return navigateTo('/login');
-	}
-});
+  // isAuthenticated() is an example method verifying if a user is authenticated
+  if (isAuthenticated() === false) {
+    return navigateTo('/login')
+  }
+})
 ```
 
 ```vue [pages/dashboard.vue] twoslash
+<template>
+  <h1>Welcome to your dashboard</h1>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
-	middleware: 'auth'
-});
+  middleware: 'auth'
+})
 </script>
-
-<template>
-	<h1>Welcome to your dashboard</h1>
-</template>
 ```
 
 ::
@@ -1381,11 +1382,11 @@ If you have a more complex use case, then you can use anonymous route middleware
 ```vue [pages/posts/[id].vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	validate: async (route) => {
-		// Check if the id is made up of digits
-		return typeof route.params.id === 'string' && /^\d+$/.test(route.params.id);
-	}
-});
+  validate: async (route) => {
+    // Check if the id is made up of digits
+    return typeof route.params.id === 'string' && /^\d+$/.test(route.params.id)
+  }
+})
 </script>
 ```
 
@@ -1409,16 +1410,16 @@ It's good practice to set tags here that won't change such as your site title de
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		head: {
-			title: 'Nuxt', // default fallback title
-			htmlAttrs: {
-				lang: 'en'
-			},
-			link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
-		}
-	}
-});
+  app: {
+    head: {
+      title: 'Nuxt', // default fallback title
+      htmlAttrs: {
+        lang: 'en'
+      },
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    }
+  }
+})
 ```
 
 You can also provide any of the keys listed below in [Types](https://nuxt.com/#types).
@@ -1434,14 +1435,14 @@ While most sites won't need to override these defaults, you can update them usin
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		head: {
-			// update Nuxt defaults
-			charset: 'utf-16',
-			viewport: 'width=device-width, initial-scale=1, maximum-scale=1'
-		}
-	}
-});
+  app: {
+    head: {
+      // update Nuxt defaults
+      charset: 'utf-16',
+      viewport: 'width=device-width, initial-scale=1, maximum-scale=1'
+    }
+  }
+})
 ```
 
 ## `useHead`
@@ -1451,13 +1452,13 @@ The [`useHead`](https://nuxt.com/docs/api/composables/use-head) composable funct
 ```vue [app.vue] twoslash
 <script setup lang="ts">
 useHead({
-	title: 'My App',
-	meta: [{ name: 'description', content: 'My amazing site.' }],
-	bodyAttrs: {
-		class: 'test'
-	},
-	script: [{ innerHTML: "console.log('Hello world')" }]
-});
+  title: 'My App',
+  meta: [{ name: 'description', content: 'My amazing site.' }],
+  bodyAttrs: {
+    class: 'test'
+  },
+  script: [{ innerHTML: 'console.log(\'Hello world\')' }]
+})
 </script>
 ```
 
@@ -1472,13 +1473,13 @@ This helps you avoid typos and common mistakes, such as using `name` instead of 
 ```vue [app.vue] twoslash
 <script setup lang="ts">
 useSeoMeta({
-	title: 'My Amazing Site',
-	ogTitle: 'My Amazing Site',
-	description: 'This is my amazing site, let me tell you all about it.',
-	ogDescription: 'This is my amazing site, let me tell you all about it.',
-	ogImage: 'https://example.com/image.png',
-	twitterCard: 'summary_large_image'
-});
+  title: 'My Amazing Site',
+  ogTitle: 'My Amazing Site',
+  description: 'This is my amazing site, let me tell you all about it.',
+  ogDescription: 'This is my amazing site, let me tell you all about it.',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image'
+})
 </script>
 ```
 
@@ -1495,21 +1496,21 @@ the capitalization of these components ensuring we don't use invalid native HTML
 `<Head>` and `<Body>` can accept nested meta tags (for aesthetic reasons) but this does not affect _where_ the nested meta tags are rendered in the final HTML.
 
 ```vue [app.vue]
-<script setup lang="ts">
-const title = ref('Hello World');
-</script>
-
 <template>
-	<div>
-		<Head>
-			<Title>{{ title }}</Title>
-			<Meta name="description" :content="title" />
-			<Style> body { background-color: green; } </Style>
-		</Head>
+  <div>
+    <Head>
+      <Title>{{ title }}</Title>
+      <Meta name="description" :content="title" />
+      <Style> body { background-color: green; } </Style>
+    </Head>
 
-		<h1>{{ title }}</h1>
-	</div>
+    <h1>{{ title }}</h1>
+  </div>
 </template>
+
+<script setup lang="ts">
+const title = ref('Hello World')
+</script>
 ```
 
 It's suggested to wrap your components in either a `<Head>` or `<Html>` components as tags will be deduped more intuitively.
@@ -1520,17 +1521,17 @@ Below are the non-reactive types used for [`useHead`](https://nuxt.com/docs/api/
 
 ```ts
 interface MetaObject {
-	title?: string;
-	titleTemplate?: string | ((title?: string) => string);
-	templateParams?: Record<string, string | Record<string, string>>;
-	base?: Base;
-	link?: Link[];
-	meta?: Meta[];
-	style?: Style[];
-	script?: Script[];
-	noscript?: Noscript[];
-	htmlAttrs?: HtmlAttributes;
-	bodyAttrs?: BodyAttributes;
+  title?: string
+  titleTemplate?: string | ((title?: string) => string)
+  templateParams?: Record<string, string | Record<string, string>>
+  base?: Base
+  link?: Link[]
+  meta?: Meta[]
+  style?: Style[]
+  script?: Script[]
+  noscript?: Noscript[]
+  htmlAttrs?: HtmlAttributes
+  bodyAttrs?: BodyAttributes
 }
 ```
 
@@ -1546,34 +1547,34 @@ Reactivity is supported on all properties, by providing a computed value, a gett
 
 ```vue [useHead] twoslash
 <script setup lang="ts">
-const description = ref('My amazing site.');
+const description = ref('My amazing site.')
 
 useHead({
-	meta: [{ name: 'description', content: description }]
-});
+  meta: [{ name: 'description', content: description }]
+})
 </script>
 ```
 
 ```vue [useSeoMeta] twoslash
 <script setup lang="ts">
-const description = ref('My amazing site.');
+const description = ref('My amazing site.')
 
 useSeoMeta({
-	description
-});
+  description
+})
 </script>
 ```
 
 ```vue [Components]
-<script setup lang="ts">
-const description = ref('My amazing site.');
-</script>
-
 <template>
-	<div>
-		<Meta name="description" :content="description" />
-	</div>
+  <div>
+    <Meta name="description" :content="description" />
+  </div>
 </template>
+
+<script setup lang="ts">
+const description = ref('My amazing site.')
+</script>
 ```
 
 ::
@@ -1591,10 +1592,10 @@ If you want to use a function (for full control), then this cannot be set in you
 ```vue [useHead] twoslash
 <script setup lang="ts">
 useHead({
-	titleTemplate: (titleChunk) => {
-		return titleChunk ? `${titleChunk} - Site Title` : 'Site Title';
-	}
-});
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - Site Title` : 'Site Title'
+  }
+})
 </script>
 ```
 
@@ -1611,14 +1612,14 @@ You can use `templateParams` to provide additional placeholders in your `titleTe
 ```vue [useHead] twoslash
 <script setup lang="ts">
 useHead({
-	titleTemplate: (titleChunk) => {
-		return titleChunk ? `${titleChunk} %separator %siteName` : '%siteName';
-	},
-	templateParams: {
-		siteName: 'Site Title',
-		separator: '-'
-	}
-});
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} %separator %siteName` : '%siteName'
+  },
+  templateParams: {
+    siteName: 'Site Title',
+    separator: '-'
+  }
+})
 </script>
 ```
 
@@ -1633,14 +1634,14 @@ For example:
 ```vue twoslash
 <script setup lang="ts">
 useHead({
-	script: [
-		{
-			src: 'https://third-party-script.com',
-			// valid options are: 'head' | 'bodyClose' | 'bodyOpen'
-			tagPosition: 'bodyClose'
-		}
-	]
-});
+  script: [
+    {
+      src: 'https://third-party-script.com',
+      // valid options are: 'head' | 'bodyClose' | 'bodyOpen'
+      tagPosition: 'bodyClose'
+    }
+  ]
+})
 </script>
 ```
 
@@ -1655,8 +1656,8 @@ For example, you can first set the current page title (this is extracted at buil
 ```vue [pages/some-page.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	title: 'Some Page'
-});
+  title: 'Some Page'
+})
 </script>
 ```
 
@@ -1664,11 +1665,11 @@ And then in your layout file, you might use the route's metadata you have previo
 
 ```vue [layouts/default.vue] twoslash
 <script setup lang="ts">
-const route = useRoute();
+const route = useRoute()
 
 useHead({
-	meta: [{ property: 'og:title', content: `App Name - ${route.meta.title}` }]
-});
+  meta: [{ property: 'og:title', content: `App Name - ${route.meta.title}` }]
+})
 </script>
 ```
 
@@ -1688,21 +1689,21 @@ In the example below, `titleTemplate` is set either as a string with the `%s` pl
 ```vue [app.vue] twoslash
 <script setup lang="ts">
 useHead({
-	// as a string,
-	// where `%s` is replaced with the title
-	titleTemplate: '%s - Site Title'
-});
+  // as a string,
+  // where `%s` is replaced with the title
+  titleTemplate: '%s - Site Title'
+})
 </script>
 ```
 
 ```vue [app.vue] twoslash
 <script setup lang="ts">
 useHead({
-	// or as a function
-	titleTemplate: (productCategory) => {
-		return productCategory ? `${productCategory} - Site Title` : 'Site Title';
-	}
-});
+  // or as a function
+  titleTemplate: (productCategory) => {
+    return productCategory ? `${productCategory} - Site Title` : 'Site Title'
+  }
+})
 </script>
 ```
 
@@ -1717,27 +1718,27 @@ The example below shows how you might enable Google Fonts using either the `link
 ```vue [useHead] twoslash
 <script setup lang="ts">
 useHead({
-	link: [
-		{
-			rel: 'preconnect',
-			href: 'https://fonts.googleapis.com'
-		},
-		{
-			rel: 'stylesheet',
-			href: 'https://fonts.googleapis.com/css2?family=Roboto&display=swap',
-			crossorigin: ''
-		}
-	]
-});
+  link: [
+    {
+      rel: 'preconnect',
+      href: 'https://fonts.googleapis.com'
+    },
+    {
+      rel: 'stylesheet',
+      href: 'https://fonts.googleapis.com/css2?family=Roboto&display=swap',
+      crossorigin: ''
+    }
+  ]
+})
 </script>
 ```
 
 ```vue [Components]
 <template>
-	<div>
-		<Link rel="preconnect" href="https://fonts.googleapis.com" />
-		<Link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" crossorigin="" />
-	</div>
+  <div>
+    <Link rel="preconnect" href="https://fonts.googleapis.com" />
+    <Link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" crossorigin="" />
+  </div>
 </template>
 ```
 
@@ -1755,10 +1756,10 @@ You can enable page transitions to apply an automatic transition for all your [p
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		pageTransition: { name: 'page', mode: 'out-in' }
-	}
-});
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' }
+  }
+})
 ```
 
 ::note
@@ -1771,37 +1772,37 @@ To start adding transition between your pages, add the following CSS to your [`a
 
 ```vue [app.vue]
 <template>
-	<NuxtPage />
+  <NuxtPage />
 </template>
 
 <style>
 .page-enter-active,
 .page-leave-active {
-	transition: all 0.4s;
+  transition: all 0.4s;
 }
 .page-enter-from,
 .page-leave-to {
-	opacity: 0;
-	filter: blur(1rem);
+  opacity: 0;
+  filter: blur(1rem);
 }
 </style>
 ```
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<h1>Home page</h1>
-		<NuxtLink to="/about">About page</NuxtLink>
-	</div>
+  <div>
+    <h1>Home page</h1>
+    <NuxtLink to="/about">About page</NuxtLink>
+  </div>
 </template>
 ```
 
 ```vue [pages/about.vue]
 <template>
-	<div>
-		<h1>About page</h1>
-		<NuxtLink to="/">Home page</NuxtLink>
-	</div>
+  <div>
+    <h1>About page</h1>
+    <NuxtLink to="/">Home page</NuxtLink>
+  </div>
 </template>
 ```
 
@@ -1818,28 +1819,28 @@ To set a different transition for a page, set the `pageTransition` key in [`defi
 ```vue [pages/about.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	pageTransition: {
-		name: 'rotate'
-	}
-});
+  pageTransition: {
+    name: 'rotate'
+  }
+})
 </script>
 ```
 
 ```vue [app.vue]
 <template>
-	<NuxtPage />
+  <NuxtPage />
 </template>
 
 <style>
 /* ... */
 .rotate-enter-active,
 .rotate-leave-active {
-	transition: all 0.4s;
+  transition: all 0.4s;
 }
 .rotate-enter-from,
 .rotate-leave-to {
-	transform: rotate3d(1, 1, 1, 15deg);
-	opacity: 0;
+  transform: rotate3d(1, 1, 1, 15deg);
+  opacity: 0;
 }
 </style>
 ```
@@ -1856,10 +1857,10 @@ You can enable layout transitions to apply an automatic transition for all your 
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		layoutTransition: { name: 'layout', mode: 'out-in' }
-	}
-});
+  app: {
+    layoutTransition: { name: 'layout', mode: 'out-in' }
+  }
+})
 ```
 
 To start adding transition between your pages and layouts, add the following CSS to your [`app.vue`](https://nuxt.com/docs/guide/directory-structure/app):
@@ -1868,77 +1869,77 @@ To start adding transition between your pages and layouts, add the following CSS
 
 ```vue [app.vue]
 <template>
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 
 <style>
 .layout-enter-active,
 .layout-leave-active {
-	transition: all 0.4s;
+  transition: all 0.4s;
 }
 .layout-enter-from,
 .layout-leave-to {
-	filter: grayscale(1);
+  filter: grayscale(1);
 }
 </style>
 ```
 
 ```vue [layouts/default.vue]
 <template>
-	<div>
-		<pre>default layout</pre>
-		<slot />
-	</div>
+  <div>
+    <pre>default layout</pre>
+    <slot></slot>
+  </div>
 </template>
 
 <style scoped>
 div {
-	background-color: lightgreen;
+  background-color: lightgreen;
 }
 </style>
 ```
 
 ```vue [layouts/orange.vue]
 <template>
-	<div>
-		<pre>orange layout</pre>
-		<slot />
-	</div>
+  <div>
+    <pre>orange layout</pre>
+    <slot></slot>
+  </div>
 </template>
 
 <style scoped>
 div {
-	background-color: #eebb90;
-	padding: 20px;
-	height: 100vh;
+  background-color: #eebb90;
+  padding: 20px;
+  height: 100vh;
 }
 </style>
 ```
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<h1>Home page</h1>
-		<NuxtLink to="/about">About page</NuxtLink>
-	</div>
+  <div>
+    <h1>Home page</h1>
+    <NuxtLink to="/about">About page</NuxtLink>
+  </div>
 </template>
 ```
 
 ```vue [pages/about.vue]
+<template>
+  <div>
+    <h1>About page</h1>
+    <NuxtLink to="/">Home page</NuxtLink>
+  </div>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
-	layout: 'orange'
-});
+  layout: 'orange'
+})
 </script>
-
-<template>
-	<div>
-		<h1>About page</h1>
-		<NuxtLink to="/">Home page</NuxtLink>
-	</div>
-</template>
 ```
 
 ::
@@ -1952,11 +1953,11 @@ Similar to `pageTransition`, you can apply a custom `layoutTransition` to the pa
 ```vue [pages/about.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	layout: 'orange',
-	layoutTransition: {
-		name: 'slide-in'
-	}
-});
+  layout: 'orange',
+  layoutTransition: {
+    name: 'slide-in'
+  }
+})
 </script>
 ```
 
@@ -1968,17 +1969,17 @@ Both `pageTransition` and `layoutTransition` keys accept [`TransitionProps`](htt
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		pageTransition: {
-			name: 'fade',
-			mode: 'out-in' // default
-		},
-		layoutTransition: {
-			name: 'slide',
-			mode: 'out-in' // default
-		}
-	}
-});
+  app: {
+    pageTransition: {
+      name: 'fade',
+      mode: 'out-in' // default
+    },
+    layoutTransition: {
+      name: 'slide',
+      mode: 'out-in' // default
+    }
+  }
+})
 ```
 
 ::warning
@@ -1990,11 +1991,11 @@ To override the global transition property, use the `definePageMeta` to define p
 ```vue [pages/some-page.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	pageTransition: {
-		name: 'bounce',
-		mode: 'out-in' // default
-	}
-});
+  pageTransition: {
+    name: 'bounce',
+    mode: 'out-in' // default
+  }
+})
 </script>
 ```
 
@@ -2005,9 +2006,9 @@ definePageMeta({
 ```vue [pages/some-page.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	pageTransition: false,
-	layoutTransition: false
-});
+  pageTransition: false,
+  layoutTransition: false
+})
 </script>
 ```
 
@@ -2015,11 +2016,11 @@ Or globally in the `nuxt.config`:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		pageTransition: false,
-		layoutTransition: false
-	}
-});
+  app: {
+    pageTransition: false,
+    layoutTransition: false
+  }
+})
 ```
 
 ## JavaScript Hooks
@@ -2031,16 +2032,16 @@ This way presents perfect use-cases for JavaScript animation libraries such as [
 ```vue [pages/some-page.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	pageTransition: {
-		name: 'custom-flip',
-		mode: 'out-in',
-		onBeforeEnter: (el) => {
-			console.log('Before enter...');
-		},
-		onEnter: (el, done) => {},
-		onAfterEnter: (el) => {}
-	}
-});
+  pageTransition: {
+    name: 'custom-flip',
+    mode: 'out-in',
+    onBeforeEnter: (el) => {
+      console.log('Before enter...')
+    },
+    onEnter: (el, done) => {},
+    onAfterEnter: (el) => {}
+  }
+})
 </script>
 ```
 
@@ -2055,66 +2056,66 @@ To apply dynamic transitions using conditional logic, you can leverage inline [m
 ::code-group
 
 ```vue [pages/[id].vue] twoslash
+<template>
+  <h1>#{{ $route.params.id }}</h1>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
-	pageTransition: {
-		name: 'slide-right',
-		mode: 'out-in'
-	},
-	middleware(to, from) {
-		if (to.meta.pageTransition && typeof to.meta.pageTransition !== 'boolean')
-			to.meta.pageTransition.name = +to.params.id! > +from.params.id! ? 'slide-left' : 'slide-right';
-	}
-});
+  pageTransition: {
+    name: 'slide-right',
+    mode: 'out-in'
+  },
+  middleware(to, from) {
+    if (to.meta.pageTransition && typeof to.meta.pageTransition !== 'boolean')
+      to.meta.pageTransition.name = +to.params.id! > +from.params.id! ? 'slide-left' : 'slide-right'
+  }
+})
 </script>
-
-<template>
-	<h1>#{{ $route.params.id }}</h1>
-</template>
 
 <style>
 .slide-left-enter-active,
 .slide-left-leave-active,
 .slide-right-enter-active,
 .slide-right-leave-active {
-	transition: all 0.2s;
+  transition: all 0.2s;
 }
 .slide-left-enter-from {
-	transform: translate(50px, 0);
-	opacity: 0;
+  transform: translate(50px, 0);
+  opacity: 0;
 }
 .slide-left-leave-to {
-	transform: translate(-50px, 0);
-	opacity: 0;
+  transform: translate(-50px, 0);
+  opacity: 0;
 }
 .slide-right-enter-from {
-	transform: translate(-50px, 0);
-	opacity: 0;
+  transform: translate(-50px, 0);
+  opacity: 0;
 }
 .slide-right-leave-to {
-	transform: translate(50px, 0);
-	opacity: 0;
+  transform: translate(50px, 0);
+  opacity: 0;
 }
 </style>
 ```
 
 ```vue [layouts/default.vue]
-<script setup lang="ts">
-const route = useRoute();
-const id = computed(() => Number(route.params.id || 1));
-const prev = computed(() => '/' + (id.value - 1));
-const next = computed(() => '/' + (id.value + 1));
-</script>
-
 <template>
-	<div>
-		<slot />
-		<div v-if="$route.params.id">
-			<NuxtLink :to="prev">⬅️</NuxtLink> |
-			<NuxtLink :to="next">➡️</NuxtLink>
-		</div>
-	</div>
+  <div>
+    <slot></slot>
+    <div v-if="$route.params.id">
+      <NuxtLink :to="prev">⬅️</NuxtLink> |
+      <NuxtLink :to="next">➡️</NuxtLink>
+    </div>
+  </div>
 </template>
+
+<script setup lang="ts">
+const route = useRoute()
+const id = computed(() => Number(route.params.id || 1))
+const prev = computed(() => `/${id.value - 1}`)
+const next = computed(() => `/${id.value + 1}`)
+</script>
 ```
 
 ::
@@ -2129,16 +2130,16 @@ When `<NuxtPage />` is used in `app.vue`, transitions can be configured with the
 
 ```vue [app.vue]
 <template>
-	<div>
-		<NuxtLayout>
-			<NuxtPage
-				:transition="{
-					name: 'bounce',
-					mode: 'out-in'
-				}"
-			/>
-		</NuxtLayout>
-	</div>
+  <div>
+    <NuxtLayout>
+      <NuxtPage
+        :transition="{
+          name: 'bounce',
+          mode: 'out-in',
+        }"
+      />
+    </NuxtLayout>
+  </div>
 </template>
 ```
 
@@ -2156,10 +2157,10 @@ The Nuxt integration is under active development, but can be enabled with the `e
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		viewTransition: true
-	}
-});
+  experimental: {
+    viewTransition: true
+  }
+})
 ```
 
 The possible values are: `false`, `true`, or `'always'`.
@@ -2170,11 +2171,11 @@ By default, view transitions are enabled for all [pages](https://nuxt.com/docs/g
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	app: {
-		// Disable view transitions globally, and opt-in on a per page basis
-		viewTransition: false
-	}
-});
+  app: {
+    // Disable view transitions globally, and opt-in on a per page basis
+    viewTransition: false
+  }
+})
 ```
 
 It is possible to override the default `viewTransition` value for a page by setting the `viewTransition` key in [`definePageMeta`](https://nuxt.com/docs/api/utils/define-page-meta) of the page:
@@ -2182,8 +2183,8 @@ It is possible to override the default `viewTransition` value for a page by sett
 ```vue [pages/about.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	viewTransition: false
-});
+  viewTransition: false
+})
 </script>
 ```
 
@@ -2195,14 +2196,14 @@ If you are also using Vue transitions like `pageTransition` and `layoutTransitio
 
 ```ts
 export default defineNuxtRouteMiddleware((to) => {
-	if (import.meta.server || !document.startViewTransition) {
-		return;
-	}
+  if (import.meta.server || !document.startViewTransition) {
+    return
+  }
 
-	// Disable built-in Vue transitions
-	to.meta.pageTransition = false;
-	to.meta.layoutTransition = false;
-});
+  // Disable built-in Vue transitions
+  to.meta.pageTransition = false
+  to.meta.layoutTransition = false
+})
 ```
 
 ### Known Issues
@@ -2234,27 +2235,27 @@ Use the [Nuxt DevTools](https://devtools.nuxt.com){rel="nofollow"} to inspect th
 ::
 
 ```vue [app.vue]
+<template>
+  <div v-if="data == null">No data</div>
+  <div v-else>
+    <form @submit="handleFormSubmit">
+      <!-- form input tags -->
+    </form>
+  </div>
+</template>
+
 <script setup lang="ts">
-const { data } = await useFetch('/api/data');
+const { data } = await useFetch('/api/data')
 
 async function handleFormSubmit() {
-	const res = await $fetch('/api/submit', {
-		method: 'POST',
-		body: {
-			// My form data
-		}
-	});
+  const res = await $fetch('/api/submit', {
+    method: 'POST',
+    body: {
+      // My form data
+    }
+  })
 }
 </script>
-
-<template>
-	<div v-if="data == null">No data</div>
-	<div v-else>
-		<form @submit="handleFormSubmit">
-			<!-- form input tags -->
-		</form>
-	</div>
-</template>
 ```
 
 In the example above, `useFetch` would make sure that the request would occur in the server and is properly forwarded to the browser. `$fetch` has no such mechanism and is a better option to use when the request is solely made from the browser.
@@ -2274,12 +2275,12 @@ Nuxt includes the [ofetch](https://github.com/unjs/ofetch){rel="nofollow"} libra
 ```vue [pages/todos.vue] twoslash
 <script setup lang="ts">
 async function addTodo() {
-	const todo = await $fetch('/api/todos', {
-		method: 'POST',
-		body: {
-			// My todo data
-		}
-	});
+  const todo = await $fetch('/api/todos', {
+    method: 'POST',
+    body: {
+      // My todo data
+    }
+  })
 }
 </script>
 ```
@@ -2299,23 +2300,23 @@ When calling `useFetch` on the server, Nuxt will use [`useRequestFetch`](https:/
 
 ```vue
 <script setup lang="ts">
-const { data } = await useFetch('/api/echo');
+const { data } = await useFetch('/api/echo')
 </script>
 ```
 
 ```ts
 // /api/echo.ts
-export default defineEventHandler((event) => parseCookies(event));
+export default defineEventHandler(event => parseCookies(event))
 ```
 
 Alternatively, the example below shows how to use [`useRequestHeaders`](https://nuxt.com/docs/api/composables/use-request-headers) to access and send cookies to the API from a server-side request (originating on the client). Using an isomorphic `$fetch` call, we ensure that the API endpoint has access to the same `cookie` header originally sent by the user's browser. This is only necessary if you aren't using `useFetch`.
 
 ```vue
 <script setup lang="ts">
-const headers = useRequestHeaders(['cookie']);
+const headers = useRequestHeaders(['cookie'])
 
 async function getCurrentUser() {
-	return await $fetch('/api/me', { headers });
+  return await $fetch('/api/me', { headers })
 }
 </script>
 ```
@@ -2338,13 +2339,13 @@ Be very careful before proxying headers to an external API and just include head
 The [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) composable uses `$fetch` under-the-hood to make SSR-safe network calls in the setup function.
 
 ```vue [app.vue] twoslash
-<script setup lang="ts">
-const { data: count } = await useFetch('/api/count');
-</script>
-
 <template>
-	<p>Page visits: {{ count }}</p>
+  <p>Page visits: {{ count }}</p>
 </template>
+
+<script setup lang="ts">
+const { data: count } = await useFetch('/api/count')
+</script>
 ```
 
 This composable is a wrapper around the [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) composable and `$fetch` utility.
@@ -2387,10 +2388,10 @@ There are some cases when using the [`useFetch`](https://nuxt.com/docs/api/compo
 
 ```vue [pages/users.vue]
 <script setup lang="ts">
-const { data, error } = await useAsyncData('users', () => myGetFunction('users'));
+const { data, error } = await useAsyncData('users', () => myGetFunction('users'))
 
 // This is also possible:
-const { data, error } = await useAsyncData(() => myGetFunction('users'));
+const { data, error } = await useAsyncData(() => myGetFunction('users'))
 </script>
 ```
 
@@ -2404,11 +2405,11 @@ Setting a key can be useful to share the same data between components using [`us
 
 ```vue [pages/users/[id].vue]
 <script setup lang="ts">
-const { id } = useRoute().params;
+const { id } = useRoute().params
 
 const { data, error } = await useAsyncData(`user:${id}`, () => {
-	return myGetFunction('users', { id });
-});
+  return myGetFunction('users', { id })
+})
 </script>
 ```
 
@@ -2417,10 +2418,10 @@ The `useAsyncData` composable is a great way to wrap and wait for multiple `$fet
 ```vue
 <script setup lang="ts">
 const { data: discounts, status } = await useAsyncData('cart-discount', async () => {
-	const [coupons, offers] = await Promise.all([$fetch('/cart/coupons'), $fetch('/cart/offers')]);
+  const [coupons, offers] = await Promise.all([$fetch('/cart/coupons'), $fetch('/cart/offers')])
 
-	return { coupons, offers };
-});
+  return { coupons, offers }
+})
 // discounts.value.coupons
 // discounts.value.offers
 </script>
@@ -2431,10 +2432,10 @@ const { data: discounts, status } = await useAsyncData('cart-discount', async ()
 
 ```vue
 <script setup lang="ts">
-const offersStore = useOffersStore();
+const offersStore = useOffersStore()
 
 // you can't do this
-await useAsyncData(() => offersStore.getOffer(route.params.slug));
+await useAsyncData(() => offersStore.getOffer(route.params.slug))
 </script>
 ```
 
@@ -2473,28 +2474,28 @@ If you have not fetched data on the server (for example, with `server: false`), 
 By default, data fetching composables will wait for the resolution of their asynchronous function before navigating to a new page by using Vue's Suspense. This feature can be ignored on client-side navigation with the `lazy` option. In that case, you will have to manually handle loading state using the `status` value.
 
 ```vue [app.vue] twoslash
+<template>
+  <!-- you will need to handle a loading state -->
+  <div v-if="status === 'pending'">Loading ...</div>
+  <div v-else>
+    <div v-for="post in posts">
+      <!-- do something -->
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 const { status, data: posts } = useFetch('/api/posts', {
-	lazy: true
-});
+  lazy: true
+})
 </script>
-
-<template>
-	<!-- you will need to handle a loading state -->
-	<div v-if="status === 'pending'">Loading ...</div>
-	<div v-else>
-		<div v-for="post in posts">
-			<!-- do something -->
-		</div>
-	</div>
-</template>
 ```
 
 You can alternatively use [`useLazyFetch`](https://nuxt.com/docs/api/composables/use-lazy-fetch) and `useLazyAsyncData` as convenient methods to perform the same.
 
 ```vue twoslash
 <script setup lang="ts">
-const { status, data: posts } = useLazyFetch('/api/posts');
+const { status, data: posts } = useLazyFetch('/api/posts')
 </script>
 ```
 
@@ -2524,13 +2525,13 @@ Combined with the `lazy` option, this can be useful for data that is not needed 
 
 ```ts twoslash
 /* This call is performed before hydration */
-const articles = await useFetch('/api/article');
+const articles = await useFetch('/api/article')
 
 /* This call will only be performed on the client */
 const { status, data: comments } = useFetch('/api/comments', {
-	lazy: true,
-	server: false
-});
+  lazy: true,
+  server: false
+})
 ```
 
 The `useFetch` composable is meant to be invoked in setup method or called directly at the top level of a function in lifecycle hooks, otherwise you should use [`$fetch` method](https://nuxt.com/#fetch).
@@ -2540,27 +2541,27 @@ The `useFetch` composable is meant to be invoked in setup method or called direc
 The `pick` option helps you to minimize the payload size stored in your HTML document by only selecting the fields that you want returned from the composables.
 
 ```vue
+<template>
+  <h1>{{ mountain.title }}</h1>
+  <p>{{ mountain.description }}</p>
+</template>
+
 <script setup lang="ts">
 /* only pick the fields used in your template */
 const { data: mountain } = await useFetch('/api/mountains/everest', {
-	pick: ['title', 'description']
-});
+  pick: ['title', 'description']
+})
 </script>
-
-<template>
-	<h1>{{ mountain.title }}</h1>
-	<p>{{ mountain.description }}</p>
-</template>
 ```
 
 If you need more control or map over several objects, you can use the `transform` function to alter the result of the query.
 
 ```ts
 const { data: mountains } = await useFetch('/api/mountains', {
-	transform: (mountains) => {
-		return mountains.map((mountain) => ({ title: mountain.title, description: mountain.description }));
-	}
-});
+  transform: (mountains) => {
+    return mountains.map(mountain => ({ title: mountain.title, description: mountain.description }))
+  }
+})
 ```
 
 ::note
@@ -2615,8 +2616,8 @@ The following options **must be consistent** across all calls with the same key:
 
 ```ts
 // ❌ This will trigger a development warning
-const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { deep: false });
-const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { deep: true });
+const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { deep: false })
+const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { deep: true })
 ```
 
 The following options **can safely differ** without triggering warnings:
@@ -2629,16 +2630,16 @@ The following options **can safely differ** without triggering warnings:
 
 ```ts
 // ✅ This is allowed
-const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: true });
-const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: false });
+const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: true })
+const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: false })
 ```
 
 If you need independent instances, use different keys:
 
 ```ts
 // These are completely independent instances
-const { data: users1 } = useAsyncData('users-1', () => $fetch('/api/users'));
-const { data: users2 } = useAsyncData('users-2', () => $fetch('/api/users'));
+const { data: users1 } = useAsyncData('users-1', () => $fetch('/api/users'))
+const { data: users2 } = useAsyncData('users-2', () => $fetch('/api/users'))
 ```
 
 #### Reactive Keys
@@ -2647,15 +2648,15 @@ You can use computed refs, plain refs or getter functions as keys, allowing for 
 
 ```ts
 // Using a computed property as a key
-const userId = ref('123');
+const userId = ref('123')
 const { data: user } = useAsyncData(
-	computed(() => `user-${userId.value}`),
-	() => fetchUser(userId.value)
-);
+  computed(() => `user-${userId.value}`),
+  () => fetchUser(userId.value)
+)
 
 // When userId changes, the data will be automatically refetched
 // and the old data will be cleaned up if no other components use it
-userId.value = '456';
+userId.value = '456'
 ```
 
 #### Refresh and execute
@@ -2663,16 +2664,16 @@ userId.value = '456';
 If you want to fetch or refresh data manually, use the `execute` or `refresh` function provided by the composables.
 
 ```vue twoslash
-<script setup lang="ts">
-const { data, error, execute, refresh } = await useFetch('/api/users');
-</script>
-
 <template>
-	<div>
-		<p>{{ data }}</p>
-		<button @click="() => refresh()">Refresh data</button>
-	</div>
+  <div>
+    <p>{{ data }}</p>
+    <button @click="() => refresh()">Refresh data</button>
+  </div>
 </template>
+
+<script setup lang="ts">
+const { data, error, execute, refresh } = await useFetch('/api/users')
+</script>
 ```
 
 The `execute` function is an alias for `refresh` that works in exactly the same way but is more semantic for cases when the fetch is [not immediate](https://nuxt.com/#not-immediate).
@@ -2687,15 +2688,16 @@ If you want to clear the data provided, for whatever reason, without needing to 
 
 ```vue twoslash
 <script setup lang="ts">
-const { data, clear } = await useFetch('/api/users');
+const { data, clear } = await useFetch('/api/users')
 
-const route = useRoute();
+const route = useRoute()
 watch(
-	() => route.path,
-	(path) => {
-		if (path === '/') clear();
-	}
-);
+  () => route.path,
+  (path) => {
+    if (path === '/')
+      clear()
+  }
+)
 </script>
 ```
 
@@ -2705,12 +2707,12 @@ To re-run your fetching function each time other reactive values in your applica
 
 ```vue twoslash
 <script setup lang="ts">
-const id = ref(1);
+const id = ref(1)
 
 const { data, error, refresh } = await useFetch('/api/users', {
-	/* Changing the id will trigger a refetch */
-	watch: [id]
-});
+  /* Changing the id will trigger a refetch */
+  watch: [id]
+})
 </script>
 ```
 
@@ -2718,11 +2720,11 @@ Note that **watching a reactive value won't change the URL fetched**. For exampl
 
 ```vue
 <script setup lang="ts">
-const id = ref(1);
+const id = ref(1)
 
 const { data, error, refresh } = await useFetch(`/api/users/${id.value}`, {
-	watch: [id]
-});
+  watch: [id]
+})
 </script>
 ```
 
@@ -2734,13 +2736,13 @@ Sometimes you may need to compute an URL from reactive values, and refresh the d
 
 ```vue
 <script setup lang="ts">
-const id = ref(null);
+const id = ref(null)
 
 const { data, status } = useLazyFetch('/api/user', {
-	query: {
-		user_id: id
-	}
-});
+  query: {
+    user_id: id
+  }
+})
 </script>
 ```
 
@@ -2749,30 +2751,30 @@ In the case of more complex URL construction, you may use a callback as a [compu
 Every time a dependency changes, the data will be fetched using the newly constructed URL. Combine this with [not-immediate](https://nuxt.com/#not-immediate), and you can wait until the reactive element changes before fetching.
 
 ```vue
+<template>
+  <div>
+    <!-- disable the input while fetching -->
+    <input v-model="id" type="number" :disabled="pending" />
+
+    <div v-if="status === 'idle'">Type an user ID</div>
+
+    <div v-else-if="pending">Loading ...</div>
+
+    <div v-else>
+      {{ data }}
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
-const id = ref(null);
+const id = ref(null)
 
 const { data, status } = useLazyFetch(() => `/api/users/${id.value}`, {
-	immediate: false
-});
+  immediate: false
+})
 
-const pending = computed(() => status.value === 'pending');
+const pending = computed(() => status.value === 'pending')
 </script>
-
-<template>
-	<div>
-		<!-- disable the input while fetching -->
-		<input v-model="id" type="number" :disabled="pending" />
-
-		<div v-if="status === 'idle'">Type an user ID</div>
-
-		<div v-else-if="pending">Loading ...</div>
-
-		<div v-else>
-			{{ data }}
-		</div>
-	</div>
-</template>
 ```
 
 If you need to force a refresh when other reactive values change, you can also [watch other values](https://nuxt.com/#watch).
@@ -2784,23 +2786,23 @@ The `useFetch` composable will start fetching data the moment is invoked. You ma
 With that, you will need both the `status` to handle the fetch lifecycle, and `execute` to start the data fetch.
 
 ```vue
+<template>
+  <div v-if="status === 'idle'">
+    <button @click="execute">Get data</button>
+  </div>
+
+  <div v-else-if="status === 'pending'">Loading comments...</div>
+
+  <div v-else>
+    {{ data }}
+  </div>
+</template>
+
 <script setup lang="ts">
 const { data, error, execute, status } = await useLazyFetch('/api/comments', {
-	immediate: false
-});
+  immediate: false
+})
 </script>
-
-<template>
-	<div v-if="status === 'idle'">
-		<button @click="execute">Get data</button>
-	</div>
-
-	<div v-else-if="status === 'pending'">Loading comments...</div>
-
-	<div v-else>
-		{{ data }}
-	</div>
-</template>
 ```
 
 For finer control, the `status` variable can be:
@@ -2823,31 +2825,31 @@ However, when calling `useFetch` with a relative URL on the server, Nuxt will us
 If you want to pass on/proxy cookies in the other direction, from an internal request back to the client, you will need to handle this yourself.
 
 ```ts [composables/fetch.ts]
-import { appendResponseHeader } from 'h3';
-import type { H3Event } from 'h3';
+import type { H3Event } from 'h3'
+import { appendResponseHeader } from 'h3'
 
-export const fetchWithCookie = async (event: H3Event, url: string) => {
-	/* Get the response from the server endpoint */
-	const res = await $fetch.raw(url);
-	/* Get the cookies from the response */
-	const cookies = res.headers.getSetCookie();
-	/* Attach each cookie to our incoming Request */
-	for (const cookie of cookies) {
-		appendResponseHeader(event, 'set-cookie', cookie);
-	}
-	/* Return the data of the response */
-	return res._data;
-};
+export async function fetchWithCookie(event: H3Event, url: string) {
+  /* Get the response from the server endpoint */
+  const res = await $fetch.raw(url)
+  /* Get the cookies from the response */
+  const cookies = res.headers.getSetCookie()
+  /* Attach each cookie to our incoming Request */
+  for (const cookie of cookies) {
+    appendResponseHeader(event, 'set-cookie', cookie)
+  }
+  /* Return the data of the response */
+  return res._data
+}
 ```
 
 ```vue
 <script setup lang="ts">
 // This composable will automatically pass cookies to the client
-const event = useRequestEvent();
+const event = useRequestEvent()
 
-const { data: result } = await useAsyncData(() => fetchWithCookie(event!, '/api/with-cookie'));
+const { data: result } = await useAsyncData(() => fetchWithCookie(event!, '/api/with-cookie'))
 
-onMounted(() => console.log(document.cookie));
+onMounted(() => console.log(document.cookie))
 </script>
 ```
 
@@ -2858,14 +2860,14 @@ Nuxt provides a way to perform `asyncData` fetching within the Options API. You 
 ```vue
 <script>
 export default defineNuxtComponent({
-	/* Use the fetchKey option to provide a unique key */
-	fetchKey: 'hello',
-	async asyncData() {
-		return {
-			hello: await $fetch('/api/hello')
-		};
-	}
-});
+  /* Use the fetchKey option to provide a unique key */
+  fetchKey: 'hello',
+  async asyncData() {
+    return {
+      hello: await $fetch('/api/hello')
+    }
+  }
+})
 </script>
 ```
 
@@ -2905,14 +2907,14 @@ Learn more about `JSON.stringify` limitations.
 
 ```ts [server/api/foo.ts]
 export default defineEventHandler(() => {
-	return new Date();
-});
+  return new Date()
+})
 ```
 
 ```vue [app.vue]
 <script setup lang="ts">
 // Type of `data` is inferred as string even though we returned a Date object
-const { data } = await useFetch('/api/foo');
+const { data } = await useFetch('/api/foo')
 </script>
 ```
 
@@ -2922,21 +2924,21 @@ To customize the serialization behavior, you can define a `toJSON` function on y
 
 ```ts [server/api/bar.ts]
 export default defineEventHandler(() => {
-	const data = {
-		createdAt: new Date(),
+  const data = {
+    createdAt: new Date(),
 
-		toJSON() {
-			return {
-				createdAt: {
-					year: this.createdAt.getFullYear(),
-					month: this.createdAt.getMonth(),
-					day: this.createdAt.getDate()
-				}
-			};
-		}
-	};
-	return data;
-});
+    toJSON() {
+      return {
+        createdAt: {
+          year: this.createdAt.getFullYear(),
+          month: this.createdAt.getMonth(),
+          day: this.createdAt.getDate()
+        }
+      }
+    }
+  }
+  return data
+})
 ```
 
 ```vue [app.vue]
@@ -2949,7 +2951,7 @@ export default defineEventHandler(() => {
 //     day: number
 //   }
 // }
-const { data } = await useFetch('/api/bar');
+const { data } = await useFetch('/api/bar')
 </script>
 ```
 
@@ -2960,33 +2962,33 @@ Nuxt does not currently support an alternative serializer to `JSON.stringify`. H
 In the example below, we use [superjson](https://github.com/blitz-js/superjson){rel="nofollow"} as our serializer.
 
 ```ts [server/api/superjson.ts]
-import superjson from 'superjson';
+import superjson from 'superjson'
 
 export default defineEventHandler(() => {
-	const data = {
-		createdAt: new Date(),
+  const data = {
+    createdAt: new Date(),
 
-		// Workaround the type conversion
-		toJSON() {
-			return this;
-		}
-	};
+    // Workaround the type conversion
+    toJSON() {
+      return this
+    }
+  }
 
-	// Serialize the output to string, using superjson
-	return superjson.stringify(data) as unknown as typeof data;
-});
+  // Serialize the output to string, using superjson
+  return superjson.stringify(data) as unknown as typeof data
+})
 ```
 
 ```vue [app.vue]
 <script setup lang="ts">
-import superjson from 'superjson';
+import superjson from 'superjson'
 
 // `date` is inferred as { createdAt: Date } and you can safely use the Date object methods
 const { data } = await useFetch('/api/superjson', {
-	transform: (value) => {
-		return superjson.parse(value as unknown as string);
-	}
-});
+  transform: (value) => {
+    return superjson.parse(value as unknown as string)
+  }
+})
 </script>
 ```
 
@@ -3003,23 +3005,24 @@ When consuming SSE via POST request, you need to handle the connection manually.
 ```ts
 // Make a POST request to the SSE endpoint
 const response = await $fetch<ReadableStream>('/chats/ask-ai', {
-	method: 'POST',
-	body: {
-		query: 'Hello AI, how are you?'
-	},
-	responseType: 'stream'
-});
+  method: 'POST',
+  body: {
+    query: 'Hello AI, how are you?'
+  },
+  responseType: 'stream'
+})
 
 // Create a new ReadableStream from the response with TextDecoderStream to get the data as text
-const reader = response.pipeThrough(new TextDecoderStream()).getReader();
+const reader = response.pipeThrough(new TextDecoderStream()).getReader()
 
 // Read the chunk of data as we get it
 while (true) {
-	const { value, done } = await reader.read();
+  const { value, done } = await reader.read()
 
-	if (done) break;
+  if (done)
+    break
 
-	console.log('Received:', value);
+  console.log('Received:', value)
 }
 ```
 
@@ -3029,11 +3032,11 @@ When requests don't rely on each other, you can make them in parallel with `Prom
 
 ```ts
 const { data } = await useAsyncData(() => {
-	return Promise.all([$fetch('/api/comments/'), $fetch('/api/author/12')]);
-});
+  return Promise.all([$fetch('/api/comments/'), $fetch('/api/author/12')])
+})
 
-const comments = computed(() => data.value?.[0]);
-const author = computed(() => data.value?.[1]);
+const comments = computed(() => data.value?.[0])
+const author = computed(() => data.value?.[1])
 ```
 
 ## ::video-accordion
@@ -3087,17 +3090,17 @@ Instead use `const useX = () => useState('x')`
 In this example, we use a component-local counter state. Any other component that uses `useState('counter')` shares the same reactive state.
 
 ```vue [app.vue] twoslash
-<script setup lang="ts">
-const counter = useState('counter', () => Math.round(Math.random() * 1000));
-</script>
-
 <template>
-	<div>
-		Counter: {{ counter }}
-		<button @click="counter++">+</button>
-		<button @click="counter--">-</button>
-	</div>
+  <div>
+    Counter: {{ counter }}
+    <button @click="counter++">+</button>
+    <button @click="counter--">-</button>
+  </div>
 </template>
+
+<script setup lang="ts">
+const counter = useState('counter', () => Math.round(Math.random() * 1000))
+</script>
 ```
 
 ::link-example{to="https://nuxt.com/docs/examples/features/state-management"}
@@ -3113,11 +3116,11 @@ Most of the time, you will want to initialize your state with data that resolves
 
 ```vue [app.vue] twoslash
 <script setup lang="ts">
-const websiteConfig = useState('config');
+const websiteConfig = useState('config')
 
 await callOnce(async () => {
-	websiteConfig.value = await $fetch('https://my-cms.com/api/website-config');
-});
+  websiteConfig.value = await $fetch('https://my-cms.com/api/website-config')
+})
 </script>
 ```
 
@@ -3140,34 +3143,34 @@ Make sure to install the Pinia module with `npx nuxi@latest module add pinia` or
 
 ```ts [stores/website.ts]
 export const useWebsiteStore = defineStore('websiteStore', {
-	state: () => ({
-		name: '',
-		description: ''
-	}),
-	actions: {
-		async fetch() {
-			const infos = await $fetch('https://api.nuxt.com/modules/pinia');
+  state: () => ({
+    name: '',
+    description: ''
+  }),
+  actions: {
+    async fetch() {
+      const infos = await $fetch('https://api.nuxt.com/modules/pinia')
 
-			this.name = infos.name;
-			this.description = infos.description;
-		}
-	}
-});
+      this.name = infos.name
+      this.description = infos.description
+    }
+  }
+})
 ```
 
 ```vue [app.vue]
-<script setup lang="ts">
-const website = useWebsiteStore();
-
-await callOnce(website.fetch);
-</script>
-
 <template>
-	<main>
-		<h1>{{ website.name }}</h1>
-		<p>{{ website.description }}</p>
-	</main>
+  <main>
+    <h1>{{ website.name }}</h1>
+    <p>{{ website.description }}</p>
+  </main>
 </template>
+
+<script setup lang="ts">
+const website = useWebsiteStore()
+
+await callOnce(website.fetch)
+</script>
 ```
 
 ::
@@ -3177,61 +3180,62 @@ await callOnce(website.fetch);
 ::code-group
 
 ```ts [composables/locale.ts]
-import type { Ref } from 'vue';
+import type { Ref } from 'vue'
 
-export const useLocale = () => {
-	return useState<string>('locale', () => useDefaultLocale().value);
-};
+export function useLocale() {
+  return useState<string>('locale', () => useDefaultLocale().value)
+}
 
-export const useDefaultLocale = (fallback = 'en-US') => {
-	const locale = ref(fallback);
-	if (import.meta.server) {
-		const reqLocale = useRequestHeaders()['accept-language']?.split(',')[0];
-		if (reqLocale) {
-			locale.value = reqLocale;
-		}
-	} else if (import.meta.client) {
-		const navLang = navigator.language;
-		if (navLang) {
-			locale.value = navLang;
-		}
-	}
-	return locale;
-};
+export function useDefaultLocale(fallback = 'en-US') {
+  const locale = ref(fallback)
+  if (import.meta.server) {
+    const reqLocale = useRequestHeaders()['accept-language']?.split(',')[0]
+    if (reqLocale) {
+      locale.value = reqLocale
+    }
+  }
+  else if (import.meta.client) {
+    const navLang = navigator.language
+    if (navLang) {
+      locale.value = navLang
+    }
+  }
+  return locale
+}
 
-export const useLocales = () => {
-	const locale = useLocale();
-	const locales = ref(['en-US', 'en-GB', ...'ja-JP-u-ca-japanese']);
-	if (!locales.value.includes(locale.value)) {
-		locales.value.unshift(locale.value);
-	}
-	return locales;
-};
+export function useLocales() {
+  const locale = useLocale()
+  const locales = ref(['en-US', 'en-GB', ...'ja-JP-u-ca-japanese'])
+  if (!locales.value.includes(locale.value)) {
+    locales.value.unshift(locale.value)
+  }
+  return locales
+}
 
-export const useLocaleDate = (date: Ref<Date> | Date, locale = useLocale()) => {
-	return computed(() => new Intl.DateTimeFormat(locale.value, { dateStyle: 'full' }).format(unref(date)));
-};
+export function useLocaleDate(date: Ref<Date> | Date, locale = useLocale()) {
+  return computed(() => new Intl.DateTimeFormat(locale.value, { dateStyle: 'full' }).format(unref(date)))
+}
 ```
 
 ```vue [app.vue]
-<script setup lang="ts">
-const locales = useLocales();
-const locale = useLocale();
-const date = useLocaleDate(new Date('2016-10-26'));
-</script>
-
 <template>
-	<div>
-		<h1>Nuxt birthday</h1>
-		<p>{{ date }}</p>
-		<label for="locale-chooser">Preview a different locale</label>
-		<select id="locale-chooser" v-model="locale">
-			<option v-for="locale of locales" :key="locale" :value="locale">
-				{{ locale }}
-			</option>
-		</select>
-	</div>
+  <div>
+    <h1>Nuxt birthday</h1>
+    <p>{{ date }}</p>
+    <label for="locale-chooser">Preview a different locale</label>
+    <select id="locale-chooser" v-model="locale">
+      <option v-for="locale of locales" :key="locale" :value="locale">
+        {{ locale }}
+      </option>
+    </select>
+  </div>
 </template>
+
+<script setup lang="ts">
+const locales = useLocales()
+const locale = useLocale()
+const date = useLocaleDate(new Date('2016-10-26'))
+</script>
 ```
 
 ::
@@ -3244,20 +3248,20 @@ const date = useLocaleDate(new Date('2016-10-26'));
 By using [auto-imported composables](https://nuxt.com/docs/guide/directory-structure/composables) we can define global type-safe states and import them across the app.
 
 ```ts [composables/states.ts] twoslash
-export const useColor = () => useState<string>('color', () => 'pink');
+export const useColor = () => useState<string>('color', () => 'pink')
 ```
 
 ```vue [app.vue]
+<template>
+  <p>Current color: {{ color }}</p>
+</template>
+
 <script setup lang="ts">
 // ---cut-start---
-const useColor = () => useState<string>('color', () => 'pink');
+const useColor = () => useState<string>('color', () => 'pink')
 // ---cut-end---
-const color = useColor(); // Same as useState('color')
+const color = useColor() // Same as useState('color')
 </script>
-
-<template>
-	<p>Current color: {{ color }}</p>
-</template>
 ```
 
 ## ::video-accordion
@@ -3302,15 +3306,15 @@ If you are using an error reporting framework, you can provide a global handler 
 
 ```ts [plugins/error-handler.ts] twoslash
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.vueApp.config.errorHandler = (error, instance, info) => {
-		// handle error, e.g. report to a service
-	};
+  nuxtApp.vueApp.config.errorHandler = (error, instance, info) => {
+    // handle error, e.g. report to a service
+  }
 
-	// Also possible
-	nuxtApp.hook('vue:error', (error, instance, info) => {
-		// handle error, e.g. report to a service
-	});
-});
+  // Also possible
+  nuxtApp.hook('vue:error', (error, instance, info) => {
+    // handle error, e.g. report to a service
+  })
+})
 ```
 
 ::note
@@ -3365,22 +3369,22 @@ Discover all the Nuxt lifecycle hooks.
 Customize the default error page by adding `~/error.vue` in the source directory of your application, alongside `app.vue`.
 
 ```vue [error.vue]
+<template>
+  <div>
+    <h2>{{ error.statusCode }}</h2>
+    <button @click="handleError">Clear errors</button>
+  </div>
+</template>
+
 <script setup lang="ts">
-import type { NuxtError } from '#app';
+import type { NuxtError } from '#app'
 
 const props = defineProps({
-	error: Object as () => NuxtError
-});
+  error: Object as () => NuxtError
+})
 
-const handleError = () => clearError({ redirect: '/' });
+const handleError = () => clearError({ redirect: '/' })
 </script>
-
-<template>
-	<div>
-		<h2>{{ error.statusCode }}</h2>
-		<button @click="handleError">Clear errors</button>
-	</div>
-</template>
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/directory-structure/error"}
@@ -3391,10 +3395,10 @@ For custom errors we highly recommend to use `onErrorCaptured` composable that c
 
 ```ts [plugins/error-handler.ts] twoslash
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.hook('vue:error', (err) => {
-		//
-	});
-});
+  nuxtApp.hook('vue:error', (err) => {
+    //
+  })
+})
 ```
 
 When you are ready to remove the error page, you can call the [`clearError`](https://nuxt.com/docs/api/utils/clear-error) helper function, which takes an optional path to redirect to (for example, if you want to navigate to a 'safe' page).
@@ -3416,7 +3420,7 @@ If you are running on Node 16 and you set any cookies when rendering your error 
 ### `useError`
 
 ```ts [TS Signature]
-function useError(): Ref<Error | { url; statusCode; statusMessage; message; description; data }>;
+function useError(): Ref<Error | { url, statusCode, statusMessage, message, description, data }>
 ```
 
 This function will return the global Nuxt error that is being handled.
@@ -3428,7 +3432,7 @@ Read more about `useError` composable.
 ### `createError`
 
 ```ts [TS Signature]
-function createError(err: string | { cause; data; message; name; stack; statusCode; statusMessage; fatal }): Error;
+function createError(err: string | { cause, data, message, name, stack, statusCode, statusMessage, fatal }): Error
 ```
 
 Create an error object with additional metadata. You can pass a string to be set as the error `message` or an object containing error properties. It is usable in both the Vue and Server portions of your app, and is meant to be thrown.
@@ -3440,14 +3444,14 @@ If you throw an error created with `createError`:
 
 ```vue [pages/movies/[slug].vue] twoslash
 <script setup lang="ts">
-const route = useRoute();
-const { data } = await useFetch(`/api/movies/${route.params.slug}`);
+const route = useRoute()
+const { data } = await useFetch(`/api/movies/${route.params.slug}`)
 
 if (!data.value) {
-	throw createError({
-		statusCode: 404,
-		statusMessage: 'Page Not Found'
-	});
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found'
+  })
 }
 </script>
 ```
@@ -3459,7 +3463,7 @@ Read more about `createError` util.
 ### `showError`
 
 ```ts [TS Signature]
-function showError(err: string | Error | { statusCode; statusMessage }): Error;
+function showError(err: string | Error | { statusCode, statusMessage }): Error
 ```
 
 You can call this function at any point on client-side, or (on server side) directly within middleware, plugins or `setup()` functions. It will trigger a full-screen error page which you can clear with [`clearError`](https://nuxt.com/#clearerror).
@@ -3473,7 +3477,7 @@ Read more about `showError` util.
 ### `clearError`
 
 ```ts [TS Signature]
-function clearError(options?: { redirect?: string }): Promise<void>;
+function clearError(options?: { redirect?: string }): Promise<void>
 ```
 
 This function will clear the currently handled Nuxt error. It also takes an optional path to redirect to (for example, if you want to navigate to a 'safe' page).
@@ -3496,14 +3500,14 @@ If you navigate to another route, the error will be cleared automatically.
 
 ```vue [pages/index.vue]
 <template>
-	<!-- some content -->
-	<NuxtErrorBoundary @error="someErrorLogger">
-		<!-- You use the default slot to render your content -->
-		<template #error="{ error, clearError }">
-			You can display the error locally here: {{ error }}
-			<button @click="clearError">This will clear the error.</button>
-		</template>
-	</NuxtErrorBoundary>
+  <!-- some content -->
+  <NuxtErrorBoundary @error="someErrorLogger">
+    <!-- You use the default slot to render your content -->
+    <template #error="{ error, clearError }">
+      You can display the error locally here: {{ error }}
+      <button @click="clearError">This will clear the error.</button>
+    </template>
+  </NuxtErrorBoundary>
 </template>
 ```
 
@@ -3547,8 +3551,8 @@ Both endpoints and middleware can be defined like this:
 
 ```ts [server/api/test.ts] twoslash
 export default defineEventHandler(async (event) => {
-	// ... Do whatever you want here
-});
+  // ... Do whatever you want here
+})
 ```
 
 And you can directly return `text`, `json`, `html` or even a `stream`.
@@ -3590,18 +3594,18 @@ Nitro has a powerful feature called `routeRules` which allows you to define a se
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	routeRules: {
-		// Generated at build time for SEO purpose
-		'/': { prerender: true },
-		// Cached for 1 hour
-		'/api/*': { cache: { maxAge: 60 * 60 } },
-		// Redirection to avoid 404
-		'/old-page': {
-			redirect: { to: '/new-page', statusCode: 302 }
-		}
-		// ...
-	}
-});
+  routeRules: {
+    // Generated at build time for SEO purpose
+    '/': { prerender: true },
+    // Cached for 1 hour
+    '/api/*': { cache: { maxAge: 60 * 60 } },
+    // Redirection to avoid 404
+    '/old-page': {
+      redirect: { to: '/new-page', statusCode: 302 }
+    }
+    // ...
+  }
+})
 ```
 
 ## ::read-more
@@ -3652,23 +3656,23 @@ In addition, you can extend from a layer by adding the [extends](https://nuxt.co
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: [
-		'../base', // Extend from a local layer
-		'@my-themes/awesome', // Extend from an installed npm package
-		'github:my-themes/awesome#v1' // Extend from a git repository
-	]
-});
+  extends: [
+    '../base', // Extend from a local layer
+    '@my-themes/awesome', // Extend from an installed npm package
+    'github:my-themes/awesome#v1' // Extend from a git repository
+  ]
+})
 ```
 
 You can also pass an authentication token if you are extending from a private GitHub repository:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: [
-		// per layer configuration
-		['github:my-themes/private-awesome', { auth: process.env.GITHUB_TOKEN }]
-	]
-});
+  extends: [
+    // per layer configuration
+    ['github:my-themes/private-awesome', { auth: process.env.GITHUB_TOKEN }]
+  ]
+})
 ```
 
 ::tip
@@ -3676,17 +3680,17 @@ You can override a layer's alias by specifying it in the options next to the lay
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: [
-		[
-			'github:my-themes/awesome',
-			{
-				meta: {
-					name: 'my-awesome-theme'
-				}
-			}
-		]
-	]
-});
+  extends: [
+    [
+      'github:my-themes/awesome',
+      {
+        meta: {
+          name: 'my-awesome-theme'
+        }
+      }
+    ]
+  ]
+})
 ```
 
 ::
@@ -3793,26 +3797,26 @@ You can manually specify routes that [Nitro](https://nuxt.com/docs/guide/concept
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	nitro: {
-		prerender: {
-			routes: ['/user/1', '/user/2'],
-			ignore: ['/dynamic']
-		}
-	}
-});
+  nitro: {
+    prerender: {
+      routes: ['/user/1', '/user/2'],
+      ignore: ['/dynamic']
+    }
+  }
+})
 ```
 
 You can combine this with the `crawlLinks` option to pre-render a set of routes that the crawler can't discover like your `/sitemap.xml` or `/robots.txt`:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	nitro: {
-		prerender: {
-			crawlLinks: true,
-			routes: ['/sitemap.xml', '/robots.txt']
-		}
-	}
-});
+  nitro: {
+    prerender: {
+      crawlLinks: true,
+      routes: ['/sitemap.xml', '/robots.txt']
+    }
+  }
+})
 ```
 
 Setting `nitro.prerender` to `true` is similar to `nitro.prerender.crawlLinks` to `true`.
@@ -3825,16 +3829,16 @@ Lastly, you can manually configure this using routeRules.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	routeRules: {
-		// Set prerender to true to configure it to be prerendered
-		'/rss.xml': { prerender: true },
-		// Set it to false to configure it to be skipped for prerendering
-		'/this-DOES-NOT-get-prerendered': { prerender: false },
-		// Everything under /blog gets prerendered as long as it
-		// is linked to from another page
-		'/blog/**': { prerender: true }
-	}
-});
+  routeRules: {
+    // Set prerender to true to configure it to be prerendered
+    '/rss.xml': { prerender: true },
+    // Set it to false to configure it to be skipped for prerendering
+    '/this-DOES-NOT-get-prerendered': { prerender: false },
+    // Everything under /blog gets prerendered as long as it
+    // is linked to from another page
+    '/blog/**': { prerender: true }
+  }
+})
 ```
 
 ::read-more{to="https://nitro.unjs.io/config/#routerules"}
@@ -3854,29 +3858,29 @@ This feature is experimental and in order to use it you must enable the `experim
 ::
 
 ```vue [pages/index.vue]
+<template>
+  <div>
+    <h1>Homepage</h1>
+    <p>Pre-rendered at build time</p>
+  </div>
+</template>
+
 <script setup>
 // Or set at the page level
 defineRouteRules({
-	prerender: true
-});
+  prerender: true
+})
 </script>
-
-<template>
-	<div>
-		<h1>Homepage</h1>
-		<p>Pre-rendered at build time</p>
-	</div>
-</template>
 ```
 
 This will be translated to:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	routeRules: {
-		'/': { prerender: true }
-	}
-});
+  routeRules: {
+    '/': { prerender: true }
+  }
+})
 ```
 
 ## Runtime prerender configuration
@@ -3886,16 +3890,16 @@ export default defineNuxtConfig({
 You can use this at runtime within a [Nuxt context](https://nuxt.com/docs/guide/going-further/nuxt-app#the-nuxt-context) to add more routes for Nitro to prerender.
 
 ```vue [pages/index.vue]
-<script setup>
-prerenderRoutes(['/some/other/url']);
-prerenderRoutes('/api/content/article/my-article');
-</script>
-
 <template>
-	<div>
-		<h1>This will register other routes for prerendering when prerendered</h1>
-	</div>
+  <div>
+    <h1>This will register other routes for prerendering when prerendered</h1>
+  </div>
 </template>
+
+<script setup>
+prerenderRoutes(['/some/other/url'])
+prerenderRoutes('/api/content/article/my-article')
+</script>
 ```
 
 ## ::read-more
@@ -3913,15 +3917,15 @@ This is called before prerendering for additional routes to be registered.
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	hooks: {
-		async 'prerender:routes'(ctx) {
-			const { pages } = await fetch('https://api.some-cms.com/pages').then((res) => res.json());
-			for (const page of pages) {
-				ctx.routes.add(`/${page.name}`);
-			}
-		}
-	}
-});
+  hooks: {
+    'prerender:routes': async function (ctx) {
+      const { pages } = await fetch('https://api.some-cms.com/pages').then(res => res.json())
+      for (const page of pages) {
+        ctx.routes.add(`/${page.name}`)
+      }
+    }
+  }
+})
 ```
 
 ### `prerender:generate` Nitro hook
@@ -3930,16 +3934,16 @@ This is called for each route during prerendering. You can use this for fine gra
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		hooks: {
-			'prerender:generate'(route) {
-				if (route.route?.includes('private')) {
-					route.skip = true;
-				}
-			}
-		}
-	}
-});
+  nitro: {
+    hooks: {
+      'prerender:generate': function (route) {
+        if (route.route?.includes('private')) {
+          route.skip = true
+        }
+      }
+    }
+  }
+})
 ```
 
 # Deployment
@@ -3984,16 +3988,16 @@ To use `pm2`, use an `ecosystem.config.cjs`:
 
 ```ts [ecosystem.config.cjs]
 module.exports = {
-	apps: [
-		{
-			name: 'NuxtAppName',
-			port: '3000',
-			exec_mode: 'cluster',
-			instances: 'max',
-			script: './.output/server/index.mjs'
-		}
-	]
-};
+  apps: [
+    {
+      name: 'NuxtAppName',
+      port: '3000',
+      exec_mode: 'cluster',
+      instances: 'max',
+      script: './.output/server/index.mjs'
+    }
+  ]
+}
 ```
 
 ### Cluster Mode
@@ -4044,8 +4048,8 @@ If you don't want to pre-render your routes, another way of using static hosting
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	ssr: false
-});
+  ssr: false
+})
 ```
 
 ## Hosting Providers
@@ -4063,10 +4067,10 @@ You can explicitly set the desired preset in the [`nuxt.config.ts`](https://nuxt
 
 ```js [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	nitro: {
-		preset: 'node-server'
-	}
-});
+  nitro: {
+    preset: 'node-server'
+  }
+})
 ```
 
 ... or use the `NITRO_PRESET` environment variable when running `nuxt build`:
@@ -4146,20 +4150,20 @@ We currently ship an environment for unit testing code that needs a [Nuxt](https
 ### Setup
 
 1. Add `@nuxt/test-utils/module` to your `nuxt.config` file (optional). It adds a Vitest integration to your Nuxt DevTools which supports running your unit tests in development.
-    ```ts twoslash
-    export default defineNuxtConfig({
-    	modules: ['@nuxt/test-utils/module']
-    });
-    ```
+   ```ts twoslash
+   export default defineNuxtConfig({
+     modules: ['@nuxt/test-utils/module']
+   })
+   ```
 2. Create a `vitest.config.ts` with the following content:
 
-    ```ts twoslash
-    import { defineVitestConfig } from '@nuxt/test-utils/config';
+   ```ts twoslash
+   import { defineVitestConfig } from '@nuxt/test-utils/config'
 
-    export default defineVitestConfig({
-    	// any custom Vitest config you require
-    });
-    ```
+   export default defineVitestConfig({
+     // any custom Vitest config you require
+   })
+   ```
 
 ::tip
 When importing `@nuxt/test-utils` in your vitest config, It is necessary to have `"type": "module"` specified in your `package.json` or rename your vitest config file appropriately.
@@ -4179,46 +4183,46 @@ You can opt in to a Nuxt environment by adding `.nuxt.` to the test file's name 
 
 ```ts twoslash
 // @vitest-environment nuxt
-import { test } from 'vitest';
+import { test } from 'vitest'
 
 test('my test', () => {
-	// ... test with Nuxt environment!
-});
+  // ... test with Nuxt environment!
+})
 ```
 
 You can alternatively set `environment: 'nuxt'` in your Vitest configuration to enable the Nuxt environment for **all tests**.
 
 ```ts twoslash
 // vitest.config.ts
-import { fileURLToPath } from 'node:url';
-import { defineVitestConfig } from '@nuxt/test-utils/config';
+import { fileURLToPath } from 'node:url'
+import { defineVitestConfig } from '@nuxt/test-utils/config'
 
 export default defineVitestConfig({
-	test: {
-		environment: 'nuxt'
-		// you can optionally set Nuxt-specific environment options
-		// environmentOptions: {
-		//   nuxt: {
-		//     rootDir: fileURLToPath(new URL('./playground', import.meta.url)),
-		//     domEnvironment: 'happy-dom', // 'happy-dom' (default) or 'jsdom'
-		//     overrides: {
-		//       // other Nuxt config you want to pass
-		//     }
-		//   }
-		// }
-	}
-});
+  test: {
+    environment: 'nuxt'
+    // you can optionally set Nuxt-specific environment options
+    // environmentOptions: {
+    //   nuxt: {
+    //     rootDir: fileURLToPath(new URL('./playground', import.meta.url)),
+    //     domEnvironment: 'happy-dom', // 'happy-dom' (default) or 'jsdom'
+    //     overrides: {
+    //       // other Nuxt config you want to pass
+    //     }
+    //   }
+    // }
+  }
+})
 ```
 
 If you have set `environment: 'nuxt'` by default, you can then opt _out_ of the [default environment](https://vitest.dev/guide/environment.html#test-environment){rel="nofollow"} per test file as needed.
 
 ```ts twoslash
 // @vitest-environment node
-import { test } from 'vitest';
+import { test } from 'vitest'
 
 test('my test', () => {
-	// ... test without Nuxt environment!
-});
+  // ... test without Nuxt environment!
+})
 ```
 
 ::warning
@@ -4242,20 +4246,20 @@ Default `false`, uses [`fake-indexeddb`](https://github.com/dumbmatter/fakeIndex
 These can be configured in the `environmentOptions` section of your `vitest.config.ts` file:
 
 ```ts twoslash
-import { defineVitestConfig } from '@nuxt/test-utils/config';
+import { defineVitestConfig } from '@nuxt/test-utils/config'
 
 export default defineVitestConfig({
-	test: {
-		environmentOptions: {
-			nuxt: {
-				mock: {
-					intersectionObserver: true,
-					indexedDb: true
-				}
-			}
-		}
-	}
-});
+  test: {
+    environmentOptions: {
+      nuxt: {
+        mock: {
+          intersectionObserver: true,
+          indexedDb: true
+        }
+      }
+    }
+  }
+})
 ```
 
 ### 🛠️ Helpers
@@ -4273,41 +4277,41 @@ Under the hood, `mountSuspended` wraps `mount` from `@vue/test-utils`, so you ca
 For example:
 
 ```ts twoslash
+import type { Component } from 'vue'
 // @noErrors
-import { it, expect } from 'vitest';
-import type { Component } from 'vue';
+import { expect, it } from 'vitest'
 declare module '#components' {
-	export const SomeComponent: Component;
+  export const SomeComponent: Component
 }
+import { SomeComponent } from '#components'
 // ---cut---
 // tests/components/SomeComponents.nuxt.spec.ts
-import { mountSuspended } from '@nuxt/test-utils/runtime';
-import { SomeComponent } from '#components';
+import { mountSuspended } from '@nuxt/test-utils/runtime'
 
 it('can mount some component', async () => {
-	const component = await mountSuspended(SomeComponent);
-	expect(component.text()).toMatchInlineSnapshot('"This is an auto-imported component"');
-});
+  const component = await mountSuspended(SomeComponent)
+  expect(component.text()).toMatchInlineSnapshot('"This is an auto-imported component"')
+})
 ```
 
 ```ts twoslash
-// @noErrors
-import { it, expect } from 'vitest';
 // ---cut---
 // tests/components/SomeComponents.nuxt.spec.ts
-import { mountSuspended } from '@nuxt/test-utils/runtime';
-import App from '~/app.vue';
+import { mountSuspended } from '@nuxt/test-utils/runtime'
+// @noErrors
+import { expect, it } from 'vitest'
+import App from '~/app.vue'
 
 // tests/App.nuxt.spec.ts
 it('can also mount an app', async () => {
-	const component = await mountSuspended(App, { route: '/test' });
-	expect(component.html()).toMatchInlineSnapshot(`
+  const component = await mountSuspended(App, { route: '/test' })
+  expect(component.html()).toMatchInlineSnapshot(`
       "<div>This is an auto-imported component</div>
       <div> I am a global component </div>
       <div>/</div>
       <a href="/test"> Test link </a>"
-    `);
-});
+    `)
+})
 ```
 
 #### `renderSuspended`
@@ -4323,42 +4327,42 @@ The passed in component will be rendered inside a `<div id="test-wrapper"></div>
 Examples:
 
 ```ts twoslash
+import type { Component } from 'vue'
 // @noErrors
-import { it, expect } from 'vitest';
-import type { Component } from 'vue';
+import { expect, it } from 'vitest'
 declare module '#components' {
-	export const SomeComponent: Component;
+  export const SomeComponent: Component
 }
+import { SomeComponent } from '#components'
 // ---cut---
 // tests/components/SomeComponents.nuxt.spec.ts
-import { renderSuspended } from '@nuxt/test-utils/runtime';
-import { SomeComponent } from '#components';
-import { screen } from '@testing-library/vue';
+import { renderSuspended } from '@nuxt/test-utils/runtime'
+import { screen } from '@testing-library/vue'
 
 it('can render some component', async () => {
-	await renderSuspended(SomeComponent);
-	expect(screen.getByText('This is an auto-imported component')).toBeDefined();
-});
+  await renderSuspended(SomeComponent)
+  expect(screen.getByText('This is an auto-imported component')).toBeDefined()
+})
 ```
 
 ```ts twoslash
-// @noErrors
-import { it, expect } from 'vitest';
 // ---cut---
 // tests/App.nuxt.spec.ts
-import { renderSuspended } from '@nuxt/test-utils/runtime';
-import App from '~/app.vue';
+import { renderSuspended } from '@nuxt/test-utils/runtime'
+// @noErrors
+import { expect, it } from 'vitest'
+import App from '~/app.vue'
 
 it('can also render an app', async () => {
-	const html = await renderSuspended(App, { route: '/test' });
-	expect(html).toMatchInlineSnapshot(`
+  const html = await renderSuspended(App, { route: '/test' })
+  expect(html).toMatchInlineSnapshot(`
     "<div id="test-wrapper">
       <div>This is an auto-imported component</div>
       <div> I am a global component </div>
       <div>Index page</div><a href="/test"> Test link </a>
     </div>"
-  `);
-});
+  `)
+})
 ```
 
 #### `mockNuxtImport`
@@ -4366,13 +4370,13 @@ it('can also render an app', async () => {
 `mockNuxtImport` allows you to mock Nuxt's auto import functionality. For example, to mock `useStorage`, you can do so like this:
 
 ```ts twoslash
-import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 
 mockNuxtImport('useStorage', () => {
-	return () => {
-		return { value: 'mocked storage' };
-	};
-});
+  return () => {
+    return { value: 'mocked storage' }
+  }
+})
 
 // your tests here
 ```
@@ -4384,25 +4388,25 @@ mockNuxtImport('useStorage', () => {
 If you need to mock a Nuxt import and provide different implementations between tests, you can do it by creating and exposing your mocks using [`vi.hoisted`](https://vitest.dev/api/vi.html#vi-hoisted){rel="nofollow"}, and then use those mocks in `mockNuxtImport`. You then have access to the mocked imports, and can change the implementation between tests. Be careful to [restore mocks](https://vitest.dev/api/mock.html#mockrestore){rel="nofollow"} before or after each test to undo mock state changes between runs.
 
 ```ts twoslash
-import { vi } from 'vitest';
-import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
+import { vi } from 'vitest'
 
 const { useStorageMock } = vi.hoisted(() => {
-	return {
-		useStorageMock: vi.fn(() => {
-			return { value: 'mocked storage' };
-		})
-	};
-});
+  return {
+    useStorageMock: vi.fn(() => {
+      return { value: 'mocked storage' }
+    })
+  }
+})
 
 mockNuxtImport('useStorage', () => {
-	return useStorageMock;
-});
+  return useStorageMock
+})
 
 // Then, inside a test
 useStorageMock.mockImplementation(() => {
-	return { value: 'something else' };
-});
+  return { value: 'something else' }
+})
 ```
 
 #### `mockComponent`
@@ -4414,29 +4418,29 @@ The second argument is a factory function that returns the mocked component.
 For example, to mock `MyComponent`, you can:
 
 ```ts twoslash
-import { mockComponent } from '@nuxt/test-utils/runtime';
+import { mockComponent } from '@nuxt/test-utils/runtime'
 
 mockComponent('MyComponent', {
-	props: {
-		value: String
-	},
-	setup(props) {
-		// ...
-	}
-});
+  props: {
+    value: String
+  },
+  setup(props) {
+    // ...
+  }
+})
 
 // relative path or alias also works
 mockComponent('~/components/my-component.vue', async () => {
-	// or a factory function
-	return defineComponent({
-		setup(props) {
-			// ...
-		}
-	});
-});
+  // or a factory function
+  return defineComponent({
+    setup(props) {
+      // ...
+    }
+  })
+})
 
 // or you can use SFC for redirecting to a mock component
-mockComponent('MyComponent', () => import('./MockComponent.vue'));
+mockComponent('MyComponent', () => import('./MockComponent.vue'))
 
 // your tests here
 ```
@@ -4444,18 +4448,18 @@ mockComponent('MyComponent', () => import('./MockComponent.vue'));
 > **Note**: You can't reference local variables in the factory function since they are hoisted. If you need to access Vue APIs or other variables, you need to import them in your factory function.
 
 ```ts twoslash
-import { mockComponent } from '@nuxt/test-utils/runtime';
+import { mockComponent } from '@nuxt/test-utils/runtime'
 
 mockComponent('MyComponent', async () => {
-	const { ref, h } = await import('vue');
+  const { ref, h } = await import('vue')
 
-	return defineComponent({
-		setup(props) {
-			const counter = ref(0);
-			return () => h('div', null, counter.value);
-		}
-	});
-});
+  return defineComponent({
+    setup(props) {
+      const counter = ref(0)
+      return () => h('div', null, counter.value)
+    }
+  })
+})
 ```
 
 #### `registerEndpoint`
@@ -4468,22 +4472,22 @@ The second argument is a factory function that returns the mocked data.
 For example, to mock `/test/` endpoint, you can do:
 
 ```ts twoslash
-import { registerEndpoint } from '@nuxt/test-utils/runtime';
+import { registerEndpoint } from '@nuxt/test-utils/runtime'
 
 registerEndpoint('/test/', () => ({
-	test: 'test-field'
-}));
+  test: 'test-field'
+}))
 ```
 
 By default, your request will be made using the `GET` method. You may use another method by setting an object as the second argument instead of a function.
 
 ```ts twoslash
-import { registerEndpoint } from '@nuxt/test-utils/runtime';
+import { registerEndpoint } from '@nuxt/test-utils/runtime'
 
 registerEndpoint('/test/', {
-	method: 'POST',
-	handler: () => ({ test: 'test-field' })
-});
+  method: 'POST',
+  handler: () => ({ test: 'test-field' })
+})
 ```
 
 > **Note**: If your requests in a component go to an external API, you can use `baseURL` and then make it empty using [Nuxt Environment Override Config](https://nuxt.com/docs/getting-started/configuration#environment-overrides) (`$test`) so all your requests will go to Nitro server.
@@ -4497,23 +4501,23 @@ If you would like to use both the end-to-end and unit testing functionality of `
 `app.nuxt.spec.ts`
 
 ```ts twoslash
-import { mockNuxtImport } from '@nuxt/test-utils/runtime';
+import { mockNuxtImport } from '@nuxt/test-utils/runtime'
 
 mockNuxtImport('useStorage', () => {
-	return () => {
-		return { value: 'mocked storage' };
-	};
-});
+  return () => {
+    return { value: 'mocked storage' }
+  }
+})
 ```
 
 `app.e2e.spec.ts`
 
 ```ts twoslash
-import { setup, $fetch } from '@nuxt/test-utils/e2e';
+import { $fetch, setup } from '@nuxt/test-utils/e2e'
 
 await setup({
-	setupTimeout: 10000
-});
+  setupTimeout: 10000
+})
 
 // ...
 ```
@@ -4525,70 +4529,70 @@ If you prefer to use `@vue/test-utils` on its own for unit testing in Nuxt, and 
 1. Install the needed dependencies
    :code-group[```bash \[npm\]
    npm i --save-dev vitest @vue/test-utils happy-dom @vitejs/plugin-vue
-    ```````bash [yarn]
-    yarn add --dev vitest @vue/test-utils happy-dom @vitejs/plugin-vue
-    ``````bash \[pnpm\]
-    pnpm add -D vitest @vue/test-utils happy-dom @vitejs/plugin-vue
-    ``````bash \[bun\]
-    bun add --dev vitest @vue/test-utils happy-dom @vitejs/plugin-vue
-    ```]{sync="pm"}
-    ```````
+   ```````bash [yarn]
+   yarn add --dev vitest @vue/test-utils happy-dom @vitejs/plugin-vue
+   ``````bash \[pnpm\]
+   pnpm add -D vitest @vue/test-utils happy-dom @vitejs/plugin-vue
+   ``````bash \[bun\]
+   bun add --dev vitest @vue/test-utils happy-dom @vitejs/plugin-vue
+   ```]{sync="pm"}
+   ```````
 2. Create a `vitest.config.ts` with the following content:
 
-    ```ts twoslash
-    import { defineConfig } from 'vitest/config';
-    import vue from '@vitejs/plugin-vue';
+   ```ts twoslash
+   import vue from '@vitejs/plugin-vue'
+   import { defineConfig } from 'vitest/config'
 
-    export default defineConfig({
-    	plugins: [vue()],
-    	test: {
-    		environment: 'happy-dom'
-    	}
-    });
-    ```
+   export default defineConfig({
+     plugins: [vue()],
+     test: {
+       environment: 'happy-dom'
+     }
+   })
+   ```
 
 3. Add a new command for test in your `package.json`
-    ```json
-    "scripts": {
-      "build": "nuxt build",
-      "dev": "nuxt dev",
-      ...
-      "test": "vitest"
-    },
-    ```
+   ```json
+   "scripts": {
+     "build": "nuxt build",
+     "dev": "nuxt dev",
+     ...
+     "test": "vitest"
+   },
+   ```
 4. Create a simple `<HelloWorld>` component `components/HelloWorld.vue` with the following content:
-    ```vue
-    <template>
-    	<p>Hello world</p>
-    </template>
-    ```
+   ```vue
+   <template>
+     <p>Hello world</p>
+   </template>
+   ```
 5. Create a simple unit test for this newly created component `~/components/HelloWorld.spec.ts`
 
-    ```ts twoslash
-    import { describe, it, expect } from 'vitest';
-    import { mount } from '@vue/test-utils';
+   ```ts twoslash
+   import { mount } from '@vue/test-utils'
+   import { describe, expect, it } from 'vitest'
 
-    import HelloWorld from './HelloWorld.vue';
+   import HelloWorld from './HelloWorld.vue'
 
-    describe('HelloWorld', () => {
-    	it('component renders Hello world properly', () => {
-    		const wrapper = mount(HelloWorld);
-    		expect(wrapper.text()).toContain('Hello world');
-    	});
-    });
-    ```
+   describe('HelloWorld', () => {
+     it('component renders Hello world properly', () => {
+       const wrapper = mount(HelloWorld)
+       expect(wrapper.text()).toContain('Hello world')
+     })
+   })
+   ```
 
 6. Run vitest command
    :code-group[```bash \[npm\]
    npm run test
-    ```````bash [yarn]
-    yarn test
-    ``````bash \[pnpm\]
-    pnpm run test
-    ``````bash \[bun\]
-    bun run test
-    ```]{sync="pm"}
-    ```````
+   ```````bash [yarn]
+   yarn test
+   ``````bash \[pnpm\]
+   pnpm run test
+   ``````bash \[bun\]
+   bun run test
+   ```]{sync="pm"}
+   ```````
 
 Congratulations, you're all set to start unit testing with `@vue/test-utils` in Nuxt! Happy testing!
 
@@ -4601,18 +4605,18 @@ For end-to-end testing, we support [Vitest](https://github.com/vitest-dev/vitest
 In each `describe` block where you are taking advantage of the `@nuxt/test-utils/e2e` helper methods, you will need to set up the test context before beginning.
 
 ```ts [test/my-test.spec.ts] twoslash
-import { describe, test } from 'vitest';
-import { setup, $fetch } from '@nuxt/test-utils/e2e';
+import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { describe, test } from 'vitest'
 
 describe('My test', async () => {
-	await setup({
-		// test context options
-	});
+  await setup({
+    // test context options
+  })
 
-	test('my test', () => {
-		// ...
-	});
-});
+  test('my test', () => {
+    // ...
+  })
+})
 ```
 
 Behind the scenes, `setup` performs a number of tasks in `beforeAll`, `beforeEach`, `afterEach` and `afterAll` to set up the Nuxt test environment correctly.
@@ -4623,48 +4627,48 @@ Please use the options below for the `setup` method.
 
 - `rootDir`: Path to a directory with a Nuxt app to be put under test.
 
-    - Type: `string`
-    - Default: `'.'`
+  - Type: `string`
+  - Default: `'.'`
 
 - `configFile`: Name of the configuration file.
 
-    - Type: `string`
-    - Default: `'nuxt.config'`
+  - Type: `string`
+  - Default: `'nuxt.config'`
 
 #### Timings
 
 - `setupTimeout`: The amount of time (in milliseconds) to allow for `setupTest` to complete its work (which could include building or generating files for a Nuxt application, depending on the options that are passed).
 
-    - Type: `number`
-    - Default: `60000`
+  - Type: `number`
+  - Default: `60000`
 
 #### Features
 
 - `build`: Whether to run a separate build step.
-    - Type: `boolean`
-    - Default: `true` (`false` if `browser` or `server` is disabled, or if a `host` is provided)
+  - Type: `boolean`
+  - Default: `true` (`false` if `browser` or `server` is disabled, or if a `host` is provided)
 - `server`: Whether to launch a server to respond to requests in the test suite.
-    - Type: `boolean`
-    - Default: `true` (`false` if a `host` is provided)
+  - Type: `boolean`
+  - Default: `true` (`false` if a `host` is provided)
 - `port`: If provided, set the launched test server port to the value.
-    - Type: `number | undefined`
-    - Default: `undefined`
+  - Type: `number | undefined`
+  - Default: `undefined`
 - `host`: If provided, a URL to use as the test target instead of building and running a new server. Useful for running "real" end-to-end tests against a deployed version of your application, or against an already running local server (which may provide a significant reduction in test execution timings). See the [target host end-to-end example below](https://nuxt.com/#target-host-end-to-end-example).
-    - Type: `string`
-    - Default: `undefined`
+  - Type: `string`
+  - Default: `undefined`
 - `browser`: Under the hood, Nuxt test utils uses [`playwright`](https://playwright.dev){rel="nofollow"} to carry out browser testing. If this option is set, a browser will be launched and can be controlled in the subsequent test suite.
-    - Type: `boolean`
-    - Default: `false`
+  - Type: `boolean`
+  - Default: `false`
 - `browserOptions`
 
-    - Type: `object` with the following properties
+  - Type: `object` with the following properties
 
-        - `type`: The type of browser to launch - either `chromium`, `firefox` or `webkit`
-        - `launch`: `object` of options that will be passed to playwright when launching the browser. See [full API reference](https://playwright.dev/docs/api/class-browsertype#browser-type-launch){rel="nofollow"}.
+    - `type`: The type of browser to launch - either `chromium`, `firefox` or `webkit`
+    - `launch`: `object` of options that will be passed to playwright when launching the browser. See [full API reference](https://playwright.dev/docs/api/class-browsertype#browser-type-launch){rel="nofollow"}.
 
 - `runner`: Specify the runner for the test suite. Currently, [Vitest](https://vitest.dev){rel="nofollow"} is recommended.
-    - Type: `'vitest' | 'jest' | 'cucumber'`
-    - Default: `'vitest'`
+  - Type: `'vitest' | 'jest' | 'cucumber'`
+  - Default: `'vitest'`
 
 ##### Target `host` end-to-end example
 
@@ -4675,20 +4679,20 @@ For local development or automated deploy pipelines, testing against a separate 
 To utilize a separate target host for end-to-end tests, simply provide the `host` property of the `setup` function with the desired URL.
 
 ```ts twoslash
-import { setup, createPage } from '@nuxt/test-utils/e2e';
-import { describe, it, expect } from 'vitest';
+import { createPage, setup } from '@nuxt/test-utils/e2e'
+import { describe, expect, it } from 'vitest'
 
 describe('login page', async () => {
-	await setup({
-		host: 'http://localhost:8787'
-	});
+  await setup({
+    host: 'http://localhost:8787'
+  })
 
-	it('displays the email and password fields', async () => {
-		const page = await createPage('/login');
-		expect(await page.getByTestId('email').isVisible()).toBe(true);
-		expect(await page.getByTestId('password').isVisible()).toBe(true);
-	});
-});
+  it('displays the email and password fields', async () => {
+    const page = await createPage('/login')
+    expect(await page.getByTestId('email').isVisible()).toBe(true)
+    expect(await page.getByTestId('password').isVisible()).toBe(true)
+  })
+})
 ```
 
 ### APIs
@@ -4698,9 +4702,9 @@ describe('login page', async () => {
 Get the HTML of a server-rendered page.
 
 ```ts twoslash
-import { $fetch } from '@nuxt/test-utils/e2e';
+import { $fetch } from '@nuxt/test-utils/e2e'
 
-const html = await $fetch('/');
+const html = await $fetch('/')
 ```
 
 #### `fetch(url)`
@@ -4708,10 +4712,10 @@ const html = await $fetch('/');
 Get the response of a server-rendered page.
 
 ```ts twoslash
-import { fetch } from '@nuxt/test-utils/e2e';
+import { fetch } from '@nuxt/test-utils/e2e'
 
-const res = await fetch('/');
-const { body, headers } = res;
+const res = await fetch('/')
+const { body, headers } = res
 ```
 
 #### `url(path)`
@@ -4719,9 +4723,9 @@ const { body, headers } = res;
 Get the full URL for a given page (including the port the test server is running on.)
 
 ```ts twoslash
-import { url } from '@nuxt/test-utils/e2e';
+import { url } from '@nuxt/test-utils/e2e'
 
-const pageUrl = url('/page');
+const pageUrl = url('/page')
 // 'http://localhost:6840/page'
 ```
 
@@ -4734,9 +4738,9 @@ We provide built-in support using Playwright within `@nuxt/test-utils`, either p
 Within `vitest`, `jest` or `cucumber`, you can create a configured Playwright browser instance with `createPage`, and (optionally) point it at a path from the running server. You can find out more about the API methods available from [in the Playwright documentation](https://playwright.dev/docs/api/class-page){rel="nofollow"}.
 
 ```ts twoslash
-import { createPage } from '@nuxt/test-utils/e2e';
+import { createPage } from '@nuxt/test-utils/e2e'
 
-const page = await createPage('/page');
+const page = await createPage('/page')
 // you can access all the Playwright APIs from the `page` variable
 ```
 
@@ -4767,18 +4771,18 @@ bun add --dev @playwright/test @nuxt/test-utils
 You can provide global Nuxt configuration, with the same configuration details as the `setup()` function mentioned earlier in this section.
 
 ```ts [playwright.config.ts]
-import { fileURLToPath } from 'node:url';
-import { defineConfig, devices } from '@playwright/test';
-import type { ConfigOptions } from '@nuxt/test-utils/playwright';
+import type { ConfigOptions } from '@nuxt/test-utils/playwright'
+import { fileURLToPath } from 'node:url'
+import { defineConfig, devices } from '@playwright/test'
 
 export default defineConfig<ConfigOptions>({
-	use: {
-		nuxt: {
-			rootDir: fileURLToPath(new URL('.', import.meta.url))
-		}
-	}
-	// ...
-});
+  use: {
+    nuxt: {
+      rootDir: fileURLToPath(new URL('.', import.meta.url))
+    }
+  }
+  // ...
+})
 ```
 
 ## ::read-more
@@ -4794,29 +4798,29 @@ to: https://github.com/nuxt/test-utils/blob/main/examples/app-playwright/playwri
 Your test file should then use `expect` and `test` directly from `@nuxt/test-utils/playwright`:
 
 ```ts [tests/example.test.ts]
-import { expect, test } from '@nuxt/test-utils/playwright';
+import { expect, test } from '@nuxt/test-utils/playwright'
 
 test('test', async ({ page, goto }) => {
-	await goto('/', { waitUntil: 'hydration' });
-	await expect(page.getByRole('heading')).toHaveText('Welcome to Playwright!');
-});
+  await goto('/', { waitUntil: 'hydration' })
+  await expect(page.getByRole('heading')).toHaveText('Welcome to Playwright!')
+})
 ```
 
 You can alternatively configure your Nuxt server directly within your test file:
 
 ```ts [tests/example.test.ts]
-import { expect, test } from '@nuxt/test-utils/playwright';
+import { expect, test } from '@nuxt/test-utils/playwright'
 
 test.use({
-	nuxt: {
-		rootDir: fileURLToPath(new URL('..', import.meta.url))
-	}
-});
+  nuxt: {
+    rootDir: fileURLToPath(new URL('..', import.meta.url))
+  }
+})
 
 test('test', async ({ page, goto }) => {
-	await goto('/', { waitUntil: 'hydration' });
-	await expect(page.getByRole('heading')).toHaveText('Welcome to Playwright!');
-});
+  await goto('/', { waitUntil: 'hydration' })
+  await expect(page.getByRole('heading')).toHaveText('Welcome to Playwright!')
+})
 ```
 
 # Upgrade Guide
@@ -4883,39 +4887,39 @@ Then you can set your `compatibilityVersion` to match Nuxt 4 behavior:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	future: {
-		compatibilityVersion: 4
-	}
-	// To re-enable _all_ Nuxt v3 behavior, set the following options:
-	// srcDir: '.',
-	// dir: {
-	//   app: 'app'
-	// },
-	// experimental: {
-	//   scanPageMeta: 'after-resolve',
-	//   sharedPrerenderData: false,
-	//   compileTemplate: true,
-	//   resetAsyncDataToUndefined: true,
-	//   templateUtils: true,
-	//   relativeWatchPaths: true,
-	//   normalizeComponentNames: false,
-	//   spaLoadingTemplateLocation: 'within',
-	//   parseErrorData: false,
-	//   defaults: {
-	//     useAsyncData: {
-	//       deep: true
-	//     }
-	//   }
-	// },
-	// features: {
-	//   inlineStyles: true
-	// },
-	// unhead: {
-	//   renderSSRHeadOptions: {
-	//     omitLineBreaks: false
-	//   }
-	// }
-});
+  future: {
+    compatibilityVersion: 4
+  }
+  // To re-enable _all_ Nuxt v3 behavior, set the following options:
+  // srcDir: '.',
+  // dir: {
+  //   app: 'app'
+  // },
+  // experimental: {
+  //   scanPageMeta: 'after-resolve',
+  //   sharedPrerenderData: false,
+  //   compileTemplate: true,
+  //   resetAsyncDataToUndefined: true,
+  //   templateUtils: true,
+  //   relativeWatchPaths: true,
+  //   normalizeComponentNames: false,
+  //   spaLoadingTemplateLocation: 'within',
+  //   parseErrorData: false,
+  //   defaults: {
+  //     useAsyncData: {
+  //       deep: true
+  //     }
+  //   }
+  // },
+  // features: {
+  //   inlineStyles: true
+  // },
+  // unhead: {
+  //   renderSSRHeadOptions: {
+  //     omitLineBreaks: false
+  //   }
+  // }
+})
 ```
 
 ::
@@ -5047,13 +5051,13 @@ You can also force a v3 folder structure with the following configuration:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	// This reverts the new srcDir default from `app` back to your root directory
-	srcDir: '.',
-	// This specifies the directory prefix for `app/router.options.ts` and `app/spa-loading-template.html`
-	dir: {
-		app: 'app'
-	}
-});
+  // This reverts the new srcDir default from `app` back to your root directory
+  srcDir: '.',
+  // This specifies the directory prefix for `app/router.options.ts` and `app/spa-loading-template.html`
+  dir: {
+    app: 'app'
+  }
+})
 ```
 
 ### Singleton Data Fetching Layer
@@ -5076,47 +5080,47 @@ These changes have been made to improve memory usage and increase consistency wi
 #### Migration Steps
 
 1. **Check for inconsistent options**: Review any components using the same key with different options or fetch functions.
-    ```ts
-    // This will now trigger a warning
-    const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { deep: false });
-    const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { deep: true });
-    ```
-    :br
-    It may be beneficial to extract any calls to `useAsyncData` that share an explicit key (and have custom options) into their own composable:
-    ```ts [composables/useUserData.ts]
-    export function useUserData(userId: string) {
-    	return useAsyncData(`user-${userId}`, () => fetchUser(userId), {
-    		deep: true,
-    		transform: (user) => ({ ...user, lastAccessed: new Date() })
-    	});
-    }
-    ```
+   ```ts
+   // This will now trigger a warning
+   const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { deep: false })
+   const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { deep: true })
+   ```
+   :br
+   It may be beneficial to extract any calls to `useAsyncData` that share an explicit key (and have custom options) into their own composable:
+   ```ts [composables/useUserData.ts]
+   export function useUserData(userId: string) {
+     return useAsyncData(`user-${userId}`, () => fetchUser(userId), {
+       deep: true,
+       transform: user => ({ ...user, lastAccessed: new Date() })
+     })
+   }
+   ```
 2. **Update `getCachedData` implementations**:
-    ```diff
-    useAsyncData('key', fetchFunction, {
-    -  getCachedData: (key, nuxtApp) => {
-    -    return cachedData[key]
-    -  }
-    +  getCachedData: (key, nuxtApp, ctx) => {
-    +    // ctx.cause - can be 'initial' | 'refresh:hook' | 'refresh:manual' | 'watch'
-    +
-    +    // Example: Don't use cache on manual refresh
-    +    if (ctx.cause === 'refresh:manual') return undefined
-    +
-    +    return cachedData[key]
-    +  }
-    })
-    ```
+   ```diff
+   useAsyncData('key', fetchFunction, {
+   -  getCachedData: (key, nuxtApp) => {
+   -    return cachedData[key]
+   -  }
+   +  getCachedData: (key, nuxtApp, ctx) => {
+   +    // ctx.cause - can be 'initial' | 'refresh:hook' | 'refresh:manual' | 'watch'
+   +
+   +    // Example: Don't use cache on manual refresh
+   +    if (ctx.cause === 'refresh:manual') return undefined
+   +
+   +    return cachedData[key]
+   +  }
+   })
+   ```
 
 Alternatively, for now, you can disable this behaviour with:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		granularCachedData: false,
-		purgeCachedData: false
-	}
-});
+  experimental: {
+    granularCachedData: false,
+    purgeCachedData: false
+  }
+})
 ```
 
 ### Deduplication of Route Metadata
@@ -5175,10 +5179,10 @@ Alternatively, for now, you can disable this behaviour with:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		normalizeComponentNames: false
-	}
-});
+  experimental: {
+    normalizeComponentNames: false
+  }
+})
 ```
 
 ### Unhead v2
@@ -5216,15 +5220,15 @@ useHead({
 - If you're using [Template Params](https://unhead.unjs.io/docs/head/guides/plugins/template-params){rel="nofollow"} or [Alias Tag Sorting](https://unhead.unjs.io/docs/head/guides/plugins/alias-sorting){rel="nofollow"}, you will need to explicitly opt in to these features now.
 
 ```ts
-import { TemplateParamsPlugin, AliasSortingPlugin } from '@unhead/vue/plugins';
+import { AliasSortingPlugin, TemplateParamsPlugin } from '@unhead/vue/plugins'
 
 export default defineNuxtPlugin({
-	setup() {
-		const unhead = injectHead();
-		unhead.use(TemplateParamsPlugin);
-		unhead.use(AliasSortingPlugin);
-	}
-});
+  setup() {
+    const unhead = injectHead()
+    unhead.use(TemplateParamsPlugin)
+    unhead.use(AliasSortingPlugin)
+  }
+})
 ```
 
 While not required it's recommend to update any imports from `@unhead/vue` to `#imports` or `nuxt/app`.
@@ -5238,10 +5242,10 @@ If you still have issues you may revert to the v1 behavior by enabling the `head
 
 ```ts
 export default defineNuxtConfig({
-	unhead: {
-		legacy: true
-	}
-});
+  unhead: {
+    legacy: true
+  }
+})
 ```
 
 ### New DOM Location for SPA Loading Screen
@@ -5254,7 +5258,7 @@ When rendering a client-only page (with `ssr: false`), we optionally render a lo
 
 ```html
 <div id="__nuxt">
-	<!-- spa loading template -->
+  <!-- spa loading template -->
 </div>
 ```
 
@@ -5277,10 +5281,10 @@ Alternatively, you can revert to the previous behaviour with:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		spaLoadingTemplateLocation: 'within'
-	}
-});
+  experimental: {
+    spaLoadingTemplateLocation: 'within'
+  }
+})
 ```
 
 ### Parsed `error.data`
@@ -5310,10 +5314,10 @@ Alternatively, you can disable this change:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		parseErrorData: false
-	}
-});
+  experimental: {
+    parseErrorData: false
+  }
+})
 ```
 
 ### More Granular Inline Styles
@@ -5332,10 +5336,10 @@ This feature is fully configurable and you can revert to the previous behavior b
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	features: {
-		inlineStyles: true
-	}
-});
+  features: {
+    inlineStyles: true
+  }
+})
 ```
 
 ### Scan Page Meta After Resolution
@@ -5371,10 +5375,10 @@ Alternatively, you can revert to the previous behaviour with:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		scanPageMeta: true
-	}
-});
+  experimental: {
+    scanPageMeta: true
+  }
+})
 ```
 
 ### Shared Prerender Data
@@ -5398,24 +5402,24 @@ Make sure that any unique key of your data is always resolvable to the same data
 ```ts [app/pages/test/[slug].vue]
 // This would be unsafe in a dynamic page (e.g. `[slug].vue`) because the route slug makes a difference
 // to the data fetched, but Nuxt can't know that because it's not reflected in the key.
-const route = useRoute();
+const route = useRoute()
 const { data } = await useAsyncData(async () => {
-	return await $fetch(`/api/my-page/${route.params.slug}`);
-});
+  return await $fetch(`/api/my-page/${route.params.slug}`)
+})
 // Instead, you should use a key that uniquely identifies the data fetched.
 const { data } = await useAsyncData(route.params.slug, async () => {
-	return await $fetch(`/api/my-page/${route.params.slug}`);
-});
+  return await $fetch(`/api/my-page/${route.params.slug}`)
+})
 ```
 
 Alternatively, you can disable this feature with:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		sharedPrerenderData: false
-	}
-});
+  experimental: {
+    sharedPrerenderData: false
+  }
+})
 ```
 
 ### Default `data` and `error` values in `useAsyncData` and `useFetch`
@@ -5442,15 +5446,15 @@ If you encounter any issues you can revert back to the previous behavior with:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		defaults: {
-			useAsyncData: {
-				value: 'null',
-				errorValue: 'null'
-			}
-		}
-	}
-});
+  experimental: {
+    defaults: {
+      useAsyncData: {
+        value: 'null',
+        errorValue: 'null'
+      }
+    }
+  }
+})
 ```
 
 Please report an issue if you are doing this, as we do not plan to keep this as configurable.
@@ -5464,10 +5468,10 @@ Please report an issue if you are doing this, as we do not plan to keep this as 
 Previously it was possible to pass `dedupe: boolean` to `refresh`. These were aliases of `cancel` (`true`) and `defer` (`false`).
 
 ```ts [app.vue] twoslash
-const { refresh } = await useAsyncData(async () => ({ message: 'Hello, Nuxt!' }));
+const { refresh } = await useAsyncData(async () => ({ message: 'Hello, Nuxt!' }))
 
 async function refreshData() {
-	await refresh({ dedupe: true });
+  await refresh({ dedupe: true })
 }
 ```
 
@@ -5517,10 +5521,10 @@ If you encounter any issues you can revert back to the previous behavior, for no
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		resetAsyncDataToUndefined: true
-	}
-});
+  experimental: {
+    resetAsyncDataToUndefined: true
+  }
+})
 ```
 
 Please report an issue if you are doing so, as we do not plan to keep this as configurable.
@@ -5545,24 +5549,24 @@ In most cases, no migration steps are required, but if you rely on the reactivit
 
 1. You can granularly opt in to deep reactivity on a per-composable basis:
 
-    ```diff
-    - const { data } = useFetch('/api/test')
-    + const { data } = useFetch('/api/test', { deep: true })
-    ```
+   ```diff
+   - const { data } = useFetch('/api/test')
+   + const { data } = useFetch('/api/test', { deep: true })
+   ```
 
 2. You can change the default behavior on a project-wide basis (not recommended):
 
-    ```ts [nuxt.config.ts] twoslash
-    export default defineNuxtConfig({
-    	experimental: {
-    		defaults: {
-    			useAsyncData: {
-    				deep: true
-    			}
-    		}
-    	}
-    });
-    ```
+   ```ts [nuxt.config.ts] twoslash
+   export default defineNuxtConfig({
+     experimental: {
+       defaults: {
+         useAsyncData: {
+           deep: true
+         }
+       }
+     }
+   })
+   ```
 
 ::tip
 If you need to, you can automate this step by running `npx codemod@latest nuxt/4/shallow-function-reactivity`
@@ -5638,12 +5642,12 @@ Probably no migration is necessary but if you wish to revert to previous behavio
 
 ```ts
 export default defineNuxtConfig({
-	hooks: {
-		'app:resolve'(app) {
-			app.middleware = app.middleware.filter((mw) => !/\/index\.[^/]+$/.test(mw.path));
-		}
-	}
-});
+  hooks: {
+    'app:resolve': function (app) {
+      app.middleware = app.middleware.filter(mw => !/\/index\.[^/]+$/.test(mw.path))
+    }
+  }
+})
 ```
 
 ### Template Compilation Changes
@@ -5690,22 +5694,22 @@ We have raised PRs to update modules using EJS syntax, but if you need to do thi
 Finally, if you are using the template utilities (`serialize`, `importName`, `importSources`), you can replace them as follows with utilities from `knitwork`:
 
 ```ts
-import { genDynamicImport, genImport, genSafeVariableName } from 'knitwork';
+import { genDynamicImport, genImport, genSafeVariableName } from 'knitwork'
 
-const serialize = (data: any) => JSON.stringify(data, null, 2).replace(/"{(.+)}"(?=,?$)/gm, (r) => JSON.parse(r).replace(/^{(.*)}$/, '$1'));
+const serialize = (data: any) => JSON.stringify(data, null, 2).replace(/"\{(.+)\}"(?=,?$)/gm, r => JSON.parse(r).replace(/^\{(.*)\}$/, '$1'))
 
-const importSources = (sources: string | string[], { lazy = false } = {}) => {
-	return toArray(sources)
-		.map((src) => {
-			if (lazy) {
-				return `const ${genSafeVariableName(src)} = ${genDynamicImport(src, { comment: `webpackChunkName: ${JSON.stringify(src)}` })}`;
-			}
-			return genImport(src, genSafeVariableName(src));
-		})
-		.join('\n');
-};
+function importSources(sources: string | string[], { lazy = false } = {}) {
+  return toArray(sources)
+    .map((src) => {
+      if (lazy) {
+        return `const ${genSafeVariableName(src)} = ${genDynamicImport(src, { comment: `webpackChunkName: ${JSON.stringify(src)}` })}`
+      }
+      return genImport(src, genSafeVariableName(src))
+    })
+    .join('\n')
+}
 
-const importName = genSafeVariableName;
+const importName = genSafeVariableName
 ```
 
 ::tip
@@ -5835,7 +5839,7 @@ Nuxt auto-imports components, composables and [Vue.js APIs](https://vuejs.org/ap
 
 ```vue [app.vue] twoslash
 <script setup lang="ts">
-const count = ref(1); // ref is auto-imported
+const count = ref(1) // ref is auto-imported
 </script>
 ```
 
@@ -5862,7 +5866,7 @@ Nuxt auto-imports functions and composables to perform [data fetching](https://n
 ```vue twoslash
 <script setup lang="ts">
 /* useFetch() is auto-imported */
-const { data, refresh, status } = await useFetch('/api/hello');
+const { data, refresh, status } = await useFetch('/api/hello')
 </script>
 ```
 
@@ -5871,8 +5875,8 @@ Vue exposes Reactivity APIs like `ref` or `computed`, as well as lifecycle hooks
 ```vue twoslash
 <script setup lang="ts">
 /* ref() and computed() are auto-imported */
-const count = ref(1);
-const double = computed(() => count.value * 2);
+const count = ref(1)
+const double = computed(() => count.value * 2)
 </script>
 ```
 
@@ -5924,23 +5928,23 @@ See the full explanation in this GitHub comment.
 
 ```ts [composables/example.ts] twoslash
 // trying to access runtime config outside a composable
-const config = useRuntimeConfig();
+const config = useRuntimeConfig()
 
-export const useMyComposable = () => {
-	// accessing runtime config here
-};
+export function useMyComposable() {
+  // accessing runtime config here
+}
 ```
 
 **Example of working code:**
 
 ```ts [composables/example.ts] twoslash
-export const useMyComposable = () => {
-	// Because your composable is called in the right place in the lifecycle,
-	// useRuntimeConfig will work here
-	const config = useRuntimeConfig();
+export function useMyComposable() {
+  // Because your composable is called in the right place in the lifecycle,
+  // useRuntimeConfig will work here
+  const config = useRuntimeConfig()
 
-	// ...
-};
+  // ...
+}
 ```
 
 ## Directory-based Auto-imports
@@ -5965,10 +5969,10 @@ Nuxt exposes every auto-import with the `#imports` alias that can be used to mak
 
 ```vue
 <script setup lang="ts">
-import { ref, computed } from '#imports';
+import { computed, ref } from '#imports'
 
-const count = ref(1);
-const double = computed(() => count.value * 2);
+const count = ref(1)
+const double = computed(() => count.value * 2)
 </script>
 ```
 
@@ -5978,10 +5982,10 @@ If you want to disable auto-importing composables and utilities, you can set `im
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	imports: {
-		autoImport: false
-	}
-});
+  imports: {
+    autoImport: false
+  }
+})
 ```
 
 This will disable auto-imports completely but it's still possible to use [explicit imports](https://nuxt.com/#explicit-imports) from `#imports`.
@@ -5992,10 +5996,10 @@ If you want framework-specific functions like `ref` to remain auto-imported but 
 
 ```ts
 export default defineNuxtConfig({
-	imports: {
-		scan: false
-	}
-});
+  imports: {
+    scan: false
+  }
+})
 ```
 
 With this configuration:
@@ -6021,10 +6025,10 @@ To disable auto-importing components from your own `~/components` directory, you
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	components: {
-		dirs: []
-	}
-});
+  components: {
+    dirs: []
+  }
+})
 ```
 
 ## Auto-import from Third-Party Packages
@@ -6039,15 +6043,15 @@ For example, you could enable the auto-import of the `useI18n` composable from t
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	imports: {
-		presets: [
-			{
-				from: 'vue-i18n',
-				imports: ['useI18n']
-			}
-		]
-	}
-});
+  imports: {
+    presets: [
+      {
+        from: 'vue-i18n',
+        imports: ['useI18n']
+      }
+    ]
+  }
+})
 ```
 
 ## ::video-accordion
@@ -6284,17 +6288,17 @@ The only way to provide data and logic to components in Vue 2 was through the Op
 ```vue twoslash
 <script>
 export default {
-	data() {
-		return {
-			count: 0
-		};
-	},
-	methods: {
-		increment() {
-			this.count++;
-		}
-	}
-};
+  data() {
+    return {
+      count: 0
+    }
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  }
+}
 </script>
 ```
 
@@ -6304,8 +6308,8 @@ Used with the `setup` keyword in the `<script>` definition, here is the above co
 
 ```vue [components/Counter.vue] twoslash
 <script setup lang="ts">
-const count = ref(0);
-const increment = () => count.value++;
+const count = ref(0)
+const increment = () => count.value++
 </script>
 ```
 
@@ -6345,20 +6349,20 @@ Universal rendering allows a Nuxt application to provide quick page load times w
 It is normal to ask which parts of a Vue file runs on the server and/or the client in universal rendering mode.
 
 ```vue [app.vue]
-<script setup lang="ts">
-const counter = ref(0); // executes in server and client environments
-
-const handleClick = () => {
-	counter.value++; // executes only in a client environment
-};
-</script>
-
 <template>
-	<div>
-		<p>Count: {{ counter }}</p>
-		<button @click="handleClick">Increment</button>
-	</div>
+  <div>
+    <p>Count: {{ counter }}</p>
+    <button @click="handleClick">Increment</button>
+  </div>
 </template>
+
+<script setup lang="ts">
+const counter = ref(0) // executes in server and client environments
+
+function handleClick() {
+  counter.value++ // executes only in a client environment
+}
+</script>
 ```
 
 On the initial request, the `counter` ref is initialized in the server since it is rendered inside the `<p>` tag. The contents of `handleClick` is never executed here. During hydration in the browser, the `counter` ref is re-initialized. The `handleClick` finally binds itself to the button; Therefore it is reasonable to deduce that the body of `handleClick` will always run in a browser environment.
@@ -6408,8 +6412,8 @@ You can enable client-side only rendering with Nuxt in your `nuxt.config.ts`:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	ssr: false
-});
+  ssr: false
+})
 ```
 
 ::note
@@ -6450,12 +6454,12 @@ In order to achieve this we can change how the routes are prerendered. Just add 
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	hooks: {
-		'prerender:routes'({ routes }) {
-			routes.clear(); // Do not generate any routes (except the defaults)
-		}
-	}
-});
+  hooks: {
+    'prerender:routes': function ({ routes }) {
+      routes.clear() // Do not generate any routes (except the defaults)
+    }
+  }
+})
 ```
 
 This will produce three files:
@@ -6472,18 +6476,18 @@ When prerendering a client-rendered app, Nuxt will generate `index.html`, `200.h
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	ssr: false,
-	nitro: {
-		hooks: {
-			'prerender:generate'(route) {
-				const routesToSkip = ['/index.html', '/200.html', '/404.html'];
-				if (routesToSkip.includes(route.route)) {
-					route.skip = true;
-				}
-			}
-		}
-	}
-});
+  ssr: false,
+  nitro: {
+    hooks: {
+      'prerender:generate': function (route) {
+        const routesToSkip = ['/index.html', '/200.html', '/404.html']
+        if (routesToSkip.includes(route.route)) {
+          route.skip = true
+        }
+      }
+    }
+  }
+})
 ```
 
 ## Hybrid Rendering
@@ -6498,25 +6502,25 @@ Nuxt server will automatically register corresponding middleware and wrap routes
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	routeRules: {
-		// Homepage pre-rendered at build time
-		'/': { prerender: true },
-		// Products page generated on demand, revalidates in background, cached until API response changes
-		'/products': { swr: true },
-		// Product pages generated on demand, revalidates in background, cached for 1 hour (3600 seconds)
-		'/products/**': { swr: 3600 },
-		// Blog posts page generated on demand, revalidates in background, cached on CDN for 1 hour (3600 seconds)
-		'/blog': { isr: 3600 },
-		// Blog post page generated on demand once until next deployment, cached on CDN
-		'/blog/**': { isr: true },
-		// Admin dashboard renders only on client-side
-		'/admin/**': { ssr: false },
-		// Add cors headers on API routes
-		'/api/**': { cors: true },
-		// Redirects legacy urls
-		'/old-page': { redirect: '/new-page' }
-	}
-});
+  routeRules: {
+    // Homepage pre-rendered at build time
+    '/': { prerender: true },
+    // Products page generated on demand, revalidates in background, cached until API response changes
+    '/products': { swr: true },
+    // Product pages generated on demand, revalidates in background, cached for 1 hour (3600 seconds)
+    '/products/**': { swr: 3600 },
+    // Blog posts page generated on demand, revalidates in background, cached on CDN for 1 hour (3600 seconds)
+    '/blog': { isr: 3600 },
+    // Blog post page generated on demand once until next deployment, cached on CDN
+    '/blog/**': { isr: true },
+    // Admin dashboard renders only on client-side
+    '/admin/**': { ssr: false },
+    // Add cors headers on API routes
+    '/api/**': { cors: true },
+    // Redirects legacy urls
+    '/old-page': { redirect: '/new-page' }
+  }
+})
 ```
 
 ### Route Rules
@@ -6706,20 +6710,20 @@ Once you have installed the modules you can add them to your [`nuxt.config.ts`](
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	modules: [
-		// Using package name (recommended usage)
-		'@nuxtjs/example',
+  modules: [
+    // Using package name (recommended usage)
+    '@nuxtjs/example',
 
-		// Load a local module
-		'./modules/example',
+    // Load a local module
+    './modules/example',
 
-		// Add module with inline-options
-		['./modules/example', { token: '123' }],
+    // Add module with inline-options
+    ['./modules/example', { token: '123' }],
 
-		// Inline module definition
-		async (inlineOptions, nuxt) => {}
-	]
-});
+    // Inline module definition
+    async (inlineOptions, nuxt) => {}
+  ]
+})
 ```
 
 ::warning
@@ -6751,9 +6755,9 @@ CommonJS (CJS) is a format introduced by Node.js that allows sharing functionali
 You might be already familiar with this syntax:
 
 ```js
-const a = require('./a');
+const a = require('./a')
 
-module.exports.a = a;
+module.exports.a = a
 ```
 
 Bundlers like webpack and Rollup support this syntax and allow you to use modules written in CommonJS in the browser.
@@ -6763,9 +6767,9 @@ Bundlers like webpack and Rollup support this syntax and allow you to use module
 Most of the time, when people talk about ESM vs. CJS, they are talking about a different syntax for writing [modules](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules){rel="nofollow"}.
 
 ```js
-import a from './a';
+import a from './a'
 
-export { a };
+export { a }
 ```
 
 Before ECMAScript Modules (ESM) became a standard (it took more than 10 years!), tooling like
@@ -6780,9 +6784,9 @@ When adding modules to your package, things were a little different. A sample li
 
 ```json
 {
-	"name": "sample-library",
-	"main": "dist/sample-library.cjs.js",
-	"module": "dist/sample-library.esm.js"
+  "name": "sample-library",
+  "main": "dist/sample-library.cjs.js",
+  "module": "dist/sample-library.esm.js"
 }
 ```
 
@@ -6857,10 +6861,10 @@ In the meantime, you can tell Nuxt not to try to import these libraries by addin
 
 ```ts twoslash
 export default defineNuxtConfig({
-	build: {
-		transpile: ['sample-library']
-	}
-});
+  build: {
+    transpile: ['sample-library']
+  }
+})
 ```
 
 You may find that you _also_ need to add other packages that are being imported by these libraries.
@@ -6871,10 +6875,10 @@ In some cases, you may also need to manually alias the library to the CJS versio
 
 ```ts twoslash
 export default defineNuxtConfig({
-	alias: {
-		'sample-library': 'sample-library/dist/sample-library.cjs.js'
-	}
-});
+  alias: {
+    'sample-library': 'sample-library/dist/sample-library.cjs.js'
+  }
+})
 ```
 
 ### Default Exports
@@ -6882,61 +6886,61 @@ export default defineNuxtConfig({
 A dependency with CommonJS format, can use `module.exports` or `exports` to provide a default export:
 
 ```js [node_modules/cjs-pkg/index.js]
-module.exports = { test: 123 };
+module.exports = { test: 123 }
 // or
-exports.test = 123;
+exports.test = 123
 ```
 
 This normally works well if we `require` such dependency:
 
 ```js [test.cjs]
-const pkg = require('cjs-pkg');
+const pkg = require('cjs-pkg')
 
-console.log(pkg); // { test: 123 }
+console.log(pkg) // { test: 123 }
 ```
 
 [Node.js in native ESM mode](https://nodejs.org/api/esm.html#interoperability-with-commonjs){rel="nofollow"}, [typescript with `esModuleInterop` enabled](https://www.typescriptlang.org/tsconfig#esModuleInterop){rel="nofollow"} and bundlers such as webpack, provide a compatibility mechanism so that we can default import such library.
 This mechanism is often referred to as "interop require default":
 
 ```js
-import pkg from 'cjs-pkg';
+import pkg from 'cjs-pkg'
 
-console.log(pkg); // { test: 123 }
+console.log(pkg) // { test: 123 }
 ```
 
 However, because of the complexities of syntax detection and different bundle formats, there is always a chance that the interop default fails and we end up with something like this:
 
 ```js
-import pkg from 'cjs-pkg';
+import pkg from 'cjs-pkg'
 
-console.log(pkg); // { default: { test: 123 } }
+console.log(pkg) // { default: { test: 123 } }
 ```
 
 Also when using dynamic import syntax (in both CJS and ESM files), we always have this situation:
 
 ```js
-import('cjs-pkg').then(console.log); // [Module: null prototype] { default: { test: '123' } }
+import('cjs-pkg').then(console.log) // [Module: null prototype] { default: { test: '123' } }
 ```
 
 In this case, we need to manually interop the default export:
 
 ```js
 // Static import
-import { default as pkg } from 'cjs-pkg';
+import { default as pkg } from 'cjs-pkg'
 
 // Dynamic import
-import('cjs-pkg').then((m) => m.default || m).then(console.log);
+import('cjs-pkg').then(m => m.default || m).then(console.log)
 ```
 
 For handling more complex situations and more safety, we recommend and internally use [mlly](https://github.com/unjs/mlly){rel="nofollow"} in Nuxt that can preserve named exports.
 
 ```js
-import { interopDefault } from 'mlly';
+import { interopDefault } from 'mlly'
 
 // Assuming the shape is { default: { foo: 'bar' }, baz: 'qux' }
-import myModule from 'my-module';
+import myModule from 'my-module'
 
-console.log(interopDefault(myModule)); // { foo: 'bar', baz: 'qux' }
+console.log(interopDefault(myModule)) // { foo: 'bar', baz: 'qux' }
 ```
 
 ## Library Author Guide
@@ -6973,7 +6977,7 @@ export const hello = ...
 ::code-group
 
 ```js [Before]
-const myLib = require('my-lib');
+const myLib = require('my-lib')
 ```
 
 ```js [After]
@@ -6990,15 +6994,15 @@ and should be replaced with `import()` and `import.meta.filename`.
 ::code-group
 
 ```js [Before]
-import { join } from 'path';
+import { join } from 'node:path'
 
-const newDir = join(__dirname, 'new-dir');
+const newDir = join(__dirname, 'new-dir')
 ```
 
 ```js [After]
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath } from 'node:url'
 
-const newDir = fileURLToPath(new URL('./new-dir', import.meta.url));
+const newDir = fileURLToPath(new URL('./new-dir', import.meta.url))
 ```
 
 ::
@@ -7006,13 +7010,13 @@ const newDir = fileURLToPath(new URL('./new-dir', import.meta.url));
 ::code-group
 
 ```js [Before]
-const someFile = require.resolve('./lib/foo.js');
+const someFile = require.resolve('./lib/foo.js')
 ```
 
 ```js [After]
-import { resolvePath } from 'mlly';
+import { resolvePath } from 'mlly'
 
-const someFile = await resolvePath('my-lib', { url: import.meta.url });
+const someFile = await resolvePath('my-lib', { url: import.meta.url })
 ```
 
 ::
@@ -7025,11 +7029,11 @@ const someFile = await resolvePath('my-lib', { url: import.meta.url });
 
 ```json
 {
-	"exports": {
-		".": {
-			"import": "./dist/mymodule.mjs"
-		}
-	}
+  "exports": {
+    ".": {
+      "import": "./dist/mymodule.mjs"
+    }
+  }
 }
 ```
 
@@ -7071,10 +7075,10 @@ To enable type-checking at build or development time, you can also use the [`typ
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	typescript: {
-		typeCheck: true
-	}
-});
+  typescript: {
+    typeCheck: true
+  }
+})
 ```
 
 ## Auto-generated Types
@@ -7122,10 +7126,10 @@ If you are currently converting your codebase to TypeScript, you may want to tem
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	typescript: {
-		strict: false
-	}
-});
+  typescript: {
+    strict: false
+  }
+})
 ```
 
 # Code Style
@@ -7204,11 +7208,11 @@ Nuxt automatically imports any components in this directory (along with componen
 
 ```html [app.vue]
 <template>
-	<div>
-		<AppHeader />
-		<NuxtPage />
-		<AppFooter />
-	</div>
+  <div>
+    <AppHeader />
+    <NuxtPage />
+    <AppFooter />
+  </div>
 </template>
 ```
 
@@ -7237,13 +7241,13 @@ If you want to auto-import components based only on its name, not path, then you
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	components: [
-		{
-			path: '~/components',
-			pathPrefix: false // [!code ++]
-		}
-	]
-});
+  components: [
+    {
+      path: '~/components',
+      pathPrefix: false // [!code ++]
+    }
+  ]
+})
 ```
 
 This registers the components using the same strategy as used in Nuxt 2. For example, `~/components/Some/MyComponent.vue` will be usable as `<MyComponent>` and not `<SomeMyComponent>`.
@@ -7255,16 +7259,16 @@ If you want to use the Vue `<component :is="someComputedComponent">`{className="
 For example:
 
 ```vue [pages/index.vue]
-<script setup lang="ts">
-import { SomeComponent } from '#components';
-
-const MyButton = resolveComponent('MyButton');
-</script>
-
 <template>
-	<component :is="clickable ? MyButton : 'div'" />
-	<component :is="SomeComponent" />
+  <component :is="clickable ? MyButton : 'div'" />
+  <component :is="SomeComponent" />
 </template>
+
+<script setup lang="ts">
+import { SomeComponent } from '#components'
+
+const MyButton = resolveComponent('MyButton')
+</script>
 ```
 
 ::important
@@ -7304,17 +7308,17 @@ To dynamically import a component (also known as lazy-loading a component) all y
 By using the `Lazy` prefix you can delay loading the component code until the right moment, which can be helpful for optimizing your JavaScript bundle size.
 
 ```vue [pages/index.vue]
-<script setup lang="ts">
-const show = ref(false);
-</script>
-
 <template>
-	<div>
-		<h1>Mountains</h1>
-		<LazyMountainsList v-if="show" />
-		<button v-if="!show" @click="show = true">Show List</button>
-	</div>
+  <div>
+    <h1>Mountains</h1>
+    <LazyMountainsList v-if="show" />
+    <button v-if="!show" @click="show = true">Show List</button>
+  </div>
 </template>
+
+<script setup lang="ts">
+const show = ref(false)
+</script>
 ```
 
 ## Delayed (or Lazy) Hydration
@@ -7339,9 +7343,9 @@ Hydrates the component when it becomes visible in the viewport.
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent hydrate-on-visible />
-	</div>
+  <div>
+    <LazyMyComponent hydrate-on-visible />
+  </div>
 </template>
 ```
 
@@ -7367,9 +7371,9 @@ You can also pass a number which serves as a max timeout.
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent hydrate-on-idle />
-	</div>
+  <div>
+    <LazyMyComponent hydrate-on-idle />
+  </div>
 </template>
 ```
 
@@ -7383,9 +7387,9 @@ Hydrates the component after a specified interaction (e.g., click, mouseover).
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent hydrate-on-interaction="mouseover" />
-	</div>
+  <div>
+    <LazyMyComponent hydrate-on-interaction="mouseover" />
+  </div>
 </template>
 ```
 
@@ -7401,9 +7405,9 @@ Hydrates the component when the window matches a media query.
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent hydrate-on-media-query="(max-width: 768px)" />
-	</div>
+  <div>
+    <LazyMyComponent hydrate-on-media-query="(max-width: 768px)" />
+  </div>
 </template>
 ```
 
@@ -7417,9 +7421,9 @@ Hydrates the component after a specified delay (in milliseconds).
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent :hydrate-after="2000" />
-	</div>
+  <div>
+    <LazyMyComponent :hydrate-after="2000" />
+  </div>
 </template>
 ```
 
@@ -7429,15 +7433,16 @@ Hydrates the component based on a boolean condition.
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent :hydrate-when="isReady" />
-	</div>
+  <div>
+    <LazyMyComponent :hydrate-when="isReady" />
+  </div>
 </template>
+
 <script setup lang="ts">
-const isReady = ref(false);
+const isReady = ref(false)
 function myFunction() {
-	// trigger custom hydration strategy...
-	isReady.value = true;
+  // trigger custom hydration strategy...
+  isReady.value = true
 }
 </script>
 ```
@@ -7448,9 +7453,9 @@ Never hydrates the component.
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent hydrate-never />
-	</div>
+  <div>
+    <LazyMyComponent hydrate-never />
+  </div>
 </template>
 ```
 
@@ -7460,14 +7465,14 @@ All delayed hydration components emit a `@hydrated` event when they are hydrated
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<LazyMyComponent hydrate-on-visible @hydrated="onHydrate" />
-	</div>
+  <div>
+    <LazyMyComponent hydrate-on-visible @hydrated="onHydrate" />
+  </div>
 </template>
 
 <script setup lang="ts">
 function onHydrate() {
-	console.log('Component has been hydrated!');
+  console.log('Component has been hydrated!')
 }
 </script>
 ```
@@ -7480,9 +7485,9 @@ Delayed hydration can offer performance benefits, but it's essential to use it c
 2. **Conditional Rendering:** When using `v-if="false"` on a lazy component, you might not need delayed hydration. You can just use a normal lazy component.
 3. **Shared State:** Be mindful of shared state (`v-model`) across multiple components. Updating the model in one component can trigger hydration in all components bound to that model.
 4. **Use Each Strategy's Intended Use Case:** Each strategy is optimized for a specific purpose.
-    - `hydrate-when` is best for components that might not always need to be hydrated.
-    - `hydrate-after` is for components that can wait a specific amount of time.
-    - `hydrate-on-idle` is for components that can be hydrated when the browser is idle.
+   - `hydrate-when` is best for components that might not always need to be hydrated.
+   - `hydrate-after` is for components that can wait a specific amount of time.
+   - `hydrate-on-idle` is for components that can be hydrated when the browser is idle.
 5. **Avoid `hydrate-never` on interactive components:** If a component requires user interaction, it should not be set to never hydrate.
 
 ## Direct Imports
@@ -7490,20 +7495,20 @@ Delayed hydration can offer performance benefits, but it's essential to use it c
 You can also explicitly import components from `#components` if you want or need to bypass Nuxt's auto-importing functionality.
 
 ```vue [pages/index.vue]
-<script setup lang="ts">
-import { NuxtLink, LazyMountainsList } from '#components';
-
-const show = ref(false);
-</script>
-
 <template>
-	<div>
-		<h1>Mountains</h1>
-		<LazyMountainsList v-if="show" />
-		<button v-if="!show" @click="show = true">Show List</button>
-		<NuxtLink to="/">Home</NuxtLink>
-	</div>
+  <div>
+    <h1>Mountains</h1>
+    <LazyMountainsList v-if="show" />
+    <button v-if="!show" @click="show = true">Show List</button>
+    <NuxtLink to="/">Home</NuxtLink>
+  </div>
 </template>
+
+<script setup lang="ts">
+import { LazyMountainsList, NuxtLink } from '#components'
+
+const show = ref(false)
+</script>
 ```
 
 ## Custom Directories
@@ -7512,24 +7517,24 @@ By default, only the `~/components` directory is scanned. If you want to add oth
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	components: [
-		// ~/calendar-module/components/event/Update.vue => <EventUpdate />
-		{ path: '~/calendar-module/components' },
+  components: [
+    // ~/calendar-module/components/event/Update.vue => <EventUpdate />
+    { path: '~/calendar-module/components' },
 
-		// ~/user-module/components/account/UserDeleteDialog.vue => <UserDeleteDialog />
-		{ path: '~/user-module/components', pathPrefix: false },
+    // ~/user-module/components/account/UserDeleteDialog.vue => <UserDeleteDialog />
+    { path: '~/user-module/components', pathPrefix: false },
 
-		// ~/components/special-components/Btn.vue => <SpecialBtn />
-		{ path: '~/components/special-components', prefix: 'Special' },
+    // ~/components/special-components/Btn.vue => <SpecialBtn />
+    { path: '~/components/special-components', prefix: 'Special' },
 
-		// It's important that this comes last if you have overrides you wish to apply
-		// to sub-directories of `~/components`.
-		//
-		// ~/components/Btn.vue => <Btn />
-		// ~/components/base/Btn.vue => <BaseBtn />
-		'~/components'
-	]
-});
+    // It's important that this comes last if you have overrides you wish to apply
+    // to sub-directories of `~/components`.
+    //
+    // ~/components/Btn.vue => <Btn />
+    // ~/components/base/Btn.vue => <BaseBtn />
+    '~/components'
+  ]
+})
 ```
 
 ::note
@@ -7543,26 +7548,26 @@ If you want to auto-import components from an npm package, you can use [`addComp
 ::code-group
 
 ```ts [~/modules/register-component.ts] twoslash
-import { addComponent, defineNuxtModule } from '@nuxt/kit';
+import { addComponent, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		// import { MyComponent as MyAutoImportedComponent } from 'my-npm-package'
-		addComponent({
-			name: 'MyAutoImportedComponent',
-			export: 'MyComponent',
-			filePath: 'my-npm-package'
-		});
-	}
-});
+  setup() {
+    // import { MyComponent as MyAutoImportedComponent } from 'my-npm-package'
+    addComponent({
+      name: 'MyAutoImportedComponent',
+      export: 'MyComponent',
+      filePath: 'my-npm-package'
+    })
+  }
+})
 ```
 
 ```vue [app.vue]
 <template>
-	<div>
-		<!--  the component uses the name we specified and is auto-imported  -->
-		<MyAutoImportedComponent />
-	</div>
+  <div>
+    <!--  the component uses the name we specified and is auto-imported  -->
+    <MyAutoImportedComponent />
+  </div>
 </template>
 ```
 
@@ -7575,13 +7580,13 @@ If you need to restrict the file extensions that should be registered as compone
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	components: [
-		{
-			path: '~/components',
-			extensions: ['.vue'] // [!code ++]
-		}
-	]
-});
+  components: [
+    {
+      path: '~/components',
+      extensions: ['.vue'] // [!code ++]
+    }
+  ]
+})
 ```
 
 ## Client Components
@@ -7595,10 +7600,10 @@ If a component is meant to be rendered only client-side, you can add the `.clien
 
 ```vue [pages/example.vue]
 <template>
-	<div>
-		<!-- this component will only be rendered on client side -->
-		<Comments />
-	</div>
+  <div>
+    <!-- this component will only be rendered on client side -->
+    <Comments />
+  </div>
 </template>
 ```
 
@@ -7650,10 +7655,10 @@ Server components are currently experimental and in order to use them, you need 
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		componentIslands: true
-	}
-});
+  experimental: {
+    componentIslands: true
+  }
+})
 ```
 
 Now you can register server-only components with the `.server` suffix and use them anywhere in your application automatically.
@@ -7665,13 +7670,13 @@ Now you can register server-only components with the `.server` suffix and use th
 
 ```vue [pages/example.vue]
 <template>
-	<div>
-		<!--
+  <div>
+    <!--
       this will automatically be rendered on the server, meaning your markdown parsing + highlighting
       libraries are not included in your client bundle.
      -->
-		<HighlightedMarkdown markdown="# Headline" />
-	</div>
+    <HighlightedMarkdown markdown="# Headline" />
+  </div>
 </template>
 ```
 
@@ -7703,11 +7708,11 @@ You can partially hydrate a component by setting a `nuxt-client` attribute on th
 
 ```vue [components/ServerWithClient.vue]
 <template>
-	<div>
-		<HighlightedMarkdown markdown="# Headline" />
-		<!-- Counter will be loaded and hydrated client-side -->
-		<Counter nuxt-client :count="5" />
-	</div>
+  <div>
+    <HighlightedMarkdown markdown="# Headline" />
+    <!-- Counter will be loaded and hydrated client-side -->
+    <Counter nuxt-client :count="5" />
+  </div>
 </template>
 ```
 
@@ -7744,10 +7749,10 @@ In this case, the `.server` + `.client` components are two 'halves' of a compone
 
 ```vue [pages/example.vue]
 <template>
-	<div>
-		<!-- this component will render Comments.server on the server then Comments.client once mounted in the browser -->
-		<Comments />
-	</div>
+  <div>
+    <!-- this component will render Comments.server on the server then Comments.client once mounted in the browser -->
+    <Comments />
+  </div>
 </template>
 ```
 
@@ -7781,37 +7786,37 @@ Imagine a directory structure like this:
 Then in `awesome-ui/nuxt.ts` you can use the `addComponentsDir` hook:
 
 ```ts twoslash
-import { createResolver, defineNuxtModule, addComponentsDir } from '@nuxt/kit';
+import { addComponentsDir, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		const resolver = createResolver(import.meta.url);
+  setup() {
+    const resolver = createResolver(import.meta.url)
 
-		// Add ./components dir to the list
-		addComponentsDir({
-			path: resolver.resolve('./components'),
-			prefix: 'awesome'
-		});
-	}
-});
+    // Add ./components dir to the list
+    addComponentsDir({
+      path: resolver.resolve('./components'),
+      prefix: 'awesome'
+    })
+  }
+})
 ```
 
 That's it! Now in your project, you can import your UI library as a Nuxt module in your `nuxt.config` file:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	modules: ['awesome-ui/nuxt']
-});
+  modules: ['awesome-ui/nuxt']
+})
 ```
 
 ... and directly use the module components (prefixed with `awesome-`) in our `pages/index.vue`:
 
 ```vue
 <template>
-	<div>
-		My <AwesomeButton>UI button</AwesomeButton>!
-		<awesome-alert>Here's an alert!</awesome-alert>
-	</div>
+  <div>
+    My <AwesomeButton>UI button</AwesomeButton>!
+    <awesome-alert>Here's an alert!</awesome-alert>
+  </div>
 </template>
 ```
 
@@ -7827,9 +7832,9 @@ It will automatically import the components only if used and also support HMR wh
 **Method 1:** Using named export
 
 ```js [composables/useFoo.ts]
-export const useFoo = () => {
-	return useState('foo', () => 'bar');
-};
+export function useFoo() {
+  return useState('foo', () => 'bar')
+}
 ```
 
 **Method 2:** Using default export
@@ -7837,22 +7842,22 @@ export const useFoo = () => {
 ```js [composables/use-foo.ts or composables/useFoo.ts]
 // It will be available as useFoo() (camelCase of file name without extension)
 export default function () {
-	return useState('foo', () => 'bar');
+  return useState('foo', () => 'bar')
 }
 ```
 
 **Usage:** You can now use auto imported composable in `.js`, `.ts` and `.vue` files
 
 ```vue [app.vue]
-<script setup lang="ts">
-const foo = useFoo();
-</script>
-
 <template>
-	<div>
-		{{ foo }}
-	</div>
+  <div>
+    {{ foo }}
+  </div>
 </template>
+
+<script setup lang="ts">
+const foo = useFoo()
+</script>
 ```
 
 ::note
@@ -7882,10 +7887,10 @@ If you create a composable without having the dev server running, TypeScript wil
 You can use a composable within another composable using auto imports:
 
 ```js [composables/test.ts]
-export const useFoo = () => {
-	const nuxtApp = useNuxtApp();
-	const bar = useBar();
-};
+export function useFoo() {
+  const nuxtApp = useNuxtApp()
+  const bar = useBar()
+}
 ```
 
 ### Access plugin injections
@@ -7893,10 +7898,10 @@ export const useFoo = () => {
 You can access [plugin injections](https://nuxt.com/docs/guide/directory-structure/plugins#providing-helpers) from composables:
 
 ```js [composables/test.ts]
-export const useHello = () => {
-	const nuxtApp = useNuxtApp();
-	return nuxtApp.$hello;
-};
+export function useHello() {
+  const nuxtApp = useNuxtApp()
+  return nuxtApp.$hello
+}
 ```
 
 ## How Files Are Scanned
@@ -7919,24 +7924,24 @@ To get auto imports working for nested modules, you could either re-export them 
 
 ```ts [composables/index.ts]
 // Enables auto import for this export
-export { utils } from './nested/utils.ts';
+export { utils } from './nested/utils.ts'
 ```
 
 **Example:** Scan nested directories inside the `composables/` folder:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	imports: {
-		dirs: [
-			// Scan top-level modules
-			'composables',
-			// ... or scan modules nested one level deep with a specific name and file extension
-			'composables/*/index.{ts,js,mjs,mts}',
-			// ... or scan all modules within given directory
-			'composables/**'
-		]
-	}
-});
+  imports: {
+    dirs: [
+      // Scan top-level modules
+      'composables',
+      // ... or scan modules nested one level deep with a specific name and file extension
+      'composables/*/index.{ts,js,mjs,mts}',
+      // ... or scan all modules within given directory
+      'composables/**'
+    ]
+  }
+})
 ```
 
 # content
@@ -7975,22 +7980,22 @@ The module automatically loads and parses them.
 To render content pages, add a [catch-all route](https://nuxt.com/docs/guide/directory-structure/pages/#catch-all-route) using the [`<ContentRenderer>`](https://content.nuxt.com/docs/components/content-renderer){rel="nofollow"} component:
 
 ```vue [pages/[...slug].vue]
-<script lang="ts" setup>
-const route = useRoute();
-const { data: page } = await useAsyncData(route.path, () => {
-	return queryCollection('content').path(route.path).first();
-});
-</script>
-
 <template>
-	<div>
-		<header><!-- ... --></header>
+  <div>
+    <header><!-- ... --></header>
 
-		<ContentRenderer v-if="page" :value="page" />
+    <ContentRenderer v-if="page" :value="page" />
 
-		<footer><!-- ... --></footer>
-	</div>
+    <footer><!-- ... --></footer>
+  </div>
 </template>
+
+<script lang="ts" setup>
+const route = useRoute()
+const { data: page } = await useAsyncData(route.path, () => {
+  return queryCollection('content').path(route.path).first()
+})
+</script>
 ```
 
 ## Documentation
@@ -8011,9 +8016,9 @@ Layouts are enabled by adding [`<NuxtLayout>`](https://nuxt.com/docs/api/compone
 
 ```vue [app.vue]
 <template>
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 ```
 
@@ -8044,10 +8049,10 @@ Add a `~/layouts/default.vue`:
 
 ```vue [layouts/default.vue]
 <template>
-	<div>
-		<p>Some default layout content shared across all pages</p>
-		<slot />
-	</div>
+  <div>
+    <p>Some default layout content shared across all pages</p>
+    <slot></slot>
+  </div>
 </template>
 ```
 
@@ -8066,8 +8071,8 @@ Then you can use the `custom` layout in your page:
 ```vue [pages/about.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	layout: 'custom'
-});
+  layout: 'custom'
+})
 </script>
 ```
 
@@ -8081,16 +8086,16 @@ Learn more about `definePageMeta`.
 You can directly override the default layout for all pages using the `name` property of [`<NuxtLayout>`](https://nuxt.com/docs/api/components/nuxt-layout):
 
 ```vue [app.vue]
+<template>
+  <NuxtLayout :name="layout">
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+
 <script setup lang="ts">
 // You might choose this based on an API call or logged-in status
-const layout = 'custom';
+const layout = 'custom'
 </script>
-
-<template>
-	<NuxtLayout :name="layout">
-		<NuxtPage />
-	</NuxtLayout>
-</template>
 ```
 
 If you have a layout in nested directories, the layout's name will be based on its own path directory and filename, with duplicate segments being removed.
@@ -8117,20 +8122,20 @@ For clarity, we recommend that the layout's filename matches its name:
 You can also use the [`setPageLayout`](https://nuxt.com/docs/api/utils/set-page-layout) helper to change the layout dynamically:
 
 ```vue twoslash
+<template>
+  <div>
+    <button @click="enableCustomLayout">Update layout</button>
+  </div>
+</template>
+
 <script setup lang="ts">
 function enableCustomLayout() {
-	setPageLayout('custom');
+  setPageLayout('custom')
 }
 definePageMeta({
-	layout: false
-});
+  layout: false
+})
 </script>
-
-<template>
-	<div>
-		<button @click="enableCustomLayout">Update layout</button>
-	</div>
-</template>
 ```
 
 ::link-example{to="https://nuxt.com/docs/examples/features/layouts"}
@@ -8143,33 +8148,33 @@ If you are using pages, you can take full control by setting `layout: false` and
 ::code-group
 
 ```vue [pages/index.vue]
+<template>
+  <div>
+    <NuxtLayout name="custom">
+      <template #header> Some header template content. </template>
+
+      The rest of the page
+    </NuxtLayout>
+  </div>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
-	layout: false
-});
+  layout: false
+})
 </script>
-
-<template>
-	<div>
-		<NuxtLayout name="custom">
-			<template #header> Some header template content. </template>
-
-			The rest of the page
-		</NuxtLayout>
-	</div>
-</template>
 ```
 
 ```vue [layouts/custom.vue]
 <template>
-	<div>
-		<header>
-			<slot name="header"> Default header content </slot>
-		</header>
-		<main>
-			<slot />
-		</main>
-	</div>
+  <div>
+    <header>
+      <slot name="header"> Default header content </slot>
+    </header>
+    <main>
+      <slot></slot>
+    </main>
+  </div>
 </template>
 ```
 
@@ -8215,16 +8220,16 @@ Route middleware are navigation guards that receive the current route and the ne
 
 ```ts [middleware/my-middleware.ts] twoslash
 export default defineNuxtRouteMiddleware((to, from) => {
-	if (to.params.id === '1') {
-		return abortNavigation();
-	}
-	// In a real app you would probably not redirect every route to `/`
-	// however it is important to check `to.path` before redirecting or you
-	// might get an infinite redirect loop
-	if (to.path !== '/') {
-		return navigateTo('/');
-	}
-});
+  if (to.params.id === '1') {
+    return abortNavigation()
+  }
+  // In a real app you would probably not redirect every route to `/`
+  // however it is important to check `to.path` before redirecting or you
+  // might get an infinite redirect loop
+  if (to.path !== '/') {
+    return navigateTo('/')
+  }
+})
 ```
 
 Nuxt provides two globally available helpers that can be returned directly from the middleware.
@@ -8271,13 +8276,13 @@ For example, assuming you have the following middleware and component:
 ```vue [pages/profile.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	middleware: [
-		function (to, from) {
-			// Custom inline middleware
-		},
-		'auth'
-	]
-});
+  middleware: [
+    function (to, from) {
+      // Custom inline middleware
+    },
+    'auth'
+  ]
+})
 </script>
 ```
 
@@ -8313,14 +8318,17 @@ However, if you want to avoid this behaviour you can do so:
 
 ```ts [middleware/example.ts] twoslash
 export default defineNuxtRouteMiddleware((to) => {
-	// skip middleware on server
-	if (import.meta.server) return;
-	// skip middleware on client side entirely
-	if (import.meta.client) return;
-	// or only skip middleware on initial client load
-	const nuxtApp = useNuxtApp();
-	if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered) return;
-});
+  // skip middleware on server
+  if (import.meta.server)
+    return
+  // skip middleware on client side entirely
+  if (import.meta.client)
+    return
+  // or only skip middleware on initial client load
+  const nuxtApp = useNuxtApp()
+  if (import.meta.client && nuxtApp.isHydrating && nuxtApp.payload.serverRendered)
+    return
+})
 ```
 
 This is true even if you throw an error in your middleware on the server, and an error page is rendered. The middleware will still run again in the browser.
@@ -8335,18 +8343,18 @@ It is possible to add global or named route middleware manually using the [`addR
 
 ```ts twoslash
 export default defineNuxtPlugin(() => {
-	addRouteMiddleware(
-		'global-test',
-		() => {
-			console.log('this global middleware was added in a plugin and will be run on every route change');
-		},
-		{ global: true }
-	);
+  addRouteMiddleware(
+    'global-test',
+    () => {
+      console.log('this global middleware was added in a plugin and will be run on every route change')
+    },
+    { global: true }
+  )
 
-	addRouteMiddleware('named-test', () => {
-		console.log('this named middleware was added in a plugin and would override any existing middleware of the same name');
-	});
-});
+  addRouteMiddleware('named-test', () => {
+    console.log('this named middleware was added in a plugin and would override any existing middleware of the same name')
+  })
+})
 ```
 
 ## Example
@@ -8361,9 +8369,9 @@ In your page file, you can reference this route middleware:
 ```vue twoslash
 <script setup lang="ts">
 definePageMeta({
-	middleware: ['auth']
-	// or middleware: 'auth'
-});
+  middleware: ['auth']
+  // or middleware: 'auth'
+})
 </script>
 ```
 
@@ -8377,27 +8385,27 @@ Now, before navigation to that page can complete, the `auth` route middleware wi
 Instead of using `definePageMeta` on each page, you can add named route middleware within the `pages:extend` hook.
 
 ```ts [nuxt.config.ts] twoslash
-import type { NuxtPage } from 'nuxt/schema';
+import type { NuxtPage } from 'nuxt/schema'
 
 export default defineNuxtConfig({
-	hooks: {
-		'pages:extend'(pages) {
-			function setMiddleware(pages: NuxtPage[]) {
-				for (const page of pages) {
-					if (/* some condition */ true) {
-						page.meta ||= {};
-						// Note that this will override any middleware set in `definePageMeta` in the page
-						page.meta.middleware = ['named'];
-					}
-					if (page.children) {
-						setMiddleware(page.children);
-					}
-				}
-			}
-			setMiddleware(pages);
-		}
-	}
-});
+  hooks: {
+    'pages:extend': function (pages) {
+      function setMiddleware(pages: NuxtPage[]) {
+        for (const page of pages) {
+          if (/* some condition */ true) {
+            page.meta ||= {}
+            // Note that this will override any middleware set in `definePageMeta` in the page
+            page.meta.middleware = ['named']
+          }
+          if (page.children) {
+            setMiddleware(page.children)
+          }
+        }
+      }
+      setMiddleware(pages)
+    }
+  }
+})
 ```
 
 # modules
@@ -8416,28 +8424,28 @@ You don't need to add those local modules to your [`nuxt.config.ts`](https://nux
 ```ts [modules/hello/index.ts] twoslash
 // `nuxt/kit` is a helper subpath import you can use when defining local modules
 // that means you do not need to add `@nuxt/kit` to your project's dependencies
-import { createResolver, defineNuxtModule, addServerHandler } from 'nuxt/kit';
+import { addServerHandler, createResolver, defineNuxtModule } from 'nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		name: 'hello'
-	},
-	setup() {
-		const resolver = createResolver(import.meta.url);
+  meta: {
+    name: 'hello'
+  },
+  setup() {
+    const resolver = createResolver(import.meta.url)
 
-		// Add an API route
-		addServerHandler({
-			route: '/api/hello',
-			handler: resolver.resolve('./runtime/api-route')
-		});
-	}
-});
+    // Add an API route
+    addServerHandler({
+      route: '/api/hello',
+      handler: resolver.resolve('./runtime/api-route')
+    })
+  }
+})
 ```
 
 ```ts [modules/hello/runtime/api-route.ts] twoslash
 export default defineEventHandler(() => {
-	return { hello: 'world' };
-});
+  return { hello: 'world' }
+})
 ```
 
 ::
@@ -8496,27 +8504,27 @@ Nuxt will automatically create a route for every page in your `~/pages/` directo
 
 ```vue [pages/index.vue]
 <template>
-	<h1>Index page</h1>
+  <h1>Index page</h1>
 </template>
 ```
 
 ```ts [pages/index.ts] twoslash
 // https://vuejs.org/guide/extras/render-function.html
 export default defineComponent({
-	render() {
-		return h('h1', 'Index page');
-	}
-});
+  render() {
+    return h('h1', 'Index page')
+  }
+})
 ```
 
 ```tsx [pages/index.tsx] twoslash
 // https://nuxt.com/docs/examples/advanced/jsx
 // https://vuejs.org/guide/extras/render-function.html#jsx-tsx
 export default defineComponent({
-	render() {
-		return <h1>Index page</h1>;
-	}
-});
+  render() {
+    return <h1>Index page</h1>
+  }
+})
 ```
 
 ::
@@ -8527,10 +8535,10 @@ If you are using [`app.vue`](https://nuxt.com/docs/guide/directory-structure/app
 
 ```vue [app.vue]
 <template>
-	<div>
-		<!-- Markup shared across all pages, ex: NavBar -->
-		<NuxtPage />
-	</div>
+  <div>
+    <!-- Markup shared across all pages, ex: NavBar -->
+    <NuxtPage />
+  </div>
 </template>
 ```
 
@@ -8544,25 +8552,25 @@ Here are some examples to illustrate what a page with a single root element look
 
 ```vue [pages/working.vue]
 <template>
-	<div>
-		<!-- This page correctly has only one single root element -->
-		Page content
-	</div>
+  <div>
+    <!-- This page correctly has only one single root element -->
+    Page content
+  </div>
 </template>
 ```
 
 ```vue [pages/bad-1.vue]
 <template>
-	<!-- This page will not render when route changes during client side navigation, because of this comment -->
-	<div>Page content</div>
+  <!-- This page will not render when route changes during client side navigation, because of this comment -->
+  <div>Page content</div>
 </template>
 ```
 
 ```vue [pages/bad-2.vue]
 <template>
-	<div>This page</div>
-	<div>Has more than one root element</div>
-	<div>And will not render when route changes during client side navigation</div>
+  <div>This page</div>
+  <div>Has more than one root element</div>
+  <div>And will not render when route changes during client side navigation</div>
 </template>
 ```
 
@@ -8585,7 +8593,7 @@ Given the example above, you can access group/id within your component via the `
 
 ```vue [pages/users-[group]/[id].vue]
 <template>
-	<p>{{ $route.params.group }} - {{ $route.params.id }}</p>
+  <p>{{ $route.params.group }} - {{ $route.params.id }}</p>
 </template>
 ```
 
@@ -8599,10 +8607,10 @@ If you want to access the route using Composition API, there is a global [`useRo
 
 ```vue twoslash
 <script setup lang="ts">
-const route = useRoute();
+const route = useRoute()
 
 if (route.params.group === 'admins' && !route.params.id) {
-	console.log('Warning! Make sure user is authenticated!');
+  console.log('Warning! Make sure user is authenticated!')
 }
 </script>
 ```
@@ -8627,7 +8635,7 @@ If you need a catch-all route, you create it by using a file named like `[...slu
 
 ```vue [pages/[...slug].vue]
 <template>
-	<p>{{ $route.params.slug }}</p>
+  <p>{{ $route.params.slug }}</p>
 </template>
 ```
 
@@ -8654,37 +8662,37 @@ This file tree will generate these routes:
 
 ```js
 [
-	{
-		path: '/parent',
-		component: '~/pages/parent.vue',
-		name: 'parent',
-		children: [
-			{
-				path: 'child',
-				component: '~/pages/parent/child.vue',
-				name: 'parent-child'
-			}
-		]
-	}
-];
+  {
+    path: '/parent',
+    component: '~/pages/parent.vue',
+    name: 'parent',
+    children: [
+      {
+        path: 'child',
+        component: '~/pages/parent/child.vue',
+        name: 'parent-child'
+      }
+    ]
+  }
+]
 ```
 
 To display the `child.vue` component, you have to insert the `<NuxtPage>` component inside `pages/parent.vue`:
 
 ```vue [pages/parent.vue]
 <template>
-	<div>
-		<h1>I am the parent view</h1>
-		<NuxtPage :foobar="123" />
-	</div>
+  <div>
+    <h1>I am the parent view</h1>
+    <NuxtPage :foobar="123" />
+  </div>
 </template>
 ```
 
 ```vue [pages/parent/child.vue]
 <script setup lang="ts">
-const props = defineProps(['foobar']);
+const props = defineProps(['foobar'])
 
-console.log(props.foobar);
+console.log(props.foobar)
 </script>
 ```
 
@@ -8694,10 +8702,10 @@ If you want more control over when the `<NuxtPage>` component is re-rendered (fo
 
 ```vue [pages/parent.vue]
 <template>
-	<div>
-		<h1>I am the parent view</h1>
-		<NuxtPage :page-key="(route) => route.fullPath" />
-	</div>
+  <div>
+    <h1>I am the parent view</h1>
+    <NuxtPage :page-key="(route) => route.fullPath" />
+  </div>
 </template>
 ```
 
@@ -8706,8 +8714,8 @@ Or alternatively:
 ```vue [pages/parent/child.vue] twoslash
 <script setup lang="ts">
 definePageMeta({
-	key: (route) => route.fullPath
-});
+  key: route => route.fullPath
+})
 </script>
 ```
 
@@ -8737,8 +8745,8 @@ You might want to define metadata for each route in your app. You can do this us
 ```vue twoslash
 <script setup lang="ts">
 definePageMeta({
-	title: 'My home page'
-});
+  title: 'My home page'
+})
 </script>
 ```
 
@@ -8746,9 +8754,9 @@ This data can then be accessed throughout the rest of your app from the `route.m
 
 ```vue twoslash
 <script setup lang="ts">
-const route = useRoute();
+const route = useRoute()
 
-console.log(route.meta.title); // My home page
+console.log(route.meta.title) // My home page
 </script>
 ```
 
@@ -8763,19 +8771,19 @@ Make sure not to reference any reactive data or functions that cause side effect
 
 ```vue
 <script setup lang="ts">
-import { someData } from '~/utils/example';
+import { someData } from '~/utils/example'
 
 function validateIdParam(route) {
-	return route.params.id && !isNaN(Number(route.params.id));
+  return route.params.id && !isNaN(Number(route.params.id))
 }
 
-const title = ref('');
+const title = ref('')
 
 definePageMeta({
-	validate: validateIdParam,
-	someData,
-	title // do not do this, the ref will be hoisted out of the component
-});
+  validate: validateIdParam,
+  someData,
+  title // do not do this, the ref will be hoisted out of the component
+})
 </script>
 ```
 
@@ -8827,13 +8835,13 @@ If you add custom metadata for your pages, you may wish to do so in a type-safe 
 
 ```ts [index.d.ts]
 declare module '#app' {
-	interface PageMeta {
-		pageType?: string;
-	}
+  interface PageMeta {
+    pageType?: string
+  }
 }
 
 // It is always important to ensure you import/export something when augmenting a type
-export {};
+export {}
 ```
 
 ## Navigation
@@ -8846,7 +8854,7 @@ A simple link to the `index.vue` page in your `pages` folder:
 
 ```vue
 <template>
-	<NuxtLink to="/">Home page</NuxtLink>
+  <NuxtLink to="/">Home page</NuxtLink>
 </template>
 ```
 
@@ -8864,17 +8872,17 @@ Ensure to always `await` on `navigateTo` or chain its result by returning from f
 
 ```vue twoslash
 <script setup lang="ts">
-const name = ref('');
-const type = ref(1);
+const name = ref('')
+const type = ref(1)
 
 function navigate() {
-	return navigateTo({
-		path: '/search',
-		query: {
-			name: name.value,
-			type: type.value
-		}
-	});
+  return navigateTo({
+    path: '/search',
+    query: {
+      name: name.value,
+      type: type.value
+    }
+  })
 }
 </script>
 ```
@@ -8914,13 +8922,13 @@ However, you can use [Nuxt Layers](https://nuxt.com/docs/getting-started/layers)
 
 ```ts [some-app/nuxt.config.ts] twoslash
 // some-app/nuxt.config.ts
-export default defineNuxtConfig({});
+export default defineNuxtConfig({})
 ```
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	extends: ['./some-app']
-});
+  extends: ['./some-app']
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/going-further/layers"}
@@ -8957,8 +8965,8 @@ To add plugins in subdirectories, you can use the [`plugins`](https://nuxt.com/d
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	plugins: ['~/plugins/bar/baz', '~/plugins/bar/foz']
-});
+  plugins: ['~/plugins/bar/baz', '~/plugins/bar/foz']
+})
 ```
 
 ## Creating Plugins
@@ -8967,8 +8975,8 @@ The only argument passed to a plugin is [`nuxtApp`](https://nuxt.com/docs/api/co
 
 ```ts [plugins/hello.ts] twoslash
 export default defineNuxtPlugin((nuxtApp) => {
-	// Doing something with nuxtApp
-});
+  // Doing something with nuxtApp
+})
 ```
 
 ### Object Syntax Plugins
@@ -8977,23 +8985,23 @@ It is also possible to define a plugin using an object syntax, for more advanced
 
 ```ts [plugins/hello.ts] twoslash
 export default defineNuxtPlugin({
-	name: 'my-plugin',
-	enforce: 'pre', // or 'post'
-	async setup(nuxtApp) {
-		// this is the equivalent of a normal functional plugin
-	},
-	hooks: {
-		// You can directly register Nuxt app runtime hooks here
-		'app:created'() {
-			const nuxtApp = useNuxtApp();
-			// do something in the hook
-		}
-	},
-	env: {
-		// Set this value to `false` if you don't want the plugin to run when rendering server-only or island components.
-		islands: true
-	}
-});
+  name: 'my-plugin',
+  enforce: 'pre', // or 'post'
+  async setup(nuxtApp) {
+    // this is the equivalent of a normal functional plugin
+  },
+  hooks: {
+    // You can directly register Nuxt app runtime hooks here
+    'app:created': function () {
+      const nuxtApp = useNuxtApp()
+      // do something in the hook
+    }
+  },
+  env: {
+    // Set this value to `false` if you don't want the plugin to run when rendering server-only or island components.
+    islands: true
+  }
+})
 ```
 
 ## ::video-accordion
@@ -9037,12 +9045,12 @@ By default, Nuxt loads plugins sequentially. You can define a plugin as `paralle
 
 ```ts [plugins/my-plugin.ts] twoslash
 export default defineNuxtPlugin({
-	name: 'my-plugin',
-	parallel: true,
-	async setup(nuxtApp) {
-		// the next plugin will be executed immediately
-	}
-});
+  name: 'my-plugin',
+  parallel: true,
+  async setup(nuxtApp) {
+    // the next plugin will be executed immediately
+  }
+})
 ```
 
 ### Plugins With Dependencies
@@ -9051,12 +9059,12 @@ If a plugin needs to wait for another plugin before it runs, you can add the plu
 
 ```ts [plugins/depending-on-my-plugin.ts] twoslash
 export default defineNuxtPlugin({
-	name: 'depends-on-my-plugin',
-	dependsOn: ['my-plugin'],
-	async setup(nuxtApp) {
-		// this plugin will wait for the end of `my-plugin`'s execution before it runs
-	}
-});
+  name: 'depends-on-my-plugin',
+  dependsOn: ['my-plugin'],
+  async setup(nuxtApp) {
+    // this plugin will wait for the end of `my-plugin`'s execution before it runs
+  }
+})
 ```
 
 ## Using Composables
@@ -9065,8 +9073,8 @@ You can use [composables](https://nuxt.com/docs/guide/directory-structure/compos
 
 ```ts [plugins/hello.ts]
 export default defineNuxtPlugin((nuxtApp) => {
-	const foo = useFoo();
-});
+  const foo = useFoo()
+})
 ```
 
 However, keep in mind there are some limitations and differences:
@@ -9091,25 +9099,25 @@ If you would like to provide a helper on the [`NuxtApp`](https://nuxt.com/docs/a
 
 ```ts [plugins/hello.ts] twoslash
 export default defineNuxtPlugin(() => {
-	return {
-		provide: {
-			hello: (msg: string) => `Hello ${msg}!`
-		}
-	};
-});
+  return {
+    provide: {
+      hello: (msg: string) => `Hello ${msg}!`
+    }
+  }
+})
 ```
 
 ```ts [plugins/hello-object-syntax.ts] twoslash
 export default defineNuxtPlugin({
-	name: 'hello',
-	setup() {
-		return {
-			provide: {
-				hello: (msg: string) => `Hello ${msg}!`
-			}
-		};
-	}
-});
+  name: 'hello',
+  setup() {
+    return {
+      provide: {
+        hello: (msg: string) => `Hello ${msg}!`
+      }
+    }
+  }
+})
 ```
 
 ::
@@ -9117,16 +9125,16 @@ export default defineNuxtPlugin({
 You can then use the helper in your components:
 
 ```vue [components/Hello.vue]
+<template>
+  <div>
+    {{ $hello('world') }}
+  </div>
+</template>
+
 <script setup lang="ts">
 // alternatively, you can also use it here
-const { $hello } = useNuxtApp();
+const { $hello } = useNuxtApp()
 </script>
-
-<template>
-	<div>
-		{{ $hello('world') }}
-	</div>
-</template>
 ```
 
 ::important
@@ -9150,18 +9158,18 @@ For advanced use-cases, you can declare the type of injected properties like thi
 
 ```ts [index.d.ts]
 declare module '#app' {
-	interface NuxtApp {
-		$hello(msg: string): string;
-	}
+  interface NuxtApp {
+    $hello(msg: string): string
+  }
 }
 
 declare module 'vue' {
-	interface ComponentCustomProperties {
-		$hello(msg: string): string;
-	}
+  interface ComponentCustomProperties {
+    $hello(msg: string): string
+  }
 }
 
-export {};
+export {}
 ```
 
 ::note
@@ -9197,16 +9205,16 @@ bun add -D vue-gtag-next
 Then create a plugin file:
 
 ```ts [plugins/vue-gtag.client.ts]
-import VueGtag, { trackRouter } from 'vue-gtag-next';
+import VueGtag, { trackRouter } from 'vue-gtag-next'
 
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.vueApp.use(VueGtag, {
-		property: {
-			id: 'GA_MEASUREMENT_ID'
-		}
-	});
-	trackRouter(useRouter());
-});
+  nuxtApp.vueApp.use(VueGtag, {
+    property: {
+      id: 'GA_MEASUREMENT_ID'
+    }
+  })
+  trackRouter(useRouter())
+})
 ```
 
 ## Vue Directives
@@ -9215,16 +9223,16 @@ Similarly, you can register a custom Vue directive in a plugin.
 
 ```ts [plugins/my-directive.ts] twoslash
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.vueApp.directive('focus', {
-		mounted(el) {
-			el.focus();
-		},
-		getSSRProps(binding, vnode) {
-			// you can provide SSR-specific props here
-			return {};
-		}
-	});
-});
+  nuxtApp.vueApp.directive('focus', {
+    mounted(el) {
+      el.focus()
+    },
+    getSSRProps(binding, vnode) {
+      // you can provide SSR-specific props here
+      return {}
+    }
+  })
+})
 ```
 
 ::warning
@@ -9256,8 +9264,8 @@ Files contained within the `public/` directory are served at the root and are no
 ```vue [app.vue]
 <script setup lang="ts">
 useSeoMeta({
-	ogImage: '/og-image.png'
-});
+  ogImage: '/og-image.png'
+})
 </script>
 ```
 
@@ -9285,22 +9293,22 @@ The handler can directly return JSON data, a `Promise`, or use `event.node.res.e
 
 ```ts [server/api/hello.ts] twoslash
 export default defineEventHandler((event) => {
-	return {
-		hello: 'world'
-	};
-});
+  return {
+    hello: 'world'
+  }
+})
 ```
 
 You can now universally call this API in your pages and components:
 
 ```vue [pages/index.vue]
-<script setup lang="ts">
-const { data } = await useFetch('/api/hello');
-</script>
-
 <template>
-	<pre>{{ data }}</pre>
+  <pre>{{ data }}</pre>
 </template>
+
+<script setup lang="ts">
+const { data } = await useFetch('/api/hello')
+</script>
 ```
 
 ## Server Routes
@@ -9322,7 +9330,7 @@ To add server routes without `/api` prefix, put them into `~/server/routes` dire
 **Example:**
 
 ```ts [server/routes/hello.ts]
-export default defineEventHandler(() => 'Hello World!');
+export default defineEventHandler(() => 'Hello World!')
 ```
 
 Given the example above, the `/hello` route will be accessible at <http://localhost:3000/hello>{rel="nofollow"}.
@@ -9345,14 +9353,14 @@ Middleware handlers should not return anything (nor close or respond to the requ
 
 ```ts [server/middleware/log.ts]
 export default defineEventHandler((event) => {
-	console.log('New request: ' + getRequestURL(event));
-});
+  console.log(`New request: ${getRequestURL(event)}`)
+})
 ```
 
 ```ts [server/middleware/auth.ts]
 export default defineEventHandler((event) => {
-	event.context.auth = { user: 123 };
-});
+  event.context.auth = { user: 123 }
+})
 ```
 
 ## Server Plugins
@@ -9363,8 +9371,8 @@ Nuxt will automatically read any files in the `~/server/plugins` directory and r
 
 ```ts [server/plugins/nitroPlugin.ts]
 export default defineNitroPlugin((nitroApp) => {
-	console.log('Nitro plugin', nitroApp);
-});
+  console.log('Nitro plugin', nitroApp)
+})
 ```
 
 ## ::read-more
@@ -9398,20 +9406,22 @@ For example, you can define a custom handler utility that wraps the original han
 **Example:**
 
 ```ts [server/utils/handler.ts]
-import type { EventHandler, EventHandlerRequest } from 'h3';
+import type { EventHandler, EventHandlerRequest } from 'h3'
 
-export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(handler: EventHandler<T, D>): EventHandler<T, D> =>
-	defineEventHandler<T>(async (event) => {
-		try {
-			// do something before the route handler
-			const response = await handler(event);
-			// do something after the route handler
-			return { response };
-		} catch (err) {
-			// Error handling
-			return { err };
-		}
-	});
+export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(handler: EventHandler<T, D>): EventHandler<T, D> {
+  return defineEventHandler<T>(async (event) => {
+    try {
+      // do something before the route handler
+      const response = await handler(event)
+      // do something after the route handler
+      return { response }
+    }
+    catch (err) {
+      // Error handling
+      return { err }
+    }
+  })
+}
 ```
 
 ## Server Types
@@ -9424,7 +9434,7 @@ To improve clarity within your IDE between the auto-imports from 'nitro' and 'vu
 
 ```json [server/tsconfig.json]
 {
-	"extends": "../.nuxt/tsconfig.server.json"
+  "extends": "../.nuxt/tsconfig.server.json"
 }
 ```
 
@@ -9438,10 +9448,10 @@ Server routes can use dynamic parameters within brackets in the file name like `
 
 ```ts [server/api/hello/[name].ts]
 export default defineEventHandler((event) => {
-	const name = getRouterParam(event, 'name');
+  const name = getRouterParam(event, 'name')
 
-	return `Hello, ${name}!`;
-});
+  return `Hello, ${name}!`
+})
 ```
 
 ::tip{to="https://h3.unjs.io/examples/validate-data#validate-params"}
@@ -9455,11 +9465,11 @@ You can now universally call this API on `/api/hello/nuxt` and get `Hello, nuxt!
 Handle file names can be suffixed with `.get`, `.post`, `.put`, `.delete`, ... to match request's [HTTP Method](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods){rel="nofollow"}.
 
 ```ts [server/api/test.get.ts]
-export default defineEventHandler(() => 'Test get handler');
+export default defineEventHandler(() => 'Test get handler')
 ```
 
 ```ts [server/api/test.post.ts]
-export default defineEventHandler(() => 'Test post handler');
+export default defineEventHandler(() => 'Test post handler')
 ```
 
 Given the example above, fetching `/test` with:
@@ -9474,20 +9484,20 @@ You can also use `index.[method].ts` inside a directory for structuring your cod
 
 ```ts [server/api/foo/index.get.ts]
 export default defineEventHandler((event) => {
-	// handle GET requests for the `api/foo` endpoint
-});
+  // handle GET requests for the `api/foo` endpoint
+})
 ```
 
 ```ts [server/api/foo/index.post.ts]
 export default defineEventHandler((event) => {
-	// handle POST requests for the `api/foo` endpoint
-});
+  // handle POST requests for the `api/foo` endpoint
+})
 ```
 
 ```ts [server/api/foo/bar.get.ts]
 export default defineEventHandler((event) => {
-	// handle GET requests for the `api/foo/bar` endpoint
-});
+  // handle GET requests for the `api/foo/bar` endpoint
+})
 ```
 
 ::
@@ -9500,28 +9510,28 @@ For example, creating a file named `~/server/api/foo/[...].ts` will register a c
 
 ```ts [server/api/foo/[...].ts]
 export default defineEventHandler((event) => {
-	// event.context.path to get the route path: '/api/foo/bar/baz'
-	// event.context.params._ to get the route segment: 'bar/baz'
-	return `Default foo handler`;
-});
+  // event.context.path to get the route path: '/api/foo/bar/baz'
+  // event.context.params._ to get the route segment: 'bar/baz'
+  return `Default foo handler`
+})
 ```
 
 You can set a name for the catch-all route by using `~/server/api/foo/[...slug].ts` and access it via `event.context.params.slug`.
 
 ```ts [server/api/foo/[...slug].ts]
 export default defineEventHandler((event) => {
-	// event.context.params.slug to get the route segment: 'bar/baz'
-	return `Default foo handler`;
-});
+  // event.context.params.slug to get the route segment: 'bar/baz'
+  return `Default foo handler`
+})
 ```
 
 ### Body Handling
 
 ```ts [server/api/submit.post.ts]
 export default defineEventHandler(async (event) => {
-	const body = await readBody(event);
-	return { body };
-});
+  const body = await readBody(event)
+  return { body }
+})
 ```
 
 ## ::tip
@@ -9536,10 +9546,10 @@ You can now universally call this API using:
 ```vue [app.vue]
 <script setup lang="ts">
 async function submit() {
-	const { body } = await $fetch('/api/submit', {
-		method: 'post',
-		body: { test: 123 }
-	});
+  const { body } = await $fetch('/api/submit', {
+    method: 'post',
+    body: { test: 123 }
+  })
 }
 </script>
 ```
@@ -9554,10 +9564,10 @@ Sample query `/api/query?foo=bar&baz=qux`
 
 ```ts [server/api/query.get.ts]
 export default defineEventHandler((event) => {
-	const query = getQuery(event);
+  const query = getQuery(event)
 
-	return { a: query.foo, b: query.baz };
-});
+  return { a: query.foo, b: query.baz }
+})
 ```
 
 ## ::tip
@@ -9577,16 +9587,16 @@ To return other error codes, throw an exception with [`createError`](https://nux
 
 ```ts [server/api/validation/[id].ts]
 export default defineEventHandler((event) => {
-	const id = parseInt(event.context.params.id) as number;
+  const id = Number.parseInt(event.context.params.id) as number
 
-	if (!Number.isInteger(id)) {
-		throw createError({
-			statusCode: 400,
-			statusMessage: 'ID should be an integer'
-		});
-	}
-	return 'All good';
-});
+  if (!Number.isInteger(id)) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'ID should be an integer'
+    })
+  }
+  return 'All good'
+})
 ```
 
 ### Status Codes
@@ -9597,8 +9607,8 @@ For example, to return `202 Accepted`
 
 ```ts [server/api/validation/[id].ts]
 export default defineEventHandler((event) => {
-	setResponseStatus(event, 202);
-});
+  setResponseStatus(event, 202)
+})
 ```
 
 ### Runtime Config
@@ -9607,24 +9617,24 @@ export default defineEventHandler((event) => {
 
 ```ts [server/api/foo.ts]
 export default defineEventHandler(async (event) => {
-	const config = useRuntimeConfig(event);
+  const config = useRuntimeConfig(event)
 
-	const repo = await $fetch('https://api.github.com/repos/nuxt/nuxt', {
-		headers: {
-			Authorization: `token ${config.githubToken}`
-		}
-	});
+  const repo = await $fetch('https://api.github.com/repos/nuxt/nuxt', {
+    headers: {
+      Authorization: `token ${config.githubToken}`
+    }
+  })
 
-	return repo;
-});
+  return repo
+})
 ```
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	runtimeConfig: {
-		githubToken: ''
-	}
-});
+  runtimeConfig: {
+    githubToken: ''
+  }
+})
 ```
 
 ```ini [.env]
@@ -9641,10 +9651,10 @@ Giving the `event` as argument to `useRuntimeConfig` is optional, but it is reco
 
 ```ts [server/api/cookies.ts]
 export default defineEventHandler((event) => {
-	const cookies = parseCookies(event);
+  const cookies = parseCookies(event)
 
-	return { cookies };
-});
+  return { cookies }
+})
 ```
 
 ### Forwarding Context & Headers
@@ -9654,8 +9664,8 @@ making fetch requests in server routes. You can use `event.$fetch` to forward th
 
 ```ts [server/api/forward.ts]
 export default defineEventHandler((event) => {
-	return event.$fetch('/api/forwarded');
-});
+  return event.$fetch('/api/forwarded')
+})
 ```
 
 ::note
@@ -9670,17 +9680,17 @@ When handling server requests, you might need to perform asynchronous tasks that
 The `event.waitUntil` method accepts a promise that will be awaited before the handler terminates, ensuring the task is completed even if the server would otherwise terminate the handler right after the response is sent. This integrates with runtime providers to leverage their native capabilities for handling asynchronous operations after the response is sent.
 
 ```ts [server/api/background-task.ts]
-const timeConsumingBackgroundTask = async () => {
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-};
+async function timeConsumingBackgroundTask() {
+  await new Promise(resolve => setTimeout(resolve, 1000))
+}
 
 export default eventHandler((event) => {
-	// schedule a background task without blocking the response
-	event.waitUntil(timeConsumingBackgroundTask());
+  // schedule a background task without blocking the response
+  event.waitUntil(timeConsumingBackgroundTask())
 
-	// immediately send the response to the client
-	return 'done';
-});
+  // immediately send the response to the client
+  return 'done'
+})
 ```
 
 ## Advanced Usage
@@ -9695,9 +9705,9 @@ This is an advanced option. Custom config can affect production deployments, as 
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	// https://nitro.unjs.io/config
-	nitro: {}
-});
+  // https://nitro.unjs.io/config
+  nitro: {}
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/concepts/server-engine"}
@@ -9706,16 +9716,16 @@ export default defineNuxtConfig({
 ### Nested Router
 
 ```ts [server/api/hello/[...slug].ts]
-import { createRouter, defineEventHandler, useBase } from 'h3';
+import { createRouter, defineEventHandler, useBase } from 'h3'
 
-const router = createRouter();
+const router = createRouter()
 
 router.get(
-	'/test',
-	defineEventHandler(() => 'Hello World')
-);
+  '/test',
+  defineEventHandler(() => 'Hello World')
+)
 
-export default useBase('/api/hello', router.handler);
+export default useBase('/api/hello', router.handler)
 ```
 
 ### Sending Streams
@@ -9725,28 +9735,28 @@ This is an experimental feature and is available in all environments.
 ::
 
 ```ts [server/api/foo.get.ts]
-import fs from 'node:fs';
-import { sendStream } from 'h3';
+import fs from 'node:fs'
+import { sendStream } from 'h3'
 
 export default defineEventHandler((event) => {
-	return sendStream(event, fs.createReadStream('/path/to/file'));
-});
+  return sendStream(event, fs.createReadStream('/path/to/file'))
+})
 ```
 
 ### Sending Redirect
 
 ```ts [server/api/foo.get.ts]
 export default defineEventHandler(async (event) => {
-	await sendRedirect(event, '/path/redirect/to', 302);
-});
+  await sendRedirect(event, '/path/redirect/to', 302)
+})
 ```
 
 ### Legacy Handler or Middleware
 
 ```ts [server/api/legacy.ts]
 export default fromNodeMiddleware((req, res) => {
-	res.end('Legacy handler');
-});
+  res.end('Legacy handler')
+})
 ```
 
 ::important
@@ -9755,9 +9765,9 @@ Legacy support is possible using [unjs/h3](https://github.com/unjs/h3){rel="nofo
 
 ```ts [server/middleware/legacy.ts]
 export default fromNodeMiddleware((req, res, next) => {
-	console.log('Legacy middleware');
-	next();
-});
+  console.log('Legacy middleware')
+  next()
+})
 ```
 
 ::warning
@@ -9774,38 +9784,38 @@ Using `nitro.storage`:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		storage: {
-			redis: {
-				driver: 'redis',
-				/* redis connector options */
-				port: 6379, // Redis port
-				host: '127.0.0.1', // Redis host
-				username: '', // needs Redis >= 6
-				password: '',
-				db: 0, // Defaults to 0
-				tls: {} // tls/ssl
-			}
-		}
-	}
-});
+  nitro: {
+    storage: {
+      redis: {
+        driver: 'redis',
+        /* redis connector options */
+        port: 6379, // Redis port
+        host: '127.0.0.1', // Redis host
+        username: '', // needs Redis >= 6
+        password: '',
+        db: 0, // Defaults to 0
+        tls: {} // tls/ssl
+      }
+    }
+  }
+})
 ```
 
 Then in your API handler:
 
 ```ts [server/api/storage/test.ts]
 export default defineEventHandler(async (event) => {
-	// List all keys with
-	const keys = await useStorage('redis').getKeys();
+  // List all keys with
+  const keys = await useStorage('redis').getKeys()
 
-	// Set a key with
-	await useStorage('redis').setItem('foo', 'bar');
+  // Set a key with
+  await useStorage('redis').setItem('foo', 'bar')
 
-	// Remove a key with
-	await useStorage('redis').removeItem('foo');
+  // Remove a key with
+  await useStorage('redis').removeItem('foo')
 
-	return {};
-});
+  return {}
+})
 ```
 
 ::read-more{target="\_blank" to="https://nitro.unjs.io/guide/storage"}
@@ -9817,35 +9827,35 @@ Alternatively, you can create a storage mount point using a server plugin and ru
 ::code-group
 
 ```ts [server/plugins/storage.ts]
-import redisDriver from 'unstorage/drivers/redis';
+import redisDriver from 'unstorage/drivers/redis'
 
 export default defineNitroPlugin(() => {
-	const storage = useStorage();
+  const storage = useStorage()
 
-	// Dynamically pass in credentials from runtime configuration, or other sources
-	const driver = redisDriver({
-		base: 'redis',
-		host: useRuntimeConfig().redis.host,
-		port: useRuntimeConfig().redis.port
-		/* other redis connector options */
-	});
+  // Dynamically pass in credentials from runtime configuration, or other sources
+  const driver = redisDriver({
+    base: 'redis',
+    host: useRuntimeConfig().redis.host,
+    port: useRuntimeConfig().redis.port
+    /* other redis connector options */
+  })
 
-	// Mount driver
-	storage.mount('redis', driver);
-});
+  // Mount driver
+  storage.mount('redis', driver)
+})
 ```
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	runtimeConfig: {
-		redis: {
-			// Default values
-			host: '',
-			port: 0
-			/* other redis connector options */
-		}
-	}
-});
+  runtimeConfig: {
+    redis: {
+      // Default values
+      host: '',
+      port: 0
+      /* other redis connector options */
+    }
+  }
+})
 ```
 
 ::
@@ -9882,39 +9892,39 @@ video-id: nnAR-MO3q5M
 **Method 1:** Named export
 
 ```ts [shared/utils/capitalize.ts] twoslash
-export const capitalize = (input: string) => {
-	return input[0] ? input[0].toUpperCase() + input.slice(1) : '';
-};
+export function capitalize(input: string) {
+  return input[0] ? input[0].toUpperCase() + input.slice(1) : ''
+}
 ```
 
 **Method 2:** Default export
 
 ```ts [shared/utils/capitalize.ts] twoslash
 export default function (input: string) {
-	return input[0] ? input[0].toUpperCase() + input.slice(1) : '';
+  return input[0] ? input[0].toUpperCase() + input.slice(1) : ''
 }
 ```
 
 You can now use [auto-imported](https://nuxt.com/docs/guide/directory-structure/shared#auto-imports) utilities in your Nuxt app and `server/` directory.
 
 ```vue [app.vue]
-<script setup lang="ts">
-const hello = capitalize('hello');
-</script>
-
 <template>
-	<div>
-		{{ hello }}
-	</div>
+  <div>
+    {{ hello }}
+  </div>
 </template>
+
+<script setup lang="ts">
+const hello = capitalize('hello')
+</script>
 ```
 
 ```ts [server/api/hello.get.ts]
 export default defineEventHandler((event) => {
-	return {
-		hello: capitalize('hello')
-	};
-});
+  return {
+    hello: capitalize('hello')
+  }
+})
 ```
 
 ## How Files Are Scanned
@@ -9948,13 +9958,13 @@ Any other files you create in the `shared/` folder must be manually imported usi
 
 ```ts
 // For files directly in the shared directory
-import capitalize from '#shared/capitalize';
+import capitalize from '#shared/capitalize'
 
 // For files in nested directories
-import lower from '#shared/formatters/lower';
+import lower from '#shared/formatters/lower'
 
 // For files nested in a folder within utils
-import upper from '#shared/utils/formatters/upper';
+import upper from '#shared/utils/formatters/upper'
 ```
 
 This alias ensures consistent imports across your application, regardless of the importing file's location.
@@ -9972,9 +9982,9 @@ The main purpose of the [`utils/` directory](https://nuxt.com/docs/guide/directo
 
 ```ts [utils/index.ts] twoslash
 export const { format: formatNumber } = Intl.NumberFormat('en-GB', {
-	notation: 'compact',
-	maximumFractionDigits: 1
-});
+  notation: 'compact',
+  maximumFractionDigits: 1
+})
 ```
 
 **Method 2:** Using default export
@@ -9982,7 +9992,7 @@ export const { format: formatNumber } = Intl.NumberFormat('en-GB', {
 ```ts [utils/random-entry.ts or utils/randomEntry.ts] twoslash
 // It will be available as randomEntry() (camelCase of file name without extension)
 export default function (arr: Array<any>) {
-	return arr[Math.floor(Math.random() * arr.length)];
+  return arr[Math.floor(Math.random() * arr.length)]
 }
 ```
 
@@ -9990,7 +10000,7 @@ You can now use auto imported utility functions in `.js`, `.ts` and `.vue` files
 
 ```vue [app.vue]
 <template>
-	<p>{{ formatNumber(1234) }}</p>
+  <p>{{ formatNumber(1234) }}</p>
 </template>
 ```
 
@@ -10196,13 +10206,13 @@ Discover all the available options in the **Nuxt configuration** documentation.
 You can also create a global `.nuxtrc` file in your home directory to apply configurations globally.
 
 - On macOS/Linux, this file is located at:
-    ```md
-    ~/.nuxtrc
-    ```
+  ```md
+  ~/.nuxtrc
+  ```
 - On Windows, it is located at:
-    ```md
-    C:\Users\{username}\.nuxtrc
-    ```
+  ```md
+  C:\Users\{username}\.nuxtrc
+  ```
 
 This global `.nuxtrc` file allows you to define default settings that apply to all Nuxt projects on your system. However, project-level `.nuxtrc` files will override these global settings, and `nuxt.config` will take precedence over both.
 
@@ -10220,7 +10230,7 @@ With Nuxt, the [`pages/`](https://nuxt.com/docs/guide/directory-structure/pages)
 
 ```vue [app.vue]
 <template>
-	<h1>Hello World!</h1>
+  <h1>Hello World!</h1>
 </template>
 ```
 
@@ -10233,7 +10243,7 @@ When you have a [`pages/`](https://nuxt.com/docs/guide/directory-structure/pages
 
 ```vue [app.vue]
 <template>
-	<NuxtPage />
+  <NuxtPage />
 </template>
 ```
 
@@ -10241,9 +10251,9 @@ You can also define the common structure of your application directly in `app.vu
 
 ```vue [app.vue]
 <template>
-	<header>Header content</header>
-	<NuxtPage />
-	<footer>Footer content</footer>
+  <header>Header content</header>
+  <NuxtPage />
+  <footer>Footer content</footer>
 </template>
 ```
 
@@ -10261,9 +10271,9 @@ When your application requires different layouts for different pages, you can us
 
 ```vue [app.vue]
 <template>
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 ```
 
@@ -10279,8 +10289,8 @@ You can easily provide runtime app configuration using `app.config.ts` file. It 
 
 ```ts [app.config.ts] twoslash
 export default defineAppConfig({
-	foo: 'bar'
-});
+  foo: 'bar'
+})
 ```
 
 ::caution
@@ -10297,19 +10307,19 @@ To expose config and environment variables to the rest of your app, you will nee
 
 ```ts [app.config.ts] twoslash
 export default defineAppConfig({
-	theme: {
-		primaryColor: '#ababab'
-	}
-});
+  theme: {
+    primaryColor: '#ababab'
+  }
+})
 ```
 
 We can now universally access `theme` both when server-rendering the page and in the browser using [`useAppConfig`](https://nuxt.com/docs/api/composables/use-app-config) composable.
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const appConfig = useAppConfig();
+const appConfig = useAppConfig()
 
-console.log(appConfig.theme);
+console.log(appConfig.theme)
 </script>
 ```
 
@@ -10317,13 +10327,13 @@ The [`updateAppConfig`](https://nuxt.com/docs/api/utils/update-app-config) utili
 
 ```vue [pages/index.vue]
 <script setup>
-const appConfig = useAppConfig(); // { foo: 'bar' }
+const appConfig = useAppConfig() // { foo: 'bar' }
 
-const newAppConfig = { foo: 'baz' };
+const newAppConfig = { foo: 'baz' }
 
-updateAppConfig(newAppConfig);
+updateAppConfig(newAppConfig)
 
-console.log(appConfig); // { foo: 'baz' }
+console.log(appConfig) // { foo: 'baz' }
 </script>
 ```
 
@@ -10343,17 +10353,17 @@ However, there are some cases where you might want to type it yourself. There ar
 
 ```ts [index.d.ts]
 declare module 'nuxt/schema' {
-	interface AppConfigInput {
-		/** Theme configuration */
-		theme?: {
-			/** Primary app color */
-			primaryColor?: string;
-		};
-	}
+  interface AppConfigInput {
+    /** Theme configuration */
+    theme?: {
+      /** Primary app color */
+      primaryColor?: string
+    }
+  }
 }
 
 // It is always important to ensure you import/export something when augmenting a type
-export {};
+export {}
 ```
 
 ### App Config Output
@@ -10366,18 +10376,18 @@ Be careful when typing `AppConfig` as you will overwrite the types Nuxt infers f
 
 ```ts [index.d.ts]
 declare module 'nuxt/schema' {
-	interface AppConfig {
-		// This will entirely replace the existing inferred `theme` property
-		theme: {
-			// You might want to type this value to add more specific types than Nuxt can infer,
-			// such as string literal types
-			primaryColor?: 'red' | 'blue';
-		};
-	}
+  interface AppConfig {
+    // This will entirely replace the existing inferred `theme` property
+    theme: {
+      // You might want to type this value to add more specific types than Nuxt can infer,
+      // such as string literal types
+      primaryColor?: 'red' | 'blue'
+    }
+  }
 }
 
 // It is always important to ensure you import/export something when augmenting a type
-export {};
+export {}
 ```
 
 ## Merging Strategy
@@ -10396,16 +10406,16 @@ Here's an example of how you can use:
 
 ```ts [layer/app.config.ts] twoslash
 export default defineAppConfig({
-	// Default array value
-	array: ['hello']
-});
+  // Default array value
+  array: ['hello']
+})
 ```
 
 ```ts [app.config.ts] twoslash
 export default defineAppConfig({
-	// Overwrite default array value by using a merger function
-	array: () => ['bonjour']
-});
+  // Overwrite default array value by using a merger function
+  array: () => ['bonjour']
+})
 ```
 
 ::
@@ -10423,12 +10433,12 @@ While it's possible to use Vite plugins in the Nitro config as a workaround, thi
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		vite: {
-			plugins: [vue()]
-		}
-	}
-});
+  nitro: {
+    vite: {
+      plugins: [vue()]
+    }
+  }
+})
 ```
 
 ::warning
@@ -10450,20 +10460,20 @@ You can track the progress in [this pull request](https://github.com/nitrojs/nit
 During the lifespan of your application, some errors may appear unexpectedly at runtime. In such case, we can use the `error.vue` file to override the default error files and display the error nicely.
 
 ```vue [error.vue]
+<template>
+  <div>
+    <h1>{{ error.statusCode }}</h1>
+    <NuxtLink to="/">Go back home</NuxtLink>
+  </div>
+</template>
+
 <script setup lang="ts">
-import type { NuxtError } from '#app';
+import type { NuxtError } from '#app'
 
 const props = defineProps({
-	error: Object as () => NuxtError
-});
+  error: Object as () => NuxtError
+})
 </script>
-
-<template>
-	<div>
-		<h1>{{ error.statusCode }}</h1>
-		<NuxtLink to="/">Go back home</NuxtLink>
-	</div>
-</template>
 ```
 
 ::note
@@ -10489,12 +10499,12 @@ If you have an error with custom fields they will be lost; you should assign the
 
 ```ts
 throw createError({
-	statusCode: 404,
-	statusMessage: 'Page Not Found',
-	data: {
-		myCustomField: true
-	}
-});
+  statusCode: 404,
+  statusMessage: 'Page Not Found',
+  data: {
+    myCustomField: true
+  }
+})
 ```
 
 # nuxt.config.ts
@@ -10503,8 +10513,8 @@ The `nuxt.config` file extension can either be `.js`, `.ts` or `.mjs`.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	// My Nuxt config
-});
+  // My Nuxt config
+})
 ```
 
 ::tip
@@ -10514,11 +10524,11 @@ export default defineNuxtConfig({
 You can explicitly import `defineNuxtConfig` from `nuxt/config` if you prefer:
 
 ```ts [nuxt.config.ts] twoslash
-import { defineNuxtConfig } from 'nuxt/config';
+import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-	// My Nuxt config
-});
+  // My Nuxt config
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/configuration/nuxt-config"}
@@ -10533,21 +10543,21 @@ The minimal `package.json` of your Nuxt application should looks like:
 
 ```json [package.json]
 {
-	"name": "nuxt-app",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"build": "nuxt build",
-		"dev": "nuxt dev",
-		"generate": "nuxt generate",
-		"preview": "nuxt preview",
-		"postinstall": "nuxt prepare"
-	},
-	"dependencies": {
-		"nuxt": "latest",
-		"vue": "latest",
-		"vue-router": "latest"
-	}
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "latest",
+    "vue": "latest",
+    "vue-router": "latest"
+  }
 }
 ```
 
@@ -10570,7 +10580,7 @@ You can benefit from this by creating a `tsconfig.json` in the root of your proj
 
 ```json [tsconfig.json]
 {
-	"extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json"
 }
 ```
 
@@ -10598,10 +10608,10 @@ Enable native async context to be accessible for nested composables in Nuxt and 
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		asyncContext: true
-	}
-});
+  experimental: {
+    asyncContext: true
+  }
+})
 ```
 
 ## ::read-more
@@ -10621,10 +10631,10 @@ Enables generation of an async entry point for the Vue bundle, aiding module fed
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		asyncEntry: true
-	}
-});
+  experimental: {
+    asyncEntry: true
+  }
+})
 ```
 
 ## externalVue
@@ -10635,10 +10645,10 @@ _Enabled by default._
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		externalVue: true
-	}
-});
+  experimental: {
+    externalVue: true
+  }
+})
 ```
 
 ::warning
@@ -10653,10 +10663,10 @@ _Enabled by default._
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		treeshakeClientOnly: true
-	}
-});
+  experimental: {
+    treeshakeClientOnly: true
+  }
+})
 ```
 
 ## emitRouteChunkError
@@ -10669,10 +10679,10 @@ You can disable automatic handling by setting this to `false`, or handle chunk e
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		emitRouteChunkError: 'automatic' // or 'automatic-immediate', 'manual' or false
-	}
-});
+  experimental: {
+    emitRouteChunkError: 'automatic' // or 'automatic-immediate', 'manual' or false
+  }
+})
 ```
 
 ## restoreState
@@ -10688,10 +10698,10 @@ and consider providing explicit keys to [`useState`](https://nuxt.com/docs/api/c
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		restoreState: true
-	}
-});
+  experimental: {
+    restoreState: true
+  }
+})
 ```
 
 ## inlineRouteRules
@@ -10700,10 +10710,10 @@ Define route rules at the page level using [`defineRouteRules`](https://nuxt.com
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		inlineRouteRules: true
-	}
-});
+  experimental: {
+    inlineRouteRules: true
+  }
+})
 ```
 
 Matching route rules will be created, based on the page's `path`.
@@ -10735,10 +10745,10 @@ _Enabled by default._
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		renderJsonPayloads: true
-	}
-});
+  experimental: {
+    renderJsonPayloads: true
+  }
+})
 ```
 
 ## noVueServer
@@ -10747,10 +10757,10 @@ Disables Vue server renderer endpoint within Nitro.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		noVueServer: true
-	}
-});
+  experimental: {
+    noVueServer: true
+  }
+})
 ```
 
 ## payloadExtraction
@@ -10759,10 +10769,10 @@ Enables extraction of payloads of pages generated with `nuxt generate`.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		payloadExtraction: true
-	}
-});
+  experimental: {
+    payloadExtraction: true
+  }
+})
 ```
 
 ## clientFallback
@@ -10771,10 +10781,10 @@ Enables the experimental [`<NuxtClientFallback>`](https://nuxt.com/docs/api/comp
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		clientFallback: true
-	}
-});
+  experimental: {
+    clientFallback: true
+  }
+})
 ```
 
 ## crossOriginPrefetch
@@ -10783,10 +10793,10 @@ Enables cross-origin prefetch using the Speculation Rules API.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		crossOriginPrefetch: true
-	}
-});
+  experimental: {
+    crossOriginPrefetch: true
+  }
+})
 ```
 
 ## ::read-more
@@ -10806,10 +10816,10 @@ Enables View Transition API integration with client-side router.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		viewTransition: true
-	}
-});
+  experimental: {
+    viewTransition: true
+  }
+})
 ```
 
 ## ::link-example
@@ -10838,10 +10848,10 @@ Enables writing of early hints when using node server.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		writeEarlyHints: true
-	}
-});
+  experimental: {
+    writeEarlyHints: true
+  }
+})
 ```
 
 ## componentIslands
@@ -10850,10 +10860,10 @@ Enables experimental component islands support with [`<NuxtIsland>`](https://nux
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		componentIslands: true // false or 'local+remote'
-	}
-});
+  experimental: {
+    componentIslands: true // false or 'local+remote'
+  }
+})
 ```
 
 ## ::read-more
@@ -10881,10 +10891,10 @@ _Enabled by default._
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		configSchema: true
-	}
-});
+  experimental: {
+    configSchema: true
+  }
+})
 ```
 
 ## polyfillVueUseHead
@@ -10893,10 +10903,10 @@ Adds a compatibility layer for modules, plugins, or user code relying on the old
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		polyfillVueUseHead: false
-	}
-});
+  experimental: {
+    polyfillVueUseHead: false
+  }
+})
 ```
 
 ## respectNoSSRHeader
@@ -10905,10 +10915,10 @@ Allow disabling Nuxt SSR responses by setting the `x-nuxt-no-ssr` header.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		respectNoSSRHeader: false
-	}
-});
+  experimental: {
+    respectNoSSRHeader: false
+  }
+})
 ```
 
 ## localLayerAliases
@@ -10919,10 +10929,10 @@ _Enabled by default._
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		localLayerAliases: true
-	}
-});
+  experimental: {
+    localLayerAliases: true
+  }
+})
 ```
 
 ## typedPages
@@ -10931,10 +10941,10 @@ Enable the new experimental typed router using [`unplugin-vue-router`](https://g
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		typedPages: true
-	}
-});
+  experimental: {
+    typedPages: true
+  }
+})
 ```
 
 Out of the box, this will enable typed usage of [`navigateTo`](https://nuxt.com/docs/api/utils/navigate-to), [`<NuxtLink>`](https://nuxt.com/docs/api/components/nuxt-link), [`router.push()`](https://nuxt.com/docs/api/composables/use-router) and more.
@@ -10968,10 +10978,10 @@ You can also set this to `chokidar` to watch all files in your source directory.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		watcher: 'chokidar-granular' // 'chokidar' or 'parcel' are also options
-	}
-});
+  experimental: {
+    watcher: 'chokidar-granular' // 'chokidar' or 'parcel' are also options
+  }
+})
 ```
 
 ## sharedPrerenderData
@@ -10982,10 +10992,10 @@ fetch the same data in different pages.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		sharedPrerenderData: true
-	}
-});
+  experimental: {
+    sharedPrerenderData: true
+  }
+})
 ```
 
 ## ::video-accordion
@@ -11005,14 +11015,14 @@ should do this automatically for you.)
 ```ts
 // This would be unsafe in a dynamic page (e.g. `[slug].vue`) because the route slug makes a difference
 // to the data fetched, but Nuxt can't know that because it's not reflected in the key.
-const route = useRoute();
+const route = useRoute()
 const { data } = await useAsyncData(async () => {
-	return await $fetch(`/api/my-page/${route.params.slug}`);
-});
+  return await $fetch(`/api/my-page/${route.params.slug}`)
+})
 // Instead, you should use a key that uniquely identifies the data fetched.
 const { data } = await useAsyncData(route.params.slug, async () => {
-	return await $fetch(`/api/my-page/${route.params.slug}`);
-});
+  return await $fetch(`/api/my-page/${route.params.slug}`)
+})
 ```
 
 ## clientNodeCompat
@@ -11023,9 +11033,9 @@ With this feature, Nuxt will automatically polyfill Node.js imports in the clien
 To make globals like `Buffer` work in the browser, you need to manually inject them.
 
 ```ts
-import { Buffer } from 'node:buffer';
+import { Buffer } from 'node:buffer'
 
-globalThis.Buffer = globalThis.Buffer || Buffer;
+globalThis.Buffer = globalThis.Buffer || Buffer
 ```
 
 ::
@@ -11042,10 +11052,10 @@ You can disable this feature if it causes issues in your project.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		scanPageMeta: false
-	}
-});
+  experimental: {
+    scanPageMeta: false
+  }
+})
 ```
 
 ## cookieStore
@@ -11054,10 +11064,10 @@ Enables CookieStore support to listen for cookie updates (if supported by the br
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		cookieStore: true
-	}
-});
+  experimental: {
+    cookieStore: true
+  }
+})
 ```
 
 ## ::read-more
@@ -11077,10 +11087,10 @@ Caches Nuxt build artifacts based on a hash of the configuration and source file
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		buildCache: true
-	}
-});
+  experimental: {
+    buildCache: true
+  }
+})
 ```
 
 When enabled, changes to the following files will trigger a full rebuild:
@@ -11111,22 +11121,22 @@ This option allows passing additional keys to extract from the page metadata whe
 ```vue
 <script lang="ts" setup>
 definePageMeta({
-	foo: 'bar'
-});
+  foo: 'bar'
+})
 </script>
 ```
 
 ```ts
 export default defineNuxtConfig({
-	experimental: {
-		extraPageMetaExtractionKeys: ['foo']
-	},
-	hooks: {
-		'pages:resolved'(ctx) {
-			// ✅ foo is available
-		}
-	}
-});
+  experimental: {
+    extraPageMetaExtractionKeys: ['foo']
+  },
+  hooks: {
+    'pages:resolved': function (ctx) {
+      // ✅ foo is available
+    }
+  }
+})
 ```
 
 This allows modules to access additional metadata from the page metadata in the build context. If you are using this within a module, it's recommended also to [augment the `NuxtPage` types with your keys](https://nuxt.com/docs/guide/directory-structure/pages#typing-custom-metadata).
@@ -11138,10 +11148,10 @@ you would use to auto-import the component.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		normalizeComponentNames: true
-	}
-});
+  experimental: {
+    normalizeComponentNames: true
+  }
+})
 ```
 
 By default, if you haven't set it manually, Vue will assign a component name that matches
@@ -11167,7 +11177,7 @@ It can be set to `within`, which will render it like this:
 
 ```html
 <div id="__nuxt">
-	<!-- spa loading template -->
+  <!-- spa loading template -->
 </div>
 ```
 
@@ -11188,10 +11198,10 @@ This is enabled by default in development mode. If you need to disable this feat
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		browserDevtoolsTiming: false
-	}
-});
+  experimental: {
+    browserDevtoolsTiming: false
+  }
+})
 ```
 
 ## ::read-more
@@ -11228,10 +11238,10 @@ To enable it explicitly:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		debugModuleMutation: true
-	}
-});
+  experimental: {
+    debugModuleMutation: true
+  }
+})
 ```
 
 ## ::read-more
@@ -11254,10 +11264,10 @@ Lazy hydration is enabled by default, but you can disable this feature:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		lazyHydration: false
-	}
-});
+  experimental: {
+    lazyHydration: false
+  }
+})
 ```
 
 ## ::read-more
@@ -11279,10 +11289,10 @@ This is enabled by default, so if you're experiencing resolution conflicts in ce
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		templateImportResolution: false
-	}
-});
+  experimental: {
+    templateImportResolution: false
+  }
+})
 ```
 
 ## ::read-more
@@ -11313,25 +11323,25 @@ Note that there may be changes before this finally lands in the JS standard.
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		decorators: true
-	}
-});
+  experimental: {
+    decorators: true
+  }
+})
 ```
 
 ```ts [app.vue]
 function something(_method: () => unknown) {
-	return () => 'decorated';
+  return () => 'decorated'
 }
 
 class SomeClass {
-	@something
-	public someMethod() {
-		return 'initial';
-	}
+  @something
+  public someMethod() {
+    return 'initial'
+  }
 }
 
-const value = new SomeClass().someMethod();
+const value = new SomeClass().someMethod()
 // this will return 'decorated'
 ```
 
@@ -11342,10 +11352,10 @@ and ensures fresh data is loaded when needed, but it is possible to disable it:
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		purgeCachedData: false
-	}
-});
+  experimental: {
+    purgeCachedData: false
+  }
+})
 ```
 
 ## ::read-more
@@ -11366,10 +11376,10 @@ Whether to call and use the result from `getCachedData` when refreshing data for
 
 ```ts [nuxt.config.ts] twoslash
 export default defineNuxtConfig({
-	experimental: {
-		granularCachedData: true
-	}
-});
+  experimental: {
+    granularCachedData: true
+  }
+})
 ```
 
 ## ::read-more
@@ -11398,10 +11408,10 @@ You can also pass a function that receives the path of a Vue component and retur
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	features: {
-		inlineStyles: false // or a function to determine inlining
-	}
-});
+  features: {
+    inlineStyles: false // or a function to determine inlining
+  }
+})
 ```
 
 ### noScripts
@@ -11410,10 +11420,10 @@ Disables rendering of Nuxt scripts and JS resource hints. Can also be configured
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	features: {
-		noScripts: true
-	}
-});
+  features: {
+    noScripts: true
+  }
+})
 ```
 
 ## `future`
@@ -11479,10 +11489,10 @@ See [the original TypeScript pull request](https://github.com/microsoft/TypeScri
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	future: {
-		typescriptBundlerResolution: true
-	}
-});
+  future: {
+    typescriptBundlerResolution: true
+  }
+})
 ```
 
 # How Nuxt Works?
@@ -11572,24 +11582,24 @@ To expose config and environment variables to the rest of your app, you will nee
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	runtimeConfig: {
-		// The private keys which are only available within server-side
-		apiSecret: '123',
-		// Keys within public, will be also exposed to the client-side
-		public: {
-			apiBase: '/api'
-		}
-	}
-});
+  runtimeConfig: {
+    // The private keys which are only available within server-side
+    apiSecret: '123',
+    // Keys within public, will be also exposed to the client-side
+    public: {
+      apiBase: '/api'
+    }
+  }
+})
 ```
 
 When adding `apiBase` to the `runtimeConfig.public`, Nuxt adds it to each page payload. We can universally access `apiBase` in both server and browser.
 
 ```ts
-const runtimeConfig = useRuntimeConfig();
+const runtimeConfig = useRuntimeConfig()
 
-console.log(runtimeConfig.apiSecret);
-console.log(runtimeConfig.public.apiBase);
+console.log(runtimeConfig.apiSecret)
+console.log(runtimeConfig.public.apiBase)
 ```
 
 ::tip
@@ -11638,13 +11648,13 @@ NUXT_PUBLIC_API_BASE=https://nuxtjs.org
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	runtimeConfig: {
-		apiSecret: '', // can be overridden by NUXT_API_SECRET environment variable
-		public: {
-			apiBase: '' // can be overridden by NUXT_PUBLIC_API_BASE environment variable
-		}
-	}
-});
+  runtimeConfig: {
+    apiSecret: '', // can be overridden by NUXT_API_SECRET environment variable
+    public: {
+      apiBase: '' // can be overridden by NUXT_PUBLIC_API_BASE environment variable
+    }
+  }
+})
 ```
 
 ## Reading
@@ -11661,20 +11671,20 @@ The behavior is different between the client-side and server-side:
   ::
 
 ```vue [pages/index.vue]
-<script setup lang="ts">
-const config = useRuntimeConfig();
+<template>
+  <div>
+    <div>Check developer console!</div>
+  </div>
+</template>
 
-console.log('Runtime config:', config);
+<script setup lang="ts">
+const config = useRuntimeConfig()
+
+console.log('Runtime config:', config)
 if (import.meta.server) {
-	console.log('API secret:', config.apiSecret);
+  console.log('API secret:', config.apiSecret)
 }
 </script>
-
-<template>
-	<div>
-		<div>Check developer console!</div>
-	</div>
-</template>
 ```
 
 ::caution
@@ -11687,10 +11697,10 @@ If you want to use the runtime config within any (custom) plugin, you can use [`
 
 ```ts [plugins/config.ts]
 export default defineNuxtPlugin((nuxtApp) => {
-	const config = useRuntimeConfig();
+  const config = useRuntimeConfig()
 
-	console.log('API base URL:', config.public.apiBase);
-});
+  console.log('API base URL:', config.public.apiBase)
+})
 ```
 
 ### Server Routes
@@ -11699,14 +11709,14 @@ You can access runtime config within the server routes as well using `useRuntime
 
 ```ts [server/api/test.ts]
 export default defineEventHandler(async (event) => {
-	const { apiSecret } = useRuntimeConfig(event);
-	const result = await $fetch('https://my.api.com/test', {
-		headers: {
-			Authorization: `Bearer ${apiSecret}`
-		}
-	});
-	return result;
-});
+  const { apiSecret } = useRuntimeConfig(event)
+  const result = await $fetch('https://my.api.com/test', {
+    headers: {
+      Authorization: `Bearer ${apiSecret}`
+    }
+  })
+  return result
+})
 ```
 
 ::note
@@ -11721,15 +11731,15 @@ But it is also possible to type your runtime config manually:
 
 ```ts [index.d.ts]
 declare module 'nuxt/schema' {
-	interface RuntimeConfig {
-		apiSecret: string;
-	}
-	interface PublicRuntimeConfig {
-		apiBase: string;
-	}
+  interface RuntimeConfig {
+    apiSecret: string
+  }
+  interface PublicRuntimeConfig {
+    apiBase: string
+  }
 }
 // It is always important to ensure you import/export something when augmenting a type
-export {};
+export {}
 ```
 
 ::note
@@ -11816,22 +11826,22 @@ These hooks are available for [Nuxt Modules](https://nuxt.com/docs/guide/going-f
 
 ```js [nuxt.config.ts]
 export default defineNuxtConfig({
-	hooks: {
-		close: () => {}
-	}
-});
+  hooks: {
+    close: () => {}
+  }
+})
 ```
 
 ### Within Nuxt Modules
 
 ```js
-import { defineNuxtModule } from '@nuxt/kit';
+import { defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		nuxt.hook('close', async () => {});
-	}
-});
+  setup(options, nuxt) {
+    nuxt.hook('close', async () => {})
+  }
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/advanced/hooks#nuxt-hooks-build-time"}
@@ -11844,10 +11854,10 @@ App hooks can be mainly used by [Nuxt Plugins](https://nuxt.com/docs/guide/direc
 
 ```js [plugins/test.ts]
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.hook('page:start', () => {
-		/* your code goes here */
-	});
-});
+  nuxtApp.hook('page:start', () => {
+    /* your code goes here */
+  })
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/advanced/hooks#app-hooks-runtime"}
@@ -11860,15 +11870,15 @@ These hooks are available for [server plugins](https://nuxt.com/docs/guide/direc
 
 ```js [~/server/plugins/test.ts]
 export default defineNitroPlugin((nitroApp) => {
-	nitroApp.hooks.hook('render:html', (html, { event }) => {
-		console.log('render:html', html);
-		html.bodyAppend.push('<hr>Appended by custom plugin');
-	});
+  nitroApp.hooks.hook('render:html', (html, { event }) => {
+    console.log('render:html', html)
+    html.bodyAppend.push('<hr>Appended by custom plugin')
+  })
 
-	nitroApp.hooks.hook('render:response', (response, { event }) => {
-		console.log('render:response', response);
-	});
-});
+  nitroApp.hooks.hook('render:response', (response, { event }) => {
+    console.log('render:response', response)
+  })
+})
 ```
 
 ## ::read-more
@@ -11883,21 +11893,21 @@ Learn more about available Nitro lifecycle hooks.
 You can add additional hooks by augmenting the types provided by Nuxt. This can be useful for modules.
 
 ```ts
-import { HookResult } from '@nuxt/schema';
+import { HookResult } from '@nuxt/schema'
 
 declare module '#app' {
-	interface RuntimeNuxtHooks {
-		'your-nuxt-runtime-hook': () => HookResult;
-	}
-	interface NuxtHooks {
-		'your-nuxt-hook': () => HookResult;
-	}
+  interface RuntimeNuxtHooks {
+    'your-nuxt-runtime-hook': () => HookResult
+  }
+  interface NuxtHooks {
+    'your-nuxt-hook': () => HookResult
+  }
 }
 
 declare module 'nitropack' {
-	interface NitroRuntimeHooks {
-		'your-nitro-hook': () => void;
-	}
+  interface NitroRuntimeHooks {
+    'your-nitro-hook': () => void
+  }
 }
 ```
 
@@ -12004,15 +12014,15 @@ When running the release script, the following will happen:
 
 - First, it will run your test suite by:
 
-    - Running the linter (`npm run lint`)
-    - Running unit, integration, and e2e tests (`npm run test`)
-    - Building the module (`npm run prepack`)
+  - Running the linter (`npm run lint`)
+  - Running unit, integration, and e2e tests (`npm run test`)
+  - Building the module (`npm run prepack`)
 
 - Then, if your test suite went well, it will proceed to publish your module by:
 
-    - Bumping your module version and generating a changelog according to your Conventional Commits
-    - Publishing the module to npm (for that purpose, the module will be built again to ensure its updated version number is taken into account in the published artifact)
-    - Pushing a git tag representing the newly published version to your git remote origin
+  - Bumping your module version and generating a changelog according to your Conventional Commits
+  - Publishing the module to npm (for that purpose, the module will be built again to ensure its updated version number is taken into account in the published artifact)
+  - Pushing a git tag representing the newly published version to your git remote origin
 
 ::tip
 As with other scripts, feel free to fine-tune the default `release` script in your `package.json` to better suit your needs.
@@ -12043,25 +12053,25 @@ At a low level, a Nuxt Module definition is a simple, potentially asynchronous, 
 
 ```ts
 export default function (inlineOptions, nuxt) {
-	// You can do whatever you like here..
-	console.log(inlineOptions.token); // `123`
-	console.log(nuxt.options.dev); // `true` or `false`
-	nuxt.hook('ready', async (nuxt) => {
-		console.log('Nuxt is ready');
-	});
+  // You can do whatever you like here..
+  console.log(inlineOptions.token) // `123`
+  console.log(nuxt.options.dev) // `true` or `false`
+  nuxt.hook('ready', async (nuxt) => {
+    console.log('Nuxt is ready')
+  })
 }
 ```
 
 You can get type-hint support for this function using the higher-level `defineNuxtModule` helper provided by [Nuxt Kit](https://nuxt.com/docs/guide/going-further/kit).
 
 ```ts
-import { defineNuxtModule } from '@nuxt/kit';
+import { defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule((options, nuxt) => {
-	nuxt.hook('pages:extend', (pages) => {
-		console.log(`Discovered ${pages.length} pages`);
-	});
-});
+  nuxt.hook('pages:extend', (pages) => {
+    console.log(`Discovered ${pages.length} pages`)
+  })
+})
 ```
 
 However, **we do not recommend** using this low-level function definition. Instead, to define a module, **we recommend** using the object-syntax with `meta` property to identify your module, especially when publishing to npm.
@@ -12069,29 +12079,29 @@ However, **we do not recommend** using this low-level function definition. Inste
 This helper makes writing Nuxt modules more straightforward by implementing many common patterns needed by modules, guaranteeing future compatibility and improving the experience for both module authors and users.
 
 ```ts
-import { defineNuxtModule } from '@nuxt/kit';
+import { defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		// Usually the npm package name of your module
-		name: '@nuxtjs/example',
-		// The key in `nuxt.config` that holds your module options
-		configKey: 'sample',
-		// Compatibility constraints
-		compatibility: {
-			// Semver version of supported nuxt versions
-			nuxt: '>=3.0.0'
-		}
-	},
-	// Default configuration options for your module, can also be a function returning those
-	defaults: {},
-	// Shorthand sugar to register Nuxt hooks
-	hooks: {},
-	// The function holding your module logic, it can be asynchronous
-	setup(moduleOptions, nuxt) {
-		// ...
-	}
-});
+  meta: {
+    // Usually the npm package name of your module
+    name: '@nuxtjs/example',
+    // The key in `nuxt.config` that holds your module options
+    configKey: 'sample',
+    // Compatibility constraints
+    compatibility: {
+      // Semver version of supported nuxt versions
+      nuxt: '>=3.0.0'
+    }
+  },
+  // Default configuration options for your module, can also be a function returning those
+  defaults: {},
+  // Shorthand sugar to register Nuxt hooks
+  hooks: {},
+  // The function holding your module logic, it can be asynchronous
+  setup(moduleOptions, nuxt) {
+    // ...
+  }
+})
 ```
 
 Ultimately `defineNuxtModule` returns a wrapper function with the lower level `(inlineOptions, nuxt)` module signature. This wrapper function applies defaults and other necessary steps before calling your `setup` function:
@@ -12175,15 +12185,15 @@ Find here common patterns used to author modules.
 Nuxt configuration can be read and altered by modules. Here's an example of a module enabling an experimental feature.
 
 ```js
-import { defineNuxtModule } from '@nuxt/kit';
+import { defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		// We create the `experimental` object if it doesn't exist yet
-		nuxt.options.experimental ||= {};
-		nuxt.options.experimental.componentIslands = true;
-	}
-});
+  setup(options, nuxt) {
+    // We create the `experimental` object if it doesn't exist yet
+    nuxt.options.experimental ||= {}
+    nuxt.options.experimental.componentIslands = true
+  }
+})
 ```
 
 When you need to handle more complex configuration alterations, you should consider using [defu](https://github.com/unjs/defu){rel="nofollow"}.
@@ -12204,16 +12214,16 @@ Watch Vue School video about altering Nuxt configuration.
 Because modules aren't part of the application runtime, their options aren't either. However, in many cases, you might need access to some of these module options within your runtime code. We recommend exposing the needed config using Nuxt's [`runtimeConfig`](https://nuxt.com/docs/api/nuxt-config#runtimeconfig).
 
 ```js
-import { defineNuxtModule } from '@nuxt/kit';
-import { defu } from 'defu';
+import { defineNuxtModule } from '@nuxt/kit'
+import { defu } from 'defu'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		nuxt.options.runtimeConfig.public.myModule = defu(nuxt.options.runtimeConfig.public.myModule, {
-			foo: options.foo
-		});
-	}
-});
+  setup(options, nuxt) {
+    nuxt.options.runtimeConfig.public.myModule = defu(nuxt.options.runtimeConfig.public.myModule, {
+      foo: options.foo
+    })
+  }
+})
 ```
 
 Note that we use [`defu`](https://github.com/unjs/defu){rel="nofollow"} to extend the public runtime configuration the user provides instead of overwriting it.
@@ -12221,7 +12231,7 @@ Note that we use [`defu`](https://github.com/unjs/defu){rel="nofollow"} to exten
 You can then access your module options in a plugin, component, the application like any other runtime configuration:
 
 ```js
-const options = useRuntimeConfig().public.myModule;
+const options = useRuntimeConfig().public.myModule
 ```
 
 ::warning
@@ -12247,16 +12257,16 @@ Watch Vue School video about passing and exposing Nuxt module options.
 Plugins are a common way for a module to add runtime logic. You can use the `addPlugin` utility to register them from your module.
 
 ```js
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit';
+import { addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		// Create resolver to resolve relative paths
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    // Create resolver to resolve relative paths
+    const resolver = createResolver(import.meta.url)
 
-		addPlugin(resolver.resolve('./runtime/plugin'));
-	}
-});
+    addPlugin(resolver.resolve('./runtime/plugin'))
+  }
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/going-further/kit"}
@@ -12267,43 +12277,43 @@ export default defineNuxtModule({
 If your module should provide Vue components, you can use the `addComponent` utility to add them as auto-imports for Nuxt to resolve.
 
 ```js
-import { defineNuxtModule, addComponent } from '@nuxt/kit';
+import { addComponent, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		// From the runtime directory
-		addComponent({
-			name: 'MySuperComponent', // name of the component to be used in vue templates
-			export: 'MySuperComponent', // (optional) if the component is a named (rather than default) export
-			filePath: resolver.resolve('runtime/components/MySuperComponent.vue')
-		});
+    // From the runtime directory
+    addComponent({
+      name: 'MySuperComponent', // name of the component to be used in vue templates
+      export: 'MySuperComponent', // (optional) if the component is a named (rather than default) export
+      filePath: resolver.resolve('runtime/components/MySuperComponent.vue')
+    })
 
-		// From a library
-		addComponent({
-			name: 'MyAwesomeComponent', // name of the component to be used in vue templates
-			export: 'MyAwesomeComponent', // (optional) if the component is a named (rather than default) export
-			filePath: '@vue/awesome-components'
-		});
-	}
-});
+    // From a library
+    addComponent({
+      name: 'MyAwesomeComponent', // name of the component to be used in vue templates
+      export: 'MyAwesomeComponent', // (optional) if the component is a named (rather than default) export
+      filePath: '@vue/awesome-components'
+    })
+  }
+})
 ```
 
 Alternatively, you can add an entire directory by using `addComponentsDir`.
 
 ```ts
-import { defineNuxtModule, addComponentsDir } from '@nuxt/kit';
+import { addComponentsDir, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		addComponentsDir({
-			path: resolver.resolve('runtime/components')
-		});
-	}
-});
+    addComponentsDir({
+      path: resolver.resolve('runtime/components')
+    })
+  }
+})
 ```
 
 #### Injecting Composables With `addImports` and `addImportsDir`
@@ -12311,67 +12321,67 @@ export default defineNuxtModule({
 If your module should provide composables, you can use the `addImports` utility to add them as auto-imports for Nuxt to resolve.
 
 ```ts
-import { defineNuxtModule, addImports, createResolver } from '@nuxt/kit';
+import { addImports, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		addImports({
-			name: 'useComposable', // name of the composable to be used
-			as: 'useComposable',
-			from: resolver.resolve('runtime/composables/useComposable') // path of composable
-		});
-	}
-});
+    addImports({
+      name: 'useComposable', // name of the composable to be used
+      as: 'useComposable',
+      from: resolver.resolve('runtime/composables/useComposable') // path of composable
+    })
+  }
+})
 ```
 
 Alternatively, you can add an entire directory by using `addImportsDir`.
 
 ```ts
-import { defineNuxtModule, addImportsDir, createResolver } from '@nuxt/kit';
+import { addImportsDir, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		addImportsDir(resolver.resolve('runtime/composables'));
-	}
-});
+    addImportsDir(resolver.resolve('runtime/composables'))
+  }
+})
 ```
 
 #### Injecting Server Routes With `addServerHandler`
 
 ```ts
-import { defineNuxtModule, addServerHandler, createResolver } from '@nuxt/kit';
+import { addServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		addServerHandler({
-			route: '/api/hello',
-			handler: resolver.resolve('./runtime/server/api/hello/index.get')
-		});
-	}
-});
+    addServerHandler({
+      route: '/api/hello',
+      handler: resolver.resolve('./runtime/server/api/hello/index.get')
+    })
+  }
+})
 ```
 
 You can also add a dynamic server route:
 
 ```ts
-import { defineNuxtModule, addServerHandler, createResolver } from '@nuxt/kit';
+import { addServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		addServerHandler({
-			route: '/api/hello/:name',
-			handler: resolver.resolve('./runtime/server/api/hello/[name].get')
-		});
-	}
-});
+    addServerHandler({
+      route: '/api/hello/:name',
+      handler: resolver.resolve('./runtime/server/api/hello/[name].get')
+    })
+  }
+})
 ```
 
 #### Injecting Other Assets
@@ -12379,35 +12389,35 @@ export default defineNuxtModule({
 If your module should provide other kinds of assets, they can also be injected. Here's a simple example module injecting a stylesheet through Nuxt's `css` array.
 
 ```js
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit';
+import { addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		nuxt.options.css.push(resolver.resolve('./runtime/style.css'));
-	}
-});
+    nuxt.options.css.push(resolver.resolve('./runtime/style.css'))
+  }
+})
 ```
 
 And a more advanced one, exposing a folder of assets through [Nitro](https://nuxt.com/docs/guide/concepts/server-engine)'s `publicAssets` option:
 
 ```js
-import { defineNuxtModule, createResolver } from '@nuxt/kit';
+import { createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		nuxt.hook('nitro:config', async (nitroConfig) => {
-			nitroConfig.publicAssets ||= [];
-			nitroConfig.publicAssets.push({
-				dir: resolver.resolve('./runtime/public'),
-				maxAge: 60 * 60 * 24 * 365 // 1 year
-			});
-		});
-	}
-});
+    nuxt.hook('nitro:config', async (nitroConfig) => {
+      nitroConfig.publicAssets ||= []
+      nitroConfig.publicAssets.push({
+        dir: resolver.resolve('./runtime/public'),
+        maxAge: 60 * 60 * 24 * 365 // 1 year
+      })
+    })
+  }
+})
 ```
 
 #### Using Other Modules in Your Module
@@ -12415,27 +12425,27 @@ export default defineNuxtModule({
 If your module depends on other modules, you can add them by using Nuxt Kit's `installModule` utility. For example, if you wanted to use Nuxt Tailwind in your module, you could add it as below:
 
 ```ts
-import { defineNuxtModule, createResolver, installModule } from '@nuxt/kit';
+import { createResolver, defineNuxtModule, installModule } from '@nuxt/kit'
 
 export default defineNuxtModule<ModuleOptions>({
-	async setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  async setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		// We can inject our CSS file which includes Tailwind's directives
-		nuxt.options.css.push(resolver.resolve('./runtime/assets/styles.css'));
+    // We can inject our CSS file which includes Tailwind's directives
+    nuxt.options.css.push(resolver.resolve('./runtime/assets/styles.css'))
 
-		await installModule('@nuxtjs/tailwindcss', {
-			// module configuration
-			exposeConfig: true,
-			config: {
-				darkMode: 'class',
-				content: {
-					files: [resolver.resolve('./runtime/components/**/*.{vue,mjs,ts}'), resolver.resolve('./runtime/*.{mjs,js,ts}')]
-				}
-			}
-		});
-	}
-});
+    await installModule('@nuxtjs/tailwindcss', {
+      // module configuration
+      exposeConfig: true,
+      config: {
+        darkMode: 'class',
+        content: {
+          files: [resolver.resolve('./runtime/components/**/*.{vue,mjs,ts}'), resolver.resolve('./runtime/*.{mjs,js,ts}')]
+        }
+      }
+    })
+  }
+})
 ```
 
 #### Using Hooks
@@ -12443,22 +12453,22 @@ export default defineNuxtModule<ModuleOptions>({
 [Lifecycle hooks](https://nuxt.com/docs/guide/going-further/hooks) allow you to expand almost every aspect of Nuxt. Modules can hook to them programmatically or through the `hooks` map in their definition.
 
 ```js
-import { defineNuxtModule, addPlugin, createResolver } from '@nuxt/kit';
+import { addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	// Hook to the `app:error` hook through the `hooks` map
-	hooks: {
-		'app:error': (err) => {
-			console.info(`This error happened: ${err}`);
-		}
-	},
-	setup(options, nuxt) {
-		// Programmatically hook to the `pages:extend` hook
-		nuxt.hook('pages:extend', (pages) => {
-			console.info(`Discovered ${pages.length} pages`);
-		});
-	}
-});
+  // Hook to the `app:error` hook through the `hooks` map
+  hooks: {
+    'app:error': (err) => {
+      console.info(`This error happened: ${err}`)
+    }
+  },
+  setup(options, nuxt) {
+    // Programmatically hook to the `pages:extend` hook
+    nuxt.hook('pages:extend', (pages) => {
+      console.info(`Discovered ${pages.length} pages`)
+    })
+  }
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/advanced/hooks"}
@@ -12485,15 +12495,15 @@ Watch Vue School video about using Nuxt lifecycle hooks in modules.
 If your module opens, handles, or starts a watcher, you should close it when the Nuxt lifecycle is done. The `close` hook is available for this.
 
 ```ts
-import { defineNuxtModule } from '@nuxt/kit';
+import { defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		nuxt.hook('close', async (nuxt) => {
-			// Your custom code here
-		});
-	}
-});
+  setup(options, nuxt) {
+    nuxt.hook('close', async (nuxt) => {
+      // Your custom code here
+    })
+  }
+})
 ```
 
 ::
@@ -12503,33 +12513,33 @@ export default defineNuxtModule({
 If you need to add a virtual file that can be imported into the user's app, you can use the `addTemplate` utility.
 
 ```ts
-import { defineNuxtModule, addTemplate } from '@nuxt/kit';
+import { addTemplate, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		// The file is added to Nuxt's internal virtual file system and can be imported from '#build/my-module-feature.mjs'
-		addTemplate({
-			filename: 'my-module-feature.mjs',
-			getContents: () => 'export const myModuleFeature = () => "hello world !"'
-		});
-	}
-});
+  setup(options, nuxt) {
+    // The file is added to Nuxt's internal virtual file system and can be imported from '#build/my-module-feature.mjs'
+    addTemplate({
+      filename: 'my-module-feature.mjs',
+      getContents: () => 'export const myModuleFeature = () => "hello world !"'
+    })
+  }
+})
 ```
 
 For the server, you should use the `addServerTemplate` utility instead.
 
 ```ts
-import { defineNuxtModule, addServerTemplate } from '@nuxt/kit';
+import { addServerTemplate, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		// The file is added to Nitro's virtual file system and can be imported in the server code from 'my-server-module.mjs'
-		addServerTemplate({
-			filename: 'my-server-module.mjs',
-			getContents: () => 'export const myServerModule = () => "hello world !"'
-		});
-	}
-});
+  setup(options, nuxt) {
+    // The file is added to Nitro's virtual file system and can be imported in the server code from 'my-server-module.mjs'
+    addServerTemplate({
+      filename: 'my-server-module.mjs',
+      getContents: () => 'export const myServerModule = () => "hello world !"'
+    })
+  }
+})
 ```
 
 #### Adding Type Declarations
@@ -12541,13 +12551,13 @@ writes a template to the disk and adds a reference to it in the generated `nuxt.
 If your module should augment types handled by Nuxt, you can use `addTypeTemplate` to perform this operation:
 
 ```js
-import { defineNuxtModule, addTemplate, addTypeTemplate } from '@nuxt/kit';
+import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		addTypeTemplate({
-			filename: 'types/my-module.d.ts',
-			getContents: () => `// Generated by my-module
+  setup(options, nuxt) {
+    addTypeTemplate({
+      filename: 'types/my-module.d.ts',
+      getContents: () => `// Generated by my-module
         interface MyModuleNitroRules {
           myModule?: { foo: 'bar' }
         }
@@ -12556,20 +12566,20 @@ export default defineNuxtModule({
           interface NitroRouteConfig extends MyModuleNitroRules {}
         }
         export {}`
-		});
-	}
-});
+    })
+  }
+})
 ```
 
 If you need more granular control, you can use the `prepare:types` hook to register a callback that will inject your types.
 
 ```ts
 const template = addTemplate({
-	/* template options */
-});
+  /* template options */
+})
 nuxt.hook('prepare:types', ({ references }) => {
-	references.push({ path: template.dst });
-});
+  references.push({ path: template.dst })
+})
 ```
 
 ##### Updating Templates
@@ -12578,11 +12588,11 @@ If you need to update your templates/virtual files, you can leverage the `update
 
 ```ts
 nuxt.hook('builder:watch', async (event, path) => {
-	if (path.includes('my-module-feature.config')) {
-		// This will reload the template that you registered
-		updateTemplates({ filter: (t) => t.filename === 'my-module-feature.mjs' });
-	}
-});
+  if (path.includes('my-module-feature.config')) {
+    // This will reload the template that you registered
+    updateTemplates({ filter: t => t.filename === 'my-module-feature.mjs' })
+  }
+})
 ```
 
 ### Testing
@@ -12610,40 +12620,40 @@ In practice, the fixture:
 
 ```js [test/fixtures/ssr/nuxt.config.ts]
 // 1. Create a Nuxt application to be used as a "fixture"
-import MyModule from '../../../src/module';
+import MyModule from '../../../src/module'
 
 export default defineNuxtConfig({
-	ssr: true,
-	modules: [MyModule]
-});
+  ssr: true,
+  modules: [MyModule]
+})
 ```
 
 And its test:
 
 ```js [test/rendering.ts]
-import { describe, it, expect } from 'vitest';
-import { fileURLToPath } from 'node:url';
-import { setup, $fetch } from '@nuxt/test-utils/e2e';
+import { fileURLToPath } from 'node:url'
+import { $fetch, setup } from '@nuxt/test-utils/e2e'
+import { describe, expect, it } from 'vitest'
 
 describe('ssr', async () => {
-	// 2. Setup Nuxt with this fixture inside your test file
-	await setup({
-		rootDir: fileURLToPath(new URL('./fixtures/ssr', import.meta.url))
-	});
+  // 2. Setup Nuxt with this fixture inside your test file
+  await setup({
+    rootDir: fileURLToPath(new URL('./fixtures/ssr', import.meta.url))
+  })
 
-	it('renders the index page', async () => {
-		// 3. Interact with the fixture using utilities from `@nuxt/test-utils`
-		const html = await $fetch('/');
+  it('renders the index page', async () => {
+    // 3. Interact with the fixture using utilities from `@nuxt/test-utils`
+    const html = await $fetch('/')
 
-		// 4. Perform checks related to this fixture
-		expect(html).toContain('<div>ssr</div>');
-	});
-});
+    // 4. Perform checks related to this fixture
+    expect(html).toContain('<div>ssr</div>')
+  })
+})
 
 // 5. Repeat
 describe('csr', async () => {
-	/* ... */
-});
+  /* ... */
+})
 ```
 
 ::tip
@@ -12771,16 +12781,16 @@ You can install the latest Nuxt Kit by adding it to the `dependencies` section o
 
 ```json [package.json]
 {
-	"dependencies": {
-		"@nuxt/kit": "npm:@nuxt/kit-nightly@latest"
-	}
+  "dependencies": {
+    "@nuxt/kit": "npm:@nuxt/kit-nightly@latest"
+  }
 }
 ```
 
 ### Import Kit Utilities
 
 ```js [test.mjs]
-import { useNuxt } from '@nuxt/kit';
+import { useNuxt } from '@nuxt/kit'
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/kit"}
@@ -12796,9 +12806,9 @@ Nuxt Kit is an [esm-only package](https://nuxt.com/docs/guide/concepts/esm) mean
 // This does NOT work!
 // const kit = require('@nuxt/kit')
 async function main() {
-	const kit = await import('@nuxt/kit');
+  const kit = await import('@nuxt/kit')
 }
-main();
+main()
 ```
 
 # NuxtApp
@@ -12838,8 +12848,8 @@ Within composables, plugins and components you can access `nuxtApp` with [`useNu
 
 ```ts [composables/useMyComposable.ts]
 export function useMyComposable() {
-	const nuxtApp = useNuxtApp();
-	// access runtime nuxt app instance
+  const nuxtApp = useNuxtApp()
+  // access runtime nuxt app instance
 }
 ```
 
@@ -12855,10 +12865,10 @@ Plugins also receive `nuxtApp` as the first argument for convenience.
 You can provide helpers to be usable across all composables and application. This usually happens within a Nuxt plugin.
 
 ```ts
-const nuxtApp = useNuxtApp();
-nuxtApp.provide('hello', (name) => `Hello ${name}!`);
+const nuxtApp = useNuxtApp()
+nuxtApp.provide('hello', name => `Hello ${name}!`)
 
-console.log(nuxtApp.$hello('name')); // Prints "Hello name!"
+console.log(nuxtApp.$hello('name')) // Prints "Hello name!"
 ```
 
 ## ::read-more
@@ -12888,7 +12898,7 @@ Nuxt layers are a powerful feature that you can use to share and reuse partial N
 A minimal Nuxt layer directory should contain a [`nuxt.config.ts`](https://nuxt.com/docs/guide/directory-structure/nuxt-config) file to indicate it is a layer.
 
 ```ts [base/nuxt.config.ts]
-export default defineNuxtConfig({});
+export default defineNuxtConfig({})
 ```
 
 Additionally, certain other files in the layer directory will be auto-scanned and used by Nuxt for the project extending this layer.
@@ -12909,31 +12919,31 @@ Additionally, certain other files in the layer directory will be auto-scanned an
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: ['./base']
-});
+  extends: ['./base']
+})
 ```
 
 ```vue [app.vue]
 <template>
-	<BaseComponent />
+  <BaseComponent />
 </template>
 ```
 
 ```ts [base/nuxt.config.ts]
 export default defineNuxtConfig({
-	// Extending from base nuxt.config.ts!
-	app: {
-		head: {
-			title: 'Extending Configs is Fun!',
-			meta: [{ name: 'description', content: 'I am using the extends feature in Nuxt!' }]
-		}
-	}
-});
+  // Extending from base nuxt.config.ts!
+  app: {
+    head: {
+      title: 'Extending Configs is Fun!',
+      meta: [{ name: 'description', content: 'I am using the extends feature in Nuxt!' }]
+    }
+  }
+})
 ```
 
 ```vue [base/components/BaseComponent.vue]
 <template>
-	<h1>Extending Components is Fun!</h1>
+  <h1>Extending Components is Fun!</h1>
 </template>
 ```
 
@@ -12959,15 +12969,15 @@ You can use a git repository to share your Nuxt layer. Some examples:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: [
-		'github:username/repoName', // GitHub Remote Source
-		'github:username/repoName/base', // GitHub Remote Source within /base directory
-		'github:username/repoName#dev', // GitHub Remote Source from dev branch
-		'github:username/repoName#v1.0.0', // GitHub Remote Source from v1.0.0 tag
-		'gitlab:username/repoName', // GitLab Remote Source example
-		'bitbucket:username/repoName' // Bitbucket Remote Source example
-	]
-});
+  extends: [
+    'github:username/repoName', // GitHub Remote Source
+    'github:username/repoName/base', // GitHub Remote Source within /base directory
+    'github:username/repoName#dev', // GitHub Remote Source from dev branch
+    'github:username/repoName#v1.0.0', // GitHub Remote Source from v1.0.0 tag
+    'gitlab:username/repoName', // GitLab Remote Source example
+    'bitbucket:username/repoName' // Bitbucket Remote Source example
+  ]
+})
 ```
 
 ::tip
@@ -12987,8 +12997,8 @@ When using git remote sources, if a layer has npm dependencies and you wish to i
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: [['github:username/repoName', { install: true }]]
-});
+  extends: [['github:username/repoName', { install: true }]]
+})
 ```
 
 ::
@@ -13001,27 +13011,27 @@ To extend from an npm package, you need to make sure that the module is publishe
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	extends: [
-		// Node Module with scope
-		'@scope/moduleName',
-		// or just the module name
-		'moduleName'
-	]
-});
+  extends: [
+    // Node Module with scope
+    '@scope/moduleName',
+    // or just the module name
+    'moduleName'
+  ]
+})
 ```
 
 To publish a layer directory as an npm package, you want to make sure that the `package.json` has the correct properties filled out. This will make sure that the files are included when the package is published.
 
 ```json [package.json]
 {
-	"name": "my-theme",
-	"version": "1.0.0",
-	"type": "module",
-	"main": "./nuxt.config.ts",
-	"dependencies": {},
-	"devDependencies": {
-		"nuxt": "^3.0.0"
-	}
+  "name": "my-theme",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./nuxt.config.ts",
+  "dependencies": {},
+  "devDependencies": {
+    "nuxt": "^3.0.0"
+  }
 }
 ```
 
@@ -13045,10 +13055,10 @@ If you want to create named layer aliases for other layers, you can specify a na
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	$meta: {
-		name: 'example'
-	}
-});
+  $meta: {
+    name: 'example'
+  }
+})
 ```
 
 This will produce an alias of `#layers/example` which points to your layer.
@@ -13060,14 +13070,14 @@ When importing using global aliases (such as `~/` and `@/`) in a layer component
 Also when using relative paths in `nuxt.config` file of a layer, (with exception of nested `extends`) they are resolved relative to user's project instead of the layer. As a workaround, use full resolved paths in `nuxt.config`:
 
 ```js [nuxt.config.ts]
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const currentDir = dirname(fileURLToPath(import.meta.url));
+const currentDir = dirname(fileURLToPath(import.meta.url))
 
 export default defineNuxtConfig({
-	css: [join(currentDir, './assets/main.css')]
-});
+  css: [join(currentDir, './assets/main.css')]
+})
 ```
 
 ## Multi-Layer Support for Nuxt Modules
@@ -13076,13 +13086,13 @@ You can use the internal array `nuxt.options._layers` to support custom multi-la
 
 ```ts [modules/my-module.ts]
 export default defineNuxtModule({
-	setup(_options, nuxt) {
-		for (const layer of nuxt.options._layers) {
-			// You can check for a custom directory existence to extend for each layer
-			console.log('Custom extension for', layer.cwd, layer.config);
-		}
-	}
-});
+  setup(_options, nuxt) {
+    for (const layer of nuxt.options._layers) {
+      // You can check for a custom directory existence to extend for each layer
+      console.log('Custom extension for', layer.cwd, layer.config)
+    }
+  }
+})
 ```
 
 **Notes:**
@@ -13113,12 +13123,12 @@ Sourcemaps are enabled for your server build by default, and for the client buil
 
 ```ts
 export default defineNuxtConfig({
-	// or sourcemap: true
-	sourcemap: {
-		server: true,
-		client: true
-	}
-});
+  // or sourcemap: true
+  sourcemap: {
+    server: true,
+    client: true
+  }
+})
 ```
 
 ## Debugging with Node Inspector
@@ -13149,32 +13159,32 @@ If you use `pnpm`, you will need to have `nuxi` installed as a devDependency for
 
 ```json5
 {
-	// Use IntelliSense to learn about possible attributes.
-	// Hover to view descriptions of existing attributes.
-	version: '0.2.0',
-	configurations: [
-		{
-			type: 'chrome',
-			request: 'launch',
-			name: 'client: chrome',
-			url: 'http://localhost:3000',
-			webRoot: '${workspaceFolder}'
-		},
-		{
-			type: 'node',
-			request: 'launch',
-			name: 'server: nuxt',
-			outputCapture: 'std',
-			program: '${workspaceFolder}/node_modules/nuxt/bin/nuxt.mjs',
-			args: ['dev']
-		}
-	],
-	compounds: [
-		{
-			name: 'fullstack: nuxt',
-			configurations: ['server: nuxt', 'client: chrome']
-		}
-	]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "client: chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "server: nuxt",
+      "outputCapture": "std",
+      "program": "${workspaceFolder}/node_modules/nuxt/bin/nuxt.mjs",
+      "args": ["dev"]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "fullstack: nuxt",
+      "configurations": ["server: nuxt", "client: chrome"]
+    }
+  ]
 }
 ```
 
@@ -13193,26 +13203,32 @@ You can also debug your Nuxt app in JetBrains IDEs such as IntelliJ IDEA, WebSto
 
 ```html
 <component name="ProjectRunConfigurationManager">
-	<configuration default="false" name="client: chrome" type="JavascriptDebugType" uri="http://localhost:3000" useFirstLineBreakpoints="true">
-		<method v="2" />
-	</configuration>
+  <configuration
+    default="false"
+    name="client: chrome"
+    type="JavascriptDebugType"
+    uri="http://localhost:3000"
+    useFirstLineBreakpoints="true"
+  >
+    <method v="2" />
+  </configuration>
 
-	<configuration
-		default="false"
-		name="server: nuxt"
-		type="NodeJSConfigurationType"
-		application-parameters="dev"
-		path-to-js-file="$PROJECT_DIR$/node_modules/nuxt/bin/nuxt.mjs"
-		working-dir="$PROJECT_DIR$"
-	>
-		<method v="2" />
-	</configuration>
+  <configuration
+    default="false"
+    name="server: nuxt"
+    type="NodeJSConfigurationType"
+    application-parameters="dev"
+    path-to-js-file="$PROJECT_DIR$/node_modules/nuxt/bin/nuxt.mjs"
+    working-dir="$PROJECT_DIR$"
+  >
+    <method v="2" />
+  </configuration>
 
-	<configuration default="false" name="fullstack: nuxt" type="CompoundRunConfigurationType">
-		<toRun name="client: chrome" type="JavascriptDebugType" />
-		<toRun name="server: nuxt" type="NodeJSConfigurationType" />
-		<method v="2" />
-	</configuration>
+  <configuration default="false" name="fullstack: nuxt" type="CompoundRunConfigurationType">
+    <toRun name="client: chrome" type="JavascriptDebugType" />
+    <toRun name="server: nuxt" type="NodeJSConfigurationType" />
+    <method v="2" />
+  </configuration>
 </component>
 ```
 
@@ -13233,18 +13249,18 @@ Using [router options](https://nuxt.com/docs/guide/recipes/custom-routing#router
 If it returns `null` or `undefined`, Nuxt will fall back to the default routes (useful to modify input array).
 
 ```ts [app/router.options.ts]
-import type { RouterConfig } from '@nuxt/schema';
+import type { RouterConfig } from '@nuxt/schema'
 
 export default {
-	// https://router.vuejs.org/api/interfaces/routeroptions.html#routes
-	routes: (_routes) => [
-		{
-			name: 'home',
-			path: '/',
-			component: () => import('~/pages/home.vue')
-		}
-	]
-} satisfies RouterConfig;
+  // https://router.vuejs.org/api/interfaces/routeroptions.html#routes
+  routes: _routes => [
+    {
+      name: 'home',
+      path: '/',
+      component: () => import('~/pages/home.vue')
+    }
+  ]
+} satisfies RouterConfig
 ```
 
 ::note
@@ -13258,36 +13274,37 @@ You can add, change or remove pages from the scanned routes with the `pages:exte
 For example, to prevent creating routes for any `.ts` files:
 
 ```ts [nuxt.config.ts]
-import type { NuxtPage } from '@nuxt/schema';
+import type { NuxtPage } from '@nuxt/schema'
 
 export default defineNuxtConfig({
-	hooks: {
-		'pages:extend'(pages) {
-			// add a route
-			pages.push({
-				name: 'profile',
-				path: '/profile',
-				file: '~/extra-pages/profile.vue'
-			});
+  hooks: {
+    'pages:extend': function (pages) {
+      // add a route
+      pages.push({
+        name: 'profile',
+        path: '/profile',
+        file: '~/extra-pages/profile.vue'
+      })
 
-			// remove routes
-			function removePagesMatching(pattern: RegExp, pages: NuxtPage[] = []) {
-				const pagesToRemove: NuxtPage[] = [];
-				for (const page of pages) {
-					if (page.file && pattern.test(page.file)) {
-						pagesToRemove.push(page);
-					} else {
-						removePagesMatching(pattern, page.children);
-					}
-				}
-				for (const page of pagesToRemove) {
-					pages.splice(pages.indexOf(page), 1);
-				}
-			}
-			removePagesMatching(/\.ts$/, pages);
-		}
-	}
-});
+      // remove routes
+      function removePagesMatching(pattern: RegExp, pages: NuxtPage[] = []) {
+        const pagesToRemove: NuxtPage[] = []
+        for (const page of pages) {
+          if (page.file && pattern.test(page.file)) {
+            pagesToRemove.push(page)
+          }
+          else {
+            removePagesMatching(pattern, page.children)
+          }
+        }
+        for (const page of pagesToRemove) {
+          pages.splice(pages.indexOf(page), 1)
+        }
+      }
+      removePagesMatching(/\.ts$/, pages)
+    }
+  }
+})
 ```
 
 ### Nuxt Module
@@ -13308,9 +13325,9 @@ On top of customizing options for [`vue-router`](https://router.vuejs.org/api/in
 This is the recommended way to specify [router options](https://nuxt.com/docs/api/nuxt-config#router).
 
 ```ts [app/router.options.ts]
-import type { RouterConfig } from '@nuxt/schema';
+import type { RouterConfig } from '@nuxt/schema'
 
-export default {} satisfies RouterConfig;
+export default {} satisfies RouterConfig
 ```
 
 It is possible to add more router options files by adding files within the `pages:routerOptions` hook. Later items in the array override earlier ones.
@@ -13320,20 +13337,20 @@ Adding a router options file in this hook will switch on page-based routing, unl
 ::
 
 ```ts [nuxt.config.ts]
-import { createResolver } from '@nuxt/kit';
+import { createResolver } from '@nuxt/kit'
 
 export default defineNuxtConfig({
-	hooks: {
-		'pages:routerOptions'({ files }) {
-			const resolver = createResolver(import.meta.url);
-			// add a route
-			files.push({
-				path: resolver.resolve('./runtime/app/router-options'),
-				optional: true
-			});
-		}
-	}
-});
+  hooks: {
+    'pages:routerOptions': function ({ files }) {
+      const resolver = createResolver(import.meta.url)
+      // add a route
+      files.push({
+        path: resolver.resolve('./runtime/app/router-options'),
+        optional: true
+      })
+    }
+  }
+})
 ```
 
 ### Using `nuxt.config`
@@ -13350,10 +13367,10 @@ export default defineNuxtConfig({
 
 ```js [nuxt.config]
 export default defineNuxtConfig({
-	router: {
-		options: {}
-	}
-});
+  router: {
+    options: {}
+  }
+})
 ```
 
 ### Hash Mode (SPA)
@@ -13362,13 +13379,13 @@ You can enable hash history in SPA mode using the `hashMode` [config](https://nu
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	ssr: false,
-	router: {
-		options: {
-			hashMode: true
-		}
-	}
-});
+  ssr: false,
+  router: {
+    options: {
+      hashMode: true
+    }
+  }
+})
 ```
 
 ### Scroll Behavior for hash links
@@ -13377,12 +13394,12 @@ You can optionally customize the scroll behavior for hash links. When you set th
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	router: {
-		options: {
-			scrollBehaviorType: 'smooth'
-		}
-	}
-});
+  router: {
+    options: {
+      scrollBehaviorType: 'smooth'
+    }
+  }
+})
 ```
 
 #### Custom History (advanced)
@@ -13390,13 +13407,13 @@ export default defineNuxtConfig({
 You can optionally override history mode using a function that accepts the base URL and returns the history mode. If it returns `null` or `undefined`, Nuxt will fallback to the default history.
 
 ```ts [app/router.options.ts]
-import type { RouterConfig } from '@nuxt/schema';
-import { createMemoryHistory } from 'vue-router';
+import type { RouterConfig } from '@nuxt/schema'
+import { createMemoryHistory } from 'vue-router'
 
 export default {
-	// https://router.vuejs.org/api/interfaces/routeroptions.html
-	history: (base) => (import.meta.client ? createMemoryHistory(base) : null) /* default */
-} satisfies RouterConfig;
+  // https://router.vuejs.org/api/interfaces/routeroptions.html
+  history: base => (import.meta.client ? createMemoryHistory(base) : null) /* default */
+} satisfies RouterConfig
 ```
 
 # Using Vite Plugins in Nuxt
@@ -13428,13 +13445,13 @@ bun add @rollup/plugin-yaml
 Next, we need to import and add it to our [`nuxt.config.ts`](https://nuxt.com/docs/guide/directory-structure/nuxt-config) file:
 
 ```ts [nuxt.config.ts]
-import yaml from '@rollup/plugin-yaml';
+import yaml from '@rollup/plugin-yaml'
 
 export default defineNuxtConfig({
-	vite: {
-		plugins: [yaml()]
-	}
-});
+  vite: {
+    plugins: [yaml()]
+  }
+})
 ```
 
 Now we installed and configured our Vite plugin, we can start using YAML files directly in our project.
@@ -13448,13 +13465,13 @@ greeting: 'Hello, Nuxt with Vite!'
 ```
 
 ```vue [components/Hello.vue]
-<script setup>
-import config from '~/data/hello.yaml';
-</script>
-
 <template>
-	<h1>{{ config.greeting }}</h1>
+  <h1>{{ config.greeting }}</h1>
 </template>
+
+<script setup>
+import config from '~/data/hello.yaml'
+</script>
 ```
 
 ::
@@ -13483,38 +13500,38 @@ Let's pretend here that:
 
 ```ts [plugins/api.ts]
 export default defineNuxtPlugin((nuxtApp) => {
-	const { session } = useUserSession();
+  const { session } = useUserSession()
 
-	const api = $fetch.create({
-		baseURL: 'https://api.nuxt.com',
-		onRequest({ request, options, error }) {
-			if (session.value?.token) {
-				// note that this relies on ofetch >= 1.4.0 - you may need to refresh your lockfile
-				options.headers.set('Authorization', `Bearer ${session.value?.token}`);
-			}
-		},
-		async onResponseError({ response }) {
-			if (response.status === 401) {
-				await nuxtApp.runWithContext(() => navigateTo('/login'));
-			}
-		}
-	});
+  const api = $fetch.create({
+    baseURL: 'https://api.nuxt.com',
+    onRequest({ request, options, error }) {
+      if (session.value?.token) {
+        // note that this relies on ofetch >= 1.4.0 - you may need to refresh your lockfile
+        options.headers.set('Authorization', `Bearer ${session.value?.token}`)
+      }
+    },
+    async onResponseError({ response }) {
+      if (response.status === 401) {
+        await nuxtApp.runWithContext(() => navigateTo('/login'))
+      }
+    }
+  })
 
-	// Expose to useNuxtApp().$api
-	return {
-		provide: {
-			api
-		}
-	};
-});
+  // Expose to useNuxtApp().$api
+  return {
+    provide: {
+      api
+    }
+  }
+})
 ```
 
 With this Nuxt plugin, `$api` is exposed from `useNuxtApp()` to make API calls directly from the Vue components:
 
 ```vue [app.vue]
 <script setup>
-const { $api } = useNuxtApp();
-const { data: modules } = await useAsyncData('modules', () => $api('/modules'));
+const { $api } = useNuxtApp()
+const { data: modules } = await useAsyncData('modules', () => $api('/modules'))
 </script>
 ```
 
@@ -13527,13 +13544,13 @@ Wrapping with [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-d
 Now that `$api` has the logic we want, let's create a `useAPI` composable to replace the usage of `useAsyncData` + `$api`:
 
 ```ts [composables/useAPI.ts]
-import type { UseFetchOptions } from 'nuxt/app';
+import type { UseFetchOptions } from 'nuxt/app'
 
 export function useAPI<T>(url: string | (() => string), options?: UseFetchOptions<T>) {
-	return useFetch(url, {
-		...options,
-		$fetch: useNuxtApp().$api as typeof $fetch
-	});
+  return useFetch(url, {
+    ...options,
+    $fetch: useNuxtApp().$api as typeof $fetch
+  })
 }
 ```
 
@@ -13541,26 +13558,26 @@ Let's use the new composable and have a nice and clean component:
 
 ```vue [app.vue]
 <script setup>
-const { data: modules } = await useAPI('/modules');
+const { data: modules } = await useAPI('/modules')
 </script>
 ```
 
 If you want to customize the type of any error returned, you can also do so:
 
 ```ts
-import type { FetchError } from 'ofetch';
-import type { UseFetchOptions } from 'nuxt/app';
+import type { UseFetchOptions } from 'nuxt/app'
+import type { FetchError } from 'ofetch'
 
 interface CustomError {
-	message: string;
-	statusCode: number;
+  message: string
+  statusCode: number
 }
 
 export function useAPI<T>(url: string | (() => string), options?: UseFetchOptions<T>) {
-	return useFetch<T, FetchError<CustomError>>(url, {
-		...options,
-		$fetch: useNuxtApp().$api
-	});
+  return useFetch<T, FetchError<CustomError>>(url, {
+    ...options,
+    $fetch: useNuxtApp().$api
+  })
 }
 ```
 
@@ -13630,31 +13647,31 @@ For this recipe, we'll create a simple API route to sign-in a user based on stat
 Let's create a `/api/login` API route that will accept a POST request with the email and password in the request body.
 
 ```ts [server/api/login.post.ts]
-import { z } from 'zod';
+import { z } from 'zod'
 
 const bodySchema = z.object({
-	email: z.string().email(),
-	password: z.string().min(8)
-});
+  email: z.string().email(),
+  password: z.string().min(8)
+})
 
 export default defineEventHandler(async (event) => {
-	const { email, password } = await readValidatedBody(event, bodySchema.parse);
+  const { email, password } = await readValidatedBody(event, bodySchema.parse)
 
-	if (email === 'admin@admin.com' && password === 'iamtheadmin') {
-		// set the user session in the cookie
-		// this server util is auto-imported by the auth-utils module
-		await setUserSession(event, {
-			user: {
-				name: 'John Doe'
-			}
-		});
-		return {};
-	}
-	throw createError({
-		statusCode: 401,
-		message: 'Bad credentials'
-	});
-});
+  if (email === 'admin@admin.com' && password === 'iamtheadmin') {
+    // set the user session in the cookie
+    // this server util is auto-imported by the auth-utils module
+    await setUserSession(event, {
+      user: {
+        name: 'John Doe'
+      }
+    })
+    return {}
+  }
+  throw createError({
+    statusCode: 401,
+    message: 'Bad credentials'
+  })
+})
 ```
 
 ::callout
@@ -13671,40 +13688,40 @@ The module exposes a Vue composable to know if a user is authenticated in our ap
 
 ```vue
 <script setup>
-const { loggedIn, session, user, clear, fetch } = useUserSession();
+const { loggedIn, session, user, clear, fetch } = useUserSession()
 </script>
 ```
 
 Let's create a login page with a form to submit the login data to our `/api/login` route.
 
 ```vue [pages/login.vue]
+<template>
+  <form @submit.prevent="login">
+    <input v-model="credentials.email" type="email" placeholder="Email" />
+    <input v-model="credentials.password" type="password" placeholder="Password" />
+    <button type="submit">Login</button>
+  </form>
+</template>
+
 <script setup lang="ts">
-const { loggedIn, user, fetch: refreshSession } = useUserSession();
+const { loggedIn, user, fetch: refreshSession } = useUserSession()
 const credentials = reactive({
-	email: '',
-	password: ''
-});
+  email: '',
+  password: ''
+})
 async function login() {
-	$fetch('/api/login', {
-		method: 'POST',
-		body: credentials
-	})
-		.then(async () => {
-			// Refresh the session on client-side and redirect to the home page
-			await refreshSession();
-			await navigateTo('/');
-		})
-		.catch(() => alert('Bad credentials'));
+  $fetch('/api/login', {
+    method: 'POST',
+    body: credentials
+  })
+    .then(async () => {
+      // Refresh the session on client-side and redirect to the home page
+      await refreshSession()
+      await navigateTo('/')
+    })
+    .catch(() => alert('Bad credentials'))
 }
 </script>
-
-<template>
-	<form @submit.prevent="login">
-		<input v-model="credentials.email" type="email" placeholder="Email" />
-		<input v-model="credentials.password" type="password" placeholder="Password" />
-		<button type="submit">Login</button>
-	</form>
-</template>
 ```
 
 ## Protect API Routes
@@ -13717,14 +13734,14 @@ Let's create an example of a `/api/user/stats` route that only authenticated use
 
 ```ts [server/api/user/stats.get.ts]
 export default defineEventHandler(async (event) => {
-	// make sure the user is logged in
-	// This will throw a 401 error if the request doesn't come from a valid user session
-	const { user } = await requireUserSession(event);
+  // make sure the user is logged in
+  // This will throw a 401 error if the request doesn't come from a valid user session
+  const { user } = await requireUserSession(event)
 
-	// TODO: Fetch some stats based on the user
+  // TODO: Fetch some stats based on the user
 
-	return {};
-});
+  return {}
+})
 ```
 
 ## Protect App Routes
@@ -13737,13 +13754,13 @@ We'll create a middleware in the `/middleware` directory. Unlike on the server, 
 
 ```typescript [middleware/authenticated.ts]
 export default defineNuxtRouteMiddleware(() => {
-	const { loggedIn } = useUserSession();
+  const { loggedIn } = useUserSession()
 
-	// redirect the user to the login screen if they're not authenticated
-	if (!loggedIn.value) {
-		return navigateTo('/login');
-	}
-});
+  // redirect the user to the login screen if they're not authenticated
+  if (!loggedIn.value) {
+    return navigateTo('/login')
+  }
+})
 ```
 
 ## Home Page
@@ -13753,25 +13770,25 @@ Now that we have our app middleware to protect our routes, we can use it on our 
 We'll use [`definePageMeta`](https://nuxt.com/docs/api/utils/define-page-meta) to apply the middleware to the route that we want to protect.
 
 ```vue [pages/index.vue]
+<template>
+  <div>
+    <h1>Welcome {{ user.name }}</h1>
+    <button @click="logout">Logout</button>
+  </div>
+</template>
+
 <script setup lang="ts">
 definePageMeta({
-	middleware: ['authenticated']
-});
+  middleware: ['authenticated']
+})
 
-const { user, clear: clearSession } = useUserSession();
+const { user, clear: clearSession } = useUserSession()
 
 async function logout() {
-	await clearSession();
-	await navigateTo('/login');
+  await clearSession()
+  await navigateTo('/login')
 }
 </script>
-
-<template>
-	<div>
-		<h1>Welcome {{ user.name }}</h1>
-		<button @click="logout">Logout</button>
-	</div>
-</template>
 ```
 
 We also added a logout button to clear the session and redirect the user to the login page.
@@ -13804,13 +13821,13 @@ The content of the default slot will be tree-shaken out of the server build. (Th
 
 ```vue
 <template>
-	<div>
-		<Sidebar />
-		<!-- The <Comment> component will only be rendered on client-side -->
-		<ClientOnly fallback-tag="span" fallback="Loading comments...">
-			<Comment />
-		</ClientOnly>
-	</div>
+  <div>
+    <Sidebar />
+    <!-- The <Comment> component will only be rendered on client-side -->
+    <ClientOnly fallback-tag="span" fallback="Loading comments...">
+      <Comment />
+    </ClientOnly>
+  </div>
 </template>
 ```
 
@@ -13820,18 +13837,18 @@ The content of the default slot will be tree-shaken out of the server build. (Th
 
 ```vue [pages/example.vue]
 <template>
-	<div>
-		<Sidebar />
-		<!-- This renders the "span" element on the server side -->
-		<ClientOnly fallbackTag="span">
-			<!-- this component will only be rendered on client side -->
-			<Comments />
-			<template #fallback>
-				<!-- this will be rendered on server side -->
-				<p>Loading comments...</p>
-			</template>
-		</ClientOnly>
-	</div>
+  <div>
+    <Sidebar />
+    <!-- This renders the "span" element on the server side -->
+    <ClientOnly fallback-tag="span">
+      <!-- this component will only be rendered on client side -->
+      <Comments />
+      <template #fallback>
+        <!-- this will be rendered on server side -->
+        <p>Loading comments...</p>
+      </template>
+    </ClientOnly>
+  </div>
 </template>
 ```
 
@@ -13842,24 +13859,24 @@ The content of the default slot will be tree-shaken out of the server build. (Th
 Components inside `<ClientOnly>` are rendered only after being mounted. To access the rendered elements in the DOM, you can watch a template ref:
 
 ```vue [pages/example.vue]
+<template>
+  <ClientOnly>
+    <NuxtWelcome ref="nuxtWelcomeRef" />
+  </ClientOnly>
+</template>
+
 <script setup lang="ts">
-const nuxtWelcomeRef = useTemplateRef('nuxtWelcomeRef');
+const nuxtWelcomeRef = useTemplateRef('nuxtWelcomeRef')
 
 // The watch will be triggered when the component is available
 watch(
-	nuxtWelcomeRef,
-	() => {
-		console.log('<NuxtWelcome /> mounted');
-	},
-	{ once: true }
-);
+  nuxtWelcomeRef,
+  () => {
+    console.log('<NuxtWelcome /> mounted')
+  },
+  { once: true }
+)
 </script>
-
-<template>
-	<ClientOnly>
-		<NuxtWelcome ref="nuxtWelcomeRef" />
-	</ClientOnly>
-</template>
 ```
 
 # <DevOnly>
@@ -13870,19 +13887,19 @@ The content will not be included in production builds.
 
 ```vue [pages/example.vue]
 <template>
-	<div>
-		<Sidebar />
-		<DevOnly>
-			<!-- this component will only be rendered during development -->
-			<LazyDebugBar />
+  <div>
+    <Sidebar />
+    <DevOnly>
+      <!-- this component will only be rendered during development -->
+      <LazyDebugBar />
 
-			<!-- if you ever require to have a replacement during production -->
-			<!-- be sure to test these using `nuxt preview` -->
-			<template #fallback>
-				<div><!-- empty div for flex.justify-between --></div>
-			</template>
-		</DevOnly>
-	</div>
+      <!-- if you ever require to have a replacement during production -->
+      <!-- be sure to test these using `nuxt preview` -->
+      <template #fallback>
+        <div><!-- empty div for flex.justify-between --></div>
+      </template>
+    </DevOnly>
+  </div>
 </template>
 ```
 
@@ -13892,17 +13909,17 @@ The content will not be included in production builds.
 
 ```vue
 <template>
-	<div>
-		<Sidebar />
-		<DevOnly>
-			<!-- this component will only be rendered during development -->
-			<LazyDebugBar />
-			<!-- be sure to test these using `nuxt preview` -->
-			<template #fallback>
-				<div><!-- empty div for flex.justify-between --></div>
-			</template>
-		</DevOnly>
-	</div>
+  <div>
+    <Sidebar />
+    <DevOnly>
+      <!-- this component will only be rendered during development -->
+      <LazyDebugBar />
+      <!-- be sure to test these using `nuxt preview` -->
+      <template #fallback>
+        <div><!-- empty div for flex.justify-between --></div>
+      </template>
+    </DevOnly>
+  </div>
 </template>
 ```
 
@@ -13919,50 +13936,50 @@ This component is experimental and in order to use it you must enable the `exper
 
 ```vue [pages/example.vue]
 <template>
-	<div>
-		<Sidebar />
-		<!-- this component will be rendered on client-side -->
-		<NuxtClientFallback fallback-tag="span">
-			<Comments />
-			<BrokeInSSR />
-		</NuxtClientFallback>
-	</div>
+  <div>
+    <Sidebar />
+    <!-- this component will be rendered on client-side -->
+    <NuxtClientFallback fallback-tag="span">
+      <Comments />
+      <BrokeInSSR />
+    </NuxtClientFallback>
+  </div>
 </template>
 ```
 
 ## Events
 
 - `@ssr-error`: Event emitted when a child triggers an error in SSR. Note that this will only be triggered on the server.
-    ```vue
-    <template>
-    	<NuxtClientFallback @ssr-error="logSomeError">
-    		<!-- ... -->
-    	</NuxtClientFallback>
-    </template>
-    ```
+  ```vue
+  <template>
+    <NuxtClientFallback @ssr-error="logSomeError">
+      <!-- ... -->
+    </NuxtClientFallback>
+  </template>
+  ```
 
 ## Props
 
 - `placeholderTag` | `fallbackTag`: Specify a fallback tag to be rendered if the slot fails to render on the server.
 
-    - **type**: `string`
-    - **default**: `div`
+  - **type**: `string`
+  - **default**: `div`
 
 - `placeholder` | `fallback`: Specify fallback content to be rendered if the slot fails to render.
 
-    - **type**: `string`
+  - **type**: `string`
 
 - `keepFallback`: Keep the fallback content if it failed to render server-side.
 
-    - **type**: `boolean`
-    - **default**: `false`
+  - **type**: `boolean`
+  - **default**: `false`
 
 ```vue
 <template>
-	<!-- render <span>Hello world</span> server-side if the default slot fails to render -->
-	<NuxtClientFallback fallback-tag="span" fallback="Hello world">
-		<BrokeInSsr />
-	</NuxtClientFallback>
+  <!-- render <span>Hello world</span> server-side if the default slot fails to render -->
+  <NuxtClientFallback fallback-tag="span" fallback="Hello world">
+    <BrokeInSsr />
+  </NuxtClientFallback>
 </template>
 ```
 
@@ -13972,13 +13989,13 @@ This component is experimental and in order to use it you must enable the `exper
 
 ```vue
 <template>
-	<NuxtClientFallback>
-		<!-- ... -->
-		<template #fallback>
-			<!-- this will be rendered on server side if the default slot fails to render in ssr -->
-			<p>Hello world</p>
-		</template>
-	</NuxtClientFallback>
+  <NuxtClientFallback>
+    <!-- ... -->
+    <template #fallback>
+      <!-- this will be rendered on server side if the default slot fails to render in ssr -->
+      <p>Hello world</p>
+    </template>
+  </NuxtClientFallback>
 </template>
 ```
 
@@ -14012,13 +14029,13 @@ The `to` target of [`<Teleport>`](https://vuejs.org/guide/built-ins/teleport.htm
 
 ```vue
 <template>
-	<button @click="open = true">Open Modal</button>
-	<Teleport to="#teleports">
-		<div v-if="open" class="modal">
-			<p>Hello from the modal!</p>
-			<button @click="open = false">Close</button>
-		</div>
-	</Teleport>
+  <button @click="open = true">Open Modal</button>
+  <Teleport to="#teleports">
+    <div v-if="open" class="modal">
+      <p>Hello from the modal!</p>
+      <button @click="open = false">Close</button>
+    </div>
+  </Teleport>
 </template>
 ```
 
@@ -14026,11 +14043,11 @@ The `to` target of [`<Teleport>`](https://vuejs.org/guide/built-ins/teleport.htm
 
 ```vue
 <template>
-	<ClientOnly>
-		<Teleport to="#some-selector">
-			<!-- content -->
-		</Teleport>
-	</ClientOnly>
+  <ClientOnly>
+    <Teleport to="#some-selector">
+      <!-- content -->
+    </Teleport>
+  </ClientOnly>
 </template>
 ```
 
@@ -14049,10 +14066,10 @@ Add `<NuxtRouteAnnouncer/>` in your [`app.vue`](https://nuxt.com/docs/guide/dire
 
 ```vue [app.vue]
 <template>
-	<NuxtRouteAnnouncer />
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+  <NuxtRouteAnnouncer />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 ```
 
@@ -14062,11 +14079,11 @@ You can pass custom HTML or components through the route announcer's default slo
 
 ```vue
 <template>
-	<NuxtRouteAnnouncer>
-		<template #default="{ message }">
-			<p>{{ message }} was loaded.</p>
-		</template>
-	</NuxtRouteAnnouncer>
+  <NuxtRouteAnnouncer>
+    <template #default="{ message }">
+      <p>{{ message }} was loaded.</p>
+    </template>
+  </NuxtRouteAnnouncer>
 </template>
 ```
 
@@ -14096,17 +14113,17 @@ You can hook into the underlying announcer instance using [the `useRouteAnnounce
 
 ```vue
 <template>
-	<RouterView #default="{ Component }">
-		<!-- Optional, when using transitions -->
-		<Transition>
-			<!-- Optional, when using keep-alive -->
-			<KeepAlive>
-				<Suspense>
-					<component :is="Component" />
-				</Suspense>
-			</KeepAlive>
-		</Transition>
-	</RouterView>
+  <RouterView v-slot="{ Component }">
+    <!-- Optional, when using transitions -->
+    <Transition>
+      <!-- Optional, when using keep-alive -->
+      <KeepAlive>
+        <Suspense>
+          <component :is="Component" />
+        </Suspense>
+      </KeepAlive>
+    </Transition>
+  </RouterView>
 </template>
 ```
 
@@ -14124,23 +14141,23 @@ In a typical Vue application, a new page component is mounted **only after** the
 
 - `name`: tells `<RouterView>` to render the component with the corresponding name in the matched route record's components option.
 
-    - type: `string`
+  - type: `string`
 
 - `route`: route location that has all of its components resolved.
 
-    - type: `RouteLocationNormalized`
+  - type: `RouteLocationNormalized`
 
 - `pageKey`: control when the `NuxtPage` component is re-rendered.
 
-    - type: `string` or `function`
+  - type: `string` or `function`
 
 - `transition`: define global transitions for all pages rendered with the `NuxtPage` component.
 
-    - type: `boolean` or [`TransitionProps`](https://vuejs.org/api/built-in-components#transition){rel="nofollow"}
+  - type: `boolean` or [`TransitionProps`](https://vuejs.org/api/built-in-components#transition){rel="nofollow"}
 
 - `keepalive`: control state preservation of pages rendered with the `NuxtPage` component.
 
-    - type: `boolean` or [`KeepAliveProps`](https://vuejs.org/api/built-in-components#keepalive){rel="nofollow"}
+  - type: `boolean` or [`KeepAliveProps`](https://vuejs.org/api/built-in-components#keepalive){rel="nofollow"}
 
 ::tip
 Nuxt automatically resolves the `name` and `route` by scanning and rendering all Vue component files found in the `/pages` directory.
@@ -14152,7 +14169,7 @@ For example, if you pass a key that never changes, the `<NuxtPage>` component wi
 
 ```vue [app.vue]
 <template>
-	<NuxtPage page-key="static" />
+  <NuxtPage page-key="static" />
 </template>
 ```
 
@@ -14171,8 +14188,8 @@ Alternatively, `pageKey` can be passed as a `key` value via [`definePageMeta`](h
 ```vue [pages/my-page.vue]
 <script setup lang="ts">
 definePageMeta({
-	key: (route) => route.fullPath
-});
+  key: route => route.fullPath
+})
 </script>
 ```
 
@@ -14184,28 +14201,28 @@ definePageMeta({
 To get the `ref` of a page component, access it through `ref.value.pageRef`
 
 ```vue [app.vue]
+<template>
+  <NuxtPage ref="page" />
+</template>
+
 <script setup lang="ts">
-const page = ref();
+const page = ref()
 
 function logFoo() {
-	page.value.pageRef.foo();
+  page.value.pageRef.foo()
 }
 </script>
-
-<template>
-	<NuxtPage ref="page" />
-</template>
 ```
 
 ```vue [my-page.vue]
 <script setup lang="ts">
-const foo = () => {
-	console.log('foo method called');
-};
+function foo() {
+  console.log('foo method called')
+}
 
 defineExpose({
-	foo
-});
+  foo
+})
 </script>
 ```
 
@@ -14217,7 +14234,7 @@ For example, in the below example, the value of `foobar` will be passed to the `
 
 ```vue [app.vue]
 <template>
-	<NuxtPage :foobar="123" />
+  <NuxtPage :foobar="123" />
 </template>
 ```
 
@@ -14234,8 +14251,8 @@ If you have not defined the prop with `defineProps`, any props passed down to `N
 
 ```vue [pages/page.vue]
 <script setup lang="ts">
-const attrs = useAttrs();
-console.log(attrs.foobar); // Outputs: 123
+const attrs = useAttrs()
+console.log(attrs.foobar) // Outputs: 123
 </script>
 ```
 
@@ -14248,7 +14265,7 @@ You can use `<NuxtLayout />` component to activate the `default` layout on `app.
 
 ```vue [app.vue]
 <template>
-	<NuxtLayout> some page content </NuxtLayout>
+  <NuxtLayout> some page content </NuxtLayout>
 </template>
 ```
 
@@ -14259,20 +14276,20 @@ You can use `<NuxtLayout />` component to activate the `default` layout on `app.
 
 - `name`: Specify a layout name to be rendered, can be a string, reactive reference or a computed property. It **must** match the name of the corresponding layout file in the [`layouts/`](https://nuxt.com/docs/guide/directory-structure/layouts) directory.
 
-    - **type**: `string`
-    - **default**: `default`
+  - **type**: `string`
+  - **default**: `default`
 
 ```vue [pages/index.vue]
+<template>
+  <NuxtLayout :name="layout">
+    <NuxtPage />
+  </NuxtLayout>
+</template>
+
 <script setup lang="ts">
 // layouts/custom.vue
-const layout = 'custom';
+const layout = 'custom'
 </script>
-
-<template>
-	<NuxtLayout :name="layout">
-		<NuxtPage />
-	</NuxtLayout>
-</template>
 ```
 
 ::note
@@ -14281,9 +14298,9 @@ Please note the layout name is normalized to kebab-case, so if your layout file 
 
 ```vue [error.vue]
 <template>
-	<NuxtLayout name="error-layout">
-		<NuxtPage />
-	</NuxtLayout>
+  <NuxtLayout name="error-layout">
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 ```
 
@@ -14293,8 +14310,8 @@ Read more about dynamic layouts.
 
 - `fallback`: If an invalid layout is passed to the `name` prop, no layout will be rendered. Specify a `fallback` layout to be rendered in this scenario. It **must** match the name of the corresponding layout file in the [`layouts/`](https://nuxt.com/docs/guide/directory-structure/layouts) directory.
 
-    - **type**: `string`
-    - **default**: `null`
+  - **type**: `string`
+  - **default**: `null`
 
 ## Additional Props
 
@@ -14302,9 +14319,9 @@ Read more about dynamic layouts.
 
 ```vue [pages/some-page.vue]
 <template>
-	<div>
-		<NuxtLayout name="custom" title="I am a custom layout"> <-- ... --> </NuxtLayout>
-	</div>
+  <div>
+    <NuxtLayout name="custom" title="I am a custom layout"> <-- ... --> </NuxtLayout>
+  </div>
 </template>
 ```
 
@@ -14312,9 +14329,9 @@ In the above example, the value of `title` will be available using `$attrs.title
 
 ```vue [layouts/custom.vue]
 <script setup lang="ts">
-const layoutCustomProps = useAttrs();
+const layoutCustomProps = useAttrs()
 
-console.log(layoutCustomProps.title); // I am a custom layout
+console.log(layoutCustomProps.title) // I am a custom layout
 </script>
 ```
 
@@ -14326,21 +14343,21 @@ console.log(layoutCustomProps.title); // I am a custom layout
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<NuxtLayout name="custom">
-			<template #header> Some header template content. </template>
-		</NuxtLayout>
-	</div>
+  <div>
+    <NuxtLayout name="custom">
+      <template #header> Some header template content. </template>
+    </NuxtLayout>
+  </div>
 </template>
 ```
 
 ```vue [layouts/custom.vue]
 <template>
-	<div>
-		<!-- named slot -->
-		<slot name="header" />
-		<slot />
-	</div>
+  <div>
+    <!-- named slot -->
+    <slot name="header"></slot>
+    <slot></slot>
+  </div>
 </template>
 ```
 
@@ -14356,33 +14373,33 @@ To get the ref of a layout component, access it through `ref.value.layoutRef`.
 ::code-group
 
 ```vue [app.vue]
+<template>
+  <NuxtLayout ref="layout"> default layout </NuxtLayout>
+</template>
+
 <script setup lang="ts">
-const layout = ref();
+const layout = ref()
 
 function logFoo() {
-	layout.value.layoutRef.foo();
+  layout.value.layoutRef.foo()
 }
 </script>
-
-<template>
-	<NuxtLayout ref="layout"> default layout </NuxtLayout>
-</template>
 ```
 
 ```vue [layouts/default.vue]
-<script setup lang="ts">
-const foo = () => console.log('foo');
-defineExpose({
-	foo
-});
-</script>
-
 <template>
-	<div>
-		default layout
-		<slot />
-	</div>
+  <div>
+    default layout
+    <slot></slot>
+  </div>
 </template>
+
+<script setup lang="ts">
+const foo = () => console.log('foo')
+defineExpose({
+  foo
+})
+</script>
 ```
 
 ::
@@ -14404,7 +14421,7 @@ In this example, we use `<NuxtLink>` component to link to another page of the ap
 
 ```vue [pages/index.vue]
 <template>
-	<NuxtLink to="/about">About page</NuxtLink>
+  <NuxtLink to="/about">About page</NuxtLink>
 </template>
 ```
 
@@ -14423,7 +14440,7 @@ In this example, we pass the `id` param to link to the route `~/pages/posts/[id]
 
 ```vue [pages/index.vue]
 <template>
-	<NuxtLink :to="{ name: 'posts-id', params: { id: 123 } }"> Post 123 </NuxtLink>
+  <NuxtLink :to="{ name: 'posts-id', params: { id: 123 } }"> Post 123 </NuxtLink>
 </template>
 ```
 
@@ -14449,7 +14466,7 @@ For static files in the `/public` directory, such as PDFs or images, use the `ex
 
 ```vue [pages/index.vue]
 <template>
-	<NuxtLink to="/example-report.pdf" external> Download Report </NuxtLink>
+  <NuxtLink to="/example-report.pdf" external> Download Report </NuxtLink>
 </template>
 ```
 
@@ -14459,7 +14476,7 @@ When pointing to a different application on the same domain, using the `external
 
 ```vue [pages/index.vue]
 <template>
-	<NuxtLink to="/another-app" external> Go to Another App </NuxtLink>
+  <NuxtLink to="/another-app" external> Go to Another App </NuxtLink>
 </template>
 ```
 
@@ -14471,8 +14488,8 @@ In this example, we use `<NuxtLink>` component to link to a website.
 
 ```vue [app.vue]
 <template>
-	<NuxtLink to="https://nuxtjs.org"> Nuxt website </NuxtLink>
-	<!-- <a href="https://nuxtjs.org" rel="noopener noreferrer">...</a> -->
+  <NuxtLink to="https://nuxtjs.org"> Nuxt website </NuxtLink>
+  <!-- <a href="https://nuxtjs.org" rel="noopener noreferrer">...</a> -->
 </template>
 ```
 
@@ -14489,14 +14506,14 @@ When you need to overwrite this behavior you can use the `rel` or `noRel` props.
 
 ```vue [app.vue]
 <template>
-	<NuxtLink to="https://twitter.com/nuxt_js"> Nuxt Twitter </NuxtLink>
-	<!-- <a href="https://twitter.com/nuxt_js" rel="noopener noreferrer">...</a> -->
+  <NuxtLink to="https://twitter.com/nuxt_js"> Nuxt Twitter </NuxtLink>
+  <!-- <a href="https://twitter.com/nuxt_js" rel="noopener noreferrer">...</a> -->
 
-	<NuxtLink to="https://discord.nuxtjs.org" rel="noopener"> Nuxt Discord </NuxtLink>
-	<!-- <a href="https://discord.nuxtjs.org" rel="noopener">...</a> -->
+  <NuxtLink to="https://discord.nuxtjs.org" rel="noopener"> Nuxt Discord </NuxtLink>
+  <!-- <a href="https://discord.nuxtjs.org" rel="noopener">...</a> -->
 
-	<NuxtLink to="/about" target="_blank">About page</NuxtLink>
-	<!-- <a href="/about" target="_blank" rel="noopener noreferrer">...</a> -->
+  <NuxtLink to="/about" target="_blank">About page</NuxtLink>
+  <!-- <a href="/about" target="_blank" rel="noopener noreferrer">...</a> -->
 </template>
 ```
 
@@ -14504,8 +14521,8 @@ A `noRel` prop can be used to prevent the default `rel` attribute from being add
 
 ```vue [app.vue]
 <template>
-	<NuxtLink to="https://github.com/nuxt" no-rel> Nuxt GitHub </NuxtLink>
-	<!-- <a href="https://github.com/nuxt">...</a> -->
+  <NuxtLink to="https://github.com/nuxt" no-rel> Nuxt GitHub </NuxtLink>
+  <!-- <a href="https://github.com/nuxt">...</a> -->
 </template>
 ```
 
@@ -14518,8 +14535,13 @@ A `noRel` prop can be used to prevent the default `rel` attribute from being add
 Nuxt automatically includes smart prefetching. That means it detects when a link is visible (by default), either in the viewport or when scrolling and prefetches the JavaScript for those pages so that they are ready when the user clicks the link. Nuxt only loads the resources when the browser isn't busy and skips prefetching if your connection is offline or if you only have 2g connection.
 
 ```vue [pages/index.vue]
-<NuxtLink to="/about" no-prefetch>About page not pre-fetched</NuxtLink>
-<NuxtLink to="/about" :prefetch="false">About page not pre-fetched</NuxtLink>
+<NuxtLink to="/about" no-prefetch>
+About page not pre-fetched
+</NuxtLink>
+
+<NuxtLink to="/about" :prefetch="false">
+About page not pre-fetched
+</NuxtLink>
 ```
 
 ### Custom Prefetch Triggers
@@ -14528,9 +14550,9 @@ We now support custom prefetch triggers for `<NuxtLink>` after `v3.13.0`. You ca
 
 ```vue
 <template>
-	<NuxtLink prefetch-on="visibility"> This will prefetch when it becomes visible (default) </NuxtLink>
+  <NuxtLink prefetch-on="visibility"> This will prefetch when it becomes visible (default) </NuxtLink>
 
-	<NuxtLink prefetch-on="interaction"> This will prefetch when hovered or when it gains focus </NuxtLink>
+  <NuxtLink prefetch-on="interaction"> This will prefetch when hovered or when it gains focus </NuxtLink>
 </template>
 ```
 
@@ -14541,7 +14563,7 @@ You can also use an object to configure `prefetchOn`:
 
 ```vue
 <template>
-	<NuxtLink :prefetch-on="{ interaction: true }"> This will prefetch when hovered or when it gains focus </NuxtLink>
+  <NuxtLink :prefetch-on="{ interaction: true }"> This will prefetch when hovered or when it gains focus </NuxtLink>
 </template>
 ```
 
@@ -14549,7 +14571,7 @@ That you probably don't want both enabled!
 
 ```vue
 <template>
-	<NuxtLink :prefetch-on="{ visibility: true, interaction: true }"> This will prefetch when hovered/focus - or when it becomes visible </NuxtLink>
+  <NuxtLink :prefetch-on="{ visibility: true, interaction: true }"> This will prefetch when hovered/focus - or when it becomes visible </NuxtLink>
 </template>
 ```
 
@@ -14561,10 +14583,10 @@ To enable cross-origin prefetching, you can set the `crossOriginPrefetch` option
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		crossOriginPrefetch: true
-	}
-});
+  experimental: {
+    crossOriginPrefetch: true
+  }
+})
 ```
 
 ### Disable prefetch globally
@@ -14573,14 +14595,14 @@ It's also possible to enable/disable prefetching all links globally for your app
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		defaults: {
-			nuxtLink: {
-				prefetch: false
-			}
-		}
-	}
-});
+  experimental: {
+    defaults: {
+      nuxtLink: {
+        prefetch: false
+      }
+    }
+  }
+})
 ```
 
 ## Props
@@ -14651,9 +14673,9 @@ You can overwrite `<NuxtLink>` defaults by creating your own link component usin
 
 ```js [components/MyNuxtLink.ts]
 export default defineNuxtLink({
-	componentName: 'MyNuxtLink'
-	/* see signature below for more */
-});
+  componentName: 'MyNuxtLink'
+  /* see signature below for more */
+})
 ```
 
 You can then use `<MyNuxtLink />` component as usual with your new defaults.
@@ -14662,17 +14684,17 @@ You can then use `<MyNuxtLink />` component as usual with your new defaults.
 
 ```ts
 interface NuxtLinkOptions {
-	componentName?: string;
-	externalRelAttribute?: string;
-	activeClass?: string;
-	exactActiveClass?: string;
-	trailingSlash?: 'append' | 'remove';
-	prefetch?: boolean;
-	prefetchedClass?: string;
-	prefetchOn?: Partial<{
-		visibility: boolean;
-		interaction: boolean;
-	}>;
+  componentName?: string
+  externalRelAttribute?: string
+  activeClass?: string
+  exactActiveClass?: string
+  trailingSlash?: 'append' | 'remove'
+  prefetch?: boolean
+  prefetchedClass?: string
+  prefetchOn?: Partial<{
+    visibility: boolean
+    interaction: boolean
+  }>
 }
 function defineNuxtLink(options: NuxtLinkOptions): Component {}
 ```
@@ -14697,10 +14719,10 @@ Add `<NuxtLoadingIndicator/>` in your [`app.vue`](https://nuxt.com/docs/guide/di
 
 ```vue [app.vue]
 <template>
-	<NuxtLoadingIndicator />
-	<NuxtLayout>
-		<NuxtPage />
-	</NuxtLayout>
+  <NuxtLoadingIndicator />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>
 ```
 
@@ -14742,27 +14764,27 @@ The `<NuxtErrorBoundary>` uses Vue's [`onErrorCaptured`](https://vuejs.org/api/c
 ## Events
 
 - `@error`: Event emitted when the default slot of the component throws an error.
-    ```vue
-    <template>
-    	<NuxtErrorBoundary @error="logSomeError">
-    		<!-- ... -->
-    	</NuxtErrorBoundary>
-    </template>
-    ```
+  ```vue
+  <template>
+    <NuxtErrorBoundary @error="logSomeError">
+      <!-- ... -->
+    </NuxtErrorBoundary>
+  </template>
+  ```
 
 ## Slots
 
 - `#error`: Specify a fallback content to display in case of error.
-    ```vue
-    <template>
-    	<NuxtErrorBoundary>
-    		<!-- ... -->
-    		<template #error="{ error }">
-    			<p>An error occurred: {{ error }}</p>
-    		</template>
-    	</NuxtErrorBoundary>
-    </template>
-    ```
+  ```vue
+  <template>
+    <NuxtErrorBoundary>
+      <!-- ... -->
+      <template #error="{ error }">
+        <p>An error occurred: {{ error }}</p>
+      </template>
+    </NuxtErrorBoundary>
+  </template>
+  ```
 
 ::read-more{to="https://nuxt.com/docs/getting-started/error-handling"}
 ::
@@ -14773,7 +14795,7 @@ It includes links to the Nuxt documentation, source code, and social media accou
 
 ```vue [app.vue]
 <template>
-	<NuxtWelcome />
+  <NuxtWelcome />
 </template>
 ```
 
@@ -14809,26 +14831,26 @@ Server only components use `<NuxtIsland>` under the hood
 
 - `name` : Name of the component to render.
 
-    - **type**: `string`
-    - **required**
+  - **type**: `string`
+  - **required**
 
 - `lazy`: Make the component non-blocking.
 
-    - **type**: `boolean`
-    - **default**: `false`
+  - **type**: `boolean`
+  - **default**: `false`
 
 - `props`: Props to send to the component to render.
 
-    - **type**: `Record<string, any>`
+  - **type**: `Record<string, any>`
 
 - `source`: Remote source to call the island to render.
 
-    - **type**: `string`
+  - **type**: `string`
 
 - **dangerouslyLoadClientComponents**: Required to load components from a remote source.
 
-    - **type**: `boolean`
-    - **default**: `false`
+  - **type**: `boolean`
+  - **default**: `false`
 
 ::note
 Remote islands need `experimental.componentIslands` to be `'local+remote'` in your `nuxt.config`.
@@ -14852,20 +14874,20 @@ Some slots are reserved to `NuxtIsland` for special cases.
 ## Ref
 
 - `refresh()`
-    - **type**: `() => Promise<void>`
-    - **description**: force refetch the server component by refetching it.
+  - **type**: `() => Promise<void>`
+  - **description**: force refetch the server component by refetching it.
 
 ## Events
 
 - `error`
 
-    - **parameters**:
+  - **parameters**:
 
-        - **error**:
+    - **error**:
 
-            - **type**: `unknown`
+      - **type**: `unknown`
 
-    - **description**: emitted when when `NuxtIsland` fails to fetch the new island.
+  - **description**: emitted when when `NuxtIsland` fails to fetch the new island.
 
 # <NuxtImg>
 
@@ -14930,28 +14952,28 @@ It will only have an effect when it is called on the server, and it will not be 
 ## Example
 
 ```vue [app.vue] twoslash
+<template>
+  <div>Hi there</div>
+</template>
+
 <script setup lang="ts">
-declare const window: Window;
+declare const window: Window
 // ---cut---
 // onPrehydrate is guaranteed to run before Nuxt hydrates
 onPrehydrate(() => {
-	console.log(window);
-});
+  console.log(window)
+})
 
 // As long as it only has one root node, you can access the element
 onPrehydrate((el) => {
-	console.log(el.outerHTML);
-	// <div data-v-inspector="app.vue:15:3" data-prehydrate-id=":b3qlvSiBeH:"> Hi there </div>
-});
+  console.log(el.outerHTML)
+  // <div data-v-inspector="app.vue:15:3" data-prehydrate-id=":b3qlvSiBeH:"> Hi there </div>
+})
 
 // For _very_ advanced use cases (such as not having a single root node) you
 // can access/set `data-prehydrate-id` yourself
-const prehydrateId = onPrehydrate((el) => {});
+const prehydrateId = onPrehydrate((el) => {})
 </script>
-
-<template>
-	<div>Hi there</div>
-</template>
 ```
 
 # useAppConfig
@@ -14959,9 +14981,9 @@ const prehydrateId = onPrehydrate((el) => {});
 ## Usage
 
 ```ts
-const appConfig = useAppConfig();
+const appConfig = useAppConfig()
 
-console.log(appConfig);
+console.log(appConfig)
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/directory-structure/app-config"}
@@ -14979,7 +15001,7 @@ Within your pages, components, and plugins you can use useAsyncData to get acces
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const { data, status, error, refresh, clear } = await useAsyncData('mountains', () => $fetch('https://api.nuxtjs.dev/mountains'));
+const { data, status, error, refresh, clear } = await useAsyncData('mountains', () => $fetch('https://api.nuxtjs.dev/mountains'))
 </script>
 ```
 
@@ -14997,19 +15019,19 @@ The built-in `watch` option allows automatically rerunning the fetcher function 
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const page = ref(1);
+const page = ref(1)
 const { data: posts } = await useAsyncData(
-	'posts',
-	() =>
-		$fetch('https://fakeApi.com/posts', {
-			params: {
-				page: page.value
-			}
-		}),
-	{
-		watch: [page]
-	}
-);
+  'posts',
+  () =>
+    $fetch('https://fakeApi.com/posts', {
+      params: {
+        page: page.value
+      }
+    }),
+  {
+    watch: [page]
+  }
+)
 </script>
 ```
 
@@ -15019,11 +15041,11 @@ You can use a computed ref, plain ref or a getter function as the key, allowing 
 
 ```vue [pages/[id].vue]
 <script setup lang="ts">
-const route = useRoute();
-const userId = computed(() => `user-${route.params.id}`);
+const route = useRoute()
+const userId = computed(() => `user-${route.params.id}`)
 
 // When the route changes and userId updates, the data will be automatically refetched
-const { data: user } = useAsyncData(userId, () => fetchUserById(route.params.id));
+const { data: user } = useAsyncData(userId, () => fetchUserById(route.params.id))
 </script>
 ```
 
@@ -15042,30 +15064,30 @@ const { data: user } = useAsyncData(userId, () => fetchUserById(route.params.id)
 - `key`: a unique key to ensure that data fetching can be properly de-duplicated across requests. If you do not provide a key, then a key that is unique to the file name and line number of the instance of `useAsyncData` will be generated for you.
 - `handler`: an asynchronous function that must return a truthy value (for example, it should not be `undefined` or `null`) or the request may be duplicated on the client side.
 
-    :warning[The `handler` function should be **side-effect free** to ensure predictable behavior during SSR and CSR hydration. If you need to trigger side effects, use the [`callOnce`](https://nuxt.com/docs/api/utils/call-once) utility to do so.]
+  :warning[The `handler` function should be **side-effect free** to ensure predictable behavior during SSR and CSR hydration. If you need to trigger side effects, use the [`callOnce`](https://nuxt.com/docs/api/utils/call-once) utility to do so.]
 
 - `options`:
 
-    - `server`: whether to fetch the data on the server (defaults to `true`)
-    - `lazy`: whether to resolve the async function after loading the route, instead of blocking client-side navigation (defaults to `false`)
-    - `immediate`: when set to `false`, will prevent the request from firing immediately. (defaults to `true`)
-    - `default`: a factory function to set the default value of the `data`, before the async function resolves - useful with the `lazy: true` or `immediate: false` option
-    - `transform`: a function that can be used to alter `handler` function result after resolving
-    - `getCachedData`: Provide a function which returns cached data. A `null` or `undefined` return value will trigger a fetch. By default, this is:
+  - `server`: whether to fetch the data on the server (defaults to `true`)
+  - `lazy`: whether to resolve the async function after loading the route, instead of blocking client-side navigation (defaults to `false`)
+  - `immediate`: when set to `false`, will prevent the request from firing immediately. (defaults to `true`)
+  - `default`: a factory function to set the default value of the `data`, before the async function resolves - useful with the `lazy: true` or `immediate: false` option
+  - `transform`: a function that can be used to alter `handler` function result after resolving
+  - `getCachedData`: Provide a function which returns cached data. A `null` or `undefined` return value will trigger a fetch. By default, this is:
 
-        ```ts
-        const getDefaultCachedData = (key, nuxtApp, ctx) => (nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key]);
-        ```
+    ```ts
+    const getDefaultCachedData = (key, nuxtApp, ctx) => (nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key])
+    ```
 
-        Which only caches data when `experimental.payloadExtraction` of `nuxt.config` is enabled.
+    Which only caches data when `experimental.payloadExtraction` of `nuxt.config` is enabled.
 
-    - `pick`: only pick specified keys in this array from the `handler` function result
-    - `watch`: watch reactive sources to auto-refresh
-    - `deep`: return data in a deep ref object (it is `true` by default). It can be set to `false` to return data in a shallow ref object, which can improve performance if your data does not need to be deeply reactive.
-    - `dedupe`: avoid fetching same key more than once at a time (defaults to `cancel`). Possible options:
+  - `pick`: only pick specified keys in this array from the `handler` function result
+  - `watch`: watch reactive sources to auto-refresh
+  - `deep`: return data in a deep ref object (it is `true` by default). It can be set to `false` to return data in a shallow ref object, which can improve performance if your data does not need to be deeply reactive.
+  - `dedupe`: avoid fetching same key more than once at a time (defaults to `cancel`). Possible options:
 
-        - `cancel` - cancels existing requests when a new one is made
-        - `defer` - does not make new requests at all if there is a pending request
+    - `cancel` - cancels existing requests when a new one is made
+    - `defer` - does not make new requests at all if there is a pending request
 
 ::note
 Under the hood, `lazy: false` uses `<Suspense>` to block the loading of the route before the data has been fetched. Consider using `lazy: true` and implementing a loading state instead for a snappier user experience.
@@ -15108,12 +15130,12 @@ The following options **can differ** without triggering warnings:
 
 ```ts
 // ❌ This will trigger a development warning
-const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { deep: false });
-const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { deep: true });
+const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { deep: false })
+const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { deep: true })
 
 // ✅ This is allowed
-const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: true });
-const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: false });
+const { data: users1 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: true })
+const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { immediate: false })
 ```
 
 ## Return Values
@@ -15123,14 +15145,14 @@ const { data: users2 } = useAsyncData('users', () => $fetch('/api/users'), { imm
 - `error`: an error object if the data fetching failed.
 - `status`: a string indicating the status of the data request:
 
-    - `idle`: when the request has not started, such as:
+  - `idle`: when the request has not started, such as:
 
-        - when `execute` has not yet been called and `{ immediate: false }` is set
-        - when rendering HTML on the server and `{ server: false }` is set
+    - when `execute` has not yet been called and `{ immediate: false }` is set
+    - when rendering HTML on the server and `{ server: false }` is set
 
-    - `pending`: the request is in progress
-    - `success`: the request has completed successfully
-    - `error`: the request has failed
+  - `pending`: the request is in progress
+  - `success`: the request has completed successfully
+  - `error`: the request has failed
 
 - `clear`: a function which will set `data` to `undefined`, set `error` to `null`, set `status` to `'idle'`, and mark any currently pending requests as cancelled.
 
@@ -15143,45 +15165,45 @@ If you have not fetched data on the server (for example, with `server: false`), 
 ## Type
 
 ```ts [Signature]
-function useAsyncData<DataT, DataE>(handler: (nuxtApp?: NuxtApp) => Promise<DataT>, options?: AsyncDataOptions<DataT>): AsyncData<DataT, DataE>;
+function useAsyncData<DataT, DataE>(handler: (nuxtApp?: NuxtApp) => Promise<DataT>, options?: AsyncDataOptions<DataT>): AsyncData<DataT, DataE>
 function useAsyncData<DataT, DataE>(
-	key: string | Ref<string> | ComputedRef<string>,
-	handler: (nuxtApp?: NuxtApp) => Promise<DataT>,
-	options?: AsyncDataOptions<DataT>
-): Promise<AsyncData<DataT, DataE>>;
+  key: string | Ref<string> | ComputedRef<string>,
+  handler: (nuxtApp?: NuxtApp) => Promise<DataT>,
+  options?: AsyncDataOptions<DataT>
+): Promise<AsyncData<DataT, DataE>>
 
-type AsyncDataOptions<DataT> = {
-	server?: boolean;
-	lazy?: boolean;
-	immediate?: boolean;
-	deep?: boolean;
-	dedupe?: 'cancel' | 'defer';
-	default?: () => DataT | Ref<DataT> | null;
-	transform?: (input: DataT) => DataT | Promise<DataT>;
-	pick?: string[];
-	watch?: WatchSource[] | false;
-	getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => DataT | undefined;
-};
-
-type AsyncDataRequestContext = {
-	/** The reason for this data request */
-	cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch';
-};
-
-type AsyncData<DataT, ErrorT> = {
-	data: Ref<DataT | null>;
-	refresh: (opts?: AsyncDataExecuteOptions) => Promise<void>;
-	execute: (opts?: AsyncDataExecuteOptions) => Promise<void>;
-	clear: () => void;
-	error: Ref<ErrorT | null>;
-	status: Ref<AsyncDataRequestStatus>;
-};
-
-interface AsyncDataExecuteOptions {
-	dedupe?: 'cancel' | 'defer';
+interface AsyncDataOptions<DataT> {
+  server?: boolean
+  lazy?: boolean
+  immediate?: boolean
+  deep?: boolean
+  dedupe?: 'cancel' | 'defer'
+  default?: () => DataT | Ref<DataT> | null
+  transform?: (input: DataT) => DataT | Promise<DataT>
+  pick?: string[]
+  watch?: WatchSource[] | false
+  getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => DataT | undefined
 }
 
-type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error';
+interface AsyncDataRequestContext {
+  /** The reason for this data request */
+  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
+}
+
+interface AsyncData<DataT, ErrorT> {
+  data: Ref<DataT | null>
+  refresh: (opts?: AsyncDataExecuteOptions) => Promise<void>
+  execute: (opts?: AsyncDataExecuteOptions) => Promise<void>
+  clear: () => void
+  error: Ref<ErrorT | null>
+  status: Ref<AsyncDataRequestStatus>
+}
+
+interface AsyncDataExecuteOptions {
+  dedupe?: 'cancel' | 'defer'
+}
+
+type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error'
 ```
 
 ::read-more{to="https://nuxt.com/docs/getting-started/data-fetching"}
@@ -15192,7 +15214,7 @@ type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error';
 Within your pages, components and plugins you can use `useCookie`, an SSR-friendly composable to read and write cookies.
 
 ```ts
-const cookie = useCookie(name, options);
+const cookie = useCookie(name, options)
 ```
 
 ::note
@@ -15208,20 +15230,20 @@ const cookie = useCookie(name, options);
 The example below creates a cookie called `counter`. If the cookie doesn't exist, it is initially set to a random value. Whenever we update the `counter` variable, the cookie will be updated accordingly.
 
 ```vue [app.vue]
-<script setup lang="ts">
-const counter = useCookie('counter');
-
-counter.value = counter.value || Math.round(Math.random() * 1000);
-</script>
-
 <template>
-	<div>
-		<h1>Counter: {{ counter || '-' }}</h1>
-		<button @click="counter = null">reset</button>
-		<button @click="counter--">-</button>
-		<button @click="counter++">+</button>
-	</div>
+  <div>
+    <h1>Counter: {{ counter || '-' }}</h1>
+    <button @click="counter = null">reset</button>
+    <button @click="counter--">-</button>
+    <button @click="counter++">+</button>
+  </div>
 </template>
+
+<script setup lang="ts">
+const counter = useCookie('counter')
+
+counter.value = counter.value || Math.round(Math.random() * 1000)
+</script>
 ```
 
 ::link-example{to="https://nuxt.com/docs/examples/advanced/use-cookie"}
@@ -15341,52 +15363,52 @@ Refresh `useCookie` values manually when a cookie has changed with [`refreshCook
 **Example 1:**
 
 ```vue
+<template>
+  <div>User score: {{ user?.score }}</div>
+</template>
+
 <script setup lang="ts">
 const user = useCookie('userInfo', {
-	default: () => ({ score: -1 }),
-	watch: false
-});
+  default: () => ({ score: -1 }),
+  watch: false
+})
 
 if (user.value && user.value !== null) {
-	user.value.score++; // userInfo cookie not update with this change
+  user.value.score++ // userInfo cookie not update with this change
 }
 </script>
-
-<template>
-	<div>User score: {{ user?.score }}</div>
-</template>
 ```
 
 **Example 2:**
 
 ```vue
+<template>
+  <div>
+    <h1>List</h1>
+    <pre>{{ list }}</pre>
+    <button @click="add">Add</button>
+    <button @click="save">Save</button>
+  </div>
+</template>
+
 <script setup lang="ts">
 const list = useCookie('list', {
-	default: () => [],
-	watch: 'shallow'
-});
+  default: () => [],
+  watch: 'shallow'
+})
 
 function add() {
-	list.value?.push(Math.round(Math.random() * 1000));
-	// list cookie not update with this change
+  list.value?.push(Math.round(Math.random() * 1000))
+  // list cookie not update with this change
 }
 
 function save() {
-	if (list.value && list.value !== null) {
-		list.value = [...list.value];
-		// list cookie update with this change
-	}
+  if (list.value && list.value !== null) {
+    list.value = [...list.value]
+    // list cookie update with this change
+  }
 }
 </script>
-
-<template>
-	<div>
-		<h1>List</h1>
-		<pre>{{ list }}</pre>
-		<button @click="add">Add</button>
-		<button @click="save">Save</button>
-	</div>
-</template>
 ```
 
 ## Cookies in API Routes
@@ -15395,15 +15417,15 @@ You can use `getCookie` and `setCookie` from [`h3`](https://github.com/unjs/h3){
 
 ```ts [server/api/counter.ts]
 export default defineEventHandler((event) => {
-	// Read counter cookie
-	let counter = getCookie(event, 'counter') || 0;
+  // Read counter cookie
+  let counter = getCookie(event, 'counter') || 0
 
-	// Increase counter cookie by 1
-	setCookie(event, 'counter', ++counter);
+  // Increase counter cookie by 1
+  setCookie(event, 'counter', ++counter)
 
-	// Send JSON response
-	return { counter };
-});
+  // Send JSON response
+  return { counter }
+})
 ```
 
 ::link-example{to="https://nuxt.com/docs/examples/advanced/use-cookie"}
@@ -15414,7 +15436,7 @@ export default defineEventHandler((event) => {
 The composable returns the global Nuxt error that is being handled and it is available on both client and server.
 
 ```ts
-const error = useError();
+const error = useError()
 ```
 
 `useError` sets an error in the state and creates a reactive as well as SSR-friendly global Nuxt error across components.
@@ -15449,8 +15471,8 @@ It automatically generates a key based on URL and fetch options, provides type h
 ```vue [pages/modules.vue]
 <script setup lang="ts">
 const { data, status, error, refresh, clear } = await useFetch('/api/modules', {
-	pick: ['title']
-});
+  pick: ['title']
+})
 </script>
 ```
 
@@ -15465,10 +15487,10 @@ If you're using a custom useFetch wrapper, do not await it in the composable, as
 Using the `query` option, you can add search parameters to your query. This option is extended from [unjs/ofetch](https://github.com/unjs/ofetch){rel="nofollow"} and is using [unjs/ufo](https://github.com/unjs/ufo){rel="nofollow"} to create the URL. Objects are automatically stringified.
 
 ```ts
-const param1 = ref('value1');
+const param1 = ref('value1')
 const { data, status, error, refresh } = await useFetch('/api/modules', {
-	query: { param1, param2: 'value2' }
-});
+  query: { param1, param2: 'value2' }
+})
 ```
 
 The above example results in `https://api.nuxt.com/modules?param1=value1&param2=value2`.
@@ -15477,22 +15499,22 @@ You can also use [interceptors](https://github.com/unjs/ofetch#%EF%B8%8F-interce
 
 ```ts
 const { data, status, error, refresh, clear } = await useFetch('/api/auth/login', {
-	onRequest({ request, options }) {
-		// Set the request headers
-		// note that this relies on ofetch >= 1.4.0 - you may need to refresh your lockfile
-		options.headers.set('Authorization', '...');
-	},
-	onRequestError({ request, options, error }) {
-		// Handle the request errors
-	},
-	onResponse({ request, response, options }) {
-		// Process the response data
-		localStorage.setItem('token', response._data.token);
-	},
-	onResponseError({ request, response, options }) {
-		// Handle the response errors
-	}
-});
+  onRequest({ request, options }) {
+    // Set the request headers
+    // note that this relies on ofetch >= 1.4.0 - you may need to refresh your lockfile
+    options.headers.set('Authorization', '...')
+  },
+  onRequestError({ request, options, error }) {
+    // Handle the request errors
+  },
+  onResponse({ request, response, options }) {
+    // Process the response data
+    localStorage.setItem('token', response._data.token)
+  },
+  onResponseError({ request, response, options }) {
+    // Handle the response errors
+  }
+})
 ```
 
 ### Reactive Keys and Shared State
@@ -15501,11 +15523,11 @@ You can use a computed ref or a plain ref as the URL, allowing for dynamic data 
 
 ```vue [pages/[id].vue]
 <script setup lang="ts">
-const route = useRoute();
-const id = computed(() => route.params.id);
+const route = useRoute()
+const id = computed(() => route.params.id)
 
 // When the route changes and id updates, the data will be automatically refetched
-const { data: post } = await useFetch(() => `/api/posts/${id.value}`);
+const { data: post } = await useFetch(() => `/api/posts/${id.value}`)
 </script>
 ```
 
@@ -15545,15 +15567,15 @@ video-id: njsGVmcWviY
 - `URL`: The URL to fetch.
 - `Options` (extends [unjs/ofetch](https://github.com/unjs/ofetch){rel="nofollow"} options & [AsyncDataOptions](https://nuxt.com/docs/api/composables/use-async-data#params)):
 
-    - `method`: Request method.
-    - `query`: Adds query search params to URL using [ufo](https://github.com/unjs/ufo){rel="nofollow"}
-    - `params`: Alias for `query`
-    - `body`: Request body - automatically stringified (if an object is passed).
-    - `headers`: Request headers.
-    - `baseURL`: Base URL for the request.
-    - `timeout`: Milliseconds to automatically abort request
-    - `cache`: Handles cache control according to [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch#cache){rel="nofollow"}
-        - You can pass boolean to disable the cache or you can pass one of the following values: `default`, `no-store`, `reload`, `no-cache`, `force-cache`, and `only-if-cached`.
+  - `method`: Request method.
+  - `query`: Adds query search params to URL using [ufo](https://github.com/unjs/ufo){rel="nofollow"}
+  - `params`: Alias for `query`
+  - `body`: Request body - automatically stringified (if an object is passed).
+  - `headers`: Request headers.
+  - `baseURL`: Base URL for the request.
+  - `timeout`: Milliseconds to automatically abort request
+  - `cache`: Handles cache control according to [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/fetch#cache){rel="nofollow"}
+    - You can pass boolean to disable the cache or you can pass one of the following values: `default`, `no-store`, `reload`, `no-cache`, `force-cache`, and `only-if-cached`.
 
 ::note
 All fetch options can be given a `computed` or `ref` value. These will be watched and new requests made automatically with any new values if they are updated.
@@ -15561,27 +15583,27 @@ All fetch options can be given a `computed` or `ref` value. These will be watche
 
 - `Options` (from [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data)):
 
-    - `key`: a unique key to ensure that data fetching can be properly de-duplicated across requests, if not provided, it will be automatically generated based on URL and fetch options
-    - `server`: whether to fetch the data on the server (defaults to `true`)
-    - `lazy`: whether to resolve the async function after loading the route, instead of blocking client-side navigation (defaults to `false`)
-    - `immediate`: when set to `false`, will prevent the request from firing immediately. (defaults to `true`)
-    - `default`: a factory function to set the default value of the `data`, before the async function resolves - useful with the `lazy: true` or `immediate: false` option
-    - `transform`: a function that can be used to alter `handler` function result after resolving
-    - `getCachedData`: Provide a function which returns cached data. A `null` or `undefined` return value will trigger a fetch. By default, this is:
+  - `key`: a unique key to ensure that data fetching can be properly de-duplicated across requests, if not provided, it will be automatically generated based on URL and fetch options
+  - `server`: whether to fetch the data on the server (defaults to `true`)
+  - `lazy`: whether to resolve the async function after loading the route, instead of blocking client-side navigation (defaults to `false`)
+  - `immediate`: when set to `false`, will prevent the request from firing immediately. (defaults to `true`)
+  - `default`: a factory function to set the default value of the `data`, before the async function resolves - useful with the `lazy: true` or `immediate: false` option
+  - `transform`: a function that can be used to alter `handler` function result after resolving
+  - `getCachedData`: Provide a function which returns cached data. A `null` or `undefined` return value will trigger a fetch. By default, this is:
 
-        ```ts
-        const getDefaultCachedData = (key, nuxtApp, ctx) => (nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key]);
-        ```
+    ```ts
+    const getDefaultCachedData = (key, nuxtApp, ctx) => (nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key])
+    ```
 
-        Which only caches data when `experimental.payloadExtraction` of `nuxt.config` is enabled.
+    Which only caches data when `experimental.payloadExtraction` of `nuxt.config` is enabled.
 
-    - `pick`: only pick specified keys in this array from the `handler` function result
-    - `watch`: watch an array of reactive sources and auto-refresh the fetch result when they change. Fetch options and URL are watched by default. You can completely ignore reactive sources by using `watch: false`. Together with `immediate: false`, this allows for a fully-manual `useFetch`. (You can [see an example here](https://nuxt.com/docs/getting-started/data-fetching#watch) of using `watch`.)
-    - `deep`: return data in a deep ref object (it is `true` by default). It can be set to `false` to return data in a shallow ref object, which can improve performance if your data does not need to be deeply reactive.
-    - `dedupe`: avoid fetching same key more than once at a time (defaults to `cancel`). Possible options:
+  - `pick`: only pick specified keys in this array from the `handler` function result
+  - `watch`: watch an array of reactive sources and auto-refresh the fetch result when they change. Fetch options and URL are watched by default. You can completely ignore reactive sources by using `watch: false`. Together with `immediate: false`, this allows for a fully-manual `useFetch`. (You can [see an example here](https://nuxt.com/docs/getting-started/data-fetching#watch) of using `watch`.)
+  - `deep`: return data in a deep ref object (it is `true` by default). It can be set to `false` to return data in a shallow ref object, which can improve performance if your data does not need to be deeply reactive.
+  - `dedupe`: avoid fetching same key more than once at a time (defaults to `cancel`). Possible options:
 
-        - `cancel` - cancels existing requests when a new one is made
-        - `defer` - does not make new requests at all if there is a pending request
+    - `cancel` - cancels existing requests when a new one is made
+    - `defer` - does not make new requests at all if there is a pending request
 
 ::note
 If you provide a function or ref as the `url` parameter, or if you provide functions as arguments to the `options` parameter, then the `useFetch` call will not match other `useFetch` calls elsewhere in your codebase, even if the options seem to be identical. If you wish to force a match, you may provide your own key in `options`.
@@ -15608,14 +15630,14 @@ video-id: aQPR0xn-MMk
 - `error`: an error object if the data fetching failed.
 - `status`: a string indicating the status of the data request:
 
-    - `idle`: when the request has not started, such as:
+  - `idle`: when the request has not started, such as:
 
-        - when `execute` has not yet been called and `{ immediate: false }` is set
-        - when rendering HTML on the server and `{ server: false }` is set
+    - when `execute` has not yet been called and `{ immediate: false }` is set
+    - when rendering HTML on the server and `{ server: false }` is set
 
-    - `pending`: the request is in progress
-    - `success`: the request has completed successfully
-    - `error`: the request has failed
+  - `pending`: the request is in progress
+  - `success`: the request has completed successfully
+  - `error`: the request has failed
 
 - `clear`: a function which will set `data` to `undefined`, set `error` to `null`, set `status` to `'idle'`, and mark any currently pending requests as cancelled.
 
@@ -15629,49 +15651,49 @@ If you have not fetched data on the server (for example, with `server: false`), 
 
 ```ts [Signature]
 function useFetch<DataT, ErrorT>(
-	url: string | Request | Ref<string | Request> | (() => string | Request),
-	options?: UseFetchOptions<DataT>
-): Promise<AsyncData<DataT, ErrorT>>;
+  url: string | Request | Ref<string | Request> | (() => string | Request),
+  options?: UseFetchOptions<DataT>
+): Promise<AsyncData<DataT, ErrorT>>
 
-type UseFetchOptions<DataT> = {
-	key?: string;
-	method?: string;
-	query?: SearchParams;
-	params?: SearchParams;
-	body?: RequestInit['body'] | Record<string, any>;
-	headers?: Record<string, string> | [key: string, value: string][] | Headers;
-	baseURL?: string;
-	server?: boolean;
-	lazy?: boolean;
-	immediate?: boolean;
-	getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => DataT | undefined;
-	deep?: boolean;
-	dedupe?: 'cancel' | 'defer';
-	default?: () => DataT;
-	transform?: (input: DataT) => DataT | Promise<DataT>;
-	pick?: string[];
-	watch?: WatchSource[] | false;
-};
-
-type AsyncDataRequestContext = {
-	/** The reason for this data request */
-	cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch';
-};
-
-type AsyncData<DataT, ErrorT> = {
-	data: Ref<DataT | null>;
-	refresh: (opts?: AsyncDataExecuteOptions) => Promise<void>;
-	execute: (opts?: AsyncDataExecuteOptions) => Promise<void>;
-	clear: () => void;
-	error: Ref<ErrorT | null>;
-	status: Ref<AsyncDataRequestStatus>;
-};
-
-interface AsyncDataExecuteOptions {
-	dedupe?: 'cancel' | 'defer';
+interface UseFetchOptions<DataT> {
+  key?: string
+  method?: string
+  query?: SearchParams
+  params?: SearchParams
+  body?: RequestInit['body'] | Record<string, any>
+  headers?: Record<string, string> | [key: string, value: string][] | Headers
+  baseURL?: string
+  server?: boolean
+  lazy?: boolean
+  immediate?: boolean
+  getCachedData?: (key: string, nuxtApp: NuxtApp, ctx: AsyncDataRequestContext) => DataT | undefined
+  deep?: boolean
+  dedupe?: 'cancel' | 'defer'
+  default?: () => DataT
+  transform?: (input: DataT) => DataT | Promise<DataT>
+  pick?: string[]
+  watch?: WatchSource[] | false
 }
 
-type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error';
+interface AsyncDataRequestContext {
+  /** The reason for this data request */
+  cause: 'initial' | 'refresh:manual' | 'refresh:hook' | 'watch'
+}
+
+interface AsyncData<DataT, ErrorT> {
+  data: Ref<DataT | null>
+  refresh: (opts?: AsyncDataExecuteOptions) => Promise<void>
+  execute: (opts?: AsyncDataExecuteOptions) => Promise<void>
+  clear: () => void
+  error: Ref<ErrorT | null>
+  status: Ref<AsyncDataRequestStatus>
+}
+
+interface AsyncDataExecuteOptions {
+  dedupe?: 'cancel' | 'defer'
+}
+
+type AsyncDataRequestStatus = 'idle' | 'pending' | 'success' | 'error'
 ```
 
 # useHead
@@ -15691,16 +15713,16 @@ Below are the non-reactive types for [`useHead`](https://nuxt.com/docs/api/compo
 
 ```ts
 interface MetaObject {
-	title?: string;
-	titleTemplate?: string | ((title?: string) => string);
-	base?: Base;
-	link?: Link[];
-	meta?: Meta[];
-	style?: Style[];
-	script?: Script[];
-	noscript?: Noscript[];
-	htmlAttrs?: HtmlAttributes;
-	bodyAttrs?: BodyAttributes;
+  title?: string
+  titleTemplate?: string | ((title?: string) => string)
+  base?: Base
+  link?: Link[]
+  meta?: Meta[]
+  style?: Style[]
+  script?: Script[]
+  noscript?: Noscript[]
+  htmlAttrs?: HtmlAttributes
+  bodyAttrs?: BodyAttributes
 }
 ```
 
@@ -15720,39 +15742,39 @@ An object accepting the following head metadata:
 
 - `meta`: Each element in the array is mapped to a newly-created `<meta>` tag, where object properties are mapped to the corresponding attributes.
 
-    - **Type**: `Array<Record<string, any>>`
+  - **Type**: `Array<Record<string, any>>`
 
 - `link`: Each element in the array is mapped to a newly-created `<link>` tag, where object properties are mapped to the corresponding attributes.
 
-    - **Type**: `Array<Record<string, any>>`
+  - **Type**: `Array<Record<string, any>>`
 
 - `style`: Each element in the array is mapped to a newly-created `<style>` tag, where object properties are mapped to the corresponding attributes.
 
-    - **Type**: `Array<Record<string, any>>`
+  - **Type**: `Array<Record<string, any>>`
 
 - `script`: Each element in the array is mapped to a newly-created `<script>` tag, where object properties are mapped to the corresponding attributes.
 
-    - **Type**: `Array<Record<string, any>>`
+  - **Type**: `Array<Record<string, any>>`
 
 - `noscript`: Each element in the array is mapped to a newly-created `<noscript>` tag, where object properties are mapped to the corresponding attributes.
 
-    - **Type**: `Array<Record<string, any>>`
+  - **Type**: `Array<Record<string, any>>`
 
 - `titleTemplate`: Configures dynamic template to customize the page title on an individual page.
 
-    - **Type**: `string` | `((title: string) => string)`
+  - **Type**: `string` | `((title: string) => string)`
 
 - `title`: Sets static page title on an individual page.
 
-    - **Type**: `string`
+  - **Type**: `string`
 
 - `bodyAttrs`: Sets attributes of the `<body>` tag. Each object property is mapped to the corresponding attribute.
 
-    - **Type**: `Record<string, any>`
+  - **Type**: `Record<string, any>`
 
 - `htmlAttrs`: Sets attributes of the `<html>` tag. Each object property is mapped to the corresponding attribute.
 
-    - **Type**: `Record<string, any>`
+  - **Type**: `Record<string, any>`
 
 # useHeadSafe
 
@@ -15764,9 +15786,9 @@ You can pass all the same values as [`useHead`](https://nuxt.com/docs/api/compos
 
 ```ts
 useHeadSafe({
-	script: [{ id: 'xss-script', innerHTML: 'alert("xss")' }],
-	meta: [{ 'http-equiv': 'refresh', content: '0;javascript:alert(1)' }]
-});
+  script: [{ id: 'xss-script', innerHTML: 'alert("xss")' }],
+  meta: [{ 'http-equiv': 'refresh', 'content': '0;javascript:alert(1)' }]
+})
 // Will safely generate
 // <script id="xss-script"></script>
 // <meta content="0;javascript:alert(1)">
@@ -15792,28 +15814,28 @@ The list of allowed values is:
 
 ```ts
 const WhitelistAttributes = {
-	htmlAttrs: ['class', 'style', 'lang', 'dir'],
-	bodyAttrs: ['class', 'style'],
-	meta: ['name', 'property', 'charset', 'content', 'media'],
-	noscript: ['textContent'],
-	style: ['media', 'textContent', 'nonce', 'title', 'blocking'],
-	script: ['type', 'textContent', 'nonce', 'blocking'],
-	link: [
-		'color',
-		'crossorigin',
-		'fetchpriority',
-		'href',
-		'hreflang',
-		'imagesrcset',
-		'imagesizes',
-		'integrity',
-		'media',
-		'referrerpolicy',
-		'rel',
-		'sizes',
-		'type'
-	]
-};
+  htmlAttrs: ['class', 'style', 'lang', 'dir'],
+  bodyAttrs: ['class', 'style'],
+  meta: ['name', 'property', 'charset', 'content', 'media'],
+  noscript: ['textContent'],
+  style: ['media', 'textContent', 'nonce', 'title', 'blocking'],
+  script: ['type', 'textContent', 'nonce', 'blocking'],
+  link: [
+    'color',
+    'crossorigin',
+    'fetchpriority',
+    'href',
+    'hreflang',
+    'imagesrcset',
+    'imagesizes',
+    'integrity',
+    'media',
+    'referrerpolicy',
+    'rel',
+    'sizes',
+    'type'
+  ]
+}
 ```
 
 See [@unhead/vue](https://github.com/unjs/unhead/blob/main/packages/vue/src/types/safeSchema.ts){rel="nofollow"} for more detailed types.
@@ -15838,32 +15860,32 @@ The data returned from the `get` function on the server is stored in `nuxtApp.pa
 
 ```ts [Without useHydration]
 export default defineNuxtPlugin((nuxtApp) => {
-	const myStore = new MyStore();
+  const myStore = new MyStore()
 
-	if (import.meta.server) {
-		nuxt.hooks.hook('app:rendered', () => {
-			nuxtApp.payload.myStoreState = myStore.getState();
-		});
-	}
+  if (import.meta.server) {
+    nuxt.hooks.hook('app:rendered', () => {
+      nuxtApp.payload.myStoreState = myStore.getState()
+    })
+  }
 
-	if (import.meta.client) {
-		nuxt.hooks.hook('app:created', () => {
-			myStore.setState(nuxtApp.payload.myStoreState);
-		});
-	}
-});
+  if (import.meta.client) {
+    nuxt.hooks.hook('app:created', () => {
+      myStore.setState(nuxtApp.payload.myStoreState)
+    })
+  }
+})
 ```
 
 ```ts [With useHydration]
 export default defineNuxtPlugin((nuxtApp) => {
-	const myStore = new MyStore();
+  const myStore = new MyStore()
 
-	useHydration(
-		'myStoreState',
-		() => myStore.getState(),
-		(data) => myStore.setState(data)
-	);
-});
+  useHydration(
+    'myStoreState',
+    () => myStore.getState(),
+    data => myStore.setState(data)
+  )
+})
 ```
 
 ::
@@ -15896,23 +15918,23 @@ By default, [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-dat
 ## Example
 
 ```vue [pages/index.vue]
+<template>
+  <div>
+    {{ status === 'pending' ? 'Loading' : count }}
+  </div>
+</template>
+
 <script setup lang="ts">
 /* Navigation will occur before fetching is complete.
   Handle 'pending' and 'error' states directly within your component's template
 */
-const { status, data: count } = await useLazyAsyncData('count', () => $fetch('/api/count'));
+const { status, data: count } = await useLazyAsyncData('count', () => $fetch('/api/count'))
 
 watch(count, (newCount) => {
-	// Because count might start out null, you won't have access
-	// to its contents immediately, but you can watch it.
-});
+  // Because count might start out null, you won't have access
+  // to its contents immediately, but you can watch it.
+})
 </script>
-
-<template>
-	<div>
-		{{ status === 'pending' ? 'Loading' : count }}
-	</div>
-</template>
 ```
 
 ::warning
@@ -15942,25 +15964,25 @@ Awaiting `useLazyFetch` in this mode only ensures the call is initialized. On cl
 ## Example
 
 ```vue [pages/index.vue]
+<template>
+  <div v-if="status === 'pending'">Loading ...</div>
+  <div v-else>
+    <div v-for="post in posts">
+      <!-- do something -->
+    </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 /* Navigation will occur before fetching is complete.
  * Handle 'pending' and 'error' states directly within your component's template
  */
-const { status, data: posts } = await useLazyFetch('/api/posts');
+const { status, data: posts } = await useLazyFetch('/api/posts')
 watch(posts, (newPosts) => {
-	// Because posts might start out null, you won't have access
-	// to its contents immediately, but you can watch it.
-});
+  // Because posts might start out null, you won't have access
+  // to its contents immediately, but you can watch it.
+})
 </script>
-
-<template>
-	<div v-if="status === 'pending'">Loading ...</div>
-	<div v-else>
-		<div v-for="post in posts">
-			<!-- do something -->
-		</div>
-	</div>
-</template>
 ```
 
 ::note
@@ -16023,20 +16045,20 @@ Used by `finish()`. Clear all timers and intervals used by the composable.
 ```vue
 <script setup lang="ts">
 const { progress, isLoading, start, finish, clear } = useLoadingIndicator({
-	duration: 2000,
-	throttle: 200,
-	// This is how progress is calculated by default
-	estimatedProgress: (duration, elapsed) => (2 / Math.PI) * 100 * Math.atan(((elapsed / duration) * 100) / 50)
-});
+  duration: 2000,
+  throttle: 200,
+  // This is how progress is calculated by default
+  estimatedProgress: (duration, elapsed) => (2 / Math.PI) * 100 * Math.atan(((elapsed / duration) * 100) / 50)
+})
 </script>
 ```
 
 ```vue
 <script setup lang="ts">
-const { start, set } = useLoadingIndicator();
+const { start, set } = useLoadingIndicator()
 // same as set(0, { force: true })
 // set the progress to 0, and show loading immediately
-start({ force: true });
+start({ force: true })
 </script>
 ```
 
@@ -16046,7 +16068,7 @@ start({ force: true });
 
 ```vue [app.vue]
 <script setup lang="ts">
-const nuxtApp = useNuxtApp();
+const nuxtApp = useNuxtApp()
 </script>
 ```
 
@@ -16061,11 +16083,11 @@ If runtime context is unavailable in your scope, `useNuxtApp` will throw an exce
 `provide` function accepts `name` and `value` parameters.
 
 ```js
-const nuxtApp = useNuxtApp();
-nuxtApp.provide('hello', (name) => `Hello ${name}!`);
+const nuxtApp = useNuxtApp()
+nuxtApp.provide('hello', name => `Hello ${name}!`)
 
 // Prints "Hello name!"
-console.log(nuxtApp.$hello('name'));
+console.log(nuxtApp.$hello('name'))
 ```
 
 As you can see in the example above, `$hello` has become the new and custom part of `nuxtApp` context and it is available in all places where `nuxtApp` is accessible.
@@ -16080,16 +16102,16 @@ See [Runtime Hooks](https://nuxt.com/docs/api/advanced/hooks#app-hooks-runtime) 
 
 ```ts [plugins/test.ts]
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.hook('page:start', () => {
-		/* your code goes here */
-	});
-	nuxtApp.hook('vue:error', (..._args) => {
-		console.log('vue:error');
-		// if (import.meta.client) {
-		//   console.log(..._args)
-		// }
-	});
-});
+  nuxtApp.hook('page:start', () => {
+    /* your code goes here */
+  })
+  nuxtApp.hook('vue:error', (..._args) => {
+    console.log('vue:error')
+    // if (import.meta.client) {
+    //   console.log(..._args)
+    // }
+  })
+})
 ```
 
 ### `callHook(name, ...args)`
@@ -16097,7 +16119,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 `callHook` returns a promise when called with any of the existing hooks.
 
 ```ts
-await nuxtApp.callHook('my-plugin:init');
+await nuxtApp.callHook('my-plugin:init')
 ```
 
 ## Properties
@@ -16140,56 +16162,56 @@ Nuxt exposes the following properties through `ssrContext`:
 - `serverRendered` (boolean) - Indicates if response is server-side-rendered.
 - `data` (object) - When you fetch the data from an API endpoint using either [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) or [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) , resulting payload can be accessed from the `payload.data`. This data is cached and helps you prevent fetching the same data in case an identical request is made more than once.
   :code-group[```vue \[app.vue\]
-    <script setup lang="ts">
-    const { data } = await useAsyncData('count', () => $fetch('/api/count'))
-    </script>
-    ````ts [server/api/count.ts]
-    export default defineEventHandler(event => {
-      return { count: 1 }
-    })
-    ```]
-    :br
-    After fetching the value of `count` using [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) in the example above, if you access `payload.data`, you will see `{ count: 1 }` recorded there.
-    :br
-    When accessing the same `payload.data` from [`ssrcontext`](https://nuxt.com/#ssrcontext), you can access the same value on the server side as well.
-    ````
+  <script setup lang="ts">
+  const { data } = await useAsyncData('count', () => $fetch('/api/count'))
+  </script>
+  ````ts [server/api/count.ts]
+  export default defineEventHandler(event => {
+    return { count: 1 }
+  })
+  ```]
+  :br
+  After fetching the value of `count` using [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) in the example above, if you access `payload.data`, you will see `{ count: 1 }` recorded there.
+  :br
+  When accessing the same `payload.data` from [`ssrcontext`](https://nuxt.com/#ssrcontext), you can access the same value on the server side as well.
+  ````
 - `state` (object) - When you use [`useState`](https://nuxt.com/docs/api/composables/use-state) composable in Nuxt to set shared state, this state data is accessed through `payload.state.[name-of-your-state]`.
 
-    ```ts [plugins/my-plugin.ts]
-    export const useColor = () => useState<string>('color', () => 'pink');
+  ```ts [plugins/my-plugin.ts]
+  export const useColor = () => useState<string>('color', () => 'pink')
 
-    export default defineNuxtPlugin((nuxtApp) => {
-    	if (import.meta.server) {
-    		const color = useColor();
-    	}
-    });
-    ```
+  export default defineNuxtPlugin((nuxtApp) => {
+    if (import.meta.server) {
+      const color = useColor()
+    }
+  })
+  ```
 
-    :br
-    It is also possible to use more advanced types, such as `ref`, `reactive`, `shallowRef`, `shallowReactive` and `NuxtError`.
-    :br
-    Since [Nuxt v3.4](https://nuxt.com/blog/v3-4#payload-enhancements){rel="nofollow"}, it is possible to define your own reducer/reviver for types that are not supported by Nuxt.
-    :video-accordion{title="Watch a video from Alexander Lichter about serializing payloads, especially with regards to classes" video-id="8w6ffRBs8a4"}
-    :br
-    In the example below, we define a reducer (or a serializer) and a reviver (or deserializer) for the [Luxon](https://moment.github.io/luxon/#/){rel="nofollow"} DateTime class, using a payload plugin.
+  :br
+  It is also possible to use more advanced types, such as `ref`, `reactive`, `shallowRef`, `shallowReactive` and `NuxtError`.
+  :br
+  Since [Nuxt v3.4](https://nuxt.com/blog/v3-4#payload-enhancements){rel="nofollow"}, it is possible to define your own reducer/reviver for types that are not supported by Nuxt.
+  :video-accordion{title="Watch a video from Alexander Lichter about serializing payloads, especially with regards to classes" video-id="8w6ffRBs8a4"}
+  :br
+  In the example below, we define a reducer (or a serializer) and a reviver (or deserializer) for the [Luxon](https://moment.github.io/luxon/#/){rel="nofollow"} DateTime class, using a payload plugin.
 
-    ```ts [plugins/date-time-payload.ts]
-    /**
-     * This kind of plugin runs very early in the Nuxt lifecycle, before we revive the payload.
-     * You will not have access to the router or other Nuxt-injected properties.
-     *
-     * Note that the "DateTime" string is the type identifier and must
-     * be the same on both the reducer and the reviver.
-     */
-    export default definePayloadPlugin((nuxtApp) => {
-    	definePayloadReducer('DateTime', (value) => {
-    		return value instanceof DateTime && value.toJSON();
-    	});
-    	definePayloadReviver('DateTime', (value) => {
-    		return DateTime.fromISO(value);
-    	});
-    });
-    ```
+  ```ts [plugins/date-time-payload.ts]
+  /**
+   * This kind of plugin runs very early in the Nuxt lifecycle, before we revive the payload.
+   * You will not have access to the router or other Nuxt-injected properties.
+   *
+   * Note that the "DateTime" string is the type identifier and must
+   * be the same on both the reducer and the reviver.
+   */
+  export default definePayloadPlugin((nuxtApp) => {
+    definePayloadReducer('DateTime', (value) => {
+      return value instanceof DateTime && value.toJSON()
+    })
+    definePayloadReviver('DateTime', (value) => {
+      return DateTime.fromISO(value)
+    })
+  })
+  ```
 
 ### `isHydrating`
 
@@ -16197,15 +16219,15 @@ Use `nuxtApp.isHydrating` (boolean) to check if the Nuxt app is hydrating on the
 
 ```ts [components/nuxt-error-boundary.ts]
 export default defineComponent({
-	setup(_props, { slots, emit }) {
-		const nuxtApp = useNuxtApp();
-		onErrorCaptured((err) => {
-			if (import.meta.client && !nuxtApp.isHydrating) {
-				// ...
-			}
-		});
-	}
-});
+  setup(_props, { slots, emit }) {
+    const nuxtApp = useNuxtApp()
+    onErrorCaptured((err) => {
+      if (import.meta.client && !nuxtApp.isHydrating) {
+        // ...
+      }
+    })
+  }
+})
 ```
 
 ### `runWithContext`
@@ -16218,25 +16240,26 @@ The `runWithContext` method is meant to be used to call a function and give it a
 
 ```ts [middleware/auth.ts]
 export default defineNuxtRouteMiddleware(async (to, from) => {
-	const nuxtApp = useNuxtApp();
-	let user;
-	try {
-		user = await fetchUser();
-		// the Vue/Nuxt compiler loses context here because of the try/catch block.
-	} catch (e) {
-		user = null;
-	}
-	if (!user) {
-		// apply the correct Nuxt context to our `navigateTo` call.
-		return nuxtApp.runWithContext(() => navigateTo('/auth'));
-	}
-});
+  const nuxtApp = useNuxtApp()
+  let user
+  try {
+    user = await fetchUser()
+    // the Vue/Nuxt compiler loses context here because of the try/catch block.
+  }
+  catch (e) {
+    user = null
+  }
+  if (!user) {
+    // apply the correct Nuxt context to our `navigateTo` call.
+    return nuxtApp.runWithContext(() => navigateTo('/auth'))
+  }
+})
 ```
 
 #### Usage
 
 ```js
-const result = nuxtApp.runWithContext(() => functionWithContext());
+const result = nuxtApp.runWithContext(() => functionWithContext())
 ```
 
 - `functionWithContext`: Any function that requires the context of the current Nuxt application. This context will be correctly applied automatically.
@@ -16251,15 +16274,15 @@ What it does mean? The Composition API and Nuxt Composables are only available d
 
 ```js
 // --- Vue internal ---
-const _vueInstance = null;
-const getCurrentInstance = () => _vueInstance;
+const _vueInstance = null
+const getCurrentInstance = () => _vueInstance
 // ---
 
 // Vue / Nuxt sets a global variable referencing to current component in _vueInstance when calling setup()
 async function setup() {
-	getCurrentInstance(); // Works
-	await someAsyncOperation(); // Vue unsets the context in same tick before async operation!
-	getCurrentInstance(); // null
+  getCurrentInstance() // Works
+  await someAsyncOperation() // Vue unsets the context in same tick before async operation!
+  getCurrentInstance() // null
 }
 ```
 
@@ -16268,11 +16291,11 @@ The classic solution to this, is caching the current instance on first call to a
 To overcome this limitation, Vue does some behind the scenes work when compiling our application code and restores context after each call for `<script setup>`:
 
 ```js
-const __instance = getCurrentInstance(); // Generated by Vue compiler
-getCurrentInstance(); // Works!
-await someAsyncOperation(); // Vue unsets the context
-__restoreInstance(__instance); // Generated by Vue compiler
-getCurrentInstance(); // Still works!
+const __instance = getCurrentInstance() // Generated by Vue compiler
+getCurrentInstance() // Works!
+await someAsyncOperation() // Vue unsets the context
+__restoreInstance(__instance) // Generated by Vue compiler
+getCurrentInstance() // Still works!
 ```
 
 For a better description of what Vue actually does, see [unjs/unctx#2 (comment)](https://github.com/unjs/unctx/issues/2#issuecomment-942193723){rel="nofollow"}.
@@ -16315,12 +16338,13 @@ Example usage:
 
 ```ts [composable.ts]
 export function useStandType() {
-	// Always works on the client
-	if (tryUseNuxtApp()) {
-		return useRuntimeConfig().public.STAND_TYPE;
-	} else {
-		return process.env.STAND_TYPE;
-	}
+  // Always works on the client
+  if (tryUseNuxtApp()) {
+    return useRuntimeConfig().public.STAND_TYPE
+  }
+  else {
+    return process.env.STAND_TYPE
+  }
 }
 ```
 
@@ -16362,24 +16386,24 @@ The example below shows how you can use cached data as a placeholder while the m
 ```vue [pages/posts.vue]
 <script setup lang="ts">
 // We can access same data later using 'posts' key
-const { data } = await useFetch('/api/posts', { key: 'posts' });
+const { data } = await useFetch('/api/posts', { key: 'posts' })
 </script>
 ```
 
 ```vue [pages/posts/[id].vue]
 <script setup lang="ts">
 // Access to the cached value of useFetch in posts.vue (parent route)
-const { data: posts } = useNuxtData('posts');
+const { data: posts } = useNuxtData('posts')
 
-const route = useRoute();
+const route = useRoute()
 
 const { data } = useLazyFetch(`/api/posts/${route.params.id}`, {
-	key: `post-${route.params.id}`,
-	default() {
-		// Find the individual post from the cache and set it as the default value.
-		return posts.value.find((post) => post.id === route.params.id);
-	}
-});
+  key: `post-${route.params.id}`,
+  default() {
+    // Find the individual post from the cache and set it as the default value.
+    return posts.value.find(post => post.id === route.params.id)
+  }
+})
 </script>
 ```
 
@@ -16392,40 +16416,40 @@ Optimistic Updates is a technique where the user interface is updated immediatel
 ```vue [pages/todos.vue]
 <script setup lang="ts">
 // We can access same data later using 'todos' key
-const { data } = await useAsyncData('todos', () => $fetch('/api/todos'));
+const { data } = await useAsyncData('todos', () => $fetch('/api/todos'))
 </script>
 ```
 
 ```vue [components/NewTodo.vue]
 <script setup lang="ts">
-const newTodo = ref('');
-let previousTodos = [];
+const newTodo = ref('')
+let previousTodos = []
 
 // Access to the cached value of useAsyncData in todos.vue
-const { data: todos } = useNuxtData('todos');
+const { data: todos } = useNuxtData('todos')
 
 async function addTodo() {
-	return $fetch('/api/addTodo', {
-		method: 'post',
-		body: {
-			todo: newTodo.value
-		},
-		onRequest() {
-			// Store the previously cached value to restore if fetch fails.
-			previousTodos = todos.value;
+  return $fetch('/api/addTodo', {
+    method: 'post',
+    body: {
+      todo: newTodo.value
+    },
+    onRequest() {
+      // Store the previously cached value to restore if fetch fails.
+      previousTodos = todos.value
 
-			// Optimistically update the todos.
-			todos.value = [...todos.value, newTodo.value];
-		},
-		onResponseError() {
-			// Rollback the data if the request failed.
-			todos.value = previousTodos;
-		},
-		async onResponse() {
-			// Invalidate todos in the background if the request succeeded.
-			await refreshNuxtData('todos');
-		}
-	});
+      // Optimistically update the todos.
+      todos.value = [...todos.value, newTodo.value]
+    },
+    onResponseError() {
+      // Rollback the data if the request failed.
+      todos.value = previousTodos
+    },
+    async onResponse() {
+      // Invalidate todos in the background if the request succeeded.
+      await refreshNuxtData('todos')
+    }
+  })
 }
 </script>
 ```
@@ -16443,7 +16467,7 @@ Preview mode allows you to see how your changes would be displayed on a live sit
 You can use the built-in `usePreviewMode` composable to access and control preview state in Nuxt. If the composable detects preview mode it will automatically force any updates necessary for [`useAsyncData`](https://nuxt.com/docs/api/composables/use-async-data) and [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) to rerender preview content.
 
 ```js
-const { enabled, state } = usePreviewMode();
+const { enabled, state } = usePreviewMode()
 ```
 
 ## Options
@@ -16454,11 +16478,11 @@ You can specify a custom way to enable preview mode. By default the `usePreviewM
 
 ```js
 export function useMyPreviewMode() {
-	return usePreviewMode({
-		shouldEnable: () => {
-			return !!route.query.customPreview;
-		}
-	});
+  return usePreviewMode({
+    shouldEnable: () => {
+      return !!route.query.customPreview
+    }
+  })
 }
 ```
 
@@ -16467,13 +16491,13 @@ export function useMyPreviewMode() {
 `usePreviewMode` will try to store the value of a `token` param from url in state. You can modify this state and it will be available for all [`usePreviewMode`](https://nuxt.com/docs/api/composables/use-preview-mode) calls.
 
 ```js
-const data1 = ref('data1');
+const data1 = ref('data1')
 
 const { enabled, state } = usePreviewMode({
-	getState: (currentState) => {
-		return { data1, data2: 'data2' };
-	}
-});
+  getState: (currentState) => {
+    return { data1, data2: 'data2' }
+  }
+})
 ```
 
 ::note
@@ -16490,13 +16514,13 @@ You can specify custom callbacks to be triggered by providing your own functions
 
 ```js
 const { enabled, state } = usePreviewMode({
-	onEnable: () => {
-		console.log('preview mode has been enabled');
-	},
-	onDisable: () => {
-		console.log('preview mode has been disabled');
-	}
-});
+  onEnable: () => {
+    console.log('preview mode has been enabled')
+  },
+  onDisable: () => {
+    console.log('preview mode has been disabled')
+  }
+})
 ```
 
 ## Example
@@ -16504,26 +16528,26 @@ const { enabled, state } = usePreviewMode({
 The example below creates a page where part of a content is rendered only in preview mode.
 
 ```vue [pages/some-page.vue]
+<template>
+  <div>
+    Some base content
+    <p v-if="enabled">
+      Only preview content: {{ state.token }}
+      <br />
+      <button @click="enabled = false">disable preview mode</button>
+    </p>
+  </div>
+</template>
+
 <script setup>
-const { enabled, state } = usePreviewMode();
+const { enabled, state } = usePreviewMode()
 
 const { data } = await useFetch('/api/preview', {
-	query: {
-		apiKey: state.token
-	}
-});
+  query: {
+    apiKey: state.token
+  }
+})
 </script>
-
-<template>
-	<div>
-		Some base content
-		<p v-if="enabled">
-			Only preview content: {{ state.token }}
-			<br />
-			<button @click="enabled = false">disable preview mode</button>
-		</p>
-	</div>
-</template>
 ```
 
 Now you can generate your site and serve it:
@@ -16549,10 +16573,10 @@ Within the [Nuxt context](https://nuxt.com/docs/guide/going-further/nuxt-app#the
 
 ```ts
 // Get underlying request event
-const event = useRequestEvent();
+const event = useRequestEvent()
 
 // Get the URL
-const url = event?.path;
+const url = event?.path
 ```
 
 ::tip
@@ -16581,21 +16605,21 @@ The [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch) composable use
 <script setup lang="ts">
 // This will forward the user's headers to the `/api/cookies` event handler
 // Result: { cookies: { foo: 'bar' } }
-const requestFetch = useRequestFetch();
-const { data: forwarded } = await useAsyncData(() => requestFetch('/api/cookies'));
+const requestFetch = useRequestFetch()
+const { data: forwarded } = await useAsyncData(() => requestFetch('/api/cookies'))
 
 // This will NOT forward anything
 // Result: { cookies: {} }
-const { data: notForwarded } = await useAsyncData(() => $fetch('/api/cookies'));
+const { data: notForwarded } = await useAsyncData(() => $fetch('/api/cookies'))
 </script>
 ```
 
 ```ts [server/api/cookies.ts]
 export default defineEventHandler((event) => {
-	const cookies = parseCookies(event);
+  const cookies = parseCookies(event)
 
-	return { cookies };
-});
+  return { cookies }
+})
 ```
 
 ::
@@ -16610,7 +16634,7 @@ You can use the built-in [`useRequestHeader`](https://nuxt.com/docs/api/composab
 
 ```ts
 // Get the authorization request header
-const authorization = useRequestHeader('authorization');
+const authorization = useRequestHeader('authorization')
 ```
 
 ::tip
@@ -16625,10 +16649,10 @@ The example below reads the `authorization` request header to find out if a pers
 
 ```ts [middleware/authorized-only.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	if (!useRequestHeader('authorization')) {
-		return navigateTo('/not-authorized');
-	}
-});
+  if (!useRequestHeader('authorization')) {
+    return navigateTo('/not-authorized')
+  }
+})
 ```
 
 # useRequestHeaders
@@ -16656,8 +16680,8 @@ The example below adds the `authorization` request header to an isomorphic `$fet
 ```vue [pages/some-page.vue]
 <script setup lang="ts">
 const { data } = await useFetch('/api/confidential', {
-	headers: useRequestHeaders(['authorization'])
-});
+  headers: useRequestHeaders(['authorization'])
+})
 </script>
 ```
 
@@ -16674,14 +16698,14 @@ You can define the [`cache.varies` option](https://nitro.unjs.io/guide/cache#opt
 ::code-group
 
 ```vue [pages/about.vue]
-<script setup lang="ts">
-const url = useRequestURL();
-</script>
-
 <template>
-	<p>URL is: {{ url }}</p>
-	<p>Path is: {{ url.pathname }}</p>
+  <p>URL is: {{ url }}</p>
+  <p>Path is: {{ url.pathname }}</p>
 </template>
+
+<script setup lang="ts">
+const url = useRequestURL()
+</script>
 ```
 
 ```html [Result in development]
@@ -16712,8 +16736,8 @@ You can use the built-in [`useResponseHeader`](https://nuxt.com/docs/api/composa
 
 ```ts
 // Set the a custom response header
-const header = useResponseHeader('X-My-Header');
-header.value = 'my-value';
+const header = useResponseHeader('X-My-Header')
+header.value = 'my-value'
 ```
 
 ## Example
@@ -16721,25 +16745,25 @@ header.value = 'my-value';
 We can use `useResponseHeader` to easily set a response header on a per-page basis.
 
 ```vue [pages/test.vue]
+<template>
+  <h1>Test page with custom header</h1>
+  <p>The response from the server for this "/test" page will have a custom "X-My-Header" header.</p>
+</template>
+
 <script setup>
 // pages/test.vue
-const header = useResponseHeader('X-My-Header');
-header.value = 'my-value';
+const header = useResponseHeader('X-My-Header')
+header.value = 'my-value'
 </script>
-
-<template>
-	<h1>Test page with custom header</h1>
-	<p>The response from the server for this "/test" page will have a custom "X-My-Header" header.</p>
-</template>
 ```
 
 We can use `useResponseHeader` for example in Nuxt [middleware](https://nuxt.com/docs/guide/directory-structure/middleware) to set a response header for all pages.
 
 ```ts [middleware/my-header-middleware.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	const header = useResponseHeader('X-My-Always-Header');
-	header.value = `I'm Always here!`;
-});
+  const header = useResponseHeader('X-My-Always-Header')
+  header.value = `I'm Always here!`
+})
 ```
 
 # useRoute
@@ -16754,15 +16778,15 @@ In the following example, we call an API via [`useFetch`](https://nuxt.com/docs/
 
 ```html [~/pages/[slug].vue]
 <script setup lang="ts">
-	const route = useRoute();
-	const { data: mountain } = await useFetch(`/api/mountains/${route.params.slug}`);
+  const route = useRoute()
+  const { data: mountain } = await useFetch(`/api/mountains/${route.params.slug}`)
 </script>
 
 <template>
-	<div>
-		<h1>{{ mountain.title }}</h1>
-		<p>{{ mountain.description }}</p>
-	</div>
+  <div>
+    <h1>{{ mountain.title }}</h1>
+    <p>{{ mountain.description }}</p>
+  </div>
 </template>
 ```
 
@@ -16840,8 +16864,8 @@ Sets the message with `politeness = "assertive"`
 ```vue [pages/index.vue]
 <script setup lang="ts">
 const { message, politeness, set, polite, assertive } = useRouteAnnouncer({
-	politeness: 'assertive'
-});
+  politeness: 'assertive'
+})
 </script>
 ```
 
@@ -16849,7 +16873,7 @@ const { message, politeness, set, polite, assertive } = useRouteAnnouncer({
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const router = useRouter();
+const router = useRouter()
 </script>
 ```
 
@@ -16857,7 +16881,7 @@ If you only need the router instance within your template, use `$router`:
 
 ```vue [pages/index.vue]
 <template>
-	<button @click="$router.back()">Back</button>
+  <button @click="$router.back()">Back</button>
 </template>
 ```
 
@@ -16883,13 +16907,13 @@ Read `vue-router` documentation about the `Router` interface.
 - [`resolve()`](https://router.vuejs.org/api/interfaces/Router.html#resolve){rel="nofollow"}: Returns the normalized version of a route location. Also includes an `href` property that includes any existing base.
 
 ```ts [Example]
-const router = useRouter();
+const router = useRouter()
 
-router.addRoute({ name: 'home', path: '/home', component: Home });
-router.removeRoute('home');
-router.getRoutes();
-router.hasRoute('home');
-router.resolve({ name: 'home' });
+router.addRoute({ name: 'home', path: '/home', component: Home })
+router.removeRoute('home')
+router.getRoutes()
+router.hasRoute('home')
+router.resolve({ name: 'home' })
 ```
 
 ::note
@@ -16905,13 +16929,13 @@ router.resolve({ name: 'home' });
 - [`replace()`](https://router.vuejs.org/api/interfaces/Router.html#replace){rel="nofollow"}: Programmatically navigate to a new URL by replacing the current entry in the routes history stack. \*\*It is recommended to use [`navigateTo`](https://nuxt.com/docs/api/utils/navigate-to) instead.\*\*
 
 ```ts [Example]
-const router = useRouter();
+const router = useRouter()
 
-router.back();
-router.forward();
-router.go(3);
-router.push({ path: '/home' });
-router.replace({ hash: '#bio' });
+router.back()
+router.forward()
+router.go(3)
+router.push({ path: '/home' })
+router.replace({ hash: '#bio' })
 ```
 
 ## ::read-more
@@ -16960,14 +16984,14 @@ If you do not have a `pages/` folder, then [`useRouter`](https://nuxt.com/docs/a
 
 ```vue [app.vue]
 <script setup lang="ts">
-const config = useRuntimeConfig();
+const config = useRuntimeConfig()
 </script>
 ```
 
 ```ts [server/api/foo.ts]
 export default defineEventHandler((event) => {
-	const config = useRuntimeConfig(event);
-});
+  const config = useRuntimeConfig(event)
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/going-further/runtime-config"}
@@ -16981,16 +17005,16 @@ We should always define `runtimeConfig` variables inside `nuxt.config`.
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	runtimeConfig: {
-		// Private keys are only available on the server
-		apiSecret: '123',
+  runtimeConfig: {
+    // Private keys are only available on the server
+    apiSecret: '123',
 
-		// Public keys that are exposed to the client
-		public: {
-			apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api'
-		}
-	}
-});
+    // Public keys that are exposed to the client
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || '/api'
+    }
+  }
+})
 ```
 
 ::note
@@ -17067,11 +17091,11 @@ Then, you can access this new base URL using `config.app.baseURL`:
 
 ```ts [/plugins/my-plugin.ts]
 export default defineNuxtPlugin((NuxtApp) => {
-	const config = useRuntimeConfig();
+  const config = useRuntimeConfig()
 
-	// Access baseURL universally
-	const baseURL = config.app.baseURL;
-});
+  // Access baseURL universally
+  const baseURL = config.app.baseURL
+})
 ```
 
 ### `app.cdnURL`
@@ -17084,11 +17108,11 @@ And then access the new CDN url using `config.app.cdnURL`.
 
 ```ts [server/api/foo.ts]
 export default defineEventHandler((event) => {
-	const config = useRuntimeConfig(event);
+  const config = useRuntimeConfig(event)
 
-	// Access cdnURL universally
-	const cdnURL = config.app.cdnURL;
-});
+  // Access cdnURL universally
+  const cdnURL = config.app.cdnURL
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/going-further/runtime-config"}
@@ -17102,9 +17126,9 @@ This composable is available in Nuxt v3.14+.
 
 ```ts [signature]
 function useRuntimeHook<THookName extends keyof RuntimeNuxtHooks>(
-	name: THookName,
-	fn: RuntimeNuxtHooks[THookName] extends HookCallback ? RuntimeNuxtHooks[THookName] : never
-): void;
+  name: THookName,
+  fn: RuntimeNuxtHooks[THookName] extends HookCallback ? RuntimeNuxtHooks[THookName] : never
+): void
 ```
 
 ## Usage
@@ -17125,8 +17149,8 @@ The composable doesn't return a value, but it automatically unregisters the hook
 // Register a hook that runs every time a link is prefetched, but which will be
 // automatically cleaned up (and not called again) when the component is unmounted
 useRuntimeHook('link:prefetch', (link) => {
-	console.log('Prefetching', link);
-});
+  console.log('Prefetching', link)
+})
 </script>
 ```
 
@@ -17146,13 +17170,13 @@ This is the recommended way to add meta tags to your site as it is XSS safe and 
 ```vue [app.vue]
 <script setup lang="ts">
 useSeoMeta({
-	title: 'My Amazing Site',
-	ogTitle: 'My Amazing Site',
-	description: 'This is my amazing site, let me tell you all about it.',
-	ogDescription: 'This is my amazing site, let me tell you all about it.',
-	ogImage: 'https://example.com/image.png',
-	twitterCard: 'summary_large_image'
-});
+  title: 'My Amazing Site',
+  ogTitle: 'My Amazing Site',
+  description: 'This is my amazing site, let me tell you all about it.',
+  ogDescription: 'This is my amazing site, let me tell you all about it.',
+  ogImage: 'https://example.com/image.png',
+  twitterCard: 'summary_large_image'
+})
 </script>
 ```
 
@@ -17160,12 +17184,12 @@ When inserting tags that are reactive, you should use the computed getter syntax
 
 ```vue [app.vue]
 <script setup lang="ts">
-const title = ref('My title');
+const title = ref('My title')
 
 useSeoMeta({
-	title,
-	description: () => `This is a description for the ${title.value} page`
-});
+  title,
+  description: () => `This is a description for the ${title.value} page`
+})
 </script>
 ```
 
@@ -17185,21 +17209,21 @@ For better performance, you can wrap your `useSeoMeta` calls in a server-only co
 ```vue [app.vue]
 <script setup lang="ts">
 if (import.meta.server) {
-	// These meta tags will only be added during server-side rendering
-	useSeoMeta({
-		robots: 'index, follow',
-		description: 'Static description that does not need reactivity',
-		ogImage: 'https://example.com/image.png'
-		// other static meta tags...
-	});
+  // These meta tags will only be added during server-side rendering
+  useSeoMeta({
+    robots: 'index, follow',
+    description: 'Static description that does not need reactivity',
+    ogImage: 'https://example.com/image.png'
+    // other static meta tags...
+  })
 }
 
-const dynamicTitle = ref('My title');
+const dynamicTitle = ref('My title')
 // Only use reactive meta tags outside the condition when necessary
 useSeoMeta({
-	title: () => dynamicTitle.value,
-	ogTitle: () => dynamicTitle.value
-});
+  title: () => dynamicTitle.value,
+  ogTitle: () => dynamicTitle.value
+})
 </script>
 ```
 
@@ -17217,8 +17241,8 @@ In most instances, the meta doesn't need to be reactive as robots will only scan
 ```vue [app.vue]
 <script setup lang="ts">
 useServerSeoMeta({
-	robots: 'index, follow'
-});
+  robots: 'index, follow'
+})
 </script>
 ```
 
@@ -17233,7 +17257,7 @@ Parameters are exactly the same as with [`useSeoMeta`](https://nuxt.com/docs/api
 
 ```ts
 // Create a reactive state and set default value
-const count = useState('counter', () => Math.round(Math.random() * 100));
+const count = useState('counter', () => Math.round(Math.random() * 100))
 ```
 
 ::read-more{to="https://nuxt.com/docs/getting-started/state-management"}
@@ -17261,7 +17285,7 @@ video-id: mv0WcBABcIk
 If you don't need your state to be deeply reactive, you can combine `useState` with [`shallowRef`](https://vuejs.org/api/reactivity-advanced.html#shallowref){rel="nofollow"}. This can improve performance when your state contains large objects and arrays.
 
 ```ts
-const state = useState('my-shallow-state', () => shallowRef({ deep: 'not reactive' }));
+const state = useState('my-shallow-state', () => shallowRef({ deep: 'not reactive' }))
 // isShallow(state) === true
 ```
 
@@ -17295,13 +17319,13 @@ We recommend to use [`useFetch`](https://nuxt.com/docs/api/composables/use-fetch
 ```vue [app.vue]
 <script setup lang="ts">
 // During SSR data is fetched twice, once on the server and once on the client.
-const dataTwice = await $fetch('/api/item');
+const dataTwice = await $fetch('/api/item')
 
 // During SSR data is fetched only on the server side and transferred to the client.
-const { data } = await useAsyncData('item', () => $fetch('/api/item'));
+const { data } = await useAsyncData('item', () => $fetch('/api/item'))
 
 // You can also useFetch as shortcut of useAsyncData + $fetch
-const { data } = await useFetch('/api/item');
+const { data } = await useFetch('/api/item')
 </script>
 ```
 
@@ -17311,18 +17335,18 @@ const { data } = await useFetch('/api/item');
 You can use `$fetch` in any methods that are executed only on client-side.
 
 ```vue [pages/contact.vue]
+<template>
+  <button @click="contactForm">Contact</button>
+</template>
+
 <script setup lang="ts">
 async function contactForm() {
-	await $fetch('/api/contact', {
-		method: 'POST',
-		body: { hello: 'world ' }
-	});
+  await $fetch('/api/contact', {
+    method: 'POST',
+    body: { hello: 'world ' }
+  })
 }
 </script>
-
-<template>
-	<button @click="contactForm">Contact</button>
-</template>
 ```
 
 ::tip
@@ -17344,15 +17368,15 @@ However, during Server-Side Rendering, due to security risks such as \*\*Server-
 ```vue [pages/index.vue]
 <script setup lang="ts">
 // This will NOT forward headers or cookies during SSR
-const { data } = await useAsyncData(() => $fetch('/api/cookies'));
+const { data } = await useAsyncData(() => $fetch('/api/cookies'))
 </script>
 ```
 
 ```ts [server/api/cookies.ts]
 export default defineEventHandler((event) => {
-	const foo = getCookie(event, 'foo');
-	// ... Do something with the cookie
-});
+  const foo = getCookie(event, 'foo')
+  // ... Do something with the cookie
+})
 ```
 
 ::
@@ -17362,8 +17386,8 @@ If you need to forward headers and cookies on the server, you must manually pass
 ```vue [pages/index.vue]
 <script setup lang="ts">
 // This will forward the user's headers and cookies to `/api/cookies`
-const requestFetch = useRequestFetch();
-const { data } = await useAsyncData(() => requestFetch('/api/cookies'));
+const requestFetch = useRequestFetch()
+const { data } = await useAsyncData(() => requestFetch('/api/cookies'))
 </script>
 ```
 
@@ -17395,16 +17419,16 @@ The example below shows how you can use `abortNavigation` in a route middleware 
 
 ```ts [middleware/auth.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	const user = useState('user');
+  const user = useState('user')
 
-	if (!user.value.isAuthorized) {
-		return abortNavigation();
-	}
+  if (!user.value.isAuthorized) {
+    return abortNavigation()
+  }
 
-	if (to.path !== '/edit-post') {
-		return navigateTo('/edit-post');
-	}
-});
+  if (to.path !== '/edit-post') {
+    return navigateTo('/edit-post')
+  }
+})
 ```
 
 ### `err` as a String
@@ -17413,12 +17437,12 @@ You can pass the error as a string:
 
 ```ts [middleware/auth.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	const user = useState('user');
+  const user = useState('user')
 
-	if (!user.value.isAuthorized) {
-		return abortNavigation('Insufficient permissions.');
-	}
-});
+  if (!user.value.isAuthorized) {
+    return abortNavigation('Insufficient permissions.')
+  }
+})
 ```
 
 ### `err` as an Error Object
@@ -17427,12 +17451,13 @@ You can pass the error as an [`Error`](https://developer.mozilla.org/pl/docs/Web
 
 ```ts [middleware/auth.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	try {
-		/* code that might throw an error */
-	} catch (err) {
-		return abortNavigation(err);
-	}
-});
+  try {
+    /* code that might throw an error */
+  }
+  catch (err) {
+    return abortNavigation(err)
+  }
+})
 ```
 
 # addRouteMiddleware
@@ -17444,11 +17469,11 @@ Route middleware are navigation guards stored in the [`middleware/`](https://nux
 ## Type
 
 ```ts
-function addRouteMiddleware(name: string, middleware: RouteMiddleware, options?: AddRouteMiddlewareOptions): void;
-function addRouteMiddleware(middleware: RouteMiddleware): void;
+function addRouteMiddleware(name: string, middleware: RouteMiddleware, options?: AddRouteMiddlewareOptions): void
+function addRouteMiddleware(middleware: RouteMiddleware): void
 
 interface AddRouteMiddlewareOptions {
-	global?: boolean;
+  global?: boolean
 }
 ```
 
@@ -17482,10 +17507,10 @@ Named route middleware is defined by providing a string as the first argument an
 
 ```ts [plugins/my-plugin.ts]
 export default defineNuxtPlugin(() => {
-	addRouteMiddleware('named-middleware', () => {
-		console.log('named middleware added in Nuxt plugin');
-	});
-});
+  addRouteMiddleware('named-middleware', () => {
+    console.log('named middleware added in Nuxt plugin')
+  })
+})
 ```
 
 When defined in a plugin, it overrides any existing middleware of the same name located in the `middleware/` directory.
@@ -17495,25 +17520,25 @@ When defined in a plugin, it overrides any existing middleware of the same name 
 Global route middleware can be defined in two ways:
 
 - Pass a function directly as the first argument without a name. It will automatically be treated as global middleware and applied on every route change.
-    ```ts [plugins/my-plugin.ts]
-    export default defineNuxtPlugin(() => {
-    	addRouteMiddleware((to, from) => {
-    		console.log('anonymous global middleware that runs on every route change');
-    	});
-    });
-    ```
+  ```ts [plugins/my-plugin.ts]
+  export default defineNuxtPlugin(() => {
+    addRouteMiddleware((to, from) => {
+      console.log('anonymous global middleware that runs on every route change')
+    })
+  })
+  ```
 - Set an optional, third argument `{ global: true }` to indicate whether the route middleware is global.
-    ```ts [plugins/my-plugin.ts]
-    export default defineNuxtPlugin(() => {
-    	addRouteMiddleware(
-    		'global-middleware',
-    		(to, from) => {
-    			console.log('global middleware that runs on every route change');
-    		},
-    		{ global: true }
-    	);
-    });
-    ```
+  ```ts [plugins/my-plugin.ts]
+  export default defineNuxtPlugin(() => {
+    addRouteMiddleware(
+      'global-middleware',
+      (to, from) => {
+        console.log('global middleware that runs on every route change')
+      },
+      { global: true }
+    )
+  })
+  ```
 
 # callOnce
 
@@ -17536,12 +17561,12 @@ The default mode of `callOnce` is to run code only once. For example, if the cod
 
 ```vue [app.vue]
 <script setup lang="ts">
-const websiteConfig = useState('config');
+const websiteConfig = useState('config')
 
 await callOnce(async () => {
-	console.log('This will only be logged once');
-	websiteConfig.value = await $fetch('https://my-cms.com/api/website-config');
-});
+  console.log('This will only be logged once')
+  websiteConfig.value = await $fetch('https://my-cms.com/api/website-config')
+})
 </script>
 ```
 
@@ -17549,15 +17574,15 @@ It is also possible to run on every navigation while still avoiding the initial 
 
 ```vue [app.vue]
 <script setup lang="ts">
-const websiteConfig = useState('config');
+const websiteConfig = useState('config')
 
 await callOnce(
-	async () => {
-		console.log('This will only be logged once and then on every client side navigation');
-		websiteConfig.value = await $fetch('https://my-cms.com/api/website-config');
-	},
-	{ mode: 'navigation' }
-);
+  async () => {
+    console.log('This will only be logged once and then on every client side navigation')
+    websiteConfig.value = await $fetch('https://my-cms.com/api/website-config')
+  },
+  { mode: 'navigation' }
+)
 </script>
 ```
 
@@ -17604,8 +17629,8 @@ type CallOnceOptions = {
 - `fn`: The function to run once. It can be asynchronous.
 - `options`: Setup the mode, either to re-execute on navigation (`navigation`) or just once for the lifetime of the app (`render`). Defaults to `render`.
 
-    - `render`: Executes once during initial render (either SSR or CSR) - Default mode
-    - `navigation`: Executes once during initial render and once per subsequent client-side navigation
+  - `render`: Executes once during initial render (either SSR or CSR) - Default mode
+  - `navigation`: Executes once during initial render and once per subsequent client-side navigation
 
 # clearError
 
@@ -17619,10 +17644,10 @@ You can provide an optional path to redirect to (for example, if you want to nav
 
 ```js
 // Without redirect
-clearError();
+clearError()
 
 // With redirect
-clearError({ redirect: '/homepage' });
+clearError({ redirect: '/homepage' })
 ```
 
 Errors are set in state using [`useError()`](https://nuxt.com/docs/api/composables/use-error). The `clearError` composable will reset this state and calls the `app:error:cleared` hook with the provided options.
@@ -17683,10 +17708,10 @@ If you throw an error created with `createError`:
 
 ```vue [pages/movies/[slug].vue]
 <script setup lang="ts">
-const route = useRoute();
-const { data } = await useFetch(`/api/movies/${route.params.slug}`);
+const route = useRoute()
+const { data } = await useFetch(`/api/movies/${route.params.slug}`)
 if (!data.value) {
-	throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
+  throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
 }
 </script>
 ```
@@ -17699,11 +17724,11 @@ Use `createError` to trigger error handling in server API routes.
 
 ```ts [server/api/error.ts]
 export default eventHandler(() => {
-	throw createError({
-		statusCode: 404,
-		statusMessage: 'Page Not Found'
-	});
-});
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Page Not Found'
+  })
+})
 ```
 
 In API routes, using `createError` by passing an object with a short `statusMessage` is recommended because it can be accessed on the client side. Otherwise, a `message` passed to `createError` on an API route will not propagate to the client. Alternatively, you can use the `data` property to pass data back to the client. In any case, always consider avoiding to put dynamic user input to the message to avoid potential security issues.
@@ -17731,14 +17756,14 @@ If you choose not to use `setup()` in your app, you can use the `asyncData()` me
 ```vue [pages/index.vue]
 <script lang="ts">
 export default defineNuxtComponent({
-	async asyncData() {
-		return {
-			data: {
-				greetings: 'hello world!'
-			}
-		};
-	}
-});
+  async asyncData() {
+    return {
+      data: {
+        greetings: 'hello world!'
+      }
+    }
+  }
+})
 </script>
 ```
 
@@ -17749,12 +17774,12 @@ If you choose not to use `setup()` in your app, you can use the `head()` method 
 ```vue [pages/index.vue]
 <script lang="ts">
 export default defineNuxtComponent({
-	head(nuxtApp) {
-		return {
-			title: 'My site'
-		};
-	}
-});
+  head(nuxtApp) {
+    return {
+      title: 'My site'
+    }
+  }
+})
 </script>
 ```
 
@@ -17790,10 +17815,10 @@ You can use route middleware to throw errors and show helpful error messages:
 
 ```ts [middleware/error.ts]
 export default defineNuxtRouteMiddleware((to) => {
-	if (to.params.id === '1') {
-		throw createError({ statusCode: 404, statusMessage: 'Page Not Found' });
-	}
-});
+  if (to.params.id === '1') {
+    throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+  }
+})
 ```
 
 The above route middleware will redirect a user to the custom error page defined in the `~/error.vue` file, and expose the error message and code passed from the middleware.
@@ -17804,16 +17829,16 @@ Use [`useState`](https://nuxt.com/docs/api/composables/use-state) in combination
 
 ```ts [middleware/auth.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	const auth = useState('auth');
+  const auth = useState('auth')
 
-	if (!auth.value.isAuthenticated) {
-		return navigateTo('/login');
-	}
+  if (!auth.value.isAuthenticated) {
+    return navigateTo('/login')
+  }
 
-	if (to.path !== '/dashboard') {
-		return navigateTo('/dashboard');
-	}
-});
+  if (to.path !== '/dashboard') {
+    return navigateTo('/dashboard')
+  }
+})
 ```
 
 Both [navigateTo](https://nuxt.com/docs/api/utils/navigate-to) and [abortNavigation](https://nuxt.com/docs/api/utils/abort-navigation) are globally available helper functions that you can use inside `defineNuxtRouteMiddleware`.
@@ -17825,8 +17850,8 @@ Both [navigateTo](https://nuxt.com/docs/api/utils/navigate-to) and [abortNavigat
 ```vue [pages/some-page.vue]
 <script setup lang="ts">
 definePageMeta({
-	layout: 'default'
-});
+  layout: 'default'
+})
 </script>
 ```
 
@@ -17870,84 +17895,84 @@ interface PageMeta {
   :br
   **`name`**
 
-    - **Type**: `string`
-      :br
-      You may define a name for this page's route. By default, name is generated based on path inside the [`pages/` directory](https://nuxt.com/docs/guide/directory-structure/pages).
-      :br
-      **`path`**
-    - **Type**: `string`
-      :br
-      You may define a [custom regular expression](https://nuxt.com/#using-a-custom-regular-expression) if you have a more complex pattern than can be expressed with the file name.
-      :br
-      **`props`**
-    - **Type**: [`RouteRecordRaw['props']`](https://router.vuejs.org/guide/essentials/passing-props){rel="nofollow"}
-      :br
-      Allows accessing the route `params` as props passed to the page component.
-      :br
-      **`alias`**
-    - **Type**: `string | string[]`
-      :br
-      Aliases for the record. Allows defining extra paths that will behave like a copy of the record. Allows having paths shorthands like `/users/:id` and `/u/:id`. All `alias` and `path` values must share the same params.
-      :br
-      **`keepalive`**
-    - **Type**: `boolean` | [`KeepAliveProps`](https://vuejs.org/api/built-in-components.html#keepalive){rel="nofollow"}
-      :br
-      Set to `true` when you want to preserve page state across route changes or use the [`KeepAliveProps`](https://vuejs.org/api/built-in-components.html#keepalive){rel="nofollow"} for a fine-grained control.
-      :br
-      **`key`**
-    - **Type**: `false` | `string` | `((route: RouteLocationNormalizedLoaded) => string)`
-      :br
-      Set `key` value when you need more control over when the `<NuxtPage>` component is re-rendered.
-      :br
-      **`layout`**
-    - **Type**: `false` | `LayoutKey` | `Ref<LayoutKey>` | `ComputedRef<LayoutKey>`
-      :br
-      Set a static or dynamic name of the layout for each route. This can be set to `false` in case the default layout needs to be disabled.
-      :br
-      **`layoutTransition`**
-    - **Type**: `boolean` | [`TransitionProps`](https://vuejs.org/api/built-in-components.html#transition){rel="nofollow"}
-      :br
-      Set name of the transition to apply for current layout. You can also set this value to `false` to disable the layout transition.
-      :br
-      **`middleware`**
-    - **Type**: `MiddlewareKey` | [`NavigationGuard`](https://router.vuejs.org/api/interfaces/NavigationGuard.html#navigationguard){rel="nofollow"} | `Array<MiddlewareKey | NavigationGuard>`
-      :br
-      Define anonymous or named middleware directly within `definePageMeta`. Learn more about [route middleware](https://nuxt.com/docs/guide/directory-structure/middleware).
-      :br
-      **`pageTransition`**
-    - **Type**: `boolean` | [`TransitionProps`](https://vuejs.org/api/built-in-components.html#transition){rel="nofollow"}
-      :br
-      Set name of the transition to apply for current page. You can also set this value to `false` to disable the page transition.
-      :br
-      **`viewTransition`**
-    - **Type**: `boolean | 'always'`
-      :br
-      **Experimental feature, only available when [enabled in your nuxt.config file](https://nuxt.com/docs/getting-started/transitions#view-transitions-api-experimental)**
-      :br
+  - **Type**: `string`
+    :br
+    You may define a name for this page's route. By default, name is generated based on path inside the [`pages/` directory](https://nuxt.com/docs/guide/directory-structure/pages).
+    :br
+    **`path`**
+  - **Type**: `string`
+    :br
+    You may define a [custom regular expression](https://nuxt.com/#using-a-custom-regular-expression) if you have a more complex pattern than can be expressed with the file name.
+    :br
+    **`props`**
+  - **Type**: [`RouteRecordRaw['props']`](https://router.vuejs.org/guide/essentials/passing-props){rel="nofollow"}
+    :br
+    Allows accessing the route `params` as props passed to the page component.
+    :br
+    **`alias`**
+  - **Type**: `string | string[]`
+    :br
+    Aliases for the record. Allows defining extra paths that will behave like a copy of the record. Allows having paths shorthands like `/users/:id` and `/u/:id`. All `alias` and `path` values must share the same params.
+    :br
+    **`keepalive`**
+  - **Type**: `boolean` | [`KeepAliveProps`](https://vuejs.org/api/built-in-components.html#keepalive){rel="nofollow"}
+    :br
+    Set to `true` when you want to preserve page state across route changes or use the [`KeepAliveProps`](https://vuejs.org/api/built-in-components.html#keepalive){rel="nofollow"} for a fine-grained control.
+    :br
+    **`key`**
+  - **Type**: `false` | `string` | `((route: RouteLocationNormalizedLoaded) => string)`
+    :br
+    Set `key` value when you need more control over when the `<NuxtPage>` component is re-rendered.
+    :br
+    **`layout`**
+  - **Type**: `false` | `LayoutKey` | `Ref<LayoutKey>` | `ComputedRef<LayoutKey>`
+    :br
+    Set a static or dynamic name of the layout for each route. This can be set to `false` in case the default layout needs to be disabled.
+    :br
+    **`layoutTransition`**
+  - **Type**: `boolean` | [`TransitionProps`](https://vuejs.org/api/built-in-components.html#transition){rel="nofollow"}
+    :br
+    Set name of the transition to apply for current layout. You can also set this value to `false` to disable the layout transition.
+    :br
+    **`middleware`**
+  - **Type**: `MiddlewareKey` | [`NavigationGuard`](https://router.vuejs.org/api/interfaces/NavigationGuard.html#navigationguard){rel="nofollow"} | `Array<MiddlewareKey | NavigationGuard>`
+    :br
+    Define anonymous or named middleware directly within `definePageMeta`. Learn more about [route middleware](https://nuxt.com/docs/guide/directory-structure/middleware).
+    :br
+    **`pageTransition`**
+  - **Type**: `boolean` | [`TransitionProps`](https://vuejs.org/api/built-in-components.html#transition){rel="nofollow"}
+    :br
+    Set name of the transition to apply for current page. You can also set this value to `false` to disable the page transition.
+    :br
+    **`viewTransition`**
+  - **Type**: `boolean | 'always'`
+    :br
+    **Experimental feature, only available when [enabled in your nuxt.config file](https://nuxt.com/docs/getting-started/transitions#view-transitions-api-experimental)**
+    :br
 
-        Enable/disable View Transitions for the current page.
-        If set to true, Nuxt will not apply the transition if the users browser matches `prefers-reduced-motion: reduce` (recommended). If set to `always`, Nuxt will always apply the transition.
-        :br
-        **`redirect`**
+    Enable/disable View Transitions for the current page.
+    If set to true, Nuxt will not apply the transition if the users browser matches `prefers-reduced-motion: reduce` (recommended). If set to `always`, Nuxt will always apply the transition.
+    :br
+    **`redirect`**
 
-    - **Type**: [`RouteRecordRedirectOption`](https://router.vuejs.org/guide/essentials/redirect-and-alias.html#redirect-and-alias){rel="nofollow"}
-      :br
-      Where to redirect if the route is directly matched. The redirection happens before any navigation guard and triggers a new navigation with the new target location.
-      :br
-      **`validate`**
-    - **Type**: `(route: RouteLocationNormalized) => boolean | Promise<boolean> | Partial<NuxtError> | Promise<Partial<NuxtError>>`
-      :br
-      Validate whether a given route can validly be rendered with this page. Return true if it is valid, or false if not. If another match can't be found, this will mean a 404. You can also directly return an object with `statusCode`/`statusMessage` to respond immediately with an error (other matches will not be checked).
-      :br
-      **`scrollToTop`**
-    - **Type**: `boolean | (to: RouteLocationNormalized, from: RouteLocationNormalized) => boolean`
-      :br
-      Tell Nuxt to scroll to the top before rendering the page or not. If you want to overwrite the default scroll behavior of Nuxt, you can do so in `~/app/router.options.ts` (see [custom routing](https://nuxt.com/docs/guide/recipes/custom-routing#using-approuteroptions)) for more info.
-      :br
-      **`[key: string]`**
-    - **Type**: `any`
-      :br
-      Apart from the above properties, you can also set **custom** metadata. You may wish to do so in a type-safe way by [augmenting the type of the `meta` object](https://nuxt.com/docs/guide/directory-structure/pages/#typing-custom-metadata).
+  - **Type**: [`RouteRecordRedirectOption`](https://router.vuejs.org/guide/essentials/redirect-and-alias.html#redirect-and-alias){rel="nofollow"}
+    :br
+    Where to redirect if the route is directly matched. The redirection happens before any navigation guard and triggers a new navigation with the new target location.
+    :br
+    **`validate`**
+  - **Type**: `(route: RouteLocationNormalized) => boolean | Promise<boolean> | Partial<NuxtError> | Promise<Partial<NuxtError>>`
+    :br
+    Validate whether a given route can validly be rendered with this page. Return true if it is valid, or false if not. If another match can't be found, this will mean a 404. You can also directly return an object with `statusCode`/`statusMessage` to respond immediately with an error (other matches will not be checked).
+    :br
+    **`scrollToTop`**
+  - **Type**: `boolean | (to: RouteLocationNormalized, from: RouteLocationNormalized) => boolean`
+    :br
+    Tell Nuxt to scroll to the top before rendering the page or not. If you want to overwrite the default scroll behavior of Nuxt, you can do so in `~/app/router.options.ts` (see [custom routing](https://nuxt.com/docs/guide/recipes/custom-routing#using-approuteroptions)) for more info.
+    :br
+    **`[key: string]`**
+  - **Type**: `any`
+    :br
+    Apart from the above properties, you can also set **custom** metadata. You may wish to do so in a type-safe way by [augmenting the type of the `meta` object](https://nuxt.com/docs/guide/directory-structure/pages/#typing-custom-metadata).
 
 ## Examples
 
@@ -17962,14 +17987,14 @@ The example below demonstrates:
 ```vue [pages/some-page.vue]
 <script setup lang="ts">
 definePageMeta({
-	key: (route) => route.fullPath,
+  key: route => route.fullPath,
 
-	keepalive: {
-		exclude: ['modal']
-	},
+  keepalive: {
+    exclude: ['modal']
+  },
 
-	pageType: 'Checkout'
-});
+  pageType: 'Checkout'
+})
 </script>
 ```
 
@@ -18015,8 +18040,8 @@ To make sure that we are only matching digits (`\d+`) for `postId` in the `[post
 ```vue [pages/[postId]-[postSlug].vue]
 <script setup lang="ts">
 definePageMeta({
-	path: '/:postId(\\d+)-:postSlug'
-});
+  path: '/:postId(\\d+)-:postSlug'
+})
 </script>
 ```
 
@@ -18053,25 +18078,25 @@ This feature is experimental and in order to use it you must enable the `experim
 ## Usage
 
 ```vue [pages/index.vue]
+<template>
+  <h1>Hello world!</h1>
+</template>
+
 <script setup lang="ts">
 defineRouteRules({
-	prerender: true
-});
+  prerender: true
+})
 </script>
-
-<template>
-	<h1>Hello world!</h1>
-</template>
 ```
 
 Will be translated to:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	routeRules: {
-		'/': { prerender: true }
-	}
-});
+  routeRules: {
+    '/': { prerender: true }
+  }
+})
 ```
 
 ::note
@@ -18114,19 +18139,19 @@ Make sure to always use `await` or `return` on result of `navigateTo` when calli
 ```vue
 <script setup lang="ts">
 // passing 'to' as a string
-await navigateTo('/search');
+await navigateTo('/search')
 
 // ... or as a route object
-await navigateTo({ path: '/search' });
+await navigateTo({ path: '/search' })
 
 // ... or as a route object with query parameters
 await navigateTo({
-	path: '/search',
-	query: {
-		page: 1,
-		sort: 'asc'
-	}
-});
+  path: '/search',
+  query: {
+    page: 1,
+    sort: 'asc'
+  }
+})
 </script>
 ```
 
@@ -18134,11 +18159,11 @@ await navigateTo({
 
 ```ts
 export default defineNuxtRouteMiddleware((to, from) => {
-	if (to.path !== '/search') {
-		// setting the redirect code to '301 Moved Permanently'
-		return navigateTo('/search', { redirectCode: 301 });
-	}
-});
+  if (to.path !== '/search') {
+    // setting the redirect code to '301 Moved Permanently'
+    return navigateTo('/search', { redirectCode: 301 })
+  }
+})
 ```
 
 When using `navigateTo` within route middleware, you must **return its result** to ensure the middleware execution flow works correctly.
@@ -18147,12 +18172,11 @@ For example, the following implementation **will not work as expected**:
 
 ```ts
 export default defineNuxtRouteMiddleware((to, from) => {
-	if (to.path !== '/search') {
-		// ❌ This will not work as expected
-		navigateTo('/search', { redirectCode: 301 });
-		return;
-	}
-});
+  if (to.path !== '/search') {
+    // ❌ This will not work as expected
+    navigateTo('/search', { redirectCode: 301 })
+  }
+})
 ```
 
 In this case, `navigateTo` will be executed but not returned, which may lead to unexpected behavior.
@@ -18165,11 +18189,11 @@ In this case, `navigateTo` will be executed but not returned, which may lead to 
 The `external` parameter in `navigateTo` influences how navigating to URLs is handled:
 
 - **Without `external: true`**:
-    - Internal URLs navigate as expected.
-    - External URLs throw an error.
+  - Internal URLs navigate as expected.
+  - External URLs throw an error.
 - **With `external: true`**:
-    - Internal URLs navigate with a full-page reload.
-    - External URLs navigate as expected.
+  - Internal URLs navigate with a full-page reload.
+  - External URLs navigate as expected.
 
 #### Example
 
@@ -18177,12 +18201,12 @@ The `external` parameter in `navigateTo` influences how navigating to URLs is ha
 <script setup lang="ts">
 // will throw an error;
 // navigating to an external URL is not allowed by default
-await navigateTo('https://nuxt.com');
+await navigateTo('https://nuxt.com')
 
 // will redirect successfully with the 'external' parameter set to 'true'
 await navigateTo('https://nuxt.com', {
-	external: true
-});
+  external: true
+})
 </script>
 ```
 
@@ -18192,14 +18216,14 @@ await navigateTo('https://nuxt.com', {
 <script setup lang="ts">
 // will open 'https://nuxt.com' in a new tab
 await navigateTo('https://nuxt.com', {
-	open: {
-		target: '_blank',
-		windowFeatures: {
-			width: 500,
-			height: 500
-		}
-	}
-});
+  open: {
+    target: '_blank',
+    windowFeatures: {
+      width: 500,
+      height: 500
+    }
+  }
+})
 </script>
 ```
 
@@ -18247,13 +18271,13 @@ type OpenWindowFeatures = {
 
 ```ts
 // Passing the URL directly will redirect to the '/blog' page
-await navigateTo('/blog');
+await navigateTo('/blog')
 
 // Using the route object, will redirect to the route with the name 'blog'
-await navigateTo({ name: 'blog' });
+await navigateTo({ name: 'blog' })
 
 // Redirects to the 'product' route while passing a parameter (id = 1) using the route object.
-await navigateTo({ name: 'product', params: { id: 1 } });
+await navigateTo({ name: 'product', params: { id: 1 } })
 ```
 
 ### `options` (optional)
@@ -18263,44 +18287,44 @@ await navigateTo({ name: 'product', params: { id: 1 } });
 An object accepting the following properties:
 
 - `replace`
-    - **Type**: `boolean`
-    - **Default**: `false`
-    - By default, `navigateTo` pushes the given route into the Vue Router's instance on the client side.
-      :br
-      This behavior can be changed by setting `replace` to `true`, to indicate that given route should be replaced.
+  - **Type**: `boolean`
+  - **Default**: `false`
+  - By default, `navigateTo` pushes the given route into the Vue Router's instance on the client side.
+    :br
+    This behavior can be changed by setting `replace` to `true`, to indicate that given route should be replaced.
 - `redirectCode`
-    - **Type**: `number`
-    - **Default**: `302`
-    - `navigateTo` redirects to the given path and sets the redirect code to [`302 Found`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/302){rel="nofollow"} by default when the redirection takes place on the server side.
-      :br
-      This default behavior can be modified by providing different `redirectCode`. Commonly, [`301 Moved Permanently`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301){rel="nofollow"} can be used for permanent redirections.
+  - **Type**: `number`
+  - **Default**: `302`
+  - `navigateTo` redirects to the given path and sets the redirect code to [`302 Found`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/302){rel="nofollow"} by default when the redirection takes place on the server side.
+    :br
+    This default behavior can be modified by providing different `redirectCode`. Commonly, [`301 Moved Permanently`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/301){rel="nofollow"} can be used for permanent redirections.
 - `external`
-    - **Type**: `boolean`
-    - **Default**: `false`
-    - Allows navigating to an external URL when set to `true`. Otherwise, `navigateTo` will throw an error, as external navigation is not allowed by default.
+  - **Type**: `boolean`
+  - **Default**: `false`
+  - Allows navigating to an external URL when set to `true`. Otherwise, `navigateTo` will throw an error, as external navigation is not allowed by default.
 - `open`
-    - **Type**: `OpenOptions`
-    - Allows navigating to the URL using the [open()](https://developer.mozilla.org/en-US/docs/Web/API/Window/open){rel="nofollow"} method of the window. This option is only applicable on the client side and will be ignored on the server side.
+  - **Type**: `OpenOptions`
+  - Allows navigating to the URL using the [open()](https://developer.mozilla.org/en-US/docs/Web/API/Window/open){rel="nofollow"} method of the window. This option is only applicable on the client side and will be ignored on the server side.
+    :br
+    An object accepting the following properties:
+  - `target`
+    - **Type**: `string`
+    - **Default**: `'_blank'`
+    - A string, without whitespace, specifying the name of the browsing context the resource is being loaded into.
+  - `windowFeatures`
+    - **Type**: `OpenWindowFeatures`
+    - An object accepting the following properties:
+      | Property | Type | Description |
+      | ------------------------- | --------- | ---------------------------------------------------------------------------------------------- |
+      | `popup` | `boolean` | Requests a minimal popup window instead of a new tab, with UI features decided by the browser. |
+      | `width` or `innerWidth` | `number` | Specifies the content area's width (minimum 100 pixels), including scrollbars. |
+      | `height` or `innerHeight` | `number` | Specifies the content area's height (minimum 100 pixels), including scrollbars. |
+      | `left` or `screenX` | `number` | Sets the horizontal position of the new window relative to the left edge of the screen. |
+      | `top` or `screenY` | `number` | Sets the vertical position of the new window relative to the top edge of the screen. |
+      | `noopener` | `boolean` | Prevents the new window from accessing the originating window via `window.opener`. |
+      | `noreferrer` | `boolean` | Prevents the Referer header from being sent and implicitly enables `noopener`. |
       :br
-      An object accepting the following properties:
-    - `target`
-        - **Type**: `string`
-        - **Default**: `'_blank'`
-        - A string, without whitespace, specifying the name of the browsing context the resource is being loaded into.
-    - `windowFeatures`
-        - **Type**: `OpenWindowFeatures`
-        - An object accepting the following properties:
-          | Property | Type | Description |
-          | ------------------------- | --------- | ---------------------------------------------------------------------------------------------- |
-          | `popup` | `boolean` | Requests a minimal popup window instead of a new tab, with UI features decided by the browser. |
-          | `width` or `innerWidth` | `number` | Specifies the content area's width (minimum 100 pixels), including scrollbars. |
-          | `height` or `innerHeight` | `number` | Specifies the content area's height (minimum 100 pixels), including scrollbars. |
-          | `left` or `screenX` | `number` | Sets the horizontal position of the new window relative to the left edge of the screen. |
-          | `top` or `screenY` | `number` | Sets the vertical position of the new window relative to the top edge of the screen. |
-          | `noopener` | `boolean` | Prevents the new window from accessing the originating window via `window.opener`. |
-          | `noreferrer` | `boolean` | Prevents the Referer header from being sent and implicitly enables `noopener`. |
-          :br
-          Refer to the [documentation](https://developer.mozilla.org/en-US/docs/Web/API/Window/open#windowfeatures){rel="nofollow"} for more detailed information on the **windowFeatures** properties.
+      Refer to the [documentation](https://developer.mozilla.org/en-US/docs/Web/API/Window/open#windowfeatures){rel="nofollow"} for more detailed information on the **windowFeatures** properties.
 
 # onBeforeRouteLeave
 
@@ -18337,11 +18361,11 @@ It is ideal for running code that should not block the initial rendering of your
 
 ```ts [plugins/ready.client.ts]
 export default defineNuxtPlugin(() => {
-	onNuxtReady(async () => {
-		const myAnalyticsLibrary = await import('my-big-analytics-library');
-		// do something with myAnalyticsLibrary
-	});
-});
+  onNuxtReady(async () => {
+    const myAnalyticsLibrary = await import('my-big-analytics-library')
+    // do something with myAnalyticsLibrary
+  })
+})
 ```
 
 It is 'safe' to run even after your app has initialized. In this case, then the code will be registered to run in the next idle callback.
@@ -18353,9 +18377,9 @@ Prefetching component downloads the code in the background, this is based on the
 Use `prefetchComponents` to manually prefetch individual components that have been registered globally in your Nuxt app. By default Nuxt registers these as async components. You must use the Pascal-cased version of the component name.
 
 ```ts
-await prefetchComponents('MyGlobalComponent');
+await prefetchComponents('MyGlobalComponent')
 
-await prefetchComponents(['MyGlobalComponent1', 'MyGlobalComponent2']);
+await prefetchComponents(['MyGlobalComponent1', 'MyGlobalComponent2'])
 ```
 
 ::note
@@ -18373,9 +18397,9 @@ Preloading components loads components that your page will need very soon, which
 Use `preloadComponents` to manually preload individual components that have been registered globally in your Nuxt app. By default Nuxt registers these as async components. You must use the Pascal-cased version of the component name.
 
 ```js
-await preloadComponents('MyGlobalComponent');
+await preloadComponents('MyGlobalComponent')
 
-await preloadComponents(['MyGlobalComponent1', 'MyGlobalComponent2']);
+await preloadComponents(['MyGlobalComponent1', 'MyGlobalComponent2'])
 ```
 
 ::note
@@ -18400,15 +18424,15 @@ Preload a route when using `navigateTo`.
 ```ts
 // we don't await this async function, to avoid blocking rendering
 // this component's setup function
-preloadRouteComponents('/dashboard');
+preloadRouteComponents('/dashboard')
 
-const submit = async () => {
-	const results = await $fetch('/api/authentication');
+async function submit() {
+  const results = await $fetch('/api/authentication')
 
-	if (results.token) {
-		await navigateTo('/dashboard');
-	}
-};
+  if (results.token) {
+    await navigateTo('/dashboard')
+  }
+}
 ```
 
 ::read-more{to="https://nuxt.com/docs/api/utils/navigate-to"}
@@ -18431,10 +18455,10 @@ When prerendering, you can hint to Nitro to prerender additional paths, even if 
 ::
 
 ```js
-const route = useRoute();
+const route = useRoute()
 
-prerenderRoutes('/');
-prerenderRoutes(['/', '/about']);
+prerenderRoutes('/')
+prerenderRoutes(['/', '/about'])
 ```
 
 ::note
@@ -18444,12 +18468,12 @@ In the browser, or if called outside prerendering, `prerenderRoutes` will have n
 You can even prerender API routes which is particularly useful for full statically generated sites (SSG) because you can then `$fetch` data as if you have an available server!
 
 ```js
-prerenderRoutes('/api/content/article/name-of-article');
+prerenderRoutes('/api/content/article/name-of-article')
 
 // Somewhere later in App
 const articleContent = await $fetch('/api/content/article/name-of-article', {
-	responseType: 'json'
-});
+  responseType: 'json'
+})
 ```
 
 ::warning
@@ -18526,24 +18550,25 @@ refreshNuxtData(keys?: string | string[])
 This example below refreshes all data being fetched using `useAsyncData` and `useFetch` in Nuxt application.
 
 ```vue [pages/some-page.vue]
+<template>
+  <div>
+    <button :disabled="refreshing" @click="refreshAll">Refetch All Data</button>
+  </div>
+</template>
+
 <script setup lang="ts">
-const refreshing = ref(false);
+const refreshing = ref(false)
 
 async function refreshAll() {
-	refreshing.value = true;
-	try {
-		await refreshNuxtData();
-	} finally {
-		refreshing.value = false;
-	}
+  refreshing.value = true
+  try {
+    await refreshNuxtData()
+  }
+  finally {
+    refreshing.value = false
+  }
 }
 </script>
-
-<template>
-	<div>
-		<button :disabled="refreshing" @click="refreshAll">Refetch All Data</button>
-	</div>
-</template>
 ```
 
 ### Refresh Specific Data
@@ -18551,24 +18576,25 @@ async function refreshAll() {
 This example below refreshes only data where the key matches to `count` and `user`.
 
 ```vue [pages/some-page.vue]
+<template>
+  <div v-if="refreshing">Loading</div>
+  <button @click="refresh">Refresh</button>
+</template>
+
 <script setup lang="ts">
-const refreshing = ref(false);
+const refreshing = ref(false)
 
 async function refresh() {
-	refreshing.value = true;
-	try {
-		// you could also pass an array of keys to refresh multiple data
-		await refreshNuxtData(['count', 'user']);
-	} finally {
-		refreshing.value = false;
-	}
+  refreshing.value = true
+  try {
+    // you could also pass an array of keys to refresh multiple data
+    await refreshNuxtData(['count', 'user'])
+  }
+  finally {
+    refreshing.value = false
+  }
 }
 </script>
-
-<template>
-	<div v-if="refreshing">Loading</div>
-	<button @click="refresh">Refresh</button>
-</template>
 ```
 
 ::note
@@ -18656,9 +18682,9 @@ An object accepting the following properties:
 
 ```ts [middleware/custom-layout.ts]
 export default defineNuxtRouteMiddleware((to) => {
-	// Set the layout on the route you are navigating _to_
-	setPageLayout('other');
-});
+  // Set the layout on the route you are navigating _to_
+  setPageLayout('other')
+})
 ```
 
 ::note
@@ -18676,15 +18702,15 @@ Nuxt provides composables and utilities for first-class server-side-rendering su
 ::
 
 ```js
-const event = useRequestEvent();
+const event = useRequestEvent()
 
 // event will be undefined in the browser
 if (event) {
-	// Set the status code to 404 for a custom 404 page
-	setResponseStatus(event, 404);
+  // Set the status code to 404 for a custom 404 page
+  setResponseStatus(event, 404)
 
-	// Set the status message as well
-	setResponseStatus(event, 404, 'Page Not Found');
+  // Set the status message as well
+  setResponseStatus(event, 404, 'Page Not Found')
 }
 ```
 
@@ -18704,11 +18730,11 @@ Within the [Nuxt context](https://nuxt.com/docs/guide/going-further/nuxt-app#the
 - `error`: `string | Error | Partial<{ cause, data, message, name, stack, statusCode, statusMessage }>`
 
 ```ts
-showError('😱 Oh no, an error has been thrown.');
+showError('😱 Oh no, an error has been thrown.')
 showError({
-	statusCode: 404,
-	statusMessage: 'Page Not Found'
-});
+  statusCode: 404,
+  statusMessage: 'Page Not Found'
+})
 ```
 
 The error is set in the state using [`useError()`](https://nuxt.com/docs/api/composables/use-error) to create a reactive and SSR-friendly shared error state across components.
@@ -18729,13 +18755,13 @@ Updates the [`app.config`](https://nuxt.com/docs/guide/directory-structure/app-c
 ## Usage
 
 ```js
-const appConfig = useAppConfig(); // { foo: 'bar' }
+const appConfig = useAppConfig() // { foo: 'bar' }
 
-const newAppConfig = { foo: 'baz' };
+const newAppConfig = { foo: 'baz' }
 
-updateAppConfig(newAppConfig);
+updateAppConfig(newAppConfig)
 
-console.log(appConfig); // { foo: 'baz' }
+console.log(appConfig) // { foo: 'baz' }
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/directory-structure/app-config"}
@@ -19123,7 +19149,7 @@ The `init` command initializes a fresh Nuxt project using [unjs/giget](https://g
 
 - `NUXI_INIT_REGISTRY`: Set to a custom template registry. ([learn more](https://github.com/unjs/giget#custom-registry){rel="nofollow"}).
 
-    - Default registry is loaded from [nuxt/starter/templates](https://github.com/nuxt/starter/tree/templates/templates){rel="nofollow"}
+  - Default registry is loaded from [nuxt/starter/templates](https://github.com/nuxt/starter/tree/templates/templates){rel="nofollow"}
 
 # nuxi module
 
@@ -19307,37 +19333,37 @@ Define a Nuxt module, automatically merging defaults with user provided options,
 ### Type
 
 ```ts
-function defineNuxtModule<OptionsT extends ModuleOptions>(definition: ModuleDefinition<OptionsT> | NuxtModule<OptionsT>): NuxtModule<OptionsT>;
+function defineNuxtModule<OptionsT extends ModuleOptions>(definition: ModuleDefinition<OptionsT> | NuxtModule<OptionsT>): NuxtModule<OptionsT>
 
-type ModuleOptions = Record<string, any>;
+type ModuleOptions = Record<string, any>
 
 interface ModuleDefinition<T extends ModuleOptions = ModuleOptions> {
-	meta?: ModuleMeta;
-	defaults?: T | ((nuxt: Nuxt) => T);
-	schema?: T;
-	hooks?: Partial<NuxtHooks>;
-	setup?: (this: void, resolvedOptions: T, nuxt: Nuxt) => Awaitable<void | false | ModuleSetupReturn>;
+  meta?: ModuleMeta
+  defaults?: T | ((nuxt: Nuxt) => T)
+  schema?: T
+  hooks?: Partial<NuxtHooks>
+  setup?: (this: void, resolvedOptions: T, nuxt: Nuxt) => Awaitable<void | false | ModuleSetupReturn>
 }
 
 interface NuxtModule<T extends ModuleOptions = ModuleOptions> {
-	(this: void, inlineOptions: T, nuxt: Nuxt): Awaitable<void | false | ModuleSetupReturn>;
-	getOptions?: (inlineOptions?: T, nuxt?: Nuxt) => Promise<T>;
-	getMeta?: () => Promise<ModuleMeta>;
+  (this: void, inlineOptions: T, nuxt: Nuxt): Awaitable<void | false | ModuleSetupReturn>
+  getOptions?: (inlineOptions?: T, nuxt?: Nuxt) => Promise<T>
+  getMeta?: () => Promise<ModuleMeta>
 }
 
 interface ModuleSetupReturn {
-	timings?: {
-		setup?: number;
-		[key: string]: number | undefined;
-	};
+  timings?: {
+    setup?: number
+    [key: string]: number | undefined
+  }
 }
 
 interface ModuleMeta {
-	name?: string;
-	version?: string;
-	configKey?: string;
-	compatibility?: NuxtCompatibility;
-	[key: string]: unknown;
+  name?: string
+  version?: string
+  configKey?: string
+  compatibility?: NuxtCompatibility
+  [key: string]: unknown
 }
 ```
 
@@ -19381,22 +19407,22 @@ A module definition object or a module function.
 
 ```ts
 // https://github.com/nuxt/starter/tree/module
-import { defineNuxtModule } from '@nuxt/kit';
+import { defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		name: 'my-module',
-		configKey: 'myModule'
-	},
-	defaults: {
-		test: 123
-	},
-	setup(options, nuxt) {
-		nuxt.hook('modules:done', () => {
-			console.log('My module is ready with current test option: ', options.test);
-		});
-	}
-});
+  meta: {
+    name: 'my-module',
+    configKey: 'myModule'
+  },
+  defaults: {
+    test: 123
+  },
+  setup(options, nuxt) {
+    nuxt.hook('modules:done', () => {
+      console.log('My module is ready with current test option: ', options.test)
+    })
+  }
+})
 ```
 
 ## `installModule`
@@ -19406,7 +19432,7 @@ Install specified Nuxt module programmatically. This is helpful when your module
 ### Type
 
 ```ts
-async function installModule(moduleToInstall: string | NuxtModule, inlineOptions?: any, nuxt?: Nuxt);
+async function installModule(moduleToInstall: string | NuxtModule, inlineOptions?: any, nuxt?: Nuxt)
 ```
 
 ### Parameters
@@ -19438,23 +19464,23 @@ Nuxt instance. If not provided, it will be retrieved from the context via `useNu
 ### Examples
 
 ```ts
-import { defineNuxtModule, installModule } from '@nuxt/kit';
+import { defineNuxtModule, installModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	async setup(options, nuxt) {
-		// will install @nuxtjs/fontaine with Roboto font and Impact fallback
-		await installModule('@nuxtjs/fontaine', {
-			// module configuration
-			fonts: [
-				{
-					family: 'Roboto',
-					fallbacks: ['Impact'],
-					fallbackName: 'fallback-a'
-				}
-			]
-		});
-	}
-});
+  async setup(options, nuxt) {
+    // will install @nuxtjs/fontaine with Roboto font and Impact fallback
+    await installModule('@nuxtjs/fontaine', {
+      // module configuration
+      fonts: [
+        {
+          family: 'Roboto',
+          fallbacks: ['Impact'],
+          fallbackName: 'fallback-a'
+        }
+      ]
+    })
+  }
+})
 ```
 
 # Runtime Config
@@ -19466,7 +19492,7 @@ At build-time, it is possible to access the resolved Nuxt [runtime config](https
 ### Type
 
 ```ts
-function useRuntimeConfig(): Record<string, unknown>;
+function useRuntimeConfig(): Record<string, unknown>
 ```
 
 ## `updateRuntimeConfig`
@@ -19474,7 +19500,7 @@ function useRuntimeConfig(): Record<string, unknown>;
 It is also possible to update runtime configuration. This will be merged with the existing runtime configuration, and if Nitro has already been initialized it will trigger an HMR event to reload the Nitro runtime config.
 
 ```ts
-function updateRuntimeConfig(config: Record<string, unknown>): void | Promise<void>;
+function updateRuntimeConfig(config: Record<string, unknown>): void | Promise<void>
 ```
 
 # Templates
@@ -19488,26 +19514,26 @@ Renders given template during build into the project buildDir.
 ### Type
 
 ```ts
-function addTemplate(template: NuxtTemplate | string): ResolvedNuxtTemplate;
+function addTemplate(template: NuxtTemplate | string): ResolvedNuxtTemplate
 
 interface NuxtTemplate {
-	src?: string;
-	filename?: string;
-	dst?: string;
-	options?: Record<string, any>;
-	getContents?: (data: Record<string, any>) => string | Promise<string>;
-	write?: boolean;
+  src?: string
+  filename?: string
+  dst?: string
+  options?: Record<string, any>
+  getContents?: (data: Record<string, any>) => string | Promise<string>
+  write?: boolean
 }
 
 interface ResolvedNuxtTemplate {
-	src: string;
-	filename: string;
-	dst: string;
-	options: Record<string, any>;
-	getContents: (data: Record<string, any>) => string | Promise<string>;
-	write: boolean;
-	filename: string;
-	dst: string;
+  src: string
+  filename: string
+  dst: string
+  options: Record<string, any>
+  getContents: (data: Record<string, any>) => string | Promise<string>
+  write: boolean
+  filename: string
+  dst: string
 }
 ```
 
@@ -19558,38 +19584,38 @@ A template object or a string with the path to the template. If a string is prov
 
 ```ts [module.ts]
 // https://github.com/nuxt/bridge
-import { addTemplate, defineNuxtModule } from '@nuxt/kit';
-import { defu } from 'defu';
+import { addTemplate, defineNuxtModule } from '@nuxt/kit'
+import { defu } from 'defu'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const globalMeta = defu(nuxt.options.app.head, {
-			charset: options.charset,
-			viewport: options.viewport
-		});
+  setup(options, nuxt) {
+    const globalMeta = defu(nuxt.options.app.head, {
+      charset: options.charset,
+      viewport: options.viewport
+    })
 
-		addTemplate({
-			filename: 'meta.config.mjs',
-			getContents: () => 'export default ' + JSON.stringify({ globalMeta, mixinKey: 'setup' })
-		});
-	}
-});
+    addTemplate({
+      filename: 'meta.config.mjs',
+      getContents: () => `export default ${JSON.stringify({ globalMeta, mixinKey: 'setup' })}`
+    })
+  }
+})
 ```
 
 ```ts [plugin.ts]
-import { createHead as createServerHead } from '@unhead/vue/server';
-import { createHead as createClientHead } from '@unhead/vue/client';
-import { defineNuxtPlugin } from '#imports';
 // @ts-ignore
-import metaConfig from '#build/meta.config.mjs';
+import metaConfig from '#build/meta.config.mjs'
+import { defineNuxtPlugin } from '#imports'
+import { createHead as createClientHead } from '@unhead/vue/client'
+import { createHead as createServerHead } from '@unhead/vue/server'
 
 export default defineNuxtPlugin((nuxtApp) => {
-	const createHead = import.meta.server ? createServerHead : createClientHead;
-	const head = createHead();
-	head.push(metaConfig.globalMeta);
+  const createHead = import.meta.server ? createServerHead : createClientHead
+  const head = createHead()
+  head.push(metaConfig.globalMeta)
 
-	nuxtApp.vueApp.use(head);
-});
+  nuxtApp.vueApp.use(head)
+})
 ```
 
 ::
@@ -19601,25 +19627,25 @@ Renders given template during build into the project buildDir, then registers it
 ### Type
 
 ```ts
-function addTypeTemplate(template: NuxtTypeTemplate | string): ResolvedNuxtTemplate;
+function addTypeTemplate(template: NuxtTypeTemplate | string): ResolvedNuxtTemplate
 
 interface NuxtTemplate {
-	src?: string;
-	filename?: string;
-	dst?: string;
-	options?: Record<string, any>;
-	getContents?: (data: Record<string, any>) => string | Promise<string>;
+  src?: string
+  filename?: string
+  dst?: string
+  options?: Record<string, any>
+  getContents?: (data: Record<string, any>) => string | Promise<string>
 }
 
 interface ResolvedNuxtTemplate {
-	src: string;
-	filename: string;
-	dst: string;
-	options: Record<string, any>;
-	getContents: (data: Record<string, any>) => string | Promise<string>;
-	write: boolean;
-	filename: string;
-	dst: string;
+  src: string
+  filename: string
+  dst: string
+  options: Record<string, any>
+  getContents: (data: Record<string, any>) => string | Promise<string>
+  write: boolean
+  filename: string
+  dst: string
 }
 ```
 
@@ -19687,21 +19713,21 @@ Regenerate templates that match the filter. If no filter is provided, all templa
 ### Type
 
 ```ts
-async function updateTemplates(options: UpdateTemplatesOptions): void;
+async function updateTemplates(options: UpdateTemplatesOptions): void
 
 interface UpdateTemplatesOptions {
-	filter?: (template: ResolvedNuxtTemplate) => boolean;
+  filter?: (template: ResolvedNuxtTemplate) => boolean
 }
 
 interface ResolvedNuxtTemplate {
-	src: string;
-	filename: string;
-	dst: string;
-	options: Record<string, any>;
-	getContents: (data: Record<string, any>) => string | Promise<string>;
-	write: boolean;
-	filename: string;
-	dst: string;
+  src: string
+  filename: string
+  dst: string
+  options: Record<string, any>
+  getContents: (data: Record<string, any>) => string | Promise<string>
+  write: boolean
+  filename: string
+  dst: string
 }
 ```
 
@@ -19725,25 +19751,25 @@ Options to pass to the template. This object can have the following property:
 
 ```ts
 // https://github.com/nuxt/nuxt
-import { defineNuxtModule, updateTemplates } from '@nuxt/kit';
+import { defineNuxtModule, updateTemplates } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		// watch and rebuild routes template list when one of the pages changes
-		nuxt.hook('builder:watch', async (event, relativePath) => {
-			if (event === 'change') {
-				return;
-			}
+  setup(options, nuxt) {
+    // watch and rebuild routes template list when one of the pages changes
+    nuxt.hook('builder:watch', async (event, relativePath) => {
+      if (event === 'change') {
+        return
+      }
 
-			const path = resolve(nuxt.options.srcDir, relativePath);
-			if (updateTemplatePaths.some((dir) => path.startsWith(dir))) {
-				await updateTemplates({
-					filter: (template) => template.filename === 'routes.mjs'
-				});
-			}
-		});
-	}
-});
+      const path = resolve(nuxt.options.srcDir, relativePath)
+      if (updateTemplatePaths.some(dir => path.startsWith(dir))) {
+        await updateTemplates({
+          filter: template => template.filename === 'routes.mjs'
+        })
+      }
+    })
+  }
+})
 ```
 
 # Nitro
@@ -19757,14 +19783,14 @@ Adds a nitro server handler. Use it if you want to create server middleware or c
 ### Type
 
 ```ts
-function addServerHandler(handler: NitroEventHandler): void;
+function addServerHandler(handler: NitroEventHandler): void
 
 export interface NitroEventHandler {
-	handler: string;
-	route?: string;
-	middleware?: boolean;
-	lazy?: boolean;
-	method?: string;
+  handler: string
+  route?: string
+  middleware?: boolean
+  lazy?: boolean
+  method?: string
 }
 ```
 
@@ -19810,26 +19836,26 @@ A handler object with the following properties:
 
 ```ts [module.ts]
 // https://github.com/nuxt-modules/robots
-import { createResolver, defineNuxtModule, addServerHandler } from '@nuxt/kit';
+import { addServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options) {
-		const resolver = createResolver(import.meta.url);
+  setup(options) {
+    const resolver = createResolver(import.meta.url)
 
-		addServerHandler({
-			route: '/robots.txt',
-			handler: resolver.resolve('./runtime/robots.get')
-		});
-	}
-});
+    addServerHandler({
+      route: '/robots.txt',
+      handler: resolver.resolve('./runtime/robots.get')
+    })
+  }
+})
 ```
 
 ```ts [runtime/robots.get.ts]
 export default defineEventHandler(() => {
-	return {
-		body: `User-agent: *\nDisallow: /`
-	};
-});
+  return {
+    body: `User-agent: *\nDisallow: /`
+  }
+})
 ```
 
 ::
@@ -19841,11 +19867,11 @@ Adds a nitro server handler to be used only in development mode. This handler wi
 ### Type
 
 ```ts
-function addDevServerHandler(handler: NitroDevEventHandler): void;
+function addDevServerHandler(handler: NitroDevEventHandler): void
 
 export interface NitroDevEventHandler {
-	handler: EventHandler;
-	route?: string;
+  handler: EventHandler
+  route?: string
 }
 ```
 
@@ -19875,42 +19901,42 @@ A handler object with the following properties:
 ::code-group
 
 ```ts [module.ts]
-import { createResolver, defineNuxtModule, addDevServerHandler } from '@nuxt/kit';
+import { addDevServerHandler, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		const resolver = createResolver(import.meta.url);
+  setup() {
+    const resolver = createResolver(import.meta.url)
 
-		addDevServerHandler({
-			handler: () => {
-				return {
-					body: `Response generated at ${new Date().toISOString()}`
-				};
-			},
-			route: '/_handler'
-		});
-	}
-});
+    addDevServerHandler({
+      handler: () => {
+        return {
+          body: `Response generated at ${new Date().toISOString()}`
+        }
+      },
+      route: '/_handler'
+    })
+  }
+})
 ```
 
 ::
 
 ```ts
+import { addDevServerHandler, defineNuxtModule } from '@nuxt/kit'
 // https://github.com/nuxt-modules/tailwindcss
-import { joinURL } from 'ufo';
-import { defineNuxtModule, addDevServerHandler } from '@nuxt/kit';
+import { joinURL } from 'ufo'
 
 export default defineNuxtModule({
-	async setup(options) {
-		const route = joinURL(nuxt.options.app?.baseURL, '/_tailwind');
+  async setup(options) {
+    const route = joinURL(nuxt.options.app?.baseURL, '/_tailwind')
 
-		// @ts-ignore
-		const createServer = (await import('tailwind-config-viewer/server/index.js').then((r) => r.default || r)) as any;
-		const viewerDevMiddleware = createServer({ tailwindConfigProvider: () => options, routerPrefix: route }).asMiddleware();
+    // @ts-ignore
+    const createServer = (await import('tailwind-config-viewer/server/index.js').then(r => r.default || r)) as any
+    const viewerDevMiddleware = createServer({ tailwindConfigProvider: () => options, routerPrefix: route }).asMiddleware()
 
-		addDevServerHandler({ route, handler: viewerDevMiddleware });
-	}
-});
+    addDevServerHandler({ route, handler: viewerDevMiddleware })
+  }
+})
 ```
 
 ## `useNitro`
@@ -19928,18 +19954,18 @@ Changes to the Nitro instance configuration are not applied.
 ### Type
 
 ```ts
-function useNitro(): Nitro;
+function useNitro(): Nitro
 
 export interface Nitro {
-	options: NitroOptions;
-	scannedHandlers: NitroEventHandler[];
-	vfs: Record<string, string>;
-	hooks: Hookable<NitroHooks>;
-	unimport?: Unimport;
-	logger: ConsolaInstance;
-	storage: Storage;
-	close: () => Promise<void>;
-	updateConfig: (config: NitroDynamicConfig) => void | Promise<void>;
+  options: NitroOptions
+  scannedHandlers: NitroEventHandler[]
+  vfs: Record<string, string>
+  hooks: Hookable<NitroHooks>
+  unimport?: Unimport
+  logger: ConsolaInstance
+  storage: Storage
+  close: () => Promise<void>
+  updateConfig: (config: NitroDynamicConfig) => void | Promise<void>
 }
 ```
 
@@ -19947,29 +19973,29 @@ export interface Nitro {
 
 ```ts
 // https://github.com/nuxt/nuxt/blob/4e05650cde31ca73be4d14b1f0d23c7854008749/packages/nuxt/src/core/nuxt.ts#L404
-import { defineNuxtModule, useNitro, addPlugin, createResolver } from '@nuxt/kit';
+import { addPlugin, createResolver, defineNuxtModule, useNitro } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		nuxt.hook('ready', () => {
-			const nitro = useNitro();
-			if (nitro.options.static && nuxt.options.experimental.payloadExtraction === undefined) {
-				console.warn(
-					'Using experimental payload extraction for full-static output. You can opt-out by setting `experimental.payloadExtraction` to `false`.'
-				);
-				nuxt.options.experimental.payloadExtraction = true;
-			}
-			nitro.options.replace['process.env.NUXT_PAYLOAD_EXTRACTION'] = String(!!nuxt.options.experimental.payloadExtraction);
-			nitro.options._config.replace!['process.env.NUXT_PAYLOAD_EXTRACTION'] = String(!!nuxt.options.experimental.payloadExtraction);
+    nuxt.hook('ready', () => {
+      const nitro = useNitro()
+      if (nitro.options.static && nuxt.options.experimental.payloadExtraction === undefined) {
+        console.warn(
+          'Using experimental payload extraction for full-static output. You can opt-out by setting `experimental.payloadExtraction` to `false`.'
+        )
+        nuxt.options.experimental.payloadExtraction = true
+      }
+      nitro.options.replace['process.env.NUXT_PAYLOAD_EXTRACTION'] = String(!!nuxt.options.experimental.payloadExtraction)
+      nitro.options._config.replace!['process.env.NUXT_PAYLOAD_EXTRACTION'] = String(!!nuxt.options.experimental.payloadExtraction)
 
-			if (!nuxt.options.dev && nuxt.options.experimental.payloadExtraction) {
-				addPlugin(resolver.resolve(nuxt.options.appDir, 'plugins/payload.client'));
-			}
-		});
-	}
-});
+      if (!nuxt.options.dev && nuxt.options.experimental.payloadExtraction) {
+        addPlugin(resolver.resolve(nuxt.options.appDir, 'plugins/payload.client'))
+      }
+    })
+  }
+})
 ```
 
 ## `addServerPlugin`
@@ -19983,7 +20009,7 @@ You can read more about Nitro plugins in the [Nitro documentation](https://nitro
 ### Type
 
 ```ts
-function addServerPlugin(plugin: string): void;
+function addServerPlugin(plugin: string): void
 ```
 
 ### Parameters
@@ -20001,30 +20027,30 @@ Path to the plugin. The plugin must export a function that accepts Nitro instanc
 ::code-group
 
 ```ts [module.ts]
-import { createResolver, defineNuxtModule, addServerPlugin } from '@nuxt/kit';
+import { addServerPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		const resolver = createResolver(import.meta.url);
-		addServerPlugin(resolver.resolve('./runtime/plugin.ts'));
-	}
-});
+  setup() {
+    const resolver = createResolver(import.meta.url)
+    addServerPlugin(resolver.resolve('./runtime/plugin.ts'))
+  }
+})
 ```
 
 ```ts [runtime/plugin.ts]
 export default defineNitroPlugin((nitroApp) => {
-	nitroApp.hooks.hook('request', (event) => {
-		console.log('on request', event.path);
-	});
+  nitroApp.hooks.hook('request', (event) => {
+    console.log('on request', event.path)
+  })
 
-	nitroApp.hooks.hook('beforeResponse', (event, { body }) => {
-		console.log('on response', event.path, { body });
-	});
+  nitroApp.hooks.hook('beforeResponse', (event, { body }) => {
+    console.log('on response', event.path, { body })
+  })
 
-	nitroApp.hooks.hook('afterResponse', (event, { body }) => {
-		console.log('on after response', event.path, { body });
-	});
-});
+  nitroApp.hooks.hook('afterResponse', (event, { body }) => {
+    console.log('on after response', event.path, { body })
+  })
+})
 ```
 
 ::
@@ -20052,23 +20078,23 @@ A route or an array of routes to prerender.
 ### Examples
 
 ```ts
-import { defineNuxtModule, addPrerenderRoutes } from '@nuxt/kit';
+import { addPrerenderRoutes, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		name: 'nuxt-sitemap',
-		configKey: 'sitemap'
-	},
-	defaults: {
-		sitemapUrl: '/sitemap.xml',
-		prerender: true
-	},
-	setup(options) {
-		if (options.prerender) {
-			addPrerenderRoutes(options.sitemapUrl);
-		}
-	}
-});
+  meta: {
+    name: 'nuxt-sitemap',
+    configKey: 'sitemap'
+  },
+  defaults: {
+    sitemapUrl: '/sitemap.xml',
+    prerender: true
+  },
+  setup(options) {
+    if (options.prerender) {
+      addPrerenderRoutes(options.sitemapUrl)
+    }
+  }
+})
 ```
 
 ## `addServerImportsDir`
@@ -20078,7 +20104,7 @@ Add a directory to be scanned for auto-imports by Nitro.
 ### Type
 
 ```ts
-function addServerImportsDir(dirs: string | string[], opts: { prepend?: boolean }): void;
+function addServerImportsDir(dirs: string | string[], opts: { prepend?: boolean }): void
 ```
 
 ### Parameters
@@ -20094,18 +20120,18 @@ A directory or an array of directories to register to be scanned by Nitro
 ### Examples
 
 ```ts
-import { defineNuxtModule, createResolver, addServerImportsDir } from '@nuxt/kit';
+import { addServerImportsDir, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		name: 'my-module',
-		configKey: 'myModule'
-	},
-	setup(options) {
-		const resolver = createResolver(import.meta.url);
-		addServerImportsDir(resolver.resolve('./runtime/server/utils'));
-	}
-});
+  meta: {
+    name: 'my-module',
+    configKey: 'myModule'
+  },
+  setup(options) {
+    const resolver = createResolver(import.meta.url)
+    addServerImportsDir(resolver.resolve('./runtime/server/utils'))
+  }
+})
 ```
 
 ## `addServerScanDir`
@@ -20116,7 +20142,7 @@ just like the `~/server` folder is.
 ### Type
 
 ```ts
-function addServerScanDir(dirs: string | string[], opts: { prepend?: boolean }): void;
+function addServerScanDir(dirs: string | string[], opts: { prepend?: boolean }): void
 ```
 
 ### Parameters
@@ -20132,17 +20158,17 @@ A directory or an array of directories to register to be scanned for by Nitro as
 ### Examples
 
 ```ts
-import { defineNuxtModule, createResolver, addServerScanDir } from '@nuxt/kit';
+import { addServerScanDir, createResolver, defineNuxtModule } from '@nuxt/kit'
 export default defineNuxtModule({
-	meta: {
-		name: 'my-module',
-		configKey: 'myModule'
-	},
-	setup(options) {
-		const resolver = createResolver(import.meta.url);
-		addServerScanDir(resolver.resolve('./runtime/server'));
-	}
-});
+  meta: {
+    name: 'my-module',
+    configKey: 'myModule'
+  },
+  setup(options) {
+    const resolver = createResolver(import.meta.url)
+    addServerScanDir(resolver.resolve('./runtime/server'))
+  }
+})
 ```
 
 # Resolving
@@ -20156,7 +20182,7 @@ Resolves full path to a file or directory respecting Nuxt alias and extensions o
 ### Type
 
 ```ts
-async function resolvePath(path: string, options?: ResolvePathOptions): Promise<string>;
+async function resolvePath(path: string, options?: ResolvePathOptions): Promise<string>
 ```
 
 ### Parameters
@@ -20203,42 +20229,42 @@ Options to pass to the resolver. This object can have the following properties:
 
 ```ts
 // https://github.com/P4sca1/nuxt-headlessui
-import { defineNuxtModule, resolvePath } from '@nuxt/kit';
-import { join } from 'pathe';
+import { defineNuxtModule, resolvePath } from '@nuxt/kit'
+import { join } from 'pathe'
 
 const headlessComponents: ComponentGroup[] = [
-	{
-		relativePath: 'combobox/combobox.js',
-		chunkName: 'headlessui/combobox',
-		exports: ['Combobox', 'ComboboxLabel', 'ComboboxButton', 'ComboboxInput', 'ComboboxOptions', 'ComboboxOption']
-	}
-];
+  {
+    relativePath: 'combobox/combobox.js',
+    chunkName: 'headlessui/combobox',
+    exports: ['Combobox', 'ComboboxLabel', 'ComboboxButton', 'ComboboxInput', 'ComboboxOptions', 'ComboboxOption']
+  }
+]
 
 export default defineNuxtModule({
-	meta: {
-		name: 'nuxt-headlessui',
-		configKey: 'headlessui'
-	},
-	defaults: {
-		prefix: 'Headless'
-	},
-	async setup(options) {
-		const entrypoint = await resolvePath('@headlessui/vue');
-		const root = join(entrypoint, '../components');
+  meta: {
+    name: 'nuxt-headlessui',
+    configKey: 'headlessui'
+  },
+  defaults: {
+    prefix: 'Headless'
+  },
+  async setup(options) {
+    const entrypoint = await resolvePath('@headlessui/vue')
+    const root = join(entrypoint, '../components')
 
-		for (const group of headlessComponents) {
-			for (const e of group.exports) {
-				addComponent({
-					name: e,
-					export: e,
-					filePath: join(root, group.relativePath),
-					chunkName: group.chunkName,
-					mode: 'all'
-				});
-			}
-		}
-	}
-});
+    for (const group of headlessComponents) {
+      for (const e of group.exports) {
+        addComponent({
+          name: e,
+          export: e,
+          filePath: join(root, group.relativePath),
+          chunkName: group.chunkName,
+          mode: 'all'
+        })
+      }
+    }
+  }
+})
 ```
 
 ## `resolveAlias`
@@ -20248,7 +20274,7 @@ Resolves path aliases respecting Nuxt alias options.
 ### Type
 
 ```ts
-function resolveAlias(path: string, alias?: Record<string, string>): string;
+function resolveAlias(path: string, alias?: Record<string, string>): string
 ```
 
 ### Parameters
@@ -20276,12 +20302,12 @@ Try to resolve first existing file in given paths.
 ### Type
 
 ```ts
-async function findPath(paths: string | string[], options?: ResolvePathOptions, pathType: 'file' | 'dir'): Promise<string | null>;
+async function findPath(paths: string | string[], options?: ResolvePathOptions, pathType: 'file' | 'dir'): Promise<string | null>
 
 interface ResolvePathOptions {
-	cwd?: string;
-	alias?: Record<string, string>;
-	extensions?: string[];
+  cwd?: string
+  alias?: Record<string, string>
+  extensions?: string[]
 }
 ```
 
@@ -20351,17 +20377,17 @@ Watch Vue School video about createResolver.
 ### Type
 
 ```ts
-function createResolver(basePath: string | URL): Resolver;
+function createResolver(basePath: string | URL): Resolver
 
 interface Resolver {
-	resolve(...path: string[]): string;
-	resolvePath(path: string, options?: ResolvePathOptions): Promise<string>;
+  resolve(...path: string[]): string
+  resolvePath(path: string, options?: ResolvePathOptions): Promise<string>
 }
 
 interface ResolvePathOptions {
-	cwd?: string;
-	alias?: Record<string, string>;
-	extensions?: string[];
+  cwd?: string
+  alias?: Record<string, string>
+  extensions?: string[]
 }
 ```
 
@@ -20379,21 +20405,22 @@ Base path to resolve from.
 
 ```ts
 // https://github.com/vuejs/pinia/blob/v2/packages/nuxt
-import { defineNuxtModule, isNuxt2, createResolver } from '@nuxt/kit';
+import { createResolver, defineNuxtModule, isNuxt2 } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
 
-		nuxt.hook('modules:done', () => {
-			if (isNuxt2()) {
-				addPlugin(resolver.resolve('./runtime/plugin.vue2'));
-			} else {
-				addPlugin(resolver.resolve('./runtime/plugin.vue3'));
-			}
-		});
-	}
-});
+    nuxt.hook('modules:done', () => {
+      if (isNuxt2()) {
+        addPlugin(resolver.resolve('./runtime/plugin.vue2'))
+      }
+      else {
+        addPlugin(resolver.resolve('./runtime/plugin.vue3'))
+      }
+    })
+  }
+})
 ```
 
 # Logging
@@ -20407,7 +20434,7 @@ Returns a logger instance. It uses [consola](https://github.com/unjs/consola){re
 ### Type
 
 ```ts
-function useLogger(tag?: string, options?: Partial<ConsolaOptions>): ConsolaInstance;
+function useLogger(tag?: string, options?: Partial<ConsolaOptions>): ConsolaInstance
 ```
 
 ### Parameters
@@ -20431,27 +20458,27 @@ Consola configuration options
 ### Examples
 
 ```ts
-import { defineNuxtModule, useLogger } from '@nuxt/kit';
+import { defineNuxtModule, useLogger } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const logger = useLogger('my-module');
+  setup(options, nuxt) {
+    const logger = useLogger('my-module')
 
-		logger.info('Hello from my module!');
-	}
-});
+    logger.info('Hello from my module!')
+  }
+})
 ```
 
 ```ts
-import { defineNuxtModule, useLogger } from '@nuxt/kit';
+import { defineNuxtModule, useLogger } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const logger = useLogger('my-module', { level: options.quiet ? 0 : 3 });
+  setup(options, nuxt) {
+    const logger = useLogger('my-module', { level: options.quiet ? 0 : 3 })
 
-		logger.info('Hello from my module!');
-	}
-});
+    logger.info('Hello from my module!')
+  }
+})
 ```
 
 # Builder
@@ -20465,14 +20492,14 @@ Extends the webpack configuration. Callback function can be called multiple time
 ### Type
 
 ```ts
-function extendWebpackConfig(callback: (config: WebpackConfig) => void, options?: ExtendWebpackConfigOptions): void;
+function extendWebpackConfig(callback: (config: WebpackConfig) => void, options?: ExtendWebpackConfigOptions): void
 
 export interface ExtendWebpackConfigOptions {
-	dev?: boolean;
-	build?: boolean;
-	server?: boolean;
-	client?: boolean;
-	prepend?: boolean;
+  dev?: boolean
+  build?: boolean
+  server?: boolean
+  client?: boolean
+  prepend?: boolean
 }
 ```
 
@@ -20542,18 +20569,18 @@ Options to pass to the callback function. This object can have the following pro
 ### Examples
 
 ```ts
-import { defineNuxtModule, extendWebpackConfig } from '@nuxt/kit';
+import { defineNuxtModule, extendWebpackConfig } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		extendWebpackConfig((config) => {
-			config.module?.rules.push({
-				test: /\.txt$/,
-				use: 'raw-loader'
-			});
-		});
-	}
-});
+  setup() {
+    extendWebpackConfig((config) => {
+      config.module?.rules.push({
+        test: /\.txt$/,
+        use: 'raw-loader'
+      })
+    })
+  }
+})
 ```
 
 ## `extendViteConfig`
@@ -20563,14 +20590,14 @@ Extends the Vite configuration. Callback function can be called multiple times, 
 ### Type
 
 ```ts
-function extendViteConfig(callback: (config: ViteConfig) => void, options?: ExtendViteConfigOptions): void;
+function extendViteConfig(callback: (config: ViteConfig) => void, options?: ExtendViteConfigOptions): void
 
 export interface ExtendViteConfigOptions {
-	dev?: boolean;
-	build?: boolean;
-	server?: boolean;
-	client?: boolean;
-	prepend?: boolean;
+  dev?: boolean
+  build?: boolean
+  server?: boolean
+  client?: boolean
+  prepend?: boolean
 }
 ```
 
@@ -20641,17 +20668,17 @@ Options to pass to the callback function. This object can have the following pro
 
 ```ts
 // https://github.com/Hrdtr/nuxt-appwrite
-import { defineNuxtModule, extendViteConfig } from '@nuxt/kit';
+import { defineNuxtModule, extendViteConfig } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		extendViteConfig((config) => {
-			config.optimizeDeps = config.optimizeDeps || {};
-			config.optimizeDeps.include = config.optimizeDeps.include || [];
-			config.optimizeDeps.include.push('cross-fetch');
-		});
-	}
-});
+  setup() {
+    extendViteConfig((config) => {
+      config.optimizeDeps = config.optimizeDeps || {}
+      config.optimizeDeps.include = config.optimizeDeps.include || []
+      config.optimizeDeps.include.push('cross-fetch')
+    })
+  }
+})
 ```
 
 ## `addWebpackPlugin`
@@ -20661,16 +20688,16 @@ Append webpack plugin to the config.
 ### Type
 
 ```ts
-function addWebpackPlugin(pluginOrGetter: PluginOrGetter, options?: ExtendWebpackConfigOptions): void;
+function addWebpackPlugin(pluginOrGetter: PluginOrGetter, options?: ExtendWebpackConfigOptions): void
 
-type PluginOrGetter = WebpackPluginInstance | WebpackPluginInstance[] | (() => WebpackPluginInstance | WebpackPluginInstance[]);
+type PluginOrGetter = WebpackPluginInstance | WebpackPluginInstance[] | (() => WebpackPluginInstance | WebpackPluginInstance[])
 
 interface ExtendWebpackConfigOptions {
-	dev?: boolean;
-	build?: boolean;
-	server?: boolean;
-	client?: boolean;
-	prepend?: boolean;
+  dev?: boolean
+  build?: boolean
+  server?: boolean
+  client?: boolean
+  prepend?: boolean
 }
 ```
 
@@ -20733,29 +20760,29 @@ Options to pass to the callback function. This object can have the following pro
 ### Examples
 
 ```ts
+import { addWebpackPlugin, defineNuxtModule } from '@nuxt/kit'
 // https://github.com/nuxt-modules/eslint
-import EslintWebpackPlugin from 'eslint-webpack-plugin';
-import { defineNuxtModule, addWebpackPlugin } from '@nuxt/kit';
+import EslintWebpackPlugin from 'eslint-webpack-plugin'
 
 export default defineNuxtModule({
-	meta: {
-		name: 'nuxt-eslint',
-		configKey: 'eslint'
-	},
-	defaults: (nuxt) => ({
-		include: [`${nuxt.options.srcDir}/**/*.{js,jsx,ts,tsx,vue}`],
-		lintOnStart: true
-	}),
-	setup(options, nuxt) {
-		const webpackOptions = {
-			...options,
-			context: nuxt.options.srcDir,
-			files: options.include,
-			lintDirtyModulesOnly: !options.lintOnStart
-		};
-		addWebpackPlugin(new EslintWebpackPlugin(webpackOptions), { server: false });
-	}
-});
+  meta: {
+    name: 'nuxt-eslint',
+    configKey: 'eslint'
+  },
+  defaults: nuxt => ({
+    include: [`${nuxt.options.srcDir}/**/*.{js,jsx,ts,tsx,vue}`],
+    lintOnStart: true
+  }),
+  setup(options, nuxt) {
+    const webpackOptions = {
+      ...options,
+      context: nuxt.options.srcDir,
+      files: options.include,
+      lintDirtyModulesOnly: !options.lintOnStart
+    }
+    addWebpackPlugin(new EslintWebpackPlugin(webpackOptions), { server: false })
+  }
+})
 ```
 
 ## `addVitePlugin`
@@ -20765,16 +20792,16 @@ Append Vite plugin to the config.
 ### Type
 
 ```ts
-function addVitePlugin(pluginOrGetter: PluginOrGetter, options?: ExtendViteConfigOptions): void;
+function addVitePlugin(pluginOrGetter: PluginOrGetter, options?: ExtendViteConfigOptions): void
 
-type PluginOrGetter = VitePlugin | VitePlugin[] | (() => VitePlugin | VitePlugin[]);
+type PluginOrGetter = VitePlugin | VitePlugin[] | (() => VitePlugin | VitePlugin[])
 
 interface ExtendViteConfigOptions {
-	dev?: boolean;
-	build?: boolean;
-	server?: boolean;
-	client?: boolean;
-	prepend?: boolean;
+  dev?: boolean
+  build?: boolean
+  server?: boolean
+  client?: boolean
+  prepend?: boolean
 }
 ```
 
@@ -20838,23 +20865,23 @@ Options to pass to the callback function. This object can have the following pro
 
 ```ts
 // https://github.com/yisibell/nuxt-svg-icons
-import { defineNuxtModule, addVitePlugin } from '@nuxt/kit';
-import { svg4VuePlugin } from 'vite-plugin-svg4vue';
+import { addVitePlugin, defineNuxtModule } from '@nuxt/kit'
+import { svg4VuePlugin } from 'vite-plugin-svg4vue'
 
 export default defineNuxtModule({
-	meta: {
-		name: 'nuxt-svg-icons',
-		configKey: 'nuxtSvgIcons'
-	},
-	defaults: {
-		svg4vue: {
-			assetsDirName: 'assets/icons'
-		}
-	},
-	setup(options) {
-		addVitePlugin(svg4VuePlugin(options.svg4vue));
-	}
-});
+  meta: {
+    name: 'nuxt-svg-icons',
+    configKey: 'nuxtSvgIcons'
+  },
+  defaults: {
+    svg4vue: {
+      assetsDirName: 'assets/icons'
+    }
+  },
+  setup(options) {
+    addVitePlugin(svg4VuePlugin(options.svg4vue))
+  }
+})
 ```
 
 ## `addBuildPlugin`
@@ -20864,19 +20891,19 @@ Builder-agnostic version of `addWebpackPlugin` and `addVitePlugin`. It will add 
 ### Type
 
 ```ts
-function addBuildPlugin(pluginFactory: AddBuildPluginFactory, options?: ExtendConfigOptions): void;
+function addBuildPlugin(pluginFactory: AddBuildPluginFactory, options?: ExtendConfigOptions): void
 
 interface AddBuildPluginFactory {
-	vite?: () => VitePlugin | VitePlugin[];
-	webpack?: () => WebpackPluginInstance | WebpackPluginInstance[];
+  vite?: () => VitePlugin | VitePlugin[]
+  webpack?: () => WebpackPluginInstance | WebpackPluginInstance[]
 }
 
 interface ExtendConfigOptions {
-	dev?: boolean;
-	build?: boolean;
-	server?: boolean;
-	client?: boolean;
-	prepend?: boolean;
+  dev?: boolean
+  build?: boolean
+  server?: boolean
+  client?: boolean
+  prepend?: boolean
 }
 ```
 
@@ -20947,28 +20974,28 @@ Some examples of projects doing this already:
 Here is a brief example of how you might access the Vite config from a project; you could implement a similar approach to get the webpack configuration.
 
 ```js
-import { loadNuxt, buildNuxt } from '@nuxt/kit';
+import { buildNuxt, loadNuxt } from '@nuxt/kit'
 
 // https://github.com/nuxt/nuxt/issues/14534
 async function getViteConfig() {
-	const nuxt = await loadNuxt({ cwd: process.cwd(), dev: false, overrides: { ssr: false } });
-	return new Promise((resolve, reject) => {
-		nuxt.hook('vite:extendConfig', (config, { isClient }) => {
-			if (isClient) {
-				resolve(config);
-				throw new Error('_stop_');
-			}
-		});
-		buildNuxt(nuxt).catch((err) => {
-			if (!err.toString().includes('_stop_')) {
-				reject(err);
-			}
-		});
-	}).finally(() => nuxt.close());
+  const nuxt = await loadNuxt({ cwd: process.cwd(), dev: false, overrides: { ssr: false } })
+  return new Promise((resolve, reject) => {
+    nuxt.hook('vite:extendConfig', (config, { isClient }) => {
+      if (isClient) {
+        resolve(config)
+        throw new Error('_stop_')
+      }
+    })
+    buildNuxt(nuxt).catch((err) => {
+      if (!err.toString().includes('_stop_')) {
+        reject(err)
+      }
+    })
+  }).finally(() => nuxt.close())
 }
 
-const viteConfig = await getViteConfig();
-console.log(viteConfig);
+const viteConfig = await getViteConfig()
+console.log(viteConfig)
 ```
 
 # Programmatic Usage
@@ -20982,11 +21009,11 @@ Load Nuxt programmatically. It will load the Nuxt configuration, instantiate and
 ### Type
 
 ```ts
-async function loadNuxt(loadOptions?: LoadNuxtOptions): Promise<Nuxt>;
+async function loadNuxt(loadOptions?: LoadNuxtOptions): Promise<Nuxt>
 
 interface LoadNuxtOptions extends LoadNuxtConfigOptions {
-	dev?: boolean;
-	ready?: boolean;
+  dev?: boolean
+  ready?: boolean
 }
 ```
 
@@ -21022,7 +21049,7 @@ Build Nuxt programmatically. It will invoke the builder (currently [@nuxt/vite-b
 ### Type
 
 ```ts
-async function buildNuxt(nuxt: Nuxt): Promise<any>;
+async function buildNuxt(nuxt: Nuxt): Promise<any>
 ```
 
 ### Parameters
@@ -21042,7 +21069,7 @@ Load Nuxt configuration. It will return the promise with the configuration objec
 ### Type
 
 ```ts
-async function loadNuxtConfig(options: LoadNuxtConfigOptions): Promise<NuxtOptions>;
+async function loadNuxtConfig(options: LoadNuxtConfigOptions): Promise<NuxtOptions>
 ```
 
 ### Parameters
@@ -21062,19 +21089,19 @@ Generates `tsconfig.json` and writes it to the project buildDir.
 ### Type
 
 ```ts
-function writeTypes(nuxt?: Nuxt): void;
+function writeTypes(nuxt?: Nuxt): void
 
 interface Nuxt {
-	options: NuxtOptions;
-	hooks: Hookable<NuxtHooks>;
-	hook: Nuxt['hooks']['hook'];
-	callHook: Nuxt['hooks']['callHook'];
-	addHooks: Nuxt['hooks']['addHooks'];
-	ready: () => Promise<void>;
-	close: () => Promise<void>;
-	server?: any;
-	vfs: Record<string, string>;
-	apps: Record<string, NuxtApp>;
+  options: NuxtOptions
+  hooks: Hookable<NuxtHooks>
+  hook: Nuxt['hooks']['hook']
+  callHook: Nuxt['hooks']['callHook']
+  addHooks: Nuxt['hooks']['addHooks']
+  ready: () => Promise<void>
+  close: () => Promise<void>
+  server?: any
+  vfs: Record<string, string>
+  apps: Record<string, NuxtApp>
 }
 ```
 
@@ -21099,26 +21126,26 @@ Checks if constraints are met for the current Nuxt version. If not, returns an a
 ### Type
 
 ```ts
-async function checkNuxtCompatibility(constraints: NuxtCompatibility, nuxt?: Nuxt): Promise<NuxtCompatibilityIssues>;
+async function checkNuxtCompatibility(constraints: NuxtCompatibility, nuxt?: Nuxt): Promise<NuxtCompatibilityIssues>
 
 interface NuxtCompatibility {
-	nuxt?: string;
-	bridge?: boolean;
-	builder?: {
-		// Set `false` if your module is not compatible with a builder
-		// or a semver-compatible string version constraint
-		vite?: false | string;
-		webpack?: false | string;
-	};
+  nuxt?: string
+  bridge?: boolean
+  builder?: {
+    // Set `false` if your module is not compatible with a builder
+    // or a semver-compatible string version constraint
+    vite?: false | string
+    webpack?: false | string
+  }
 }
 
 interface NuxtCompatibilityIssue {
-	name: string;
-	message: string;
+  name: string
+  message: string
 }
 
 interface NuxtCompatibilityIssues extends Array<NuxtCompatibilityIssue> {
-	toString(): string;
+  toString(): string
 }
 ```
 
@@ -21158,11 +21185,11 @@ Asserts that constraints are met for the current Nuxt version. If not, throws an
 ### Type
 
 ```ts
-async function assertNuxtCompatibility(constraints: NuxtCompatibility, nuxt?: Nuxt): Promise<true>;
+async function assertNuxtCompatibility(constraints: NuxtCompatibility, nuxt?: Nuxt): Promise<true>
 
 interface NuxtCompatibility {
-	nuxt?: string;
-	bridge?: boolean;
+  nuxt?: string
+  bridge?: boolean
 }
 ```
 
@@ -21202,11 +21229,11 @@ Checks if constraints are met for the current Nuxt version. Return `true` if all
 ### Type
 
 ```ts
-async function hasNuxtCompatibility(constraints: NuxtCompatibility, nuxt?: Nuxt): Promise<boolean>;
+async function hasNuxtCompatibility(constraints: NuxtCompatibility, nuxt?: Nuxt): Promise<boolean>
 
 interface NuxtCompatibility {
-	nuxt?: string;
-	bridge?: boolean;
+  nuxt?: string
+  bridge?: boolean
 }
 ```
 
@@ -21246,7 +21273,7 @@ Checks if the current Nuxt version is 2.x.
 ### Type
 
 ```ts
-function isNuxt2(nuxt?: Nuxt): boolean;
+function isNuxt2(nuxt?: Nuxt): boolean
 ```
 
 ### Parameters
@@ -21266,7 +21293,7 @@ Checks if the current Nuxt version is 3.x.
 ### Type
 
 ```ts
-function isNuxt3(nuxt?: Nuxt): boolean;
+function isNuxt3(nuxt?: Nuxt): boolean
 ```
 
 ### Parameters
@@ -21286,7 +21313,7 @@ Returns the current Nuxt version.
 ### Type
 
 ```ts
-function getNuxtVersion(nuxt?: Nuxt): string;
+function getNuxtVersion(nuxt?: Nuxt): string
 ```
 
 ### Parameters
@@ -21329,21 +21356,21 @@ Add imports to the Nuxt application. It makes your imports available in the Nuxt
 ### Usage
 
 ```ts twoslash
-import { defineNuxtModule, addImports } from '@nuxt/kit';
+import { addImports, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		const names = ['useStoryblok', 'useStoryblokApi', 'useStoryblokBridge', 'renderRichText', 'RichTextSchema'];
+  setup(options, nuxt) {
+    const names = ['useStoryblok', 'useStoryblokApi', 'useStoryblokBridge', 'renderRichText', 'RichTextSchema']
 
-		names.forEach((name) => addImports({ name, as: name, from: '@storyblok/vue' }));
-	}
-});
+    names.forEach(name => addImports({ name, as: name, from: '@storyblok/vue' }))
+  }
+})
 ```
 
 ### Type
 
 ```ts
-function addImports(imports: Import | Import[]): void;
+function addImports(imports: Import | Import[]): void
 ```
 
 ### Parameters
@@ -21368,24 +21395,24 @@ Add imports from a directory to the Nuxt application. It will automatically impo
 ### Usage
 
 ```ts twoslash
-import { defineNuxtModule, addImportsDir, createResolver } from '@nuxt/kit';
+import { addImportsDir, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		name: '@vueuse/motion',
-		configKey: 'motion'
-	},
-	setup(options, nuxt) {
-		const resolver = createResolver(import.meta.url);
-		addImportsDir(resolver.resolve('./runtime/composables'));
-	}
-});
+  meta: {
+    name: '@vueuse/motion',
+    configKey: 'motion'
+  },
+  setup(options, nuxt) {
+    const resolver = createResolver(import.meta.url)
+    addImportsDir(resolver.resolve('./runtime/composables'))
+  }
+})
 ```
 
 ### Type
 
 ```ts
-function addImportsDir(dirs: string | string[], options?: { prepend?: boolean }): void;
+function addImportsDir(dirs: string | string[], options?: { prepend?: boolean }): void
 ```
 
 ### Parameters
@@ -21402,22 +21429,22 @@ Add listed imports to the Nuxt application.
 ### Usage
 
 ```ts twoslash
-import { defineNuxtModule, addImportsSources } from '@nuxt/kit';
+import { addImportsSources, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		addImportsSources({
-			from: 'h3',
-			imports: ['defineEventHandler', 'getQuery', 'getRouterParams', 'readBody', 'sendRedirect']
-		});
-	}
-});
+  setup() {
+    addImportsSources({
+      from: 'h3',
+      imports: ['defineEventHandler', 'getQuery', 'getRouterParams', 'readBody', 'sendRedirect']
+    })
+  }
+})
 ```
 
 ### Type
 
 ```ts
-function addImportsSources(importSources: ImportSource | ImportSource[]): void;
+function addImportsSources(importSources: ImportSource | ImportSource[]): void
 ```
 
 ### Parameters
@@ -21452,24 +21479,24 @@ Register a directory to be scanned for components and imported only when used. K
 
 ```ts
 export default defineNuxtModule({
-	meta: {
-		name: '@nuxt/ui',
-		configKey: 'ui'
-	},
-	setup() {
-		addComponentsDir({
-			path: resolve('./runtime/components'),
-			prefix: 'U',
-			pathPrefix: false
-		});
-	}
-});
+  meta: {
+    name: '@nuxt/ui',
+    configKey: 'ui'
+  },
+  setup() {
+    addComponentsDir({
+      path: resolve('./runtime/components'),
+      prefix: 'U',
+      pathPrefix: false
+    })
+  }
+})
 ```
 
 ### Type
 
 ```ts
-function addComponentsDir(dir: ComponentsDir, opts: { prepend?: boolean } = {}): void;
+function addComponentsDir(dir: ComponentsDir, opts: { prepend?: boolean } = {}): void
 ```
 
 ### Parameters
@@ -21507,33 +21534,33 @@ Register a component to be automatically imported.
 ### Usage
 
 ```ts
-import { defineNuxtModule, createResolver, addComponent } from '@nuxt/kit';
+import { addComponent, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	meta: {
-		name: '@nuxt/image',
-		configKey: 'image'
-	},
-	async setup() {
-		const resolver = createResolver(import.meta.url);
+  meta: {
+    name: '@nuxt/image',
+    configKey: 'image'
+  },
+  async setup() {
+    const resolver = createResolver(import.meta.url)
 
-		addComponent({
-			name: 'NuxtImg',
-			filePath: resolver.resolve('./runtime/components/NuxtImg.vue')
-		});
+    addComponent({
+      name: 'NuxtImg',
+      filePath: resolver.resolve('./runtime/components/NuxtImg.vue')
+    })
 
-		addComponent({
-			name: 'NuxtPicture',
-			filePath: resolver.resolve('./runtime/components/NuxtPicture.vue')
-		});
-	}
-});
+    addComponent({
+      name: 'NuxtPicture',
+      filePath: resolver.resolve('./runtime/components/NuxtPicture.vue')
+    })
+  }
+})
 ```
 
 ### Type
 
 ```ts
-function addComponent(options: AddComponentOptions): void;
+function addComponent(options: AddComponentOptions): void
 ```
 
 ### Parameters
@@ -21571,19 +21598,19 @@ Get the Nuxt instance from the context. It will throw an error if Nuxt is not av
 ### Type
 
 ```ts
-function useNuxt(): Nuxt;
+function useNuxt(): Nuxt
 
 interface Nuxt {
-	options: NuxtOptions;
-	hooks: Hookable<NuxtHooks>;
-	hook: Nuxt['hooks']['hook'];
-	callHook: Nuxt['hooks']['callHook'];
-	addHooks: Nuxt['hooks']['addHooks'];
-	ready: () => Promise<void>;
-	close: () => Promise<void>;
-	server?: any;
-	vfs: Record<string, string>;
-	apps: Record<string, NuxtApp>;
+  options: NuxtOptions
+  hooks: Hookable<NuxtHooks>
+  hook: Nuxt['hooks']['hook']
+  callHook: Nuxt['hooks']['callHook']
+  addHooks: Nuxt['hooks']['addHooks']
+  ready: () => Promise<void>
+  close: () => Promise<void>
+  server?: any
+  vfs: Record<string, string>
+  apps: Record<string, NuxtApp>
 }
 ```
 
@@ -21593,28 +21620,28 @@ interface Nuxt {
 
 ```ts [setupTranspilation.ts]
 // https://github.com/Lexpeartha/nuxt-xstate/blob/main/src/parts/transpile.ts
-import { useNuxt } from '@nuxt/kit';
+import { useNuxt } from '@nuxt/kit'
 
-export const setupTranspilation = () => {
-	const nuxt = useNuxt();
+export function setupTranspilation() {
+  const nuxt = useNuxt()
 
-	nuxt.options.build.transpile = nuxt.options.build.transpile || [];
+  nuxt.options.build.transpile = nuxt.options.build.transpile || []
 
-	if (nuxt.options.builder === '@nuxt/webpack-builder') {
-		nuxt.options.build.transpile.push('xstate');
-	}
-};
+  if (nuxt.options.builder === '@nuxt/webpack-builder') {
+    nuxt.options.build.transpile.push('xstate')
+  }
+}
 ```
 
 ```ts [module.ts]
-import { useNuxt } from '@nuxt/kit';
-import { setupTranspilation } from './setupTranspilation';
+import { useNuxt } from '@nuxt/kit'
+import { setupTranspilation } from './setupTranspilation'
 
 export default defineNuxtModule({
-	setup() {
-		setupTranspilation();
-	}
-});
+  setup() {
+    setupTranspilation()
+  }
+})
 ```
 
 ::
@@ -21626,19 +21653,19 @@ Get the Nuxt instance from the context. It will return `null` if Nuxt is not ava
 ### Type
 
 ```ts
-function tryUseNuxt(): Nuxt | null;
+function tryUseNuxt(): Nuxt | null
 
 interface Nuxt {
-	options: NuxtOptions;
-	hooks: Hookable<NuxtHooks>;
-	hook: Nuxt['hooks']['hook'];
-	callHook: Nuxt['hooks']['callHook'];
-	addHooks: Nuxt['hooks']['addHooks'];
-	ready: () => Promise<void>;
-	close: () => Promise<void>;
-	server?: any;
-	vfs: Record<string, string>;
-	apps: Record<string, NuxtApp>;
+  options: NuxtOptions
+  hooks: Hookable<NuxtHooks>
+  hook: Nuxt['hooks']['hook']
+  callHook: Nuxt['hooks']['callHook']
+  addHooks: Nuxt['hooks']['addHooks']
+  ready: () => Promise<void>
+  close: () => Promise<void>
+  server?: any
+  vfs: Record<string, string>
+  apps: Record<string, NuxtApp>
 }
 ```
 
@@ -21648,31 +21675,31 @@ interface Nuxt {
 
 ```ts [requireSiteConfig.ts]
 // https://github.com/harlan-zw/nuxt-site-config/blob/main/test/assertions.test.ts
-import { tryUseNuxt } from '@nuxt/kit';
+import { tryUseNuxt } from '@nuxt/kit'
 
 interface SiteConfig {
-	title: string;
+  title: string
 }
 
-export const requireSiteConfig = (): SiteConfig => {
-	const nuxt = tryUseNuxt();
-	if (!nuxt) {
-		return { title: null };
-	}
-	return nuxt.options.siteConfig;
-};
+export function requireSiteConfig(): SiteConfig {
+  const nuxt = tryUseNuxt()
+  if (!nuxt) {
+    return { title: null }
+  }
+  return nuxt.options.siteConfig
+}
 ```
 
 ```ts [module.ts]
-import { useNuxt } from '@nuxt/kit';
-import { requireSiteConfig } from './requireSiteConfig';
+import { useNuxt } from '@nuxt/kit'
+import { requireSiteConfig } from './requireSiteConfig'
 
 export default defineNuxtModule({
-	setup(_, nuxt) {
-		const config = requireSiteConfig();
-		nuxt.options.app.head.title = config.title;
-	}
-});
+  setup(_, nuxt) {
+    const config = requireSiteConfig()
+    nuxt.options.app.head.title = config.title
+  }
+})
 ```
 
 ::
@@ -21697,17 +21724,17 @@ Watch Vue School video about extendPages.
 ### Type
 
 ```ts
-function extendPages(callback: (pages: NuxtPage[]) => void): void;
+function extendPages(callback: (pages: NuxtPage[]) => void): void
 
-type NuxtPage = {
-	name?: string;
-	path: string;
-	file?: string;
-	meta?: Record<string, any>;
-	alias?: string[] | string;
-	redirect?: RouteLocationRaw;
-	children?: NuxtPage[];
-};
+interface NuxtPage {
+  name?: string
+  path: string
+  file?: string
+  meta?: Record<string, any>
+  alias?: string[] | string
+  redirect?: RouteLocationRaw
+  children?: NuxtPage[]
+}
 ```
 
 ### Parameters
@@ -21724,21 +21751,21 @@ A function that will be called with the pages configuration. You can alter this 
 
 ```ts
 // https://github.com/nuxt-modules/prismic/blob/master/src/module.ts
-import { createResolver, defineNuxtModule, extendPages } from '@nuxt/kit';
+import { createResolver, defineNuxtModule, extendPages } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options) {
-		const resolver = createResolver(import.meta.url);
+  setup(options) {
+    const resolver = createResolver(import.meta.url)
 
-		extendPages((pages) => {
-			pages.unshift({
-				name: 'prismic-preview',
-				path: '/preview',
-				file: resolver.resolve('runtime/preview.vue')
-			});
-		});
-	}
-});
+    extendPages((pages) => {
+      pages.unshift({
+        name: 'prismic-preview',
+        path: '/preview',
+        file: resolver.resolve('runtime/preview.vue')
+      })
+    })
+  }
+})
 ```
 
 ## `extendRouteRules`
@@ -21763,47 +21790,47 @@ Watch Vue School video about adding route rules and route middelwares.
 ### Type
 
 ```ts
-function extendRouteRules(route: string, rule: NitroRouteConfig, options: ExtendRouteRulesOptions): void;
+function extendRouteRules(route: string, rule: NitroRouteConfig, options: ExtendRouteRulesOptions): void
 
 interface NitroRouteConfig {
-	cache?: CacheOptions | false;
-	headers?: Record<string, string>;
-	redirect?: string | { to: string; statusCode?: HTTPStatusCode };
-	prerender?: boolean;
-	proxy?: string | ({ to: string } & ProxyOptions);
-	isr?: number | boolean;
-	cors?: boolean;
-	swr?: boolean | number;
-	static?: boolean | number;
+  cache?: CacheOptions | false
+  headers?: Record<string, string>
+  redirect?: string | { to: string, statusCode?: HTTPStatusCode }
+  prerender?: boolean
+  proxy?: string | ({ to: string } & ProxyOptions)
+  isr?: number | boolean
+  cors?: boolean
+  swr?: boolean | number
+  static?: boolean | number
 }
 
 interface ExtendRouteRulesOptions {
-	override?: boolean;
+  override?: boolean
 }
 
 interface CacheOptions {
-	swr?: boolean;
-	name?: string;
-	group?: string;
-	integrity?: any;
-	maxAge?: number;
-	staleMaxAge?: number;
-	base?: string;
-	headersOnly?: boolean;
+  swr?: boolean
+  name?: string
+  group?: string
+  integrity?: any
+  maxAge?: number
+  staleMaxAge?: number
+  base?: string
+  headersOnly?: boolean
 }
 
 // See https://www.jsdocs.io/package/h3#ProxyOptions
 interface ProxyOptions {
-	headers?: RequestHeaders | HeadersInit;
-	fetchOptions?: RequestInit & { duplex?: Duplex } & {
-		ignoreResponseError?: boolean;
-	};
-	fetch?: typeof fetch;
-	sendStream?: boolean;
-	streamRequest?: boolean;
-	cookieDomainRewrite?: string | Record<string, string>;
-	cookiePathRewrite?: string | Record<string, string>;
-	onResponse?: (event: H3Event, response: Response) => void;
+  headers?: RequestHeaders | HeadersInit
+  fetchOptions?: RequestInit & { duplex?: Duplex } & {
+    ignoreResponseError?: boolean
+  }
+  fetch?: typeof fetch
+  sendStream?: boolean
+  streamRequest?: boolean
+  cookieDomainRewrite?: string | Record<string, string>
+  cookiePathRewrite?: string | Record<string, string>
+  onResponse?: (event: H3Event, response: Response) => void
 }
 ```
 
@@ -21837,34 +21864,34 @@ Options to pass to the route configuration. If `override` is set to `true`, it w
 
 ```ts
 // https://github.com/directus/website/blob/main/modules/redirects.ts
-import { createResolver, defineNuxtModule, extendRouteRules, extendPages } from '@nuxt/kit';
+import { createResolver, defineNuxtModule, extendPages, extendRouteRules } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup(options) {
-		const resolver = createResolver(import.meta.url);
+  setup(options) {
+    const resolver = createResolver(import.meta.url)
 
-		extendPages((pages) => {
-			pages.unshift({
-				name: 'preview-new',
-				path: '/preview-new',
-				file: resolver.resolve('runtime/preview.vue')
-			});
-		});
+    extendPages((pages) => {
+      pages.unshift({
+        name: 'preview-new',
+        path: '/preview-new',
+        file: resolver.resolve('runtime/preview.vue')
+      })
+    })
 
-		extendRouteRules('/preview', {
-			redirect: {
-				to: '/preview-new',
-				statusCode: 302
-			}
-		});
+    extendRouteRules('/preview', {
+      redirect: {
+        to: '/preview-new',
+        statusCode: 302
+      }
+    })
 
-		extendRouteRules('/preview-new', {
-			cache: {
-				maxAge: 60 * 60 * 24 * 7
-			}
-		});
-	}
-});
+    extendRouteRules('/preview-new', {
+      cache: {
+        maxAge: 60 * 60 * 24 * 7
+      }
+    })
+  }
+})
 ```
 
 ## `addRouteMiddleware`
@@ -21891,17 +21918,17 @@ Watch Vue School video about adding route rules and route middelwares.
 ### Type
 
 ```ts
-function addRouteMiddleware(input: NuxtMiddleware | NuxtMiddleware[], options: AddRouteMiddlewareOptions): void;
+function addRouteMiddleware(input: NuxtMiddleware | NuxtMiddleware[], options: AddRouteMiddlewareOptions): void
 
-type NuxtMiddleware = {
-	name: string;
-	path: string;
-	global?: boolean;
-};
+interface NuxtMiddleware {
+  name: string
+  path: string
+  global?: boolean
+}
 
 interface AddRouteMiddlewareOptions {
-	override?: boolean;
-	prepend?: boolean;
+  override?: boolean
+  prepend?: boolean
 }
 ```
 
@@ -21958,30 +21985,30 @@ A middleware object or an array of middleware objects with the following propert
 
 ```ts [runtime/auth.ts]
 export default defineNuxtRouteMiddleware((to, from) => {
-	// isAuthenticated() is an example method verifying if a user is authenticated
-	if (to.path !== '/login' && isAuthenticated() === false) {
-		return navigateTo('/login');
-	}
-});
+  // isAuthenticated() is an example method verifying if a user is authenticated
+  if (to.path !== '/login' && isAuthenticated() === false) {
+    return navigateTo('/login')
+  }
+})
 ```
 
 ```ts [module.ts]
-import { createResolver, defineNuxtModule, addRouteMiddleware } from '@nuxt/kit';
+import { addRouteMiddleware, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		const resolver = createResolver(import.meta.url);
+  setup() {
+    const resolver = createResolver(import.meta.url)
 
-		addRouteMiddleware(
-			{
-				name: 'auth',
-				path: resolver.resolve('runtime/auth.ts'),
-				global: true
-			},
-			{ prepend: true }
-		);
-	}
-});
+    addRouteMiddleware(
+      {
+        name: 'auth',
+        path: resolver.resolve('runtime/auth.ts'),
+        global: true
+      },
+      { prepend: true }
+    )
+  }
+})
 ```
 
 ::
@@ -22001,15 +22028,15 @@ In Nuxt 2 `error` layout can also be registered using this utility. In Nuxt 3+ `
 ### Type
 
 ```ts
-function addLayout(layout: NuxtTemplate | string, name: string): void;
+function addLayout(layout: NuxtTemplate | string, name: string): void
 
 interface NuxtTemplate {
-	src?: string;
-	filename?: string;
-	dst?: string;
-	options?: Record<string, any>;
-	getContents?: (data: Record<string, any>) => string | Promise<string>;
-	write?: boolean;
+  src?: string
+  filename?: string
+  dst?: string
+  options?: Record<string, any>
+  getContents?: (data: Record<string, any>) => string | Promise<string>
+  write?: boolean
 }
 ```
 
@@ -22076,16 +22103,16 @@ Watch Vue School video about addPlugin.
 ### Type
 
 ```ts
-function addPlugin(plugin: NuxtPlugin | string, options: AddPluginOptions): NuxtPlugin;
+function addPlugin(plugin: NuxtPlugin | string, options: AddPluginOptions): NuxtPlugin
 
 interface NuxtPlugin {
-	src: string;
-	mode?: 'all' | 'server' | 'client';
-	order?: number;
+  src: string
+  mode?: 'all' | 'server' | 'client'
+  order?: number
 }
 
 interface AddPluginOptions {
-	append?: boolean;
+  append?: boolean
 }
 ```
 
@@ -22136,31 +22163,31 @@ Options to pass to the plugin. If `append` is set to `true`, the plugin will be 
 ::code-group
 
 ```ts [module.ts]
-import { createResolver, defineNuxtModule, addPlugin } from '@nuxt/kit';
+import { addPlugin, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		const resolver = createResolver(import.meta.url);
+  setup() {
+    const resolver = createResolver(import.meta.url)
 
-		addPlugin({
-			src: resolver.resolve('runtime/plugin.js'),
-			mode: 'client'
-		});
-	}
-});
+    addPlugin({
+      src: resolver.resolve('runtime/plugin.js'),
+      mode: 'client'
+    })
+  }
+})
 ```
 
 ```ts [runtime/plugin.js]
 // https://github.com/nuxt/nuxters
 export default defineNuxtPlugin((nuxtApp) => {
-	const colorMode = useColorMode();
+  const colorMode = useColorMode()
 
-	nuxtApp.hook('app:mounted', () => {
-		if (colorMode.preference !== 'dark') {
-			colorMode.preference = 'dark';
-		}
-	});
-});
+  nuxtApp.hook('app:mounted', () => {
+    if (colorMode.preference !== 'dark') {
+      colorMode.preference = 'dark'
+    }
+  })
+})
 ```
 
 ::
@@ -22183,27 +22210,27 @@ Watch Vue School video about addPluginTemplate.
 ### Type
 
 ```ts
-function addPluginTemplate(pluginOptions: NuxtPluginTemplate, options: AddPluginOptions): NuxtPlugin;
+function addPluginTemplate(pluginOptions: NuxtPluginTemplate, options: AddPluginOptions): NuxtPlugin
 
 interface NuxtPluginTemplate<Options = Record<string, any>> {
-	src?: string;
-	filename?: string;
-	dst?: string;
-	mode?: 'all' | 'server' | 'client';
-	options?: Options;
-	getContents?: (data: Options) => string | Promise<string>;
-	write?: boolean;
-	order?: number;
+  src?: string
+  filename?: string
+  dst?: string
+  mode?: 'all' | 'server' | 'client'
+  options?: Options
+  getContents?: (data: Options) => string | Promise<string>
+  write?: boolean
+  order?: number
 }
 
 interface AddPluginOptions {
-	append?: boolean;
+  append?: boolean
 }
 
 interface NuxtPlugin {
-	src: string;
-	mode?: 'all' | 'server' | 'client';
-	order?: number;
+  src: string
+  mode?: 'all' | 'server' | 'client'
+  order?: number
 }
 ```
 
@@ -22280,22 +22307,22 @@ Options to pass to the plugin. If `append` is set to `true`, the plugin will be 
 
 ```ts [module.ts]
 // https://github.com/vuejs/vuefire
-import { createResolver, defineNuxtModule, addPluginTemplate } from '@nuxt/kit';
+import { addPluginTemplate, createResolver, defineNuxtModule } from '@nuxt/kit'
 
 export default defineNuxtModule({
-	setup() {
-		const resolver = createResolver(import.meta.url);
+  setup() {
+    const resolver = createResolver(import.meta.url)
 
-		addPluginTemplate({
-			src: resolve(templatesDir, 'plugin.ejs'),
-			filename: 'plugin.mjs',
-			options: {
-				...options,
-				ssr: nuxt.options.ssr
-			}
-		});
-	}
-});
+    addPluginTemplate({
+      src: resolve(templatesDir, 'plugin.ejs'),
+      filename: 'plugin.mjs',
+      options: {
+        ...options,
+        ssr: nuxt.options.ssr
+      }
+    })
+  }
+})
 ```
 
 ```ts [runtime/plugin.ejs]
@@ -22467,21 +22494,21 @@ These values are available both in modules and in your `nuxt.config`.
 ### Using `import.meta.url` to resolve files within modules
 
 ```ts [modules/my-module/index.ts]
-import { createResolver } from 'nuxt/kit';
+import { createResolver } from 'nuxt/kit'
 
 // Resolve relative from the current file
-const resolver = createResolver(import.meta.url);
+const resolver = createResolver(import.meta.url)
 
 export default defineNuxtModule({
-	meta: { name: 'myModule' },
-	setup() {
-		addComponent({
-			name: 'MyModuleComponent',
-			// Resolves to '/modules/my-module/components/MyModuleComponent.vue'
-			filePath: resolver.resolve('./components/MyModuleComponent.vue')
-		});
-	}
-});
+  meta: { name: 'myModule' },
+  setup() {
+    addComponent({
+      name: 'MyModuleComponent',
+      // Resolves to '/modules/my-module/components/MyModuleComponent.vue'
+      filePath: resolver.resolve('./components/MyModuleComponent.vue')
+    })
+  }
+})
 ```
 
 # Nuxt Configuration
@@ -22506,15 +22533,15 @@ You can improve your DX by defining additional aliases to access custom director
 
 ```json
 {
-	"~": "/<srcDir>",
-	"@": "/<srcDir>",
-	"~~": "/<rootDir>",
-	"@@": "/<rootDir>",
-	"#shared": "/<rootDir>/shared",
-	"assets": "/<srcDir>/assets",
-	"public": "/<srcDir>/public",
-	"#build": "/<rootDir>/.nuxt",
-	"#internal/nuxt/paths": "/<rootDir>/.nuxt/paths.mjs"
+  "~": "/<srcDir>",
+  "@": "/<srcDir>",
+  "~~": "/<rootDir>",
+  "@@": "/<rootDir>",
+  "#shared": "/<rootDir>/shared",
+  "assets": "/<srcDir>/assets",
+  "public": "/<srcDir>/public",
+  "#build": "/<rootDir>/.nuxt",
+  "#internal/nuxt/paths": "/<rootDir>/.nuxt/paths.mjs"
 }
 ```
 
@@ -22533,12 +22560,12 @@ further, make sure to add them here or within the `typescript.tsConfig` property
 
 ```js
 export default {
-	alias: {
-		images: fileURLToPath(new URL('./assets/images', import.meta.url)),
-		style: fileURLToPath(new URL('./assets/style', import.meta.url)),
-		data: fileURLToPath(new URL('./assets/other/data', import.meta.url))
-	}
-};
+  alias: {
+    images: fileURLToPath(new URL('./assets/images', import.meta.url)),
+    style: fileURLToPath(new URL('./assets/style', import.meta.url)),
+    data: fileURLToPath(new URL('./assets/other/data', import.meta.url))
+  }
+}
 ```
 
 ## analyzeDir
@@ -22567,10 +22594,10 @@ For example:
 
 ```ts
 export default defineNuxtConfig({
-	app: {
-		baseURL: '/prefix/'
-	}
-});
+  app: {
+    baseURL: '/prefix/'
+  }
+})
 ```
 
 **Example**:
@@ -22599,10 +22626,10 @@ For example:
 
 ```ts
 export default defineNuxtConfig({
-	app: {
-		cdnURL: 'https://mycdn.org/'
-	}
-});
+  app: {
+    cdnURL: 'https://mycdn.org/'
+  }
+})
 ```
 
 **Example**:
@@ -22620,19 +22647,19 @@ Set default configuration for `<head>` on every page.
 
 ```json
 {
-	"meta": [
-		{
-			"name": "viewport",
-			"content": "width=device-width, initial-scale=1"
-		},
-		{
-			"charset": "utf-8"
-		}
-	],
-	"link": [],
-	"style": [],
-	"script": [],
-	"noscript": []
+  "meta": [
+    {
+      "name": "viewport",
+      "content": "width=device-width, initial-scale=1"
+    },
+    {
+      "charset": "utf-8"
+    }
+  ],
+  "link": [],
+  "style": [],
+  "script": [],
+  "noscript": []
 }
 ```
 
@@ -22708,7 +22735,7 @@ Customize Nuxt root element id.
 
 ```json
 {
-	"id": "__nuxt"
+  "id": "__nuxt"
 }
 ```
 
@@ -22751,7 +22778,7 @@ Customize Nuxt Teleport element attributes.
 
 ```json
 {
-	"id": "teleports"
+  "id": "teleports"
 }
 ```
 
@@ -22813,9 +22840,9 @@ Set to `true` to enable bundle analysis, or pass an object with options: [for we
 
 ```json
 {
-	"template": "treemap",
-	"projectRoot": "/<rootDir>",
-	"filename": "/<rootDir>/.nuxt/analyze/{name}.html"
+  "template": "treemap",
+  "projectRoot": "/<rootDir>",
+  "filename": "/<rootDir>/.nuxt/analyze/{name}.html"
 }
 ```
 
@@ -22823,7 +22850,7 @@ Set to `true` to enable bundle analysis, or pass an object with options: [for we
 
 ```js
 analyze: {
-	analyzerMode: 'static';
+  analyzerMode: 'static'
 }
 ```
 
@@ -22837,11 +22864,11 @@ It is recommended to use `addTemplate` from `@nuxt/kit` instead of this option.
 
 ```js
 templates: [
-	{
-		src: '~/modules/support/plugin.js', // `src` can be absolute or relative
-		dst: 'support.js' // `dst` is relative to project `.nuxt` dir
-	}
-];
+  {
+    src: '~/modules/support/plugin.js', // `src` can be absolute or relative
+    dst: 'support.js' // `dst` is relative to project `.nuxt` dir
+  }
+]
 ```
 
 ### `transpile`
@@ -22855,7 +22882,7 @@ You can also use a function to conditionally transpile. The function will receiv
 **Example**:
 
 ```js
-transpile: [({ isLegacy }) => isLegacy && 'ky'];
+transpile: [({ isLegacy }) => isLegacy && 'ky']
 ```
 
 ## buildDir
@@ -22871,8 +22898,8 @@ Many tools assume that `.nuxt` is a hidden directory (because it starts with a `
 
 ```js
 export default {
-	buildDir: 'nuxt-build'
-};
+  buildDir: 'nuxt-build'
+}
 ```
 
 ## buildId
@@ -22907,13 +22934,13 @@ Any components in the directories configured here can be used throughout your pa
 
 ```json
 {
-	"dirs": [
-		{
-			"path": "~/components/global",
-			"global": true
-		},
-		"~/components"
-	]
+  "dirs": [
+    {
+      "path": "~/components/global",
+      "global": true
+    },
+    "~/components"
+  ]
 }
 ```
 
@@ -22931,13 +22958,13 @@ Nuxt will automatically guess the file type by its extension and use the appropr
 
 ```js
 css: [
-	// Load a Node.js module directly (here it's a Sass file).
-	'bulma',
-	// CSS file in the project
-	'~/assets/css/main.css',
-	// SCSS file in the project
-	'~/assets/css/main.scss'
-];
+  // Load a Node.js module directly (here it's a Sass file).
+  'bulma',
+  // CSS file in the project
+  '~/assets/css/main.css',
+  // SCSS file in the project
+  '~/assets/css/main.scss'
+]
 ```
 
 ## debug
@@ -22989,13 +23016,13 @@ Whether to enable HTTPS.
 
 ```ts
 export default defineNuxtConfig({
-	devServer: {
-		https: {
-			key: './server.key',
-			cert: './server.crt'
-		}
-	}
-});
+  devServer: {
+    https: {
+      key: './server.key',
+      cert: './server.crt'
+    }
+  }
+})
 ```
 
 ### `loadingTemplate`
@@ -23172,11 +23199,11 @@ This feature adds performance markers for Nuxt hooks, allowing you to track thei
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-	experimental: {
-		// Enable performance markers for Nuxt hooks in browser devtools
-		browserDevtoolsTiming: true
-	}
-});
+  experimental: {
+    // Enable performance markers for Nuxt hooks in browser devtools
+    browserDevtoolsTiming: true
+  }
+})
 ```
 
 **See**: [PR #29922](https://github.com/nuxt/nuxt/pull/29922){rel="nofollow"}
@@ -23274,11 +23301,11 @@ When enabled, Nuxt will track which modules modify configuration options, making
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-	experimental: {
-		// Enable tracking of config mutations by modules
-		debugModuleMutation: true
-	}
-});
+  experimental: {
+    // Enable tracking of config mutations by modules
+    debugModuleMutation: true
+  }
+})
 ```
 
 **See**: [PR #30555](https://github.com/nuxt/nuxt/pull/30555){rel="nofollow"}
@@ -23477,11 +23504,11 @@ Nuxt will automatically purge cached data from `useAsyncData` and `nuxtApp.stati
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-	experimental: {
-		// Disable automatic cache cleanup (default is true)
-		purgeCachedData: false
-	}
-});
+  experimental: {
+    // Disable automatic cache cleanup (default is true)
+    purgeCachedData: false
+  }
+})
 ```
 
 **See**: [PR #31379](https://github.com/nuxt/nuxt/pull/31379){rel="nofollow"}
@@ -23551,14 +23578,14 @@ It is particularly important when enabling this feature to make sure that any un
 ```ts
 // This would be unsafe in a dynamic page (e.g. `[slug].vue`) because the route slug makes a difference
 // to the data fetched, but Nuxt can't know that because it's not reflected in the key.
-const route = useRoute();
+const route = useRoute()
 const { data } = await useAsyncData(async () => {
-	return await $fetch(`/api/my-page/${route.params.slug}`);
-});
+  return await $fetch(`/api/my-page/${route.params.slug}`)
+})
 // Instead, you should use a key that uniquely identifies the data fetched.
 const { data } = await useAsyncData(route.params.slug, async () => {
-	return await $fetch(`/api/my-page/${route.params.slug}`);
-});
+  return await $fetch(`/api/my-page/${route.params.slug}`)
+})
 ```
 
 ### `spaLoadingTemplateLocation`
@@ -23584,11 +23611,11 @@ By default, Nuxt attempts to resolve imports in templates relative to the module
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-	experimental: {
-		// Disable template import resolution from module path
-		templateImportResolution: false
-	}
-});
+  experimental: {
+    // Disable template import resolution from module path
+    templateImportResolution: false
+  }
+})
 ```
 
 **See**: [PR #31175](https://github.com/nuxt/nuxt/pull/31175){rel="nofollow"}
@@ -23730,31 +23757,31 @@ Setting `compatibilityVersion` to `4` changes defaults throughout your Nuxt conf
 
 ```ts
 export default defineNuxtConfig({
-	future: {
-		compatibilityVersion: 4
-	},
-	// To re-enable _all_ Nuxt v3 behaviour, set the following options:
-	srcDir: '.',
-	dir: {
-		app: 'app'
-	},
-	experimental: {
-		compileTemplate: true,
-		templateUtils: true,
-		relativeWatchPaths: true,
-		resetAsyncDataToUndefined: true,
-		defaults: {
-			useAsyncData: {
-				deep: true
-			}
-		}
-	},
-	unhead: {
-		renderSSRHeadOptions: {
-			omitLineBreaks: false
-		}
-	}
-});
+  future: {
+    compatibilityVersion: 4
+  },
+  // To re-enable _all_ Nuxt v3 behaviour, set the following options:
+  srcDir: '.',
+  dir: {
+    app: 'app'
+  },
+  experimental: {
+    compileTemplate: true,
+    templateUtils: true,
+    relativeWatchPaths: true,
+    resetAsyncDataToUndefined: true,
+    defaults: {
+      useAsyncData: {
+        deep: true
+      }
+    }
+  },
+  unhead: {
+    renderSSRHeadOptions: {
+      omitLineBreaks: false
+    }
+  }
+})
 ```
 
 ### `multiApp`
@@ -23798,7 +23825,7 @@ It is preferred to use `nitro.prerender.routes`.
 **Example**:
 
 ```js
-routes: ['/users/1', '/users/2', '/users/3'];
+routes: ['/users/1', '/users/2', '/users/3']
 ```
 
 ## hooks
@@ -23811,18 +23838,18 @@ For ease of configuration, you can also structure them as an hierarchical object
 **Example**:
 
 ```js
-import fs from 'node:fs';
-import path from 'node:path';
+import fs from 'node:fs'
+import path from 'node:path'
 export default {
-	hooks: {
-		build: {
-			done(builder) {
-				const extraFilePath = path.join(builder.nuxt.options.buildDir, 'extra-file');
-				fs.writeFileSync(extraFilePath, 'Something extra');
-			}
-		}
-	}
-};
+  hooks: {
+    build: {
+      done(builder) {
+        const extraFilePath = path.join(builder.nuxt.options.buildDir, 'extra-file')
+        fs.writeFileSync(extraFilePath, 'Something extra')
+      }
+    }
+  }
+}
 ```
 
 ## ignore
@@ -23834,14 +23861,14 @@ More customizable than `ignorePrefix`: all files matching glob patterns specifie
 
 ```json
 [
-	"**/*.stories.{js,cts,mts,ts,jsx,tsx}",
-	"**/*.{spec,test}.{js,cts,mts,ts,jsx,tsx}",
-	"**/*.d.{cts,mts,ts}",
-	"**/.{pnpm-store,vercel,netlify,output,git,cache,data}",
-	"**/*.sock",
-	".nuxt/analyze",
-	".nuxt",
-	"**/-*.*"
+  "**/*.stories.{js,cts,mts,ts,jsx,tsx}",
+  "**/*.{spec,test}.{js,cts,mts,ts,jsx,tsx}",
+  "**/*.d.{cts,mts,ts}",
+  "**/.{pnpm-store,vercel,netlify,output,git,cache,data}",
+  "**/*.sock",
+  ".nuxt/analyze",
+  ".nuxt",
+  "**/-*.*"
 ]
 ```
 
@@ -23855,7 +23882,7 @@ Pass options directly to `node-ignore` (which is used by Nuxt to ignore files).
 
 ```js
 ignoreOptions: {
-	ignorecase: false;
+  ignorecase: false
 }
 ```
 
@@ -23882,8 +23909,8 @@ An array of custom directories that will be auto-imported. Note that this option
 
 ```js
 imports: {
-	// Auto-import pinia stores defined in `~/stores`
-	dirs: ['stores'];
+  // Auto-import pinia stores defined in `~/stores`
+  dirs: ['stores']
 }
 ```
 
@@ -23926,15 +23953,15 @@ directory are executed, and they load in alphabetical order.
 
 ```js
 modules: [
-	// Using package name
-	'@nuxtjs/axios',
-	// Relative to your project srcDir
-	'~/modules/awesome.js',
-	// Providing options
-	['@nuxtjs/google-analytics', { ua: 'X1234567' }],
-	// Inline definition
-	function () {}
-];
+  // Using package name
+  '@nuxtjs/axios',
+  // Relative to your project srcDir
+  '~/modules/awesome.js',
+  // Providing options
+  ['@nuxtjs/google-analytics', { ua: 'X1234567' }],
+  // Inline definition
+  function () {}
+]
 ```
 
 ## modulesDir
@@ -23955,8 +23982,8 @@ Setting this field may be necessary if your project is organized as a yarn works
 
 ```js
 export default {
-	modulesDir: ['../../node_modules']
-};
+  modulesDir: ['../../node_modules']
+}
 ```
 
 ## nitro
@@ -23976,16 +24003,16 @@ Configuration for Nitro.
 
 ```json
 {
-	"public": {},
-	"app": {
-		"buildId": "9adf8915-ab29-4ac2-9832-80aabe2d6725",
-		"baseURL": "/",
-		"buildAssetsDir": "/_nuxt/",
-		"cdnURL": ""
-	},
-	"nitro": {
-		"envPrefix": "NUXT_"
-	}
+  "public": {},
+  "app": {
+    "buildId": "9adf8915-ab29-4ac2-9832-80aabe2d6725",
+    "baseURL": "/",
+    "buildAssetsDir": "/_nuxt/",
+    "cdnURL": ""
+  },
+  "nitro": {
+    "envPrefix": "NUXT_"
+  }
 }
 ```
 
@@ -24047,34 +24074,34 @@ The key will be unique based on the location of the function being invoked withi
 
 ```json
 [
-	{
-		"name": "callOnce",
-		"argumentLength": 3
-	},
-	{
-		"name": "defineNuxtComponent",
-		"argumentLength": 2
-	},
-	{
-		"name": "useState",
-		"argumentLength": 2
-	},
-	{
-		"name": "useFetch",
-		"argumentLength": 3
-	},
-	{
-		"name": "useAsyncData",
-		"argumentLength": 3
-	},
-	{
-		"name": "useLazyAsyncData",
-		"argumentLength": 3
-	},
-	{
-		"name": "useLazyFetch",
-		"argumentLength": 3
-	}
+  {
+    "name": "callOnce",
+    "argumentLength": 3
+  },
+  {
+    "name": "defineNuxtComponent",
+    "argumentLength": 2
+  },
+  {
+    "name": "useState",
+    "argumentLength": 2
+  },
+  {
+    "name": "useFetch",
+    "argumentLength": 3
+  },
+  {
+    "name": "useAsyncData",
+    "argumentLength": 3
+  },
+  {
+    "name": "useLazyAsyncData",
+    "argumentLength": 3
+  },
+  {
+    "name": "useLazyFetch",
+    "argumentLength": 3
+  }
 ]
 ```
 
@@ -24090,9 +24117,9 @@ Tree shake composables from the server or client builds.
 
 ```js
 treeShake: {
-	client: {
-		myPackage: ['useServerOnlyComposable'];
-	}
+  client: {
+    myPackage: ['useServerOnlyComposable']
+  }
 }
 ```
 
@@ -24103,8 +24130,8 @@ treeShake: {
 
 ```json
 {
-	"vue": ["onRenderTracked", "onRenderTriggered", "onServerPrefetch"],
-	"#app": ["definePayloadReducer", "definePageMeta", "onPrehydrate"]
+  "vue": ["onRenderTracked", "onRenderTriggered", "onServerPrefetch"],
+  "#app": ["definePayloadReducer", "definePageMeta", "onPrehydrate"]
 }
 ```
 
@@ -24115,19 +24142,19 @@ treeShake: {
 
 ```json
 {
-	"vue": [
-		"onMounted",
-		"onUpdated",
-		"onUnmounted",
-		"onBeforeMount",
-		"onBeforeUpdate",
-		"onBeforeUnmount",
-		"onRenderTracked",
-		"onRenderTriggered",
-		"onActivated",
-		"onDeactivated"
-	],
-	"#app": ["definePayloadReviver", "definePageMeta"]
+  "vue": [
+    "onMounted",
+    "onUpdated",
+    "onUnmounted",
+    "onBeforeMount",
+    "onBeforeUpdate",
+    "onBeforeUnmount",
+    "onRenderTracked",
+    "onRenderTriggered",
+    "onActivated",
+    "onDeactivated"
+  ],
+  "#app": ["definePayloadReviver", "definePageMeta"]
 }
 ```
 
@@ -24166,13 +24193,13 @@ need to customize their order. All plugins are deduplicated by their src path.
 
 ```js
 plugins: [
-	'~/plugins/foo.client.js', // only in client side
-	'~/plugins/bar.server.js', // only in server side
-	'~/plugins/baz.js', // both client & server
-	{ src: '~/plugins/both-sides.js' },
-	{ src: '~/plugins/client-only.js', mode: 'client' }, // only on client side
-	{ src: '~/plugins/server-only.js', mode: 'server' } // only on server side
-];
+  '~/plugins/foo.client.js', // only in client side
+  '~/plugins/bar.server.js', // only in server side
+  '~/plugins/baz.js', // both client & server
+  { src: '~/plugins/both-sides.js' },
+  { src: '~/plugins/client-only.js', mode: 'client' }, // only on client side
+  { src: '~/plugins/server-only.js', mode: 'server' } // only on server side
+]
 ```
 
 ## postcss
@@ -24264,13 +24291,13 @@ Values are automatically replaced by matching env variables at runtime, e.g. set
 
 ```json
 {
-	"public": {},
-	"app": {
-		"buildId": "9adf8915-ab29-4ac2-9832-80aabe2d6725",
-		"baseURL": "/",
-		"buildAssetsDir": "/_nuxt/",
-		"cdnURL": ""
-	}
+  "public": {},
+  "app": {
+    "buildId": "9adf8915-ab29-4ac2-9832-80aabe2d6725",
+    "baseURL": "/",
+    "buildAssetsDir": "/_nuxt/",
+    "cdnURL": ""
+  }
 }
 ```
 
@@ -24278,13 +24305,13 @@ Values are automatically replaced by matching env variables at runtime, e.g. set
 
 ```js
 export default {
-	runtimeConfig: {
-		apiKey: '', // Default to an empty string, automatically set at runtime using process.env.NUXT_API_KEY
-		public: {
-			baseURL: '' // Exposed to the frontend as well.
-		}
-	}
-};
+  runtimeConfig: {
+    apiKey: '', // Default to an empty string, automatically set at runtime using process.env.NUXT_API_KEY
+    public: {
+      baseURL: '' // Exposed to the frontend as well.
+    }
+  }
+}
 ```
 
 ## serverDir
@@ -24314,7 +24341,7 @@ Each handler accepts the following options:
 **Example**:
 
 ```js
-serverHandlers: [{ route: '/path/foo/**:name', handler: '~/server/foohandler.ts' }];
+serverHandlers: [{ route: '/path/foo/**:name', handler: '~/server/foohandler.ts' }]
 ```
 
 ## sourcemap
@@ -24329,8 +24356,8 @@ Available options for both client and server: - `true`: Generates sourcemaps and
 
 ```json
 {
-	"server": true,
-	"client": false
+  "server": true,
+  "client": false
 }
 ```
 
@@ -24349,42 +24376,42 @@ Boolean or a path to an HTML file with the contents of which will be inserted in
 <!-- https://github.com/barelyhuman/snips/blob/dev/pages/css-loader.md -->
 <div class="loader"></div>
 <style>
-	.loader {
-		display: block;
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 1031;
-		-webkit-animation: loader 400ms linear infinite;
-		animation: loader 400ms linear infinite;
-		box-sizing: border-box;
-		border: solid 2px transparent;
-		border-top-color: #000;
-		border-right-color: #efefef;
-		border-bottom-color: #efefef;
-		border-left-color: #000;
-		border-radius: 50%;
-		width: 18px;
-		height: 18px;
-	}
+  .loader {
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1031;
+    -webkit-animation: loader 400ms linear infinite;
+    animation: loader 400ms linear infinite;
+    box-sizing: border-box;
+    border: solid 2px transparent;
+    border-top-color: #000;
+    border-right-color: #efefef;
+    border-bottom-color: #efefef;
+    border-left-color: #000;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+  }
 
-	@-webkit-keyframes loader {
-		0% {
-			-webkit-transform: translate(-50%, -50%) rotate(0deg);
-		}
-		100% {
-			-webkit-transform: translate(-50%, -50%) rotate(360deg);
-		}
-	}
-	@keyframes loader {
-		0% {
-			transform: translate(-50%, -50%) rotate(0deg);
-		}
-		100% {
-			transform: translate(-50%, -50%) rotate(360deg);
-		}
-	}
+  @-webkit-keyframes loader {
+    0% {
+      -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
 </style>
 ```
 
@@ -24401,8 +24428,8 @@ If a relative path is specified, it will be relative to the `rootDir`.
 
 ```js
 export default {
-	srcDir: 'src/'
-};
+  srcDir: 'src/'
+}
 ```
 
 This would work with the following folder structure:
@@ -24478,23 +24505,23 @@ Modules to generate deep aliases for within `compilerOptions.paths`. This does n
 
 ```json
 [
-	"nitropack/types",
-	"nitropack/runtime",
-	"nitropack",
-	"defu",
-	"h3",
-	"consola",
-	"ofetch",
-	"@unhead/vue",
-	"@nuxt/devtools",
-	"vue",
-	"@vue/runtime-core",
-	"@vue/compiler-sfc",
-	"vue-router",
-	"vue-router/auto-routes",
-	"unplugin-vue-router/client",
-	"@nuxt/schema",
-	"nuxt"
+  "nitropack/types",
+  "nitropack/runtime",
+  "nitropack",
+  "defu",
+  "h3",
+  "consola",
+  "ofetch",
+  "@unhead/vue",
+  "@nuxt/devtools",
+  "vue",
+  "@vue/runtime-core",
+  "@vue/compiler-sfc",
+  "vue-router",
+  "vue-router/auto-routes",
+  "unplugin-vue-router/client",
+  "@nuxt/schema",
+  "nuxt"
 ]
 ```
 
@@ -24568,7 +24595,7 @@ An object that will be passed to `renderSSRHead` to customize the output.
 
 ```json
 {
-	"omitLineBreaks": false
+  "omitLineBreaks": false
 }
 ```
 
@@ -24619,11 +24646,11 @@ Please note that not all vite options are supported in Nuxt.
 
 ```json
 {
-	"__VUE_PROD_HYDRATION_MISMATCH_DETAILS__": false,
-	"process.dev": false,
-	"import.meta.dev": false,
-	"process.test": false,
-	"import.meta.test": false
+  "__VUE_PROD_HYDRATION_MISMATCH_DETAILS__": false,
+  "process.dev": false,
+  "import.meta.dev": false,
+  "process.test": false,
+  "import.meta.test": false
 }
 ```
 
@@ -24634,10 +24661,10 @@ Please note that not all vite options are supported in Nuxt.
 
 ```json
 {
-	"target": "esnext",
-	"jsxFactory": "h",
-	"jsxFragment": "Fragment",
-	"tsconfigRaw": {}
+  "target": "esnext",
+  "jsxFactory": "h",
+  "jsxFragment": "Fragment",
+  "tsconfigRaw": {}
 }
 ```
 
@@ -24655,10 +24682,10 @@ Please note that not all vite options are supported in Nuxt.
 
 ```json
 {
-	"target": "esnext",
-	"jsxFactory": "h",
-	"jsxFragment": "Fragment",
-	"tsconfigRaw": {}
+  "target": "esnext",
+  "jsxFactory": "h",
+  "jsxFragment": "Fragment",
+  "tsconfigRaw": {}
 }
 ```
 
@@ -24733,11 +24760,11 @@ Please note that not all vite options are supported in Nuxt.
 
 ```json
 {
-	"video": ["src", "poster"],
-	"source": ["src"],
-	"img": ["src"],
-	"image": ["xlink:href", "href"],
-	"use": ["xlink:href", "href"]
+  "video": ["src", "poster"],
+  "source": ["src"],
+  "img": ["src"],
+  "image": ["xlink:href", "href"],
+  "use": ["xlink:href", "href"]
 }
 ```
 
@@ -24748,13 +24775,13 @@ Please note that not all vite options are supported in Nuxt.
 
 ```json
 {
-	"isCustomElement": {
-		"$schema": {
-			"title": "",
-			"description": "",
-			"tags": []
-		}
-	}
+  "isCustomElement": {
+    "$schema": {
+      "title": "",
+      "description": "",
+      "tags": []
+    }
+  }
 }
 ```
 
@@ -24898,9 +24925,9 @@ Set to `true` to enable bundle analysis, or pass an object with options: [for we
 
 ```json
 {
-	"template": "treemap",
-	"projectRoot": "/<rootDir>",
-	"filename": "/<rootDir>/.nuxt/analyze/{name}.html"
+  "template": "treemap",
+  "projectRoot": "/<rootDir>",
+  "filename": "/<rootDir>/.nuxt/analyze/{name}.html"
 }
 ```
 
@@ -24908,7 +24935,7 @@ Set to `true` to enable bundle analysis, or pass an object with options: [for we
 
 ```js
 analyze: {
-	analyzerMode: 'static';
+  analyzerMode: 'static'
 }
 ```
 
@@ -24945,36 +24972,36 @@ Using [mini-css-extract-plugin](https://github.com/webpack-contrib/mini-css-extr
 
 ```js
 export default {
-	webpack: {
-		extractCSS: true,
-		// or
-		extractCSS: {
-			ignoreOrder: true
-		}
-	}
-};
+  webpack: {
+    extractCSS: true,
+    // or
+    extractCSS: {
+      ignoreOrder: true
+    }
+  }
+}
 ```
 
 **Example**:
 
 ```js
 export default {
-	webpack: {
-		extractCSS: true,
-		optimization: {
-			splitChunks: {
-				cacheGroups: {
-					styles: {
-						name: 'styles',
-						test: /\.(css|vue)$/,
-						chunks: 'all',
-						enforce: true
-					}
-				}
-			}
-		}
-	}
-};
+  webpack: {
+    extractCSS: true,
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          styles: {
+            name: 'styles',
+            test: /\.(css|vue)$/,
+            chunks: 'all',
+            enforce: true
+          }
+        }
+      }
+    }
+  }
+}
 ```
 
 ### `filenames`
@@ -24992,7 +25019,7 @@ as most browsers will cache the asset and not detect the changes on first load.
 
 ```js
 filenames: {
-	chunk: ({ isDev }) => (isDev ? '[name].js' : '[id].[contenthash].js');
+  chunk: ({ isDev }) => (isDev ? '[name].js' : '[id].[contenthash].js')
 }
 ```
 
@@ -25089,10 +25116,10 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```json
 {
-	"target": "esnext",
-	"jsxFactory": "h",
-	"jsxFragment": "Fragment",
-	"tsconfigRaw": {}
+  "target": "esnext",
+  "jsxFactory": "h",
+  "jsxFragment": "Fragment",
+  "tsconfigRaw": {}
 }
 ```
 
@@ -25106,7 +25133,7 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```ts
 {
-	esModule: false;
+  esModule: false
 }
 ```
 
@@ -25128,7 +25155,7 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```ts
 {
-	esModule: false;
+  esModule: false
 }
 ```
 
@@ -25150,7 +25177,7 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```ts
 {
-	esModule: false;
+  esModule: false
 }
 ```
 
@@ -25170,7 +25197,7 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```json
 {
-	"sourceMap": false
+  "sourceMap": false
 }
 ```
 
@@ -25188,9 +25215,9 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```ts
 {
-	sassOptions: {
-		indentedSyntax: true;
-	}
+  sassOptions: {
+    indentedSyntax: true
+  }
 }
 ```
 
@@ -25207,7 +25234,7 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```json
 {
-	"sourceMap": false
+  "sourceMap": false
 }
 ```
 
@@ -25219,7 +25246,7 @@ See [css-loader](https://github.com/webpack-contrib/css-loader){rel="nofollow"} 
 
 ```json
 {
-	"sourceMap": false
+  "sourceMap": false
 }
 ```
 
@@ -25245,11 +25272,11 @@ See [vue-loader](https://github.com/vuejs/vue-loader){rel="nofollow"} for availa
 
 ```json
 {
-	"video": ["src", "poster"],
-	"source": ["src"],
-	"img": ["src"],
-	"image": ["xlink:href", "href"],
-	"use": ["xlink:href", "href"]
+  "video": ["src", "poster"],
+  "source": ["src"],
+  "img": ["src"],
+  "image": ["xlink:href", "href"],
+  "use": ["xlink:href", "href"]
 }
 ```
 
@@ -25259,7 +25286,7 @@ See [vue-loader](https://github.com/vuejs/vue-loader){rel="nofollow"} for availa
 
 ```json
 {
-	"sourceMap": false
+  "sourceMap": false
 }
 ```
 
@@ -25317,14 +25344,14 @@ Add webpack plugins.
 **Example**:
 
 ```js
-import webpack from 'webpack';
-import { version } from './package.json';
+import webpack from 'webpack'
+import { version } from './package.json'
 // ...
 plugins: [
-	new webpack.DefinePlugin({
-		'process.VERSION': version
-	})
-];
+  new webpack.DefinePlugin({
+    'process.VERSION': version
+  })
+]
 ```
 
 ### `postcss`
@@ -25340,8 +25367,8 @@ Customize PostCSS Loader. same options as [`postcss-loader` options](https://git
 
 ```json
 {
-	"autoprefixer": {},
-	"cssnano": {}
+  "autoprefixer": {},
+  "cssnano": {}
 }
 ```
 
@@ -26077,7 +26104,7 @@ Under projects with configuration as shown below, Corepack will install `v7.5.0`
 
 ```jsonc [package.json]
 {
-	"packageManager": "pnpm@7.5.0"
+  "packageManager": "pnpm@7.5.0"
 }
 ```
 
@@ -26091,10 +26118,10 @@ We recommend using [VS Code](https://code.visualstudio.com){rel="nofollow"} alon
 
 ```json [settings.json]
 {
-	"editor.codeActionsOnSave": {
-		"source.fixAll": "never",
-		"source.fixAll.eslint": "explicit"
-	}
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "explicit"
+  }
 }
 ```
 
@@ -26160,29 +26187,29 @@ To contribute to Nuxt, you need to set up a local environment.
 1. [Fork](https://help.github.com/articles/fork-a-repo){rel="nofollow"} the [`nuxt/nuxt`](https://github.com/nuxt/nuxt){rel="nofollow"} repository to your own GitHub account and then [clone](https://help.github.com/articles/cloning-a-repository){rel="nofollow"} it to your local device.
 2. Ensure using the latest [Node.js](https://nodejs.org/en){rel="nofollow"} (20.x)
 3. Enable [Corepack](https://github.com/nodejs/corepack){rel="nofollow"} to have `pnpm` and `yarn`
-    ```bash [Terminal]
-    corepack enable
-    ```
+   ```bash [Terminal]
+   corepack enable
+   ```
 4. Run `pnpm install --frozen-lockfile` to Install the dependencies with pnpm:
 
-    ```bash [Terminal]
-    pnpm install --frozen-lockfile
-    ```
+   ```bash [Terminal]
+   pnpm install --frozen-lockfile
+   ```
 
-    :note[If you are adding a dependency, please use `pnpm add`. :br
-    The `pnpm-lock.yaml` file is the source of truth for all Nuxt dependencies.]
+   :note[If you are adding a dependency, please use `pnpm add`. :br
+   The `pnpm-lock.yaml` file is the source of truth for all Nuxt dependencies.]
 
 5. Activate the passive development system
 
-    ```bash [Terminal]
-    pnpm dev:prepare
-    ```
+   ```bash [Terminal]
+   pnpm dev:prepare
+   ```
 
 6. Check out a branch where you can work and commit your changes:
 
-    ```bash [Terminal]
-    git checkout -b my-new-branch
-    ```
+   ```bash [Terminal]
+   git checkout -b my-new-branch
+   ```
 
 Then, test your changes against the [playground](https://nuxt.com/#playground) and [test](https://nuxt.com/#testing) your changes before submitting a pull request.
 
@@ -26615,11 +26642,11 @@ Please make sure to avoid any CommonJS syntax such as `module.exports`, `require
 You can use static `import`, dynamic `import()` and `export default` instead. Using TypeScript by renaming to [`nuxt.config.ts`](https://nuxt.com/docs/guide/directory-structure/nuxt-config) is also possible and recommended.
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	bridge: false
-});
+  bridge: false
+})
 ```
 
 ### Update Commands
@@ -26670,47 +26697,47 @@ You can optionally disable some features from bridge or opt-in to less stable on
 You can check [bridge/src/module.ts](https://github.com/nuxt/bridge/blob/main/packages/bridge/src/module.ts){rel="nofollow"} for latest defaults.
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 export default defineNuxtConfig({
-	bridge: {
-		// -- Opt-in features --
-		// Use Vite as the bundler instead of webpack 4
-		// vite: true,
-		// Enable Nuxt 3 compatible useHead
-		// meta: true,
-		// Enable definePageMeta macro
-		// macros: {
-		//   pageMeta: true
-		// },
-		// Enable transpiling TypeScript with esbuild
-		// typescript: {
-		//   esbuild: true
-		// },
-		// -- Default features --
-		// Use legacy server instead of Nitro
-		// nitro: false,
-		// Disable Nuxt 3 compatible `nuxtApp` interface
-		// app: false,
-		// Disable Composition API support
-		// capi: false,
-		// ... or just disable legacy Composition API support
-		// capi: {
-		//   legacy: false
-		// },
-		// Do not transpile modules
-		// transpile: false,
-		// Disable <script setup> support
-		// scriptSetup: false,
-		// Disable composables auto importing
-		// imports: false,
-		// Do not warn about module incompatibilities
-		// constraints: false
-	},
+  bridge: {
+    // -- Opt-in features --
+    // Use Vite as the bundler instead of webpack 4
+    // vite: true,
+    // Enable Nuxt 3 compatible useHead
+    // meta: true,
+    // Enable definePageMeta macro
+    // macros: {
+    //   pageMeta: true
+    // },
+    // Enable transpiling TypeScript with esbuild
+    // typescript: {
+    //   esbuild: true
+    // },
+    // -- Default features --
+    // Use legacy server instead of Nitro
+    // nitro: false,
+    // Disable Nuxt 3 compatible `nuxtApp` interface
+    // app: false,
+    // Disable Composition API support
+    // capi: false,
+    // ... or just disable legacy Composition API support
+    // capi: {
+    //   legacy: false
+    // },
+    // Do not transpile modules
+    // transpile: false,
+    // Disable <script setup> support
+    // scriptSetup: false,
+    // Disable composables auto importing
+    // imports: false,
+    // Do not warn about module incompatibilities
+    // constraints: false
+  },
 
-	vite: {
-		// Config for Vite
-	}
-});
+  vite: {
+    // Config for Vite
+  }
+})
 ```
 
 ## Migration of each option
@@ -26751,14 +26778,14 @@ export default defineNuxtConfig({
 ### Set `bridge.typescript`
 
 ```ts
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	bridge: {
-		typescript: true,
-		nitro: false // If migration to Nitro is complete, set to true
-	}
-});
+  bridge: {
+    typescript: true,
+    nitro: false // If migration to Nitro is complete, set to true
+  }
+})
 ```
 
 ## Update `tsconfig.json`
@@ -26799,12 +26826,12 @@ Nuxt Bridge provides access to Composition API syntax. It is specifically design
 If you have been using just `@vue/composition-api` and not `@nuxtjs/composition-api`, then things are very straightforward.
 
 1. First, remove the plugin where you are manually registering the Composition API. Nuxt Bridge will handle this for you.
-    ```diff
-    - import Vue from 'vue'
-    - import VueCompositionApi from '@vue/composition-api'
-    -
-    - Vue.use(VueCompositionApi)
-    ```
+   ```diff
+   - import Vue from 'vue'
+   - import VueCompositionApi from '@vue/composition-api'
+   -
+   - Vue.use(VueCompositionApi)
+   ```
 2. Otherwise, there is nothing you need to do. However, if you want, you can remove your explicit imports from `@vue/composition-api` and rely on Nuxt Bridge auto-importing them for you.
 
 ## Migrating from `@nuxtjs/composition-api`
@@ -26824,14 +26851,14 @@ You don't have to immediately update your imports yet - Nuxt Bridge will automat
 ### Set `bridge.capi`
 
 ```ts
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	bridge: {
-		capi: true,
-		nitro: false // If migration to Nitro is complete, set to true
-	}
-});
+  bridge: {
+    capi: true,
+    nitro: false // If migration to Nitro is complete, set to true
+  }
+})
 ```
 
 For each other composable you are using from `@nuxtjs/composition-api`, follow the steps below.
@@ -26864,9 +26891,9 @@ Remove the `defineNuxtMiddleware` wrapper:
 For typescript support, you can use `@nuxt/types`:
 
 ```ts
-import type { Middleware } from '@nuxt/types';
+import type { Middleware } from '@nuxt/types'
 
-export default <Middleware>function (ctx) {};
+export default <Middleware> function (ctx) {}
 ```
 
 ### `defineNuxtPlugin`
@@ -26886,9 +26913,9 @@ Remove the `defineNuxtPlugin` wrapper:
 For typescript support, you can use `@nuxt/types`:
 
 ```ts
-import type { Plugin } from '@nuxt/types';
+import type { Plugin } from '@nuxt/types'
 
-export default <Plugin>function (ctx, inject) {};
+export default <Plugin> function (ctx, inject) {}
 ```
 
 ::warning
@@ -26924,9 +26951,9 @@ Plugins now take only one argument (`nuxtApp`). You can find out more in [the do
 
 ```js [plugins/hello.ts]
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.provide('injected', () => 'my injected function');
-	// now available on `nuxtApp.$injected`
-});
+  nuxtApp.provide('injected', () => 'my injected function')
+  // now available on `nuxtApp.$injected`
+})
 ```
 
 ::note
@@ -26945,10 +26972,10 @@ Middleware now take only two argument (`to`, `from`). You can find out more in [
 
 ```ts twoslash
 export default defineNuxtRouteMiddleware((to) => {
-	if (to.path !== '/') {
-		return navigateTo('/');
-	}
-});
+  if (to.path !== '/') {
+    return navigateTo('/')
+  }
+})
 ```
 
 ::important
@@ -26962,15 +26989,15 @@ You can also use [`definePageMeta`](https://nuxt.com/docs/api/utils/define-page-
 You can be enabled with the `macros.pageMeta` option in your configuration file
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	bridge: {
-		macros: {
-			pageMeta: true
-		}
-	}
-});
+  bridge: {
+    macros: {
+      pageMeta: true
+    }
+  }
+})
 ```
 
 ::note
@@ -27050,12 +27077,12 @@ You can access injected helpers using `useNuxtApp`.
 This helper function is not provided any more but you can replace it with the following code:
 
 ```js
-const wrapProperty =
-	(property, makeComputed = true) =>
-	() => {
-		const vm = getCurrentInstance().proxy;
-		return makeComputed ? computed(() => vm[property]) : vm[property];
-	};
+function wrapProperty(property, makeComputed = true) {
+  return () => {
+    const vm = getCurrentInstance().proxy
+    return makeComputed ? computed(() => vm[property]) : vm[property]
+  }
+}
 ```
 
 ## `useAsync` and `useFetch`
@@ -27142,12 +27169,12 @@ Nuxt Bridge also provides a Nuxt 3-compatible meta implementation that can be ac
 You will also need to enable it explicitly in your `nuxt.config`:
 
 ```js
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 export default defineNuxtConfig({
-	bridge: {
-		meta: true
-	}
-});
+  bridge: {
+    meta: true
+  }
+})
 ```
 
 This [`useHead`](https://nuxt.com/docs/api/composables/use-head) composable uses `@unhead/vue` under the hood (rather than `vue-meta`) to manipulate your `<head>`. Accordingly, it is recommended not to use both the native Nuxt 2 `head()` properties as well as [`useHead`](https://nuxt.com/docs/api/composables/use-head) , as they may conflict.
@@ -27160,10 +27187,10 @@ Nuxt exposes every auto-import with the `#imports` alias that can be used to mak
 
 ```vue
 <script setup lang="ts">
-import { ref, computed } from '#imports';
+import { computed, ref } from '#imports'
 
-const count = ref(1);
-const double = computed(() => count.value * 2);
+const count = ref(1)
+const double = computed(() => count.value * 2)
 </script>
 ```
 
@@ -27173,10 +27200,10 @@ If you want to disable auto-importing composables and utilities, you can set `im
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	imports: {
-		autoImport: false
-	}
-});
+  imports: {
+    autoImport: false
+  }
+})
 ```
 
 This will disable auto-imports completely but it's still possible to use [explicit imports](https://nuxt.com/#explicit-imports) from `#imports`.
@@ -27192,13 +27219,13 @@ If you need to use the Options API, there is a `head()` method you can use when 
 ### Set `bridge.meta`
 
 ```js
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 export default defineNuxtConfig({
-	bridge: {
-		meta: true,
-		nitro: false // If migration to Nitro is complete, set to true
-	}
-});
+  bridge: {
+    meta: true,
+    nitro: false // If migration to Nitro is complete, set to true
+  }
+})
 ```
 
 ### Update head properties
@@ -27209,30 +27236,30 @@ In your `nuxt.config`, rename `head` to `meta`. (Note that objects no longer hav
 
 ```ts [Nuxt 2]
 export default {
-	head: {
-		titleTemplate: '%s - Nuxt',
-		meta: [
-			{ charset: 'utf-8' },
-			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
-			{ hid: 'description', name: 'description', content: 'Meta description' }
-		]
-	}
-};
+  head: {
+    titleTemplate: '%s - Nuxt',
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'description', name: 'description', content: 'Meta description' }
+    ]
+  }
+}
 ```
 
 ```ts [Nuxt 3]
 export default defineNuxtConfig({
-	app: {
-		head: {
-			titleTemplate: '%s - Nuxt',
-			meta: [
-				{ charset: 'utf-8' },
-				{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
-				{ name: 'description', content: 'Meta description' }
-			]
-		}
-	}
-});
+  app: {
+    head: {
+      titleTemplate: '%s - Nuxt',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        { name: 'description', content: 'Meta description' }
+      ]
+    }
+  }
+})
 ```
 
 ::
@@ -27244,8 +27271,8 @@ Nuxt Bridge provides a new Nuxt 3 meta API that can be accessed with a new [`use
 ```vue
 <script setup lang="ts">
 useHead({
-	title: 'My Nuxt App'
-});
+  title: 'My Nuxt App'
+})
 </script>
 ```
 
@@ -27265,18 +27292,18 @@ For more information on how to use this composable, see [the docs](https://nuxt.
 <script>
 // if using options API `head` method you must use `defineNuxtComponent`
 export default defineNuxtComponent({
-	head(nuxtApp) {
-		// `head` receives the nuxt app but cannot access the component instance
-		return {
-			meta: [
-				{
-					name: 'description',
-					content: 'This is my page description.'
-				}
-			]
-		};
-	}
-});
+  head(nuxtApp) {
+    // `head` receives the nuxt app but cannot access the component instance
+    return {
+      meta: [
+        {
+          name: 'description',
+          content: 'This is my page description.'
+        }
+      ]
+    }
+  }
+})
 </script>
 ```
 
@@ -27291,10 +27318,10 @@ If you want to use a function (for full control), then this cannot be set in you
 ```vue [layouts/default.vue]
 <script setup lang="ts">
 useHead({
-	titleTemplate: (titleChunk) => {
-		return titleChunk ? `${titleChunk} - Site Title` : 'Site Title';
-	}
-});
+  titleTemplate: (titleChunk) => {
+    return titleChunk ? `${titleChunk} - Site Title` : 'Site Title'
+  }
+})
 </script>
 ```
 
@@ -27343,13 +27370,13 @@ This also means that when you need to access public runtime config, it's behind 
 ## Update Config
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	bridge: {
-		nitro: true
-	}
-});
+  bridge: {
+    nitro: true
+  }
+})
 ```
 
 ## Update Your Scripts
@@ -27407,9 +27434,9 @@ If you have set `target: 'static'` in your `nuxt.config` then you need to ensure
 
 ```json [package.json]
 {
-	"scripts": {
-		"build": "nuxi generate"
-	}
+  "scripts": {
+    "build": "nuxi generate"
+  }
 }
 ```
 
@@ -27419,10 +27446,10 @@ For all other situations, you can use the `nuxi build` command.
 
 ```json [package.json]
 {
-	"scripts": {
-		"build": "nuxi build",
-		"start": "nuxi preview"
-	}
+  "scripts": {
+    "build": "nuxi build",
+    "start": "nuxi preview"
+  }
 }
 ```
 
@@ -27447,26 +27474,26 @@ When using `vite`, [nitro](https://nuxt.com/docs/bridge/nitro) must have been co
 ## Update Config
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	bridge: {
-		vite: true,
-		nitro: true
-	}
-});
+  bridge: {
+    vite: true,
+    nitro: true
+  }
+})
 ```
 
 ## Configuration
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from '@nuxt/bridge';
+import { defineNuxtConfig } from '@nuxt/bridge'
 
 export default defineNuxtConfig({
-	vite: {
-		// Config for Vite
-	}
-});
+  vite: {
+    // Config for Vite
+  }
+})
 ```
 
 # Overview
@@ -27555,12 +27582,12 @@ Nuxt configuration will be loaded using [`unjs/jiti`](https://github.com/unjs/ji
    export default {
    // ...
    }
-    ````ts [Nuxt 3]
-    export default defineNuxtConfig({
-      // ...
-    })
-    ```]
-    ````
+   ````ts [Nuxt 3]
+   export default defineNuxtConfig({
+     // ...
+   })
+   ```]
+   ````
 2. If you were using `router.extendRoutes` you can migrate to the new `pages:extend` hook:
    :code-group[```ts \[Nuxt 2\]
    export default {
@@ -27570,16 +27597,16 @@ Nuxt configuration will be loaded using [`unjs/jiti`](https://github.com/unjs/ji
    }
    }
    }
-    ````ts [Nuxt 3]
-    export default defineNuxtConfig({
-      hooks: {
-        'pages:extend' (routes) {
-          //
-        }
-      }
-    })
-    ```]
-    ````
+   ````ts [Nuxt 3]
+   export default defineNuxtConfig({
+     hooks: {
+       'pages:extend' (routes) {
+         //
+       }
+     }
+   })
+   ```]
+   ````
 3. If you were using `router.routeNameSplitter` you can achieve same result by updating route name generation logic in the new `pages:extend` hook:
    :code-group[```ts \[Nuxt 2\]
    export default {
@@ -27588,31 +27615,31 @@ Nuxt configuration will be loaded using [`unjs/jiti`](https://github.com/unjs/ji
    }
    }
 
-    ````ts [Nuxt 3]
-    import { createResolver } from '@nuxt/kit'
+   ````ts [Nuxt 3]
+   import { createResolver } from '@nuxt/kit'
 
-    export default defineNuxtConfig({
-      hooks: {
-        'pages:extend' (routes) {
-          const routeNameSplitter = '/'
-          const root = createResolver(import.meta.url).resolve('./pages')
+   export default defineNuxtConfig({
+     hooks: {
+       'pages:extend' (routes) {
+         const routeNameSplitter = '/'
+         const root = createResolver(import.meta.url).resolve('./pages')
 
-          function updateName(routes) {
-            if (!routes) return
+         function updateName(routes) {
+           if (!routes) return
 
-            for (const route of routes) {
-              const relativePath = route.file.substring(root.length + 1)
-              route.name = relativePath.slice(0, -4).replace(/\/index$/, '').replace(/\//g, routeNameSplitter)
+           for (const route of routes) {
+             const relativePath = route.file.substring(root.length + 1)
+             route.name = relativePath.slice(0, -4).replace(/\/index$/, '').replace(/\//g, routeNameSplitter)
 
-              updateName(route.children)
-            }
-          }
-          updateName(routes)
-        },
-      },
-    })
-    ```]
-    ````
+             updateName(route.children)
+           }
+         }
+         updateName(routes)
+       },
+     },
+   })
+   ```]
+   ````
 
 #### ESM Syntax
 
@@ -27672,11 +27699,11 @@ Nuxt can type-check your app using [`vue-tsc`](https://github.com/vuejs/language
 ### Migration
 
 1. Create a `tsconfig.json` with the following content:
-    ```json
-    {
-    	"extends": "./.nuxt/tsconfig.json"
-    }
-    ```
+   ```json
+   {
+     "extends": "./.nuxt/tsconfig.json"
+   }
+   ```
 2. Run `npx nuxi prepare` to generate `.nuxt/tsconfig.json`.
 3. Install Volar following the instructions in the [docs](https://nuxt.com/docs/getting-started/introduction#prerequisites).
 
@@ -27703,43 +27730,43 @@ yarn add pinia @pinia/nuxt
 Enable the module in your nuxt configuration:
 
 ```ts [nuxt.config.ts]
-import { defineNuxtConfig } from 'nuxt/config';
+import { defineNuxtConfig } from 'nuxt/config'
 
 export default defineNuxtConfig({
-	modules: ['@pinia/nuxt']
-});
+  modules: ['@pinia/nuxt']
+})
 ```
 
 Create a `store` folder at the root of your application:
 
 ```ts [store/index.ts]
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 
 export const useMainStore = defineStore('main', {
-	state: () => ({
-		counter: 0
-	}),
-	actions: {
-		increment() {
-			// `this` is the store instance
-			this.counter++;
-		}
-	}
-});
+  state: () => ({
+    counter: 0
+  }),
+  actions: {
+    increment() {
+      // `this` is the store instance
+      this.counter++
+    }
+  }
+})
 ```
 
 Create a [plugin](https://nuxt.com/docs/guide/directory-structure/plugins) file to globalize your store:
 
 ```ts [plugins/pinia.ts]
-import { useMainStore } from '~/store';
+import { useMainStore } from '~/store'
 
 export default defineNuxtPlugin(({ $pinia }) => {
-	return {
-		provide: {
-			store: useMainStore($pinia)
-		}
-	};
-});
+  return {
+    provide: {
+      store: useMainStore($pinia)
+    }
+  }
+})
 ```
 
 If you want to keep using Vuex, you can manually migrate to Vuex 4 following [these steps](https://vuex.vuejs.org/guide/migrating-to-4-0-from-3-x.html){rel="nofollow"}.
@@ -27747,11 +27774,11 @@ If you want to keep using Vuex, you can manually migrate to Vuex 4 following [th
 Once it's done you will need to add the following plugin to your Nuxt app:
 
 ```ts [plugins/vuex.ts]
-import store from '~/store';
+import store from '~/store'
 
 export default defineNuxtPlugin((nuxtApp) => {
-	nuxtApp.vueApp.use(store);
-});
+  nuxtApp.vueApp.use(store)
+})
 ```
 
 For larger apps, this migration can entail a lot of work. If updating Vuex still creates roadblocks, you may want to use the community module: [nuxt3-vuex-module](https://github.com/vedmant/nuxt3-vuex#nuxt3-vuex-module){rel="nofollow"}, which should work out of the box.
@@ -27803,20 +27830,20 @@ If you inject a Nuxt plugin that does not have `export default` (such as global 
 
 ```js [Before]
 // ~/plugins/vuelidate.js
-import Vue from 'vue';
-import Vuelidate from 'vuelidate';
+import Vue from 'vue'
+import Vuelidate from 'vuelidate'
 
-Vue.use(Vuelidate);
+Vue.use(Vuelidate)
 ```
 
 ```js [After]
 // ~/plugins/vuelidate.js
-import Vue from 'vue';
-import Vuelidate from 'vuelidate';
+import Vue from 'vue'
+import Vuelidate from 'vuelidate'
 
-Vue.use(Vuelidate);
+Vue.use(Vuelidate)
 
-export default () => {};
+export default () => {}
 ```
 
 ::
@@ -27915,19 +27942,19 @@ export default {
 
 ```vue [Nuxt 3]
 <script setup lang="ts">
-const title = ref('My App');
-const description = ref('My App Description');
+const title = ref('My App')
+const description = ref('My App Description')
 
 // This will be reactive when you change title/description above
 useHead({
-	title,
-	meta: [
-		{
-			name: 'description',
-			content: description
-		}
-	]
-});
+  title,
+  meta: [
+    {
+      name: 'description',
+      content: description
+    }
+  ]
+})
 </script>
 ```
 
@@ -27942,31 +27969,31 @@ Nuxt 3 also provides meta components that you can use to accomplish the same tas
 ```vue [Nuxt 2]
 <script>
 export default {
-	head() {
-		return {
-			title: 'My App',
-			meta: [
-				{
-					hid: 'description',
-					name: 'description',
-					content: 'My App Description'
-				}
-			]
-		};
-	}
-};
+  head() {
+    return {
+      title: 'My App',
+      meta: [
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'My App Description'
+        }
+      ]
+    }
+  }
+}
 </script>
 ```
 
 ```vue [Nuxt 3]
 <template>
-	<div>
-		<Head>
-			<Title>My App</Title>
-			<Meta name="description" content="My app description" />
-		</Head>
-		<!-- -->
-	</div>
+  <div>
+    <Head>
+      <Title>My App</Title>
+      <Meta name="description" content="My app description" />
+    </Head>
+    <!-- -->
+  </div>
 </template>
 ```
 
@@ -27984,18 +28011,18 @@ export default {
 <script>
 // if using options API `head` method you must use `defineNuxtComponent`
 export default defineNuxtComponent({
-	head(nuxtApp) {
-		// `head` receives the nuxt app but cannot access the component instance
-		return {
-			meta: [
-				{
-					name: 'description',
-					content: 'This is my page description.'
-				}
-			]
-		};
-	}
-});
+  head(nuxtApp) {
+    // `head` receives the nuxt app but cannot access the component instance
+    return {
+      meta: [
+        {
+          name: 'description',
+          content: 'This is my page description.'
+        }
+      ]
+    }
+  }
+})
 </script>
 ```
 
@@ -28015,16 +28042,16 @@ export default (ctx, inject) => {
 
 ```ts [Nuxt 3]
 export default defineNuxtPlugin((nuxtApp) => {
-	// now available on `nuxtApp.$injected`
-	nuxtApp.provide('injected', () => 'my injected function');
+  // now available on `nuxtApp.$injected`
+  nuxtApp.provide('injected', () => 'my injected function')
 
-	// You can alternatively use this format, which comes with automatic type support
-	return {
-		provide: {
-			injected: () => 'my injected function'
-		}
-	};
-});
+  // You can alternatively use this format, which comes with automatic type support
+  return {
+    provide: {
+      injected: () => 'my injected function'
+    }
+  }
+})
 ```
 
 ::
@@ -28049,20 +28076,20 @@ Route middleware has a different format.
 
 ```js [Nuxt 2]
 export default function ({ store, redirect }) {
-	// If the user is not authenticated
-	if (!store.state.authenticated) {
-		return redirect('/login');
-	}
+  // If the user is not authenticated
+  if (!store.state.authenticated) {
+    return redirect('/login')
+  }
 }
 ```
 
 ```ts [Nuxt 3]
 export default defineNuxtRouteMiddleware((to, from) => {
-	const auth = useState('auth');
-	if (!auth.value.authenticated) {
-		return navigateTo('/login');
-	}
-});
+  const auth = useState('auth')
+  if (!auth.value.authenticated) {
+    return navigateTo('/login')
+  }
+})
 ```
 
 ::
@@ -28112,41 +28139,41 @@ You will also need to change how you define the layout used by a page using the 
 ### Migration
 
 1. Replace `<Nuxt />` with `<slot />`
-    ```diff [layouts/custom.vue]
-      <template>
-        <div id="app-layout">
-          <main>
-    -       <Nuxt />
-    +       <slot />
-          </main>
-        </div>
-      </template>
-    ```
+   ```diff [layouts/custom.vue]
+     <template>
+       <div id="app-layout">
+         <main>
+   -       <Nuxt />
+   +       <slot />
+         </main>
+       </div>
+     </template>
+   ```
 2. Use [`definePageMeta`](https://nuxt.com/docs/api/utils/define-page-meta) to select the layout used by your page.
 
-    ```diff [pages/index.vue]
-    + <script setup>
-    + definePageMeta({
-    +   layout: 'custom'
-    + })
-    - <script>
-    - export default {
-    -   layout: 'custom'
-    - }
-      </script>
-    ```
+   ```diff [pages/index.vue]
+   + <script setup>
+   + definePageMeta({
+   +   layout: 'custom'
+   + })
+   - <script>
+   - export default {
+   -   layout: 'custom'
+   - }
+     </script>
+   ```
 
 3. Move `~/layouts/_error.vue` to `~/error.vue`. See [the error handling docs](https://nuxt.com/docs/getting-started/error-handling). If you want to ensure that this page uses a layout, you can use [`<NuxtLayout>`](https://nuxt.com/docs/guide/directory-structure/layouts) directly within `error.vue`:
 
-    ```vue [error.vue]
-    <template>
-    	<div>
-    		<NuxtLayout name="default">
-    			<!-- -->
-    		</NuxtLayout>
-    	</div>
-    </template>
-    ```
+   ```vue [error.vue]
+   <template>
+     <div>
+       <NuxtLayout name="default">
+         <!-- -->
+       </NuxtLayout>
+     </div>
+   </template>
+   ```
 
 ## Pages
 
@@ -28232,37 +28259,37 @@ If you have been defining transitions for your page or layout directly in your c
 
 ```vue [Nuxt 2]
 <template>
-	<div>
-		<NuxtChild keep-alive :keep-alive-props="{ exclude: ['modal'] }" :nuxt-child-key="$route.slug" />
-	</div>
+  <div>
+    <NuxtChild keep-alive :keep-alive-props="{ exclude: ['modal'] }" :nuxt-child-key="$route.slug" />
+  </div>
 </template>
 
 <script>
 export default {
-	transition: 'page' // or { name: 'page' }
-};
+  transition: 'page' // or { name: 'page' }
+}
 </script>
 ```
 
 ```vue [Nuxt 3]
 <template>
-	<div>
-		<NuxtPage />
-	</div>
+  <div>
+    <NuxtPage />
+  </div>
 </template>
 
 <script setup lang="ts">
 // This compiler macro works in both <script> and <script setup>
 definePageMeta({
-	// you can also pass a string or a computed property
-	key: (route) => route.slug,
-	transition: {
-		name: 'page'
-	},
-	keepalive: {
-		exclude: ['modal']
-	}
-});
+  // you can also pass a string or a computed property
+  key: route => route.slug,
+  transition: {
+    name: 'page'
+  },
+  keepalive: {
+    exclude: ['modal']
+  }
+})
 </script>
 ```
 
@@ -28290,31 +28317,31 @@ Ensure to always `await` on [`navigateTo`](https://nuxt.com/docs/api/utils/navig
 ```vue [Nuxt 2]
 <script>
 export default {
-	methods: {
-		navigate() {
-			this.$router.push({
-				path: '/search',
-				query: {
-					name: 'first name',
-					type: '1'
-				}
-			});
-		}
-	}
-};
+  methods: {
+    navigate() {
+      this.$router.push({
+        path: '/search',
+        query: {
+          name: 'first name',
+          type: '1'
+        }
+      })
+    }
+  }
+}
 </script>
 ```
 
 ```vue [Nuxt 3]
 <script setup lang="ts">
 function navigate() {
-	return navigateTo({
-		path: '/search',
-		query: {
-			name: 'first name',
-			type: '1'
-		}
-	});
+  return navigateTo({
+    path: '/search',
+    query: {
+      name: 'first name',
+      type: '1'
+    }
+  })
 }
 </script>
 ```
@@ -28346,15 +28373,15 @@ In Nuxt 2, you'd fetch your data in your component using a syntax similar to:
 
 ```ts
 export default {
-	async asyncData({ params, $http }) {
-		const post = await $http.$get(`https://api.nuxtjs.dev/posts/${params.id}`);
-		return { post };
-	},
-	// or alternatively
-	fetch() {
-		this.post = await $http.$get(`https://api.nuxtjs.dev/posts/${params.id}`);
-	}
-};
+  async asyncData({ params, $http }) {
+    const post = await $http.$get(`https://api.nuxtjs.dev/posts/${params.id}`)
+    return { post }
+  },
+  // or alternatively
+  fetch() {
+    this.post = await $http.$get(`https://api.nuxtjs.dev/posts/${params.id}`)
+  }
+}
 ```
 
 Within your methods and templates, you could use the `post` variable similar how you'd use any other piece of data provided by your component.
@@ -28364,9 +28391,9 @@ With Nuxt 3, you can perform this data fetching using composables in your `setup
 ```vue
 <script setup lang="ts">
 // Define params wherever, through `defineProps()`, `useRoute()`, etc.
-const { data: post, refresh } = await useAsyncData('post', () => $fetch(`https://api.nuxtjs.dev/posts/${params.id}`));
+const { data: post, refresh } = await useAsyncData('post', () => $fetch(`https://api.nuxtjs.dev/posts/${params.id}`))
 // Or instead - useFetch is a convenience wrapper around useAsyncData when you're just performing a simple fetch
-const { data: post, refresh } = await useFetch(`https://api.nuxtjs.dev/posts/${params.id}`);
+const { data: post, refresh } = await useFetch(`https://api.nuxtjs.dev/posts/${params.id}`)
 </script>
 ```
 
@@ -28469,12 +28496,12 @@ This is not supported in Nuxt 3. Instead, you can directly use a watcher to trig
 
 ```vue [pages/users/[id].vue]
 <script setup lang="ts">
-const route = useRoute();
-const { data, refresh } = await useFetch('/api/user');
+const route = useRoute()
+const { data, refresh } = await useFetch('/api/user')
 watch(
-	() => route.query,
-	() => refresh()
-);
+  () => route.query,
+  () => refresh()
+)
 </script>
 ```
 
@@ -28498,33 +28525,33 @@ In the `server/` portion of your app, you can use [`useRuntimeConfig`](https://n
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	runtimeConfig: {
-		// Private config that is only available on the server
-		apiSecret: '123',
-		// Config within public will be also exposed to the client
-		public: {
-			apiBase: '/api'
-		}
-	}
-});
+  runtimeConfig: {
+    // Private config that is only available on the server
+    apiSecret: '123',
+    // Config within public will be also exposed to the client
+    public: {
+      apiBase: '/api'
+    }
+  }
+})
 ```
 
 ```vue [pages/index.vue]
 <script setup lang="ts">
-const config = useRuntimeConfig();
+const config = useRuntimeConfig()
 
 // instead of process.env you will now access config.public.apiBase
-console.log(config.public.apiBase);
+console.log(config.public.apiBase)
 </script>
 ```
 
 ```ts [server/api/hello.ts]
 export default defineEventhandler((event) => {
-	const config = useRuntimeConfig(event);
-	// In server, you can now access config.apiSecret, in addition to config.public
-	console.log(config.apiSecret);
-	console.log(config.public.apiBase);
-});
+  const config = useRuntimeConfig(event)
+  // In server, you can now access config.apiSecret, in addition to config.public
+  console.log(config.apiSecret)
+  console.log(config.public.apiBase)
+})
 ```
 
 ```ini [.env]
@@ -28638,10 +28665,10 @@ You can also set `experimental.restoreState` to preserve some of your app state 
 
 ```ts [nuxt.config.ts]
 defineNuxtConfig({
-	experimental: {
-		restoreState: true
-	}
-});
+  experimental: {
+    restoreState: true
+  }
+})
 ```
 
 We also have a new experimental error handling component: [`<NuxtClientFallback>`](https://nuxt.com/docs/api/components/nuxt-client-fallback) ([#8216](https://github.com/nuxt/framework/pull/8216){rel="nofollow"}) which can capture errors rendering on server, replace them with fallback content, and granularly trigger rerendering the part with an error on the client. This can be enabled with `experimental.clientFallback` - feedback very welcome!
@@ -28709,10 +28736,10 @@ Nuxt now ships with an experimental implementation, which will be under active d
 
 ```ts
 export default defineNuxtConfig({
-	experimental: {
-		viewTransition: true
-	}
-});
+  experimental: {
+    viewTransition: true
+  }
+})
 ```
 
 ## ✨ Payload Enhancements
@@ -28721,10 +28748,10 @@ We've merged a \*\*[significant change to how Nuxt handles payloads](https://git
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		renderJsonPayloads: true
-	}
-});
+  experimental: {
+    renderJsonPayloads: true
+  }
+})
 ```
 
 With this new option enabled, this now means that **various rich JS types are supported out-of-the-box**: regular expressions, dates, Map and Set and BigInt as well as NuxtError - and Vue-specific objects like `ref`, `reactive`, `shallowRef` and `shallowReactive`.
@@ -28737,9 +28764,9 @@ You can even register your own custom types with a new object-syntax Nuxt plugin
 
 ```ts [plugins/custom-payload-type.ts]
 export default definePayloadPlugin(() => {
-	definePayloadReducer('BlinkingText', (data) => data === '<original-blink>' && '_');
-	definePayloadReviver('BlinkingText', () => '<revivified-blink>');
-});
+  definePayloadReducer('BlinkingText', data => data === '<original-blink>' && '_')
+  definePayloadReviver('BlinkingText', () => '<revivified-blink>')
+})
 ```
 
 You can read more about how this works [here](https://github.com/rich-harris/devalue#custom-types){rel="nofollow"}.
@@ -28756,19 +28783,19 @@ We now support object-syntax Nuxt plugins for better control over plugin _order_
 
 ```ts [plugins/my-plugin.ts]
 export default defineNuxtPlugin({
-	name: 'my-plugin',
-	enforce: 'pre', // or 'post'
-	async setup(nuxtApp) {
-		// this is the equivalent of a normal functional plugin
-	},
-	hooks: {
-		// You can directly register Nuxt app hooks here
-		'app:created'() {
-			const nuxtApp = useNuxtApp();
-			//
-		}
-	}
-});
+  name: 'my-plugin',
+  enforce: 'pre', // or 'post'
+  async setup(nuxtApp) {
+    // this is the equivalent of a normal functional plugin
+  },
+  hooks: {
+    // You can directly register Nuxt app hooks here
+    'app:created': function () {
+      const nuxtApp = useNuxtApp()
+      //
+    }
+  }
+})
 ```
 
 In future we plan to enable build optimizations based on the metadata you pass in your Nuxt plugins.
@@ -28779,8 +28806,8 @@ It's even easier to enable Nuxt DevTools in your project: just set `devtools: tr
 
 ```js [nuxt.config.ts]
 export default defineNuxtConfig({
-	devtools: true
-});
+  devtools: true
+})
 ```
 
 If it's not already installed, Nuxt will prompt to install it locally. This means you no longer need to have Nuxt DevTools enabled globally.
@@ -28865,9 +28892,9 @@ You can even register your own custom types with a new object-syntax Nuxt plugin
 
 ```ts [plugins/custom-payload-type.ts]
 export default definePayloadPlugin(() => {
-	definePayloadReducer('BlinkingText', (data) => data === '<original-blink>' && '_');
-	definePayloadReviver('BlinkingText', () => '<revivified-blink>');
-});
+  definePayloadReducer('BlinkingText', data => data === '<original-blink>' && '_')
+  definePayloadReviver('BlinkingText', () => '<revivified-blink>')
+})
 ```
 
 You can read more about how this works [here](https://github.com/rich-harris/devalue#custom-types){rel="nofollow"}.
@@ -28884,15 +28911,15 @@ You can now configure fully typed, per-environment overrides in your `nuxt.confi
 
 ```js
 export default defineNuxtConfig({
-	$production: {
-		routeRules: {
-			'/**': { isr: true }
-		}
-	},
-	$development: {
-		//
-	}
-});
+  $production: {
+    routeRules: {
+      '/**': { isr: true }
+    }
+  },
+  $development: {
+    //
+  }
+})
 ```
 
 If you're authoring layers, you can also use the `$meta` key to provide metadata that you or the consumers of your layer might use.
@@ -28911,10 +28938,10 @@ Enable this feature directly in your `nuxt.config`:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		typedPages: true
-	}
-});
+  experimental: {
+    typedPages: true
+  }
+})
 ```
 
 ## 🔎 'Bundler' module resolution
@@ -28925,14 +28952,14 @@ We would recommend adopting this if possible. It has type support for subpath ex
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	typescript: {
-		tsConfig: {
-			compilerOptions: {
-				moduleResolution: 'bundler'
-			}
-		}
-	}
-});
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        moduleResolution: 'bundler'
+      }
+    }
+  }
+})
 ```
 
 This turns on TypeScript's ability to 'follow' Node subpath exports. For example, if a library has a subpath export like `mylib/path` that is mapped to `mylib/dist/path.mjs` then the types for this can be pulled in from `mylib/dist/path.d.ts` rather than requiring the library author to create `mylib/path.d.ts`.
@@ -28945,7 +28972,7 @@ You can use by adding an additional `~/server/tsconfig.json` with the following 
 
 ```json
 {
-	"extends": "../.nuxt/tsconfig.server.json"
+  "extends": "../.nuxt/tsconfig.server.json"
 }
 ```
 
@@ -29104,22 +29131,22 @@ To add the `/api/hello` route, create a `server/api/hello.ts` file:
 
 ```ts [server/api/hello.ts]
 export default defineEventHandler((event) => {
-	return {
-		hello: 'world'
-	};
-});
+  return {
+    hello: 'world'
+  }
+})
 ```
 
 You can now universally call this API in your pages and components:
 
 ```vue [pages/index.vue]
-<script setup>
-const { data } = await useFetch('/api/hello');
-</script>
-
 <template>
-	<pre>{{ data }}</pre>
+  <pre>{{ data }}</pre>
 </template>
+
+<script setup>
+const { data } = await useFetch('/api/hello')
+</script>
 ```
 
 One important thing to note when we created [useFetch](https://nuxt.com/docs/api/composables/use-fetch) and [$fetch](https://nuxt.com/docs/api/utils/dollarfetch) is that during server-side rendering, if you call your API routes, it will emulate the request and call the function code directly: **avoiding an HTTP request and reducing page’s rendering time**.
@@ -29162,10 +29189,10 @@ It's possible to opt-in to upcoming head improvements with the `experimental.hea
 
 ```ts
 export default defineNuxtConfig({
-	experimental: {
-		headNext: true
-	}
-});
+  experimental: {
+    headNext: true
+  }
+})
 ```
 
 We'd love your thoughts - you can respond with any issues/feedback in [this discussion](https://github.com/nuxt/nuxt/discussions/22632){rel="nofollow"}.
@@ -29178,20 +29205,20 @@ For example:
 
 ```ts
 export default defineNuxtConfig({
-	vite: {
-		$client: {
-			build: {
-				rollupOptions: {
-					output: {
-						chunkFileNames: '_nuxt/[hash].js',
-						assetFileNames: '_nuxt/[hash][extname]',
-						entryFileNames: '_nuxt/[hash].js'
-					}
-				}
-			}
-		}
-	}
-});
+  vite: {
+    $client: {
+      build: {
+        rollupOptions: {
+          output: {
+            chunkFileNames: '_nuxt/[hash].js',
+            assetFileNames: '_nuxt/[hash][extname]',
+            entryFileNames: '_nuxt/[hash].js'
+          }
+        }
+      }
+    }
+  }
+})
 ```
 
 ### ⚡️ Vite 4.4
@@ -29218,10 +29245,10 @@ To try it out, you can enable `experimental.asyncContext`:
 
 ```ts
 export default defineNuxtConfig({
-	experimental: {
-		asyncContext: true
-	}
-});
+  experimental: {
+    asyncContext: true
+  }
+})
 ```
 
 ### 👓 Watcher Updates
@@ -29513,18 +29540,18 @@ It also enables **client-side route rules**. Only `redirect` route rules is supp
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	routeRules: {
-		'/about': { redirect: '/about-us' }
-	}
-});
+  routeRules: {
+    '/about': { redirect: '/about-us' }
+  }
+})
 ```
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<!-- Will be redirected to /about-us on client-side -->
-		<NuxtLink to="/about">About</NuxtLink>
-	</div>
+  <div>
+    <!-- Will be redirected to /about-us on client-side -->
+    <NuxtLink to="/about">About</NuxtLink>
+  </div>
 </template>
 ```
 
@@ -29563,10 +29590,10 @@ If you experience issues with `Nuxt instance unavailable`, enabling this option 
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		asyncContext: true
-	}
-});
+  experimental: {
+    asyncContext: true
+  }
+})
 ```
 
 ::note
@@ -29583,15 +29610,15 @@ This can enable you to enforce trailing slash behaviour across your entire site,
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		defaults: {
-			nuxtLink: {
-				activeClass: 'nuxt-link-active',
-				trailingSlash: 'append'
-			}
-		}
-	}
-});
+  experimental: {
+    defaults: {
+      nuxtLink: {
+        activeClass: 'nuxt-link-active',
+        trailingSlash: 'append'
+      }
+    }
+  }
+})
 ```
 
 ### ⚡️ Data Fetching Improvements
@@ -29603,16 +29630,16 @@ We have two very significant new features for [`useAsyncData`](https://nuxt.com/
 
 ```vue [pages/index.vue]
 <script setup>
-const nuxtApp = useNuxtApp();
+const nuxtApp = useNuxtApp()
 const { data } = await useAsyncData(
-	() => {
-		/* fetcher */
-	},
-	{
-		// this will not refetch if the key exists in the payload
-		getCachedData: (key) => nuxtApp.payload.static[key] ?? nuxtApp.payload.data[key]
-	}
-);
+  () => {
+    /* fetcher */
+  },
+  {
+    // this will not refetch if the key exists in the payload
+    getCachedData: key => nuxtApp.payload.static[key] ?? nuxtApp.payload.data[key]
+  }
+)
 </script>
 ```
 
@@ -29630,20 +29657,20 @@ We also support configuring some default values for these composables in an app-
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		defaults: {
-			useAsyncData: {
-				deep: false
-			},
-			useFetch: {
-				retry: false,
-				retryDelay: 100,
-				retryStatusCodes: [500],
-				timeout: 100
-			}
-		}
-	}
-});
+  experimental: {
+    defaults: {
+      useAsyncData: {
+        deep: false
+      },
+      useFetch: {
+        retry: false,
+        retryDelay: 100,
+        retryStatusCodes: [500],
+        timeout: 100
+      }
+    }
+  }
+})
 ```
 
 ### 🔢 Layer Improvements
@@ -29714,14 +29741,14 @@ If for whatever reason you need to undo this change in your project you can set 
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	typescript: {
-		tsConfig: {
-			compilerOptions: {
-				verbatimModuleSyntax: false
-			}
-		}
-	}
-});
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        verbatimModuleSyntax: false
+      }
+    }
+  }
+})
 ```
 
 However, we'd recommend only doing that temporarily, as Vue does need this option to be set for best results.
@@ -29763,10 +29790,10 @@ You can start playing with it by upgrading to the latest Nuxt, and press `Shift 
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	devtools: {
-		enabled: true
-	}
-});
+  devtools: {
+    enabled: true
+  }
+})
 ```
 
 ## The Reasons We Built Nuxt DevTools
@@ -30039,11 +30066,11 @@ This release is tested with the latest Vue 3.4 release candidate, and has the ne
 
 ```json [package.json]
 {
-	"dependencies": {
-		"nuxt": "3.9.0",
-		"vue": "3.4.0-rc.1",
-		"vue-router": "latest"
-	}
+  "dependencies": {
+    "nuxt": "3.9.0",
+    "vue": "3.4.0-rc.1",
+    "vue-router": "latest"
+  }
 }
 ```
 
@@ -30053,12 +30080,12 @@ This is a highly-experimental update, but it's now possible to play around with 
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		componentIslands: {
-			selectiveClient: true
-		}
-	}
-});
+  experimental: {
+    componentIslands: {
+      selectiveClient: true
+    }
+  }
+})
 ```
 
 Now, within a server component, you can specify components to hydrate by using the `nuxt-client` directive:
@@ -30076,7 +30103,7 @@ We now use Vite's new AST-aware 'define' to perform more accurate replacements o
 ```vue [app.vue]
 <script setup lang="ts">
 if (document) {
-	console.log(document.querySelector('div'));
+  console.log(document.querySelector('div'))
 }
 </script>
 ```
@@ -30085,12 +30112,12 @@ This hasn't been possible until now because we haven't wanted to run the risk of
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	hooks: {
-		'vite:extendConfig'(config) {
-			delete config.define!.document;
-		}
-	}
-});
+  hooks: {
+    'vite:extendConfig': function (config) {
+      delete config.define!.document
+    }
+  }
+})
 ```
 
 ### 🚦 Granular Loading API
@@ -30109,12 +30136,12 @@ For this, we have a new utility: [`callOnce`](https://nuxt.com/docs/api/utils/ca
 
 ```vue [app.vue]
 <script setup>
-const websiteConfig = useState('config');
+const websiteConfig = useState('config')
 
 await callOnce(async () => {
-	console.log('This will only be logged once');
-	websiteConfig.value = await $fetch('https://my-cms.com/api/website-config');
-});
+  console.log('This will only be logged once')
+  websiteConfig.value = await $fetch('https://my-cms.com/api/website-config')
+})
 </script>
 ```
 
@@ -30267,19 +30294,19 @@ It is particularly important to make sure that any unique key of your data is al
 We now ship a `useId` composable for generating SSR-safe unique IDs ([#23368](https://github.com/nuxt/nuxt/pull/23368){rel="nofollow"}). This allows creating more accessible interfaces in your app. For example:
 
 ```vue [components/MyForm.vue]
-<script setup>
-const emailId = useId();
-const passwordId = useId();
-</script>
-
 <template>
-	<form>
-		<label :for="emailId">Email</label>
-		<input :id="emailId" name="email" type="email" />
-		<label :for="passwordId">Password</label>
-		<input :id="passwordId" name="password" type="password" />
-	</form>
+  <form>
+    <label :for="emailId">Email</label>
+    <input :id="emailId" name="email" type="email" />
+    <label :for="passwordId">Password</label>
+    <input :id="passwordId" name="password" type="password" />
+  </form>
 </template>
+
+<script setup>
+const emailId = useId()
+const passwordId = useId()
+</script>
 ```
 
 ### ✍️ Extending `app/router.options`
@@ -30299,20 +30326,20 @@ We now support (experimentally) polyfilling key Node.js built-ins ([#25028](http
 That means that, within your client-side code, you can import directly from Node built-ins (`node:` and node imports are supported). However, nothing is globally injected for you, to avoid increasing your bundle size unnecessarily. You can either import them where needed.
 
 ```ts [some-file.ts]
-import { Buffer } from 'node:buffer';
-import process from 'node:process';
+import { Buffer } from 'node:buffer'
+import process from 'node:process'
 ```
 
 Or provide your own polyfill, for example, inside a Nuxt plugin.
 
 ```ts [plugins/node.client.ts]
-import { Buffer } from 'node:buffer';
-import process from 'node:process';
+import { Buffer } from 'node:buffer'
+import process from 'node:process'
 
-globalThis.Buffer = Buffer;
-globalThis.process = process;
+globalThis.Buffer = Buffer
+globalThis.process = process
 
-export default defineNuxtPlugin({});
+export default defineNuxtPlugin({})
 ```
 
 This should make life easier for users who are working with libraries without proper browser support. However, because of the risk in increasing your bundle unnecessarily, we would strongly urge users **to choose other alternatives** if at all possible.
@@ -30342,14 +30369,14 @@ You need to have experimental view transitions support enabled first:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		viewTransition: true
-	},
-	app: {
-		// you can disable them globally if necessary (they are enabled by default)
-		viewTransition: false
-	}
-});
+  experimental: {
+    viewTransition: true
+  },
+  app: {
+    // you can disable them globally if necessary (they are enabled by default)
+    viewTransition: false
+  }
+})
 ```
 
 And you can opt in/out granularly:
@@ -30357,8 +30384,8 @@ And you can opt in/out granularly:
 ```vue [pages/index.vue]
 <script setup lang="ts">
 definePageMeta({
-	viewTransition: false
-});
+  viewTransition: false
+})
 </script>
 ```
 
@@ -30370,10 +30397,10 @@ It's now possible to access routing metadata defined in `definePageMeta` at buil
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		scanPageMeta: true
-	}
-});
+  experimental: {
+    scanPageMeta: true
+  }
+})
 ```
 
 Please, experiment with this and let us know how it works for you. We hope to improve performance and enable this by default in a future release so modules like `@nuxtjs/i18n` and others can provide a deeper integration with routing options set in `definePageMeta`.
@@ -30390,10 +30417,10 @@ If you need to switch off this behaviour, you can do so. However, please conside
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	future: {
-		typescriptBundlerResolution: false
-	}
-});
+  future: {
+    typescriptBundlerResolution: false
+  }
+})
 ```
 
 ## ✅ Upgrading
@@ -30434,14 +30461,14 @@ For example, with the code snippet below:
 
 ```ts
 export default defineNuxtConfig({
-	modules: ['@nuxt/content']
-});
+  modules: ['@nuxt/content']
+})
 ```
 
 Shiki will generate the following HTML:
 
 ```html
-<pre class="shiki material-theme-palenight" style="background-color:#292D3E;color:#babed8" tabindex="0">
+<pre class="shiki material-theme-palenight" style="background-color: #292d3e; color: #babed8" tabindex="0">
   <code>
     <span class="line"><span style="color:#89DDFF;font-style:italic">export</span><span style="color:#89DDFF;font-style:italic"> default</span><span style="color:#82AAFF"> defineNuxtConfig</span><span style="color:#BABED8">(</span><span style="color:#89DDFF">{</span></span>
     <span class="line"><span style="color:#F07178">  modules</span><span style="color:#89DDFF">:</span><span style="color:#BABED8"> [</span></span>
@@ -30472,13 +30499,13 @@ It all started with a chat between [Sébastien](https://x.com/Atinux){rel="nofol
 I started the experiments by patching [`shiki-es`](https://github.com/pi0/shiki-es){rel="nofollow"} (a ESM build of Shiki by [Pooya Parsa](https://github.com/pi0){rel="nofollow"}) locally, to convert the grammars and themes files into [ECMAScript Module (ESM)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules){rel="nofollow"} so that it could be understood and bundled by the build tools. This was done to create the code bundle for CloudFlare Workers to consume without using the filesystem nor making network requests.
 
 ```ts [Before - Read JSON assets from filesystem]
-import fs from 'fs/promises';
+import fs from 'node:fs/promises'
 
-const cssGrammar = JSON.parse(await fs.readFile('../langs/css.json', 'utf-8'));
+const cssGrammar = JSON.parse(await fs.readFile('../langs/css.json', 'utf-8'))
 ```
 
 ```ts [After - Using ESM import]
-const cssGrammar = await import('../langs/css.mjs').then((m) => m.default);
+const cssGrammar = await import('../langs/css.mjs').then(m => m.default)
 ```
 
 We need to wrap the JSON files into ESM as inline literal so that we can use [`import()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import){rel="nofollow"} to dynamically import them. The difference is that `import()` is a standard JavaScript feature that works everywhere, while `fs.readFile` is a Node.js specific API that only works in Node.js. Having `import()` statically would also make bundlers like [Rollup](https://rollupjs.org/){rel="nofollow"} and [webpack](https://webpack.js.org/){rel="nofollow"} able to construct the module relationship graph and [emit the bundled code as chunks](https://rollupjs.org/tutorial/#code-splitting){rel="nofollow"}.
@@ -30541,16 +30568,16 @@ We first come up of fetching the types on-demand from CDN, using the [Auto-Type-
 After a few iterations on the underlying tools (e.g. on [`@nuxtjs/mdc`](https://github.com/nuxt-modules/mdc/pull/129){rel="nofollow"}, the markdown compiler used by Nuxt Content), we managed to take the hybrid approach and made [`nuxt-content-twoslash`](https://github.com/antfu/nuxt-content-twoslash){rel="nofollow"} that runs Twoslash on build time and caches the results for edge rendering. This way we could avoid shipping any extra dependencies to the final bundle, but still have the rich interactive code snippets on the website:
 
 ```vue twoslash
+<template>
+  <button>Count is: {{ count }}</button>
+  <div>Double is: {{ double }}</div>
+</template>
+
 <script setup>
 // Try hover on identifiers below to see the types
-const count = useState('counter', () => 0);
-const double = computed(() => count.value * 2);
+const count = useState('counter', () => 0)
+const double = computed(() => count.value * 2)
 </script>
-
-<template>
-	<button>Count is: {{ count }}</button>
-	<div>Double is: {{ double }}</div>
-</template>
 ```
 
 During that, we also took the chance to refactor [Twoslash](https://github.com/twoslashes/twoslash){rel="nofollow"} with Orta to have a more efficient and modern structure. It also allows us have [`twoslash-vue`](https://github.com/twoslashes/twoslash/tree/main/packages/twoslash-vue){rel="nofollow"} that provides the [Vue SFC](https://vuejs.org/guide/scaling-up/sfc.html){rel="nofollow"} support as you are playing above. It's powered by [Volar.js](https://github.com/volarjs/volar.js){rel="nofollow"} and [`vuejs/language-tools`](https://github.com/vuejs/language-tools){rel="nofollow"}. With Volar growing to be framework agnostic and frameworks to work together, we are looking forward to see such integrations to expand to more syntaxes like Astro and Svelte components files in the future.
@@ -30560,14 +30587,14 @@ During that, we also took the chance to refactor [Twoslash](https://github.com/t
 If you want to give Shiki a try in your own website, here you can find some integrations that we have made:
 
 - [Nuxt](https://shiki.style/packages/nuxt){rel="nofollow"}
-    - If using [Nuxt Content](https://content.nuxt.com/){rel="nofollow"}, Shiki is [build-in](https://content.nuxt.com/get-started/configuration#highlight){rel="nofollow"}. For Twoslash, you can add [`nuxt-content-twoslash`](https://github.com/antfu/nuxt-content-twoslash){rel="nofollow"} on top.
-    - If not, you can use [`nuxt-shiki`](https://github.com/pi0/nuxt-shiki){rel="nofollow"} to use Shiki as Vue component or composibles.
+  - If using [Nuxt Content](https://content.nuxt.com/){rel="nofollow"}, Shiki is [build-in](https://content.nuxt.com/get-started/configuration#highlight){rel="nofollow"}. For Twoslash, you can add [`nuxt-content-twoslash`](https://github.com/antfu/nuxt-content-twoslash){rel="nofollow"} on top.
+  - If not, you can use [`nuxt-shiki`](https://github.com/pi0/nuxt-shiki){rel="nofollow"} to use Shiki as Vue component or composibles.
 - [VitePress](https://shiki.style/packages/vitepress){rel="nofollow"}
-    - Shiki is [built-in](https://vitepress.dev/guide/markdown#syntax-highlighting-in-code-blocks){rel="nofollow"}. For Twoslash, you can use [`vitepress-twoslash`](https://shiki.style/packages/vitepress#twoslash){rel="nofollow"}.
+  - Shiki is [built-in](https://vitepress.dev/guide/markdown#syntax-highlighting-in-code-blocks){rel="nofollow"}. For Twoslash, you can use [`vitepress-twoslash`](https://shiki.style/packages/vitepress#twoslash){rel="nofollow"}.
 - Low-level integrations - Shiki provides official integrations for markdown compilers:
 
-    - [`markdown-it`](https://shiki.style/packages/markdown-it){rel="nofollow"} - Plugin for [`markdown-it`](https://github.com/markdown-it/markdown-it){rel="nofollow"}
-    - [`rehype`](https://shiki.style/packages/rehype){rel="nofollow"} - Plugin for [`rehype`](https://github.com/rehypejs/rehype){rel="nofollow"}
+  - [`markdown-it`](https://shiki.style/packages/markdown-it){rel="nofollow"} - Plugin for [`markdown-it`](https://github.com/markdown-it/markdown-it){rel="nofollow"}
+  - [`rehype`](https://shiki.style/packages/rehype){rel="nofollow"} - Plugin for [`rehype`](https://github.com/rehypejs/rehype){rel="nofollow"}
 
 Check out more integrations on [Shiki's Documentation](https://shiki.style/){rel="nofollow"}
 
@@ -30589,12 +30616,12 @@ For example, this code:
 
 ```vue [pages/index.vue]
 <script setup>
-console.log('Log from index page');
+console.log('Log from index page')
 
 const { data } = await useAsyncData(() => {
-	console.log('Log inside useAsyncData');
-	return $fetch('/api/test');
-});
+  console.log('Log inside useAsyncData')
+  return $fetch('/api/test')
+})
 </script>
 ```
 
@@ -30614,11 +30641,11 @@ If you encounter any issues with this, it is possible to disable them - or preve
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	features: {
-		devLogs: false
-		// or 'silent' to allow you to handle yourself with `dev:ssr-logs` hook
-	}
-});
+  features: {
+    devLogs: false
+    // or 'silent' to allow you to handle yourself with `dev:ssr-logs` hook
+  }
+})
 ```
 
 ## 🎨 Preview mode
@@ -30626,7 +30653,7 @@ export default defineNuxtConfig({
 A new `usePreviewMode` composable aims to make it simple to use preview mode in your Nuxt app.
 
 ```ts [plugins/test.client.ts]
-const { enabled, state } = usePreviewMode();
+const { enabled, state } = usePreviewMode()
 ```
 
 When preview mode is enabled, all your data fetching composables, like `useAsyncData` and `useFetch` will rerun, meaning any cached data in the payload will be bypassed.
@@ -30644,19 +30671,19 @@ It's now possible to define middleware for page paths within the Vue app part of
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	routeRules: {
-		'/admin/**': {
-			// or appMiddleware: 'auth'
-			appMiddleware: ['auth']
-		},
-		'/admin/login': {
-			// You can 'turn off' middleware that would otherwise run for a page
-			appMiddleware: {
-				auth: false
-			}
-		}
-	}
-});
+  routeRules: {
+    '/admin/**': {
+      // or appMiddleware: 'auth'
+      appMiddleware: ['auth']
+    },
+    '/admin/login': {
+      // You can 'turn off' middleware that would otherwise run for a page
+      appMiddleware: {
+        auth: false
+      }
+    }
+  }
+})
 ```
 
 ::read-more{to="https://nuxt.com/docs/guide/concepts/rendering#route-rules"}
@@ -30668,15 +30695,16 @@ Now, `useAsyncData` and `useFetch` expose a `clear` utility. This is a function 
 
 ```vue
 <script setup lang="ts">
-const { data, clear } = await useFetch('/api/test');
+const { data, clear } = await useFetch('/api/test')
 
-const route = useRoute();
+const route = useRoute()
 watch(
-	() => route.path,
-	(path) => {
-		if (path === '/') clear();
-	}
-);
+  () => route.path,
+  (path) => {
+    if (path === '/')
+      clear()
+  }
+)
 </script>
 ```
 
@@ -30689,9 +30717,9 @@ Nuxt now includes a new `<div id="teleports"></div>` element in your app within 
 
 ```vue [app.vue]
 <template>
-	<Teleport to="#teleports">
-		<span> Something </span>
-	</Teleport>
+  <Teleport to="#teleports">
+    <span> Something </span>
+  </Teleport>
 </template>
 ```
 
@@ -30715,12 +30743,12 @@ When you are using server components, you can now use the `nuxt-client` attribut
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		componentIslands: {
-			selectiveClient: 'deep'
-		}
-	}
-});
+  experimental: {
+    componentIslands: {
+      selectiveClient: 'deep'
+    }
+  }
+})
 ```
 
 You can listen to an `@error` event from server components that will be triggered if there is any issue loading the component ([#25798](https://github.com/nuxt/nuxt/pull/25798){rel="nofollow"}).
@@ -30748,19 +30776,19 @@ You can easily configure this to revert to previous behaviour if you wish:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	vite: {
-		$client: {
-			build: {
-				rollupOptions: {
-					output: {
-						chunkFileNames: '_nuxt/[name].[hash].js',
-						entryFileNames: '_nuxt/[name].[hash].js'
-					}
-				}
-			}
-		}
-	}
-});
+  vite: {
+    $client: {
+      build: {
+        rollupOptions: {
+          output: {
+            chunkFileNames: '_nuxt/[name].[hash].js',
+            entryFileNames: '_nuxt/[name].[hash].js'
+          }
+        }
+      }
+    }
+  }
+})
 ```
 
 ## 💪 Type fixes
@@ -30983,15 +31011,15 @@ A quick reference to differentiate:
 
 ```jsonc [.eslintrc]
 {
-	"extends": [
-		// Solve from `import("@nuxtjs/eslint-config").then(mod => mod.default)`
-		"@nuxtjs",
-		// Solve from `import("eslint-config-vue").then(mod => mod.default.configs["vue3-recommended"])`
-		"plugin:vue/vue3-recommended"
-	],
-	"rules": {
-		// ...
-	}
+  "extends": [
+    // Solve from `import("@nuxtjs/eslint-config").then(mod => mod.default)`
+    "@nuxtjs",
+    // Solve from `import("eslint-config-vue").then(mod => mod.default.configs["vue3-recommended"])`
+    "plugin:vue/vue3-recommended"
+  ],
+  "rules": {
+    // ...
+  }
 }
 ```
 
@@ -31002,9 +31030,9 @@ The new flat config moves the plugins and configs resolution from ESLint's inter
 In the latest [`@nuxt/eslint-config` package](https://eslint.nuxt.com/packages/config#flat-config-format){rel="nofollow"}, we leverage the flexibility we have to provide a factory function that allows you to customize the config presets easily in a more high-level way. Here is an example of how you can use it:
 
 ```ts [eslint.config.js]
-import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
 
-export default createConfigForNuxt();
+export default createConfigForNuxt()
 ```
 
 `@nuxt/eslint-config` starts with an unopinionated base config, which means we only include rules for best practices of TypeScript, Vue and Nuxt, and leave the rest like code style, formatting, etc for you to decide. You can also run [Prettier](https://prettier.io/){rel="nofollow"} alongside for formatting with the defaults.
@@ -31012,42 +31040,42 @@ export default createConfigForNuxt();
 The config also allows you to opt-in to more opinionated features as needed. For example, if you want ESLint to take care of the formatting as well, you can turn it on by passing `features.stylistic` to the factory function (powered by [ESLint Stylistic](https://eslint.style/){rel="nofollow"}):
 
 ```ts [eslint.config.js]
-import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
 
 export default createConfigForNuxt({
-	features: {
-		stylistic: true
-	}
-});
+  features: {
+    stylistic: true
+  }
+})
 ```
 
 Or tweak your preferences with an options object ([learn more with the options here](https://eslint.style/guide/config-presets#configuration-factory){rel="nofollow"}):
 
 ```ts [eslint.config.js]
-import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
 
 export default createConfigForNuxt({
-	features: {
-		stylistic: {
-			semi: false,
-			indent: 2, // 4 or 'tab'
-			quotes: 'single'
-			// ... and more
-		}
-	}
-});
+  features: {
+    stylistic: {
+      semi: false,
+      indent: 2, // 4 or 'tab'
+      quotes: 'single'
+      // ... and more
+    }
+  }
+})
 ```
 
 And if you are [authoring a Nuxt Module](https://nuxt.com/docs/guide/going-further/modules){rel="nofollow"}, you can turn on `features.tooling` to enable the rules for the Nuxt module development:
 
 ```ts [eslint.config.js]
-import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
 
 export default createConfigForNuxt({
-	features: {
-		tooling: true
-	}
-});
+  features: {
+    tooling: true
+  }
+})
 ```
 
 ...and so on. The factory function in flat config allows the presets to cover the complexity of the underlying ESLint configuration, and provide high-level and user-friendly abstractions for end users to customize. All this without requiring users to worry about the internal details.
@@ -31057,27 +31085,27 @@ While this approach offers you a Prettier-like experience with minimal configura
 We also made a [`FlatConfigComposer`](https://github.com/antfu/eslint-flat-config-utils#composer){rel="nofollow"} utility from [`eslint-flat-config-utils`](https://github.com/antfu/eslint-flat-config-utils){rel="nofollow"} to make it even easier to override and extend the flat config. The factory function in `@nuxt/eslint-config/flat` returns a `FlatConfigComposer` instance:
 
 ```ts [eslint.config.js]
-import { createConfigForNuxt } from '@nuxt/eslint-config/flat';
+import { createConfigForNuxt } from '@nuxt/eslint-config/flat'
 
 export default createConfigForNuxt({
-	// ...options for Nuxt integration
+  // ...options for Nuxt integration
 })
-	.append
-	// ...append other flat config items
-	()
-	.prepend
-	// ...prepend other flat config items before the base config
-	()
-	// override a specific config item based on their name
-	.override(
-		'nuxt/typescript', // specify the name of the target config, or index
-		{
-			rules: {
-				// ...override the rules
-				'@typescript-eslint/no-unsafe-assignment': 'off'
-			}
-		}
-	);
+  .append
+// ...append other flat config items
+  ()
+  .prepend
+// ...prepend other flat config items before the base config
+  ()
+// override a specific config item based on their name
+  .override(
+    'nuxt/typescript', // specify the name of the target config, or index
+    {
+      rules: {
+        // ...override the rules
+        '@typescript-eslint/no-unsafe-assignment': 'off'
+      }
+    }
+  )
 // an so on, operations are chainable
 ```
 
@@ -31095,20 +31123,20 @@ Usually, we could turn off the rule for those files like:
 
 ```js [eslint.config.js]
 export default [
-	{
-		files: ['*.vue'],
-		rules: {
-			'vue/multi-word-component-names': 'error'
-		}
-	},
-	{
-		files: ['app.vue', 'error.vue', 'pages/**/*.vue', 'layouts/**/*.vue'],
-		rules: {
-			// disable the rule for these files
-			'vue/multi-word-component-names': 'off'
-		}
-	}
-];
+  {
+    files: ['*.vue'],
+    rules: {
+      'vue/multi-word-component-names': 'error'
+    }
+  },
+  {
+    files: ['app.vue', 'error.vue', 'pages/**/*.vue', 'layouts/**/*.vue'],
+    rules: {
+      // disable the rule for these files
+      'vue/multi-word-component-names': 'off'
+    }
+  }
+]
 ```
 
 It should work for the majority of the cases. However, we know that in Nuxt you can [customize the path for each directory](https://nuxt.com/docs/api/nuxt-config#dir){rel="nofollow"}, and [layers](https://nuxt.com/docs/getting-started/layers){rel="nofollow"} allow you to have multiple sources for each directory. This means the linter rules will be less accurate and potentially cause users extra effort to keep them aligned **manually**.
@@ -31155,11 +31183,11 @@ To enable it, you can set the `checker` option to `true` in the module options:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	modules: ['@nuxt/eslint'],
-	eslint: {
-		checker: true // <---
-	}
-});
+  modules: ['@nuxt/eslint'],
+  eslint: {
+    checker: true // <---
+  }
+})
 ```
 
 Whenever you get some ESLint errors, you will see a warning in the console and the browser. To learn more about this feature, you can check the [documentation](https://eslint.nuxt.com/packages/module#dev-server-checker){rel="nofollow"}.
@@ -31200,10 +31228,10 @@ Nuxt 4 is on the horizon, and it's now possible to test out the behaviour change
 
 ```ts
 export default defineNuxtConfig({
-	future: {
-		compatibilityVersion: 4
-	}
-});
+  future: {
+    compatibilityVersion: 4
+  }
+})
 ```
 
 As we've been merging PRs for Nuxt 4, we've been enabling them behind this flag. As much as possible we're aiming for backwards compatibility - our test matrix is running the same fixtures in both v3 and v4 compatibility mode.
@@ -31352,7 +31380,7 @@ Let's walk through adding a third-party script to your Nuxt app using a fictiona
 We start by loading the script using `useHead`.
 
 ```ts
-useHead({ script: [{ src: '/tracker.js', defer: true }] });
+useHead({ script: [{ src: '/tracker.js', defer: true }] })
 ```
 
 However, let's now try to get the script functionality working in our app.
@@ -31370,17 +31398,17 @@ The following steps are common when working with third-party scripts in Nuxt:
 // ❌ Oops, window is not defined!
 // 💡 The window can't be directly accessed if we use SSR in Nuxt.
 // 👉 We need to make this SSR safe
-window.track('page_view', useRoute().path);
+window.track('page_view', useRoute().path)
 </script>
 ```
 
 ```vue [2: Script Timing]
 <script setup>
 if (import.meta.client) {
-	// ❌ Oops, the script hasn't finished loading yet!
-	// 💡 A `defer` script may not be available while our Nuxt app hydrates.
-	// 👉 We need to wait for the script to be loaded
-	window.track('page_view', useRoute().path);
+  // ❌ Oops, the script hasn't finished loading yet!
+  // 💡 A `defer` script may not be available while our Nuxt app hydrates.
+  // 👉 We need to wait for the script to be loaded
+  window.track('page_view', useRoute().path)
 }
 </script>
 ```
@@ -31388,13 +31416,13 @@ if (import.meta.client) {
 ```vue [3: Broken types]
 <script lang="ts" setup>
 if (import.meta.client) {
-	useTimeoutFn(() => {
-		// ✅ It's working!
-		// ❌ Oops, types are broken.
-		// 💡 The `window` has strict types and nothing is defined yet.
-		// 👉 We need to manually augment the window
-		window.track('page_view', useRoute().path);
-	}, 1000 /* should be loaded in 1 second!? */);
+  useTimeoutFn(() => {
+    // ✅ It's working!
+    // ❌ Oops, types are broken.
+    // 💡 The `window` has strict types and nothing is defined yet.
+    // 👉 We need to manually augment the window
+    window.track('page_view', useRoute().path)
+  }, 1000 /* should be loaded in 1 second!? */)
 }
 </script>
 ```
@@ -31402,18 +31430,18 @@ if (import.meta.client) {
 ```vue [4: It works?]
 <script lang="ts" setup>
 declare global {
-	interface Window {
-		track: (e: string, p: string) => void;
-	}
+  interface Window {
+    track: (e: string, p: string) => void
+  }
 }
 if (import.meta.client) {
-	useTimeoutFn(() => {
-		// ✅ It's working and types are valid!
-		// ❌ Oops, ad-blockers, GDPR and duplicate scripts
-		// 💡 There's a lot of hidden complexity in third-party scripts
-		// 👉 We need a better API
-		window.track('page_view', useRoute().path);
-	}, 1000);
+  useTimeoutFn(() => {
+    // ✅ It's working and types are valid!
+    // ❌ Oops, ad-blockers, GDPR and duplicate scripts
+    // 💡 There's a lot of hidden complexity in third-party scripts
+    // 👉 We need a better API
+    window.track('page_view', useRoute().path)
+  }, 1000)
 }
 </script>
 ```
@@ -31462,34 +31490,34 @@ For the scripts API, it:
 
 ```ts [hello.ts]
 const { proxy, onLoaded } = useScript('/hello.js', {
-	trigger: 'onNuxtReady',
-	use() {
-		return window.helloWorld;
-	}
-});
+  trigger: 'onNuxtReady',
+  use() {
+    return window.helloWorld
+  }
+})
 
 onLoaded(({ greeting }) => {
-	// ✅ script is loaded! Hooks into Vue lifecycle
-});
+  // ✅ script is loaded! Hooks into Vue lifecycle
+})
 
 // ✅ OR use the proxy API - SSR friendly, called when script is loaded
-proxy.greeting(); // Hello, World!
+proxy.greeting() // Hello, World!
 
 declare global {
-	interface Window {
-		helloWorld: {
-			greeting: () => 'Hello World!';
-		};
-	}
+  interface Window {
+    helloWorld: {
+      greeting: () => 'Hello World!'
+    }
+  }
 }
 ```
 
 ```ts [hello.js]
 window.helloWorld = {
-	greeting() {
-		console.log('Hello, World!');
-	}
-};
+  greeting() {
+    console.log('Hello, World!')
+  }
+}
 ```
 
 ::
@@ -31506,11 +31534,11 @@ For example, we can look at the [Fathom Analytics](https://scripts.nuxt.com/scri
 
 ```ts
 const { proxy } = useScriptFathomAnalytics({
-	// ✅ options are validated at runtime
-	site: undefined
-});
+  // ✅ options are validated at runtime
+  site: undefined
+})
 // ✅ typed
-proxy.trackPageview();
+proxy.trackPageview()
 ```
 
 ### Facade Components
@@ -31534,33 +31562,33 @@ a16y data.
 :::tabs-item{label="Input"}
 
 ```vue
+<template>
+  <ScriptYouTubePlayer ref="video" video-id="d_IFKP1Ofq0" @ready="isLoaded = true" @state-change="stateChange">
+    <template #awaitingLoad>
+      <div class="absolute top-1/2 left-1/2 h-[48px] w-[68px] -translate-x-1/2 -translate-y-1/2 transform">
+        <svg height="100%" version="1.1" viewBox="0 0 68 48" width="100%">
+          <path
+            d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"
+            fill="#f00"
+          />
+          <path d="M 45,24 27,14 27,34" fill="#fff" />
+        </svg>
+      </div>
+    </template>
+  </ScriptYouTubePlayer>
+</template>
+
 <script setup lang="ts">
-const isLoaded = ref(false);
-const isPlaying = ref(false);
-const video = ref();
+const isLoaded = ref(false)
+const isPlaying = ref(false)
+const video = ref()
 function play() {
-	video.value?.player.playVideo();
+  video.value?.player.playVideo()
 }
 function stateChange(state) {
-	isPlaying.value = state.data === 1;
+  isPlaying.value = state.data === 1
 }
 </script>
-
-<template>
-	<ScriptYouTubePlayer ref="video" video-id="d_IFKP1Ofq0" @ready="isLoaded = true" @state-change="stateChange">
-		<template #awaitingLoad>
-			<div class="absolute top-1/2 left-1/2 h-[48px] w-[68px] -translate-x-1/2 -translate-y-1/2 transform">
-				<svg height="100%" version="1.1" viewBox="0 0 68 48" width="100%">
-					<path
-						d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z"
-						fill="#f00"
-					/>
-					<path d="M 45,24 27,14 27,34" fill="#fff" />
-				</svg>
-			</div>
-		</template>
-	</ScriptYouTubePlayer>
-</template>
 ```
 
 :::
@@ -31576,17 +31604,17 @@ Building on top of this, Nuxt Scripts provides advanced triggers to make it even
 - [Element Event Triggers](https://scripts.nuxt.com/docs/guides/script-triggers#element-event-triggers){rel="nofollow"} - Load scripts based on user interactions such as scrolling, clicking, or form submissions.
 
 ```ts
-const cookieConsentTrigger = useScriptTriggerConsent();
+const cookieConsentTrigger = useScriptTriggerConsent()
 const { proxy } = useScript<{ greeting: () => void }>('/hello.js', {
-	// script will only be loaded once the consent has been accepted
-	trigger: cookieConsentTrigger
-});
+  // script will only be loaded once the consent has been accepted
+  trigger: cookieConsentTrigger
+})
 // ...
 function acceptCookies() {
-	cookieConsentTrigger.accept();
+  cookieConsentTrigger.accept()
 }
 // greeting() is queued until the user accepts cookies
-proxy.greeting();
+proxy.greeting()
 ```
 
 ### Bundling Scripts
@@ -31602,8 +31630,8 @@ To mitigate this, Nuxt Scripts provides a way to bundle third-party scripts into
 
 ```ts
 useScript('https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js', {
-	bundle: true
-});
+  bundle: true
+})
 ```
 
 The script will now be served from `/_scripts/{hash}` on your own domain.
@@ -31672,13 +31700,13 @@ For example:
 
 ```vue [pages/index.vue]
 <template>
-	<div>
-		<NuxtLink prefetch-on="interaction"> This will prefetch when hovered or when it gains focus </NuxtLink>
-		<!-- note that you probably don't want both enabled! -->
-		<NuxtLink :prefetch-on="{ visibility: true, interaction: true }">
-			This will prefetch when hovered/focus - or when it becomes visible
-		</NuxtLink>
-	</div>
+  <div>
+    <NuxtLink prefetch-on="interaction"> This will prefetch when hovered or when it gains focus </NuxtLink>
+    <!-- note that you probably don't want both enabled! -->
+    <NuxtLink :prefetch-on="{ visibility: true, interaction: true }">
+      This will prefetch when hovered/focus - or when it becomes visible
+    </NuxtLink>
+  </div>
 </template>
 ```
 
@@ -31688,15 +31716,15 @@ For example:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		defaults: {
-			nuxtLink: {
-				prefetch: true,
-				prefetchOn: { visibility: false, interaction: true }
-			}
-		}
-	}
-});
+  experimental: {
+    defaults: {
+      nuxtLink: {
+        prefetch: true,
+        prefetchOn: { visibility: false, interaction: true }
+      }
+    }
+  }
+})
 ```
 
 ## 🗺️ Better Server Source Maps
@@ -31709,11 +31737,11 @@ Note that one of the easiest ways of improving your build performance is to turn
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	sourcemap: {
-		server: false,
-		client: true
-	}
-});
+  sourcemap: {
+    server: false,
+    client: true
+  }
+})
 ```
 
 ## 🎁 New Features for Module Authors
@@ -31735,11 +31763,11 @@ We've updated our types in Nuxt along these lines but you may experience issues 
 Please create an issue with a reproduction - I'll happily help create a PR to resolve in the upstream library in question. Or you may be able to work around the issue by creating a `declarations.d.ts` in the root of your project with the following code ([credit](https://github.com/nuxt/nuxt/pull/28542#issuecomment-2293282891){rel="nofollow"} to [@BobbieGoede](https://github.com/BobbieGoede){rel="nofollow"}):
 
 ```ts [declarations.d.ts]
-import type { ComponentCustomOptions as _ComponentCustomOptions, ComponentCustomProperties as _ComponentCustomProperties } from 'vue';
+import type { ComponentCustomOptions as _ComponentCustomOptions, ComponentCustomProperties as _ComponentCustomProperties } from 'vue'
 
 declare module '@vue/runtime-core' {
-	interface ComponentCustomProperties extends _ComponentCustomProperties {}
-	interface ComponentCustomOptions extends _ComponentCustomOptions {}
+  interface ComponentCustomProperties extends _ComponentCustomProperties {}
+  interface ComponentCustomOptions extends _ComponentCustomOptions {}
 }
 ```
 
@@ -32040,7 +32068,7 @@ Then, import the `<Icon>` component in your Vue components, providing icon `name
 
 ```vue
 <template>
-	<Icon name="i-lucide-activity" />
+  <Icon name="i-lucide-activity" />
 </template>
 ```
 
@@ -32348,7 +32376,7 @@ We now use the [Chrome DevTools extensibility API](https://developer.chrome.com/
 `callOnce` is a built-in Nuxt composable for running code only once. For example, if the code runs on the server it won't run again on the client. But sometimes you do want code to run on _every navigation_ - just avoid the initial server/client double load. For this, there's a new `mode: 'navigation'` option that will run the code only once _per navigation_. (See [#30260](https://github.com/nuxt/nuxt/pull/30260){rel="nofollow"} for more info.)
 
 ```ts
-await callOnce(() => counter.value++, { mode: 'navigation' });
+await callOnce(() => counter.value++, { mode: 'navigation' })
 ```
 
 ## 🥵 HMR for templates, pages + page metadata
@@ -32365,12 +32393,12 @@ We also now support local functions in `definePageMeta` ([#30241](https://github
 
 ```ts
 function validateIdParam(route) {
-	return !!(route.params.id && !isNaN(Number(route.params.id)));
+  return !!(route.params.id && !isNaN(Number(route.params.id)))
 }
 
 definePageMeta({
-	validate: validateIdParam
-});
+  validate: validateIdParam
+})
 ```
 
 ## 🔥 Performance improvements
@@ -32443,8 +32471,8 @@ We've upgraded to `unhead` v2, the engine behind Nuxt's `<head>` management. Thi
 ```ts
 // Nuxt now re-exports composables while properly resolving the context
 export function useHead(input, options = {}) {
-	const unhead = injectHead(options.nuxt);
-	return head(input, { head: unhead, ...options });
+  const unhead = injectHead(options.nuxt)
+  return head(input, { head: unhead, ...options })
 }
 ```
 
@@ -32489,20 +32517,20 @@ We're very pleased to bring you native delayed/lazy hydration support ([#26468](
 
 ```vue
 <template>
-	<!-- Hydrate when component becomes visible in viewport -->
-	<LazyExpensiveComponent hydrate-on-visible />
+  <!-- Hydrate when component becomes visible in viewport -->
+  <LazyExpensiveComponent hydrate-on-visible />
 
-	<!-- Hydrate when browser is idle -->
-	<LazyHeavyComponent hydrate-on-idle />
+  <!-- Hydrate when browser is idle -->
+  <LazyHeavyComponent hydrate-on-idle />
 
-	<!-- Hydrate on interaction (mouseover in this case) -->
-	<LazyDropdown hydrate-on-interaction="mouseover" />
+  <!-- Hydrate on interaction (mouseover in this case) -->
+  <LazyDropdown hydrate-on-interaction="mouseover" />
 
-	<!-- Hydrate when media query matches -->
-	<LazyMobileMenu hydrate-on-media-query="(max-width: 768px)" />
+  <!-- Hydrate when media query matches -->
+  <LazyMobileMenu hydrate-on-media-query="(max-width: 768px)" />
 
-	<!-- Hydrate after a specific delay in milliseconds -->
-	<LazyFooter :hydrate-after="2000" />
+  <!-- Hydrate after a specific delay in milliseconds -->
+  <LazyFooter :hydrate-after="2000" />
 </template>
 ```
 
@@ -32520,11 +32548,11 @@ You can now fine-tune which files Nuxt scans for pages ([#31090](https://github.
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	pages: {
-		// Filter specific files or directories
-		pattern: ['**/*.vue']
-	}
-});
+  pages: {
+    // Filter specific files or directories
+    pattern: ['**/*.vue']
+  }
+})
 ```
 
 ## 🔍 Enhanced Debugging
@@ -32533,20 +32561,20 @@ We've made debugging with the `debug` option more flexible! Now you can enable j
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	debug: {
-		// Enable specific debugging features
-		templates: true,
-		modules: true,
-		watchers: true,
-		hooks: {
-			client: true,
-			server: true
-		},
-		nitro: true,
-		router: true,
-		hydration: true
-	}
-});
+  debug: {
+    // Enable specific debugging features
+    templates: true,
+    modules: true,
+    watchers: true,
+    hooks: {
+      client: true,
+      server: true
+    },
+    nitro: true,
+    router: true,
+    hydration: true
+  }
+})
 ```
 
 Or keep it simple with `debug: true` to enable all these debugging features.
@@ -32557,25 +32585,25 @@ For the decorator fans out there (whoever you are!), we've added experimental su
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	experimental: {
-		decorators: true
-	}
-});
+  experimental: {
+    decorators: true
+  }
+})
 ```
 
 ```ts
 function something(_method: () => unknown) {
-	return () => 'decorated';
+  return () => 'decorated'
 }
 
 class SomeClass {
-	@something
-	public someMethod() {
-		return 'initial';
-	}
+  @something
+  public someMethod() {
+    return 'initial'
+  }
 }
 
-const value = new SomeClass().someMethod();
+const value = new SomeClass().someMethod()
 // returns 'decorated'
 ```
 
@@ -32587,10 +32615,10 @@ If you want named aliases for other layers, you can add a name to your layer con
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	$meta: {
-		name: 'example-layer'
-	}
-});
+  $meta: {
+    name: 'example-layer'
+  }
+})
 ```
 
 This creates the alias `#layers/example-layer` pointing to your layer - making imports cleaner and more intuitive.
@@ -32613,22 +32641,22 @@ For module authors, we've added the ability to augment Nitro types with `addType
 ```ts
 // Inside your Nuxt module
 export default defineNuxtModule({
-	setup(options, nuxt) {
-		addTypeTemplate(
-			{
-				filename: 'types/my-module.d.ts',
-				getContents: () => `
+  setup(options, nuxt) {
+    addTypeTemplate(
+      {
+        filename: 'types/my-module.d.ts',
+        getContents: () => `
         declare module 'nitropack' {
           interface NitroRouteConfig {
             myCustomOption?: boolean
           }
         }
       `
-			},
-			{ nitro: true }
-		);
-	}
-});
+      },
+      { nitro: true }
+    )
+  }
+})
 ```
 
 ## ⚙️ Nitro v2.11 Upgrade
@@ -32718,18 +32746,18 @@ Your applications will feel snappier, build quicker, and load faster for your us
 ```html
 <!-- Before: Inconsistent color usage with duplicate dark mode classes -->
 <div class="rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
-	<h2 class="mb-2 text-xl text-gray-900 dark:text-white">User Profile</h2>
-	<p class="text-gray-600 dark:text-gray-300">Account settings and preferences</p>
-	<button class="mt-2 rounded bg-blue-500 px-3 py-1 text-white">Edit Profile</button>
+  <h2 class="mb-2 text-xl text-gray-900 dark:text-white">User Profile</h2>
+  <p class="text-gray-600 dark:text-gray-300">Account settings and preferences</p>
+  <button class="mt-2 rounded bg-blue-500 px-3 py-1 text-white">Edit Profile</button>
 </div>
 ```
 
 ```html
 <!-- After: Semantic design tokens with automatic dark mode support -->
 <div class="rounded-lg bg-(--ui-background-muted) p-4">
-	<h2 class="mb-2 text-xl text-(--ui-text-highlighted)">User Profile</h2>
-	<p class="text-(--ui-text-muted)">Account settings and preferences</p>
-	<UButton color="primary" size="sm" class="mt-2">Edit Profile</UButton>
+  <h2 class="mb-2 text-xl text-(--ui-text-highlighted)">User Profile</h2>
+  <p class="text-(--ui-text-muted)">Account settings and preferences</p>
+  <UButton color="primary" size="sm" class="mt-2">Edit Profile</UButton>
 </div>
 ```
 
@@ -32760,13 +32788,13 @@ We're really happy to expand the scope of Nuxt UI beyond the Nuxt framework. Wit
 • Leverage both basic components and advanced Pro components in any Vue project
 
 ```ts [vite.config.ts]
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import ui from '@nuxt/ui/vite';
+import ui from '@nuxt/ui/vite'
+import vue from '@vitejs/plugin-vue'
+import { defineConfig } from 'vite'
 
 export default defineConfig({
-	plugins: [vue(), ui()]
-});
+  plugins: [vue(), ui()]
+})
 ```
 
 ## 📦 Components for Every Need
@@ -32795,19 +32823,19 @@ We've completely revamped our TypeScript integration, with features that make yo
 
 ```ts
 export default defineAppConfig({
-	ui: {
-		button: {
-			// Your IDE will show all available options
-			slots: {
-				base: 'font-bold rounded-lg'
-			},
-			defaultVariants: {
-				size: 'md',
-				color: 'error'
-			}
-		}
-	}
-});
+  ui: {
+    button: {
+      // Your IDE will show all available options
+      slots: {
+        base: 'font-bold rounded-lg'
+      },
+      defaultVariants: {
+        size: 'md',
+        color: 'error'
+      }
+    }
+  }
+})
 ```
 
 ## ⬆️ Upgrading to v3
@@ -33041,10 +33069,10 @@ To improve the user experience as well as telling Nuxt that you want to export y
 
 ```vue
 <script setup>
-import { ref, computed } from '#imports';
+import { computed, ref } from '#imports'
 
-const count = ref(1);
-const double = computed(() => count.value * 2);
+const count = ref(1)
+const double = computed(() => count.value * 2)
 </script>
 ```
 
@@ -33095,9 +33123,9 @@ We do support live preview out of the box to keep calling your API:
 
 ```js [plugins/preview.client.js]
 export default async function ({ query, enablePreview }) {
-	if (query.preview) {
-		enablePreview();
-	}
+  if (query.preview) {
+    enablePreview()
+  }
 }
 ```
 
@@ -33110,13 +33138,13 @@ When the preview mode is activated, `asyncData` and `fetch` original methods wil
 Depending of the `target`, you can run these commands.
 
 - `server`
-    - `nuxt dev`: Start the development server
-    - `nuxt build`: Bundle your Nuxt application for production
-    - `nuxt start`: Start the production server
+  - `nuxt dev`: Start the development server
+  - `nuxt build`: Bundle your Nuxt application for production
+  - `nuxt start`: Start the production server
 - `static`
-    - `nuxt dev`: Start the development server (static aware)
-    - `nuxt generate`: Bundle your Nuxt application for production if needed (static aware) and export your application to static HTML in `dist/` directory
-    - `nuxt start`: Serve your production application from `dist/`
+  - `nuxt dev`: Start the development server (static aware)
+  - `nuxt generate`: Bundle your Nuxt application for production if needed (static aware) and export your application to static HTML in `dist/` directory
+  - `nuxt start`: Serve your production application from `dist/`
 
 ### What to do next
 
@@ -33161,10 +33189,10 @@ Fetch hook is called after the component instance is created on the server-side.
 
 ```js
 export default {
-	fetch() {
-		console.log(this);
-	}
-};
+  fetch() {
+    console.log(this)
+  }
+}
 ```
 
 Let’s see what this could mean for page components.
@@ -33211,8 +33239,8 @@ In addition, we can even disable fetch on the server-side if required.
 
 ```js
 export default {
-	fetchOnServer: false
-};
+  fetchOnServer: false
+}
 ```
 
 And this way, the fetch hook will only be called on client-side. When `fetchOnServer` is set to false, `$fetchState.pending` becomes `true` when the component is rendered on server-side.
@@ -33243,13 +33271,13 @@ These keys are then used directly in the template area of the component to show 
 
 ```html
 <template>
-	<div>
-		<p v-if="$fetchState.pending">Fetching posts...</p>
-		<p v-else-if="$fetchState.error">Error while fetching posts</p>
-		<ul v-else>
-			…
-		</ul>
-	</div>
+  <div>
+    <p v-if="$fetchState.pending">Fetching posts...</p>
+    <p v-else-if="$fetchState.error">Error while fetching posts</p>
+    <ul v-else>
+      …
+    </ul>
+  </div>
 </template>
 ```
 
@@ -33287,12 +33315,12 @@ New fetch hook also acts as a method that can be invoked upon user interaction o
 ```js
 // from component methods in script section
 export default {
-	methods: {
-		refresh() {
-			this.$fetch();
-		}
-	}
-};
+  methods: {
+    refresh() {
+      this.$fetch()
+    }
+  }
+}
 ```
 
 ## Making Nuxt pages more performant
@@ -33305,9 +33333,9 @@ For any of the above methods to work, we have to use the `keep-alive` prop in ge
 
 ```html [layouts/default.vue]
 <template>
-	<div>
-		<nuxt keep-alive />
-	</div>
+  <div>
+    <nuxt keep-alive />
+  </div>
 </template>
 ```
 
@@ -33325,13 +33353,13 @@ Vue’s `activated` hook is used here with Nuxt's `keep-alive` prop to re-fetch 
 
 ```js
 export default {
-	activated() {
-		// Call fetch again if last fetch more than a minute ago
-		if (this.$fetchState.timestamp <= Date.now() - 60000) {
-			this.$fetch();
-		}
-	}
-};
+  activated() {
+    // Call fetch again if last fetch more than a minute ago
+    if (this.$fetchState.timestamp <= Date.now() - 60000) {
+      this.$fetch()
+    }
+  }
+}
 ```
 
 ## asyncData vs Fetch
@@ -33348,13 +33376,13 @@ As of Nuxt 2.12, `asyncData` method is still an active feature. Let’s examine 
 
 ```js
 export default {
-	async asyncData(context) {
-		const data = await context.$axios.$get(`https://jsonplaceholder.typicode.com/todos`);
-		// `todos` does not have to be declared in data()
-		return { todos: data.Item };
-		// `todos` is merged with local data
-	}
-};
+  async asyncData(context) {
+    const data = await context.$axios.$get(`https://jsonplaceholder.typicode.com/todos`)
+    // `todos` does not have to be declared in data()
+    return { todos: data.Item }
+    // `todos` is merged with local data
+  }
+}
 ```
 
 ### New Fetch
@@ -33365,17 +33393,17 @@ export default {
 
 ```js
 export default {
-	data() {
-		return {
-			todos: []
-		};
-	},
-	async fetch() {
-		const { data } = await axios.get(`https://jsonplaceholder.typicode.com/todos`);
-		// `todos` has to be declared in data()
-		this.todos = data;
-	}
-};
+  data() {
+    return {
+      todos: []
+    }
+  },
+  async fetch() {
+    const { data } = await axios.get(`https://jsonplaceholder.typicode.com/todos`)
+    // `todos` has to be declared in data()
+    this.todos = data
+  }
+}
 ```
 
 ## Fetch before Nuxt 2.12
@@ -33400,20 +33428,20 @@ Here’s the list of notable changes in `fetch` hook compared with **before** an
 
 ```js
 export default {
-	fetch(context) {
-		// …
-	}
-};
+  fetch(context) {
+    // …
+  }
+}
 ```
 
 **After -** We can access `this` context just like Vue client-side hooks without passing any parameters.
 
 ```js
 export default {
-	fetch() {
-		console.log(this);
-	}
-};
+  fetch() {
+    console.log(this)
+  }
+}
 ```
 
 ### 3. Availability of `fetch` hook
@@ -33497,9 +33525,9 @@ yarn upgrade nuxt
 
 ```js [nuxt.config.js]
 export default {
-	target: 'static'
-	// ...
-};
+  target: 'static'
+  // ...
+}
 ```
 
 `nuxt generate` will behave as before to avoid breaking changes and provide legacy compatibility if you keep `target: ‘server’` or don't specify target.
@@ -33525,15 +33553,15 @@ You can add more patterns using [generate.cache.ignore](https://v2.nuxt.com/docs
 
 ```js [nuxt.config.js]
 export default {
-	generate: {
-		cache: {
-			ignore: [
-				// When something changed in the docs folder, do not re-build via webpack
-				'docs'
-			]
-		}
-	}
-};
+  generate: {
+    cache: {
+      ignore: [
+        // When something changed in the docs folder, do not re-build via webpack
+        'docs'
+      ]
+    }
+  }
+}
 ```
 
 It is also possible to use a function for `ignore` option to override default ignore entries.
@@ -33543,7 +33571,7 @@ It is also possible to use a function for `ignore` option to override default ig
 What if you are developing a nuxt module that is working with files that should not trigger a rebuild? The best example is for [@nuxt/content](https://content.nuxt.com){rel="nofollow"} module that reads markdown files from the repository. In this case, these files are used within a runtime module, which is the case when using `@nuxt/content`, the module itself can tell nuxt to ignore these files for you already so you don't have to do anything! Module authors can use the new `generate:cache:ignore` hook to do so:
 
 ```js
-nuxt.hook('generate:cache:ignore', (ignore) => ignore.push('content'));
+nuxt.hook('generate:cache:ignore', ignore => ignore.push('content'))
 ```
 
 ## How it works
@@ -33699,18 +33727,18 @@ You can alter the generated configuration using `azure.config` option. For insta
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	// ...
-	nitro: {
-		azure: {
-			config: {
-				// ...
-				platform: {
-					apiRuntime: 'node:18'
-				}
-			}
-		}
-	}
-});
+  // ...
+  nitro: {
+    azure: {
+      config: {
+        // ...
+        platform: {
+          apiRuntime: 'node:18'
+        }
+      }
+    }
+  }
+})
 ```
 
 Custom routes will be added and matched first. In the case of a conflict (determined if an object has the same route property), custom routes will override generated ones.
@@ -33730,11 +33758,11 @@ When you are asked to select your framework, select custom and provide the follo
 If you miss this step, you can always find the build configuration section in your workflow and update the build configuration:
 
 ```yaml [.github/workflows/azure-static-web-apps-<RANDOM_NAME>.yml]
-###### Repository/Build Configurations ######
-app_location: '/'
-api_location: '.output/server'
-output_location: '.output/public'
-###### End of Repository/Build Configurations ######
+# ##### Repository/Build Configurations ######
+app_location: /
+api_location: .output/server
+output_location: .output/public
+# ##### End of Repository/Build Configurations ######
 ```
 
 ::callout
@@ -33912,12 +33940,12 @@ To match Cloudflare [route matching](https://developers.cloudflare.com/pages/con
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		prerender: {
-			autoSubfolderIndex: false
-		}
-	}
-});
+  nitro: {
+    prerender: {
+      autoSubfolderIndex: false
+    }
+  }
+})
 ```
 
 ### Direct Upload
@@ -33927,13 +33955,13 @@ Alternatively, you can use [wrangler](https://github.com/cloudflare/workers-sdk)
 In this case, you will have to set the preset manually.
 
 1. Build your project for Cloudflare Pages:
-    ```bash [Terminal]
-    npx nuxi build --preset=cloudflare_pages
-    ```
+   ```bash [Terminal]
+   npx nuxi build --preset=cloudflare_pages
+   ```
 2. Deploy, it will ask you to create a project for the first time:
-    ```bash [Terminal]
-    wrangler pages deploy dist/
-    ```
+   ```bash [Terminal]
+   wrangler pages deploy dist/
+   ```
 
 ## Learn more
 
@@ -34071,31 +34099,31 @@ Create a GitHub action file in your repository:
 ```yaml [.github/workflows/deno_deploy.yml]
 name: deno-deploy
 on:
-    push:
-        branches:
-            - main
-    pull_request:
-        branches:
-            - main
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 jobs:
-    deploy:
-        steps:
-            - uses: actions/checkout@v3
-            - run: corepack enable
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 18
-                  cache: pnpm
-            - run: pnpm install
-            - run: pnpm build
-              env:
-                  NITRO_PRESET: deno_deploy
-            - name: Deploy to Deno Deploy
-              uses: denoland/deployctl@v1
-              with:
-                  project: <my-project>
-                  entrypoint: server/index.ts
-                  root: .output
+  deploy:
+    steps:
+      - uses: actions/checkout@v3
+      - run: corepack enable
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+      - run: pnpm install
+      - run: pnpm build
+        env:
+          NITRO_PRESET: deno_deploy
+      - name: Deploy to Deno Deploy
+        uses: denoland/deployctl@v1
+        with:
+          project: <my-project>
+          entrypoint: server/index.ts
+          root: .output
 ```
 
 ::important
@@ -34143,25 +34171,25 @@ Nuxt supports deploying on the [DigitalOcean App Platform](https://docs.digitalo
 
 1. Create a new DigitalOcean app following the [guide](https://docs.digitalocean.com/products/app-platform/how-to/create-apps/){rel="nofollow"}.
 2. Next, you'll need to configure environment variables. In your app settings, ensure the following [app-level environment variables](https://docs.digitalocean.com/products/app-platform/how-to/use-environment-variables/){rel="nofollow"}:
-    ```bash
-    SERVER_PRESET=digital-ocean
-    ```
+   ```bash
+   SERVER_PRESET=digital-ocean
+   ```
 3. You will need to ensure you set an `engines.node` field in your app's `package.json` to ensure DigitalOcean uses a supported version of Node.js:
-    ```json [package.json]
-    {
-    	"engines": {
-    		"node": "20.x"
-    	}
-    }
-    ```
+   ```json [package.json]
+   {
+     "engines": {
+       "node": "20.x"
+     }
+   }
+   ```
 4. You'll also need to add a run command so DigitalOcean knows what command to run after a build. You can do so by adding a start script to your `package.json`:
-    ```json [package.json]
-    {
-    	"scripts": {
-    		"start": "node .output/server/index.mjs"
-    	}
-    }
-    ```
+   ```json [package.json]
+   {
+     "scripts": {
+       "start": "node .output/server/index.mjs"
+     }
+   }
+   ```
 5. Finally, you'll need to add this start script to your DigitalOcean app's run command. Go to `Components > Settings > Commands`, click "Edit", then add `npm run start`
 
 ::tip
@@ -34202,14 +34230,14 @@ to: https://firebase.google.com/docs/app-hosting
 1. Go to the Firebase [console](https://console.firebase.google.com/){rel="nofollow"} and set up a new project.
 2. Select **Build > App Hosting** from the sidebar.
 
-    - You may need to upgrade your billing plan at this step.
+   - You may need to upgrade your billing plan at this step.
 
 3. Click **Get Started**.
 
-    - Choose a region.
-    - Import a GitHub repository (you’ll need to link your GitHub account).
-    - Configure deployment settings (project root directory and branch), and enable automatic rollouts.
-    - Choose a unique ID for your backend.
+   - Choose a region.
+   - Import a GitHub repository (you’ll need to link your GitHub account).
+   - Configure deployment settings (project root directory and branch), and enable automatic rollouts.
+   - Choose a unique ID for your backend.
 
 4. Click Finish & Deploy to create your first rollout.
 
@@ -34225,12 +34253,12 @@ To use the more recent and recommended generation of Firebase functions, set the
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		firebase: {
-			gen: 2
-		}
-	}
-});
+  nitro: {
+    firebase: {
+      gen: 2
+    }
+  }
+})
 ```
 
 ::note
@@ -34254,14 +34282,14 @@ Comparison between 1st and 2nd generation functions
 You may instead prefer to set up your project with the Firebase CLI, which will fetch your project ID for you, add required dependencies (see above) and even set up automated deployments via GitHub Actions (for hosting only). [Learn about installing the firebase CLI](https://firebase.google.com/docs/cli#windows-npm){rel="nofollow"}.
 
 1. Install the latest version of the Firebase CLI.
-    ```bash [Terminal]
-    npm install -g firebase-tools@latest
-    ```
+   ```bash [Terminal]
+   npm install -g firebase-tools@latest
+   ```
 2. Initialize your Firebase Project
-    ```bash [Terminal]
-    firebase login
-    firebase init hosting
-    ```
+   ```bash [Terminal]
+   firebase login
+   firebase init hosting
+   ```
 
 ::note
 When prompted, you can enter `.output/public` as the public directory. In the next step, **do not** configure your project as a single-page app.
@@ -34271,15 +34299,15 @@ Once complete, add the following to your `firebase.json` to enable server render
 
 ```json [firebase.json]
 {
-	"functions": { "source": ".output/server" },
-	"hosting": [
-		{
-			"site": "<your_project_id>",
-			"public": ".output/public",
-			"cleanUrls": true,
-			"rewrites": [{ "source": "**", "function": "server" }]
-		}
-	]
+  "functions": { "source": ".output/server" },
+  "hosting": [
+    {
+      "site": "<your_project_id>",
+      "public": ".output/public",
+      "cleanUrls": true,
+      "rewrites": [{ "source": "**", "function": "server" }]
+    }
+  ]
 }
 ```
 
@@ -34307,16 +34335,16 @@ You can set options for Firebase functions in your `nuxt.config.ts` file:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		firebase: {
-			gen: 2,
-			httpsOptions: {
-				region: 'europe-west1',
-				maxInstances: 3
-			}
-		}
-	}
-});
+  nitro: {
+    firebase: {
+      gen: 2,
+      httpsOptions: {
+        region: 'europe-west1',
+        maxInstances: 3
+      }
+    }
+  }
+})
 ```
 
 ### Runtime Node.js Version
@@ -34325,12 +34353,12 @@ You can set a custom Node.js version in configuration:
 
 ```ts [nuxt.config.ts]
 export default defineNuxtConfig({
-	nitro: {
-		firebase: {
-			nodeVersion: '18' // Can be '16' or '18' or '20'
-		}
-	}
-});
+  nitro: {
+    firebase: {
+      nodeVersion: '18' // Can be '16' or '18' or '20'
+    }
+  }
+})
 ```
 
 Firebase tools use the `engines.node` version in `package.json` to determine which node version to use for your functions. Nuxt automatically writes to the `.output/server/package.json` with configured Node.js version.
@@ -34339,10 +34367,10 @@ You might also need to add a runtime key to your `firebase.json` file:
 
 ```json [firebase.json]
 {
-	"functions": {
-		"source": ".output/server",
-		"runtime": "nodejs20"
-	}
+  "functions": {
+    "source": ".output/server",
+    "runtime": "nodejs20"
+  }
 }
 ```
 
@@ -34395,9 +34423,9 @@ You can do this by adding a `postbuild` script to your `package.json`, that will
 
 ```json [package.json]
 {
-	"scripts": {
-		"postbuild": "cp .env .output/server/.env"
-	}
+  "scripts": {
+    "postbuild": "cp .env .output/server/.env"
+  }
 }
 ```
 
@@ -34449,30 +34477,30 @@ On a high level, the steps you will need to follow to deploy a project for the f
 
 ```json [flightcontrol.json]
 {
-	"$schema": "https://app.flightcontrol.dev/schema.json",
-	"environments": [
-		{
-			"id": "production",
-			"name": "Production",
-			"region": "us-west-2",
-			"source": {
-				"branch": "main"
-			},
-			"services": [
-				{
-					"id": "nitro",
-					"buildType": "nixpacks",
-					"name": "My Nitro site",
-					"type": "fargate",
-					"domain": "www.yourdomain.com",
-					"outputDirectory": ".output",
-					"startCommand": "node .output/server/index.mjs",
-					"cpu": 0.25,
-					"memory": 0.5
-				}
-			]
-		}
-	]
+  "$schema": "https://app.flightcontrol.dev/schema.json",
+  "environments": [
+    {
+      "id": "production",
+      "name": "Production",
+      "region": "us-west-2",
+      "source": {
+        "branch": "main"
+      },
+      "services": [
+        {
+          "id": "nitro",
+          "buildType": "nixpacks",
+          "name": "My Nitro site",
+          "type": "fargate",
+          "domain": "www.yourdomain.com",
+          "outputDirectory": ".output",
+          "startCommand": "node .output/server/index.mjs",
+          "cpu": 0.25,
+          "memory": 0.5
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -34518,44 +34546,44 @@ Here is an example GitHub Actions workflow to deploy your site to GitHub Pages u
 # https://github.com/actions/deploy-pages#usage
 name: Deploy to GitHub Pages
 on:
-    workflow_dispatch:
-    push:
-        branches:
-            - main
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - run: corepack enable
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: '20'
-            # Pick your own package manager and build script
-            - run: npm install
-            - run: npx nuxt build --preset github_pages
-            - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
-              with:
-                  path: ./.output/public
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: corepack enable
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          # Pick your own package manager and build script
+      - run: npm install
+      - run: npx nuxt build --preset github_pages
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./.output/public
     # Deployment job
-    deploy:
-        # Add a dependency to the build job
-        needs: build
-        # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-        permissions:
-            pages: write # to deploy to Pages
-            id-token: write # to verify the deployment originates from an appropriate source
-        # Deploy to the github_pages environment
-        environment:
-            name: github_pages
-            url: ${{ steps.deployment.outputs.page_url }}
-        # Specify runner + deployment step
-        runs-on: ubuntu-latest
-        steps:
-            - name: Deploy to GitHub Pages
-              id: deployment
-              uses: actions/deploy-pages@v4
+  deploy:
+    # Add a dependency to the build job
+    needs: build
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+      # Deploy to the github_pages environment
+    environment:
+      name: github_pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      # Specify runner + deployment step
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
 ## ::read-more
@@ -34589,28 +34617,28 @@ If you are **not** using a custom domain, you need to set `NUXT_APP_BASE_URL` to
 ```yaml [.gitlab-ci.yml]
 # Job name has to be `pages`. See https://docs.gitlab.com/ee/user/project/pages/#how-it-works
 pages:
-    image: node
-    before_script:
-        - npm ci --cache .npm --prefer-offline
-    script:
-        # Specify the steps involved to build your app here
-        - npm run generate
-    cache: # https://docs.gitlab.com/ee/ci/caching/#cache-nodejs-dependencies
-        key:
-            files:
-                - package-lock.json
-        paths:
-            - .npm/
-    artifacts:
-        paths:
-            # The directory that contains the built files to be published
-            - .output/public
+  image: node
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+  script:
+    # Specify the steps involved to build your app here
+    - npm run generate
+  cache: # https://docs.gitlab.com/ee/ci/caching/#cache-nodejs-dependencies
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  artifacts:
+    paths:
+      # The directory that contains the built files to be published
+      - .output/public
     # The directory that contains the built files to be published
-    publish: .output/public
-    rules:
-        # This ensures that only pushes to the default branch
-        # will trigger a pages deploy
-        - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+  publish: .output/public
+  rules:
+    # This ensures that only pushes to the default branch
+    # will trigger a pages deploy
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 ```
 
 ## Learn more
@@ -34632,26 +34660,26 @@ Nuxt supports deploying on [Heroku](https://heroku.com/){rel="nofollow"} with mi
 ## Using the Heroku CLI
 
 1. Create a new Heroku app.
-    ```bash [Terminal]
-    heroku create myapp
-    ```
+   ```bash [Terminal]
+   heroku create myapp
+   ```
 2. Configure Heroku to use the nodejs buildpack.
-    ```bash [Terminal]
-    heroku buildpacks:set heroku/nodejs
-    ```
+   ```bash [Terminal]
+   heroku buildpacks:set heroku/nodejs
+   ```
 3. Configure your app.
-    ```bash [Terminal]
-    heroku config:set SERVER_PRESET=heroku
-    ```
+   ```bash [Terminal]
+   heroku config:set SERVER_PRESET=heroku
+   ```
 4. Ensure you have `start` and `build` commands in your `package.json` file.
-    ```json [package.json]
-    {
-    	"scripts": {
-    		"build": "nuxt build",
-    		"start": "node .output/server/index.mjs"
-    	}
-    }
-    ```
+   ```json [package.json]
+   {
+     "scripts": {
+       "build": "nuxt build",
+       "start": "node .output/server/index.mjs"
+     }
+   }
+   ```
 
 ## Learn more
 
@@ -34669,9 +34697,9 @@ Head over **Nitro documentation** to learn more about the Heroku deployment pres
 4. In IIS, add `.mjs` as a new mime type and set its content type to `application/javascript`.
 5. Build you application with the following command:
 
-    ```bash [Terminal]
-    npx nuxi build --preset=iis_node
-    ```
+   ```bash [Terminal]
+   npx nuxi build --preset=iis_node
+   ```
 
 6. Deploy the contents of your `.output` folder to your website in IIS.
 
@@ -34689,26 +34717,26 @@ Nuxt supports deploying on the [Koyeb serverless platform](https://www.koyeb.com
 
 1. Create a new Koyeb app for Nuxt following the [guide](https://www.koyeb.com/docs/deploy/nuxt){rel="nofollow"}.
 2. Set the `engines.node` field in your project's `package.json` file to a [Koyeb-supported version of Node.js](https://www.koyeb.com/docs/build-and-deploy/build-from-git/nodejs#runtime){rel="nofollow"}:
-    ```json [package.json]
-    {
-    	"engines": {
-    		"node": "20.x"
-    	}
-    }
-    ```
+   ```json [package.json]
+   {
+     "engines": {
+       "node": "20.x"
+     }
+   }
+   ```
 3. Ensure that `build` and `start` scripts are defined within the project's `package.json` file to define how to build and run the application:
-    ```json [package.json]
-    {
-    	"scripts": {
-    		"build": "nuxt build",
-    		"start": "node .output/server/index.mjs"
-    	}
-    }
-    ```
+   ```json [package.json]
+   {
+     "scripts": {
+       "build": "nuxt build",
+       "start": "node .output/server/index.mjs"
+     }
+   }
+   ```
 4. During deployment, you'll need to configure environment variables. In your service settings, set the following [environment variable](https://www.koyeb.com/docs/build-and-deploy/environment-variables){rel="nofollow"}:
-    ```bash
-    SERVER_PRESET=koyeb
-    ```
+   ```bash
+   SERVER_PRESET=koyeb
+   ```
 5. Click "Deploy" to build and deploy your Nuxt app.
 
 ## Learn more
@@ -34963,10 +34991,10 @@ Nuxt supports deploying on [Render](https://render.com/){rel="nofollow"} with mi
 4. Update the start command to `node .output/server/index.mjs`
 5. Click 'Advanced' and add the following environment variables
 
-    ```bash
-    SERVER_PRESET=render_com
-    NODE_VERSION=20
-    ```
+   ```bash
+   SERVER_PRESET=render_com
+   NODE_VERSION=20
+   ```
 
 6. Click on `Create Web Service`.
 
@@ -34985,23 +35013,23 @@ Nuxt supports deploying on [SST](https://sst.dev/){rel="nofollow"} with minimal 
 1. Create a Nuxt project.
 2. Init SST in your project.
 
-    ```bash
-    npx sst@latest init
-    ```
+   ```bash
+   npx sst@latest init
+   ```
 
 3. It should detect that your are using Nuxt and ask you to update your `nuxt.config.ts` file.
 
-    ```ts
-    nitro: {
-    	preset: 'aws-lambda';
-    }
-    ```
+   ```ts
+   nitro: {
+     preset: 'aws-lambda'
+   }
+   ```
 
 4. Once you are ready to deploy, run.
 
-    ```bash
-    npx sst deploy --stage production
-    ```
+   ```bash
+   npx sst deploy --stage production
+   ```
 
 You can [read the full Nuxt on SST tutorial here](https://sst.dev/docs/start/aws/nuxt){rel="nofollow"}.
 
@@ -35085,22 +35113,22 @@ Read more about the Vercel KV driver on Unstorage documentation.
 ::
 
 1. Install `@vercel/kv` dependency:
-    ```bash [Terminal]
-    npm i @vercel/kv
-    ```
+   ```bash [Terminal]
+   npm i @vercel/kv
+   ```
 2. Update your `nuxt.config`:
-    ```ts [nuxt.config.ts]
-    export default defineNuxtConfig({
-    	nitro: {
-    		storage: {
-    			data: {
-    				driver: 'vercelKV'
-    				/* Vercel KV driver options */
-    			}
-    		}
-    	}
-    });
-    ```
+   ```ts [nuxt.config.ts]
+   export default defineNuxtConfig({
+     nitro: {
+       storage: {
+         data: {
+           driver: 'vercelKV'
+           /* Vercel KV driver options */
+         }
+       }
+     }
+   })
+   ```
 
 ::caution
 You need to either set `KV_REST_API_URL` and `KV_REST_API_TOKEN` environment variables or pass `url` and `token` to driver options. Check [driver docs](https://unstorage.unjs.io/drivers/vercel-kv){rel="nofollow"} for more information about usage.
@@ -35110,13 +35138,13 @@ You can now access your data store anywhere in your `server/` directory:
 
 ```ts [server/routes/hello.ts]
 export default defineEventHandler(async (event) => {
-	const dataStorage = useStorage('data');
-	await dataStorage.setItem('hello', 'world');
+  const dataStorage = useStorage('data')
+  await dataStorage.setItem('hello', 'world')
 
-	return {
-		hello: await dataStorage.getItem('hello')
-	};
-});
+  return {
+    hello: await dataStorage.getItem('hello')
+  }
+})
 ```
 
 ## Custom Build Output Configuration
@@ -35175,9 +35203,9 @@ Nuxt supports deploying on [Zeabur](https://zeabur.com){rel="nofollow"} with min
 
 1. Create a new Zeabur app for Nuxt following the [guide](https://zeabur.com/docs/guides/nodejs/nuxt){rel="nofollow"}.
 2. During the deployment process, you can configure environment variables in Zeabur dashboard. In your service page, open the variables tab set the following [environment variable](https://zeabur.com/docs/deploy/variables){rel="nofollow"}:
-    ```bash
-    SERVER_PRESET=zeabur
-    ```
+   ```bash
+   SERVER_PRESET=zeabur
+   ```
 
 ## Learn more
 
@@ -35210,11 +35238,11 @@ Projects and services can be added either through a [Project add wizard](https:/
 
 ```yml [zerops-project-import.yml]
 project:
-    name: recipe-nuxt
+  name: recipe-nuxt
 
 services:
-    - hostname: app
-      type: static
+  - hostname: app
+    type: static
 ```
 
 This will create a project called `recipe-nuxt` with a Zerops Static service called `app`.
@@ -35225,16 +35253,16 @@ To tell Zerops how to build and run your app, add a `zerops.yml` to your root:
 
 ```yml [zerops.yml]
 zerops:
-    - setup: app
-      build:
-          base: nodejs@20
-          buildCommands:
-              - yarn
-              - yarn nuxi generate
-          deployFiles:
-              - .output/public/~
-      run:
-          base: static
+  - setup: app
+    build:
+      base: nodejs@20
+      buildCommands:
+        - yarn
+        - yarn nuxi generate
+      deployFiles:
+        - .output/public/~
+    run:
+      base: static
 ```
 
 Now you can trigger the [build & deploy pipeline using the Zerops CLI](https://nuxt.com/#building-deploying-your-app) or by connecting the app service with your [GitHub](https://docs.zerops.io/references/github-integration/){rel="nofollow"} / [GitLab](https://docs.zerops.io/references/gitlab-integration){rel="nofollow"} repository from inside the service detail.
@@ -35245,11 +35273,11 @@ Projects and services can be added either through a [Project add wizard](https:/
 
 ```yml [zerops-project-import.yml]
 project:
-    name: recipe-nuxt
+  name: recipe-nuxt
 
 services:
-    - hostname: app
-      type: nodejs@20
+  - hostname: app
+    type: nodejs@20
 ```
 
 This will create a project called `recipe-nuxt` with a Zerops Node.js service called `app`.
@@ -35260,20 +35288,20 @@ To tell Zerops how to build and run your app, add a `zerops.yml` to your root:
 
 ```yml [zerops.yml]
 zerops:
-    - setup: nuxt
-      build:
-          base: nodejs@20
-          buildCommands:
-              - yarn
-              - yarn build
-          deployFiles:
-              - .output/~
-      run:
-          base: nodejs@20
-          ports:
-              - port: 3000
-                httpSupport: true
-          start: node server/index.mjs
+  - setup: nuxt
+    build:
+      base: nodejs@20
+      buildCommands:
+        - yarn
+        - yarn build
+      deployFiles:
+        - .output/~
+    run:
+      base: nodejs@20
+      ports:
+        - port: 3000
+          httpSupport: true
+      start: node server/index.mjs
 ```
 
 Now you can trigger the [build & deploy pipeline using the Zerops CLI](https://nuxt.com/#building-deploying-your-app) or by connecting the app service with your [GitHub](https://docs.zerops.io/references/github-integration/){rel="nofollow"} / [GitLab](https://docs.zerops.io/references/gitlab-integration){rel="nofollow"} repository from inside the service detail.

@@ -1,23 +1,23 @@
 <template>
-	<ComboboxItemIndicator data-slot="combobox-item-indicator" v-bind="forwarded" :class="cn('ml-auto', props.class)">
-		<slot></slot>
-	</ComboboxItemIndicator>
+  <ComboboxItemIndicator data-slot="combobox-item-indicator" v-bind="forwarded" :class="cn('ml-auto', props.class)">
+    <slot></slot>
+  </ComboboxItemIndicator>
 </template>
 
 <script setup lang="ts">
-import type { ComboboxItemIndicatorProps } from 'reka-ui';
-import type { HTMLAttributes } from 'vue';
-import { ComboboxItemIndicator, useForwardProps } from 'reka-ui';
-import { computed } from 'vue';
-import { cn } from '@/utils/cn';
+import type { ComboboxItemIndicatorProps } from 'reka-ui'
+import type { HTMLAttributes } from 'vue'
+import { ComboboxItemIndicator, useForwardProps } from 'reka-ui'
+import { computed } from 'vue'
+import { cn } from '@/utils/cn'
 
-const props = defineProps<ComboboxItemIndicatorProps & { class?: HTMLAttributes['class'] }>();
+const props = defineProps<ComboboxItemIndicatorProps & { class?: HTMLAttributes['class'] }>()
 
 const delegatedProps = computed(() => {
-	const { class: _, ...delegated } = props;
+  const { class: _, ...delegated } = props
 
-	return delegated;
-});
+  return delegated
+})
 
-const forwarded = useForwardProps(delegatedProps);
+const forwarded = useForwardProps(delegatedProps)
 </script>

@@ -64,7 +64,7 @@ daisyUI config with `light` theme only:
 
 ```css
 @plugin "daisyui" {
-	themes: light --default;
+  themes: light --default;
 }
 ```
 
@@ -72,14 +72,14 @@ daisyUI with all the default configs:
 
 ```css
 @plugin "daisyui" {
-	themes:
-		light --default,
-		dark --prefersdark;
-	root: ':root';
-	include:;
-	exclude:;
-	prefix:;
-	logs: true;
+  themes:
+    light --default,
+    dark --prefersdark;
+  root: ':root';
+  include:;
+  exclude:;
+  prefix:;
+  logs: true;
 }
 ```
 
@@ -90,47 +90,47 @@ root scrollbar gutter is excluded. `daisy-` prefix is used for all daisyUI class
 
 ```css
 @plugin "daisyui" {
-	themes:
-		light,
-		dark,
-		cupcake,
-		bumblebee --default,
-		emerald,
-		corporate,
-		synthwave --prefersdark,
-		retro,
-		cyberpunk,
-		valentine,
-		halloween,
-		garden,
-		forest,
-		aqua,
-		lofi,
-		pastel,
-		fantasy,
-		wireframe,
-		black,
-		luxury,
-		dracula,
-		cmyk,
-		autumn,
-		business,
-		acid,
-		lemonade,
-		night,
-		coffee,
-		winter,
-		dim,
-		nord,
-		sunset,
-		caramellatte,
-		abyss,
-		silk;
-	root: ':root';
-	include:;
-	exclude: rootscrollgutter, checkbox;
-	prefix: daisy-;
-	logs: false;
+  themes:
+    light,
+    dark,
+    cupcake,
+    bumblebee --default,
+    emerald,
+    corporate,
+    synthwave --prefersdark,
+    retro,
+    cyberpunk,
+    valentine,
+    halloween,
+    garden,
+    forest,
+    aqua,
+    lofi,
+    pastel,
+    fantasy,
+    wireframe,
+    black,
+    luxury,
+    dracula,
+    cmyk,
+    autumn,
+    business,
+    acid,
+    lemonade,
+    night,
+    coffee,
+    winter,
+    dim,
+    nord,
+    sunset,
+    caramellatte,
+    abyss,
+    silk;
+  root: ':root';
+  include:;
+  exclude: rootscrollgutter, checkbox;
+  prefix: daisy-;
+  logs: false;
 }
 ```
 
@@ -180,43 +180,43 @@ A CSS file with Tailwind CSS, daisyUI and a custom daisyUI theme looks like this
 @import 'tailwindcss';
 @plugin "daisyui";
 @plugin "daisyui/theme" {
-	name: 'mytheme';
-	default: true; /* set as default */
-	prefersdark: false; /* set as default dark mode (prefers-color-scheme:dark) */
-	color-scheme: light; /* color of browser-provided UI */
+  name: 'mytheme';
+  default: true; /* set as default */
+  prefersdark: false; /* set as default dark mode (prefers-color-scheme:dark) */
+  color-scheme: light; /* color of browser-provided UI */
 
-	--color-base-100: oklch(98% 0.02 240);
-	--color-base-200: oklch(95% 0.03 240);
-	--color-base-300: oklch(92% 0.04 240);
-	--color-base-content: oklch(20% 0.05 240);
-	--color-primary: oklch(55% 0.3 240);
-	--color-primary-content: oklch(98% 0.01 240);
-	--color-secondary: oklch(70% 0.25 200);
-	--color-secondary-content: oklch(98% 0.01 200);
-	--color-accent: oklch(65% 0.25 160);
-	--color-accent-content: oklch(98% 0.01 160);
-	--color-neutral: oklch(50% 0.05 240);
-	--color-neutral-content: oklch(98% 0.01 240);
-	--color-info: oklch(70% 0.2 220);
-	--color-info-content: oklch(98% 0.01 220);
-	--color-success: oklch(65% 0.25 140);
-	--color-success-content: oklch(98% 0.01 140);
-	--color-warning: oklch(80% 0.25 80);
-	--color-warning-content: oklch(20% 0.05 80);
-	--color-error: oklch(65% 0.3 30);
-	--color-error-content: oklch(98% 0.01 30);
+  --color-base-100: oklch(98% 0.02 240);
+  --color-base-200: oklch(95% 0.03 240);
+  --color-base-300: oklch(92% 0.04 240);
+  --color-base-content: oklch(20% 0.05 240);
+  --color-primary: oklch(55% 0.3 240);
+  --color-primary-content: oklch(98% 0.01 240);
+  --color-secondary: oklch(70% 0.25 200);
+  --color-secondary-content: oklch(98% 0.01 200);
+  --color-accent: oklch(65% 0.25 160);
+  --color-accent-content: oklch(98% 0.01 160);
+  --color-neutral: oklch(50% 0.05 240);
+  --color-neutral-content: oklch(98% 0.01 240);
+  --color-info: oklch(70% 0.2 220);
+  --color-info-content: oklch(98% 0.01 220);
+  --color-success: oklch(65% 0.25 140);
+  --color-success-content: oklch(98% 0.01 140);
+  --color-warning: oklch(80% 0.25 80);
+  --color-warning-content: oklch(20% 0.05 80);
+  --color-error: oklch(65% 0.3 30);
+  --color-error-content: oklch(98% 0.01 30);
 
-	--radius-selector: 1rem; /* border radius of selectors (checkbox, toggle, badge) */
-	--radius-field: 0.25rem; /* border radius of fields (button, input, select, tab) */
-	--radius-box: 0.5rem; /* border radius of boxes (card, modal, alert) */
+  --radius-selector: 1rem; /* border radius of selectors (checkbox, toggle, badge) */
+  --radius-field: 0.25rem; /* border radius of fields (button, input, select, tab) */
+  --radius-box: 0.5rem; /* border radius of boxes (card, modal, alert) */
 
-	--size-selector: 0.25rem; /* base size of selectors (checkbox, toggle, badge) */
-	--size-field: 0.25rem; /* base size of fields (button, input, select, tab) */
+  --size-selector: 0.25rem; /* base size of selectors (checkbox, toggle, badge) */
+  --size-field: 0.25rem; /* base size of fields (button, input, select, tab) */
 
-	--border: 1px; /* border size */
+  --border: 1px; /* border size */
 
-	--depth: 1; /* Adds a shadow and subtle 3D effect to components */
-	--noise: 0; /* Adds a subtle noise effect to components */
+  --depth: 1; /* Adds a shadow and subtle 3D effect to components */
+  --noise: 0; /* Adds a subtle noise effect to components */
 }
 ```
 
@@ -297,9 +297,9 @@ Avatars are used to show a thumbnail
 
 ```html
 <div class="{MODIFIER} avatar">
-	<div>
-		<img src="{image-url}" />
-	</div>
+  <div>
+    <img src="{image-url}" />
+  </div>
 </div>
 ```
 
@@ -349,9 +349,9 @@ Breadcrumbs helps users to navigate
 
 ```html
 <div class="breadcrumbs">
-	<ul>
-		<li><a>Link</a></li>
-	</ul>
+  <ul>
+    <li><a>Link</a></li>
+  </ul>
 </div>
 ```
 
@@ -398,9 +398,9 @@ Calendar includes styles for different calendar libraries
 #### Class names
 
 - component
-    - `cally (for Cally web component)`
-    - `pika-single (for the input field that opens Pikaday calendar)`
-    - `react-day-picker (for the DayPicker component)`
+  - `cally (for Cally web component)`
+  - `pika-single (for the input field that opens Pikaday calendar)`
+  - `react-day-picker (for the DayPicker component)`
 
 #### Syntax
 
@@ -444,12 +444,12 @@ Cards are used to group and display content
 
 ```html
 <div class="{MODIFIER} card">
-	<figure><img src="{image-url}" alt="{alt-text}" /></figure>
-	<div class="card-body">
-		<h2 class="card-title">{title}</h2>
-		<p>{CONTENT}</p>
-		<div class="card-actions">{actions}</div>
-	</div>
+  <figure><img src="{image-url}" alt="{alt-text}" /></figure>
+  <div class="card-body">
+    <h2 class="card-title">{title}</h2>
+    <p>{CONTENT}</p>
+    <div class="card-actions">{actions}</div>
+  </div>
 </div>
 ```
 
@@ -502,10 +502,10 @@ Chat bubbles are used to show one line of conversation and all its data, includi
 
 ```html
 <div class="{PLACEMENT} chat">
-	<div class="chat-image"></div>
-	<div class="chat-header"></div>
-	<div class="{COLOR} chat-bubble">Message text</div>
-	<div class="chat-footer"></div>
+  <div class="chat-image"></div>
+  <div class="chat-header"></div>
+  <div class="{COLOR} chat-bubble">Message text</div>
+  <div class="chat-footer"></div>
 </div>
 ```
 
@@ -553,8 +553,8 @@ Collapse is used for showing and hiding content
 
 ```html
 <div tabindex="0" class="{MODIFIER} collapse">
-	<div class="collapse-title">{title}</div>
-	<div class="collapse-content">{CONTENT}</div>
+  <div class="collapse-title">{title}</div>
+  <div class="collapse-content">{CONTENT}</div>
 </div>
 ```
 
@@ -578,7 +578,7 @@ Countdown gives you a transition effect when you change a number between 0 to 99
 
 ```html
 <span class="countdown">
-	<span style="--value:{number};">number</span>
+  <span style="--value:{number};">number</span>
 </span>
 ```
 
@@ -603,9 +603,9 @@ Diff component shows a side-by-side comparison of two items
 
 ```html
 <figure class="diff">
-	<div class="diff-item-1">{item1}</div>
-	<div class="diff-item-2">{item2}</div>
-	<div class="diff-resizer"></div>
+  <div class="diff-item-1">{item1}</div>
+  <div class="diff-item-2">{item2}</div>
+  <div class="diff-resizer"></div>
 </figure>
 ```
 
@@ -660,8 +660,8 @@ where content is a list of buttons:
 
 ```html
 <button>
-	<svg>{icon}</svg>
-	<span class="dock-label">Text</span>
+  <svg>{icon}</svg>
+  <span class="dock-label">Text</span>
 </button>
 ```
 
@@ -688,9 +688,9 @@ Drawer is a grid layout that can show/hide a sidebar on the left or right side o
 
 ```html
 <div class="{MODIFIER} drawer">
-	<input id="my-drawer" type="checkbox" class="drawer-toggle" />
-	<div class="drawer-content">{CONTENT}</div>
-	<div class="drawer-side">{SIDEBAR}</div>
+  <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+  <div class="drawer-content">{CONTENT}</div>
+  <div class="drawer-side">{SIDEBAR}</div>
 </div>
 ```
 
@@ -699,8 +699,8 @@ and {SIDEBAR} can be a menu like:
 
 ```html
 <ul class="menu min-h-full w-80 bg-base-100 p-4 text-base-content">
-	<li><a>Item 1</a></li>
-	<li><a>Item 2</a></li>
+  <li><a>Item 1</a></li>
+  <li><a>Item 2</a></li>
 </ul>
 ```
 
@@ -732,10 +732,10 @@ Using details and summary
 
 ```html
 <details class="dropdown">
-	<summary>Button</summary>
-	<ul class="dropdown-content">
-		{CONTENT}
-	</ul>
+  <summary>Button</summary>
+  <ul class="dropdown-content">
+    {CONTENT}
+  </ul>
 </details>
 ```
 
@@ -744,7 +744,7 @@ Using popover API
 ```html
 <button popovertarget="{id}" style="anchor-name:--{anchor}">{button}</button>
 <ul class="dropdown-content" popover id="{id}" style="position-anchor:--{anchor}">
-	{CONTENT}
+  {CONTENT}
 </ul>
 ```
 
@@ -752,10 +752,10 @@ Using CSS focus
 
 ```html
 <div class="dropdown">
-	<div tabindex="0" role="button">Button</div>
-	<ul tabindex="0" class="dropdown-content">
-		{CONTENT}
-	</ul>
+  <div tabindex="0" role="button">Button</div>
+  <ul tabindex="0" class="dropdown-content">
+    {CONTENT}
+  </ul>
 </div>
 ```
 
@@ -781,9 +781,9 @@ Fieldset is a container for grouping related form elements. It includes fieldset
 
 ```html
 <fieldset class="fieldset">
-	<legend class="fieldset-legend">{title}</legend>
-	{CONTENT}
-	<p class="fieldset-label">{description}</p>
+  <legend class="fieldset-legend">{title}</legend>
+  {CONTENT}
+  <p class="fieldset-label">{description}</p>
 </fieldset>
 ```
 
@@ -831,8 +831,8 @@ Using HTML form
 
 ```html
 <form class="filter">
-	<input class="btn btn-square" type="reset" value="×" />
-	<input class="btn" type="radio" name="{name}" aria-label="{label}" />
+  <input class="btn btn-square" type="reset" value="×" />
+  <input class="btn" type="radio" name="{name}" aria-label="{label}" />
 </form>
 ```
 
@@ -840,8 +840,8 @@ Without HTML form
 
 ```html
 <div class="filter">
-	<input class="filter-reset btn" type="radio" name="{name}" aria-label="{label}" />
-	<input class="btn" type="radio" name="{name}" aria-label="{label}" />
+  <input class="filter-reset btn" type="radio" name="{name}" aria-label="{label}" />
+  <input class="btn" type="radio" name="{name}" aria-label="{label}" />
 </div>
 ```
 
@@ -919,8 +919,8 @@ Indicators are used to place an element on the corner of another element
 
 ```html
 <div class="indicator">
-	<span class="indicator-item">{indicator content}</span>
-	<div>{main content}</div>
+  <span class="indicator-item">{indicator content}</span>
+  <div>{main content}</div>
 </div>
 ```
 
@@ -1015,8 +1015,8 @@ For regular label:
 
 ```html
 <label class="input">
-	<span class="label">{label text}</span>
-	<input type="text" placeholder="Type here" />
+  <span class="label">{label text}</span>
+  <input type="text" placeholder="Type here" />
 </label>
 ```
 
@@ -1024,8 +1024,8 @@ For floating label:
 
 ```html
 <label class="floating-label">
-	<input type="text" placeholder="Type here" class="input" />
-	<span>{label text}</span>
+  <input type="text" placeholder="Type here" class="input" />
+  <span>{label text}</span>
 </label>
 ```
 
@@ -1071,7 +1071,7 @@ List is a vertical layout to display information in rows
 
 ```html
 <ul class="list">
-	<li class="list-row">{CONTENT}</li>
+  <li class="list-row">{CONTENT}</li>
 </ul>
 ```
 
@@ -1147,7 +1147,7 @@ Vertical menu:
 
 ```html
 <ul class="menu">
-	<li><button>Item</button></li>
+  <li><button>Item</button></li>
 </ul>
 ```
 
@@ -1155,7 +1155,7 @@ Horizontal menu:
 
 ```html
 <ul class="menu menu-horizontal">
-	<li><button>Item</button></li>
+  <li><button>Item</button></li>
 </ul>
 ```
 
@@ -1182,8 +1182,8 @@ Browser mockup shows a box that looks like a browser window
 
 ```html
 <div class="mockup-browser">
-	<div class="mockup-browser-toolbar">{toolbar content}</div>
-	<div>{CONTENT}</div>
+  <div class="mockup-browser-toolbar">{toolbar content}</div>
+  <div>{CONTENT}</div>
 </div>
 ```
 
@@ -1206,7 +1206,7 @@ Code mockup is used to show a block of code in a box that looks like a code edit
 
 ```html
 <div class="mockup-code">
-	<pre data-prefix="$"><code>npm i daisyui</code></pre>
+  <pre data-prefix="$"><code>npm i daisyui</code></pre>
 </div>
 ```
 
@@ -1231,8 +1231,8 @@ Phone mockup shows a mockup of an iPhone
 
 ```html
 <div class="mockup-phone">
-	<div class="mockup-phone-camera"></div>
-	<div class="mockup-phone-display">{CONTENT}</div>
+  <div class="mockup-phone-camera"></div>
+  <div class="mockup-phone-display">{CONTENT}</div>
 </div>
 ```
 
@@ -1254,7 +1254,7 @@ Window mockup shows a box that looks like an operating system window
 
 ```html
 <div class="mockup-window">
-	<div>{CONTENT}</div>
+  <div>{CONTENT}</div>
 </div>
 ```
 
@@ -1278,8 +1278,8 @@ Using HTML dialog element
 ```html
 <button onclick="my_modal.showModal()">Open modal</button>
 <dialog id="my_modal" class="modal">
-	<div class="modal-box">{CONTENT}</div>
-	<form method="dialog" class="modal-backdrop"><button>close</button></form>
+  <div class="modal-box">{CONTENT}</div>
+  <form method="dialog" class="modal-backdrop"><button>close</button></form>
 </dialog>
 ```
 
@@ -1289,8 +1289,8 @@ Using checkbox (legacy)
 <label for="my-modal" class="btn">Open modal</label>
 <input type="checkbox" id="my-modal" class="modal-toggle" />
 <div class="modal">
-	<div class="modal-box">{CONTENT}</div>
-	<label class="modal-backdrop" for="my-modal">Close</label>
+  <div class="modal-box">{CONTENT}</div>
+  <label class="modal-backdrop" for="my-modal">Close</label>
 </div>
 ```
 
@@ -1299,7 +1299,7 @@ Using anchor links (legacy)
 ```html
 <a href="#my-modal" class="btn">Open modal</a>
 <div class="modal" id="my-modal">
-	<div class="modal-box">{CONTENT}</div>
+  <div class="modal-box">{CONTENT}</div>
 </div>
 ```
 
@@ -1391,7 +1391,7 @@ Radial progress can be used to show the progress of a task or to show the passin
 #### Syntax
 
 ```html
-<div class="radial-progress" style="--value:70;" aria-valuenow="70" role="progressbar">70%</div>
+<div class="radial-progress" style="--value: 70" aria-valuenow="70" role="progressbar">70%</div>
 ```
 
 #### Rules
@@ -1464,7 +1464,7 @@ Rating is a set of radio buttons that allow the user to rate something
 
 ```html
 <div class="{MODIFIER} rating">
-	<input type="radio" name="rating-1" class="mask mask-star" />
+  <input type="radio" name="rating-1" class="mask mask-star" />
 </div>
 ```
 
@@ -1491,7 +1491,7 @@ Select is used to pick a value from a list of options
 
 ```html
 <select class="{MODIFIER} select">
-	<option>Option</option>
+  <option>Option</option>
 </select>
 ```
 
@@ -1557,7 +1557,7 @@ Stat is used to show numbers and data in a block
 
 ```html
 <div class="{MODIFIER} stats">
-	<div class="stat">{CONTENT}</div>
+  <div class="stat">{CONTENT}</div>
 </div>
 ```
 
@@ -1607,7 +1607,7 @@ Steps can be used to show a list of steps in a process
 
 ```html
 <ul class="{MODIFIER} steps">
-	<li class="step">{step content}</li>
+  <li class="step">{step content}</li>
 </ul>
 ```
 
@@ -1637,9 +1637,9 @@ Using checkbox
 
 ```html
 <label class="{MODIFIER} swap">
-	<input type="checkbox" />
-	<div class="swap-on">{content when active}</div>
-	<div class="swap-off">{content when inactive}</div>
+  <input type="checkbox" />
+  <div class="swap-on">{content when active}</div>
+  <div class="swap-off">{content when inactive}</div>
 </label>
 ```
 
@@ -1647,8 +1647,8 @@ Using class name
 
 ```html
 <div class="{MODIFIER} swap">
-	<div class="swap-on">{content when active}</div>
-	<div class="swap-off">{content when inactive}</div>
+  <div class="swap-on">{content when active}</div>
+  <div class="swap-off">{content when inactive}</div>
 </div>
 ```
 
@@ -1678,7 +1678,7 @@ Using buttons:
 
 ```html
 <div role="tablist" class="{MODIFIER} tabs">
-	<button role="tab" class="tab">Tab</button>
+  <button role="tab" class="tab">Tab</button>
 </div>
 ```
 
@@ -1686,7 +1686,7 @@ Using radio inputs:
 
 ```html
 <div role="tablist" class="tabs tabs-box">
-	<input type="radio" name="my_tabs" class="tab" aria-label="Tab" />
+  <input type="radio" name="my_tabs" class="tab" aria-label="Tab" />
 </div>
 ```
 
@@ -1712,18 +1712,18 @@ Table can be used to show a list of data in a table format
 
 ```html
 <div class="overflow-x-auto">
-	<table class="{MODIFIER} table">
-		<thead>
-			<tr>
-				<th></th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<th></th>
-			</tr>
-		</tbody>
-	</table>
+  <table class="{MODIFIER} table">
+    <thead>
+      <tr>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th></th>
+      </tr>
+    </tbody>
+  </table>
 </div>
 ```
 
@@ -1792,11 +1792,11 @@ Timeline component shows a list of events in chronological order
 
 ```html
 <ul class="{MODIFIER} timeline">
-	<li>
-		<div class="timeline-start">{start}</div>
-		<div class="timeline-middle">{icon}</div>
-		<div class="timeline-end">{end}</div>
-	</li>
+  <li>
+    <div class="timeline-start">{start}</div>
+    <div class="timeline-middle">{icon}</div>
+    <div class="timeline-end">{end}</div>
+  </li>
 </ul>
 ```
 

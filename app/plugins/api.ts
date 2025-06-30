@@ -1,8 +1,5 @@
-import { isDevelopment } from 'std-env'
-
 export default defineNuxtPlugin(async () => {
   const apiOrigin = getApiOrigin()
-  const { handleApiError, handleNetworkError } = await useErrorHandler()
 
   const api = $fetch.create({
     baseURL: apiOrigin,
@@ -10,22 +7,7 @@ export default defineNuxtPlugin(async () => {
     headers: {
       'Content-Type': 'application/json',
       'X-Request-ID': crypto.randomUUID?.(),
-    },
-    onRequestError({ error }) {
-      // Handle network/connection errors
-      handleNetworkError(error)
-    },
-    onResponseError({ request, response, error }) {
-      // Log for debugging
-      if (isDevelopment)
-        useLogger().debug(error)
-
-      // Handle API response errors with enhanced context
-      const endpoint = typeof request === 'string' ? request : request.toString()
-      const method = response?.headers?.get('') || 'GET'
-
-      handleApiError(error, endpoint, method)
-    },
+    }
   })
 
   return {

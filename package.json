@@ -24,8 +24,8 @@
     "prepare": "node .husky/install.mjs",
     "preview": "nuxt preview",
     "prisma:generate": "pnpm prisma generate",
-    "start": "node .output/server/index.mjs",
-    "start:generate": "npx serve .output/public",
+    "serve": "node --import ./.output/server/sentry.server.config.mjs .output/server/index.mjs",
+    "serve:generate": "npx serve .output/public",
     "typecheck": "stale-dep && nuxt typecheck"
   },
   "commitlint": {
@@ -43,6 +43,7 @@
     "@pinia/nuxt": "catalog:frontend",
     "@prisma/client": "catalog:prod",
     "@prisma/nuxt": "catalog:prod",
+    "@sentry/nuxt": "catalog:dev",
     "@shelve/cli": "catalog:prod",
     "@tailwindcss/vite": "catalog:build",
     "@vee-validate/zod": "catalog:utils",
@@ -69,6 +70,7 @@
     "tailwind-merge": "catalog:style",
     "tailwind-variants": "catalog:prod",
     "taze": "catalog:cli",
+    "toucan-js": "catalog:dev",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",

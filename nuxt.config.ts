@@ -2,10 +2,18 @@ import tailwindcss from '@tailwindcss/vite'
 import { isDevelopment, isWindows } from 'std-env'
 import { appDescription, appName, pwa } from './config/pwa'
 import { generateRuntimeConfig } from './server/utils/runtimeConfig'
+import { Env } from './shared/types/index'
 import '@vite-pwa/nuxt'
 import 'nuxt'
 
 const baseURL = 'https://wolfstar.rocks'
+const environment =
+  isDevelopment ? Env.Dev :
+  process.env.CF_PAGES_BRANCH === 'main' ? Env.Prod :
+  process.env.CF_PAGES_BRANCH ??
+  'unknown'
+
+const sentryReleaseName = process.env.CF_PAGES_COMMIT_SHA ?? 'unknown commit'
 
 export default defineNuxtConfig({
   // Modules configuration
@@ -24,6 +32,7 @@ export default defineNuxtConfig({
     'nuxt-authorization',
     'shadcn-nuxt',
     '@josephanson/nuxt-ai',
+    '@sentry/nuxt/module',
     ...(isDevelopment || isWindows ? [] : ['nuxt-security']),
     ...(process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['@nuxthub/core'] : []),
     'vue-sonner/nuxt',
@@ -105,7 +114,10 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
   },
-  sourcemap: { client: 'hidden' },
+
+  sourcemap: {
+    client: 'hidden',
+  },
   future: {
     compatibilityVersion: 4,
   },
@@ -119,7 +131,7 @@ export default defineNuxtConfig({
     preset: process.env.NUXT_NITRO_PRESET,
     prerender: {
       crawlLinks: true,
-      routes: ['/', '/sitemap.xml', '/robots.txt'],
+      routes: ['/', '/sitemap.xml'],
     },
     esbuild: {
       options: {
@@ -204,6 +216,19 @@ export default defineNuxtConfig({
       },
     },
     rateLimiter: false,
+  },
+
+  
+  sentry: {
+    unstable_sentryBundlerPluginOptions: {
+      release: {
+        name: sentryReleaseName,
+        deploy: {
+          env: environment,
+          url: process.env.CF_PAGES_URL,
+        },
+      },
+    },
   },
   seo: {
     meta: {

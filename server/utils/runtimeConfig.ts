@@ -11,6 +11,12 @@ export function generateRuntimeConfig() {
       clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
       apiBase: process.env.NUXT_PUBLIC_API_BASE,
       environment: process.env.NODE_ENV,
+      app: {
+        version: process.env.NUXT_PUBLIC_APP_VERSION,
+      },
+      sentry: {
+        dsn: process.env.SENTRY_DSN,
+      },
     },
     sentry: {
       authToken: process.env.SENTRY_AUTH_TOKEN,

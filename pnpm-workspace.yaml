@@ -26,12 +26,14 @@ catalogs:
     '@sapphire/snowflake': ^3.5.5
     '@sapphire/time-utilities': ^1.7.14
     '@sapphire/utilities': ^3.18.2
+    '@sentry/nuxt': ^9.33.0
 
     daisyui: 5.0.35
     discord-api-types: ^0.38.11
     nuxt-auth-utils: ^0.5.20
     simple-git: ^3.28.0
     std-env: ^3.9.0
+    toucan-js: ^4.1.1
     typescript: ~5.8.3
     vue-tsc: 2.2.10
     wrangler: ^4.19.1

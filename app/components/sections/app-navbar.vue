@@ -1,15 +1,6 @@
 <!-- eslint-disable vue/no-unused-refs -->
 <template>
-  <SpotlightCard
-    ref="navbar"
-    class="app-navbar"
-    :class="y > 100 ? 'bg-base-200/80 backdrop-blur-xs' : 'bg-transparent'"
-    from="rgba(0, 0, 0, 0.0)"
-    via="rgba(246, 12, 12, 0.2)"
-    to="transparent"
-    :size="300"
-    mode="before"
-  >
+  <div ref="navbar" class="app-navbar" :class="y > 100 ? 'bg-base-200/80 backdrop-blur-sm' : 'bg-transparent'">
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -42,10 +33,10 @@
             </ul>
           </li>
           <li>
-            <nuxt-link to="/commands">
+            <!-- <nuxt-link to="/commands">
               <ShadIcon name="ph:list" class="h-4 w-4" />
               Commands
-            </nuxt-link>
+            </nuxt-link> -->
           </li>
           <li>
             <nuxt-link :to="currentApp.invite">
@@ -94,10 +85,10 @@
         </ul>
       </div>
 
-      <nuxt-link to="/commands" class="btn btn-ghost transition-colors hover:text-primary">
+      <!-- <nuxt-link to="/commands" class="btn btn-ghost transition-colors hover:text-primary">
         Commands
         <ShadIcon name="ph:list" />
-      </nuxt-link>
+      </nuxt-link> -->
 
       <nuxt-link :to="currentApp.invite" class="btn btn-ghost transition-colors hover:text-success">
         Invite App
@@ -106,21 +97,20 @@
     </div>
 
     <div class="navbar-end">
-      <div><layout-change-theme /></div>
       <AuthState>
         <template #default="{ loggedIn, clear }">
-          <div v-if="loggedIn" class="group dropdown dropdown-end">
+          <div v-if="loggedIn" class="group dropdown dropdown-bottom dropdown-end">
             <!-- Avatar Button -->
             <div
               tabindex="0"
               role="button"
-              class="group btn relative z-10 flex btn-circle h-10 w-10 items-center justify-center p-0.5 btn-ghost transition-colors hover:bg-base-200 focus-visible:bg-base-200"
+              class="group btn relative z-10 flex items-center justify-center gap-x-2 btn-ghost transition-colors hover:bg-base-200 focus-visible:bg-base-200"
               aria-expanded="false"
               aria-haspopup="menu"
             >
               <!-- Avatar Container -->
               <div
-                class="size-full overflow-hidden rounded-full bg-base-300 ring-2 ring-base-100 transition-transform group-hover:scale-95"
+                class="size-8 overflow-hidden rounded-full bg-base-300 ring-2 ring-base-100"
               >
                 <!-- Default Avatar -->
                 <img
@@ -150,6 +140,8 @@
                   />
                 </picture>
               </div>
+
+              <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
             </div>
 
             <!-- Dropdown Menu -->
@@ -168,20 +160,20 @@
               </li>
             </ul>
           </div>
-          <button v-else class="btn bg-[#5865F2] text-white transition-colors hover:bg-[#5865F2]/80" @click="() => $router.push('/login')">
+          <button v-else class="btn bg-[#5865F2] px-8 text-white transition-colors hover:bg-[#5865F2]/80" @click="() => $router.push('/login')">
             <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
             <span class="hidden sm:inline">Login</span>
           </button>
         </template>
         <template #placeholder>
-          <button disabled class="btn bg-[#5865F2] text-white disabled:opacity-65">
+          <button disabled class="btn bg-[#5865F2] px-8 text-white disabled:opacity-65">
             <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
             <span class="hidden sm:inline">Login</span>
           </button>
         </template>
       </AuthState>
     </div>
-  </SpotlightCard>
+  </div>
 </template>
 
 <script setup lang="ts">

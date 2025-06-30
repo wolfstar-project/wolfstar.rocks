@@ -1,5 +1,6 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from 'discord-api-types/v10'
 import type { H3Event } from 'h3'
+import { isDevelopment } from 'std-env'
 import { useLogger } from '~~/shared/utils/logger'
 
 defineRouteMeta({
@@ -55,7 +56,8 @@ export default defineOAuthDiscordEventHandler({
         maxAge: 60 * 60 * 24 * 7, // 1 week
       },
     )
-    useLogger('@wolfstar/auth').info(`User session set: ${userSession.id}`, userSession)
+    if (isDevelopment)
+      useLogger('@wolfstar/auth').debug(`User session set: ${userSession.id}`, userSession)
     // Redirect to the home page
     return sendRedirect(event, '/')
   },

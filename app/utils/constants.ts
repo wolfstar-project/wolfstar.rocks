@@ -114,7 +114,7 @@ export const OtherApps = {
     name: 'Staryl',
     explore: '/',
     avatar: '/avatars/staryl.png',
-    invite: Invites.WolfStar,
+    invite: Invites.Staryl,
     purposes: ['Social', 'Notification'],
     description: 'An app to help you manage your server\'s social notifications (Twitch, Instragram and etc.).',
   },

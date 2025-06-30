@@ -100,16 +100,16 @@
         </div>
 
         <div class="perspective-1000 relative mt-8 inline-block h-32">
-          <span class="relative -top-[200%] inline-block origin-bottom animate-[hang_4s_infinite] text-8xl">🦇</span>
+          <span class="relative -top-16 inline-block origin-bottom animate-[hang_4s_infinite] text-8xl">🦇</span>
         </div>
 
         <div class="mt-8 text-xl font-medium text-gray-400 italic">{{ errorInfo.messageHint }}</div>
 
-        <div class="fixed right-0 bottom-0 left-0 bg-base-100/80 backdrop-blur-sm">
+        <div class="fixed right-0 bottom-0 left-0 bg-base-100/90 backdrop-blur-sm">
           <div class="container mx-auto">
-            <div class="flex justify-center gap-6 border-t border-red-500/20 px-4 py-6">
+            <div class="flex flex-col justify-center gap-4 border-t border-red-500/20 px-6 py-8 sm:flex-row sm:gap-6">
               <button
-                class="btn flex max-w-[200px] flex-1 items-center justify-center gap-2 shadow-lg transition-transform duration-200 btn-error hover:scale-105 hover:shadow-xl"
+                class="btn flex w-full max-w-[250px] flex-1 items-center justify-center gap-2 shadow-lg transition-all duration-200 btn-error hover:scale-105 hover:shadow-xl sm:w-auto"
                 @click="handleReturnHome"
               >
                 <ShadIcon name="mdi:home" class="size-5" />
@@ -119,7 +119,7 @@
                 href="https://join.wolfstar.rocks"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn flex max-w-[200px] flex-1 items-center justify-center gap-2 shadow-lg transition-transform duration-200 btn-outline hover:scale-105 hover:bg-[#ff5d5b]/10 hover:shadow-xl"
+                class="btn flex w-full max-w-[250px] flex-1 items-center justify-center gap-2 shadow-lg transition-all duration-200 btn-outline hover:scale-105 hover:bg-[#ff5d5b]/10 hover:shadow-xl sm:w-auto"
               >
                 <ShadIcon name="mdi:forum" class="size-5" />
                 Server Support

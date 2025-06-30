@@ -36,7 +36,7 @@ export default defineEventHandler({
       auth: true,
     }),
   ],
-  handler: defineWrappedHandlingError(async (event) => {
+  handler: async (event) => {
     // Get guild ID from params
     const guildId = getRouterParam(event, 'guild')
     if (isNullOrUndefined(guildId)) {
@@ -98,5 +98,5 @@ export default defineEventHandler({
     }
 
     return flattenMember(guildMember, guild)
-  }),
+  },
 })

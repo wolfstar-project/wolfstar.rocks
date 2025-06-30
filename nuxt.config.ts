@@ -220,6 +220,7 @@ export default defineNuxtConfig({
 
   
   sentry: {
+    enabled: !isDevelopment,
     unstable_sentryBundlerPluginOptions: {
       release: {
         name: sentryReleaseName,

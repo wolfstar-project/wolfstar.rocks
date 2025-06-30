@@ -22,7 +22,7 @@ export default defineEventHandler({
       auth: true,
     }),
   ],
-  handler: defineWrappedHandlingError(async (event) => {
+  handler: async (event) => {
     // Get session token
 
     const tokens = await event.context.$authorization.resolveServerTokens()
@@ -63,5 +63,5 @@ export default defineEventHandler({
       user,
       guilds,
     })
-  }),
+  },
 })

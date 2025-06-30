@@ -38,7 +38,7 @@ export default defineEventHandler({
       auth: true,
     }),
   ],
-  handler: defineWrappedHandlingError(async (event) => {
+  handler: async (event) => {
     const guildId = getRouterParam(event, 'guild')
     if (isNullOrUndefined(guildId)) {
       throw createError({
@@ -121,5 +121,5 @@ export default defineEventHandler({
         message: Array.isArray(error) ? error.join('\n') : String(error),
       })
     })
-  }),
+  },
 })

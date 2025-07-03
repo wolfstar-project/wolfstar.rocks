@@ -192,8 +192,8 @@
         />
       </div>
 
-      <div class="flex flex-col items-center">
-        <discord-messages>
+      <div class="flex flex-col items-start">
+        <discord-messages class="w-full">
           <discord-message name="wolfstar">
             <discord-embed
               :color="moderationActionRender.color"
@@ -208,7 +208,7 @@
           </discord-message>
         </discord-messages>
 
-        <div class="mt-4 join">
+        <div class="mt-4 join self-start">
           <button
             class="btn join-item md:btn-wide"
             :class="{ 'btn-info': moderationTemporary }"

@@ -34,7 +34,7 @@
     ]
   },
   "lint-staged": {
-    "*": "pnpm lint:fix"
+    "*": "pnpm eslint --fix ."
   },
   "dependencies": {
     "@ai-sdk/vue": "catalog:dev",
@@ -70,7 +70,6 @@
     "tailwind-merge": "catalog:style",
     "tailwind-variants": "catalog:prod",
     "taze": "catalog:cli",
-    "toucan-js": "catalog:dev",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
@@ -123,7 +122,7 @@
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev"
   },
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.12.4",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

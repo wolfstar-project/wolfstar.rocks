@@ -2,6 +2,7 @@ import type { RESTOptions } from '@discordjs/rest'
 import { REST } from '@discordjs/rest'
 import { runtimeConfig } from '~~/server/utils/runtimeConfig'
 
+// eslint-disable-next-line import/no-mutable-exports
 export let rest: REST
 
 export function setRest(options?: Partial<RESTOptions> & { token?: string }) {

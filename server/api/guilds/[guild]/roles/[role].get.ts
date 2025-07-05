@@ -1,10 +1,9 @@
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import { createError } from 'h3'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { createRateLimit } from '~~/server/utils/middlewares/ratelimit'
 import { manageAbility } from '~~/shared/utils/abilities'
 import useApi from '~~/shared/utils/api'
-import { seconds } from '~~/shared/utils/times'
+
 
 defineRouteMeta({
   openAPI: {
@@ -30,11 +29,6 @@ defineRouteMeta({
 export default defineEventHandler({
   onRequest: [
     authMiddleware(),
-    createRateLimit({
-      max: 10,
-      time: seconds(5),
-      auth: true,
-    }),
   ],
   handler: async (event) => {
     // Get guild ID from params

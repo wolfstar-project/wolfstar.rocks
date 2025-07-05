@@ -1,10 +1,9 @@
 import { Result } from '@sapphire/result'
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { createRateLimit } from '~~/server/utils/middlewares/ratelimit'
 import useApi from '~~/shared/utils/api'
 import { setRest } from '~~/shared/utils/rest'
-import { seconds } from '~~/shared/utils/times'
+
 
 defineRouteMeta({
   openAPI: {
@@ -16,11 +15,6 @@ defineRouteMeta({
 export default defineEventHandler({
   onRequest: [
     authMiddleware(),
-    createRateLimit({
-      max: 2,
-      time: seconds(10),
-      auth: true,
-    }),
   ],
   handler: async (event) => {
     // Get session token

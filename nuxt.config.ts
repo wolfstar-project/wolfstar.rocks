@@ -1,3 +1,4 @@
+import type { ModuleOptions } from 'nuxt-security'
 import tailwindcss from '@tailwindcss/vite'
 import { isDevelopment, isWindows } from 'std-env'
 import { appDescription, appName, pwa } from './config/pwa'
@@ -215,8 +216,11 @@ export default defineNuxtConfig({
         fullscreen: '*',
       },
     },
-    rateLimiter: false,
-  },
+    rateLimiter: {
+      tokensPerInterval: 10,
+      interval: 20000,
+    },
+  } as ModuleOptions,
 
   
   sentry: {

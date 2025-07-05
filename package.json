@@ -60,6 +60,7 @@
     "markdown-it-anchor": "catalog:markdown",
     "nuxt": "catalog:prod",
     "nuxt-authorization": "catalog:prod",
+    "nuxt-security": "catalog:prod",
     "pinia": "catalog:frontend",
     "prisma": "catalog:prod",
     "prisma-json-types-generator": "catalog:prod",

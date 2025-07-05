@@ -4,10 +4,8 @@ import { createError } from 'h3'
 import { z } from 'zod'
 import { serializeSettings, writeSettingsTransaction } from '~~/server/database'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { createRateLimit } from '~~/server/utils/middlewares/ratelimit'
 import { manageAbility } from '~~/shared/utils/abilities'
 import useApi from '~~/shared/utils/api'
-import { seconds } from '~~/shared/utils/times'
 
 // Assuming settingsUpdateSchema is imported or defined here
 const settingsUpdateSchema = z.object({
@@ -31,12 +29,7 @@ defineRouteMeta({
 
 export default defineEventHandler({
   onRequest: [
-    authMiddleware(),
-    createRateLimit({
-      max: 10,
-      time: seconds(10),
-      auth: true,
-    }),
+    authMiddleware()
   ],
   handler: async (event) => {
     const guildId = getRouterParam(event, 'guild')

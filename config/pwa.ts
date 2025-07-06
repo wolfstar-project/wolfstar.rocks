@@ -1,12 +1,8 @@
 import type { ModuleOptions } from '@vite-pwa/nuxt'
 
-import { manifestIcons as icons } from './manifestIcons'
-
-export const appName = 'WolfStar Dashboard'
-export const appDescription = 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.'
-
 export const pwa: ModuleOptions = {
   registerType: 'autoUpdate',
+  includeManifestIcons: true,
   devOptions: {
     enabled: process.env.VITE_PLUGIN_PWA === 'true',
     type: 'module',
@@ -14,26 +10,25 @@ export const pwa: ModuleOptions = {
   manifest: {
     background_color: '#050505',
     categories: ['discord', 'bot', 'wolfstar', 'moderation', 'automation', 'cyborg', 'logging'],
-    description: appDescription,
+    description: 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.',
     dir: 'ltr',
     display: 'minimal-ui',
     lang: 'en_US',
-    name: appName,
+    name: 'WolfStar',
     orientation: 'portrait-primary',
     scope: '/',
     short_name: 'WolfStar',
     start_url: '/',
     theme_color: '#fd171b',
-    icons,
     shortcuts: [
       {
-        name: appName,
+        name: 'WolfStar',
         short_name: 'Homepage',
         description: 'Go to WolfStar\'s dashboard',
         url: '/',
         icons: [
           {
-            src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+            src: '/icons/android-chrome-96x96.png',
             sizes: '96x96',
             type: 'image/png',
           },
@@ -46,7 +41,7 @@ export const pwa: ModuleOptions = {
         url: '/commands',
         icons: [
           {
-            src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+            src: '/icons/android-chrome-96x96.png',
             sizes: '96x96',
             type: 'image/png',
           },
@@ -59,7 +54,7 @@ export const pwa: ModuleOptions = {
         url: '/terms',
         icons: [
           {
-            src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+            src: '/icons/android-chrome-96x96.png',
             sizes: '96x96',
             type: 'image/png',
           },
@@ -72,7 +67,7 @@ export const pwa: ModuleOptions = {
         url: '/privacy',
         icons: [
           {
-            src: 'https://wolfstar.rocks/icons/android-chrome-96x96.png',
+            src: '/icons/android-chrome-96x96.png',
             sizes: '96x96',
             type: 'image/png',
           },

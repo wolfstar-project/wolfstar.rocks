@@ -2,9 +2,9 @@ import type { GuildData } from '~~/server/database'
 import { isNullOrUndefined } from '@sapphire/utilities'
 import { z } from 'zod'
 import { readSettings, serializeSettings } from '~~/server/database'
+import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
 import { manageAbility } from '~~/shared/utils/abilities'
-import useApi from '~~/shared/utils/api'
 
 
 const querySchema = z.object({

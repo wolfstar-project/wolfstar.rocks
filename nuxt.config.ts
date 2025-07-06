@@ -1,13 +1,12 @@
 import type { ModuleOptions } from 'nuxt-security'
 import tailwindcss from '@tailwindcss/vite'
 import { isDevelopment, isWindows } from 'std-env'
-import { appDescription, appName, pwa } from './config/pwa'
+import { pwa } from './config/pwa'
 import { generateRuntimeConfig } from './server/utils/runtimeConfig'
 import { Env } from './shared/types/index'
 import '@vite-pwa/nuxt'
 import 'nuxt'
 
-const baseURL = 'https://wolfstar.rocks'
 const environment =
   isDevelopment ? Env.Dev :
   process.env.CF_PAGES_BRANCH === 'main' ? Env.Prod :
@@ -46,12 +45,6 @@ export default defineNuxtConfig({
       name: 'WolfStar (Development)',
     },
   },
-  $production: {
-    site: {
-      url: 'https://wolfstar.rocks',
-      name: 'WolfStar',
-    },
-  },
   devtools: {
     enabled: true,
   },
@@ -60,12 +53,8 @@ export default defineNuxtConfig({
     head: {
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
-      titleTemplate: '%s • WolfStar',
       htmlAttrs: { lang: 'en' },
-      title: 'WolfStar',
       link: [
-        { rel: 'alternate', href: baseURL },
-        { rel: 'canonical', href: baseURL },
         { rel: 'apple-touch-icon', href: '/icons/apple-touch-icon.png' },
         { rel: 'apple-touch-startup-image', href: '/icons/apple-startup.png' },
         { rel: 'icon', href: '/icons/android-chrome-192x192.png' },
@@ -103,6 +92,10 @@ export default defineNuxtConfig({
     },
   },
   css: ['~/assets/css/main.css'],
+  site: {
+    url: 'https://wolfstar.rocks',
+    name: 'WolfStar',
+  },
   colorMode: {
     preference: 'system', // default theme
     dataValue: 'theme', // activate data-theme in <html> tag
@@ -237,28 +230,20 @@ export default defineNuxtConfig({
   },
   seo: {
     meta: {
-      description: appDescription,
-      themeColor: '#fd171b',
+      description: 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.',
       author: 'WolfStar Project, contact@wolfstar.rocks',
       colorScheme: 'dark light',
-      applicationName: appName,
-      ogSiteName: appName,
+      applicationName: 'WolfStar',
+      ogSiteName: 'WolfStar',
       ogLocale: 'en',
       ogType: 'website',
-      ogUrl: baseURL,
-      ogTitle: appName,
-      ogDescription: appDescription,
-      ogImage: 'https://wolfstar.rocks/icons/opengraph.png',
-      ogImageAlt: 'OpenGraphImage',
-      ogImageHeight: '512',
-      ogImageWidth: '1024',
+      ogUrl: 'https://wolfstar.rocks',
+      ogTitle: 'WolfStar',
+      ogDescription: 'WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.',
       robots: 'archive,follow,imageindex,index,odp,snippet,translate',
-      msapplicationTileColor: '#fd171b',
       msapplicationConfig: '/browserconfig.xml',
-      keywords: 'discord, bot, wolfstar, moderation, automation, wolfstar, cyborg',
       mobileWebAppCapable: 'yes',
       appleMobileWebAppStatusBarStyle: 'black',
-      appleMobileWebAppTitle: appName,
     },
   },
 

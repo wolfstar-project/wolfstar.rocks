@@ -3,9 +3,9 @@ import { isNullOrUndefined } from '@sapphire/utilities'
 import { createError } from 'h3'
 import { z } from 'zod'
 import { serializeSettings, writeSettingsTransaction } from '~~/server/database'
+import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
 import { manageAbility } from '~~/shared/utils/abilities'
-import useApi from '~~/shared/utils/api'
 
 // Assuming settingsUpdateSchema is imported or defined here
 const settingsUpdateSchema = z.object({

@@ -11,8 +11,8 @@ import {
   PermissionFlagsBits,
 } from 'discord-api-types/v10'
 import { readSettings } from '~~/server/database/settings/functions'
+import useApi from '~~/server/utils/api'
 import { flattenGuild } from '~~/server/utils/ApiTransformers'
-import useApi from '~~/shared/utils/api'
 import { PermissionsBits } from '~/utils/bits'
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {

@@ -28,9 +28,33 @@ watch(
   { immediate: true },
 )
 
-useSeoMeta({
-  title: appName.value,
+useHead({
+  titleTemplate: title => title ? `${title} · %separator %siteName` : '%siteName: The app for automating your Discord server',
+  templateParams: {
+    siteName: 'WolfStar',
+    separator: '·'
+  }
 })
+
+if (import.meta.server) {
+  useHead({
+    meta: [
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+    ],
+    link: [
+      { rel: 'icon', type: 'image/png', href: '/icon.png' }
+    ],
+    htmlAttrs: {
+      lang: 'en'
+    }
+  })
+  useSeoMeta({
+    ogSiteName: 'WolfStar',
+    ogType: 'website',
+    twitterCard: 'summary_large_image',
+    twitterSite: 'wolfstar_bot'
+  })
+}
 
 provide(ProviderAppNameKey, appName)
 </script>

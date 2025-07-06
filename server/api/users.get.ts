@@ -1,8 +1,8 @@
 import { Result } from '@sapphire/result'
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
+import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import useApi from '~~/shared/utils/api'
-import { setRest } from '~~/shared/utils/rest'
+import { setRest } from '~~/server/utils/rest'
 
 
 defineRouteMeta({

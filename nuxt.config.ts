@@ -172,11 +172,13 @@ export default defineNuxtConfig({
     clientBundle: {
       scan: true,
     },
-    mode: 'svg',
+    provider: 'iconify',
     componentName: 'NuxtIcon',
   },
   image: {
-    screens: {},
+    ipx: {
+      baseURL: 'https://ipx.wolfstar.rocks'
+    }
   },
   ogImage: {
     zeroRuntime: true,

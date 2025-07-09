@@ -5,15 +5,14 @@
       <slot></slot>
     </main>
     <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
-      <layout-change-theme />
-      <layout-scroll-to-top-button />
+      <scroll-to-top-button />
     </div>
     <sections-app-footer />
   </div>
 </template>
 
 <script setup lang="ts">
-const appName = inject(ProviderAppNameKey)!
+const appName = inject(ProviderAppNameKey, ref<'wolfstar' | 'staryl'>('wolfstar'))
 </script>
 
 <style scoped>

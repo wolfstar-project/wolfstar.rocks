@@ -48,5 +48,10 @@
         Privacy Policy
       </nuxt-link>
     </nav>
+    <nav>
+      <div class="flex flex-col gap-2">
+        <change-theme />
+      </div>
+    </nav>
   </footer>
 </template>

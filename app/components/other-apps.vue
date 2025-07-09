@@ -33,7 +33,7 @@ defineProps<{ apps: readonly OtherApp[] }>()
 </script>
 
 <style scoped>
-@reference "../assets/css/main.css";
+@reference "@/assets/css/main.css";
 
 .other-apps-layout {
   @apply grid gap-4 p-4;

@@ -10,7 +10,7 @@
     </section>
 
     <!-- Logging Channels Section -->
-    <LayoutSettingsSection title="Logging Channels">
+    <SettingsSection title="Logging Channels">
       <div v-if="guildData" class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div v-for="channel in ConfigurableLoggingChannels" :key="channel.key">
           <SelectChannel
@@ -23,10 +23,10 @@
           />
         </div>
       </div>
-    </LayoutSettingsSection>
+    </SettingsSection>
 
     <!-- Ignore Channels Section -->
-    <LayoutSettingsSection title="Logging Ignore Channels" class="mt-8">
+    <SettingsSection title="Logging Ignore Channels" class="mt-8">
       <div v-if="guildData" class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div v-for="channel in ConfigurableIgnoreChannels" :key="channel.key">
           <SelectChannels
@@ -39,7 +39,7 @@
           />
         </div>
       </div>
-    </LayoutSettingsSection>
+    </SettingsSection>
   </div>
 </template>
 

@@ -3,14 +3,14 @@ packages: []
 overrides:
   '@types/node': 20.11.5
   '@vercel/nft': ^0.29.4
-  vite: ^7.0.1
+  vite: ^7.0.3
 
 catalogs:
   build:
     '@tailwindcss/vite': ^4.1.11
     '@vite-pwa/nuxt': ^1.0.4
   cli:
-    pncat: ^0.2.5
+    pncat: ^0.2.6
     taze: ^19.1.0
   dev:
     '@ai-sdk/vue': '>=1.2.12'
@@ -19,7 +19,7 @@ catalogs:
     '@discordjs/core': ^2.2.0
     '@nuxt/fonts': ^0.11.4
     '@nuxt/image': ^1.10.0
-    '@nuxt/scripts': ^0.11.8
+    '@nuxt/scripts': ^0.11.9
     '@nuxthub/core': ^0.9.0
     '@nuxtjs/seo': ^3.1.0
     '@sapphire/bitfield': ^1.2.4
@@ -28,7 +28,7 @@ catalogs:
     '@sapphire/snowflake': ^3.5.5
     '@sapphire/time-utilities': ^1.7.14
     '@sapphire/utilities': ^3.18.2
-    '@sentry/nuxt': ^9.34.0
+    '@sentry/nuxt': ^9.35.0
     daisyui: 5.0.35
     discord-api-types: ^0.38.15
     nuxt-auth-utils: ^0.5.20
@@ -36,7 +36,7 @@ catalogs:
     std-env: ^3.9.0
     typescript: ~5.8.3
     vue-tsc: 2.2.10
-    wrangler: ^4.23.0
+    wrangler: ^4.24.0
   frontend:
     '@pinia/nuxt': ^0.11.1
     pinia: ^3.0.3
@@ -44,7 +44,7 @@ catalogs:
   icons:
     '@iconify-json/heroicons': ^1.2.2
     '@iconify-json/ic': ^1.2.2
-    '@iconify-json/lucide': ^1.2.54
+    '@iconify-json/lucide': ^1.2.56
     '@iconify-json/ph': ^1.2.2
     '@nuxt/icon': ^1.15.0
   lint:
@@ -55,7 +55,7 @@ catalogs:
     '@sapphire/prettier-config': ^2.0.0
     eslint: ^9.30.1
     eslint-plugin-format: ^1.0.1
-    eslint-plugin-package-json: ^0.43.0
+    eslint-plugin-package-json: ^0.43.3
     husky: ^9.1.7
     lint-staged: ^16.1.2
     prettier: ^3.6.2
@@ -66,11 +66,11 @@ catalogs:
     vue-markdown-render: ^2.2.1
   node:
     consola: ^3.4.2
-    dotenv: ^17.0.1
+    dotenv: ^17.1.0
   prod:
     '@josephanson/nuxt-ai': 0.1.6
     '@nuxtjs/color-mode': ^3.5.2
-    '@prisma/client': ^6.11.0
+    '@prisma/client': ^6.11.1
     '@prisma/nuxt': ^0.3.0
     '@shelve/cli': ^4.1.6
     colortranslator: ^5.0.0
@@ -79,8 +79,8 @@ catalogs:
     nuxt: ^3.17.6
     nuxt-authorization: ^0.3.4
     nuxt-security: ^2.2.0
-    prisma: ^6.11.0
-    prisma-json-types-generator: ^3.5.0
+    prisma: ^6.11.1
+    prisma-json-types-generator: ^3.5.1
     shadcn-nuxt: 2.1.0
     stale-dep: ^0.8.2
     tailwind-variants: ^1.0.0
@@ -90,7 +90,7 @@ catalogs:
     '@tailwindcss/typography': ^0.5.16
     tailwind-merge: ^3.3.1
     tailwindcss: ^4.1.11
-    tw-animate-css: ^1.3.4
+    tw-animate-css: ^1.3.5
   test:
     playwright: ^1.53.2
   utils:
@@ -99,7 +99,7 @@ catalogs:
     '@vueuse/nuxt': ^13.5.0
     '@vueuse/router': ^13.5.0
     clsx: ^2.1.1
-    zod: ^3.25.71
+    zod: ^3.25.76
 
 allowedDeprecatedVersions:
   - glob: 7.2.3

@@ -10,6 +10,7 @@ catalogs:
     '@tailwindcss/vite': ^4.1.11
     '@vite-pwa/nuxt': ^1.0.4
   cli:
+    '@shelve/cli': ^4.1.6
     pncat: ^0.2.6
     taze: ^19.1.0
   dev:
@@ -19,7 +20,6 @@ catalogs:
     '@discordjs/core': ^2.2.0
     '@nuxt/fonts': ^0.11.4
     '@nuxt/image': ^1.10.0
-    '@nuxt/scripts': ^0.11.9
     '@nuxthub/core': ^0.9.0
     '@nuxtjs/seo': ^3.1.0
     '@sapphire/bitfield': ^1.2.4
@@ -72,7 +72,7 @@ catalogs:
     '@nuxtjs/color-mode': ^3.5.2
     '@prisma/client': ^6.11.1
     '@prisma/nuxt': ^0.3.0
-    '@shelve/cli': ^4.1.6
+
     colortranslator: ^5.0.0
     fuse.js: ^7.1.0
     import-in-the-middle: ^1.14.2

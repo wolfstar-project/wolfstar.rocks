@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     '@nuxt/image',
     '@nuxt/eslint',
     '@nuxt/icon',
+    '@nuxt/scripts',
     '@nuxtjs/seo',
     '@nuxtjs/color-mode',
     '@vueuse/nuxt',

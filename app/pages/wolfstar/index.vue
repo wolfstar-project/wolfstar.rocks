@@ -269,6 +269,11 @@ import { cast } from '@sapphire/utilities/cast'
 
 definePageMeta({ alias: ['/'] })
 
+defineOgImageComponent('Default', {
+  title: 'WolfStar',
+  description: 'A very customizable multilanguage application to help you moderate your server, with a complete logging suite and more, 100% for free!',
+})
+
 enum AutomodFeature {
   Attachments,
   Capitals,

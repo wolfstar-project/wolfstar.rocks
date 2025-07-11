@@ -24,22 +24,22 @@
       <div class="mt-8 w-full bg-base-100/90 backdrop-blur-sm rounded-xl">
         <div class="container mx-auto">
           <div class="flex flex-col justify-center gap-4 border-t border-red-500/20 px-6 py-8 sm:flex-row sm:gap-6">
-            <button
-              class="btn flex w-full max-w-[250px] flex-1 items-center justify-center gap-2 shadow-lg transition-all duration-200 btn-error hover:scale-105 hover:shadow-xl sm:w-auto"
-              @click="handleReturnHome"
-            >
-              <ShadIcon name="mdi:home" class="size-5" />
-              Return Home
-            </button>
-            <a
-              href="https://join.wolfstar.rocks"
+            <ShadButton
+              label="Return Home"
+              color="pri"
+              leading-icon="mdi:home"
+              class="w-full max-w-[250px] flex-1 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl sm:w-auto"
+              @click="handleError"
+            />
+            <ShadButton
+              label="Server Support"
+              to="https://join.wolfstar.rocks"
               target="_blank"
-              rel="noopener noreferrer"
-              class="btn flex w-full max-w-[250px] flex-1 items-center justify-center gap-2 shadow-lg transition-all duration-200 btn-outline hover:scale-105 hover:bg-[#ff5d5b]/10 hover:shadow-xl sm:w-auto"
-            >
-              <ShadIcon name="mdi:forum" class="size-5" />
-              Server Support
-            </a>
+              external
+              variant="outline"
+              leading-icon="mdi:forum"
+              class="w-full max-w-[250px] flex-1 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl sm:w-auto"
+            />
           </div>
         </div>
       </div>
@@ -62,9 +62,7 @@ const statusCode = computed(() => (error?.statusCode ?? ErrorType.INTERNAL_SERVE
 const errorInfo = computed(() => errorMessages[statusCode.value] || errorMessages[ErrorType.INTERNAL_SERVER])
 
 // Navigation handling
-function handleReturnHome() {
-  clearError({ redirect: '/' })
-}
+const handleError = () => clearError({ redirect: '/' })
 
 // SEO and meta configuration
 defineOgImageComponent('NuxtSeo', {

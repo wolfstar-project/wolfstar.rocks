@@ -160,16 +160,34 @@
               </li>
             </ul>
           </div>
-          <button v-else class="btn bg-[#5865F2] px-8 text-white transition-colors hover:bg-[#5865F2]/80" @click="() => $router.push('/login')">
-            <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
-            <span class="hidden sm:inline">Login</span>
-          </button>
+          <ShadButton
+            v-else
+            color="#5865F2"
+            active-color="#5865F2"
+            size="md"
+            to="/login"
+          >
+            <template #leading>
+              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
+            </template>
+            <template #default>
+              <span class="hidden sm:inline">Login</span>
+            </template>
+          </ShadButton>
         </template>
         <template #placeholder>
-          <button disabled class="btn bg-[#5865F2] px-8 text-white disabled:opacity-65">
-            <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
-            <span class="hidden sm:inline">Login</span>
-          </button>
+          <ShadButton
+            disabled
+            color="#5865F2"
+            size="md"
+          >
+            <template #leading>
+              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
+            </template>
+            <template #default>
+              <span class="hidden sm:inline">Login</span>
+            </template>
+          </ShadButton>
         </template>
       </AuthState>
     </div>

@@ -13,6 +13,9 @@ catalogs:
       specifier: ^1.0.4
       version: 1.0.4
   cli:
+    '@shelve/cli':
+      specifier: ^4.1.6
+      version: 4.1.6
     pncat:
       specifier: ^0.2.6
       version: 0.2.6
@@ -38,9 +41,6 @@ catalogs:
     '@nuxt/image':
       specifier: ^1.10.0
       version: 1.10.0
-    '@nuxt/scripts':
-      specifier: ^0.11.9
-      version: 0.11.9
     '@nuxthub/core':
       specifier: ^0.9.0
       version: 0.9.0
@@ -185,9 +185,6 @@ catalogs:
     '@prisma/nuxt':
       specifier: ^0.3.0
       version: 0.3.0
-    '@shelve/cli':
-      specifier: ^4.1.6
-      version: 4.1.6
     colortranslator:
       specifier: ^5.0.0
       version: 5.0.0
@@ -295,7 +292,7 @@ importers:
         specifier: catalog:dev
         version: 9.35.0(@sentry/cloudflare@9.34.0(@cloudflare/workers-types@4.20250603.0))(encoding@0.1.13)(magicast@0.3.5)(nuxt@3.17.6(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@20.11.5)(@vue/compiler-sfc@3.5.17)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.30.1(jiti@2.4.2))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.44.1)(terser@5.40.0)(tsx@4.19.3)(typescript@5.8.3)(vite@7.0.3(@types/node@20.11.5)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.40.0)(tsx@4.19.3)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(yaml@2.8.0))(pinia@3.0.3(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3)))(rollup@4.44.1)(vue@3.5.16(typescript@5.8.3))
       '@shelve/cli':
-        specifier: catalog:prod
+        specifier: catalog:cli
         version: 4.1.6(magicast@0.3.5)
       '@tailwindcss/vite':
         specifier: catalog:build
@@ -437,7 +434,7 @@ importers:
         specifier: catalog:dev
         version: 1.10.0(@netlify/blobs@8.2.0)(db0@0.3.2(better-sqlite3@11.8.1))(ioredis@5.6.1)(magicast@0.3.5)
       '@nuxt/scripts':
-        specifier: catalog:dev
+        specifier: ^0.11.9
         version: 0.11.9(@netlify/blobs@8.2.0)(@unhead/vue@2.0.11(vue@3.5.16(typescript@5.8.3)))(db0@0.3.2(better-sqlite3@11.8.1))(ioredis@5.6.1)(magicast@0.3.5)(nuxt@3.17.6(@netlify/blobs@8.2.0)(@parcel/watcher@2.5.1)(@types/node@20.11.5)(@vue/compiler-sfc@3.5.17)(better-sqlite3@11.8.1)(db0@0.3.2(better-sqlite3@11.8.1))(encoding@0.1.13)(eslint@9.30.1(jiti@2.4.2))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.44.1)(terser@5.40.0)(tsx@4.19.3)(typescript@5.8.3)(vite@7.0.3(@types/node@20.11.5)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.40.0)(tsx@4.19.3)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(yaml@2.8.0))(typescript@5.8.3)(vue@3.5.16(typescript@5.8.3))
       '@nuxthub/core':
         specifier: catalog:dev
@@ -17443,7 +17440,7 @@ snapshots:
       citty: 0.1.6
       consola: 3.4.2
       pathe: 2.0.3
-      pkg-types: 2.1.0
+      pkg-types: 2.2.0
       tinyexec: 0.3.2
 
   oauth4webapi@3.5.1: {}
@@ -18980,7 +18977,7 @@ snapshots:
 
   tinyglobby@0.2.12:
     dependencies:
-      fdir: 6.4.5(picomatch@4.0.2)
+      fdir: 6.4.6(picomatch@4.0.2)
       picomatch: 4.0.2
 
   tinyglobby@0.2.14:

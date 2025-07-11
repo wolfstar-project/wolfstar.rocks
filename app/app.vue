@@ -29,7 +29,7 @@ watch(
 )
 
 useHead({
-  titleTemplate: title => title ? `${title} · %separator %siteName` : '%siteName: The app for automating your Discord server',
+  titleTemplate: title => title ? `${title} %separator %siteName` : '%siteName: The app for automating your Discord server',
   templateParams: {
     siteName: 'WolfStar',
     separator: '·'

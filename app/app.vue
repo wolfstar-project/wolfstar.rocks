@@ -37,17 +37,6 @@ useHead({
 })
 
 if (import.meta.server) {
-  useHead({
-    meta: [
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' }
-    ],
-    link: [
-      { rel: 'icon', type: 'image/png', href: '/icon.png' }
-    ],
-    htmlAttrs: {
-      lang: 'en'
-    }
-  })
   useSeoMeta({
     ogSiteName: 'WolfStar',
     ogType: 'website',

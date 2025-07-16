@@ -1,5 +1,9 @@
 packages: []
 
+overrides:
+  '@types/node': 20.11.5
+  '@vercel/nft': ^0.29.4
+
 catalogs:
   build:
     '@tailwindcss/vite': ^4.1.11
@@ -111,10 +115,6 @@ onlyBuiltDependencies:
   - sharp
   - vue-demi
   - workerd
-
-overrides:
-  '@types/node': 20.11.5
-  '@vercel/nft': ^0.29.4
 
 peerDependencyRules:
   allowedVersions:

@@ -50,9 +50,6 @@ catalogs:
     '@sapphire/bitfield':
       specifier: ^1.2.4
       version: 1.2.4
-    '@sapphire/ratelimits':
-      specifier: ^2.4.11
-      version: 2.4.11
     '@sapphire/result':
       specifier: ^2.7.2
       version: 2.7.2
@@ -444,9 +441,6 @@ importers:
       '@sapphire/prettier-config':
         specifier: catalog:lint
         version: 2.0.0
-      '@sapphire/ratelimits':
-        specifier: catalog:dev
-        version: 2.4.11
       '@sapphire/result':
         specifier: catalog:dev
         version: 2.7.2
@@ -3204,10 +3198,6 @@ packages:
 
   '@sapphire/prettier-config@2.0.0':
     resolution: {integrity: sha512-Vie8KR5zQ6sbEP4+biW/IR7k55saGfZkTSuRlgvxCBKb4SBJdRWcOBI80i+JxMVIDDZKgXlgYnXEST+FgZiWXA==}
-    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
-
-  '@sapphire/ratelimits@2.4.11':
-    resolution: {integrity: sha512-O6FNA/P0wxU4Ve9gxL948CoZw7+sSpujyUR2CLyLLCNuNvuFGFxPCJVl5crFVLXMIyBIrc2qk+/H9bsqsyQK1Q==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   '@sapphire/result@2.7.2':
@@ -12901,8 +12891,6 @@ snapshots:
   '@sapphire/prettier-config@2.0.0':
     dependencies:
       prettier: 3.6.2
-
-  '@sapphire/ratelimits@2.4.11': {}
 
   '@sapphire/result@2.7.2': {}
 

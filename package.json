@@ -97,7 +97,6 @@
     "@nuxtjs/seo": "catalog:dev",
     "@sapphire/bitfield": "catalog:dev",
     "@sapphire/prettier-config": "catalog:lint",
-    "@sapphire/ratelimits": "catalog:dev",
     "@sapphire/result": "catalog:dev",
     "@sapphire/snowflake": "catalog:dev",
     "@sapphire/time-utilities": "catalog:dev",

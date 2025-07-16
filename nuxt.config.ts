@@ -169,16 +169,14 @@ export default defineNuxtConfig({
     },
   },
   icon: {
+    serverBundle: false,
     clientBundle: {
-      scan: true,
+      scan: {
+        globInclude: ['**\/*.{vue,jsx,tsx,md,mdc,mdx}', 'app/**/*.ts']
+      }
     },
     provider: 'iconify',
     componentName: 'NuxtIcon',
-  },
-  image: {
-    ipx: {
-      baseURL: 'https://ipx.wolfstar.rocks'
-    }
   },
   ogImage: {
     zeroRuntime: true,

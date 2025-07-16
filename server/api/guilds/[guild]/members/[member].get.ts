@@ -2,6 +2,7 @@ import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import { createError } from 'h3'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
+import { createRest } from '~~/server/utils/rest'
 import { manageAbility } from '~~/shared/utils/abilities'
 
 
@@ -41,7 +42,8 @@ export default defineEventHandler({
     }
 
     // Fetch guild data
-    const guild = await useApi().guilds.get(guildId, { with_counts: true })
+    const api = useApi(createRest())
+    const guild = await api.guilds.get(guildId, { with_counts: true })
     if (isNullOrUndefined(guild)) {
       throw createError({
         statusCode: 400,
@@ -59,7 +61,7 @@ export default defineEventHandler({
     }
 
     // Fetch member data
-    const member = await useApi().guilds.getMember(guild.id, user.id)
+    const member = await api.guilds.getMember(guild.id, user.id)
     if (isNullOrUndefined(member)) {
       throw createError({
         statusCode: 400,
@@ -82,7 +84,7 @@ export default defineEventHandler({
       })
     }
 
-    const guildMember = await useApi().guilds.getMember(guild.id, memberId)
+    const guildMember = await api.guilds.getMember(guild.id, memberId)
 
     if (isNullOrUndefined(guildMember)) {
       throw createError({

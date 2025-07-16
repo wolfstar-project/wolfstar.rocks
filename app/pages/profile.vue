@@ -14,24 +14,23 @@
       />
       <div class="space-y-2 text-center">
         <h1 class="text-4xl font-bold text-base-content">{{ user.name }}</h1>
-        <p class="text-lg font-medium text-base-content/70">@{{ user.username || user.id }}</p>
-        <p class="text-sm text-base-content/50">User ID: {{ user.id }}</p>
+        <p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
+        <p class="text-sm text-base-content/60">User ID: {{ user.id }}</p>
       </div>
     </section>
 
     <section class="overflow-hidden rounded-xl bg-base-200 shadow-lg">
       <div class="border-b border-base-300">
-        <nav class="flex" aria-label="Profile Navigation">
+        <nav class="flex gap-1 p-1" aria-label="Profile Navigation">
           <ShadButton
             v-for="tab in profileTabs"
             :key="tab.id"
             variant="ghost"
-            :color="activeTab === tab.id ? 'primary' : 'neutral'"
-            class="flex items-center space-x-3 rounded-none border-b-2 px-6 py-4 text-sm font-medium transition-all duration-200"
+            class="flex-1 justify-center rounded-md border-0"
             :class="[
               activeTab === tab.id
-                ? 'border-primary bg-primary/10 text-primary'
-                : 'border-transparent text-base-content/70 hover:bg-base-300/50 hover:text-base-content',
+                ? 'bg-base-300 text-base-content'
+                : 'text-base-content/70 hover:bg-base-300/50 hover:text-base-content',
             ]"
             :aria-selected="activeTab === tab.id"
             role="tab"
@@ -41,7 +40,10 @@
               <ShadIcon :name="tab.icon" class="h-5 w-5" />
             </template>
             {{ tab.label }}
-            <span v-if="tab.id === 'servers' && guilds" class="rounded-full bg-base-content/20 px-2 py-1 text-xs">
+            <span
+              v-if="tab.id === 'servers' && guilds"
+              class="ml-2 rounded-full bg-base-content/20 px-2 py-1 text-xs"
+            >
               {{ guilds.length }}
             </span>
           </ShadButton>
@@ -52,18 +54,18 @@
       <div class="p-8">
         <!-- Servers Tab -->
         <div v-if="activeTab === 'servers'" class="space-y-6">
-          <div class="flex items-center justify-between">
+          <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 class="text-2xl font-bold text-base-content">Servers</h2>
               <p class="mt-1 text-base-content/60">Servers you're in ({{ guilds?.length ?? 0 }} servers)</p>
             </div>
             <!-- Add Server Button - like Dyno's CTA -->
-            <UiButton variant="soft" color="primary" size="sm">
+            <ShadButton variant="soft" color="primary" size="sm">
               <template #leading>
                 <ShadIcon name="heroicons:plus" class="h-4 w-4" />
               </template>
               Add Bot to Server
-            </UiButton>
+            </ShadButton>
           </div>
 
           <ShadAlert
@@ -87,10 +89,10 @@
           </div>
 
           <!-- Empty State -->
-          <div v-else class="flex flex-col items-center justify-center space-y-4 py-16">
+          <div v-else-if="!error" class="flex flex-col items-center justify-center space-y-4 py-16">
             <ShadIcon name="heroicons:server" class="h-16 w-16 text-base-content/30" />
             <p class="text-lg text-base-content/60">No servers found</p>
-            <UiButton variant="outline" size="sm" @click="() => refreshGuilds()">Refresh</UiButton>
+            <ShadButton variant="outline" size="sm" @click="() => refreshGuilds()">Refresh</ShadButton>
           </div>
         </div>
 
@@ -103,23 +105,12 @@
           <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
             <ShadCard class="shadow-md">
               <template #header>
-                <h3 class="text-lg font-semibold">Theme Preferences</h3>
-              </template>
-              <p class="text-base-content/60">Customize your visual experience</p>
-              <template #footer>
-                <div class="flex justify-end">
-                  <UiButton variant="soft" color="primary" size="sm">Configure</UiButton>
-                </div>
-              </template>
-            </ShadCard>
-            <ShadCard class="shadow-md">
-              <template #header>
                 <h3 class="text-lg font-semibold">Notification Settings</h3>
               </template>
               <p class="text-base-content/60">Control how you receive updates</p>
               <template #footer>
                 <div class="flex justify-end">
-                  <UiButton variant="soft" color="primary" size="sm">Manage</UiButton>
+                  <ShadButton variant="soft" color="primary" size="sm">Manage</ShadButton>
                 </div>
               </template>
             </ShadCard>
@@ -132,14 +123,14 @@
             <h2 class="text-2xl font-bold text-base-content">Premium</h2>
             <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
           </div>
-          <ShadCard class="border-2 border-primary/20 bg-gradient-to-r from-primary/10 to-secondary/10">
-            <div class="space-y-4 text-center">
-              <ShadIcon name="heroicons:star" class="mx-auto h-12 w-12 text-primary" />
+          <ShadCard class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg">
+            <div class="space-y-4 p-6 text-center">
+              <ShadIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
               <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
               <p class="text-base-content/70">Get access to exclusive features and priority support</p>
-              <div class="flex justify-center space-x-4">
-                <ShadButton color="primary">Get Premium</ShadButton>
-                <ShadButton variant="outline">Learn More</ShadButton>
+              <div class="flex justify-center space-x-4 pt-4">
+                <ShadButton color="primary" size="lg">Get Premium</ShadButton>
+                <ShadButton variant="outline" size="lg">Learn More</ShadButton>
               </div>
             </div>
           </ShadCard>
@@ -160,16 +151,11 @@ const {
   pending,
   error: fetchError,
   refresh: refreshGuilds,
-} = useAsyncData(
-  'guilds',
-  async () => {
-    const response = await $fetch('/api/users')
-    return response.transformedGuilds ?? null
-  },
-  {
-    watch: [user],
-  },
-)
+} = useFetch('/api/users', {
+  key: 'guilds',
+  transform: data => data?.transformedGuilds ?? null,
+  watch: [user],
+})
 
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref('servers')

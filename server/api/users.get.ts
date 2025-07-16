@@ -1,8 +1,7 @@
-import { Result } from '@sapphire/result'
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { setRest } from '~~/server/utils/rest'
+import { createRest } from '~~/server/utils/rest'
 
 
 defineRouteMeta({
@@ -29,28 +28,29 @@ export default defineEventHandler({
     }
 
     // Initialize REST client
-    setRest({
+    const rest = createRest({
       token: tokens.access_token,
     })
 
-    // Fetch user data
+    const api = useApi(rest)
 
-    const user = (await Result.fromAsync(async () => useApi().users.getCurrent())).unwrapOrElse((error) => {
+    // Fetch user data
+    const user = await api.users.getCurrent()
+    if (isNullOrUndefined(user)) {
       throw createError({
         statusCode: 500,
         message: 'Failed to fetch user',
-        stack: error instanceof Error ? error.stack : undefined,
       })
-    })
+    }
 
     // Fetch guilds
-    const guilds = (await Result.fromAsync(async () => useApi().users.getGuilds())).unwrapOrElse((error) => {
+    const guilds = await api.users.getGuilds()
+    if (isNullOrUndefined(guilds)) {
       throw createError({
         statusCode: 500,
         message: 'Failed to fetch guilds',
-        stack: error instanceof Error ? error.stack : undefined,
       })
-    })
+    }
 
     // Return transformed or raw data based on query param
     return await transformOauthGuildsAndUser({

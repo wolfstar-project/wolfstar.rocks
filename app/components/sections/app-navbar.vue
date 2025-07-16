@@ -104,9 +104,7 @@
             <div
               tabindex="0"
               role="button"
-              class="group btn relative z-10 flex items-center justify-center gap-x-2 btn-ghost transition-colors hover:bg-base-200 focus-visible:bg-base-200"
-              aria-expanded="false"
-              aria-haspopup="menu"
+              class="group btn relative z-10 flex items-center justify-center gap-x-2 btn-ghost transition-colors"
             >
               <!-- Avatar Container -->
               <div
@@ -145,16 +143,16 @@
             </div>
 
             <!-- Dropdown Menu -->
-            <ul tabindex="0" class="dropdown-content menu z-1 w-56 translate-y-2 rounded-box bg-base-100 p-2 shadow-lg">
+            <ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
               <li>
                 <nuxt-link to="/profile" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200">
-                  <ShadIcon name="ph:user" class="h-4 w-4 opacity-70" />
+                  <ShadIcon name="i-lucide-user" class="size-4" />
                   Profile
                 </nuxt-link>
               </li>
               <li>
                 <button type="button" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-error hover:bg-error/10" @click="clear">
-                  <ShadIcon name="ph:sign-out" class="h-4 w-4 opacity-70" />
+                  <ShadIcon name="i-lucide-log-out" class="size-4" />
                   Logout
                 </button>
               </li>
@@ -165,7 +163,7 @@
             color="#5865F2"
             active-color="#5865F2"
             size="md"
-            to="/login"
+            to="/api/auth/discord"
           >
             <template #leading>
               <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />

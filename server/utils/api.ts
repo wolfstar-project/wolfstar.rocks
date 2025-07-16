@@ -1,6 +1,6 @@
+import type { REST } from '@discordjs/rest'
 import { API } from '@discordjs/core/http-only'
-import { rest } from '~~/server/utils/rest'
 
-export default () => {
+export default (rest: REST) => {
   return new API(rest)
 }

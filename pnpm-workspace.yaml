@@ -1,9 +1,5 @@
 packages: []
 
-overrides:
-  '@types/node': 20.11.5
-  '@vercel/nft': ^0.29.4
-
 catalogs:
   build:
     '@tailwindcss/vite': ^4.1.11
@@ -71,7 +67,6 @@ catalogs:
     '@nuxtjs/color-mode': ^3.5.2
     '@prisma/client': ^6.11.1
     '@prisma/nuxt': ^0.3.0
-
     colortranslator: ^5.0.0
     fuse.js: ^7.1.0
     import-in-the-middle: ^1.14.2
@@ -116,6 +111,10 @@ onlyBuiltDependencies:
   - sharp
   - vue-demi
   - workerd
+
+overrides:
+  '@types/node': 20.11.5
+  '@vercel/nft': ^0.29.4
 
 peerDependencyRules:
   allowedVersions:

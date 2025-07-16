@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { serializeSettings, writeSettingsTransaction } from '~~/server/database'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
+import { createRest } from '~~/server/utils/rest'
 import { manageAbility } from '~~/shared/utils/abilities'
 
 // Assuming settingsUpdateSchema is imported or defined here
@@ -68,7 +69,8 @@ export default defineEventHandler({
     }
 
     // Fetch guild data
-    const guild = await useApi().guilds.get(guildId, { with_counts: true })
+    const api = useApi(createRest())
+    const guild = await api.guilds.get(guildId, { with_counts: true })
     if (!guild) {
       throw createError({
         statusCode: 400,
@@ -85,7 +87,7 @@ export default defineEventHandler({
     }
 
     // Fetch member data
-    const member = await useApi().guilds.getMember(guild.id, user.id)
+    const member = await api.guilds.getMember(guild.id, user.id)
     if (!member) {
       throw createError({
         statusCode: 400,

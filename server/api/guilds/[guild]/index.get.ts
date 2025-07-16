@@ -2,6 +2,7 @@ import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import { createError } from 'h3'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
+import { createRest } from '~~/server/utils/rest'
 import { manageAbility } from '~~/shared/utils/abilities'
 
 defineRouteMeta({
@@ -32,9 +33,9 @@ export default defineEventHandler({
         message: 'Guild ID is required',
       })
     }
-
     // Fetch guild data
-    const guild = await useApi().guilds.get(guildId, { with_counts: true })
+    const api = useApi(createRest())
+    const guild = await api.guilds.get(guildId, { with_counts: true })
     if (isNullOrUndefined(guild)) {
       throw createError({
         statusCode: 400,
@@ -52,7 +53,7 @@ export default defineEventHandler({
     }
 
     // Fetch member data
-    const member = await useApi().guilds.getMember(guild.id, user.id)
+    const member = await api.guilds.getMember(guild.id, user.id)
     if (isNullOrUndefined(member)) {
       throw createError({
         statusCode: 400,
@@ -67,7 +68,7 @@ export default defineEventHandler({
       })
     }
 
-    const channels = (await useApi().guilds.getChannels(guild.id)) as any
+    const channels = (await api.guilds.getChannels(guild.id)) as any
 
     // Return flattened guild data
     return flattenGuild({ ...guild, channels })

@@ -99,7 +99,7 @@
     <div class="navbar-end">
       <AuthState>
         <template #default="{ loggedIn, clear }">
-          <div v-if="loggedIn" class="group dropdown dropdown-bottom dropdown-end">
+          <div v-if="loggedIn" class="group dropdown dropdown-hover dropdown-bottom dropdown-end">
             <!-- Avatar Button -->
             <div
               tabindex="0"
@@ -153,10 +153,10 @@
                 </nuxt-link>
               </li>
               <li>
-                <a variant="ghost" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-error hover:bg-error/10" @click="clear">
+                <button type="button" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-error hover:bg-error/10" @click="clear">
                   <ShadIcon name="ph:sign-out" class="h-4 w-4 opacity-70" />
                   Logout
-                </a>
+                </button>
               </li>
             </ul>
           </div>

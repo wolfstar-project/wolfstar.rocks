@@ -58,7 +58,7 @@
               <p class="mt-1 text-base-content/60">Servers you're in ({{ guilds?.length ?? 0 }} servers)</p>
             </div>
             <!-- Add Server Button - like Dyno's CTA -->
-            <UiButton variant="solid" color="primary" size="sm">
+            <UiButton variant="soft" color="primary" size="sm">
               <template #leading>
                 <ShadIcon name="heroicons:plus" class="h-4 w-4" />
               </template>
@@ -75,14 +75,22 @@
             icon="heroicons:exclamation-triangle"
           />
 
+          <!-- Loading State -->
+          <div v-if="pending" class="flex flex-col items-center justify-center space-y-4 py-16">
+            <ShadIcon name="svg-spinners:270-ring" class="h-16 w-16 text-primary" />
+            <p class="text-lg text-base-content/60">Loading servers...</p>
+          </div>
+
           <!-- Enhanced Server Grid -->
-          <div v-else-if="guilds !== undefined" class="space-y-4">
+          <div v-else-if="guilds && guilds.length > 0" class="space-y-4">
             <guild-cards :guilds="guilds" />
           </div>
+
+          <!-- Empty State -->
           <div v-else class="flex flex-col items-center justify-center space-y-4 py-16">
             <ShadIcon name="heroicons:server" class="h-16 w-16 text-base-content/30" />
             <p class="text-lg text-base-content/60">No servers found</p>
-            <UiButton variant="outline" size="sm">Refresh</UiButton>
+            <UiButton variant="outline" size="sm" @click="() => refreshGuilds()">Refresh</UiButton>
           </div>
         </div>
 
@@ -100,7 +108,7 @@
               <p class="text-base-content/60">Customize your visual experience</p>
               <template #footer>
                 <div class="flex justify-end">
-                  <UiButton variant="solid" color="primary" size="sm">Configure</UiButton>
+                  <UiButton variant="soft" color="primary" size="sm">Configure</UiButton>
                 </div>
               </template>
             </ShadCard>
@@ -111,7 +119,7 @@
               <p class="text-base-content/60">Control how you receive updates</p>
               <template #footer>
                 <div class="flex justify-end">
-                  <UiButton variant="solid" color="primary" size="sm">Manage</UiButton>
+                  <UiButton variant="soft" color="primary" size="sm">Manage</UiButton>
                 </div>
               </template>
             </ShadCard>
@@ -142,13 +150,26 @@
 </template>
 
 <script setup lang="ts">
+import { captureException } from '@sentry/vue';
+
 definePageMeta({ alias: ['/account'], auth: true })
 
 const { user } = useAuth()
-const { start, finish } = useLoadingIndicator({
-  duration: 2000,
-  throttle: 200,
-})
+const {
+  data: guilds,
+  pending,
+  error: fetchError,
+  refresh: refreshGuilds,
+} = useAsyncData(
+  'guilds',
+  async () => {
+    const response = await $fetch('/api/users')
+    return response.transformedGuilds ?? null
+  },
+  {
+    watch: [user],
+  },
+)
 
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref('servers')
@@ -174,30 +195,10 @@ const error = ref<Error | null>(null)
 const isAnimated = ref(false)
 const isDefault = ref(false)
 
-const {
-  data: guilds,
-  status,
-  error: fetchError,
-} = await useFetch('/api/users', {
-  transform: response => response.transformedGuilds ?? null,
-})
-
 watch(fetchError, (newError) => {
   if (newError) {
     error.value = newError
     captureException(newError)
-    finish({ error: true })
-  }
-})
-
-const pending = ref(status.value === 'pending')
-
-watch(pending, (isPending) => {
-  if (isPending) {
-    start()
-  }
-  else {
-    finish()
   }
 })
 

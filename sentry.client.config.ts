@@ -1,11 +1,11 @@
 import * as Sentry from "@sentry/nuxt";
 
-if(runtimeConfig.public.sentry.dsn) {
+if(useRuntimeConfig().public.sentry.dsn) {
 Sentry.init({
   // If set up, you can use the Nuxt runtime config here
   // dsn: useRuntimeConfig().public.sentry.dsn
   // modify depending on your custom runtime config
-  dsn: runtimeConfig.public.sentry.dsn,
+  dsn: useRuntimeConfig().public.sentry.dsn,
 
   // Adds request headers and IP for users, for more info visit:
   // https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#sendDefaultPii
@@ -14,10 +14,6 @@ Sentry.init({
   // Replay may only be enabled for the client-side
   integrations: [
     Sentry.replayIntegration(),
-    Sentry.feedbackIntegration({
-      // Additional SDK configuration goes in here, for example:
-      colorScheme: "system",
-    }),
   ],
 
   // Set tracesSampleRate to 1.0 to capture 100%

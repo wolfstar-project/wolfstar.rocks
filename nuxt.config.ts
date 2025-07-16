@@ -178,6 +178,9 @@ export default defineNuxtConfig({
     provider: 'iconify',
     componentName: 'NuxtIcon',
   },
+  image: {
+    screens: {},
+  },
   ogImage: {
     zeroRuntime: true,
   },
@@ -217,7 +220,6 @@ export default defineNuxtConfig({
 
   
   sentry: {
-    enabled: !isDevelopment,
     unstable_sentryBundlerPluginOptions: {
       release: {
         name: sentryReleaseName,

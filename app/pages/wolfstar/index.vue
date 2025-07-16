@@ -20,217 +20,241 @@
   </section>
 
   <h2 id="explore" class="mt-72 text-5xl font-bold">Explore</h2>
-  <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-    <div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
-      <discord-messages class="w-full">
-        <discord-message v-if="featureIndex === AutomodFeature.Spam" name="baddie">Guys look at me!</discord-message>
-        <discord-message v-if="featureIndex === AutomodFeature.Spam" name="baddie">Guys look at me!</discord-message>
-        <discord-message
-          :name="featureIndex === AutomodFeature.Reactions ? 'stella' : 'baddie'"
-          :class="{ 'text-error': featureIndex !== AutomodFeature.Reactions }"
-        >
-          <template v-if="featureIndex === AutomodFeature.Attachments">
-            Have you seen this????
-            <div class="grid max-w-96 grid-cols-2 gap-2">
-              <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
-              </div>
-              <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
-              </div>
-              <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
-              </div>
-              <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
-              </div>
-            </div>
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Capitals">
-            I CAN TALK IN ALL UPPER CASES, <strong>AND WOLFSTAR WILL NOT STOP ME!</strong>
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Invites">
-            Everyone join my server!
-            <nuxt-link to="https://discord.gg/gqAnRyUXG8" class="text-info">https://discord.gg/gqAnRyUXG8</nuxt-link>
-            <discord-invite link="https://discord.gg/gqAnRyUXG8" />
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Links">
-            Everyone check out those links!
-            <ul class="ml-5 list-disc">
-              <li><span class="text-info">https://definitely-not-pishing.com</span></li>
-              <li><span class="text-info">https://redundant-spam-links.net</span></li>
-              <li><span class="text-info">https://too-many-links.com</span></li>
-              <li><span class="text-info">https://trojan-horse.xyz</span></li>
-              <li><span class="text-info">https://not-a-virus.com</span></li>
-            </ul>
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Mentions">
-            Everyone notice me! <discord-mention kind="mention">everyone</discord-mention>
-            <discord-mention kind="mention">members</discord-mention>{{ ' ' }}<discord-mention kind="mention">moderators</discord-mention>
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Newlines">
-            Hehehehe
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            <br />
-            So many lines!
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Reactions">
-            Hey folks! I have great news to share!
-            <discord-reactions>
-              <discord-reaction :count="7" self><ShadIcon name="ph:cheers-fill" class="text-success" /></discord-reaction>
-              <discord-reaction :count="1" class="text-error"><ShadIcon name="ph:knife-fill" /></discord-reaction>
-            </discord-reactions>
-          </template>
-          <template v-else-if="featureIndex === AutomodFeature.Spam">Guys look at me!</template>
-          <template v-else-if="featureIndex === AutomodFeature.Words">
-            I would like to say that you're a <strong>disgusting</strong> person.
-          </template>
-        </discord-message>
-        <discord-message name="wolfstar">
-          Dear <discord-mention kind="mention">Baddie</discord-mention>, {{ texts[featureIndex]!.alert }}
-        </discord-message>
-      </discord-messages>
-
-      <div class="flex flex-row items-center gap-1 lg:flex-col">
-        <ShadIcon
-          name="ph:caret-down-bold"
-          class="radio-feature-arrow rotate-90 lg:rotate-180"
-          role="button"
-          @click="advanceFeatureIndex(-1)"
-        />
-        <div v-for="(text, index) of texts" :key="index" class="radio-feature-container" :data-tip="text.tooltip">
-          <input v-model="featureIndex" type="radio" name="automod-feature" class="radio-feature" :value="index" />
-        </div>
-        <ShadIcon
-          name="ph:caret-down-bold"
-          class="radio-feature-arrow -rotate-90 lg:rotate-0"
-          role="button"
-          @click="advanceFeatureIndex(1)"
-        />
-      </div>
-    </div>
-
-    <div class="prose">
-      <h3 class="mb-4 text-3xl font-bold">
-        <ShadIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
-        WolfStar can act on <span class="underline underline-offset-4">{{ texts[featureIndex]!.title }}</span>
-      </h3>
-
-      <p>Enjoy the power of moderation with WolfStar, a fully customizable moderation bot for your server.</p>
-
-      <p>You can define what WolfStar should do on every infraction:</p>
-      <ul>
-        <li>
-          <ShadIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" />
-          <strong>Alert the user:</strong> send a message notifying the user of their infraction.
-        </li>
-        <li>
-          <ShadIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" />
-          <strong>Post moderation log:</strong> send a message to the moderation log channel for moderators to see.
-        </li>
-        <li>
-          <ShadIcon name="ph:trash-simple-fill" class="my-0 mr-1 h-5 w-5 text-error" />
-          <strong>Delete the message:</strong> delete the message that triggered the infraction, keeping your channels clean.
-        </li>
-      </ul>
-
-      <p>And even what WolfStar should do after repeated infractions!</p>
-      <ul>
-        <li>
-          <ShadIcon name="ph:shield-check-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
-          <strong>Define the punishment action:</strong> from a simple warning to a full ban, and everything in between, with a customizable
-          <strong>punishment duration</strong> ranging from seconds to even years, or permanent.
-        </li>
-        <li>
-          <ShadIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
-          <strong>Define the threshold:</strong> how many infractions are needed within a period of time before the punishment is applied.
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-    <div class="prose">
-      <h3 class="mb-4 text-3xl font-bold">
-        <ShadIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
-        A complete suite for <span class="underline underline-offset-4">moderation logs</span>
-      </h3>
-
-      <p>
-        Easily searchable moderation logs, with a complete history of every action taken by WolfStar in your server, and with the ability to
-        filter them later by user, action, and more!
-      </p>
-
-      <p>
-        <ShadIcon name="ph:binoculars-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
-        WolfStar can also listen for external moderation actions. You prefer banning by hand than by bot? Good news, WolfStar can be
-        configured to listen and log external bans, retrieving the reason from audit logs!
-      </p>
-    </div>
-
-    <div class="flex flex-col items-center gap-4 lg:flex-row">
-      <div class="flex flex-row items-center gap-1 lg:flex-col">
-        <ShadIcon
-          name="ph:caret-down-bold"
-          class="radio-feature-arrow rotate-90 lg:rotate-180"
-          role="button"
-          @click="advanceModerationIndex(-1)"
-        />
-        <div v-for="(action, index) of moderationActions" :key="action.name" class="radio-feature-container" :data-tip="action.name">
-          <input v-model="moderationIndex" type="radio" name="moderation-log" class="radio-feature" :value="index" />
-        </div>
-        <ShadIcon
-          name="ph:caret-down-bold"
-          class="radio-feature-arrow -rotate-90 lg:rotate-0"
-          role="button"
-          @click="advanceModerationIndex(1)"
-        />
-      </div>
-
-      <div class="flex flex-col items-start">
+  <ClientOnly>
+    <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
         <discord-messages class="w-full">
+          <discord-message v-if="featureIndex === AutomodFeature.Spam" name="baddie">Guys look at me!</discord-message>
+          <discord-message v-if="featureIndex === AutomodFeature.Spam" name="baddie">Guys look at me!</discord-message>
+          <discord-message
+            :name="featureIndex === AutomodFeature.Reactions ? 'stella' : 'baddie'"
+            :class="{ 'text-error': featureIndex !== AutomodFeature.Reactions }"
+          >
+            <template v-if="featureIndex === AutomodFeature.Attachments">
+              Have you seen this????
+              <div class="grid max-w-96 grid-cols-2 gap-2">
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                </div>
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                </div>
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                </div>
+                <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
+                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                </div>
+              </div>
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Capitals">
+              I CAN TALK IN ALL UPPER CASES, <strong>AND WOLFSTAR WILL NOT STOP ME!</strong>
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Invites">
+              Everyone join my server!
+              <nuxt-link to="https://discord.gg/gqAnRyUXG8" class="text-info">https://discord.gg/gqAnRyUXG8</nuxt-link>
+              <discord-invite link="https://discord.gg/gqAnRyUXG8" />
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Links">
+              Everyone check out those links!
+              <ul class="ml-5 list-disc">
+                <li><span class="text-info">https://definitely-not-pishing.com</span></li>
+                <li><span class="text-info">https://redundant-spam-links.net</span></li>
+                <li><span class="text-info">https://too-many-links.com</span></li>
+                <li><span class="text-info">https://trojan-horse.xyz</span></li>
+                <li><span class="text-info">https://not-a-virus.com</span></li>
+              </ul>
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Mentions">
+              Everyone notice me! <discord-mention kind="mention">everyone</discord-mention>
+              <discord-mention kind="mention">members</discord-mention>{{ ' ' }}<discord-mention kind="mention">moderators</discord-mention>
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Newlines">
+              Hehehehe
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              So many lines!
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Reactions">
+              Hey folks! I have great news to share!
+              <discord-reactions>
+                <discord-reaction :count="7" self><ShadIcon name="ph:cheers-fill" class="text-success" /></discord-reaction>
+                <discord-reaction :count="1" class="text-error"><ShadIcon name="ph:knife-fill" /></discord-reaction>
+              </discord-reactions>
+            </template>
+            <template v-else-if="featureIndex === AutomodFeature.Spam">Guys look at me!</template>
+            <template v-else-if="featureIndex === AutomodFeature.Words">
+              I would like to say that you're a <strong>disgusting</strong> person.
+            </template>
+          </discord-message>
           <discord-message name="wolfstar">
-            <discord-embed
-              :color="moderationActionRender.color"
-              :author="{ icon: '/avatars/wolfstar.png', name: 'WolfStar#9286 (854714837388755004)' }"
-              :footer="{ icon: '/avatars/wolfstar.png', text: 'Case 3' }"
-              :timestamp="Date.now()"
-            >
-              <span><strong>❯ Type:</strong> {{ moderationActionRender.name }}</span><br />
-              <span><strong>❯ User:</strong> @baddie (541738403230777351)</span><br />
-              <span><strong>❯ Reason:</strong> spam</span>
-            </discord-embed>
+            Dear <discord-mention kind="mention">Baddie</discord-mention>, {{ texts[featureIndex]!.alert }}
           </discord-message>
         </discord-messages>
 
-        <div class="mt-4 join self-start">
-          <button
-            class="btn join-item md:btn-wide"
-            :class="{ 'btn-info': moderationTemporary }"
-            :disabled="moderationAction.temporary === null"
-            @click="((moderationTemporary = !moderationTemporary), (moderationUndo = false))"
-          >
-            <ShadIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
-            Temporary
-          </button>
-          <button
-            class="btn join-item md:btn-wide"
-            :class="{ 'btn-success': moderationUndo }"
-            :disabled="moderationAction.undo === null"
-            @click="((moderationUndo = !moderationUndo), (moderationTemporary = false))"
-          >
-            <ShadIcon name="ph:arrow-counter-clockwise-duotone" class="my-0 mr-1 h-5 w-5" />
-            Undo
-          </button>
+        <div class="flex flex-row items-center gap-1 lg:flex-col">
+          <ShadIcon
+            name="ph:caret-down-bold"
+            class="radio-feature-arrow rotate-90 lg:rotate-180"
+            role="button"
+            @click="advanceFeatureIndex(-1)"
+          />
+          <div v-for="(text, index) of texts" :key="index" class="radio-feature-container" :data-tip="text.tooltip">
+            <input v-model="featureIndex" type="radio" name="automod-feature" class="radio-feature" :value="index" />
+          </div>
+          <ShadIcon
+            name="ph:caret-down-bold"
+            class="radio-feature-arrow -rotate-90 lg:rotate-0"
+            role="button"
+            @click="advanceFeatureIndex(1)"
+          />
         </div>
       </div>
-    </div>
-  </section>
+
+      <div class="prose">
+        <h3 class="mb-4 text-3xl font-bold">
+          <ShadIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+          WolfStar can act on <span class="underline underline-offset-4">{{ texts[featureIndex]!.title }}</span>
+        </h3>
+
+        <p>Enjoy the power of moderation with WolfStar, a fully customizable moderation bot for your server.</p>
+
+        <p>You can define what WolfStar should do on every infraction:</p>
+        <ul>
+          <li>
+            <ShadIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" />
+            <strong>Alert the user:</strong> send a message notifying the user of their infraction.
+          </li>
+          <li>
+            <ShadIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" />
+            <strong>Post moderation log:</strong> send a message to the moderation log channel for moderators to see.
+          </li>
+          <li>
+            <ShadIcon name="ph:trash-simple-fill" class="my-0 mr-1 h-5 w-5 text-error" />
+            <strong>Delete the message:</strong> delete the message that triggered the infraction, keeping your channels clean.
+          </li>
+        </ul>
+
+        <p>And even what WolfStar should do after repeated infractions!</p>
+        <ul>
+          <li>
+            <ShadIcon name="ph:shield-check-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
+            <strong>Define the punishment action:</strong> from a simple warning to a full ban, and everything in between, with a customizable
+            <strong>punishment duration</strong> ranging from seconds to even years, or permanent.
+          </li>
+          <li>
+            <ShadIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
+            <strong>Define the threshold:</strong> how many infractions are needed within a period of time before the punishment is applied.
+          </li>
+        </ul>
+      </div>
+    </section>
+    <template #fallback>
+      <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
+        <div class="skeleton h-96 w-full"></div>
+        <div class="prose">
+          <div class="skeleton h-12 w-1/2"></div>
+          <div class="skeleton mt-4 h-8 w-full"></div>
+          <div class="skeleton mt-2 h-8 w-full"></div>
+        </div>
+      </div>
+    </template>
+  </ClientOnly>
+
+  <ClientOnly>
+    <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
+      <div class="prose">
+        <h3 class="mb-4 text-3xl font-bold">
+          <ShadIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+          A complete suite for <span class="underline underline-offset-4">moderation logs</span>
+        </h3>
+
+        <p>
+          Easily searchable moderation logs, with a complete history of every action taken by WolfStar in your server, and with the ability to
+          filter them later by user, action, and more!
+        </p>
+
+        <p>
+          <ShadIcon name="ph:binoculars-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
+          WolfStar can also listen for external moderation actions. You prefer banning by hand than by bot? Good news, WolfStar can be
+          configured to listen and log external bans, retrieving the reason from audit logs!
+        </p>
+      </div>
+
+      <div class="flex flex-col items-center gap-4 lg:flex-row">
+        <div class="flex flex-row items-center gap-1 lg:flex-col">
+          <ShadIcon
+            name="ph:caret-down-bold"
+            class="radio-feature-arrow rotate-90 lg:rotate-180"
+            role="button"
+            @click="advanceModerationIndex(-1)"
+          />
+          <div v-for="(action, index) of moderationActions" :key="action.name" class="radio-feature-container" :data-tip="action.name">
+            <input v-model="moderationIndex" type="radio" name="moderation-log" class="radio-feature" :value="index" />
+          </div>
+          <ShadIcon
+            name="ph:caret-down-bold"
+            class="radio-feature-arrow -rotate-90 lg:rotate-0"
+            role="button"
+            @click="advanceModerationIndex(1)"
+          />
+        </div>
+
+        <div class="flex flex-col items-start">
+          <discord-messages class="w-full">
+            <discord-message name="wolfstar">
+              <discord-embed
+                :color="moderationActionRender.color"
+                :author="{ icon: '/avatars/wolfstar.png', name: 'WolfStar#9286 (854714837388755004)' }"
+                :footer="{ icon: '/avatars/wolfstar.png', text: 'Case 3' }"
+                :timestamp="Date.now()"
+              >
+                <span><strong>❯ Type:</strong> {{ moderationActionRender.name }}</span><br />
+                <span><strong>❯ User:</strong> @baddie (541738403230777351)</span><br />
+                <span><strong>❯ Reason:</strong> spam</span>
+              </discord-embed>
+            </discord-message>
+          </discord-messages>
+
+          <div class="mt-4 join self-start">
+            <button
+              class="btn join-item md:btn-wide"
+              :class="{ 'btn-info': moderationTemporary }"
+              :disabled="moderationAction.temporary === null"
+              @click="((moderationTemporary = !moderationTemporary), (moderationUndo = false))"
+            >
+              <ShadIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
+              Temporary
+            </button>
+            <button
+              class="btn join-item md:btn-wide"
+              :class="{ 'btn-success': moderationUndo }"
+              :disabled="moderationAction.undo === null"
+              @click="((moderationUndo = !moderationUndo), (moderationTemporary = false))"
+            >
+              <ShadIcon name="ph:arrow-counter-clockwise-duotone" class="my-0 mr-1 h-5 w-5" />
+              Undo
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <template #fallback>
+      <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
+        <div class="prose">
+          <div class="skeleton h-12 w-1/2"></div>
+          <div class="skeleton mt-4 h-8 w-full"></div>
+          <div class="skeleton mt-2 h-8 w-full"></div>
+        </div>
+        <div class="skeleton h-96 w-full"></div>
+      </div>
+    </template>
+  </ClientOnly>
 
   <section class="prose">
     <h3 class="mt-32 text-center text-3xl font-bold">And a more!</h3>

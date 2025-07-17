@@ -144,6 +144,11 @@ export default defineNuxtConfig({
     build: {
       target: 'esnext',
     },
+    resolve: {
+      alias: {
+        '.prisma/client/index-browser': './node_modules/.prisma/client/index-browser.js',
+      },
+    },
     optimizeDeps: {
       include: [
         'reka-ui',

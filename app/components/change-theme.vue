@@ -1,28 +1,36 @@
 <template>
-  <div class="theme-selector">
-    <fieldset class="theme-fieldset">
-      <legend class="sr-only">Select display theme</legend>
-      <div class="theme-options">
-        <label 
-          v-for="option in themeOptions" 
-          :key="option.value"
-          class="theme-option"
-          :class="{ 'active': colorMode.preference === option.value }"
-        >
-          <input
-            v-model="colorMode.preference"
-            type="radio"
-            :value="option.value"
-            class="sr-only"
-          />
-          <span class="theme-icon">
-            <ShadIcon :name="option.icon" class="w-4 h-4" />
-          </span>
-          <span class="md:hidden whitespace-nowrap">{{ option.label }}</span>
-        </label>
-      </div>
-    </fieldset>
-  </div>
+  <ClientOnly v-if="!colorMode?.forced">
+    <div class="theme-selector">
+      <fieldset class="theme-fieldset">
+        <legend class="sr-only">Select display theme</legend>
+        <div class="theme-options">
+          <label
+            v-for="option in themeOptions"
+            :key="option.value"
+            class="theme-option"
+            :class="{ 'active': colorMode.preference === option.value }"
+          >
+            <input
+              type="radio"
+              name="theme"
+              class="sr-only theme-controller"
+              :value="option.value"
+              :checked="colorMode.preference === option.value"
+              @change="colorMode.preference = option.value"
+            />
+            <span class="theme-icon">
+              <ShadIcon :name="option.icon" class="w-4 h-4" />
+            </span>
+            <span class="whitespace-nowrap hidden sm:inline">{{ option.label }}</span>
+          </label>
+        </div>
+      </fieldset>
+    </div>
+
+    <template #fallback>
+      <div class="size-8"></div>
+    </template>
+  </ClientOnly>
 </template>
 
 <script setup lang="ts">
@@ -34,11 +42,12 @@ interface ThemeOption {
   icon: string
 }
 
-const themeOptions: ThemeOption[] = [
-  { value: 'system', label: 'System', icon: 'ph:monitor-duotone' },
+const themeOptions: ThemeOption[] = [  
+  { value: 'dark', label: 'Dark', icon: 'ph:moon-duotone' },
   { value: 'light', label: 'Light', icon: 'ph:sun-duotone' },
-  { value: 'dark', label: 'Dark', icon: 'ph:moon-duotone' }
+  { value: 'system', label: 'System', icon: 'ph:monitor-duotone' },
 ]
+
 </script>
 
 <style scoped>

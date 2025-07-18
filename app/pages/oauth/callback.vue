@@ -1,24 +1,45 @@
 <template>
-  <section class="prose max-w-none prose-stone dark:prose-invert">
+  <div class="container mx-auto px-4 py-8">
     <template v-if="!code">
-      <h1>Missing code</h1>
-      <p>Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="underline">here</NuxtLink>.</p>
+      <ShadAlert variant="solid" color="error" title="Missing Code" icon="emojione:warning">
+        <template #description>
+          Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
+        </template>
+        <template #actions>
+          <ShadButton to="/login" size="sm" variant="outline"> Return to Login </ShadButton>
+        </template>
+      </ShadAlert>
     </template>
     <client-only v-else>
-      <h1 v-if="status === 'pending'" class="animate-pulse">Loading...</h1>
+      <template v-if="status === 'pending'">
+        <ShadAlert color="info" icon="emojione:hourglass-done" title="Loading">
+          <template #description>
+            Completing authentication flow...
+          </template>
+        </ShadAlert>
+      </template>
       <template v-else-if="error">
-        <h1>Failed to complete authentication flow:</h1>
-        <pre><code>{{ error }}</code></pre>
+        <ShadAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+          <template #description>
+            {{ error }}
+          </template>
+          <template #actions>
+            <ShadButton to="/login" size="sm" variant="outline"> Try Again </ShadButton>
+          </template>
+        </ShadAlert>
       </template>
       <template v-else-if="data">
-        <h1>Welcome {{ data.name }}</h1>
-        <p>You will be redirected to the main page in a second.</p>
-        <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
-          <div class="progress h-4 rounded-md bg-rose-500"></div>
-        </div>
+        <ShadAlert color="success" icon="emojione:check-mark" title="Welcome {{ data.name }}">
+          <template #description>
+            You will be redirected to the main page in a second.
+            <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
+              <div class="progress h-4 rounded-md bg-rose-500"></div>
+            </div>
+          </template>
+        </ShadAlert>
       </template>
     </client-only>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">

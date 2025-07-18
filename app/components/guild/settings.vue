@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import type { NuxtError } from '#app'
-import type { GuildData } from '~~/lib/database'
+import type { GuildData } from '~~/shared/types/database'
 import { useRouteParams } from '@vueuse/router'
 import { toast } from 'vue-sonner'
 

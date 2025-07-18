@@ -16,7 +16,8 @@ import { flattenGuild } from '~~/server/utils/ApiTransformers'
 import { PermissionsBits } from '~/utils/bits'
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-  const memberRolePermissions = BigInt((member as unknown as { permissions: string }).permissions)
+  const permissionsValue = (member as unknown as { permissions?: string }).permissions
+  const memberRolePermissions = BigInt(permissionsValue ?? '0')
   return roles.length === 0
     ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
     : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles)

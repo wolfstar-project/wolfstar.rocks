@@ -77,22 +77,24 @@
             icon="heroicons:exclamation-triangle"
           />
 
-          <!-- Loading State -->
-          <div v-if="pending" class="flex flex-col items-center justify-center space-y-4 py-16">
-            <ShadIcon name="svg-spinners:270-ring" class="h-16 w-16 text-primary" />
-            <p class="text-lg text-base-content/60">Loading servers...</p>
+          <!-- Guild Cards with Loading State -->
+          <div class="space-y-4">
+            <guild-cards 
+              :guilds="guilds" 
+              :loading="pending"
+              :container-height="600"
+              :item-height="280"
+            />
           </div>
 
-          <!-- Enhanced Server Grid -->
-          <div v-else-if="guilds && guilds.length > 0" class="space-y-4">
-            <guild-cards :guilds="guilds" />
-          </div>
-
-          <!-- Empty State -->
-          <div v-else-if="!error" class="flex flex-col items-center justify-center space-y-4 py-16">
-            <ShadIcon name="heroicons:server" class="h-16 w-16 text-base-content/30" />
-            <p class="text-lg text-base-content/60">No servers found</p>
-            <ShadButton variant="outline" size="sm" @click="() => refreshGuilds()">Refresh</ShadButton>
+          <!-- Refresh Button for Empty State -->
+          <div v-if="!pending && !error && (!guilds || guilds.length === 0)" class="flex justify-center pt-4">
+            <ShadButton variant="outline" size="sm" @click="() => refreshGuilds()">
+              <template #leading>
+                <ShadIcon name="heroicons:arrow-path" class="h-4 w-4" />
+              </template>
+              Refresh
+            </ShadButton>
           </div>
         </div>
 

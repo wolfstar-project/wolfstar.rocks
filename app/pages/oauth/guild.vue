@@ -1,44 +1,46 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <template v-if="!guildId">
-      <Alert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
+      <ShadAlert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
         <template #description>
           Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
         </template>
-      </Alert>
+      </ShadAlert>
     </template>
     <template v-else-if="error">
-      <Alert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+      <ShadAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
         <template #description>
           {{ error }}
         </template>
         <template #actions>
-          <Button to="/login" size="sm" variant="outline"> Return to Login </Button>
+          <ShadButton to="/login" size="sm" variant="outline"> Return to Login </ShadButton>
         </template>
-      </Alert>
+      </ShadAlert>
     </template>
     <template v-else>
-      <Alert color="info" icon="emojione:hourglass-done" title="Redirecting">
+      <ShadAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
         <template #description> Redirecting you to the guild page... </template>
-      </Alert>
+      </ShadAlert>
     </template>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Alert } from '~/components/ui/alert'
-import { Button } from '~/components/ui/button'
-
+import { promiseTimeout } from '@vueuse/core'
 const route = useRoute()
+const { user } = useAuth()
 const guildId = computed(() => (route.query.guildid as string) || null)
 const error = ref<string | null>(null)
 
 const { start, finish } = useLoadingIndicator({
-  duration: 1500,
+  duration: 2000, 
 })
 
-// Handle redirect on both client and server
-if (import.meta.client && guildId.value) {
+if (!user.value) {
+  error.value = 'You must be logged in to add the bot to a server'
+}
+
+if (import.meta.client && guildId.value && !error.value) {
   start()
   navigateToGuild()
 }
@@ -51,7 +53,12 @@ async function navigateToGuild() {
       return
     }
 
-    // Add any validation or additional checks here
+    if (!user.value) {
+      error.value = 'Authentication required'
+      finish()
+      return
+    }
+    await promiseTimeout(1500);
 
     await navigateTo(`/guilds/${guildId.value}`)
   }

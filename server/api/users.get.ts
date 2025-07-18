@@ -1,7 +1,7 @@
+import { REST } from '@discordjs/rest'
 import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { createRest } from '~~/server/utils/rest'
 
 
 defineRouteMeta({
@@ -28,9 +28,9 @@ export default defineEventHandler({
     }
 
     // Initialize REST client
-    const rest = createRest({
-      token: tokens.access_token,
-    })
+    const rest = new REST({
+      authPrefix: 'Bearer',
+    }).setToken(tokens.access_token)
 
     const api = useApi(rest)
 

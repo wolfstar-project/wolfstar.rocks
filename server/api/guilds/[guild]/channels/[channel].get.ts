@@ -2,7 +2,6 @@ import { isNullOrUndefined } from '@sapphire/utilities/isNullish'
 import { createError } from 'h3'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { createRest } from '~~/server/utils/rest'
 import { manageAbility } from '~~/shared/utils/abilities'
 
 defineRouteMeta({
@@ -40,7 +39,7 @@ export default defineEventHandler({
       })
     }
 
-    const api = useApi(createRest())
+    const api = useApi()
 
     // Fetch guild data
     const guild = await api.guilds.get(guildId, { with_counts: true })

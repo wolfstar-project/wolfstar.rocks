@@ -4,7 +4,6 @@ import { z } from 'zod'
 import { readSettings, serializeSettings } from '~~/server/database'
 import useApi from '~~/server/utils/api'
 import authMiddleware from '~~/server/utils/middlewares/auth'
-import { createRest } from '~~/server/utils/rest'
 import { manageAbility } from '~~/shared/utils/abilities'
 
 
@@ -48,7 +47,7 @@ export default defineEventHandler({
 
     // Initialize API client
     // Fetch guild data
-    const api = useApi(createRest())
+    const api = useApi()
     const guild = await api.guilds.get(guildId, { with_counts: true })
     if (!guild) {
       throw createError({

@@ -1,5 +1,4 @@
 import type { ModuleOptions } from 'nuxt-security'
-import { createResolver } from "@nuxt/kit";
 import tailwindcss from '@tailwindcss/vite'
 import { isDevelopment, isWindows } from 'std-env'
 import { pwa } from './config/pwa'
@@ -7,8 +6,6 @@ import { generateRuntimeConfig } from './server/utils/runtimeConfig'
 import { Env } from './shared/types/index'
 import '@vite-pwa/nuxt'
 import 'nuxt'
-
-const resolver = createResolver(import.meta.url);
 
 const environment =
   isDevelopment ? Env.Dev :

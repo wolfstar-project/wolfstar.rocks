@@ -45,12 +45,13 @@
       </div>
     </div>
   </div>
-  <ShadToaster position="bottom-right" />
+  <ShadToaster position="bottom-right">
+    <slot></slot>
+  </ShadToaster>
 </template>
 
 <script setup lang="ts">
 import type { NuxtError } from '#app'
-import 'vue-sonner/style.css'
 
 // Props definition
 const { error } = defineProps<{

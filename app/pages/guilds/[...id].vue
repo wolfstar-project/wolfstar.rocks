@@ -4,7 +4,6 @@
     <div class="w-64 bg-base-200 border-r border-base-300 flex flex-col">
       <!-- Header -->
       <div class="p-6 border-b border-base-300">
-    
       </div>
 
       <!-- Navigation Menu -->
@@ -145,7 +144,7 @@ import type { NuxtError } from '#app'
 import type { GuildData } from '~~/server/database'
 import type { FlattenedCommand } from '~~/shared/types/discord'
 import { useRouteParams } from '@vueuse/router'
-import { toast } from 'vue-sonner'
+import { useToast } from '@/composables/useToast'
 
 // Define emits
 const emit = defineEmits<{
@@ -155,6 +154,7 @@ const emit = defineEmits<{
 const route = useRoute()
 const router = useRouter()
 const guildId = useRouteParams('guildId')
+const toast = useToast()
 
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | string[]): boolean {
@@ -244,46 +244,68 @@ async function handleError(error: NuxtError<unknown> | Error) {
   // Handle specific error cases
   switch (nuxtError.statusCode) {
     case 400:
-      toast.error('Invalid Request', {
+      toast.add({
+        color: 'error',
+        title: 'Invalid Request',
         description: nuxtError.message || 'The guild ID provided is not valid.',
-        action: {
+        actions: [{
           label: 'Go Home',
-          onClick: () => router.push('/'),
-        },
+          onClick: (event: MouseEvent) => {
+            event.preventDefault()
+            router.push('/')
+          },
+        }],
       })
       break
     case 401: {
       const auth = useAuth()
       await auth.clear()
-      toast.error('Authentication Error', {
+      toast.add({
+        color: 'error',
+        title: 'Authentication Error',
         description: 'Your session has expired. Please log in again.',
-        action: {
+        actions: [{
           label: 'Login',
-          onClick: () => router.push('/login'),
-        },
+          onClick: (event: MouseEvent) => {
+            event.preventDefault()
+            router.push('/login')
+          },
+        }],
       })
       break
     }
     case 403:
-      toast.error('Access Denied', {
+      toast.add({
+        color: 'error',
+        title: 'Access Denied',
         description: nuxtError.message || 'You do not have permission to access this guild.',
-        action: {
+        actions: [{
           label: 'Go Home',
-          onClick: () => router.push('/'),
-        },
+          onClick: (event: MouseEvent) => {
+            event.preventDefault()
+            router.push('/')
+          },
+        }],
       })
       break
     case 404:
-      toast.error('Not Found', {
+      toast.add({
+        color: 'error',
+        title: 'Not Found',
         description: nuxtError.message || 'The requested guild could not be found.',
-        action: {
+        actions: [{
           label: 'Go Home',
-          onClick: () => router.push('/'),
-        },
+          onClick: (event: MouseEvent) => {
+            event.preventDefault()
+            router.push('/')
+          },
+        }],
       })
       break
     default:
-      toast.error('Operation Failed', {
+      toast.add({
+        color: 'error',
+        title: 'Operation Failed',
         description: nuxtError.message || 'An unexpected error occurred.',
       })
   }
@@ -328,7 +350,11 @@ async function submitChanges() {
     }
 
     resetAllChanges()
-    toast.success('Settings updated successfully')
+    toast.add({
+      color: 'error',
+      title: 'Settings Updated',
+      description: 'Settings updated successfully',
+    })
   }
   catch (error) {
     await handleError(error as NuxtError<unknown>)

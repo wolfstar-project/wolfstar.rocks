@@ -82,7 +82,6 @@ catalogs:
     stale-dep: ^0.8.2
     tailwind-variants: ^1.0.0
     utility-types: ^3.11.0
-    vue-sonner: ^2.0.1
   style:
     '@tailwindcss/typography': ^0.5.16
     tailwind-merge: ^3.3.1

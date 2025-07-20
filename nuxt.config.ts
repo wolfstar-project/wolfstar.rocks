@@ -35,7 +35,6 @@ export default defineNuxtConfig({
     '@sentry/nuxt/module',
     ...(isDevelopment || isWindows ? [] : ['nuxt-security']),
     ...(process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['@nuxthub/core'] : []),
-    'vue-sonner/nuxt',
     '~~/modules/build-env',
     'stale-dep/nuxt',
   ],

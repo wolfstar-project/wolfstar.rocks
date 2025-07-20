@@ -74,7 +74,6 @@
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
-    "vue-sonner": "catalog:prod",
     "wrangler": "catalog:dev",
     "zod": "catalog:utils"
   },

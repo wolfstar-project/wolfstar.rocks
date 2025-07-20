@@ -45,9 +45,7 @@
       </div>
     </div>
   </div>
-  <ShadToaster position="bottom-right">
-    <slot></slot>
-  </ShadToaster>
+  <ShadToaster position="bottom-right" />
 </template>
 
 <script setup lang="ts">

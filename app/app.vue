@@ -3,9 +3,7 @@
   <nuxt-loading-indicator color="bg-neutral" />
   <nuxt-layout name="main">
     <nuxt-page />
-    <ShadToaster position="bottom-left">
-      <slot></slot>
-    </ShadToaster>
+    <ShadToaster position="bottom-left" />
   </nuxt-layout>
 </template>
 

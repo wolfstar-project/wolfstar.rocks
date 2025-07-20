@@ -8,8 +8,8 @@
     :style="{ '--height': height }"
   >
     <slot name="leading">
-      <ShadAvatar v-if="avatar" :size="((props.ui?.avatarSize || ui.avatarSize()) as AvatarProps['size'])" v-bind="avatar" :class="ui.avatar({ class: props.ui?.avatar })" />
-      <ShadIcon v-else-if="icon" :name="icon" :class="ui.icon({ class: props.ui?.icon })" />
+      <Avatar v-if="avatar" :size="((props.ui?.avatarSize || ui.avatarSize()) as AvatarProps['size'])" v-bind="avatar" :class="ui.avatar({ class: props.ui?.avatar })" />
+      <Icon v-else-if="icon" :name="icon" :class="ui.icon({ class: props.ui?.icon })" />
     </slot>
 
     <div :class="ui.wrapper({ class: props.ui?.wrapper })">
@@ -35,7 +35,7 @@
       <div v-if="orientation === 'vertical' && actions?.length" :class="ui.actions({ class: props.ui?.actions })">
         <slot name="actions">
           <ToastAction v-for="(action, index) in actions" :key="index" :alt-text="action.label || 'Action'" as-child @click.stop>
-            <ShadButton size="xs" :color="color" v-bind="action" />
+            <Button size="xs" :color="color" v-bind="action" />
           </ToastAction>
         </slot>
       </div>
@@ -45,14 +45,14 @@
       <template v-if="orientation === 'horizontal' && actions?.length">
         <slot name="actions">
           <ToastAction v-for="(action, index) in actions" :key="index" :alt-text="action.label || 'Action'" as-child @click.stop>
-            <ShadButton size="xs" :color="color" v-bind="action" />
+            <Button size="xs" :color="color" v-bind="action" />
           </ToastAction>
         </slot>
       </template>
 
       <ToastClose as-child>
         <slot name="close" :ui="ui">
-          <ShadButton
+          <Button
             v-if="close"
             :icon="closeIcon || 'heroicons:x-mark'"
             size="md"
@@ -77,9 +77,9 @@
 import { reactivePick } from '@vueuse/core'
 import { ToastAction, ToastClose, ToastDescription, ToastRoot, ToastTitle, useForwardPropsEmits } from 'reka-ui'
 import { computed, onMounted, ref } from 'vue'
-import { type AvatarProps, Avatar as ShadAvatar } from '@/components/ui/avatar'
-import { type ButtonProps, Button as ShadButton } from '@/components/ui/button'
-import { Icon as ShadIcon } from '@/components/ui/icon'
+import { Avatar, type AvatarProps } from '@/components/ui/avatar'
+import { Button, type ButtonProps } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
 import { toast, type ToastEmits, type ToastProps, type ToastSlots } from '.'
 
 const props = withDefaults(defineProps<ToastProps>(), {
@@ -88,8 +88,6 @@ const props = withDefaults(defineProps<ToastProps>(), {
 })
 const emits = defineEmits<ToastEmits>()
 const slots = defineSlots<ToastSlots>()
-
-
 
 const rootProps = useForwardPropsEmits(reactivePick(props, 'as', 'defaultOpen', 'open', 'duration', 'type'), emits)
 

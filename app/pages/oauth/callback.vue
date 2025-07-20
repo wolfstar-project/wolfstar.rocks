@@ -29,7 +29,7 @@
         </ShadAlert>
       </template>
       <template v-else-if="data">
-        <ShadAlert color="success" icon="emojione:check-mark" title="Welcome {{ data.name }}">
+        <ShadAlert color="success" icon="emojione:check-mark" title="Welcome {{ data.username }}">
           <template #description>
             You will be redirected to the main page in a second.
             <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">

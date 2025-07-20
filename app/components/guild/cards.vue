@@ -1,42 +1,68 @@
 <template>
   <!-- Enhanced Guild Cards Grid - inspired by Dyno.gg -->
   <div class="guild-cards-container space-y-6">
-    <!-- Filter/Search Section -->
-    <div v-if="!loading" class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-      <div class="flex items-center space-x-4">
-        <div class="relative">
-          <ShadIcon name="heroicons:magnifying-glass-circle" class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60 transition-colors hover:text-primary" />
-          <input 
-            v-model="searchQuery" 
-            type="text" 
-            placeholder="Search servers..." 
-            class="input-bordered input w-full pl-11 sm:w-64 transition-all duration-200 focus:border-primary/50"
-            :disabled="loading"
-          />
-        </div>
-        <div class="form-control">
-          <label class="label cursor-pointer space-x-2 transition-all duration-200 hover:bg-base-200/50 rounded-lg px-2 py-1">
-            <input 
-              v-model="showManageableOnly" 
-              type="checkbox" 
-              class="checkbox checkbox-sm checkbox-primary"
+    <template v-if="!loading">
+      <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <div class="flex w-full items-center space-x-2 sm:w-auto">
+          <!-- Search Input for Desktop -->
+          <div class="relative hidden flex-grow sm:block">
+            <ShadIcon
+              name="heroicons:magnifying-glass-circle"
+              class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60"
+            />
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search servers..."
+              class="input-bordered input w-full pl-11 sm:w-64"
               :disabled="loading"
             />
-            <span class="label-text text-sm flex items-center space-x-1">
-              <ShadIcon name="heroicons:shield-check" class="h-3 w-3 text-primary/70" />
-              <span>Manageable only</span>
-            </span>
-          </label>
+          </div>
+
+          <!-- Search Button for Mobile -->
+          <div class="relative flex-grow sm:hidden">
+            <ShadButton
+              variant="outline"
+              class="w-full justify-center"
+              @click="isSearchExpanded = !isSearchExpanded"
+            >
+              <ShadIcon name="heroicons:magnifying-glass" class="h-5 w-5" />
+            </ShadButton>
+          </div>
+
+          <!-- Manageable Only Toggle Button -->
+          <div class="form-control">
+            <button
+              class="btn btn-ghost btn-sm"
+              :class="{ 'btn-active': showManageableOnly }"
+              :disabled="loading"
+              @click="showManageableOnly = !showManageableOnly"
+            >
+              <ShadIcon name="heroicons:shield-check" class="h-4 w-4" />
+              <span class="hidden sm:inline">Manageable</span>
+            </button>
+          </div>
+        </div>
+        <div class="hidden text-sm text-base-content/60 sm:block">
+          <span> {{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers </span>
         </div>
       </div>
-      <div class="text-sm text-base-content/60">
-        <span v-if="!loading">
-          {{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers
-        </span>
+      <!-- Expanded Search for Mobile -->
+      <div v-if="isSearchExpanded" class="relative sm:hidden">
+        <ShadIcon
+          name="heroicons:magnifying-glass-circle"
+          class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60"
+        />
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search servers..."
+          class="input-bordered input w-full pl-11"
+          :disabled="loading"
+        />
       </div>
-    </div>
+    </template>
 
-    <!-- Loading Filter Skeleton -->
     <div v-else class="flex flex-col items-center justify-between gap-4 sm:flex-row">
       <div class="flex items-center space-x-4">
         <div class="skeleton h-12 w-64 rounded-lg"></div>
@@ -50,31 +76,26 @@
       <guild-card-skeleton v-for="i in 12" :key="`skeleton-${i}`" class="h-full" />
     </div>
 
-    <!-- Virtual List Container -->
-    <div 
-      v-else-if="!loading && filteredGuilds.length > 0" 
-      class="overflow-auto rounded-lg border border-base-300"
-      :style="{ height: `${props.containerHeight}px` }"
-      v-bind="containerProps"
-    >
-      <div v-bind="wrapperProps">
-        <div
-          v-for="{ data: rowGuilds, index } in list"
-          :key="index"
-          class="grid grid-cols-1 gap-6 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-        >
-          <guild-card
-            v-for="guild in rowGuilds"
-            :key="guild.id"
-            :guild="guild"
-            class="h-full"
-          />
-        </div>
+    <div ref="scrollComponent">
+      <!-- Guild Cards Grid -->
+      <div
+        v-if="!loading && paginatedGuilds.length > 0"
+        class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      >
+        <guild-card v-for="guild in paginatedGuilds" :key="guild.id" :guild="guild" class="h-full" />
+      </div>
+
+      <!-- Loading Indicator for Infinite Scroll -->
+      <div v-if="!loading && loadingMore" class="flex justify-center py-4">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
       </div>
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="!loading && filteredGuilds.length === 0" class="flex flex-col items-center justify-center space-y-6 py-16">
+    <div
+      v-if="!loading && filteredGuilds.length === 0"
+      class="flex flex-col items-center justify-center space-y-6 py-16"
+    >
       <div class="relative">
         <ShadIcon 
           :name="searchQuery ? 'heroicons:magnifying-glass-circle' : 'heroicons:server-stack'" 
@@ -84,7 +105,7 @@
           <ShadIcon name="heroicons:plus-circle" class="h-8 w-8 text-primary/50" />
         </div>
       </div>
-      
+        
       <div class="text-center space-y-2">
         <h3 class="text-xl font-bold text-base-content/80">
           {{ searchQuery ? 'No matching servers' : 'No servers found' }}
@@ -93,7 +114,7 @@
           {{ searchQuery ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
         </p>
       </div>
-      
+        
       <div class="flex flex-col sm:flex-row gap-3">
         <button 
           v-if="searchQuery" 
@@ -114,22 +135,24 @@
 
 <script setup lang="ts">
 import type { TransformedLoginData } from '~~/shared/types/discord'
-import { useVirtualList } from '@vueuse/core'
+import { useInfiniteScroll } from '@vueuse/core'
 
 interface EnhancedGuildCardsProps {
   guilds: TransformedLoginData['transformedGuilds'] | null
   loading?: boolean
-  itemHeight?: number
-  containerHeight?: number
-  itemsPerRow?: number
 }
 
 const props = withDefaults(defineProps<EnhancedGuildCardsProps>(), {
   loading: false,
-  itemHeight: 280, // Altezza approssimativa di una guild card
-  containerHeight: 600, // Altezza del container virtuale  
-  itemsPerRow: 5, // Numero di elementi per riga (xl:grid-cols-5)
 })
+
+const INITIAL_COUNT = 20
+const LOAD_MORE_COUNT = 10
+
+const visibleCount = ref(INITIAL_COUNT)
+const isSearchExpanded = ref(false)
+const scrollComponent = ref<HTMLElement | null>(null)
+const loadingMore = ref(false)
 
 // Search and filtering
 const searchQuery = ref('')
@@ -165,21 +188,28 @@ const filteredGuilds = computed(() => {
   })
 })
 
-// Convert guilds to rows for virtual list (5 items per row)
-const guildRows = computed(() => {
-  const rows = []
-  for (let i = 0; i < filteredGuilds.value.length; i += props.itemsPerRow) {
-    rows.push(filteredGuilds.value.slice(i, i + props.itemsPerRow))
-  }
-  return rows
+const paginatedGuilds = computed(() => {
+  return filteredGuilds.value.slice(0, visibleCount.value)
 })
 
-// Virtual list setup
-const { list, containerProps, wrapperProps } = useVirtualList(
-  guildRows,
-  {
-    itemHeight: props.itemHeight,
-  }
+function loadMore() {
+  if (loadingMore.value || visibleCount.value >= filteredGuilds.value.length)
+    return
+
+  loadingMore.value = true
+  setTimeout(() => {
+    visibleCount.value += LOAD_MORE_COUNT
+    loadingMore.value = false
+  }, 500) // Simula un ritardo di caricamento
+}
+
+useInfiniteScroll(
+  scrollComponent,
+  () => {
+    if (!props.loading)
+      loadMore()
+  },
+  { distance: 10 },
 )
 
 function clearSearch() {

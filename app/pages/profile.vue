@@ -4,19 +4,29 @@
     <Meta name="description" content="Manage your profile and servers" />
   </Head>
 
-  <div v-if="user" class="container mx-auto max-w-7xl space-y-8 px-4 py-8">
+  <div class="container mx-auto max-w-7xl space-y-8 px-4 py-8">
     <section class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-200 p-12 shadow-lg">
-      <ShadAvatar
-        :src="isDefault ? defaultAvatar : isAnimated ? createUrl('gif', 128) : createUrl('png', 128)"
-        :alt="isDefault ? 'Default Avatar' : 'Avatar'"
-        size="xl"
-        class="ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
-      />
-      <div class="space-y-2 text-center">
-        <h1 class="text-4xl font-bold text-base-content">{{ user.name }}</h1>
-        <p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
-        <p class="text-sm text-base-content/60">User ID: {{ user.id }}</p>
+      <div v-if="!user || loading" class="flex flex-col items-center justify-center space-y-6">
+        <div class="h-24 w-24 animate-pulse rounded-full bg-base-300"></div>
+        <div class="space-y-2 text-center">
+          <div class="h-8 w-48 animate-pulse rounded bg-base-300"></div>
+          <div class="h-6 w-32 animate-pulse rounded bg-base-300"></div>
+          <div class="h-4 w-56 animate-pulse rounded bg-base-300"></div>
+        </div>
       </div>
+      <template v-else>
+        <ShadAvatar
+          :src="isDefault ? defaultAvatar : isAnimated ? createUrl('gif', 128) : createUrl('png', 128)"
+          :alt="isDefault ? 'Default Avatar' : 'Avatar'"
+          size="xl"
+          class="ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
+        />
+        <div class="space-y-2 text-center">
+          <h1 class="text-4xl font-bold text-base-content">{{ user.name }}</h1>
+          <p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
+          <p class="text-sm text-base-content/60">User ID: {{ user.id }}</p>
+        </div>
+      </template>
     </section>
 
     <section class="overflow-hidden rounded-xl bg-base-200 shadow-lg">
@@ -57,7 +67,10 @@
           <div class="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h2 class="text-2xl font-bold text-base-content">Servers</h2>
-              <p class="mt-1 text-base-content/60">Servers you're in ({{ guilds?.length ?? 0 }} servers)</p>
+              <p class="mt-1 text-base-content/60">
+                <span v-if="!guilds || pending" class="inline-block h-5 w-48 animate-pulse rounded bg-base-300"></span>
+                <span v-else>Servers you're in ({{ guilds?.length ?? 0 }} servers)</span>
+              </p>
             </div>
             <!-- Add Server Button - like Dyno's CTA -->
             <ShadButton variant="soft" color="primary" size="sm">
@@ -147,7 +160,7 @@ import { captureException } from '@sentry/vue';
 
 definePageMeta({ alias: ['/account'], auth: true })
 
-const { user } = useAuth()
+const { user, ready } = useAuth()
 const {
   data: guilds,
   pending,
@@ -182,7 +195,15 @@ const profileTabs = [
 const error = ref<Error | null>(null)
 const isAnimated = ref(false)
 const isDefault = ref(false)
+const loading = ref(true)
 
+watch(ready, (isReady) => {
+  if (isReady) {
+    setTimeout(() => {
+      loading.value = false
+    }, 500)
+  }
+}, { immediate: true })
 watch(fetchError, (newError) => {
   if (newError) {
     error.value = newError

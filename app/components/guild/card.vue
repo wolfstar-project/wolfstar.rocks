@@ -1,7 +1,34 @@
 <template>
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
   <NuxtLink :to="guild.wolfstarIsIn ? `/guilds/${guild.id}` : guildAddURL(guild.id)" class="group block cursor-pointer">
+    <!-- Minimal Card Version -->
     <div
+      v-if="type === 'card'"
+      class="relative rounded-xl border border-base-300 bg-base-100 p-4 shadow-md transition-all duration-300 group-hover:bg-base-200/50 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl"
+      :class="{
+        'ring-2 ring-primary/20': guild.wolfstarIsIn,
+        'opacity-75': !guild.manageable,
+      }"
+    >
+      <!-- Guild Icon -->
+      <div class="flex flex-col items-center space-y-3">
+        <guild-icon 
+          :guild="guild"
+          variant="bare"
+          size="md"
+          :show-status="false"
+        />
+        
+        <!-- Guild Name -->
+        <h3 class="line-clamp-2 text-sm font-semibold text-base-content transition-colors group-hover:text-primary text-center">
+          {{ guild.name }}
+        </h3>
+      </div>
+    </div>
+
+    <!-- Full List Version -->
+    <div
+      v-else
       class="relative rounded-xl border border-base-300 bg-base-100 p-6 shadow-md transition-all duration-300 group-hover:bg-base-200/50 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl"
       :class="{
         'ring-2 ring-primary/20': guild.wolfstarIsIn,
@@ -93,12 +120,16 @@ import type { TransformedLoginData } from '~~/shared/types/discord'
 
 interface EnhancedGuildCardProps {
   guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
+  type?: 'card' | 'list'
 }
 
-const props = defineProps<EnhancedGuildCardProps>()
+const props = withDefaults(defineProps<EnhancedGuildCardProps>(), {
+  type: 'list',
+})
 
-// Extract guild from props for template usage
+// Extract guild and type from props for template usage
 const guild = toRef(props, 'guild')
+const type = toRef(props, 'type')
 
 // Utility functions
 function formatNumber(num: number): string {

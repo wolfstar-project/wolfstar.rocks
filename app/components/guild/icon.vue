@@ -21,21 +21,21 @@
         class="flex h-5 w-5 items-center justify-center rounded-full bg-success/20 text-success"
         title="WolfStar is active"
       >
-        <ShadIcon name="heroicons:check-badge" class="h-3 w-3" />
+        <ShadIcon name="ph:check-circle-fill" class="h-3 w-3" />
       </div>
       <div
         v-else-if="guild.manageable"
         class="flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-primary"
         title="Can invite WolfStar"
       >
-        <ShadIcon name="heroicons:plus-circle" class="h-3 w-3" />
+        <ShadIcon name="ph:plus-circle-fill" class="h-3 w-3" />
       </div>
       <div
         v-else
         class="flex h-5 w-5 items-center justify-center rounded-full bg-error/20 text-error"
         title="No permissions"
       >
-        <ShadIcon name="heroicons:shield-exclamation" class="h-3 w-3" />
+        <ShadIcon name="ph:shield-warning-fill" class="h-3 w-3" />
       </div>
     </div>
 
@@ -47,12 +47,14 @@
       ]"
     >
       <div
-        class="flex items-center justify-center overflow-hidden rounded-2xl bg-base-300 transition-transform duration-300 group-hover:scale-105"
+        class="flex items-center justify-center overflow-hidden rounded-full bg-base-300 transition-transform duration-300 group-hover:scale-105"
         :class="iconSizeClasses"
+        @mouseenter="isHovering = true"
+        @mouseleave="isHovering = false"
       >
         <picture v-if="guild?.icon && !isDefault">
           <source
-            v-if="isAnimated"
+            v-if="isAnimated && isHovering"
             media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
             type="image/gif"
             :srcset="makeSrcset('gif')"
@@ -81,7 +83,7 @@
         class="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-base-100 bg-success shadow-md animate-pulse"
         title="WolfStar is online"
       >
-        <ShadIcon name="heroicons:bolt" class="h-2 w-2 text-white" />
+        <ShadIcon name="ph:lightning-fill" class="h-2 w-2 text-white" />
       </div>
     </div>
 
@@ -95,11 +97,11 @@
     <!-- Guild Stats (optional) - only in card variant -->
     <div v-if="variant === 'card' && showStats && guild" class="flex items-center justify-center space-x-2 text-xs text-base-content/60">
       <span v-if="guild.approximateMemberCount" class="flex items-center space-x-1" title="Total members">
-        <ShadIcon name="heroicons:user-group" class="h-2 w-2" />
+        <ShadIcon name="ph:users-fill" class="h-2 w-2" />
         <span>{{ formatNumber(guild.approximateMemberCount) }}</span>
       </span>
       <span v-if="guild.approximatePresenceCount" class="flex items-center space-x-1" title="Members online">
-        <ShadIcon name="heroicons:signal" class="h-2 w-2 text-success" />
+        <ShadIcon name="ph:wifi-high" class="h-2 w-2 text-success" />
         <span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
       </span>
     </div>
@@ -110,6 +112,16 @@
 import type { ValuesType } from 'utility-types'
 import type { TransformedLoginData } from '~~/shared/types/discord'
 
+const props = withDefaults(defineProps<GuildIconProps>(), {
+  size: 'md',
+  variant: 'card',
+  showStatus: true,
+  showName: false,
+  showStats: false,
+})
+
+const isHovering = ref(false)
+
 interface GuildIconProps {
   guild?: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
   size?: 'sm' | 'md' | 'lg' | 'xl'
@@ -118,14 +130,6 @@ interface GuildIconProps {
   showName?: boolean
   showStats?: boolean
 }
-
-const props = withDefaults(defineProps<GuildIconProps>(), {
-  size: 'md',
-  variant: 'card',
-  showStatus: true,
-  showName: false,
-  showStats: false,
-})
 
 const isDefault = ref(true)
 const isAnimated = ref(false)

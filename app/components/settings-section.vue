@@ -1,15 +1,17 @@
 <template>
-  <section class="mr-0 mb-2 w-full not-first-of-type:mt-3 md:mr-4 md:w-auto md:not-first-of-type:mt-0">
+  <section class="mb-6 w-full">
     <template v-if="title">
       <div v-if="disableTypography" v-bind="titleProps">
         {{ title }}
       </div>
-      <h1 v-else class="mb-3 border-b-2 border-primary pb-0.5 text-xl font-medium" v-bind="titleProps">
+      <h2 v-else class="mb-4 text-xl font-semibold text-base-content border-b border-base-300 pb-2" v-bind="titleProps">
         {{ title }}
-      </h1>
+      </h2>
     </template>
 
-    <slot></slot>
+    <div class="space-y-4">
+      <slot></slot>
+    </div>
   </section>
 </template>
 

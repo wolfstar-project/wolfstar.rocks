@@ -19,47 +19,40 @@
             />
           </div>
 
-          <!-- Search Button for Mobile -->
-          <div class="relative flex-grow sm:hidden">
-            <ShadButton
-              variant="outline"
-              class="w-full justify-center"
-              @click="isSearchExpanded = !isSearchExpanded"
-            >
-              <ShadIcon name="heroicons:magnifying-glass" class="h-5 w-5" />
-            </ShadButton>
+          <!-- Search Input for Mobile -->
+          <div class="relative w-48 sm:hidden">
+            <ShadIcon
+              name="heroicons:magnifying-glass-circle"
+              class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60"
+            />
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Search..."
+              class="input-bordered input w-full pl-11"
+              :disabled="loading"
+            />
           </div>
 
           <!-- Manageable Only Toggle Button -->
           <div class="form-control">
-            <button
-              class="btn btn-ghost btn-sm"
+            <ShadButton
+              variant="ghost"
+              size="sm"
               :class="{ 'btn-active': showManageableOnly }"
               :disabled="loading"
               @click="showManageableOnly = !showManageableOnly"
             >
-              <ShadIcon name="heroicons:shield-check" class="h-4 w-4" />
+              <template #leading>
+                <ShadIcon name="heroicons:shield-check" class="h-4 w-4" />
+              </template>
               <span class="hidden sm:inline">Manageable</span>
-            </button>
+            </ShadButton>
           </div>
         </div>
         <div class="hidden text-sm text-base-content/60 sm:block">
           <span> {{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers </span>
         </div>
-      </div>
-      <!-- Expanded Search for Mobile -->
-      <div v-if="isSearchExpanded" class="relative sm:hidden">
-        <ShadIcon
-          name="heroicons:magnifying-glass-circle"
-          class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60"
-        />
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search servers..."
-          class="input-bordered input w-full pl-11"
-          :disabled="loading"
-        />
       </div>
     </template>
 
@@ -135,7 +128,7 @@
 
 <script setup lang="ts">
 import type { TransformedLoginData } from '~~/shared/types/discord'
-import { useInfiniteScroll } from '@vueuse/core'
+import { useInfiniteScroll, useRefHistory } from '@vueuse/core'
 
 interface EnhancedGuildCardsProps {
   guilds: TransformedLoginData['transformedGuilds'] | null
@@ -150,13 +143,17 @@ const INITIAL_COUNT = 20
 const LOAD_MORE_COUNT = 10
 
 const visibleCount = ref(INITIAL_COUNT)
-const isSearchExpanded = ref(false)
 const scrollComponent = ref<HTMLElement | null>(null)
 const loadingMore = ref(false)
 
 // Search and filtering
 const searchQuery = ref('')
-const showManageableOnly = ref(false)
+const { history: _searchHistory, undo: _undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
+  deep: false,
+  capacity: 10, // Keep last 10 search terms
+})
+// is true by default because we want to show only manageable servers
+const showManageableOnly = ref(true)
 
 // Computed filtered guilds
 const filteredGuilds = computed(() => {
@@ -200,7 +197,7 @@ function loadMore() {
   setTimeout(() => {
     visibleCount.value += LOAD_MORE_COUNT
     loadingMore.value = false
-  }, 500) // Simula un ritardo di caricamento
+  }, 500) // Simulate loading delay
 }
 
 useInfiniteScroll(

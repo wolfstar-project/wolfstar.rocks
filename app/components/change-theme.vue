@@ -43,8 +43,9 @@ interface ThemeOption {
 }
 
 const themeOptions: ThemeOption[] = [  
+  { value: 'light', label: 'Light', icon: 'ph:sun-duotone' },  
   { value: 'dark', label: 'Dark', icon: 'ph:moon-duotone' },
-  { value: 'light', label: 'Light', icon: 'ph:sun-duotone' },
+  { value: 'midnight', label: 'Midnight', icon: 'ph:moon-stars-duotone' },
   { value: 'system', label: 'System', icon: 'ph:monitor-duotone' },
 ]
 

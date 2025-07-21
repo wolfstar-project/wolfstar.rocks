@@ -52,7 +52,7 @@
         @mouseenter="isHovering = true"
         @mouseleave="isHovering = false"
       >
-        <picture v-if="guild?.icon && !isDefault">
+        <picture v-if="!isDefault">
           <source
             v-if="isAnimated && isHovering"
             media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
@@ -123,7 +123,7 @@ const props = withDefaults(defineProps<GuildIconProps>(), {
 const isHovering = ref(false)
 
 interface GuildIconProps {
-  guild?: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
+  guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
   size?: 'sm' | 'md' | 'lg' | 'xl'
   variant?: 'card' | 'bare'
   showStatus?: boolean
@@ -131,26 +131,17 @@ interface GuildIconProps {
   showStats?: boolean
 }
 
-const isDefault = ref(true)
-const isAnimated = ref(false)
+// Make these computed to avoid SSR hydration issues
+const isDefault = computed(() => {
+  return !props.guild.icon
+})
 
-watch(
-  () => props.guild,
-  (guild) => {
-    if (guild?.icon) {
-      isDefault.value = false
-      isAnimated.value = guild.icon.startsWith('a_')
-    }
-    else {
-      isDefault.value = true
-      isAnimated.value = false
-    }
-  },
-  { immediate: true },
-)
+const isAnimated = computed(() => {
+  return props.guild.icon ? props.guild.icon.startsWith('a_') ?? false : false
+})
 
 const acronym = computed(() => {
-  return props.guild ? props.guild.acronym : ''
+  return props.guild.acronym
 })
 
 // Size-based classes

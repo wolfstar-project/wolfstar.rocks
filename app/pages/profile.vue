@@ -19,7 +19,7 @@
           :src="isDefault ? defaultAvatar : isAnimated ? createUrl('gif', 128) : createUrl('png', 128)"
           :alt="isDefault ? 'Default Avatar' : 'Avatar'"
           size="xl"
-          class="ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
+          class="rounded-full ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
         />
         <div class="space-y-2 text-center">
           <h1 class="text-4xl font-bold text-base-content">{{ user.name }}</h1>

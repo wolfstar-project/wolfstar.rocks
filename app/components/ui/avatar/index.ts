@@ -12,7 +12,7 @@ export const avatarVariant = tv({
   slots: {
     root: 'inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-200 align-middle select-none',
     image: 'h-full w-full rounded-[inherit] object-cover',
-    fallback: 'truncate leading-none font-medium text-base-content',
+    fallback: 'avatar-placeholder truncate leading-none font-medium text-base-content',
     icon: 'shrink-0 text-base-content',
   },
   variants: {

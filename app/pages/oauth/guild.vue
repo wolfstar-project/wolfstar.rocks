@@ -27,18 +27,15 @@
 
 <script setup lang="ts">
 import { promiseTimeout } from '@vueuse/core'
-const route = useRoute()
-const { user } = useAuth()
-const guildId = computed(() => (route.query.guildid as string) || null)
+import { useRouteParams } from '@vueuse/router'
+
+const guildId = useRouteParams('guild_id')
 const error = ref<string | null>(null)
 
 const { start, finish } = useLoadingIndicator({
   duration: 2000, 
 })
 
-if (!user.value) {
-  error.value = 'You must be logged in to add the bot to a server'
-}
 
 if (import.meta.client && guildId.value && !error.value) {
   start()
@@ -46,29 +43,22 @@ if (import.meta.client && guildId.value && !error.value) {
 }
 
 async function navigateToGuild() {
-  try {
+
     if (!guildId.value) {
-      error.value = 'No guild ID provided'
-      finish()
-      return
+      finish({
+        error: true
+      })
+     throw createError({
+      statusCode: 400,
+      statusMessage: 'No guild ID provided',
+     })
     }
 
-    if (!user.value) {
-      error.value = 'Authentication required'
-      finish()
-      return
-    }
     await promiseTimeout(1500);
 
-    await navigateTo(`/guilds/${guildId.value}`)
-  }
-  catch (err) {
-    error.value = 'Failed to navigate to guild page, please try again later.'
-    console.error('Guild navigation error:', err)
-  }
-  finally {
     finish()
-  }
+    await navigateTo(`/guilds/${guildId.value}`)
+
 }
 
 useSeoMeta({

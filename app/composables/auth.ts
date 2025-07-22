@@ -19,18 +19,6 @@ export function useAuth() {
   }
 }
 
-export function getLoginURL() {
-  const DiscordOauthURL = `https://discord.com/oauth2/authorize`
-  const url = new URL(DiscordOauthURL)
-  url.search = new URLSearchParams([
-    ['redirect_uri', `${getOrigin()}/oauth/callback`],
-    ['response_type', 'code'],
-    ['scope', ['identify', 'guilds'].join(' ')],
-    ['client_id', getClientId()],
-  ]).toString()
-  return url.toString()
-}
-
 export function guildAddURL(guildID: string) {
   const DiscordOauthURL = `https://discord.com/oauth2/authorize`
   const guildAuthURL = new URL(DiscordOauthURL)

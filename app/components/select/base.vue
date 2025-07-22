@@ -1,30 +1,32 @@
 <template>
   <div class="join">
-    <UIButton :variant="error ? 'destructive' : undefined" :title="tooltipTitle" @click="openDialog"> {{ label }}: {{ displayValue }} </UIButton>
+    <ShadButton :color="error ? 'error' : undefined" :title="tooltipTitle" @click="openDialog"> {{ label }}: {{ displayValue }} </ShadButton>
 
-    <UIModal v-model:open="isOpen" :title="label" @update:open="(value: boolean) => !value && closeDialog()">
+    <ShadModal v-model:open="isOpen" :title="label" @update:open="(value: boolean) => !value && closeDialog()">
       <template #body>
-        <UIForm :validation-schema="validationSchema" @submit="handleSubmit">
-          <div class="w-full">
-            <UIFormField :name="name">
-              <UILabel>{{ label }}</UILabel>
-              <UISelect v-model="selectedValue" :items="options" :placeholder="placeholder || `Select ${label}`" />
-              <span v-if="errors?.[name]" class="text-error">
-                {{ errors[name] }}
-              </span>
-              <span v-else-if="helperText" class="">
-                {{ helperText }}
-              </span>
-            </UIFormField>
-          </div>
+        <ShadForm :validation-schema="validationSchema" @submit="handleSubmit">
+          <ShadFormField :name="name" :description="helperText">
+            <template #label>{{ label }}</template>
+            
+            <ShadSelect v-model="selectedValue">
+              <ShadSelectTrigger>
+                <ShadSelectValue :placeholder="placeholder || `Select ${label}`" />
+              </ShadSelectTrigger>
+              <ShadSelectContent>
+                <ShadSelectItem v-for="option in options" :key="option.value" :value="option.value">
+                  {{ option.label }}
+                </ShadSelectItem>
+              </ShadSelectContent>
+            </ShadSelect>
+          </ShadFormField>
 
           <div class="mt-4 flex justify-end gap-2">
-            <UIButton variant="outline" @click="closeDialog">Cancel</UIButton>
-            <UIButton type="submit">Confirm</UIButton>
+            <ShadButton variant="outline" @click="closeDialog">Cancel</ShadButton>
+            <ShadButton type="submit">Confirm</ShadButton>
           </div>
-        </UIForm>
+        </ShadForm>
       </template>
-    </UIModal>
+    </ShadModal>
   </div>
 </template>
 

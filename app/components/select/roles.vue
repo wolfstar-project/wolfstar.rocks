@@ -1,5 +1,5 @@
 <template>
-  <select-many-base
+  <SelectManyBase
     :label="label"
     :options="roleOptions"
     :value="modelValue"

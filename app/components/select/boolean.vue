@@ -2,13 +2,14 @@
   <SelectBase
     :label="title"
     :options="options"
-    :model-value="modelValue ? 'true' : 'false'"
+    :value="modelValue ? 'true' : 'false'"
     :error="error"
     :helper-text="description"
     :name="name"
     :tooltip-title="tooltipTitle"
     :required="true"
-    @update:model-value="handleChange"
+    @update:value="handleChange"
+    @change="handleChange"
   />
 </template>
 
@@ -38,9 +39,11 @@ const options = [
   { label: 'No', value: 'false' },
 ]
 
-function handleChange(value: string) {
-  const boolValue = value === 'true'
-  emit('update:modelValue', boolValue)
-  emit('change', boolValue)
+function handleChange(value: string | number | null | undefined) {
+  if (typeof value === 'string') {
+    const boolValue = value === 'true'
+    emit('update:modelValue', boolValue)
+    emit('change', boolValue)
+  }
 }
 </script>

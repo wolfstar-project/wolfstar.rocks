@@ -1,19 +1,19 @@
 <template>
   <ShadForm :validation-schema="validationSchema" :validate-on="['change', 'blur']">
     <ShadFormField :name="name" :label="label" :required="required" :hint="tooltip">
-      <Select v-model="selectedValues" multiple>
-        <SelectTrigger :aria-label="`Select ${label}`">
-          <SelectValue>
+      <ShadSelect v-model="selectedValues" multiple>
+        <ShadSelectTrigger :aria-label="`Select ${label}`">
+          <ShadSelectValue>
             <span class="flex items-center gap-2">
               {{ displayValue }}
               <ShadIcon v-if="icon" :name="icon" class="size-6" />
             </span>
-          </SelectValue>
-        </SelectTrigger>
+          </ShadSelectValue>
+        </ShadSelectTrigger>
 
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>{{ label }}</SelectLabel>
+        <ShadSelectContent>
+          <ShadSelectGroup>
+            <ShadSelectLabel>{{ label }}</ShadSelectLabel>
 
             <!-- Search input -->
             <div v-if="searchable && options.length > 10" class="p-2">
@@ -22,11 +22,11 @@
 
             <!-- Options -->
             <div class="max-h-64 overflow-y-auto">
-              <SelectItem v-for="option in filteredOptions" :key="option.value" :value="option.value" class="flex items-center gap-2">
+              <ShadSelectItem v-for="option in filteredOptions" :key="option.value" :value="option.value" class="flex items-center gap-2">
                 <ShadCheckbox :label="option.label" @change="toggleSelection(option.value)" />
                 <img v-if="option.iconUrl" :src="option.iconUrl" :alt="option.label" class="size-6" />
                 {{ option.label }}
-              </SelectItem>
+              </ShadSelectItem>
             </div>
 
             <!-- Actions -->
@@ -34,9 +34,9 @@
               <ShadButton type="button" variant="ghost" size="sm" @click="clearSelection">Clear</ShadButton>
               <ShadButton type="submit" size="sm" @click="handleSubmit">Confirm</ShadButton>
             </div>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
+          </ShadSelectGroup>
+        </ShadSelectContent>
+      </ShadSelect>
     </ShadFormField>
   </ShadForm>
 </template>

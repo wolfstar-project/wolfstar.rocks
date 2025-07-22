@@ -1,5 +1,5 @@
 <template>
-  <BaseSelect
+  <SelectBase
     :label="label"
     :options="roleOptions"
     :value="modelValue"
@@ -51,9 +51,11 @@ const roleOptions = computed(() =>
     })),
 )
 
-function handleChange(value: string) {
-  emit('update:modelValue', value)
-  emit('change', value)
+function handleChange(value: string | number | null | undefined) {
+  if (typeof value === 'string') {
+    emit('update:modelValue', value)
+    emit('change', value)
+  }
 }
 </script>
 >

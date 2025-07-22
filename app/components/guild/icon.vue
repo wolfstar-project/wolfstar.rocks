@@ -46,34 +46,37 @@
         variant === 'card' ? '' : 'group'
       ]"
     >
-      <div
-        class="flex items-center justify-center overflow-hidden rounded-full bg-base-300 transition-transform duration-300 group-hover:scale-105"
-        :class="iconSizeClasses"
-        @mouseenter="isHovering = true"
-        @mouseleave="isHovering = false"
-      >
-        <picture v-if="!isDefault">
-          <source
-            v-if="isAnimated && isHovering"
-            media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
-            type="image/gif"
-            :srcset="makeSrcset('gif')"
-          />
-          <source type="image/webp" :srcset="makeSrcset('webp')" />
-          <source type="image/png" :srcset="makeSrcset('png')" />
-          <img 
-            :src="createUrl('png', 128)" 
-            :alt="guild?.name || 'Guild icon'" 
-            class="h-full w-full object-cover" 
-            decoding="async" 
-            crossorigin="anonymous" 
-          />
-        </picture>
-        <div
-          v-else
-          class="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20 text-base-content"
+      <div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
+        <div 
+          class="rounded-full transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
+          :class="iconSizeClasses"
+          @mouseenter="isHovering = true"
+          @mouseleave="isHovering = false"
         >
-          <span :class="acronymSizeClasses">{{ acronym }}</span>
+          <picture v-if="!isDefault">
+            <source
+              v-if="isAnimated && isHovering"
+              media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
+              type="image/gif"
+              :srcset="makeSrcset('gif')"
+            />
+            <source type="image/webp" :srcset="makeSrcset('webp')" />
+            <source type="image/png" :srcset="makeSrcset('png')" />
+            <img 
+              :src="createUrl('png', 128)" 
+              :alt="guild?.name || 'Guild icon'" 
+              class="rounded-full" 
+              decoding="async" 
+              crossorigin="anonymous" 
+            />
+          </picture>
+          <div
+            v-else
+            class="bg-gradient-to-br from-primary/20 to-secondary/20 text-base-content flex rounded-full"
+            :class="iconSizeClasses"
+          >
+            <span :class="acronymSizeClasses">{{ guild.acronym }}</span>
+          </div>
         </div>
       </div>
 
@@ -137,20 +140,17 @@ const isDefault = computed(() => {
 })
 
 const isAnimated = computed(() => {
-  return props.guild.icon ? props.guild.icon.startsWith('a_') ?? false : false
+  return props.guild.icon ? props.guild.icon.startsWith('a_') : false
 })
 
-const acronym = computed(() => {
-  return props.guild.acronym
-})
 
-// Size-based classes
+// Size-based classes for DaisyUI Avatar
 const iconSizeClasses = computed(() => {
   const sizeMap = {
-    sm: 'h-12 w-12',
-    md: 'h-16 w-16', 
-    lg: 'h-20 w-20',
-    xl: 'h-24 w-24'
+    sm: 'size-12',
+    md: 'size-16', 
+    lg: 'size-20',
+    xl: 'size-24'
   }
   return sizeMap[props.size]
 })

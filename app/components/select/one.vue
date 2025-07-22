@@ -21,7 +21,7 @@
             />
 
             <div class="max-h-64 overflow-y-auto" role="listbox" :aria-label="label">
-              <ShadList>
+              <ul>
                 <li
                   v-for="item in filteredOptions"
                   :key="item.value"
@@ -34,7 +34,7 @@
                   <span>{{ item.label }}</span>
                   <img v-if="item.iconUrl" :src="item.iconUrl" :alt="`${item.label} icon`" class="ml-2 h-8 w-8" />
                 </li>
-              </ShadList>
+              </ul>
             </div>
 
             <div class="flex justify-end gap-2">

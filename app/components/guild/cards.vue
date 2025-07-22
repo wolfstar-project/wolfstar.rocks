@@ -66,7 +66,7 @@
 
     <!-- Loading Skeleton Grid -->
     <div v-if="loading" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-      <guild-card-skeleton v-for="i in 12" :key="`skeleton-${i}`" class="h-full" />
+      <guild-card-skeleton v-for="i in 14" :key="`skeleton-${i}`" class="h-full" />
     </div>
 
     <div ref="scrollComponent">

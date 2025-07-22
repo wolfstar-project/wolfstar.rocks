@@ -22,7 +22,7 @@
           </label>
         </div>
 
-        <Select v-model="unit" label="Unit" :name="`${name}-unit`" :options="unitOptions" :required="true" />
+        <SelectBase v-model:value="unit" label="Unit" :name="`${name}-unit`" :options="unitOptions" :required="true" />
       </div>
     </VeeForm>
   </div>

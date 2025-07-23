@@ -80,19 +80,10 @@
               Add Bot to Server
             </ShadButton>
           </div>
-
-          <ShadAlert
-            v-if="error"
-            color="error"
-            variant="soft"
-            title="Error Occurred"
-            :description="error.toString()"
-            icon="heroicons:exclamation-triangle"
-          />
-
           <!-- Guild Cards with Loading State -->
           <div class="space-y-4">
             <guild-cards 
+              :error="error"
               :guilds="guilds" 
               :loading="pending"
               :container-height="600"
@@ -168,7 +159,7 @@ const {
   refresh: refreshGuilds,
 } = useFetch('/api/users', {
   key: 'guilds',
-  transform: data => data?.transformedGuilds ?? null,
+  transform: data =>  data ? data.transformedGuilds ?? null : null,
   watch: [user],
 })
 

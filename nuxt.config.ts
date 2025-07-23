@@ -113,14 +113,11 @@ export default defineNuxtConfig({
   sourcemap: {
     client: 'hidden',
   },
-  future: {
-    compatibilityVersion: 4,
-  },
   experimental: {
     typedPages: true,
     inlineRouteRules: true,
   },
-  compatibilityDate: '2025-01-10',
+  compatibilityDate: '2025-07-20',
 
   nitro: {
     preset: process.env.NUXT_NITRO_PRESET,

@@ -2,7 +2,7 @@ packages: []
 
 overrides:
   '@types/node': 20.11.5
-  '@vercel/nft': ^0.29.4
+  '@vercel/nft': ^0.30.0
 
 catalogs:
   build:
@@ -26,7 +26,7 @@ catalogs:
     '@sapphire/snowflake': ^3.5.5
     '@sapphire/time-utilities': ^1.7.14
     '@sapphire/utilities': ^3.18.2
-    '@sentry/nuxt': ^9.38.0
+    '@sentry/nuxt': ^9.40.0
     daisyui: 5.0.35
     discord-api-types: ^0.38.16
     nuxt-auth-utils: ^0.5.20
@@ -34,26 +34,26 @@ catalogs:
     std-env: ^3.9.0
     typescript: ~5.8.3
     vue-tsc: 2.2.10
-    wrangler: ^4.24.3
+    wrangler: ^4.25.1
   frontend:
-    '@pinia/nuxt': ^0.11.1
+    '@pinia/nuxt': ^0.11.2
     pinia: ^3.0.3
     reka-ui: ^2.3.2
   icons:
     '@iconify-json/heroicons': ^1.2.2
     '@iconify-json/ic': ^1.2.2
-    '@iconify-json/lucide': ^1.2.57
+    '@iconify-json/lucide': ^1.2.58
     '@iconify-json/ph': ^1.2.2
     '@nuxt/icon': ^1.15.0
   lint:
-    '@antfu/eslint-config': ^4.16.2
+    '@antfu/eslint-config': ^4.18.0
     '@commitlint/cli': ^19.8.1
     '@commitlint/config-conventional': ^19.8.1
-    '@nuxt/eslint': ^1.5.2
+    '@nuxt/eslint': ^1.7.0
     '@sapphire/prettier-config': ^2.0.0
     eslint: ^9.31.0
     eslint-plugin-format: ^1.0.1
-    eslint-plugin-package-json: ^0.43.4
+    eslint-plugin-package-json: ^0.45.1
     husky: ^9.1.7
     lint-staged: ^16.1.2
     prettier: ^3.6.2
@@ -68,15 +68,15 @@ catalogs:
   prod:
     '@josephanson/nuxt-ai': 0.1.6
     '@nuxtjs/color-mode': ^3.5.2
-    '@prisma/client': ^6.11.1
+    '@prisma/client': ^6.12.0
     '@prisma/nuxt': ^0.3.0
     colortranslator: ^5.0.0
     fuse.js: ^7.1.0
     import-in-the-middle: ^1.14.2
-    nuxt: ^3.17.6
-    nuxt-authorization: ^0.3.4
-    nuxt-security: ^2.2.0
-    prisma: ^6.11.1
+    nuxt: ^4.0.1
+    nuxt-authorization: ^0.3.5
+    nuxt-security: ^2.3.0
+    prisma: ^6.12.0
     prisma-json-types-generator: ^3.5.1
     shadcn-nuxt: 2.1.0
     stale-dep: ^0.8.2
@@ -95,7 +95,7 @@ catalogs:
     '@vueuse/nuxt': ^13.5.0
     '@vueuse/router': ^13.5.0
     clsx: ^2.1.1
-    zod: ^3.25.76
+    zod: ^4.0.5
 
 allowedDeprecatedVersions:
   - glob: 7.2.3

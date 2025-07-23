@@ -98,16 +98,27 @@
           <ShadIcon name="heroicons:plus-circle" class="h-8 w-8 text-primary/50" />
         </div>
       </div>
+
+     
         
-      <div class="text-center space-y-2">
-        <h3 class="text-xl font-bold text-base-content/80">
-          {{ searchQuery ? 'No matching servers' : 'No servers found' }}
-        </h3>
-        <p class="max-w-md text-center text-base-content/60">
-          {{ searchQuery ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
-        </p>
+      <div class="text-center space-y-2"> 
+        <ShadAlert
+          v-if="error"
+          color="error"
+          variant="soft"
+          title="Error Occurred"
+          :description="error.toString()"
+          icon="heroicons:exclamation-triangle"
+        />
+        <div v-else>
+          <h3 class="text-xl font-bold text-base-content/80">
+            {{ searchQuery ? 'No matching servers' : 'No servers found' }}
+          </h3>
+          <p class="max-w-md text-center text-base-content/60">
+            {{ searchQuery ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
+          </p>
+        </div>
       </div>
-        
       <div class="flex flex-col sm:flex-row gap-3">
         <button 
           v-if="searchQuery" 
@@ -133,6 +144,7 @@ import { useInfiniteScroll, useRefHistory } from '@vueuse/core'
 interface EnhancedGuildCardsProps {
   guilds: TransformedLoginData['transformedGuilds'] | null
   loading?: boolean
+  error?: Error | null
 }
 
 const props = withDefaults(defineProps<EnhancedGuildCardsProps>(), {

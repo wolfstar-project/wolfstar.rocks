@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Nuxt TypeScript Best Practices",
+  "description": "Enforces TypeScript best practices in Nuxt applications including proper type annotations, interfaces, type guards, and component typing",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.ts",
+      "**/*.vue"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review the TypeScript code in this Nuxt application and ensure it follows best practices:\n\n1. **Type Safety**: Check for proper type annotations, avoid 'any' types, use proper interfaces and types\n2. **Component Types**: Ensure Vue components use proper prop types, emit types, and ref types\n3. **Type Guards**: Verify proper type guards and null/undefined handling\n4. **Generics**: Check for proper use of generics where applicable\n5. **Async Types**: Ensure async functions and promises are properly typed\n6. **Error Handling**: Verify proper error types and handling\n7. **Composables**: Check that composables return properly typed objects\n8. **API Types**: Ensure API calls use proper typing with useFetch and other Nuxt utilities\n\nFocus on:\n- Using proper type annotations instead of implicit any\n- Defining clear interfaces and types\n- Implementing proper type guards\n- Using proper generics\n- Handling null and undefined properly\n- Using proper type assertions\n- Implementing proper error types\n- Using proper component types (defineProps, defineEmits, etc.)\n- Handling async types properly\n\nProvide specific suggestions for improvements and highlight any violations of TypeScript best practices."
+  }
+}

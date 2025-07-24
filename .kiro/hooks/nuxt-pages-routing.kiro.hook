@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Nuxt Pages and Routing",
+  "description": "Follow best practices for pages, routing, and navigation in Nuxt",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/pages/**/*.vue",
+      "**/pages/**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review this Nuxt page file for proper routing and navigation practices. Check for:\n\n1. **File-based routing structure** - Ensure proper use of Nuxt's file-based routing\n2. **Page meta and SEO** - Verify definePageMeta() and proper SEO tags with useSeoMeta()\n3. **Route parameter handling** - Check for safe parameter validation and error handling\n4. **Dynamic routes** - Ensure proper [param] and [...slug] syntax usage\n5. **Navigation and middleware** - Verify proper middleware implementation\n6. **Loading states** - Check for proper loading state handling\n7. **Error handling** - Ensure proper error handling with createError()\n8. **Meta tags** - Verify useHead() and useSeoMeta() implementation\n\nProvide specific feedback on:\n- Missing or incorrect page meta definitions\n- Unsafe route parameter handling\n- Missing SEO optimization\n- Improper error handling\n- Missing loading states\n- Incorrect routing patterns\n\nReference the examples provided in the context for proper implementation patterns."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Nuxt Data Fetching Best Practices",
+  "description": "Enforces best practices for data fetching in Nuxt applications including proper use of useFetch, useAsyncData, error handling, and loading states",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/*.vue",
+      "**/*.ts"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review this Nuxt application code for data fetching best practices. Check for:\n\n1. **Proper Composable Usage**:\n   - Use `useFetch` for external API calls\n   - Use `useAsyncData` for internal server functions  \n   - Use `$fetch` for direct API calls only when appropriate\n   - Avoid using `fetch()` in lifecycle hooks like `onMounted`\n\n2. **Error Handling**:\n   - Implement proper error handling with try/catch or composable error states\n   - Use `onRequestError` callbacks where appropriate\n   - Display meaningful error messages to users\n\n3. **Loading States**:\n   - Handle `status` or `pending` states properly\n   - Show loading indicators during data fetching\n   - Provide feedback for all loading states\n\n4. **Response Management**:\n   - Use `key` option for caching when appropriate\n   - Implement `transform` for data processing\n   - Use `pick` to select only needed fields\n   - Handle empty/null data states\n\n5. **Advanced Features**:\n   - Implement retry logic for critical requests\n   - Use `lazy` loading when appropriate\n   - Provide refresh/reload functionality\n   - Handle SSR serialization properly\n\n6. **Anti-patterns to Flag**:\n   - Data fetching in `onMounted` or other lifecycle hooks\n   - Missing error handling\n   - Incomplete loading state management\n   - Non-serializable data in SSR context\n\nProvide specific recommendations for improvements and flag any violations of Nuxt data fetching best practices. Include code examples for proper implementations."
+  }
+}

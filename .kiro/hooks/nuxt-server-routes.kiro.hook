@@ -1,0 +1,17 @@
+{
+  "enabled": true,
+  "name": "Nuxt Server Routes & Middleware",
+  "description": "Follow best practices for server routes, API endpoints, and middleware in Nuxt using h3",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/server/**/*.ts",
+      "**/server/**/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review this Nuxt server file and ensure it follows h3 best practices:\n\n## Context\nRules for creating server-side functionality in Nuxt using h3.\n- API routes are auto-registered from server/api/\n- Server Middleware is not recommended as described in the nitro docs\n- Event handlers are registered from server/plugins/\n- File-based routing with support for dynamic parameters ([id].ts)\n- Method-specific handlers supported (users.get.ts, users.post.ts)\n\n## Requirements\n- Use defineEventHandler for all route handlers\n- Use H3 utilities for request/response handling (getQuery, readBody, etc.)\n- Implement proper error handling with createError\n- Use proper HTTP status codes and methods\n- Validate request data with zod or similar\n- Use proper TypeScript types for request/response\n- Implement rate limiting for public endpoints\n- Use proper CORS configuration\n- Handle file uploads with readMultipartFormData\n- Implement proper authentication/authorization\n- Use environment variables for sensitive data\n- Return appropriate response types (JSON, string, null, streams)\n- Use lazy event handlers for expensive operations\n- Implement proper request body size limits\n- Add proper content-type headers\n\n## Critical Rules\n- ALWAYS use defineEventHandler for route handlers\n- ALWAYS use H3 utilities for request handling (getQuery, readBody, etc.)\n- ALWAYS implement proper error handling with createError\n- NEVER return errors directly, use createError instead\n- ALWAYS validate input data before processing\n- ALWAYS use proper HTTP status codes\n- ALWAYS secure sensitive endpoints with authentication\n- ALWAYS handle file uploads safely with size and type limits\n- NEVER use Node.js req/res objects directly\n- NEVER expose sensitive data in error messages\n\nPlease review the code and provide specific feedback on:\n1. Proper use of defineEventHandler\n2. Correct H3 utility usage\n3. Error handling implementation\n4. Input validation\n5. Security considerations\n6. TypeScript typing\n7. Any violations of the critical rules\n\nIf the code is correct, acknowledge it follows best practices. If there are issues, provide specific corrections with code examples."
+  }
+}

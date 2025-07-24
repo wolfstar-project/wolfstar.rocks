@@ -3,6 +3,7 @@
 ## Root Directory Organization
 
 ### Configuration Files
+
 - `nuxt.config.ts` - Main Nuxt configuration
 - `tsconfig.json` - TypeScript configuration (references .nuxt configs)
 - `package.json` - Dependencies and scripts
@@ -11,6 +12,7 @@
 - `prettier.config.mjs` - Prettier configuration using Sapphire preset
 
 ### Application Structure (`app/`)
+
 ```
 app/
 ├── app.vue              # Root application component
@@ -27,6 +29,7 @@ app/
 ```
 
 ### Server-Side (`server/`)
+
 ```
 server/
 ├── api/                 # API routes
@@ -38,6 +41,7 @@ server/
 ```
 
 ### Database (`prisma/`)
+
 ```
 prisma/
 ├── schema.prisma        # Database schema definition
@@ -45,6 +49,7 @@ prisma/
 ```
 
 ### Shared Code (`shared/`)
+
 ```
 shared/
 ├── types/               # Shared TypeScript types
@@ -52,6 +57,7 @@ shared/
 ```
 
 ### Configuration (`config/`)
+
 ```
 config/
 ├── env.ts               # Environment configuration
@@ -59,6 +65,7 @@ config/
 ```
 
 ### Build & Deployment
+
 - `.nuxt/` - Generated Nuxt build files (auto-generated)
 - `.output/` - Production build output
 - `Dockerfile` - Container configuration
@@ -66,6 +73,7 @@ config/
 - `wrangler.toml` - Cloudflare Workers configuration
 
 ### Development Tools
+
 - `.husky/` - Git hooks configuration
 - `.vscode/` - VS Code workspace settings
 - `.devcontainer/` - Development container configuration
@@ -73,27 +81,32 @@ config/
 ## Key Conventions
 
 ### File Naming
+
 - Use kebab-case for files and directories
 - Vue components use PascalCase
 - Pages follow Nuxt file-based routing conventions
 - API routes mirror the URL structure
 
 ### Component Organization
+
 - UI components in `app/components/ui/` (shadcn/ui with `Shad` prefix)
 - Feature components organized by domain
 - Shared components at root of `components/`
 
 ### Import Patterns
+
 - Auto-imports enabled for composables, components, and utilities
 - Explicit imports for external libraries
 - Path aliases configured for clean imports
 
 ### Database Schema
+
 - Prisma models use PascalCase
 - Database tables use snake_case mapping
 - JSON fields typed with custom generators
 
 ### Environment Configuration
+
 - `.env` for local development
 - `.env.example` as template
 - Runtime config generated dynamically

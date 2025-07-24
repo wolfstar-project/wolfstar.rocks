@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Nuxt Layout Best Practices",
+  "description": "Follow best practices for creating and using layouts in Nuxt applications",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/layouts/**/*.vue"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Review this Nuxt layout file and ensure it follows best practices:\n\n## Requirements to Check:\n- Uses script setup and Composition API (not Options API)\n- Implements semantic HTML structure (header, nav, main, footer)\n- Uses proper navigation components (NuxtLink instead of anchor tags)\n- Handles layout-specific state with composables (useAuth, useMenu, etc.)\n- Implements proper authentication flow with middleware\n- Uses CSS Grid/Flexbox for layout structure\n- Handles responsive design considerations\n- Manages route transitions appropriately\n- Implements proper error boundaries\n- Uses proper TypeScript types\n\n## Critical Rules:\n- ALWAYS use script setup and Composition API\n- Use proper navigation components (NuxtLink)\n- Implement proper authentication flow\n- Use semantic HTML structure\n- Handle layout-specific state with composables\n- Implement proper error handling\n\n## Examples of Good Practices:\n- Auth layouts with middleware and user state management\n- Proper grid/flexbox layout structure\n- Route watching for analytics\n- Semantic HTML with proper navigation\n\n## Common Issues to Flag:\n- Using Options API instead of Composition API\n- Direct DOM manipulation instead of reactive state\n- Inline styles instead of scoped CSS\n- Regular anchor tags instead of NuxtLink\n- Missing authentication checks\n- Non-semantic HTML structure\n\nPlease provide specific feedback on any issues found and suggest improvements to align with Nuxt layout best practices."
+  }
+}

@@ -30,6 +30,7 @@ catalogs:
     daisyui: 5.0.35
     discord-api-types: ^0.38.16
     eslint-plugin-prettier: ^5.5.3
+    nitro-cloudflare-dev: ^0.2.2
     nuxt-auth-utils: ^0.5.20
     simple-git: ^3.28.0
     std-env: ^3.9.0
@@ -54,6 +55,7 @@ catalogs:
     '@nuxt/eslint': ^1.7.0
     '@sapphire/prettier-config': ^2.0.0
     eslint: ^9.31.0
+    eslint-config-prettier: ^10.1.8
     eslint-plugin-format: ^1.0.1
     eslint-plugin-package-json: ^0.45.1
     husky: ^9.1.7

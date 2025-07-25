@@ -77,7 +77,9 @@
     "vue-markdown-render": "catalog:markdown",
     "wrangler": "catalog:dev",
     "zod": "catalog:utils",
-    "eslint-plugin-prettier": "catalog:dev"
+    "eslint-plugin-prettier": "catalog:dev",
+    "nitro-cloudflare-dev": "catalog:dev",
+    "eslint-config-prettier": "catalog:lint"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

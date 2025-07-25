@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
 
-if(process.env.SENTRY_DSN) {
+if(process.env.SENTRY_DSN && process.env.NUXT_NITRO_PRESET === 'node-server') {
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
 

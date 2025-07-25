@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     'shadcn-nuxt',
     '@josephanson/nuxt-ai',
     '@sentry/nuxt/module',
+    'nitro-cloudflare-dev',
     ...(isDevelopment || isWindows ? [] : ['nuxt-security']),
     ...(process.env.NUXT_NITRO_PRESET !== 'node-server' ? ['@nuxthub/core'] : []),
     '~~/modules/build-env',

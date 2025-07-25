@@ -11,7 +11,7 @@
   >
     <span class="absolute right-2 flex size-3.5 items-center justify-center">
       <SelectItemIndicator>
-        <Check class="size-4" />
+        <ShadIcon name="lucide:check" class="size-4" />
       </SelectItemIndicator>
     </span>
 
@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import type { SelectItemProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
-import { Check } from "lucide-vue-next";
 import { SelectItem, SelectItemIndicator, SelectItemText, useForwardProps } from "reka-ui";
 import { computed } from "vue";
 import { cn } from "@/utils/cn";

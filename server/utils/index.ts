@@ -52,40 +52,41 @@ async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGui
     })
     .catch(() => undefined);
 
-  const serialized: PartialOauthFlattenedGuild
-		= guild === undefined
-		  ? ({
-		      afkChannelId: null,
-		      afkTimeout: 60,
-		      applicationId: null,
-		      approximateMemberCount: null,
-		      approximatePresenceCount: null,
-		      available: true,
-		      banner: null,
-		      channels: [],
-		      defaultMessageNotifications: GuildDefaultMessageNotifications.OnlyMentions,
-		      description: null,
-		      widgetEnabled: false,
-		      explicitContentFilter: GuildExplicitContentFilter.Disabled,
-		      emojis: [],
-		      icon: data.icon,
-		      id: data.id,
-		      joinedTimestamp: null,
-		      mfaLevel: GuildMFALevel.None,
-		      name: data.name,
-		      ownerId: data.owner ? userId : null,
-		      partnered: false,
-		      preferredLocale: Locale.EnglishUS,
-		      premiumSubscriptionCount: null,
-		      premiumTier: GuildPremiumTier.None,
-		      roles: [],
-		      splash: null,
-		      systemChannelId: null,
-		      vanityURLCode: null,
-		      verificationLevel: GuildVerificationLevel.None,
-		      verified: false,
-		    } as unknown as FlattenedGuild)
-		  : flattenGuild({ ...guild, channels: (await useApi().guilds.getChannels(guild.id)) as any });
+  const mockGuild = {
+    afkChannelId: null,
+    afkTimeout: 60,
+    applicationId: null,
+    approximateMemberCount: null,
+    approximatePresenceCount: null,
+    available: true,
+    banner: null,
+    channels: [],
+    defaultMessageNotifications: GuildDefaultMessageNotifications.OnlyMentions,
+    description: null,
+    widgetEnabled: false,
+    explicitContentFilter: GuildExplicitContentFilter.Disabled,
+    emojis: [],
+    icon: data.icon,
+    id: data.id,
+    joinedTimestamp: null,
+    mfaLevel: GuildMFALevel.None,
+    name: data.name,
+    ownerId: data.owner ? userId : null,
+    partnered: false,
+    preferredLocale: Locale.EnglishUS,
+    premiumSubscriptionCount: null,
+    premiumTier: GuildPremiumTier.None,
+    roles: [],
+    splash: null,
+    systemChannelId: null,
+    vanityURLCode: null,
+    verificationLevel: GuildVerificationLevel.None,
+    verified: false,
+  } as unknown as FlattenedGuild;
+
+  const serialized: PartialOauthFlattenedGuild = guild === undefined
+    ? mockGuild
+    : flattenGuild({ ...guild, channels: (await useApi().guilds.getChannels(guild.id)) as any });
 
   return {
     ...serialized,

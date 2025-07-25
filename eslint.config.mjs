@@ -43,7 +43,7 @@ export default withNuxt(
   rules: {
     "format/prettier": ["error", {
       parser: "css",
-      endOfLine: "lf",
+      endOfLine: "crlf",
       printWidth: 150,
       quoteProps: "as-needed",
       semi: true,

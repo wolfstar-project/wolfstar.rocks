@@ -388,6 +388,7 @@ useHead({
 </script>
 
 <style scoped>
+@reference "@/assets/css/main.css";
 /* Glass-morphism utilities */
 .glass-panel {
 	@apply bg-base-100/80 backdrop-blur-md border border-base-300/50;

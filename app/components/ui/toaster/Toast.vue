@@ -71,46 +71,44 @@
   </ToastRoot>
 </template>
 
-
-
 <script setup lang="ts">
-import { reactivePick } from '@vueuse/core'
-import { ToastAction, ToastClose, ToastDescription, ToastRoot, ToastTitle, useForwardPropsEmits } from 'reka-ui'
-import { computed, onMounted, ref } from 'vue'
-import { Avatar, type AvatarProps } from '@/components/ui/avatar'
-import { Button, type ButtonProps } from '@/components/ui/button'
-import { Icon } from '@/components/ui/icon'
-import { toast, type ToastEmits, type ToastProps, type ToastSlots } from '.'
+import { reactivePick } from "@vueuse/core";
+import { ToastAction, ToastClose, ToastDescription, ToastRoot, ToastTitle, useForwardPropsEmits } from "reka-ui";
+import { computed, onMounted, ref } from "vue";
+import { Avatar, type AvatarProps } from "@/components/ui/avatar";
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import { toast, type ToastEmits, type ToastProps, type ToastSlots } from ".";
 
 const props = withDefaults(defineProps<ToastProps>(), {
   close: true,
-  orientation: 'vertical'
-})
-const emits = defineEmits<ToastEmits>()
-const slots = defineSlots<ToastSlots>()
+  orientation: "vertical",
+});
+const emits = defineEmits<ToastEmits>();
+const slots = defineSlots<ToastSlots>();
 
-const rootProps = useForwardPropsEmits(reactivePick(props, 'as', 'defaultOpen', 'open', 'duration', 'type'), emits)
+const rootProps = useForwardPropsEmits(reactivePick(props, "as", "defaultOpen", "open", "duration", "type"), emits);
 
 const ui = computed(() => toast({
   color: props.color,
   orientation: props.orientation,
-  title: !!props.title || !!slots.title
-}))
+  title: !!props.title || !!slots.title,
+}));
 
-const el = ref()
-const height = ref(0)
+const el = ref();
+const height = ref(0);
 
 onMounted(() => {
   if (!el.value) {
-    return
+    return;
   }
 
   setTimeout(() => {
-    height.value = el.value.$el.getBoundingClientRect()?.height
-  }, 0)
-})
+    height.value = el.value.$el.getBoundingClientRect()?.height;
+  }, 0);
+});
 
 defineExpose({
-  height
-})
+  height,
+});
 </script>

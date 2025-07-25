@@ -21,28 +21,28 @@
 </template>
 
 <script setup lang="ts">
-import { useMouseInElement } from '@vueuse/core'
+import { useMouseInElement } from "@vueuse/core";
 
 interface SpotlightCardProps {
-  as?: string
-  from?: string
-  via?: string | null
-  to?: string
-  size?: number
-  mode?: 'before' | 'after'
+  as?: string;
+  from?: string;
+  via?: string | null;
+  to?: string;
+  size?: number;
+  mode?: "before" | "after";
 }
 
 const props = withDefaults(defineProps<SpotlightCardProps>(), {
-  as: 'div',
-  from: 'rgba(255,255,255,0.8)',
+  as: "div",
+  from: "rgba(255,255,255,0.8)",
   via: null,
-  to: 'transparent',
+  to: "transparent",
   size: 400,
-  mode: 'before',
-})
+  mode: "before",
+});
 
-const card = ref()
-const { elementX, elementY } = useMouseInElement(card)
+const card = ref();
+const { elementX, elementY } = useMouseInElement(card);
 
-const spotlightColorStops = [props.from, props.via, props.to].filter(value => !!value).join(',')
+const spotlightColorStops = [props.from, props.via, props.to].filter(value => !!value).join(",");
 </script>

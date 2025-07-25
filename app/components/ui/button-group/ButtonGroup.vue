@@ -5,16 +5,16 @@
 </template>
 
 <script setup lang="ts">
-import type { ButtonGroupProps, ButtonGroupSlots } from '.'
-import { Primitive } from 'reka-ui'
-import { computed, provide } from 'vue'
-import { buttonGroupInjectionKey } from '~/composables/useButtonGroup'
-import { ButtonGroupVariant } from '.'
+import type { ButtonGroupProps, ButtonGroupSlots } from ".";
+import { Primitive } from "reka-ui";
+import { computed, provide } from "vue";
+import { buttonGroupInjectionKey } from "~/composables/useButtonGroup";
+import { ButtonGroupVariant } from ".";
 
 const props = withDefaults(defineProps<ButtonGroupProps>(), {
-  orientation: 'horizontal',
-})
-defineSlots<ButtonGroupSlots>()
+  orientation: "horizontal",
+});
+defineSlots<ButtonGroupSlots>();
 
 provide(
   buttonGroupInjectionKey,
@@ -22,5 +22,5 @@ provide(
     orientation: props.orientation,
     size: props.size,
   })),
-)
+);
 </script>

@@ -22,20 +22,20 @@
 </template>
 
 <script setup lang="ts">
-import type { SelectItemProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { Check } from 'lucide-vue-next'
-import { SelectItem, SelectItemIndicator, SelectItemText, useForwardProps } from 'reka-ui'
-import { computed } from 'vue'
-import { cn } from '@/utils/cn'
+import type { SelectItemProps } from "reka-ui";
+import type { HTMLAttributes } from "vue";
+import { Check } from "lucide-vue-next";
+import { SelectItem, SelectItemIndicator, SelectItemText, useForwardProps } from "reka-ui";
+import { computed } from "vue";
+import { cn } from "@/utils/cn";
 
-const props = defineProps<SelectItemProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<SelectItemProps & { class?: HTMLAttributes["class"] }>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 
-const forwardedProps = useForwardProps(delegatedProps)
+const forwardedProps = useForwardProps(delegatedProps);
 </script>

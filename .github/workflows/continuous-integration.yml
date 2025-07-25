@@ -38,7 +38,7 @@ jobs:
       - name: Checkout Project
         uses: actions/checkout@v4
       - name: Add problem matchers
-        run: echo "::add-matcher::.github/problemMatchers/tsc.json"      
+        run: echo "::add-matcher::.github/problemMatchers/tsc.json"
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:

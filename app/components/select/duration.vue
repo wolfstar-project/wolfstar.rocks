@@ -29,52 +29,52 @@
 </template>
 
 <script setup lang="ts">
-import { Time } from '@sapphire/time-utilities'
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
+import { Time } from "@sapphire/time-utilities";
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
 
 interface DurationUnit {
-  label: string
-  value: keyof typeof unitMap
+  label: string;
+  value: keyof typeof unitMap;
 }
 
 interface Props {
-  value: number
-  min?: number
-  max?: number
-  name?: string
+  value: number;
+  min?: number;
+  max?: number;
+  name?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   name: () => `duration-${Math.random().toString(36).slice(2)}`,
   min: 0,
   max: undefined,
-})
+});
 
 const emit = defineEmits<{
-  'update:value': [value: number]
-  'change': [value: number]
-}>()
+  "update:value": [value: number];
+  "change": [value: number];
+}>();
 
 const unitMap = {
   seconds: Time.Second,
   minutes: Time.Minute,
   hours: Time.Hour,
   days: Time.Day,
-} as const
+} as const;
 
-const duration = ref(0)
-const unit = ref<keyof typeof unitMap>('seconds')
-const error = ref('')
+const duration = ref(0);
+const unit = ref<keyof typeof unitMap>("seconds");
+const error = ref("");
 
 const initialValues = computed(() => ({
   [`${props.name}-duration`]: duration.value,
   [`${props.name}-unit`]: unit.value,
-}))
+}));
 
-const minDuration = computed(() => (props.min ? Math.floor(props.min / unitMap[unit.value]) : 0))
+const minDuration = computed(() => (props.min ? Math.floor(props.min / unitMap[unit.value]) : 0));
 
-const maxDuration = computed(() => (props.max ? Math.floor(props.max / unitMap[unit.value]) : Infinity))
+const maxDuration = computed(() => (props.max ? Math.floor(props.max / unitMap[unit.value]) : Infinity));
 
 const validationSchema = computed(() =>
   toTypedSchema(
@@ -83,70 +83,70 @@ const validationSchema = computed(() =>
         .number()
         .min(minDuration.value, `Minimum value is ${minDuration.value}`)
         .max(maxDuration.value, `Maximum value is ${maxDuration.value}`),
-      [`${props.name}-unit`]: z.enum(['seconds', 'minutes', 'hours', 'days']),
+      [`${props.name}-unit`]: z.enum(["seconds", "minutes", "hours", "days"]),
     }),
   ),
-)
+);
 
 const unitOptions = computed<DurationUnit[]>(() =>
   Object.keys(unitMap).map(key => ({
     label: key.charAt(0).toUpperCase() + key.slice(1),
     value: key as keyof typeof unitMap,
   })),
-)
+);
 
 function determineUnit(ms: number): [number, keyof typeof unitMap] {
-  const units = Object.entries(unitMap)
+  const units = Object.entries(unitMap);
   for (let i = 0; i < units.length; i++) {
-    const [currentUnit, currentValue] = units[i] as [string, (typeof unitMap)[keyof typeof unitMap]]
-    const nextValue = units[i + 1]?.[1]
+    const [currentUnit, currentValue] = units[i] as [string, (typeof unitMap)[keyof typeof unitMap]];
+    const nextValue = units[i + 1]?.[1];
 
     if (!nextValue || ms < nextValue) {
-      return [Math.floor(ms / currentValue), currentUnit as keyof typeof unitMap]
+      return [Math.floor(ms / currentValue), currentUnit as keyof typeof unitMap];
     }
   }
-  return [0, 'seconds']
+  return [0, "seconds"];
 }
 
 function validateValue(ms: number): boolean {
   const schema = z
     .number()
     .min(props.min || 0)
-    .max(props.max || Infinity)
+    .max(props.max || Infinity);
 
-  const result = schema.safeParse(ms)
+  const result = schema.safeParse(ms);
   if (!result.success) {
-    error.value = result.error.errors[0]?.message ?? 'Invalid value'
-    return false
+    error.value = result.error.errors[0]?.message ?? "Invalid value";
+    return false;
   }
-  error.value = ''
-  return true
+  error.value = "";
+  return true;
 }
 
 function updateValue(newDuration: number, newUnit: keyof typeof unitMap) {
-  const ms = newDuration * unitMap[newUnit]
+  const ms = newDuration * unitMap[newUnit];
   if (validateValue(ms)) {
-    duration.value = newDuration
-    unit.value = newUnit
-    emit('update:value', ms)
-    emit('change', ms)
+    duration.value = newDuration;
+    unit.value = newUnit;
+    emit("update:value", ms);
+    emit("change", ms);
   }
 }
 
 watch([duration, unit], ([newDuration, newUnit]) => {
-  updateValue(newDuration, newUnit)
-})
+  updateValue(newDuration, newUnit);
+});
 
 onMounted(() => {
-  const [initialDuration, initialUnit] = determineUnit(props.value)
-  duration.value = initialDuration
-  unit.value = initialUnit
-})
+  const [initialDuration, initialUnit] = determineUnit(props.value);
+  duration.value = initialDuration;
+  unit.value = initialUnit;
+});
 
 function handleSubmit(values: Record<string, number | keyof typeof unitMap>) {
-  const newDuration = values[`${props.name}-duration`] as number
-  const newUnit = values[`${props.name}-unit`] as keyof typeof unitMap
-  updateValue(newDuration, newUnit)
+  const newDuration = values[`${props.name}-duration`] as number;
+  const newUnit = values[`${props.name}-unit`] as keyof typeof unitMap;
+  updateValue(newDuration, newUnit);
 }
 </script>
 
@@ -154,10 +154,10 @@ function handleSubmit(values: Record<string, number | keyof typeof unitMap>) {
 @reference "@/assets/css/main.css";
 
 .input-error {
-  @apply border-error;
+	@apply border-error;
 }
 
 .text-error {
-  @apply text-error;
+	@apply text-error;
 }
 </style>

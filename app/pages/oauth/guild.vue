@@ -26,45 +26,42 @@
 </template>
 
 <script setup lang="ts">
-import { promiseTimeout } from '@vueuse/core'
-import { useRouteParams } from '@vueuse/router'
+import { promiseTimeout } from "@vueuse/core";
+import { useRouteParams } from "@vueuse/router";
 
-const guildId = useRouteParams('guild_id')
-const error = ref<string | null>(null)
+const guildId = useRouteParams("guild_id");
+const error = ref<string | null>(null);
 
 const { start, finish } = useLoadingIndicator({
-  duration: 2000, 
-})
-
+  duration: 2000,
+});
 
 if (import.meta.client && guildId.value && !error.value) {
-  start()
-  navigateToGuild()
+  start();
+  navigateToGuild();
 }
 
 async function navigateToGuild() {
-
-    if (!guildId.value) {
-      finish({
-        error: true
-      })
-     throw createError({
+  if (!guildId.value) {
+    finish({
+      error: true,
+    });
+    throw createError({
       statusCode: 400,
-      statusMessage: 'No guild ID provided',
-     })
-    }
+      statusMessage: "No guild ID provided",
+    });
+  }
 
-    await promiseTimeout(1500);
+  await promiseTimeout(1500);
 
-    finish()
-    await navigateTo(`/guilds/${guildId.value}`)
-
+  finish();
+  await navigateTo(`/guilds/${guildId.value}`);
 }
 
 useSeoMeta({
-  title: 'Auth Guild Callback',
+  title: "Auth Guild Callback",
   robots: { none: true },
-  ogTitle: 'OAuth Guild Callback',
-  ogDescription: 'A landing page for the OAuth2.0 guild callback flow.',
-})
+  ogTitle: "OAuth Guild Callback",
+  ogDescription: "A landing page for the OAuth2.0 guild callback flow.",
+});
 </script>

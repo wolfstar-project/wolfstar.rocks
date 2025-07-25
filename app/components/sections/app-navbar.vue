@@ -193,56 +193,56 @@
 </template>
 
 <script setup lang="ts">
-import { useAuth } from '~/composables/auth'
-import { Invites } from '~/utils/constants'
+import { useAuth } from "~/composables/auth";
+import { Invites } from "~/utils/constants";
 
-const { y } = useScroll(document)
+const { y } = useScroll(document);
 
 // Safely inject appName with fallback to prevent SSR issues
-const appName = inject(ProviderAppNameKey, ref<'wolfstar' | 'staryl'>('wolfstar'))
+const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 
 const Apps = {
-  wolfstar: { name: 'WolfStar', invite: Invites.WolfStar, landing: '/' },
-  staryl: { name: 'Staryl', invite: Invites.Staryl, landing: '/staryl' },
-}
+  wolfstar: { name: "WolfStar", invite: Invites.WolfStar, landing: "/" },
+  staryl: { name: "Staryl", invite: Invites.Staryl, landing: "/staryl" },
+};
 
-const { user } = useAuth()
+const { user } = useAuth();
 
-const isAnimated = ref(false)
-const isDefault = ref(false)
+const isAnimated = ref(false);
+const isDefault = ref(false);
 
 // Computed properties for consistent state
 const defaultAvatar = computed(
-  () => `https://cdn.discordapp.com/embed/avatars/${user.value && user.value.id ? BigInt(user.value.id) % BigInt(5) : '0'}.png`,
-)
+  () => `https://cdn.discordapp.com/embed/avatars/${user.value && user.value.id ? BigInt(user.value.id) % BigInt(5) : "0"}.png`,
+);
 
 const currentApp = computed(() => {
-  const appKey = unref(appName)
-  return Apps[appKey] || Apps.wolfstar
-})
+  const appKey = unref(appName);
+  return Apps[appKey] || Apps.wolfstar;
+});
 
 // Watch user changes for avatar state
 watch(
   user,
   (user) => {
     if (user && user.avatar) {
-      isDefault.value = false
-      isAnimated.value = user.avatar.startsWith('a_')
+      isDefault.value = false;
+      isAnimated.value = user.avatar.startsWith("a_");
     }
     else {
-      isDefault.value = true
-      isAnimated.value = false
+      isDefault.value = true;
+      isAnimated.value = false;
     }
   },
   { immediate: true },
-)
+);
 
-function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`
+function createUrl(format: "webp" | "png" | "gif", size: number) {
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
-function makeSrcset(format: 'webp' | 'png' | 'gif') {
-  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`
+function makeSrcset(format: "webp" | "png" | "gif") {
+  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
 </script>
 
@@ -250,11 +250,11 @@ function makeSrcset(format: 'webp' | 'png' | 'gif') {
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-  @apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
-  align-self: center;
-  transition-duration: 250ms;
-  transition-property: background-color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  width: calc(100% - 1rem);
+	@apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
+	align-self: center;
+	transition-duration: 250ms;
+	transition-property: background-color;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+	width: calc(100% - 1rem);
 }
 </style>

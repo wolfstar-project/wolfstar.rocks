@@ -14,17 +14,17 @@
 </template>
 
 <script setup lang="ts">
-import type { LabelProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { Label } from 'reka-ui'
-import { computed } from 'vue'
-import { cn } from '~~/server/utils'
+import type { LabelProps } from "reka-ui";
+import type { HTMLAttributes } from "vue";
+import { Label } from "reka-ui";
+import { computed } from "vue";
+import { cn } from "~~/server/utils";
 
-const props = defineProps<LabelProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<LabelProps & { class?: HTMLAttributes["class"] }>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 </script>

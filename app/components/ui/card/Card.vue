@@ -15,13 +15,13 @@
 </template>
 
 <script setup lang="ts">
-import type { CardProps, CardSlots } from '.'
-import { Primitive } from 'reka-ui'
-import { computed } from 'vue'
-import { card } from '.'
+import type { CardProps, CardSlots } from ".";
+import { Primitive } from "reka-ui";
+import { computed } from "vue";
+import { card } from ".";
 
-const props = defineProps<CardProps>()
-const slots = defineSlots<CardSlots>()
+const props = defineProps<CardProps>();
+const slots = defineSlots<CardSlots>();
 
-const ui = computed(() => card({ variant: props.variant }))
+const ui = computed(() => card({ variant: props.variant }));
 </script>

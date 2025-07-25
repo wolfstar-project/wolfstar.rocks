@@ -20,55 +20,55 @@
 </template>
 
 <script setup lang="ts">
-import type { AvatarProps } from '.'
-import { computed, ref } from 'vue'
-import { Icon } from '@/components/ui/icon'
-import { AvatarBase, AvatarFallback, avatarVariant } from '.'
+import type { AvatarProps } from ".";
+import { computed, ref } from "vue";
+import { Icon } from "@/components/ui/icon";
+import { AvatarBase, AvatarFallback, avatarVariant } from ".";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<AvatarProps>(), {
-  size: 'md',
-  shape: 'circle',
-  as: 'span',
-})
+  size: "md",
+  shape: "circle",
+  as: "span",
+});
 
-const { size } = useAvatarGroup(props)
+const { size } = useAvatarGroup(props);
 
 const ui = computed(() =>
   avatarVariant({
     size: size.value,
   }),
-)
+);
 
 const sizePx = computed(
   () =>
     ({
-      '3xs': 16,
-      '2xs': 20,
-      'xs': 24,
-      'sm': 28,
-      'md': 32,
-      'lg': 36,
-      'xl': 40,
-      '2xl': 44,
-      '3xl': 48,
-    })[props.size || 'md'],
-)
+      "3xs": 16,
+      "2xs": 20,
+      "xs": 24,
+      "sm": 28,
+      "md": 32,
+      "lg": 36,
+      "xl": 40,
+      "2xl": 44,
+      "3xl": 48,
+    })[props.size || "md"],
+);
 
-const error = ref(false)
+const error = ref(false);
 
 const fallback = computed(
   () =>
     props.fallback
-    || (props.alt || '')
-      .split(' ')
+    || (props.alt || "")
+      .split(" ")
       .map(word => word.charAt(0))
-      .join('')
+      .join("")
       .substring(0, 2),
-)
+);
 
 function onError() {
-  error.value = true
+  error.value = true;
 }
 </script>

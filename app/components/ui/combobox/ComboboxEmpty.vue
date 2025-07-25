@@ -5,17 +5,17 @@
 </template>
 
 <script setup lang="ts">
-import type { ComboboxEmptyProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { ComboboxEmpty } from 'reka-ui'
-import { computed } from 'vue'
-import { cn } from '@/utils/cn'
+import type { ComboboxEmptyProps } from "reka-ui";
+import type { HTMLAttributes } from "vue";
+import { ComboboxEmpty } from "reka-ui";
+import { computed } from "vue";
+import { cn } from "@/utils/cn";
 
-const props = defineProps<ComboboxEmptyProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<ComboboxEmptyProps & { class?: HTMLAttributes["class"] }>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 </script>

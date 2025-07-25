@@ -81,9 +81,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ModalEmits, ModalProps, ModalSlots } from '.'
-import type { ButtonProps } from '@/components/ui/button'
-import { reactivePick } from '@vueuse/core'
+import type { ModalEmits, ModalProps, ModalSlots } from ".";
+import type { ButtonProps } from "@/components/ui/button";
+import { reactivePick } from "@vueuse/core";
 import {
   DialogClose,
   DialogContent,
@@ -95,10 +95,10 @@ import {
   DialogTrigger,
   useForwardPropsEmits,
   VisuallyHidden,
-} from 'reka-ui'
-import { computed, toRef } from 'vue'
-import { Button } from '@/components/ui/button'
-import { modal } from '.'
+} from "reka-ui";
+import { computed, toRef } from "vue";
+import { Button } from "@/components/ui/button";
+import { modal } from ".";
 
 const props = withDefaults(defineProps<ModalProps>(), {
   close: true,
@@ -107,16 +107,16 @@ const props = withDefaults(defineProps<ModalProps>(), {
   transition: true,
   modal: true,
   dismissible: true,
-})
-const emits = defineEmits<ModalEmits>()
-const slots = defineSlots<ModalSlots>()
+});
+const emits = defineEmits<ModalEmits>();
+const slots = defineSlots<ModalSlots>();
 
-const rootProps = useForwardPropsEmits(reactivePick(props, 'open', 'defaultOpen', 'modal'), emits)
-const contentProps = toRef(() => props.content)
+const rootProps = useForwardPropsEmits(reactivePick(props, "open", "defaultOpen", "modal"), emits);
+const contentProps = toRef(() => props.content);
 const contentEvents = computed(() => {
   const events = {
     closeAutoFocus: (e: Event) => e.preventDefault(),
-  }
+  };
 
   if (!props.dismissible) {
     return {
@@ -124,16 +124,16 @@ const contentEvents = computed(() => {
       interactOutside: (e: Event) => e.preventDefault(),
       escapeKeyDown: (e: Event) => e.preventDefault(),
       ...events,
-    }
+    };
   }
 
-  return events
-})
+  return events;
+});
 
 const ui = computed(() =>
   modal({
     transition: props.transition,
     fullscreen: props.fullscreen,
   }),
-)
+);
 </script>

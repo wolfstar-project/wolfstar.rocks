@@ -1,23 +1,23 @@
-import type { ComputedRef, InjectionKey } from 'vue'
-import type { ButtonGroupProps } from '@/components/ui/button-group'
-import type { GetObjectField } from '~/types/utils'
-import { computed, inject } from 'vue'
+import type { ComputedRef, InjectionKey } from "vue";
+import type { ButtonGroupProps } from "@/components/ui/button-group";
+import type { GetObjectField } from "~/types/utils";
+import { computed, inject } from "vue";
 
 export const buttonGroupInjectionKey: InjectionKey<
   ComputedRef<{
-    size: ButtonGroupProps['size']
-    orientation: ButtonGroupProps['orientation']
+    size: ButtonGroupProps["size"];
+    orientation: ButtonGroupProps["orientation"];
   }>
-> = Symbol('buttonGroupInjectionKey')
+> = Symbol("buttonGroupInjectionKey");
 
 interface Props<T> {
-  size?: GetObjectField<T, 'size'>
+  size?: GetObjectField<T, "size">;
 }
 
 export function useButtonGroup<T>(props: Props<T>) {
-  const buttonGroup = inject(buttonGroupInjectionKey, undefined)
+  const buttonGroup = inject(buttonGroupInjectionKey, undefined);
   return {
     orientation: computed(() => buttonGroup?.value.orientation),
     size: computed(() => props?.size ?? buttonGroup?.value.size),
-  }
+  };
 }

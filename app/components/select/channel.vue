@@ -14,18 +14,18 @@
 </template>
 
 <script setup lang="ts">
-import type { ValuesType } from 'utility-types'
-import type { TransformedLoginData } from '~~/shared/types/discord'
-import { ChannelType } from 'discord-api-types/v10'
+import type { ValuesType } from "utility-types";
+import type { TransformedLoginData } from "~~/shared/types/discord";
+import { ChannelType } from "discord-api-types/v10";
 
 interface Props {
-  label: string
-  modelValue: string | undefined
-  guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
-  tooltipTitle?: string
-  error?: boolean
-  description?: string
-  name?: string
+  label: string;
+  modelValue: string | undefined;
+  guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
+  tooltipTitle?: string;
+  error?: boolean;
+  description?: string;
+  name?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -33,11 +33,11 @@ const props = withDefaults(defineProps<Props>(), {
   error: false,
   name: () => `channel-${Math.random().toString(36).slice(2)}`,
   description: undefined,
-})
+});
 
 const emit = defineEmits<{
-  (e: 'update:modelValue' | 'change', value: string): void
-}>()
+  (e: "update:modelValue" | "change", value: string): void;
+}>();
 
 const channelOptions = computed(() =>
   props.guild.channels
@@ -47,12 +47,12 @@ const channelOptions = computed(() =>
       label: c.name,
       value: c.id,
     })),
-)
+);
 
 function handleChange(value: string | number | null | undefined) {
-  if (typeof value === 'string') {
-    emit('update:modelValue', value)
-    emit('change', value)
+  if (typeof value === "string") {
+    emit("update:modelValue", value);
+    emit("change", value);
   }
 }
 </script>

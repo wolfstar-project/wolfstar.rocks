@@ -1,10 +1,10 @@
-import type { ReadonlyGuildData } from '~~/server/database/settings/types'
+import type { ReadonlyGuildData } from "~~/server/database/settings/types";
 
-let cachedDefaultGuildSettings: DefaultGuildData | null = null
+let cachedDefaultGuildSettings: DefaultGuildData | null = null;
 
 export function getDefaultGuildSettings() {
   cachedDefaultGuildSettings ??= Object.assign(Object.create(null), {
-    language: 'en-US',
+    language: "en-US",
     disableNaturalPrefix: false,
     disabledCommands: [],
     permissionsUsers: [],
@@ -155,9 +155,9 @@ export function getDefaultGuildSettings() {
     noMentionSpamAlerts: false,
     noMentionSpamMentionsAllowed: 20,
     noMentionSpamTimePeriod: 8,
-  } as unknown as DefaultGuildData)
+  } as unknown as DefaultGuildData);
 
-  return cachedDefaultGuildSettings
+  return cachedDefaultGuildSettings;
 }
 
-export type DefaultGuildData = Omit<ReadonlyGuildData, 'id'>
+export type DefaultGuildData = Omit<ReadonlyGuildData, "id">;

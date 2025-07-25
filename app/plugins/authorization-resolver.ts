@@ -1,5 +1,5 @@
 export default defineNuxtPlugin({
-  name: 'authorization-resolver',
+  name: "authorization-resolver",
   parallel: true,
   setup() {
     return {
@@ -8,6 +8,6 @@ export default defineNuxtPlugin({
           resolveClientUser: () => useUserSession().user.value,
         },
       },
-    }
+    };
   },
-})
+});

@@ -34,7 +34,7 @@
     ]
   },
   "lint-staged": {
-    "*": "pnpm eslint --fix ."
+    "*": "eslint --fix ."
   },
   "dependencies": {
     "@ai-sdk/vue": "catalog:dev",
@@ -59,6 +59,7 @@
     "import-in-the-middle": "catalog:prod",
     "markdown-it-anchor": "catalog:markdown",
     "motion-v": "catalog:frontend",
+    "nitro-cloudflare-dev": "catalog:dev",
     "nuxt": "catalog:prod",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
@@ -76,10 +77,7 @@
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
     "wrangler": "catalog:dev",
-    "zod": "catalog:utils",
-    "eslint-plugin-prettier": "catalog:dev",
-    "nitro-cloudflare-dev": "catalog:dev",
-    "eslint-config-prettier": "catalog:lint"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

@@ -43,57 +43,57 @@
 </template>
 
 <script setup lang="ts">
-import { promiseTimeout } from '@vueuse/core'
+import { promiseTimeout } from "@vueuse/core";
 
-const { code } = useRoute().query
+const { code } = useRoute().query;
 
-const { error, status, execute } = useFetch('/api/auth/discord', {
+const { error, status, execute } = useFetch("/api/auth/discord", {
   query: { code },
-  method: 'GET',
-  key: 'callback',
+  method: "GET",
+  key: "callback",
   server: false,
   immediate: false,
-})
+});
 
-const { user: data } = useAuth()
+const { user: data } = useAuth();
 
 if (import.meta.client && code) {
-  void performCall().catch(console.error)
+  void performCall().catch(console.error);
 }
 
 async function performCall() {
-  await execute()
+  await execute();
   if (!data)
-    return
+    return;
 
-  await promiseTimeout(1000)
-  await useRouter().replace(useAuth().redirectTo.value)
+  await promiseTimeout(1000);
+  await useRouter().replace(useAuth().redirectTo.value);
 }
 
 useSeoMeta({
-  title: 'OAuth Callback',
+  title: "OAuth Callback",
   robots: { none: true },
-  ogTitle: 'OAuth Callback',
-  ogDescription: 'A landing page for the OAuth2.0 callback flow, use the Login button instead.',
-})
-defineOgImageComponent('NuxtSeo', {
-  title: 'OAuth Callback',
-  description: 'A landing page for the OAuth2.0 callback flow',
+  ogTitle: "OAuth Callback",
+  ogDescription: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
+});
+defineOgImageComponent("NuxtSeo", {
+  title: "OAuth Callback",
+  description: "A landing page for the OAuth2.0 callback flow",
   theme: Colors.Red,
-})
+});
 </script>
 
 <style scoped>
 .progress {
-  animation: progressAnimation 1s;
+	animation: progressAnimation 1s;
 }
 
 @keyframes progressAnimation {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
+	from {
+		width: 0;
+	}
+	to {
+		width: 100%;
+	}
 }
 </style>

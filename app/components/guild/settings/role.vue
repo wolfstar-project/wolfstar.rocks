@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import { useGuildRoles } from '~~/app/composables/useGuildSettings'
+import { useGuildRoles } from "~~/app/composables/useGuildSettings";
 
-const { roleConfig, settings, updateRoleSetting, resetRole, getRoleSelectComponent, getRoleProps } = useGuildRoles()
-const guildData = useGuildData()
+const { roleConfig, settings, updateRoleSetting, resetRole, getRoleSelectComponent, getRoleProps } = useGuildRoles();
+const guildData = useGuildData();
 </script>

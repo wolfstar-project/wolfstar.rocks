@@ -40,26 +40,26 @@
 </template>
 
 <script setup lang="ts">
-import type { CheckboxEmits, CheckboxProps, CheckboxSlots } from '.'
-import { reactivePick } from '@vueuse/core'
-import { CheckboxIndicator, CheckboxRoot, Label, Primitive, useForwardProps } from 'reka-ui'
+import type { CheckboxEmits, CheckboxProps, CheckboxSlots } from ".";
+import { reactivePick } from "@vueuse/core";
+import { CheckboxIndicator, CheckboxRoot, Label, Primitive, useForwardProps } from "reka-ui";
 
-import { computed, useId } from 'vue'
-import { Icon } from '@/components/ui/icon'
-import { useFormField } from '@/composables/useFormField'
-import { checkbox } from '.'
+import { computed, useId } from "vue";
+import { Icon } from "@/components/ui/icon";
+import { useFormField } from "@/composables/useFormField";
+import { checkbox } from ".";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
-const props = defineProps<CheckboxProps>()
-const emits = defineEmits<CheckboxEmits>()
-const slots = defineSlots<CheckboxSlots>()
-const modelValue = defineModel<boolean | 'indeterminate'>({ default: undefined })
+const props = defineProps<CheckboxProps>();
+const emits = defineEmits<CheckboxEmits>();
+const slots = defineSlots<CheckboxSlots>();
+const modelValue = defineModel<boolean | "indeterminate">({ default: undefined });
 
-const rootProps = useForwardProps(reactivePick(props, 'required', 'value', 'defaultValue'))
+const rootProps = useForwardProps(reactivePick(props, "required", "value", "defaultValue"));
 
-const { id: _id, emitFormChange, emitFormInput, size, color, name, disabled, ariaAttrs } = useFormField<CheckboxProps>(props)
-const id = _id.value ?? useId()
+const { id: _id, emitFormChange, emitFormInput, size, color, name, disabled, ariaAttrs } = useFormField<CheckboxProps>(props);
+const id = _id.value ?? useId();
 
 const ui = computed(() =>
   checkbox({
@@ -69,13 +69,13 @@ const ui = computed(() =>
     disabled: disabled.value,
     checked: Boolean(modelValue.value ?? props.defaultValue),
   }),
-)
+);
 
 function onUpdate(value: any) {
   // @ts-expect-error - 'target' does not exist in type 'EventInit'
-  const event = new Event('change', { target: { value } })
-  emits('change', event)
-  emitFormChange()
-  emitFormInput()
+  const event = new Event("change", { target: { value } });
+  emits("change", event);
+  emitFormChange();
+  emitFormInput();
 }
 </script>

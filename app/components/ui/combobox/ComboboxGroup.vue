@@ -8,22 +8,22 @@
 </template>
 
 <script setup lang="ts">
-import type { ComboboxGroupProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { ComboboxGroup, ComboboxLabel } from 'reka-ui'
-import { computed } from 'vue'
-import { cn } from '@/utils/cn'
+import type { ComboboxGroupProps } from "reka-ui";
+import type { HTMLAttributes } from "vue";
+import { ComboboxGroup, ComboboxLabel } from "reka-ui";
+import { computed } from "vue";
+import { cn } from "@/utils/cn";
 
 const props = defineProps<
   ComboboxGroupProps & {
-    class?: HTMLAttributes['class']
-    heading?: string
+    class?: HTMLAttributes["class"];
+    heading?: string;
   }
->()
+>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 </script>

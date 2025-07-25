@@ -49,27 +49,27 @@
 </template>
 
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
 
 interface Option<T = string> {
-  label: string
-  value: T
-  iconUrl?: string
+  label: string;
+  value: T;
+  iconUrl?: string;
 }
 
 interface Props<T = string> {
-  label: string
-  options: Option<T>[]
-  value?: T
-  error?: boolean
-  helperText?: string
-  name?: string
-  tooltipTitle?: string
-  required?: boolean
-  placeholder?: string
-  searchable?: boolean
-  imageInName?: string
+  label: string;
+  options: Option<T>[];
+  value?: T;
+  error?: boolean;
+  helperText?: string;
+  name?: string;
+  tooltipTitle?: string;
+  required?: boolean;
+  placeholder?: string;
+  searchable?: boolean;
+  imageInName?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -82,81 +82,81 @@ const props = withDefaults(defineProps<Props>(), {
   helperText: undefined,
   searchable: true,
   imageInName: undefined,
-})
+});
 
 const emit = defineEmits<{
-  'update:value': [value: Props['value']]
-  'change': [value: Props['value']]
-  'reset': []
-}>()
+  "update:value": [value: Props["value"]];
+  "change": [value: Props["value"]];
+  "reset": [];
+}>();
 
-const isOpen = ref(false)
-const search = ref('')
-const selectedValue = ref<Props['value']>(props.value)
+const isOpen = ref(false);
+const search = ref("");
+const selectedValue = ref<Props["value"]>(props.value);
 
 const validationSchema = computed(() =>
   toTypedSchema(
     z.object({
-      [props.name]: props.required ? z.any().refine(val => val !== undefined, 'This field is required') : z.any().optional(),
+      [props.name]: props.required ? z.any().refine(val => val !== undefined, "This field is required") : z.any().optional(),
       search: z.string().optional(),
     }),
   ),
-)
+);
 
 const filteredOptions = computed(() => {
   if (!search.value)
-    return props.options
-  const searchLower = search.value.toLowerCase()
-  return props.options.filter(item => item.label.toLowerCase().includes(searchLower))
-})
+    return props.options;
+  const searchLower = search.value.toLowerCase();
+  return props.options.filter(item => item.label.toLowerCase().includes(searchLower));
+});
 
 const displayValue = computed(() => {
-  const option = props.options.find(opt => opt.value === selectedValue.value)
-  return option?.label ?? props.placeholder ?? 'Select...'
-})
+  const option = props.options.find(opt => opt.value === selectedValue.value);
+  return option?.label ?? props.placeholder ?? "Select...";
+});
 
 function openDialog() {
-  isOpen.value = true
-  search.value = ''
+  isOpen.value = true;
+  search.value = "";
 }
 
 function closeDialog() {
-  isOpen.value = false
+  isOpen.value = false;
 }
 
 function onModalClose() {
-  search.value = ''
+  search.value = "";
 }
 
-function selectItem(value: Props['value']) {
-  selectedValue.value = value
+function selectItem(value: Props["value"]) {
+  selectedValue.value = value;
 }
 
 function handleSubmit() {
   if (selectedValue.value !== undefined) {
-    emit('update:value', selectedValue.value)
-    emit('change', selectedValue.value)
-    closeDialog()
+    emit("update:value", selectedValue.value);
+    emit("change", selectedValue.value);
+    closeDialog();
   }
 }
 
 function handleReset() {
-  selectedValue.value = undefined
-  emit('reset')
-  closeDialog()
+  selectedValue.value = undefined;
+  emit("reset");
+  closeDialog();
 }
 
 watch(
   () => props.value,
   (newValue) => {
-    selectedValue.value = newValue
+    selectedValue.value = newValue;
   },
-)
+);
 
 // Cleanup on unmount
 onUnmounted(() => {
   if (isOpen.value) {
-    closeDialog()
+    closeDialog();
   }
-})
+});
 </script>

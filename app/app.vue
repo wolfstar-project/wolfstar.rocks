@@ -8,41 +8,40 @@
 </template>
 
 <script setup lang="ts">
-
-const router = useRouter()
-const appName = ref<'wolfstar' | 'staryl'>('wolfstar')
+const router = useRouter();
+const appName = ref<"wolfstar" | "staryl">("wolfstar");
 
 // Watch for route changes to update appName
 watch(
   router.currentRoute,
   (route) => {
     switch (route.path) {
-      case '/staryl':
-        appName.value = 'staryl'
-        break
+      case "/staryl":
+        appName.value = "staryl";
+        break;
       default:
-        appName.value = 'wolfstar'
+        appName.value = "wolfstar";
     }
   },
   { immediate: true },
-)
+);
 
 useHead({
-  titleTemplate: title => title ? `${title} %separator %siteName` : '%siteName: The app for automating your Discord server',
+  titleTemplate: title => title ? `${title} %separator %siteName` : "%siteName: The app for automating your Discord server",
   templateParams: {
-    siteName: 'WolfStar',
-    separator: '·'
-  }
-})
+    siteName: "WolfStar",
+    separator: "·",
+  },
+});
 
 if (import.meta.server) {
   useSeoMeta({
-    ogSiteName: 'WolfStar',
-    ogType: 'website',
-    twitterCard: 'summary_large_image',
-    twitterSite: 'wolfstar_bot'
-  })
+    ogSiteName: "WolfStar",
+    ogType: "website",
+    twitterCard: "summary_large_image",
+    twitterSite: "wolfstar_bot",
+  });
 }
 
-provide(ProviderAppNameKey, appName)
+provide(ProviderAppNameKey, appName);
 </script>

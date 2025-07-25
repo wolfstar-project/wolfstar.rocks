@@ -25,8 +25,7 @@
           :color="errors.language ? 'error' : 'primary'"
           placeholder="Select language..."
           class="w-full"
-        >
-        </ShadSelect>
+        />
         <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
         <p v-if="errors.language" class="text-sm text-error">{{ errors.language }}</p>
       </div>
@@ -50,106 +49,106 @@
 </template>
 
 <script setup lang="ts">
-import { z } from 'zod'
-import { useGuildGeneral } from '~~/app/composables/useGuildSettings'
+import { z } from "zod";
+import { useGuildGeneral } from "~~/app/composables/useGuildSettings";
 
 interface Props {
-  languages: string[]
+  languages: string[];
 }
 
-const props = defineProps<Props>()
+const props = defineProps<Props>();
 
 // Use the new general composable
-const { generalConfig, settings, updateGeneralSetting } = useGuildGeneral()
+const { generalConfig, settings, updateGeneralSetting } = useGuildGeneral();
 
 // Form validation schema
 const guildGeneralSchema = z.object({
   prefix: z.string()
-    .min(1, 'Prefix must be at least 1 character')
+    .min(1, "Prefix must be at least 1 character")
     .max(generalConfig.prefix.maxLength, `Prefix cannot be longer than ${generalConfig.prefix.maxLength} characters`)
     .optional(),
   language: z.string().optional(),
   disableNaturalPrefix: z.boolean().optional(),
-})
+});
 
-type FormData = z.infer<typeof guildGeneralSchema>
+type FormData = z.infer<typeof guildGeneralSchema>;
 
 // Form data reactive state
 const formData = ref<FormData>({
-  prefix: settings.value.prefix ?? '',
-  language: settings.value.language ?? '',
+  prefix: settings.value.prefix ?? "",
+  language: settings.value.language ?? "",
   disableNaturalPrefix: settings.value.disableNaturalPrefix ?? false,
-})
+});
 
 // Form validation errors
-const errors = ref<Record<string, string>>({})
+const errors = ref<Record<string, string>>({});
 
 // Watch for changes and update settings with validation
 watch(
   formData,
   async (newValue) => {
     try {
-      await guildGeneralSchema.parseAsync(newValue)
-      errors.value = {}
-      
+      await guildGeneralSchema.parseAsync(newValue);
+      errors.value = {};
+
       // Update settings using the composable
       Object.entries(newValue).forEach(([key, value]) => {
         if (value !== undefined) {
-          updateGeneralSetting(key, value)
+          updateGeneralSetting(key, value);
         }
-      })
+      });
     }
     catch (err) {
       if (err instanceof z.ZodError) {
         // Map Zod errors to simple string errors using the issues array
-        const fieldErrors: Record<string, string> = {}
+        const fieldErrors: Record<string, string> = {};
         err.issues.forEach(issue => {
           if (issue.path && issue.path.length > 0 && issue.message) {
             // Use the first path segment as the field key
-            const key = String(issue.path[0])
+            const key = String(issue.path[0]);
             // Only set the error if not already set (show first error per field)
             if (!fieldErrors[key]) {
-              fieldErrors[key] = issue.message
+              fieldErrors[key] = issue.message;
             }
           }
-        })
-        errors.value = fieldErrors
+        });
+        errors.value = fieldErrors;
       }
     }
   },
   { deep: true },
-)
+);
 
 // Language mapping function
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
   const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
-    'ckb-IR': ['Kurdiya Navîn (Iranran)', 'Kurdish'],
-    'de-DE': ['Deutsch', 'German'],
-    'en-GB': ['British English', 'English, United Kingdom'],
-    'en-US': ['American English', 'English, United States'],
-    'es-ES': ['Español', 'Spanish'],
-    'fa-IR': ['فارسی', 'Persian'],
-    'fr-FR': ['Français', 'French'],
-    'hi-IN': ['हिंदी', 'Hindi'],
-    'hi-Latn-IN': ['Hinglish', 'Hindi (Latin Alphabet)'],
-    'it-IT': ['Italiano', 'Italian'],
-    'ja-JP': ['日本語', 'Japanese'],
-    'nb-NO': ['Bokmål', 'Norwegian Bokmal'],
-    'nl-NL': ['Nederlands', 'Dutch'],
-    'pt-BR': ['Português Brasileiro', 'Portuguese, Brazilian'],
-    'ro-RO': ['Română', 'Romanian'],
-    'ru-RU': ['Pусский', 'Russian'],
-    'sl-SI': ['Slovenščina', 'Slovenian'],
-    'tr-TR': ['Türkçe', 'Turkish'],
-  }
-  return supportedLanguagesMap[langKey] ?? [langKey]
+    "ckb-IR": ["Kurdiya Navîn (Iranran)", "Kurdish"],
+    "de-DE": ["Deutsch", "German"],
+    "en-GB": ["British English", "English, United Kingdom"],
+    "en-US": ["American English", "English, United States"],
+    "es-ES": ["Español", "Spanish"],
+    "fa-IR": ["فارسی", "Persian"],
+    "fr-FR": ["Français", "French"],
+    "hi-IN": ["हिंदी", "Hindi"],
+    "hi-Latn-IN": ["Hinglish", "Hindi (Latin Alphabet)"],
+    "it-IT": ["Italiano", "Italian"],
+    "ja-JP": ["日本語", "Japanese"],
+    "nb-NO": ["Bokmål", "Norwegian Bokmal"],
+    "nl-NL": ["Nederlands", "Dutch"],
+    "pt-BR": ["Português Brasileiro", "Portuguese, Brazilian"],
+    "ro-RO": ["Română", "Romanian"],
+    "ru-RU": ["Pусский", "Russian"],
+    "sl-SI": ["Slovenščina", "Slovenian"],
+    "tr-TR": ["Türkçe", "Turkish"],
+  };
+  return supportedLanguagesMap[langKey] ?? [langKey];
 }
 
 // Computed language options
 const languageOptions = computed(() =>
   props.languages.map(langKey => ({
     value: langKey,
-    label: mapLanguageKeysToNames(langKey).join(' - '),
+    label: mapLanguageKeysToNames(langKey).join(" - "),
   })),
-)
+);
 </script>

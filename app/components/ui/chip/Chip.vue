@@ -13,23 +13,23 @@
 </template>
 
 <script setup lang="ts">
-import type { ChipProps, ChipSlots } from '.'
-import { Primitive, Slot } from 'reka-ui'
-import { computed } from 'vue'
-import { useAvatarGroup } from '@/composables/useAvatarGroup'
-import { chip } from '.'
+import type { ChipProps, ChipSlots } from ".";
+import { Primitive, Slot } from "reka-ui";
+import { computed } from "vue";
+import { useAvatarGroup } from "@/composables/useAvatarGroup";
+import { chip } from ".";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<ChipProps>(), {
   inset: false,
   standalone: false,
-})
-defineSlots<ChipSlots>()
+});
+defineSlots<ChipSlots>();
 
-const show = defineModel<boolean>('show', { default: true })
+const show = defineModel<boolean>("show", { default: true });
 
-const { size } = useAvatarGroup(props)
+const { size } = useAvatarGroup(props);
 
 const ui = computed(() =>
   chip({
@@ -39,5 +39,5 @@ const ui = computed(() =>
     inset: props.inset,
     standalone: props.standalone,
   }),
-)
+);
 </script>

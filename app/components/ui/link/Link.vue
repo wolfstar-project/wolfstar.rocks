@@ -37,28 +37,28 @@
 </template>
 
 <script setup lang="ts">
-import type { LinkProps, LinkSlots } from '.'
-import { reactiveOmit } from '@vueuse/core'
-import { diff, isEqual } from 'ohash/utils'
-import { useForwardProps } from 'reka-ui'
-import { tv } from 'tailwind-variants'
-import { link, LinkBase } from '.'
+import type { LinkProps, LinkSlots } from ".";
+import { reactiveOmit } from "@vueuse/core";
+import { diff, isEqual } from "ohash/utils";
+import { useForwardProps } from "reka-ui";
+import { tv } from "tailwind-variants";
+import { link, LinkBase } from ".";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<LinkProps>(), {
-  as: 'button',
-  type: 'button',
+  as: "button",
+  type: "button",
   active: undefined,
-  activeClass: '',
-  inactiveClass: '',
-})
-defineSlots<LinkSlots>()
+  activeClass: "",
+  inactiveClass: "",
+});
+defineSlots<LinkSlots>();
 
-const route = useRoute()
+const route = useRoute();
 const nuxtLinkProps = useForwardProps(
-  reactiveOmit(props, 'as', 'type', 'disabled', 'active', 'exact', 'exactQuery', 'exactHash', 'activeClass', 'inactiveClass', 'raw', 'class'),
-)
+  reactiveOmit(props, "as", "type", "disabled", "active", "exact", "exactQuery", "exactHash", "activeClass", "inactiveClass", "raw", "class"),
+);
 
 const ui = computed(() =>
   tv({
@@ -70,58 +70,58 @@ const ui = computed(() =>
       },
     },
   }),
-)
+);
 
 function isPartiallyEqual(item1: any, item2: any) {
   const diffedKeys = diff(item1, item2).reduce((filtered, q) => {
-    if (q.type === 'added') {
-      filtered.add(q.key)
+    if (q.type === "added") {
+      filtered.add(q.key);
     }
-    return filtered
-  }, new Set<string>())
+    return filtered;
+  }, new Set<string>());
 
-  const item1Filtered = Object.fromEntries(Object.entries(item1).filter(([key]) => !diffedKeys.has(key)))
-  const item2Filtered = Object.fromEntries(Object.entries(item2).filter(([key]) => !diffedKeys.has(key)))
+  const item1Filtered = Object.fromEntries(Object.entries(item1).filter(([key]) => !diffedKeys.has(key)));
+  const item2Filtered = Object.fromEntries(Object.entries(item2).filter(([key]) => !diffedKeys.has(key)));
 
-  return isEqual(item1Filtered, item2Filtered)
+  return isEqual(item1Filtered, item2Filtered);
 }
 
 function isLinkActive({ route: linkRoute, isActive, isExactActive }: any) {
   if (props.active !== undefined) {
-    return props.active
+    return props.active;
   }
 
-  if (props.exactQuery === 'partial') {
+  if (props.exactQuery === "partial") {
     if (!isPartiallyEqual(linkRoute.query, route.query))
-      return false
+      return false;
   }
   else if (props.exactQuery === true) {
     if (!isEqual(linkRoute.query, route.query))
-      return false
+      return false;
   }
 
   if (props.exactHash && linkRoute.hash !== route.hash) {
-    return false
+    return false;
   }
 
   if (props.exact && isExactActive) {
-    return true
+    return true;
   }
 
   if (!props.exact && isActive) {
-    return true
+    return true;
   }
 
-  return false
+  return false;
 }
 
 function resolveLinkClass({ route, isActive, isExactActive }: any) {
-  const active = isLinkActive({ route, isActive, isExactActive })
+  const active = isLinkActive({ route, isActive, isExactActive });
 
   if (props.raw) {
-    return [props.class, active ? props.activeClass : props.inactiveClass]
+    return [props.class, active ? props.activeClass : props.inactiveClass];
   }
 
-  return ui.value({ class: props.class, active, disabled: props.disabled })
+  return ui.value({ class: props.class, active, disabled: props.disabled });
 }
 </script>

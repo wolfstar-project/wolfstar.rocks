@@ -1,6 +1,6 @@
-import type { APIGuild, APIGuildMember, RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v10'
-import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from '~~/shared/types/discord'
-import { hasAtLeastOneKeyInMap } from '@sapphire/utilities'
+import type { APIGuild, APIGuildMember, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from "~~/shared/types/discord";
+import { hasAtLeastOneKeyInMap } from "@sapphire/utilities";
 import {
   GuildDefaultMessageNotifications,
   GuildExplicitContentFilter,
@@ -9,39 +9,39 @@ import {
   GuildVerificationLevel,
   Locale,
   PermissionFlagsBits,
-} from 'discord-api-types/v10'
-import { readSettings } from '~~/server/database/settings/functions'
-import useApi from '~~/server/utils/api'
-import { flattenGuild } from '~~/server/utils/ApiTransformers'
-import { PermissionsBits } from '~/utils/bits'
+} from "discord-api-types/v10";
+import { readSettings } from "~~/server/database/settings/functions";
+import useApi from "~~/server/utils/api";
+import { flattenGuild } from "~~/server/utils/ApiTransformers";
+import { PermissionsBits } from "~/utils/bits";
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-  const permissionsValue = (member as unknown as { permissions?: string }).permissions
-  const memberRolePermissions = BigInt(permissionsValue ?? '0')
+  const permissionsValue = (member as unknown as { permissions?: string }).permissions;
+  const memberRolePermissions = BigInt(permissionsValue ?? "0");
   return roles.length === 0
     ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles)
+    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles);
 }
 
 async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boolean> {
   if (guild.owner_id === member.user.id)
-    return true
+    return true;
 
-  const settings = await readSettings(guild.id)
-  return isAdmin(member, settings.rolesAdmin)
+  const settings = await readSettings(guild.id);
+  return isAdmin(member, settings.rolesAdmin);
 }
 
 async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGuild, guild: APIGuild | undefined): Promise<boolean> {
   if (oauthGuild.owner)
-    return true
-  if (typeof guild === 'undefined')
-    return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild)
+    return true;
+  if (typeof guild === "undefined")
+    return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild);
 
-  const member = await useApi().guilds.getMember(guild.id, id)
+  const member = await useApi().guilds.getMember(guild.id, id);
   if (!member)
-    return false
+    return false;
 
-  return canManage(guild, member)
+  return canManage(guild, member);
 }
 
 async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
@@ -50,7 +50,7 @@ async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGui
     .get(data.id, {
       with_counts: true,
     })
-    .catch(() => undefined)
+    .catch(() => undefined);
 
   const serialized: PartialOauthFlattenedGuild
 		= guild === undefined
@@ -85,22 +85,22 @@ async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGui
 		      verificationLevel: GuildVerificationLevel.None,
 		      verified: false,
 		    } as unknown as FlattenedGuild)
-		  : flattenGuild({ ...guild, channels: (await useApi().guilds.getChannels(guild.id)) as any })
+		  : flattenGuild({ ...guild, channels: (await useApi().guilds.getChannels(guild.id)) as any });
 
   return {
     ...serialized,
     permissions: Number(data.permissions),
     manageable: await getManageable(userId, data, guild),
-    wolfstarIsIn: typeof guild !== 'undefined',
-  }
+    wolfstarIsIn: typeof guild !== "undefined",
+  };
 }
 
 export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): Promise<TransformedLoginData> {
   if (!user || !guilds)
-    return { user, guilds }
+    return { user, guilds };
 
-  const userId = user.id
+  const userId = user.id;
 
-  const transformedGuilds = await Promise.all(guilds.map(guild => transformGuild(userId, guild)))
-  return { user, transformedGuilds }
+  const transformedGuilds = await Promise.all(guilds.map(guild => transformGuild(userId, guild)));
+  return { user, transformedGuilds };
 }

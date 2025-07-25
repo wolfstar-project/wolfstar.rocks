@@ -50,29 +50,29 @@
 </template>
 
 <script setup lang="ts">
-import type { InputNumberEmits, InputNumberProps, InputNumberSlots } from '.'
-import { reactivePick } from '@vueuse/core'
-import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot, useForwardPropsEmits } from 'reka-ui'
-import { computed, onMounted, ref } from 'vue'
-import { Button } from '@/components/ui/button'
-import { useFormField } from '@/composables/useFormField'
-import { inputNumber } from '.'
+import type { InputNumberEmits, InputNumberProps, InputNumberSlots } from ".";
+import { reactivePick } from "@vueuse/core";
+import { NumberFieldDecrement, NumberFieldIncrement, NumberFieldInput, NumberFieldRoot, useForwardPropsEmits } from "reka-ui";
+import { computed, onMounted, ref } from "vue";
+import { Button } from "@/components/ui/button";
+import { useFormField } from "@/composables/useFormField";
+import { inputNumber } from ".";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<InputNumberProps>(), {
-  orientation: 'horizontal',
-})
-const emits = defineEmits<InputNumberEmits>()
-defineSlots<InputNumberSlots>()
+  orientation: "horizontal",
+});
+const emits = defineEmits<InputNumberEmits>();
+defineSlots<InputNumberSlots>();
 
 const rootProps = useForwardPropsEmits(
-  reactivePick(props, 'as', 'modelValue', 'defaultValue', 'min', 'max', 'step', 'stepSnapping', 'formatOptions', 'disableWheelChange'),
+  reactivePick(props, "as", "modelValue", "defaultValue", "min", "max", "step", "stepSnapping", "formatOptions", "disableWheelChange"),
   emits,
-)
+);
 
 const { emitFormBlur, emitFormFocus, emitFormChange, emitFormInput, id, color, size, name, highlight, disabled, ariaAttrs }
-	= useFormField<InputNumberProps>(props)
+	= useFormField<InputNumberProps>(props);
 
 const ui = computed(() =>
   inputNumber({
@@ -82,40 +82,40 @@ const ui = computed(() =>
     highlight: highlight.value,
     orientation: props.orientation,
   }),
-)
+);
 
-const incrementIcon = computed(() => props.incrementIcon || (props.orientation === 'horizontal' ? 'radix-icons:plus' : 'radix-icons:chevron-up'))
-const decrementIcon = computed(() => props.decrementIcon || (props.orientation === 'horizontal' ? 'radix-icons:minus' : 'radix-icons:chevron-down'))
+const incrementIcon = computed(() => props.incrementIcon || (props.orientation === "horizontal" ? "radix-icons:plus" : "radix-icons:chevron-up"));
+const decrementIcon = computed(() => props.decrementIcon || (props.orientation === "horizontal" ? "radix-icons:minus" : "radix-icons:chevron-down"));
 
-const inputRef = ref<InstanceType<typeof NumberFieldInput> | null>(null)
+const inputRef = ref<InstanceType<typeof NumberFieldInput> | null>(null);
 
 function onUpdate(value: number) {
   // @ts-expect-error - 'target' does not exist in type 'EventInit'
-  const event = new Event('change', { target: { value } })
-  emits('change', event)
+  const event = new Event("change", { target: { value } });
+  emits("change", event);
 
-  emitFormChange()
-  emitFormInput()
+  emitFormChange();
+  emitFormInput();
 }
 
 function onBlur(event: FocusEvent) {
-  emitFormBlur()
-  emits('blur', event)
+  emitFormBlur();
+  emits("blur", event);
 }
 
 function autoFocus() {
   if (props.autofocus) {
-    inputRef.value?.$el?.focus()
+    inputRef.value?.$el?.focus();
   }
 }
 
 onMounted(() => {
   setTimeout(() => {
-    autoFocus()
-  }, props.autofocusDelay)
-})
+    autoFocus();
+  }, props.autofocusDelay);
+});
 
 defineExpose({
   inputRef,
-})
+});
 </script>

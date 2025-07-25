@@ -49,12 +49,12 @@
 </template>
 
 <script setup lang="ts">
-import { useGuildEvents } from '~~/app/composables/useGuildSettings'
+import { useGuildEvents } from "~~/app/composables/useGuildSettings";
 
 // Use the events composable with SettingsDataEntries
-const { 
-  eventsConfig, 
-  settings, 
-  updateEventSetting
-} = useGuildEvents()
+const {
+  eventsConfig,
+  settings,
+  updateEventSetting,
+} = useGuildEvents();
 </script>

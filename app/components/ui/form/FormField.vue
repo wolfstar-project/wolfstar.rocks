@@ -39,124 +39,124 @@
 </template>
 
 <script lang="ts">
-import { tv, type VariantProps } from 'tailwind-variants'
+import { tv, type VariantProps } from "tailwind-variants";
 
 export const formField = tv({
   slots: {
-    root: '',
-    wrapper: '',
-    labelWrapper: 'flex items-center justify-between',
-    label: 'block font-medium text-base-content',
-    container: 'relative mt-1',
-    description: 'text-base-content/70',
-    error: 'mt-2 text-error',
-    hint: 'text-base-content/70',
-    help: 'mt-2 text-base-content/70',
+    root: "",
+    wrapper: "",
+    labelWrapper: "flex items-center justify-between",
+    label: "block font-medium text-base-content",
+    container: "relative mt-1",
+    description: "text-base-content/70",
+    error: "mt-2 text-error",
+    hint: "text-base-content/70",
+    help: "mt-2 text-base-content/70",
   },
   variants: {
     size: {
       xs: {
-        root: 'text-2xs',
+        root: "text-2xs",
       },
       sm: {
-        root: 'text-xs',
+        root: "text-xs",
       },
       md: {
-        root: 'text-sm',
+        root: "text-sm",
       },
       lg: {
-        root: 'text-base',
+        root: "text-base",
       },
       xl: {
-        root: 'text-lg',
+        root: "text-lg",
       },
     },
     required: {
       true: {
-        label: 'after:ms-0.5 after:text-error after:content-[\'*\']',
+        label: "after:ms-0.5 after:text-error after:content-['*']",
       },
     },
   },
   defaultVariants: {
-    size: 'md',
+    size: "md",
   },
-})
+});
 
-export type FormFieldVariants = VariantProps<typeof formField>
+export type FormFieldVariants = VariantProps<typeof formField>;
 
 export interface FormFieldProps {
   /**
    * The element or component this component should render as.
    * @defaultValue 'div'
    */
-  as?: any
+  as?: any;
   /** The name of the FormField. Also used to match form errors. */
-  name?: string
+  name?: string;
   /** A regular expression to match form error names. */
-  errorPattern?: RegExp
-  label?: string
-  description?: string
-  help?: string
-  error?: string | boolean
-  hint?: string
+  errorPattern?: RegExp;
+  label?: string;
+  description?: string;
+  help?: string;
+  error?: string | boolean;
+  hint?: string;
   /**
    * @defaultValue 'md'
    */
-  size?: FormFieldVariants['size']
-  required?: boolean
+  size?: FormFieldVariants["size"];
+  required?: boolean;
   /** If true, validation on input will be active immediately instead of waiting for a blur event. */
-  eagerValidation?: boolean
+  eagerValidation?: boolean;
   /**
    * Delay in milliseconds before validating the form on input events.
    * @defaultValue `300`
    */
-  validateOnInputDelay?: number
-  class?: any
-  ui?: Partial<typeof formField.slots>
+  validateOnInputDelay?: number;
+  class?: any;
+  ui?: Partial<typeof formField.slots>;
 }
 
 export interface FormFieldSlots {
-  label: (props: { label?: string }) => any
-  hint: (props: { hint?: string }) => any
-  description: (props: { description?: string }) => any
-  help: (props: { help?: string }) => any
-  error: (props: { error?: string | boolean }) => any
-  default: (props: { error?: string | boolean }) => any
+  label: (props: { label?: string }) => any;
+  hint: (props: { hint?: string }) => any;
+  description: (props: { description?: string }) => any;
+  help: (props: { help?: string }) => any;
+  error: (props: { error?: string | boolean }) => any;
+  default: (props: { error?: string | boolean }) => any;
 }
 </script>
 
 <script setup lang="ts">
-import type { Ref } from 'vue'
-import type { FormError, FormFieldInjectedOptions } from '~/types/form'
-import { Primitive } from 'reka-ui'
-import { computed, inject, provide, ref, useId } from 'vue'
-import { formFieldInjectionKey, inputIdInjectionKey } from '~/composables/useFormField'
+import type { Ref } from "vue";
+import type { FormError, FormFieldInjectedOptions } from "~/types/form";
+import { Primitive } from "reka-ui";
+import { computed, inject, provide, ref, useId } from "vue";
+import { formFieldInjectionKey, inputIdInjectionKey } from "~/composables/useFormField";
 
-const props = defineProps<FormFieldProps>()
-const slots = defineSlots<FormFieldSlots>()
+const props = defineProps<FormFieldProps>();
+const slots = defineSlots<FormFieldSlots>();
 
 const ui = computed(() =>
   formField({
     size: props.size,
     required: props.required,
   }),
-)
+);
 
-const formErrors = inject<Ref<FormError[]> | null>('form-errors', null)
+const formErrors = inject<Ref<FormError[]> | null>("form-errors", null);
 
 const error = computed(
   () =>
     props.error
     || formErrors?.value?.find(error => error.name && (error.name === props.name || (props.errorPattern && error.name.match(props.errorPattern))))
       ?.message,
-)
+);
 
-const id = ref(useId())
+const id = ref(useId());
 // Copies id's initial value to bind aria-attributes such as aria-describedby.
 // This is required for the RadioGroup component which unsets the id value.
-const ariaId = id.value
+const ariaId = id.value;
 
-provide(inputIdInjectionKey, id)
+provide(inputIdInjectionKey, id);
 
 provide(
   formFieldInjectionKey,
@@ -175,5 +175,5 @@ provide(
         ariaId,
       }) as FormFieldInjectedOptions<FormFieldProps>,
   ),
-)
+);
 </script>

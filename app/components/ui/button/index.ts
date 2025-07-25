@@ -1,159 +1,159 @@
-import type { VariantProps } from 'tailwind-variants'
-import type { HTMLAttributes } from 'vue'
-import type { LinkProps } from '../link'
-import type { UseComponentIconsProps } from '~/composables/useComponentIcons'
-import { tv } from 'tailwind-variants'
-import { buttonGroupVariant } from '../button-group'
+import type { VariantProps } from "tailwind-variants";
+import type { HTMLAttributes } from "vue";
+import type { LinkProps } from "../link";
+import type { UseComponentIconsProps } from "~/composables/useComponentIcons";
+import { tv } from "tailwind-variants";
+import { buttonGroupVariant } from "../button-group";
 
-export { default as Button } from './Button.vue'
+export { default as Button } from "./Button.vue";
 
 // Type-safe color definitions with readonly array
-const colors = ['primary', 'secondary', 'success', 'error', 'info', 'warning', 'neutral'] as const
+const colors = ["primary", "secondary", "success", "error", "info", "warning", "neutral"] as const;
 
 export const buttonVariants = tv({
   slots: {
     base: [
-      'btn', // daisyUI button base class
+      "btn", // daisyUI button base class
       //	'inline-flex items-center',
       //	'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
       //	'disabled:opacity-75 aria-disabled:opacity-75'
     ],
-    label: 'truncate',
-    leadingIcon: 'shrink-0',
-    leadingAvatar: 'shrink-0',
-    leadingAvatarSize: '',
-    trailingIcon: 'shrink-0',
+    label: "truncate",
+    leadingIcon: "shrink-0",
+    leadingAvatar: "shrink-0",
+    leadingAvatarSize: "",
+    trailingIcon: "shrink-0",
   },
   variants: {
     ...buttonGroupVariant,
     color: { ...Object.fromEntries(colors.map(color => [color, `btn-${color}`])) },
     variant: {
-      outline: 'btn-outline',
-      soft: 'btn-ghost',
-      dash: 'btn-dash',
-      ghost: 'btn-ghost',
-      link: 'btn-link',
+      outline: "btn-outline",
+      soft: "btn-ghost",
+      dash: "btn-dash",
+      ghost: "btn-ghost",
+      link: "btn-link",
     },
     size: {
       xs: {
-        base: 'gap-1 btn-xs',
-        leadingIcon: 'size-4',
-        leadingAvatarSize: '3xs',
-        trailingIcon: 'size-4',
+        base: "gap-1 btn-xs",
+        leadingIcon: "size-4",
+        leadingAvatarSize: "3xs",
+        trailingIcon: "size-4",
       },
       sm: {
-        base: 'gap-1.5 btn-sm',
-        leadingIcon: 'size-4',
-        leadingAvatarSize: '3xs',
-        trailingIcon: 'size-4',
+        base: "gap-1.5 btn-sm",
+        leadingIcon: "size-4",
+        leadingAvatarSize: "3xs",
+        trailingIcon: "size-4",
       },
       md: {
-        base: 'gap-1.5 btn-md',
-        leadingIcon: 'size-5',
-        leadingAvatarSize: '2xs',
-        trailingIcon: 'size-5',
+        base: "gap-1.5 btn-md",
+        leadingIcon: "size-5",
+        leadingAvatarSize: "2xs",
+        trailingIcon: "size-5",
       },
       lg: {
-        base: 'gap-2 btn-lg',
-        leadingIcon: 'size-5',
-        leadingAvatarSize: '2xs',
-        trailingIcon: 'size-5',
+        base: "gap-2 btn-lg",
+        leadingIcon: "size-5",
+        leadingAvatarSize: "2xs",
+        trailingIcon: "size-5",
       },
       xl: {
-        base: 'gap-2 btn-xl',
-        leadingIcon: 'size-6',
-        leadingAvatarSize: 'xs',
-        trailingIcon: 'size-6',
+        base: "gap-2 btn-xl",
+        leadingIcon: "size-6",
+        leadingAvatarSize: "xs",
+        trailingIcon: "size-6",
       },
     },
     block: {
-      true: 'btn-block',
+      true: "btn-block",
     },
     square: {
-      true: 'btn-square',
+      true: "btn-square",
     },
     circle: {
-      true: 'btn-circle',
+      true: "btn-circle",
     },
     leading: {
-      true: '',
+      true: "",
     },
     trailing: {
-      true: '',
+      true: "",
     },
     loading: {
-      true: 'loading loading-spinner',
+      true: "loading loading-spinner",
     },
     active: {
       true: {
-        base: 'btn-active',
+        base: "btn-active",
       },
       false: {
-        base: '',
+        base: "",
       },
     },
   },
   compoundVariants: [
     // Neutral variants
     {
-      color: 'neutral',
+      color: "neutral",
       class: `disabled:btn-disabled aria-disabled:btn-disabled`,
     },
     {
-      color: 'neutral',
-      variant: 'outline',
+      color: "neutral",
+      variant: "outline",
       class: `disabled:btn-disabled aria-disabled:btn-disabled`,
     },
     {
-      color: 'neutral',
-      variant: 'soft',
+      color: "neutral",
+      variant: "soft",
       class: `disabled:btn-disabled aria-disabled:btn-disabled opacity-80`,
     },
     {
-      color: 'neutral',
-      variant: 'dash',
+      color: "neutral",
+      variant: "dash",
       class: `disabled:btn-disabled aria-disabled:btn-disabled`,
     },
     {
-      color: 'neutral',
-      variant: 'ghost',
+      color: "neutral",
+      variant: "ghost",
       class: `disabled:btn-disabled aria-disabled:btn-disabled`,
     },
     {
-      color: 'neutral',
-      variant: 'link',
+      color: "neutral",
+      variant: "link",
       class: `disabled:btn-disabled aria-disabled:btn-disabled`,
     },
     {
-      size: 'xs',
+      size: "xs",
       square: true,
-      class: 'btn-xs',
+      class: "btn-xs",
     },
     {
-      size: 'sm',
+      size: "sm",
       square: true,
-      class: 'btn-sm',
+      class: "btn-sm",
     },
     {
-      size: 'md',
+      size: "md",
       square: true,
-      class: 'btn-md',
+      class: "btn-md",
     },
     {
-      size: 'lg',
+      size: "lg",
       square: true,
-      class: 'btn-lg',
+      class: "btn-lg",
     },
     {
-      size: 'xl',
+      size: "xl",
       square: true,
-      class: 'btn-xl',
+      class: "btn-xl",
     },
     {
       loading: true,
       leading: true,
       class: {
-        leadingIcon: 'animate-spin',
+        leadingIcon: "animate-spin",
       },
     },
     {
@@ -161,36 +161,36 @@ export const buttonVariants = tv({
       leading: false,
       trailing: true,
       class: {
-        trailingIcon: 'animate-spin',
+        trailingIcon: "animate-spin",
       },
     },
   ],
 
   defaultVariants: {
-    color: 'primary',
+    color: "primary",
   },
-})
+});
 
-export type ButtonVariants = VariantProps<typeof buttonVariants>
+export type ButtonVariants = VariantProps<typeof buttonVariants>;
 
-export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, 'raw' | 'custom'> {
-  label?: string
-  color?: ButtonVariants['color'] | string
-  activeColor?: ButtonVariants['color'] | string
-  variant?: ButtonVariants['variant']
-  activeVariant?: ButtonVariants['variant']
-  size?: ButtonVariants['size']
-  square?: boolean
-  block?: boolean
-  circle?: boolean
-  loadingAuto?: boolean
-  onClick?: ((event: MouseEvent) => void | Promise<void>) | Array<(event: MouseEvent) => void | Promise<void>>
-  class?: HTMLAttributes['class']
-  ui?: Partial<typeof buttonVariants.slots>
+export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, "raw" | "custom"> {
+  label?: string;
+  color?: ButtonVariants["color"] | string;
+  activeColor?: ButtonVariants["color"] | string;
+  variant?: ButtonVariants["variant"];
+  activeVariant?: ButtonVariants["variant"];
+  size?: ButtonVariants["size"];
+  square?: boolean;
+  block?: boolean;
+  circle?: boolean;
+  loadingAuto?: boolean;
+  onClick?: ((event: MouseEvent) => void | Promise<void>) | Array<(event: MouseEvent) => void | Promise<void>>;
+  class?: HTMLAttributes["class"];
+  ui?: Partial<typeof buttonVariants.slots>;
 }
 
 export interface ButtonSlots {
-  leading: (props?: object) => unknown
-  default: (props?: object) => unknown
-  trailing: (props?: object) => unknown
+  leading: (props?: object) => unknown;
+  default: (props?: object) => unknown;
+  trailing: (props?: object) => unknown;
 }

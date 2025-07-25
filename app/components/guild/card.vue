@@ -12,13 +12,13 @@
     >
       <!-- Guild Icon -->
       <div class="flex flex-col items-center space-y-3">
-        <guild-icon 
+        <guild-icon
           :guild="guild"
           variant="bare"
           size="md"
           :show-status="false"
         />
-        
+
         <!-- Guild Name -->
         <h3 class="line-clamp-2 text-sm font-semibold text-base-content transition-colors group-hover:text-primary text-center">
           {{ guild.name }}
@@ -62,7 +62,7 @@
 
       <!-- Guild Icon -->
       <div class="flex flex-col items-center space-y-4">
-        <guild-icon 
+        <guild-icon
           :guild="guild"
           variant="bare"
           size="lg"
@@ -115,37 +115,37 @@
 </template>
 
 <script setup lang="ts">
-import type { ValuesType } from 'utility-types'
-import type { TransformedLoginData } from '~~/shared/types/discord'
+import type { ValuesType } from "utility-types";
+import type { TransformedLoginData } from "~~/shared/types/discord";
 
 interface EnhancedGuildCardProps {
-  guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
-  type?: 'card' | 'list'
+  guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
+  type?: "card" | "list";
 }
 
 const props = withDefaults(defineProps<EnhancedGuildCardProps>(), {
-  type: 'list',
-})
+  type: "list",
+});
 
 // Extract guild and type from props for template usage
-const guild = toRef(props, 'guild')
-const type = toRef(props, 'type')
+const guild = toRef(props, "guild");
+const type = toRef(props, "type");
 
 // Utility functions
 function formatNumber(num: number): string {
-  return new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 1
-  }).format(num)
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(num);
 }
 </script>
 
 <style scoped>
 .line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 }
 </style>

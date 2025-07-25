@@ -29,45 +29,45 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ apps: readonly OtherApp[] }>()
+defineProps<{ apps: readonly OtherApp[] }>();
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 
 .other-apps-layout {
-  @apply grid gap-4 p-4;
-  grid-template-rows: 230px min-content 1fr;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    'a'
-    'b'
-    'c';
+	@apply grid gap-4 p-4;
+	grid-template-rows: 230px min-content 1fr;
+	grid-template-columns: 1fr;
+	grid-template-areas:
+		'a'
+		'b'
+		'c';
 }
 
 .other-apps-avatar {
-  @apply h-full w-full object-cover object-[0_20%] max-md:rounded-xl md:rounded-l-xl;
-  grid-area: a;
+	@apply h-full w-full object-cover object-[0_20%] max-md:rounded-xl md:rounded-l-xl;
+	grid-area: a;
 }
 
 .other-apps-title {
-  @apply text-3xl font-semibold md:mr-4 md:mt-4 md:text-xl;
-  grid-area: b;
+	@apply text-3xl font-semibold md:mr-4 md:mt-4 md:text-xl;
+	grid-area: b;
 }
 
 .other-apps-description {
-  @apply flex flex-col md:mb-4 md:mr-4;
-  grid-area: c;
+	@apply flex flex-col md:mb-4 md:mr-4;
+	grid-area: c;
 }
 
 @media (min-width: 768px) {
-  .other-apps-layout {
-    @apply p-0;
-    grid-template-rows: min-content 1fr;
-    grid-template-columns: 256px 1fr;
-    grid-template-areas:
-      'a b'
-      'a c';
-  }
+	.other-apps-layout {
+		@apply p-0;
+		grid-template-rows: min-content 1fr;
+		grid-template-columns: 256px 1fr;
+		grid-template-areas:
+			'a b'
+			'a c';
+	}
 }
 </style>

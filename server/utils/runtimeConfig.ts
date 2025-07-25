@@ -1,8 +1,8 @@
-import type { NitroRuntimeConfig } from 'nitropack/types'
-import { cast } from '@sapphire/utilities/cast'
-import { config } from 'dotenv'
+import type { NitroRuntimeConfig } from "nitropack/types";
+import { cast } from "@sapphire/utilities/cast";
+import { config } from "dotenv";
 
-let runtimeConfigInstance: NitroRuntimeConfig
+let runtimeConfigInstance: NitroRuntimeConfig;
 
 export function generateRuntimeConfig() {
   return {
@@ -26,15 +26,15 @@ export function generateRuntimeConfig() {
     discordToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
     discordClientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
     discordClientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
-  }
+  };
 }
 
-if (typeof useRuntimeConfig !== 'undefined') {
-  runtimeConfigInstance = useRuntimeConfig()
+if (typeof useRuntimeConfig !== "undefined") {
+  runtimeConfigInstance = useRuntimeConfig();
 }
 else {
-  config()
-  runtimeConfigInstance = cast<NitroRuntimeConfig>(generateRuntimeConfig())
+  config();
+  runtimeConfigInstance = cast<NitroRuntimeConfig>(generateRuntimeConfig());
 }
 
-export const runtimeConfig = runtimeConfigInstance
+export const runtimeConfig = runtimeConfigInstance;

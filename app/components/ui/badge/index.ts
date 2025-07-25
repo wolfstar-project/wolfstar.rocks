@@ -1,20 +1,20 @@
-import type {VariantProps} from 'tailwind-variants';
-import { tv  } from 'tailwind-variants'
+import type { VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
-export { default as Badge } from './Badge.vue'
+export { default as Badge } from "./Badge.vue";
 
 export const badgeVariants = tv({
-  base: 'badge',
+  base: "badge",
   variants: {
     variant: {
-      primary: 'badge badge-primary',
-      secondary: 'badge badge-secondary',
-      eror: 'badge badge-error',
-      outline: 'badge-outline badge',
+      primary: "badge badge-primary",
+      secondary: "badge badge-secondary",
+      eror: "badge badge-error",
+      outline: "badge-outline badge",
     },
   },
   defaultVariants: {
-    variant: 'primary',
+    variant: "primary",
   },
-})
-export type BadgeVariants = VariantProps<typeof badgeVariants>
+});
+export type BadgeVariants = VariantProps<typeof badgeVariants>;

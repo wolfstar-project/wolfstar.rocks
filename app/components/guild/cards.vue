@@ -90,18 +90,16 @@
       class="flex flex-col items-center justify-center space-y-6 py-16"
     >
       <div class="relative">
-        <ShadIcon 
-          :name="searchQuery ? 'heroicons:magnifying-glass-circle' : 'heroicons:server-stack'" 
-          class="h-20 w-20 text-base-content/30 transition-all duration-300" 
+        <ShadIcon
+          :name="searchQuery ? 'heroicons:magnifying-glass-circle' : 'heroicons:server-stack'"
+          class="h-20 w-20 text-base-content/30 transition-all duration-300"
         />
         <div v-if="!searchQuery" class="absolute -top-2 -right-2">
           <ShadIcon name="heroicons:plus-circle" class="h-8 w-8 text-primary/50" />
         </div>
       </div>
 
-     
-        
-      <div class="text-center space-y-2"> 
+      <div class="text-center space-y-2">
         <ShadAlert
           v-if="error"
           color="error"
@@ -120,9 +118,9 @@
         </div>
       </div>
       <div class="flex flex-col sm:flex-row gap-3">
-        <button 
-          v-if="searchQuery" 
-          class="btn btn-outline btn-sm gap-2 transition-all duration-200 hover:scale-105" 
+        <button
+          v-if="searchQuery"
+          class="btn btn-outline btn-sm gap-2 transition-all duration-200 hover:scale-105"
           @click="clearSearch"
         >
           <ShadIcon name="heroicons:x-mark" class="h-4 w-4" />
@@ -138,90 +136,90 @@
 </template>
 
 <script setup lang="ts">
-import type { TransformedLoginData } from '~~/shared/types/discord'
-import { useInfiniteScroll, useRefHistory } from '@vueuse/core'
+import type { TransformedLoginData } from "~~/shared/types/discord";
+import { useInfiniteScroll, useRefHistory } from "@vueuse/core";
 
 interface EnhancedGuildCardsProps {
-  guilds: TransformedLoginData['transformedGuilds'] | null
-  loading?: boolean
-  error?: Error | null
+  guilds: TransformedLoginData["transformedGuilds"] | null;
+  loading?: boolean;
+  error?: Error | null;
 }
 
 const props = withDefaults(defineProps<EnhancedGuildCardsProps>(), {
   loading: false,
-})
+});
 
-const INITIAL_COUNT = 20
-const LOAD_MORE_COUNT = 10
+const INITIAL_COUNT = 20;
+const LOAD_MORE_COUNT = 10;
 
-const visibleCount = ref(INITIAL_COUNT)
-const scrollComponent = ref<HTMLElement | null>(null)
-const loadingMore = ref(false)
+const visibleCount = ref(INITIAL_COUNT);
+const scrollComponent = ref<HTMLElement | null>(null);
+const loadingMore = ref(false);
 
 // Search and filtering
-const searchQuery = ref('')
+const searchQuery = ref("");
 const { history: _searchHistory, undo: _undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
   deep: false,
   capacity: 10, // Keep last 10 search terms
-})
+});
 // is true by default because we want to show only manageable servers
-const showManageableOnly = ref(true)
+const showManageableOnly = ref(true);
 
 // Computed filtered guilds
 const filteredGuilds = computed(() => {
   if (!props.guilds)
-    return []
+    return [];
 
-  let filtered = [...props.guilds]
+  let filtered = [...props.guilds];
 
   // Apply manageable filter
   if (showManageableOnly.value) {
-    filtered = filtered.filter(guild => guild.manageable)
+    filtered = filtered.filter(guild => guild.manageable);
   }
 
   // Apply search filter
   if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase().trim()
-    filtered = filtered.filter(guild => guild.name.toLowerCase().includes(query) || guild.id.includes(query))
+    const query = searchQuery.value.toLowerCase().trim();
+    filtered = filtered.filter(guild => guild.name.toLowerCase().includes(query) || guild.id.includes(query));
   }
 
   // Sort: manageable servers first, then alphabetically
   return filtered.sort((guildA, guildB) => {
     if (guildA.manageable !== guildB.manageable) {
-      return guildA.manageable ? -1 : 1
+      return guildA.manageable ? -1 : 1;
     }
     if (guildA.wolfstarIsIn !== guildB.wolfstarIsIn) {
-      return guildA.wolfstarIsIn ? -1 : 1
+      return guildA.wolfstarIsIn ? -1 : 1;
     }
-    return guildA.name.localeCompare(guildB.name, 'en', { sensitivity: 'base' })
-  })
-})
+    return guildA.name.localeCompare(guildB.name, "en", { sensitivity: "base" });
+  });
+});
 
 const paginatedGuilds = computed(() => {
-  return filteredGuilds.value.slice(0, visibleCount.value)
-})
+  return filteredGuilds.value.slice(0, visibleCount.value);
+});
 
 function loadMore() {
   if (loadingMore.value || visibleCount.value >= filteredGuilds.value.length)
-    return
+    return;
 
-  loadingMore.value = true
+  loadingMore.value = true;
   setTimeout(() => {
-    visibleCount.value += LOAD_MORE_COUNT
-    loadingMore.value = false
-  }, 500) // Simulate loading delay
+    visibleCount.value += LOAD_MORE_COUNT;
+    loadingMore.value = false;
+  }, 500); // Simulate loading delay
 }
 
 useInfiniteScroll(
   scrollComponent,
   () => {
     if (!props.loading)
-      loadMore()
+      loadMore();
   },
   { distance: 10 },
-)
+);
 
 function clearSearch() {
-  searchQuery.value = ''
+  searchQuery.value = "";
 }
 </script>

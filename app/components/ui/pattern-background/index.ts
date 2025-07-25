@@ -39,7 +39,7 @@ export const PATTERN_BACKGROUND_SPEED = {
   Fast: 5000,
 } as const;
 
-export const patternBackgroundVariants = tv({ 
+export const patternBackgroundVariants = tv({
   base: "relative text-clip",
   variants: {
     variant: {
@@ -70,7 +70,7 @@ export const PATTERN_BACKGROUND_MASK = {
   EllipseTop: "ellipse-top",
 } as const;
 
-export const patternBackgroundMaskVariants = tv({ 
+export const patternBackgroundMaskVariants = tv({
   base: "bg-background",
   variants: {
     mask: {

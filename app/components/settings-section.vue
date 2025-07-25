@@ -17,10 +17,10 @@
 
 <script setup lang="ts">
 interface Props {
-  title?: string | number
-  disableTypography?: boolean
-  titleProps?: Record<string, unknown>
+  title?: string | number;
+  disableTypography?: boolean;
+  titleProps?: Record<string, unknown>;
 }
 
-defineProps<Props>()
+defineProps<Props>();
 </script>

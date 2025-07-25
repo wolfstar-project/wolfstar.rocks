@@ -29,7 +29,6 @@
           class="p-4"
         >
           <div class="flex items-center justify-between">
-  
             <SelectBoolean
               :title="event.title"
               :description="event.description"
@@ -44,13 +43,13 @@
 </template>
 
 <script setup lang="ts">
-import { useGuildModeration } from '~~/app/composables/useGuildSettings'
-import SelectBoolean from '~/components/select/boolean.vue'
+import { useGuildModeration } from "~~/app/composables/useGuildSettings";
+import SelectBoolean from "~/components/select/boolean.vue";
 
 // Use the moderation composable with SettingsDataEntries
-const { 
-  moderationConfig, 
-  settings, 
-  updateModerationSetting
-} = useGuildModeration()
+const {
+  moderationConfig,
+  settings,
+  updateModerationSetting,
+} = useGuildModeration();
 </script>

@@ -12,25 +12,25 @@
 </template>
 
 <script setup lang="ts">
-const isScrolling = ref(false)
+const isScrolling = ref(false);
 
 function scrollToTop() {
   window.scrollTo({
     top: 0,
     left: 0,
-    behavior: 'smooth',
-  })
+    behavior: "smooth",
+  });
 }
 
 function handleScroll() {
-  isScrolling.value = window.scrollY > 0
+  isScrolling.value = window.scrollY > 0;
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
+  window.addEventListener("scroll", handleScroll);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+  window.removeEventListener("scroll", handleScroll);
+});
 </script>

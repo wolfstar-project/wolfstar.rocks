@@ -82,9 +82,9 @@
           </div>
           <!-- Guild Cards with Loading State -->
           <div class="space-y-4">
-            <guild-cards 
+            <guild-cards
               :error="error"
-              :guilds="guilds" 
+              :guilds="guilds"
               :loading="pending"
               :container-height="600"
               :item-height="280"
@@ -147,83 +147,83 @@
 </template>
 
 <script setup lang="ts">
-import { captureException } from '@sentry/vue';
+import { captureException } from "@sentry/vue";
 
-definePageMeta({ alias: ['/account'], auth: true })
+definePageMeta({ alias: ["/account"], auth: true });
 
-const { user, ready } = useAuth()
+const { user, ready } = useAuth();
 const {
   data: guilds,
   pending,
   error: fetchError,
   refresh: refreshGuilds,
-} = useFetch('/api/users', {
-  key: 'guilds',
-  transform: data =>  data ? data.transformedGuilds ?? null : null,
+} = useFetch("/api/users", {
+  key: "guilds",
+  transform: data => data ? data.transformedGuilds ?? null : null,
   watch: [user],
-})
+});
 
 // Tab Management - inspired by Dyno.gg tab system
-const activeTab = ref('servers')
+const activeTab = ref("servers");
 const profileTabs = [
   {
-    id: 'servers',
-    label: 'Servers',
-    icon: 'heroicons:server',
+    id: "servers",
+    label: "Servers",
+    icon: "heroicons:server",
   },
   {
-    id: 'premium',
-    label: 'Premium',
-    icon: 'heroicons:star',
+    id: "premium",
+    label: "Premium",
+    icon: "heroicons:star",
   },
   {
-    id: 'settings',
-    label: 'Settings',
-    icon: 'heroicons:cog-6-tooth',
+    id: "settings",
+    label: "Settings",
+    icon: "heroicons:cog-6-tooth",
   },
-]
+];
 
-const error = ref<Error | null>(null)
-const isAnimated = ref(false)
-const isDefault = ref(false)
-const loading = ref(true)
+const error = ref<Error | null>(null);
+const isAnimated = ref(false);
+const isDefault = ref(false);
+const loading = ref(true);
 
 watch(ready, (isReady) => {
   if (isReady) {
     setTimeout(() => {
-      loading.value = false
-    }, 500)
+      loading.value = false;
+    }, 500);
   }
-}, { immediate: true })
+}, { immediate: true });
 watch(fetchError, (newError) => {
   if (newError) {
-    error.value = newError
-    captureException(newError)
+    error.value = newError;
+    captureException(newError);
   }
-})
+});
 
 const defaultAvatar = computed(() =>
   user.value?.id
     ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
-    : 'https://cdn.discordapp.com/embed/avatars/0.png',
-)
+    : "https://cdn.discordapp.com/embed/avatars/0.png",
+);
 
 watch(
   user,
   (user) => {
     if (user?.avatar) {
-      isDefault.value = false
-      isAnimated.value = user.avatar.startsWith('a_')
+      isDefault.value = false;
+      isAnimated.value = user.avatar.startsWith("a_");
     }
     else {
-      isDefault.value = true
-      isAnimated.value = false
+      isDefault.value = true;
+      isAnimated.value = false;
     }
   },
   { immediate: true },
-)
+);
 
-function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`
+function createUrl(format: "webp" | "png" | "gif", size: number) {
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 </script>

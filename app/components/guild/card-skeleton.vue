@@ -19,7 +19,7 @@
       <div class="flex min-h-[4rem] w-full flex-col justify-center space-y-2">
         <!-- Guild Name Skeleton -->
         <div class="skeleton h-4 w-3/4 mx-auto rounded"></div>
-        
+
         <!-- Guild Stats Skeleton -->
         <div class="flex items-center justify-center space-x-4">
           <div class="flex items-center space-x-1">
@@ -45,28 +45,28 @@
 @reference '@/assets/css/main.css';
 /* DaisyUI skeleton styling with modern shimmer animation */
 .skeleton {
-  @apply bg-base-300/40;
-  position: relative;
-  overflow: hidden;
+	@apply bg-base-300/40;
+	position: relative;
+	overflow: hidden;
 }
 
 .skeleton::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  animation: shimmer 2s infinite;
+	position: absolute;
+	top: 0;
+	left: -100%;
+	animation: shimmer 2s infinite;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	width: 100%;
+	height: 100%;
+	content: '';
 }
 
 @keyframes shimmer {
-  0% {
-    left: -100%;
-  }
-  100% {
-    left: 100%;
-  }
+	0% {
+		left: -100%;
+	}
+	100% {
+		left: 100%;
+	}
 }
-</style> 
+</style>

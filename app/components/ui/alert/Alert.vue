@@ -61,21 +61,21 @@
 </template>
 
 <script setup lang="ts">
-import type { AlertEmits, AlertProps, AlertSlots } from '.'
-import type { AvatarProps } from '@/components/ui/avatar'
-import type { ButtonProps } from '@/components/ui/button'
-import { Primitive } from 'reka-ui'
-import { computed } from 'vue'
-import { Avatar } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Icon } from '@/components/ui/icon'
-import { alert } from '.'
+import type { AlertEmits, AlertProps, AlertSlots } from ".";
+import type { AvatarProps } from "@/components/ui/avatar";
+import type { ButtonProps } from "@/components/ui/button";
+import { Primitive } from "reka-ui";
+import { computed } from "vue";
+import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Icon } from "@/components/ui/icon";
+import { alert } from ".";
 
 const props = withDefaults(defineProps<AlertProps>(), {
-  orientation: 'vertical',
-})
-const emits = defineEmits<AlertEmits>()
-const slots = defineSlots<AlertSlots>()
+  orientation: "vertical",
+});
+const emits = defineEmits<AlertEmits>();
+const slots = defineSlots<AlertSlots>();
 
 const ui = computed(() =>
   alert({
@@ -84,5 +84,5 @@ const ui = computed(() =>
     orientation: props.orientation,
     title: !!props.title || !!slots.title,
   }),
-)
+);
 </script>

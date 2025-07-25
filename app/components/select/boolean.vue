@@ -15,12 +15,12 @@
 
 <script setup lang="ts">
 interface Props {
-  title: string
-  modelValue: boolean | null
-  description?: string
-  error?: boolean
-  name?: string
-  tooltipTitle?: string
+  title: string;
+  modelValue: boolean | null;
+  description?: string;
+  error?: boolean;
+  name?: string;
+  tooltipTitle?: string;
 }
 
 withDefaults(defineProps<Props>(), {
@@ -28,22 +28,22 @@ withDefaults(defineProps<Props>(), {
   tooltipTitle: undefined,
   error: false,
   description: undefined,
-})
+});
 
 const emit = defineEmits<{
-  (e: 'update:modelValue' | 'change', value: boolean): void
-}>()
+  (e: "update:modelValue" | "change", value: boolean): void;
+}>();
 
 const options = [
-  { label: 'Yes', value: 'true' },
-  { label: 'No', value: 'false' },
-]
+  { label: "Yes", value: "true" },
+  { label: "No", value: "false" },
+];
 
 function handleChange(value: string | number | null | undefined) {
-  if (typeof value === 'string') {
-    const boolValue = value === 'true'
-    emit('update:modelValue', boolValue)
-    emit('change', boolValue)
+  if (typeof value === "string") {
+    const boolValue = value === "true";
+    emit("update:modelValue", boolValue);
+    emit("change", boolValue);
   }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <!-- Guild Icon - Card or Bare variant -->
-  <div 
+  <div
     :class="[
-      variant === 'card' 
+      variant === 'card'
         ? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:bg-base-200/50 hover:shadow-lg hover:scale-[1.02]'
         : 'relative',
       {
@@ -12,8 +12,8 @@
     ]"
   >
     <!-- Status Indicator -->
-    <div 
-      v-if="showStatus && guild && variant === 'card'" 
+    <div
+      v-if="showStatus && guild && variant === 'card'"
       class="absolute top-2 right-2"
     >
       <div
@@ -40,14 +40,14 @@
     </div>
 
     <!-- Guild Icon -->
-    <div 
+    <div
       class="relative"
       :class="[
         variant === 'card' ? '' : 'group'
       ]"
     >
       <div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
-        <div 
+        <div
           class="rounded-full transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
           :class="iconSizeClasses"
           @mouseenter="isHovering = true"
@@ -62,12 +62,12 @@
             />
             <source type="image/webp" :srcset="makeSrcset('webp')" />
             <source type="image/png" :srcset="makeSrcset('png')" />
-            <img 
-              :src="createUrl('png', 128)" 
-              :alt="guild?.name || 'Guild icon'" 
-              class="rounded-full" 
-              decoding="async" 
-              crossorigin="anonymous" 
+            <img
+              :src="createUrl('png', 128)"
+              :alt="guild?.name || 'Guild icon'"
+              class="rounded-full"
+              decoding="async"
+              crossorigin="anonymous"
             />
           </picture>
           <div
@@ -112,85 +112,84 @@
 </template>
 
 <script setup lang="ts">
-import type { ValuesType } from 'utility-types'
-import type { TransformedLoginData } from '~~/shared/types/discord'
+import type { ValuesType } from "utility-types";
+import type { TransformedLoginData } from "~~/shared/types/discord";
 
 const props = withDefaults(defineProps<GuildIconProps>(), {
-  size: 'md',
-  variant: 'card',
+  size: "md",
+  variant: "card",
   showStatus: true,
   showName: false,
   showStats: false,
-})
+});
 
-const isHovering = ref(false)
+const isHovering = ref(false);
 
 interface GuildIconProps {
-  guild: ValuesType<NonNullable<TransformedLoginData['transformedGuilds']>>
-  size?: 'sm' | 'md' | 'lg' | 'xl'
-  variant?: 'card' | 'bare'
-  showStatus?: boolean
-  showName?: boolean
-  showStats?: boolean
+  guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
+  size?: "sm" | "md" | "lg" | "xl";
+  variant?: "card" | "bare";
+  showStatus?: boolean;
+  showName?: boolean;
+  showStats?: boolean;
 }
 
 // Make these computed to avoid SSR hydration issues
 const isDefault = computed(() => {
-  return !props.guild.icon
-})
+  return !props.guild.icon;
+});
 
 const isAnimated = computed(() => {
-  return props.guild.icon ? props.guild.icon.startsWith('a_') : false
-})
-
+  return props.guild.icon ? props.guild.icon.startsWith("a_") : false;
+});
 
 // Size-based classes for DaisyUI Avatar
 const iconSizeClasses = computed(() => {
   const sizeMap = {
-    sm: 'size-12',
-    md: 'size-16', 
-    lg: 'size-20',
-    xl: 'size-24'
-  }
-  return sizeMap[props.size]
-})
+    sm: "size-12",
+    md: "size-16",
+    lg: "size-20",
+    xl: "size-24",
+  };
+  return sizeMap[props.size];
+});
 
 const acronymSizeClasses = computed(() => {
   const sizeMap = {
-    sm: 'text-sm font-bold',
-    md: 'text-lg font-bold',
-    lg: 'text-xl font-bold', 
-    xl: 'text-2xl font-bold'
-  }
-  return sizeMap[props.size]
-})
+    sm: "text-sm font-bold",
+    md: "text-lg font-bold",
+    lg: "text-xl font-bold",
+    xl: "text-2xl font-bold",
+  };
+  return sizeMap[props.size];
+});
 
 // Utility functions
-function createUrl(format: 'webp' | 'png' | 'gif', size: number) {
-  return `https://cdn.discordapp.com/icons/${props.guild!.id}/${props.guild!.icon}.${format}?size=${size}`
+function createUrl(format: "webp" | "png" | "gif", size: number) {
+  return `https://cdn.discordapp.com/icons/${props.guild!.id}/${props.guild!.icon}.${format}?size=${size}`;
 }
 
-function makeSrcset(format: 'webp' | 'png' | 'gif') {
-  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`
+function makeSrcset(format: "webp" | "png" | "gif") {
+  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
 
 function formatNumber(num: number): string {
   if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1)}M`
+    return `${(num / 1000000).toFixed(1)}M`;
   }
   if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K`
+    return `${(num / 1000).toFixed(1)}K`;
   }
-  return num.toString()
+  return num.toString();
 }
 </script>
 
 <style scoped>
 .line-clamp-1 {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	line-clamp: 1;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 }
 </style>

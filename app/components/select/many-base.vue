@@ -42,113 +42,113 @@
 </template>
 
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
-import { useId } from 'reka-ui'
-import { useField } from 'vee-validate'
-import * as z from 'zod'
+import { toTypedSchema } from "@vee-validate/zod";
+import { useId } from "reka-ui";
+import { useField } from "vee-validate";
+import * as z from "zod";
 
 interface Option<T = string> {
-  label: string
-  value: T
-  [keY: string]: T | string | null
+  label: string;
+  value: T;
+  [keY: string]: T | string | null;
 }
 
 interface Props<T = string> {
-  label: string
-  options: Option<T>[]
-  value: T[] | null
-  name?: string
-  tooltip?: string
-  required?: boolean
-  placeholder?: string
-  searchable?: boolean
-  icon?: string
+  label: string;
+  options: Option<T>[];
+  value: T[] | null;
+  name?: string;
+  tooltip?: string;
+  required?: boolean;
+  placeholder?: string;
+  searchable?: boolean;
+  icon?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  name: () => useId(Math.random().toString(36).slice(2), 'multi-select'),
+  name: () => useId(Math.random().toString(36).slice(2), "multi-select"),
   tooltipTitle: undefined,
   required: true,
   helperText: undefined,
   tooltip: undefined,
   searchable: true,
-  placeholder: 'Select an option',
+  placeholder: "Select an option",
   icon: undefined,
-})
+});
 
 const emit = defineEmits<{
-  (e: 'update:value', value: Props['value'] | null): void
-}>()
+  (e: "update:value", value: Props["value"] | null): void;
+}>();
 
-const isOpen = ref(false)
-const search = ref('')
-const validationSchema = toTypedSchema(props.required ? z.array(z.string()).min(1, 'At least one item must be selected') : z.array(z.string()))
+const isOpen = ref(false);
+const search = ref("");
+const validationSchema = toTypedSchema(props.required ? z.array(z.string()).min(1, "At least one item must be selected") : z.array(z.string()));
 
-const { value: fieldValue } = useField<string[]>(props.name, validationSchema)
+const { value: fieldValue } = useField<string[]>(props.name, validationSchema);
 
 const selectedValues = computed({
   get: () => fieldValue.value ?? (props.value ? [...props.value] : []),
   set: (newValue) => {
-    fieldValue.value = newValue
+    fieldValue.value = newValue;
   },
-})
+});
 
 const filteredOptions = computed(() => {
   if (!search.value)
-    return props.options
-  const searchLower = search.value.toLowerCase()
-  return props.options.filter(item => item.label.toLowerCase().includes(searchLower))
-})
+    return props.options;
+  const searchLower = search.value.toLowerCase();
+  return props.options.filter(item => item.label.toLowerCase().includes(searchLower));
+});
 
 const displayValue = computed(() => {
   if (!selectedValues.value.length)
-    return props.placeholder || 'Select...'
-  return `${selectedValues.value.length} selected`
-})
+    return props.placeholder || "Select...";
+  return `${selectedValues.value.length} selected`;
+});
 
 function closeDialog() {
-  isOpen.value = false
-  search.value = ''
+  isOpen.value = false;
+  search.value = "";
 }
 
 function toggleSelection(value: string) {
-  const currentValues = selectedValues.value ?? []
-  const index = currentValues.indexOf(value)
+  const currentValues = selectedValues.value ?? [];
+  const index = currentValues.indexOf(value);
 
   if (index === -1) {
-    selectedValues.value = [...currentValues, value]
+    selectedValues.value = [...currentValues, value];
   }
   else {
-    currentValues.splice(index, 1)
-    selectedValues.value = currentValues
+    currentValues.splice(index, 1);
+    selectedValues.value = currentValues;
   }
 }
 
 function clearSelection() {
-  selectedValues.value = []
+  selectedValues.value = [];
 }
 
 function handleSubmit() {
-  emit('update:value', selectedValues.value)
-  closeDialog()
+  emit("update:value", selectedValues.value);
+  closeDialog();
 }
 
 watch(
   () => props.value,
   (newValue) => {
-    selectedValues.value = newValue ? [...newValue] : []
+    selectedValues.value = newValue ? [...newValue] : [];
   },
-)
+);
 </script>
 
 <style>
 @reference "@/assets/css/main.css";
 
 .modal-backdrop {
-  @apply bg-black/50;
+	@apply bg-black/50;
 }
 
 .checkbox:checked {
-  @apply border-primary bg-primary;
+	@apply border-primary bg-primary;
 }
 </style>

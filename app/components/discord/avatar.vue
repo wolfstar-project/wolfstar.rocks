@@ -7,27 +7,27 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ user: ProfileName, size: keyof typeof Sizes }>()
-const profile = computed(() => Profiles[props.user])
-const size = computed(() => Sizes[props.size])
+const props = defineProps<{ user: ProfileName; size: keyof typeof Sizes }>();
+const profile = computed(() => Profiles[props.user]);
+const size = computed(() => Sizes[props.size]);
 
 const Sizes = {
-  tiny: { dimensions: 16, classes: 'h-4 w-4' },
-  medium: { dimensions: 48, classes: 'h-8 w-8 md:h-12 md:w-12' },
-}
+  tiny: { dimensions: 16, classes: "h-4 w-4" },
+  medium: { dimensions: 48, classes: "h-8 w-8 md:h-12 md:w-12" },
+};
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-message-avatar-wrapper {
-  @apply flex-none select-none overflow-hidden rounded-full;
+	@apply flex-none select-none overflow-hidden rounded-full;
 }
 
 .discord-message-avatar.baddie {
-  filter: drop-shadow(0 0 0.2rem oklch(var(--er) / 0.4));
+	filter: drop-shadow(0 0 0.2rem oklch(var(--er) / 0.4));
 }
 
 .discord-message-avatar.baddie :deep(path) {
-  @apply fill-error;
+	@apply fill-error;
 }
 </style>

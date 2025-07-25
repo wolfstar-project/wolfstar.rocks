@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ link: string, online?: number, members?: number }>(), {
+withDefaults(defineProps<{ link: string; online?: number; members?: number }>(), {
   online: 0,
   members: 0,
-})
+});
 </script>

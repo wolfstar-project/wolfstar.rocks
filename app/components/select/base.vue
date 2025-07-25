@@ -7,7 +7,7 @@
         <ShadForm :validation-schema="validationSchema" @submit="handleSubmit">
           <ShadFormField :name="name" :description="helperText">
             <template #label>{{ label }}</template>
-            
+
             <ShadSelect v-model="selectedValue">
               <ShadSelectTrigger>
                 <ShadSelectValue :placeholder="placeholder || `Select ${label}`" />
@@ -31,24 +31,24 @@
 </template>
 
 <script setup lang="ts">
-import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
+import { toTypedSchema } from "@vee-validate/zod";
+import * as z from "zod";
 
 interface Option<T = string | number> {
-  label: string
-  value: T
+  label: string;
+  value: T;
 }
 
 interface Props<T = string | number> {
-  label: string
-  options: Option<T>[]
-  value?: T | null
-  error?: boolean
-  helperText?: string
-  name?: string
-  tooltipTitle?: string
-  required?: boolean
-  placeholder?: string
+  label: string;
+  options: Option<T>[];
+  value?: T | null;
+  error?: boolean;
+  helperText?: string;
+  name?: string;
+  tooltipTitle?: string;
+  required?: boolean;
+  placeholder?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -59,54 +59,54 @@ const props = withDefaults(defineProps<Props>(), {
   tooltipTitle: undefined,
   required: true,
   placeholder: undefined,
-})
+});
 
 const emit = defineEmits<{
-  (e: 'update:value' | 'change', value: Props['value'] | null): void
-}>()
+  (e: "update:value" | "change", value: Props["value"] | null): void;
+}>();
 
-const isOpen = ref(false)
+const isOpen = ref(false);
 
-const selectedValue = ref<any>(props.value)
+const selectedValue = ref<any>(props.value);
 
 const validationSchema = computed(() =>
   toTypedSchema(
     z.object({
-      [props.name]: props.required ? z.string().min(1, 'This field is required') : z.string().optional(),
+      [props.name]: props.required ? z.string().min(1, "This field is required") : z.string().optional(),
     }),
   ),
-)
+);
 
 const displayValue = computed(() => {
-  const option = props.options.find(opt => opt.value === selectedValue.value)
-  return option?.label ?? (props.placeholder || 'Select...')
-})
+  const option = props.options.find(opt => opt.value === selectedValue.value);
+  return option?.label ?? (props.placeholder || "Select...");
+});
 
 function openDialog() {
-  isOpen.value = true
+  isOpen.value = true;
 }
 
 function closeDialog() {
-  isOpen.value = false
+  isOpen.value = false;
 }
 
 function handleSubmit() {
-  emit('update:value', selectedValue.value)
-  emit('change', selectedValue.value)
-  closeDialog()
+  emit("update:value", selectedValue.value);
+  emit("change", selectedValue.value);
+  closeDialog();
 }
 
 watch(
   () => props.value,
   (newValue) => {
-    selectedValue.value = newValue
+    selectedValue.value = newValue;
   },
-)
+);
 </script>
 
 <style>
 @reference "@/assets/css/main.css";
 .modal-backdrop {
-  @apply bg-black/50;
+	@apply bg-black/50;
 }
 </style>

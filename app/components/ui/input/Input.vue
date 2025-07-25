@@ -41,26 +41,26 @@
 </template>
 
 <script setup lang="ts">
-import type { InputEmits, InputProps, InputSlots, InputVariants } from '.'
-import type { AvatarProps } from '@/components/ui/avatar'
-import { Primitive } from 'reka-ui'
-import { computed, onMounted, ref } from 'vue'
-import { Avatar } from '@/components/ui/avatar'
-import { Icon } from '@/components/ui/icon'
-import { useFormField } from '~/composables/useFormField'
-import { input } from '.'
+import type { InputEmits, InputProps, InputSlots, InputVariants } from ".";
+import type { AvatarProps } from "@/components/ui/avatar";
+import { Primitive } from "reka-ui";
+import { computed, onMounted, ref } from "vue";
+import { Avatar } from "@/components/ui/avatar";
+import { Icon } from "@/components/ui/icon";
+import { useFormField } from "~/composables/useFormField";
+import { input } from ".";
 
-defineOptions({ inheritAttrs: false })
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<InputProps>(), {
-  type: 'text',
-  autocomplete: 'off',
+  type: "text",
+  autocomplete: "off",
   autofocusDelay: 0,
-})
-const emits = defineEmits<InputEmits>()
-const slots = defineSlots<InputSlots>()
+});
+const emits = defineEmits<InputEmits>();
+const slots = defineSlots<InputSlots>();
 
-const [modelValue, modelModifiers] = defineModel<string | number | null>()
+const [modelValue, modelModifiers] = defineModel<string | number | null>();
 
 const {
   emitFormBlur,
@@ -74,15 +74,15 @@ const {
   disabled,
   emitFormFocus,
   ariaAttrs,
-} = useFormField<InputProps>(props, { deferInputValidation: true })
-const { orientation, size: buttonGroupSize } = useButtonGroup<InputProps>(props)
-const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props)
+} = useFormField<InputProps>(props, { deferInputValidation: true });
+const { orientation, size: buttonGroupSize } = useButtonGroup<InputProps>(props);
+const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
 
-const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value)
+const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value);
 
 const ui = computed(() =>
   input({
-    type: props.type as InputVariants['type'],
+    type: props.type as InputVariants["type"],
     color: color.value,
     variant: props.variant,
     size: inputSize?.value,
@@ -92,68 +92,68 @@ const ui = computed(() =>
     trailing: isTrailing.value || !!slots.trailing,
     buttonGroup: orientation.value,
   }),
-)
+);
 
-const inputRef = ref<HTMLInputElement | null>(null)
+const inputRef = ref<HTMLInputElement | null>(null);
 
 // Custom function to handle the v-model properties
 function updateInput(value: string | null) {
   if (modelModifiers.trim) {
-    value = value?.trim() ?? null
+    value = value?.trim() ?? null;
   }
 
-  if (modelModifiers.number || props.type === 'number') {
-    value = looseToNumber(value)
+  if (modelModifiers.number || props.type === "number") {
+    value = looseToNumber(value);
   }
 
   if (modelModifiers.nullify) {
-    value ||= null
+    value ||= null;
   }
 
-  modelValue.value = value
-  emitFormInput()
+  modelValue.value = value;
+  emitFormInput();
 }
 
 function onInput(event: Event) {
   if (!modelModifiers.lazy) {
-    updateInput((event.target as HTMLInputElement).value)
+    updateInput((event.target as HTMLInputElement).value);
   }
 }
 
 function onChange(event: Event) {
-  const value = (event.target as HTMLInputElement).value
+  const value = (event.target as HTMLInputElement).value;
 
   if (modelModifiers.lazy) {
-    updateInput(value)
+    updateInput(value);
   }
 
   // Update trimmed input so that it has same behavior as native input https://github.com/vuejs/core/blob/5ea8a8a4fab4e19a71e123e4d27d051f5e927172/packages/runtime-dom/src/directives/vModel.ts#L63
   if (modelModifiers.trim) {
-    (event.target as HTMLInputElement).value = value.trim()
+    (event.target as HTMLInputElement).value = value.trim();
   }
 
-  emitFormChange()
-  emits('change', event)
+  emitFormChange();
+  emits("change", event);
 }
 
 function onBlur(event: FocusEvent) {
-  emitFormBlur()
-  emits('blur', event)
+  emitFormBlur();
+  emits("blur", event);
 }
 
 function autoFocus() {
   if (props.autofocus) {
-    inputRef.value?.focus()
+    inputRef.value?.focus();
   }
 }
 
 onMounted(() => {
   setTimeout(() => {
-    autoFocus()
-  }, props.autofocusDelay)
-})
+    autoFocus();
+  }, props.autofocusDelay);
+});
 
 defineExpose({
   inputRef,
-})
+});
 </script>

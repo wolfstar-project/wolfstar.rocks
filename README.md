@@ -42,4 +42,5 @@ Thank you to all the people who already contributed to WolfStar Project!
   <img src="https://contrib.rocks/image?repo=wolfstar-project/wolfstar.rocks" />
 </a>
 
-[contributing]: https://github.com/wolfstar-project/.github/blob/main/.github/CONTRIBUTING.md
+[contributing]:
+  https://github.com/wolfstar-project/.github/blob/main/.github/CONTRIBUTING.md

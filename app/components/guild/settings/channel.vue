@@ -22,7 +22,7 @@
                 @update:model-value="(value: string) => updateChannelSetting(channel.key, value)"
               />
               <ShadButton
-                variant="outline" 
+                variant="outline"
                 size="sm"
                 @click="resetChannel(channel.key)"
               >
@@ -60,7 +60,7 @@
                 @update:model-value="(value: string[]) => updateChannelSetting(ignoreChannel.key, value)"
               />
               <ShadButton
-                variant="outline" 
+                variant="outline"
                 size="sm"
                 @click="resetChannel(ignoreChannel.key)"
               >
@@ -79,22 +79,22 @@
 </template>
 
 <script setup lang="ts">
-import { useGuildChannels } from '~~/app/composables/useGuildSettings'
+import { useGuildChannels } from "~~/app/composables/useGuildSettings";
 
 // Use the channels composable with SettingsDataEntries
 const {
   channelsConfig,
   settings,
   updateChannelSetting,
-  resetChannel
-} = useGuildChannels()
+  resetChannel,
+} = useGuildChannels();
 
 // Get guild data from composable
-const guildData = useGuildData()
+const guildData = useGuildData();
 </script>
 
 <style scoped>
 .md-grid-cols-3 {
-  @apply grid-cols-3;
+	@apply grid-cols-3;
 }
 </style>

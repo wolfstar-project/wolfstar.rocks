@@ -12,31 +12,31 @@
 </template>
 
 <script setup lang="ts">
-const appName = inject(ProviderAppNameKey, ref<'wolfstar' | 'staryl'>('wolfstar'))
+const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-layout {
-  @apply flex min-h-screen flex-col;
-  background-image: linear-gradient(to top, oklch(var(--color-secondary) / 1) 0%, transparent 70%);
-  position: relative;
+	@apply flex min-h-screen flex-col;
+	position: relative;
+	background-image: linear-gradient(to top, oklch(var(--color-secondary) / 1) 0%, transparent 70%);
 }
 
 .app-layout::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background-image: radial-gradient(ellipse at 50% 0%, oklch(from var(--color) l c h / 0.2) 0%, transparent 80%);
-  background-repeat: no-repeat;
-  background-size: max(100vw, 600px) 50rem;
+	position: absolute;
+	inset: 0;
+	background-image: radial-gradient(ellipse at 50% 0%, oklch(from var(--color) l c h / 0.2) 0%, transparent 80%);
+	background-size: max(100vw, 600px) 50rem;
+	background-repeat: no-repeat;
+	pointer-events: none;
+	content: '';
 }
 .app-layout.wolfstar {
-  --color: var(--color-branding-wolfstar);
+	--color: var(--color-branding-wolfstar);
 }
 
 .app-layout.staryl {
-  --color: var(--color-branding-staryl);
+	--color: var(--color-branding-staryl);
 }
 </style>

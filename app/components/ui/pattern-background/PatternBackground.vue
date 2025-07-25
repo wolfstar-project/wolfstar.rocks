@@ -3,7 +3,7 @@
     :class="
       cn(
         patternBackgroundVariants({ variant, size }),
-        ` ${animate ? `move move-${ direction}` : ''} `,
+        ` ${animate ? `move move-${direction}` : ''} `,
         props.class,
       )
     "
@@ -45,98 +45,98 @@ const durationFormSpeed = computed(() => `${props.speed}ms`);
 
 <style scoped>
 @keyframes to-top {
-  0% {
-    background-position: 0 100%;
-  }
-  100% {
-    background-position: 0 0;
-  }
+	0% {
+		background-position: 0 100%;
+	}
+	100% {
+		background-position: 0 0;
+	}
 }
 @keyframes to-bottom {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 0 100%;
-  }
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 0 100%;
+	}
 }
 @keyframes to-right {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100% 0;
-  }
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 100% 0;
+	}
 }
 @keyframes to-left {
-  0% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: 0 0;
-  }
+	0% {
+		background-position: 100% 0;
+	}
+	100% {
+		background-position: 0 0;
+	}
 }
 @keyframes to-top-right {
-  0% {
-    background-position: 0 100%;
-  }
-  100% {
-    background-position: 100% 0;
-  }
+	0% {
+		background-position: 0 100%;
+	}
+	100% {
+		background-position: 100% 0;
+	}
 }
 @keyframes to-top-left {
-  0% {
-    background-position: 100% 100%;
-  }
-  100% {
-    background-position: 0 0;
-  }
+	0% {
+		background-position: 100% 100%;
+	}
+	100% {
+		background-position: 0 0;
+	}
 }
 @keyframes to-bottom-right {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 100% 100%;
-  }
+	0% {
+		background-position: 0 0;
+	}
+	100% {
+		background-position: 100% 100%;
+	}
 }
 @keyframes to-bottom-left {
-  0% {
-    background-position: 100% 0;
-  }
-  100% {
-    background-position: 0 100%;
-  }
+	0% {
+		background-position: 100% 0;
+	}
+	100% {
+		background-position: 0 100%;
+	}
 }
 
 .move {
-  animation-duration: v-bind(durationFormSpeed);
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+	animation-duration: v-bind(durationFormSpeed);
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
 }
 
 .move-top {
-  animation-name: to-top;
+	animation-name: to-top;
 }
 .move-bottom {
-  animation-name: to-bottom;
+	animation-name: to-bottom;
 }
 .move-right {
-  animation-name: to-right;
+	animation-name: to-right;
 }
 .move-left {
-  animation-name: to-left;
+	animation-name: to-left;
 }
 .move-top-right {
-  animation-name: to-top-right;
+	animation-name: to-top-right;
 }
 .move-top-left {
-  animation-name: to-top-left;
+	animation-name: to-top-left;
 }
 .move-bottom-right {
-  animation-name: to-bottom-right;
+	animation-name: to-bottom-right;
 }
 .move-bottom-left {
-  animation-name: to-bottom-left;
+	animation-name: to-bottom-left;
 }
 </style>

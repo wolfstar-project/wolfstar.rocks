@@ -6,72 +6,72 @@
 </template>
 
 <script setup lang="ts">
-import type { AvatarGroupProps, AvatarGroupSlots } from '.'
-import { Primitive } from 'reka-ui'
-import { computed, provide } from 'vue'
-import { Avatar } from '@/components/ui/avatar'
-import { AvatarGroupInjectionKey } from '~/composables/useAvatarGroup'
-import { avatarGroupVariants } from '.'
+import type { AvatarGroupProps, AvatarGroupSlots } from ".";
+import { Primitive } from "reka-ui";
+import { computed, provide } from "vue";
+import { Avatar } from "@/components/ui/avatar";
+import { AvatarGroupInjectionKey } from "~/composables/useAvatarGroup";
+import { avatarGroupVariants } from ".";
 
-const props = defineProps<AvatarGroupProps>()
-const slots = defineSlots<AvatarGroupSlots>()
+const props = defineProps<AvatarGroupProps>();
+const slots = defineSlots<AvatarGroupSlots>();
 
 const ui = computed(() =>
   avatarGroupVariants({
     size: props.size,
   }),
-)
+);
 
-const max = computed(() => (typeof props.max === 'string' ? Number.parseInt(props.max, 10) : props.max))
+const max = computed(() => (typeof props.max === "string" ? Number.parseInt(props.max, 10) : props.max));
 
 const children = computed(() => {
-  let children = slots.default?.()
+  let children = slots.default?.();
   if (children?.length) {
     children = children
 
       .flatMap((child: any) => {
-        if (typeof child.type === 'symbol') {
+        if (typeof child.type === "symbol") {
           // `v-if="false"` or commented node
-          if (typeof child.children === 'string') {
+          if (typeof child.children === "string") {
             // eslint-disable-next-line array-callback-return
-            return
+            return;
           }
 
-          return child.children
+          return child.children;
         }
 
-        return child
+        return child;
       })
-      .filter(Boolean)
+      .filter(Boolean);
   }
 
-  return children || []
-})
+  return children || [];
+});
 
 const visibleAvatars = computed(() => {
   if (!children.value.length) {
-    return []
+    return [];
   }
 
   if (!max.value || max.value <= 0) {
-    return [...children.value].reverse()
+    return [...children.value].reverse();
   }
 
-  return [...children.value].slice(0, max.value).reverse()
-})
+  return [...children.value].slice(0, max.value).reverse();
+});
 
 const hiddenCount = computed(() => {
   if (!children.value.length) {
-    return 0
+    return 0;
   }
 
-  return children.value.length - visibleAvatars.value.length
-})
+  return children.value.length - visibleAvatars.value.length;
+});
 
 provide(
   AvatarGroupInjectionKey,
   computed(() => ({
     size: props.size,
   })),
-)
+);
 </script>

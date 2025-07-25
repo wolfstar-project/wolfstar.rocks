@@ -14,20 +14,20 @@
 </template>
 
 <script setup lang="ts">
-import type { ComboboxItemEmits, ComboboxItemProps } from 'reka-ui'
-import type { HTMLAttributes } from 'vue'
-import { ComboboxItem, useForwardPropsEmits } from 'reka-ui'
-import { computed } from 'vue'
-import { cn } from '@/utils/cn'
+import type { ComboboxItemEmits, ComboboxItemProps } from "reka-ui";
+import type { HTMLAttributes } from "vue";
+import { ComboboxItem, useForwardPropsEmits } from "reka-ui";
+import { computed } from "vue";
+import { cn } from "@/utils/cn";
 
-const props = defineProps<ComboboxItemProps & { class?: HTMLAttributes['class'] }>()
-const emits = defineEmits<ComboboxItemEmits>()
+const props = defineProps<ComboboxItemProps & { class?: HTMLAttributes["class"] }>();
+const emits = defineEmits<ComboboxItemEmits>();
 
 const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const { class: _, ...delegated } = props;
 
-  return delegated
-})
+  return delegated;
+});
 
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>

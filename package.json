@@ -58,6 +58,7 @@
     "fuse.js": "catalog:prod",
     "import-in-the-middle": "catalog:prod",
     "markdown-it-anchor": "catalog:markdown",
+    "motion-v": "catalog:frontend",
     "nuxt": "catalog:prod",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
@@ -75,7 +76,8 @@
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
     "wrangler": "catalog:dev",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "eslint-plugin-prettier": "catalog:dev"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

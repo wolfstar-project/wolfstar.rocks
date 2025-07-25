@@ -9,13 +9,10 @@
           class="p-4"
         >
           <div class="flex items-center justify-between">
-            <div class="space-y-1">
-              <ShadLabel>{{ message.name }}</ShadLabel>
-              <p class="text-sm text-base-content/70">{{ message.description }}</p>
-            </div>
-            <ShadCheckbox
+            <SelectBoolean
+              :title="message.name"
+              :description="message.description"
               :model-value="Boolean(settings[message.key])"
-              color="primary"
               @update:model-value="(value) => updateModerationSetting(message.key, Boolean(value))"
             />
           </div>
@@ -32,13 +29,11 @@
           class="p-4"
         >
           <div class="flex items-center justify-between">
-            <div class="space-y-1">
-              <ShadLabel>{{ event.title }}</ShadLabel>
-              <p class="text-sm text-base-content/70">{{ event.description }}</p>
-            </div>
-            <ShadCheckbox
+  
+            <SelectBoolean
+              :title="event.title"
+              :description="event.description"
               :model-value="Boolean(settings[event.key])"
-              color="primary"
               @update:model-value="(value) => updateModerationSetting(event.key, Boolean(value))"
             />
           </div>
@@ -50,6 +45,7 @@
 
 <script setup lang="ts">
 import { useGuildModeration } from '~~/app/composables/useGuildSettings'
+import SelectBoolean from '~/components/select/boolean.vue'
 
 // Use the moderation composable with SettingsDataEntries
 const { 

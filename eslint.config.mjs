@@ -1,6 +1,7 @@
 // @ts-check
 import antfu from '@antfu/eslint-config'
 import packageJson from 'eslint-plugin-package-json'
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import nuxt from './.nuxt/eslint.config.mjs'
 
 export default antfu(
@@ -23,6 +24,7 @@ export default antfu(
       'node/prefer-global/process': 'off',
     },
   },
+  eslintPluginPrettierRecommended,
   packageJson.configs.recommended,
 )
   .append(nuxt())

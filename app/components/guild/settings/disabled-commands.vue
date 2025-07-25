@@ -1,9 +1,9 @@
 <template>
   <div>
-    <layout-refresh-commands :set-commands="setGuildSettingsChanges" @fresh="(newCommands) => emit('update:commands', newCommands)" />
+    <layout-refresh-commands @fresh="(newCommands: FlattenedCommand[]) => emit('update:commands', newCommands)" />
 
-    <form-auto-save :model-value="formData" :schema="guildSettingsSchema" @submit="saveChanges">
-      <layout-settings-section title="Commands">
+    <ShadForm :model-value="localCommands" :schema="guildSettingsSchema" @submit="saveChanges">
+      <SettingsSection title="Commands">
         <p class="mb-4 text-sm">On this page you can disable commands on your server</p>
 
         <div v-for="category in categories" :key="category" class="mb-4">
@@ -27,20 +27,22 @@
                 <button class="btn join btn-sm btn-success" @click="toggleCategory(category, true)">Enable all</button>
                 <button class="btn join btn-sm btn-warning" @click="toggleCategory(category, false)">Disable all</button>
                 <button class="btn join btn-sm btn-error" @click="parseCommandsToLocalCommands">Reset</button>
-                <button class="btn join btn-sm btn-primary" @click="saveChanges">Save</button>
               </div>
             </div>
           </div>
         </div>
-      </layout-settings-section>
-    </form-auto-save>
+      </SettingsSection>
+    </ShadForm>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { DisableCommands } from '~~/lib/types/types/ConfigurableData'
+import type { DisableCommands } from '~~/shared/types/ConfigurableData'
 import type { FlattenedCommand } from '~~/shared/types/discord'
 import { z } from 'zod'
+import { useToast } from '~/composables/useToast'
+
+const toast = useToast()
 
 const props = defineProps<{
   commands: FlattenedCommand[]
@@ -93,22 +95,32 @@ function toggleCommand(commandName: string) {
   }
 }
 
-const formData = computed(() => ({
-  disabledCommands: Object.entries(localCommands.value)
-    .filter(([_, command]) => !command.isEnabled)
-    .map(([name]) => name),
-}))
+function toggleCategory(category: string, enable: boolean) {
+  for (const command of getCommandsByCategory(category)) {
+    command.isEnabled = enable
+  }
+}
 
-async function saveChanges(event: FormData) {
+
+async function saveChanges() {
   try {
-    const disabledCommands = event.data.disabledCommands
     changes({
-      disabledCommands,
+      disabledCommands: Object.entries(localCommands.value)
+        .filter(([_, command]) => !command.isEnabled)
+        .map(([name]) => name),
     })
-    toast.success('Commands settings saved successfully')
+    toast.add({
+      color: 'success',
+      description: 'Commands settings saved successfully',
+      icon: 'check-circle',
+    })
   }
   catch (error) {
-    toast.error('Failed to save commands settings')
+    toast.add({
+      color: 'error',
+      title: 'Failed to save commands settings',
+      description: 'Please try again later',
+    })
     console.error('Failed to save commands settings:', error)
   }
 }

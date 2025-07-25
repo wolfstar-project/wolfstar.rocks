@@ -132,6 +132,7 @@ export function useGuildRoles() {
 
   const getRoleProps = (role: Roles.Role) => {
     return {
+      label: role.name,
       title: role.name,
       description: role.tooltip,
     }

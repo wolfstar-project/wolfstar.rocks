@@ -26,10 +26,6 @@
           placeholder="Select language..."
           class="w-full"
         >
-          <option value="">Select language...</option>
-          <option v-for="option in languageOptions" :key="option.value" :value="option.value">
-            {{ option.label }}
-          </option>
         </ShadSelect>
         <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
         <p v-if="errors.language" class="text-sm text-error">{{ errors.language }}</p>
@@ -105,11 +101,16 @@ watch(
     }
     catch (err) {
       if (err instanceof z.ZodError) {
-        // Map Zod errors to simple string errors
+        // Map Zod errors to simple string errors using the issues array
         const fieldErrors: Record<string, string> = {}
-        Object.entries(err.formErrors.fieldErrors || {}).forEach(([key, messages]) => {
-          if (messages && messages.length > 0 && messages[0]) {
-            fieldErrors[key] = messages[0]
+        err.issues.forEach(issue => {
+          if (issue.path && issue.path.length > 0 && issue.message) {
+            // Use the first path segment as the field key
+            const key = String(issue.path[0])
+            // Only set the error if not already set (show first error per field)
+            if (!fieldErrors[key]) {
+              fieldErrors[key] = issue.message
+            }
           }
         })
         errors.value = fieldErrors

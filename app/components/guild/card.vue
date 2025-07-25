@@ -1,6 +1,6 @@
 <template>
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
-  <NuxtLink :to="guild.wolfstarIsIn ? `/guilds/${guild.id}` : guildAddURL(guild.id)" class="group block cursor-pointer">
+  <NuxtLink :to="guild.wolfstarIsIn ? `/guilds/${guild.id}/manage` : guildAddURL(guild.id)" class="group block cursor-pointer">
     <!-- Minimal Card Version -->
     <div
       v-if="type === 'card'"

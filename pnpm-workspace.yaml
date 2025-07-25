@@ -29,6 +29,7 @@ catalogs:
     '@sentry/nuxt': ^9.40.0
     daisyui: 5.0.35
     discord-api-types: ^0.38.16
+    eslint-plugin-prettier: ^5.5.3
     nuxt-auth-utils: ^0.5.20
     simple-git: ^3.28.0
     std-env: ^3.9.0
@@ -37,6 +38,7 @@ catalogs:
     wrangler: ^4.25.1
   frontend:
     '@pinia/nuxt': ^0.11.2
+    motion-v: ^1.6.1
     pinia: ^3.0.3
     reka-ui: ^2.3.2
   icons:

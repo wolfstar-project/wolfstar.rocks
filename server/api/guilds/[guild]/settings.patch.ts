@@ -1,13 +1,10 @@
 import { Result } from "@sapphire/result";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import { createError } from "h3";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { serializeSettings, writeSettingsTransaction } from "~~/server/database";
-import useApi from "~~/server/utils/api";
-import authMiddleware from "~~/server/utils/middlewares/auth";
 import { manageAbility } from "~~/shared/utils/abilities";
 
-// Assuming settingsUpdateSchema is imported or defined here
 const settingsUpdateSchema = z.object({
   data: z.array(z.tuple([z.string(), z.unknown()])),
 });
@@ -27,93 +24,103 @@ defineRouteMeta({
   },
 });
 
-export default defineEventHandler({
-  onRequest: [
-    authMiddleware(),
-  ],
-  handler: async (event) => {
-    const guildId = getRouterParam(event, "guild");
-    if (isNullOrUndefined(guildId)) {
-      throw createError({
-        statusCode: 400,
-        message: "No guild id provided",
-      });
-    }
+export default defineWrappedResponseHandler(async (event) => {
+  const guildId = getRouterParam(event, "guild");
+  if (isNullOrUndefined(guildId)) {
+    throw createError({
+      statusCode: 400,
+      message: "No guild id provided",
+      data: {
+        field: "guildId",
+        error: "guild_id_required",
+        message: "Guild ID is required",
+      },
+    });
+  }
 
-    // Get and validate body data
-    const body = await readValidatedBody(event, settingsUpdateSchema.parse);
+  // Get and validate body data
+  const body = await readValidatedBody(event, settingsUpdateSchema.parse);
 
-    if (isNullOrUndefined(body)) {
-      throw createError({
-        statusCode: 400,
+  if (isNullOrUndefined(body)) {
+    throw createError({
+      statusCode: 400,
+      message: "Invalid request body",
+      data: {
+        field: "body",
+        error: "invalid_request_body",
         message: "Invalid request body",
-      });
-    }
+      },
+    });
+  }
 
-    const { data } = body;
+  const { data } = body;
 
-    // Validate inputs
-    if (isNullOrUndefined(guildId)) {
-      throw createError({
-        statusCode: 400,
-        message: "No guild id provided",
-      });
-    }
-
-    if (data.length === 0) {
-      throw createError({
-        statusCode: 400,
+  if (data.length === 0) {
+    throw createError({
+      statusCode: 400,
+      message: "No settings provided",
+      data: {
+        field: "data",
+        error: "no_settings_provided",
         message: "No settings provided",
-      });
-    }
+      },
+    });
+  }
 
-    // Fetch guild data
-    const api = useApi();
-    const guild = await api.guilds.get(guildId, { with_counts: true });
-    if (!guild) {
-      throw createError({
-        statusCode: 400,
-        message: "Guild not found",
-      });
-    }
-
-    const user = await event.context.$authorization.resolveServerUser();
-    if (!user) {
-      throw createError({
-        statusCode: 401,
+  const user = await event.context.$authorization.resolveServerUser();
+  if (!user) {
+    logger.error("Unauthorized user or missing session");
+    throw createError({
+      statusCode: 401,
+      message: "Unauthorized",
+      data: {
+        error: "unauthorized",
         message: "Unauthorized",
-      });
-    }
+      },
+    });
+  }
 
-    // Fetch member data
-    const member = await api.guilds.getMember(guild.id, user.id);
-    if (!member) {
-      throw createError({
-        statusCode: 400,
-        message: "Member not found",
-      });
-    }
+  // Fetch guilds with improved error handling
+  logger.info(`Fetching guilds for user ${user.id}...`);
+  const guild = await getGuild(guildId);
 
-    // Check permissions
-    if (await denies(event, manageAbility, guild, member)) {
-      throw createError({
-        statusCode: 403,
+  // Fetch member data
+  const member = await getMember(guild, user);
+
+  // Check permissions
+  if (await denies(event, manageAbility, guild, member)) {
+    throw createError({
+      statusCode: 403,
+      message: "Insufficient permissions",
+      data: {
+        error: "insufficient_permissions",
         message: "Insufficient permissions",
-      });
-    }
-
-    // Update settings
-    const updateResult = await Result.fromAsync(async () => {
-      const trx = await writeSettingsTransaction(guild.id);
-      await trx.write(Object.fromEntries(data)).submit();
-      return serializeSettings(trx.settings);
+        details: {
+          guild: guild.id,
+          member: member.user.id,
+        },
+      },
     });
+  }
 
-    return updateResult.unwrapOrElse((error) => {
-      throw createError({
-        statusCode: 400,
+  // Update settings
+  const updateResult = await Result.fromAsync(async () => {
+    const trx = await writeSettingsTransaction(guild.id);
+    await trx.write(Object.fromEntries(data)).submit();
+    return serializeSettings(trx.settings);
+  });
+
+  return updateResult.unwrapOrElse((error) => {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Failed to update settings",
+      data: {
+        error: "settings_update_failed",
         message: Array.isArray(error) ? error.join("\n") : String(error),
-      });
+        details: error,
+      },
     });
-  },
+  });
+}, {
+  auth: true,
 });

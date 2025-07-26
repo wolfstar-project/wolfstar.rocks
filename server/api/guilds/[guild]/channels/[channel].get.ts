@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
 import useApi from "~~/server/utils/api";
-import authMiddleware from "~~/server/utils/middlewares/auth";
+
 import { manageAbility } from "~~/shared/utils/abilities";
 
 defineRouteMeta({
@@ -25,82 +25,107 @@ defineRouteMeta({
   },
 });
 
-export default defineEventHandler({
-  onRequest: [
-    authMiddleware(),
-  ],
-  handler: async (event) => {
-    // Get guild ID from params
-    const guildId = getRouterParam(event, "guild");
-    if (isNullOrUndefined(guildId)) {
-      throw createError({
-        statusCode: 400,
+export default defineWrappedResponseHandler(async (event) => {
+  // Get guild ID from params
+  const guildId = getRouterParam(event, "guild");
+  if (isNullOrUndefined(guildId)) {
+    throw createError({
+      statusCode: 400,
+      message: "Guild ID is required",
+      data: {
+        field: "guildId",
+        error: "guild_id_required",
         message: "Guild ID is required",
-      });
-    }
+      },
+    });
+  }
 
-    const api = useApi();
+  const api = useApi();
 
-    // Fetch guild data
-    const guild = await api.guilds.get(guildId, { with_counts: true });
-    if (isNullOrUndefined(guild)) {
-      throw createError({
-        statusCode: 400,
-        message: "Guild not found",
-      });
-    }
+  // Fetch guild data
+  const user = await event.context.$authorization.resolveServerUser();
+  if (!user) {
+    logger.error("Unauthorized user or missing session");
+    throw createError({
+      statusCode: 401,
+      message: "Unauthorized",
+      data: {
+        field: "user",
+        error: "unauthorized",
+        message: "Unauthorized",
+      },
+    });
+  }
 
-    const user = await event.context.$authorization.resolveServerUser();
-    // Check if user ID is provided
-    if (isNullOrUndefined(user)) {
-      throw createError({
-        statusCode: 400,
-        message: "User ID is required",
-      });
-    }
+  // Fetch guilds with improved error handling
+  logger.info(`Fetching guilds for user ${user.id}...`);
+  const guild = await getGuild(guildId);
 
-    // Fetch member data
-    const member = await api.guilds.getMember(guild.id, user.id);
-    if (isNullOrUndefined(member)) {
-      throw createError({
-        statusCode: 400,
-        message: "Member not found",
-      });
-    }
+  // Fetch member data
+  const member = await getMember(guild, user);
 
-    if (await denies(event, manageAbility, guild, member)) {
-      throw createError({
-        statusCode: 403,
+  // Check permissions
+  if (await denies(event, manageAbility, guild, member)) {
+    throw createError({
+      statusCode: 403,
+      message: "Insufficient permissions",
+      data: {
+        error: "insufficient_permissions",
         message: "Insufficient permissions",
-      });
-    }
+        details: {
+          guild: guild.id,
+          member: member.user.id,
+        },
+      },
+    });
+  }
 
-    const channelId = getRouterParam(event, "channel");
-    if (isNullOrUndefined(channelId)) {
-      throw createError({
-        statusCode: 400,
-        message: "Member ID is required",
-      });
-    }
+  const channelId = getRouterParam(event, "channel");
+  if (isNullOrUndefined(channelId)) {
+    throw createError({
+      statusCode: 400,
+      message: "Channel ID is required",
+      data: {
+        error: "channel_id_required",
+        message: "Channel ID is required",
+      },
+    });
+  }
 
-    const channels = await api.guilds.getChannels(guild.id);
+  const channels = await api.guilds.getChannels(guild.id).catch((error) => {
+    logger.error("Failed to fetch channels:", error);
+    throw createError({
+      statusCode: 500,
+      message: "Failed to fetch channels",
+      data: {
+        error: "channels_fetch_failed",
+        message: error.message || "Unknown error",
+        details: error,
+      },
+    });
+  });
 
-    if (isNullOrUndefined(channels)) {
-      throw createError({
-        statusCode: 404,
-        message: "Guild member not found",
-      });
-    }
+  const channel = channels.find(channel => channel.id === channelId) ?? null;
 
-    const channel = channels.find(channel => channel.id === channelId);
-
-    if (isNullOrUndefined(channel)) {
-      throw createError({
-        statusCode: 404,
+  if (isNullOrUndefined(channel)) {
+    throw createError({
+      statusCode: 404,
+      message: "Channel not found",
+      data: {
+        error: "channel_not_found",
         message: "Channel not found",
-      });
-    }
-
-    return flattenGuildChannel(channel as any);
+      },
+    });
+  }
+  // @ts-expect-error - Too much type checking
+  return flattenGuildChannel(channel);
+}, {
+  auth: true,
+  onError: (err) => {
+    logger.error("Channels API error:", {
+      message: err.message,
+      statusCode: err.statusCode,
+      data: err.data,
+    });
   },
 });

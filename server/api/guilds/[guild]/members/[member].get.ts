@@ -1,8 +1,5 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
-import useApi from "~~/server/utils/api";
-import authMiddleware from "~~/server/utils/middlewares/auth";
-import { manageAbility } from "~~/shared/utils/abilities";
 
 defineRouteMeta({
   openAPI: {
@@ -25,72 +22,45 @@ defineRouteMeta({
   },
 });
 
-export default defineEventHandler({
-  onRequest: [
-    authMiddleware(),
-  ],
-  handler: async (event) => {
-    // Get guild ID from params
-    const guildId = getRouterParam(event, "guild");
-    if (isNullOrUndefined(guildId)) {
-      throw createError({
-        statusCode: 400,
-        message: "Guild ID is required",
-      });
-    }
+export default defineWrappedResponseHandler(async (event) => {
+  // Get guild ID from params
+  const guildId = getRouterParam(event, "guild");
+  if (isNullOrUndefined(guildId)) {
+    throw createError({
+      statusCode: 400,
+      message: "Guild ID is required",
+    });
+  }
 
-    // Fetch guild data
-    const api = useApi();
-    const guild = await api.guilds.get(guildId, { with_counts: true });
-    if (isNullOrUndefined(guild)) {
-      throw createError({
-        statusCode: 400,
-        message: "Guild not found",
-      });
-    }
+  const user = await event.context.$authorization.resolveServerUser();
+  if (!user) {
+    logger.error("Unauthorized user or missing session");
+    throw createError({
+      statusCode: 401,
+      message: "Unauthorized",
+      data: {
+        error: "unauthorized",
+        message: "Unauthorized",
+      },
+    });
+  }
 
-    const user = await event.context.$authorization.resolveServerUser();
-    // Check if user ID is provided
-    if (isNullOrUndefined(user)) {
-      throw createError({
-        statusCode: 400,
-        message: "User ID is required",
-      });
-    }
+  // Fetch guilds with improved error handling
+  logger.info(`Fetching guilds for user ${user.id}...`);
+  const guild = await getGuild(guildId);
 
-    // Fetch member data
-    const member = await api.guilds.getMember(guild.id, user.id);
-    if (isNullOrUndefined(member)) {
-      throw createError({
-        statusCode: 400,
-        message: "Member not found",
-      });
-    }
+  const memberId = getRouterParam(event, "member");
+  if (isNullOrUndefined(memberId)) {
+    throw createError({
+      statusCode: 400,
+      message: "Member ID is required",
+    });
+  }
 
-    if (await denies(event, manageAbility, guild, member)) {
-      throw createError({
-        statusCode: 403,
-        message: "Insufficient permissions",
-      });
-    }
+  // Fetch member data
+  const member = await getMember(guild, user);
 
-    const memberId = getRouterParam(event, "member");
-    if (isNullOrUndefined(memberId)) {
-      throw createError({
-        statusCode: 400,
-        message: "Member ID is required",
-      });
-    }
-
-    const guildMember = await api.guilds.getMember(guild.id, memberId);
-
-    if (isNullOrUndefined(guildMember)) {
-      throw createError({
-        statusCode: 404,
-        message: "Guild member not found",
-      });
-    }
-
-    return flattenMember(guildMember, guild);
-  },
+  return flattenMember(member, guild);
+}, {
+  auth: true,
 });

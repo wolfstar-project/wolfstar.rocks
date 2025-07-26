@@ -1,7 +1,6 @@
 import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import useApi from "~~/server/utils/api";
-import { defineWrappedCachedResponseHandler } from "~~/server/utils/wrappedEventHandler";
 
 defineRouteMeta({
   openAPI: {
@@ -10,7 +9,7 @@ defineRouteMeta({
   },
 });
 
-export default defineWrappedCachedResponseHandler(async (event) => {
+export default defineWrappedResponseHandler(async (event) => {
   const logger = useLogger("@wolfstar/api");
   // Get session token
   const tokens = await event.context.$authorization.resolveServerTokens();
@@ -87,7 +86,6 @@ export default defineWrappedCachedResponseHandler(async (event) => {
   return transformedData;
 }, {
   auth: true,
-  maxAge: 60 * 60 * 24, // 24 hours
   onError: (err) => {
     logger.error("Users API error:", {
       message: err.message,

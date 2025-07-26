@@ -102,7 +102,7 @@ const SelectDuration: FC<SelectDurationProps> = ({ value, min, max, onChange }) 
 			/>
 			<Select
 				sx={{
-					width: (theme) => theme.spacing(20)
+					width: (theme: any) => theme.spacing(20)
 				}}
 				FormControlProps={{
 					sx: {

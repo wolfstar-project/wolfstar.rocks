@@ -1,16 +1,17 @@
 import { FormControl, FormHelperText, InputLabel, Select as MSelect } from '@mui/material';
 import type { FormControlProps } from '@mui/material/FormControl';
 import type { SelectProps as MSelectProps } from '@mui/material/Select';
-import type { FC } from 'react';
+import type { FC, ReactNode } from 'react';
 
 /**
  * Props to pass to the Select component.
  * Any additional props will be passed to the Material-UI Select component
  */
-interface SelectProps extends MSelectProps {
+interface SelectProps extends Omit<MSelectProps, 'onChange'> {
 	title: string;
 	helperText?: string;
 	fullWidth?: boolean;
+	children?: ReactNode;
 
 	/** Additional props to pass to the FormControl component */
 	FormControlProps?: FormControlProps;

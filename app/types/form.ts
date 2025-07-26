@@ -1,5 +1,5 @@
 import type { ComputedRef, DeepReadonly, Ref } from "vue";
-import type { ZodSchema } from "zod";
+import type { ZodSchema } from "zod/v4";
 import type { GetObjectField } from "./utils";
 
 export interface Form<T extends object> {

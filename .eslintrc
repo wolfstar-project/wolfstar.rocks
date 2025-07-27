@@ -19,6 +19,7 @@
 		"@next/next/no-document-import-in-page": "off",
 		"@typescript-eslint/naming-convention": "off",
 		"@typescript-eslint/no-throw-literal": "off",
+		"@typescript-eslint/unbound-method": "off",
 		"no-extra-label": "warn",
 		"no-iterator": "warn",
 		"no-label-var": "warn",

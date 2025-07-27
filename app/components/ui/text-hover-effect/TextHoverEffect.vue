@@ -5,7 +5,9 @@
     height="100%"
     viewBox="0 0 300 100"
     xmlns="http://www.w3.org/2000/svg"
-    class="select-none"
+    style=".select-none {
+	user-select: none;
+}"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
     @mousemove="handleMouseMove"
@@ -192,8 +194,5 @@ function handleTouchEnd() {
 </script>
 
 <style scoped>
-.select-none {
-	user-select: none;
-}
 
 </style>

@@ -184,18 +184,18 @@ async function _validate(
   const names = opts.name && !Array.isArray(opts.name) ? [opts.name] : (opts.name as (keyof T)[]);
 
   const nestedValidatePromises
-		= !names && opts.nested
-		  ? Array.from(nestedForms.value.values()).map(({ validate }) =>
-		      validate(opts)
-		        .then(() => undefined)
-		        .catch((error: Error) => {
-		          if (!(error instanceof FormValidationException)) {
-		            throw error;
-		          }
-		          return error;
-		        }),
-		    )
-		  : [];
+    = !names && opts.nested
+      ? Array.from(nestedForms.value.values()).map(({ validate }) =>
+          validate(opts)
+            .then(() => undefined)
+            .catch((error: Error) => {
+              if (!(error instanceof FormValidationException)) {
+                throw error;
+              }
+              return error;
+            }),
+        )
+      : [];
 
   if (names) {
     const otherErrors = errors.value.filter(

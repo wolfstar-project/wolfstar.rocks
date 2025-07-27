@@ -61,7 +61,8 @@ const expandedCategory = ref<string | null>(null);
 const guildSettingsSchema = z.object({
   disabledCommands: z.array(z.custom<FlattenedCommand>()),
 });
-type FormData = z.infer<typeof guildSettingsSchema>;
+// Renamed to _FormData to indicate it's intentionally unused
+type _FormData = z.infer<typeof guildSettingsSchema>;
 
 function parseCommandsToLocalCommands() {
   loading.value = true;

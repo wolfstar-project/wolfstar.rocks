@@ -5,9 +5,9 @@ import type { UseComponentIconsProps } from "~/composables/useComponentIcons";
 import { tv } from "tailwind-variants";
 import { buttonGroupVariant } from "../button-group";
 
+export { default as AnimatedButton } from "./AnimatedButton.vue";
 export { default as Button } from "./Button.vue";
 export { default as RippleButton } from "./RippleButton.vue";
-export { default as AnimatedButton } from "./AnimatedButton.vue";
 
 // Type-safe color definitions with readonly array
 const colors = ["primary", "secondary", "success", "error", "info", "warning", "neutral"] as const;

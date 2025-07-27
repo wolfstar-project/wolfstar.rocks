@@ -145,7 +145,7 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 }
 
 // Computed language options
-const languageOptions = computed(() =>
+const _languageOptions = computed(() =>
   props.languages.map(langKey => ({
     value: langKey,
     label: mapLanguageKeysToNames(langKey).join(" - "),

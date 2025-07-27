@@ -15,10 +15,7 @@
       </div>
       <div class="relative mx-auto mb-8 w-full max-w-[340px] overflow-hidden rounded-xl border-2 border-dashed border-[#ff5d5b] bg-[#ff5d5b]/10 p-6 animate-pulsebox">
         <div class="absolute left-4 animate-blink font-mono font-bold text-[#ff5d5b]">&gt;</div>
-        <pre class="pl-6 text-left font-mono text-sm leading-relaxed text-[#ff5d5b]">{{ errorInfo.consoleMessage }}</pre>
-        <div class="h-2 divider">
-          <pre class="pl-6 text-left font-mono text-sm leading-relaxed text-[#fe7c7a]">{{ error.message }}</pre>
-        </div>
+        <div class="pl-6 text-left font-mono text-sm leading-relaxed text-[#ff5d5b]">{{ errorInfo.consoleMessage }}</div>
       </div>
       <div class="perspective-1000 relative mt-4 mb-2 h-32 flex items-center justify-center">
         <span class="relative -top-45 inline-block rotate-180 origin-bottom animate-hang text-8xl select-none">🦇</span>

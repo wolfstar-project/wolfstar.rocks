@@ -17,37 +17,19 @@
   >
     <defs>
       <linearGradient
+        v-if="hovered"
         id="textGradient"
         gradientUnits="userSpaceOnUse"
         cx="50%"
         cy="50%"
         r="25%"
-      >
-        <stop
-          v-if="hovered"
-          offset="0%"
-          stop-color="var(--yellow-500)"
-        />
-        <stop
-          v-if="hovered"
-          offset="25%"
-          stop-color="var(--red-500)"
-        />
-        <stop
-          v-if="hovered"
-          offset="50%"
-          stop-color="var(--blue-500)"
-        />
-        <stop
-          v-if="hovered"
-          offset="75%"
-          stop-color="var(--cyan-500)"
-        />
-        <stop
-          v-if="hovered"
-          offset="100%"
-          stop-color="var(--violet-500)"
-        />
+      >      <stop
+        v-for="(color, index) in colors"
+
+        :key="index"
+        :offset="`${index * 25}%`"
+        :stop-color="`var(${color}))`"
+      />!-- Radial Gradient -->
       </linearGradient>
 
       <!-- Radial Gradient -->
@@ -89,7 +71,7 @@
       dominant-baseline="middle"
       :stroke-width="strokeWidth"
       :style="{ opacity: hovered ? opacity : 0 }"
-      class="fill-transparent stroke-neutral-200 font-[helvetica] text-7xl font-bold dark:stroke-neutral-800"
+      :class="`fill-transparent stroke-neutral-200 font-[helvetica] ${textClass} font-bold dark:stroke-neutral-800`"
     >
       {{ text }}
     </text>
@@ -102,7 +84,7 @@
       dominant-baseline="middle"
       :stroke-width="strokeWidth"
       :style="strokeStyle"
-      class="fill-transparent stroke-neutral-200 font-[helvetica] text-7xl font-bold dark:stroke-neutral-800"
+      :class="`fill-transparent stroke-neutral-200 font-[helvetica] ${textClass} font-bold dark:stroke-neutral-800`"
     >
       {{ text }}
     </text>
@@ -115,7 +97,7 @@
       stroke="url(#textGradient)"
       :stroke-width="strokeWidth"
       mask="url(#textMask)"
-      class="fill-transparent font-[helvetica] text-7xl font-bold"
+      :class="`fill-transparent font-[helvetica] ${textClass} font-bold`"
     >
       {{ text }}
     </text>
@@ -123,6 +105,7 @@
 </template>
 
 <script setup lang="ts">
+import { isNullOrUndefinedOrZero } from "@sapphire/utilities";
 import { computed, reactive, ref } from "vue";
 
 interface Props {
@@ -130,12 +113,16 @@ interface Props {
   text: string;
   duration?: number;
   opacity?: number;
+  textClass?: string;
+  colors?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   strokeWidth: 0.75,
   duration: 200,
   opacity: 0.75,
+  textClass: "text-7xl",
+  colors: () => ["--bg-yellow-500", "--bg-red-500", "--bg-blue-500", "--bg-cyan-500", "--bg-violet-500"],
 });
 
 const svgRef = ref<SVGSVGElement | null>(null);
@@ -143,7 +130,7 @@ const cursor = reactive({ x: 0, y: 0 });
 const hovered = ref(false);
 
 // Set transition duration for smoother animation
-const transitionDuration = props.duration ? props.duration * 1000 : 200;
+const transitionDuration = !isNullOrUndefinedOrZero(props.duration) ? props.duration * 1000 : 200;
 
 // Reactive gradient position
 const maskPosition = computed(() => {

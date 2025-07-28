@@ -166,7 +166,7 @@
             to="/api/auth/discord"
           >
             <template #leading>
-              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
+              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
             </template>
             <template #default>
               <span class="hidden sm:inline">Login</span>
@@ -180,7 +180,7 @@
             size="md"
           >
             <template #leading>
-              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[24px]" />
+              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
             </template>
             <template #default>
               <span class="hidden sm:inline">Login</span>

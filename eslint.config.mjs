@@ -6,6 +6,7 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 export default withNuxt(
   antfu(
     {
+      vue: true,
       formatters: true,
       pnpm: true,
       stylistic: {
@@ -24,7 +25,6 @@ export default withNuxt(
         "ts/no-use-before-define": "off",
         "vue/comma-dangle": "off",
         "vue/eqeqeq": "off",
-        "vue/max-attributes-per-line": "warn",
         "vue/no-unused-refs": "off",
         "antfu/top-level-function": "off",
         "node/prefer-global/process": "off",

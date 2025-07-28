@@ -16,8 +16,9 @@
       </div>
       <template v-else>
         <ShadAvatar
-          :src="isDefault ? defaultAvatar : isAnimated ? createUrl('gif', 128) : createUrl('png', 128)"
+          :src="isAnimated ? createUrl('gif', 128) : createUrl('png', 128)"
           :alt="isDefault ? 'Default Avatar' : 'Avatar'"
+          :fallback="defaultAvatar"
           size="xl"
           class="rounded-full ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
         />

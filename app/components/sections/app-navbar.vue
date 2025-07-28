@@ -104,7 +104,7 @@
             <div
               tabindex="0"
               role="button"
-              class="group btn relative z-10 flex items-center justify-center gap-x-2 btn-ghost transition-colors"
+              class="group relative z-10 flex items-center justify-center gap-x-2 transition-all duration-200 hover:opacity-70 active:opacity-50 cursor-pointer rounded-lg p-2"
             >
               <!-- Avatar Container -->
               <div

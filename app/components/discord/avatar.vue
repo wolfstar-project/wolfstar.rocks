@@ -1,20 +1,26 @@
 <template>
   <div class="discord-message-avatar-wrapper" :class="size.classes">
     <nuxt-img v-if="profile.app" :src="`/avatars/${user}.png`" :width="size.dimensions" :height="size.dimensions" alt="Avatar" />
-    <ShadIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie h-full w-full" />
+    <ShadIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie size-full" />
     <ShadIcon v-else name="ph:shooting-star-fill" class="h-full w-full text-info" />
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ user: ProfileName; size: keyof typeof Sizes }>();
+import type { ProfileName } from "~/utils/constants";
+import { computed } from "vue";
+import { Profiles } from "~/utils/constants";
+
+const props = defineProps<{ user: ProfileName; size: SizeKey }>();
 const profile = computed(() => Profiles[props.user]);
 const size = computed(() => Sizes[props.size]);
 
 const Sizes = {
   tiny: { dimensions: 16, classes: "h-4 w-4" },
   medium: { dimensions: 48, classes: "h-8 w-8 md:h-12 md:w-12" },
-};
+} as const;
+
+type SizeKey = keyof typeof Sizes;
 </script>
 
 <style scoped>

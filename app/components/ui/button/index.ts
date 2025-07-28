@@ -94,6 +94,11 @@ export const buttonVariants = tv({
         base: "",
       },
     },
+    responsive: {
+      true: {
+        label: "hidden sm:inline",
+      },
+    },
   },
   compoundVariants: [
     // Neutral variants
@@ -186,6 +191,7 @@ export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, "ra
   block?: boolean;
   circle?: boolean;
   loadingAuto?: boolean;
+  responsive?: boolean;
   onClick?: ((event: MouseEvent) => void | Promise<void>) | Array<(event: MouseEvent) => void | Promise<void>>;
   class?: HTMLAttributes["class"];
   ui?: Partial<typeof buttonVariants.slots>;

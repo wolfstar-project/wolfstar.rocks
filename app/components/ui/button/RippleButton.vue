@@ -6,10 +6,6 @@
     class="relative overflow-hidden"
     @click="handleClick"
   >
-    <template v-for="(_, name) in $slots" #[name]="slotData">
-      <slot :name="name" v-bind="slotData"></slot>
-    </template>
-
     <span class="pointer-events-none absolute inset-0">
       <span
         v-for="ripple in buttonRipples"
@@ -31,7 +27,8 @@
 
 <script lang="ts" setup>
 import type { ButtonProps } from "@/components/ui/button";
-import { ref, watchEffect } from "vue";
+import { useForwardProps } from "reka-ui";
+import { computed, ref, watchEffect } from "vue";
 import { Button } from "@/components/ui/button";
 
 interface RippleButtonProps extends Omit<ButtonProps, "rippleColor" | "rippleDuration"> {
@@ -45,7 +42,13 @@ const props = withDefaults(defineProps<RippleButtonProps>(), {
 });
 
 // Estrai le proprietà specifiche del ripple e passa il resto a Button
-const { rippleColor, rippleDuration, ...buttonProps } = props;
+const { rippleColor, rippleDuration } = props;
+
+const buttonProps = useForwardProps(computed(() => {
+  const { class: _, ...delegated } = props;
+
+  return delegated;
+}));
 
 const rippleButtonRef = ref<HTMLButtonElement | null>(null);
 const buttonRipples = ref<Array<{ x: number; y: number; size: number; key: number }>>([]);

@@ -41,6 +41,8 @@
 
 <script lang="ts" setup>
 import type { ButtonProps } from "@/components/ui/button";
+import { useForwardProps } from "reka-ui";
+import { computed } from "vue";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 
@@ -53,5 +55,11 @@ const props = withDefaults(defineProps<AnimatedButtonProps>(), {
 });
 
 // Estrai le proprietà specifiche dell'animazione e passa il resto a Button
-const { text, class: customClass, ...buttonProps } = props;
+const { text } = props;
+
+const buttonProps = useForwardProps(computed(() => {
+  const { class: _, ...delegated } = props;
+
+  return delegated;
+}));
 </script>

@@ -72,6 +72,8 @@ import { Avatar } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Link, LinkBase, pickLinkProps } from "@/components/ui/link";
+import { useButtonGroup } from "@/composables/useButtonGroup";
+import { useComponentIcons } from "@/composables/useComponentIcons";
 import { formLoadingInjectionKey } from "@/composables/useFormField";
 import { omit } from "@/utils/index";
 
@@ -254,6 +256,7 @@ const ui = computed(() =>
     leading: isLeading.value,
     trailing: isTrailing.value,
     buttonGroup: orientation.value,
+    responsive: props.responsive,
   }),
 );
 </script>

@@ -49,7 +49,7 @@ multi-purpose Discord bot for moderation and community management.
 
 ## ✨ Features
 
-- **Modern Web Interface**: Built with Nuxt 3 and modern web technologies for a
+- **Modern Web Interface**: Built with Nuxt 4 and modern web technologies for a
   smooth user experience
 - **Guild Management**: Manage your Discord server's settings, roles, and
   permissions through an intuitive web interface
@@ -62,7 +62,7 @@ multi-purpose Discord bot for moderation and community management.
 ## 🚀 Self-Hosting WolfStar.Rocks Requirements
 
 **Node.js**: WolfStar.Rocks is built on Node.js, so you will need to have
-Node.js (v18+) installed.
+Node.js (v20+) installed.
 
 **WolfStar Bot**: You need a running instance of WolfStar bot to connect this
 dashboard to.
@@ -72,23 +72,12 @@ configuration.
 
 **Database**: PostgreSQL database (shared with WolfStar bot instance).
 
-## 🛳 Self-Hosting WolfStar.Rocks
-
-### Prerequisites
-
-Before you begin, ensure you have:
-
-- A running WolfStar bot instance
-- Node.js v18 or higher installed
-- Discord bot application with OAuth2 configured
-- PostgreSQL database access
-
 ### Quick Setup
 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/wolfstar-project/wolfstar.rocks.rocks.git
+   git clone https://github.com/wolfstar-project/wolfstar.rocks.git
    cd wolfstar.rocks
    ```
 
@@ -96,10 +85,6 @@ Before you begin, ensure you have:
 
    ```bash
    pnpm install
-   # or
-   npm install
-   # or
-   yarn install
    ```
 
 3. **Environment Configuration**
@@ -114,10 +99,6 @@ Before you begin, ensure you have:
 5. **Start the development server**
    ```bash
    pnpm dev
-   # or
-   npm run dev
-   # or
-   yarn dev
    ```
 
 ### Environment Variables

@@ -1,5 +1,5 @@
 <template>
-  <vite-pwa-manifest />
+  <nuxt-pwa-manifest />
   <div class="relative flex min-h-screen items-center justify-center overflow-hidden font-sans">
     <div class="relative z-10 flex flex-col items-center justify-center w-full max-w-lg p-8 mx-auto text-center rounded-2xl shadow-2 border border-[#ff5d5b]/30">
       <h1 class="mb-4 text-6xl font-extrabold tracking-tight text-[#ff5d5b] drop-shadow-[3px_3px_0px_#2c1810]">
@@ -50,21 +50,24 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "#app";
+import { captureException } from "@sentry/nuxt";
 
 // Props definition
 const { error } = defineProps<{
   error: NuxtError;
 }>();
 
+captureException(error);
+
 // Error state management
 const statusCode = computed(() => (error?.statusCode ?? ErrorType.INTERNAL_SERVER) as ErrorType);
-const errorInfo = computed(() => errorMessages[statusCode.value] || errorMessages[ErrorType.INTERNAL_SERVER]);
+const errorInfo = computed(() => errorMessages[statusCode.value]);
 
 // Navigation handling
 const handleError = () => clearError({ redirect: "/" });
 
 // SEO and meta configuration
-defineOgImageComponent("NuxtSeo", {
+defineOgImageComponent("Default", {
   title: statusCode.value.toString(),
   description: error.statusMessage,
 });

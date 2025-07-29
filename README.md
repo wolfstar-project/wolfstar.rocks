@@ -1,6 +1,13 @@
 # WolfStar.rocks
 
-[![Discord][discord-embed-image]][server-invite-link] <br/>
+<div align="center"><a name="readme-top"></a>
+
+<img src="https://github.com/WolfStarBot.png" width="15%" alt="WolfStar Logo">
+
+# WolfStar.rocks
+
+The official web dashboard for WolfStar, a powerful multi-purpose Discord
+bot.<br/>
 
 [Official Site][official-site] · [Blog][blog] · [WolfStar Invite
 Link][invite-link] · [Support Server][discord-link] ·
@@ -33,44 +40,65 @@ Super Admin.</sup>
 
 <details>
 <summary><kbd>Table of contents</kbd></summary>
-- [👋🏻 Welcome to WolfStar.Rocks](#welcome)
-- [✨ Features](#features)
-- [🚀 Requirements](#requirements)
-- [🛳 Self-Hosting WolfStar.Rocks](#self-hosting)
-- [⌨️ Local Development](#local-development)
-- [💻 Online Development](#online-development)
-- [🤝 Contributing](#contributing)
-- [❤️ Sponsor](#sponsor)
 
-## 👋🏻 Welcome to WolfStar.Rocks
+#### TOC
 
-WolfStar.Rocks is the official web dashboard for WolfStar, a powerful
+- [👋🏻 Welcome to WolfStar.rocks](#-welcome-to-wolfstarrocks)
+- [✨ Features](#-features)
+- [🛳 Self-Hosting WolfStar.rocks](#-self-hosting-wolfstarrocks)
+- [🚀 Self-Hosting WolfStar.rocks Requirements](#-self-hosting-wolfstarrocks-requirements)
+- [⌨️ Local Development](#️-local-development)
+- [💻 Online Development](#-online-development)
+- [🤝 Contributing](#-contributing)
+- [❤️ Sponsor](#️-sponsor)
+
+<br/>
+
+</details>
+
+<div id="-welcome-to-wolfstarrocks">
+
+## 👋🏻 Welcome to WolfStar.rocks
+
+WolfStar.rocks is the official web dashboard for WolfStar, a powerful
 multi-purpose Discord bot for moderation and community management.
+
+</div>
+
+<div id="-features">
 
 ## ✨ Features
 
 - **Modern Web Interface**: Built with Nuxt 4 and modern web technologies for a
-  smooth user experience
+  smooth user experience.
 - **Guild Management**: Manage your Discord server's settings, roles, and
-  permissions through an intuitive web interface
-- **Real-time Updates**: Live updates for guild data and bot status
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
-- **OAuth Integration**: Secure Discord authentication and authorization
-- **Multi-language Support**: Support for multiple languages (coming soon)
-- **Dashboard Analytics**: View server statistics and bot usage metrics
+  permissions through an intuitive web interface.
+- **Real-time Updates**: Live updates for guild data and bot status.
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+  devices.
+- **OAuth Integration**: Secure Discord authentication and authorization.
+- **Multi-language Support**: Support for multiple languages (coming soon).
+- **Dashboard Analytics**: View server statistics and bot usage metrics.
 
-## 🚀 Self-Hosting WolfStar.Rocks Requirements
+</div>
 
-**Node.js**: WolfStar.Rocks is built on Node.js, so you will need to have
-Node.js (v20+) installed.
+<div id="-self-hosting-wolfstarrocks-requirements">
 
-**WolfStar Bot**: You need a running instance of WolfStar bot to connect this
-dashboard to.
+## 🚀 Self-Hosting WolfStar.rocks Requirements
 
-**Discord Bot Application**: A Discord bot application with proper OAuth2
-configuration.
+- **Node.js**: WolfStar.rocks is built on Node.js, so you will need to have
+  Node.js (v20+) installed.
+- **WolfStar Bot**: You need a running instance of WolfStar bot to connect this
+  dashboard to.
+- **Discord Bot Application**: A Discord bot application with proper OAuth2
+  configuration.
+- **PostgreSQL**: PostgreSQL database (shared with WolfStar bot instance).
 
-**Database**: PostgreSQL database (shared with WolfStar bot instance).
+</div>
+
+<div id="-self-hosting-wolfstarrocks">
+
+## 🛳 Self-Hosting WolfStar.rocks
 
 ### Quick Setup
 
@@ -128,13 +156,6 @@ SENTRY_DSN=your_sentry_dsn
    - `http://localhost:3000/oauth/guild`
 5. Save your changes
 
-## ⌨️ Local Development
-
-### Development Setup
-
-For detailed development setup instructions, refer to
-[CONTRIBUTING.md](https://github.com/wolfstar-project/.github/blob/main/.github/CONTRIBUTING.md).
-
 ### Available Scripts
 
 - `pnpm dev` - Start development server
@@ -144,26 +165,6 @@ For detailed development setup instructions, refer to
 - `pnpm lint` - Run ESLint
 - `pnpm type-check` - Run TypeScript checks
 
-### Development Tools
-
-- **Nuxt 4** - Vue.js framework
-- **TypeScript** - Type safety
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **Prisma** - Database ORM
-- **Tailwind CSS** - Styling
-- **DaisyUI** - Styling \_ **Shadcn** - Components
-
-## 💻 Online Development
-
-You can develop WolfStar.Rocks online using GitHub Codespaces:
-
-1. Navigate to the
-   [repository](https://github.com/wolfstar-project/wolfstar.rocks.rocks)
-2. Click the **Code** button
-3. Select **Codespaces** tab
-4. Click **Create codespace on main**
-
 ### Development Guidelines
 
 - Follow the existing code style and conventions
@@ -172,17 +173,58 @@ You can develop WolfStar.Rocks online using GitHub Codespaces:
 - Update documentation as needed
 - Ensure all CI checks pass
 
+### Development Tools
+
+- **Nuxt 4** - Vue.js framework
+- **TypeScript** - Type safety
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Prisma** - Database ORM
+- **Tailwind CSS** - Styling
+- **DaisyUI** - Styling
+- **Shadcn** - Components
+
+</div>
+
+<div id="️-local-development">
+
+## ⌨️ Local Development
+
+Refer to [CONTRIBUTING.md][contributing-link] for detailed setup instructions.
+
+</div>
+
+<div id="-online-development" align="right">
+
+## 💻 Online Development
+
+Click any of the buttons below to start a new development environment to demo or
+contribute to the codebase without having to install anything on your machine:
+
+[![Open in VS Code](https://img.shields.io/badge/Open%20in-VS%20Code-blue?logo=visualstudiocode)](https://vscode.dev/github/wolfstar-project/wolfstar.rocks)
+[![Open in GitHub1s](https://img.shields.io/badge/Open%20in-GitHub1s-blue?logo=github)](https://github1s.com/wolfstar-project/wolfstar.rocks)
+[![Open in Glitch](https://img.shields.io/badge/Open%20in-Glitch-purple?logo=glitch)](https://glitch.com/edit/#!/import/github/wolfstar-project/wolfstar.rocks)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wolfstar-project/wolfstar.rocks)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/wolfstar-project/wolfstar.rocks)
+[![Edit in Codesandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/wolfstar-project/wolfstar.rocks)
+[![Open in Repl.it](https://replit.com/badge/github/withastro/astro)](https://replit.com/github/wolfstar-project/wolfstar.rocks)
+[![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/wolfstar-project/wolfstar.rocks)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/wolfstar-project/wolfstar.rocks)
+
+</div>
+
 <div id="️-contributing">
 
 ## 🤝 Contributing
 
-Thank you to all the people who already contributed to WolfStar.Rocks! Please
+Thank you to all the people who already contributed to WolfStar.rocks! Please
 make sure to read the [Contributing Guide][contributing-link] before making a
 pull request.
 
 <a href="https://github.com/wolfstar-project/wolfstar.rocks/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=wolfstar-project/wolfstar.rocks" />
 </a>
+
 </div>
 
 <div id="️-sponsor">
@@ -199,6 +241,18 @@ donation. Every contribution helps to maintain and improve the bot.
 Thank you for your support!
 
 </div>
+
+<!-- LINK GROUP -->
+
+---
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+---
 
 <summary><h4>📝 License</h4>
 
@@ -267,8 +321,6 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [pr-welcome-shield]:
   https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/wolfstar
-[set-up - refer to contributing.md]:
-  https://github.com/wolfstar-project/.github/blob/main/.github/CONTRIBUTING.md
 [share-linkedin-shield]:
   https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
 [share-linkedin-link]: https://linkedin.com/feed

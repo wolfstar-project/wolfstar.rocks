@@ -9,7 +9,6 @@ catalogs:
     "@tailwindcss/vite": ^4.1.11
     "@vite-pwa/nuxt": ^1.0.4
   cli:
-    "@shelve/cli": ^4.1.6
     pncat: ^0.3.1
     taze: ^19.1.0
   dev:
@@ -65,8 +64,8 @@ catalogs:
     markdown-it-anchor: ^9.2.0
     vue-markdown-render: ^2.2.1
   node:
+    "@dotenvx/dotenvx": ^1.48.3
     consola: ^3.4.2
-    dotenv: ^17.2.1
   prod:
     "@josephanson/nuxt-ai": 0.1.6
     "@nuxtjs/color-mode": ^3.5.2

@@ -15,7 +15,9 @@ RUN set -ex && \
     mkdir -p /base/bin && \
     # Install dumb-init
     wget -O /base/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_"$(uname -m)" && \
-    chmod 755 /base/bin/dumb-init
+    chmod 755 /base/bin/dumb-init && \
+    # Install dotenvx
+    curl -sfS https://dotenvx.sh/install.sh | sh 
 
 # Install Node.js dependencies and build
 COPY package.json pnpm-lock.yaml .npmrc ./
@@ -35,7 +37,7 @@ COPY --from=builder /app/.output /app/.output
 
 # Set environment variables
 ENV NODE_ENV="production" \
-    NODE_OPTIONS="--enable-source-maps" \
+    NODE_OPTIONS="--enable-source-maps --import=./.output/server/sentry.server.config.mjs" \
     NUXT_TELEMETRY_DISABLED=1
 
 # Create and use non-root user
@@ -49,4 +51,4 @@ WORKDIR /app
 EXPOSE ${PORT}
 
 ENTRYPOINT ["/bin/dumb-init", "--"]
-CMD ["node", ".output/server/index.mjs"]
+CMD ["dotenvx", "run", "--", "node", ".output/server/index.mjs"]

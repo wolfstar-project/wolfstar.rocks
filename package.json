@@ -1,8 +1,10 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@wolfstar-project/dashboard",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "description": "Wolfstar Dashboard",
+  "homepage": "https://wolfstar.rocks",
   "bugs": {
     "url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"
   },
@@ -10,6 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/wolfstar-project/wolfstar.rocks.git"
   },
+  "funding": "https://github.com/wolfstar-project/wolfstar.rocks?sponsor",
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {

@@ -96,6 +96,9 @@ catalogs:
     motion-v:
       specifier: ^1.6.1
       version: 1.6.1
+    nuxt-vue-dragscroll:
+      specifier: ^1.0.1
+      version: 1.0.1
     pinia:
       specifier: ^3.0.3
       version: 3.0.3
@@ -341,6 +344,9 @@ importers:
       nuxt-security:
         specifier: catalog:prod
         version: 2.3.0(magicast@0.3.5)(rollup@4.45.1)
+      nuxt-vue-dragscroll:
+        specifier: catalog:frontend
+        version: 1.0.1(magicast@0.3.5)(typescript@5.8.3)
       pinia:
         specifier: catalog:frontend
         version: 3.0.3(typescript@5.8.3)(vue@3.5.17(typescript@5.8.3))
@@ -380,6 +386,9 @@ importers:
       vue-markdown-render:
         specifier: catalog:markdown
         version: 2.2.1(vue@3.5.17(typescript@5.8.3))
+      vue-scrollto:
+        specifier: ^2.20.0
+        version: 2.20.0
       wrangler:
         specifier: catalog:dev
         version: 4.26.0(@cloudflare/workers-types@4.20250718.0)
@@ -4454,6 +4463,9 @@ packages:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
     engines: {node: '>= 0.8'}
 
+  bezier-easing@2.1.0:
+    resolution: {integrity: sha512-gbIqZ/eslnUFC1tjEvtz0sgx+xTK20wDnYMIA27VA04R7w6xxXQPZDbibjA9DTWZRA2CXtwHykkVzlCaAJAZig==}
+
   binary-extensions@2.3.0:
     resolution: {integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw==}
     engines: {node: '>=8'}
@@ -7280,6 +7292,9 @@ packages:
   nuxt-site-config@3.2.2:
     resolution: {integrity: sha512-0zCo8nZKk11F4oEWvioTPpxYesJtiwWGfanh1coOfPmvGdYuCcJ/pusy8zdPb6xQkvAYqpTZUy7KKfjXjrE8rA==}
 
+  nuxt-vue-dragscroll@1.0.1:
+    resolution: {integrity: sha512-M8HjwoYhA4QRtGfEVtMEQ2+TLO18+m+bCsHhFDOPeKXCM9dMcrg5PFtif8Fpj1b5yIz8i+Ry9pi/vKMygbasBw==}
+
   nuxt@4.0.1:
     resolution: {integrity: sha512-1WbtiX127640PXUJ2Mb32ck0A0/hzBk6+oPQ0YvJnS/HZK3A/oJEW7sYCRPYyEBwUyIQk12QRCBHxmr6LLeXZQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -8384,6 +8399,7 @@ packages:
   source-map@0.8.0-beta.0:
     resolution: {integrity: sha512-2ymg6oRBpebeZi9UUNsgQ89bhx01TcTkmNTGnNO88imTmbSgy4nfujrgVEFKWpMTEGA11EDkTt7mqObTPdigIA==}
     engines: {node: '>= 8'}
+    deprecated: The work that was done in this beta branch won't be included in future versions
 
   sourcemap-codec@1.4.8:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
@@ -9210,6 +9226,9 @@ packages:
   vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
 
+  vue-dragscroll@4.0.6:
+    resolution: {integrity: sha512-zW1k58p41yhmFhmg/JxfesUM4Srl0JfXg7xSINqffVGpHJKvnEHMK4QgF6mUVkPMTgibn976fhPYkomcXPvvFA==}
+
   vue-eslint-parser@10.2.0:
     resolution: {integrity: sha512-CydUvFOQKD928UzZhTp4pr2vWz1L+H99t7Pkln2QSPdvmURT0MoC4wUccfCnuEaihNsu9aYYyk+bep8rlfkUXw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -9225,6 +9244,9 @@ packages:
     resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
     peerDependencies:
       vue: ^3.2.0
+
+  vue-scrollto@2.20.0:
+    resolution: {integrity: sha512-7i+AGKJTThZnMEkhIPgrZjyAX+fXV7/rGdg+CV283uZZwCxwiMXaBLTmIc5RTA4uwGnT+E6eJle3mXQfM2OD3A==}
 
   vue-tsc@2.2.10:
     resolution: {integrity: sha512-jWZ1xSaNbabEV3whpIDMbjVSVawjAyW+x1n3JeGQo7S0uv2n9F/JMgWW90tGWNFRKya4YwKMZgCtr0vRAM7DeQ==}
@@ -13969,6 +13991,8 @@ snapshots:
     dependencies:
       safe-buffer: 5.1.2
 
+  bezier-easing@2.1.0: {}
+
   binary-extensions@2.3.0: {}
 
   bindings@1.5.0:
@@ -17440,6 +17464,14 @@ snapshots:
       - magicast
       - vue
 
+  nuxt-vue-dragscroll@1.0.1(magicast@0.3.5)(typescript@5.8.3):
+    dependencies:
+      '@nuxt/kit': 4.0.1(magicast@0.3.5)
+      vue-dragscroll: 4.0.6(typescript@5.8.3)
+    transitivePeerDependencies:
+      - magicast
+      - typescript
+
   nuxt@4.0.1(@netlify/blobs@9.1.2)(@parcel/watcher@2.5.1)(@types/node@20.11.5)(@vue/compiler-sfc@3.5.17)(db0@0.3.2)(encoding@0.1.13)(eslint@9.32.0(jiti@2.4.2))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.45.1)(terser@5.43.1)(typescript@5.8.3)(vite@7.0.5(@types/node@20.11.5)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.43.1)(yaml@2.8.0))(vue-tsc@2.2.10(typescript@5.8.3))(yaml@2.8.0):
     dependencies:
       '@nuxt/cli': 3.26.4(magicast@0.3.5)
@@ -19664,6 +19696,12 @@ snapshots:
 
   vue-devtools-stub@0.1.0: {}
 
+  vue-dragscroll@4.0.6(typescript@5.8.3):
+    dependencies:
+      vue: 3.5.17(typescript@5.8.3)
+    transitivePeerDependencies:
+      - typescript
+
   vue-eslint-parser@10.2.0(eslint@9.32.0(jiti@2.4.2)):
     dependencies:
       debug: 4.4.1
@@ -19685,6 +19723,10 @@ snapshots:
     dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.17(typescript@5.8.3)
+
+  vue-scrollto@2.20.0:
+    dependencies:
+      bezier-easing: 2.1.0
 
   vue-tsc@2.2.10(typescript@5.8.3):
     dependencies:

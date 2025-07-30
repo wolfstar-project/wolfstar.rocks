@@ -47,7 +47,7 @@ export default defineWrappedResponseHandler(async (event) => {
 
   // Fetch guilds with improved error handling
   logger.info(`Fetching guilds for user ${user.id}...`);
-  const guild = await getGuild(guildId);
+  const guild = await getGuild(event, guildId);
 
   const memberId = getRouterParam(event, "member");
   if (isNullOrUndefined(memberId)) {
@@ -58,7 +58,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Fetch member data
-  const member = await getMember(guild, user);
+  const member = await getMember(event, guild, user);
 
   return flattenMember(member, guild);
 }, {

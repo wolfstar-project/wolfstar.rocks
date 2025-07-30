@@ -38,6 +38,7 @@ catalogs:
   frontend:
     "@pinia/nuxt": ^0.11.2
     motion-v: ^1.6.1
+    nuxt-vue-dragscroll: ^1.0.1
     pinia: ^3.0.3
     reka-ui: ^2.4.0
   icons:

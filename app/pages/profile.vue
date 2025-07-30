@@ -50,7 +50,7 @@
             <template #leading>
               <ShadIcon :name="tab.icon" class="h-5 w-5" />
             </template>
-            {{ tab.label }}
+            <span class="hidden text-sm sm:inline">{{ tab.label }}</span>
             <span
               v-if="tab.id === 'servers' && guilds"
               class="ml-2 rounded-full bg-base-content/20 px-2 py-1 text-xs"
@@ -131,15 +131,20 @@
             <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
           </div>
           <ShadCard class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg">
-            <div class="space-y-4 p-6 text-center">
-              <ShadIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
-              <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
-              <p class="text-base-content/70">Get access to exclusive features and priority support</p>
-              <div class="flex justify-center space-x-4 pt-4">
-                <ShadButton color="primary" size="lg">Get Premium</ShadButton>
-                <ShadButton variant="outline" size="lg">Learn More</ShadButton>
+            <template #header>
+              <div class="space-y-4 p-6 text-center">
+                <ShadIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
+                <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
               </div>
-            </div>
+            </template>
+
+            <p class="text-base-content/70">Get access to exclusive features and priority support</p>
+            <template #footer>
+              <div class="flex justify-center space-x-4 pt-4">
+                <ShadButton color="primary" size="sm">Get Premium</ShadButton>
+                <ShadButton variant="outline" size="sm">Learn More</ShadButton>
+              </div>
+            </template>
           </ShadCard>
         </div>
       </div>

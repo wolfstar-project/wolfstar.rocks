@@ -115,7 +115,7 @@
 </template>
 
 <script setup lang="ts">
-import type { NuxtError } from "#app";
+import type { NuxtError } from "nuxt/app";
 import type { GuildData } from "~~/server/database";
 import { cast, isNullOrUndefined } from "@sapphire/utilities";
 import { useRouteParams } from "@vueuse/router";
@@ -126,6 +126,17 @@ const router = useRouter();
 const guildId = useRouteParams("id");
 const toast = useToast();
 
+interface NavigationItem {
+  route: string;
+  label: string;
+  icon: string;
+  description: string;
+  badge?: {
+    text: string;
+    color: string;
+  };
+}
+
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | string[] | null): boolean {
   if (isNullOrUndefined(id) || Array.isArray(id))
@@ -135,7 +146,7 @@ function isValidGuildId(id: string | string[] | null): boolean {
 }
 
 // Use composables and stores
-const { settings, resetChanges, hasChanges, changes } = useGuildSettings();
+const { settings, resetAllChanges, hasChanges, changes } = useGuildSettings();
 const guildData = useGuild();
 const languagesStore = LanguagesStore();
 const commandsStore = CommandsStore();
@@ -150,7 +161,7 @@ const commands = computed(() => commandsStore.commands);
 const currentRoute = computed(() => "general");
 
 // Navigation items for sidebar
-const navigationItems = computed(() => [
+const navigationItems = computed<NavigationItem[]>(() => [
   {
     route: "general",
     label: "General",
@@ -209,6 +220,9 @@ onMounted(async () => {
         statusCode: 400,
         statusMessage: "Invalid Guild ID",
         message: "The provided guild ID is not valid. Guild IDs must be 17-19 digit numbers.",
+        data: {
+          field: "guildId",
+        },
       });
     }
 
@@ -321,7 +335,7 @@ async function submitChanges() {
     }
 
     // Update settings using PATCH endpoint
-    const settingsChanges = await useFetch(`/api/guilds/${guildId.value}/settings`, {
+    const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
       method: "PATCH",
       body: {
         data: Object.entries(settings.value),
@@ -342,15 +356,17 @@ async function submitChanges() {
       },
     });
 
-    if (!settingsChanges) {
+    if (!data.value) {
       throw createError({
         statusCode: 500,
         message: "Failed to update settings",
       });
     }
+
     resetAllChanges();
     toast.add({
       color: "success",
+      icon: "heroicons:check",
       title: "Settings Updated",
       description: "Settings updated successfully",
     });
@@ -360,15 +376,6 @@ async function submitChanges() {
   }
   finally {
     loading.value = false;
-  }
-}
-
-function resetAllChanges() {
-  // Reset all changes instead of resetting by key
-  if (settings.value && Object.keys(settings.value).length > 0) {
-    Object.keys(settings.value).forEach((key) => {
-      resetChanges(key as keyof GuildData);
-    });
   }
 }
 
@@ -389,7 +396,7 @@ useHead({
 
 <style scoped>
 @reference "@/assets/css/main.css";
-/* Glass-morphism utilities */
+/* glass-morphism utilities */
 .glass-panel {
 	@apply bg-base-100/80 backdrop-blur-md border border-base-300/50;
 }

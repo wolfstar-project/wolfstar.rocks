@@ -78,8 +78,10 @@
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
+    "vue-scrollto": "^2.20.0",
     "wrangler": "catalog:dev",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "nuxt-vue-dragscroll": "catalog:frontend"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

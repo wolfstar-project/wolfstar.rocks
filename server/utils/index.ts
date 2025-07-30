@@ -37,7 +37,7 @@ async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGu
   if (typeof guild === "undefined")
     return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild);
 
-  const member = await useApi().guilds.getMember(guild.id, id);
+  const member = await useApi().guilds.getMember(event, guild.id, id);
   if (!member)
     return false;
 

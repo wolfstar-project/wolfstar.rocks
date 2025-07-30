@@ -21,7 +21,7 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const { shouldSerialize } = await getValidatedQuery(event, querySchema.parse);
 
-  const guild = await getGuild(guildId);
+  const guild = await getGuild(event, guildId);
 
   const api = useApi();
 

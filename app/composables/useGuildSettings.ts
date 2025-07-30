@@ -60,6 +60,15 @@ function useGuildSettings() {
     }
   };
 
+  // reset All changes
+  const resetAllChanges = () => {
+    if (guildSettingsChanges.value && Object.keys(guildSettingsChanges.value).length > 0) {
+      Object.keys(guildSettingsChanges.value).forEach((key) => {
+        resetChanges(key as keyof GuildData);
+      });
+    }
+  };
+
   const hasChanges = computed(() => {
     return !!guildSettingsChanges.value && Object.keys(guildSettingsChanges.value).length > 0;
   });
@@ -67,6 +76,7 @@ function useGuildSettings() {
   return {
     settings: readonly(mergedSettings),
     resetChanges,
+    resetAllChanges,
     hasChanges,
     changes,
   };

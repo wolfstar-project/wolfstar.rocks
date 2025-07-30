@@ -32,6 +32,7 @@ export default defineNuxtConfig({
     "@prisma/nuxt",
     "nuxt-auth-utils",
     "nuxt-authorization",
+    "nuxt-vue-dragscroll",
     "shadcn-nuxt",
     "@josephanson/nuxt-ai",
     "@sentry/nuxt/module",

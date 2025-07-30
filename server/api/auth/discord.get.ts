@@ -1,5 +1,6 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
+import type { NuxtError } from "nuxt/app";
 import { isDevelopment } from "std-env";
 import { useLogger } from "~~/shared/utils/logger";
 
@@ -62,16 +63,13 @@ export default defineOAuthDiscordEventHandler({
     return sendRedirect(event, "/");
   },
 
-  async onError(event: H3Event, error: Error) {
+  async onError(_event: H3Event, error: NuxtError) {
     useLogger("@wolfstar/auth").error("Discord OAuth error", error);
 
-    return sendError(
-      event,
-      createError({
-        statusCode: 500,
-        statusMessage: "Discord OAuth error",
-        data: error,
-      }),
-    );
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Discord OAuth error",
+      data: error,
+    });
   },
 });

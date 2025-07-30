@@ -1,9 +1,10 @@
 import type { APIGuild, APIUser } from "discord-api-types/v10";
+import type { H3Event } from "h3";
 import useApi from "~~/server/utils/api";
 
 const logger = useLogger("@wolfstar/api");
 
-export const getGuild = async (guildId: string) => {
+export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: string) => {
   const api = useApi();
   const guild = await api.guilds.get(guildId, { with_counts: true }).catch((error) => {
     logger.error("Failed to fetch guilds:", error);
@@ -19,7 +20,10 @@ export const getGuild = async (guildId: string) => {
     });
   });
   return guild;
-};
+}, {
+  swr: false,
+  maxAge: 2000,
+});
 
 export const getMember = async (guild: APIGuild, user: APIUser) => {
   const api = useApi();

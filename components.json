@@ -13,8 +13,7 @@
     "components": "@/components",
     "composables": "@/composables",
     "utils": "@/utils/cn",
-    "ui": "@/components/ui",
-    "lib": "@/lib"
+    "ui": "@/components/ui"
   },
   "iconLibrary": "lucide"
 }

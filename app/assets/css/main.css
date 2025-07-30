@@ -144,6 +144,23 @@
 	@apply max-w-none;
 }
 
+@utility card {
+	glass {
+		@apply bg-base-100/60 backdrop-blur-sm border border-base-300/40 shadow-lg;
+	}
+}
+
+@utility btn {
+	glass {
+		@apply bg-base-200/50 hover:bg-base-300/60 backdrop-blur-sm border border-base-300/30;
+	}
+}
+
+@utility scrollbar {
+	scrollbar-color: var(--color-gray-200) var(--color-gray-100);
+	scrollbar-width: none;
+}
+
 @layer base {
 	input::placeholder,
 	textarea::placeholder {

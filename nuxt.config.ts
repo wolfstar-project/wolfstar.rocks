@@ -107,7 +107,6 @@ export default defineNuxtConfig({
   },
   // Runtime configuration
   runtimeConfig: generateRuntimeConfig(),
-
   // Nitro server configuration
   // Build configuration
   routeRules: {
@@ -174,6 +173,12 @@ export default defineNuxtConfig({
         "@sapphire/async-queue",
         "@prisma/nuxt",
       ],
+    },
+  },
+  postcss: {
+    plugins: {
+      "postcss-nested": {},
+      "postcss-nesting": {},
     },
   },
   eslint: {

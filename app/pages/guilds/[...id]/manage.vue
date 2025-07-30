@@ -64,7 +64,7 @@
           <Transition name="fade" mode="out-in">
             <div v-if="hasChanges" class="flex gap-3">
               <button
-                class="glass-button btn btn-sm transition-glass hover-lift"
+                class="glass btn btn-sm transition-glass hover-lift"
                 :class="{ loading }"
                 :disabled="loading"
                 @click="resetAllChanges"
@@ -103,7 +103,7 @@
           </div>
           <!-- Loading State -->
           <div v-else class="flex items-center justify-center h-full">
-            <div class="glass-card rounded-xl p-8 text-center">
+            <div class="glass card rounded-xl p-8 text-center">
               <span class="loading loading-spinner loading-lg text-primary"></span>
               <p class="mt-4 text-base-content/70">Loading guild settings...</p>
             </div>
@@ -403,14 +403,6 @@ useHead({
 
 .glass-sidebar {
 	@apply bg-base-200/70 backdrop-blur-lg border-r border-base-300/30;
-}
-
-.glass-card {
-	@apply bg-base-100/60 backdrop-blur-sm border border-base-300/40 shadow-lg;
-}
-
-.glass-button {
-	@apply bg-base-200/50 hover:bg-base-300/60 backdrop-blur-sm border border-base-300/30;
 }
 
 /* Animation utilities */

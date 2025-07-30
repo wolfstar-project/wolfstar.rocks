@@ -3,12 +3,11 @@ on: push
 
 jobs:
   deploy:
-    name: Deploy to NuxtHub
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
-
+    if: github.repository_owner == 'wolfstar-project'
     steps:
       - name: Checkout
         uses: actions/checkout@v4

@@ -65,6 +65,7 @@
     "nuxt": "catalog:prod",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
+    "nuxt-vue-dragscroll": "catalog:frontend",
     "pinia": "catalog:frontend",
     "prisma": "catalog:prod",
     "prisma-json-types-generator": "catalog:prod",
@@ -78,10 +79,8 @@
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
-    "vue-scrollto": "^2.20.0",
     "wrangler": "catalog:dev",
-    "zod": "catalog:utils",
-    "nuxt-vue-dragscroll": "catalog:frontend"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

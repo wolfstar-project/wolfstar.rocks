@@ -25,7 +25,7 @@ export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: st
   maxAge: 2000,
 });
 
-export const getMember = async (guild: APIGuild, user: APIUser) => {
+export const getMember = defineCachedFunction(async (_event: H3Event, guild: APIGuild, user: APIUser) => {
   const api = useApi();
   const member = await api.guilds.getMember(guild.id, user.id).catch((error) => {
     logger.error("Failed to fetch member:", error);
@@ -40,4 +40,7 @@ export const getMember = async (guild: APIGuild, user: APIUser) => {
     });
   });
   return member;
-};
+}, {
+  swr: false,
+  maxAge: 2000,
+});

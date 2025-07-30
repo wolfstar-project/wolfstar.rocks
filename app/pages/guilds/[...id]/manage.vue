@@ -22,7 +22,7 @@
           class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-glass hover-lift"
           :class="currentRoute === 'general' ? 'bg-primary/20 text-primary border border-primary/30' : 'hover:bg-base-300/50'"
         >
-          <Icon name="heroicons:home" class="w-5 h-5" />
+          <ShadIcon name="heroicons:home" class="w-5 h-5" />
           <span>Dashboard</span>
         </NuxtLink>
 
@@ -38,7 +38,7 @@
             class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-glass hover-lift"
             :class="currentRoute === navItem.route ? 'bg-primary/20 text-primary border border-primary/30' : 'hover:bg-base-300/50'"
           >
-            <Icon :name="navItem.icon" class="w-5 h-5" />
+            <ShadIcon :name="navItem.icon" class="w-5 h-5" />
             <span>{{ navItem.label }}</span>
             <div v-if="navItem.badge" class="ml-auto">
               <div class="badge badge-sm" :class="`badge-${navItem.badge.color || 'primary'}`">
@@ -64,7 +64,7 @@
           <Transition name="fade" mode="out-in">
             <div v-if="hasChanges" class="flex gap-3">
               <button
-                class="glass btn btn-sm transition-glass hover-lift"
+                class="btn-glass btn btn-sm transition-glass hover-lift"
                 :class="{ loading }"
                 :disabled="loading"
                 @click="resetAllChanges"
@@ -90,10 +90,9 @@
       <div class="flex-1 overflow-y-auto">
         <Transition name="fade-slide-in" mode="out-in">
           <div v-if="readyToRender" class="p-6">
-            <div class="glass-card rounded-xl p-6 fade-slide-in">
+            <div class="card card-glass rounded-xl p-6 fade-slide-in">
               <!-- General Dashboard Content -->
               <GuildSettingsGeneral v-if="currentRoute === 'General'" :guild-data="guildData" :languages="languages" />
-
               <GuildSettingsModeration v-if="currentRoute === 'Moderation'" :guild-data="guildData" />
               <GuildSettingsChannel v-if="currentRoute === 'Channels'" :guild-data="guildData" />
               <GuildSettingsRole v-if="currentRoute === 'Roles'" :guild-data="guildData" />
@@ -103,7 +102,7 @@
           </div>
           <!-- Loading State -->
           <div v-else class="flex items-center justify-center h-full">
-            <div class="glass card rounded-xl p-8 text-center">
+            <div class="card card-glass rounded-xl p-8 text-center">
               <span class="loading loading-spinner loading-lg text-primary"></span>
               <p class="mt-4 text-base-content/70">Loading guild settings...</p>
             </div>

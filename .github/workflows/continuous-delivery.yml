@@ -35,4 +35,4 @@ jobs:
           context: .
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ghcr.io/wolfstar-project/wolstar.rocks:latest
+          tags: ghcr.io/wolfstar-project/wolfstar.rocks:latest

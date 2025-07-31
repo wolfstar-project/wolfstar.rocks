@@ -49,6 +49,7 @@
     "@prisma/nuxt": "catalog:prod",
     "@sentry/nuxt": "catalog:dev",
     "@tailwindcss/vite": "catalog:build",
+    "@tanstack/pacer": "catalog:frontend",
     "@vee-validate/zod": "catalog:utils",
     "@vite-pwa/nuxt": "catalog:build",
     "@vueuse/core": "catalog:utils",

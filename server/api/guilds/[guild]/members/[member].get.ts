@@ -58,9 +58,10 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Fetch member data
-  const member = await getMember(event, guild, user);
+  const member = await getMember(event, guild, user as any);
 
   return flattenMember(member, guild);
 }, {
+  rateLimit: { enabled: true, window: seconds(5), limit: 2 },
   auth: true,
 });

@@ -94,4 +94,5 @@ export default defineWrappedResponseHandler(async (event) => {
       stack: err.stack,
     });
   },
+  rateLimit: { enabled: true, window: seconds(5), limit: 2 },
 });

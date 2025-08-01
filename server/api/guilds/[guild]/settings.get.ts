@@ -61,7 +61,7 @@ export default defineWrappedResponseHandler(async (event) => {
   const guild = await getGuild(event, guildId);
 
   // Fetch member data
-  const member = await getMember(event, guild, user);
+  const member = await getMember(event, guild, user as any);
 
   // Check permissions
   if (await denies(event, manageAbility, guild, member)) {
@@ -84,6 +84,7 @@ export default defineWrappedResponseHandler(async (event) => {
   return shouldSerialize ? serializeSettings(settings) : (settings as unknown as GuildData);
 }, {
   auth: true,
+  rateLimit: { enabled: true, window: seconds(5), limit: 2 },
   onError: (err) => {
     logger.error("Settings API error:", {
       message: err.message,

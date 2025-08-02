@@ -30,6 +30,7 @@ catalogs:
     discord-api-types: ^0.38.17
     nitro-cloudflare-dev: ^0.2.2
     nuxt-auth-utils: ^0.5.20
+    prisma: "6.11"
     simple-git: ^3.28.0
     std-env: ^3.9.0
     typescript: ~5.8.3
@@ -71,7 +72,7 @@ catalogs:
   prod:
     "@josephanson/nuxt-ai": 0.1.6
     "@nuxtjs/color-mode": ^3.5.2
-    "@prisma/client": ^6.13.0
+    "@prisma/client": ~6.11.0
     "@prisma/nuxt": ^0.3.0
     colortranslator: ^5.0.0
     fuse.js: ^7.1.0
@@ -79,7 +80,6 @@ catalogs:
     nuxt: ^4.0.2
     nuxt-authorization: ^0.3.5
     nuxt-security: ^2.3.0
-    prisma: ^6.13.0
     prisma-json-types-generator: ^3.5.1
     shadcn-nuxt: 2.1.0
     stale-dep: ^0.8.2

@@ -70,7 +70,7 @@
     "pinia": "catalog:frontend",
     "postcss-nested": "catalog:style",
     "postcss-nesting": "catalog:style",
-    "prisma": "catalog:prod",
+    "prisma": "catalog:dev",
     "prisma-json-types-generator": "catalog:prod",
     "reka-ui": "catalog:frontend",
     "shadcn-nuxt": "catalog:prod",

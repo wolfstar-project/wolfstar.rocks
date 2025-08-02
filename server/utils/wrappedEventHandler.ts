@@ -1,17 +1,21 @@
 import type { UserSessionRequired } from "#auth-utils";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
-import { logger } from "#shared/utils/logger";
-import { isNullOrUndefined } from "@sapphire/utilities";
+import { logger, useLogger } from "#shared/utils/logger";
 import { cast } from "@sapphire/utilities/cast";
 import { asyncRateLimit } from "@tanstack/pacer";
+import { isDevelopment } from "std-env";
 
-const KEY = "wolfstar:rate-limiter-state";
+const debugLogger = isDevelopment
+  ? useLogger("@wolfstar/debug")
+  : {
+      info: () => {},
+    };
 
 const rateLimitStorage = useStorage<string>();
 
 interface DefinedWrappedResponseHandlerOptions {
-  onError?: (err: any | Error | H3Error) => void;
+  onError?: (logger: typeof useLogger, err: any | Error | H3Error) => void;
   auth?: boolean;
   rateLimit: RateLimitOptions;
 }
@@ -23,20 +27,21 @@ interface RateLimitOptions {
   enabled: true;
   window?: number;
   limit: number;
+  type?: "fixed" | "sliding";
 }
 
-async function getIdentifier(event: H3Event, user: UserSessionRequired | null) {
-  if (user) {
-    return user.user?.id ?? null;
+async function getIdentifier(event: H3Event, session: UserSessionRequired | null) {
+  if (session) {
+    return session.user.id;
   }
-  return getRequestIP(event, { xForwardedFor: true }) ?? event.node.req.socket.remoteAddress ?? null;
+  return getRequestIP(event, { xForwardedFor: true }) ?? event.node.req.socket.remoteAddress ?? event.headers.get("X-Real-IP") ?? event.headers.get("X-Cluster-Client-IP");
 }
 
 export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
   options: DefinedWrappedResponseHandlerOptions = {
     auth: false,
-    rateLimit: { enabled: true, window: 10000, limit: 5 },
+    rateLimit: { enabled: true, window: 10000, limit: 5, type: "fixed" },
   },
 ): EventHandler<T, D> =>
   defineEventHandler<T>(async (event) => {
@@ -47,62 +52,70 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
           statusCode: 401,
           message: "Missing session",
         });
+        debugLogger.info("User session required and found", user.user.name);
       }
 
       if (options.rateLimit) {
         const id = await getIdentifier(event, user);
-        if (!isNullOrUndefined(id)) {
-          const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number }>(options.rateLimit ?? { window: 10000, limit: 5 });
-          const savedState = await rateLimitStorage.getItem(KEY);
-          const initialState = savedState ? JSON.parse(savedState) : {};
+        debugLogger.info(`Rate limit identifier: ${id}`);
+        const KEY = `wolfstar:rate-limiter-state:${id}`;
 
-          const xRateLimitLimit = config.window;
-          const asyncLimiter = asyncRateLimit(async () => {
-            await rateLimitStorage.setItem(KEY, id);
-          }, {
-            onSettled(rateLimiter) {
+        const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number; type: "fixed" | "sliding" }>(options.rateLimit ?? { window: 10000, limit: 5, type: "fixed" });
+        const savedState = await rateLimitStorage.getItem(KEY);
+        const initialState = savedState ? JSON.parse(savedState) : {};
+
+        const xRateLimitLimit = config.limit;
+        const asyncLimiter = asyncRateLimit(
+          async () => {
+            // This function is intentionally left empty.
+            // It serves as a placeholder for the rate limiter to decide whether to proceed or reject the request.
+          },
+          {
+            async onSettled(rateLimiter) {
               const state = rateLimiter.store.state;
+
+              if (id) {
+                await rateLimitStorage.setItem(KEY, JSON.stringify(state));
+              }
+
+              setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
+              setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
+              setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
+
               if (state.isExceeded) {
-                setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
+                logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
+                setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
               }
             },
-            onSuccess: (_result, rateLimiter) => {
+            onSuccess(_result, rateLimiter) {
               setResponseHeader(event, "Date", new Date().toUTCString());
               // Called after each successful execution
-              logger.log("Async function executed", rateLimiter.store.state.successCount);
+              debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
             },
-            onReject: (_args, rateLimiter) => {
-              const state = rateLimiter.store.state;
-              if (state.isExceeded) {
-                setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
-                setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
-                setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
-                logger.log(`Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
-              }
-            },
-            onError: (error, _args, rateLimiter) => {
-              setResponseHeader(event, "X-RateLimit-Reset", rateLimiter.getMsUntilNextWindow());
+            onError(error) {
               if (options.onError) {
-                options.onError(error);
+                options.onError(useLogger, error);
               }
             },
+            windowType: config.type,
             window: config.window,
             limit: config.limit,
             initialState,
             enabled,
             throwOnError: true,
-          });
-          await asyncLimiter();
-        }
+          },
+        );
+        await asyncLimiter();
       }
       return await handler(event);
     }
     catch (error) {
+      console.log(error);
       if (options.onError) {
-        options.onError(error);
+        options.onError(useLogger, error);
       }
       // Error handling
-      return { error };
+      return error;
     }
   });
 
@@ -122,43 +135,51 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
           statusCode: 401,
           message: "Missing session",
         });
+        debugLogger.info("User session required and found", user.user.name);
       }
 
       if (options.rateLimit) {
         const id = await getIdentifier(event, user);
-        if (!isNullOrUndefined(id)) {
-          const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number }>(options.rateLimit ?? { window: 10000, limit: 5 });
-          const savedState = await rateLimitStorage.getItem(KEY);
-          const initialState = savedState ? JSON.parse(savedState) : {};
+        debugLogger.info(`Rate limit identifier: ${id}`);
+        const KEY = `wolfstar:rate-limiter-state:${id}`;
 
-          const xRateLimitLimit = config.window;
-          const asyncLimiter = asyncRateLimit(async () => {
-            await rateLimitStorage.setItem(KEY, id);
-          }, {
-            onSettled(rateLimiter) {
+        const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number }>(options.rateLimit ?? { window: 10000, limit: 5 });
+        const savedState = await rateLimitStorage.getItem(KEY);
+        const initialState = savedState ? JSON.parse(savedState) : {};
+
+        const xRateLimitLimit = config.limit;
+        const asyncLimiter = asyncRateLimit(
+          async () => {
+            // This function is intentionally left empty.
+            // It serves as a placeholder for the rate limiter to decide whether to proceed or reject the request.
+          },
+          {
+            async onSettled(rateLimiter) {
               const state = rateLimiter.store.state;
-              if (state.isExceeded) {
-                setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
+
+              if (id) {
+                await rateLimitStorage.setItem(KEY, JSON.stringify(state));
               }
+
+              setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
+              setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
+              setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
             },
-            onSuccess: (_result, rateLimiter) => {
+            onSuccess(_result, rateLimiter) {
               setResponseHeader(event, "Date", new Date().toUTCString());
               // Called after each successful execution
-              logger.log("Async function executed", rateLimiter.store.state.successCount);
+              debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
             },
             onReject: (_args, rateLimiter) => {
               const state = rateLimiter.store.state;
               if (state.isExceeded) {
-                setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
-                setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
-                setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
-                logger.log(`Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
+                logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
+                setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
               }
             },
-            onError: (error, _args, rateLimiter) => {
-              setResponseHeader(event, "X-RateLimit-Reset", rateLimiter.getMsUntilNextWindow());
+            onError(error) {
               if (options.onError) {
-                options.onError(error);
+                options.onError(useLogger, error);
               }
             },
             window: config.window,
@@ -166,18 +187,18 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
             initialState,
             enabled,
             throwOnError: true,
-          });
-          await asyncLimiter();
-        }
+          },
+        );
+        await asyncLimiter();
       }
       return await handler(event);
     }
     catch (error) {
       if (options.onError) {
-        options.onError(error);
+        options.onError(useLogger, error);
       }
       // Error handling
-      return { error };
+      return error;
     }
   }, {
     maxAge: options.maxAge,

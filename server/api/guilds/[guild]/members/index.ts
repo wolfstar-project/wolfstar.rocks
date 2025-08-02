@@ -41,8 +41,9 @@ export default defineWrappedResponseHandler(async (event) => {
   return shouldSerialize ? members.map((member) => flattenMember(member, guild)) : members;
 }, {
   auth: true,
-  onError: (err) => {
-    logger.error("Members API error:", {
+  rateLimit: { enabled: true, window: seconds(5), limit: 2 },
+  onError: (logger, err) => {
+    logger().error("Members API error:", {
       message: err.message,
       statusCode: err.statusCode,
       data: err.data,

@@ -19,6 +19,7 @@
     "build": "dotenvx run -- nuxi build",
     "dev": "dotenvx run -- nuxi dev",
     "dev:pwa": "dotenvx run -- VITE_PLUGIN_PWA=true nuxi dev",
+    "dev:stagewise": "pnpm dlx stagewise -p 3100 -a 3000 -b -- nuxi dev",
     "format": "prettier --write .",
     "generate": "nuxt generate",
     "lint": "eslint --cache .",

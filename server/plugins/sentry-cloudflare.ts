@@ -10,6 +10,8 @@ export default defineNitroPlugin(
           dsn: runtimeConfig.public.sentry.dsn,
           tracesSampleRate: 1.0,
           debug: nitroApp.h3App.options.debug,
+          environment: runtimeConfig.public.environment,
+
         };
       }),
 );

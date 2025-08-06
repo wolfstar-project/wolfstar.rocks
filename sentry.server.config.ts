@@ -11,5 +11,6 @@ if (process.env.SENTRY_DSN && process.env.NUXT_NITRO_PRESET === "node-server") {
     // Learn more at
     // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
     tracesSampleRate: isDevelopment ? 1.0 : 0.7,
+    environment: process.env.SENTRY_ENVIRONMENT || process.env.NODE_ENV || "production",
   });
 }

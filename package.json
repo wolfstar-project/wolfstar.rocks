@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@ai-sdk/vue": "catalog:dev",
-    "@dotenvx/dotenvx": "catalog:node",
     "@josephanson/nuxt-ai": "catalog:prod",
     "@nuxtjs/color-mode": "catalog:prod",
     "@pinia/nuxt": "catalog:frontend",
@@ -60,6 +59,7 @@
     "colortranslator": "catalog:prod",
     "consola": "catalog:node",
     "cross-env": "catalog:cli",
+    "dotenv": "catalog:node",
     "fuse.js": "catalog:prod",
     "import-in-the-middle": "catalog:prod",
     "markdown-it-anchor": "catalog:markdown",

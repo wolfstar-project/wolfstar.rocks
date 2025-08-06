@@ -41,12 +41,14 @@ export default defineNuxtConfig({
     "~~/modules/build-env",
     "stale-dep/nuxt",
   ],
+
   $development: {
     site: {
       url: "http://localhost:3000",
       name: "WolfStar (Development)",
     },
   },
+
   devtools: {
     enabled: true,
   },
@@ -93,19 +95,24 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   css: ["~/assets/css/main.css"],
+
   site: {
     url: "https://wolfstar.rocks",
     name: "WolfStar",
   },
+
   colorMode: {
     preference: "system", // default theme
     dataValue: "theme", // activate data-theme in <html> tag
     classSuffix: "",
     fallback: "light",
   },
+
   // Runtime configuration
   runtimeConfig: generateRuntimeConfig(),
+
   // Nitro server configuration
   // Build configuration
   routeRules: {
@@ -115,10 +122,12 @@ export default defineNuxtConfig({
   sourcemap: {
     client: "hidden",
   },
+
   experimental: {
     typedPages: true,
     inlineRouteRules: true,
   },
+
   compatibilityDate: "2025-07-20",
 
   nitro: {
@@ -158,6 +167,7 @@ export default defineNuxtConfig({
       openAPI: true,
     },
   },
+
   vite: {
     plugins: [tailwindcss()],
     build: {
@@ -194,12 +204,14 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   postcss: {
     plugins: {
       "postcss-nested": {},
       "postcss-nesting": {},
     },
   },
+
   eslint: {
     config: {
       standalone: false,
@@ -208,6 +220,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   icon: {
     serverBundle: false,
     clientBundle: {
@@ -218,9 +231,11 @@ export default defineNuxtConfig({
     provider: "iconify",
     componentName: "NuxtIcon",
   },
+
   image: {
     screens: {},
   },
+
   ogImage: {
     zeroRuntime: true,
   },
@@ -269,6 +284,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   seo: {
     meta: {
       description: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",

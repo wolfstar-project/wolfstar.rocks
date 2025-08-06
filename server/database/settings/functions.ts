@@ -2,7 +2,7 @@ import type { Awaitable, PickByValue } from "@sapphire/utilities";
 import type { GuildData, ReadonlyGuildData } from "~~/server/database/settings/types";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
-import prisma from "~~/lib/prisma";
+import prisma from "~~/server/database/prisma";
 import { getDefaultGuildSettings } from "~~/server/database/settings/constants";
 import { deleteSettings, getSettings, updateSettings } from "~~/server/database/settings/context/functions";
 import { maybeParseNumber } from "~~/server/utils/parse";

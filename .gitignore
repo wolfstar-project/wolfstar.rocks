@@ -26,3 +26,6 @@ logs
 .pnpm-store
 .data
 .eslintcache
+
+server/database/generated/
+

@@ -1,7 +1,9 @@
 import type { UserSessionRequired } from "#auth-utils";
+import type { ConsolaInstance } from "consola";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { logger, useLogger } from "#shared/utils/logger";
+import { isNullOrUndefined, isObject } from "@sapphire/utilities";
 import { cast } from "@sapphire/utilities/cast";
 import { asyncRateLimit } from "@tanstack/pacer";
 import { isDevelopment } from "std-env";
@@ -15,7 +17,7 @@ const debugLogger = isDevelopment
 const rateLimitStorage = useStorage<string>();
 
 interface DefinedWrappedResponseHandlerOptions {
-  onError?: (logger: typeof useLogger, err: any | Error | H3Error) => void;
+  onError?: (logger: ConsolaInstance, err: any | Error | H3Error) => void;
   auth?: boolean;
   rateLimit: RateLimitOptions;
 }
@@ -62,7 +64,7 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
 
         const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number; type: "fixed" | "sliding" }>(options.rateLimit ?? { window: 10000, limit: 5, type: "fixed" });
         const savedState = await rateLimitStorage.getItem(KEY);
-        const initialState = savedState ? JSON.parse(savedState) : {};
+        const initialState = !isNullOrUndefined(savedState) && !isObject(savedState) ? JSON.parse(savedState) : {};
 
         const xRateLimitLimit = config.limit;
         const asyncLimiter = asyncRateLimit(
@@ -94,7 +96,7 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
             },
             onError(error) {
               if (options.onError) {
-                options.onError(useLogger, error);
+                options.onError(useLogger("@wolfstar/api"), error);
               }
             },
             windowType: config.type,
@@ -110,12 +112,12 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
       return await handler(event);
     }
     catch (error) {
-      console.log(error);
       if (options.onError) {
-        options.onError(useLogger, error);
+        options.onError(useLogger("@wolfstar/api"), error);
+        throw error;
       }
       // Error handling
-      return error;
+      return error as H3Error;
     }
   });
 
@@ -145,7 +147,7 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
 
         const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number }>(options.rateLimit ?? { window: 10000, limit: 5 });
         const savedState = await rateLimitStorage.getItem(KEY);
-        const initialState = savedState ? JSON.parse(savedState) : {};
+        const initialState = !isNullOrUndefined(savedState) && !isObject(savedState) ? JSON.parse(savedState) : {};
 
         const xRateLimitLimit = config.limit;
         const asyncLimiter = asyncRateLimit(
@@ -179,7 +181,7 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
             },
             onError(error) {
               if (options.onError) {
-                options.onError(useLogger, error);
+                options.onError(useLogger("@wolfstar/api"), error);
               }
             },
             window: config.window,
@@ -195,10 +197,11 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
     }
     catch (error) {
       if (options.onError) {
-        options.onError(useLogger, error);
+        options.onError(useLogger("@wolfstar/api"), error);
+        throw error;
       }
       // Error handling
-      return error;
+      return error as H3Error;
     }
   }, {
     maxAge: options.maxAge,

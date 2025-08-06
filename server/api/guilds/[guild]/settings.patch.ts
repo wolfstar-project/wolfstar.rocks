@@ -125,7 +125,7 @@ export default defineWrappedResponseHandler(async (event) => {
   auth: true,
   rateLimit: { enabled: true, window: seconds(1), limit: 2 },
   onError: (logger, err) => {
-    logger("@wolfstar/api").error("Settings API error:", {
+    logger.error("Settings API error:", {
       message: err.message,
       statusCode: err.statusCode,
       data: err.data,

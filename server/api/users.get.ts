@@ -87,7 +87,7 @@ export default defineWrappedResponseHandler(async (event) => {
 }, {
   auth: true,
   onError: (logger, err) => {
-    logger("@wolfstar/api").error("Users API error:", {
+    logger.error("Users API error:", {
       message: err.message,
       statusCode: err.statusCode,
       data: err.data,

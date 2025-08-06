@@ -123,7 +123,7 @@ export default defineWrappedResponseHandler(async (event) => {
   auth: true,
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
   onError: (logger, err) => {
-    logger().error("Channels API error:", {
+    logger.error("Channels API error:", {
       message: err.message,
       statusCode: err.statusCode,
       data: err.data,

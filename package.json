@@ -43,6 +43,7 @@
   "dependencies": {
     "@ai-sdk/vue": "catalog:dev",
     "@josephanson/nuxt-ai": "catalog:prod",
+    "@nuxt/scripts": "catalog:dev",
     "@nuxtjs/color-mode": "catalog:prod",
     "@pinia/nuxt": "catalog:frontend",
     "@prisma/adapter-pg": "catalog:prod",

@@ -17,6 +17,11 @@ export function generateRuntimeConfig() {
       sentry: {
         dsn: process.env.SENTRY_DSN,
       },
+      scripts: {
+        cloudflareWebAnalytics: {
+          token: process.env.NUXT_PUBLIC_SCRIPTS_CLOUDFLARE_WEB_ANALYTICS_TOKEN,
+        },
+      },
     },
     sentry: {
       authToken: process.env.SENTRY_AUTH_TOKEN,

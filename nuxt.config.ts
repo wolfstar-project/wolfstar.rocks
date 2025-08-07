@@ -17,6 +17,10 @@ const environment
 
 const sentryReleaseName = process.env.CF_PAGES_COMMIT_SHA ?? "unknown commit";
 
+const isHubEnabled = process.env.NUXT_NITRO_PRESET !== "node-server";
+
+const preset = isHubEnabled || isDevelopment;
+
 export default defineNuxtConfig({
   // Modules configuration
   modules: [
@@ -37,15 +41,25 @@ export default defineNuxtConfig({
     "@sentry/nuxt/module",
     "nitro-cloudflare-dev",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
-    ...(process.env.NUXT_NITRO_PRESET !== "node-server" ? ["@nuxthub/core"] : []),
+    ...(preset ? ["@nuxthub/core"] : []),
     "~~/modules/build-env",
     "stale-dep/nuxt",
+    "@nuxt/scripts",
+
   ],
 
   $development: {
     site: {
       url: "http://localhost:3000",
       name: "WolfStar (Development)",
+    },
+  },
+
+  $production: {
+    scripts: {
+      registry: {
+        cloudflareWebAnalytics: true,
+      },
     },
   },
 
@@ -167,6 +181,14 @@ export default defineNuxtConfig({
       openAPI: true,
     },
   },
+  ...(
+    preset
+      ? {
+          hub: {
+            cache: true,
+          },
+        }
+      : {}),
 
   vite: {
     plugins: [tailwindcss()],

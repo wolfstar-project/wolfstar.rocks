@@ -21,8 +21,9 @@ export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: st
   });
   return guild;
 }, {
+  getKey: (_event, guildId) => `${guildId}:${Date.now()}`,
   swr: false,
-  maxAge: 2000,
+  maxAge: seconds(5),
 });
 
 export const getMember = defineCachedFunction(async (_event: H3Event, guild: APIGuild, user: APIUser) => {
@@ -33,6 +34,7 @@ export const getMember = defineCachedFunction(async (_event: H3Event, guild: API
       statusCode: 500,
       statusMessage: "Failed to fetch member",
       data: {
+        field: "member",
         error: "member_fetch_failed",
         message: error.message || "Unknown error",
         details: error,
@@ -41,6 +43,7 @@ export const getMember = defineCachedFunction(async (_event: H3Event, guild: API
   });
   return member;
 }, {
+  getKey: (_event, guild, user) => `${guild.id}-${user.id}:${Date.now()}`,
   swr: false,
-  maxAge: 2000,
+  maxAge: seconds(5),
 });

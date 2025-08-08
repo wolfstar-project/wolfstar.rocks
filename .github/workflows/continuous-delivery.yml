@@ -17,8 +17,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  LATEST_TAG: ghcr.io/${{ github.repository }}:latest
-  HASH_TAG: ghcr.io/${{ github.repository }}:${{ github.sha }}
+  LATEST_TAG: ghcr.io/${{ github.repository }}:dev # dev tag
+  HASH_TAG: ghcr.io/${{ github.repository }}:${{ github.sha }}-dev # dev tag
 
 jobs:
   build:

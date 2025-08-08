@@ -19,7 +19,7 @@ const sentryReleaseName = process.env.CF_PAGES_COMMIT_SHA ?? "unknown commit";
 
 const isHubEnabled = process.env.NUXT_NITRO_PRESET !== "node-server";
 
-const preset = isHubEnabled || isDevelopment;
+const preset = isHubEnabled;
 
 export default defineNuxtConfig({
   // Modules configuration

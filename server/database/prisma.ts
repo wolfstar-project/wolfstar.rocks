@@ -1,12 +1,12 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "~~/server/database/generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 export interface GetDbParams {
   connectionString: string;
 }
 
 export function getDb({ connectionString }: GetDbParams) {
-  const pool = new PrismaPg({ connectionString, database: "postgres" });
+  const pool = new PrismaPg({ connectionString });
 
   const prisma = new PrismaClient({ adapter: pool });
 

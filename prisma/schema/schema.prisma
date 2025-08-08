@@ -1,8 +1,6 @@
 generator client {
-  provider = "prisma-client"
-  output = "../../server/database/generated/prisma"
-  previewFeatures = ["driverAdapters", "queryCompiler", "multiSchema"]
-  moduleFormat = "esm"
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters", "multiSchema"]
 }
 
 generator json {

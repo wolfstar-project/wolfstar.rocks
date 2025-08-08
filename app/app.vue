@@ -26,22 +26,12 @@ watch(
   { immediate: true },
 );
 
-useHead({
-  titleTemplate: title => title ? `${title} %separator %siteName` : "%siteName: The app for automating your Discord server",
-  templateParams: {
-    siteName: "WolfStar",
-    separator: "·",
-  },
+useSeoMetadata({
+  ogSiteName: "WolfStar",
+  ogType: "website",
+  twitterCard: "summary_large_image",
+  twitterSite: "wolfstar_bot",
 });
-
-if (import.meta.server) {
-  useSeoMeta({
-    ogSiteName: "WolfStar",
-    ogType: "website",
-    twitterCard: "summary_large_image",
-    twitterSite: "wolfstar_bot",
-  });
-}
 
 provide(ProviderAppNameKey, appName);
 </script>

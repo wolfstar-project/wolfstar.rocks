@@ -72,7 +72,7 @@ defineOgImageComponent("Default", {
   description: error.statusMessage,
 });
 
-useSeoMeta({
+useSeoMetadata({
   title: statusCode.value.toString(),
   description: error.statusMessage,
 });

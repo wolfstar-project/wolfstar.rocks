@@ -32,7 +32,7 @@ catalogs:
     discord-api-types: ^0.38.17
     nitro-cloudflare-dev: ^0.2.2
     nuxt-auth-utils: ^0.5.20
-    prisma: "6.11"
+    prisma: ~6.11.0
     simple-git: ^3.28.0
     std-env: ^3.9.0
     typescript: ~5.8.3

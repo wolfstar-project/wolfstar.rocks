@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client"
+  output = "../../server/database/generated/prisma"
+  previewFeatures = ["driverAdapters", "queryCompiler", "multiSchema"]
+  moduleFormat = "esm"
+}
+
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas = ["user", "schedule", "moderation", "migration", "guild"]
+}
+
+
+

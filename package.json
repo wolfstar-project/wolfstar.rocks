@@ -16,7 +16,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "build": "nuxi build",
+    "build": "pnpm prisma:generate && nuxi build",
     "deploy": "pnpx nuxthub deploy",
     "dev": "pnpm prisma:generate && nuxi dev",
     "dev:pwa": "cross-env VITE_PLUGIN_PWA=true pnpm prisma:generate && nuxi dev",

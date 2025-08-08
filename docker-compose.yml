@@ -1,6 +1,6 @@
 services:
   wolfstar.rocks:
-    image: ghrc.io/wolfstar-project/wolfstar.rocks:stable
+    image: ghrc.io/wolfstar-project/wolfstar.rocks:dev
     build: .
     container_name: wolfstar.rocks
     restart: no

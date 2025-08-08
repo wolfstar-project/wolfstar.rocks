@@ -198,18 +198,18 @@ export default defineNuxtConfig({
     build: {
       target: "esnext",
     },
-    resolve: {  
-      alias: {  
-        ".prisma/client/index-browser":  
-          // https://vite.dev/config/shared-options.html#resolve-alias  
-          // When aliasing to file system paths, always use absolute paths.  
-          resolver.resolve("./node_modules/.prisma/client/index-browser.js"),  
-        ".prisma/client/default":  
-          // https://vite.dev/config/shared-options.html#resolve-alias  
-          // When aliasing to file system paths, always use absolute paths.  
-          resolver.resolve("./node_modules/.prisma/client/default.js"),  
-      },  
-    },  
+    resolve: {
+      alias: {
+        ".prisma/client/index-browser":
+          // https://vite.dev/config/shared-options.html#resolve-alias
+          // When aliasing to file system paths, always use absolute paths.
+          resolver.resolve("./node_modules/.prisma/client/index-browser.js"),
+        ".prisma/client/default":
+          // https://vite.dev/config/shared-options.html#resolve-alias
+          // When aliasing to file system paths, always use absolute paths.
+          resolver.resolve("./node_modules/.prisma/client/default.js"),
+      },
+    },
     optimizeDeps: {
       include: [
         "reka-ui",

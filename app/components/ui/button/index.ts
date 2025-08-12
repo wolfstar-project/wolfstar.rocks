@@ -10,7 +10,6 @@ export { default as Button } from "./Button.vue";
 export { default as RippleButton } from "./RippleButton.vue";
 
 // Type-safe color definitions with readonly array
-const colors = ["primary", "secondary", "success", "error", "info", "warning", "neutral"] as const;
 
 export const buttonVariants = tv({
   slots: {
@@ -28,7 +27,9 @@ export const buttonVariants = tv({
   },
   variants: {
     ...buttonGroupVariant,
-    color: { ...Object.fromEntries(colors.map(color => [color, `btn-${color}`])) },
+    color: {
+      ...Object.fromEntries(colors.map(color => [color, `btn-${color}`])),
+    },
     variant: {
       outline: "btn-outline",
       soft: "btn-ghost",

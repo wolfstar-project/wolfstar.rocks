@@ -93,7 +93,7 @@ export function HSVtoHSL(hsv: HSVColor): HSLObject {
   return {
     H: hsv.h,
     S: x === 0 || x === 200 ? 0 : Math.round((hsv.s * hsv.v) / (x <= 100 ? x : 200 - x)),
-    L: Math.round(x / 2),
+    L: x / 2,
   };
 }
 
@@ -127,7 +127,7 @@ export interface ColorPickerProps {
   size?: ColorPicker["size"];
 
   class?: HTMLAttributes["class"];
-  ui?: ColorPicker["slots"];
+  ui?: Partial<typeof colorPicker.slots>;
 }
 </script>
 
@@ -163,7 +163,6 @@ const pickedColor = computed<HSVColor>({
   },
   set(value) {
     const color = new ColorTranslator(HSVtoHSL(value), {
-      decimals: 2,
       labUnit: "percent",
       cmykUnit: "percent",
       cmykFunction: "cmyk",

@@ -3,6 +3,7 @@ import type { HTMLAttributes, InputHTMLAttributes } from "vue";
 import type { UseComponentIconsProps } from "~/composables/useComponentIcons";
 import type { PartialString } from "~/types/utils";
 import { tv } from "tailwind-variants";
+import { buttonGroupVariantWithRoot } from "../button-group";
 
 export { default as Input } from "./Input.vue";
 
@@ -21,6 +22,7 @@ export const inputWithoutTV = {
     trailingIcon: "shrink-0 text-base-content/50",
   },
   variants: {
+    ...buttonGroupVariantWithRoot,
     color: {
       primary: "input-primary",
       secondary: "input-secondary",
@@ -199,6 +201,9 @@ export const input = tv({
     trailingIcon: "shrink-0 text-base-content/50",
   },
   variants: {
+    type: {
+      file: "file:mr-1.5 file:font-medium file:text-gray-500 dark:file:text-gray-400 file:outline-none",
+    },
     color: {
       primary: "input-primary",
       secondary: "input-secondary",
@@ -253,6 +258,8 @@ export const input = tv({
     variant: {
       bordered: "input-bordered",
       ghost: "input-ghost",
+      outline: "bg-trasparent",
+
     },
     leading: {
       true: "",

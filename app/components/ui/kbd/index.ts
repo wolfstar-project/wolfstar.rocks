@@ -1,4 +1,5 @@
 import type { VariantProps } from "tailwind-variants";
+import type { KbdKey } from "~/composables/useKbd";
 import { tv } from "tailwind-variants";
 
 export { default as Kbd } from "./Kbd.vue";

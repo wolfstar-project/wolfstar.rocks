@@ -90,6 +90,7 @@ const ui = computed(() =>
     highlight: highlight.value,
     leading: isLeading.value || !!props.avatar || !!slots.leading,
     trailing: isTrailing.value || !!slots.trailing,
+    // @ts-expect-error - is bug
     buttonGroup: orientation.value,
   }),
 );

@@ -5,6 +5,8 @@ export const Invites = {
 
 export const robotBlockingPageProps = "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1";
 
+export const colors = ["primary", "secondary", "success", "error", "info", "warning", "neutral"] as const;
+
 export enum Colors {
   White = "#e7e7e8",
   Amber = "#ffc107",

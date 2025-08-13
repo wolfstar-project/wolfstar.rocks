@@ -1,58 +1,57 @@
 <template>
   <!-- Enhanced Guild Cards Grid - inspired by Dyno.gg -->
-  <div class="guild-cards-container space-y-6">
+  <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-base-content space-y-6">
     <template v-if="!loading">
       <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <div class="flex w-full items-center space-x-2 sm:w-auto">
+        <div class="w-full flex-col space-x-2 sm:w-auto">
           <!-- Search Input for Desktop -->
-          <div class="relative hidden flex-grow sm:block">
-            <ShadIcon
-              name="heroicons:magnifying-glass-circle"
-              class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60"
-            />
-            <input
+          <div class="relative flex-grow">
+            <ShadInput
               v-model="searchQuery"
               type="text"
               placeholder="Search servers..."
-              class="input-bordered input w-full pl-11 sm:w-64"
               :disabled="loading"
-            />
-          </div>
-
-          <!-- Search Input for Mobile -->
-          <div class="relative w-48 sm:hidden">
-            <ShadIcon
-              name="heroicons:magnifying-glass-circle"
-              class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 transform text-primary/60"
-            />
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="Search..."
-              class="input-bordered input w-full pl-11"
-              :disabled="loading"
-            />
-          </div>
-
-          <!-- Manageable Only Toggle Button -->
-          <div class="form-control">
-            <ShadButton
-              variant="ghost"
-              size="sm"
-              :class="{ 'btn-active': showManageableOnly }"
-              :disabled="loading"
-              @click="showManageableOnly = !showManageableOnly"
+              icon="heroicons:magnifying-glass-circle"
+              :loading="loading"
+              loading-icon="i-lucide-loader"
             >
-              <template #leading>
-                <ShadIcon name="heroicons:shield-check" class="h-4 w-4" />
+              <template #trailing>
+                <ShadKbd
+                  value="k"
+                  class="absolute top-1/2 right-2 -translate-y-1/2"
+                />
               </template>
-              <span class="hidden sm:inline">Manageable</span>
-            </ShadButton>
+            </ShadInput>
           </div>
         </div>
-        <div class="hidden text-sm text-base-content/60 sm:block">
-          <span> {{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers </span>
+
+        <!-- Manageable Only Toggle Button -->
+        <div class="form-control">
+          <ShadButton
+            variant="ghost"
+            size="sm"
+            :class="{ 'btn-active': showManageableOnly }"
+            :disabled="loading"
+            @click="showManageableOnly = !showManageableOnly"
+          >
+            <template #leading>
+              <ShadIcon name="heroicons:shield-check" class="h-4 w-4" />
+            </template>
+            <span class="hidden sm:inline">Manageable</span>
+          </ShadButton>
         </div>
+
+        <div v-if="loading && !error && (!guilds || guilds.length === 0)">
+          <ShadButton variant="outline" size="sm" @click="refreshGuilds()">
+            <template #leading>
+              <ShadIcon name="heroicons:arrow-path" class="h-4 w-4" />
+            </template>
+            Refresh
+          </ShadButton>
+        </div>
+      </div>
+      <div class="hidden text-sm text-base-content/60 sm:block">
+        <span> {{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers </span>
       </div>
     </template>
 
@@ -121,7 +120,7 @@
         <button
           v-if="searchQuery"
           class="btn btn-outline btn-sm gap-2 transition-all duration-200 hover:scale-105"
-          @click="clearSearch"
+          @click="undoSearch"
         >
           <ShadIcon name="heroicons:x-mark" class="h-4 w-4" />
           Clear Search
@@ -137,13 +136,15 @@
 
 <script setup lang="ts">
 import type { TransformedLoginData } from "~~/shared/types/discord";
+import { isNullOrUndefined } from "@sapphire/utilities";
 import { useInfiniteScroll, useRefHistory } from "@vueuse/core";
 
 interface EnhancedGuildCardsProps {
   guilds: TransformedLoginData["transformedGuilds"] | null;
   loading?: boolean;
   error?: Error | null;
-}
+  refreshGuilds: (opts?: object) => Promise<void>;
+};
 
 const props = withDefaults(defineProps<EnhancedGuildCardsProps>(), {
   loading: false,
@@ -155,19 +156,18 @@ const LOAD_MORE_COUNT = 10;
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = ref<HTMLElement | null>(null);
 const loadingMore = ref(false);
-
+// is true by default because we want to show only manageable servers
+const showManageableOnly = ref(true);
 // Search and filtering
 const searchQuery = ref("");
-const { history: _searchHistory, undo: _undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
+
+const { history: _searchHistory, undo: undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
   deep: false,
   capacity: 10, // Keep last 10 search terms
 });
-// is true by default because we want to show only manageable servers
-const showManageableOnly = ref(true);
-
 // Computed filtered guilds
 const filteredGuilds = computed(() => {
-  if (!props.guilds)
+  if (isNullOrUndefined(props.guilds))
     return [];
 
   let filtered = [...props.guilds];
@@ -218,8 +218,4 @@ useInfiniteScroll(
   },
   { distance: 10 },
 );
-
-function clearSearch() {
-  searchQuery.value = "";
-}
 </script>

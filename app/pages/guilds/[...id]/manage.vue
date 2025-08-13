@@ -1,55 +1,5 @@
 <template>
   <div class="flex h-screen bg-gradient-to-br from-base-100/95 to-base-200/90 backdrop-blur-sm">
-    <!-- Sidebar Navigation -->
-    <div class="glass-sidebar w-64 flex flex-col transition-glass">
-      <!-- Header -->
-      <div class="p-6 border-b border-base-300/30">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-            <Icon name="heroicons:cog-6-tooth" class="w-6 h-6 text-primary" />
-          </div>
-          <div>
-            <h1 class="font-bold text-lg">{{ guildData?.name || 'Guild Settings' }}</h1>
-            <p class="text-sm text-base-content/70">Management Dashboard</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Navigation Menu -->
-      <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
-        <NuxtLink
-          :to="`/guilds/${guildId}/manage`"
-          class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-glass hover-lift"
-          :class="currentRoute === 'general' ? 'bg-primary/20 text-primary border border-primary/30' : 'hover:bg-base-300/50'"
-        >
-          <ShadIcon name="heroicons:home" class="w-5 h-5" />
-          <span>Dashboard</span>
-        </NuxtLink>
-
-        <div class="pt-4">
-          <h3 class="px-3 text-xs font-semibold text-base-content/50 uppercase tracking-wider mb-2">
-            Configuration
-          </h3>
-
-          <NuxtLink
-            v-for="navItem in navigationItems.filter(item => item.route !== 'general')"
-            :key="navItem.route"
-            :to="`/guilds/${guildId}/manage/${navItem.route}`"
-            class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-glass hover-lift"
-            :class="currentRoute === navItem.route ? 'bg-primary/20 text-primary border border-primary/30' : 'hover:bg-base-300/50'"
-          >
-            <ShadIcon :name="navItem.icon" class="w-5 h-5" />
-            <span>{{ navItem.label }}</span>
-            <div v-if="navItem.badge" class="ml-auto">
-              <div class="badge badge-sm" :class="`badge-${navItem.badge.color || 'primary'}`">
-                {{ navItem.badge.text }}
-              </div>
-            </div>
-          </NuxtLink>
-        </div>
-      </nav>
-    </div>
-
     <!-- Main Content -->
     <div class="flex-1 flex flex-col overflow-hidden">
       <!-- Top Bar -->
@@ -87,27 +37,21 @@
       </div>
 
       <!-- Settings Content -->
-      <div class="flex-1 overflow-y-auto">
-        <Transition name="fade-slide-in" mode="out-in">
-          <div v-if="readyToRender" class="p-6">
-            <div class="card card-glass rounded-xl p-6 fade-slide-in">
-              <!-- General Dashboard Content -->
-              <GuildSettingsGeneral v-if="currentRoute === 'General'" :guild-data="guildData" :languages="languages" />
-              <GuildSettingsModeration v-if="currentRoute === 'Moderation'" :guild-data="guildData" />
-              <GuildSettingsChannel v-if="currentRoute === 'Channels'" :guild-data="guildData" />
-              <GuildSettingsRole v-if="currentRoute === 'Roles'" :guild-data="guildData" />
-              <GuildSettingsEvent v-if="currentRoute === 'Events'" :guild-data="guildData" />
-              <GuildSettingsDisabledCommands v-if="currentRoute === 'DisabledCommands'" :guild-data="guildData" :commands="commands" />
-            </div>
-          </div>
-          <!-- Loading State -->
-          <div v-else class="flex items-center justify-center h-full">
-            <div class="card card-glass rounded-xl p-8 text-center">
-              <span class="loading loading-spinner loading-lg text-primary"></span>
-              <p class="mt-4 text-base-content/70">Loading guild settings...</p>
-            </div>
-          </div>
-        </Transition>
+      <div class="flex-1 overflow-y-auto p-6">
+        <div v-if="readyToRender">
+          <ShadTabs v-model="currentRoute" :items="navigationItems" variant="lift" orientation="vertical">
+            <template #content="{ item }">
+              <div class="card card-glass rounded-xl p-6 fade-slide-in">
+                <GuildSettingsGeneral v-if="item.value === 'general'" :guild-data="guildData" :languages="languages" />
+                <GuildSettingsModeration v-if="item.value === 'moderation'" :guild-data="guildData" />
+                <GuildSettingsChannel v-if="item.value === 'channels'" :guild-data="guildData" />
+                <GuildSettingsRole v-if="item.value === 'roles'" :guild-data="guildData" />
+                <GuildSettingsEvent v-if="item.value === 'events'" :guild-data="guildData" />
+                <GuildSettingsDisabledCommands v-if="item.value === 'disabled-commands'" :guild-data="guildData" :commands="commands" />
+              </div>
+            </template>
+          </ShadTabs>
+        </div>
       </div>
     </div>
   </div>
@@ -116,6 +60,7 @@
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
 import type { GuildData } from "~~/server/database";
+import type { TabsItem } from "~/components/ui/tabs";
 import { cast, isNullOrUndefined } from "@sapphire/utilities";
 import { useRouteParams } from "@vueuse/router";
 import { useToast } from "@/composables/useToast";
@@ -124,17 +69,6 @@ import useGuild from "~/composables/useGuildData";
 const router = useRouter();
 const guildId = useRouteParams("id");
 const toast = useToast();
-
-interface NavigationItem {
-  route: string;
-  label: string;
-  icon: string;
-  description: string;
-  badge?: {
-    text: string;
-    color: string;
-  };
-}
 
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | string[] | null): boolean {
@@ -160,9 +94,9 @@ const commands = computed(() => commandsStore.commands);
 const currentRoute = computed(() => "general");
 
 // Navigation items for sidebar
-const navigationItems = computed<NavigationItem[]>(() => [
+const navigationItems = [
   {
-    route: "general",
+    value: "general",
     label: "General",
     icon: "heroicons:cog-6-tooth",
     badge: {
@@ -172,36 +106,36 @@ const navigationItems = computed<NavigationItem[]>(() => [
     description: "Basic bot settings",
   },
   {
-    route: "moderation",
+    value: "moderation",
     label: "Moderation",
     icon: "heroicons:shield-check",
     description: "Moderation features",
   },
   {
-    route: "channels",
+    value: "channels",
     label: "Channels",
     icon: "heroicons:hashtag",
     description: "Channel configuration",
   },
   {
-    route: "roles",
+    value: "roles",
     label: "Roles",
     icon: "heroicons:user-group",
     description: "Role management",
   },
   {
-    route: "events",
+    value: "events",
     label: "Events",
     icon: "heroicons:bell",
     description: "Event logging",
   },
   {
-    route: "disabled-commands",
+    value: "disabled-commands",
     label: "Commands",
     icon: "heroicons:command-line",
     description: "Command settings",
   },
-]);
+] satisfies TabsItem[];
 
 // Page title and description
 const currentPageTitle = computed(() => "Dashboard");
@@ -398,10 +332,6 @@ useHead({
 /* glass-morphism utilities */
 .glass-panel {
 	@apply bg-base-100/80 backdrop-blur-md border border-base-300/50;
-}
-
-.glass-sidebar {
-	@apply bg-base-200/70 backdrop-blur-lg border-r border-base-300/30;
 }
 
 /* Animation utilities */

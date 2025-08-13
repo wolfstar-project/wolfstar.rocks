@@ -1,10 +1,10 @@
 import type { UseEventBusReturn } from "@vueuse/core";
-import type { InjectionKey, Ref } from "vue";
-import type { FormFieldProps } from "~/components/ui/form/FormField.vue";
-import type { FormEvent, FormFieldInjectedOptions, FormInjectedOptions, FormInputEvents } from "~/types/form";
-import type { GetObjectField } from "~/types/utils";
+import type { ComputedRef, InjectionKey, Ref } from "vue";
+import type { FormFieldProps } from "@/compoents/ui/form";
+import type { FormEvent, FormFieldInjectedOptions, FormInjectedOptions, FormInputEvents } from "@/types/form";
+import type { GetObjectField } from "@/types/utils";
 import { useDebounceFn } from "@vueuse/core";
-import { computed, inject } from "vue";
+import { computed, inject, provide } from "vue";
 
 interface Props<T> {
   id?: string;
@@ -15,33 +15,23 @@ interface Props<T> {
   disabled?: boolean;
 }
 
-interface FormFieldOptions {
-  id?: string;
-  name?: string;
-  disabled?: boolean;
-  required?: boolean;
-  error?: boolean;
-  bind?: boolean;
-  deferInputValidation?: boolean;
-}
-export const formOptionsInjectionKey: InjectionKey<ComputedRef<FormInjectedOptions>> = Symbol("form-options");
-export const formBusInjectionKey: InjectionKey<UseEventBusReturn<FormEvent<any>, string>> = Symbol("form-events");
-export const formFieldInjectionKey: InjectionKey<ComputedRef<FormFieldInjectedOptions<FormFieldProps>>> = Symbol("form-field");
-export const inputIdInjectionKey: InjectionKey<Ref<string | undefined>> = Symbol("input-id");
-export const formInputsInjectionKey: InjectionKey<Ref<Record<string, { id?: string; pattern?: RegExp }>>> = Symbol("form-inputs");
-export const formLoadingInjectionKey: InjectionKey<Readonly<Ref<boolean>>> = Symbol("form-loading");
+export const formOptionsInjectionKey: InjectionKey<ComputedRef<FormInjectedOptions>> = Symbol("nuxt-ui.form-options");
+export const formBusInjectionKey: InjectionKey<UseEventBusReturn<FormEvent<any>, string>> = Symbol("nuxt-ui.form-events");
+export const formFieldInjectionKey: InjectionKey<ComputedRef<FormFieldInjectedOptions<FormFieldProps>> | undefined> = Symbol("nuxt-ui.form-field");
+export const inputIdInjectionKey: InjectionKey<Ref<string | undefined>> = Symbol("nuxt-ui.input-id");
+export const formInputsInjectionKey: InjectionKey<Ref<Record<string, { id?: string; pattern?: RegExp }>>> = Symbol("nuxt-ui.form-inputs");
+export const formLoadingInjectionKey: InjectionKey<Readonly<Ref<boolean>>> = Symbol("nuxt-ui.form-loading");
 
-export function useFormField<T>(props?: Props<T>, opts?: FormFieldOptions) {
-  const fieldContext = inject(formFieldInjectionKey);
+export function useFormField<T>(props?: Props<T>, opts?: { bind?: boolean; deferInputValidation?: boolean }) {
   const formOptions = inject(formOptionsInjectionKey, undefined);
   const formBus = inject(formBusInjectionKey, undefined);
   const formField = inject(formFieldInjectionKey, undefined);
   const formInputs = inject(formInputsInjectionKey, undefined);
   const inputId = inject(inputIdInjectionKey, undefined);
 
-  if (!fieldContext) {
-    throw new Error("useFormField must be used within a FormField component");
-  }
+  // Blocks the FormField injection to avoid duplicating events when nesting input components.
+  provide(formFieldInjectionKey, undefined);
+
   if (formField && inputId) {
     if (opts?.bind === false) {
       // Removes for="..." attribute on label for RadioGroup and alike.
@@ -86,8 +76,8 @@ export function useFormField<T>(props?: Props<T>, opts?: FormFieldOptions) {
     id: computed(() => props?.id ?? inputId?.value),
     name: computed(() => props?.name ?? formField?.value.name),
     size: computed(() => props?.size ?? formField?.value.size),
-    color: computed(() => (formField?.value.error ? "error" : props?.color)),
-    highlight: computed(() => (formField?.value.error ? true : props?.highlight)),
+    color: computed(() => formField?.value.error ? "error" : props?.color),
+    highlight: computed(() => formField?.value.error ? true : props?.highlight),
     disabled: computed(() => formOptions?.value.disabled || props?.disabled),
     emitFormBlur,
     emitFormInput,
@@ -97,13 +87,19 @@ export function useFormField<T>(props?: Props<T>, opts?: FormFieldOptions) {
       if (!formField?.value)
         return;
 
-      const descriptiveAttrs
-				= ["error" as const, "hint" as const, "description" as const, "help" as const].filter(type => formField?.value?.[type]).map(type => `${formField?.value.ariaId}-${type}`) || [];
+      const descriptiveAttrs = ["error" as const, "hint" as const, "description" as const, "help" as const]
+        .filter(type => formField?.value?.[type])
+        .map(type => `${formField?.value.ariaId}-${type}`) || [];
 
-      return {
-        "aria-describedby": descriptiveAttrs.join(" "),
+      const attrs: Record<string, any> = {
         "aria-invalid": !!formField?.value.error,
       };
+
+      if (descriptiveAttrs.length > 0) {
+        attrs["aria-describedby"] = descriptiveAttrs.join(" ");
+      }
+
+      return attrs;
     }),
   };
 }

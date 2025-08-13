@@ -1,32 +1,46 @@
-import type { ZodSchema } from "zod/v4";
-import type { FormSchema, ValidateReturnSchema } from "../types/form";
+import type { ValidationError as YupError, ObjectSchema as YupObjectSchema } from "yup";
+import type { FormSchema, ValidateReturnSchema } from "@/types/form";
 
-export function isZodSchema(schema: any): schema is ZodSchema {
-  return schema.parse !== undefined;
+export function isYupSchema(schema: any): schema is YupObjectSchema<any> {
+  return schema.validate && schema.__isYupSchema__;
 }
 
-async function validateZodSchema(state: any, schema: ZodSchema): Promise<ValidateReturnSchema<typeof state>> {
-  const result = await schema.safeParseAsync(state);
-  if (result.success === false) {
-    const errors = result.error.issues.map(issue => ({
-      name: issue.path.join("."),
-      message: issue.message,
-    }));
+export function isYupError(error: any): error is YupError {
+  return error.inner !== undefined;
+}
 
+async function validateYupSchema(
+  state: any,
+  schema: YupObjectSchema<any>,
+): Promise<ValidateReturnSchema<typeof state>> {
+  try {
+    const result = await schema.validate(state, { abortEarly: false });
     return {
-      errors,
-      result: null,
+      errors: null,
+      result,
     };
   }
-  return {
-    result: result.data,
-    errors: null,
-  };
+  catch (error) {
+    if (isYupError(error)) {
+      const errors = error.inner.map(issue => ({
+        name: issue.path ?? "",
+        message: issue.message,
+      }));
+
+      return {
+        errors,
+        result: null,
+      };
+    }
+    else {
+      throw error;
+    }
+  }
 }
 
 export function validateSchema<T extends object>(state: T, schema: FormSchema<T>): Promise<ValidateReturnSchema<typeof state>> {
-  if (isZodSchema(schema)) {
-    return validateZodSchema(state, schema);
+  if (isYupSchema(schema)) {
+    return validateYupSchema(state, schema);
   }
   else {
     throw new Error("Form validation failed: Unsupported form schema");

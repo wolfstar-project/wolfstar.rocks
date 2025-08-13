@@ -1,24 +1,33 @@
 import type { ComputedRef, DeepReadonly, Ref } from "vue";
-import type { ZodSchema } from "zod/v4";
+import type { ObjectSchema as YupObjectSchema } from "yup";
 import type { GetObjectField } from "./utils";
 
-export interface Form<T extends object> {
-  validate: (opts?: { name?: keyof T | (keyof T)[]; silent?: boolean; nested?: boolean; transform?: boolean }) => Promise<T | false>;
-  clear: (path?: string) => void;
+export interface Form<S extends FormSchema> {
+  validate<T extends boolean>(opts?: { name?: keyof FormData<S, false> | (keyof FormData<S, false>)[]; silent?: boolean; nested?: boolean; transform?: T }): Promise<FormData<S, T> | false>;
+  clear (name?: keyof FormData<S, false>): void;
   errors: Ref<FormError[]>;
-  setErrors: (errs: FormError[], name?: keyof T) => void;
-  getErrors: (name?: keyof T) => FormError[];
-  submit: () => Promise<void>;
+  setErrors (errs: FormError[], name?: keyof FormData<S, false>): void;
+  getErrors (name?: keyof FormData<S, false>): FormError[];
+  submit (): Promise<void>;
   disabled: ComputedRef<boolean>;
   dirty: ComputedRef<boolean>;
   loading: Ref<boolean>;
 
-  dirtyFields: DeepReadonly<Set<keyof T>>;
-  touchedFields: DeepReadonly<Set<keyof T>>;
-  blurredFields: DeepReadonly<Set<keyof T>>;
+  dirtyFields: ReadonlySet<DeepReadonly<keyof FormData<S, false>>>;
+  touchedFields: ReadonlySet<DeepReadonly<keyof FormData<S, false>>>;
+  blurredFields: ReadonlySet<DeepReadonly<keyof FormData<S, false>>>;
 }
 
-export type FormSchema<T extends object> = ZodSchema<T>;
+export type FormSchema<I extends object = object>
+  = YupObjectSchema<I>;
+
+// Define a utility type to infer the input type based on the schema type
+export type InferInput<Schema> = Schema extends YupObjectSchema<infer I> ? I : never;
+
+// Define a utility type to infer the output type based on the schema type
+export type InferOutput<Schema> = Schema extends YupObjectSchema<infer O> ? O : never;
+
+export type FormData<S extends FormSchema, T extends boolean = true> = T extends true ? InferOutput<S> : InferInput<S>;
 
 export type FormInputEvents = "input" | "blur" | "change" | "focus";
 
@@ -59,7 +68,10 @@ export interface FormInputEvent<T extends object> {
   eager?: boolean;
 }
 
-export type FormEvent<T extends object> = FormInputEvent<T> | FormChildAttachEvent | FormChildDetachEvent;
+export type FormEvent<T extends object>
+  = | FormInputEvent<T>
+    | FormChildAttachEvent
+    | FormChildDetachEvent;
 
 export interface FormInjectedOptions {
   disabled?: boolean;

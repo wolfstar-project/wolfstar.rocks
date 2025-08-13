@@ -97,11 +97,13 @@ catalogs:
   test:
     playwright: ^1.54.1
   utils:
+    "@vee-validate/yup": ^4.15.1
     "@vee-validate/zod": ^4.15.1
     "@vueuse/core": ^13.6.0
     "@vueuse/nuxt": ^13.6.0
     "@vueuse/router": ^13.6.0
     clsx: ^2.1.1
+    yup: ^1.7.0
     zod: ^4.0.14
 
 allowedDeprecatedVersions:

@@ -1,5 +1,5 @@
 <template>
-  <Primitive :as="as" :class="ui.root({ class: [props.class, props.ui?.root] })">
+  <Primitive :as="as" :class="ui.root({ class: [props.ui?.root, props.class] })">
     <div :class="ui.wrapper({ class: props.ui?.wrapper })">
       <div v-if="label || !!slots.label" :class="ui.labelWrapper({ class: props.ui?.labelWrapper })">
         <Label :for="id" :class="ui.label({ class: props.ui?.label })">
@@ -22,18 +22,18 @@
     </div>
 
     <div :class="[(label || !!slots.label || description || !!slots.description) && ui.container({ class: props.ui?.container })]">
-      <slot :error="error"></slot>
+      <slot :error="error" />
 
-      <p v-if="(typeof error === 'string' && error) || !!slots.error" :id="`${ariaId}-error`" :class="ui.error({ class: props.ui?.error })">
+      <div v-if="(typeof error === 'string' && error) || !!slots.error" :id="`${ariaId}-error`" :class="ui.error({ class: props.ui?.error })">
         <slot name="error" :error="error">
           {{ error }}
         </slot>
-      </p>
-      <p v-else-if="help || !!slots.help" :class="ui.help({ class: props.ui?.help })">
+      </div>
+      <div v-else-if="help || !!slots.help" :id="`${ariaId}-help`" :class="ui.help({ class: props.ui?.help })">
         <slot name="help" :help="help">
           {{ help }}
         </slot>
-      </p>
+      </div>
     </div>
   </Primitive>
 </template>
@@ -128,7 +128,7 @@ export interface FormFieldSlots {
 <script setup lang="ts">
 import type { Ref } from "vue";
 import type { FormError, FormFieldInjectedOptions } from "~/types/form";
-import { Primitive } from "reka-ui";
+import { Label, Primitive } from "reka-ui";
 import { computed, inject, provide, ref, useId } from "vue";
 import { formFieldInjectionKey, inputIdInjectionKey } from "~/composables/useFormField";
 

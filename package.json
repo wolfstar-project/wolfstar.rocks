@@ -86,7 +86,9 @@
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
     "wrangler": "catalog:dev",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "yup": "catalog:utils",
+    "@vee-validate/yup": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

@@ -27,3 +27,4 @@ logs
 .data
 .eslintcache
 
+server/database/generated

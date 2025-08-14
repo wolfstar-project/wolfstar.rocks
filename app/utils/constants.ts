@@ -7,6 +7,8 @@ export const robotBlockingPageProps = "nosnippet,notranslate,noimageindex,noarch
 
 export const colors = ["primary", "secondary", "success", "error", "info", "warning", "neutral"] as const;
 
+export type UIColors = (typeof colors)[number];
+
 export enum Colors {
   White = "#e7e7e8",
   Amber = "#ffc107",

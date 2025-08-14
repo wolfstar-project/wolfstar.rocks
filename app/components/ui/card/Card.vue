@@ -1,5 +1,8 @@
 <template>
   <Primitive :as="as" :class="ui.root({ class: [props.class, props.ui?.root] })">
+    <div v-if="!!slots.title" :class="ui.title({ class: props.ui?.title })">
+      <slot name="title"></slot>
+    </div>
     <div v-if="!!slots.header" :class="ui.header({ class: props.ui?.header })">
       <slot name="header"></slot>
     </div>

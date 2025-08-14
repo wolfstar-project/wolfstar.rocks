@@ -7,23 +7,34 @@ export { default as Card } from "./Card.vue";
 export const card = tv({
   slots: {
     root: "card",
+    title: "card-title",
     header: "card-body",
     body: "p-4 sm:p-6",
     footer: "card-actions",
   },
   variants: {
+    color: {
+      ...Object.fromEntries(
+        Object.keys(colors).map((key) => [key, { root: `bg-${key} text-${key}-content` }]),
+      ) as {
+        [key in UIColors]: { root: string };
+      },
+    },
     variant: {
       solid: {
         root: "bg-base-100 shadow-xl",
       },
+      dash: {
+        root: "card-dash",
+      },
       outline: {
-        root: "card-bordered",
+        root: "card-border",
       },
       soft: {
         root: "bg-base-200",
       },
       subtle: {
-        root: "card-bordered bg-base-200",
+        root: "card-border bg-base-200",
       },
     },
     size: {
@@ -61,6 +72,7 @@ export interface CardProps {
 }
 
 export interface CardSlots {
+  title: (props?: object) => any;
   header: (props?: object) => any;
   default: (props?: object) => any;
   footer: (props?: object) => any;

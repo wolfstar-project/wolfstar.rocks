@@ -22,7 +22,7 @@ import type { HTMLAttributes } from "vue";
 import { ComboboxInput, useForwardPropsEmits } from "reka-ui";
 import { computed } from "vue";
 import { Icon } from "@/components/ui/icon";
-import { cn } from "~/utils/cn";
+import { cn } from "@/utils/cn";
 
 defineOptions({
   inheritAttrs: false,

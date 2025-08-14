@@ -51,7 +51,7 @@ import type { TabsRootEmits, TabsRootProps } from "reka-ui";
 import type { VariantProps } from "tailwind-variants";
 import type { AvatarProps } from "@/components/ui/avatar";
 import type { BadgeProps } from "@/components/ui/badge";
-import type { DynamicSlots } from "~/types/utils";
+import type { DynamicSlots } from "@/types/utils";
 import { tv } from "tailwind-variants";
 
 const tabs = tv({

@@ -8,7 +8,7 @@
 import type { ButtonGroupProps, ButtonGroupSlots } from ".";
 import { Primitive } from "reka-ui";
 import { computed, provide } from "vue";
-import { buttonGroupInjectionKey } from "~/composables/useButtonGroup";
+import { buttonGroupInjectionKey } from "@/composables/useButtonGroup";
 import { ButtonGroupVariant } from ".";
 
 const props = withDefaults(defineProps<ButtonGroupProps>(), {

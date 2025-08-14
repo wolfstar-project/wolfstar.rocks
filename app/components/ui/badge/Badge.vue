@@ -20,7 +20,6 @@
 <script lang="ts">
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
-import { colors } from "@/utils/constants";
 import { buttonGroupVariant } from "../button-group";
 
 const badge = tv({
@@ -39,7 +38,7 @@ const badge = tv({
     ...buttonGroupVariant,
     color: {
       ...Object.fromEntries(colors.map(color => [color, `badge-${color}`])) as {
-        [key in (typeof colors)[number]]: `badge-${key}`;
+        [key in UIColors]: `badge-${key}`;
       },
     },
     variant: {

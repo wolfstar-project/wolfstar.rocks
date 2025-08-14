@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import type { VariantProps } from "tailwind-variants";
-import type { KbdKey } from "~/composables/useKbd";
+import type { KbdKey } from "@/composables/useKbd";
 import { tv } from "tailwind-variants";
 
 const kbd = tv({

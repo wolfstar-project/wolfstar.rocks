@@ -20,7 +20,7 @@ import type { ComboboxContentEmits, ComboboxContentProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
 import { reactiveOmit } from "@vueuse/core";
 import { ComboboxContent, ComboboxPortal, useForwardPropsEmits } from "reka-ui";
-import { cn } from "~/utils/cn";
+import { cn } from "@/utils/cn";
 
 const props = withDefaults(defineProps<ComboboxContentProps & { class?: HTMLAttributes["class"]; viewportClass?: HTMLAttributes["class"] }>(), {
   position: "popper",

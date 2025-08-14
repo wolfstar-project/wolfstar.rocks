@@ -127,10 +127,10 @@ export interface FormFieldSlots {
 
 <script setup lang="ts">
 import type { Ref } from "vue";
-import type { FormError, FormFieldInjectedOptions } from "~/types/form";
+import type { FormError, FormFieldInjectedOptions } from "@/types/form";
 import { Label, Primitive } from "reka-ui";
 import { computed, inject, provide, ref, useId } from "vue";
-import { formFieldInjectionKey, inputIdInjectionKey } from "~/composables/useFormField";
+import { formFieldInjectionKey, inputIdInjectionKey } from "@/composables/useFormField";
 
 const props = defineProps<FormFieldProps>();
 const slots = defineSlots<FormFieldSlots>();

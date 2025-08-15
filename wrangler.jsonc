@@ -24,14 +24,14 @@
   "env": {
     "development": {
       "name": "wolfstar-site",
-      "main": ".output/server/index.mjs",
+      "main": "./dist/server/index.mjs",
       "assets": {
-        "directory": "./public/",
+        "directory": "./dist/public/",
         "binding": "ASSETS",
         "run_worker_first": true
       },
       "route": {
-        "pattern": "localhost:3000",
+        "pattern": "dev.wolfstar.rocks",
         "custom_domain": true
       }
     },

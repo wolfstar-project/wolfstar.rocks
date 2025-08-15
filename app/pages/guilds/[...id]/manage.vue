@@ -67,12 +67,15 @@ import { useToast } from "@/composables/useToast";
 import useGuild from "~/composables/useGuildData";
 
 const router = useRouter();
-const guildId = useRouteParams("id");
+const route = useRoute();
+const guildIdParam = useRouteParams("id");
 const toast = useToast();
 
+const guildId = computed(() => (Array.isArray(guildIdParam.value) ? guildIdParam.value[0] : guildIdParam.value));
+
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
-function isValidGuildId(id: string | string[] | null): boolean {
-  if (isNullOrUndefined(id) || Array.isArray(id))
+function isValidGuildId(id: string | undefined | null): boolean {
+  if (isNullOrUndefined(id))
     return false;
   const snowflakeRegex = /^\d{17,19}$/;
   return snowflakeRegex.test(id);
@@ -91,7 +94,19 @@ const languages = computed(() => languagesStore.languages);
 const commands = computed(() => commandsStore.commands);
 
 // Current route detection
-const currentRoute = computed(() => "general");
+const currentRoute = computed(() => {
+  const pathParts = route.path.split("/");
+  const manageIndex = pathParts.indexOf("manage");
+
+  if (manageIndex !== -1 && manageIndex + 1 < pathParts.length) {
+    const section = pathParts[manageIndex + 1];
+    if (navigationItems.some(item => item.value === section)) {
+      return section;
+    }
+  }
+
+  return "general";
+});
 
 // Navigation items for sidebar
 const navigationItems = [
@@ -100,7 +115,7 @@ const navigationItems = [
     label: "General",
     icon: "heroicons:cog-6-tooth",
     badge: {
-      text: "New",
+      label: "New",
       color: "primary",
     },
     description: "Basic bot settings",

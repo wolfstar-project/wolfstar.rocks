@@ -22,7 +22,7 @@
     </div>
 
     <div :class="[(label || !!slots.label || description || !!slots.description) && ui.container({ class: props.ui?.container })]">
-      <slot :error="error" />
+      <slot :error="error"></slot>
 
       <div v-if="(typeof error === 'string' && error) || !!slots.error" :id="`${ariaId}-error`" :class="ui.error({ class: props.ui?.error })">
         <slot name="error" :error="error">

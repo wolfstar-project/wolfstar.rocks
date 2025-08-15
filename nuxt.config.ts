@@ -5,6 +5,7 @@ import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 import { Env } from "./shared/types/index";
+import { seconds } from "./shared/utils/times";
 import "@vite-pwa/nuxt";
 import "nuxt";
 
@@ -42,7 +43,6 @@ export default defineNuxtConfig({
     "shadcn-nuxt",
     "@josephanson/nuxt-ai",
     "@sentry/nuxt/module",
-    "nitro-cloudflare-dev",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     ...(preset ? ["@nuxthub/core"] : []),
     "~~/modules/build-env",
@@ -141,6 +141,7 @@ export default defineNuxtConfig({
   },
 
   experimental: {
+    checkOutdatedBuildInterval: seconds(10),
     typedPages: true,
     inlineRouteRules: true,
   },

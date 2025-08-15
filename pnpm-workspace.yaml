@@ -30,7 +30,6 @@ catalogs:
     "@sentry/nuxt": ^9.43.0
     daisyui: 5.0.35
     discord-api-types: ^0.38.17
-    nitro-cloudflare-dev: ^0.2.2
     nuxt-auth-utils: ^0.5.20
     prisma: ~6.11.0
     simple-git: ^3.28.0

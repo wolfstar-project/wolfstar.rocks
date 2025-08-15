@@ -1,6 +1,7 @@
 <template>
   <vite-pwa-manifest />
   <nuxt-loading-indicator color="bg-neutral" />
+  <nuxt-route-announcer />
   <nuxt-layout name="main">
     <nuxt-page />
     <ShadToaster position="bottom-left" />
@@ -22,7 +23,7 @@ nuxtApp.hooks.hookOnce("app:manifest:update", () => {
       color: "neutral",
       activeColor: "primary",
       label: "Update",
-      onClick: (_event) => window.location.reload(),
+      onClick: () => window.location.reload(),
       icon: "ic:round-warning",
     }],
   });

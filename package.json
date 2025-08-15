@@ -76,7 +76,6 @@
     "import-in-the-middle": "catalog:prod",
     "markdown-it-anchor": "catalog:markdown",
     "motion-v": "catalog:frontend",
-    "nitro-cloudflare-dev": "catalog:dev",
     "nuxt": "catalog:prod",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",

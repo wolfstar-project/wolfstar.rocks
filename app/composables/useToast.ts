@@ -1,4 +1,4 @@
-import type { ToastEmits, ToastProps } from "@/components/ui/toaster/Toast.vue";
+import type { ToastEmits, ToastProps } from "@/components/ui/toaster";
 import type { EmitsToProps } from "@/types/utils";
 
 export interface Toast extends Omit<ToastProps, "defaultOpen">, EmitsToProps<ToastEmits> {

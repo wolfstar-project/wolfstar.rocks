@@ -57,12 +57,14 @@
               </div>
             </div>
             <div v-if="item.value === 'settings'" class="space-y-6">
-              <div>
-                <h2 class="text-2xl font-bold text-base-content">Settings</h2>
-                <p class="mt-1 text-base-content/60">Manage your account preferences</p>
-              </div>
               <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <ShadCard class="shadow-md">
+                  <template #title>
+                    <div>
+                      <h2 class="text-2xl font-bold text-base-content">Settings</h2>
+                      <p class="mt-1 text-base-content/60">Manage your account preferences</p>
+                    </div>
+                  </template>
                   <template #header>
                     <h3 class="text-lg font-semibold">Notification Settings</h3>
                   </template>
@@ -76,11 +78,13 @@
               </div>
             </div>
             <div v-if="item.value === 'premium'" class="space-y-6">
-              <div>
-                <h2 class="text-2xl font-bold text-base-content">Premium</h2>
-                <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
-              </div>
               <ShadCard class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg">
+                <template #title>
+                  <div>
+                    <h2 class="text-2xl font-bold text-base-content">Premium</h2>
+                    <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
+                  </div>
+                </template>
                 <template #header>
                   <div class="space-y-4 p-6 text-center">
                     <ShadIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
@@ -90,10 +94,10 @@
 
                 <p class="text-base-content/70">Get access to exclusive features and priority support</p>
                 <template #footer>
-                  <div class="flex justify-center space-x-4 pt-4">
+                  <ShadButtonGroup class="flex justify-center space-x-4 pt-4">
                     <ShadButton color="primary" size="sm">Get Premium</ShadButton>
                     <ShadButton variant="outline" size="sm">Learn More</ShadButton>
-                  </div>
+                  </ShadButtonGroup>
                 </template>
               </ShadCard>
             </div>
@@ -121,7 +125,7 @@ const loading = ref(true);
 
 const {
   data: guilds,
-  status: _,
+  status,
   refresh: refreshGuilds,
   error,
 } = useFetch("/api/users", {

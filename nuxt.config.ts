@@ -29,6 +29,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/eslint",
     "@nuxt/icon",
+    "@nuxt/scripts",
     "@nuxtjs/seo",
     "@nuxtjs/color-mode",
     "@vueuse/nuxt",
@@ -44,8 +45,6 @@ export default defineNuxtConfig({
     ...(preset ? ["@nuxthub/core"] : []),
     "~~/modules/build-env",
     "stale-dep/nuxt",
-    "@nuxt/scripts",
-
   ],
 
   $development: {

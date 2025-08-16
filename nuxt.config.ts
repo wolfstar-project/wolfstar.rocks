@@ -1,5 +1,4 @@
 import type { ModuleOptions } from "nuxt-security";
-import { createResolver } from "@nuxt/kit";
 import tailwindcss from "@tailwindcss/vite";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
@@ -8,8 +7,6 @@ import { Env } from "./shared/types/index";
 import { seconds } from "./shared/utils/times";
 import "@vite-pwa/nuxt";
 import "nuxt";
-
-const resolver = createResolver(import.meta.url);
 
 const environment
   = isDevelopment
@@ -199,18 +196,6 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
     build: {
       target: "esnext",
-    },
-    resolve: {
-      alias: {
-        ".prisma/client/index-browser":
-          // https://vite.dev/config/shared-options.html#resolve-alias
-          // When aliasing to file system paths, always use absolute paths.
-          resolver.resolve("./node_modules/.prisma/client/index-browser.js"),
-        ".prisma/client/default":
-          // https://vite.dev/config/shared-options.html#resolve-alias
-          // When aliasing to file system paths, always use absolute paths.
-          resolver.resolve("./node_modules/.prisma/client/default.js"),
-      },
     },
     optimizeDeps: {
       include: [

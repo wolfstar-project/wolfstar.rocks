@@ -36,6 +36,7 @@ ENV PORT 8281
 ENV NODE_ENV="production"
 ENV NODE_OPTIONS="--enable-source-maps"
 ENV HOSTNAME="0.0.0.0"
+ENV NEXT_PUBLIC_BASE_WEB_URL=wolfstar.rocks
 
 RUN chown -R node:node /home/node/app/
 

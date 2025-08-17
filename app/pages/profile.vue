@@ -36,24 +36,102 @@
         <template #content="{ item }">
           <div class="p-8">
             <div v-if="item.value === 'servers'" class="space-y-6">
-              <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                  <h2 class="text-2xl font-bold text-base-content">Servers</h2>
-                  <p class="mt-1 text-base-content/60">
-                    <span v-if="!guilds || status === 'pending'" class="inline-block h-5 w-48 animate-pulse rounded bg-base-300"></span>
-                    <span v-else>Servers you're in ({{ guilds?.length ?? 0 }} servers)</span>
-                  </p>
+              <!-- Server Section Header -->
+              <div class="mb-4">
+                <h2 class="text-2xl font-bold text-base-content">Servers</h2>
+                <p class="mt-1 text-base-content/60">
+                  <span v-if="status === 'pending'" class="inline-block h-5 w-48 animate-pulse rounded bg-base-300"></span>
+                  <span v-else>Servers you're in ({{ guilds?.length ?? 0 }} servers)</span>
+                </p>
+              </div>
+
+              <!-- Search and Controls Section -->
+              <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                <div class="flex items-end gap-2">
+                  <ShadInput
+                    v-model="searchQuery"
+                    type="text"
+                    placeholder="Search servers..."
+                    :disabled="loading"
+                    icon="heroicons:magnifying-glass-circle"
+                    :loading="loading"
+                    loading-icon="i-lucide-loader"
+                    class="max-w-xs"
+                  >
+                    <template #trailing>
+                      <ShadKbd
+                        value="k"
+                        class="absolute top-1/2 right-2 -translate-y-1/2"
+                      />
+                    </template>
+                  </ShadInput>
+                  <!-- Skeletons -->
+                  <div v-if="loading" class="flex items-center gap-2">
+                    <div class="skeleton h-9 w-24 rounded-md"></div>
+                    <div class="skeleton h-9 w-20 rounded-md"></div>
+                    <div class="skeleton h-9 w-24 rounded-md"></div>
+                    <div class="skeleton h-9 w-20 rounded-md"></div>
+                  </div>
+                  <!-- Actual Buttons -->
+                  <div v-else class="flex items-center justify-end gap-2">
+                    <!-- View Button -->
+                    <ShadButton
+                      size="sm"
+                      active-class="btn-active"
+                      :icon="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'"
+                      @click="toggleView()"
+                    >
+                      <span class="hidden sm:inline">View</span>
+                    </ShadButton>
+
+                    <!-- Manageable Only Toggle Button -->
+                    <ShadButton
+                      size="sm"
+                      active-class="btn-active"
+                      icon="heroicons:shield-check"
+                      @click="showManageableOnly = !showManageableOnly"
+                    >
+                      <span class="hidden sm:inline">Manageable</span>
+                    </ShadButton>
+
+                    <!-- Sort Button -->
+                    <ShadButton
+                      size="sm"
+                      class="join-item btn-active"
+                      @click="toggleSortOrder"
+                    >
+                      <template #leading>
+                        <ShadIcon :name="sortAscending ? 'heroicons:arrow-up' : 'heroicons:arrow-down'" class="h-4 w-4" />
+                      </template>
+                      <span class="hidden sm:inline">{{ sortAscending ? 'A-Z' : 'Z-A' }}</span>
+                    </ShadButton>
+
+                    <!-- Refresh Button -->
+                    <ShadButton
+                      v-if="filteredGuilds.length > 0"
+                      size="sm"
+                      icon="heroicons:arrow-path"
+                      @click="refresh()"
+                    >
+                      <span class="hidden sm:inline">Refresh</span>
+                    </ShadButton>
+                  </div>
                 </div>
-                <div class="space-y-4">
-                  <guild-cards
-                    :error="error"
-                    :guilds="guilds"
-                    :refresh-guilds="refreshGuilds"
-                    :loading="status === 'pending'"
-                    :container-height="600"
-                    :item-height="280"
-                  />
-                </div>
+
+                <!-- Search Input for Desktop -->
+              </div>
+              <div class="space-y-4">
+                <guild-cards
+                  :error="error"
+                  :guilds="guilds"
+                  :filter-guilds="filteredGuilds"
+                  :undo-search="undoSearch"
+                  :search-query="searchQuery"
+                  :loading="status === 'pending'"
+                  :container-height="600"
+                  :item-height="280"
+                  :type="viewMode === 'grid' ? 'card' : 'list'"
+                />
               </div>
             </div>
             <div v-if="item.value === 'settings'" class="space-y-6">
@@ -94,9 +172,9 @@
 
                 <p class="text-base-content/70">Get access to exclusive features and priority support</p>
                 <template #footer>
-                  <ShadButtonGroup class="flex justify-center space-x-4 pt-4">
-                    <ShadButton color="primary" size="sm">Get Premium</ShadButton>
-                    <ShadButton variant="outline" size="sm">Learn More</ShadButton>
+                  <ShadButtonGroup class="flex w-full justify-center space-x-4 pt-4 z-10">
+                    <ShadButton color="primary" size="md">Get Premium</ShadButton>
+                    <ShadButton variant="outline" size="md">Learn More</ShadButton>
                   </ShadButtonGroup>
                 </template>
               </ShadCard>
@@ -110,6 +188,7 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@/components/ui/tabs";
+import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { captureException } from "@sentry/vue";
 import { promiseTimeout } from "@vueuse/core";
 
@@ -122,18 +201,27 @@ const activeTab = ref("servers");
 const isAnimated = ref(false);
 const isDefault = ref(false);
 const loading = ref(true);
+const searchQuery = ref("");
+const viewMode = ref("grid");
+// is true by default because we want to show only manageable servers
+const showManageableOnly = ref(true);
+const sortAscending = ref(true);
+const { history: _searchHistory, undo: undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
+  deep: false,
+  capacity: 10, // Keep last 10 search terms
+});
 
 const {
   data: guilds,
   status,
-  refresh: refreshGuilds,
+  refresh,
   error,
 } = useFetch("/api/users", {
   key: "guilds",
   transform: data => data ? data.transformedGuilds ?? null : null,
   getCachedData: (key, nuxtApp, _ctx) => {
     const now = Date.now();
-    if (now - lastFetchTime.value > 5 * 60 * 1000) {
+    if (now - lastFetchTime.value > minutes(5)) {
       return undefined;
     }
     return nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key];
@@ -163,10 +251,49 @@ if (error.value)
   captureException(error.value);
 
 function fetchGuildsIfNeeded() {
-  refreshGuilds().then(() => {
+  refresh().then(() => {
     lastFetchTime.value = Date.now();
   });
 }
+
+function toggleView() {
+  viewMode.value = viewMode.value === "grid" ? "list" : "grid";
+}
+
+function toggleSortOrder() {
+  sortAscending.value = !sortAscending.value;
+}
+
+// Computed filtered guilds
+const filteredGuilds = computed(() => {
+  if (isNullOrUndefined(guilds.value))
+    return [];
+
+  let filtered = [...guilds.value];
+
+  // Apply manageable filter
+  if (showManageableOnly.value) {
+    filtered = filtered.filter(guild => guild.manageable);
+  }
+
+  // Apply search filter
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim();
+    filtered = filtered.filter(guild => guild.name.toLowerCase().includes(query) || guild.id.includes(query));
+  }
+
+  // Sort: manageable servers first, then alphabetically
+  return filtered.sort((guildA, guildB) => {
+    if (guildA.manageable !== guildB.manageable) {
+      return guildA.manageable ? -1 : 1;
+    }
+    if (guildA.wolfstarIsIn !== guildB.wolfstarIsIn) {
+      return guildA.wolfstarIsIn ? -1 : 1;
+    }
+    const comparison = guildA.name.localeCompare(guildB.name, "en", { sensitivity: "base" });
+    return sortAscending.value ? comparison : -comparison;
+  });
+});
 
 onMounted(() => {
   if (ready.value) {

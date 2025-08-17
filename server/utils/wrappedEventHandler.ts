@@ -7,6 +7,7 @@ import { isNullOrUndefined, isObject } from "@sapphire/utilities";
 import { cast } from "@sapphire/utilities/cast";
 import { asyncRateLimit } from "@tanstack/pacer";
 import { isDevelopment } from "std-env";
+import { omit } from "~~/server/utils";
 
 const debugLogger = isDevelopment
   ? useLogger("@wolfstar/debug")
@@ -127,6 +128,7 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
     auth: false,
     rateLimit: { enabled: true, window: 10000, limit: 5 },
     maxAge: 60 * 60,
+    swr: false,
   },
 ): EventHandler<T, D> =>
   defineCachedEventHandler<T>(async (event) => {
@@ -204,5 +206,6 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
       return error as H3Error;
     }
   }, {
+    ...omit(["rateLimit", "auth"], options),
     maxAge: options.maxAge,
   });

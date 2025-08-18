@@ -1,11 +1,29 @@
+import type { VariantProps } from "tailwind-variants";
 import type { ButtonHTMLAttributes, HTMLAttributes } from "vue";
 import type { RouteLocationRaw, RouterLinkProps } from "vue-router";
 import { reactivePick } from "@vueuse/core";
-
 import { tv } from "tailwind-variants";
 
 export { default as Link } from "./Link.vue";
 export { default as LinkBase } from "./LinkBase.vue";
+
+export const link = tv({
+  base: "link",
+  variants: {
+    color: {
+      ...Object.fromEntries(colors.map(color => [color, `link-${color}`])),
+    },
+    active: {
+      true: "link-primary",
+      false: "link hover:link-hover",
+    },
+    disabled: {
+      true: "cursor-not-allowed opacity-75",
+    },
+  },
+});
+
+export type LinkVariants = VariantProps<typeof link>;
 
 export interface LinkBaseProps {
   as?: string;
@@ -90,6 +108,9 @@ export interface LinkProps extends NuxtLinkProps {
   exactHash?: boolean;
   /** The class to apply when the link is inactive. */
   inactiveClass?: string;
+  /** The color of the link. */
+  color?: LinkVariants["color"];
+
   custom?: boolean;
   /** When `true`, only styles from `class`, `activeClass`, and `inactiveClass` will be applied. */
   raw?: boolean;
@@ -109,6 +130,7 @@ export function pickLinkProps(link: LinkProps & { ariaLabel?: string; title?: st
     "ariaLabel",
     "as",
     "disabled",
+    "color",
     "exact",
     "exactActiveClass",
     "exactHash",
@@ -128,16 +150,3 @@ export function pickLinkProps(link: LinkProps & { ariaLabel?: string; title?: st
     "title",
   );
 }
-
-export const link = tv({
-  base: "link",
-  variants: {
-    active: {
-      true: "link-primary",
-      false: "link hover:link-hover",
-    },
-    disabled: {
-      true: "cursor-not-allowed opacity-75",
-    },
-  },
-});

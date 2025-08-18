@@ -57,13 +57,15 @@ defineSlots<LinkSlots>();
 
 const route = useRoute();
 const nuxtLinkProps = useForwardProps(
-  reactiveOmit(props, "as", "type", "disabled", "active", "exact", "exactQuery", "exactHash", "activeClass", "inactiveClass", "raw", "class"),
+  reactiveOmit(props, "as", "type", "color", "disabled", "active", "exact", "exactQuery", "exactHash", "activeClass", "inactiveClass", "raw", "class"),
 );
 
 const ui = computed(() =>
   tv({
     extend: link,
+
     variants: {
+      color: props.color,
       active: {
         true: props.activeClass,
         false: props.inactiveClass,

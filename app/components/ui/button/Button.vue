@@ -215,10 +215,6 @@ const theme = tv({
       },
     },
   ],
-
-  defaultVariants: {
-    color: "primary",
-  },
 });
 
 type ButtonVariants = VariantProps<typeof theme>;
@@ -228,7 +224,7 @@ export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, "ra
   /**
    * The color of the button.
    *
-   * @default 'primary'
+   * @default 'undefined'
    */
 
   color?: ButtonVariants["color"] | string;
@@ -236,7 +232,7 @@ export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, "ra
   /**
    * The active color of the button.
    *
-   * @default 'primary'
+   * @default 'undefined'
    */
 
   activeColor?: ButtonVariants["color"] | string;

@@ -15,9 +15,7 @@
           active,
           ...(active && activeVariant ? { variant: activeVariant } : {}),
           ...(active && activeColor ? { color: getColorForVariants(activeColor) } : {}),
-        })
-      "
-      :style="getCustomColorStyles(active)"
+        })"
       @click="onClickWrapper"
     >
       <slot name="leading">
@@ -31,7 +29,7 @@
       </slot>
 
       <slot>
-        <span v-if="label" :class="ui.label({ class: props.ui?.label, active })">
+        <span v-if="label !== undefined && label !== null" :class="ui.label({ class: props.ui?.label, active })">
           {{ label }}
         </span>
       </slot>
@@ -46,6 +44,235 @@
     </LinkBase>
   </Link>
 </template>
+
+<script lang="ts">
+import type { VariantProps } from "tailwind-variants";
+import type { HTMLAttributes, Ref } from "vue";
+import type { LinkProps } from "../link";
+import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
+import { tv } from "tailwind-variants";
+import { buttonGroupVariant } from "../button-group";
+
+const theme = tv({
+  slots: {
+    base: [
+      "btn", // daisyUI button base class
+      //	'inline-flex items-center',
+      //	'disabled:cursor-not-allowed aria-disabled:cursor-not-allowed',
+      //	'disabled:opacity-75 aria-disabled:opacity-75'
+    ],
+    label: "truncate",
+    leadingIcon: "shrink-0",
+    leadingAvatar: "shrink-0",
+    leadingAvatarSize: "",
+    trailingIcon: "shrink-0",
+  },
+  variants: {
+    ...buttonGroupVariant,
+    color: {
+      ...Object.fromEntries(colors.map(color => [color, `btn-${color}`])),
+    },
+    variant: {
+      outline: "btn-outline",
+      soft: "btn-ghost",
+      dash: "btn-dash",
+      ghost: "btn-ghost",
+      link: "btn-link",
+    },
+    size: {
+      xs: {
+        base: "gap-1 btn-xs",
+        leadingIcon: "size-4",
+        leadingAvatarSize: "3xs",
+        trailingIcon: "size-4",
+      },
+      sm: {
+        base: "gap-1.5 btn-sm",
+        leadingIcon: "size-4",
+        leadingAvatarSize: "3xs",
+        trailingIcon: "size-4",
+      },
+      md: {
+        base: "gap-1.5 btn-md",
+        leadingIcon: "size-5",
+        leadingAvatarSize: "2xs",
+        trailingIcon: "size-5",
+      },
+      lg: {
+        base: "gap-2 btn-lg",
+        leadingIcon: "size-5",
+        leadingAvatarSize: "2xs",
+        trailingIcon: "size-5",
+      },
+      xl: {
+        base: "gap-2 btn-xl",
+        leadingIcon: "size-6",
+        leadingAvatarSize: "xs",
+        trailingIcon: "size-6",
+      },
+    },
+    block: {
+      true: "btn-block",
+    },
+    square: {
+      true: "btn-square",
+    },
+    circle: {
+      true: "btn-circle",
+    },
+    leading: {
+      true: "",
+    },
+    trailing: {
+      true: "",
+    },
+    loading: {
+      true: "loading loading-spinner",
+    },
+    active: {
+      true: {
+        base: "btn-active",
+      },
+      false: {
+        base: "",
+      },
+    },
+    responsive: {
+      true: {
+        label: "hidden sm:inline",
+      },
+    },
+  },
+  compoundVariants: [
+    // Neutral variants
+    {
+      color: "neutral",
+      class: `disabled:btn-disabled aria-disabled:btn-disabled`,
+    },
+    {
+      color: "neutral",
+      variant: "outline",
+      class: `disabled:btn-disabled aria-disabled:btn-disabled`,
+    },
+    {
+      color: "neutral",
+      variant: "soft",
+      class: `disabled:btn-disabled aria-disabled:btn-disabled opacity-80`,
+    },
+    {
+      color: "neutral",
+      variant: "dash",
+      class: `disabled:btn-disabled aria-disabled:btn-disabled`,
+    },
+    {
+      color: "neutral",
+      variant: "ghost",
+      class: `disabled:btn-disabled aria-disabled:btn-disabled`,
+    },
+    {
+      color: "neutral",
+      variant: "link",
+      class: `disabled:btn-disabled aria-disabled:btn-disabled`,
+    },
+    {
+      size: "xs",
+      square: true,
+      class: "btn-xs",
+    },
+    {
+      size: "sm",
+      square: true,
+      class: "btn-sm",
+    },
+    {
+      size: "md",
+      square: true,
+      class: "btn-md",
+    },
+    {
+      size: "lg",
+      square: true,
+      class: "btn-lg",
+    },
+    {
+      size: "xl",
+      square: true,
+      class: "btn-xl",
+    },
+    {
+      loading: true,
+      leading: true,
+      class: {
+        leadingIcon: "animate-spin",
+      },
+    },
+    {
+      loading: true,
+      leading: false,
+      trailing: true,
+      class: {
+        trailingIcon: "animate-spin",
+      },
+    },
+  ],
+
+  defaultVariants: {
+    color: "primary",
+  },
+});
+
+type ButtonVariants = VariantProps<typeof theme>;
+
+export interface ButtonProps extends UseComponentIconsProps, Omit<LinkProps, "raw" | "custom"> {
+  label?: string;
+  /**
+   * The color of the button.
+   *
+   * @default 'primary'
+   */
+
+  color?: ButtonVariants["color"] | string;
+
+  /**
+   * The active color of the button.
+   *
+   * @default 'primary'
+   */
+
+  activeColor?: ButtonVariants["color"] | string;
+
+  variant?: ButtonVariants["variant"];
+
+  activeVariant?: ButtonVariants["variant"];
+
+  size?: ButtonVariants["size"];
+
+  square?: boolean;
+
+  block?: boolean;
+
+  circle?: boolean;
+  /**
+   * Is responsive of display.
+   *
+   * @default 'true'
+   */
+
+  responsive?: boolean;
+  /** Set loading state automatically based on the `@click` promise state */
+  loadingAuto?: boolean;
+
+  onClick?: ((event: MouseEvent) => void | Promise<void>) | Array<((event: MouseEvent) => void | Promise<void>)>;
+  class?: HTMLAttributes["class"];
+  ui?: Partial<typeof theme.slots>;
+}
+
+export interface ButtonSlots {
+  leading: (props?: object) => unknown;
+  default: (props?: object) => unknown;
+  trailing: (props?: object) => unknown;
+}
+</script>
 
 <script setup lang="ts">
 /**
@@ -62,20 +289,17 @@
  * <Button color="blue-500" activeColor="#ff0000">Custom Active Color</Button>
  * <Button color="primary" activeColor="var(--hover-color)">Active CSS Color</Button>
  */
-import type { Ref } from "vue";
-import type { ButtonProps, ButtonSlots } from ".";
 import type { AvatarProps } from "@/components/ui/avatar";
+import { defu } from "defu";
 import { useForwardProps } from "reka-ui";
-import { tv } from "tailwind-variants";
 import { computed, inject, ref } from "vue";
 import { Avatar } from "@/components/ui/avatar";
-import { buttonVariants } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
 import { Link, LinkBase, pickLinkProps } from "@/components/ui/link";
 import { useButtonGroup } from "@/composables/useButtonGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { formLoadingInjectionKey } from "@/composables/useFormField";
-import { omit } from "@/utils/index";
+import { mergeClasses, omit } from "@/utils/index";
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   active: undefined,
@@ -84,9 +308,9 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 });
 const slots = defineSlots<ButtonSlots>();
 
-const linkProps = useForwardProps(pickLinkProps(props));
-
 const { orientation, size: buttonSize } = useButtonGroup<ButtonProps>(props);
+
+const linkProps = useForwardProps(pickLinkProps(props));
 
 const loadingAutoState = ref(false);
 const formLoading = inject<Ref<boolean> | undefined>(formLoadingInjectionKey, undefined);
@@ -106,8 +330,9 @@ const isLoading = computed(() => {
   return props.loading || (props.loadingAuto && (loadingAutoState.value || (formLoading?.value && props.type === "submit")));
 });
 
-const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(computed(() => ({ ...props, loading: isLoading.value })));
-
+const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(
+  computed(() => ({ ...props, loading: isLoading.value })),
+);
 /**
  * Determines if the color is custom (not one of the predefined DaisyUI colors)
  */
@@ -115,8 +340,8 @@ function isCustomColor(color: string | number | undefined): boolean {
   if (!color)
     return false;
   const colorStr = String(color);
-  const daisyUIColors = ["primary", "secondary", "success", "error", "info", "warning", "neutral", "accent"];
-  return !daisyUIColors.includes(colorStr);
+  const daisyUIColors = colors;
+  return !daisyUIColors.includes(colorStr as UIColors);
 }
 
 /**
@@ -144,47 +369,6 @@ function getTailwindColorClass(color: string | number, variant?: string): string
 
   // Solid variant (default)
   return `bg-${colorStr} border-${colorStr} text-white hover:bg-${colorStr}/90`;
-}
-
-/**
- * Generates CSS styles for custom colors (hex, rgb, hsl, etc.)
- * Supports both normal and active states
- */
-function getCustomColorStyles(active: boolean): Record<string, string> {
-  // Determine which color to use based on active state
-  const currentColor = active && props.activeColor ? props.activeColor : props.color;
-
-  if (!currentColor || !isCustomColor(currentColor) || !isCSSColor(currentColor)) {
-    return {};
-  }
-
-  // Determine which variant to use based on active state
-  const variant = active && props.activeVariant ? props.activeVariant : props.variant;
-  const styles: Record<string, string> = {};
-  const colorStr = String(currentColor);
-
-  if (variant === "outline") {
-    styles.borderColor = colorStr;
-    styles.color = colorStr;
-    styles["--tw-bg-opacity"] = "0";
-  }
-  else if (variant === "soft" || variant === "ghost") {
-    styles.color = colorStr;
-    styles.backgroundColor = "transparent";
-  }
-  else if (variant === "link") {
-    styles.color = colorStr;
-    styles.backgroundColor = "transparent";
-    styles.borderColor = "transparent";
-  }
-  else {
-    // Solid variant (default)
-    styles.backgroundColor = colorStr;
-    styles.borderColor = colorStr;
-    styles.color = "white";
-  }
-
-  return styles;
 }
 
 /**
@@ -234,17 +418,19 @@ function getInactiveCustomClasses(): string {
 
 const ui = computed(() =>
   tv({
-    extend: buttonVariants,
-    variants: {
-      active: {
-        true: {
-          base: [props.activeClass, getActiveCustomClasses()].filter(Boolean).join(" "),
-        },
-        false: {
-          base: [props.inactiveClass, getInactiveCustomClasses()].filter(Boolean).join(" "),
+    extend: theme,
+    ...defu({
+      variants: {
+        active: {
+          true: {
+            base: mergeClasses(props.activeClass, getActiveCustomClasses()),
+          },
+          false: {
+            base: mergeClasses(props.inactiveClass, getInactiveCustomClasses()),
+          },
         },
       },
-    },
+    }),
   })({
     color: getColorForVariants(props.color),
     variant: props.variant,

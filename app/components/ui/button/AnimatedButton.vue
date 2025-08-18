@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<AnimatedButtonProps>(), {
   text: "Button",
 });
 
-// Estrai le proprietà specifiche dell'animazione e passa il resto a Button
+// Extract the animation-specific properties and pass the rest to Button
 const { text } = props;
 
 const buttonProps = useForwardProps(computed(() => {

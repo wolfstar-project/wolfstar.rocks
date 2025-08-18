@@ -1,4 +1,5 @@
 import type { Selfmod } from "~~/shared/types/ConfigurableData";
+import type { GetItemKeys, NestedItem } from "@/types/utils";
 import { isEqual } from "ohash/utils";
 
 export function updateSliderValueObj(prop: Selfmod.Union, value: number | number[], multiplier = 1) {
@@ -12,6 +13,158 @@ export function updateSliderValueArr(prop: Selfmod.Union, value: number | number
     [prop]: Array.isArray(value) ? value.map(v => v * multiplier) : value * multiplier,
   };
 }
+/**
+ * Sorts in ascending order.
+ * @param a The first value.
+ * @param b The second value.
+ * @returns The result.
+ */
+/* eslint-disable no-cond-assign */
+export function asc(a: number | string | bigint, b: number | string | bigint): -1 | 0 | 1 {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+/**
+ * Sorts in ascending order.
+ * @param a The first value.
+ * @param b The second value.
+ * @returns The result.
+ */
+
+export function desc(a: number | string | bigint, b: number | string | bigint): -1 | 0 | 1 {
+  return a > b ? -1 : a < b ? 1 : 0;
+}
+
+export interface BidirectionalReplaceOptions<T> {
+  onMatch: (match: RegExpExecArray) => T;
+  outMatch: (content: string, previous: number, next: number) => T;
+}
+
+/**
+ * Bidirectionally replaces content.
+ * @param regex The regex.
+ * @param content The content.
+ * @param options The options.
+ * @returns The content.
+ */
+
+export function bidirectionalReplace<T>(regex: RegExp, content: string, options: BidirectionalReplaceOptions<T>) {
+  const results: T[] = [];
+  let previous = 0;
+  let match: RegExpExecArray | null = null;
+
+  while ((match = regex.exec(content)) !== null) {
+    if (previous !== match.index) {
+      results.push(options.outMatch(content.slice(previous, match.index), previous, match.index));
+    }
+
+    previous = regex.lastIndex;
+    results.push(options.onMatch(match));
+  }
+
+  if (previous < content.length)
+    results.push(options.outMatch(content.slice(previous), previous, content.length));
+  return results;
+}
+
+export type BooleanFn<ArgumentTypes extends readonly unknown[], ReturnType extends boolean = boolean> = (...args: ArgumentTypes) => ReturnType;
+
+/**
+ * Ands functions.
+ * @param fns The functions.
+ * @returns The function.
+ */
+
+export function andMix<T extends readonly unknown[], R extends boolean>(...fns: readonly BooleanFn<T, R>[]): BooleanFn<T, R> {
+  if (fns.length === 0)
+    throw new Error("You must input at least one function.");
+  return (...args) => {
+    let ret!: R;
+    for (const fn of fns) {
+      if (!(ret = fn(...args)))
+        break;
+    }
+
+    return ret;
+  };
+}
+
+/**
+ * Ors functions.
+ * @param fns The functions.
+ * @returns The function.
+ */
+
+export function orMix<ArgumentTypes extends readonly unknown[], ReturnType extends boolean>(
+  ...fns: readonly BooleanFn<ArgumentTypes, ReturnType>[]
+): BooleanFn<ArgumentTypes, ReturnType> {
+  if (fns.length === 0)
+    throw new Error("You must input at least one function.");
+  return (...args) => {
+    let ret!: ReturnType;
+    for (const fn of fns) {
+      if ((ret = fn(...args)))
+        break;
+    }
+
+    return ret;
+  };
+}
+
+/**
+ * Removes non-alphanumeric characters from a string.
+ * @param str The string.
+ * @returns The string.
+ */
+export default function removeNonAlphaNumeric(str: string) {
+  return str.replace(/[^0-9a-z]/gi, "");
+}
+
+/**
+ * Uses object storage.
+ * @param key The key.
+ * @param initial The initial value.
+ * @param listenToStorage Whether to listen to storage.
+ * @returns The object.
+ */
+
+export async function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Promise<Ref<T>> {
+  const raw = await useStorage().getItem(key);
+  const data = ref(raw ? JSON.parse(raw as string) : initial);
+  for (const key2 in initial) {
+    if (data.value[key2] === void 0)
+      data.value[key2] = initial[key2];
+  }
+  let updating = false;
+  let wrote = "";
+  watch(
+    data,
+    (value) => {
+      if (updating)
+        return;
+      wrote = JSON.stringify(value);
+      useStorage().setItem(key, wrote);
+    },
+    { deep: true, flush: "post" },
+  );
+  if (listenToStorage) {
+    useEventListener(window, "storage", (e) => {
+      if (e.key === key && e.newValue && e.newValue !== wrote) {
+        updating = true;
+        data.value = JSON.parse(e.newValue);
+        updating = false;
+      }
+    });
+  }
+  return data;
+}
+
+/**
+ * Picks keys from an object.
+ * @param data The object.
+ * @param keys The keys.
+ * @returns The object.
+ */
 
 export function pick<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Pick<Data, Keys> {
   const result = {} as Pick<Data, Keys>;
@@ -23,6 +176,13 @@ export function pick<Data extends object, Keys extends keyof Data>(data: Data, k
   return result;
 }
 
+/**
+ * Omits keys from an object.
+ * @param data The object.
+ * @param keys The keys.
+ * @returns The object.
+ */
+
 export function omit<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Omit<Data, Keys> {
   const result = { ...data };
 
@@ -32,6 +192,14 @@ export function omit<Data extends object, Keys extends keyof Data>(data: Data, k
 
   return result as Omit<Data, Keys>;
 }
+
+/**
+ * Gets a value from an object.
+ * @param object The object.
+ * @param path The path.
+ * @param defaultValue The default value.
+ * @returns The value.
+ */
 
 export function get(object: Record<string, any> | undefined, path: (string | number)[] | string, defaultValue?: any): any {
   if (typeof path === "string") {
@@ -54,6 +222,13 @@ export function get(object: Record<string, any> | undefined, path: (string | num
   return result !== undefined ? result : defaultValue;
 }
 
+/**
+ * Sets a value in an object.
+ * @param object The object.
+ * @param path The path.
+ * @param value The value.
+ */
+
 export function set(object: Record<string, any>, path: (string | number)[] | string, value: any): void {
   if (typeof path === "string") {
     path = path.split(".").map((key) => {
@@ -71,10 +246,23 @@ export function set(object: Record<string, any>, path: (string | number)[] | str
   }, object);
 }
 
-export function looseToNumber(val: any): any {
+/**
+ * Converts a value to a number.
+ * @param val The value.
+ * @returns The number.
+ */
+export function looseToNumber(val: any): number {
   const n = Number.parseFloat(val);
   return Number.isNaN(n) ? val : n;
 }
+
+/**
+ * Compares two values.
+ * @param value The value.
+ * @param currentValue The current value.
+ * @param comparator The comparator.
+ * @returns Whether the values are equal.
+ */
 
 export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((a: T, b: T) => boolean)) {
   if (value === undefined || currentValue === undefined) {
@@ -96,13 +284,74 @@ export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((
   return isEqual(value, currentValue);
 }
 
-/* eslint-disable no-cond-assign */
-export function asc(a: number | string | bigint, b: number | string | bigint): -1 | 0 | 1 {
-  return a < b ? -1 : a > b ? 1 : 0;
+/**
+ * Gets the display value.
+ * @param items The items.
+ * @param value The value.
+ * @param options The options.
+ * @returns The display value.
+ */
+
+export function getDisplayValue<T, V>(
+  items: T[],
+  value: V | undefined | null,
+  options: {
+    valueKey?: GetItemKeys<T>;
+    labelKey?: keyof NestedItem<T>;
+  } = {},
+): string | undefined {
+  const { valueKey, labelKey } = options;
+
+  if (value === null || value === undefined) {
+    return undefined;
+  }
+
+  const foundItem = items.find((item) => {
+    const itemValue = (typeof item === "object" && item !== null && valueKey)
+      ? get(item, valueKey as string)
+      : item;
+    return compare(itemValue, value);
+  });
+
+  const source = foundItem ?? value;
+
+  if (source === null || source === undefined) {
+    return undefined;
+  }
+
+  if (typeof source === "object") {
+    return labelKey ? get(source as Record<string, any>, labelKey as string) : undefined;
+  }
+
+  return String(source);
 }
 
-export function desc(a: number | string | bigint, b: number | string | bigint): -1 | 0 | 1 {
-  return a > b ? -1 : a < b ? 1 : 0;
+/**
+ * Checks if the item is an array of arrays.
+ * @param item The item to check.
+ * @returns Whether the item is an array of arrays.
+ */
+
+export function isArrayOfArray<A>(item: A[] | A[][]): item is A[][] {
+  return Array.isArray(item[0]);
+}
+
+/**
+ * Merges classes.
+ * @param defaultClass The default class.
+ * @param propClass The property class.
+ * @returns The merged classes.
+ */
+
+export function mergeClasses(defaultClass?: string | string[], propClass?: string) {
+  if (!defaultClass && !propClass) {
+    return "";
+  }
+
+  return [
+    ...(Array.isArray(defaultClass) ? defaultClass : [defaultClass]),
+    propClass,
+  ].filter(Boolean);
 }
 
 /**
@@ -123,6 +372,12 @@ export function max<N extends number | bigint>(...values: readonly N[]): N {
 
   return lowest;
 }
+/**
+ * Gets the difference between two bit fields.
+ * @param previous The previous bit field.
+ * @param next The next bit field.
+ * @returns The difference between the two bit fields.
+ */
 
 export function differenceBitField<T extends number | bigint>(previous: T, next: T) {
   const diff = (previous ^ next) as T;
@@ -130,6 +385,12 @@ export function differenceBitField<T extends number | bigint>(previous: T, next:
   const removed = (previous & diff) as T;
   return { added, removed };
 }
+/**
+ * Gets the difference between two arrays.
+ * @param previous The previous array.
+ * @param next The next array.
+ * @returns The difference between the two arrays.
+ */
 
 export function differenceArray<T>(previous: readonly T[], next: readonly T[]) {
   const added = next.filter(value => !previous.includes(value));
@@ -137,7 +398,12 @@ export function differenceArray<T>(previous: readonly T[], next: readonly T[]) {
 
   return { added, removed };
 }
-
+/**
+ * Gets the difference between two maps.
+ * @param previous The previous map.
+ * @param next The next map.
+ * @returns The difference between the two maps.
+ */
 export function differenceMap<K, V>(previous: ReadonlyMap<K, V>, next: ReadonlyMap<K, V>) {
   const added = new Map<K, V>();
   const removed = new Map<K, V>();
@@ -161,98 +427,4 @@ export function differenceMap<K, V>(previous: ReadonlyMap<K, V>, next: ReadonlyM
   }
 
   return { added, updated, removed };
-}
-
-export interface BidirectionalReplaceOptions<T> {
-  onMatch: (match: RegExpExecArray) => T;
-  outMatch: (content: string, previous: number, next: number) => T;
-}
-
-export function bidirectionalReplace<T>(regex: RegExp, content: string, options: BidirectionalReplaceOptions<T>) {
-  const results: T[] = [];
-  let previous = 0;
-  let match: RegExpExecArray | null = null;
-
-  while ((match = regex.exec(content)) !== null) {
-    if (previous !== match.index) {
-      results.push(options.outMatch(content.slice(previous, match.index), previous, match.index));
-    }
-
-    previous = regex.lastIndex;
-    results.push(options.onMatch(match));
-  }
-
-  if (previous < content.length)
-    results.push(options.outMatch(content.slice(previous), previous, content.length));
-  return results;
-}
-
-export type BooleanFn<ArgumentTypes extends readonly unknown[], ReturnType extends boolean = boolean> = (...args: ArgumentTypes) => ReturnType;
-
-export function andMix<T extends readonly unknown[], R extends boolean>(...fns: readonly BooleanFn<T, R>[]): BooleanFn<T, R> {
-  if (fns.length === 0)
-    throw new Error("You must input at least one function.");
-  return (...args) => {
-    let ret!: R;
-    for (const fn of fns) {
-      if (!(ret = fn(...args)))
-        break;
-    }
-
-    return ret;
-  };
-}
-
-export function orMix<ArgumentTypes extends readonly unknown[], ReturnType extends boolean>(
-  ...fns: readonly BooleanFn<ArgumentTypes, ReturnType>[]
-): BooleanFn<ArgumentTypes, ReturnType> {
-  if (fns.length === 0)
-    throw new Error("You must input at least one function.");
-  return (...args) => {
-    let ret!: ReturnType;
-    for (const fn of fns) {
-      if ((ret = fn(...args)))
-        break;
-    }
-
-    return ret;
-  };
-}
-
-export function isArrayOfArray<A>(item: A[] | A[][]): item is A[][] {
-  return Array.isArray(item[0]);
-}
-export default function removeNonAlphaNumeric(str: string) {
-  return str.replace(/[^0-9a-z]/gi, "");
-}
-
-export function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Ref<T> {
-  const raw = localStorage.getItem(key);
-  const data = ref(raw ? JSON.parse(raw) : initial);
-  for (const key2 in initial) {
-    if (data.value[key2] === void 0)
-      data.value[key2] = initial[key2];
-  }
-  let updating = false;
-  let wrote = "";
-  watch(
-    data,
-    (value) => {
-      if (updating)
-        return;
-      wrote = JSON.stringify(value);
-      localStorage.setItem(key, wrote);
-    },
-    { deep: true, flush: "post" },
-  );
-  if (listenToStorage) {
-    useEventListener(window, "storage", (e) => {
-      if (e.key === key && e.newValue && e.newValue !== wrote) {
-        updating = true;
-        data.value = JSON.parse(e.newValue);
-        updating = false;
-      }
-    });
-  }
-  return data;
 }

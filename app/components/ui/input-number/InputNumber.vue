@@ -85,7 +85,7 @@ const inputNumber = tv({
       xl: "input-xl",
     },
     variant: {
-      bordered: "input-bordered",
+      border: "input-border",
       ghost: "input-ghost",
     },
     disabled: {
@@ -186,7 +186,7 @@ const inputNumber = tv({
   defaultVariants: {
     size: "md",
     color: "primary",
-    variant: "bordered",
+    variant: "border",
   },
 });
 

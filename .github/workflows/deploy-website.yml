@@ -30,4 +30,5 @@ jobs:
       - name: Build & Deploy to NuxtHub
         uses: nuxt-hub/action@v2
         with:
-          project-key: wolfstar-rocks-bydj
+          project-key: wolfstar-rocks-24js
+          build-command: pnpm build

@@ -37,7 +37,6 @@ const { start, finish } = useLoadingIndicator({
 });
 
 if (import.meta.client && guildId.value && !error.value) {
-  start();
   navigateToGuild();
 }
 
@@ -51,6 +50,7 @@ async function navigateToGuild() {
       statusMessage: "No guild ID provided",
     });
   }
+  start();
 
   await promiseTimeout(1500);
 

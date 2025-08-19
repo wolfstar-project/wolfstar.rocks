@@ -61,6 +61,7 @@
     "@sentry/nuxt": "catalog:dev",
     "@tailwindcss/vite": "catalog:build",
     "@tanstack/pacer": "catalog:frontend",
+    "@vee-validate/yup": "catalog:utils",
     "@vee-validate/zod": "catalog:utils",
     "@vite-pwa/nuxt": "catalog:build",
     "@vueuse/core": "catalog:utils",
@@ -95,9 +96,8 @@
     "utility-types": "catalog:prod",
     "vue-markdown-render": "catalog:markdown",
     "wrangler": "catalog:dev",
-    "zod": "catalog:utils",
     "yup": "catalog:utils",
-    "@vee-validate/yup": "catalog:utils"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -142,7 +142,7 @@
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev"
   },
-  "packageManager": "pnpm@10.13.1",
+  "packageManager": "pnpm@10.14.0",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

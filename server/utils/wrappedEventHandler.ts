@@ -74,7 +74,7 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
             // It serves as a placeholder for the rate limiter to decide whether to proceed or reject the request.
           },
           {
-            async onSettled(rateLimiter) {
+            async onSettled(_args, rateLimiter) {
               const state = rateLimiter.store.state;
 
               if (id) {
@@ -90,7 +90,7 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
                 setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
               }
             },
-            onSuccess(_result, rateLimiter) {
+            onSuccess(_result, _args, rateLimiter) {
               setResponseHeader(event, "Date", new Date().toUTCString());
               // Called after each successful execution
               debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
@@ -147,7 +147,7 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
         debugLogger.info(`Rate limit identifier: ${id}`);
         const KEY = `wolfstar:rate-limiter-state:${id}`;
 
-        const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number }>(options.rateLimit ?? { window: 10000, limit: 5 });
+        const { enabled, ...config } = cast<{ enabled: true; window: number; limit: number; type: "fixed" | "sliding" }>(options.rateLimit ?? { window: 10000, limit: 5, type: "fixed" });
         const savedState = await rateLimitStorage.getItem(KEY);
         const initialState = !isNullOrUndefined(savedState) && !isObject(savedState) ? JSON.parse(savedState) : {};
 
@@ -158,7 +158,7 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
             // It serves as a placeholder for the rate limiter to decide whether to proceed or reject the request.
           },
           {
-            async onSettled(rateLimiter) {
+            async onSettled(_args, rateLimiter) {
               const state = rateLimiter.store.state;
 
               if (id) {
@@ -168,24 +168,23 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
               setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
               setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
               setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
-            },
-            onSuccess(_result, rateLimiter) {
-              setResponseHeader(event, "Date", new Date().toUTCString());
-              // Called after each successful execution
-              debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
-            },
-            onReject: (_args, rateLimiter) => {
-              const state = rateLimiter.store.state;
+
               if (state.isExceeded) {
                 logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
                 setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
               }
+            },
+            onSuccess(_result, _args, rateLimiter) {
+              setResponseHeader(event, "Date", new Date().toUTCString());
+              // Called after each successful execution
+              debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
             },
             onError(error) {
               if (options.onError) {
                 options.onError(useLogger("@wolfstar/api"), error);
               }
             },
+            windowType: config.type,
             window: config.window,
             limit: config.limit,
             initialState,

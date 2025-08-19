@@ -18,7 +18,6 @@
     </div>
 
     <div class="w-full">
-
       <!-- Loading Skeleton Grid -->
       <div ref="scrollComponent">
         <!-- Guild Cards Grid -->
@@ -50,7 +49,6 @@
         />
       </div>
       <div v-else-if="!loading && filterGuilds.length === 0" class="flex flex-col items-center justify-center space-y-6 py-16">
-
         <div class="text-center py-16">
           <h3 class="text-xl font-bold text-base-content/80 mb-2">
             {{ searchQuery ? 'No matching servers' : 'No servers found' }}

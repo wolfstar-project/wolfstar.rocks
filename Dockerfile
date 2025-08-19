@@ -73,7 +73,7 @@ COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
 
 # Copy environment files
-COPY --chown=nonroot:nonroot .env.example .env.example
+COPY --chown=nonroot:nonroot .env.example .env
 
 RUN pnpm install --frozen-lockfile --prod
 
@@ -84,4 +84,4 @@ RUN chown -R nonroot:nonroot /usr/src/app
 
 USER nonroot
 
-CMD ["dotenvx", "run", "--", "node", ".output/server/index.mjs"]
+CMD ["node", ".output/server/index.mjs"]

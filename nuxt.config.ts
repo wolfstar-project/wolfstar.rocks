@@ -178,7 +178,6 @@ export default defineNuxtConfig({
       },
     },
     experimental: {
-      wasm: true,
       openAPI: true,
     },
   },

@@ -2,7 +2,7 @@ generator client {
   provider     = "prisma-client"
   output       = "../../server/database/generated"
   moduleFormat = "esm"
-  previewFeatures = ["driverAdapters", "multiSchema", "queryCompiler"]
+  previewFeatures = ["driverAdapters", "queryCompiler"]
 }
 
 generator json {

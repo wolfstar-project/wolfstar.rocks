@@ -206,5 +206,4 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
     }
   }, {
     ...omit(["rateLimit", "auth"], options),
-    maxAge: options.maxAge,
   });

@@ -1,44 +1,17 @@
 <template>
   <!-- Guild Icon - Card or Bare variant -->
   <div
+    ref="icon"
     :class="[
       variant === 'card'
         ? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:bg-base-200/50 hover:shadow-lg hover:scale-[1.02]'
         : 'relative',
       {
-        'ring-2 ring-primary/20': variant === 'card' && guild?.wolfstarIsIn,
-        'opacity-75': variant === 'card' && guild && !guild.manageable,
+        'ring-2 ring-primary/20': variant === 'card' && guild.wolfstarIsIn,
+        'opacity-75': variant === 'card' && guild.manageable,
       }
     ]"
   >
-    <!-- Status Indicator -->
-    <div
-      v-if="showStatus && guild && variant === 'card'"
-      class="absolute top-2 right-2"
-    >
-      <div
-        v-if="guild.wolfstarIsIn"
-        class="flex h-5 w-5 items-center justify-center rounded-full bg-success/20 text-success"
-        title="WolfStar is active"
-      >
-        <ShadIcon name="ph:check-circle-fill" class="h-3 w-3" />
-      </div>
-      <div
-        v-else-if="guild.manageable"
-        class="flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-primary"
-        title="Can invite WolfStar"
-      >
-        <ShadIcon name="ph:plus-circle-fill" class="h-3 w-3" />
-      </div>
-      <div
-        v-else
-        class="flex h-5 w-5 items-center justify-center rounded-full bg-error/20 text-error"
-        title="No permissions"
-      >
-        <ShadIcon name="ph:shield-warning-fill" class="h-3 w-3" />
-      </div>
-    </div>
-
     <!-- Guild Icon -->
     <div
       class="relative"
@@ -46,6 +19,33 @@
         variant === 'card' ? '' : 'group'
       ]"
     >
+      <!-- Status Indicator -->
+      <div
+        v-if="showStatus && guild"
+        class="absolute  -top-1 -right-1 z-10"
+      >
+        <div
+          v-if="guild.wolfstarIsIn"
+          class="flex h-7 w-7 items-center justify-center rounded-full bg-success/70 text-white shadow-sm transition-all duration-200 hover:bg-success/60"
+          title="WolfStar is active in this server"
+        >
+          <ShadIcon name="heroicons:check-badge" class="h-5 w-5" />
+        </div>
+        <div
+          v-else-if="guild.manageable"
+          class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/70 text-white shadow-sm transition-all duration-200 hover:bg-primary/60"
+          title="You can invite WolfStar to this server"
+        >
+          <ShadIcon name="heroicons:plus-circle" class="h-5 w-5" />
+        </div>
+        <div
+          v-else
+          class="flex h-7 w-7 items-center justify-center rounded-full bg-error/70 text-white shadow-sm"
+          title="Insufficient permissions to manage this server"
+        >
+          <ShadIcon name="heroicons:shield-exclamation" class="h-4 w-4" />
+        </div>
+      </div>
       <div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
         <div
           class="rounded-full transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
@@ -53,7 +53,8 @@
           @mouseenter="isHovering = true"
           @mouseleave="isHovering = false"
         >
-          <picture v-if="!isDefault">
+          <div v-if="!loaded" class="skeleton h-full w-full"></div>
+          <picture v-if="!isDefault && loaded">
             <source
               v-if="isAnimated && isHovering"
               media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
@@ -67,11 +68,12 @@
               :alt="guild?.name || 'Guild icon'"
               class="rounded-full"
               decoding="async"
+              loading="lazy"
               crossorigin="anonymous"
             />
           </picture>
           <div
-            v-else
+            v-else-if="isDefault && loaded"
             class="bg-gradient-to-br from-primary/20 to-secondary/20 text-base-content flex rounded-full"
             :class="iconSizeClasses"
           >
@@ -79,19 +81,10 @@
           </div>
         </div>
       </div>
-
-      <!-- Online indicator for bot status -->
-      <div
-        v-if="showStatus && guild?.wolfstarIsIn"
-        class="absolute -right-1 -bottom-1 flex h-4 w-4 items-center justify-center rounded-full border-2 border-base-100 bg-success shadow-md animate-pulse"
-        title="WolfStar is online"
-      >
-        <ShadIcon name="ph:lightning-fill" class="h-2 w-2 text-white" />
-      </div>
     </div>
 
     <!-- Guild Name (optional) - only in card variant -->
-    <div v-if="variant === 'card' && showName && guild?.name" class="w-full text-center">
+    <div v-if="variant === 'card' && showName && guild" class="w-full text-center">
       <h4 class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary">
         {{ guild.name }}
       </h4>
@@ -112,8 +105,9 @@
 </template>
 
 <script setup lang="ts">
-import type { ValuesType } from "utility-types";
 import type { TransformedLoginData } from "~~/shared/types/discord";
+import type { ValuesType } from "~/types/utils";
+import { useIntersectionObserver } from "@vueuse/core";
 
 const props = withDefaults(defineProps<GuildIconProps>(), {
   size: "md",
@@ -124,6 +118,14 @@ const props = withDefaults(defineProps<GuildIconProps>(), {
 });
 
 const isHovering = ref(false);
+const loaded = ref(false);
+const icon = useTemplateRef<HTMLElement | null>("icon");
+
+useIntersectionObserver(icon, (mutations) => {
+  if (mutations[0]) {
+    loaded.value = true;
+  }
+});
 
 interface GuildIconProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
@@ -133,15 +135,10 @@ interface GuildIconProps {
   showName?: boolean;
   showStats?: boolean;
 }
-
+const guild = toRef(props, "guild");
 // Make these computed to avoid SSR hydration issues
-const isDefault = computed(() => {
-  return !props.guild.icon;
-});
-
-const isAnimated = computed(() => {
-  return props.guild.icon ? props.guild.icon.startsWith("a_") : false;
-});
+const isDefault = ref(false);
+const isAnimated = ref(false);
 
 // Size-based classes for DaisyUI Avatar
 const iconSizeClasses = computed(() => {
@@ -182,6 +179,21 @@ function formatNumber(num: number): string {
   }
   return num.toString();
 }
+
+watch(
+  guild,
+  (guild) => {
+    if (guild.icon) {
+      isDefault.value = false;
+      isAnimated.value = guild.icon.startsWith("a_");
+    }
+    else {
+      isDefault.value = true;
+      isAnimated.value = false;
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped>

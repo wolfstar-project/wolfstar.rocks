@@ -125,12 +125,12 @@
                   :error="error"
                   :guilds="guilds"
                   :filter-guilds="filteredGuilds"
-                  :undo-search="undoSearch"
+                  :undo-search="() => searchQuery = 'null'"
                   :search-query="searchQuery"
                   :loading="status === 'pending'"
                   :container-height="600"
                   :item-height="280"
-                  :type="viewMode === 'grid' ? 'card' : 'list'"
+                  :type="viewMode === 'grid' ? 'grid' : 'card'"
                 />
               </div>
             </div>
@@ -190,23 +190,23 @@
 import type { TabsItem } from "@/components/ui/tabs";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { captureException } from "@sentry/vue";
-import { promiseTimeout } from "@vueuse/core";
+import { computedAsync, promiseTimeout } from "@vueuse/core";
 
 definePageMeta({ alias: ["/account"], auth: true });
 
 const { user, ready } = useAuth();
-const lastFetchTime = useState("profile-guilds-last-fetch", () => 0);
+const lastFetchTime = useState("wolfstar:profileGuildsLastFetch", () => 0);
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const isAnimated = ref(false);
 const isDefault = ref(false);
 const loading = ref(true);
 const searchQuery = ref("");
-const viewMode = ref("grid");
+const viewMode = ref<"grid" | "card">("card");
 // is true by default because we want to show only manageable servers
 const showManageableOnly = ref(true);
 const sortAscending = ref(true);
-const { history: _searchHistory, undo: undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
+const { history: _searchHistory, undo: _undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
   deep: false,
   capacity: 10, // Keep last 10 search terms
 });
@@ -228,12 +228,28 @@ const {
   },
 });
 
+function fetchGuildsIfNeeded() {
+  refresh().then(() => {
+    lastFetchTime.value = Date.now();
+  });
+}
+function toggleView() {
+  viewMode.value = viewMode.value === "grid" ? "card" : "grid";
+}
+
+function toggleSortOrder() {
+  sortAscending.value = !sortAscending.value;
+}
+function createUrl(format: "webp" | "png" | "gif", size: number) {
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
+}
+
 const items = [
   {
     value: "servers",
     label: "Servers",
     icon: "heroicons:server",
-    badge: guilds?.value?.length || 0,
+    badge: guilds.value ? guilds.value.length : 0,
   },
   {
     value: "premium",
@@ -249,23 +265,8 @@ const items = [
 
 if (error.value)
   captureException(error.value);
-
-function fetchGuildsIfNeeded() {
-  refresh().then(() => {
-    lastFetchTime.value = Date.now();
-  });
-}
-
-function toggleView() {
-  viewMode.value = viewMode.value === "grid" ? "list" : "grid";
-}
-
-function toggleSortOrder() {
-  sortAscending.value = !sortAscending.value;
-}
-
 // Computed filtered guilds
-const filteredGuilds = computed(() => {
+const filteredGuilds = computedAsync(async () => {
   if (isNullOrUndefined(guilds.value))
     return [];
 
@@ -293,7 +294,7 @@ const filteredGuilds = computed(() => {
     const comparison = guildA.name.localeCompare(guildB.name, "en", { sensitivity: "base" });
     return sortAscending.value ? comparison : -comparison;
   });
-});
+}, [], { lazy: true });
 
 onMounted(() => {
   if (ready.value) {
@@ -327,8 +328,4 @@ watch(
   },
   { immediate: true },
 );
-
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
 </script>

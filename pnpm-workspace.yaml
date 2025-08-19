@@ -9,12 +9,11 @@ catalogs:
     "@tailwindcss/vite": ^4.1.12
     "@vite-pwa/nuxt": ^1.0.4
   cli:
+    "@antfu/nip": ^0.1.0
     cross-env: ^10.0.0
     pncat: ^0.4.2
     taze: ^19.1.0
   dev:
-    "@ai-sdk/vue": ">=1.2.12"
-    "@antfu/nip": ^0.1.0
     "@discordjs/collection": ^2.1.1
     "@discordjs/core": ^2.2.0
     "@nuxt/fonts": ^0.11.4
@@ -22,16 +21,11 @@ catalogs:
     "@nuxt/scripts": ^0.11.10
     "@nuxthub/core": ^0.9.0
     "@nuxtjs/seo": ^3.1.0
-    "@sapphire/bitfield": ^1.2.4
-    "@sapphire/result": ^2.7.2
-    "@sapphire/snowflake": ^3.5.5
-    "@sapphire/time-utilities": ^1.7.14
-    "@sapphire/utilities": ^3.18.2
+
     "@sentry/nuxt": ^9.46.0
     daisyui: 5.0.35
     discord-api-types: ^0.38.20
     nuxt-auth-utils: ^0.5.23
-    prisma: ~6.14.0
     simple-git: ^3.28.0
     std-env: ^3.9.0
     typescript: ~5.8.3
@@ -45,10 +39,6 @@ catalogs:
     pinia: ^3.0.3
     reka-ui: ^2.4.1
   icons:
-    "@iconify-json/heroicons": ^1.2.2
-    "@iconify-json/ic": ^1.2.4
-    "@iconify-json/lucide": ^1.2.63
-    "@iconify-json/ph": ^1.2.2
     "@nuxt/icon": ^2.0.0
   lint:
     "@antfu/eslint-config": ^5.2.1
@@ -64,22 +54,19 @@ catalogs:
     prettier: ^3.6.2
     prettier-plugin-css-order: ^2.1.2
     prettier-plugin-tailwindcss: ^0.6.14
-  markdown:
-    markdown-it-anchor: ^9.2.0
-    vue-markdown-render: ^2.2.1
-  node:
-    consola: ^3.4.2
-    dotenv: ^17.2.1
   prod:
     "@nuxtjs/color-mode": ^3.5.2
     "@prisma/adapter-pg": ~6.14.0
-    "@prisma/client": ~6.14.0
+    "@prisma/client": ~6.13.0
     colortranslator: ^5.0.0
+    consola: ^3.4.2
+    dotenv: ^17.2.1
     fuse.js: ^7.1.0
     import-in-the-middle: ^1.14.2
     nuxt: ^4.0.3
     nuxt-authorization: ^0.3.5
     nuxt-security: ^2.3.0
+    prisma: ~6.13.0
     prisma-json-types-generator: ^3.5.2
     shadcn-nuxt: 2.1.0
     stale-dep: ^0.8.3
@@ -95,6 +82,11 @@ catalogs:
   test:
     playwright: ^1.54.2
   utils:
+    "@sapphire/bitfield": ^1.2.4
+    "@sapphire/result": ^2.7.2
+    "@sapphire/snowflake": ^3.5.5
+    "@sapphire/time-utilities": ^1.7.14
+    "@sapphire/utilities": ^3.18.2
     "@vee-validate/yup": ^4.15.1
     "@vee-validate/zod": ^4.15.1
     "@vueuse/core": ^13.6.0

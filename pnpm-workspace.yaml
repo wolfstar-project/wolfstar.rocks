@@ -71,7 +71,6 @@ catalogs:
     consola: ^3.4.2
     dotenv: ^17.2.1
   prod:
-    "@josephanson/nuxt-ai": 0.1.6
     "@nuxtjs/color-mode": ^3.5.2
     "@prisma/adapter-pg": ~6.11.0
     "@prisma/client": ~6.11.0

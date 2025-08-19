@@ -39,9 +39,9 @@ export default defineNuxtConfig({
     "nuxt-authorization",
     "nuxt-vue-dragscroll",
     "shadcn-nuxt",
-    "@josephanson/nuxt-ai",
     "@sentry/nuxt/module",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
+    // #TODO: maybe remove this
     ...(preset ? ["@nuxthub/core"] : []),
     "~~/modules/build-env",
     "stale-dep/nuxt",

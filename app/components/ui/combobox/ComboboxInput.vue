@@ -1,6 +1,6 @@
 <template>
   <div data-slot="command-input-wrapper" class="flex h-9 items-center gap-2 border-b px-3">
-    <Icon name="radix-icons:search" class="size-4 shrink-0 opacity-50" />
+    <Icon name="ic:round-search" class="size-4 shrink-0 opacity-50" />
     <ComboboxInput
       data-slot="command-input"
       :class="

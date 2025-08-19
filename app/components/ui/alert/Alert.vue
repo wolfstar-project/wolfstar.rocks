@@ -1,57 +1,44 @@
-<!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <Primitive :as="as" :data-orientation="orientation" :class="ui.root({ class: [props.class, props.ui?.root] })">
+  <Primitive :as="as" :data-orientation="orientation" :class="ui.root({ class: [props.ui?.root, props.class] })">
     <slot name="leading">
-      <Avatar
-        v-if="avatar"
-        :size="(props.ui?.avatarSize || ui.avatarSize()) as AvatarProps['size']"
-        v-bind="avatar"
-        :class="ui.avatar({ class: props.ui?.avatar })"
-      />
+      <Avatar v-if="avatar" :size="((props.ui?.avatarSize || ui.avatarSize()) as AvatarProps['size'])" v-bind="avatar" :class="ui.avatar({ class: props.ui?.avatar })" />
       <Icon v-else-if="icon" :name="icon" :class="ui.icon({ class: props.ui?.icon })" />
     </slot>
 
     <div :class="ui.wrapper({ class: props.ui?.wrapper })">
-      <div v-if="title || !!slots.title" :class="ui.title({ class: cn('mb-1 leading-none font-medium tracking-tight', props.ui?.title) })">
+      <div v-if="title || !!slots.title" :class="ui.title({ class: props.ui?.title })">
         <slot name="title">
           {{ title }}
         </slot>
       </div>
-      <div
-        v-if="description || !!slots.description"
-        :class="cn(ui.description({ class: props.ui?.description }), 'text-sm [&_p]:leading-relaxed')"
-      >
+      <div v-if="description || !!slots.description" :class="ui.description({ class: props.ui?.description })">
         <slot name="description">
           {{ description }}
         </slot>
       </div>
 
-      <div v-if="orientation === 'vertical' && actions?.length" :class="ui.actions({ class: props.ui?.actions })">
+      <div v-if="orientation === 'vertical' && (actions?.length || !!slots.actions)" :class="ui.actions({ class: props.ui?.actions })">
         <slot name="actions">
           <Button v-for="(action, index) in actions" :key="index" size="xs" v-bind="action" />
         </slot>
       </div>
     </div>
 
-    <div
-      v-if="(orientation === 'horizontal' && actions?.length) || close"
-      :class="ui.actions({ class: props.ui?.actions, orientation: 'horizontal' })"
-    >
-      <template v-if="orientation === 'horizontal' && actions?.length">
+    <div v-if="(orientation === 'horizontal' && (actions?.length || !!slots.actions)) || close" :class="ui.actions({ class: props.ui?.actions, orientation: 'horizontal' })">
+      <template v-if="orientation === 'horizontal' && (actions?.length || !!slots.actions)">
         <slot name="actions">
-          <Button v-for="(action, index) in actions" :key="index" size="xs" v-bind="action" />
+          <UButton v-for="(action, index) in actions" :key="index" size="xs" v-bind="action" />
         </slot>
       </template>
 
       <slot name="close" :ui="ui">
         <Button
           v-if="close"
-          :icon="closeIcon || 'radix-icons:cross'"
-          size="md"
+          :icon="closeIcon || 'ic:baseline-close'"
           color="neutral"
           variant="link"
           aria-label="Close"
-          v-bind="typeof close === 'object' ? (close as Partial<ButtonProps>) : {}"
+          v-bind="(typeof close === 'object' ? close as Partial<ButtonProps> : {})"
           :class="ui.close({ class: props.ui?.close })"
           @click="emits('update:open', false)"
         />

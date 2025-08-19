@@ -298,8 +298,8 @@ const ui = computed(() =>
   }),
 );
 
-const incrementIcon = computed(() => props.incrementIcon || (props.orientation === "horizontal" ? "radix-icons:plus" : "radix-icons:chevron-up"));
-const decrementIcon = computed(() => props.decrementIcon || (props.orientation === "horizontal" ? "radix-icons:minus" : "radix-icons:chevron-down"));
+const incrementIcon = computed(() => props.incrementIcon || (props.orientation === "horizontal" ? "ic:baseline-plus" : "ic:baseline-arrow-drop-up"));
+const decrementIcon = computed(() => props.decrementIcon || (props.orientation === "horizontal" ? "ic:baseline-minus" : "ic:baseline-arrow-drop-down"));
 
 const inputRef = ref<InstanceType<typeof NumberFieldInput> | null>(null);
 

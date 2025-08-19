@@ -5,7 +5,7 @@
     :class="cn('flex cursor-default items-center justify-center py-1', props.class)"
   >
     <slot>
-      <Icon name="radix-icons:chevronup" class="size-4" />
+      <Icon name="ic:baseline-arrow-drop-up" class="size-4" />
     </slot>
   </SelectScrollUpButton>
 </template>

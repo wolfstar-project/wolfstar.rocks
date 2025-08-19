@@ -217,6 +217,7 @@ export default defineNuxtConfig({
         "vee-validate",
         "discord-api-types/v10",
         "@discordjs/rest",
+        "motion-v",
         "@vee-validate/zod",
         "@discordjs/core/http-only",
         "@sapphire/time-utilities",
@@ -245,7 +246,6 @@ export default defineNuxtConfig({
   },
 
   icon: {
-    serverBundle: false,
     clientBundle: {
       scan: {
         globInclude: ["**\/*.{vue,jsx,tsx,md,mdc,mdx}", "app/**/*.ts"],

@@ -28,7 +28,7 @@ export interface UseComponentIconsProps {
   loading?: boolean;
   /**
    * The icon when the `loading` prop is `true`.
-   * @defaultValue 'radix-icons:cross'
+   * @defaultValue 'lucide:loader-circle'
    * @IconifyIcon
    */
   loadingIcon?: string;
@@ -50,14 +50,14 @@ export function useComponentIcons(componentProps: MaybeRefOrGetter<UseComponentI
 
   const leadingIconName = computed(() => {
     if (props.value.loading) {
-      return props.value.loadingIcon || "radix-icons:cross";
+      return props.value.loadingIcon || "ic:round-cross";
     }
 
     return props.value.leadingIcon || props.value.icon;
   });
   const trailingIconName = computed(() => {
     if (props.value.loading && !isLeading.value) {
-      return props.value.loadingIcon || "radix-icons:cross";
+      return props.value.loadingIcon || "ic:round-cross";
     }
 
     return props.value.trailingIcon || props.value.icon;

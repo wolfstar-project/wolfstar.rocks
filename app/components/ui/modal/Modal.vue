@@ -54,7 +54,7 @@
                 <slot name="close" :ui="ui">
                   <Button
                     v-if="close"
-                    :icon="closeIcon || 'radix-icons:cross2'"
+                    :icon="closeIcon || 'ic:round-close-fullscreen'"
                     size="md"
                     color="neutral"
                     variant="ghost"

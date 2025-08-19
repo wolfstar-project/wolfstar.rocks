@@ -251,6 +251,7 @@ export default defineNuxtConfig({
         globInclude: ["**\/*.{vue,jsx,tsx,md,mdc,mdx}", "app/**/*.ts"],
       },
     },
+    cssLayer: "base",
     provider: "iconify",
     componentName: "NuxtIcon",
   },

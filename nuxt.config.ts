@@ -290,10 +290,7 @@ export default defineNuxtConfig({
         fullscreen: "*",
       },
     },
-    rateLimiter: {
-      tokensPerInterval: 10,
-      interval: 20000,
-    },
+    rateLimiter: false,
   } as ModuleOptions,
 
   sentry: {

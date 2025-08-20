@@ -4,6 +4,9 @@ overrides:
   "@types/node": 20.11.5
   "@vercel/nft": ^0.30.0
 
+patchedDependencies:
+  prisma: patches/prisma.patch
+
 catalogs:
   build:
     "@tailwindcss/vite": ^4.1.12
@@ -21,7 +24,6 @@ catalogs:
     "@nuxt/scripts": ^0.11.10
     "@nuxthub/core": ^0.9.0
     "@nuxtjs/seo": ^3.1.0
-
     "@sentry/nuxt": ^9.46.0
     daisyui: 5.0.35
     discord-api-types: ^0.38.20

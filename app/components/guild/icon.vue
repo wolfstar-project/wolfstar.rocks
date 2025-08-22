@@ -109,6 +109,15 @@ import type { TransformedLoginData } from "~~/shared/types/discord";
 import type { ValuesType } from "~/types/utils";
 import { useIntersectionObserver } from "@vueuse/core";
 
+interface GuildIconProps {
+  guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
+  size?: "sm" | "md" | "lg" | "xl";
+  variant?: "card" | "bare";
+  showStatus?: boolean;
+  showName?: boolean;
+  showStats?: boolean;
+}
+
 const props = withDefaults(defineProps<GuildIconProps>(), {
   size: "md",
   variant: "card",
@@ -127,19 +136,10 @@ useIntersectionObserver(icon, (mutations) => {
   }
 });
 
-interface GuildIconProps {
-  guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
-  size?: "sm" | "md" | "lg" | "xl";
-  variant?: "card" | "bare";
-  showStatus?: boolean;
-  showName?: boolean;
-  showStats?: boolean;
-}
 const guild = toRef(props, "guild");
 // Make these computed to avoid SSR hydration issues
 const isDefault = ref(false);
 const isAnimated = ref(false);
-
 // Size-based classes for DaisyUI Avatar
 const iconSizeClasses = computed(() => {
   const sizeMap = {
@@ -171,13 +171,9 @@ function makeSrcset(format: "webp" | "png" | "gif") {
 }
 
 function formatNumber(num: number): string {
-  if (num >= 1000000) {
-    return `${(num / 1000000).toFixed(1)}M`;
-  }
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}K`;
-  }
-  return num.toString();
+  return Intl.NumberFormat("en-US", {
+    maximumFractionDigits: 1,
+  }).format(num);
 }
 
 watch(

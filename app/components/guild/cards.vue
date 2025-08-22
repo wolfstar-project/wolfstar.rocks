@@ -1,6 +1,6 @@
 <template>
   <!-- Enhanced Guild Cards Grid - inspired by Dyno.gg -->
-  <div class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 text-base-content space-y-6">
+  <div class="w-full max-w-7xl mx-auto sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6">
     <div class="flex flex-col justify-between gap-4 sm:flex-row">
       <div class="flex items-start">
         <div v-if="loading" class="text-sm text-base-content/60 sm:block">
@@ -21,13 +21,13 @@
       <!-- Loading Skeleton Grid -->
       <div ref="scrollComponent">
         <!-- Guild Cards Grid -->
-        <div v-if="loading" class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <div v-if="loading" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           <guild-card-skeleton v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :type="type" />
         </div>
 
         <div
           v-if="!loading && paginatedGuilds.length > 0"
-          class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+          class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
           <guild-card v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :guild="guild" :type="type" />
         </div>
@@ -72,6 +72,7 @@
 </template>
 
 <script setup lang="ts">
+import type { FetchError } from "ofetch";
 import type { TransformedLoginData } from "~~/shared/types/discord";
 import { useInfiniteScroll } from "@vueuse/core";
 
@@ -80,15 +81,12 @@ interface EnhancedGuildCardsProps {
   guilds: TransformedLoginData["transformedGuilds"] | null;
   undoSearch: () => void;
   searchQuery: string;
-  loading?: boolean;
-  error?: Error | null;
-  type?: "card" | "grid";
+  loading: boolean;
+  error: FetchError<any> | undefined;
+  type: "card" | "grid";
 };
 
-const props = withDefaults(defineProps<EnhancedGuildCardsProps>(), {
-  loading: false,
-  type: "card",
-});
+const props = defineProps<EnhancedGuildCardsProps>();
 
 const INITIAL_COUNT = 20;
 const LOAD_MORE_COUNT = 10;
@@ -96,7 +94,9 @@ const LOAD_MORE_COUNT = 10;
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
 const loading = toRef(props, "loading");
-const type = reactive(toRef(props, "type"));
+const type = toRef(props, "type");
+const error = toRef(props, "error");
+
 const paginatedGuilds = computed(() => {
   return props.filterGuilds.slice(0, visibleCount.value);
 });
@@ -104,7 +104,7 @@ const paginatedGuilds = computed(() => {
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
   () => {
-    if (loading.value)
+    if (loading.value && error.value !== undefined)
       return;
     visibleCount.value += LOAD_MORE_COUNT;
   },
@@ -113,6 +113,10 @@ const { isLoading: loadingMore, reset } = useInfiniteScroll(
     canLoadMore: () => visibleCount.value < props.filterGuilds.length,
   },
 );
+
+if (error.value) {
+  useLogger().error(error.value);
+}
 
 watch(
   () => props.filterGuilds,

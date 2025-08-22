@@ -13,32 +13,6 @@
           'opacity-75 ring-2 ring-error/20': !guild.manageable,
         }"
       >
-        <div
-          v-if="showStatus && guild && variant === 'card'"
-          class="absolute top-2 right-2"
-        >
-          <div
-            v-if="guild.wolfstarIsIn"
-            class="flex h-5 w-5 items-center justify-center rounded-full bg-success/20 text-success"
-            title="WolfStar is active"
-          >
-            <ShadIcon name="ph:check-circle-fill" class="h-3 w-3" />
-          </div>
-          <div
-            v-else-if="guild.manageable"
-            class="flex h-5 w-5 items-center justify-center rounded-full bg-primary/20 text-primary"
-            title="Can invite WolfStar"
-          >
-            <ShadIcon name="ph:plus-circle-fill" class="h-3 w-3" />
-          </div>
-          <div
-            v-else
-            class="flex h-5 w-5 items-center justify-center rounded-full bg-error/20 text-error"
-            title="No permissions"
-          >
-            <ShadIcon name="ph:shield-warning-fill" class="h-3 w-3" />
-          </div>
-        </div>
         <!-- Guild Icon -->
         <div class="flex flex-col items-center space-y-4">
           <guild-icon
@@ -51,7 +25,7 @@
 
         <!-- Guild Info -->
         <div class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center">
-          <h3 class="line-clamp-2 text-base font-semibold text-base-content transition-colors group-hover:text-primary">
+          <h3 class="2xl:line-clamp-2 md:text-md text-base font-semibold text-base-content transition-colors group-hover:text-primary">
             {{ guild.name }}
           </h3>
 
@@ -90,20 +64,18 @@
             class="flex items-center justify-center space-x-4 text-xs text-base-content/60"
           >
             <span
-              v-if="guild.approximateMemberCount"
               class="flex items-center space-x-1"
               title="Total members"
             >
               <ShadIcon name="heroicons:user-group" class="h-3 w-3 text-base-content/70" />
-              <span>{{ formatNumber(guild.approximateMemberCount) }}</span>
+              <span>{{ guild.approximateMemberCount ? formatNumber(guild.approximateMemberCount) : 'N/A' }}</span>
             </span>
             <span
-              v-if="guild.approximatePresenceCount"
               class="flex items-center space-x-1"
               title="Members online"
             >
               <ShadIcon name="heroicons:signal" class="h-3 w-3 text-success" />
-              <span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
+              <span>{{ guild.approximatePresenceCount ? formatNumber(guild.approximatePresenceCount) : 'N/A' }}</span>
             </span>
           </div>
         </div>

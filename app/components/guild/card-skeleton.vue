@@ -12,7 +12,7 @@
       <div class="relative">
         <div class="skeleton h-20 w-20 rounded-2xl"></div>
         <!-- Online indicator skeleton -->
-        <div class="absolute -right-1 -bottom-1 skeleton h-6 w-6 rounded-full"></div>
+        <!-- <div class="absolute -right-1 -top-1 skeleton h-6 w-6 rounded-full"></div> -->
       </div>
 
       <!-- Guild Info Skeleton -->
@@ -46,33 +46,3 @@ defineProps<{
   type?: "card" | "grid";
 }>();
 </script>
-
-<style scoped>
-@reference '@/assets/css/main.css';
-/* DaisyUI skeleton styling with modern shimmer animation */
-.skeleton {
-	@apply bg-base-300/40;
-	position: relative;
-	overflow: hidden;
-}
-
-.skeleton::before {
-	position: absolute;
-	top: 0;
-	left: -100%;
-	animation: shimmer 2s infinite;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-	width: 100%;
-	height: 100%;
-	content: '';
-}
-
-@keyframes shimmer {
-	0% {
-		left: -100%;
-	}
-	100% {
-		left: 100%;
-	}
-}
-</style>

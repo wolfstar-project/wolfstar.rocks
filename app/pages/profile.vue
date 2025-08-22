@@ -24,7 +24,7 @@
           class="rounded-full ring-4 ring-primary ring-offset-4 ring-offset-base-100 transition-all duration-300 hover:ring-primary/70"
         />
         <div class="space-y-2 text-center">
-          <h1 class="text-4xl font-bold text-base-content">{{ user.name }}</h1>
+          <h1 class="text-4xl font-bold text-base-content">{{ user.globalName ?? user.username }}</h1>
           <p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
           <p class="text-sm text-base-content/60">User ID: {{ user.id }}</p>
         </div>
@@ -56,26 +56,26 @@
                     icon="heroicons:magnifying-glass-circle"
                     :loading="loading"
                     loading-icon="i-lucide-loader"
-                    class="max-w-xs"
+                    class="max-w-xs flex items-start"
                   >
                     <template #trailing>
                       <ShadKbd
                         value="k"
-                        class="absolute top-1/2 right-2 -translate-y-1/2"
+                        class="absolute top-1/2 right-2 -translate-y-1/2 hidden md:block"
                       />
                     </template>
                   </ShadInput>
                   <!-- Skeletons -->
-                  <div v-if="loading" class="flex items-center gap-2">
+                  <div v-if="loading" class="flex items-end gap-2">
                     <div class="skeleton h-9 w-24 rounded-md"></div>
                     <div class="skeleton h-9 w-20 rounded-md"></div>
                     <div class="skeleton h-9 w-24 rounded-md"></div>
-                    <div class="skeleton h-9 w-20 rounded-md"></div>
                   </div>
                   <!-- Actual Buttons -->
-                  <div v-else class="flex items-center justify-end gap-2">
+                  <div v-else class="flex items-center join justify-end gap-2">
                     <!-- View Button -->
                     <ShadButton
+                      v-if="!isMobile"
                       size="sm"
                       active-class="btn-active"
                       :icon="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'"
@@ -83,11 +83,11 @@
                     >
                       <span class="hidden sm:inline">View</span>
                     </ShadButton>
-
                     <!-- Manageable Only Toggle Button -->
                     <ShadButton
                       size="sm"
-                      active-class="btn-active"
+                      active-class="join-item"
+                      color="secondary"
                       icon="heroicons:shield-check"
                       @click="showManageableOnly = !showManageableOnly"
                     >
@@ -97,6 +97,7 @@
                     <!-- Sort Button -->
                     <ShadButton
                       size="sm"
+                      color="secondary"
                       class="join-item btn-active"
                       @click="toggleSortOrder"
                     >
@@ -108,10 +109,11 @@
 
                     <!-- Refresh Button -->
                     <ShadButton
-                      v-if="filteredGuilds.length > 0"
+                      v-if="filteredGuilds.length < 0"
+                      color="secondary"
                       size="sm"
                       icon="heroicons:arrow-path"
-                      @click="refresh()"
+                      @click="refreshGuilds()"
                     >
                       <span class="hidden sm:inline">Refresh</span>
                     </ShadButton>
@@ -120,7 +122,7 @@
 
                 <!-- Search Input for Desktop -->
               </div>
-              <div class="space-y-4">
+              <div class="space-y-4 md:space-y-2">
                 <guild-cards
                   :error="error"
                   :guilds="guilds"
@@ -174,7 +176,7 @@
                 <template #footer>
                   <ShadButtonGroup class="flex w-full justify-center space-x-4 pt-4 z-10">
                     <ShadButton color="primary" size="md">Get Premium</ShadButton>
-                    <ShadButton variant="outline" size="md">Learn More</ShadButton>
+                    <ShadButton color="primary" variant="outline" size="md">Learn More</ShadButton>
                   </ShadButtonGroup>
                 </template>
               </ShadCard>
@@ -189,7 +191,6 @@
 <script setup lang="ts">
 import type { TabsItem } from "@/components/ui/tabs";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import { captureException } from "@sentry/vue";
 import { computedAsync, promiseTimeout } from "@vueuse/core";
 
 definePageMeta({ alias: ["/account"], auth: true });
@@ -202,23 +203,22 @@ const isAnimated = ref(false);
 const isDefault = ref(false);
 const loading = ref(true);
 const searchQuery = ref("");
-const viewMode = ref<"grid" | "card">("card");
 // is true by default because we want to show only manageable servers
 const showManageableOnly = ref(true);
+// Sort order: true for ascending, false for descending
 const sortAscending = ref(true);
-const { history: _searchHistory, undo: _undoSearch, redo: _redoSearch, canUndo: _canUndo, canRedo: _canRedo } = useRefHistory(searchQuery, {
-  deep: false,
-  capacity: 10, // Keep last 10 search terms
-});
+const evaluating = shallowRef(false);
+const { isMobile } = useBreakpoint();
+const viewMode = ref<"grid" | "card">(isMobile.value ? "card" : "grid");
 
 const {
-  data: guilds,
+  data,
   status,
   refresh,
   error,
 } = useFetch("/api/users", {
   key: "guilds",
-  transform: data => data ? data.transformedGuilds ?? null : null,
+  transform: data => data && data.transformedGuilds ? data.transformedGuilds : [],
   getCachedData: (key, nuxtApp, _ctx) => {
     const now = Date.now();
     if (now - lastFetchTime.value > minutes(5)) {
@@ -228,49 +228,14 @@ const {
   },
 });
 
-function fetchGuildsIfNeeded() {
-  refresh().then(() => {
-    lastFetchTime.value = Date.now();
-  });
-}
-function toggleView() {
-  viewMode.value = viewMode.value === "grid" ? "card" : "grid";
-}
-
-function toggleSortOrder() {
-  sortAscending.value = !sortAscending.value;
-}
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
-
-const items = [
-  {
-    value: "servers",
-    label: "Servers",
-    icon: "heroicons:server",
-    badge: guilds.value ? guilds.value.length : 0,
-  },
-  {
-    value: "premium",
-    label: "Premium",
-    icon: "heroicons:star",
-  },
-  {
-    value: "settings",
-    label: "Settings",
-    icon: "heroicons:cog-6-tooth",
-  },
-] satisfies TabsItem[];
-
-if (error.value)
-  captureException(error.value);
+const guilds = computedAsync(() => data.value ?? null, []);
 // Computed filtered guilds
-const filteredGuilds = computedAsync(async () => {
+const filteredGuilds = computedAsync(() => {
   if (isNullOrUndefined(guilds.value))
     return [];
 
   let filtered = [...guilds.value];
+  evaluating.value = true;
 
   // Apply manageable filter
   if (showManageableOnly.value) {
@@ -294,36 +259,62 @@ const filteredGuilds = computedAsync(async () => {
     const comparison = guildA.name.localeCompare(guildB.name, "en", { sensitivity: "base" });
     return sortAscending.value ? comparison : -comparison;
   });
-}, [], { lazy: true });
-
-onMounted(() => {
-  if (ready.value) {
-    promiseTimeout(seconds(5)).then(() => {
-      loading.value = false;
-    });
-  }
-});
-
+}, [], { lazy: true, evaluating });
 const defaultAvatar = computed(() =>
   user.value?.id
     ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
     : "https://cdn.discordapp.com/embed/avatars/0.png",
 );
 
+const items = computed<TabsItem[]>(() => [
+  {
+    value: "servers",
+    label: "Servers",
+    icon: "heroicons:server",
+    badge: { label: guilds.value?.length ?? 0, color: "primary", variant: "ghost" },
+  },
+  {
+    value: "premium",
+    label: "Premium",
+    icon: "heroicons:star",
+  },
+  {
+    value: "settings",
+    label: "Settings",
+    icon: "heroicons:cog-6-tooth",
+  },
+]);
+
+function toggleSortOrder() {
+  sortAscending.value = !sortAscending.value;
+}
+function toggleView() {
+  viewMode.value = viewMode.value === "grid" ? "card" : "grid";
+}
+function createUrl(format: "webp" | "png" | "gif", size: number) {
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
+}
+function refreshGuilds() {
+  refresh().then(() => {
+    lastFetchTime.value = Date.now();
+  });
+}
+
+onMounted(() => {
+  if (ready.value) {
+    promiseTimeout(seconds(8)).then(() => {
+      loading.value = false;
+      evaluating.value = false;
+    });
+  }
+});
 watch(
   user,
   (user) => {
     lastFetchTime.value = 0;
-    if (activeTab.value === "servers") {
-      fetchGuildsIfNeeded();
-    };
-    if (user?.avatar) {
-      isDefault.value = false;
-      isAnimated.value = user.avatar.startsWith("a_");
-    }
-    else {
-      isDefault.value = true;
-      isAnimated.value = false;
+    if (user) {
+      isAnimated.value = user.avatar ? user.avatar.startsWith("a_") : false;
+      isDefault.value = user.avatar === null;
     }
   },
   { immediate: true },

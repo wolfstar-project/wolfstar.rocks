@@ -20,7 +20,6 @@
     "deploy": "pnpx nuxthub deploy",
     "dev": "pnpm prisma:generate && nuxi dev",
     "dev:pwa": "cross-env VITE_PLUGIN_PWA=true pnpm prisma:generate && nuxi dev",
-    "dev:stagewise": "pnpx stagewise@latest -p 3100 -a 3000 -b -- nuxi dev",
     "format": "prettier --write .",
     "generate": "nuxt generate",
     "lint": "eslint --cache .",

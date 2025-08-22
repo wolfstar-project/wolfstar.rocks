@@ -11,7 +11,7 @@
           </div>
 
           <!-- Save/Reset Actions -->
-          <Transition name="fade" mode="out-in">
+          <!-- <Transition name="fade" mode="out-in">
             <div v-if="hasChanges" class="flex gap-3">
               <button
                 class="btn-glass btn btn-sm transition-glass hover-lift"
@@ -32,14 +32,31 @@
                 Save Changes
               </button>
             </div>
-          </Transition>
+          </Transition> -->
         </div>
       </div>
 
       <!-- Settings Content -->
       <div class="flex-1 overflow-y-auto p-6">
         <div v-if="readyToRender">
-          <ShadTabs v-model="currentRoute" :items="navigationItems" variant="lift" orientation="vertical">
+          <!-- Mobile Select -->
+          <div class="mb-4 sm:hidden">
+            <ShadSelect v-model="currentRoute">
+              <ShadSelectTrigger class="w-full">
+                <ShadSelectValue placeholder="Select a category" />
+              </ShadSelectTrigger>
+              <ShadSelectContent>
+                <ShadSelectGroup>
+                  <ShadSelectItem v-for="item in navigationItems" :key="item.value" :value="item.value">
+                    {{ item.label }}
+                  </ShadSelectItem>
+                </ShadSelectGroup>
+              </ShadSelectContent>
+            </ShadSelect>
+          </div>
+
+          <!-- Desktop Tabs -->
+          <ShadTabs v-model="currentRoute" :items="navigationItems" variant="lift" orientation="vertical" class="hidden sm:flex">
             <template #content="{ item }">
               <div class="card card-glass rounded-xl p-6 fade-slide-in">
                 <GuildSettingsGeneral v-if="item.value === 'general'" :guild-data="guildData" :languages="languages" />
@@ -51,6 +68,16 @@
               </div>
             </template>
           </ShadTabs>
+
+          <!-- Content for mobile -->
+          <div class="card card-glass rounded-xl p-6 fade-slide-in sm:hidden">
+            <GuildSettingsGeneral v-if="currentRoute === 'general'" :guild-data="guildData" :languages="languages" />
+            <GuildSettingsModeration v-if="currentRoute === 'moderation'" :guild-data="guildData" />
+            <GuildSettingsChannel v-if="currentRoute === 'channels'" :guild-data="guildData" />
+            <GuildSettingsRole v-if="currentRoute === 'roles'" :guild-data="guildData" />
+            <GuildSettingsEvent v-if="currentRoute === 'events'" :guild-data="guildData" />
+            <GuildSettingsDisabledCommands v-if="currentRoute === 'disabled-commands'" :guild-data="guildData" :commands="commands" />
+          </div>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@
 FROM node:22-alpine AS base
 
 WORKDIR /usr/src/app
+ARG NODE_OPTIONS
 
 ENV CI=true
 ENV PNPM_HOME="/pnpm"
@@ -58,12 +59,12 @@ RUN pnpm install --frozen-lockfile \
 FROM base AS runner
 
 ENV NODE_ENV="production"
-ENV NODE_OPTIONS="--enable-source-maps --import=./.output/server/sentry.server.config.mjs"
+ENV NODE_OPTIONS=${NODE_OPTIONS}
 
 RUN apk add --no-cache curl
 
 # Install dotenvx
-RUN curl -sfS https://dotenvx.sh/install.sh | sh
+# RUN curl -sfS https://dotenvx.sh/install.sh | sh
 
 # Create non-root user
 RUN addgroup -S nonroot && \
@@ -71,7 +72,7 @@ RUN addgroup -S nonroot && \
 
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
-
+COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
 # Copy environment files
 COPY --chown=nonroot:nonroot .env.example .env
 

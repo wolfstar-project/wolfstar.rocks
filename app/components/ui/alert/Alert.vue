@@ -27,7 +27,7 @@
     <div v-if="(orientation === 'horizontal' && (actions?.length || !!slots.actions)) || close" :class="ui.actions({ class: props.ui?.actions, orientation: 'horizontal' })">
       <template v-if="orientation === 'horizontal' && (actions?.length || !!slots.actions)">
         <slot name="actions">
-          <UButton v-for="(action, index) in actions" :key="index" size="xs" v-bind="action" />
+          <Button v-for="(action, index) in actions" :key="index" size="xs" v-bind="action" />
         </slot>
       </template>
 

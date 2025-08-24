@@ -74,6 +74,7 @@ catalogs:
     stale-dep: ^0.8.3
     tailwind-variants: ^2.1.0
     utility-types: ^3.11.0
+    vue-component-type-helpers: ^3.0.6
   style:
     "@tailwindcss/typography": ^0.5.16
     postcss-nested: ^7.0.2

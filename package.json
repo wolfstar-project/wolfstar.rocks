@@ -93,7 +93,8 @@
     "utility-types": "catalog:prod",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "vue-component-type-helpers": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

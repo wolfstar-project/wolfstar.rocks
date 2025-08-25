@@ -38,11 +38,10 @@ const badge = tv({
     ...buttonGroupVariant,
     color: {
       ...Object.fromEntries(colors.map(color => [color, `badge-${color}`])) as {
-        [key in UIColors]: `badge-${key}`;
+        [key in UIColors]: string;
       },
     },
     variant: {
-      solid: "",
       outline: "badge-outline",
       ghost: "badge-ghost",
     },

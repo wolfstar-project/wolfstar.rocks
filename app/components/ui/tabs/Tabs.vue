@@ -61,7 +61,7 @@ const tabs = tv({
     indicator: "absolute transition-[translate,width] duration-200",
     trigger: [
       "group relative inline-flex items-center min-w-0 data-[state=inactive]:text-muted hover:data-[state=inactive]:not-disabled:text-default font-medium rounded-md disabled:cursor-not-allowed disabled:tab-disabled",
-      "transition-colors ",
+      "transition-colors",
     ],
     leadingIcon: "shrink-0",
     leadingAvatar: "shrink-0",
@@ -73,13 +73,7 @@ const tabs = tv({
   },
   variants: {
     color: {
-      primary: "",
-      secondary: "",
-      success: "",
-      info: "",
-      warning: "",
-      error: "",
-      neutral: "",
+      ...Object.fromEntries(colors.map(color => [color, ""])),
     },
     variant: {
       pill: {
@@ -100,6 +94,7 @@ const tabs = tv({
       },
       lift: {
         list: "tab-lift",
+        trigger: "tab-content",
       },
     },
     orientation: {
@@ -141,6 +136,19 @@ const tabs = tv({
         leadingAvatarSize: "xs ",
       },
     },
+    active: {
+      true: {
+        root: "tab-active",
+      },
+      false: {
+        root: "",
+      },
+    },
+    responsive: {
+      true: {
+        label: "hidden sm:inline",
+      },
+    },
   },
   compoundVariants: [
     {
@@ -174,21 +182,55 @@ const tabs = tv({
         indicator: "-start-px w-px ",
       },
     },
+    ...colors.map(color => ([
+      {
+        color,
+        variant: "pill",
+        class: {
+          indicator: `bg-${color}`,
+          trigger: `data-[state=active]:text-neutral data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-${color} `,
+        },
+      },
+      {
+        color,
+        variant: "link",
+        class: {
+          indicator: `bg-${color}`,
+          trigger: `data-[state=active]:text-${color} data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-${color} `,
+        },
+      },
+      {
+        color,
+        variant: "box",
+        class: {
+          indicator: `bg-${color}`,
+          trigger: `data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-${color} `,
+        },
+      },
+      {
+        color,
+        variant: "border",
+        class: {
+          list: "border-b",
+          indicator: `bg-${color}`,
+          trigger: `data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-${color} `,
+        },
+      },
+    ])) as any,
     {
       color: "primary",
       variant: "pill",
       class: {
         indicator: "bg-primary",
-        trigger: "data-[state=active]:text-inverted data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ",
-
+        trigger: "data-[state=active]:text-neutral data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ",
       },
     },
     {
       color: "neutral",
       variant: "pill",
       class: {
-        indicator: "bg-inverted",
-        trigger: "data-[state=active]:text-inverted data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted ",
+        indicator: "bg-neutral",
+        trigger: "data-[state=active]:text-neutral data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral ",
 
       },
     },
@@ -198,32 +240,39 @@ const tabs = tv({
       class: {
         indicator: "bg-primary",
         trigger: "data-[state=active]:text-primary data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ",
-
       },
     },
     {
       color: "neutral",
       variant: "link",
       class: {
-        indicator: "bg-inverted",
-        trigger: "data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted ",
+        indicator: "bg-neutral",
+        trigger: "data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral ",
       },
     },
     {
       color: "neutral",
       variant: "box",
       class: {
-        indicator: "bg-inverted",
-        trigger: "data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted ",
+        indicator: "bg-neutral",
+        trigger: "data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral ",
       },
     },
     {
       color: "neutral",
       variant: "box",
       class: {
-        indicator: "bg-inverted",
-        trigger: "data-[state=active]:text-inverted data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted ",
-
+        indicator: "bg-neutral",
+        trigger: "data-[state=active]:text-neutral data-[state=active]:tab-active focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral ",
+      },
+    },
+    {
+      color: "neutral",
+      variant: "border",
+      class: {
+        list: "border-b",
+        indicator: "bg-neutral",
+        trigger: "data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral ",
       },
     },
   ],
@@ -290,6 +339,8 @@ export interface TabsProps<T extends TabsItem = TabsItem> extends Pick<TabsRootP
   labelKey?: string;
   class?: HTMLAttributes["class"];
   ui?: Partial<typeof tabs.slots>;
+  color?: Tabs["color"];
+  responsive?: boolean;
 }
 export interface TabsEmits extends TabsRootEmits<string | number> {}
 
@@ -318,6 +369,7 @@ import { Icon } from "@/components/ui/icon";
 const props = withDefaults(defineProps<TabsProps<T>>(), {
   content: true,
   defaultValue: "0",
+  active: undefined,
   orientation: "horizontal",
   unmountOnHide: true,
   labelKey: "label",
@@ -330,6 +382,8 @@ const rootProps = useForwardPropsEmits(reactivePick(props, "as", "modelValue", "
 const ui = computed(() => tabs({
   variant: props.variant,
   size: props.size,
+  color: props.color,
+  responsive: props.responsive,
 }));
 
 const triggersRef = ref<ComponentPublicInstance[]>([]);

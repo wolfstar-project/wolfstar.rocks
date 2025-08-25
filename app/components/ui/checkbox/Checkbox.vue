@@ -61,26 +61,10 @@ const checkbox = tv({
   },
   variants: {
     color: {
-      primary: {
-        indicator: "checkbox-primary",
-      },
-      secondary: {
-        indicator: "checkbox-secondary",
-      },
-      success: {
-        indicator: "checkbox-success",
-      },
-      info: {
-        indicator: "checkbox-info",
-      },
-      warning: {
-        indicator: "checkbox-warning",
-      },
-      error: {
-        indicator: "checkbox-error",
-      },
-      neutral: {
-        indicator: "checkbox-inverted",
+      ...Object.fromEntries(colors.map((color: string) => [color, { indicator: `checkbox-${color}` }])) as {
+        [key in UIColors]: {
+          indicator: string;
+        };
       },
     },
     variant: {

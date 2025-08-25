@@ -299,7 +299,7 @@ export interface InputTagsProps<T extends InputTagItem = InputTagItem> extends P
   autofocusDelay?: number;
   /**
    * The icon displayed to delete a tag.
-   * @defaultValue appConfig.ui.icons.close
+   * @defaultValue 'heroicons:x-mark'
    * @IconifyIcon
    */
   deleteIcon?: string;
@@ -327,7 +327,6 @@ export interface InputTagsSlots<T extends InputTagItem = InputTagItem> {
 </script>
 
 <script setup lang="ts" generic="T extends InputTagItem">
-import { useAppConfig } from "#imports";
 import { reactivePick } from "@vueuse/core";
 import { TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText, TagsInputRoot, useForwardPropsEmits } from "reka-ui";
 import { computed, onMounted, ref, toRaw } from "vue";

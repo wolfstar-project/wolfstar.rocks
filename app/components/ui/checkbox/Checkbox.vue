@@ -179,7 +179,7 @@ export interface CheckboxProps extends Pick<CheckboxRootProps, "disabled" | "req
   indicator?: Checkbox["indicator"];
   /**
    * The icon displayed when checked.
-   * @defaultValue appConfig.ui.icons.check
+   * @defaultValue 'heroicons:check'
    * @IconifyIcon
    */
   icon?: string;

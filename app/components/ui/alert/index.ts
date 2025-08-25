@@ -180,7 +180,7 @@ export interface AlertProps {
   close?: boolean | Partial<ButtonProps>;
   /**
    * The icon displayed in the close button.
-   * @defaultValue appConfig.ui.icons.close
+   * @defaultValue 'heroicons:x-mark'
    * @IconifyIcon
    */
   closeIcon?: string;

@@ -49,7 +49,7 @@
 
           <TagsInputItemDelete :class="ui.tagsItemDelete({ class: [props.ui?.tagsItemDelete, isInputItem(item) && item.ui?.tagsItemDelete] })" :disabled="disabled">
             <slot name="tags-item-delete" :item="(item as NestedItem<T>)" :index="index">
-              <Icon :name="deleteIcon || appConfig.ui.icons.close" :class="ui.tagsItemDeleteIcon({ class: [props.ui?.tagsItemDeleteIcon, isInputItem(item) && item.ui?.tagsItemDeleteIcon] })" />
+              <Icon :name="deleteIcon || 'heroicons:x-mark'" :class="ui.tagsItemDeleteIcon({ class: [props.ui?.tagsItemDeleteIcon, isInputItem(item) && item.ui?.tagsItemDeleteIcon] })" />
             </slot>
           </TagsInputItemDelete>
         </TagsInputItem>
@@ -100,7 +100,7 @@
 
         <ComboboxEmpty :class="ui.empty({ class: props.ui?.empty })">
           <slot name="empty" :search-term="searchTerm">
-            {{ searchTerm ? `No match found for: ${searchTerm}` :  'No data' }}
+            {{ searchTerm ? `No match found for: ${searchTerm}` : 'No data' }}
           </slot>
         </ComboboxEmpty>
 
@@ -539,20 +539,20 @@ export interface InputMenuProps<T extends ArrayOrNested<InputMenuItem> = ArrayOr
   autofocusDelay?: number;
   /**
    * The icon displayed to open the menu.
-   * @defaultValue appConfig.ui.icons.chevronDown
+   * @defaultValue 'heroicons:chevron-down'
    * @IconifyIcon
    */
   trailingIcon?: string;
   /**
    * The icon displayed when an item is selected.
-   * @defaultValue appConfig.ui.icons.check
+   * @defaultValue 'heroicons:check'
    * @IconifyIcon
    */
   selectedIcon?: string;
   /**
    * The icon displayed to delete a tag.
    * Works only when `multiple` is `true`.
-   * @defaultValue appConfig.ui.icons.close
+   * @defaultValue 'heroicons:x-mark'
    * @IconifyIcon
    */
   deleteIcon?: string;

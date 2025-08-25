@@ -47,7 +47,7 @@ async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGu
   return canManage(guild, member);
 }
 
-async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
+export async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
   const guild = await useApi()
     .guilds
     .get(data.id, {

@@ -1,9 +1,9 @@
 import { isNullOrUndefined } from "@sapphire/utilities";
-import z from "zod/v4";
+import * as yup from "yup";
 import useApi from "~~/server/utils/api";
 
-const querySchema = z.object({
-  shouldSerialize: z.boolean().optional(),
+const querySchema = yup.object({
+  shouldSerialize: yup.boolean().optional(),
 });
 
 export default defineWrappedResponseHandler(async (event) => {
@@ -19,13 +19,13 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  const { shouldSerialize } = await getValidatedQuery(event, querySchema.parse);
+  const { shouldSerialize } = await getValidatedQuery(event, querySchema.validate);
 
   const guild = await getGuild(event, guildId);
 
   const api = useApi();
 
-  const members = await api.guilds.getMembers(guildId, { limit: 200 }).catch((error) => {
+  const members = await api.guilds.getMembers(guildId).catch((error) => {
     logger.error("Failed to fetch members:", error);
     throw createError({
       statusCode: 500,

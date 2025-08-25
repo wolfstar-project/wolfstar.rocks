@@ -1,8 +1,14 @@
+import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
+import * as yup from "yup";
 import useApi from "~~/server/utils/api";
-
+import { transformGuild } from "~~/server/utils/discord";
 import { manageAbility } from "~~/shared/utils/abilities";
+
+const querySchema = yup.object({
+  shouldSerialize: yup.boolean().optional(),
+});
 
 defineRouteMeta({
   openAPI: {
@@ -32,6 +38,9 @@ export default defineWrappedResponseHandler(async (event) => {
       },
     });
   }
+
+  const { shouldSerialize } = await getValidatedQuery(event, querySchema.validate);
+
   const api = useApi();
 
   const user = await event.context.$authorization.resolveServerUser();
@@ -72,7 +81,7 @@ export default defineWrappedResponseHandler(async (event) => {
   const channels = (await api.guilds.getChannels(guild.id)) as any;
 
   // Return flattened guild data
-  return flattenGuild({ ...guild, channels });
+  return shouldSerialize ? transformGuild(user.id, guild as RESTAPIPartialCurrentUserGuild) : flattenGuild({ ...guild, channels });
 }, {
   auth: true,
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },

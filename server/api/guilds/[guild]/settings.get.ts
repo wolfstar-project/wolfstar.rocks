@@ -1,12 +1,12 @@
 import type { GuildData } from "~~/server/database";
 import { isNullOrUndefined } from "@sapphire/utilities";
-import { z } from "zod/v4";
+import * as yup from "yup";
 import { readSettings, serializeSettings } from "~~/server/database";
 import { manageAbility } from "~~/shared/utils/abilities";
 
-const querySchema = z.object({
-  shouldSerialize: z.boolean().optional(),
-  userId: z.string().optional(),
+const querySchema = yup.object({
+  shouldSerialize: yup.boolean().optional().default(false),
+  userId: yup.string().optional(),
 });
 
 defineRouteMeta({
@@ -40,7 +40,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Validate query parameters
-  const { shouldSerialize } = await getValidatedQuery(event, querySchema.parse);
+  const { shouldSerialize } = await getValidatedQuery(event, querySchema.validate);
 
   const user = await event.context.$authorization.resolveServerUser();
   if (!user) {

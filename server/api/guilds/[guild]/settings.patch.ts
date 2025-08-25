@@ -1,12 +1,17 @@
 import { Result } from "@sapphire/result";
-import { isNullOrUndefined } from "@sapphire/utilities";
+import { isNullOrUndefined, isNullOrUndefinedOrZero } from "@sapphire/utilities";
 import { createError } from "h3";
-import { z } from "zod/v4";
+import * as yup from "yup";
 import { serializeSettings, writeSettingsTransaction } from "~~/server/database";
 import { manageAbility } from "~~/shared/utils/abilities";
 
-const settingsUpdateSchema = z.object({
-  data: z.array(z.tuple([z.string(), z.unknown()])),
+const settingsUpdateSchema = yup.object({
+  data: yup.array().of(
+    yup.tuple([
+      yup.string().required(),
+      yup.mixed().required(),
+    ]),
+  ),
 });
 
 defineRouteMeta({
@@ -39,7 +44,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Get and validate body data
-  const body = await readValidatedBody(event, settingsUpdateSchema.parse);
+  const body = await readValidatedBody(event, settingsUpdateSchema.validate);
 
   if (isNullOrUndefined(body)) {
     throw createError({
@@ -55,7 +60,7 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const { data } = body;
 
-  if (data.length === 0) {
+  if (isNullOrUndefinedOrZero(data)) {
     throw createError({
       statusCode: 400,
       message: "No settings provided",
@@ -106,7 +111,7 @@ export default defineWrappedResponseHandler(async (event) => {
   // Update settings
   const updateResult = await Result.fromAsync(async () => {
     const trx = await writeSettingsTransaction(guild.id);
-    await trx.write(Object.fromEntries(data)).submit();
+    await trx.write(Object.fromEntries(data.filter((entry): entry is [string, any] => entry !== undefined))).submit();
     return serializeSettings(trx.settings);
   });
 

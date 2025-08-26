@@ -341,7 +341,7 @@ function updateInput(value: string | null) {
   }
 
   if (modelModifiers.number || props.type === "number") {
-    value = looseToNumber(value);
+    (value as any) = looseToNumber(value);
   }
 
   if (modelModifiers.nullify) {

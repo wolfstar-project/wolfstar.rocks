@@ -10,18 +10,7 @@
         :disabled="disabled"
         :class="ui.base({ class: props.ui?.base })"
         @update:model-value="onUpdate"
-      >
-        <template #default="{ modelValue }">
-          <CheckboxIndicator as-child>
-            <Icon
-              v-if="modelValue === 'indeterminate'"
-              :name="indeterminateIcon || 'ic:baseline-minus'"
-              :class="ui.icon({ class: props.ui?.icon })"
-            />
-            <Icon v-else :name="icon || 'ic:baseline-check'" :class="ui.icon({ class: props.ui?.icon })" />
-          </CheckboxIndicator>
-        </template>
-      </CheckboxRoot>
+      />
     </div>
 
     <div v-if="label || !!slots.label || description || !!slots.description" :class="ui.wrapper({ class: props.ui?.wrapper })">
@@ -178,12 +167,6 @@ export interface CheckboxProps extends Pick<CheckboxRootProps, "disabled" | "req
    */
   indicator?: Checkbox["indicator"];
   /**
-   * The icon displayed when checked.
-   * @defaultValue 'heroicons:check'
-   * @IconifyIcon
-   */
-  icon?: string;
-  /**
    * The icon displayed when the checkbox is indeterminate.
    * @defaultValue appConfig.ui.icons.minus
    * @IconifyIcon
@@ -205,9 +188,8 @@ interface CheckboxSlots {
 
 <script setup lang="ts">
 import { reactivePick } from "@vueuse/core";
-import { CheckboxIndicator, CheckboxRoot, Label, Primitive, useForwardProps } from "reka-ui";
+import { CheckboxRoot, Label, Primitive, useForwardProps } from "reka-ui";
 import { computed, useId } from "vue";
-import { Icon } from "@/components/ui/icon";
 import { useFormField } from "@/composables/useFormField";
 
 defineOptions({ inheritAttrs: false });

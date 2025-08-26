@@ -1,7 +1,6 @@
-import type { Options as DeepMergeOptions } from "deepmerge";
-import type { GuildData, GuildDataKey, GuildDataValue } from "~~/server/database";
+import type { GuildData } from "~~/server/database";
 import type { Channels, Events, Moderation, Roles } from "~~/shared/types/ConfigurableData";
-import deepMerge from "deepmerge";
+import { storeToRefs } from "pinia";
 import {
   ConfigurableIgnoreChannels,
   ConfigurableLoggingChannels,
@@ -12,73 +11,17 @@ import {
   ConfigurableRoles,
 } from "~~/shared/types/SettingsDataEntries";
 
-type NullablePartialGuildData = Partial<{ [K in keyof GuildData]: GuildData[K] | null }>;
-
-// Overwrite arrays when merging
-const mergeOptions: DeepMergeOptions = {
-  arrayMerge: (_, sourceArray) => sourceArray,
-};
-
 function useGuildSettings() {
-  const guildSettings = useState<GuildData | null>(() => null);
-  const guildSettingsChanges = useState<NullablePartialGuildData | null>(() => null);
-
-  const mergedSettings = computed({
-    get: () => {
-      return deepMerge(guildSettings.value ?? {}, guildSettingsChanges.value ?? {}, mergeOptions);
-    },
-    set: (newSettings: NullablePartialGuildData) => {
-      if (!newSettings) {
-        guildSettingsChanges.value = null;
-        return;
-      }
-
-      guildSettingsChanges.value = deepMerge(guildSettingsChanges.value ?? {}, newSettings, mergeOptions);
-    },
-  });
-
-  const changes = (settings: GuildData | { [key: string]: GuildDataValue | undefined }) => {
-    guildSettingsChanges.value = settings;
-  };
-
-  const resetChanges = (key: GuildDataKey) => {
-    if (guildSettingsChanges.value && key in guildSettingsChanges.value) {
-      Reflect.deleteProperty(guildSettingsChanges.value, key);
-
-      // If there are no more changes, set the whole object to null
-      if (Object.keys(guildSettingsChanges.value).length === 0) {
-        guildSettingsChanges.value = null;
-      }
-    }
-    else if (guildSettingsChanges.value) {
-      Reflect.set(guildSettingsChanges.value, key, null);
-    }
-    else {
-      guildSettingsChanges.value = {
-        [key]: null,
-      };
-    }
-  };
-
-  // reset All changes
-  const resetAllChanges = () => {
-    if (guildSettingsChanges.value && Object.keys(guildSettingsChanges.value).length > 0) {
-      Object.keys(guildSettingsChanges.value).forEach((key) => {
-        resetChanges(key as keyof GuildData);
-      });
-    }
-  };
-
-  const hasChanges = computed(() => {
-    return !!guildSettingsChanges.value && Object.keys(guildSettingsChanges.value).length > 0;
-  });
+  const guildStore = useGuildStore();
+  const { mergedSettings, hasChanges } = storeToRefs(guildStore);
+  const { setChanges, resetChange, resetAllChanges } = guildStore;
 
   return {
-    settings: readonly(mergedSettings),
-    resetChanges,
+    settings: readonly(mergedSettings) as Readonly<Ref<GuildData>>,
+    resetChanges: resetChange,
     resetAllChanges,
-    hasChanges,
-    changes,
+    hasChanges: readonly(hasChanges),
+    changes: setChanges,
   };
 }
 
@@ -91,7 +34,7 @@ export function useGuildGeneral() {
       key: "prefix" as const,
       name: "Prefix",
       description: "This is your server's prefix, use it to trigger WolfStar commands.",
-      placeholder: "!",
+      placeholder: "w!",
       maxLength: 10,
     },
     language: {

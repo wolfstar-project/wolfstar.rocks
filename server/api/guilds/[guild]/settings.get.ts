@@ -40,7 +40,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Validate query parameters
-  const { shouldSerialize } = await getValidatedQuery(event, querySchema.validate);
+  const { shouldSerialize } = await getValidatedQuery(event, (body) => querySchema.validate(body));
 
   const user = await event.context.$authorization.resolveServerUser();
   if (!user) {

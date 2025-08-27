@@ -44,7 +44,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Get and validate body data
-  const body = await readValidatedBody(event, settingsUpdateSchema.validate);
+  const body = await readValidatedBody(event, body => settingsUpdateSchema.validate(body));
 
   if (isNullOrUndefined(body)) {
     throw createError({

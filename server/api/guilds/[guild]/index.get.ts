@@ -39,7 +39,7 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  const { shouldSerialize } = await getValidatedQuery(event, querySchema.validate);
+  const { shouldSerialize } = await getValidatedQuery(event, (body) => querySchema.validate(body));
 
   const api = useApi();
 

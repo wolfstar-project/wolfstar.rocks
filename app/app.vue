@@ -1,33 +1,22 @@
 <template>
-  <vite-pwa-manifest />
-  <nuxt-loading-indicator color="bg-neutral" />
-  <nuxt-route-announcer />
-  <nuxt-layout name="main">
-    <nuxt-page />
-    <ShadToaster position="bottom-left" />
-  </nuxt-layout>
+  <ShadApp
+    :toaster="{
+      position: 'bottom-left'
+    }"
+  >
+    <nuxt-pwa-manifest />
+    <nuxt-loading-indicator color="bg-neutral" />
+
+    <nuxt-layout name="main">
+      <nuxt-page />
+    </nuxt-layout>
+  </ShadApp>
 </template>
 
 <script setup lang="ts">
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
 
-const nuxtApp = useNuxtApp();
-nuxtApp.hooks.hookOnce("app:manifest:update", () => {
-  useToast().add({
-    title: "Needs to update",
-    color: "info",
-    description: "Update the app to the latest version",
-    closeIcon: "ic:round-close",
-    actions: [{
-      color: "neutral",
-      activeColor: "primary",
-      label: "Update",
-      onClick: () => window.location.reload(),
-      icon: "ic:round-warning",
-    }],
-  });
-});
 // Watch for route changes to update appName
 watch(
   router.currentRoute,

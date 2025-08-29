@@ -21,7 +21,7 @@ export interface AppProps extends Omit<ConfigProviderProps, "useId" | "dir" | "l
   portal?: string | HTMLElement;
 }
 export interface AppSlots {
-  default(props?: {}): any;
+  default(props?: object): any;
 }
 </script>
 

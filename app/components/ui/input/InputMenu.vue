@@ -631,7 +631,7 @@ export interface InputMenuProps<T extends ArrayOrNested<InputMenuItem> = ArrayOr
    */
   ignoreFilter?: boolean;
   class?: any;
-  ui?: typeof theme.slots;
+  ui?: Partial<typeof theme.slots>;
 }
 
 export type InputMenuEmits<A extends ArrayOrNested<InputMenuItem>, VK extends GetItemKeys<A> | undefined, M extends boolean> = Pick<ComboboxRootEmits, "update:open"> & {
@@ -672,8 +672,8 @@ export interface InputMenuSlots<
   "item-trailing": SlotProps<T>;
   "tags-item-text": SlotProps<T>;
   "tags-item-delete": SlotProps<T>;
-  "content-top": (props?: {}) => any;
-  "content-bottom": (props?: {}) => any;
+  "content-top": (props?: object) => any;
+  "content-bottom": (props?: object) => any;
   "create-item-label"(props: { item: string }): any;
 }
 </script>
@@ -722,7 +722,7 @@ const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value);
 
 const [DefineCreateItemTemplate, ReuseCreateItemTemplate] = createReusableTemplate();
 
-const ui = computed(() => tv({ extend: tv(theme) })({
+const ui = computed(() => tv({ extend: theme })({
   color: color.value,
   variant: props.variant,
   size: inputSize?.value,

@@ -1,3 +1,4 @@
+import type { HookResult } from "nuxt/schema";
 import type { CommandAutoDelete, DisabledCommandChannel, PermissionsNode, ReactionRole, StickyRole, UniqueRoleSet } from "~~/server/database";
 
 declare global {
@@ -9,6 +10,14 @@ declare global {
     export type StickyRoleEntries = StickyRole[];
     export type ReactionRoleEntries = ReactionRole[];
     export type UniqueRoleSetEntries = UniqueRoleSet[];
+  }
+}
+
+declare module "#app" {
+  interface RuntimeNuxtHooks {
+    "dashboard:search:toggle": () => HookResult;
+    "dashboard:sidebar:toggle": () => HookResult;
+    "dashboard:sidebar:collapse": (value: boolean) => HookResult;
   }
 }
 

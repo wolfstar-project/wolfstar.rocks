@@ -306,7 +306,7 @@ export interface InputTagsProps<T extends InputTagItem = InputTagItem> extends P
   /** Highlight the ring color like a focus state. */
   highlight?: boolean;
   class?: any;
-  ui?: typeof theme.slots;
+  ui?: Partial<typeof theme.slots>;
 }
 
 export interface InputTagsEmits<T extends InputTagItem> extends TagsInputRootEmits<T> {
@@ -318,9 +318,9 @@ export interface InputTagsEmits<T extends InputTagItem> extends TagsInputRootEmi
 type SlotProps<T extends InputTagItem> = (props: { item: T; index: number }) => any;
 
 export interface InputTagsSlots<T extends InputTagItem = InputTagItem> {
-  "leading"(props?: {}): any;
-  "default"(props?: {}): any;
-  "trailing"(props?: {}): any;
+  "leading"(props?: object): any;
+  "default"(props?: object): any;
+  "trailing"(props?: object): any;
   "item-text": SlotProps<T>;
   "item-delete": SlotProps<T>;
 }
@@ -353,7 +353,7 @@ const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponen
 
 const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value);
 
-const ui = computed(() => tv({ extend: tv(theme) })({
+const ui = computed(() => tv({ extend: theme })({
   color: color.value,
   variant: props.variant,
   size: inputSize?.value,

@@ -2,6 +2,12 @@ import { buttonGroupVariantWithRoot } from "../button-group";
 
 export { default as Input } from "./Input.vue";
 export type { InputProps } from "./Input.vue";
+export { default as InputMenu } from "./InputMenu.vue";
+export type { InputMenuProps } from "./InputMenu.vue";
+export { default as InputNumber } from "./InputNumber.vue";
+export type { InputNumberProps } from "./InputNumber.vue";
+export { default as InputTags } from "./InputTags.vue";
+export type { InputTagsProps } from "./InputTags.vue";
 
 export const inputWithoutTV = {
   slots: {

@@ -1,4 +1,4 @@
-import { buttonGroupVariantWithRoot } from "../button-group";
+import { fieldGroupVariantWithRoot } from "../field-group";
 
 export { default as Input } from "./Input.vue";
 export type { InputProps } from "./Input.vue";
@@ -24,7 +24,7 @@ export const inputWithoutTV = {
     trailingIcon: "shrink-0 text-base-content/50",
   },
   variants: {
-    ...buttonGroupVariantWithRoot,
+    ...fieldGroupVariantWithRoot,
     color: {
       primary: "input-primary",
       secondary: "input-secondary",

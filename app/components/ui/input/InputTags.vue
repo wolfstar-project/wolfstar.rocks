@@ -332,7 +332,7 @@ import { TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText, 
 import { computed, onMounted, ref, toRaw } from "vue";
 import { Avatar, type AvatarProps } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
-import { useButtonGroup } from "@/composables/useButtonGroup";
+import { useButtonGroup } from "~/composables/useFieldGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { useFormField } from "@/composables/useFormField";
 

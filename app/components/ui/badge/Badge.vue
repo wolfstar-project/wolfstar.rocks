@@ -20,7 +20,7 @@
 <script lang="ts">
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
-import { buttonGroupVariant } from "../button-group";
+import { fieldGroupVariant } from "../field-group";
 
 const badge = tv({
   slots: {
@@ -35,7 +35,7 @@ const badge = tv({
     trailingIcon: "shrink-0",
   },
   variants: {
-    ...buttonGroupVariant,
+    ...fieldGroupVariant,
     color: {
       ...Object.fromEntries(colors.map(color => [color, `badge-${color}`])) as {
         [key in UIColors]: string;
@@ -156,7 +156,7 @@ import { Primitive } from "reka-ui";
 import { computed } from "vue";
 import { Avatar } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
-import { useButtonGroup } from "@/composables/useButtonGroup";
+import { useButtonGroup } from "~/composables/useFieldGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 
 const props = withDefaults(defineProps<BadgeProps>(), {

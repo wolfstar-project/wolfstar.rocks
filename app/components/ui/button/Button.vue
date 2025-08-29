@@ -51,7 +51,7 @@ import type { HTMLAttributes, Ref } from "vue";
 import type { LinkProps } from "../link";
 import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
 import { tv } from "tailwind-variants";
-import { buttonGroupVariant } from "../button-group";
+import { fieldGroupVariant } from "../field-group";
 
 const theme = tv({
   slots: {
@@ -68,7 +68,7 @@ const theme = tv({
     trailingIcon: "shrink-0",
   },
   variants: {
-    ...buttonGroupVariant,
+    ...fieldGroupVariant,
     color: {
       ...Object.fromEntries(colors.map(color => [color, `btn-${color}`])),
     },
@@ -292,10 +292,10 @@ import { computed, inject, ref } from "vue";
 import { Avatar } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
 import { Link, LinkBase, pickLinkProps } from "@/components/ui/link";
-import { useButtonGroup } from "@/composables/useButtonGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { formLoadingInjectionKey } from "@/composables/useFormField";
 import { mergeClasses, omit } from "@/utils/index";
+import { useFieldGroup } from "~/composables/useFieldGroup";
 
 const props = withDefaults(defineProps<ButtonProps>(), {
   active: undefined,
@@ -304,7 +304,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
 });
 const slots = defineSlots<ButtonSlots>();
 
-const { orientation, size: buttonSize } = useButtonGroup<ButtonProps>(props);
+const { orientation, size: buttonSize } = useFieldGroup<ButtonProps>(props);
 
 const linkProps = useForwardProps(pickLinkProps(props));
 
@@ -349,25 +349,6 @@ function isCSSColor(color: string | number): boolean {
 }
 
 /**
- * Generates Tailwind classes for custom colors
- */
-function getTailwindColorClass(color: string | number, variant?: string): string {
-  const colorStr = String(color);
-  if (variant === "outline") {
-    return `border-${colorStr} text-${colorStr} hover:bg-${colorStr} hover:text-white`;
-  }
-  if (variant === "soft" || variant === "ghost") {
-    return `text-${colorStr} hover:bg-${colorStr}/10`;
-  }
-  if (variant === "link") {
-    return `text-${colorStr} hover:text-${colorStr}/80`;
-  }
-
-  // Solid variant (default)
-  return `bg-${colorStr} border-${colorStr} text-white hover:bg-${colorStr}/90`;
-}
-
-/**
  * Handles color for Tailwind Variants
  */
 function getColorForVariants(color: string | number | undefined): string | undefined {
@@ -388,30 +369,6 @@ function getColorForVariants(color: string | number | undefined): string | undef
   return String(color);
 }
 
-/**
- * Generates additional Tailwind classes for active state when using custom colors
- */
-function getActiveCustomClasses(): string {
-  if (!props.activeColor || !isCustomColor(props.activeColor) || isCSSColor(props.activeColor)) {
-    return "";
-  }
-
-  const variant = props.activeVariant || props.variant;
-  return getTailwindColorClass(props.activeColor, variant);
-}
-
-/**
- * Generates additional Tailwind classes for inactive state when using custom colors
- */
-function getInactiveCustomClasses(): string {
-  // For inactive state, we use the base color if it's a custom Tailwind color
-  if (!props.color || !isCustomColor(props.color) || isCSSColor(props.color)) {
-    return "";
-  }
-
-  return getTailwindColorClass(props.color, props.variant);
-}
-
 const ui = computed(() =>
   tv({
     extend: theme,
@@ -419,10 +376,10 @@ const ui = computed(() =>
       variants: {
         active: {
           true: {
-            base: mergeClasses(props.activeClass, getActiveCustomClasses()),
+            base: props.activeClass,
           },
           false: {
-            base: mergeClasses(props.inactiveClass, getInactiveCustomClasses()),
+            base: props.inactiveClass,
           },
         },
       },
@@ -437,7 +394,7 @@ const ui = computed(() =>
     square: props.square || (!slots.default && !props.label),
     leading: isLeading.value,
     trailing: isTrailing.value,
-    buttonGroup: orientation.value,
+    fieldGroup: orientation.value,
     responsive: props.responsive,
   }),
 );

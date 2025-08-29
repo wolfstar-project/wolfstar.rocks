@@ -1,3 +1,4 @@
+<!-- vue/no-template-shadow -->
 <template>
   <DefineCreateItemTemplate>
     <ComboboxGroup :class="ui.group({ class: props.ui?.group })">
@@ -687,11 +688,11 @@ import { computed, nextTick, onMounted, ref, toRaw, toRef } from "vue";
 import { Avatar, type AvatarProps } from "@/components/ui/avatar";
 import { Chip } from "@/components/ui/chip";
 import { Icon } from "@/components/ui/icon";
-import { useButtonGroup } from "@/composables/useButtonGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { useFormField } from "@/composables/useFormField";
 import { usePortal } from "@/composables/usePortal";
 import { compare, get, getDisplayValue, isArrayOfArray } from "@/utils";
+import { useFieldGroup } from "~/composables/useFieldGroup";
 
 defineOptions({ inheritAttrs: false });
 
@@ -715,10 +716,10 @@ const contentProps = toRef(() => defu(props.content, { side: "bottom", sideOffse
 const arrowProps = toRef(() => props.arrow as ComboboxArrowProps);
 
 const { emitFormBlur, emitFormFocus, emitFormChange, emitFormInput, size: formGroupSize, color, id, name, highlight, disabled, ariaAttrs } = useFormField<InputProps>(props);
-const { orientation, size: buttonGroupSize } = useButtonGroup<InputProps>(props);
+const { orientation, size: fieldGroupSize } = useFieldGroup<InputProps>(props);
 const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(toRef(() => defu(props, { trailingIcon: "lucide:chevron-down" })));
 
-const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value);
+const inputSize = computed(() => fieldGroupSize.value || formGroupSize.value);
 
 const [DefineCreateItemTemplate, ReuseCreateItemTemplate] = createReusableTemplate();
 

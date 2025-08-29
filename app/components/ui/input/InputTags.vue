@@ -332,7 +332,7 @@ import { TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText, 
 import { computed, onMounted, ref, toRaw } from "vue";
 import { Avatar, type AvatarProps } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
-import { useButtonGroup } from "~/composables/useFieldGroup";
+import { useFieldGroup } from "~/composables/useFieldGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { useFormField } from "@/composables/useFormField";
 
@@ -348,7 +348,7 @@ const slots = defineSlots<InputTagsSlots<T>>();
 const rootProps = useForwardPropsEmits(reactivePick(props, "as", "addOnPaste", "addOnTab", "addOnBlur", "duplicate", "delimiter", "max", "convertValue", "displayValue", "required"), emits);
 
 const { emitFormBlur, emitFormFocus, emitFormChange, emitFormInput, size: formGroupSize, color, id, name, highlight, disabled, ariaAttrs } = useFormField<InputTagsProps>(props);
-const { orientation, size: buttonGroupSize } = useButtonGroup<InputTagsProps>(props);
+const { orientation, size: buttonGroupSize } = useFieldGroup<InputTagsProps>(props);
 const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
 
 const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value);

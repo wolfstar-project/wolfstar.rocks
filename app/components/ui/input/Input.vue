@@ -312,7 +312,7 @@ const {
   emitFormFocus,
   ariaAttrs,
 } = useFormField<InputProps>(props, { deferInputValidation: true });
-const { orientation, size: buttonGroupSize } = useButtonGroup<InputProps>(props);
+const { orientation, size: buttonGroupSize } = useFieldGroup<InputProps>(props);
 const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
 
 const inputSize = computed(() => buttonGroupSize.value || formGroupSize.value);

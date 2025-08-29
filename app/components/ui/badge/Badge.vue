@@ -156,7 +156,7 @@ import { Primitive } from "reka-ui";
 import { computed } from "vue";
 import { Avatar } from "@/components/ui/avatar";
 import { Icon } from "@/components/ui/icon";
-import { useButtonGroup } from "~/composables/useFieldGroup";
+import { useFieldGroup } from "~/composables/useFieldGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 
 const props = withDefaults(defineProps<BadgeProps>(), {
@@ -164,7 +164,7 @@ const props = withDefaults(defineProps<BadgeProps>(), {
 });
 const slots = defineSlots<BadgeSlots>();
 
-const { orientation, size: buttonGroupSize } = useButtonGroup<BadgeProps>(props);
+const { orientation, size: buttonGroupSize } = useFieldGroup<BadgeProps>(props);
 const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(props);
 
 const ui = computed(() => badge({

@@ -86,7 +86,7 @@ export interface FooterColumnLink extends Omit<LinkProps, "custom"> {
    */
   icon?: string;
   class?: any;
-  ui?: Pick<typeof theme.slots, "item" | "link" | "linkLabel" | "linkLabelExternalIcon" | "linkLeadingIcon">;
+  ui?: Partial<Pick<typeof theme.slots, "item" | "link" | "linkLabel" | "linkLabelExternalIcon" | "linkLeadingIcon">>;
 }
 
 export interface FooterColumn<T extends FooterColumnLink = FooterColumnLink> {

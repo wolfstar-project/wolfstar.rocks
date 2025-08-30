@@ -52,7 +52,7 @@
 
       <ToastClose v-if="close || !!slots.close" as-child>
         <slot name="close" :ui="ui">
-          <UButton
+          <Button
             v-if="close"
             :icon="closeIcon || 'lucide:x'"
             color="neutral"

@@ -2,6 +2,7 @@ export { default as AnimatedButton } from "./AnimatedButton.vue";
 export { default as Avatar } from "./Avatar.vue";
 export type { AvatarProps } from "./Avatar.vue";
 export { default as AvatarGroup } from "./AvatarGroup.vue";
+export type { AvatarGroupProps } from "./AvatarGroup.vue";
 export { default as Badge } from "./Badge.vue";
 export type { BadgeProps } from "./Badge.vue";
 export { default as Button } from "./Button.vue";
@@ -16,9 +17,9 @@ export { default as Kbd } from "./Kbd.vue";
 export type { KbdProps } from "./Kbd.vue";
 export { default as Progress } from "./Progress.vue";
 export type { ProgressProps } from "./Progress.vue";
-export { default as Toast } from "./Toast.vue";
-export { default as Toaster } from "./Toaster.vue";
 export { default as RippleButton } from "./RippleButton.vue";
+export type { SeparatorProps } from "./Separator.vue";
+export { default as Separator } from "./Separator.vue";
 
 export const fieldGroupVariant = {
   fieldGroup: {

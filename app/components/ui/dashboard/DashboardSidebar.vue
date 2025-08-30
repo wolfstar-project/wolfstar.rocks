@@ -82,9 +82,8 @@
 </template>
 
 <script lang="ts">
-import type { DrawerProps } from "../drawer";
 import type { ButtonProps } from "@/components/ui/element";
-import type { SlideoverProps } from "@/components/ui/slideover";
+import type { DrawerProps, ModalProps, SlideoverProps } from "@/components/ui/overlay";
 import type { UseResizableProps } from "@/composables/useResizable";
 import { tv } from "tailwind-variants";
 
@@ -170,9 +169,7 @@ import { createReusableTemplate } from "@vueuse/core";
 import { defu } from "defu";
 import { computed, ref, toRef, useId, watch } from "vue";
 import { DashboardResizeHandle, DashboardSidebarToggle } from "@/components/ui/dashboard";
-import { Drawer } from "@/components/ui/drawer";
-import { Modal, type ModalProps } from "@/components/ui/modal";
-import { Slideover } from "@/components/ui/slideover";
+import { Drawer, Modal, Slideover } from "@/components/ui/overlay";
 import { useResizable } from "@/composables/useResizable";
 import { useDashboard } from "@/utils/dashboard";
 

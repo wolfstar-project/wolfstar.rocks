@@ -21,7 +21,6 @@
 </template>
 
 <script lang="ts">
-import type { AppConfig } from "@nuxt/schema";
 import type { TooltipArrowProps, TooltipContentEmits, TooltipContentProps, TooltipRootEmits, TooltipRootProps, TooltipTriggerProps } from "reka-ui";
 import type { KbdProps } from "@/components/ui/element";
 import type { EmitsToProps } from "@/types/utils";

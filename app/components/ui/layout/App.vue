@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import type { ConfigProviderProps, TooltipProviderProps } from "reka-ui";
-import type { ToasterProps } from "../toaster";
+import type { ToasterProps } from "@/components/ui/overlay";
 
 export interface AppProps extends Omit<ConfigProviderProps, "useId" | "dir" | "locale"> {
   tooltip?: TooltipProviderProps;
@@ -29,8 +29,7 @@ export interface AppSlots {
 import { reactivePick } from "@vueuse/core";
 import { ConfigProvider, TooltipProvider, useForwardProps } from "reka-ui";
 import { provide, toRef, useId } from "vue";
-import { OverlayProvider } from "@/components/ui/overlay";
-import { Toaster } from "@/components/ui/toaster";
+import { OverlayProvider, Toaster } from "@/components/ui/overlay";
 import { portalTargetInjectionKey } from "@/composables/usePortal";
 
 const props = withDefaults(defineProps<AppProps>(), {

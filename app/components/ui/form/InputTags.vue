@@ -330,11 +330,10 @@ export interface InputTagsSlots<T extends InputTagItem = InputTagItem> {
 import { reactivePick } from "@vueuse/core";
 import { TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText, TagsInputRoot, useForwardPropsEmits } from "reka-ui";
 import { computed, onMounted, ref, toRaw } from "vue";
-import { Avatar, type AvatarProps } from "~/components/ui/element/avatar";
-import { Icon } from "@/components/ui/icon";
-import { useFieldGroup } from "~/composables/useFieldGroup";
+import { Avatar, type AvatarProps, Icon } from "@/components/ui/element";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { useFormField } from "@/composables/useFormField";
+import { useFieldGroup } from "~/composables/useFieldGroup";
 
 defineOptions({ inheritAttrs: false });
 

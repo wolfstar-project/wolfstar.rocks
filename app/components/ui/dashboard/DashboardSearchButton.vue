@@ -40,9 +40,8 @@
 </template>
 
 <script lang="ts">
-import type { ButtonProps, ButtonSlots } from "@/components/ui/element";
-import type { KbdProps } from "@/components/ui/element";
-import type { TooltipProps } from "@/components/ui/tooltip";
+import type { ButtonProps, ButtonSlots, KbdProps } from "@/components/ui/element";
+import type { TooltipProps } from "@/components/ui/overlay";
 import { tv } from "tailwind-variants";
 
 const theme = tv({ slots: {
@@ -100,9 +99,8 @@ import { createReusableTemplate, reactivePick } from "@vueuse/core";
 import { defu } from "defu";
 import { useForwardProps } from "reka-ui";
 import { computed, toRef } from "vue";
-import { Button } from "@/components/ui/element";
-import { Kbd } from "@/components/ui/element";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Button, Kbd } from "@/components/ui/element";
+import { Tooltip } from "@/components/ui/overlay";
 import { omit, transformUI } from "@/utils";
 import { useDashboard } from "@/utils/dashboard";
 

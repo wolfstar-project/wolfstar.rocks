@@ -49,8 +49,7 @@
 <script lang="ts">
 import type { TabsRootEmits, TabsRootProps } from "reka-ui";
 import type { VariantProps } from "tailwind-variants";
-import type { AvatarProps } from "~/components/ui/element/avatar";
-import type { BadgeProps } from "@/components/ui/badge";
+import type { AvatarProps, BadgeProps } from "@/components/ui/element";
 import type { DynamicSlots } from "@/types/utils";
 import { tv } from "tailwind-variants";
 
@@ -362,9 +361,7 @@ import type { ComponentPublicInstance, HTMLAttributes } from "vue";
 import { reactivePick } from "@vueuse/core";
 import { TabsContent, TabsList, TabsRoot, TabsTrigger, useForwardPropsEmits } from "reka-ui";
 import { computed, ref } from "vue";
-import { Avatar } from "~/components/ui/element/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Icon } from "@/components/ui/icon";
+import { Avatar, Badge, Icon } from "@/components/ui/element";
 
 const props = withDefaults(defineProps<TabsProps<T>>(), {
   content: true,

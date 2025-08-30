@@ -48,7 +48,7 @@
 <script lang="ts">
 import type { VariantProps } from "tailwind-variants";
 import type { HTMLAttributes, Ref } from "vue";
-import type { LinkProps } from "../link";
+import type { LinkProps } from "@/components/ui/link";
 import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
 import { tv } from "tailwind-variants";
 import { fieldGroupVariant } from "@/components/ui/element";

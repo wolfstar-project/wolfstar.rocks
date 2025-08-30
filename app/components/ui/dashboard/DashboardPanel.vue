@@ -67,7 +67,6 @@ export interface DashboardPanelSlots {
 </script>
 
 <script setup lang="ts">
-import { useAppConfig } from "#imports";
 import { computed, toRef, useId } from "vue";
 import { DashboardResizeHandle } from "@/components/ui/dashboard";
 import { useResizable } from "@/composables/useResizable";

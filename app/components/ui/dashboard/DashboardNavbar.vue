@@ -42,7 +42,6 @@
 </template>
 
 <script lang="ts">
-import type { AppConfig } from "@nuxt/schema";
 import type { ButtonProps } from "@/components/ui/element";
 import type { DashboardContext } from "@/utils/dashboard";
 import { tv, type VariantProps } from "tailwind-variants";
@@ -116,7 +115,7 @@ import { createReusableTemplate } from "@vueuse/core";
 import { Primitive } from "reka-ui";
 import { computed } from "vue";
 import { DashboardSidebarToggle } from "@/components/ui/dashboard";
-import { Icon } from "@/components/ui/icon";
+import { Icon } from "@/components/ui/element";
 import { useDashboard } from "@/utils/dashboard";
 
 defineOptions({ inheritAttrs: false });

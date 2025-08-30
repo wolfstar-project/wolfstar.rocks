@@ -1,8 +1,9 @@
+import { fieldGroupVariantWithRoot } from "@/components/ui/element";
+
+export { default as Checkbox } from "./Checkbox.vue";
 export { default as Form } from "./Form.vue";
 export { default as FormField } from "./FormField.vue";
 export type { FormFieldProps } from "./FormField.vue";
-export { FieldArray as FormFieldArray } from "vee-validate";
-import { fieldGroupVariantWithRoot } from "../field-group";
 
 export { default as Input } from "./Input.vue";
 export type { InputProps } from "./Input.vue";
@@ -12,6 +13,7 @@ export { default as InputNumber } from "./InputNumber.vue";
 export type { InputNumberProps } from "./InputNumber.vue";
 export { default as InputTags } from "./InputTags.vue";
 export type { InputTagsProps } from "./InputTags.vue";
+export { FieldArray as FormFieldArray } from "vee-validate";
 
 export const inputWithoutTV = {
   slots: {

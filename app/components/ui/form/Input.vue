@@ -280,11 +280,10 @@ export interface InputSlots {
 </script>
 
 <script setup lang="ts">
-import type { AvatarProps } from "~/components/ui/element/avatar";
+import type { AvatarProps } from "@/components/ui/element";
 import { Primitive } from "reka-ui";
 import { computed, onMounted, ref } from "vue";
-import { Avatar } from "~/components/ui/element/avatar";
-import { Icon } from "@/components/ui/icon";
+import { Avatar, Icon } from "@/components/ui/element";
 import { useFormField } from "@/composables/useFormField";
 
 defineOptions({ inheritAttrs: false });

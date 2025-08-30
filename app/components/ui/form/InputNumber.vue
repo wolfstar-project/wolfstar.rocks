@@ -52,7 +52,7 @@
 <script lang="ts">
 import type { NumberFieldRootProps } from "reka-ui";
 import type { VariantProps } from "tailwind-variants";
-import type { ButtonProps } from "../button";
+import type { ButtonProps } from "@/components/ui/element";
 import type { PartialString } from "@/types/utils";
 import { tv } from "tailwind-variants";
 

@@ -9,7 +9,6 @@
 </template>
 
 <script lang="ts">
-import type { AppConfig } from "@nuxt/schema";
 import type { ButtonProps } from "@/components/ui/element";
 import { tv } from "tailwind-variants";
 

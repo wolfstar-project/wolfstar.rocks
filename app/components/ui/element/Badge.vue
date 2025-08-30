@@ -19,8 +19,9 @@
 
 <script lang="ts">
 import type { VariantProps } from "tailwind-variants";
+import type { AvatarProps } from "~/components/ui/element";
 import { tv } from "tailwind-variants";
-import { fieldGroupVariant } from "../field-group";
+import { fieldGroupVariant } from "@/components/ui/element";
 
 const badge = tv({
   slots: {
@@ -150,14 +151,12 @@ export interface BadgeSlots {
 </script>
 
 <script setup lang="ts">
-import type { AvatarProps } from "~/components/ui/element/avatar";
 import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
 import { Primitive } from "reka-ui";
 import { computed } from "vue";
-import { Avatar } from "~/components/ui/element/avatar";
-import { Icon } from "@/components/ui/icon";
-import { useFieldGroup } from "~/composables/useFieldGroup";
 import { useComponentIcons } from "@/composables/useComponentIcons";
+import { Avatar, Icon } from "~/components/ui/element";
+import { useFieldGroup } from "~/composables/useFieldGroup";
 
 const props = withDefaults(defineProps<BadgeProps>(), {
   as: "span",
@@ -172,6 +171,6 @@ const ui = computed(() => badge({
   variant: props.variant,
   size: buttonGroupSize.value || props.size,
   square: props.square || (!slots.default && !props.label),
-  buttonGroup: orientation.value,
+  fieldGroup: orientation.value,
 }));
 </script>

@@ -133,9 +133,9 @@ export interface ToasterSlots {
 import { reactivePick } from "@vueuse/core";
 import { ToastPortal, ToastProvider, ToastViewport, useForwardProps } from "reka-ui";
 import { computed, ref } from "vue";
+import { Toast } from "@/components/ui/overlay";
 import { useToast } from "@/composables/useToast";
 import { omit } from "@/utils/index";
-import Toast from "../element/Toast.vue";
 
 const props = withDefaults(defineProps<ToasterProps>(), {
   expand: true,

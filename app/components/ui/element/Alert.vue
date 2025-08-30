@@ -34,10 +34,10 @@
       <slot name="close" :ui="ui">
         <Button
           v-if="close"
-          :icon="closeIcon || appConfig.ui.icons.close"
+          :icon="closeIcon || 'lucide:x'"
           color="neutral"
           variant="link"
-          :aria-label="t('alert.close')"
+          aria-label="Close..."
           v-bind="(typeof close === 'object' ? close as Partial<ButtonProps> : {})"
           :class="ui.close({ class: props.ui?.close })"
           @click="emits('update:open', false)"
@@ -47,7 +47,7 @@
   </Primitive>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import type { VariantProps } from "tailwind-variants";
 import type { AvatarProps, ButtonProps } from "@/components/ui/element";
 
@@ -55,7 +55,7 @@ import { tv } from "tailwind-variants";
 
 const theme = tv({
   slots: {
-    root: "alert relative overflow-hidden w-full rounded-lg p-4 flex gap-2.5",
+    root: "relative overflow-hidden w-full rounded-lg p-4 flex gap-2.5 alert",
     wrapper: "min-w-0 flex-1 flex flex-col",
     title: "text-sm font-medium",
     description: "text-sm opacity-90",
@@ -67,27 +67,27 @@ const theme = tv({
   },
   variants: {
     color: {
-      primary: "alert-primary",
-      secondary: "alert-secondary",
-      accent: "alert-accent",
-      success: "alert-success",
-      info: "alert-info",
-      warning: "alert-warning",
-      error: "alert-error",
+      primary: "",
+      secondary: "",
+      success: "",
+      info: "",
+      warning: "",
+      error: "",
       neutral: "",
     },
     variant: {
-      outline: "alert-outline",
-      soft: "alert-soft",
-      dash: "alert-dash",
+      solid: "",
+      outline: "",
+      soft: "",
       subtle: "",
     },
     orientation: {
       horizontal: {
-        root: "alert-horizontal items-center",
+        root: "items-center",
+        actions: "items-center",
       },
       vertical: {
-        root: "alert-vertical items-start",
+        root: "items-start",
         actions: "items-start mt-2.5",
       },
     },
@@ -100,83 +100,176 @@ const theme = tv({
   compoundVariants: [
     {
       color: "primary",
-      variant: "subtle",
+      variant: "solid",
       class: {
-        root: "bg-primary/10 text-primary ring ring-inset ring-primary/25",
+        root: "alert-primary",
       },
     },
     {
-      color: "secondary",
-      variant: "subtle",
+      color: "primary",
+      variant: "outline",
       class: {
-        root: "bg-secondary/10 text-secondary ring ring-inset ring-secondary/25",
+        root: "alert-primary border-primary/20",
       },
     },
     {
-      color: "accent",
+      color: "primary",
+      variant: "soft",
+      class: {
+        root: "alert-primary bg-opacity-10",
+      },
+    },
+    {
+      color: "primary",
       variant: "subtle",
       class: {
-        root: "bg-accent/10 text-accent ring ring-inset ring-accent/25",
+        root: "alert-primary bg-opacity-10 border border-primary/20",
+      },
+    },
+    {
+      color: "success",
+      variant: "solid",
+      class: {
+        root: "alert-success",
+      },
+    },
+    {
+      color: "success",
+      variant: "outline",
+      class: {
+        root: "alert-success border-success/20",
+      },
+    },
+    {
+      color: "success",
+      variant: "soft",
+      class: {
+        root: "alert-success bg-opacity-10",
       },
     },
     {
       color: "success",
       variant: "subtle",
       class: {
-        root: "bg-success/10 text-success ring ring-inset ring-success/25",
+        root: "alert-success bg-opacity-10 border border-success/20",
       },
     },
     {
-      color: "info",
-      variant: "subtle",
+      color: "warning",
+      variant: "solid",
       class: {
-        root: "bg-info/10 text-info ring ring-inset ring-info/25",
+        root: "alert-warning",
+      },
+    },
+    {
+      color: "warning",
+      variant: "outline",
+      class: {
+        root: "alert-warning border-warning/20",
+      },
+    },
+    {
+      color: "warning",
+      variant: "soft",
+      class: {
+        root: "alert-warning bg-opacity-10",
       },
     },
     {
       color: "warning",
       variant: "subtle",
       class: {
-        root: "bg-warning/10 text-warning ring ring-inset ring-warning/25",
+        root: "alert-warning bg-opacity-10 border border-warning/20",
+      },
+    },
+    {
+      color: "error",
+      variant: "solid",
+      class: {
+        root: "alert-error",
+      },
+    },
+    {
+      color: "error",
+      variant: "outline",
+      class: {
+        root: "alert-error border-error/20",
+      },
+    },
+    {
+      color: "error",
+      variant: "soft",
+      class: {
+        root: "alert-error bg-opacity-10",
       },
     },
     {
       color: "error",
       variant: "subtle",
       class: {
-        root: "bg-error/10 text-error ring ring-inset ring-error/25",
+        root: "alert-error bg-opacity-10 border border-error/20",
+      },
+    },
+    {
+      color: "info",
+      variant: "solid",
+      class: {
+        root: "alert-info",
+      },
+    },
+    {
+      color: "info",
+      variant: "outline",
+      class: {
+        root: "alert-info border-info/20",
+      },
+    },
+    {
+      color: "info",
+      variant: "soft",
+      class: {
+        root: "alert-info bg-opacity-10",
+      },
+    },
+    {
+      color: "info",
+      variant: "subtle",
+      class: {
+        root: "alert-info bg-opacity-10 border border-info/20",
       },
     },
     {
       color: "neutral",
+      variant: "solid",
       class: {
-        root: "text-inverted bg-inverted",
+        root: "alert-neutral",
       },
     },
     {
       color: "neutral",
       variant: "outline",
       class: {
-        root: "text-highlighted bg-default ring ring-inset ring-default",
+        root: "alert-neutral border-neutral/20",
       },
     },
     {
       color: "neutral",
       variant: "soft",
       class: {
-        root: "text-highlighted bg-elevated/50",
+        root: "alert-neutral bg-opacity-10",
       },
     },
     {
       color: "neutral",
       variant: "subtle",
       class: {
-        root: "text-highlighted bg-elevated/50 ring ring-inset ring-accented",
+        root: "alert-neutral bg-opacity-10 border border-neutral/20",
       },
     },
   ],
   defaultVariants: {
     color: "primary",
+    variant: "solid",
   },
 });
 

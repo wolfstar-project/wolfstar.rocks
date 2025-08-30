@@ -1,4 +1,4 @@
-<!-- vue/no-template-shadow -->
+<!-- eslint-disable vue/no-template-shadow -->
 <template>
   <DefineCreateItemTemplate>
     <ComboboxGroup :class="ui.group({ class: props.ui?.group })">
@@ -170,10 +170,10 @@
 import type { ComboboxArrowProps, ComboboxContentEmits, ComboboxContentProps, ComboboxRootEmits, ComboboxRootProps } from "reka-ui";
 import type { VariantProps } from "tailwind-variants";
 import type { InputHTMLAttributes } from "vue";
-import type { ChipProps } from "~/components/ui/element";
-import type { InputProps } from "@/components/ui/input";
+import type { InputProps } from "@/components/ui/form";
 import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
 import type { AcceptableValue, ArrayOrNested, EmitsToProps, GetItemKeys, GetItemValue, GetModelValue, GetModelValueEmits, NestedItem } from "@/types/utils";
+import type { ChipProps } from "~/components/ui/element";
 import { tv } from "tailwind-variants";
 
 const theme = tv({
@@ -685,9 +685,8 @@ import { defu } from "defu";
 import { isEqual } from "ohash/utils";
 import { ComboboxAnchor, ComboboxArrow, ComboboxContent, ComboboxEmpty, ComboboxGroup, ComboboxInput, ComboboxItem, ComboboxItemIndicator, ComboboxLabel, ComboboxPortal, ComboboxRoot, ComboboxSeparator, ComboboxTrigger, TagsInputInput, TagsInputItem, TagsInputItemDelete, TagsInputItemText, TagsInputRoot, useFilter, useForwardPropsEmits } from "reka-ui";
 import { computed, nextTick, onMounted, ref, toRaw, toRef } from "vue";
-import { Avatar, type AvatarProps } from "~/components/ui/element/avatar";
-import { Chip } from "~/components/ui/element";
-import { Icon } from "@/components/ui/icon";
+import { Icon } from "@/components/ui/element";
+import { Avatar, type AvatarProps, Chip } from "@/components/ui/element";
 import { useComponentIcons } from "@/composables/useComponentIcons";
 import { useFormField } from "@/composables/useFormField";
 import { usePortal } from "@/composables/usePortal";

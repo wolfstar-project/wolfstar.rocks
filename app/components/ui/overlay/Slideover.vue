@@ -1,4 +1,4 @@
-<!-- vue/no-template-shadow -->
+<!-- eslint-disable vue/no-template-shadow -->
 <template>
   <DialogRoot v-slot="{ open, close }" v-bind="rootProps">
     <DialogTrigger v-if="!!slots.default" as-child :class="props.class">

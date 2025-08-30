@@ -186,7 +186,6 @@ export function omit<Data extends object, Keys extends keyof Data>(data: Data, k
   const result = { ...data };
 
   for (const key of keys) {
-    // eslint-disable-next-line ts/no-dynamic-delete
     delete result[key];
   }
 
@@ -286,6 +285,8 @@ export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((
  * @param items The items.
  * @param value The value.
  * @param options The options.
+ * @param options.valueKey The value key.
+ * @param options.labelKey The label key.
  * @returns The display value.
  */
 export function getDisplayValue<T, V>(

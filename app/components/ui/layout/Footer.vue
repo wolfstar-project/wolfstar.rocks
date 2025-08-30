@@ -60,7 +60,7 @@ export interface FooterSlots {
 import { Primitive } from "reka-ui";
 import { tv } from "tailwind-variants";
 import { computed } from "vue";
-import { Container } from "@/components/ui/container";
+import { Container } from "@/components/ui/layout";
 
 const props = withDefaults(defineProps<FooterProps>(), {
   as: "footer",

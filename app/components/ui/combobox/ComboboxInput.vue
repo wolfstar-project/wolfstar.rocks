@@ -21,7 +21,7 @@ import type { ComboboxInputEmits, ComboboxInputProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
 import { ComboboxInput, useForwardPropsEmits } from "reka-ui";
 import { computed } from "vue";
-import { Icon } from "@/components/ui/icon";
+import { Icon } from "@/components/ui/element";
 import { cn } from "@/utils/cn";
 
 defineOptions({

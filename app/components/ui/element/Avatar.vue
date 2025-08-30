@@ -29,7 +29,6 @@
 
 <script lang="ts">
 import type { VariantProps } from "tailwind-variants";
-import type { HTMLAttributes } from "vue";
 import { NuxtImg } from "#components";
 import { tv } from "tailwind-variants";
 

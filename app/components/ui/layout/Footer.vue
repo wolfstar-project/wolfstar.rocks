@@ -44,7 +44,7 @@ export interface FooterProps {
    */
   as?: any;
   class?: any;
-  ui?: typeof theme.slots;
+  ui?: Partial<typeof theme.slots>;
 }
 
 export interface FooterSlots {

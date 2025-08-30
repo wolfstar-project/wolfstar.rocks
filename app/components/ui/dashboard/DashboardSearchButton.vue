@@ -40,8 +40,8 @@
 </template>
 
 <script lang="ts">
-import type { ButtonProps, ButtonSlots } from "@/components/ui/button";
-import type { KbdProps } from "@/components/ui/kbd";
+import type { ButtonProps, ButtonSlots } from "@/components/ui/element";
+import type { KbdProps } from "@/components/ui/element";
 import type { TooltipProps } from "@/components/ui/tooltip";
 import { tv } from "tailwind-variants";
 
@@ -100,8 +100,8 @@ import { createReusableTemplate, reactivePick } from "@vueuse/core";
 import { defu } from "defu";
 import { useForwardProps } from "reka-ui";
 import { computed, toRef } from "vue";
-import { Button } from "@/components/ui/button";
-import { Kbd } from "@/components/ui/kbd";
+import { Button } from "@/components/ui/element";
+import { Kbd } from "@/components/ui/element";
 import { Tooltip } from "@/components/ui/tooltip";
 import { omit, transformUI } from "@/utils";
 import { useDashboard } from "@/utils/dashboard";

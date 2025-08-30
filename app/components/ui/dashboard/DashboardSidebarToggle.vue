@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import type { ButtonProps } from "@/components/ui/button";
+import type { ButtonProps } from "@/components/ui/element";
 import { tv } from "tailwind-variants";
 
 const theme = tv({
@@ -40,7 +40,7 @@ export interface DashboardSidebarToggleProps extends /** @vue-ignore */ Pick<But
 import { reactivePick } from "@vueuse/core";
 import { useForwardProps } from "reka-ui";
 import { computed, ref } from "vue";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/element";
 import { useDashboard } from "@/utils/dashboard";
 
 const props = withDefaults(defineProps<DashboardSidebarToggleProps>(), {

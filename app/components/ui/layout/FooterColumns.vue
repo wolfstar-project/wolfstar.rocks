@@ -102,7 +102,7 @@ export interface FooterColumnsProps<T extends FooterColumnLink = FooterColumnLin
   as?: any;
   class?: any;
   columns?: FooterColumn<T>[];
-  ui?: typeof theme.slots;
+  ui?: Partial<typeof theme.slots>;
 }
 
 type SlotProps<T> = (props: { link: T; active: boolean }) => any;

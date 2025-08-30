@@ -83,7 +83,7 @@
 
 <script lang="ts">
 import type { DrawerProps } from "../drawer";
-import type { ButtonProps } from "@/components/ui/button";
+import type { ButtonProps } from "@/components/ui/element";
 import type { SlideoverProps } from "@/components/ui/slideover";
 import type { UseResizableProps } from "@/composables/useResizable";
 import { tv } from "tailwind-variants";

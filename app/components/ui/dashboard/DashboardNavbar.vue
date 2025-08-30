@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import type { AppConfig } from "@nuxt/schema";
-import type { ButtonProps } from "@/components/ui/button";
+import type { ButtonProps } from "@/components/ui/element";
 import type { DashboardContext } from "@/utils/dashboard";
 import { tv, type VariantProps } from "tailwind-variants";
 

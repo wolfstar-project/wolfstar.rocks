@@ -1,5 +1,5 @@
 import type { MaybeRefOrGetter } from "vue";
-import type { AvatarProps } from "@/components/ui/avatar";
+import type { AvatarProps } from "~/components/ui/element/avatar";
 import { computed, toValue } from "vue";
 
 export interface UseComponentIconsProps {

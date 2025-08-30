@@ -21,7 +21,6 @@
 import type { VariantProps } from "tailwind-variants";
 import type { AvatarProps } from "~/components/ui/element";
 import { tv } from "tailwind-variants";
-import { fieldGroupVariant } from "@/components/ui/element";
 
 const badge = tv({
   slots: {
@@ -36,7 +35,10 @@ const badge = tv({
     trailingIcon: "shrink-0",
   },
   variants: {
-    ...fieldGroupVariant,
+    fieldGroup: {
+      horizontal: "not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none",
+      vertical: "not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
+    },
     color: {
       ...Object.fromEntries(colors.map(color => [color, `badge-${color}`])) as {
         [key in UIColors]: string;

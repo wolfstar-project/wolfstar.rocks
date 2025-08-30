@@ -51,7 +51,6 @@ import type { HTMLAttributes, Ref } from "vue";
 import type { LinkProps } from "@/components/ui/link";
 import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
 import { tv } from "tailwind-variants";
-import { fieldGroupVariant } from "@/components/ui/element";
 
 const theme = tv({
   slots: {
@@ -68,7 +67,10 @@ const theme = tv({
     trailingIcon: "shrink-0",
   },
   variants: {
-    ...fieldGroupVariant,
+    fieldGroup: {
+      horizontal: "not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none",
+      vertical: "not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
+    },
     color: {
       ...Object.fromEntries(colors.map(color => [color, `btn-${color}`])),
     },

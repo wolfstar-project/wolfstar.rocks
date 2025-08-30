@@ -2,123 +2,163 @@
   <SettingsSection title="General Settings">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Prefix Setting -->
-      <div class="space-y-2">
-        <ShadLabel for="prefix">{{ generalConfig.prefix.name }}</ShadLabel>
-        <ShadInput
-          id="prefix"
-          v-model="formData.prefix"
-          :placeholder="generalConfig.prefix.placeholder"
-          :maxlength="generalConfig.prefix.maxLength"
-          :color="errors.prefix ? 'error' : 'primary'"
-          class="w-full"
-        />
-        <p class="text-sm text-base-content/70">{{ generalConfig.prefix.description }}</p>
-        <p v-if="errors.prefix" class="text-sm text-error">{{ errors.prefix }}</p>
-      </div>
+      <ShadForm ref="form" :schema="schema" :state="state" class="space-y-4" :on-error="onError" @submit="onSubmit">
+        <div>
+          <ShadFormField>
+            <template #label>
+              <ShadLabel for="prefix">{{ generalConfig.prefix.name }}</ShadLabel>
+            </template>
 
-      <!-- Language Setting -->
-      <div class="space-y-2">
-        <ShadLabel for="language">{{ generalConfig.language.name }}</ShadLabel>
-        <ShadSelect
-          id="language"
-          v-model="formData.language"
-          :color="errors.language ? 'error' : 'primary'"
-          placeholder="Select language..."
-          class="w-full"
-        />
-        <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
-        <p v-if="errors.language" class="text-sm text-error">{{ errors.language }}</p>
-      </div>
-
-      <!-- Disable Natural Prefix Setting -->
-      <div class="space-y-2">
-        <div class="flex items-center justify-between">
-          <div>
-            <ShadLabel for="disableNaturalPrefix">{{ generalConfig.disableNaturalPrefix.name }}</ShadLabel>
-            <p class="text-sm text-base-content/70">{{ generalConfig.disableNaturalPrefix.description }}</p>
-          </div>
-          <ShadCheckbox
-            id="disableNaturalPrefix"
-            v-model="formData.disableNaturalPrefix"
-            color="primary"
-          />
+            <ShadInput
+              id="prefix"
+              v-model="state.prefix"
+              :placeholder="generalConfig.prefix.placeholder"
+              :maxlength="generalConfig.prefix.maxLength"
+              color="primary"
+              class="w-full"
+            >
+              <template #trailing>
+                <div
+                  id="character-count"
+                  class="text-xs text-muted tabular-nums"
+                  aria-live="polite"
+                  role="status"
+                >
+                  {{ state.prefix?.length }}/{{ generalConfig.prefix.maxLength }}
+                </div>
+              </template>
+            </ShadInput>
+            <template #error="{ error }">
+              <p class="text-sm text-error">{{ error }}</p>
+            </template>
+            <template #description>
+              <p class="text-sm text-base-content/70">{{ generalConfig.prefix.description }}</p>
+            </template>
+          </ShadFormField>
         </div>
-      </div>
+
+        <!-- Language Setting -->
+        <div>
+          <ShadFormField>
+            <template #label>
+              <ShadLabel for="language">{{ generalConfig.language.name }}</ShadLabel>
+            </template>
+            <template #description>
+              <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
+            </template>
+            <ShadInputMenu
+              id="language"
+              color="primary"
+              placeholder="Select language..."
+              class="w-full"
+              :items="items"
+            />
+            <template #error="{ error }">
+              <p class="text-sm text-error">{{ error }}</p>
+            </template>
+          </ShadFormField>
+        </div>
+
+        <!-- Disable Natural Prefix Setting -->
+        <div>
+          <div class="flex items-center justify-between">
+            <ShadFormField>
+              <template #label>
+                <ShadLabel for="disableNaturalPrefix">{{ generalConfig.disableNaturalPrefix.name }}</ShadLabel>
+              </template>
+              <template #description>
+                <p class="text-sm text-base-content/70">{{ generalConfig.disableNaturalPrefix.description }}</p>
+              </template>
+              <ShadCheckbox
+                id="disableNaturalPrefix"
+                v-model="state.disableNaturalPrefix"
+                color="primary"
+              />
+            </ShadFormField>
+          </div>
+        </div>
+      </ShadForm>
     </div>
   </SettingsSection>
 </template>
 
 <script setup lang="ts">
-import { z } from "zod";
+import type { OauthFlattenedGuild } from "#shared/types/discord";
+import type { FormErrorEvent, FormSubmitEvent } from "~/types/form";
+import type { ValuesType } from "~/types/utils";
+import * as yup from "yup";
 import { useGuildGeneral } from "~~/app/composables/useGuildSettings";
 
 interface Props {
+  guildData: ValuesType<NonNullable<OauthFlattenedGuild>>;
   languages: string[];
 }
 
 const props = defineProps<Props>();
-
+const _form = useTemplateRef("form");
+const toast = useToast();
 // Use the new general composable
-const { generalConfig, settings, updateGeneralSetting } = useGuildGeneral();
+const { generalConfig, settings: _settings, updateGeneralSetting } = useGuildGeneral();
 
-// Form validation schema
-const guildGeneralSchema = z.object({
-  prefix: z.string()
-    .min(1, "Prefix must be at least 1 character")
-    .max(generalConfig.prefix.maxLength, `Prefix cannot be longer than ${generalConfig.prefix.maxLength} characters`)
-    .optional(),
-  language: z.string().optional(),
-  disableNaturalPrefix: z.boolean().optional(),
-});
-
-type FormData = z.infer<typeof guildGeneralSchema>;
-
-// Form data reactive state
-const formData = ref<FormData>({
-  prefix: settings.value.prefix ?? "",
-  language: settings.value.language ?? "",
-  disableNaturalPrefix: settings.value.disableNaturalPrefix ?? false,
-});
-
-// Form validation errors
-const errors = ref<Record<string, string>>({});
-
-// Watch for changes and update settings with validation
-watch(
-  formData,
-  async (newValue) => {
-    try {
-      await guildGeneralSchema.parseAsync(newValue);
-      errors.value = {};
-
-      // Update settings using the composable
-      Object.entries(newValue).forEach(([key, value]) => {
-        if (value !== undefined) {
-          updateGeneralSetting(key, value);
-        }
-      });
-    }
-    catch (err) {
-      if (err instanceof z.ZodError) {
-        // Map Zod errors to simple string errors using the issues array
-        const fieldErrors: Record<string, string> = {};
-        err.issues.forEach(issue => {
-          if (issue.path && issue.path.length > 0 && issue.message) {
-            // Use the first path segment as the field key
-            const key = String(issue.path[0]);
-            // Only set the error if not already set (show first error per field)
-            if (!fieldErrors[key]) {
-              fieldErrors[key] = issue.message;
-            }
-          }
-        });
-        errors.value = fieldErrors;
-      }
-    }
-  },
-  { deep: true },
+// Computed language options
+const items = computed(() =>
+  props.languages.map(langKey => ({
+    value: langKey,
+    label: mapLanguageKeysToNames(langKey).join(" - "),
+  })),
 );
 
+// Form validation schema
+const schema = yup.object({
+  prefix: yup.string()
+    .min(1, "Prefix must be at least 1 character")
+    .max(generalConfig.prefix.maxLength, `Prefix cannot be longer than ${generalConfig.prefix.maxLength} characters`)
+    .optional()
+    .default(generalConfig.prefix.placeholder),
+  language: yup.string().optional(),
+  disableNaturalPrefix: yup.boolean().optional(),
+});
+
+type Schema = yup.InferType<typeof schema>;
+
+// Form data reactive state
+const state = reactive<Partial<Schema>>({
+  prefix: "",
+  language: "",
+  disableNaturalPrefix: false,
+});
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  if (event.data.language) {
+    updateGeneralSetting("language", event.data.language);
+  }
+
+  if (event.data.prefix) {
+    updateGeneralSetting("prefix", event.data.prefix);
+  }
+
+  if (event.data.disableNaturalPrefix) {
+    updateGeneralSetting("disableNaturalPrefix", event.data.disableNaturalPrefix);
+  }
+
+  toast.add({
+    color: "success",
+    icon: "heroicons:check",
+    title: "Settings Updated",
+    description: "Settings updated successfully",
+  });
+  console.log(event.data);
+}
+
+async function onError(payload: FormErrorEvent) {
+  console.log(payload);
+
+  toast.add({
+    color: "error",
+    icon: "heroicons:exclamation-triangle",
+    title: "Error",
+  });
+}
 // Language mapping function
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
   const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
@@ -142,13 +182,5 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
     "tr-TR": ["Türkçe", "Turkish"],
   };
   return supportedLanguagesMap[langKey] ?? [langKey];
-}
-
-// Computed language options
-const _languageOptions = computed(() =>
-  props.languages.map(langKey => ({
-    value: langKey,
-    label: mapLanguageKeysToNames(langKey).join(" - "),
-  })),
-);
+};
 </script>

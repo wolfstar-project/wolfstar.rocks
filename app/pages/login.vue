@@ -2,7 +2,6 @@
 definePageMeta({
   middleware: () =>
     navigateTo(`${getOrigin()}/api/auth/discord`, {
-
       external: true,
       redirectCode: 301,
       replace: true,

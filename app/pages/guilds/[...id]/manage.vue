@@ -32,31 +32,13 @@
                 Save Changes
               </button>
             </div>
-          </Transition> -->
+          </Transition>
+        </div> -->
         </div>
-      </div>
 
-      <!-- Settings Content -->
-      <div class="flex-1 overflow-y-auto p-6">
-        <div v-if="readyToRender">
-          <!-- Mobile Select -->
-          <div class="mb-4 sm:hidden">
-            <ShadSelect v-model="currentRoute">
-              <ShadSelectTrigger class="w-full">
-                <ShadSelectValue placeholder="Select a category" />
-              </ShadSelectTrigger>
-              <ShadSelectContent>
-                <ShadSelectGroup>
-                  <ShadSelectItem v-for="item in navigationItems" :key="item.value" :value="item.value">
-                    {{ item.label }}
-                  </ShadSelectItem>
-                </ShadSelectGroup>
-              </ShadSelectContent>
-            </ShadSelect>
-          </div>
-
-          <!-- Desktop Tabs -->
-          <ShadTabs v-model="currentRoute" :items="navigationItems" variant="lift" orientation="vertical" class="hidden sm:flex">
+        <!-- Settings Content -->
+        <div class="flex-1 overflow-y-auto p-6">
+          <ShadTabs v-model="currentRoute" :items="navigationItems" variant="lift">
             <template #content="{ item }">
               <div class="card card-glass rounded-xl p-6 fade-slide-in">
                 <GuildSettingsGeneral v-if="item.value === 'general'" :guild-data="guildData" :languages="languages" />
@@ -68,16 +50,6 @@
               </div>
             </template>
           </ShadTabs>
-
-          <!-- Content for mobile -->
-          <div class="card card-glass rounded-xl p-6 fade-slide-in sm:hidden">
-            <GuildSettingsGeneral v-if="currentRoute === 'general'" :guild-data="guildData" :languages="languages" />
-            <GuildSettingsModeration v-if="currentRoute === 'moderation'" :guild-data="guildData" />
-            <GuildSettingsChannel v-if="currentRoute === 'channels'" :guild-data="guildData" />
-            <GuildSettingsRole v-if="currentRoute === 'roles'" :guild-data="guildData" />
-            <GuildSettingsEvent v-if="currentRoute === 'events'" :guild-data="guildData" />
-            <GuildSettingsDisabledCommands v-if="currentRoute === 'disabled-commands'" :guild-data="guildData" :commands="commands" />
-          </div>
         </div>
       </div>
     </div>
@@ -85,40 +57,19 @@
 </template>
 
 <script setup lang="ts">
-import type { NuxtError } from "nuxt/app";
-import type { GuildData } from "~~/server/database";
+import type { OauthFlattenedGuild } from "~~/shared/types/discord";
 import type { TabsItem } from "~/components/ui/tabs";
-import { cast, isNullOrUndefined } from "@sapphire/utilities";
+import { isNullOrUndefined } from "@sapphire/utilities";
 import { useRouteParams } from "@vueuse/router";
-import { useToast } from "@/composables/useToast";
-import useGuild from "~/composables/useGuildData";
+import { useCommands } from "@/composables/useCommands";
+import { useLanguages } from "@/composables/useLanguages";
 
-const router = useRouter();
 const route = useRoute();
 const guildIdParam = useRouteParams("id");
-const toast = useToast();
+const guildData = ref<OauthFlattenedGuild>();
+const loading = useState("loading", () => false);
 
 const guildId = computed(() => (Array.isArray(guildIdParam.value) ? guildIdParam.value[0] : guildIdParam.value));
-
-// Validate Guild ID format (Discord Snowflake: 17-19 digit string)
-function isValidGuildId(id: string | undefined | null): boolean {
-  if (isNullOrUndefined(id))
-    return false;
-  const snowflakeRegex = /^\d{17,19}$/;
-  return snowflakeRegex.test(id);
-}
-
-// Use composables and stores
-const { settings, resetAllChanges, hasChanges, changes } = useGuildSettings();
-const guildData = useGuild();
-const languagesStore = LanguagesStore();
-const commandsStore = CommandsStore();
-
-const loading = ref(true);
-
-// Computed values from stores
-const languages = computed(() => languagesStore.languages);
-const commands = computed(() => commandsStore.commands);
 
 // Current route detection
 const currentRoute = computed(() => {
@@ -134,6 +85,11 @@ const currentRoute = computed(() => {
 
   return "general";
 });
+
+// Use composables and stores
+
+const { languages, fetchLanguages } = useLanguages();
+const { commands, fetchCommands } = useCommands();
 
 // Navigation items for sidebar
 const navigationItems = [
@@ -183,189 +139,35 @@ const navigationItems = [
 const currentPageTitle = computed(() => "Dashboard");
 const currentPageDescription = computed(() => "Overview of your server settings and quick actions");
 
-// Remove fetchData and move logic inline
-// Example: Place this in onMounted or setup
-onMounted(async () => {
-  try {
-    loading.value = true;
+await Promise.all([fetchLanguages(), fetchCommands()]);
 
-    // Validate guild ID first
-    if (!isValidGuildId(guildId.value)) {
-      throw createError({
-        statusCode: 400,
-        statusMessage: "Invalid Guild ID",
-        message: "The provided guild ID is not valid. Guild IDs must be 17-19 digit numbers.",
-        data: {
-          field: "guildId",
-        },
-      });
-    }
-
-    const guildSettings = await useFetch(`/api/guilds/${guildId.value}/settings`, {
-      onResponseError({ response }) {
-        if (response.status === 404) {
-          throw createError({
-            statusCode: 404,
-            statusMessage: "Guild Settings Not Found",
-            message: "Settings for this guild could not be found.",
-          });
-        }
-      },
-    });
-
-    // Update settings state with the received settings
-    if (guildSettings && typeof guildSettings === "object") {
-      changes(guildSettings as unknown as GuildData);
-    }
-  }
-  catch (error) {
-    useLogger().error("Error fetching data:", cast<NuxtError<unknown>>(error).message);
-    await handleError(cast<NuxtError<unknown>>(error));
-  }
-  finally {
-    loading.value = false;
-  }
-});
-
-async function handleError(error: NuxtError<unknown>) {
-  // Handle specific error cases
-  switch (error.statusCode) {
-    case 400:
-      toast.add({
-        color: "error",
-        title: "Invalid Request",
-        description: error.message || "The guild ID provided is not valid.",
-        actions: [{
-          label: "Go Home",
-          onClick: (event: MouseEvent) => {
-            event.preventDefault();
-            router.push("/");
-          },
-        }],
-      });
-      break;
-    case 401: {
-      const auth = useAuth();
-      await auth.clear();
-      toast.add({
-        color: "error",
-        title: "Authentication Error",
-        description: "Your session has expired. Please log in again.",
-        actions: [{
-          label: "Login",
-          onClick: (event: MouseEvent) => {
-            event.preventDefault();
-            router.push("/login");
-          },
-        }],
-      });
-      break;
-    }
-    case 403:
-      toast.add({
-        color: "error",
-        title: "Access Denied",
-        description: error.message || "You do not have permission to access this guild.",
-        actions: [{
-          label: "Go Home",
-          onClick: (event: MouseEvent) => {
-            event.preventDefault();
-            router.push("/");
-          },
-        }],
-      });
-      break;
-    case 404:
-      toast.add({
-        color: "error",
-        title: "Not Found",
-        description: error.message || "The requested guild could not be found.",
-        actions: [{
-          label: "Go Home",
-          onClick: (event: MouseEvent) => {
-            event.preventDefault();
-            router.push("/");
-          },
-        }],
-      });
-      break;
-    default:
-      toast.add({
-        color: "error",
-        title: "Operation Failed",
-        description: error.message || "An unexpected error occurred.",
-      });
-  }
-}
-
-async function submitChanges() {
-  try {
-    loading.value = true;
-
-    if (!guildId.value || !isValidGuildId(guildId.value as string)) {
-      throw createError({
-        statusCode: 400,
-        message: "Invalid guild ID",
-      });
-    }
-
-    // Update settings using PATCH endpoint
-    const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
-      method: "PATCH",
-      body: {
-        data: Object.entries(settings.value),
-      },
-      onResponseError({ response }) {
-        if (response.status === 404) {
-          throw createError({
-            statusCode: 404,
-            message: "Guild settings not found",
-          });
-        }
-        if (response.status === 400) {
-          throw createError({
-            statusCode: 400,
-            message: "Invalid settings",
-          });
-        }
-      },
-    });
-
-    if (!data.value) {
-      throw createError({
-        statusCode: 500,
-        message: "Failed to update settings",
-      });
-    }
-
-    resetAllChanges();
-    toast.add({
-      color: "success",
-      icon: "heroicons:check",
-      title: "Settings Updated",
-      description: "Settings updated successfully",
-    });
-  }
-  catch (error) {
-    await handleError(cast<NuxtError<unknown>>(error));
-  }
-  finally {
-    loading.value = false;
-  }
-}
-
-const readyToRender = computed(
-  () => !loading.value && guildData.value && settings.value && Object.keys(guildData.value).length > 0 && Object.keys(settings.value).length > 0,
-);
-
-useHead({
-  title: computed(() => `${guildData.value?.name ?? "Guild"} Settings - Dashboard`),
-  meta: [
-    {
-      name: "description",
-      content: "Manage your guild settings dashboard",
+// Validate guild ID first
+if (!isValidGuildId(guildId.value)) {
+  throw createError({
+    statusCode: 400,
+    statusMessage: "Invalid Guild ID",
+    message: "The provided guild ID is not valid. Guild IDs must be 17-19 digit numbers.",
+    data: {
+      field: "guildId",
     },
-  ],
+  });
+}
+
+// Validate Guild ID format (Discord Snowflake: 17-19 digit string)
+function isValidGuildId(id: string | undefined | null): boolean {
+  if (isNullOrUndefined(id))
+    return false;
+  const snowflakeRegex = /^\d{17,19}$/;
+  return snowflakeRegex.test(id);
+}
+
+onMounted(async () => {
+  loading.value = true;
+  await fetchLanguages();
+
+  await fetchCommands();
+
+  loading.value = false;
 });
 </script>
 

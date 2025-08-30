@@ -22,7 +22,7 @@
       <div ref="scrollComponent">
         <!-- Guild Cards Grid -->
         <div v-if="loading" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          <guild-card-skeleton v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :type="type" />
+          <guild-card-skeleton v-for="i in paginatedGuilds.length" :key="i" class="h-full" :type="type" />
         </div>
 
         <div
@@ -93,9 +93,9 @@ const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
-const loading = toRef(props, "loading");
-const type = toRef(props, "type");
-const error = toRef(props, "error");
+const loading = reactive(toRef(() => props.loading));
+const type = toRef(() => props.type);
+const error = toRef(() => props.error);
 
 const paginatedGuilds = computed(() => {
   return props.filterGuilds.slice(0, visibleCount.value);

@@ -174,10 +174,10 @@
 
                 <p class="text-base-content/70">Get access to exclusive features and priority support</p>
                 <template #footer>
-                  <ShadButtonGroup class="flex w-full justify-center space-x-4 pt-4 z-10">
+                  <ShadFieldGroup class="flex w-full justify-center space-x-4 pt-4 z-10">
                     <ShadButton color="primary" size="md">Get Premium</ShadButton>
                     <ShadButton color="primary" variant="outline" size="md">Learn More</ShadButton>
-                  </ShadButtonGroup>
+                  </ShadFieldGroup>
                 </template>
               </ShadCard>
             </div>
@@ -209,7 +209,7 @@ const showManageableOnly = ref(true);
 const sortAscending = ref(true);
 const evaluating = shallowRef(false);
 const { isMobile } = useBreakpoint();
-const viewMode = ref<"grid" | "card">(isMobile.value ? "card" : "grid");
+const viewMode = ref<"grid" | "card">("card");
 
 const {
   data,
@@ -271,7 +271,7 @@ const items = computed<TabsItem[]>(() => [
     value: "servers",
     label: "Servers",
     icon: "heroicons:server",
-    badge: { label: guilds.value?.length ?? 0, color: "primary", variant: "ghost" },
+    badge: loading.value ? undefined : { label: guilds.value?.length ?? "N/A", color: "primary" },
   },
   {
     value: "premium",

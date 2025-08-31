@@ -16,10 +16,10 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "build": "pnpm prisma:generate && nuxi build",
+    "build": "nuxi build",
     "deploy": "pnpx nuxthub deploy",
-    "dev": "pnpm prisma:generate && nuxi dev",
-    "dev:pwa": "cross-env VITE_PLUGIN_PWA=true pnpm prisma:generate && nuxi dev",
+    "dev": "nuxi dev",
+    "dev:pwa": "cross-env VITE_PLUGIN_PWA=true nuxi dev",
     "format": "prettier --write .",
     "generate": "nuxt generate",
     "lint": "eslint --cache .",

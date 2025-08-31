@@ -60,6 +60,11 @@ export default defineNuxtConfig({
         cloudflareWebAnalytics: true,
       },
     },
+    sentry: {
+      unstable_sentryBundlerPluginOptions: {
+        telemetry: false,
+      },
+    },
   },
 
   devtools: {
@@ -125,12 +130,6 @@ export default defineNuxtConfig({
 
   // Runtime configuration
   runtimeConfig: generateRuntimeConfig(),
-
-  // Nitro server configuration
-  // Build configuration
-  routeRules: {
-    "/": { prerender: true },
-  },
 
   sourcemap: {
     client: "hidden",

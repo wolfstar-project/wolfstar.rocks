@@ -189,7 +189,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TabsItem } from "@/components/ui/tabs";
+import type { TabsItem } from "@/components/ui/navigation";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { computedAsync, promiseTimeout } from "@vueuse/core";
 

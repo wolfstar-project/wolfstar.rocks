@@ -72,8 +72,8 @@
 </template>
 
 <script setup lang="ts">
+import type { TransformedLoginData } from "#shared/types/discord";
 import type { FetchError } from "ofetch";
-import type { TransformedLoginData } from "~~/shared/types/discord";
 import { useInfiniteScroll } from "@vueuse/core";
 
 interface EnhancedGuildCardsProps {

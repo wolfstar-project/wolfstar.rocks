@@ -1,4 +1,4 @@
-import type { FlattenedCommand } from "~~/shared/types/discord";
+import type { FlattenedCommand } from "#shared/types/discord";
 import type { ExpirableLocalStorageStructure } from "@/utils/constants";
 import { Time } from "@sapphire/time-utilities";
 import { computed, ref } from "vue";

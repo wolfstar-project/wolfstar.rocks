@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
+import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "utility-types";
-import type { TransformedLoginData } from "~~/shared/types/discord";
 import { CDN } from "@discordjs/rest";
 
 interface Props {
@@ -57,7 +57,3 @@ function handleChange(value: string[]) {
   emit("change", value);
 }
 </script>
-
-<style>
-@import '@/assets/css/main.css';
-</style>

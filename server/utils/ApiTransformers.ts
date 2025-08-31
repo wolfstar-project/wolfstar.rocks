@@ -35,7 +35,7 @@ import type {
   FlattenedThreadChannel,
   FlattenedUser,
   FlattenedVoiceChannel,
-} from "~~/shared/types/discord";
+} from "#shared/types/discord";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";

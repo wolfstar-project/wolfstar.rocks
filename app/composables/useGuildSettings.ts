@@ -1,6 +1,5 @@
+import type { Channels, Events, Moderation, Roles } from "#shared/types/ConfigurableData";
 import type { GuildData } from "~~/server/database";
-import type { Channels, Events, Moderation, Roles } from "~~/shared/types/ConfigurableData";
-import { storeToRefs } from "pinia";
 import {
   ConfigurableIgnoreChannels,
   ConfigurableLoggingChannels,
@@ -9,7 +8,8 @@ import {
   ConfigurableModerationKeys,
   ConfigurableRemoveInitialRole,
   ConfigurableRoles,
-} from "~~/shared/types/SettingsDataEntries";
+} from "#shared/types/SettingsDataEntries";
+import { storeToRefs } from "pinia";
 
 function useGuildSettings() {
   const guildStore = useGuildStore();

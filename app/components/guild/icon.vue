@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TransformedLoginData } from "~~/shared/types/discord";
+import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
 import { useIntersectionObserver } from "@vueuse/core";
 

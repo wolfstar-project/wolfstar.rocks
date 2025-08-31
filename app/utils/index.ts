@@ -1,4 +1,4 @@
-import type { Selfmod } from "~~/shared/types/ConfigurableData";
+import type { Selfmod } from "#shared/types/ConfigurableData";
 import type { GetItemKeys, NestedItem } from "@/types/utils";
 
 import { isEqual } from "ohash/utils";

@@ -37,8 +37,8 @@
 </template>
 
 <script setup lang="ts">
-import type { DisableCommands } from "~~/shared/types/ConfigurableData";
-import type { FlattenedCommand } from "~~/shared/types/discord";
+import type { DisableCommands } from "#shared/types/ConfigurableData";
+import type { FlattenedCommand } from "#shared/types/discord";
 import { z } from "zod";
 import { useToast } from "~/composables/useToast";
 

@@ -1,6 +1,6 @@
+import { Env } from "#shared/types/index";
 import Git from "simple-git";
 import { isDevelopment } from "std-env";
-import { Env } from "~~/shared/types/index";
 
 export { version } from "../package.json";
 

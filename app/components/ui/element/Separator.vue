@@ -24,7 +24,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 const theme = tv({
   slots: {
     root: "flex items-center align-center text-center",
-    border: "divider", // Using daisyUI divider class
+    border: "",
     container: "font-medium text-base-content flex",
     icon: "shrink-0 size-5",
     avatar: "shrink-0",
@@ -34,25 +34,25 @@ const theme = tv({
   variants: {
     color: {
       primary: {
-        border: "divider-primary",
+        border: "border-primary",
       },
       secondary: {
-        border: "divider-secondary",
+        border: "border-secondary",
       },
       success: {
-        border: "divider-success",
+        border: "border-success",
       },
       info: {
-        border: "divider-info",
+        border: "border-info",
       },
       warning: {
-        border: "divider-warning",
+        border: "border-warning",
       },
       error: {
-        border: "divider-error",
+        border: "border-error",
       },
       neutral: {
-        border: "divider-neutral",
+        border: "border-neutral",
       },
     },
     orientation: {

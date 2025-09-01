@@ -1,3 +1,5 @@
+export { default as Alert } from "./Alert.vue";
+export type { AlertProps } from "./Alert.vue";
 export { default as AnimatedButton } from "./AnimatedButton.vue";
 export { default as Avatar } from "./Avatar.vue";
 export type { AvatarProps } from "./Avatar.vue";

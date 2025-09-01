@@ -29,7 +29,7 @@
     "preview": "pnpx nuxthub preview",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:dev:create": "prisma migrate dev --create-only",
-    "prisma:migrate:diff": "prisma migrate diff --exit-code --from-migrations prisma/migrations --to-schema-datamodel prisma/schema/schema.prisma --shadow-database-url",
+    "prisma:migrate:diff": "prisma migrate diff --exit-code --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --shadow-database-url",
     "prisma:migrate:reset": "prisma migrate reset",
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:migrate:status": "prisma migrate status",
@@ -91,11 +91,16 @@
     "taze": "catalog:cli",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
+    "vaul-vue": "catalog:prod",
+    "vue-component-type-helpers": "catalog:prod",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
     "zod": "catalog:utils",
-    "vue-component-type-helpers": "catalog:prod",
-    "vaul-vue": "catalog:prod"
+    "@vueuse/motion": "catalog:utils",
+    "@iconify-json/lucide": "catalog:icons",
+    "@iconify-json/heroicons": "catalog:icons",
+    "@iconify-json/ph": "catalog:icons",
+    "@iconify-json/ic": "catalog:icons"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -136,7 +141,7 @@
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.15.0",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

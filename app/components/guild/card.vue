@@ -36,7 +36,7 @@
     <div
       v-else
     >
-      <div
+      <ShadContainer
         class="relative h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-md transition-all duration-300"
         :class="{
           'ring-2 ring-primary/20': guild.wolfstarIsIn,
@@ -55,7 +55,7 @@
 
         <!-- Guild Info -->
         <div class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center">
-          <h3 class="line-clamp-2 text-base font-semibold text-base-content">
+          <h3 class="line-clamp-2 text-md font-semibold text-base-content">
             {{ guild.name }}
           </h3>
 
@@ -102,7 +102,7 @@
             No Permission
           </div>
         </div>
-      </div>
+      </ShadContainer>
     </div>
   </div>
 </template>

@@ -93,7 +93,6 @@ const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
-const loading = reactive(toRef(() => props.loading));
 const type = toRef(() => props.type);
 const error = toRef(() => props.error);
 
@@ -104,7 +103,7 @@ const paginatedGuilds = computed(() => {
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
   () => {
-    if (loading.value && error.value !== undefined)
+    if (props.loading && error.value !== undefined)
       return;
     visibleCount.value += LOAD_MORE_COUNT;
   },

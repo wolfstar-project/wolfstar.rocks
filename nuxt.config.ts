@@ -4,7 +4,6 @@ import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 import { Env } from "./shared/types/index";
-import { seconds } from "./shared/utils/times";
 import "@vite-pwa/nuxt";
 import "nuxt";
 
@@ -36,6 +35,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
     "nuxt-auth-utils",
+    "@vueuse/motion/nuxt",
     "nuxt-authorization",
     "nuxt-vue-dragscroll",
     "shadcn-nuxt",
@@ -136,9 +136,8 @@ export default defineNuxtConfig({
   },
 
   experimental: {
-    checkOutdatedBuildInterval: seconds(10),
+    payloadExtraction: false,
     typedPages: true,
-    inlineRouteRules: true,
   },
 
   compatibilityDate: "2025-07-20",
@@ -225,6 +224,7 @@ export default defineNuxtConfig({
         "@sapphire/async-queue",
         "@vue/devtools-core",
         "@vue/devtools-kit",
+        "vaul-vue",
         "clsx",
         "@sapphire/utilities/isNullish",
       ],
@@ -248,13 +248,15 @@ export default defineNuxtConfig({
   },
 
   icon: {
+    serverBundle: {
+      collections: ["ph", "ic", "heroicons", "lucide"],
+    },
     clientBundle: {
       scan: {
         globInclude: ["**\/*.{vue,jsx,tsx,md,mdc,mdx}", "app/**/*.ts"],
       },
     },
     cssLayer: "base",
-    provider: "iconify",
     componentName: "NuxtIcon",
   },
 

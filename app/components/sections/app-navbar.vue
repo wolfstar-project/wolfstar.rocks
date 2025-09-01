@@ -1,4 +1,4 @@
-<!-- eslint-disable vue/no-unused-refs -->
+<!-- eslint-disable vue/no-template-shadow vue/no-unused-refs -->
 <template>
   <div ref="navbar" class="app-navbar" :class="y > 100 ? 'bg-base-200/80 backdrop-blur-sm' : 'bg-transparent'">
     <div class="navbar-start">

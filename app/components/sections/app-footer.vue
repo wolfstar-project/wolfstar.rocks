@@ -1,57 +1,69 @@
 <template>
-  <footer class="mt-24 footer bg-base-200 p-10 text-base-content md:footer-horizontal">
-    <aside>
-      <div class="w-10 rounded-full">
-        <icons-wolfstar class="h-12 w-12" />
-      </div>
-      <p>WolfStar Project<br />Providing reliable open-source software since 2024</p>
-      <p>© 2024 All rights reserved.</p>
-    </aside>
-    <nav>
-      <h6 class="footer-title">Links</h6>
-      <nuxt-link class="link link-hover" to="https://join.wolfstar.rocks">
-        <ShadIcon name="ph:discord-logo-duotone" class="h-5 w-5 text-indigo-500" />
-        Support Server
-      </nuxt-link>
-      <nuxt-link class="link link-hover" to="https://github.com/wolfstar-project">
-        <ShadIcon name="ph:github-logo-duotone" class="h-5 w-5 text-indigo-500" />
-        GitHub
-      </nuxt-link>
-      <nuxt-link class="link link-hover" to="https://blog.wolfstar.rocks">
-        <ShadIcon name="ph:newspaper-clipping-duotone" class="h-5 w-5 text-primary" />
-        Blog
-      </nuxt-link>
-    </nav>
-    <nav>
-      <h6 class="footer-title">Donate</h6>
-      <nuxt-link class="link link-hover" to="https://donate.wolfstar.rocks/patreon">
-        <ShadIcon name="ph:patreon-logo-duotone" class="h-5 w-5 text-rose-600" />
-        Patreon
-      </nuxt-link>
-      <nuxt-link class="link link-hover" to="https://donate.wolfstar.rocks/paypal">
-        <ShadIcon name="ph:paypal-logo-duotone" class="h-5 w-5 text-sky-600" />
-        PayPal
-      </nuxt-link>
-      <nuxt-link class="link link-hover" to="https://donate.wolfstar.rocks/kofi">
-        <ShadIcon name="ph:coffee-duotone" class="h-5 w-5 text-pink-500" />
-        Ko-fi
-      </nuxt-link>
-    </nav>
-    <nav>
-      <h6 class="footer-title">Legal</h6>
-      <nuxt-link class="link link-hover" to="/terms">
-        <ShadIcon name="ph:scales-fill" class="h-5 w-5 text-warning" />
-        Terms of Use
-      </nuxt-link>
-      <nuxt-link class="link link-hover" to="/privacy">
-        <ShadIcon name="ph:scales-fill" class="h-5 w-5 text-warning" />
-        Privacy Policy
-      </nuxt-link>
-    </nav>
-    <nav>
-      <div class="flex flex-col gap-2">
-        <change-theme />
-      </div>
-    </nav>
-  </footer>
+  <ShadFooter :ui="{ root: 'mt-24 bg-base-200 p-10 text-base-content', top: 'text-base-content' }">
+    <template #top>
+      <ShadContainer>
+        <ShadFooterColumns class="p-10" :columns="columns" />
+      </ShadContainer>
+    </template>
+
+    <template #left>
+      <aside>
+        <div class="flex items-center gap-4">
+          <div class="w-10 rounded-full">
+            <icons-wolfstar class="h-12 w-12" />
+          </div>
+          <div>
+            <p class="font-semibold">
+              WolfStar Project
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-base-content/80">
+              Copyright © {{ new Date().getFullYear() }}. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </template>
+    <template #right>
+      <ShadColorModeButton />
+
+      <ShadButton
+        to="https://github.com/nuxt-ui-pro/saas"
+        target="_blank"
+        icon="i-simple-icons-github"
+        aria-label="GitHub"
+        color="neutral"
+        variant="ghost"
+      />
+    </template>
+  </ShadFooter>
 </template>
+
+<script setup lang="ts">
+const columns = [
+  {
+    label: "Links",
+    children: [
+      { label: "Support Server", to: "https://join.wolfstar.rocks", icon: "ph:discord-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-indigo-500" } },
+      { label: "GitHub", to: "https://github.com/wolfstar-project", icon: "ph:github-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-indigo-500" } },
+      { label: "Blog", to: "https://blog.wolfstar.rocks", icon: "ph:newspaper-clipping-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-primary" } },
+    ],
+  },
+  {
+    label: "Donate",
+    children: [
+      { label: "Patreon", to: "https://donate.wolfstar.rocks/patreon", icon: "ph:patreon-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-rose-600" } },
+      { label: "PayPal", to: "https://donate.wolfstar.rocks/paypal", icon: "ph:paypal-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-sky-600" } },
+      { label: "Ko-fi", to: "https://donate.wolfstar.rocks/kofi", icon: "ph:coffee-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-pink-500" } },
+    ],
+  },
+  {
+    label: "Legal",
+    children: [
+      { label: "Terms of Use", to: "/terms", icon: "ph:scales-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
+      { label: "Privacy Policy", to: "/privacy", icon: "ph:scales-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
+    ],
+  },
+];
+</script>

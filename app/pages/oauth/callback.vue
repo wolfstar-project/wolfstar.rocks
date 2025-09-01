@@ -18,10 +18,10 @@
           </template>
         </ShadAlert>
       </template>
-      <template v-else-if="error">
+      <template v-else-if="status === 'error'">
         <ShadAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
           <template #description>
-            {{ error }}
+            {{ error?.message ?? error?.statusMessage }}
           </template>
           <template #actions>
             <ShadButton to="/login" size="sm" variant="outline"> Try Again </ShadButton>
@@ -29,11 +29,17 @@
         </ShadAlert>
       </template>
       <template v-else-if="data">
-        <ShadAlert color="success" icon="emojione:check-mark" title="Welcome {{ data.username }}">
+        <ShadAlert color="success" icon="lucide:check" :title="`Welcome ${data.username}`">
           <template #description>
             You will be redirected to the main page in a second.
             <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
-              <div class="progress h-4 rounded-md bg-rose-500"></div>
+              <Motion
+                is="div"
+                :initial="{ width: 0 }"
+                :animate="{ width: 100 }"
+                :transition="{ duration: 1 }"
+                class="h-4 rounded-md bg-rose-500"
+              />
             </div>
           </template>
         </ShadAlert>
@@ -86,18 +92,3 @@ defineOgImageComponent("Default", {
   theme: Colors.Red,
 });
 </script>
-
-<style scoped>
-.progress {
-	animation: progressAnimation 1s;
-}
-
-@keyframes progressAnimation {
-	from {
-		width: 0;
-	}
-	to {
-		width: 100%;
-	}
-}
-</style>

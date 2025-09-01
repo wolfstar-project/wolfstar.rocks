@@ -33,7 +33,7 @@ export interface ColorModeButtonProps extends /** @vue-ignore */ Pick<ButtonProp
 </script>
 
 <script setup lang="ts">
-import { useAppConfig, useColorMode } from "#imports";
+import { useColorMode } from "#imports";
 import { computed } from "vue";
 import { Button } from "@/components/ui/element";
 

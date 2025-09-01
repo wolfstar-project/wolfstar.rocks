@@ -1,8 +1,8 @@
+import { manageAbility } from "#shared/utils/abilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
-import useApi from "~~/server/utils/api";
 
-import { manageAbility } from "#shared/utils/abilities";
+import useApi from "~~/server/utils/api";
 
 defineRouteMeta({
   openAPI: {

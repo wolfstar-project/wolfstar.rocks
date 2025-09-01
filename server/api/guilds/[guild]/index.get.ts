@@ -1,10 +1,10 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import { manageAbility } from "#shared/utils/abilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
 import * as yup from "yup";
 import useApi from "~~/server/utils/api";
 import { transformGuild } from "~~/server/utils/discord";
-import { manageAbility } from "#shared/utils/abilities";
 
 const querySchema = yup.object({
   shouldSerialize: yup.boolean().optional(),

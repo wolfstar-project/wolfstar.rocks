@@ -1,9 +1,9 @@
+import { manageAbility } from "#shared/utils/abilities";
 import { Result } from "@sapphire/result";
 import { isNullOrUndefined, isNullOrUndefinedOrZero } from "@sapphire/utilities";
 import { createError } from "h3";
 import * as yup from "yup";
 import { serializeSettings, writeSettingsTransaction } from "~~/server/database";
-import { manageAbility } from "#shared/utils/abilities";
 
 const settingsUpdateSchema = yup.object({
   data: yup.array().of(

@@ -1,4 +1,22 @@
 import type {
+  FlattenedAnnouncementChannel,
+  FlattenedAnyChannel,
+  FlattenedCategoryChannel,
+  FlattenedDMChannel,
+  FlattenedForumChannel,
+  FlattenedGroupDMChannel,
+  FlattenedGuild,
+  FlattenedGuildEmoji,
+  FlattenedMediaChannel,
+  FlattenedMember,
+  FlattenedRole,
+  FlattenedStageVoiceChannel,
+  FlattenedTextChannel,
+  FlattenedThreadChannel,
+  FlattenedUser,
+  FlattenedVoiceChannel,
+} from "#shared/types/discord";
+import type {
   APIChannel,
   APIDMChannel,
   APIEmoji,
@@ -18,24 +36,6 @@ import type {
   APIUser,
   Locale,
 } from "discord-api-types/v10";
-import type {
-  FlattenedAnnouncementChannel,
-  FlattenedAnyChannel,
-  FlattenedCategoryChannel,
-  FlattenedDMChannel,
-  FlattenedForumChannel,
-  FlattenedGroupDMChannel,
-  FlattenedGuild,
-  FlattenedGuildEmoji,
-  FlattenedMediaChannel,
-  FlattenedMember,
-  FlattenedRole,
-  FlattenedStageVoiceChannel,
-  FlattenedTextChannel,
-  FlattenedThreadChannel,
-  FlattenedUser,
-  FlattenedVoiceChannel,
-} from "#shared/types/discord";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";

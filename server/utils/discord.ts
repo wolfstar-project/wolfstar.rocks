@@ -1,6 +1,6 @@
+import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from "#shared/types/discord";
 import type { APIGuild, APIGuildMember, APIUser, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from "#shared/types/discord";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities";
 import {
   GuildDefaultMessageNotifications,

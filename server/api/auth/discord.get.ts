@@ -1,8 +1,8 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
-import { isDevelopment } from "std-env";
 import { useLogger } from "#shared/utils/logger";
+import { isDevelopment } from "std-env";
 
 defineRouteMeta({
   openAPI: {

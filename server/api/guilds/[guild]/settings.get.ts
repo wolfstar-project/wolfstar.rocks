@@ -1,8 +1,8 @@
 import type { GuildData } from "~~/server/database";
+import { manageAbility } from "#shared/utils/abilities";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import * as yup from "yup";
 import { readSettings, serializeSettings } from "~~/server/database";
-import { manageAbility } from "#shared/utils/abilities";
 
 const querySchema = yup.object({
   shouldSerialize: yup.boolean().optional().default(false),

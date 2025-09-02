@@ -1,6 +1,5 @@
 <template>
-  <!-- Enhanced Guild Cards Grid - inspired by Dyno.gg -->
-  <div class="w-full max-w-7xl mx-auto sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6">
+  <ShadContainer class="w-full max-w-7xl sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6">
     <div class="flex flex-col justify-between gap-4 sm:flex-row">
       <div class="flex items-start">
         <div v-if="loading" class="text-sm text-base-content/60 sm:block">
@@ -19,56 +18,61 @@
 
     <div class="w-full">
       <!-- Loading Skeleton Grid -->
-      <div ref="scrollComponent">
+      <div v-if="loading" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+        <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" :type="type" />
+      </div>
+      <div v-else ref="scrollComponent">
         <!-- Guild Cards Grid -->
-        <div v-if="loading" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          <guild-card-skeleton v-for="i in paginatedGuilds.length" :key="i" class="h-full" :type="type" />
-        </div>
-
         <div
-          v-if="!loading && paginatedGuilds.length > 0"
+          v-if="paginatedGuilds.length > 0"
           class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
           <guild-card v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :guild="guild" :type="type" />
         </div>
 
         <!-- Loading Indicator for Infinite Scroll -->
-        <div v-if="!loading && loadingMore" class="flex justify-center py-4">
+        <div v-else-if="!loading && loadingMore" class="flex justify-center py-4">
           <span class="loading loading-spinner loading-lg text-primary"></span>
         </div>
       </div>
 
       <!-- Empty State -->
-      <div v-if="!loading && error" class="flex flex-col items-center justify-center space-y-6 py-16">
-        <ShadAlert
-          color="error"
-          variant="subtle"
-          title="Error Occurred"
-          :description="error.toString()"
-          icon="heroicons:exclamation-triangle"
-        />
-      </div>
-      <div v-else-if="!loading && filterGuilds.length === 0" class="flex flex-col items-center justify-center space-y-6 py-16">
-        <div class="text-center py-16">
-          <h3 class="text-xl font-bold text-base-content/80 mb-2">
-            {{ searchQuery ? 'No matching servers' : 'No servers found' }}
-          </h3>
-          <p class="max-w-md mx-auto text-base-content/60">
-            {{ searchQuery && filterGuilds.length === 0 ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
-          </p>
+      <div v-if="!loading && error">
+        <div class="flex flex-col items-center justify-center space-y-6 py-16">
+          <ShadAlert
+            color="error"
+            variant="subtle"
+            title="Error Occurred"
+            :description="error.statusMessage ?? error.message"
+            icon="heroicons:exclamation-triangle"
+          />
         </div>
+      </div>
+      <div v-else-if="!loading && filterGuilds.length === 0">
+        <div class="flex flex-col items-center justify-center space-y-6 py-16">
+          <div class="text-center py-16">
+            <h3 class="text-xl font-bold text-base-content/80 mb-2">
+              {{ searchQuery ? 'No matching servers' : 'No servers found' }}
+            </h3>
+            <p class="max-w-md mx-auto text-base-content/60">
+              {{ searchQuery && filterGuilds.length !== 0 ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
+            </p>
+          </div>
 
-        <button
-          v-if="searchQuery"
-          class="btn btn-outline btn-sm gap-2 transition-all duration-200 hover:scale-105"
-          @click="undoSearch"
-        >
-          <ShadIcon name="heroicons:x-mark" class="h-4 w-4" />
-          Clear Search
-        </button>
+          <ShadButton
+            v-if="searchQuery"
+            variant="outline"
+            size="sm"
+            class="gap-2 transition-all duration-200 hover:scale-105"
+            icon="heroicons:x-mark"
+            @click="undoSearch"
+          >
+            Clear Search
+          </ShadButton>
+        </div>
       </div>
     </div>
-  </div>
+  </ShadContainer>
 </template>
 
 <script setup lang="ts">

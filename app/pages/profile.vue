@@ -32,7 +32,7 @@
     </section>
 
     <section class="overflow-hidden rounded-xl bg-base-200 shadow-lg">
-      <ShadTabs v-model="activeTab" color="primary" :items="items" class="w-full flex flex-col items-center">
+      <ShadTabs v-model="activeTab" :unmount-on-hide="false" color="primary" :items class="w-full flex flex-col items-center">
         <template #content="{ item }">
           <div class="p-8">
             <div v-if="item.value === 'servers'" class="space-y-6">
@@ -54,7 +54,7 @@
                     placeholder="Search servers..."
                     :disabled="loading"
                     icon="heroicons:magnifying-glass-circle"
-                    :loading="loading"
+                    :loading
                     loading-icon="i-lucide-loader"
                     class="max-w-xs flex items-start"
                   >
@@ -75,13 +75,13 @@
                   <div v-else class="flex items-center join justify-end gap-2">
                     <!-- View Button -->
                     <ShadButton
-                      v-if="!isMobile"
+                      class="sm:inline hidden"
                       size="sm"
                       active-class="btn-active"
                       :icon="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'"
                       @click="toggleView()"
                     >
-                      <span class="hidden sm:inline">View</span>
+                      <span>View</span>
                     </ShadButton>
                     <!-- Manageable Only Toggle Button -->
                     <ShadButton
@@ -113,7 +113,7 @@
                       color="secondary"
                       size="sm"
                       icon="heroicons:arrow-path"
-                      @click="refreshGuilds()"
+                      @click="refresh()"
                     >
                       <span class="hidden sm:inline">Refresh</span>
                     </ShadButton>
@@ -124,12 +124,12 @@
               </div>
               <div class="space-y-4 md:space-y-2">
                 <guild-cards
-                  :error="error"
-                  :guilds="guilds"
+                  :error
+                  :guilds
                   :filter-guilds="filteredGuilds"
                   :undo-search="() => searchQuery = 'null'"
-                  :search-query="searchQuery"
-                  :loading="status === 'pending'"
+                  :search-query
+                  :loading
                   :container-height="600"
                   :item-height="280"
                   :type="viewMode === 'grid' ? 'grid' : 'card'"
@@ -196,7 +196,6 @@ import { computedAsync, promiseTimeout } from "@vueuse/core";
 definePageMeta({ alias: ["/account"], auth: true });
 
 const { user, ready } = useAuth();
-const lastFetchTime = useState("wolfstar:profileGuildsLastFetch", () => 0);
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const isAnimated = ref(false);
@@ -211,6 +210,10 @@ const evaluating = shallowRef(false);
 const { isMobile } = useBreakpoint();
 const viewMode = ref<"grid" | "card">("card");
 
+if (isMobile) {
+  viewMode.value = "grid";
+}
+
 const {
   data,
   status,
@@ -218,17 +221,42 @@ const {
   error,
 } = useFetch("/api/users", {
   key: "guilds",
-  transform: data => data && data.transformedGuilds ? data.transformedGuilds : [],
-  getCachedData: (key, nuxtApp, _ctx) => {
-    const now = Date.now();
-    if (now - lastFetchTime.value > minutes(5)) {
-      return undefined;
+  transform: (data) => {
+    if (!data) {
+      return {
+        guilds: [],
+        fetchAt: Date.now(),
+      };
     }
-    return nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key];
+
+    const { transformedGuilds } = data;
+
+    return {
+      guilds: transformedGuilds ?? [],
+      fetchAt: Date.now(),
+    };
+  },
+  getCachedData: (key, nuxtApp, { cause }) => {
+    const data = nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key];
+    if (!data) {
+      return;
+    }
+
+    if (cause === "refresh:manual") {
+      return;
+    }
+
+    const experationDate = new Date(data.fetchAt);
+    experationDate.setMinutes(experationDate.getMinutes() + minutes(10));
+    const isExpired = experationDate.getTime() < Date.now();
+    if (isExpired) {
+      return;
+    }
+    return data;
   },
 });
 
-const guilds = computedAsync(() => data.value ?? null, []);
+const guilds = computedAsync(() => data.value?.guilds ?? null, []);
 // Computed filtered guilds
 const filteredGuilds = computedAsync(() => {
   if (isNullOrUndefined(guilds.value))
@@ -294,24 +322,19 @@ function toggleView() {
 function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
-function refreshGuilds() {
-  refresh().then(() => {
-    lastFetchTime.value = Date.now();
-  });
-}
 
 onMounted(() => {
-  if (ready.value) {
+  if (ready.value && status.value !== "pending") {
     promiseTimeout(seconds(8)).then(() => {
       loading.value = false;
       evaluating.value = false;
     });
   }
 });
+
 watch(
   user,
   (user) => {
-    lastFetchTime.value = 0;
     if (user) {
       isAnimated.value = user.avatar ? user.avatar.startsWith("a_") : false;
       isDefault.value = user.avatar === null;

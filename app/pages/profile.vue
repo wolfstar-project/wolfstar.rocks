@@ -192,6 +192,7 @@
 import type { TabsItem } from "@/components/ui/navigation";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { computedAsync, promiseTimeout } from "@vueuse/core";
+import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
 
@@ -261,21 +262,22 @@ const guilds = computedAsync(() => data.value?.guilds ?? null, []);
 const filteredGuilds = computedAsync(() => {
   if (isNullOrUndefined(guilds.value))
     return [];
-
   let filtered = [...guilds.value];
   evaluating.value = true;
-
   // Apply manageable filter
   if (showManageableOnly.value) {
     filtered = filtered.filter(guild => guild.manageable);
   }
-
   // Apply search filter
   if (searchQuery.value.trim()) {
-    const query = searchQuery.value.toLowerCase().trim();
-    filtered = filtered.filter(guild => guild.name.toLowerCase().includes(query) || guild.id.includes(query));
+    const { results } = useFuse(searchQuery, filtered, {
+      fuseOptions: {
+        keys: ["name", "id"],
+        threshold: 0.3,
+      },
+    });
+    filtered = results.value.map(result => result.item);
   }
-
   // Sort: manageable servers first, then alphabetically
   return filtered.sort((guildA, guildB) => {
     if (guildA.manageable !== guildB.manageable) {

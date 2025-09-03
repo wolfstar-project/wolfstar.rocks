@@ -100,7 +100,8 @@
     "@iconify-json/lucide": "catalog:icons",
     "@iconify-json/heroicons": "catalog:icons",
     "@iconify-json/ph": "catalog:icons",
-    "@iconify-json/ic": "catalog:icons"
+    "@iconify-json/ic": "catalog:icons",
+    "@vueuse/integrations": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

@@ -240,13 +240,9 @@ const {
       fetchAt: Date.now(),
     };
   },
-  getCachedData: (key, nuxtApp, { cause }) => {
+  getCachedData: (key, nuxtApp) => {
     const data = nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key];
     if (!data) {
-      return;
-    }
-
-    if (cause === "refresh:manual") {
       return;
     }
 

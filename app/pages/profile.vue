@@ -73,10 +73,15 @@
                         class="join-item"
                         color="secondary"
                         :loading
-                        :icon="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'"
                         @click="toggleView()"
                       >
-                        <span>View</span>
+                        <template #leading>
+                          <Transition name="fade" mode="out-in">
+                            <ShadIcon :name="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'" />
+                          </Transition>
+                        </template>
+
+                        <span class="hidden sm:inline">View</span>
                       </ShadButton>
                       <!-- Manageable Only Toggle Button -->
                       <ShadButton
@@ -98,9 +103,7 @@
                       >
                         <template #leading>
                           <Transition name="fade" mode="out-in">
-                            <span :key="sortAscending">
-                              <ShadIcon :name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'" />
-                            </span>
+                            <ShadIcon :name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'" />
                           </Transition>
                         </template>
                       </ShadButton>

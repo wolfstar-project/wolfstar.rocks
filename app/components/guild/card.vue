@@ -1,38 +1,38 @@
 <template>
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
   <div class="group block cursor-pointer">
-    <NuxtLink
+    <div
       v-if="viewMode === 'grid'"
-
-      :to="guild.wolfstarIsIn ? `/guilds/${guild.id}/manage` : guildAddURL(guild.id)"
     >
-      <div
-        class="relative h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-md transition-all duration-300 group-hover:bg-base-200/50 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl"
-        :class="{
-          'ring-2 ring-primary/20': guild.wolfstarIsIn,
-          'opacity-75 ring-2 ring-error/20': !guild.manageable,
-        }"
+      <NuxtLink
+        :to="manageGuildURL"
       >
-        <!-- Guild Icon -->
-        <div class="flex flex-col items-center space-y-4">
-          <guild-icon
-            :guild="guild"
-            variant="bare"
-            size="lg"
-            :show-status="true"
-          />
-        </div>
+        <div
+          class="relative h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-md transition-all duration-300 group-hover:bg-base-200/50 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl"
+          :class="{
+            'ring-2 ring-primary/20': guild.wolfstarIsIn,
+            'opacity-75 ring-2 ring-error/20': !guild.manageable,
+          }"
+        >
+          <!-- Guild Icon -->
+          <div class="flex flex-col items-center space-y-4">
+            <guild-icon
+              :guild
+              variant="bare"
+              size="lg"
+              :show-status="true"
+            />
+          </div>
 
-        <!-- Guild Info -->
-        <div class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center">
-          <h3 class="2xl:line-clamp-2 md:text-md text-base font-semibold text-base-content transition-colors group-hover:text-primary">
-            {{ guild.name }}
-          </h3>
-
-        <!-- Guild Stats -->
+          <!-- Guild Info -->
+          <div class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center">
+            <h3 class="line-clamp-2 sm:text-sm text-md text-base font-semibold text-base-content transition-colors group-hover:text-primary">
+              {{ guild.name }}
+            </h3>
+          </div>
         </div>
-      </div>
-    </NuxtLink>
+      </NuxtLink>
+    </div>
     <div
       v-else
     >
@@ -46,7 +46,7 @@
         <!-- Guild Icon -->
         <div class="flex flex-col items-center space-y-4">
           <guild-icon
-            :guild="guild"
+            :guild
             variant="bare"
             size="lg"
             :show-status="true"
@@ -55,7 +55,7 @@
 
         <!-- Guild Info -->
         <div class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center">
-          <h3 class="line-clamp-2 text-md font-semibold text-base-content">
+          <h3 class="line-clamp-2 text-sm font-semibold text-base-content">
             {{ guild.name }}
           </h3>
 
@@ -121,10 +121,17 @@ interface EnhancedGuildCardProps {
   viewMode?: "card" | "grid";
 }
 
-withDefaults(defineProps<EnhancedGuildCardProps>(), {
+const props = withDefaults(defineProps<EnhancedGuildCardProps>(), {
   viewMode: "card",
 });
 
+const manageGuildURL = computed(() => {
+  const guild = toRef(() => props.guild);
+  if (!guild.value.manageable) {
+    return undefined;
+  }
+  return guild.value.wolfstarIsIn ? `/guilds/${guild.value.id}/manage` : guildAddURL(guild.value.id);
+});
 // Utility functions
 function formatNumber(num: number): string {
   return new Intl.NumberFormat("en-US", {

@@ -194,7 +194,7 @@
 <script setup lang="ts">
 import type { TabsItem } from "@/components/ui/navigation";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import { computedAsync, promiseTimeout } from "@vueuse/core";
+import { computedAsync } from "@vueuse/core";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
@@ -330,10 +330,8 @@ function createUrl(format: "webp" | "png" | "gif", size: number) {
 
 onMounted(() => {
   if (ready.value && status.value !== "pending") {
-    promiseTimeout(seconds(8)).then(() => {
-      loading.value = false;
-      evaluating.value = false;
-    });
+    loading.value = false;
+    evaluating.value = false;
   }
 });
 

@@ -70,13 +70,13 @@
                     <ShadFieldGroup size="sm" class="flex items-center join justify-items-end gap-2">
                       <!-- View Button -->
                       <ShadButton
-                        class="join-item"
+                        class="join-item hidden sm:inline-flex"
                         color="secondary"
                         :loading
                         @click="toggleView()"
                       >
                         <template #leading>
-                          <Transition name="fade" mode="out-in">
+                          <Transition name="fade" mode="in-out">
                             <ShadIcon :name="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'" />
                           </Transition>
                         </template>

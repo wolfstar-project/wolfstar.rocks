@@ -2,7 +2,7 @@
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
   <div class="group block cursor-pointer">
     <NuxtLink
-      v-if="type === 'grid'"
+      v-if="viewMode === 'grid'"
 
       :to="guild.wolfstarIsIn ? `/guilds/${guild.id}/manage` : guildAddURL(guild.id)"
     >
@@ -118,16 +118,12 @@ interface EnhancedGuildCardProps {
    * - `card`: A full-width card with a status indicator.
    * - `grid`: A grid card with a status indicator.
    */
-  type?: "card" | "grid";
+  viewMode?: "card" | "grid";
 }
 
-const props = withDefaults(defineProps<EnhancedGuildCardProps>(), {
-  type: "card",
+withDefaults(defineProps<EnhancedGuildCardProps>(), {
+  viewMode: "card",
 });
-
-// Extract guild and type from props for template usage
-const guild = toRef(props, "guild");
-const type = toRef(props, "type");
 
 // Utility functions
 function formatNumber(num: number): string {

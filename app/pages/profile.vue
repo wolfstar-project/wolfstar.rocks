@@ -65,58 +65,58 @@
                       />
                     </template>
                   </ShadInput>
-                  <!-- Skeletons -->
-                  <div v-if="loading" class="flex items-end gap-2">
-                    <div class="skeleton h-9 w-24 rounded-md"></div>
-                    <div class="skeleton h-9 w-20 rounded-md"></div>
-                    <div class="skeleton h-9 w-24 rounded-md"></div>
-                  </div>
                   <!-- Actual Buttons -->
-                  <div v-else class="flex items-center join justify-end gap-2">
-                    <!-- View Button -->
-                    <ShadButton
-                      class="sm:inline hidden"
-                      size="sm"
-                      active-class="btn-active"
-                      :icon="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'"
-                      @click="toggleView()"
-                    >
-                      <span>View</span>
-                    </ShadButton>
-                    <!-- Manageable Only Toggle Button -->
-                    <ShadButton
-                      size="sm"
-                      active-class="join-item"
-                      color="secondary"
-                      icon="heroicons:shield-check"
-                      @click="showManageableOnly = !showManageableOnly"
-                    >
-                      <span class="hidden sm:inline">Manageable</span>
-                    </ShadButton>
+                  <div>
+                    <ShadFieldGroup size="sm" class="flex items-center join justify-items-end gap-2">
+                      <!-- View Button -->
+                      <ShadButton
+                        class="join-item"
+                        color="secondary"
+                        :loading
+                        :icon="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'"
+                        @click="toggleView()"
+                      >
+                        <span>View</span>
+                      </ShadButton>
+                      <!-- Manageable Only Toggle Button -->
+                      <ShadButton
+                        class="join-item"
+                        color="secondary"
+                        :loading
+                        icon="heroicons:shield-check"
+                        @click="showManageableOnly = !showManageableOnly"
+                      >
+                        <span class="hidden sm:inline">Manageable</span>
+                      </ShadButton>
 
-                    <!-- Sort Button -->
-                    <ShadButton
-                      size="sm"
-                      color="secondary"
-                      class="join-item btn-active"
-                      @click="toggleSortOrder"
-                    >
-                      <template #leading>
-                        <ShadIcon :name="sortAscending ? 'heroicons:arrow-up' : 'heroicons:arrow-down'" class="h-4 w-4" />
-                      </template>
-                      <span class="hidden sm:inline">{{ sortAscending ? 'A-Z' : 'Z-A' }}</span>
-                    </ShadButton>
+                      <!-- Sort Button -->
+                      <ShadButton
+                        class="join-item"
+                        color="secondary"
+                        :loading
+                        @click="toggleSortOrder"
+                      >
+                        <template #leading>
+                          <Transition name="fade" mode="out-in">
+                            <span :key="sortAscending">
+                              <ShadIcon :name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'" />
+                            </span>
+                          </Transition>
+                        </template>
+                      </ShadButton>
 
-                    <!-- Refresh Button -->
-                    <ShadButton
-                      v-if="filteredGuilds.length < 0"
-                      color="secondary"
-                      size="sm"
-                      icon="heroicons:arrow-path"
-                      @click="refresh()"
-                    >
-                      <span class="hidden sm:inline">Refresh</span>
-                    </ShadButton>
+                      <!-- Refresh Button -->
+                      <ShadButton
+                        v-if="filteredGuilds.length < 0"
+                        color="secondary"
+                        class="join-item"
+                        :loading
+                        icon="heroicons:arrow-path-20-solid"
+                        @click="refresh()"
+                      >
+                        <span class="hidden sm:inline">Refresh</span>
+                      </ShadButton>
+                    </ShadFieldGroup>
                   </div>
                 </div>
 
@@ -132,7 +132,7 @@
                   :loading
                   :container-height="600"
                   :item-height="280"
-                  :type="viewMode === 'grid' ? 'grid' : 'card'"
+                  :view-mode
                 />
               </div>
             </div>
@@ -345,3 +345,15 @@ watch(
   { immediate: true },
 );
 </script>
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.15s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+	opacity: 0;
+}
+</style>

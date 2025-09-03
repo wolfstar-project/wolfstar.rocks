@@ -19,7 +19,7 @@
     <div class="w-full">
       <!-- Loading Skeleton Grid -->
       <div v-if="loading" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" :type="type" />
+        <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" :view-mode />
       </div>
       <div v-else ref="scrollComponent">
         <!-- Guild Cards Grid -->
@@ -27,7 +27,7 @@
           v-if="paginatedGuilds.length > 0"
           class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
-          <guild-card v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :guild="guild" :type="type" />
+          <guild-card v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :guild="guild" :view-mode />
         </div>
 
         <!-- Loading Indicator for Infinite Scroll -->
@@ -87,7 +87,7 @@ interface EnhancedGuildCardsProps {
   searchQuery: string;
   loading: boolean;
   error: FetchError<any> | undefined;
-  type: "card" | "grid";
+  viewMode: "card" | "grid";
 };
 
 const props = defineProps<EnhancedGuildCardsProps>();
@@ -97,7 +97,7 @@ const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
-const type = toRef(() => props.type);
+const viewMode = toRef(() => props.viewMode);
 const error = toRef(() => props.error);
 
 const paginatedGuilds = computed(() => {

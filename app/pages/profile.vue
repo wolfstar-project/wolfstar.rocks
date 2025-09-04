@@ -89,7 +89,7 @@
                         color="secondary"
                         :loading
                         icon="heroicons:shield-check"
-                        @click="showManageableOnly = !showManageableOnly"
+                        @click="toggleShowManageableOnly()"
                       >
                         <span class="hidden sm:inline">Manageable</span>
                       </ShadButton>
@@ -99,7 +99,7 @@
                         class="join-item"
                         color="secondary"
                         :loading
-                        @click="toggleSortOrder"
+                        @click="toggleSortOrder()"
                       >
                         <template #leading>
                           <Transition name="fade" mode="out-in">
@@ -200,19 +200,20 @@ import { useFuse } from "@vueuse/integrations/useFuse";
 definePageMeta({ alias: ["/account"], auth: true });
 
 const { user, ready } = useAuth();
+const { isMobile } = useBreakpoint();
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const isAnimated = ref(false);
 const isDefault = ref(false);
 const loading = ref(true);
-const searchQuery = ref("");
-// is true by default because we want to show only manageable servers
-const showManageableOnly = ref(true);
-// Sort order: true for ascending, false for descending
-const sortAscending = ref(true);
 const evaluating = shallowRef(false);
-const { isMobile } = useBreakpoint();
+const searchQuery = ref("");
 const viewMode = ref<"grid" | "card">("card");
+
+// is true by default because we want to show only manageable servers
+const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
+// Sort order: true for ascending, false for descending
+const [sortAscending, toggleSortOrder] = useToggle(true);
 
 if (isMobile) {
   viewMode.value = "grid";
@@ -289,6 +290,7 @@ const filteredGuilds = computedAsync(() => {
     return sortAscending.value ? comparison : -comparison;
   });
 }, [], { lazy: true, evaluating });
+
 const defaultAvatar = computed(() =>
   user.value?.id
     ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
@@ -313,10 +315,6 @@ const items = computed<TabsItem[]>(() => [
     icon: "heroicons:cog-6-tooth",
   },
 ]);
-
-function toggleSortOrder() {
-  sortAscending.value = !sortAscending.value;
-}
 function toggleView() {
   viewMode.value = viewMode.value === "grid" ? "card" : "grid";
 }

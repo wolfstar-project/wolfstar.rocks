@@ -3,6 +3,8 @@ export type { DrawerProps } from "./Drawer.vue";
 export { default as Modal } from "./Modal.vue";
 export type { ModalProps } from "./Modal.vue";
 export { default as OverlayProvider } from "./OverlayProvider.vue";
+export { default as Popover } from "./Popover.vue";
+export type { PopoverProps } from "./Popover.vue";
 export { default as Slideover } from "./Slideover.vue";
 export type { SlideoverProps } from "./Slideover.vue";
 export { default as Toast } from "./Toast.vue";

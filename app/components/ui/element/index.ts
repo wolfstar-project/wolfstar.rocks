@@ -15,6 +15,7 @@ export { default as Chip } from "./Chip.vue";
 export type { ChipProps } from "./Chip.vue";
 export { default as FieldGroup } from "./FieldGroup.vue";
 export { default as Icon } from "./Icon.vue";
+export type { IconProps } from "./Icon.vue";
 export { default as Kbd } from "./Kbd.vue";
 export type { KbdProps } from "./Kbd.vue";
 export { default as Progress } from "./Progress.vue";

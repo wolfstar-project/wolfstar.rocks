@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div class="flex items-end gap-4 mt-4">
+        <div class="divider flex items-end gap-4 mt-4">
           <span class="text-sm text-base-content/80">
             Version: {{ buildInfo.version }}
           </span>
@@ -38,8 +38,6 @@
       </aside>
     </template>
     <template #right>
-      <ShadColorModeButton />
-
       <ShadButton
         to="https://github.com/nuxt-ui-pro/saas"
         target="_blank"

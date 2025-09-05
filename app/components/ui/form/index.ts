@@ -13,6 +13,8 @@ export { default as InputNumber } from "./InputNumber.vue";
 export type { InputNumberProps } from "./InputNumber.vue";
 export { default as InputTags } from "./InputTags.vue";
 export type { InputTagsProps } from "./InputTags.vue";
+export { default as Switch } from "./Switch.vue";
+export type { SwitchProps } from "./Switch.vue";
 export { FieldArray as FormFieldArray } from "vee-validate";
 
 export const inputWithoutTV = {

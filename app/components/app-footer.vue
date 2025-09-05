@@ -24,7 +24,7 @@
           </div>
         </div>
 
-        <div class="divider flex items-end gap-4 mt-4">
+        <div class="flex items-end gap-4 mt-4">
           <span class="text-sm text-base-content/80">
             Version: {{ buildInfo.version }}
           </span>

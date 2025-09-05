@@ -129,7 +129,7 @@ const theme = tv({
       true: "",
     },
     loading: {
-      true: "loading loading-spinner",
+      true: "",
     },
     active: {
       true: {

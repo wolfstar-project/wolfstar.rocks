@@ -1,10 +1,18 @@
 <template>
-  <nuxt-pwa-manifest />
-  <nuxt-loading-indicator color="bg-neutral" />
+  <ShadApp
+    :toaster="{
+      position: 'top-right',
+      expand: true,
+      duration: 5000
+    }"
+  >
+    <NuxtPwaManifest />
+    <NuxtLoadingIndicator color="bg-neutral" />
 
-  <nuxt-layout name="main">
-    <nuxt-page />
-  </nuxt-layout>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </ShadApp>
 </template>
 
 <script setup lang="ts">

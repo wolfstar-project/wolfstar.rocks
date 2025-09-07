@@ -1,20 +1,17 @@
 <template>
-  <ShadApp
-    :toaster="{
-      position: 'top-right',
-    }"
-  >
-    <div class="app-layout scrollbar" :class="appName">
-      <app-navbar />
-      <main class="mx-4 flex flex-grow flex-col items-center sm:mx-auto sm:w-5/6 lg:max-w-5xl xl:max-w-7xl">
-        <slot></slot>
-      </main>
-      <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
-        <scroll-to-top-button />
-      </div>
-      <app-footer />
+  <div class="app-layout" :class="appName">
+    <AppNavbar />
+
+    <main class="mx-4 flex flex-grow flex-col items-center sm:mx-auto sm:w-5/6 lg:max-w-5xl xl:max-w-7xl">
+      <slot></slot>
+    </main>
+
+    <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
+      <ScrollToTopButton />
     </div>
-  </ShadApp>
+
+    <AppFooter />
+  </div>
 </template>
 
 <script setup lang="ts">

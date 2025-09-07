@@ -1,5 +1,8 @@
 export { default as Drawer } from "./Drawer.vue";
 export type { DrawerProps } from "./Drawer.vue";
+export { default as DropdownMenu } from "./DropdownMenu.vue";
+export type { DropdownMenuItem, DropdownMenuSlots } from "./DropdownMenu.vue";
+export { default as DropdownMenuContent } from "./DropdownMenuContent.vue";
 export { default as Modal } from "./Modal.vue";
 export type { ModalProps } from "./Modal.vue";
 export { default as OverlayProvider } from "./OverlayProvider.vue";

@@ -33,13 +33,6 @@ catalogs:
     typescript: ~5.8.3
     vue-tsc: 2.2.10
     wrangler: ^4.33.1
-  frontend:
-    "@pinia/nuxt": ^0.11.2
-    "@tanstack/pacer": ^0.15.1
-    motion-v: ^1.7.1
-    nuxt-vue-dragscroll: ^1.0.1
-    pinia: ^3.0.3
-    reka-ui: ^2.5.0
   icons:
     "@iconify-json/heroicons": ^1.2.2
     "@iconify-json/ic": ^1.2.4
@@ -62,18 +55,23 @@ catalogs:
     prettier-plugin-tailwindcss: ^0.6.14
   prod:
     "@nuxtjs/color-mode": ^3.5.2
+    "@pinia/nuxt": ^0.11.2
     "@prisma/adapter-pg": ~6.15.0
     "@prisma/client": ~6.15.0
-    colortranslator: ^5.0.0
+    "@tanstack/pacer": ^0.15.1
     consola: ^3.4.2
     dotenv: ^17.2.1
     fuse.js: ^7.1.0
     import-in-the-middle: ^1.14.2
+    motion-v: ^1.7.1
     nuxt: ^4.0.3
     nuxt-authorization: ^0.3.5
     nuxt-security: ^2.4.0
+    nuxt-vue-dragscroll: ^1.0.1
+    pinia: ^3.0.3
     prisma: ~6.15.0
     prisma-json-types-generator: ^3.6.0
+    reka-ui: ^2.5.0
     shadcn-nuxt: 2.1.0
     stale-dep: ^0.8.3
     tailwind-variants: ^3.1.0
@@ -103,6 +101,7 @@ catalogs:
     "@vueuse/nuxt": ^13.6.0
     "@vueuse/router": ^13.6.0
     clsx: ^2.1.1
+    colortranslator: ^5.0.0
     yup: ^1.7.0
     zod: ^4.1.5
 
@@ -111,16 +110,18 @@ allowedDeprecatedVersions:
   inflight: 1.0.6
   sourcemap-codec: 1.4.8
 
-onlyBuiltDependencies:
+ignoredBuiltDependencies:
   - "@parcel/watcher"
+  - esbuild
+  - vue-demi
+
+onlyBuiltDependencies:
   - "@prisma/client"
   - "@prisma/engines"
   - "@tailwindcss/oxide"
-  - esbuild
   - pncat
   - prisma
   - sharp
-  - vue-demi
   - workerd
 
 peerDependencyRules:

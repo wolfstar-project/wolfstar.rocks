@@ -1,0 +1,526 @@
+<!-- eslint-disable vue/no-template-shadow -->
+<template>
+  <SelectRoot
+    v-slot="{ modelValue, open }"
+    :name="name"
+    v-bind="rootProps"
+    :autocomplete="autocomplete"
+    :disabled="disabled"
+    :default-value="(defaultValue as (AcceptableValue | AcceptableValue[]))"
+    :model-value="(modelValue as (AcceptableValue | AcceptableValue[]))"
+    @update:model-value="onUpdate"
+    @update:open="onUpdateOpen"
+  >
+    <SelectTrigger
+      :id="id"
+      ref="triggerRef"
+      :class="ui.base({ class: [props.ui?.base, props.class] })"
+      v-bind="{ ...$attrs, ...ariaAttrs }"
+    >
+      <span v-if="isLeading || !!avatar || !!slots.leading" :class="ui.leading({ class: props.ui?.leading })">
+        <slot name="leading" :model-value="(modelValue as GetModelValue<T, VK, M>)" :open="open" :ui="ui">
+          <Icon v-if="isLeading && leadingIconName" :name="leadingIconName" :class="ui.leadingIcon({ class: props.ui?.leadingIcon })" />
+          <Avatar v-else-if="!!avatar" :size="((props.ui?.itemLeadingAvatarSize || ui.itemLeadingAvatarSize()) as AvatarProps['size'])" v-bind="avatar" :class="ui.itemLeadingAvatar({ class: props.ui?.itemLeadingAvatar })" />
+        </slot>
+      </span>
+
+      <slot :model-value="(modelValue as GetModelValue<T, VK, M>)" :open="open">
+        <template v-for="displayedModelValue in [displayValue(modelValue as GetModelValue<T, VK, M>)]" :key="displayedModelValue">
+          <span v-if="displayedModelValue !== undefined && displayedModelValue !== null" :class="ui.value({ class: props.ui?.value })">
+            {{ displayedModelValue }}
+          </span>
+          <span v-else :class="ui.placeholder({ class: props.ui?.placeholder })">
+            {{ placeholder ?? '&nbsp;' }}
+          </span>
+        </template>
+      </slot>
+
+      <span v-if="isTrailing || !!slots.trailing" :class="ui.trailing({ class: props.ui?.trailing })">
+        <slot name="trailing" :model-value="(modelValue as GetModelValue<T, VK, M>)" :open="open" :ui="ui">
+          <Icon v-if="trailingIconName" :name="trailingIconName" :class="ui.trailingIcon({ class: props.ui?.trailingIcon })" />
+        </slot>
+      </span>
+    </SelectTrigger>
+
+    <SelectPortal v-bind="portalProps">
+      <SelectContent :class="ui.content({ class: props.ui?.content })" v-bind="contentProps">
+        <slot name="content-top"></slot>
+
+        <div role="presentation" :class="ui.viewport({ class: props.ui?.viewport })">
+          <SelectGroup v-for="(group, groupIndex) in groups" :key="`group-${groupIndex}`" :class="ui.group({ class: props.ui?.group })">
+            <template v-for="(item, index) in group" :key="`group-${groupIndex}-${index}`">
+              <SelectLabel v-if="isSelectItem(item) && item.type === 'label'" :class="ui.label({ class: [props.ui?.label, item.ui?.label, item.class] })">
+                {{ get(item, props.labelKey as string) }}
+              </SelectLabel>
+
+              <SelectSeparator v-else-if="isSelectItem(item) && item.type === 'separator'" :class="ui.separator({ class: [props.ui?.separator, item.ui?.separator, item.class] })" />
+
+              <SelectItemReka
+                v-else
+                :class="ui.item({ class: [props.ui?.item, isSelectItem(item) && item.ui?.item, isSelectItem(item) && item.class] })"
+                :disabled="isSelectItem(item) && item.disabled"
+                :value="isSelectItem(item) ? get(item, props.valueKey as string) : item"
+                @select="isSelectItem(item) && item.onSelect?.($event)"
+              >
+                <slot name="item" :item="(item as NestedItem<T>)" :index="index">
+                  <slot name="item-leading" :item="(item as NestedItem<T>)" :index="index">
+                    <Icon v-if="isSelectItem(item) && item.icon" :name="item.icon" :class="ui.itemLeadingIcon({ class: [props.ui?.itemLeadingIcon, item.ui?.itemLeadingIcon] })" />
+                    <Avatar v-else-if="isSelectItem(item) && item.avatar" :size="((item.ui?.itemLeadingAvatarSize || props.ui?.itemLeadingAvatarSize || ui.itemLeadingAvatarSize()) as AvatarProps['size'])" v-bind="item.avatar" :class="ui.itemLeadingAvatar({ class: [props.ui?.itemLeadingAvatar, item.ui?.itemLeadingAvatar] })" />
+                    <Chip
+                      v-else-if="isSelectItem(item) && item.chip"
+                      :size="((item.ui?.itemLeadingChipSize || props.ui?.itemLeadingChipSize || ui.itemLeadingChipSize()) as ChipProps['size'])"
+                      inset
+                      standalone
+                      v-bind="item.chip"
+                      :class="ui.itemLeadingChip({ class: [props.ui?.itemLeadingChip, item.ui?.itemLeadingChip] })"
+                    />
+                  </slot>
+
+                  <SelectItemText :class="ui.itemLabel({ class: [props.ui?.itemLabel, isSelectItem(item) && item.ui?.itemLabel] })">
+                    <slot name="item-label" :item="(item as NestedItem<T>)" :index="index">
+                      {{ isSelectItem(item) ? get(item, props.labelKey as string) : item }}
+                    </slot>
+                  </SelectItemText>
+
+                  <span :class="ui.itemTrailing({ class: [props.ui?.itemTrailing, isSelectItem(item) && item.ui?.itemTrailing] })">
+                    <slot name="item-trailing" :item="(item as NestedItem<T>)" :index="index"></slot>
+
+                    <SelectItemIndicator as-child>
+                      <Icon :name="selectedIcon || 'lucide:check'" :class="ui.itemTrailingIcon({ class: [props.ui?.itemTrailingIcon, isSelectItem(item) && item.ui?.itemTrailingIcon] })" />
+                    </SelectItemIndicator>
+                  </span>
+                </slot>
+              </SelectItemReka>
+            </template>
+          </SelectGroup>
+        </div>
+
+        <slot name="content-bottom"></slot>
+
+        <SelectArrow v-if="!!arrow" v-bind="arrowProps" :class="ui.arrow({ class: props.ui?.arrow })" />
+      </SelectContent>
+    </SelectPortal>
+  </SelectRoot>
+</template>
+
+<script lang="ts">
+import type { SelectArrowProps, SelectContentEmits, SelectContentProps, SelectRootEmits, SelectRootProps } from "reka-ui";
+import type { AvatarProps, ChipProps, IconProps } from "@/components/ui/element";
+import type { InputProps } from "@/components/ui/form";
+import type { UseComponentIconsProps } from "@/composables/useComponentIcons";
+import type { AcceptableValue, ArrayOrNested, EmitsToProps, GetItemKeys, GetItemValue, GetModelValue, GetModelValueEmits, NestedItem } from "@/types/utils";
+import { tv, type VariantProps } from "tailwind-variants";
+
+const theme = tv({
+  slots: {
+    base: [
+      "select w-full",
+      "disabled:select-disabled disabled:cursor-not-allowed disabled:opacity-75",
+      "transition-colors",
+    ],
+    leading: "absolute inset-y-0 start-0 flex items-center",
+    leadingIcon: "shrink-0 text-base-content/60",
+    leadingAvatar: "shrink-0",
+    leadingAvatarSize: "",
+    trailing: "absolute inset-y-0 end-0 flex items-center",
+    trailingIcon: "shrink-0 text-base-content/60",
+    value: "truncate pointer-events-none",
+    placeholder: "truncate text-base-content/60",
+    arrow: "fill-base-content",
+    content: "max-h-60 w-full bg-base-100 shadow-lg rounded-box overflow-hidden menu menu-dropdown",
+    viewport: "relative divide-y divide-base-200 overflow-y-auto",
+    group: "p-1",
+    empty: "text-center text-base-content/60",
+    label: "font-semibold text-base-content",
+    separator: "divider",
+    item: [
+      "menu-item",
+      "disabled:opacity-50 disabled:cursor-not-allowed",
+      "transition-colors",
+    ],
+    itemLeadingIcon: [
+      "shrink-0 text-base-content/60",
+      "transition-colors",
+    ],
+    itemLeadingAvatar: "shrink-0",
+    itemLeadingAvatarSize: "",
+    itemLeadingChip: "shrink-0",
+    itemLeadingChipSize: "",
+    itemTrailing: "ms-auto inline-flex gap-1.5 items-center",
+    itemTrailingIcon: "shrink-0",
+    itemLabel: "truncate",
+  },
+  variants: {
+    fieldGroup: {
+      horizontal: "join-item join-horizontal",
+      vertical: "join-item join-vertical",
+    },
+    size: {
+      xs: {
+        base: "select-xs",
+        leading: "ps-2",
+        trailing: "pe-2",
+        leadingIcon: "size-4",
+        leadingAvatarSize: "avatar-xs",
+        trailingIcon: "size-4",
+        label: "text-xs",
+        item: "text-xs",
+        itemLeadingIcon: "size-4",
+        itemLeadingAvatarSize: "avatar-xs",
+        itemLeadingChip: "badge-xs",
+        itemLeadingChipSize: "badge-xs",
+        itemTrailingIcon: "size-4",
+        empty: "text-xs",
+      },
+      sm: {
+        base: "select-sm",
+        leading: "ps-2.5",
+        trailing: "pe-2.5",
+        leadingIcon: "size-4",
+        leadingAvatarSize: "avatar-sm",
+        trailingIcon: "size-4",
+        label: "text-sm",
+        item: "text-sm",
+        itemLeadingIcon: "size-4",
+        itemLeadingAvatarSize: "avatar-sm",
+        itemLeadingChip: "badge-sm",
+        itemLeadingChipSize: "badge-sm",
+        itemTrailingIcon: "size-4",
+        empty: "text-sm",
+      },
+      md: {
+        base: "select-md",
+        leading: "ps-3",
+        trailing: "pe-3",
+        leadingIcon: "size-5",
+        leadingAvatarSize: "avatar-md",
+        trailingIcon: "size-5",
+        label: "text-base",
+        item: "text-base",
+        itemLeadingIcon: "size-5",
+        itemLeadingAvatarSize: "avatar-md",
+        itemLeadingChip: "badge-md",
+        itemLeadingChipSize: "badge-md",
+        itemTrailingIcon: "size-5",
+        empty: "text-base",
+      },
+      lg: {
+        base: "select-lg",
+        leading: "ps-3.5",
+        trailing: "pe-3.5",
+        leadingIcon: "size-6",
+        leadingAvatarSize: "avatar-lg",
+        trailingIcon: "size-6",
+        label: "text-lg",
+        item: "text-lg",
+        itemLeadingIcon: "size-6",
+        itemLeadingAvatarSize: "avatar-lg",
+        itemLeadingChip: "badge-lg",
+        itemLeadingChipSize: "badge-lg",
+        itemTrailingIcon: "size-6",
+        empty: "text-lg",
+      },
+    },
+    variant: {
+      outline: "select-bordered",
+      soft: "select",
+      subtle: "select-ghost",
+      ghost: "select-ghost",
+      none: "",
+    },
+    color: {
+      primary: "select-primary",
+      secondary: "select-secondary",
+      success: "select-success",
+      info: "select-info",
+      warning: "select-warning",
+      error: "select-error",
+      neutral: "select-neutral",
+    },
+    leading: {
+      true: "",
+    },
+    trailing: {
+      true: "",
+    },
+    loading: {
+      true: "",
+    },
+    highlight: {
+      true: "select-focus",
+    },
+    type: {
+      file: "",
+    },
+  },
+  compoundVariants: [
+    {
+      loading: true,
+      leading: true,
+      class: {
+        leadingIcon: "loading loading-spinner",
+      },
+    },
+    {
+      loading: true,
+      leading: false,
+      trailing: true,
+      class: {
+        trailingIcon: "loading loading-spinner",
+      },
+    },
+  ],
+  defaultVariants: {
+    size: "md",
+    color: "primary",
+    variant: "outline",
+  },
+});
+
+type SelectVariants = VariantProps<typeof theme>;
+
+interface SelectItemBase {
+  label?: string;
+  /**
+   * @IconifyIcon
+   */
+  icon?: IconProps["name"];
+  avatar?: AvatarProps;
+  chip?: ChipProps;
+  /**
+   * The item type.
+   * @defaultValue 'item'
+   */
+  type?: "label" | "separator" | "item";
+  value?: AcceptableValue | boolean;
+  disabled?: boolean;
+  onSelect?(e?: Event): void;
+  class?: any;
+  ui?: Pick<Partial<typeof theme.slots>, "label" | "separator" | "item" | "itemLeadingIcon" | "itemLeadingAvatarSize" | "itemLeadingAvatar" | "itemLeadingChipSize" | "itemLeadingChip" | "itemLabel" | "itemTrailing" | "itemTrailingIcon">;
+  [key: string]: any;
+}
+export type SelectItem = SelectItemBase | AcceptableValue | boolean;
+
+export interface SelectProps<T extends ArrayOrNested<SelectItem> = ArrayOrNested<SelectItem>, VK extends GetItemKeys<T> = "value", M extends boolean = false> extends Omit<SelectRootProps<T>, "dir" | "multiple" | "modelValue" | "defaultValue" | "by">, UseComponentIconsProps {
+  id?: string;
+  /** The placeholder text when the select is empty. */
+  placeholder?: string;
+  /**
+   * @defaultValue 'primary'
+   */
+  color?: SelectVariants["color"];
+  /**
+   * @defaultValue 'outline'
+   */
+  variant?: SelectVariants["variant"];
+  /**
+   * @defaultValue 'md'
+   */
+  size?: SelectVariants["size"];
+  /**
+   * The icon displayed to open the menu.
+   * @defaultValue appConfig.ui.icons.chevronDown
+   * @IconifyIcon
+   */
+  trailingIcon?: IconProps["name"];
+  /**
+   * The icon displayed when an item is selected.
+   * @defaultValue appConfig.ui.icons.check
+   * @IconifyIcon
+   */
+  selectedIcon?: IconProps["name"];
+  /**
+   * The content of the menu.
+   * @defaultValue { side: 'bottom', sideOffset: 8, collisionPadding: 8, position: 'popper' }
+   */
+  content?: Omit<SelectContentProps, "as" | "asChild" | "forceMount"> & Partial<EmitsToProps<SelectContentEmits>>;
+  /**
+   * Display an arrow alongside the menu.
+   * @defaultValue false
+   */
+  arrow?: boolean | Omit<SelectArrowProps, "as" | "asChild">;
+  /**
+   * Render the menu in a portal.
+   * @defaultValue true
+   */
+  portal?: boolean | string | HTMLElement;
+  /**
+   * When `items` is an array of objects, select the field to use as the value.
+   * @defaultValue 'value'
+   */
+  valueKey?: VK;
+  /**
+   * When `items` is an array of objects, select the field to use as the label.
+   * @defaultValue 'label'
+   */
+  labelKey?: keyof NestedItem<T>;
+  items?: T;
+  /** The value of the Select when initially rendered. Use when you do not need to control the state of the Select. */
+  defaultValue?: GetModelValue<T, VK, M>;
+  /** The controlled value of the Select. Can be bind as `v-model`. */
+  modelValue?: GetModelValue<T, VK, M>;
+  /** Whether multiple options can be selected or not. */
+  multiple?: M & boolean;
+  /** Highlight the ring color like a focus state. */
+  highlight?: boolean;
+  autofocus?: boolean;
+  autofocusDelay?: number;
+  class?: any;
+  ui?: Partial<typeof theme.slots>;
+}
+
+export type SelectEmits<A extends ArrayOrNested<SelectItem>, VK extends GetItemKeys<A> | undefined, M extends boolean> = Omit<SelectRootEmits, "update:modelValue"> & {
+  change: [event: Event];
+  blur: [event: FocusEvent];
+  focus: [event: FocusEvent];
+} & GetModelValueEmits<A, VK, M>;
+
+type SlotProps<T extends SelectItem> = (props: { item: T; index: number }) => any;
+
+export interface SelectSlots<
+  A extends ArrayOrNested<SelectItem> = ArrayOrNested<SelectItem>,
+  VK extends GetItemKeys<A> | undefined = undefined,
+  M extends boolean = false,
+  T extends NestedItem<A> = NestedItem<A>,
+> {
+  "leading"(props: {
+    modelValue?: GetModelValue<A, VK, M>;
+    open: boolean;
+    ui: { [K in keyof Required<Partial<typeof theme.slots>>]: (props?: Record<string, any>) => string };
+  }): any;
+  "default"(props: {
+    modelValue?: GetModelValue<A, VK, M>;
+    open: boolean;
+  }): any;
+  "trailing"(props: {
+    modelValue?: GetModelValue<A, VK, M>;
+    open: boolean;
+    ui: { [K in keyof Required<Partial<typeof theme.slots>>]: (props?: Record<string, any>) => string };
+  }): any;
+  "item": SlotProps<T>;
+  "item-leading": SlotProps<T>;
+  "item-label": SlotProps<T>;
+  "item-trailing": SlotProps<T>;
+  "content-top": (props?: object) => any;
+  "content-bottom": (props?: object) => any;
+}
+</script>
+
+<script setup lang="ts" generic="T extends ArrayOrNested<SelectItem>, VK extends GetItemKeys<T> = 'value', M extends boolean = false">
+import { reactivePick } from "@vueuse/core";
+import { defu } from "defu";
+import { SelectArrow, SelectContent, SelectGroup, SelectItemIndicator, SelectItem as SelectItemReka, SelectItemText, SelectLabel, SelectPortal, SelectRoot, SelectSeparator, SelectTrigger, useForwardPropsEmits } from "reka-ui";
+import { computed, onMounted, ref, toRef } from "vue";
+import { Avatar, Chip, Icon } from "@/components/ui/element";
+import { useComponentIcons } from "@/composables/useComponentIcons";
+import { useFieldGroup } from "@/composables/useFieldGroup";
+import { useFormField } from "@/composables/useFormField";
+import { usePortal } from "@/composables/usePortal";
+import { get, getDisplayValue, isArrayOfArray } from "@/utils/index";
+
+defineOptions({ inheritAttrs: false });
+
+const props = withDefaults(defineProps<SelectProps<T, VK, M>>(), {
+  valueKey: "value" as never,
+  labelKey: "label" as never,
+  portal: true,
+  autofocusDelay: 0,
+});
+const emits = defineEmits<SelectEmits<T, VK, M>>();
+const slots = defineSlots<SelectSlots<T, VK, M>>();
+
+const rootProps = useForwardPropsEmits(reactivePick(props, "open", "defaultOpen", "disabled", "autocomplete", "required", "multiple"), emits);
+const portalProps = usePortal(toRef(() => props.portal));
+const contentProps = toRef(() => defu(props.content, { side: "bottom", sideOffset: 8, collisionPadding: 8, position: "popper" }) as SelectContentProps);
+const arrowProps = toRef(() => props.arrow as SelectArrowProps);
+
+const { emitFormChange, emitFormInput, emitFormBlur, emitFormFocus, size: formGroupSize, color, id, name, highlight, disabled, ariaAttrs } = useFormField<InputProps>(props);
+const { orientation, size: fieldGroupSize } = useFieldGroup<InputProps>(props);
+const { isLeading, isTrailing, leadingIconName, trailingIconName } = useComponentIcons(toRef(() => defu(props, { trailingIcon: "lucide:chevron-down" })));
+
+const selectSize = computed(() => fieldGroupSize.value || formGroupSize.value);
+
+const ui = computed(() => tv({ extend: theme })({
+  color: color.value,
+  variant: props.variant,
+  size: selectSize?.value,
+  loading: props.loading,
+  highlight: highlight.value,
+  leading: isLeading.value || !!props.avatar || !!slots.leading,
+  trailing: isTrailing.value || !!slots.trailing,
+  fieldGroup: orientation.value,
+}));
+
+const groups = computed<SelectItem[][]>(() =>
+  props.items?.length
+    ? isArrayOfArray(props.items)
+      ? props.items
+      : [props.items]
+    : [],
+);
+
+const items = computed(() => groups.value.flatMap(group => group) as T[]);
+
+function displayValue(value: GetItemValue<T, VK> | GetItemValue<T, VK>[]): string | undefined {
+  if (props.multiple && Array.isArray(value)) {
+    const displayedValues = value
+      .map(item => getDisplayValue(items.value, item, {
+        labelKey: props.labelKey,
+        valueKey: props.valueKey,
+      }))
+      .filter((v): v is string => v != null && v !== "");
+
+    return displayedValues.length > 0 ? displayedValues.join(", ") : undefined;
+  }
+
+  return getDisplayValue(items.value, value, {
+    labelKey: props.labelKey,
+    valueKey: props.valueKey,
+  });
+}
+
+const triggerRef = ref<InstanceType<typeof SelectTrigger> | null>(null);
+
+function autoFocus() {
+  if (props.autofocus) {
+    triggerRef.value?.$el?.focus({
+      focusVisible: true,
+    });
+  }
+}
+
+onMounted(() => {
+  setTimeout(() => {
+    autoFocus();
+  }, props.autofocusDelay);
+});
+
+function onUpdate(value: any) {
+  // @ts-expect-error - 'target' does not exist in type 'EventInit'
+  const event = new Event("change", { target: { value } });
+  emits("change", event);
+
+  emitFormChange();
+  emitFormInput();
+}
+function onUpdateOpen(value: boolean) {
+  if (!value) {
+    const event = new FocusEvent("blur");
+    emits("blur", event);
+    emitFormBlur();
+  }
+  else {
+    const event = new FocusEvent("focus");
+    emits("focus", event);
+    emitFormFocus();
+  }
+}
+
+function isSelectItem(item: SelectItem): item is SelectItemBase {
+  return typeof item === "object" && item !== null;
+}
+
+defineExpose({
+  triggerRef,
+});
+</script>

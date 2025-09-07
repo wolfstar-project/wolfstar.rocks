@@ -4,7 +4,6 @@ export { default as Checkbox } from "./Checkbox.vue";
 export { default as Form } from "./Form.vue";
 export { default as FormField } from "./FormField.vue";
 export type { FormFieldProps } from "./FormField.vue";
-
 export { default as Input } from "./Input.vue";
 export type { InputProps } from "./Input.vue";
 export { default as InputMenu } from "./InputMenu.vue";
@@ -13,6 +12,8 @@ export { default as InputNumber } from "./InputNumber.vue";
 export type { InputNumberProps } from "./InputNumber.vue";
 export { default as InputTags } from "./InputTags.vue";
 export type { InputTagsProps } from "./InputTags.vue";
+export { default as Select } from "./Select.vue";
+export type { SelectProps } from "./Select.vue";
 export { default as Switch } from "./Switch.vue";
 export type { SwitchProps } from "./Switch.vue";
 export { FieldArray as FormFieldArray } from "vee-validate";

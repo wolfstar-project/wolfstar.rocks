@@ -14,6 +14,8 @@ export { default as InputTags } from "./InputTags.vue";
 export type { InputTagsProps } from "./InputTags.vue";
 export { default as Select } from "./Select.vue";
 export type { SelectProps } from "./Select.vue";
+export { default as SelectMenu } from "./SelectMenu.vue";
+export type { SelectMenuProps } from "./SelectMenu.vue";
 export { default as Switch } from "./Switch.vue";
 export type { SwitchProps } from "./Switch.vue";
 export { FieldArray as FormFieldArray } from "vee-validate";

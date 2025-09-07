@@ -66,7 +66,7 @@
                   </li>
                   <li v-for="(childItem, childIndex) in item.children" :key="childIndex" :class="ui.childItem({ class: [props.ui?.childItem, item.ui?.childItem] })">
                     <Link v-slot="{ active: childActive, ...childSlotProps }" v-bind="pickLinkProps(childItem as Omit<NavigationMenuItem, 'type'>)" custom>
-                      <NavigationMenLink as-child :active="childActive" @select="childItem.onSelect">
+                      <NavigationMenuLink as-child :active="childActive" @select="childItem.onSelect">
                         <LinkBase v-bind="childSlotProps" :class="ui.childLink({ class: [props.ui?.childLink, item.ui?.childLink, childItem.class], active: childActive })">
                           <Icon v-if="childItem.icon" :name="childItem.icon" :class="ui.childLinkIcon({ class: [props.ui?.childLinkIcon, item.ui?.childLinkIcon], active: childActive })" />
 
@@ -76,7 +76,7 @@
                             <Icon v-if="childItem.target === '_blank' && externalIcon !== false" :name="typeof externalIcon === 'string' ? externalIcon : 'lucide:external-link'" :class="ui.childLinkLabelExternalIcon({ class: [props.ui?.childLinkLabelExternalIcon, item.ui?.childLinkLabelExternalIcon], active: childActive })" />
                           </span>
                         </LinkBase>
-                      </NavigationMenLink>
+                      </NavigationMenuLink>
                     </Link>
                   </li>
                 </ul>
@@ -98,7 +98,7 @@
             <ul :class="ui.childList({ class: [props.ui?.childList, item.ui?.childList] })">
               <li v-for="(childItem, childIndex) in item.children" :key="childIndex" :class="ui.childItem({ class: [props.ui?.childItem, item.ui?.childItem] })">
                 <Link v-slot="{ active: childActive, ...childSlotProps }" v-bind="pickLinkProps(childItem as Omit<NavigationMenuItem, 'type'>)" custom>
-                  <NavigationMenLink as-child :active="childActive" @select="childItem.onSelect">
+                  <NavigationMenuLink as-child :active="childActive" @select="childItem.onSelect">
                     <LinkBase v-bind="childSlotProps" :class="ui.childLink({ class: [props.ui?.childLink, item.ui?.childLink, childItem.class], active: childActive })">
                       <Icon v-if="childItem.icon" :name="childItem.icon" :class="ui.childLinkIcon({ class: [props.ui?.childLinkIcon, item.ui?.childLinkIcon], active: childActive })" />
 
@@ -113,7 +113,7 @@
                         </p>
                       </div>
                     </LinkBase>
-                  </NavigationMenLink>
+                  </NavigationMenuLink>
                 </Link>
               </li>
             </ul>

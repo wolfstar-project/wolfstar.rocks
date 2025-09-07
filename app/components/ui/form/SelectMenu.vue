@@ -30,8 +30,8 @@
       <ComboboxTrigger ref="triggerRef" :class="ui.base({ class: [props.ui?.base, props.class] })" tabindex="0">
         <span v-if="isLeading || !!avatar || !!slots.leading" :class="ui.leading({ class: props.ui?.leading })">
           <slot name="leading" :model-value="(modelValue as GetModelValue<T, VK, M>)" :open="open" :ui="ui">
-            <UIcon v-if="isLeading && leadingIconName" :name="leadingIconName" :class="ui.leadingIcon({ class: props.ui?.leadingIcon })" />
-            <UAvatar v-else-if="!!avatar" :size="((props.ui?.itemLeadingAvatarSize || ui.itemLeadingAvatarSize()) as AvatarProps['size'])" v-bind="avatar" :class="ui.itemLeadingAvatar({ class: props.ui?.itemLeadingAvatar })" />
+            <Icon v-if="isLeading && leadingIconName" :name="leadingIconName" :class="ui.leadingIcon({ class: props.ui?.leadingIcon })" />
+            <Avatar v-else-if="!!avatar" :size="((props.ui?.itemLeadingAvatarSize || ui.itemLeadingAvatarSize()) as AvatarProps['size'])" v-bind="avatar" :class="ui.itemLeadingAvatar({ class: props.ui?.itemLeadingAvatar })" />
           </slot>
         </span>
 
@@ -48,7 +48,7 @@
 
         <span v-if="isTrailing || !!slots.trailing" :class="ui.trailing({ class: props.ui?.trailing })">
           <slot name="trailing" :model-value="(modelValue as GetModelValue<T, VK, M>)" :open="open" :ui="ui">
-            <UIcon v-if="trailingIconName" :name="trailingIconName" :class="ui.trailingIcon({ class: props.ui?.trailingIcon })" />
+            <Icon v-if="trailingIconName" :name="trailingIconName" :class="ui.trailingIcon({ class: props.ui?.trailingIcon })" />
           </slot>
         </span>
       </ComboboxTrigger>
@@ -60,7 +60,7 @@
           <slot name="content-top"></slot>
 
           <ComboboxInput v-if="!!searchInput" v-model="searchTerm" :display-value="() => searchTerm" as-child>
-            <UInput autofocus autocomplete="off" :size="size" v-bind="searchInputProps" :class="ui.input({ class: props.ui?.input })" />
+            <Input autofocus autocomplete="off" :size="size" v-bind="searchInputProps" :class="ui.input({ class: props.ui?.input })" />
           </ComboboxInput>
 
           <ComboboxEmpty :class="ui.empty({ class: props.ui?.empty })">
@@ -89,9 +89,9 @@
                 >
                   <slot name="item" :item="(item as NestedItem<T>)" :index="index">
                     <slot name="item-leading" :item="(item as NestedItem<T>)" :index="index">
-                      <UIcon v-if="isSelectItem(item) && item.icon" :name="item.icon" :class="ui.itemLeadingIcon({ class: [props.ui?.itemLeadingIcon, item.ui?.itemLeadingIcon] })" />
-                      <UAvatar v-else-if="isSelectItem(item) && item.avatar" :size="((item.ui?.itemLeadingAvatarSize || props.ui?.itemLeadingAvatarSize || ui.itemLeadingAvatarSize()) as AvatarProps['size'])" v-bind="item.avatar" :class="ui.itemLeadingAvatar({ class: [props.ui?.itemLeadingAvatar, item.ui?.itemLeadingAvatar] })" />
-                      <UChip
+                      <Icon v-if="isSelectItem(item) && item.icon" :name="item.icon" :class="ui.itemLeadingIcon({ class: [props.ui?.itemLeadingIcon, item.ui?.itemLeadingIcon] })" />
+                      <Avatar v-else-if="isSelectItem(item) && item.avatar" :size="((item.ui?.itemLeadingAvatarSize || props.ui?.itemLeadingAvatarSize || ui.itemLeadingAvatarSize()) as AvatarProps['size'])" v-bind="item.avatar" :class="ui.itemLeadingAvatar({ class: [props.ui?.itemLeadingAvatar, item.ui?.itemLeadingAvatar] })" />
+                      <Chip
                         v-else-if="isSelectItem(item) && item.chip"
                         :size="((props.ui?.itemLeadingChipSize || ui.itemLeadingChipSize()) as ChipProps['size'])"
                         inset
@@ -111,7 +111,7 @@
                       <slot name="item-trailing" :item="(item as NestedItem<T>)" :index="index"></slot>
 
                       <ComboboxItemIndicator as-child>
-                        <UIcon :name="selectedIcon || 'lucide:check'" :class="ui.itemTrailingIcon({ class: [props.ui?.itemTrailingIcon, isSelectItem(item) && item.ui?.itemTrailingIcon] })" />
+                        <Icon :name="selectedIcon || 'lucide:check'" :class="ui.itemTrailingIcon({ class: [props.ui?.itemTrailingIcon, isSelectItem(item) && item.ui?.itemTrailingIcon] })" />
                       </ComboboxItemIndicator>
                     </span>
                   </slot>

@@ -84,7 +84,7 @@ interface EnhancedGuildCardsProps {
   filterGuilds: NonNullable<TransformedLoginData["transformedGuilds"]>;
   guilds: TransformedLoginData["transformedGuilds"] | null;
   undoSearch: () => void;
-  searchQuery: string;
+  searchQuery: string | null;
   loading: boolean;
   error: FetchError<any> | undefined;
   viewMode: "card" | "grid";

@@ -45,18 +45,18 @@ export const formField = tv({
   slots: {
     root: "",
     wrapper: "",
-    labelWrapper: "flex items-center justify-between",
-    label: "block font-medium text-base-content",
-    container: "relative mt-1",
-    description: "text-base-content/70",
+    labelWrapper: "flex content-center items-center justify-between",
+    label: "block font-medium text-default",
+    container: "mt-1 relative",
+    description: "text-muted",
     error: "mt-2 text-error",
-    hint: "text-base-content/70",
-    help: "mt-2 text-base-content/70",
+    hint: "text-muted",
+    help: "mt-2 text-muted",
   },
   variants: {
     size: {
       xs: {
-        root: "text-2xs",
+        root: "text-xs",
       },
       sm: {
         root: "text-xs",
@@ -65,15 +65,15 @@ export const formField = tv({
         root: "text-sm",
       },
       lg: {
-        root: "text-base",
+        root: "text-sm",
       },
       xl: {
-        root: "text-lg",
+        root: "text-base",
       },
     },
     required: {
       true: {
-        label: "after:ms-0.5 after:text-error after:content-['*']",
+        label: "after:content-['*'] after:ms-0.5 after:text-error",
       },
     },
   },

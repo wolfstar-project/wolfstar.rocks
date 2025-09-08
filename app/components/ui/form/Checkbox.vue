@@ -43,23 +43,43 @@ import { tv } from "tailwind-variants";
 const theme = tv({
   slots: {
     root: "relative flex items-start",
-    base: [
-      "rounded focus-visible:outline-2 focus-visible:outline-offset-2",
-    ],
     container: "flex items-center",
-    wrapper: "ms-2",
-    icon: "size-full shrink-0",
-    label: "block font-medium text-base-content",
-    description: "text-base-content/60",
-    indicator: "flex items-center justify-center size-full text-base-content",
-
+    base: "rounded-sm ring ring-inset ring-accented overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2",
+    indicator: "flex items-center justify-center size-full text-inverted",
+    icon: "shrink-0 size-full",
+    wrapper: "w-full",
+    label: "block font-medium text-default",
+    description: "text-muted",
   },
   variants: {
     color: {
-      ...Object.fromEntries(colors.map((color: string) => [color, { indicator: `checkbox-${color}` }])) as {
-        [key in UIColors]: {
-          indicator: string;
-        };
+      primary: {
+        base: "focus-visible:outline-primary",
+        indicator: "bg-primary",
+      },
+      secondary: {
+        base: "focus-visible:outline-secondary",
+        indicator: "bg-secondary",
+      },
+      success: {
+        base: "focus-visible:outline-success",
+        indicator: "bg-success",
+      },
+      info: {
+        base: "focus-visible:outline-info",
+        indicator: "bg-info",
+      },
+      warning: {
+        base: "focus-visible:outline-warning",
+        indicator: "bg-warning",
+      },
+      error: {
+        base: "focus-visible:outline-error",
+        indicator: "bg-error",
+      },
+      neutral: {
+        base: "focus-visible:outline-inverted",
+        indicator: "bg-inverted",
       },
     },
     variant: {
@@ -86,41 +106,41 @@ const theme = tv({
     },
     size: {
       xs: {
-        base: "checkbox-xs",
+        base: "size-3",
         container: "h-4",
         wrapper: "text-xs",
       },
       sm: {
-        base: "checkbox-sm",
+        base: "size-3.5",
         container: "h-4",
         wrapper: "text-xs",
       },
       md: {
-        base: "checkbox-md",
+        base: "size-4",
         container: "h-5",
         wrapper: "text-sm",
       },
       lg: {
-        base: "checkbox-lg",
+        base: "size-4.5",
         container: "h-5",
         wrapper: "text-sm",
       },
       xl: {
-        base: "checkbox-xl",
+        base: "size-5",
         container: "h-6",
         wrapper: "text-base",
       },
     },
     required: {
       true: {
-        label: "after:ms-0.5 after:text-error after:content-['*']",
+        label: "after:content-['*'] after:ms-0.5 after:text-error",
       },
     },
     disabled: {
       true: {
-        base: "cursor-not-allowed opacity-50",
-        label: "cursor-not-allowed opacity-50",
-        description: "cursor-not-allowed opacity-50",
+        base: "cursor-not-allowed opacity-75",
+        label: "cursor-not-allowed opacity-75",
+        description: "cursor-not-allowed opacity-75",
       },
     },
     checked: {
@@ -128,21 +148,70 @@ const theme = tv({
     },
   },
   compoundVariants: [
-    ...(colors.map((color: string) => ({
-      color,
-      checked: true,
-      class: `ring-2 ring-${color} bg-${color}`,
-    })) as any),
+    {
+      size: "xs",
+      variant: "card",
+      class: {
+        root: "p-2.5",
+      },
+    },
+    {
+      size: "sm",
+      variant: "card",
+      class: {
+        root: "p-3",
+      },
+    },
+    {
+      size: "md",
+      variant: "card",
+      class: {
+        root: "p-3.5",
+      },
+    },
+    {
+      size: "lg",
+      variant: "card",
+      class: {
+        root: "p-4",
+      },
+    },
+    {
+      size: "xl",
+      variant: "card",
+      class: {
+        root: "p-4.5",
+      },
+    },
+    {
+      color: "primary",
+      variant: "card",
+      class: {
+        root: "has-data-[state=checked]:border-primary",
+      },
+    },
     {
       color: "neutral",
-      checked: true,
-      class: "bg-base-content ring-2 ring-base-content",
+      variant: "card",
+      class: {
+        root: "has-data-[state=checked]:border-inverted",
+      },
+    },
+    {
+      variant: "card",
+      disabled: true,
+      class: {
+        root: "cursor-not-allowed opacity-75",
+      },
     },
   ],
   defaultVariants: {
     size: "md",
     color: "primary",
+    variant: "list",
+    indicator: "start",
   },
+
 });
 
 type CheckboxVariants = VariantProps<typeof theme>;

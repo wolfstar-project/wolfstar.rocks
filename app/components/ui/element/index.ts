@@ -1,6 +1,5 @@
 export { default as Alert } from "./Alert.vue";
 export type { AlertProps } from "./Alert.vue";
-export { default as AnimatedButton } from "./AnimatedButton.vue";
 export { default as Avatar } from "./Avatar.vue";
 export type { AvatarProps } from "./Avatar.vue";
 export { default as AvatarGroup } from "./AvatarGroup.vue";
@@ -20,7 +19,6 @@ export { default as Kbd } from "./Kbd.vue";
 export type { KbdProps } from "./Kbd.vue";
 export { default as Progress } from "./Progress.vue";
 export type { ProgressProps } from "./Progress.vue";
-export { default as RippleButton } from "./RippleButton.vue";
 export type { SeparatorProps } from "./Separator.vue";
 export { default as Separator } from "./Separator.vue";
 

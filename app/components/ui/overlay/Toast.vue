@@ -84,62 +84,55 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 const theme = tv({
   slots: {
-    root: "alert shadow-lg rounded-lg p-4 flex gap-2.5 focus:outline-none",
+    root: "relative group overflow-hidden bg-default shadow-lg rounded-lg ring ring-default p-4 flex gap-2.5 focus:outline-none",
     wrapper: "w-0 flex-1 flex flex-col",
-    title: "text-sm font-medium",
-    description: "text-sm opacity-75",
+    title: "text-sm font-medium text-highlighted",
+    description: "text-sm text-muted",
     icon: "shrink-0 size-5",
     avatar: "shrink-0",
     avatarSize: "2xl",
     actions: "flex gap-1.5 shrink-0",
-    progress: "absolute inset-x-0 bottom-0 h-1 z-[-1]",
+    progress: "absolute inset-x-0 bottom-0",
     close: "p-0",
   },
   variants: {
     color: {
       primary: {
-        root: "alert-primary",
-        icon: "text-current",
-        progress: "bg-current",
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
+        icon: "text-primary",
       },
       secondary: {
-        root: "alert-secondary",
-        icon: "text-current",
-        progress: "bg-current",
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-secondary",
+        icon: "text-secondary",
       },
       success: {
-        root: "alert-success",
-        icon: "text-current",
-        progress: "bg-current",
-      },
-      error: {
-        root: "alert-error",
-        icon: "text-current",
-        progress: "bg-current",
-      },
-      warning: {
-        root: "alert-warning",
-        icon: "text-current",
-        progress: "bg-current",
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-success",
+        icon: "text-success",
       },
       info: {
-        root: "alert-info",
-        icon: "text-current",
-        progress: "bg-current",
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-info",
+        icon: "text-info",
+      },
+      warning: {
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-warning",
+        icon: "text-warning",
+      },
+      error: {
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-error",
+        icon: "text-error",
       },
       neutral: {
-        root: "alert",
-        icon: "text-current",
-        progress: "bg-current",
+        root: "focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted",
+        icon: "text-highlighted",
       },
     },
     orientation: {
       horizontal: {
-        root: "items-center alert-horizontal",
+        root: "items-center",
         actions: "items-center",
       },
       vertical: {
-        root: "items-start alert-vertical",
+        root: "items-start",
         actions: "items-start mt-2.5",
       },
     },
@@ -150,7 +143,7 @@ const theme = tv({
     },
   },
   defaultVariants: {
-    color: "neutral",
+    color: "primary",
   },
 });
 

@@ -30,35 +30,35 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 const colorPicker = tv({
   slots: {
-    root: "opacity-100 data-[disabled]:opacity-50",
-    picker: "join-horizontal join gap-4",
-    selector: "rounded-box", // daisyUI box radius
-    selectorBackground: "relative h-full w-full rounded-box",
-    selectorThumb: `absolute size-4 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full ring-2 ring-base-100 data-[disabled]:cursor-not-allowed`,
-    track: "relative w-2 rounded-box",
-    trackThumb: `absolute size-4 -translate-x-1 -translate-y-1/2 cursor-pointer rounded-full ring-2 ring-base-100 data-[disabled]:cursor-not-allowed rtl:translate-x-1`,
+    root: "data-[disabled]:opacity-75",
+    picker: "flex gap-4",
+    selector: "rounded-md touch-none",
+    selectorBackground: "w-full h-full relative rounded-md",
+    selectorThumb: "-translate-y-1/2 -translate-x-1/2 absolute size-4 ring-2 ring-(--color-white) rounded-full cursor-pointer data-[disabled]:cursor-not-allowed",
+    track: "w-[8px] relative rounded-md touch-none",
+    trackThumb: "absolute transform -translate-y-1/2 -translate-x-[4px] rtl:translate-x-[4px] size-4 rounded-full ring-2 ring-(--color-white) cursor-pointer data-[disabled]:cursor-not-allowed",
   },
   variants: {
     size: {
       xs: {
-        selector: "h-32 w-32",
-        track: "h-32",
+        selector: "w-38 h-38",
+        track: "h-38",
       },
       sm: {
-        selector: "h-36 w-36",
-        track: "h-36",
-      },
-      md: {
-        selector: "h-40 w-40",
+        selector: "w-40 h-40",
         track: "h-40",
       },
+      md: {
+        selector: "w-42 h-42",
+        track: "h-42",
+      },
       lg: {
-        selector: "h-44 w-44",
+        selector: "w-44 h-44",
         track: "h-44",
       },
       xl: {
-        selector: "h-48 w-48",
-        track: "h-48",
+        selector: "w-46 h-46",
+        track: "h-46",
       },
     },
   },

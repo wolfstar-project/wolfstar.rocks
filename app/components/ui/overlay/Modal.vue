@@ -85,8 +85,8 @@ const theme = tv({
     wrapper: "",
     body: "flex-1 overflow-y-auto p-4 sm:p-6",
     footer: "modal-actions flex items-center gap-1.5 p-4 sm:px-6",
-    title: "modal-title font-bold",
-    description: "mt-1 text-sm text-base-content/60",
+    title: "modal-title font-semibold",
+    description: "mt-1 text-sm text-highlight",
     close: "btn absolute top-2 right-2 btn-circle btn-sm",
   },
   variants: {
@@ -101,7 +101,7 @@ const theme = tv({
         content: "modal-full",
       },
       false: {
-        content: "max-w-lg",
+        content: "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100vw-2rem)] max-w-lg max-h-[calc(100dvh-2rem)] sm:max-h-[calc(100dvh-4rem)] rounded-lg shadow-lg ring ring-default overflow-hidden",
       },
     },
   },

@@ -86,14 +86,14 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 const theme = tv({
   slots: {
-    overlay: "fixed inset-0 bg-base-300/75",
-    content: "fixed bg-base-100 divide-y divide-base-200 sm:ring ring-base-200 sm:shadow-lg flex flex-col focus:outline-none",
+    overlay: "fixed inset-0 bg-elevated/75",
+    content: "fixed bg-default divide-y divide-default sm:ring ring-default sm:shadow-lg flex flex-col focus:outline-none",
     header: "flex items-center gap-1.5 p-4 sm:px-6 min-h-16",
     wrapper: "",
     body: "flex-1 overflow-y-auto p-4 sm:p-6",
     footer: "flex items-center gap-1.5 p-4 sm:px-6",
-    title: "text-base-content font-semibold",
-    description: "mt-1 text-base-content/70 text-sm",
+    title: "text-highlighted font-semibold",
+    description: "mt-1 text-muted text-sm",
     close: "absolute top-4 end-4",
   },
   variants: {
@@ -117,31 +117,37 @@ const theme = tv({
       },
     },
   },
-  compoundVariants: [{
-    transition: true,
-    side: "top",
-    class: {
-      content: "data-[state=open]:animate-[slide-in-from-top_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-top_200ms_ease-in-out]",
+  compoundVariants: [
+    {
+      transition: true,
+      side: "top",
+      class: {
+        content: "data-[state=open]:animate-[slide-in-from-top_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-top_200ms_ease-in-out]",
+      },
     },
-  }, {
-    transition: true,
-    side: "right",
-    class: {
-      content: "data-[state=open]:animate-[slide-in-from-right_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-right_200ms_ease-in-out]",
+    {
+      transition: true,
+      side: "right",
+      class: {
+        content: "data-[state=open]:animate-[slide-in-from-right_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-right_200ms_ease-in-out]",
+      },
     },
-  }, {
-    transition: true,
-    side: "bottom",
-    class: {
-      content: "data-[state=open]:animate-[slide-in-from-bottom_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-bottom_200ms_ease-in-out]",
+    {
+      transition: true,
+      side: "bottom",
+      class: {
+        content: "data-[state=open]:animate-[slide-in-from-bottom_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-bottom_200ms_ease-in-out]",
+      },
     },
-  }, {
-    transition: true,
-    side: "left",
-    class: {
-      content: "data-[state=open]:animate-[slide-in-from-left_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-left_200ms_ease-in-out]",
+    {
+      transition: true,
+      side: "left",
+      class: {
+        content: "data-[state=open]:animate-[slide-in-from-left_200ms_ease-in-out] data-[state=closed]:animate-[slide-out-to-left_200ms_ease-in-out]",
+      },
     },
-  }],
+  ],
+
 });
 
 type Slideover = VariantProps<typeof theme>;

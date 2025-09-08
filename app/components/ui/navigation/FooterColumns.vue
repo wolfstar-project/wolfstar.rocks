@@ -56,13 +56,13 @@ const theme = tv({
     left: "mb-10 xl:mb-0",
     center: "flex flex-col lg:grid grid-flow-col auto-cols-fr gap-8 xl:col-span-2",
     right: "mt-10 xl:mt-0",
-    label: "text-sm font-semibold text-base-content",
+    label: "text-sm font-semibold",
     list: "mt-6 space-y-4",
     item: "relative",
     link: "group text-sm flex items-center gap-1.5 focus-visible:outline-primary",
     linkLeadingIcon: "size-5 shrink-0",
     linkLabel: "truncate",
-    linkLabelExternalIcon: "size-3 absolute top-0 text-base-300 inline-block",
+    linkLabelExternalIcon: "size-3 absolute top-0 text-dimmed inline-block",
   },
   variants: {
     active: {
@@ -71,7 +71,7 @@ const theme = tv({
       },
       false: {
         link: [
-          "text-base-content/70 hover:text-base-content",
+          "text-muted hover:text-default",
           "transition-colors",
         ],
       },

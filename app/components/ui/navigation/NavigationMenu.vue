@@ -29,7 +29,7 @@
             :class="ui.linkTrailingBadge({ class: [props.ui?.linkTrailingBadge, item.ui?.linkTrailingBadge] })"
           />
 
-          <Icon v-if="(orientation === 'horizontal' && (item.children?.length || !!slots[(item.slot ? `${item.slot}-content` : 'item-content') as keyof NavigationMenuSlots<T>])) || (orientation === 'vertical' && item.children?.length)" :name="item.trailingIcon || trailingIcon || appConfig.ui.icons.chevronDown" :class="ui.linkTrailingIcon({ class: [props.ui?.linkTrailingIcon, item.ui?.linkTrailingIcon], active })" />
+          <Icon v-if="(orientation === 'horizontal' && (item.children?.length || !!slots[(item.slot ? `${item.slot}-content` : 'item-content') as keyof NavigationMenuSlots<T>])) || (orientation === 'vertical' && item.children?.length)" :name="item.trailingIcon || trailingIcon || 'lucide:chevron-down'" :class="ui.linkTrailingIcon({ class: [props.ui?.linkTrailingIcon, item.ui?.linkTrailingIcon], active })" />
           <Icon v-else-if="item.trailingIcon" :name="item.trailingIcon" :class="ui.linkTrailingIcon({ class: [props.ui?.linkTrailingIcon, item.ui?.linkTrailingIcon], active })" />
         </slot>
       </component>
@@ -186,9 +186,9 @@ const theme = tv({
   slots: {
     root: "relative flex gap-1.5 [&>div]:min-w-0",
     list: "isolate min-w-0",
-    label: "w-full flex items-center gap-1.5 font-semibold text-xs/5 text-base-content px-2.5 py-1.5",
+    label: "w-full flex items-center gap-1.5 font-semibold text-xs/5 text-highlighted px-2.5 py-1.5",
     item: "min-w-0",
-    link: "group relative w-full flex items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
+    link: "group relative w-full flex items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
     linkLeadingIcon: "shrink-0 size-5",
     linkLeadingAvatar: "shrink-0",
     linkLeadingAvatarSize: "2xs",
@@ -197,22 +197,22 @@ const theme = tv({
     linkTrailingBadgeSize: "sm",
     linkTrailingIcon: "size-5 transform shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200",
     linkLabel: "truncate",
-    linkLabelExternalIcon: "inline-block size-3 align-top text-base-300",
+    linkLabelExternalIcon: "inline-block size-3 align-top text-dimmed",
     childList: "isolate",
-    childLabel: "text-xs text-base-content",
+    childLabel: "text-xs text-highlighted",
     childItem: "",
-    childLink: "group relative size-full flex items-start text-start text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
+    childLink: "group relative size-full flex items-start text-start text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
     childLinkWrapper: "min-w-0",
     childLinkIcon: "size-5 shrink-0",
     childLinkLabel: "truncate",
-    childLinkLabelExternalIcon: "inline-block size-3 align-top text-base-300",
-    childLinkDescription: "text-base-content/70",
-    separator: "px-2 h-px bg-base-300",
+    childLinkLabelExternalIcon: "inline-block size-3 align-top text-dimmed",
+    childLinkDescription: "text-muted",
+    separator: "px-2 h-px bg-border",
     viewportWrapper: "absolute top-full left-0 flex w-full",
-    viewport: "relative overflow-hidden bg-base-100 shadow-lg rounded-md ring ring-base-200 h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
+    viewport: "relative overflow-hidden bg-default shadow-lg rounded-md ring ring-default h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
     content: "",
     indicator: "absolute data-[state=visible]:animate-[fade-in_100ms_ease-out] data-[state=hidden]:animate-[fade-out_100ms_ease-in] data-[state=hidden]:opacity-0 bottom-0 z-[2] w-(--reka-navigation-menu-indicator-size) translate-x-(--reka-navigation-menu-indicator-position) flex h-2.5 items-end justify-center overflow-hidden transition-[translate,width] duration-200",
-    arrow: "relative top-[50%] size-2.5 rotate-45 border border-base-200 bg-base-100 z-[1] rounded-xs",
+    arrow: "relative top-[50%] size-2.5 rotate-45 border border-default bg-default z-[1] rounded-xs",
   },
   variants: {
     color: {
@@ -241,8 +241,8 @@ const theme = tv({
         childLink: "focus-visible:before:ring-error",
       },
       neutral: {
-        link: "focus-visible:before:ring-neutral",
-        childLink: "focus-visible:before:ring-neutral",
+        link: "focus-visible:before:ring-inverted",
+        childLink: "focus-visible:before:ring-inverted",
       },
     },
     highlightColor: {
@@ -287,18 +287,18 @@ const theme = tv({
     },
     active: {
       true: {
-        childLink: "before:bg-base-200 text-base-content",
-        childLinkIcon: "text-base-content",
+        childLink: "before:bg-elevated text-highlighted",
+        childLinkIcon: "text-default",
       },
       false: {
-        link: "text-base-content/70",
-        linkLeadingIcon: "text-base-300",
+        link: "text-muted",
+        linkLeadingIcon: "text-dimmed",
         childLink: [
-          "hover:before:bg-base-200/50 text-base-content hover:text-base-content",
+          "hover:before:bg-elevated/50 text-default hover:text-highlighted",
           "transition-colors before:transition-colors",
         ],
         childLinkIcon: [
-          "text-base-300 group-hover:text-base-content",
+          "text-dimmed group-hover:text-default",
           "transition-colors",
         ],
       },
@@ -338,7 +338,7 @@ const theme = tv({
       orientation: "vertical",
       collapsed: false,
       class: {
-        childList: "ms-5 border-s border-base-300",
+        childList: "ms-5 border-s border-default",
         childItem: "ps-1.5 -ms-px",
         content: "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden",
       },
@@ -378,11 +378,11 @@ const theme = tv({
       variant: "pill",
       class: {
         link: [
-          "hover:text-base-content hover:before:bg-base-200/50",
+          "hover:text-highlighted hover:before:bg-elevated/50",
           "transition-colors before:transition-colors",
         ],
         linkLeadingIcon: [
-          "group-hover:text-base-content",
+          "group-hover:text-default",
           "transition-colors",
         ],
       },
@@ -393,8 +393,8 @@ const theme = tv({
       variant: "pill",
       orientation: "horizontal",
       class: {
-        link: "data-[state=open]:text-base-content",
-        linkLeadingIcon: "group-data-[state=open]:text-base-content",
+        link: "data-[state=open]:text-highlighted",
+        linkLeadingIcon: "group-data-[state=open]:text-default",
       },
     },
     {
@@ -403,7 +403,7 @@ const theme = tv({
       highlight: true,
       orientation: "horizontal",
       class: {
-        link: "data-[state=open]:before:bg-base-200/50",
+        link: "data-[state=open]:before:bg-elevated/50",
       },
     },
     {
@@ -413,7 +413,7 @@ const theme = tv({
       active: false,
       orientation: "horizontal",
       class: {
-        link: "data-[state=open]:before:bg-base-200/50",
+        link: "data-[state=open]:before:bg-elevated/50",
       },
     },
     {
@@ -430,8 +430,8 @@ const theme = tv({
       variant: "pill",
       active: true,
       class: {
-        link: "text-base-content",
-        linkLeadingIcon: "text-base-content group-data-[state=open]:text-base-content",
+        link: "text-highlighted",
+        linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted",
       },
     },
     {
@@ -439,7 +439,7 @@ const theme = tv({
       active: true,
       highlight: false,
       class: {
-        link: "before:bg-base-200",
+        link: "before:bg-elevated",
       },
     },
     {
@@ -449,7 +449,7 @@ const theme = tv({
       disabled: false,
       class: {
         link: [
-          "hover:before:bg-base-200/50",
+          "hover:before:bg-elevated/50",
           "before:transition-colors",
         ],
       },
@@ -460,11 +460,11 @@ const theme = tv({
       variant: "link",
       class: {
         link: [
-          "hover:text-base-content",
+          "hover:text-highlighted",
           "transition-colors",
         ],
         linkLeadingIcon: [
-          "group-hover:text-base-content",
+          "group-hover:text-default",
           "transition-colors",
         ],
       },
@@ -475,8 +475,8 @@ const theme = tv({
       variant: "link",
       orientation: "horizontal",
       class: {
-        link: "data-[state=open]:text-base-content",
-        linkLeadingIcon: "group-data-[state=open]:text-base-content",
+        link: "data-[state=open]:text-highlighted",
+        linkLeadingIcon: "group-data-[state=open]:text-default",
       },
     },
     {
@@ -493,8 +493,8 @@ const theme = tv({
       variant: "link",
       active: true,
       class: {
-        link: "text-base-content",
-        linkLeadingIcon: "text-base-content group-data-[state=open]:text-base-content",
+        link: "text-highlighted",
+        linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted",
       },
     },
     {
@@ -512,7 +512,7 @@ const theme = tv({
       level: true,
       active: true,
       class: {
-        link: "after:bg-neutral",
+        link: "after:bg-inverted",
       },
     },
   ],

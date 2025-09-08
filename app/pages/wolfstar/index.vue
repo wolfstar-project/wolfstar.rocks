@@ -14,9 +14,9 @@
 
   <section class="mt-16 join flex items-center justify-center">
     <nuxt-link class="btn join-item sm:btn-wide" :to="Invites.WolfStar">
-      <ShadIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
+      <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
     </nuxt-link>
-    <nuxt-link class="btn join-item sm:btn-wide" to="#explore"><ShadIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
+    <nuxt-link class="btn join-item sm:btn-wide" to="#explore"><UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
   </section>
 
   <h2 id="explore" class="mt-72 text-5xl font-bold">Explore</h2>
@@ -34,16 +34,16 @@
               Have you seen this????
               <div class="grid max-w-96 grid-cols-2 gap-2">
                 <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                  <UIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
                 </div>
                 <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                  <UIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
                 </div>
                 <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                  <UIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
                 </div>
                 <div class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg">
-                  <ShadIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
+                  <UIcon name="ph:image-duotone" class="h-24 w-24 animate-pulse text-base-content/20" />
                 </div>
               </div>
             </template>
@@ -83,8 +83,8 @@
             <template v-else-if="featureIndex === AutomodFeature.Reactions">
               Hey folks! I have great news to share!
               <discord-reactions>
-                <discord-reaction :count="7" self><ShadIcon name="ph:cheers-fill" class="text-success" /></discord-reaction>
-                <discord-reaction :count="1" class="text-error"><ShadIcon name="ph:knife-fill" /></discord-reaction>
+                <discord-reaction :count="7" self><UIcon name="ph:cheers-fill" class="text-success" /></discord-reaction>
+                <discord-reaction :count="1" class="text-error"><UIcon name="ph:knife-fill" /></discord-reaction>
               </discord-reactions>
             </template>
             <template v-else-if="featureIndex === AutomodFeature.Spam">Guys look at me!</template>
@@ -98,7 +98,7 @@
         </discord-messages>
 
         <div class="flex flex-row items-center gap-1 lg:flex-col">
-          <ShadIcon
+          <UIcon
             name="ph:caret-down-bold"
             class="radio-feature-arrow rotate-90 lg:rotate-180"
             role="button"
@@ -107,7 +107,7 @@
           <div v-for="(text, index) of texts" :key="index" class="radio-feature-container" :data-tip="text.tooltip">
             <input v-model="featureIndex" type="radio" name="automod-feature" class="radio-feature" :value="index" />
           </div>
-          <ShadIcon
+          <UIcon
             name="ph:caret-down-bold"
             class="radio-feature-arrow -rotate-90 lg:rotate-0"
             role="button"
@@ -118,7 +118,7 @@
 
       <div class="prose">
         <h3 class="mb-4 text-3xl font-bold">
-          <ShadIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+          <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
           WolfStar can act on <span class="underline underline-offset-4">{{ texts[featureIndex]!.title }}</span>
         </h3>
 
@@ -127,15 +127,15 @@
         <p>You can define what WolfStar should do on every infraction:</p>
         <ul>
           <li>
-            <ShadIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" />
+            <UIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" />
             <strong>Alert the user:</strong> send a message notifying the user of their infraction.
           </li>
           <li>
-            <ShadIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" />
+            <UIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" />
             <strong>Post moderation log:</strong> send a message to the moderation log channel for moderators to see.
           </li>
           <li>
-            <ShadIcon name="ph:trash-simple-fill" class="my-0 mr-1 h-5 w-5 text-error" />
+            <UIcon name="ph:trash-simple-fill" class="my-0 mr-1 h-5 w-5 text-error" />
             <strong>Delete the message:</strong> delete the message that triggered the infraction, keeping your channels clean.
           </li>
         </ul>
@@ -143,12 +143,12 @@
         <p>And even what WolfStar should do after repeated infractions!</p>
         <ul>
           <li>
-            <ShadIcon name="ph:shield-check-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
+            <UIcon name="ph:shield-check-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
             <strong>Define the punishment action:</strong> from a simple warning to a full ban, and everything in between, with a customizable
             <strong>punishment duration</strong> ranging from seconds to even years, or permanent.
           </li>
           <li>
-            <ShadIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
+            <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
             <strong>Define the threshold:</strong> how many infractions are needed within a period of time before the punishment is applied.
           </li>
         </ul>
@@ -170,7 +170,7 @@
     <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
       <div class="prose">
         <h3 class="mb-4 text-3xl font-bold">
-          <ShadIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+          <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
           A complete suite for <span class="underline underline-offset-4">moderation logs</span>
         </h3>
 
@@ -180,7 +180,7 @@
         </p>
 
         <p>
-          <ShadIcon name="ph:binoculars-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
+          <UIcon name="ph:binoculars-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" />
           WolfStar can also listen for external moderation actions. You prefer banning by hand than by bot? Good news, WolfStar can be
           configured to listen and log external bans, retrieving the reason from audit logs!
         </p>
@@ -188,7 +188,7 @@
 
       <div class="flex flex-col items-center gap-4 lg:flex-row">
         <div class="flex flex-row items-center gap-1 lg:flex-col">
-          <ShadIcon
+          <UIcon
             name="ph:caret-down-bold"
             class="radio-feature-arrow rotate-90 lg:rotate-180"
             role="button"
@@ -197,7 +197,7 @@
           <div v-for="(action, index) of moderationActions" :key="action.name" class="radio-feature-container" :data-tip="action.name">
             <input v-model="moderationIndex" type="radio" name="moderation-log" class="radio-feature" :value="index" />
           </div>
-          <ShadIcon
+          <UIcon
             name="ph:caret-down-bold"
             class="radio-feature-arrow -rotate-90 lg:rotate-0"
             role="button"
@@ -228,7 +228,7 @@
               :disabled="moderationAction.temporary === null"
               @click="((moderationTemporary = !moderationTemporary), (moderationUndo = false))"
             >
-              <ShadIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
+              <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
               Temporary
             </button>
             <button
@@ -237,7 +237,7 @@
               :disabled="moderationAction.undo === null"
               @click="((moderationUndo = !moderationUndo), (moderationTemporary = false))"
             >
-              <ShadIcon name="ph:arrow-counter-clockwise-duotone" class="my-0 mr-1 h-5 w-5" />
+              <UIcon name="ph:arrow-counter-clockwise-duotone" class="my-0 mr-1 h-5 w-5" />
               Undo
             </button>
           </div>
@@ -261,13 +261,13 @@
     <p>WolfStar not only comes with a very complete moderation suite, but also:</p>
     <ul>
       <li>
-        <ShadIcon name="ph:chat-text-duotone" class="my-0 mr-1 h-5 w-5 text-warning" />
+        <NuxtIcon name="ph:chat-text-duotone" class="my-0 mr-1 h-5 w-5 text-warning" />
         <strong>A large logging suite:</strong> WolfStar can log almost everything that happens in your server: moderation actions, message
         updates and deletions, channel updates and deletions, role updates and deletions, server updates, members changing voice channels, and
         more.
       </li>
       <li>
-        <ShadIcon name="ph:money-wavy-duotone" class="my-0 mr-1 h-5 w-5 text-error" />
+        <UIcon name="ph:money-wavy-duotone" class="my-0 mr-1 h-5 w-5 text-error" />
         <strong>No paywalls:</strong> all of WolfStar's features are <strong>available for free</strong> and all logs are sent to your server
         as soon as they happen, without any delay. WolfStar Project <strong>will never paywall core features</strong>, and also
         <strong>strongly believes in Open-Source Software</strong>, making all the apps' source code freely available to everyone, and will

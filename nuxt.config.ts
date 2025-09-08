@@ -24,13 +24,11 @@ const preset = isHubEnabled || isDevelopment;
 export default defineNuxtConfig({
   // Modules configuration
   modules: [
-    "@nuxt/fonts",
-    "@nuxt/image",
     "@nuxt/eslint",
-    "@nuxt/icon",
+    "@nuxt/ui",
     "@nuxt/scripts",
+    "@nuxt/image",
     "@nuxtjs/seo",
-    "@nuxtjs/color-mode",
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
@@ -38,7 +36,6 @@ export default defineNuxtConfig({
     "@vueuse/motion/nuxt",
     "nuxt-authorization",
     "nuxt-vue-dragscroll",
-    "shadcn-nuxt",
     "@sentry/nuxt/module",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     // #TODO: maybe remove this
@@ -70,7 +67,6 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true,
   },
-  // App meta configuration
   app: {
     head: {
       charset: "utf-8",
@@ -113,7 +109,6 @@ export default defineNuxtConfig({
       ],
     },
   },
-
   css: ["~/assets/css/main.css"],
 
   site: {
@@ -141,7 +136,6 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: "2025-07-20",
-
   nitro: {
     preset: process.env.NUXT_NITRO_PRESET,
     prerender: {
@@ -183,6 +177,7 @@ export default defineNuxtConfig({
     preset
       ? {
           hub: {
+            workers: true,
             cache: true,
           },
         }
@@ -257,7 +252,6 @@ export default defineNuxtConfig({
       },
     },
     cssLayer: "base",
-    componentName: "NuxtIcon",
   },
 
   image: {
@@ -327,11 +321,6 @@ export default defineNuxtConfig({
       mobileWebAppCapable: "yes",
       appleMobileWebAppStatusBarStyle: "black",
     },
-  },
-
-  shadcn: {
-    componentDir: "./app/components/ui",
-    prefix: "Shad",
   },
   sitemap: {
     exclude: ["/join", "/oauth/guild", "/oauth/callback", "/[...id]"],

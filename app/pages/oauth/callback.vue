@@ -1,35 +1,35 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <template v-if="!code">
-      <ShadAlert variant="solid" color="error" title="Missing Code" icon="emojione:warning">
+      <UAlert variant="solid" color="error" title="Missing Code" icon="emojione:warning">
         <template #description>
           Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
         </template>
         <template #actions>
-          <ShadButton to="/login" size="sm" variant="outline"> Return to Login </ShadButton>
+          <UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
         </template>
-      </ShadAlert>
+      </UAlert>
     </template>
     <client-only v-else>
       <template v-if="status === 'pending'">
-        <ShadAlert color="info" icon="emojione:hourglass-done" title="Loading">
+        <UAlert color="info" icon="emojione:hourglass-done" title="Loading">
           <template #description>
             Completing authentication flow...
           </template>
-        </ShadAlert>
+        </UAlert>
       </template>
       <template v-else-if="status === 'error'">
-        <ShadAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+        <UAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
           <template #description>
             {{ error?.message ?? error?.statusMessage }}
           </template>
           <template #actions>
-            <ShadButton to="/login" size="sm" variant="outline"> Try Again </ShadButton>
+            <UButton to="/login" size="sm" variant="outline"> Try Again </UButton>
           </template>
-        </ShadAlert>
+        </UAlert>
       </template>
       <template v-else-if="data">
-        <ShadAlert color="success" icon="lucide:check" :title="`Welcome ${data.username}`">
+        <UAlert color="success" icon="lucide:check" :title="`Welcome ${data.username}`">
           <template #description>
             You will be redirected to the main page in a second.
             <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
@@ -42,7 +42,7 @@
               />
             </div>
           </template>
-        </ShadAlert>
+        </UAlert>
       </template>
     </client-only>
   </div>

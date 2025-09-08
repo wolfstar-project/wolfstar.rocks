@@ -32,7 +32,7 @@
     </section>
 
     <section class="overflow-hidden rounded-xl bg-base-50 shadow-lg">
-      <ShadTabs v-model="activeTab" :unmount-on-hide="false" color="primary" :items class="w-full flex flex-col items-center">
+      <UTabs v-model="activeTab" variant="transparent" :unmount-on-hide="false" :items class="w-full flex flex-col items-center">
         <template #content="{ item }">
           <div class="p-8">
             <div v-if="item.value === 'servers'" class="space-y-6">
@@ -49,7 +49,7 @@
               <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
                 <div class="flex items-end gap-2">
                   <ShadFieldGroup class="flex items-start gap-2">
-                    <ShadInput
+                    <UInput
                       ref="input"
                       v-model="searchQuery"
                       name="search"
@@ -62,7 +62,7 @@
                       class="max-w-xs flex items-start"
                     >
                       <template v-if="searchQuery?.length" #trailing>
-                        <ShadButton
+                        <UButton
                           color="neutral"
                           variant="link"
                           size="sm"
@@ -71,13 +71,13 @@
                           @click="undoSearch()"
                         />
                       </template>
-                    </ShadInput>
+                    </UInput>
                   </ShadFieldGroup>
                   <!-- Actual Buttons -->
                   <ShadFieldGroup size="sm" class="flex items-end join gap-2">
                     <!-- View Button -->
 
-                    <ShadButton
+                    <UButton
                       class="join-item hidden sm:inline-flex"
                       color="secondary"
                       loading-icon="lucide:loader"
@@ -91,10 +91,10 @@
                       </template>
 
                       <span class="hidden sm:inline">View</span>
-                    </ShadButton>
+                    </UButton>
 
                     <!-- Manageable Only Toggle Button -->
-                    <ShadButton
+                    <UButton
                       class="join-item"
                       color="secondary"
                       :loading
@@ -103,10 +103,10 @@
                       @click="toggleShowManageableOnly()"
                     >
                       <span class="hidden sm:inline">Manageable</span>
-                    </ShadButton>
+                    </UButton>
 
                     <!-- Sort Button -->
-                    <ShadButton
+                    <UButton
                       class="join-item"
                       color="secondary"
                       :loading
@@ -117,10 +117,10 @@
                           <ShadIcon :name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'" />
                         </Transition>
                       </template>
-                    </ShadButton>
+                    </UButton>
 
                     <!-- Refresh Button -->
-                    <ShadButton
+                    <UButton
                       v-if="filteredGuilds.length < 0"
                       color="secondary"
                       class="join-item"
@@ -130,7 +130,7 @@
                       @click="refresh()"
                     >
                       <span class="hidden sm:inline">Refresh</span>
-                    </ShadButton>
+                    </UButton>
                   </ShadFieldGroup>
                 </div>
                 <!-- Search Input for Desktop -->
@@ -164,7 +164,7 @@
                   <p class="text-base-content/60">Control how you receive updates</p>
                   <template #footer>
                     <div class="flex justify-end">
-                      <ShadButton variant="soft" color="primary" size="sm">Manage</ShadButton>
+                      <UButton variant="soft" color="primary" size="sm">Manage</UButton>
                     </div>
                   </template>
                 </ShadCard>
@@ -188,21 +188,21 @@
                 <p class="text-base-content/70">Get access to exclusive features and priority support</p>
                 <template #footer>
                   <ShadFieldGroup class="flex w-full justify-center space-x-4 pt-4 z-10">
-                    <ShadButton color="primary" size="md">Get Premium</ShadButton>
-                    <ShadButton color="primary" variant="outline" size="md">Learn More</ShadButton>
+                    <UButton color="primary" size="md">Get Premium</UButton>
+                    <UButton color="primary" variant="outline" size="md">Learn More</UButton>
                   </ShadFieldGroup>
                 </template>
               </ShadCard>
             </div>
           </div>
         </template>
-      </ShadTabs>
+      </UTabs>
     </section>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { TabsItem } from "@/components/ui/navigation";
+import type { TabsItem } from "@nuxt/ui";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });

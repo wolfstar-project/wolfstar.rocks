@@ -4,7 +4,7 @@
     <div class="navbar-start">
       <div class="dropdown">
         <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-          <ShadIcon name="ph:list" class="h-5 w-5" />
+          <UIcon name="ph:list" class="h-5 w-5" />
         </div>
         <ul tabindex="0" class="dropdown-content menu z-[1] mt-3 w-32 menu-sm rounded-box bg-base-100 p-2 shadow-lg">
           <li>
@@ -20,13 +20,13 @@
             <ul class="p-2">
               <li>
                 <nuxt-link to="/">
-                  <ShadIcon name="ph:shield-duotone" class="h-4 w-4 text-branding-wolfstar" />
+                  <UIcon name="ph:shield-duotone" class="h-4 w-4 text-branding-wolfstar" />
                   WolfStar
                 </nuxt-link>
               </li>
               <li>
                 <nuxt-link to="/staryl">
-                  <ShadIcon name="ph:books-duotone" class="h-4 w-4 text-branding-staryl" />
+                  <UIcon name="ph:books-duotone" class="h-4 w-4 text-branding-staryl" />
                   Staryl
                 </nuxt-link>
               </li>
@@ -34,13 +34,13 @@
           </li>
           <li>
             <!-- <nuxt-link to="/commands">
-              <ShadIcon name="ph:list" class="h-4 w-4" />
+              <UIcon name="ph:list" class="h-4 w-4" />
               Commands
             </nuxt-link> -->
           </li>
           <li>
             <nuxt-link :to="currentApp.invite">
-              <ShadIcon name="ph:plus-circle-duotone" class="h-4 w-4 text-success" />
+              <UIcon name="ph:plus-circle-duotone" class="h-4 w-4 text-success" />
               Invite App
             </nuxt-link>
           </li>
@@ -56,7 +56,7 @@
       <div class="group dropdown-hover dropdown">
         <div tabindex="0" role="button" class="btn m-1 items-center btn-ghost transition-all group-hover:text-white">
           Features
-          <ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
+          <UIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
         </div>
         <ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
           <li><a>Moderation Tools</a></li>
@@ -67,18 +67,18 @@
       <div class="group dropdown-hover dropdown">
         <div tabindex="0" role="button" class="btn m-1 items-center btn-ghost transition-all group-hover:text-white">
           Applications
-          <ShadIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
+          <UIcon name="ph:caret-down" class="rotate-0 transition-all group-hover:rotate-180" />
         </div>
         <ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
           <li>
             <nuxt-link to="/">
-              <ShadIcon name="ph:shield-duotone" class="h-4 w-4 text-branding-wolfstar" />
+              <UIcon name="ph:shield-duotone" class="h-4 w-4 text-branding-wolfstar" />
               WolfStar
             </nuxt-link>
           </li>
           <li>
             <nuxt-link to="/staryl">
-              <ShadIcon name="i-lucide-twitch" class="h-4 w-4 text-branding-staryl" />
+              <UIcon name="i-lucide-twitch" class="h-4 w-4 text-branding-staryl" />
               Staryl
             </nuxt-link>
           </li>
@@ -87,12 +87,12 @@
 
       <!-- <nuxt-link to="/commands" class="btn btn-ghost transition-colors hover:text-primary">
         Commands
-        <ShadIcon name="ph:list" />
+        <UIcon name="ph:list" />
       </nuxt-link> -->
 
       <nuxt-link :to="currentApp.invite" class="btn btn-ghost transition-colors hover:text-success">
         Invite App
-        <ShadIcon name="ph:plus-circle-duotone" />
+        <UIcon name="ph:plus-circle-duotone" />
       </nuxt-link>
     </div>
 
@@ -146,46 +146,43 @@
             <ul tabindex="0" class="dropdown-content menu z-[1] w-52 rounded-box bg-base-100 p-2 shadow">
               <li>
                 <nuxt-link to="/profile" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-base-content hover:bg-base-200">
-                  <ShadIcon name="i-lucide-user" class="size-4" />
+                  <UIcon name="i-lucide-user" class="size-4" />
                   Profile
                 </nuxt-link>
               </li>
               <li>
                 <button type="button" class="gap-2 rounded-md px-3 py-2 text-sm font-medium text-error hover:bg-error/10" @click="clear">
-                  <ShadIcon name="i-lucide-log-out" class="size-4" />
+                  <UIcon name="i-lucide-log-out" class="size-4" />
                   Logout
                 </button>
               </li>
             </ul>
           </div>
-          <ShadButton
+          <UButton
             v-else
-            color="#5865F2"
-            active-color="#5865F2"
             size="md"
             to="/api/auth/discord"
           >
             <template #leading>
-              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
+              <UIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
             </template>
             <template #default>
               <span class="hidden sm:inline">Login</span>
             </template>
-          </ShadButton>
+          </UButton>
         </template>
         <template #placeholder>
-          <ShadButton
+          <UButton
             disabled
-            color="#5865F2"
             size="md"
           >
             <template #leading>
-              <ShadIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
+              <UIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
             </template>
             <template #default>
               <span class="hidden sm:inline">Login</span>
             </template>
-          </ShadButton>
+          </UButton>
         </template>
       </AuthState>
     </div>

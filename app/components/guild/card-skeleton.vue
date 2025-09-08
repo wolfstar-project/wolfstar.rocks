@@ -8,7 +8,7 @@
 
     <!-- Guild Card Content -->
     <div class="flex flex-col items-center space-y-4">
-      <!-- Guild Icon Skeleton -->
+      <!-- Guild UIcon Skeleton -->
       <div class="relative">
         <div class="skeleton h-20 w-20 rounded-2xl"></div>
         <!-- Online indicator skeleton -->

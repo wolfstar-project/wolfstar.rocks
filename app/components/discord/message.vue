@@ -13,13 +13,13 @@
       <div class="mb-0.5 flex flex-row items-center">
         <div class="font-whitney font-bold">{{ profile.name }}</div>
         <span v-if="profile.app" class="app-badge">
-          <ShadIcon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" />
+          <UIcon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" />
           <span class="font-whitney">APP</span>
         </span>
       </div>
       <div><slot></slot></div>
       <div v-if="ephemeral" class="discord-message-ephemeral-footer">
-        <ShadIcon name="ph:eye-duotone" /> Only you can see this •
+        <UIcon name="ph:eye-duotone" /> Only you can see this •
         <span class="discord-message-link">Dismiss message</span>
       </div>
     </div>

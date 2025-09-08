@@ -1,26 +1,26 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <template v-if="!guildId">
-      <ShadAlert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
+      <UAlert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
         <template #description>
           Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
         </template>
-      </ShadAlert>
+      </UAlert>
     </template>
     <template v-else-if="error">
-      <ShadAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+      <UAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
         <template #description>
           {{ error }}
         </template>
         <template #actions>
-          <ShadButton to="/login" size="sm" variant="outline"> Return to Login </ShadButton>
+          <UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
         </template>
-      </ShadAlert>
+      </UAlert>
     </template>
     <template v-else>
-      <ShadAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
+      <UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
         <template #description> Redirecting you to the guild page... </template>
-      </ShadAlert>
+      </UAlert>
     </template>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <ShadContainer class="w-full max-w-7xl sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6">
+  <UContainer class="w-full max-w-7xl sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6">
     <div class="flex flex-col justify-between gap-4 sm:flex-row">
       <div class="flex items-start">
         <div v-if="loading" class="text-sm text-base-content/60 sm:block">
@@ -39,7 +39,7 @@
       <!-- Empty State -->
       <div v-if="!loading && error">
         <div class="flex flex-col items-center justify-center space-y-6 py-16">
-          <ShadAlert
+          <UAlert
             color="error"
             variant="subtle"
             title="Error Occurred"
@@ -59,7 +59,7 @@
             </p>
           </div>
 
-          <ShadButton
+          <UButton
             v-if="searchQuery"
             variant="outline"
             size="sm"
@@ -68,11 +68,11 @@
             @click="undoSearch"
           >
             Clear Search
-          </ShadButton>
+          </UButton>
         </div>
       </div>
     </div>
-  </ShadContainer>
+  </UContainer>
 </template>
 
 <script setup lang="ts">

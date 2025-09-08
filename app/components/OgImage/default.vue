@@ -75,7 +75,7 @@
           </p>
         </div>
 
-        <!-- Icon section -->
+        <!-- UIcon section -->
         <div v-if="Boolean(icon)" class="w-[30%] flex justify-end items-center">
           <component
             :is="IconComponent"
@@ -216,11 +216,11 @@ const gradientColors = computed(() => {
   };
 });
 
-// Icon component handling
+// UIcon component handling
 const IconComponent = computed(() => {
-  // Try to resolve Icon component, fallback to div if not available
+  // Try to resolve UIcon component, fallback to div if not available
   try {
-    return resolveComponent("ShadIcon");
+    return resolveComponent("UIcon");
   }
   catch {
     return defineComponent({

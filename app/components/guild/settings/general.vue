@@ -2,14 +2,14 @@
   <SettingsSection title="General Settings">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Prefix Setting -->
-      <ShadForm ref="form" :schema="schema" :state="state" class="space-y-4" :on-error="onError" @submit="onSubmit">
+      <UForm ref="form" :schema="schema" :state="state" class="space-y-4" :on-error="onError" @submit="onSubmit">
         <div>
-          <ShadFormField>
+          <UFormField>
             <template #label>
               <ShadLabel for="prefix">{{ generalConfig.prefix.name }}</ShadLabel>
             </template>
 
-            <ShadInput
+            <UInput
               id="prefix"
               v-model="state.prefix"
               :placeholder="generalConfig.prefix.placeholder"
@@ -27,74 +27,67 @@
                   {{ state.prefix?.length }}/{{ generalConfig.prefix.maxLength }}
                 </div>
               </template>
-            </ShadInput>
+            </UInput>
             <template #error="{ error }">
               <p class="text-sm text-error">{{ error }}</p>
             </template>
             <template #description>
               <p class="text-sm text-base-content/70">{{ generalConfig.prefix.description }}</p>
             </template>
-          </ShadFormField>
+          </UFormField>
         </div>
 
         <!-- Language Setting -->
         <div>
-          <ShadFormField>
+          <UFormField>
             <template #label>
               <ShadLabel for="language">{{ generalConfig.language.name }}</ShadLabel>
             </template>
             <template #description>
               <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
             </template>
-            <ShadInputMenu
+            <UInputMenu
               id="language"
               color="primary"
               placeholder="Select language..."
               class="w-full"
+              v-model="state.language"
               :items="items"
             />
             <template #error="{ error }">
               <p class="text-sm text-error">{{ error }}</p>
             </template>
-          </ShadFormField>
+          </UFormField>
         </div>
 
         <!-- Disable Natural Prefix Setting -->
         <div>
           <div class="flex items-center justify-between">
-            <ShadFormField>
+            <UFormField>
               <template #label>
                 <ShadLabel for="disableNaturalPrefix">{{ generalConfig.disableNaturalPrefix.name }}</ShadLabel>
               </template>
               <template #description>
                 <p class="text-sm text-base-content/70">{{ generalConfig.disableNaturalPrefix.description }}</p>
               </template>
-              <ShadCheckbox
+              <UCheckbox
                 id="disableNaturalPrefix"
                 v-model="state.disableNaturalPrefix"
                 color="primary"
               />
-            </ShadFormField>
+            </UFormField>
           </div>
         </div>
-      </ShadForm>
+      </UForm>
     </div>
   </SettingsSection>
 </template>
 
 <script setup lang="ts">
-import type { OauthFlattenedGuild } from "#shared/types/discord";
 import type { FormErrorEvent, FormSubmitEvent } from "~/types/form";
-import type { ValuesType } from "~/types/utils";
 import * as yup from "yup";
 import { useGuildGeneral } from "~~/app/composables/useGuildSettings";
 
-interface Props {
-  guildData: ValuesType<NonNullable<OauthFlattenedGuild>>;
-  languages: string[];
-}
-
-const props = defineProps<Props>();
 const _form = useTemplateRef("form");
 const toast = useToast();
 // Use the new general composable
@@ -102,7 +95,7 @@ const { generalConfig, settings: _settings, updateGeneralSetting } = useGuildGen
 
 // Computed language options
 const items = computed(() =>
-  props.languages.map(langKey => ({
+  useLanguages().languages.value.map(langKey => ({
     value: langKey,
     label: mapLanguageKeysToNames(langKey).join(" - "),
   })),
@@ -116,7 +109,7 @@ const schema = yup.object({
     .optional()
     .default(generalConfig.prefix.placeholder),
   language: yup.string().optional(),
-  disableNaturalPrefix: yup.boolean().optional(),
+  disableNaturalPrefix: yup.boolean().optional().default(false),
 });
 
 type Schema = yup.InferType<typeof schema>;

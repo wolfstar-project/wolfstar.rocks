@@ -1,6 +1,6 @@
 import type { ValuesType } from "~/types/utils";
 
-export const useGuildData = () => {
+const _useGuildData = () => {
   const guild = ref<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>();
   const guildData = computed({
     get: () => guild.value,
@@ -9,3 +9,5 @@ export const useGuildData = () => {
 
   return guildData;
 };
+
+export const useGuildData = createSharedComposable(_useGuildData);

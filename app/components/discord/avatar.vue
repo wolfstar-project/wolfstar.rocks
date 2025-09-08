@@ -1,8 +1,8 @@
 <template>
   <div class="discord-message-avatar-wrapper" :class="size.classes">
     <nuxt-img v-if="profile.app" :src="`/avatars/${user}.png`" :width="size.dimensions" :height="size.dimensions" alt="Avatar" />
-    <ShadIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie size-full" />
-    <ShadIcon v-else name="ph:shooting-star-fill" class="h-full w-full text-info" />
+    <UIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie size-full" />
+    <UIcon v-else name="ph:shooting-star-fill" class="h-full w-full text-info" />
   </div>
 </template>
 

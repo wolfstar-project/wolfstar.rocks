@@ -1,11 +1,11 @@
 <template>
-  <ShadApp
+  <UApp
     :toaster="{
       position: 'bottom-left'
     }"
   >
     <nuxt-pwa-manifest />
-    <div class="relative flex min-h-screen items-center justify-center overflow-hidden font-sans">
+    <UContainer class="relative flex min-h-screen items-center justify-center overflow-hidden font-sans">
       <div class="relative z-10 flex flex-col items-center justify-center w-full max-w-lg p-8 mx-auto text-center rounded-2xl shadow-2 border border-[#ff5d5b]/30">
         <h1 class="mb-4 text-6xl font-extrabold tracking-tight text-[#ff5d5b] drop-shadow-[3px_3px_0px_#2c1810]">
           {{ errorInfo.title }}
@@ -29,14 +29,14 @@
         <div class="mt-8 w-full bg-base-100/90 backdrop-blur-sm rounded-xl">
           <div class="container mx-auto">
             <div class="flex flex-col justify-center gap-4 border-t border-red-500/20 px-6 py-8 sm:flex-row sm:gap-6">
-              <ShadButton
+              <UButton
                 label="Return Home"
                 color="pri"
                 leading-icon="mdi:home"
                 class="w-full max-w-[250px] flex-1 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl sm:w-auto"
                 @click="handleError"
               />
-              <ShadButton
+              <UButton
                 label="Server Support"
                 to="https://join.wolfstar.rocks"
                 target="_blank"
@@ -49,8 +49,8 @@
           </div>
         </div>
       </div>
-    </div>
-  </ShadApp>
+    </UContainer>
+  </UApp>
 </template>
 
 <script setup lang="ts">

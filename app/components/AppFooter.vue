@@ -1,9 +1,9 @@
 <template>
-  <ShadFooter :ui="{ root: 'mt-24 bg-base-200 p-10 text-base-content', top: 'text-base-content' }">
+  <UFooter :ui="{ root: 'mt-24 bg-base-200 p-10 text-base-content', top: 'text-base-content' }">
     <template #top>
-      <ShadContainer>
-        <ShadFooterColumns class="p-10" :columns="columns" />
-      </ShadContainer>
+      <UContainer>
+        <UFooterColumns class="p-10" :columns="columns" />
+      </UContainer>
     </template>
 
     <template #left>
@@ -38,7 +38,7 @@
       </aside>
     </template>
     <template #right>
-      <ShadButton
+      <UButton
         to="https://github.com/nuxt-ui-pro/saas"
         target="_blank"
         icon="i-simple-icons-github"
@@ -47,7 +47,7 @@
         variant="ghost"
       />
     </template>
-  </ShadFooter>
+  </UFooter>
 </template>
 
 <script setup lang="ts">

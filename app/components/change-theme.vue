@@ -19,7 +19,7 @@
               @change="colorMode.preference = option.value"
             />
             <span class="theme-icon">
-              <ShadIcon :name="option.icon" class="w-4 h-4" />
+              <UIcon :name="option.icon" class="w-4 h-4" />
             </span>
             <span class="whitespace-nowrap hidden sm:inline">{{ option.label }}</span>
           </label>

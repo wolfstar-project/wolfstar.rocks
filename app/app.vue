@@ -1,5 +1,5 @@
 <template>
-  <ShadApp
+  <UApp
     :toaster="{
       position: 'top-right',
       expand: true,
@@ -12,7 +12,7 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-  </ShadApp>
+  </UApp>
 </template>
 
 <script setup lang="ts">

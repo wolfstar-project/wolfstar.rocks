@@ -1,7 +1,9 @@
 @import 'tailwindcss';
+@import "@nuxt/ui";
 @import 'tw-animate-css';
 @import './keyframes.css';
 @plugin "@tailwindcss/typography";
+
 
 @plugin 'daisyui' {
 	root: ':root';
@@ -153,7 +155,7 @@
 		--ui-text-highlighted: var(--color-white);
 		--ui-text-inverted: var(--color-neutral-900);
 	
-		--ui-bg: var(--color-neutral-900);
+		--ui-bg: var(--color-base-300);
 		--ui-bg-muted: var(--color-neutral-800);
 		--ui-bg-elevated: var(--color-neutral-800);
 		--ui-bg-accented: var(--color-neutral-700);

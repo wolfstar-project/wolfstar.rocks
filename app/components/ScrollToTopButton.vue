@@ -1,5 +1,5 @@
 <template>
-  <ShadButton
+  <UButton
     aria-label="scroll to top button"
     :class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
     icon="heroicons-arrow-up"

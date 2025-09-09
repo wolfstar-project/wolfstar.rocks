@@ -107,38 +107,11 @@
               class="group relative z-10 flex items-center justify-center gap-x-2 transition-all duration-200 hover:opacity-70 active:opacity-50 cursor-pointer rounded-lg p-2"
             >
               <!-- Avatar Container -->
-              <div
-                class="size-8 overflow-hidden rounded-full bg-base-300 ring-2 ring-base-100"
-              >
-                <!-- Default Avatar -->
-                <img
-                  v-if="isDefault"
-                  :src="defaultAvatar"
-                  alt="Default Avatar"
-                  class="h-full w-full object-cover"
-                  decoding="async"
-                  crossorigin="anonymous"
-                />
-                <!-- Custom Avatar -->
-                <picture v-else>
-                  <source
-                    v-if="isAnimated"
-                    media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
-                    type="image/gif"
-                    :srcset="makeSrcset('gif')"
-                  />
-                  <source type="image/webp" :srcset="makeSrcset('webp')" />
-                  <source type="image/png" :srcset="makeSrcset('png')" />
-                  <img
-                    :src="createUrl('png', 128)"
-                    alt="User Avatar"
-                    class="h-full w-full object-cover"
-                    decoding="async"
-                    crossorigin="anonymous"
-                  />
-                </picture>
-              </div>
-
+              <UAvatar
+                :src
+                icon="i-lucide-image"
+                size="md"
+              />
               <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
             </div>
 
@@ -162,10 +135,8 @@
             v-else
             size="md"
             to="/api/auth/discord"
+            icon="ic:round-discord"
           >
-            <template #leading>
-              <UIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
-            </template>
             <template #default>
               <span class="hidden sm:inline">Login</span>
             </template>
@@ -175,10 +146,8 @@
           <UButton
             disabled
             size="md"
+            icon="ic:round-discord"
           >
-            <template #leading>
-              <UIcon name="ic:baseline-discord" class="size-[16px] sm:size-[32px]" />
-            </template>
             <template #default>
               <span class="hidden sm:inline">Login</span>
             </template>
@@ -205,13 +174,19 @@ const Apps = {
 
 const { user } = useAuth();
 
-const isAnimated = ref(false);
 const isDefault = ref(false);
 
 // Computed properties for consistent state
 const defaultAvatar = computed(
   () => `https://cdn.discordapp.com/embed/avatars/${user.value && user.value.id ? BigInt(user.value.id) % BigInt(5) : "0"}.png`,
 );
+
+const src = computed(() => {
+  if (isDefault.value) {
+    return defaultAvatar.value;
+  }
+  return createUrl("webp", 64);
+});
 
 const currentApp = computed(() => {
   const appKey = unref(appName);
@@ -224,11 +199,9 @@ watch(
   (user) => {
     if (user && user.avatar) {
       isDefault.value = false;
-      isAnimated.value = user.avatar.startsWith("a_");
     }
     else {
       isDefault.value = true;
-      isAnimated.value = false;
     }
   },
   { immediate: true },
@@ -236,10 +209,6 @@ watch(
 
 function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
-
-function makeSrcset(format: "webp" | "png" | "gif") {
-  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
 </script>
 

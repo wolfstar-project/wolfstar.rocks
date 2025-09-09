@@ -247,11 +247,11 @@
     <template #fallback>
       <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
         <div class="prose">
-          <USkeleton class="h-12 w-1/2"></USkeleton>
-          <USkeleton class="mt-4 h-8 w-full"></USkeleton>
-          <USkeleton class="mt-2 h-8 w-full"></USkeleton>
+          <USkeleton class="h-12 w-1/2" />
+          <USkeleton class="mt-4 h-8 w-full" />
+          <USkeleton class="mt-2 h-8 w-full" />
         </div>
-        <USkeleton class="h-96 w-full"></USkeleton>
+        <USkeleton class="h-96 w-full" />
       </div>
     </template>
   </ClientOnly>

@@ -1,16 +1,15 @@
 <template>
   <div class="mb-6 w-full">
     <template v-if="title">
-      <component
+      <div
         v-if="disableTypography && !forceSemanticHeading"
-        v-bind:is="'div'"
         v-bind="titleProps"
       >
         {{ title }}
-      </component>
+      </div>
       <component
+        :is="headingLevel"
         v-else
-        v-bind:is="headingLevel"
         :class="[
           disableTypography ? '' : 'divider divider-start text-xl font-semibold'
         ]"
@@ -27,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-type HeadingLevel = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 interface Props {
   title?: string | number;
@@ -38,7 +37,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  headingLevel: 'h2',
+  headingLevel: "h2",
   forceSemanticHeading: false,
 });
 </script>

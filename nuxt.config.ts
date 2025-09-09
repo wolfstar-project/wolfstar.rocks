@@ -113,6 +113,8 @@ export default defineNuxtConfig({
   site: {
     url: "https://wolfstar.rocks",
     name: "WolfStar",
+    defaultLocale: "en-US",
+    indexable: true,
   },
 
   colorMode: {
@@ -125,11 +127,18 @@ export default defineNuxtConfig({
   // Runtime configuration
   runtimeConfig: generateRuntimeConfig(),
 
+  routeRules: {
+    "/api/**": {
+      cors: true,
+    },
+  },
+
   sourcemap: {
     client: "hidden",
   },
 
   experimental: {
+    viewTransition: true,
     payloadExtraction: false,
     typedPages: true,
   },

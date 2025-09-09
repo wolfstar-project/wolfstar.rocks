@@ -9,7 +9,7 @@ const commandsStorage = ref<ExpirableLocalStorageStructure<FlattenedCommand[]>>(
   data: [],
 });
 
-export function useCommands() {
+function _useCommands() {
   const commands = computed(() => commandsStorage.value.data);
   const expired = computed(() => commandsStorage.value.expire < Date.now());
 
@@ -37,3 +37,5 @@ export function useCommands() {
     fetchCommands,
   };
 }
+
+export const useCommands = createSharedComposable(_useCommands);

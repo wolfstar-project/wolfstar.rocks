@@ -7,12 +7,16 @@
   <div class="mt-8 grid w-full gap-4 xl:grid-cols-2">
     <div v-for="app of apps" :key="app.name" class="other-apps-layout rounded-xl bg-base-200 shadow-xl">
       <nuxt-img :src="app.avatar" width="256" height="256" :alt="`${app.name}'s avatar`" loading="lazy" class="other-apps-avatar" />
-      <h2 class="other-apps-title">
-        {{ app.name }}
-        <div v-for="purpose of app.purposes" :key="purpose" class="badge badge-neutral">
-          {{ purpose }}
+      <div class="other-apps-title">
+        <h3 class="text-3xl font-semibold md:text-xl">
+          {{ app.name }}
+        </h3>
+        <div class="mt-2 flex flex-wrap gap-1">
+          <span v-for="purpose of app.purposes" :key="purpose" class="badge badge-neutral">
+            {{ purpose }}
+          </span>
         </div>
-      </h2>
+      </div>
       <div class="other-apps-description">
         <p class="flex-grow">{{ app.description }}</p>
         <div class="mt-4 join flex justify-end">

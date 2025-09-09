@@ -4,8 +4,11 @@
     <div
       v-if="viewMode === 'grid'"
     >
-      <NuxtLink
-        :to="manageGuildURL"
+      <component
+        :is="guild.manageable ? 'NuxtLink' : 'div'"
+        :to="guild.manageable ? manageGuildURL : undefined"
+        :aria-disabled="!guild.manageable"
+        :role="!guild.manageable ? 'button' : undefined"
       >
         <div
           class="relative h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-md transition-all duration-300 group-hover:bg-base-200/50 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl"
@@ -31,7 +34,7 @@
             </h3>
           </div>
         </div>
-      </NuxtLink>
+      </component>
     </div>
     <div
       v-else
@@ -126,11 +129,10 @@ const props = withDefaults(defineProps<EnhancedGuildCardProps>(), {
 });
 
 const manageGuildURL = computed(() => {
-  const guild = toRef(() => props.guild);
-  if (!guild.value.manageable) {
+  if (!props.guild.manageable) {
     return undefined;
   }
-  return guild.value.wolfstarIsIn ? `/guilds/${guild.value.id}/manage` : guildAddURL(guild.value.id);
+  return props.guild.wolfstarIsIn ? `/guilds/${props.guild.id}/manage` : guildAddURL(props.guild.id);
 });
 // Utility functions
 function formatNumber(num: number): string {

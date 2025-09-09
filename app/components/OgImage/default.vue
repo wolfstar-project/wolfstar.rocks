@@ -216,11 +216,11 @@ const gradientColors = computed(() => {
   };
 });
 
-// UIcon component handling
+// Icon component handling
 const IconComponent = computed(() => {
   // Try to resolve UIcon component, fallback to div if not available
   try {
-    return resolveComponent("UIcon");
+    return resolveComponent("Icon");
   }
   catch {
     return defineComponent({

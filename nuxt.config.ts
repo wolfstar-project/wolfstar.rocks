@@ -1,5 +1,4 @@
 import type { ModuleOptions } from "nuxt-security";
-import tailwindcss from "@tailwindcss/vite";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
@@ -184,33 +183,25 @@ export default defineNuxtConfig({
       : {}),
 
   vite: {
-    plugins: [tailwindcss()],
     build: {
       target: "esnext",
     },
     optimizeDeps: {
       include: [
-        "reka-ui",
-        "reka-ui/namespaced",
         "@vueuse/shared",
         "@sapphire/utilities",
         "@sapphire/utilities/cast",
-        "colortranslator",
         "tailwindcss/colors",
-        "tailwind-variants",
         "ufo",
         "zod",
         "std-env",
-        "tailwind-merge",
         "ohash/utils",
         "@sentry/vue",
         "@sentry/nuxt",
         "deepmerge",
-        "vee-validate",
         "discord-api-types/v10",
         "@discordjs/rest",
         "motion-v",
-        "@vee-validate/zod",
         "@discordjs/core/http-only",
         "@sapphire/time-utilities",
         "@sapphire/utilities",
@@ -219,8 +210,6 @@ export default defineNuxtConfig({
         "@sapphire/async-queue",
         "@vue/devtools-core",
         "@vue/devtools-kit",
-        "vaul-vue",
-        "clsx",
         "@sapphire/utilities/isNullish",
       ],
     },
@@ -251,7 +240,6 @@ export default defineNuxtConfig({
         globInclude: ["**\/*.{vue,jsx,tsx,md,mdc,mdx}", "app/**/*.ts"],
       },
     },
-    cssLayer: "base",
   },
 
   image: {

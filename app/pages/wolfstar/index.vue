@@ -247,11 +247,11 @@
     <template #fallback>
       <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
         <div class="prose">
-          <div class="skeleton h-12 w-1/2"></div>
-          <div class="skeleton mt-4 h-8 w-full"></div>
-          <div class="skeleton mt-2 h-8 w-full"></div>
+          <USkeleton class="h-12 w-1/2"></USkeleton>
+          <USkeleton class="mt-4 h-8 w-full"></USkeleton>
+          <USkeleton class="mt-2 h-8 w-full"></USkeleton>
         </div>
-        <div class="skeleton h-96 w-full"></div>
+        <USkeleton class="h-96 w-full"></USkeleton>
       </div>
     </template>
   </ClientOnly>
@@ -261,7 +261,7 @@
     <p>WolfStar not only comes with a very complete moderation suite, but also:</p>
     <ul>
       <li>
-        <NuxtIcon name="ph:chat-text-duotone" class="my-0 mr-1 h-5 w-5 text-warning" />
+        <UIcon name="ph:chat-text-duotone" class="my-0 mr-1 h-5 w-5 text-warning" />
         <strong>A large logging suite:</strong> WolfStar can log almost everything that happens in your server: moderation actions, message
         updates and deletions, channel updates and deletions, role updates and deletions, server updates, members changing voice channels, and
         more.

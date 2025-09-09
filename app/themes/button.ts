@@ -169,4 +169,8 @@ export default {
       },
     },
   ],
+  defaultVariants: {
+    variant: "solid",
+    size: "md",
+  },
 } as const;

@@ -73,8 +73,10 @@ RUN addgroup -S nonroot && \
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
-# Copy environment files
-COPY --chown=nonroot:nonroot .env.example .env
+
+# Copy package.json and lockfile for production dependencies install
+COPY --chown=nonroot:nonroot --from=builder /usr/src/app/package.json package.json
+COPY --chown=nonroot:nonroot --from=builder /usr/src/app/pnpm-lock.yaml pnpm-lock.yaml
 
 RUN pnpm install --frozen-lockfile --prod
 

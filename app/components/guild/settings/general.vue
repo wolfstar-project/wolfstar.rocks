@@ -4,11 +4,7 @@
       <!-- Prefix Setting -->
       <UForm ref="form" :schema="schema" :state="state" class="space-y-4" :on-error="onError" @submit="onSubmit">
         <div>
-          <UFormField>
-            <template #label>
-              <ShadLabel for="prefix">{{ generalConfig.prefix.name }}</ShadLabel>
-            </template>
-
+          <UFormField :label="generalConfig.prefix.name" name="prefix">
             <UInput
               id="prefix"
               v-model="state.prefix"
@@ -39,10 +35,7 @@
 
         <!-- Language Setting -->
         <div>
-          <UFormField>
-            <template #label>
-              <ShadLabel for="language">{{ generalConfig.language.name }}</ShadLabel>
-            </template>
+          <UFormField :label="generalConfig.language.name" name="language">
             <template #description>
               <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
             </template>

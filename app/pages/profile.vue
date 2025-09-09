@@ -153,18 +153,17 @@
               </div>
             </div>
             <div v-if="item.value === 'premium'" class="space-y-6">
-              <div>
-                <h2 class="text-2xl font-bold text-base-content">Premium</h2>
-                <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
-              </div>
               <UCard class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg">
                 <template #header>
-                  <div class="space-y-4 p-6 text-center">
-                    <UIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
-                    <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
+                  <div>
+                    <h2 class="text-2xl font-bold text-base-content">Premium</h2>
+                    <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
                   </div>
                 </template>
-
+                <div class="space-y-4 p-6 text-center">
+                  <UIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
+                  <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
+                </div>
                 <p class="text-base-content/70">Get access to exclusive features and priority support</p>
                 <template #footer>
                   <UFieldGroup size="md" class="flex w-full justify-center pt-4 z-10">
@@ -187,11 +186,10 @@ import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
 
-const { user, ready } = useAuth();
+const { user } = useAuth();
 // refs
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
-const isAnimated = ref(false);
 const isDefault = ref(false);
 const loading = ref(true);
 const evaluating = shallowRef(false);
@@ -300,7 +298,7 @@ const src = computed(() => {
   if (isDefault.value) {
     return defaultAvatar.value;
   }
-  return isAnimated.value ? createUrl("gif", 128) : createUrl("png", 128);
+  return createUrl("webp", 128);
 });
 
 function undoSearch() {
@@ -315,10 +313,10 @@ function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
-onMounted(() => {
-  if (ready.value && status.value !== "pending") {
-    loading.value = false;
+watch(status, (status) => {
+  if (status === "success") {
     evaluating.value = false;
+    loading.value = false;
   }
 });
 
@@ -326,7 +324,6 @@ watch(
   user,
   (user) => {
     if (user) {
-      isAnimated.value = user.avatar ? user.avatar.startsWith("a_") : false;
       isDefault.value = user.avatar === null;
     }
   },

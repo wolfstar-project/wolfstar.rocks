@@ -156,11 +156,11 @@
     </section>
     <template #fallback>
       <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-        <div class="skeleton h-96 w-full"></div>
+        <USkeleton class="h-96 w-full" />
         <div class="prose">
-          <div class="skeleton h-12 w-1/2"></div>
-          <div class="skeleton mt-4 h-8 w-full"></div>
-          <div class="skeleton mt-2 h-8 w-full"></div>
+          <USkeleton class="h-12 w-1/2" />
+          <USkeleton class="mt-4 h-8 w-full" />
+          <USkeleton class="mt-2 h-8 w-full" />
         </div>
       </div>
     </template>

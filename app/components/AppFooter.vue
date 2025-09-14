@@ -1,5 +1,5 @@
 <template>
-  <UFooter :ui="{ root: 'mt-24 bg-base-200 p-10 text-base-content', top: 'text-base-content' }">
+  <UFooter :ui="{ root: 'mt-24 p-10', top: 'text-base-content' }">
     <template #top>
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns" />

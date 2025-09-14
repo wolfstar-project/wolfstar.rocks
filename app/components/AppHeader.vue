@@ -12,7 +12,7 @@
     }"
   >
     <template #title>
-      <NavbarLogo />
+      <HeaderLogo />
     </template>
 
     <div class="navbar-center">
@@ -24,7 +24,7 @@
     </div>
 
     <template #right>
-      <NavbarRight />
+      <HeaderRight />
     </template>
     <template #body>
       <UNavigationMenu :items="mobileLinks" orientation="vertical" class="-mx-2.5" />

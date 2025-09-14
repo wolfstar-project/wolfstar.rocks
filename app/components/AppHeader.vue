@@ -1,18 +1,17 @@
 <!-- eslint-disable vue/no-template-shadow vue/no-unused-refs -->
 <template>
   <UHeader
-    is="div"
     ref="navbar"
     class="app-navbar"
+    as="div"
     :ui="{
       root: {
-        'bg-base-200/80 backdrop-blur-sm': y > 100,
-        'bg-transparent': y <= 100,
+        'bg-base-200/80 backdrop-blur-sm': y > 100
       }
     }"
   >
-    <template #title>
-      <HeaderLogo />
+    <template #left>
+      <HeaderLogo class="navbar-start" />
     </template>
 
     <div class="navbar-center">
@@ -24,7 +23,7 @@
     </div>
 
     <template #right>
-      <HeaderRight />
+      <HeaderRight class="navbar-end" />
     </template>
     <template #body>
       <UNavigationMenu :items="mobileLinks" orientation="vertical" class="-mx-2.5" />
@@ -33,7 +32,8 @@
 </template>
 
 <script setup lang="ts">
-const { y } = useScroll(document);
+const navbar = ref<HTMLElement | null>(null);
+const { y } = useScroll(navbar);
 const { desktopLinks, mobileLinks } = useHeader();
 </script>
 

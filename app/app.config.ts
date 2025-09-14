@@ -1,4 +1,4 @@
-import { avatar, badge, button, fieldGroup, footer, footerColumns, inputMenu, kbd, link, navigationMenu, tabs, toaster } from "@/themes/index";
+import { avatar, badge, button, fieldGroup, footer, footerColumns, inputMenu, kbd, link, navigationMenu, tabs, toaster, header } from "@/themes/index";
 
 export default defineAppConfig({
   ui: {
@@ -14,6 +14,7 @@ export default defineAppConfig({
     footer,
     fieldGroup,
     badge,
+    header,
     container: {
       base: "container mx-auto px-4",
     },

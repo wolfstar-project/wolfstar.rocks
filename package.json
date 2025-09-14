@@ -55,6 +55,7 @@
     "@iconify-json/ic": "catalog:icons",
     "@iconify-json/lucide": "catalog:icons",
     "@iconify-json/ph": "catalog:icons",
+    "@nuxt/icon": "catalog:icons",
     "@nuxt/image": "catalog:frontend",
     "@nuxt/scripts": "catalog:dev",
     "@nuxt/ui": "catalog:frontend",
@@ -62,7 +63,6 @@
     "@prisma/adapter-pg": "catalog:prod",
     "@prisma/client": "catalog:prod",
     "@sentry/nuxt": "catalog:dev",
-    "@tailwindcss/vite": "catalog:build",
     "@tanstack/pacer": "catalog:prod",
     "@vee-validate/yup": "catalog:utils",
     "@vee-validate/zod": "catalog:utils",
@@ -97,8 +97,7 @@
     "utility-types": "catalog:prod",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
-    "zod": "catalog:utils",
-    "@nuxt/icon": "catalog:icons"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -117,7 +116,6 @@
     "@sapphire/time-utilities": "catalog:utils",
     "@sapphire/utilities": "catalog:utils",
     "@tailwindcss/typography": "catalog:style",
-    "@tailwindcss/vite": "catalog:build",
     "daisyui": "catalog:dev",
     "discord-api-types": "catalog:dev",
     "eslint": "catalog:lint",
@@ -136,7 +134,7 @@
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.16.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

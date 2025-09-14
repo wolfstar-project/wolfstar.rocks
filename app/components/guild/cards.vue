@@ -29,11 +29,11 @@
         >
           <guild-card v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :guild="guild" :view-mode />
         </div>
+      </div>
 
-        <!-- Loading Indicator for Infinite Scroll -->
-        <div v-else-if="!loading && loadingMore" class="flex justify-center py-4">
-          <span class="loading loading-spinner loading-lg text-primary"></span>
-        </div>
+      <!-- Loading Indicator for Infinite Scroll -->
+      <div v-if="!loading && loadingMore" class="flex justify-center py-4">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
       </div>
 
       <!-- Empty State -->
@@ -97,8 +97,8 @@ const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
-const viewMode = toRef(() => props.viewMode);
-const error = toRef(() => props.error);
+const viewMode = toRef(props, "viewMode");
+const error = toRef(props, "error");
 
 const paginatedGuilds = computed(() => {
   return props.filterGuilds.slice(0, visibleCount.value);
@@ -107,7 +107,7 @@ const paginatedGuilds = computed(() => {
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
   () => {
-    if (props.loading && error.value !== undefined)
+    if (props.loading || error.value !== undefined)
       return;
     visibleCount.value += LOAD_MORE_COUNT;
   },

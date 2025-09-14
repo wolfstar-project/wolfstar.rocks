@@ -4,6 +4,7 @@ export { default as button } from "./button";
 export { default as fieldGroup } from "./field-group";
 export { default as footer } from "./footer";
 export { default as footerColumns } from "./footer-columns";
+export { default as header } from "./header";
 export { default as inputMenu } from "./input-menu";
 export { default as kbd } from "./kbd";
 export { default as link } from "./link";

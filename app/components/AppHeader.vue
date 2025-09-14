@@ -41,7 +41,6 @@ const { desktopLinks, mobileLinks } = useHeader();
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-	@apply navbar sticky top-2 z-50 rounded-xl drop-shadow-lg;
 	align-self: center;
 	transition-duration: 250ms;
 	transition-property: background-color;

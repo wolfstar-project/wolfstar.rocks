@@ -1,6 +1,5 @@
 <template>
-  <Separator></Separator>
-  <UFooter :ui="{ root: 'mt-24 p-10', top: 'text-base-content' }">
+  <UFooter :ui="{ root: 'mt-24 p-10', top: 'border-default' }">
     <template #top>
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns" />
@@ -39,8 +38,10 @@
       </aside>
     </template>
     <template #right>
+      <UColorModeButton />
+
       <UButton
-        to="https://github.com/nuxt-ui-pro/saas"
+        to="https://github.com/wolfstar-project/wolfstar"
         target="_blank"
         icon="i-simple-icons-github"
         aria-label="GitHub"

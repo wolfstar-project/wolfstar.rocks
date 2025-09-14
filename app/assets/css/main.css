@@ -169,16 +169,16 @@
 		width: 5px;
 		height: 2px;
 	}
-	
+
 	::-webkit-scrollbar-thumb {
-		background: varinverted;
 		border-radius: 5px;
+		background: varinverted;
 	}
-	
+
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;
 	}
-	
+
 	.no-scrollbar {
 		scrollbar-width: none;
 		-ms-overflow-style: none;

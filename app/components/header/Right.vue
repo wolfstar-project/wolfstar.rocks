@@ -13,14 +13,15 @@
           :ui="{
             content: 'w-48'
           }"
-        />
-        <UAvatar
-          :src="avatarSrc"
-          icon="i-lucide-image"
-          size="md"
         >
-          <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
-        </UAvatar>
+          <UAvatar
+            :src="avatarSrc"
+            icon="i-lucide-image"
+            size="md"
+          >
+            <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
+          </UAvatar>
+        </UDropdownMenu>
       </div>
       <div v-else>
         <UButton

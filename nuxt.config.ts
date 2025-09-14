@@ -35,6 +35,7 @@ export default defineNuxtConfig({
     "@vueuse/motion/nuxt",
     "nuxt-authorization",
     "nuxt-vue-dragscroll",
+    "nuxt-vitalizer",
     "@sentry/nuxt/module",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     // #TODO: maybe remove this
@@ -241,6 +242,12 @@ export default defineNuxtConfig({
   },
 
   icon: {
+    customCollections: [
+      {
+        prefix: "custom",
+        dir: "./app/assets/icons",
+      },
+    ],
     serverBundle: {
       collections: ["ph", "ic", "heroicons", "lucide"],
     },

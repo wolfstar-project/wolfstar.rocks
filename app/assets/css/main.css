@@ -164,6 +164,25 @@
 		--ui-radius: var(--radius-box);
 		--ui-container: var(--container-7xl);
 	}
+
+	::-webkit-scrollbar {
+		width: 5px;
+		height: 2px;
+	}
+	
+	::-webkit-scrollbar-thumb {
+		background: varinverted;
+		border-radius: 5px;
+	}
+	
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
+	}
+	
+	.no-scrollbar {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+	}
 }
 
 @theme inline {

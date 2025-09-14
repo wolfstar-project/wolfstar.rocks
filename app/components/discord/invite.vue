@@ -2,8 +2,8 @@
   <div class="mt-2 rounded-md bg-base-200 px-2 pt-2 pb-2 drop-shadow-lg sm:px-4 sm:pb-4">
     <span class="text-xs font-extrabold uppercase">You've been invited to join a server</span>
     <div class="mt-2 flex">
-      <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-base-content/20 sm:h-12 sm:w-12">
-        <icons-wolfstar class="h-32 w-32 p-1 text-base-content" />
+      <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-black sm:h-12 sm:w-12">
+        <icons-wolfstar class="h-full w-full p-1 text-base-content" />
       </div>
       <div class="ml-4 flex-grow">
         <nuxt-link class="font-bold" :to="link">WolfStar Lounge</nuxt-link>

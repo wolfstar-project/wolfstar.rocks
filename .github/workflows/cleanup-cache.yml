@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       pr_number:
-        description: 'PR number to clean caches for (manual runs)'
+        description: PR number to clean caches for (manual runs)
         required: true
 jobs:
   cleanup:

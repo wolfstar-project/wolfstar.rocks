@@ -30,7 +30,7 @@ export default defineOAuthDiscordEventHandler({
     event: H3Event,
     {
       user,
-			tokens,
+      tokens,
     }: {
       user: APIUser;
       tokens: RESTPostOAuth2AccessTokenResult;

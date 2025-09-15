@@ -1,6 +1,5 @@
 import { isNullOrUndefined } from "@sapphire/utilities";
 import * as yup from "yup";
-import useApi from "~~/server/utils/api";
 
 const querySchema = yup.object({
   shouldSerialize: yup.boolean().optional(),

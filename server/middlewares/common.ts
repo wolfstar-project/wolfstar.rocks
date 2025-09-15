@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
   const start = performance.now();
 
   const { req, res } = event.node;
-  await res.on("finish", () => {
+  res.on("finish", () => {
     const duration = Math.round(performance.now() - start);
     const statusCode = res.statusCode;
     const method = req.method;

@@ -39,7 +39,7 @@ import type {
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
-import api from "~~/server/utils/api";
+import api from "~~/server/utils/useApi";
 
 // #region Guild
 

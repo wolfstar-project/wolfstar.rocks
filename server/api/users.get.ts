@@ -1,6 +1,5 @@
 import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import useApi from "~~/server/utils/api";
 
 defineRouteMeta({
   openAPI: {

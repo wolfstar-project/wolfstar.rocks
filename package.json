@@ -97,7 +97,8 @@
     "utility-types": "catalog:prod",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "unplugin-unused": "catalog:build"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

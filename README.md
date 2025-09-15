@@ -15,6 +15,7 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
+[![Commit Check][commit-check-shield]][commit-check-link]
 [![][github-release-shield]][github-release-link]
 [![][github-releasedate-shield]][github-releasedate-link]<br/>
 [![][discord-shield]][discord-link] [![][codecov-shield]][codecov-link]
@@ -272,6 +273,10 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [heroku]: https://heroku.com
 [back-to-top]:
   https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
+[commit-check-link]:
+  https://github.com/wolfstar-project/wolfstar.rocks/actions/workflows/commit-check.yml
+[commit-check-shield]:
+  https://github.com/wolfstar-project/wolfstar.rocks/actions/workflows/commit-check.yml/badge.svg
 [blog]: https://blog.wolfstar.rocks
 [contributing-link]:
   https://github.com/wolfstar-project/.github/blob/main/.github/CONTRIBUTING.md
@@ -331,7 +336,7 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [share-telegram-shield]:
   https://img.shields.io/badge/-share%20on%20telegram-black?labelColor=black&logo=telegram&logoColor=white&style=flat-square
 [share-telegram-link]:
-  https://t.me/share/url"?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20WolfStar%20-%20A%20powerful%20bot%20designed%20to%20enhance%20your%20server%20experience.%20%23bot%20%23server%20%23openAI&url=https%3A%2F%2Fgithub.com%2Fwolfstar-project%2Fwolfstar
+  https://t.me/share/url?text=Check%20this%20GitHub%20repository%20out%20%F0%9F%A4%AF%20WolfStar%20-%20A%20powerful%20bot%20designed%20to%20enhance%20your%20server%20experience.%20%23bot%20%23server%20%23openAI&url=https%3A%2F%2Fgithub.com%2Fwolfstar-project%2Fwolfstar
 [share-whatsapp-shield]:
   https://img.shields.io/badge/-share%20on%20whatsapp-black?labelColor=black&logo=whatsapp&logoColor=white&style=flat-square
 [share-whatsapp-link]:

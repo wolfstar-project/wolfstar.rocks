@@ -16,19 +16,15 @@ RUN set -ex && \
     jq \
     libc6-compat \
     curl \
-    build-base && \
-    # Create minimal directory structure
-    mkdir -p /base/bin && \
-    # Install dumb-init
-    wget -O /base/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_$(uname -m) && \
-    chmod 755 /base/bin/dumb-init
+    build-base \
+    dumb-init
 
 RUN corepack enable
 
 COPY --chown=node:node pnpm-lock.yaml .
 COPY --chown=node:node package.json .
 
-ENTRYPOINT ["/base/bin/dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 # ================ #
 #   Builder Stage  #
@@ -45,7 +41,6 @@ COPY --chown=node:node app/ app/
 COPY --chown=node:node server/ server/
 COPY --chown=node:node shared/ shared/
 COPY --chown=node:node config/ config/
-COPY --chown=node:node lib/ lib/
 COPY --chown=node:node modules/ modules/
 
 RUN pnpm install --frozen-lockfile \

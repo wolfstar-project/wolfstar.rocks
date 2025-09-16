@@ -40,6 +40,8 @@
     <template #right>
       <UColorModeButton />
 
+      <Feedback />
+
       <UButton
         to="https://github.com/wolfstar-project/wolfstar"
         target="_blank"

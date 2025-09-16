@@ -281,7 +281,7 @@
 
     <div class="join">
       <nuxt-link :to="Invites.WolfStar" class="btn join-item btn-ghost">Invite WolfStar</nuxt-link>
-      <nuxt-link to="https://join.wolfstar.pw" class="btn join-item btn-ghost">Support Server</nuxt-link>
+      <nuxt-link to="https://join.wolfstar.rocks" class="btn join-item btn-ghost">Support Server</nuxt-link>
     </div>
   </section>
 

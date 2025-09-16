@@ -1,9 +1,4 @@
 <template>
-  <Head>
-    <Title>Home</Title>
-    <Meta name="description" content="WolfStar's landing page" />
-  </Head>
-
   <section class="mt-28 flex flex-col items-center text-center">
     <h2 class="title pb-4">Imagine a<br />moderation app</h2>
     <p class="max-w-[30rem]">
@@ -293,9 +288,14 @@ import { cast } from "@sapphire/utilities/cast";
 
 definePageMeta({ alias: ["/"] });
 
+useSeoMetadata({
+  title: "Home",
+  description: "WolfStar's landing page.\nA very customizable multilanguage application to help you moderate your server, with a complete logging suite and more, 100% for free!",
+});
+
 defineOgImageComponent("Default", {
-  title: "WolfStar",
-  description: "A very customizable multilanguage application to help you moderate your server, with a complete logging suite and more, 100% for free!",
+  title: "Home",
+  description: "WolfStar's landing page.\nA very customizable multilanguage application to help you moderate your server, with a complete logging suite and more, 100% for free!",
 });
 
 enum AutomodFeature {

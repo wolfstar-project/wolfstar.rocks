@@ -1,13 +1,8 @@
 <template>
-  <Head>
-    <Title>Staryl</Title>
-    <Meta name="description" content="Staryl's landing page" />
-  </Head>
-
   <section class="mt-28 flex flex-col items-center text-center">
-    <h2 class="title pb-4">Imagine an<br />anime and manga app</h2>
+    <h2 class="title pb-4">Imagine an<br />social and feeder network</h2>
     <p class="max-w-[30rem]">
-      A very customizable multilanguage application to cover your members' anime and manga needs, with a few entertainment features and more,
+      A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more,
       <span class="font-bold underline underline-offset-2">100% for free</span>!
     </p>
   </section>
@@ -19,6 +14,18 @@
 
   <other-apps :apps="[OtherApps.WolfStar]" />
 </template>
+
+<script lang="ts">
+useSeoMetadata({
+  title: "Staryl",
+  description: "Staryl's landing page.\nA very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
+});
+
+defineOgImageComponent("Default", {
+  title: "Staryl",
+  description: "Staryl's landing page.\nA very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
+});
+</script>
 
 <style scoped>
 @reference "@/assets/css/main.css";

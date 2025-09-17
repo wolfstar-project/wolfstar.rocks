@@ -10,10 +10,10 @@
     } : undefined"
   >
     <template #left>
-      <HeaderLogo class="navbar-start" />
+      <HeaderLogo />
     </template>
 
-    <div class="navbar-center">
+    <div>
       <UNavigationMenu
         :items="desktopLinks"
         variant="link"
@@ -22,7 +22,7 @@
     </div>
 
     <template #right>
-      <HeaderRight class="navbar-end" />
+      <HeaderRight />
     </template>
     <template #body>
       <UNavigationMenu :items="mobileLinks" orientation="vertical" class="-mx-2.5" />

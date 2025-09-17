@@ -17,7 +17,7 @@ export default withNuxt(
       },
     },
     {
-      ignores: [".vscode/**/*.md", ".trae/"],
+      ignores: [".vscode/**/*.md", ".trae/", "AGENTS.md"],
     },
   ),
 ).append({

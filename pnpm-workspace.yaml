@@ -20,16 +20,16 @@ catalogs:
     "@discordjs/core": ^2.2.2
     "@nuxt/scripts": ^0.11.13
     "@nuxthub/core": ^0.9.0
-    "@nuxtjs/seo": ^3.1.0
-    "@sentry/nuxt": ^10.11.0
+    "@nuxtjs/seo": ^3.2.2
+    "@sentry/nuxt": ^10.12.0
     daisyui: ^5.1.12
     discord-api-types: ^0.38.25
-    nuxt-auth-utils: ^0.5.24
+    nuxt-auth-utils: ^0.5.25
     simple-git: ^3.28.0
     std-env: ^3.9.0
     typescript: ~5.8.3
     vue-tsc: ^3.0.7
-    wrangler: ^4.37.0
+    wrangler: ^4.37.1
   frontend:
     "@nuxt/image": ^1.11.0
     "@nuxt/ui": 4.0.0-alpha.1
@@ -55,8 +55,8 @@ catalogs:
     prettier-plugin-tailwindcss: ^0.6.14
   prod:
     "@pinia/nuxt": ^0.11.2
-    "@prisma/adapter-pg": ~6.16.1
-    "@prisma/client": ~6.16.1
+    "@prisma/adapter-pg": ~6.16.2
+    "@prisma/client": ~6.16.2
     "@tanstack/pacer": ^0.15.2
     consola: ^3.4.2
     dotenv: ^17.2.2
@@ -69,8 +69,8 @@ catalogs:
     nuxt-vitalizer: ^2.0.0
     nuxt-vue-dragscroll: ^1.0.1
     pinia: ^3.0.3
-    prisma: ~6.16.1
-    prisma-json-types-generator: ^3.6.0
+    prisma: ~6.16.2
+    prisma-json-types-generator: ^3.6.1
     stale-dep: ^0.8.3
     tailwind-variants: ^3.1.1
     utility-types: ^3.11.0
@@ -97,7 +97,7 @@ catalogs:
     "@vueuse/router": ^13.9.0
     clsx: ^2.1.1
     yup: ^1.7.0
-    zod: ^4.1.8
+    zod: ^4.1.9
 
 allowedDeprecatedVersions:
   glob: 7.2.3

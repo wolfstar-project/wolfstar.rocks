@@ -5,12 +5,14 @@ This is the official web dashboard for WolfStar, a Discord bot built with Nuxt 4
 ## Architecture Overview
 
 This is a **Nuxt 4 full-stack application** with the following key components:
+
 - **Frontend**: Vue 3 Composition API with TypeScript, TailwindCSS + DaisyUI + NuxtUI
 - **Backend**: Nitro server with Prisma ORM and PostgreSQL database
 - **Auth**: Discord OAuth2 via nuxt-auth-utils with JWT sessions
 - **Deployment**: Cloudflare Pages with NuxtHub for full-stack hosting
 
 ### Directory Structure Patterns
+
 - `app/` - Nuxt application code (frontend)
 - `server/` - Nitro server code (backend APIs)
 - `shared/` - Code shared between client/server
@@ -19,6 +21,7 @@ This is a **Nuxt 4 full-stack application** with the following key components:
 ## Core Development Patterns
 
 ### API Development with Wrapped Handlers
+
 **Always use** `defineWrappedResponseHandler` for API endpoints in `server/api/`:
 
 ```typescript
@@ -31,7 +34,9 @@ export default defineWrappedResponseHandler(async (event) => {
 ```
 
 ### Vue Component Structure
+
 Follow this specific order in `.vue` files:
+
 1. `<template>` - Template content
 2. `<script>` - Regular script (if needed)
 3. `<script setup lang="ts">` - Composition API setup
@@ -39,11 +44,13 @@ Follow this specific order in `.vue` files:
 5. `<style scoped>` - Scoped styles
 
 ### Authentication Patterns
+
 - Use `requireUserSession(event)` in server handlers for auth
 - Frontend auth state managed via nuxt-auth-utils
 - Session contains Discord user data and OAuth tokens
 
 ### Database with Prisma
+
 - **Always run migrations**: `pnpm prisma:migrate:dev` after schema changes
 - Use ESM format for generated Prisma client
 - Database models use PascalCase, fields use camelCase
@@ -70,22 +77,25 @@ pnpm typecheck            # TypeScript type checking
 This dashboard manages settings for **WolfStar** (moderation) and **Staryl** (social notifications) Discord bots. Key concepts:
 
 - **Guild Management**: Server/guild-specific settings and permissions
-- **OAuth Scopes**: `identify guilds` for user auth, `bot` for guild invitations  
+- **OAuth Scopes**: `identify guilds` for user auth, `bot` for guild invitations
 - **Permissions**: Use `manageAbility` to check if user can manage guild settings
 - **Rate Limiting**: Built into wrapped handlers via `@tanstack/pacer`
 
 ## Styling Conventions
 
 ### TailwindCSS + DaisyUI
+
 - Use **DaisyUI components** for consistent theming: `btn`, `card`, `modal`, etc.
 - **Semantic colors**: `primary`, `secondary`, `accent`, `base-100` (auto-adapt to themes)
 - **Responsive design**: `sm:`, `lg:` prefixes for breakpoints
 - Theme switching via `data-theme` attribute on `<html>`
 
 ### Component Variants
+
 Use `tailwind-variants` for component variants:
+
 ```typescript
-import { tv } from 'tailwind-variants';
+import { tv } from "tailwind-variants";
 
 const button = tv({
   base: "btn",
@@ -107,12 +117,15 @@ const button = tv({
 ## Environment & Configuration
 
 ### Runtime Config Pattern
+
 Environment variables defined in `server/utils/runtimeConfig.ts` and accessed via:
+
 ```typescript
 const config = useRuntimeConfig();
 ```
 
 ### Development vs Production
+
 - **Development**: OpenAPI docs at `/api/docs`, debug logging enabled
 - **Production**: CSP headers, rate limiting, Cloudflare analytics
 

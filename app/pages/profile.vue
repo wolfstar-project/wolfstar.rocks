@@ -115,10 +115,9 @@
 
                     <!-- Refresh Button -->
                     <UButton
-                      v-if="!loading"
+                      v-if="filteredGuilds.length < 0"
                       class="join-item"
-                      color="secondary"
-                      variant="subtle"
+                      color="primary"
                       :loading
                       loading-icon="lucide:loader"
                       icon="heroicons:arrow-path-20-solid"

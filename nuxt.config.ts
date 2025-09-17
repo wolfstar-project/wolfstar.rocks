@@ -1,3 +1,5 @@
+import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
+import type { ModuleOptions } from "nuxt-security";
 import { isDevelopment } from "std-env";
 import UnpluginUnused from "unplugin-unused/vite";
 import { pwa } from "./config/pwa";
@@ -48,6 +50,30 @@ export default defineNuxtConfig({
       url: "http://localhost:3000",
       name: "WolfStar (Development)",
     },
+    nitro: {
+      openAPI: {
+        // OpenAPI configuration
+        meta: {
+          title: "WolfStar API",
+          description: "WolfStar API documentation",
+          version: "1.0.0",
+        },
+        route: "/_docs/openapi.json",
+        production: "runtime",
+        ui: {
+          scalar: {
+            route: "/api/docs",
+            darkMode: true,
+            hideDownloadButton: true,
+            searchHotKey: "k",
+            showSidebar: true,
+          },
+        },
+      },
+      experimental: {
+        openAPI: true,
+      },
+    },
     vite: {
       plugins: [UnpluginUnused({
         include: [/\.([cm]?[jt]sx?|vue)$/],
@@ -78,7 +104,7 @@ export default defineNuxtConfig({
         cloudflareWebAnalytics: true,
       },
     },
-
+    // @ts-expect-error - bug
     security: {
       headers: {
         crossOriginEmbedderPolicy: false,
@@ -104,7 +130,7 @@ export default defineNuxtConfig({
         },
       },
       rateLimiter: false,
-    },
+    } satisfies Partial<ModuleOptions>,
     sentry: {
       unstable_sentryBundlerPluginOptions: {
         telemetry: false,
@@ -210,28 +236,7 @@ export default defineNuxtConfig({
     rollupConfig: {
       external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native", "node:fs"] : undefined,
     },
-    openAPI: {
-      // OpenAPI configuration
-      meta: {
-        title: "WolfStar API",
-        description: "WolfStar API documentation",
-        version: "1.0.0",
-      },
-      route: "/_docs/openapi.json",
-      production: "runtime",
-      ui: {
-        scalar: {
-          route: "/api/docs",
-          darkMode: true,
-          hideDownloadButton: true,
-          searchHotKey: "k",
-          showSidebar: true,
-        },
-      },
-    },
-    experimental: {
-      openAPI: true,
-    },
+
   },
   ...(
     preset
@@ -239,7 +244,7 @@ export default defineNuxtConfig({
           hub: {
             workers: true,
             cache: true,
-          },
+          } as Partial<NuxtHubModuleOptions>,
         }
       : {}),
 
@@ -254,7 +259,6 @@ export default defineNuxtConfig({
         "@sapphire/utilities/cast",
         "tailwindcss/colors",
         "ufo",
-        "zod",
         "std-env",
         "ohash/utils",
         "@sentry/vue",
@@ -263,6 +267,8 @@ export default defineNuxtConfig({
         "discord-api-types/v10",
         "@discordjs/rest",
         "motion-v",
+        "@vueuse/integrations/useFuse",
+        "yup",
         "@discordjs/core/http-only",
         "@sapphire/time-utilities",
         "@sapphire/utilities",

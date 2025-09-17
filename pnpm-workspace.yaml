@@ -10,7 +10,6 @@ patchedDependencies:
 catalogs:
   build:
     "@vite-pwa/nuxt": ^1.0.4
-    unplugin-unused: ^0.5.3
   cli:
     "@antfu/nip": ^0.1.0
     cross-env: ^10.0.0

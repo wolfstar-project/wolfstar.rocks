@@ -1,7 +1,6 @@
-<!-- eslint-disable vue/no-template-shadow -->
 <template>
   <AuthState>
-    <template #default="{ loggedIn, user }">
+    <template #default="{ loggedIn, user: authUser }">
       <div v-if="loggedIn">
         <UDropdownMenu
           :items="items"
@@ -19,7 +18,7 @@
             icon="i-lucide-image"
             size="md"
           >
-            <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
+            <span v-if="authUser" class="hidden font-semibold sm:inline">{{ authUser.globalName ?? authUser.username }}</span>
           </UAvatar>
         </UDropdownMenu>
       </div>
@@ -31,7 +30,7 @@
           variant="subtle"
           to="/login"
           block
-          class="mb-3 lg:hidden"
+          class="mb-3 hidden lg:inline-flex"
           icon="ic:round-discord"
         />
         <UButton
@@ -40,7 +39,7 @@
           variant="subtle"
           to="/login"
           block
-          class="mb-3 hidden lg:inline-flex"
+          class="mb-3 lg:hidden"
           icon="ic:round-discord"
         />
       </div>
@@ -53,7 +52,7 @@
         variant="subtle"
         disabled
         block
-        class="mb-3 lg:hidden"
+        class="mb-3 hidden lg:inline-flex"
         icon="ic:round-discord"
       />
       <UButton
@@ -62,7 +61,7 @@
         variant="subtle"
         disabled
         block
-        class="mb-3 hidden lg:inline-flex"
+        class="mb-3 lg:hidden"
         icon="ic:round-discord"
       />
     </template>
@@ -78,12 +77,20 @@ const items = ref<DropdownMenuItem[]>([
   {
     label: "Profile",
     icon: "i-lucide-user",
-    to: "/profile",
+    onSelect: () => {
+      navigateTo("/profile");
+    },
   },
   {
     label: "Log Out",
     icon: "i-lucide-log-out",
-    onSelect: () => clear(),
+    ui: {
+      itemLeadingIcon: "bg-red-500",
+    },
+    onSelect: async () => {
+      await clear();
+      navigateTo("/");
+    },
   },
 ]);
 

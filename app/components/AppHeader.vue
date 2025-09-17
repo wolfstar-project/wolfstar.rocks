@@ -4,11 +4,10 @@
     ref="navbar"
     class="app-navbar"
     as="div"
-    :ui="{
-      root: {
-        'bg-base-200/80 backdrop-blur-sm': y > 100
-      }
-    }"
+    :ui=" y > 100 ? {
+      root: 'bg-base-200/80 backdrop-blur-sm'
+
+    } : undefined"
   >
     <template #left>
       <HeaderLogo class="navbar-start" />

@@ -10,8 +10,8 @@
         <UDropdownMenu
           :items="items"
           :content="{
-            align: 'start',
-            side: 'bottom',
+            align: 'end',
+            side: 'left',
             sideOffset: 8
           }"
           :ui="{
@@ -37,16 +37,7 @@
           variant="subtle"
           to="/login"
           block
-          class="mb-3 lg:hidden"
-          icon="ic:round-discord"
-        />
-        <UButton
-          size="md"
-          color="primary"
-          variant="subtle"
-          to="/login"
-          block
-          class="mb-3 hidden lg:inline-flex"
+          class="mb-3"
           icon="ic:round-discord"
         />
       </div>
@@ -59,16 +50,7 @@
         variant="subtle"
         disabled
         block
-        class="mb-3 lg:hidden"
-        icon="ic:round-discord"
-      />
-      <UButton
-        size="md"
-        color="primary"
-        variant="subtle"
-        disabled
-        block
-        class="mb-3 hidden lg:inline-flex"
+        class="mb-3"
         icon="ic:round-discord"
       />
     </template>

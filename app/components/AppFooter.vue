@@ -1,5 +1,6 @@
 <template>
-  <UFooter :ui="{ root: 'mt-24 p-10', top: 'border-default' }">
+  <USeparator icon="custom:wolfstar" class="white-text mt-24 p-10" />
+  <UFooter :ui="{ root: 'p-2', top: 'border-default' }">
     <template #top>
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns" />

@@ -1,10 +1,5 @@
 <!-- eslint-disable vue/valid-v-else-if -->
 <template>
-  <Head>
-    <Title>Profile</Title>
-    <Meta name="description" content="Manage your profile and servers" />
-  </Head>
-
   <UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
     <section class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-80 p-12 shadow-lg">
       <div v-if="!user || loading" class="flex flex-col items-center justify-center space-y-6">
@@ -78,8 +73,7 @@
 
                     <UButton
                       class="join-item hidden sm:inline-flex"
-                      color="secondary"
-                      variant="subtle"
+                      color="primary"
                       loading-icon="lucide:loader"
                       :loading
                       @click="toggleView()"
@@ -96,8 +90,7 @@
                     <!-- Manageable Only Toggle Button -->
                     <UButton
                       class="join-item"
-                      color="secondary"
-                      variant="subtle"
+                      color="primary"
                       :loading
                       loading-icon="lucide:loader"
                       icon="heroicons:shield-check"
@@ -109,8 +102,7 @@
                     <!-- Sort Button -->
                     <UButton
                       class="join-item"
-                      color="secondary"
-                      variant="subtle"
+                      color="primary"
                       :loading
                       @click="toggleSortOrder()"
                     >
@@ -123,7 +115,7 @@
 
                     <!-- Refresh Button -->
                     <UButton
-                      v-if="filteredGuilds.length < 0"
+                      v-if="!loading"
                       class="join-item"
                       color="secondary"
                       variant="subtle"
@@ -188,11 +180,11 @@ definePageMeta({ alias: ["/account"], auth: true });
 
 useSeoMetadata({
   title: "Profile",
-  description: "Manage your account and settings",
+  description: "Manage your profile, servers and settings",
   shouldSeoImage: true,
 });
 
-const { user } = useAuth();
+const { user, ready } = useAuth();
 // refs
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");

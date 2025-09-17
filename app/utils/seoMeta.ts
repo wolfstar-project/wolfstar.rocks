@@ -1,3 +1,5 @@
+import type { OGImageProps } from "@/components/OgImage/default.vue";
+
 interface SiteMetadata {
   title?: string;
   description?: string;
@@ -7,21 +9,7 @@ interface SiteMetadata {
   twitterCard?: "summary" | "summary_large_image";
   twitterSite?: string;
   shouldSeoImage?: boolean;
-  seoImage?: {
-    title?: string;
-    description?: string;
-    headline?: string;
-
-    // Appearance props
-    colorMode?: "dark" | "light";
-    theme?: string;
-    useCustomBackground?: boolean;
-
-    // Site branding props
-    siteName?: string;
-    siteLogo?: string;
-    icon?: string | boolean;
-  };
+  seoImage?: OGImageProps;
 }
 
 export function useSeoMetadata({

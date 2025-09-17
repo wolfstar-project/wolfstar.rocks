@@ -1,7 +1,6 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import type { ModuleOptions } from "nuxt-security";
 import { isDevelopment } from "std-env";
-import UnpluginUnused from "unplugin-unused/vite";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 import { Env } from "./shared/types/index";
@@ -73,26 +72,6 @@ export default defineNuxtConfig({
       experimental: {
         openAPI: true,
       },
-    },
-    vite: {
-      plugins: [UnpluginUnused({
-        include: [/\.([cm]?[jt]sx?|vue)$/],
-        exclude: [/node_modules/],
-        level: "warning", // or 'error'
-        /**
-         * Ignore some dependencies.
-         */
-        ignore: {
-          peerDependencies: ["vue"],
-        },
-        // Or ignore all kinds of dependencies.
-        // ignore: ['vue'],
-
-        /**
-         * Dependency kinds to check.
-         */
-        depKinds: ["dependencies", "peerDependencies"],
-      })],
     },
   },
 

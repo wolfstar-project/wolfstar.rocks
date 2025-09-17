@@ -1,3 +1,5 @@
+import consola from "consola";
+
 export default defineNuxtPlugin(async () => {
   const apiOrigin = getApiOrigin();
 
@@ -7,6 +9,9 @@ export default defineNuxtPlugin(async () => {
     headers: {
       "Content-Type": "application/json",
       "X-Request-ID": crypto.randomUUID?.(),
+    },
+    onResponse({ response }) {
+      consola.log("Response:", response);
     },
   });
 

@@ -291,11 +291,7 @@ definePageMeta({ alias: ["/"] });
 useSeoMetadata({
   title: "Home",
   description: "WolfStar's landing page.\nA very customizable multilanguage application to help you moderate your server, with a complete logging suite and more, 100% for free!",
-});
-
-defineOgImageComponent("Default", {
-  title: "Home",
-  description: "WolfStar's landing page.\nA very customizable multilanguage application to help you moderate your server, with a complete logging suite and more, 100% for free!",
+  shouldSeoImage: true,
 });
 
 enum AutomodFeature {

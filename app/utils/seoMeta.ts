@@ -6,6 +6,22 @@ interface SiteMetadata {
   ogType?: "website" | "article" | "profile";
   twitterCard?: "summary" | "summary_large_image";
   twitterSite?: string;
+  shouldSeoImage?: boolean;
+  seoImage?: {
+    title?: string;
+    description?: string;
+    headline?: string;
+
+    // Appearance props
+    colorMode?: "dark" | "light";
+    theme?: string;
+    useCustomBackground?: boolean;
+
+    // Site branding props
+    siteName?: string;
+    siteLogo?: string;
+    icon?: string | boolean;
+  };
 }
 
 export function useSeoMetadata({
@@ -16,6 +32,8 @@ export function useSeoMetadata({
   ogType = "website",
   twitterCard = "summary_large_image",
   twitterSite,
+  shouldSeoImage = false,
+  seoImage = {},
 }: SiteMetadata) {
   const { url, name: siteName } = useSiteConfig();
   const route = useRoute();
@@ -34,6 +52,15 @@ export function useSeoMetadata({
       { name: "description", content: description },
     ],
   });
+
+  if (shouldSeoImage) {
+    const { title: seoTitle, description: seoDescription, ...seoImageProps } = seoImage;
+    defineOgImageComponent("Default", {
+      title: seoTitle ?? title,
+      description: seoDescription ?? description,
+      ...seoImageProps,
+    });
+  }
 
   if (import.meta.server) {
     useSeoMeta({

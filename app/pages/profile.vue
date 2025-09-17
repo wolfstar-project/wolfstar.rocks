@@ -186,6 +186,12 @@ import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
 
+useSeoMetadata({
+  title: "Profile",
+  description: "Manage your account and settings",
+  shouldSeoImage: true,
+});
+
 const { user } = useAuth();
 // refs
 // Tab Management - inspired by Dyno.gg tab system
@@ -313,8 +319,8 @@ function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
-watch(status, (status) => {
-  if (status === "success") {
+watch([status, ready], ([fetchStatus, authReady]) => {
+  if (fetchStatus === "success" && authReady) {
     evaluating.value = false;
     loading.value = false;
   }

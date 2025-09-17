@@ -12,18 +12,14 @@
     <nuxt-link class="btn join-item md:btn-wide" to="#explore"><UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
   </section>
 
-  <other-apps :apps="[OtherApps.WolfStar]" />
+  <OtherApps :apps="[OtherApps.WolfStar]" />
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 useSeoMetadata({
   title: "Staryl",
   description: "Staryl's landing page.\nA very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
-});
-
-defineOgImageComponent("Default", {
-  title: "Staryl",
-  description: "Staryl's landing page.\nA very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
+  shouldSeoImage: true,
 });
 </script>
 

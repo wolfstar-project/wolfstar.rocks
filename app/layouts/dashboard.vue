@@ -153,7 +153,6 @@ const _submitChanges = async () => {
 
   if (settingsData.value) {
     guildStore.setSettings(settingsData.value);
-    guildStore.resetAllChanges();
     toast.add({
       title: "Success",
       description: "Changes saved successfully",

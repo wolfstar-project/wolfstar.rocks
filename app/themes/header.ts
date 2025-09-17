@@ -2,9 +2,9 @@ export default {
   slots: {
     root: "border-b border-transparent h-(--ui-header-height) bg-transparent navbar sticky top-2 z-50 rounded-xl drop-shadow-lg",
     container: "flex items-center justify-between gap-3 h-full",
-    left: "lg:flex-1 flex items-center gap-1.5 navbar-start",
-    center: "hidden lg:flex navbar-center",
-    right: "flex items-center justify-end lg:flex-1 gap-1.5 navbar-end",
+    left: "lg:flex-1 flex items-center gap-1.5",
+    center: "hidden lg:flex",
+    right: "flex items-center justify-end lg:flex-1 gap-1.5",
     title: "shrink-0 font-bold text-xl text-highlighted flex items-end gap-1.5",
     toggle: "lg:hidden",
     content: "lg:hidden",

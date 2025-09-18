@@ -1,13 +1,13 @@
-import { colors } from "@/utils/constants";
+import type { ModuleOptions } from "@nuxt/ui";
 
-export default {
+export default (options: Required<ModuleOptions>) => ({
   slots: {
     root: "tabs flex items-center gap-2",
     list: "relative flex p-1 group",
     indicator: "absolute transition-[translate,width] duration-200",
     trigger: [
       "tab group relative inline-flex items-center min-w-0 data-[state=inactive]:text-muted hover:data-[state=inactive]:not-disabled:text-default font-medium rounded-md disabled:cursor-not-allowed disabled:tab-disabled",
-      "transition-colors",
+      options.theme.transitions && "transition-colors",
     ],
     leadingIcon: "shrink-0",
     leadingAvatar: "shrink-0",
@@ -19,12 +19,7 @@ export default {
   },
   variants: {
     color: {
-      primary: "",
-      secondary: "",
-      success: "",
-      info: "",
-      warning: "",
-      error: "",
+      ...Object.fromEntries((options.theme.colors || []).map((color: string) => [color, ""])),
       neutral: "",
     },
     variant: {
@@ -39,7 +34,8 @@ export default {
         trigger: "focus:outline-none",
       },
       transparent: {
-        trigger: "",
+        root: "tabs-glass",
+        trigger: "tab-glass",
       },
       box: {
         trigger: "tabs-box",
@@ -105,7 +101,7 @@ export default {
     },
   },
   compoundVariants: [
-    ...colors.map(color => ([
+    ...(options.theme.colors || []).map((color: string) => ([
       {
         color,
         variant: "pill",
@@ -135,6 +131,14 @@ export default {
         variant: "border",
         class: {
           list: "border-b",
+          indicator: `bg-${color}`,
+          trigger: `data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-${color} `,
+        },
+      },
+      {
+        color,
+        variant: "transparent",
+        class: {
           indicator: `bg-${color}`,
           trigger: `data-[state=active]:text-highlighted data-[state=active]:tab-active focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-${color} `,
         },
@@ -235,4 +239,4 @@ export default {
     variant: "box",
     size: "md",
   },
-} as const;
+});

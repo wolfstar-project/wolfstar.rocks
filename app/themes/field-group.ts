@@ -1,5 +1,5 @@
 export default {
-  base: "relative join",
+  base: "relative",
   variants: {
     size: {
       xs: "",

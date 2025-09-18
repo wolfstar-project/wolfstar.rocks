@@ -1,0 +1,112 @@
+@layer components {
+	/* Liquid Glass Button */
+	.btn-glass {
+		position: relative;
+		backdrop-filter: blur(10px);
+		transition: all 0.3s ease;
+		cursor: pointer;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 1rem;
+		background: rgba(255, 255, 255, 0.1);
+		padding: 1rem 2rem;
+		overflow: hidden;
+		color: rgba(255, 255, 255, 0.8);
+	}
+
+	.btn-glass::before {
+		position: absolute;
+		top: 0;
+		left: 0;
+		transform: translateX(-100%);
+		transition: 0.5s;
+		background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		width: 100%;
+		height: 100%;
+		content: '';
+	}
+
+	.btn-glass:hover::before {
+		transform: translateX(100%);
+	}
+
+	.btn-glass:hover {
+		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+		background: rgba(255, 255, 255, 0.2);
+	}
+
+	/* Liquid Glass Container */
+	.container-glass {
+		position: relative;
+		backdrop-filter: blur(10px);
+		box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 20px;
+		background: rgba(255, 255, 255, 0.1);
+		padding: 2rem;
+	}
+
+	.container-glass::before {
+		position: absolute;
+		top: 0;
+		left: -50%;
+		transform: skewX(-15deg);
+		animation: shine 3s infinite;
+		background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+		width: 100%;
+		height: 100%;
+		content: '';
+	}
+
+	/* Liquid Glass Tabs */
+	.tabs-glass {
+		display: flex;
+		gap: 1rem;
+		backdrop-filter: blur(10px);
+		border-radius: 1rem;
+		background: rgba(255, 255, 255, 0.05);
+		padding: 0.5rem;
+	}
+
+	.tab-glass {
+		position: relative;
+		transition: all 0.3s ease;
+		cursor: pointer;
+		border-radius: 0.75rem;
+		padding: 0.75rem 1.5rem;
+		overflow: hidden;
+		color: rgba(255, 255, 255, 0.7);
+	}
+
+	.tab-glass.active {
+		box-shadow: 0 4px 15px rgba(31, 38, 135, 0.2);
+		background: rgba(255, 255, 255, 0.1);
+		color: rgba(255, 255, 255, 0.9);
+	}
+
+	.tab-glass::before {
+		position: absolute;
+		top: 0;
+		left: -100%;
+		transition: 0.5s;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		width: 100%;
+		height: 100%;
+		content: '';
+	}
+
+	.tab-glass:hover::before {
+		left: 100%;
+	}
+
+	@keyframes shine {
+		0% {
+			transform: skewX(-15deg) translateX(-100%);
+		}
+		50% {
+			transform: skewX(-15deg) translateX(100%);
+		}
+		100% {
+			transform: skewX(-15deg) translateX(100%);
+		}
+	}
+}

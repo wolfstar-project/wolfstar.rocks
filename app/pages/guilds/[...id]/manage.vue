@@ -217,7 +217,7 @@ async function fetchCommandsAndLanguages() {
     expire: 0,
     data: [],
   });
-  if (commandsStorage.value && (process.env.NODE_ENV === "development" || commandsStorage.value.expire > Date.now())) {
+  if (commandsStorage.value && (import.meta.env.DEV || commandsStorage.value.expire > Date.now())) {
     commands.value = commandsStorage.value.data;
   }
   else {
@@ -233,7 +233,7 @@ async function fetchCommandsAndLanguages() {
     expire: 0,
     data: [],
   });
-  if (languagesStorage.value && (process.env.NODE_ENV === "development" || languagesStorage.value.expire > Date.now())) {
+  if (languagesStorage.value && (import.meta.env.DEV || languagesStorage.value.expire > Date.now())) {
     languages.value = languagesStorage.value.data;
   }
   else {

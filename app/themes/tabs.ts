@@ -1,13 +1,11 @@
-import type { ModuleOptions } from "@nuxt/ui";
-
-export default (options: Required<ModuleOptions>) => ({
+export default {
   slots: {
     root: "tabs flex items-center gap-2",
     list: "relative flex p-1 group",
     indicator: "absolute transition-[translate,width] duration-200",
     trigger: [
       "tab group relative inline-flex items-center min-w-0 data-[state=inactive]:text-muted hover:data-[state=inactive]:not-disabled:text-default font-medium rounded-md disabled:cursor-not-allowed disabled:tab-disabled",
-      options.theme.transitions && "transition-colors",
+      "transition-colors",
     ],
     leadingIcon: "shrink-0",
     leadingAvatar: "shrink-0",
@@ -19,7 +17,7 @@ export default (options: Required<ModuleOptions>) => ({
   },
   variants: {
     color: {
-      ...Object.fromEntries((options.theme.colors || []).map((color: string) => [color, ""])),
+      ...Object.fromEntries((colors || []).map((color: string) => [color, ""])),
       neutral: "",
     },
     variant: {
@@ -239,4 +237,4 @@ export default (options: Required<ModuleOptions>) => ({
     variant: "box",
     size: "md",
   },
-});
+};

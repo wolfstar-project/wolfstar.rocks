@@ -42,11 +42,6 @@
     "serve": "node .output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck"
   },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
   "lint-staged": {
     "*": "eslint --fix ."
   },

@@ -25,7 +25,7 @@
       </template>
     </section>
 
-    <section class="overflow-hidden rounded-xl bg-base-80 border-2 border-solid border-base-300 shadow-lg flex flex-col items-center">
+    <section class="overflow-hidden rounded-xl bg-base-80 shadow-lg flex flex-col items-center">
       <UTabs v-model="activeTab" variant="transparent" :unmount-on-hide="false" :items class="w-full flex flex-col items-center">
         <template #content="{ item }">
           <div class="p-8">

@@ -95,14 +95,6 @@ const items = computed<NavigationMenuItem[][]>(() => [[{
     open.value = false;
   },
 }, {
-  label: "Moderation",
-  value: "moderation",
-  icon: "lucide:shield",
-  to: `/guilds/${guildId.value}/manage/moderation`,
-  onSelect: () => {
-    open.value = false;
-  },
-}, {
   label: "Settings",
   value: "settings",
   icon: "heroicons:settings",

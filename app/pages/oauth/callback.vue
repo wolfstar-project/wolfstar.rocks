@@ -3,7 +3,7 @@
     <template v-if="!code">
       <UAlert variant="solid" color="error" title="Missing Code" icon="emojione:warning">
         <template #description>
-          Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
+          Please use the <code>Login</code> button instead or click <ULink to="/login" class="font-medium underline">here</ULink>.
         </template>
         <template #actions>
           <UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
@@ -12,7 +12,7 @@
     </template>
     <client-only v-else>
       <template v-if="status === 'pending'">
-        <UAlert color="info" icon="emojione:hourglass-done" title="Loading">
+        <UAlert color="neutral" icon="emojione:hourglass-done" title="Loading">
           <template #description>
             Completing authentication flow...
           </template>
@@ -53,8 +53,6 @@ import { promiseTimeout } from "@vueuse/core";
 
 const { code } = useRoute().query;
 
-const title = ref("OAuth Callback");
-
 const { error, status, execute } = useFetch("/api/auth/discord", {
   query: { code },
   method: "GET",
@@ -81,13 +79,12 @@ async function performCall() {
 }
 
 useRobotsRule(robotBlockingPageProps);
-useSeoMeta({
-  title: title.value,
-  ogTitle: title.value,
-  ogDescription: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
+useSeoMetadata({
+  title: "OAuth Callback",
+  description: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
 });
 defineOgImageComponent("Default", {
-  title: title.value,
+  title: "OAuth Callback",
   description: "A landing page for the OAuth2.0 callback flow",
   theme: Colors.Red,
 });

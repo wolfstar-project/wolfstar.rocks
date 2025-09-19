@@ -138,9 +138,9 @@ export interface ExpirableLocalStorageStructure<T> {
   data: T;
 }
 
-export enum StorageKeys {
-  Commands = "commandsStore",
-  Language = "languageStore",
+export enum LocalStorageKeys {
+  Commands = "commands",
+  Languages = "languages",
 }
 
 export const EmojiRegexExtractName = /<?a?:(\w{2,32}):\d{17,21}>?/gi;

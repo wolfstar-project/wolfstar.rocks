@@ -1,3 +1,5 @@
+import { colors } from "@/utils/constants";
+
 export default {
   slots: {
     root: "tabs flex items-center gap-2",
@@ -99,7 +101,7 @@ export default {
     },
   },
   compoundVariants: [
-    ...(options.theme.colors || []).map((color: string) => ([
+    ...(colors || []).map((color: string) => ([
       {
         color,
         variant: "pill",

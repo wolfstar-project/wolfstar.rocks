@@ -50,6 +50,7 @@
 
 <script setup lang="ts">
 import { promiseTimeout } from "@vueuse/core";
+import consola from "consola";
 
 const { code } = useRoute().query;
 
@@ -64,12 +65,12 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
 const { user: data } = useAuth();
 
 if (import.meta.client && code) {
-  void performCall().catch(console.error);
+  void performCall().catch(consola.error);
 }
 
 async function performCall() {
   await execute();
-  if (!data)
+  if (!data.value)
     return;
 
   await promiseTimeout(1000);
@@ -82,10 +83,10 @@ useRobotsRule(robotBlockingPageProps);
 useSeoMetadata({
   title: "OAuth Callback",
   description: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
-});
-defineOgImageComponent("Default", {
-  title: "OAuth Callback",
-  description: "A landing page for the OAuth2.0 callback flow",
-  theme: Colors.Red,
+  seoImage: {
+    title: "OAuth Callback",
+    description: "A landing page for the OAuth2.0 callback flow",
+    theme: Colors.Blue,
+  },
 });
 </script>

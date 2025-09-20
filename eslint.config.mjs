@@ -125,18 +125,19 @@ export default withNuxt(
 }).overrideRules({
   "ts/method-signature-style": "off",
   "ts/no-use-before-define": "off",
-  "ts/ban-types": "off",
-  "ts/no-empty-object-type": "off",
+  // ts/ban-types has been deprecated - using modern alternatives instead
+  "ts/no-empty-object-type": "warn", // Modern replacement for part of ban-types
+  "ts/no-wrapper-object-types": "warn", // Modern replacement for part of ban-types
   "ts/no-explicit-any": "off",
   "vue/comma-dangle": "off",
-  "vue/eqeqeq": "off",
+  "vue/eqeqeq": "warn", // Changed from "off" to "warn" for safety
   "vue/no-unused-refs": "off",
   "antfu/top-level-function": "off",
   "node/prefer-global/process": "off",
-  "eqeqeq": "off",
+  "eqeqeq": "warn", // Changed from "off" to "warn" for safety
   "style/no-tabs": "off",
-  "no-console": "off",
-  "no-debugger": "off",
+  "no-console": "warn", // Changed from "off" to "warn" for safety
+  "no-debugger": "warn", // Changed from "off" to "warn" for safety
   "no-async-promise-executor": "off",
   "style/arrow-parens": "off",
 });

@@ -25,8 +25,8 @@
       </template>
     </section>
 
-    <section class="overflow-hidden rounded-xl bg-base-80 shadow-lg flex flex-col items-center">
-      <UTabs v-model="activeTab" variant="transparent" :unmount-on-hide="false" :items class="w-full flex flex-col items-center">
+    <section class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center">
+      <UTabs v-model="activeTab" variant="transparent" :items class="w-full flex flex-col items-center">
         <template #content="{ item }">
           <div class="p-8">
             <div v-if="item.value === 'servers'" class="space-y-6">
@@ -183,7 +183,7 @@ useSeoMetadata({
   shouldSeoImage: true,
 });
 
-const { user, ready } = useAuth();
+const { user } = useAuth();
 // refs
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
@@ -310,8 +310,8 @@ function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
-watch([status, ready], ([fetchStatus, authReady]) => {
-  if (fetchStatus === "success" && authReady) {
+watch(status, (fetchStatus) => {
+  if (fetchStatus === "success") {
     evaluating.value = false;
     loading.value = false;
   }

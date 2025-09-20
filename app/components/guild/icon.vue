@@ -130,11 +130,16 @@ const isHovering = ref(false);
 const loaded = ref(false);
 const icon = useTemplateRef<HTMLElement | null>("icon");
 
-useIntersectionObserver(icon, (mutations) => {
-  if (mutations[0]) {
-    loaded.value = true;
-  }
-});
+const { stop } = useIntersectionObserver(
+  icon,
+  ([entry]) => {
+    if (entry?.isIntersecting) {
+      loaded.value = true;
+      stop();
+    }
+  },
+  { rootMargin: "150px" },
+);
 
 const guild = toRef(props, "guild");
 // Make these computed to avoid SSR hydration issues

@@ -55,7 +55,7 @@
               {{ searchQuery ? 'No matching servers' : 'No servers found' }}
             </h3>
             <p class="max-w-md mx-auto text-base-content/60">
-              {{ searchQuery && filterGuilds.length !== 0 ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
+              {{ searchQuery ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
             </p>
           </div>
 
@@ -90,39 +90,33 @@ interface EnhancedGuildCardsProps {
   viewMode: "card" | "grid";
 };
 
-const props = defineProps<EnhancedGuildCardsProps>();
+const { filterGuilds, guilds, undoSearch, searchQuery, loading, error, viewMode } = defineProps<EnhancedGuildCardsProps>();
 
 const INITIAL_COUNT = 20;
 const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
-const viewMode = toRef(props, "viewMode");
-const error = toRef(props, "error");
 
 const paginatedGuilds = computed(() => {
-  return props.filterGuilds.slice(0, visibleCount.value);
+  return filterGuilds.slice(0, visibleCount.value);
 });
 
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
   () => {
-    if (props.loading || error.value !== undefined)
+    if (loading || error !== undefined)
       return;
     visibleCount.value += LOAD_MORE_COUNT;
   },
   {
     distance: 10,
-    canLoadMore: () => visibleCount.value < props.filterGuilds.length,
+    canLoadMore: () => visibleCount.value < filterGuilds.length,
   },
 );
 
-if (error.value) {
-  useLogger().error(error.value);
-}
-
 watch(
-  () => props.filterGuilds,
+  () => filterGuilds,
   () => {
     visibleCount.value = INITIAL_COUNT;
     reset();

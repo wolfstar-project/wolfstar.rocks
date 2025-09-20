@@ -38,8 +38,7 @@ interface FlattenedGuild {
 	manageable: boolean;
 	permissions?: number;
 	roles: FlattenedRole[];
-
-	wolfstarIsIn: boolean;
+	skyraIsIn: boolean;
 }
 
 interface FlattenedEmoji {

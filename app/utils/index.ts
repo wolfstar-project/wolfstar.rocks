@@ -1,5 +1,4 @@
 import type { Selfmod } from "#shared/types/ConfigurableData";
-import type { GetItemKeys, NestedItem } from "@/types/utils";
 
 import { isEqual } from "ohash/utils";
 
@@ -281,102 +280,12 @@ export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((
 }
 
 /**
- * Gets the display value.
- * @param items The items.
- * @param value The value.
- * @param options The options.
- * @param options.valueKey The value key.
- * @param options.labelKey The label key.
- * @returns The display value.
- */
-export function getDisplayValue<T, V>(
-  items: T[],
-  value: V | undefined | null,
-  options: {
-    valueKey?: GetItemKeys<T>;
-    labelKey?: keyof NestedItem<T>;
-  } = {},
-): string | undefined {
-  const { valueKey, labelKey } = options;
-
-  if (value === null || value === undefined) {
-    return undefined;
-  }
-
-  const foundItem = items.find((item) => {
-    const itemValue = (typeof item === "object" && item !== null && valueKey)
-      ? get(item, valueKey as string)
-      : item;
-    return compare(itemValue, value);
-  });
-
-  const source = foundItem ?? value;
-
-  if (source === null || source === undefined) {
-    return undefined;
-  }
-
-  if (typeof source === "object") {
-    return labelKey ? get(source as Record<string, any>, labelKey as string) : undefined;
-  }
-
-  return String(source);
-}
-
-/**
  * Checks if the item is an array of arrays.
  * @param item The item.
  * @returns Whether the item is an array of arrays.
  */
 export function isArrayOfArray<A>(item: A[] | A[][]): item is A[][] {
   return Array.isArray(item[0]);
-}
-
-/**
- * Merges the default class and the property class.
- * @param defaultClass The default class.
- * @param propClass The property class.
- * @returns The merged class.
- */
-export function mergeClasses(defaultClass?: string | string[], propClass?: string) {
-  if (!defaultClass && !propClass) {
-    return "";
-  }
-
-  return [
-    ...(Array.isArray(defaultClass) ? defaultClass : [defaultClass]),
-    propClass,
-  ].filter(Boolean);
-}
-
-/**
- * Gets the text content of a slot.
- * @param children The slot children.
- * @returns The text content of the slot.
- */
-export function getSlotChildrenText(children: any) {
-  // eslint-disable-next-line array-callback-return
-  return children.map((node: any) => {
-    if (!node.children || typeof node.children === "string")
-      return node.children || "";
-    else if (Array.isArray(node.children))
-      return getSlotChildrenText(node.children);
-    else if (node.children.default)
-      return getSlotChildrenText(node.children.default());
-  }).join("");
-}
-
-/**
- * Transforms the UI object.
- * @param ui The UI object.
- * @param uiProp The UI property.
- * @returns The transformed UI object.
- */
-export function transformUI(ui: any, uiProp?: any) {
-  return Object.entries(ui).reduce((acc, [key, value]) => {
-    acc[key] = typeof value === "function" ? value({ class: uiProp?.[key] }) : value;
-    return acc;
-  }, uiProp || {});
 }
 
 /**

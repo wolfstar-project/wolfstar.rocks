@@ -230,7 +230,7 @@ export default defineWrappedResponseHandler(
 ### Naming Conventions
 - **PascalCase** for model names
 - **camelCase** for field names
-- **kebab-case** for mapped database columns
+- **snake_case** for mapped database columns — avoid kebab-case (hyphens) because they require quoting and can cause issues with PostgreSQL/Prisma and other tooling.
 - **Descriptive names** for relationships
 
 ### Migration Strategy

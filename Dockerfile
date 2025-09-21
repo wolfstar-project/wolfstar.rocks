@@ -23,6 +23,7 @@ RUN corepack enable
 
 COPY --chown=node:node pnpm-lock.yaml .
 COPY --chown=node:node package.json .
+COPY --chown=node:node .npmrc .
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
@@ -44,7 +45,7 @@ COPY --chown=node:node shared/ shared/
 COPY --chown=node:node config/ config/
 COPY --chown=node:node modules/ modules/
 
-RUN pnpm install --frozen-lockfile \
+RUN pnpm install \
  && pnpm run prisma:generate \
  && pnpm run build
 
@@ -56,6 +57,7 @@ FROM base AS runner
 
 ENV NODE_ENV="production"
 ENV NODE_OPTIONS=${NODE_OPTIONS}
+ENV PORT=${PORT:-3000}
 
 RUN apk add --no-cache curl
 
@@ -69,6 +71,8 @@ RUN addgroup -S nonroot && \
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
+COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
+
 
 # Copy environment files
 COPY --chown=nonroot:nonroot .env.example .env
@@ -79,4 +83,5 @@ RUN chown -R nonroot:nonroot /usr/src/app
 
 USER nonroot
 
+RUN dotenvx ext prebuild
 CMD ["dotenvx", "run", "--", "node", ".output/server/index.mjs"]

@@ -28,7 +28,30 @@
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
-
+    <div v-if="readyToRender">
+      <UAlert
+        v-if="hasError"
+        color="error"
+        icon="heroicons:exclamation-circle"
+        :dismissible="true"
+        @dismiss="hasError = false"
+      >
+        <template #title>Error</template>
+        <template #description>
+          Something went wrong. Please try again.
+        </template>
+      </UAlert>
+      <UAlert
+        v-else
+        color="info"
+        icon="heroicons:info"
+      >
+        <template #title>Loading</template>
+        <template #description>
+          loading Data, please be patient.
+        </template>
+      </UAlert>
+    </div>
     <slot></slot>
   </UDashboardGroup>
 </template>
@@ -162,11 +185,20 @@ onMounted(async () => {
     });
     if (data.value)
       guildData.value = data.value;
-    /* const { data: settingsResponse } = useFetch<GuildData>(`/api/guilds/${guildId}/settings`),
+    const { data: settingsData, error: getSettingsError } = await useFetch<GuildData>(`/api/guilds/${guildId.value}/settings`, {
+      method: "GET",
+    });
 
-    if (settingsResponse.value) {
-      guildStore.setSettings(settingsResponse.value);
-    } */
+    if (getSettingsError?.value) {
+      toast.add({ title: "Error", description: "Failed to reload settings" });
+    }
+    else if (settingsData.value) {
+      guildStore.setSettings(settingsData.value);
+      toast.add({
+        title: "Success",
+        description: "Changes saved successfully",
+      });
+    }
   }
   catch {
     hasError.value = true;
@@ -176,7 +208,7 @@ onMounted(async () => {
   }
 });
 
-const _readyToRender = computed(() => {
+const readyToRender = computed(() => {
   return !loading.value && guildData.value && guildStore.settings;
 });
 </script>

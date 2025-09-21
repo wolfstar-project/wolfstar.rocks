@@ -2,9 +2,9 @@
   <div class="app-layout" :class="appName">
     <AppHeader />
 
-    <main class="mx-4 flex flex-grow flex-col items-center sm:mx-auto sm:w-5/6 lg:max-w-5xl xl:max-w-7xl">
+    <UMain>
       <slot></slot>
-    </main>
+    </UMain>
 
     <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
       <ScrollToTopButton />

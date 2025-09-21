@@ -27,7 +27,7 @@
       <GuildSettingsSection title="General Settings">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Prefix Setting -->
-          <UForm ref="form" :schema="schema" :state="state" class="space-y-4" :on-error="onError" @submit="onSubmit">
+          <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @error="onError" @submit="onSubmit">
             <div>
               <UFormField :label="generalConfig.prefix.name" name="prefix">
                 <UInput
@@ -146,8 +146,10 @@ const schema = yup.object({
 type Schema = yup.InferType<typeof schema>;
 
 // Form data reactive state
-const state = reactive<Schema>({
-  prefix: generalConfig.prefix.placeholder,
+const state = reactive<NonNullable<Schema>>({
+  // Use the guild's existing prefix if available, otherwise start empty.
+  // The placeholder should remain a UI hint, not the submitted value.
+  prefix: _settings.value?.prefix ?? generalConfig.prefix.placeholder,
   language: {
     value: "",
     label: "",
@@ -156,16 +158,16 @@ const state = reactive<Schema>({
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  if (event.data.language) {
-    updateGeneralSetting("language", event.data.language);
+  if (event.data.language?.value) {
+    updateGeneralSetting("language", event.data.language.value);
   }
 
   if (event.data.prefix) {
     updateGeneralSetting("prefix", event.data.prefix);
   }
 
-  if (event.data.disableNaturalPrefix) {
-    updateGeneralSetting("disableNaturalPrefix", event.data.disableNaturalPrefix);
+  if ("disableNaturalPrefix" in event.data) {
+    updateGeneralSetting("disableNaturalPrefix", Boolean(event.data.disableNaturalPrefix ?? false));
   }
 
   toast.add({

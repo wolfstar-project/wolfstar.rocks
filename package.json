@@ -92,7 +92,8 @@
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
     "zod": "catalog:utils",
-    "@dotenvx/dotenvx": "catalog:node"
+    "@dotenvx/dotenvx": "catalog:node",
+    "uuid": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

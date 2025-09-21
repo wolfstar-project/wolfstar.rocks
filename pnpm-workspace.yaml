@@ -98,6 +98,7 @@ catalogs:
     "@vueuse/nuxt": ^13.9.0
     "@vueuse/router": ^13.9.0
     clsx: ^2.1.1
+    uuid: ^13.0.0
     yup: ^1.7.0
     zod: ^4.1.9
 allowedDeprecatedVersions:

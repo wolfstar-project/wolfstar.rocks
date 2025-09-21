@@ -1,4 +1,5 @@
 import type { Selfmod } from "#shared/types/ConfigurableData";
+import type { Ref } from "vue";
 
 import { isEqual } from "ohash/utils";
 
@@ -129,33 +130,53 @@ export default function removeNonAlphaNumeric(str: string) {
  */
 
 export async function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Promise<Ref<T>> {
-  const raw = await useStorage().getItem(key);
-  const data = ref(raw ? JSON.parse(raw as string) : initial);
+  const storage = useStorage();
+  const raw = await storage.getItem(key);
+
+  let parsedValue: T;
+  try {
+    parsedValue = raw ? JSON.parse(raw as string) : initial;
+  }
+  catch {
+    parsedValue = initial;
+  }
+
+  const data = ref(parsedValue) as Ref<T>;
+
   for (const key2 in initial) {
     if (data.value[key2] === void 0)
       data.value[key2] = initial[key2];
   }
+
   let updating = false;
   let wrote = "";
+
   watch(
     data,
     (value) => {
       if (updating)
         return;
       wrote = JSON.stringify(value);
-      useStorage().setItem(key, wrote);
+      storage.setItem(key, wrote);
     },
     { deep: true, flush: "post" },
   );
+
   if (listenToStorage) {
     useEventListener(window, "storage", (e) => {
       if (e.key === key && e.newValue && e.newValue !== wrote) {
         updating = true;
-        data.value = JSON.parse(e.newValue);
+        try {
+          data.value = JSON.parse(e.newValue);
+        }
+        catch {
+          data.value = initial;
+        }
         updating = false;
       }
     });
   }
+
   return data;
 }
 

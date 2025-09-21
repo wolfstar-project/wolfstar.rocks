@@ -39,6 +39,7 @@ COPY --chown=node:node nuxt.config.ts nuxt.config.ts
 COPY --chown=node:node prisma/ prisma/
 COPY --chown=node:node app/ app/
 COPY --chown=node:node server/ server/
+COPY --chown=node:node server/generated/ server/generated/
 COPY --chown=node:node shared/ shared/
 COPY --chown=node:node config/ config/
 COPY --chown=node:node modules/ modules/
@@ -59,7 +60,7 @@ ENV NODE_OPTIONS=${NODE_OPTIONS}
 RUN apk add --no-cache curl
 
 # Install dotenvx
-# RUN curl -sfS https://dotenvx.sh/install.sh | sh
+RUN curl -sfS https://dotenvx.sh/install.sh | sh
 
 # Create non-root user
 RUN addgroup -S nonroot && \
@@ -69,17 +70,13 @@ COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
 
-# Copy package.json and lockfile for production dependencies install
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/package.json package.json
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/pnpm-lock.yaml pnpm-lock.yaml
+# Copy environment files
+COPY --chown=nonroot:nonroot .env.example .env
 
 RUN pnpm install --frozen-lockfile --prod
-
-# Patch .prisma with the built files
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/node_modules/.prisma node_modules/.prisma
 
 RUN chown -R nonroot:nonroot /usr/src/app
 
 USER nonroot
 
-CMD ["node", ".output/server/index.mjs"]
+CMD ["dotenvx", "run", "--", "node", ".output/server/index.mjs"]

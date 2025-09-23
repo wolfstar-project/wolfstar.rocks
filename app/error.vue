@@ -8,7 +8,7 @@
     <NuxtLayout>
       <UMain>
         <UError
-          :error
+          :error="error"
         />
       </UMain>
     </NuxtLayout>
@@ -17,24 +17,19 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
-import { captureException } from "@sentry/nuxt";
 
 // Props definition
 const { error } = defineProps<{
   error: NuxtError;
 }>();
 
-captureException(error);
+logger.error(`[${error.statusCode}] ${error.statusMessage}`);
 
 // SEO and meta configuration
-defineOgImageComponent("Default", {
-  title: error.statusCode.toString(),
-  description: error.statusMessage,
-});
-
 useSeoMetadata({
   title: error.statusCode.toString(),
   description: error.statusMessage,
+  shouldSeoImage: true,
 });
 </script>
 

@@ -9,13 +9,14 @@ export function generateRuntimeConfig() {
     preset: process.env.NUXT_NITRO_PRESET,
     public: {
       clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
-      apiBase: process.env.NUXT_PUBLIC_API_BASE,
-      environment: process.env.NODE_ENV,
+      environment: process.env.NODE_ENV ?? process.env.SENTRY_ENVIRONMENT ?? "production",
       app: {
         version: process.env.NUXT_PUBLIC_APP_VERSION,
+        apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
       },
       sentry: {
         dsn: process.env.SENTRY_DSN,
+        tracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE ? Number(process.env.NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE) : 0.2,
       },
       scripts: {
         cloudflareWebAnalytics: {

@@ -195,9 +195,9 @@ export { default as Component } from './Component.vue';
 
 ### Authentication & Authorization
 - **Discord OAuth2** integration
-- **JWT sessions** with nuxt-auth-utils
+- **cookie-based (sealed/encrypted) sessions** with nuxt-auth-utils
 - **Role-based access control** via authorization resolver
-- **Rate limiting** with @tanstack/pacer
+- **Rate limiting** with @tanstack/pacer (official framework-agnostic rate-limiter usable in Node/Nitro)
 
 ### Error Handling
 ```typescript

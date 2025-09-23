@@ -67,7 +67,7 @@ export function useHeader() {
   }, {
     label: "GitHub",
     to: "https://github.com/wolfstar-project/wolfstar.rocks",
-    icon: "i-simple-icons-github",
+    icon: "lucide:github",
     target: "_blank",
   }]);
 

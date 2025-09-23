@@ -5,12 +5,13 @@
     }"
   >
     <nuxt-pwa-manifest />
-    <UContainer class="relative flex min-h-screen items-center justify-center overflow-hidden font-sans">
-      <UError
-        :error="error"
-      />
-    </UContainer>
-    <AppFooter />
+    <NuxtLayout>
+      <UMain>
+        <UError
+          :error
+        />
+      </UMain>
+    </NuxtLayout>
   </UApp>
 </template>
 

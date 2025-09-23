@@ -30,7 +30,7 @@ defineProps<{
 }>();
 
 const colorMode = useColorMode();
-const { user: authUser } = useAuth();
+const { user: authUser, clear } = useAuth();
 
 const isDefault = ref(false);
 
@@ -79,6 +79,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
 }], [{
   label: "Profile",
   icon: "i-lucide-user",
+  to: "/profile",
 }, {
   label: "Billing",
   icon: "i-lucide-credit-card",
@@ -114,12 +115,12 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     },
   }],
 }], [{
-  label: "GitHub repository",
-  icon: "i-simple-icons-github",
-  to: "https://github.com/nuxt-ui-templates/dashboard",
-  target: "_blank",
-}, {
   label: "Log out",
-  icon: "i-lucide-log-out",
+  icon: "lucide:log-out",
+  onSelect(e: Event) {
+    e.preventDefault();
+    clear();
+    navigateTo("/");
+  },
 }]]));
 </script>

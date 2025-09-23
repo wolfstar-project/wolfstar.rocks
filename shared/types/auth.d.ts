@@ -24,11 +24,7 @@ export {};
 declare module "h3" {
   interface H3EventContext {
     $authorization: {
-      resolveServerUser(): Promise<{
-        id: string;
-        name: string;
-        avatar: string | null;
-      } | null>;
+      resolveServerUser(): Promise<User | null>;
       resolveServerTokens(): Promise<RESTPostOAuth2AccessTokenResult | null>;
     };
   }

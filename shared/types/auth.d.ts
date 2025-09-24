@@ -2,7 +2,7 @@ import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 
 // auth.d.ts
 declare module "#auth-utils" {
-  interface User {
+  export interface User {
     id: string;
     name: string;
     globalName: string;
@@ -10,11 +10,11 @@ declare module "#auth-utils" {
     avatar: string | null;
   }
 
-  interface UserSession {
+  export interface UserSession {
     loggedAt: number;
   }
 
-  interface SecureSessionData {
+  export interface SecureSessionData {
     tokens: RESTPostOAuth2AccessTokenResult;
   }
 }
@@ -24,7 +24,7 @@ export {};
 declare module "h3" {
   interface H3EventContext {
     $authorization: {
-      resolveServerUser(): Promise<User | null>;
+      resolveServerUser(): Promise<import("#auth-utils").User | null>;
       resolveServerTokens(): Promise<RESTPostOAuth2AccessTokenResult | null>;
     };
   }

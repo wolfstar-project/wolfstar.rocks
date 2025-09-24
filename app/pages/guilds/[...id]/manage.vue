@@ -133,8 +133,9 @@ const items = computed(() =>
 // Form validation schema
 const schema = yup.object({
   prefix: yup.string()
-    .min(1, "Prefix must be at least 1 character")
+    .trim()
     .max(generalConfig.prefix.maxLength, `Prefix cannot be longer than ${generalConfig.prefix.maxLength} characters`)
+    .transform(v => (v === "" ? undefined : v))
     .optional(),
   language: yup.object({
     value: yup.string().optional(),

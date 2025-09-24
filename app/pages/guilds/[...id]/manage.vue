@@ -34,7 +34,6 @@
                   id="prefix"
                   v-model="state.prefix"
                   :placeholder="generalConfig.prefix.placeholder"
-                  :maxlength="generalConfig.prefix.maxLength"
                   color="primary"
                   class="w-full"
                 >

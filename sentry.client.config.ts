@@ -1,6 +1,6 @@
+import { useRuntimeConfig } from "#imports";
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
-import "nuxt";
 
 const { public: { sentry, environment } } = useRuntimeConfig();
 

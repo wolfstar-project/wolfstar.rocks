@@ -1,8 +1,12 @@
 {
-  "css.lint.unknownAtRules": "ignore",
   // Disable the default formatter, use eslint instead
   "prettier.enable": false,
   "editor.formatOnSave": false,
+
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
 
   // Auto fix
   "editor.codeActionsOnSave": {
@@ -27,9 +31,7 @@
   // Enable eslint for all supported languages
   "eslint.validate": [
     "javascript",
-    "javascriptreact",
     "typescript",
-    "typescriptreact",
     "vue",
     "html",
     "markdown",
@@ -37,11 +39,6 @@
     "jsonc",
     "yaml",
     "toml",
-    "xml",
-    "gql",
-    "graphql",
-    "astro",
-    "svelte",
     "css",
     "less",
     "scss",
@@ -52,18 +49,6 @@
     "*.css": "tailwindcss"
   },
   "files.autoSave": "onFocusChange", // optional but recommended,
-  "github.copilot.chat.codeGeneration.instructions": [
-    {
-      "file": "./.vscode/daisyui.md"
-    },
-    {
-      "file": "./.vscode/shadcn-vue.md"
-    },
-    {
-      "file": "./.vscode/nuxt.md"
-    }
-  ],
   "tailwindCSS.experimental.classRegex": [["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]],
-  "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
   "typescript.tsdk": "node_modules\\typescript\\lib"
 }

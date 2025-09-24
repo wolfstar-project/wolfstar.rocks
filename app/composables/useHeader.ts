@@ -5,7 +5,7 @@ export function useHeader() {
   const Apps = {
     wolfstar: { name: "WolfStar", invite: Invites.WolfStar, landing: "/" },
     staryl: { name: "Staryl", invite: Invites.Staryl, landing: "/staryl" },
-  };
+  } as const satisfies Record<"wolfstar" | "staryl", { name: string; invite: string; landing: string }>;
 
   const currentApp = computed(() => {
     const appKey = unref(appName);
@@ -17,9 +17,11 @@ export function useHeader() {
     children: [
       {
         label: "Moderation Tools",
+        description: "Tools to help you moderate your server",
       },
       {
         label: "Advanced Logging",
+        description: "Track and log events in your server",
       },
     ],
   }, {
@@ -36,11 +38,13 @@ export function useHeader() {
         icon: "i-lucide-twitch",
       },
     ],
-  }, {
-    label: "Invite App",
-    to: currentApp.value.invite,
-    icon: "ph:plus-circle-duotone",
-  }]);
+  }, ...(currentApp.value.invite
+    ? [{
+        label: "Invite App",
+        to: currentApp.value.invite,
+        icon: "ph:plus-circle-duotone",
+      }]
+    : [])]);
 
   const mobileLinks = computed(() => [{
     label: "Features",
@@ -60,9 +64,8 @@ export function useHeader() {
       to: "/",
     }, {
       label: "Staryl",
-      icon: "ph:books-duotone",
+      icon: "i-lucide-twitch",
       to: "/staryl",
-      target: "_blank",
     }],
   }, {
     label: "GitHub",

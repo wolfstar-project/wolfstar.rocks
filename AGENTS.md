@@ -60,7 +60,6 @@ This document outlines the established project norms, conventions, and best prac
 wolfstar.rocks/
 ├── app/                    # Nuxt application code
 │   ├── components/         # Vue components
-│   │   ├── ui/            # Reusable UI components
 │   │   └── *.vue          # Feature-specific components
 │   ├── composables/       # Vue composables
 │   ├── layouts/           # Nuxt layouts

@@ -1,5 +1,6 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import type { ModuleOptions } from "nuxt-security";
+import type { NuxtPage } from "nuxt/schema";
 import { isDevelopment } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
@@ -265,6 +266,25 @@ export default defineNuxtConfig({
     plugins: {
       "postcss-nested": {},
       "postcss-nesting": {},
+    },
+  },
+
+  hooks: {
+    "pages:extend": function (pages) {
+      const pagesToRemove: NuxtPage[] = [];
+      pages.forEach((page) => {
+        if (page.path.includes("component") || page.path.includes("/api")) {
+          pagesToRemove.push(page);
+        }
+      });
+
+      pagesToRemove.forEach((page) => {
+        pages.splice(pages.indexOf(page), 1);
+      });
+      // Uncomment to show current Routes
+      // console.log(`\nCurrent Routes:`)
+      // console.log(pages)
+      // console.log(`\n`)
     },
   },
 

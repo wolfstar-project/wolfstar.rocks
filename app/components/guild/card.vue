@@ -68,14 +68,14 @@
             title="Total members"
           >
             <UIcon name="heroicons:user-group" class="h-3 w-3 text-base-content/70" />
-            <span>{{ guild.approximateMemberCount ? formatNumber(guild.approximateMemberCount) : 'N/A' }}</span>
+            <span>{{ !isNullOrUndefinedOrZero(guild.approximateMemberCount) ? formatNumber(guild.approximateMemberCount) : 'N/A' }}</span>
           </span>
           <span
             class="flex items-center space-x-1"
             title="Members online"
           >
             <UIcon name="heroicons:signal" class="h-3 w-3 text-success" />
-            <span>{{ guild.approximatePresenceCount ? formatNumber(guild.approximatePresenceCount) : 'N/A' }}</span>
+            <span>{{ !isNullOrUndefinedOrZero(guild.approximatePresenceCount) ? formatNumber(guild.approximatePresenceCount) : 'N/A' }}</span>
           </span>
         </div>
       </div>
@@ -109,7 +109,7 @@
 <script setup lang="ts">
 import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
-import { card } from "#build/ui";
+import { isNullOrUndefinedOrZero } from "@sapphire/utilities";
 
 interface EnhancedGuildCardProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
@@ -121,7 +121,7 @@ interface EnhancedGuildCardProps {
   viewMode?: "card" | "grid";
 }
 
-const { guild, viewMode = card } = defineProps<EnhancedGuildCardProps>();
+const { guild, viewMode = "card" } = defineProps<EnhancedGuildCardProps>();
 
 const manageGuildURL = computed(() => {
   if (!guild.manageable) {

@@ -1,3 +1,5 @@
+import { useLogger } from "#shared/utils/logger";
+
 export default defineEventHandler(async (event) => {
   const start = performance.now();
 

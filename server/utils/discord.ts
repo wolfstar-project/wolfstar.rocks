@@ -19,8 +19,10 @@ import { PermissionsBits } from "~/utils/bits";
 const logger = useLogger("@wolfstar/api");
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-  const permissionsValue = (member as unknown as { permissions?: string }).permissions;
-  const memberRolePermissions = BigInt(permissionsValue ?? "0");
+  const permissionsValue = "permissions" in member && typeof member.permissions === "string"
+    ? member.permissions
+    : "0";
+  const memberRolePermissions = BigInt(permissionsValue);
   return roles.length === 0
     ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
     : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles);
@@ -59,7 +61,7 @@ export async function transformGuild(userId: string, data: RESTAPIPartialCurrent
     afkChannelId: null,
     afkTimeout: 60,
     applicationId: null,
-    approximateMemberCount: null,
+    approximateMemberCount: 0,
     approximatePresenceCount: null,
     available: true,
     banner: null,

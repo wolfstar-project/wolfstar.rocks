@@ -314,6 +314,7 @@ export default defineNuxtConfig({
         },
       },
     },
+    sourceMapsUploadOptions: generateRuntimeConfig().sentry,
   },
 
   seo: {

@@ -17,7 +17,6 @@
   "type": "module",
   "scripts": {
     "build": "nuxi build",
-    "deploy": "pnpx nuxthub deploy",
     "dev": "nuxi dev",
     "dev:pwa": "cross-env VITE_PLUGIN_PWA=true nuxi dev",
     "format": "prettier --write .",
@@ -40,6 +39,8 @@
     "prisma:generate": "prisma generate",
     "prisma:generate:watch": "prisma generate --watch",
     "serve": "node .output/server/index.mjs",
+    "preview:cf": "wrangler dev --x-remote-bindings",
+    "deploy": "wrangler deploy",
     "typecheck": "stale-dep && nuxt typecheck"
   },
   "lint-staged": {

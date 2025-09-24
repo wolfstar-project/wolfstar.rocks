@@ -94,7 +94,8 @@
     "yup": "catalog:utils",
     "zod": "catalog:utils",
     "@dotenvx/dotenvx": "catalog:node",
-    "uuid": "catalog:utils"
+    "uuid": "catalog:utils",
+    "require-in-the-middle": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

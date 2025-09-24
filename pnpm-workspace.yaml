@@ -73,6 +73,7 @@ catalogs:
     pinia: ^3.0.3
     prisma: ~6.16.2
     prisma-json-types-generator: ^3.6.1
+    require-in-the-middle: ^8.0.0
     stale-dep: ^0.8.3
     tailwind-variants: ^3.1.1
     utility-types: ^3.11.0

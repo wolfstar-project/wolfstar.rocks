@@ -1,10 +1,12 @@
 {
   "recommendations": [
+    "Vue.volar",
     "bradlc.vscode-tailwindcss",
     "dbaeumer.vscode-eslint",
+    "vitest.explorer",
+    "antfu.iconify",
+    "Cyanhall.close-git-unmodified",
     "antfu.goto-alias",
-    "Nuxtr.nuxtr-vscode",
-    "Vue.volar",
     "mikestead.dotenv",
     "usernamehw.errorlens",
     "formulahendry.auto-rename-tag"

@@ -47,6 +47,7 @@
     "*": "eslint --fix ."
   },
   "dependencies": {
+    "@dotenvx/dotenvx": "catalog:node",
     "@iconify-json/heroicons": "catalog:icons",
     "@iconify-json/ic": "catalog:icons",
     "@iconify-json/lucide": "catalog:icons",
@@ -67,7 +68,6 @@
     "@vueuse/motion": "catalog:utils",
     "@vueuse/nuxt": "catalog:utils",
     "@vueuse/router": "catalog:utils",
-    "clsx": "catalog:utils",
     "consola": "catalog:prod",
     "cross-env": "catalog:cli",
     "fuse.js": "catalog:prod",
@@ -83,6 +83,7 @@
     "postcss-nesting": "catalog:style",
     "prisma": "catalog:prod",
     "prisma-json-types-generator": "catalog:prod",
+    "require-in-the-middle": "catalog:prod",
     "simple-git": "catalog:dev",
     "stale-dep": "catalog:prod",
     "tailwind-merge": "catalog:style",
@@ -90,12 +91,10 @@
     "taze": "catalog:cli",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
+    "uuid": "catalog:utils",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
-    "zod": "catalog:utils",
-    "@dotenvx/dotenvx": "catalog:node",
-    "uuid": "catalog:utils",
-    "require-in-the-middle": "catalog:prod"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -132,7 +131,7 @@
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev"
   },
-  "packageManager": "pnpm@10.16.1",
+  "packageManager": "pnpm@10.17.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

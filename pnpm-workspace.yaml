@@ -61,6 +61,7 @@ catalogs:
     "@prisma/client": ^6.16.2
     "@tanstack/pacer": ^0.15.3
     consola: ^3.4.2
+    cz-conventional-changelog: ^3.3.0
     fuse.js: ^7.1.0
     import-in-the-middle: ^1.14.4
     motion-v: ^1.7.1

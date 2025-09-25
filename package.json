@@ -94,7 +94,8 @@
     "uuid": "catalog:utils",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "cz-conventional-changelog": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -130,6 +131,11 @@
     "tailwindcss": "catalog:style",
     "typescript": "catalog:dev",
     "vue-tsc": "catalog:dev"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "packageManager": "pnpm@10.17.1",
   "engines": {

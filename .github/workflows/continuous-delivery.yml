@@ -8,7 +8,8 @@ on:
     paths:
       - "app/**/*"
       - "server/**/*"
-      - "lib/**/*"
+      - "config/*"
+      - "modules/*"
       - nuxt.config.ts # File config Nuxt
       - Dockerfile
       - .github/workflows/continuous-delivery.yml

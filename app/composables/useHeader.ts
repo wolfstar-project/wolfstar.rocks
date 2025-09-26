@@ -72,6 +72,7 @@ export function useHeader() {
     to: "https://github.com/wolfstar-project/wolfstar.rocks",
     icon: "lucide:github",
     target: "_blank",
+    rel: "noopener noreferrer",
   }]);
 
   return {

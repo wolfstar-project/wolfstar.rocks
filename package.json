@@ -3,7 +3,7 @@
   "name": "@wolfstar-project/dashboard",
   "version": "2.0.0",
   "private": true,
-  "description": "Wolfstar Dashboard",
+  "description": "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
   "homepage": "https://wolfstar.rocks",
   "bugs": {
     "url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"

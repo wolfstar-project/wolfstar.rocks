@@ -11,7 +11,6 @@ export const pwa: ModuleOptions = {
   manifest: {
     background_color: "#050505",
     categories: ["discord", "bot", "wolfstar", "moderation", "automation", "cyborg", "logging"],
-    description: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
     dir: "ltr",
     display: "minimal-ui",
     lang: "en_US",

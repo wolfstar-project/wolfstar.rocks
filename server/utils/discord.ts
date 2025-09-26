@@ -29,6 +29,9 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 }
 
 async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boolean> {
+  if (!member.user || !member.user.id) {
+    return false;
+  }
   if (guild.owner_id === member.user.id)
     return true;
 
@@ -97,7 +100,7 @@ export async function transformGuild(userId: string, data: RESTAPIPartialCurrent
     ...serialized,
     permissions: Number(data.permissions),
     manageable: await getManageable(userId, data, guild),
-    wolfstarIsIn: typeof guild !== "undefined",
+    wolfstarIsIn: guild !== undefined,
   };
 }
 
@@ -128,8 +131,7 @@ export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: st
   });
   return guild;
 }, {
-  getKey: (_event, guildId) => `${guildId}:${Date.now()}`,
-  swr: false,
+  getKey: (_event, guildId) => `guild:${guildId}`,
   maxAge: seconds(5),
 });
 
@@ -150,7 +152,6 @@ export const getMember = defineCachedFunction(async (_event: H3Event, guild: API
   });
   return member;
 }, {
-  getKey: (_event, guild, user) => `${guild.id}-${user.id}:${Date.now()}`,
-  swr: false,
+  getKey: (_event, guild, user) => `guild:${guild.id}member:${user.id}`,
   maxAge: seconds(5),
 });

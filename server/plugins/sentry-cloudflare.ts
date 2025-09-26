@@ -2,7 +2,7 @@ import { sentryCloudflareNitroPlugin } from "@sentry/nuxt/module/plugins";
 import { runtimeConfig } from "~~/server/utils/runtimeConfig";
 
 export default defineNitroPlugin(
-  ["cloudflare-pages"].includes(runtimeConfig.preset)
+  ["cloudflare_pages", "cloudflare_module"].includes(runtimeConfig.preset)
     ? sentryCloudflareNitroPlugin((nitroApp) => ({
         dsn: runtimeConfig.public.sentry.dsn,
         // Set tracesSampleRate to 1.0 to capture 100%

@@ -131,7 +131,7 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
     swr: false,
   },
 ): EventHandler<T, D> =>
-  defineCachedEventHandler<T>(async (event) => {
+  cachedEventHandler<T>(async (event) => {
     let user: UserSessionRequired | null = null;
     try {
       if (options.auth) {

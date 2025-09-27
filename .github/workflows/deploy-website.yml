@@ -30,4 +30,4 @@ jobs:
         uses: nuxt-hub/action@v2
         with:
           project-key: wolfstar-rocks-24js
-          build-command: pnpm prisma:generate && pnpm build
+          build-command: pnpm build

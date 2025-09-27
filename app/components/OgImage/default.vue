@@ -142,7 +142,7 @@ const HexRegex = /^#(?:[0-9a-f]{3}){1,2}$/i;
 // WolfStar brand colors - Black and Red
 const brandColors = computed(() => {
   return {
-    primary: "#000000",
+    primary: BrandingColors.Primary,
     accent: "#FF0000",
     iconFill: "url(#paint1_diamond_563_6)",
   };
@@ -203,7 +203,7 @@ const themeRgb = computed(() => {
 const gradientColors = computed(() => {
   return {
     primary: brandColors.value.accent, // Red
-    secondary: "#FF4444", // Light red
+    secondary: BrandingColors.Secondary, // Light red
     tertiary: "#990000", // Dark red
   };
 });

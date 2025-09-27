@@ -9,6 +9,14 @@ export const colors = ["primary", "secondary", "success", "error", "info", "warn
 
 export type UIColors = (typeof colors)[number];
 
+export enum BrandingColors {
+  Primary = "#050505",
+  Secondary = "#fd171b",
+
+  // extra color
+  Tertiary = "#FF4444",
+}
+
 export enum Colors {
   White = "#e7e7e8",
   Amber = "#ffc107",

@@ -1,5 +1,4 @@
 import type { Channels, Events, Moderation, Roles } from "#shared/types/ConfigurableData";
-import type { GuildData } from "~~/server/database";
 import {
   ConfigurableIgnoreChannels,
   ConfigurableLoggingChannels,
@@ -9,25 +8,10 @@ import {
   ConfigurableRemoveInitialRole,
   ConfigurableRoles,
 } from "#shared/types/SettingsDataEntries";
-import { storeToRefs } from "pinia";
-
-function useGuildSettings() {
-  const guildStore = useGuildStore();
-  const { mergedSettings, hasChanges } = storeToRefs(guildStore);
-  const { setChanges, resetChange, resetAllChanges } = guildStore;
-
-  return {
-    settings: readonly(mergedSettings) as Readonly<Ref<GuildData>>,
-    resetChanges: resetChange,
-    resetAllChanges,
-    hasChanges: readonly(hasChanges),
-    changes: setChanges,
-  };
-}
 
 // Composable for general settings
 export function useGuildGeneral() {
-  const { settings, changes } = useGuildSettings();
+  const { settings, setChanges } = useGuildSettingsStore();
 
   const generalConfig = {
     prefix: {
@@ -50,7 +34,7 @@ export function useGuildGeneral() {
   };
 
   const updateGeneralSetting = (key: string, value: any) => {
-    changes({ [key]: value });
+    setChanges({ [key]: value });
   };
 
   return {
@@ -62,7 +46,7 @@ export function useGuildGeneral() {
 
 // Composable for roles settings using SettingsDataEntries
 export function useGuildRoles() {
-  const { settings, changes } = useGuildSettings();
+  const { settings, setChanges } = useGuildSettingsStore();
 
   const roleConfig = {
     removeInitial: ConfigurableRemoveInitialRole,
@@ -70,17 +54,11 @@ export function useGuildRoles() {
   };
 
   const updateRoleSetting = (key: string, value: any) => {
-    changes({ [key]: value });
+    setChanges({ [key]: value });
   };
 
   const resetRole = (key: string) => {
-    changes({ [key]: null });
-  };
-
-  const getRoleSelectComponent = (key: string): "SelectRole" | "SelectRoles" => {
-    // Multiple selection roles
-    const multipleRoles = ["rolesPublic", "rolesAdmin", "rolesModerator"];
-    return multipleRoles.includes(key) ? "SelectRoles" : "SelectRole";
+    setChanges({ [key]: null });
   };
 
   const getRoleProps = (role: Roles.Role) => {
@@ -96,14 +74,13 @@ export function useGuildRoles() {
     settings,
     updateRoleSetting,
     resetRole,
-    getRoleSelectComponent,
     getRoleProps,
   };
 }
 
 // Composable for moderation settings using SettingsDataEntries
 export function useGuildModeration() {
-  const { settings, changes } = useGuildSettings();
+  const { settings, setChanges } = useGuildSettingsStore();
 
   const moderationConfig = {
     messages: ConfigurableModerationKeys,
@@ -111,7 +88,7 @@ export function useGuildModeration() {
   };
 
   const updateModerationSetting = (key: string, value: any) => {
-    changes({ [key]: value });
+    setChanges({ [key]: value });
   };
 
   const getModerationProps = (message: Moderation.Message) => {
@@ -139,7 +116,7 @@ export function useGuildModeration() {
 
 // Composable for events settings using SettingsDataEntries
 export function useGuildEvents() {
-  const { settings, changes } = useGuildSettings();
+  const { settings, setChanges } = useGuildSettingsStore();
 
   const eventsConfig = {
     moderation: ConfigurableModerationEvents,
@@ -147,7 +124,11 @@ export function useGuildEvents() {
   };
 
   const updateEventSetting = (key: string, value: any) => {
-    changes({ [key]: value });
+    setChanges({ [key]: value });
+  };
+
+  const resetEvent = (key: string) => {
+    setChanges({ [key]: null });
   };
 
   const getEventProps = (event: Events.Event) => {
@@ -161,13 +142,14 @@ export function useGuildEvents() {
     eventsConfig,
     settings,
     updateEventSetting,
+    resetEvent,
     getEventProps,
   };
 }
 
 // Composable for channels settings using SettingsDataEntries
 export function useGuildChannels() {
-  const { settings, changes } = useGuildSettings();
+  const { settings, setChanges } = useGuildSettingsStore();
 
   const channelsConfig = {
     logging: ConfigurableLoggingChannels,
@@ -175,11 +157,11 @@ export function useGuildChannels() {
   };
 
   const updateChannelSetting = (key: string, value: any) => {
-    changes({ [key]: value });
+    setChanges({ [key]: value });
   };
 
   const resetChannel = (key: string) => {
-    changes({ [key]: null });
+    setChanges({ [key]: null });
   };
 
   const getChannelProps = (channel: Channels.Channel) => {

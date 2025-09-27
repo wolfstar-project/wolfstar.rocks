@@ -1,7 +1,7 @@
 <template>
-  <UDashboardPanel id="home">
+  <UDashboardPanel id="guild-settings">
     <template #header>
-      <UDashboardNavbar title="Home" :ui="{ right: 'gap-3' }">
+      <UDashboardNavbar title="Guild Settings" :ui="{ right: 'gap-3' }">
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
@@ -114,8 +114,8 @@ const { isNotificationsSlideoverOpen } = useDashboardLayout();
 
 // Use composables and stores
 
-const commands = useState<FlattenedCommand[]>(() => []);
-const languages = useState<string[]>(() => []);
+const commands = useState<FlattenedCommand[]>("guildCommands", () => []);
+const languages = useState<string[]>("guildLanguages", () => []);
 
 const toast = useToast();
 // Use the new general composable
@@ -190,7 +190,7 @@ async function onError(event: FormErrorEvent) {
 // Language mapping function
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
   const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
-    "ckb-IR": ["Kurdiya Navîn (Iranran)", "Kurdish"],
+    "ckb-IR": ["Kurdîya Navîn (Iran)", "Kurdish"],
     "de-DE": ["Deutsch", "German"],
     "en-GB": ["British English", "English, United Kingdom"],
     "en-US": ["American English", "English, United States"],
@@ -201,11 +201,11 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
     "hi-Latn-IN": ["Hinglish", "Hindi (Latin Alphabet)"],
     "it-IT": ["Italiano", "Italian"],
     "ja-JP": ["日本語", "Japanese"],
-    "nb-NO": ["Bokmål", "Norwegian Bokmal"],
+    "nb-NO": ["Bokmål", "Norwegian Bokmål"],
     "nl-NL": ["Nederlands", "Dutch"],
     "pt-BR": ["Português Brasileiro", "Portuguese, Brazilian"],
     "ro-RO": ["Română", "Romanian"],
-    "ru-RU": ["Pусский", "Russian"],
+    "ru-RU": ["Русский", "Russian"],
     "sl-SI": ["Slovenščina", "Slovenian"],
     "tr-TR": ["Türkçe", "Turkish"],
   };

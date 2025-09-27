@@ -28,7 +28,8 @@
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
-    <div v-if="readyToRender">
+    <slot v-if="readyToRender"></slot>
+    <div v-else>
       <UAlert
         v-if="hasError"
         color="error"
@@ -52,7 +53,20 @@
         </template>
       </UAlert>
     </div>
-    <slot></slot>
+
+    <div v-if="hasChanges" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
+      <UButton
+        color="primary"
+        icon="heroicons:check"
+        @click="submitChanges"
+      >
+        Submit Changes
+      </UButton>
+
+      <UButton color="error" icon="heroicons:trash" @click="resetAllChanges">
+        Reset Changes
+      </UButton>
+    </div>
   </UDashboardGroup>
 </template>
 
@@ -65,10 +79,14 @@ import { isNullOrUndefined } from "@sapphire/utilities";
 const guildId = useRouteParams("id", null, { transform: String });
 const loading = useState("loading", () => false);
 const guildData = useGuildData();
-const guildStore = useGuildStore();
+const guildStore = useGuildSettingsStore();
 const toast = useToast();
 const hasError = ref(false);
 const open = ref(false);
+
+useSeoMetadata({
+  title: `${guildData.value?.name ? `${guildData.value.name} - ` : ""} Guild`,
+});
 
 const items = computed<NavigationMenuItem[][]>(() => [[{
   label: "Home",
@@ -146,7 +164,7 @@ function isValidGuildId(id: string | undefined | null): boolean {
   const snowflakeRegex = /^\d{17,19}$/;
   return snowflakeRegex.test(id);
 }
-const _submitChanges = async () => {
+const submitChanges = async () => {
   const { error } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
     method: "PATCH",
     body: {
@@ -175,33 +193,21 @@ const _submitChanges = async () => {
   }
 };
 
-const { hasChanges: _, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
+const { hasChanges, resetAllChanges, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
 
 onMounted(async () => {
   loading.value = true;
   try {
-    const { data } = useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId}`, {
+    const { data, error } = useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId}`, {
       lazy: true,
     });
     if (data.value)
       guildData.value = data.value;
-    const { data: settingsData, error: getSettingsError } = await useFetch<GuildData>(`/api/guilds/${guildId.value}/settings`, {
-      method: "GET",
-    });
 
-    if (getSettingsError?.value) {
-      toast.add({ title: "Error", description: "Failed to reload settings" });
+    if (error.value) {
+      hasError.value = true;
+      toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
     }
-    else if (settingsData.value) {
-      guildStore.setSettings(settingsData.value);
-      toast.add({
-        title: "Success",
-        description: "Changes saved successfully",
-      });
-    }
-  }
-  catch {
-    hasError.value = true;
   }
   finally {
     loading.value = false;

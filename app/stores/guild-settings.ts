@@ -9,7 +9,7 @@ const mergeOptions: DeepMergeOptions = {
   arrayMerge: (_, sourceArray) => sourceArray,
 };
 
-export const useGuildStore = defineStore("guild", {
+export const useGuildSettingsStore = defineStore("guild", {
   state: () => ({
     settings: null as GuildData | null,
     changes: null as NullablePartialGuildData | null,

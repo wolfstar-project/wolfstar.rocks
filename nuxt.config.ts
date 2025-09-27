@@ -1,5 +1,4 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
-import type { ModuleOptions } from "nuxt-security";
 import type { NuxtPage } from "nuxt/schema";
 import { isDevelopment } from "std-env";
 import { pwa } from "./config/pwa";
@@ -60,7 +59,6 @@ export default defineNuxtConfig({
         cloudflareWebAnalytics: true,
       },
     },
-    // @ts-expect-error - bug
     security: {
       headers: {
         crossOriginEmbedderPolicy: false,
@@ -86,7 +84,7 @@ export default defineNuxtConfig({
         },
       },
       rateLimiter: false,
-    } satisfies Partial<ModuleOptions>,
+    },
     sentry: {
       unstable_sentryBundlerPluginOptions: {
         telemetry: false,

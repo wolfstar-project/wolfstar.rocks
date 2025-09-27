@@ -1,0 +1,62 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "github>sapphiredev/.github:sapphire-renovate"
+  ],
+  "npm": {
+    "packageRules": [
+      {
+        "matchPackagePatterns": ["typescript"],
+        "enabled": false
+      },
+      {
+        "matchPackageNames": ["prettier", "prettier-*"],
+        "groupName": "prettier"
+      },
+      {
+        "matchPackageNames": [
+          "nuxt",
+          "vite",
+          "nuxt-**",
+          "@nuxt{/,}**",
+          "@nuxtjs{/,}**",
+          "pinia",
+          "@pinia/nuxt",
+          "typescript",
+          "yup",
+          "ufo"
+        ],
+        "groupName": "nuxt"
+      },
+      {
+        "matchPackageNames": ["prisma", "@prisma{/,}**"],
+        "groupName": "prisma"
+      },
+      {
+        "matchPackageNames": ["@types{/,}**"],
+        "groupName": "types"
+      },
+      {
+        "matchManagers": ["docker-compose", "dockerfile"],
+        "groupName": "docker"
+      },
+      {
+        "matchManagers": ["devcontainer"],
+        "groupName": "devcontainer"
+      },
+      {
+        "matchManagers": ["github-actions"],
+        "groupName": "github-actions"
+      },
+      {
+        "matchPackageNames": ["**eslint**"],
+        "groupName": "eslint"
+      }
+    ]
+  },
+  "github-actions": { "enabled": true },
+  "postUpdateOptions": [
+    // Always dedupe the lock file after updating dependencies: https://docs.renovatebot.com/configuration-options/#postupdateoptions
+    "pnpmDedupe"
+  ]
+}

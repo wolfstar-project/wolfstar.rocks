@@ -193,7 +193,8 @@ const submitChanges = async () => {
   }
 };
 
-const { hasChanges, resetAllChanges, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
+const { hasChanges, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
+const { resetAllChanges } = guildStore;
 
 onMounted(async () => {
   loading.value = true;

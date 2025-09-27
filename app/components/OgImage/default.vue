@@ -63,7 +63,7 @@
             style="display: block; text-overflow: ellipsis;"
             :style="{ lineClamp: description ? 2 : 3 }"
           >
-            {{ title }}
+            {{ title?.slice(0, 60) }}
           </h1>
 
           <!-- Description -->
@@ -133,13 +133,7 @@ export interface OGImageProps {
  */
 import { computed, defineComponent, h, resolveComponent } from "vue";
 
-const { icon, theme, title: titleProp, description } = withDefaults(defineProps<OGImageProps>(), {
-  headline: "",
-  theme: "",
-  colorMode: "dark",
-  useCustomBackground: true,
-  icon: "custom:wolfstar",
-});
+const { theme = "", title = "", description, headline = "", colorMode = "dark", useCustomBackground = true, icon = "custom:wolfstar" } = defineProps<OGImageProps>();
 
 const hasIcon = computed(() => typeof icon === "string" && icon.trim().length > 0);
 
@@ -197,12 +191,12 @@ const themeHex = computed(() => {
 });
 
 const themeRgb = computed(() => {
-  // we want to convert it so it's just `<red>, <green>, <blue>` (255, 255, 255)
-  return themeHex.value
-    .replace("#", "")
-    .match(/.{1,2}/g)
-    ?.map(v => Number.parseInt(v, 16))
-    .join(", ");
+  const hex = themeHex.value.replace("#", "");
+  const parts = hex.match(/.{1,2}/g);
+  if (!parts)
+    return "255, 0, 0";
+  const [r, g, b] = parts.slice(0, 3).map(v => Number.parseInt(v, 16));
+  return `${r}, ${g}, ${b}`;
 });
 
 // Enhanced gradient colors using brand palette
@@ -228,7 +222,4 @@ const IconComponent = computed(() => {
     });
   }
 });
-
-// Truncate title for better display
-const title = computed(() => titleProp.slice(0, 60));
 </script>

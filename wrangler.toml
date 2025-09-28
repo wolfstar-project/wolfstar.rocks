@@ -23,3 +23,11 @@ binding = "ASSETS"
 [[kv_namespaces]]
 binding = "OG_IMAGE_CACHE"
 id = "594b9f219bc94c14b55a0fd7d90dc691"
+
+[env.staging.route]
+pattern = "staging.wolfstar.rocks"
+custom_domain = true
+
+[env.beta.route]
+pattern = "beta.wolfstar.rocks"
+custom_domain = true

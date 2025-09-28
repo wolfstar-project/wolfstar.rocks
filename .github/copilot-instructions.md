@@ -1,6 +1,6 @@
 # WolfStar.rocks Development Instructions
 
-WolfStar.rocks is a modern Nuxt 4 full-stack web application serving as the dashboard for WolfStar and Staryl Discord bots. It's built with Vue 3, TypeScript, Prisma, PostgreSQL, and Redis, featuring Discord OAuth2 authentication and comprehensive guild management.
+WolfStar.rocks is a modern Nuxt 4 full-stack web application serving as the dashboard for WolfStar and Staryl Discord bots. It's built with Vue 3, TypeScript, Prisma and PostgreSQL, featuring Discord OAuth2 authentication and comprehensive guild management.
 
 **Always reference these instructions first and fallback to search or bash commands only when you encounter unexpected information that does not match the info here.**
 

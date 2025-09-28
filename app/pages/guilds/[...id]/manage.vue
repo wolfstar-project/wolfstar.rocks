@@ -119,7 +119,7 @@ const languages = useState<string[]>("guildLanguages", () => []);
 
 const toast = useToast();
 // Use the new general composable
-const { generalConfig, settings: _settings, updateGeneralSetting } = useGuildGeneral();
+const { generalConfig, settings, updateGeneralSetting } = useGuildGeneral();
 
 // Computed language options
 const items = computed(() =>
@@ -149,7 +149,7 @@ type Schema = yup.InferType<typeof schema>;
 const state = reactive<NonNullable<Schema>>({
   // Use the guild's existing prefix if available, otherwise start empty.
   // The placeholder should remain a UI hint, not the submitted value.
-  prefix: _settings.value?.prefix ?? generalConfig.prefix.placeholder,
+  prefix: settings?.prefix ?? generalConfig.prefix.placeholder,
   language: {
     value: "",
     label: "",

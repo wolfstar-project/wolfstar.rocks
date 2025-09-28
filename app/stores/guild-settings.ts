@@ -10,30 +10,57 @@ const mergeOptions: DeepMergeOptions = {
 };
 
 export const useGuildSettingsStore = defineStore("guild", {
-  state: () => ({
-    settings: null as GuildData | null,
-    changes: null as NullablePartialGuildData | null,
-  }),
+  state: (): State => {
+    const guild = useGuildData();
+    const { data } = useFetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
+      method: "GET",
+    });
+
+    if (data.value) {
+      return {
+        settings: data.value,
+        changes: null,
+      };
+    }
+
+    return {
+      settings: null,
+      changes: null,
+    };
+  },
   getters: {
     mergedSettings(state): GuildData {
-      return deepMerge(state.settings ?? {}, state.changes ?? {}, mergeOptions);
+      state.changes ??= {};
+      return deepMerge(state.settings!, state.changes!, mergeOptions) as GuildData;
     },
     hasChanges(state): boolean {
       return !!state.changes && Object.keys(state.changes).length > 0;
     },
   },
   actions: {
-    setSettings(settings: GuildData) {
-      this.settings = settings;
+    setSettings() {
       this.changes = null;
     },
-    setChanges(newChanges: NullablePartialGuildData) {
+    async setChanges(newChanges: NullablePartialGuildData) {
       if (!newChanges) {
         this.changes = null;
         return;
       }
 
+      const guild = useGuildData();
+
       this.changes = deepMerge(this.changes ?? {}, newChanges, mergeOptions);
+
+      const { error, status } = await useFetch(`/api/guilds/${guild.value.id}/settings`, {
+        method: "PATCH",
+        body: {
+          data: this.changes,
+        },
+      });
+
+      if (status.value === "error") {
+        return error;
+      }
     },
     resetChange(key: GuildDataKey) {
       if (this.changes && key in this.changes) {
@@ -62,3 +89,8 @@ export const useGuildSettingsStore = defineStore("guild", {
     },
   },
 });
+
+interface State {
+  settings: GuildData | null;
+  changes: NullablePartialGuildData | null;
+}

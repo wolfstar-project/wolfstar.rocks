@@ -1,3 +1,4 @@
+import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
 
 const _useGuildData = () => {

@@ -63,7 +63,7 @@
         Submit Changes
       </UButton>
 
-      <UButton color="error" icon="heroicons:trash" @click="resetAllChanges">
+      <UButton color="error" icon="heroicons:trash" @click="guildStore.resetAllChanges">
         Reset Changes
       </UButton>
     </div>
@@ -72,7 +72,6 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
-import type { GuildData } from "~~/server/database";
 import type { ValuesType } from "~/types/utils";
 import { isNullOrUndefined } from "@sapphire/utilities";
 
@@ -83,6 +82,7 @@ const guildStore = useGuildSettingsStore();
 const toast = useToast();
 const hasError = ref(false);
 const open = ref(false);
+const { hasChanges, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
 
 useSeoMetadata({
   title: `${guildData.value?.name ? `${guildData.value.name} - ` : ""} Guild`,
@@ -165,36 +165,23 @@ function isValidGuildId(id: string | undefined | null): boolean {
   return snowflakeRegex.test(id);
 }
 const submitChanges = async () => {
-  const { error } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
-    method: "PATCH",
-    body: {
-      data: guildSettingsChanges.value,
-    },
-  });
+  const error = await guildStore.setChanges(guildSettingsChanges.value);
 
-  if (error.value) {
+  if (error) {
     hasError.value = true;
     toast.add({
       title: "Error",
       description: "Failed to save changes",
     });
   }
-
-  const { data: settingsData } = useFetch<GuildData>(`/api/guilds/${guildId.value}/settings`, {
-    method: "GET",
-  });
-
-  if (settingsData.value) {
-    guildStore.setSettings(settingsData.value);
+  else {
+    guildStore.setSettings();
     toast.add({
       title: "Success",
       description: "Changes saved successfully",
     });
   }
 };
-
-const { hasChanges, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
-const { resetAllChanges } = guildStore;
 
 onMounted(async () => {
   loading.value = true;

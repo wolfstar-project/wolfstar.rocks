@@ -186,6 +186,7 @@ const submitChanges = async () => {
 onMounted(async () => {
   loading.value = true;
   try {
+    await guildStore.fetchSettings();
     const { data, error } = useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId}`, {
       lazy: true,
     });

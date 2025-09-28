@@ -1,6 +1,6 @@
-import type { Guild as GuildData } from "@prisma/client";
 import type { DeepReadonly, PickByValue } from "@sapphire/utilities";
 import type { Snowflake } from "discord-api-types/v10";
+import type { Guild as GuildData } from "~~/server/database";
 
 export type GuildDataKey = keyof GuildData;
 export type GuildDataValue = GuildData[GuildDataKey];
@@ -10,7 +10,7 @@ export type ReadonlyGuildDataValue = DeepReadonly<GuildDataValue>;
 
 export type GuildSettingsOfType<T> = PickByValue<GuildData, T>;
 
-export type { Guild as GuildData } from "@prisma/client";
+export type { Guild as GuildData } from "~~/server/database";
 
 export interface PermissionsNode {
   allow: readonly Snowflake[];

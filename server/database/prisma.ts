@@ -1,6 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { isDevelopment } from "std-env";
-import { PrismaClient } from "~~/server/database/generated/client";
+import { PrismaClient } from "~~/server/database";
 
 export interface GetDbParams {
   connectionString: string;

@@ -14,6 +14,7 @@ export const useGuildSettingsStore = defineStore("guild", {
     settings: null,
     changes: null,
     loading: false,
+    error: null,
   }),
   getters: {
     mergedSettings(state): GuildData {
@@ -23,25 +24,30 @@ export const useGuildSettingsStore = defineStore("guild", {
     hasChanges(state): boolean {
       return !!state.changes && Object.keys(state.changes).length > 0;
     },
+    hasError(state): boolean {
+      return !!state.error;
+    },
   },
   actions: {
     async fetchSettings() {
       const guild = useGuildData();
-      if (!guild.value)
+      if (!guild.value?.id) {
         return;
+      }
 
       this.changes = null;
+      this.settings = null;
+      this.error = null;
       this.loading = true;
+
       try {
-        const { data } = await useFetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
+        this.settings = await $fetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
           method: "GET",
         });
-        if (data.value) {
-          this.settings = data.value;
-        }
       }
-      catch (error) {
-        console.error("Failed to fetch guild settings:", error);
+      catch (e) {
+        this.error = e as Error;
+        console.error("Failed to fetch guild settings:", e);
       }
       finally {
         this.loading = false;
@@ -107,4 +113,5 @@ interface State {
   settings: GuildData | null;
   changes: NullablePartialGuildData | null;
   loading: boolean;
+  error: Error | null;
 }

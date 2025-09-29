@@ -174,7 +174,7 @@ export default defineNuxtConfig({
     typedPages: true,
   },
 
-  compatibilityDate: "2025-07-20",
+  compatibilityDate: "2025-09-20",
   nitro: {
     preset: process.env.NUXT_NITRO_PRESET,
     prerender: {
@@ -257,7 +257,6 @@ export default defineNuxtConfig({
 
   postcss: {
     plugins: {
-      "postcss-nested": {},
       "postcss-nesting": {},
     },
   },

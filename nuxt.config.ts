@@ -160,6 +160,7 @@ export default defineNuxtConfig({
   runtimeConfig: generateRuntimeConfig(),
 
   routeRules: {
+    "/": { prerender: true },
     "/api/**": {
       cors: true,
     },
@@ -188,7 +189,7 @@ export default defineNuxtConfig({
       },
     },
     rollupConfig: {
-      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native", "node:fs"] : undefined,
+      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
     },
     openAPI: {
       // OpenAPI configuration

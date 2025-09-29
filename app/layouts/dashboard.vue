@@ -187,15 +187,14 @@ onMounted(async () => {
   loading.value = true;
   try {
     await guildStore.fetchSettings();
-    const { data, error } = useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId}`, {
-      lazy: true,
+    const { data, error } = await useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`, {
+      method: "GET",
     });
-    if (data.value)
-      guildData.value = data.value;
-
     if (error.value) {
       hasError.value = true;
       toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
+    } else if (data.value) {
+      guildData.value = data.value;
     }
   }
   finally {

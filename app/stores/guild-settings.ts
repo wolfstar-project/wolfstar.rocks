@@ -47,26 +47,33 @@ export const useGuildSettingsStore = defineStore("guild", {
         this.loading = false;
       }
     },
-    async setChanges(newChanges: NullablePartialGuildData) {
+    async setChanges(newChanges?: NullablePartialGuildData | null) {
       if (!newChanges) {
         this.changes = null;
         return;
       }
 
       const guild = useGuildData();
+      if (!guild.value?.id)
+        return new Error("Missing guild id");
 
       this.changes = deepMerge(this.changes ?? {}, newChanges, mergeOptions);
 
-      const { error, status } = await useFetch(`/api/guilds/${guild.value.id}/settings`, {
+      const { data, error, status } = await useFetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
         method: "PATCH",
         body: {
           data: this.changes,
         },
       });
 
-      if (status.value === "error") {
-        return error;
-      }
+      if (status.value === "error")
+        return error.value;
+
+      // Commit server response when available; otherwise commit local snapshot.
+      this.settings = data.value
+        ?? (deepMerge(this.settings ?? {} as GuildData, this.changes!, mergeOptions) as GuildData);
+      this.changes = null;
+      return null;
     },
     resetChange(key: GuildDataKey) {
       if (this.changes && key in this.changes) {

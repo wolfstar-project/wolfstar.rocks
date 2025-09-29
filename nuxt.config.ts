@@ -351,12 +351,6 @@ export default defineNuxtConfig({
     },
   },
   sitemap: {
-    ...(isHubEnabled
-      ? { runtimeCacheStorage: {
-          driver: "cloudflare-kv-binding",
-          binding: "OG_IMAGE_CACHE",
-        } }
-      : {}),
     exclude: ["/join", "/oauth/guild", "/oauth/callback", "/[...id]"],
   },
 });

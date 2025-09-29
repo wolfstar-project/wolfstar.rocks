@@ -86,9 +86,7 @@ export default defineNuxtConfig({
       rateLimiter: false,
     },
     sentry: {
-      unstable_sentryBundlerPluginOptions: {
-        telemetry: false,
-      },
+      telemetry: false,
     },
   },
 
@@ -320,16 +318,14 @@ export default defineNuxtConfig({
   pwa,
 
   sentry: {
-    unstable_sentryBundlerPluginOptions: {
-      release: {
-        name: sentryReleaseName,
-        deploy: {
-          env: environment,
-          url: process.env.CF_PAGES_URL,
-        },
+    release: {
+      name: sentryReleaseName,
+      deploy: {
+        env: environment,
+        url: process.env.CF_PAGES_URL,
       },
     },
-    sourceMapsUploadOptions: generateRuntimeConfig().sentry,
+    ...generateRuntimeConfig().sentry,
   },
 
   seo: {

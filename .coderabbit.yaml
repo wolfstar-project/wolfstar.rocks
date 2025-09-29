@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 language: en-US
-early_access: false
+early_access: true
 reviews:
-  profile: chill
-  request_changes_workflow: false
+  profile: assertive
+  request_changes_workflow: true
   high_level_summary: true
   poem: true
   review_status: false
@@ -11,5 +11,44 @@ reviews:
   auto_review:
     enabled: true
     drafts: false
+  path_filters:
+    - "!**/*.xml"
+    - "!**/*.yaml"
+  path_instructions:
+    - path: "**/*.vue"
+      instructions: |
+        Review Vue files for the WolfStar.rocks Nuxt4 dashboard project. Ensure that:
+        - The `<script setup lang="ts">` section follows TypeScript best practices:
+          - Proper type annotations and modern TypeScript features
+          - Use `defineProps()` with `withDefaults()` for prop validation
+          - Use `defineEmits()` for type-safe event definitions
+          - Follow component block order: `<template>`, `<script>`, `<script setup>`, `<style>`, `<style scoped>`
+        - The `<template>` section uses proper HTML and TailwindCSS:
+          - Correct usage of TailwindCSS utility classes and DaisyUI components
+          - Semantic HTML structure and accessibility considerations
+          - Use semantic colors: `primary`, `secondary`, `accent`, `base-100`
+        - Nuxt4 conventions and best practices:
+          - Use auto-imports for Vue, Nuxt, and project utilities
+          - Leverage Nuxt composables: `useRoute()`, `useRouter()`, `useLazyFetch()`
+          - Use custom composables from `/app/composables/` for Discord integration
+          - Efficient use of Composition API and reactive data handling
+          - Proper naming: PascalCase for components, camelCase for props/variables
+    - path: "**/*.ts"
+      instructions: |
+        Review TypeScript files for the WolfStar.rocks project. Ensure that:
+        - TypeScript best practices and guidelines:
+          - Proper type annotations and modern TypeScript features
+          - Use strict mode, avoid `any` type, prefer proper type definitions
+          - Utilize modern features: optional chaining, nullish coalescing, template literals
+        - Project-specific patterns:
+          - API routes: Use `defineWrappedResponseHandler()` with auth and rate limiting
+          - Database: Use Prisma client with proper type safety and ESM format
+          - Discord integration: Use `requireUserSession()` and `manageAbility` utility
+          - Error handling: Use H3 `createError()` and Sentry integration
+        - Code organization and architecture:
+          - Modular structure with clear separation of concerns
+          - Use shared types in `/shared/types/` for client-server communication
+          - Leverage Nuxt auto-imports, avoid manual imports when possible
+          - Clear documentation with JSDoc comments and proper naming conventions
 chat:
   auto_reply: true

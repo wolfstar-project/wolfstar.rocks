@@ -193,7 +193,8 @@ onMounted(async () => {
     if (error.value) {
       hasError.value = true;
       toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
-    } else if (data.value) {
+    }
+    else if (data.value) {
       guildData.value = data.value;
     }
   }

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - refactor/imagine-an-app
+      - main
     paths:
       - "app/**/*"
       - "server/**/*"
@@ -18,8 +18,8 @@ on:
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
-  LATEST_TAG: ghcr.io/${{ github.repository }}:dev # dev tag
-  HASH_TAG: ghcr.io/${{ github.repository }}:${{ github.sha }}-dev # dev tag
+  LATEST_TAG: ghcr.io/${{ github.repository }}:latest
+  HASH_TAG: ghcr.io/${{ github.repository }}:${{ github.sha }}
 
 jobs:
   build:

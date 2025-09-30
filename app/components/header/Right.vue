@@ -77,9 +77,7 @@ const items = ref<DropdownMenuItem[]>([
   {
     label: "Profile",
     icon: "i-lucide-user",
-    onSelect: () => {
-      navigateTo("/profile");
-    },
+    to: "/profile",
   },
   {
     label: "Log Out",

@@ -65,7 +65,6 @@
     "@vite-pwa/nuxt": "catalog:build",
     "@vueuse/core": "catalog:utils",
     "@vueuse/integrations": "catalog:utils",
-    "@vueuse/motion": "catalog:utils",
     "@vueuse/nuxt": "catalog:utils",
     "@vueuse/router": "catalog:utils",
     "consola": "catalog:prod",
@@ -94,7 +93,8 @@
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
     "zod": "catalog:utils",
-    "cz-conventional-changelog": "catalog:prod"
+    "cz-conventional-changelog": "catalog:prod",
+    "@iconify-json/emojione": "catalog:icons"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

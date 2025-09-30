@@ -23,7 +23,6 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
-    "@vueuse/motion/nuxt",
     "@sentry/nuxt/module",
     // #TODO: maybe remove this
     ...(preset ? ["@nuxthub/core"] : []),

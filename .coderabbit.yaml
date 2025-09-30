@@ -14,6 +14,7 @@ reviews:
   path_filters:
     - "!**/*.xml"
     - "!**/*.yaml"
+    - "!.github/workflows/*.yml"
   path_instructions:
     - path: "**/*.vue"
       instructions: |

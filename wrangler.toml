@@ -16,3 +16,17 @@ binding = "CF_VERSION_METADATA"
 [assets]
 directory = "./dist/public/"
 binding = "ASSETS"
+
+[env.beta]
+name = "wolfstar-rocks-beta"
+
+[env.beta.assets]
+directory = "./dist/public/"
+binding = "ASSETS"
+
+[env.staging]
+name = "wolfstar-rocks-staging"
+
+[env.staging.assets]
+directory = "./dist/public/"
+binding = "ASSETS"

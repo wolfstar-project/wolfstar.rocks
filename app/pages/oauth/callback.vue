@@ -33,13 +33,7 @@
           <template #description>
             You will be redirected to the main page in a second.
             <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
-              <Motion
-                is="div"
-                :initial="{ width: 0 }"
-                :animate="{ width: 100 }"
-                :transition="{ duration: 1 }"
-                class="h-4 rounded-md bg-rose-500"
-              />
+              <div class="progress h-4 rounded-md bg-rose-500"></div>
             </div>
           </template>
         </UAlert>

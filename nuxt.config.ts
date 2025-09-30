@@ -1,22 +1,13 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import type { NuxtPage } from "nuxt/schema";
 import { isDevelopment } from "std-env";
+import { getEnv } from "./config/env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
-import { Env } from "./shared/types/index";
 import "@vite-pwa/nuxt";
 import "nuxt";
 
-const environment
-  = isDevelopment
-    ? Env.Dev
-    : process.env.CF_PAGES_BRANCH === "main"
-      ? Env.Prod
-      : process.env.CF_PAGES_BRANCH
-        ?? "unknown";
-
-const sentryReleaseName = process.env.CF_PAGES_COMMIT_SHA ?? "unknown commit";
-
+const { env, commit } = await getEnv();
 const isHubEnabled = process.env.NUXT_NITRO_PRESET !== "node-server";
 
 const preset = isHubEnabled || isDevelopment;
@@ -244,7 +235,6 @@ export default defineNuxtConfig({
         "yup",
         "@discordjs/core/http-only",
         "@sapphire/time-utilities",
-        "@sapphire/utilities",
         "@sapphire/bitfield",
         "@sapphire/snowflake",
         "@sapphire/async-queue",
@@ -254,10 +244,9 @@ export default defineNuxtConfig({
       ],
     },
   },
-
   postcss: {
     plugins: {
-      "postcss-nesting": {},
+      "postcss-nested": {},
     },
   },
 
@@ -318,9 +307,9 @@ export default defineNuxtConfig({
 
   sentry: {
     release: {
-      name: sentryReleaseName,
+      name: commit,
       deploy: {
-        env: environment,
+        env,
         url: process.env.CF_PAGES_URL,
       },
     },

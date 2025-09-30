@@ -1,4 +1,4 @@
-import type { BuildInfo } from "#shared/types";
+import type { BuildInfo } from "../shared/types";
 import { defineNuxtModule } from "@nuxt/kit";
 import { getEnv, version } from "../config/env";
 

@@ -1,11 +1,12 @@
 import type { ModuleOptions } from "@vite-pwa/nuxt";
-import { get } from "@dotenvx/dotenvx";
+import { isDevelopment } from "std-env";
 
 export const pwa: ModuleOptions = {
   registerType: "autoUpdate",
   includeManifestIcons: true,
+  disable: isDevelopment && process.env.VITE_DEV_PWA !== "true",
   devOptions: {
-    enabled: Boolean(get("VITE_PLUGIN_PWA")) === true,
+    enabled: process.env.VITE_DEV_PWA === "true",
     type: "module",
   },
   manifest: {

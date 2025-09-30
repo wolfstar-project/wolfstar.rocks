@@ -27,3 +27,10 @@ export enum Env {
   Release = "release",
   Prod = "production",
 }
+
+declare module "@nuxt/schema" {
+  export interface AppConfig {
+    env: BuildInfo["env"];
+    buildInfo: BuildInfo;
+  }
+}

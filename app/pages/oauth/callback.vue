@@ -84,3 +84,18 @@ useSeoMetadata({
   },
 });
 </script>
+
+<style scoped>
+.progress {
+	animation: progressAnimation 1s;
+}
+
+@keyframes progressAnimation {
+	from {
+		width: 0;
+	}
+	to {
+		width: 100%;
+	}
+}
+</style>

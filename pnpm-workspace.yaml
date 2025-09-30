@@ -69,7 +69,6 @@ catalogs:
     nuxt-authorization: ^0.3.5
     nuxt-security: ^2.4.0
     nuxt-vitalizer: ^2.0.0
-    nuxt-vue-dragscroll: ^1.0.1
     pinia: ^3.0.3
     prisma: ^6.16.2
     prisma-json-types-generator: ^3.6.1

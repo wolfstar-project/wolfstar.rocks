@@ -1,6 +1,6 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import type { NuxtPage } from "nuxt/schema";
-import { isDevelopment } from "std-env";
+import { isDevelopment, isWindows } from "std-env";
 import { getEnv } from "./config/env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
@@ -23,14 +23,14 @@ export default defineNuxtConfig({
     "@vueuse/nuxt",
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
-    "nuxt-auth-utils",
     "@vueuse/motion/nuxt",
-    "nuxt-authorization",
-    "nuxt-vue-dragscroll",
-    "nuxt-vitalizer",
     "@sentry/nuxt/module",
     // #TODO: maybe remove this
     ...(preset ? ["@nuxthub/core"] : []),
+    "nuxt-auth-utils",
+    "nuxt-authorization",
+    "nuxt-vitalizer",
+    ...(isDevelopment || isWindows) ? [] : ["nuxt-security"],
     "~~/modules/build-env",
     "stale-dep/nuxt",
   ],
@@ -43,38 +43,10 @@ export default defineNuxtConfig({
   },
 
   $production: {
-
-    modules: ["nuxt-security"],
     scripts: {
       registry: {
         cloudflareWebAnalytics: true,
       },
-    },
-    security: {
-      headers: {
-        crossOriginEmbedderPolicy: false,
-        contentSecurityPolicy: {
-          "default-src": ["'self'"],
-          "base-uri": ["'self'"],
-          "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
-          "font-src": ["'self'"],
-          "form-action": ["'none'"],
-          "frame-ancestors": ["'none'"],
-          "frame-src": ["https:"],
-          "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
-          "manifest-src": ["'self'"],
-          "media-src": ["'self'", "https:", "http:"],
-          "object-src": ["'none'"],
-          "script-src": ["'self'", "'wasm-unsafe-eval'", "'nonce-{generated-nonce}'", "https://static.cloudflareinsights.com"],
-          "script-src-attr": ["'none'"],
-          "style-src": ["'self'", "'unsafe-inline'"],
-          "upgrade-insecure-requests": true,
-        },
-        permissionsPolicy: {
-          fullscreen: "*",
-        },
-      },
-      rateLimiter: false,
     },
     sentry: {
       telemetry: false,
@@ -130,6 +102,9 @@ export default defineNuxtConfig({
     },
   },
   css: ["~/assets/css/main.css"],
+  vue: {
+    propsDestructure: true,
+  },
 
   site: {
     url: "https://wolfstar.rocks",
@@ -137,7 +112,6 @@ export default defineNuxtConfig({
     defaultLocale: "en-US",
     indexable: true,
   },
-
   colorMode: {
     preference: "system", // default theme
     dataValue: "theme", // activate data-theme in <html> tag
@@ -162,6 +136,7 @@ export default defineNuxtConfig({
   experimental: {
     viewTransition: true,
     payloadExtraction: false,
+    renderJsonPayloads: true,
     typedPages: true,
   },
 
@@ -202,6 +177,34 @@ export default defineNuxtConfig({
       openAPI: true,
     },
   },
+  // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-ignore nuxt-security is conditional
+  security: {
+    headers: {
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        "default-src": ["'self'"],
+        "base-uri": ["'self'"],
+        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
+        "font-src": ["'self'"],
+        "form-action": ["'none'"],
+        "frame-ancestors": ["'none'"],
+        "frame-src": ["https:"],
+        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
+        "manifest-src": ["'self'"],
+        "media-src": ["'self'", "https:", "http:"],
+        "object-src": ["'none'"],
+        "script-src": ["'self'", "'wasm-unsafe-eval'", "'nonce-{generated-nonce}'", "https://static.cloudflareinsights.com"],
+        "script-src-attr": ["'none'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "upgrade-insecure-requests": true,
+      },
+      permissionsPolicy: {
+        fullscreen: "*",
+      },
+    },
+    rateLimiter: false,
+  },
   ...(
     preset
       ? {
@@ -220,6 +223,7 @@ export default defineNuxtConfig({
       include: [
         "@vueuse/shared",
         "@sapphire/utilities",
+        "@sapphire/utilities/isNullish",
         "@sapphire/utilities/cast",
         "tailwindcss/colors",
         "ufo",
@@ -240,7 +244,7 @@ export default defineNuxtConfig({
         "@sapphire/async-queue",
         "@vue/devtools-core",
         "@vue/devtools-kit",
-        "@sapphire/utilities/isNullish",
+        "uuid",
       ],
     },
   },

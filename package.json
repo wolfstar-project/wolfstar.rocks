@@ -77,7 +77,6 @@
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",
-    "nuxt-vue-dragscroll": "catalog:prod",
     "pinia": "catalog:prod",
     "postcss-nested": "catalog:style",
     "postcss-nesting": "catalog:style",

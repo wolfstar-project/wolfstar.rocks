@@ -212,7 +212,7 @@ const gradientColors = computed(() => {
 const IconComponent = computed(() => {
   // Try to resolve UIcon component, fallback to div if not available
   try {
-    return resolveComponent("NuxtIcon");
+    return resolveComponent("UIcon");
   }
   catch {
     return defineComponent({

@@ -1,15 +1,14 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import { isDevelopment, isWindows } from "std-env";
-import { getEnv } from "./config/env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 import "@vite-pwa/nuxt";
 import "nuxt";
 
-const { env, commit } = await getEnv();
 const isHubEnabled = process.env.NUXT_NITRO_PRESET !== "node-server";
+const runtimeConfig = generateRuntimeConfig();
 
-const preset = isHubEnabled || isDevelopment;
+const shouldEnableHubModule = isHubEnabled || isDevelopment;
 
 export default defineNuxtConfig({
   // Modules configuration
@@ -24,7 +23,7 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     "@sentry/nuxt/module",
     // #TODO: maybe remove this
-    ...(preset ? ["@nuxthub/core"] : []),
+    ...(shouldEnableHubModule ? ["@nuxthub/core"] : []),
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
@@ -205,7 +204,7 @@ export default defineNuxtConfig({
     rateLimiter: false,
   },
   ...(
-    preset
+    shouldEnableHubModule
       ? {
           hub: {
             workers: true,
@@ -300,14 +299,7 @@ export default defineNuxtConfig({
   pwa,
 
   sentry: {
-    release: {
-      name: commit,
-      deploy: {
-        env,
-        url: process.env.CF_PAGES_URL,
-      },
-    },
-    ...generateRuntimeConfig().sentry,
+    ...runtimeConfig.sentry,
   },
 
   seo: {

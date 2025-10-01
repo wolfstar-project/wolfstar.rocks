@@ -10,7 +10,7 @@ export default defineNuxtModule({
     const { env, commit, shortCommit, branch } = await getEnv();
     const buildInfo: BuildInfo = {
       version,
-      time: +Date.now(),
+      time: Date.now(),
       commit,
       shortCommit,
       branch,

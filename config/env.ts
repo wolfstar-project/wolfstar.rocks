@@ -4,8 +4,8 @@ import { Env } from "../shared/types/index";
 
 export { version } from "../package.json";
 
-const git = Git();
 export async function getGitInfo() {
+  const git = Git();
   let branch;
   try {
     if (process.env.CF_PAGES_BRANCH) {
@@ -53,6 +53,21 @@ export async function getGitInfo() {
 export async function getEnv() {
   const { commit, shortCommit, branch } = await getGitInfo();
 
-  const env = isDevelopment ? Env.Dev : branch === "main" ? Env.Prod : branch;
+  let env: Env;
+  if (isDevelopment) {
+    env = Env.Dev;
+  }
+  else {
+    switch (branch) {
+      case "main":
+        env = Env.Prod;
+        break;
+      case "refactor/":
+        env = Env.Canary;
+        break;
+      default:
+        env = Env.Dev;
+    }
+  }
   return { commit, shortCommit, branch, env } as const;
 }

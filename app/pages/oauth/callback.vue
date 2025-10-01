@@ -28,8 +28,8 @@
           </template>
         </UAlert>
       </template>
-      <template v-else-if="data">
-        <UAlert color="success" icon="lucide:check" :title="`Welcome ${data.username}`">
+      <template v-else-if="user">
+        <UAlert color="success" icon="lucide:check" :title="`Welcome ${user.username}`">
           <template #description>
             You will be redirected to the main page in a second.
             <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
@@ -58,7 +58,7 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
   immediate: false,
 });
 
-const { user: data } = useAuth();
+const { user } = useAuth();
 
 if (import.meta.client && code) {
   void performCall().catch(consola.error);
@@ -69,7 +69,7 @@ async function performCall() {
   if (error.value)
     return;
   // wait until data is populated instead of a fixed timeout
-  await until(data).toBeTruthy();
+  await until(user).toBeTruthy();
   // perform a client‐side redirect (replace history entry) without a full reload
   await navigateTo(useAuth().redirectTo.value, { replace: true });
 }

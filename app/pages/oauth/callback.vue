@@ -11,7 +11,7 @@
       </UAlert>
     </template>
     <client-only v-else>
-      <template v-if="status === 'pending'">
+      <template v-if="status === 'pending' || status === 'idle'">
         <UAlert color="neutral" icon="emojione:hourglass-done" title="Loading">
           <template #description>
             Completing authentication flow...
@@ -33,7 +33,7 @@
           <template #description>
             You will be redirected to the main page in a second.
             <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
-              <div class="progress h-4 rounded-md bg-rose-500"></div>
+              <div class="oauth-progress h-4 rounded-md bg-rose-500"></div>
             </div>
           </template>
         </UAlert>
@@ -43,10 +43,12 @@
 </template>
 
 <script setup lang="ts">
-import { promiseTimeout } from "@vueuse/core";
+// at the top of the file, update the import
+import { until } from "@vueuse/core";
 import consola from "consola";
 
-const { code } = useRoute().query;
+const { code: rawCode } = useRoute().query;
+const code = Array.isArray(rawCode) ? rawCode[0] : rawCode;
 
 const { error, status, execute } = useFetch("/api/auth/discord", {
   query: { code },
@@ -64,13 +66,12 @@ if (import.meta.client && code) {
 
 async function performCall() {
   await execute();
-  if (!data.value)
+  if (error.value)
     return;
-
-  await promiseTimeout(1000);
-  await useRouter().replace(useAuth().redirectTo.value);
-  // reload the page
-  window.location.reload();
+  // wait until data is populated instead of a fixed timeout
+  await until(data).toBeTruthy();
+  // perform a client‐side redirect (replace history entry) without a full reload
+  await navigateTo(useAuth().redirectTo.value, { replace: true });
 }
 
 useRobotsRule(robotBlockingPageProps);
@@ -86,7 +87,7 @@ useSeoMetadata({
 </script>
 
 <style scoped>
-.progress {
+.oauth-progress {
 	animation: progressAnimation 1s;
 }
 

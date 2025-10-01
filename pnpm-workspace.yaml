@@ -5,8 +5,9 @@ overrides:
   "@vercel/nft": ^0.30.1
 
 patchedDependencies:
-  prisma: patches/prisma.patch
+  "@prisma/client": patches/@prisma__client.patch
 
+  prisma: patches/prisma.patch
 catalogs:
   build:
     "@vite-pwa/nuxt": ^1.0.4

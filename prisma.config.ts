@@ -8,4 +8,7 @@ import { defineConfig } from "prisma/config";
 
 export default defineConfig({
   schema: path.join("server", "database", "schema.prisma"),
+  migrations: {
+    path: path.join("server", "database", "migrations"),
+  },
 });

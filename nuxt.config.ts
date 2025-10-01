@@ -1,5 +1,4 @@
 import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
-import type { NuxtPage } from "nuxt/schema";
 import { isDevelopment, isWindows } from "std-env";
 import { getEnv } from "./config/env";
 import { pwa } from "./config/pwa";
@@ -152,7 +151,7 @@ export default defineNuxtConfig({
       },
     },
     rollupConfig: {
-      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native", "node:fs"] : undefined,
+      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native", "node:fs", "node:os"] : undefined,
     },
     openAPI: {
       // OpenAPI configuration
@@ -255,16 +254,7 @@ export default defineNuxtConfig({
 
   hooks: {
     "pages:extend": function (pages) {
-      const pagesToRemove: NuxtPage[] = [];
-      pages.forEach((page) => {
-        if (page.path.includes("component") || page.path.includes("/api")) {
-          pagesToRemove.push(page);
-        }
-      });
-
-      pagesToRemove.forEach((page) => {
-        pages.splice(pages.indexOf(page), 1);
-      });
+      pages.splice(0, pages.length, ...pages.filter(page => !page.path.includes("component") && !page.path.includes("/api")));
       // Uncomment to show current Routes
       // console.log(`\nCurrent Routes:`)
       // console.log(pages)

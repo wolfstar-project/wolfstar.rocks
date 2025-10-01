@@ -3,7 +3,8 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - main
+      # for now is set to refactor/imagine-an-app
+      - refactor/imagine-an-app
   pull_request:
 
 jobs:
@@ -62,3 +63,12 @@ jobs:
         run: pnpm prisma:generate
       - name: Build code
         run: pnpm build
+      - name: Create Sentry release
+        uses: getsentry/action-release@v3
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          sourcemaps: ./dist

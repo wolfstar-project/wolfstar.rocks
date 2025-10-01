@@ -4,7 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      # for now is set to refactor/imagine-an-app
+      - refactor/imagine-an-app
     paths:
       - "app/**/*"
       - "server/**/*"

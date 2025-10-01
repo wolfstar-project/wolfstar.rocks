@@ -2,7 +2,6 @@ import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
-import "@vite-pwa/nuxt";
 import "nuxt";
 
 const isHubEnabled = process.env.NUXT_NITRO_PRESET !== "node-server";
@@ -117,7 +116,7 @@ export default defineNuxtConfig({
   },
 
   // Runtime configuration
-  runtimeConfig: generateRuntimeConfig(),
+  runtimeConfig,
 
   routeRules: {
     "/": { prerender: true },

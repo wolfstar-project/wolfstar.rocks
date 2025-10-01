@@ -13,6 +13,7 @@ catalogs:
     "@vite-pwa/nuxt": ^1.0.4
   cli:
     "@antfu/nip": ^0.1.0
+    bumpp: ^10.2.3
     cross-env: ^10.0.0
     pncat: ^0.5.4
     taze: ^19.7.0

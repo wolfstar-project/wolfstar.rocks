@@ -94,7 +94,8 @@
     "uuid": "catalog:utils",
     "wrangler": "catalog:dev",
     "yup": "catalog:utils",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "bumpp": "catalog:cli"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

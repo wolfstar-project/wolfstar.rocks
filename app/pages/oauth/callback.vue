@@ -88,7 +88,7 @@ useSeoMetadata({
 
 <style scoped>
 .oauth-progress {
-	animation: progressAnimation 1s;
+	animation: progressAnimation 1s ease-out;
 }
 
 @keyframes progressAnimation {

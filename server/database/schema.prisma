@@ -1,8 +1,6 @@
 generator client {
   provider        = "prisma-client"
   output          = "./generated"
-  moduleFormat    = "esm"
-  engineType = "client"
 }
 
 generator json {
@@ -10,8 +8,9 @@ generator json {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Guild {

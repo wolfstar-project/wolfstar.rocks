@@ -26,3 +26,5 @@
 .DS_Store
 
 README.md
+
+server/database/generated/

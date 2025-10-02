@@ -1,5 +1,5 @@
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "~~/server/database";
+import { PrismaClient } from "~~/server/database/generated/client";
 
 export interface GetDbParams {
   connectionString: string;
@@ -12,5 +12,5 @@ export function getDb({ connectionString }: GetDbParams) {
 
   return prisma;
 }
-const prisma = getDb({ connectionString: process.env.DATABASE_URL! });
+const prisma = getDb({ connectionString: process.env.DIRECT_URL! });
 export default prisma;

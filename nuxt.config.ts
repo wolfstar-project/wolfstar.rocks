@@ -120,9 +120,6 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
-    "/api/**": {
-      cors: true,
-    },
   },
 
   sourcemap: {
@@ -148,9 +145,9 @@ export default defineNuxtConfig({
         target: "esnext",
       },
     },
-    rollupConfig: {
+    /* rollupConfig: {
       external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
-    },
+    }, */
     openAPI: {
       // OpenAPI configuration
       meta: {
@@ -171,7 +168,7 @@ export default defineNuxtConfig({
     },
     experimental: {
       openAPI: true,
-      wasm: true,
+      // wasm: true,
     },
   },
   // eslint-disable-next-line ts/ban-ts-comment

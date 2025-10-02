@@ -145,9 +145,9 @@ export default defineNuxtConfig({
         target: "esnext",
       },
     },
-    /* rollupConfig: {
-      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
-    }, */
+    rollupConfig: {
+      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native", "pg"] : undefined,
+    },
     openAPI: {
       // OpenAPI configuration
       meta: {

@@ -168,7 +168,7 @@ export default defineNuxtConfig({
     },
     experimental: {
       openAPI: true,
-      // wasm: true,
+      wasm: true,
     },
   },
   // eslint-disable-next-line ts/ban-ts-comment

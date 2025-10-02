@@ -73,7 +73,14 @@
             :class="[
               colorMode === 'light' ? 'text-gray-700' : 'text-[#E4E4E7]',
             ]"
-            style="display: block; line-clamp: 3; text-overflow: ellipsis;"
+            style="
+              display: -webkit-box;
+              -webkit-box-orient: vertical;
+              -webkit-line-clamp: 3;
+              line-clamp: 3;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
           >
             {{ description }}
           </p>

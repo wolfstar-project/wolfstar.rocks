@@ -70,7 +70,6 @@
     "@vueuse/router": "catalog:utils",
     "consola": "catalog:prod",
     "cross-env": "catalog:cli",
-    "cz-conventional-changelog": "catalog:prod",
     "fuse.js": "catalog:prod",
     "import-in-the-middle": "catalog:prod",
     "motion-v": "catalog:prod",
@@ -84,7 +83,6 @@
     "prisma": "catalog:prod",
     "prisma-json-types-generator": "catalog:prod",
     "require-in-the-middle": "catalog:prod",
-    "simple-git": "catalog:dev",
     "stale-dep": "catalog:prod",
     "tailwind-merge": "catalog:style",
     "tailwind-variants": "catalog:prod",
@@ -98,6 +96,8 @@
     "bumpp": "catalog:cli"
   },
   "devDependencies": {
+    "simple-git": "catalog:dev",
+    "cz-conventional-changelog": "catalog:prod",
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:cli",
     "@commitlint/cli": "catalog:lint",

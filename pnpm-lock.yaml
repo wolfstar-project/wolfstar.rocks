@@ -351,9 +351,6 @@ importers:
       cross-env:
         specifier: catalog:cli
         version: 10.1.0
-      cz-conventional-changelog:
-        specifier: catalog:prod
-        version: 3.3.0(@types/node@22.13.14)(typescript@5.8.3)
       fuse.js:
         specifier: catalog:prod
         version: 7.1.0
@@ -475,6 +472,9 @@ importers:
       '@tailwindcss/typography':
         specifier: catalog:style
         version: 0.5.19(tailwindcss@4.1.13)
+      cz-conventional-changelog:
+        specifier: catalog:prod
+        version: 3.3.0(@types/node@22.13.14)(typescript@5.8.3)
       daisyui:
         specifier: catalog:dev
         version: 5.1.26

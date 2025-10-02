@@ -26,9 +26,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Genarate prisma types
-        run: pnpm prisma:generate
-
       - name: Build & Deploy to NuxtHub
         uses: nuxt-hub/action@v2
         with:

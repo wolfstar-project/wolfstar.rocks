@@ -5,7 +5,7 @@ node_modules/
 .output/
 dist/
 functions/
-
+.netlify/
 
 # Logs
 logs
@@ -15,16 +15,14 @@ logs
 .DS_Store
 .fleet
 .idea
-.wrangler
-.dev.vars*
+.pnpm-store
+.data
+.eslintcache
 
 # Local env files
 .env
 .env.*
 !.env.example
 
-.pnpm-store
-.data
-.eslintcache
 
 server/database/generated/

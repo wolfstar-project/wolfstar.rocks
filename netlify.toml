@@ -1,6 +1,6 @@
 [build]
 publish = "dist"
-command = "pnpm run build"
+command = "pnpm prisma:generate && pnpm run build"
 
 [build.environment]
 NODE_OPTIONS = '--import ./.output/server/sentry.server.config.mjs --max-old-space-size=4096'

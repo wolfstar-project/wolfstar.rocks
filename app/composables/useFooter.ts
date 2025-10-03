@@ -21,8 +21,8 @@ export const useFooter = () => {
     {
       label: "Legal",
       children: [
-        { label: "Terms of Use", to: "/terms", icon: "ph:scales-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
-        { label: "Privacy Policy", to: "/privacy", icon: "ph:scales-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
+        { label: "Terms of Use", to: "/terms", icon: "ph:file-text-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
+        { label: "Privacy Policy", to: "/privacy", icon: "ph:shield-check-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
       ],
     },
   ]);

@@ -31,6 +31,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Genarate prisma types
+        run: pnpm prisma:generate
       - name: Run ESLint
         run: pnpm lint --fix=false
 
@@ -59,5 +61,7 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Generate prisma types
+        run: pnpm prisma:generate
       - name: Build code
         run: pnpm build

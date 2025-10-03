@@ -1,6 +1,6 @@
 <template>
   <AuthState>
-    <template #default="{ loggedIn, user: authUser }">
+    <template #default="{ loggedIn }">
       <div v-if="loggedIn">
         <UDropdownMenu
           :items="items"
@@ -13,13 +13,16 @@
             content: 'w-48'
           }"
         >
-          <UAvatar
-            :src="avatarSrc"
-            icon="i-lucide-image"
-            size="md"
+          <UButton
+            circle
+            :avatar="{
+              src: avatarSrc,
+              icon: 'i-lucide-image',
+              size: 'md',
+            }"
           >
-            <span v-if="authUser" class="hidden font-semibold sm:inline">{{ authUser.globalName ?? authUser.username }}</span>
-          </UAvatar>
+            <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
+          </UButton>
         </UDropdownMenu>
       </div>
       <div v-else>
@@ -28,7 +31,7 @@
           size="md"
           color="primary"
           variant="subtle"
-          to="/login"
+          to="/api/auth/discord"
           block
           class="mb-3 hidden lg:inline-flex"
           icon="ic:round-discord"
@@ -85,6 +88,7 @@ const items = ref<DropdownMenuItem[]>([
     ui: {
       itemLeadingIcon: "bg-red-500",
     },
+    kbds: ["shift", "meta", "q"],
     onSelect: async () => {
       await clear();
       navigateTo("/");

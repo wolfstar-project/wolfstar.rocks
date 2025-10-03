@@ -21,7 +21,6 @@ catalogs:
     "@discordjs/collection": ^2.1.1
     "@discordjs/core": ^2.2.2
     "@nuxt/scripts": ^0.12.1
-    "@nuxthub/core": ^0.9.0
     "@nuxtjs/seo": ^3.2.2
     "@sentry/nuxt": ^10.15.0
     daisyui: ^5.1.20

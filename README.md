@@ -15,7 +15,7 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
-[![Commit Check][commit-check-shield]][commit-check-link]
+[![][netlify-status-shield]][netlify-status-link]
 [![][github-release-shield]][github-release-link]
 [![][github-releasedate-shield]][github-releasedate-link]<br/>
 [![][discord-shield]][discord-link] [![][codecov-shield]][codecov-link]
@@ -88,7 +88,7 @@ multi-purpose Discord bot for moderation and community management.
 ## 🚀 Self-Hosting WolfStar.rocks Requirements
 
 - **Node.js**: WolfStar.rocks is built on Node.js, so you will need to have
-  Node.js (v20+) installed.
+  Node.js (v22+) installed.
 - **WolfStar Bot**: You need a running instance of WolfStar bot to connect this
   dashboard to.
 - **Discord Bot Application**: A Discord bot application with proper OAuth2
@@ -321,6 +321,10 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://img.shields.io/github/stars/wolfstar-project/wolfstar.rocks?color=ffcb47&labelColor=black&style=flat-square
 [issues-link]:
   https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks.svg?style=flat
+[netlify-status-shield]:
+  https://api.netlify.com/api/v1/badges/80592647-d7bf-49b3-b82c-d0a3b3d7b3d0/deploy-status
+[netlify-status-link]:
+  https://app.netlify.com/projects/wolfstar-rocks-et34281/deploys
 [official-site]: https://wolfstar.rocks
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:

@@ -105,7 +105,6 @@
     "@discordjs/collection": "catalog:dev",
     "@discordjs/core": "catalog:dev",
     "@nuxt/eslint": "catalog:lint",
-    "@nuxthub/core": "catalog:dev",
     "@nuxtjs/seo": "catalog:dev",
     "@sapphire/bitfield": "catalog:utils",
     "@sapphire/prettier-config": "catalog:lint",

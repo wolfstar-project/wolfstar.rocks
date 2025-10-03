@@ -1,13 +1,9 @@
-import type { ModuleOptions as NuxtHubModuleOptions } from "@nuxthub/core";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 import "nuxt";
 
-const isHubEnabled = process.env.NUXT_NITRO_PRESET !== "node-server";
 const runtimeConfig = generateRuntimeConfig();
-
-const shouldEnableHubModule = isHubEnabled || isDevelopment;
 
 export default defineNuxtConfig({
   // Modules configuration
@@ -21,8 +17,6 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vite-pwa/nuxt",
     "@sentry/nuxt/module",
-    // #TODO: maybe remove this
-    ...(shouldEnableHubModule ? ["@nuxthub/core"] : []),
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
@@ -171,43 +165,6 @@ export default defineNuxtConfig({
       wasm: true,
     },
   },
-  // eslint-disable-next-line ts/ban-ts-comment
-  // @ts-ignore nuxt-security is conditional
-  security: {
-    headers: {
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        "default-src": ["'self'"],
-        "base-uri": ["'self'"],
-        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
-        "font-src": ["'self'"],
-        "form-action": ["'none'"],
-        "frame-ancestors": ["'none'"],
-        "frame-src": ["https:"],
-        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
-        "manifest-src": ["'self'"],
-        "media-src": ["'self'", "https:", "http:"],
-        "object-src": ["'none'"],
-        "script-src": ["'self'", "'wasm-unsafe-eval'", "'nonce-{generated-nonce}'", "https://static.cloudflareinsights.com"],
-        "script-src-attr": ["'none'"],
-        "style-src": ["'self'", "'unsafe-inline'"],
-        "upgrade-insecure-requests": true,
-      },
-      permissionsPolicy: {
-        fullscreen: "*",
-      },
-    },
-    rateLimiter: false,
-  },
-  ...(
-    shouldEnableHubModule
-      ? {
-          hub: {
-            workers: true,
-            cache: true,
-          } as Partial<NuxtHubModuleOptions>,
-        }
-      : {}),
 
   vite: {
     build: {
@@ -293,6 +250,34 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
+  // eslint-disable-next-line ts/ban-ts-comment
+  // @ts-ignore nuxt-security is conditional
+  security: {
+    headers: {
+      crossOriginEmbedderPolicy: false,
+      contentSecurityPolicy: {
+        "default-src": ["'self'"],
+        "base-uri": ["'self'"],
+        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
+        "font-src": ["'self'"],
+        "form-action": ["'none'"],
+        "frame-ancestors": ["'none'"],
+        "frame-src": ["https:"],
+        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
+        "manifest-src": ["'self'"],
+        "media-src": ["'self'", "https:", "http:"],
+        "object-src": ["'none'"],
+        "script-src": ["'self'", "'wasm-unsafe-eval'", "'nonce-{generated-nonce}'", "https://static.cloudflareinsights.com"],
+        "script-src-attr": ["'none'"],
+        "style-src": ["'self'", "'unsafe-inline'"],
+        "upgrade-insecure-requests": true,
+      },
+      permissionsPolicy: {
+        fullscreen: "*",
+      },
+    },
+    rateLimiter: false,
+  },
 
   sentry: {
     ...runtimeConfig.sentry,

@@ -3,7 +3,13 @@
   <UFooter :ui="{ root: 'p-2', top: 'border-default' }">
     <template #top>
       <UContainer>
-        <UFooterColumns class="p-10" :columns="columns" />
+        <UFooterColumns class="p-10" :columns="columns">
+          <template #right>
+            <ULink target="_blank" to="https://www.netlify.com">
+              <NuxtImg :src="netlify" height="250px" width="250px" alt="Deploys by Netlify" />
+            </ULink>
+          </template>
+        </UFooterColumns>
       </UContainer>
     </template>
 
@@ -29,9 +35,16 @@
           <span class="text-sm text-base-content/80">
             Version: {{ buildInfo.version }}
           </span>
-          <span class="text-sm text-base-content/80">
-            Commit: {{ buildInfo.shortCommit }}
-          </span>
+          <template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
+            <NuxtLink
+              external
+              :href="`https://github.com/elk-zone/elk/commit/${buildInfo.commit}`"
+              target="_blank"
+              class="text-sm text-base-content/80"
+            >
+              Commit: {{ buildInfo.shortCommit }}
+            </NuxtLink>
+          </template>
           <span class="text-sm text-base-content/80">
             Build Date: {{ useDateFormat(buildInfo.time, 'YYYY-MM-DD') }}
           </span>
@@ -58,4 +71,12 @@
 <script setup lang="ts">
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+
+const colorMode = useColorMode();
+
+const netlify = computed(() => {
+  return colorMode.value === "dark"
+    ? "/netlify-badge-dark.svg"
+    : "/netlify-badge-light.svg";
+});
 </script>

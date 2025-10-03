@@ -1,5 +1,7 @@
+import type { FooterColumn } from "@nuxt/ui";
+
 export const useFooter = () => {
-  const columns = computed(() => [
+  const columns = computed<FooterColumn[]>(() => [
     {
       label: "Links",
       children: [

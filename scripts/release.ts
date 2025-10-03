@@ -24,6 +24,13 @@ async function main() {
       return;
     }
 
+    const remotes = await git.getRemotes();
+    if (!remotes.some(r => r.name === "origin")) {
+      consola.error("Remote 'origin' does not exist.");
+      process.exitCode = 1;
+      return;
+    }
+
     consola.log("Pre-flight checks passed.");
 
     const hash = (await git.revparse(["main"])).trim();
@@ -102,4 +109,4 @@ async function main() {
   }
 }
 
-main();
+void main();

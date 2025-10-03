@@ -13,13 +13,15 @@ async function main() {
     const status = await git.status();
     if (!status.isClean()) {
       consola.error("Working tree is not clean. Please commit or stash your changes.");
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
 
     const branches = await git.branchLocal();
     if (!branches.all.includes("main") || !branches.all.includes("release")) {
       consola.error("Both 'main' and 'release' branches must exist locally.");
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
 
     consola.log("Pre-flight checks passed.");
@@ -27,14 +29,16 @@ async function main() {
     const hash = (await git.revparse(["main"])).trim();
     if (!hash) {
       consola.error("Could not resolve main branch commit hash.");
-      process.exit(1);
+      process.exitCode = 1;
+      return;
     }
 
     const force = process.argv.includes("--force") || process.env.FORCE_PUSH === "true";
     if (!force) {
       if (!process.stdout.isTTY) {
         consola.error("Non-interactive environment detected. Re-run with --force or FORCE_PUSH=true.");
-        process.exit(1);
+        process.exitCode = 1;
+        return;
       }
 
       const proceed = await consola.prompt(
@@ -64,9 +68,6 @@ async function main() {
 
     consola.log("Checkout main branch");
     await git.checkout("main");
-
-    consola.log("Release process completed successfully.");
-    consola.log(`You can delete the recovery branch with: git branch -D ${recoveryRef}`);
   }
   catch (error) {
     consola.error("An error occurred during the release process:", error);
@@ -76,7 +77,7 @@ async function main() {
       try {
         await git.checkout("release");
         await git.reset(["--hard", recoveryRef]);
-        await git.push(["--force"]);
+        await git.push(["origin", "release", "--force"]);
         consola.log("'release' branch has been restored.");
       }
       catch (restoreError) {
@@ -89,7 +90,6 @@ async function main() {
         );
       }
     }
-
     process.exitCode = 1;
   }
   finally {

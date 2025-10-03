@@ -15,16 +15,17 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
-[![][netlify-status-shield]][netlify-status-link]
-[![][github-release-shield]][github-release-link]
-[![][github-releasedate-shield]][github-releasedate-link]<br/>
-[![][discord-shield]][discord-link] [![][codecov-shield]][codecov-link]
-[![][github-contributors-shield]][github-contributors-link]<br/>
-[![][github-forks-shield]][github-forks-link]
-[![][github-stars-shield]][github-stars-link]
-[![][github-issues-shield]][github-issues-link]
-[![][github-license-shield]][github-license-link]<br>
-[![][pr-welcome-shield]][pr-welcome-link]
+[![Netlify deploy status badge][netlify-status-shield]][netlify-status-link]
+[![GitHub latest release badge][github-release-shield]][github-release-link]
+[![GitHub release date badge][github-releasedate-shield]][github-releasedate-link]<br/>
+[![Discord community badge][discord-shield]][discord-link]
+[![Codecov coverage badge][codecov-shield]][codecov-link]
+[![GitHub contributors badge][github-contributors-shield]][github-contributors-link]<br/>
+[![GitHub forks badge][github-forks-shield]][github-forks-link]
+[![GitHub stars badge][github-stars-shield]][github-stars-link]
+[![GitHub issues badge][github-issues-shield]][github-issues-link]
+[![GitHub license badge][github-license-shield]][github-license-link]<br>
+[![PRs welcome badge][pr-welcome-shield]][pr-welcome-link]
 
 **Share WolfStar Repository**
 
@@ -32,10 +33,8 @@ Link][invite-link] · [Support Server][discord-link] ·
 [![][share-reddit-shield]][share-reddit-link]
 [![][share-telegram-shield]][share-telegram-link]
 [![][share-whatsapp-shield]][share-whatsapp-link]
-[![][share-x-shield]][share-x-link]
-
-<sup>Pioneering the new age of server moderation management. Built for you, the
-Super Admin.</sup>
+[![][share-x-shield]][share-x-link] <sup>Pioneering the new age of server
+moderation management. Built for you, the Super Admin.</sup>
 
 </div>
 
@@ -164,6 +163,7 @@ SENTRY_DSN=your_sentry_dsn
 - `pnpm build` - Build for production
 - `pnpm preview` - Preview production build
 - `pnpm lint` - Run ESLint
+- `pnpm lint:fix` - Run ESLint and fix issues
 - `pnpm type-check` - Run TypeScript checks
 
 ### Development Guidelines
@@ -183,7 +183,7 @@ SENTRY_DSN=your_sentry_dsn
 - **Prisma** - Database ORM
 - **Tailwind CSS** - Styling
 - **DaisyUI** - Styling
-- **Shadcn** - Components
+- **NuxtUI** - Components
 
 </div>
 

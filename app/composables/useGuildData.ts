@@ -2,7 +2,7 @@ import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
 
 const _useGuildData = () => {
-  const guild = useState<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>();
+  const guild = useState<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>> | null>("guild", () => null);
 
   return guild;
 };

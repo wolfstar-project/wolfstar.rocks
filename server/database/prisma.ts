@@ -6,7 +6,7 @@ export interface GetDbParams {
 }
 
 export function getDb({ connectionString }: GetDbParams) {
-  const pool = new PrismaPg({ connectionString, max: 20, idleTimeoutMillis: 30000, connectionTimeoutMillis: 5000 });
+  const pool = new PrismaPg({ connectionString });
 
   const prisma = new PrismaClient({ adapter: pool });
 

@@ -14,7 +14,7 @@ export function getDb({ connectionString }: GetDbParams) {
 }
 const databaseUrl = process.env.DATABASE_URL;
 if (!databaseUrl) {
-  throw new Error("DIRECT_URL environment variable is required");
+  throw new Error("DATABASE_URL environment variable is required");
 }
 const prisma = getDb({ connectionString: databaseUrl });
 export default prisma;

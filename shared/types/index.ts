@@ -18,14 +18,14 @@ export interface BuildInfo {
   shortCommit: string;
   time: number;
   branch: string;
-  env: Env.Canary | Env.Dev | Env.Release | Env.Prod;
+  env: Env.Canary | Env.Dev | Env.Release | Env.Preview;
 }
 
 export enum Env {
   Canary = "canary",
   Dev = "development",
   Release = "release",
-  Prod = "production",
+  Preview = "preview",
 }
 
 declare module "@nuxt/schema" {

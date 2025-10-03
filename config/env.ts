@@ -1,5 +1,6 @@
 import Git from "simple-git";
 import { isDevelopment } from "std-env";
+import { Env } from "../shared/types";
 
 export { version } from "../package.json";
 
@@ -59,11 +60,11 @@ export async function getGitInfo() {
 export async function getEnv() {
   const { commit, shortCommit, branch } = await getGitInfo();
   const env = isDevelopment
-    ? "dev"
+    ? Env.Dev
     : isPreview
-      ? "preview"
+      ? Env.Preview
       : branch === "main"
-        ? "canary"
-        : "release";
+        ? Env.Canary
+        : Env.Release;
   return { commit, shortCommit, branch, env } as const;
 }

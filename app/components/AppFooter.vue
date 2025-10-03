@@ -38,7 +38,7 @@
           <template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
             <NuxtLink
               external
-              :href="`https://github.com/WolfStarOrg/WolfStar/commit/${buildInfo.commit}`"
+              :href="`https://github.com/wolfstar-project/wolfstar.rocks/commit/${buildInfo.commit}`"
               target="_blank"
               rel="noopener noreferrer"
               class="text-sm text-base-content/80"

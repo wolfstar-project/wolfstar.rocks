@@ -5,7 +5,7 @@
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns">
           <template #right>
-            <ULink target="_blank" to="https://www.netlify.com">
+            <ULink target="_blank" rel="noopener noreferrer" to="https://www.netlify.com">
               <NuxtImg :src="netlify" height="250px" width="250px" alt="Deploys by Netlify" />
             </ULink>
           </template>
@@ -38,8 +38,9 @@
           <template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
             <NuxtLink
               external
-              :href="`https://github.com/elk-zone/elk/commit/${buildInfo.commit}`"
+              :href="`https://github.com/WolfStarOrg/WolfStar/commit/${buildInfo.commit}`"
               target="_blank"
+              rel="noopener noreferrer"
               class="text-sm text-base-content/80"
             >
               Commit: {{ buildInfo.shortCommit }}

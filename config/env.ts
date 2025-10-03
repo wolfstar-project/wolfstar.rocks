@@ -1,47 +1,53 @@
 import Git from "simple-git";
 import { isDevelopment } from "std-env";
-import { Env } from "../shared/types/index";
 
 export { version } from "../package.json";
+
+/**
+ * Environment variable `PULL_REQUEST` provided by Netlify.
+ * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#git-metadata}
+ *
+ * Whether triggered by a GitHub PR
+ */
+export const isPR = process.env.PULL_REQUEST === "true";
+
+/**
+ * Environment variable `BRANCH` provided by Netlify.
+ * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#git-metadata}
+ *
+ * Git branch
+ */
+export const gitBranch = process.env.BRANCH;
+
+/**
+ * Environment variable `CONTEXT` provided by Netlify.
+ * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#build-metadata}
+ *
+ * Whether triggered by PR, `deploy-preview` or `dev`.
+ */
+export const isPreview = isPR || process.env.CONTEXT === "deploy-preview" || process.env.CONTEXT === "dev";
 
 export async function getGitInfo() {
   const git = Git();
   let branch;
   try {
-    if (process.env.CF_PAGES_BRANCH) {
-      branch = process.env.CF_PAGES_BRANCH;
-    }
-    else {
-      branch = await git.revparse(["--abbrev-ref", "HEAD"]);
-    }
+    branch = gitBranch || await git.revparse(["--abbrev-ref", "HEAD"]);
   }
   catch {
     branch = "unknown";
   }
 
   let commit;
-
   try {
-    if (process.env.CF_PAGES_COMMIT_SHA) {
-      commit = process.env.CF_PAGES_COMMIT_SHA;
-    }
-    else {
-      commit = await git.revparse(["HEAD"]);
-    }
+    commit = await git.revparse(["HEAD"]);
   }
   catch {
     commit = "unknown";
   }
 
   let shortCommit;
-
   try {
-    if (process.env.CF_PAGES_COMMIT_SHA) {
-      shortCommit = process.env.CF_PAGES_COMMIT_SHA.slice(0, 7);
-    }
-    else {
-      shortCommit = await git.revparse(["--short=7", "HEAD"]);
-    }
+    shortCommit = await git.revparse(["--short=7", "HEAD"]);
   }
   catch {
     shortCommit = "unknown";
@@ -52,22 +58,12 @@ export async function getGitInfo() {
 
 export async function getEnv() {
   const { commit, shortCommit, branch } = await getGitInfo();
-
-  let env: Env;
-  if (isDevelopment) {
-    env = Env.Dev;
-  }
-  else {
-    switch (branch) {
-      case "main":
-        env = Env.Prod;
-        break;
-      case "refactor/":
-        env = Env.Canary;
-        break;
-      default:
-        env = Env.Dev;
-    }
-  }
+  const env = isDevelopment
+    ? "dev"
+    : isPreview
+      ? "preview"
+      : branch === "main"
+        ? "canary"
+        : "release";
   return { commit, shortCommit, branch, env } as const;
 }

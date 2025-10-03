@@ -18,6 +18,7 @@ export default {
       vertical: "not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
     },
     color: {
+      neutral: "btn-neutral",
       primary: "btn-primary",
       secondary: "btn-secondary",
       accent: "btn-accent",
@@ -179,4 +180,4 @@ export default {
     variant: "solid",
     size: "md",
   },
-} as const;
+};

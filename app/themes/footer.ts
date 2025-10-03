@@ -8,4 +8,4 @@ export default {
     center: "mt-3 lg:mt-0 lg:order-2 flex items-center justify-center",
     right: "lg:flex-1 flex items-center justify-center lg:justify-end gap-x-1.5 lg:order-3",
   },
-} as const;
+};

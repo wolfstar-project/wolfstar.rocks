@@ -94,4 +94,4 @@ export default {
     color: "primary",
     size: "md",
   },
-} as const;
+};

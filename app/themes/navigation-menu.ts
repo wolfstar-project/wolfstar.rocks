@@ -337,4 +337,4 @@ export default {
     highlightColor: "primary",
     variant: "pill",
   },
-} as const;
+};

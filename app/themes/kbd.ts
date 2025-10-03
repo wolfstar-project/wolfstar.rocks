@@ -69,4 +69,4 @@ export default {
     variant: "outline",
     size: "md",
   },
-} as const;
+};

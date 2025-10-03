@@ -335,4 +335,4 @@ export default {
     color: "primary",
     variant: "outline",
   },
-} as const;
+};

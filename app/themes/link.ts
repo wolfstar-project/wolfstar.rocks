@@ -14,4 +14,4 @@ export default {
       true: "cursor-not-allowed opacity-75",
     },
   },
-} as const;
+};

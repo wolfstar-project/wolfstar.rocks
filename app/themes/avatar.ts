@@ -27,4 +27,4 @@ export default {
     size: "md",
     shape: "circle",
   },
-} as const;
+};

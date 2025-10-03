@@ -51,4 +51,4 @@ export default {
   defaultVariants: {
     position: "bottom-right",
   },
-} as const;
+};

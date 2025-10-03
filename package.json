@@ -23,7 +23,7 @@
     "generate": "nuxt generate",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache --fix .",
-    "postinstall": "stale-dep -u && pnpm prisma:generate && nuxt prepare",
+    "postinstall": "stale-dep -u && nuxt prepare && pnpm prisma:generate",
     "prepare": "node .husky/install.mjs",
     "preview": "pnpx nuxthub preview",
     "prisma:migrate:dev": "prisma migrate dev",

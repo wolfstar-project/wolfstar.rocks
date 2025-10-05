@@ -61,31 +61,33 @@ async function main() {
         consola.log("Operation cancelled.");
         return;
       }
-      consola.log("Creating recovery reference...");
-      await git.branch([recoveryRef, "release"]);
-      recoveryRefCreated = true;
-      consola.log(`Recovery reference '${recoveryRef}' created.`);
-
-      consola.log("Checkout release branch");
-      await git.checkout("release");
-      switchedBranch = true;
-
-      consola.log(`Reset to main branch (${hash})`);
-      await git.reset(["--hard", hash]);
-
-      consola.log("Push to release branch");
-      await git.push(["origin", "release", "--force"]);
-
-      consola.log("Checkout main branch");
-      await git.checkout("main");
-      await git.reset(["--hard", hash]);
-
-      consola.log("Push to release branch");
-      await git.push(["--force"]);
-
-      consola.log("Checkout main branch");
-      await git.checkout("main");
     }
+
+    // Always create a recovery reference before performing destructive operations
+    consola.log("Creating recovery reference...");
+    await git.branch([recoveryRef, "release"]);
+    recoveryRefCreated = true;
+    consola.log(`Recovery reference '${recoveryRef}' created.`);
+
+    consola.log("Checkout release branch");
+    await git.checkout("release");
+    switchedBranch = true;
+
+    consola.log(`Reset to main branch (${hash})`);
+    await git.reset(["--hard", hash]);
+
+    consola.log("Push to release branch");
+    await git.push(["origin", "release", "--force"]);
+
+    consola.log("Checkout main branch");
+    await git.checkout("main");
+    await git.reset(["--hard", hash]);
+
+    consola.log("Push to release branch");
+    await git.push(["--force"]);
+
+    consola.log("Checkout main branch");
+    await git.checkout("main");
   }
   catch (error) {
     consola.error("An error occurred during the release process:", error);

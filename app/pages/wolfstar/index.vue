@@ -99,9 +99,23 @@
             role="button"
             @click="advanceFeatureIndex(-1)"
           />
-          <div v-for="(text, index) of texts" :key="index" class="radio-feature-container" :data-tip="text.tooltip">
-            <input v-model="featureIndex" type="radio" name="automod-feature" class="radio-feature" :value="index" />
-          </div>
+          <label
+            v-for="(text, index) of texts"
+            :key="index"
+            class="radio-feature-container"
+            :data-tip="text.tooltip"
+            :for="`automod-feature-${index}`"
+          >
+            <input
+              :id="`automod-feature-${index}`"
+              v-model="featureIndex"
+              type="radio"
+              name="automod-feature"
+              class="radio-feature"
+              :value="index"
+            />
+            <span class="sr-only">{{ text.tooltip }}</span>
+          </label>
           <UIcon
             name="ph:caret-down-bold"
             class="radio-feature-arrow -rotate-90 lg:rotate-0"
@@ -189,9 +203,23 @@
             role="button"
             @click="advanceModerationIndex(-1)"
           />
-          <div v-for="(action, index) of moderationActions" :key="action.name" class="radio-feature-container" :data-tip="action.name">
-            <input v-model="moderationIndex" type="radio" name="moderation-log" class="radio-feature" :value="index" />
-          </div>
+          <label
+            v-for="(action, index) of moderationActions"
+            :key="action.name"
+            class="radio-feature-container"
+            :data-tip="action.name"
+            :for="`moderation-feature-${index}`"
+          >
+            <input
+              :id="`moderation-feature-${index}`"
+              v-model="moderationIndex"
+              type="radio"
+              name="moderation-log"
+              class="radio-feature"
+              :value="index"
+            />
+            <span class="sr-only">{{ action.name }}</span>
+          </label>
           <UIcon
             name="ph:caret-down-bold"
             class="radio-feature-arrow -rotate-90 lg:rotate-0"

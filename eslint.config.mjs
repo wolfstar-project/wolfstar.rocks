@@ -6,7 +6,6 @@ import withNuxt from "./.nuxt/eslint.config.mjs";
 export default withNuxt(
   antfu(
     {
-      vue: true,
       formatters: true,
       pnpm: true,
       stylistic: {
@@ -14,6 +13,9 @@ export default withNuxt(
         quotes: "double",
         semi: true,
         jsx: true,
+      },
+      vue: {
+        a11y: true,
       },
     },
     {
@@ -84,6 +86,10 @@ export default withNuxt(
     "vue/custom-event-name-casing": "off",
     "vue/no-multiple-template-root": "off",
     "vue/singleline-html-element-content-newline": "off",
+    "vue/no-restricted-syntax": ["error", {
+      selector: "VElement[name='a']",
+      message: "Use NuxtLink instead.",
+    }],
     "import/first": "off",
     "import/consistent-type-specifier-style": "off",
   },

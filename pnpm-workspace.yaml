@@ -49,6 +49,7 @@ catalogs:
     eslint: ^9.36.0
     eslint-plugin-format: ^1.0.2
     eslint-plugin-package-json: ^0.56.3
+    eslint-plugin-vuejs-accessibility: ^2.4.1
     husky: ^9.1.7
     lint-staged: ^16.2.3
     prettier: ^3.6.2

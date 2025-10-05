@@ -1,5 +1,6 @@
+const { public: { clientId } } = useRuntimeConfig();
 export const Invites = {
-  WolfStar: "https://discord.com/oauth2/authorize?client_id=&permissions=534185897078&scope=bot%20applications.commands",
+  WolfStar: `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=534185897078&scope=bot%20applications.commands`,
   Staryl: "",
 };
 
@@ -16,6 +17,11 @@ export enum BrandingColors {
   // extra color
   Tertiary = "#FF4444",
 }
+
+export enum ThemeColors {
+  themeLight = "#ffffff",
+  themeDark = "#121212",
+};
 
 export enum Colors {
   White = "#e7e7e8",
@@ -43,6 +49,7 @@ export enum Colors {
   Yellow = "#ffeb3b",
   Yellow300 = "#fff176",
 }
+
 export interface ModerationAction {
   color: Colors;
   name: string;

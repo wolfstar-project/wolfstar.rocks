@@ -50,13 +50,12 @@
         <div
           class="rounded-full transition-transform duration-300 group-hover:scale-105 flex items-center justify-center"
           :class="iconSizeClasses"
-          @mouseenter="isHovering = true"
-          @mouseleave="isHovering = false"
+          role="img"
         >
           <div v-if="!loaded" class="skeleton h-full w-full"></div>
           <picture v-if="!isDefault && loaded">
             <source
-              v-if="isAnimated && isHovering"
+              v-if="shouldAnimate"
               media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
               type="image/gif"
               :srcset="makeSrcset('gif')"
@@ -107,7 +106,7 @@
 <script setup lang="ts">
 import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
-import { useIntersectionObserver } from "@vueuse/core";
+import { useIntersectionObserver, usePreferredReducedMotion } from "@vueuse/core";
 
 interface GuildIconProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
@@ -126,10 +125,11 @@ const props = withDefaults(defineProps<GuildIconProps>(), {
   showStats: false,
 });
 
-const isHovering = ref(false);
 const loaded = ref(false);
 const icon = useTemplateRef<HTMLElement | null>("icon");
+const prefersReducedMotion = usePreferredReducedMotion();
 
+// Intersection Observer to lazy-load the icon image
 const { stop } = useIntersectionObserver(
   icon,
   ([entry]) => {
@@ -145,6 +145,7 @@ const guild = toRef(props, "guild");
 // Make these computed to avoid SSR hydration issues
 const isDefault = ref(false);
 const isAnimated = ref(false);
+const shouldAnimate = computed(() => isAnimated.value && !prefersReducedMotion.value);
 // Size-based classes for DaisyUI Avatar
 const iconSizeClasses = computed(() => {
   const sizeMap = {

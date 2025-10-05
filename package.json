@@ -92,7 +92,8 @@
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:utils",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "eslint-plugin-vuejs-accessibility": "catalog:lint"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

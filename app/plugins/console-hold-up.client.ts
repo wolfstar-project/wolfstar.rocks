@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { isProduction } from "std-env";
 
 export default defineNuxtPlugin(() => {

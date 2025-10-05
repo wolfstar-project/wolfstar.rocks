@@ -57,7 +57,7 @@ export function useHeader() {
       },
     ],
   }, {
-    label: "Application",
+    label: "Applications",
     children: [{
       label: "WolfStar",
       icon: "ph:shield-duotone",
@@ -67,7 +67,13 @@ export function useHeader() {
       icon: "i-lucide-twitch",
       to: "/staryl",
     }],
-  }, {
+  }, ...(currentApp.value.invite
+    ? [{
+        label: "Invite App",
+        to: currentApp.value.invite,
+        icon: "ph:plus-circle-duotone",
+      }]
+    : []), {
     label: "GitHub",
     to: "https://github.com/wolfstar-project/wolfstar.rocks",
     icon: "lucide:github",

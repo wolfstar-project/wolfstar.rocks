@@ -13,16 +13,15 @@
             content: 'w-48'
           }"
         >
-          <UButton
-            circle
+          <UUser
+            :ui="{ name: 'hidden font-semibold sm:inline' }"
+            :name="user!.globalName ?? user!.username"
             :avatar="{
               src: avatarSrc,
               icon: 'i-lucide-image',
-              size: 'md',
+              size: 'md'
             }"
-          >
-            <span v-if="user" class="hidden font-semibold sm:inline">{{ user.globalName ?? user.username }}</span>
-          </UButton>
+          />
         </UDropdownMenu>
       </div>
       <div v-else>
@@ -40,7 +39,7 @@
           size="md"
           color="primary"
           variant="subtle"
-          to="/login"
+          to="/api/auth/discord"
           block
           class="mb-3 lg:hidden"
           icon="ic:round-discord"

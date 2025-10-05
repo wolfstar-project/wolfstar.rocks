@@ -1,6 +1,5 @@
-const { public: { clientId } } = useRuntimeConfig();
 export const Invites = {
-  WolfStar: `https://discord.com/oauth2/authorize?client_id=${clientId}&permissions=534185897078&scope=bot%20applications.commands`,
+  WolfStar: `https://discord.com/oauth2/authorize?client_id=&permissions=534185897078&scope=bot%20applications.commands`,
   Staryl: "",
 };
 

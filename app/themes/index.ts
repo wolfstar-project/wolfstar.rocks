@@ -6,7 +6,6 @@ export { default as footer } from "./footer";
 export { default as footerColumns } from "./footer-columns";
 export { default as header } from "./header";
 export { default as inputMenu } from "./input-menu";
-export { default as kbd } from "./kbd";
 export { default as link } from "./link";
 export { default as navigationMenu } from "./navigation-menu";
 export { default as tabs } from "./tabs";

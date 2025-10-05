@@ -1,4 +1,4 @@
-import { avatar, badge, button, fieldGroup, footer, footerColumns, header, inputMenu, kbd, link, navigationMenu, tabs, toaster } from "@/themes/index";
+import { avatar, badge, button, fieldGroup, footer, footerColumns, header, inputMenu, link, navigationMenu, tabs, toaster } from "@/themes/index";
 
 export default defineAppConfig({
   ui: {
@@ -10,7 +10,6 @@ export default defineAppConfig({
     link,
     toaster,
     avatar,
-    kbd,
     footer,
     fieldGroup,
     badge,

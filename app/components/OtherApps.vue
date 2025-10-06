@@ -23,7 +23,7 @@
           <nuxt-link class="btn join-item btn-neutral" :to="app.explore">
             <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore
           </nuxt-link>
-          <nuxt-link class="btn join-item btn-neutral" :to="app.invite">
+          <nuxt-link class="btn join-item btn-neutral" :to="getInvite(app.name)">
             <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
           </nuxt-link>
         </div>
@@ -33,7 +33,18 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ apps: readonly OtherApp[] }>();
+defineProps<{ apps: readonly (Omit<OtherApp, "invite">)[] }>();
+const { wolfstarInvite, starylInvite } = useInvites();
+
+function getInvite(appName: string): string {
+  if (appName === "WolfStar") {
+    return wolfstarInvite.value;
+  }
+  if (appName === "Staryl") {
+    return starylInvite.value;
+  }
+  return "";
+}
 </script>
 
 <style scoped>

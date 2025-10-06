@@ -8,7 +8,7 @@
   </section>
 
   <section class="mt-16 join flex items-center justify-center">
-    <nuxt-link class="btn join-item sm:btn-wide" :to="Invites.WolfStar">
+    <nuxt-link class="btn join-item sm:btn-wide" :to="wolfstarInvite">
       <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
     </nuxt-link>
     <nuxt-link class="btn join-item sm:btn-wide" to="#explore"><UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
@@ -303,7 +303,7 @@
     <h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
     <div class="join">
-      <nuxt-link :to="Invites.WolfStar" class="btn join-item btn-ghost">Invite WolfStar</nuxt-link>
+      <nuxt-link :to="wolfstarInvite" class="btn join-item btn-ghost">Invite WolfStar</nuxt-link>
       <nuxt-link to="https://join.wolfstar.rocks" class="btn join-item btn-ghost">Support Server</nuxt-link>
     </div>
   </section>
@@ -313,6 +313,8 @@
 
 <script setup lang="ts">
 import { cast } from "@sapphire/utilities/cast";
+
+const { wolfstarInvite } = useInvites();
 
 definePageMeta({ alias: ["/"] });
 

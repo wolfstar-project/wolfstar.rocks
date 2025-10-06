@@ -55,8 +55,7 @@
           <div v-if="!loaded" class="skeleton h-full w-full"></div>
           <picture v-if="!isDefault && loaded">
             <source
-              v-if="shouldAnimate"
-              media="(prefers-reduced-motion: no-preference), (prefers-reduced-data: no-preference)"
+              :media="`(prefers-reduced-motion: ${prefersReducedMotion})`"
               type="image/gif"
               :srcset="makeSrcset('gif')"
             />
@@ -145,7 +144,6 @@ const guild = toRef(props, "guild");
 // Make these computed to avoid SSR hydration issues
 const isDefault = ref(false);
 const isAnimated = ref(false);
-const shouldAnimate = computed(() => isAnimated.value && !prefersReducedMotion.value);
 // Size-based classes for DaisyUI Avatar
 const iconSizeClasses = computed(() => {
   const sizeMap = {

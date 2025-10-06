@@ -15,7 +15,7 @@ export const useFooter = () => {
       children: [
         { label: "Patreon", to: "https://donate.wolfstar.rocks/patreon", icon: "ph:patreon-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-rose-600" } },
         { label: "PayPal", to: "https://donate.wolfstar.rocks/paypal", icon: "ph:paypal-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-sky-600" } },
-        { label: "Ko-fi", to: "https://donate.wolfstar.rocks/kofi", icon: "ph:coffee-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-pink-500" } },
+        { label: "Ko-fi", to: "https://donate.wolfstar.rocks/ko-fi", icon: "ph:coffee-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-pink-500" } },
       ],
     },
     {

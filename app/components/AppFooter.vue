@@ -5,9 +5,14 @@
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns">
           <template #right>
-            <ULink target="_blank" rel="noopener noreferrer" to="https://www.netlify.com">
-              <NuxtImg :src="netlify" height="250px" width="250px" alt="Deploys by Netlify" />
-            </ULink>
+            <UButton
+              label="Powered by Netlify"
+              to="https://www.netlify.com"
+              icon="simple-icons:netlify"
+              color="neutral"
+              variant="soft"
+              :ui="{ leadingIcon: 'bg-green-500' }"
+            />
           </template>
         </UFooterColumns>
       </UContainer>
@@ -72,12 +77,4 @@
 <script setup lang="ts">
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
-
-const colorMode = useColorMode();
-
-const netlify = computed(() => {
-  return colorMode.value === "dark"
-    ? "/netlify-badge-dark.svg"
-    : "/netlify-badge-light.svg";
-});
 </script>

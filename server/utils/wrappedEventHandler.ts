@@ -4,7 +4,6 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { logger, useLogger } from "#shared/utils/logger";
 import { isObject } from "@sapphire/utilities";
-import { cast } from "@sapphire/utilities/cast";
 import { asyncRateLimit } from "@tanstack/pacer";
 import { isDevelopment } from "std-env";
 import { omit } from "~~/server/utils";
@@ -12,6 +11,34 @@ import { omit } from "~~/server/utils";
 const debugLogger = useLogger("@wolfstar/debug");
 
 const rateLimitStorage = useStorage();
+
+interface NormalizedRateLimitOptions {
+  enabled: boolean;
+  window: number;
+  limit: number;
+  type: "fixed" | "sliding";
+}
+
+const rateLimitDefaults: NormalizedRateLimitOptions = {
+  enabled: true,
+  window: 10000,
+  limit: 5,
+  type: "fixed",
+};
+
+function normalizeRateLimitOptions(options: RateLimitOptions | undefined): NormalizedRateLimitOptions {
+  if (!options || !isObject(options)) {
+    return { ...rateLimitDefaults };
+  }
+
+  const candidate = options as unknown as Record<string, unknown>;
+  const enabled = typeof candidate.enabled === "boolean" ? candidate.enabled : rateLimitDefaults.enabled;
+  const window = typeof candidate.window === "number" && Number.isFinite(candidate.window) && candidate.window > 0 ? candidate.window : rateLimitDefaults.window;
+  const limit = typeof candidate.limit === "number" && Number.isFinite(candidate.limit) && candidate.limit > 0 ? candidate.limit : rateLimitDefaults.limit;
+  const type = candidate.type === "sliding" ? "sliding" : rateLimitDefaults.type;
+
+  return { enabled, window, limit, type };
+}
 
 interface DefinedWrappedResponseHandlerOptions {
   onError?: (logger: ConsolaInstance, err: any | Error | H3Error) => void;
@@ -23,7 +50,7 @@ interface DefinedWrappedCachedResponseHandlerOptions extends DefinedWrappedRespo
 }
 
 interface RateLimitOptions {
-  enabled: true;
+  enabled: boolean;
   window?: number;
   limit: number;
   type?: "fixed" | "sliding";
@@ -33,7 +60,62 @@ async function getIdentifier(event: H3Event, session: UserSessionRequired | null
   if (session) {
     return session.user.id;
   }
-  return getRequestIP(event, { xForwardedFor: true }) ?? event.node.req.socket.remoteAddress ?? event.headers.get("X-Real-IP") ?? event.headers.get("X-Cluster-Client-IP");
+  return getRequestIP(event, { xForwardedFor: true })
+    ?? event.node.req.socket.remoteAddress
+    ?? event.headers.get("X-Real-IP")
+    ?? event.headers.get("X-Cluster-Client-IP")
+    ?? "unknown";
+}
+
+async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
+  event: H3Event<T>,
+  handler: EventHandler<T, D>,
+  options: DefinedWrappedResponseHandlerOptions,
+) {
+  let session: UserSessionRequired | null = null;
+
+  if (options.auth) {
+    session = await requireUserSession(event, {
+      statusCode: 401,
+      message: "Missing session",
+    });
+    isDevelopment && debugLogger.debug("User session required and found", session.user.name);
+  }
+
+  const id = await getIdentifier(event, session);
+  const savedState = await rateLimitStorage.getItem(`rate-limiter-state:${id}`);
+  const initialState = savedState && isObject(savedState) ? savedState : {};
+  isDevelopment && debugLogger.debug(`Rate limit identifier: ${id}`);
+
+  const { enabled, limit, window, type: windowType } = normalizeRateLimitOptions(options.rateLimit);
+
+  const asyncLimiter = asyncRateLimit(
+    async (event: H3Event<T>) => handler(event),
+    {
+      onSettled(_args, rateLimiter) {
+        rateLimitStorage.setItem(`rate-limiter-state:${id}`, rateLimiter.store.state);
+        setResponseHeader(event, "X-RateLimit-Limit", limit);
+        setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
+        setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
+      },
+      onSuccess(_result, _args, rateLimiter) {
+        setResponseHeader(event, "Date", new Date().toUTCString());
+        isDevelopment && debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
+      },
+      onReject: (_args, rateLimiter) => {
+        logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
+        setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
+      },
+      windowType,
+      window,
+      limit,
+      enabled,
+      initialState,
+      throwOnError: true,
+    },
+  );
+
+  return await asyncLimiter(event);
 }
 
 export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
@@ -44,54 +126,8 @@ export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
   },
 ): EventHandler<T, D> =>
   defineEventHandler<T>(async (event) => {
-    let user: UserSessionRequired | null = null;
-
     try {
-      if (options.auth) {
-        user = await requireUserSession(event, {
-          statusCode: 401,
-          message: "Missing session",
-        });
-        isDevelopment && debugLogger.debug("User session required and found", user.user.name);
-      }
-
-      const id = await getIdentifier(event, user);
-      const savedState = await rateLimitStorage.getItem(`rate-limiter-state:${id}`);
-      const initialState = savedState && isObject(savedState) ? savedState : {};
-      isDevelopment && debugLogger.debug(`Rate limit identifier: ${id}`);
-
-      const { enabled, limit, window, type: windowType } = cast<{ enabled: true; window: number; limit: number; type: "fixed" | "sliding" }>(options.rateLimit ?? { window: 10000, limit: 5, type: "fixed" });
-
-      const xRateLimitLimit = limit;
-      const asyncLimiter = asyncRateLimit(
-        async (event: H3Event<T>) => {
-          rateLimitStorage.setItem(`rate-limiter-state:${id}`, event);
-          return await handler(event);
-        },
-        {
-          onSettled(_args, rateLimiter) {
-            setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
-            setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
-            setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
-          },
-          onSuccess(_result, _args, rateLimiter) {
-            setResponseHeader(event, "Date", new Date().toUTCString());
-            // Called after each successful execution
-            isDevelopment && debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
-          },
-          onReject: (_args, rateLimiter) => {
-            logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
-            setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
-          },
-          windowType,
-          window,
-          limit,
-          enabled,
-          initialState,
-          throwOnError: true,
-        },
-      );
-      return await asyncLimiter(event);
+      return await applyWrappedHandlerLogic(event, handler, options);
     }
     catch (error) {
       if (options.onError) {
@@ -113,54 +149,8 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
   },
 ): EventHandler<T, D> =>
   cachedEventHandler<T>(async (event) => {
-    let user: UserSessionRequired | null = null;
-
     try {
-      if (options.auth) {
-        user = await requireUserSession(event, {
-          statusCode: 401,
-          message: "Missing session",
-        });
-        isDevelopment && debugLogger.debug("User session required and found", user.user.name);
-      }
-
-      const id = await getIdentifier(event, user);
-      const savedState = await rateLimitStorage.getItem(`rate-limiter-state:${id}`);
-      const initialState = savedState && isObject(savedState) ? savedState : {};
-      isDevelopment && debugLogger.debug(`Rate limit identifier: ${id}`);
-
-      const { enabled, limit, window, type: windowType } = cast<{ enabled: true; window: number; limit: number; type: "fixed" | "sliding" }>(options.rateLimit ?? { window: 10000, limit: 5, type: "fixed" });
-
-      const xRateLimitLimit = limit;
-      const asyncLimiter = asyncRateLimit(
-        async (event: H3Event<T>) => {
-          rateLimitStorage.setItem(`rate-limiter-state:${id}`, event);
-          return await handler(event);
-        },
-        {
-          onSettled(_args, rateLimiter) {
-            setResponseHeader(event, "X-RateLimit-Limit", xRateLimitLimit);
-            setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
-            setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
-          },
-          onSuccess(_result, _args, rateLimiter) {
-            setResponseHeader(event, "Date", new Date().toUTCString());
-            // Called after each successful execution
-            isDevelopment && debugLogger.info(`Request from ${id} successful.`, rateLimiter.store.state.successCount);
-          },
-          onReject: (_args, rateLimiter) => {
-            logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
-            setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
-          },
-          windowType,
-          window,
-          limit,
-          enabled,
-          initialState,
-          throwOnError: true,
-        },
-      );
-      return await asyncLimiter(event);
+      return await applyWrappedHandlerLogic(event, handler, options);
     }
     catch (error) {
       if (options.onError) {

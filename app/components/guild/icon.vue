@@ -116,13 +116,14 @@ interface GuildIconProps {
   showStats?: boolean;
 }
 
-const props = withDefaults(defineProps<GuildIconProps>(), {
-  size: "md",
-  variant: "card",
-  showStatus: true,
-  showName: false,
-  showStats: false,
-});
+const {
+  guild,
+  size = "md",
+  variant = "card",
+  showStatus = true,
+  showName = false,
+  showStats = false,
+} = defineProps<GuildIconProps>();
 
 const loaded = ref(false);
 const icon = useTemplateRef<HTMLElement | null>("icon");
@@ -139,8 +140,6 @@ const { stop } = useIntersectionObserver(
   },
   { rootMargin: "150px" },
 );
-
-const guild = toRef(props, "guild");
 // Make these computed to avoid SSR hydration issues
 const isDefault = ref(false);
 const isAnimated = ref(false);
@@ -152,7 +151,7 @@ const iconSizeClasses = computed(() => {
     lg: "size-20",
     xl: "size-24",
   };
-  return sizeMap[props.size];
+  return sizeMap[size];
 });
 
 const acronymSizeClasses = computed(() => {
@@ -162,12 +161,12 @@ const acronymSizeClasses = computed(() => {
     lg: "text-xl font-bold",
     xl: "text-2xl font-bold",
   };
-  return sizeMap[props.size];
+  return sizeMap[size];
 });
 
 // Utility functions
 function createUrl(format: "webp" | "png" | "gif", size: number) {
-  return `https://cdn.discordapp.com/icons/${props.guild!.id}/${props.guild!.icon}.${format}?size=${size}`;
+  return `https://cdn.discordapp.com/icons/${guild!.id}/${guild!.icon}.${format}?size=${size}`;
 }
 
 function makeSrcset(format: "webp" | "png" | "gif") {
@@ -176,6 +175,8 @@ function makeSrcset(format: "webp" | "png" | "gif") {
 
 function formatNumber(num: number): string {
   return Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
     maximumFractionDigits: 1,
   }).format(num);
 }
@@ -183,25 +184,9 @@ function formatNumber(num: number): string {
 watch(
   guild,
   (guild) => {
-    if (guild.icon) {
-      isDefault.value = false;
-      isAnimated.value = guild.icon.startsWith("a_");
-    }
-    else {
-      isDefault.value = true;
-      isAnimated.value = false;
-    }
+    isDefault.value = guild.icon === null;
+    isAnimated.value = guild.icon?.startsWith("a_") ?? false;
   },
   { immediate: true },
 );
 </script>
-
-<style scoped>
-.line-clamp-1 {
-	display: -webkit-box;
-	-webkit-line-clamp: 1;
-	line-clamp: 1;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-}
-</style>

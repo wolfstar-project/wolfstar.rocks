@@ -80,7 +80,6 @@
     "nuxt-vitalizer": "catalog:prod",
     "pinia": "catalog:prod",
     "postcss-nested": "catalog:style",
-    "postcss-nesting": "catalog:style",
     "prisma": "catalog:prod",
     "prisma-json-types-generator": "catalog:prod",
     "require-in-the-middle": "catalog:prod",

@@ -55,7 +55,7 @@
           <div v-if="!loaded" class="skeleton h-full w-full"></div>
           <picture v-if="!isDefault && loaded">
             <source
-              :media="`(prefers-reduced-motion: ${prefersReducedMotion})`"
+              v-if="isAnimated && prefersReducedMotion === 'no-preference'"
               type="image/gif"
               :srcset="makeSrcset('gif')"
             />

@@ -65,6 +65,7 @@
       <UButton
         to="https://github.com/wolfstar-project/wolfstar"
         target="_blank"
+        rel="noopener noreferrer"
         icon="lucide:github"
         aria-label="GitHub"
         color="neutral"

@@ -252,23 +252,24 @@ export default defineNuxtConfig({
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {
+    nonce: true, // Enable nonce support for SSR
     headers: {
       crossOriginEmbedderPolicy: false,
       contentSecurityPolicy: {
         "default-src": ["'self'"],
         "base-uri": ["'self'"],
-        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
-        "font-src": ["'self'"],
+        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:", "https://cdn.wolfstar.rocks", "https://static.cloudflareinsights.com", "https://cdn.discordapp.com", "https://media.discordapp.net"],
+        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],
-        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
+        "img-src": ["'self'", "https:", "http:", "data:", "blob:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
         "manifest-src": ["'self'"],
-        "media-src": ["'self'", "https:", "http:"],
+        "media-src": ["'self'", "https:", "http:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
         "object-src": ["'none'"],
-        "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"],
+        "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'", "https://cdn.wolfstar.rocks", "https://static.cloudflareinsights.com"],
         "script-src-attr": ["'none'"],
-        "style-src": ["'self'", "'unsafe-inline'"],
+        "style-src": ["'self'", "'unsafe-inline'", "https:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
         "upgrade-insecure-requests": true,
       },
       permissionsPolicy: {

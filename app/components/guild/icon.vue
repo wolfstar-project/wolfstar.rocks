@@ -182,7 +182,7 @@ function formatNumber(num: number): string {
 }
 
 watch(
-  guild,
+  () => guild,
   (guild) => {
     isDefault.value = guild.icon === null;
     isAnimated.value = guild.icon?.startsWith("a_") ?? false;

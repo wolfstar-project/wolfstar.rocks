@@ -60,8 +60,8 @@
           <!-- Title -->
           <h1
             class="m-0 font-bold mb-[30px] text-[75px] leading-tight"
-            style="display: block; text-overflow: ellipsis;"
-            :style="{ lineClamp: description ? 2 : 3 }"
+            style="display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;"
+            :style="{ WebkitLineClamp: description ? 2 : 3 }"
           >
             {{ title?.slice(0, 60) }}
           </h1>
@@ -69,18 +69,10 @@
           <!-- Description -->
           <p
             v-if="description"
-            class="text-[32px] leading-tight"
-            :class="[
+            class="text-[32px] leading-tight line-clamp-3"
+            :class=" [
               colorMode === 'light' ? 'text-gray-700' : 'text-[#E4E4E7]',
             ]"
-            style="
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 3;
-              line-clamp: 3;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            "
           >
             {{ description }}
           </p>

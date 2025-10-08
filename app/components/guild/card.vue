@@ -147,12 +147,4 @@ function formatNumber(num: number): string {
 .card-info {
 	@apply flex min-h-[4rem] flex-col justify-between space-y-2 text-center;
 }
-
-.line-clamp-2 {
-	display: -webkit-box;
-	-webkit-line-clamp: 2;
-	line-clamp: 2;
-	-webkit-box-orient: vertical;
-	overflow: hidden;
-}
 </style>

@@ -8,7 +8,7 @@
   </section>
 
   <section class="mt-16 join">
-    <nuxt-link class="btn join-item md:btn-wide" :to="starylInvite"><UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link>
+    <nuxt-link class="btn join-item md:btn-wide" :to="Invites.Staryl"><UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App</nuxt-link>
     <nuxt-link class="btn join-item md:btn-wide" to="#explore"><UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
   </section>
 
@@ -16,8 +16,6 @@
 </template>
 
 <script setup lang="ts">
-const { starylInvite } = useInvites();
-
 useSeoMetadata({
   title: "Staryl",
   description: "Staryl's landing page.\nA very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",

@@ -56,7 +56,7 @@ interface RateLimitOptions {
   type?: "fixed" | "sliding";
 }
 
-async function getIdentifier(event: H3Event, session: UserSessionRequired | null) {
+function getIdentifier(event: H3Event, session: UserSessionRequired | null) {
   if (session) {
     return session.user.id;
   }
@@ -82,7 +82,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
     isDevelopment && debugLogger.debug("User session required and found", session.user.name);
   }
 
-  const id = await getIdentifier(event, session);
+  const id = getIdentifier(event, session);
   const savedState = await rateLimitStorage.getItem(`rate-limiter-state:${id}`);
   const initialState = savedState && isObject(savedState) ? savedState : {};
   isDevelopment && debugLogger.debug(`Rate limit identifier: ${id}`);
@@ -118,37 +118,36 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
   return await asyncLimiter(event);
 }
 
-export const defineWrappedResponseHandler = <T extends EventHandlerRequest, D>(
+export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
   options: DefinedWrappedResponseHandlerOptions = {
     auth: false,
     rateLimit: { enabled: true, window: 10000, limit: 5, type: "fixed" },
   },
-): EventHandler<T, D> =>
-  defineEventHandler<T>(async (event) => {
+): EventHandler<T, D> {
+  return defineEventHandler<T>(async (event) => {
     try {
       return await applyWrappedHandlerLogic(event, handler, options);
     }
     catch (error) {
       if (options.onError) {
         options.onError(useLogger("@wolfstar/api"), error);
-        throw error;
       }
-      // Error handling
-      return error as H3Error;
+      throw error;
     }
   });
-
-export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest, D> (
+}
+export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
   options: DefinedWrappedCachedResponseHandlerOptions = {
     auth: false,
-    rateLimit: { enabled: true, window: 10000, limit: 5 },
+    rateLimit: { enabled: true, window: 10000, limit: 5, type: "fixed" },
     maxAge: 60 * 60,
-    swr: false,
+    swr: true,
   },
-): EventHandler<T, D> =>
-  cachedEventHandler<T>(async (event) => {
+): EventHandler<T, D> {
+  const opts = omit(["rateLimit", "auth", "onError"], options);
+  return cachedEventHandler<T>(async (event) => {
     try {
       return await applyWrappedHandlerLogic(event, handler, options);
     }
@@ -160,6 +159,5 @@ export const defineWrappedCachedResponseHandler = <T extends EventHandlerRequest
       // Error handling
       return error as H3Error;
     }
-  }, {
-    ...omit(["rateLimit", "auth"], options),
-  });
+  }, opts);
+};

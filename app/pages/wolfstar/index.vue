@@ -19,8 +19,11 @@
     <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
       <div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
         <discord-messages class="w-full">
-          <discord-message v-if="featureIndex === AutomodFeature.Spam" name="baddie">Guys look at me!</discord-message>
-          <discord-message v-if="featureIndex === AutomodFeature.Spam" name="baddie">Guys look at me!</discord-message>
+          <template v-if="featureIndex === AutomodFeature.Spam">
+            <discord-message v-for="n in 2" :key="n" name="baddie">
+              Guys look at me!
+            </discord-message>
+          </template>
           <discord-message
             :name="featureIndex === AutomodFeature.Reactions ? 'stella' : 'baddie'"
             :class="{ 'text-error': featureIndex !== AutomodFeature.Reactions }"

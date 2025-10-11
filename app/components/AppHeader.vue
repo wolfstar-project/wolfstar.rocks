@@ -25,7 +25,7 @@
       <HeaderRight />
     </template>
     <template #body>
-      <UNavigationMenu :items="mobileLinks" orientation="vertical" class="-mx-2.5" />
+      <HeaderBody />
     </template>
   </UHeader>
 </template>
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 const navbar = ref<HTMLElement | null>(null);
 const { y } = useScroll(navbar);
-const { desktopLinks, mobileLinks } = useHeader();
+const { desktopLinks } = useHeader();
 </script>
 
 <style scoped>

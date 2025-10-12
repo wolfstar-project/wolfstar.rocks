@@ -6,7 +6,6 @@ const { public: { sentry, environment } } = generateRuntimeConfig();
 
 if (sentry.dsn) {
   Sentry.init({
-    enabled: !["cloudflare_pages", "cloudflare_module"].includes(process.env.NUXT_NITRO_PRESET ?? ""),
     dsn: sentry.dsn,
 
     // Set tracesSampleRate to 1.0 to capture 100%

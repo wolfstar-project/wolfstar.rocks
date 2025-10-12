@@ -1,4 +1,3 @@
-import { useRuntimeConfig } from "#imports";
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
 
@@ -27,7 +26,7 @@ if (sentry.dsn) {
 
     // Specify a set of allowed URLs to reduce noise from third-party services
     // https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#allowurls
-    allowUrls: [/https?:\/\/((cdn|www)\.)?wolfstar\.rocks/],
+    allowUrls: [/https?:\/\/((cdn|www|beta)\.)?wolfstar\.rocks/],
 
     // Adds request headers and IP for users, for more info visit:
     // https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#sendDefaultPii

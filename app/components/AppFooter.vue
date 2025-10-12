@@ -8,6 +8,8 @@
             <UButton
               label="Powered by Netlify"
               to="https://www.netlify.com"
+              target="_blank"
+              rel="noopener noreferrer"
               icon="simple-icons:netlify"
               color="neutral"
               variant="soft"
@@ -59,8 +61,6 @@
     </template>
     <template #right>
       <UColorModeButton />
-
-      <Feedback />
 
       <UButton
         to="https://github.com/wolfstar-project/wolfstar"

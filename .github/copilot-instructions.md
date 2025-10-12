@@ -156,7 +156,6 @@ The CI pipeline (.github/workflows/continuous-integration.yml) will fail if lint
 
 - **Main application**: http://localhost:3000 (dev server)
 - **Prisma Studio**: http://localhost:5555 (database management)
-- **Tailwind Viewer**: http://localhost:3000/\_tailwind/ (CSS utility viewer)
 
 Always ensure ports are available before starting services. The development server includes hot reload and will automatically reflect code changes.
 

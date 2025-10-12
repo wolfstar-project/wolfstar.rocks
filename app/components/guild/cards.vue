@@ -90,7 +90,7 @@ interface EnhancedGuildCardsProps {
   viewMode: "card" | "grid";
 };
 
-const { filterGuilds, guilds, undoSearch, searchQuery, loading, error, viewMode } = toRefs(defineProps<EnhancedGuildCardsProps>());
+const { filterGuilds, guilds, undoSearch, searchQuery, loading, error, viewMode = "card" } = defineProps<EnhancedGuildCardsProps>();
 
 const INITIAL_COUNT = 20;
 const LOAD_MORE_COUNT = 10;
@@ -99,24 +99,24 @@ const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
 
 const paginatedGuilds = computed(() => {
-  return filterGuilds.value.slice(0, visibleCount.value);
+  return filterGuilds.slice(0, visibleCount.value);
 });
 
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
   () => {
-    if (loading.value || error.value !== undefined)
+    if (loading || error !== undefined)
       return;
     visibleCount.value += LOAD_MORE_COUNT;
   },
   {
     distance: 10,
-    canLoadMore: () => visibleCount.value < filterGuilds.value.length,
+    canLoadMore: () => visibleCount.value < filterGuilds.length,
   },
 );
 
 watch(
-  () => filterGuilds.value,
+  () => filterGuilds,
   () => {
     visibleCount.value = INITIAL_COUNT;
     reset();

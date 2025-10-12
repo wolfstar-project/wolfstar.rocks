@@ -17,17 +17,16 @@
       >
         <!-- Guild UIcon -->
         <div class="flex flex-col items-center space-y-4">
-          <guild-icon
-            :guild
-            variant="bare"
-            size="lg"
-            :show-status="true"
-          />
+          <guild-icon :guild variant="bare" size="lg" :show-status="true" />
         </div>
 
         <!-- Guild Info -->
-        <div class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center">
-          <h3 class="line-clamp-2 sm:text-sm text-md text-base font-semibold text-base-content transition-colors group-hover:text-primary">
+        <div
+          class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center"
+        >
+          <h3
+            class="line-clamp-2 text-base sm:text-sm font-semibold text-base-content transition-colors group-hover:text-primary"
+          >
             {{ guild.name }}
           </h3>
         </div>
@@ -44,12 +43,7 @@
     >
       <!-- Guild UIcon -->
       <div class="flex flex-col items-center space-y-4">
-        <guild-icon
-          :guild
-          variant="bare"
-          size="lg"
-          :show-status="true"
-        />
+        <guild-icon :guild variant="bare" size="lg" :show-status="true" />
       </div>
 
       <!-- Guild Info -->
@@ -63,19 +57,24 @@
         <div
           class="flex items-center justify-center space-x-4 text-xs text-base-content/60"
         >
-          <span
-            class="flex items-center space-x-1"
-            title="Total members"
-          >
-            <UIcon name="heroicons:user-group" class="h-3 w-3 text-base-content/70" />
-            <span>{{ !isNullOrUndefinedOrZero(guild.approximateMemberCount) ? formatNumber(guild.approximateMemberCount) : 'N/A' }}</span>
+          <span class="flex items-center space-x-1" title="Total members">
+            <UIcon
+              name="heroicons:user-group"
+              class="h-3 w-3 text-base-content/70"
+            />
+            <span>{{
+              !isNullOrUndefinedOrZero(guild.approximateMemberCount)
+                ? formatNumber(guild.approximateMemberCount)
+                : "N/A"
+            }}</span>
           </span>
-          <span
-            class="flex items-center space-x-1"
-            title="Members online"
-          >
+          <span class="flex items-center space-x-1" title="Members online">
             <UIcon name="heroicons:signal" class="h-3 w-3 text-success" />
-            <span>{{ !isNullOrUndefinedOrZero(guild.approximatePresenceCount) ? formatNumber(guild.approximatePresenceCount) : 'N/A' }}</span>
+            <span>{{
+              !isNullOrUndefinedOrZero(guild.approximatePresenceCount)
+                ? formatNumber(guild.approximatePresenceCount)
+                : "N/A"
+            }}</span>
           </span>
         </div>
       </div>
@@ -86,7 +85,10 @@
           :to="`/guilds/${guild.id}/manage`"
           class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
         >
-          <UIcon name="heroicons:adjustments-horizontal" class="mr-1 inline h-3 w-3" />
+          <UIcon
+            name="heroicons:adjustments-horizontal"
+            class="mr-1 inline h-3 w-3"
+          />
           Manage Server
         </NuxtLink>
         <NuxtLink
@@ -97,7 +99,10 @@
           <UIcon name="heroicons:rocket-launch" class="mr-1 inline h-3 w-3" />
           Invite Bot
         </NuxtLink>
-        <div v-else class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50">
+        <div
+          v-else
+          class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50"
+        >
           <UIcon name="heroicons:no-symbol" class="mr-1 inline h-3 w-3" />
           No Permission
         </div>
@@ -127,7 +132,9 @@ const manageGuildURL = computed(() => {
   if (!guild.manageable) {
     return undefined;
   }
-  return guild.wolfstarIsIn ? `/guilds/${guild.id}/manage` : guildAddURL(guild.id);
+  return guild.wolfstarIsIn
+    ? `/guilds/${guild.id}/manage`
+    : guildAddURL(guild.id);
 });
 // Utility functions
 function formatNumber(num: number): string {

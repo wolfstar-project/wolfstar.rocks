@@ -8,22 +8,14 @@
         : 'relative',
       {
         'ring-2 ring-primary/20': variant === 'card' && guild.wolfstarIsIn,
-        'opacity-75': variant === 'card' && guild.manageable,
-      }
+        'opacity-75': variant === 'card' && !guild.manageable,
+      },
     ]"
   >
     <!-- Guild UIcon -->
-    <div
-      class="relative"
-      :class="[
-        variant === 'card' ? '' : 'group'
-      ]"
-    >
+    <div class="relative" :class="[variant === 'card' ? '' : 'group']">
       <!-- Status Indicator -->
-      <div
-        v-if="showStatus && guild"
-        class="absolute  -top-1 -right-1 z-10"
-      >
+      <div v-if="showStatus && guild" class="absolute -top-1 -right-1 z-10">
         <div
           v-if="guild.wolfstarIsIn"
           class="flex h-7 w-7 items-center justify-center rounded-full bg-success/70 text-white shadow-sm transition-all duration-200 hover:bg-success/60"
@@ -82,19 +74,35 @@
     </div>
 
     <!-- Guild Name (optional) - only in card variant -->
-    <div v-if="variant === 'card' && showName && guild" class="w-full text-center">
-      <h4 class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary">
+    <div
+      v-if="variant === 'card' && showName && guild"
+      class="w-full text-center"
+    >
+      <h4
+        class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary"
+      >
         {{ guild.name }}
       </h4>
     </div>
 
     <!-- Guild Stats (optional) - only in card variant -->
-    <div v-if="variant === 'card' && showStats && guild" class="flex items-center justify-center space-x-2 text-xs text-base-content/60">
-      <span v-if="guild.approximateMemberCount" class="flex items-center space-x-1" title="Total members">
+    <div
+      v-if="variant === 'card' && showStats && guild"
+      class="flex items-center justify-center space-x-2 text-xs text-base-content/60"
+    >
+      <span
+        v-if="guild.approximateMemberCount"
+        class="flex items-center space-x-1"
+        title="Total members"
+      >
         <UIcon name="ph:users-fill" class="h-2 w-2" />
         <span>{{ formatNumber(guild.approximateMemberCount) }}</span>
       </span>
-      <span v-if="guild.approximatePresenceCount" class="flex items-center space-x-1" title="Members online">
+      <span
+        v-if="guild.approximatePresenceCount"
+        class="flex items-center space-x-1"
+        title="Members online"
+      >
         <UIcon name="ph:wifi-high" class="h-2 w-2 text-success" />
         <span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
       </span>
@@ -105,7 +113,10 @@
 <script setup lang="ts">
 import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
-import { useIntersectionObserver, usePreferredReducedMotion } from "@vueuse/core";
+import {
+  useIntersectionObserver,
+  usePreferredReducedMotion,
+} from "@vueuse/core";
 
 interface GuildIconProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
@@ -166,7 +177,7 @@ const acronymSizeClasses = computed(() => {
 
 // Utility functions
 function createUrl(format: "webp" | "png" | "gif", size: number) {
-  return `https://cdn.discordapp.com/icons/${guild!.id}/${guild!.icon}.${format}?size=${size}`;
+  return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${format}?size=${size}`;
 }
 
 function makeSrcset(format: "webp" | "png" | "gif") {

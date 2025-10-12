@@ -154,10 +154,8 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
     catch (error) {
       if (options.onError) {
         options.onError(useLogger("@wolfstar/api"), error);
-        throw error;
       }
-      // Error handling
-      return error as H3Error;
+      throw error;
     }
   }, opts);
 };

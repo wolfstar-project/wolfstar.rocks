@@ -70,7 +70,18 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  const channels = await api.guilds.getChannels(guild.id);
+  const channels = await api.guilds.getChannels(guild.id).catch((error) => {
+    logger.error("Failed to fetch channels:", error);
+    throw createError({
+      statusCode: 500,
+      message: "Failed to fetch channels",
+      data: {
+        error: "channels_fetch_failed",
+        message: error.message || "Unknown error",
+        details: error,
+      },
+    });
+  });
 
   // Return flattened guild data
 

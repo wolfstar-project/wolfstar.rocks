@@ -1,7 +1,8 @@
 import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from "#shared/types/discord";
 import type { APIGuild, APIGuildMember, APIUser, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { hasAtLeastOneKeyInMap } from "@sapphire/utilities";
+import { REST } from "@discordjs/rest";
+import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
 import {
   GuildDefaultMessageNotifications,
   GuildExplicitContentFilter,
@@ -12,7 +13,6 @@ import {
   PermissionFlagsBits,
 } from "discord-api-types/v10";
 import { readSettings } from "~~/server/database/settings/functions";
-
 import { flattenGuild } from "~~/server/utils/ApiTransformers";
 import { PermissionsBits } from "~/utils/bits";
 
@@ -114,6 +114,26 @@ export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): 
   return { user, transformedGuilds };
 }
 
+export const getGuilds = defineCachedFunction(async (_event: H3Event) => {
+  const api = useApi();
+
+  const guilds = await api.users.getGuilds().catch((error) => {
+    logger.error("Failed to fetch guilds:", error);
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Failed to fetch guilds",
+      data: {
+        error: "guilds_fetch_failed",
+        message: error.message || "Unknown error",
+        details: error,
+      },
+    });
+  });
+  return guilds;
+}, {
+  maxAge: seconds(5),
+});
+
 export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: string) => {
   const api = useApi();
   const guild = await api.guilds.get(guildId, { with_counts: true }).catch((error) => {
@@ -132,6 +152,47 @@ export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: st
   return guild;
 }, {
   getKey: (_event, guildId) => `guild:${guildId}`,
+  maxAge: seconds(5),
+});
+
+export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
+  // Get session token
+  const tokens = await event.context.$authorization.resolveServerTokens();
+
+  if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
+    logger.warn("No tokens or access token not found");
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Authentication required",
+      data: {
+        error: "no_access_token",
+        message: "None tokens OR access token not found",
+      },
+    });
+  }
+
+  // Initialize REST client
+  const rest = new REST({
+    authPrefix: "Bearer",
+  }).setToken(tokens.access_token);
+
+  const api = useApi(rest);
+
+  const user = await api.users.getCurrent().catch((error) => {
+    logger.error("Failed to fetch user data:", error);
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Failed to fetch user data",
+      data: {
+        field: "user",
+        error: "user_fetch_failed",
+        message: error.message || "Unknown error",
+        details: error,
+      },
+    });
+  });
+  return user;
+}, {
   maxAge: seconds(5),
 });
 

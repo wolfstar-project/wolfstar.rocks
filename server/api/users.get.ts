@@ -1,6 +1,3 @@
-import { REST } from "@discordjs/rest";
-import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-
 defineRouteMeta({
   openAPI: {
     tags: ["Discord Api"],
@@ -10,59 +7,10 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(async (event) => {
   const logger = useLogger("@wolfstar/api");
-  // Get session token
-  const tokens = await event.context.$authorization.resolveServerTokens();
 
-  if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
-    logger.warn("No tokens or access token not found");
-    throw createError({
-      statusCode: 401,
-      statusMessage: "Authentication required",
-      data: {
-        error: "no_access_token",
-        message: "None tokens OR access token not found",
-      },
-    });
-  }
+  const user = await getCurrentUser(event);
 
-  // Initialize REST client
-  const rest = new REST({
-    authPrefix: "Bearer",
-  }).setToken(tokens.access_token);
-
-  const api = useApi(rest);
-
-  // Fetch user data with improved error handling
-  logger.info("Fetching user data...");
-  const user = await api.users.getCurrent().catch((error) => {
-    logger.error("Failed to fetch user data:", error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch user data",
-      data: {
-        error: "user_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
-    });
-  });
-
-  // Fetch guilds with improved error handling
-  logger.info(`Fetching guilds for user ${user.id}...`);
-  const guilds = await api.users.getGuilds().catch((error) => {
-    logger.error("Failed to fetch guilds:", error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch guilds",
-      data: {
-        error: "guilds_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
-    });
-  });
-
-  logger.info(`Successfully fetched ${guilds.length} guilds for user ${user.id}`);
+  const guilds = await getGuilds(event);
 
   // Transform and return data with improved error handling
   const transformedData = await transformOauthGuildsAndUser({

@@ -32,7 +32,7 @@
               <UButton color="warning" @click="toggleCategory(item.label, false)">
                 Disable all
               </UButton>
-              <UButton color="error" @click="parseCommandsToState">
+              <UButton color="error" @click="fetchCommandsAndParseToState">
                 Reset
               </UButton>
             </div>
@@ -50,16 +50,19 @@
 <script setup lang="ts">
 import type { FlattenedCommand } from "#shared/types/discord";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
+import type { ExpirableLocalStorageStructure } from "~/utils/constants";
+import { Time } from "@sapphire/time-utilities";
 import * as yup from "yup";
+import { LocalStorageKeys } from "~/utils/constants";
 
 const emit = defineEmits<{
   (e: "update:commands", commands: FlattenedCommand[]): void;
 }>();
 
-const { commands } = useCommands();
+const commands = useState<FlattenedCommand[]>(() => []);
 
 const toast = useToast();
-const { settings, changes } = useGuildSettings();
+const { mergedSettings, setChanges } = useGuildSettingsStore();
 
 const schema = computed(() => {
   const shape: Record<string, yup.BooleanSchema> = {};
@@ -94,12 +97,29 @@ function toggleCategory(category: string, enable: boolean) {
   }
 }
 
-function parseCommandsToState() {
+async function fetchCommandsAndParseToState() {
+  const commandsStorage = useSessionStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
+    expire: 0,
+    data: [],
+  });
+  if (commandsStorage.value && (import.meta.env.DEV || commandsStorage.value.expire > Date.now())) {
+    commands.value = commandsStorage.value.data;
+  }
+  else {
+    const { data: commandsData } = await useAPI<FlattenedCommand[]>("/commands");
+    commands.value = commandsData.value!;
+    commandsStorage.value = {
+      expire: Date.now() + Time.Day * 6,
+      data: commandsData.value!,
+    };
+  }
+
+  // Parse commands to state after fetching
   const commandsForState: Schema = {};
   for (const command of commands.value) {
     if (command.guarded)
       continue;
-    commandsForState[command.name] = !settings.value.disabledCommands?.includes(command.name);
+    commandsForState[command.name] = !mergedSettings.disabledCommands?.includes(command.name);
   }
   Object.assign(state, commandsForState);
 }
@@ -109,7 +129,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     .filter(([_, isEnabled]) => !isEnabled)
     .map(([name]) => name);
 
-  changes({
+  setChanges({
     disabledCommands,
   });
 
@@ -131,5 +151,5 @@ async function onError(event: FormErrorEvent) {
   });
 }
 
-onMounted(parseCommandsToState);
+onMounted(fetchCommandsAndParseToState);
 </script>

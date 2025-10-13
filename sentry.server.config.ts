@@ -14,6 +14,12 @@ if (sentry.dsn) {
     // Learn more at
     // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
     tracesSampleRate: isDevelopment ? 1.0 : sentry.tracesSampleRate,
+
+    // Define what the valid targets for trace propagation are
+    // Learn more at
+    // https://docs.sentry.io/platforms/javascript/configuration/options/#tracePropagationTargets
+    tracePropagationTargets: ["localhost", /^(?:beta\.)?wolfstar\.rocks\/api/],
+
     environment,
 
     // Enable logging for Sentry

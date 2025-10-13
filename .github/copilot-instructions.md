@@ -15,15 +15,15 @@ The dependencies are already installed via pnpm.
 
 **CRITICAL - Build Timeouts:**
 
-- **NEVER CANCEL** build commands. Set timeout to 120+ minutes.
-- Build takes 45-60 seconds normally but can take longer on first run.
-- Always wait for builds to complete fully.
+- Avoid canceling commands prematurely; cold starts can be slower.
+- Builds take ~45–60s normally; they may take longer on first run or when caches are cold.
+- For CI, prefer pragmatic timeouts (e.g., 20–30 minutes by default) and extend to ~60 minutes for cold/first-run builds. Consider retries/backoff for transient failures.
 
 ```bash
-# Development server (NEVER CANCEL - takes 30+ seconds to start)
-pnpm dev                        # Runs on http://localhost:3000 - TIMEOUT: 120+ seconds
+# Development server (cold start ~30–60s)
+pnpm dev                        # Runs on http://localhost:3000
 
-# Production build (NEVER CANCEL - takes 45-60 seconds)
+# Production build (~45–60s typical; longer on first run)
 pnpm build                      # TIMEOUT: 120+ seconds
 
 # Production server (requires build first)
@@ -72,9 +72,10 @@ pnpm dev:pwa                    # Dev server with PWA features
    ```
 
 2. **Migration Creation:**
-   ```bash
-   pnpm prisma:migrate:dev     # Generate migration file from schema changes
-   ```
+
+```bash
+pnpm prisma:migrate:dev     # Generate migration file from schema changes
+```
 
 ### Discord Bot Integration Development
 
@@ -90,7 +91,7 @@ pnpm dev:pwa                    # Dev server with PWA features
 ### Scenario 1: Basic Dashboard Functionality
 
 1. Start development server: `pnpm dev`
-2. Navigate to http://localhost:3000
+2. Navigate to <http://localhost:3000>
 3. Verify homepage loads with WolfStar branding
 4. Test Discord OAuth login flow
 5. Verify guild list loads after authentication
@@ -120,7 +121,7 @@ pnpm dev:pwa                    # Dev server with PWA features
 
 ## Important Directory Structure
 
-```
+```text
 /app/                    # Nuxt application code (frontend)
   /components/           # Vue components
   /composables/          # Vue composables
@@ -128,9 +129,13 @@ pnpm dev:pwa                    # Dev server with PWA features
   /pages/                # File-based routing
   /stores/               # Pinia stores
   /themes/               # UI theme configurations
+  /plugins/              # Nuxt plugins
+  /stores/               # Pinia stores
+  /types/                # Frontend type definitions
+  /utils/                # Frontend utilities
 /server/                 # Nitro server code (backend)
   /api/                  # API routes
-  /database/             # Prisma schema and utilities
+  /database/             # Database utilities
     /migrations          # Prisma migrations
     /schema.prisma       # Database schema definition
   /middlewares/          # Server middlewares
@@ -146,16 +151,16 @@ pnpm dev:pwa                    # Dev server with PWA features
 
 Before committing changes, always run:
 
-2. `pnpm build` - Must build successfully
-3. `pnpm lint` - Fix any errors, warnings are acceptable
-4. `pnpm typecheck` - Must pass without errors (optional)
+1. `pnpm build` - Must build successfully
+2. `pnpm lint` - Fix any errors, warnings are acceptable
+3. `pnpm typecheck` - Must pass without errors (optional)
 
 The CI pipeline (.github/workflows/continuous-integration.yml) will fail if linting, type checking, building, or core tests fail.
 
 ## Development Servers and Ports
 
-- **Main application**: http://localhost:3000 (dev server)
-- **Prisma Studio**: http://localhost:5555 (database management)
+- **Main application**: <http://localhost:3000> (dev server)
+- **Prisma Studio**: <http://localhost:5555> (database management)
 
 Always ensure ports are available before starting services. The development server includes hot reload and will automatically reflect code changes.
 

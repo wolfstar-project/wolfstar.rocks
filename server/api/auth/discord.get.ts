@@ -55,6 +55,7 @@ export default defineOAuthDiscordEventHandler({
         maxAge: 60 * 60 * 24 * 7, // 1 week
       },
     );
+    return sendRedirect(event, "/");
   },
 
   async onError(_event: H3Event, error: NuxtError) {

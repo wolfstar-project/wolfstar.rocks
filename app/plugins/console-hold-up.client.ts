@@ -5,7 +5,7 @@ export default defineNuxtPlugin(() => {
   if (isProduction) {
     const warningStyles = ["color: red", "background: yellow", "font-size: 24px", "font-weight: bold", "padding: 10px"].join(";");
 
-    const messageStyles = ["color: white", "font-size: 16px", "padding: 5px", "border: 2px solid black"].join(";");
+    const messageStyles = ["color: white", "background: black", "font-size: 16px", "padding: 5px", "border: 2px solid red"].join(";");
 
     console.log("%c⚠️ WARNING! ⚠️", warningStyles);
 

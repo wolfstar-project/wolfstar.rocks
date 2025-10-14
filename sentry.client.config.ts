@@ -34,7 +34,7 @@ if (sentry.dsn) {
 
     // Specify the tunnel path for Sentry to use when sending events also enabled ad blocker
     // https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#tunnel
-    tunnel: "/sentry",
+    tunnel: "/tunnel",
 
     // Replay may only be enabled for the client-side
     integrations: [

@@ -268,6 +268,8 @@ export default defineNuxtConfig({
         "media-src": ["'self'", "https:", "http:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
         "object-src": ["'none'"],
         "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'", "https://cdn.wolfstar.rocks", "https://static.cloudflareinsights.com"],
+        "worker-src": ["'self'", "blob:"],
+        "child-src": ["'self'", "blob:"],
         "script-src-attr": ["'none'"],
         "style-src": ["'self'", "'unsafe-inline'", "https:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
         "upgrade-insecure-requests": true,

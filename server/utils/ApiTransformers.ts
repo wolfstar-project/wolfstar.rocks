@@ -62,7 +62,7 @@ export function flattenGuild(
     features: guild.features,
     icon: guild.icon,
     id: guild.id,
-    joinedTimestamp: Date.now(), // Add missing property
+    joinedTimestamp: "joined_at" in guild ? Date.parse(guild.joined_at as string) : null,
     mfaLevel: guild.mfa_level,
     name: guild.name,
     acronym: guild.name
@@ -428,7 +428,7 @@ export function flattenMember(member: APIGuildMember, guild: APIGuild): Flattene
     id: member.user.id,
     guildId: guild.id,
     user: flattenUser(member.user),
-    joinedTimestamp: Date.parse(member.joined_at),
+    joinedTimestamp: member.joined_at ? Date.parse(member.joined_at) : null,
     premiumSinceTimestamp: member.premium_since ? Date.parse(member.premium_since) : null,
     roles: member.roles
       .map((roleId) => {

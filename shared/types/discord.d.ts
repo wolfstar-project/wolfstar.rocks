@@ -68,7 +68,7 @@ export interface FlattenedGuild {
   features: APIGuild["features"];
   icon: APIGuild["icon"];
   id: APIGuild["id"];
-  joinedTimestamp: number;
+  joinedTimestamp: number | null;
   mfaLevel: APIGuild["mfa_level"];
   features: APIGuild["features"];
   name: APIGuild["name"];

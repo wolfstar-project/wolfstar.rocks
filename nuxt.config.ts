@@ -204,7 +204,7 @@ export default defineNuxtConfig({
     },
   },
 
-  hooks: {
+  /* hooks: {
     "pages:extend": function (pages) {
       pages.splice(0, pages.length, ...pages.filter(page => !page.path.includes("component") && !page.path.includes("/api")));
       // Uncomment to show current Routes
@@ -212,7 +212,7 @@ export default defineNuxtConfig({
       // console.log(pages)
       // console.log(`\n`)
     },
-  },
+  }, */
 
   eslint: {
     config: {
@@ -267,7 +267,7 @@ export default defineNuxtConfig({
         "manifest-src": ["'self'"],
         "media-src": ["'self'", "https:", "http:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
         "object-src": ["'none'"],
-        "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'", "https://cdn.wolfstar.rocks", "https://static.cloudflareinsights.com"],
+        "script-src": ["'self'", "https:", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'"],
         "worker-src": ["'self'", "blob:"],
         "child-src": ["'self'", "blob:"],
         "script-src-attr": ["'none'"],

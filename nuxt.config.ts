@@ -258,7 +258,7 @@ export default defineNuxtConfig({
       contentSecurityPolicy: {
         "default-src": ["'self'"],
         "base-uri": ["'self'"],
-        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:", "https://cdn.wolfstar.rocks", "https://static.cloudflareinsights.com", "https://cdn.discordapp.com", "https://media.discordapp.net"],
+        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:", "https://cdn.wolfstar.rocks", "https://cloudflareinsights.com", "https://static.cloudflareinsights.com", "https://cdn.discordapp.com", "https://media.discordapp.net"],
         "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
@@ -267,7 +267,7 @@ export default defineNuxtConfig({
         "manifest-src": ["'self'"],
         "media-src": ["'self'", "https:", "http:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
         "object-src": ["'none'"],
-        "script-src": ["'self'", "https:", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'"],
+        "script-src": ["'self'", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'"],
         "worker-src": ["'self'", "blob:"],
         "child-src": ["'self'", "blob:"],
         "script-src-attr": ["'none'"],

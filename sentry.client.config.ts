@@ -48,6 +48,15 @@ if (sentry.dsn) {
     // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
     tracesSampleRate: isDevelopment ? 1.0 : sentry.tracesSampleRate,
 
+    // Define what the valid targets for trace propagation are
+    // Learn more at
+    // https://docs.sentry.io/platforms/javascript/configuration/options/#tracePropagationTargets
+    tracePropagationTargets: [
+      "localhost", // For local development
+      /^\/api\//, // For same-origin API calls
+      "https://api.wolfstar.rocks", // For your backend domain
+    ],
+
     // Capture Replay for 10% of all sessions,
     // plus for 100% of sessions with an error
     // Learn more at

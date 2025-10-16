@@ -18,7 +18,11 @@ if (sentry.dsn) {
     // Define what the valid targets for trace propagation are
     // Learn more at
     // https://docs.sentry.io/platforms/javascript/configuration/options/#tracePropagationTargets
-    tracePropagationTargets: ["localhost", /^(?:beta\.)?wolfstar\.rocks\/api/],
+    tracePropagationTargets: [
+      "localhost", // For local development
+      /^\/api\//, // For same-origin API calls
+      "https://api.wolfstar.rocks", // For your backend domain
+    ],
 
     environment,
 

@@ -6,18 +6,15 @@ defineRouteMeta({
 });
 
 export default defineWrappedResponseHandler(async (event) => {
-  const logger = useLogger("@wolfstar/api");
-
   const user = await getCurrentUser(event);
 
-  const guilds = await getGuilds(event);
+  const guilds = await getGuilds();
 
   // Transform and return data with improved error handling
   const transformedData = await transformOauthGuildsAndUser({
     user,
     guilds,
   }).catch((error) => {
-    logger.error("Failed to transform guilds and user data:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Data transformation failed",
@@ -29,17 +26,21 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   });
 
-  logger.info(`Successfully transformed data for user ${user.id}`);
   return transformedData;
 }, {
   auth: true,
-  onError: (logger, err) => {
-    logger.error("Users API error:", {
-      message: err.message,
-      statusCode: err.statusCode,
-      data: err.data,
-      stack: err.stack,
+  onSuccess: (logger, { user, guilds }) => {
+    logger.info(`Successfully transformed guilds and user ${user?.id}`, {
+      guilds: guilds ? guilds.map(guild => ({ id: guild.id, name: guild.name })) : undefined,
     });
+  },
+  onError: (logger, error) => {
+    if (isH3Error(error)) {
+      logger.error("Failed to transform guilds and user data:", {
+        message: error.message,
+        statusCode: error.statusCode,
+      });
+    }
   },
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
 });

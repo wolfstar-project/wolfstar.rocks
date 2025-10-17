@@ -29,9 +29,11 @@ export function generateRuntimeConfig() {
       project: process.env.SENTRY_PROJECT,
       org: process.env.SENTRY_ORG,
     },
-    discordToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
-    discordClientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
-    discordClientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
+    discord: {
+      clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
+      clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
+      botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
+    },
   };
 }
 

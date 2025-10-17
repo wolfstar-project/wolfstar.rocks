@@ -1,5 +1,4 @@
 import { manageAbility } from "#shared/utils/abilities";
-import { Result } from "@sapphire/result";
 import { isNullOrUndefined, isNullOrUndefinedOrZero } from "@sapphire/utilities";
 import { createError } from "h3";
 import * as yup from "yup";
@@ -109,23 +108,9 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Update settings
-  const updateResult = await Result.fromAsync(async () => {
-    const trx = await writeSettingsTransaction(guild.id);
-    await trx.write(Object.fromEntries(data.filter((entry): entry is [string, any] => entry !== undefined))).submit();
-    return serializeSettings(trx.settings);
-  });
-
-  return updateResult.unwrapOrElse((error) => {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to update settings",
-      data: {
-        error: "settings_update_failed",
-        message: Array.isArray(error) ? error.join("\n") : String(error),
-        details: error,
-      },
-    });
-  });
+  const trx = await writeSettingsTransaction(guild.id);
+  await trx.write(Object.fromEntries(data.filter((entry): entry is [string, any] => entry !== undefined))).submit();
+  return serializeSettings(trx.settings);
 }, {
   auth: true,
   rateLimit: { enabled: true, window: seconds(1), limit: 2 },

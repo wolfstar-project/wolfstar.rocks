@@ -16,8 +16,6 @@ import { readSettings } from "~~/server/database/settings/functions";
 import { flattenGuild } from "~~/server/utils/ApiTransformers";
 import { PermissionsBits } from "~/utils/bits";
 
-const logger = useLogger("@wolfstar/api");
-
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
   const permissionsValue = "permissions" in member && typeof member.permissions === "string"
     ? member.permissions
@@ -114,11 +112,10 @@ export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): 
   return { user, transformedGuilds };
 }
 
-export const getGuilds = defineCachedFunction(async (_event: H3Event) => {
+export const getGuilds = defineCachedFunction(async () => {
   const api = useApi();
 
   const guilds = await api.users.getGuilds().catch((error) => {
-    logger.error("Failed to fetch guilds:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to fetch guilds",
@@ -131,13 +128,12 @@ export const getGuilds = defineCachedFunction(async (_event: H3Event) => {
   });
   return guilds;
 }, {
-  maxAge: seconds(5),
+  maxAge: seconds(10),
 });
 
 export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: string) => {
   const api = useApi();
   const guild = await api.guilds.get(guildId, { with_counts: true }).catch((error) => {
-    logger.error("Failed to fetch guilds:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to fetch guilds",
@@ -160,7 +156,6 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   const tokens = await event.context.$authorization.resolveServerTokens();
 
   if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
-    logger.warn("No tokens or access token not found");
     throw createError({
       statusCode: 401,
       statusMessage: "Authentication required",
@@ -179,7 +174,6 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   const api = useApi(rest);
 
   const user = await api.users.getCurrent().catch((error) => {
-    logger.error("Failed to fetch user data:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to fetch user data",
@@ -199,7 +193,6 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
 export const getMember = defineCachedFunction(async (_event: H3Event, guild: APIGuild, user: APIUser) => {
   const api = useApi();
   const member = await api.guilds.getMember(guild.id, user.id).catch((error) => {
-    logger.error("Failed to fetch member:", error);
     throw createError({
       statusCode: 500,
       statusMessage: "Failed to fetch member",

@@ -40,13 +40,14 @@ function normalizeRateLimitOptions(options: RateLimitOptions | undefined): Norma
   return { enabled, window, limit, type };
 }
 
-interface DefinedWrappedResponseHandlerOptions {
-  onError?: (logger: ConsolaInstance, err: any | Error | H3Error) => void;
+interface DefinedWrappedResponseHandlerOptions<Data> {
+  onError?: (logger: ConsolaInstance, error: any | Error | H3Error) => void;
+  onSuccess?: (logger: ConsolaInstance, data: Awaited<Data>) => void;
   auth?: boolean;
   rateLimit: RateLimitOptions;
 }
 
-interface DefinedWrappedCachedResponseHandlerOptions extends DefinedWrappedResponseHandlerOptions, CacheOptions {
+interface DefinedWrappedCachedResponseHandlerOptions<Data> extends DefinedWrappedResponseHandlerOptions<Data>, CacheOptions {
 }
 
 interface RateLimitOptions {
@@ -70,7 +71,7 @@ function getIdentifier(event: H3Event, session: UserSessionRequired | null) {
 async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
   event: H3Event<T>,
   handler: EventHandler<T, D>,
-  options: DefinedWrappedResponseHandlerOptions,
+  options: DefinedWrappedResponseHandlerOptions<D>,
 ) {
   let session: UserSessionRequired | null = null;
 
@@ -120,14 +121,18 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 
 export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
-  options: DefinedWrappedResponseHandlerOptions = {
+  options: DefinedWrappedResponseHandlerOptions<D> = {
     auth: false,
     rateLimit: { enabled: true, window: 10000, limit: 5, type: "fixed" },
   },
 ): EventHandler<T, D> {
   return defineEventHandler<T>(async (event) => {
     try {
-      return await applyWrappedHandlerLogic(event, handler, options);
+      const result = await applyWrappedHandlerLogic(event, handler, options);
+      if (result && options.onSuccess && typeof options.onSuccess === "function") {
+        options.onSuccess?.(useLogger("@wolfstar/api"), result);
+      }
+      return result;
     }
     catch (error) {
       if (options.onError) {
@@ -139,7 +144,7 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 }
 export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
-  options: DefinedWrappedCachedResponseHandlerOptions = {
+  options: DefinedWrappedCachedResponseHandlerOptions<D> = {
     auth: false,
     rateLimit: { enabled: true, window: 10000, limit: 5, type: "fixed" },
     maxAge: 60 * 60,
@@ -149,7 +154,11 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
   const opts = omit(["rateLimit", "auth", "onError"], options);
   return cachedEventHandler<T>(async (event) => {
     try {
-      return await applyWrappedHandlerLogic(event, handler, options);
+      const result = await applyWrappedHandlerLogic(event, handler, options);
+      if (result && options.onSuccess && typeof options.onSuccess === "function") {
+        options.onSuccess?.(useLogger("@wolfstar/api"), result);
+      }
+      return result;
     }
     catch (error) {
       if (options.onError) {

@@ -71,6 +71,7 @@
     "bumpp": "catalog:cli",
     "consola": "catalog:prod",
     "cross-env": "catalog:cli",
+    "eslint-plugin-vuejs-accessibility": "catalog:lint",
     "fuse.js": "catalog:prod",
     "import-in-the-middle": "catalog:prod",
     "motion-v": "catalog:prod",
@@ -91,8 +92,7 @@
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:utils",
-    "zod": "catalog:utils",
-    "eslint-plugin-vuejs-accessibility": "catalog:lint"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -105,7 +105,6 @@
     "@nuxtjs/seo": "catalog:dev",
     "@sapphire/bitfield": "catalog:utils",
     "@sapphire/prettier-config": "catalog:lint",
-    "@sapphire/result": "catalog:utils",
     "@sapphire/snowflake": "catalog:utils",
     "@sapphire/time-utilities": "catalog:utils",
     "@sapphire/utilities": "catalog:utils",
@@ -135,7 +134,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "pnpm@10.18.0",
+  "packageManager": "pnpm@10.18.3",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

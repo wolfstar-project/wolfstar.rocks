@@ -1,5 +1,16 @@
-import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from "#shared/types/discord";
-import type { APIGuild, APIGuildMember, APIUser, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import type {
+  FlattenedGuild,
+  LoginData,
+  OauthFlattenedGuild,
+  PartialOauthFlattenedGuild,
+  TransformedLoginData,
+} from "#shared/types/discord";
+import type {
+  APIGuild,
+  APIGuildMember,
+  APIUser,
+  RESTAPIPartialCurrentUserGuild,
+} from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { REST } from "@discordjs/rest";
 import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
@@ -17,16 +28,26 @@ import { flattenGuild } from "~~/server/utils/ApiTransformers";
 import { PermissionsBits } from "~/utils/bits";
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-  const permissionsValue = "permissions" in member && typeof member.permissions === "string"
-    ? member.permissions
-    : "0";
+  const permissionsValue
+    = "permissions" in member && typeof member.permissions === "string"
+      ? member.permissions
+      : "0";
   const memberRolePermissions = BigInt(permissionsValue);
   return roles.length === 0
-    ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles);
+    ? PermissionsBits.has(
+        memberRolePermissions,
+        PermissionFlagsBits.ManageGuild,
+      )
+    : hasAtLeastOneKeyInMap(
+        new Map(roles.map((role) => [role, true])),
+        member.roles,
+      );
 }
 
-async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boolean> {
+async function canManage(
+  guild: APIGuild,
+  member: APIGuildMember,
+): Promise<boolean> {
   if (!member.user || !member.user.id) {
     return false;
   }
@@ -37,11 +58,19 @@ async function canManage(guild: APIGuild, member: APIGuildMember): Promise<boole
   return isAdmin(member, settings.rolesAdmin);
 }
 
-async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGuild, guild: APIGuild | undefined): Promise<boolean> {
+async function getManageable(
+  id: string,
+  oauthGuild: RESTAPIPartialCurrentUserGuild,
+  guild: APIGuild | undefined,
+): Promise<boolean> {
   if (oauthGuild.owner)
     return true;
-  if (typeof guild === "undefined")
-    return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild);
+  if (typeof guild === "undefined") {
+    return PermissionsBits.has(
+      BigInt(oauthGuild.permissions),
+      PermissionFlagsBits.ManageGuild,
+    );
+  }
 
   const member = await useApi().guilds.getMember(guild.id, id);
   if (!member)
@@ -50,7 +79,10 @@ async function getManageable(id: string, oauthGuild: RESTAPIPartialCurrentUserGu
   return canManage(guild, member);
 }
 
-export async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
+export async function transformGuild(
+  userId: string,
+  data: RESTAPIPartialCurrentUserGuild,
+): Promise<OauthFlattenedGuild> {
   const guild = await useApi()
     .guilds
     .get(data.id, {
@@ -90,9 +122,13 @@ export async function transformGuild(userId: string, data: RESTAPIPartialCurrent
     verified: false,
   } as unknown as FlattenedGuild;
 
-  const serialized: PartialOauthFlattenedGuild = guild === undefined
-    ? mockGuild
-    : flattenGuild({ ...guild, channels: (await useApi().guilds.getChannels(guild.id)) as any });
+  const serialized: PartialOauthFlattenedGuild
+    = guild === undefined
+      ? mockGuild
+      : flattenGuild({
+          ...guild,
+          channels: (await useApi().guilds.getChannels(guild.id)) as any,
+        });
 
   return {
     ...serialized,
@@ -102,110 +138,135 @@ export async function transformGuild(userId: string, data: RESTAPIPartialCurrent
   };
 }
 
-export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): Promise<TransformedLoginData> {
+export async function transformOauthGuildsAndUser({
+  user,
+  guilds,
+}: LoginData): Promise<TransformedLoginData> {
   if (!user || !guilds)
     return { user, guilds };
 
   const userId = user.id;
 
-  const transformedGuilds = await Promise.all(guilds.map(guild => transformGuild(userId, guild)));
+  const transformedGuilds = await Promise.all(
+    guilds.map((guild) => transformGuild(userId, guild)),
+  );
   return { user, transformedGuilds };
 }
 
-export const getGuilds = defineCachedFunction(async () => {
-  const api = useApi();
+export const getGuilds = defineCachedFunction(
+  async () => {
+    const api = useApi();
 
-  const guilds = await api.users.getGuilds().catch((error) => {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch guilds",
-      data: {
-        error: "guilds_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
+    const guilds = await api.users.getGuilds().catch((error) => {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Failed to fetch guilds",
+        data: {
+          error: "guilds_fetch_failed",
+          message: error.message || "Unknown error",
+          details: error,
+        },
+      });
     });
-  });
-  return guilds;
-}, {
-  maxAge: seconds(10),
-});
+    return guilds;
+  },
+  {
+    maxAge: hours(1),
+  },
+);
 
-export const getGuild = defineCachedFunction(async (_event: H3Event, guildId: string) => {
-  const api = useApi();
-  const guild = await api.guilds.get(guildId, { with_counts: true }).catch((error) => {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch guilds",
-      data: {
-        field: "guild",
-        error: "guilds_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
+export const getGuild = defineCachedFunction(
+  async (_event: H3Event, guildId: string) => {
+    const api = useApi();
+    const guild = await api.guilds
+      .get(guildId, { with_counts: true })
+      .catch((error) => {
+        throw createError({
+          statusCode: 500,
+          statusMessage: "Failed to fetch guilds",
+          data: {
+            field: "guild",
+            error: "guilds_fetch_failed",
+            message: error.message || "Unknown error",
+            details: error,
+          },
+        });
+      });
+    return guild;
+  },
+  {
+    getKey: (_event, guildId) => `guild:${guildId}`,
+    maxAge: hours(1),
+  },
+);
+
+export const getCurrentUser = defineCachedFunction(
+  async (event: H3Event) => {
+    // Get session token
+    const tokens = await event.context.$authorization.resolveServerTokens();
+
+    if (
+      isNullOrUndefined(tokens)
+      || !("access_token" in tokens)
+      || isNullOrUndefined(tokens.access_token)
+    ) {
+      throw createError({
+        statusCode: 401,
+        statusMessage: "Authentication required",
+        data: {
+          error: "no_access_token",
+          message: "None tokens OR access token not found",
+        },
+      });
+    }
+
+    // Initialize REST client
+    const rest = new REST({
+      authPrefix: "Bearer",
+    }).setToken(tokens.access_token);
+
+    const api = useApi(rest);
+
+    const user = await api.users.getCurrent().catch((error) => {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Failed to fetch user data",
+        data: {
+          field: "user",
+          error: "user_fetch_failed",
+          message: error.message || "Unknown error",
+          details: error,
+        },
+      });
     });
-  });
-  return guild;
-}, {
-  getKey: (_event, guildId) => `guild:${guildId}`,
-  maxAge: seconds(5),
-});
+    return user;
+  },
+  {
+    maxAge: hours(1),
+  },
+);
 
-export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
-  // Get session token
-  const tokens = await event.context.$authorization.resolveServerTokens();
-
-  if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: "Authentication required",
-      data: {
-        error: "no_access_token",
-        message: "None tokens OR access token not found",
-      },
-    });
-  }
-
-  // Initialize REST client
-  const rest = new REST({
-    authPrefix: "Bearer",
-  }).setToken(tokens.access_token);
-
-  const api = useApi(rest);
-
-  const user = await api.users.getCurrent().catch((error) => {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch user data",
-      data: {
-        field: "user",
-        error: "user_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
-    });
-  });
-  return user;
-}, {
-  maxAge: seconds(5),
-});
-
-export const getMember = defineCachedFunction(async (_event: H3Event, guild: APIGuild, user: APIUser) => {
-  const api = useApi();
-  const member = await api.guilds.getMember(guild.id, user.id).catch((error) => {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch member",
-      data: {
-        field: "member",
-        error: "member_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
-    });
-  });
-  return member;
-}, {
-  getKey: (_event, guild, user) => `guild:${guild.id}member:${user.id}`,
-  maxAge: seconds(5),
-});
+export const getMember = defineCachedFunction(
+  async (_event: H3Event, guild: APIGuild, user: APIUser) => {
+    const api = useApi();
+    const member = await api.guilds
+      .getMember(guild.id, user.id)
+      .catch((error) => {
+        throw createError({
+          statusCode: 500,
+          statusMessage: "Failed to fetch member",
+          data: {
+            field: "member",
+            error: "member_fetch_failed",
+            message: error.message || "Unknown error",
+            details: error,
+          },
+        });
+      });
+    return member;
+  },
+  {
+    getKey: (_event, guild, user) => `guild:${guild.id}member:${user.id}`,
+    maxAge: hours(1),
+  },
+);

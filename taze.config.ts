@@ -8,6 +8,7 @@ export default defineConfig({
     "typescript": "ignore",
     // regex starts and ends with '/'
     "/vue/": "latest",
+    "/@vueuse/": "latest",
   },
   depFields: {
     overrides: false,

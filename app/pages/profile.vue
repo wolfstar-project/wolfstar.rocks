@@ -1,8 +1,13 @@
 <!-- eslint-disable vue/valid-v-else-if -->
 <template>
   <UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
-    <section class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-80 p-12 shadow-lg">
-      <div v-if="!user || loading" class="flex flex-col items-center justify-center space-y-6">
+    <section
+      class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-80 p-12 shadow-lg"
+    >
+      <div
+        v-if="!user || loading"
+        class="flex flex-col items-center justify-center space-y-6"
+      >
         <div class="h-24 w-24 animate-pulse rounded-full bg-base-300"></div>
         <div class="space-y-2 text-center">
           <div class="h-8 w-48 animate-pulse rounded bg-base-300"></div>
@@ -18,15 +23,26 @@
           class="rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 transition-all duration-300"
         />
         <div class="space-y-2 text-center">
-          <h1 class="text-4xl font-bold text-base-content">{{ user.globalName ?? user.username }}</h1>
-          <p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
+          <h1 class="text-4xl font-bold text-base-content">
+            {{ user.globalName ?? user.username }}
+          </h1>
+          <p class="text-lg font-medium text-base-content/80">
+            @{{ user.username }}
+          </p>
           <p class="text-sm text-base-content/60">User ID: {{ user.id }}</p>
         </div>
       </template>
     </section>
 
-    <section class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center">
-      <UTabs v-model="activeTab" variant="transparent" :items class="w-full flex flex-col items-center">
+    <section
+      class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center"
+    >
+      <UTabs
+        v-model="activeTab"
+        variant="transparent"
+        :items
+        class="w-full flex flex-col items-center"
+      >
         <template #content="{ item }">
           <div class="p-8">
             <div v-if="item.value === 'servers'" class="space-y-6">
@@ -34,13 +50,18 @@
               <div class="mb-4">
                 <h2 class="text-2xl font-bold text-base-content">Servers</h2>
                 <p class="mt-1 text-base-content/60">
-                  <span v-if="status === 'pending'" class="inline-block h-5 w-48 animate-pulse rounded bg-base-300"></span>
+                  <span
+                    v-if="status === 'pending'"
+                    class="inline-block h-5 w-48 animate-pulse rounded bg-base-300"
+                  ></span>
                   <span v-else>Servers you're in ({{ guilds?.length ?? 0 }} servers)</span>
                 </p>
               </div>
 
               <!-- Search and Controls Section -->
-              <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+              <div
+                class="flex flex-wrap items-center justify-between gap-4 mb-4"
+              >
                 <div class="flex items-end gap-2">
                   <UFieldGroup class="flex items-start gap-2">
                     <UInput
@@ -80,7 +101,13 @@
                     >
                       <template #leading>
                         <Transition name="fade" mode="in-out">
-                          <UIcon :name="viewMode === 'grid' ? 'heroicons:squares-2x2' : 'heroicons:bars-3'" />
+                          <UIcon
+                            :name="
+                              viewMode === 'grid'
+                                ? 'heroicons:squares-2x2'
+                                : 'heroicons:bars-3'
+                            "
+                          />
                         </Transition>
                       </template>
 
@@ -108,7 +135,13 @@
                     >
                       <template #leading>
                         <Transition name="fade" mode="out-in">
-                          <UIcon :name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'" />
+                          <UIcon
+                            :name="
+                              sortAscending
+                                ? 'lucide:arrow-up-a-z'
+                                : 'lucide:arrow-down-z-a'
+                            "
+                          />
                         </Transition>
                       </template>
                     </UButton>
@@ -130,7 +163,7 @@
                 <!-- Search Input for Desktop -->
               </div>
               <div class="space-y-4 md:space-y-2">
-                <guild-cards
+                <GuildCards
                   :error
                   :guilds
                   :filter-guilds="filteredGuilds"
@@ -144,22 +177,41 @@
               </div>
             </div>
             <div v-if="item.value === 'premium'" class="space-y-6">
-              <UCard class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg">
+              <UCard
+                class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg"
+              >
                 <template #header>
                   <div>
-                    <h2 class="text-2xl font-bold text-base-content">Premium</h2>
-                    <p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
+                    <h2 class="text-2xl font-bold text-base-content">
+                      Premium
+                    </h2>
+                    <p class="mt-1 text-base-content/60">
+                      Unlock advanced features and support the project
+                    </p>
                   </div>
                 </template>
                 <div class="space-y-4 p-6 text-center">
-                  <UIcon name="heroicons:sparkles-20-solid" class="mx-auto h-12 w-12 text-primary" />
+                  <UIcon
+                    name="heroicons:sparkles-20-solid"
+                    class="mx-auto h-12 w-12 text-primary"
+                  />
                   <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
                 </div>
-                <p class="text-base-content/70">Get access to exclusive features and priority support</p>
+                <p class="text-base-content/70">
+                  Get access to exclusive features and priority support
+                </p>
                 <template #footer>
-                  <UFieldGroup size="md" class="flex w-full justify-center pt-4 z-10">
+                  <UFieldGroup
+                    size="md"
+                    class="flex w-full justify-center pt-4 z-10"
+                  >
                     <UButton color="primary">Get Premium</UButton>
-                    <UButton color="primary" variant="outline">Learn More</UButton>
+                    <UButton
+                      color="primary"
+                      variant="outline"
+                    >
+                      Learn More
+                    </UButton>
                   </UFieldGroup>
                 </template>
               </UCard>
@@ -199,12 +251,7 @@ const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
-const {
-  data,
-  status,
-  refresh,
-  error,
-} = useFetch("/api/users", {
+const { data, status, refresh, error } = useFetch("/api/users", {
   key: "guilds",
   transform: (data) => {
     if (!data) {
@@ -222,7 +269,9 @@ const {
     };
   },
   getCachedData: (key, nuxtApp) => {
-    const data = nuxtApp.isHydrating ? nuxtApp.payload.data[key] : nuxtApp.static.data[key];
+    const data = nuxtApp.isHydrating
+      ? nuxtApp.payload.data[key]
+      : nuxtApp.static.data[key];
     if (!data) {
       return;
     }
@@ -239,35 +288,41 @@ const {
 
 const guilds = computed(() => data.value?.guilds ?? []);
 // Optimized filtered guilds with memoization
-const filteredGuilds = computedAsync(() => {
-  let filtered = [...guilds.value];
-  evaluating.value = true;
-  // Apply manageable filter
-  if (showManageableOnly.value) {
-    filtered = filtered.filter(guild => guild.manageable);
-  }
-  // Apply search filter
-  if (searchQuery.value !== null && searchQuery.value?.trim()) {
-    const { results } = useFuse(searchQuery as Ref<string>, filtered, {
-      fuseOptions: {
-        keys: ["name", "id"],
-        threshold: 0.3,
-      },
+const filteredGuilds = computedAsync(
+  () => {
+    let filtered = [...guilds.value];
+    evaluating.value = true;
+    // Apply manageable filter
+    if (showManageableOnly.value) {
+      filtered = filtered.filter((guild) => guild.manageable);
+    }
+    // Apply search filter
+    if (searchQuery.value !== null && searchQuery.value?.trim()) {
+      const { results } = useFuse(searchQuery as Ref<string>, filtered, {
+        fuseOptions: {
+          keys: ["name", "id"],
+          threshold: 0.3,
+        },
+      });
+      filtered = results.value.map((result) => result.item);
+    }
+    // Sort: manageable servers first, then alphabetically
+    return filtered.sort((guildA, guildB) => {
+      if (guildA.manageable !== guildB.manageable) {
+        return guildA.manageable ? -1 : 1;
+      }
+      if (guildA.wolfstarIsIn !== guildB.wolfstarIsIn) {
+        return guildA.wolfstarIsIn ? -1 : 1;
+      }
+      const comparison = guildA.name.localeCompare(guildB.name, "en", {
+        sensitivity: "base",
+      });
+      return sortAscending.value ? comparison : -comparison;
     });
-    filtered = results.value.map(result => result.item);
-  }
-  // Sort: manageable servers first, then alphabetically
-  return filtered.sort((guildA, guildB) => {
-    if (guildA.manageable !== guildB.manageable) {
-      return guildA.manageable ? -1 : 1;
-    }
-    if (guildA.wolfstarIsIn !== guildB.wolfstarIsIn) {
-      return guildA.wolfstarIsIn ? -1 : 1;
-    }
-    const comparison = guildA.name.localeCompare(guildB.name, "en", { sensitivity: "base" });
-    return sortAscending.value ? comparison : -comparison;
-  });
-}, [], { lazy: true, evaluating });
+  },
+  [],
+  { lazy: true, evaluating },
+);
 
 // Optimized avatar computation
 const defaultAvatar = computed(() =>
@@ -282,7 +337,9 @@ const items = computed<TabsItem[]>(() => [
     value: "servers",
     label: "Servers",
     icon: "heroicons:server",
-    badge: loading.value ? undefined : { label: guilds.value?.length ?? "N/A", color: "primary" },
+    badge: loading.value
+      ? undefined
+      : { label: guilds.value?.length ?? "N/A", color: "primary" },
   },
   {
     value: "premium",

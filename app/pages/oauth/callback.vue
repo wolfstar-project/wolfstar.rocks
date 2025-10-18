@@ -1,44 +1,65 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <template v-if="!code">
-      <UAlert variant="solid" color="error" title="Missing Code" icon="emojione:warning">
+      <UAlert
+        variant="solid"
+        color="error"
+        title="Missing Code"
+        icon="emojione:warning"
+      >
         <template #description>
-          Please use the <code>Login</code> button instead or click <ULink to="/login" class="font-medium underline">here</ULink>.
+          Please use the <code>Login</code> button instead or click
+          <ULink to="/login" class="font-medium underline">here</ULink>.
         </template>
         <template #actions>
-          <UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
+          <UButton to="/login" size="sm" variant="outline">
+            Return to Login
+          </UButton>
         </template>
       </UAlert>
     </template>
-    <client-only v-else>
+    <ClientOnly v-else>
       <template v-if="status === 'pending' || status === 'idle'">
         <UAlert color="neutral" icon="emojione:hourglass-done" title="Loading">
-          <template #description>
-            Completing authentication flow...
-          </template>
+          <template #description> Completing authentication flow... </template>
         </UAlert>
       </template>
       <template v-else-if="status === 'error'">
-        <UAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+        <UAlert
+          variant="solid"
+          color="error"
+          title="Authentication Error"
+          icon="emojione:cross-mark"
+        >
           <template #description>
             {{ error?.message ?? error?.statusMessage }}
           </template>
           <template #actions>
-            <UButton to="/login" size="sm" variant="outline"> Try Again </UButton>
+            <UButton to="/login" size="sm" variant="outline">
+              Try Again
+            </UButton>
           </template>
         </UAlert>
       </template>
       <template v-else-if="user">
-        <UAlert color="success" icon="lucide:check" :title="`Welcome ${user.username}`">
+        <UAlert
+          color="success"
+          icon="lucide:check"
+          :title="`Welcome ${user.username}`"
+        >
           <template #description>
             You will be redirected to the main page in a second.
-            <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
+            <div
+              class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900"
+              aria-label="Progress"
+              role="progressbar"
+            >
               <div class="oauth-progress h-4 rounded-md bg-rose-500"></div>
             </div>
           </template>
         </UAlert>
       </template>
-    </client-only>
+    </ClientOnly>
   </div>
 </template>
 
@@ -77,7 +98,8 @@ async function performCall() {
 useRobotsRule(robotBlockingPageProps);
 useSeoMetadata({
   title: "OAuth Callback",
-  description: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
+  description:
+    "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
   seoImage: {
     title: "OAuth Callback",
     description: "A landing page for the OAuth2.0 callback flow",

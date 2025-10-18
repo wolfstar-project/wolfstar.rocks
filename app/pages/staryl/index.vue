@@ -2,18 +2,26 @@
   <section class="mt-28 flex flex-col items-center text-center">
     <h2 class="title pb-4">Imagine an<br />social and feeder network</h2>
     <p class="max-w-[30rem]">
-      A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more,
+      A very customizable multilanguage application to cover your members'
+      social and feeder network needs, with a few entertainment features and
+      more,
       <span class="font-bold underline underline-offset-2">100% for free</span>!
     </p>
   </section>
   <section class="mt-16 join flex items-center justify-center">
-    <nuxt-link class="btn join-item sm:btn-wide" :to="Invites.Staryl">
+    <NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
       <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
-    </nuxt-link>
-    <nuxt-link class="btn join-item sm:btn-wide" to="#explore"><UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore</nuxt-link>
+    </NuxtLink>
+    <NuxtLink
+      class="btn join-item sm:btn-wide"
+      to="#explore"
+    >
+      <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" />
+      Explore
+    </NuxtLink>
   </section>
 
-  <h1> COMING SOON...</h1>
+  <h1>COMING SOON...</h1>
 
   <OtherApps :apps="[OtherApps.WolfStar]" />
 </template>
@@ -21,7 +29,8 @@
 <script setup lang="ts">
 useSeoMetadata({
   title: "Staryl",
-  description: "Staryl's landing page. A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
+  description:
+    "Staryl's landing page. A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
   shouldSeoImage: true,
 });
 </script>

@@ -20,7 +20,7 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
-    ...(isDevelopment || isWindows) ? [] : ["nuxt-security"],
+    ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     "~~/modules/build-env",
     "stale-dep/nuxt",
   ],
@@ -72,15 +72,24 @@ export default defineNuxtConfig({
         { "http-equiv": "Pragma", "content": "1y" },
 
         // Page transitions
-        { "http-equiv": "Page-Enter", "content": "RevealTrans(Duration=2.0,Transition=2)" },
-        { "http-equiv": "Page-Exit", "content": "RevealTrans(Duration=3.0,Transition=12)" },
+        {
+          "http-equiv": "Page-Enter",
+          "content": "RevealTrans(Duration=2.0,Transition=2)",
+        },
+        {
+          "http-equiv": "Page-Exit",
+          "content": "RevealTrans(Duration=3.0,Transition=12)",
+        },
 
         // Mobile specific (only keep if not in seo.meta)
         { name: "HandheldFriendly", content: "True" },
 
         // Microsoft specific (only keep if not in seo.meta)
         { name: "application-name", content: "WolfStar" },
-        { name: "msapplication-TileImage", content: "/icons/mstile-144x144.png" },
+        {
+          name: "msapplication-TileImage",
+          content: "/icons/mstile-144x144.png",
+        },
 
         // Distribution and audience (only keep if not in seo.meta)
         { name: "target", content: "all" },
@@ -140,7 +149,10 @@ export default defineNuxtConfig({
       },
     },
     rollupConfig: {
-      external: process.env.NUXT_NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
+      external:
+        process.env.NUXT_NITRO_PRESET !== "node-server"
+          ? ["pg-native"]
+          : undefined,
     },
     openAPI: {
       // OpenAPI configuration
@@ -204,16 +216,6 @@ export default defineNuxtConfig({
     },
   },
 
-  /* hooks: {
-    "pages:extend": function (pages) {
-      pages.splice(0, pages.length, ...pages.filter(page => !page.path.includes("component") && !page.path.includes("/api")));
-      // Uncomment to show current Routes
-      // console.log(`\nCurrent Routes:`)
-      // console.log(pages)
-      // console.log(`\n`)
-    },
-  }, */
-
   eslint: {
     config: {
       standalone: false,
@@ -258,20 +260,58 @@ export default defineNuxtConfig({
       contentSecurityPolicy: {
         "default-src": ["'self'"],
         "base-uri": ["'self'"],
-        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:", "https://cdn.wolfstar.rocks", "https://cloudflareinsights.com", "https://static.cloudflareinsights.com", "https://cdn.discordapp.com", "https://media.discordapp.net"],
+        "connect-src": [
+          "'self'",
+          "https:",
+          "http:",
+          "wss:",
+          "ws:",
+          "https://cdn.wolfstar.rocks",
+          "https://cloudflareinsights.com",
+          "https://static.cloudflareinsights.com",
+          "https://cdn.discordapp.com",
+          "https://media.discordapp.net",
+        ],
         "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],
-        "img-src": ["'self'", "https:", "http:", "data:", "blob:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
+        "img-src": [
+          "'self'",
+          "https:",
+          "http:",
+          "data:",
+          "blob:",
+          "https://cdn.wolfstar.rocks",
+          "https://cdn.discordapp.com",
+          "https://media.discordapp.net",
+        ],
         "manifest-src": ["'self'"],
-        "media-src": ["'self'", "https:", "http:", "https://cdn.wolfstar.rocks", "https://cdn.discordapp.com", "https://media.discordapp.net"],
+        "media-src": [
+          "'self'",
+          "https:",
+          "http:",
+          "https://cdn.wolfstar.rocks",
+          "https://cdn.discordapp.com",
+          "https://media.discordapp.net",
+        ],
         "object-src": ["'none'"],
-        "script-src": ["'self'", "'wasm-unsafe-eval'", "'strict-dynamic'", "'nonce-{{nonce}}'"],
+        "script-src": [
+          "'self'",
+          "'wasm-unsafe-eval'",
+          "'strict-dynamic'",
+          "'nonce-{{nonce}}'",
+        ],
         "worker-src": ["'self'", "blob:"],
         "child-src": ["'self'", "blob:"],
         "script-src-attr": ["'none'"],
-        "style-src": ["'self'", "'unsafe-inline'", "https:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
+        "style-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "https:",
+          "https://cdn.wolfstar.rocks",
+          "https://rsms.me/inter/inter.css",
+        ],
         "upgrade-insecure-requests": true,
       },
       permissionsPolicy: {
@@ -287,7 +327,8 @@ export default defineNuxtConfig({
 
   seo: {
     meta: {
-      description: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+      description:
+        "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
       author: "WolfStar Project, contact@wolfstar.rocks",
       colorScheme: "dark light",
       applicationName: "WolfStar",
@@ -296,7 +337,8 @@ export default defineNuxtConfig({
       ogType: "website",
       ogUrl: "https://wolfstar.rocks",
       ogTitle: "WolfStar",
-      ogDescription: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+      ogDescription:
+        "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
       robots: "archive,follow,imageindex,index,odp,snippet,translate",
       msapplicationConfig: "/browserconfig.xml",
       mobileWebAppCapable: "yes",

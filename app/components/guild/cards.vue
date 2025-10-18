@@ -1,5 +1,7 @@
 <template>
-  <UContainer class="w-full max-w-7xl sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6">
+  <UContainer
+    class="w-full max-w-7xl sm:px-6 lg:px-8 sm:py-6 text-base-content space-y-6"
+  >
     <div class="flex flex-col justify-between gap-4 sm:flex-row">
       <div class="flex items-start">
         <div v-if="loading" class="text-sm text-base-content/60 sm:block">
@@ -10,7 +12,8 @@
           </div>
         </div>
         <div v-else-if="guilds" class="text-sm text-base-content/60 sm:block">
-          <span>{{ filterGuilds.length }} of {{ guilds?.length || 0 }} servers</span>
+          <span>{{ filterGuilds.length }} of
+            {{ guilds?.length || 0 }} servers</span>
         </div>
       </div>
       <!-- Control Buttons with Loading States -->
@@ -18,7 +21,10 @@
 
     <div class="w-full">
       <!-- Loading Skeleton Grid -->
-      <div v-if="loading" class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+      <div
+        v-if="loading"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+      >
         <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" :view-mode />
       </div>
       <div v-else ref="scrollComponent">
@@ -27,7 +33,13 @@
           v-if="paginatedGuilds.length > 0"
           class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         >
-          <guild-card v-for="guild in paginatedGuilds" :key="guild.id" class="h-full" :guild="guild" :view-mode />
+          <guild-card
+            v-for="guild in paginatedGuilds"
+            :key="guild.id"
+            class="h-full"
+            :guild="guild"
+            :view-mode
+          />
         </div>
       </div>
 
@@ -52,10 +64,14 @@
         <div class="flex flex-col items-center justify-center space-y-6 py-16">
           <div class="text-center py-16">
             <h3 class="text-xl font-bold text-base-content/80 mb-2">
-              {{ searchQuery ? 'No matching servers' : 'No servers found' }}
+              {{ searchQuery ? "No matching servers" : "No servers found" }}
             </h3>
             <p class="max-w-md mx-auto text-base-content/60">
-              {{ searchQuery ? 'Try adjusting your search terms or filters.' : "Start by inviting WolfStar to your Discord servers." }}
+              {{
+                searchQuery
+                  ? "Try adjusting your search terms or filters."
+                  : "Start by inviting WolfStar to your Discord servers."
+              }}
             </p>
           </div>
 
@@ -87,10 +103,18 @@ interface EnhancedGuildCardsProps {
   searchQuery: string | null;
   loading: boolean;
   error: FetchError<any> | undefined;
-  viewMode: "card" | "grid";
-};
+  viewMode?: "card" | "grid";
+}
 
-const { filterGuilds, guilds, undoSearch, searchQuery, loading, error, viewMode = "card" } = defineProps<EnhancedGuildCardsProps>();
+const {
+  filterGuilds,
+  guilds,
+  undoSearch,
+  searchQuery,
+  loading,
+  error,
+  viewMode = "card",
+} = defineProps<EnhancedGuildCardsProps>();
 
 const INITIAL_COUNT = 20;
 const LOAD_MORE_COUNT = 10;
@@ -105,8 +129,6 @@ const paginatedGuilds = computed(() => {
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
   () => {
-    if (loading || error !== undefined)
-      return;
     visibleCount.value += LOAD_MORE_COUNT;
   },
   {
@@ -116,7 +138,7 @@ const { isLoading: loadingMore, reset } = useInfiniteScroll(
 );
 
 watch(
-  () => filterGuilds,
+  () => filterGuilds.length,
   () => {
     visibleCount.value = INITIAL_COUNT;
     reset();

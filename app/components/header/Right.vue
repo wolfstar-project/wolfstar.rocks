@@ -7,10 +7,10 @@
           :content="{
             align: 'start',
             side: 'bottom',
-            sideOffset: 8
+            sideOffset: 8,
           }"
           :ui="{
-            content: 'w-48'
+            content: 'w-48',
           }"
         >
           <UUser
@@ -19,7 +19,7 @@
             :avatar="{
               src: avatarSrc,
               icon: 'i-lucide-image',
-              size: 'md'
+              size: 'md',
             }"
           />
         </UDropdownMenu>
@@ -32,7 +32,7 @@
           variant="subtle"
           to="/api/auth/discord"
           block
-          class="mb-3 hidden lg:inline-flex"
+          class="hidden lg:inline-flex"
           icon="ic:round-discord"
         />
         <UButton
@@ -41,7 +41,7 @@
           variant="subtle"
           to="/api/auth/discord"
           block
-          class="mb-3 lg:hidden"
+          class="lg:hidden"
           icon="ic:round-discord"
         />
       </div>
@@ -54,7 +54,7 @@
         variant="subtle"
         disabled
         block
-        class="mb-3 hidden lg:inline-flex"
+        class="hidden lg:inline-flex"
         icon="ic:round-discord"
       />
       <UButton
@@ -63,7 +63,7 @@
         variant="subtle"
         disabled
         block
-        class="mb-3 lg:hidden"
+        class="lg:hidden"
         icon="ic:round-discord"
       />
     </template>

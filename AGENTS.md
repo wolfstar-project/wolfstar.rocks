@@ -5,6 +5,7 @@ This document outlines the established project norms, conventions, and best prac
 ## Table of Contents
 
 - [Project Overview](#project-overview)
+- [AI Development Tools](#ai-development-tools)
 - [Technology Stack](#technology-stack)
 - [Project Structure](#project-structure)
 - [Code Style & Formatting](#code-style--formatting)
@@ -30,6 +31,52 @@ This document outlines the established project norms, conventions, and best prac
 - **WolfStar**: Primary Discord bot for moderation and logging
 - **Staryl**: Social notifications bot for Twitch, Instagram, etc.
 
+## AI Development Tools
+
+### Recommended Tools for AI-Assisted Development
+
+This project is optimized for AI-assisted development. The following tools are recommended for the best development experience:
+
+#### Context7
+**Purpose**: Access up-to-date documentation for libraries and frameworks
+
+- **What it is**: Context7 provides real-time documentation access for all project dependencies
+- **When to use**: When you need current API references, usage examples, or best practices
+- **Benefits**:
+  - Always up-to-date library documentation
+  - Framework-specific patterns and conventions
+  - API reference for dependencies
+
+**Example libraries to query**:
+- Nuxt 4 documentation
+- Vue 3 Composition API
+- Prisma ORM
+- TailwindCSS and DaisyUI
+- Discord API
+
+#### MCP ESLint
+**Purpose**: Real-time linting and code quality checks
+
+- **What it is**: Model Context Protocol (MCP) server for ESLint integration
+- **When to use**: Before committing code, during development, when fixing linting issues
+- **Benefits**:
+  - Real-time linting feedback
+  - Automatic fix suggestions
+  - Consistent code quality
+  - Integration with project's ESLint configuration
+
+**Usage**:
+```bash
+# The project uses @antfu/eslint-config
+# MCP ESLint automatically uses the project's eslint.config.js
+```
+
+**Best Practices**:
+1. ✅ Use Context7 when unsure about API usage or library patterns
+2. ✅ Use MCP ESLint to validate code before committing
+3. ✅ Reference AGENTS.md first, then use Context7 for library-specific details
+4. ✅ Run `pnpm lint:fix` after MCP ESLint suggests fixes
+
 ## Technology Stack
 
 ### Frontend
@@ -45,7 +92,7 @@ This document outlines the established project norms, conventions, and best prac
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Discord OAuth2 with JWT sessions
 - **API**: RESTful APIs with OpenAPI documentation
-- **Caching**: Redis for rate limiting and caching
+- **Caching**: Unstorage for rate limiting and session management
 
 ### DevOps
 - **Package Manager**: pnpm with workspace configuration
@@ -120,9 +167,152 @@ wolfstar.rocks/
 ```
 
 ### Commit Conventions
-- Follow **Conventional Commits** standard
-- Use **commitlint** with @commitlint/config-conventional
-- Pre-commit hooks with **Husky** and **lint-staged**
+
+**Standard**: Conventional Commits with commitlint validation
+
+**Configuration**: 
+- Uses `@commitlint/config-conventional` as base
+- Custom rules in `.commitlintrc.json`
+- Pre-commit validation via Husky hooks
+- CI/CD enforcement in GitHub Actions
+
+**Commit Message Format**: `<type>(<scope>): <subject>`
+
+**Allowed Types**:
+- `feat` - New features
+- `fix` - Bug fixes
+- `docs` - Documentation changes
+- `style` - Code style changes (formatting, missing semicolons, etc.)
+- `refactor` - Code refactoring without changing behavior
+- `perf` - Performance improvements
+- `test` - Adding or updating tests
+- `build` - Build system or external dependency changes
+- `ci` - CI/CD configuration changes
+- `chore` - Other changes that don't modify src or test files
+- `revert` - Reverting previous commits
+- `types` - TypeScript type definition updates
+
+**Rules**:
+- Scope must be **lowercase** (e.g., `auth`, `api`, `ui`)
+- Subject must be **lowercase** and **imperative** mood
+- No **exclamation marks** in subject
+- No **period** at the end of subject
+- Maximum line length enforced
+
+**Examples**:
+```bash
+# ✅ Good examples
+feat: add user dashboard component
+feat(auth): implement Discord OAuth2 flow
+fix(api): resolve guild data fetching issue
+docs: update installation instructions
+style: format code with prettier
+refactor(components): simplify button component logic
+perf(database): optimize guild query performance
+test(api): add unit tests for auth endpoints
+
+# ❌ Bad examples
+Add feature                     # Missing type
+feat: Add feature               # Subject not lowercase
+feat!: breaking change          # Exclamation mark not allowed
+fix(Auth): bug fix              # Scope not lowercase
+feat: add feature.              # Period at end
+```
+
+**Validation Command**:
+```bash
+# Validate commit message
+pnpm commitlint --from HEAD~1 --to HEAD --verbose
+```
+
+### Automated Git Hooks with Husky
+
+**Husky automatically enforces code quality on every commit**
+
+The project uses **Husky v9+** with Git hooks to automatically validate commits before they are created. This ensures consistent code quality and commit message formatting across all contributors.
+
+#### What Happens Automatically
+
+When you run `git commit`, Husky automatically triggers:
+
+1. **commit-msg hook** - Validates commit message format
+   - Runs `commitlint` to check Conventional Commits format
+   - Rejects commits with invalid messages
+   - Ensures all commits follow project standards
+
+2. **pre-commit hook** (via lint-staged) - Lints and formats staged files
+   - Runs `eslint --fix` on staged `.js`, `.ts`, `.vue` files
+   - Runs `prettier --write` on staged files
+   - Only processes files that are staged for commit
+   - Automatically fixes issues when possible
+
+#### Configuration
+
+**Husky hooks location**: `.husky/` directory
+- `.husky/commit-msg` - Commit message validation
+- `.husky/pre-commit` - Lint-staged execution
+
+**lint-staged configuration**: `package.json`
+```json
+{
+  "lint-staged": {
+    "*.{js,ts,vue}": "eslint --fix",
+    "*.{js,ts,vue,json,md}": "prettier --write"
+  }
+}
+```
+
+#### Example Workflow
+
+```bash
+# 1. Stage your changes
+git add .
+
+# 2. Commit with proper message
+git commit -m "feat(api): add new endpoint for guild settings"
+
+# Husky automatically runs:
+# → lint-staged (eslint + prettier on staged files)
+# → commitlint (validates commit message)
+
+# If everything passes:
+# ✅ Commit created successfully
+
+# If issues found:
+# ❌ Commit rejected with error messages
+# → Fix the issues and try again
+```
+
+#### Bypassing Hooks (Not Recommended)
+
+In rare cases, you may need to bypass hooks:
+
+```bash
+# Skip all hooks (NOT RECOMMENDED)
+git commit -m "message" --no-verify
+
+# Or use the -n flag
+git commit -m "message" -n
+```
+
+**⚠️ Warning**: Bypassing hooks can lead to:
+- CI pipeline failures
+- Inconsistent code formatting
+- Invalid commit messages in history
+- Rejected pull requests
+
+**Only bypass when**:
+- Fixing a broken hook during development
+- Emergency hotfix (still must follow standards manually)
+- Working on hook configuration itself
+
+#### Benefits of Husky Integration
+
+✅ **Automatic enforcement** - No need to remember to run linters  
+✅ **Consistent quality** - All commits meet project standards  
+✅ **Fast feedback** - Catch issues before pushing  
+✅ **Reduced CI failures** - Issues caught locally first  
+✅ **Better git history** - Consistent commit message format
 
 ## Vue.js Conventions
 
@@ -141,7 +331,10 @@ wolfstar.rocks/
 - **Components**: PascalCase (e.g., `UserProfile.vue`)
 - **Props**: camelCase with descriptive names
 - **Events**: kebab-case (e.g., `user-updated`)
-- **Variables**: camelCase with auxiliary verbs (e.g., `isLoading`, `hasError`)
+- **Variables**: camelCase (e.g., `guildId`, `userName`, `isLoading`, `hasError`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `API_BASE_URL`, `MAX_RETRIES`)
+- **Functions**: camelCase (e.g., `getUserData`, `fetchGuilds`)
+- **Types/Interfaces**: PascalCase (e.g., `UserData`, `GuildSettings`)
 
 ### Component Patterns
 - Use **Composition API** exclusively
@@ -200,23 +393,83 @@ export { default as Component } from './Component.vue';
 
 ### Error Handling
 ```typescript
-// Wrapped event handlers for consistent error handling
+// Basic wrapped event handler
 export default defineWrappedResponseHandler(
   async (event) => {
     // Handler logic
+    const guildId = getRouterParam(event, 'guild');
+    const settings = await prisma.guild.findUnique({
+      where: { id: guildId }
+    });
+    return settings;
   },
   {
     auth: true,
-    rateLimit: { enabled: true, window: 10000, limit: 5 }
+    rateLimit: {
+      enabled: true,
+      window: 10000,    // 10 seconds
+      limit: 5,         // 5 requests per window
+      type: "fixed"     // or "sliding"
+    }
+  }
+);
+
+// Complete example with all options
+export default defineWrappedResponseHandler(
+  async (event) => {
+    const guildId = getRouterParam(event, 'guild');
+    const body = await readBody(event);
+    
+    // Update guild settings
+    const updatedSettings = await prisma.guildSettings.update({
+      where: { guildId },
+      data: body
+    });
+    
+    return updatedSettings;
+  },
+  {
+    auth: true,
+    rateLimit: {
+      enabled: true,
+      window: 60000,        // 60 seconds (1 minute)
+      limit: 10,            // 10 requests per minute
+      type: "sliding"       // Sliding window for smoother limits
+    },
+    // Success callback
+    onSuccess: (logger, data) => {
+      logger.info('Guild settings updated successfully', {
+        guildId: data.guildId,
+        updatedAt: data.updatedAt
+      });
+    },
+    // Error callback (called before error is thrown)
+    onError: (logger, error) => {
+      logger.error('Failed to update guild settings', {
+        error: error.message,
+        statusCode: error.statusCode
+      });
+    }
   }
 );
 ```
 
+**Options Reference**:
+- `auth: boolean` - Require Discord authentication (default: false)
+- `rateLimit.enabled: boolean` - Enable rate limiting (default: true)
+- `rateLimit.window: number` - Time window in milliseconds (default: 10000)
+- `rateLimit.limit: number` - Max requests per window (default: 5)
+- `rateLimit.type: "fixed" | "sliding"` - Window type (default: "fixed")
+- `onSuccess: (logger, data) => void` - Callback on successful response
+- `onError: (logger, error) => void` - Callback on error (before throwing)
+
 ### API Patterns
-- Use **wrapped event handlers** for consistency
+- Use **wrapped event handlers** for consistency (always use `defineWrappedResponseHandler`)
 - Implement **proper validation** with Zod or similar
 - Use **transformers** for data serialization
 - Follow **REST conventions** for resource endpoints
+- Use **camelCase** for all variables (e.g., `guildId`, not `guild_id`)
+- Leverage **onSuccess** and **onError** callbacks for logging and monitoring
 
 ## Database Conventions
 
@@ -227,9 +480,10 @@ export default defineWrappedResponseHandler(
 - **JSON types** with prisma-json-types-generator
 
 ### Naming Conventions
-- **PascalCase** for model names
-- **camelCase** for field names
-- **snake_case** for mapped database columns — avoid kebab-case (hyphens) because they require quoting and can cause issues with PostgreSQL/Prisma and other tooling.
+- **PascalCase** for model names (e.g., `Guild`, `GuildSettings`)
+- **camelCase** for field names (e.g., `guildId`, `createdAt`)
+- **snake_case** for mapped database columns (e.g., `@@map("guild_settings")`)
+- **Avoid kebab-case** (hyphens) — they require quoting and can cause issues with PostgreSQL/Prisma
 - **Descriptive names** for relationships
 
 ### Migration Strategy
@@ -299,7 +553,7 @@ export default defineWrappedResponseHandler(
 
 ### Backend Performance
 - **Database query optimization**
-- **Caching strategies** with Redis
+- **Caching strategies** with Unstorage
 - **Rate limiting** to prevent abuse
 - **Efficient serialization** with transformers
 
@@ -311,23 +565,91 @@ export default defineWrappedResponseHandler(
 
 ## Testing & Quality Assurance
 
-### Code Quality
-- **ESLint** for code linting
-- **TypeScript** for type checking
-- **Prettier** for code formatting
-- **Husky** for pre-commit hooks
+### Pre-commit Checklist
+
+Before committing changes, **ALWAYS** run these commands in order:
+
+1. **Build Validation**
+   ```bash
+   pnpm build
+   ```
+   - ✅ Must build successfully without errors
+   - ⏱️ Takes ~45-120 seconds (depending on cache state)
+   - ❌ CI will fail if build fails
+
+2. **Linting**
+   ```bash
+   pnpm lint
+   ```
+   - ✅ Fix any **errors** (mandatory)
+   - ⚠️ Warnings are acceptable
+   - 💡 Use `pnpm lint:fix` for auto-fixes
+   - ❌ CI will fail if errors exist
+
+3. **Type Checking** (Optional but Recommended)
+   ```bash
+   pnpm typecheck
+   ```
+   - ✅ Must pass without errors
+   - ⏱️ Takes ~22 seconds
+   - 💡 Catches TypeScript issues early
+
+4. **Commit Message Validation**
+   ```bash
+   pnpm commitlint --from HEAD~1 --to HEAD --verbose
+   ```
+   - ✅ Validates commit message format
+   - 📋 Must follow Conventional Commits standard
+   - ❌ CI may reject improperly formatted commits
+
+### Code Quality Tools
+
+**Automated Enforcement**:
+- **Husky v9+** - Git hooks for automatic validation
+  - Pre-commit hook: Runs lint-staged on staged files
+  - Commit-msg hook: Validates commit message format
+  - Automatic execution on every `git commit`
+- **lint-staged** - Runs linters only on staged files
+  - Executes `eslint --fix` on `.js`, `.ts`, `.vue` files
+  - Executes `prettier --write` on all applicable files
+  - Automatic fixes applied before commit
+
+**Manual Tools**:
+- **ESLint** - Code linting with @antfu/eslint-config
+  - Command: `pnpm lint` or `pnpm lint:fix`
+  - Enforces code style and best practices
+- **TypeScript** - Type checking with strict mode
+  - Command: `pnpm typecheck`
+  - Catches type errors and improves code safety
+- **Prettier** - Code formatting with @sapphire/prettier-config
+  - Command: `pnpm format`
+  - Ensures consistent code formatting
+- **commitlint** - Commit message validation
+  - Command: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
+  - Enforces Conventional Commits standard
 
 ### Testing Strategy
 - **Unit tests** for utilities and composables
 - **Component tests** for Vue components
 - **Integration tests** for API endpoints
 - **E2E tests** for critical user flows
+- **Coverage reporting** for test effectiveness
 
 ### Continuous Integration
+
+**CI Pipeline** (`.github/workflows/continuous-integration.yml`) enforces:
+- ❌ Build must succeed
+- ❌ Linting must pass (no errors)
+- ❌ Type checking must pass
+- ❌ Tests must pass
+- ❌ Commit messages must be properly formatted
+
+**Automated Checks**:
 - **GitHub Actions** for CI/CD
 - **Automated testing** on pull requests
 - **Code coverage** reporting
-- **Dependency vulnerability** scanning
+- **Dependency vulnerability** scanning with Dependabot
+- **Security scanning** with CodeQL
 
 ## DevOps & Deployment
 
@@ -377,14 +699,117 @@ export async function transformOauthGuildsAndUser(data: OAuthData) {
 
 ---
 
+## Common Gotchas
+
+### 1. File Naming & Variable Conventions
+- ❌ `UserProfile.ts` for components → ✅ `UserProfile.vue`
+- ❌ `guild-settings.vue` for components → ✅ `GuildSettings.vue`
+- ❌ `AuthUtils.ts` for utilities → ✅ `auth-utils.ts`
+- ❌ `guild_id` for variables (snake_case) → ✅ `guildId` (camelCase)
+- ❌ `GuildId` for variables (PascalCase) → ✅ `guildId` (camelCase)
+- ❌ `GUILD_ID` for variables → ✅ Use for constants only: `const MAX_RETRIES = 3`
+
+### 2. Import Patterns
+- ✅ Prefer Nuxt auto-imports for Vue, composables, and utilities
+- ✅ Manually import third-party libraries
+- ✅ Explicitly import from `~/shared/` for clarity
+
+### 3. State Management
+- ✅ Use **Pinia stores** for global state
+- ✅ Use **composables** for reusable local logic
+- ❌ Don't create reactive state at module level
+
+### 4. API Routes
+- ✅ Must be in `server/api/` directory to auto-register
+- ✅ Use `.get.ts`, `.post.ts` suffixes for HTTP methods
+- ✅ Always use `defineWrappedResponseHandler` for consistency
+- ✅ Use camelCase for parameter names: `getRouterParam(event, 'guild')`
+- ✅ Leverage `onSuccess` and `onError` options for logging
+
+### 5. Database Migrations
+- ✅ Use `prisma:push` for prototyping (no migration files)
+- ✅ Use `prisma:migrate:dev` for production-ready changes
+- ✅ Always run `prisma:generate` after schema changes
+
+### 6. Vue Component Block Order
+**Required order** (enforced by ESLint):
+1. `<template>`
+2. `<script>` (if needed)
+3. `<script setup lang="ts">`
+4. `<style>`
+5. `<style scoped>`
+
+### 7. Discord OAuth
+- ✅ Redirect URI must exactly match Discord app settings
+- ✅ Required scopes: `identify`, `guilds`
+- ✅ Session management via nuxt-auth-utils
+
+### 8. Rate Limiting
+- ✅ Configured per endpoint in wrapped handlers
+- ✅ Requires cache storage for state
+- ✅ Uses `@tanstack/pacer` for implementation
+- ✅ Supports both `"fixed"` and `"sliding"` window types
+- ✅ Default: enabled with 5 requests per 10 seconds
+
+---
+
+## Quality Assurance Commands
+
+```bash
+# Daily development
+pnpm dev                        # Start dev server
+pnpm lint:fix                   # Fix linting issues
+pnpm typecheck                  # Check types
+
+# Database work
+pnpm prisma:studio              # Visual database editor
+pnpm prisma:push                # Quick schema sync
+pnpm prisma:migrate:dev         # Create migration
+
+# Before committing
+pnpm build                      # Validate build
+pnpm lint                       # Check for errors
+pnpm commitlint --from HEAD~1 --to HEAD --verbose  # Validate commit
+
+# Validation
+pnpm prisma:validate            # Validate Prisma schema
+```
+
+---
+
 ## Enforcement
 
 These conventions are enforced through:
-- **Automated linting** with ESLint
-- **Type checking** with TypeScript
+- **Automated linting** with ESLint (pre-commit and CI)
+- **Type checking** with TypeScript (pre-commit and CI)
+- **Commit message validation** with commitlint (pre-commit and CI)
 - **Pre-commit hooks** with Husky
-- **CI/CD pipeline** checks
+- **CI/CD pipeline** checks (GitHub Actions)
 - **Code review** requirements
+
+**CI Pipeline Failures**: The build will fail if:
+- ❌ Linting errors exist
+- ❌ Type checking fails
+- ❌ Build fails
+- ❌ Tests fail
+- ❌ Commit messages are improperly formatted
+
+---
+
+## Philosophy
+
+This codebase emphasizes:
+- ✅ **Type Safety** - Full TypeScript with strict mode
+- ✅ **Developer Experience** - Fast hot reload, auto-imports, great DX
+- ✅ **Discord Integration** - Seamless OAuth and bot management
+- ✅ **Code Quality** - Automated linting, formatting, and testing
+- ✅ **Performance** - Optimized builds, efficient caching, PWA support
+- ✅ **Security** - Proper authentication, authorization, and rate limiting
+- ✅ **Maintainability** - Clear patterns, consistent conventions, good documentation
+
+**When in doubt**: Always reference existing patterns in similar files when implementing new features.
+
+---
 
 ## Updates
 
@@ -394,5 +819,10 @@ This document should be updated when:
 - Architecture decisions are made
 - Best practices evolve
 
-**Last Updated**: January 2025  
-**Version**: 1.0.0
+When the project or this file has changed, the **Last Updated** date will be updated to reflect the current month and year.
+
+---
+
+**Last Updated**: October 2025  
+**Version**: 2.0.0  
+**Maintained by**: WolfStar Development Team

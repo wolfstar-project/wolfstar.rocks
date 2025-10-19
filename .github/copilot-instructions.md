@@ -112,12 +112,11 @@ pnpm prisma:migrate:dev     # Generate migration file from schema changes
 ## Technology Stack and Architecture
 
 - **Frontend**: Nuxt 4, Vue 3 Composition API, TypeScript
-- **Styling**: TailwindCSS, DaisyUI, shadcn/ui components
+- **Styling**: TailwindCSS, DaisyUI, NuxtUI components
 - **Backend**: Nitro server, Prisma ORM, PostgreSQL
-- **Cache**: Redis for sessions and rate limiting
+- **Cache**: Unstorage for sessions and rate limiting
 - **Authentication**: Discord OAuth2 via nuxt-auth-utils
-- **Testing**: Vitest for unit/integration tests
-- **Deployment**: Cloudflare Pages with NuxtHub
+- **Deployment**: Netlify
 
 ## Important Directory Structure
 

@@ -32,7 +32,7 @@
           icon="emojione:cross-mark"
         >
           <template #description>
-            {{ error?.message ?? error?.statusMessage }}
+            Authentication failed. Please try again.
           </template>
           <template #actions>
             <UButton to="/login" size="sm" variant="outline">
@@ -68,8 +68,8 @@
 import { until } from "@vueuse/core";
 import consola from "consola";
 
-const { code: rawCode } = useRoute().query;
-const code = Array.isArray(rawCode) ? rawCode[0] : rawCode;
+const { query: { code: rawCode } } = useRoute();
+const code = Array.isArray(rawCode) ? rawCode[0] : rawCode ?? undefined;
 
 const { error, status, execute } = useFetch("/api/auth/discord", {
   query: { code },

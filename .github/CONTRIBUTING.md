@@ -154,6 +154,7 @@ pnpm prisma:studio
 A clear description of what the bug is.
 
 **To Reproduce**
+
 1. Go to '...'
 2. Click on '...'
 3. See error
@@ -165,6 +166,7 @@ What you expected to happen.
 If applicable, add screenshots.
 
 **Environment:**
+
 - OS: [e.g., Windows 11]
 - Node: [e.g., 22.0.0]
 - Browser: [e.g., Chrome 120]
@@ -336,7 +338,7 @@ Husky's `commit-msg` hook automatically validates your commit message. If invali
 export default defineWrappedResponseHandler(
   async (event) => {
     // Your handler logic
-    return { message: 'Success' };
+    return { message: "Success" };
   },
   {
     auth: true,
@@ -347,10 +349,10 @@ export default defineWrappedResponseHandler(
       type: "fixed"
     },
     onSuccess: (logger, data) => {
-      logger.info('Request successful');
+      logger.info("Request successful");
     },
     onError: (logger, error) => {
-      logger.error('Request failed', error);
+      logger.error("Request failed", error);
     }
   }
 );
@@ -486,24 +488,30 @@ pnpm prisma:generate
 
 ```markdown
 ## Description
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix (non-breaking change)
 - [ ] New feature (non-breaking change)
 - [ ] Breaking change (fix or feature that would break existing functionality)
 - [ ] Documentation update
 
 ## Related Issues
+
 Fixes #(issue number)
 
 ## How Has This Been Tested?
+
 Describe the testing you've done
 
 ## Screenshots (if applicable)
+
 Add screenshots to help explain your changes
 
 ## Checklist
+
 - [ ] My code follows the project's style guidelines
 - [ ] I have performed a self-review of my code
 - [ ] I have commented my code where necessary

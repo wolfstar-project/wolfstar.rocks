@@ -22,12 +22,13 @@ This document outlines the established project norms, conventions, and best prac
 
 ## Project Overview
 
-**Project Name**: WolfStar.rocks Dashboard  
-**Version**: 2.0.0  
-**License**: Apache-2.0  
+**Project Name**: WolfStar.rocks Dashboard
+**Version**: 2.0.0
+**License**: Apache-2.0
 **Description**: Official web dashboard for WolfStar, a powerful multi-purpose Discord bot
 
 ### Core Applications
+
 - **WolfStar**: Primary Discord bot for moderation and logging
 - **Staryl**: Social notifications bot for Twitch, Instagram, etc.
 
@@ -38,6 +39,7 @@ This document outlines the established project norms, conventions, and best prac
 This project is optimized for AI-assisted development. The following tools are recommended for the best development experience:
 
 #### Context7
+
 **Purpose**: Access up-to-date documentation for libraries and frameworks
 
 - **What it is**: Context7 provides real-time documentation access for all project dependencies
@@ -48,6 +50,7 @@ This project is optimized for AI-assisted development. The following tools are r
   - API reference for dependencies
 
 **Example libraries to query**:
+
 - Nuxt 4 documentation
 - Vue 3 Composition API
 - Prisma ORM
@@ -55,6 +58,7 @@ This project is optimized for AI-assisted development. The following tools are r
 - Discord API
 
 #### MCP ESLint
+
 **Purpose**: Real-time linting and code quality checks
 
 - **What it is**: Model Context Protocol (MCP) server for ESLint integration
@@ -66,12 +70,14 @@ This project is optimized for AI-assisted development. The following tools are r
   - Integration with project's ESLint configuration
 
 **Usage**:
+
 ```bash
 # The project uses @antfu/eslint-config
 # MCP ESLint automatically uses the project's eslint.config.js
 ```
 
 **Best Practices**:
+
 1. ✅ Use Context7 when unsure about API usage or library patterns
 2. ✅ Use MCP ESLint to validate code before committing
 3. ✅ Reference AGENTS.md first, then use Context7 for library-specific details
@@ -80,6 +86,7 @@ This project is optimized for AI-assisted development. The following tools are r
 ## Technology Stack
 
 ### Frontend
+
 - **Framework**: Nuxt 4 with Vue 3 Composition API
 - **TypeScript**: Full TypeScript support with strict mode
 - **Styling**: TailwindCSS + DaisyUI + NuxtUI components
@@ -88,6 +95,7 @@ This project is optimized for AI-assisted development. The following tools are r
 - **Icons**: Nuxt Icon with ph, ic, heroicons, lucide collections
 
 ### Backend
+
 - **Runtime**: Node.js 22+ with Nitro server
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Discord OAuth2 with JWT sessions
@@ -95,6 +103,7 @@ This project is optimized for AI-assisted development. The following tools are r
 - **Caching**: Unstorage for rate limiting and session management
 
 ### DevOps
+
 - **Package Manager**: pnpm with workspace configuration
 - **Containerization**: Docker with multi-stage builds
 - **CI/CD**: GitHub Actions for testing and deployment
@@ -130,6 +139,7 @@ wolfstar.rocks/
 ```
 
 ### Directory Naming Conventions
+
 - Use **kebab-case** for directories and files
 - Use **PascalCase** for Vue components
 - Use **camelCase** for TypeScript files and utilities
@@ -137,6 +147,7 @@ wolfstar.rocks/
 ## Code Style & Formatting
 
 ### ESLint Configuration
+
 - **Base**: @antfu/eslint-config with Nuxt integration
 - **Formatting**: Prettier integration with 2-space indentation
 - **Quotes**: Double quotes for strings
@@ -144,25 +155,26 @@ wolfstar.rocks/
 - **Vue**: Specific Vue.js rules with custom block order
 
 ### Block Order for Vue Components
+
 ```vue
 <template>
-<!-- Template content -->
+  <!-- Template content -->
 </template>
 
 <script>
-<!-- Regular script -->
+// Regular script
 </script>
 
 <script setup lang="ts">
-<!-- Setup script -->
+// Setup script
 </script>
 
 <style>
-<!-- Non-scoped styles -->
+/* Non-scoped styles */
 </style>
 
 <style scoped>
-<!-- Scoped styles -->
+/* Scoped styles */
 </style>
 ```
 
@@ -170,7 +182,8 @@ wolfstar.rocks/
 
 **Standard**: Conventional Commits with commitlint validation
 
-**Configuration**: 
+**Configuration**:
+
 - Uses `@commitlint/config-conventional` as base
 - Custom rules in `.commitlintrc.json`
 - Pre-commit validation via Husky hooks
@@ -179,6 +192,7 @@ wolfstar.rocks/
 **Commit Message Format**: `<type>(<scope>): <subject>`
 
 **Allowed Types**:
+
 - `feat` - New features
 - `fix` - Bug fixes
 - `docs` - Documentation changes
@@ -193,6 +207,7 @@ wolfstar.rocks/
 - `types` - TypeScript type definition updates
 
 **Rules**:
+
 - Scope must be **lowercase** (e.g., `auth`, `api`, `ui`)
 - Subject must be **lowercase** and **imperative** mood
 - No **exclamation marks** in subject
@@ -200,6 +215,7 @@ wolfstar.rocks/
 - Maximum line length enforced
 
 **Examples**:
+
 ```bash
 # ✅ Good examples
 feat: add user dashboard component
@@ -220,6 +236,7 @@ feat: add feature.              # Period at end
 ```
 
 **Validation Command**:
+
 ```bash
 # Validate commit message
 pnpm commitlint --from HEAD~1 --to HEAD --verbose
@@ -249,10 +266,12 @@ When you run `git commit`, Husky automatically triggers:
 #### Configuration
 
 **Husky hooks location**: `.husky/` directory
+
 - `.husky/commit-msg` - Commit message validation
 - `.husky/pre-commit` - Lint-staged execution
 
 **lint-staged configuration**: `package.json`
+
 ```json
 {
   "lint-staged": {
@@ -296,27 +315,30 @@ git commit -m "message" -n
 ```
 
 **⚠️ Warning**: Bypassing hooks can lead to:
+
 - CI pipeline failures
 - Inconsistent code formatting
 - Invalid commit messages in history
 - Rejected pull requests
 
 **Only bypass when**:
+
 - Fixing a broken hook during development
 - Emergency hotfix (still must follow standards manually)
 - Working on hook configuration itself
 
 #### Benefits of Husky Integration
 
-✅ **Automatic enforcement** - No need to remember to run linters  
-✅ **Consistent quality** - All commits meet project standards  
-✅ **Fast feedback** - Catch issues before pushing  
-✅ **Reduced CI failures** - Issues caught locally first  
+✅ **Automatic enforcement** - No need to remember to run linters
+✅ **Consistent quality** - All commits meet project standards
+✅ **Fast feedback** - Catch issues before pushing
+✅ **Reduced CI failures** - Issues caught locally first
 ✅ **Better git history** - Consistent commit message format
 
 ## Vue.js Conventions
 
 ### Component Structure
+
 1. **Imports** - External libraries and internal modules
 2. **Type Definitions** - Interfaces and types
 3. **Props Definition** - With defaults using `withDefaults`
@@ -328,6 +350,7 @@ git commit -m "message" -n
 9. **Lifecycle Hooks** - When needed
 
 ### Naming Conventions
+
 - **Components**: PascalCase (e.g., `UserProfile.vue`)
 - **Props**: camelCase with descriptive names
 - **Events**: kebab-case (e.g., `user-updated`)
@@ -337,6 +360,7 @@ git commit -m "message" -n
 - **Types/Interfaces**: PascalCase (e.g., `UserData`, `GuildSettings`)
 
 ### Component Patterns
+
 - Use **Composition API** exclusively
 - Prefer **`<script setup>`** syntax
 - Implement **proper prop validation** with TypeScript
@@ -344,6 +368,7 @@ git commit -m "message" -n
 - Follow **single responsibility principle**
 
 ### State Management
+
 - Use **Pinia** for global state
 - Store structure: `state`, `getters`, `actions`
 - Use **composables** for reusable logic
@@ -352,52 +377,63 @@ git commit -m "message" -n
 ## TypeScript Guidelines
 
 ### Configuration
+
 - **Strict mode** enabled
 - **Module resolution**: Node with ESM
 - **Target**: ESNext
 - **Auto-imports** via Nuxt
 
 ### Type Definitions
+
 - Use **interfaces** for object shapes
 - Use **type aliases** for unions and complex types
 - Implement **generic types** where appropriate
 - Use **const assertions** for immutable data
 
 ### Import/Export Patterns
+
 ```typescript
 // Named exports preferred
-export interface UserData { ... }
-export type UserRole = 'admin' | 'user';
+export interface UserData {
+  id: string;
+  name: string;
+}
+export type UserRole = "admin" | "user";
 
 // Default exports for components
-export default defineComponent({ ... });
+export default defineComponent({
+  name: "MyComponent"
+});
 
+export { default as Component } from "./Component.vue";
 // Re-exports for barrel files
-export * from './types';
-export { default as Component } from './Component.vue';
+export * from "./types";
 ```
 
 ## API Development
 
 ### Route Structure
+
 - **File-based routing** in `server/api/`
 - **RESTful conventions** for endpoints
 - **OpenAPI documentation** with `defineRouteMeta`
 - **Proper HTTP status codes** and error handling
 
 ### Authentication & Authorization
+
 - **Discord OAuth2** integration
 - **cookie-based (sealed/encrypted) sessions** with nuxt-auth-utils
 - **Role-based access control** via authorization resolver
 - **Rate limiting** with @tanstack/pacer (official framework-agnostic rate-limiter usable in Node/Nitro)
 
 ### Error Handling
+
 ```typescript
 // Basic wrapped event handler
 export default defineWrappedResponseHandler(
   async (event) => {
     // Handler logic
-    const guildId = getRouterParam(event, 'guild');
+    const guildId = getRouterParam(event, "guild");
     const settings = await prisma.guild.findUnique({
       where: { id: guildId }
     });
@@ -407,9 +443,9 @@ export default defineWrappedResponseHandler(
     auth: true,
     rateLimit: {
       enabled: true,
-      window: 10000,    // 10 seconds
-      limit: 5,         // 5 requests per window
-      type: "fixed"     // or "sliding"
+      window: 10000, // 10 seconds
+      limit: 5, // 5 requests per window
+      type: "fixed" // or "sliding"
     }
   }
 );
@@ -417,35 +453,35 @@ export default defineWrappedResponseHandler(
 // Complete example with all options
 export default defineWrappedResponseHandler(
   async (event) => {
-    const guildId = getRouterParam(event, 'guild');
+    const guildId = getRouterParam(event, "guild");
     const body = await readBody(event);
-    
+
     // Update guild settings
     const updatedSettings = await prisma.guildSettings.update({
       where: { guildId },
       data: body
     });
-    
+
     return updatedSettings;
   },
   {
     auth: true,
     rateLimit: {
       enabled: true,
-      window: 60000,        // 60 seconds (1 minute)
-      limit: 10,            // 10 requests per minute
-      type: "sliding"       // Sliding window for smoother limits
+      window: 60000, // 60 seconds (1 minute)
+      limit: 10, // 10 requests per minute
+      type: "sliding" // Sliding window for smoother limits
     },
     // Success callback
     onSuccess: (logger, data) => {
-      logger.info('Guild settings updated successfully', {
+      logger.info("Guild settings updated successfully", {
         guildId: data.guildId,
         updatedAt: data.updatedAt
       });
     },
     // Error callback (called before error is thrown)
     onError: (logger, error) => {
-      logger.error('Failed to update guild settings', {
+      logger.error("Failed to update guild settings", {
         error: error.message,
         statusCode: error.statusCode
       });
@@ -455,6 +491,7 @@ export default defineWrappedResponseHandler(
 ```
 
 **Options Reference**:
+
 - `auth: boolean` - Require Discord authentication (default: false)
 - `rateLimit.enabled: boolean` - Enable rate limiting (default: true)
 - `rateLimit.window: number` - Time window in milliseconds (default: 10000)
@@ -464,6 +501,7 @@ export default defineWrappedResponseHandler(
 - `onError: (logger, error) => void` - Callback on error (before throwing)
 
 ### API Patterns
+
 - Use **wrapped event handlers** for consistency (always use `defineWrappedResponseHandler`)
 - Implement **proper validation** with Zod or similar
 - Use **transformers** for data serialization
@@ -474,12 +512,14 @@ export default defineWrappedResponseHandler(
 ## Database Conventions
 
 ### Prisma Schema
+
 - **PostgreSQL** as primary database
 - **ESM module format** for generated client
 - **Driver adapters** and **query compiler** preview features
 - **JSON types** with prisma-json-types-generator
 
 ### Naming Conventions
+
 - **PascalCase** for model names (e.g., `Guild`, `GuildSettings`)
 - **camelCase** for field names (e.g., `guildId`, `createdAt`)
 - **snake_case** for mapped database columns (e.g., `@@map("guild_settings")`)
@@ -487,6 +527,7 @@ export default defineWrappedResponseHandler(
 - **Descriptive names** for relationships
 
 ### Migration Strategy
+
 - **Development**: `prisma migrate dev`
 - **Production**: `prisma migrate deploy`
 - **Descriptive migration names** required
@@ -495,18 +536,21 @@ export default defineWrappedResponseHandler(
 ## Styling Guidelines
 
 ### TailwindCSS + DaisyUI
+
 - **Utility-first** approach with TailwindCSS
 - **DaisyUI components** for consistent theming
 - **CSS variables** for theme customization
 - **Light/dark mode** support with @nuxtjs/color-mode
 
 ### Component Styling
+
 - Use **tailwind-variants** for component variants
 - Implement **cn utility** for class merging
 - Follow **design system** patterns
 - Use **semantic color names** (primary, secondary, etc.)
 
 ### CSS Organization
+
 ```css
 /* Main CSS structure */
 @import 'tailwindcss';
@@ -518,6 +562,7 @@ export default defineWrappedResponseHandler(
 ```
 
 ### Theme Configuration
+
 - **System preference** as default
 - **Data attribute** theming (`data-theme`)
 - **Custom color schemes** with oklch color space
@@ -526,18 +571,21 @@ export default defineWrappedResponseHandler(
 ## Security Practices
 
 ### Content Security Policy
+
 - **Strict CSP** headers in production
 - **HTTPS enforcement** with upgrade-insecure-requests
 - **Frame protection** with frame-ancestors 'none'
 - **XSS protection** with script-src restrictions
 
 ### Authentication Security
+
 - **OAuth2 state validation**
 - **Secure session management**
 - **Rate limiting** on authentication endpoints
 - **CSRF protection** via SameSite cookies
 
 ### Data Protection
+
 - **Input validation** on all endpoints
 - **SQL injection prevention** via Prisma
 - **Sensitive data masking** in logs
@@ -546,18 +594,21 @@ export default defineWrappedResponseHandler(
 ## Performance Standards
 
 ### Frontend Optimization
+
 - **Code splitting** with Nuxt auto-imports
 - **Lazy loading** for heavy components
 - **Image optimization** with @nuxt/image
 - **Bundle analysis** and optimization
 
 ### Backend Performance
+
 - **Database query optimization**
 - **Caching strategies** with Unstorage
 - **Rate limiting** to prevent abuse
 - **Efficient serialization** with transformers
 
 ### Core Web Vitals
+
 - **LCP**: Optimize largest contentful paint
 - **FID**: Minimize first input delay
 - **CLS**: Prevent cumulative layout shift
@@ -570,34 +621,42 @@ export default defineWrappedResponseHandler(
 Before committing changes, **ALWAYS** run these commands in order:
 
 1. **Build Validation**
+
    ```bash
    pnpm build
    ```
+
    - ✅ Must build successfully without errors
    - ⏱️ Takes ~45-120 seconds (depending on cache state)
    - ❌ CI will fail if build fails
 
 2. **Linting**
+
    ```bash
    pnpm lint
    ```
+
    - ✅ Fix any **errors** (mandatory)
    - ⚠️ Warnings are acceptable
    - 💡 Use `pnpm lint:fix` for auto-fixes
    - ❌ CI will fail if errors exist
 
 3. **Type Checking** (Optional but Recommended)
+
    ```bash
    pnpm typecheck
    ```
+
    - ✅ Must pass without errors
    - ⏱️ Takes ~22 seconds
    - 💡 Catches TypeScript issues early
 
 4. **Commit Message Validation**
+
    ```bash
    pnpm commitlint --from HEAD~1 --to HEAD --verbose
    ```
+
    - ✅ Validates commit message format
    - 📋 Must follow Conventional Commits standard
    - ❌ CI may reject improperly formatted commits
@@ -605,6 +664,7 @@ Before committing changes, **ALWAYS** run these commands in order:
 ### Code Quality Tools
 
 **Automated Enforcement**:
+
 - **Husky v9+** - Git hooks for automatic validation
   - Pre-commit hook: Runs lint-staged on staged files
   - Commit-msg hook: Validates commit message format
@@ -615,6 +675,7 @@ Before committing changes, **ALWAYS** run these commands in order:
   - Automatic fixes applied before commit
 
 **Manual Tools**:
+
 - **ESLint** - Code linting with @antfu/eslint-config
   - Command: `pnpm lint` or `pnpm lint:fix`
   - Enforces code style and best practices
@@ -629,6 +690,7 @@ Before committing changes, **ALWAYS** run these commands in order:
   - Enforces Conventional Commits standard
 
 ### Testing Strategy
+
 - **Unit tests** for utilities and composables
 - **Component tests** for Vue components
 - **Integration tests** for API endpoints
@@ -638,6 +700,7 @@ Before committing changes, **ALWAYS** run these commands in order:
 ### Continuous Integration
 
 **CI Pipeline** (`.github/workflows/continuous-integration.yml`) enforces:
+
 - ❌ Build must succeed
 - ❌ Linting must pass (no errors)
 - ❌ Type checking must pass
@@ -645,6 +708,7 @@ Before committing changes, **ALWAYS** run these commands in order:
 - ❌ Commit messages must be properly formatted
 
 **Automated Checks**:
+
 - **GitHub Actions** for CI/CD
 - **Automated testing** on pull requests
 - **Code coverage** reporting
@@ -654,18 +718,21 @@ Before committing changes, **ALWAYS** run these commands in order:
 ## DevOps & Deployment
 
 ### Container Strategy
+
 - **Multi-stage Docker builds**
 - **Alpine Linux** base images
 - **Non-root user** execution
 - **Minimal attack surface**
 
 ### Deployment Pipeline
+
 - **Cloudflare Pages** for hosting
 - **NuxtHub** for full-stack deployment
 - **Environment-specific** configurations
 - **Automated deployments** from main branch
 
 ### Monitoring & Observability
+
 - **Sentry** for error tracking
 - **Cloudflare Analytics** for web metrics
 - **Console logging** with structured format
@@ -674,18 +741,21 @@ Before committing changes, **ALWAYS** run these commands in order:
 ## Documentation Standards
 
 ### Code Documentation
+
 - **JSDoc comments** for functions and components
 - **TypeScript interfaces** with descriptions
 - **README files** for major features
 - **API documentation** with OpenAPI
 
 ### Project Documentation
+
 - **Architecture decisions** recorded
 - **Setup instructions** maintained
 - **Contributing guidelines** available
 - **Changelog** for version tracking
 
 ### Comment Guidelines
+
 ```typescript
 /**
  * Transforms Discord OAuth guilds and user data
@@ -702,6 +772,7 @@ export async function transformOauthGuildsAndUser(data: OAuthData) {
 ## Common Gotchas
 
 ### 1. File Naming & Variable Conventions
+
 - ❌ `UserProfile.ts` for components → ✅ `UserProfile.vue`
 - ❌ `guild-settings.vue` for components → ✅ `GuildSettings.vue`
 - ❌ `AuthUtils.ts` for utilities → ✅ `auth-utils.ts`
@@ -710,16 +781,19 @@ export async function transformOauthGuildsAndUser(data: OAuthData) {
 - ❌ `GUILD_ID` for variables → ✅ Use for constants only: `const MAX_RETRIES = 3`
 
 ### 2. Import Patterns
+
 - ✅ Prefer Nuxt auto-imports for Vue, composables, and utilities
 - ✅ Manually import third-party libraries
 - ✅ Explicitly import from `~/shared/` for clarity
 
 ### 3. State Management
+
 - ✅ Use **Pinia stores** for global state
 - ✅ Use **composables** for reusable local logic
 - ❌ Don't create reactive state at module level
 
 ### 4. API Routes
+
 - ✅ Must be in `server/api/` directory to auto-register
 - ✅ Use `.get.ts`, `.post.ts` suffixes for HTTP methods
 - ✅ Always use `defineWrappedResponseHandler` for consistency
@@ -727,12 +801,15 @@ export async function transformOauthGuildsAndUser(data: OAuthData) {
 - ✅ Leverage `onSuccess` and `onError` options for logging
 
 ### 5. Database Migrations
+
 - ✅ Use `prisma:push` for prototyping (no migration files)
 - ✅ Use `prisma:migrate:dev` for production-ready changes
 - ✅ Always run `prisma:generate` after schema changes
 
 ### 6. Vue Component Block Order
+
 **Required order** (enforced by ESLint):
+
 1. `<template>`
 2. `<script>` (if needed)
 3. `<script setup lang="ts">`
@@ -740,11 +817,13 @@ export async function transformOauthGuildsAndUser(data: OAuthData) {
 5. `<style scoped>`
 
 ### 7. Discord OAuth
+
 - ✅ Redirect URI must exactly match Discord app settings
 - ✅ Required scopes: `identify`, `guilds`
 - ✅ Session management via nuxt-auth-utils
 
 ### 8. Rate Limiting
+
 - ✅ Configured per endpoint in wrapped handlers
 - ✅ Requires cache storage for state
 - ✅ Uses `@tanstack/pacer` for implementation
@@ -780,6 +859,7 @@ pnpm prisma:validate            # Validate Prisma schema
 ## Enforcement
 
 These conventions are enforced through:
+
 - **Automated linting** with ESLint (pre-commit and CI)
 - **Type checking** with TypeScript (pre-commit and CI)
 - **Commit message validation** with commitlint (pre-commit and CI)
@@ -788,6 +868,7 @@ These conventions are enforced through:
 - **Code review** requirements
 
 **CI Pipeline Failures**: The build will fail if:
+
 - ❌ Linting errors exist
 - ❌ Type checking fails
 - ❌ Build fails
@@ -799,6 +880,7 @@ These conventions are enforced through:
 ## Philosophy
 
 This codebase emphasizes:
+
 - ✅ **Type Safety** - Full TypeScript with strict mode
 - ✅ **Developer Experience** - Fast hot reload, auto-imports, great DX
 - ✅ **Discord Integration** - Seamless OAuth and bot management
@@ -814,6 +896,7 @@ This codebase emphasizes:
 ## Updates
 
 This document should be updated when:
+
 - New conventions are established
 - Technology stack changes
 - Architecture decisions are made
@@ -823,6 +906,6 @@ When the project or this file has changed, the **Last Updated** date will be upd
 
 ---
 
-**Last Updated**: October 2025  
-**Version**: 2.0.0  
+**Last Updated**: October 2025
+**Version**: 2.0.0
 **Maintained by**: WolfStar Development Team

@@ -44,28 +44,33 @@ Before contributing, ensure you have:
 ### Initial Setup
 
 1. **Fork the repository**
+
    ```bash
    # Visit https://github.com/wolfstar-project/wolfstar.rocks
    # Click "Fork" button in the top right
    ```
 
 2. **Clone your fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/wolfstar.rocks.git
    cd wolfstar.rocks
    ```
 
 3. **Add upstream remote**
+
    ```bash
    git remote add upstream https://github.com/wolfstar-project/wolfstar.rocks.git
    ```
 
 4. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 5. **Setup environment variables**
+
    ```bash
    # Copy the example env file
    cp .env.example .env
@@ -87,12 +92,14 @@ Before contributing, ensure you have:
    - Copy Client ID and Client Secret to your `.env` file
 
 7. **Setup database**
+
    ```bash
    # Run migrations
    pnpm prisma:migrate:dev
    ```
 
 8. **Start development server**
+
    ```bash
    pnpm dev
    ```
@@ -126,11 +133,13 @@ pnpm prisma:studio
 ### Reporting Bugs
 
 **Before submitting a bug report:**
+
 1. Check [existing issues](https://github.com/wolfstar-project/wolfstar.rocks/issues) to avoid duplicates
 2. Ensure you're using the latest version
 3. Verify the bug is reproducible
 
 **When submitting a bug report, include:**
+
 - Clear, descriptive title
 - Steps to reproduce the issue
 - Expected vs actual behavior
@@ -139,6 +148,7 @@ pnpm prisma:studio
 - Relevant code snippets
 
 **Use the bug report template:**
+
 ```markdown
 **Describe the bug**
 A clear description of what the bug is.
@@ -163,11 +173,13 @@ If applicable, add screenshots.
 ### Suggesting Features
 
 **Before suggesting a feature:**
+
 1. Check if it already exists or is planned
 2. Ensure it aligns with project goals
 3. Consider if it benefits the broader community
 
 **When suggesting a feature, include:**
+
 - Clear, descriptive title
 - Detailed description of the feature
 - Use cases and benefits
@@ -179,6 +191,7 @@ If applicable, add screenshots.
 **Pull Request Workflow:**
 
 1. **Create a feature branch**
+
    ```bash
    git checkout -b feat/my-new-feature
    # or
@@ -192,6 +205,7 @@ If applicable, add screenshots.
    - Update documentation if needed
 
 3. **Commit your changes**
+
    ```bash
    # Husky will automatically:
    # - Run lint-staged (ESLint + Prettier on staged files)
@@ -202,12 +216,14 @@ If applicable, add screenshots.
    ```
 
 4. **Keep your branch updated**
+
    ```bash
    git fetch upstream
    git rebase upstream/main
    ```
 
 5. **Push to your fork**
+
    ```bash
    git push origin feat/my-new-feature
    ```
@@ -226,16 +242,19 @@ If applicable, add screenshots.
 ### Code Style
 
 **This project uses:**
+
 - **ESLint** with `@antfu/eslint-config` for linting
 - **Prettier** with `@sapphire/prettier-config` for formatting
 - **TypeScript** with strict mode enabled
 
 **Automatic enforcement via Husky:**
+
 - Pre-commit hook runs `lint-staged` (ESLint + Prettier on staged files)
 - Commit-msg hook validates commit message format
 - All checks must pass before commit is created
 
 **Manual commands:**
+
 ```bash
 # Fix linting issues
 pnpm lint:fix
@@ -254,6 +273,7 @@ pnpm typecheck
 **Format:** `<type>(<scope>): <subject>`
 
 **Allowed types:**
+
 - `feat` - New features
 - `fix` - Bug fixes
 - `docs` - Documentation changes
@@ -268,12 +288,14 @@ pnpm typecheck
 - `types` - TypeScript type definition updates
 
 **Rules:**
+
 - Scope must be lowercase (e.g., `auth`, `api`, `ui`)
 - Subject must be lowercase and imperative mood
 - No exclamation marks in subject
 - No period at end of subject
 
 **Examples:**
+
 ```bash
 # ✅ Good examples
 feat: add user dashboard component
@@ -295,15 +317,15 @@ Husky's `commit-msg` hook automatically validates your commit message. If invali
 
 ### File Naming Conventions
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Vue Components | PascalCase | `UserProfile.vue` |
-| TypeScript Files | kebab-case | `auth-utils.ts` |
-| API Routes | kebab-case | `guild-settings.get.ts` |
-| Directories | kebab-case | `guild-settings/` |
-| Variables | camelCase | `guildId`, `userName` |
-| Constants | UPPER_SNAKE_CASE | `API_BASE_URL` |
-| Types/Interfaces | PascalCase | `UserData`, `GuildSettings` |
+| Type             | Convention       | Example                     |
+| ---------------- | ---------------- | --------------------------- |
+| Vue Components   | PascalCase       | `UserProfile.vue`           |
+| TypeScript Files | kebab-case       | `auth-utils.ts`             |
+| API Routes       | kebab-case       | `guild-settings.get.ts`     |
+| Directories      | kebab-case       | `guild-settings/`           |
+| Variables        | camelCase        | `guildId`, `userName`       |
+| Constants        | UPPER_SNAKE_CASE | `API_BASE_URL`              |
+| Types/Interfaces | PascalCase       | `UserData`, `GuildSettings` |
 
 ### API Development
 
@@ -368,12 +390,14 @@ export default defineWrappedResponseHandler(
 ### Database Changes
 
 **For prototyping:**
+
 ```bash
 # Edit server/database/schema.prisma
 pnpm prisma:push
 ```
 
 **For production-ready changes:**
+
 ```bash
 # Edit server/database/schema.prisma
 pnpm prisma:migrate:dev
@@ -382,6 +406,7 @@ pnpm prisma:generate
 ```
 
 **Always:**
+
 - Use descriptive migration names
 - Review generated SQL
 - Test migrations locally
@@ -392,21 +417,27 @@ pnpm prisma:generate
 **Before submitting a PR:**
 
 1. **Build validation**
+
    ```bash
    pnpm build
    ```
+
    Must complete without errors
 
 2. **Linting**
+
    ```bash
    pnpm lint
    ```
+
    No errors allowed (warnings acceptable)
 
 3. **Type checking**
+
    ```bash
    pnpm typecheck
    ```
+
    Must pass without errors
 
 4. **Manual testing**
@@ -418,6 +449,7 @@ pnpm prisma:generate
 ### Documentation
 
 **Update documentation when:**
+
 - Adding new features
 - Changing existing behavior
 - Adding new API endpoints
@@ -425,6 +457,7 @@ pnpm prisma:generate
 - Changing development workflow
 
 **Documentation locations:**
+
 - `/README.md` - Project overview and setup
 - `/.github/copilot-instructions.md` - AI development guidelines
 - `/AGENTS.md` - Project conventions and standards
@@ -439,6 +472,7 @@ pnpm prisma:generate
 ### Before Submitting
 
 **Checklist:**
+
 - [ ] Branch is up to date with `main`
 - [ ] All commits follow Conventional Commits format
 - [ ] Code passes `pnpm lint` (no errors)
@@ -516,6 +550,7 @@ Add screenshots to help explain your changes
 ### Getting Help
 
 **Need help?**
+
 - 💬 [Discord Server](https://join.wolfstar.rocks) - Real-time chat and support
 - 📝 [GitHub Discussions](https://github.com/wolfstar-project/wolfstar.rocks/discussions) - Community discussions
 - 🐛 [GitHub Issues](https://github.com/wolfstar-project/wolfstar.rocks/issues) - Bug reports and feature requests
@@ -523,10 +558,12 @@ Add screenshots to help explain your changes
 ### Recommended AI Tools
 
 **For AI-assisted development:**
+
 - **Context7** - Access up-to-date documentation for project dependencies
 - **MCP ESLint** - Real-time linting feedback and automatic fixes
 
 **Best practices:**
+
 1. Use Context7 when unsure about API usage or library patterns
 2. Use MCP ESLint to validate code before committing
 3. Reference `AGENTS.md` and `copilot-instructions.md` for project-specific guidelines
@@ -534,11 +571,13 @@ Add screenshots to help explain your changes
 ### Recognition
 
 Contributors are recognized in:
+
 - Project README.md
 - Release notes
 - GitHub contributors page
 
 **Significant contributors may:**
+
 - Be invited to join the core team
 - Get special roles in Discord server
 - Receive early access to new features
@@ -564,6 +603,7 @@ Contributors are recognized in:
 ## Questions?
 
 If you have questions not covered in this guide:
+
 1. Check [existing documentation](../README.md)
 2. Search [GitHub Issues](https://github.com/wolfstar-project/wolfstar.rocks/issues)
 3. Ask in [Discord Server](https://join.wolfstar.rocks)
@@ -575,5 +615,5 @@ If you have questions not covered in this guide:
 
 ---
 
-**Last Updated**: October 2025  
+**Last Updated**: October 2025
 **Maintained by**: WolfStar Development Team

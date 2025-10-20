@@ -32,10 +32,10 @@ WolfStar.rocks is a modern Nuxt 4 full-stack web application serving as the offi
 - **Package Manager**: pnpm (required, not npm or yarn)
 - **Database**: PostgreSQL (auto-provided in Copilot environment)
 
-
 ### Initial Setup
 
 In the Copilot environment:
+
 - ✅ PostgreSQL service is **automatically provided** with pre-configured environment variables
 - ✅ Database is **already created and seeded**
 - ✅ Dependencies are **already installed** via pnpm
@@ -60,6 +60,7 @@ pnpm dev
 This project is optimized for AI-assisted development. The following tools are recommended for the best development experience:
 
 #### Context7
+
 **Purpose**: Access up-to-date documentation for libraries and frameworks
 
 - **What it is**: Context7 provides real-time documentation access for all project dependencies
@@ -70,6 +71,7 @@ This project is optimized for AI-assisted development. The following tools are r
   - API reference for dependencies
 
 **Example libraries to query**:
+
 - Nuxt 4 documentation
 - Vue 3 Composition API
 - Prisma ORM
@@ -77,6 +79,7 @@ This project is optimized for AI-assisted development. The following tools are r
 - Discord API
 
 #### MCP ESLint
+
 **Purpose**: Real-time linting and code quality checks
 
 - **What it is**: Model Context Protocol (MCP) server for ESLint integration
@@ -88,12 +91,14 @@ This project is optimized for AI-assisted development. The following tools are r
   - Integration with project's ESLint configuration
 
 **Usage**:
+
 ```bash
 # The project uses @antfu/eslint-config
 # MCP ESLint automatically uses the project's eslint.config.js
 ```
 
 **Best Practices**:
+
 1. ✅ Use Context7 when unsure about API usage or library patterns
 2. ✅ Use MCP ESLint to validate code before committing
 3. ✅ Reference these instructions first, then use Context7 for library-specific details
@@ -122,6 +127,7 @@ pnpm start                      # Runs on http://localhost:3000
 ```
 
 **⚠️ CRITICAL - Build Timeouts:**
+
 - Avoid canceling commands prematurely; cold starts can be slower
 - Builds take ~45-60s normally; they may take longer on first run or when caches are cold
 - For CI, prefer pragmatic timeouts (e.g., 20-30 minutes by default) and extend to ~60 minutes for cold/first-run builds
@@ -199,34 +205,42 @@ pnpm prisma:seed                # Seed database with test data
 **ALWAYS run these commands in order:**
 
 1. **Build Validation**
+
    ```bash
    pnpm build
    ```
+
    - ✅ Must build successfully without errors
    - ⏱️ Takes ~45-120 seconds (depending on cache state)
    - ❌ CI will fail if build fails
 
 2. **Linting**
+
    ```bash
    pnpm lint
    ```
+
    - ✅ Fix any **errors** (mandatory)
    - ⚠️ Warnings are acceptable
    - 💡 Use `pnpm lint:fix` for auto-fixes
    - ❌ CI will fail if errors exist
 
 3. **Type Checking** (Optional but Recommended)
+
    ```bash
    pnpm typecheck
    ```
+
    - ✅ Must pass without errors
    - ⏱️ Takes ~22 seconds
    - 💡 Catches TypeScript issues early
 
 4. **Commit Message Validation**
+
    ```bash
    pnpm commitlint --from HEAD~1 --to HEAD --verbose
    ```
+
    - ✅ Validates commit message format
    - 📋 Must follow Conventional Commits standard
    - ❌ CI may reject improperly formatted commits
@@ -238,6 +252,7 @@ pnpm prisma:seed                # Seed database with test data
 **Format**: `<type>(<scope>): <subject>`
 
 **Allowed Types**:
+
 - `feat` - New features
 - `fix` - Bug fixes
 - `docs` - Documentation changes
@@ -252,12 +267,14 @@ pnpm prisma:seed                # Seed database with test data
 - `types` - TypeScript type definition updates
 
 **Rules**:
+
 - Scope must be **lowercase** (e.g., `auth`, `api`, `ui`)
 - Subject must be **lowercase** and **imperative** mood
 - No **exclamation marks** in subject
 - No **period** at the end of subject
 
 **Examples**:
+
 ```bash
 # ✅ Good examples
 feat: add user dashboard component
@@ -303,10 +320,12 @@ When you run `git commit`, Husky automatically triggers:
 #### Configuration
 
 **Husky hooks location**: `.husky/` directory
+
 - `.husky/commit-msg` - Commit message validation
 - `.husky/pre-commit` - Lint-staged execution
 
 **lint-staged configuration**: `package.json`
+
 ```json
 {
   "lint-staged": {
@@ -350,12 +369,14 @@ git commit -m "message" -n
 ```
 
 **⚠️ Warning**: Bypassing hooks can lead to:
+
 - CI pipeline failures
 - Inconsistent code formatting
 - Invalid commit messages in history
 - Rejected pull requests
 
 **Only bypass when**:
+
 - Fixing a broken hook during development
 - Emergency hotfix (still must follow standards manually)
 - Working on hook configuration itself
@@ -369,6 +390,7 @@ git commit -m "message" -n
 ✅ **Better git history** - Consistent commit message format
 
 **Validation Command**:
+
 ```bash
 # Validate commit message before pushing
 echo "feat(api): add new endpoint" | pnpm commitlint
@@ -380,6 +402,7 @@ pnpm commitlint --from HEAD~1 --to HEAD --verbose
 ### CI Pipeline Enforcement
 
 The CI pipeline (`.github/workflows/continuous-integration.yml`) will **fail** if:
+
 - ❌ Linting errors exist
 - ❌ Type checking fails
 - ❌ Build fails
@@ -480,17 +503,19 @@ git commit -m "feat(api): add new endpoint for guild settings"
 ### 4. Discord Bot Integration Development
 
 **Key Areas**:
+
 - OAuth2 configuration: `server/utils/discord.ts`
 - Guild permissions: Use `manageAbility` utility
 - Rate limiting: Via `@tanstack/pacer` in wrapped handlers
 - Session management: Via nuxt-auth-utils
 
 **Example Flow**:
+
 ```typescript
 // Check if user can manage guild
 const hasPermission = manageAbility(guild.permissions);
 if (!hasPermission) {
-  throw createError({ statusCode: 403, message: 'Insufficient permissions' });
+  throw createError({ statusCode: 403, message: "Insufficient permissions" });
 }
 ```
 
@@ -505,6 +530,7 @@ if (!hasPermission) {
 **Purpose**: Verify core application functionality
 
 **Steps**:
+
 1. Start development server: `pnpm dev`
 2. Navigate to `http://localhost:3000`
 3. Verify homepage loads with WolfStar branding
@@ -515,6 +541,7 @@ if (!hasPermission) {
 8. Check browser console for **critical errors** (warnings are expected)
 
 **Expected Results**:
+
 - ✅ Homepage renders correctly
 - ✅ Discord OAuth redirects properly
 - ✅ Guild list displays user's servers
@@ -526,6 +553,7 @@ if (!hasPermission) {
 **Purpose**: Verify hot reload and development experience
 
 **Steps**:
+
 1. Start development server: `pnpm dev`
 2. Open `app/pages/index.vue`
 3. Make a visible change (e.g., edit heading text)
@@ -535,6 +563,7 @@ if (!hasPermission) {
 7. Check terminal for compilation errors
 
 **Expected Results**:
+
 - ✅ Changes reflect immediately in browser
 - ✅ No compilation errors in terminal
 - ✅ Fast hot module replacement (< 1 second)
@@ -544,6 +573,7 @@ if (!hasPermission) {
 **Purpose**: Ensure production-ready code
 
 **Steps**:
+
 1. Build application: `pnpm build`
 2. Wait for build to complete (~45-120 seconds)
 3. Verify no build errors
@@ -554,6 +584,7 @@ if (!hasPermission) {
 8. Check browser DevTools Network tab for errors
 
 **Expected Results**:
+
 - ✅ Build completes successfully
 - ✅ Production server starts without errors
 - ✅ Application loads and functions correctly
@@ -564,6 +595,7 @@ if (!hasPermission) {
 **Purpose**: Verify database schema changes
 
 **Steps**:
+
 1. Make schema change in `server/database/schema.prisma`
 2. Run: `pnpm prisma:push` (for prototyping) OR `pnpm prisma:migrate:dev` (for production)
 3. Open Prisma Studio: `pnpm prisma:studio`
@@ -572,6 +604,7 @@ if (!hasPermission) {
 6. Verify data integrity
 
 **Expected Results**:
+
 - ✅ Schema changes applied successfully
 - ✅ Prisma Studio reflects changes
 - ✅ Application uses updated schema
@@ -582,6 +615,7 @@ if (!hasPermission) {
 ## Technology Stack
 
 ### Frontend Stack
+
 - **Framework**: Nuxt 4 (latest)
 - **UI Framework**: Vue 3 with Composition API
 - **Language**: TypeScript (strict mode)
@@ -592,6 +626,7 @@ if (!hasPermission) {
 - **PWA Support**: @vite-pwa/nuxt
 
 ### Backend Stack
+
 - **Runtime**: Node.js 22+ with Nitro server
 - **Database**: PostgreSQL with Prisma ORM v6
 - **Cache/Session**: Unstorage
@@ -600,6 +635,7 @@ if (!hasPermission) {
 - **API Documentation**: OpenAPI/Swagger
 
 ### DevOps & Tooling
+
 - **Package Manager**: pnpm v9+ (workspaces enabled)
 - **Linting**: ESLint with @antfu/eslint-config
 - **Formatting**: Prettier with @sapphire/prettier-config
@@ -687,34 +723,37 @@ wolfstar.rocks/
 ### Key Directories Explained
 
 **`app/`** - All frontend code
+
 - File-based routing via `pages/`
 - Reusable components in `components/`
 - Composables for shared logic
 - Pinia stores for global state
 
 **`server/`** - All backend code
+
 - API routes auto-registered from `api/`
 - Database schema and migrations
 - Server utilities and middlewares
 - Nitro-specific code
 
 **`shared/`** - Code shared between client and server
+
 - Common type definitions
 - Constants and utilities
 - Must be isomorphic (works in both environments)
 
 ### File Naming Conventions
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| Vue Components | PascalCase | `UserProfile.vue`, `GuildSettings.vue` |
-| TypeScript Files | kebab-case | `auth-utils.ts`, `discord-api.ts` |
-| API Routes | kebab-case | `guild-settings.get.ts` |
-| Directories | kebab-case | `guild-settings/`, `user-profile/` |
-| Types/Interfaces | PascalCase | `interface UserData {}` |
-| Functions | camelCase | `getUserData()`, `fetchGuilds()` |
-| Variables | camelCase | `guildId`, `userName`, `isLoading` |
-| Constants | UPPER_SNAKE_CASE | `API_BASE_URL`, `MAX_RETRIES` |
+| Type             | Convention       | Example                                |
+| ---------------- | ---------------- | -------------------------------------- |
+| Vue Components   | PascalCase       | `UserProfile.vue`, `GuildSettings.vue` |
+| TypeScript Files | kebab-case       | `auth-utils.ts`, `discord-api.ts`      |
+| API Routes       | kebab-case       | `guild-settings.get.ts`                |
+| Directories      | kebab-case       | `guild-settings/`, `user-profile/`     |
+| Types/Interfaces | PascalCase       | `interface UserData {}`                |
+| Functions        | camelCase        | `getUserData()`, `fetchGuilds()`       |
+| Variables        | camelCase        | `guildId`, `userName`, `isLoading`     |
+| Constants        | UPPER_SNAKE_CASE | `API_BASE_URL`, `MAX_RETRIES`          |
 
 ---
 
@@ -725,86 +764,89 @@ wolfstar.rocks/
 **⚠️ ALWAYS use `defineWrappedResponseHandler` for API endpoints**
 
 **Why?**
+
 - Consistent error handling across all endpoints
 - Built-in rate limiting
 - Automatic authentication checks
 - Standardized response format
 
 **Basic Pattern**:
+
 ```typescript
 // server/api/guilds/[guild]/settings.get.ts
 export default defineWrappedResponseHandler(
   async (event) => {
-    const guildId = getRouterParam(event, 'guild');
-    
+    const guildId = getRouterParam(event, "guild");
+
     // Your handler logic here
     const settings = await prisma.guild.findUnique({
       where: { id: guildId }
     });
-    
+
     if (!settings) {
       throw createError({
         statusCode: 404,
-        message: 'Guild not found'
+        message: "Guild not found"
       });
     }
-    
+
     return settings;
   },
   {
     // Require Discord authentication
     auth: true,
-    
+
     // Rate limiting configuration
     rateLimit: {
       enabled: true,
-      window: 10000,        // 10 seconds
-      limit: 5,             // 5 requests per window
-      type: "fixed"         // or "sliding"
+      window: 10000, // 10 seconds
+      limit: 5, // 5 requests per window
+      type: "fixed" // or "sliding"
     }
   }
 );
 ```
 
 **Complete Example with All Options**:
+
 ```typescript
 // server/api/guilds/[guild]/settings.patch.ts
 export default defineWrappedResponseHandler(
   async (event) => {
-    const guildId = getRouterParam(event, 'id');
+    const guildId = getRouterParam(event, "id");
     const body = await readBody(event);
-    
+
     // Update guild settings
     const updatedSettings = await prisma.guildSettings.update({
       where: { guildId },
       data: body
     });
-    
+
     return updatedSettings;
   },
   {
     // Require authentication
     auth: true,
-    
+
     // Rate limiting
     rateLimit: {
       enabled: true,
-      window: 60000,        // 60 seconds (1 minute)
-      limit: 10,            // 10 requests per minute
-      type: "sliding"       // Sliding window for smoother limits
+      window: 60000, // 60 seconds (1 minute)
+      limit: 10, // 10 requests per minute
+      type: "sliding" // Sliding window for smoother limits
     },
-    
+
     // Success callback
     onSuccess: (logger, data) => {
-      logger.info('Guild settings updated successfully', {
+      logger.info("Guild settings updated successfully", {
         guildId: data.guildId,
         updatedAt: data.updatedAt
       });
     },
-    
+
     // Error callback (called before error is thrown)
     onError: (logger, error) => {
-      logger.error('Failed to update guild settings', {
+      logger.error("Failed to update guild settings", {
         error: error.message,
         statusCode: error.statusCode
       });
@@ -814,15 +856,16 @@ export default defineWrappedResponseHandler(
 ```
 
 **Cached Response Handler**:
+
 ```typescript
 // server/api/guilds/[guild]/channels.get.ts
 export default defineWrappedCachedResponseHandler(
   async (event) => {
-    const guildId = getRouterParam(event, 'guild');
-    
+    const guildId = getRouterParam(event, "guild");
+
     // Fetch channels from Discord API
     const channels = await fetchGuildChannels(guildId);
-    
+
     return channels;
   },
   {
@@ -832,13 +875,13 @@ export default defineWrappedCachedResponseHandler(
       window: 10000,
       limit: 5
     },
-    
+
     // Cache options (from Nitro's cachedEventHandler)
-    maxAge: 60 * 60,        // Cache for 1 hour
-    swr: true,              // Stale-while-revalidate
-    name: 'guild-channels', // Cache key prefix
+    maxAge: 60 * 60, // Cache for 1 hour
+    swr: true, // Stale-while-revalidate
+    name: "guild-channels", // Cache key prefix
     getKey: (event) => {
-      const guildId = getRouterParam(event, 'guild');
+      const guildId = getRouterParam(event, "guild");
       return `channels:${guildId}`;
     }
   }
@@ -847,25 +890,26 @@ export default defineWrappedCachedResponseHandler(
 
 **Options Reference**:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `auth` | `boolean` | `false` | Require Discord authentication |
-| `rateLimit.enabled` | `boolean` | `true` | Enable rate limiting |
-| `rateLimit.window` | `number` | `10000` | Time window in milliseconds |
-| `rateLimit.limit` | `number` | `5` | Max requests per window |
-| `rateLimit.type` | `"fixed" \| "sliding"` | `"fixed"` | Window type for rate limiting |
-| `onSuccess` | `(logger, data) => void` | `undefined` | Callback on successful response |
-| `onError` | `(logger, error) => void` | `undefined` | Callback on error (before throwing) |
+| Option              | Type                      | Default     | Description                         |
+| ------------------- | ------------------------- | ----------- | ----------------------------------- |
+| `auth`              | `boolean`                 | `false`     | Require Discord authentication      |
+| `rateLimit.enabled` | `boolean`                 | `true`      | Enable rate limiting                |
+| `rateLimit.window`  | `number`                  | `10000`     | Time window in milliseconds         |
+| `rateLimit.limit`   | `number`                  | `5`         | Max requests per window             |
+| `rateLimit.type`    | `"fixed" \| "sliding"`    | `"fixed"`   | Window type for rate limiting       |
+| `onSuccess`         | `(logger, data) => void`  | `undefined` | Callback on successful response     |
+| `onError`           | `(logger, error) => void` | `undefined` | Callback on error (before throwing) |
 
 **Additional Options for `defineWrappedCachedResponseHandler`**:
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `maxAge` | `number` | `60 * 60` | Cache duration in seconds |
-| `swr` | `boolean` | `true` | Stale-while-revalidate |
-| `name` | `string` | `undefined` | Cache key prefix |
+| Option   | Type                | Default     | Description                |
+| -------- | ------------------- | ----------- | -------------------------- |
+| `maxAge` | `number`            | `60 * 60`   | Cache duration in seconds  |
+| `swr`    | `boolean`           | `true`      | Stale-while-revalidate     |
+| `name`   | `string`            | `undefined` | Cache key prefix           |
 | `getKey` | `(event) => string` | `undefined` | Custom cache key generator |
-```
+
+````
 
 ### 2. Vue Component Structure
 
@@ -940,9 +984,10 @@ onMounted(() => {
   background-color: var(--color-background);
 }
 </style>
-```
+````
 
 **Component Best Practices**:
+
 - ✅ Use Composition API exclusively
 - ✅ Prefer `<script setup>` syntax
 - ✅ Type props and emits with TypeScript
@@ -954,26 +999,28 @@ onMounted(() => {
 ### 3. Authentication Patterns
 
 **Server-Side Authentication**:
+
 ```typescript
 // In API routes
 export default defineWrappedResponseHandler(
   async (event) => {
     // Wrapped handler automatically validates session when auth: true
     const session = await requireUserSession(event);
-    
+
     // session.user contains Discord user data
     const userId = session.user.id;
     const username = session.user.username;
-    
+
     // Your logic here
   },
   {
-    auth: true  // Requires authentication
+    auth: true // Requires authentication
   }
 );
 ```
 
 **Client-Side Authentication**:
+
 ```vue
 <script setup lang="ts">
 // Using auth composable
@@ -981,7 +1028,7 @@ const { loggedIn, user, session, fetch, clear } = useUserSession();
 
 // Check if user is logged in
 if (!loggedIn.value) {
-  navigateTo('/auth/login');
+  navigateTo("/auth/login");
 }
 
 // Access user data
@@ -991,8 +1038,9 @@ const avatar = user.value?.avatar;
 ```
 
 **Guild Permission Checking**:
+
 ```typescript
-import { manageAbility } from '~/server/utils/permissions';
+import { manageAbility } from "~/server/utils/permissions";
 
 // Check if user can manage guild
 const hasPermission = manageAbility(guild.permissions);
@@ -1000,7 +1048,7 @@ const hasPermission = manageAbility(guild.permissions);
 if (!hasPermission) {
   throw createError({
     statusCode: 403,
-    message: 'Insufficient permissions to manage this guild'
+    message: "Insufficient permissions to manage this guild"
   });
 }
 ```
@@ -1008,9 +1056,10 @@ if (!hasPermission) {
 ### 4. Database Patterns with Prisma
 
 **Prisma Client Singleton**:
+
 ```typescript
 // server/database/client.ts - Always use this import
-import { prisma } from '~/server/database/client';
+import { prisma } from "~/server/database/client";
 
 // Usage in API routes
 const guilds = await prisma.guild.findMany({
@@ -1020,6 +1069,7 @@ const guilds = await prisma.guild.findMany({
 ```
 
 **Schema Conventions**:
+
 ```prisma
 // server/database/schema.prisma
 
@@ -1030,21 +1080,22 @@ model Guild {
   discordId   String   @unique
   name        String
   ownerId     String
-  
+
   // Relations
   owner       User     @relation(fields: [ownerId], references: [id])
   settings    GuildSettings?
-  
+
   // Timestamps
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
   // Map to snake_case table name
   @@map("guilds")
 }
 ```
 
 **Migration Best Practices**:
+
 - Use descriptive migration names: `add_guild_settings_table`, not `migration_1`
 - Always review generated SQL before applying
 - Test migrations locally before deploying
@@ -1054,35 +1105,37 @@ model Guild {
 ### 5. State Management with Pinia
 
 **Store Structure**:
+
 ```typescript
 // app/stores/guild.ts
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
-export const useGuildStore = defineStore('guild', () => {
+export const useGuildStore = defineStore("guild", () => {
   // State (using composition API style)
   const selectedGuild = ref<Guild | null>(null);
   const guilds = ref<Guild[]>([]);
   const loading = ref(false);
-  
+
   // Getters (computed)
   const hasGuilds = computed(() => guilds.value.length > 0);
   const selectedGuildId = computed(() => selectedGuild.value?.id);
-  
+
   // Actions (functions)
   async function fetchGuilds() {
     loading.value = true;
     try {
-      const { data } = await useFetch('/api/guilds');
+      const { data } = await useFetch("/api/guilds");
       guilds.value = data.value || [];
-    } finally {
+    }
+    finally {
       loading.value = false;
     }
   }
-  
+
   function selectGuild(guild: Guild) {
     selectedGuild.value = guild;
   }
-  
+
   // Return everything to expose
   return {
     // State
@@ -1100,6 +1153,7 @@ export const useGuildStore = defineStore('guild', () => {
 ```
 
 **Usage in Components**:
+
 ```vue
 <script setup lang="ts">
 const guildStore = useGuildStore();
@@ -1117,20 +1171,21 @@ onMounted(() => {
 ### 6. Styling with TailwindCSS + DaisyUI
 
 **DaisyUI Components**:
+
 ```vue
 <template>
   <!-- Use semantic DaisyUI classes -->
   <button class="btn btn-primary">
     Primary Button
   </button>
-  
+
   <div class="card bg-base-100 shadow-xl">
     <div class="card-body">
       <h2 class="card-title">Card Title</h2>
       <p>Card content</p>
     </div>
   </div>
-  
+
   <div class="alert alert-info">
     <span>Information message</span>
   </div>
@@ -1138,22 +1193,26 @@ onMounted(() => {
 ```
 
 **Responsive Design**:
+
 ```vue
 <template>
   <!-- Mobile first approach -->
-  <div class="
+  <div
+    class="
     grid
     grid-cols-1
     sm:grid-cols-2
     lg:grid-cols-3
     gap-4
-  ">
+  "
+  >
     <!-- Content -->
   </div>
 </template>
 ```
 
 **Theme Colors**:
+
 - `primary` - Primary brand color
 - `secondary` - Secondary brand color
 - `accent` - Accent color
@@ -1169,13 +1228,14 @@ onMounted(() => {
 ### 7. Error Handling Patterns
 
 **Server-Side Error Handling**:
+
 ```typescript
 // H3 errors in server handlers
 throw createError({
   statusCode: 400,
-  statusMessage: 'Bad Request',
-  message: 'Invalid guild ID provided',
-  data: { guildId: 'expected string' }
+  statusMessage: "Bad Request",
+  message: "Invalid guild ID provided",
+  data: { guildId: "expected string" }
 });
 
 // Common status codes:
@@ -1188,34 +1248,37 @@ throw createError({
 ```
 
 **Client-Side Error Handling**:
+
 ```vue
 <script setup lang="ts">
-const { data, error, pending } = await useFetch('/api/guilds');
+const { data, error, pending } = await useFetch("/api/guilds");
 
 // Handle errors
 if (error.value) {
   const statusCode = error.value.statusCode;
   const message = error.value.message;
-  
+
   // Show user-friendly error
-  console.error('Failed to fetch guilds:', message);
+  console.error("Failed to fetch guilds:", message);
 }
 </script>
 ```
 
 **Logging**:
+
 ```typescript
 // Use logger composable
-const logger = useLogger('@wolfstar/component-name');
+const logger = useLogger("@wolfstar/component-name");
 
-logger.info('User logged in', { userId: user.id });
-logger.warn('Guild not found', { guildId });
-logger.error('Database error', { error: err.message });
+logger.info("User logged in", { userId: user.id });
+logger.warn("Guild not found", { guildId });
+logger.error("Database error", { error: err.message });
 ```
 
 ### 8. Discord Bot Integration
 
 **OAuth2 Configuration**:
+
 ```typescript
 // server/utils/discord.ts
 const DISCORD_CLIENT_ID = process.env.NUXT_OAUTH_DISCORD_CLIENT_ID;
@@ -1223,12 +1286,13 @@ const DISCORD_CLIENT_SECRET = process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET;
 const DISCORD_REDIRECT_URI = process.env.NUXT_OAUTH_DISCORD_REDIRECT_URI;
 
 // Required OAuth scopes
-const SCOPES = ['identify', 'guilds'];
+const SCOPES = ["identify", "guilds"];
 ```
 
 **Guild Permission Checking**:
+
 ```typescript
-import { manageAbility } from '~/server/utils/permissions';
+import { manageAbility } from "~/server/utils/permissions";
 
 // Check if user has MANAGE_GUILD permission
 const canManage = manageAbility(guild.permissions);
@@ -1236,12 +1300,13 @@ const canManage = manageAbility(guild.permissions);
 if (!canManage) {
   throw createError({
     statusCode: 403,
-    message: 'You need MANAGE_GUILD permission to access this guild'
+    message: "You need MANAGE_GUILD permission to access this guild"
   });
 }
 ```
 
 **Bot Integration Points**:
+
 - **WolfStar Bot**: Moderation, logging, and server management
 - **Staryl Bot**: Social media notifications (Twitch, Instagram, etc.)
 - **OAuth Scopes**: `identify` for user data, `guilds` for server list, `bot` for bot invitations
@@ -1255,22 +1320,26 @@ if (!canManage) {
 ### 1. File Naming & Variable Conventions
 
 **❌ Wrong - Files**:
+
 - `UserProfile.ts` (should be .vue for components)
 - `guild-settings.vue` (components should be PascalCase)
 - `AuthUtils.ts` (utils should be kebab-case)
 
 **✅ Correct - Files**:
+
 - `UserProfile.vue` (component)
 - `GuildSettings.vue` (component)
 - `auth-utils.ts` (utility)
 - `guild-settings.get.ts` (API route)
 
 **❌ Wrong - Variables**:
+
 - `guild_id` (snake_case, not TypeScript convention)
 - `GuildId` (PascalCase, reserved for types)
 - `GUILD_ID` (uppercase, reserved for constants)
 
 **✅ Correct - Variables**:
+
 - `guildId` (camelCase for variables)
 - `userId`, `userName`, `isLoading` (camelCase)
 - `API_BASE_URL`, `MAX_RETRIES` (UPPER_SNAKE_CASE for constants)
@@ -1278,21 +1347,24 @@ if (!canManage) {
 ### 2. Import Confusion
 
 **❌ Avoid manual imports when auto-imports work**:
+
 ```typescript
+import { useFetch } from "#app";
 // Don't do this
-import { ref, computed } from 'vue';
-import { useFetch } from '#app';
+import { computed, ref } from "vue";
 ```
 
 **✅ Use Nuxt auto-imports**:
+
 ```typescript
 // Just use them directly
 const count = ref(0);
 const doubled = computed(() => count.value * 2);
-const { data } = await useFetch('/api/guilds');
+const { data } = await useFetch("/api/guilds");
 ```
 
 **When to manually import**:
+
 - Third-party libraries not in auto-imports
 - Shared utilities from `~/shared/`
 - Explicit imports for clarity in complex files
@@ -1300,21 +1372,24 @@ const { data } = await useFetch('/api/guilds');
 ### 3. State Management Misuse
 
 **❌ Wrong - Using reactive state in wrong place**:
+
 ```typescript
 // Don't create global state outside composables/stores
 const globalUser = ref(null); // Bad!
 ```
 
 **✅ Correct - Use Pinia for global state**:
+
 ```typescript
 // app/stores/auth.ts
-export const useAuthStore = defineStore('auth', () => {
+export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   return { user };
 });
 ```
 
 **✅ Correct - Use composables for local logic**:
+
 ```typescript
 // app/composables/useUser.ts
 export function useUser() {
@@ -1327,11 +1402,13 @@ export function useUser() {
 ### 4. API Route Registration
 
 **❌ Wrong location - API not auto-registered**:
+
 ```
 app/api/guilds.ts           # Wrong directory!
 ```
 
 **✅ Correct location**:
+
 ```
 server/api/guilds.get.ts    # GET /api/guilds
 server/api/guilds.post.ts   # POST /api/guilds
@@ -1340,6 +1417,7 @@ server/api/guilds.post.ts   # POST /api/guilds
 ### 5. Database Migration Confusion
 
 **❌ Wrong - Skipping migrations**:
+
 ```bash
 # Making schema changes without migrations
 # Edit schema.prisma
@@ -1347,6 +1425,7 @@ pnpm dev  # ❌ Schema not applied!
 ```
 
 **✅ Correct - Use proper workflow**:
+
 ```bash
 # Prototyping (development only)
 pnpm prisma:push
@@ -1360,6 +1439,7 @@ pnpm prisma:migrate:dev
 **Issue**: Code behaves differently on Cloudflare Pages vs Node.js
 
 **Solution**: Use environment detection
+
 ```typescript
 // Check runtime environment
 if (import.meta.server) {
@@ -1371,7 +1451,7 @@ if (import.meta.client) {
 }
 
 // Check deployment target
-const isCloudflare = process.env.NITRO_PRESET === 'cloudflare-pages';
+const isCloudflare = process.env.NITRO_PRESET === "cloudflare-pages";
 ```
 
 ### 7. Discord OAuth Redirect Issues
@@ -1379,6 +1459,7 @@ const isCloudflare = process.env.NITRO_PRESET === 'cloudflare-pages';
 **Common Problem**: OAuth redirect doesn't match configured URI
 
 **Solution**: Ensure `.env` matches Discord app settings
+
 ```bash
 # .env
 NUXT_OAUTH_DISCORD_REDIRECT_URI=http://localhost:3000/auth/discord/callback
@@ -1391,6 +1472,7 @@ NUXT_OAUTH_DISCORD_REDIRECT_URI=http://localhost:3000/auth/discord/callback
 **Problem**: Rate limiting bypassed or not triggering
 
 **Checklist**:
+
 - ✅ Using `defineWrappedResponseHandler`
 - ✅ `rateLimit.enabled: true` in options
 - ✅ Cache storage properly configured
@@ -1401,6 +1483,7 @@ NUXT_OAUTH_DISCORD_REDIRECT_URI=http://localhost:3000/auth/discord/callback
 **Problem**: Schema changes not reflected in TypeScript types
 
 **Solution**:
+
 ```bash
 # After schema changes, always regenerate
 pnpm prisma:generate
@@ -1414,6 +1497,7 @@ pnpm prisma:generate:watch
 **Problem**: ESLint errors about block order
 
 **Solution**: Always follow this order
+
 1. `<template>`
 2. `<script>` (if needed)
 3. `<script setup lang="ts">`
@@ -1429,6 +1513,7 @@ pnpm prisma:generate:watch
 **Symptoms**: `pnpm dev` fails or hangs
 
 **Solutions**:
+
 ```bash
 # 1. Check port availability
 lsof -i :3000                   # macOS/Linux
@@ -1453,6 +1538,7 @@ cat .env  # Verify all required vars are set
 **Symptoms**: `pnpm build` hangs or times out
 
 **Solutions**:
+
 1. **Wait longer** - First builds can take 90-120 seconds
 2. **Check memory** - Ensure sufficient RAM (4GB+ recommended)
 3. **Clear caches**:
@@ -1467,6 +1553,7 @@ cat .env  # Verify all required vars are set
 **Symptoms**: `PrismaClientInitializationError` or connection refused
 
 **Solutions**:
+
 ```bash
 # 1. Verify PostgreSQL is running
 # In Copilot environment, it's auto-provided
@@ -1486,6 +1573,7 @@ pnpm prisma:migrate:reset
 **Symptoms**: TypeScript errors after package updates
 
 **Solutions**:
+
 ```bash
 # 1. Regenerate all type definitions
 pnpm nuxt prepare
@@ -1503,7 +1591,9 @@ pnpm typecheck
 **Symptoms**: Changes not reflected without manual refresh
 
 **Solutions**:
+
 1. **Check file watchers**: Ensure no watcher limit issues (Linux)
+
    ```bash
    # Increase file watchers (Linux)
    echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
@@ -1511,6 +1601,7 @@ pnpm typecheck
    ```
 
 2. **Restart dev server**:
+
    ```bash
    # Kill and restart
    pkill node
@@ -1528,6 +1619,7 @@ pnpm typecheck
 **Symptoms**: User logged out after page refresh
 
 **Solutions**:
+
 1. **Check session configuration** in `nuxt.config.ts`
 2. **Verify cookie settings** (secure, httpOnly, sameSite)
 3. **Check cache connection** for session storage
@@ -1540,6 +1632,7 @@ pnpm typecheck
 **Note**: Should not happen in this setup (same origin)
 
 **If it does occur**:
+
 - Verify API routes are in `server/api/` directory
 - Check Nitro server configuration
 - Ensure using `/api/` prefix in fetch calls
@@ -1549,6 +1642,7 @@ pnpm typecheck
 **Symptoms**: `pnpm lint` shows errors even after `lint:fix`
 
 **Solutions**:
+
 ```bash
 # 1. Clear ESLint cache
 rm -rf node_modules/.cache/eslint
@@ -1567,6 +1661,7 @@ pnpm lint:fix
 **Symptoms**: Husky hook fails on commit
 
 **Solutions**:
+
 ```bash
 # 1. Validate message format
 echo "your commit message" | pnpm commitlint
@@ -1589,10 +1684,10 @@ git commit -m "your message" --no-verify
 
 ### Active Services
 
-| Service | URL | Purpose | Command |
-|---------|-----|---------|---------|
-| **Nuxt Dev Server** | http://localhost:3000 | Main application | `pnpm dev` |
-| **Prisma Studio** | http://localhost:5555 | Database GUI | `pnpm prisma:studio` |
+| Service               | URL                   | Purpose            | Command                    |
+| --------------------- | --------------------- | ------------------ | -------------------------- |
+| **Nuxt Dev Server**   | http://localhost:3000 | Main application   | `pnpm dev`                 |
+| **Prisma Studio**     | http://localhost:5555 | Database GUI       | `pnpm prisma:studio`       |
 | **Production Server** | http://localhost:3000 | Production preview | `pnpm build && pnpm start` |
 
 ---
@@ -1620,30 +1715,30 @@ pnpm commitlint --from HEAD~1 --to HEAD --verbose  # Validate commit
 
 ### Important Paths
 
-| Path | Description |
-|------|-------------|
-| `app/pages/` | File-based routing pages |
-| `app/components/` | Vue components |
-| `server/api/` | API endpoints |
-| `server/database/schema.prisma` | Database schema |
-| `server/utils/` | Server utilities |
-| `.github/workflows/` | CI/CD pipelines |
+| Path                            | Description              |
+| ------------------------------- | ------------------------ |
+| `app/pages/`                    | File-based routing pages |
+| `app/components/`               | Vue components           |
+| `server/api/`                   | API endpoints            |
+| `server/database/schema.prisma` | Database schema          |
+| `server/utils/`                 | Server utilities         |
+| `.github/workflows/`            | CI/CD pipelines          |
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `nuxt.config.ts` | Nuxt configuration |
-| `tailwind.config.ts` | TailwindCSS configuration |
-| `tsconfig.json` | TypeScript configuration |
-| `.commitlintrc.json` | Commit message rules |
-| `eslint.config.js` | Linting rules |
-| `sentry.client.config.ts` | Sentry client configuration |
-| `sentry.server.config.ts` | Sentry server configuration |
-| `taze.config.ts` | Taze configuration |
-| `prisma.config.ts` | Prisma configuration |
-| `package.json` | Dependencies and scripts |
-| `.env` | Environment variables (local) |
+| File                      | Purpose                       |
+| ------------------------- | ----------------------------- |
+| `nuxt.config.ts`          | Nuxt configuration            |
+| `tailwind.config.ts`      | TailwindCSS configuration     |
+| `tsconfig.json`           | TypeScript configuration      |
+| `.commitlintrc.json`      | Commit message rules          |
+| `eslint.config.js`        | Linting rules                 |
+| `sentry.client.config.ts` | Sentry client configuration   |
+| `sentry.server.config.ts` | Sentry server configuration   |
+| `taze.config.ts`          | Taze configuration            |
+| `prisma.config.ts`        | Prisma configuration          |
+| `package.json`            | Dependencies and scripts      |
+| `.env`                    | Environment variables (local) |
 
 ---
 
@@ -1687,6 +1782,6 @@ When the project or this file has changed, the **Last Updated** date will be upd
 
 ---
 
-**Last Updated**: October 2025  
-**Version**: 2.0.0  
+**Last Updated**: October 2025
+**Version**: 2.0.0
 **Maintained by**: WolfStar Development Team

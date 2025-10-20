@@ -19,7 +19,7 @@ export default withNuxt(
       },
     },
     {
-      ignores: [".vscode/**/*.md", "server/database/generated/**/*", ".trae/", "AGENTS.md"],
+      ignores: ["server/database/generated/**/*", ".trae/"],
     },
   ),
 ).append({
@@ -76,6 +76,7 @@ export default withNuxt(
         },
       },
     ],
+    "vue/camelcase": "error",
     "vue/max-attributes-per-line": [
       "error",
       {

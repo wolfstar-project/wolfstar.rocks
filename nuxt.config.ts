@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     "@nuxtjs/seo",
     "@vueuse/nuxt",
     "@pinia/nuxt",
+    "@netlify/nuxt",
     "@vite-pwa/nuxt",
     "@sentry/nuxt/module",
     "nuxt-auth-utils",

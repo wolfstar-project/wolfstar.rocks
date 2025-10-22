@@ -64,7 +64,6 @@
     "@vueuse/integrations": "catalog:utils",
     "@vueuse/nuxt": "catalog:utils",
     "@vueuse/router": "catalog:utils",
-    "bumpp": "catalog:cli",
     "consola": "catalog:node",
     "cross-env": "catalog:node",
     "eslint-plugin-vuejs-accessibility": "catalog:lint",
@@ -83,14 +82,16 @@
     "stale-dep": "catalog:prod",
     "tailwind-merge": "catalog:prod",
     "tailwind-variants": "catalog:prod",
-    "taze": "catalog:cli",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
-    "zod": "catalog:utils"
+    "bumpp": "catalog:cli",
+    "zod": "catalog:utils",
+    "@netlify/nuxt": "catalog:prod"
   },
   "devDependencies": {
+    "taze": "catalog:cli",
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",

@@ -285,6 +285,7 @@ export default defineNuxtConfig({
           "http:",
           "data:",
           "blob:",
+          "https://ipx.wolfstar.rocks",
           "https://cdn.wolfstar.rocks",
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
@@ -294,6 +295,7 @@ export default defineNuxtConfig({
           "'self'",
           "https:",
           "http:",
+          "https://ipx.wolfstar.rocks",
           "https://cdn.wolfstar.rocks",
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
@@ -301,6 +303,7 @@ export default defineNuxtConfig({
         "object-src": ["'none'"],
         "script-src": [
           "'self'",
+          "https://static.cloudflareinsights.com",
           "'wasm-unsafe-eval'",
           "'strict-dynamic'",
           "'nonce-{{nonce}}'",

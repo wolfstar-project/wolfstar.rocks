@@ -253,7 +253,6 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
-  robots: {},
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {

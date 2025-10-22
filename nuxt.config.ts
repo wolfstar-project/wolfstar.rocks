@@ -147,11 +147,6 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: ["/", "/sitemap.xml"],
     },
-    esbuild: {
-      options: {
-        target: "esnext",
-      },
-    },
     rollupConfig: {
       external:
         process.env.NUXT_NITRO_PRESET !== "node-server"

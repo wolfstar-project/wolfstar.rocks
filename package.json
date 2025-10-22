@@ -19,13 +19,11 @@
     "build": "nuxi build",
     "dev": "nuxi dev",
     "dev:pwa": "cross-env VITE_DEV_PWA=true nuxi dev",
-    "format": "prettier --write .",
     "generate": "nuxt generate",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache --fix .",
     "postinstall": "stale-dep -u && nuxt prepare",
     "prepare": "node .husky/install.mjs",
-    "preview": "pnpx nuxthub preview",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:dev:create": "prisma migrate dev --create-only",
     "prisma:migrate:diff": "prisma migrate diff --exit-code --from-migrations server/database/migrations --to-schema-datamodel server/database/schema.prisma --shadow-database-url",
@@ -38,13 +36,11 @@
     "prisma:studio": "prisma studio",
     "prisma:generate": "prisma generate",
     "prisma:generate:watch": "prisma generate --watch",
-    "serve": "node .output/server/index.mjs",
-    "preview:cf": "wrangler dev --x-remote-bindings",
-    "deploy": "wrangler deploy",
+    "start": "node --import ./.output/server/sentry.server.config.mjs .output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck"
   },
   "lint-staged": {
-    "*": "eslint --fix ."
+    "*": "pnpm lint:fix"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "catalog:node",

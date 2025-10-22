@@ -1,10 +1,13 @@
+import { createResolver } from "nuxt/kit";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
-import "nuxt";
 
 const runtimeConfig = generateRuntimeConfig();
 
+const { resolve } = createResolver(import.meta.url);
+
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   // Modules configuration
   modules: [
@@ -28,7 +31,7 @@ export default defineNuxtConfig({
   $development: {
     site: {
       url: "http://localhost:3000",
-      name: "WolfStar (Development)",
+      name: "WolfStar (Dev)",
     },
   },
 
@@ -66,19 +69,19 @@ export default defineNuxtConfig({
       ],
       meta: [
         // Cache control
-        { "http-equiv": "Cache-Control", "content": "1y" },
-        { "http-equiv": "Content-Type", "content": "text/html; charset=UTF-8" },
-        { "http-equiv": "Expires", "content": "1y" },
-        { "http-equiv": "Pragma", "content": "1y" },
+        { "http-equiv": "Cache-Control", content: "1y" },
+        { "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" },
+        { "http-equiv": "Expires", content: "1y" },
+        { "http-equiv": "Pragma", content: "1y" },
 
         // Page transitions
         {
           "http-equiv": "Page-Enter",
-          "content": "RevealTrans(Duration=2.0,Transition=2)",
+          content: "RevealTrans(Duration=2.0,Transition=2)",
         },
         {
           "http-equiv": "Page-Exit",
-          "content": "RevealTrans(Duration=3.0,Transition=12)",
+          content: "RevealTrans(Duration=3.0,Transition=12)",
         },
 
         // Mobile specific (only keep if not in seo.meta)
@@ -123,6 +126,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
+    "/sitemap.xml": { prerender: true },
   },
 
   sourcemap: {
@@ -130,7 +134,6 @@ export default defineNuxtConfig({
   },
 
   experimental: {
-    viewTransition: true,
     payloadExtraction: false,
     renderJsonPayloads: true,
     typedPages: true,
@@ -161,7 +164,7 @@ export default defineNuxtConfig({
         description: "WolfStar API documentation",
         version: "1.0.0",
       },
-      route: "/_docs/openapi.json",
+      route: "/api/openapi.json",
       ui: {
         scalar: {
           route: "/api/docs",
@@ -178,9 +181,6 @@ export default defineNuxtConfig({
   },
 
   vite: {
-    build: {
-      target: "esnext",
-    },
     optimizeDeps: {
       include: [
         "@vueuse/shared",
@@ -229,21 +229,22 @@ export default defineNuxtConfig({
     customCollections: [
       {
         prefix: "custom",
-        dir: "./app/assets/icons",
+        dir: resolve("./app/assets/icons"),
       },
     ],
-    serverBundle: {
-      collections: ["ph", "ic", "heroicons", "lucide"],
-    },
     clientBundle: {
-      scan: {
-        globInclude: ["**\/*.{vue,jsx,tsx,md,mdc,mdx}", "app/**/*.ts"],
-      },
+      scan: true,
+      includeCustomCollections: true,
     },
+    provider: "iconify",
   },
 
   image: {
-    screens: {},
+    format: ["webp", "jpeg", "jpg", "png", "svg"],
+    provider: "ipx",
+    ipx: {
+      baseURL: "https://ipx.wolfstar.rocks",
+    },
   },
 
   ogImage: {
@@ -251,6 +252,7 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
+  robots: {},
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {
@@ -346,6 +348,6 @@ export default defineNuxtConfig({
     },
   },
   sitemap: {
-    exclude: ["/join", "/oauth/guild", "/oauth/callback", "/[...id]"],
+    exclude: ["/oauth/guild", "/oauth/callback", "/[...id]"],
   },
 });

@@ -69,19 +69,19 @@ export default defineNuxtConfig({
       ],
       meta: [
         // Cache control
-        { "http-equiv": "Cache-Control", content: "1y" },
-        { "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" },
-        { "http-equiv": "Expires", content: "1y" },
-        { "http-equiv": "Pragma", content: "1y" },
+        { "http-equiv": "Cache-Control", "content": "1y" },
+        { "http-equiv": "Content-Type", "content": "text/html; charset=UTF-8" },
+        { "http-equiv": "Expires", "content": "1y" },
+        { "http-equiv": "Pragma", "content": "1y" },
 
         // Page transitions
         {
           "http-equiv": "Page-Enter",
-          content: "RevealTrans(Duration=2.0,Transition=2)",
+          "content": "RevealTrans(Duration=2.0,Transition=2)",
         },
         {
           "http-equiv": "Page-Exit",
-          content: "RevealTrans(Duration=3.0,Transition=12)",
+          "content": "RevealTrans(Duration=3.0,Transition=12)",
         },
 
         // Mobile specific (only keep if not in seo.meta)

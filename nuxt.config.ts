@@ -242,10 +242,6 @@ export default defineNuxtConfig({
 
   image: {
     format: ["webp", "jpeg", "jpg", "png", "svg"],
-    provider: "ipx",
-    ipx: {
-      baseURL: "https://ipx.wolfstar.rocks",
-    },
   },
 
   ogImage: {

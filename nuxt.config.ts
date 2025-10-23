@@ -1,3 +1,4 @@
+// import { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver } from "nuxt/kit";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
@@ -246,7 +247,7 @@ export default defineNuxtConfig({
   pwa,
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
-  security: {
+  /* security: {
     nonce: true, // Enable nonce support for SSR
     headers: {
       crossOriginEmbedderPolicy: false,
@@ -265,7 +266,7 @@ export default defineNuxtConfig({
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
         ],
-        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks"],
+        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],
@@ -296,7 +297,7 @@ export default defineNuxtConfig({
           "https://static.cloudflareinsights.com",
           "'wasm-unsafe-eval'",
           "'strict-dynamic'",
-          "'nonce-{{nonce}}'",
+          "'nonce-{generated-nonce}'",
         ],
         "worker-src": ["'self'", "blob:"],
         "child-src": ["'self'", "blob:"],
@@ -315,8 +316,8 @@ export default defineNuxtConfig({
       },
     },
     rateLimiter: false,
-  },
-
+  } satisfies Partial<SecurityModuleOptions>,
+*/
   sentry: {
     ...runtimeConfig.sentry,
   },

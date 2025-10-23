@@ -1,6 +1,6 @@
 // import { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver } from "nuxt/kit";
-import { isDevelopment, isWindows } from "std-env";
+// import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -26,7 +26,7 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
-    ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
+    // ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     "~~/modules/build-env",
     "stale-dep/nuxt",
   ],

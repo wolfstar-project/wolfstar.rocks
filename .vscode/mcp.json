@@ -1,0 +1,24 @@
+{
+  "servers": {
+    "nuxt": {
+      "type": "http",
+      "url": "http://localhost:3000/__mcp/sse"
+    },
+    "eslint": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@eslint/mcp"
+      ]
+    },
+    "browsermcp-server-82755aeb": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@browser/mcp@latest"
+      ]
+    }
+  },
+  "inputs": []
+}

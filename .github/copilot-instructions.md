@@ -1,3 +1,26 @@
+# WolfStar.rocks Copilot Instructions
+
+- **Project Snapshot**: Nuxt 4 + Vue 3 + TypeScript app on Node 22+; start locally with `pnpm dev` (first boot can take ~60s).
+- **Essential Commands**: `pnpm build` (pre-PR sanity), `pnpm lint`, `pnpm typecheck`, `pnpm prisma:studio`, `pnpm prisma:migrate:dev`, `pnpm prisma:generate`.
+- **Workspace Layout**: `app/` drives the client, `server/` hosts Nitro API + Prisma, `shared/` contains isomorphic types/utilities—keep new code inside the right boundary.
+- **Routing & Fetching**: Pages live in `app/pages/**`; author components with `<script setup>` Composition API and lean on Nuxt auto-imports instead of manual Vue imports.
+- **State & Data**: Use Pinia stores in `app/stores` for global state, colocate reusable logic inside `app/composables`, and pull types from `shared/types` to avoid drift.
+- **Styling**: Tailwind + DaisyUI + Nuxt UI drive styling; shared utility sheets sit in `app/assets/css`, and tokens/variants live in `app/themes`.
+- **API Pattern**: Place routes under `server/api`; wrap handlers with `defineWrappedResponseHandler` (or cached variant) from `server/utils/wrappedEventHandler.ts` to inherit auth + @tanstack/pacer rate limiting.
+- **Auth & Discord**: Sessions come from `nuxt-auth-utils`; required Discord scopes are `identify` + `guilds`; manage permission checks with `shared/utils/abilities.ts` and helpers in `server/utils/discord.ts`.
+- **Database**: Prisma schema resides in `server/database/schema.prisma`; default client exports from `server/database/prisma.ts`; prototype with `pnpm prisma:push`, ship changes via `pnpm prisma:migrate:dev`.
+- **Conventions**: Directories/files use kebab-case except Vue components (PascalCase); enforce block order template → script → script setup → styles; constants in UPPER_SNAKE; never create reactive state at module scope.
+- **Logging & Transform**: Prefer `shared/utils/logger.ts` for structured logs and `server/utils/ApiTransformers.ts` when shaping API payloads.
+- **Error Handling**: Throw `createError` inside handlers; use wrapper `onSuccess`/`onError` callbacks for logging; wrappers auto-set `X-RateLimit-*` headers.
+- **Testing Hooks**: Husky + lint-staged run ESLint/Prettier on staged files; commit messages must follow Conventional Commits (`pnpm commitlint`).
+- **Validation Scenarios**: After auth or guild changes, run `pnpm dev`, complete Discord login, and ensure guild dashboards load without console errors.
+- **Deployment Notes**: Nitro output targets Cloudflare/NuxtHub—respect runtime config in `config/env.ts` and `server/utils/runtimeConfig.ts` for env-aware features.
+- **Common Pitfalls**: Match HTTP suffixes (`.get.ts`, `.post.ts`) for new endpoints, regenerate Prisma after schema edits, and remember rate-limit state persists via Nitro storage.
+- **Diagnostics**: If builds misbehave, clear `.nuxt` and `node_modules/.cache`, then restart rather than editing generated output.
+- **Reference Files**: `nuxt.config.ts`, `app/plugins/api.ts`, `server/plugins/authorization-resolver.ts`, and `app/utils/seoMeta.ts` illustrate preferred patterns.
+- **CI Expectations**: `.github/workflows/continuous-integration.yml` runs build/lint/typecheck on PRs—mirror that locally before pushing.
+- **When Unsure**: Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
+
 # WolfStar.rocks Development Instructions
 
 > **Comprehensive guide for AI-assisted development on the WolfStar.rocks dashboard project**

@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     "@netlify/nuxt",
     "@vite-pwa/nuxt",
     "@sentry/nuxt/module",
+    "@josephanson/nuxt-ai",
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",

@@ -88,7 +88,8 @@
     "yup": "catalog:prod",
     "bumpp": "catalog:cli",
     "zod": "catalog:utils",
-    "@netlify/nuxt": "catalog:prod"
+    "@netlify/nuxt": "catalog:prod",
+    "@josephanson/nuxt-ai": "catalog:prod"
   },
   "devDependencies": {
     "taze": "catalog:cli",

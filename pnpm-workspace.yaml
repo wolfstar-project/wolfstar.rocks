@@ -68,6 +68,7 @@ catalogs:
     cross-env: ^10.1.0
     std-env: ^3.10.0
   prod:
+    "@josephanson/nuxt-ai": ^0.1.6
     "@netlify/nuxt": ^0.2.3
     "@nuxt/image": ^1.11.0
     "@nuxt/scripts": ^0.12.2

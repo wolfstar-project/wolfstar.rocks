@@ -1,6 +1,6 @@
-// import { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
+import type { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver } from "nuxt/kit";
-// import { isDevelopment, isWindows } from "std-env";
+import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -26,7 +26,7 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
-    // ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
+    ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     "~~/modules/build-env",
     "stale-dep/nuxt",
   ],
@@ -248,7 +248,7 @@ export default defineNuxtConfig({
   pwa,
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
-  /* security: {
+  security: {
     nonce: true, // Enable nonce support for SSR
     headers: {
       crossOriginEmbedderPolicy: false,
@@ -318,7 +318,6 @@ export default defineNuxtConfig({
     },
     rateLimiter: false,
   } satisfies Partial<SecurityModuleOptions>,
-*/
   sentry: {
     ...runtimeConfig.sentry,
   },

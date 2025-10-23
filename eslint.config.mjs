@@ -19,7 +19,7 @@ export default withNuxt(
       },
     },
     {
-      ignores: ["server/database/generated/**/*", ".trae/"],
+      ignores: ["server/database/generated/**/*", ".cursor/"],
     },
   ),
 )

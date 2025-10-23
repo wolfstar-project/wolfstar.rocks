@@ -89,9 +89,10 @@ if (import.meta.client && code) {
 
 async function performCall() {
   await execute();
-  if (error.value) return;
+  if (error.value)
+    return;
   // wait until data is populated instead of a fixed timeout
-  await until(user).toBeTruthy();
+  await until(user).toBeTruthy({ timeout: 1000, throwOnTimeout: true });
   // perform a client‐side redirect (replace history entry) without a full reload
   await navigateTo(redirectTo.value, { replace: true });
 }
@@ -102,7 +103,6 @@ useSeoMetadata({
   description:
     "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
   seoImage: {
-    title: "OAuth Callback",
     description: "A landing page for the OAuth2.0 callback flow",
     theme: Colors.Blue,
   },
@@ -111,15 +111,15 @@ useSeoMetadata({
 
 <style scoped>
 .oauth-progress {
-  animation: progressAnimation 1s ease-out;
+	animation: progressAnimation 1s ease-out;
 }
 
 @keyframes progressAnimation {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
+	from {
+		width: 0;
+	}
+	to {
+		width: 100%;
+	}
 }
 </style>

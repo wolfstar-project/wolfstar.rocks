@@ -68,8 +68,10 @@
 import { until } from "@vueuse/core";
 import consola from "consola";
 
-const { query: { code: rawCode } } = useRoute();
-const code = Array.isArray(rawCode) ? rawCode[0] : rawCode ?? undefined;
+const {
+  query: { code: rawCode },
+} = useRoute();
+const code = Array.isArray(rawCode) ? rawCode[0] : (rawCode ?? undefined);
 
 const { error, status, execute } = useFetch("/api/auth/discord", {
   query: { code },
@@ -79,7 +81,7 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
   immediate: false,
 });
 
-const { user } = useAuth();
+const { user, redirectTo } = useAuth();
 
 if (import.meta.client && code) {
   void performCall().catch(consola.error);
@@ -87,12 +89,11 @@ if (import.meta.client && code) {
 
 async function performCall() {
   await execute();
-  if (error.value)
-    return;
+  if (error.value) return;
   // wait until data is populated instead of a fixed timeout
   await until(user).toBeTruthy();
   // perform a client‐side redirect (replace history entry) without a full reload
-  await navigateTo(useAuth().redirectTo.value, { replace: true });
+  await navigateTo(redirectTo.value, { replace: true });
 }
 
 useRobotsRule(robotBlockingPageProps);
@@ -110,15 +111,15 @@ useSeoMetadata({
 
 <style scoped>
 .oauth-progress {
-	animation: progressAnimation 1s ease-out;
+  animation: progressAnimation 1s ease-out;
 }
 
 @keyframes progressAnimation {
-	from {
-		width: 0;
-	}
-	to {
-		width: 100%;
-	}
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
 }
 </style>

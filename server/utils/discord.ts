@@ -162,6 +162,7 @@ export const getGuilds = defineCachedFunction(
         statusCode: 500,
         statusMessage: "Failed to fetch guilds",
         data: {
+          field: "guilds",
           error: "guilds_fetch_failed",
           message: error.message || "Unknown error",
           details: error,

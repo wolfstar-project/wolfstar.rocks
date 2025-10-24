@@ -39,7 +39,6 @@ import type {
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
-import api from "~~/server/utils/useApi";
 
 // #region Guild
 
@@ -62,26 +61,26 @@ export function flattenGuild(
     features: guild.features,
     icon: guild.icon,
     id: guild.id,
-    joinedTimestamp: "joined_at" in guild ? Date.parse(guild.joined_at as string) : null,
+    joinedTimestamp:
+      "joined_at" in guild ? Date.parse(guild.joined_at as string) : null,
     mfaLevel: guild.mfa_level,
     name: guild.name,
-    acronym: guild.name
-      .replace(/'s /g, " ")
-      .replace(/\w+/g, e => e[0])
-      .replace(/\s/g, ""), // Fix misplaced comma
+    acronym: guildNameToAcronym(guild.name), // Fix misplaced comma
     ownerId: guild.owner_id,
     partnered: guild.features.includes(GuildFeature.Partnered),
     preferredLocale: guild.preferred_locale as Locale,
     premiumSubscriptionCount: guild.premium_subscription_count ?? 0,
     premiumTier: guild.premium_tier,
-    roles: guild.roles.map(role => flattenRole(guild.id, role)),
+    roles: guild.roles.map((role) => flattenRole(guild.id, role)),
     splash: guild.splash,
     systemChannelId: guild.system_channel_id,
     vanityURLCode: guild.vanity_url_code,
     verificationLevel: guild.verification_level,
     verified: guild.features.includes(GuildFeature.Verified),
-    channels: guild.channels.map(channel => flattenGuildChannel(channel as any)) ?? [],
-    emojis: guild.emojis.map(emoji => flattenGuildEmoji(guild.id, emoji)),
+    channels:
+      guild.channels.map((channel) => flattenGuildChannel(channel as any))
+      ?? [],
+    emojis: guild.emojis.map((emoji) => flattenGuildEmoji(guild.id, emoji)),
   };
 }
 
@@ -89,7 +88,10 @@ export function flattenGuild(
 
 // #region Emoji
 
-export function flattenGuildEmoji(guildId: string, emoji: APIEmoji): FlattenedGuildEmoji {
+export function flattenGuildEmoji(
+  guildId: string,
+  emoji: APIEmoji,
+): FlattenedGuildEmoji {
   return {
     animated: emoji.animated ?? false,
     available: emoji.available ?? false,
@@ -123,7 +125,7 @@ export function flattenRole(guildId: string, role: APIRole): FlattenedRole {
 function transformPermissionOverwrites(
   overwrites: APIOverwrite[] | undefined,
 ): [string, { id: string; type: string; deny: number; allow: number }][] {
-  return (overwrites ?? []).map(overwrite => [
+  return (overwrites ?? []).map((overwrite) => [
     overwrite.id,
     {
       id: overwrite.id,
@@ -134,11 +136,15 @@ function transformPermissionOverwrites(
   ]);
 }
 
-export function getParentChannel(channel: APIThreadChannel | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>) {
+export function getParentChannel(
+  channel:
+    | APIThreadChannel
+    | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>,
+) {
   const channelResult = lazy(async () => {
     if (!channel.parent_id)
       return null;
-    const parentChannel = await api().channels.get(channel.parent_id);
+    const parentChannel = await useApi().channels.get(channel.parent_id);
     if (parentChannel.type !== ChannelType.GuildCategory)
       return null;
     return flattenChannelCategory(parentChannel as APIGuildCategoryChannel);
@@ -150,15 +156,29 @@ export function getParentChannel(channel: APIThreadChannel | Exclude<APIChannel,
 
 // #region Channel
 
-export function flattenChannel(channel: APINewsChannel): FlattenedAnnouncementChannel;
+export function flattenChannel(
+  channel: APINewsChannel,
+): FlattenedAnnouncementChannel;
 export function flattenChannel(channel: APITextChannel): FlattenedTextChannel;
-export function flattenChannel(channel: APIGuildVoiceChannel): FlattenedVoiceChannel;
+export function flattenChannel(
+  channel: APIGuildVoiceChannel,
+): FlattenedVoiceChannel;
 export function flattenChannel(channel: APIDMChannel): FlattenedDMChannel;
-export function flattenChannel(channel: APIThreadChannel): FlattenedThreadChannel;
-export function flattenChannel(channel: APIGuildCategoryChannel): FlattenedCategoryChannel;
-export function flattenChannel(channel: APIGuildForumChannel): FlattenedForumChannel;
-export function flattenChannel(channel: APIGuildMediaChannel): FlattenedMediaChannel;
-export function flattenChannel(channel: APIThreadChannel | APIChannel): FlattenedAnyChannel {
+export function flattenChannel(
+  channel: APIThreadChannel,
+): FlattenedThreadChannel;
+export function flattenChannel(
+  channel: APIGuildCategoryChannel,
+): FlattenedCategoryChannel;
+export function flattenChannel(
+  channel: APIGuildForumChannel,
+): FlattenedForumChannel;
+export function flattenChannel(
+  channel: APIGuildMediaChannel,
+): FlattenedMediaChannel;
+export function flattenChannel(
+  channel: APIThreadChannel | APIChannel,
+): FlattenedAnyChannel {
   switch (channel.type) {
     case ChannelType.GuildAnnouncement:
       return flattenChannelAnnouncement(channel);
@@ -189,15 +209,31 @@ export function flattenChannel(channel: APIThreadChannel | APIChannel): Flattene
   }
 }
 
-export function flattenGuildChannel(channel: APINewsChannel): FlattenedAnnouncementChannel;
-export function flattenGuildChannel(channel: APITextChannel): FlattenedTextChannel;
-export function flattenGuildChannel(channel: APIGuildVoiceChannel): FlattenedVoiceChannel;
-export function flattenGuildChannel(channel: APIThreadChannel): FlattenedThreadChannel;
-export function flattenGuildChannel(channel: APIGuildCategoryChannel): FlattenedCategoryChannel;
-export function flattenGuildChannel(channel: APIGuildForumChannel): FlattenedForumChannel;
-export function flattenGuildChannel(channel: APIGuildMediaChannel): FlattenedMediaChannel;
 export function flattenGuildChannel(
-  channel: APIThreadChannel | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>,
+  channel: APINewsChannel,
+): FlattenedAnnouncementChannel;
+export function flattenGuildChannel(
+  channel: APITextChannel,
+): FlattenedTextChannel;
+export function flattenGuildChannel(
+  channel: APIGuildVoiceChannel,
+): FlattenedVoiceChannel;
+export function flattenGuildChannel(
+  channel: APIThreadChannel,
+): FlattenedThreadChannel;
+export function flattenGuildChannel(
+  channel: APIGuildCategoryChannel,
+): FlattenedCategoryChannel;
+export function flattenGuildChannel(
+  channel: APIGuildForumChannel,
+): FlattenedForumChannel;
+export function flattenGuildChannel(
+  channel: APIGuildMediaChannel,
+): FlattenedMediaChannel;
+export function flattenGuildChannel(
+  channel:
+    | APIThreadChannel
+    | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>,
 ): Exclude<FlattenedAnyChannel, FlattenedDMChannel | FlattenedGroupDMChannel> {
   switch (channel.type) {
     case ChannelType.GuildAnnouncement:
@@ -225,7 +261,9 @@ export function flattenGuildChannel(
   }
 }
 
-function flattenChannelCategory(channel: APIGuildCategoryChannel): FlattenedCategoryChannel {
+function flattenChannelCategory(
+  channel: APIGuildCategoryChannel,
+): FlattenedCategoryChannel {
   return {
     id: channel.id,
     type: channel.type,
@@ -233,21 +271,29 @@ function flattenChannelCategory(channel: APIGuildCategoryChannel): FlattenedCate
     name: channel.name,
     rawPosition: channel.position ?? 0,
     parentId: channel.parent_id ?? null, // Categories cannot have parents,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
   };
 }
 
-function flattenChannelAnnouncement(channel: APINewsChannel): FlattenedAnnouncementChannel {
+function flattenChannelAnnouncement(
+  channel: APINewsChannel,
+): FlattenedAnnouncementChannel {
   return {
     id: channel.id,
     type: channel.type,
     guildId: channel.guild_id ?? null,
     name: channel.name,
-    lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+    lastPinTimestamp: channel.last_pin_timestamp
+      ? Date.parse(channel.last_pin_timestamp)
+      : null,
     rawPosition: channel.position ?? 0,
     parentId: channel.parent_id ?? null,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     topic: channel.topic ?? null,
     nsfw: channel.nsfw ?? false,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
@@ -259,11 +305,15 @@ function flattenChannelText(channel: APITextChannel): FlattenedTextChannel {
     id: channel.id,
     type: channel.type,
     guildId: channel.guild_id ?? null,
-    lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+    lastPinTimestamp: channel.last_pin_timestamp
+      ? Date.parse(channel.last_pin_timestamp)
+      : null,
     name: channel.name,
     rawPosition: channel.position ?? 0,
     parentId: channel.parent_id ?? null,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     topic: channel.topic ?? null,
     nsfw: channel.nsfw ?? false,
     rateLimitPerUser: channel.rate_limit_per_user ?? 0,
@@ -271,7 +321,10 @@ function flattenChannelText(channel: APITextChannel): FlattenedTextChannel {
   };
 }
 
-function flattenChannelVoice(channel: APIGuildVoiceChannel, guildId?: string): FlattenedVoiceChannel {
+function flattenChannelVoice(
+  channel: APIGuildVoiceChannel,
+  guildId?: string,
+): FlattenedVoiceChannel {
   return {
     id: channel.id,
     type: channel.type,
@@ -281,14 +334,19 @@ function flattenChannelVoice(channel: APIGuildVoiceChannel, guildId?: string): F
     rtcRegion: channel.rtc_region ?? null,
     videoQualityMode: channel.video_quality_mode ?? 1,
     parentId: channel.parent_id ?? null,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     bitrate: channel.bitrate ?? 64000,
     userLimit: channel.user_limit ?? 0,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
   };
 }
 
-function flattenChannelStageVoice(channel: APIGuildStageVoiceChannel, guildId?: string): FlattenedStageVoiceChannel {
+function flattenChannelStageVoice(
+  channel: APIGuildStageVoiceChannel,
+  guildId?: string,
+): FlattenedStageVoiceChannel {
   return {
     id: channel.id,
     type: channel.type,
@@ -298,14 +356,18 @@ function flattenChannelStageVoice(channel: APIGuildStageVoiceChannel, guildId?: 
     rtcRegion: channel.rtc_region ?? null,
     videoQualityMode: channel.video_quality_mode ?? 1,
     parentId: channel.parent_id ?? null,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     bitrate: channel.bitrate ?? 64000,
     userLimit: channel.user_limit ?? 0,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
   };
 }
 
-function flattenChannelGroupDM(channel: APIGroupDMChannel): FlattenedGroupDMChannel {
+function flattenChannelGroupDM(
+  channel: APIGroupDMChannel,
+): FlattenedGroupDMChannel {
   return {
     id: channel.id,
     type: channel.type,
@@ -314,12 +376,15 @@ function flattenChannelGroupDM(channel: APIGroupDMChannel): FlattenedGroupDMChan
     icon: channel.icon ?? null,
     lastMessageId: channel.last_message_id ?? null,
     name: channel.name ?? null,
-    recipients: channel.recipients?.map(recipient => flattenUser(recipient)) ?? null,
+    recipients:
+      channel.recipients?.map((recipient) => flattenUser(recipient)) ?? null,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
   };
 }
 
-function flattenChannelForum(channel: APIGuildForumChannel): FlattenedForumChannel {
+function flattenChannelForum(
+  channel: APIGuildForumChannel,
+): FlattenedForumChannel {
   return {
     id: channel.id,
     type: channel.type,
@@ -327,16 +392,25 @@ function flattenChannelForum(channel: APIGuildForumChannel): FlattenedForumChann
     name: channel.name,
     rawPosition: channel.position ?? 0,
     parentId: channel.parent_id ?? null,
-    defaultThreadRateLimitPerUser: channel.default_thread_rate_limit_per_user ?? 0,
+    defaultThreadRateLimitPerUser:
+      channel.default_thread_rate_limit_per_user ?? 0,
     lastMessageId: channel.last_message_id ?? null,
-    lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+    lastPinTimestamp: channel.last_pin_timestamp
+      ? Date.parse(channel.last_pin_timestamp)
+      : null,
     defaultSortOrder: channel.default_sort_order ?? 0,
     defaultAutoArchiveDuration: channel.default_auto_archive_duration ?? 60,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     topic: channel.topic ?? null,
     rateLimitPerUser: channel.rate_limit_per_user ?? 0,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
-    availableTags: channel.available_tags.map(tag => ({ emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null }, ...tag })) ?? [],
+    availableTags:
+      channel.available_tags.map((tag) => ({
+        emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null },
+        ...tag,
+      })) ?? [],
     defaultReactionEmoji: {
       id: channel.default_reaction_emoji?.emoji_id ?? null,
       name: channel.default_reaction_emoji?.emoji_name ?? null,
@@ -344,7 +418,9 @@ function flattenChannelForum(channel: APIGuildForumChannel): FlattenedForumChann
   };
 }
 
-function flattenChannelMedia(channel: APIGuildMediaChannel): FlattenedMediaChannel {
+function flattenChannelMedia(
+  channel: APIGuildMediaChannel,
+): FlattenedMediaChannel {
   return {
     id: channel.id,
     type: channel.type,
@@ -352,16 +428,25 @@ function flattenChannelMedia(channel: APIGuildMediaChannel): FlattenedMediaChann
     name: channel.name,
     rawPosition: channel.position ?? 0,
     parentId: channel.parent_id ?? null,
-    defaultThreadRateLimitPerUser: channel.default_thread_rate_limit_per_user ?? 0,
+    defaultThreadRateLimitPerUser:
+      channel.default_thread_rate_limit_per_user ?? 0,
     lastMessageId: channel.last_message_id ?? null,
-    lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+    lastPinTimestamp: channel.last_pin_timestamp
+      ? Date.parse(channel.last_pin_timestamp)
+      : null,
     defaultSortOrder: channel.default_sort_order ?? 0,
     defaultAutoArchiveDuration: channel.default_auto_archive_duration ?? 60,
-    permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
+    permissionOverwrites: transformPermissionOverwrites(
+      channel.permission_overwrites,
+    ),
     topic: channel.topic ?? null,
     rateLimitPerUser: channel.rate_limit_per_user ?? 0,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
-    availableTags: channel.available_tags.map(tag => ({ ...tag, emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null } })) ?? [],
+    availableTags:
+      channel.available_tags.map((tag) => ({
+        ...tag,
+        emoji: { id: tag.emoji_id ?? null, name: tag.emoji_name ?? null },
+      })) ?? [],
     defaultReactionEmoji: {
       id: channel.default_reaction_emoji?.emoji_id ?? null,
       name: channel.default_reaction_emoji?.emoji_name ?? null,
@@ -378,12 +463,17 @@ function flattenChannelDM(channel: APIDMChannel): FlattenedDMChannel {
   };
 }
 
-function flattenChannelThread(channel: APIThreadChannel, guildId?: string): FlattenedThreadChannel {
+function flattenChannelThread(
+  channel: APIThreadChannel,
+  guildId?: string,
+): FlattenedThreadChannel {
   return {
     id: channel.id,
     type: channel.type,
     archived: channel.thread_metadata?.archived ?? false,
-    archivedTimestamp: channel.thread_metadata?.archive_timestamp ? Date.parse(channel.thread_metadata.archive_timestamp) : null,
+    archivedTimestamp: channel.thread_metadata?.archive_timestamp
+      ? Date.parse(channel.thread_metadata.archive_timestamp)
+      : null,
     createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
     guildId: channel.guild_id ?? guildId ?? null,
     name: channel.name,
@@ -423,16 +513,21 @@ export function flattenUser(user: APIUser): FlattenedUser {
 
 // #region Member
 
-export function flattenMember(member: APIGuildMember, guild: APIGuild): FlattenedMember {
+export function flattenMember(
+  member: APIGuildMember,
+  guild: APIGuild,
+): FlattenedMember {
   return {
     id: member.user.id,
     guildId: guild.id,
     user: flattenUser(member.user),
     joinedTimestamp: member.joined_at ? Date.parse(member.joined_at) : null,
-    premiumSinceTimestamp: member.premium_since ? Date.parse(member.premium_since) : null,
+    premiumSinceTimestamp: member.premium_since
+      ? Date.parse(member.premium_since)
+      : null,
     roles: member.roles
       .map((roleId) => {
-        const role = guild.roles.find(r => r.id === roleId);
+        const role = guild.roles.find((r) => r.id === roleId);
         return role ? flattenRole(guild.id, role) : null;
       })
       .filter((role): role is FlattenedRole => role !== null),

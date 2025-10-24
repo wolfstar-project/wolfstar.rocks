@@ -9,9 +9,65 @@ export const pwa: ModuleOptions = {
     enabled: process.env.VITE_DEV_PWA === "true",
     type: "module",
   },
+  workbox: {
+    navigateFallback: "/",
+    navigateFallbackDenylist: [/^\/api\/.*/, /^\/oauth\/.*/],
+    globPatterns: ["**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg,woff,woff2}"],
+    cleanupOutdatedCaches: true,
+    runtimeCaching: [
+      {
+        urlPattern: ({ request }) => request.mode === "navigate",
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "pages-cache",
+          networkTimeoutSeconds: 5,
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+          },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/static\.cloudflareinsights\.com\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "cloudflare-insights-cache",
+          expiration: {
+            maxEntries: 10,
+            maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/cdn\.wolfstar\.rocks\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "cdn-cache",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+    ],
+  },
   manifest: {
     background_color: "#050505",
-    categories: ["discord", "bot", "wolfstar", "moderation", "automation", "cyborg", "logging"],
+    categories: [
+      "discord",
+      "bot",
+      "wolfstar",
+      "moderation",
+      "automation",
+      "cyborg",
+      "logging",
+    ],
     dir: "ltr",
     display: "minimal-ui",
     lang: "en_US",

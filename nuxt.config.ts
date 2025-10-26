@@ -141,7 +141,8 @@ export default defineNuxtConfig({
   experimental: {
     payloadExtraction: false,
     renderJsonPayloads: true,
-    typedPages: true,
+    viteEnvironmentApi: true,
+    typescriptPlugin: true,
   },
 
   compatibilityDate: "2025-09-20",

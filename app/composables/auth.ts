@@ -14,7 +14,7 @@ export function useAuth() {
       size?: {
         width?: number;
         height?: number;
-      }
+      },
     ) => void;
   };
 }

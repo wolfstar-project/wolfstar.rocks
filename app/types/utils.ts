@@ -20,7 +20,7 @@ export type DynamicSlots<
   ExtraProps extends object = object,
 > = {
   [K in DynamicSlotsKeys<T["slot"], Suffix>]: (
-    props: { item: Extract<T, { slot: K extends `${infer Base}-${Suffix}` ? Base : K }> } & ExtraProps
+    props: { item: Extract<T, { slot: K extends `${infer Base}-${Suffix}` ? Base : K }> } & ExtraProps,
   ) => any
 };
 

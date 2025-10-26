@@ -63,7 +63,7 @@
         Submit Changes
       </UButton>
 
-      <UButton color="error" icon="heroicons:trash" @click="guildStore.resetAllChanges">
+      <UButton color="error" icon="heroicons:trash" @click="guildStore.resetAllChanges()">
         Reset Changes
       </UButton>
     </div>
@@ -76,7 +76,7 @@ import type { ValuesType } from "~/types/utils";
 import { isNullOrUndefined } from "@sapphire/utilities";
 
 const guildId = useRouteParams("id", null, { transform: String });
-const loading = useState("loading", () => false);
+const loading = useState("dashboard:loading", () => false);
 const guildData = useGuildData();
 const guildStore = useGuildSettingsStore();
 const toast = useToast();
@@ -175,7 +175,6 @@ const submitChanges = async () => {
     });
   }
   else {
-    guildStore.setSettings();
     toast.add({
       title: "Success",
       description: "Changes saved successfully",
@@ -204,6 +203,6 @@ onMounted(async () => {
 });
 
 const readyToRender = computed(() => {
-  return !loading.value && guildData.value && guildStore.settings;
+  return !loading.value && !!guildData.value && !!guildStore.settings;
 });
 </script>

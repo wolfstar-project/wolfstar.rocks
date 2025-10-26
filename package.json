@@ -49,6 +49,8 @@
     "@iconify-json/ic": "catalog:icons",
     "@iconify-json/lucide": "catalog:icons",
     "@iconify-json/ph": "catalog:icons",
+    "@josephanson/nuxt-ai": "catalog:prod",
+    "@netlify/nuxt": "catalog:prod",
     "@nuxt/icon": "catalog:icons",
     "@nuxt/image": "catalog:prod",
     "@nuxt/scripts": "catalog:prod",
@@ -64,6 +66,7 @@
     "@vueuse/integrations": "catalog:utils",
     "@vueuse/nuxt": "catalog:utils",
     "@vueuse/router": "catalog:utils",
+    "bumpp": "catalog:cli",
     "consola": "catalog:node",
     "cross-env": "catalog:node",
     "eslint-plugin-vuejs-accessibility": "catalog:lint",
@@ -71,6 +74,7 @@
     "import-in-the-middle": "catalog:prod",
     "motion-v": "catalog:frontend",
     "nuxt": "catalog:prod",
+    "nuxt-auth-utils": "catalog:utils",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",
@@ -80,19 +84,16 @@
     "prisma-json-types-generator": "catalog:database",
     "require-in-the-middle": "catalog:prod",
     "stale-dep": "catalog:prod",
+    "@nuxtjs/seo": "catalog:dev",
     "tailwind-merge": "catalog:prod",
     "tailwind-variants": "catalog:prod",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
-    "bumpp": "catalog:cli",
-    "zod": "catalog:utils",
-    "@netlify/nuxt": "catalog:prod",
-    "@josephanson/nuxt-ai": "catalog:prod"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
-    "taze": "catalog:cli",
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",
@@ -100,7 +101,6 @@
     "@discordjs/collection": "catalog:dev",
     "@discordjs/core": "catalog:dev",
     "@nuxt/eslint": "catalog:lint",
-    "@nuxtjs/seo": "catalog:dev",
     "@sapphire/bitfield": "catalog:dev",
     "@sapphire/prettier-config": "catalog:lint",
     "@sapphire/snowflake": "catalog:dev",
@@ -115,7 +115,6 @@
     "eslint-plugin-package-json": "catalog:lint",
     "husky": "catalog:lint",
     "lint-staged": "catalog:lint",
-    "nuxt-auth-utils": "catalog:utils",
     "playwright": "catalog:e2e",
     "pncat": "catalog:cli",
     "prettier": "catalog:lint",
@@ -124,6 +123,7 @@
     "simple-git": "catalog:dev",
     "std-env": "catalog:node",
     "tailwindcss": "catalog:style",
+    "taze": "catalog:cli",
     "typescript": "catalog:tsc",
     "vue-tsc": "catalog:tsc"
   },
@@ -132,7 +132,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "pnpm@10.18.3",
+  "packageManager": "pnpm@10.19.0",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

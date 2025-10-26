@@ -3,7 +3,6 @@
 @import 'tw-animate-css';
 @import './keyframes.css';
 @import './utilities.css';
-@import './components.css';
 @plugin "@tailwindcss/typography";
 @plugin 'daisyui';
 

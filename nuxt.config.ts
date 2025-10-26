@@ -283,7 +283,6 @@ export default defineNuxtConfig({
           "http:",
           "data:",
           "blob:",
-          "https://ipx.wolfstar.rocks",
           "https://cdn.wolfstar.rocks",
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",

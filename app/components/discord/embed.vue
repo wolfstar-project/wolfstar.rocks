@@ -3,12 +3,12 @@
     <div class="discord-embed" :style="{ 'border-color': color ?? '#1E1F22' }">
       <div v-if="title" class="font-whitney mb-2 text-base font-bold">{{ title }}</div>
       <div v-if="author" class="font-whitney mt-2 flex items-center gap-2 text-base">
-        <nuxt-img v-if="author.icon" :src="author.icon" class="mr-2 h-6 w-6 rounded-full" alt="Author avatar" />
+        <nuxt-img v-if="author.icon" :src="author.icon" class="mr-2 h-6 w-6 rounded-full" :alt="`${author.name} avatar`" />
         <span>{{ author.name }}</span>
       </div>
       <slot></slot>
       <div v-if="footer" class="mt-2 flex items-center gap-2 text-sm">
-        <nuxt-img v-if="footer.icon" src="/avatars/wolfstar.png" width="16" height="16" class="h-4 w-4 rounded-full" />
+        <nuxt-img v-if="footer.icon" src="/avatars/wolfstar.png" width="16" height="16" class="h-4 w-4 rounded-full" alt="WolfStar footer icon" />
         <span class="text-sm">
           {{ footer.text }}
           <span v-if="timestamp">• {{ dtf.format(timestamp) }}</span>

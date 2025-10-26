@@ -6,6 +6,7 @@
       v-if="viewMode === 'grid'"
       :to="guild.manageable ? manageGuildURL : undefined"
       :aria-disabled="!guild.manageable"
+      :aria-label="guild.manageable ? `Manage ${guild.name}` : `${guild.name} - Insufficient permissions`"
       :role="!guild.manageable ? 'button' : undefined"
     >
       <div
@@ -15,8 +16,8 @@
           'opacity-75 ring-2 ring-error/20': !guild.manageable,
         }"
       >
-        <!-- Guild UIcon -->
-        <div class="flex flex-col items-center space-y-4">
+        <!-- Guild Icon -->
+        <div class="flex flex-col items-center space-y-4" role="img" :aria-label="`${guild.name} server icon`">
           <guild-icon :guild variant="bare" size="lg" :show-status="true" />
         </div>
 
@@ -41,8 +42,8 @@
         'opacity-75 ring-2 ring-error/20': !guild.manageable,
       }"
     >
-      <!-- Guild UIcon -->
-      <div class="flex flex-col items-center space-y-4">
+      <!-- Guild Icon -->
+      <div class="flex flex-col items-center space-y-4" role="img" :aria-label="`${guild.name} server icon`">
         <guild-icon :guild variant="bare" size="lg" :show-status="true" />
       </div>
 
@@ -57,10 +58,11 @@
         <div
           class="flex items-center justify-center space-x-4 text-xs text-base-content/60"
         >
-          <span class="flex items-center space-x-1" title="Total members">
+          <span class="flex items-center space-x-1" title="Total members" aria-label="Total members">
             <UIcon
               name="heroicons:user-group"
               class="h-3 w-3 text-base-content/70"
+              aria-hidden="true"
             />
             <span>{{
               !isNullOrUndefinedOrZero(guild.approximateMemberCount)
@@ -68,8 +70,8 @@
                 : "N/A"
             }}</span>
           </span>
-          <span class="flex items-center space-x-1" title="Members online">
-            <UIcon name="heroicons:signal" class="h-3 w-3 text-success" />
+          <span class="flex items-center space-x-1" title="Members online" aria-label="Members online">
+            <UIcon name="heroicons:signal" class="h-3 w-3 text-success" aria-hidden="true" />
             <span>{{
               !isNullOrUndefinedOrZero(guild.approximatePresenceCount)
                 ? formatNumber(guild.approximatePresenceCount)
@@ -84,10 +86,12 @@
           v-if="guild.wolfstarIsIn"
           :to="`/guilds/${guild.id}/manage`"
           class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
+          :aria-label="`Manage ${guild.name} server settings`"
         >
           <UIcon
             name="heroicons:adjustments-horizontal"
             class="mr-1 inline h-3 w-3"
+            aria-hidden="true"
           />
           Manage Server
         </NuxtLink>
@@ -95,15 +99,18 @@
           v-else-if="guild.manageable"
           :to="guildAddURL(guild.id)"
           class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
+          :aria-label="`Invite WolfStar bot to ${guild.name}`"
         >
-          <UIcon name="heroicons:rocket-launch" class="mr-1 inline h-3 w-3" />
+          <UIcon name="heroicons:rocket-launch" class="mr-1 inline h-3 w-3" aria-hidden="true" />
           Invite Bot
         </NuxtLink>
         <div
           v-else
           class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50"
+          role="status"
+          :aria-label="`No permission to manage ${guild.name}`"
         >
-          <UIcon name="heroicons:no-symbol" class="mr-1 inline h-3 w-3" />
+          <UIcon name="heroicons:no-symbol" class="mr-1 inline h-3 w-3" aria-hidden="true" />
           No Permission
         </div>
       </div>

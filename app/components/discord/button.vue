@@ -1,8 +1,18 @@
 <template>
-  <button class="discord-message-button-primary">
+  <button
+    class="discord-message-button-primary"
+    type="button"
+    :aria-label="ariaLabel"
+  >
     <slot></slot>
   </button>
 </template>
+
+<script setup lang="ts">
+defineProps<{
+  ariaLabel?: string;
+}>();
+</script>
 
 <style scoped>
 @reference "@/assets/css/main.css";

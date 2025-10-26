@@ -1,6 +1,6 @@
 <template>
   <USeparator icon="custom:wolfstar" class="white-text mt-24 p-10" />
-  <UFooter :ui="{ root: 'p-2', top: 'border-default' }">
+  <UFooter :ui="{ root: 'p-2', top: 'border-default' }" role="contentinfo" aria-label="Site footer">
     <template #top>
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns">
@@ -14,6 +14,7 @@
               color="neutral"
               variant="soft"
               :ui="{ leadingIcon: 'bg-green-500' }"
+              aria-label="Powered by Netlify - opens in new tab"
             />
           </template>
         </UFooterColumns>
@@ -23,8 +24,8 @@
     <template #left>
       <aside>
         <div class="flex items-center gap-4">
-          <div class="w-10 rounded-full">
-            <icons-wolfstar class="h-12 w-12" />
+          <div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
+            <icons-wolfstar class="h-12 w-12" aria-hidden="true" />
           </div>
           <div>
             <p class="font-semibold">
@@ -49,6 +50,7 @@
               target="_blank"
               rel="noopener noreferrer"
               class="text-sm text-base-content/80"
+              :aria-label="`View commit ${buildInfo.shortCommit} on GitHub - opens in new tab`"
             >
               Commit: {{ buildInfo.shortCommit }}
             </NuxtLink>
@@ -67,7 +69,7 @@
         target="_blank"
         rel="noopener noreferrer"
         icon="lucide:github"
-        aria-label="GitHub"
+        aria-label="Visit WolfStar on GitHub - opens in new tab"
         color="neutral"
         variant="ghost"
       />

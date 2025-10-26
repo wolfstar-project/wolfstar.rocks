@@ -34,6 +34,7 @@
           block
           class="hidden lg:inline-flex"
           icon="ic:round-discord"
+          aria-label="Login with Discord"
         />
         <UButton
           size="md"
@@ -43,6 +44,7 @@
           block
           class="lg:hidden"
           icon="ic:round-discord"
+          aria-label="Login with Discord"
         />
       </div>
     </template>
@@ -56,6 +58,7 @@
         block
         class="hidden lg:inline-flex"
         icon="ic:round-discord"
+        aria-label="Login with Discord (Loading)"
       />
       <UButton
         size="md"
@@ -65,6 +68,7 @@
         block
         class="lg:hidden"
         icon="ic:round-discord"
+        aria-label="Login with Discord (Loading)"
       />
     </template>
   </AuthState>

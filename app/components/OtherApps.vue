@@ -8,9 +8,9 @@
     <div v-for="app of apps" :key="app.name" class="other-apps-layout rounded-xl bg-base-200 shadow-xl">
       <nuxt-img :src="app.avatar" width="256" height="256" :alt="`${app.name}'s avatar`" loading="lazy" class="other-apps-avatar" />
       <div class="other-apps-title">
-        <h3 class="text-3xl font-semibold md:text-xl">
+        <h2 class="text-3xl font-semibold md:text-xl">
           {{ app.name }}
-        </h3>
+        </h2>
         <div class="mt-2 flex flex-wrap gap-1">
           <span v-for="purpose of app.purposes" :key="purpose" class="badge badge-neutral">
             {{ purpose }}

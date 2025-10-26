@@ -1,6 +1,6 @@
 <template>
   <section class="mt-28 flex flex-col items-center text-center">
-    <h2 class="title pb-4">Imagine an<br />social and feeder network</h2>
+    <h1 class="title pb-4">Imagine an<br />social and feeder network</h1>
     <p class="max-w-[30rem]">
       A very customizable multilanguage application to cover your members'
       social and feeder network needs, with a few entertainment features and
@@ -21,7 +21,7 @@
     </NuxtLink>
   </section>
 
-  <h1>COMING SOON...</h1>
+  <h2 class="mt-72 text-5xl font-bold text-center">COMING SOON...</h2>
 
   <OtherApps :apps="[OtherApps.WolfStar]" />
 </template>

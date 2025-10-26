@@ -1,7 +1,11 @@
 <template>
-  <button class="tag">
-    <span v-if="kind === 'mention'">@</span>
-    <icons-app v-else-if="kind === 'app'" class="icon" />
+  <button
+    class="tag"
+    type="button"
+    :aria-label="kind === 'mention' ? `Mention ${$slots.default?.[0]?.children}` : `App command ${$slots.default?.[0]?.children}`"
+  >
+    <span v-if="kind === 'mention'" aria-hidden="true">@</span>
+    <icons-app v-else-if="kind === 'app'" class="icon" aria-hidden="true" />
     <slot></slot>
   </button>
 </template>

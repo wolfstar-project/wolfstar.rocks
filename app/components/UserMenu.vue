@@ -3,6 +3,7 @@
     :items="items"
     :content="{ align: 'center', collisionPadding: 12 }"
     :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
+    aria-label="User account menu"
   >
     <UButton
       v-bind="{
@@ -18,6 +19,8 @@
       :ui="{
         trailingIcon: 'text-dimmed'
       }"
+      :aria-label="collapsed ? 'User menu' : `User menu for ${user?.name}`"
+      aria-haspopup="true"
     />
   </UDropdownMenu>
 </template>
@@ -50,7 +53,7 @@ const user = ref({
   name: authUser.value?.name,
   avatar: {
     src: src.value,
-    alt: authUser.value?.name,
+    alt: authUser.value?.name ? `${authUser.value.name}'s avatar` : "User avatar",
   },
 });
 

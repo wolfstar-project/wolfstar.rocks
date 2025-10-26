@@ -3,7 +3,8 @@
   <UHeader
     ref="navbar"
     class="app-navbar"
-    as="div"
+    as="header"
+    role="banner"
     :ui=" y > 100 ? {
       root: 'bg-base-200/80 backdrop-blur-sm'
 
@@ -13,13 +14,13 @@
       <HeaderLogo />
     </template>
 
-    <div>
+    <nav aria-label="Main navigation">
       <UNavigationMenu
         :items="desktopLinks"
         variant="link"
         class="hidden lg:inline-flex"
       />
-    </div>
+    </nav>
 
     <template #right>
       <HeaderRight />

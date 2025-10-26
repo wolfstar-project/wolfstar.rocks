@@ -12,10 +12,11 @@
               color="neutral"
               variant="ghost"
               square
+              aria-label="Open notifications panel"
               @click="isNotificationsSlideoverOpen = true"
             >
               <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" />
+                <UIcon name="i-lucide-bell" class="size-5 shrink-0" aria-hidden="true" />
               </UChip>
             </UButton>
           </UTooltip>
@@ -27,7 +28,15 @@
       <GuildSettingsSection title="General Settings">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Prefix Setting -->
-          <UForm ref="form" :schema="schema" :state="state" class="space-y-4" @error="onError" @submit="onSubmit">
+          <UForm
+            ref="form"
+            :schema="schema"
+            :state="state"
+            class="space-y-4"
+            aria-label="General guild settings form"
+            @error="onError"
+            @submit="onSubmit"
+          >
             <div>
               <UFormField :label="generalConfig.prefix.name" name="prefix">
                 <UInput
@@ -36,6 +45,8 @@
                   :placeholder="generalConfig.prefix.placeholder"
                   color="primary"
                   class="w-full"
+                  aria-describedby="prefix-description character-count"
+                  aria-label="Bot command prefix"
                 >
                   <template #trailing>
                     <div
@@ -52,7 +63,7 @@
                   <p class="text-sm text-error">{{ error }}</p>
                 </template>
                 <template #description>
-                  <p class="text-sm text-base-content/70">{{ generalConfig.prefix.description }}</p>
+                  <p id="prefix-description" class="text-sm text-base-content/70">{{ generalConfig.prefix.description }}</p>
                 </template>
               </UFormField>
             </div>
@@ -61,7 +72,7 @@
             <div>
               <UFormField :label="generalConfig.language.name" name="language">
                 <template #description>
-                  <p class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
+                  <p id="language-description" class="text-sm text-base-content/70">{{ generalConfig.language.description }}</p>
                 </template>
                 <UInputMenu
                   id="language"
@@ -70,6 +81,8 @@
                   placeholder="Select language..."
                   class="w-full"
                   :items="items"
+                  aria-label="Select bot language"
+                  aria-describedby="language-description"
                 />
                 <template #error="{ error }">
                   <p class="text-sm text-error">{{ error }}</p>
@@ -82,12 +95,14 @@
               <div class="flex items-center justify-between">
                 <UFormField :label="generalConfig.disableNaturalPrefix.name" name="disableNaturalPrefix">
                   <template #description>
-                    <p class="text-sm text-base-content/70">{{ generalConfig.disableNaturalPrefix.description }}</p>
+                    <p id="disableNaturalPrefix-description" class="text-sm text-base-content/70">{{ generalConfig.disableNaturalPrefix.description }}</p>
                   </template>
                   <UCheckbox
                     id="disableNaturalPrefix"
                     v-model="state.disableNaturalPrefix"
                     color="primary"
+                    aria-describedby="disableNaturalPrefix-description"
+                    aria-label="Disable natural language prefix"
                   />
                 </UFormField>
               </div>

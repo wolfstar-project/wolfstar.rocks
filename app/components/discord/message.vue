@@ -1,8 +1,12 @@
 <template>
-  <div class="discord-message" :class="{ 'discord-message-ephemeral': ephemeral }">
+  <article
+    class="discord-message"
+    :class="{ 'discord-message-ephemeral': ephemeral }"
+    :aria-label="`Message from ${profile.name}`"
+  >
     <discord-avatar :user="name" size="medium" :class="{ 'mt-6': command }" />
     <div class="flex-grow gap-2 max-sm:text-xs">
-      <div v-if="command" class="discord-message-reply">
+      <div v-if="command" class="discord-message-reply" role="complementary" aria-label="Reply context">
         <span class="flex items-center gap-1 font-bold">
           <discord-avatar :user="command.user" size="tiny" />
           {{ command.user }}
@@ -10,20 +14,20 @@
         used
         <discord-mention kind="app">{{ command.name }}</discord-mention>
       </div>
-      <div class="mb-0.5 flex flex-row items-center">
+      <header class="mb-0.5 flex flex-row items-center">
         <div class="font-whitney font-bold">{{ profile.name }}</div>
-        <span v-if="profile.app" class="app-badge">
-          <UIcon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" />
+        <span v-if="profile.app" class="app-badge" role="img" aria-label="Verified application badge">
+          <UIcon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" aria-hidden="true" />
           <span class="font-whitney">APP</span>
         </span>
-      </div>
-      <div><slot></slot></div>
-      <div v-if="ephemeral" class="discord-message-ephemeral-footer">
-        <UIcon name="ph:eye-duotone" /> Only you can see this •
-        <span class="discord-message-link">Dismiss message</span>
-      </div>
+      </header>
+      <div class="message-content"><slot></slot></div>
+      <footer v-if="ephemeral" class="discord-message-ephemeral-footer" role="status" aria-label="Ephemeral message notice">
+        <UIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
+        <button class="discord-message-link" type="button" aria-label="Dismiss ephemeral message">Dismiss message</button>
+      </footer>
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup lang="ts">
@@ -65,7 +69,7 @@ const profile = computed(() => Profiles[props.name]);
 }
 
 .discord-message-ephemeral-footer > .discord-message-link {
-	@apply cursor-pointer text-info hover:underline hover:underline-offset-1;
+	@apply cursor-pointer text-info hover:underline hover:underline-offset-1 bg-transparent border-0 p-0 font-inherit;
 }
 
 .discord-message-reply {

@@ -1,6 +1,6 @@
 <template>
   <section class="mt-28 flex flex-col items-center text-center">
-    <h2 class="title pb-4">Imagine a<br />moderation app</h2>
+    <h1 class="title pb-4">Imagine a<br />moderation app</h1>
     <p class="max-w-[30rem]">
       A very customizable multilanguage application to help you moderate your
       server, with a complete logging suite and more,

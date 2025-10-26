@@ -69,6 +69,8 @@ export default defineNuxtConfig({
         { rel: "icon", href: "/icons/favicon-32x32.png" },
         { rel: "mask-icon", href: "/icons/safari-pinned-tab.svg" },
         { rel: "shortcut icon", href: "/favicon.ico" },
+        { rel: "preconnect", href: "https://rsms.me/" },
+        { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
       ],
       meta: [
         // Cache control
@@ -249,9 +251,13 @@ export default defineNuxtConfig({
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {
-    nonce: true, // Enable nonce support for SSR
+    nonce: true, // Enables HTML nonce support in SSR mode
+    ssg: {
+      meta: true, // Enables CSP as a meta tag in SSG mode
+      hashScripts: true, // Enables CSP hash support for scripts in SSG mode
+      hashStyles: false, // Disables CSP hash support for styles in SSG mode (recommended)
+    },
     headers: {
-      crossOriginEmbedderPolicy: false,
       contentSecurityPolicy: {
         "default-src": ["'self'"],
         "base-uri": ["'self'"],
@@ -267,13 +273,7 @@ export default defineNuxtConfig({
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
         ],
-        "font-src": [
-          "'self'",
-          "https:",
-          "data:",
-          "https://cdn.wolfstar.rocks",
-          "https://rsms.me/inter/inter.css",
-        ],
+        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],
@@ -283,6 +283,7 @@ export default defineNuxtConfig({
           "http:",
           "data:",
           "blob:",
+          "https://ipx.wolfstar.rocks",
           "https://cdn.wolfstar.rocks",
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
@@ -297,22 +298,18 @@ export default defineNuxtConfig({
           "https://media.discordapp.net",
         ],
         "object-src": ["'none'"],
-        "script-src": [
-          "'self'",
-          "'wasm-unsafe-eval'",
-          "'strict-dynamic'",
-          "'nonce-{{nonce}}'",
-        ],
-        "script-src-elem": [
-          "'self'",
-          "https://static.cloudflareinsights.com",
-          "'wasm-unsafe-eval'",
-          "'strict-dynamic'",
-          "'nonce-{{nonce}}'",
-        ],
         "worker-src": ["'self'", "blob:"],
         "child-src": ["'self'", "blob:"],
         "script-src-attr": ["'none'"],
+        "script-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "'https:'",
+          "https://static.cloudflareinsights.com/beacon.min.js",
+          "'wasm-unsafe-eval'",
+          "'strict-dynamic'",
+          "'nonce-{generated-nonce}'",
+        ],
         "style-src": [
           "'self'",
           "'unsafe-inline'",

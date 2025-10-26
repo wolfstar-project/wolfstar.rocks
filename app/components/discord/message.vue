@@ -69,7 +69,7 @@ const profile = computed(() => Profiles[props.name]);
 }
 
 .discord-message-ephemeral-footer > .discord-message-link {
-	@apply cursor-pointer text-info hover:underline hover:underline-offset-1 bg-transparent border-0 p-0 font-inherit;
+	@apply cursor-pointer text-info hover:underline hover:underline-offset-1 bg-transparent border-0 p-0;
 }
 
 .discord-message-reply {

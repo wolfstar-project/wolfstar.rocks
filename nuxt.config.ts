@@ -306,7 +306,6 @@ export default defineNuxtConfig({
           "'unsafe-inline'",
           "https://static.cloudflareinsights.com/beacon.min.js",
           "'wasm-unsafe-eval'",
-          "'strict-dynamic'",
           "'nonce-{generated-nonce}'",
         ],
         "style-src": [

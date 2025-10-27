@@ -5,9 +5,17 @@ export const pwa: ModuleOptions = {
   registerType: "autoUpdate",
   includeManifestIcons: true,
   disable: isDevelopment && process.env.VITE_DEV_PWA !== "true",
+  registerWebManifestInRouteRules: true,
   devOptions: {
     enabled: process.env.VITE_DEV_PWA === "true",
     type: "module",
+  },
+  injectManifest: {
+    globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+  },
+  workbox: {
+    navigateFallback: "/",
+    globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
   },
   manifest: {
     background_color: "#050505",

@@ -10,13 +10,13 @@
   </section>
   <section class="mt-16 join flex items-center justify-center">
     <NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
-      <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
+      <UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
     </NuxtLink>
     <NuxtLink
       class="btn join-item sm:btn-wide"
       to="#explore"
     >
-      <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" />
+      <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
       Explore
     </NuxtLink>
   </section>

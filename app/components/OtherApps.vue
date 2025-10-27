@@ -8,9 +8,9 @@
     <div v-for="app of apps" :key="app.name" class="other-apps-layout rounded-xl bg-base-200 shadow-xl">
       <nuxt-img :src="app.avatar" width="256" height="256" :alt="`${app.name}'s avatar`" loading="lazy" class="other-apps-avatar" />
       <div class="other-apps-title">
-        <h2 class="text-3xl font-semibold md:text-xl">
+        <h3 class="text-3xl font-semibold md:text-xl">
           {{ app.name }}
-        </h2>
+        </h3>
         <div class="mt-2 flex flex-wrap gap-1">
           <span v-for="purpose of app.purposes" :key="purpose" class="badge badge-neutral">
             {{ purpose }}
@@ -21,10 +21,10 @@
         <p class="flex-grow">{{ app.description }}</p>
         <div class="mt-4 join flex justify-end">
           <nuxt-link class="btn join-item btn-neutral" :to="app.explore">
-            <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" /> Explore
+            <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" /> Explore
           </nuxt-link>
           <nuxt-link class="btn join-item btn-neutral" :to="app.invite">
-            <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
+            <UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
           </nuxt-link>
         </div>
       </div>

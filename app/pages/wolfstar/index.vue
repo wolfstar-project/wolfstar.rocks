@@ -10,13 +10,13 @@
 
   <section class="mt-16 join flex items-center justify-center">
     <NuxtLink class="btn join-item sm:btn-wide" :to="Invites.WolfStar">
-      <UIcon name="ph:plus-circle-fill" class="h-5 w-5" /> Add App
+      <UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
     </NuxtLink>
     <NuxtLink
       class="btn join-item sm:btn-wide"
       to="#explore"
     >
-      <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" />
+      <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
       Explore
     </NuxtLink>
   </section>
@@ -48,6 +48,7 @@
                   <UIcon
                     name="ph:image-duotone"
                     class="h-24 w-24 animate-pulse text-base-content/20"
+                    aria-hidden="true"
                   />
                 </div>
                 <div
@@ -56,6 +57,7 @@
                   <UIcon
                     name="ph:image-duotone"
                     class="h-24 w-24 animate-pulse text-base-content/20"
+                    aria-hidden="true"
                   />
                 </div>
                 <div
@@ -64,6 +66,7 @@
                   <UIcon
                     name="ph:image-duotone"
                     class="h-24 w-24 animate-pulse text-base-content/20"
+                    aria-hidden="true"
                   />
                 </div>
                 <div
@@ -72,6 +75,7 @@
                   <UIcon
                     name="ph:image-duotone"
                     class="h-24 w-24 animate-pulse text-base-content/20"
+                    aria-hidden="true"
                   />
                 </div>
               </div>
@@ -133,13 +137,14 @@
                   <UIcon
                     name="ph:cheers-fill"
                     class="text-success"
+                    aria-hidden="true"
                   />
                 </DiscordReaction>
                 <DiscordReaction
                   :count="1"
                   class="text-error"
                 >
-                  <UIcon name="ph:knife-fill" />
+                  <UIcon name="ph:knife-fill" aria-hidden="true" />
                 </DiscordReaction>
               </DiscordReactions>
             </template>
@@ -162,6 +167,7 @@
             name="ph:caret-down-bold"
             class="radio-feature-arrow rotate-90 lg:rotate-180"
             role="button"
+            aria-label="Previous automod feature"
             @click="advanceFeatureIndex(-1)"
           />
           <label
@@ -185,6 +191,7 @@
             name="ph:caret-down-bold"
             class="radio-feature-arrow -rotate-90 lg:rotate-0"
             role="button"
+            aria-label="Next automod feature"
             @click="advanceFeatureIndex(1)"
           />
         </div>
@@ -207,12 +214,12 @@
         <p>You can define what WolfStar should do on every infraction:</p>
         <ul>
           <li>
-            <UIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" />
+            <UIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
             <strong>Alert the user:</strong> send a message notifying the user
             of their infraction.
           </li>
           <li>
-            <UIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" />
+            <UIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" aria-hidden="true" />
             <strong>Post moderation log:</strong> send a message to the
             moderation log channel for moderators to see.
           </li>
@@ -220,6 +227,7 @@
             <UIcon
               name="ph:trash-simple-fill"
               class="my-0 mr-1 h-5 w-5 text-error"
+              aria-hidden="true"
             />
             <strong>Delete the message:</strong> delete the message that
             triggered the infraction, keeping your channels clean.
@@ -232,6 +240,7 @@
             <UIcon
               name="ph:shield-check-duotone"
               class="my-0 mr-1 h-5 w-5 text-purple-500"
+              aria-hidden="true"
             />
             <strong>Define the punishment action:</strong> from a simple warning
             to a full ban, and everything in between, with a customizable
@@ -239,7 +248,7 @@
             years, or permanent.
           </li>
           <li>
-            <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
+            <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
             <strong>Define the threshold:</strong> how many infractions are
             needed within a period of time before the punishment is applied.
           </li>
@@ -277,6 +286,7 @@
           <UIcon
             name="ph:binoculars-duotone"
             class="my-0 mr-1 h-5 w-5 text-purple-500"
+            aria-hidden="true"
           />
           WolfStar can also listen for external moderation actions. You prefer
           banning by hand than by bot? Good news, WolfStar can be configured to
@@ -290,6 +300,7 @@
             name="ph:caret-down-bold"
             class="radio-feature-arrow rotate-90 lg:rotate-180"
             role="button"
+            aria-label="Previous moderation action"
             @click="advanceModerationIndex(-1)"
           />
           <label
@@ -313,6 +324,7 @@
             name="ph:caret-down-bold"
             class="radio-feature-arrow -rotate-90 lg:rotate-0"
             role="button"
+            aria-label="Next moderation action"
             @click="advanceModerationIndex(1)"
           />
         </div>
@@ -347,7 +359,7 @@
                  (moderationUndo = false))
               "
             >
-              <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" />
+              <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
               Temporary
             </button>
             <button
@@ -362,6 +374,7 @@
               <UIcon
                 name="ph:arrow-counter-clockwise-duotone"
                 class="my-0 mr-1 h-5 w-5"
+                aria-hidden="true"
               />
               Undo
             </button>
@@ -391,6 +404,7 @@
         <UIcon
           name="ph:chat-text-duotone"
           class="my-0 mr-1 h-5 w-5 text-warning"
+          aria-hidden="true"
         />
         <strong>A large logging suite:</strong> WolfStar can log almost
         everything that happens in your server: moderation actions, message
@@ -401,6 +415,7 @@
         <UIcon
           name="ph:money-wavy-duotone"
           class="my-0 mr-1 h-5 w-5 text-error"
+          aria-hidden="true"
         />
         <strong>No paywalls:</strong> all of WolfStar's features are
         <strong>available for free</strong> and all logs are sent to your server

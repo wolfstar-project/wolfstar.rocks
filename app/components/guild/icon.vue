@@ -21,21 +21,21 @@
           class="flex h-7 w-7 items-center justify-center rounded-full bg-success/70 text-white shadow-sm transition-all duration-200 hover:bg-success/60"
           title="WolfStar is active in this server"
         >
-          <UIcon name="heroicons:check-badge" class="h-5 w-5" />
+          <UIcon name="heroicons:check-badge" class="h-5 w-5" aria-hidden="true" />
         </div>
         <div
           v-else-if="guild.manageable"
           class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/70 text-white shadow-sm transition-all duration-200 hover:bg-primary/60"
           title="You can invite WolfStar to this server"
         >
-          <UIcon name="heroicons:plus-circle" class="h-5 w-5" />
+          <UIcon name="heroicons:plus-circle" class="h-5 w-5" aria-hidden="true" />
         </div>
         <div
           v-else
           class="flex h-7 w-7 items-center justify-center rounded-full bg-error/70 text-white shadow-sm"
           title="Insufficient permissions to manage this server"
         >
-          <UIcon name="heroicons:shield-exclamation" class="h-4 w-4" />
+          <UIcon name="heroicons:shield-exclamation" class="h-4 w-4" aria-hidden="true" />
         </div>
       </div>
       <div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
@@ -78,11 +78,11 @@
       v-if="variant === 'card' && showName && guild"
       class="w-full text-center"
     >
-      <h4
+      <h3
         class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary"
       >
         {{ guild.name }}
-      </h4>
+      </h3>
     </div>
 
     <!-- Guild Stats (optional) - only in card variant -->
@@ -95,7 +95,7 @@
         class="flex items-center space-x-1"
         title="Total members"
       >
-        <UIcon name="ph:users-fill" class="h-2 w-2" />
+        <UIcon name="ph:users-fill" class="h-2 w-2" aria-hidden="true" />
         <span>{{ formatNumber(guild.approximateMemberCount) }}</span>
       </span>
       <span
@@ -103,7 +103,7 @@
         class="flex items-center space-x-1"
         title="Members online"
       >
-        <UIcon name="ph:wifi-high" class="h-2 w-2 text-success" />
+        <UIcon name="ph:wifi-high" class="h-2 w-2 text-success" aria-hidden="true" />
         <span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
       </span>
     </div>

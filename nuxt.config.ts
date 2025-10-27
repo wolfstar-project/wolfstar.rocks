@@ -158,6 +158,16 @@ export default defineNuxtConfig({
           ? ["pg-native"]
           : undefined,
     },
+    storage: {
+      "@wolfstar/ratelimiter": {
+        driver: "netlify-blobs",
+      },
+    },
+    devStorage: {
+      "@wolfstar/ratelimiter": {
+        driver: "memory",
+      },
+    },
     openAPI: {
       // OpenAPI configuration
       meta: {

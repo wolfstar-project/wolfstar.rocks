@@ -10,7 +10,7 @@ import { omit } from "~~/server/utils";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
-const rateLimitStorage = useStorage();
+const rateLimitStorage = useStorage("@wolfstar/ratelimiter");
 
 interface NormalizedRateLimitOptions {
   enabled: boolean;

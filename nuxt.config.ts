@@ -291,7 +291,7 @@ export default defineNuxtConfig({
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
         ],
-        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
+        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],

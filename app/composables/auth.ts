@@ -1,22 +1,24 @@
 import type { User, UserSession } from "#auth-utils";
 
+export interface Auth {
+  loggedIn: globalThis.ComputedRef<boolean>;
+  user: globalThis.ComputedRef<User | null>;
+  session: globalThis.Ref<UserSession | null>;
+  redirectTo: globalThis.Ref<string>;
+  clear: () => Promise<void>;
+  ready: globalThis.ComputedRef<boolean>;
+  fetch: () => Promise<void>;
+  openInPopup: (
+    route: string,
+    size?: {
+      width?: number;
+      height?: number;
+    },
+  ) => void;
+}
+
 export function useAuth() {
-  return useNuxtApp().$auth as {
-    loggedIn: globalThis.ComputedRef<boolean>;
-    user: globalThis.ComputedRef<User | null>;
-    session: globalThis.Ref<UserSession | null, UserSession | null>;
-    redirectTo: globalThis.Ref<string, string>;
-    clear: () => Promise<void>;
-    ready: globalThis.ComputedRef<boolean>;
-    fetch: () => Promise<void>;
-    openInPopup: (
-      route: string,
-      size?: {
-        width?: number;
-        height?: number;
-      },
-    ) => void;
-  };
+  return useNuxtApp().$auth as Auth;
 }
 
 export function guildAddURL(guildID: string) {

@@ -18,8 +18,6 @@
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
 
-defineOgImage({ component: "default", emojis: "twemoji" });
-
 // Watch for route changes to update appName
 watch(
   router.currentRoute,

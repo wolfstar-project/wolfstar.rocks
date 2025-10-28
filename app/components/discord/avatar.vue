@@ -12,8 +12,6 @@ import { computed } from "vue";
 import { Profiles } from "~/utils/constants";
 
 const props = defineProps<{ user: ProfileName; size: SizeKey }>();
-const profile = computed(() => Profiles[props.user]);
-const size = computed(() => Sizes[props.size]);
 
 const Sizes = {
   tiny: { dimensions: 16, classes: "h-4 w-4" },
@@ -21,6 +19,9 @@ const Sizes = {
 } as const;
 
 type SizeKey = keyof typeof Sizes;
+
+const profile = computed(() => Profiles[props.user]);
+const size = computed(() => Sizes[props.size]);
 </script>
 
 <style scoped>

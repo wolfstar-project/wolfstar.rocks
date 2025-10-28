@@ -33,12 +33,5 @@ watch(
   { immediate: true },
 );
 
-useSeoMetadata({
-  ogSiteName: "WolfStar",
-  ogType: "website",
-  twitterCard: "summary_large_image",
-  twitterSite: "wolfstar_bot",
-});
-
 provide(ProviderAppNameKey, appName);
 </script>

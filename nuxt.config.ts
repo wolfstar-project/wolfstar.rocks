@@ -115,6 +115,8 @@ export default defineNuxtConfig({
 
   site: {
     url: "https://wolfstar.rocks",
+    description:
+      "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
     name: "WolfStar",
     defaultLocale: "en-US",
     indexable: true,
@@ -128,11 +130,6 @@ export default defineNuxtConfig({
 
   // Runtime configuration
   runtimeConfig,
-
-  routeRules: {
-    "/": { prerender: true },
-    "/sitemap.xml": { prerender: true },
-  },
 
   sourcemap: {
     client: "hidden",
@@ -347,8 +344,6 @@ export default defineNuxtConfig({
 
   seo: {
     meta: {
-      description:
-        "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
       author: "WolfStar Project, contact@wolfstar.rocks",
       colorScheme: "dark light",
       applicationName: "WolfStar",

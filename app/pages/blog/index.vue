@@ -24,10 +24,13 @@
               {{ article.title }}
             </div>
             <p class="mb-6 opacity-80">
-              <small>
+              <small v-if="article.date">
                 Published on
                 <u :title="longDate.format(new Date(article.date as string))">{{ date.format(new Date(article.date as string)) }}</u> by
                 <span class="opacity-90">{{ article.author }}</span></small>
+              <small v-else>
+                By <span class="opacity-90">{{ article.author }}</span>
+              </small>
             </p>
           </div>
         </div>
@@ -42,7 +45,7 @@
 
 <script setup lang="ts">
 const { data } = await useAsyncData("navigation", () => {
-  return queryCollectionNavigation("content", ["title", "description", "author", "path", "image", "date"]).order("id", "DESC");
+  return queryCollectionNavigation("blog", ["title", "description", "author", "path", "image", "date"]).order("id", "DESC");
 });
 
 const date = new Intl.DateTimeFormat(["en-GB", "en-US"]);

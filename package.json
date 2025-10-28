@@ -107,7 +107,7 @@
     "@sapphire/time-utilities": "catalog:dev",
     "@sapphire/utilities": "catalog:dev",
     "@tailwindcss/typography": "catalog:style",
-    "better-sqlite3": "^12.4.1",
+    "better-sqlite3": "catalog:dev",
     "cz-conventional-changelog": "catalog:dev",
     "daisyui": "catalog:dev",
     "discord-api-types": "catalog:dev",

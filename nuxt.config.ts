@@ -152,6 +152,7 @@ export default defineNuxtConfig({
     prerender: {
       crawlLinks: true,
       routes: ["/", "/sitemap.xml"],
+      failOnError: false,
     },
     rollupConfig: {
       external:

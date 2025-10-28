@@ -130,12 +130,12 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
     try {
       const result = await applyWrappedHandlerLogic(event, handler, options);
       if (result && options.onSuccess && typeof options.onSuccess === "function") {
-        options.onSuccess?.(useLogger("@wolfstar/api"), result);
+        options.onSuccess(useLogger("@wolfstar/api"), result);
       }
       return result;
     }
     catch (error) {
-      if (options.onError) {
+      if (options.onError && typeof options.onError === "function") {
         options.onError(useLogger("@wolfstar/api"), error);
       }
       throw error;
@@ -151,17 +151,17 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
     swr: true,
   },
 ): EventHandler<T, D> {
-  const opts = omit(["rateLimit", "auth", "onError"], options);
+  const opts = omit(["rateLimit", "auth", "onError", "onSuccess"], options);
   return cachedEventHandler<T>(async (event) => {
     try {
       const result = await applyWrappedHandlerLogic(event, handler, options);
       if (result && options.onSuccess && typeof options.onSuccess === "function") {
-        options.onSuccess?.(useLogger("@wolfstar/api"), result);
+        options.onSuccess(useLogger("@wolfstar/api"), result);
       }
       return result;
     }
     catch (error) {
-      if (options.onError) {
+      if (options.onError && typeof options.onError === "function") {
         options.onError(useLogger("@wolfstar/api"), error);
       }
       throw error;

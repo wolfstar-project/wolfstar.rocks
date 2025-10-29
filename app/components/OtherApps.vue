@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="other-apps-description">
-        <p class="flex-grow">{{ app.description }}</p>
+        <p class="grow">{{ app.description }}</p>
         <div class="mt-4 join flex justify-end">
           <nuxt-link class="btn join-item btn-neutral" :to="app.explore">
             <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" /> Explore

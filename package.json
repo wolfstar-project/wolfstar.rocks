@@ -16,9 +16,9 @@
   "license": "Apache-2.0",
   "type": "module",
   "scripts": {
-    "build": "nuxi build",
-    "dev": "nuxi dev",
-    "dev:pwa": "cross-env VITE_DEV_PWA=true nuxi dev",
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "dev:pwa": "cross-env VITE_DEV_PWA=true nuxt dev",
     "generate": "nuxt generate",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache --fix .",

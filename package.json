@@ -36,6 +36,7 @@
     "prisma:studio": "prisma studio",
     "prisma:generate": "prisma generate",
     "prisma:generate:watch": "prisma generate --watch",
+    "generate-pwa-assets": "pwa-assets-generator",
     "start": "node --import ./.output/server/sentry.server.config.mjs .output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck"
   },
@@ -96,6 +97,7 @@
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",
+    "@vite-pwa/assets-generator": "catalog:build",
     "eslint-plugin-vuejs-accessibility": "catalog:lint",
     "@commitlint/config-conventional": "catalog:lint",
     "@discordjs/collection": "catalog:dev",

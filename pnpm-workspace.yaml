@@ -10,6 +10,7 @@ patchedDependencies:
   prisma: patches/prisma.patch
 catalogs:
   build:
+    "@vite-pwa/assets-generator": ^1.0.2
     "@vite-pwa/nuxt": ^1.0.7
   cli:
     bumpp: ^10.3.1

@@ -55,6 +55,7 @@ export default defineNuxtConfig({
       enabled: true,
     },
   },
+
   app: {
     head: {
       charset: "utf-8",
@@ -100,7 +101,9 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   css: ["~/assets/css/main.css"],
+
   vue: {
     propsDestructure: true,
   },
@@ -113,6 +116,7 @@ export default defineNuxtConfig({
     defaultLocale: "en-US",
     indexable: true,
   },
+
   colorMode: {
     preference: "system", // default theme
     dataValue: "theme", // activate data-theme in <html> tag
@@ -135,11 +139,13 @@ export default defineNuxtConfig({
   },
 
   compatibilityDate: "2025-09-20",
+
   nitro: {
     preset: process.env.NUXT_NITRO_PRESET,
     prerender: {
       crawlLinks: true,
       routes: ["/", "/sitemap.xml"],
+      ignore: ["/api"],
     },
     rollupConfig: {
       external:
@@ -217,6 +223,7 @@ export default defineNuxtConfig({
       ],
     },
   },
+
   postcss: {
     plugins: {
       "postcss-nested": {},
@@ -330,6 +337,7 @@ export default defineNuxtConfig({
     },
     rateLimiter: false,
   } satisfies Partial<SecurityModuleOptions>,
+
   sentry: {
     ...runtimeConfig.sentry,
   },
@@ -352,6 +360,7 @@ export default defineNuxtConfig({
       appleMobileWebAppStatusBarStyle: "black",
     },
   },
+
   sitemap: {
     exclude: ["/oauth/guild", "/oauth/callback", "/[...id]"],
   },

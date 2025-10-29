@@ -18,7 +18,7 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "dev:pwa": "cross-env VITE_DEV_PWA=true nuxt dev",
+    "dev:pwa": "cross-env VITE_DEV_PWA='true' nuxt dev",
     "generate": "nuxt generate",
     "lint": "eslint --cache .",
     "lint:fix": "eslint --cache --fix .",

@@ -4,10 +4,3 @@ command = "pnpm prisma:generate && pnpm run build"
 
 [build.environment]
 NODE_OPTIONS = '--max-old-space-size=4096'
-
-# Redirect to Discord server
-[[redirects]]
-from = "https://join.wolfstar.rocks"
-to = "https://discord.gg/gqAnRyUXG8"
-status = 301
-force = true

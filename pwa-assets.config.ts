@@ -3,6 +3,8 @@
  * See: https://vite-pwa-org.netlify.app/assets-generator/
  */
 
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 import {
   combinePresetAndAppleSplashScreens,
   defineConfig,
@@ -41,11 +43,15 @@ export default defineConfig({
         }
       },
     }, {
-      darkImageResolver: (image) => {
-        return image;
+      darkImageResolver: async (imageName) => {
+        if (imageName.includes("logo.svg")) {
+          const whiteLogoPath = resolve(process.cwd(), "public/icons/logo-white.svg");
+          return await readFile(whiteLogoPath);
+        }
+        return undefined;
       },
       padding: 0.3,
-      darkResizeOptions: { background: "#050505", fit: "contain" },
+      darkResizeOptions: { background: "black", fit: "contain" },
       resizeOptions: {
         background: "white",
         fit: "contain",

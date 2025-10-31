@@ -80,7 +80,7 @@
     "prisma": "catalog:database",
     "prisma-json-types-generator": "catalog:database",
     "require-in-the-middle": "catalog:prod",
-    "stale-dep": "catalog:prod",
+
     "tailwind-merge": "catalog:prod",
     "tailwind-variants": "catalog:prod",
     "tw-animate-css": "catalog:style",
@@ -94,6 +94,7 @@
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",
     "@netlify/nuxt": "catalog:dev",
+    "stale-dep": "catalog:dev",
     "@commitlint/config-conventional": "catalog:lint",
     "@discordjs/collection": "catalog:dev",
     "@discordjs/core": "catalog:dev",

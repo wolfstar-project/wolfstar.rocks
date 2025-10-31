@@ -58,31 +58,6 @@ pnpm lint                       # Check for errors
 pnpm commitlint --from HEAD~1 --to HEAD --verbose  # Validate commit
 ```
 
-### Important Paths
-
-| Path                            | Description              |
-| ------------------------------- | ------------------------ |
-| `app/pages/`                    | File-based routing pages |
-| `app/components/`               | Vue components           |
-| `server/api/`                   | API endpoints            |
-| `server/database/schema.prisma` | Database schema          |
-| `server/utils/`                 | Server utilities         |
-| `.github/workflows/`            | CI/CD pipelines          |
-
-### Key Files
-
-| File                      | Purpose                       |
-| ------------------------- | ----------------------------- |
-| `nuxt.config.ts`          | Nuxt configuration            |
-| `tailwind.config.ts`      | TailwindCSS configuration     |
-| `tsconfig.json`           | TypeScript configuration      |
-| `.commitlintrc.json`      | Commit message rules          |
-| `eslint.config.js`        | Linting rules                 |
-| `sentry.client.config.ts` | Sentry client configuration   |
-| `sentry.server.config.ts` | Sentry server configuration   |
-| `package.json`            | Dependencies and scripts      |
-| `.env`                    | Environment variables (local) |
-
 ---
 
 ## Project Overview
@@ -154,7 +129,7 @@ This project is optimized for AI-assisted development. The following tools are r
 
 ```bash
 # The project uses @antfu/eslint-config
-# MCP ESLint automatically uses the project's eslint.config.js
+# MCP ESLint automatically uses the project's eslint.config.mjs
 ```
 
 **Best Practices**:
@@ -679,10 +654,9 @@ wolfstar.rocks/
 ├── public/                        # Static assets
 ├── .env                           # Environment variables (local)
 ├── nuxt.config.ts                 # Nuxt configuration
-├── tailwind.config.ts             # TailwindCSS configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── .commitlintrc.json             # Commitlint configuration
-├── eslint.config.js               # ESLint configuration
+├── eslint.config.mjs              # ESLint configuration
 └── package.json                   # Project dependencies
 ```
 
@@ -2260,7 +2234,7 @@ rm -rf node_modules/.cache/eslint
 pnpm lint:fix
 
 # 3. If specific errors persist, check:
-# - .eslintrc or eslint.config.js for rules
+# - eslint.config.mjs for rules
 # - Whether error is from Prettier (formatting issue)
 # - Whether it's a genuine code issue requiring manual fix
 ```
@@ -2349,30 +2323,3 @@ This codebase emphasizes:
 - ✅ **Maintainability** - Clear patterns, consistent conventions, good documentation
 
 **When in doubt**: Always reference existing patterns in similar files when implementing new features.
-
----
-
-## Updates
-
-This document should be updated when:
-
-- New conventions are established
-- Technology stack changes
-- Architecture decisions are made
-- Best practices evolve
-
-When the project or this file has changed, the **Last Updated** date will be updated to reflect the current month and year.
-
----
-
-**Last Updated**: October 2025
-**Version**: 2.0.0
-**Maintained by**: WolfStar Development Team
-
-When the project or this file has changed, the **Last Updated** date will be updated to reflect the current month and year.
-
----
-
-**Last Updated**: October 2025
-**Version**: 2.0.0
-**Maintained by**: WolfStar Development Team

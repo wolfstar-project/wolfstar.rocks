@@ -117,7 +117,7 @@ This project is optimized for AI-assisted development. The following tools are r
 
 ```bash
 # The project uses @antfu/eslint-config
-# MCP ESLint automatically uses the project's eslint.config.js
+# MCP ESLint automatically uses the project's eslint.config.mjs
 ```
 
 **Best Practices**:
@@ -736,10 +736,9 @@ wolfstar.rocks/
 ├── public/                        # Static assets
 ├── .env                           # Environment variables (local)
 ├── nuxt.config.ts                 # Nuxt configuration
-├── tailwind.config.ts             # TailwindCSS configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── .commitlintrc.json             # Commitlint configuration
-├── eslint.config.js               # ESLint configuration
+├── eslint.config.mjs              # ESLint configuration
 └── package.json                   # Project dependencies
 ```
 
@@ -1674,7 +1673,7 @@ rm -rf node_modules/.cache/eslint
 pnpm lint:fix
 
 # 3. If specific errors persist, check:
-# - .eslintrc or eslint.config.js for rules
+# - eslint.config.mjs for rules
 # - Whether error is from Prettier (formatting issue)
 # - Whether it's a genuine code issue requiring manual fix
 ```
@@ -1707,11 +1706,12 @@ git commit -m "your message" --no-verify
 
 ### Active Services
 
-| Service               | URL                   | Purpose            | Command                    |
-| --------------------- | --------------------- | ------------------ | -------------------------- |
-| **Nuxt Dev Server**   | http://localhost:3000 | Main application   | `pnpm dev`                 |
-| **Prisma Studio**     | http://localhost:5555 | Database GUI       | `pnpm prisma:studio`       |
-| **Production Server** | http://localhost:3000 | Production preview | `pnpm build && pnpm start` |
+| Service                          | URL                   | Purpose            | Command                    |
+| -------------------------------- | --------------------- | ------------------ | -------------------------- |
+| **Nuxt Dev Server**              | http://localhost:3000 | Main application   | `pnpm dev`                 |
+| **Nuxt Dev Server With Netlify** | http://localhost:8888 | Main Application   | `netlify dev`              |
+| **Prisma Studio**                | http://localhost:5555 | Database GUI       | `pnpm prisma:studio`       |
+| **Production Server**            | http://localhost:3000 | Production preview | `pnpm build && pnpm start` |
 
 ---
 
@@ -1736,33 +1736,6 @@ pnpm lint                       # Check for errors
 pnpm commitlint --from HEAD~1 --to HEAD --verbose  # Validate commit
 ```
 
-### Important Paths
-
-| Path                            | Description              |
-| ------------------------------- | ------------------------ |
-| `app/pages/`                    | File-based routing pages |
-| `app/components/`               | Vue components           |
-| `server/api/`                   | API endpoints            |
-| `server/database/schema.prisma` | Database schema          |
-| `server/utils/`                 | Server utilities         |
-| `.github/workflows/`            | CI/CD pipelines          |
-
-### Key Files
-
-| File                      | Purpose                       |
-| ------------------------- | ----------------------------- |
-| `nuxt.config.ts`          | Nuxt configuration            |
-| `tailwind.config.ts`      | TailwindCSS configuration     |
-| `tsconfig.json`           | TypeScript configuration      |
-| `.commitlintrc.json`      | Commit message rules          |
-| `eslint.config.js`        | Linting rules                 |
-| `sentry.client.config.ts` | Sentry client configuration   |
-| `sentry.server.config.ts` | Sentry server configuration   |
-| `taze.config.ts`          | Taze configuration            |
-| `prisma.config.ts`        | Prisma configuration          |
-| `package.json`            | Dependencies and scripts      |
-| `.env`                    | Environment variables (local) |
-
 ---
 
 ## Additional Resources
@@ -1779,7 +1752,6 @@ pnpm commitlint --from HEAD~1 --to HEAD --verbose  # Validate commit
 
 ### Project-Specific Docs
 
-- **AGENTS.md**: Complete project conventions and standards
 - **README.md**: Project overview and setup instructions
 - **CHANGELOG.md**: Version history and changes
 
@@ -1798,13 +1770,3 @@ This codebase emphasizes:
 - ✅ **Maintainability** - Clear patterns, consistent conventions, good documentation
 
 **When in doubt**: Always reference existing patterns in similar files when implementing new features.
-
----
-
-When the project or this file has changed, the **Last Updated** date will be updated to reflect the current month and year.
-
----
-
-**Last Updated**: October 2025
-**Version**: 2.0.0
-**Maintained by**: WolfStar Development Team

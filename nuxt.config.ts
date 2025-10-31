@@ -14,7 +14,6 @@ export default defineNuxtConfig({
   modules: [
     "@nuxt/eslint",
     "@nuxt/ui",
-    "@nuxt/scripts",
     "@nuxt/image",
     "@nuxtjs/seo",
     "@vueuse/nuxt",
@@ -39,11 +38,6 @@ export default defineNuxtConfig({
   },
 
   $production: {
-    scripts: {
-      registry: {
-        cloudflareWebAnalytics: true,
-      },
-    },
     sentry: {
       telemetry: false,
     },
@@ -132,7 +126,6 @@ export default defineNuxtConfig({
   },
 
   experimental: {
-    payloadExtraction: false,
     renderJsonPayloads: true,
     viteEnvironmentApi: true,
     typescriptPlugin: true,
@@ -282,8 +275,6 @@ export default defineNuxtConfig({
           "wss:",
           "ws:",
           "https://cdn.wolfstar.rocks",
-          "https://cloudflareinsights.com",
-          "https://static.cloudflareinsights.com",
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
         ],
@@ -318,7 +309,6 @@ export default defineNuxtConfig({
           "'self'",
           "'unsafe-inline'",
           "'strict-dynamic'",
-          "https://static.cloudflareinsights.com",
           "'wasm-unsafe-eval'",
           "'nonce-{generated-nonce}'",
         ],

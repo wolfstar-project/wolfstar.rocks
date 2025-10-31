@@ -4,10 +4,6 @@ overrides:
   "@types/node": 22.13.14
   "@vercel/nft": ^0.30.3
 
-patchedDependencies:
-  "@prisma/client": patches/@prisma__client.patch
-
-  prisma: patches/prisma.patch
 catalogs:
   build:
     "@vite-pwa/assets-generator": ^1.0.2
@@ -15,7 +11,7 @@ catalogs:
   cli:
     bumpp: ^10.3.1
     pncat: ^0.7.4
-    taze: ^19.8.1
+    taze: ^19.9.0
   database:
     "@prisma/adapter-pg": ^6.18.0
     "@prisma/client": ^6.18.0
@@ -25,6 +21,7 @@ catalogs:
     "@antfu/nip": ^0.1.0
     "@discordjs/collection": ^2.1.1
     "@discordjs/core": ^2.3.0
+    "@netlify/nuxt": ^0.2.7
     "@nuxtjs/seo": ^3.2.2
     "@sapphire/bitfield": ^1.2.4
     "@sapphire/snowflake": ^3.5.5
@@ -33,7 +30,7 @@ catalogs:
     cz-conventional-changelog: ^3.3.0
     daisyui: ^5.3.10
     discord-api-types: ^0.38.31
-    simple-git: ^3.28.0
+    simple-git: ^3.29.0
   e2e:
     playwright: ^1.56.1
   frontend:
@@ -52,11 +49,11 @@ catalogs:
     "@antfu/eslint-config": ^6.1.0
     "@commitlint/cli": ^20.1.0
     "@commitlint/config-conventional": ^20.0.0
-    "@nuxt/eslint": ^1.9.0
+    "@nuxt/eslint": ^1.10.0
     "@sapphire/prettier-config": ^2.0.0
     eslint: ^9.38.0
     eslint-plugin-format: ^1.0.2
-    eslint-plugin-package-json: ^0.59.0
+    eslint-plugin-package-json: ^0.59.1
     eslint-plugin-vuejs-accessibility: ^2.4.1
     husky: ^9.1.7
     lint-staged: ^16.2.6
@@ -70,9 +67,7 @@ catalogs:
     std-env: ^3.10.0
   prod:
     "@josephanson/nuxt-ai": ^0.1.6
-    "@netlify/nuxt": ^0.2.5
     "@nuxt/image": ^1.11.0
-    "@nuxt/scripts": ^0.13.0
     "@sentry/nuxt": ^10.22.0
     "@tanstack/pacer": ^0.15.4
     "@vee-validate/yup": ^4.15.1
@@ -104,6 +99,7 @@ catalogs:
     nuxt-auth-utils: ^0.5.25
     uuid: ^13.0.0
     zod: ^4.1.12
+
 allowedDeprecatedVersions:
   glob: 7.2.3
   inflight: 1.0.6
@@ -112,6 +108,7 @@ allowedDeprecatedVersions:
 ignoredBuiltDependencies:
   - "@parcel/watcher"
   - esbuild
+  - puppeteer
   - vue-demi
 
 onlyBuiltDependencies:

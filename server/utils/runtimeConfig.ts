@@ -18,11 +18,6 @@ export function generateRuntimeConfig() {
         dsn: process.env.SENTRY_DSN,
         tracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE ? Number(process.env.NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE) : 0.2,
       },
-      scripts: {
-        cloudflareWebAnalytics: {
-          token: process.env.NUXT_PUBLIC_SCRIPTS_CLOUDFLARE_WEB_ANALYTICS_TOKEN,
-        },
-      },
     },
     sentry: {
       authToken: process.env.SENTRY_AUTH_TOKEN,

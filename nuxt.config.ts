@@ -141,6 +141,13 @@ export default defineNuxtConfig({
       ignore: ["/api"],
     },
     rollupConfig: {
+      output: {
+        manualChunks: {
+          "@sapphire/utilities": ["@sapphire/utilities"],
+          "@vueuse/core": ["@vueuse/core"],
+          "yup": ["yup"],
+        },
+      },
       external:
         process.env.NUXT_NITRO_PRESET !== "node-server"
           ? ["pg-native"]

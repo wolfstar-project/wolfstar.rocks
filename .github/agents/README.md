@@ -22,6 +22,23 @@ Expert agent for full-stack development on the WolfStar.rocks dashboard using:
 - State management with Pinia
 - Authentication and authorization tasks
 
+### Beast Mode 3.2 Agent (`beast-mode.md`)
+
+Autonomous problem-solving agent enhanced with Context7 MCP integration for:
+- Complex debugging and troubleshooting
+- Library integration with up-to-date documentation
+- Iterative development with extensive testing
+- Internet research and documentation fetching
+- Version-specific API usage patterns
+
+**Use this agent for**:
+- Solving complex technical problems autonomously
+- Integrating new libraries or frameworks
+- Debugging difficult issues requiring research
+- Tasks requiring current documentation from Context7
+- Problems needing iterative refinement and testing
+- Autonomous code fixes with validation
+
 ## How to Use Custom Agents
 
 1. Custom agents are automatically detected by GitHub Copilot when working in this repository

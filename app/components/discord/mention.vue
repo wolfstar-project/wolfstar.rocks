@@ -2,7 +2,6 @@
   <button
     class="tag"
     type="button"
-    :aria-label
   >
     <span v-if="kind === 'mention'" aria-hidden="true">@</span>
     <icons-app v-else-if="kind === 'app'" class="icon" aria-hidden="true" />
@@ -12,34 +11,6 @@
 
 <script setup lang="ts">
 const { kind = "mention" } = defineProps<{ kind?: "mention" | "app" }>();
-
-// derive readable text from the first slot vnode safely
-const slots = useSlots();
-
-const slotText = computed(() => {
-  const s = slots.default?.();
-  if (!s || s.length === 0)
-    return "";
-  const first = s[0] as any;
-
-  // Try common vnode shapes
-  const children = first?.children ?? first?.text ?? "";
-  if (typeof children === "string")
-    return children;
-  if (Array.isArray(children)) {
-    return children
-      .map((c: any) => (typeof c === "string" ? c : c?.children ?? c?.text ?? ""))
-      .join("");
-  }
-  return String(children ?? "");
-});
-
-const ariaLabel = computed(() => {
-  const text = slotText.value.trim();
-  return kind === "mention"
-    ? `Mention ${text}`.trim()
-    : `App command ${text}`.trim();
-});
 </script>
 
 <style scoped>

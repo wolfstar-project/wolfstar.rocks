@@ -96,6 +96,80 @@ pnpm prisma:migrate:dev         # Create and apply migration
 pnpm prisma:generate            # Regenerate Prisma client
 ```
 
+### ESLint Integration
+
+**Configuration**: `eslint.config.mjs` (Nuxt 4 uses flat config)
+
+**Base Config**: `@antfu/eslint-config` with Nuxt integration
+
+**Key Features**:
+- Auto-formatting on save
+- TypeScript-aware linting
+- Vue component linting with proper block order enforcement
+- Import sorting and organization
+- Accessibility checks
+
+**Usage**:
+```bash
+pnpm lint           # Check for linting errors
+pnpm lint:fix       # Auto-fix fixable issues
+```
+
+**Husky Integration**: Pre-commit hook runs `lint-staged` which automatically:
+- Runs `eslint --fix` on staged `.js`, `.ts`, `.vue` files
+- Runs `prettier --write` on staged files
+- Only processes files staged for commit
+
+**Important Rules**:
+- Vue block order: `<template>` → `<script>` → `<script setup>` → `<style>` → `<style scoped>`
+- Double quotes for strings
+- Semicolons required
+- 2-space indentation
+- camelCase for variables, PascalCase for components, kebab-case for files
+
+### Sentry Integration
+
+**Purpose**: Error tracking and monitoring in production
+
+**Configuration Files**:
+- `sentry.client.config.ts` - Client-side error tracking
+- `sentry.server.config.ts` - Server-side error tracking
+
+**Environment Variables**:
+- `SENTRY_DSN` - Data Source Name for Sentry project
+- `SENTRY_ORG` - Sentry organization slug
+- `SENTRY_PROJECT` - Sentry project slug
+
+**Features**:
+- Automatic error capture on client and server
+- Performance monitoring
+- Release tracking
+- Source map upload for better error debugging
+- Custom error context and tags
+
+**Usage in Code**:
+```typescript
+import * as Sentry from '@sentry/nuxt';
+
+// Capture custom errors
+Sentry.captureException(error);
+
+// Add context
+Sentry.setContext('user', { id: userId });
+
+// Add breadcrumbs
+Sentry.addBreadcrumb({
+  message: 'User action',
+  level: 'info'
+});
+```
+
+**Integration Points**:
+- Wrapped event handlers automatically log errors to Sentry
+- API errors are captured with request context
+- Client-side errors include component stack traces
+- Performance metrics tracked for routes and API calls
+
 ## Quality Assurance & Pre-commit Checklist
 
 **ALWAYS run these commands before committing:**

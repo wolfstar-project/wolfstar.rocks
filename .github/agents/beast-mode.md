@@ -155,12 +155,50 @@ Carefully read the issue and think hard about a plan to solve it before coding.
 ## 8. Debugging
 
 - Use the `get_errors` tool to check for any problems in the code
+- **ESLint Integration**: Use `problems` tool to check ESLint errors in real-time
 - Make code changes only if you have high confidence they can solve the problem
 - When debugging, try to determine the root cause rather than addressing symptoms
 - Debug for as long as needed to identify the root cause and identify a fix
 - Use print statements, logs, or temporary code to inspect program state, including descriptive statements or error messages to understand what's happening
 - To test hypotheses, you can also add test statements or functions
 - Revisit your assumptions if unexpected behavior occurs.
+
+## 9. Quality Tools Integration
+
+### ESLint Integration
+
+When working with this codebase, leverage ESLint for code quality:
+
+- **Check Errors**: Use `problems` tool to view ESLint issues in the current file
+- **Auto-fix**: Run linting with auto-fix enabled when making changes
+- **Pre-commit**: Husky hooks automatically run ESLint on staged files
+- **Configuration**: Respects `eslint.config.mjs` (flat config) or `.eslintrc`
+- **Important**: Always fix ESLint errors before committing - warnings are acceptable, errors are not
+
+**ESLint Workflow**:
+1. Make code changes
+2. Check for ESLint errors using `problems` tool
+3. Run auto-fix if needed
+4. Verify errors are resolved
+5. Commit changes (Husky will run ESLint again)
+
+### Sentry Error Tracking
+
+When debugging or implementing error handling:
+
+- **Error Capture**: Sentry automatically captures unhandled errors
+- **Custom Errors**: Use `Sentry.captureException()` for explicit error tracking
+- **Context**: Add user/request context to errors for better debugging
+- **Breadcrumbs**: Track user actions leading to errors
+- **Source Maps**: Errors include original TypeScript source locations
+- **Environment Variables**: Ensure `SENTRY_DSN` is configured
+
+**Sentry Best Practices**:
+- Capture errors at appropriate severity levels
+- Add contextual information (user ID, request params, etc.)
+- Use breadcrumbs to track user flow
+- Test error tracking in development before deploying
+- Review Sentry dashboard for error patterns and trends
 
 # How to create a Todo List
 

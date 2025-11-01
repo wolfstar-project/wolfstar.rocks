@@ -56,10 +56,8 @@ const profile = computed(() => Profiles[props.name]);
 }
 
 .discord-message:not(.discord-message-ephemeral):hover {
-	.discord-message:not(.discord-message-ephemeral):hover {
-		background-color: var(--color-base-200);
-		background-color: oklch(from var(--color-base-300) calc(l + 0.01) c h);
-	}
+	background-color: var(--color-base-200);
+	background-color: oklch(from var(--color-base-300) calc(l + 0.01) c h);
 }
 
 .discord-message-ephemeral {

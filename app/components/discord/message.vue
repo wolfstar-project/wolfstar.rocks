@@ -5,7 +5,7 @@
     :aria-label="`Message from ${profile.name}`"
   >
     <discord-avatar :user="name" size="medium" :class="{ 'mt-6': command }" />
-    <div class="flex-grow gap-2 max-sm:text-xs">
+    <div class="grow gap-2 max-sm:text-xs">
       <div v-if="command" class="discord-message-reply" role="complementary" aria-label="Reply context">
         <span class="flex items-center gap-1 font-bold">
           <discord-avatar :user="command.user" size="tiny" />
@@ -56,8 +56,10 @@ const profile = computed(() => Profiles[props.name]);
 }
 
 .discord-message:not(.discord-message-ephemeral):hover {
-	background-color: var(--colors-base-200);
-	background-color: oklch(from var(colors-base-300) calc(l + 0.01) c h);
+	.discord-message:not(.discord-message-ephemeral):hover {
+		background-color: var(--color-base-200);
+		background-color: oklch(from var(--color-base-300) calc(l + 0.01) c h);
+	}
 }
 
 .discord-message-ephemeral {

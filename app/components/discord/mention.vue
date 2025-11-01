@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-/* filepath: d:\codes\wolfstar.rocks\app\components\discord\mention.vue */
 const { kind = "mention" } = defineProps<{ kind?: "mention" | "app" }>();
 
 // derive readable text from the first slot vnode safely

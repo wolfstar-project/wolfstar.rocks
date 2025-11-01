@@ -12,9 +12,7 @@
 
 <script setup lang="ts">
 /* filepath: d:\codes\wolfstar.rocks\app\components\discord\mention.vue */
-const props = withDefaults(defineProps<{ kind?: "mention" | "app" }>(), {
-  kind: "mention",
-});
+const { kind = "mention" } = defineProps<{ kind?: "mention" | "app" }>();
 
 // derive readable text from the first slot vnode safely
 const slots = useSlots();
@@ -39,13 +37,10 @@ const slotText = computed(() => {
 
 const ariaLabel = computed(() => {
   const text = slotText.value.trim();
-  return props.kind === "mention"
+  return kind === "mention"
     ? `Mention ${text}`.trim()
     : `App command ${text}`.trim();
 });
-
-// Expose kind for template usage (keep original name)
-const { kind } = toRefs(props);
 </script>
 
 <style scoped>

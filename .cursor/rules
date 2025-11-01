@@ -1,0 +1,114 @@
+# WolfStar Dashboard - Cursor AI Rules
+
+## Project Overview
+This is a Next.js dashboard for the WolfStar Discord bot. It uses TypeScript, React 18, Material-UI (MUI), and follows the Sapphire framework conventions.
+
+## Technology Stack
+- **Framework**: Next.js 13.5.9
+- **Language**: TypeScript 4.9.5
+- **UI Library**: Material-UI (MUI) v5
+- **State Management**: Constate for context management
+- **Styling**: Emotion (CSS-in-JS)
+- **Code Quality**: ESLint with @sapphire/eslint-config, Prettier
+- **Package Manager**: Yarn 3.4.1
+
+## Code Style and Conventions
+
+### TypeScript
+- Use strict TypeScript with proper type annotations
+- Prefer `type` over `interface` for component props
+- Import types explicitly with `import type` when possible
+- Follow the @sapphire/ts-config conventions
+
+### React Components
+- Use functional components with hooks
+- Wrap components in `memo()` for performance optimization when appropriate
+- Use FC<Props> type for functional components
+- Prefer named exports for components, but use default exports for pages
+- Place props interfaces before the component definition
+- Use JSDoc comments for complex props or utility functions
+
+### File Organization
+- Place components in `src/components/` organized by category
+- Pages go in `src/pages/` following Next.js conventions
+- Utilities go in `src/utils/`
+- Use PascalCase for component files (e.g., `SelectBoolean.tsx`)
+- Use camelCase for utility files (e.g., `wolfstarUtils.ts`)
+
+### Import Order
+1. External dependencies (React, MUI, etc.)
+2. Type imports from external dependencies
+3. Internal components/utilities
+4. Type imports from internal sources
+5. Styles
+
+### Material-UI Usage
+- Import components individually from their respective packages
+- Use the `sx` prop for inline styling when needed
+- Follow MUI theming conventions
+- Prefer MUI components over custom HTML elements
+
+### Code Quality
+- Run `yarn lint` before committing
+- Follow ESLint rules defined in `.eslintrc`
+- Use Prettier for code formatting
+- No console.log in production code
+- Handle errors appropriately
+
+### Accessibility
+- Follow jsx-a11y rules for accessibility
+- Provide proper ARIA labels
+- Ensure keyboard navigation works
+- Use semantic HTML elements
+
+### State Management
+- Use React hooks (useState, useEffect, etc.) for local state
+- Use Constate for shared context state
+- Keep state as close to where it's used as possible
+
+### API Integration
+- API routes follow Next.js API routes pattern
+- Handle OAuth callbacks properly
+- Use proper error handling for API calls
+
+## Specific Patterns
+
+### Component Props
+```typescript
+export interface ComponentNameProps extends BaseProps {
+	/** JSDoc description */
+	propName: string;
+	optionalProp?: boolean;
+}
+```
+
+### Functional Components
+```typescript
+const ComponentName: FC<ComponentNameProps> = ({ prop1, prop2, ...props }) => (
+	// JSX here
+);
+
+export default memo(ComponentName);
+```
+
+### Utilities
+- Include Apache 2.0 license header for new utility files
+- Export utility functions and types clearly
+- Use JSDoc comments for documentation
+
+## Testing
+- No test infrastructure currently exists in the project
+- Focus on type safety and ESLint compliance
+
+## Don't Do
+- Don't use `any` type unless absolutely necessary
+- Don't bypass ESLint rules without good reason
+- Don't use class components
+- Don't import React in every file (not needed in modern React)
+- Don't use inline styles without MUI's sx prop
+- Don't modify generated files (next-env.d.ts, etc.)
+
+## Environment
+- Development: Local setup with `yarn dev`
+- Uses environment variables from `.env.development.local`
+- Docker support available via `compose.yaml`

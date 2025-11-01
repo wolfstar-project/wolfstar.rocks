@@ -7,10 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ProfileName } from "~/utils/constants";
-import { computed } from "vue";
-import { Profiles } from "~/utils/constants";
-
 const props = defineProps<{ user: ProfileName; size: SizeKey }>();
 
 const Sizes = {

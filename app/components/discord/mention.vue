@@ -2,7 +2,7 @@
   <button
     class="tag"
     type="button"
-    :aria-label="kind === 'mention' ? `Mention ${$slots.default?.[0]?.children}` : `App command ${$slots.default?.[0]?.children}`"
+    :aria-label
   >
     <span v-if="kind === 'mention'" aria-hidden="true">@</span>
     <icons-app v-else-if="kind === 'app'" class="icon" aria-hidden="true" />
@@ -11,9 +11,41 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ kind?: "mention" | "app" }>(), {
+/* filepath: d:\codes\wolfstar.rocks\app\components\discord\mention.vue */
+const props = withDefaults(defineProps<{ kind?: "mention" | "app" }>(), {
   kind: "mention",
 });
+
+// derive readable text from the first slot vnode safely
+const slots = useSlots();
+
+const slotText = computed(() => {
+  const s = slots.default?.();
+  if (!s || s.length === 0)
+    return "";
+  const first = s[0] as any;
+
+  // Try common vnode shapes
+  const children = first?.children ?? first?.text ?? "";
+  if (typeof children === "string")
+    return children;
+  if (Array.isArray(children)) {
+    return children
+      .map((c: any) => (typeof c === "string" ? c : c?.children ?? c?.text ?? ""))
+      .join("");
+  }
+  return String(children ?? "");
+});
+
+const ariaLabel = computed(() => {
+  const text = slotText.value.trim();
+  return props.kind === "mention"
+    ? `Mention ${text}`.trim()
+    : `App command ${text}`.trim();
+});
+
+// Expose kind for template usage (keep original name)
+const { kind } = toRefs(props);
 </script>
 
 <style scoped>

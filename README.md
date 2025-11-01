@@ -185,6 +185,14 @@ SENTRY_DSN=your_sentry_dsn
 - **DaisyUI** - Styling
 - **NuxtUI** - Components
 
+### AI Development Assistant
+
+- **Custom GitHub Copilot Agent** - Specialized WolfStar development agent with
+  Context7 MCP integration (see `.github/agents/wolfstar-dev-agent.md`)
+- **Autonomous Problem-Solving** - Beast Mode with iterative refinement
+- **Real-time Documentation** - Up-to-date library docs via Context7
+- **Quality First** - Integrated ESLint, Sentry, and testing workflows
+
 </div>
 
 <div id="️-local-development">

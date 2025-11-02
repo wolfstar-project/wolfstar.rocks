@@ -1,0 +1,309 @@
+---
+applyTo: **/*.{ts,vue}
+---
+
+# Nuxt TypeScript
+
+## Context
+
+Rules for using TypeScript in Nuxt applications.
+
+- Use proper type annotations
+- Implement proper interfaces and types
+- Use type inference when possible
+- Handle type safety in components
+
+## Requirements
+
+- Use proper type annotations
+- Define proper interfaces and types
+- Use type inference when possible
+- Implement proper type guards
+- Use proper generics
+- Handle null and undefined properly
+- Use proper type assertions
+- Implement proper error types
+- Use proper component types
+- Handle async types properly
+
+## Examples
+
+<example>
+<script setup lang="ts">
+import type { PropType } from 'vue'
+
+// Define interfaces
+interface User {
+id: string
+name: string
+email: string
+role: 'admin' | 'user'
+preferences: UserPreferences
+}
+
+interface UserPreferences {
+theme: 'light' | 'dark'
+notifications: boolean
+}
+
+// Define props with proper types
+const props = defineProps<{
+user: User
+isEditable?: boolean
+onSave?: (user: User) => Promise<void>
+}>()
+
+// Define emits with type checking
+const emit = defineEmits<{
+'update:user': [user: User]
+'save': [user: User]
+'cancel': []
+}>()
+
+// Define refs with types
+const isEditing = ref(false)
+const editedUser = ref<User>({ ...props.user })
+
+// Computed properties with type inference
+const userRole = computed(() => props.user.role.toUpperCase())
+
+// Methods with proper typing
+async function handleSave() {
+try {
+if (props.onSave) {
+await props.onSave(editedUser.value)
+}
+emit('save', editedUser.value)
+isEditing.value = false
+} catch (error) {
+if (error instanceof Error) {
+console.error('Failed to save:', error.message)
+}
+}
+}
+
+// Type-safe composable usage
+const { t } = useI18n()
+const toast = useToast()
+
+// Watchers with type inference
+watch(() => props.user, (newUser) => {
+editedUser.value = { ...newUser }
+})
+</script>
+
+<template>
+  <div class="user-profile">
+    <div v-if="isEditing">
+      <input
+        v-model="editedUser.name"
+        :placeholder="t('user.name')"
+        type="text"
+      />
+      <input
+        v-model="editedUser.email"
+        :placeholder="t('user.email')"
+        type="email"
+      />
+      <select v-model="editedUser.preferences.theme">
+        <option value="light">{{ t('theme.light') }}</option>
+        <option value="dark">{{ t('theme.dark') }}</option>
+      </select>
+      <div class="actions">
+        <button @click="handleSave">{{ t('actions.save') }}</button>
+        <button @click="isEditing = false">{{ t('actions.cancel') }}</button>
+      </div>
+    </div>
+    <div v-else>
+      <h2>{{ user.name }}</h2>
+      <p>{{ user.email }}</p>
+      <p>{{ userRole }}</p>
+      <button
+        v-if="isEditable"
+        @click="isEditing = true"
+      >
+        {{ t('actions.edit') }}
+      </button>
+    </div>
+  </div>
+</template>
+</example>
+
+<example>
+// Define types
+interface UseAuthOptions {
+  redirect?: string
+  cookie?: {
+    name: string
+    maxAge: number
+  }
+}
+
+interface AuthUser {
+id: string
+email: string
+role: 'admin' | 'user'
+permissions: string[]
+}
+
+interface LoginCredentials {
+email: string
+password: string
+}
+
+interface AuthError extends Error {
+code: 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | 'UNAUTHORIZED'
+}
+
+// Type-safe composable
+export function useAuth(options: UseAuthOptions = {}) {
+// Type-safe refs and state
+const user = useState<AuthUser | null>('auth_user', () => null)
+const loading = ref(false)
+const error = ref<AuthError | null>(null)
+
+// Type-safe cookie
+const token = useCookie<string | null>(
+options.cookie?.name ?? 'auth*token',
+{
+maxAge: options.cookie?.maxAge ?? 60 * 60 \_ 24 \* 7,
+},
+)
+
+// Type-safe computed properties
+const isAuthenticated = computed(() => !!user.value)
+const isAdmin = computed(() => user.value?.role === 'admin')
+const hasPermission = (permission: string) => {
+return user.value?.permissions.includes(permission) ?? false
+}
+
+// Type-safe methods
+async function login(credentials: LoginCredentials): Promise<void> {
+loading.value = true
+error.value = null
+
+    try {
+      const { data } = await useFetch<{ user: AuthUser, token: string }>('/api/auth/login', {
+        method: 'POST',
+        body: credentials,
+      })
+
+      if (data.value) {
+        user.value = data.value.user
+        token.value = data.value.token
+      }
+
+      if (options.redirect) {
+        navigateTo(options.redirect)
+      }
+    }
+    catch (err) {
+      error.value = err as AuthError
+      throw error.value
+    }
+    finally {
+      loading.value = false
+    }
+
+}
+
+async function logout(): Promise<void> {
+try {
+await useFetch('/api/auth/logout', {
+method: 'POST',
+})
+}
+finally {
+user.value = null
+token.value = null
+navigateTo('/login')
+}
+}
+
+// Return typed object
+return {
+user: readonly(user),
+loading: readonly(loading),
+error: readonly(error),
+isAuthenticated,
+isAdmin,
+hasPermission,
+login,
+logout,
+}
+}
+
+</example>
+
+<example type="invalid">
+// ❌ Wrong: Using any type
+function processData(data: any) {
+  return data.value
+}
+
+// ❌ Wrong: Not using proper interfaces
+interface UserData {
+n: string // ❌ Wrong: Poor naming
+e: string // ❌ Wrong: Poor naming
+a: boolean // ❌ Wrong: Poor naming
+}
+
+// ❌ Wrong: Not using proper type guards
+function handleResponse(response: unknown) {
+// @ts-ignore ❌ Wrong: Ignoring TypeScript errors
+return response.data
+}
+
+// ❌ Wrong: Not using proper generics
+class Store {
+// ❌ Wrong: Using any[]
+private items: any[] = []
+
+// ❌ Wrong: Not typing parameters
+add(item) {
+this.items.push(item)
+}
+
+// ❌ Wrong: Not typing return value
+get(index) {
+return this.items[index]
+}
+}
+
+// ❌ Wrong: Not using proper union types
+const status = null // ❌ Wrong: Implicit any
+
+// ❌ Wrong: Not using proper type assertions
+const element = document.getElementById('app') as any
+
+// ❌ Wrong: Not using proper function types
+// @ts-expect-error ❌ Wrong: Suppressing TypeScript errors
+function handler(evt) {
+console.log(evt.target.value)
+}
+
+// ❌ Wrong: Not using proper interfaces for Vue components
+export default defineComponent({
+props: {
+// ❌ Wrong: Not using proper prop types
+value: null,
+},
+
+// ❌ Wrong: Not typing component data
+data() {
+return {
+items: [],
+}
+},
+})
+
+</example>
+
+## Critical Rules
+
+- NEVER use any type unless absolutely necessary
+- Use proper type annotations
+- Define proper interfaces and types
+- Handle null and undefined properly
+- Use proper component types
+- Handle async types properly

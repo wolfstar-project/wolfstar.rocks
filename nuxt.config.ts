@@ -58,6 +58,12 @@ export default defineNuxtConfig({
       link: [
         { rel: "preconnect", href: "https://rsms.me/" },
         { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
+        {
+          rel: "icon",
+          type: "image/png",
+          href: "/favicon.png",
+        },
+
       ],
       meta: [
         // Cache control
@@ -339,12 +345,17 @@ export default defineNuxtConfig({
       colorScheme: "dark light",
       applicationName: "WolfStar",
       ogSiteName: "WolfStar",
+      ogImage: "https://wolfstar.rocks/opengraph.png",
       ogLocale: "en",
       ogType: "website",
       ogUrl: "https://wolfstar.rocks",
       ogTitle: "WolfStar",
       ogDescription:
         "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+      twitterCard: "summary_large_image",
+      twitterSite: "@WolfStarBot",
+      twitterCreator: "@RedStar071",
+      twitterImage: "https://wolfstar.rocks/opengraph.png",
       robots: "archive,follow,imageindex,index,odp,snippet,translate",
       msapplicationConfig: "/browserconfig.xml",
       mobileWebAppCapable: "yes",

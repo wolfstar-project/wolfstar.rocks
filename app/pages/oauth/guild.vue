@@ -43,20 +43,13 @@ if (import.meta.client && guildId.value && !error.value) {
 }
 
 async function navigateToGuild() {
-  if (!guildId.value) {
-    finish({
-      error: true,
-    });
-    throw createError({
-      statusCode: 400,
-      statusMessage: "No guild ID provided",
-    });
-  }
   start();
 
   await promiseTimeout(1500);
 
-  finish();
+  finish({
+    error: !guildId.value,
+  });
   await navigateTo(`/guilds/${guildId.value}`);
 }
 

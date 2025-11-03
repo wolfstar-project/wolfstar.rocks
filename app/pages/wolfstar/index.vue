@@ -1,7 +1,7 @@
 <template>
   <section class="mt-28 flex flex-col items-center text-center">
     <h1 class="title pb-4">Imagine a<br />moderation app</h1>
-    <p class="max-w-[30rem]">
+    <p class="max-w-120">
       A very customizable multilanguage application to help you moderate your
       server, with a complete logging suite and more,
       <span class="font-bold underline underline-offset-2">100% for free</span>!
@@ -22,380 +22,356 @@
   </section>
 
   <h2 id="explore" class="mt-72 text-5xl font-bold">Explore</h2>
-  <ClientOnly>
-    <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-      <div
-        class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
-      >
-        <DiscordMessages class="w-full">
-          <template v-if="featureIndex === AutomodFeature.Spam">
-            <DiscordMessage v-for="n in 2" :key="n" name="baddie">
-              Guys look at me!
-            </DiscordMessage>
-          </template>
-          <DiscordMessage
-            :name="
-              featureIndex === AutomodFeature.Reactions ? 'stella' : 'baddie'
-            "
-            :class="{ 'text-error': featureIndex !== AutomodFeature.Reactions }"
-          >
-            <template v-if="featureIndex === AutomodFeature.Attachments">
-              Have you seen this????
-              <div class="grid max-w-96 grid-cols-2 gap-2">
-                <div
-                  class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
-                >
-                  <UIcon
-                    name="ph:image-duotone"
-                    class="h-24 w-24 animate-pulse text-base-content/20"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div
-                  class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
-                >
-                  <UIcon
-                    name="ph:image-duotone"
-                    class="h-24 w-24 animate-pulse text-base-content/20"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div
-                  class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
-                >
-                  <UIcon
-                    name="ph:image-duotone"
-                    class="h-24 w-24 animate-pulse text-base-content/20"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div
-                  class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
-                >
-                  <UIcon
-                    name="ph:image-duotone"
-                    class="h-24 w-24 animate-pulse text-base-content/20"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Capitals">
-              I CAN TALK IN ALL UPPER CASES,
-              <strong>AND WOLFSTAR WILL NOT STOP ME!</strong>
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Invites">
-              Everyone join my server!
-              <NuxtLink
-                to="https://discord.gg/gqAnRyUXG8"
-                class="text-info"
+  <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
+    <div
+      class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
+    >
+      <DiscordMessages class="w-full">
+        <template v-if="featureIndex === AutomodFeature.Spam">
+          <DiscordMessage v-for="n in 2" :key="n" name="baddie">
+            Guys look at me!
+          </DiscordMessage>
+        </template>
+        <DiscordMessage
+          :name="
+            featureIndex === AutomodFeature.Reactions ? 'stella' : 'baddie'
+          "
+          :class="{ 'text-error': featureIndex !== AutomodFeature.Reactions }"
+        >
+          <template v-if="featureIndex === AutomodFeature.Attachments">
+            Have you seen this????
+            <div class="grid max-w-96 grid-cols-2 gap-2">
+              <div
+                class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
               >
-                https://discord.gg/gqAnRyUXG8
-              </NuxtLink>
-              <DiscordInvite link="https://discord.gg/gqAnRyUXG8" />
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Links">
-              Everyone check out those links!
-              <ul class="ml-5 list-disc">
-                <li>
-                  <span class="text-info">https://definitely-not-pishing.com</span>
-                </li>
-                <li>
-                  <span class="text-info">https://redundant-spam-links.net</span>
-                </li>
-                <li>
-                  <span class="text-info">https://too-many-links.com</span>
-                </li>
-                <li><span class="text-info">https://trojan-horse.xyz</span></li>
-                <li><span class="text-info">https://not-a-virus.com</span></li>
-              </ul>
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Mentions">
-              Everyone notice me!
-              <DiscordMention kind="mention">everyone</DiscordMention>
-              <DiscordMention kind="mention">members</DiscordMention>{{ " "
-              }}<DiscordMention kind="mention">moderators</DiscordMention>
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Newlines">
-              Hehehehe
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              <br />
-              So many lines!
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Reactions">
-              Hey folks! I have great news to share!
-              <DiscordReactions>
-                <DiscordReaction
-                  :count="7"
-                  self
-                >
-                  <UIcon
-                    name="ph:cheers-fill"
-                    class="text-success"
-                    aria-hidden="true"
-                  />
-                </DiscordReaction>
-                <DiscordReaction
-                  :count="1"
-                  class="text-error"
-                >
-                  <UIcon name="ph:knife-fill" aria-hidden="true" />
-                </DiscordReaction>
-              </DiscordReactions>
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Spam">
-              Guys look at me!
-            </template>
-            <template v-else-if="featureIndex === AutomodFeature.Words">
-              I would like to say that you're a
-              <strong>disgusting</strong> person.
-            </template>
-          </DiscordMessage>
-          <DiscordMessage name="wolfstar">
-            Dear <DiscordMention kind="mention">Baddie</DiscordMention>,
-            {{ texts[featureIndex]!.alert }}
-          </DiscordMessage>
-        </DiscordMessages>
+                <UIcon
+                  name="ph:image-duotone"
+                  class="h-24 w-24 animate-pulse text-base-content/20"
+                  aria-hidden="true"
+                />
+              </div>
+              <div
+                class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
+              >
+                <UIcon
+                  name="ph:image-duotone"
+                  class="h-24 w-24 animate-pulse text-base-content/20"
+                  aria-hidden="true"
+                />
+              </div>
+              <div
+                class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
+              >
+                <UIcon
+                  name="ph:image-duotone"
+                  class="h-24 w-24 animate-pulse text-base-content/20"
+                  aria-hidden="true"
+                />
+              </div>
+              <div
+                class="flex aspect-video w-full items-center justify-center rounded-lg bg-base-100 drop-shadow-lg"
+              >
+                <UIcon
+                  name="ph:image-duotone"
+                  class="h-24 w-24 animate-pulse text-base-content/20"
+                  aria-hidden="true"
+                />
+              </div>
+            </div>
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Capitals">
+            I CAN TALK IN ALL UPPER CASES,
+            <strong>AND WOLFSTAR WILL NOT STOP ME!</strong>
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Invites">
+            Everyone join my server!
+            <NuxtLink
+              to="https://discord.gg/gqAnRyUXG8"
+              class="text-info"
+            >
+              https://discord.gg/gqAnRyUXG8
+            </NuxtLink>
+            <DiscordInvite link="https://discord.gg/gqAnRyUXG8" />
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Links">
+            Everyone check out those links!
+            <ul class="ml-5 list-disc">
+              <li>
+                <span class="text-info">https://definitely-not-pishing.com</span>
+              </li>
+              <li>
+                <span class="text-info">https://redundant-spam-links.net</span>
+              </li>
+              <li>
+                <span class="text-info">https://too-many-links.com</span>
+              </li>
+              <li><span class="text-info">https://trojan-horse.xyz</span></li>
+              <li><span class="text-info">https://not-a-virus.com</span></li>
+            </ul>
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Mentions">
+            Everyone notice me!
+            <DiscordMention kind="mention">everyone</DiscordMention>
+            <DiscordMention kind="mention">members</DiscordMention>{{ " "
+            }}<DiscordMention kind="mention">moderators</DiscordMention>
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Newlines">
+            Hehehehe
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            So many lines!
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Reactions">
+            Hey folks! I have great news to share!
+            <DiscordReactions>
+              <DiscordReaction
+                :count="7"
+                self
+              >
+                <UIcon
+                  name="ph:cheers-fill"
+                  class="text-success"
+                  aria-hidden="true"
+                />
+              </DiscordReaction>
+              <DiscordReaction
+                :count="1"
+                class="text-error"
+              >
+                <UIcon name="ph:knife-fill" aria-hidden="true" />
+              </DiscordReaction>
+            </DiscordReactions>
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Spam">
+            Guys look at me!
+          </template>
+          <template v-else-if="featureIndex === AutomodFeature.Words">
+            I would like to say that you're a
+            <strong>disgusting</strong> person.
+          </template>
+        </DiscordMessage>
+        <DiscordMessage name="wolfstar">
+          Dear <DiscordMention kind="mention">Baddie</DiscordMention>,
+          {{ texts[featureIndex]!.alert }}
+        </DiscordMessage>
+      </DiscordMessages>
 
-        <div class="flex flex-row items-center gap-1 lg:flex-col">
-          <UIcon
-            name="ph:caret-down-bold"
-            class="radio-feature-arrow rotate-90 lg:rotate-180"
-            role="button"
-            aria-label="Previous automod feature"
-            @click="advanceFeatureIndex(-1)"
+      <div class="flex flex-row items-center gap-1 lg:flex-col">
+        <UIcon
+          name="ph:caret-down-bold"
+          class="radio-feature-arrow rotate-90 lg:rotate-180"
+          role="button"
+          aria-label="Previous automod feature"
+          @click="advanceFeatureIndex(-1)"
+        />
+        <label
+          v-for="(text, index) of texts"
+          :key="index"
+          class="radio-feature-container"
+          :data-tip="text.tooltip"
+          :for="`automod-feature-${index}`"
+        >
+          <input
+            :id="`automod-feature-${index}`"
+            v-model="featureIndex"
+            type="radio"
+            name="automod-feature"
+            class="radio-feature"
+            :value="index"
           />
-          <label
-            v-for="(text, index) of texts"
-            :key="index"
-            class="radio-feature-container"
-            :data-tip="text.tooltip"
-            :for="`automod-feature-${index}`"
-          >
-            <input
-              :id="`automod-feature-${index}`"
-              v-model="featureIndex"
-              type="radio"
-              name="automod-feature"
-              class="radio-feature"
-              :value="index"
-            />
-            <span class="sr-only">{{ text.tooltip }}</span>
-          </label>
+          <span class="sr-only">{{ text.tooltip }}</span>
+        </label>
+        <UIcon
+          name="ph:caret-down-bold"
+          class="radio-feature-arrow -rotate-90 lg:rotate-0"
+          role="button"
+          aria-label="Next automod feature"
+          @click="advanceFeatureIndex(1)"
+        />
+      </div>
+    </div>
+
+    <div class="prose">
+      <h3 class="mb-4 text-3xl font-bold">
+        <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+        WolfStar can act on
+        <span class="underline underline-offset-4">{{
+          texts[featureIndex]!.title
+        }}</span>
+      </h3>
+
+      <p>
+        Enjoy the power of moderation with WolfStar, a fully customizable
+        moderation bot for your server.
+      </p>
+
+      <p>You can define what WolfStar should do on every infraction:</p>
+      <ul>
+        <li>
+          <UIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
+          <strong>Alert the user:</strong> send a message notifying the user
+          of their infraction.
+        </li>
+        <li>
+          <UIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" aria-hidden="true" />
+          <strong>Post moderation log:</strong> send a message to the
+          moderation log channel for moderators to see.
+        </li>
+        <li>
           <UIcon
-            name="ph:caret-down-bold"
-            class="radio-feature-arrow -rotate-90 lg:rotate-0"
-            role="button"
-            aria-label="Next automod feature"
-            @click="advanceFeatureIndex(1)"
+            name="ph:trash-simple-fill"
+            class="my-0 mr-1 h-5 w-5 text-error"
+            aria-hidden="true"
           />
-        </div>
-      </div>
+          <strong>Delete the message:</strong> delete the message that
+          triggered the infraction, keeping your channels clean.
+        </li>
+      </ul>
 
-      <div class="prose">
-        <h3 class="mb-4 text-3xl font-bold">
-          <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
-          WolfStar can act on
-          <span class="underline underline-offset-4">{{
-            texts[featureIndex]!.title
-          }}</span>
-        </h3>
-
-        <p>
-          Enjoy the power of moderation with WolfStar, a fully customizable
-          moderation bot for your server.
-        </p>
-
-        <p>You can define what WolfStar should do on every infraction:</p>
-        <ul>
-          <li>
-            <UIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
-            <strong>Alert the user:</strong> send a message notifying the user
-            of their infraction.
-          </li>
-          <li>
-            <UIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" aria-hidden="true" />
-            <strong>Post moderation log:</strong> send a message to the
-            moderation log channel for moderators to see.
-          </li>
-          <li>
-            <UIcon
-              name="ph:trash-simple-fill"
-              class="my-0 mr-1 h-5 w-5 text-error"
-              aria-hidden="true"
-            />
-            <strong>Delete the message:</strong> delete the message that
-            triggered the infraction, keeping your channels clean.
-          </li>
-        </ul>
-
-        <p>And even what WolfStar should do after repeated infractions!</p>
-        <ul>
-          <li>
-            <UIcon
-              name="ph:shield-check-duotone"
-              class="my-0 mr-1 h-5 w-5 text-purple-500"
-              aria-hidden="true"
-            />
-            <strong>Define the punishment action:</strong> from a simple warning
-            to a full ban, and everything in between, with a customizable
-            <strong>punishment duration</strong> ranging from seconds to even
-            years, or permanent.
-          </li>
-          <li>
-            <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
-            <strong>Define the threshold:</strong> how many infractions are
-            needed within a period of time before the punishment is applied.
-          </li>
-        </ul>
-      </div>
-    </section>
-    <template #fallback>
-      <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-        <USkeleton class="h-96 w-full" />
-        <div class="prose">
-          <USkeleton class="h-12 w-1/2" />
-          <USkeleton class="mt-4 h-8 w-full" />
-          <USkeleton class="mt-2 h-8 w-full" />
-        </div>
-      </div>
-    </template>
-  </ClientOnly>
-
-  <ClientOnly>
-    <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-      <div class="prose">
-        <h3 class="mb-4 text-3xl font-bold">
-          <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
-          A complete suite for
-          <span class="underline underline-offset-4">moderation logs</span>
-        </h3>
-
-        <p>
-          Easily searchable moderation logs, with a complete history of every
-          action taken by WolfStar in your server, and with the ability to
-          filter them later by user, action, and more!
-        </p>
-
-        <p>
+      <p>And even what WolfStar should do after repeated infractions!</p>
+      <ul>
+        <li>
           <UIcon
-            name="ph:binoculars-duotone"
+            name="ph:shield-check-duotone"
             class="my-0 mr-1 h-5 w-5 text-purple-500"
             aria-hidden="true"
           />
-          WolfStar can also listen for external moderation actions. You prefer
-          banning by hand than by bot? Good news, WolfStar can be configured to
-          listen and log external bans, retrieving the reason from audit logs!
-        </p>
+          <strong>Define the punishment action:</strong> from a simple warning
+          to a full ban, and everything in between, with a customizable
+          <strong>punishment duration</strong> ranging from seconds to even
+          years, or permanent.
+        </li>
+        <li>
+          <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
+          <strong>Define the threshold:</strong> how many infractions are
+          needed within a period of time before the punishment is applied.
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
+    <div class="prose">
+      <h3 class="mb-4 text-3xl font-bold">
+        <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+        A complete suite for
+        <span class="underline underline-offset-4">moderation logs</span>
+      </h3>
+
+      <p>
+        Easily searchable moderation logs, with a complete history of every
+        action taken by WolfStar in your server, and with the ability to
+        filter them later by user, action, and more!
+      </p>
+
+      <p>
+        <UIcon
+          name="ph:binoculars-duotone"
+          class="my-0 mr-1 h-5 w-5 text-purple-500"
+          aria-hidden="true"
+        />
+        WolfStar can also listen for external moderation actions. You prefer
+        banning by hand than by bot? Good news, WolfStar can be configured to
+        listen and log external bans, retrieving the reason from audit logs!
+      </p>
+    </div>
+
+    <div class="flex flex-col items-center gap-4 lg:flex-row">
+      <div class="flex flex-row items-center gap-1 lg:flex-col">
+        <UIcon
+          name="ph:caret-down-bold"
+          class="radio-feature-arrow rotate-90 lg:rotate-180"
+          role="button"
+          aria-label="Previous moderation action"
+          @click="advanceModerationIndex(-1)"
+        />
+        <label
+          v-for="(action, index) of moderationActions"
+          :key="action.name"
+          class="radio-feature-container"
+          :data-tip="action.name"
+          :for="`moderation-feature-${index}`"
+        >
+          <input
+            :id="`moderation-feature-${index}`"
+            v-model="moderationIndex"
+            type="radio"
+            name="moderation-log"
+            class="radio-feature"
+            :value="index"
+          />
+          <span class="sr-only">{{ action.name }}</span>
+        </label>
+        <UIcon
+          name="ph:caret-down-bold"
+          class="radio-feature-arrow -rotate-90 lg:rotate-0"
+          role="button"
+          aria-label="Next moderation action"
+          @click="advanceModerationIndex(1)"
+        />
       </div>
 
-      <div class="flex flex-col items-center gap-4 lg:flex-row">
-        <div class="flex flex-row items-center gap-1 lg:flex-col">
-          <UIcon
-            name="ph:caret-down-bold"
-            class="radio-feature-arrow rotate-90 lg:rotate-180"
-            role="button"
-            aria-label="Previous moderation action"
-            @click="advanceModerationIndex(-1)"
-          />
-          <label
-            v-for="(action, index) of moderationActions"
-            :key="action.name"
-            class="radio-feature-container"
-            :data-tip="action.name"
-            :for="`moderation-feature-${index}`"
+      <div class="flex flex-col items-start">
+        <DiscordMessages class="w-full">
+          <DiscordMessage name="wolfstar">
+            <DiscordEmbed
+              :color="moderationActionRender.color"
+              :author="{
+                icon: '/avatars/wolfstar.png',
+                name: 'WolfStar#9286 (854714837388755004)',
+              }"
+              :footer="{ icon: '/avatars/wolfstar.png', text: 'Case 3' }"
+              :timestamp="Date.now()"
+            >
+              <span><strong>❯ Type:</strong>
+                {{ moderationActionRender.name }}</span><br />
+              <span><strong>❯ User:</strong> @baddie (541738403230777351)</span><br />
+              <span><strong>❯ Reason:</strong> spam</span>
+            </DiscordEmbed>
+          </DiscordMessage>
+        </DiscordMessages>
+
+        <div class="mt-4 join self-start">
+          <button
+            class="btn join-item md:btn-wide"
+            :class="{ 'btn-info': moderationTemporary }"
+            :disabled="moderationAction.temporary === null"
+            @click="
+              ((moderationTemporary = !moderationTemporary),
+               (moderationUndo = false))
+            "
           >
-            <input
-              :id="`moderation-feature-${index}`"
-              v-model="moderationIndex"
-              type="radio"
-              name="moderation-log"
-              class="radio-feature"
-              :value="index"
+            <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
+            Temporary
+          </button>
+          <button
+            class="btn join-item md:btn-wide"
+            :class="{ 'btn-success': moderationUndo }"
+            :disabled="moderationAction.undo === null"
+            @click="
+              ((moderationUndo = !moderationUndo),
+               (moderationTemporary = false))
+            "
+          >
+            <UIcon
+              name="ph:arrow-counter-clockwise-duotone"
+              class="my-0 mr-1 h-5 w-5"
+              aria-hidden="true"
             />
-            <span class="sr-only">{{ action.name }}</span>
-          </label>
-          <UIcon
-            name="ph:caret-down-bold"
-            class="radio-feature-arrow -rotate-90 lg:rotate-0"
-            role="button"
-            aria-label="Next moderation action"
-            @click="advanceModerationIndex(1)"
-          />
-        </div>
-
-        <div class="flex flex-col items-start">
-          <DiscordMessages class="w-full">
-            <DiscordMessage name="wolfstar">
-              <DiscordEmbed
-                :color="moderationActionRender.color"
-                :author="{
-                  icon: '/avatars/wolfstar.png',
-                  name: 'WolfStar#9286 (854714837388755004)',
-                }"
-                :footer="{ icon: '/avatars/wolfstar.png', text: 'Case 3' }"
-                :timestamp="Date.now()"
-              >
-                <span><strong>❯ Type:</strong>
-                  {{ moderationActionRender.name }}</span><br />
-                <span><strong>❯ User:</strong> @baddie (541738403230777351)</span><br />
-                <span><strong>❯ Reason:</strong> spam</span>
-              </DiscordEmbed>
-            </DiscordMessage>
-          </DiscordMessages>
-
-          <div class="mt-4 join self-start">
-            <button
-              class="btn join-item md:btn-wide"
-              :class="{ 'btn-info': moderationTemporary }"
-              :disabled="moderationAction.temporary === null"
-              @click="
-                ((moderationTemporary = !moderationTemporary),
-                 (moderationUndo = false))
-              "
-            >
-              <UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
-              Temporary
-            </button>
-            <button
-              class="btn join-item md:btn-wide"
-              :class="{ 'btn-success': moderationUndo }"
-              :disabled="moderationAction.undo === null"
-              @click="
-                ((moderationUndo = !moderationUndo),
-                 (moderationTemporary = false))
-              "
-            >
-              <UIcon
-                name="ph:arrow-counter-clockwise-duotone"
-                class="my-0 mr-1 h-5 w-5"
-                aria-hidden="true"
-              />
-              Undo
-            </button>
-          </div>
+            Undo
+          </button>
         </div>
       </div>
-    </section>
-    <template #fallback>
-      <div class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-        <div class="prose">
-          <USkeleton class="h-12 w-1/2" />
-          <USkeleton class="mt-4 h-8 w-full" />
-          <USkeleton class="mt-2 h-8 w-full" />
-        </div>
-        <USkeleton class="h-96 w-full" />
-      </div>
-    </template>
-  </ClientOnly>
+    </div>
+  </section>
 
   <section class="prose">
-    <h3 class="mt-32 text-center text-3xl font-bold">And a more!</h3>
+    <h3 class="mt-32 text-center text-3xl font-bold">And more!</h3>
     <p>
       WolfStar not only comes with a very complete moderation suite, but also:
     </p>

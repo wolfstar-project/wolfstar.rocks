@@ -139,6 +139,7 @@ export default defineNuxtConfig({
       crawlLinks: true,
       routes: ["/", "/sitemap.xml"],
       ignore: ["/api"],
+      autoSubfolderIndex: false,
     },
     rollupConfig: {
       external:

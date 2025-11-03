@@ -30,7 +30,7 @@
           size="md"
           color="primary"
           variant="subtle"
-          to="/api/auth/discord"
+          to="/login"
           block
           class="hidden lg:inline-flex"
           icon="ic:round-discord"
@@ -40,7 +40,7 @@
           size="md"
           color="primary"
           variant="subtle"
-          to="/api/auth/discord"
+          to="/login"
           block
           class="lg:hidden"
           icon="ic:round-discord"

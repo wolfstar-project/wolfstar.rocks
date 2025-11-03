@@ -20,19 +20,18 @@
     </template>
     <ClientOnly v-else>
       <template v-if="status === 'pending' || status === 'idle'">
-        <UAlert color="neutral" icon="emojione:hourglass-done" title="Loading">
+        <UAlert color="info" icon="emojione:hourglass-done" title="Loading">
           <template #description> Completing authentication flow... </template>
         </UAlert>
       </template>
-      <template v-else-if="status === 'error'">
+      <template v-else-if="status === 'error' && error">
         <UAlert
-          variant="solid"
           color="error"
           title="Authentication Error"
           icon="emojione:cross-mark"
         >
           <template #description>
-            Authentication failed. Please try again.
+            {{ error.cause }}
           </template>
           <template #actions>
             <UButton to="/login" size="sm" variant="outline">
@@ -64,10 +63,6 @@
 </template>
 
 <script setup lang="ts">
-// at the top of the file, update the import
-import { until } from "@vueuse/core";
-import consola from "consola";
-
 const {
   query: { code: rawCode },
 } = useRoute();
@@ -84,7 +79,7 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
 const { user, redirectTo } = useAuth();
 
 if (import.meta.client && code) {
-  void performCall().catch(consola.error);
+  void performCall().catch(logger.error);
 }
 
 async function performCall() {

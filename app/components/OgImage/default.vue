@@ -101,6 +101,9 @@
             {{ siteName }}
           </p>
         </div>
+        <div class="flex items-center">
+          <IconsWolfstar class="w-20 h-20 opacity-90" />
+        </div>
       </div>
     </div>
   </div>

@@ -356,6 +356,9 @@ export default defineNuxtConfig({
       twitterSite: "@WolfStarBot",
       twitterCreator: "@RedStar071",
       twitterImage: "https://wolfstar.rocks/opengraph.png",
+      twitterDescription:
+        "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+      twitterTitle: "WolfStar",
       robots: "archive,follow,imageindex,index,odp,snippet,translate",
       msapplicationConfig: "/browserconfig.xml",
       mobileWebAppCapable: "yes",

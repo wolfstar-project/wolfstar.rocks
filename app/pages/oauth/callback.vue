@@ -3,7 +3,7 @@
     <template v-if="!code">
       <UAlert
         variant="solid"
-        color="error"
+        color="warning"
         title="Missing Code"
         icon="emojione:warning"
       >
@@ -34,7 +34,7 @@
             {{ error.cause }}
           </template>
           <template #actions>
-            <UButton to="/login" size="sm" variant="outline">
+            <UButton color="secondary" to="/login" size="sm" variant="outline">
               Try Again
             </UButton>
           </template>

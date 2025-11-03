@@ -7,21 +7,23 @@
         </template>
       </UAlert>
     </template>
-    <template v-else-if="error">
-      <UAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
-        <template #description>
-          {{ error }}
-        </template>
-        <template #actions>
-          <UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
-        </template>
-      </UAlert>
-    </template>
-    <template v-else>
-      <UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
-        <template #description> Redirecting you to the guild page... </template>
-      </UAlert>
-    </template>
+    <ClientOnly v-else>
+      <template v-if="error">
+        <UAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+          <template #description>
+            {{ error }}
+          </template>
+          <template #actions>
+            <UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
+          </template>
+        </UAlert>
+      </template>
+      <template v-else>
+        <UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
+          <template #description> Redirecting you to the guild page... </template>
+        </UAlert>
+      </template>
+    </ClientOnly>
   </div>
 </template>
 

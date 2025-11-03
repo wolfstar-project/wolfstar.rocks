@@ -1,7 +1,7 @@
 <template>
   <section class="mt-28 flex flex-col items-center text-center">
     <h1 class="title pb-4">Imagine an<br />social and feeder network</h1>
-    <p class="max-w-[30rem]">
+    <p class="max-w-120">
       A very customizable multilanguage application to cover your members'
       social and feeder network needs, with a few entertainment features and
       more,

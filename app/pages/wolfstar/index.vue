@@ -541,7 +541,7 @@ function advanceModerationIndex(value: -1 | 1) {
 <style scoped>
 @reference "@/assets/css/main.css";
 .title {
-	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem] bg-gradient-to-b from-white to-branding-wolfstar bg-clip-text text-transparent;
+	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem] bg-linear-to-b from-white to-branding-wolfstar bg-clip-text text-transparent;
 }
 
 .radio-feature-container {

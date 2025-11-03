@@ -34,7 +34,7 @@
             {{ error.cause }}
           </template>
           <template #actions>
-            <UButton color="secondary" to="/login" size="sm" variant="outline">
+            <UButton color="secondary" to="/login" size="sm">
               Try Again
             </UButton>
           </template>

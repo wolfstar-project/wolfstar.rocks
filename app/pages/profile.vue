@@ -178,7 +178,7 @@
             </div>
             <div v-if="item.value === 'premium'" class="space-y-6">
               <UCard
-                class="border-2 border-primary/30 bg-gradient-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg"
+                class="border-2 border-primary/30 bg-linear-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg"
               >
                 <template #header>
                   <div>

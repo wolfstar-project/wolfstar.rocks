@@ -273,7 +273,7 @@ const { data, status, refresh, error } = useFetch("/api/users", {
       ? nuxtApp.payload.data[key]
       : nuxtApp.static.data[key];
     if (!data) {
-      return;
+      return undefined;
     }
 
     const experationDate = new Date(data.fetchAt);

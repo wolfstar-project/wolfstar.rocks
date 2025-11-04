@@ -1,227 +1,144 @@
 <template>
   <div
-    class="w-full h-full flex justify-between relative"
+    class="w-full h-full flex justify-between relative p-[60px]"
     :class="[
-      colorMode === 'light' ? ['bg-white', 'text-gray-900'] : ['bg-[#212121]', 'text-white'],
+      colorMode === 'light' ? ['bg-white', 'text-gray-900'] : ['bg-gray-900', 'text-white'],
     ]"
   >
-    <!-- Background gradient overlay -->
     <div
-      v-if="!useCustomBackground"
-      class="flex absolute top-0 right-[-50%]"
+      class="flex absolute top-0 -right-full"
       :style="{
-        width: '150%',
-        height: '150%',
-        backgroundImage: `radial-gradient(circle, rgba(${themeRgb}, 0.4) 0%, ${colorMode === 'dark' ? 'rgba(5, 5, 5, 0.2)' : 'rgba(255, 255, 255, 0.6)'} 50%, ${colorMode === 'dark' ? 'rgba(5, 5, 5, 0)' : 'rgba(255, 255, 255, 0)'} 70%)`,
+        width: '200%',
+        height: '200%',
+        backgroundImage: `radial-gradient(circle, rgba(${themeRgb}, 0.5) 0%,  ${colorMode === 'dark' ? 'rgba(5, 5, 5,0.3)' : 'rgba(255, 255, 255, 0.7)'} 50%, ${props.colorMode === 'dark' ? 'rgba(5, 5, 5,0)' : 'rgba(255, 255, 255, 0)'} 70%)`,
       }"
     ></div>
-
-    <!-- Custom SVG background with brand colors -->
-    <svg
-      v-if="useCustomBackground"
-      class="absolute top-0 right-0"
-      width="1200"
-      height="675"
-      viewBox="0 0 1200 675"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g style="mix-blend-mode:overlay" :opacity="colorMode === 'dark' ? '0.7' : '0.5'" filter="url(#filter0_f_448_25)">
-        <circle cx="901.5" cy="45.5" r="199.5" :fill="gradientColors.primary" />
-        <circle cx="600.5" cy="216.5" r="199.5" :fill="gradientColors.secondary" />
-        <circle cx="179.5" cy="317.5" r="199.5" :fill="gradientColors.tertiary" />
-      </g>
-      <defs>
-        <filter id="filter0_f_448_25" x="-240" y="-374" width="1561" height="1111" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
-          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
-          <feGaussianBlur stdDeviation="110" result="effect1_foregroundBlur_448_25" />
-        </filter>
-      </defs>
-    </svg>
-
-    <div class="h-full w-full flex flex-col justify-between relative p-[60px]">
-      <!-- Main content area -->
-      <div class="flex flex-row justify-between items-start flex-1">
-        <div
-          class="flex flex-col w-full"
-          :class="hasIcon ? 'max-w-[65%]' : 'max-w-[85%]'"
-        >
-          <!-- Headline -->
-          <p
-            v-if="
-              headline"
-            class="uppercase text-[24px] mb-4 font-semibold"
-            :style="{ color: brandColors.accent }"
-          >
-            {{ headline }}
-          </p>
-
-          <!-- Title -->
-          <h1
-            class="m-0 font-bold mb-[30px] text-[75px] leading-tight"
-            style="display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;"
-            :style="{ WebkitLineClamp: description ? 2 : 3 }"
-          >
-            {{ title?.slice(0, 60) }}
+    <div class="h-full w-full justify-between relative">
+      <div class="flex flex-row justify-between items-start">
+        <div class="flex flex-col w-full max-w-[65%]">
+          <h1 class="m-0 font-bold mb-[30px] text-[75px]" style="display: block; text-overflow: ellipsis;" :style="{ lineClamp: description ? 2 : 3 }">
+            {{ title }}
           </h1>
-
-          <!-- Description -->
           <p
             v-if="description"
-            class="text-[32px] leading-tight line-clamp-3"
-            :class=" [
-              colorMode === 'light' ? 'text-gray-700' : 'text-[#E4E4E7]',
+            class="text-[35px] leading-12"
+            :class="[
+              colorMode === 'light' ? ['text-gray-700'] : ['text-gray-300'],
             ]"
+            style="display: block; line-clamp: 3; text-overflow: ellipsis;"
           >
             {{ description }}
           </p>
         </div>
-
-        <div v-if="hasIcon" class="w-[30%] flex items-center">
-          <component
-            :is="IconComponent"
-            :name="icon"
-            size="200px"
-            class="opacity-80"
-            style="filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));"
-          />
+        <div v-if="Boolean(icon)" style="width: 30%;" class="flex justify-end">
+          <IconComponent :name="icon" size="250px" style="margin: 0 auto; opacity: 0.7;" />
         </div>
       </div>
-
-      <div class="flex flex-row items-center justify-between mt-8">
-        <div class="flex items-center">
-          <p
-            v-if="siteName"
-            class="text-[28px] font-bold"
-            :class="[
-              colorMode === 'light' ? 'text-gray-800' : 'text-white'
-            ]"
-          >
+      <div class="flex flex-row justify-center items-center text-left w-full">
+        <img
+          v-if="siteLogo"
+          :src="siteLogo"
+          :alt="siteName ? `${siteName} logo` : ''"
+          height="30"
+        />
+        <template v-else>
+          <svg height="50" width="50" class="mr-3" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path :fill="theme.includes('#') ? theme : `#${theme}`" d="M62.3,-53.9C74.4,-34.5,73.5,-9,67.1,13.8C60.6,36.5,48.7,56.5,30.7,66.1C12.7,75.7,-11.4,74.8,-31.6,65.2C-51.8,55.7,-67.9,37.4,-73.8,15.7C-79.6,-6,-75.1,-31.2,-61.1,-51C-47.1,-70.9,-23.6,-85.4,0.8,-86C25.1,-86.7,50.2,-73.4,62.3,-53.9Z" transform="translate(100 100)" />
+          </svg>
+          <p v-if="siteName" style="font-size: 25px;" class="font-bold">
             {{ siteName }}
           </p>
-        </div>
-        <div class="flex items-center">
-          <IconsWolfstar class="w-20 h-20 opacity-90" />
-        </div>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-export interface OGImageProps {
-  // Content props
-  title?: string;
-  description?: string;
-  headline?: string;
-
-  // Appearance props
-  colorMode?: "dark" | "light";
-  theme?: string;
-  useCustomBackground?: boolean;
-
-  // Site branding props
-  siteName?: string;
-  siteLogo?: string;
-  icon?: string;
-
-}
-</script>
-
 <script setup lang="ts">
 /**
- * @credits Nuxt SEO <https://nuxtseo.com/> and Pergel <https://nuxtlabs.com/>
+ * @credits Nuxt SEO <https://nuxtseo.com/>
  */
+
+import { useOgImageRuntimeConfig } from "#og-image/app/utils";
+import { useSiteConfig } from "#site-config/app/composables";
 import { computed, defineComponent, h, resolveComponent } from "vue";
 
-const { theme = "", title = "", description, headline = "", colorMode = "dark", useCustomBackground = true, icon = "custom:wolfstar" } = defineProps<OGImageProps>();
+export interface OGImageProps {
+  colorMode?: "dark" | "light";
+  title?: string;
+  description?: string;
+  icon?: string | boolean;
+  siteName?: string;
+  siteLogo?: string;
+  theme?: string;
+}
 
-const hasIcon = computed(() => typeof icon === "string" && icon.trim().length > 0);
+// convert to typescript props
+const props = withDefaults(defineProps<OGImageProps>(), {
+  theme: BrandingColors.Secondary,
+  siteLogo: "/avatars/wolfstar.png",
+  siteName: "Wolfstar",
+  title: "title",
+});
 
 const HexRegex = /^#(?:[0-9a-f]{3}){1,2}$/i;
 
-// WolfStar brand colors - Black and Red
-const brandColors = computed(() => {
-  return {
-    primary: BrandingColors.Primary,
-    accent: "#FF0000",
-    iconFill: "url(#paint1_diamond_563_6)",
-  };
+const runtimeConfig = useOgImageRuntimeConfig();
+
+const colorMode = computed(() => {
+  return props.colorMode || runtimeConfig.colorPreference || "light";
 });
 
-// Theme color processing with brand defaults
 const themeHex = computed(() => {
-  // Use WolfStar brand color if no custom theme provided
-  if (!theme) {
-    return brandColors.value.accent; // Use red as default
-  }
-
   // regex test if valid hex
-  if (HexRegex.test(theme))
-    return theme;
+  if (HexRegex.test(props.theme))
+    return props.theme;
 
   // if it's hex without the hash, just add the hash
-  if (HexRegex.test(`#${theme}`))
-    return `#${theme}`;
+  if (HexRegex.test(`#${props.theme}`))
+    return `#${props.theme}`;
 
   // if it's rgb or rgba, we convert it to hex
-  if (theme.toLowerCase().startsWith("rgb")) {
-    const rawValues = theme.substring(theme.indexOf("(") + 1, theme.lastIndexOf(")")).split(",");
-
-    const channels = rawValues.slice(0, 3).map(v => {
-      const trimmed = v.trim();
-      if (trimmed.endsWith("%")) {
-        return Math.round(Number.parseFloat(trimmed.slice(0, -1)) * 2.55);
-      }
-      return Number.parseInt(trimmed, 10);
-    });
-
-    if (channels.length < 3 || channels.some(v => Number.isNaN(v))) {
-      return brandColors.value.accent;
-    }
-
-    const hex = channels.map(v => {
-      const clamped = Math.max(0, Math.min(255, v));
-      const hexValue = clamped.toString(16);
-      return hexValue.length === 1 ? `0${hexValue}` : hexValue;
-    }).join("");
-
+  if (props.theme.startsWith("rgb")) {
+    const rgb = props.theme
+      .replace("rgb(", "")
+      .replace("rgba(", "")
+      .replace(")", "")
+      .split(",")
+      .map(v => Number.parseInt(v.trim(), 10));
+    const hex = rgb
+      .map((v) => {
+        const hex = v.toString(16);
+        return hex.length === 1 ? `0${hex}` : hex;
+      })
+      .join("");
     return `#${hex}`;
   }
-  return brandColors.value.accent; // Use red as fallback
+  return "#FFFFFF";
 });
 
 const themeRgb = computed(() => {
-  const hex = themeHex.value.replace("#", "");
-  const parts = hex.match(/.{1,2}/g);
-  if (!parts)
-    return "255, 0, 0";
-  const [r, g, b] = parts.slice(0, 3).map(v => Number.parseInt(v, 16));
-  return `${r}, ${g}, ${b}`;
+  // we want to convert it so it's just `<red>, <green>, <blue>` (255, 255, 255)
+  return themeHex.value
+    .replace("#", "")
+    .match(/.{1,2}/g)
+    ?.map(v => Number.parseInt(v, 16))
+    .join(", ");
 });
 
-// Enhanced gradient colors using brand palette
-const gradientColors = computed(() => {
-  return {
-    primary: brandColors.value.accent, // Red
-    secondary: BrandingColors.Secondary, // Light red
-    tertiary: "#990000", // Dark red
-  };
+const siteConfig = useSiteConfig();
+const siteName = computed(() => {
+  return props.siteName || siteConfig.name;
+});
+const siteLogo = computed(() => {
+  return props.siteLogo || siteConfig.logo;
 });
 
-// Icon component handling
-const IconComponent = computed(() => {
-  // Try to resolve UIcon component, fallback to div if not available
-  try {
-    return resolveComponent("UIcon");
-  }
-  catch {
-    return defineComponent({
+const IconComponent = runtimeConfig.hasNuxtIcon
+  ? resolveComponent("Icon")
+  : defineComponent({
       render() {
-        return h("div", { class: "text-gray-500 text-center" }, "🎨");
+        return h("div", "missing @nuxt/icon");
       },
     });
-  }
-});
 </script>

@@ -80,7 +80,6 @@
     "prisma": "catalog:database",
     "prisma-json-types-generator": "catalog:database",
     "require-in-the-middle": "catalog:prod",
-
     "tailwind-merge": "catalog:prod",
     "tailwind-variants": "catalog:prod",
     "tw-animate-css": "catalog:style",

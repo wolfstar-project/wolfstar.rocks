@@ -90,6 +90,6 @@ export default defineWrappedResponseHandler(
   {
     auth: true,
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-    onError: (logger, err) => logger.error(`Guilds API error:\n${err.message}`),
+    onError: (logger, error) => logger.error(`Guilds API error:\n${error.message}`),
   },
 );

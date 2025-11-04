@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     const method = req.method;
     const u = getRequestURL(event);
 
-    const safeUrl = `${u.pathname}${u.search ? `${u.search.replace(/&/g, "&")}` : ""}`;
+    const safeUrl = `${u.pathname}${u.search ? `${u.search.replace(/&/g, "&amp;")}` : ""}`;
     const timestamp = new Date().toISOString();
     logger.info(`[${timestamp}] ${method} ${safeUrl} ${statusCode} - ${duration}ms`);
   };

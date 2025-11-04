@@ -76,22 +76,6 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  // Check permissions
-  if (await denies(event, manageAbility, guild, member)) {
-    throw createError({
-      statusCode: 403,
-      message: "Insufficient permissions",
-      data: {
-        error: "insufficient_permissions",
-        message: "Insufficient permissions",
-        details: {
-          guild: guild.id,
-          member: member.user.id,
-        },
-      },
-    });
-  }
-
   const roleId = getRouterParam(event, "role");
   if (isNullOrUndefined(roleId)) {
     throw createError({
@@ -124,11 +108,6 @@ export default defineWrappedResponseHandler(async (event) => {
 }, {
   auth: true,
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-  onError: (logger, err) => {
-    logger.error("Roles API error:", {
-      message: err.message,
-      statusCode: err.statusCode,
-      data: err.data,
-    });
-  },
+  onError: (logger, error) =>
+    logger.error(`Roles API error:\n${error.message}`),
 });

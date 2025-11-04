@@ -17,6 +17,7 @@ interface NormalizedRateLimitOptions {
   window: number;
   limit: number;
   type: "fixed" | "sliding";
+  scope: "global" | "route";
 }
 
 const rateLimitDefaults: NormalizedRateLimitOptions = {
@@ -24,6 +25,7 @@ const rateLimitDefaults: NormalizedRateLimitOptions = {
   window: 10000,
   limit: 5,
   type: "fixed",
+  scope: "global",
 };
 
 function normalizeRateLimitOptions(options: RateLimitOptions | undefined): NormalizedRateLimitOptions {
@@ -36,8 +38,9 @@ function normalizeRateLimitOptions(options: RateLimitOptions | undefined): Norma
   const window = typeof candidate.window === "number" && Number.isFinite(candidate.window) && candidate.window > 0 ? candidate.window : rateLimitDefaults.window;
   const limit = typeof candidate.limit === "number" && Number.isFinite(candidate.limit) && candidate.limit > 0 ? candidate.limit : rateLimitDefaults.limit;
   const type = candidate.type === "sliding" ? "sliding" : rateLimitDefaults.type;
+  const scope = candidate.scope === "route" ? "route" : "global";
 
-  return { enabled, window, limit, type };
+  return { enabled, window, limit, type, scope };
 }
 
 interface DefinedWrappedResponseHandlerOptions<Data> {
@@ -55,6 +58,7 @@ interface RateLimitOptions {
   window?: number;
   limit: number;
   type?: "fixed" | "sliding";
+  scope?: "global" | "route";
 }
 
 function getIdentifier(event: H3Event, session: UserSessionRequired | null) {
@@ -84,17 +88,28 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
   }
 
   const id = getIdentifier(event, session);
-  const savedState = await rateLimitStorage.getItem(`rate-limiter-state:${id}`);
-  const initialState = savedState && isObject(savedState) ? savedState : {};
-  isDevelopment && debugLogger.debug(`Rate limit identifier: ${id}`);
 
-  const { enabled, limit, window, type: windowType } = normalizeRateLimitOptions(options.rateLimit);
+  // Normalize options (includes new `scope`)
+  const normalizedRate = normalizeRateLimitOptions(options.rateLimit);
+  const { enabled, limit, window: windowMs, type: windowType, scope } = normalizedRate;
+
+  // Build storage key: global (per-user) by default, or method:path:user when scope === 'route'
+  const method = String(event.node?.req?.method ?? "GET").toUpperCase();
+  const pathname = getRequestURL(event).pathname;
+  const normalizedPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  const scopeKey = `${method}:${normalizedPath}`;
+  const storageKey = scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
+
+  const savedState = await rateLimitStorage.getItem(storageKey);
+  const initialState = savedState && isObject(savedState) ? savedState : {};
+  isDevelopment && debugLogger.debug(`Rate limit identifier: ${id} scope: ${scope} storageKey: ${storageKey}`);
 
   const asyncLimiter = asyncRateLimit(
     async (event: H3Event<T>) => handler(event),
     {
       onSettled(_args, rateLimiter) {
-        rateLimitStorage.setItem(`rate-limiter-state:${id}`, rateLimiter.store.state);
+        // persist using the same storageKey
+        rateLimitStorage.setItem(storageKey, rateLimiter.store.state);
         setResponseHeader(event, "X-RateLimit-Limit", limit);
         setResponseHeader(event, "X-RateLimit-Remaining", rateLimiter.getRemainingInWindow());
         setResponseHeader(event, "X-RateLimit-Reset", Math.floor((Date.now() + rateLimiter.getMsUntilNextWindow()) / 1000));
@@ -105,10 +120,12 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
       },
       onReject: (_args, rateLimiter) => {
         logger.info(`Rate limit exceeded for ${id}. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
+        const retryAfterSeconds = Math.ceil(rateLimiter.getMsUntilNextWindow() / 1000);
+        setResponseHeader(event, "Retry-After", retryAfterSeconds);
         setResponseStatus(event, 429, `Rate limit exceeded. Try again in ${rateLimiter.getMsUntilNextWindow()}ms`);
       },
       windowType,
-      window,
+      window: windowMs,
       limit,
       enabled,
       initialState,

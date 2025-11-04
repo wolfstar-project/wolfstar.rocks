@@ -5,7 +5,7 @@ defineRouteMeta({
   },
 });
 
-export default defineWrappedResponseHandler(
+export default defineWrappedCachedResponseHandler(
   async (event) => {
     const user = await getCurrentUser(event);
 
@@ -31,17 +31,10 @@ export default defineWrappedResponseHandler(
   },
   {
     auth: true,
-    onSuccess: (logger, { user }) => {
-      logger.info(`Successfully transformed guilds and user ${user?.id}`);
-    },
-    onError: (logger, error) => {
-      if (isH3Error(error)) {
-        logger.error("Failed to transform guilds and user data:", {
-          message: error.message,
-          statusCode: error.statusCode,
-        });
-      }
-    },
+    onSuccess: (logger, { user }) =>
+      logger.info(`Successfully transformed guilds and user: ${user?.id}`),
+    onError: (logger, error) =>
+      logger.error(`Failed to transform guilds and user data:\n${error.message}`),
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
   },
 );

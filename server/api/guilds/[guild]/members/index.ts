@@ -41,11 +41,6 @@ export default defineWrappedResponseHandler(async (event) => {
 }, {
   auth: true,
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-  onError: (logger, err) => {
-    logger.error("Members API error:", {
-      message: err.message,
-      statusCode: err.statusCode,
-      data: err.data,
-    });
-  },
+  onError: (logger, error) =>
+    logger.error(`Members API error:\n${error.message}`),
 });

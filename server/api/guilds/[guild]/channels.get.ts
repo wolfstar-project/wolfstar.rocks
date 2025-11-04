@@ -90,5 +90,6 @@ export default defineWrappedResponseHandler(
   {
     auth: true,
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
+    onError: (logger, error) => logger.error(`Channels API error:\n${error.message}`),
   },
 );

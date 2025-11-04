@@ -2,6 +2,42 @@ defineRouteMeta({
   openAPI: {
     tags: ["Discord Api"],
     description: "Get the current user and their guilds",
+    responses: {
+      200: {
+        description: "Successful response with user and guild data",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                user: {
+                  type: "object",
+                  description: "The current authenticated user",
+                },
+                guilds: {
+                  type: "array",
+                  description: "List of guilds the user is a member of",
+                  items: {
+                    type: "object",
+                  },
+                },
+                transformedGuilds: {
+                  type: "array",
+                  description: "List of transformed guilds the user is a member of",
+                  items: {
+                    type: "object",
+                  },
+                },
+              },
+              required: ["user", "guilds"],
+            },
+          },
+        },
+      },
+      500: {
+        description: "Internal Server Error",
+      },
+    },
   },
 });
 

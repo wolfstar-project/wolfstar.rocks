@@ -20,6 +20,44 @@ defineRouteMeta({
   openAPI: {
     tags: ["Discord Api"],
     description: "Update guild settings",
+    requestBody: {
+      description: "Settings data to update",
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                key: { type: "string" },
+                value: { type: "object" },
+              },
+              required: ["key", "value"],
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "Successful response with updated settings",
+        content: {
+          "application/text": {
+            schema: { type: "string" },
+          },
+        },
+      },
+      400: {
+        description: "Bad Request - Invalid input data",
+      },
+      401: {
+        description: "Unauthorized - Missing or invalid authentication",
+      },
+      403: {
+        description: "Forbidden - Insufficient permissions",
+      },
+    },
     parameters: [
       {
         in: "path",

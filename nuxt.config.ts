@@ -127,6 +127,10 @@ export default defineNuxtConfig({
   // Runtime configuration
   runtimeConfig,
 
+  routeRules: {
+    "/": { prerender: true },
+  },
+
   sourcemap: {
     client: "hidden",
   },
@@ -141,12 +145,6 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: process.env.NUXT_NITRO_PRESET,
-    prerender: {
-      crawlLinks: true,
-      routes: ["/", "/sitemap.xml"],
-      ignore: ["/api"],
-      autoSubfolderIndex: false,
-    },
     rollupConfig: {
       external:
         process.env.NUXT_NITRO_PRESET !== "node-server"
@@ -160,14 +158,6 @@ export default defineNuxtConfig({
       },
       "@wolfstar/ratelimiter": {
         driver: "netlify-blobs",
-      },
-    },
-    devStorage: {
-      "cache": {
-        driver: "memory",
-      },
-      "@wolfstar/ratelimiter": {
-        driver: "memory",
       },
     },
     openAPI: {

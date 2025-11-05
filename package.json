@@ -44,7 +44,6 @@
     "*": "pnpm lint:fix"
   },
   "dependencies": {
-    "@dotenvx/dotenvx": "catalog:node",
     "@iconify-json/emojione": "catalog:icons",
     "@iconify-json/heroicons": "catalog:icons",
     "@iconify-json/ic": "catalog:icons",
@@ -86,7 +85,8 @@
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "dotenv": "catalog:node"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

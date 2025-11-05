@@ -1,6 +1,6 @@
 import type { NitroRuntimeConfig } from "nitropack/types";
-import { config } from "@dotenvx/dotenvx";
 import { cast } from "@sapphire/utilities/cast";
+import { config } from "dotenv";
 
 let runtimeConfigInstance: NitroRuntimeConfig;
 
@@ -36,7 +36,7 @@ if (typeof useRuntimeConfig !== "undefined") {
   runtimeConfigInstance = useRuntimeConfig();
 }
 else {
-  config();
+  config({ quiet: true });
   runtimeConfigInstance = cast<NitroRuntimeConfig>(generateRuntimeConfig());
 }
 

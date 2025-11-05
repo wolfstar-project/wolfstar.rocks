@@ -62,9 +62,9 @@ catalogs:
     prettier-plugin-css-order: ^2.1.2
     prettier-plugin-tailwindcss: ^0.7.1
   node:
-    "@dotenvx/dotenvx": ^1.51.0
     consola: ^3.4.2
     cross-env: ^10.1.0
+    dotenv: ^17.2.3
     std-env: ^3.10.0
   prod:
     "@josephanson/nuxt-ai": ^0.1.6

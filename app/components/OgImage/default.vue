@@ -37,6 +37,7 @@
       <div class="flex flex-row justify-center items-center text-left w-full">
         <IconsWolfstar
           height="30"
+          width="30"
         />
         <template>
           <p v-if="siteName" style="font-size: 25px;" class="font-bold">

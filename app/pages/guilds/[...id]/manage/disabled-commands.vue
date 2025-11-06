@@ -5,7 +5,7 @@
       <UForm ref="form" :state="state" :schema="schema" class="space-y-4" @submit="onSubmit" @error="onError">
         <UAccordion :items="accordionItems" multiple>
           <template #default="{ item, open }">
-            <UButton color="neutral" variant="ghost" class="border-b border-gray-200 dark:border-gray-700">
+            <UButton color="neutral" variant="ghost" class="border-b border-base-200">
               <span class="truncate text-xl font-medium">{{ item.label }}</span>
 
               <template #trailing>

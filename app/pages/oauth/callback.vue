@@ -49,7 +49,7 @@
           <template #description>
             You will be redirected to the main page in a second.
             <div
-              class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900"
+              class="mt-2 rounded-lg bg-base-200 p-1"
               aria-label="Progress"
               role="progressbar"
             >

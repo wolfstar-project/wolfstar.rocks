@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
+    "nuxt-skew-protection",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     "~~/modules/build-env",
     "stale-dep/nuxt",
@@ -51,6 +52,7 @@ export default defineNuxtConfig({
   },
 
   app: {
+    cdnURL: "https://cdn.wolfstar.rocks",
     head: {
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
@@ -136,7 +138,7 @@ export default defineNuxtConfig({
   },
 
   experimental: {
-    renderJsonPayloads: true,
+    checkOutdatedBuildInterval: 20 * 60 * 1000, // 20 minutes
     viteEnvironmentApi: true,
     typescriptPlugin: true,
   },

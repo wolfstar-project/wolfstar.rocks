@@ -4,9 +4,9 @@
     :class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
     icon="heroicons-arrow-up"
     color="neutral"
+    variant="soft"
     size="lg"
-    variant="ghost"
-    :circle="true"
+    class="rounded-full"
     @click="scrollToTop"
   />
 </template>

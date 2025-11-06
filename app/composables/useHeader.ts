@@ -18,10 +18,12 @@ export function useHeader() {
       {
         label: "Moderation Tools",
         description: "Tools to help you moderate your server",
+        to: "#moderation-tools",
       },
       {
         label: "Advanced Logging",
         description: "Track and log events in your server",
+        to: "#advanced-logging",
       },
     ],
   }, {

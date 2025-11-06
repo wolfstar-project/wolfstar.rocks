@@ -23,7 +23,7 @@
 
   <h2 id="explore" class="mt-72 text-5xl font-bold">Explore</h2>
   <div id="moderation-tools" class="mt-32">
-    <h2 class="text-5xl font-bold">Advanced AutoModeration</h2>
+    <h2 class="text-5xl font-bold">Advanced Auto Moderator</h2>
     <section class="mt-32 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
       <div
         class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
@@ -375,7 +375,7 @@
 
   <div id="advanced-logging" class="mt-32">
     <h2 class="text-5xl font-bold">Advanced Logging</h2>
-    <p class="mt-4">
+    <p class="mt-4 font-semibold">
       WolfStar not only comes with a very complete moderation suite, but also
       advanced logging capabilities to keep track of everything that happens in
       your server.
@@ -683,6 +683,18 @@ const loggingEvents = [
     ],
   },
   {
+    tooltip: "Channel Update",
+    title: "channel updates",
+    icon: "ph:hash-fill",
+    color: "#F39C12",
+    action: "Channel Updated",
+    details: [
+      { label: "Channel", value: "#general" },
+      { label: "Changes", value: "Name changed from #old-general to #general" },
+      { label: "Updated By", value: "@admin (112233445566778899)" },
+    ],
+  },
+  {
     tooltip: "Role Create",
     title: "role creation",
     icon: "ph:shield-plus-fill",
@@ -704,6 +716,18 @@ const loggingEvents = [
       { label: "Role", value: "@Moderator" },
       { label: "Changes", value: "Permissions updated" },
       { label: "Updated By", value: "@admin (112233445566778899)" },
+    ],
+  },
+  {
+    tooltip: "Role Delete",
+    title: "role deletion",
+    icon: "ph:shield-minus-fill",
+    color: "#E91E63",
+    action: "Role Deleted",
+    details: [
+      { label: "Role", value: "@OldRole" },
+      { label: "Color", value: "#99AAB5" },
+      { label: "Deleted By", value: "@admin (112233445566778899)" },
     ],
   },
 ] satisfies {

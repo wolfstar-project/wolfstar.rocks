@@ -61,6 +61,14 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Cache skew-protection
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/nuxt/skew-protection
+          key: skew-protection-${{ github.ref_name }}-${{ github.run_id }}
+          restore-keys: |
+            skew-protection-${{ github.ref_name }}-
+            skew-protection-
       - name: Generate prisma types
         run: pnpm prisma:generate
       - name: Build code

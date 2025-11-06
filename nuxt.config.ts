@@ -274,67 +274,23 @@ export default defineNuxtConfig({
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {
-    nonce: true, // Enables HTML nonce support in SSR mode
-    ssg: {
-      meta: true, // Enables CSP as a meta tag in SSG mode
-      hashScripts: true, // Enables CSP hash support for scripts in SSG mode
-      hashStyles: false, // Disables CSP hash support for styles in SSG mode (recommended)
-    },
     headers: {
+      crossOriginEmbedderPolicy: false,
       contentSecurityPolicy: {
         "default-src": ["'self'"],
         "base-uri": ["'self'"],
-        "connect-src": [
-          "'self'",
-          "https:",
-          "http:",
-          "wss:",
-          "ws:",
-          "https://cdn.wolfstar.rocks",
-          "https://cdn.discordapp.com",
-          "https://media.discordapp.net",
-        ],
-        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me"],
+        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
+        "font-src": ["'self'"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],
-        "img-src": [
-          "'self'",
-          "https:",
-          "http:",
-          "data:",
-          "blob:",
-          "https://cdn.wolfstar.rocks",
-          "https://cdn.discordapp.com",
-          "https://media.discordapp.net",
-        ],
+        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
         "manifest-src": ["'self'"],
-        "media-src": [
-          "'self'",
-          "https:",
-          "http:",
-          "https://cdn.wolfstar.rocks",
-          "https://cdn.discordapp.com",
-          "https://media.discordapp.net",
-        ],
+        "media-src": ["'self'", "https:", "http:"],
         "object-src": ["'none'"],
-        "worker-src": ["'self'", "blob:"],
-        "child-src": ["'self'", "blob:"],
+        "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"],
         "script-src-attr": ["'none'"],
-        "script-src": [
-          "'self'",
-          "'unsafe-inline'",
-          "'strict-dynamic'",
-          "'wasm-unsafe-eval'",
-          "'nonce-{generated-nonce}'",
-        ],
-        "style-src": [
-          "'self'",
-          "'unsafe-inline'",
-          "https:",
-          "https://cdn.wolfstar.rocks",
-          "https://rsms.me/inter/inter.css",
-        ],
+        "style-src": ["'self'", "'unsafe-inline'"],
         "upgrade-insecure-requests": true,
       },
       permissionsPolicy: {

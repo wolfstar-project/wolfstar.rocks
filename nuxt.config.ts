@@ -133,9 +133,12 @@ export default defineNuxtConfig({
 
   sourcemap: {
     client: "hidden",
+    server: false,
   },
 
   experimental: {
+    payloadExtraction: false,
+    renderJsonPayloads: true,
     checkOutdatedBuildInterval: 20 * 60 * 1000, // 20 minutes
     viteEnvironmentApi: true,
     typescriptPlugin: true,

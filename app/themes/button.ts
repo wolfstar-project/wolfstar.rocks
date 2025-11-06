@@ -33,7 +33,6 @@ export default {
       dash: "btn-dash",
       ghost: "btn-ghost",
       link: "btn-link",
-      glass: "btn-glass",
     },
     size: {
       xs: {
@@ -132,7 +131,6 @@ export default {
     },
     {
       color: "neutral",
-      variant: "glass",
       class: `disabled:btn-disabled aria-disabled:btn-disabled`,
     },
     {

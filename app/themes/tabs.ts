@@ -34,8 +34,8 @@ export default {
         trigger: "focus:outline-none",
       },
       transparent: {
-        root: "tabs-glass",
-        trigger: "tab-glass",
+        root: "",
+        trigger: "",
       },
       box: {
         trigger: "tabs-box",

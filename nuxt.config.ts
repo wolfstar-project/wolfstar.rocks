@@ -25,7 +25,6 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
-    "nuxt-skew-protection",
     ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     "~~/modules/build-env",
     "stale-dep/nuxt",

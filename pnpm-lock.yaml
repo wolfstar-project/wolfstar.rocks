@@ -198,9 +198,6 @@ catalogs:
     nuxt-security:
       specifier: ^2.4.0
       version: 2.4.0
-    nuxt-skew-protection:
-      specifier: 0.3.0
-      version: 0.3.0
     nuxt-vitalizer:
       specifier: ^2.0.0
       version: 2.0.0
@@ -363,9 +360,6 @@ importers:
       nuxt-security:
         specifier: catalog:prod
         version: 2.4.0(magicast@0.3.5)(rollup@4.52.5)
-      nuxt-skew-protection:
-        specifier: catalog:prod
-        version: 0.3.0(h3@1.15.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.8.3))
       nuxt-vitalizer:
         specifier: catalog:prod
         version: 2.0.0(magicast@0.3.5)
@@ -7700,9 +7694,6 @@ packages:
     resolution: {integrity: sha512-Li/q3d8q/dGzWJJw9fFzZp7JnGUudKxB03gZojShYnN4lz15r++vL8ET1Vu7/BTDXaW9dhLRE1f60Et0jGk7ew==}
     peerDependencies:
       h3: ^1
-
-  nuxt-skew-protection@0.3.0:
-    resolution: {integrity: sha512-GXJKyFWO9W48sECw+DIUVqtFKcQLO4JHdSPnaRn/njXIehS90+EUMAcpNNFA8o1hgH9bGM9OcENchCtfHK+3Aw==}
 
   nuxt-vitalizer@2.0.0:
     resolution: {integrity: sha512-X2mabvcXMfKmWc46p8WmCbTlr8+wDniPHunQIRSGWmH0goqw6YTAe0+ttxRNISGxcobXDqqip7qPCE6+T60t1g==}
@@ -18837,25 +18828,6 @@ snapshots:
       site-config-stack: 3.2.9(vue@3.5.22(typescript@5.8.3))
       ufo: 1.6.1
     transitivePeerDependencies:
-      - magicast
-      - vue
-
-  nuxt-skew-protection@0.3.0(h3@1.15.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.8.3)):
-    dependencies:
-      '@nuxt/kit': 4.2.0(magicast@0.3.5)
-      '@nuxtjs/robots': 5.5.5(h3@1.15.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.8.3))
-      '@vueuse/core': 13.9.0(vue@3.5.22(typescript@5.8.3))
-      consola: 3.4.2
-      cookie-es: 2.0.0
-      defu: 6.1.4
-      nuxt-site-config: 3.2.11(h3@1.15.4)(magicast@0.3.5)(vue@3.5.22(typescript@5.8.3))
-      pathe: 2.0.3
-      pkg-types: 2.3.0
-      std-env: 3.10.0
-      tinyexec: 1.0.1
-      ufo: 1.6.1
-    transitivePeerDependencies:
-      - h3
       - magicast
       - vue
 

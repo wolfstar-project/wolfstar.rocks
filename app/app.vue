@@ -7,7 +7,6 @@
   >
     <NuxtPwaManifest />
     <NuxtLoadingIndicator color="bg-neutral" />
-    <AppSkewNotification />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>

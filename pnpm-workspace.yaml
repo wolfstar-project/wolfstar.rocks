@@ -76,7 +76,6 @@ catalogs:
     nuxt: ^4.2.0
     nuxt-authorization: ^0.3.5
     nuxt-security: ^2.4.0
-    nuxt-skew-protection: 0.3.0
     nuxt-vitalizer: ^2.0.0
     require-in-the-middle: ^8.0.1
     tailwind-merge: ^3.3.1

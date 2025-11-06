@@ -52,7 +52,6 @@ export default defineNuxtConfig({
   },
 
   app: {
-    cdnURL: "https://cdn.wolfstar.rocks",
     head: {
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",

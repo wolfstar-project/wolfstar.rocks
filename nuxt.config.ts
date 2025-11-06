@@ -163,6 +163,22 @@ export default defineNuxtConfig({
         driver: "netlify-blobs",
       },
     },
+
+    esbuild: {
+      options: {
+        target: "esnext",
+      },
+    },
+    prerender: {
+      crawlLinks: true,
+    },
+    publicAssets: [
+      {
+        dir: resolve("./public/avatars"),
+        maxAge: 24 * 60 * 60 * 30, // 30 days
+        baseURL: "/avatars",
+      },
+    ],
     openAPI: {
       // OpenAPI configuration
       meta: {

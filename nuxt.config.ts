@@ -1,6 +1,4 @@
-import type { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver } from "nuxt/kit";
-import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -25,7 +23,6 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
-    ...(isDevelopment || isWindows ? [] : ["nuxt-security"]),
     "~~/modules/build-env",
     "stale-dep/nuxt",
   ],
@@ -271,34 +268,6 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
-  // eslint-disable-next-line ts/ban-ts-comment
-  // @ts-ignore nuxt-security is conditional
-  security: {
-    headers: {
-      crossOriginEmbedderPolicy: false,
-      contentSecurityPolicy: {
-        "default-src": ["'self'"],
-        "base-uri": ["'self'"],
-        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
-        "font-src": ["'self'"],
-        "form-action": ["'none'"],
-        "frame-ancestors": ["'none'"],
-        "frame-src": ["https:"],
-        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
-        "manifest-src": ["'self'"],
-        "media-src": ["'self'", "https:", "http:"],
-        "object-src": ["'none'"],
-        "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"],
-        "script-src-attr": ["'none'"],
-        "style-src": ["'self'", "'unsafe-inline'"],
-        "upgrade-insecure-requests": true,
-      },
-      permissionsPolicy: {
-        fullscreen: "*",
-      },
-    },
-    rateLimiter: false,
-  } satisfies Partial<SecurityModuleOptions>,
 
   sentry: {
     ...runtimeConfig.sentry,

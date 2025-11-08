@@ -72,7 +72,6 @@ RUN addgroup -S nonroot && \
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 
 
 # Copy environment files

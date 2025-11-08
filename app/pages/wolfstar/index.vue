@@ -340,7 +340,7 @@
 
           <div class="mt-4 join self-start">
             <button
-              class="btn join-item"
+              class="btn join-item md:btn-wide"
               :class="{ 'btn-info': moderationTemporary }"
               :disabled="moderationAction.temporary === null"
               @click="
@@ -352,7 +352,7 @@
               Temporary
             </button>
             <button
-              class="btn join-item"
+              class="btn join-item md:btn-wide"
               :class="{ 'btn-success': moderationUndo }"
               :disabled="moderationAction.undo === null"
               @click="
@@ -797,11 +797,14 @@ function advanceModerationIndex(value: -1 | 1) {
 }
 
 .radio-feature-arrow {
-	@apply h-6 w-6;
+	@apply h-4 w-4;
 }
 
 @media (max-width: 767px) {
 	.radio-feature {
+		@apply h-12 w-12;
+	}
+	.radio-feature-arrow {
 		@apply h-12 w-12;
 	}
 }

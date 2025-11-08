@@ -20,10 +20,10 @@
       <div class="other-apps-description">
         <p class="grow">{{ app.description }}</p>
         <div class="mt-4 join flex justify-end">
-          <nuxt-link class="btn join-item btn-neutral" :to="app.explore">
+          <nuxt-link class="btn join-item btn-neutral sm:btn-wide" :to="app.explore">
             <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" /> Explore
           </nuxt-link>
-          <nuxt-link class="btn join-item btn-neutral" :to="app.invite">
+          <nuxt-link class="btn join-item btn-neutral sm:btn-wide" :to="app.invite">
             <UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
           </nuxt-link>
         </div>

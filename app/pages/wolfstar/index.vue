@@ -797,7 +797,7 @@ function advanceModerationIndex(value: -1 | 1) {
 }
 
 .radio-feature-arrow {
-	@apply h-1.5 w-1.5;
+	@apply h-6 w-6;
 }
 
 @media (max-width: 767px) {

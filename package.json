@@ -73,7 +73,6 @@
     "nuxt": "catalog:prod",
     "nuxt-auth-utils": "catalog:utils",
     "nuxt-authorization": "catalog:prod",
-    "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",
     "pinia": "catalog:frontend",
     "postcss-nested": "catalog:style",

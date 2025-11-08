@@ -1,6 +1,10 @@
+#  This is the configuration file for Netlify
+#  https://docs.netlify.com/configure-builds/file-based-configuration/
+
 [build]
-publish = "dist"
-command = "pnpm prisma:generate && pnpm run build"
+command = "pnpm prisma:generate && pnpm run build" # build command
+functions = "netlify/functions" # where Netlify Functions live
+publish = "dist" # where the built project lives
 
 [build.environment]
 NODE_OPTIONS = '--max-old-space-size=4096'

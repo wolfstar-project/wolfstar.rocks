@@ -800,7 +800,7 @@ function advanceModerationIndex(value: -1 | 1) {
 	@apply h-4 w-4;
 }
 
-@media not (hover: hover) {
+@media (max-width: 767px) {
 	.radio-feature {
 		@apply h-12 w-12;
 	}

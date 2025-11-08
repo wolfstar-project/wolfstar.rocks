@@ -10,7 +10,7 @@
       :style="{
         width: '200%',
         height: '200%',
-        backgroundImage: `radial-gradient(circle, rgba(${themeRgb}, 0.5) 0%,  ${colorMode === 'dark' ? 'rgba(5, 5, 5,0.3)' : 'rgba(255, 255, 255, 0.7)'} 50%, ${props.colorMode === 'dark' ? 'rgba(5, 5, 5,0)' : 'rgba(255, 255, 255, 0)'} 70%)`,
+        backgroundImage: `radial-gradient(circle, rgba(${themeRgb}, 0.5) 0%,  ${colorMode === 'dark' ? 'rgba(5, 5, 5,0.3)' : 'rgba(255, 255, 255, 0.7)'} 50%, ${colorMode === 'dark' ? 'rgba(5, 5, 5,0)' : 'rgba(255, 255, 255, 0)'} 70%)`,
       }"
     ></div>
     <div class="h-full w-full justify-between relative">
@@ -68,32 +68,35 @@ export interface OGImageProps {
 }
 
 // convert to typescript props
-const props = withDefaults(defineProps<OGImageProps>(), {
-  theme: BrandingColors.Secondary,
-  siteName: "Wolfstar",
-  title: "title",
-});
+const {
+  theme = BrandingColors.Secondary,
+  siteName: propsSiteName = "Wolfstar",
+  title = "title",
+  colorMode: propsColorMode,
+  description,
+  icon,
+} = defineProps<OGImageProps>();
 
 const HexRegex = /^#(?:[0-9a-f]{3}){1,2}$/i;
 
 const runtimeConfig = useOgImageRuntimeConfig();
 
 const colorMode = computed(() => {
-  return props.colorMode || runtimeConfig.colorPreference || "light";
+  return propsColorMode || runtimeConfig.colorPreference || "light";
 });
 
 const themeHex = computed(() => {
   // regex test if valid hex
-  if (HexRegex.test(props.theme))
-    return props.theme;
+  if (HexRegex.test(theme))
+    return theme;
 
   // if it's hex without the hash, just add the hash
-  if (HexRegex.test(`#${props.theme}`))
-    return `#${props.theme}`;
+  if (HexRegex.test(`#${theme}`))
+    return `#${theme}`;
 
   // if it's rgb or rgba, we convert it to hex
-  if (props.theme.startsWith("rgb")) {
-    const rgb = props.theme
+  if (theme.startsWith("rgb")) {
+    const rgb = theme
       .replace("rgb(", "")
       .replace("rgba(", "")
       .replace(")", "")
@@ -121,7 +124,7 @@ const themeRgb = computed(() => {
 
 const siteConfig = useSiteConfig();
 const siteName = computed(() => {
-  return props.siteName || siteConfig.name;
+  return propsSiteName || siteConfig.name;
 });
 
 const IconComponent = runtimeConfig.hasNuxtIcon

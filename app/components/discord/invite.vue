@@ -5,7 +5,7 @@
       <div class="flex h-8 w-8 items-center justify-center flex-none select-none overflow-hidden rounded-full sm:h-12 sm:w-12">
         <nuxt-img src="/avatars/wolfstar.png" alt="WolfStar Lounge server icon" />
       </div>
-      <div class="ml-4 flex-grow">
+      <div class="ml-4 grow">
         <nuxt-link class="font-bold" :to="link">WolfStar Lounge</nuxt-link>
         <div class="flex flex-row items-center">
           <span class="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-green-500 sm:h-2 sm:w-2"></span>
@@ -23,8 +23,9 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(defineProps<{ link: string; online?: number; members?: number }>(), {
-  online: 0,
-  members: 0,
-});
+const {
+  link,
+  online = 0,
+  members = 0,
+} = defineProps<{ link: string; online?: number; members?: number }>();
 </script>

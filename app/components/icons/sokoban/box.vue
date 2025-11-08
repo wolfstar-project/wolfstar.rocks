@@ -30,20 +30,17 @@
 </template>
 
 <script setup lang="ts">
-withDefaults(
-  defineProps<{
-    colorWoodLighter?: string;
-    colorWood?: string;
-    colorWoodDarker?: string;
-    colorLight?: string;
-    colorMetal?: string;
-  }>(),
-  {
-    colorWoodLighter: "#a07451",
-    colorWood: "#835937",
-    colorWoodDarker: "#69411e",
-    colorLight: "#b6b6b6",
-    colorMetal: "#dadada",
-  },
-);
+const {
+  colorWoodLighter = "#a07451",
+  colorWood = "#835937",
+  colorWoodDarker = "#69411e",
+  colorLight = "#b6b6b6",
+  colorMetal = "#dadada",
+} = defineProps<{
+  colorWoodLighter?: string;
+  colorWood?: string;
+  colorWoodDarker?: string;
+  colorLight?: string;
+  colorMetal?: string;
+}>();
 </script>

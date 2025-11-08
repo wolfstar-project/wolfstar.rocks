@@ -36,8 +36,11 @@ interface Props {
   forceSemanticHeading?: boolean;
 }
 
-withDefaults(defineProps<Props>(), {
-  headingLevel: "h2",
-  forceSemanticHeading: false,
-});
+const {
+  headingLevel = "h2",
+  forceSemanticHeading = false,
+  title,
+  disableTypography,
+  titleProps,
+} = defineProps<Props>();
 </script>

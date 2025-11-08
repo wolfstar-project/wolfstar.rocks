@@ -3,12 +3,13 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<{ date?: number; format: keyof typeof TimeFormatters }>(), { date: () => Date.now() });
-const formatter = computed(() => TimeFormatters[props.format]);
+const { date = Date.now(), format } = defineProps<{ date?: number; format: keyof typeof TimeFormatters }>();
 
 const TimeFormatters = {
   long: new Intl.DateTimeFormat("en-US", { dateStyle: "full", timeStyle: "short" }),
 };
+
+const formatter = computed(() => TimeFormatters[format]);
 </script>
 
 <style scoped>

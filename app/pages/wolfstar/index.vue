@@ -802,10 +802,10 @@ function advanceModerationIndex(value: -1 | 1) {
 
 @media not (hover: hover) {
 	.radio-feature {
-		@apply h-6 w-6;
+		@apply h-12 w-12;
 	}
 	.radio-feature-arrow {
-		@apply h-6 w-6;
+		@apply h-12 w-12;
 	}
 }
 

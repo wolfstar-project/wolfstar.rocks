@@ -340,7 +340,7 @@
 
           <div class="mt-4 join self-start">
             <button
-              class="btn join-item md:btn-wide"
+              class="btn join-item"
               :class="{ 'btn-info': moderationTemporary }"
               :disabled="moderationAction.temporary === null"
               @click="
@@ -352,7 +352,7 @@
               Temporary
             </button>
             <button
-              class="btn join-item md:btn-wide"
+              class="btn join-item"
               :class="{ 'btn-success': moderationUndo }"
               :disabled="moderationAction.undo === null"
               @click="

@@ -18,6 +18,7 @@ logs
 .pnpm-store
 .data
 .eslintcache
+.unlighthouse
 
 # Local env files
 .env

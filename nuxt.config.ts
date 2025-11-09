@@ -36,6 +36,11 @@ export default defineNuxtConfig({
   },
 
   $production: {
+    scripts: {
+      registry: {
+        cloudflareWebAnalytics: true,
+      },
+    },
     sentry: {
       telemetry: false,
     },

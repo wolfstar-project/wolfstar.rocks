@@ -85,7 +85,8 @@
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "@nuxt/scripts": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

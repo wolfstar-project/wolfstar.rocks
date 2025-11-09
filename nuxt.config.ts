@@ -13,6 +13,7 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/ui",
     "@nuxt/image",
+    "@nuxt/scripts",
     "@nuxtjs/seo",
     "@vueuse/nuxt",
     "@pinia/nuxt",
@@ -136,7 +137,6 @@ export default defineNuxtConfig({
   experimental: {
     payloadExtraction: false,
     renderJsonPayloads: true,
-    checkOutdatedBuildInterval: 20 * 60 * 1000, // 20 minutes
     viteEnvironmentApi: true,
     typescriptPlugin: true,
   },
@@ -268,6 +268,12 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
+
+  scripts: {
+    registry: {
+      cloudflareWebAnalytics: true,
+    },
+  },
 
   sentry: {
     ...runtimeConfig.sentry,

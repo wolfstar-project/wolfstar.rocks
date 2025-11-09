@@ -65,7 +65,7 @@ async function getManageable(
 ): Promise<boolean> {
   if (oauthGuild.owner)
     return true;
-  if (typeof guild === "undefined") {
+  if (isNullOrUndefined(guild)) {
     return PermissionsBits.has(
       BigInt(oauthGuild.permissions),
       PermissionFlagsBits.ManageGuild,

@@ -36,6 +36,9 @@ export default defineNuxtConfig({
   },
 
   $production: {
+    image: {
+      provider: "netlify",
+    },
     scripts: {
       registry: {
         cloudflareWebAnalytics: true,
@@ -59,12 +62,10 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
       htmlAttrs: { lang: "en" },
       link: [
-        { rel: "preconnect", href: "https://rsms.me/" },
-        { rel: "stylesheet", href: "https://rsms.me/inter/inter.css" },
         {
           rel: "icon",
-          type: "image/png",
-          href: "/favicon.png",
+          type: "image/x-icon",
+          href: "/favicon.ico",
         },
 
       ],

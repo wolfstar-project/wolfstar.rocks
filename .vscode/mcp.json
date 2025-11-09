@@ -18,6 +18,10 @@
         "-y",
         "@browser/mcp@latest"
       ]
+    },
+    "nuxt-ui": {
+      "type": "http",
+      "url": "https://ui.nuxt.com/mcp"
     }
   },
   "inputs": []

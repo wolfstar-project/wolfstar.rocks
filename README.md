@@ -1,5 +1,3 @@
-# WolfStar.rocks
-
 <div align="center"><a name="readme-top"></a>
 
 <img src="https://github.com/WolfStarBot.png" width="15%" alt="WolfStar Logo">
@@ -27,7 +25,7 @@ Link][invite-link] · [Support Server][discord-link] ·
 [![GitHub license badge][github-license-shield]][github-license-link]<br>
 [![PRs welcome badge][pr-welcome-shield]][pr-welcome-link]
 
-**Share WolfStar Repository**
+### Share WolfStar Repository
 
 [![][share-linkedin-shield]][share-linkedin-link]
 [![][share-reddit-shield]][share-reddit-link]
@@ -41,9 +39,8 @@ moderation management. Built for you, the Super Admin.</sup>
 <details>
 <summary><kbd>Table of contents</kbd></summary>
 
-#### TOC
+## Table of Contents
 
-- [👋🏻 Welcome to WolfStar.rocks](#-welcome-to-wolfstarrocks)
 - [✨ Features](#-features)
 - [🛳 Self-Hosting WolfStar.rocks](#-self-hosting-wolfstarrocks)
 - [🚀 Self-Hosting WolfStar.rocks Requirements](#-self-hosting-wolfstarrocks-requirements)
@@ -125,6 +122,7 @@ multi-purpose Discord bot for moderation and community management.
    - Run database migrations if needed
 
 5. **Start the development server**
+
    ```bash
    pnpm dev
    ```
@@ -231,7 +229,7 @@ make sure to read the [Contributing Guide][contributing-link] before making a
 pull request.
 
 <a href="https://github.com/wolfstar-project/wolfstar.rocks/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=wolfstar-project/wolfstar.rocks" />
+    <img src="https://contrib.rocks/image?repo=wolfstar-project/wolfstar.rocks" alt="Project contributors" />
 </a>
 
 </div>
@@ -257,7 +255,7 @@ Thank you for your support!
 
 <div align="right">
 
-[![][back-to-top]](#readme-top)
+[![Back to top][back-to-top]](#readme-top)
 
 </div>
 
@@ -337,7 +335,7 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:
   https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
-[profile-link]: https://github.com/wolfstar
+[profile-link]: https://github.com/wolfstar-project
 [share-linkedin-shield]:
   https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square
 [share-linkedin-link]: https://linkedin.com/feed

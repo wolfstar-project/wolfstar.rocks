@@ -161,19 +161,11 @@ export default defineNuxtConfig({
           : undefined,
     },
     storage: {
-      "cache": {
-        driver: "netlify-blobs",
-        /* redis connector options */
-      },
       "@wolfstar/ratelimiter": {
         driver: "netlify-blobs",
       },
     },
     devStorage: {
-      "cache": {
-        driver: "memory",
-        /* redis connector options */
-      },
       "@wolfstar/ratelimiter": {
         driver: "memory",
       },

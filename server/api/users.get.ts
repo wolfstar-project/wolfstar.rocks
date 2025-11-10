@@ -43,9 +43,21 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
   async (event) => {
+    const api = useApi();
     const user = await getCurrentUser(event);
 
-    const guilds = await getGuilds();
+    const guilds = await api.users.getGuilds().catch((error) => {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "Failed to fetch guilds",
+        data: {
+          field: "guilds",
+          error: "guilds_fetch_failed",
+          message: error.message || "Unknown error",
+          details: error,
+        },
+      });
+    });
 
     // Transform and return data with improved error handling
     const transformedData = await transformOauthGuildsAndUser({

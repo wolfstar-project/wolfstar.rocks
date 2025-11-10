@@ -4,8 +4,6 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
 import * as yup from "yup";
 
-import { transformGuild } from "~~/server/utils/discord";
-
 const querySchema = yup.object({
   shouldSerialize: yup.boolean().optional(),
 });
@@ -27,6 +25,8 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
   async (event) => {
+    const api = useApi();
+
     // Get guild ID from params
     const guildId = getRouterParam(event, "guild");
     if (isNullOrUndefined(guildId)) {
@@ -43,8 +43,6 @@ export default defineWrappedResponseHandler(
     const { shouldSerialize } = await getValidatedQuery(event, (body) =>
       querySchema.validate(body));
 
-    const api = useApi();
-
     const user = await event.context.$authorization.resolveServerUser();
     if (!user) {
       throw createError({
@@ -59,10 +57,35 @@ export default defineWrappedResponseHandler(
 
     // Fetch guilds with improved error handling
     logger.info(`Fetching guilds for user ${user.id}...`);
-    const guild = await getGuild(event, guildId);
+    const guild = await api.guilds.get(guildId, { with_counts: true })
+      .catch((error) => {
+        throw createError({
+          statusCode: 500,
+          statusMessage: "Failed to fetch guilds",
+          data: {
+            field: "guild",
+            error: "guilds_fetch_failed",
+            message: error.message || "Unknown error",
+            details: error,
+          },
+        });
+      });
 
     // Fetch member data
-    const member = await getMember(event, guild, user as any);
+    const member = await api.guilds
+      .getMember(guild.id, user.id)
+      .catch((error) => {
+        throw createError({
+          statusCode: 500,
+          statusMessage: "Failed to fetch member",
+          data: {
+            field: "member",
+            error: "member_fetch_failed",
+            message: error.message || "Unknown error",
+            details: error,
+          },
+        });
+      });
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {

@@ -153,121 +153,62 @@ export async function transformOauthGuildsAndUser({
   return { user, transformedGuilds };
 }
 
-export const getGuilds = defineCachedFunction(
-  async () => {
-    const api = useApi();
+export const getCurrentUser = async (event: H3Event) => {
+  // Get session token
+  const tokens = await event.context.$authorization.resolveServerTokens();
 
-    const guilds = await api.users.getGuilds().catch((error) => {
+  if (
+    isNullOrUndefined(tokens)
+    || !("access_token" in tokens)
+    || isNullOrUndefined(tokens.access_token)
+  ) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "Authentication required",
+      data: {
+        error: "no_access_token",
+        message: "None tokens OR access token not found",
+      },
+    });
+  }
+
+  // Initialize REST client
+  const rest = new REST({
+    authPrefix: "Bearer",
+  }).setToken(tokens.access_token);
+
+  const api = useApi(rest);
+
+  const user = await api.users.getCurrent().catch((error) => {
+    throw createError({
+      statusCode: 500,
+      statusMessage: "Failed to fetch user data",
+      data: {
+        field: "user",
+        error: "user_fetch_failed",
+        message: error.message || "Unknown error",
+        details: error,
+      },
+    });
+  });
+  return user;
+};
+
+export const getMember = async (_event: H3Event, guild: APIGuild, user: APIUser) => {
+  const api = useApi();
+  const member = await api.guilds
+    .getMember(guild.id, user.id)
+    .catch((error) => {
       throw createError({
         statusCode: 500,
-        statusMessage: "Failed to fetch guilds",
+        statusMessage: "Failed to fetch member",
         data: {
-          field: "guilds",
-          error: "guilds_fetch_failed",
+          field: "member",
+          error: "member_fetch_failed",
           message: error.message || "Unknown error",
           details: error,
         },
       });
     });
-    return guilds;
-  },
-  {
-    maxAge: hours(1),
-  },
-);
-
-export const getGuild = defineCachedFunction(
-  async (_event: H3Event, guildId: string) => {
-    const api = useApi();
-    const guild = await api.guilds
-      .get(guildId, { with_counts: true })
-      .catch((error) => {
-        throw createError({
-          statusCode: 500,
-          statusMessage: "Failed to fetch guilds",
-          data: {
-            field: "guild",
-            error: "guilds_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
-    return guild;
-  },
-  {
-    getKey: (_event, guildId) => `guild:${guildId}`,
-    maxAge: hours(1),
-  },
-);
-
-export const getCurrentUser = defineCachedFunction(
-  async (event: H3Event) => {
-    // Get session token
-    const tokens = await event.context.$authorization.resolveServerTokens();
-
-    if (
-      isNullOrUndefined(tokens)
-      || !("access_token" in tokens)
-      || isNullOrUndefined(tokens.access_token)
-    ) {
-      throw createError({
-        statusCode: 401,
-        statusMessage: "Authentication required",
-        data: {
-          error: "no_access_token",
-          message: "None tokens OR access token not found",
-        },
-      });
-    }
-
-    // Initialize REST client
-    const rest = new REST({
-      authPrefix: "Bearer",
-    }).setToken(tokens.access_token);
-
-    const api = useApi(rest);
-
-    const user = await api.users.getCurrent().catch((error) => {
-      throw createError({
-        statusCode: 500,
-        statusMessage: "Failed to fetch user data",
-        data: {
-          field: "user",
-          error: "user_fetch_failed",
-          message: error.message || "Unknown error",
-          details: error,
-        },
-      });
-    });
-    return user;
-  },
-  {
-    maxAge: hours(1),
-  },
-);
-
-export const getMember = defineCachedFunction(
-  async (_event: H3Event, guild: APIGuild, user: APIUser) => {
-    const api = useApi();
-    const member = await api.guilds
-      .getMember(guild.id, user.id)
-      .catch((error) => {
-        throw createError({
-          statusCode: 500,
-          statusMessage: "Failed to fetch member",
-          data: {
-            field: "member",
-            error: "member_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
-    return member;
-  },
-  {
-    getKey: (_event, guild, user) => `guild:${guild.id}member:${user.id}`,
-    maxAge: hours(1),
-  },
-);
+  return member;
+};

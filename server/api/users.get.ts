@@ -41,7 +41,7 @@ defineRouteMeta({
   },
 });
 
-export default defineWrappedCachedResponseHandler(
+export default defineWrappedResponseHandler(
   async (event) => {
     const user = await getCurrentUser(event);
 

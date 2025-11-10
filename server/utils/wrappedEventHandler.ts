@@ -4,32 +4,28 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { logger, useLogger } from "#shared/utils/logger";
 import { isObject } from "@sapphire/utilities";
+import { defu } from "defu";
 import { isDevelopment } from "std-env";
-import { omit } from "~~/server/utils";
+import * as yup from "yup";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
 const rateLimitStorage = useStorage("@wolfstar/ratelimiter");
 
 /**
- * Normalized rate limiting options with all defaults applied
+ * Yup schema for rate limiting options validation
  */
-interface NormalizedRateLimitOptions {
-  /** Whether rate limiting is enabled */
-  enabled: boolean;
-  /** Time window in milliseconds */
-  window: number;
-  /** Maximum number of requests per window */
-  limit: number;
-  /** Window type: 'fixed' or 'sliding' */
-  type: "fixed" | "sliding";
-  /** Scope: 'global' (per-user) or 'route' (per-route per-user) */
-  scope: "global" | "route";
-  /** List of IP addresses to whitelist (bypass rate limiting) */
-  whitelist: string[];
-  /** Custom header to use for IP detection (e.g., 'CF-Connecting-IP') */
-  ipHeader?: string;
-}
+const rateLimitSchema = yup.object({
+  enabled: yup.boolean().default(true),
+  window: yup.number().positive().integer().default(10000).optional(),
+  limit: yup.number().positive().integer().required(),
+  type: yup.string().oneOf(["fixed", "sliding"]).default("fixed").optional(),
+  scope: yup.string().oneOf(["global", "route"]).default("global").optional(),
+  whitelist: yup.array().of(yup.string()).default([]).nonNullable().optional(),
+  ipHeader: yup.string().optional().optional(),
+}).noUnknown(true);
+
+type NormalizedRateLimitOptions = yup.InferType<typeof rateLimitSchema>;
 
 const rateLimitDefaults: NormalizedRateLimitOptions = {
   enabled: true,
@@ -41,20 +37,29 @@ const rateLimitDefaults: NormalizedRateLimitOptions = {
 };
 
 function normalizeRateLimitOptions(options: RateLimitOptions | undefined): NormalizedRateLimitOptions {
-  if (!options || !isObject(options)) {
-    return { ...rateLimitDefaults };
+  try {
+    // Merge with defaults first
+    const merged = defu(options, rateLimitDefaults);
+
+    // Validate and normalize with Yup schema
+    const validated = rateLimitSchema.validateSync(merged, {
+      stripUnknown: true,
+      abortEarly: false,
+    });
+
+    return validated as NormalizedRateLimitOptions;
   }
+  catch (error) {
+    if (error instanceof yup.ValidationError) {
+      isDevelopment && debugLogger.warn("Rate limit options validation failed, using defaults", {
+        errors: error.errors,
+        value: options,
+      });
+    }
 
-  const candidate = options as unknown as Record<string, unknown>;
-  const enabled = typeof candidate.enabled === "boolean" ? candidate.enabled : rateLimitDefaults.enabled;
-  const window = typeof candidate.window === "number" && Number.isFinite(candidate.window) && candidate.window > 0 ? candidate.window : rateLimitDefaults.window;
-  const limit = typeof candidate.limit === "number" && Number.isFinite(candidate.limit) && candidate.limit > 0 ? candidate.limit : rateLimitDefaults.limit;
-  const type = candidate.type === "sliding" ? "sliding" : rateLimitDefaults.type;
-  const scope = candidate.scope === "route" ? "route" : "global";
-  const whitelist = Array.isArray(candidate.whitelist) ? candidate.whitelist.filter((ip): ip is string => typeof ip === "string") : rateLimitDefaults.whitelist;
-  const ipHeader = typeof candidate.ipHeader === "string" && candidate.ipHeader.length > 0 ? candidate.ipHeader : undefined;
-
-  return { enabled, window, limit, type, scope, whitelist, ipHeader };
+    // Fallback to defaults on validation error
+    return rateLimitDefaults;
+  }
 }
 
 interface DefinedWrappedResponseHandlerOptions<Data> {
@@ -141,7 +146,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
   const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
   // Normalize options (includes new `scope`)
-  const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit);
+  const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit) as NonNullable<NormalizedRateLimitOptions>;
 
   // Check if IP is whitelisted (skip rate limiting for whitelisted IPs)
   if (!session && whitelist.length > 0 && whitelist.includes(id)) {

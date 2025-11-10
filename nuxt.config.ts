@@ -169,7 +169,15 @@ export default defineNuxtConfig({
         driver: "netlify-blobs",
       },
     },
-
+    devStorage: {
+      "cache": {
+        driver: "memory",
+        /* redis connector options */
+      },
+      "@wolfstar/ratelimiter": {
+        driver: "memory",
+      },
+    },
     esbuild: {
       options: {
         target: "esnext",

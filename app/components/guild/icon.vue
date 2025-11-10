@@ -47,7 +47,7 @@
           <div v-if="!loaded" class="skeleton h-full w-full"></div>
           <picture v-if="!isDefault && loaded">
             <source
-              v-if="isAnimated && prefersReducedMotion === 'reduce'"
+              v-if="isAnimated && prefersReducedMotion !== 'reduce'"
               type="image/gif"
               :srcset="makeSrcset('gif')"
             />
@@ -64,7 +64,7 @@
           </picture>
           <div
             v-else-if="isDefault && loaded"
-            class="bg-gradient-to-br from-primary/20 to-secondary/20 text-base-content flex rounded-full"
+            class="bg-linear-to-br from-primary/20 to-secondary/20 text-base-content flex rounded-full"
             :class="iconSizeClasses"
           >
             <span :class="acronymSizeClasses">{{ guild.acronym }}</span>

@@ -139,6 +139,9 @@ export default defineNuxtConfig({
     client: "hidden",
     server: false,
   },
+  features: {
+    inlineStyles: true,
+  },
 
   experimental: {
     payloadExtraction: false,
@@ -275,12 +278,6 @@ export default defineNuxtConfig({
   // PWA configuration
   pwa,
 
-  scripts: {
-    registry: {
-      cloudflareWebAnalytics: true,
-    },
-  },
-
   sentry: {
     ...runtimeConfig.sentry,
   },
@@ -314,5 +311,9 @@ export default defineNuxtConfig({
 
   sitemap: {
     exclude: ["/oauth/guild", "/oauth/callback", "/[...id]"],
+  },
+
+  vitalizer: {
+    disableStylesheets: "entry",
   },
 });

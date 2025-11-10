@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1.7
+
 # ================ #
 #    Base Stage    #
 # ================ #
@@ -46,7 +48,7 @@ COPY --chown=node:node shared/ shared/
 COPY --chown=node:node config/ config/
 COPY --chown=node:node modules/ modules/
 
-RUN pnpm install \
+RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install \
  && pnpm run prisma:generate \
  && pnpm run build
 
@@ -62,9 +64,6 @@ ENV PORT=${PORT:-3000}
 
 RUN apk add --no-cache curl
 
-# Install dotenvx
-RUN curl -sfS https://dotenvx.sh/install.sh | sh
-
 # Create non-root user
 RUN addgroup -S nonroot && \
     adduser -S nonroot -G nonroot
@@ -73,15 +72,9 @@ COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
 COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
 
-
-# Copy environment files
-COPY --chown=nonroot:nonroot .env.example .env
-
 RUN pnpm install --frozen-lockfile --prod
 
 RUN chown -R nonroot:nonroot /usr/src/app
 
 USER nonroot
-
-RUN dotenvx ext prebuild
-CMD ["dotenvx", "run", "--", "node", ".output/server/index.mjs"]
+CMD ["node", ".output/server/index.mjs"]

@@ -64,8 +64,9 @@
 
 <script setup lang="ts">
 const code = useRouteQuery("code", null, { transform: String });
+const router = useRouter();
 
-const { error, status } = useFetch("/api/auth/discord", {
+const { error, status, execute } = useFetch("/api/auth/discord", {
   query: { code },
   method: "GET",
   key: "callback",
@@ -73,20 +74,20 @@ const { error, status } = useFetch("/api/auth/discord", {
   immediate: false,
 });
 
-const { user, redirectTo, fetch } = useAuth();
+const { user, redirectTo } = useAuth();
 
 if (import.meta.client && code) {
   void performCall().catch(logger.error);
 }
 
 async function performCall() {
-  await fetch(); // prefetch user data
+  await execute();
   if (error.value)
-    return;
+    throw error.value;
   // wait until data is populated instead of a fixed timeout
-  await until(user).toBeTruthy({ timeout: 1000, throwOnTimeout: true });
+  await until(user).toBeTruthy({ timeout: 5000, throwOnTimeout: true });
   // perform a client‐side redirect (replace history entry) without a full reload
-  await navigateTo(redirectTo.value, { replace: true });
+  await router.replace(redirectTo.value);
 }
 
 useRobotsRule(robotBlockingPageProps);

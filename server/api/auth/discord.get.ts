@@ -1,7 +1,6 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
-import { useLogger } from "#shared/utils/logger";
 
 defineRouteMeta({
   openAPI: {
@@ -55,16 +54,13 @@ export default defineOAuthDiscordEventHandler({
         maxAge: 60 * 60 * 24 * 7, // 1 week
       },
     );
-    return sendRedirect(event, "/");
   },
 
   async onError(_event: H3Event, error: NuxtError) {
-    useLogger("@wolfstar/auth").error("Discord OAuth error", error);
-
     throw createError({
       statusCode: 500,
       statusMessage: "Discord OAuth error",
-      data: { code: "discord_oauth_error" },
+      data: error,
     });
   },
 });

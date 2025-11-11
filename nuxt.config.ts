@@ -133,11 +133,11 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
+    "/api/**": { cors: true },
   },
 
   sourcemap: {
     client: "hidden",
-    server: false,
   },
   features: {
     inlineStyles: true,
@@ -236,6 +236,9 @@ export default defineNuxtConfig({
         "@vue/devtools-kit",
         "uuid",
       ],
+    },
+    esbuild: {
+      target: "esnext",
     },
   },
 

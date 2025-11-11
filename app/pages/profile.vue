@@ -5,7 +5,7 @@
       class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-80 p-12 shadow-lg"
     >
       <div
-        v-if="!user || loading"
+        v-if="!user || isLoading"
         class="flex flex-col items-center justify-center space-y-6"
       >
         <div class="h-24 w-24 animate-pulse rounded-full bg-base-300"></div>
@@ -70,10 +70,10 @@
                       name="search"
                       type="text"
                       placeholder="Search servers.."
-                      :disabled="loading"
+                      :disabled="isLoading"
                       icon="heroicons:magnifying-glass-circle"
-                      :loading
-                      loading-icon="lucide:loader"
+                      :is-loading
+                      is-loading-icon="lucide:loader"
                       class="max-w-xs flex items-start"
                     >
                       <template v-if="searchQuery?.length" #trailing>
@@ -95,8 +95,8 @@
                     <UButton
                       class="join-item hidden sm:inline-flex"
                       color="primary"
-                      loading-icon="lucide:loader"
-                      :loading
+                      is-loading-icon="lucide:loader"
+                      :is-loading
                       @click="toggleView()"
                     >
                       <template #leading>
@@ -118,8 +118,8 @@
                     <UButton
                       class="join-item"
                       color="primary"
-                      :loading
-                      loading-icon="lucide:loader"
+                      :is-loading
+                      is-loading-icon="lucide:loader"
                       icon="heroicons:shield-check"
                       @click="toggleShowManageableOnly()"
                     >
@@ -130,7 +130,7 @@
                     <UButton
                       class="join-item"
                       color="primary"
-                      :loading
+                      :is-loading
                       @click="toggleSortOrder()"
                     >
                       <template #leading>
@@ -148,11 +148,11 @@
 
                     <!-- Refresh Button -->
                     <UButton
-                      v-if="filteredGuilds.length < 0"
+                      v-if="filteredGuilds.length === 0"
                       class="join-item"
                       color="primary"
-                      :loading
-                      loading-icon="lucide:loader"
+                      :is-loading
+                      is-loading-icon="lucide:loader"
                       icon="heroicons:arrow-path-20-solid"
                       @click="refresh()"
                     >
@@ -169,7 +169,7 @@
                   :filter-guilds="filteredGuilds"
                   :undo-search
                   :search-query
-                  :loading
+                  :loading="isLoading"
                   :container-height="600"
                   :item-height="280"
                   :view-mode
@@ -240,7 +240,8 @@ const { user } = useAuth();
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const isDefault = ref(false);
-const loading = ref(true);
+const isAnimated = ref(false);
+const isLoading = ref(true);
 const evaluating = shallowRef(false);
 const searchQuery = ref<null | string>(null);
 const viewMode = ref<"grid" | "card">("card");
@@ -276,9 +277,9 @@ const { data, status, refresh, error } = useFetch("/api/users", {
       return undefined;
     }
 
-    const experationDate = new Date(data.fetchAt);
-    experationDate.setMinutes(experationDate.getMinutes() + minutes(10));
-    const isExpired = experationDate.getTime() < Date.now();
+    const expirationDate = new Date(data.fetchAt);
+    expirationDate.setMinutes(expirationDate.getMinutes() + minutes(10));
+    const isExpired = expirationDate.getTime() < Date.now();
     if (isExpired) {
       return;
     }
@@ -337,7 +338,7 @@ const items = computed<TabsItem[]>(() => [
     value: "servers",
     label: "Servers",
     icon: "heroicons:server",
-    badge: loading.value
+    badge: isLoading.value
       ? undefined
       : { label: guilds.value?.length ?? "N/A", color: "primary" },
   },
@@ -352,7 +353,7 @@ const src = computed(() => {
   if (isDefault.value) {
     return defaultAvatar.value;
   }
-  return createUrl("webp", 128);
+  return createUrl(isAnimated.value ? "gif" : "png", 128);
 });
 
 function undoSearch() {
@@ -370,7 +371,7 @@ function createUrl(format: "webp" | "png" | "gif", size: number) {
 watch(status, (fetchStatus) => {
   if (fetchStatus === "success") {
     evaluating.value = false;
-    loading.value = false;
+    isLoading.value = false;
   }
 });
 
@@ -379,6 +380,7 @@ watch(
   (user) => {
     if (user) {
       isDefault.value = user.avatar === null;
+      isAnimated.value = user.avatar?.startsWith("a_") ?? false;
     }
   },
   { immediate: true },

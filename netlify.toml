@@ -3,7 +3,6 @@
 
 [build]
 command = "pnpm prisma:generate && pnpm run build" # build command
-functions = "netlify/functions" # where Netlify Functions live
 publish = "dist" # where the built project lives
 
 [build.environment]

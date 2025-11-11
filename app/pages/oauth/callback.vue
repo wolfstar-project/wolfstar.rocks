@@ -63,12 +63,9 @@
 </template>
 
 <script setup lang="ts">
-const {
-  query: { code: rawCode },
-} = useRoute();
-const code = Array.isArray(rawCode) ? rawCode[0] : (rawCode ?? undefined);
+const code = useRouteQuery("code", null, { transform: String });
 
-const { error, status, execute } = useFetch("/api/auth/discord", {
+const { error, status } = useFetch("/api/auth/discord", {
   query: { code },
   method: "GET",
   key: "callback",
@@ -76,14 +73,14 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
   immediate: false,
 });
 
-const { user, redirectTo } = useAuth();
+const { user, redirectTo, fetch } = useAuth();
 
 if (import.meta.client && code) {
   void performCall().catch(logger.error);
 }
 
 async function performCall() {
-  await execute();
+  await fetch(); // prefetch user data
   if (error.value)
     return;
   // wait until data is populated instead of a fixed timeout

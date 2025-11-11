@@ -83,7 +83,7 @@ if (import.meta.client && code) {
 async function performCall() {
   await execute();
   if (error.value)
-    throw error.value;
+    return;
   // wait until data is populated instead of a fixed timeout
   await until(user).toBeTruthy({ timeout: 5000, throwOnTimeout: true });
   // perform a client‐side redirect (replace history entry) without a full reload

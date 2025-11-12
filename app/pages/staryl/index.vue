@@ -1,6 +1,6 @@
 <template>
   <section class="mt-28 flex flex-col items-center text-center">
-    <h1 class="title pb-4">Imagine an<br />social and feeder network</h1>
+    <h1 class="title pb-4">Imagine a<br />social and feeder network</h1>
     <p class="max-w-120">
       A very customizable multilanguage application to cover your members'
       social and feeder network needs, with a few entertainment features and
@@ -38,6 +38,6 @@ useSeoMetadata({
 <style scoped>
 @reference "@/assets/css/main.css";
 .title {
-	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem] bg-gradient-to-b from-white to-branding-staryl bg-clip-text text-transparent;
+	@apply text-4xl font-bold leading-[3.05rem] md:text-5xl md:leading-[3.8rem] bg-linear-to-b from-white to-branding-staryl bg-clip-text text-transparent;
 }
 </style>

@@ -42,13 +42,13 @@
       "problemMatcher": []
     },
     {
-      "label": "pnpm build final",
+      "label": "pnpm dev",
       "type": "shell",
       "command": "pnpm",
       "args": [
-        "build"
+        "dev"
       ],
-      "isBackground": false,
+      "isBackground": true,
       "problemMatcher": []
     }
   ]

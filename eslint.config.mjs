@@ -19,7 +19,7 @@ export default withNuxt(
       },
     },
     {
-      ignores: ["server/database/generated/**/*", ".cursor/"],
+      ignores: ["server/database/generated/**/*", ".cursor/", ".vscode/github-accounts.json"],
     },
   ),
 )

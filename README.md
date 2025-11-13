@@ -19,6 +19,9 @@ Link][invite-link] · [Support Server][discord-link] ·
 [![Discord community badge][discord-shield]][discord-link]
 [![Codecov coverage badge][codecov-shield]][codecov-link]
 [![GitHub contributors badge][github-contributors-shield]][github-contributors-link]<br/>
+![LCP](https://page-speed.dev/badge/beta.wolfstar.rocks?metric=lcp)
+![CLS](https://page-speed.dev/badge/beta.wolfstar.rocks?metric=cls)
+![INP](https://page-speed.dev/badge/beta.wolfstar.rocks?metric=inp)<br/>
 [![GitHub forks badge][github-forks-shield]][github-forks-link]
 [![GitHub stars badge][github-stars-shield]][github-stars-link]
 [![GitHub issues badge][github-issues-shield]][github-issues-link]

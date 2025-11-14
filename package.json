@@ -89,6 +89,7 @@
     "@nuxt/scripts": "catalog:prod"
   },
   "devDependencies": {
+    "@nuxt/hints": "catalog:dev",
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",

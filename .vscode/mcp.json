@@ -11,7 +11,7 @@
         "@eslint/mcp"
       ]
     },
-    "browsermcp-server-82755aeb": {
+    "browsermcp": {
       "type": "stdio",
       "command": "npx",
       "args": [
@@ -23,7 +23,7 @@
       "type": "http",
       "url": "https://ui.nuxt.com/mcp"
     },
-    "getsentry/sentry-mcp": {
+    "sentry": {
       "type": "http",
       "url": "https://mcp.sentry.dev/mcp"
     }

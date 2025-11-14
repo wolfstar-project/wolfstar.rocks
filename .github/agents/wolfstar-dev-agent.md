@@ -1,6 +1,6 @@
 ---
 description: WolfStar Development Agent - Enhanced with Context7 MCP and Beast Mode
-tools: ['runCommands/terminalSelection', 'runCommands/terminalLastCommand', 'runTasks', 'context7/*', 'eslint/*', 'sentry/*', 'edit/editFiles', 'runNotebooks', 'search', 'new', 'extensions', 'runTests', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'fetch', 'githubRepo']
+tools: ['runCommands/terminalSelection', 'runCommands/terminalLastCommand', 'runTasks', 'context7/*', 'eslint/*', 'edit/editFiles', 'runNotebooks', 'search', 'new', 'extensions', 'runTests', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'fetch', 'githubRepo']
 ---
 
 # WolfStar Development Agent - Enhanced Edition

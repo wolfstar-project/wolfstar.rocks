@@ -28,7 +28,7 @@ COPY --chown=node:node pnpm-workspace.yaml .
 COPY --chown=node:node package.json .
 COPY --chown=node:node .npmrc .
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+ENTRYPOINT ["dumb-init", "--"]
 
 # ================ #
 #   Builder Stage  #
@@ -48,7 +48,7 @@ COPY --chown=node:node shared/ shared/
 COPY --chown=node:node config/ config/
 COPY --chown=node:node modules/ modules/
 
-RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install \
+RUN pnpm install --frozen-lockfile \
  && pnpm run prisma:generate \
  && pnpm run build
 
@@ -59,22 +59,14 @@ RUN --mount=type=cache,id=pnpm-store,target=/pnpm/store pnpm install \
 FROM base AS runner
 
 ENV NODE_ENV="production"
-ENV NODE_OPTIONS=${NODE_OPTIONS}
+ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV PORT=${PORT:-3000}
-
-RUN apk add --no-cache curl
-
-# Create non-root user
-RUN addgroup -S nonroot && \
-    adduser -S nonroot -G nonroot
-
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/.output .output/
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/prisma prisma/
-COPY --chown=nonroot:nonroot --from=builder /usr/src/app/patches patches/
+COPY --chown=node:node --from=builder /usr/src/app/package.json .
+COPY --chown=node:node --from=builder /usr/src/app/pnpm-lock.yaml .
+COPY --chown=node:node --from=builder /usr/src/app/.output .output/
 
 RUN pnpm install --frozen-lockfile --prod
 
 RUN chown -R nonroot:nonroot /usr/src/app
 
-USER nonroot
-CMD ["node", ".output/server/index.mjs"]
+CMD ["pnpm", "run", "start"]

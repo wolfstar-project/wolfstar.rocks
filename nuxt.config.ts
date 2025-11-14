@@ -233,6 +233,7 @@ export default defineNuxtConfig({
         "@vue/devtools-kit",
         "uuid",
       ],
+      exclude: ["@prisma/client"],
     },
     esbuild: {
       target: "esnext",

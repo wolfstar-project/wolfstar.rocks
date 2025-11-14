@@ -25,9 +25,7 @@
     },
     "getsentry/sentry-mcp": {
       "type": "http",
-      "url": "https://mcp.sentry.dev/sse",
-      "gallery": "https://api.mcp.github.com",
-      "version": "1.0.0"
+      "url": "https://mcp.sentry.dev/mcp"
     }
   },
   "inputs": []

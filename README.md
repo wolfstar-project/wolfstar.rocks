@@ -179,8 +179,8 @@ SENTRY_DSN=your_sentry_dsn
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **Prisma** - Database ORM
-- **Tailwind CSS** - Styling
-- **DaisyUI** - Styling
+- **Tailwind CSS** - Utility-first CSS framework
+- **DaisyUI** - Tailwind CSS component library
 - **NuxtUI** - Components
 
 ### AI Development Assistant

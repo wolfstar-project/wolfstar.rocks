@@ -11,13 +11,6 @@ NODE_OPTIONS = '--max-old-space-size=4096'
 [functions]
 external_node_modules = [ '@resvg/resvg-js' ]
 
-# Redirect to Discord server
-[[redirects]]
-from = "https://join.wolfstar.rocks"
-to = "https://discord.gg/gqAnRyUXG8"
-status = 301
-force = true
-
 [[headers]]
 for = "/manifest.webmanifest"
 

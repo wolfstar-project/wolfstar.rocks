@@ -38,8 +38,13 @@ FROM base AS builder
 
 ENV NODE_ENV="development"
 
+COPY --chown=node:node pnpm-lock.yaml .
+RUN --mount=type=cache,target=/pnpm/store \
+    pnpm fetch --frozen-lockfile
+
 COPY --chown=node:node tsconfig.json tsconfig.json
 COPY --chown=node:node nuxt.config.ts nuxt.config.ts
+COPY --chown=node:node package.json .
 COPY --chown=node:node prisma/ prisma/
 COPY --chown=node:node app/ app/
 COPY --chown=node:node server/ server/
@@ -48,7 +53,8 @@ COPY --chown=node:node shared/ shared/
 COPY --chown=node:node config/ config/
 COPY --chown=node:node modules/ modules/
 
-RUN pnpm install --frozen-lockfile \
+RUN --mount=type=cache,target=/pnpm/store \
+    pnpm install --frozen-lockfile --offline \
  && pnpm run prisma:generate \
  && pnpm run build
 
@@ -61,11 +67,17 @@ FROM base AS runner
 ENV NODE_ENV="production"
 ENV NODE_OPTIONS="--max_old_space_size=4096"
 ENV PORT=${PORT:-3000}
+
+COPY --chown=node:node pnpm-lock.yaml .
+RUN --mount=type=cache,target=/pnpm/store \
+    pnpm fetch --frozen-lockfile --prod
+
 COPY --chown=node:node --from=builder /usr/src/app/package.json .
 COPY --chown=node:node --from=builder /usr/src/app/pnpm-lock.yaml .
 COPY --chown=node:node --from=builder /usr/src/app/.output .output/
 
-RUN pnpm install --frozen-lockfile --prod
+RUN --mount=type=cache,target=/pnpm/store \
+    pnpm install --frozen-lockfile --prod --offline
 
 RUN chown -R nonroot:nonroot /usr/src/app
 

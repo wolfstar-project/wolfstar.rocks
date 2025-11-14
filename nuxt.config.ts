@@ -64,7 +64,7 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: "en" },
       link: [
         { rel: "icon", href: "/favicon.ico", sizes: "any" },
-        { rel: "icon", type: "image/svg+xml", href: "/logo.svg" },
+        { rel: "icon", type: "image/svg+xml", href: "/icons/logo.svg" },
       ],
       meta: [
         // Cache control

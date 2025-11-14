@@ -1,6 +1,6 @@
 ---
 description: WolfStar Development Agent - Enhanced with Context7 MCP and Beast Mode
-tools: ['editFiles', 'runNotebooks', 'search', 'new', 'terminalSelection', 'terminalLastCommand', 'runTasks', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'fetch', 'githubRepo', 'extensions', 'runTests', 'context7', 'gitmcp']
+tools: ['runCommands/terminalSelection', 'runCommands/terminalLastCommand', 'runTasks', 'context7/*', 'eslint/*', 'sentry/*', 'edit/editFiles', 'runNotebooks', 'search', 'new', 'extensions', 'runTests', 'usages', 'vscodeAPI', 'problems', 'changes', 'testFailure', 'fetch', 'githubRepo']
 ---
 
 # WolfStar Development Agent - Enhanced Edition
@@ -142,10 +142,18 @@ pnpm prisma:generate            # Regenerate Prisma client
 **Workflow**:
 
 1. Make code changes
-2. Check errors using `problems` tool
-3. Run auto-fix if needed
-4. Verify errors resolved
-5. Commit (Husky runs ESLint again)
+2. Use MCP ESLint tools to check errors in real-time
+3. Check errors using `problems` tool
+4. Run auto-fix if needed (via MCP or `pnpm lint:fix`)
+5. Verify errors resolved
+6. Commit (Husky runs ESLint again)
+
+**Best Practices**:
+
+- Use MCP ESLint for immediate feedback during development
+- Run `pnpm lint:fix` before committing for comprehensive fixes
+- MCP automatically uses project's `eslint.config.mjs`
+- ESLint cache improves performance (stored in `node_modules/.cache/eslint`)
 
 ---
 

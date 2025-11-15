@@ -12,6 +12,7 @@
   "forwardPorts": [3000],
   "customizations": {
     "vscode": {
+      "settings": {},
       "extensions": [
         "bradlc.vscode-tailwindcss",
         "dbaeumer.vscode-eslint",
@@ -25,5 +26,14 @@
         "formulahendry.auto-rename-tag"
       ]
     }
-  }
+  },
+  "portsAttributes": {
+    "3000": {
+      "label": "Application",
+      "onAutoForward": "openPreview"
+    }
+  },
+  "mounts": [
+    "type=volume,target=${containerWorkspaceFolder}/node_modules"
+  ]
 }

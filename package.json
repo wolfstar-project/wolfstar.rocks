@@ -86,7 +86,8 @@
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
     "zod": "catalog:utils",
-    "@nuxt/scripts": "catalog:prod"
+    "@nuxt/scripts": "catalog:prod",
+    "nuxt-security": "catalog:prod"
   },
   "devDependencies": {
     "@nuxt/hints": "catalog:dev",

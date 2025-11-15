@@ -16,7 +16,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@browser/mcp@latest"
+        "@browsermcp/mcp@latest"
       ]
     },
     "nuxt-ui": {

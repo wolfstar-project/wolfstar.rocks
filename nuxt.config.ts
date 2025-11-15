@@ -1,3 +1,4 @@
+import type { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver } from "nuxt/kit";
 import { isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
@@ -291,18 +292,57 @@ export default defineNuxtConfig({
       contentSecurityPolicy: {
         "default-src": ["'self'"],
         "base-uri": ["'self'"],
-        "connect-src": ["'self'", "https:", "http:", "wss:", "ws:"],
-        "font-src": ["'self'"],
+        "connect-src": [
+          "'self'",
+          "https:",
+          "http:",
+          "wss:",
+          "ws:",
+          "https://cdn.wolfstar.rocks",
+          "https://cdn.discordapp.com",
+          "https://media.discordapp.net",
+        ],
+        "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me"],
         "form-action": ["'none'"],
         "frame-ancestors": ["'none'"],
         "frame-src": ["https:"],
-        "img-src": ["'self'", "https:", "http:", "data:", "blob:"],
+        "img-src": [
+          "'self'",
+          "https:",
+          "http:",
+          "data:",
+          "blob:",
+          "https://cdn.wolfstar.rocks",
+          "https://cdn.discordapp.com",
+          "https://media.discordapp.net",
+        ],
         "manifest-src": ["'self'"],
-        "media-src": ["'self'", "https:", "http:"],
+        "media-src": [
+          "'self'",
+          "https:",
+          "http:",
+          "https://cdn.wolfstar.rocks",
+          "https://cdn.discordapp.com",
+          "https://media.discordapp.net",
+        ],
         "object-src": ["'none'"],
-        "script-src": ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'"],
+        "worker-src": ["'self'", "blob:"],
+        "child-src": ["'self'", "blob:"],
         "script-src-attr": ["'none'"],
-        "style-src": ["'self'", "'unsafe-inline'"],
+        "script-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "'strict-dynamic'",
+          "'wasm-unsafe-eval'",
+          "'nonce-{generated-nonce}'",
+        ],
+        "style-src": [
+          "'self'",
+          "'unsafe-inline'",
+          "https:",
+          "https://cdn.wolfstar.rocks",
+          "https://rsms.me/inter/inter.css",
+        ],
         "upgrade-insecure-requests": true,
       },
       permissionsPolicy: {
@@ -310,7 +350,7 @@ export default defineNuxtConfig({
       },
     },
     rateLimiter: false,
-  },
+  } satisfies Partial<SecurityModuleOptions>,
 
   sentry: {
     ...runtimeConfig.sentry,

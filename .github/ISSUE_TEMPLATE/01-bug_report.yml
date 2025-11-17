@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for filing an issue! If you are here to ask a question, use Discord instead: https://discord.gg/djs
+        Thank you for filing an issue! If you are here to ask a question, use Discord instead: https://join.wolfstar.rocks
 
         This issue form is for our main website and other related issues.
   - type: textarea

@@ -68,6 +68,7 @@ export default defineNuxtConfig({
       link: [
         { rel: "icon", href: "/favicon.ico", sizes: "any" },
         { rel: "icon", type: "image/svg+xml", href: "/icons/logo.svg" },
+        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
       ],
       meta: [
         // Cache control
@@ -301,6 +302,8 @@ export default defineNuxtConfig({
           "https://cdn.wolfstar.rocks",
           "https://cdn.discordapp.com",
           "https://media.discordapp.net",
+          "https://*.netlify.com",
+          "https://*.netlify.app",
         ],
         "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me"],
         "form-action": ["'none'"],

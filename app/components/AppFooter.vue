@@ -62,7 +62,7 @@
       </aside>
     </template>
     <template #right>
-      <UColorModeButton />
+      <ColorModeButton />
 
       <UButton
         to="https://github.com/wolfstar-project/wolfstar"

@@ -6,6 +6,8 @@ export default defineConfig({
   install: true,
   packageMode: {
     "typescript": "ignore",
+    "@prisma/client": "ignore",
+    "prisma": "ignore",
     // regex starts and ends with '/'
     "/vue/": "latest",
     "/@vueuse/": "latest",

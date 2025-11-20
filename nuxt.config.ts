@@ -145,6 +145,7 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 5,
   },
+
   features: {
     inlineStyles: true,
   },

@@ -135,12 +135,15 @@ export default defineNuxtConfig({
   routeRules: {
     "/": { prerender: true },
     "/sitemap.xml": { prerender: true },
-    "/404.html": { prerender: true },
     "/api/**": { cors: true },
   },
 
   sourcemap: {
     client: "hidden",
+  },
+
+  future: {
+    compatibilityVersion: 5,
   },
   features: {
     inlineStyles: true,
@@ -149,7 +152,6 @@ export default defineNuxtConfig({
   experimental: {
     payloadExtraction: false,
     renderJsonPayloads: true,
-    viteEnvironmentApi: true,
     typescriptPlugin: true,
   },
 
@@ -304,6 +306,7 @@ export default defineNuxtConfig({
           "https://media.discordapp.net",
           "https://*.netlify.com",
           "https://*.netlify.app",
+          "https://cloudflareinsights.com",
         ],
         "font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me"],
         "form-action": ["'none'"],
@@ -338,6 +341,7 @@ export default defineNuxtConfig({
           "'strict-dynamic'",
           "'wasm-unsafe-eval'",
           "'nonce-{generated-nonce}'",
+          "https://static.cloudflareinsights.com",
         ],
         "style-src": [
           "'self'",

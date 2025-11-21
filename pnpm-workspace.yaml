@@ -2,7 +2,7 @@ packages: []
 
 overrides:
   "@types/node": 22.13.14
-  "@vercel/nft": ^0.30.3
+  "@vercel/nft": ^1.0.0
 
 catalogs:
   build:
@@ -20,8 +20,8 @@ catalogs:
   dev:
     "@antfu/nip": ^0.1.0
     "@discordjs/collection": ^2.1.1
-    "@discordjs/core": ^2.3.0
-    "@netlify/nuxt": ^0.2.11
+    "@discordjs/core": ^2.4.0
+    "@netlify/nuxt": ^0.2.13
     "@nuxt/hints": ^1.0.0-alpha.1
     "@nuxtjs/seo": ^3.2.2
     "@sapphire/bitfield": ^1.2.4
@@ -29,22 +29,21 @@ catalogs:
     "@sapphire/time-utilities": ^1.7.14
     "@sapphire/utilities": ^3.18.2
     cz-conventional-changelog: ^3.3.0
-    daisyui: ^5.5.4
-    discord-api-types: ^0.38.33
+    daisyui: ^5.5.5
+    discord-api-types: ^0.38.34
     simple-git: ^3.30.0
     stale-dep: ^0.8.4
   e2e:
     playwright: ^1.56.1
   frontend:
-    "@nuxt/ui": ^4.1.0
+    "@nuxt/ui": ^4.2.1
     "@pinia/nuxt": ^0.11.3
-    motion-v: ^1.7.4
     pinia: ^3.0.4
   icons:
     "@iconify-json/emojione": ^1.2.3
     "@iconify-json/heroicons": ^1.2.3
     "@iconify-json/ic": ^1.2.4
-    "@iconify-json/lucide": ^1.2.73
+    "@iconify-json/lucide": ^1.2.74
     "@iconify-json/ph": ^1.2.2
     "@nuxt/icon": ^2.1.0
   lint:
@@ -55,10 +54,10 @@ catalogs:
     "@sapphire/prettier-config": ^2.0.0
     eslint: ^9.39.1
     eslint-plugin-format: ^1.0.2
-    eslint-plugin-package-json: ^0.77.0
+    eslint-plugin-package-json: ^0.85.0
     eslint-plugin-vuejs-accessibility: ^2.4.1
     husky: ^9.1.7
-    lint-staged: ^16.2.6
+    lint-staged: ^16.2.7
     prettier: ^3.6.2
     prettier-plugin-css-order: ^2.1.2
     prettier-plugin-tailwindcss: ^0.7.1
@@ -71,13 +70,13 @@ catalogs:
     "@josephanson/nuxt-ai": ^0.1.6
     "@nuxt/image": ^2.0.0
     "@nuxt/scripts": ^0.13.0
-    "@sentry/nuxt": ^10.25.0
-    "@tanstack/pacer": ^0.16.2
+    "@sentry/nuxt": ^10.26.0
+    "@tanstack/pacer": ^0.16.3
     "@vee-validate/yup": ^4.15.1
     import-in-the-middle: ^2.0.0
     nuxt: ^4.2.1
     nuxt-authorization: ^0.3.5
-    nuxt-security: ^2.4.0
+    nuxt-security: ^2.5.0
     nuxt-vitalizer: ^2.0.0
     require-in-the-middle: ^8.0.1
     tailwind-merge: ^3.4.0
@@ -95,6 +94,7 @@ catalogs:
   utils:
     "@vueuse/core": ^13.9.0
     "@vueuse/integrations": ^13.9.0
+    "@vueuse/motion": ^3.0.3
     "@vueuse/nuxt": ^13.9.0
     "@vueuse/router": ^13.9.0
     fuse.js: ^7.1.0

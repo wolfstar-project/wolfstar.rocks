@@ -50,7 +50,7 @@ export default {
     orientation: {
       horizontal: {
         root: "flex-col",
-        list: "w-full",
+        list: "w-full justify-center",
         indicator: "left-0 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position)",
         trigger: "justify-center",
       },

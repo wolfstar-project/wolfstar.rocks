@@ -14,7 +14,7 @@
           </div>
         </div>
         <div v-else-if="guilds" class="text-sm text-base-content/60 sm:block" role="status" aria-live="polite">
-          <span>{{ filterGuilds.length }} of
+          <span>{{ filteredGuilds.length }} of
             {{ guilds?.length || 0 }} servers</span>
         </div>
       </div>
@@ -67,7 +67,7 @@
           />
         </div>
       </div>
-      <div v-else-if="!loading && filterGuilds.length === 0">
+      <div v-else-if="!loading && filteredGuilds.length === 0">
         <div class="flex flex-col items-center justify-center space-y-6 py-16">
           <div class="text-center py-16" role="status" aria-live="polite">
             <h2 class="text-xl font-bold text-base-content/80 mb-2">
@@ -105,7 +105,7 @@ import type { FetchError } from "ofetch";
 import { useInfiniteScroll } from "@vueuse/core";
 
 interface EnhancedGuildCardsProps {
-  filterGuilds: NonNullable<TransformedLoginData["transformedGuilds"]>;
+  filteredGuilds: NonNullable<TransformedLoginData["transformedGuilds"]>;
   guilds: TransformedLoginData["transformedGuilds"] | null;
   undoSearch: () => void;
   searchQuery: string | null;
@@ -115,7 +115,7 @@ interface EnhancedGuildCardsProps {
 }
 
 const {
-  filterGuilds,
+  filteredGuilds,
   guilds,
   undoSearch,
   searchQuery,
@@ -131,7 +131,7 @@ const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
 
 const paginatedGuilds = computed(() => {
-  return filterGuilds.slice(0, visibleCount.value);
+  return filteredGuilds.slice(0, visibleCount.value);
 });
 
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
@@ -141,12 +141,12 @@ const { isLoading: loadingMore, reset } = useInfiniteScroll(
   },
   {
     distance: 10,
-    canLoadMore: () => visibleCount.value < filterGuilds.length,
+    canLoadMore: () => visibleCount.value < filteredGuilds.length,
   },
 );
 
 watch(
-  () => filterGuilds.length,
+  () => filteredGuilds.length,
   () => {
     visibleCount.value = INITIAL_COUNT;
     reset();

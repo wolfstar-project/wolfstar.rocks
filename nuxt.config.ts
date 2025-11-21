@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@netlify/nuxt",
     "@vite-pwa/nuxt",
+    "@vueuse/motion/nuxt",
     "@sentry/nuxt/module",
     "@josephanson/nuxt-ai",
     "nuxt-auth-utils",

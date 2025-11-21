@@ -64,13 +64,13 @@
     "@vite-pwa/nuxt": "catalog:build",
     "@vueuse/core": "catalog:utils",
     "@vueuse/integrations": "catalog:utils",
+    "@vueuse/motion": "catalog:utils",
     "@vueuse/nuxt": "catalog:utils",
     "@vueuse/router": "catalog:utils",
     "consola": "catalog:node",
     "dotenv": "catalog:node",
     "fuse.js": "catalog:utils",
     "import-in-the-middle": "catalog:prod",
-    "motion-v": "catalog:frontend",
     "nuxt": "catalog:prod",
     "nuxt-auth-utils": "catalog:utils",
     "nuxt-authorization": "catalog:prod",
@@ -135,7 +135,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.23.0",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

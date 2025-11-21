@@ -2,7 +2,7 @@
 <template>
   <UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
     <section
-      class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-base-80 p-12 shadow-lg"
+      class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-linear-to-br from-base-100 via-base-200 to-base-100 p-12 shadow-xl border border-base-300"
     >
       <div
         v-if="!user || isLoading"
@@ -34,14 +34,86 @@
       </template>
     </section>
 
+    <!-- Statistics Cards Section -->
     <section
-      class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center"
+      v-if="user && !isLoading"
+      class="grid grid-cols-1 gap-4 sm:grid-cols-3"
+    >
+      <!-- Total Servers Card -->
+      <UCard class="bg-linear-to-br from-primary/10 to-primary/5 border border-primary/20">
+        <div class="flex items-center gap-4">
+          <div class="rounded-xl bg-primary/20 p-3">
+            <UIcon
+              name="heroicons:server"
+              class="h-6 w-6 text-primary"
+            />
+          </div>
+          <div>
+            <p class="text-sm font-medium text-base-content/70">Total Servers</p>
+            <p
+              v-if="status === 'pending'"
+              class="mt-1 h-8 w-16 animate-pulse rounded bg-base-300"
+            ></p>
+            <p v-else class="text-2xl font-bold text-base-content">
+              {{ guilds?.length ?? 0 }}
+            </p>
+          </div>
+        </div>
+      </UCard>
+
+      <!-- Manageable Servers Card -->
+      <UCard class="bg-linear-to-br from-secondary/10 to-secondary/5 border border-secondary/20">
+        <div class="flex items-center gap-4">
+          <div class="rounded-xl bg-secondary/20 p-3">
+            <UIcon
+              name="heroicons:shield-check"
+              class="h-6 w-6 text-secondary"
+            />
+          </div>
+          <div>
+            <p class="text-sm font-medium text-base-content/70">Manageable</p>
+            <p
+              v-if="status === 'pending'"
+              class="mt-1 h-8 w-16 animate-pulse rounded bg-base-300"
+            ></p>
+            <p v-else class="text-2xl font-bold text-base-content">
+              {{ manageableGuildsCount }}
+            </p>
+          </div>
+        </div>
+      </UCard>
+
+      <!-- WolfStar Active Card -->
+      <UCard class="bg-linear-to-br from-accent/10 to-accent/5 border border-accent/20">
+        <div class="flex items-center gap-4">
+          <div class="rounded-xl bg-accent/20 p-3">
+            <UIcon
+              name="heroicons:star"
+              class="h-6 w-6 text-accent"
+            />
+          </div>
+          <div>
+            <p class="text-sm font-medium text-base-content/70">WolfStar Active</p>
+            <p
+              v-if="status === 'pending'"
+              class="mt-1 h-8 w-16 animate-pulse rounded bg-base-300"
+            ></p>
+            <p v-else class="text-2xl font-bold text-base-content">
+              {{ wolfstarActiveGuildsCount }}
+            </p>
+          </div>
+        </div>
+      </UCard>
+    </section>
+
+    <section
+      class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center bg-base-100 border border-base-300"
     >
       <UTabs
         v-model="activeTab"
         variant="transparent"
         :items
-        class="w-full flex flex-col items-center"
+        class="w-full flex flex-col items-center justify-center"
       >
         <template #content="{ item }">
           <div class="p-8">
@@ -100,15 +172,17 @@
                       @click="toggleView()"
                     >
                       <template #leading>
-                        <Transition name="fade" mode="in-out">
-                          <UIcon
-                            :name="
-                              viewMode === 'grid'
-                                ? 'heroicons:squares-2x2'
-                                : 'heroicons:bars-3'
-                            "
-                          />
-                        </Transition>
+                        <UIcon
+                          v-motion
+                          :initial="{ opacity: 0 }"
+                          :enter="{ opacity: 1, transition: { duration: 150 } }"
+                          :leave="{ opacity: 0, transition: { duration: 150 } }"
+                          :name="
+                            viewMode === 'grid'
+                              ? 'heroicons:squares-2x2'
+                              : 'heroicons:bars-3'
+                          "
+                        />
                       </template>
 
                       <span class="hidden sm:inline">View</span>
@@ -134,15 +208,17 @@
                       @click="toggleSortOrder()"
                     >
                       <template #leading>
-                        <Transition name="fade" mode="out-in">
-                          <UIcon
-                            :name="
-                              sortAscending
-                                ? 'lucide:arrow-up-a-z'
-                                : 'lucide:arrow-down-z-a'
-                            "
-                          />
-                        </Transition>
+                        <UIcon
+                          v-motion
+                          :initial="{ opacity: 0 }"
+                          :enter="{ opacity: 1, transition: { duration: 150 } }"
+                          :leave="{ opacity: 0, transition: { duration: 150 } }"
+                          :name="
+                            sortAscending
+                              ? 'lucide:arrow-up-a-z'
+                              : 'lucide:arrow-down-z-a'
+                          "
+                        />
                       </template>
                     </UButton>
 
@@ -166,7 +242,7 @@
                 <GuildCards
                   :error
                   :guilds
-                  :filter-guilds="filteredGuilds"
+                  :filtered-guilds
                   :undo-search
                   :search-query
                   :loading="isLoading"
@@ -178,7 +254,7 @@
             </div>
             <div v-if="item.value === 'premium'" class="space-y-6">
               <UCard
-                class="border-2 border-primary/30 bg-linear-to-r from-primary/10 via-transparent to-secondary/10 shadow-lg"
+                class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl"
               >
                 <template #header>
                   <div>
@@ -190,16 +266,54 @@
                     </p>
                   </div>
                 </template>
-                <div class="space-y-4 p-6 text-center">
-                  <UIcon
-                    name="heroicons:sparkles-20-solid"
-                    class="mx-auto h-12 w-12 text-primary"
-                  />
-                  <h3 class="text-2xl font-bold">Upgrade to Premium</h3>
+                <div class="space-y-6">
+                  <div class="flex flex-col items-center space-y-4 text-center">
+                    <div class="rounded-full bg-primary/20 p-4">
+                      <UIcon
+                        name="heroicons:sparkles-20-solid"
+                        class="h-12 w-12 text-primary"
+                      />
+                    </div>
+                    <div>
+                      <h3 class="text-3xl font-bold text-base-content">Upgrade to Premium</h3>
+                      <p class="mt-2 text-base-content/70">
+                        Unlock advanced features and get priority support
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Feature List -->
+                  <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="flex items-start gap-3">
+                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div>
+                        <p class="font-semibold text-base-content">Advanced Commands</p>
+                        <p class="text-sm text-base-content/60">Access to premium-only commands</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div>
+                        <p class="font-semibold text-base-content">Priority Support</p>
+                        <p class="text-sm text-base-content/60">Get help faster from our team</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div>
+                        <p class="font-semibold text-base-content">Custom Settings</p>
+                        <p class="text-sm text-base-content/60">Personalize your experience</p>
+                      </div>
+                    </div>
+                    <div class="flex items-start gap-3">
+                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div>
+                        <p class="font-semibold text-base-content">Early Access</p>
+                        <p class="text-sm text-base-content/60">Try new features first</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <p class="text-base-content/70">
-                  Get access to exclusive features and priority support
-                </p>
                 <template #footer>
                   <UFieldGroup
                     size="md"
@@ -254,21 +368,10 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 
 const { data, status, refresh, error } = useFetch("/api/users", {
   key: "guilds",
-  transform: (data) => {
-    if (!data) {
-      return {
-        guilds: [],
-        fetchAt: Date.now(),
-      };
-    }
-
-    const { transformedGuilds } = data;
-
-    return {
-      guilds: transformedGuilds ?? [],
-      fetchAt: Date.now(),
-    };
-  },
+  transform: (data) => ({
+    transformedGuilds: data.transformedGuilds ?? [],
+    fetchAt: Date.now(),
+  }),
   getCachedData: (key, nuxtApp) => {
     const data = nuxtApp.isHydrating
       ? nuxtApp.payload.data[key]
@@ -287,7 +390,11 @@ const { data, status, refresh, error } = useFetch("/api/users", {
   },
 });
 
-const guilds = computed(() => data.value?.guilds ?? []);
+const guilds = computed(() => data.value?.transformedGuilds ?? []);
+
+// Statistics computed properties
+const manageableGuildsCount = computed(() => guilds.value?.filter(g => g.manageable).length ?? 0);
+const wolfstarActiveGuildsCount = computed(() => guilds.value?.filter(g => g.wolfstarIsIn).length ?? 0);
 // Optimized filtered guilds with memoization
 const filteredGuilds = computedAsync(
   () => {
@@ -386,15 +493,3 @@ watch(
   { immediate: true },
 );
 </script>
-
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-	transition: opacity 0.15s ease-in-out;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-	opacity: 0;
-}
-</style>

@@ -14,7 +14,7 @@
 	--color-base-100: oklch(100% 0 0);
 	--color-base-200: oklch(90% 0 0);
 	--color-base-300: oklch(85% 0 0);
-	--color-base-content: oklch(21% 0.006 285.885);
+	--color-base-content: oklch(0% 0 0);
 	--color-primary-content: oklch(96% 0.018 272.314);
 	--color-secondary: oklch(0.5873 0.0204 272.13);
 	--color-secondary-content: oklch(94% 0.028 342.258);
@@ -118,11 +118,11 @@
 	}
 
 	[data-theme='light'] {
-		--ui-text-dimmed: var(--color-neutral-400);
-		--ui-text-muted: var(--color-neutral-500);
-		--ui-text-toned: var(--color-neutral-600);
-		--ui-text: var(--color-neutral-700);
-		--ui-text-highlighted: var(--color-neutral-900);
+		--ui-text-dimmed: var(--color-neutral-600);
+		--ui-text-muted: var(--color-neutral-800);
+		--ui-text-toned: var(--color-neutral-900);
+		--ui-text: black;
+		--ui-text-highlighted: black;
 		--ui-text-inverted: var(--color-white);
 
 		--ui-bg: var(--color-base-300);

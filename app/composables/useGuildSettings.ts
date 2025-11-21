@@ -187,5 +187,3 @@ export function useGuildChannels() {
     getIgnoreChannelProps,
   };
 }
-
-export default useGuildSettings;

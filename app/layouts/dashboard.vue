@@ -29,29 +29,11 @@
       </template>
     </UDashboardSidebar>
     <slot v-if="readyToRender"></slot>
-    <div v-else>
+    <div v-if="error" class="fixed top-4 left-4 z-50">
       <UAlert
-        v-if="hasError"
         color="error"
-        icon="heroicons:exclamation-circle"
-        :dismissible="true"
-        @dismiss="hasError = false"
-      >
-        <template #title>Error</template>
-        <template #description>
-          Something went wrong. Please try again.
-        </template>
-      </UAlert>
-      <UAlert
-        v-else
-        color="info"
-        icon="heroicons:info"
-      >
-        <template #title>Loading</template>
-        <template #description>
-          loading Data, please be patient.
-        </template>
-      </UAlert>
+        :title="error.message"
+      />
     </div>
 
     <div v-if="hasChanges" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
@@ -72,17 +54,14 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
-import type { ValuesType } from "~/types/utils";
 import { isNullOrUndefined } from "@sapphire/utilities";
 
 const guildId = useRouteParams("id", null, { transform: String });
-const loading = useState("dashboard:loading", () => false);
 const guildData = useGuildData();
 const guildStore = useGuildSettingsStore();
 const toast = useToast();
-const hasError = ref(false);
 const open = ref(false);
-const { hasChanges, mergedSettings: guildSettingsChanges } = storeToRefs(guildStore);
+const { hasChanges, mergedSettings: guildSettingsChanges, error } = storeToRefs(guildStore);
 
 useSeoMetadata({
   title: `${guildData.value?.name ? `${guildData.value.name} - ` : ""} Guild`,
@@ -167,42 +146,29 @@ function isValidGuildId(id: string | undefined | null): boolean {
 const submitChanges = async () => {
   const error = await guildStore.setChanges(guildSettingsChanges.value);
 
-  if (error) {
-    hasError.value = true;
-    toast.add({
-      title: "Error",
-      description: "Failed to save changes",
-    });
-  }
-  else {
-    toast.add({
-      title: "Success",
-      description: "Changes saved successfully",
-    });
-  }
+  toast.add(error
+    ? {
+        title: "Error",
+        color: "error",
+        description: "Failed to save changes",
+      }
+    : {
+        title: "Success",
+        color: "success",
+        description: "Changes saved successfully",
+      });
 };
 
 onMounted(async () => {
-  loading.value = true;
   try {
     await guildStore.fetchSettings();
-    const { data, error } = await useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`, {
-      method: "GET",
-    });
-    if (error.value) {
-      hasError.value = true;
-      toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
-    }
-    else if (data.value) {
-      guildData.value = data.value;
-    }
   }
-  finally {
-    loading.value = false;
+  catch {
+    toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
   }
 });
 
 const readyToRender = computed(() => {
-  return !loading.value && !!guildData.value && !!guildStore.settings;
+  return guildStore.loading !== true && !isNullOrUndefined(guildStore.settings);
 });
 </script>

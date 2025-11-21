@@ -39,11 +39,9 @@
           class="h-10 w-10"
           aria-hidden="true"
         />
-        <template>
-          <p v-if="siteName" style="font-size: 25px;" class="font-bold">
-            {{ siteName }}
-          </p>
-        </template>
+        <p v-if="siteName" style="font-size: 25px;" class="font-bold">
+          {{ siteName }}
+        </p>
       </div>
     </div>
   </div>

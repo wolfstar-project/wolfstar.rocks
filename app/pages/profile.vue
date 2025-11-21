@@ -34,78 +34,6 @@
       </template>
     </section>
 
-    <!-- Statistics Cards Section -->
-    <section
-      v-if="user && !isLoading"
-      class="grid grid-cols-1 gap-4 sm:grid-cols-3"
-    >
-      <!-- Total Servers Card -->
-      <UCard class="bg-linear-to-br from-primary/10 to-primary/5 border border-primary/20">
-        <div class="flex items-center gap-4">
-          <div class="rounded-xl bg-primary/20 p-3">
-            <UIcon
-              name="heroicons:server"
-              class="h-6 w-6 text-primary"
-            />
-          </div>
-          <div>
-            <p class="text-sm font-medium text-base-content/70">Total Servers</p>
-            <p
-              v-if="status === 'pending'"
-              class="mt-1 h-8 w-16 animate-pulse rounded bg-base-300"
-            ></p>
-            <p v-else class="text-2xl font-bold text-base-content">
-              {{ guilds?.length ?? 0 }}
-            </p>
-          </div>
-        </div>
-      </UCard>
-
-      <!-- Manageable Servers Card -->
-      <UCard class="bg-linear-to-br from-secondary/10 to-secondary/5 border border-secondary/20">
-        <div class="flex items-center gap-4">
-          <div class="rounded-xl bg-secondary/20 p-3">
-            <UIcon
-              name="heroicons:shield-check"
-              class="h-6 w-6 text-secondary"
-            />
-          </div>
-          <div>
-            <p class="text-sm font-medium text-base-content/70">Manageable</p>
-            <p
-              v-if="status === 'pending'"
-              class="mt-1 h-8 w-16 animate-pulse rounded bg-base-300"
-            ></p>
-            <p v-else class="text-2xl font-bold text-base-content">
-              {{ manageableGuildsCount }}
-            </p>
-          </div>
-        </div>
-      </UCard>
-
-      <!-- WolfStar Active Card -->
-      <UCard class="bg-linear-to-br from-accent/10 to-accent/5 border border-accent/20">
-        <div class="flex items-center gap-4">
-          <div class="rounded-xl bg-accent/20 p-3">
-            <UIcon
-              name="heroicons:star"
-              class="h-6 w-6 text-accent"
-            />
-          </div>
-          <div>
-            <p class="text-sm font-medium text-base-content/70">WolfStar Active</p>
-            <p
-              v-if="status === 'pending'"
-              class="mt-1 h-8 w-16 animate-pulse rounded bg-base-300"
-            ></p>
-            <p v-else class="text-2xl font-bold text-base-content">
-              {{ wolfstarActiveGuildsCount }}
-            </p>
-          </div>
-        </div>
-      </UCard>
-    </section>
-
     <section
       class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center bg-base-100 border border-base-300"
     >
@@ -392,9 +320,6 @@ const { data, status, refresh, error } = useFetch("/api/users", {
 
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
 
-// Statistics computed properties
-const manageableGuildsCount = computed(() => guilds.value?.filter(g => g.manageable).length ?? 0);
-const wolfstarActiveGuildsCount = computed(() => guilds.value?.filter(g => g.wolfstarIsIn).length ?? 0);
 // Optimized filtered guilds with memoization
 const filteredGuilds = computedAsync(
   () => {

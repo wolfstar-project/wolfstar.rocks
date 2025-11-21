@@ -17,13 +17,13 @@
         }"
       >
         <!-- Guild Icon -->
-        <div class="flex flex-col items-center space-y-4" role="img" :aria-label="`${guild.name} server icon`">
+        <div class="flex flex-col items-center space-y-2" role="img" :aria-label="`${guild.name} server icon`">
           <guild-icon :guild variant="bare" size="lg" :show-status="true" />
         </div>
 
         <!-- Guild Info -->
         <div
-          class="flex min-h-[4rem] flex-col justify-center space-y-2 text-center"
+          class="flex min-h-16 flex-col justify-center space-y-2 text-center"
         >
           <h3
             class="line-clamp-2 text-base sm:text-sm font-semibold text-base-content transition-colors group-hover:text-primary"
@@ -42,13 +42,11 @@
         'opacity-75 ring-2 ring-error/20': !guild.manageable,
       }"
     >
-      <!-- Guild Icon -->
-      <div class="flex flex-col items-center space-y-4" role="img" :aria-label="`${guild.name} server icon`">
-        <guild-icon :guild variant="bare" size="lg" :show-status="true" />
-      </div>
-
       <!-- Guild Info -->
       <div class="card-info">
+        <div class="flex flex-col items-center space-y-1" role="img" :aria-label="`${guild.name} server icon`">
+          <guild-icon :guild variant="bare" size="lg" :show-status="true" />
+        </div>
         <!-- Guild Name -->
         <h3 class="line-clamp-2 text-sm font-semibold text-base-content">
           {{ guild.name }}
@@ -79,39 +77,40 @@
             }}</span>
           </span>
         </div>
-      </div>
-      <!-- Action Button -->
-      <div class="w-full gap-2">
-        <NuxtLink
-          v-if="guild.wolfstarIsIn"
-          :to="`/guilds/${guild.id}/manage`"
-          class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
-          :aria-label="`Manage ${guild.name} server settings`"
-        >
-          <UIcon
-            name="heroicons:adjustments-horizontal"
-            class="mr-1 inline h-3 w-3"
-            aria-hidden="true"
-          />
-          Manage Server
-        </NuxtLink>
-        <NuxtLink
-          v-else-if="guild.manageable"
-          :to="guildAddURL(guild.id)"
-          class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
-          :aria-label="`Invite WolfStar bot to ${guild.name}`"
-        >
-          <UIcon name="heroicons:rocket-launch" class="mr-1 inline h-3 w-3" aria-hidden="true" />
-          Invite Bot
-        </NuxtLink>
-        <div
-          v-else
-          class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50"
-          role="status"
-          :aria-label="`No permission to manage ${guild.name}`"
-        >
-          <UIcon name="heroicons:no-symbol" class="mr-1 inline h-3 w-3" aria-hidden="true" />
-          No Permission
+
+        <!-- Action Button -->
+        <div class="w-fullspace-y-2 gap-2">
+          <NuxtLink
+            v-if="guild.wolfstarIsIn"
+            :to="`/guilds/${guild.id}/manage`"
+            class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
+            :aria-label="`Manage ${guild.name} server settings`"
+          >
+            <UIcon
+              name="heroicons:adjustments-horizontal"
+              class="mr-1 inline h-3 w-3"
+              aria-hidden="true"
+            />
+            Manage Server
+          </NuxtLink>
+          <NuxtLink
+            v-else-if="guild.manageable"
+            :to="guildAddURL(guild.id)"
+            class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
+            :aria-label="`Invite WolfStar bot to ${guild.name}`"
+          >
+            <UIcon name="heroicons:rocket-launch" class="mr-1 inline h-3 w-3" aria-hidden="true" />
+            Invite Bot
+          </NuxtLink>
+          <div
+            v-else
+            class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50"
+            role="status"
+            :aria-label="`No permission to manage ${guild.name}`"
+          >
+            <UIcon name="heroicons:no-symbol" class="mr-1 inline h-3 w-3" aria-hidden="true" />
+            No Permission
+          </div>
         </div>
       </div>
     </UContainer>
@@ -159,6 +158,6 @@ function formatNumber(num: number): string {
 	@apply relative h-full rounded-xl border border-base-300 bg-base-100 p-6 shadow-md transition-all duration-300;
 }
 .card-info {
-	@apply flex min-h-[4rem] flex-col justify-between space-y-2 text-center;
+	@apply flex min-h-16 flex-col justify-between space-y-2 text-center;
 }
 </style>

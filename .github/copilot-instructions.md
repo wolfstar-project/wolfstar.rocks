@@ -987,6 +987,7 @@ function handleClick() {
 
 // Lifecycle
 onMounted(() => {
+  // eslint-disable-next-line no-console
   console.log('Component mounted');
 });
 </script>
@@ -1281,6 +1282,7 @@ if (error.value) {
   const message = error.value.message;
 
   // Show user-friendly error
+  // eslint-disable-next-line no-console
   console.error("Failed to fetch guilds:", message);
 }
 </script>

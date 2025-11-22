@@ -88,12 +88,57 @@
                       </template>
                     </UInput>
                   </UFieldGroup>
-                  <!-- Actual Buttons -->
-                  <UFieldGroup size="sm" class="flex items-end join">
-                    <!-- View Button -->
-
+                  <!-- Mobile Buttons (no view toggle) -->
+                  <UFieldGroup size="sm" class="flex items-end join sm:hidden">
+                    <!-- Manageable Only Toggle Button -->
                     <UButton
-                      class="join-item hidden sm:inline-flex"
+                      class="join-item"
+                      color="primary"
+                      :is-loading
+                      is-loading-icon="lucide:loader"
+                      icon="heroicons:shield-check"
+                      @click="toggleShowManageableOnly()"
+                    />
+
+                    <!-- Sort Button -->
+                    <UButton
+                      class="join-item"
+                      color="primary"
+                      :is-loading
+                      @click="toggleSortOrder()"
+                    >
+                      <template #leading>
+                        <UIcon
+                          v-motion
+                          :initial="{ opacity: 0 }"
+                          :enter="{ opacity: 1, transition: { duration: 150 } }"
+                          :leave="{ opacity: 0, transition: { duration: 150 } }"
+                          :name="
+                            sortAscending
+                              ? 'lucide:arrow-up-a-z'
+                              : 'lucide:arrow-down-z-a'
+                          "
+                        />
+                      </template>
+                    </UButton>
+
+                    <!-- Refresh Button -->
+                    <UButton
+                      v-if="filteredGuilds.length === 0"
+                      class="join-item"
+                      color="primary"
+                      :is-loading
+                      is-loading-icon="lucide:loader"
+                      icon="heroicons:arrow-path-20-solid"
+                      @click="refresh()"
+                    />
+                  </UFieldGroup>
+
+                  <!-- Desktop Buttons (with view toggle) -->
+                  <UFieldGroup size="sm" class="hidden sm:flex items-end join">
+                    <!-- View Button -->
+                    <UButton
+                      class="join-item"
                       color="primary"
                       is-loading-icon="lucide:loader"
                       :is-loading
@@ -113,7 +158,7 @@
                         />
                       </template>
 
-                      <span class="hidden sm:inline">View</span>
+                      <span>View</span>
                     </UButton>
 
                     <!-- Manageable Only Toggle Button -->
@@ -125,7 +170,7 @@
                       icon="heroicons:shield-check"
                       @click="toggleShowManageableOnly()"
                     >
-                      <span class="hidden sm:inline">Manageable</span>
+                      <span>Manageable</span>
                     </UButton>
 
                     <!-- Sort Button -->
@@ -160,7 +205,7 @@
                       icon="heroicons:arrow-path-20-solid"
                       @click="refresh()"
                     >
-                      <span class="hidden sm:inline">Refresh</span>
+                      <span>Refresh</span>
                     </UButton>
                   </UFieldGroup>
                 </div>

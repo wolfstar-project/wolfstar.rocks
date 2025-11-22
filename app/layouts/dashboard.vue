@@ -29,6 +29,9 @@
       </template>
     </UDashboardSidebar>
     <slot v-if="readyToRender"></slot>
+    <div v-else class="flex flex-1 items-center justify-center">
+      <UIcon name="i-heroicons-arrow-path-20-solid" class="size-10 animate-spin text-primary" />
+    </div>
     <div v-if="error" class="fixed top-4 left-4 z-50">
       <UAlert
         color="error"

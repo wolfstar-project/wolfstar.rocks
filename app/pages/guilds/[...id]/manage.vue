@@ -25,7 +25,10 @@
     </template>
 
     <template #body>
-      <GuildSettingsSection title="General Settings">
+      <div v-if="isLoading" class="flex h-full items-center justify-center py-12">
+        <UIcon name="i-heroicons-arrow-path-20-solid" class="size-10 animate-spin text-primary" />
+      </div>
+      <GuildSettingsSection v-else title="General Settings">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <!-- Prefix Setting -->
           <UForm
@@ -134,7 +137,9 @@ const languages = useState<string[]>("guildLanguages", () => []);
 
 const toast = useToast();
 // Use the new general composable
-const { generalConfig, settings, updateGeneralSetting } = useGuildGeneral();
+const { generalConfig, settings, loading: settingsLoading, updateGeneralSetting } = useGuildGeneral();
+
+const isLoading = computed(() => loading.value || settingsLoading.value);
 
 // Computed language options
 const items = computed(() =>
@@ -164,7 +169,7 @@ type Schema = yup.InferType<typeof schema>;
 const state = reactive<NonNullable<Schema>>({
   // Use the guild's existing prefix if available, otherwise start empty.
   // The placeholder should remain a UI hint, not the submitted value.
-  prefix: settings?.prefix ?? generalConfig.prefix.placeholder,
+  prefix: settings.value.prefix ?? generalConfig.prefix.placeholder,
   language: {
     value: "",
     label: "",

@@ -3,7 +3,7 @@
   <div class="group block cursor-pointer">
     <component
       :is="guild.manageable ? 'NuxtLink' : 'div'"
-      v-if="viewMode === 'grid'"
+      v-if="effectiveViewMode === 'grid'"
       :to="guild.manageable ? manageGuildURL : undefined"
       :aria-disabled="!guild.manageable"
       :aria-label="guild.manageable ? `Manage ${guild.name}` : `${guild.name} - Insufficient permissions`"
@@ -121,6 +121,7 @@
 import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "~/types/utils";
 import { isNullOrUndefinedOrZero } from "@sapphire/utilities";
+import { breakpointsTailwind } from "@vueuse/core";
 
 interface EnhancedGuildCardProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
@@ -133,6 +134,11 @@ interface EnhancedGuildCardProps {
 }
 
 const { guild, viewMode = "card" } = defineProps<EnhancedGuildCardProps>();
+
+// Force grid view on mobile devices
+const breakpoints = useBreakpoints(breakpointsTailwind);
+const isMobile = breakpoints.smaller("sm");
+const effectiveViewMode = computed(() => isMobile.value ? "grid" : viewMode);
 
 const manageGuildURL = computed(() => {
   if (!guild.manageable) {

@@ -11,7 +11,9 @@ import {
 
 // Composable for general settings
 export function useGuildGeneral() {
-  const { settings, setChanges } = useGuildSettingsStore();
+  const store = useGuildSettingsStore();
+  const { mergedSettings: settings, loading } = storeToRefs(store);
+  const { setChanges } = store;
 
   const generalConfig = {
     prefix: {
@@ -40,13 +42,16 @@ export function useGuildGeneral() {
   return {
     generalConfig,
     settings,
+    loading,
     updateGeneralSetting,
   };
 }
 
 // Composable for roles settings using SettingsDataEntries
 export function useGuildRoles() {
-  const { settings, setChanges } = useGuildSettingsStore();
+  const store = useGuildSettingsStore();
+  const { mergedSettings: settings, loading } = storeToRefs(store);
+  const { setChanges } = store;
 
   const roleConfig = {
     removeInitial: ConfigurableRemoveInitialRole,
@@ -72,6 +77,7 @@ export function useGuildRoles() {
   return {
     roleConfig,
     settings,
+    loading,
     updateRoleSetting,
     resetRole,
     getRoleProps,
@@ -80,7 +86,9 @@ export function useGuildRoles() {
 
 // Composable for moderation settings using SettingsDataEntries
 export function useGuildModeration() {
-  const { settings, setChanges } = useGuildSettingsStore();
+  const store = useGuildSettingsStore();
+  const { settings, loading } = storeToRefs(store);
+  const { setChanges } = store;
 
   const moderationConfig = {
     messages: ConfigurableModerationKeys,
@@ -108,6 +116,7 @@ export function useGuildModeration() {
   return {
     moderationConfig,
     settings,
+    loading,
     updateModerationSetting,
     getModerationProps,
     getEventProps,
@@ -116,7 +125,9 @@ export function useGuildModeration() {
 
 // Composable for events settings using SettingsDataEntries
 export function useGuildEvents() {
-  const { settings, setChanges } = useGuildSettingsStore();
+  const store = useGuildSettingsStore();
+  const { mergedSettings: settings, loading } = storeToRefs(store);
+  const { setChanges } = store;
 
   const eventsConfig = {
     moderation: ConfigurableModerationEvents,
@@ -141,6 +152,7 @@ export function useGuildEvents() {
   return {
     eventsConfig,
     settings,
+    loading,
     updateEventSetting,
     resetEvent,
     getEventProps,
@@ -149,7 +161,9 @@ export function useGuildEvents() {
 
 // Composable for channels settings using SettingsDataEntries
 export function useGuildChannels() {
-  const { settings, setChanges } = useGuildSettingsStore();
+  const store = useGuildSettingsStore();
+  const { mergedSettings: settings, loading } = storeToRefs(store);
+  const { setChanges } = store;
 
   const channelsConfig = {
     logging: ConfigurableLoggingChannels,
@@ -181,6 +195,7 @@ export function useGuildChannels() {
   return {
     channelsConfig,
     settings,
+    loading,
     updateChannelSetting,
     resetChannel,
     getChannelProps,

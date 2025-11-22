@@ -11,7 +11,7 @@ const mergeOptions: DeepMergeOptions = {
 
 export const useGuildSettingsStore = defineStore("guild", {
   state: (): State => ({
-    settings: undefined,
+    settings: null,
     changes: null,
     loading: false,
     error: undefined,
@@ -43,7 +43,7 @@ export const useGuildSettingsStore = defineStore("guild", {
       const { data, error, status } = await useFetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
         method: "GET",
       });
-      this.settings = data.value;
+      this.settings = data.value ?? null;
       this.loading = status.value === "pending";
       this.error = error.value;
     },
@@ -104,8 +104,8 @@ export const useGuildSettingsStore = defineStore("guild", {
 });
 
 interface State {
-  settings?: GuildData | null;
+  settings: GuildData | null;
   changes: NullablePartialGuildData | null;
   loading: boolean;
-  error?: Error | null;
+  error?: Error;
 }

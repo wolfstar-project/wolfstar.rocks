@@ -395,7 +395,7 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    exclude: ["/oauth/guild", "/oauth/callback", "/[...id]"],
+    exclude: ["/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
   },
 
   vitalizer: {

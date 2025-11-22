@@ -37,7 +37,7 @@
     "prisma:generate": "prisma generate",
     "prisma:generate:watch": "prisma generate --watch",
     "generate-pwa-assets": "pwa-assets-generator",
-    "start": "node --import ./.output/server/sentry.server.config.mjs .output/server/index.mjs",
+    "start": ".output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck"
   },
   "lint-staged": {

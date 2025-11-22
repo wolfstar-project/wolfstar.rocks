@@ -49,8 +49,8 @@ catalogs:
       specifier: ^0.2.13
       version: 0.2.13
     '@nuxt/hints':
-      specifier: ^1.0.0-alpha.1
-      version: 1.0.0-alpha.1
+      specifier: ^1.0.0-alpha.2
+      version: 1.0.0-alpha.2
     '@nuxtjs/seo':
       specifier: ^3.2.2
       version: 3.2.2
@@ -435,7 +435,7 @@ importers:
         version: 1.10.0(@typescript-eslint/utils@8.46.2(eslint@9.39.1(jiti@2.6.1))(typescript@5.8.3))(@vue/compiler-sfc@3.5.24)(eslint-plugin-format@1.0.2(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))(magicast@0.5.1)(typescript@5.8.3)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
       '@nuxt/hints':
         specifier: catalog:dev
-        version: 1.0.0-alpha.1(@netlify/blobs@10.4.1)(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.24(typescript@5.8.3))
+        version: 1.0.0-alpha.2(@netlify/blobs@10.4.1)(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.24(typescript@5.8.3))
       '@sapphire/bitfield':
         specifier: catalog:dev
         version: 1.2.4
@@ -2313,8 +2313,8 @@ packages:
   '@nuxt/fonts@0.12.1':
     resolution: {integrity: sha512-ALajI/HE+uqqL/PWkWwaSUm1IdpyGPbP3mYGy2U1l26/o4lUZBxjFaduMxaZ85jS5yQeJfCu2eEHANYFjAoujQ==}
 
-  '@nuxt/hints@1.0.0-alpha.1':
-    resolution: {integrity: sha512-qq48ZwATbOWK+a/bpoRM7Q5cMp6sg6csSTVPcNDiN3lKebL7aytQUavCTg2siipAZTajuc8+zxITjOvQkcfHMg==}
+  '@nuxt/hints@1.0.0-alpha.2':
+    resolution: {integrity: sha512-VQcqc3qf6xr4HaBdPJnmQdsL5RRLACw5cE0m57U2gu0JYYs0k4+nhczavj+/cS8xmnnHnZmchJh7NHHxZ7BexQ==}
 
   '@nuxt/icon@2.1.0':
     resolution: {integrity: sha512-m+XQrgzeK5gQ1HkB7G7u1os6egoD07fiHKijG7NPxqT5yZUGOjKJ7X/Le10l3QWRKyCB+IiU0t+eUqSvh+SULg==}
@@ -12350,7 +12350,7 @@ snapshots:
       - uploadthing
       - vite
 
-  '@nuxt/hints@1.0.0-alpha.1(@netlify/blobs@10.4.1)(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.24(typescript@5.8.3))':
+  '@nuxt/hints@1.0.0-alpha.2(@netlify/blobs@10.4.1)(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.24(typescript@5.8.3))':
     dependencies:
       '@nuxt/devtools-kit': 3.1.0(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
       '@nuxt/kit': 4.2.1(magicast@0.5.1)

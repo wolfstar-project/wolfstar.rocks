@@ -22,7 +22,7 @@ catalogs:
     "@discordjs/collection": ^2.1.1
     "@discordjs/core": ^2.4.0
     "@netlify/nuxt": ^0.2.13
-    "@nuxt/hints": ^1.0.0-alpha.1
+    "@nuxt/hints": ^1.0.0-alpha.2
     "@nuxtjs/seo": ^3.2.2
     "@sapphire/bitfield": ^1.2.4
     "@sapphire/snowflake": ^3.5.5

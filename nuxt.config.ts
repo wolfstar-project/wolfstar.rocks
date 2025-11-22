@@ -364,6 +364,7 @@ export default defineNuxtConfig({
 
   sentry: {
     ...runtimeConfig.sentry,
+    autoInjectServerSentry: "top-level-import",
   },
 
   seo: {

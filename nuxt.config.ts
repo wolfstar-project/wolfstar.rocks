@@ -160,10 +160,9 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-09-20",
 
   nitro: {
-    preset: process.env.NUXT_NITRO_PRESET,
     rollupConfig: {
       external:
-        process.env.NUXT_NITRO_PRESET !== "node-server"
+        process.env.PRESET !== "node-server"
           ? ["pg-native"]
           : undefined,
     },
@@ -175,11 +174,6 @@ export default defineNuxtConfig({
     devStorage: {
       "@wolfstar/ratelimiter": {
         driver: "memory",
-      },
-    },
-    esbuild: {
-      options: {
-        target: "esnext",
       },
     },
     prerender: {
@@ -243,10 +237,6 @@ export default defineNuxtConfig({
         "@vue/devtools-kit",
         "uuid",
       ],
-      exclude: ["@prisma/client"],
-    },
-    esbuild: {
-      target: "esnext",
     },
   },
 

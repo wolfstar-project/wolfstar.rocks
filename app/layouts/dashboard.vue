@@ -28,10 +28,11 @@
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
-    <slot v-if="readyToRender"></slot>
+    <slot></slot>
+    <!-- <slot v-if="readyToRender"></slot>
     <div v-else class="flex flex-1 items-center justify-center">
       <UIcon name="i-heroicons-arrow-path-20-solid" class="size-10 animate-spin text-primary" />
-    </div>
+    </div> -->
     <div v-if="error" class="fixed top-4 left-4 z-50">
       <UAlert
         color="error"
@@ -60,72 +61,67 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 import { isNullOrUndefined } from "@sapphire/utilities";
 
 const guildId = useRouteParams("id", null, { transform: String });
-const guildData = useGuildData();
 const guildStore = useGuildSettingsStore();
 const toast = useToast();
 const open = ref(false);
 const { hasChanges, mergedSettings: guildSettingsChanges, error } = storeToRefs(guildStore);
+const readyToRender = ref(false);
 
-useSeoMetadata({
-  title: `${guildData.value?.name ? `${guildData.value.name} - ` : ""} Guild`,
-});
+const items = computed<NavigationMenuItem[][]>(() => [[
+  {
+    label: "General",
+    icon: "heroicons:home",
+    to: `/guilds/${guildId.value}/manage/general`,
+    exact: true,
+    onSelect: () => {
+      open.value = false;
+    },
 
-const items = computed<NavigationMenuItem[][]>(() => [[{
-  label: "Home",
-  icon: "heroicons:home",
-  to: `/guilds/${guildId.value}/manage`,
-  exact: true,
-  onSelect: () => {
-    open.value = false;
   },
-
-}, {
-  label: "Moderation",
-  icon: "lucide:shield",
-  to: `/guilds/${guildId.value}/manage/moderation`,
-  onSelect: () => {
-    open.value = false;
+  {
+    label: "Moderation",
+    icon: "lucide:shield",
+    to: `/guilds/${guildId.value}/manage/moderation`,
+    onSelect: () => {
+      open.value = false;
+    },
   },
-}, {
-  label: "Channels",
-  icon: "heroicons:hashtag",
-  to: `/guilds/${guildId.value}/manage/channels`,
-  onSelect: () => {
-    open.value = false;
+  {
+    label: "Channels",
+    icon: "heroicons:hashtag",
+    to: `/guilds/${guildId.value}/manage/channels`,
+    onSelect: () => {
+      open.value = false;
+    },
   },
-}, {
-  value: "roles",
-  label: "Roles",
-  icon: "heroicons:user-group",
-  to: `/guilds/${guildId.value}/manage/roles`,
-  onSelect: () => {
-    open.value = false;
+  {
+    value: "roles",
+    label: "Roles",
+    icon: "heroicons:user-group",
+    to: `/guilds/${guildId.value}/manage/roles`,
+    onSelect: () => {
+      open.value = false;
+    },
   },
-}, {
-  value: "events",
-  label: "Events",
-  icon: "heroicons:bell",
-  to: `/guilds/${guildId.value}/manage/events`,
-  onSelect: () => {
-    open.value = false;
+  {
+    value: "events",
+    label: "Events",
+    icon: "heroicons:bell",
+    to: `/guilds/${guildId.value}/manage/events`,
+    onSelect: () => {
+      open.value = false;
+    },
   },
-}, {
-  value: "disabled-commands",
-  label: "Commands",
-  icon: "heroicons:command-line",
-  to: `/guilds/${guildId.value}/manage/commands`,
-  onSelect: () => {
-    open.value = false;
+  {
+    value: "disabled-commands",
+    label: "Commands",
+    icon: "heroicons:command-line",
+    to: `/guilds/${guildId.value}/manage/commands`,
+    onSelect: () => {
+      open.value = false;
+    },
   },
-}, {
-  label: "Settings",
-  value: "settings",
-  icon: "heroicons:settings",
-  to: `/guilds/${guildId.value}/manage/settings`,
-  onSelect: () => {
-    open.value = false;
-  },
-}]]);
+]]);
 
 // Validate guild ID first
 if (!isValidGuildId(guildId.value)) {
@@ -171,7 +167,8 @@ onMounted(async () => {
   }
 });
 
-const readyToRender = computed(() => {
-  return guildStore.loading !== true && !isNullOrUndefined(guildStore.settings);
+watch(() => guildStore.loading, () => {
+  if (guildStore.loading === false && !isNullOrUndefined(guildStore.settings))
+    readyToRender.value = true;
 });
 </script>

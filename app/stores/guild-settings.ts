@@ -12,17 +12,17 @@ const mergeOptions: DeepMergeOptions = {
 export const useGuildSettingsStore = defineStore("guild", {
   state: (): State => ({
     settings: null,
-    changes: null,
-    loading: false,
-    error: undefined,
+    originalSettings: null,
   }),
   getters: {
-    mergedSettings(state): GuildData {
-      state.changes ??= {};
-      return deepMerge(state.settings!, state.changes!, mergeOptions) as GuildData;
+    // Deprecated: kept for compatibility, but now just returns settings
+    mergedSettings(state): GuildData | null {
+      return state.settings;
     },
     hasChanges(state): boolean {
-      return !!state.changes && Object.keys(state.changes).length > 0;
+      if (!state.settings || !state.originalSettings)
+        return false;
+      return JSON.stringify(state.settings) !== JSON.stringify(state.originalSettings);
     },
     hasError(state): boolean {
       return !!state.error;
@@ -31,81 +31,75 @@ export const useGuildSettingsStore = defineStore("guild", {
   actions: {
     async fetchSettings() {
       const guild = useGuildData();
-      if (!guild.value?.id) {
-        return;
-      }
-
-      this.changes = null;
-      this.settings = null;
-      this.error = undefined;
-      this.loading = true;
-
-      const { data, error, status } = await useFetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
-        method: "GET",
-      });
-      this.settings = data.value ?? null;
-      this.loading = status.value === "pending";
-      this.error = error.value;
-    },
-    async setChanges(newChanges?: NullablePartialGuildData | null) {
-      if (!newChanges) {
-        this.changes = null;
-        return;
-      }
-
-      const guild = useGuildData();
-      if (!guild.value?.id)
-        return new Error("Missing guild id");
-
-      this.changes = deepMerge(this.changes ?? {}, newChanges, mergeOptions);
-
-      const { data, error, status } = await useFetch<GuildData>(`/api/guilds/${guild.value.id}/settings`, {
-        method: "PATCH",
-        body: {
-          data: this.changes,
-        },
-      });
-
-      if (status.value === "error")
-        return error.value;
-
-      // Commit server response when available; otherwise commit local snapshot.
-      this.settings = data.value
-        ?? (deepMerge(this.settings ?? {} as GuildData, this.changes!, mergeOptions) as GuildData);
-      this.changes = null;
-      return null;
-    },
-    resetChange(key: GuildDataKey) {
-      if (this.changes && key in this.changes) {
-        Reflect.deleteProperty(this.changes, key);
-
-        // If there are no more changes, set the whole object to null
-        if (Object.keys(this.changes).length === 0) {
-          this.changes = null;
-        }
-      }
-      else if (this.changes) {
-        Reflect.set(this.changes, key, null);
-      }
-      else {
-        this.changes = {
-          [key]: null,
-        };
-      }
-    },
-    resetAllChanges() {
-      if (this.changes && Object.keys(this.changes).length > 0) {
-        Object.keys(this.changes).forEach((key) => {
-          this.resetChange(key as keyof GuildData);
+      try {
+        const data = await $fetch<GuildData>(`/api/guilds/${guild.value?.id}/settings`, {
+          method: "GET",
         });
+
+        // Deep clone to ensure no reference sharing
+        this.settings = data ? JSON.parse(JSON.stringify(data)) : null;
+        this.originalSettings = data ? JSON.parse(JSON.stringify(data)) : null;
+      }
+      catch (e: any) {
+        this.error = e;
+        console.error(e);
       }
     },
+
+    // Updates local state only
+    updateSettings(partialSettings: NullablePartialGuildData) {
+      if (!this.settings)
+        return;
+
+      // Use deepMerge to update settings
+      this.settings = deepMerge(this.settings, partialSettings as Partial<GuildData>, mergeOptions) as GuildData;
+    },
+
+    // Saves current settings to API
+    async saveSettings() {
+      const guild = useGuildData();
+      try {
+        const data = await $fetch<GuildData>(`/api/guilds/${guild.value?.id}/settings`, {
+          method: "PATCH",
+          body: {
+            data: this.settings,
+          },
+        });
+
+        this.settings = data ? JSON.parse(JSON.stringify(data)) : null;
+        this.originalSettings = data ? JSON.parse(JSON.stringify(data)) : null;
+        return null;
+      }
+      catch (e: any) {
+        this.error = e;
+        console.error(e);
+        return e;
+      }
+    },
+
+    resetChange(key: GuildDataKey) {
+      if (!this.settings || !this.originalSettings)
+        return;
+
+      // Revert specific key from originalSettings
+      if (key in this.originalSettings) {
+        (this.settings as any)[key] = JSON.parse(JSON.stringify(this.originalSettings[key]));
+      }
+    },
+
+    resetAllChanges() {
+      if (this.originalSettings) {
+        this.settings = JSON.parse(JSON.stringify(this.originalSettings));
+      }
+    },
+
+    // Compatibility alias for old setChanges if needed, but better to update consumers
+    // We will update consumers to use updateSettings
   },
 });
 
 interface State {
   settings: GuildData | null;
-  changes: NullablePartialGuildData | null;
-  loading: boolean;
+  originalSettings: GuildData | null;
   error?: Error;
 }

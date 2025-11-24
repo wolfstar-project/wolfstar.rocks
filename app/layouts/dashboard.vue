@@ -4,7 +4,7 @@
       id="default"
       collapsible
       resizable
-      :ui="{ footer: 'border-t border-base-300' }"
+      :ui="{ footer: 'border-t border-base-100' }"
     >
       <template #default="{ collapsed }">
         <UNavigationMenu
@@ -28,18 +28,14 @@
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
-    <slot></slot>
-    <!-- <slot v-if="readyToRender"></slot>
+    <slot v-if="readyToRender"></slot>
     <div v-else class="flex flex-1 items-center justify-center">
       <UIcon name="i-heroicons-arrow-path-20-solid" class="size-10 animate-spin text-primary" />
-    </div> -->
-    <div v-if="error" class="fixed top-4 left-4 z-50">
-      <UAlert
-        color="error"
-        :title="error.message"
-      />
-    </div>
 
+      <div class="text-center">
+        <p>Loading guild data...</p>
+      </div>
+    </div>
     <div v-if="hasChanges" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
       <UButton
         color="primary"
@@ -58,20 +54,22 @@
 
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
+import type { ValuesType } from "@/types/utils";
 import { isNullOrUndefined } from "@sapphire/utilities";
 
 const guildId = useRouteParams("id", null, { transform: String });
+const readyToRender = useState<boolean>("readyToRender", () => false);
 const guildStore = useGuildSettingsStore();
 const toast = useToast();
 const open = ref(false);
-const { hasChanges, mergedSettings: guildSettingsChanges, error } = storeToRefs(guildStore);
-const readyToRender = ref(false);
+const guild = useGuildData();
+const { hasChanges } = storeToRefs(guildStore);
 
 const items = computed<NavigationMenuItem[][]>(() => [[
   {
-    label: "General",
+    label: "Home",
     icon: "heroicons:home",
-    to: `/guilds/${guildId.value}/manage/general`,
+    to: `/guilds/${guildId.value}/manage`,
     exact: true,
     onSelect: () => {
       open.value = false;
@@ -142,16 +140,18 @@ function isValidGuildId(id: string | undefined | null): boolean {
   const snowflakeRegex = /^\d{17,19}$/;
   return snowflakeRegex.test(id);
 }
-const submitChanges = async () => {
-  const error = await guildStore.setChanges(guildSettingsChanges.value);
+async function submitChanges() {
+  const error = await guildStore.saveSettings();
 
   toast.add(error
     ? {
+        icon: "lucide-x",
         title: "Error",
         color: "error",
         description: "Failed to save changes",
       }
     : {
+        icon: "lucide-check",
         title: "Success",
         color: "success",
         description: "Changes saved successfully",
@@ -159,16 +159,26 @@ const submitChanges = async () => {
 };
 
 onMounted(async () => {
+  readyToRender.value = false;
   try {
+    const { data } = await useFetch(`/api/guilds/${guildId.value}`, {
+      params: {
+        shouldSerialize: true,
+      },
+    });
+
+    if (data.value) {
+      guild.value = data.value as ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
+    }
+
     await guildStore.fetchSettings();
+    toast.add({ color: "success", title: "Success", description: "Settings fetched successfully" });
   }
   catch {
     toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
   }
-});
-
-watch(() => guildStore.loading, () => {
-  if (guildStore.loading === false && !isNullOrUndefined(guildStore.settings))
+  finally {
     readyToRender.value = true;
+  }
 });
 </script>

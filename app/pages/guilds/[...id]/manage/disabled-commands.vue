@@ -62,7 +62,7 @@ const emit = defineEmits<{
 const commands = useState<FlattenedCommand[]>(() => []);
 
 const toast = useToast();
-const { mergedSettings, setChanges } = useGuildSettingsStore();
+const { updateSettings, settings } = useGuildSettingsStore();
 
 const schema = computed(() => {
   const shape: Record<string, yup.BooleanSchema> = {};
@@ -119,7 +119,7 @@ async function fetchCommandsAndParseToState() {
   for (const command of commands.value) {
     if (command.guarded)
       continue;
-    commandsForState[command.name] = !mergedSettings.disabledCommands?.includes(command.name);
+    commandsForState[command.name] = !settings?.disabledCommands?.includes(command.name);
   }
   Object.assign(state, commandsForState);
 }
@@ -129,7 +129,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     .filter(([_, isEnabled]) => !isEnabled)
     .map(([name]) => name);
 
-  setChanges({
+  updateSettings({
     disabledCommands,
   });
 

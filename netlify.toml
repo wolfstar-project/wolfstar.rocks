@@ -8,14 +8,6 @@ publish = "dist" # where the built project lives
 [build.environment]
 NODE_OPTIONS = '--max-old-space-size=4096'
 
-[functions]
-external_node_modules = [ '@resvg/resvg-js' ]
-
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
-
 [[headers]]
 for = "/manifest.webmanifest"
 

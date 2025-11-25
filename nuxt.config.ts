@@ -332,7 +332,6 @@ export default defineNuxtConfig({
         "script-src": [
           "'self'",
           "'unsafe-inline'",
-          "'strict-dynamic'",
           "'wasm-unsafe-eval'",
           "blob:",
           "'nonce-{generated-nonce}'",

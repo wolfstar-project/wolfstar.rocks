@@ -334,6 +334,7 @@ export default defineNuxtConfig({
           "'unsafe-inline'",
           "'strict-dynamic'",
           "'wasm-unsafe-eval'",
+          "blob:",
           "'nonce-{generated-nonce}'",
           "https://static.cloudflareinsights.com",
         ],

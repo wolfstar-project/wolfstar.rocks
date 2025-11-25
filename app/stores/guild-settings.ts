@@ -42,7 +42,6 @@ export const useGuildSettingsStore = defineStore("guild", {
       }
       catch (e: any) {
         this.error = e;
-        console.error(e);
       }
     },
 
@@ -72,7 +71,6 @@ export const useGuildSettingsStore = defineStore("guild", {
       }
       catch (e: any) {
         this.error = e;
-        console.error(e);
         return e;
       }
     },

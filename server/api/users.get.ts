@@ -50,12 +50,8 @@ export default defineWrappedResponseHandler(
       throw createError({
         statusCode: 500,
         statusMessage: "Failed to fetch guilds",
-        data: {
-          field: "guilds",
-          error: "guilds_fetch_failed",
-          message: error.message || "Unknown error",
-          details: error,
-        },
+        message: error.message || "Unknown error",
+        cause: error,
       });
     });
 
@@ -67,11 +63,8 @@ export default defineWrappedResponseHandler(
       throw createError({
         statusCode: 500,
         statusMessage: "Data transformation failed",
-        data: {
-          error: "transformation_failed",
-          message: error.message || "Unknown error",
-          details: error,
-        },
+        message: error.message || "Unknown error",
+        cause: error,
       });
     });
 
@@ -82,7 +75,7 @@ export default defineWrappedResponseHandler(
     onSuccess: (logger, { user }) =>
       logger.info(`Successfully transformed guilds and user: ${user?.id}`),
     onError: (logger, error) =>
-      logger.error(`Failed to transform guilds and user data:\n${error.message}`),
+      logger.error(`Failed to transform guilds and user data:\n${error.message}\n${error.cause}`),
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
   },
 );

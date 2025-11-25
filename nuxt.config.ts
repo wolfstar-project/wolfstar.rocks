@@ -167,13 +167,13 @@ export default defineNuxtConfig({
           : undefined,
     },
     storage: {
-      "@wolfstar/ratelimiter": {
+      "wolfstar:ratelimiter": {
         driver: "netlify-blobs",
-        name: "@wolfstar/ratelimiter",
+        name: "wolfstar:ratelimiter",
       },
     },
     devStorage: {
-      "@wolfstar/ratelimiter": {
+      "wolfstar:ratelimiter": {
         driver: "memory",
       },
     },

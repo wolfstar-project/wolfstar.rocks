@@ -10,7 +10,7 @@ import * as yup from "yup";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
-const rateLimitStorage = useStorage("@wolfstar/ratelimiter");
+const rateLimitStorage = useStorage("wolfstar:ratelimiter");
 
 /**
  * Yup schema for rate limiting options validation

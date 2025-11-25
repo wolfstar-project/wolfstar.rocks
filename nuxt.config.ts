@@ -162,13 +162,14 @@ export default defineNuxtConfig({
   nitro: {
     rollupConfig: {
       external:
-        process.env.PRESET !== "node-server"
+        process.env.NITRO_PRESET !== "node-server"
           ? ["pg-native"]
           : undefined,
     },
     storage: {
       "@wolfstar/ratelimiter": {
         driver: "netlify-blobs",
+        name: "@wolfstar/ratelimiter",
       },
     },
     devStorage: {

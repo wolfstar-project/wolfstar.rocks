@@ -8,6 +8,74 @@ export const pwa: ModuleOptions = {
     enabled: process.env.VITE_DEV_PWA === "true",
     type: "module",
   },
+  workbox: {
+    navigateFallback: "/",
+    globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+    runtimeCaching: [
+      {
+        urlPattern: ({ request }) => request.mode === "navigate",
+        handler: "NetworkFirst",
+        options: {
+          cacheName: "pages",
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+          },
+          networkTimeoutSeconds: 10,
+        },
+      },
+      {
+        urlPattern: /^https:\/\/cdn\.wolfstar\.rocks\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "wolfstar-cdn-cache",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/cdn\.discordapp\.com\/.*/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "discord-cdn-cache",
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+      {
+        urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/i,
+        handler: "CacheFirst",
+        options: {
+          cacheName: "images",
+          expiration: {
+            maxEntries: 60,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+        },
+      },
+      {
+        urlPattern: /\.(?:js|css)$/i,
+        handler: "StaleWhileRevalidate",
+        options: {
+          cacheName: "static-resources",
+          expiration: {
+            maxEntries: 60,
+            maxAgeSeconds: 60 * 60 * 24 * 7, // 7 days
+          },
+        },
+      },
+    ],
+  },
   manifest: {
     background_color: "#050505",
     categories: ["discord", "bot", "wolfstar", "moderation", "automation", "cyborg", "logging"],

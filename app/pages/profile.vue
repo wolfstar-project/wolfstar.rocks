@@ -430,7 +430,7 @@ const src = computed(() => {
   if (isDefault.value) {
     return defaultAvatar.value;
   }
-  return createUrl(isAnimated.value ? "gif" : "png", 128);
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${isAnimated.value ? "gif" : "png"}`;
 });
 
 function undoSearch() {
@@ -439,10 +439,6 @@ function undoSearch() {
 
 function toggleView() {
   viewMode.value = viewMode.value === "grid" ? "card" : "grid";
-}
-
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
 
 watch(status, (fetchStatus) => {

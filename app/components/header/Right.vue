@@ -16,10 +16,10 @@
           <UUser
             :ui="{ name: 'hidden font-semibold sm:inline' }"
             :name="user!.globalName ?? user!.username"
+            size="sm"
             :avatar="{
-              src: avatarSrc,
+              src,
               icon: 'i-lucide-image',
-              size: 'md',
             }"
           />
         </UDropdownMenu>
@@ -79,6 +79,9 @@ import type { DropdownMenuItem } from "@nuxt/ui";
 
 const { user, clear } = useAuth();
 
+const isDefault = ref(false);
+const isAnimated = ref(false);
+
 const items = ref<DropdownMenuItem[]>([
   {
     label: "Profile",
@@ -99,10 +102,28 @@ const items = ref<DropdownMenuItem[]>([
   },
 ]);
 
-const avatarSrc = computed(() => {
-  if (user.value?.avatar) {
-    return `https://cdn.discordapp.com/avatars/${user.value.id}/${user.value.avatar}.webp?size=64`;
+// Optimized avatar computation
+const defaultAvatar = computed(() =>
+  user.value?.id
+    ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
+    : "https://cdn.discordapp.com/embed/avatars/0.png",
+);
+
+const src = computed(() => {
+  if (isDefault.value) {
+    return defaultAvatar.value;
   }
-  return `https://cdn.discordapp.com/embed/avatars/${user.value && user.value.id ? BigInt(user.value.id) % BigInt(5) : "0"}.png`;
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${isAnimated.value ? "gif" : "png"}`;
 });
+
+watch(
+  user,
+  (user) => {
+    if (user) {
+      isDefault.value = user.avatar === null;
+      isAnimated.value = user.avatar?.startsWith("a_") ?? false;
+    }
+  },
+  { immediate: true },
+);
 </script>

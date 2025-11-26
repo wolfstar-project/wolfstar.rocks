@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/scripts",
     "@nuxt/hints",
+    "@nuxt/fonts",
     "@nuxtjs/seo",
     "@vueuse/nuxt",
     "@pinia/nuxt",

@@ -1,6 +1,7 @@
 packages: []
 
 overrides:
+  "@netlify/api": ^14.0.11
   "@types/node": 22.13.14
   "@vercel/nft": ^1.0.0
 
@@ -68,6 +69,7 @@ catalogs:
     std-env: ^3.10.0
   prod:
     "@josephanson/nuxt-ai": ^0.1.6
+    "@nuxt/fonts": ^0.12.1
     "@nuxt/image": ^2.0.0
     "@nuxt/scripts": ^0.13.0
     "@sentry/nuxt": ^10.26.0
@@ -124,6 +126,9 @@ onlyBuiltDependencies:
 
 peerDependencyRules:
   allowedVersions:
+    "@nuxt/kit": "*"
+    "@unhead/vue": "*"
     inflight: 1.0.6
+    magicast: "*"
     typescript: 5.8.3
     vue-tsc: ^3.0.7

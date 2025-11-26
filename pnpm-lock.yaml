@@ -174,6 +174,9 @@ catalogs:
     '@josephanson/nuxt-ai':
       specifier: ^0.1.6
       version: 0.1.6
+    '@nuxt/fonts':
+      specifier: ^0.12.1
+      version: 0.12.1
     '@nuxt/image':
       specifier: ^2.0.0
       version: 2.0.0
@@ -269,6 +272,7 @@ catalogs:
       version: 4.1.12
 
 overrides:
+  '@netlify/api': ^14.0.11
   '@types/node': 22.13.14
   '@vercel/nft': ^1.0.0
 
@@ -294,6 +298,9 @@ importers:
       '@josephanson/nuxt-ai':
         specifier: catalog:prod
         version: 0.1.6(@ai-sdk/vue@2.0.80(vue@3.5.24(typescript@5.8.3))(zod@4.1.12))(ai@5.0.80(zod@4.1.12))(magicast@0.5.1)(nitropack@2.12.9(@netlify/blobs@10.4.1))(nuxi@3.29.3)(nuxt@4.2.1(@netlify/blobs@10.4.1)(@parcel/watcher@2.5.1)(@types/node@22.13.14)(@vue/compiler-sfc@3.5.24)(db0@0.3.4)(eslint@9.39.1(jiti@2.6.1))(ioredis@5.8.2)(lightningcss@1.30.2)(magicast@0.5.1)(optionator@0.9.4)(rollup@4.52.5)(terser@5.44.0)(typescript@5.8.3)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue-tsc@3.1.1(typescript@5.8.3))(yaml@2.8.1))(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
+      '@nuxt/fonts':
+        specifier: catalog:prod
+        version: 0.12.1(@netlify/blobs@10.4.1)(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
       '@nuxt/icon':
         specifier: catalog:icons
         version: 2.1.0(magicast@0.5.1)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))(vue@3.5.24(typescript@5.8.3))
@@ -429,7 +436,7 @@ importers:
         version: 2.4.0
       '@netlify/nuxt':
         specifier: catalog:dev
-        version: 0.2.13(@netlify/api@14.0.7)(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(rollup@4.52.5)
+        version: 0.2.13(@netlify/api@14.0.11)(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(rollup@4.52.5)
       '@nuxt/eslint':
         specifier: catalog:lint
         version: 1.10.0(@typescript-eslint/utils@8.46.2(eslint@9.39.1(jiti@2.6.1))(typescript@5.8.3))(@vue/compiler-sfc@3.5.24)(eslint-plugin-format@1.0.2(eslint@9.39.1(jiti@2.6.1)))(eslint@9.39.1(jiti@2.6.1))(magicast@0.5.1)(typescript@5.8.3)(vite@7.2.2(@types/node@22.13.14)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.0)(yaml@2.8.1))
@@ -2118,10 +2125,10 @@ packages:
     resolution: {integrity: sha512-P2EWy+fmybtJ4xptqR1qq+fL0JK4kj7MxqziSIB9BfqG7kIGDPTHHgbrzpEbgNvUpPt/l74mF5rQ5UW26VRp3A==}
     engines: {node: '>=20.6.1'}
     peerDependencies:
-      '@netlify/api': '>=14.0.10'
+      '@netlify/api': ^14.0.11
 
-  '@netlify/api@14.0.7':
-    resolution: {integrity: sha512-smSD3MnyUwi+rdcvRlD2EAGEpzK9RRMiGxaXzKW7FGqIlZSEe08aPySuC0d5BXwl/7EmT43hOkBHH4KtP8DxcQ==}
+  '@netlify/api@14.0.11':
+    resolution: {integrity: sha512-9bkjyeAacqZ2xa/BK4AbQ4tLlFzZ8X+hTekFozGhpKKg9mQVyAwreUZHKyVt3NFyew6fFcsFKZ/hjgdMLslARA==}
     engines: {node: '>=18.14.0'}
 
   '@netlify/binary-info@1.0.0':
@@ -2187,8 +2194,8 @@ packages:
     resolution: {integrity: sha512-kUuclwp5Wlf5cJfBEtGK49fBhcjNEzlj0cqR6LznBLYre2kP16b122iDU0W95ESHqqSQY0vQzcBbTTUG/Bm60Q==}
     engines: {node: ^20.19.0 || >=22.12.0}
 
-  '@netlify/open-api@2.40.0':
-    resolution: {integrity: sha512-Dp4lilDnkRKGWnljGkFVxfoh1wsWqxheE5/ZOf/sMZPsh3jGu5QZ4hVLEidzXYB/zIKFFqLaUbP2XYVxTqWqyQ==}
+  '@netlify/open-api@2.44.0':
+    resolution: {integrity: sha512-boKEIFvXXITHTNTZgy+PebDpzhTiGYEn4jbXW9hiF/iYgIFHTdvbqiCWQpK0Pr2CUGYWeqMSUnZgfRUFDu7M6Q==}
     engines: {node: '>=14.8.0'}
 
   '@netlify/otel@5.0.0':
@@ -11784,13 +11791,13 @@ snapshots:
       '@tybys/wasm-util': 0.10.1
     optional: true
 
-  '@netlify/ai@0.3.3(@netlify/api@14.0.7)':
+  '@netlify/ai@0.3.3(@netlify/api@14.0.11)':
     dependencies:
-      '@netlify/api': 14.0.7
+      '@netlify/api': 14.0.11
 
-  '@netlify/api@14.0.7':
+  '@netlify/api@14.0.11':
     dependencies:
-      '@netlify/open-api': 2.40.0
+      '@netlify/open-api': 2.44.0
       node-fetch: 3.3.2
       p-wait-for: 5.0.2
       picoquery: 2.5.0
@@ -11812,7 +11819,7 @@ snapshots:
   '@netlify/config@23.2.0':
     dependencies:
       '@iarna/toml': 2.2.5
-      '@netlify/api': 14.0.7
+      '@netlify/api': 14.0.11
       '@netlify/headers-parser': 9.0.2
       '@netlify/redirect-parser': 15.0.3
       chalk: 5.6.2
@@ -11854,9 +11861,9 @@ snapshots:
       uuid: 13.0.0
       write-file-atomic: 5.0.1
 
-  '@netlify/dev@4.8.2(@netlify/api@14.0.7)(db0@0.3.4)(ioredis@5.8.2)(rollup@4.52.5)':
+  '@netlify/dev@4.8.2(@netlify/api@14.0.11)(db0@0.3.4)(ioredis@5.8.2)(rollup@4.52.5)':
     dependencies:
-      '@netlify/ai': 0.3.3(@netlify/api@14.0.7)
+      '@netlify/ai': 0.3.3(@netlify/api@14.0.11)
       '@netlify/blobs': 10.4.1
       '@netlify/config': 23.2.0
       '@netlify/dev-utils': 4.3.2
@@ -11993,9 +12000,9 @@ snapshots:
       - ioredis
       - uploadthing
 
-  '@netlify/nuxt@0.2.13(@netlify/api@14.0.7)(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(rollup@4.52.5)':
+  '@netlify/nuxt@0.2.13(@netlify/api@14.0.11)(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(rollup@4.52.5)':
     dependencies:
-      '@netlify/dev': 4.8.2(@netlify/api@14.0.7)(db0@0.3.4)(ioredis@5.8.2)(rollup@4.52.5)
+      '@netlify/dev': 4.8.2(@netlify/api@14.0.11)(db0@0.3.4)(ioredis@5.8.2)(rollup@4.52.5)
       '@netlify/dev-utils': 4.3.2
       '@nuxt/kit': 4.2.1(magicast@0.5.1)
       h3: 1.15.4
@@ -12025,7 +12032,7 @@ snapshots:
       - supports-color
       - uploadthing
 
-  '@netlify/open-api@2.40.0': {}
+  '@netlify/open-api@2.44.0': {}
 
   '@netlify/otel@5.0.0':
     dependencies:

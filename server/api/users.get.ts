@@ -1,3 +1,5 @@
+import { createApiError } from "../utils";
+
 defineRouteMeta({
   openAPI: {
     tags: ["Discord Api"],
@@ -47,11 +49,13 @@ export default defineWrappedResponseHandler(
     const user = await getCurrentUser(event);
 
     const guilds = await api.users.getGuilds().catch((error) => {
-      throw createError({
+      throw createApiError({
         statusCode: 500,
-        statusMessage: "Failed to fetch guilds",
-        message: error.message || "Unknown error",
-        cause: error,
+        message: "Failed to fetch guilds",
+        error,
+        data: {
+          message: error.message || "Unknown error",
+        },
       });
     });
 
@@ -60,11 +64,13 @@ export default defineWrappedResponseHandler(
       user,
       guilds,
     }).catch((error) => {
-      throw createError({
+      throw createApiError({
         statusCode: 500,
-        statusMessage: "Data transformation failed",
-        message: error.message || "Unknown error",
-        cause: error,
+        message: "Data transformation failed",
+        error,
+        data: {
+          message: error.message || "Unknown error",
+        },
       });
     });
 

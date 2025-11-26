@@ -1,7 +1,6 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import { manageAbility } from "#shared/utils/abilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import { createError } from "h3";
 import * as yup from "yup";
 
 const querySchema = yup.object({
@@ -30,7 +29,7 @@ export default defineWrappedResponseHandler(
     // Get guild ID from params
     const guildId = getRouterParam(event, "guild");
     if (isNullOrUndefined(guildId)) {
-      throw createError({
+      throw createApiError({
         statusCode: 400,
         message: "Guild ID is required",
         data: {
@@ -45,7 +44,7 @@ export default defineWrappedResponseHandler(
 
     const user = await event.context.$authorization.resolveServerUser();
     if (!user) {
-      throw createError({
+      throw createApiError({
         statusCode: 401,
         message: "Unauthorized",
         data: {
@@ -59,42 +58,23 @@ export default defineWrappedResponseHandler(
     logger.info(`Fetching guilds for user ${user.id}...`);
     const guild = await api.guilds.get(guildId, { with_counts: true })
       .catch((error) => {
-        throw createError({
+        throw createApiError({
           statusCode: 500,
-          statusMessage: "Failed to fetch guilds",
-          data: {
-            field: "guild",
-            error: "guilds_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
+          message: "Failed to fetch guilds",
+          error,
         });
       });
 
     // Fetch member data
-    const member = await api.guilds
-      .getMember(guild.id, user.id)
-      .catch((error) => {
-        throw createError({
-          statusCode: 500,
-          statusMessage: "Failed to fetch member",
-          data: {
-            field: "member",
-            error: "member_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
+    const member = await getMember(event, guild, user as any);
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {
-      throw createError({
+      throw createApiError({
         statusCode: 403,
-        message: "Insufficient permissions",
+        message: `Insufficient permissions for: ${member.user.id} member.`,
         data: {
           error: "insufficient_permissions",
-          message: "Insufficient permissions",
           details: {
             guild: guild.id,
             member: member.user.id,
@@ -103,7 +83,13 @@ export default defineWrappedResponseHandler(
       });
     }
 
-    const channels = (await api.guilds.getChannels(guild.id)) as any;
+    const channels = (await api.guilds.getChannels(guild.id).catch((error) => {
+      throw createApiError({
+        statusCode: 500,
+        message: "Failed to fetch channels",
+        error,
+      });
+    })) as any;
 
     // Return flattened guild data
     return shouldSerialize

@@ -1,4 +1,21 @@
+import type { DiscordAPIError, RESTOptions } from "@discordjs/rest";
 import type { H3Error } from "h3";
+import { API } from "@discordjs/core/http-only";
+import { REST } from "@discordjs/rest";
+import { createError } from "h3";
+
+export function createApiError(options: { statusCode: number; message: string; data?: Record<string, any>; error?: Error | DiscordAPIError }) {
+  const { statusCode, message, error, data } = options;
+  return createError({
+    statusCode,
+    message,
+    cause: error,
+    data,
+    ...(error && {
+      stack: error.stack,
+    }),
+  });
+}
 
 export function omit<T, K extends keyof T>(keys: K[], obj: T): Omit<T, K> {
   if (!keys.length)
@@ -24,4 +41,16 @@ export function guildNameToAcronym(name: string) {
     .replace(/'s /g, " ")
     .replace(/\w+/g, (e) => e[0])
     .replace(/\s/g, "");
+}
+
+export function useApi(rest?: REST) {
+  rest ??= useRest();
+  return new API(rest);
+}
+
+export function useRest(options?: Partial<RESTOptions>) {
+  if (!runtimeConfig.discord.botToken) {
+    throw new Error("'NUXT_OAUTH_DISCORD_BOT_TOKEN' env is not defined");
+  }
+  return new REST(options).setToken(runtimeConfig.discord.botToken);
 }

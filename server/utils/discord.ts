@@ -5,6 +5,7 @@ import type {
   PartialOauthFlattenedGuild,
   TransformedLoginData,
 } from "#shared/types/discord";
+import type { DiscordAPIError } from "@discordjs/rest";
 import type {
   APIGuild,
   APIGuildMember,
@@ -153,7 +154,7 @@ export async function transformOauthGuildsAndUser({
   return { user, transformedGuilds };
 }
 
-export const getCurrentUser = async (event: H3Event) => {
+export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   // Get session token
   const tokens = await event.context.$authorization.resolveServerTokens();
 
@@ -162,9 +163,9 @@ export const getCurrentUser = async (event: H3Event) => {
     || !("access_token" in tokens)
     || isNullOrUndefined(tokens.access_token)
   ) {
-    throw createError({
+    throw createApiError({
       statusCode: 401,
-      statusMessage: "Authentication required",
+      message: "Authentication required",
       data: {
         error: "no_access_token",
         message: "None tokens OR access token not found",
@@ -179,36 +180,30 @@ export const getCurrentUser = async (event: H3Event) => {
 
   const api = useApi(rest);
 
-  const user = await api.users.getCurrent().catch((error) => {
-    throw createError({
+  const user = await api.users.getCurrent().catch((error: DiscordAPIError) => {
+    throw createApiError({
       statusCode: 500,
-      statusMessage: "Failed to fetch user data",
-      data: {
-        field: "user",
-        error: "user_fetch_failed",
-        message: error.message || "Unknown error",
-        details: error,
-      },
+      message: "Failed to fetch user data",
+      error,
     });
   });
   return user;
-};
+}, {
+  maxAge: 60 * 60 * 1000,
+});
 
-export const getMember = async (_event: H3Event, guild: APIGuild, user: APIUser) => {
+export const getMember = defineCachedFunction(async (_event: H3Event, guild: APIGuild, user: APIUser) => {
   const api = useApi();
   const member = await api.guilds
     .getMember(guild.id, user.id)
-    .catch((error) => {
-      throw createError({
+    .catch((error: DiscordAPIError) => {
+      throw createApiError({
         statusCode: 500,
-        statusMessage: "Failed to fetch member",
-        data: {
-          field: "member",
-          error: "member_fetch_failed",
-          message: error.message || "Unknown error",
-          details: error,
-        },
+        message: `Failed to fetch member: ${user.id}`,
+        error,
       });
     });
   return member;
-};
+}, {
+  maxAge: 60 * 60 * 1000,
+});

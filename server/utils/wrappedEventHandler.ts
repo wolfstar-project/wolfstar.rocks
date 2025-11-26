@@ -7,6 +7,7 @@ import { isObject } from "@sapphire/utilities";
 import { defu } from "defu";
 import { isDevelopment } from "std-env";
 import * as yup from "yup";
+import { createApiError } from "./index";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
@@ -210,10 +211,12 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
         setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
         setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
-        throw createError({
+        throw createApiError({
           statusCode: 429,
-          statusMessage: "Too Many Requests",
-          message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
+          message: "Too Many Requests",
+          data: {
+            message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
+          },
         });
       }
 
@@ -265,10 +268,12 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
         setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
         setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
-        throw createError({
+        throw createApiError({
           statusCode: 429,
-          statusMessage: "Too Many Requests",
-          message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
+          message: "Too Many Requests",
+          data: {
+            message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
+          },
         });
       }
 

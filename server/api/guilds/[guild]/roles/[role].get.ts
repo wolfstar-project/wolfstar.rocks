@@ -1,6 +1,5 @@
 import { manageAbility } from "#shared/utils/abilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import { createError } from "h3";
 
 defineRouteMeta({
   openAPI: {
@@ -29,7 +28,7 @@ export default defineWrappedResponseHandler(async (event) => {
   // Get guild ID from params
   const guildId = getRouterParam(event, "guild");
   if (isNullOrUndefined(guildId)) {
-    throw createError({
+    throw createApiError({
       statusCode: 400,
       message: "No guild id provided",
       data: {
@@ -43,7 +42,7 @@ export default defineWrappedResponseHandler(async (event) => {
   const user = await event.context.$authorization.resolveServerUser();
   if (!user) {
     logger.error("Unauthorized user or missing session");
-    throw createError({
+    throw createApiError({
       statusCode: 401,
       message: "Unauthorized",
       data: {
@@ -58,9 +57,10 @@ export default defineWrappedResponseHandler(async (event) => {
   logger.info(`Fetching guilds for user ${user.id}...`);
   const guild = await api.guilds.get(guildId, { with_counts: true })
     .catch((error) => {
-      throw createError({
+      throw createApiError({
         statusCode: 500,
-        statusMessage: "Failed to fetch guilds",
+        message: "Failed to fetch guilds",
+        error,
         data: {
           field: "guild",
           error: "guilds_fetch_failed",
@@ -74,9 +74,10 @@ export default defineWrappedResponseHandler(async (event) => {
   const member = await api.guilds
     .getMember(guild.id, user.id)
     .catch((error) => {
-      throw createError({
+      throw createApiError({
         statusCode: 500,
-        statusMessage: "Failed to fetch member",
+        message: "Failed to fetch member",
+        error,
         data: {
           field: "member",
           error: "member_fetch_failed",
@@ -88,7 +89,7 @@ export default defineWrappedResponseHandler(async (event) => {
 
   // Check permissions
   if (await denies(event, manageAbility, guild, member)) {
-    throw createError({
+    throw createApiError({
       statusCode: 403,
       message: "Insufficient permissions",
       data: {
@@ -104,7 +105,7 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const roleId = getRouterParam(event, "role");
   if (isNullOrUndefined(roleId)) {
-    throw createError({
+    throw createApiError({
       statusCode: 400,
       message: "No role id provided",
       data: {
@@ -116,9 +117,10 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   const role = await api.guilds.getRole(guild.id, roleId).catch((error) => {
-    throw createError({
+    throw createApiError({
       statusCode: 500,
       message: "Failed to fetch role",
+      error,
       data: {
         error: "role_fetch_failed",
         message: error.message || "Unknown error",

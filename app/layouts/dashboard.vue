@@ -55,7 +55,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 import type { ValuesType } from "@/types/utils";
-import { isNullOrUndefined } from "@sapphire/utilities";
+import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 
 const guildId = useRouteParams("id", null, { transform: String });
 const readyToRender = useState<boolean>("readyToRender", () => false);

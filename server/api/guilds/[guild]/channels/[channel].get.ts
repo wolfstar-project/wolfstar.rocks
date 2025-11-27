@@ -3,7 +3,7 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord API", "Channel"],
+    tags: ["Discord API"],
     summary: "Get channel by ID",
     description: "Retrieves detailed information about a specific channel within a guild. Requires the user to have management permissions for the guild.",
     operationId: "getGuildChannel",

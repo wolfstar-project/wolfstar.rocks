@@ -7,7 +7,7 @@ const querySchema = yup.object({
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord API", "Channel"],
+    tags: ["Discord API"],
     summary: "List all channels",
     description: "Retrieves a list of all channels within a guild. Requires the user to have management permissions for the guild.",
     operationId: "listGuildChannels",

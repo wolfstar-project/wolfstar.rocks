@@ -9,7 +9,7 @@ const querySchema = yup.object({
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Guild Settings"],
+    tags: ["General"],
     summary: "Get guild settings",
     description: "Retrieves the bot configuration and settings for a specific guild. Requires the user to have management permissions for the guild.",
     operationId: "getGuildSettings",

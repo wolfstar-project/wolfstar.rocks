@@ -2,7 +2,7 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord API", "Member"],
+    tags: ["Discord API"],
     summary: "Get member by ID",
     description: "Retrieves detailed information about a specific member within a guild, including their roles and permissions.",
     operationId: "getGuildMember",

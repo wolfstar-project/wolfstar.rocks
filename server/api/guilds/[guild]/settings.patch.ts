@@ -16,7 +16,7 @@ const settingsUpdateSchema = yup.object({
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Guild Settings"],
+    tags: ["General"],
     description: "Update guild settings",
     requestBody: {
       description: "Settings data to update",
@@ -55,6 +55,7 @@ defineRouteMeta({
       403: {
         description: "Forbidden - Insufficient permissions",
       },
+      429: { description: "Rate limit exceeded" },
     },
     parameters: [
       {

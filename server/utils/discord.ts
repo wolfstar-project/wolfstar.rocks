@@ -1,3 +1,4 @@
+import type { User } from "#auth-utils";
 import type {
   FlattenedGuild,
   LoginData,
@@ -73,7 +74,7 @@ async function getManageable(
     );
   }
 
-  const member = await useApi().guilds.getMember(guild.id, id);
+  const member = await getMember(guild, id);
   if (!member)
     return false;
 
@@ -187,23 +188,44 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
       error,
     });
   });
+
   return user;
 }, {
   maxAge: 60 * 60 * 1000,
 });
 
-export const getMember = defineCachedFunction(async (_event: H3Event, guild: APIGuild, user: APIUser) => {
+export const getMember = defineCachedFunction(async (guild: APIGuild | string, user: User | APIUser | string) => {
   const api = useApi();
-  const member = await api.guilds
-    .getMember(guild.id, user.id)
-    .catch((error: DiscordAPIError) => {
-      throw createApiError({
-        statusCode: 500,
-        message: `Failed to fetch member: ${user.id}`,
-        error,
-      });
+  try {
+    const result = await api.guilds
+      .getMember(typeof guild === "string" ? guild : guild.id, typeof user === "string" ? user : user.id);
+    return result;
+  }
+  catch (err) {
+    throw createApiError({
+      statusCode: 500,
+      message: `Failed to fetch member: ${typeof user === "string" ? user : user.id}`,
+      error: err as DiscordAPIError,
     });
-  return member;
+  }
+}, {
+  maxAge: 60 * 60 * 1000,
+});
+
+export const getGuild = defineCachedFunction(async (guildId: string) => {
+  const api = useApi();
+  try {
+    const result = await api.guilds
+      .get(guildId, { with_counts: true });
+    return result;
+  }
+  catch (err) {
+    throw createApiError({
+      statusCode: 500,
+      message: `Failed to fetch guild: ${guildId}`,
+      error: err as DiscordAPIError,
+    });
+  }
 }, {
   maxAge: 60 * 60 * 1000,
 });

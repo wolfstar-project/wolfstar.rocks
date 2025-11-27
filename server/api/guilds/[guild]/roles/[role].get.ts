@@ -3,22 +3,57 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord Api"],
-    description: "Get guild role data",
+    tags: ["Discord API", "Role"],
+    summary: "Get role by ID",
+    description: "Retrieves detailed information about a specific role within a guild, including its permissions and color. Requires the user to have management permissions for the guild.",
+    operationId: "getGuildRole",
     parameters: [
       {
         in: "path",
         name: "guild",
         required: true,
-        description: "The guild ID to fetch data for",
+        description: "The Discord snowflake ID of the guild",
+        schema: { type: "string", example: "123456789012345678" },
       },
       {
         in: "path",
         name: "role",
         required: true,
-        description: "The role ID to fetch data for",
+        description: "The Discord snowflake ID of the role to retrieve",
+        schema: { type: "string", example: "987654321098765432" },
       },
     ],
+    responses: {
+      200: {
+        description: "Role data retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                id: { type: "string", description: "The role's snowflake ID", example: "987654321098765432" },
+                guildId: { type: "string", description: "The guild's snowflake ID", example: "123456789012345678" },
+                name: { type: "string", description: "The role name", example: "Moderator" },
+                color: { type: "integer", description: "The role color as an integer", example: 3447003 },
+                hoist: { type: "boolean", description: "Whether the role is displayed separately", example: true },
+                icon: { type: "string", nullable: true, description: "The role icon hash" },
+                managed: { type: "boolean", description: "Whether the role is managed by an integration", example: false },
+                mentionable: { type: "boolean", description: "Whether the role can be mentioned", example: true },
+                permissions: { type: "string", description: "The role permissions as a bitfield string", example: "1071698660929" },
+                rawPosition: { type: "integer", description: "The role's position in the role list", example: 5 },
+              },
+            },
+          },
+        },
+      },
+      400: { description: "Role ID is required or invalid" },
+      401: { description: "Authentication required" },
+      403: { description: "Insufficient permissions to access this guild" },
+      404: { description: "Role not found in the guild" },
+      429: { description: "Rate limit exceeded" },
+      500: { description: "Failed to fetch role data from Discord" },
+    },
+    security: [{ discordOAuth: ["identify", "guilds"] }],
   },
 });
 
@@ -26,66 +61,14 @@ export default defineWrappedResponseHandler(async (event) => {
   const api = useApi();
 
   // Get guild ID from params
-  const guildId = getRouterParam(event, "guild");
-  if (isNullOrUndefined(guildId)) {
-    throw createApiError({
-      statusCode: 400,
-      message: "No guild id provided",
-      data: {
-        field: "guildId",
-        error: "guild_id_required",
-        message: "Guild ID is required",
-      },
-    });
-  }
+  const guildId = getGuildParam(event);
 
-  const user = await event.context.$authorization.resolveServerUser();
-  if (!user) {
-    logger.error("Unauthorized user or missing session");
-    throw createApiError({
-      statusCode: 401,
-      message: "Unauthorized",
-      data: {
-        field: "user",
-        error: "unauthorized",
-        message: "Unauthorized",
-      },
-    });
-  }
+  const user = await getCurrentUser(event);
 
-  // Fetch guilds with improved error handling
-  logger.info(`Fetching guilds for user ${user.id}...`);
-  const guild = await api.guilds.get(guildId, { with_counts: true })
-    .catch((error) => {
-      throw createApiError({
-        statusCode: 500,
-        message: "Failed to fetch guilds",
-        error,
-        data: {
-          field: "guild",
-          error: "guilds_fetch_failed",
-          message: error.message || "Unknown error",
-          details: error,
-        },
-      });
-    });
+  const guild = await getGuild(guildId);
 
   // Fetch member data
-  const member = await api.guilds
-    .getMember(guild.id, user.id)
-    .catch((error) => {
-      throw createApiError({
-        statusCode: 500,
-        message: "Failed to fetch member",
-        error,
-        data: {
-          field: "member",
-          error: "member_fetch_failed",
-          message: error.message || "Unknown error",
-          details: error,
-        },
-      });
-    });
+  const member = await getMember(guild, user);
 
   // Check permissions
   if (await denies(event, manageAbility, guild, member)) {

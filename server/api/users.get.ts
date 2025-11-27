@@ -2,8 +2,10 @@ import { createApiError } from "../utils";
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord Api"],
-    description: "Get the current user and their guilds",
+    tags: ["Discord API"],
+    summary: "Get current user and guilds",
+    description: "Retrieves the currently authenticated user's profile and a list of guilds they are a member of. The guilds include both raw Discord data and transformed data with additional bot-specific information.",
+    operationId: "getCurrentUserAndGuilds",
     responses: {
       200: {
         description: "Successful response with user and guild data",
@@ -36,10 +38,11 @@ defineRouteMeta({
           },
         },
       },
-      500: {
-        description: "Internal Server Error",
-      },
+      401: { description: "Authentication required" },
+      429: { description: "Rate limit exceeded" },
+      500: { description: "Internal server error - failed to fetch or transform data" },
     },
+    security: [{ discordOAuth: ["identify", "guilds"] }],
   },
 });
 

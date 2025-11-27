@@ -1,98 +1,80 @@
 import type { GuildData } from "~~/server/database";
 import { manageAbility } from "#shared/utils/abilities";
-import { isNullOrUndefined } from "@sapphire/utilities";
 import * as yup from "yup";
 import { readSettings, serializeSettings } from "~~/server/database";
 
 const querySchema = yup.object({
   shouldSerialize: yup.boolean().optional().default(false),
-  userId: yup.string().optional(),
 });
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord Api"],
-    description: "Get guild settings",
+    tags: ["Guild Settings"],
+    summary: "Get guild settings",
+    description: "Retrieves the bot configuration and settings for a specific guild. Requires the user to have management permissions for the guild.",
+    operationId: "getGuildSettings",
     parameters: [
       {
         in: "path",
         name: "guild",
         required: true,
-        description: "The guild ID to fetch settings for",
+        description: "The Discord snowflake ID of the guild",
+        schema: { type: "string", example: "123456789012345678" },
+      },
+      {
+        in: "query",
+        name: "shouldSerialize",
+        required: false,
+        description: "Whether to serialize the settings data for API response (default: false)",
+        schema: { type: "boolean", default: false },
       },
     ],
+    responses: {
+      200: {
+        description: "Guild settings retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                id: { type: "string", description: "The guild's snowflake ID", example: "123456789012345678" },
+                prefix: { type: "string", description: "The bot command prefix", example: "!" },
+                language: { type: "string", description: "The preferred language", example: "en-US" },
+                disabledCommands: { type: "array", items: { type: "string" }, description: "List of disabled command names" },
+                moderationSettings: { type: "object", description: "Moderation configuration" },
+                loggingSettings: { type: "object", description: "Logging configuration" },
+                welcomeSettings: { type: "object", description: "Welcome message configuration" },
+                automodSettings: { type: "object", description: "Auto-moderation configuration" },
+              },
+            },
+          },
+        },
+      },
+      401: { description: "Authentication required" },
+      403: { description: "Insufficient permissions to access this guild" },
+      404: { description: "Guild not found or bot is not in the guild" },
+      429: { description: "Rate limit exceeded" },
+      500: { description: "Failed to fetch guild settings" },
+    },
+    security: [{ discordOAuth: ["identify", "guilds"] }],
   },
 });
 
 export default defineWrappedResponseHandler(
   async (event) => {
-    const api = useApi();
-
     // Get guild ID from params
-    const guildId = getRouterParam(event, "guild");
-    if (isNullOrUndefined(guildId)) {
-      throw createApiError({
-        statusCode: 400,
-        message: "No guild id provided",
-        data: {
-          field: "guildId",
-          error: "guild_id_required",
-          message: "Guild ID is required",
-        },
-      });
-    }
+    const guildId = getGuildParam(event);
 
     // Validate query parameters
     const { shouldSerialize } = await getValidatedQuery(event, (body) =>
       querySchema.validate(body));
 
-    const user = await event.context.$authorization.resolveServerUser();
-    if (!user) {
-      logger.error("Unauthorized user or missing session");
-      throw createApiError({
-        statusCode: 401,
-        message: "Unauthorized",
-        data: {
-          field: "user",
-          error: "unauthorized",
-          message: "Unauthorized",
-        },
-      });
-    }
+    const user = await getCurrentUser(event);
 
-    // Fetch guilds with improved error handling
-    logger.info(`Fetching guilds for user ${user.id}...`);
-    const guild = await api.guilds.get(guildId, { with_counts: true })
-      .catch((error) => {
-        throw createApiError({
-          statusCode: 500,
-          message: "Failed to fetch guilds",
-          error,
-          data: {
-            field: "guild",
-            error: "guilds_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
+    const guild = await getGuild(guildId);
 
     // Fetch member data
-    const member = await api.guilds
-      .getMember(guild.id, user.id)
-      .catch((error) => {
-        throw createApiError({
-          statusCode: 500,
-          message: "Failed to fetch member",
-          error,
-          data: {
-            field: "member",
-            error: "member_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
+    const member = await getMember(guild, user);
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {

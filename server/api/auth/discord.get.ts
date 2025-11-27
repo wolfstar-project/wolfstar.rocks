@@ -4,22 +4,31 @@ import type { NuxtError } from "nuxt/app";
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord Api"],
-    description: "Discord OAuth2 callback",
+    tags: ["Authentication"],
+    summary: "Discord OAuth2 callback",
+    description: "Handles the OAuth2 callback from Discord after user authorization. Exchanges the authorization code for access tokens and establishes a user session.",
+    operationId: "discordOAuthCallback",
     parameters: [
       {
         in: "query",
         name: "code",
         required: true,
-        description: "The authorization code returned by Discord",
+        description: "The authorization code returned by Discord after user consent",
+        schema: { type: "string" },
       },
       {
         in: "query",
         name: "state",
         required: true,
-        description: "The state parameter returned by Discord",
+        description: "The state parameter for CSRF protection, must match the original request",
+        schema: { type: "string" },
       },
     ],
+    responses: {
+      302: { description: "Redirect to the dashboard on successful authentication" },
+      400: { description: "Invalid or missing authorization code or state" },
+      500: { description: "Failed to exchange code for tokens or fetch user data" },
+    },
   },
 });
 

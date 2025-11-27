@@ -1,7 +1,8 @@
 import type { DiscordAPIError, RESTOptions } from "@discordjs/rest";
-import type { H3Error } from "h3";
+import type { H3Error, H3Event } from "h3";
 import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
+import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
 
 export function createApiError(options: { statusCode: number; message: string; data?: Record<string, any>; error?: Error | DiscordAPIError }) {
@@ -15,6 +16,22 @@ export function createApiError(options: { statusCode: number; message: string; d
       stack: error.stack,
     }),
   });
+}
+
+export function getGuildParam(event: H3Event) {
+  const guildId = getRouterParam(event, "guild");
+  if (isNullOrUndefined(guildId)) {
+    throw createApiError({
+      statusCode: 400,
+      message: "No guild id provided",
+      data: {
+        field: "guildId",
+        error: "guild_id_required",
+        message: "Guild ID is required",
+      },
+    });
+  }
+  return guildId;
 }
 
 export function omit<T, K extends keyof T>(keys: K[], obj: T): Omit<T, K> {

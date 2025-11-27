@@ -259,7 +259,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
       const timestamps = rawTimestamps.filter((t) => t > windowLowerBound);
 
       if (timestamps.length >= limit) {
-        const oldest = timestamps[0];
+        const oldest = timestamps?.[0] ?? now;
         const msUntilReset = oldest + windowMs - now;
         const timeForInterval = oldest + windowMs;
         logger.info(`Rate limit exceeded for ${id}. Try again in ${msUntilReset}ms`);

@@ -1,7 +1,6 @@
 import { manageAbility } from "#shared/utils/abilities";
 import {
   isNullOrUndefined,
-  isNullOrUndefinedOrZero,
 } from "@sapphire/utilities";
 import * as yup from "yup";
 import {
@@ -17,7 +16,7 @@ const settingsUpdateSchema = yup.object({
 
 defineRouteMeta({
   openAPI: {
-    tags: ["Discord Api"],
+    tags: ["Guild Settings"],
     description: "Update guild settings",
     requestBody: {
       description: "Settings data to update",
@@ -70,98 +69,33 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
   async (event) => {
-    const api = useApi();
-
     // Get guild ID from params
-    const guildId = getRouterParam(event, "guild");
-    if (isNullOrUndefined(guildId)) {
-      throw createApiError({
-        statusCode: 400,
-        message: "No guild id provided",
-        data: {
-          field: "guildId",
-          error: "guild_id_required",
-          message: "Guild ID is required",
-        },
-      });
-    }
+    const guildId = getGuildParam(event);
 
     // Get and validate body data
     const body = await readValidatedBody(event, (body) =>
       settingsUpdateSchema.validate(body));
 
-    if (isNullOrUndefined(body)) {
+    if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
       throw createApiError({
         statusCode: 400,
-        message: "Invalid request body",
+        message: "Invalid request body or missing data",
         data: {
           field: "body",
           error: "invalid_request_body",
-          message: "Invalid request body",
+          message: "Invalid request body or missing data",
         },
       });
     }
 
     const { data } = body;
 
-    if (isNullOrUndefinedOrZero(data)) {
-      throw createApiError({
-        statusCode: 400,
-        message: "No settings provided",
-        data: {
-          field: "data",
-          error: "no_settings_provided",
-          message: "No settings provided",
-        },
-      });
-    }
+    const user = await getCurrentUser(event);
 
-    const user = await event.context.$authorization.resolveServerUser();
-    if (!user) {
-      logger.error("Unauthorized user or missing session");
-      throw createApiError({
-        statusCode: 401,
-        message: "Unauthorized",
-        data: {
-          error: "unauthorized",
-          message: "Unauthorized",
-        },
-      });
-    }
-
-    // Fetch guilds with improved error handling
-    logger.info(`Fetching guilds for user ${user.id}...`);
-    const guild = await api.guilds.get(guildId, { with_counts: true })
-      .catch((error) => {
-        throw createApiError({
-          statusCode: 500,
-          message: "Failed to fetch guilds",
-          error,
-          data: {
-            field: "guild",
-            error: "guilds_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
+    const guild = await getGuild(guildId);
 
     // Fetch member data
-    const member = await api.guilds
-      .getMember(guild.id, user.id)
-      .catch((error) => {
-        throw createApiError({
-          statusCode: 500,
-          message: "Failed to fetch member",
-          error,
-          data: {
-            field: "member",
-            error: "member_fetch_failed",
-            message: error.message || "Unknown error",
-            details: error,
-          },
-        });
-      });
+    const member = await getMember(guild, user);
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {

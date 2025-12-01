@@ -19,7 +19,7 @@
         <UAvatar
           :src
           :alt="isDefault ? 'Default Avatar' : 'Avatar'"
-          size="xl"
+          size="2xl"
           class="rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 transition-all duration-300"
         />
         <div class="space-y-2 text-center">

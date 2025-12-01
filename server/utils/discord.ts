@@ -202,10 +202,16 @@ export const getMember = defineCachedFunction(async (guild: APIGuild | string, u
     return result;
   }
   catch (err) {
+    const discordError = err as DiscordAPIError;
+
+    const errors: Record<number, string> = {
+      10007: `Unknown Member: ${typeof user === "string" ? user : user.id} in Guild: ${typeof guild === "string" ? guild : guild.id}`,
+    };
+    const defaultMessage = `Failed to fetch member: ${typeof user === "string" ? user : user.id} in Guild: ${typeof guild === "string" ? guild : guild.id}`;
+
     throw createApiError({
       statusCode: 500,
-      message: `Failed to fetch member: ${typeof user === "string" ? user : user.id}`,
-      error: err as DiscordAPIError,
+      message: errors[discordError.code as number] ?? defaultMessage,
     });
   }
 }, {
@@ -223,7 +229,7 @@ export const getGuild = defineCachedFunction(async (guildId: string) => {
     throw createApiError({
       statusCode: 500,
       message: `Failed to fetch guild: ${guildId}`,
-      error: err as DiscordAPIError,
+      error: err as Error,
     });
   }
 }, {

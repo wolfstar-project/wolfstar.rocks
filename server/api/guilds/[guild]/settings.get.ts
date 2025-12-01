@@ -306,6 +306,11 @@ export default defineWrappedResponseHandler(
   {
     auth: true,
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-    onError: (logger, error) => logger.error("Settings API error:", error),
+    onSuccess(logger) {
+      logger.info(`Successfully retrieved settings`);
+    },
+    onError(logger, error) {
+      logger.error("Settings API error:", error);
+    },
   },
 );

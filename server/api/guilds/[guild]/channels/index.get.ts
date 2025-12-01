@@ -1,9 +1,4 @@
 import { manageAbility } from "#shared/utils/abilities";
-import * as yup from "yup";
-
-const querySchema = yup.object({
-  shouldSerialize: yup.boolean().optional().default(true),
-});
 
 defineRouteMeta({
   openAPI: {
@@ -19,13 +14,7 @@ defineRouteMeta({
         description: "The Discord snowflake ID of the guild",
         schema: { type: "string", example: "123456789012345678" },
       },
-      {
-        in: "query",
-        name: "shouldSerialize",
-        required: false,
-        description: "Whether to serialize the channel data for API response (default: true)",
-        schema: { type: "boolean", default: true },
-      },
+
     ],
     responses: {
       200: {
@@ -69,9 +58,6 @@ export default defineWrappedResponseHandler(
     // Get guild ID from params
     const guildId = getGuildParam(event);
 
-    const { shouldSerialize } = await getValidatedQuery(event, (body) =>
-      querySchema.validate(body));
-
     const user = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
@@ -108,11 +94,21 @@ export default defineWrappedResponseHandler(
     });
 
     // Return flattened guild data
-    return shouldSerialize ? channels.map((channel) => flattenGuildChannel(channel as any)) : channels;
+    return channels.map((channel) => flattenGuildChannel(channel as any));
   },
   {
     auth: true,
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-    onError: (logger, error) => logger.error(`Channels API error:\n${error.message}`),
+
+    onSuccess(logger, data) {
+      const count = Array.isArray(data) ? data.length : 0;
+      const guildId = Array.isArray(data) && data.length > 0 && typeof (data)[0]?.guildId === "string"
+        ? (data)[0].guildId
+        : "unknown";
+      logger.info(`Successfully retrieved ${count} channels for guild ID: ${guildId}`);
+    },
+    onError(logger, error) {
+      logger.error("Channels API error:", error);
+    },
   },
 );

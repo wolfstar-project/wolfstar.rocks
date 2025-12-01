@@ -58,8 +58,6 @@ defineRouteMeta({
 });
 
 export default defineWrappedResponseHandler(async (event) => {
-  const api = useApi();
-
   // Get guild ID from params
   const guildId = getGuildParam(event);
 
@@ -98,8 +96,9 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   }
 
-  const channels = await api.guilds.getChannels(guild.id).catch((error) => {
-    logger.error("Failed to fetch channels:", error);
+  const channels = await $fetch<ReturnType<typeof flattenGuildChannel>[]>(`/api/guilds/${guildId}/channels`, {
+    headers: event.headers,
+  }).catch((error) => {
     throw createApiError({
       statusCode: 500,
       message: "Failed to fetch channels",
@@ -111,7 +110,7 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   });
 
-  const channel = channels.find(channel => channel.id === channelId) ?? null;
+  const channel = channels.find((channel: any) => channel.id === channelId) ?? null;
 
   if (isNullOrUndefined(channel)) {
     throw createApiError({
@@ -123,10 +122,15 @@ export default defineWrappedResponseHandler(async (event) => {
       },
     });
   }
-  // @ts-expect-error - Too much type checking
-  return flattenGuildChannel(channel);
+
+  return channel;
 }, {
   auth: true,
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-  onError: (logger, error) => logger.error(`Channels API error:\n${error.message}`),
+  onSuccess(logger, data) {
+    logger.info(`Successfully retrieved channel data for channel ID: ${data.id} in guild ID: ${data.guildId}`);
+  },
+  onError(logger, error) {
+    logger.error("Channels API error:", error);
+  },
 });

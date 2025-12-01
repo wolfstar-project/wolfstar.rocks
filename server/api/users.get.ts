@@ -217,10 +217,13 @@ export default defineWrappedResponseHandler(
   },
   {
     auth: true,
-    onSuccess: (logger, { user }) =>
-      logger.info(`Successfully transformed guilds and user: ${user?.id}`),
-    onError: (logger, error) =>
-      logger.error(`Failed to transform guilds and user data:\n${error.message}\n${error.cause}`),
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
+    onSuccess(logger, { user }) {
+      logger.info(`Successfully transformed guilds and user: ${user?.id}`);
+    },
+    onError(logger, error) {
+      logger.error(`Failed to transform guilds and user data:\n${error.message}\n${error.cause}`);
+    },
+
   },
 );

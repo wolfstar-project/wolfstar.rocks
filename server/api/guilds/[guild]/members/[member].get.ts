@@ -97,6 +97,10 @@ export default defineWrappedResponseHandler(async (event) => {
 }, {
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
   auth: true,
-  onError: (logger, error) =>
-    logger.error(`Members API error:\n${error.message}`),
+  onSuccess(logger, data) {
+    logger.info(`Successfully retrieved member data for member ID: ${data.id} in guild ID: ${data.guildId}`);
+  },
+  onError(logger, error) {
+    logger.error("Members API error:", error);
+  },
 });

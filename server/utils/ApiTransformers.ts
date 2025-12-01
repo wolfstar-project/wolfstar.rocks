@@ -23,6 +23,7 @@ import type {
   APIGroupDMChannel,
   APIGuild,
   APIGuildCategoryChannel,
+  APIGuildChannel,
   APIGuildForumChannel,
   APIGuildMediaChannel,
   APIGuildMember,
@@ -35,6 +36,7 @@ import type {
   APIThreadChannel,
   APIUser,
   Locale,
+  RESTGetAPIGuildChannelsResult,
 } from "discord-api-types/v10";
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
@@ -44,7 +46,7 @@ import { ChannelType, GuildFeature } from "discord-api-types/v10";
 
 export function flattenGuild(
   guild: APIGuild & {
-    channels: Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>[];
+    channels: RESTGetAPIGuildChannelsResult;
   },
 ): FlattenedGuild {
   return {
@@ -231,33 +233,29 @@ export function flattenGuildChannel(
   channel: APIGuildMediaChannel,
 ): FlattenedMediaChannel;
 export function flattenGuildChannel(
-  channel:
-    | APIThreadChannel
-    | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>,
+  channel: APIGuildChannel<GuildChannelType> | APIThreadChannel,
 ): Exclude<FlattenedAnyChannel, FlattenedDMChannel | FlattenedGroupDMChannel> {
   switch (channel.type) {
     case ChannelType.GuildAnnouncement:
-      return flattenChannelAnnouncement(channel);
+      return flattenChannelAnnouncement(channel as APINewsChannel);
     case ChannelType.GuildText:
-      return flattenChannelText(channel);
+      return flattenChannelText(channel as APITextChannel);
     case ChannelType.GuildVoice:
-      return flattenChannelVoice(channel);
+      return flattenChannelVoice(channel as APIGuildVoiceChannel);
     case ChannelType.GuildStageVoice:
-      return flattenChannelStageVoice(channel);
+      return flattenChannelStageVoice(channel as APIGuildStageVoiceChannel);
     case ChannelType.GuildCategory:
-      return flattenChannelCategory(channel);
+      return flattenChannelCategory(channel as APIGuildCategoryChannel);
     case ChannelType.PublicThread:
     case ChannelType.PrivateThread:
     case ChannelType.AnnouncementThread:
-      return flattenChannelThread(channel);
-
+      return flattenChannelThread(channel as APIThreadChannel);
     case ChannelType.GuildForum:
-      return flattenChannelForum(channel);
-
+      return flattenChannelForum(channel as APIGuildForumChannel);
     case ChannelType.GuildMedia:
-      return flattenChannelMedia(channel);
+      return flattenChannelMedia(channel as APIGuildMediaChannel);
     default:
-      throw new Error(`Unsupported channel type: unknown`);
+      throw new Error(`Unsupported channel type: ${(channel as APIChannel).type}`);
   }
 }
 

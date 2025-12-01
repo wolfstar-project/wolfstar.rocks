@@ -1,5 +1,6 @@
 import { manageAbility } from "#shared/utils/abilities";
 import {
+  isNullishOrEmpty,
   isNullOrUndefined,
 } from "@sapphire/utilities";
 import * as yup from "yup";
@@ -91,6 +92,18 @@ export default defineWrappedResponseHandler(
 
     const { data } = body;
 
+    if (isNullishOrEmpty(data)) {
+      throw createApiError({
+        statusCode: 400,
+        message: "Data array cannot be empty",
+        data: {
+          field: "data",
+          error: "empty_data_array",
+          message: "Data array cannot be empty",
+        },
+      });
+    }
+
     const user = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
@@ -116,10 +129,22 @@ export default defineWrappedResponseHandler(
 
     // Update settings
     const trx = await writeSettingsTransaction(guild.id);
+
+    if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
+      throw createApiError({
+        statusCode: 400,
+        message: "Invalid data entries",
+        data: {
+          error: "invalid_data_entries",
+          message: "All data entries must be valid [key, value] tuples",
+        },
+      });
+    }
+
     await trx
       .write(
         Object.fromEntries(
-          data.filter((entry): entry is [string, any] => entry !== undefined),
+          data,
         ),
       )
       .submit();
@@ -128,6 +153,11 @@ export default defineWrappedResponseHandler(
   {
     auth: true,
     rateLimit: { enabled: true, window: seconds(1), limit: 2 },
-    onError: (logger, error) => logger.error("Settings API error:", error),
+    onSuccess(logger) {
+      logger.info(`Successfully updated settings`);
+    },
+    onError(logger, error) {
+      logger.error("Settings API error:", error);
+    },
   },
 );

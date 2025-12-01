@@ -99,22 +99,28 @@ export default defineWrappedResponseHandler(
       });
     }
 
-    const channels = (await api.guilds.getChannels(guild.id).catch((error) => {
+    const channels = await api.guilds.getChannels(guild.id).catch((error) => {
       throw createApiError({
         statusCode: 500,
         message: "Failed to fetch channels",
         error,
       });
-    })) as any;
+    });
 
     // Return flattened guild data
-    return shouldSerialize
-      ? transformGuild(user.id, guild as RESTAPIPartialCurrentUserGuild)
+    const result = shouldSerialize
+      ? await transformGuild(user.id, guild as RESTAPIPartialCurrentUserGuild)
       : flattenGuild({ ...guild, channels });
+    return result;
   },
   {
     auth: true,
     rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-    onError: (logger, error) => logger.error(`Guilds API error:\n${error.message}`),
+    onSuccess(logger, data) {
+      logger.info(`Successfully retrieved guild data for guild ID: ${data.id}`);
+    },
+    onError(logger, error) {
+      logger.error("Guilds API error:", error);
+    },
   },
 );

@@ -1,9 +1,4 @@
 import { manageAbility } from "#shared/utils/abilities";
-import * as yup from "yup";
-
-const querySchema = yup.object({
-  shouldSerialize: yup.boolean().optional(),
-});
 
 defineRouteMeta({
   openAPI: {
@@ -64,8 +59,6 @@ export default defineWrappedResponseHandler(async (event) => {
   // Get guild ID from params
   const guildId = getGuildParam(event);
 
-  const { shouldSerialize } = await getValidatedQuery(event, (body) => querySchema.validate(body));
-
   const user = await getCurrentUser(event);
 
   const guild = await getGuild(guildId);
@@ -101,10 +94,18 @@ export default defineWrappedResponseHandler(async (event) => {
     });
   });
 
-  return shouldSerialize ? members.map((member) => flattenMember(member, guild)) : members;
+  return members.map((member) => flattenMember(member, guild));
 }, {
   auth: true,
   rateLimit: { enabled: true, window: seconds(5), limit: 2 },
-  onError: (logger, error) =>
-    logger.error(`Members API error:\n${error.message}`),
+  onSuccess(logger, data) {
+    const count = Array.isArray(data) ? data.length : 0;
+    const guildId = Array.isArray(data) && data.length > 0 && typeof (data)[0]?.guildId === "string"
+      ? (data)[0].guildId
+      : "unknown";
+    logger.info(`Successfully retrieved ${count} members for guild ID: ${guildId}`);
+  },
+  onError(logger, error) {
+    logger.error("Members API error:", error);
+  },
 });

@@ -48,7 +48,7 @@
           <guild-icon :guild variant="bare" size="lg" :show-status="true" />
         </div>
         <!-- Guild Name -->
-        <h3 class="line-clamp-2 text-sm font-semibold text-base-content">
+        <h3 class="line-clamp-2 text-base font-bold text-base-content">
           {{ guild.name }}
         </h3>
 
@@ -79,9 +79,9 @@
         </div>
 
         <!-- Action Button -->
-        <div class="w-fullspace-y-2 gap-2">
+        <div class="w-full space-y-2 gap-2">
           <NuxtLink
-            v-if="guild.wolfstarIsIn"
+            v-if="guild.wolfstarIsIn && guild.manageable"
             :to="`/guilds/${guild.id}/manage`"
             class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
             :aria-label="`Manage ${guild.name} server settings`"
@@ -104,7 +104,7 @@
           </NuxtLink>
           <div
             v-else
-            class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50"
+            class="flex h-9 w-full items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 cursor-not-allowed"
             role="status"
             :aria-label="`No permission to manage ${guild.name}`"
           >

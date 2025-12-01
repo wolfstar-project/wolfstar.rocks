@@ -64,7 +64,7 @@
           </picture>
           <div
             v-else-if="isDefault && loaded"
-            class="bg-linear-to-br from-primary/20 to-secondary/20 text-base-content flex rounded-full"
+            class="bg-linear-to-br from-primary/20 to-secondary/20 text-base-content flex items-center justify-center rounded-full"
             :class="iconSizeClasses"
           >
             <span :class="acronymSizeClasses">{{ guild.acronym }}</span>

@@ -43,7 +43,7 @@
             v-for="guild in paginatedGuilds"
             :key="guild.id"
             class="h-full"
-            :guild="guild"
+            :guild
             :view-mode
             role="listitem"
           />
@@ -55,19 +55,52 @@
         <span class="loading loading-spinner loading-lg text-primary" aria-hidden="true"></span>
       </div>
 
-      <!-- Empty State -->
-      <div v-if="!loading && error">
-        <div class="flex flex-col items-center justify-center space-y-6 py-16">
-          <UAlert
-            color="error"
-            variant="subtle"
-            title="Error Occurred"
-            :description="error.statusMessage ?? error.message"
-            icon="heroicons:exclamation-triangle"
-          />
+      <!-- Error State with Enhanced UX -->
+      <div
+        v-if="!loading && error"
+        v-motion
+        :initial="{ opacity: 0, scale: 0.95 }"
+        :enter="{ opacity: 1, scale: 1, transition: { duration: 300, ease: 'easeOut' } }"
+        :leave="{ opacity: 0, scale: 0.95, transition: { duration: 200, ease: 'easeIn' } }"
+        class="py-8"
+      >
+        <div
+          class="max-w-2xl mx-auto rounded-xl border p-6"
+          :class="[
+            errorColor === 'warning'
+              ? 'bg-warning/10 border-warning/30 text-warning'
+              : 'bg-error/10 border-error/30 text-error',
+          ]"
+        >
+          <div class="flex items-start gap-4">
+            <div class="shrink-0">
+              <UIcon :name="errorIcon" class="size-6" />
+            </div>
+            <div class="flex-1 space-y-2">
+              <h3 class="font-semibold text-lg">{{ errorTitle }}</h3>
+              <p class="opacity-90">{{ errorDescription }}</p>
+              <p v-if="errorSuggestion" class="text-sm opacity-70">
+                {{ errorSuggestion }}
+              </p>
+            </div>
+          </div>
+          <div v-if="onRetry" class="mt-4 flex justify-end">
+            <UButton
+              :color="errorColor"
+              variant="outline"
+              size="sm"
+              icon="heroicons:arrow-path"
+              :loading="isRetrying"
+              @click="onRetry"
+            >
+              {{ isRetrying ? "Retrying..." : "Try Again" }}
+            </UButton>
+          </div>
         </div>
       </div>
-      <div v-else-if="!loading && filteredGuilds.length === 0">
+
+      <!-- Empty State -->
+      <div v-if="!loading && !error && filteredGuilds.length === 0">
         <div class="flex flex-col items-center justify-center space-y-6 py-16">
           <div class="text-center py-16" role="status" aria-live="polite">
             <h2 class="text-xl font-bold text-base-content/80 mb-2">
@@ -111,6 +144,8 @@ interface EnhancedGuildCardsProps {
   searchQuery: string | null;
   loading: boolean;
   error: FetchError<any> | undefined;
+  isRetrying?: boolean;
+  onRetry?: () => void;
   viewMode?: "card" | "grid";
 }
 
@@ -121,8 +156,113 @@ const {
   searchQuery,
   loading,
   error,
+  isRetrying = false,
+  onRetry,
   viewMode = "card",
 } = defineProps<EnhancedGuildCardsProps>();
+
+// Error handling computed properties
+const isTimeoutError = computed(() => error?.statusCode === 408);
+const isNetworkError = computed(() =>
+  error?.statusCode === 0
+  || error?.message?.includes("network")
+  || error?.message?.includes("fetch"),
+);
+
+const errorColor = computed<"error" | "warning">(() => {
+  if (isTimeoutError.value || isNetworkError.value || error?.statusCode === 429) {
+    return "warning";
+  }
+  return "error";
+});
+
+const errorTitle = computed(() => {
+  if (!error) {
+    return "Error";
+  }
+  if (isTimeoutError.value) {
+    return "Request Timeout";
+  }
+  if (error.statusCode === 401) {
+    return "Session Expired";
+  }
+  if (error.statusCode === 403) {
+    return "Access Denied";
+  }
+  if (error.statusCode === 429) {
+    return "Too Many Requests";
+  }
+  if (error.statusCode && error.statusCode >= 500) {
+    return "Server Error";
+  }
+  if (isNetworkError.value) {
+    return "Network Error";
+  }
+  return "Error Loading Servers";
+});
+
+const errorDescription = computed(() => {
+  if (!error) {
+    return "An unexpected error occurred.";
+  }
+  if (isTimeoutError.value) {
+    return "The request took too long to complete.";
+  }
+  if (error.statusCode === 401) {
+    return "Your session has expired. Please log in again.";
+  }
+  if (error.statusCode === 403) {
+    return "You don't have permission to access this resource.";
+  }
+  if (error.statusCode === 429) {
+    return "You've made too many requests. Please wait a moment before trying again.";
+  }
+  if (error.statusCode && error.statusCode >= 500) {
+    return "Something went wrong on our end. Please try again later.";
+  }
+  if (isNetworkError.value) {
+    return "Unable to connect to the server.";
+  }
+  return error.statusMessage ?? error.message ?? "Failed to load servers.";
+});
+
+const errorSuggestion = computed(() => {
+  if (isTimeoutError.value) {
+    return "This might be due to slow network connection or server load. Try again in a moment.";
+  }
+  if (error?.statusCode === 429) {
+    return "Rate limiting is in effect to protect the service.";
+  }
+  if (error?.statusCode && error.statusCode >= 500) {
+    return "If this persists, please contact support.";
+  }
+  if (isNetworkError.value) {
+    return "Please check your internet connection and try again.";
+  }
+  return undefined;
+});
+
+const errorIcon = computed(() => {
+  if (isTimeoutError.value) {
+    return "heroicons:clock";
+  }
+  if (error?.statusCode === 401) {
+    return "heroicons:lock-closed";
+  }
+  if (error?.statusCode === 403) {
+    return "heroicons:shield-exclamation";
+  }
+  if (error?.statusCode === 429) {
+    return "heroicons:hand-raised";
+  }
+  if (error?.statusCode && error.statusCode >= 500) {
+    return "heroicons:server";
+  }
+  if (isNetworkError.value) {
+    return "heroicons:signal-slash";
+  }
+  return "heroicons:exclamation-triangle";
+});
 
 const INITIAL_COUNT = 20;
 const LOAD_MORE_COUNT = 10;

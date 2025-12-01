@@ -213,14 +213,14 @@
               </div>
               <div class="space-y-4 md:space-y-2">
                 <GuildCards
-                  :error
+                  :error="combinedError"
                   :guilds
                   :filtered-guilds
                   :undo-search
                   :search-query
                   :loading="isLoading"
-                  :container-height="600"
-                  :item-height="280"
+                  :is-retrying
+                  :on-retry="handleRetry"
                   :view-mode
                 />
               </div>
@@ -312,6 +312,7 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
+import type { FetchError } from "ofetch";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
@@ -321,6 +322,10 @@ useSeoMetadata({
   description: "Manage your profile, servers and settings",
   shouldSeoImage: true,
 });
+
+// Constants for timeout and retry logic
+const FETCH_TIMEOUT_MS = 15000; // 15 seconds timeout
+const MAX_RETRY_ATTEMPTS = 3;
 
 const { user } = useAuth();
 // refs
@@ -333,14 +338,20 @@ const evaluating = shallowRef(false);
 const searchQuery = ref<null | string>(null);
 const viewMode = ref<"grid" | "card">("card");
 
+// Error handling state
+const timeoutError = ref<Error | null>(null);
+const isRetrying = ref(false);
+const retryCount = ref(0);
+
 // toggles
 // is true by default because we want to show only manageable servers
 const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
-const { data, status, refresh, error } = useFetch("/api/users", {
+const { data, status, error: fetchError, execute } = useFetch("/api/users", {
   key: "guilds",
+  immediate: false,
   transform: (data) => ({
     transformedGuilds: data.transformedGuilds ?? [],
     fetchAt: Date.now(),
@@ -364,6 +375,78 @@ const { data, status, refresh, error } = useFetch("/api/users", {
 });
 
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
+
+// Combined error for GuildCards component
+const combinedError = computed(() => {
+  if (timeoutError.value) {
+    return {
+      statusCode: 408,
+      statusMessage: "Request Timeout",
+      message: timeoutError.value.message,
+      data: null,
+    } as unknown as FetchError;
+  }
+  return fetchError.value;
+});
+
+// Fetch with timeout using @vueuse/core
+async function fetchWithTimeout() {
+  isLoading.value = true;
+  timeoutError.value = null;
+
+  try {
+    const fetchPromise = execute();
+
+    await Promise.race([
+      fetchPromise,
+      until(status).toMatch(s => s === "success" || s === "error", {
+        timeout: FETCH_TIMEOUT_MS,
+        throwOnTimeout: true,
+      }),
+    ]);
+
+    if (fetchError.value) {
+      throw fetchError.value;
+    }
+
+    await until(data).toBeTruthy({ timeout: 2000, throwOnTimeout: false });
+  }
+  catch (err) {
+    if (err instanceof Error && err.message?.includes("Timeout")) {
+      timeoutError.value = new Error(`Request timed out after ${FETCH_TIMEOUT_MS / 1000} seconds`);
+      logger.warn("Profile fetch timed out", { timeout: FETCH_TIMEOUT_MS });
+    }
+    else {
+      logger.error("Profile fetch failed", { error: err });
+    }
+  }
+  finally {
+    isLoading.value = false;
+  }
+}
+
+// Retry handler with exponential backoff
+async function handleRetry() {
+  if (retryCount.value >= MAX_RETRY_ATTEMPTS) {
+    logger.warn("Max retry attempts reached");
+    return;
+  }
+
+  isRetrying.value = true;
+  retryCount.value++;
+
+  const delay = (2 ** (retryCount.value - 1)) * 1000;
+  await new Promise(resolve => setTimeout(resolve, delay));
+
+  await fetchWithTimeout();
+  isRetrying.value = false;
+}
+
+// Refresh wrapper for the UI buttons
+async function refresh() {
+  retryCount.value = 0;
+  await fetchWithTimeout();
+}
 
 // Optimized filtered guilds with memoization
 const filteredGuilds = computedAsync(
@@ -450,12 +533,17 @@ watch(status, (fetchStatus) => {
 
 watch(
   user,
-  (user) => {
-    if (user) {
-      isDefault.value = user.avatar === null;
-      isAnimated.value = user.avatar?.startsWith("a_") ?? false;
+  (userData) => {
+    if (userData) {
+      isDefault.value = userData.avatar === null;
+      isAnimated.value = userData.avatar?.startsWith("a_") ?? false;
     }
   },
   { immediate: true },
 );
+
+// Initialize fetch on client side
+if (import.meta.client) {
+  void fetchWithTimeout().catch(logger.error);
+}
 </script>

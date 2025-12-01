@@ -7,15 +7,20 @@ import { createError } from "h3";
 
 export function createApiError(options: { statusCode: number; message: string; data?: Record<string, any>; error?: Error | DiscordAPIError }) {
   const { statusCode, message, error, data } = options;
-  return createError({
+
+  let cause: unknown;
+  if (error?.stack) {
+    cause = error.stack;
+  }
+  const errorObj: Record<string, any> = {
     statusCode,
     message,
-    cause: error,
     data,
-    ...(error && {
-      stack: error.stack,
-    }),
-  });
+  };
+  if (typeof cause === "object" && cause !== null) {
+    errorObj.cause = cause;
+  }
+  return createError(errorObj);
 }
 
 export function getGuildParam(event: H3Event) {

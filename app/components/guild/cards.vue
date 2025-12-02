@@ -22,16 +22,7 @@
     </div>
 
     <div class="w-full">
-      <!-- Loading Skeleton Grid -->
-      <div
-        v-if="loading"
-        class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-        role="status"
-        aria-label="Loading servers"
-      >
-        <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" :view-mode />
-      </div>
-      <div v-else ref="scrollComponent">
+      <div ref="scrollComponent">
         <!-- Guild Cards Grid -->
         <div
           v-if="paginatedGuilds.length > 0"
@@ -46,6 +37,7 @@
             :guild
             :view-mode
             role="listitem"
+            loading
           />
         </div>
       </div>
@@ -164,9 +156,9 @@ const {
 // Error handling computed properties
 const isTimeoutError = computed(() => error?.statusCode === 408);
 const isNetworkError = computed(() =>
-  error?.statusCode === 0
-  || error?.message?.includes("network")
-  || error?.message?.includes("fetch"),
+  (error?.statusCode === 0
+    || error?.message?.includes("network")
+    || error?.message?.includes("fetch")) ?? false,
 );
 
 const errorColor = computed<"error" | "warning">(() => {

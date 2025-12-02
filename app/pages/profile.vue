@@ -16,21 +16,35 @@
         </div>
       </div>
       <template v-else>
-        <UAvatar
+        <UUser
+          v-motion
+          :initial="{ scale: 0.9, opacity: 0 }"
+          :enter="{ scale: 1, opacity: 1, transition: { duration: 300 } }"
           :src
           :alt="isDefault ? 'Default Avatar' : 'Avatar'"
+          :label="user.globalName ?? user.username"
           size="2xl"
-          class="rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 transition-all duration-300"
-        />
-        <div class="space-y-2 text-center">
-          <h1 class="text-4xl font-bold text-base-content">
-            {{ user.globalName ?? user.username }}
-          </h1>
-          <p class="text-lg font-medium text-base-content/80">
-            @{{ user.username }}
-          </p>
-          <p class="text-sm text-base-content/60">User ID: {{ user.id }}</p>
-        </div>
+        >
+          <template #description>
+            <div class="space-y-1">
+              <p class="text-lg font-medium text-base-content/80">
+                @{{ user.username }}
+              </p>
+              <UButton
+                variant="ghost"
+                size="xs"
+                color="neutral"
+                class="text-sm text-base-content/60 hover:text-base-content"
+                @click="copyUserId"
+              >
+                <template #leading>
+                  <UIcon :name="copied ? 'heroicons:check' : 'heroicons:clipboard-document'" />
+                </template>
+                User ID: {{ user.id }}
+              </UButton>
+            </div>
+          </template>
+        </UUser>
       </template>
     </section>
 
@@ -334,6 +348,7 @@ const activeTab = ref("servers");
 const isDefault = ref(false);
 const isAnimated = ref(false);
 const isLoading = ref(true);
+const { copy, copied } = useClipboard();
 const evaluating = shallowRef(false);
 const searchQuery = ref<null | string>(null);
 const viewMode = ref<"grid" | "card">("card");
@@ -522,6 +537,12 @@ function undoSearch() {
 
 function toggleView() {
   viewMode.value = viewMode.value === "grid" ? "card" : "grid";
+}
+
+async function copyUserId() {
+  if (user.value?.id) {
+    await copy(user.value.id);
+  }
 }
 
 watch(status, (fetchStatus) => {

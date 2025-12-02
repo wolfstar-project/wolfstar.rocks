@@ -13,15 +13,17 @@
             content: 'w-48',
           }"
         >
-          <UUser
-            :ui="{ name: 'hidden font-semibold sm:inline' }"
-            :name="user!.globalName ?? user!.username"
-            size="sm"
-            :avatar="{
-              src,
-              icon: 'i-lucide-image',
-            }"
-          />
+          <div class="flex items-center gap-2 cursor-pointer">
+            <UAvatar
+              v-motion
+              :initial="{ scale: 1 }"
+              :hover="{ scale: 1.1, rotate: 5 }"
+              :src="src"
+              icon="i-lucide-image"
+              size="2xs"
+            />
+            <span class="hidden font-semibold sm:inline">{{ user!.globalName ?? user!.username }}</span>
+          </div>
         </UDropdownMenu>
       </div>
       <div v-else>

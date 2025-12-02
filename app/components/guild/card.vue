@@ -1,6 +1,9 @@
 <template>
+  <!-- Loading Skeleton -->
+  <GuildCardSkeleton v-if="loading" :view-mode="effectiveViewMode" />
+
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
-  <div class="group block cursor-pointer">
+  <div v-else class="group block cursor-pointer">
     <component
       :is="guild.manageable ? 'NuxtLink' : 'div'"
       v-if="effectiveViewMode === 'grid'"
@@ -131,9 +134,13 @@ interface EnhancedGuildCardProps {
    * - `grid`: A grid card with a status indicator.
    */
   viewMode?: "card" | "grid";
+  /**
+   * Show loading skeleton instead of content
+   */
+  loading?: boolean;
 }
 
-const { guild, viewMode = "card" } = defineProps<EnhancedGuildCardProps>();
+const { guild, viewMode = "card", loading = false } = defineProps<EnhancedGuildCardProps>();
 
 // Force grid view on mobile devices
 const breakpoints = useBreakpoints(breakpointsTailwind);

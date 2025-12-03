@@ -8,43 +8,45 @@
         v-if="!user || isLoading"
         class="flex flex-col items-center justify-center space-y-6"
       >
-        <div class="h-24 w-24 animate-pulse rounded-full bg-base-300"></div>
+        <USkeleton class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100" />
         <div class="space-y-2 text-center">
-          <div class="h-8 w-48 animate-pulse rounded bg-base-300"></div>
-          <div class="h-6 w-32 animate-pulse rounded bg-base-300"></div>
-          <div class="h-4 w-56 animate-pulse rounded bg-base-300"></div>
+          <USkeleton class="h-10 w-48" />
+          <USkeleton class="h-7 w-32" />
+          <div class="flex items-center justify-center gap-2">
+            <USkeleton class="h-6 w-16" />
+            <USkeleton class="h-6 w-32 rounded-md" />
+          </div>
         </div>
       </div>
       <template v-else>
-        <UUser
-          v-motion
-          :initial="{ scale: 0.9, opacity: 0 }"
-          :enter="{ scale: 1, opacity: 1, transition: { duration: 300 } }"
+        <UAvatar
           :src
           :alt="isDefault ? 'Default Avatar' : 'Avatar'"
-          :label="user.globalName ?? user.username"
           size="2xl"
-        >
-          <template #description>
-            <div class="space-y-1">
-              <p class="text-lg font-medium text-base-content/80">
-                @{{ user.username }}
-              </p>
-              <UButton
-                variant="ghost"
-                size="xs"
-                color="neutral"
-                class="text-sm text-base-content/60 hover:text-base-content"
-                @click="copyUserId"
-              >
-                <template #leading>
-                  <UIcon :name="copied ? 'heroicons:check' : 'heroicons:clipboard-document'" />
-                </template>
-                User ID: {{ user.id }}
-              </UButton>
-            </div>
-          </template>
-        </UUser>
+          class="rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 transition-all duration-300"
+        />
+        <div class="space-y-2 text-center">
+          <h1 class="text-4xl font-bold text-base-content">
+            {{ user.globalName ?? user.username }}
+          </h1>
+          <p class="text-lg font-medium text-base-content/80">
+            @{{ user.username }}
+          </p>
+          <p class="text-sm text-base-content/60">
+            User ID:               <UButton
+              variant="outline"
+              size="xs"
+              color="neutral"
+              class="text-sm text-base-content/60 hover:text-base-content"
+              @click="copyUserId"
+            >
+              <template #leading>
+                <UIcon :name="copied ? 'heroicons:check' : 'heroicons:clipboard-document'" />
+              </template>
+              User ID: {{ user.id }}
+            </UButton>
+          </p>
+        </div>
       </template>
     </section>
 
@@ -64,10 +66,10 @@
               <div class="mb-4">
                 <h2 class="text-2xl font-bold text-base-content">Servers</h2>
                 <p class="mt-1 text-base-content/60">
-                  <span
-                    v-if="status === 'pending'"
-                    class="inline-block h-5 w-48 animate-pulse rounded bg-base-300"
-                  ></span>
+                  <USkeleton
+                    v-if="isLoading"
+                    class="inline-block h-5 w-48"
+                  />
                   <span v-else>Servers you're in ({{ guilds?.length ?? 0 }} servers)</span>
                 </p>
               </div>
@@ -84,7 +86,6 @@
                       name="search"
                       type="text"
                       placeholder="Search servers.."
-                      :disabled="isLoading"
                       icon="heroicons:magnifying-glass-circle"
                       :is-loading
                       is-loading-icon="lucide:loader"

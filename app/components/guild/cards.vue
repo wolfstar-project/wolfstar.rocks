@@ -22,7 +22,16 @@
     </div>
 
     <div class="w-full">
-      <div ref="scrollComponent">
+      <!-- Loading Skeleton Grid -->
+      <div
+        v-if="loading"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+        role="status"
+        aria-label="Loading servers"
+      >
+        <guild-card-skeleton v-for="n in paginatedGuilds.length || INITIAL_COUNT" :key="n" :view-mode />
+      </div>
+      <div v-else ref="scrollComponent">
         <!-- Guild Cards Grid -->
         <div
           v-if="paginatedGuilds.length > 0"
@@ -37,7 +46,6 @@
             :guild
             :view-mode
             role="listitem"
-            loading
           />
         </div>
       </div>

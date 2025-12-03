@@ -1,9 +1,6 @@
 <template>
-  <!-- Loading Skeleton -->
-  <GuildCardSkeleton v-if="loading" :view-mode="effectiveViewMode" />
-
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
-  <div v-else class="group block cursor-pointer">
+  <div class="group block cursor-pointer">
     <component
       :is="guild.manageable ? 'NuxtLink' : 'div'"
       v-if="effectiveViewMode === 'grid'"
@@ -66,17 +63,13 @@
               aria-hidden="true"
             />
             <span>{{
-              !isNullOrUndefinedOrZero(guild.approximateMemberCount)
-                ? formatNumber(guild.approximateMemberCount)
-                : "N/A"
+              approximateMemberCount
             }}</span>
           </span>
           <span class="flex items-center space-x-1" title="Members online" aria-label="Members online">
             <UIcon name="heroicons:signal" class="h-3 w-3 text-success" aria-hidden="true" />
             <span>{{
-              !isNullOrUndefinedOrZero(guild.approximatePresenceCount)
-                ? formatNumber(guild.approximatePresenceCount)
-                : "N/A"
+              approximatePresenceCount
             }}</span>
           </span>
         </div>
@@ -134,18 +127,26 @@ interface EnhancedGuildCardProps {
    * - `grid`: A grid card with a status indicator.
    */
   viewMode?: "card" | "grid";
-  /**
-   * Show loading skeleton instead of content
-   */
-  loading?: boolean;
 }
 
-const { guild, viewMode = "card", loading = false } = defineProps<EnhancedGuildCardProps>();
+const { guild, viewMode = "card" } = defineProps<EnhancedGuildCardProps>();
 
 // Force grid view on mobile devices
 const breakpoints = useBreakpoints(breakpointsTailwind);
 const isMobile = breakpoints.smaller("sm");
 const effectiveViewMode = computed(() => isMobile.value ? "grid" : viewMode);
+
+const approximatePresenceCount = computed(() => {
+  return !isNullOrUndefinedOrZero(guild.approximatePresenceCount)
+    ? formatNumber(guild.approximatePresenceCount)
+    : "N/A";
+});
+
+const approximateMemberCount = computed(() => {
+  return !isNullOrUndefinedOrZero(guild.approximateMemberCount)
+    ? formatNumber(guild.approximateMemberCount)
+    : "N/A";
+});
 
 const manageGuildURL = computed(() => {
   if (!guild.manageable) {

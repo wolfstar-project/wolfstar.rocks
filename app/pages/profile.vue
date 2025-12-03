@@ -21,8 +21,7 @@
       <template v-else>
         <UAvatar
           :src
-          :alt="isDefault ? 'Default Avatar' : 'Avatar'"
-          size="2xl"
+          :alt="`Avatar's ${user.name}`"
           class="rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 transition-all duration-300"
         />
         <div class="space-y-2 text-center">
@@ -43,7 +42,7 @@
               <template #leading>
                 <UIcon :name="copied ? 'heroicons:check' : 'heroicons:clipboard-document'" />
               </template>
-              User ID: {{ user.id }}
+              {{ user.id }}
             </UButton>
           </p>
         </div>
@@ -328,6 +327,7 @@
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
 import type { FetchError } from "ofetch";
+import { CDN } from "@discordjs/rest";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
@@ -346,8 +346,6 @@ const { user } = useAuth();
 // refs
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
-const isDefault = ref(false);
-const isAnimated = ref(false);
 const isLoading = ref(true);
 const { copy, copied } = useClipboard();
 const evaluating = shallowRef(false);
@@ -501,13 +499,6 @@ const filteredGuilds = computedAsync(
   { lazy: true, evaluating },
 );
 
-// Optimized avatar computation
-const defaultAvatar = computed(() =>
-  user.value?.id
-    ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
-    : "https://cdn.discordapp.com/embed/avatars/0.png",
-);
-
 // Enhanced tabs configuration
 const items = computed<TabsItem[]>(() => [
   {
@@ -525,12 +516,9 @@ const items = computed<TabsItem[]>(() => [
   },
 ]);
 
-const src = computed(() => {
-  if (isDefault.value) {
-    return defaultAvatar.value;
-  }
-  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${isAnimated.value ? "gif" : "png"}`;
-});
+const src = computed(() => new CDN().avatar(user.value!.id, user.value!.avatar!, {
+  size: 1024,
+}));
 
 function undoSearch() {
   searchQuery.value = null;
@@ -552,17 +540,6 @@ watch(status, (fetchStatus) => {
     isLoading.value = false;
   }
 });
-
-watch(
-  user,
-  (userData) => {
-    if (userData) {
-      isDefault.value = userData.avatar === null;
-      isAnimated.value = userData.avatar?.startsWith("a_") ?? false;
-    }
-  },
-  { immediate: true },
-);
 
 // Initialize fetch on client side
 if (import.meta.client) {

@@ -104,7 +104,7 @@ export default defineWrappedResponseHandler(
       });
     }
 
-    const user = await getCurrentUser(event);
+    const { user } = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
 
@@ -157,7 +157,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully updated settings`);
     },
     onError(logger, error) {
-      logger.error("Settings API error:", error);
+      logger.error(String.raw`Settings API error:\nStatus - ${error.statusCode}\n${error.message}`);
     },
   },
 );

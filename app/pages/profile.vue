@@ -326,8 +326,7 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
-import type { FetchError } from "ofetch";
-import { CDN } from "@discordjs/rest";
+import { avatarURL } from "#shared/utils/discord";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"], auth: true });
@@ -366,6 +365,10 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 const { data, status, error: fetchError, execute } = useFetch("/api/users", {
   key: "guilds",
   immediate: false,
+  timeout: FETCH_TIMEOUT_MS,
+  retry: MAX_RETRY_ATTEMPTS,
+  retryDelay: 1000,
+  retryStatusCodes: [408, 500, 502, 503, 504],
   transform: (data) => ({
     transformedGuilds: data.transformedGuilds ?? [],
     fetchAt: Date.now(),
@@ -386,6 +389,32 @@ const { data, status, error: fetchError, execute } = useFetch("/api/users", {
     }
     return data;
   },
+  onRequest({ options }) {
+    isLoading.value = true;
+    timeoutError.value = null;
+    logger.info("Fetching user guilds", { timeout: options.timeout });
+  },
+  onRequestError({ error }) {
+    logger.error("Profile fetch request failed", { error: error.message });
+    timeoutError.value = error;
+  },
+  onResponse({ response }) {
+    logger.info("Profile fetch successful", { status: response.status });
+  },
+  onResponseError({ response, error }) {
+    logger.error("Profile fetch response error", {
+      status: response.status,
+      error: error?.message,
+    });
+
+    if (response.status === 408 || (error && error.message?.includes("timeout"))) {
+      timeoutError.value = createError({
+        statusCode: 408,
+        statusMessage: "Request Timeout",
+        message: `Request timed out after ${FETCH_TIMEOUT_MS / 1000} seconds`,
+      });
+    }
+  },
 });
 
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
@@ -393,67 +422,42 @@ const guilds = computed(() => data.value?.transformedGuilds ?? []);
 // Combined error for GuildCards component
 const combinedError = computed(() => {
   if (timeoutError.value) {
-    return {
-      statusCode: 408,
-      statusMessage: "Request Timeout",
-      message: timeoutError.value.message,
-      data: null,
-    } as unknown as FetchError;
+    return timeoutError.value;
   }
   return fetchError.value;
 });
 
-// Fetch with timeout using @vueuse/core
+// Fetch with built-in timeout and retry
 async function fetchWithTimeout() {
   isLoading.value = true;
   timeoutError.value = null;
 
   try {
-    const fetchPromise = execute();
-
-    await Promise.race([
-      fetchPromise,
-      until(status).toMatch(s => s === "success" || s === "error", {
-        timeout: FETCH_TIMEOUT_MS,
-        throwOnTimeout: true,
-      }),
-    ]);
+    await execute();
 
     if (fetchError.value) {
       throw fetchError.value;
     }
-
-    await until(data).toBeTruthy({ timeout: 2000, throwOnTimeout: false });
   }
-  catch (err) {
-    if (err instanceof Error && err.message?.includes("Timeout")) {
-      timeoutError.value = new Error(`Request timed out after ${FETCH_TIMEOUT_MS / 1000} seconds`);
-      logger.warn("Profile fetch timed out", { timeout: FETCH_TIMEOUT_MS });
-    }
-    else {
-      logger.error("Profile fetch failed", { error: err });
-    }
+  catch (error) {
+    logger.error("Profile fetch failed", error);
   }
   finally {
     isLoading.value = false;
   }
 }
 
-// Retry handler with exponential backoff
+// Retry handler - ofetch handles automatic retry, this is for manual user-initiated retry
 async function handleRetry() {
-  if (retryCount.value >= MAX_RETRY_ATTEMPTS) {
-    logger.warn("Max retry attempts reached");
-    return;
-  }
-
   isRetrying.value = true;
   retryCount.value++;
 
-  const delay = (2 ** (retryCount.value - 1)) * 1000;
-  await new Promise(resolve => setTimeout(resolve, delay));
-
-  await fetchWithTimeout();
-  isRetrying.value = false;
+  try {
+    await fetchWithTimeout();
+  }
+  finally {
+    isRetrying.value = false;
+  }
 }
 
 // Refresh wrapper for the UI buttons
@@ -516,9 +520,7 @@ const items = computed<TabsItem[]>(() => [
   },
 ]);
 
-const src = computed(() => new CDN().avatar(user.value!.id, user.value!.avatar!, {
-  size: 1024,
-}));
+const src = computed(() => avatarURL(user.value!));
 
 function undoSearch() {
   searchQuery.value = null;

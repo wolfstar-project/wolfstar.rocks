@@ -1,5 +1,3 @@
-import { createApiError } from "../utils";
-
 defineRouteMeta({
   openAPI: {
     tags: ["Discord API"],
@@ -184,19 +182,7 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
   async (event) => {
-    const api = useApi();
-    const user = await getCurrentUser(event);
-
-    const guilds = await api.users.getGuilds().catch((error) => {
-      throw createApiError({
-        statusCode: 500,
-        message: "Failed to fetch guilds",
-        error,
-        data: {
-          message: error.message || "Unknown error",
-        },
-      });
-    });
+    const { user, guilds } = await getCurrentUser(event);
 
     // Transform and return data with improved error handling
     const transformedData = await transformOauthGuildsAndUser({
@@ -213,7 +199,7 @@ export default defineWrappedResponseHandler(
       });
     });
 
-    return transformedData;
+    return { ...transformedData, guilds };
   },
   {
     auth: true,
@@ -222,7 +208,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully transformed guilds and user: ${user?.id}`);
     },
     onError(logger, error) {
-      logger.error(`Failed to transform guilds and user data:\n${error.message}\n${error.cause}`);
+      logger.error(String.raw`Failed to transform guilds and user data:\nStatus - ${error.statusCode}\n${error.message}`);
     },
 
   },

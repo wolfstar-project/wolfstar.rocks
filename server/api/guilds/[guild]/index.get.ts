@@ -76,7 +76,7 @@ export default defineWrappedResponseHandler(
     const { shouldSerialize } = await getValidatedQuery(event, (body) =>
       querySchema.validate(body));
 
-    const user = await getCurrentUser(event);
+    const { user } = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
 
@@ -120,7 +120,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved guild data for guild ID: ${data.id}`);
     },
     onError(logger, error) {
-      logger.error("Guilds API error:", error);
+      logger.error(String.raw`Guilds API error:\nStatus - ${error.statusCode}\n${error.message}`);
     },
   },
 );

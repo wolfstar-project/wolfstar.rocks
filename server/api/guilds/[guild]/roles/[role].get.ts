@@ -63,7 +63,7 @@ export default defineWrappedResponseHandler(async (event) => {
   // Get guild ID from params
   const guildId = getGuildParam(event);
 
-  const user = await getCurrentUser(event);
+  const { user } = await getCurrentUser(event);
 
   const guild = await getGuild(guildId);
 
@@ -121,6 +121,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved role data for role ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error("Roles API error:", error);
+    logger.error(String.raw`Roles API error:\nStatus - ${error.statusCode}\n${error.message}`);
   },
 });

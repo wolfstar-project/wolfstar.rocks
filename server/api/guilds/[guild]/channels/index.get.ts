@@ -58,7 +58,7 @@ export default defineWrappedResponseHandler(
     // Get guild ID from params
     const guildId = getGuildParam(event);
 
-    const user = await getCurrentUser(event);
+    const { user } = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
 
@@ -108,7 +108,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved ${count} channels for guild ID: ${guildId}`);
     },
     onError(logger, error) {
-      logger.error("Channels API error:", error);
+      logger.error(String.raw`Channels API error:\n${error.message}\n${error.cause}`);
     },
   },
 );

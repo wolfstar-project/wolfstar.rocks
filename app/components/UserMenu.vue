@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
+import { avatarURL } from "#shared/utils/discord";
 
 defineProps<{
   collapsed?: boolean;
@@ -35,19 +36,9 @@ defineProps<{
 const colorMode = useColorMode();
 const { user: authUser, clear } = useAuth();
 
-const isDefault = ref(false);
-
-// Computed properties for consistent state
-const defaultAvatar = computed(
-  () => `https://cdn.discordapp.com/embed/avatars/${authUser.value && authUser.value.id ? BigInt(authUser.value.id) % BigInt(5) : "0"}.png`,
+const src = computed(() =>
+  avatarURL(authUser.value!, { size: 64 }),
 );
-
-const src = computed(() => {
-  if (isDefault.value) {
-    return defaultAvatar.value;
-  }
-  return createUrl("webp", 64);
-});
 
 const user = ref({
   name: authUser.value?.name,
@@ -56,24 +47,6 @@ const user = ref({
     alt: authUser.value?.name ? `${authUser.value.name}'s avatar` : "User avatar",
   },
 });
-
-// Watch user changes for avatar state
-watch(
-  authUser,
-  (user) => {
-    if (user && user.avatar) {
-      isDefault.value = false;
-    }
-    else {
-      isDefault.value = true;
-    }
-  },
-  { immediate: true },
-);
-
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-  return `https://cdn.discordapp.com/avatars/${authUser.value!.id}/${authUser.value!.avatar}.${format}?size=${size}`;
-}
 
 const items = computed<DropdownMenuItem[][]>(() => ([[{
   type: "label",

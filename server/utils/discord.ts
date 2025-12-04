@@ -189,7 +189,15 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
     });
   });
 
-  return user;
+  const guilds = await api.users.getGuilds().catch((error: DiscordAPIError) => {
+    throw createApiError({
+      statusCode: 500,
+      message: "Failed to fetch user guilds",
+      error,
+    });
+  });
+
+  return { user, guilds };
 }, {
   maxAge: 60 * 60 * 1000,
 });
@@ -213,6 +221,26 @@ export const getMember = defineCachedFunction(async (guild: APIGuild | string, u
       statusCode: 500,
       message: errors[discordError.code as number] ?? defaultMessage,
     });
+  }
+}, {
+  maxAge: 60 * 60 * 1000,
+});
+
+export const getGuildChannels = defineCachedFunction(async (guildId: string) => {
+  const api = useApi();
+  try {
+    const result = await api.guilds
+      .getChannels(guildId);
+    return result;
+  }
+  catch (err) {
+    throw createApiError({
+      statusCode: 500,
+      message: `Failed to fetch channels for guild: ${guildId}`,
+      error: err as Error,
+    });
+
+    return [];
   }
 }, {
   maxAge: 60 * 60 * 1000,

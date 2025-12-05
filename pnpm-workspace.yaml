@@ -1,18 +1,26 @@
+trustPolicy: no-downgrade
+
+shellEmulator: true
+
+cleanupUnusedCatalogs: true
+
+catalogMode: prefer
 packages: []
 
 overrides:
   "@netlify/api": ^14.0.11
   "@types/node": 22.13.14
-  "@vercel/nft": ^1.0.0
+  "@vercel/nft": ^1.1.1
+  vite: 8.0.0-beta.0
 
 catalogs:
   build:
     "@vite-pwa/assets-generator": ^1.0.2
-    "@vite-pwa/nuxt": ^1.0.7
+    "@vite-pwa/nuxt": ^1.1.0
   cli:
-    bumpp: ^10.3.1
-    pncat: ^0.7.6
-    taze: ^19.9.0
+    bumpp: ^10.3.2
+    pncat: ^0.7.7
+    taze: ^19.9.2
   database:
     "@prisma/adapter-pg": ^6.19.0
     "@prisma/client": ^6.19.0
@@ -22,20 +30,20 @@ catalogs:
     "@antfu/nip": ^0.1.0
     "@discordjs/collection": ^2.1.1
     "@discordjs/core": ^2.4.0
-    "@netlify/nuxt": ^0.2.13
-    "@nuxt/hints": ^1.0.0-alpha.2
+    "@netlify/nuxt": ^0.2.14
+    "@nuxt/hints": ^1.0.0-alpha.3
     "@nuxtjs/seo": ^3.2.2
     "@sapphire/bitfield": ^1.2.4
     "@sapphire/snowflake": ^3.5.5
     "@sapphire/time-utilities": ^1.7.14
     "@sapphire/utilities": ^3.18.2
     cz-conventional-changelog: ^3.3.0
-    daisyui: ^5.5.5
-    discord-api-types: ^0.38.34
+    daisyui: ^5.5.8
+    discord-api-types: ^0.38.36
     simple-git: ^3.30.0
     stale-dep: ^0.8.4
   e2e:
-    playwright: ^1.56.1
+    playwright: ^1.57.0
   frontend:
     "@nuxt/ui": ^4.2.1
     "@pinia/nuxt": ^0.11.3
@@ -44,24 +52,24 @@ catalogs:
     "@iconify-json/emojione": ^1.2.3
     "@iconify-json/heroicons": ^1.2.3
     "@iconify-json/ic": ^1.2.4
-    "@iconify-json/lucide": ^1.2.74
+    "@iconify-json/lucide": ^1.2.78
     "@iconify-json/ph": ^1.2.2
     "@nuxt/icon": ^2.1.0
   lint:
-    "@antfu/eslint-config": ^6.2.0
-    "@commitlint/cli": ^20.1.0
-    "@commitlint/config-conventional": ^20.0.0
-    "@nuxt/eslint": ^1.10.0
+    "@antfu/eslint-config": ^6.4.2
+    "@commitlint/cli": ^20.2.0
+    "@commitlint/config-conventional": ^20.2.0
+    "@nuxt/eslint": ^1.11.0
     "@sapphire/prettier-config": ^2.0.0
     eslint: ^9.39.1
-    eslint-plugin-format: ^1.0.2
+    eslint-plugin-format: ^1.1.0
     eslint-plugin-package-json: ^0.85.0
     eslint-plugin-vuejs-accessibility: ^2.4.1
     husky: ^9.1.7
     lint-staged: ^16.2.7
-    prettier: ^3.6.2
+    prettier: ^3.7.4
     prettier-plugin-css-order: ^2.1.2
-    prettier-plugin-tailwindcss: ^0.7.1
+    prettier-plugin-tailwindcss: ^0.7.2
   node:
     consola: ^3.4.2
     cross-env: ^10.1.0
@@ -72,7 +80,7 @@ catalogs:
     "@nuxt/fonts": ^0.12.1
     "@nuxt/image": ^2.0.0
     "@nuxt/scripts": ^0.13.0
-    "@sentry/nuxt": ^10.26.0
+    "@sentry/nuxt": ^10.29.0
     "@tanstack/pacer": ^0.16.3
     "@vee-validate/yup": ^4.15.1
     import-in-the-middle: ^2.0.0
@@ -82,7 +90,7 @@ catalogs:
     nuxt-vitalizer: ^2.0.0
     require-in-the-middle: ^8.0.1
     tailwind-merge: ^3.4.0
-    tailwind-variants: ^3.1.1
+    tailwind-variants: ^3.2.2
     utility-types: ^3.11.0
     yup: ^1.7.1
   style:
@@ -102,7 +110,7 @@ catalogs:
     fuse.js: ^7.1.0
     nuxt-auth-utils: ^0.5.25
     uuid: ^13.0.0
-    zod: ^4.1.12
+    zod: ^4.1.13
 
 allowedDeprecatedVersions:
   glob: 7.2.3

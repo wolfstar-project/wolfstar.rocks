@@ -50,6 +50,7 @@
     "@iconify-json/lucide": "catalog:icons",
     "@iconify-json/ph": "catalog:icons",
     "@josephanson/nuxt-ai": "catalog:prod",
+    "@nuxt/fonts": "catalog:prod",
     "@nuxt/icon": "catalog:icons",
     "@nuxt/image": "catalog:prod",
     "@nuxt/scripts": "catalog:prod",
@@ -87,8 +88,7 @@
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
-    "zod": "catalog:utils",
-    "@nuxt/fonts": "catalog:prod"
+    "zod": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -136,7 +136,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "pnpm@10.23.0",
+  "packageManager": "pnpm@10.24.0",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

@@ -300,6 +300,11 @@ export default defineNuxtConfig({
 
   image: {
     format: ["webp", "jpeg", "jpg", "png", "svg"],
+    domains: [
+      "https://cdn.discordapp.com",
+      "https://media.discordapp.net",
+      "https://cdn.wolfstar.rocks",
+    ],
   },
 
   ogImage: {

@@ -137,7 +137,6 @@ export default defineNuxtConfig({
   routeRules: {
     "/": { prerender: true },
     "/sitemap.xml": { prerender: true },
-    "/api/**": { cors: true },
   },
 
   sourcemap: {

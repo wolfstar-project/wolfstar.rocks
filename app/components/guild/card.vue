@@ -147,14 +147,6 @@ const manageGuildURL = computed(() => {
     ? `/guilds/${guild.id}/manage`
     : guildAddURL(guild.id);
 });
-
-// Utility functions
-function formatNumber(num: number): string {
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(num);
-}
 </script>
 
 <style scoped>
@@ -162,8 +154,10 @@ function formatNumber(num: number): string {
 
 /* Grid view card container */
 .card-container {
-	@apply relative flex h-full flex-col items-center gap-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-md transition-all duration-300;
-	@apply group-hover:bg-base-200/50 hover:scale-[1.02] hover:border-primary/30 hover:shadow-xl;
+  @apply relative flex h-full flex-col items-center gap-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-lg transition-all duration-300 ease-out transform-gpu;
+  @apply group-hover:bg-base-200/50 hover:-translate-y-1 hover:shadow-2xl hover:border-primary/40;
+  @apply focus-visible:-translate-y-1 focus-visible:shadow-2xl focus-visible:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+  @apply motion-reduce:transform-none motion-reduce:transition-none motion-reduce:hover:shadow-xl motion-reduce:hover:translate-y-0;
 }
 
 /* Grid view title container */
@@ -178,7 +172,10 @@ function formatNumber(num: number): string {
 
 /* Full card view container */
 .card-container-full {
-	@apply relative flex h-full flex-col rounded-xl border border-base-300 bg-base-100 p-4 shadow-md transition-all duration-300;
+  @apply relative flex h-full flex-col rounded-xl border border-base-300 bg-base-100 p-4 shadow-lg transition-all duration-300 ease-out transform-gpu;
+  @apply hover:-translate-y-1 hover:shadow-2xl hover:border-primary/40;
+  @apply focus-visible:-translate-y-1 focus-visible:shadow-2xl focus-visible:border-primary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+  @apply motion-reduce:transform-none motion-reduce:transition-none motion-reduce:hover:shadow-xl motion-reduce:hover:translate-y-0;
 }
 
 /* Full card info layout */

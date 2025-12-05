@@ -239,8 +239,6 @@ export const getGuildChannels = defineCachedFunction(async (guildId: string) => 
       message: `Failed to fetch channels for guild: ${guildId}`,
       error: err as Error,
     });
-
-    return [];
   }
 }, {
   maxAge: 60 * 60 * 1000,

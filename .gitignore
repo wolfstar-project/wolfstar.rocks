@@ -25,5 +25,8 @@ logs
 .env.*
 !.env.example
 
+# Netlify
+deno.lock
 
+# Prisma generated files
 server/database/generated/

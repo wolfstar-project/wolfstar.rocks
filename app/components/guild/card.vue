@@ -106,7 +106,7 @@
 
 <script setup lang="ts">
 import type { TransformedLoginData } from "#shared/types/discord";
-import type { ValuesType } from "~/types/utils";
+import type { ValuesType } from "#shared/types/utils";
 import { isNullOrUndefinedOrZero } from "@sapphire/utilities";
 import { breakpointsTailwind } from "@vueuse/core";
 

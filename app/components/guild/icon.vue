@@ -112,11 +112,7 @@
 
 <script setup lang="ts">
 import type { TransformedLoginData } from "#shared/types/discord";
-import type { ValuesType } from "~/types/utils";
-import {
-  useIntersectionObserver,
-  usePreferredReducedMotion,
-} from "@vueuse/core";
+import type { ValuesType } from "#shared/types/utils";
 
 interface GuildIconProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;

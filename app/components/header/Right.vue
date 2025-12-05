@@ -13,7 +13,7 @@
             content: 'w-48',
           }"
         >
-          <div class="flex items-center gap-2 cursor-pointer">
+          <div class="flex items-center gap-2 cursor-pointer" role="button" aria-label="User menu" aria-haspopup="menu" tabindex="0">
             <UAvatar
               v-motion
               :initial="{ scale: 1 }"

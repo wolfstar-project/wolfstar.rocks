@@ -7,10 +7,10 @@ export default {
     label: "text-sm font-semibold",
     list: "mt-6 space-y-4",
     item: "relative",
-    link: "group text-sm flex items-center gap-1.5 focus-visible:outline-primary",
+    link: "group text-sm flex items-center gap-1.5 focus-visible:outline-primary relative",
     linkLeadingIcon: "size-5 shrink-0",
-    linkLabel: "truncate",
-    linkLabelExternalIcon: "size-3 absolute top-0 text-dimmed inline-block",
+    linkLabel: "truncate pe-4",
+    linkLabelExternalIcon: "size-3 absolute top-0.5 end-0 text-dimmed inline-block",
   },
   variants: {
     active: {

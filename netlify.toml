@@ -22,3 +22,10 @@ cache-control = '''
     max-age=31536000,
     immutable
     '''
+
+[images]
+remote_images = [
+  "https:\\/\\/cdn.discordapp.com/.*",
+  "https:\\/\\/media.discordapp.net/.*",
+  "https:\\/\\/cdn.wolfstar.rocks/.*",
+]

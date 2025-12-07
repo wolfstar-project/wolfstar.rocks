@@ -310,7 +310,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved settings`);
     },
     onError(logger, error) {
-      logger.error(String.raw`Settings API error:\nStatus - ${error.statusCode}\n${error.message}`);
+      logger.error(`Settings API error:\nStatus - ${error.statusCode}\n${error.message}`);
     },
   },
 );

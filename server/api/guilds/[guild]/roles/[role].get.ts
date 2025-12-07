@@ -121,6 +121,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved role data for role ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error(String.raw`Roles API error:\nStatus - ${error.statusCode}\n${error.message}`);
+    logger.error(`Roles API error:\nStatus - ${error.statusCode}\n${error.message}`);
   },
 });

@@ -108,7 +108,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved ${count} channels for guild ID: ${guildId}`);
     },
     onError(logger, error) {
-      logger.error(String.raw`Channels API error:\n${error.message}\n${error.cause}`);
+      logger.error(`Channels API error:\n${error.message}\n${error.cause}`);
     },
   },
 );

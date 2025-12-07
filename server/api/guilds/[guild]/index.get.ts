@@ -120,7 +120,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved guild data for guild ID: ${data.id}`);
     },
     onError(logger, error) {
-      logger.error(String.raw`Guilds API error:\nStatus - ${error.statusCode}\n${error.message}`);
+      logger.error(`Guilds API error:\nStatus - ${error.statusCode}\n${error.message}`);
     },
   },
 );

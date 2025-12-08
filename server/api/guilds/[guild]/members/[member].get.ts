@@ -101,6 +101,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved member data for member ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error(`Members API error:\nStatus - ${error.statusCode}\n${error.message}`);
+    logger.error(`Members API error: ${error.message}`);
   },
 });

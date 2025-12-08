@@ -157,7 +157,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully updated settings`);
     },
     onError(logger, error) {
-      logger.error(`Settings API error:\nStatus - ${error.statusCode}\n${error.message}`);
+      logger.error(`Settings API error: ${error.message}`);
     },
   },
 );

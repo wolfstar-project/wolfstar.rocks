@@ -131,6 +131,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved channel data for channel ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error(`Channels API error:\nStatus - ${error.statusCode}\n${error.message}`);
+    logger.error(`Channels API error: ${error.message}`);
   },
 });

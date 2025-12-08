@@ -239,6 +239,142 @@
                 />
               </div>
             </div>
+            <div v-if="item.value === 'settings'" class="space-y-6">
+              <div class="mb-6">
+                <h2 class="text-2xl font-bold text-base-content">Settings</h2>
+                <p class="mt-1 text-base-content/60">
+                  Manage your profile settings and preferences
+                </p>
+              </div>
+
+              <!-- Accessibility Settings Card -->
+              <UCard>
+                <template #header>
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center rounded-full size-7 bg-primary/10">
+                      <UIcon name="heroicons:eye-20-solid" class="size-4 text-primary" />
+                    </div>
+
+                    <div>
+                      <h3 class="text-lg font-semibold text-base-content">
+                        Accessibility
+                      </h3>
+                      <p class="text-sm text-base-content/60">
+                        Customize your viewing experience
+                      </p>
+                    </div>
+                  </div>
+                </template>
+
+                <div class="space-y-4">
+                  <!-- Reduce Motion Toggle -->
+                  <div class="flex items-center justify-between rounded-lg border border-base-300 bg-base-200/50 p-4">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2">
+                        <UIcon name="heroicons:arrows-right-left" class="h-5 w-5 text-base-content/70" />
+                        <h4 class="font-medium text-base-content">
+                          Reduce Motion
+                        </h4>
+                      </div>
+                      <p class="mt-1 text-sm text-base-content/60">
+                        Minimize animations and transitions for a calmer experience
+                      </p>
+                    </div>
+                    <USwitch
+                      v-model="reduceMotionEnabled"
+                      size="lg"
+                      :disabled="systemPrefersReducedMotion"
+                      @update:model-value="setReduceMotion"
+                    />
+                  </div>
+
+                  <!-- System Preference Info -->
+                  <div
+                    v-if="systemPrefersReducedMotion"
+                    class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
+                  >
+                    <UIcon name="heroicons:information-circle" class="h-5 w-5 text-info mt-0.5 shrink-0" />
+                    <div class="text-sm">
+                      <p class="font-medium text-info">
+                        System Preference Detected
+                      </p>
+                      <p class="mt-1 text-info/80">
+                        Your system is configured to reduce motion. This setting is automatically applied and cannot be overridden for your safety.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Motion Status Indicator -->
+                  <div class="flex items-center gap-2 text-sm">
+                    <span class="text-base-content/60">Current Status:</span>
+                    <UBadge
+                      :color="effectiveReduceMotion ? 'primary' : 'neutral'"
+                      variant="subtle"
+                    >
+                      <template #leading>
+                        <UIcon
+                          :name="effectiveReduceMotion ? 'heroicons:check-circle' : 'heroicons:x-circle'"
+                          class="h-4 w-4"
+                        />
+                      </template>
+                      {{ effectiveReduceMotion ? 'Motion Reduced' : 'Motion Enabled' }}
+                    </UBadge>
+                  </div>
+                </div>
+              </UCard>
+
+              <!-- Privacy Settings Card -->
+              <UCard>
+                <template #header>
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center rounded-full size-7 bg-primary/10">
+                      <UIcon name="heroicons:lock-closed-20-solid" class="size-4 text-primary" />
+                    </div>
+                    <div>
+                      <h3 class="text-lg font-semibold text-base-content">
+                        Privacy
+                      </h3>
+                      <p class="text-sm text-base-content/60">
+                        Manage your privacy preferences
+                      </p>
+                    </div>
+                  </div>
+                </template>
+                <div class="flex flex-col items-center justify-center py-12">
+                  <div class="text-center space-y-2">
+                    <UIcon name="heroicons:sparkles" class="size-12 text-base-content/30 mx-auto mb-4" />
+                    <h4 class="text-xl font-semibold text-base-content/60">Coming Soon</h4>
+                    <p class="text-sm text-base-content/40">Privacy controls and data management options coming soon</p>
+                  </div>
+                </div>
+              </UCard>
+
+              <!-- Notifications Settings Card -->
+              <UCard>
+                <template #header>
+                  <div class="flex items-center gap-3">
+                    <div class="flex items-center justify-center rounded-full size-7 bg-primary/10">
+                      <UIcon name="heroicons:bell-20-solid" class="size-4 text-primary" />
+                    </div>
+                    <div>
+                      <h3 class="text-lg font-semibold text-base-content">
+                        Notifications
+                      </h3>
+                      <p class="text-sm text-base-content/60">
+                        Configure notification preferences
+                      </p>
+                    </div>
+                  </div>
+                </template>
+                <div class="flex flex-col items-center justify-center py-12">
+                  <div class="text-center space-y-2">
+                    <UIcon name="heroicons:sparkles" class="size-12 text-base-content/30 mx-auto mb-4" />
+                    <h4 class="text-xl font-semibold text-base-content/60">Coming Soon</h4>
+                    <p class="text-sm text-base-content/40">Notification settings and preferences will be available soon</p>
+                  </div>
+                </div>
+              </UCard>
+            </div>
             <div v-if="item.value === 'premium'" class="space-y-6">
               <UCard
                 class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl"
@@ -255,11 +391,8 @@
                 </template>
                 <div class="space-y-6">
                   <div class="flex flex-col items-center space-y-4 text-center">
-                    <div class="rounded-full bg-primary/20 p-4">
-                      <UIcon
-                        name="heroicons:sparkles-20-solid"
-                        class="h-12 w-12 text-primary"
-                      />
+                    <div class="flex items-center justify-center rounded-full size-18 bg-primary/20">
+                      <UIcon name="heroicons:sparkles-20-solid" class="size-12 text-primary" />
                     </div>
                     <div>
                       <h3 class="text-3xl font-bold text-base-content">Upgrade to Premium</h3>
@@ -272,28 +405,36 @@
                   <!-- Feature List -->
                   <div class="grid gap-4 sm:grid-cols-2">
                     <div class="flex items-start gap-3">
-                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div class="flex items-center justify-center rounded-full size-10 bg-success/20">
+                        <UIcon name="heroicons:check-circle" class="size-7 text-success mt-0.5" />
+                      </div>
                       <div>
                         <p class="font-semibold text-base-content">Advanced Commands</p>
                         <p class="text-sm text-base-content/60">Access to premium-only commands</p>
                       </div>
                     </div>
                     <div class="flex items-start gap-3">
-                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div class="flex items-center justify-center rounded-full size-10 bg-success/20">
+                        <UIcon name="heroicons:check-circle" class="size-7 text-success mt-0.5" />
+                      </div>
                       <div>
                         <p class="font-semibold text-base-content">Priority Support</p>
                         <p class="text-sm text-base-content/60">Get help faster from our team</p>
                       </div>
                     </div>
                     <div class="flex items-start gap-3">
-                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div class="flex items-center justify-center rounded-full size-10 bg-success/20">
+                        <UIcon name="heroicons:check-circle" class="size-7 text-success mt-0.5" />
+                      </div>
                       <div>
                         <p class="font-semibold text-base-content">Custom Settings</p>
                         <p class="text-sm text-base-content/60">Personalize your experience</p>
                       </div>
                     </div>
                     <div class="flex items-start gap-3">
-                      <UIcon name="heroicons:check-circle" class="h-5 w-5 text-success mt-0.5" />
+                      <div class="flex items-center justify-center rounded-full size-10 bg-success/20">
+                        <UIcon name="heroicons:check-circle" class="size-7 text-success mt-0.5" />
+                      </div>
                       <div>
                         <p class="font-semibold text-base-content">Early Access</p>
                         <p class="text-sm text-base-content/60">Try new features first</p>
@@ -328,6 +469,8 @@
 import type { TabsItem } from "@nuxt/ui";
 import { avatarURL } from "#shared/utils/discord";
 import { useFuse } from "@vueuse/integrations/useFuse";
+import { FetchError } from "ofetch";
+import { isDevelopment } from "std-env";
 
 definePageMeta({ alias: ["/account"], auth: true });
 
@@ -362,6 +505,14 @@ const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
+// Accessibility - Reduce Motion
+const {
+  reduceMotionEnabled,
+  effectiveReduceMotion,
+  systemPreferenceActive: systemPrefersReducedMotion,
+  setReduceMotion,
+} = useReduceMotion();
+
 const { data, status, error: fetchError, execute } = useFetch("/api/users", {
   key: "guilds",
   immediate: false,
@@ -392,20 +543,17 @@ const { data, status, error: fetchError, execute } = useFetch("/api/users", {
   onRequest({ options }) {
     isLoading.value = true;
     timeoutError.value = null;
-    logger.info("Fetching user guilds", { timeout: options.timeout });
+    logger.info(`Fetching user: ${user.value?.id} guilds ${isDevelopment ? `with timeout: ${options.timeout}ms` : ""}`);
   },
   onRequestError({ error }) {
-    logger.error("Profile fetch request failed", { error: error.message });
+    logger.error(`Profile fetch request failed: ${error.message}`);
     timeoutError.value = error;
   },
   onResponse({ response }) {
-    logger.info("Profile fetch successful", { status: response.status });
+    logger.info(`Profile fetch successful with status: ${response.status}`);
   },
   onResponseError({ response, error }) {
-    logger.error("Profile fetch response error", {
-      status: response.status,
-      error: error?.message,
-    });
+    logger.error(`Profile fetch response error with status: ${response.status} - ${error?.message}`);
 
     if (response.status === 408 || (error && error.message?.includes("timeout"))) {
       timeoutError.value = createError({
@@ -420,12 +568,7 @@ const { data, status, error: fetchError, execute } = useFetch("/api/users", {
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
 
 // Combined error for GuildCards component
-const combinedError = computed(() => {
-  if (timeoutError.value) {
-    return timeoutError.value;
-  }
-  return fetchError.value;
-});
+const combinedError = computed(() => timeoutError.value ?? fetchError.value);
 
 // Fetch with built-in timeout and retry
 async function fetchWithTimeout() {
@@ -440,7 +583,7 @@ async function fetchWithTimeout() {
     }
   }
   catch (error) {
-    logger.error("Profile fetch failed", error);
+    error instanceof FetchError && logger.error(`Failed fetch user profile:\nStatus - ${error.statusCode}\n${error.message}`);
   }
   finally {
     isLoading.value = false;
@@ -514,13 +657,18 @@ const items = computed<TabsItem[]>(() => [
       : { label: guilds.value?.length ?? "N/A", color: "primary" },
   },
   {
+    value: "settings",
+    label: "Settings",
+    icon: "heroicons:cog-6-tooth",
+  },
+  {
     value: "premium",
     label: "Premium",
     icon: "heroicons:star",
   },
 ]);
 
-const src = computed(() => avatarURL(user.value!));
+const src = computed(() => avatarURL(user.value!, { size: 256 }));
 
 function undoSearch() {
   searchQuery.value = null;

@@ -48,7 +48,7 @@ export default defineOAuthDiscordEventHandler({
       event,
       {
         user: {
-          name: user.username ?? user.global_name,
+          name: user.global_name ?? user.username,
           globalName: user.global_name,
           username: user.username,
           id: user.id,

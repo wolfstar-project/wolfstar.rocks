@@ -1,7 +1,7 @@
 <template>
   <AuthState>
     <template #default="{ loggedIn }">
-      <div v-if="loggedIn">
+      <div v-if="loggedIn && user">
         <UDropdownMenu
           :items="items"
           :content="{
@@ -22,7 +22,7 @@
               icon="i-lucide-image"
               size="2xs"
             />
-            <span class="hidden font-semibold sm:inline">{{ user!.globalName ?? user!.username }}</span>
+            <span class="hidden font-semibold sm:inline">{{ user.name }}</span>
           </div>
         </UDropdownMenu>
       </div>

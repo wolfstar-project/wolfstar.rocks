@@ -11,6 +11,10 @@
         "@eslint/mcp"
       ]
     },
+    "daisyUI": {
+      "type": "http",
+      "url": "https://gitmcp.io/saadeghi/daisyui"
+    },
     "browsermcp": {
       "type": "stdio",
       "command": "npx",

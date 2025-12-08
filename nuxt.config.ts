@@ -73,11 +73,11 @@ export default defineNuxtConfig({
         { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
       ],
       meta: [
-        // Cache control - more reasonable values for dynamic content
-        { "http-equiv": "Cache-Control", "content": "no-cache, no-store, must-revalidate" },
+        // Cache control
+        { "http-equiv": "Cache-Control", "content": "1y" },
         { "http-equiv": "Content-Type", "content": "text/html; charset=UTF-8" },
-        { "http-equiv": "Expires", "content": "0" },
-        { "http-equiv": "Pragma", "content": "no-cache" },
+        { "http-equiv": "Expires", "content": "1y" },
+        { "http-equiv": "Pragma", "content": "1y" },
 
         // Page transitions
         {

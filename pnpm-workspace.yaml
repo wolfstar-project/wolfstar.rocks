@@ -1,4 +1,4 @@
-trustPolicy: no-downgrade
+
 
 shellEmulator: true
 
@@ -8,10 +8,9 @@ catalogMode: prefer
 packages: []
 
 overrides:
-  "@netlify/api": ^14.0.11
+  "@netlify/api": ^14.0.12
   "@types/node": 22.13.14
   "@vercel/nft": ^1.1.1
-  vite: 8.0.0-beta.0
 
 catalogs:
   build:
@@ -25,12 +24,12 @@ catalogs:
     "@prisma/adapter-pg": ^6.19.0
     "@prisma/client": ^6.19.0
     prisma: ^6.19.0
-    prisma-json-types-generator: ^3.6.2
+    prisma-json-types-generator: ^4.0.1
   dev:
     "@antfu/nip": ^0.1.0
     "@discordjs/collection": ^2.1.1
     "@discordjs/core": ^2.4.0
-    "@netlify/nuxt": ^0.2.14
+    "@netlify/nuxt": ^0.2.15
     "@nuxt/hints": ^1.0.0-alpha.3
     "@nuxtjs/seo": ^3.2.2
     "@sapphire/bitfield": ^1.2.4
@@ -52,11 +51,11 @@ catalogs:
     "@iconify-json/emojione": ^1.2.3
     "@iconify-json/heroicons": ^1.2.3
     "@iconify-json/ic": ^1.2.4
-    "@iconify-json/lucide": ^1.2.78
+    "@iconify-json/lucide": ^1.2.79
     "@iconify-json/ph": ^1.2.2
     "@nuxt/icon": ^2.1.0
   lint:
-    "@antfu/eslint-config": ^6.4.2
+    "@antfu/eslint-config": ^6.5.1
     "@commitlint/cli": ^20.2.0
     "@commitlint/config-conventional": ^20.2.0
     "@nuxt/eslint": ^1.11.0
@@ -81,7 +80,7 @@ catalogs:
     "@nuxt/image": ^2.0.0
     "@nuxt/scripts": ^0.13.0
     "@sentry/nuxt": ^10.29.0
-    "@tanstack/pacer": ^0.16.3
+    "@tanstack/pacer": ^0.16.4
     "@vee-validate/yup": ^4.15.1
     import-in-the-middle: ^2.0.0
     nuxt: ^4.2.1

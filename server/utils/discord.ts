@@ -14,6 +14,7 @@ import type {
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
+import { createHash } from "node:crypto";
 import { REST } from "@discordjs/rest";
 import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
 import {
@@ -206,13 +207,15 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
     const tokens = await event.context.$authorization.resolveServerTokens();
     const accessToken = tokens?.access_token;
 
+    // If no access token, this request should fail in the handler
+    // Don't cache unauthenticated requests with a shared key
     if (!accessToken) {
-      return "no-token";
+      // Use a unique key to prevent cache pollution
+      return `no-token:${Date.now()}:${Math.random()}`;
     }
 
-    // Use a hash of the access token to create a unique but privacy-preserving key
-    // Take last 16 chars of token for cache key (tokens are typically long and random)
-    const tokenHash = accessToken.slice(-16);
+    // Use SHA-256 hash of the access token for secure, collision-resistant cache key
+    const tokenHash = createHash("sha256").update(accessToken).digest("hex");
     return `user:${tokenHash}`;
   },
 });

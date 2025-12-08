@@ -202,19 +202,20 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
 }, {
   maxAge: 60 * 60 * 1000,
   getKey: async (event: H3Event) => {
-    // Note: This function is async because token resolution requires accessing
-    // encrypted session data. The performance impact is negligible as:
-    // 1. Cache key generation only happens on cache misses
-    // 2. Token resolution is optimized by the auth framework
-    // 3. The security benefit far outweighs any minimal overhead
+    // Note: Token resolution requires accessing encrypted session data.
+    // While getKey is called on every request (to determine cache hit/miss),
+    // the actual handler only runs on cache misses. Since authenticated requests
+    // have a 1-hour cache, the vast majority of requests will be cache hits.
 
     // Create a unique cache key based on the access token
     // This ensures each user's data is cached separately
     const tokens = await event.context.$authorization.resolveServerTokens();
     const accessToken = tokens?.access_token;
 
-    // If no access token, this request should fail in the handler
-    // Use a cryptographically secure random UUID to prevent cache pollution
+    // If no access token, the handler will throw an authentication error.
+    // We use a unique key to prevent caching of error responses, ensuring
+    // users always get fresh authentication errors (not cached ones).
+    // This is intentional: we don't want to cache failed auth attempts.
     if (!accessToken) {
       return `no-token:${randomUUID()}`;
     }

@@ -200,6 +200,21 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   return { user, guilds };
 }, {
   maxAge: 60 * 60 * 1000,
+  getKey: async (event: H3Event) => {
+    // Create a unique cache key based on the access token
+    // This ensures each user's data is cached separately
+    const tokens = await event.context.$authorization.resolveServerTokens();
+    const accessToken = tokens?.access_token;
+
+    if (!accessToken) {
+      return "no-token";
+    }
+
+    // Use a hash of the access token to create a unique but privacy-preserving key
+    // Take last 16 chars of token for cache key (tokens are typically long and random)
+    const tokenHash = accessToken.slice(-16);
+    return `user:${tokenHash}`;
+  },
 });
 
 export const getMember = defineCachedFunction(async (guild: APIGuild | string, user: User | APIUser | string) => {
@@ -224,6 +239,11 @@ export const getMember = defineCachedFunction(async (guild: APIGuild | string, u
   }
 }, {
   maxAge: 60 * 60 * 1000,
+  getKey: (guild: APIGuild | string, user: User | APIUser | string) => {
+    const guildId = typeof guild === "string" ? guild : guild.id;
+    const userId = typeof user === "string" ? user : user.id;
+    return `member:${guildId}:${userId}`;
+  },
 });
 
 export const getGuildChannels = defineCachedFunction(async (guildId: string) => {
@@ -242,6 +262,7 @@ export const getGuildChannels = defineCachedFunction(async (guildId: string) => 
   }
 }, {
   maxAge: 60 * 60 * 1000,
+  getKey: (guildId: string) => `channels:${guildId}`,
 });
 
 export const getGuild = defineCachedFunction(async (guildId: string) => {
@@ -260,4 +281,5 @@ export const getGuild = defineCachedFunction(async (guildId: string) => {
   }
 }, {
   maxAge: 60 * 60 * 1000,
+  getKey: (guildId: string) => `guild:${guildId}`,
 });

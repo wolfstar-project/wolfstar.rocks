@@ -18,10 +18,10 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
-    "dev:pwa": "cross-env VITE_DEV_PWA='true' nuxt dev",
+    "dev:pwa": "VITE_DEV_PWA=true nuxt dev",
     "generate": "nuxt generate",
-    "lint": "eslint --cache .",
-    "lint:fix": "eslint --cache --fix .",
+    "lint": "lintroll --cache .",
+    "lint:fix": "lintroll --fix --cache .",
     "postinstall": "stale-dep -u && nuxt prepare",
     "prepare": "node .husky/install.mjs",
     "prisma:migrate:dev": "prisma migrate dev",
@@ -41,7 +41,7 @@
     "typecheck": "stale-dep && nuxt typecheck"
   },
   "lint-staged": {
-    "*": "pnpm lint:fix"
+    "*": "pnpm lintroll --fix --cache --git ."
   },
   "dependencies": {
     "@iconify-json/emojione": "catalog:icons",
@@ -88,7 +88,8 @@
     "utility-types": "catalog:prod",
     "uuid": "catalog:utils",
     "yup": "catalog:prod",
-    "zod": "catalog:utils"
+    "zod": "catalog:utils",
+    "lintroll": "catalog:lint"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -108,7 +109,6 @@
     "@tailwindcss/typography": "catalog:style",
     "@vite-pwa/assets-generator": "catalog:build",
     "bumpp": "catalog:cli",
-    "cross-env": "catalog:node",
     "cz-conventional-changelog": "catalog:dev",
     "daisyui": "catalog:dev",
     "discord-api-types": "catalog:dev",

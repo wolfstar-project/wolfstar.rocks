@@ -1,10 +1,14 @@
 trustPolicy: no-downgrade
 
+trustPolicyExclude:
+  - semver@6.3.1
+
 shellEmulator: true
 
 cleanupUnusedCatalogs: true
 
 catalogMode: prefer
+
 packages: []
 
 overrides:
@@ -66,12 +70,12 @@ catalogs:
     eslint-plugin-vuejs-accessibility: ^2.4.1
     husky: ^9.1.7
     lint-staged: ^16.2.7
+    lintroll: ^1.26.0
     prettier: ^3.7.4
     prettier-plugin-css-order: ^2.1.2
     prettier-plugin-tailwindcss: ^0.7.2
   node:
     consola: ^3.4.2
-    cross-env: ^10.1.0
     dotenv: ^17.2.3
     std-env: ^3.10.0
   prod:
@@ -126,6 +130,7 @@ onlyBuiltDependencies:
   - "@prisma/client"
   - "@prisma/engines"
   - "@tailwindcss/oxide"
+  - esbuild
   - pncat
   - prisma
   - sharp

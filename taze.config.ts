@@ -8,6 +8,7 @@ export default defineConfig({
     "typescript": "ignore",
     "@prisma/client": "ignore",
     "@prisma/adapter-pg": "ignore",
+    "prisma-json-types-generator": "ignore",
     "prisma": "ignore",
     // regex starts and ends with '/'
     "/vue/": "latest",

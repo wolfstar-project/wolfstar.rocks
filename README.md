@@ -129,19 +129,7 @@ multi-purpose Discord bot for moderation and community management.
 
 ### Environment Variables
 
-Copy `.env.example` to `.env` and configure the following:
-
-```env
-# Discord OAuth
-DISCORD_CLIENT_ID=your_discord_client_id
-DISCORD_CLIENT_SECRET=your_discord_client_secret
-
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/wolfstar
-
-# Optional: Sentry for error tracking
-SENTRY_DSN=your_sentry_dsn
-```
+Copy `.env.example` to `.env` and configure the the variables:
 
 ### Discord OAuth2 Configuration
 
@@ -162,6 +150,21 @@ SENTRY_DSN=your_sentry_dsn
 - `pnpm preview` - Preview production build
 - `pnpm lint` - Run ESLint
 - `pnpm lint:fix` - Run ESLint and fix issues
+- `pnpm prisma:migrate:dev` - Create and apply a new migration in development
+- `pnpm prisma:migrate:dev:create` - Create a new migration in development
+- `pnpm prisma:migrate:diff` - Create a new migration by comparing database
+  schema to Prisma schema
+- `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database
+- `pnpm prisma:migrate:status` - Check the status of migrations
+- `pnpm prisma:migrate:resolve` - Mark a migration as applied or rolled back
+- `pnpm prisma:push` - Push the Prisma schema to the database without generating
+  a migration
+- `pnpm prisma:seed` - Seed the database with initial data
+- `pnpm prisma:studio` - Open Prisma Studio for database management
+- `pnpm prisma:generate` - Generate Prisma client
+- `pnpm prisma:generate:watch` - Watch for changes and regenerate Prisma client
+- `pnpm generate-pwa-assets` - Generate PWA assets
+- `pnpm start` - Start production server
 - `pnpm type-check` - Run TypeScript checks
 
 ### Development Guidelines
@@ -201,22 +204,24 @@ Refer to [CONTRIBUTING.md][contributing-link] for detailed setup instructions.
 
 </div>
 
-<div id="-online-development" align="right">
+<div id="-online-development">
 
 ## 💻 Online Development
 
 Click any of the buttons below to start a new development environment to demo or
 contribute to the codebase without having to install anything on your machine:
 
+<div align="center">
+
 [![Open in VS Code](https://img.shields.io/badge/Open%20in-VS%20Code-blue?logo=visualstudiocode)](https://vscode.dev/github/wolfstar-project/wolfstar.rocks)
 [![Open in GitHub1s](https://img.shields.io/badge/Open%20in-GitHub1s-blue?logo=github)](https://github1s.com/wolfstar-project/wolfstar.rocks)
-[![Open in Glitch](https://img.shields.io/badge/Open%20in-Glitch-purple?logo=glitch)](https://glitch.com/edit/#!/import/github/wolfstar-project/wolfstar.rocks)
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/wolfstar-project/wolfstar.rocks)
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/wolfstar-project/wolfstar.rocks)
 [![Edit in Codesandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/wolfstar-project/wolfstar.rocks)
-[![Open in Repl.it](https://replit.com/badge/github/withastro/astro)](https://replit.com/github/wolfstar-project/wolfstar.rocks)
 [![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/wolfstar-project/wolfstar.rocks)
 [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/wolfstar-project/wolfstar.rocks)
+
+</div>
 
 </div>
 
@@ -291,7 +296,7 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://img.shields.io/codecov/c/github/wolfstar-project/wolfstar.rocks?labelColor=black&style=flat-square&logo=codecov&logoColor=white
 [codespaces-link]: https://codespaces.new/wolfstar-project/wolfstar.rocks
 [codespaces-shield]: https://github.com/codespaces/badge.svg
-[discord-link]: https://discord.gg/gqAnRyUXG8
+[discord-link]: https://join.wolfstar.rocks
 [discord-shield]:
   https://img.shields.io/discord/830481105261821952?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
 [discord-shield-badge]:

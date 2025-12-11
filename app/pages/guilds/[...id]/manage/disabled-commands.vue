@@ -20,7 +20,7 @@
           <template #content="{ item }">
             <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <UFormGroup v-for="command in getCommandsByCategory(item.label)" :key="command.name" :name="command.name" :label="command.name" :description="parseCommandDescription(command.description)">
-                <UToggle
+                <USwitch
                   v-model="state[command.name]"
                 />
               </UFormGroup>
@@ -32,16 +32,12 @@
               <UButton color="warning" @click="toggleCategory(item.label, false)">
                 Disable all
               </UButton>
-              <UButton color="error" @click="fetchCommandsAndParseToState">
-                Reset
+              <UButton color="neutral" variant="outline" @click="resetCategory(item.label)">
+                Reset Category
               </UButton>
             </div>
           </template>
         </UAccordion>
-
-        <UButton type="submit" color="primary">
-          Save Changes
-        </UButton>
       </UForm>
     </GuildSettingsSection>
   </div>
@@ -97,6 +93,19 @@ function toggleCategory(category: string, enable: boolean) {
   }
 }
 
+function resetCategory(category: string) {
+  const originalDisabledCommands = settings?.disabledCommands || [];
+  for (const command of getCommandsByCategory(category)) {
+    state[command.name] = !originalDisabledCommands.includes(command.name);
+  }
+  toast.add({
+    color: "info",
+    icon: "i-heroicons-arrow-path",
+    title: "Category Reset",
+    description: `${category} commands have been reset to saved values`,
+  });
+}
+
 async function fetchCommandsAndParseToState() {
   const commandsStorage = useSessionStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
     expire: 0,
@@ -134,10 +143,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   });
 
   toast.add({
-    color: "success",
-    title: "Success",
-    description: "Commands settings saved successfully",
-    icon: "i-heroicons-check-circle",
+    color: "info",
+    icon: "i-heroicons-information-circle",
+    title: "Changes Staged",
+    description: "Click 'Save Changes' to apply your command settings",
   });
 }
 
@@ -146,10 +155,21 @@ async function onError(event: FormErrorEvent) {
   toast.add({
     color: "error",
     title: "Error",
-    description: `Failed to save commands settings. Please try again later.\n${errorMessage ?? "Unknown error"}`,
+    description: `Failed to update commands. ${errorMessage ?? "Unknown error"}`,
     icon: "i-heroicons-x-circle",
   });
 }
+
+// Watch for state changes and sync to store
+watch(state, () => {
+  const disabledCommands = Object.entries(state)
+    .filter(([_, isEnabled]) => !isEnabled)
+    .map(([name]) => name);
+
+  updateSettings({
+    disabledCommands,
+  });
+}, { deep: true });
 
 onMounted(fetchCommandsAndParseToState);
 </script>

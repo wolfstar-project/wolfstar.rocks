@@ -28,24 +28,24 @@
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
-    <slot v-if="readyToRender"></slot>
-    <div v-else class="flex flex-1 items-center justify-center">
-      <UIcon name="i-heroicons-arrow-path-20-solid" class="size-10 animate-spin text-primary" />
-
-      <div class="text-center">
-        <p>Loading guild data...</p>
-      </div>
-    </div>
+    <slot></slot>
     <div v-if="hasChanges" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
       <UButton
         color="primary"
         icon="heroicons:check"
+        :loading="saving"
+        :disabled="saving"
         @click="submitChanges"
       >
-        Submit Changes
+        {{ saving ? "Saving..." : "Save Changes" }}
       </UButton>
 
-      <UButton color="error" icon="heroicons:trash" @click="guildStore.resetAllChanges()">
+      <UButton
+        color="error"
+        icon="heroicons:arrow-path"
+        :disabled="saving"
+        @click="resetChanges"
+      >
         Reset Changes
       </UButton>
     </div>
@@ -53,8 +53,8 @@
 </template>
 
 <script setup lang="ts">
+import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
-import type { ValuesType } from "@/types/utils";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 
 const guildId = useRouteParams("id", null, { transform: String });
@@ -63,7 +63,7 @@ const guildStore = useGuildSettingsStore();
 const toast = useToast();
 const open = ref(false);
 const guild = useGuildData();
-const { hasChanges } = storeToRefs(guildStore);
+const { hasChanges, saving } = storeToRefs(guildStore);
 
 const items = computed<NavigationMenuItem[][]>(() => [[
   {
@@ -145,37 +145,54 @@ async function submitChanges() {
 
   toast.add(error
     ? {
-        icon: "lucide-x",
+        icon: "i-heroicons-x-circle",
         title: "Error",
         color: "error",
-        description: "Failed to save changes",
+        description: error.message || "Failed to save changes",
       }
     : {
-        icon: "lucide-check",
+        icon: "i-heroicons-check-circle",
         title: "Success",
         color: "success",
         description: "Changes saved successfully",
       });
-};
+}
+
+function resetChanges() {
+  guildStore.resetAllChanges();
+  toast.add({
+    icon: "i-heroicons-arrow-path",
+    title: "Reset",
+    color: "info",
+    description: "All changes have been reset",
+  });
+}
 
 onMounted(async () => {
   readyToRender.value = false;
+
   try {
-    const { data } = await useFetch(`/api/guilds/${guildId.value}`, {
+    // Fetch guild data first
+    const { data, error: guildError } = await useFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`, {
       params: {
         shouldSerialize: true,
       },
     });
 
-    if (data.value) {
-      guild.value = data.value as ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
+    if (guildError.value) {
+      throw createError({
+        statusCode: guildError.value.statusCode || 500,
+        statusMessage: guildError.value.statusMessage || "Failed to fetch guild data",
+        message: guildError.value.data?.message || "An error occurred while fetching guild data",
+      });
     }
 
+    if (data.value) {
+      guild.value = data.value;
+    }
+
+    // Then fetch guild settings
     await guildStore.fetchSettings();
-    toast.add({ color: "success", title: "Success", description: "Settings fetched successfully" });
-  }
-  catch {
-    toast.add({ color: "error", title: "Error", description: "Failed to fetch settings" });
   }
   finally {
     readyToRender.value = true;

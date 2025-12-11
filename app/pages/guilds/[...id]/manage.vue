@@ -177,10 +177,10 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   });
 
   toast.add({
-    color: "success",
-    icon: "heroicons:check",
-    title: "Settings Updated",
-    description: "Settings updated successfully",
+    color: "info",
+    icon: "i-heroicons-information-circle",
+    title: "Changes Staged",
+    description: "Click 'Save Changes' to apply your changes",
   });
 }
 
@@ -189,10 +189,34 @@ async function onError(event: FormErrorEvent) {
   toast.add({
     color: "error",
     title: "Error",
-    description: `Failed to save general settings. Please try again later.\n${errorMessage ?? "Unknown error"}`,
+    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
     icon: "i-heroicons-x-circle",
   });
 }
+
+// Watch state and auto-sync to store
+watch(state, () => {
+  updateSettings({
+    prefix: state.prefix,
+    language: state.language?.value,
+    disableNaturalPrefix: Boolean(state.disableNaturalPrefix ?? false),
+  });
+}, { deep: true });
+
+// Initialize state from settings when settings change
+watch(() => settings, () => {
+  if (settings) {
+    state.prefix = settings.prefix ?? generalConfig.prefix.placeholder;
+    state.disableNaturalPrefix = settings.disableNaturalPrefix ?? false;
+    // Find matching language
+    const langValue = settings.language ?? "";
+    const langOption = items.value.find(item => item.value === langValue);
+    if (langOption) {
+      state.language = langOption;
+    }
+  }
+}, { immediate: true });
+
 // Language mapping function
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
   const supportedLanguagesMap: Record<string, [string] | [string, string]> = {

@@ -543,14 +543,14 @@ const { data, status, error: fetchError, execute } = useFetch("/api/users", {
   onRequest({ options }) {
     isLoading.value = true;
     timeoutError.value = null;
-    logger.info(`Fetching user: ${user.value?.id} guilds ${isDevelopment ? `with timeout: ${options.timeout}ms` : ""}`);
+    logger.info(`Fetching user: ${user.value?.id} guilds ${isDevelopment && options.timeout ? `with timeout: ${options.timeout}ms` : ""}`);
   },
   onRequestError({ error }) {
-    logger.error(`Profile fetch request failed: ${error.message}`);
+    logger.error(`Profile fetch request failed: ${error.message} for user: ${user.value?.id}`);
     timeoutError.value = error;
   },
   onResponse({ response }) {
-    logger.info(`Profile fetch successful with status: ${response.status}`);
+    logger.info(`Profile fetch successful with status: ${response.status} for user: ${user.value?.id}`);
   },
   onResponseError({ response, error }) {
     logger.error(`Profile fetch response error with status: ${response.status} - ${error?.message}`);

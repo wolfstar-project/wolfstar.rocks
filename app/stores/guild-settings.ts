@@ -1,5 +1,7 @@
 import type { Options as DeepMergeOptions } from "deepmerge";
 import type { GuildData, GuildDataKey } from "~~/server/database";
+import { isDeepStrictEqual } from "node:util";
+import { isNullOrUndefined } from "@sapphire/utilities";
 import deepMerge from "deepmerge";
 
 type NullablePartialGuildData = Partial<{ [K in keyof GuildData]: GuildData[K] | null }>;
@@ -13,6 +15,8 @@ export const useGuildSettingsStore = defineStore("guild", {
   state: (): State => ({
     settings: null,
     originalSettings: null,
+    loading: false,
+    saving: false,
   }),
   getters: {
     // Deprecated: kept for compatibility, but now just returns settings
@@ -20,9 +24,9 @@ export const useGuildSettingsStore = defineStore("guild", {
       return state.settings;
     },
     hasChanges(state): boolean {
-      if (!state.settings || !state.originalSettings)
+      if (isNullOrUndefined(state.settings) || isNullOrUndefined(state.originalSettings))
         return false;
-      return JSON.stringify(state.settings) !== JSON.stringify(state.originalSettings);
+      return !isDeepStrictEqual(state.settings, state.originalSettings);
     },
     hasError(state): boolean {
       return !!state.error;
@@ -31,6 +35,9 @@ export const useGuildSettingsStore = defineStore("guild", {
   actions: {
     async fetchSettings() {
       const guild = useGuildData();
+      this.loading = true;
+      this.error = undefined;
+
       try {
         const data = await $fetch<GuildData>(`/api/guilds/${guild.value?.id}/settings`, {
           method: "GET",
@@ -42,12 +49,16 @@ export const useGuildSettingsStore = defineStore("guild", {
       }
       catch (e: any) {
         this.error = e;
+        throw e;
+      }
+      finally {
+        this.loading = false;
       }
     },
 
     // Updates local state only
     updateSettings(partialSettings: NullablePartialGuildData) {
-      if (!this.settings)
+      if (isNullOrUndefined(this.settings))
         return;
 
       // Use deepMerge to update settings
@@ -57,26 +68,53 @@ export const useGuildSettingsStore = defineStore("guild", {
     // Saves current settings to API
     async saveSettings() {
       const guild = useGuildData();
+      if (isNullOrUndefined(this.settings) || isNullOrUndefined(this.originalSettings)) {
+        throw createError({
+          statusCode: 400,
+          message: "No settings to save",
+        });
+      }
+
+      // Calculate the diff between current and original settings
+      const changes: Array<[string, any]> = [];
+      for (const key in this.settings) {
+        const typedKey = key as keyof GuildData;
+        if (!isDeepStrictEqual(this.settings[typedKey], this.originalSettings[typedKey])) {
+          changes.push([key, this.settings[typedKey]]);
+        }
+      }
+
+      if (changes.length === 0) {
+        // No changes to save
+        return null;
+      }
+
+      this.saving = true;
+
       try {
         const data = await $fetch<GuildData>(`/api/guilds/${guild.value?.id}/settings`, {
           method: "PATCH",
           body: {
-            data: this.settings,
+            data: changes,
           },
         });
 
         this.settings = data ? JSON.parse(JSON.stringify(data)) : null;
         this.originalSettings = data ? JSON.parse(JSON.stringify(data)) : null;
+        this.error = undefined;
         return null;
       }
-      catch (e: any) {
-        this.error = e;
-        return e;
+      catch (error: any) {
+        this.error = error;
+        return error;
+      }
+      finally {
+        this.saving = false;
       }
     },
 
     resetChange(key: GuildDataKey) {
-      if (!this.settings || !this.originalSettings)
+      if (isNullOrUndefined(this.settings) || isNullOrUndefined(this.originalSettings))
         return;
 
       // Revert specific key from originalSettings
@@ -86,9 +124,10 @@ export const useGuildSettingsStore = defineStore("guild", {
     },
 
     resetAllChanges() {
-      if (this.originalSettings) {
-        this.settings = JSON.parse(JSON.stringify(this.originalSettings));
-      }
+      if (isNullOrUndefined(this.originalSettings))
+        return;
+
+      this.settings = JSON.parse(JSON.stringify(this.originalSettings));
     },
 
     // Compatibility alias for old setChanges if needed, but better to update consumers
@@ -99,5 +138,7 @@ export const useGuildSettingsStore = defineStore("guild", {
 interface State {
   settings: GuildData | null;
   originalSettings: GuildData | null;
+  loading: boolean;
+  saving: boolean;
   error?: Error;
 }

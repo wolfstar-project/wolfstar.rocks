@@ -113,13 +113,13 @@ multi-purpose Discord bot for moderation and community management.
    ```
 
 3. **Environment Configuration**
-   - Duplicate `.env.example` and rename it to `.env`
-   - Fill in all required environment variables
-   - Configure Discord OAuth2 settings in your Discord Developer Portal
+   - Duplicate `.env.example` and rename it to `.env`.
+   - Fill in all required environment variables.
+   - Configure Discord OAuth2 settings in your Discord Developer Portal.
 
 4. **Database Setup**
-   - Ensure your WolfStar bot database is accessible
-   - Run database migrations if needed
+   - Ensure your WolfStar bot database is accessible.
+   - Run database migrations if needed.
 
 5. **Start the development server**
 
@@ -129,51 +129,53 @@ multi-purpose Discord bot for moderation and community management.
 
 ### Environment Variables
 
-Copy `.env.example` to `.env` and configure the the variables:
+1. Duplicate `.env.example` and rename it to `.env`.
+2. Fill in all required environment variables.
+3. Configure Discord OAuth2 settings in your Discord Developer Portal.
 
 ### Discord OAuth2 Configuration
 
 1. Go to the
-   [Discord Developer Portal](https://discord.com/developers/applications/)
-2. Select your bot application
-3. Navigate to the **OAuth2** tab
+   [Discord Developer Portal](https://discord.com/developers/applications/).
+2. Select your bot application.
+3. Navigate to the **OAuth2** tab.
 4. Add redirect URLs:
    - `http://localhost:3000/oauth/callback`
    - `http://localhost:3000/oauth/guild`
-5. Save your changes
+5. Save your changes.
 
 ### Available Scripts
 
-- `pnpm dev` - Start development server
-- `pnpm dev:pwa` - Start development server with PWA support
-- `pnpm build` - Build for production
-- `pnpm preview` - Preview production build
-- `pnpm lint` - Run ESLint
-- `pnpm lint:fix` - Run ESLint and fix issues
-- `pnpm prisma:migrate:dev` - Create and apply a new migration in development
-- `pnpm prisma:migrate:dev:create` - Create a new migration in development
-- `pnpm prisma:migrate:diff` - Create a new migration by comparing database
+- `pnpm dev` - Start development server.
+- `pnpm dev:pwa` - Start development server with PWA support.
+- `pnpm build` - Build for production.
+- `pnpm preview` - Preview production build.
+- `pnpm lint` - Run ESLint.
+- `pnpm lint:fix` - Run ESLint and fix issues.
+- `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
+- `pnpm prisma:migrate:dev:create` - Create a new migration in development.
+- `pnpm prisma:migrate:diff` - Create a new migration by comparing database.
   schema to Prisma schema
-- `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database
-- `pnpm prisma:migrate:status` - Check the status of migrations
-- `pnpm prisma:migrate:resolve` - Mark a migration as applied or rolled back
+- `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database.
+- `pnpm prisma:migrate:status` - Check the status of migrations.
+- `pnpm prisma:migrate:resolve` - Mark a migration as applied or rolled back.
 - `pnpm prisma:push` - Push the Prisma schema to the database without generating
-  a migration
-- `pnpm prisma:seed` - Seed the database with initial data
-- `pnpm prisma:studio` - Open Prisma Studio for database management
-- `pnpm prisma:generate` - Generate Prisma client
-- `pnpm prisma:generate:watch` - Watch for changes and regenerate Prisma client
-- `pnpm generate-pwa-assets` - Generate PWA assets
-- `pnpm start` - Start production server
-- `pnpm type-check` - Run TypeScript checks
+  a migration.
+- `pnpm prisma:seed` - Seed the database with initial data.
+- `pnpm prisma:studio` - Open Prisma Studio for database management.
+- `pnpm prisma:generate` - Generate Prisma client.
+- `pnpm prisma:generate:watch` - Watch for changes and regenerate Prisma client.
+- `pnpm generate-pwa-assets` - Generate PWA assets.
+- `pnpm start` - Start production server.
+- `pnpm type-check` - Run TypeScript checks.
 
 ### Development Guidelines
 
-- Follow the existing code style and conventions
-- Write clear, descriptive commit messages
-- Add tests for new features
-- Update documentation as needed
-- Ensure all CI checks pass
+- Follow the existing code style and conventions.
+- Write clear, descriptive commit messages.
+- Add tests for new features.
+- Update documentation as needed.
+- Ensure all CI checks pass.
 
 ### Development Tools
 
@@ -189,10 +191,10 @@ Copy `.env.example` to `.env` and configure the the variables:
 ### AI Development Assistant
 
 - **Custom GitHub Copilot Agent** - Specialized WolfStar development agent with
-  Context7 MCP integration (see `.github/agents/wolfstar-dev-agent.md`)
-- **Autonomous Problem-Solving** - Beast Mode with iterative refinement
-- **Real-time Documentation** - Up-to-date library docs via Context7
-- **Quality First** - Integrated ESLint, Sentry, and testing workflows
+  Context7 MCP integration (see `.github/agents/wolfstar-dev-agent.md`).
+- **Autonomous Problem-Solving** - Beast Mode with iterative refinement.
+- **Real-time Documentation** - Up-to-date library docs via Context7.
+- **Quality First** - Integrated ESLint, Sentry, and testing workflows.
 
 </div>
 

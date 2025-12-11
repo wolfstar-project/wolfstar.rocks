@@ -9,7 +9,7 @@
       v-bind="{
         ...user,
         label: collapsed ? undefined : user?.name,
-        trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down'
+        trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down'
       }"
       color="neutral"
       variant="ghost"
@@ -54,14 +54,14 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
   avatar: user.value.avatar,
 }], [{
   label: "Profile",
-  icon: "i-lucide-user",
+  icon: "lucide:user",
   to: "/profile",
 }], [{
   label: "Appearance",
-  icon: "i-lucide-sun-moon",
+  icon: "lucide:sun-moon",
   children: [{
     label: "Light",
-    icon: "i-lucide-sun",
+    icon: "lucide:sun",
     type: "checkbox",
     checked: colorMode.value === "light",
     onSelect(e: Event) {
@@ -71,7 +71,7 @@ const items = computed<DropdownMenuItem[][]>(() => ([[{
     },
   }, {
     label: "Dark",
-    icon: "i-lucide-moon",
+    icon: "lucide:moon",
     type: "checkbox",
     checked: colorMode.value === "dark",
     onUpdateChecked(checked: boolean) {

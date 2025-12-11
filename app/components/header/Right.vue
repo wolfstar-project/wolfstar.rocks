@@ -19,7 +19,7 @@
               :initial="{ scale: 1 }"
               :hover="{ scale: 1.1, rotate: 5 }"
               :src="src"
-              icon="i-lucide-image"
+              icon="lucide:image"
               size="2xs"
             />
             <span class="hidden font-semibold sm:inline">{{ user.name }}</span>
@@ -84,12 +84,12 @@ const { user, clear } = useAuth();
 const items = ref<DropdownMenuItem[]>([
   {
     label: "Profile",
-    icon: "i-lucide-user",
+    icon: "lucide:user",
     to: "/profile",
   },
   {
     label: "Log Out",
-    icon: "i-lucide-log-out",
+    icon: "lucide:log-out",
     ui: {
       itemLeadingIcon: "bg-red-500",
     },

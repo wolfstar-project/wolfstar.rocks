@@ -37,7 +37,7 @@ export function useHeader() {
       {
         label: "Staryl",
         to: "/staryl",
-        icon: "i-lucide-twitch",
+        icon: "lucide:twitch",
       },
     ],
   }, ...(currentApp.value.invite
@@ -66,7 +66,7 @@ export function useHeader() {
       to: "/",
     }, {
       label: "Staryl",
-      icon: "i-lucide-twitch",
+      icon: "lucide:twitch",
       to: "/staryl",
     }],
   }, ...(currentApp.value.invite

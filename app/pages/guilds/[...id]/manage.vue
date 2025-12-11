@@ -15,7 +15,7 @@
               @click="isNotificationsSlideoverOpen = true"
             >
               <UChip color="error" inset>
-                <UIcon name="i-lucide-bell" class="size-5 shrink-0" aria-hidden="true" />
+                <UIcon name="lucide:bell" class="size-5 shrink-0" aria-hidden="true" />
               </UChip>
             </UButton>
           </UTooltip>

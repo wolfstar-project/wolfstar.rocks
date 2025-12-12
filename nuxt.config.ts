@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     "@vueuse/motion/nuxt",
     "@sentry/nuxt/module",
+    "@vue-macros/nuxt",
     "@josephanson/nuxt-ai",
     "nuxt-auth-utils",
     "nuxt-authorization",
@@ -304,6 +305,13 @@ export default defineNuxtConfig({
       "media.discordapp.net",
       "cdn.wolfstar.rocks",
     ],
+  },
+
+  macros: {
+    setupSFC: true,
+    betterDefine: false,
+    defineModels: false,
+    reactivityTransform: true,
   },
 
   ogImage: {

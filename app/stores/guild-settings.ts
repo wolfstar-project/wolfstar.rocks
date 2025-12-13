@@ -1,6 +1,6 @@
 import type { Options as DeepMergeOptions } from "deepmerge";
 import type { GuildData, GuildDataKey } from "~~/server/database";
-import { isDeepStrictEqual } from "node:util";
+import { isDeepEqual } from "#shared/utils/is-deep-equal";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import deepMerge from "deepmerge";
 
@@ -17,6 +17,7 @@ export const useGuildSettingsStore = defineStore("guild", {
     originalSettings: null,
     loading: false,
     saving: false,
+    error: undefined,
   }),
   getters: {
     // Deprecated: kept for compatibility, but now just returns settings
@@ -26,7 +27,22 @@ export const useGuildSettingsStore = defineStore("guild", {
     hasChanges(state): boolean {
       if (isNullOrUndefined(state.settings) || isNullOrUndefined(state.originalSettings))
         return false;
-      return !isDeepStrictEqual(state.settings, state.originalSettings);
+      return !isDeepEqual(state.settings, state.originalSettings, {
+        onEqualSuccess: () => {
+          // Settings match original - no changes detected
+        },
+        onEqualFailed: (diff) => {
+          // Changes detected - can log first difference for debugging
+          if (import.meta.dev && diff) {
+            const logger = useLogger("guild-settings");
+            logger.debug("Changes detected", {
+              path: diff.path.join("."),
+              original: diff.right,
+              current: diff.left,
+            });
+          }
+        },
+      });
     },
     hasError(state): boolean {
       return !!state.error;
@@ -76,10 +92,11 @@ export const useGuildSettingsStore = defineStore("guild", {
       }
 
       // Calculate the diff between current and original settings
-      const changes: Array<[string, any]> = [];
+      const changes: Array<[string, unknown]> = [];
+
       for (const key in this.settings) {
         const typedKey = key as keyof GuildData;
-        if (!isDeepStrictEqual(this.settings[typedKey], this.originalSettings[typedKey])) {
+        if (!isDeepEqual(this.settings[typedKey], this.originalSettings[typedKey])) {
           changes.push([key, this.settings[typedKey]]);
         }
       }
@@ -99,14 +116,15 @@ export const useGuildSettingsStore = defineStore("guild", {
           },
         });
 
-        this.settings = data ? JSON.parse(JSON.stringify(data)) : null;
-        this.originalSettings = data ? JSON.parse(JSON.stringify(data)) : null;
+        if (data) {
+          this.settings = data;
+          this.originalSettings = data;
+        }
         this.error = undefined;
-        return null;
       }
       catch (error: any) {
         this.error = error;
-        return error;
+        return Promise.reject(error);
       }
       finally {
         this.saving = false;
@@ -119,7 +137,7 @@ export const useGuildSettingsStore = defineStore("guild", {
 
       // Revert specific key from originalSettings
       if (key in this.originalSettings) {
-        (this.settings as any)[key] = JSON.parse(JSON.stringify(this.originalSettings[key]));
+        (this.settings as Record<string, unknown>)[key] = JSON.parse(JSON.stringify(this.originalSettings[key]));
       }
     },
 

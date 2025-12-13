@@ -7,7 +7,8 @@
         ? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:bg-base-200/50 hover:shadow-lg hover:scale-[1.02]'
         : 'relative',
       {
-        'ring-2 ring-primary/20': variant === 'card' && guild.wolfstarIsIn,
+        'ring-2 ring-primary/20': variant === 'card' && guild.wolfstarIsIn && guild.manageable,
+        'ring-2 ring-error/20': variant === 'card' && !guild.manageable,
         'opacity-75': variant === 'card' && !guild.manageable,
       },
     ]"
@@ -16,27 +17,15 @@
     <div class="relative" :class="[variant === 'card' ? '' : 'group']">
       <!-- Status Indicator -->
       <div v-if="showStatus && guild" class="absolute -top-1 -right-1 z-10">
-        <div
-          v-if="guild.wolfstarIsIn"
-          class="flex h-7 w-7 items-center justify-center rounded-full bg-success/70 text-white shadow-sm transition-all duration-200 hover:bg-success/60"
-          title="WolfStar is active in this server"
-        >
-          <UIcon name="heroicons:check-badge" class="h-5 w-5" aria-hidden="true" />
-        </div>
-        <div
-          v-else-if="guild.manageable"
-          class="flex h-7 w-7 items-center justify-center rounded-full bg-primary/70 text-white shadow-sm transition-all duration-200 hover:bg-primary/60"
-          title="You can invite WolfStar to this server"
-        >
-          <UIcon name="heroicons:plus-circle" class="h-5 w-5" aria-hidden="true" />
-        </div>
-        <div
-          v-else
-          class="flex h-7 w-7 items-center justify-center rounded-full bg-error/70 text-white shadow-sm"
-          title="Insufficient permissions to manage this server"
-        >
-          <UIcon name="heroicons:shield-exclamation" class="h-4 w-4" aria-hidden="true" />
-        </div>
+        <UTooltip :text="statusIndicator.tooltipText">
+          <div
+            class="flex h-7 w-7 items-center justify-center rounded-full text-white shadow-sm transition-all duration-200"
+            :class="statusIndicator.wrapperClasses"
+          >
+            <span class="sr-only">{{ statusIndicator.tooltipText }}</span>
+            <UIcon :name="statusIndicator.iconName" :class="statusIndicator.iconClasses" aria-hidden="true" />
+          </div>
+        </UTooltip>
       </div>
       <div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
         <div
@@ -169,6 +158,54 @@ const acronymSizeClasses = computed(() => {
     xl: "text-2xl font-bold",
   };
   return sizeMap[size];
+});
+
+interface StatusIndicator {
+  wrapperClasses: string;
+  iconName: string;
+  iconClasses: string;
+  tooltipText: string;
+}
+
+const statusIndicator = computed<StatusIndicator>(() => {
+  // 1) Bot present
+  if (guild.wolfstarIsIn) {
+    // 1a) Bot present + user can manage
+    if (guild.manageable) {
+      return {
+        wrapperClasses: "bg-success/70 hover:bg-success/60",
+        iconName: "heroicons:check-badge",
+        iconClasses: "h-5 w-5",
+        tooltipText: "WolfStar is active in this server",
+      };
+    }
+
+    // 1b) Bot present + user cannot manage
+    return {
+      wrapperClasses: "bg-warning/70 hover:bg-warning/60",
+      iconName: "heroicons:lock-closed",
+      iconClasses: "h-4 w-4",
+      tooltipText: "WolfStar is active, but you have insufficient permissions to manage this server",
+    };
+  }
+
+  // 2) Bot not present
+  if (guild.manageable) {
+    return {
+      wrapperClasses: "bg-primary/70 hover:bg-primary/60",
+      iconName: "heroicons:plus-circle",
+      iconClasses: "h-5 w-5",
+      tooltipText: "You can invite WolfStar to this server",
+    };
+  }
+
+  // 3) Bot not present + user cannot manage
+  return {
+    wrapperClasses: "bg-error/70",
+    iconName: "heroicons:shield-exclamation",
+    iconClasses: "h-4 w-4",
+    tooltipText: "You cannot invite WolfStar to this server due to insufficient permissions",
+  };
 });
 
 // Utility functions

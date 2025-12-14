@@ -16,7 +16,7 @@
       </div>
 
       <!-- Guild Info Skeleton -->
-      <div class="flex min-h-[4rem] w-full flex-col justify-center space-y-2">
+      <div class="flex min-h-16 w-full flex-col justify-center space-y-2">
         <!-- Guild Name Skeleton -->
         <USkeleton class="h-4 w-3/4 mx-auto rounded" />
 

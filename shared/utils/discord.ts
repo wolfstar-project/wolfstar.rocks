@@ -1,6 +1,7 @@
 import type { ImageURLOptions, MakeURLOptions } from "@discordjs/rest";
 import type { APIUser } from "discord-api-types/v10";
 import type { MaybeRef } from "vue";
+import type { OauthFlattenedGuild } from "../types/discord";
 import { ALLOWED_EXTENSIONS, ALLOWED_SIZES, DefaultRestOptions } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import { toValue } from "vue";
@@ -73,4 +74,16 @@ export function avatarURL(user: MaybeRef<AvatarUser | APIUser>, options?: Readon
   }
 
   return dynamicMakeURL(`/avatars/${userData.id}/${userData.avatar}`, userData.avatar, options);
+}
+
+export function guildIconURL(
+  guild: MaybeRef<OauthFlattenedGuild>,
+  options?: Readonly<ImageURLOptions>,
+): string | null {
+  const guildData = toValue(guild);
+  if (isNullOrUndefined(guildData.icon)) {
+    return guildData.acronym;
+  }
+
+  return dynamicMakeURL(`/icons/${guildData.id}/${guildData.icon}`, guildData.icon, options);
 }

@@ -48,9 +48,9 @@
             <template #description>
               <p id="language-description" class="text-sm text-base-content/70">Select the language you want for this guild</p>
             </template>
-            <UInputMenu
+            <USelectMenu
               id="language"
-              v-model="state.language as { value: string; label: string }"
+              v-model="state.language"
               color="primary"
               placeholder="Select language..."
               class="w-full"
@@ -70,13 +70,13 @@
 
 <script lang="ts" setup>
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
+import { isNullOrUndefined } from "@sapphire/utilities";
 import * as yup from "yup";
-import { useGuildSettings } from "~/composables/useGuildSettings";
-import { useGuildSettingsChanges } from "~/composables/useGuildSettingsChanges";
 
-const { languages } = defineProps<{
+const props = defineProps<{
   languages: string[];
 }>();
+
 const { setGuildSettingsChanges } = useGuildSettingsChanges();
 const { guildSettings } = useGuildSettings();
 
@@ -85,13 +85,18 @@ const toast = useToast();
 
 // Computed language options
 const items = computed(() =>
-  languages.map(langKey => ({
-    value: langKey,
-    label: mapLanguageKeysToNames(langKey).join(" - "),
-  })),
+  props.languages.map(langKey => {
+    const [lang, label] = mapLanguageKeysToNames(langKey);
+    return label
+      ? {
+          value: lang,
+          label,
+        }
+      : undefined;
+  }).filter(item => !isNullOrUndefined(item)),
 );
 
-// Form validation schema
+// Form validation schema - computed to be reactive to guildSettings
 const schema = yup.object({
   prefix: yup.string()
     .trim()
@@ -100,16 +105,33 @@ const schema = yup.object({
     .transform(v => (v === "" ? undefined : v))
     .optional()
     .default(guildSettings.value.prefix),
-  language: yup.object({
-    value: yup.string().optional(),
-    label: yup.string().optional(),
-  }).optional(),
+  language: yup.mixed<{
+    value: string;
+    label: string;
+
+  }>()
+    .optional()
+    .default({
+      value: guildSettings.value.language,
+      label: mapLanguageKeysToNames(guildSettings.value.language)[0],
+    }),
 });
 
 type Schema = yup.InferType<typeof schema>;
 
 // Form data reactive state
-const state = reactive<NonNullable<Schema>>(schema.getDefault());
+const state = reactive<Schema>(schema.getDefault());
+
+// Watch guildSettings changes to update state
+/* watch(() => guildSettings.value, (newSettings) => {
+  if (newSettings) {
+    state.prefix = newSettings.prefix;
+    state.language = {
+      value: newSettings.language,
+      label: mapLanguageKeysToNames(newSettings.language)[0],
+    };
+  }
+}, { deep: true }); */
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   if (event.data.prefix) {
@@ -119,7 +141,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   }
   if (event.data.language) {
     setGuildSettingsChanges({
-      language: event.data.language?.value,
+      language: event.data.language.value,
     });
   }
 

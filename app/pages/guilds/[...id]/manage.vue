@@ -2,6 +2,16 @@
   <UDashboardPanel id="home">
     <template #header>
       <UDashboardNavbar :ui="{ right: 'gap-3' }">
+        <template #title>
+          <div v-if="guildData" class="flex items-center gap-0.5 cursor-pointer">
+            <UAvatar
+              :src
+              :alt="guildData.name"
+              class="mr-2"
+            />
+            <h1 class="text-lg font-semibold">{{ guildData.name }}</h1>
+          </div>
+        </template>
         <template #leading>
           <UDashboardSidebarCollapse />
         </template>
@@ -34,6 +44,7 @@
 
 <script setup lang="ts">
 import { Time } from "@sapphire/time-utilities";
+import { isDevelopment } from "std-env";
 
 definePageMeta({
   layout: "dashboard",
@@ -42,14 +53,65 @@ definePageMeta({
 
 const route = useRoute();
 // Use composables and stores
+
 const { isNotificationsSlideoverOpen } = useDashboardLayout();
 const loading = useState<boolean>("guildGeneral:loading", () => false);
 const commands = useState<FlattenedCommand[]>("guildCommands", () => []);
 const languages = useState<string[]>("guildLanguages", () => []);
-const { $api } = useNuxtApp();
+const toast = useToast();
+const { guildData } = useGuildData();
 
 const slug = route.params.slug as string | string[];
 const joinedPath = Array.isArray(slug) ? slug.join("/") : (slug || "");
+
+async function fetchCommandsAndLanguages() {
+  loading.value = true;
+
+  try {
+    const commandsStorage = useSessionStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
+      expire: 0,
+      data: [],
+    });
+    if (commandsStorage.value && (isDevelopment || commandsStorage.value.expire > Date.now())) {
+      commands.value = commandsStorage.value.data;
+    }
+    else {
+      const commandsData = await $fetch<FlattenedCommand[]>("/api/commands");
+      commands.value = commandsData;
+      commandsStorage.value = {
+        expire: Date.now() + Time.Day * 6,
+        data: commandsData,
+      };
+    }
+
+    const languagesStorage = useSessionStorage<ExpirableLocalStorageStructure<string[]>>(LocalStorageKeys.Languages, {
+      expire: 0,
+      data: [],
+    });
+    if (languagesStorage.value && (isDevelopment || languagesStorage.value.expire > Date.now())) {
+      languages.value = languagesStorage.value.data;
+    }
+    else {
+      const languagesData = await $fetch<string[]>("/api/languages");
+      languages.value = languagesData;
+      languagesStorage.value = {
+        expire: Date.now() + Time.Day * 6,
+        data: languagesData,
+      };
+    }
+  }
+  catch (error: any) {
+    toast.add({
+      title: "Failed to load data",
+      description: error?.message || "Unable to fetch commands and languages",
+      color: "error",
+    });
+    console.error("Error fetching commands and languages:", error);
+  }
+  finally {
+    loading.value = false;
+  }
+}
 
 const renderComponent = computed(() => {
   switch (joinedPath) {
@@ -60,44 +122,10 @@ const renderComponent = computed(() => {
   }
 });
 
-async function fetchCommandsAndLanguages() {
-  loading.value = true;
+const src = computed(() =>
+  guildIconURL(guildData as unknown as OauthFlattenedGuild, {
+    size: 64,
+  })!);
 
-  const commandsStorage = useSessionStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
-    expire: 0,
-    data: [],
-  });
-  if (commandsStorage.value && (import.meta.env.DEV || commandsStorage.value.expire > Date.now())) {
-    commands.value = commandsStorage.value.data;
-  }
-  else {
-    const commandsData = await $api<FlattenedCommand[]>("/commands");
-    logger.info("Fetched commands data:", commandsData);
-    commands.value = commandsData;
-    commandsStorage.value = {
-      expire: Date.now() + Time.Day * 6,
-      data: commandsData!,
-    };
-  }
-
-  const languagesStorage = useSessionStorage<ExpirableLocalStorageStructure<string[]>>(LocalStorageKeys.Languages, {
-    expire: 0,
-    data: [],
-  });
-  if (languagesStorage.value && (import.meta.env.DEV || languagesStorage.value.expire > Date.now())) {
-    languages.value = languagesStorage.value.data;
-  }
-  else {
-    const languagesData = await $api<string[]>("/languages");
-    logger.info("Fetched languages data:", languagesData);
-    languages.value = languagesData;
-    languagesStorage.value = {
-      expire: Date.now() + Time.Day * 6,
-      data: languagesData,
-    };
-  }
-
-  loading.value = false;
-}
-onMounted(fetchCommandsAndLanguages);
+onMounted(async () => await fetchCommandsAndLanguages());
 </script>

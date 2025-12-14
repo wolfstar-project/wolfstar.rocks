@@ -9,8 +9,8 @@ const mergeOptions: DeepMergeOptions = {
 };
 
 export function useGuildSettings() {
-  // Use ref for reactive state
-  const guildSettings = ref<GuildSettings | undefined>(undefined);
+  // Use useState for reactive state
+  const guildSettings = useState<GuildSettings | undefined>("guild:settings", () => undefined);
 
   // Get guild settings changes composable
   const { guildSettingsChanges } = useGuildSettingsChanges();

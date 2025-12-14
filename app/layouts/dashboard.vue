@@ -28,38 +28,40 @@
         <UserMenu :collapsed="collapsed" />
       </template>
     </UDashboardSidebar>
+
     <slot></slot>
     <div v-if="isReadyToRender" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
-      <UButton
-        color="primary"
-        icon="heroicons:check"
+      <UFieldGroup>
+        <UButton
+          color="primary"
+          icon="heroicons:check"
 
-        @click="submitChanges"
-      >
-        Save Changes
-      </UButton>
+          @click="submitChanges"
+        >
+          Save Changes
+        </UButton>
 
-      <UButton
-        color="error"
-        icon="heroicons:arrow-path"
+        <UButton
+          color="error"
+          icon="heroicons:arrow-path"
 
-        @click="resetChanges"
-      >
-        Reset Changes
-      </UButton>
+          @click="resetChanges"
+        >
+          Reset Changes
+        </UButton>
+      </UFieldGroup>
     </div>
   </UDashboardGroup>
 </template>
 
 <script setup lang="ts">
+import type { GuildSettings } from "#shared/types/guildSettings";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
-import type { GuildSettings } from "~~/shared/types/guildSettings";
 import { Time } from "@sapphire/time-utilities";
+import { isNullOrUndefinedOrZero } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
-import { useGuildSettings } from "~/composables/useGuildSettings";
-import { useGuildSettingsChanges } from "~/composables/useGuildSettingsChanges";
 
 const guildId = useRouteParams("id", null, { transform: String });
 
@@ -81,8 +83,7 @@ const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges } = useGuildSettingsChanges();
 const hasError = useState<boolean>("dashboard:hasError", () => false);
-const isLoading = ref(true);
-const { $api } = useNuxtApp();
+const isLoading = useState<boolean>("dashboard:loading", () => true);
 
 const items = computed<NavigationMenuItem[][]>(() => [[
   {
@@ -142,10 +143,10 @@ const items = computed<NavigationMenuItem[][]>(() => [[
 
 const isReadyToRender = computed(() =>
   !isLoading.value
-  && guildData.value !== undefined
-  && guildSettings.value !== undefined
-  && Object.keys(guildData.value).length !== 0
-  && Object.keys(guildSettings.value).length !== 0);
+  && !isNullOrUndefined(guildData.value)
+  && !isNullOrUndefined(guildSettings.value)
+  && !isNullOrUndefinedOrZero(Object.keys(guildData.value).length)
+  && !isNullOrUndefinedOrZero(Object.keys(guildSettings.value).length));
 
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
@@ -161,7 +162,7 @@ async function submitChanges() {
       method: "PATCH",
       body: JSON.stringify({
         guild_id: guildId.value,
-        data: objectToTuples(guildSettingsChanges),
+        data: objectToTuples(guildSettingsChanges.value as Partial<GuildSettings>),
       }),
     });
 
@@ -188,11 +189,15 @@ async function submitChanges() {
       });
     }
   }
-  catch {
+  catch (error: any) {
     hasError.value = true;
     setTimeout(() => {
       isLoading.value = false;
     }, Time.Second);
+
+    console.error("Error saving guild settings changes", {
+      error,
+    });
 
     toast.add({
       color: "error",
@@ -218,20 +223,29 @@ onMounted(async () => {
 
   try {
     // Fetch guild data first
-    const [guildData, guildSettings] = await Promise.all([
-      $fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`),
-      $api<GuildSettings>(`/guilds/${guildId.value}/settings`),
-    ]);
+    const guildData = await $fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`);
+    const guildSettings = await $fetch<GuildSettings>(`/api/guilds/${guildId.value}/settings`);
 
     setGuildData(guildData);
     setGuildSettings(guildSettings);
+
+    hasError.value = false;
+
+    toast.add({
+      color: "success",
+      icon: "i-heroicons-check-circle",
+      title: "Data Loaded",
+      description: "Guild data and settings have been successfully loaded.",
+    });
   }
-  catch (error) {
-    throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to load guild data or settings",
-      message: "An error occurred while fetching the guild data or settings. Please try again later.",
-      cause: error,
+  catch (error: any) {
+    hasError.value = true;
+
+    toast.add({
+      color: "error",
+      icon: "i-heroicons-x-circle",
+      title: "Error Loading Data",
+      description: error?.message || "An error occurred while fetching the guild data or settings. Please try again later.",
     });
   }
   finally {

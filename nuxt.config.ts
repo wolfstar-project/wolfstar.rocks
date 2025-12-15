@@ -48,7 +48,9 @@ export default defineNuxtConfig({
     },
     scripts: {
       registry: {
-        cloudflareWebAnalytics: true,
+        cloudflareWebAnalytics: {
+          token: process.env.NUXT_PUBLIC_CLOUDFLARE_WEB_ANALYTICS_TOKEN,
+        },
       },
     },
     sentry: {

@@ -1,7 +1,8 @@
 import type { DiscordAPIError, RESTOptions } from "@discordjs/rest";
-import type { H3Error, H3Event } from "h3";
+import type { H3Event } from "h3";
 import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
+import { isNullishOrEmpty } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError } from "h3";
 
@@ -47,17 +48,6 @@ export function omit<T, K extends keyof T>(keys: K[], obj: T): Omit<T, K> {
   return omit(keys, rest as T) as Omit<T, K>;
 }
 
-export function isH3Error(error: unknown): error is H3Error {
-  return (
-    typeof error === "object"
-    && error !== null
-    && "statusCode" in error
-    && "statusMessage" in error
-    && "fatal" in error
-    && "unhandled" in error
-  );
-}
-
 export function guildNameToAcronym(name: string) {
   return name
     .replace(/'s /g, " ")
@@ -75,4 +65,16 @@ export function useRest(options?: Partial<RESTOptions>) {
     throw new Error("'NUXT_OAUTH_DISCORD_BOT_TOKEN' env is not defined");
   }
   return new REST(options).setToken(runtimeConfig.discord.botToken);
+}
+
+export function maybeParseNumber(value: string | bigint | null | undefined): number | null {
+  if (isNullishOrEmpty(value))
+    return null;
+  return Number(value);
+}
+
+export function maybeParseDate(value: string | null | undefined): number | null {
+  if (isNullishOrEmpty(value))
+    return null;
+  return Date.parse(value);
 }

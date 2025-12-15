@@ -1,29 +1,29 @@
 import type { Snowflake } from "discord-api-types/v10";
 import type { ReadonlyGuildData } from "~~/server/database/settings/types";
 import { Collection } from "@discordjs/collection";
+import { SettingsContext } from "~~/server/database/settings/context/SettingsContext";
 
-const cache = new Collection<Snowflake, ReadonlyGuildData>();
+const cache = new Collection<Snowflake, SettingsContext>();
 
-export function getSettingsByGuildId(guildId: Snowflake): ReadonlyGuildData | null {
+export function getSettingsContextByGuildId(guildId: Snowflake): SettingsContext | null {
   return cache.get(guildId) ?? null;
 }
 
-export function getSettings(settings: ReadonlyGuildData): ReadonlyGuildData {
-  return cache.ensure(settings.id, () => settings);
+export function getSettingsContext(settings: ReadonlyGuildData): SettingsContext {
+  return cache.ensure(settings.id, () => new SettingsContext(settings));
 }
 
-export function updateSettings(settings: ReadonlyGuildData, data: Partial<ReadonlyGuildData>): void {
+export function updateSettingsContext(settings: ReadonlyGuildData, data: Partial<ReadonlyGuildData>): void {
   const existing = cache.get(settings.id);
   if (existing) {
-    // Merge existing data with new data and update cache
-    cache.set(settings.id, { ...existing, ...data });
+    existing.update(settings, data);
   }
   else {
-    const context = settings;
+    const context = new SettingsContext(settings);
     cache.set(settings.id, context);
   }
 }
 
-export function deleteSettings(guildId: Snowflake) {
+export function deleteSettingsContext(guildId: Snowflake) {
   cache.delete(guildId);
 }

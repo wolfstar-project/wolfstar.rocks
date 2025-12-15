@@ -1,6 +1,8 @@
 import type { User } from "#auth-utils";
 import type {
+  FlattenedCommand,
   FlattenedGuild,
+  FlattenedMember,
   LoginData,
   OauthFlattenedGuild,
   PartialOauthFlattenedGuild,
@@ -9,11 +11,11 @@ import type {
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
   APIGuild,
-  APIGuildMember,
   APIUser,
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
+import { hours, minutes } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
 import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
 import {
@@ -25,11 +27,11 @@ import {
   Locale,
   PermissionFlagsBits,
 } from "discord-api-types/v10";
-import { readSettings } from "~~/server/database/settings/functions";
+import { readSettings, readSettingsPermissionNodes } from "~~/server/database/settings/functions";
 import { flattenGuild } from "~~/server/utils/ApiTransformers";
 import { PermissionsBits } from "~/utils/bits";
 
-function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
+function isAdmin(member: FlattenedMember, roles: readonly string[]): boolean {
   const permissionsValue
     = "permissions" in member && typeof member.permissions === "string"
       ? member.permissions
@@ -42,13 +44,13 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
       )
     : hasAtLeastOneKeyInMap(
         new Map(roles.map((role) => [role, true])),
-        member.roles,
+        member.roles.map((role) => role.id),
       );
 }
 
 async function canManage(
   guild: APIGuild,
-  member: APIGuildMember,
+  member: FlattenedMember,
 ): Promise<boolean> {
   if (!member.user || !member.user.id) {
     return false;
@@ -57,7 +59,8 @@ async function canManage(
     return true;
 
   const settings = await readSettings(guild.id);
-  return isAdmin(member, settings.rolesAdmin);
+  const nodes = readSettingsPermissionNodes(settings);
+  return isAdmin(member, settings.rolesAdmin) && (await nodes.run(member, "conf") ?? true);
 }
 
 async function getManageable(
@@ -75,10 +78,11 @@ async function getManageable(
   }
 
   const member = await getMember(guild, id);
+  const flattenedMember = flattenMember(member, guild);
   if (!member)
     return false;
 
-  return canManage(guild, member);
+  return canManage(guild, flattenedMember);
 }
 
 export async function transformGuild(
@@ -199,7 +203,7 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
 
   return { user, guilds };
 }, {
-  maxAge: 60 * 60 * 1000,
+  maxAge: hours(1),
 });
 
 export const getMember = defineCachedFunction(async (guild: APIGuild | string, user: User | APIUser | string) => {
@@ -223,7 +227,7 @@ export const getMember = defineCachedFunction(async (guild: APIGuild | string, u
     });
   }
 }, {
-  maxAge: 60 * 60 * 1000,
+  maxAge: hours(1),
 });
 
 export const getGuildChannels = defineCachedFunction(async (guildId: string) => {
@@ -241,7 +245,7 @@ export const getGuildChannels = defineCachedFunction(async (guildId: string) => 
     });
   }
 }, {
-  maxAge: 60 * 60 * 1000,
+  maxAge: hours(1),
 });
 
 export const getGuild = defineCachedFunction(async (guildId: string) => {
@@ -259,5 +263,36 @@ export const getGuild = defineCachedFunction(async (guildId: string) => {
     });
   }
 }, {
-  maxAge: 60 * 60 * 1000,
+  maxAge: hours(1),
+});
+
+export const fetchCommands = defineCachedFunction(async () => {
+  try {
+    const config = runtimeConfig;
+    const { apiBaseUrl } = config.public.app;
+
+    if (!apiBaseUrl) {
+      throw new Error("Bot API base URL is not configured");
+    }
+
+    // Fetch commands from the bot API
+    const commands = await $fetch<FlattenedCommand[]>(`/commands`, {
+      method: "GET",
+      baseURL: apiBaseUrl,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return commands;
+  }
+  catch (error) {
+    throw createApiError({
+      statusCode: 500,
+      message: "Failed to fetch commands from bot API",
+      error: error as Error,
+    });
+  }
+}, {
+  maxAge: minutes(5),
 });

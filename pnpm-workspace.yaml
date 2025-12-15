@@ -85,6 +85,7 @@ catalogs:
     "@nuxt/fonts": ^0.12.1
     "@nuxt/image": ^2.0.0
     "@nuxt/scripts": ^0.13.1
+    "@sapphire/ratelimits": ^2.4.11
     "@sentry/nuxt": ^10.30.0
     "@vee-validate/yup": ^4.15.1
     import-in-the-middle: ^2.0.0

@@ -1,11 +1,12 @@
 import type { Awaitable, PickByValue } from "@sapphire/utilities";
+import type { AdderKey } from "~~/server/database/settings/structures/AdderManager";
 import type { GuildData, ReadonlyGuildData } from "~~/server/database/settings/types";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 import prisma from "~~/server/database/prisma";
 import { getDefaultGuildSettings } from "~~/server/database/settings/constants";
-import { deleteSettings, getSettings, updateSettings } from "~~/server/database/settings/context/functions";
-import { maybeParseNumber } from "~~/server/utils/parse";
+import { deleteSettingsContext, getSettingsContext, updateSettingsContext } from "~~/server/database/settings/context/functions";
+import { maybeParseNumber } from "~~/server/utils";
 
 const cache = new Collection<string, GuildData>();
 const queue = new Collection<string, Promise<GuildData>>();
@@ -27,14 +28,30 @@ export function serializeSettings(data: ReadonlyGuildData, space?: string | numb
   return JSON.stringify(data, (key, value) => (key in transformers ? transformers[key as keyof typeof transformers](value) : value), space);
 }
 
-export function deleteSettingsCached(guildid: string) {
-  locks.delete(guildid);
-  cache.delete(guildid);
-  deleteSettings(guildid);
+export function deleteSettingsCached(guildId: string) {
+  locks.delete(guildId);
+  cache.delete(guildId);
+  deleteSettingsContext(guildId);
 }
 
-export function readSettings(guildid: string): Awaitable<ReadonlyGuildData> {
-  return cache.get(guildid) ?? processFetch(guildid);
+export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
+  return cache.get(guildId) ?? processFetch(guildId);
+}
+
+export function readSettingsAdder(settings: ReadonlyGuildData, key: AdderKey) {
+  return getSettingsContext(settings).adders[key];
+}
+
+export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
+  return getSettingsContext(settings).permissionNodes;
+}
+
+export function readSettingsNoMentionSpam(settings: ReadonlyGuildData) {
+  return getSettingsContext(settings).noMentionSpam;
+}
+
+export function readSettingsWordFilterRegExp(settings: ReadonlyGuildData) {
+  return getSettingsContext(settings).wordFilterRegExp;
 }
 
 export function readSettingsCached(guildid: string): ReadonlyGuildData | null {
@@ -113,7 +130,7 @@ export class Transaction {
 
       Object.assign(this.settings, this.#changes);
       this.#hasChanges = false;
-      updateSettings(this.settings, this.#changes);
+      updateSettingsContext(this.settings, this.#changes);
     }
     finally {
       this.#changes = Object.create(null);
@@ -163,7 +180,7 @@ async function processFetch(id: string): Promise<ReadonlyGuildData> {
     const promise = fetch(id);
     queue.set(id, promise);
     const value = await promise;
-    getSettings(value);
+    getSettingsContext(value);
     return value;
   }
   finally {

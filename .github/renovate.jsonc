@@ -20,8 +20,6 @@
           "nuxt-**",
           "@nuxt{/,}**",
           "@nuxtjs{/,}**",
-          "pinia",
-          "@pinia/nuxt",
           "typescript",
           "yup",
           "ufo"

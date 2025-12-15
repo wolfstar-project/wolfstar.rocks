@@ -2,12 +2,6 @@ trustPolicy: no-downgrade
 
 trustPolicyExclude:
   - semver@6.3.1
-  - chokidar@4.0.3
-  - undici@6.21.3
-  - undici-types@6.21.0
-  - "@netlify/edge-bundler@14.9.1"
-  - "@netlify/zip-it-and-ship-it@14.1.16"
-  - "@netlify/serverless-functions-api@2.8.1"
 
 shellEmulator: true
 
@@ -21,6 +15,7 @@ overrides:
   "@netlify/api": ^14.0.12
   "@types/node": 22.19.2
   "@vercel/nft": ^1.1.1
+  chokidar: ^5.0.0
 
 catalogs:
   build:
@@ -41,13 +36,13 @@ catalogs:
     "@discordjs/core": ^2.4.0
     "@netlify/nuxt": ^0.2.15
     "@nuxt/hints": ^1.0.0-alpha.3
-    "@nuxtjs/seo": ^3.2.2
+    "@nuxtjs/seo": ^3.3.0
     "@sapphire/bitfield": ^1.2.4
     "@sapphire/snowflake": ^3.5.5
     "@sapphire/time-utilities": ^1.7.14
     "@sapphire/utilities": ^3.18.2
     cz-conventional-changelog: ^3.3.0
-    daisyui: ^5.5.13
+    daisyui: ^5.5.14
     discord-api-types: ^0.38.37
     simple-git: ^3.30.0
     stale-dep: ^0.8.4
@@ -71,7 +66,7 @@ catalogs:
     "@commitlint/config-conventional": ^20.2.0
     "@nuxt/eslint": ^1.12.1
     "@sapphire/prettier-config": ^2.0.0
-    eslint: ^9.39.1
+    eslint: ^9.39.2
     eslint-plugin-format: ^1.1.0
     eslint-plugin-package-json: ^0.85.0
     eslint-plugin-vuejs-accessibility: ^2.4.1
@@ -89,7 +84,7 @@ catalogs:
     "@josephanson/nuxt-ai": ^0.1.6
     "@nuxt/fonts": ^0.12.1
     "@nuxt/image": ^2.0.0
-    "@nuxt/scripts": ^0.13.0
+    "@nuxt/scripts": ^0.13.1
     "@sentry/nuxt": ^10.30.0
     "@vee-validate/yup": ^4.15.1
     import-in-the-middle: ^2.0.0
@@ -148,5 +143,6 @@ peerDependencyRules:
     "@unhead/vue": "*"
     inflight: 1.0.6
     magicast: "*"
+    nuxt: "*"
     typescript: 5.8.3
     vue-tsc: ^3.0.7

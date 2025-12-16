@@ -40,7 +40,7 @@
           </template>
         </UAlert>
       </template>
-      <template v-else-if="user">
+      <template v-else-if="ready && user">
         <UAlert
           color="success"
           icon="lucide:check"
@@ -74,7 +74,7 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
   immediate: false,
 });
 
-const { user, redirectTo } = useAuth();
+const { user, ready, redirectTo } = useAuth();
 
 if (import.meta.client && code) {
   void performCall().catch(logger.error);

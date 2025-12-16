@@ -12,48 +12,50 @@
           <ULink to="/login" class="font-medium underline">here</ULink>.
         </template>
         <template #actions>
-          <UButton to="/login" size="sm" variant="outline">
+          <UButton color="neutral" variant="ghost" to="/login" size="sm">
             Return to Login
           </UButton>
         </template>
       </UAlert>
     </template>
     <ClientOnly v-else>
-      <template v-if="status === 'pending' || status === 'idle'">
+      <template v-if="isPending">
         <UAlert color="info" icon="emojione:hourglass-done" title="Loading">
           <template #description> Completing authentication flow... </template>
         </UAlert>
       </template>
-      <template v-else-if="status === 'error' && error">
+      <template v-else-if="isError">
         <UAlert
           color="error"
           title="Authentication Error"
           icon="emojione:cross-mark"
         >
           <template #description>
-            {{ error.cause }}
+            {{ error?.cause ?? error?.message ?? "An error occurred during authentication" }}
           </template>
           <template #actions>
-            <UButton color="secondary" to="/login" size="sm">
-              Try Again
+            <UButton color="neutral" variant="ghost" to="/login" size="sm">
+              Try again clicking here
             </UButton>
           </template>
         </UAlert>
       </template>
-      <template v-else-if="ready && user">
+      <template v-else-if="user">
         <UAlert
           color="success"
           icon="lucide:check"
-          :title="`Welcome ${user.username}`"
+          :title="`Welcome ${user.username}!`"
         >
           <template #description>
-            You will be redirected to the main page in a second.
+            You will be redirected to the main page in a moment.
             <div
               class="mt-2 rounded-lg bg-base-200 p-1"
               aria-label="Progress"
               role="progressbar"
             >
-              <div class="oauth-progress h-4 rounded-md bg-rose-500"></div>
+              <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
+                <div class="progress h-4 rounded-md bg-rose-500"></div>
+              </div>
             </div>
           </template>
         </UAlert>
@@ -63,6 +65,8 @@
 </template>
 
 <script setup lang="ts">
+import { promiseTimeout } from "@vueuse/core";
+
 const code = useRouteQuery("code", null, { transform: String });
 const router = useRouter();
 
@@ -74,21 +78,23 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
   immediate: false,
 });
 
-const { user, ready, redirectTo } = useAuth();
+const { user, redirectTo } = useAuth();
 
 if (import.meta.client && code) {
-  void performCall().catch(logger.error);
+  void performCall().catch(console.error);
 }
 
 async function performCall() {
   await execute();
-  if (error.value)
+  if (!user.value)
     return;
-  // wait until data is populated instead of a fixed timeout
-  await until(user).toBeTruthy({ timeout: 5000, throwOnTimeout: true });
-  // perform a client‐side redirect (replace history entry) without a full reload
+
+  await promiseTimeout(1000);
   await router.replace(redirectTo.value);
 }
+
+const isPending = computed(() => status.value === "pending");
+const isError = computed(() => status.value === "error" && error.value !== undefined);
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMetadata({
@@ -101,18 +107,3 @@ useSeoMetadata({
   },
 });
 </script>
-
-<style scoped>
-.oauth-progress {
-	animation: progressAnimation 1s ease-out;
-}
-
-@keyframes progressAnimation {
-	from {
-		width: 0;
-	}
-	to {
-		width: 100%;
-	}
-}
-</style>

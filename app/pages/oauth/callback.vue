@@ -5,7 +5,7 @@
         variant="solid"
         color="warning"
         title="Missing Code"
-        icon="emojione:warning"
+        icon="twemoji:warning"
       >
         <template #description>
           Please use the <code>Login</code> button instead or click
@@ -28,10 +28,10 @@
         <UAlert
           color="error"
           title="Authentication Error"
-          icon="emojione:cross-mark"
+          icon="twemoji:cross-mark"
         >
           <template #description>
-            {{ error?.cause ?? error?.message ?? "An error occurred during authentication" }}
+            {{ error ? error.message ?? error.cause : "An error occurred during authentication" }}
           </template>
           <template #actions>
             <UButton color="neutral" variant="ghost" to="/login" size="sm">
@@ -40,23 +40,14 @@
           </template>
         </UAlert>
       </template>
-      <template v-else-if="user">
+      <template v-else-if="isSuccess">
         <UAlert
           color="success"
-          icon="lucide:check"
-          :title="`Welcome ${user.username}!`"
+          icon="twemoji:check-mark"
+          :title="`Welcome ${user!.username}!`"
         >
           <template #description>
             You will be redirected to the main page in a moment.
-            <div
-              class="mt-2 rounded-lg bg-base-200 p-1"
-              aria-label="Progress"
-              role="progressbar"
-            >
-              <div class="mt-2 rounded-lg bg-gray-200 p-1 dark:bg-stone-900" aria-label="Progress" role="progressbar">
-                <div class="progress h-4 rounded-md bg-rose-500"></div>
-              </div>
-            </div>
           </template>
         </UAlert>
       </template>
@@ -68,33 +59,45 @@
 import { promiseTimeout } from "@vueuse/core";
 
 const code = useRouteQuery("code", null, { transform: String });
-const router = useRouter();
+const { user, redirectTo, fetch: refreshSession } = useAuth();
+const { start, finish } = useLoadingIndicator();
 
 const { error, status, execute } = useFetch("/api/auth/discord", {
-  query: { code },
+  query: {
+    code,
+  },
   method: "GET",
   key: "callback",
   server: false,
   immediate: false,
 });
 
-const { user, redirectTo } = useAuth();
-
 if (import.meta.client && code) {
-  void performCall().catch(console.error);
+  void performCall()
+    .catch(logger.error);
 }
 
 async function performCall() {
+  start();
   await execute();
-  if (!user.value)
-    return;
 
-  await promiseTimeout(1000);
-  await router.replace(redirectTo.value);
+  await refreshSession();
+
+  await promiseTimeout(seconds(5));
+
+  finish({
+    error: !user.value,
+  });
+
+  if (user.value) {
+    redirectTo.value = "/";
+    await navigateTo(redirectTo.value);
+  }
 }
 
 const isPending = computed(() => status.value === "pending");
-const isError = computed(() => status.value === "error" && error.value !== undefined);
+const isError = computed(() => status.value === "error");
+const isSuccess = computed(() => status.value === "success");
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMetadata({

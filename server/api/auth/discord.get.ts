@@ -57,7 +57,7 @@ export default defineOAuthDiscordEventHandler({
         secure: {
           tokens,
         },
-        loggedInAt: new Date().getTime(),
+        loggedInAt: Date.now(),
       },
       {
         maxAge: 60 * 60 * 24 * 7, // 1 week
@@ -67,9 +67,9 @@ export default defineOAuthDiscordEventHandler({
 
   async onError(_event: H3Event, error: NuxtError) {
     throw createError({
-      statusCode: 500,
+      status: 500,
       statusMessage: "Discord OAuth error",
-      data: error,
+      message: error.message,
     });
   },
 });

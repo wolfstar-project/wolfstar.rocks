@@ -28,10 +28,11 @@
 </template>
 
 <script setup lang="ts">
+import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import { promiseTimeout } from "@vueuse/core";
 import { useRouteParams } from "@vueuse/router";
 
-const guildId = useRouteParams("guild_id");
+const guildId = useRouteParams("id", null, { transform: String });
 const error = ref<string | null>(null);
 
 const { start, finish } = useLoadingIndicator({
@@ -48,11 +49,12 @@ async function navigateToGuild() {
   await promiseTimeout(1500);
 
   finish({
-    error: !guildId.value,
+    error: isNullOrUndefined(guildId.value),
   });
   await navigateTo(`/guilds/${guildId.value}`);
 }
 
+useRobotsRule(robotBlockingPageProps);
 useSeoMeta({
   title: "Auth Guild Callback",
   robots: { none: true },

@@ -66,12 +66,12 @@ export default defineWrappedResponseHandler(async (event) => {
   const guild = await getGuild(guildId);
 
   // Fetch member data
-  const member = await getMember(guild, user);
+  const member = await getMember(guild.id, user.id);
 
   // Check permissions
   if (await denies(event, manageAbility, guild, member)) {
-    throw createApiError({
-      statusCode: 403,
+    throw createError({
+      status: 403,
       message: "Insufficient permissions",
       data: {
         error: "insufficient_permissions",
@@ -86,8 +86,8 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const channelId = getRouterParam(event, "channel");
   if (isNullOrUndefined(channelId)) {
-    throw createApiError({
-      statusCode: 400,
+    throw createError({
+      status: 400,
       message: "Channel ID is required",
       data: {
         error: "channel_id_required",
@@ -99,8 +99,8 @@ export default defineWrappedResponseHandler(async (event) => {
   const channels = await $fetch<ReturnType<typeof flattenGuildChannel>[]>(`/api/guilds/${guildId}/channels`, {
     headers: event.headers,
   }).catch((error) => {
-    throw createApiError({
-      statusCode: 500,
+    throw createError({
+      status: 500,
       message: "Failed to fetch channels",
       data: {
         error: "channels_fetch_failed",
@@ -113,8 +113,8 @@ export default defineWrappedResponseHandler(async (event) => {
   const channel = channels.find((channel: any) => channel.id === channelId) ?? null;
 
   if (isNullOrUndefined(channel)) {
-    throw createApiError({
-      statusCode: 404,
+    throw createError({
+      status: 404,
       message: "Channel not found",
       data: {
         error: "channel_not_found",
@@ -131,6 +131,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved channel data for channel ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error(`Channels API error: ${error.message}`);
+    logger.error("Failed to retrieve channel data:", error);
   },
 });

@@ -189,13 +189,10 @@ export default defineWrappedResponseHandler(
       user,
       guilds,
     }).catch((error) => {
-      throw createApiError({
-        statusCode: 500,
-        message: "Data transformation failed",
-        error,
-        data: {
-          message: error.message || "Unknown error",
-        },
+      throw createError({
+        status: 500,
+        statusText: `Data transformation failed`,
+        message: error.message || "Unknown error",
       });
     });
 
@@ -208,8 +205,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully transformed guilds and user: ${user?.id}`);
     },
     onError(logger, error) {
-      logger.error(`Failed to transform guilds and user data: ${error.message}`);
+      logger.error("Failed to transform guilds and user data:", error);
     },
-
   },
 );

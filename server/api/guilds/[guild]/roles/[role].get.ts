@@ -68,12 +68,12 @@ export default defineWrappedResponseHandler(async (event) => {
   const guild = await getGuild(guildId);
 
   // Fetch member data
-  const member = await getMember(guild, user);
+  const member = await getMember(guild.id, user.id);
 
   // Check permissions
   if (await denies(event, manageAbility, guild, member)) {
-    throw createApiError({
-      statusCode: 403,
+    throw createError({
+      status: 403,
       message: "Insufficient permissions",
       data: {
         error: "insufficient_permissions",
@@ -88,8 +88,8 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const roleId = getRouterParam(event, "role");
   if (isNullOrUndefined(roleId)) {
-    throw createApiError({
-      statusCode: 400,
+    throw createError({
+      status: 400,
       message: "No role id provided",
       data: {
         field: "roleId",
@@ -100,10 +100,9 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   const role = await api.guilds.getRole(guild.id, roleId).catch((error) => {
-    throw createApiError({
-      statusCode: 500,
+    throw createError({
+      status: 500,
       message: "Failed to fetch role",
-      error,
       data: {
         error: "role_fetch_failed",
         message: error.message || "Unknown error",
@@ -121,6 +120,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved role data for role ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error(`Roles API error: ${error.message}`);
+    logger.error("Failed to retrieve role data:", error);
   },
 });

@@ -64,11 +64,11 @@ export default defineWrappedResponseHandler(async (event) => {
   const guild = await getGuild(guildId);
 
   // Fetch member data
-  const member = await getMember(guild, user);
+  const member = await getMember(guild.id, user.id);
 
   // Check permissions
   if (await denies(event, manageAbility, guild, member)) {
-    throw createApiError({
+    throw createError({
       statusCode: 403,
       message: "Insufficient permissions",
       data: {
@@ -106,6 +106,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved ${count} members for guild ID: ${guildId}`);
   },
   onError(logger, error) {
-    logger.error(`Members API error: ${error.message}`);
+    logger.error("Failed to retrieve members:", error);
   },
 });

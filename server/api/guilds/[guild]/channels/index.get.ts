@@ -63,12 +63,12 @@ export default defineWrappedResponseHandler(
     const guild = await getGuild(guildId);
 
     // Fetch member data
-    const member = await getMember(guild, user);
+    const member = await getMember(guild.id, user.id);
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {
-      throw createApiError({
-        statusCode: 403,
+      throw createError({
+        status: 403,
         message: "Insufficient permissions",
         data: {
           error: "insufficient_permissions",
@@ -82,8 +82,8 @@ export default defineWrappedResponseHandler(
     }
 
     const channels = await api.guilds.getChannels(guild.id).catch((error) => {
-      throw createApiError({
-        statusCode: 500,
+      throw createError({
+        status: 500,
         message: "Failed to fetch channels",
         data: {
           error: "channels_fetch_failed",
@@ -108,7 +108,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved ${count} channels for guild ID: ${guildId}`);
     },
     onError(logger, error) {
-      logger.error(`Channels API error:\n${error.message}\n${error.cause}`);
+      logger.error("Failed to retrieve channels:", error);
     },
   },
 );

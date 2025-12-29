@@ -79,8 +79,8 @@ export default defineWrappedResponseHandler(
       settingsUpdateSchema.validate(body));
 
     if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
-      throw createApiError({
-        statusCode: 400,
+      throw createError({
+        status: 400,
         message: "Invalid request body or missing data",
         data: {
           field: "body",
@@ -93,8 +93,8 @@ export default defineWrappedResponseHandler(
     const { data } = body;
 
     if (isNullishOrEmpty(data)) {
-      throw createApiError({
-        statusCode: 400,
+      throw createError({
+        status: 400,
         message: "Data array cannot be empty",
         data: {
           field: "data",
@@ -109,12 +109,12 @@ export default defineWrappedResponseHandler(
     const guild = await getGuild(guildId);
 
     // Fetch member data
-    const member = await getMember(guild, user);
+    const member = await getMember(guild.id, user.id);
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {
-      throw createApiError({
-        statusCode: 403,
+      throw createError({
+        status: 403,
         message: "Insufficient permissions",
         data: {
           error: "insufficient_permissions",
@@ -128,11 +128,11 @@ export default defineWrappedResponseHandler(
     }
 
     // Update settings
-    const trx = await writeSettingsTransaction(guild.id);
+    using trx = await writeSettingsTransaction(guild.id);
 
     if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
-      throw createApiError({
-        statusCode: 400,
+      throw createError({
+        status: 400,
         message: "Invalid data entries",
         data: {
           error: "invalid_data_entries",
@@ -157,7 +157,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully updated settings`);
     },
     onError(logger, error) {
-      logger.error(`Settings API error: ${error.message}`);
+      logger.error("Failed to update settings:", error);
     },
   },
 );

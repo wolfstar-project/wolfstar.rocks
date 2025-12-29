@@ -1,11 +1,5 @@
-import type { GuildData } from "~~/server/database";
 import { manageAbility } from "#shared/utils/abilities";
-import * as yup from "yup";
 import { readSettings, serializeSettings } from "~~/server/database";
-
-const querySchema = yup.object({
-  shouldSerialize: yup.boolean().optional().default(false),
-});
 
 defineRouteMeta({
   openAPI: {
@@ -270,21 +264,17 @@ export default defineWrappedResponseHandler(
     // Get guild ID from params
     const guildId = getGuildParam(event);
 
-    // Validate query parameters
-    const { shouldSerialize } = await getValidatedQuery(event, (body) =>
-      querySchema.validate(body));
-
     const { user } = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
 
     // Fetch member data
-    const member = await getMember(guild, user);
+    const member = await getMember(guild.id, user.id);
 
     // Check permissions
     if (await denies(event, manageAbility, guild, member)) {
-      throw createApiError({
-        statusCode: 403,
+      throw createError({
+        status: 403,
         message: "Insufficient permissions",
         data: {
           error: "insufficient_permissions",
@@ -299,9 +289,7 @@ export default defineWrappedResponseHandler(
 
     // Read and return settings
     const settings = await readSettings(guild.id);
-    return shouldSerialize
-      ? serializeSettings(settings)
-      : (settings as unknown as GuildData);
+    return serializeSettings(settings);
   },
   {
     auth: true,
@@ -310,7 +298,7 @@ export default defineWrappedResponseHandler(
       logger.info(`Successfully retrieved settings`);
     },
     onError(logger, error) {
-      logger.error(`Settings API error: ${error.message}`);
+      logger.error("Failed to retrieve settings:", error);
     },
   },
 );

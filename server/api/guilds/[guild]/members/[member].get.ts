@@ -84,14 +84,14 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const memberId = getRouterParam(event, "member");
   if (isNullOrUndefined(memberId)) {
-    throw createApiError({
-      statusCode: 400,
+    throw createError({
+      status: 400,
       message: "Member ID is required",
     });
   }
 
   // Fetch member data
-  const member = await getMember(guild, user);
+  const member = await getMember(guild.id, user.id);
 
   return flattenMember(member, guild);
 }, {
@@ -101,6 +101,6 @@ export default defineWrappedResponseHandler(async (event) => {
     logger.info(`Successfully retrieved member data for member ID: ${data.id} in guild ID: ${data.guildId}`);
   },
   onError(logger, error) {
-    logger.error(`Members API error: ${error.message}`);
+    logger.error("Failed to retrieve member data:", error);
   },
 });

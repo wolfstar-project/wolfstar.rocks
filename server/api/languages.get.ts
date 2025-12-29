@@ -33,7 +33,7 @@ export default defineWrappedCachedResponseHandler(
 
     if (!apiBaseUrl) {
       throw createError({
-        statusCode: 500,
+        status: 500,
         message: "Bot API base URL is not configured",
       });
     }
@@ -51,12 +51,18 @@ export default defineWrappedCachedResponseHandler(
     auth: false,
     rateLimit: {
       enabled: true,
-      window: 60000, // 1 minute
+      window: minutes(1),
       limit: 30,
       type: "sliding",
     },
-    maxAge: 60 * 60 * 24, // Cache for 24 hours
+    maxAge: days(1),
     swr: true,
     name: "bot-languages",
+    onSuccess(logger) {
+      logger.info(`Successfully fetched bot languages`);
+    },
+    onError(logger, error) {
+      logger.error("Failed to fetch bot languages:", error);
+    },
   },
 );

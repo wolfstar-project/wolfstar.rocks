@@ -1,8 +1,8 @@
 import type { OGImageProps } from "@/components/OgImage/default.vue";
 
 interface SiteMetadata {
-  title?: string;
-  description?: string;
+  title?: MaybeRefOrGetter<string>;
+  description?: MaybeRefOrGetter<string>;
   ogImage?: string;
   ogSiteName?: string;
   ogType?: "website" | "article" | "profile";

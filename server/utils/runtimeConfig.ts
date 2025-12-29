@@ -10,18 +10,17 @@ export function generateRuntimeConfig() {
       clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
       environment: process.env.NODE_ENV ?? "production",
       app: {
-        version: process.env.NUXT_PUBLIC_APP_VERSION,
         apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
       },
       sentry: {
         dsn: process.env.SENTRY_DSN,
         tracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE ? Number(process.env.NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE) : 0.2,
       },
-      scripts: {
-        cloudflareWebAnalytics: {
-          token: process.env.NUXT_PUBLIC_SCRIPTS_CLOUDFLARE_WEB_ANALYTICS_TOKEN,
-        },
-      },
+    },
+    cloudflare: {
+      accountId: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID,
+      namespaceId: process.env.NUXT_CLOUDFLARE_NAMESPACE_ID,
+      apiToken: process.env.NUXT_CLOUDFLARE_API_TOKEN,
     },
     sentry: {
       authToken: process.env.SENTRY_AUTH_TOKEN,
@@ -33,6 +32,10 @@ export function generateRuntimeConfig() {
       clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
       botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
     },
+    storage: {
+      fsBase: process.env.NUXT_STORAGE_FS_BASE,
+    },
+
   };
 }
 

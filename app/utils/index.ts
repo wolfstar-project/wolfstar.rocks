@@ -1,5 +1,5 @@
+import type { Selfmod } from "#shared/types/configurableData";
 import type { Ref } from "vue";
-import type { Selfmod } from "~~/shared/types/configurableData";
 
 import { isEqual } from "ohash/utils";
 

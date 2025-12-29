@@ -5,13 +5,13 @@ declare module "#auth-utils" {
   export interface User {
     id: string;
     name: string;
-    globalName: string;
+    globalName: string | null;
     username: string;
     avatar: string | null;
   }
 
   export interface UserSession {
-    loggedAt: number;
+    loggedInAt: number;
   }
 
   export interface SecureSessionData {

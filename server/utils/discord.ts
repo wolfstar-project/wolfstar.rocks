@@ -1,6 +1,4 @@
-import type { User } from "#auth-utils";
 import type {
-  FlattenedCommand,
   FlattenedGuild,
   FlattenedMember,
   LoginData,
@@ -11,11 +9,10 @@ import type {
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
   APIGuild,
-  APIUser,
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { hours, minutes } from "#shared/utils/times";
+import { hours } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
 import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
 import {
@@ -77,7 +74,7 @@ async function getManageable(
     );
   }
 
-  const member = await getMember(guild, id);
+  const member = await getMember(guild.id, id);
   const flattenedMember = flattenMember(member, guild);
   if (!member)
     return false;
@@ -159,7 +156,7 @@ export async function transformOauthGuildsAndUser({
   return { user, transformedGuilds };
 }
 
-export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
+export const getCurrentToken = defineCachedFunction(async (event: H3Event) => {
   // Get session token
   const tokens = await event.context.$authorization.resolveServerTokens();
 
@@ -168,8 +165,31 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
     || !("access_token" in tokens)
     || isNullOrUndefined(tokens.access_token)
   ) {
-    throw createApiError({
-      statusCode: 401,
+    throw createError({
+      status: 401,
+      message: "Authentication required",
+      data: {
+        error: "no_access_token",
+        message: "None tokens OR access token not found",
+      },
+    });
+  }
+
+  return tokens;
+}, {
+  maxAge: days(7),
+});
+
+export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
+  const tokens = await event.context.$authorization.resolveServerTokens();
+
+  if (
+    isNullOrUndefined(tokens)
+    || !("access_token" in tokens)
+    || isNullOrUndefined(tokens.access_token)
+  ) {
+    throw createError({
+      status: 401,
       message: "Authentication required",
       data: {
         error: "no_access_token",
@@ -186,18 +206,18 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   const api = useApi(rest);
 
   const user = await api.users.getCurrent().catch((error: DiscordAPIError) => {
-    throw createApiError({
-      statusCode: 500,
+    throw createError({
+      status: 500,
       message: "Failed to fetch user data",
-      error,
+      cause: error,
     });
   });
 
   const guilds = await api.users.getGuilds().catch((error: DiscordAPIError) => {
-    throw createApiError({
-      statusCode: 500,
+    throw createError({
+      status: 500,
       message: "Failed to fetch user guilds",
-      error,
+      cause: error,
     });
   });
 
@@ -206,93 +226,83 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   maxAge: hours(1),
 });
 
-export const getMember = defineCachedFunction(async (guild: APIGuild | string, user: User | APIUser | string) => {
+export const getMember = defineCachedFunction(async (guildId: string, userId: string) => {
   const api = useApi();
-  try {
-    const result = await api.guilds
-      .getMember(typeof guild === "string" ? guild : guild.id, typeof user === "string" ? user : user.id);
-    return result;
-  }
-  catch (err) {
-    const discordError = err as DiscordAPIError;
 
-    const errors: Record<number, string> = {
-      10007: `Unknown Member: ${typeof user === "string" ? user : user.id} in Guild: ${typeof guild === "string" ? guild : guild.id}`,
-    };
-    const defaultMessage = `Failed to fetch member: ${typeof user === "string" ? user : user.id} in Guild: ${typeof guild === "string" ? guild : guild.id}`;
+  const result = await api.guilds
+    .getMember(guildId, userId)
+    .catch((error) => {
+      const discordError = error as DiscordAPIError;
 
-    throw createApiError({
-      statusCode: 500,
-      message: errors[discordError.code as number] ?? defaultMessage,
+      let message = "";
+      switch (discordError.code) {
+        case 10007: // Unknown Member
+          message = `Unknown Member: ${userId} in Guild: ${guildId}`;
+
+          break;
+        default:
+          message = `Failed to fetch member: ${userId} in Guild: ${guildId}`;
+      }
+
+      throw createError({
+        status: 500,
+        message,
+      });
     });
-  }
+  return result;
 }, {
   maxAge: hours(1),
 });
 
 export const getGuildChannels = defineCachedFunction(async (guildId: string) => {
   const api = useApi();
-  try {
-    const result = await api.guilds
-      .getChannels(guildId);
-    return result;
-  }
-  catch (err) {
-    throw createApiError({
-      statusCode: 500,
-      message: `Failed to fetch channels for guild: ${guildId}`,
-      error: err as Error,
+  const result = await api.guilds
+    .getChannels(guildId)
+    .catch(() => {
+      throw createError({
+        status: 500,
+        message: `Failed to fetch channels for guild: ${guildId}`,
+      });
     });
-  }
+  return result;
 }, {
   maxAge: hours(1),
 });
 
 export const getGuild = defineCachedFunction(async (guildId: string) => {
   const api = useApi();
-  try {
-    const result = await api.guilds
-      .get(guildId, { with_counts: true });
-    return result;
-  }
-  catch (err) {
-    throw createApiError({
-      statusCode: 500,
-      message: `Failed to fetch guild: ${guildId}`,
-      error: err as Error,
+  const result = await api.guilds
+    .get(guildId, { with_counts: true })
+    .catch(() => {
+      throw createError({
+        status: 500,
+        message: `Failed to fetch guild: ${guildId}`,
+      });
     });
-  }
+  return result;
 }, {
   maxAge: hours(1),
 });
 
 export const fetchCommands = defineCachedFunction(async () => {
-  try {
-    const config = runtimeConfig;
-    const { apiBaseUrl } = config.public.app;
+  const { public: { app: { apiBaseUrl } } } = runtimeConfig;
 
-    if (!apiBaseUrl) {
-      throw new Error("Bot API base URL is not configured");
-    }
-
-    // Fetch commands from the bot API
-    const commands = await $fetch<FlattenedCommand[]>(`/commands`, {
-      method: "GET",
-      baseURL: apiBaseUrl,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    return commands;
-  }
-  catch (error) {
-    throw createApiError({
-      statusCode: 500,
-      message: "Failed to fetch commands from bot API",
-      error: error as Error,
+  if (!apiBaseUrl) {
+    throw createError({
+      status: 500,
+      message: "Bot API base URL is not configured",
     });
   }
+
+  const commands = await $fetch<FlattenedCommand[]>(`/commands`, {
+    method: "GET",
+    baseURL: apiBaseUrl,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return commands;
 }, {
-  maxAge: minutes(5),
+  maxAge: hours(1),
 });

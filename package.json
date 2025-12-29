@@ -41,7 +41,7 @@
     "typecheck": "stale-dep && nuxt typecheck"
   },
   "lint-staged": {
-    "*": "pnpm lintroll --fix --cache --git ."
+    "*": "pnpm lintroll --fix --cache --staged ."
   },
   "dependencies": {
     "@iconify-json/emojione": "catalog:icons",
@@ -53,14 +53,12 @@
     "@nuxt/fonts": "catalog:prod",
     "@nuxt/icon": "catalog:icons",
     "@nuxt/image": "catalog:prod",
-    "@nuxt/scripts": "catalog:prod",
     "@nuxt/ui": "catalog:frontend",
     "@nuxtjs/seo": "catalog:dev",
-    "@pinia/nuxt": "catalog:frontend",
     "@prisma/adapter-pg": "catalog:database",
     "@prisma/client": "catalog:database",
+    "@sapphire/ratelimits": "catalog:prod",
     "@sentry/nuxt": "catalog:prod",
-    "@vee-validate/yup": "catalog:prod",
     "@vite-pwa/nuxt": "catalog:build",
     "@vueuse/core": "catalog:utils",
     "@vueuse/integrations": "catalog:utils",
@@ -77,7 +75,6 @@
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",
-    "pinia": "catalog:frontend",
     "postcss-nested": "catalog:style",
     "prisma": "catalog:database",
     "prisma-json-types-generator": "catalog:database",
@@ -86,10 +83,7 @@
     "tailwind-variants": "catalog:prod",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
-    "uuid": "catalog:utils",
-    "yup": "catalog:prod",
-    "zod": "catalog:utils",
-    "@sapphire/ratelimits": "catalog:prod"
+    "yup": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -137,7 +131,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "pnpm@10.25.0",
+  "packageManager": "pnpm@10.26.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

@@ -38,7 +38,7 @@ jobs:
       - name: Genarate prisma types
         run: pnpm prisma:generate
       - name: Run ESLint
-        run: pnpm lint --fix=false
+        run: pnpm lint
 
   Building:
     name: Compile source code
@@ -69,15 +69,3 @@ jobs:
         run: pnpm prisma:generate
       - name: Build code
         run: pnpm build
-
-  Provenance:
-    name: Run Provenance Checks
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-      - name: Check provenance downgrades
-        uses: danielroe/provenance-action@v0.1.1
-        with:
-          fail-on-provenance-change: true

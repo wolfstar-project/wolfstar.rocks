@@ -6,7 +6,7 @@ import { AsyncQueue } from "@sapphire/async-queue";
 import prisma from "~~/server/database/prisma";
 import { getDefaultGuildSettings } from "~~/server/database/settings/constants";
 import { deleteSettingsContext, getSettingsContext, updateSettingsContext } from "~~/server/database/settings/context/functions";
-import { maybeParseNumber } from "~~/server/utils";
+import { maybeParseNumber } from "~~/server/utils/shared";
 
 const cache = new Collection<string, GuildData>();
 const queue = new Collection<string, Promise<GuildData>>();

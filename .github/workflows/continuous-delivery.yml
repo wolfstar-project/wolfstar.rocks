@@ -22,15 +22,15 @@ on:
       - pnpm-lock.yaml
       - pnpm-workspace.yaml
 
+env:
+  HUSKY: 0
+
 jobs:
-  build:
-    name: Publish WolfStar.Rocks image to container registry
+  publish:
+    name: Publish WolfStar Latest image to GHCR
     uses: wolfstar-project/.github/.github/workflows/reusable-publish-image.yml@main
-    permissions:
-      contents: read
-      packages: write
+    secrets: inherit
     with:
       enablePlatforms: true
-      platforms: '["linux/amd64", "linux/arm64"]'
-      tag: latest
-    secrets: inherit
+      platforms: >-
+        [{"platform": "linux/amd64", "runner": "ubuntu-latest"}, {"platform": "linux/arm64", "runner": "ubuntu-latest"}]

@@ -32,5 +32,6 @@ declare module "@nuxt/schema" {
   export interface AppConfig {
     env: BuildInfo["env"];
     buildInfo: BuildInfo;
+    storage: any;
   }
 }

@@ -1,34 +1,39 @@
-import type { DiscordAPIError, RESTOptions } from "@discordjs/rest";
+import type { RESTOptions } from "@discordjs/rest";
 import type { H3Event } from "h3";
+// @ts-expect-error virtual import
+import { driver } from "#storage-config";
 import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
-import { isNullishOrEmpty } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import { createError } from "h3";
+import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
+import kv from "unstorage/drivers/cloudflare-kv-http";
+import fs from "unstorage/drivers/fs";
+import memory from "unstorage/drivers/memory";
+import cached from "~~/server/cache-driver";
 
-export function createApiError(options: { statusCode: number; message: string; data?: Record<string, any>; error?: Error | DiscordAPIError }) {
-  const { statusCode, message, error, data } = options;
+const storage = useStorage();
 
-  let cause: unknown;
-  if (error?.stack) {
-    cause = error.stack;
-  }
-  const errorObj: Record<string, any> = {
-    statusCode,
-    message,
-    data,
-  };
-  if (typeof cause === "object" && cause !== null) {
-    errorObj.cause = cause;
-  }
-  return createError(errorObj);
+if (driver === "fs") {
+  const config = useRuntimeConfig();
+  storage.mount("wolfstar:ratelimiter", fs({ base: config.storage.fsBase }));
+}
+else if (driver === "cloudflare") {
+  const config = useRuntimeConfig();
+  storage.mount("wolfstar:ratelimiter", cached(kv({
+    accountId: config.cloudflare.accountId,
+    namespaceId: config.cloudflare.namespaceId,
+    apiToken: config.cloudflare.apiToken,
+  })));
+}
+else if (driver === "memory") {
+  storage.mount("wolfstar:ratelimiter", memory());
 }
 
 export function getGuildParam(event: H3Event) {
   const guildId = getRouterParam(event, "guild");
   if (isNullOrUndefined(guildId)) {
-    throw createApiError({
-      statusCode: 400,
+    throw createError({
+      status: 400,
       message: "No guild id provided",
       data: {
         field: "guildId",

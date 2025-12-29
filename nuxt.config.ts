@@ -1,6 +1,6 @@
 import type { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
-import { createResolver } from "nuxt/kit";
-import { isDevelopment, isWindows } from "std-env";
+import { createResolver, useNuxt } from "nuxt/kit";
+import { isCI, isDevelopment, isWindows } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -15,18 +15,15 @@ export default defineNuxtConfig({
     "@nuxt/eslint",
     "@nuxt/ui",
     "@nuxt/image",
-    "@nuxt/scripts",
     "@nuxt/hints",
     "@nuxt/fonts",
     "@nuxtjs/seo",
     "@vueuse/nuxt",
-    "@pinia/nuxt",
     "@netlify/nuxt",
     "@vite-pwa/nuxt",
     "@vueuse/motion/nuxt",
     "@sentry/nuxt/module",
     "@vue-macros/nuxt",
-    "@josephanson/nuxt-ai",
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
@@ -45,11 +42,6 @@ export default defineNuxtConfig({
   $production: {
     image: {
       provider: "netlify",
-    },
-    scripts: {
-      registry: {
-        cloudflareWebAnalytics: true,
-      },
     },
     sentry: {
       telemetry: false,
@@ -117,7 +109,6 @@ export default defineNuxtConfig({
   },
 
   site: {
-    url: "https://wolfstar.rocks",
     description:
       "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
     name: "WolfStar",
@@ -132,6 +123,17 @@ export default defineNuxtConfig({
     fallback: "light",
   },
 
+  ui: {
+    experimental: {
+      componentDetection: true,
+    },
+  },
+
+  appConfig: {
+    storage: {
+      driver: process.env.NUXT_STORAGE_DRIVER ?? (isCI ? "cloudflare" : "fs"),
+    },
+  },
   // Runtime configuration
   runtimeConfig,
 
@@ -144,16 +146,13 @@ export default defineNuxtConfig({
     client: "hidden",
   },
 
-  future: {
-    compatibilityVersion: 5,
-  },
-
   features: {
     inlineStyles: true,
   },
 
   experimental: {
     payloadExtraction: false,
+    viteEnvironmentApi: true,
     renderJsonPayloads: true,
     typescriptPlugin: true,
   },
@@ -166,17 +165,6 @@ export default defineNuxtConfig({
         process.env.NITRO_PRESET !== "node-server"
           ? ["pg-native"]
           : undefined,
-    },
-    storage: {
-      "wolfstar:ratelimiter": {
-        driver: "netlify-blobs",
-        name: "wolfstar:ratelimiter",
-      },
-    },
-    devStorage: {
-      "wolfstar:ratelimiter": {
-        driver: "memory",
-      },
     },
     prerender: {
       crawlLinks: true,
@@ -241,30 +229,48 @@ export default defineNuxtConfig({
   vite: {
     optimizeDeps: {
       include: [
-        "@vueuse/shared",
-        "@sapphire/utilities",
-        "@sapphire/utilities/isNullish",
-        "@sapphire/utilities/cast",
-        "tailwindcss/colors",
-        "ufo",
-        "std-env",
-        "ohash/utils",
-        "@sentry/vue",
-        "@sentry/nuxt",
-        "deepmerge",
-        "discord-api-types/v10",
-        "@discordjs/rest",
-        "motion-v",
-        "@vueuse/integrations/useFuse",
-        "yup",
         "@discordjs/core/http-only",
-        "@sapphire/time-utilities",
+        "@discordjs/rest",
+        "@sapphire/async-queue",
         "@sapphire/bitfield",
         "@sapphire/snowflake",
-        "@sapphire/async-queue",
+        "@sapphire/time-utilities",
+        "@sapphire/utilities",
+        "@sapphire/utilities/cast",
+        "@sapphire/utilities/isNullish",
+        "@sapphire/utilities/objectValues",
+        "@sapphire/utilities/objectToTuples",
+        "@sentry/nuxt",
+        "@sentry/vue",
+        "@tiptap/core",
+        "@tiptap/extension-drag-handle-vue-3",
+        "@tiptap/extension-horizontal-rule",
+        "@tiptap/extension-image",
+        "@tiptap/extension-mention",
+        "@tiptap/extension-placeholder",
+        "@tiptap/markdown",
+        "@tiptap/pm/state",
+        "@tiptap/starter-kit",
+        "@tiptap/suggestion",
+        "@tiptap/vue-3",
+        "@tiptap/vue-3/menus",
         "@vue/devtools-core",
         "@vue/devtools-kit",
-        "uuid",
+        "@vueuse/integrations/useFuse",
+        "@vueuse/shared",
+        "deepmerge",
+        "discord-api-types/v10",
+        "motion-v",
+        "ohash/utils",
+        "prettier",
+        "reka-ui",
+        "reka-ui/namespaced",
+        "std-env",
+        "tailwind-variants",
+        "tailwindcss/colors",
+        "ufo",
+        "vaul-vue",
+        "yup",
       ],
     },
   },
@@ -273,6 +279,18 @@ export default defineNuxtConfig({
     plugins: {
       "postcss-nested": {},
     },
+  },
+
+  hooks: {
+    "nitro:config": function (config) {
+      const nuxt = useNuxt();
+      config.virtual = config.virtual || {};
+      config.virtual["#storage-config"] = `export const driver = ${JSON.stringify(nuxt.options.appConfig.storage.driver)}`;
+    },
+  },
+
+  auth: {
+    loadStrategy: "none",
   },
 
   eslint: {
@@ -339,7 +357,6 @@ export default defineNuxtConfig({
           "https://media.discordapp.net",
           "https://*.netlify.com",
           "https://*.netlify.app",
-          "https://cloudflareinsights.com",
           "https://*.wolfstar.rocks",
           "https://*.ingest.us.sentry.io",
           "https://*.sentry.io",
@@ -376,7 +393,6 @@ export default defineNuxtConfig({
           "'unsafe-inline'",
           "'wasm-unsafe-eval'",
           "blob:",
-          "https://static.cloudflareinsights.com",
           "https://beta.wolfstar.rocks",
           "https://wolfstar.rocks",
         ],

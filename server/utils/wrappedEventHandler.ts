@@ -3,11 +3,10 @@ import type { ConsolaInstance } from "consola";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { logger, useLogger } from "#shared/utils/logger";
-import { isObject } from "@sapphire/utilities";
+import { cast, isObject } from "@sapphire/utilities";
 import { defu } from "defu";
 import { isDevelopment } from "std-env";
 import * as yup from "yup";
-import { createApiError } from "./index";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
@@ -17,92 +16,27 @@ const rateLimitStorage = useStorage("wolfstar:ratelimiter");
  * Yup schema for rate limiting options validation
  */
 const rateLimitSchema = yup.object({
-  enabled: yup.boolean().default(true),
+  enabled: yup.boolean().default(true).optional(),
   window: yup.number().positive().integer().default(10000).optional(),
-  limit: yup.number().positive().integer().required(),
+  limit: yup.number().positive().integer().default(5).optional(),
   type: yup.string().oneOf(["fixed", "sliding"]).default("fixed").optional(),
   scope: yup.string().oneOf(["global", "route"]).default("global").optional(),
-  whitelist: yup.array().of(yup.string()).default([]).nonNullable().optional(),
-  ipHeader: yup.string().optional().optional(),
-}).noUnknown(true);
+  whitelist: yup.array().of(yup.string()).optional().default([]),
+  ipHeader: yup.string().optional(),
+});
+type RateLimitOptions = yup.InferType<typeof rateLimitSchema>;
+type PartialRateLimitOptions = Partial<yup.InferType<typeof rateLimitSchema>>;
 
-type NormalizedRateLimitOptions = yup.InferType<typeof rateLimitSchema>;
-
-const rateLimitDefaults: NormalizedRateLimitOptions = {
-  enabled: true,
-  window: 10000,
-  limit: 5,
-  type: "fixed",
-  scope: "global",
-  whitelist: [],
-};
-
-function normalizeRateLimitOptions(options: RateLimitOptions | undefined): NormalizedRateLimitOptions {
-  try {
-    // Merge with defaults first
-    const merged = defu(options, rateLimitDefaults);
-
-    // Validate and normalize with Yup schema
-    const validated = rateLimitSchema.validateSync(merged, {
-      stripUnknown: true,
-      abortEarly: false,
-    });
-
-    return validated as NormalizedRateLimitOptions;
-  }
-  catch (error) {
-    if (error instanceof yup.ValidationError) {
-      isDevelopment && debugLogger.warn("Rate limit options validation failed, using defaults", {
-        errors: error.errors,
-        value: options,
-      });
-    }
-
-    // Fallback to defaults on validation error
-    return rateLimitDefaults;
-  }
-}
+const rateLimitDefaults = rateLimitSchema.getDefault() as RateLimitOptions;
 
 interface DefinedWrappedResponseHandlerOptions<Data> {
   onError?: (logger: ConsolaInstance, error: any | Error | H3Error) => void;
   onSuccess?: (logger: ConsolaInstance, data: Awaited<Data>) => void;
   auth?: boolean;
-  rateLimit: RateLimitOptions;
+  rateLimit?: PartialRateLimitOptions;
 }
 
 interface DefinedWrappedCachedResponseHandlerOptions<Data> extends DefinedWrappedResponseHandlerOptions<Data>, CacheOptions {
-}
-
-/**
- * Rate limiting configuration options
- * @example
- * ```typescript
- * {
- *   enabled: true,
- *   limit: 10,
- *   window: 60000, // 1 minute
- *   type: 'sliding',
- *   scope: 'route',
- *   whitelist: ['127.0.0.1', '192.168.1.1'],
- *   ipHeader: 'CF-Connecting-IP'
- * }
- * ```
- */
-interface RateLimitOptions {
-  /** Whether rate limiting is enabled (default: true) */
-  enabled: boolean;
-  /** Time window in milliseconds (default: 10000 = 10 seconds) */
-  window?: number;
-  /** Maximum number of requests per window (required) */
-  limit: number;
-  /** Window type: 'fixed' or 'sliding' (default: 'fixed') */
-  type?: "fixed" | "sliding";
-  /** Scope: 'global' (per-user) or 'route' (per-route per-user) (default: 'global') */
-  scope?: "global" | "route";
-  /** List of IP addresses to whitelist (bypass rate limiting) (default: []) */
-  whitelist?: string[];
-  /** Custom header to use for IP detection, e.g., 'CF-Connecting-IP' for Cloudflare (default: undefined) */
-  ipHeader?: string;
 }
 
 /**
@@ -133,21 +67,55 @@ function getIdentifier(event: H3Event, session: UserSessionRequired | null, ipHe
     ?? "unknown";
 }
 
+function normalizeRateLimitOptions(options?: PartialRateLimitOptions): RateLimitOptions {
+  try {
+    // Merge with defaults first
+    const merged = defu(options, rateLimitDefaults);
+
+    // Validate and normalize with Yup schema
+    const validated = rateLimitSchema.validateSync(merged, {
+      stripUnknown: true,
+      abortEarly: false,
+    });
+
+    return validated;
+  }
+  catch (error) {
+    if (error instanceof yup.ValidationError) {
+      isDevelopment && debugLogger.warn("Rate limit options validation failed, using defaults", {
+        errors: error.errors,
+        value: options,
+      });
+    }
+
+    // Fallback to defaults on validation error
+    return rateLimitDefaults;
+  }
+}
+
+async function getUserSession(
+  options: DefinedWrappedResponseHandlerOptions<any>,
+  event: H3Event,
+): Promise<UserSessionRequired | null> {
+  if (options.auth) {
+    return await requireUserSession(event);
+  }
+  return null;
+}
+
 async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
   event: H3Event<T>,
   handler: EventHandler<T, D>,
   options: DefinedWrappedResponseHandlerOptions<D>,
 ) {
-  const session = options.auth
-    ? await requireUserSession(event)
-    : null;
+  const session = await getUserSession(options, event);
   if (session)
     isDevelopment && debugLogger.debug("User session required and found", session.user.name);
 
   const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
   // Normalize options (includes new `scope`)
-  const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit) as NonNullable<NormalizedRateLimitOptions>;
+  const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit);
 
   // Check if IP is whitelisted (skip rate limiting for whitelisted IPs)
   if (!session && whitelist.length > 0 && whitelist.includes(id)) {
@@ -158,13 +126,13 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
   // Build storage key: global (per-user) by default, or method:path:user when scope === 'route'
   const { req } = event.node;
   const method = req.method;
-  const pathname = getRequestURL(event).pathname;
+  const { pathname } = getRequestURL(event);
   const normalizedPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
   const scopeKey = `${method}:${normalizedPath}`;
   const storageKey = scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 
   const savedState = await rateLimitStorage.getItem(storageKey);
-  const initialState = savedState && isObject(savedState) ? (savedState as Record<string, unknown>) : {};
+  const initialState = savedState && isObject(savedState) ? cast<Record<string, unknown>>(savedState) : {};
   isDevelopment && debugLogger.debug(`Rate limit identifier: ${id} scope: ${scope} storageKey: ${storageKey}`);
 
   // If rate limiting is disabled, run handler immediately
@@ -211,8 +179,8 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
         setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
         setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
-        throw createApiError({
-          statusCode: 429,
+        throw createError({
+          status: 429,
           message: "Too Many Requests",
           data: {
             message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
@@ -268,8 +236,8 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
         setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
         setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
-        throw createApiError({
-          statusCode: 429,
+        throw createError({
+          status: 429,
           message: "Too Many Requests",
           data: {
             message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
@@ -338,6 +306,7 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
     }
   });
 }
+
 export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest, D>(
   handler: EventHandler<T, D>,
   options: DefinedWrappedCachedResponseHandlerOptions<D> = {

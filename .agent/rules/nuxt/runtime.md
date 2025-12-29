@@ -1,19 +1,21 @@
 ---
-description: Follow best practices for runtime configuration in Nuxt applications
+trigger: glob
 globs: **/*.{ts,js}
-alwaysApply: false
 ---
 
 # Nuxt Runtime Configuration
 
 ## Context
+
 Rules for implementing runtime configuration in Nuxt applications.
+
 - Use runtimeConfig for environment variables
 - Separate public and private keys
 - Handle server-side configuration properly
 - Implement proper type safety
 
 ## Requirements
+
 - Use runtimeConfig for environment variables
 - Keep sensitive data server-side only
 - Use proper TypeScript types
@@ -26,6 +28,7 @@ Rules for implementing runtime configuration in Nuxt applications.
 - Validate configuration values
 
 ## Examples
+
 <example>
 // Define runtime config
 export default defineNuxtConfig({
@@ -49,9 +52,9 @@ export default defineNuxtConfig({
 
 // Usage in component
 export default defineComponent({
-  setup() {
-    // Access runtime config
-    const config = useRuntimeConfig()
+setup() {
+// Access runtime config
+const config = useRuntimeConfig()
 
     // Use in composable
     const { initializeStripe } = useStripe(config.public.stripe.publishableKey)
@@ -65,7 +68,8 @@ export default defineComponent({
       data,
       initializeStripe,
     }
-  },
+
+},
 })
 
 </example>
@@ -76,21 +80,21 @@ export default defineEventHandler(async (event) => {
   // Access runtime config in server
   const config = useRuntimeConfig()
 
-  // Initialize services with private keys
-  const stripe = new Stripe(config.stripe.secretKey, {
-    apiVersion: '2023-10-16',
-  })
+// Initialize services with private keys
+const stripe = new Stripe(config.stripe.secretKey, {
+apiVersion: '2023-10-16',
+})
 
-  // Handle webhook events
-  const signature = getHeader(event, 'stripe-signature')
-  const rawBody = await readBody(event)
+// Handle webhook events
+const signature = getHeader(event, 'stripe-signature')
+const rawBody = await readBody(event)
 
-  try {
-    const webhookEvent = stripe.webhooks.constructEvent(
-      rawBody,
-      signature,
-      config.stripe.webhookSecret,
-    )
+try {
+const webhookEvent = stripe.webhooks.constructEvent(
+rawBody,
+signature,
+config.stripe.webhookSecret,
+)
 
     // Process webhook
     switch (webhookEvent.type) {
@@ -105,13 +109,14 @@ export default defineEventHandler(async (event) => {
     }
 
     return { received: true }
-  }
-  catch (err) {
-    throw createError({
-      statusCode: 400,
-      message: `Webhook Error: ${err.message}`,
-    })
-  }
+
+}
+catch (err) {
+throw createError({
+statusCode: 400,
+message: `Webhook Error: ${err.message}`,
+})
+}
 })
 
 </example>
@@ -123,43 +128,43 @@ const API_SECRET = 'my_super_secret_key'
 
 // ❌ Wrong: Not using runtime config
 export default {
-  // ❌ Wrong: Exposing secrets in client-side code
-  stripeConfig: {
-    secretKey: STRIPE_SECRET_KEY,
-    publishableKey: 'pk_test_987654321',
-  },
+// ❌ Wrong: Exposing secrets in client-side code
+stripeConfig: {
+secretKey: STRIPE_SECRET_KEY,
+publishableKey: 'pk_test_987654321',
+},
 
-  // ❌ Wrong: Not using environment variables
-  api: {
-    baseUrl: 'http://localhost:3000',
-    secret: API_SECRET,
-  },
+// ❌ Wrong: Not using environment variables
+api: {
+baseUrl: 'http://localhost:3000',
+secret: API_SECRET,
+},
 }
 
 // ❌ Wrong: Global state for configuration
 if (process.client) {
-  window.__APP_CONFIG__ = {
-    // ❌ Wrong: Mixing client/server concerns
-    apiSecret: API_SECRET,
-    stripeKey: STRIPE_SECRET_KEY,
-  }
+window.**APP_CONFIG** = {
+// ❌ Wrong: Mixing client/server concerns
+apiSecret: API_SECRET,
+stripeKey: STRIPE_SECRET_KEY,
+}
 }
 
 // ❌ Wrong: Not using proper typing
 export function getConfig() {
-  // ❌ Wrong: Accessing window directly
-  return process.client
-    ? window.__APP_CONFIG__
-    : {
-        apiSecret: API_SECRET,
-        stripeKey: STRIPE_SECRET_KEY,
-      }
+// ❌ Wrong: Accessing window directly
+return process.client
+? window.**APP_CONFIG**
+: {
+apiSecret: API_SECRET,
+stripeKey: STRIPE_SECRET_KEY,
+}
 }
 
 </example>
 
-
 ## Critical Rules
+
 - NEVER expose sensitive data client-side
 - Use runtimeConfig for environment variables
 - Keep sensitive data server-side only

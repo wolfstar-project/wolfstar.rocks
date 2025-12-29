@@ -1,13 +1,14 @@
 ---
-description: Follow best practices for pages, routing, and navigation in Nuxt
+trigger: glob
 globs: **/pages/**/*.{vue,ts}
-alwaysApply: false
 ---
 
 # Nuxt Pages and Routing
 
 ## Context
+
 Rules for creating pages and handling routing in Nuxt.
+
 - Pages are auto-registered from pages/ directory
 - Dynamic routes use [param] syntax
 - Nested routes follow directory structure
@@ -15,6 +16,7 @@ Rules for creating pages and handling routing in Nuxt.
 - Catch-all routes use [...slug] syntax
 
 ## Requirements
+
 - Use proper file-based routing structure
 - Implement proper page meta with definePageMeta
 - Handle dynamic route parameters properly
@@ -27,6 +29,7 @@ Rules for creating pages and handling routing in Nuxt.
 - Implement middleware when needed
 
 ## Examples
+
 <example>
 // Example of proper catch-all route handling with meta tags
 export default `
@@ -42,13 +45,13 @@ const { data: post } = await useFetch(\`/api/blog/\${path}\`)
 
 // Update meta tags
 useHead({
-  title: post.value?.title,
-  meta: [
-    {
-      name: 'description',
-      content: post.value?.description
-    }
-  ]
+title: post.value?.title,
+meta: [
+{
+name: 'description',
+content: post.value?.description
+}
+]
 })
 </script>
 
@@ -71,32 +74,32 @@ const id = route.params.id
 
 // Validate route params
 if (!id || Array.isArray(id)) {
-  throw createError({
-    statusCode: 400,
-    message: 'Invalid user ID'
-  })
+throw createError({
+statusCode: 400,
+message: 'Invalid user ID'
+})
 }
 
 // Define page meta
 definePageMeta({
-  validate: async (route) => {
-    // Validate user exists
-    const user = await fetchUser(route.params.id)
-    return !!user
-  }
+validate: async (route) => {
+// Validate user exists
+const user = await fetchUser(route.params.id)
+return !!user
+}
 })
 
 // Fetch user data
 const { data: user } = await useFetch(\`/api/users/\${id}\`, {
-  // Handle 404
-  error: (error) => {
-    if (error.statusCode === 404) {
-      throw createError({
-        statusCode: 404,
-        message: \`User \${id} not found\`
-      })
-    }
-  }
+// Handle 404
+error: (error) => {
+if (error.statusCode === 404) {
+throw createError({
+statusCode: 404,
+message: \`User \${id} not found\`
+})
+}
+}
 })
 </script>
 
@@ -123,9 +126,9 @@ definePageMeta({
 
 // Handle page-specific SEO
 useSeoMeta({
-  title: 'Home - My App',
-  description: 'Welcome to my awesome app',
-  ogImage: '/images/home-og.jpg'
+title: 'Home - My App',
+description: 'Welcome to my awesome app',
+ogImage: '/images/home-og.jpg'
 })
 
 // Fetch page data
@@ -135,12 +138,13 @@ const { data, pending } = await useFetch('/api/featured')
 <template>
   <div>
     <h1>Welcome</h1>
-    
+
     <!-- Loading state -->
     <LoadingSpinner v-if="pending" />
-    
+
     <!-- Content -->
     <FeaturedContent v-else :items="data" />
+
   </div>
 </template>
 `
@@ -187,8 +191,8 @@ const data = await $fetch(\`/api/users/\${id}\`)
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use file-based routing structure
 - Implement proper page meta and SEO tags
 - Handle route parameters safely

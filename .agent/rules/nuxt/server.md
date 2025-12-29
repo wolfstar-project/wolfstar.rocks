@@ -1,13 +1,14 @@
 ---
-description: Follow best practices for server routes, API endpoints, and middleware in Nuxt using h3
+trigger: glob
 globs: **/server/**/*.{ts,js}
-alwaysApply: false
 ---
 
 # Nuxt Server Routes and Middleware
 
 ## Context
+
 Rules for creating server-side functionality in Nuxt using h3.
+
 - API routes are auto-registered from server/api/
 - Server Middleware is not recommended as described in the nitro docs
 - Event handlers are registered from server/plugins/
@@ -15,6 +16,7 @@ Rules for creating server-side functionality in Nuxt using h3.
 - Method-specific handlers supported (users.get.ts, users.post.ts)
 
 ## Requirements
+
 - Use defineEventHandler for all route handlers
 - Use H3 utilities for request/response handling (getQuery, readBody, etc.)
 - Implement proper error handling with createError
@@ -32,6 +34,7 @@ Rules for creating server-side functionality in Nuxt using h3.
 - Add proper content-type headers
 
 ## Examples
+
 <example>
 defineEventHandler(() => {
   return 'Response'
@@ -45,9 +48,9 @@ export default defineLazyEventHandler(async () => {
   const db = await initializeDatabase()
   const cache = await setupCache()
 
-  // Return the actual handler
-  return defineEventHandler(async (event: H3Event) => {
-    const { id } = getQuery(event)
+// Return the actual handler
+return defineEventHandler(async (event: H3Event) => {
+const { id } = getQuery(event)
 
     // Check cache first
     const cached = await cache.get(id as string)
@@ -59,7 +62,8 @@ export default defineLazyEventHandler(async () => {
     await cache.set(id as string, result)
 
     return result
-  })
+
+})
 })
 
 </example>
@@ -73,9 +77,9 @@ import type { H3Event } from 'h3'
 
 // Wrong: Using raw Node.js types instead of H3
 export default defineEventHandler(async (event: H3Event) => {
-  try {
-    // Wrong: Accessing raw request properties
-    const id = event.context.params?.id
+try {
+// Wrong: Accessing raw request properties
+const id = event.context.params?.id
 
     // Wrong: Manual JSON parsing
     let body = ''
@@ -87,18 +91,19 @@ export default defineEventHandler(async (event: H3Event) => {
     const data = JSON.parse(body)
     event.res.writeHead(200, { 'Content-Type': 'application/json' })
     event.res.end(JSON.stringify({ id, data }))
-  }
-  catch (error) {
-    // Wrong: Manual error handling
-    event.res.writeHead(500)
-    event.res.end(JSON.stringify({ error: 'Internal server error' }))
-  }
+
+}
+catch (error) {
+// Wrong: Manual error handling
+event.res.writeHead(500)
+event.res.end(JSON.stringify({ error: 'Internal server error' }))
+}
 }
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use defineEventHandler for route handlers
 - ALWAYS use H3 utilities for request handling (getQuery, readBody, etc.)
 - ALWAYS implement proper error handling with createError

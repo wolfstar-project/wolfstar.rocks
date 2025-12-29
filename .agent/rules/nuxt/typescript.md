@@ -1,19 +1,21 @@
 ---
-description: Follow TypeScript best practices in Nuxt applications
+trigger: glob
 globs: **/*.{ts,vue}
-alwaysApply: false
 ---
 
 # Nuxt TypeScript
 
 ## Context
+
 Rules for using TypeScript in Nuxt applications.
+
 - Use proper type annotations
 - Implement proper interfaces and types
 - Use type inference when possible
 - Handle type safety in components
 
 ## Requirements
+
 - Use proper type annotations
 - Define proper interfaces and types
 - Use type inference when possible
@@ -26,36 +28,37 @@ Rules for using TypeScript in Nuxt applications.
 - Handle async types properly
 
 ## Examples
+
 <example>
 <script setup lang="ts">
 import type { PropType } from 'vue'
 
 // Define interfaces
 interface User {
-  id: string
-  name: string
-  email: string
-  role: 'admin' | 'user'
-  preferences: UserPreferences
+id: string
+name: string
+email: string
+role: 'admin' | 'user'
+preferences: UserPreferences
 }
 
 interface UserPreferences {
-  theme: 'light' | 'dark'
-  notifications: boolean
+theme: 'light' | 'dark'
+notifications: boolean
 }
 
 // Define props with proper types
 const props = defineProps<{
-  user: User
-  isEditable?: boolean
-  onSave?: (user: User) => Promise<void>
+user: User
+isEditable?: boolean
+onSave?: (user: User) => Promise<void>
 }>()
 
 // Define emits with type checking
 const emit = defineEmits<{
-  'update:user': [user: User]
-  'save': [user: User]
-  'cancel': []
+'update:user': [user: User]
+'save': [user: User]
+'cancel': []
 }>()
 
 // Define refs with types
@@ -67,17 +70,17 @@ const userRole = computed(() => props.user.role.toUpperCase())
 
 // Methods with proper typing
 async function handleSave() {
-  try {
-    if (props.onSave) {
-      await props.onSave(editedUser.value)
-    }
-    emit('save', editedUser.value)
-    isEditing.value = false
-  } catch (error) {
-    if (error instanceof Error) {
-      console.error('Failed to save:', error.message)
-    }
-  }
+try {
+if (props.onSave) {
+await props.onSave(editedUser.value)
+}
+emit('save', editedUser.value)
+isEditing.value = false
+} catch (error) {
+if (error instanceof Error) {
+console.error('Failed to save:', error.message)
+}
+}
 }
 
 // Type-safe composable usage
@@ -86,7 +89,7 @@ const toast = useToast()
 
 // Watchers with type inference
 watch(() => props.user, (newUser) => {
-  editedUser.value = { ...newUser }
+editedUser.value = { ...newUser }
 })
 </script>
 
@@ -124,7 +127,7 @@ watch(() => props.user, (newUser) => {
       </button>
     </div>
   </div>
-</template> 
+</template>
 </example>
 
 <example>
@@ -138,47 +141,47 @@ interface UseAuthOptions {
 }
 
 interface AuthUser {
-  id: string
-  email: string
-  role: 'admin' | 'user'
-  permissions: string[]
+id: string
+email: string
+role: 'admin' | 'user'
+permissions: string[]
 }
 
 interface LoginCredentials {
-  email: string
-  password: string
+email: string
+password: string
 }
 
 interface AuthError extends Error {
-  code: 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | 'UNAUTHORIZED'
+code: 'INVALID_CREDENTIALS' | 'NETWORK_ERROR' | 'UNAUTHORIZED'
 }
 
 // Type-safe composable
 export function useAuth(options: UseAuthOptions = {}) {
-  // Type-safe refs and state
-  const user = useState<AuthUser | null>('auth_user', () => null)
-  const loading = ref(false)
-  const error = ref<AuthError | null>(null)
+// Type-safe refs and state
+const user = useState<AuthUser | null>('auth_user', () => null)
+const loading = ref(false)
+const error = ref<AuthError | null>(null)
 
-  // Type-safe cookie
-  const token = useCookie<string | null>(
-    options.cookie?.name ?? 'auth_token',
-    {
-      maxAge: options.cookie?.maxAge ?? 60 * 60 * 24 * 7,
-    },
-  )
+// Type-safe cookie
+const token = useCookie<string | null>(
+options.cookie?.name ?? 'auth*token',
+{
+maxAge: options.cookie?.maxAge ?? 60 * 60 \_ 24 \* 7,
+},
+)
 
-  // Type-safe computed properties
-  const isAuthenticated = computed(() => !!user.value)
-  const isAdmin = computed(() => user.value?.role === 'admin')
-  const hasPermission = (permission: string) => {
-    return user.value?.permissions.includes(permission) ?? false
-  }
+// Type-safe computed properties
+const isAuthenticated = computed(() => !!user.value)
+const isAdmin = computed(() => user.value?.role === 'admin')
+const hasPermission = (permission: string) => {
+return user.value?.permissions.includes(permission) ?? false
+}
 
-  // Type-safe methods
-  async function login(credentials: LoginCredentials): Promise<void> {
-    loading.value = true
-    error.value = null
+// Type-safe methods
+async function login(credentials: LoginCredentials): Promise<void> {
+loading.value = true
+error.value = null
 
     try {
       const { data } = await useFetch<{ user: AuthUser, token: string }>('/api/auth/login', {
@@ -202,32 +205,33 @@ export function useAuth(options: UseAuthOptions = {}) {
     finally {
       loading.value = false
     }
-  }
 
-  async function logout(): Promise<void> {
-    try {
-      await useFetch('/api/auth/logout', {
-        method: 'POST',
-      })
-    }
-    finally {
-      user.value = null
-      token.value = null
-      navigateTo('/login')
-    }
-  }
+}
 
-  // Return typed object
-  return {
-    user: readonly(user),
-    loading: readonly(loading),
-    error: readonly(error),
-    isAuthenticated,
-    isAdmin,
-    hasPermission,
-    login,
-    logout,
-  }
+async function logout(): Promise<void> {
+try {
+await useFetch('/api/auth/logout', {
+method: 'POST',
+})
+}
+finally {
+user.value = null
+token.value = null
+navigateTo('/login')
+}
+}
+
+// Return typed object
+return {
+user: readonly(user),
+loading: readonly(loading),
+error: readonly(error),
+isAuthenticated,
+isAdmin,
+hasPermission,
+login,
+logout,
+}
 }
 
 </example>
@@ -240,31 +244,31 @@ function processData(data: any) {
 
 // ❌ Wrong: Not using proper interfaces
 interface UserData {
-  n: string // ❌ Wrong: Poor naming
-  e: string // ❌ Wrong: Poor naming
-  a: boolean // ❌ Wrong: Poor naming
+n: string // ❌ Wrong: Poor naming
+e: string // ❌ Wrong: Poor naming
+a: boolean // ❌ Wrong: Poor naming
 }
 
 // ❌ Wrong: Not using proper type guards
 function handleResponse(response: unknown) {
-  // @ts-ignore ❌ Wrong: Ignoring TypeScript errors
-  return response.data
+// @ts-ignore ❌ Wrong: Ignoring TypeScript errors
+return response.data
 }
 
 // ❌ Wrong: Not using proper generics
 class Store {
-  // ❌ Wrong: Using any[]
-  private items: any[] = []
+// ❌ Wrong: Using any[]
+private items: any[] = []
 
-  // ❌ Wrong: Not typing parameters
-  add(item) {
-    this.items.push(item)
-  }
+// ❌ Wrong: Not typing parameters
+add(item) {
+this.items.push(item)
+}
 
-  // ❌ Wrong: Not typing return value
-  get(index) {
-    return this.items[index]
-  }
+// ❌ Wrong: Not typing return value
+get(index) {
+return this.items[index]
+}
 }
 
 // ❌ Wrong: Not using proper union types
@@ -276,28 +280,28 @@ const element = document.getElementById('app') as any
 // ❌ Wrong: Not using proper function types
 // @ts-expect-error ❌ Wrong: Suppressing TypeScript errors
 function handler(evt) {
-  console.log(evt.target.value)
+console.log(evt.target.value)
 }
 
 // ❌ Wrong: Not using proper interfaces for Vue components
 export default defineComponent({
-  props: {
-    // ❌ Wrong: Not using proper prop types
-    value: null,
-  },
+props: {
+// ❌ Wrong: Not using proper prop types
+value: null,
+},
 
-  // ❌ Wrong: Not typing component data
-  data() {
-    return {
-      items: [],
-    }
-  },
+// ❌ Wrong: Not typing component data
+data() {
+return {
+items: [],
+}
+},
 })
 
 </example>
 
-
 ## Critical Rules
+
 - NEVER use any type unless absolutely necessary
 - Use proper type annotations
 - Define proper interfaces and types

@@ -1,18 +1,20 @@
 ---
-description: Follow best practices to ensure smooth hydration in Nuxt applications
+trigger: glob
 globs: **/*.vue
-alwaysApply: false
 ---
 
 # Nuxt Hydration Best Practices
 
 ## Context
+
 Hydration is the process of making the server-rendered HTML interactive on the client.
+
 - Mismatches between server and client output can cause issues.
 - Ensure consistent state and DOM structure.
 - Debug hydration errors using browser devtools.
 
 ## Requirements
+
 - Ensure consistent state between server and client
 - Avoid direct DOM manipulation before hydration
 - Use keys for list rendering consistency
@@ -20,17 +22,18 @@ Hydration is the process of making the server-rendered HTML interactive on the c
 - Use <ClientOnly> sparingly for non-critical UI
 
 ## Examples
+
 <example>
 <template>
   <div>
     <h1>Welcome to Our App</h1>
-    
+
     <!-- Main content works with SSR -->
     <main>
       <p>This critical content is server-rendered and hydrated normally</p>
       <ProductList :products="products" />
     </main>
-    
+
     <!-- Only wrapping third-party component that doesn't support SSR -->
     <ClientOnly>
       <ThirdPartyChart :data="chartData" />
@@ -38,6 +41,7 @@ Hydration is the process of making the server-rendered HTML interactive on the c
         <div class="chart-placeholder">Chart loading...</div>
       </template>
     </ClientOnly>
+
   </div>
 </template>
 
@@ -45,12 +49,12 @@ Hydration is the process of making the server-rendered HTML interactive on the c
 import { ref } from 'vue'
 import { useAsyncData } from '#app'
 
-const { data: products } = useAsyncData('products', () => 
+const { data: products } = useAsyncData('products', () =>
   $fetch('/api/products')
 )
 
 const chartData = ref([10, 25, 45, 30, 65, 40])
-</script> 
+</script>
 </example>
 
 <example>
@@ -76,7 +80,7 @@ const { data: user, pending: isPending } = useFetch('/api/user')
 function formatDate(date) {
   return new Date(date).toLocaleDateString()
 }
-</script> 
+</script>
 </example>
 
 <example>
@@ -108,7 +112,7 @@ function toggleComplete(id) {
   const todo = todos.value.find(t => t.id === id)
   if (todo) todo.completed = !todo.completed
 }
-</script> 
+</script>
 </example>
 
 <example>
@@ -137,12 +141,12 @@ function renderChart(element) {
   const chart = document.createElement('div')
   chart.className = 'chart'
   chart.textContent = 'Chart Content'
-  
+
   // Clean up any existing content
   while (element.firstChild) {
     element.removeChild(element.firstChild)
   }
-  
+
   element.appendChild(chart)
 }
 </script>
@@ -153,7 +157,7 @@ function renderChart(element) {
   padding: 20px;
   border-radius: 8px;
 }
-</style> 
+</style>
 </example>
 
 <example type="invalid">
@@ -162,20 +166,21 @@ function renderChart(element) {
     <!-- BAD: Wrapping the entire app in ClientOnly -->
     <ClientOnly>
       <h1>Welcome to Our App</h1>
-      
+
       <header>
         <NavBar :user="user" />
       </header>
-      
+
       <main>
         <p>This critical content doesn't need ClientOnly</p>
         <ProductList :products="products" />
       </main>
-      
+
       <footer>
         <p>© 2023 Our Company</p>
       </footer>
     </ClientOnly>
+
   </div>
 </template>
 
@@ -191,11 +196,11 @@ onMounted(async () => {
   // This approach loses the benefits of SSR
   const userResponse = await fetch('/api/user')
   user.value = await userResponse.json()
-  
+
   const productsResponse = await fetch('/api/products')
   products.value = await productsResponse.json()
 })
-</script> 
+</script>
 </example>
 
 <example type="invalid">
@@ -214,18 +219,18 @@ onMounted(() => {
   // This will cause hydration mismatches
   const container = document.getElementById('chart-container')
   container.innerHTML = '<div class="chart">Chart Content</div>'
-  
+
   // Adding event listeners directly to DOM
   container.addEventListener('click', () => {
     alert('Chart clicked!')
   })
-  
+
   // Modifying DOM styles directly
   container.style.backgroundColor = '#f0f0f0'
   container.style.padding = '20px'
   container.style.borderRadius = '8px'
 })
-</script> 
+</script>
 </example>
 
 <example type="invalid">
@@ -258,7 +263,7 @@ onMounted(async () => {
   const response = await fetch('/api/user')
   user.value = await response.json()
 })
-</script> 
+</script>
 </example>
 
 <example type="invalid">
@@ -272,7 +277,7 @@ onMounted(async () => {
         <button @click="removeTodo(index)">Delete</button>
       </li>
     </ul>
-    
+
     <ul>
       <!-- BAD: Using index as key when items can be reordered -->
       <li v-for="(todo, index) in sortableTodos" :key="index">
@@ -280,6 +285,7 @@ onMounted(async () => {
         <button @click="moveUp(index)" v-if="index > 0">Move Up</button>
       </li>
     </ul>
+
   </div>
 </template>
 
@@ -309,11 +315,11 @@ function moveUp(index) {
     sortableTodos.value[index - 1] = temp
   }
 }
-</script> 
+</script>
 </example>
 
-
 ## Critical Rules
+
 - Ensure consistent state between server and client
 - Avoid direct DOM manipulation before hydration
 - Use keys for list rendering consistency

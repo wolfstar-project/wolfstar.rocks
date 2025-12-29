@@ -1,19 +1,21 @@
 ---
-description: Follow best practices for creating and using layouts in Nuxt applications
+trigger: glob
 globs: **/layouts/**/*.vue
-alwaysApply: false
 ---
 
 # Nuxt Layouts
 
 ## Context
+
 Rules for implementing layouts in Nuxt applications.
+
 - Use layouts for shared UI elements across pages
 - Implement proper navigation and routing
 - Handle authentication and authorization
 - Manage layout-specific state and composables
 
 ## Requirements
+
 - Use script setup and Composition API
 - Implement semantic HTML structure
 - Use proper navigation components (NuxtLink)
@@ -26,6 +28,7 @@ Rules for implementing layouts in Nuxt applications.
 - Use proper TypeScript types
 
 ## Examples
+
 <example>
 <script setup lang="ts">
 // Auth middleware
@@ -38,9 +41,9 @@ const { user, isAuthenticated } = useAuth()
 
 // Redirect if not authenticated
 onMounted(() => {
-  if (!isAuthenticated) {
-    navigateTo('/login')
-  }
+if (!isAuthenticated) {
+navigateTo('/login')
+}
 })
 
 // Handle auth-specific navigation
@@ -73,6 +76,7 @@ const { currentWorkspace } = useWorkspace()
         <slot />
       </main>
     </div>
+
   </div>
 </template>
 
@@ -87,7 +91,7 @@ const { currentWorkspace } = useWorkspace()
   display: grid;
   grid-template-columns: 250px 1fr;
 }
-</style> 
+</style>
 </example>
 
 <example>
@@ -102,10 +106,10 @@ const route = useRoute()
 
 // Watch route changes for analytics
 watch(
-  () => route.path,
-  (path) => {
-    trackPageView(path)
-  }
+() => route.path,
+(path) => {
+trackPageView(path)
+}
 )
 </script>
 
@@ -133,6 +137,7 @@ watch(
     <footer>
       <p>&copy; {{ new Date().getFullYear() }} My App</p>
     </footer>
+
   </div>
 </template>
 
@@ -142,7 +147,7 @@ watch(
   min-height: 100vh;
   grid-template-rows: auto 1fr auto;
 }
-</style> 
+</style>
 </example>
 
 <example type="invalid">
@@ -197,12 +202,13 @@ export default {
     <div style="padding: 20px;">
       <slot />
     </div>
+
   </div>
-</template> 
+</template>
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use script setup and Composition API
 - Use proper navigation components
 - Implement proper authentication flow

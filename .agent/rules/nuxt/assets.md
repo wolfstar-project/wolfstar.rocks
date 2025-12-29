@@ -1,13 +1,14 @@
 ---
-description: Follow best practices for handling assets, images, fonts, and styles in Nuxt
+trigger: glob
 globs: **/{assets,public}/**/*.{css,scss,less,styl,png,jpg,jpeg,gif,svg,woff,woff2,ttf,eot}
-alwaysApply: false
 ---
 
 # Nuxt Assets and Static Files
 
 ## Context
+
 Rules for managing assets in Nuxt applications.
+
 - Assets in assets/ are processed by build tools
 - Files in public/ are served as-is
 - Use Nuxt Image for optimized images
@@ -15,6 +16,7 @@ Rules for managing assets in Nuxt applications.
 - Implement proper CSS organization
 
 ## Requirements
+
 - Use Nuxt Image for optimized images
 - Implement proper image lazy loading
 - Use responsive image sizes
@@ -27,6 +29,7 @@ Rules for managing assets in Nuxt applications.
 - Handle static files correctly
 
 ## Examples
+
 <example>
 // Example of proper CSS handling with Nuxt assets
 export default `
@@ -36,64 +39,64 @@ export default `
 @import './utilities.css';
 
 :root {
-  /* Use CSS variables for theming */
-  --primary-color: theme('colors.primary');
-  --text-color: theme('colors.gray.900');
-  --background-color: theme('colors.white');
+/_ Use CSS variables for theming _/
+--primary-color: theme('colors.primary');
+--text-color: theme('colors.gray.900');
+--background-color: theme('colors.white');
 }
 
-/* Use proper media queries */
+/_ Use proper media queries _/
 @media (prefers-color-scheme: dark) {
-  :root {
-    --text-color: theme('colors.gray.100');
-    --background-color: theme('colors.gray.900');
-  }
+:root {
+--text-color: theme('colors.gray.100');
+--background-color: theme('colors.gray.900');
+}
 }
 
-/* Use proper CSS nesting */
+/_ Use proper CSS nesting _/
 .container {
-  max-width: theme('screens.xl');
-  margin: 0 auto;
-  padding: theme('spacing.4');
+max-width: theme('screens.xl');
+margin: 0 auto;
+padding: theme('spacing.4');
 
-  @media (min-width: theme('screens.lg')) {
-    padding: theme('spacing.6');
-  }
-
-  & > * + * {
-    margin-top: theme('spacing.4');
-  }
+@media (min-width: theme('screens.lg')) {
+padding: theme('spacing.6');
 }
 
-/* Use proper CSS custom properties */
+& > _ + _ {
+margin-top: theme('spacing.4');
+}
+}
+
+/_ Use proper CSS custom properties _/
 .button {
-  background-color: var(--primary-color);
-  color: var(--background-color);
-  padding: theme('spacing.2') theme('spacing.4');
-  border-radius: theme('borderRadius.md');
-  transition: opacity 0.2s ease;
+background-color: var(--primary-color);
+color: var(--background-color);
+padding: theme('spacing.2') theme('spacing.4');
+border-radius: theme('borderRadius.md');
+transition: opacity 0.2s ease;
 
-  &:hover {
-    opacity: 0.9;
-  }
-
-  &:focus {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-  }
+&:hover {
+opacity: 0.9;
 }
 
-/* Use proper utility classes */
+&:focus {
+outline: 2px solid var(--primary-color);
+outline-offset: 2px;
+}
+}
+
+/_ Use proper utility classes _/
 .visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+position: absolute;
+width: 1px;
+height: 1px;
+padding: 0;
+margin: -1px;
+overflow: hidden;
+clip: rect(0, 0, 0, 0);
+white-space: nowrap;
+border: 0;
 }
 `
 
@@ -115,38 +118,39 @@ export default `
 }
 
 @font-face {
-  font-family: 'CustomFont';
-  src: url('../fonts/CustomFont-Bold.woff2') format('woff2'),
-       url('../fonts/CustomFont-Bold.woff') format('woff');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-  unicode-range: U+000-5FF;
+font-family: 'CustomFont';
+src: url('../fonts/CustomFont-Bold.woff2') format('woff2'),
+url('../fonts/CustomFont-Bold.woff') format('woff');
+font-weight: 700;
+font-style: normal;
+font-display: swap;
+unicode-range: U+000-5FF;
 }
 
-/* Define font variables */
+/_ Define font variables _/
 :root {
-  --font-primary: 'CustomFont', system-ui, sans-serif;
-  --font-mono: ui-monospace, 'SF Mono', monospace;
-  --font-size-base: 1rem;
-  --line-height-base: 1.5;
+--font-primary: 'CustomFont', system-ui, sans-serif;
+--font-mono: ui-monospace, 'SF Mono', monospace;
+--font-size-base: 1rem;
+--line-height-base: 1.5;
 }
 
-/* Apply fonts with proper fallbacks */
+/_ Apply fonts with proper fallbacks _/
 body {
-  font-family: var(--font-primary);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+font-family: var(--font-primary);
+font-size: var(--font-size-base);
+line-height: var(--line-height-base);
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: var(--font-mono);
-  font-size: 0.9em;
+font-family: var(--font-mono);
+font-size: 0.9em;
 }
 
-/* Use proper font loading */
+/_ Use proper font loading _/
+
 <script>
 // nuxt.config.ts
 export default defineNuxtConfig({
@@ -165,6 +169,7 @@ export default defineNuxtConfig({
   }
 })
 </script>
+
 `
 
 </example>
@@ -183,24 +188,24 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  width: 800,
-  height: 600,
-  format: 'webp'
+width: 800,
+height: 600,
+format: 'webp'
 })
 
 // Use computed for dynamic sources
 const optimizedSrc = computed(() => {
-  const base = props.src.startsWith('http')
-    ? props.src // Remote image
-    : \`/assets/images/\${props.src}\` // Local image
+const base = props.src.startsWith('http')
+? props.src // Remote image
+: \`/assets/images/\${props.src}\` // Local image
 
-  return {
-    src: base,
-    width: props.width,
-    height: props.height,
-    format: props.format,
-    quality: 80
-  }
+return {
+src: base,
+width: props.width,
+height: props.height,
+format: props.format,
+quality: 80
+}
 })
 </script>
 
@@ -232,6 +237,7 @@ img {
   display: block;
 }
 </style>
+
 `
 
 </example>
@@ -249,26 +255,26 @@ export default `
   border-radius: 4px;
 }
 
-/* Wrong: No media queries or responsive design */
+/_ Wrong: No media queries or responsive design _/
 .container {
-  width: 1200px;
-  margin: 0 auto;
+width: 1200px;
+margin: 0 auto;
 }
 
-/* Wrong: No CSS variables or theming */
+/_ Wrong: No CSS variables or theming _/
 .text-primary {
-  color: #00dc82;
+color: #00dc82;
 }
 
-/* Wrong: No proper nesting or organization */
+/_ Wrong: No proper nesting or organization _/
 .card .card-title {
-  font-size: 24px;
+font-size: 24px;
 }
 .card .card-body {
-  padding: 16px;
+padding: 16px;
 }
 .card .card-footer {
-  border-top: 1px solid #eee;
+border-top: 1px solid #eee;
 }
 `
 
@@ -284,18 +290,18 @@ export default `
   src: url('/fonts/custom.ttf');
 }
 
-/* Wrong: No font variables or system fallbacks */
+/_ Wrong: No font variables or system fallbacks _/
 body {
-  font-family: CustomFont;
+font-family: CustomFont;
 }
 
-/* Wrong: No font preloading */
+/_ Wrong: No font preloading _/
 h1, h2, h3 {
-  /* Wrong: Hardcoded font stack */
-  font-family: Arial, sans-serif;
+/_ Wrong: Hardcoded font stack _/
+font-family: Arial, sans-serif;
 }
 
-/* Wrong: No font optimization */
+/_ Wrong: No font optimization _/
 @import url('https://fonts.googleapis.com/css2?family=OpenSans');
 `
 
@@ -315,14 +321,15 @@ export default `
 
     <!-- Wrong: No optimization or responsive handling -->
     <img src="~/assets/images/photo.jpg" style="width: 100%" />
+
   </div>
 </template>
 `
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use Nuxt Image for image optimization
 - Implement proper font loading strategies
 - Use proper CSS organization and variables

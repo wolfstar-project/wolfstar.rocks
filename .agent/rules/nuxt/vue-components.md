@@ -1,15 +1,16 @@
 ---
-description: Follow Vue component best practices in Nuxt application
+trigger: glob
 globs: **/components/**/*.vue
-alwaysApply: false
 ---
 
 # Vue Component Best Practices
 
 ## Context
+
 Rules for Vue components in a Nuxt application.
 
 ## Requirements
+
 - Create small, focused components
 - Use defineModel for two-way binding
 - Use props for data down, emits for events up
@@ -20,6 +21,7 @@ Rules for Vue components in a Nuxt application.
 - Mark optional props with ? symbol
 
 ## Examples
+
 <example>
 <script setup lang="ts">
 const props = defineProps<{
@@ -28,26 +30,26 @@ const props = defineProps<{
 
 // Handle async data fetching with error states
 const { data, error, pending, refresh } = await useFetch(
-  props.fetchUrl,
-  {
-    // Handle errors
-    onRequestError: ({ error }) => {
-      console.error('Request failed:', error)
-    },
-    // Retry failed requests
-    retry: 3,
-    retryDelay: 1000
-  }
+props.fetchUrl,
+{
+// Handle errors
+onRequestError: ({ error }) => {
+console.error('Request failed:', error)
+},
+// Retry failed requests
+retry: 3,
+retryDelay: 1000
+}
 )
 
 // Show error toast on failure
 watch(error, (newError) => {
-  if (newError) {
-    useToast().error({
-      title: 'Error',
-      message: newError.message
-    })
-  }
+if (newError) {
+useToast().error({
+title: 'Error',
+message: newError.message
+})
+}
 })
 </script>
 
@@ -55,7 +57,7 @@ watch(error, (newError) => {
   <div>
     <!-- Loading state -->
     <LoadingSpinner v-if="pending" />
-    
+
     <!-- Error state with retry -->
     <div v-else-if="error" class="error-state">
       <p>{{ error.message }}</p>
@@ -63,13 +65,14 @@ watch(error, (newError) => {
         Try Again
       </button>
     </div>
-    
+
     <!-- Success state -->
     <div v-else>
       <slot :data="data" />
     </div>
+
   </div>
-</template> 
+</template>
 </example>
 
 <example>
@@ -82,11 +85,11 @@ interface CardProps {
 
 const props = defineProps<CardProps>()
 const emit = defineEmits<{
-  click: [event: MouseEvent]
+click: [event: MouseEvent]
 }>()
 
 function handleClick(event: MouseEvent) {
-  emit('click', event)
+emit('click', event)
 }
 </script>
 
@@ -116,7 +119,7 @@ img {
   height: auto;
   border-radius: 0.25rem;
 }
-</style> 
+</style>
 </example>
 
 <example>
@@ -131,13 +134,13 @@ const props = defineProps<{
 
 // Handle error page head
 useHead({
-  title: `Error ${props.error.statusCode}`
+title: `Error ${props.error.statusCode}`
 })
 
 // Clear error and return to homepage
 function handleError() {
-  clearError()
-  navigateTo('/')
+clearError()
+navigateTo('/')
 }
 </script>
 
@@ -151,7 +154,7 @@ function handleError() {
       </button>
     </div>
   </div>
-</template> 
+</template>
 </example>
 
 <example type="invalid">
@@ -181,11 +184,11 @@ export default {
 h2 {
   margin-bottom: 10px;
 }
-</style> 
+</style>
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use TypeScript interfaces for props/emits
 - Keep components small and focused
 - Use proper component structure (script → template → style)

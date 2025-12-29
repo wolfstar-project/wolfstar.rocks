@@ -1,19 +1,21 @@
 ---
-description: Follow best practices for error handling and logging in Nuxt applications
+trigger: glob
 globs: **/server/**/*.{ts,js}
-alwaysApply: false
 ---
 
 # Nuxt Error Handling
 
 ## Context
+
 Rules for handling errors in Nuxt applications.
+
 - Use error.vue for global error handling
 - Use createError for server-side errors
 - Use try/catch for async operations
 - Implement proper error boundaries
 
 ## Requirements
+
 - Implement proper error pages
 - Use createError for server errors
 - Handle async errors properly
@@ -26,13 +28,14 @@ Rules for handling errors in Nuxt applications.
 - Implement proper error recovery
 
 ## Examples
+
 <example>
 export function useErrorHandler() {
   const toast = useToast()
 
-  function handleError(error: unknown) {
-    // Log error
-    console.error('Error:', error)
+function handleError(error: unknown) {
+// Log error
+console.error('Error:', error)
 
     // Show user-friendly message
     const message = error instanceof Error
@@ -47,11 +50,12 @@ export function useErrorHandler() {
 
     // Track error in monitoring
     trackError(error)
-  }
 
-  return {
-    handleError,
-  }
+}
+
+return {
+handleError,
+}
 }
 
 </example>
@@ -66,31 +70,31 @@ async function fetchData() {
 
 // ❌ Wrong: Generic error messages
 export default defineEventHandler(() => {
-  try {
-    // Implementation
-  }
-  catch (e) {
-    // Wrong: Generic error
-    throw createError({
-      statusCode: 500,
-      message: 'Something went wrong',
-    })
-  }
+try {
+// Implementation
+}
+catch (e) {
+// Wrong: Generic error
+throw createError({
+statusCode: 500,
+message: 'Something went wrong',
+})
+}
 })
 
 // ❌ Wrong: Not handling all error states
 // <template>
-//   <div>
-//     <!-- Wrong: Missing error state -->
-//     <div v-if="loading">Loading...</div>
-//     <div v-else>{{ data }}</div>
-//   </div>
+// <div>
+// <!-- Wrong: Missing error state -->
+// <div v-if="loading">Loading...</div>
+// <div v-else>{{ data }}</div>
+// </div>
 // </template>
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS implement proper error pages
 - Use createError for server-side errors
 - Handle async errors properly

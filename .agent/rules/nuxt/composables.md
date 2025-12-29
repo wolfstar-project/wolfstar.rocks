@@ -1,15 +1,16 @@
 ---
-description: Follow best practices for creating and using composables in Nuxt
+trigger: glob
 globs: **/composables/**/*.{ts,js}
-alwaysApply: false
 ---
 
 # Nuxt Composables Best Practices
 
 ## Context
+
 Rules for creating and using composables in Nuxt applications. Composables are auto-imported from the composables/ directory.
 
 ## Requirements
+
 - Name composables with "use" prefix (e.g., useCounter)
 - Return reactive values using ref/reactive
 - Handle SSR compatibility in composables
@@ -22,6 +23,7 @@ Rules for creating and using composables in Nuxt applications. Composables are a
 - Consider using async composables with useAsyncData
 
 ## Examples
+
 <example>
 export async function useAsyncResource<T>(
   key: string,
@@ -30,35 +32,35 @@ export async function useAsyncResource<T>(
   // Use built-in composables
   const nuxtApp = useNuxtApp()
 
-  // Use useAsyncData for data fetching
-  const { data, error, refresh } = await useAsyncData(
-    key,
-    () => fetcher(),
-    {
-      // Handle errors
-      onRequestError: ({ error }) => {
-        console.error(`Failed to fetch ${key}:`, error)
-      },
-      // Transform data if needed
-      transform: response => response,
-      // Cache management
-      watch: false,
-      // SSR options
-      server: true,
-      lazy: false,
-    },
-  )
+// Use useAsyncData for data fetching
+const { data, error, refresh } = await useAsyncData(
+key,
+() => fetcher(),
+{
+// Handle errors
+onRequestError: ({ error }) => {
+console.error(`Failed to fetch ${key}:`, error)
+},
+// Transform data if needed
+transform: response => response,
+// Cache management
+watch: false,
+// SSR options
+server: true,
+lazy: false,
+},
+)
 
-  // Provide refresh method
-  async function refetchData() {
-    await refresh()
-  }
+// Provide refresh method
+async function refetchData() {
+await refresh()
+}
 
-  return {
-    data: readonly(data),
-    error: readonly(error),
-    refresh: refetchData,
-  }
+return {
+data: readonly(data),
+error: readonly(error),
+refresh: refetchData,
+}
 }
 
 </example>
@@ -67,44 +69,44 @@ export async function useAsyncResource<T>(
 import { useState } from '#app'
 
 export interface UseCounterOptions {
-  initial?: number
-  min?: number
-  max?: number
+initial?: number
+min?: number
+max?: number
 }
 
 export function useCounter(options: UseCounterOptions = {}) {
-  const {
-    initial = 0,
-    min = Number.MIN_SAFE_INTEGER,
-    max = Number.MAX_SAFE_INTEGER,
-  } = options
+const {
+initial = 0,
+min = Number.MIN_SAFE_INTEGER,
+max = Number.MAX_SAFE_INTEGER,
+} = options
 
-  // Use useState for SSR-friendly state
-  const count = useState('counter', () => initial)
+// Use useState for SSR-friendly state
+const count = useState('counter', () => initial)
 
-  function increment() {
-    if (count.value < max) {
-      count.value++
-    }
-  }
+function increment() {
+if (count.value < max) {
+count.value++
+}
+}
 
-  function decrement() {
-    if (count.value > min) {
-      count.value--
-    }
-  }
+function decrement() {
+if (count.value > min) {
+count.value--
+}
+}
 
-  // Cleanup if needed
-  onUnmounted(() => {
-    // Clear state when component unmounts
-    count.value = initial
-  })
+// Cleanup if needed
+onUnmounted(() => {
+// Clear state when component unmounts
+count.value = initial
+})
 
-  return {
-    count: readonly(count),
-    increment,
-    decrement,
-  }
+return {
+count: readonly(count),
+increment,
+decrement,
+}
 }
 
 </example>
@@ -124,23 +126,23 @@ export function useWindowSize() {
   const width = ref(0)
   const height = ref(0)
 
-  // Direct window access will fail in SSR
-  width.value = window.innerWidth
-  height.value = window.innerHeight
+// Direct window access will fail in SSR
+width.value = window.innerWidth
+height.value = window.innerHeight
 
-  // No cleanup
-  window.addEventListener('resize', () => {
-    width.value = window.innerWidth
-    height.value = window.innerHeight
-  })
+// No cleanup
+window.addEventListener('resize', () => {
+width.value = window.innerWidth
+height.value = window.innerHeight
+})
 
-  return { width, height }
+return { width, height }
 }
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use "use" prefix for composable names
 - Use useState for SSR-compatible shared state
 - Implement proper cleanup in onUnmounted

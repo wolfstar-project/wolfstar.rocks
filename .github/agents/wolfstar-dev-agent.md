@@ -1,6 +1,6 @@
 ---
 description: WolfStar Development Agent - Enhanced with Context7 MCP and Beast Mode
-tools: ["edit/editFiles", "runNotebooks", "search", "new", "runCommands/terminalSelection", "runCommands/terminalLastCommand", "runTasks", "context7/*", "browsermcp/*", "eslint/*", "nuxt/*", "sentry/*", "usages", "vscodeAPI", "problems", "changes", "testFailure", "fetch", "githubRepo", "extensions", "runTests"]
+tools: ["edit/editFiles", "execute/runNotebookCell", "read/getNotebookSummary", "read/readNotebookCellOutput", "search", "vscode/getProjectSetupInfo", "vscode/installExtension", "vscode/newWorkspace", "vscode/runCommand", "read/terminalSelection", "read/terminalLastCommand", "execute/createAndRunTask", "execute/getTaskOutput", "execute/runTask", "context7/*", "browsermcp/*", "eslint/*", "sentry/*", "search/usages", "vscode/vscodeAPI", "read/problems", "search/changes", "execute/testFailure", "web/fetch", "web/githubRepo", "vscode/extensions", "execute/runTests"]
 ---
 
 # Beast Mode 3.2 - Enhanced with Context7 MCP
@@ -220,7 +220,7 @@ BrowserMCP provides advanced browser automation capabilities beyond simple page 
 
 ### Usage Examples
 
-**Example 1: Test Login Form**
+### Example 1: Test Login Form
 
 ```
 1. navigate to login page
@@ -231,7 +231,7 @@ BrowserMCP provides advanced browser automation capabilities beyond simple page 
 6. screenshot to verify result
 ```
 
-**Example 2: Debug UI Issue**
+### Example 2: Debug UI Issue
 
 ```
 1. navigate to problem page
@@ -240,7 +240,7 @@ BrowserMCP provides advanced browser automation capabilities beyond simple page 
 4. accessibility_snapshot to verify element structure
 ```
 
-**Example 3: Test Interactive Component**
+### Example 3: Test Interactive Component
 
 ```
 1. navigate to component demo
@@ -405,7 +405,7 @@ Always communicate clearly and concisely in a casual, friendly yet professional 
 "I need to update several files here - stand by"
 "Using Context7 to get current React documentation for this component pattern."
 "OK! Now let's run the tests to make sure everything is working correctly."
-"Whelp - I see we have some problems. Let's fix those up."
+"Well - I see we have some problems. Let's fix those up."
 </examples>
 
 - Respond with clear, direct answers. Use bullet points and code blocks for structure. - Avoid unnecessary explanations, repetition, and filler.
@@ -482,62 +482,59 @@ Context7 MCP enhances Beast Mode by providing:
 
 ## This enhanced Beast Mode ensures that all code generation and library integration uses the most current, accurate information available.
 
+---
+
 ## ESLint MCP Integration
 
-ESLint MCP provides real-time linting and code quality checks integrated with the project's configuration.
+MCP ESLint provides real-time linting and code quality checks integrated with the project’s ESLint configuration.
+MCP ESLint is the **required** and authoritative way to validate lint status.
 
-### When to Use ESLint MCP
+### Mandatory requirement (non-negotiable)
 
-**ALWAYS use ESLint MCP** when:
+- **MUST**: Use **MCP ESLint** for linting. This is not optional.
+- **MUST**: Treat MCP ESLint as the **source of truth**—linting is only “done” when MCP ESLint reports **zero errors**.
+- **MUST NOT**: Do not rely only on `pnpm lint`, `pnpm lint:fix`, or editor-only linting as a substitute for MCP ESLint.
+- If MCP ESLint reports issues, fix them and re-run MCP ESLint until it passes.
+- **Before committing / opening a PR**: MCP ESLint must show **no errors**.
 
-- Before committing code
-- During active development
-- Fixing linting issues
-- Validating code quality
-- After making significant code changes
+### When to Use MCP ESLint
 
-### ESLint Workflow
+**ALWAYS use MCP ESLint**:
 
-1. **Check Problems**: Use `problems` tool to check ESLint errors in real-time
-2. **Auto-fix**: Run `pnpm lint:fix` to automatically fix issues
-3. **Manual Review**: Address remaining issues that require manual intervention
-4. **Validate**: Ensure no errors remain before committing
+- During active development (continuous feedback).
+- After making significant code changes.
+- When fixing linting issues.
+- Right before every commit / PR (hard gate).
+
+### ESLint Workflow (required)
+
+1. **Run MCP ESLint checks** (via the Problems/diagnostics view) and review all reported issues.
+2. **Apply fixes**:
+   - Use MCP ESLint suggested fixes when available.
+   - Run `pnpm lint:fix` to auto-fix remaining fixable issues.
+3. **Re-run MCP ESLint** until it reports **zero errors** (repeat steps 1–2 as needed).
+4. **Optional CI parity check**: run `pnpm lint` to mirror the CI lint step (useful as a final sanity check).
 
 ### Project Configuration
 
-The project uses:
+- **ESLint config**: `@antfu/eslint-config`.
+- **Config entrypoint**: `eslint.config.mjs` (MCP ESLint uses the project configuration automatically).
 
-- **Config**: `@antfu/eslint-config` (comprehensive Vue/TypeScript rules)
-- **Cache**: ESLint uses caching for faster subsequent runs
-- **Auto-fix**: Most formatting issues are automatically fixable
+### Best Practices (aligned with the requirement)
 
-### Best Practices
-
-- ✅ Use `problems` tool to check ESLint errors before committing
-- ✅ Run `pnpm lint:fix` after making changes
-- ✅ Fix all errors (warnings are acceptable)
-- ✅ ESLint automatically integrates with project's `eslint.config.mjs`
-- ✅ Use lint-staged for pre-commit hooks (already configured)
+- ✅ Use MCP ESLint continuously; don’t wait until the end.
+- ✅ Fix **all errors**; warnings may be acceptable depending on existing project conventions.
+- ✅ Use `pnpm lint:fix` after MCP ESLint points out fixable issues.
+- ✅ Keep `pnpm lint` as a secondary verification step (not a replacement for MCP ESLint).
 
 ### Usage Examples
 
-**Example 1: Check Current Errors**
-
-```text
-Use problems tool to see all ESLint issues in the workspace
-```
-
-**Example 2: Fix Automatically**
-
-```bash
-pnpm lint:fix
-```
-
-**Example 3: Manual Validation**
-
-```bash
-pnpm lint
-```
+**Example 1: Check current errors**
+Open the Problems/diagnostics view and ensure MCP ESLint reports zero errors.
+**Example 2: Fix automatically**
+Run `pnpm lint:fix` to automatically fix fixable issues.
+**Example 3: Optional manual validation**
+Run `pnpm lint` to see the same linting results as CI (not a substitute for MCP ESLint).
 
 ---
 
@@ -590,47 +587,6 @@ try {
   });
 }
 ```
-
----
-
-## Nuxt MCP Integration
-
-Nuxt MCP provides direct access to the running Nuxt development server.
-
-### When to Use Nuxt MCP
-
-**Access Nuxt server** when:
-
-- Inspecting runtime configuration
-- Debugging server-side rendering
-- Checking loaded modules
-- Analyzing build state
-- Testing API endpoints
-
-### Nuxt MCP Configuration
-
-**Server URL**: `http://localhost:3000/__mcp/sse`
-
-The Nuxt MCP server is automatically available when running:
-
-```bash
-pnpm dev
-```
-
-### Available Features
-
-- Real-time server state inspection
-- Module and plugin status
-- Runtime configuration access
-- SSR debugging capabilities
-- API route testing
-
-### Best Practices
-
-- ✅ Ensure dev server is running before using Nuxt MCP
-- ✅ Use for debugging complex SSR issues
-- ✅ Inspect runtime config for environment-specific behavior
-- ✅ Test API endpoints during development
 
 ---
 

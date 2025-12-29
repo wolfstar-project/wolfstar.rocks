@@ -1,13 +1,14 @@
 ---
-description: Follow best practices for route middleware and navigation guards in Nuxt
+trigger: glob
 globs: **/middleware/**/*.{ts,js}
-alwaysApply: false
 ---
 
 # Nuxt Route Middleware
 
 ## Context
+
 Rules for creating route middleware in Nuxt.
+
 - Middleware runs before route changes
 - Global middleware runs on every route
 - Named middleware can be applied selectively
@@ -15,6 +16,7 @@ Rules for creating route middleware in Nuxt.
 - Can be used for auth, validation, redirection
 
 ## Requirements
+
 - Use defineNuxtRouteMiddleware for type safety
 - Handle async operations properly
 - Implement proper error handling
@@ -27,19 +29,20 @@ Rules for creating route middleware in Nuxt.
 - Handle server/client state properly
 
 ## Examples
+
 <example>
 // Example of proper analytics middleware with client-side only execution
 export default `
 export default defineNuxtRouteMiddleware((to) => {
   // Skip on server
   if (process.server) return
-  
-  // Track page view
-  const analytics = useAnalytics()
-  analytics.trackPageView({
-    path: to.fullPath,
-    title: to.meta.title
-  })
+
+// Track page view
+const analytics = useAnalytics()
+analytics.trackPageView({
+path: to.fullPath,
+title: to.meta.title
+})
 })
 `
 
@@ -50,20 +53,20 @@ export default defineNuxtRouteMiddleware((to) => {
 export default `
 export default defineNuxtRouteMiddleware((to) => {
   const { isAuthenticated } = useAuth()
-  
-  // Handle auth requirements
-  if (to.meta.requiresAuth && !isAuthenticated.value) {
-    // Redirect to login with return URL
-    return navigateTo({
-      path: '/login',
-      query: { redirect: to.fullPath }
-    })
-  }
-  
-  // Handle guest-only pages
-  if (to.meta.guest && isAuthenticated.value) {
-    return navigateTo('/')
-  }
+
+// Handle auth requirements
+if (to.meta.requiresAuth && !isAuthenticated.value) {
+// Redirect to login with return URL
+return navigateTo({
+path: '/login',
+query: { redirect: to.fullPath }
+})
+}
+
+// Handle guest-only pages
+if (to.meta.guest && isAuthenticated.value) {
+return navigateTo('/')
+}
 })
 `
 
@@ -75,17 +78,17 @@ export default `
 export default defineNuxtRouteMiddleware((to) => {
   const { user } = useAuth()
   const requiredRole = to.meta.requiredRole
-  
-  // Skip if no role required
-  if (!requiredRole) return
-  
-  // Check user role
-  if (!user.value?.roles.includes(requiredRole)) {
-    throw createError({
-      statusCode: 403,
-      message: 'Access denied'
-    })
-  }
+
+// Skip if no role required
+if (!requiredRole) return
+
+// Check user role
+if (!user.value?.roles.includes(requiredRole)) {
+throw createError({
+statusCode: 403,
+message: 'Access denied'
+})
+}
 })
 `
 
@@ -98,26 +101,26 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (!to.params.id)
     return
 
-  try {
-    // Validate route params
-    const isValid = await validateRouteParams(to.params)
-    if (!isValid) {
-      throw createError({
-        statusCode: 400,
-        message: 'Invalid route parameters',
-      })
-    }
-  }
-  catch (error) {
-    // Handle validation errors
-    return navigateTo({
-      name: 'error',
-      query: {
-        statusCode: error.statusCode,
-        message: error.message,
-      },
-    })
-  }
+try {
+// Validate route params
+const isValid = await validateRouteParams(to.params)
+if (!isValid) {
+throw createError({
+statusCode: 400,
+message: 'Invalid route parameters',
+})
+}
+}
+catch (error) {
+// Handle validation errors
+return navigateTo({
+name: 'error',
+query: {
+statusCode: error.statusCode,
+message: error.message,
+},
+})
+}
 })
 
 </example>
@@ -164,8 +167,8 @@ export default defineNuxtRouteMiddleware(() => {
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use defineNuxtRouteMiddleware
 - Handle async operations properly
 - Implement proper error handling

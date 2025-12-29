@@ -1,13 +1,14 @@
 ---
-description: Follow best practices for data fetching in Nuxt applications
+trigger: glob
 globs: **/*.{vue,ts}
-alwaysApply: false
 ---
 
 # Nuxt Data Fetching
 
 ## Context
+
 Rules for implementing data fetching in Nuxt applications.
+
 - Use useFetch, useAsyncData, or $fetch
 - Avoid fetch in lifecycle hooks
 - Handle loading states
@@ -15,6 +16,7 @@ Rules for implementing data fetching in Nuxt applications.
 - Cache responses when appropriate
 
 ## Requirements
+
 - Use useFetch for external API calls
 - Use useAsyncData for internal server functions
 - Use $fetch for direct API calls
@@ -23,6 +25,7 @@ Rules for implementing data fetching in Nuxt applications.
 - Cache responses when appropriate using key option
 
 ## Examples
+
 <example>
 <script setup lang="ts">
 // Basic usage with error handling and lazy loading
@@ -46,14 +49,14 @@ const { data, status, error, refresh } = await useFetch('/api/users', {
 
 // Retry logic for critical requests
 const { data: critical } = await useFetch('/api/critical', {
-  retry: 3,
-  retryDelay: 1000,
-  timeout: 5000
+retry: 3,
+retryDelay: 1000,
+timeout: 5000
 })
 
 // Refresh strategy
 const refreshData = () => {
-  refresh()
+refresh()
 }
 </script>
 
@@ -78,7 +81,7 @@ const refreshData = () => {
       <button @click="refreshData">Refresh</button>
     </div>
   </div>
-</template> 
+</template>
 </example>
 
 <example type="invalid">
@@ -89,30 +92,30 @@ const loading = ref(true)
 
 // ❌ Wrong: Fetching in lifecycle hook
 onMounted(async () => {
-  try {
-    data.value = await $fetch('/api/data')
-  } catch (err) {
-    error.value = err
-  } finally {
-    loading.value = false
-  }
+try {
+data.value = await $fetch('/api/data')
+} catch (err) {
+error.value = err
+} finally {
+loading.value = false
+}
 })
 
 // ❌ Wrong: No error handling or state management
 const fetchData = async () => {
-  const result = await $fetch('/api/data')
-  data.value = result
+const result = await $fetch('/api/data')
+data.value = result
 }
 
 // ❌ Wrong: Not handling serialization
 const processData = (rawData) => {
-  return {
-    ...rawData,
-    // This will fail in SSR
-    date: new Date(rawData.timestamp),
-    // This will fail in SSR
-    handler: () => console.log('click')
-  }
+return {
+...rawData,
+// This will fail in SSR
+date: new Date(rawData.timestamp),
+// This will fail in SSR
+handler: () => console.log('click')
+}
 }
 </script>
 
@@ -122,11 +125,11 @@ const processData = (rawData) => {
     <div v-if="loading">Loading...</div>
     <div v-else>{{ data }}</div>
   </div>
-</template> 
+</template>
 </example>
 
-
 ## Critical Rules
+
 - NEVER fetch data inside lifecycle hooks
 - ALWAYS implement proper error handling
 - Handle loading states properly

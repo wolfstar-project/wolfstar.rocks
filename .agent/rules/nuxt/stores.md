@@ -1,19 +1,21 @@
 ---
-description: Follow best practices for state management using Pinia in Nuxt applications
+trigger: glob
 globs: **/stores/**/*.{ts,js}
-alwaysApply: false
 ---
 
 # Nuxt Store Management
 
 ## Context
+
 Rules for implementing stores in Nuxt applications.
+
 - Use Pinia for state management
 - Implement proper TypeScript types
 - Handle async operations properly
 - Maintain proper store structure
 
 ## Requirements
+
 - Use Pinia for state management
 - Implement proper TypeScript types
 - Use proper store structure (state, getters, actions)
@@ -26,38 +28,39 @@ Rules for implementing stores in Nuxt applications.
 - Handle SSR properly
 
 ## Examples
+
 <example>
 import { defineStore } from 'pinia'
 
 interface CartItem {
-  id: string
-  name: string
-  price: number
-  quantity: number
+id: string
+name: string
+price: number
+quantity: number
 }
 
 interface CartState {
-  items: CartItem[]
-  loading: boolean
-  error: Error | null
+items: CartItem[]
+loading: boolean
+error: Error | null
 }
 
 export const useCartStore = defineStore('cart', {
-  state: (): CartState => ({
-    items: [],
-    loading: false,
-    error: null,
-  }),
+state: (): CartState => ({
+items: [],
+loading: false,
+error: null,
+}),
 
-  getters: {
-    totalItems: state => state.items.reduce((sum, item) => sum + item.quantity, 0),
-    totalPrice: state => state.items.reduce((sum, item) => sum + (item.price * item.quantity), 0),
-    isEmpty: state => state.items.length === 0,
-  },
+getters: {
+totalItems: state => state.items.reduce((sum, item) => sum + item.quantity, 0),
+totalPrice: state => state.items.reduce((sum, item) => sum + (item.price \* item.quantity), 0),
+isEmpty: state => state.items.length === 0,
+},
 
-  actions: {
-    async addItem(item: Omit<CartItem, 'quantity'>) {
-      this.loading = true
+actions: {
+async addItem(item: Omit<CartItem, 'quantity'>) {
+this.loading = true
 
       try {
         // Check if item already exists
@@ -131,7 +134,8 @@ export const useCartStore = defineStore('cart', {
       this.items = []
       this.error = null
     },
-  },
+
+},
 })
 
 </example>
@@ -140,34 +144,34 @@ export const useCartStore = defineStore('cart', {
 import { defineStore } from 'pinia'
 
 interface User {
-  id: string
-  email: string
-  name: string
-  preferences: UserPreferences
+id: string
+email: string
+name: string
+preferences: UserPreferences
 }
 
 interface UserPreferences {
-  theme: 'light' | 'dark'
-  notifications: boolean
+theme: 'light' | 'dark'
+notifications: boolean
 }
 
 export const useUserStore = defineStore('user', {
-  state: () => ({
-    user: null as User | null,
-    loading: false,
-    error: null as Error | null,
-  }),
+state: () => ({
+user: null as User | null,
+loading: false,
+error: null as Error | null,
+}),
 
-  getters: {
-    isAuthenticated: state => !!state.user,
-    userPreferences: state => state.user?.preferences,
-    userName: state => state.user?.name,
-  },
+getters: {
+isAuthenticated: state => !!state.user,
+userPreferences: state => state.user?.preferences,
+userName: state => state.user?.name,
+},
 
-  actions: {
-    async fetchUser() {
-      this.loading = true
-      this.error = null
+actions: {
+async fetchUser() {
+this.loading = true
+this.error = null
 
       try {
         const { data } = await useFetch<User>('/api/user')
@@ -212,7 +216,8 @@ export const useUserStore = defineStore('user', {
       this.user = null
       this.error = null
     },
-  },
+
+},
 })
 
 </example>
@@ -227,45 +232,45 @@ const globalStore = {
     settings: {},
   },
 
-  // ❌ Wrong: Not using proper mutations/actions
-  setUser(user) {
-    this.state.user = user
-  },
+// ❌ Wrong: Not using proper mutations/actions
+setUser(user) {
+this.state.user = user
+},
 
-  // ❌ Wrong: Direct state mutation
-  addToCart(item) {
-    this.state.cart.push(item)
-  },
+// ❌ Wrong: Direct state mutation
+addToCart(item) {
+this.state.cart.push(item)
+},
 
-  // ❌ Wrong: No error handling
-  async fetchData() {
-    const response = await fetch('/api/data')
-    const data = await response.json()
-    this.state = { ...this.state, ...data }
-  },
+// ❌ Wrong: No error handling
+async fetchData() {
+const response = await fetch('/api/data')
+const data = await response.json()
+this.state = { ...this.state, ...data }
+},
 }
 
 // ❌ Wrong: Exposing store globally
 if (process.client) {
-  window.__STORE__ = globalStore
+window.**STORE** = globalStore
 }
 
 // ❌ Wrong: Not using proper store access
 export function useStore() {
-  // ❌ Wrong: Accessing window directly
-  return process.client ? window.__STORE__ : globalStore
+// ❌ Wrong: Accessing window directly
+return process.client ? window.**STORE** : globalStore
 }
 
 // ❌ Wrong: No TypeScript types
 export function updateStore(key, value) {
-  const store = useStore()
-  store.state[key] = value
+const store = useStore()
+store.state[key] = value
 }
 
 </example>
 
-
 ## Critical Rules
+
 - ALWAYS use Pinia for state management
 - Use proper TypeScript types
 - Handle async operations properly

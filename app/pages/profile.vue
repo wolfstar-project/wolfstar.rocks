@@ -5,7 +5,7 @@
       class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-linear-to-br from-base-100 via-base-200 to-base-100 p-12 shadow-xl border border-base-300"
     >
       <div
-        v-if="!user || isLoading"
+        v-if="!user"
         class="flex flex-col items-center justify-center space-y-6"
       >
         <USkeleton class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100" />
@@ -19,11 +19,39 @@
         </div>
       </div>
       <template v-else>
-        <UAvatar
-          :src
-          :alt="`Avatar's ${user.name}`"
-          class="rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 transition-all duration-300"
-        />
+        <div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
+          <div
+            class="ring-base-300 ring-offset-base-100 rounded-full flex items-center justify-center"
+            :class="{ 'duration-300 group-hover:scale-105 transition-transform': !effectiveReduceMotion }"
+            role="img"
+          >
+            <img
+              v-if="isDefault"
+              :src="defaultAvatar"
+              alt="Default Avatar"
+              class="h-full w-full object-cover"
+              decoding="async"
+              crossorigin="anonymous"
+            />
+            <picture v-else>
+              <source
+                v-if="isAnimated && !effectiveReduceMotion"
+                type="image/gif"
+                :srcset="makeSrcset('gif')"
+              />
+              <source type="image/webp" :srcset="makeSrcset('webp')" />
+              <source type="image/png" :srcset="makeSrcset('png')" />
+              <img
+                :src="createUrl('gif', 128)"
+                :alt="`${user?.name} avatar`"
+                class="h-full w-full object-cover"
+                decoding="async"
+                loading="lazy"
+                crossorigin="anonymous"
+              />
+            </picture>
+          </div>
+        </div>
         <div class="space-y-2 text-center">
           <h1 class="text-4xl font-bold text-base-content">
             {{ user.globalName ?? user.username }}
@@ -227,7 +255,7 @@
               </div>
               <div class="space-y-4 md:space-y-2">
                 <GuildCards
-                  :error="combinedError"
+                  :error
                   :guilds
                   :filtered-guilds
                   :undo-search
@@ -283,14 +311,14 @@
                     <USwitch
                       v-model="reduceMotionEnabled"
                       size="lg"
-                      :disabled="systemPrefersReducedMotion"
+                      :disabled="effectiveReduceMotion"
                       @update:model-value="setReduceMotion"
                     />
                   </div>
 
                   <!-- System Preference Info -->
                   <div
-                    v-if="systemPrefersReducedMotion"
+                    v-if="effectiveReduceMotion"
                     class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
                   >
                     <UIcon name="heroicons:information-circle" class="h-5 w-5 text-info mt-0.5 shrink-0" />
@@ -467,9 +495,7 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
-import { avatarURL } from "#shared/utils/discord";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import { FetchError } from "ofetch";
 import { isDevelopment } from "std-env";
 
 definePageMeta({ alias: ["/account"], auth: true });
@@ -494,8 +520,12 @@ const evaluating = shallowRef(false);
 const searchQuery = ref<null | string>(null);
 const viewMode = ref<"grid" | "card">("card");
 
+//
+const isAnimated = ref(false);
+const isDefault = ref(false);
+
 // Error handling state
-const timeoutError = ref<Error | null>(null);
+
 const isRetrying = ref(false);
 const retryCount = ref(0);
 
@@ -509,17 +539,15 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 const {
   reduceMotionEnabled,
   effectiveReduceMotion,
-  systemPreferenceActive: systemPrefersReducedMotion,
   setReduceMotion,
 } = useReduceMotion();
 
-const { data, status, error: fetchError, execute } = useFetch("/api/users", {
+const { data, status, error, execute } = useFetch("/api/users", {
   key: "guilds",
   immediate: false,
   timeout: FETCH_TIMEOUT_MS,
   retry: MAX_RETRY_ATTEMPTS,
   retryDelay: 1000,
-  retryStatusCodes: [408, 500, 502, 503, 504],
   transform: (data) => ({
     transformedGuilds: data.transformedGuilds ?? [],
     fetchAt: Date.now(),
@@ -541,73 +569,17 @@ const { data, status, error: fetchError, execute } = useFetch("/api/users", {
     return data;
   },
   onRequest({ options }) {
-    isLoading.value = true;
-    timeoutError.value = null;
     logger.info(`Fetching user: ${user.value?.id} guilds ${isDevelopment && options.timeout ? `with timeout: ${options.timeout}ms` : ""}`);
   },
   onRequestError({ error }) {
-    logger.error(`Profile fetch request failed: ${error.message} for user: ${user.value?.id}`);
-    timeoutError.value = error;
-  },
-  onResponse({ response }) {
-    logger.info(`Profile fetch successful with status: ${response.status} for user: ${user.value?.id}`);
+    logger.error(`Profile fetch request failed for user: ${user.value?.id}`, error);
   },
   onResponseError({ response, error }) {
-    logger.error(`Profile fetch response error with status: ${response.status} - ${error?.message}`);
-
-    if (response.status === 408 || (error && error.message?.includes("timeout"))) {
-      timeoutError.value = createError({
-        statusCode: 408,
-        statusMessage: "Request Timeout",
-        message: `Request timed out after ${FETCH_TIMEOUT_MS / 1000} seconds`,
-      });
-    }
+    logger.error(`Profile fetch response error with status: ${response.status}`, error);
   },
 });
 
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
-
-// Combined error for GuildCards component
-const combinedError = computed(() => timeoutError.value ?? fetchError.value);
-
-// Fetch with built-in timeout and retry
-async function fetchWithTimeout() {
-  isLoading.value = true;
-  timeoutError.value = null;
-
-  try {
-    await execute();
-
-    if (fetchError.value) {
-      throw fetchError.value;
-    }
-  }
-  catch (error) {
-    error instanceof FetchError && logger.error(`Failed fetch user profile:\nStatus - ${error.statusCode}\n${error.message}`);
-  }
-  finally {
-    isLoading.value = false;
-  }
-}
-
-// Retry handler - ofetch handles automatic retry, this is for manual user-initiated retry
-async function handleRetry() {
-  isRetrying.value = true;
-  retryCount.value++;
-
-  try {
-    await fetchWithTimeout();
-  }
-  finally {
-    isRetrying.value = false;
-  }
-}
-
-// Refresh wrapper for the UI buttons
-async function refresh() {
-  retryCount.value = 0;
-  await fetchWithTimeout();
-}
 
 // Optimized filtered guilds with memoization
 const filteredGuilds = computedAsync(
@@ -653,8 +625,8 @@ const items = computed<TabsItem[]>(() => [
     label: "Servers",
     icon: "heroicons:server",
     badge: isLoading.value
-      ? undefined
-      : { label: guilds.value?.length ?? "N/A", color: "primary" },
+      ? { trailingIcon: "lucide:loader", color: "primary" }
+      : { label: `${guilds.value?.length ?? "N/A"}`, color: "primary" },
   },
   {
     value: "settings",
@@ -668,7 +640,43 @@ const items = computed<TabsItem[]>(() => [
   },
 ]);
 
-const src = computed(() => avatarURL(user.value!, { size: 256 }));
+const defaultAvatar = computed(() =>
+  user.value?.id
+    ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % BigInt(5)}.png`
+    : "https://cdn.discordapp.com/embed/avatars/0.png",
+);
+
+async function performCall() {
+  isLoading.value = true;
+  evaluating.value = true;
+  try {
+    if (status.value === "error")
+      return;
+    await execute();
+  }
+  finally {
+    isLoading.value = false;
+    evaluating.value = false;
+  }
+};
+
+async function handleRetry() {
+  isRetrying.value = true;
+  retryCount.value++;
+
+  try {
+    await performCall();
+  }
+  finally {
+    isRetrying.value = false;
+  }
+}
+
+// Refresh wrapper for the UI buttons
+async function refresh() {
+  retryCount.value = 0;
+  await performCall();
+}
 
 function undoSearch() {
   searchQuery.value = null;
@@ -684,15 +692,28 @@ async function copyUserId() {
   }
 }
 
-watch(status, (fetchStatus) => {
-  if (fetchStatus === "success") {
-    evaluating.value = false;
-    isLoading.value = false;
-  }
-});
-
-// Initialize fetch on client side
-if (import.meta.client) {
-  void fetchWithTimeout().catch(logger.error);
+function createUrl(format: "webp" | "png" | "gif", size: number) {
+  return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
+
+function makeSrcset(format: "webp" | "png" | "gif") {
+  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
+}
+
+watch(
+  user,
+  (user) => {
+    if (user?.avatar) {
+      isDefault.value = false;
+      isAnimated.value = user.avatar.startsWith("a_");
+    }
+    else {
+      isDefault.value = true;
+      isAnimated.value = false;
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(performCall);
 </script>

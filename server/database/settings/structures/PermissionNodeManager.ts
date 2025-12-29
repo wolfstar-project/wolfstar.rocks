@@ -159,7 +159,7 @@ export class PermissionNodeManager {
 
     // Assume sorted data
     for (const [id, node] of this.sorted.entries()) {
-      if (!roles.every((role) => role.id === id))
+      if (!roles.some((role) => role.id === id))
         continue;
       if (await CommandMatcher.matchAny(node.allow, command))
         return true;

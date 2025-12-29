@@ -1,5 +1,5 @@
-import type { GuildSettings } from "#shared/types/guildSettings";
 import type { Options as DeepMergeOptions } from "deepmerge";
+import type { GuildData } from "~~/server/database";
 import deepMerge from "deepmerge";
 
 // Overwrite arrays when merging
@@ -9,22 +9,22 @@ const mergeOptions: DeepMergeOptions = {
 
 export function useGuildSettingsChanges() {
   // Use useState for reactive state
-  const guildSettingsChanges = useState<GuildSettings | undefined>("guild:settings:changes", () => undefined);
+  const guildSettingsChanges = useState<GuildData | undefined>("guild:settings:changes", () => undefined);
 
-  const mergeGuildSettings = (changes?: Partial<GuildSettings>) => {
+  const mergeGuildSettings = (changes?: Partial<GuildData>) => {
     if (!changes) {
       guildSettingsChanges.value = undefined;
       return;
     }
 
-    guildSettingsChanges.value = deepMerge<GuildSettings, Partial<GuildSettings>>(
-      guildSettingsChanges.value ?? {} as GuildSettings,
+    guildSettingsChanges.value = deepMerge<GuildData, Partial<GuildData>>(
+      guildSettingsChanges.value ?? {} as GuildData,
       changes,
       mergeOptions,
     );
   };
 
-  const setGuildSettingsChanges = (changes?: Partial<GuildSettings>) => {
+  const setGuildSettingsChanges = (changes?: Partial<GuildData>) => {
     mergeGuildSettings(changes);
   };
 

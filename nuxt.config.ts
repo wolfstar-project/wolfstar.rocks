@@ -308,6 +308,10 @@ export default defineNuxtConfig({
         prefix: "custom",
         dir: resolve("./app/assets/icons"),
       },
+      {
+        prefix: "discord",
+        dir: resolve("./app/assets/icons/discord"),
+      },
     ],
     clientBundle: {
       scan: true,

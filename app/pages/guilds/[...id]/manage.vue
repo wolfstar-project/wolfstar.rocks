@@ -34,35 +34,38 @@
     </template>
 
     <template #body>
-      <div v-if="loading" class="flex h-48 items-center justify-center">
-        <UIcon name="heroicons:arrow-path" class="size-8 animate-spin text-primary" />
-      </div>
-      <component :is="renderComponent" v-else :commands="commands" :languages="languages" />
+      <ClientOnly>
+        <component :is="renderComponent" :commands="commands" :languages="languages" />
+        <template #fallback>
+          <div class="flex h-48 items-center justify-center">
+            <UIcon name="heroicons:arrow-path" class="size-8 animate-spin text-primary" />
+          </div>
+        </template>
+      </ClientOnly>
     </template>
   </UDashboardPanel>
 </template>
 
 <script setup lang="ts">
+import type { FilterRoutes, GuildRoutes } from "@/types/GuildRoutes";
 import { Time } from "@sapphire/time-utilities";
 import { isDevelopment } from "std-env";
 
 definePageMeta({
   layout: "dashboard",
   path: "/guilds/:id/manage/:slug(.*)*",
+  auth: true,
 });
 
 const route = useRoute();
-// Use composables and stores
-
 const { isNotificationsSlideoverOpen } = useDashboardLayout();
-const loading = useState<boolean>("guildGeneral:loading", () => false);
-const commands = useState<FlattenedCommand[]>("guildCommands", () => []);
-const languages = useState<string[]>("guildLanguages", () => []);
+const loading = useState<boolean>("guild:loading", () => false);
+const commands = useState<FlattenedCommand[]>("guild:commands", () => []);
+const languages = useState<string[]>("guild:languages", () => []);
 const toast = useToast();
 const { guildData } = useGuildData();
 
 const slug = route.params.slug as string | string[];
-const joinedPath = Array.isArray(slug) ? slug.join("/") : (slug || "");
 
 async function fetchCommandsAndLanguages() {
   loading.value = true;
@@ -106,17 +109,23 @@ async function fetchCommandsAndLanguages() {
       description: error?.message || "Unable to fetch commands and languages",
       color: "error",
     });
-    console.error("Error fetching commands and languages:", error);
+    logger.error("Error fetching commands and languages:", error);
   }
   finally {
     loading.value = false;
   }
 }
 
+const joinedPath = computed(() => Array.isArray(slug) ? slug.join("/") : (slug || ""));
+
 const renderComponent = computed(() => {
-  switch (joinedPath) {
+  switch (joinedPath.value as GuildRoutes & FilterRoutes) {
+    case "channels":
+      return defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue"));
     case "commands":
       return defineAsyncComponent(() => import("~/components/guild/settings/DisabledCommands.vue"));
+    case "roles":
+      return defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue"));
     default:
       return defineAsyncComponent(() => import("~/components/guild/settings/General.vue"));
   }
@@ -127,5 +136,5 @@ const src = computed(() =>
     size: 64,
   })!);
 
-onMounted(async () => await fetchCommandsAndLanguages());
+onMounted(fetchCommandsAndLanguages);
 </script>

@@ -1,15 +1,13 @@
 <template>
   <GuildSettingsSection title="General Settings">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Prefix Setting -->
-      <UForm
-        ref="form"
+      <GuildSettingsForm
         :schema="schema"
         :state="state"
+        :map-to-guild-data="mapToGuildData"
         class="space-y-4"
         aria-label="General guild settings form"
         @error="onError"
-        @submit="onSubmit"
       >
         <div>
           <UFormField label="Prefix" name="prefix">
@@ -55,6 +53,7 @@
               placeholder="Select language..."
               class="w-full"
               :items="items"
+              value-attribute="value"
               aria-label="Select bot language"
               aria-describedby="language-description"
             />
@@ -63,105 +62,22 @@
             </template>
           </UFormField>
         </div>
-      </UForm>
+      </GuildSettingsForm>
     </div>
   </GuildSettingsSection>
 </template>
 
 <script lang="ts" setup>
-import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
-import { isNullOrUndefined } from "@sapphire/utilities";
+import type { FormErrorEvent } from "@nuxt/ui";
+import type { GuildData } from "~~/server/database";
 import * as yup from "yup";
 
-const props = defineProps<{
+const { languages } = defineProps<{
   languages: string[];
 }>();
 
-const { setGuildSettingsChanges } = useGuildSettingsChanges();
 const { guildSettings } = useGuildSettings();
-
 const toast = useToast();
-// Use the new general composable
-
-// Computed language options
-const items = computed(() =>
-  props.languages.map(langKey => {
-    const [lang, label] = mapLanguageKeysToNames(langKey);
-    return label
-      ? {
-          value: lang,
-          label,
-        }
-      : undefined;
-  }).filter(item => !isNullOrUndefined(item)),
-);
-
-// Form validation schema - computed to be reactive to guildSettings
-const schema = yup.object({
-  prefix: yup.string()
-    .trim()
-    .min(1, "Prefix must be at least 1 character")
-    .max(11, "Prefix cannot be longer than 10 characters")
-    .transform(v => (v === "" ? undefined : v))
-    .optional()
-    .default(guildSettings.value.prefix),
-  language: yup.mixed<{
-    value: string;
-    label: string;
-
-  }>()
-    .optional()
-    .default({
-      value: guildSettings.value.language,
-      label: mapLanguageKeysToNames(guildSettings.value.language)[0],
-    }),
-});
-
-type Schema = yup.InferType<typeof schema>;
-
-// Form data reactive state
-const state = reactive<Schema>(schema.getDefault());
-
-// Watch guildSettings changes to update state
-/* watch(() => guildSettings.value, (newSettings) => {
-  if (newSettings) {
-    state.prefix = newSettings.prefix;
-    state.language = {
-      value: newSettings.language,
-      label: mapLanguageKeysToNames(newSettings.language)[0],
-    };
-  }
-}, { deep: true }); */
-
-async function onSubmit(event: FormSubmitEvent<Schema>) {
-  if (event.data.prefix) {
-    setGuildSettingsChanges({
-      prefix: event.data.prefix,
-    });
-  }
-  if (event.data.language) {
-    setGuildSettingsChanges({
-      language: event.data.language.value,
-    });
-  }
-
-  toast.add({
-    color: "info",
-    icon: "i-heroicons-information-circle",
-    title: "Changes Staged",
-    description: "Click 'Save Changes' to apply your changes",
-  });
-}
-
-async function onError(event: FormErrorEvent) {
-  const errorMessage = event.errors[0]?.message;
-  toast.add({
-    color: "error",
-    title: "Error",
-    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
-    icon: "i-heroicons-x-circle",
-  });
-}
 
 // Language mapping function
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
@@ -186,5 +102,86 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
     "tr-TR": ["Türkçe", "Turkish"],
   };
   return supportedLanguagesMap[langKey] ?? [langKey];
-};
+}
+
+// Computed language options
+const items = computed(() =>
+  languages.map(langKey => {
+    const [lang, label] = mapLanguageKeysToNames(langKey);
+    return label
+      ? {
+          value: lang,
+          label,
+        }
+      : {
+          value: lang,
+          label: `This Language ${lang} is not supported`,
+          disabled: true,
+        };
+  }),
+);
+
+// Form validation schema
+const schema = yup.object({
+  prefix: yup.string()
+    .trim()
+    .min(1, "Prefix must be at least 1 character")
+    .max(11, "Prefix cannot be longer than 10 characters")
+    .transform(v => (v === "" ? undefined : v))
+    .optional()
+    .default(guildSettings.value.prefix),
+  language: yup.object()
+    .shape({
+      value: yup.string().required(),
+      label: yup.string().required(),
+    })
+    .optional()
+    .default({
+      value: guildSettings.value.language,
+      label: mapLanguageKeysToNames(guildSettings.value.language)[1] ?? "Unknown Language",
+    }),
+});
+
+type Schema = yup.InferType<typeof schema>;
+
+// Form data reactive state
+const state = reactive<Schema>(schema.getDefault());
+
+// Original values for change detection
+
+// Watch for guild settings to populate state
+/* watch(guildSettings, (settings) => {
+  if (settings) {
+    state.prefix = settings.prefix;
+    state.language = {
+      value: settings.language,
+      label: mapLanguageKeysToNames(settings.language)[1] ?? "Unknown Language",
+    };
+  }
+}, { immediate: true }); */
+
+// Map form state to GuildData format
+function mapToGuildData(formState: Schema): Partial<GuildData> {
+  const changes: Partial<GuildData> = {};
+
+  if (formState.prefix) {
+    changes.prefix = formState.prefix;
+  }
+
+  if (formState.language) {
+    changes.language = formState.language.value;
+  }
+
+  return changes;
+}
+
+async function onError(event: FormErrorEvent) {
+  const errorMessage = event.errors[0]?.message;
+  toast.add({
+    color: "error",
+    title: "Error",
+    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
+    icon: "heroicons:circle",
+  });
+}
 </script>

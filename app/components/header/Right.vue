@@ -96,7 +96,7 @@ const items = ref<DropdownMenuItem[]>([
     kbds: ["shift", "meta", "q"],
     onSelect: async () => {
       await clear();
-      navigateTo("/");
+      await navigateTo("/");
     },
   },
 ]);

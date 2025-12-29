@@ -1,5 +1,5 @@
-import type { GuildSettings } from "#shared/types/guildSettings";
 import type { Options as DeepMergeOptions } from "deepmerge";
+import type { GuildData } from "~~/server/database";
 import deepMerge from "deepmerge";
 import { useGuildSettingsChanges } from "@/composables/useGuildSettingsChanges";
 
@@ -10,7 +10,7 @@ const mergeOptions: DeepMergeOptions = {
 
 export function useGuildSettings() {
   // Use useState for reactive state
-  const guildSettings = useState<GuildSettings | undefined>("guild:settings", () => undefined);
+  const guildSettings = useState<GuildData | undefined>("guild:settings", () => undefined);
 
   // Get guild settings changes composable
   const { guildSettingsChanges } = useGuildSettingsChanges();
@@ -18,18 +18,19 @@ export function useGuildSettings() {
   // Computed property that merges settings with changes
   const mergedSettings = computed(() => {
     return deepMerge(
-      guildSettings.value ?? {} as GuildSettings,
-      guildSettingsChanges.value ?? {} as GuildSettings,
+      guildSettings.value ?? {} as GuildData,
+      guildSettingsChanges.value ?? {} as GuildData,
       mergeOptions,
-    ) as GuildSettings;
+    ) as GuildData;
   });
 
-  const setGuildSettings = (settings?: GuildSettings) => {
+  const setGuildSettings = (settings?: GuildData) => {
     guildSettings.value = settings;
   };
 
   return {
     guildSettings: readonly(mergedSettings),
+    originalGuildSettings: readonly(guildSettings),
     setGuildSettings,
   };
 }

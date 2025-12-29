@@ -23,7 +23,7 @@
       <!-- Loading Skeleton Grid -->
       <div
         v-if="loading"
-        class="cards-grid"
+        class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
         role="status"
         aria-label="Loading servers"
       >
@@ -33,7 +33,7 @@
         <!-- Guild Cards Grid -->
         <div
           v-if="paginatedGuilds.length > 0"
-          class="cards-grid"
+          class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
           role="list"
           aria-label="Discord servers"
         >
@@ -81,8 +81,19 @@
               </p>
             </div>
           </div>
-          <div v-if="onRetry" class="mt-4 flex justify-end">
+          <div class="mt-4 flex justify-end">
             <UButton
+              v-if="error.statusCode === 401"
+              color="error"
+              variant="outline"
+              size="sm"
+              icon="heroicons:arrow-path"
+              @click="reloadPage"
+            >
+              Reload Page
+            </UButton>
+            <UButton
+              v-else-if="onRetry"
               :color="errorState.color"
               variant="outline"
               size="sm"
@@ -280,6 +291,10 @@ const { isLoading: loadingMore, reset } = useInfiniteScroll(
   },
 );
 
+function reloadPage() {
+  window.location.reload();
+}
+
 watch(
   () => filteredGuilds.length,
   () => {
@@ -288,36 +303,3 @@ watch(
   },
 );
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.cards-grid {
-	@apply grid auto-rows-fr gap-4;
-	grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-@media (min-width: 640px) {
-	.cards-grid {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
-@media (min-width: 768px) {
-	.cards-grid {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-}
-
-@media (min-width: 1024px) {
-	.cards-grid {
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-	}
-}
-
-@media (min-width: 1280px) {
-	.cards-grid {
-		grid-template-columns: repeat(5, minmax(0, 1fr));
-	}
-}
-</style>

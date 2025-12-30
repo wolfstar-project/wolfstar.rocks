@@ -140,6 +140,13 @@ export default defineNuxtConfig({
   routeRules: {
     "/": { prerender: true },
     "/sitemap.xml": { prerender: true },
+    "/oauth/**": {
+      security: {
+        headers: {
+          contentSecurityPolicy: false,
+        },
+      },
+    },
   },
 
   sourcemap: {

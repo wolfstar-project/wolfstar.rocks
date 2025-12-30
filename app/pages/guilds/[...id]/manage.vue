@@ -80,7 +80,7 @@ async function fetchCommandsAndLanguages() {
       commands.value = commandsStorage.value.data;
     }
     else {
-      const commandsData = await $api<FlattenedCommand[]>("/api/commands");
+      const commandsData = await $api<FlattenedCommand[]>("/commands");
       commands.value = commandsData;
       commandsStorage.value = {
         expire: Date.now() + Time.Day * 6,
@@ -96,7 +96,7 @@ async function fetchCommandsAndLanguages() {
       languages.value = languagesStorage.value.data;
     }
     else {
-      const languagesData = await $api<string[]>("/api/languages");
+      const languagesData = await $api<string[]>("/languages");
       languages.value = languagesData;
       languagesStorage.value = {
         expire: Date.now() + Time.Day * 6,

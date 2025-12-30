@@ -4,6 +4,9 @@ export default defineNuxtPlugin(async () => {
   const api = $fetch.create({
     baseURL: apiOrigin,
     credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 
   return {

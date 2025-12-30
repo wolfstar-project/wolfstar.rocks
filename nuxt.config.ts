@@ -420,6 +420,18 @@ export default defineNuxtConfig({
         fullscreen: "*",
       },
     },
+    // CORS configuration - allow production and beta subdomains and local dev
+    corsHandler: {
+      origin: [
+        "https://wolfstar.rocks",
+        "https://beta.wolfstar.rocks",
+        "http://localhost:3000",
+      ],
+      methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE", "OPTIONS"],
+      allowHeaders: ["Content-Type"],
+      exposeHeaders: ["x-ratelimit-limit", "x-ratelimit-remaining", "x-ratelimit-reset", "retry-after"],
+      credentials: true,
+    },
     rateLimiter: false,
   } satisfies Partial<SecurityModuleOptions>,
 

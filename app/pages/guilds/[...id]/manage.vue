@@ -72,7 +72,7 @@ async function fetchCommandsAndLanguages() {
   loading.value = true;
 
   try {
-    const commandsStorage = useSessionStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
+    const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
       expire: 0,
       data: [],
     });
@@ -88,7 +88,7 @@ async function fetchCommandsAndLanguages() {
       };
     }
 
-    const languagesStorage = useSessionStorage<ExpirableLocalStorageStructure<string[]>>(LocalStorageKeys.Languages, {
+    const languagesStorage = useLocalStorage<ExpirableLocalStorageStructure<string[]>>(LocalStorageKeys.Languages, {
       expire: 0,
       data: [],
     });

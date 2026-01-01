@@ -106,9 +106,12 @@ async function fetchCommandsAndLanguages() {
   }
   catch (error: any) {
     toast.add({
+      icon: "heroicons:exclamation-triangle",
+      closeIcon: "heroicons:x-mark",
       title: "Failed to load data",
       description: error?.message || "Unable to fetch commands and languages",
       color: "error",
+      duration: 3000,
     });
     logger.error("Error fetching commands and languages:", error);
   }

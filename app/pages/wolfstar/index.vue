@@ -328,7 +328,7 @@
                   name: 'WolfStar#9286 (854714837388755004)',
                 }"
                 :footer="{ icon: '/avatars/wolfstar.png', text: 'Case 3' }"
-                :timestamp="Date.now()"
+                :timestamp
               >
                 <span><strong>❯ Type:</strong>
                   {{ moderationActionRender.name }}</span><br />
@@ -392,7 +392,7 @@
                 name: 'WolfStar#9286 (854714837388755004)',
               }"
               :footer="{ icon: '/avatars/wolfstar.png', text: `Log ID ${123456 + loggingIndex}` }"
-              :timestamp="Date.now()"
+              :timestamp
             >
               <span><strong>❯ Action:</strong> {{ loggingEvents[loggingIndex]!.action }}</span><br />
               <span
@@ -607,18 +607,17 @@ const texts = [
   alert: string;
 }[];
 
+const timestamp = ref(Date.now());
 const featureIndex = ref(0);
-
 const loggingIndex = ref(0);
+const moderationTemporary = ref(false);
+const moderationUndo = ref(false);
+const moderationIndex = ref(0);
 
 const moderationActions = Object.values(ModerationActions);
-const moderationIndex = ref(0);
 const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(
   computed(() => moderationActions[moderationIndex.value]),
 );
-
-const moderationTemporary = ref(false);
-const moderationUndo = ref(false);
 
 const moderationActionRender = computed(() => {
   const action = moderationAction.value;

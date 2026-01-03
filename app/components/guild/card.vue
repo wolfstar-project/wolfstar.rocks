@@ -1,103 +1,102 @@
 <template>
   <!-- Enhanced Guild Card - inspired by Dyno.gg design -->
-  <div class="group block cursor-pointer h-full">
-    <component
-      :is="guild.manageable ? 'NuxtLink' : 'div'"
-      v-if="effectiveViewMode === 'grid'"
-      :to="guild.manageable ? manageGuildURL : undefined"
-      :aria-disabled="!guild.manageable"
-      :aria-label="guild.manageable ? `Manage ${guild.name}` : `${guild.name} - Insufficient permissions`"
-      :role="!guild.manageable ? 'button' : undefined"
-      class="block h-full"
-    >
-      <div
-        class="card-container"
-        :class="{
-          'ring-2 ring-primary/20': guild.wolfstarIsIn,
-          'opacity-75 ring-2 ring-error/20': !guild.manageable,
-        }"
-      >
-        <!-- Guild Icon -->
-        <div class="flex flex-col items-center" role="img" :aria-label="`${guild.name} server icon`">
-          <guild-icon :guild variant="bare" size="lg" :show-status="true" />
-        </div>
-
-        <!-- Guild Info -->
-        <div class="card-title-container">
-          <h3 class="card-title">
-            {{ guild.name }}
-          </h3>
-        </div>
-      </div>
-    </component>
-
+  <component
+    :is="guild.manageable ? 'NuxtLink' : 'div'"
+    v-if="effectiveViewMode === 'grid'"
+    :to="guild.manageable ? manageGuildURL : undefined"
+    :aria-disabled="!guild.manageable"
+    :aria-label="guild.manageable ? `Manage ${guild.name}` : `${guild.name} - Insufficient permissions`"
+    :role="!guild.manageable ? 'button' : undefined"
+    class="group block h-full"
+    :class="{ 'cursor-pointer': guild.manageable }"
+  >
     <div
-      v-else
-      class="card-container-full"
+      class="card-container"
       :class="{
         'ring-2 ring-primary/20': guild.wolfstarIsIn,
         'opacity-75 ring-2 ring-error/20': !guild.manageable,
       }"
     >
+      <!-- Guild Icon -->
+      <div class="flex flex-col items-center" role="img" :aria-label="`${guild.name} server icon`">
+        <guild-icon :guild variant="bare" size="lg" :show-status="true" />
+      </div>
+
       <!-- Guild Info -->
-      <div class="card-info">
-        <div class="flex flex-col items-center" role="img" :aria-label="`${guild.name} server icon`">
-          <guild-icon :guild variant="bare" size="lg" :show-status="true" />
-        </div>
-        <!-- Guild Name -->
-        <h3 class="card-title-full">
+      <div class="card-title-container">
+        <h3 class="card-title">
           {{ guild.name }}
         </h3>
+      </div>
+    </div>
+  </component>
 
-        <!-- Guild Stats -->
-        <div class="card-stats">
-          <span class="flex items-center gap-1" title="Total members" aria-label="Total members">
-            <UIcon
-              name="heroicons:user-group"
-              class="size-3 text-base-content/70"
-              aria-hidden="true"
-            />
-            <span>{{ approximateMemberCount }}</span>
-          </span>
-          <span class="flex items-center gap-1" title="Members online" aria-label="Members online">
-            <UIcon name="heroicons:signal" class="size-3 text-success" aria-hidden="true" />
-            <span>{{ approximatePresenceCount }}</span>
-          </span>
-        </div>
+  <div
+    v-else
+    class="card-container-full"
+    :class="{
+      'ring-2 ring-primary/20': guild.wolfstarIsIn,
+      'opacity-75 ring-2 ring-error/20': !guild.manageable,
+    }"
+  >
+    <!-- Guild Info -->
+    <div class="card-info">
+      <div class="flex flex-col items-center" role="img" :aria-label="`${guild.name} server icon`">
+        <guild-icon :guild variant="bare" size="lg" :show-status="true" />
+      </div>
+      <!-- Guild Name -->
+      <h3 class="card-title-full">
+        {{ guild.name }}
+      </h3>
 
-        <!-- Action Button -->
-        <div class="card-actions">
-          <NuxtLink
-            v-if="guild.wolfstarIsIn && guild.manageable"
-            :to="`/guilds/${guild.id}/manage`"
-            class="card-action-btn card-action-manage"
-            :aria-label="`Manage ${guild.name} server settings`"
-          >
-            <UIcon
-              name="heroicons:adjustments-horizontal"
-              class="mr-1 inline size-3"
-              aria-hidden="true"
-            />
-            Manage Server
-          </NuxtLink>
-          <NuxtLink
-            v-else-if="guild.manageable"
-            :to="guildAddURL(guild.id)"
-            class="card-action-btn card-action-invite"
-            :aria-label="`Invite WolfStar bot to ${guild.name}`"
-          >
-            <UIcon name="heroicons:rocket-launch" class="mr-1 inline size-3" aria-hidden="true" />
-            Invite Bot
-          </NuxtLink>
-          <div
-            v-else
-            class="card-action-btn card-action-disabled"
-            role="status"
-            :aria-label="`No permission to manage ${guild.name}`"
-          >
-            <UIcon name="heroicons:no-symbol" class="mr-1 inline size-3" aria-hidden="true" />
-            No Permission
-          </div>
+      <!-- Guild Stats -->
+      <div class="card-stats">
+        <span class="flex items-center gap-1" title="Total members" aria-label="Total members">
+          <UIcon
+            name="heroicons:user-group"
+            class="size-3 text-base-content/70"
+            aria-hidden="true"
+          />
+          <span>{{ approximateMemberCount }}</span>
+        </span>
+        <span class="flex items-center gap-1" title="Members online" aria-label="Members online">
+          <UIcon name="heroicons:signal" class="size-3 text-success" aria-hidden="true" />
+          <span>{{ approximatePresenceCount }}</span>
+        </span>
+      </div>
+
+      <!-- Action Button -->
+      <div class="card-actions">
+        <NuxtLink
+          v-if="guild.wolfstarIsIn && guild.manageable"
+          :to="`/guilds/${guild.id}/manage`"
+          class="card-action-btn card-action-manage"
+          :aria-label="`Manage ${guild.name} server settings`"
+        >
+          <UIcon
+            name="heroicons:adjustments-horizontal"
+            class="mr-1 inline size-3"
+            aria-hidden="true"
+          />
+          Manage Server
+        </NuxtLink>
+        <NuxtLink
+          v-else-if="guild.manageable"
+          :to="guildAddURL(guild.id)"
+          class="card-action-btn card-action-invite"
+          :aria-label="`Invite WolfStar bot to ${guild.name}`"
+        >
+          <UIcon name="heroicons:rocket-launch" class="mr-1 inline size-3" aria-hidden="true" />
+          Invite Bot
+        </NuxtLink>
+        <div
+          v-else
+          class="card-action-btn card-action-disabled"
+          role="status"
+          :aria-label="`No permission to manage ${guild.name}`"
+        >
+          <UIcon name="heroicons:no-symbol" class="mr-1 inline size-3" aria-hidden="true" />
+          No Permission
         </div>
       </div>
     </div>
@@ -108,7 +107,6 @@
 import type { TransformedLoginData } from "#shared/types/discord";
 import type { ValuesType } from "#shared/types/utils";
 import { isNullOrUndefinedOrZero } from "@sapphire/utilities";
-import { breakpointsTailwind } from "@vueuse/core";
 
 interface EnhancedGuildCardProps {
   guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
@@ -122,10 +120,7 @@ interface EnhancedGuildCardProps {
 
 const { guild, viewMode = "card" } = defineProps<EnhancedGuildCardProps>();
 
-// Force grid view on mobile devices
-const breakpoints = useBreakpoints(breakpointsTailwind);
-const isMobile = breakpoints.smaller("sm");
-const effectiveViewMode = computed(() => isMobile.value ? "grid" : viewMode);
+const effectiveViewMode = computed(() => isSmallScreen.value ? "grid" : viewMode);
 
 const approximatePresenceCount = computed(() => {
   return !isNullOrUndefinedOrZero(guild.approximatePresenceCount)

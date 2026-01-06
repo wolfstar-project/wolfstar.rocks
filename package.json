@@ -69,6 +69,7 @@
     "@vueuse/nuxt": "catalog:utils",
     "@vueuse/router": "catalog:utils",
     "consola": "catalog:node",
+    "defu": "catalog:utils",
     "dotenv": "catalog:node",
     "fuse.js": "catalog:utils",
     "import-in-the-middle": "catalog:prod",
@@ -85,7 +86,8 @@
     "utility-types": "catalog:prod",
     "stale-dep": "catalog:prod",
     "yup": "catalog:prod",
-    "simple-git": "catalog:prod"
+    "simple-git": "catalog:prod",
+    "rou3": "catalog:utils"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",

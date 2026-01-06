@@ -44,8 +44,6 @@ catalogs:
     cz-conventional-changelog: ^3.3.0
     daisyui: ^5.5.14
     discord-api-types: ^0.38.37
-    simple-git: ^3.30.0
-    stale-dep: ^0.8.4
   e2e:
     playwright: ^1.57.0
   frontend:
@@ -90,6 +88,8 @@ catalogs:
     nuxt-security: ^2.5.0
     nuxt-vitalizer: ^2.0.0
     require-in-the-middle: ^8.0.1
+    simple-git: ^3.30.0
+    stale-dep: ^0.8.4
     tailwind-merge: ^3.4.0
     tailwind-variants: ^3.2.2
     utility-types: ^3.11.0
@@ -102,15 +102,19 @@ catalogs:
   tsc:
     typescript: ~5.8.3
     vue-tsc: ^3.1.8
+  types:
+    "@types/pg": ^8.16.0
+
   utils:
     "@vueuse/core": ^14.1.0
     "@vueuse/integrations": ^14.1.0
     "@vueuse/motion": ^3.0.3
     "@vueuse/nuxt": ^14.1.0
     "@vueuse/router": ^14.1.0
+    defu: ^6.1.4
     fuse.js: ^7.1.0
     nuxt-auth-utils: ^0.5.26
-
+    rou3: ^0.5.1
 allowedDeprecatedVersions:
   glob: 7.2.3
   inflight: 1.0.6

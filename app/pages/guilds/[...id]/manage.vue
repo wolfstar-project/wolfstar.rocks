@@ -54,7 +54,6 @@ import { isDevelopment } from "std-env";
 definePageMeta({
   layout: "dashboard",
   path: "/guilds/:id/manage/:slug(.*)*",
-  auth: true,
 });
 
 const route = useRoute();

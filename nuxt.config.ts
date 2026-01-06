@@ -28,6 +28,7 @@ export default defineNuxtConfig({
     "nuxt-authorization",
     "nuxt-vitalizer",
     "~~/modules/build-env",
+    "~~/modules/auth",
     "stale-dep/nuxt",
     ...(isDevelopment || isWindows) ? [] : ["nuxt-security"],
   ],
@@ -132,7 +133,7 @@ export default defineNuxtConfig({
   runtimeConfig,
 
   routeRules: {
-    "/": { prerender: true },
+    "/": { prerender: true, auth: { required: false } },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {
       security: {
@@ -143,6 +144,10 @@ export default defineNuxtConfig({
           referrerPolicy: "strict-origin-when-cross-origin",
         },
       },
+    },
+    "/guilds/:id/manage/:slug(.*)*": { auth: { required: true } },
+    "/profile": {
+      auth: { required: true },
     },
     "/manifest.webmanifest": {
       headers: {

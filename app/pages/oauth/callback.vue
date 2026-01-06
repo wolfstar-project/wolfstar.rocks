@@ -59,8 +59,10 @@
 import { promiseTimeout } from "@vueuse/core";
 
 const code = useRouteQuery("code", null, { transform: String });
-const { user, redirectTo, fetch: refreshSession } = useAuth();
+const { user, refreshSession } = useAuth();
 const { start, finish } = useLoadingIndicator();
+
+const route = useRoute();
 
 const { error, status, execute } = useFetch("/api/auth/discord", {
   query: {
@@ -83,16 +85,27 @@ async function performCall() {
 
   await refreshSession();
 
-  await promiseTimeout(seconds(5));
+  await promiseTimeout(seconds(2));
 
   finish({
     error: !user.value,
   });
 
-  if (user.value) {
-    redirectTo.value = "/";
-    await navigateTo(redirectTo.value);
+  // Decode redirect URL from state parameter (if present)
+  let redirectUrl = "/";
+  const state = route.query.state as string | undefined;
+  if (state) {
+    console.log("Decoding state:", state);
+    try {
+      redirectUrl = atob(state);
+    }
+    catch {
+      // If decoding fails, use default
+      redirectUrl = "/";
+    }
   }
+
+  await navigateTo(redirectUrl);
 }
 
 const isPending = computed(() => status.value === "pending");

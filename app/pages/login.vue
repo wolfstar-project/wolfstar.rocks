@@ -1,9 +1,11 @@
 <script setup lang="ts">
 const { login } = useAuth();
 const route = useRoute();
-addRouteMiddleware(() => {
-  const nextUrl = (route.query.next as string) || "/";
-  void login(nextUrl);
+definePageMeta({
+  middleware: () => {
+    const nextUrl = (route.query.next as string) || "/";
+    void login(nextUrl);
+  },
 });
 
 defineOgImageComponent("Default", {

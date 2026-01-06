@@ -6,6 +6,7 @@
     }"
   >
     <NuxtPwaManifest />
+    <NuxtRouteAnnouncer />
     <NuxtLoadingIndicator color="bg-neutral" />
     <NuxtLayout>
       <NuxtPage />

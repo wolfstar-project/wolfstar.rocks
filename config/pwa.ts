@@ -1,16 +1,20 @@
 import type { ModuleOptions } from "@vite-pwa/nuxt";
+import { isCI, isDevelopment } from "std-env";
 
 export const pwa: ModuleOptions = {
-  registerType: "autoUpdate",
+  mode: isCI ? "production" : "development",
+  disable: isDevelopment && process.env.VITE_DEV_PWA !== "true",
   includeManifestIcons: true,
-  disable: process.env.VITE_DEV_PWA !== "true" && process.env.NODE_ENV === "development",
+  strategies: "injectManifest",
+  scope: "/",
+  srcDir: "../service-worker",
+  filename: "sw.ts",
+  injectManifest: {
+    globPatterns: ["**/*.{js,json,css,html,txt,svg,png,ico,webp,woff,woff2,ttf,eot,otf,wasm}"],
+  },
   devOptions: {
     enabled: process.env.VITE_DEV_PWA === "true",
     type: "module",
-  },
-  workbox: {
-    navigateFallback: "/",
-    globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
   },
   manifest: {
     background_color: "#050505",

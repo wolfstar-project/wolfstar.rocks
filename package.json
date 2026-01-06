@@ -5,6 +5,7 @@
   "private": true,
   "description": "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
   "homepage": "https://wolfstar.rocks",
+  "main": "./nuxt.config.ts",
   "bugs": {
     "url": "https://github.com/wolfstar-project/wolfstar.rocks/issues"
   },
@@ -38,7 +39,8 @@
     "prisma:generate:watch": "prisma generate --watch",
     "generate-pwa-assets": "pwa-assets-generator",
     "start": ".output/server/index.mjs",
-    "typecheck": "stale-dep && nuxt typecheck"
+    "typecheck": "stale-dep && nuxt typecheck",
+    "release": "bumpp && node scripts/release.ts"
   },
   "lint-staged": {
     "*": "pnpm lintroll --fix --cache --staged ."
@@ -48,6 +50,7 @@
     "@iconify-json/heroicons": "catalog:icons",
     "@iconify-json/ic": "catalog:icons",
     "@iconify-json/lucide": "catalog:icons",
+    "std-env": "catalog:node",
     "@iconify-json/ph": "catalog:icons",
     "@josephanson/nuxt-ai": "catalog:prod",
     "@nuxt/fonts": "catalog:prod",
@@ -69,21 +72,20 @@
     "dotenv": "catalog:node",
     "fuse.js": "catalog:utils",
     "import-in-the-middle": "catalog:prod",
-    "lintroll": "catalog:lint",
     "nuxt": "catalog:prod",
     "nuxt-auth-utils": "catalog:utils",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",
     "postcss-nested": "catalog:style",
-    "prisma": "catalog:database",
-    "prisma-json-types-generator": "catalog:database",
     "require-in-the-middle": "catalog:prod",
     "tailwind-merge": "catalog:prod",
     "tailwind-variants": "catalog:prod",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
-    "yup": "catalog:prod"
+    "stale-dep": "catalog:prod",
+    "yup": "catalog:prod",
+    "simple-git": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
@@ -103,6 +105,7 @@
     "@tailwindcss/typography": "catalog:style",
     "@vite-pwa/assets-generator": "catalog:build",
     "@vue-macros/nuxt": "catalog:frontend",
+    "prisma": "catalog:database",
     "bumpp": "catalog:cli",
     "cz-conventional-changelog": "catalog:dev",
     "daisyui": "catalog:dev",
@@ -113,18 +116,18 @@
     "eslint-plugin-vuejs-accessibility": "catalog:lint",
     "husky": "catalog:lint",
     "lint-staged": "catalog:lint",
+    "lintroll": "catalog:lint",
     "playwright": "catalog:e2e",
     "pncat": "catalog:cli",
+    "prisma-json-types-generator": "catalog:database",
     "prettier": "catalog:lint",
     "prettier-plugin-css-order": "catalog:lint",
     "prettier-plugin-tailwindcss": "catalog:lint",
-    "simple-git": "catalog:dev",
-    "stale-dep": "catalog:dev",
-    "std-env": "catalog:node",
     "tailwindcss": "catalog:style",
     "taze": "catalog:cli",
     "typescript": "catalog:tsc",
-    "vue-tsc": "catalog:tsc"
+    "vue-tsc": "catalog:tsc",
+    "@types/pg": "catalog:types"
   },
   "config": {
     "commitizen": {

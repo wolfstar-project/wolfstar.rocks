@@ -66,12 +66,6 @@ export default defineNuxtConfig({
         { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
       ],
       meta: [
-        // Cache control
-        { "http-equiv": "Cache-Control", "content": "1y" },
-        { "http-equiv": "Content-Type", "content": "text/html; charset=UTF-8" },
-        { "http-equiv": "Expires", "content": "1y" },
-        { "http-equiv": "Pragma", "content": "1y" },
-
         // Page transitions
         {
           "http-equiv": "Page-Enter",
@@ -144,7 +138,21 @@ export default defineNuxtConfig({
       security: {
         headers: {
           contentSecurityPolicy: false,
+          xContentTypeOptions: "nosniff",
+          xFrameOptions: "DENY",
+          referrerPolicy: "strict-origin-when-cross-origin",
         },
+      },
+    },
+    "/manifest.webmanifest": {
+      headers: {
+        "Content-Type": "application/manifest+json",
+        "Cache-Control": "public, max-age=0, must-revalidate",
+      },
+    },
+    "/assets/*": {
+      headers: {
+        "Cache-Control": "public, max-age=31536000, immutable",
       },
     },
   },
@@ -282,6 +290,12 @@ export default defineNuxtConfig({
     },
   },
 
+  typescript: {
+    tsConfig: {
+      exclude: ["../service-worker"],
+    },
+  },
+
   postcss: {
     plugins: {
       "postcss-nested": {},
@@ -348,7 +362,6 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
-
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {

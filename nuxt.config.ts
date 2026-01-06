@@ -133,7 +133,7 @@ export default defineNuxtConfig({
   runtimeConfig,
 
   routeRules: {
-    "/": { prerender: true, auth: { required: false } },
+    "/": { prerender: true },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {
       security: {
@@ -144,10 +144,6 @@ export default defineNuxtConfig({
           referrerPolicy: "strict-origin-when-cross-origin",
         },
       },
-    },
-    "/guilds/:id/manage/:slug(.*)*": { auth: { required: true } },
-    "/profile": {
-      auth: { required: true },
     },
     "/manifest.webmanifest": {
       headers: {

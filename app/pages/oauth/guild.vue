@@ -51,7 +51,7 @@ async function navigateToGuild() {
   finish({
     error: isNullOrUndefined(guildId.value),
   });
-  await navigateTo(`/guilds/${guildId.value}`);
+  await navigateTo(`/guilds/${guildId.value}/manage`);
 }
 
 useRobotsRule(robotBlockingPageProps);

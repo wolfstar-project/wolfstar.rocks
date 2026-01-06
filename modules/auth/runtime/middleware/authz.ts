@@ -1,22 +1,23 @@
+import type { AuthMeta } from "../types";
+
 // @ts-expect-error vfs
 import config from "#build/auth.config";
-
 import { defineNuxtRouteMiddleware } from "#imports";
 import { usePermissions } from "../composable";
 
 export default defineNuxtRouteMiddleware(async (to, _from) => {
   if (to.name === undefined)
     return;
+  const auth = to.meta?.auth as AuthMeta | undefined;
+  const authRequired = auth?.required ?? false;
+  const authNamespace = auth?.namespace;
 
-  const authRequired = to.meta?.auth?.required ?? false;
-  const authNamespace = to.meta?.auth?.namespace;
+  const loginRoute = auth?.loginRoute || config.loginRoute;
+  const redirectIfLoggedIn = auth?.redirectIfLoggedIn ?? false;
+  const redirectIfNotAllowed = auth?.redirectIfNotAllowed ?? false;
 
-  const loginRoute = to.meta?.auth?.loginRoute || config.loginRoute;
-  const redirectIfLoggedIn = to.meta?.auth?.redirectIfLoggedIn ?? false;
-  const redirectIfNotAllowed = to.meta?.auth?.redirectIfNotAllowed ?? false;
-
-  const routeRoles = to.meta?.auth?.roles;
-  const routePermissions = to.meta?.auth?.permissions;
+  const routeRoles = auth?.roles;
+  const routePermissions = auth?.permissions;
 
   // Use useUserSession directly instead of useAuth wrapper
   const { loggedIn } = useUserSession();

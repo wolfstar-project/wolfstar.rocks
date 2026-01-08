@@ -27,8 +27,6 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-authorization",
     "nuxt-vitalizer",
-    "~~/modules/build-env",
-    "~~/modules/auth",
     "stale-dep/nuxt",
     ...(isDevelopment || isWindows) ? [] : ["nuxt-security"],
   ],
@@ -131,6 +129,10 @@ export default defineNuxtConfig({
   },
   // Runtime configuration
   runtimeConfig,
+
+  dir: {
+    modules: resolve("./modules"),
+  },
 
   routeRules: {
     "/": { prerender: true },

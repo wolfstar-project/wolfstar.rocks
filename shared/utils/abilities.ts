@@ -1,4 +1,7 @@
+import type { User } from "#auth-utils";
 import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
+import { useApi } from "#shared/utils";
+import { PermissionsBits } from "#shared/utils/bits";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities";
 import { PermissionFlagsBits } from "discord-api-types/v10";
 import { readSettings } from "~~/server/database";
@@ -10,7 +13,13 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
     : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles);
 }
 
-export const manageAbility = defineAbility({ allowGuest: false }, async (_user: any, guild: APIGuild, member: APIGuildMember) => {
+// @ts-expect-error is bug ts
+export const manageAbility = defineAbility({ allowGuest: false }, async (user: User, guild: APIGuild) => {
+  const api = useApi();
+  const member = await api.guilds.getMember(guild.id, user.id).catch(() => null);
+  if (!member)
+    return false;
+
   if (guild.owner_id === member.user.id)
     return true;
 

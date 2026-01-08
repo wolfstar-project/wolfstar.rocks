@@ -169,6 +169,7 @@ export default defineNuxtConfig({
   },
 
   experimental: {
+    clientNodeCompat: true,
     payloadExtraction: false,
     viteEnvironmentApi: true,
     renderJsonPayloads: true,

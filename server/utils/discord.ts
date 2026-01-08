@@ -12,6 +12,8 @@ import type {
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
+import { useApi } from "#shared/utils";
+import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
 import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
@@ -26,7 +28,6 @@ import {
 } from "discord-api-types/v10";
 import { readSettings, readSettingsPermissionNodes } from "~~/server/database/settings/functions";
 import { flattenGuild } from "~~/server/utils/ApiTransformers";
-import { PermissionsBits } from "~/utils/bits";
 
 function isAdmin(member: FlattenedMember, roles: readonly string[]): boolean {
   const permissionsValue

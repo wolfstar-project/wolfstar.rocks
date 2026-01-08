@@ -3,9 +3,8 @@ import type { AuthMeta } from "../types";
 // @ts-expect-error vfs
 import config from "#build/auth.config";
 import { defineNuxtRouteMiddleware } from "#imports";
-import { usePermissions } from "../composable";
 
-export default defineNuxtRouteMiddleware(async (to, _from) => {
+export default defineNuxtRouteMiddleware(async (to, from) => {
   if (to.name === undefined)
     return;
   const auth = to.meta?.auth as AuthMeta | undefined;
@@ -19,8 +18,8 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
   const routeRoles = auth?.roles;
   const routePermissions = auth?.permissions;
 
-  // Use useUserSession directly instead of useAuth wrapper
-  const { loggedIn } = useUserSession();
+  const { hasAnyRole, hasAnyPermission } = usePermissions({ namespace: authNamespace });
+  const { user, loggedIn } = useAuth({ namespace: authNamespace });
 
   // Create a ref to know where to redirect the user when logged in
   const redirectTo = useState<string>("authRedirect", () => "/");
@@ -47,23 +46,29 @@ export default defineNuxtRouteMiddleware(async (to, _from) => {
     );
   }
 
-  // Check roles and permissions only if specified
-  if (routeRoles || routePermissions) {
-    const { hasAnyRole, hasAnyPermission } = usePermissions({ namespace: authNamespace });
-
-    if (routeRoles && hasAnyRole(routeRoles)) {
-      return;
-    }
-
-    if (routePermissions && hasAnyPermission(routePermissions)) {
-      return;
-    }
-
-    // If has specified roles/permissions but doesn't have any, deny access
-    if (!redirectIfNotAllowed) {
-      return abortNavigation({ statusCode: 403 });
-    }
-
-    return navigateTo({ path: redirectIfNotAllowed }, { redirectCode: 302 });
+  if (from.fullPath !== to.fullPath && from.path !== loginRoute) {
+    return navigateTo(from);
   }
+
+  if (routeRoles && hasAnyRole(routeRoles)) {
+    return;
+  }
+
+  if (routePermissions && await hasAnyPermission(routePermissions)) {
+    return;
+  }
+
+  if (!routeRoles && !routePermissions && user.value) {
+    return;
+  }
+
+  if (from.fullPath !== to.fullPath && from.path !== loginRoute) {
+    return navigateTo(from);
+  }
+
+  if (!redirectIfNotAllowed) {
+    return abortNavigation({ statusCode: 403 });
+  }
+
+  return navigateTo({ path: redirectIfNotAllowed }, { redirectCode: 302 });
 });

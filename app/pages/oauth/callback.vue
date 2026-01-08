@@ -31,7 +31,7 @@
           icon="twemoji:cross-mark"
         >
           <template #description>
-            {{ error ? error.message ?? error.cause : "An error occurred during authentication" }}
+            {{ errorMessage }}
           </template>
           <template #actions>
             <UButton color="neutral" variant="ghost" to="/login" size="sm">
@@ -107,6 +107,14 @@ async function performCall() {
 
   await navigateTo(redirectUrl);
 }
+
+const errorMessage = computed(() => {
+  if (route.query.error) {
+    return route.query.error;
+  }
+
+  return error.value ? error.value.message ?? error.value.cause : "An error occurred during authentication";
+});
 
 const isPending = computed(() => status.value === "pending");
 const isError = computed(() => status.value === "error");

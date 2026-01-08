@@ -1,0 +1,16 @@
+import type { RESTOptions } from "@discordjs/rest";
+import { API } from "@discordjs/core/http-only";
+import { REST } from "@discordjs/rest";
+import { runtimeConfig } from "~~/server/utils/runtimeConfig";
+
+export function useApi(rest?: REST) {
+  rest ??= useRest();
+  return new API(rest);
+}
+
+function useRest(options?: Partial<RESTOptions>) {
+  if (!runtimeConfig.discord.botToken) {
+    throw new Error("'NUXT_OAUTH_DISCORD_BOT_TOKEN' env is not defined");
+  }
+  return new REST(options).setToken(runtimeConfig.discord.botToken);
+}

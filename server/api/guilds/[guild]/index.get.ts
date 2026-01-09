@@ -80,8 +80,10 @@ export default defineWrappedResponseHandler(
 
     const guild = await getGuild(guildId);
 
+    const member = await getMember(guild.id, user.id);
+
     // Check permissions
-    if (await denies(event, manageAbility, guild)) {
+    if (await denies(event, manageAbility, guild, member)) {
       throw createError({
         status: 403,
         message: "Insufficient permissions",

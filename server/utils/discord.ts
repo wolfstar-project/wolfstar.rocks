@@ -1,6 +1,5 @@
 import type {
   FlattenedGuild,
-  FlattenedMember,
   LoginData,
   OauthFlattenedGuild,
   PartialOauthFlattenedGuild,
@@ -12,11 +11,11 @@ import type {
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { useApi } from "#shared/utils";
+
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
-import { hasAtLeastOneKeyInMap, isNullOrUndefined } from "@sapphire/utilities";
+import { isNullOrUndefined } from "@sapphire/utilities";
 import {
   GuildDefaultMessageNotifications,
   GuildExplicitContentFilter,
@@ -26,40 +25,6 @@ import {
   Locale,
   PermissionFlagsBits,
 } from "discord-api-types/v10";
-import { readSettings, readSettingsPermissionNodes } from "~~/server/database/settings/functions";
-import { flattenGuild } from "~~/server/utils/ApiTransformers";
-
-function isAdmin(member: FlattenedMember, roles: readonly string[]): boolean {
-  const permissionsValue
-    = "permissions" in member && typeof member.permissions === "string"
-      ? member.permissions
-      : "0";
-  const memberRolePermissions = BigInt(permissionsValue);
-  return roles.length === 0
-    ? PermissionsBits.has(
-        memberRolePermissions,
-        PermissionFlagsBits.ManageGuild,
-      )
-    : hasAtLeastOneKeyInMap(
-        new Map(roles.map((role) => [role, true])),
-        member.roles.map((role) => role.id),
-      );
-}
-
-async function canManage(
-  guild: APIGuild,
-  member: FlattenedMember,
-): Promise<boolean> {
-  if (!member.user || !member.user.id) {
-    return false;
-  }
-  if (guild.owner_id === member.user.id)
-    return true;
-
-  const settings = await readSettings(guild.id);
-  const nodes = readSettingsPermissionNodes(settings);
-  return isAdmin(member, settings.rolesAdmin) && (await nodes.run(member, "conf") ?? true);
-}
 
 async function getManageable(
   id: string,
@@ -80,7 +45,7 @@ async function getManageable(
   if (!member)
     return false;
 
-  return canManage(guild, flattenedMember);
+  return manageAbility.original(guild, flattenedMember);
 }
 
 export async function transformGuild(

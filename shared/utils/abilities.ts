@@ -1,28 +1,27 @@
-import type { User } from "#auth-utils";
-import type { APIGuild, APIGuildMember } from "discord-api-types/v10";
-import { useApi } from "#shared/utils";
+import type { FlattenedMember } from "#shared/types/discord";
+import type { APIGuild } from "discord-api-types/v10";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities";
 import { PermissionFlagsBits } from "discord-api-types/v10";
 import { defineAbility } from "nuxt-authorization/utils";
-import { readSettings } from "~~/server/database";
+import { readSettings, readSettingsPermissionNodes } from "~~/server/database";
 
-function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
+function isAdmin(member: FlattenedMember, roles: readonly string[]): boolean {
   const memberRolePermissions = BigInt((member as unknown as { permissions: string }).permissions);
   return roles.length === 0
     ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles);
+    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles.map(r => r.id));
 }
 
-export const manageAbility = defineAbility({ allowGuest: false }, async (user: User, guild: APIGuild) => {
-  const api = useApi();
-  const member = await api.guilds.getMember(guild.id, user.id).catch(() => null);
-  if (!member)
+export const manageAbility = defineAbility({ allowGuest: false }, async (guild: APIGuild, member: FlattenedMember) => {
+  if (!member.user || !member.user.id) {
     return false;
-
+  }
   if (guild.owner_id === member.user.id)
     return true;
 
   const settings = await readSettings(guild.id);
-  return isAdmin(member, settings.rolesAdmin);
+  const nodes = readSettingsPermissionNodes(settings);
+
+  return isAdmin(member, settings.rolesAdmin) && (await nodes.run(member, "conf") ?? true);
 });

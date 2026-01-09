@@ -1,12 +1,16 @@
+import type { RESTOptions } from "@discordjs/rest";
 import type { H3Event } from "h3";
 // @ts-expect-error virtual import
 import { driver } from "#storage-config";
+import { API } from "@discordjs/core/http-only";
+import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
 import kv from "unstorage/drivers/cloudflare-kv-http";
 import fs from "unstorage/drivers/fs";
 import memory from "unstorage/drivers/memory";
 import cached from "~~/server/cache-driver";
+import { runtimeConfig } from "~~/server/utils/runtimeConfig";
 
 const storage = useStorage();
 
@@ -24,6 +28,18 @@ else if (driver === "cloudflare") {
 }
 else if (driver === "memory") {
   storage.mount("wolfstar:ratelimiter", memory());
+}
+
+export function useApi(rest?: REST) {
+  rest ??= useRest();
+  return new API(rest);
+}
+
+function useRest(options?: Partial<RESTOptions>) {
+  if (!runtimeConfig.discord.botToken) {
+    throw new Error("'NUXT_OAUTH_DISCORD_BOT_TOKEN' env is not defined");
+  }
+  return new REST(options).setToken(runtimeConfig.discord.botToken);
 }
 
 export function getGuildParam(event: H3Event) {

@@ -22,6 +22,18 @@ export const auth = betterAuth({
       clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET as string,
       redirectURI: `${process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000"}/api/auth/callback/discord`,
       scope: ["identify", "guilds"], // Request Discord scopes
+      // Map Discord user data to our user schema
+      mapProfileToUser: (profile) => {
+        return {
+          id: profile.id,
+          name: profile.global_name || profile.username,
+          email: profile.email || null,
+          image: profile.avatar
+            ? `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.png`
+            : null,
+          emailVerified: profile.verified || false,
+        };
+      },
     },
   },
   session: {
@@ -41,4 +53,5 @@ export const auth = betterAuth({
 
 export type AuthSession = typeof auth.$Infer.Session;
 export type AuthUser = typeof auth.$Infer.Session.user;
+
 

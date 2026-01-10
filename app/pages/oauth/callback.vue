@@ -1,24 +1,6 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <template v-if="!code">
-      <UAlert
-        variant="solid"
-        color="warning"
-        title="Missing Code"
-        icon="twemoji:warning"
-      >
-        <template #description>
-          Please use the <code>Login</code> button instead or click
-          <ULink to="/login" class="font-medium underline">here</ULink>.
-        </template>
-        <template #actions>
-          <UButton color="neutral" variant="ghost" to="/login" size="sm">
-            Return to Login
-          </UButton>
-        </template>
-      </UAlert>
-    </template>
-    <ClientOnly v-else>
+    <ClientOnly>
       <template v-if="isPending">
         <UAlert color="info" icon="emojione:hourglass-done" title="Loading">
           <template #description> Completing authentication flow... </template>
@@ -44,7 +26,7 @@
         <UAlert
           color="success"
           icon="twemoji:check-mark"
-          :title="`Welcome ${user!.username}!`"
+          :title="`Welcome ${user?.name || 'back'}!`"
         >
           <template #description>
             You will be redirected to the main page in a moment.
@@ -58,54 +40,55 @@
 <script setup lang="ts">
 import { promiseTimeout } from "@vueuse/core";
 
-const code = useRouteQuery("code", null, { transform: String });
-const { user, refreshSession } = useAuth();
+const { user } = useAuth();
 const { start, finish } = useLoadingIndicator();
 
 const route = useRoute();
+const error = ref<Error | null>(null);
+const status = ref<"idle" | "pending" | "success" | "error">("idle");
 
-const { error, status, execute } = useFetch("/api/auth/discord", {
-  query: {
-    code,
-  },
-  method: "GET",
-  key: "callback",
-  server: false,
-  immediate: false,
-});
-
-if (import.meta.client && code) {
-  void performCall()
-    .catch(logger.error);
+// Better auth handles the OAuth callback automatically
+// We just need to wait for the session to be established and redirect
+if (import.meta.client) {
+  void handleCallback()
+    .catch((err) => {
+      logger.error("Callback error:", err);
+      error.value = err;
+      status.value = "error";
+    });
 }
 
-async function performCall() {
+async function handleCallback() {
+  status.value = "pending";
   start();
-  await execute();
 
-  await refreshSession();
-
+  // Wait for authentication to complete
   await promiseTimeout(seconds(2));
 
-  finish({
-    error: !user.value,
-  });
+  if (user.value) {
+    status.value = "success";
+    finish({ error: false });
 
-  // Decode redirect URL from state parameter (if present)
-  let redirectUrl = "/";
-  const state = route.query.state as string | undefined;
-  if (state) {
-    console.log("Decoding state:", state);
-    try {
-      redirectUrl = atob(state);
+    // Decode redirect URL from state parameter (if present)
+    let redirectUrl = "/";
+    const state = route.query.state as string | undefined;
+    if (state) {
+      try {
+        redirectUrl = atob(state);
+      }
+      catch {
+        // If decoding fails, use default
+        redirectUrl = "/";
+      }
     }
-    catch {
-      // If decoding fails, use default
-      redirectUrl = "/";
-    }
+
+    await navigateTo(redirectUrl);
   }
-
-  await navigateTo(redirectUrl);
+  else {
+    status.value = "error";
+    finish({ error: true });
+    error.value = new Error("Authentication failed");
+  }
 }
 
 const errorMessage = computed(() => {
@@ -113,7 +96,7 @@ const errorMessage = computed(() => {
     return route.query.error;
   }
 
-  return error.value ? error.value.message ?? error.value.cause : "An error occurred during authentication";
+  return error.value?.message ?? "An error occurred during authentication";
 });
 
 const isPending = computed(() => status.value === "pending");

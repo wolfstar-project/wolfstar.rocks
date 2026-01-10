@@ -8,7 +8,7 @@ import { toValue } from "vue";
 
 /**
  * Minimal user type that can be used for avatar URL generation
- * Compatible with both APIUser and User from #auth-utils
+ * Compatible with both APIUser and better-auth User types
  */
 export interface AvatarUser {
   id: string;

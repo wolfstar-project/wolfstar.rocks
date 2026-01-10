@@ -6,9 +6,11 @@ let runtimeConfigInstance: NitroRuntimeConfig;
 
 export function generateRuntimeConfig() {
   return {
+    betterAuthSecret: process.env.BETTER_AUTH_SECRET || process.env.NUXT_SESSION_PASSWORD,
     public: {
       clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
       environment: process.env.NODE_ENV ?? "production",
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || "http://localhost:3000",
       app: {
         apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
       },

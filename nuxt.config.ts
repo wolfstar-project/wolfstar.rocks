@@ -319,10 +319,6 @@ export default defineNuxtConfig({
     loadStrategy: "none",
   },
 
-  betterAuth: {
-    // Better auth will use /api/auth/* routes
-  },
-
   eslint: {
     config: {
       standalone: false,

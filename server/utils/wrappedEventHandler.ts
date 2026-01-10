@@ -7,7 +7,7 @@ import { cast, isObject } from "@sapphire/utilities";
 import { defu } from "defu";
 import { isDevelopment } from "std-env";
 import * as yup from "yup";
-import { auth } from "~/server/lib/auth";
+import { useAuth } from "#auth";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
@@ -99,6 +99,7 @@ async function getUserSession(
   event: H3Event,
 ): Promise<Session | null> {
   if (options.auth) {
+    const auth = useAuth(event);
     const session = await auth.api.getSession({ headers: event.node.req.headers });
     if (!session) {
       throw createError({

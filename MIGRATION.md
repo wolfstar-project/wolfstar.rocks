@@ -27,6 +27,18 @@ pnpm prisma:migrate:dev
 
 ### Environment Variables
 
+#### New Required Variables
+Add to your `.env` file:
+```env
+BETTER_AUTH_SECRET=<generate-with-openssl-rand-base64-32>
+NUXT_PUBLIC_SITE_URL=http://localhost:3000  # or your production URL
+```
+
+Generate a secure secret:
+```bash
+openssl rand -base64 32
+```
+
 #### Updated Configuration
 The Discord OAuth callback URL has changed:
 - **Old**: `http://localhost:3000/oauth/callback`
@@ -36,14 +48,7 @@ Update your Discord OAuth application settings in the [Discord Developer Portal]
 1. Navigate to your application
 2. Go to "OAuth2" → "General"
 3. Update the redirect URI to: `http://localhost:3000/api/auth/callback/discord` (for dev) or `https://wolfstar.rocks/api/auth/callback/discord` (for production)
-
-#### New Required Variable
-Add to your `.env` file:
-```env
-NUXT_PUBLIC_SITE_URL=http://localhost:3000  # or your production URL
-```
-
-This is used by better-auth to construct OAuth callback URLs.
+4. Save changes
 
 ### API Changes
 

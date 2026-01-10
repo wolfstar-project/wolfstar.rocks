@@ -1,14 +1,16 @@
-import { auth } from "~/server/lib/auth";
+import { useAuth } from "#auth";
 import { prisma } from "~/server/database/prisma";
 
 export default defineNitroPlugin((nitroApp) => {
   nitroApp.hooks.hook("request", async (event) => {
     event.context.$authorization = {
       resolveServerUser: async () => {
+        const auth = useAuth(event);
         const session = await auth.api.getSession({ headers: event.node.req.headers });
         return session?.user ?? null;
       },
       resolveServerTokens: async () => {
+        const auth = useAuth(event);
         const session = await auth.api.getSession({ headers: event.node.req.headers });
         if (!session?.user) {
           return null;

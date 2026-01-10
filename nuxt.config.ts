@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxt/hints",
     "@nuxt/fonts",
+    "@nuxt/a11y",
     "@nuxtjs/seo",
     "@vueuse/nuxt",
     "@netlify/nuxt",

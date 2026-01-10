@@ -93,6 +93,7 @@
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",
+    "@nuxt/a11y": "catalog:dev",
     "@commitlint/config-conventional": "catalog:lint",
     "@discordjs/collection": "catalog:dev",
     "@discordjs/core": "catalog:dev",

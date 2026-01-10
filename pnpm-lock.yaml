@@ -48,6 +48,9 @@ catalogs:
     '@netlify/nuxt':
       specifier: ^0.2.16
       version: 0.2.16
+    '@nuxt/a11y':
+      specifier: ^1.0.0-alpha.1
+      version: 1.0.0-alpha.1
     '@nuxt/hints':
       specifier: ^1.0.0-alpha.4
       version: 1.0.0-alpha.4
@@ -424,6 +427,9 @@ importers:
       '@netlify/nuxt':
         specifier: catalog:dev
         version: 0.2.16(@netlify/api@14.0.12)(db0@0.3.4)(ioredis@5.8.2)(magicast@0.5.1)(rollup@4.53.3)
+      '@nuxt/a11y':
+        specifier: catalog:dev
+        version: 1.0.0-alpha.1(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
       '@nuxt/eslint':
         specifier: catalog:lint
         version: 1.12.1(@typescript-eslint/utils@8.49.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.8.3))(@vue/compiler-sfc@3.5.25)(eslint-plugin-format@1.1.0(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(magicast@0.5.1)(typescript@5.8.3)(vite@7.2.7(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
@@ -2289,6 +2295,9 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@nuxt/a11y@1.0.0-alpha.1':
+    resolution: {integrity: sha512-TwON9I0uI4erv9IJ6cD4nx9QcaxfXnAg7CwcQyjMKfDHCfI3xitezg4CZhQOHl0FGqHYGRf9Y9kSwh6fahCJrQ==}
 
   '@nuxt/cli@3.31.2':
     resolution: {integrity: sha512-ud4KcfSdPeY96IR3UCtg/k7p6nUbJqF3IguQsolHo6EEJwiNM283EFXhRzU9cR+1iILExjaJvHMpFJ/7Xi++bg==}
@@ -5227,6 +5236,10 @@ packages:
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
+
+  axe-core@4.11.1:
+    resolution: {integrity: sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==}
+    engines: {node: '>=4'}
 
   b4a@1.7.3:
     resolution: {integrity: sha512-5Q2mfq2WfGuFp3uS//0s6baOJLMoVduPYVeNmDYxu5OUA1/cBfvr2RIS7vi62LdNj/urk1hfmj867I3qt6uZ7Q==}
@@ -13080,6 +13093,16 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
+  '@nuxt/a11y@1.0.0-alpha.1(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))':
+    dependencies:
+      '@nuxt/devtools-kit': 3.1.1(magicast@0.5.1)(vite@7.2.7(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.2))
+      '@nuxt/kit': 4.2.2(magicast@0.5.1)
+      axe-core: 4.11.1
+      sirv: 3.0.2
+    transitivePeerDependencies:
+      - magicast
+      - vite
+
   '@nuxt/cli@3.31.2(cac@6.7.14)(magicast@0.5.1)':
     dependencies:
       '@bomb.sh/tab': 0.0.9(cac@6.7.14)(citty@0.1.6)
@@ -16571,6 +16594,8 @@ snapshots:
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.1.0
+
+  axe-core@4.11.1: {}
 
   b4a@1.7.3: {}
 

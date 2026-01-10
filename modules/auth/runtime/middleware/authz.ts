@@ -15,12 +15,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const redirectIfLoggedIn = auth?.redirectIfLoggedIn ?? false;
   const redirectIfNotAllowed = auth?.redirectIfNotAllowed ?? false;
 
-  const { loggedIn } = useAuth({ namespace: authNamespace });
+  const { isAuthenticated } = useAuth({ namespace: authNamespace });
 
   // Create a ref to know where to redirect the user when logged in
   const redirectTo = useState<string>("authRedirect", () => "/");
 
-  if (typeof redirectIfLoggedIn === "string" && redirectIfLoggedIn && loggedIn.value) {
+  if (typeof redirectIfLoggedIn === "string" && redirectIfLoggedIn && isAuthenticated.value) {
     return navigateTo({ path: redirectIfLoggedIn }, { redirectCode: 302 });
   }
 
@@ -28,7 +28,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return;
   }
 
-  if (!loggedIn.value) {
+  if (!isAuthenticated.value) {
     // Save the current path to redirect after login
     redirectTo.value = to.fullPath;
     return navigateTo(

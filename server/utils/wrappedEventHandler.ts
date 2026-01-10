@@ -1,4 +1,4 @@
-import type { UserSessionRequired } from "#auth-utils";
+import type { Session } from "better-auth/types";
 import type { ConsolaInstance } from "consola";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
@@ -7,6 +7,7 @@ import { cast, isObject } from "@sapphire/utilities";
 import { defu } from "defu";
 import { isDevelopment } from "std-env";
 import * as yup from "yup";
+import { auth } from "~/server/lib/auth";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
@@ -46,8 +47,8 @@ interface DefinedWrappedCachedResponseHandlerOptions<Data> extends DefinedWrappe
  * @param ipHeader - Custom header to use for IP detection (optional)
  * @returns User ID if authenticated, otherwise IP address
  */
-function getIdentifier(event: H3Event, session: UserSessionRequired | null, ipHeader?: string): string {
-  if (session) {
+function getIdentifier(event: H3Event, session: Session | null, ipHeader?: string): string {
+  if (session?.user) {
     return session.user.id;
   }
 
@@ -96,9 +97,16 @@ function normalizeRateLimitOptions(options?: PartialRateLimitOptions): RateLimit
 async function getUserSession(
   options: DefinedWrappedResponseHandlerOptions<any>,
   event: H3Event,
-): Promise<UserSessionRequired | null> {
+): Promise<Session | null> {
   if (options.auth) {
-    return await requireUserSession(event);
+    const session = await auth.api.getSession({ headers: event.node.req.headers });
+    if (!session) {
+      throw createError({
+        statusCode: 401,
+        message: "Unauthorized - Authentication required",
+      });
+    }
+    return session;
   }
   return null;
 }
@@ -110,7 +118,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 ) {
   const session = await getUserSession(options, event);
   if (session)
-    isDevelopment && debugLogger.debug("User session required and found", session.user.name);
+    isDevelopment && debugLogger.debug("User session required and found", session.user?.name);
 
   const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 

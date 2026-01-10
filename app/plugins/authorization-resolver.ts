@@ -2,10 +2,11 @@ export default defineNuxtPlugin({
   name: "authorization-resolver",
   parallel: true,
   setup() {
+    const { data: session } = useAuthSession();
     return {
       provide: {
         authorization: {
-          resolveClientUser: () => useUserSession().user.value,
+          resolveClientUser: () => session.value?.user ?? null,
         },
       },
     };

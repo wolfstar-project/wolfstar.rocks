@@ -1,21 +1,14 @@
-import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
+import type { Session } from "better-auth/types";
 
-// auth.d.ts
-declare module "#auth-utils" {
-  export interface User {
-    id: string;
-    name: string;
-    globalName: string | null;
-    username: string;
-    avatar: string | null;
-  }
-
-  export interface UserSession {
-    loggedInAt: number;
-  }
-
-  export interface SecureSessionData {
-    tokens: RESTPostOAuth2AccessTokenResult;
+declare module "better-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name: string | null;
+      email: string | null;
+      image: string | null;
+      emailVerified: boolean;
+    };
   }
 }
 
@@ -24,8 +17,8 @@ export {};
 declare module "h3" {
   interface H3EventContext {
     $authorization: {
-      resolveServerUser(): Promise<import("#auth-utils").User | null>;
-      resolveServerTokens(): Promise<RESTPostOAuth2AccessTokenResult | null>;
+      resolveServerUser(): Promise<Session["user"] | null>;
+      resolveServerTokens(): Promise<any | null>;
     };
   }
 }

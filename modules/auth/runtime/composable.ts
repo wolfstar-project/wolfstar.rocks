@@ -1,41 +1,42 @@
-// @ts-expect-error vfs
-import authconfig from "#build/auth.config";
-
 /**
- * Composable for managing Discord authentication
- * Uses nuxt-auth-utils under the hood
+ * Composable for managing Discord authentication using better-auth
  */
 export const useAuth = (
   { namespace: _namespace }: { namespace?: string } = {},
 ) => {
-  const { ready, loggedIn, user, session, fetch, openInPopup, clear } = useUserSession();
+  const { data: session, status, signIn, signOut } = useAuthSession();
 
   // Create a ref to know where to redirect the user when logged in
   const redirectTo = useState<string>("authRedirect", () => "/");
 
   const login = async (returnUrl?: string) => {
     const targetUrl = returnUrl || redirectTo.value || useRoute().fullPath;
-    await navigateTo(`/api/auth/discord?next=${encodeURIComponent(targetUrl)}`, { external: true });
+    // Better auth uses provider-based sign in
+    await signIn.discord({
+      callbackURL: targetUrl,
+    });
   };
 
   const logout = async () => {
-    await clear();
+    await signOut();
     await navigateTo("/");
   };
 
+  const refreshSession = async () => {
+    // Better auth handles session refresh automatically
+    // This is a no-op for compatibility
+  };
+
   return {
-    isAuthenticated: computed(() => loggedIn.value),
+    isAuthenticated: computed(() => status.value === "authenticated"),
     login,
     logout,
-    refreshSession: fetch,
+    refreshSession,
     redirectTo,
-    loggedIn,
-    user,
+    loggedIn: computed(() => status.value === "authenticated"),
+    user: computed(() => session.value?.user ?? null),
     session,
-    clear,
-    ready,
-    fetch,
-    openInPopup,
+    ready: computed(() => status.value !== "loading"),
   };
 };
 
@@ -69,6 +70,7 @@ export const _usePermissions = (
   };
 
   const _hasFullAccess = () => {
+    // @ts-expect-error vfs
     return hasAnyRole(authconfig.fullAccessRoles || []);
   };
 

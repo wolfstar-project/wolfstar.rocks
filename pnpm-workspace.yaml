@@ -114,7 +114,8 @@ catalogs:
     "@vueuse/router": ^14.1.0
     defu: ^6.1.4
     fuse.js: ^7.1.0
-    nuxt-auth-utils: ^0.5.26
+    better-auth: ^1.4.10
+    nuxt-better-auth: ^0.5.1
     rou3: ^0.5.1
 allowedDeprecatedVersions:
   glob: 7.2.3

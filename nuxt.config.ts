@@ -25,7 +25,7 @@ export default defineNuxtConfig({
     "@vueuse/motion/nuxt",
     "@sentry/nuxt/module",
     "@vue-macros/nuxt",
-    "nuxt-auth-utils",
+    "nuxt-better-auth",
     "nuxt-authorization",
     "nuxt-vitalizer",
     "stale-dep/nuxt",
@@ -317,6 +317,10 @@ export default defineNuxtConfig({
 
   auth: {
     loadStrategy: "none",
+  },
+
+  betterAuth: {
+    // Better auth will use /api/auth/* routes
   },
 
   eslint: {

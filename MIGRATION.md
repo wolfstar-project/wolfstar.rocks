@@ -6,7 +6,7 @@ This document explains the migration from `nuxt-auth-utils` to `better-auth` for
 
 ### Dependencies
 - **Removed**: `nuxt-auth-utils`
-- **Added**: `better-auth` and `nuxt-better-auth`
+- **Added**: `better-auth` and `@onmax/nuxt-better-auth`
 
 ### Database Schema
 New tables for better-auth:

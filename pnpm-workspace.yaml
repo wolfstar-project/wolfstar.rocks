@@ -115,7 +115,7 @@ catalogs:
     defu: ^6.1.4
     fuse.js: ^7.1.0
     better-auth: ^1.4.10
-    nuxt-better-auth: ^0.5.1
+    "@onmax/nuxt-better-auth": ^0.0.2-alpha.13
     rou3: ^0.5.1
 allowedDeprecatedVersions:
   glob: 7.2.3

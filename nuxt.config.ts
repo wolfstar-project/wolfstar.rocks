@@ -25,7 +25,7 @@ export default defineNuxtConfig({
     "@vueuse/motion/nuxt",
     "@sentry/nuxt/module",
     "@vue-macros/nuxt",
-    "nuxt-better-auth",
+    "@onmax/nuxt-better-auth",
     "nuxt-authorization",
     "nuxt-vitalizer",
     "stale-dep/nuxt",

@@ -75,7 +75,7 @@
     "import-in-the-middle": "catalog:prod",
     "nuxt": "catalog:prod",
     "better-auth": "catalog:utils",
-    "nuxt-better-auth": "catalog:utils",
+    "@onmax/nuxt-better-auth": "catalog:utils",
     "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",

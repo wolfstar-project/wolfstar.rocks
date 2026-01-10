@@ -1,7 +1,7 @@
+/* eslint-disable node/prefer-global/buffer */
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
-import { Buffer } from "node:buffer";
 
 defineRouteMeta({
   openAPI: {

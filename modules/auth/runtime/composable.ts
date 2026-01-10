@@ -39,7 +39,7 @@ export const useAuth = (
   };
 };
 
-export const usePermissions = (
+export const _usePermissions = (
   { namespace = "default" }: { namespace?: string } = {},
 ) => {
   const prefix = namespace !== "default" ? `${namespace}:` : "";

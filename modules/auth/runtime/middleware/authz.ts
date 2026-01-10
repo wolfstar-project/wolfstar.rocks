@@ -15,11 +15,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const redirectIfLoggedIn = auth?.redirectIfLoggedIn ?? false;
   const redirectIfNotAllowed = auth?.redirectIfNotAllowed ?? false;
 
-  const routeRoles = auth?.roles;
-  const routePermissions = auth?.permissions;
-
-  const { hasAnyRole, hasAnyPermission } = usePermissions({ namespace: authNamespace });
-  const { user, loggedIn } = useAuth({ namespace: authNamespace });
+  const { loggedIn } = useAuth({ namespace: authNamespace });
 
   // Create a ref to know where to redirect the user when logged in
   const redirectTo = useState<string>("authRedirect", () => "/");
@@ -44,22 +40,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         redirectCode: 302,
       },
     );
-  }
-
-  if (from.fullPath !== to.fullPath && from.path !== loginRoute) {
-    return navigateTo(from);
-  }
-
-  if (routeRoles && hasAnyRole(routeRoles)) {
-    return;
-  }
-
-  if (routePermissions && await hasAnyPermission(routePermissions)) {
-    return;
-  }
-
-  if (!routeRoles && !routePermissions && user.value) {
-    return;
   }
 
   if (from.fullPath !== to.fullPath && from.path !== loginRoute) {

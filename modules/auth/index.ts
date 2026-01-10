@@ -76,12 +76,12 @@ export default defineNuxtModule<ModuleOptions>({
       return rules;
     };
 
-    await addImports([
+    addImports([
       { name: "useAuth", from: resolve("./runtime/composable") },
-      { name: "usePermissions", from: resolve("./runtime/composable") },
+      /* { name: "usePermissions", from: resolve("./runtime/composable") }, */
     ]);
 
-    await addTemplate({
+    addTemplate({
       filename: "auth.config.mjs",
       getContents: () => `export default ${JSON.stringify(options, null, 2)}`,
     });

@@ -135,13 +135,17 @@ multi-purpose Discord bot for moderation and community management.
 
 ### Discord OAuth2 Configuration
 
+> **Note**: The authentication system has been migrated from `nuxt-auth-utils` to `better-auth`. 
+> See [MIGRATION.md](./MIGRATION.md) for details if upgrading from an older version.
+
 1. Go to the
    [Discord Developer Portal](https://discord.com/developers/applications/).
 2. Select your bot application.
 3. Navigate to the **OAuth2** tab.
 4. Add redirect URLs:
-   - `http://localhost:3000/oauth/callback`
-   - `http://localhost:3000/oauth/guild`
+   - `http://localhost:3000/api/auth/callback/discord` (for local development)
+   - `http://localhost:3000/oauth/guild` (for guild bot invite)
+   - For production: `https://wolfstar.rocks/api/auth/callback/discord`
 5. Save your changes.
 
 ### Available Scripts

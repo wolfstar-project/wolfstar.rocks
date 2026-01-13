@@ -28,23 +28,13 @@
       </div>
       <div v-else>
         <UButton
-          label="Login"
+          :label
           size="md"
           color="primary"
           variant="subtle"
           to="/login"
           block
-          class="hidden lg:inline-flex"
-          icon="ic:round-discord"
-          aria-label="Login with Discord"
-        />
-        <UButton
-          size="md"
-          color="primary"
-          variant="subtle"
-          to="/login"
-          block
-          class="lg:hidden"
+          class="inline-flex"
           icon="ic:round-discord"
           aria-label="Login with Discord"
         />
@@ -52,23 +42,13 @@
     </template>
     <template #placeholder>
       <UButton
-        label="Login"
+        :label
         size="md"
         color="primary"
         variant="subtle"
         disabled
         block
-        class="hidden lg:inline-flex"
-        icon="ic:round-discord"
-        aria-label="Login with Discord (Loading)"
-      />
-      <UButton
-        size="md"
-        color="primary"
-        variant="subtle"
-        disabled
-        block
-        class="lg:hidden"
+        class="inline-flex"
         icon="ic:round-discord"
         aria-label="Login with Discord (Loading)"
       />
@@ -97,6 +77,8 @@ const items = ref<DropdownMenuItem[]>([
     onSelect: async () => logout(),
   },
 ]);
+
+const label = computed(() => (isSmallScreen.value ? undefined : "Login"));
 
 const src = computed(() => avatarURL(user.value!));
 </script>

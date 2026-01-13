@@ -38,7 +38,7 @@
     "prisma:generate": "prisma generate",
     "prisma:generate:watch": "prisma generate --watch",
     "generate-pwa-assets": "pwa-assets-generator",
-    "start": ".output/server/index.mjs",
+    "start": "node .output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck",
     "release": "bumpp && node scripts/release.ts"
   },

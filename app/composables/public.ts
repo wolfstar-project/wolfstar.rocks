@@ -1,6 +1,6 @@
-import { useNitroOrigin } from "#imports";
+import { getNitroOrigin } from "#imports";
 
-export const getConfiguredOrigin = () => useNitroOrigin();
+export const getConfiguredOrigin = () => getNitroOrigin();
 
 export const getClientId = () => useRuntimeConfig().public.clientId;
 

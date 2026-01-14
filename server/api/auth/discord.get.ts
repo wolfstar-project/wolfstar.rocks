@@ -43,9 +43,13 @@ export default defineEventHandler(async (event) => {
       authorizationParams: nextUrl
         ? {
             state: Buffer.from(nextUrl).toString("base64"),
+            prompt: "none",
           }
-        : {},
+        : {
+            prompt: "none",
+          },
     },
+
     async onSuccess(
       event: H3Event,
       {

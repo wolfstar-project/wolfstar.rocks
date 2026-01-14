@@ -315,10 +315,6 @@ export default defineNuxtConfig({
     },
   },
 
-  auth: {
-    loadStrategy: "none",
-  },
-
   eslint: {
     config: {
       standalone: false,

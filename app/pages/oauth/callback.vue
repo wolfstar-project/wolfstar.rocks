@@ -59,8 +59,8 @@
 import { promiseTimeout } from "@vueuse/core";
 
 const code = useRouteQuery("code", null, { transform: String });
-const { user, refreshSession } = useAuth();
-const { start, finish } = useLoadingIndicator();
+const state = useRouteQuery("state", undefined, { transform: String });
+const { user } = useAuth();
 
 const route = useRoute();
 
@@ -80,24 +80,15 @@ if (import.meta.client && code) {
 }
 
 async function performCall() {
-  start();
   await execute();
-
-  await refreshSession();
 
   await promiseTimeout(seconds(2));
 
-  finish({
-    error: !user.value,
-  });
-
   // Decode redirect URL from state parameter (if present)
   let redirectUrl = "/";
-  const state = route.query.state as string | undefined;
-  if (state) {
-    console.log("Decoding state:", state);
+  if (state.value) {
     try {
-      redirectUrl = atob(state);
+      redirectUrl = atob(state.value);
     }
     catch {
       // If decoding fails, use default

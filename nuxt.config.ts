@@ -464,7 +464,6 @@ export default defineNuxtConfig({
       colorScheme: "dark light",
       applicationName: "WolfStar",
       ogSiteName: "WolfStar",
-      ogImage: "https://wolfstar.rocks/icons/opengraph.png",
       ogLocale: "en",
       ogType: "website",
       ogUrl: "https://wolfstar.rocks",
@@ -474,7 +473,6 @@ export default defineNuxtConfig({
       twitterCard: "summary_large_image",
       twitterSite: "@WolfStarBot",
       twitterCreator: "@RedStar071",
-      twitterImage: "https://wolfstar.rocks/opengraph.png",
       twitterDescription:
         "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
       twitterTitle: "WolfStar",

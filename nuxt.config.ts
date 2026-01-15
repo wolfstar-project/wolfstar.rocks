@@ -137,6 +137,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
+    "/__og-image__/**": { prerender: true },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {
       security: {
@@ -172,7 +173,6 @@ export default defineNuxtConfig({
   experimental: {
     clientNodeCompat: true,
     payloadExtraction: false,
-    viteEnvironmentApi: true,
     renderJsonPayloads: true,
     typescriptPlugin: true,
   },
@@ -360,6 +360,9 @@ export default defineNuxtConfig({
 
   ogImage: {
     zeroRuntime: true,
+    defaults: {
+      component: "Default",
+    },
   },
   // PWA configuration
   pwa,

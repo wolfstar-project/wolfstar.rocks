@@ -4,17 +4,17 @@ import { isCI, isDevelopment } from "std-env";
 export const pwa: ModuleOptions = {
   mode: isCI ? "production" : "development",
   disable: isDevelopment && process.env.VITE_DEV_PWA !== "true",
-  includeManifestIcons: true,
-  strategies: "injectManifest",
   scope: "/",
   srcDir: "../service-worker",
   filename: "sw.ts",
+  injectRegister: "auto",
+  strategies: "injectManifest",
+  pwaAssets: {
+    config: true,
+    overrideManifestIcons: true,
+  },
   injectManifest: {
     globPatterns: ["**/*.{js,json,css,html,txt,svg,png,ico,webp,woff,woff2,ttf,eot,otf,wasm}"],
-  },
-  devOptions: {
-    enabled: process.env.VITE_DEV_PWA === "true",
-    type: "module",
   },
   manifest: {
     background_color: "#050505",
@@ -82,5 +82,13 @@ export const pwa: ModuleOptions = {
         ],
       },
     ],
+  },
+  devOptions: {
+    enabled: process.env.VITE_DEV_PWA === "true",
+    type: "module",
+  },
+  client: {
+    installPrompt: true,
+    periodicSyncForUpdates: 3600,
   },
 };

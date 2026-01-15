@@ -34,7 +34,7 @@
           </div>
           <div>
             <p class="text-sm text-base-content/80">
-              Copyright © {{ new Date().getFullYear() }}. All rights reserved.
+              Copyright © {{ currentYear }}. All rights reserved.
             </p>
           </div>
         </div>
@@ -80,4 +80,7 @@
 <script setup lang="ts">
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+
+// Use computed for year to ensure SSR consistency
+const currentYear = computed(() => new Date().getFullYear());
 </script>

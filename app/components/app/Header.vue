@@ -1,7 +1,6 @@
 <!-- eslint-disable vue/no-template-shadow vue/no-unused-refs -->
 <template>
   <UHeader
-    ref="navbar"
     class="app-navbar"
     as="header"
     role="banner"
@@ -32,8 +31,7 @@
 </template>
 
 <script setup lang="ts">
-const navbar = ref<HTMLElement | null>(null);
-const { y } = useScroll(navbar);
+const { y } = useWindowScroll();
 const { desktopLinks } = useHeader();
 </script>
 

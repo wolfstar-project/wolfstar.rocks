@@ -607,7 +607,7 @@ const texts = [
   alert: string;
 }[];
 
-const timestamp = ref(Date.now());
+const timestamp = ref(0);
 const featureIndex = ref(0);
 const loggingIndex = ref(0);
 const moderationTemporary = ref(false);
@@ -615,22 +615,6 @@ const moderationUndo = ref(false);
 const moderationIndex = ref(0);
 
 const moderationActions = Object.values(ModerationActions);
-const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(
-  computed(() => moderationActions[moderationIndex.value]),
-);
-
-const moderationActionRender = computed(() => {
-  const action = moderationAction.value;
-  if (moderationTemporary.value && action.temporary !== null) {
-    return { color: action.temporary, name: `Temporary ${action.name}` };
-  }
-
-  if (moderationUndo.value && action.undo !== null) {
-    return { color: action.undo, name: `Remove ${action.name}` };
-  }
-
-  return { color: action.color, name: action.name };
-});
 
 function advanceFeatureIndex(value: -1 | 1) {
   featureIndex.value
@@ -648,6 +632,28 @@ function advanceModerationIndex(value: -1 | 1) {
     = (moderationIndex.value + value + moderationActions.length)
       % moderationActions.length;
 }
+
+const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(
+  computed(() => moderationActions[moderationIndex.value]),
+);
+
+const moderationActionRender = computed(() => {
+  const action = moderationAction.value;
+  if (moderationTemporary.value && action.temporary !== null) {
+    return { color: action.temporary, name: `Temporary ${action.name}` };
+  }
+
+  if (moderationUndo.value && action.undo !== null) {
+    return { color: action.undo, name: `Remove ${action.name}` };
+  }
+
+  return { color: action.color, name: action.name };
+});
+
+// Set timestamp on client-side only to prevent hydration mismatch
+onMounted(() => {
+  timestamp.value = Date.now();
+});
 </script>
 
 <style scoped>

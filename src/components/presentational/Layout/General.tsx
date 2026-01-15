@@ -8,6 +8,7 @@ import sx from 'mui-sx';
 import { useRouter } from 'next/router';
 import { useEffect, type FC } from 'react';
 import type { ReactNode } from 'react-markdown/lib/ast-to-react';
+import Banner from '@presentational/Banner';
 import NavBar from './Navigation/NavBar';
 import ScrollToTopButton from './ScrollToTopButton';
 
@@ -30,15 +31,14 @@ const GeneralPage: FC<GeneralPageProps> = ({ children, loading = false, containe
 	return (
 		<>
 			<Box component="section" display="flex" flexDirection="column" justifyContent="space-between" height="100vh" {...containerProps}>
+				<Banner />
 				<NavBar loading={loading} />
 
 				<Box
 					component="main"
 					role="contentinfo"
 					sx={sx(
-						{
-							pt: 16
-						},
+						{},
 						{
 							condition: loading,
 							sx: {

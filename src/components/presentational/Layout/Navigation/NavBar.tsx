@@ -12,7 +12,7 @@ export interface NavBarProps {
 const NavBar: FC<NavBarProps> = ({ loading = false }) => {
 	return (
 		<Box component="nav">
-			<AppBar position="fixed" enableColorOnDark>
+			<AppBar position="sticky" enableColorOnDark>
 				<Toolbar>
 					<Hidden mdUp>
 						<MobileNavMenu />

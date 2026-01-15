@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full flex justify-between relative p-[60px]"
+    class="w-full h-full flex justify-between relative p-15"
     :class="[
       colorMode === 'light' ? ['bg-white', 'text-gray-900'] : ['bg-gray-900', 'text-white'],
     ]"
@@ -16,7 +16,7 @@
     <div class="h-full w-full justify-between relative">
       <div class="flex flex-row justify-between items-start">
         <div class="flex flex-col w-full max-w-[65%]">
-          <h1 class="m-0 font-bold mb-[30px] text-[75px]" style="display: block; text-overflow: ellipsis;" :style="{ lineClamp: description ? 2 : 3 }">
+          <h1 class="m-0 font-bold mb-7.5 text-[75px]" style="display: block; text-overflow: ellipsis;" :style="{ lineClamp: description ? 2 : 3 }">
             {{ title }}
           </h1>
           <p

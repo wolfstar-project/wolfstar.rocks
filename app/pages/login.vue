@@ -2,10 +2,13 @@
 const { login } = useAuth();
 const route = useRoute();
 
-defineOgImageComponent("Default", {
+useSeoMetadata({
   title: "Login",
   description: "A landing page for the OAuth2.0 login flow",
-  theme: Colors.Red,
+  shouldSeoImage: true,
+  seoImage: {
+    theme: Colors.Red,
+  },
 });
 
 onMounted(() => {

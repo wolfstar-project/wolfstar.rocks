@@ -21,12 +21,6 @@ export default defineNuxtModule({
     nuxt.options.appConfig.env = env;
     nuxt.options.appConfig.buildInfo = buildInfo;
 
-    if (nuxt.options._prepare) {
-      nuxt.options.pwa ||= {};
-      nuxt.options.pwa.pwaAssets ||= {};
-      nuxt.options.pwa.pwaAssets.disabled = true;
-    }
-
     nuxt.options.nitro.virtual = nuxt.options.nitro.virtual || {};
     nuxt.options.nitro.virtual["#build-info"] = `export const env = ${JSON.stringify(env)}`;
 

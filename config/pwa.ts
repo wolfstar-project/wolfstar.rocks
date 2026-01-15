@@ -9,10 +9,6 @@ export const pwa: ModuleOptions = {
   filename: "sw.ts",
   injectRegister: "auto",
   strategies: "injectManifest",
-  pwaAssets: {
-    config: true,
-    overrideManifestIcons: true,
-  },
   injectManifest: {
     globPatterns: ["**/*.{js,json,css,html,txt,svg,png,ico,webp,woff,woff2,ttf,eot,otf,wasm}"],
   },

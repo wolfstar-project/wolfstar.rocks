@@ -130,6 +130,8 @@ const renderComponent = computed(() => {
       return defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue"));
     case "commands":
       return defineAsyncComponent(() => import("~/components/guild/settings/DisabledCommands.vue"));
+    case "events":
+      return defineAsyncComponent(() => import("~/components/guild/settings/Events.vue"));
     case "roles":
       return defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue"));
     default:

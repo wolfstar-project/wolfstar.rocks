@@ -226,12 +226,14 @@ function resetCategory(category: string) {
 
 // Form error handler
 async function onError(event: FormErrorEvent) {
+  const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+  element?.scrollIntoView({ behavior: "smooth", block: "center" });
   const errorMessage = event.errors[0]?.message;
   toast.add({
     color: "error",
     title: "Error",
-    description: `Failed to update command settings. ${errorMessage ?? "Unknown error"}`,
-    icon: "i-heroicons-x-circle",
+    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
+    icon: "heroicons:circle",
   });
 }
 

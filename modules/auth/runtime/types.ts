@@ -32,10 +32,4 @@ export interface AuthMeta {
    * false = do not redirect
    */
   redirectIfLoggedIn?: string | false;
-
-  /**
-   * Where to redirect if the user does not have the necessary permissions
-   * false = show 403
-   */
-  redirectIfNotAllowed?: string | false;
 }

@@ -13,7 +13,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   const loginRoute = auth?.loginRoute || config.loginRoute;
   const redirectIfLoggedIn = auth?.redirectIfLoggedIn ?? false;
-  const redirectIfNotAllowed = auth?.redirectIfNotAllowed ?? false;
 
   const { loggedIn } = useAuth({ namespace: authNamespace });
 
@@ -45,10 +44,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (from.fullPath !== to.fullPath && from.path !== loginRoute) {
     return navigateTo(from);
   }
-
-  if (!redirectIfNotAllowed) {
-    return abortNavigation({ statusCode: 403 });
-  }
-
-  return navigateTo({ path: redirectIfNotAllowed }, { redirectCode: 302 });
 });

@@ -46,7 +46,6 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     fullAccessRoles: [],
     loginRoute: "/login",
-    redirectIfNotAllowed: false,
   },
   async setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url);
@@ -63,7 +62,6 @@ export default defineNuxtModule<ModuleOptions>({
 
       if (rules.auth) {
         rules.auth.loginRoute ??= options.loginRoute;
-        rules.auth.redirectIfNotAllowed ??= options.redirectIfNotAllowed;
 
         if (options.fullAccessRoles?.length) {
           rules.auth.roles ||= [];

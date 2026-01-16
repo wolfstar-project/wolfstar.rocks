@@ -11,11 +11,11 @@ import type {
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
-import { isNullOrUndefined } from "@sapphire/utilities";
+import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
+import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import {
   GuildDefaultMessageNotifications,
   GuildExplicitContentFilter,
@@ -25,6 +25,27 @@ import {
   Locale,
   PermissionFlagsBits,
 } from "discord-api-types/v10";
+import { readSettings, readSettingsPermissionNodes } from "~~/server/database";
+
+function isAdmin(member: FlattenedMember, roles: readonly string[]): boolean {
+  const memberRolePermissions = BigInt((member as unknown as { permissions: string }).permissions);
+  return roles.length === 0
+    ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
+    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles.map(r => r.id));
+}
+
+async function manageAbility(guild: APIGuild, member: FlattenedMember) {
+  if (!member.user || !member.user.id) {
+    return false;
+  }
+  if (guild.owner_id === member.user.id)
+    return true;
+
+  const settings = await readSettings(guild.id);
+  const nodes = readSettingsPermissionNodes(settings);
+
+  return isAdmin(member, settings.rolesAdmin) && (await nodes.run(member, "conf") ?? true);
+};
 
 async function getManageable(
   id: string,
@@ -45,7 +66,7 @@ async function getManageable(
   if (!member)
     return false;
 
-  return manageAbility.original(guild, flattenedMember);
+  return manageAbility(guild, flattenedMember);
 }
 
 export async function transformGuild(

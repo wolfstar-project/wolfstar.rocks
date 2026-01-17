@@ -15,7 +15,12 @@
 	tab-size: --value(--tab-size-*);
 }
 
-/* Reduce Motion Support */
+/* Reduce Motion Support
+   Note: The rules below are intentionally duplicated.
+   - The `:root[data-reduce-motion='true']` selector is a JS-controlled override (e.g., a user toggle).
+   - The `@media (prefers-reduced-motion: reduce)` block provides the user/system preference fallback.
+   Keep both selectors in sync when changing these values.
+*/
 :root[data-reduce-motion='true'] *,
 :root[data-reduce-motion='true'] *::before,
 :root[data-reduce-motion='true'] *::after {
@@ -25,6 +30,7 @@
 	scroll-behavior: auto !important;
 }
 
+/* Intentional duplication (see above): prefers-reduced-motion fallback */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,

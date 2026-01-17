@@ -211,6 +211,9 @@ export default defineNuxtConfig({
     experimental: {
       openAPI: true,
     },
+    future: {
+      nativeSWR: true,
+    },
   },
 
   vite: {

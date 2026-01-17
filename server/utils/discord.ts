@@ -14,6 +14,7 @@ import type { H3Event } from "h3";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
+import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import {
@@ -80,15 +81,17 @@ export async function transformGuild(
     })
     .catch(() => undefined);
 
-  const mockGuild = {
+  const channels = isNullOrUndefined(data) ? [] : await useApi().guilds.getChannels(data.id).catch(() => []);
+
+  const mockGuild = cast<FlattenedGuild>({
     afkChannelId: null,
     afkTimeout: 60,
     applicationId: null,
-    approximateMemberCount: 0,
-    approximatePresenceCount: null,
+    approximateMemberCount: data.approximate_member_count ?? 0,
+    approximatePresenceCount: data.approximate_presence_count ?? 0,
     available: true,
     banner: null,
-    channels: [],
+    channels,
     defaultMessageNotifications: GuildDefaultMessageNotifications.OnlyMentions,
     description: null,
     widgetEnabled: false,
@@ -100,6 +103,7 @@ export async function transformGuild(
     mfaLevel: GuildMFALevel.None,
     name: data.name,
     ownerId: data.owner ? userId : null,
+    permissions: Number(data.permissions),
     partnered: false,
     preferredLocale: Locale.EnglishUS,
     premiumSubscriptionCount: null,
@@ -110,21 +114,21 @@ export async function transformGuild(
     vanityURLCode: null,
     verificationLevel: GuildVerificationLevel.None,
     verified: false,
-  } as unknown as FlattenedGuild;
+  });
 
   const serialized: PartialOauthFlattenedGuild
-    = guild === undefined
+    = isNullOrUndefined(guild)
       ? mockGuild
       : flattenGuild({
           ...guild,
-          channels: (await useApi().guilds.getChannels(guild.id)) as any,
+          channels,
         });
 
   return {
     ...serialized,
     permissions: Number(data.permissions),
     manageable: await getManageable(userId, data, guild),
-    wolfstarIsIn: guild !== undefined,
+    wolfstarIsIn: !isNullOrUndefined(guild),
   };
 }
 

@@ -1,4 +1,4 @@
-import type { FlattenedMember, FlattenedRole, FlattenedUser } from "#shared/types/discord";
+import type { APIGuildMember, APIRole, APIUser } from "discord-api-types/v10";
 import type { PermissionsNode, ReadonlyGuildData } from "~~/server/database/settings/types";
 import { Collection } from "@discordjs/collection";
 import { CommandMatcher } from "~~/server/database/settings/utils/matchers";
@@ -9,7 +9,7 @@ export const enum PermissionNodeAction {
   Deny,
 }
 
-type PermissionNodeValueResolvable = FlattenedRole | FlattenedMember | FlattenedUser;
+type PermissionNodeValueResolvable = APIRole | APIGuildMember | APIUser;
 
 export class PermissionNodeManager {
   private sorted = new Collection<string, PermissionsManagerNode>();
@@ -21,10 +21,10 @@ export class PermissionNodeManager {
   }
 
   public settingsPropertyFor(target: PermissionNodeValueResolvable) {
-    return (this.isFlattenedRole(target) ? "permissionsRoles" : "permissionsUsers") satisfies keyof ReadonlyGuildData;
+    return (this.isAPIRole(target) ? "permissionsRoles" : "permissionsUsers") satisfies keyof ReadonlyGuildData;
   }
 
-  public async run(member: FlattenedMember, command: string) {
+  public async run(member: APIGuildMember, command: FlattenedCommand) {
     return (await this.runUser(member, command)) ?? (await this.runRole(member, command));
   }
 
@@ -35,10 +35,10 @@ export class PermissionNodeManager {
   public add(target: PermissionNodeValueResolvable, command: string, action: PermissionNodeAction): readonly PermissionsNode[] {
     const nodes = this.#getPermissionNodes(target);
 
-    const nodeIndex = nodes.findIndex((n) => n.id === target.id);
+    const nodeIndex = nodes.findIndex((n) => n.id === (typeof target === "object" && "id" in target ? target.id : target.user.id));
     if (nodeIndex === -1) {
       const node: PermissionsNode = {
-        id: target.id,
+        id: typeof target === "object" && "id" in target ? target.id : target.user.id,
         allow: action === PermissionNodeAction.Allow ? [command] : [],
         deny: action === PermissionNodeAction.Deny ? [command] : [],
       };
@@ -55,7 +55,7 @@ export class PermissionNodeManager {
     }
 
     const node: PermissionsNode = {
-      id: target.id,
+      id: typeof target === "object" && "id" in target ? target.id : target.user.id,
       allow: action === PermissionNodeAction.Allow ? previous.allow.concat(command) : previous.allow,
       deny: action === PermissionNodeAction.Deny ? previous.deny.concat(command) : previous.deny,
     };
@@ -66,7 +66,7 @@ export class PermissionNodeManager {
   public remove(target: PermissionNodeValueResolvable, command: string, action: PermissionNodeAction): readonly PermissionsNode[] {
     const nodes = this.#getPermissionNodes(target);
 
-    const nodeIndex = nodes.findIndex((n) => n.id === target.id);
+    const nodeIndex = nodes.findIndex((n) => n.id === (typeof target === "object" && "id" in target ? target.id : target.user.id));
     if (nodeIndex === -1) {
       throw new Error("This node does not exist.");
     }
@@ -79,7 +79,7 @@ export class PermissionNodeManager {
     }
 
     const node: PermissionsNode = {
-      id: target.id,
+      id: (typeof target === "object" && "id" in target ? target.id : target.user.id),
       allow: action === PermissionNodeAction.Allow ? previous.allow.toSpliced(commandIndex, 1) : previous.allow,
       deny: action === PermissionNodeAction.Deny ? previous.deny.toSpliced(commandIndex, 1) : previous.deny,
     };
@@ -92,7 +92,7 @@ export class PermissionNodeManager {
   public reset(target: PermissionNodeValueResolvable): readonly PermissionsNode[] {
     const nodes = this.#getPermissionNodes(target);
 
-    const nodeIndex = nodes.findIndex((n) => n.id === target.id);
+    const nodeIndex = nodes.findIndex((n) => n.id === (typeof target === "object" && "id" in target ? target.id : target.user.id));
     if (nodeIndex === -1) {
       throw new Error("This node does not exist.");
     }
@@ -138,10 +138,10 @@ export class PermissionNodeManager {
     return copy ?? nodes;
   }
 
-  private async runUser(member: FlattenedMember, command: string) {
+  private async runUser(member: APIGuildMember, command: FlattenedCommand) {
     // Assume sorted data
     const permissionNodeRoles = this.#cachedRawPermissionUsers;
-    const memberId = member.id;
+    const memberId = member.user.id;
     for (const node of permissionNodeRoles) {
       if (node.id !== memberId)
         continue;
@@ -154,12 +154,12 @@ export class PermissionNodeManager {
     return null;
   }
 
-  private async runRole(member: FlattenedMember, command: string) {
+  private async runRole(member: APIGuildMember, command: FlattenedCommand) {
     const roles = member.roles;
 
     // Assume sorted data
     for (const [id, node] of this.sorted.entries()) {
-      if (!roles.some((role) => role.id === id))
+      if (!roles.includes(id))
         continue;
       if (await CommandMatcher.matchAny(node.allow, command))
         return true;
@@ -188,7 +188,7 @@ export class PermissionNodeManager {
     };
   }
 
-  private isFlattenedRole(target: PermissionNodeValueResolvable): target is FlattenedRole {
+  private isAPIRole(target: PermissionNodeValueResolvable): target is APIRole {
     return "permissions" in target && "hoist" in target && !("user" in target);
   }
 
@@ -239,7 +239,7 @@ export class PermissionNodeManager {
   }
 
   #getPermissionNodes(target: PermissionNodeValueResolvable): readonly PermissionsNode[] {
-    return this.isFlattenedRole(target) ? this.#cachedRawPermissionRoles : this.#cachedRawPermissionUsers;
+    return this.isAPIRole(target) ? this.#cachedRawPermissionRoles : this.#cachedRawPermissionUsers;
   }
 }
 

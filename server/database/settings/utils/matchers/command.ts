@@ -1,4 +1,3 @@
-import type { WolfCommand } from "~~/shared/types/discord";
 import { fetchCommands } from "~~/server/utils/discord";
 
 function getNameSpaceDetails(name: string): readonly [string | null, string] {
@@ -8,19 +7,19 @@ function getNameSpaceDetails(name: string): readonly [string | null, string] {
   return [name.substring(0, index), name.substring(index + 1)];
 }
 
-function matchName(name: string, command: WolfCommand): boolean {
+function matchName(name: string, command: FlattenedCommand): boolean {
   return command.name === name || command.aliases.includes(name);
 }
 
-function matchNameAndCategory(name: string, category: string, command: WolfCommand): boolean {
+function matchNameAndCategory(name: string, category: string, command: FlattenedCommand): boolean {
   return command.category === category && matchName(name, command);
 }
 
-function matchNameCategoryAndSubCategory(name: string, category: string, subCategory: string, command: WolfCommand): boolean {
+function matchNameCategoryAndSubCategory(name: string, category: string, subCategory: string, command: FlattenedCommand): boolean {
   return command.subCategory === subCategory && matchNameAndCategory(name, category, command);
 }
 
-export async function matchAny(names: Iterable<string>, command: WolfCommand): Promise<boolean> {
+export async function matchAny(names: Iterable<string>, command: FlattenedCommand): Promise<boolean> {
   for (const name of names) {
     if (await match(name, command))
       return true;
@@ -28,7 +27,7 @@ export async function matchAny(names: Iterable<string>, command: WolfCommand): P
   return false;
 }
 
-export async function match(name: string, command: WolfCommand): Promise<boolean> {
+export async function match(name: string, command: FlattenedCommand): Promise<boolean> {
   // Match All:
   if (name === "*")
     return true;
@@ -74,6 +73,29 @@ async function resolveCategory(category: string): Promise<string | null> {
   return null;
 }
 
+async function resolveSubCategory(category: string, subCategory: string): Promise<string | null> {
+  const commands = await fetchCommands();
+  const scanned = new Set<string>();
+  const lowerCaseSubCategory = subCategory.toLowerCase();
+
+  for (const command of commands) {
+    if (command.category !== category)
+      continue;
+
+    const { subCategory } = command;
+    if (!subCategory)
+      continue;
+
+    if (scanned.has(subCategory))
+      continue;
+    if (subCategory.toLowerCase() === lowerCaseSubCategory)
+      return subCategory;
+    scanned.add(subCategory);
+  }
+
+  return null;
+}
+
 async function resolveCommandWithCategory(name: string, category: string): Promise<string | null> {
   const commands = await fetchCommands();
   const lowerName = name.toLowerCase();
@@ -87,12 +109,12 @@ async function resolveCommandWithCategory(name: string, category: string): Promi
   return null;
 }
 
-async function resolveCommandWithCategoryAndSubCategory(name: string, category: string): Promise<string | null> {
+async function resolveCommandWithCategoryAndSubCategory(name: string, category: string, subCategory: string): Promise<string | null> {
   const commands = await fetchCommands();
   const lowerName = name.toLowerCase();
 
   for (const command of commands) {
-    if (command.name.toLowerCase() === lowerName && command.category === category) {
+    if (command.name.toLowerCase() === lowerName && command.category === category && command.subCategory === subCategory) {
       return command.name;
     }
   }
@@ -107,8 +129,8 @@ export async function resolve(name: string): Promise<string | null> {
 
   const parts = name.split(".");
 
-  // If it's an empty string, or has more than two parts, it is invalid:
-  if (parts.length === 0 || parts.length > 2)
+  // If it's an empty string, or has more than three parts, it is invalid:
+  if (parts.length === 0 || parts.length > 3)
     return null;
 
   const commands = await fetchCommands();
@@ -127,7 +149,11 @@ export async function resolve(name: string): Promise<string | null> {
   if (parts.length === 2)
     return parts[1] === "*" ? `${category}.*` : resolveCommandWithCategory(parts[1].toLowerCase(), category);
 
+  // Handle `${category}.${category}.${string}`:
+  const subCategory = await resolveSubCategory(category, parts[1]);
+  if (subCategory === null)
+    return null;
   return parts[2] === "*"
-    ? `${category}.*`
-    : resolveCommandWithCategoryAndSubCategory(parts[2].toLowerCase(), category);
+    ? `${category}.${subCategory}.*`
+    : resolveCommandWithCategoryAndSubCategory(parts[2].toLowerCase(), category, subCategory);
 }

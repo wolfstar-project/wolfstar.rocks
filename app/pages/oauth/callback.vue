@@ -111,7 +111,6 @@ const isPending = computed(() => status.value === "pending");
 const isError = computed(() => status.value === "error");
 const isSuccess = computed(() => status.value === "success");
 
-useRobotsRule(robotBlockingPageProps);
 useSeoMetadata({
   title: "OAuth Callback",
   description:

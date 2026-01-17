@@ -136,10 +136,12 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    "/": { prerender: true },
+    "/wolfstar": { appLayout: "default", robots: true, auth: { required: false }, prerender: true },
+    "/starly": { appLayout: "default", robots: true, auth: { required: false }, prerender: true },
     "/__og-image__/**": { prerender: true },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {
+      robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
       security: {
         headers: {
           contentSecurityPolicy: false,
@@ -149,17 +151,11 @@ export default defineNuxtConfig({
         },
       },
     },
-    "/manifest.webmanifest": {
-      headers: {
-        "Content-Type": "application/manifest+json",
-        "Cache-Control": "public, max-age=0, must-revalidate",
-      },
-    },
-    "/assets/*": {
-      headers: {
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    },
+    "/oauth/callback": { robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1" },
+    "/auth/login": { robots: true },
+    "/terms": { appLayout: "default", robots: true, auth: { required: false } },
+    "/privacy": { appLayout: "default", robots: true, auth: { required: false } },
+    "/profile": { appLayout: "default", robots: true, auth: { required: true } },
   },
 
   sourcemap: {
@@ -209,35 +205,6 @@ export default defineNuxtConfig({
           route: "/api/docs",
           layout: "alternate",
           theme: "mars",
-          hideClientButton: false,
-          showSidebar: true,
-          showDeveloperTools: "localhost",
-          showToolbar: "localhost",
-          operationTitleSource: "summary",
-          persistAuth: false,
-          telemetry: true,
-          isEditable: false,
-          isLoading: false,
-          hideModels: false,
-          documentDownloadType: "none",
-          hideTestRequestButton: false,
-          hideSearch: false,
-          showOperationId: false,
-          hideDarkModeToggle: false,
-          withDefaultFonts: true,
-          defaultOpenAllTags: false,
-          expandAllModelSections: false,
-          expandAllResponses: false,
-          orderSchemaPropertiesBy: "alpha",
-          orderRequiredPropertiesFirst: true,
-          searchHotKey: "k",
-          _integration: "html",
-          hideDownloadButton: true,
-          darkMode: true,
-          default: false,
-          slug: "api-1",
-          title: "API #1",
-
         },
       },
     },

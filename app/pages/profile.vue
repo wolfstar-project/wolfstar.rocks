@@ -498,7 +498,7 @@ import type { TabsItem } from "@nuxt/ui";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import { isDevelopment } from "std-env";
 
-definePageMeta({ alias: ["/account"], auth: { required: true } });
+definePageMeta({ alias: ["/account"] });
 
 useSeoMetadata({
   title: "Profile",

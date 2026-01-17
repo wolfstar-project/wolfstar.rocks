@@ -30,27 +30,21 @@
 <script setup lang="ts">
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import { promiseTimeout } from "@vueuse/core";
-import { useRouteParams } from "@vueuse/router";
 
 const guildId = useRouteParams("id", null, { transform: String });
 const error = ref<string | null>(null);
 
-const { start, finish } = useLoadingIndicator({
-  duration: 2000,
-});
-
 if (import.meta.client && guildId.value && !error.value) {
-  navigateToGuild();
+  navigateToGuild().catch(logger.error);
 }
 
 async function navigateToGuild() {
-  start();
+  if (isNullOrUndefined(guildId.value)) {
+    throw createError({ statusCode: 400, statusMessage: "Guild ID is required." });
+  }
 
   await promiseTimeout(1500);
 
-  finish({
-    error: isNullOrUndefined(guildId.value),
-  });
   await navigateTo(`/guilds/${guildId.value}/manage`);
 }
 

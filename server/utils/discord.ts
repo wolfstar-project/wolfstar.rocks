@@ -45,8 +45,10 @@ async function manageAbility(guild: APIGuild, member: APIGuildMember) {
 
   const settings = await readSettings(guild.id);
   const nodes = readSettingsPermissionNodes(settings);
+  const commands = await fetchCommands();
+  const conf = commands.find(cmd => cmd.name === "conf");
 
-  return isAdmin(member, settings.rolesAdmin) && (await nodes.run(member, "conf") ?? true);
+  return isAdmin(member, settings.rolesAdmin) && (conf ? await nodes.run(member, conf) ?? true : true);
 };
 
 async function getManageable(

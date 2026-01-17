@@ -8,6 +8,7 @@ import type {
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
   APIGuild,
+  APIGuildMember,
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
@@ -28,14 +29,14 @@ import {
 } from "discord-api-types/v10";
 import { readSettings, readSettingsPermissionNodes } from "~~/server/database";
 
-function isAdmin(member: FlattenedMember, roles: readonly string[]): boolean {
-  const memberRolePermissions = BigInt((member as unknown as { permissions: string }).permissions);
+function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
+  const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);
   return roles.length === 0
     ? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles.map(r => r.id));
+    : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles.map(r => r));
 }
 
-async function manageAbility(guild: APIGuild, member: FlattenedMember) {
+async function manageAbility(guild: APIGuild, member: APIGuildMember) {
   if (!member.user || !member.user.id) {
     return false;
   }
@@ -62,12 +63,11 @@ async function getManageable(
     );
   }
 
-  const member = await getMember(guild.id, id);
-  const flattenedMember = flattenMember(member, guild);
+  const member = await useApi().guilds.getMember(guild.id, id).catch(() => undefined);
   if (!member)
     return false;
 
-  return manageAbility(guild, flattenedMember);
+  return manageAbility(guild, member);
 }
 
 export async function transformGuild(

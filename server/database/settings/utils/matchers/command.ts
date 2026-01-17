@@ -1,6 +1,6 @@
-/**
- * Parses namespace details from a command string (e.g., "category.subcategory.command")
- */
+import type { WolfCommand } from "~~/shared/types/discord";
+import { fetchCommands } from "~~/server/utils/discord";
+
 function getNameSpaceDetails(name: string): readonly [string | null, string] {
   const index = name.indexOf(".");
   if (index === -1)
@@ -8,63 +8,53 @@ function getNameSpaceDetails(name: string): readonly [string | null, string] {
   return [name.substring(0, index), name.substring(index + 1)];
 }
 
-/**
- * Checks if a command name matches
- */
-function matchName(pattern: string, commandName: string): boolean {
-  return commandName === pattern;
+function matchName(name: string, command: WolfCommand): boolean {
+  return command.name === name || command.aliases.includes(name);
 }
 
-/**
- * Checks if a command matches name and category
- */
-function matchNameAndCategory(commandName: string, category: string, commandFullName: string): boolean {
-  return commandFullName === `${category}.${commandName}`;
+function matchNameAndCategory(name: string, category: string, command: WolfCommand): boolean {
+  return command.category === category && matchName(name, command);
 }
 
-/**
- * Matches any command from an iterable list of names
- */
-export async function matchAny(names: Iterable<string>, commandName: string): Promise<boolean> {
+function matchNameCategoryAndSubCategory(name: string, category: string, subCategory: string, command: WolfCommand): boolean {
+  return command.subCategory === subCategory && matchNameAndCategory(name, category, command);
+}
+
+export async function matchAny(names: Iterable<string>, command: WolfCommand): Promise<boolean> {
   for (const name of names) {
-    if (await match(name, commandName))
+    if (await match(name, command))
       return true;
   }
   return false;
 }
 
-/**
- * Matches a command based on name pattern (supports wildcards and namespaces)
- * Patterns:
- * - "*" - matches all commands
- * - "commandName" - matches specific command
- * - "category.*" - matches all commands in category
- * - "category.commandName" - matches specific command in category
- */
-export async function match(pattern: string, commandName: string): Promise<boolean> {
+export async function match(name: string, command: WolfCommand): Promise<boolean> {
   // Match All:
-  if (pattern === "*")
+  if (name === "*")
     return true;
 
   // Match Category:
-  const [category, categoryRest] = getNameSpaceDetails(pattern);
+  const [category, categoryRest] = getNameSpaceDetails(name);
   if (category === null)
-    return matchName(pattern, commandName);
-
-  // Check if command starts with category
-  const [commandCategory] = getNameSpaceDetails(commandName);
-  if (category !== commandCategory)
+    return matchName(name, command);
+  if (category !== command.category)
     return false;
   if (categoryRest === "*")
     return true;
 
+  // Match Sub-Category:
+  const [subCategory, subCategoryRest] = getNameSpaceDetails(categoryRest);
+  if (subCategory === null)
+    return matchNameAndCategory(name, category, command);
+  if (subCategory !== command.subCategory)
+    return false;
+  if (subCategoryRest === "*")
+    return true;
+
   // Match Command:
-  return matchNameAndCategory(categoryRest, category, commandName);
+  return matchNameCategoryAndSubCategory(subCategoryRest, category, subCategory, command);
 }
 
-/**
- * Resolves a category name from the command list
- */
 async function resolveCategory(category: string): Promise<string | null> {
   const commands = await fetchCommands();
   const scanned = new Set<string>();
@@ -84,9 +74,6 @@ async function resolveCategory(category: string): Promise<string | null> {
   return null;
 }
 
-/**
- * Resolves a command with a specific category
- */
 async function resolveCommandWithCategory(name: string, category: string): Promise<string | null> {
   const commands = await fetchCommands();
   const lowerName = name.toLowerCase();
@@ -100,14 +87,19 @@ async function resolveCommandWithCategory(name: string, category: string): Promi
   return null;
 }
 
-/**
- * Resolves a command name pattern to its canonical form
- * Supports:
- * - "*" - returns "*"
- * - "commandName" - returns actual command name if found
- * - "category.*" - returns "Category.*" if category exists
- * - "category.commandName" - returns "Category.CommandName" if found
- */
+async function resolveCommandWithCategoryAndSubCategory(name: string, category: string): Promise<string | null> {
+  const commands = await fetchCommands();
+  const lowerName = name.toLowerCase();
+
+  for (const command of commands) {
+    if (command.name.toLowerCase() === lowerName && command.category === category) {
+      return command.name;
+    }
+  }
+
+  return null;
+}
+
 export async function resolve(name: string): Promise<string | null> {
   // Match All:
   if (name === "*")
@@ -132,8 +124,10 @@ export async function resolve(name: string): Promise<string | null> {
   const category = await resolveCategory(parts[0]);
   if (category === null)
     return null;
-  if (parts[1] === "*")
-    return `${category}.*`;
+  if (parts.length === 2)
+    return parts[1] === "*" ? `${category}.*` : resolveCommandWithCategory(parts[1].toLowerCase(), category);
 
-  return resolveCommandWithCategory(parts[1].toLowerCase(), category);
+  return parts[2] === "*"
+    ? `${category}.*`
+    : resolveCommandWithCategoryAndSubCategory(parts[2].toLowerCase(), category);
 }

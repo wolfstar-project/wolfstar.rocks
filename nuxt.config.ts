@@ -137,7 +137,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/wolfstar": { appLayout: "default", robots: true, auth: { required: false }, prerender: true },
-    "/starly": { appLayout: "default", robots: true, auth: { required: false }, prerender: true },
+    "/starly": { appLayout: "default", robots: true, auth: { required: false } },
     "/__og-image__/**": { prerender: true },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {

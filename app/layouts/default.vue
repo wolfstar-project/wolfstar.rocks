@@ -6,11 +6,9 @@
       <slot></slot>
     </UMain>
 
-    <aside class="fixed left-0 top-1/2 z-50 -translate-y-1/2">
-      <div class="flex-auto"></div>
+    <div class="fixed left-4 bottom-4 z-50 flex flex-col space-y-2">
       <PwaPrompt />
-      <PwaInstallPrompt />
-    </aside>
+    </div>
 
     <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
       <ScrollToTopButton />

@@ -19,7 +19,7 @@ export default withNuxt(
       },
     },
     {
-      ignores: ["server/database/generated/**/*", ".cursor/", ".github/skills"],
+      ignores: ["server/database/generated/**/*", ".github/skills/**/*", ".gemini/**/*", ".agent/**/*"],
     },
   ),
 )

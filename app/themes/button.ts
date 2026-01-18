@@ -28,6 +28,7 @@ export default {
       error: "btn-error",
     },
     variant: {
+      solid: "",
       outline: "btn-outline",
       soft: "btn-ghost",
       dash: "btn-dash",

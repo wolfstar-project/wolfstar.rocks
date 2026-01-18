@@ -16,6 +16,8 @@
               :ui="{ leadingIcon: 'bg-green-500' }"
               aria-label="Powered by Netlify - opens in new tab"
             />
+            <div class="flex-auto"></div>
+            <PwaInstallPrompt />
           </template>
         </UFooterColumns>
       </UContainer>

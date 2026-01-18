@@ -3,8 +3,7 @@ name: Continuous Integration
 on:
   push:
     branches:
-      # for now is set to refactor/imagine-an-app
-      - refactor/imagine-an-app
+      - main
   pull_request:
     branches:
       - main
@@ -40,8 +39,8 @@ jobs:
       - name: Run ESLint
         run: pnpm lint
 
-  Building:
-    name: Compile source code
+  Typecheck:
+    name: Typecheck source code
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -67,5 +66,5 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Generate prisma types
         run: pnpm prisma:generate
-      - name: Build code
-        run: pnpm build
+      - name: Typecheck code
+        run: pnpm typecheck

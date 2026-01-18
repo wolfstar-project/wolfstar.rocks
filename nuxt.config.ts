@@ -1,6 +1,6 @@
 import type { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver, useNuxt } from "nuxt/kit";
-import { isCI, isDevelopment, isWindows } from "std-env";
+import { isCI } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -29,7 +29,6 @@ export default defineNuxtConfig({
     "nuxt-authorization",
     "nuxt-vitalizer",
     "stale-dep/nuxt",
-    ...(isDevelopment || isWindows) ? [] : ["nuxt-security"],
   ],
 
   $development: {
@@ -40,6 +39,7 @@ export default defineNuxtConfig({
   },
 
   $production: {
+    modules: ["nuxt-security"],
     image: {
       provider: "netlify",
     },

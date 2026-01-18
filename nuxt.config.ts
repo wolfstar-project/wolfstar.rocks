@@ -263,11 +263,15 @@ export default defineNuxtConfig({
         "yup",
       ],
     },
+
   },
 
   typescript: {
     tsConfig: {
       exclude: ["../service-worker"],
+      compilerOptions: {
+        noUncheckedIndexedAccess: true,
+      },
     },
   },
 

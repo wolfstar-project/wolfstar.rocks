@@ -4,7 +4,7 @@
     :class="{ 'opacity-100': isScrolling, 'opacity-0': !isScrolling }"
     icon="heroicons-arrow-up"
     color="neutral"
-    variant="soft"
+    variant="ghost"
     size="lg"
     class="rounded-full"
     @click="scrollToTop"
@@ -26,11 +26,5 @@ function handleScroll() {
   isScrolling.value = window.scrollY > 0;
 }
 
-onMounted(() => {
-  window.addEventListener("scroll", handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", handleScroll);
-});
+useEventListener("scroll", handleScroll);
 </script>

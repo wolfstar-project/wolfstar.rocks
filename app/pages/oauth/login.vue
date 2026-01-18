@@ -13,7 +13,7 @@ useSeoMetadata({
 const { login } = useAuth();
 
 onMounted(() => {
-  const nextUrl = useRouteParams("next", "/", { transform: String });
+  const nextUrl = useRouteQuery("next", "/", { transform: String });
   void login(nextUrl.value);
 });
 </script>

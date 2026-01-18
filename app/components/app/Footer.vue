@@ -1,5 +1,5 @@
 <template>
-  <USeparator icon="custom:wolfstar" class="white-text mt-24 p-10" />
+  <USeparator icon="custom:wolfstar" class="text-white mt-24 p-10" />
   <UFooter :ui="{ root: 'p-2', top: 'border-default' }" role="contentinfo" aria-label="Site footer">
     <template #top>
       <UContainer>

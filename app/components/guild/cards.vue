@@ -27,7 +27,7 @@
         role="status"
         aria-label="Loading servers"
       >
-        <guild-card-skeleton v-for="n in paginatedGuilds.length || INITIAL_COUNT" :key="n" :view-mode />
+        <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" />
       </div>
       <div v-else ref="scrollComponent">
         <!-- Guild Cards Grid -->
@@ -41,7 +41,6 @@
             v-for="guild in paginatedGuilds"
             :key="guild.id"
             :guild
-            :view-mode
             role="listitem"
           />
         </div>
@@ -154,7 +153,6 @@ interface EnhancedGuildCardsProps {
   error: FetchError<any> | undefined;
   isRetrying?: boolean;
   onRetry?: () => void;
-  viewMode?: "card" | "grid";
 }
 
 const {
@@ -166,7 +164,6 @@ const {
   error,
   isRetrying = false,
   onRetry,
-  viewMode = "card",
 } = defineProps<EnhancedGuildCardsProps>();
 
 // Error handling computed properties

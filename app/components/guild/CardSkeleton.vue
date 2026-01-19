@@ -21,7 +21,7 @@
         <USkeleton class="h-4 w-3/4 mx-auto rounded" />
 
         <!-- Guild Stats Skeleton -->
-        <div v-if="type === 'card'" class="flex items-center justify-center space-x-4">
+        <div class="hidden md:flex items-center justify-center space-x-4">
           <div class="flex items-center space-x-1">
             <USkeleton class="h-3 w-3 rounded opacity-50" />
             <USkeleton class="h-3 w-8 rounded" />

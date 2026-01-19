@@ -177,33 +177,16 @@
                   </UFieldGroup>
 
                   <!-- Desktop Buttons (with view toggle) -->
-                  <UFieldGroup size="sm" class="hidden sm:flex items-end join">
-                    <!-- View Button -->
-                    <UButton
-                      class="join-item"
-                      color="primary"
-                      is-loading-icon="lucide:loader"
-                      :is-loading
-                      @click="toggleView()"
-                    >
-                      <template #leading>
-                        <UIcon
-                          v-motion
-                          :initial="{ opacity: 0 }"
-                          :enter="{ opacity: 1, transition: { duration: 150 } }"
-                          :leave="{ opacity: 0, transition: { duration: 150 } }"
-                          :name="
-                            viewMode === 'grid'
-                              ? 'heroicons:squares-2x2'
-                              : 'heroicons:bars-3'
-                          "
-                        />
-                      </template>
-
-                      <span>View</span>
-                    </UButton>
-
-                    <!-- Manageable Only Toggle Button -->
+                  <UFieldGroup
+                    size="sm"
+                    class="hidden sm:flex items-end join"
+                  >
+                    <!--
+                    Manageable
+                    Only
+                    Toggle
+                    Button
+                    -->
                     <UButton
                       class="join-item"
                       color="primary"
@@ -263,7 +246,6 @@
                   :loading="isLoading"
                   :is-retrying
                   :on-retry="handleRetry"
-                  :view-mode
                 />
               </div>
             </div>
@@ -518,14 +500,10 @@ const isLoading = ref(true);
 const { copy, copied } = useClipboard();
 const evaluating = shallowRef(false);
 const searchQuery = ref<null | string>(null);
-const viewMode = ref<"grid" | "card">("card");
-
-//
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
 // Error handling state
-
 const isRetrying = ref(false);
 const retryCount = ref(0);
 
@@ -680,10 +658,6 @@ async function refresh() {
 
 function undoSearch() {
   searchQuery.value = null;
-}
-
-function toggleView() {
-  viewMode.value = viewMode.value === "grid" ? "card" : "grid";
 }
 
 async function copyUserId() {

@@ -37,17 +37,17 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const nextUrl = query.next as string | undefined;
 
+  const authorizationParams: Record<string, string> = {
+    prompt: "none",
+  };
+  if (nextUrl) {
+    authorizationParams.state = Buffer.from(nextUrl).toString("base64");
+  }
+
   // Create OAuth handler with dynamic state
   const oauthHandler = defineOAuthDiscordEventHandler({
     config: {
-      authorizationParams: nextUrl
-        ? {
-            state: Buffer.from(nextUrl).toString("base64"),
-            prompt: "none",
-          }
-        : {
-            prompt: "none",
-          },
+      authorizationParams,
     },
 
     async onSuccess(

@@ -96,7 +96,10 @@ async function performCall() {
     }
   }
 
-  await navigateTo(redirectUrl);
+  await navigateTo(redirectUrl, {
+    replace: true,
+    redirectCode: 302,
+  });
 }
 
 const errorMessage = computed(() => {

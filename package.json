@@ -40,7 +40,8 @@
     "generate-pwa-assets": "pwa-assets-generator",
     "start": "node .output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck",
-    "release": "bumpp && node scripts/release.ts"
+    "release": "bumpp && node scripts/release.ts",
+    "upgrade:interactive": "taze"
   },
   "lint-staged": {
     "*": "pnpm lintroll --fix --cache --staged ."

@@ -3,7 +3,8 @@
     <template #default="{ loggedIn }">
       <div v-if="loggedIn && user">
         <UDropdownMenu
-          :items="items"
+          :items
+          arrow
           :content="{
             align: 'start',
             side: 'bottom',
@@ -61,20 +62,20 @@ import type { DropdownMenuItem } from "@nuxt/ui";
 
 const { user, logout } = useAuth();
 
-const items = ref<DropdownMenuItem[][]>([
-  [{
+const items = ref<DropdownMenuItem[]>([
+  {
     label: "Profile",
     icon: "lucide:user",
     to: "/profile",
-  }, {
+  },
+  {
     label: "Log Out",
     icon: "lucide:log-out",
     ui: {
       itemLeadingIcon: "bg-red-500",
     },
-    kbds: ["shift", "meta", "q"],
     onSelect: logout,
-  }],
+  },
 ]);
 
 const label = computed(() => (isSmallScreen.value ? undefined : "Login"));

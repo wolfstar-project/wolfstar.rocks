@@ -52,7 +52,6 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 };
 
 async function getManageable(
-  id: string,
   oauthGuild: RESTAPIPartialCurrentUserGuild,
   guild: APIGuild | undefined,
 ): Promise<boolean> {
@@ -129,7 +128,7 @@ export async function transformGuild(
   return {
     ...serialized,
     permissions: Number(data.permissions),
-    manageable: await getManageable(userId, data, guild),
+    manageable: await getManageable(data, guild),
     wolfstarIsIn: !isNullOrUndefined(guild),
   };
 }
@@ -219,35 +218,13 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   maxAge: hours(1),
 });
 
-export const getCurrentMember = defineCachedFunction(async (event: H3Event, guildId: string) => {
-  const tokens = await event.context.$authorization.resolveServerTokens();
-
-  if (
-    isNullOrUndefined(tokens)
-    || !("access_token" in tokens)
-    || isNullOrUndefined(tokens.access_token)
-  ) {
-    throw createError({
-      status: 401,
-      message: "Authentication required",
-      data: {
-        error: "no_access_token",
-        message: "None tokens OR access token not found",
-      },
-    });
-  }
-
-  // Initialize REST client
-  const rest = new REST({
-    authPrefix: "Bearer",
-  }).setToken(tokens.access_token);
-
-  const api = useApi(rest);
+export const getCurrentMember = defineCachedFunction(async (guildId) => {
+  const api = useApi();
 
   const member = await api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
     throw createError({
       status: 500,
-      message: "Failed to fetch member data",
+      message: "Failed to fetch user data",
       cause: error,
     });
   });
@@ -278,6 +255,7 @@ export const getMember = defineCachedFunction(async (guildId: string, userId: st
       throw createError({
         status: 500,
         message,
+        cause: error,
       });
     });
   return result;
@@ -289,10 +267,11 @@ export const getGuildChannels = defineCachedFunction(async (guildId: string) => 
   const api = useApi();
   const result = await api.guilds
     .getChannels(guildId)
-    .catch(() => {
+    .catch((error: DiscordAPIError) => {
       throw createError({
         status: 500,
         message: `Failed to fetch channels for guild: ${guildId}`,
+        cause: error,
       });
     });
   return result;
@@ -304,10 +283,11 @@ export const getGuild = defineCachedFunction(async (guildId: string) => {
   const api = useApi();
   const result = await api.guilds
     .get(guildId, { with_counts: true })
-    .catch(() => {
+    .catch((error: DiscordAPIError) => {
       throw createError({
         status: 500,
         message: `Failed to fetch guild: ${guildId}`,
+        cause: error,
       });
     });
   return result;

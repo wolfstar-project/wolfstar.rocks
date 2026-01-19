@@ -36,7 +36,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
     : hasAtLeastOneKeyInMap(new Map(roles.map(role => [role, true])), member.roles.map(r => r));
 }
 
-async function manageAbility(guild: APIGuild, member: APIGuildMember) {
+async function manage(guild: APIGuild, member: APIGuildMember) {
   if (!member.user || !member.user.id) {
     return false;
   }
@@ -65,11 +65,11 @@ async function getManageable(
     );
   }
 
-  const member = await useApi().guilds.getMember(guild.id, id).catch(() => undefined);
+  const member = await useApi().users.getGuildMember(guild.id).catch(() => undefined);
   if (!member)
     return false;
 
-  return manageAbility(guild, member);
+  return manage(guild, member);
 }
 
 export async function transformGuild(
@@ -215,6 +215,44 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   });
 
   return { user, guilds };
+}, {
+  maxAge: hours(1),
+});
+
+export const getCurrentMember = defineCachedFunction(async (event: H3Event, guildId: string) => {
+  const tokens = await event.context.$authorization.resolveServerTokens();
+
+  if (
+    isNullOrUndefined(tokens)
+    || !("access_token" in tokens)
+    || isNullOrUndefined(tokens.access_token)
+  ) {
+    throw createError({
+      status: 401,
+      message: "Authentication required",
+      data: {
+        error: "no_access_token",
+        message: "None tokens OR access token not found",
+      },
+    });
+  }
+
+  // Initialize REST client
+  const rest = new REST({
+    authPrefix: "Bearer",
+  }).setToken(tokens.access_token);
+
+  const api = useApi(rest);
+
+  const member = await api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
+    throw createError({
+      status: 500,
+      message: "Failed to fetch member data",
+      cause: error,
+    });
+  });
+
+  return member;
 }, {
   maxAge: hours(1),
 });

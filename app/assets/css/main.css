@@ -4,7 +4,7 @@
 @import './keyframes.css';
 @import './utilities.css';
 @plugin "@tailwindcss/typography";
-@plugin "daisyui";
+@plugin 'daisyui';
 
 @plugin "daisyui/theme" {
 	name: 'light';
@@ -25,15 +25,15 @@
 	--color-neutral-content: oklch(100% 0 0);
 	--color-info: oklch(55% 0.16 232.661);
 	--color-info-content: oklch(89.04% 0.062 264.052);
-	--color-success: oklch(51.975% 0.176 142.495);
-	--color-success-content: oklch(90.395% 0.035 142.495);
+	--color-success: oklch(76% 0.177 163.223);
+	--color-success-content: oklch(37% 0.077 168.94);
 	--color-warning: oklch(82% 0.189 84.429);
 	--color-warning-content: oklch(41% 0.112 45.904);
 	--color-error: oklch(71% 0.194 13.428);
 	--color-error-content: oklch(28% 0.109 3.907);
-	--radius-selector: 2rem;
-	--radius-field: 1rem;
-	--radius-box: 1rem;
+	--radius-selector: 0.5rem;
+	--radius-field: 0.5rem;
+	--radius-box: 0.5rem;
 	--size-selector: 0.25rem;
 	--size-field: 0.21875rem;
 	--border: 1.5px;
@@ -49,7 +49,7 @@
 	--color-base-100: oklch(25% 0.016 252);
 	--color-base-200: oklch(23% 0.014 253);
 	--color-base-300: oklch(20% 0.012 254);
-	--color-base-content: oklch(87.609% 0 0);
+	--color-base-content: oklch(90% 0 0);
 	--color-primary: oklch(58% 0.233 277.117);
 	--color-primary-content: oklch(100% 0 0);
 	--color-secondary: oklch(0.5873 0.0204 272.13);
@@ -60,15 +60,15 @@
 	--color-neutral-content: oklch(100% 0 0);
 	--color-info: oklch(55% 0.16 232.661);
 	--color-info-content: oklch(89.04% 0.062 264.052);
-	--color-success: oklch(51.975% 0.176 142.495);
-	--color-success-content: oklch(90.395% 0.035 142.495);
+	--color-success: oklch(76% 0.177 163.223);
+	--color-success-content: oklch(37% 0.077 168.94);
 	--color-warning: oklch(82% 0.189 84.429);
 	--color-warning-content: oklch(41% 0.112 45.904);
 	--color-error: oklch(71% 0.194 13.428);
 	--color-error-content: oklch(28% 0.109 3.907);
-	--radius-selector: 2rem;
-	--radius-field: 1rem;
-	--radius-box: 1rem;
+	--radius-selector: 0.5rem;
+	--radius-field: 0.5rem;
+	--radius-box: 0.5rem;
 	--size-selector: 0.25rem;
 	--size-field: 0.21875rem;
 	--border: 1.5px;
@@ -76,7 +76,7 @@
 	--noise: 0;
 }
 
-@plugin "daisyui/theme" {
+@plugin 'daisyui/theme' {
 	name: 'midnight';
 	default: false;
 	prefersdark: false;
@@ -95,15 +95,15 @@
 	--color-neutral-content: oklch(100% 0 0);
 	--color-info: oklch(55% 0.16 232.661);
 	--color-info-content: oklch(89.04% 0.062 264.052);
-	--color-success: oklch(51.975% 0.176 142.495);
-	--color-success-content: oklch(90.395% 0.035 142.495);
+	--color-success: oklch(76% 0.177 163.223);
+	--color-success-content: oklch(37% 0.077 168.94);
 	--color-warning: oklch(82% 0.189 84.429);
 	--color-warning-content: oklch(41% 0.112 45.904);
 	--color-error: oklch(71% 0.194 13.428);
 	--color-error-content: oklch(28% 0.109 3.907);
-	--radius-selector: 2rem;
-	--radius-field: 1rem;
-	--radius-box: 1rem;
+	--radius-selector: 0.5rem;
+	--radius-field: 0.5rem;
+	--radius-box: 0.5rem;
 	--size-selector: 0.25rem;
 	--size-field: 0.21875rem;
 	--border: 1.5px;
@@ -166,49 +166,48 @@
 	}
 
 	::-webkit-scrollbar {
-		background: var(--ui-bg-inverted);
 		width: 5px;
 		height: 2px;
-
-		::-webkit-scrollbar-thumb {
-			border-radius: 5px;
-			background: varinverted;
-		}
-
-		.no-scrollbar::-webkit-scrollbar {
-			display: none;
-		}
-
-		.no-scrollbar {
-			scrollbar-width: none;
-			-ms-overflow-style: none;
-		}
 	}
 
-	@theme inline {
-		--color-branding-wolfstar: oklch(var(--branding-wolfstar) / <alpha-value>);
-		--color-branding-staryl: oklch(var(--branding-staryl) / <alpha-value>);
+	::-webkit-scrollbar-thumb {
+		border-radius: 5px;
+		background: varinverted;
 	}
 
-	@theme {
-		--color-branding-wolfstar: var(--branding-wolfstar);
-		--color-branding-staryl: var(--branding-staryl);
+	.no-scrollbar::-webkit-scrollbar {
+		display: none;
 	}
 
-	@layer base {
-		input::placeholder,
-		textarea::placeholder {
-			color: var(--color-gray-400);
-		}
+	.no-scrollbar {
+		scrollbar-width: none;
+		-ms-overflow-style: none;
 	}
+}
 
-	@layer base {
-		*,
-		::after,
-		::before,
-		::backdrop,
-		::file-selector-button {
-			border-color: var(--color-gray-200, currentColor);
-		}
+@theme inline {
+	--color-branding-wolfstar: oklch(var(--branding-wolfstar) / <alpha-value>);
+	--color-branding-staryl: oklch(var(--branding-staryl) / <alpha-value>);
+}
+
+@theme {
+	--color-branding-wolfstar: var(--branding-wolfstar);
+	--color-branding-staryl: var(--branding-staryl);
+}
+
+@layer base {
+	input::placeholder,
+	textarea::placeholder {
+		color: var(--color-gray-400);
+	}
+}
+
+@layer base {
+	*,
+	::after,
+	::before,
+	::backdrop,
+	::file-selector-button {
+		border-color: var(--color-gray-200, currentColor);
 	}
 }

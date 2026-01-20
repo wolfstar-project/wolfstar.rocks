@@ -24,7 +24,7 @@ export class PermissionNodeManager {
     return (this.isAPIRole(target) ? "permissionsRoles" : "permissionsUsers") satisfies keyof ReadonlyGuildData;
   }
 
-  public async run(member: APIGuildMember, command: FlattenedCommand) {
+  public async run(member: APIGuildMember, command: WolfCommand) {
     return (await this.runUser(member, command)) ?? (await this.runRole(member, command));
   }
 
@@ -138,7 +138,7 @@ export class PermissionNodeManager {
     return copy ?? nodes;
   }
 
-  private async runUser(member: APIGuildMember, command: FlattenedCommand) {
+  private async runUser(member: APIGuildMember, command: WolfCommand) {
     // Assume sorted data
     const permissionNodeRoles = this.#cachedRawPermissionUsers;
     const memberId = member.user.id;
@@ -154,7 +154,7 @@ export class PermissionNodeManager {
     return null;
   }
 
-  private async runRole(member: APIGuildMember, command: FlattenedCommand) {
+  private async runRole(member: APIGuildMember, command: WolfCommand) {
     const roles = member.roles;
 
     // Assume sorted data

@@ -315,13 +315,9 @@ export interface FlattenedMember {
 export interface FlattenedCommand {
   category: string;
 
-  subCategory: string;
-
   description: string;
 
   extendedHelp: ExtendedHelp;
-
-  aliases: string[];
 
   guarded: boolean;
 

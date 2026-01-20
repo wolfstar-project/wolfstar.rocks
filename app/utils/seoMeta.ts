@@ -1,4 +1,4 @@
-import type { OGImageProps } from "@/components/OgImage/default.vue";
+import type { OGImageProps } from "@/components/OgImage/Default.vue";
 
 interface SiteMetadata {
   title?: MaybeRefOrGetter<string>;

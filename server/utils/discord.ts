@@ -296,18 +296,9 @@ export const getGuild = defineCachedFunction(async (guildId: string) => {
 });
 
 export const fetchCommands = defineCachedFunction(async () => {
-  const { public: { app: { apiBaseUrl } } } = runtimeConfig;
-
-  if (!apiBaseUrl) {
-    throw createError({
-      status: 500,
-      message: "Bot API base URL is not configured",
-    });
-  }
-
-  const commands = await $fetch<FlattenedCommand[]>(`/commands`, {
+  const commands = await $fetch<WolfCommand[]>(`/api/commands`, {
     method: "GET",
-    baseURL: apiBaseUrl,
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

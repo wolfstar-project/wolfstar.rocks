@@ -66,7 +66,6 @@ const commands = useState<FlattenedCommand[]>("guild:commands", () => []);
 const languages = useState<string[]>("guild:languages", () => []);
 const toast = useToast();
 const { guildData } = useGuildData();
-const { $api } = useNuxtApp();
 
 const slug = route.params.slug as string | string[];
 
@@ -82,7 +81,13 @@ async function fetchCommandsAndLanguages() {
       commands.value = commandsStorage.value.data;
     }
     else {
-      const commandsData = await $api<FlattenedCommand[]>("/commands");
+      const commandsData = await $fetch<FlattenedCommand[]>("/api/commands", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       commands.value = commandsData;
       commandsStorage.value = {
         expire: Date.now() + Time.Day * 6,
@@ -98,7 +103,13 @@ async function fetchCommandsAndLanguages() {
       languages.value = languagesStorage.value.data;
     }
     else {
-      const languagesData = await $api<string[]>("/languages");
+      const languagesData = await $fetch<string[]>("/api/languages", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       languages.value = languagesData;
       languagesStorage.value = {
         expire: Date.now() + Time.Day * 6,

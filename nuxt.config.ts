@@ -136,6 +136,12 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
+    "/api/commands": {
+      proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
+    },
+    "/api/languages": {
+      proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
+    },
     "/wolfstar": { appLayout: "default", robots: true, auth: { required: false }, prerender: true },
     "/starly": { appLayout: "default", robots: true, auth: { required: false } },
     "/__og-image__/**": { prerender: true },

@@ -31,6 +31,25 @@
 
     <slot v-if="isReadyToRender"></slot>
     <div
+      v-else-if="hasError && error"
+      class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
+      role="alert"
+      aria-label="Error loading dashboard"
+    >
+      <UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
+      <div class="space-y-2">
+        <h2 class="text-xl font-semibold text-base-content">Error Loading Dashboard</h2>
+        <p v-if="error.status === 403">
+          You do not have permission to access this guild's dashboard.
+          Please ensure you have the necessary permissions and try again.
+        </p>
+        <p class="text-sm text-base-content/60">
+          An error occurred while loading the dashboard.
+          Please try again later or contact support if the issue persists.
+        </p>
+      </div>
+    </div>
+    <div
       v-else
       class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
       role="status"
@@ -91,6 +110,7 @@
 <script setup lang="ts">
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
+import type { FetchError } from "ofetch";
 import type { GuildData } from "~~/server/database";
 import { Time } from "@sapphire/time-utilities";
 import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
@@ -114,6 +134,7 @@ if (!isValidGuildId(guildId.value)) {
 
 const toast = useToast();
 const open = ref(false);
+const error = useState<FetchError | null>("dashboard:error", () => null);
 const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges } = useGuildSettingsChanges();
@@ -259,6 +280,10 @@ onMounted(async () => {
   }
   catch (error: any) {
     hasError.value = true;
+
+    isLoading.value = false;
+
+    error.value = error;
 
     toast.add({
       color: "error",

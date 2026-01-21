@@ -152,7 +152,7 @@ export default defineNuxtConfig({
       },
     },
     "/oauth/callback": { robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1" },
-    "/auth/login": { robots: true },
+    "/oauth/login": { robots: true },
     "/terms": { appLayout: "default", robots: true, auth: { required: false } },
     "/privacy": { appLayout: "default", robots: true, auth: { required: false } },
     "/profile": { appLayout: "default", robots: true, auth: { required: true } },

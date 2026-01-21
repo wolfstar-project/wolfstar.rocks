@@ -46,7 +46,10 @@ export function useHeader() {
         to: currentApp.value.invite,
         icon: "ph:plus-circle-duotone",
       }]
-    : [])]);
+    : []), {
+    label: "Commands",
+    to: "/commands",
+  }]);
 
   const mobileLinks = computed(() => [{
     label: "Features",
@@ -69,6 +72,9 @@ export function useHeader() {
       icon: "lucide:twitch",
       to: "/staryl",
     }],
+  }, {
+    label: "Commands",
+    to: "/commands",
   }, ...(currentApp.value.invite
     ? [{
         label: "Invite App",

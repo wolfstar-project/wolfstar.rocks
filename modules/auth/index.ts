@@ -3,6 +3,7 @@ import type { AuthMeta } from "./runtime/types";
 import { defu } from "defu";
 import {
   addImports,
+  addPlugin,
   addRouteMiddleware,
   addTemplate,
   createResolver,
@@ -85,7 +86,7 @@ export default defineNuxtModule<ModuleOptions>({
     });
 
     nuxt.hook("modules:done", () => {
-      // addPlugin({ src: resolve("./runtime/plugin/discord-auth") }, { append: true });
+      addPlugin({ src: resolve("./runtime/plugin/auth") }, { append: true });
       addRouteMiddleware({
         name: "authz",
         path: resolve("./runtime/middleware/authz"),

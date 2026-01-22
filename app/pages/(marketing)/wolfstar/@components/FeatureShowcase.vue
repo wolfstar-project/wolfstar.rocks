@@ -20,7 +20,7 @@
             <p class="text-lg opacity-80 mb-6 leading-relaxed">
               {{ feature.description }}
             </p>
-            <NuxtLink :to="`/docs/${feature.id}`" class="btn btn-outline">
+            <NuxtLink to="#" class="btn btn-outline">
               Learn more about {{ feature.label }}
             </NuxtLink>
           </div>

@@ -38,8 +38,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 .discord-embed {
 	@apply mt-1 max-w-fit border-l-4 p-3;
 	border-radius: 0.25rem;
-	background-color: #2b2d31;
-	background-color: #2b2d31;
+	background-color: var(--color-base-100);
 }
 
 /* Media features */

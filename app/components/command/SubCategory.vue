@@ -3,27 +3,28 @@
     <UAccordion
       :items="categoryItems"
       :ui="{
-        root: 'base-100 border border-base-300 rounded-xl shadow-lg overflow-hidden',
-        item: 'mb-4'
+        root: 'space-y-2',
+        item: '',
+        content: 'glass-card rounded-2xl overflow-hidden transition-all'
       }"
-      class=""
+      class="animate-fade-in"
     >
       <template #default="{ item, open }">
         <UButton
           color="neutral"
           variant="ghost"
-          class="w-full justify-between border-b border-base-200 hover:bg-base-200/50 transition-colors"
+          class="w-full justify-between hover:bg-base-200/30 transition-all px-6 py-4"
           :aria-expanded="open"
           :aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
         >
-          <span :id="`category-${item.value.replace(/\s+/g, '-').toLowerCase()}`" class="truncate text-xl font-medium">
+          <span :id="`category-${item.value.replace(/\s+/g, '-').toLowerCase()}`" class="truncate text-xl font-bold">
             {{ item.label }}
           </span>
 
           <template #trailing>
             <UIcon
               name="i-heroicons-chevron-down-20-solid"
-              class="ms-auto size-5 transform transition-transform duration-200"
+              class="size-5 shrink-0 transform transition-transform duration-200"
               :class="[open && 'rotate-180']"
               aria-hidden="true"
             />
@@ -32,25 +33,26 @@
       </template>
 
       <template #body="{ item }">
-        <div :id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`" class="py-2">
+        <div :id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`" class="p-4 space-y-3">
           <UAccordion
             :items="getCommandsByCategory(item.label).map(command => ({ label: command.name, value: command.name, description: command.description }))"
             trailing-icon="i-heroicons-chevron-down-20-solid"
             :ui="{
-              item: 'mb-3',
-              trigger: 'bg-gray-700 dark:bg-gray-800 hover:bg-gray-600 dark:hover:bg-gray-700 text-white px-4 py-4 rounded-lg',
-              trailingIcon: 'text-gray-400',
+              item: 'border-0',
+              content: 'border-0 pt-4',
+              trigger: 'bg-base-content/5 hover:bg-base-content/10 px-5 py-4 rounded-xl hover-lift transition-all w-full border-0',
+              trailingIcon: 'text-base-content/60 size-5 shrink-0',
               label: 'flex items-center gap-4 flex-1 min-w-0'
             }"
           >
             <template #default="{ item: commandItem }">
               <!-- Command name -->
-              <div class="font-mono font-semibold text-base text-white min-w-fit pl-2">
+              <div class="font-mono font-bold text-base min-w-fit">
                 {{ commandItem.label }}
               </div>
 
               <!-- Command description -->
-              <div class="flex-1 text-gray-300 text-sm truncate pl-4">
+              <div class="flex-1 text-base-content/70 text-sm truncate ml-4">
                 {{ commandItem.description || 'No description available' }}
               </div>
             </template>
@@ -66,10 +68,13 @@
       </template>
     </UAccordion>
   </div>
-  <div v-else-if="searchValue" class="text-center py-8 px-4" role="status">
-    <UIcon name="i-heroicons-magnifying-glass" class="h-10 w-10 mx-auto mb-3 text-gray-400" aria-hidden="true" />
-    <h3 class="text-lg font-semibold mb-2">No commands found in {{ categoryName }}</h3>
-    <p class="text-gray-600 dark:text-gray-400">
+  <div v-else-if="searchValue" class="glass-card text-center py-12 px-6 rounded-2xl" role="status">
+    <div class="relative inline-block mb-4">
+      <div class="absolute inset-0 rounded-full bg-gray-400/20 blur-xl"></div>
+      <UIcon name="i-heroicons-magnifying-glass" class="h-12 w-12 mx-auto text-gray-400 relative" aria-hidden="true" />
+    </div>
+    <h3 class="text-lg font-bold mb-2">No commands found in {{ categoryName }}</h3>
+    <p class="text-base-content/70">
       Try adjusting your search or browse other categories.
     </p>
   </div>

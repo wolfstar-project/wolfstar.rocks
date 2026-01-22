@@ -1,5 +1,5 @@
 <template>
-  <div v-if="hasChips" class="flex flex-wrap gap-3" role="list" aria-label="Command properties">
+  <div v-if="hasChips" class="flex flex-wrap gap-3 animate-fade-in" role="list" aria-label="Command properties">
     <!-- Permission Level Badge -->
     <UBadge
       v-if="command.permissionLevel > 0"
@@ -8,7 +8,7 @@
       size="md"
       role="listitem"
       :aria-label="`Permission level: ${permissionLevelLabel}`"
-      class="transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-offset-2"
+      class="hover-lift focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-offset-2"
     >
       <template #leading>
         <UIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />

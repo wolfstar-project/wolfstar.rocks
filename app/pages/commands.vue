@@ -1,19 +1,23 @@
 <template>
-  <UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
-    <!-- Page Header -->
-    <header class="space-y-4">
-      <h1 class="text-4xl font-bold tracking-tight">
-        WolfStar Commands
+  <!-- Hero Background Pattern -->
+  <div class="hero-pattern" aria-hidden="true"></div>
+
+  <UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8 relative z-10">
+    <!-- Page Header - Hero Style -->
+    <header class="mt-16 flex flex-col items-center text-center space-y-6 animate-fade-in-up">
+      <h1 class="title pb-4">
+        Discover<br />WolfStar Commands
       </h1>
-      <p class="text-lg text-gray-600 dark:text-gray-400">
-        Browse and search through all available bot commands. Use the search bar to quickly find specific commands.
+      <p class="max-w-2xl text-lg text-base-content/80 animate-fade-in-up animate-fade-in-delay-1">
+        Browse and search through all available bot commands.
+        <span class="font-semibold">Powerful moderation</span> at your fingertips.
       </p>
     </header>
 
     <!-- Commands content -->
-    <div class="space-y-6">
+    <div class="space-y-8 animate-fade-in-up animate-fade-in-delay-2">
       <!-- Search bar -->
-      <section aria-labelledby="search-heading" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+      <section aria-labelledby="search-heading" class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 max-w-3xl mx-auto">
         <h2 id="search-heading" class="sr-only">
           Search Commands
         </h2>
@@ -21,8 +25,8 @@
           v-model="searchValue"
           placeholder="Search a command..."
           icon="i-heroicons-magnifying-glass"
-          size="lg"
-          class="flex-1"
+          size="xl"
+          class="flex-1 glass-card"
           aria-label="Search for commands by name or description"
           :aria-describedby="searchValue ? 'search-results-count' : undefined"
         >
@@ -43,6 +47,8 @@
           icon="i-heroicons-arrow-path"
           color="primary"
           variant="soft"
+          size="xl"
+          class="glass-card hover-lift"
           :loading="refreshing"
           :disabled="loading"
           aria-label="Refresh commands list"
@@ -59,36 +65,53 @@
 
       <!-- Loading state -->
       <div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
-        <div class="text-center py-12">
-          <UIcon name="i-heroicons-arrow-path" class="animate-spin h-8 w-8 mx-auto mb-4 text-primary-500" />
-          <p class="text-lg font-medium">Loading commands...</p>
-          <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">Please wait while we fetch the latest commands</p>
+        <div class="glass-card text-center py-20 rounded-2xl">
+          <div class="relative inline-block">
+            <div class="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse"></div>
+            <UIcon name="i-heroicons-arrow-path" class="animate-spin h-12 w-12 mx-auto mb-6 text-primary relative" />
+          </div>
+          <p class="text-xl font-semibold mb-2">Loading commands...</p>
+          <p class="text-sm text-base-content/60">Fetching the latest command data</p>
         </div>
       </div>
 
       <!-- No results message -->
-      <div v-else-if="commands.length === 0" class="text-center py-12 space-y-4" role="status">
-        <UIcon name="i-heroicons-exclamation-circle" class="h-12 w-12 mx-auto text-gray-400" />
-        <h2 class="text-xl font-semibold">No commands available</h2>
-        <p class="text-gray-600 dark:text-gray-400">
-          Unable to load commands at this time. Please try refreshing.
-        </p>
+      <div v-else-if="commands.length === 0" class="glass-card text-center py-20 rounded-2xl space-y-6" role="status">
+        <div class="relative inline-block">
+          <div class="absolute inset-0 rounded-full bg-error/20 blur-xl"></div>
+          <UIcon name="i-heroicons-exclamation-circle" class="h-16 w-16 mx-auto text-error/80 relative" />
+        </div>
+        <div>
+          <h2 class="text-2xl font-bold mb-3">No commands available</h2>
+          <p class="text-base-content/70 max-w-md mx-auto">
+            Unable to load commands at this time. Please try refreshing.
+          </p>
+        </div>
+        <UButton
+          icon="i-heroicons-arrow-path"
+          color="primary"
+          variant="outline"
+          size="lg"
+          @click="fetchCommands()"
+        >
+          Try Again
+        </UButton>
       </div>
 
       <!-- Categories -->
       <section
         v-else
         aria-labelledby="categories-heading"
-        class="space-y-4 overflow-hidden rounded-xl shadow-lg flex flex-col bg-base-100 border border-base-300 p-4 sm:p-6"
+        class="glass-card hover-border-glow rounded-2xl p-6 sm:p-8 transition-all"
       >
         <h2 id="categories-heading" class="sr-only">
           Command Categories
         </h2>
         <CommandCategory
-          :commands
+          :commands="filteredCommands"
           :search-value
           :categories
-          :loading="false"
+          :loading
         />
       </section>
     </div>
@@ -98,6 +121,7 @@
 <script lang="ts" setup>
 import type { FlattenedCommand } from "#shared/types/discord";
 import { Time } from "@sapphire/time-utilities";
+import { useFuse } from "@vueuse/integrations/useFuse";
 import { isDevelopment } from "std-env";
 
 // SEO
@@ -117,6 +141,19 @@ const commands = ref<FlattenedCommand[]>([]);
 const loading = ref(false);
 const refreshing = ref(false);
 
+// Fuse.js fuzzy search
+const { results } = useFuse(searchValue, commands, {
+  fuseOptions: {
+    keys: ["name", "description", "category"],
+    threshold: 0.3,
+  },
+  matchAllWhenSearchEmpty: true,
+});
+
+const filteredCommands = computed(() => {
+  return results.value.map(result => result.item);
+});
+
 const categories = computed(() => {
   const uniqueCategories = new Set<string>();
   for (const command of commands.value) {
@@ -126,13 +163,7 @@ const categories = computed(() => {
 });
 
 const filteredCommandsCount = computed(() => {
-  if (!searchValue.value)
-    return commands.value.length;
-  const search = searchValue.value.toLowerCase();
-  return commands.value.filter(cmd =>
-    cmd.name.toLowerCase().includes(search)
-    || (cmd.description && cmd.description.toLowerCase().includes(search)),
-  ).length;
+  return results.value.length;
 });
 
 async function fetchCommands() {
@@ -168,3 +199,29 @@ async function fetchCommands() {
 // Lifecycle
 onMounted(fetchCommands);
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.title {
+	@apply text-4xl font-bold leading-[3.05rem] md:text-6xl md:leading-18;
+	background: linear-gradient(to bottom right, oklch(95% 0 0) 0%, oklch(80% 0.2 35) 40%, oklch(75% 0.22 50) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Hero background pattern */
+.hero-pattern {
+	@apply fixed inset-0 -z-10 pointer-events-none;
+	mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
+	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
+	background-image:
+		radial-gradient(ellipse at 50% 0%, oklch(from var(--branding-wolfstar) l c h / 0.15) 0%, transparent 60%),
+		linear-gradient(to right, oklch(50% 0 0 / 0.03) 1px, transparent 1px), linear-gradient(to bottom, oklch(50% 0 0 / 0.03) 1px, transparent 1px);
+	background-size:
+		100% 100%,
+		4rem 4rem,
+		4rem 4rem;
+}
+</style>

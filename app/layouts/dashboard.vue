@@ -4,7 +4,7 @@
       id="default"
       collapsible
       resizable
-      :ui="{ footer: 'border-t border-base-100' }"
+      :ui="{ footer: 'border-t border-base-100 bg-grid-pattern' }"
     >
       <template #default="{ collapsed }">
         <UNavigationMenu

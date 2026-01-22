@@ -15,6 +15,214 @@
 	tab-size: --value(--tab-size-*);
 }
 
+/* =============================================================================
+   Vercel/Turbo Inspired Effects
+   Modern gradients, patterns, and animations
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Background Patterns
+   ----------------------------------------------------------------------------- */
+
+@utility bg-grid-pattern {
+	background-image:
+		linear-gradient(to right, oklch(50% 0 0 / 0.05) 1px, transparent 1px), linear-gradient(to bottom, oklch(50% 0 0 / 0.05) 1px, transparent 1px);
+	background-size: 4rem 4rem;
+}
+
+/* Dot mask for patterns */
+@utility bg-dot-pattern {
+	background-image: radial-gradient(oklch(50% 0 0 / 0.15) 1px, transparent 1px);
+	background-size: 1.5rem 1.5rem;
+}
+
+/* Fade mask for patterns */
+@utility bg-fade-pattern {
+	mask-image: linear-gradient(to bottom, white 0%, transparent 100%);
+	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 100%);
+}
+
+/* -----------------------------------------------------------------------------
+   Gradient Text Effects
+   ----------------------------------------------------------------------------- */
+
+/* Hero gradient - vibrant pink to orange */
+@utility gradient-text-hero {
+	background: linear-gradient(to bottom right, oklch(75% 0.18 15) 0%, oklch(80% 0.2 45) 50%, oklch(85% 0.15 85) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Alternative: Blue to purple gradient */
+@utility gradient-text-cool {
+	background: linear-gradient(to bottom right, oklch(70% 0.2 260) 0%, oklch(65% 0.25 300) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Shimmer animation for text */
+@utility animate-shimmer {
+	animation: shimmer 3s ease-in-out infinite;
+	background-size: 200% 100%;
+}
+
+/* -----------------------------------------------------------------------------
+   Button Glow Effects
+   ----------------------------------------------------------------------------- */
+
+@utility btn-glow {
+	position: relative;
+	transition: all 0.3s ease;
+
+	&::before {
+		position: absolute;
+		opacity: 0;
+		z-index: -1;
+		filter: blur(12px);
+		transition: opacity 0.3s ease;
+		inset: -2px;
+		border-radius: inherit;
+		/* Default glow color if no specific button class is present */
+		background: var(--color-neutral);
+		content: '';
+	}
+
+	&:hover::before {
+		opacity: 0.6;
+	}
+
+	/* Adaptive colors based on DaisyUI button classes */
+	&.btn-primary::before {
+		background: var(--color-primary);
+	}
+	&.btn-secondary::before {
+		background: var(--color-secondary);
+	}
+	&.btn-accent::before {
+		background: var(--color-accent);
+	}
+	&.btn-neutral::before {
+		background: var(--color-neutral);
+	}
+	&.btn-info::before {
+		background: var(--color-info);
+	}
+	&.btn-success::before {
+		background: var(--color-success);
+	}
+	&.btn-warning::before {
+		background: var(--color-warning);
+	}
+	&.btn-error::before {
+		background: var(--color-error);
+	}
+
+	/* Custom branding override if needed */
+	&.btn-branding::before {
+		background: var(--branding-wolfstar);
+	}
+}
+
+/* -----------------------------------------------------------------------------
+   Glassmorphism Cards
+   ----------------------------------------------------------------------------- */
+
+@utility glass-card {
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid oklch(100% 0 0 / 0.1);
+	border-radius: var(--radius-box, 0.5rem);
+	background: oklch(50% 0 0 / 0.05);
+
+	[data-theme='dark'] & {
+		border-color: oklch(100% 0 0 / 0.08);
+		background: oklch(20% 0 0 / 0.3);
+	}
+}
+
+@utility glass-card-hover {
+	transition: all 0.3s ease;
+
+	&:hover {
+		transform: translateY(-2px);
+		border-color: oklch(100% 0 0 / 0.15);
+		background: oklch(50% 0 0 / 0.08);
+	}
+
+	[data-theme='dark'] &:hover {
+		background: oklch(25% 0 0 / 0.4);
+	}
+}
+
+/* -----------------------------------------------------------------------------
+   Entrance Animations
+   ----------------------------------------------------------------------------- */
+
+@utility animate-fade-in {
+	animation: fade-in 0.6s ease-out forwards;
+}
+
+@utility animate-fade-in-up {
+	animation: fade-in-up 0.6s ease-out forwards;
+}
+
+@utility animate-fade-in-delay-1 {
+	opacity: 0;
+	animation-delay: 0.1s;
+}
+
+@utility animate-fade-in-delay-2 {
+	opacity: 0;
+	animation-delay: 0.2s;
+}
+
+@utility animate-fade-in-delay-3 {
+	opacity: 0;
+	animation-delay: 0.3s;
+}
+
+/* -----------------------------------------------------------------------------
+   Interactive Hover Effects
+   ----------------------------------------------------------------------------- */
+
+@utility hover-lift {
+	transition:
+		transform 0.3s ease,
+		box-shadow 0.3s ease;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.1);
+	}
+
+	[data-theme='dark'] &:hover {
+		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.3);
+	}
+}
+
+/* Subtle scale on hover */
+@utility hover-scale {
+	transition: transform 0.2s ease;
+
+	&:hover {
+		transform: scale(1.02);
+	}
+}
+
+/* Border glow on hover */
+@utility hover-border-glow {
+	transition:
+		border-color 0.3s ease,
+		box-shadow 0.3s ease;
+
+	&:hover {
+		box-shadow: 0 0 12px -2px oklch(70% 0.15 20 / 0.4);
+		border-color: oklch(70% 0.15 20 / 0.5);
+	}
+}
+
 /* Reduce Motion Support
    Note: The rules below are intentionally duplicated.
    - The `:root[data-reduce-motion='true']` selector is a JS-controlled override (e.g., a user toggle).

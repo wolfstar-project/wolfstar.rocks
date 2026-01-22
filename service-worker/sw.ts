@@ -7,7 +7,12 @@ import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from
 import { NavigationRoute, registerRoute } from "workbox-routing";
 import { NetworkFirst } from "workbox-strategies";
 
-declare let self: ServiceWorkerGlobalScope;
+declare const self: ServiceWorkerGlobalScope;
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING")
+    self.skipWaiting();
+});
 
 const entries = self.__WB_MANIFEST;
 if (import.meta.env.DEV)

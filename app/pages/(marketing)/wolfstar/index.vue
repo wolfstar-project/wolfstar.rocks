@@ -88,8 +88,8 @@
 </template>
 
 <script setup lang="ts">
-import FeatureCarousel from "./@components/FeatureCarousel.vue";
-import FeatureShowcase from "./@components/FeatureShowcase.vue";
+import FeatureCarousel from "./@components/FeatureCarousel.client.vue";
+import FeatureShowcase from "./@components/FeatureShowcase.client.vue";
 
 definePageMeta({ alias: ["/"] });
 

@@ -10,7 +10,7 @@
       >
         <div v-if="activeFeature === index" class="gap-8 items-center">
           <!-- Feature Details -->
-          <div class="text-left">
+          <div :id="feature.id" class="text-left scroll-mt-24">
             <h3 class="text-3xl font-bold mb-4 flex items-center gap-2">
               <div class="flex items-center justify-center rounded-full size-10 bg-primary/20">
                 <UIcon :name="feature.icon" class="size-7 text-primary mt-0.5" />
@@ -27,7 +27,7 @@
 
           <!-- Discord Preview -->
           <div class="w-full">
-            <template v-if="feature.id === 'automod'">
+            <template v-if="feature.id === 'moderation-tools'">
               <section class="mt-12 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
                 <div
                   class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
@@ -377,7 +377,7 @@
               </section>
             </template>
 
-            <template v-else-if="feature.id === 'logging'">
+            <template v-else-if="feature.id === 'advanced-logging'">
               <section class="mt-12 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
                 <div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
                   <DiscordMessages class="w-full text-left">
@@ -499,16 +499,16 @@ enum AutomodFeature {
 
 const features = [
   {
-    id: "automod",
+    id: "moderation-tools",
     title: "Advanced Auto Moderator",
-    label: "automod",
+    label: "Automod",
     description: "WolfStar's auto-moderation system is a powerful tool that can help you keep your server safe and clean. It can automatically detect and remove unwanted content, such as spam, bad words, and more.",
     icon: "ph:shield-fill",
   },
   {
-    id: "logging",
+    id: "advanced-logging",
     title: "Advanced Logging",
-    label: "logging",
+    label: "Logging",
     description: "WolfStar not only comes with a very complete moderation suite, but also advanced logging capabilities to keep track of everything that happens in your server.",
     icon: "ph:binoculars-duotone",
   },
@@ -615,10 +615,34 @@ const moderationActionRender = computed(() => {
   return { color: action.color, name: action.name };
 });
 
+const location = useBrowserLocation();
+
+// Handle hash navigation
+function handleHashChange() {
+  const hash = location.value.hash?.slice(1);
+  if (!hash)
+    return;
+  const featureIndex = features.findIndex(f => f.id === hash);
+  if (featureIndex !== -1) {
+    activeFeature.value = featureIndex;
+    // Scroll to element after a short delay to ensure it's rendered
+    setTimeout(() => {
+      const element = document.getElementById(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+  }
+};
+
 // Set timestamp on client-side only to prevent hydration mismatch
 onMounted(() => {
   timestamp.value = Date.now();
 });
+
+const cleanup = useEventListener(window, "hashchange", handleHashChange);
+
+onUnmounted(cleanup);
 </script>
 
 <style scoped>

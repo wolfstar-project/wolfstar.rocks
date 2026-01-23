@@ -50,7 +50,7 @@ defineProps<{ apps: readonly OtherApp[] }>();
 }
 
 .other-apps-avatar {
-	@apply h-full w-full object-cover object-[0_20%] max-md:rounded-xl md:rounded-l-xl;
+	@apply h-full w-full object-contain max-md:rounded-xl md:rounded-l-xl;
 	grid-area: a;
 }
 

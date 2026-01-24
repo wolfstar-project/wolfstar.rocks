@@ -17,8 +17,8 @@
         variant="link"
         class="hidden lg:inline-flex"
         :ui="{
-          link: 'text-base-content/80 hover:text-white',
-          root: 'text-white'
+          link: 'text-base-content/80 hover:text-base-content/100',
+          root: 'text-base-content/70',
         }"
       />
     </nav>

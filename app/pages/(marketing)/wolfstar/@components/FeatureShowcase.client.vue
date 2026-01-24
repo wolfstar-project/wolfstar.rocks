@@ -202,7 +202,7 @@
                   </div>
                 </div>
 
-                <div class="prose">
+                <div class="prose text-left">
                   <h3 class="mb-4 text-3xl font-bold">
                     <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
                     WolfStar can act on
@@ -262,7 +262,10 @@
               </section>
 
               <section class="mt-12 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-                <div class="prose">
+                <div
+                  class="prose text-left
+                "
+                >
                   <h3 class="mb-4 text-3xl font-bold">
                     <UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
                     A complete suite for
@@ -379,7 +382,9 @@
 
             <template v-else-if="feature.id === 'advanced-logging'">
               <section class="mt-12 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-                <div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
+                <div
+                  class="flex flex-col items-center gap-4 lg:flex-row"
+                >
                   <DiscordMessages class="w-full text-left">
                     <DiscordMessage name="wolfstar">
                       <DiscordEmbed
@@ -437,9 +442,9 @@
                   </div>
                 </div>
 
-                <div class="prose">
+                <div class="prose text-left">
                   <h3 class="mb-4 text-3xl font-bold">
-                    <UIcon :name="loggingEvents[loggingIndex]!.icon" class="h-8 w-8" aria-hidden="true" />
+                    <UIcon :name="loggingEvents[loggingIndex]!.icon ?? 'ph:binoculars-duotone'" class="h-8 w-8" aria-hidden="true" />
                     Keep track of
                     <span class="underline underline-offset-4">{{ loggingEvents[loggingIndex]!.title }}</span>
                   </h3>
@@ -450,26 +455,28 @@
                     edits and deletions, and much more.
                   </p>
 
-                  <p>
-                    <UIcon
-                      name="ph:magnifying-glass-duotone"
-                      class="my-0 mr-1 h-5 w-5 text-purple-500"
-                      aria-hidden="true"
-                    />
-                    All logs are <strong>fully searchable</strong> and can be filtered by
-                    user, action, channel, and more. Keep a complete history of your
-                    server's activity.
-                  </p>
-
-                  <p>
-                    <UIcon
-                      name="ph:clock-duotone"
-                      class="my-0 mr-1 h-5 w-5 text-info"
-                      aria-hidden="true"
-                    />
-                    Logs are sent to your server <strong>in real-time</strong>, so you
-                    can stay up to date with everything that's happening.
-                  </p>
+                  <p>And even what WolfStar should be logging:</p>
+                  <ul>
+                    <li>
+                      <UIcon
+                        name="ph:magnifying-glass-duotone"
+                        class="my-0 mr-1 h-5 w-5 text-purple-500"
+                        aria-hidden="true"
+                      />
+                      All logs are <strong>fully searchable</strong> and can be filtered by
+                      user, action, channel, and more. Keep a complete history of your
+                      server's activity.
+                    </li>
+                    <li>
+                      <UIcon
+                        name="ph:clock-duotone"
+                        class="my-0 mr-1 h-5 w-5 text-info"
+                        aria-hidden="true"
+                      />
+                      Logs are sent to your server <strong>in real-time</strong>, so you
+                      can stay up to date with everything that's happening.
+                    </li>
+                  </ul>
                 </div>
               </section>
             </template>

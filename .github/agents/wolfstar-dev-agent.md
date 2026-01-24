@@ -181,23 +181,26 @@ BrowserMCP provides advanced browser automation capabilities beyond simple page 
 
 **Interaction:**
 
-- `mcp_browsermcp_browser_click` - Click on elements
-- `mcp_playwright_browser_click` - Advanced click with modifiers
-- `mcp_playwright_browser_type` - Type text into fields
-- `mcp_playwright_browser_press` - Press keyboard keys
-- `mcp_playwright_browser_hover` - Hover over elements
+- `mcp_browsermcp_browser_click` - Click on elements (preferred)
+- `mcp_browsermcp_browser_type` - Type text into fields (preferred)
+- `mcp_browsermcp_browser_press` - Press keyboard keys (preferred)
+- `mcp_browsermcp_browser_hover` - Hover over elements (preferred)
+
+- If you need advanced modifier support or features not exposed by BrowserMCP, use the Playwright-specific variants (`mcp_playwright_*`) as a fallback (e.g. `mcp_playwright_browser_click` for modifier clicks).
 
 **Inspection & Debugging:**
 
-- `mcp_browsermcp_browser_get_console_logs` - Capture console errors/logs
-- `mcp_playwright_browser_screenshot` - Take screenshots
-- `mcp_playwright_browser_accessibility_snapshot` - Get accessibility tree
-- `mcp_playwright_browser_console_messages` - Get console messages
+- `mcp_browsermcp_browser_get_console_logs` - Capture console errors/logs (preferred)
+- `mcp_browsermcp_browser_screenshot` - Take screenshots (preferred)
+- `mcp_browsermcp_browser_accessibility_snapshot` - Get accessibility tree (preferred)
+- `mcp_browsermcp_browser_console_messages` - Get console messages (preferred)
+
+- Use Playwright variants only when BrowserMCP cannot capture the required state or when you need Playwright-specific debug helpers.
 
 **Forms & Data Entry:**
 
-- `mcp_playwright_browser_fill_form` - Fill multiple form fields at once
-- `mcp_playwright_browser_upload_file` - Upload files to input fields
+- Prefer BrowserMCP's `fill_form` and file-upload helpers when available (e.g. `mcp_browsermcp_browser_fill_form`, `mcp_browsermcp_browser_file_upload`) — they are the primary, higher-level API for forms.
+- If a BrowserMCP helper for a specific complex interaction is not available, use the Playwright variants (`mcp_playwright_browser_fill_form`, `mcp_playwright_browser_upload_file`) as a fallback.
 
 ### BrowserMCP Workflow
 
@@ -590,9 +593,9 @@ try {
 
 ---
 
-## BrowserMCP (Playwright) Integration
+## BrowserMCP (preferred) — Playwright fallback
 
-BrowserMCP provides advanced browser automation for testing and debugging web applications via Playwright MCP.
+BrowserMCP is the preferred tool for browser automation and UI testing in this workspace; it covers the vast majority of interactions. Use Playwright-specific MCP tools only when BrowserMCP cannot perform the required advanced interaction or diagnostic (Playwright remains supported as a fallback).
 
 ### When to Use BrowserMCP
 

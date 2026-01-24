@@ -12,11 +12,11 @@
   </section>
 
   <section class="mt-16 join justify-center relative z-10 animate-fade-in-up animate-fade-in-delay-2">
-    <NuxtLink class="btn join-item btn-error glow-btn glow-btn-branding sm:btn-wide" :to="Invites.WolfStar">
+    <NuxtLink class="btn join-item btn-neutral glow-btn glow-btn-branding sm:btn-wide" :to="Invites.WolfStar">
       <UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
     </NuxtLink>
     <NuxtLink
-      class="btn join-item btn-outline glass-card hover-border-glow sm:btn-wide"
+      class="btn join-item btn-neutral glow-btn glow-btn-branding sm:btn-wide"
       to="#explore"
     >
       <UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />

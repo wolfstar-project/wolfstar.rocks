@@ -2,10 +2,10 @@ export default {
   slots: {
     root: "relative flex gap-1.5 [&>div]:min-w-0",
     list: "isolate min-w-0",
-    label: "w-full flex items-center gap-1.5 font-semibold text-xs/5 text-highlighted px-2.5 py-1.5",
-    item: "min-w-0",
-    link: "group relative w-full flex items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
-    linkLeadingIcon: "shrink-0 size-5",
+    label: "w-full flex items-center gap-1.5 font-semibold text-xs/5 text-highlighted px-2.5 py-1.5 animate-fade-in",
+    item: "min-w-0 animate-fade-in-up",
+    link: "group relative w-full flex items-center gap-1.5 font-medium text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2 transition-all duration-300",
+    linkLeadingIcon: "shrink-0 size-5 transition-transform duration-200",
     linkLeadingAvatar: "shrink-0",
     linkLeadingAvatarSize: "2xs",
     linkTrailing: "group ms-auto inline-flex gap-1.5 items-center",
@@ -15,18 +15,18 @@ export default {
     linkLabel: "truncate",
     linkLabelExternalIcon: "inline-block size-3 align-top text-dimmed",
     childList: "isolate",
-    childLabel: "text-xs text-highlighted",
-    childItem: "",
-    childLink: "group relative size-full flex items-start text-start text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2",
+    childLabel: "text-xs text-highlighted animate-fade-in",
+    childItem: "animate-fade-in-up",
+    childLink: "group relative size-full flex items-start text-start text-sm before:absolute before:z-[-1] before:rounded-md focus:outline-none focus-visible:outline-none dark:focus-visible:outline-none focus-visible:before:ring-inset focus-visible:before:ring-2 transition-all duration-300",
     childLinkWrapper: "min-w-0",
-    childLinkIcon: "size-5 shrink-0",
+    childLinkIcon: "size-5 shrink-0 transition-colors duration-200",
     childLinkLabel: "truncate",
     childLinkLabelExternalIcon: "inline-block size-3 align-top text-dimmed",
-    childLinkDescription: "text-muted",
+    childLinkDescription: "text-muted transition-colors duration-200",
     separator: "px-2 h-px bg-border",
     viewportWrapper: "absolute top-full left-0 flex w-full",
-    viewport: "relative overflow-hidden bg-default shadow-lg rounded-md ring ring-default h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
-    content: "",
+    viewport: "relative overflow-hidden bg-default shadow-lg rounded-md ring ring-default h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1] card-glass",
+    content: "animate-fade-in",
     indicator: "absolute data-[state=visible]:animate-[fade-in_100ms_ease-out] data-[state=hidden]:animate-[fade-out_100ms_ease-in] data-[state=hidden]:opacity-0 bottom-0 z-[2] w-(--reka-navigation-menu-indicator-size) translate-x-(--reka-navigation-menu-indicator-position) flex h-2.5 items-end justify-center overflow-hidden transition-[translate,width] duration-200",
     arrow: "relative top-[50%] size-2.5 rotate-45 border border-default bg-default z-[1] rounded-xs",
   },
@@ -78,7 +78,7 @@ export default {
       horizontal: {
         root: "items-center justify-between",
         list: "flex items-center",
-        item: "py-2",
+        item: "py-2 animate-fade-in-up",
         link: "px-2.5 py-1.5 before:inset-x-px before:inset-y-0",
         childList: "grid p-2",
         childLink: "px-3 py-2 gap-2 before:inset-x-px before:inset-y-0",
@@ -103,19 +103,19 @@ export default {
     },
     active: {
       true: {
-        childLink: "before:bg-elevated text-highlighted",
+        childLink: "before:bg-elevated text-highlighted hover-lift",
         childLinkIcon: "text-default",
       },
       false: {
         link: "text-muted",
         linkLeadingIcon: "text-dimmed",
         childLink: [
-          "hover:before:bg-elevated/50 text-default hover:text-highlighted",
-          "transition-colors before:transition-colors",
+          "hover:before:bg-elevated/50 text-default hover:text-highlighted hover-scale",
+          "transition-all duration-300 before:transition-all",
         ],
         childLinkIcon: [
-          "text-dimmed group-hover:text-default",
-          "transition-colors",
+          "text-dimmed group-hover:text-default group-hover:scale-110",
+          "transition-all duration-200",
         ],
       },
     },
@@ -147,7 +147,7 @@ export default {
       contentOrientation: "vertical",
       class: {
         childList: "gap-1",
-        content: "w-60",
+        content: "w-60 animate-fade-in",
       },
     },
     {
@@ -155,7 +155,7 @@ export default {
       collapsed: false,
       class: {
         childList: "ms-5 border-s border-default",
-        childItem: "ps-1.5 -ms-px",
+        childItem: "ps-1.5 -ms-px animate-fade-in-delay-1",
         content: "data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden",
       },
     },
@@ -164,7 +164,7 @@ export default {
       collapsed: true,
       class: {
         link: "px-1.5",
-        content: "shadow-sm rounded-sm min-h-6 p-1",
+        content: "shadow-sm rounded-sm min-h-6 p-1 card-glass",
       },
     },
     {
@@ -173,7 +173,7 @@ export default {
       class: {
         link: [
           "after:absolute after:-bottom-2 after:inset-x-2.5 after:block after:h-px after:rounded-full",
-          "after:transition-colors",
+          "after:transition-all after:duration-300",
         ],
       },
     },
@@ -184,7 +184,7 @@ export default {
       class: {
         link: [
           "after:absolute after:-start-1.5 after:inset-y-0.5 after:block after:w-px after:rounded-full",
-          "after:transition-colors",
+          "after:transition-all after:duration-300",
         ],
       },
     },
@@ -195,11 +195,11 @@ export default {
       class: {
         link: [
           "hover:text-highlighted hover:before:bg-elevated/50",
-          "transition-colors before:transition-colors",
+          "transition-all duration-300 before:transition-all hover-scale",
         ],
         linkLeadingIcon: [
-          "group-hover:text-default",
-          "transition-colors",
+          "group-hover:text-default group-hover:scale-110",
+          "transition-all duration-200",
         ],
       },
     },
@@ -209,8 +209,8 @@ export default {
       variant: "pill",
       orientation: "horizontal",
       class: {
-        link: "data-[state=open]:text-highlighted",
-        linkLeadingIcon: "group-data-[state=open]:text-default",
+        link: "data-[state=open]:text-highlighted data-[state=open]:before:bg-elevated/50",
+        linkLeadingIcon: "group-data-[state=open]:text-default group-data-[state=open]:scale-110",
       },
     },
     {
@@ -219,7 +219,7 @@ export default {
       highlight: true,
       orientation: "horizontal",
       class: {
-        link: "data-[state=open]:before:bg-elevated/50",
+        link: "data-[state=open]:before:bg-elevated/50 data-[state=open]:shadow-lg",
       },
     },
     {
@@ -237,8 +237,8 @@ export default {
       variant: "pill",
       active: true,
       class: {
-        link: "text-primary",
-        linkLeadingIcon: "text-primary group-data-[state=open]:text-primary",
+        link: "text-primary relative",
+        linkLeadingIcon: "text-primary group-data-[state=open]:text-primary scale-110",
       },
     },
     {
@@ -246,8 +246,8 @@ export default {
       variant: "pill",
       active: true,
       class: {
-        link: "text-highlighted",
-        linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted",
+        link: "text-highlighted relative",
+        linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted scale-110",
       },
     },
     {
@@ -255,7 +255,7 @@ export default {
       active: true,
       highlight: false,
       class: {
-        link: "before:bg-elevated",
+        link: "before:bg-elevated shadow-md",
       },
     },
     {
@@ -265,8 +265,8 @@ export default {
       disabled: false,
       class: {
         link: [
-          "hover:before:bg-elevated/50",
-          "before:transition-colors",
+          "hover:before:bg-elevated/50 hover:shadow-lg",
+          "before:transition-all duration-300",
         ],
       },
     },
@@ -277,11 +277,11 @@ export default {
       class: {
         link: [
           "hover:text-highlighted",
-          "transition-colors",
+          "transition-all duration-300",
         ],
         linkLeadingIcon: [
-          "group-hover:text-default",
-          "transition-colors",
+          "group-hover:text-default group-hover:scale-110",
+          "transition-all duration-200",
         ],
       },
     },
@@ -292,7 +292,7 @@ export default {
       orientation: "horizontal",
       class: {
         link: "data-[state=open]:text-highlighted",
-        linkLeadingIcon: "group-data-[state=open]:text-default",
+        linkLeadingIcon: "group-data-[state=open]:text-default group-data-[state=open]:scale-110",
       },
     },
     {
@@ -300,8 +300,8 @@ export default {
       variant: "link",
       active: true,
       class: {
-        link: "text-primary",
-        linkLeadingIcon: "text-primary group-data-[state=open]:text-primary",
+        link: "text-primary relative",
+        linkLeadingIcon: "text-primary group-data-[state=open]:text-primary scale-110",
       },
     },
     {
@@ -309,8 +309,8 @@ export default {
       variant: "link",
       active: true,
       class: {
-        link: "text-highlighted",
-        linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted",
+        link: "text-highlighted relative",
+        linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted scale-110",
       },
     },
     {
@@ -319,7 +319,7 @@ export default {
       level: true,
       active: true,
       class: {
-        link: "after:bg-primary",
+        link: "after:bg-primary after:shadow-[0_0_8px_rgba(var(--color-primary),0.5)]",
       },
     },
     {
@@ -328,7 +328,7 @@ export default {
       level: true,
       active: true,
       class: {
-        link: "after:bg-inverted",
+        link: "after:bg-inverted after:shadow-[0_0_8px_rgba(0,0,0,0.3)]",
       },
     },
   ],

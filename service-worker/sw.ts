@@ -1,7 +1,6 @@
 /// <reference lib="WebWorker" />
 /// <reference types="vite/client" />
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
-import { clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
 import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
 import { NavigationRoute, registerRoute } from "workbox-routing";
@@ -33,6 +32,10 @@ if (import.meta.env.PROD) {
     /^\/api\//,
     /^\/login\//,
     /^\/oauth\//,
+    // exclude sw: if the user navigates to it, fallback to index.html
+    /^\/sw.js$/,
+    // exclude webmanifest: has its own cache
+    /^\/manifest-(.*).webmanifest$/,
   ];
 }
 
@@ -57,6 +60,3 @@ registerRoute(new NavigationRoute(
   createHandlerBoundToURL("/"),
   { allowlist, denylist },
 ));
-
-self.skipWaiting();
-clientsClaim();

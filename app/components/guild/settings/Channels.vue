@@ -95,8 +95,8 @@
 </template>
 
 <script setup lang="ts">
+import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import type { GuildData, GuildDataKey } from "~~/server/database";
 import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from "#shared/utils/settingsDataEntries";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import * as yup from "yup";

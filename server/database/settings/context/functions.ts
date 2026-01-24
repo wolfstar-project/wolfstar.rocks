@@ -1,7 +1,7 @@
+import type { ReadonlyGuildData } from "#server/database/settings/types";
 import type { Snowflake } from "discord-api-types/v10";
-import type { ReadonlyGuildData } from "~~/server/database/settings/types";
+import { SettingsContext } from "#server/database/settings/context/SettingsContext";
 import { Collection } from "@discordjs/collection";
-import { SettingsContext } from "~~/server/database/settings/context/SettingsContext";
 
 const cache = new Collection<Snowflake, SettingsContext>();
 

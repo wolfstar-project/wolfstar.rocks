@@ -1,4 +1,4 @@
-import { fetchCommands } from "~~/server/utils/discord";
+import { fetchCommands } from "#server/utils/discord";
 
 function getNameSpaceDetails(name: string): readonly [string | null, string] {
   const index = name.indexOf(".");

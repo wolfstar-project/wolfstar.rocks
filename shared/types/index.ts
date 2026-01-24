@@ -1,4 +1,4 @@
-import type { CommandAutoDelete, DisabledCommandChannel, PermissionsNode, ReactionRole, StickyRole, UniqueRoleSet } from "~~/server/database";
+import type { CommandAutoDelete, DisabledCommandChannel, PermissionsNode, ReactionRole, StickyRole, UniqueRoleSet } from "#server/database";
 
 declare global {
   // eslint-disable-next-line ts/no-namespace

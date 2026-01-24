@@ -1,7 +1,7 @@
+import type { PermissionsNode, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuildMember, APIRole, APIUser } from "discord-api-types/v10";
-import type { PermissionsNode, ReadonlyGuildData } from "~~/server/database/settings/types";
+import { CommandMatcher } from "#server/database/settings/utils/matchers";
 import { Collection } from "@discordjs/collection";
-import { CommandMatcher } from "~~/server/database/settings/utils/matchers";
 
 // eslint-disable-next-line no-restricted-syntax
 export const enum PermissionNodeAction {

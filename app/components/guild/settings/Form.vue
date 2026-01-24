@@ -12,9 +12,9 @@
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, any>">
+import type { GuildData } from "#server/database";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "yup";
-import type { GuildData } from "~~/server/database";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 import { isDeepEqual } from "~~/shared/utils/isDeepEqual";
 

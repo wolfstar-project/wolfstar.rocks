@@ -1,5 +1,5 @@
+import { readSettings, serializeSettings } from "#server/database";
 import { manageAbility } from "#shared/utils/abilities";
-import { readSettings, serializeSettings } from "~~/server/database";
 
 defineRouteMeta({
   openAPI: {

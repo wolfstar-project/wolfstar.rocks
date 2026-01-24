@@ -68,8 +68,8 @@
 </template>
 
 <script lang="ts" setup>
+import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import type { GuildData } from "~~/server/database";
 import * as yup from "yup";
 
 const { languages } = defineProps<{

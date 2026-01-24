@@ -1,8 +1,8 @@
-import type { ReadonlyGuildData } from "~~/server/database/settings/types";
+import type { ReadonlyGuildData } from "#server/database/settings/types";
+import { AdderManager } from "#server/database/settings/structures/AdderManager";
+import { PermissionNodeManager } from "#server/database/settings/structures/PermissionNodeManager";
 import { RateLimitManager } from "@sapphire/ratelimits";
 import { isNullish, isNullishOrEmpty } from "@sapphire/utilities";
-import { AdderManager } from "~~/server/database/settings/structures/AdderManager";
-import { PermissionNodeManager } from "~~/server/database/settings/structures/PermissionNodeManager";
 
 export class SettingsContext {
   readonly #adders: AdderManager;

@@ -1,12 +1,12 @@
+import type { AdderKey } from "#server/database/settings/structures/AdderManager";
+import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { Awaitable, PickByValue } from "@sapphire/utilities";
-import type { AdderKey } from "~~/server/database/settings/structures/AdderManager";
-import type { GuildData, ReadonlyGuildData } from "~~/server/database/settings/types";
+import prisma from "#server/database/prisma";
+import { getDefaultGuildSettings } from "#server/database/settings/constants";
+import { deleteSettingsContext, getSettingsContext, updateSettingsContext } from "#server/database/settings/context/functions";
+import { maybeParseNumber } from "#server/utils/shared";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
-import prisma from "~~/server/database/prisma";
-import { getDefaultGuildSettings } from "~~/server/database/settings/constants";
-import { deleteSettingsContext, getSettingsContext, updateSettingsContext } from "~~/server/database/settings/context/functions";
-import { maybeParseNumber } from "~~/server/utils/shared";
 
 const cache = new Collection<string, GuildData>();
 const queue = new Collection<string, Promise<GuildData>>();

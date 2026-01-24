@@ -1,5 +1,5 @@
 import type { UserSession } from "#auth-utils";
-import { runtimeConfig } from "~~/server/utils/runtimeConfig";
+import { runtimeConfig } from "#server/utils/runtimeConfig";
 
 async function refreshTokens(refreshToken: string) {
   const api = useApi();

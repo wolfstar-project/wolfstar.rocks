@@ -1,1 +1,1 @@
-export * as CommandMatcher from "~~/server/database/settings/utils/matchers/command";
+export * as CommandMatcher from "#server/database/settings/utils/matchers/command";

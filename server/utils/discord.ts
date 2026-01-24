@@ -12,6 +12,7 @@ import type {
   RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
+import { readSettings, readSettingsPermissionNodes } from "#server/database";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { REST } from "@discordjs/rest";
@@ -27,7 +28,6 @@ import {
   Locale,
   PermissionFlagsBits,
 } from "discord-api-types/v10";
-import { readSettings, readSettingsPermissionNodes } from "~~/server/database";
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
   const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);

@@ -107,10 +107,10 @@
 </template>
 
 <script setup lang="ts">
+import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types/configurableData";
 import type { FlattenedCommand } from "#shared/types/discord";
 import type { FormErrorEvent } from "@nuxt/ui";
-import type { GuildData } from "~~/server/database";
 import { objectValues } from "@sapphire/utilities/objectValues";
 import * as y from "yup";
 

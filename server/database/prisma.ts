@@ -1,5 +1,5 @@
+import { PrismaClient } from "#server/database/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "~~/server/database/generated/client";
 
 export interface GetDbParams {
   connectionString: string;

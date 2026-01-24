@@ -1,7 +1,7 @@
+import type { ReadonlyGuildData } from "#server/database/settings/types";
 import type { Nullish } from "@sapphire/utilities";
-import type { ReadonlyGuildData } from "~~/server/database/settings/types";
+import { Adder } from "#server/database/settings/utils/Adder";
 import { isNullishOrZero } from "@sapphire/utilities";
-import { Adder } from "~~/server/database/settings/utils/Adder";
 
 export type AdderKey = "attachments" | "capitals" | "links" | "messages" | "newlines" | "invites" | "words" | "reactions";
 

@@ -1,13 +1,13 @@
+import {
+  serializeSettings,
+  writeSettingsTransaction,
+} from "#server/database";
 import { manageAbility } from "#shared/utils/abilities";
 import {
   isNullishOrEmpty,
   isNullOrUndefined,
 } from "@sapphire/utilities";
 import * as yup from "yup";
-import {
-  serializeSettings,
-  writeSettingsTransaction,
-} from "~~/server/database";
 
 const settingsUpdateSchema = yup.object({
   data: yup

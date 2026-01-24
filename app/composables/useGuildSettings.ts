@@ -1,5 +1,5 @@
+import type { GuildData } from "#server/database";
 import type { Options as DeepMergeOptions } from "deepmerge";
-import type { GuildData } from "~~/server/database";
 import deepMerge from "deepmerge";
 import { useGuildSettingsChanges } from "@/composables/useGuildSettingsChanges";
 

@@ -1,5 +1,7 @@
 import type { RESTOptions } from "@discordjs/rest";
 import type { H3Event } from "h3";
+import cached from "#server/cache-driver";
+import { runtimeConfig } from "#server/utils/runtimeConfig";
 // @ts-expect-error virtual import
 import { driver } from "#storage-config";
 import { API } from "@discordjs/core/http-only";
@@ -9,8 +11,6 @@ import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
 import kv from "unstorage/drivers/cloudflare-kv-http";
 import fs from "unstorage/drivers/fs";
 import memory from "unstorage/drivers/memory";
-import cached from "~~/server/cache-driver";
-import { runtimeConfig } from "~~/server/utils/runtimeConfig";
 
 const storage = useStorage();
 

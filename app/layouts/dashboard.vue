@@ -108,10 +108,10 @@
 </template>
 
 <script setup lang="ts">
+import type { GuildData } from "#server/database";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
 import type { FetchError } from "ofetch";
-import type { GuildData } from "~~/server/database";
 import { Time } from "@sapphire/time-utilities";
 import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";

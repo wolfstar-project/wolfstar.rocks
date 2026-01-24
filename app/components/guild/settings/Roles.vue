@@ -129,8 +129,8 @@
 </template>
 
 <script setup lang="ts">
+import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import type { GuildData, GuildDataKey } from "~~/server/database";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import * as yup from "yup";
 import { ConfigurableRemoveInitialRole, ConfigurableRoles } from "~~/shared/utils/settingsDataEntries";

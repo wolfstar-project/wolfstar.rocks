@@ -4,7 +4,7 @@ import type { AuthMeta } from "../types";
 import config from "#build/auth.config";
 import { defineNuxtRouteMiddleware } from "#imports";
 
-export default defineNuxtRouteMiddleware(async (to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   if (to.name === undefined)
     return;
   const auth = to.meta?.auth as AuthMeta | undefined;
@@ -41,7 +41,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     );
   }
 
-  if (from.fullPath !== to.fullPath && from.path !== loginRoute) {
-    return navigateTo(from);
-  }
+  // Previous behaviour redirected users back to the `from` route in many
+  // cases which prevented access to protected pages even when authenticated.
+  // That logic has been removed so authenticated users can access pages
+  // with `auth.required = true` as expected.
 });

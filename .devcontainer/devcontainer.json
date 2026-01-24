@@ -1,5 +1,5 @@
 {
-  "name": "Nuxt3",
+  "name": "Nuxt 4 Dev Container",
   "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
@@ -7,8 +7,9 @@
       "pnpmVersion": "10"
     }
   },
+
   "postCreateCommand": ["pnpm", "install", "--frozen-lockfile"],
-  "remoteUser": "node",
+  "remoteUser": "root",
   "forwardPorts": [3000],
   "customizations": {
     "vscode": {

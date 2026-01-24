@@ -4,11 +4,11 @@
     <UBadge
       v-if="command.permissionLevel > 0"
       color="warning"
-      variant="soft"
+      variant="outline"
       size="md"
       role="listitem"
       :aria-label="`Permission level: ${permissionLevelLabel}`"
-      class="hover-lift focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-offset-2"
+      class="hover-lift focus:outline-none focus:ring-2 focus:ring-warning-500 focus:ring-offset-2 bg-warning-50 dark:bg-warning-950/30 border-warning-300 dark:border-warning-700 text-warning-800 dark:text-warning-200 font-semibold"
     >
       <template #leading>
         <UIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
@@ -20,11 +20,11 @@
     <UBadge
       v-if="isGuildOnly"
       color="info"
-      variant="soft"
+      variant="outline"
       size="md"
       role="listitem"
       :aria-label="`Server requirement: ${guildOnlyLabel}`"
-      class="transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-info-500 focus:ring-offset-2"
+      class="transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-info-500 focus:ring-offset-2 bg-info-50 dark:bg-info-950/30 border-info-300 dark:border-info-700 text-info-800 dark:text-info-200 font-semibold"
     >
       <template #leading>
         <UIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
@@ -36,11 +36,11 @@
     <UBadge
       v-if="command.guarded"
       color="error"
-      variant="soft"
+      variant="outline"
       size="md"
       role="listitem"
       aria-label="This command cannot be disabled"
-      class="transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2"
+      class="transition-all hover:scale-105 focus:outline-none focus:ring-2 focus:ring-error-500 focus:ring-offset-2 bg-error-50 dark:bg-error-950/30 border-error-300 dark:border-error-700 text-error-800 dark:text-error-200 font-semibold"
     >
       <template #leading>
         <UIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />

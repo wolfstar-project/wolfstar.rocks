@@ -65,7 +65,7 @@
       <!-- Command Usage -->
       <section v-if="command.extendedHelp.usages?.length" class="space-y-4">
         <h3 class="flex items-center gap-3 text-lg font-bold">
-          <div class="flex items-center justify-center rounded-full size-8 bg-primary/20">
+          <div class="flex items-center justify-center rounded-full size-8 bg-primary/30">
             <UIcon name="i-heroicons-pencil-square" class="size-5 text-primary" aria-hidden="true" />
           </div>
           <span>Command Usage</span>
@@ -75,7 +75,7 @@
             v-for="(usage, idx) in command.extendedHelp.usages"
             :key="idx"
             role="listitem"
-            class="block glass-card bg-gray-800/50 dark:bg-gray-900/50 text-gray-100 dark:text-gray-200 px-5 py-4 rounded-xl text-sm font-mono hover-lift transition-all"
+            class="block glass-card bg-gray-800/70 dark:bg-gray-900/70 text-gray-100 dark:text-gray-200 px-5 py-4 rounded-xl text-sm font-mono hover-lift transition-all border border-gray-700/50 dark:border-gray-800/50"
           >
             <span class="text-primary-400">WolfStar</span>, <span class="text-blue-300">{{ command.name }}</span> <span class="text-gray-300">{{ usage }}</span>
           </code>
@@ -85,20 +85,22 @@
       <!-- Extended Help -->
       <section v-if="command.extendedHelp.extendedHelp" class="space-y-4">
         <h3 class="flex items-center gap-3 text-lg font-bold">
-          <div class="flex items-center justify-center rounded-full size-8 bg-blue-500/20">
+          <div class="flex items-center justify-center rounded-full size-8 bg-blue-500/30">
             <UIcon name="i-heroicons-question-mark-circle" class="size-5 text-blue-500" aria-hidden="true" />
           </div>
           <span>Extended Help</span>
         </h3>
-        <div class="prose dark:prose-invert max-w-none prose-p:leading-relaxed">
-          <div class="whitespace-pre-line text-base leading-7" v-html="sanitizeAndFormat(resolveMultilineString(command.extendedHelp.extendedHelp, true))"></div>
+        <div class="glass-card bg-base-200/30 dark:bg-base-300/30 px-5 py-4 rounded-xl border border-base-300/50 dark:border-base-content/10">
+          <div class="prose dark:prose-invert max-w-none prose-p:leading-relaxed">
+            <div class="whitespace-pre-line text-base leading-7" v-html="sanitizeAndFormat(resolveMultilineString(command.extendedHelp.extendedHelp, true))"></div>
+          </div>
         </div>
       </section>
 
       <!-- Explained Usage -->
       <section v-if="command.extendedHelp.explainedUsage?.length" class="space-y-4">
         <h3 class="flex items-center gap-3 text-lg font-bold">
-          <div class="flex items-center justify-center rounded-full size-8 bg-purple-500/20">
+          <div class="flex items-center justify-center rounded-full size-8 bg-purple-500/30">
             <UIcon name="i-heroicons-code-bracket" class="size-5 text-purple-500" aria-hidden="true" />
           </div>
           <span>Explained Usage</span>
@@ -107,7 +109,7 @@
           <div
             v-for="([arg, desc], idx) in command.extendedHelp.explainedUsage"
             :key="idx"
-            class="glass-card border-l-4 border-purple-500/50 pl-5 pr-4 py-3 rounded-r-xl hover-lift transition-all"
+            class="glass-card bg-purple-50/50 dark:bg-purple-950/30 border-l-4 border-purple-500/70 pl-5 pr-4 py-3 rounded-r-xl hover-lift transition-all"
           >
             <dt class="font-semibold text-base mb-1 text-purple-600 dark:text-purple-400">
               {{ arg }}
@@ -122,7 +124,7 @@
       <!-- Possible Formats -->
       <section v-if="command.extendedHelp.possibleFormats?.length" class="space-y-4">
         <h3 class="flex items-center gap-3 text-lg font-bold">
-          <div class="flex items-center justify-center rounded-full size-8 bg-pink-500/20">
+          <div class="flex items-center justify-center rounded-full size-8 bg-pink-500/30">
             <UIcon name="i-heroicons-paint-brush" class="size-5 text-pink-500" aria-hidden="true" />
           </div>
           <span>Possible Formats</span>
@@ -131,7 +133,7 @@
           <div
             v-for="([type, example], idx) in command.extendedHelp.possibleFormats"
             :key="idx"
-            class="glass-card border-l-4 border-pink-500/50 pl-5 pr-4 py-3 rounded-r-xl hover-lift transition-all"
+            class="glass-card bg-pink-50/50 dark:bg-pink-950/30 border-l-4 border-pink-500/70 pl-5 pr-4 py-3 rounded-r-xl hover-lift transition-all"
           >
             <dt class="font-semibold text-base mb-1 text-pink-600 dark:text-pink-400">
               {{ type }}
@@ -146,7 +148,7 @@
       <!-- Examples -->
       <section v-if="command.extendedHelp.examples?.length" class="space-y-4">
         <h3 class="flex items-center gap-3 text-lg font-bold">
-          <div class="flex items-center justify-center rounded-full size-8 bg-yellow-500/20">
+          <div class="flex items-center justify-center rounded-full size-8 bg-yellow-500/30">
             <UIcon name="i-heroicons-light-bulb" class="size-5 text-yellow-500" aria-hidden="true" />
           </div>
           <span>Examples</span>
@@ -155,11 +157,11 @@
           <li
             v-for="(example, idx) in command.extendedHelp.examples"
             :key="idx"
-            class="flex items-start gap-3 text-sm glass-card bg-yellow-50/50 dark:bg-yellow-900/20 p-4 rounded-xl hover-lift transition-all"
+            class="flex items-start gap-3 text-sm glass-card bg-yellow-50/70 dark:bg-yellow-900/30 p-4 rounded-xl hover-lift transition-all border border-yellow-200/50 dark:border-yellow-800/50"
           >
             <UIcon name="i-heroicons-arrow-right" class="w-4 h-4 mt-0.5 text-yellow-600 dark:text-yellow-500 shrink-0" aria-hidden="true" />
             <span class="font-mono">
-              <span class="text-primary-600 dark:text-primary-400 font-semibold">WolfStar</span>, <span class="text-blue-600 dark:text-blue-400">{{ command.name }}</span><span v-if="example"> {{ example }}</span>
+              <span class="text-primary-600 dark:text-primary-400 font-semibold">WolfStar</span>, <span class="text-blue-600 dark:text-blue-400">{{ command.name }}</span><span v-if="example">{{ ` ${example}` }}</span>
             </span>
           </li>
         </ul>
@@ -168,12 +170,12 @@
       <!-- Reminder -->
       <section v-if="command.extendedHelp.reminder" class="space-y-4">
         <h3 class="flex items-center gap-3 text-lg font-bold">
-          <div class="flex items-center justify-center rounded-full size-8 bg-orange-500/20">
+          <div class="flex items-center justify-center rounded-full size-8 bg-orange-500/30">
             <UIcon name="i-heroicons-bell-alert" class="size-5 text-orange-500" aria-hidden="true" />
           </div>
           <span>Reminder</span>
         </h3>
-        <div class="glass-card bg-orange-50/50 dark:bg-orange-900/20 rounded-xl p-5 hover-lift transition-all">
+        <div class="glass-card bg-orange-50/70 dark:bg-orange-900/30 rounded-xl p-5 hover-lift transition-all border border-orange-200/50 dark:border-orange-800/50">
           <div class="text-sm text-orange-900 dark:text-orange-200 leading-relaxed prose dark:prose-invert max-w-none prose-p:m-0" v-html="sanitizeAndFormat(command.extendedHelp.reminder)"></div>
         </div>
       </section>

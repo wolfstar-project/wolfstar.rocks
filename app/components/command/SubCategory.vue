@@ -3,9 +3,9 @@
     <UAccordion
       :items="categoryItems"
       :ui="{
-        root: 'space-y-2',
+        root: 'space-y-3',
         item: '',
-        content: 'glass-card rounded-2xl overflow-hidden transition-all'
+        content: 'glass-card rounded-2xl overflow-hidden transition-all border border-base-content/10'
       }"
       class="animate-fade-in"
     >
@@ -13,7 +13,7 @@
         <UButton
           color="neutral"
           variant="ghost"
-          class="w-full justify-between hover:bg-base-200/30 transition-all px-6 py-4"
+          class="w-full justify-between bg-base-200/50 hover:bg-base-200/80 dark:bg-base-300/30 dark:hover:bg-base-300/50 transition-all px-6 py-4 border border-base-content/5 rounded-xl"
           :aria-expanded="open"
           :aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
         >
@@ -40,7 +40,7 @@
             :ui="{
               item: 'border-0',
               content: 'border-0 pt-4',
-              trigger: 'bg-base-content/5 hover:bg-base-content/10 px-5 py-4 rounded-xl hover-lift transition-all w-full border-0',
+              trigger: 'bg-base-content/10 hover:bg-base-content/15 dark:bg-base-content/5 dark:hover:bg-base-content/10 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-base-content/10',
               trailingIcon: 'text-base-content/60 size-5 shrink-0',
               label: 'flex items-center gap-4 flex-1 min-w-0'
             }"

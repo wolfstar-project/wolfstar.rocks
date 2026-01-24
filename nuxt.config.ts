@@ -142,8 +142,8 @@ export default defineNuxtConfig({
     "/api/languages": {
       proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
     },
-    "/wolfstar": { appLayout: "default", robots: true, auth: { required: false }, prerender: true },
-    "/starly": { appLayout: "default", robots: true, auth: { required: false } },
+    "/wolfstar": { appLayout: "default", robots: true, prerender: true },
+    "/starly": { appLayout: "default", robots: true },
     "/__og-image__/**": { prerender: true },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {
@@ -159,9 +159,9 @@ export default defineNuxtConfig({
     },
     "/oauth/callback": { robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1" },
     "/oauth/login": { robots: true },
-    "/terms": { appLayout: "default", robots: true, auth: { required: false } },
-    "/privacy": { appLayout: "default", robots: true, auth: { required: false } },
-    "/profile": { appLayout: "default", robots: true, auth: { required: true } },
+    "/terms": { appLayout: "default", robots: true },
+    "/privacy": { appLayout: "default", robots: true },
+    "/profile": { appLayout: "default", robots: true },
   },
 
   sourcemap: {

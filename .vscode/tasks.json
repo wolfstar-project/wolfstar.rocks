@@ -50,6 +50,14 @@
       ],
       "isBackground": true,
       "problemMatcher": []
+    },
+    {
+      "label": "pnpm lint:fix",
+      "type": "shell",
+      "command": "pnpm",
+      "args": [
+        "lint:fix"
+      ]
     }
   ]
 }

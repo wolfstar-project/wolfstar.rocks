@@ -51,7 +51,6 @@
     "@iconify-json/heroicons": "catalog:icons",
     "@iconify-json/ic": "catalog:icons",
     "@iconify-json/lucide": "catalog:icons",
-    "std-env": "catalog:node",
     "@iconify-json/ph": "catalog:icons",
     "@josephanson/nuxt-ai": "catalog:prod",
     "@nuxt/fonts": "catalog:prod",
@@ -81,24 +80,25 @@
     "nuxt-vitalizer": "catalog:prod",
     "postcss-nested": "catalog:style",
     "require-in-the-middle": "catalog:prod",
+    "rou3": "catalog:utils",
+    "simple-git": "catalog:prod",
+    "stale-dep": "catalog:prod",
+    "std-env": "catalog:node",
     "tailwind-merge": "catalog:prod",
     "tailwind-variants": "catalog:prod",
     "tw-animate-css": "catalog:style",
     "utility-types": "catalog:prod",
-    "stale-dep": "catalog:prod",
-    "yup": "catalog:prod",
-    "simple-git": "catalog:prod",
-    "rou3": "catalog:utils"
+    "yup": "catalog:prod"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:lint",
     "@antfu/nip": "catalog:dev",
     "@commitlint/cli": "catalog:lint",
-    "@nuxt/a11y": "catalog:dev",
     "@commitlint/config-conventional": "catalog:lint",
     "@discordjs/collection": "catalog:dev",
     "@discordjs/core": "catalog:dev",
     "@netlify/nuxt": "catalog:dev",
+    "@nuxt/a11y": "catalog:dev",
     "@nuxt/eslint": "catalog:lint",
     "@nuxt/hints": "catalog:dev",
     "@sapphire/bitfield": "catalog:dev",
@@ -107,9 +107,9 @@
     "@sapphire/time-utilities": "catalog:dev",
     "@sapphire/utilities": "catalog:dev",
     "@tailwindcss/typography": "catalog:style",
+    "@types/pg": "catalog:types",
     "@vite-pwa/assets-generator": "catalog:build",
     "@vue-macros/nuxt": "catalog:frontend",
-    "prisma": "catalog:database",
     "bumpp": "catalog:cli",
     "cz-conventional-changelog": "catalog:dev",
     "daisyui": "catalog:dev",
@@ -123,22 +123,22 @@
     "lintroll": "catalog:lint",
     "playwright": "catalog:e2e",
     "pncat": "catalog:cli",
-    "prisma-json-types-generator": "catalog:database",
     "prettier": "catalog:lint",
     "prettier-plugin-css-order": "catalog:lint",
     "prettier-plugin-tailwindcss": "catalog:lint",
+    "prisma": "catalog:database",
+    "prisma-json-types-generator": "catalog:database",
     "tailwindcss": "catalog:style",
     "taze": "catalog:cli",
     "typescript": "catalog:tsc",
-    "vue-tsc": "catalog:tsc",
-    "@types/pg": "catalog:types"
+    "vue-tsc": "catalog:tsc"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "packageManager": "pnpm@10.26.1",
+  "packageManager": "pnpm@10.28.1",
   "engines": {
     "node": ">=20",
     "pnpm": ">=10"

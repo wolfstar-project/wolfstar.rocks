@@ -174,7 +174,7 @@ export const loggingEvents: LoggingEventDetail[] = [
   {
     tooltip: "Role Delete",
     title: "role deletion",
-    icon: "ph:shield-minus-fill",
+    icon: "ph:shield-slash-fill",
     color: "#E91E63",
     action: "Role Deleted",
     details: [

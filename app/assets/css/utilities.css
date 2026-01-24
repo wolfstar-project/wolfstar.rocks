@@ -48,7 +48,7 @@
 
 /* Hero gradient - vibrant pink to orange */
 @utility gradient-text-hero {
-	background: linear-gradient(to bottom right, oklch(75% 0.18 15) 0%, oklch(80% 0.2 45) 50%, oklch(85% 0.15 85) 100%);
+	background: linear-gradient(to bottom right, oklch(100% 0 45) 0%, oklch(75% 0.18 15) 50%, var(--color-branding-wolfstar) 100%);
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;

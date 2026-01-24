@@ -7,7 +7,7 @@
     leave-from-class="opacity-100 translate-y-0"
     leave-to-class="opacity-0 translate-y-2"
   >
-    <div v-if="$pwa?.needRefresh" class="fixed bottom-4 right-4 z-50">
+    <div v-if="$pwa?.showInstallPrompt && !$pwa?.needRefresh" class="fixed bottom-4 right-4 z-50">
       <div class="flex items-center gap-3 bg-white dark:bg-gray-900 rounded-full shadow-lg ring-1 ring-gray-200 dark:ring-gray-800 px-4 py-3">
         <span class="text-lg">✨</span>
         <div class="text-sm font-medium">

@@ -116,7 +116,7 @@ function openFeature(index: number) {
 
 .title {
 	@apply text-4xl font-bold leading-[3.05rem] md:text-6xl md:leading-18;
-	background: linear-gradient(to bottom right, oklch(95% 0 0) 0%, oklch(80% 0.2 35) 40%, oklch(75% 0.22 50) 100%);
+	background: linear-gradient(to bottom right, oklch(100% 0 45) 0%, oklch(75% 0.18 15) 50%, var(--color-branding-wolfstar) 100%);
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;

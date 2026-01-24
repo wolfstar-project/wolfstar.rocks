@@ -48,7 +48,7 @@
                         Have you seen this????
                         <div class="grid max-w-96 grid-cols-2 gap-2">
                           <div
-                            class="flex aspect-video w-full items-center justify-center rounded-lg glass-card drop-shadow-lg"
+                            class="flex aspect-video w-full items-center justify-center rounded-lg card-glass drop-shadow-lg"
                           >
                             <UIcon
                               name="ph:image-duotone"
@@ -57,7 +57,7 @@
                             />
                           </div>
                           <div
-                            class="flex aspect-video w-full items-center justify-center rounded-lg glass-card drop-shadow-lg"
+                            class="flex aspect-video w-full items-center justify-center rounded-lg card-glass drop-shadow-lg"
                           >
                             <UIcon
                               name="ph:image-duotone"
@@ -66,7 +66,7 @@
                             />
                           </div>
                           <div
-                            class="flex aspect-video w-full items-center justify-center rounded-lg glass-card drop-shadow-lg"
+                            class="flex aspect-video w-full items-center justify-center rounded-lg card-glass drop-shadow-lg"
                           >
                             <UIcon
                               name="ph:image-duotone"
@@ -75,7 +75,7 @@
                             />
                           </div>
                           <div
-                            class="flex aspect-video w-full items-center justify-center rounded-lg glass-card drop-shadow-lg"
+                            class="flex aspect-video w-full items-center justify-center rounded-lg card-glass drop-shadow-lg"
                           >
                             <UIcon
                               name="ph:image-duotone"

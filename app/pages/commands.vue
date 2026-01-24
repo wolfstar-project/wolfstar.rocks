@@ -26,7 +26,7 @@
           placeholder="Search a command..."
           icon="i-heroicons-magnifying-glass"
           size="xl"
-          class="flex-1 glass-card"
+          class="flex-1 card-glass"
           aria-label="Search for commands by name or description"
           :aria-describedby="searchValue ? 'search-results-count' : undefined"
         >
@@ -48,7 +48,7 @@
           color="primary"
           variant="soft"
           size="xl"
-          class="glass-card hover-lift"
+          class="card-glass hover-lift"
           :loading="refreshing"
           :disabled="loading"
           aria-label="Refresh commands list"
@@ -65,7 +65,7 @@
 
       <!-- Loading state -->
       <div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
-        <div class="glass-card text-center py-20 rounded-2xl">
+        <div class="card-glass text-center py-20 rounded-2xl">
           <div class="relative inline-block">
             <div class="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse"></div>
             <UIcon name="i-heroicons-arrow-path" class="animate-spin h-12 w-12 mx-auto mb-6 text-primary relative" />
@@ -76,7 +76,7 @@
       </div>
 
       <!-- No results message -->
-      <div v-else-if="commands.length === 0" class="glass-card text-center py-20 rounded-2xl space-y-6" role="status">
+      <div v-else-if="commands.length === 0" class="card-glass text-center py-20 rounded-2xl space-y-6" role="status">
         <div class="relative inline-block">
           <div class="absolute inset-0 rounded-full bg-error/20 blur-xl"></div>
           <UIcon name="i-heroicons-exclamation-circle" class="h-16 w-16 mx-auto text-error/80 relative" />
@@ -102,7 +102,7 @@
       <section
         v-else
         aria-labelledby="categories-heading"
-        class="glass-card hover-border-glow rounded-2xl p-6 sm:p-8 transition-all"
+        class="card-glass hover-border-glow rounded-2xl p-6 sm:p-8 transition-all"
       >
         <h2 id="categories-heading" class="sr-only">
           Command Categories

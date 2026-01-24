@@ -5,7 +5,7 @@
       :ui="{
         root: 'space-y-3',
         item: '',
-        content: 'glass-card rounded-2xl overflow-hidden transition-all border border-base-content/10'
+        content: 'card-glass rounded-2xl overflow-hidden transition-all border border-base-content/10'
       }"
       class="animate-fade-in"
     >
@@ -68,7 +68,7 @@
       </template>
     </UAccordion>
   </div>
-  <div v-else-if="searchValue" class="glass-card text-center py-12 px-6 rounded-2xl" role="status">
+  <div v-else-if="searchValue" class="card-glass text-center py-12 px-6 rounded-2xl" role="status">
     <div class="relative inline-block mb-4">
       <div class="absolute inset-0 rounded-full bg-gray-400/20 blur-xl"></div>
       <UIcon name="i-heroicons-magnifying-glass" class="h-12 w-12 mx-auto text-gray-400 relative" aria-hidden="true" />

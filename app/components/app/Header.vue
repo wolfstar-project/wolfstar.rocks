@@ -1,6 +1,6 @@
 <template>
   <UHeader
-    class="app-navbar glass-card"
+    class="app-navbar card-glass"
     as="header"
     role="banner"
     :ui="{

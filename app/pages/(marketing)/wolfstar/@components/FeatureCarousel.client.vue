@@ -13,7 +13,7 @@
     >
       <template #default="{ item }">
         <div
-          class="glass-card hover-lift hover-border-glow group relative mx-3 my-5 flex h-40 w-64 flex-col items-start justify-center gap-2 overflow-hidden px-6 transition-colors hover:bg-white/5 cursor-pointer"
+          class="card-glass hover-lift hover-border-glow group relative mx-3 my-5 flex h-40 w-64 flex-col items-start justify-center gap-2 overflow-hidden px-6 transition-colors hover:bg-white/5 cursor-pointer"
           @click="item.action"
         >
           <div class="rounded-full flex items-center justify-center size-10 bg-base-content/5 p-2 transition-colors group-hover:bg-branding-wolfstar/20 group-hover:text-branding-wolfstar">

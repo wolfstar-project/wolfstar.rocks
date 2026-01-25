@@ -11,7 +11,7 @@ export const pwa: ModuleOptions = {
   strategies: "injectManifest",
   registerType: "autoUpdate",
   injectManifest: {
-    globPatterns: ["**/*.{js,json,css,html,txt,svg,png,ico,webp,woff,woff2,ttf,eot,otf,wasm}"],
+    globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
   },
   manifest: {
     background_color: "#050505",
@@ -21,9 +21,9 @@ export const pwa: ModuleOptions = {
     lang: "en_US",
     name: "WolfStar",
     orientation: "portrait-primary",
-    scope: "/",
     short_name: "WolfStar",
     start_url: "/",
+    scope: "/",
     theme_color: "#fd171b",
     icons: [
       {

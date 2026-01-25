@@ -6,10 +6,6 @@
       <slot></slot>
     </UMain>
 
-    <div class="fixed left-4 bottom-4 z-50 flex flex-col space-y-2">
-      <PwaPrompt />
-    </div>
-
     <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
       <ScrollToTopButton />
     </div>

@@ -30,4 +30,19 @@ if (import.meta.env.PROD) {
       ],
     }),
   );
+
+  // cache external assets (CDNs)
+  registerRoute(
+    ({ url }) =>
+      url.origin === "https://cdn.discordapp.com"
+      || url.origin === "https://cdn.wolfstar.rocks",
+    new NetworkFirst({
+      cacheName: "wolfstar-cdn-assets",
+      plugins: [
+        new CacheableResponsePlugin({ statuses: [200] }),
+        // we only need a few entries
+        new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 }),
+      ],
+    }),
+  );
 }

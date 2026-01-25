@@ -35,7 +35,8 @@ if (import.meta.env.PROD) {
   registerRoute(
     ({ url }) =>
       url.origin === "https://cdn.discordapp.com"
-      || url.origin === "https://cdn.wolfstar.rocks",
+      || url.origin === "https://cdn.wolfstar.rocks"
+      || url.origin === "https://media.discordapp.net",
     new NetworkFirst({
       cacheName: "wolfstar-cdn-assets",
       plugins: [

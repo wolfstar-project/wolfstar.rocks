@@ -1,43 +1,19 @@
 /// <reference lib="WebWorker" />
 /// <reference types="vite/client" />
 import { CacheableResponsePlugin } from "workbox-cacheable-response";
+import { clientsClaim } from "workbox-core";
 import { ExpirationPlugin } from "workbox-expiration";
-import { cleanupOutdatedCaches, createHandlerBoundToURL, precacheAndRoute } from "workbox-precaching";
-import { NavigationRoute, registerRoute } from "workbox-routing";
+import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
+import { registerRoute } from "workbox-routing";
 import { NetworkFirst } from "workbox-strategies";
 
 declare const self: ServiceWorkerGlobalScope;
 
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING")
-    self.skipWaiting();
-});
+self.skipWaiting();
+clientsClaim();
 
-const entries = self.__WB_MANIFEST;
-if (import.meta.env.DEV)
-  entries.push({ url: "/", revision: Math.random().toString() });
-
-precacheAndRoute(entries);
-
-// clean old assets
 cleanupOutdatedCaches();
-
-let allowlist: undefined | RegExp[];
-if (import.meta.env.DEV)
-  allowlist = [/^\/$/];
-
-let denylist: undefined | RegExp[];
-if (import.meta.env.PROD) {
-  denylist = [
-    /^\/api\//,
-    /^\/login\//,
-    /^\/oauth\//,
-    // exclude sw: if the user navigates to it, fallback to index.html
-    /^\/sw.js$/,
-    // exclude webmanifest: has its own cache
-    /^\/manifest-(.*).webmanifest$/,
-  ];
-}
+precacheAndRoute(self.__WB_MANIFEST);
 
 // only cache pages and external assets on local build + start or in production
 if (import.meta.env.PROD) {
@@ -55,8 +31,3 @@ if (import.meta.env.PROD) {
     }),
   );
 }
-// to allow work offline
-registerRoute(new NavigationRoute(
-  createHandlerBoundToURL("/"),
-  { allowlist, denylist },
-));

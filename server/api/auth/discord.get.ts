@@ -77,9 +77,6 @@ export default defineEventHandler(async (event) => {
           },
           loggedInAt: Date.now(),
         },
-        {
-          maxAge: 60 * 60 * 24 * 7, // 1 week
-        },
       );
     },
 

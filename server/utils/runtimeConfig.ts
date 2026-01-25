@@ -17,6 +17,14 @@ export function generateRuntimeConfig() {
         tracesSampleRate: process.env.SENTRY_TRACES_SAMPLE_RATE ? Number(process.env.NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE) : 0.2,
       },
     },
+    session: {
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      name: "wolfstar-session",
+      password: process.env.NUXT_SESSION_PASSWORD || "",
+      cookie: {
+        sameSite: "lax",
+      },
+    },
     cloudflare: {
       accountId: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID,
       namespaceId: process.env.NUXT_CLOUDFLARE_NAMESPACE_ID,

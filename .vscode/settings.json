@@ -59,6 +59,10 @@
     "**/*.code-search": true,
     "**/*.agent": true,
     "**/*.github/agents": true,
-    "**/*.github/instructions": true
+    "**/*.github/instructions": true,
+    "**/*.github/skills": true,
+    "**/*.gemini/skills": true,
+    "**/*.agents/skills": true,
+    "**/*.agent/skills": true
   }
 }

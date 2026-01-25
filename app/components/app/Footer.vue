@@ -5,7 +5,7 @@
       <UContainer>
         <UFooterColumns class="p-10" :columns="columns">
           <template #right>
-            <PwaInstallPrompt />
+            <PwaInstallPrompt class="xl:hidden" />
             <div class="flex-auto"></div>
             <UButton
               label="Powered by Netlify"

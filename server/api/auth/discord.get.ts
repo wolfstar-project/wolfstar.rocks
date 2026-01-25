@@ -48,6 +48,7 @@ export default defineEventHandler(async (event) => {
   const oauthHandler = defineOAuthDiscordEventHandler({
     config: {
       authorizationParams,
+      scope: ["guilds.members.read"],
     },
 
     async onSuccess(

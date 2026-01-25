@@ -1,5 +1,4 @@
 import { readSettings, serializeSettings } from "#server/database";
-import { manageAbility } from "#shared/utils/abilities";
 
 defineRouteMeta({
   openAPI: {
@@ -261,30 +260,13 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
   async (event) => {
-    // Get guild ID from params
     const guildId = getGuildParam(event);
-
-    const { user } = await getCurrentUser(event);
 
     const guild = await getGuild(guildId);
 
-    const member = await getMember(guild.id, user.id);
-
+    const member = await getCurrentMember(event, guild.id);
     // Check permissions
-    if (await denies(event, manageAbility, guild, member)) {
-      throw createError({
-        status: 403,
-        message: "Insufficient permissions",
-        data: {
-          error: "insufficient_permissions",
-          message: "Insufficient permissions",
-          details: {
-            guild: guild.id,
-            member: user.id,
-          },
-        },
-      });
-    }
+    await canManage(guild, member);
 
     // Read and return settings
     const settings = await readSettings(guild.id);

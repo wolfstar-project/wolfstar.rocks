@@ -75,12 +75,13 @@ defineRouteMeta({
 });
 
 export default defineWrappedResponseHandler(async (event) => {
-  // Get guild ID from params
   const guildId = getGuildParam(event);
 
-  const { user } = await getCurrentUser(event);
-
   const guild = await getGuild(guildId);
+
+  const currentMember = await getCurrentMember(event, guild.id);
+
+  await canManage(guild, currentMember);
 
   const memberId = getRouterParam(event, "member");
   if (isNullOrUndefined(memberId)) {
@@ -91,7 +92,7 @@ export default defineWrappedResponseHandler(async (event) => {
   }
 
   // Fetch member data
-  const member = await getMember(guild.id, user.id);
+  const member = await getMember(guild.id, memberId);
 
   return flattenMember(member, guild);
 }, {

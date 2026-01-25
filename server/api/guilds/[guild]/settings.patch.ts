@@ -2,7 +2,6 @@ import {
   serializeSettings,
   writeSettingsTransaction,
 } from "#server/database";
-import { manageAbility } from "#shared/utils/abilities";
 import {
   isNullishOrEmpty,
   isNullOrUndefined,
@@ -71,12 +70,11 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
   async (event) => {
-    // Get guild ID from params
     const guildId = getGuildParam(event);
 
     // Get and validate body data
-    const body = await readValidatedBody(event, (body) =>
-      settingsUpdateSchema.validate(body));
+    const body = await readValidatedBody(event, async (body) =>
+      settingsUpdateSchema.validate(body, { strict: true }));
 
     if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
       throw createError({
@@ -104,27 +102,11 @@ export default defineWrappedResponseHandler(
       });
     }
 
-    const { user } = await getCurrentUser(event);
-
     const guild = await getGuild(guildId);
 
-    const member = await getMember(guild.id, user.id);
-
+    const member = await getCurrentMember(event, guild.id);
     // Check permissions
-    if (await denies(event, manageAbility, guild, member)) {
-      throw createError({
-        status: 403,
-        message: "Insufficient permissions",
-        data: {
-          error: "insufficient_permissions",
-          message: "Insufficient permissions",
-          details: {
-            guild: guild.id,
-            member: user.id,
-          },
-        },
-      });
-    }
+    await canManage(guild, member);
     // Update settings
     using trx = await writeSettingsTransaction(guild.id);
 

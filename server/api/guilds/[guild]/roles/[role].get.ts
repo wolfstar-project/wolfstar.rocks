@@ -1,4 +1,3 @@
-import { manageAbility } from "#shared/utils/abilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 
 defineRouteMeta({
@@ -60,31 +59,13 @@ defineRouteMeta({
 export default defineWrappedResponseHandler(async (event) => {
   const api = useApi();
 
-  // Get guild ID from params
   const guildId = getGuildParam(event);
-
-  const { user } = await getCurrentUser(event);
 
   const guild = await getGuild(guildId);
 
-  // Fetch member data
-  const member = await getMember(guild.id, user.id);
+  const currentMember = await getCurrentMember(event, guild.id);
 
-  // Check permissions
-  if (await denies(event, manageAbility, guild, member)) {
-    throw createError({
-      status: 403,
-      message: "Insufficient permissions",
-      data: {
-        error: "insufficient_permissions",
-        message: "Insufficient permissions",
-        details: {
-          guild: guild.id,
-          member: member.user.id,
-        },
-      },
-    });
-  }
+  await canManage(guild, currentMember);
 
   const roleId = getRouterParam(event, "role");
   if (isNullOrUndefined(roleId)) {

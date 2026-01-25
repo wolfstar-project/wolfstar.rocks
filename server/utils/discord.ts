@@ -172,6 +172,24 @@ export const getCurrentToken = defineCachedFunction(async (event: H3Event) => {
   maxAge: days(7),
 });
 
+export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
+  const shouldManage = await manage(guild, member);
+  if (!shouldManage) {
+    throw createError({
+      status: 403,
+      message: "Insufficient permissions",
+      data: {
+        error: "insufficient_permissions",
+        message: "Insufficient permissions",
+        details: {
+          guild: guild.id,
+          member: member.user.id,
+        },
+      },
+    });
+  }
+};
+
 export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   const tokens = await event.context.$authorization.resolveServerTokens();
 
@@ -218,8 +236,30 @@ export const getCurrentUser = defineCachedFunction(async (event: H3Event) => {
   maxAge: hours(1),
 });
 
-export const getCurrentMember = defineCachedFunction(async (guildId) => {
-  const api = useApi();
+export const getCurrentMember = defineCachedFunction(async (event: H3Event, guildId: string) => {
+  const tokens = await event.context.$authorization.resolveServerTokens();
+
+  if (
+    isNullOrUndefined(tokens)
+    || !("access_token" in tokens)
+    || isNullOrUndefined(tokens.access_token)
+  ) {
+    throw createError({
+      status: 401,
+      message: "Authentication required",
+      data: {
+        error: "no_access_token",
+        message: "None tokens OR access token not found",
+      },
+    });
+  }
+
+  // Initialize REST client
+  const rest = new REST({
+    authPrefix: "Bearer",
+  }).setToken(tokens.access_token);
+
+  const api = useApi(rest);
 
   const member = await api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
     throw createError({

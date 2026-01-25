@@ -48,6 +48,8 @@ export default defineEventHandler(async (event) => {
         tokens: newTokens,
       },
       loggedInAt: Date.now(),
+    }, {
+      maxAge: 60 * 60 * 24 * 7, // 1 week
     });
   }
   catch (error) {

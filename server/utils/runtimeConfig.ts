@@ -22,7 +22,8 @@ export function generateRuntimeConfig() {
       name: "wolfstar-session",
       password: process.env.NUXT_SESSION_PASSWORD || "",
       cookie: {
-        sameSite: "lax",
+        sameSite: "strict",
+        secure: true,
       },
     },
     cloudflare: {

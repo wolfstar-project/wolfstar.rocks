@@ -26,7 +26,6 @@ export default defineNuxtConfig({
     "@sentry/nuxt/module",
     "@vue-macros/nuxt",
     "nuxt-auth-utils",
-    "nuxt-authorization",
     "nuxt-vitalizer",
     "stale-dep/nuxt",
   ],

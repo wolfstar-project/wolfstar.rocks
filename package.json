@@ -75,7 +75,6 @@
     "import-in-the-middle": "catalog:prod",
     "nuxt": "catalog:prod",
     "nuxt-auth-utils": "catalog:utils",
-    "nuxt-authorization": "catalog:prod",
     "nuxt-security": "catalog:prod",
     "nuxt-vitalizer": "catalog:prod",
     "postcss-nested": "catalog:style",

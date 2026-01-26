@@ -25,8 +25,8 @@ const { error } = defineProps<{
 
 // SEO and meta configuration
 useSeoMetadata({
-  title: error.statusCode.toString(),
-  description: error.statusMessage,
+  title: error.status?.toString(),
+  description: error.statusText || "An unexpected error occurred.",
   shouldSeoImage: true,
 });
 </script>

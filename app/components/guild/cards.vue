@@ -82,7 +82,7 @@
           </div>
           <div class="mt-4 flex justify-end">
             <UButton
-              v-if="error.statusCode === 401"
+              v-if="error.status === 401"
               color="error"
               variant="outline"
               size="sm"
@@ -167,16 +167,16 @@ const {
 } = defineProps<EnhancedGuildCardsProps>();
 
 // Error handling computed properties
-const isTimeoutError = computed(() => error?.statusCode === 408);
+const isTimeoutError = computed(() => error?.status === 408);
 const isNetworkError = computed(() =>
-  (error?.statusCode === 0
+  (error?.status === 0
     || error?.message?.includes("network")
     || error?.message?.includes("fetch")) ?? false,
 );
 
 const errorState = computed(() => ({
   color: (() => {
-    if (isTimeoutError.value || isNetworkError.value || error?.statusCode === 429) {
+    if (isTimeoutError.value || isNetworkError.value || error?.status === 429) {
       return "warning";
     }
     return "error";
@@ -188,16 +188,16 @@ const errorState = computed(() => ({
     if (isTimeoutError.value) {
       return "Request Timeout";
     }
-    if (error.statusCode === 401) {
+    if (error.status === 401) {
       return "Session Expired";
     }
-    if (error.statusCode === 403) {
+    if (error.status === 403) {
       return "Access Denied";
     }
-    if (error.statusCode === 429) {
+    if (error.status === 429) {
       return "Too Many Requests";
     }
-    if (error.statusCode && error.statusCode >= 500) {
+    if (error.status && error.status >= 500) {
       return "Server Error";
     }
     if (isNetworkError.value) {
@@ -212,31 +212,31 @@ const errorState = computed(() => ({
     if (isTimeoutError.value) {
       return "The request took too long to complete.";
     }
-    if (error.statusCode === 401) {
+    if (error.status === 401) {
       return "Your session has expired. Please log in again.";
     }
-    if (error.statusCode === 403) {
+    if (error.status === 403) {
       return "You don't have permission to access this resource.";
     }
-    if (error.statusCode === 429) {
+    if (error.status === 429) {
       return "You've made too many requests. Please wait a moment before trying again.";
     }
-    if (error.statusCode && error.statusCode >= 500) {
+    if (error.status && error.status >= 500) {
       return "Something went wrong on our end. Please try again later.";
     }
     if (isNetworkError.value) {
       return "Unable to connect to the server.";
     }
-    return error.statusMessage ?? error.message ?? "Failed to load servers.";
+    return error.statusText ?? error.message ?? "Failed to load servers.";
   })(),
   suggestion: (() => {
     if (isTimeoutError.value) {
       return "This might be due to slow network connection or server load. Try again in a moment.";
     }
-    if (error?.statusCode === 429) {
+    if (error?.status === 429) {
       return "Rate limiting is in effect to protect the service.";
     }
-    if (error?.statusCode && error.statusCode >= 500) {
+    if (error?.status && error.status >= 500) {
       return "If this persists, please contact support.";
     }
     if (isNetworkError.value) {
@@ -248,16 +248,16 @@ const errorState = computed(() => ({
     if (isTimeoutError.value) {
       return "heroicons:clock";
     }
-    if (error?.statusCode === 401) {
+    if (error?.status === 401) {
       return "heroicons:lock-closed";
     }
-    if (error?.statusCode === 403) {
+    if (error?.status === 403) {
       return "heroicons:shield-exclamation";
     }
-    if (error?.statusCode === 429) {
+    if (error?.status === 429) {
       return "heroicons:hand-raised";
     }
-    if (error?.statusCode && error.statusCode >= 500) {
+    if (error?.status && error.status >= 500) {
       return "heroicons:server";
     }
     if (isNetworkError.value) {

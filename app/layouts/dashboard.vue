@@ -123,8 +123,8 @@ const guildId = useRouteParams("id", null, { transform: String });
 // Validate guild ID first
 if (!isValidGuildId(guildId.value)) {
   throw createError({
-    statusCode: 400,
-    statusMessage: "Invalid Guild ID",
+    status: 400,
+    statusText: "Invalid Guild ID",
     message: "The provided guild ID is not valid. Guild IDs must be 17-19 digit numbers.",
     data: {
       field: "guildId",

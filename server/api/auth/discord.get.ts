@@ -83,7 +83,7 @@ export default defineEventHandler(async (event) => {
     async onError(_event: H3Event, error: NuxtError) {
       throw createError({
         status: 500,
-        statusMessage: "Discord OAuth error",
+        statusText: "Discord OAuth error",
         message: error.message,
       });
     },

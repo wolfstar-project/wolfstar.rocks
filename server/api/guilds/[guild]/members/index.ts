@@ -64,8 +64,8 @@ export default defineWrappedResponseHandler(async (event) => {
 
   const members = await api.guilds.getMembers(guildId).catch((error) => {
     throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch members",
+      status: 500,
+      statusText: "Failed to fetch members",
       data: {
         error: "members_fetch_failed",
         message: error.message || "Unknown error",

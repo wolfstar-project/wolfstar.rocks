@@ -40,7 +40,7 @@ if (import.meta.client && guildId.value && !error.value) {
 
 async function navigateToGuild() {
   if (isNullOrUndefined(guildId.value)) {
-    throw createError({ statusCode: 400, statusMessage: "Guild ID is required." });
+    throw createError({ status: 400, statusText: "Guild ID is required." });
   }
 
   await promiseTimeout(1500);

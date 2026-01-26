@@ -27,7 +27,24 @@
   <section id="explore" class="mt-38 w-full scroll-mt-24">
     <div class="text-center mb-16">
       <h2 class="text-5xl font-bold">Explore</h2>
-      <FeatureCarousel class="mb-24" @open-feature="openFeature" />
+      <ClientOnly>
+        <FeatureCarousel class="mb-24" @open-feature="openFeature" />
+        <template #fallback>
+          <div class="mb-24 w-full py-10 flex justify-center overflow-hidden">
+            <div class="flex">
+              <div
+                v-for="i in 3"
+                :key="i"
+                class="mx-3 my-5 flex h-40 w-64 flex-col items-start justify-center gap-2 rounded-xl border border-white/5 bg-white/5 px-6"
+              >
+                <div class="size-10 rounded-full bg-white/10 animate-pulse" />
+                <div class="h-6 w-32 rounded bg-white/10 animate-pulse" />
+                <div class="h-4 w-48 rounded bg-white/10 animate-pulse" />
+              </div>
+            </div>
+          </div>
+        </template>
+      </ClientOnly>
       <FeatureShowcase v-model:active-feature="selectedFeatureIndex" />
     </div>
   </section>

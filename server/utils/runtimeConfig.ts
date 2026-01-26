@@ -42,9 +42,8 @@ export function generateRuntimeConfig() {
       botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
     },
     storage: {
-      fsBase: process.env.NUXT_STORAGE_FS_BASE,
+      fsBase: process.env.NUXT_STORAGE_FS_BASE ?? "node_modules/.cache/app",
     },
-
   };
 }
 

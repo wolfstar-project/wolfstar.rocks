@@ -13,6 +13,9 @@ export const pwa: ModuleOptions = {
   injectManifest: {
     globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
   },
+  pwaAssets: {
+    config: true,
+  },
   manifest: {
     background_color: "#050505",
     categories: ["discord", "bot", "wolfstar", "moderation", "automation", "cyborg", "logging"],

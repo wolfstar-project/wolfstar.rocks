@@ -1,24 +1,27 @@
-node_modules/
-.nuxt/
-.nitro/
-.cache/
-.output/
-dist/
-functions/
-.netlify/
+
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.netlify
+.cache
+dist
+functions
+
+# Node dependencies
+node_modules
+.pnpm-store
 
 # Logs
 logs
-*.log*
+*.log
 
 # Misc
 .DS_Store
 .fleet
 .idea
-.pnpm-store
-.data
 .eslintcache
-.unlighthouse
 
 # Local env files
 .env
@@ -30,3 +33,16 @@ deno.lock
 
 # Prisma generated files
 server/database/generated/
+
+# Testing
+test-results
+
+# Test coverage
+coverage/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Lighthouse
+.lighthouseci

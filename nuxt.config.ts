@@ -12,6 +12,13 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
   // Modules configuration
   modules: [
+    function (_, nuxt) {
+      if (nuxt.options._prepare) {
+        nuxt.options.pwa ||= {};
+        nuxt.options.pwa.pwaAssets ||= {};
+        nuxt.options.pwa.pwaAssets.disabled = true;
+      }
+    },
     "@nuxt/eslint",
     "@nuxt/ui",
     "@nuxt/image",
@@ -28,6 +35,7 @@ export default defineNuxtConfig({
     "nuxt-auth-utils",
     "nuxt-vitalizer",
     "stale-dep/nuxt",
+    "@nuxt/test-utils/module",
   ],
 
   $development: {
@@ -223,6 +231,9 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    define: {
+      "process.test": "false",
+    },
     optimizeDeps: {
       include: [
         "@discordjs/core/http-only",
@@ -274,6 +285,7 @@ export default defineNuxtConfig({
 
   typescript: {
     tsConfig: {
+      include: ["../test/nuxt"],
       exclude: ["../service-worker"],
     },
   },
@@ -400,6 +412,8 @@ export default defineNuxtConfig({
           "blob:",
           "https://beta.wolfstar.rocks",
           "https://wolfstar.rocks",
+          // Allow Sentry's runtime assets when Replay is enabled via CDN
+          "https://browser.sentry-cdn.com",
         ],
         "style-src": [
           "'self'",

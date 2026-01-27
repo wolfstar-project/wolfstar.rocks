@@ -58,19 +58,59 @@ export function getGuildParam(event: H3Event) {
   return guildId;
 }
 
+/**
+ * @param name Guild name
+ * @returns Guild acronym
+ */
+export function guildNameToAcronym(name: string) {
+  const MAX_LEN = 3;
+  if (!name || !name.trim()) {
+    return "";
+  }
+
+  const normalized = name.trim().replace(/\s+/g, " ").replace(/(?:'s|’s)\b/giu, " ");
+
+  const words = Array.from(normalized.matchAll(/(?:\p{L}|\p{N})[\p{L}\p{N}'’\-]*/gu)).map(
+    (m) => m[0],
+  );
+
+  if (words.length === 1) {
+    const only = words[0];
+    const alnums = Array.from(String(only)).filter((ch) => /[\p{L}\p{N}]/u.test(ch)).slice(0, MAX_LEN);
+    if (alnums.length > 1 && /\p{N}/u.test(alnums[0]!)) {
+      return alnums.join("").toUpperCase();
+    }
+  }
+
+  const initials: string[] = [];
+  for (const w of words) {
+    const firstGrapheme = Array.from(w)[0];
+    if (firstGrapheme && /[\p{L}\p{N}]/u.test(firstGrapheme)) {
+      initials.push(firstGrapheme);
+      if (initials.length >= MAX_LEN) {
+        break;
+      }
+    }
+  }
+
+  if (initials.length === 0) {
+    const fallback = Array.from(normalized).filter((ch) => /[\p{L}\p{N}]/u.test(ch)).slice(0, MAX_LEN);
+    if (fallback.length) {
+      return fallback.join("").toUpperCase();
+    }
+
+    return Array.from(normalized).slice(0, MAX_LEN).join("").toUpperCase();
+  }
+
+  return initials.join("").toUpperCase();
+}
+
 export function omit<T, K extends keyof T>(keys: K[], obj: T): Omit<T, K> {
   if (!keys.length)
     return obj;
   const key = keys.pop()!;
   const { [key]: omitted, ...rest } = obj;
   return omit(keys, rest as T) as Omit<T, K>;
-}
-
-export function guildNameToAcronym(name: string) {
-  return name
-    .replace(/'s /g, " ")
-    .replace(/\w+/g, (e) => e[0])
-    .replace(/\s/g, "");
 }
 
 export function maybeParseNumber(value: string | bigint | null | undefined): number | null {

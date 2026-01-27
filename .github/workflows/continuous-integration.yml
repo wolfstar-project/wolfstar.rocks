@@ -1,70 +1,123 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
+
 permissions:
   contents: read
 
 jobs:
-  Linting:
-    name: Linting NodeJS
+  lint:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
         node: [22]
+
     steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Add problem matchers
         run: echo "::add-matcher::.github/problemMatchers/eslint.json"
       - uses: pnpm/action-setup@v4
-        name: Install pnpm
         with:
           run_install: false
-      - name: Use Node.js v22
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Genarate prisma types
-        run: pnpm prisma:generate
-      - name: Run ESLint
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🔠 Lint project
         run: pnpm lint
 
-  Typecheck:
-    name: Typecheck source code
+  test:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
         node: [22]
+
     steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Add problem matchers
-        run: echo "::add-matcher::.github/problemMatchers/tsc.json"
+      - uses: actions/checkout@v6
       - uses: pnpm/action-setup@v4
-        name: Install pnpm
         with:
           run_install: false
-      - name: Use Node.js v22
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Generate prisma types
-        run: pnpm prisma:generate
-      - name: Typecheck code
-        run: pnpm typecheck
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🌐 Install browser
+        run: pnpm playwright install
+
+      - name: 💪 Type check
+        run: pnpm test:types
+
+      - name: 🧪 Unit test
+        run: pnpm test:unit
+
+      - name: 🏃 Component tests
+        run: pnpm test:nuxt
+
+  browser:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [22]
+    container:
+      image: mcr.microsoft.com/playwright:v1.57.0-noble
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🖥️ Test project (browser)
+        run: pnpm test:browser
+
+  a11y:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [22]
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node }}
+          cache: pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🏗️ Build project
+        run: pnpm build
+
+      - name: ♿ Accessibility audit (Lighthouse)
+        run: pnpx @lhci/cli autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}

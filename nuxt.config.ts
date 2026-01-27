@@ -12,13 +12,6 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
   // Modules configuration
   modules: [
-    function (_, nuxt) {
-      if (nuxt.options._prepare) {
-        nuxt.options.pwa ||= {};
-        nuxt.options.pwa.pwaAssets ||= {};
-        nuxt.options.pwa.pwaAssets.disabled = true;
-      }
-    },
     "@nuxt/eslint",
     "@nuxt/ui",
     "@nuxt/image",
@@ -49,6 +42,11 @@ export default defineNuxtConfig({
     modules: ["nuxt-security"],
     image: {
       provider: "netlify",
+    },
+    pwa: {
+      pwaAssets: {
+        disabled: true,
+      },
     },
     sentry: {
       telemetry: false,

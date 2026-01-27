@@ -1,4 +1,3 @@
-import type { ModuleOptions as SecurityModuleOptions } from "nuxt-security";
 import { createResolver, useNuxt } from "nuxt/kit";
 import { isCI } from "std-env";
 import { pwa } from "./config/pwa";
@@ -432,7 +431,7 @@ export default defineNuxtConfig({
       },
     },
     rateLimiter: false,
-  } satisfies Partial<SecurityModuleOptions>,
+  },
 
   sentry: {
     ...runtimeConfig.sentry,

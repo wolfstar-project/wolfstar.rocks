@@ -355,6 +355,11 @@ export default defineNuxtConfig({
   },
   // PWA configuration
   pwa,
+
+  robots: {
+    blockAiBots: true,
+    blockNonSeoBots: true,
+  },
   // eslint-disable-next-line ts/ban-ts-comment
   // @ts-ignore nuxt-security is conditional
   security: {

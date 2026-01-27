@@ -42,7 +42,6 @@
     "test:browser:ui": "playwright test --ui",
     "test:browser:update": "playwright test --update-snapshots",
     "test:nuxt": "vitest --project nuxt",
-    "start": "node .output/server/index.mjs",
     "typecheck": "stale-dep && nuxt typecheck",
     "release": "bumpp && node scripts/release.ts",
     "upgrade:interactive": "taze"

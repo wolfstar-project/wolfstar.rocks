@@ -2,8 +2,10 @@
 <template>
   <UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
     <section
-      class="flex flex-col items-center justify-center space-y-6 rounded-xl bg-linear-to-br from-base-100 via-base-200 to-base-100 p-12 shadow-xl border border-base-300"
+      class="relative overflow-hidden flex flex-col md:flex-row items-center justify-center gap-6 rounded-xl bg-base-200/30 p-8 md:p-12 md:border-4 border-2 border-base-200"
     >
+      <!-- decorative left accent (sidebar-like) -->
+      <div class="hidden md:block absolute left-0 inset-y-2 w-1 rounded-r-md bg-primary/40" aria-hidden="true"></div>
       <div
         v-if="!user"
         class="flex flex-col items-center justify-center space-y-6"
@@ -78,8 +80,10 @@
     </section>
 
     <section
-      class="overflow-hidden rounded-xl shadow-lg flex flex-col items-center bg-base-100 border border-base-300"
+      class="relative overflow-hidden rounded-xl shadow-lg flex flex-col justify-center items-center bg-base-200/20 md:border-4 border-2 border-base-200 divide-y divide-base-200/50"
     >
+      <!-- subtle left accent to mirror dashboard sidebar -->
+      <div class="hidden md:block absolute left-0 inset-y-2 w-1 rounded-r-md bg-secondary/20" aria-hidden="true"></div>
       <UTabs
         v-model="activeTab"
         variant="transparent"
@@ -97,7 +101,7 @@
                     v-if="isLoading"
                     class="inline-block h-5 w-48"
                   />
-                  <span v-else>Servers you're in ({{ guilds?.length ?? 0 }} servers)</span>
+                  <span v-else>Servers you're in ({{ guilds.length ?? 0 }} servers)</span>
                 </p>
               </div>
 
@@ -258,7 +262,7 @@
               </div>
 
               <!-- Accessibility Settings Card -->
-              <UCard>
+              <UCard class="bg-base-100 border border-base-200/60 shadow-sm">
                 <template #header>
                   <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center rounded-full size-7 bg-primary/10">
@@ -334,7 +338,7 @@
               </UCard>
 
               <!-- Privacy Settings Card -->
-              <UCard>
+              <UCard class="bg-base-100 border border-base-200/60 shadow-sm">
                 <template #header>
                   <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center rounded-full size-7 bg-primary/10">
@@ -360,7 +364,7 @@
               </UCard>
 
               <!-- Notifications Settings Card -->
-              <UCard>
+              <UCard class="bg-base-100 border border-base-200/60 shadow-sm">
                 <template #header>
                   <div class="flex items-center gap-3">
                     <div class="flex items-center justify-center rounded-full size-7 bg-primary/10">
@@ -485,7 +489,7 @@ definePageMeta({ alias: ["/account"] });
 useSeoMetadata({
   title: "Profile",
   description: "Manage your profile, servers and settings",
-  shouldSeoImage: true,
+  shouldOgImage: true,
 });
 
 // Constants for timeout and retry logic

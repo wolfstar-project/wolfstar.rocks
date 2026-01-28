@@ -141,10 +141,6 @@
 		background: oklch(20% 0 0 / 0.3);
 	}
 
-	&:hover {
-		transform: translateY(-2px);
-	}
-
 	/* Adaptive colors based on DaisyUI background classes */
 	&.bg-primary {
 		border-color: var(--color-primary);

@@ -132,8 +132,14 @@ async function fetchCommandsAndLanguages() {
     loading.value = false;
   }
 }
+const src = computed(() =>
+  guildIconURL(guildData as unknown as OauthFlattenedGuild, {
+    size: 64,
+  })!);
 
 const joinedPath = computed(() => Array.isArray(slug) ? slug.join("/") : (slug || ""));
+
+const title = ref(`${joinedPath.value} · ${guildData.value.name}`);
 
 const renderComponent = computed(() => {
   switch (joinedPath.value as GuildRoutes & FilterRoutes) {
@@ -150,10 +156,9 @@ const renderComponent = computed(() => {
   }
 });
 
-const src = computed(() =>
-  guildIconURL(guildData as unknown as OauthFlattenedGuild, {
-    size: 64,
-  })!);
+useHead({
+  title: () => title.value,
+});
 
 onMounted(fetchCommandsAndLanguages);
 </script>

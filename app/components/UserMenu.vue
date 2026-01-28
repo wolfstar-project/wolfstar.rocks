@@ -2,7 +2,7 @@
   <UDropdownMenu
     :items="items"
     :content="{ align: 'center', collisionPadding: 12 }"
-    :ui="{ content: collapsed ? 'w-48' : 'w-(--reka-dropdown-menu-trigger-width)' }"
+    :ui="{ content: collapsed ? 'w-48 bg-base-200/60 border border-base-200 shadow-md rounded-md' : 'w-(--reka-dropdown-menu-trigger-width) bg-base-200/60 border border-base-200 shadow-md rounded-md' }"
     aria-label="User account menu"
   >
     <UButton
@@ -11,13 +11,13 @@
         label: collapsed ? undefined : user?.name,
         trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down'
       }"
-      color="neutral"
+      color="primary"
       variant="ghost"
       block
       :square="collapsed"
-      class="data-[state=open]:bg-elevated"
+      class="data-[state=open]:bg-primary/10"
       :ui="{
-        trailingIcon: 'text-dimmed'
+        trailingIcon: 'text-dimmed',
       }"
       :aria-label="collapsed ? 'User menu' : `User menu for ${user?.name}`"
       aria-haspopup="true"

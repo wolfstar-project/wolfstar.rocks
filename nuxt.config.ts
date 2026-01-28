@@ -61,6 +61,11 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      titleTemplate: "%s %separator %siteName",
+      templateParams: {
+        separator: "·",
+        siteName: "WolfStar",
+      },
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
       htmlAttrs: { lang: "en" },

@@ -128,8 +128,8 @@ import { isDevelopment } from "std-env";
 useSeoMetadata({
   title: "Commands",
   description: "Browse all available WolfStar bot commands and their descriptions.",
-  shouldSeoImage: true,
-  seoImage: {
+  shouldOgImage: true,
+  ogImage: {
     title: "WolfStar Commands",
     description: "Explore all bot commands",
   },

@@ -1,15 +1,15 @@
+import type { ResolvableValue } from "@unhead/vue";
 import type { OGImageProps } from "@/components/OgImage/Default.vue";
 
 interface SiteMetadata {
-  title?: MaybeRefOrGetter<string>;
-  description?: MaybeRefOrGetter<string>;
-  ogImage?: string;
+  title?: ResolvableValue<string>;
+  description?: ResolvableValue<string>;
   ogSiteName?: string;
   ogType?: "website" | "article" | "profile";
   twitterCard?: "summary" | "summary_large_image";
   twitterSite?: string;
-  shouldSeoImage?: boolean;
-  seoImage?: OGImageProps;
+  shouldOgImage?: boolean;
+  ogImage?: OGImageProps;
 }
 
 export function useSeoMetadata({
@@ -20,53 +20,37 @@ export function useSeoMetadata({
   ogType = "website",
   twitterCard = "summary_large_image",
   twitterSite,
-  shouldSeoImage = false,
-  seoImage = {},
+  shouldOgImage = false,
 }: SiteMetadata) {
   const { url, name: siteName } = useSiteConfig();
   const route = useRoute();
   const ogUrl = `${url}${route.fullPath}`;
 
   useHead({
-    titleTemplate: (title) =>
-      title
-        ? `${title} %separator %siteName`
-        : "%siteName: The app for automating your Discord server",
-    templateParams: {
-      siteName: ogSiteName ?? siteName,
-      separator: "·",
-    },
     meta: [
       { name: "description", content: description },
     ],
   });
 
-  if (shouldSeoImage) {
-    const { title: seoTitle, description: seoDescription, ...seoImageProps } = seoImage;
+  if (shouldOgImage) {
     defineOgImageComponent("Default", {
-      title: seoTitle ?? title,
-      description: seoDescription ?? description,
-      ...seoImageProps,
+      title: ogImage?.title ?? title,
+      description: ogImage?.description ?? description,
+      ...ogImage,
     });
   }
 
   if (import.meta.server) {
     useSeoMeta({
       title,
-      titleTemplate: (title) =>
-        title
-          ? `${title} · ${ogSiteName ?? siteName}`
-          : `${ogSiteName ?? siteName}: The app for automating your Discord server`,
       description,
       ogTitle: title,
       ogDescription: description,
-      ogImage,
       ogSiteName: ogSiteName ?? siteName,
       ogType,
       ogUrl,
       twitterTitle: title,
       twitterDescription: description,
-      twitterImage: ogImage,
       twitterCard,
       twitterSite,
     });

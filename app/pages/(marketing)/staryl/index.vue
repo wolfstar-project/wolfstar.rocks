@@ -31,7 +31,7 @@ useSeoMetadata({
   title: "Staryl",
   description:
     "Staryl's landing page. A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
-  shouldSeoImage: true,
+  shouldOgImage: true,
 });
 </script>
 

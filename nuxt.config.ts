@@ -446,7 +446,6 @@ export default defineNuxtConfig({
       ogSiteName: "WolfStar",
       ogLocale: "en",
       ogType: "website",
-      ogUrl: "https://wolfstar.rocks",
       ogTitle: "WolfStar",
       ogDescription:
         "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",

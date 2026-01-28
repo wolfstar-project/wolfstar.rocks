@@ -52,14 +52,15 @@
  * @credits Nuxt SEO <https://nuxtseo.com/>
  */
 
+import type { ResolvableValue } from "@unhead/vue";
 import { useOgImageRuntimeConfig } from "#og-image/app/utils";
 import { useSiteConfig } from "#site-config/app/composables";
 import { computed, defineComponent, h, resolveComponent } from "vue";
 
 export interface OGImageProps {
   colorMode?: "dark" | "light";
-  title?: string;
-  description?: string;
+  title?: ResolvableValue<string>;
+  description?: ResolvableValue<string>;
   icon?: string | boolean;
   siteName?: string;
   theme?: string;

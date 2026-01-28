@@ -4,8 +4,8 @@ definePageMeta({ alias: ["/login"] });
 useSeoMetadata({
   title: "Login",
   description: "A landing page for the OAuth2.0 login flow",
-  shouldSeoImage: true,
-  seoImage: {
+  shouldOgImage: true,
+  ogImage: {
     theme: Colors.Red,
   },
 });

@@ -118,7 +118,7 @@ useSeoMetadata({
   title: "OAuth Callback",
   description:
     "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
-  seoImage: {
+  ogImage: {
     description: "A landing page for the OAuth2.0 callback flow",
     theme: Colors.Blue,
   },

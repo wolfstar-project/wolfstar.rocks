@@ -21,21 +21,23 @@
 
     <div class="w-full">
       <!-- Loading Skeleton Grid -->
-      <div
-        v-if="loading"
-        class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-        role="status"
-        aria-label="Loading servers"
-      >
-        <guild-card-skeleton v-for="n in INITIAL_COUNT" :key="n" />
-      </div>
-      <div v-else ref="scrollComponent">
+      <div ref="scrollComponent">
+        <!-- Loading Skeleton Grid -->
+        <div
+          v-if="loading"
+          class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+          role="status"
+          aria-label="Loading servers"
+        >
+          <guild-card v-for="n in INITIAL_COUNT" :key="n" :loading="true" />
+        </div>
+
         <!-- Guild Cards Grid -->
         <div
-          v-if="paginatedGuilds.length > 0"
-          class="grid grid-cols-2 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+          v-else-if="paginatedGuilds.length > 0"
+          class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
           role="list"
-          aria-label="Discord servers"
+          aria-label="Guilds list"
         >
           <guild-card
             v-for="guild in paginatedGuilds"
@@ -144,7 +146,7 @@ import type { TransformedLoginData } from "#shared/types/discord";
 import type { FetchError } from "ofetch";
 import { useInfiniteScroll } from "@vueuse/core";
 
-interface EnhancedGuildCardsProps {
+interface GuildCardsProps {
   filteredGuilds: NonNullable<TransformedLoginData["transformedGuilds"]>;
   guilds: TransformedLoginData["transformedGuilds"] | null;
   undoSearch: () => void;
@@ -164,7 +166,7 @@ const {
   error,
   isRetrying = false,
   onRetry,
-} = defineProps<EnhancedGuildCardsProps>();
+} = defineProps<GuildCardsProps>();
 
 // Error handling computed properties
 const isTimeoutError = computed(() => error?.status === 408);

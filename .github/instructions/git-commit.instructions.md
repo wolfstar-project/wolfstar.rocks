@@ -46,6 +46,34 @@ Example: `fix/api/fix-guild-list-pagination`
 
 ---
 
+## Before committing — ALWAYS run ✅
+
+Follow these checks locally in this exact order before creating a commit or opening a PR:
+
+1. **Build**: `pnpm build` (must succeed — first builds can take longer)
+2. **Lint**: `pnpm lint` (fix **errors**; warnings are acceptable)
+3. **Typecheck**: `pnpm typecheck` (must pass)
+4. **Commit Message**: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
+
+These steps mirror the project's CI gates and help ensure a green PR.
+
+---
+
+## Commit Message Format
+
+**Format**: `<type>(<scope>): <subject>`
+
+**Types**: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert, types
+
+**Rules**:
+
+- Scope: lowercase (e.g., `auth`, `api`, `ui`)
+- Subject: lowercase, imperative mood
+- No exclamation marks
+- No period at end
+
+---
+
 ### Recommended PR template (paste into the PR body) 📋
 
 Use this compact template for behavior or documentation changes.

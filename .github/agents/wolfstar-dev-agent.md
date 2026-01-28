@@ -353,39 +353,6 @@ manage_todo_list({
 
 ---
 
-## Quality Assurance Checklist
-
-**Before Committing** - ALWAYS run:
-
-1. **Build**: `pnpm build` (must succeed, 45-120s)
-2. **Lint**: `pnpm lint` (fix errors, warnings OK)
-3. **Typecheck**: `pnpm typecheck` (must pass)
-4. **Commit Message**: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
-
-### Commit Message Format
-
-**Standard**: Conventional Commits
-
-**Format**: `<type>(<scope>): <subject>`
-
-**Types**: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert, types
-
-**Rules**:
-
-- Scope: lowercase (e.g., `auth`, `api`, `ui`)
-- Subject: lowercase, imperative mood
-- No exclamation marks
-- No period at end
-
-**Examples**:
-
-```bash
-feat: add user dashboard component
-feat(auth): implement Discord OAuth2 flow
-fix(api): resolve guild data fetching issue
-docs: update installation instructions
-```
-
 Do not ever use HTML tags or any other formatting for the todo list, as it will not be rendered correctly. Always use the `manage_todo_list` tool with proper JSON structure for todo items.
 
 The `manage_todo_list` tool ensures:

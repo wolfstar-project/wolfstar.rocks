@@ -45,7 +45,7 @@
             <img
               :src="createUrl('png', 128)"
               :alt="guild?.name || 'Guild icon'"
-              class="rounded-full"
+              class="h-full w-full object-cover rounded-full"
               decoding="async"
               loading="lazy"
               crossorigin="anonymous"

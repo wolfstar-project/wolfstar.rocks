@@ -464,6 +464,10 @@ export default defineNuxtConfig({
       msapplicationConfig: "/browserconfig.xml",
       mobileWebAppCapable: "yes",
       appleMobileWebAppStatusBarStyle: "black",
+      themeColor: [
+        { content: "#121212", media: "(prefers-color-scheme: dark)" },
+        { content: "#ffffff", media: "(prefers-color-scheme: light)" },
+      ],
     },
   },
 

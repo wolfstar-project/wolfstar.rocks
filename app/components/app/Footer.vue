@@ -3,7 +3,7 @@
   <UFooter :ui="{ root: 'p-2', top: 'border-default' }" role="contentinfo" aria-label="Site footer">
     <template #top>
       <UContainer>
-        <UFooterColumns class="p-10" :columns="columns">
+        <UFooterColumns class="p-10" :columns>
           <template #right>
             <PwaInstallPrompt class="xl:hidden" />
             <div class="flex-auto"></div>
@@ -80,8 +80,7 @@
 </template>
 
 <script setup lang="ts">
-const { buildInfo } = useAppConfig();
-const { columns } = useFooter();
+const { buildInfo, footer: columns } = useAppConfig();
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

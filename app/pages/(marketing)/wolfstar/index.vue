@@ -100,6 +100,9 @@ useSeoMetadata({
   shouldOgImage: true,
 });
 
+const OtherApps = useApp();
+const Invites = useInvites();
+
 const selectedFeatureIndex = ref(0);
 
 function openFeature(index: number) {

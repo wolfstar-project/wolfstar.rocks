@@ -2,14 +2,11 @@ export function useHeader() {
   // Safely inject appName with fallback to prevent SSR issues
   const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 
-  const Apps = {
-    wolfstar: { name: "WolfStar", invite: Invites.WolfStar, landing: "/" },
-    staryl: { name: "Staryl", invite: Invites.Staryl, landing: "/staryl" },
-  } as const satisfies Record<"wolfstar" | "staryl", { name: string; invite: string; landing: string }>;
+  const apps = useApp();
 
   const currentApp = computed(() => {
-    const appKey = unref(appName);
-    return Apps[appKey] || Apps.wolfstar;
+    const appKey = unref(appName).toLocaleLowerCase().replace(/^\w/, (c) => c.toUpperCase()) as "WolfStar" | "Staryl";
+    return apps[appKey] || apps.WolfStar;
   });
 
   const desktopLinks = computed(() => [{
@@ -40,7 +37,7 @@ export function useHeader() {
         icon: "lucide:twitch",
       },
     ],
-  }, ...(currentApp.value.invite
+  }, ...(currentApp.value.invite !== "#"
     ? [{
         label: "Invite App",
         to: currentApp.value.invite,
@@ -75,7 +72,7 @@ export function useHeader() {
   }, {
     label: "Commands",
     to: "/commands",
-  }, ...(currentApp.value.invite
+  }, ...(currentApp.value.invite !== "#"
     ? [{
         label: "Invite App",
         to: currentApp.value.invite,

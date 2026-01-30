@@ -1,8 +1,3 @@
-export const Invites = {
-  WolfStar: `https://discord.com/oauth2/authorize?client_id=&permissions=534185897078&scope=bot%20applications.commands`,
-  Staryl: "",
-};
-
 export const robotBlockingPageProps = "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1";
 
 export const colors = ["primary", "secondary", "success", "error", "info", "warning", "neutral"] as const;
@@ -247,25 +242,6 @@ export interface Profile {
 }
 
 export type ProfileName = keyof typeof Profiles;
-
-export const OtherApps = {
-  WolfStar: {
-    name: "WolfStar",
-    explore: "/",
-    avatar: "/avatars/wolfstar.png",
-    invite: Invites.WolfStar,
-    purposes: ["Moderation", "Logging"],
-    description: "An app to help you manage your server's moderation and logging.",
-  },
-  Staryl: {
-    name: "Staryl",
-    explore: "/",
-    avatar: "/avatars/staryl.png",
-    invite: Invites.Staryl,
-    purposes: ["Social", "Notification"],
-    description: "An app to help you manage your server's social notifications (Twitch, Instragram and etc.).",
-  },
-} as const satisfies Record<string, OtherApp>;
 
 export interface OtherApp {
   name: string;

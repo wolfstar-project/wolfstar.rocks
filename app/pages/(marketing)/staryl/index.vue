@@ -33,6 +33,9 @@ useSeoMetadata({
     "Staryl's landing page. A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
   shouldOgImage: true,
 });
+
+const OtherApps = useApp();
+const Invites = useInvites();
 </script>
 
 <style scoped>

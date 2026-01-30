@@ -1,5 +1,4 @@
-# credits:
-# https://github.com/npmx-dev/npmx.dev/blob/main/.github/workflows/semantic-pull-requests.yml
+# credit to: https://github.com/npmx-dev/npmx.dev/blob/main/.github/workflows/semantic-pull-requests.yml
 name: chore
 
 on:

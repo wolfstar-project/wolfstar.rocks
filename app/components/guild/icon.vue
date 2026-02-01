@@ -34,23 +34,19 @@
           role="img"
         >
           <div v-if="!loaded" class="skeleton h-full w-full"></div>
-          <picture v-if="!isDefault && loaded">
-            <source
-              v-if="isAnimated && prefersReducedMotion !== 'reduce'"
-              type="image/gif"
-              :srcset="makeSrcset('gif')"
-            />
-            <source type="image/webp" :srcset="makeSrcset('webp')" />
-            <source type="image/png" :srcset="makeSrcset('png')" />
-            <img
-              :src="createUrl('png', 128)"
-              :alt="guild?.name || 'Guild icon'"
-              class="h-full w-full object-cover rounded-full"
-              decoding="async"
-              loading="lazy"
-              crossorigin="anonymous"
-            />
-          </picture>
+          <NuxtImg
+            v-if="!isDefault && loaded"
+            :src="createUrl(preferredFormat, iconPixelSize)"
+            :format="preferredFormat === 'gif' ? undefined : 'webp'"
+            :width="iconPixelSize"
+            :height="iconPixelSize"
+            sizes="96px"
+            :alt="guild?.name || 'Guild icon'"
+            class="h-full w-full object-cover rounded-full"
+            loading="lazy"
+            decoding="async"
+            crossorigin="anonymous"
+          />
           <div
             v-else-if="isDefault && loaded"
             class="bg-linear-to-br from-primary/20 to-secondary/20 text-base-content flex items-center justify-center rounded-full"
@@ -160,6 +156,25 @@ const acronymSizeClasses = computed(() => {
   return sizeMap[size];
 });
 
+const iconPixelSize = computed(() => {
+  const sizeMap = {
+    sm: 48,
+    md: 64,
+    lg: 80,
+    xl: 96,
+  } as const;
+
+  return sizeMap[size];
+});
+
+const preferredFormat = computed<"gif" | "png">(() => {
+  if (isAnimated.value && prefersReducedMotion.value !== "reduce") {
+    return "gif";
+  }
+
+  return "png";
+});
+
 interface StatusIndicator {
   wrapperClasses: string;
   iconName: string;
@@ -211,10 +226,6 @@ const statusIndicator = computed<StatusIndicator>(() => {
 // Utility functions
 function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${format}?size=${size}`;
-}
-
-function makeSrcset(format: "webp" | "png" | "gif") {
-  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
 
 function formatNumber(num: number): string {

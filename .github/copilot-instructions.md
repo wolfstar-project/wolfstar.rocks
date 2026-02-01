@@ -710,7 +710,7 @@ if (!hasPermission) {
 
 ## Project Structure
 
-```
+```text
 wolfstar.rocks/
 ├── app/                           # Nuxt application (client-side)
 │   ├── components/                # Vue components
@@ -1464,13 +1464,13 @@ export function useUser() {
 
 **❌ Wrong location - API not auto-registered**:
 
-```
+```text
 app/api/guilds.ts           # Wrong directory!
 ```
 
 **✅ Correct location**:
 
-```
+```text
 server/api/guilds.get.ts    # GET /api/guilds
 server/api/guilds.post.ts   # POST /api/guilds
 ```

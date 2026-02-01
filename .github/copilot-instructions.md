@@ -7,17 +7,18 @@
 - **State & Data**: Use Pinia stores in `app/stores` for global state, colocate reusable logic inside `app/composables`, and pull types from `shared/types` to avoid drift.
 - **Styling**: Tailwind + DaisyUI + Nuxt UI drive styling; shared utility sheets sit in `app/assets/css`, and tokens/variants live in `app/themes`.
 - **API Pattern**: Place routes under `server/api`; wrap handlers with `defineWrappedResponseHandler` (or cached variant) from `server/utils/wrappedEventHandler.ts` to inherit auth + @tanstack/pacer rate limiting.
-- **Auth & Discord**: Sessions come from `nuxt-auth-utils`; required Discord scopes are `identify` + `guilds`; manage permission checks with `shared/utils/abilities.ts` and helpers in `server/utils/discord.ts`.
+- **Auth & Discord**: Custom Nuxt auth module in `modules/auth/` provides route-based auth, `useAuth` composable, and `authz` middleware; sessions via `nuxt-auth-utils` with Discord OAuth2 (`identify` + `guilds` scopes); permission checks with `shared/utils/abilities.ts` and `server/utils/discord.ts`; `$authorization` resolver in plugins.
 - **Database**: Prisma schema resides in `server/database/schema.prisma`; default client exports from `server/database/prisma.ts`; prototype with `pnpm prisma:push`, ship changes via `pnpm prisma:migrate:dev`.
 - **Conventions**: Directories/files use kebab-case except Vue components (PascalCase); enforce block order template → script → script setup → styles; constants in UPPER_SNAKE; never create reactive state at module scope.
 - **Logging & Transform**: Prefer `shared/utils/logger.ts` for structured logs and `server/utils/ApiTransformers.ts` when shaping API payloads.
 - **Error Handling**: Throw `createError` inside handlers; use wrapper `onSuccess`/`onError` callbacks for logging; wrappers auto-set `X-RateLimit-*` headers.
+- **Testing**: Vitest for unit/component tests (`pnpm test`), Playwright for E2E (`pnpm test:browser`); test files in `test/unit/` and `test/nuxt/`; always run tests before committing.
 - **Testing Hooks**: Husky + lint-staged run ESLint/Prettier on staged files; commit messages must follow Conventional Commits (`pnpm commitlint`).
 - **Validation Scenarios**: After auth or guild changes, run `pnpm dev`, complete Discord login, and ensure guild dashboards load without console errors.
 - **Deployment Notes**: Nitro output targets Cloudflare/NuxtHub—respect runtime config in `config/env.ts` and `server/utils/runtimeConfig.ts` for env-aware features.
 - **Common Pitfalls**: Match HTTP suffixes (`.get.ts`, `.post.ts`) for new endpoints, regenerate Prisma after schema edits, and remember rate-limit state persists via Nitro storage.
 - **Diagnostics**: If builds misbehave, clear `.nuxt` and `node_modules/.cache`, then restart rather than editing generated output.
-- **Reference Files**: `nuxt.config.ts`, `app/plugins/api.ts`, `server/plugins/authorization-resolver.ts`, and `app/utils/seoMeta.ts` illustrate preferred patterns.
+- **Reference Files**: `nuxt.config.ts`, `modules/auth/index.ts` (custom auth module), `server/plugins/authorization-resolver.ts` (permission context), `app/utils/seoMeta.ts`, and `vitest.config.ts` (test setup) illustrate preferred patterns.
 - **CI Expectations**: `.github/workflows/continuous-integration.yml` runs build/lint/typecheck on PRs—mirror that locally before pushing.
 - **When Unsure**: Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
@@ -206,7 +207,21 @@ pnpm prisma:generate            # Regenerate Prisma client
 pnpm prisma:generate:watch      # Watch mode for schema changes
 ```
 
-### Additional Tools
+#### Testing
+
+```bash
+# Run all tests
+pnpm test                       # Run all test suites with Vitest
+
+# Run specific test projects
+pnpm test:nuxt                  # Run Nuxt-specific tests
+pnpm test:browser               # Run Playwright browser tests
+
+# Test with coverage
+pnpm test -- --coverage         # Generate coverage report
+```
+
+## Additional Tools
 
 ```bash
 # Development with PWA support
@@ -267,6 +282,27 @@ pnpm prisma:seed                # Seed database with test data
    - ✅ Validates commit message format
    - 📋 Must follow Conventional Commits standard
    - ❌ CI may reject improperly formatted commits
+
+#### Example Workflow
+
+```bash
+# 1. Stage your changes
+git add .
+
+# 2. Commit with proper message
+git commit -m "feat(api): add new endpoint for guild settings"
+
+# Husky automatically runs:
+# → lint-staged (eslint + prettier on staged files)
+# → commitlint (validates commit message)
+
+# If everything passes:
+# ✅ Commit created successfully
+
+# If issues found:
+# ❌ Commit rejected with error messages
+# → Fix the issues and try again
+```
 
 ### Commit Message Format
 
@@ -653,7 +689,7 @@ if (!hasPermission) {
 - **Runtime**: Node.js 22+ with Nitro server
 - **Database**: PostgreSQL with Prisma ORM v6
 - **Cache/Session**: Unstorage
-- **Authentication**: nuxt-auth-utils with Discord OAuth2
+- **Authentication**: Custom Nuxt auth module (`modules/auth/`) with nuxt-auth-utils for Discord OAuth2 sessions
 - **Rate Limiting**: @tanstack/pacer
 - **API Documentation**: OpenAPI/Swagger
 
@@ -663,10 +699,11 @@ if (!hasPermission) {
 - **Linting**: ESLint with @antfu/eslint-config
 - **Formatting**: Prettier with @sapphire/prettier-config
 - **Type Checking**: TypeScript v5+
+- **Testing**: Vitest with @nuxt/test-utils, @vue/test-utils, Playwright
 - **Commit Linting**: commitlint with @commitlint/config-conventional
 - **Git Hooks**: Husky v9+ with lint-staged
 - **CI/CD**: GitHub Actions
-- **Deployment**: Netlify/Cloudflare Pages with NuxtHub
+- **Deployment**: Netlify
 - **Monitoring**: Sentry for error tracking
 
 ---

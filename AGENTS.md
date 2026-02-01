@@ -218,6 +218,24 @@ pnpm prisma:generate            # Regenerate Prisma client
 pnpm prisma:generate:watch      # Watch mode for schema changes
 ```
 
+### Testing
+
+```bash
+# Run all tests
+pnpm test                       # Run all test suites with Vitest
+
+# Run specific test projects
+pnpm test:nuxt                  # Run Nuxt-specific tests
+pnpm test:browser               # Run Playwright browser tests
+pnpm test:browser:ui            # Run browser tests with UI
+
+# Test coverage
+pnpm test -- --coverage         # Generate coverage report
+
+# Watch mode
+pnpm test -- --watch            # Run tests in watch mode
+```
+
 ### Additional Tools
 
 ```bash
@@ -1552,9 +1570,16 @@ export * from "./types";
 
 ### Authentication & Authorization
 
-- **Discord OAuth2** integration
-- **cookie-based (sealed/encrypted) sessions** with nuxt-auth-utils
-- **Role-based access control** via authorization resolver
+- **Discord OAuth2** integration via nuxt-auth-utils
+- **Cookie-based (sealed/encrypted) sessions** with nuxt-auth-utils
+- **Custom auth module** in `modules/auth/`
+  - Route-based authentication via `routeRules` with `auth` meta property
+  - Global `authz` middleware for page-level authorization
+  - `useAuth` composable for client-side auth logic
+  - Fully custom implementation - no external auth module
+- **Authorization resolver plugins** in `app/plugins/authorization-resolver.ts` and `server/plugins/authorization-resolver.ts`
+  - Provides `$authorization` context helper for client and server
+  - Handles user/guild permission resolution
 - **Rate limiting** with @tanstack/pacer (official framework-agnostic rate-limiter usable in Node/Nitro)
 
 ### Error Handling
@@ -1747,6 +1772,74 @@ export default defineWrappedResponseHandler(
 
 ## Testing & Quality Assurance
 
+### Testing Framework
+
+The project uses **Vitest** as the primary testing framework with multiple test environments:
+
+**Test Projects**:
+
+- **Unit Tests** (`test/unit/`): Node.js environment for testing utilities, helpers, and server logic
+- **Nuxt Tests** (`test/nuxt/`): Nuxt environment for testing components, composables, and pages
+- **Browser Tests** (`test/browser/`): Playwright-powered browser tests for E2E scenarios
+
+**Configuration**: `vitest.config.ts`
+
+- Coverage provider: v8
+- Test setup: `test/setup.ts`
+- Global test utilities available
+- Auto-imports for Vitest functions (`describe`, `it`, `expect`, `vi`)
+
+### Writing Tests
+
+**Unit Test Example**:
+
+```typescript
+// test/unit/utils.test.ts
+import { describe, expect, it } from 'vitest';
+import { myUtility } from '~/shared/utils/myUtility';
+
+describe('myUtility', () => {
+  it('should return expected result', () => {
+    expect(myUtility(input)).toBe(expectedOutput);
+  });
+});
+```
+
+**Nuxt Component Test Example**:
+
+```typescript
+import { mountSuspended } from '@nuxt/test-utils/runtime';
+// test/nuxt/MyComponent.test.ts
+import { describe, expect, it } from 'vitest';
+import MyComponent from '~/app/components/MyComponent.vue';
+
+describe('MyComponent', () => {
+  it('renders correctly', async () => {
+    const wrapper = await mountSuspended(MyComponent);
+    expect(wrapper.text()).toContain('Expected text');
+  });
+});
+```
+
+**Running Tests**:
+
+```bash
+# All tests
+pnpm test
+
+# Specific project
+pnpm test:nuxt
+
+# With coverage
+pnpm test -- --coverage
+
+# Watch mode
+pnpm test -- --watch
+
+# Specific file
+pnpm test -- path/to/test.test.ts
+```
+
 ### Pre-commit Checklist
 
 Follow these checks locally in this exact order before creating a commit or opening a PR:
@@ -1754,7 +1847,8 @@ Follow these checks locally in this exact order before creating a commit or open
 1. **Build**: `pnpm build` (must succeed — first builds can take longer)
 2. **Lint**: `pnpm lint` (fix **errors**; warnings are acceptable)
 3. **Typecheck**: `pnpm typecheck` (must pass)
-4. **Commit Message**: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
+4. **Tests**: `pnpm test` (all tests must pass)
+5. **Commit Message**: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
 
 These steps mirror the project's CI gates and help ensure a green PR.
 
@@ -1840,11 +1934,41 @@ These steps mirror the project's CI gates and help ensure a green PR.
 
 ### Testing Strategy
 
-- **Unit tests** for utilities and composables
-- **Component tests** for Vue components
-- **Integration tests** for API endpoints
-- **E2E tests** for critical user flows
-- **Coverage reporting** for test effectiveness
+**Test Types**:
+
+1. **Unit Tests** (`test/unit/`):
+   - Server utilities in `server/utils/`
+   - Shared utilities in `shared/utils/`
+   - Database models and helpers
+   - Pure TypeScript/JavaScript functions
+   - Run in Node.js environment
+
+2. **Nuxt Component Tests** (`test/nuxt/`):
+   - Vue components in `app/components/`
+   - Composables in `app/composables/`
+   - Pages in `app/pages/`
+   - Pinia stores in `app/stores/`
+   - Run in Nuxt environment with auto-imports
+
+3. **Browser Tests** (`test/browser/`):
+   - E2E user flows
+   - Discord OAuth integration
+   - Guild dashboard interactions
+   - Run with Playwright in Chromium
+
+**Coverage Requirements**:
+
+- Minimum 70% overall coverage recommended
+- Critical paths (auth, permissions) should have 90%+ coverage
+- Use `pnpm test -- --coverage` to generate reports
+- Coverage reports available in `coverage/` directory
+
+**Test Utilities**:
+
+- `@nuxt/test-utils`: Nuxt-specific testing helpers
+- `@vue/test-utils`: Vue component testing utilities
+- `@playwright/test`: Browser automation
+- `vitest`: Core testing framework with mock, spy, and assertion APIs
 
 ### Continuous Integration
 

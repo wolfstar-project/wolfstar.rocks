@@ -1,6 +1,6 @@
 <template>
-  <USeparator size="lg" icon="custom:wolfstar" :ui="{ border: 'border-[1px] border-base-300' }" class="mt-24 p-10" />
-  <UFooter :ui="{ root: 'p-2', top: 'border-default' }" role="contentinfo" aria-label="Site footer">
+  <USeparator size="lg" icon="custom:wolfstar" :ui="{ border: 'border-[1px] border-base-300' }" class="mt-24 p-10 content-visibility-auto" />
+  <UFooter :ui="{ root: 'p-2 content-visibility-auto', top: 'border-default' }" role="contentinfo" aria-label="Site footer">
     <template #top>
       <UContainer>
         <UFooterColumns class="p-10" :columns>

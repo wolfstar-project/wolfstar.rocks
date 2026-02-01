@@ -7,6 +7,17 @@
 	vertical-align: text-bottom !important;
 }
 
+/* Performance: Skip rendering of below-fold content until needed */
+@utility content-visibility-auto {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 500px;
+}
+
+/* Performance: Optimize paint for fixed elements */
+@utility will-change-transform {
+	will-change: transform;
+}
+
 @utility prose {
 	@apply max-w-none;
 }

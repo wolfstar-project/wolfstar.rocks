@@ -73,6 +73,11 @@ export default defineNuxtConfig({
         { rel: "icon", href: "/favicon.ico", sizes: "any" },
         { rel: "icon", type: "image/svg+xml", href: "/icons/logo.svg" },
         { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
+        // DNS prefetch for external domains
+        { rel: "dns-prefetch", href: "https://cdn.discordapp.com" },
+        { rel: "dns-prefetch", href: "https://cdn.wolfstar.rocks" },
+        // Preconnect to critical external origins
+        { rel: "preconnect", href: "https://cdn.discordapp.com", crossorigin: "anonymous" },
       ],
       meta: [
         // Page transitions
@@ -152,12 +157,14 @@ export default defineNuxtConfig({
     "/api/languages": {
       proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
     },
+    "/": { prerender: true, appLayout: "default", robots: true },
     "/wolfstar": { appLayout: "default", robots: true, prerender: true },
     "/starly": { appLayout: "default", robots: true },
     "/__og-image__/**": { prerender: true },
     "/sitemap.xml": { prerender: true },
     "/oauth/**": {
       robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
+      // @ts-expect-error nuxt-security route-specific headers
       security: {
         headers: {
           contentSecurityPolicy: false,
@@ -169,8 +176,8 @@ export default defineNuxtConfig({
     },
     "/oauth/callback": { robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1" },
     "/oauth/login": { robots: true },
-    "/terms": { appLayout: "default", robots: true },
-    "/privacy": { appLayout: "default", robots: true },
+    "/terms": { appLayout: "default", robots: true, prerender: true },
+    "/privacy": { appLayout: "default", robots: true, prerender: true },
     "/profile": { appLayout: "default", robots: true },
   },
 
@@ -184,7 +191,6 @@ export default defineNuxtConfig({
 
   experimental: {
     clientNodeCompat: true,
-    payloadExtraction: false,
     renderJsonPayloads: true,
     typescriptPlugin: true,
   },
@@ -313,6 +319,24 @@ export default defineNuxtConfig({
         sortConfigKeys: true,
       },
     },
+  },
+
+  fonts: {
+    defaults: {
+      fallbacks: {
+        "sans-serif": ["system-ui", "-apple-system", "Segoe UI", "sans-serif"],
+      },
+      preload: true,
+    },
+    families: [
+      {
+        name: "Inter",
+        provider: "google",
+        weights: [400, 500, 600, 700],
+        subsets: ["latin"],
+        preload: true,
+      },
+    ],
   },
 
   icon: {

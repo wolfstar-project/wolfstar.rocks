@@ -42,8 +42,8 @@
           <SelectBoolean
             v-for="event in ConfigurableModerationEvents"
             :key="event.key"
+            v-model="state[event.key]"
             :label="event.title"
-            :value="state[event.key]"
             :description="event.description"
             :tooltip-title="event.description"
           />
@@ -71,8 +71,8 @@
           <SelectBoolean
             v-for="event in ConfigurableMessageEvents"
             :key="event.key"
+            v-model="state[event.key]"
             :label="event.title"
-            :value="state[event.key]"
             :description="event.description"
             :tooltip-title="event.description"
           />

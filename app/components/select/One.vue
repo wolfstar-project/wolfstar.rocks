@@ -62,6 +62,8 @@ export interface SelectOneProps {
   label: string;
   /** The name of the current value */
   name?: string;
+  /** The model value (ID) */
+  modelValue?: string | null;
   /** Array of values */
   values: SelectOneValue[];
   /** Optional description below the field */
@@ -75,17 +77,26 @@ export interface SelectOneProps {
 }
 
 interface Emits {
+  (e: "update:modelValue", value: string): void;
   (e: "change", value: string): void;
   (e: "reset"): void;
 }
 </script>
 
 <script setup lang="ts">
-const { name = "None", disabled = false, label, values, description, tooltipTitle, imageInName } = defineProps<SelectOneProps>();
+const { name = "None", disabled = false, label, values, description, tooltipTitle, imageInName, modelValue } = defineProps<SelectOneProps>();
 
 const emit = defineEmits<Emits>();
 
-const selectedValue = ref<string | undefined>(resolveValueFromName(name));
+const selectedValue = computed({
+  get: () => modelValue ?? resolveValueFromName(name),
+  set: (val) => {
+    if (val) {
+      emit("update:modelValue", val);
+      emit("change", val);
+    }
+  },
+});
 
 const items = computed<SelectOption[]>(() =>
   values.map(value => ({
@@ -104,18 +115,13 @@ const selectedLabel = computed(() => {
   return current?.label;
 });
 
+// Watchers for name are likely not needed if using modelValue, but keep for backward compat if name is used
 watch(
   () => name,
   newName => {
-    selectedValue.value = resolveValueFromName(newName);
-  },
-);
-
-watch(
-  selectedValue,
-  newValue => {
-    if (newValue)
-      emit("change", newValue);
+    if (!modelValue) {
+      // Direct update only if modelValue is not controlling it (though computed getter handles this)
+    }
   },
 );
 
@@ -128,7 +134,7 @@ function resolveValueFromName(name?: string) {
 }
 
 function handleReset() {
-  selectedValue.value = undefined;
+  emit("update:modelValue", ""); // Or whatever constitutes "reset" for the model
   emit("reset");
 }
 

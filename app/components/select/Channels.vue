@@ -3,10 +3,11 @@
     :label="label"
     :name="selectedCount"
     :values="channelValues"
-    :value="value"
+    :model-value="modelValue"
     :tooltip-title="tooltipTitle"
     :image-in-name="imageInName"
     :disabled="disabled"
+    @update:model-value="$emit('update:modelValue', $event); $emit('change', $event)"
     @change="$emit('change', $event)"
     @reset="$emit('reset')"
   />
@@ -22,7 +23,7 @@ export interface SelectChannelsProps {
   /** The label to show on the button */
   label: string;
   /** The current selected channel IDs */
-  value: string[];
+  modelValue: string[];
   /** The guild data containing channels */
   guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
   /** Content to be shown as a tooltip when hovering over the button */
@@ -34,6 +35,7 @@ export interface SelectChannelsProps {
 }
 
 interface Emits {
+  (e: "update:modelValue", value: string[]): void;
   (e: "change", value: string[]): void;
   (e: "reset"): void;
 }
@@ -42,7 +44,7 @@ interface Emits {
 <script setup lang="ts">
 const {
   label,
-  value,
+  modelValue,
   guild,
   tooltipTitle,
   imageInName,
@@ -52,7 +54,7 @@ const {
 defineEmits<Emits>();
 
 // Count of selected channels
-const selectedCount = computed(() => value.length);
+const selectedCount = computed(() => modelValue.length);
 
 // Filter and sort channels, then map to SelectManyValue format
 const channelValues = computed<SelectManyValue[]>(() => {

@@ -43,7 +43,7 @@ export interface SelectBooleanProps {
   /** The label to show on the button */
   label: string;
   /** The current boolean value */
-  value?: boolean;
+  modelValue?: boolean;
   /** Optional description below the field */
   description?: string;
   /** Content to be shown as a tooltip when hovering over the button */
@@ -55,37 +55,30 @@ export interface SelectBooleanProps {
 }
 
 interface Emits {
+  (e: "update:modelValue", value: boolean): void;
   (e: "change", value: boolean): void;
   (e: "reset"): void;
 }
 </script>
 
 <script setup lang="ts">
-const { value = false, disabled = false, label, description, tooltipTitle, defaultValue = false } = defineProps<SelectBooleanProps>();
+const { modelValue = false, disabled = false, label, description, tooltipTitle, defaultValue = false } = defineProps<SelectBooleanProps>();
 
 const emit = defineEmits<Emits>();
 
-const isEnabled = ref<boolean>(value);
+const isEnabled = computed({
+  get: () => modelValue,
+  set: (val) => {
+    emit("update:modelValue", val);
+    emit("change", val);
+  },
+});
 
 const formattedLabel = computed(() => toTitleCase(label));
 const fieldName = computed(() => label.trim().toLowerCase().replace(/\s+/g, "-"));
 
 const statusText = computed(() => isEnabled.value ? "Enabled" : "Disabled");
 const buttonLabel = computed(() => `${formattedLabel.value}: ${statusText.value}`);
-
-watch(
-  () => value,
-  newValue => {
-    isEnabled.value = newValue;
-  },
-);
-
-watch(
-  isEnabled,
-  newValue => {
-    emit("change", newValue);
-  },
-);
 
 function handleReset() {
   isEnabled.value = defaultValue;

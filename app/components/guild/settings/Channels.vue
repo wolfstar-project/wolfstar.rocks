@@ -53,10 +53,10 @@
             :key="config.key"
           >
             <SelectChannel
+              v-model="state[config.key]"
               :guild="guildData"
               :name="config.name"
               :label="config.name"
-              :value="state[config.key]"
               :description="config.description"
             />
           </div>
@@ -83,9 +83,9 @@
             :key="config.key"
           >
             <SelectChannels
+              v-model="state[config.key]"
               :guild="guildData"
               :label="config.name"
-              :value="state[config.key]"
             />
           </div>
         </div>

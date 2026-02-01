@@ -28,6 +28,38 @@ export function serializeSettings(data: ReadonlyGuildData, space?: string | numb
   return JSON.stringify(data, (key, value) => (key in transformers ? transformers[key as keyof typeof transformers](value) : value), space);
 }
 
+/**
+ * Coerce known BigInt fields from JSON (numbers/strings) to BigInt
+ * @param data - Settings data from client
+ */
+export function coerceBigIntFields(data: Record<string, unknown>): void {
+  const bigintFields = [
+    "selfmodLinksHardActionDuration",
+    "selfmodMessagesHardActionDuration",
+    "selfmodNewlinesHardActionDuration",
+    "selfmodInvitesHardActionDuration",
+    "selfmodFilterHardActionDuration",
+    "selfmodReactionsHardActionDuration",
+    "selfmodAttachmentsHardActionDuration",
+    "selfmodCapitalsHardActionDuration",
+  ];
+
+  for (const field of bigintFields) {
+    if (field in data && data[field] !== null && data[field] !== undefined) {
+      const value = data[field];
+      if (typeof value === "number" || typeof value === "string") {
+        try {
+          data[field] = BigInt(value);
+        }
+        catch {
+          // If conversion fails, delete the field to prevent Prisma error
+          delete data[field];
+        }
+      }
+    }
+  }
+}
+
 export function deleteSettingsCached(guildId: string) {
   locks.delete(guildId);
   cache.delete(guildId);

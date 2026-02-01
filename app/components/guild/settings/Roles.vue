@@ -69,18 +69,18 @@
             <!-- Many (Array) -->
             <SelectRoles
               v-if="isArrayKey(roleConfig.key)"
+              v-model="state[roleConfig.key] as string[]"
               :label="roleConfig.name"
               :guild="guildData"
-              :value="state[roleConfig.key] as string[]"
               :tooltip-title="roleConfig.tooltip"
             />
 
             <!-- One (Single) -->
             <SelectRole
               v-else
+              v-model="state[roleConfig.key]"
               :label="roleConfig.name"
               :guild="guildData"
-              :value="state[roleConfig.key]"
               :tooltip-title="roleConfig.tooltip"
             />
           </template>
@@ -106,19 +106,18 @@
             <!-- Many (Array) -->
             <SelectRoles
               v-if="isArrayKey(roleConfig.key)"
+              v-model="state[roleConfig.key] as string[]"
               :label="roleConfig.name"
               :guild="guildData"
-              :value="state[roleConfig.key] as string[]"
               :tooltip-title="roleConfig.tooltip"
-              @change="(val) => state[roleConfig.key] = val"
             />
 
             <!-- One (Single) -->
             <SelectRole
               v-else
+              v-model="state[roleConfig.key]"
               :label="roleConfig.name"
               :guild="guildData"
-              :value="state[roleConfig.key]"
               :tooltip-title="roleConfig.tooltip"
             />
           </template>

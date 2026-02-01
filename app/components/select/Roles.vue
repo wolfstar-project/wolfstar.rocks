@@ -3,10 +3,11 @@
     :label="label"
     :name="roleSummary"
     :values="roleValues"
-    :value="value"
+    :model-value="modelValue"
     :tooltip-title="tooltipTitle"
     :image-in-name="imageInName"
     :disabled="disabled"
+    @update:model-value="$emit('update:modelValue', $event); $emit('change', $event)"
     @change="$emit('change', $event)"
   />
 </template>
@@ -21,7 +22,7 @@ export interface SelectRolesProps {
   /** The label to show on the button */
   label: string;
   /** The current selected role IDs */
-  value: string[];
+  modelValue: string[];
   /** The guild data containing roles */
   guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
   /** Content to be shown as a tooltip when hovering over the button */
@@ -33,6 +34,7 @@ export interface SelectRolesProps {
 }
 
 interface Emits {
+  (e: "update:modelValue", value: string[]): void;
   (e: "change", value: string[]): void;
 }
 </script>
@@ -40,7 +42,7 @@ interface Emits {
 <script setup lang="ts">
 const {
   label,
-  value,
+  modelValue,
   guild,
   tooltipTitle,
   imageInName,
@@ -51,9 +53,9 @@ defineEmits<Emits>();
 
 // Generate summary for the button
 const roleSummary = computed(() => {
-  if (!value || value.length === 0)
+  if (!modelValue || modelValue.length === 0)
     return "None";
-  return `${value.length} selected`;
+  return `${modelValue.length} selected`;
 });
 
 // Filter and sort roles, then map to SelectManyValue format

@@ -28,9 +28,26 @@ export function useGuildSettingsChanges() {
     mergeGuildSettings(changes);
   };
 
+  const removeChange = (key: keyof GuildData) => {
+    if (!guildSettingsChanges.value)
+      return;
+
+    const current = { ...guildSettingsChanges.value };
+    delete current[key];
+
+    // If no changes remain, set to undefined
+    if (Object.keys(current).length === 0) {
+      guildSettingsChanges.value = undefined;
+    }
+    else {
+      guildSettingsChanges.value = current as GuildData;
+    }
+  };
+
   return {
     guildSettingsChanges: readonly(guildSettingsChanges),
     setGuildSettingsChanges,
     mergeGuildSettings,
+    removeChange,
   };
 }

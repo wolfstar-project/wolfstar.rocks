@@ -112,12 +112,12 @@ import type { GuildData } from "#server/database";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
 import type { FetchError } from "ofetch";
-import { Time } from "@sapphire/time-utilities";
+import { useLogger } from "#shared/utils/logger";
 import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
-import { promiseTimeout } from "@vueuse/core";
 
+const logger = useLogger("@wolfstar/dashboard");
 const guildId = useRouteParams("id", null, { transform: String });
 
 // Validate guild ID first
@@ -140,6 +140,21 @@ const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges } = useGuildSettingsChanges();
 const hasError = useState<boolean>("dashboard:hasError", () => false);
 const isLoading = useState<boolean>("dashboard:loading", () => true);
+
+// Form validation registration
+type ValidateFn = () => Promise<{ valid: boolean; errors: any[] }>;
+const registeredValidation = ref<ValidateFn | null>(null);
+
+function registerFormValidation(validateFn: ValidateFn) {
+  registeredValidation.value = validateFn;
+}
+
+function unregisterFormValidation() {
+  registeredValidation.value = null;
+}
+
+provide("registerFormValidation", registerFormValidation);
+provide("unregisterFormValidation", unregisterFormValidation);
 
 const items = computed<NavigationMenuItem[][]>(() => [[
   {
@@ -216,47 +231,102 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-  const { data, error } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
-    method: "PATCH",
-    body: JSON.stringify({
-      data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-    }),
-  });
+  // Validate form before submitting
+  if (registeredValidation.value) {
+    try {
+      const validation = await registeredValidation.value();
 
-  if (error.value) {
+      if (!validation.valid) {
+        // Extract first error message for toast
+        const firstError = validation.errors[0];
+        const errorMessage = firstError?.message || firstError?.path || "Please fix the errors before saving";
+
+        toast.add({
+          color: "error",
+          icon: "i-heroicons-exclamation-triangle",
+          title: "Validation Failed",
+          description: errorMessage,
+        });
+
+        logger.warn(`Validation failed for guild ${guildId.value}:`, validation.errors);
+        return; // Abort save
+      }
+    }
+    catch (err: any) {
+      logger.error(`Validation error for guild ${guildId.value}:`, err);
+
+      toast.add({
+        color: "error",
+        icon: "i-heroicons-exclamation-triangle",
+        title: "Validation Error",
+        description: "An error occurred during validation. Please try again.",
+      });
+
+      return; // Abort save
+    }
+  }
+
+  try {
+    const { data, error: fetchError } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
+      method: "PATCH",
+      body: {
+        data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
+      },
+    });
+
+    if (fetchError.value) {
+      hasError.value = true;
+      error.value = fetchError.value;
+
+      logger.error("Error saving guild settings changes for guild Id:", guildId.value, fetchError.value);
+
+      toast.add({
+        color: "error",
+        icon: "i-heroicons-x-circle",
+        title: "Error",
+        description: "An error occurred while saving changes. Please try again later.",
+      });
+
+      return; // Early return on error
+    }
+
+    // Parse the serialized JSON string response from server
+    const dataParsed = cast<GuildData>(JSON.parse(data.value as string));
+
+    if (!isNullOrUndefined(dataParsed) && objectValues(dataParsed).length !== 0) {
+      setGuildSettings(dataParsed);
+      setGuildSettingsChanges(undefined);
+
+      logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
+
+      toast.add({
+        color: "success",
+        icon: "i-heroicons-check-circle",
+        title: "Success",
+        description: "Guild settings have been successfully updated.",
+      });
+    }
+  }
+  catch (err: any) {
     hasError.value = true;
-    await promiseTimeout(Time.Second);
-    isLoading.value = false;
+    error.value = err;
 
-    logger.error("Error saving guild settings changes for guild Id:", error.value);
+    logger.error("Unexpected error saving guild settings:", guildId.value, err);
 
     toast.add({
       color: "error",
       icon: "i-heroicons-x-circle",
       title: "Error",
-      description: "An error occurred while saving changes. Please try again later.",
-    });
-  }
-
-  const dataParsed = cast<GuildData>(JSON.parse(data.value ?? "{}"));
-
-  if (!isNullOrUndefined(data.value) || (!isNullOrUndefined(data.value) && !Array.isArray(data.value)) || (!isNullOrUndefined(dataParsed) && objectValues(dataParsed).length !== 0)) {
-    setGuildSettings(dataParsed);
-    setGuildSettingsChanges(undefined);
-
-    logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
-
-    toast.add({
-      color: "success",
-      icon: "i-heroicons-check-circle",
-      title: "Success",
-      description: "Guild settings have been successfully updated.",
+      description: "An unexpected error occurred while saving changes. Please try again later.",
     });
   }
 }
 
 function resetChanges() {
   setGuildSettingsChanges(undefined);
+
+  logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
+
   toast.add({
     icon: "heroicons:arrow-path",
     title: "Reset",
@@ -264,6 +334,28 @@ function resetChanges() {
     description: "All changes have been reset",
   });
 }
+
+// Navigation guard to warn about unsaved changes
+onBeforeRouteLeave((to, from, next) => {
+  if (isReadyToSubmit.value) {
+    // eslint-disable-next-line no-alert
+    const confirmed = window.confirm(
+      "You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.",
+    );
+
+    if (confirmed) {
+      logger.info(`User confirmed navigation away with unsaved changes for guild Id: ${guildId.value}`);
+      next();
+    }
+    else {
+      logger.info(`User cancelled navigation to preserve unsaved changes for guild Id: ${guildId.value}`);
+      next(false);
+    }
+  }
+  else {
+    next();
+  }
+});
 
 onMounted(async () => {
   isLoading.value = true;
@@ -278,18 +370,18 @@ onMounted(async () => {
 
     hasError.value = false;
   }
-  catch (error: any) {
+  catch (err: any) {
     hasError.value = true;
-
     isLoading.value = false;
+    error.value = err;
 
-    error.value = error;
+    logger.error("Error loading guild data or settings for guild Id:", guildId.value, err);
 
     toast.add({
       color: "error",
       icon: "i-heroicons-x-circle",
       title: "Error Loading Data",
-      description: error?.message || "An error occurred while fetching the guild data or settings. Please try again later.",
+      description: err?.message || "An error occurred while fetching the guild data or settings. Please try again later.",
     });
   }
   finally {

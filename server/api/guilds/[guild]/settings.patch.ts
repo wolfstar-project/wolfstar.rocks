@@ -1,4 +1,5 @@
 import {
+  coerceBigIntFields,
   serializeSettings,
   writeSettingsTransaction,
 } from "#server/database";
@@ -121,12 +122,13 @@ export default defineWrappedResponseHandler(
       });
     }
 
+    const settingsData = Object.fromEntries(data);
+
+    // Coerce BigInt fields from JSON (numbers/strings) to BigInt
+    coerceBigIntFields(settingsData);
+
     await trx
-      .write(
-        Object.fromEntries(
-          data,
-        ),
-      )
+      .write(settingsData)
       .submit();
     return serializeSettings(trx.settings);
   },

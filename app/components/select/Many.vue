@@ -65,7 +65,7 @@ export interface SelectManyProps {
   /** Array of values */
   values: SelectManyValue[];
   /** Selected values */
-  value: string[];
+  modelValue?: string[];
   /** Optional description below the field */
   description?: string;
   /** Content to be shown as a tooltip when hovering over the button */
@@ -77,16 +77,23 @@ export interface SelectManyProps {
 }
 
 interface Emits {
+  (e: "update:modelValue", value: string[]): void;
   (e: "change", value: string[]): void;
 }
 </script>
 
 <script setup lang="ts">
-const { name = "None", disabled = false, value, values, label, tooltipTitle, description, imageInName } = defineProps<SelectManyProps>();
+const { name = "None", disabled = false, modelValue = [], values, label, tooltipTitle, description, imageInName } = defineProps<SelectManyProps>();
 
 const emit = defineEmits<Emits>();
 
-const selectedValues = ref<string[]>([...value]);
+const selectedValues = computed({
+  get: () => modelValue,
+  set: (val) => {
+    emit("update:modelValue", val);
+    emit("change", val);
+  },
+});
 
 const items = computed<SelectItem[]>(() =>
   values.map(value => ({
@@ -108,21 +115,6 @@ const buttonLabel = computed(() => {
     : (selectedValues.value.length ? `${selectedValues.value.length}` : "None");
   return `${formattedLabel.value}: ${summary}`;
 });
-
-watch(
-  () => value,
-  newValue => {
-    selectedValues.value = [...newValue];
-  },
-  { deep: true },
-);
-
-watch(
-  selectedValues,
-  newValue => {
-    emit("change", newValue);
-  },
-);
 
 function clearSelected() {
   selectedValues.value = [];

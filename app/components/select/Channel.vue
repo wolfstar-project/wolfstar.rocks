@@ -2,10 +2,12 @@
   <SelectOne
     :label="label"
     :name="channelName"
+    :model-value="modelValue"
     :values="channelValues"
     :tooltip-title="tooltipTitle"
     :image-in-name="imageInName"
     :disabled="disabled"
+    @update:model-value="$emit('update:modelValue', $event); $emit('change', $event)"
     @change="$emit('change', $event)"
     @reset="$emit('reset')"
   />
@@ -21,7 +23,7 @@ export interface SelectChannelProps {
   /** The label to show on the button */
   label: string;
   /** The current selected channel ID */
-  value: string | null;
+  modelValue: string | null;
   /** The guild data containing channels */
   guild: DeepReadonly<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>;
   /** Content to be shown as a tooltip when hovering over the button */
@@ -33,6 +35,7 @@ export interface SelectChannelProps {
 }
 
 interface Emits {
+  (e: "update:modelValue", value: string): void;
   (e: "change", value: string): void;
   (e: "reset"): void;
 }
@@ -41,7 +44,7 @@ interface Emits {
 <script setup lang="ts">
 const {
   label,
-  value,
+  modelValue,
   guild,
   tooltipTitle,
   imageInName,
@@ -52,9 +55,9 @@ defineEmits<Emits>();
 
 // Find the channel name based on the current value
 const channelName = computed(() => {
-  if (!value)
+  if (!modelValue)
     return undefined;
-  const channel = guild.channels.find(c => c.id === value);
+  const channel = guild.channels.find(c => c.id === modelValue);
   return channel?.name;
 });
 

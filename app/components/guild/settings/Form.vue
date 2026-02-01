@@ -28,93 +28,142 @@ const { schema, state, mapToGuildData } = defineProps<Props>();
 const emit = defineEmits<{
   error: [event: FormErrorEvent];
 }>();
-const toast = useToast();
-const { setGuildSettingsChanges } = useGuildSettingsChanges();
+const { setGuildSettingsChanges, removeChange } = useGuildSettingsChanges();
+const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
-// Original state snapshot
-const originalState = ref<T>() as Ref<T>;
+// Register validation with dashboard layout
+const registerValidation = inject<((validateFn: () => Promise<{ valid: boolean; errors: any[] }>) => void) | undefined>("registerFormValidation", undefined);
+const unregisterValidation = inject<(() => void) | undefined>("unregisterFormValidation", undefined);
 
-// Initialize original state on mount
-onMounted(() => {
-  originalState.value = structuredClone(toRaw(state));
+// Original state snapshot - delay until data is loaded
+const originalState = ref<T | undefined>(undefined);
+const isOriginalStateInitialized = ref(false);
+
+// Watch for when guild settings are loaded, then snapshot original state
+watchEffect(() => {
+  // Only initialize once, when originalGuildSettings becomes defined
+  if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
+    originalState.value = structuredClone(toRaw(state));
+    isOriginalStateInitialized.value = true;
+  }
 });
 
 // Calculate changes between current state and original values
-function calculateChanges(currentState: T): Partial<GuildData> {
+function calculateChanges(currentState: T): { changes: Partial<GuildData>; changedKeys: Set<keyof GuildData>; revertedKeys: Set<keyof GuildData> } {
   const changes: Partial<GuildData> = {};
-  if (!originalState.value)
-    return changes;
+  const changedKeys = new Set<keyof GuildData>();
+  const revertedKeys = new Set<keyof GuildData>();
 
-  // If a custom mapper is provided, use it
-  if (mapToGuildData) {
-    const mappedChanges = mapToGuildData(currentState);
-
-    // Check if any values have actually changed
-    for (const [key, value] of Object.entries(mappedChanges)) {
-      const originalValue = (originalState.value as any)[key];
-      // Use deep comparison
-      if (!isDeepEqual(value, originalValue) && value !== undefined) {
-        (changes as any)[key] = value;
-      }
-    }
-  }
-  else {
-    // Default behavior if no mapper (comparative check on all keys in originalValues)
-    for (const key of Object.keys(originalState.value)) {
-      const value = currentState[key];
-      const originalValue = (originalState.value as any)[key];
-      if (!isDeepEqual(value, originalValue) && value !== undefined) {
-        (changes as any)[key] = value;
-      }
-    }
+  if (!originalState.value) {
+    return { changes, changedKeys, revertedKeys };
   }
 
-  return changes;
+  // Map both current and original states to GuildData format for comparison
+  const mappedCurrent = mapToGuildData ? mapToGuildData(currentState) : currentState;
+  const mappedOriginal = mapToGuildData ? mapToGuildData(originalState.value) : originalState.value;
+
+  // Track all keys from both mapped states
+  const allKeys = new Set([
+    ...Object.keys(mappedCurrent),
+    ...Object.keys(mappedOriginal),
+  ]);
+
+  // Compare each key
+  for (const key of allKeys) {
+    const currentValue = (mappedCurrent as any)[key];
+    const originalValue = (mappedOriginal as any)[key];
+
+    // Check if value has changed from original
+    if (!isDeepEqual(currentValue, originalValue)) {
+      if (currentValue !== undefined) {
+        (changes as any)[key] = currentValue;
+        changedKeys.add(key as keyof GuildData);
+      }
+    }
+    else {
+      // Value has been reverted to original
+      revertedKeys.add(key as keyof GuildData);
+    }
+  }
+
+  return { changes, changedKeys, revertedKeys };
 }
 
 // Watch for state changes to update the global settings store (triggers UI footer)
 watch(
   () => state,
   (newState) => {
-    const changes = calculateChanges(newState);
-    // Identify if there are any keys in changes
-    const hasChanges = objectKeys(changes).length > 0;
+    // Skip if original state hasn't been initialized yet
+    if (!isOriginalStateInitialized.value)
+      return;
 
+    const { changes, revertedKeys } = calculateChanges(newState);
+
+    // Remove changes for keys that have been reverted to original
+    for (const key of revertedKeys) {
+      removeChange(key);
+    }
+
+    // Update changes for keys that differ from original
+    const hasChanges = objectKeys(changes).length > 0;
     if (hasChanges) {
       setGuildSettingsChanges(changes);
-      toast.add({
-        color: "info",
-        icon: "heroicons:information-circle",
-        title: "Changes Staged",
-        description: "Click 'Save Changes' to apply your changes",
-      });
     }
     else {
-      setGuildSettingsChanges({}); // Clear changes if state matches original
+      // Clear all changes if nothing differs from original
+      setGuildSettingsChanges(undefined);
     }
   },
   { deep: true },
 );
 
 function handleSubmit(event: FormSubmitEvent<T>) {
-  // Changes are already tracked by the watcher, but we calculate one last time for the event
-  // or rely on what's in the store.
-  // Actually, the emit event.data is usually the same as props.state if v-model is used.
+  // Ensure the store has the final changes before submission
+  // This is important if the form is submitted before the watcher has a chance to run
+  const { changes } = calculateChanges(event.data);
 
-  // We can just emit submit. The form submission might be triggered by the footer button?
-  // If the footer button calls form.submit(), we want to finalize things.
-
-  const changes = calculateChanges(event.data);
-  // Ensure the store has the final changes before emitting submit.
-  // This is important if the form is submitted before the watcher has a chance to run,
-  // or if event.data differs slightly from props.state due to form internals.
-  setGuildSettingsChanges(changes);
+  if (objectKeys(changes).length > 0) {
+    setGuildSettingsChanges(changes);
+  }
 }
 
 function handleError(event: FormErrorEvent) {
   emit("error", event);
 }
+
+// Create validation function to share with dashboard
+async function validateForm(): Promise<{ valid: boolean; errors: any[] }> {
+  if (!formRef.value) {
+    return { valid: false, errors: [{ message: "Form not initialized" }] };
+  }
+
+  try {
+    await formRef.value.validate({});
+    return { valid: true, errors: [] };
+  }
+  catch (err: any) {
+    const errors = err.inner || [err];
+    return {
+      valid: false,
+      errors,
+    };
+  }
+}
+
+// Register with dashboard on mount
+onMounted(() => {
+  if (registerValidation) {
+    registerValidation(validateForm);
+  }
+});
+
+// Unregister on unmount
+onBeforeUnmount(() => {
+  if (unregisterValidation) {
+    unregisterValidation();
+  }
+});
 
 // Expose form ref methods
 defineExpose({

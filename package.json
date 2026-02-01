@@ -25,6 +25,7 @@
     "lint:fix": "lintroll --fix --cache .",
     "postinstall": "stale-dep -u && nuxt prepare",
     "prepare": "node .husky/install.mjs",
+    "generate-pwa-icons": "pwa-assets-generator",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:dev:create": "prisma migrate dev --create-only",
     "prisma:migrate:diff": "prisma migrate diff --exit-code --from-migrations server/database/migrations --to-schema-datamodel server/database/schema.prisma --shadow-database-url",

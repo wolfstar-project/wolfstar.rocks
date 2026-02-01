@@ -14,7 +14,7 @@ export const pwa: ModuleOptions = {
     globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
   },
   pwaAssets: {
-    config: true,
+    config: false,
   },
   manifest: {
     background_color: "#050505",

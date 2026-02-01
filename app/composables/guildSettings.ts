@@ -1,7 +1,6 @@
 import type { GuildData } from "#server/database";
 import type { Options as DeepMergeOptions } from "deepmerge";
 import deepMerge from "deepmerge";
-import { useGuildSettingsChanges } from "@/composables/useGuildSettingsChanges";
 
 // Overwrite arrays when merging
 const mergeOptions: DeepMergeOptions = {

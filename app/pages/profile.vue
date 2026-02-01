@@ -27,31 +27,31 @@
             :class="{ 'duration-300 group-hover:scale-105 transition-transform': !effectiveReduceMotion }"
             role="img"
           >
-            <img
+            <NuxtImg
               v-if="isDefault"
               :src="defaultAvatar"
               alt="Default Avatar"
               class="h-full w-full object-cover"
+              :width="128"
+              :height="128"
+              format="png"
+              loading="lazy"
               decoding="async"
               crossorigin="anonymous"
             />
-            <picture v-else>
-              <source
-                v-if="isAnimated && !effectiveReduceMotion"
-                type="image/gif"
-                :srcset="makeSrcset('gif')"
-              />
-              <source type="image/webp" :srcset="makeSrcset('webp')" />
-              <source type="image/png" :srcset="makeSrcset('png')" />
-              <img
-                :src="createUrl('gif', 128)"
-                :alt="`${user?.name} avatar`"
-                class="h-full w-full object-cover"
-                decoding="async"
-                loading="lazy"
-                crossorigin="anonymous"
-              />
-            </picture>
+            <NuxtImg
+              v-else
+              :src="createUrl(preferredFormat, 256)"
+              :format="preferredFormat === 'gif' ? undefined : 'webp'"
+              :width="128"
+              :height="128"
+              sizes="128px"
+              :alt="`${user?.name} avatar`"
+              class="h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+              crossorigin="anonymous"
+            />
           </div>
         </div>
         <div class="space-y-2 text-center">
@@ -524,6 +524,14 @@ const {
   setReduceMotion,
 } = useReduceMotion();
 
+const preferredFormat = computed<"gif" | "png">(() => {
+  if (isAnimated.value && !effectiveReduceMotion.value) {
+    return "gif";
+  }
+
+  return "png";
+});
+
 const { data, status, error, execute } = useFetch("/api/users", {
   key: "guilds",
   immediate: false,
@@ -672,10 +680,6 @@ async function copyUserId() {
 
 function createUrl(format: "webp" | "png" | "gif", size: number) {
   return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
-
-function makeSrcset(format: "webp" | "png" | "gif") {
-  return `${createUrl(format, 64)} 1x, ${createUrl(format, 128)} 2x, ${createUrl(format, 256)} 3x, ${createUrl(format, 512)} 4x`;
 }
 
 watch(

@@ -1,21 +1,6 @@
 <template>
   <GuildSettingsSection title="Event Settings" description="Configure which events should be logged and tracked">
-    <!-- Loading Skeleton -->
-    <div v-if="loading" class="space-y-8">
-      <div class="space-y-4">
-        <USkeleton class="h-8 w-48" />
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div v-for="i in 4" :key="`event-skeleton-${i}`" class="space-y-2">
-            <USkeleton class="h-5 w-32" />
-            <USkeleton class="h-10 w-full" />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Events Settings Form -->
     <GuildSettingsForm
-      v-else
       :state="state"
       :schema="schema"
       :map-to-guild-data="mapToGuildData"
@@ -97,7 +82,6 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import { isNullOrUndefined } from "@sapphire/utilities";
 import * as yup from "yup";
 import { ConfigurableMessageEvents, ConfigurableModerationEvents } from "~~/shared/utils/settingsDataEntries";
 
@@ -109,22 +93,17 @@ const toast = useToast();
 const allEvents = [...ConfigurableModerationEvents, ...ConfigurableMessageEvents];
 
 // Create yup schema for all event keys
-const schemaObject: Record<string, yup.BooleanSchema> = {};
+// Ensure defaults are concrete booleans (never `undefined`) so the schema's default
+// generic stays compatible and `schema.getDefault()` yields booleans.
+const schemaObject: Record<string, yup.BooleanSchema<boolean | undefined, yup.AnyObject, boolean, any>> = {};
 for (const event of allEvents) {
-  schemaObject[event.key] = yup.boolean().required();
+  const defaultValue: boolean = guildSettings.value?.[event.key] ?? false;
+  schemaObject[event.key] = yup.boolean().default(defaultValue).optional();
 }
 
 const schema = yup.object(schemaObject);
 
-// Initialize state with current values from guildSettings
-const loading = computed(() => isNullOrUndefined(guildSettings.value));
-
-const initialState: Record<string, boolean> = {};
-for (const event of allEvents) {
-  initialState[event.key] = guildSettings.value?.[event.key] ?? false;
-}
-
-const state = reactive<Record<string, boolean>>(initialState);
+const state = reactive<Record<string, boolean>>(schema.getDefault());
 
 function mapToGuildData(stateData: Record<string, boolean>): Partial<GuildData> {
   const result: Partial<GuildData> = {};

@@ -32,75 +32,77 @@
         :aria-disabled="loading"
         @error="onError"
       >
-        <UAccordion
-          v-model="expandedCategory"
-          :items="accordionItems"
-          :unmount-on-hide="false"
-        >
-          <template #default="{ item, open }">
-            <UButton color="neutral" variant="ghost" class="w-full justify-between border-b border-base-200">
-              <span class="truncate text-xl font-medium">{{ item.label }}</span>
+        <div class="space-y-4">
+          <UCollapsible
+            v-for="category in categories"
+            :key="category"
+            :unmount-on-hide="false"
+          >
+            <template #default="{ open }">
+              <UButton color="neutral" variant="ghost" class="w-full justify-between border-b border-base-200">
+                <span class="truncate text-xl font-medium">{{ category }}</span>
 
-              <template #trailing>
-                <UIcon
-                  name="i-heroicons-chevron-down-20-solid"
-                  class="ms-auto size-5 transform transition-transform duration-200"
-                  :class="[open && 'rotate-180']"
-                />
-              </template>
-            </UButton>
-          </template>
+                <template #trailing>
+                  <UIcon
+                    name="i-heroicons-chevron-down-20-solid"
+                    class="ms-auto size-5 transform transition-transform duration-200"
+                    :class="[open && 'rotate-180']"
+                  />
+                </template>
+              </UButton>
+            </template>
 
-          <template #body="{ item }">
-            <!-- Commands Grid -->
-            <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              <div
-                v-for="command in getCommandsByCategory(item.label)"
-                :key="command.name"
-                class="flex items-center justify-between rounded-lg border border-base-200 p-3"
-              >
-                <div class="flex-1 min-w-0">
-                  <p class="font-medium text-base-content truncate">{{ command.name }}</p>
-                  <p class="text-sm text-base-content/60 truncate">{{ command.description }}</p>
+            <template #content>
+              <!-- Commands Grid -->
+              <div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div
+                  v-for="command in getCommandsByCategory(category)"
+                  :key="command.name"
+                  class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+                >
+                  <div class="flex-1 min-w-0">
+                    <p class="font-medium text-base-content truncate">{{ command.name }}</p>
+                    <p class="text-sm text-base-content/60 truncate">{{ command.description }}</p>
+                  </div>
+                  <USwitch
+                    v-if="state[command.name]"
+                    v-model="state[command.name]!.isEnabled"
+                    :value="state[command.name]!.name"
+                  />
                 </div>
-                <USwitch
-                  v-if="state[command.name]"
-                  v-model="state[command.name]!.isEnabled"
-                  :value="state[command.name]!.name"
-                />
               </div>
-            </div>
 
-            <!-- Category Actions -->
-            <Separator />
-            <div class="flex flex-wrap items-center justify-end gap-2 p-4">
-              <UButton
-                color="success"
-                variant="solid"
-                size="sm"
-                @click="enableAllInCategory(item.label)"
-              >
-                Enable all
-              </UButton>
-              <UButton
-                color="warning"
-                variant="solid"
-                size="sm"
-                @click="disableAllInCategory(item.label)"
-              >
-                Disable all
-              </UButton>
-              <UButton
-                color="neutral"
-                variant="outline"
-                size="sm"
-                @click="resetCategory(item.label)"
-              >
-                Reset
-              </UButton>
-            </div>
-          </template>
-        </UAccordion>
+              <!-- Category Actions -->
+              <Separator />
+              <div class="flex flex-wrap items-center justify-end gap-2 p-4">
+                <UButton
+                  color="success"
+                  variant="solid"
+                  size="sm"
+                  @click="enableAllInCategory(category)"
+                >
+                  Enable all
+                </UButton>
+                <UButton
+                  color="warning"
+                  variant="solid"
+                  size="sm"
+                  @click="disableAllInCategory(category)"
+                >
+                  Disable all
+                </UButton>
+                <UButton
+                  color="neutral"
+                  variant="outline"
+                  size="sm"
+                  @click="resetCategory(category)"
+                >
+                  Reset
+                </UButton>
+              </div>
+            </template>
+          </UCollapsible>
+        </div>
       </GuildSettingsForm>
     </GuildSettingsSection>
   </div>
@@ -125,8 +127,8 @@ type Schema = y.InferType<typeof schema>;
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
-// Track the currently expanded accordion category
-const expandedCategory = ref<string | undefined>(undefined);
+// Track the currently expanded accordion category (unused until Phase 3)
+const _expandedCategory = ref<string | undefined>(undefined);
 
 // Local state for commands - reactive record of command states
 const state = reactive<Schema>({});
@@ -248,8 +250,8 @@ const categories = computed(() => {
   return [...uniqueCategories].sort();
 });
 
-// Accordion items configuration
-const accordionItems = computed(() =>
+// Accordion items configuration (unused until Phase 4 removal)
+const _accordionItems = computed(() =>
   categories.value.map(category => ({
     label: category,
     value: category,

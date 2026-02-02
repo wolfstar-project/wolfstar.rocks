@@ -32,22 +32,9 @@ const { setGuildSettingsChanges, removeChange } = useGuildSettingsChanges();
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
-// Register validation with dashboard layout
-const registerValidation = inject<((validateFn: () => Promise<{ valid: boolean; errors: any[] }>) => void) | undefined>("registerFormValidation", undefined);
-const unregisterValidation = inject<(() => void) | undefined>("unregisterFormValidation", undefined);
-
 // Original state snapshot - delay until data is loaded
 const originalState = ref<T | undefined>(undefined);
 const isOriginalStateInitialized = ref(false);
-
-// Watch for when guild settings are loaded, then snapshot original state
-watchEffect(() => {
-  // Only initialize once, when originalGuildSettings becomes defined
-  if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
-    originalState.value = structuredClone(toRaw(state));
-    isOriginalStateInitialized.value = true;
-  }
-});
 
 // Calculate changes between current state and original values
 function calculateChanges(currentState: T): { changes: Partial<GuildData>; changedKeys: Set<keyof GuildData>; revertedKeys: Set<keyof GuildData> } {
@@ -90,6 +77,20 @@ function calculateChanges(currentState: T): { changes: Partial<GuildData>; chang
   return { changes, changedKeys, revertedKeys };
 }
 
+function handleSubmit(event: FormSubmitEvent<T>) {
+  // Ensure the store has the final changes before submission
+  // This is important if the form is submitted before the watcher has a chance to run
+  const { changes } = calculateChanges(event.data);
+
+  if (objectKeys(changes).length > 0) {
+    setGuildSettingsChanges(changes);
+  }
+}
+
+function handleError(event: FormErrorEvent) {
+  emit("error", event);
+}
+
 // Watch for state changes to update the global settings store (triggers UI footer)
 watch(
   () => state,
@@ -118,50 +119,12 @@ watch(
   { deep: true },
 );
 
-function handleSubmit(event: FormSubmitEvent<T>) {
-  // Ensure the store has the final changes before submission
-  // This is important if the form is submitted before the watcher has a chance to run
-  const { changes } = calculateChanges(event.data);
-
-  if (objectKeys(changes).length > 0) {
-    setGuildSettingsChanges(changes);
-  }
-}
-
-function handleError(event: FormErrorEvent) {
-  emit("error", event);
-}
-
-// Create validation function to share with dashboard
-async function validateForm(): Promise<{ valid: boolean; errors: any[] }> {
-  if (!formRef.value) {
-    return { valid: false, errors: [{ message: "Form not initialized" }] };
-  }
-
-  try {
-    await formRef.value.validate({});
-    return { valid: true, errors: [] };
-  }
-  catch (err: any) {
-    const errors = err.inner || [err];
-    return {
-      valid: false,
-      errors,
-    };
-  }
-}
-
-// Register with dashboard on mount
-onMounted(() => {
-  if (registerValidation) {
-    registerValidation(validateForm);
-  }
-});
-
-// Unregister on unmount
-onBeforeUnmount(() => {
-  if (unregisterValidation) {
-    unregisterValidation();
+// Watch for when guild settings are loaded, then snapshot original state
+watchEffect(() => {
+  // Only initialize once, when originalGuildSettings becomes defined
+  if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
+    originalState.value = structuredClone(toRaw(state));
+    isOriginalStateInitialized.value = true;
   }
 });
 

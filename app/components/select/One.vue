@@ -77,8 +77,8 @@ export interface SelectOneProps {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: string): void;
-  (e: "change", value: string): void;
+  (e: "update:modelValue", value: string | null): void;
+  (e: "change", value: string | null): void;
   (e: "reset"): void;
 }
 </script>
@@ -91,7 +91,8 @@ const emit = defineEmits<Emits>();
 const selectedValue = computed({
   get: () => modelValue ?? resolveValueFromName(name),
   set: (val) => {
-    if (val) {
+    // Allow null and string values (null = cleared)
+    if (val !== undefined) {
       emit("update:modelValue", val);
       emit("change", val);
     }
@@ -134,7 +135,8 @@ function resolveValueFromName(name?: string) {
 }
 
 function handleReset() {
-  emit("update:modelValue", ""); // Or whatever constitutes "reset" for the model
+  emit("update:modelValue", null);
+  emit("change", null);
   emit("reset");
 }
 

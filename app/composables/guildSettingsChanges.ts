@@ -1,5 +1,6 @@
 import type { GuildData } from "#server/database";
 import type { Options as DeepMergeOptions } from "deepmerge";
+import { useRouteParams } from "@vueuse/router";
 import deepMerge from "deepmerge";
 
 // Overwrite arrays when merging
@@ -8,8 +9,13 @@ const mergeOptions: DeepMergeOptions = {
 };
 
 export function useGuildSettingsChanges() {
-  // Use useState for reactive state
-  const guildSettingsChanges = useState<GuildData | undefined>("guild:settings:changes", () => undefined);
+  const guildId = useRouteParams("id", null, { transform: String });
+
+  // Use guild-scoped state key
+  const guildSettingsChanges = useState<GuildData | undefined>(
+    `guild:${guildId.value}:settings:changes`,
+    () => undefined,
+  );
 
   const mergeGuildSettings = (changes?: Partial<GuildData>) => {
     if (!changes) {

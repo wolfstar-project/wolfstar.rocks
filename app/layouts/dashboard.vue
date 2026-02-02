@@ -335,25 +335,11 @@ function resetChanges() {
   });
 }
 
-// Navigation guard to warn about unsaved changes
-onBeforeRouteLeave((to, from, next) => {
-  if (isReadyToSubmit.value) {
-    // eslint-disable-next-line no-alert
-    const confirmed = window.confirm(
-      "You have unsaved changes. Are you sure you want to leave? All unsaved changes will be lost.",
-    );
-
-    if (confirmed) {
-      logger.info(`User confirmed navigation away with unsaved changes for guild Id: ${guildId.value}`);
-      next();
-    }
-    else {
-      logger.info(`User cancelled navigation to preserve unsaved changes for guild Id: ${guildId.value}`);
-      next(false);
-    }
-  }
-  else {
-    next();
+// Clear staged changes when guild ID changes (prevents cross-guild leakage)
+watch(guildId, (newGuildId, oldGuildId) => {
+  if (oldGuildId && newGuildId !== oldGuildId) {
+    setGuildSettingsChanges(undefined);
+    logger.info(`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`);
   }
 });
 

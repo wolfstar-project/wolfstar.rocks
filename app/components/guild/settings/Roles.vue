@@ -221,11 +221,15 @@ watch(loading, (isLoading) => {
 function mapToGuildData(formState: Schema): Partial<GuildData> {
   const changes: Partial<GuildData> = {};
 
+  // Always include the boolean toggle
   changes.rolesRemoveInitial = formState.rolesRemoveInitial;
 
   for (const roleConfig of ConfigurableRoles) {
     const value = formState[roleConfig.key];
-    if (!isNullOrUndefined(value)) {
+    // Include null values for nullable single-role fields (user explicitly cleared)
+    // Include empty arrays for multi-role fields (user explicitly cleared all)
+    // Only exclude undefined (form doesn't control this key)
+    if (value !== undefined) {
       changes[roleConfig.key as GuildDataKey] = value;
     }
   }

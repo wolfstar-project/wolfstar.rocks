@@ -129,7 +129,7 @@ const schema = yup.object({
     .max(11, "Prefix cannot be longer than 10 characters")
     .transform(v => (v === "" ? undefined : v))
     .optional()
-    .default(guildSettings.value.prefix),
+    .default(guildSettings.value!.prefix),
   language: yup.object()
     .shape({
       value: yup.string().required(),
@@ -137,8 +137,8 @@ const schema = yup.object({
     })
     .optional()
     .default({
-      value: guildSettings.value.language,
-      label: mapLanguageKeysToNames(guildSettings.value.language)[1] ?? "Unknown Language",
+      value: guildSettings.value!.language,
+      label: mapLanguageKeysToNames(guildSettings.value!.language)[1] ?? "Unknown Language",
     }),
 });
 
@@ -146,19 +146,6 @@ type Schema = yup.InferType<typeof schema>;
 
 // Form data reactive state
 const state = reactive<Schema>(schema.getDefault());
-
-// Original values for change detection
-
-// Watch for guild settings to populate state
-/* watch(guildSettings, (settings) => {
-  if (settings) {
-    state.prefix = settings.prefix;
-    state.language = {
-      value: settings.language,
-      label: mapLanguageKeysToNames(settings.language)[1] ?? "Unknown Language",
-    };
-  }
-}, { immediate: true }); */
 
 // Map form state to GuildData format
 function mapToGuildData(formState: Schema): Partial<GuildData> {

@@ -15,8 +15,8 @@
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { Schema } from "yup";
+import { isDeepEqual } from "#shared/utils/isDeepEqual";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
-import { isDeepEqual } from "~~/shared/utils/isDeepEqual";
 
 interface Props {
   schema: Schema;
@@ -65,8 +65,8 @@ function calculateChanges(currentState: T): { changes: Partial<GuildData>; chang
 
   // Track all keys from both mapped states
   const allKeys = new Set([
-    ...Object.keys(mappedCurrent),
-    ...Object.keys(mappedOriginal),
+    ...objectKeys(mappedCurrent),
+    ...objectKeys(mappedOriginal),
   ]);
 
   // Compare each key

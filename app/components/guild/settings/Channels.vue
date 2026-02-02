@@ -1,33 +1,7 @@
 <template>
   <GuildSettingsSection title="Channel Settings" description="Configure which channels are used for logging events and which channels should be ignored">
-    <!-- Loading Skeleton -->
-    <div v-if="loading" class="space-y-8">
-      <!-- Logging Channels Skeleton -->
-      <div class="space-y-4">
-        <USkeleton class="h-8 w-48" />
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div v-for="i in 6" :key="`log-skeleton-${i}`" class="space-y-2">
-            <USkeleton class="h-5 w-32" />
-            <USkeleton class="h-10 w-full" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Ignore Channels Skeleton -->
-      <div class="space-y-4">
-        <USkeleton class="h-8 w-48" />
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div v-for="i in 5" :key="`ignore-skeleton-${i}`" class="space-y-2">
-            <USkeleton class="h-5 w-32" />
-            <USkeleton class="h-10 w-full" />
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Channels Settings Form -->
     <GuildSettingsForm
-      v-else
       :state="state"
       :schema="schema"
       :map-to-guild-data="mapToGuildData"
@@ -98,11 +72,9 @@
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from "#shared/utils/settingsDataEntries";
-import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import * as yup from "yup";
 
 const { guildData } = useGuildData();
-const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
 // Create dynamic schema for form validation
@@ -129,62 +101,23 @@ type Schema = yup.InferType<typeof schema>;
 // Initialize form state from guild settings
 const state = reactive<Schema>(schema.getDefault());
 
-// Loading state
-const loading = computed(() => !guildData.value?.channels?.length || !guildSettings.value);
-
-// Compute original values from initialized state (snapshot)
-// We need this to return the actual values from guildData once loaded, not just defaults
-const originalValues = computed(() => {
-  if (loading.value)
-    return schema.getDefault();
-
-  const values: Record<string, any> = {};
-
-  // Populate from guildData
-  for (const config of ConfigurableLoggingChannels) {
-    if (guildSettings.value && guildSettings.value[config.key as GuildDataKey]) {
-      values[config.key] = guildSettings.value[config.key as GuildDataKey];
-    }
-    else {
-      values[config.key] = null; // or default
-    }
-  }
-
-  for (const config of ConfigurableIgnoreChannels) {
-    if (guildSettings.value && guildSettings.value[config.key as GuildDataKey]) {
-      values[config.key] = guildSettings.value[config.key as GuildDataKey];
-    }
-    else {
-      values[config.key] = []; // or default
-    }
-  }
-
-  return values as Schema;
-});
-
-// Watch for loading state change to populate local state
-watch(loading, (isLoading) => {
-  if (!isLoading && guildData.value && guildSettings.value) {
-    // Populate state with values from guildData
-    const newValues = originalValues.value;
-    Object.assign(state, newValues);
-  }
-}, { immediate: true });
-
 // Map form state to GuildData changes
 function mapToGuildData(formState: Schema): Partial<GuildData> {
   const changes: Partial<GuildData> = {};
 
   for (const config of ConfigurableLoggingChannels) {
     const value = formState[config.key];
-    if (!isNullOrUndefined(value)) {
+    // Include null values for nullable fields (user explicitly cleared)
+    // Only exclude undefined (form doesn't control this key)
+    if (value !== undefined) {
       changes[config.key as GuildDataKey] = value;
     }
   }
 
   for (const config of ConfigurableIgnoreChannels) {
     const value = formState[config.key];
-    if (!isNullOrUndefined(value)) {
+    // Include empty arrays (user explicitly cleared all ignored channels)
+    if (value !== undefined) {
       changes[config.key as GuildDataKey] = value;
     }
   }
@@ -194,12 +127,14 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 
 // Form error handler
 async function onError(event: FormErrorEvent) {
+  const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+  element?.scrollIntoView({ behavior: "smooth", block: "center" });
   const errorMessage = event.errors[0]?.message;
   toast.add({
     color: "error",
     title: "Error",
-    description: `Failed to update channel settings. ${errorMessage ?? "Unknown error"}`,
-    icon: "heroicons:x-circle",
+    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
+    icon: "heroicons:circle",
   });
 }
 </script>

@@ -35,8 +35,8 @@ export interface SelectChannelProps {
 }
 
 interface Emits {
-  (e: "update:modelValue", value: string): void;
-  (e: "change", value: string): void;
+  (e: "update:modelValue", value: string | null): void;
+  (e: "change", value: string | null): void;
   (e: "reset"): void;
 }
 </script>

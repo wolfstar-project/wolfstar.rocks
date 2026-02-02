@@ -232,8 +232,8 @@ async function onError(event: FormErrorEvent) {
   toast.add({
     color: "error",
     title: "Error",
-    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
-    icon: "heroicons:circle",
+    description: `Failed to update disabled commands settings. ${errorMessage ?? "Unknown error"}`,
+    icon: "heroicons:x-circle",
   });
 }
 

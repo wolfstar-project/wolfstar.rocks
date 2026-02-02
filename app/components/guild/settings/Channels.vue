@@ -1,6 +1,5 @@
 <template>
   <GuildSettingsSection title="Channel Settings" description="Configure which channels are used for logging events and which channels should be ignored">
-    <!-- Channels Settings Form -->
     <GuildSettingsForm
       :state="state"
       :schema="schema"
@@ -75,6 +74,7 @@ import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from "#shared
 import * as yup from "yup";
 
 const { guildData } = useGuildData();
+const { guildSettings: _guildSettings } = useGuildSettings();
 const toast = useToast();
 
 // Create dynamic schema for form validation
@@ -133,8 +133,8 @@ async function onError(event: FormErrorEvent) {
   toast.add({
     color: "error",
     title: "Error",
-    description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
-    icon: "heroicons:circle",
+    description: `Failed to update channel settings. ${errorMessage ?? "Unknown error"}`,
+    icon: "heroicons:x-circle",
   });
 }
 </script>

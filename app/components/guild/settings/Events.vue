@@ -39,14 +39,20 @@
         </p>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <SelectBoolean
+          <UFormField
             v-for="event in ConfigurableModerationEvents"
-            :key="event.key"
-            v-model="state[event.key]"
+            :key="`form-field-${event.key}`"
             :label="event.title"
-            :description="event.description"
-            :tooltip-title="event.description"
-          />
+            :name="event.key"
+          >
+            <template #description>
+              <p class="text-sm text-base-content/70">{{ event.description }}</p>
+            </template>
+            <USwitch
+              v-model="state[event.key]"
+              :aria-label="`Toggle ${event.title}`"
+            />
+          </UFormField>
         </div>
       </div>
 
@@ -68,14 +74,20 @@
         </p>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <SelectBoolean
+          <UFormField
             v-for="event in ConfigurableMessageEvents"
-            :key="event.key"
-            v-model="state[event.key]"
+            :key="`form-field-${event.key}`"
             :label="event.title"
-            :description="event.description"
-            :tooltip-title="event.description"
-          />
+            :name="event.key"
+          >
+            <template #description>
+              <p class="text-sm text-base-content/70">{{ event.description }}</p>
+            </template>
+            <USwitch
+              v-model="state[event.key]"
+              :aria-label="`Toggle ${event.title}`"
+            />
+          </UFormField>
         </div>
       </div>
     </GuildSettingsForm>

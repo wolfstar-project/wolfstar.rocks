@@ -239,6 +239,8 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 
 // Form error handler
 async function onError(event: FormErrorEvent) {
+  const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+  element?.scrollIntoView({ behavior: "smooth", block: "center" });
   const errorMessage = event.errors[0]?.message;
   toast.add({
     color: "error",

@@ -322,19 +322,13 @@ export default defineNuxtConfig({
   },
 
   fonts: {
-    defaults: {
-      fallbacks: {
-        "sans-serif": ["system-ui", "-apple-system", "Segoe UI", "sans-serif"],
-      },
-      preload: true,
-    },
     families: [
       {
         name: "Inter",
-        provider: "google",
-        weights: [400, 500, 600, 700],
+        weights: [400, 500, 600, 700, 800, 900],
         subsets: ["latin"],
         preload: true,
+        global: true,
       },
     ],
   },

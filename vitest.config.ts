@@ -39,6 +39,10 @@ export default defineConfig({
               overrides: {
                 ogImage: { enabled: false },
                 sitemap: { enabled: false },
+                pwa: {
+                  pwaAssets: { disabled: true },
+                },
+
                 sentry: { enabled: false },
               },
             },
@@ -50,7 +54,7 @@ export default defineConfig({
           browser: {
             enabled: true,
             provider: playwright(),
-            instances: [{ browser: "chromium" }],
+            instances: [{ browser: "chromium", headless: true }],
           },
         },
       }),

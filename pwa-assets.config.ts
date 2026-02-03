@@ -45,8 +45,20 @@ export default defineConfig({
     }, {
       darkImageResolver: async (imageName) => {
         if (imageName.includes("logo.svg")) {
-          const whiteLogoPath = resolve(process.cwd(), "public/icons/logo-white.svg");
-          return await readFile(whiteLogoPath);
+          const logoPaths = [
+            "public/icons/logo-white.svg",
+            "public-dev/icons/logo-white.svg",
+            "public-staging/icons/logo-white.svg",
+          ];
+          for (const logoPath of logoPaths) {
+            try {
+              const whiteLogoPath = resolve(process.cwd(), logoPath);
+              return await readFile(whiteLogoPath);
+            }
+            catch {
+              continue;
+            }
+          }
         }
         return undefined;
       },
@@ -110,5 +122,5 @@ export default defineConfig({
       "iPad mini 8.3\"",
       "iPad mini 7.9\"",
     ]),
-  images: ["public/icons/logo.svg"],
+  images: ["public/icons/logo.svg", "public-dev/icons/logo.svg", "public-staging/icons/logo.svg"],
 });

@@ -36,7 +36,9 @@
           <UCollapsible
             v-for="category in categories"
             :key="category"
+            :open="isCategoryOpen(category)"
             :unmount-on-hide="false"
+            @update:open="() => toggleCategory(category)"
           >
             <template #default="{ open }">
               <UButton color="neutral" variant="ghost" class="w-full justify-between border-b border-base-200">
@@ -127,8 +129,18 @@ type Schema = y.InferType<typeof schema>;
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
-// Track the currently expanded accordion category (unused until Phase 3)
-const _expandedCategory = ref<string | undefined>(undefined);
+// Track the currently expanded accordion category
+const expandedCategory = ref<string | undefined>(undefined);
+
+// Check if a category is currently open
+function isCategoryOpen(category: string): boolean {
+  return expandedCategory.value === category;
+}
+
+// Toggle a category open/closed (single-open behavior)
+function toggleCategory(category: string): void {
+  expandedCategory.value = isCategoryOpen(category) ? undefined : category;
+}
 
 // Local state for commands - reactive record of command states
 const state = reactive<Schema>({});
@@ -249,14 +261,6 @@ const categories = computed(() => {
   }
   return [...uniqueCategories].sort();
 });
-
-// Accordion items configuration (unused until Phase 4 removal)
-const _accordionItems = computed(() =>
-  categories.value.map(category => ({
-    label: category,
-    value: category,
-  })),
-);
 
 // Track loading state
 const loading = computed(() => !commands.length || objectValues(state).length === 0);

@@ -14,8 +14,8 @@ describe("useGuildSettingsChanges", () => {
     const mockGuild1 = createMockOauthFlattenedGuild({ id: "guild1", name: "Test Guild 1" });
     const mockGuild2 = createMockOauthFlattenedGuild({ id: "guild2", name: "Test Guild 2" });
 
-    const { useGuildSettingsChanges } = await import("../../../app/composables/guildSettingsChanges");
-    const { useGuildData } = await import("../../../app/composables/guildData");
+    const { useGuildSettingsChanges } = await import("../../../app/composables/useGuildSettingsChanges");
+    const { useGuildData } = await import("../../../app/composables/useGuildData");
     const { setGuildData } = useGuildData();
     const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
@@ -35,7 +35,7 @@ describe("useGuildSettingsChanges", () => {
   });
 
   it("clears changes completely (not merge with {})", async () => {
-    const { useGuildSettingsChanges } = await import("../../../app/composables/guildSettingsChanges");
+    const { useGuildSettingsChanges } = await import("../../../app/composables/useGuildSettingsChanges");
     const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
     // Set some changes
@@ -49,7 +49,7 @@ describe("useGuildSettingsChanges", () => {
   });
 
   it("removes specific keys when changes are reverted", async () => {
-    const { useGuildSettingsChanges } = await import("../../../app/composables/guildSettingsChanges");
+    const { useGuildSettingsChanges } = await import("../../../app/composables/useGuildSettingsChanges");
     const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
     // Set multiple changes
@@ -64,7 +64,7 @@ describe("useGuildSettingsChanges", () => {
   });
 
   it("handles partial updates correctly", async () => {
-    const { useGuildSettingsChanges } = await import("../../../app/composables/guildSettingsChanges");
+    const { useGuildSettingsChanges } = await import("../../../app/composables/useGuildSettingsChanges");
     const { guildSettingsChanges, mergeGuildSettings } = useGuildSettingsChanges();
 
     // Set initial changes
@@ -79,7 +79,7 @@ describe("useGuildSettingsChanges", () => {
   });
 
   it("returns Partial<GuildData> type", async () => {
-    const { useGuildSettingsChanges } = await import("../../../app/composables/guildSettingsChanges");
+    const { useGuildSettingsChanges } = await import("../../../app/composables/useGuildSettingsChanges");
     const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 
     // Should accept partial data
@@ -93,8 +93,8 @@ describe("useGuildSettingsChanges", () => {
     const mockGuild1 = createMockOauthFlattenedGuild({ id: "guild1", name: "Test Guild 1" });
     const mockGuild2 = createMockOauthFlattenedGuild({ id: "guild2", name: "Test Guild 2" });
 
-    const { useGuildData } = await import("../../../app/composables/guildData");
-    const { useGuildSettingsChanges } = await import("../../../app/composables/guildSettingsChanges");
+    const { useGuildData } = await import("../../../app/composables/useGuildData");
+    const { useGuildSettingsChanges } = await import("../../../app/composables/useGuildSettingsChanges");
     const { setGuildData } = useGuildData();
     const { guildSettingsChanges, setGuildSettingsChanges } = useGuildSettingsChanges();
 

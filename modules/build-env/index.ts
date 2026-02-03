@@ -28,7 +28,6 @@ export default defineNuxtModule({
     nuxt.options.nitro.virtual["#build-info"] = `export const env = ${JSON.stringify(env)}`;
 
     nuxt.options.nitro.publicAssets = nuxt.options.nitro.publicAssets || [];
-    nuxt.options.nitro.publicAssets = nuxt.options.nitro.publicAssets || [];
     if (env === Env.Dev)
       nuxt.options.nitro.publicAssets.unshift({ dir: resolve("../public-dev") });
     else if (env === Env.Canary || env === Env.Preview || !isCI)

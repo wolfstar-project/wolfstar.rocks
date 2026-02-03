@@ -11,6 +11,21 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
   // Modules configuration
   modules: [
+    // Workaround for Nuxt 4.3.0 regression: https://github.com/nuxt/nuxt/issues/34140
+    // shared-imports.d.ts pulls in app composables during type-checking of shared context,
+    // but the shared context doesn't have access to auto-import globals.
+    // TODO: Remove when Nuxt fixes this upstream
+    function (_, nuxt) {
+      nuxt.hook("prepare:types", ({ sharedReferences }) => {
+        const idx = sharedReferences.findIndex(
+          ref => "path" in ref && ref.path.endsWith("shared-imports.d.ts"),
+        );
+        if (idx !== -1) {
+          sharedReferences.splice(idx, 1);
+        }
+      });
+    },
+
     "@nuxt/eslint",
     "@nuxt/ui",
     "@nuxt/image",

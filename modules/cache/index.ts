@@ -5,7 +5,7 @@ const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
 
 export default defineNuxtModule({
   meta: {
-    name: "vercel-cache",
+    name: "netlify-cache",
   },
   async setup(_, nuxt) {
     const config = useRuntimeConfig();

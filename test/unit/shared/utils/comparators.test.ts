@@ -927,3 +927,250 @@ describe("orMix", () => {
     expect(combined(42)).toBe(false); // Positive, even, not > 100
   });
 });
+
+describe("integration tests", () => {
+  /**
+   * Integration test: Sorting with max() and asc/desc comparators
+   * Validates that sorting functions work correctly with max() utility
+   * Real-world scenario: Finding maximum value in sorted/unsorted arrays
+   */
+  it("should correctly combine sorting comparators with max utility", () => {
+    const numbers = [42, 7, 23, 91, 15, 68, 3];
+
+    // Sort ascending and verify max is at the end
+    const sortedAsc = [...numbers].sort(asc);
+    expect(sortedAsc).toEqual([3, 7, 15, 23, 42, 68, 91]);
+    expect(sortedAsc[sortedAsc.length - 1]).toBe(max(...numbers));
+    expect(max(...sortedAsc)).toBe(91);
+
+    // Sort descending and verify max is at the start
+    const sortedDesc = [...numbers].sort(desc);
+    expect(sortedDesc).toEqual([91, 68, 42, 23, 15, 7, 3]);
+    expect(sortedDesc[0]).toBe(max(...numbers));
+    expect(max(...sortedDesc)).toBe(91);
+
+    // Verify max works on sorted and unsorted arrays identically
+    expect(max(...numbers)).toBe(max(...sortedAsc));
+    expect(max(...numbers)).toBe(max(...sortedDesc));
+  });
+
+  /**
+   * Integration test: Complex difference detection with Maps and boolean combinators
+   * Validates differenceMap working with complex nested objects and andMix validation
+   * Real-world scenario: Configuration management system tracking changes with validation rules
+   */
+  it("should detect and validate complex map changes with predicate composition", () => {
+    // Simulate guild configuration objects
+    interface GuildConfig { enabled: boolean; threshold: number; channels: string[] }
+
+    const loggingConfig = { enabled: true, threshold: 10, channels: ["admin", "audit"] };
+
+    const previousConfig = new Map<string, GuildConfig>([
+      ["moderation", { enabled: true, threshold: 5, channels: ["mod-log"] }],
+      ["automod", { enabled: false, threshold: 3, channels: ["general"] }],
+      ["logging", loggingConfig], // Use same reference
+    ]);
+
+    const nextConfig = new Map<string, GuildConfig>([
+      ["moderation", { enabled: true, threshold: 10, channels: ["mod-log"] }], // Updated threshold
+      ["logging", loggingConfig], // Same reference - no change detected
+      ["welcome", { enabled: true, threshold: 1, channels: ["welcome"] }], // Added
+    ]);
+
+    const diff = differenceMap(previousConfig, nextConfig);
+
+    // Verify additions
+    expect(diff.added.size).toBe(1);
+    expect(diff.added.has("welcome")).toBe(true);
+    expect(diff.added.get("welcome")).toEqual({
+      enabled: true,
+      threshold: 1,
+      channels: ["welcome"],
+    });
+
+    // Verify removals
+    expect(diff.removed.size).toBe(1);
+    expect(diff.removed.has("automod")).toBe(true);
+
+    // Verify updates
+    expect(diff.updated.size).toBe(1);
+    expect(diff.updated.has("moderation")).toBe(true);
+
+    // Use andMix to validate that updated configs meet criteria
+    const isEnabled = (cfg: GuildConfig) => cfg.enabled;
+    const hasHighThreshold = (cfg: GuildConfig) => cfg.threshold >= 5;
+    const hasChannels = (cfg: GuildConfig) => cfg.channels.length > 0;
+
+    const validateConfig = andMix(isEnabled, hasHighThreshold, hasChannels);
+
+    // Validate the updated moderation config
+    const [_prevMod, nextMod] = diff.updated.get("moderation")!;
+    expect(validateConfig(nextMod)).toBe(true);
+
+    // Validate added welcome config fails threshold check
+    const welcomeConfig = diff.added.get("welcome")!;
+    expect(validateConfig(welcomeConfig)).toBe(false); // threshold is 1, not >= 5
+  });
+
+  /**
+   * Integration test: Regex processing with bidirectionalReplace and transformations
+   * Validates bidirectionalReplace in a real text processing scenario
+   * Real-world scenario: Discord message parsing with mention replacement and text formatting
+   */
+  it("should process complex text with bidirectionalReplace and apply transformations", () => {
+    // Simulate Discord message with user mentions
+    const message = "Hey <@123456>, check out <@789012> for the updates!";
+
+    // Process mentions and text separately
+    const result = bidirectionalReplace<string>(
+      /<@(\d+)>/g,
+      message,
+      {
+        onMatch: (match) => {
+          const userId = match[1]!;
+          // Simulate user lookup and format as @Username
+          const userMap = new Map([
+            ["123456", "Alice"],
+            ["789012", "Bob"],
+          ]);
+          return `@${userMap.get(userId) ?? "Unknown"}`;
+        },
+        outMatch: (content) => content.trim(),
+      },
+    );
+
+    expect(result).toEqual([
+      "Hey",
+      "@Alice",
+      ", check out",
+      "@Bob",
+      "for the updates!",
+    ]);
+
+    // Combine results and verify the final message
+    const processedMessage = result.join(" ");
+    expect(processedMessage).toBe("Hey @Alice , check out @Bob for the updates!");
+
+    // Use differenceArray to track which users were mentioned
+    const originalMentions = ["123456", "789012"];
+    const newMentions = ["123456", "789012", "456789"];
+    const mentionDiff = differenceArray(originalMentions, newMentions);
+
+    expect(mentionDiff.added).toEqual(["456789"]);
+    expect(mentionDiff.removed).toEqual([]);
+  });
+
+  /**
+   * Integration test: Complex predicate composition with andMix and orMix
+   * Validates boolean combinators for complex validation logic
+   * Real-world scenario: User permission checking with multiple criteria
+   */
+  it("should compose complex predicates for multi-criteria validation", () => {
+    interface User { id: string; age: number; roles: string[]; verified: boolean }
+
+    const users: User[] = [
+      { id: "1", age: 25, roles: ["admin", "moderator"], verified: true },
+      { id: "2", age: 17, roles: ["member"], verified: true },
+      { id: "3", age: 30, roles: ["moderator"], verified: false },
+      { id: "4", age: 22, roles: ["vip", "member"], verified: true },
+    ];
+
+    // Create individual validation predicates
+    const isAdult = (user: User) => user.age >= 18;
+    const isVerified = (user: User) => user.verified;
+    const hasModeratorRole = (user: User) => user.roles.includes("moderator");
+    const hasAdminRole = (user: User) => user.roles.includes("admin");
+
+    // Compose: Can moderate = (adult AND verified AND (moderator OR admin))
+    const hasStaffRole = orMix(hasModeratorRole, hasAdminRole);
+    const canModerate = andMix(isAdult, isVerified, hasStaffRole);
+
+    // Test each user
+    expect(canModerate(users[0]!)).toBe(true); // Adult, verified, admin+moderator
+    expect(canModerate(users[1]!)).toBe(false); // Minor (age 17)
+    expect(canModerate(users[2]!)).toBe(false); // Not verified
+    expect(canModerate(users[3]!)).toBe(false); // No staff role
+
+    // Filter users who can moderate
+    const moderators = users.filter(canModerate);
+    expect(moderators.length).toBe(1);
+    expect(moderators[0]!.id).toBe("1");
+
+    // Alternative: Can participate = (adult OR verified)
+    const canParticipate = orMix(isAdult, isVerified);
+    const participants = users.filter(canParticipate);
+    expect(participants.length).toBe(4); // All users can participate
+  });
+
+  /**
+   * Integration test: Real-world workflow simulation combining multiple functions
+   * Validates end-to-end data processing pipeline using multiple comparator utilities
+   * Real-world scenario: Guild settings migration with validation and change tracking
+   */
+  it("should handle complete data processing workflow with multiple utilities", () => {
+    // Initial guild roles with bitfield permissions
+    interface Role { id: string; name: string; permissions: number }
+
+    const adminRole = { id: "role1", name: "Admin", permissions: 0b1111 };
+
+    const previousRoles = new Map<string, Role>([
+      ["role1", adminRole], // Use same reference
+      ["role2", { id: "role2", name: "Mod", permissions: 0b0111 }],
+      ["role3", { id: "role3", name: "Member", permissions: 0b0001 }],
+    ]);
+
+    const nextRoles = new Map<string, Role>([
+      ["role1", adminRole], // Same reference - no change detected
+      ["role2", { id: "role2", name: "Moderator", permissions: 0b1111 }], // Name changed + permissions updated
+      ["role4", { id: "role4", name: "VIP", permissions: 0b0011 }], // New role
+    ]);
+
+    // Step 1: Detect role changes
+    const roleDiff = differenceMap(previousRoles, nextRoles);
+
+    expect(roleDiff.added.size).toBe(1);
+    expect(roleDiff.updated.size).toBe(1);
+    expect(roleDiff.removed.size).toBe(1);
+
+    // Step 2: Analyze permission changes for updated roles
+    const [prevMod, nextMod] = roleDiff.updated.get("role2")!;
+    const permissionDiff = differenceBitField(prevMod.permissions, nextMod.permissions);
+
+    expect(permissionDiff.added).toBe(0b1000); // Added bit at position 3
+    expect(permissionDiff.removed).toBe(0);
+
+    // Step 3: Collect all role IDs and find the lexicographically maximum ID
+    const allRoleIds = Array.from(nextRoles.keys());
+    const sortedIds = allRoleIds.sort(asc);
+    expect(sortedIds).toEqual(["role1", "role2", "role4"]);
+
+    const maxRoleId = max(...allRoleIds);
+    expect(maxRoleId).toBe("role4"); // Lexicographically maximum
+
+    // Step 4: Validate new roles with predicate composition
+    const hasBasicPermissions = (role: Role) => (role.permissions & 0b0001) !== 0;
+    const hasElevatedPermissions = (role: Role) => (role.permissions & 0b1000) !== 0;
+    const isValidRole = (role: Role) => role.name.length > 0 && role.id.startsWith("role");
+
+    const isFullyPrivilegedRole = andMix(isValidRole, hasBasicPermissions, hasElevatedPermissions);
+
+    // Test roles
+    expect(isFullyPrivilegedRole(nextRoles.get("role1")!)).toBe(true); // Admin
+    expect(isFullyPrivilegedRole(nextRoles.get("role2")!)).toBe(true); // Moderator (updated)
+    expect(isFullyPrivilegedRole(nextRoles.get("role4")!)).toBe(false); // VIP (no elevated perms)
+
+    // Step 5: Generate audit log using bidirectionalReplace for formatting
+    const auditTemplate = "Roles changed: added=[role4], removed=[role3], updated=[role2]";
+    const formattedAudit = bidirectionalReplace<string>(
+      /\[(\w+)\]/g,
+      auditTemplate,
+      {
+        onMatch: (match) => `"${match[1]}"`,
+        outMatch: (content) => content,
+      },
+    );
+
+    const finalAudit = formattedAudit.join("");
+    expect(finalAudit).toBe("Roles changed: added=\"role4\", removed=\"role3\", updated=\"role2\"");
+  });
+});

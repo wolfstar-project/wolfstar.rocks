@@ -107,17 +107,14 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 // Computed language options
 const items = computed(() =>
   languages.map(langKey => {
-    const [lang, label] = mapLanguageKeysToNames(langKey);
-    return label
-      ? {
-          value: lang,
-          label,
-        }
-      : {
-          value: lang,
-          label: `This Language ${lang} is not supported`,
-          disabled: true,
-        };
+    const mapping = mapLanguageKeysToNames(langKey);
+    const nativeName = mapping[0];
+    const englishName = mapping[1];
+
+    return {
+      value: langKey, // Use the actual language key
+      label: englishName ?? nativeName, // Use English name if available, otherwise native name
+    };
   }),
 );
 
@@ -136,9 +133,13 @@ const schema = yup.object({
       label: yup.string().required(),
     })
     .optional()
-    .default({
-      value: guildSettings.value!.language,
-      label: mapLanguageKeysToNames(guildSettings.value!.language)[1] ?? "Unknown Language",
+    .default(() => {
+      const currentLangKey = guildSettings.value!.language;
+      const mapping = mapLanguageKeysToNames(currentLangKey);
+      return {
+        value: currentLangKey,
+        label: mapping[1] ?? mapping[0], // Use English name if available, otherwise native name
+      };
     }),
 });
 

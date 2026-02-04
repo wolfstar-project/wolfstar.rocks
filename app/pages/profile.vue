@@ -481,7 +481,6 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
-import { useFuse } from "@vueuse/integrations/useFuse";
 
 definePageMeta({ alias: ["/account"] });
 
@@ -527,49 +526,19 @@ const preferredFormat = computed<"gif" | "png">(() => {
 // Use the centralized useUser composable instead of manual useFetch
 // Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
 // Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { data, status, error, refresh } = useUser(user, {
+const { data, filteredGuilds, status, error, refresh } = useUser(user, {
   timeout: 15000, // 15 seconds timeout
   retry: 3, // Max retry attempts
   retryDelay: 1000, // 1 second delay between retries
+  search: {
+    query: searchQuery,
+    showManageableOnly,
+    sortAscending,
+  },
 });
 
 // Extract guilds from useUser data
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
-
-// Apply manageable filter
-const manageableGuilds = computed(() => {
-  if (!showManageableOnly.value)
-    return guilds.value;
-  return guilds.value.filter(guild => guild.manageable);
-});
-
-// Convert searchQuery (string | null) to string for useFuse
-const searchValue = computed(() => searchQuery.value ?? "");
-
-// Use useFuse for search (following commands.vue pattern)
-const { results } = useFuse(searchValue, manageableGuilds, {
-  fuseOptions: {
-    keys: ["name"],
-    threshold: 0.3,
-  },
-  matchAllWhenSearchEmpty: true,
-});
-
-// Apply sorting to search results
-const filteredGuilds = computed(() => {
-  const items = results.value.map(r => r.item);
-  return items.sort((a, b) => {
-    // Manageable first
-    if (a.manageable !== b.manageable)
-      return a.manageable ? -1 : 1;
-    // WolfStar presence
-    if (a.wolfstarIsIn !== b.wolfstarIsIn)
-      return a.wolfstarIsIn ? -1 : 1;
-    // Alphabetical
-    const comparison = a.name.localeCompare(b.name, "en", { sensitivity: "base" });
-    return sortAscending.value ? comparison : -comparison;
-  });
-});
 
 // Loading state based on status from useUser
 const isLoading = computed(() => status.value === "pending");

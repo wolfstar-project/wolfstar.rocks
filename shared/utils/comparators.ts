@@ -46,18 +46,19 @@ export function differenceMap<K, V>(previous: ReadonlyMap<K, V>, next: ReadonlyM
   const updated = new Map<K, [previous: V, next: V]>();
 
   for (const [key, value] of previous.entries()) {
-    const other = next.get(key);
-    if (other === undefined) {
+    if (!next.has(key)) {
       removed.set(key, value);
     }
-    else if (other !== value) {
-      updated.set(key, [value, other]);
+    else {
+      const other = next.get(key)!;
+      if (other !== value) {
+        updated.set(key, [value, other]);
+      }
     }
   }
 
   for (const [key, value] of next.entries()) {
-    const other = previous.get(key);
-    if (other === undefined) {
+    if (!previous.has(key)) {
       added.set(key, value);
     }
   }

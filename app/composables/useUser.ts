@@ -1,5 +1,24 @@
 import type { User } from "#auth-utils";
 import type { APIUser } from "discord-api-types/v10";
+import { useFuse } from "@vueuse/integrations/useFuse";
+
+/**
+ * Search and filter options for useUser composable
+ */
+export interface UseUserSearchOptions {
+  /**
+   * Search query for filtering guilds by name
+   */
+  query?: Ref<string | null>;
+  /**
+   * Filter to show only manageable guilds
+   */
+  showManageableOnly?: Ref<boolean>;
+  /**
+   * Sort order: true for ascending, false for descending
+   */
+  sortAscending?: Ref<boolean>;
+}
 
 /**
  * Fetch options for useUser composable
@@ -17,6 +36,10 @@ export interface UseUserOptions {
    * Delay between retry attempts in milliseconds
    */
   retryDelay?: number;
+  /**
+   * Optional search and filter options
+   */
+  search?: UseUserSearchOptions;
 }
 
 export function useUser(
@@ -34,6 +57,11 @@ export function useUser(
 
   const isLoadingMore = shallowRef(false);
 
+  // Extract search refs from options (Step 2)
+  const searchQuery = computed(() => options?.search?.query?.value ?? null);
+  const showManageableOnly = computed(() => options?.search?.showManageableOnly?.value ?? false);
+  const sortAscending = computed(() => options?.search?.sortAscending?.value ?? true);
+
   const asyncData = useLazyAsyncData(
     () => {
       const userValue = toValue(user);
@@ -43,9 +71,10 @@ export function useUser(
       // Reset cache for new query
       cache.value = null;
 
+      const { search, ...fetchOptions } = options ?? {};
       const { data, isStale } = await cachedFetch<TransformedLoginData>(
         "/api/users",
-        { ...options, signal },
+        { ...fetchOptions, signal },
       );
 
       cache.value = {
@@ -74,8 +103,9 @@ export function useUser(
     isLoadingMore.value = true;
 
     try {
+      const { search, ...fetchOptions } = options ?? {};
       const { data } = await cachedFetch<TransformedLoginData>("/api/users", {
-        ...options,
+        ...fetchOptions,
       });
 
       if (!cache.value) {
@@ -109,6 +139,52 @@ export function useUser(
     return asyncData.data.value;
   });
 
+  // Step 3: Create guilds computed
+  const guilds = computed(() => {
+    if (cache.value) {
+      return cache.value.guilds;
+    }
+    return data.value?.transformedGuilds ?? [];
+  });
+
+  // Step 4: Create manageableGuilds computed
+  const manageableGuilds = computed(() => {
+    if (!showManageableOnly.value)
+      return guilds.value;
+    return guilds.value.filter(guild => guild.manageable);
+  });
+
+  // Step 5: Use useFuse from VueUse
+  const searchValue = computed(() => searchQuery.value ?? "");
+
+  const { results } = useFuse(searchValue, manageableGuilds, {
+    fuseOptions: {
+      keys: ["name"],
+      threshold: 0.3,
+    },
+    matchAllWhenSearchEmpty: true,
+  });
+
+  // Step 6: Create filteredGuilds computed
+  const filteredGuilds = computed(() => {
+    // If no search options provided, return all guilds
+    if (!options?.search)
+      return guilds.value;
+
+    const items = results.value.map(r => r.item);
+    return items.sort((a, b) => {
+      // Manageable first
+      if (a.manageable !== b.manageable)
+        return a.manageable ? -1 : 1;
+      // WolfStar presence
+      if (a.wolfstarIsIn !== b.wolfstarIsIn)
+        return a.wolfstarIsIn ? -1 : 1;
+      // Alphabetical
+      const comparison = a.name.localeCompare(b.name, "en", { sensitivity: "base" });
+      return sortAscending.value ? comparison : -comparison;
+    });
+  });
+
   if (import.meta.client && asyncData.data.value?.isStale) {
     onMounted(() => {
       asyncData.refresh();
@@ -133,5 +209,7 @@ export function useUser(
     hasMore,
     /** Manually fetch more guilds up to target size */
     fetchMore,
+    /** Filtered guilds (only when search options are provided) */
+    filteredGuilds,
   };
 }

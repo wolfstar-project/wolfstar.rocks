@@ -11,6 +11,7 @@
 export const FETCH_CACHE_ALLOWED_DOMAINS = [
   "wolfstar.rocks",
   "beta.wolfstar.rocks",
+  "localhost:3000",
 ];
 
 /**

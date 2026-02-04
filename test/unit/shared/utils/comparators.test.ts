@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { asc, desc, differenceArray, differenceBitField, differenceMap, max } from "../../../../shared/utils/comparators";
+import { asc, bidirectionalReplace, desc, differenceArray, differenceBitField, differenceMap, max } from "../../../../shared/utils/comparators";
 
 describe("asc", () => {
   it("should return -1 when first number is smaller", () => {
@@ -499,5 +499,254 @@ describe("differenceMap", () => {
     expect(result.removed.size).toBe(1);
     expect(result.removed.get("b")).toBe(1);
     expect(result.updated.size).toBe(0);
+  });
+});
+
+describe("bidirectionalReplace", () => {
+  it("should process matched and unmatched portions", () => {
+    const result = bidirectionalReplace(
+      /\d+/g, // Match numbers
+      "a123b456c",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual(["a", "[123]", "b", "[456]", "c"]);
+  });
+
+  it("should handle content before first match", () => {
+    const result = bidirectionalReplace(
+      /\d+/g,
+      "hello123world",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual(["hello", "[123]", "world"]);
+    expect(result[0]).toBe("hello"); // Content before first match
+  });
+
+  it("should handle content between matches", () => {
+    const result = bidirectionalReplace(
+      /\d+/g,
+      "a123b456c789d",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual(["a", "[123]", "b", "[456]", "c", "[789]", "d"]);
+    expect(result[2]).toBe("b"); // Content between first and second match
+    expect(result[4]).toBe("c"); // Content between second and third match
+  });
+
+  it("should handle content after last match", () => {
+    const result = bidirectionalReplace(
+      /\d+/g,
+      "123hello",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual(["[123]", "hello"]);
+    expect(result[1]).toBe("hello"); // Content after last match
+  });
+
+  it("should handle no matches (all outMatch)", () => {
+    const onMatchCalls: RegExpExecArray[] = [];
+    const outMatchCalls: Array<{ content: string; prev: number; next: number }> = [];
+
+    const result = bidirectionalReplace(
+      /\d+/g,
+      "abcdef",
+      {
+        onMatch: (match) => {
+          onMatchCalls.push(match);
+          return `[${match[0]}]`;
+        },
+        outMatch: (content, prev, next) => {
+          outMatchCalls.push({ content, prev, next });
+          return content;
+        },
+      },
+    );
+
+    expect(result).toEqual(["abcdef"]);
+    expect(onMatchCalls.length).toBe(0); // No matches
+    expect(outMatchCalls.length).toBe(1); // One outMatch for entire string
+    expect(outMatchCalls[0]).toEqual({ content: "abcdef", prev: 0, next: 6 });
+  });
+
+  it("should handle consecutive matches with no gap", () => {
+    // Use /\d/g to match each digit separately (consecutive matches)
+    const result = bidirectionalReplace(
+      /\d/g,
+      "123",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    // Should have 3 consecutive matches with NO outMatch calls
+    expect(result).toEqual(["[1]", "[2]", "[3]"]);
+    expect(result.length).toBe(3);
+  });
+
+  it("should not call outMatch between consecutive matches", () => {
+    let outMatchCalls = 0;
+    const result = bidirectionalReplace(
+      /\d/g,
+      "123",
+      {
+        onMatch: (match) => match[0],
+        outMatch: (content, _prev, _next) => {
+          outMatchCalls++;
+          return content;
+        },
+      },
+    );
+
+    expect(result).toEqual(["1", "2", "3"]);
+    expect(outMatchCalls).toBe(0); // No gaps, so outMatch should never be called
+  });
+
+  it("should pass correct indices to outMatch", () => {
+    const outMatchCalls: Array<{ prev: number; next: number }> = [];
+
+    bidirectionalReplace(
+      /\d+/g,
+      "a123b456c",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, prev, next) => {
+          outMatchCalls.push({ prev, next });
+          return content;
+        },
+      },
+    );
+
+    expect(outMatchCalls).toEqual([
+      { prev: 0, next: 1 }, // "a" before first match at index 1
+      { prev: 4, next: 5 }, // "b" between matches
+      { prev: 8, next: 9 }, // "c" after last match
+    ]);
+  });
+
+  it("should pass correct match groups to onMatch", () => {
+    const matches: string[] = [];
+
+    bidirectionalReplace(
+      /(\d+)([a-z]+)/g,
+      "123abc456def",
+      {
+        onMatch: (match) => {
+          matches.push(match[0]); // Full match
+          matches.push(match[1]!); // First capture group (digits)
+          matches.push(match[2]!); // Second capture group (letters)
+          return match[0];
+        },
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(matches).toEqual([
+      "123abc",
+      "123",
+      "abc",
+      "456def",
+      "456",
+      "def",
+    ]);
+  });
+
+  it("should preserve order of results", () => {
+    const result = bidirectionalReplace<string | number>(
+      /\d+/g,
+      "a123b456c789d",
+      {
+        onMatch: (match) => Number.parseInt(match[0], 10),
+        outMatch: (content, _prev, _next) => content.toUpperCase(),
+      },
+    );
+
+    expect(result).toEqual(["A", 123, "B", 456, "C", 789, "D"]);
+    expect(result[0]).toBe("A"); // First outMatch
+    expect(result[1]).toBe(123); // First onMatch
+    expect(result[2]).toBe("B"); // Second outMatch
+    expect(result[3]).toBe(456); // Second onMatch
+  });
+
+  it("should handle empty string", () => {
+    const result = bidirectionalReplace(
+      /\d+/g,
+      "",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual([]);
+  });
+
+  it("should handle pattern that matches entire string", () => {
+    const result = bidirectionalReplace(
+      /.+/g, // Match entire string
+      "hello",
+      {
+        onMatch: (match) => match[0].toUpperCase(),
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual(["HELLO"]);
+    expect(result.length).toBe(1); // Only onMatch, no outMatch calls
+  });
+
+  it("should handle patterns with multiple capture groups", () => {
+    const captureGroups: Array<{ full: string; group1: string; group2: string }> = [];
+
+    bidirectionalReplace(
+      /(\w+)=(\w+)/g,
+      "key1=value1 key2=value2",
+      {
+        onMatch: (match) => {
+          captureGroups.push({
+            full: match[0],
+            group1: match[1]!,
+            group2: match[2]!,
+          });
+          return match[0];
+        },
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(captureGroups).toEqual([
+      { full: "key1=value1", group1: "key1", group2: "value1" },
+      { full: "key2=value2", group1: "key2", group2: "value2" },
+    ]);
+  });
+
+  it("should handle strings that start and end with matches", () => {
+    const result = bidirectionalReplace(
+      /\d+/g,
+      "123abc456",
+      {
+        onMatch: (match) => `[${match[0]}]`,
+        outMatch: (content, _prev, _next) => content,
+      },
+    );
+
+    expect(result).toEqual(["[123]", "abc", "[456]"]);
+    expect(result.length).toBe(3);
   });
 });

@@ -482,7 +482,6 @@
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import { isDevelopment } from "std-env";
 
 definePageMeta({ alias: ["/account"] });
 
@@ -492,24 +491,17 @@ useSeoMetadata({
   shouldOgImage: true,
 });
 
-// Constants for timeout and retry logic
-const FETCH_TIMEOUT_MS = 15000; // 15 seconds timeout
-const MAX_RETRY_ATTEMPTS = 3;
-
 const { user } = useAuth();
 // refs
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
-const isLoading = ref(true);
 const { copy, copied } = useClipboard();
-const evaluating = shallowRef(false);
 const searchQuery = ref<null | string>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
 // Error handling state
 const isRetrying = ref(false);
-const retryCount = ref(0);
 
 // toggles
 // is true by default because we want to show only manageable servers
@@ -532,81 +524,66 @@ const preferredFormat = computed<"gif" | "png">(() => {
   return "png";
 });
 
-const { data, status, error, execute } = useFetch("/api/users", {
-  key: "guilds",
-  immediate: false,
-  timeout: FETCH_TIMEOUT_MS,
-  retry: MAX_RETRY_ATTEMPTS,
-  retryDelay: 1000,
-  transform: (data) => ({
-    transformedGuilds: data.transformedGuilds ?? [],
-    fetchAt: Date.now(),
-  }),
-  getCachedData: (key, nuxtApp) => {
-    const data = nuxtApp.isHydrating
-      ? nuxtApp.payload.data[key]
-      : nuxtApp.static.data[key];
-    if (!data) {
-      return undefined;
-    }
-
-    const expirationDate = new Date(data.fetchAt);
-    expirationDate.setMinutes(expirationDate.getMinutes() + minutes(10));
-    const isExpired = expirationDate.getTime() < Date.now();
-    if (isExpired) {
-      return;
-    }
-    return data;
-  },
-  onRequest({ options }) {
-    logger.info(`Fetching user: ${user.value?.id} guilds ${isDevelopment && options.timeout ? `with timeout: ${options.timeout}ms` : ""}`);
-  },
-  onRequestError({ error }) {
-    logger.error(`Profile fetch request failed for user: ${user.value?.id}`, error);
-  },
-  onResponseError({ response, error }) {
-    logger.error(`Profile fetch response error with status: ${response.status}`, error);
-  },
+// Use the centralized useUser composable instead of manual useFetch
+// Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
+// Transform and getCachedData are handled internally by useUser (from Phase 2)
+const { data, status, error, refresh } = useUser(user, {
+  timeout: 15000, // 15 seconds timeout
+  retry: 3, // Max retry attempts
+  retryDelay: 1000, // 1 second delay between retries
 });
 
+// Extract guilds from useUser data
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
 
-// Optimized filtered guilds with memoization
-const filteredGuilds = computedAsync(
-  () => {
-    let filtered = [...guilds.value];
-    evaluating.value = true;
-    // Apply manageable filter
-    if (showManageableOnly.value) {
-      filtered = filtered.filter((guild) => guild.manageable);
-    }
-    // Apply search filter
-    if (searchQuery.value !== null && searchQuery.value?.trim()) {
-      const { results } = useFuse(searchQuery as Ref<string>, filtered, {
-        fuseOptions: {
-          keys: ["name", "id"],
-          threshold: 0.3,
-        },
-      });
-      filtered = results.value.map((result) => result.item);
-    }
-    // Sort: manageable servers first, then alphabetically
-    return filtered.sort((guildA, guildB) => {
-      if (guildA.manageable !== guildB.manageable) {
-        return guildA.manageable ? -1 : 1;
-      }
-      if (guildA.wolfstarIsIn !== guildB.wolfstarIsIn) {
-        return guildA.wolfstarIsIn ? -1 : 1;
-      }
-      const comparison = guildA.name.localeCompare(guildB.name, "en", {
-        sensitivity: "base",
-      });
-      return sortAscending.value ? comparison : -comparison;
-    });
+// Apply manageable filter
+const manageableGuilds = computed(() => {
+  if (!showManageableOnly.value)
+    return guilds.value;
+  return guilds.value.filter(guild => guild.manageable);
+});
+
+// Convert searchQuery (string | null) to string for useFuse
+const searchValue = computed(() => searchQuery.value ?? "");
+
+// Use useFuse for search (following commands.vue pattern)
+const { results } = useFuse(searchValue, manageableGuilds, {
+  fuseOptions: {
+    keys: ["name"],
+    threshold: 0.3,
   },
-  [],
-  { lazy: true, evaluating },
-);
+  matchAllWhenSearchEmpty: true,
+});
+
+// Apply sorting to search results
+const filteredGuilds = computed(() => {
+  const items = results.value.map(r => r.item);
+  return items.sort((a, b) => {
+    // Manageable first
+    if (a.manageable !== b.manageable)
+      return a.manageable ? -1 : 1;
+    // WolfStar presence
+    if (a.wolfstarIsIn !== b.wolfstarIsIn)
+      return a.wolfstarIsIn ? -1 : 1;
+    // Alphabetical
+    const comparison = a.name.localeCompare(b.name, "en", { sensitivity: "base" });
+    return sortAscending.value ? comparison : -comparison;
+  });
+});
+
+// Loading state based on status from useUser
+const isLoading = computed(() => status.value === "pending");
+
+// Retry handler
+async function handleRetry() {
+  isRetrying.value = true;
+  try {
+    await refresh();
+  }
+  finally {
+    isRetrying.value = false;
+  }
+}
 
 // Enhanced tabs configuration
 const items = computed<TabsItem[]>(() => [
@@ -636,38 +613,6 @@ const defaultAvatar = computed(() =>
     : "https://cdn.discordapp.com/embed/avatars/0.png",
 );
 
-async function performCall() {
-  isLoading.value = true;
-  evaluating.value = true;
-  try {
-    if (status.value === "error")
-      return;
-    await execute();
-  }
-  finally {
-    isLoading.value = false;
-    evaluating.value = false;
-  }
-};
-
-async function handleRetry() {
-  isRetrying.value = true;
-  retryCount.value++;
-
-  try {
-    await performCall();
-  }
-  finally {
-    isRetrying.value = false;
-  }
-}
-
-// Refresh wrapper for the UI buttons
-async function refresh() {
-  retryCount.value = 0;
-  await performCall();
-}
-
 function undoSearch() {
   searchQuery.value = null;
 }
@@ -696,6 +641,4 @@ watch(
   },
   { immediate: true },
 );
-
-onMounted(performCall);
 </script>

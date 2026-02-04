@@ -9,8 +9,8 @@
  * Only requests to these domains will be intercepted and cached.
  */
 export const FETCH_CACHE_ALLOWED_DOMAINS = [
-  "api.beta.wolfstar.rocks",
-  "api.wolfstar.rocks",
+  "wolfstar.rocks",
+  "beta.wolfstar.rocks",
 ];
 
 /**

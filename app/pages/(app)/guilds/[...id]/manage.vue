@@ -139,7 +139,7 @@ const src = computed(() =>
 
 const joinedPath = computed(() => Array.isArray(slug) ? slug.join("/") : (slug || ""));
 
-const title = ref(`${joinedPath.value} · ${guildData.value.name}`);
+const title = ref(`${joinedPath.value || "General"} · ${guildData.value.name}`);
 
 const renderComponent = computed(() => {
   switch (joinedPath.value as GuildRoutes & FilterRoutes) {

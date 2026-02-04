@@ -92,6 +92,7 @@ catalogs:
     nuxt-security: ^2.5.1
     nuxt-vitalizer: ^2.0.0
     require-in-the-middle: ^8.0.1
+    sharp: ^0.34.5
     simple-git: ^3.30.0
     stale-dep: ^0.8.4
     utility-types: ^3.11.0

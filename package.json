@@ -90,7 +90,8 @@
     "@vitest/browser-playwright": "catalog:test",
     "@playwright/test": "catalog:test",
     "vitest": "catalog:test",
-    "@vue/test-utils": "catalog:test"
+    "@vue/test-utils": "catalog:test",
+    "sharp": "catalog:prod"
   },
   "devDependencies": {
     "@iconify-json/emojione": "catalog:icons",

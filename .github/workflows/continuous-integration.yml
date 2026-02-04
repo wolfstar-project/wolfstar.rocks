@@ -7,12 +7,21 @@ on:
   push:
     branches:
       - main
+  merge_group:
+    branches:
+      - main
+
+# cancel in-progress runs on new commits to same PR (gitub.event.number)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
   lint:
+    name: 🔠 Lint project
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -20,24 +29,26 @@ jobs:
         node: [22]
 
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1 # v6.0.1
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
       - name: Add problem matchers
         run: echo "::add-matcher::.github/problemMatchers/eslint.json"
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{ matrix.node }}
-          cache: pnpm
 
-      - name: 📦 Install dependencies
-        run: pnpm install
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
+        # pnpm cache skipped deliberately as the project is not actually installed here
 
       - name: 🔠 Lint project
         run: pnpm lint
 
-  test:
+  unit:
+    name: 🧪 Unit tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -45,56 +56,102 @@ jobs:
         node: [22]
 
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1 # v6.0.1
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{ matrix.node }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🧪 Unit tests
+        run: pnpm test:unit run --coverage --reporter=junit --outputFile=test-report.junit.xml
+
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@0fa95f0e1eeaafde2c782583b36b28ad0d8c77d3 # v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  test:
+    name: 🧪 Component tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [22]
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: ${{ matrix.node }}
+
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
 
       - name: 🌐 Install browser
-        run: pnpm playwright install
+        run: pnpm playwright install chromium-headless-shell
 
-      - name: 💪 Type check
-        run: pnpm test:types
+      - name: 🧪 Component tests
+        run: pnpm test:nuxt run --coverage --reporter=junit --outputFile=test-report.junit.xml
 
-      - name: 🧪 Unit test
-        run: pnpm test:unit
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@0fa95f0e1eeaafde2c782583b36b28ad0d8c77d3 # v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
-      - name: 🏃 Component tests
-        run: pnpm test:nuxt
+      - name: ⬆︎ Upload coverage reports to Codecov
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   browser:
+    name: 🖥️ Browser tests
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
         node: [22]
     container:
-      image: mcr.microsoft.com/playwright:v1.57.0-noble
+      image: mcr.microsoft.com/playwright:v1.58.0-noble
 
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1 # v6.0.1
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{ matrix.node }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
 
+      - name: 🏗️ Build project
+        run: pnpm build:playwright
+
       - name: 🖥️ Test project (browser)
-        run: pnpm test:browser
+        run: pnpm test:browser:prebuilt
 
   a11y:
+    name: ♿ Accessibility audit
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -102,20 +159,22 @@ jobs:
         node: [22]
 
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1 # v6.0.1
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
           node-version: ${{ matrix.node }}
-          cache: pnpm
+
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
 
       - name: 🏗️ Build project
-        run: pnpm build
+        run: NODE_ENV=test pnpm build
 
       - name: ♿ Accessibility audit (Lighthouse)
         run: pnpx @lhci/cli autorun

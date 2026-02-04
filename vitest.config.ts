@@ -16,7 +16,6 @@ export default defineConfig({
           alias: {
             "#shared": `${rootDir}/shared`,
             "#server": `${rootDir}/server`,
-            "#storage-config": `${rootDir}/test/mocks/storage-config.ts`,
           },
         },
         test: {

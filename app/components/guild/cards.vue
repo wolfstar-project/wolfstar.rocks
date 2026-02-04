@@ -6,15 +6,22 @@
   >
     <div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row">
       <div class="flex items-start">
-        <div v-if="loading" class="text-sm text-base-content/60 sm:block">
+        <div v-if="loading || filterLoading" class="text-sm text-base-content/60 sm:block">
           <div class="flex animate-pulse items-center">
             <div class="h-4 w-24 rounded bg-base-content/20"></div>
             <div class="mx-1 h-4 w-4 rounded bg-base-content/20"></div>
             <div class="h-4 w-24 rounded bg-base-content/20"></div>
           </div>
         </div>
-        <div v-else-if="guilds" class="text-sm text-base-content/60 sm:block" role="status" aria-live="polite">
+        <div
+          v-else-if="guilds"
+          class="text-sm text-base-content/60 sm:block"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
           <span>{{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers</span>
+          <span v-if="searchQuery" class="sr-only">matching "{{ searchQuery }}"</span>
         </div>
       </div>
     </div>
@@ -24,17 +31,19 @@
       <div ref="scrollComponent">
         <!-- Loading Skeleton Grid -->
         <div
-          v-if="loading"
+          v-if="loading || filterLoading"
           class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
           role="status"
-          aria-label="Loading servers"
+          :aria-label="filterLoading ? 'Applying filters' : 'Loading servers'"
         >
           <guild-card v-for="n in INITIAL_COUNT" :key="n" :loading="true" />
         </div>
 
         <!-- Guild Cards Grid -->
-        <div
+        <TransitionGroup
           v-else-if="paginatedGuilds.length > 0"
+          name="guild-list"
+          tag="div"
           class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
           role="list"
           aria-label="Guilds list"
@@ -42,10 +51,11 @@
           <guild-card
             v-for="guild in paginatedGuilds"
             :key="guild.id"
+            v-memo="[guild.id, guild.name, guild.manageable]"
             :guild
             role="listitem"
           />
-        </div>
+        </TransitionGroup>
       </div>
 
       <!-- Loading Indicator for Infinite Scroll -->
@@ -152,6 +162,7 @@ interface GuildCardsProps {
   undoSearch: () => void;
   searchQuery: string | null;
   loading: boolean;
+  filterLoading?: boolean;
   error: FetchError<any> | undefined;
   isRetrying?: boolean;
   onRetry?: () => void;
@@ -163,6 +174,7 @@ const {
   undoSearch,
   searchQuery,
   loading,
+  filterLoading = false,
   error,
   isRetrying = false,
   onRetry,
@@ -295,10 +307,30 @@ function reloadPage() {
 }
 
 watch(
-  () => filteredGuilds.length,
+  () => filteredGuilds,
   () => {
     visibleCount.value = INITIAL_COUNT;
     reset();
   },
 );
 </script>
+
+<style scoped>
+.guild-list-move,
+.guild-list-enter-active,
+.guild-list-leave-active {
+	transition-duration: 0.3s;
+	transition-property: transform, opacity;
+	transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.guild-list-enter-from,
+.guild-list-leave-to {
+	transform: scale(0.95);
+	opacity: 0;
+}
+
+.guild-list-leave-active {
+	position: absolute;
+}
+</style>

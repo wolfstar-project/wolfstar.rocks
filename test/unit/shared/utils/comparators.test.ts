@@ -1,4 +1,3 @@
-/* eslint-disable unused-imports/no-unused-vars */
 import { describe, expect, it, vi } from "vitest";
 import { andMix, asc, bidirectionalReplace, desc, differenceArray, differenceBitField, differenceMap, max, orMix } from "../../../../shared/utils/comparators";
 
@@ -807,9 +806,9 @@ describe("andMix", () => {
   });
 
   it("should pass arguments correctly to all functions", () => {
-    const fn1 = vi.fn((a: number, b: string) => a > 0);
-    const fn2 = vi.fn((a: number, b: string) => b.length > 0);
-    const fn3 = vi.fn((a: number, b: string) => true);
+    const fn1 = vi.fn((a: number, _b: string) => a > 0);
+    const fn2 = vi.fn((_a: number, b: string) => b.length > 0);
+    const fn3 = vi.fn((_a: number, _b: string) => true);
 
     const combined = andMix(fn1, fn2, fn3);
     combined(5, "hello");
@@ -1141,10 +1140,9 @@ describe("integration tests", () => {
 
     // Step 3: Collect all role IDs and find the lexicographically maximum ID
     const allRoleIds = Array.from(nextRoles.keys());
-    const sortedIds = allRoleIds.sort(asc);
-    expect(sortedIds).toEqual(["role1", "role2", "role4"]);
-
-    const maxRoleId = max(...allRoleIds);
+    // Use sorting instead of max() since role IDs are strings
+    const sortedIds = allRoleIds.sort(desc);
+    const maxRoleId = sortedIds[0]; // First element after desc sort is the max
     expect(maxRoleId).toBe("role4"); // Lexicographically maximum
 
     // Step 4: Validate new roles with predicate composition

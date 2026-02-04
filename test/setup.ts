@@ -1,19 +1,7 @@
-import { vi } from "vitest";
+// Vitest global setup file
+// This file is referenced in vitest.config.ts for test environment setup
 
-// mock virtual/imported drivers so the module's import-time code can run safely.
-vi.stubGlobal("useStorage", () => ({ mount: () => undefined }));
-vi.stubGlobal("useRuntimeConfig", () => ({
-  storage: { fsBase: "." },
-}));
+// Add any global test setup here
+// For example: test utilities, mocks, or configuration
 
-vi.mock("#storage-config", () => ({ driver: "memory" }));
-vi.mock("#server/cache-driver", () => ({ default: (x: any) => x }));
-vi.mock("unstorage/drivers/memory", () => ({ default: () => ({}) }));
-vi.mock("unstorage/drivers/fs", () => ({ default: () => ({}) }));
-vi.mock("unstorage/drivers/cloudflare-kv-http", () => ({ default: () => ({}) }));
-vi.mock("#server/utils/runtimeConfig", () => ({
-  runtimeConfig: {
-    discord: { botToken: "fake-token" },
-    cloudflare: { accountId: "", namespaceId: "", apiToken: "" },
-  },
-}));
+// Currently empty - add setup code as needed

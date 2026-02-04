@@ -1,4 +1,4 @@
-import { createResolver, useNuxt } from "nuxt/kit";
+import { createResolver } from "nuxt/kit";
 import { isCI } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
@@ -251,6 +251,21 @@ export default defineNuxtConfig({
     future: {
       nativeSWR: true,
     },
+
+    storage: {
+      "fetch-cache": {
+        driver: "fsLite",
+        base: "./.cache/fetch",
+      },
+      "wolfstar:ratelimiter": {
+        driver: "fsLite",
+        base: "./.cache/atproto-oauth/state",
+      },
+      "oauth-atproto-session": {
+        driver: "fsLite",
+        base: "./.cache/atproto-oauth/session",
+      },
+    },
   },
 
   vite: {
@@ -316,14 +331,6 @@ export default defineNuxtConfig({
   postcss: {
     plugins: {
       "postcss-nested": {},
-    },
-  },
-
-  hooks: {
-    "nitro:config": function (config) {
-      const nuxt = useNuxt();
-      config.virtual = config.virtual || {};
-      config.virtual["#storage-config"] = `export const driver = ${JSON.stringify(nuxt.options.appConfig.storage.driver)}`;
     },
   },
 

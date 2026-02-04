@@ -1,11 +1,29 @@
+import type { User } from "#auth-utils";
+import type { ChannelType } from "discord-api-types/v10";
 import type {
   FlattenedEmoji,
   FlattenedGuildChannel,
   FlattenedRole,
   OauthFlattenedGuild,
   PartialOauthFlattenedGuild,
-} from "#shared/types/discord";
-import type { ChannelType, Locale } from "discord-api-types/v10";
+} from "../../shared/types/discord";
+
+/**
+ * Creates a mock User for testing
+ * @param overrides - Partial overrides for the default mock user
+ * @returns A complete User object
+ */
+export function createMockUser(overrides?: Partial<User>): User {
+  const defaultUser: User = {
+    id: "123456789012345678",
+    name: "Test User",
+    globalName: "Test User",
+    username: "testuser",
+    avatar: "a1b2c3d4e5f6g7h8i9j0",
+  };
+
+  return { ...defaultUser, ...overrides };
+}
 
 /**
  * Creates a mock OauthFlattenedGuild for testing
@@ -41,7 +59,7 @@ export function createMockOauthFlattenedGuild(
     verificationLevel: 0,
 
     // Features and stats
-    preferredLocale: "en-US" as Locale,
+    preferredLocale: "en-US" as any, // Cast to avoid type mismatch
     premiumTier: 0,
     premiumSubscriptionCount: 0,
     approximateMemberCount: 100,

@@ -1,34 +1,10 @@
 import type { RESTOptions } from "@discordjs/rest";
 import type { H3Event } from "h3";
-import cached from "#server/cache-driver";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
-// @ts-expect-error virtual import
-import { driver } from "#storage-config";
 import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
-import kv from "unstorage/drivers/cloudflare-kv-http";
-import fs from "unstorage/drivers/fs";
-import memory from "unstorage/drivers/memory";
-
-const storage = useStorage();
-
-if (driver === "fs") {
-  const config = useRuntimeConfig();
-  storage.mount("wolfstar:ratelimiter", fs({ base: config.storage.fsBase }));
-}
-else if (driver === "cloudflare") {
-  const config = useRuntimeConfig();
-  storage.mount("wolfstar:ratelimiter", cached(kv({
-    accountId: config.cloudflare.accountId,
-    namespaceId: config.cloudflare.namespaceId,
-    apiToken: config.cloudflare.apiToken,
-  })));
-}
-else if (driver === "memory") {
-  storage.mount("wolfstar:ratelimiter", memory());
-}
 
 export function useApi(rest?: REST) {
   rest ??= useRest();

@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
-import { asc, bidirectionalReplace, desc, differenceArray, differenceBitField, differenceMap, max } from "../../../../shared/utils/comparators";
+/* eslint-disable unused-imports/no-unused-vars */
+import { describe, expect, it, vi } from "vitest";
+import { andMix, asc, bidirectionalReplace, desc, differenceArray, differenceBitField, differenceMap, max, orMix } from "../../../../shared/utils/comparators";
 
 describe("asc", () => {
   it("should return -1 when first number is smaller", () => {
@@ -748,5 +749,181 @@ describe("bidirectionalReplace", () => {
 
     expect(result).toEqual(["[123]", "abc", "[456]"]);
     expect(result.length).toBe(3);
+  });
+});
+
+describe("andMix", () => {
+  it("should return true when all functions return true", () => {
+    const fn1 = () => true;
+    const fn2 = () => true;
+    const fn3 = () => true;
+
+    const combined = andMix(fn1, fn2, fn3);
+    const result = combined();
+
+    expect(result).toBe(true);
+  });
+
+  it("should return false when any function returns false", () => {
+    const fn1 = () => true;
+    const fn2 = () => false;
+    const fn3 = () => true;
+
+    const combined = andMix(fn1, fn2, fn3);
+    const result = combined();
+
+    expect(result).toBe(false);
+  });
+
+  it("should short-circuit on first false", () => {
+    const fn1 = vi.fn((_arg: string) => true);
+    const fn2 = vi.fn((_arg: string) => false);
+    const fn3 = vi.fn((_arg: string) => true);
+
+    const combined = andMix(fn1, fn2, fn3);
+    const result = combined("test");
+
+    expect(result).toBe(false);
+    expect(fn1).toHaveBeenCalledWith("test");
+    expect(fn2).toHaveBeenCalledWith("test");
+    expect(fn3).not.toHaveBeenCalled(); // Short-circuited!
+  });
+
+  it("should throw when called with no functions", () => {
+    expect(() => andMix()).toThrow(Error);
+    expect(() => andMix()).toThrow("You must input at least one function.");
+  });
+
+  it("should handle single function", () => {
+    const fn = () => true;
+    const combined = andMix(fn);
+
+    expect(combined()).toBe(true);
+
+    const fn2 = () => false;
+    const combined2 = andMix(fn2);
+
+    expect(combined2()).toBe(false);
+  });
+
+  it("should pass arguments correctly to all functions", () => {
+    const fn1 = vi.fn((a: number, b: string) => a > 0);
+    const fn2 = vi.fn((a: number, b: string) => b.length > 0);
+    const fn3 = vi.fn((a: number, b: string) => true);
+
+    const combined = andMix(fn1, fn2, fn3);
+    combined(5, "hello");
+
+    expect(fn1).toHaveBeenCalledWith(5, "hello");
+    expect(fn2).toHaveBeenCalledWith(5, "hello");
+    expect(fn3).toHaveBeenCalledWith(5, "hello");
+  });
+
+  it("should preserve type signatures with typed functions", () => {
+    type CheckFn = (value: number) => boolean;
+
+    const isPositive: CheckFn = (value) => value > 0;
+    const isEven: CheckFn = (value) => value % 2 === 0;
+    const isLessThan100: CheckFn = (value) => value < 100;
+
+    const combined = andMix(isPositive, isEven, isLessThan100);
+
+    // Type check: combined should accept number and return boolean
+    const result: boolean = combined(42);
+    expect(result).toBe(true);
+
+    // Test with value that fails one condition
+    expect(combined(3)).toBe(false); // Not even
+    expect(combined(-2)).toBe(false); // Not positive
+    expect(combined(200)).toBe(false); // Not less than 100
+  });
+});
+
+describe("orMix", () => {
+  it("should return true when any function returns true", () => {
+    const fn1 = () => false;
+    const fn2 = () => true;
+    const fn3 = () => false;
+
+    const combined = orMix(fn1, fn2, fn3);
+    const result = combined();
+
+    expect(result).toBe(true);
+  });
+
+  it("should return false when all functions return false", () => {
+    const fn1 = () => false;
+    const fn2 = () => false;
+    const fn3 = () => false;
+
+    const combined = orMix(fn1, fn2, fn3);
+    const result = combined();
+
+    expect(result).toBe(false);
+  });
+
+  it("should short-circuit on first true", () => {
+    const fn1 = vi.fn((_arg: string) => false);
+    const fn2 = vi.fn((_arg: string) => true);
+    const fn3 = vi.fn((_arg: string) => false);
+
+    const combined = orMix(fn1, fn2, fn3);
+    const result = combined("test");
+
+    expect(result).toBe(true);
+    expect(fn1).toHaveBeenCalledWith("test");
+    expect(fn2).toHaveBeenCalledWith("test");
+    expect(fn3).not.toHaveBeenCalled(); // Short-circuited!
+  });
+
+  it("should throw when called with no functions", () => {
+    expect(() => orMix()).toThrow(Error);
+    expect(() => orMix()).toThrow("You must input at least one function.");
+  });
+
+  it("should handle single function", () => {
+    const fn = () => true;
+    const combined = orMix(fn);
+
+    expect(combined()).toBe(true);
+
+    const fn2 = () => false;
+    const combined2 = orMix(fn2);
+
+    expect(combined2()).toBe(false);
+  });
+
+  it("should pass arguments correctly to all functions", () => {
+    const fn1 = vi.fn((a: number, _b: string) => a < 0);
+    const fn2 = vi.fn((_a: number, b: string) => b.length === 0);
+    const fn3 = vi.fn((a: number, _b: string) => a > 100);
+
+    const combined = orMix(fn1, fn2, fn3);
+    combined(5, "hello");
+
+    expect(fn1).toHaveBeenCalledWith(5, "hello");
+    expect(fn2).toHaveBeenCalledWith(5, "hello");
+    expect(fn3).toHaveBeenCalledWith(5, "hello");
+  });
+
+  it("should preserve type signatures with typed functions", () => {
+    type CheckFn = (value: number) => boolean;
+
+    const isNegative: CheckFn = (value) => value < 0;
+    const isOdd: CheckFn = (value) => value % 2 !== 0;
+    const isGreaterThan100: CheckFn = (value) => value > 100;
+
+    const combined = orMix(isNegative, isOdd, isGreaterThan100);
+
+    // Type check: combined should accept number and return boolean
+    const result: boolean = combined(3);
+    expect(result).toBe(true); // 3 is odd
+
+    // Test with value that passes one condition
+    expect(combined(3)).toBe(true); // Odd
+    expect(combined(-2)).toBe(true); // Negative
+    expect(combined(200)).toBe(true); // Greater than 100
+    expect(combined(-5)).toBe(true); // Negative and odd
+    expect(combined(42)).toBe(false); // Positive, even, not > 100
   });
 });

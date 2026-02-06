@@ -59,9 +59,8 @@
       </div>
 
       <!-- Loading Indicator for Infinite Scroll -->
-      <div v-if="!loading && isAnyLoading" class="flex justify-center py-4" role="status" aria-label="Loading more servers">
+      <div v-if="!loading && loadingMore" class="flex justify-center py-4" role="status" aria-label="Loading more servers">
         <span class="loading loading-spinner loading-lg text-primary" aria-hidden="true"></span>
-        <span class="sr-only">{{ isLoadingMore ? 'Loading more from server' : 'Loading more servers' }}</span>
       </div>
 
       <!-- Error State with Enhanced UX -->
@@ -167,9 +166,6 @@ interface GuildCardsProps {
   error: FetchError<any> | undefined;
   isRetrying?: boolean;
   onRetry?: () => void;
-  fetchMore?: (targetSize: number) => Promise<void>;
-  isLoadingMore?: boolean;
-  hasMore?: boolean;
 }
 
 const {
@@ -182,9 +178,6 @@ const {
   error,
   isRetrying = false,
   onRetry,
-  fetchMore,
-  isLoadingMore = false,
-  hasMore = false,
 } = defineProps<GuildCardsProps>();
 
 // Error handling computed properties
@@ -298,43 +291,14 @@ const paginatedGuilds = computed(() => {
   return filteredGuilds.slice(0, visibleCount.value);
 });
 
-// Server-side incremental loading logic
-const canFetchMoreFromServer = computed(() => {
-  return hasMore && !isLoadingMore && fetchMore !== undefined;
-});
-
-async function loadMoreFromServer() {
-  if (!canFetchMoreFromServer.value || !fetchMore) {
-    return;
-  }
-
-  // Request more guilds from the server
-  // Target size is current filtered length + a batch size
-  const targetSize = filteredGuilds.length + LOAD_MORE_COUNT;
-  await fetchMore(targetSize);
-}
-
-// Combined loading state: client-side pagination OR server-side fetch
-const isAnyLoading = computed(() => loadingMore || isLoadingMore);
-
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
   scrollComponent,
-  async () => {
-    // First, try to show more from already loaded data
-    if (visibleCount.value < filteredGuilds.length) {
-      visibleCount.value += LOAD_MORE_COUNT;
-      return;
-    }
-
-    // If all filtered guilds are visible and more are available on server, fetch them
-    if (canFetchMoreFromServer.value) {
-      await loadMoreFromServer();
-    }
+  () => {
+    visibleCount.value += LOAD_MORE_COUNT;
   },
   {
     distance: 10,
-    canLoadMore: () =>
-      visibleCount.value < filteredGuilds.length || canFetchMoreFromServer.value,
+    canLoadMore: () => visibleCount.value < filteredGuilds.length,
   },
 );
 

@@ -34,7 +34,19 @@ if (sentry.dsn) {
 
     // Replay may only be enabled for the client-side
     integrations: [
-      Sentry.replayIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: true,
+        blockAllMedia: true,
+        networkDetailAllowUrls: [
+          "https://wolfstar.rocks/api",
+          "https://beta.wolfstar.rocks/api",
+        ],
+        networkDetailDenyUrls: [
+          "/api/auth/discord",
+          "/_auth/session",
+        ],
+        mask: ["access_token"],
+      }),
     ],
 
     // Set tracesSampleRate to 1.0 to capture 100%

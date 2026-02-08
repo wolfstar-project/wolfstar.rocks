@@ -1,37 +1,4 @@
-import type { CommandAutoDelete, DisabledCommandChannel, PermissionsNode, ReactionRole, StickyRole, UniqueRoleSet } from "#server/database";
-
-declare global {
-  // eslint-disable-next-line ts/no-namespace
-  namespace PrismaJson {
-    export type PermissionNodeEntries = PermissionsNode[];
-    export type CommandAutoDeleteEntries = CommandAutoDelete[];
-    export type DisabledCommandChannelEntries = DisabledCommandChannel[];
-    export type StickyRoleEntries = StickyRole[];
-    export type ReactionRoleEntries = ReactionRole[];
-    export type UniqueRoleSetEntries = UniqueRoleSet[];
-  }
-}
-
-export interface BuildInfo {
-  version: string;
-  commit: string;
-  shortCommit: string;
-  time: number;
-  branch: string;
-  env: Env.Canary | Env.Dev | Env.Release | Env.Preview;
-}
-
-export enum Env {
-  Canary = "canary",
-  Dev = "development",
-  Release = "release",
-  Preview = "preview",
-}
-
-declare module "@nuxt/schema" {
-  export interface AppConfig {
-    env: BuildInfo["env"];
-    buildInfo: BuildInfo;
-    storage: any;
-  }
-}
+export * from "./discord";
+export * from "./env";
+export * from "./prisma";
+export * from "./utils";

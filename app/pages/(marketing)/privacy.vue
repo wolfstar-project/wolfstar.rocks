@@ -1,8 +1,8 @@
 <template>
-  <UMain>
-    <article class="max-w-3xl mx-auto">
+  <div class="content-fit py-10">
+    <article class="prose">
       <!-- Header -->
-      <header class="mb-12">
+      <header class="mb-12 mt-8">
         <div class="flex items-baseline justify-between gap-4 mb-6">
           <h1 class="font-bold text-base-content/80 text-4xl sm:text-5xl">
             WolfStar Privacy Policy
@@ -803,7 +803,7 @@
         </section>
       </div>
     </article>
-  </UMain>
+  </div>
 </template>
 
 <script setup lang="ts">

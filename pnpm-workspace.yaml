@@ -1,3 +1,5 @@
+shellEmulator: true
+
 trustPolicy: no-downgrade
 
 trustPolicyExclude:
@@ -6,12 +8,6 @@ trustPolicyExclude:
   - "@netlify/edge-bundler@14.9.4"
   - "@netlify/zip-it-and-ship-it@14.3.1"
   - "@netlify/serverless-functions-api@2.8.3"
-
-shellEmulator: true
-
-cleanupUnusedCatalogs: true
-
-catalogMode: prefer
 
 packages: []
 

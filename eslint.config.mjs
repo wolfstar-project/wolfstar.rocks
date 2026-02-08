@@ -7,7 +7,6 @@ export default withNuxt(
   antfu(
     {
       formatters: true,
-      pnpm: true,
       stylistic: {
         indent: 2,
         quotes: "double",
@@ -154,42 +153,6 @@ export default withNuxt(
       ],
       "import/first": "off",
       "import/consistent-type-specifier-style": "off",
-    },
-  })
-  .append({
-    files: ["pnpm-workspace.yaml"],
-    name: "antfu/yaml/pnpm-workspace",
-    rules: {
-      "yaml/sort-keys": [
-        "error",
-        {
-          order: [
-            "packages",
-            "overrides",
-            "patchedDependencies",
-            "hoistPattern",
-            "catalog",
-            "catalogs",
-
-            "allowedDeprecatedVersions",
-            "allowNonAppliedPatches",
-            "configDependencies",
-            "ignoredBuiltDependencies",
-            "ignoredOptionalDependencies",
-            "neverBuiltDependencies",
-            "onlyBuiltDependencies",
-            "onlyBuiltDependenciesFile",
-            "packageExtensions",
-            "peerDependencyRules",
-            "supportedArchitectures",
-          ],
-          pathPattern: "^$",
-        },
-        {
-          order: { type: "asc" },
-          pathPattern: ".*",
-        },
-      ],
     },
   })
   .overrideRules({

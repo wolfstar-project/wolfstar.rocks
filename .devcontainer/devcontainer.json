@@ -3,7 +3,7 @@
   "image": "mcr.microsoft.com/vscode/devcontainers/typescript-node",
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "22",
+      "version": "lts",
       "pnpmVersion": "10"
     }
   },

@@ -44,6 +44,7 @@ if (sentry.dsn) {
         networkDetailDenyUrls: [
           "/api/auth/discord",
           "/_auth/session",
+          "/api/auth/refresh",
         ],
         mask: ["access_token"],
       }),

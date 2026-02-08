@@ -4,283 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  build:
-    '@vite-pwa/assets-generator':
-      specifier: ^1.0.2
-      version: 1.0.2
-    '@vite-pwa/nuxt':
-      specifier: ^1.1.0
-      version: 1.1.0
-  cli:
-    bumpp:
-      specifier: ^10.4.0
-      version: 10.4.0
-    pncat:
-      specifier: ^0.7.8
-      version: 0.7.8
-    taze:
-      specifier: ^19.9.2
-      version: 19.9.2
-  database:
-    '@prisma/adapter-pg':
-      specifier: ^6.19.0
-      version: 6.19.2
-    '@prisma/client':
-      specifier: ^6.19.0
-      version: 6.19.2
-    prisma:
-      specifier: ^6.19.0
-      version: 6.19.2
-    prisma-json-types-generator:
-      specifier: ^3.6.2
-      version: 3.6.2
-  dev:
-    '@antfu/nip':
-      specifier: ^0.1.1
-      version: 0.1.1
-    '@discordjs/collection':
-      specifier: ^2.1.1
-      version: 2.1.1
-    '@discordjs/core':
-      specifier: ^2.4.0
-      version: 2.4.0
-    '@netlify/nuxt':
-      specifier: ^0.2.19
-      version: 0.2.19
-    '@nuxt/hints':
-      specifier: ^1.0.0-alpha.5
-      version: 1.0.0-alpha.5
-    '@sapphire/bitfield':
-      specifier: ^1.2.4
-      version: 1.2.4
-    '@sapphire/snowflake':
-      specifier: ^3.5.5
-      version: 3.5.5
-    '@sapphire/time-utilities':
-      specifier: ^1.7.14
-      version: 1.7.14
-    '@sapphire/utilities':
-      specifier: ^3.18.2
-      version: 3.18.2
-    cz-conventional-changelog:
-      specifier: ^3.3.0
-      version: 3.3.0
-    daisyui:
-      specifier: ^5.5.14
-      version: 5.5.14
-    discord-api-types:
-      specifier: ^0.38.37
-      version: 0.38.37
-  frontend:
-    '@nuxt/ui':
-      specifier: ^4.4.0
-      version: 4.4.0
-    '@vue-macros/nuxt':
-      specifier: ^3.1.1
-      version: 3.1.2
-  icons:
-    '@iconify-json/emojione':
-      specifier: ^1.2.3
-      version: 1.2.3
-    '@iconify-json/heroicons':
-      specifier: ^1.2.3
-      version: 1.2.3
-    '@iconify-json/ic':
-      specifier: ^1.2.4
-      version: 1.2.4
-    '@iconify-json/lucide':
-      specifier: ^1.2.86
-      version: 1.2.87
-    '@iconify-json/ph':
-      specifier: ^1.2.2
-      version: 1.2.2
-    '@nuxt/icon':
-      specifier: ^2.2.1
-      version: 2.2.1
-  lint:
-    '@antfu/eslint-config':
-      specifier: ^7.2.0
-      version: 7.2.0
-    '@commitlint/cli':
-      specifier: ^20.3.1
-      version: 20.3.1
-    '@commitlint/config-conventional':
-      specifier: ^20.3.1
-      version: 20.3.1
-    '@nuxt/eslint':
-      specifier: ^1.13.0
-      version: 1.13.0
-    '@sapphire/prettier-config':
-      specifier: ^2.0.0
-      version: 2.0.0
-    eslint:
-      specifier: ^9.39.2
-      version: 9.39.2
-    eslint-plugin-format:
-      specifier: ^1.3.1
-      version: 1.3.1
-    eslint-plugin-package-json:
-      specifier: ^0.88.2
-      version: 0.88.2
-    eslint-plugin-vuejs-accessibility:
-      specifier: ^2.4.1
-      version: 2.4.1
-    husky:
-      specifier: ^9.1.7
-      version: 9.1.7
-    lint-staged:
-      specifier: ^16.2.7
-      version: 16.2.7
-    lintroll:
-      specifier: ^1.28.1
-      version: 1.28.1
-    prettier:
-      specifier: ^3.8.1
-      version: 3.8.1
-    prettier-plugin-css-order:
-      specifier: ^2.2.0
-      version: 2.2.0
-    prettier-plugin-tailwindcss:
-      specifier: ^0.7.2
-      version: 0.7.2
-  node:
-    consola:
-      specifier: ^3.4.2
-      version: 3.4.2
-    dotenv:
-      specifier: ^17.2.3
-      version: 17.2.3
-    std-env:
-      specifier: ^3.10.0
-      version: 3.10.0
-  prod:
-    '@nuxt/a11y':
-      specifier: ^1.0.0-alpha.1
-      version: 1.0.0-alpha.1
-    '@nuxt/fonts':
-      specifier: ^0.13.0
-      version: 0.13.0
-    '@nuxt/image':
-      specifier: ^2.0.0
-      version: 2.0.0
-    '@nuxtjs/seo':
-      specifier: ^3.3.0
-      version: 3.3.0
-    '@sapphire/ratelimits':
-      specifier: ^2.4.11
-      version: 2.4.11
-    '@sentry/nuxt':
-      specifier: ^10.36.0
-      version: 10.37.0
-    import-in-the-middle:
-      specifier: ^2.0.5
-      version: 2.0.5
-    nuxt:
-      specifier: ^4.3.0
-      version: 4.3.0
-    nuxt-security:
-      specifier: ^2.5.1
-      version: 2.5.1
-    nuxt-vitalizer:
-      specifier: ^2.0.0
-      version: 2.0.0
-    require-in-the-middle:
-      specifier: ^8.0.1
-      version: 8.0.1
-    sharp:
-      specifier: ^0.34.5
-      version: 0.34.5
-    simple-git:
-      specifier: ^3.30.0
-      version: 3.30.0
-    stale-dep:
-      specifier: ^0.8.4
-      version: 0.8.4
-    utility-types:
-      specifier: ^3.11.0
-      version: 3.11.0
-    yup:
-      specifier: ^1.7.1
-      version: 1.7.1
-  style:
-    '@tailwindcss/typography':
-      specifier: ^0.5.19
-      version: 0.5.19
-    postcss-nested:
-      specifier: ^7.0.2
-      version: 7.0.2
-    tailwind-merge:
-      specifier: ^3.4.0
-      version: 3.4.0
-    tailwind-variants:
-      specifier: ^3.2.2
-      version: 3.2.2
-    tailwindcss:
-      specifier: ^4.1.18
-      version: 4.1.18
-    tw-animate-css:
-      specifier: ^1.4.0
-      version: 1.4.0
-  test:
-    '@nuxt/test-utils':
-      specifier: ^3.23.0
-      version: 3.23.0
-    '@playwright/test':
-      specifier: ^1.58.0
-      version: 1.58.0
-    '@vitest/browser-playwright':
-      specifier: ^4.0.18
-      version: 4.0.18
-    '@vitest/coverage-v8':
-      specifier: ^4.0.18
-      version: 4.0.18
-    '@vue/test-utils':
-      specifier: ^2.4.6
-      version: 2.4.6
-    vitest:
-      specifier: ^4.0.18
-      version: 4.0.18
-  tsc:
-    typescript:
-      specifier: ~5.8.3
-      version: 5.8.3
-    vue-tsc:
-      specifier: ^3.1.8
-      version: 3.2.4
-  types:
-    '@types/pg':
-      specifier: ^8.16.0
-      version: 8.16.0
-  utils:
-    '@vueuse/core':
-      specifier: ^14.1.0
-      version: 14.1.0
-    '@vueuse/integrations':
-      specifier: ^14.1.0
-      version: 14.1.0
-    '@vueuse/motion':
-      specifier: ^3.0.3
-      version: 3.0.3
-    '@vueuse/nuxt':
-      specifier: ^14.1.0
-      version: 14.1.0
-    '@vueuse/router':
-      specifier: ^14.1.0
-      version: 14.1.0
-    defu:
-      specifier: ^6.1.4
-      version: 6.1.4
-    fuse.js:
-      specifier: ^7.1.0
-      version: 7.1.0
-    nuxt-auth-utils:
-      specifier: ^0.5.27
-      version: 0.5.28
-    rou3:
-      specifier: ^0.7.12
-      version: 0.7.12
-
 overrides:
   '@netlify/api': ^14.0.13
   '@types/node': 25.0.3
@@ -292,266 +15,263 @@ importers:
   .:
     dependencies:
       '@nuxt/a11y':
-        specifier: catalog:prod
+        specifier: ^1.0.0-alpha.1
         version: 1.0.0-alpha.1(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       '@nuxt/fonts':
-        specifier: catalog:prod
+        specifier: ^0.13.0
         version: 0.13.0(@netlify/blobs@10.5.0)(db0@0.3.4)(ioredis@5.9.2)(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       '@nuxt/icon':
-        specifier: catalog:icons
+        specifier: ^2.2.1
         version: 2.2.1(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.8.3))
       '@nuxt/image':
-        specifier: catalog:prod
+        specifier: ^2.0.0
         version: 2.0.0(@netlify/blobs@10.5.0)(db0@0.3.4)(ioredis@5.9.2)(magicast@0.5.1)
       '@nuxt/ui':
-        specifier: catalog:frontend
+        specifier: ^4.4.0
         version: 4.4.0(@netlify/blobs@10.5.0)(@tiptap/extensions@3.17.1(@tiptap/core@3.17.1(@tiptap/pm@3.17.1))(@tiptap/pm@3.17.1))(@tiptap/y-tiptap@3.0.2(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)(y-protocols@1.0.7(yjs@13.6.29))(yjs@13.6.29))(change-case@5.4.4)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.9.2)(jwt-decode@4.0.0)(magicast@0.5.1)(tailwindcss@4.1.18)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-router@4.6.4(vue@3.5.27(typescript@5.8.3)))(vue@3.5.27(typescript@5.8.3))(yjs@13.6.29)(yup@1.7.1)(zod@4.3.6)
       '@nuxtjs/seo':
-        specifier: catalog:prod
+        specifier: ^3.3.0
         version: 3.3.0(@netlify/blobs@10.5.0)(@unhead/vue@2.1.2(vue@3.5.27(typescript@5.8.3)))(db0@0.3.4)(ioredis@5.9.2)(magicast@0.5.1)(rollup@4.57.0)(unhead@2.1.2)(unstorage@1.17.4(@netlify/blobs@10.5.0)(db0@0.3.4)(ioredis@5.9.2))(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.8.3))(zod@4.3.6)
       '@playwright/test':
-        specifier: catalog:test
+        specifier: ^1.58.0
         version: 1.58.0
       '@prisma/adapter-pg':
-        specifier: catalog:database
+        specifier: ^6.19.0
         version: 6.19.2
       '@prisma/client':
-        specifier: catalog:database
+        specifier: ^6.19.0
         version: 6.19.2(prisma@6.19.2(magicast@0.5.1)(typescript@5.8.3))(typescript@5.8.3)
       '@sapphire/ratelimits':
-        specifier: catalog:prod
+        specifier: ^2.4.11
         version: 2.4.11
       '@sentry/nuxt':
-        specifier: catalog:prod
+        specifier: ^10.36.0
         version: 10.37.0(@opentelemetry/api@1.9.0)(@opentelemetry/context-async-hooks@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/core@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/instrumentation@0.211.0(@opentelemetry/api@1.9.0))(@opentelemetry/resources@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/sdk-trace-base@2.5.0(@opentelemetry/api@1.9.0))(@opentelemetry/semantic-conventions@1.39.0)(encoding@0.1.13)(magicast@0.5.1)(nuxt@4.3.0(@netlify/blobs@10.5.0)(@parcel/watcher@2.5.6)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.27)(cac@6.7.14)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(lightningcss@1.31.1)(magicast@0.5.1)(optionator@0.9.4)(rollup@4.57.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.4(typescript@5.8.3))(yaml@2.8.2))(rollup@4.57.0)(vue@3.5.27(typescript@5.8.3))
       '@vitest/browser-playwright':
-        specifier: catalog:test
+        specifier: ^4.0.18
         version: 4.0.18(playwright@1.58.0)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
       '@vitest/coverage-v8':
-        specifier: catalog:test
+        specifier: ^4.0.18
         version: 4.0.18(@vitest/browser@4.0.18(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18))(vitest@4.0.18)
       '@vue/test-utils':
-        specifier: catalog:test
+        specifier: ^2.4.6
         version: 2.4.6
       '@vueuse/core':
-        specifier: catalog:utils
+        specifier: ^14.1.0
         version: 14.1.0(vue@3.5.27(typescript@5.8.3))
       '@vueuse/integrations':
-        specifier: catalog:utils
+        specifier: ^14.1.0
         version: 14.1.0(change-case@5.4.4)(fuse.js@7.1.0)(jwt-decode@4.0.0)(vue@3.5.27(typescript@5.8.3))
       '@vueuse/motion':
-        specifier: catalog:utils
+        specifier: ^3.0.3
         version: 3.0.3(magicast@0.5.1)(vue@3.5.27(typescript@5.8.3))
       '@vueuse/nuxt':
-        specifier: catalog:utils
+        specifier: ^14.1.0
         version: 14.1.0(magicast@0.5.1)(nuxt@4.3.0(@netlify/blobs@10.5.0)(@parcel/watcher@2.5.6)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.27)(cac@6.7.14)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(lightningcss@1.31.1)(magicast@0.5.1)(optionator@0.9.4)(rollup@4.57.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.4(typescript@5.8.3))(yaml@2.8.2))(vue@3.5.27(typescript@5.8.3))
       '@vueuse/router':
-        specifier: catalog:utils
+        specifier: ^14.1.0
         version: 14.1.0(vue-router@4.6.4(vue@3.5.27(typescript@5.8.3)))(vue@3.5.27(typescript@5.8.3))
       consola:
-        specifier: catalog:node
+        specifier: ^3.4.2
         version: 3.4.2
       defu:
-        specifier: catalog:utils
+        specifier: ^6.1.4
         version: 6.1.4
       dotenv:
-        specifier: catalog:node
+        specifier: ^17.2.3
         version: 17.2.3
       fuse.js:
-        specifier: catalog:utils
+        specifier: ^7.1.0
         version: 7.1.0
       import-in-the-middle:
-        specifier: catalog:prod
+        specifier: ^2.0.5
         version: 2.0.5
       nuxt:
-        specifier: catalog:prod
+        specifier: ^4.3.0
         version: 4.3.0(@netlify/blobs@10.5.0)(@parcel/watcher@2.5.6)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.27)(cac@6.7.14)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(lightningcss@1.31.1)(magicast@0.5.1)(optionator@0.9.4)(rollup@4.57.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.4(typescript@5.8.3))(yaml@2.8.2)
       nuxt-auth-utils:
-        specifier: catalog:utils
+        specifier: ^0.5.27
         version: 0.5.28(magicast@0.5.1)
       nuxt-security:
-        specifier: catalog:prod
+        specifier: ^2.5.1
         version: 2.5.1(magicast@0.5.1)(rollup@4.57.0)
       nuxt-vitalizer:
-        specifier: catalog:prod
+        specifier: ^2.0.0
         version: 2.0.0(magicast@0.5.1)
       postcss-nested:
-        specifier: catalog:style
+        specifier: ^7.0.2
         version: 7.0.2(postcss@8.5.6)
       require-in-the-middle:
-        specifier: catalog:prod
+        specifier: ^8.0.1
         version: 8.0.1
       rou3:
-        specifier: catalog:utils
+        specifier: ^0.7.12
         version: 0.7.12
       sharp:
-        specifier: catalog:prod
+        specifier: ^0.34.5
         version: 0.34.5
       simple-git:
-        specifier: catalog:prod
+        specifier: ^3.30.0
         version: 3.30.0
       stale-dep:
-        specifier: catalog:prod
+        specifier: ^0.8.4
         version: 0.8.4(@nuxt/kit@4.3.0(magicast@0.5.1))
       std-env:
-        specifier: catalog:node
+        specifier: ^3.10.0
         version: 3.10.0
       tailwind-merge:
-        specifier: catalog:style
+        specifier: ^3.4.0
         version: 3.4.0
       tailwind-variants:
-        specifier: catalog:style
+        specifier: ^3.2.2
         version: 3.2.2(tailwind-merge@3.4.0)(tailwindcss@4.1.18)
       tw-animate-css:
-        specifier: catalog:style
+        specifier: ^1.4.0
         version: 1.4.0
       utility-types:
-        specifier: catalog:prod
+        specifier: ^3.11.0
         version: 3.11.0
       vitest:
-        specifier: catalog:test
+        specifier: ^4.0.18
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@25.0.3)(@vitest/browser-playwright@4.0.18)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2)
       yup:
-        specifier: catalog:prod
+        specifier: ^1.7.1
         version: 1.7.1
     devDependencies:
       '@antfu/eslint-config':
-        specifier: catalog:lint
+        specifier: ^7.2.0
         version: 7.2.0(@vue/compiler-sfc@3.5.27)(eslint-plugin-format@1.3.1(eslint@9.39.2(jiti@2.6.1)))(eslint-plugin-react-hooks@7.0.1(eslint@9.39.2(jiti@2.6.1)))(eslint-plugin-vuejs-accessibility@2.4.1(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(typescript@5.8.3)(vitest@4.0.18)
       '@antfu/nip':
-        specifier: catalog:dev
+        specifier: ^0.1.1
         version: 0.1.1(@pnpm/logger@1001.0.1)(@pnpm/worker@1000.6.3(@pnpm/logger@1001.0.1)(@types/node@25.0.3))(typanion@3.14.0)
       '@commitlint/cli':
-        specifier: catalog:lint
+        specifier: ^20.3.1
         version: 20.3.1(@types/node@25.0.3)(typescript@5.8.3)
       '@commitlint/config-conventional':
-        specifier: catalog:lint
+        specifier: ^20.3.1
         version: 20.3.1
       '@discordjs/collection':
-        specifier: catalog:dev
+        specifier: ^2.1.1
         version: 2.1.1
       '@discordjs/core':
-        specifier: catalog:dev
+        specifier: ^2.4.0
         version: 2.4.0
       '@iconify-json/emojione':
-        specifier: catalog:icons
+        specifier: ^1.2.3
         version: 1.2.3
       '@iconify-json/heroicons':
-        specifier: catalog:icons
+        specifier: ^1.2.3
         version: 1.2.3
       '@iconify-json/ic':
-        specifier: catalog:icons
+        specifier: ^1.2.4
         version: 1.2.4
       '@iconify-json/lucide':
-        specifier: catalog:icons
+        specifier: ^1.2.86
         version: 1.2.87
       '@iconify-json/ph':
-        specifier: catalog:icons
+        specifier: ^1.2.2
         version: 1.2.2
       '@netlify/nuxt':
-        specifier: catalog:dev
+        specifier: ^0.2.19
         version: 0.2.19(@netlify/api@14.0.13)(db0@0.3.4)(encoding@0.1.13)(ioredis@5.9.2)(magicast@0.5.1)(rollup@4.57.0)
       '@nuxt/eslint':
-        specifier: catalog:lint
+        specifier: ^1.13.0
         version: 1.13.0(@typescript-eslint/utils@8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.8.3))(@vue/compiler-sfc@3.5.27)(eslint-plugin-format@1.3.1(eslint@9.39.2(jiti@2.6.1)))(eslint@9.39.2(jiti@2.6.1))(magicast@0.5.1)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))
       '@nuxt/hints':
-        specifier: catalog:dev
+        specifier: ^1.0.0-alpha.5
         version: 1.0.0-alpha.5(@netlify/blobs@10.5.0)(encoding@0.1.13)(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue@3.5.27(typescript@5.8.3))
       '@nuxt/test-utils':
-        specifier: catalog:test
+        specifier: ^3.23.0
         version: 3.23.0(@playwright/test@1.58.0)(@vue/test-utils@2.4.6)(magicast@0.5.1)(playwright-core@1.58.0)(typescript@5.8.3)(vitest@4.0.18)
       '@sapphire/bitfield':
-        specifier: catalog:dev
+        specifier: ^1.2.4
         version: 1.2.4
       '@sapphire/prettier-config':
-        specifier: catalog:lint
+        specifier: ^2.0.0
         version: 2.0.0
       '@sapphire/snowflake':
-        specifier: catalog:dev
+        specifier: ^3.5.5
         version: 3.5.5
       '@sapphire/time-utilities':
-        specifier: catalog:dev
+        specifier: ^1.7.14
         version: 1.7.14
       '@sapphire/utilities':
-        specifier: catalog:dev
+        specifier: ^3.18.2
         version: 3.18.2
       '@tailwindcss/typography':
-        specifier: catalog:style
+        specifier: ^0.5.19
         version: 0.5.19(tailwindcss@4.1.18)
       '@types/pg':
-        specifier: catalog:types
+        specifier: ^8.16.0
         version: 8.16.0
       '@vite-pwa/assets-generator':
-        specifier: catalog:build
+        specifier: ^1.0.2
         version: 1.0.2
       '@vite-pwa/nuxt':
-        specifier: catalog:build
+        specifier: ^1.1.0
         version: 1.1.0(@vite-pwa/assets-generator@1.0.2)(magicast@0.5.1)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(workbox-build@7.4.0)(workbox-window@7.4.0)
       '@vue-macros/nuxt':
-        specifier: catalog:frontend
+        specifier: ^3.1.1
         version: 3.1.2(@vueuse/core@14.1.0(vue@3.5.27(typescript@5.8.3)))(esbuild@0.27.2)(magicast@0.5.1)(nuxt@4.3.0(@netlify/blobs@10.5.0)(@parcel/watcher@2.5.6)(@types/node@25.0.3)(@vue/compiler-sfc@3.5.27)(cac@6.7.14)(db0@0.3.4)(encoding@0.1.13)(eslint@9.39.2(jiti@2.6.1))(ioredis@5.9.2)(lightningcss@1.31.1)(magicast@0.5.1)(optionator@0.9.4)(rollup@4.57.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.4(typescript@5.8.3))(yaml@2.8.2))(rollup@4.57.0)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.4(typescript@5.8.3))(vue@3.5.27(typescript@5.8.3))
       bumpp:
-        specifier: catalog:cli
+        specifier: ^10.4.0
         version: 10.4.0(magicast@0.5.1)
       cz-conventional-changelog:
-        specifier: catalog:dev
+        specifier: ^3.3.0
         version: 3.3.0(@types/node@25.0.3)(typescript@5.8.3)
       daisyui:
-        specifier: catalog:dev
+        specifier: ^5.5.14
         version: 5.5.14
       discord-api-types:
-        specifier: catalog:dev
+        specifier: ^0.38.37
         version: 0.38.37
       eslint:
-        specifier: catalog:lint
+        specifier: ^9.39.2
         version: 9.39.2(jiti@2.6.1)
       eslint-plugin-format:
-        specifier: catalog:lint
+        specifier: ^1.3.1
         version: 1.3.1(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-package-json:
-        specifier: catalog:lint
+        specifier: ^0.88.2
         version: 0.88.2(@types/estree@1.0.8)(eslint@9.39.2(jiti@2.6.1))(jsonc-eslint-parser@2.4.2)
       eslint-plugin-vuejs-accessibility:
-        specifier: catalog:lint
+        specifier: ^2.4.1
         version: 2.4.1(eslint@9.39.2(jiti@2.6.1))
       husky:
-        specifier: catalog:lint
+        specifier: ^9.1.7
         version: 9.1.7
       lint-staged:
-        specifier: catalog:lint
+        specifier: ^16.2.7
         version: 16.2.7
       lintroll:
-        specifier: catalog:lint
+        specifier: ^1.28.1
         version: 1.28.1(@types/estree@1.0.8)(@typescript-eslint/utils@8.54.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.8.3))(jiti@2.6.1)(jsonc-eslint-parser@2.4.2)(typescript@5.8.3)
-      pncat:
-        specifier: catalog:cli
-        version: 0.7.8
       prettier:
-        specifier: catalog:lint
+        specifier: ^3.8.1
         version: 3.8.1
       prettier-plugin-css-order:
-        specifier: catalog:lint
+        specifier: ^2.2.0
         version: 2.2.0(postcss@8.5.6)(prettier@3.8.1)
       prettier-plugin-tailwindcss:
-        specifier: catalog:lint
+        specifier: ^0.7.2
         version: 0.7.2(prettier-plugin-css-order@2.2.0(postcss@8.5.6)(prettier@3.8.1))(prettier@3.8.1)
       prisma:
-        specifier: catalog:database
+        specifier: ^6.19.0
         version: 6.19.2(magicast@0.5.1)(typescript@5.8.3)
       prisma-json-types-generator:
-        specifier: catalog:database
+        specifier: ^3.6.2
         version: 3.6.2(@prisma/client@6.19.2(prisma@6.19.2(magicast@0.5.1)(typescript@5.8.3))(typescript@5.8.3))(prisma@6.19.2(magicast@0.5.1)(typescript@5.8.3))(typescript@5.8.3)
       tailwindcss:
-        specifier: catalog:style
+        specifier: ^4.1.18
         version: 4.1.18
       taze:
-        specifier: catalog:cli
+        specifier: ^19.9.2
         version: 19.9.2
       typescript:
-        specifier: catalog:tsc
+        specifier: ~5.8.3
         version: 5.8.3
       vue-tsc:
-        specifier: catalog:tsc
+        specifier: ^3.1.8
         version: 3.2.4(typescript@5.8.3)
 
 packages:
@@ -7945,6 +7665,7 @@ packages:
 
   glob@10.5.0:
     resolution: {integrity: sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@11.1.0:
@@ -7959,12 +7680,12 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
@@ -9905,10 +9626,6 @@ packages:
     resolution: {integrity: sha512-hEt02O4hUct5wtwg4H4KcWgDdm+l1bOaEy/hWzd8xtXB9BqxTWBBhb+2ImAtH4Cv4rPjV76xN3Zumqk3k3AhhQ==}
     engines: {node: '>=16.17'}
 
-  p-retry@7.1.1:
-    resolution: {integrity: sha512-J5ApzjyRkkf601HpEeykoiCvzHQjWxPAHhyjFcEUP2SWq0+35NKh8TLhpLw+Dkq5TZBFvUM6UigdE9hIVYTl5w==}
-    engines: {node: '>=20'}
-
   p-timeout@3.2.0:
     resolution: {integrity: sha512-rhIwUycgwwKcP9yTOOFK/AKsAopjjCakVqLHePO3CC6Mir1Z99xT+R63jZxAT5lFZLa2inS5h+ZS2GvR99/FBg==}
     engines: {node: '>=8'}
@@ -10156,10 +9873,6 @@ packages:
   pluralize@8.0.0:
     resolution: {integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==}
     engines: {node: '>=4'}
-
-  pncat@0.7.8:
-    resolution: {integrity: sha512-+ZLcVBawXcD2y+bZen38uCILhgdDiYyofalnMESJBfkHnw6/st6y2pASn14rIEGcqfwW1QkXfEn1tfvjDX63qQ==}
-    hasBin: true
 
   pngjs@7.0.0:
     resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
@@ -11422,6 +11135,7 @@ packages:
   tar@7.5.6:
     resolution: {integrity: sha512-xqUeu2JAIJpXyvskvU3uvQW8PAmHrtXp2KDuMJwQqW8Sqq0CaZBAQ+dKS3RBXVhU4wC5NjAdKrmh84241gO9cA==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   taze@19.9.2:
     resolution: {integrity: sha512-If8bq7lSckIMPfXV+C9jjEfdsQnRryh/foKfpX/ah6zI0TrQfUGWSGCaaD32Bqy5/KGRmLZie3EwMSr3Au21XQ==}
@@ -21838,7 +21552,7 @@ snapshots:
       cli-width: 3.0.0
       external-editor: 3.1.0
       figures: 3.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1
@@ -24101,10 +23815,6 @@ snapshots:
       is-network-error: 1.3.0
       retry: 0.13.1
 
-  p-retry@7.1.1:
-    dependencies:
-      is-network-error: 1.3.0
-
   p-timeout@3.2.0:
     dependencies:
       p-finally: 1.0.0
@@ -24319,19 +24029,6 @@ snapshots:
       fsevents: 2.3.2
 
   pluralize@8.0.0: {}
-
-  pncat@0.7.8:
-    dependencies:
-      '@clack/prompts': 0.11.0
-      ansis: 4.2.0
-      cac: 6.7.14
-      find-up-simple: 1.0.1
-      p-retry: 7.1.1
-      package-manager-detector: 1.6.0
-      pathe: 2.0.3
-      pnpm-workspace-yaml: 1.5.0
-      tinyexec: 1.0.2
-      unconfig: 7.4.2
 
   pngjs@7.0.0: {}
 

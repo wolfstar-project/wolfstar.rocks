@@ -46,9 +46,9 @@ export default defineConfig({
       darkImageResolver: async (imageName) => {
         if (imageName.includes("logo.svg")) {
           const logoPaths = [
-            "public/icons/logo-white.svg",
-            "public-dev/icons/logo-white.svg",
-            "public-staging/icons/logo-white.svg",
+            "public/logo-white.svg",
+            "public-dev/logo-white.svg",
+            "public-staging/logo-white.svg",
           ];
           for (const logoPath of logoPaths) {
             try {
@@ -67,16 +67,6 @@ export default defineConfig({
       resizeOptions: {
         background: "white",
         fit: "contain",
-      },
-      linkMediaOptions: {
-        log: true,
-        addMediaScreen: true,
-        basePath: "/icons/",
-        xhtml: false,
-      },
-      png: {
-        compressionLevel: 9,
-        quality: 85,
       },
       name: (landscape, size, _dark) => {
         return `apple-splash-${landscape ? "landscape" : "portrait"}-${size.width}x${size.height}.png`;
@@ -122,5 +112,5 @@ export default defineConfig({
       "iPad mini 8.3\"",
       "iPad mini 7.9\"",
     ]),
-  images: ["public/icons/logo.svg", "public-dev/icons/logo.svg", "public-staging/icons/logo.svg"],
+  images: ["public/logo.svg", "public-dev/logo.svg", "public-staging/logo.svg"],
 });

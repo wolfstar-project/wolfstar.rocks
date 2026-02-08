@@ -1,109 +1,180 @@
 <template>
-  <Head>
-    <Title>Terms of Service</Title>
-    <Meta name="description" content="WolfStar Project's Terms of Service" />
-  </Head>
+  <UMain class="bg-base-100">
+    <article class="max-w-3xl mx-auto px-4 py-8 sm:py-12">
+      <!-- Header -->
+      <header class="mb-12 mt-8">
+        <div class="flex items-baseline justify-between gap-4 mb-6">
+          <h1 class="font-bold text-base-content/80 text-4xl sm:text-5xl">
+            WolfStar Terms of Service
+          </h1>
+        </div>
+        <p class="text-lg text-base-content/70 mb-4">
+          Last updated and effective:
+          <NuxtTime
+            locale="en-US"
+            :datetime="buildInfo.termsDate"
+            date-style="long"
+            time-style="medium"
+          />
+        </p>
+        <div class="space-y-2 text-sm text-base-content/60">
+          <p>
+            <span class="font-semibold">Owner and data controller:</span> WolfStar Project
+          </p>
+          <p>
+            <span class="font-semibold">Contact email: </span>
+            <NuxtLink to="mailto:contact@wolfstar.rocks" class="underline hover:opacity-80">
+              contact@wolfstar.rocks
+            </NuxtLink>
+          </p>
+        </div>
+      </header>
 
-  <div class="content-fit py-10">
-    <article class="prose">
-      <h1>WolfStar Terms of Service</h1>
-      <p>Last updated and effective: May 12, 2024</p>
-      <hr />
-      <p>
-        <span class="font-bold">Owner and data controller</span>: WolfStar
-        Project
-      </p>
-      <p>
-        <span class="font-bold">Owner contact email</span>:
-        <NuxtLink to="mailto:contact@wolfstar.rocks">
-          contact@wolfstar.rocks
-        </NuxtLink>
-      </p>
-      <hr />
+      <!-- Content Sections -->
+      <div class="prose prose-lg max-w-none space-y-12">
+        <!-- Terms -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Terms
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            By accessing this service, accessible through the
+            <NuxtLink to="https://discord.com/privacy" target="_blank" class="underline hover:opacity-70">
+              Discord
+            </NuxtLink> chat
+            platform, you are agreeing to be bound by these WolfStar Terms of
+            Service and agree that you are responsible for the agreement with any
+            applicable local laws. If you disagree with any of these terms, you are
+            prohibited from accessing this service. The materials contained in the
+            Service are protected by copyright and trade mark law.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Terms</h2>
-      <p>
-        By accessing this service, accessible through the
-        <NuxtLink to="https://discord.com/privacy">Discord</NuxtLink> chat
-        platform, you are agreeing to be bound by these WolfStar Terms of
-        Service and agree that you are responsible for the agreement with any
-        applicable local laws. If you disagree with any of these terms, you are
-        prohibited from accessing this service. The materials contained in the
-        Service are protected by copyright and trade mark law.
-      </p>
+        <!-- Use License -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Use License
+          </h2>
+          <p class="text-base-content leading-relaxed mb-3">
+            To view what license applies to the Service please consult their
+            respective LICENSE documents:
+          </p>
+          <ul class="space-y-2 text-base-content list-disc pl-6">
+            <li>
+              <NuxtLink
+                to="https://github.com/wolfstar-project/wolfstar/blob/main/LICENSE"
+                target="_blank"
+                class="underline hover:opacity-70"
+              >
+                WolfStar
+              </NuxtLink>
+            </li>
+          </ul>
+        </section>
 
-      <h2 class="uppercase">Use License</h2>
-      <p>
-        To view what license applies to the Service please consult their
-        respective LICENSE documents:
-      </p>
-      <ul>
-        <li>
-          <NuxtLink
-            to="https://github.com/wolf-project/wolfstar/blob/main/LICENSE"
-          >
-            WolfStar
-          </NuxtLink>
-        </li>
-      </ul>
+        <!-- Disclaimer -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Disclaimer
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            All the materials in the Service is provided "as is". WolfStar Project
+            makes no warranties, may it be expressed or implied, therefore negates
+            all other warranties. Furthermore, WolfStar Project does not make any
+            representations concerning the accuracy or reliability of the use of the
+            materials on its Service or otherwise relating to such materials or any
+            sites linked to this Service.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Disclaimer</h2>
-      <p>
-        All the materials in the Service is provided "as is". WolfStar Project
-        makes no warranties, may it be expressed or implied, therefore negates
-        all other warranties. Furthermore, WolfStar Project does not make any
-        representations concerning the accuracy or reliability of the use of the
-        materials on its Service or otherwise relating to such materials or any
-        sites linked to this Service.
-      </p>
+        <!-- Limitations -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Limitations
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            WolfStar Project or its suppliers will not be hold accountable for any
+            damages that will arise with the use or inability to use the materials
+            on the Service, even if WolfStar Project or an authorize representative
+            of this Service has been notified, orally or written, of the possibility
+            of such damage. Some jurisdiction does not allow limitations on implied
+            warranties or limitations of liability for incidental damages, these
+            limitations may not apply to you.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Limitations</h2>
-      <p>
-        WolfStar Project or its suppliers will not be hold accountable for any
-        damages that will arise with the use or inability to use the materials
-        on the Service, even if WolfStar Project or an authorize representative
-        of this Service has been notified, orally or written, of the possibility
-        of such damage. Some jurisdiction does not allow limitations on implied
-        warranties or limitations of liability for incidental damages, these
-        limitations may not apply to you.
-      </p>
+        <!-- Revisions and Errata -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Revisions and errata
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            The materials appearing on the Service may include technical,
+            typographical, or photographic errors. WolfStar Project will not promise
+            that any of the materials in this Service are accurate, complete, or
+            current. WolfStar Project may change the materials contained on its
+            Service at any time without notice. WolfStar Project does not make any
+            commitment to update the materials.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Revisions and errata</h2>
-      <p>
-        The materials appearing on the Service may include technical,
-        typographical, or photographic errors. WolfStar Project will not promise
-        that any of the materials in this Service are accurate, complete, or
-        current. WolfStar Project may change the materials contained on its
-        Service at any time without notice. WolfStar Project does not make any
-        commitment to update the materials.
-      </p>
+        <!-- Links -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Links
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            WolfStar Project has not reviewed all of the sites linked to its Service
+            and is not responsible for the contents of any such linked site. The
+            presence of any link does not imply endorsement by WolfStar Project of
+            the site. The use of any linked website is at the user's own risk.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Links</h2>
-      <p>
-        WolfStar Project has not reviewed all of the sites linked to its Service
-        and is not responsible for the contents of any such linked site. The
-        presence of any link does not imply endorsement by WolfStar Project of
-        the site. The use of any linked website is at the user’s own risk.
-      </p>
+        <!-- Terms of Service Modifications -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Terms of Service modifications
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            WolfStar Project may revise these Terms of Service for its Service at
+            any time without prior notice. By using this Service, you are agreeing
+            to be bound by the current version of these Terms of Service.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Terms of Service modifications</h2>
-      <p>
-        WolfStar Project may revise these Terms of Service for its Service at
-        any time without prior notice. By using this Service, you are agreeing
-        to be bound by the current version of these Terms of Service.
-      </p>
+        <!-- Your Privacy -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Your Privacy
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            Please read our Privacy Policy, found
+            <NuxtLink to="/privacy" class="underline hover:opacity-70">here</NuxtLink>.
+          </p>
+        </section>
 
-      <h2 class="uppercase">Your Privacy</h2>
-      <p>
-        Please read our Privacy Policy, found
-        <NuxtLink to="privacy">here</NuxtLink>.
-      </p>
-
-      <h2 class="uppercase">Governing law</h2>
-      <p>
-        Any claim related to WolfStar Project's Service shall be governed by the
-        laws of Spain without regards to its conflict of law provisions.
-      </p>
+        <!-- Governing Law -->
+        <section>
+          <h2 class="uppercase text-lg tracking-wider text-base-content/60 mb-4">
+            Governing law
+          </h2>
+          <p class="text-base-content leading-relaxed">
+            Any claim related to WolfStar Project's Service shall be governed by the
+            laws of Italy without regards to its conflict of law provisions.
+          </p>
+        </section>
+      </div>
     </article>
-  </div>
+  </UMain>
 </template>
+
+<script setup lang="ts">
+useSeoMetadata({
+  title: "Terms of Service",
+  description: "WolfStar Project's Terms of Service - Learn about the terms and conditions for using our services",
+  shouldOgImage: true,
+});
+
+const { buildInfo } = useAppConfig();
+</script>

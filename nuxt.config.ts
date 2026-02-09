@@ -70,9 +70,6 @@ export default defineNuxtConfig({
       viewport: "width=device-width, initial-scale=1",
       htmlAttrs: { lang: "en" },
       link: [
-        { rel: "icon", href: "/favicon.ico", sizes: "any" },
-        { rel: "icon", type: "image/svg+xml", href: "/icons/logo.svg" },
-        { rel: "apple-touch-icon", href: "/icons/apple-touch-icon.png" },
         // DNS prefetch for external domains
         { rel: "dns-prefetch", href: "https://cdn.discordapp.com" },
         { rel: "dns-prefetch", href: "https://cdn.wolfstar.rocks" },
@@ -97,7 +94,7 @@ export default defineNuxtConfig({
         { name: "application-name", content: "WolfStar" },
         {
           name: "msapplication-TileImage",
-          content: "/icons/mstile-144x144.png",
+          content: "/mstile-144x144.png",
         },
 
         // Distribution and audience (only keep if not in seo.meta)

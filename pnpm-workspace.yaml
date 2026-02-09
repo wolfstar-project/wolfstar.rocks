@@ -2,49 +2,31 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 
-trustPolicyExclude:
-  - semver@6.3.1
-  - undici@6.21.3
-  - "@netlify/edge-bundler@14.9.4"
-  - "@netlify/zip-it-and-ship-it@14.3.1"
-  - "@netlify/serverless-functions-api@2.8.3"
-
 packages: []
 
 overrides:
   "@netlify/api": ^14.0.13
   "@types/node": 25.0.3
   "@vercel/nft": ^1.3.0
-  chokidar: ^5.0.0
+  sharp: 0.34.5
+
 allowedDeprecatedVersions:
   glob: 7.2.3
   inflight: 1.0.6
   sourcemap-codec: 1.4.8
 
 ignoredBuiltDependencies:
-  - puppeteer
+  - "@parcel/watcher"
+  - core-js
+  - esbuild
+  - unrs-resolver
+  - vue-demi
 
 onlyBuiltDependencies:
   - "@prisma/client"
   - "@prisma/engines"
   - "@tailwindcss/oxide"
-  - pncat
   - prisma
-  - sharp
+  - sharp@0.34.5
   - workerd
   - better-sqlite3
-  - esbuild
-  - "@parcel/watcher"
-  - sharp
-  - unrs-resolver
-  - vue-demi
-
-peerDependencyRules:
-  allowedVersions:
-    "@nuxt/kit": "*"
-    "@unhead/vue": "*"
-    inflight: 1.0.6
-    magicast: "*"
-    nuxt: "*"
-    typescript: 5.8.3
-    vue-tsc: ^3.0.7

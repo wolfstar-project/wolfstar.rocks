@@ -18,7 +18,7 @@ This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participat
 
 ### Prerequisites
 
-- **Node.js** 22+ (LTS)
+- **Node.js** 24+ (LTS)
 - **pnpm** 10+ (required - not npm or yarn)
 - **PostgreSQL** 14+
 - **Discord Bot Application** ([Create one](https://discord.com/developers/applications/))
@@ -27,43 +27,43 @@ This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participat
 
 1. **Fork and clone the repository**
 
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/wolfstar.rocks.git
-   cd wolfstar.rocks
-   ```
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/wolfstar.rocks.git
+    cd wolfstar.rocks
+    ```
 
 2. **Install dependencies**
 
-   ```bash
-   pnpm install
-   ```
+    ```bash
+    pnpm install
+    ```
 
 3. **Set up environment variables**
 
-   Copy `.env.example` to `.env` and configure:
+    Copy `.env.example` to `.env` and configure:
 
-   ```bash
-   cp .env.example .env
-   ```
+    ```bash
+    cp .env.example .env
+    ```
 
-   Required variables:
-   - `DATABASE_URL` - PostgreSQL connection string
-   - `NUXT_OAUTH_DISCORD_CLIENT_ID` - Discord OAuth client ID
-   - `NUXT_OAUTH_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
-   - `NUXT_SESSION_PASSWORD` - Random 32+ character string
+    Required variables:
+    - `DATABASE_URL` - PostgreSQL connection string
+    - `NUXT_OAUTH_DISCORD_CLIENT_ID` - Discord OAuth client ID
+    - `NUXT_OAUTH_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
+    - `NUXT_SESSION_PASSWORD` - Random 32+ character string
 
 4. **Set up the database**
 
-   ```bash
-   pnpm prisma:push          # Sync schema to database
-   pnpm prisma:seed          # Seed with test data (optional)
-   ```
+    ```bash
+    pnpm prisma:push          # Sync schema to database
+    pnpm prisma:seed          # Seed with test data (optional)
+    ```
 
 5. **Start development server**
 
-   ```bash
-   pnpm dev                  # Runs on http://localhost:3000
-   ```
+    ```bash
+    pnpm dev                  # Runs on http://localhost:3000
+    ```
 
 ## 💻 Development Workflow
 
@@ -127,7 +127,7 @@ Format: `<type>(<scope>): <subject>`
 - Use **TypeScript** with strict mode
 - Use **Vue 3 Composition API** with `<script setup>`
 - Type all props, emits, and function signatures
-- Follow the project's ESLint configuration (@antfu/eslint-config)
+- Follow the project's oxlint configuration (.oxlintrc.json)
 
 ### File Naming
 
@@ -152,23 +152,23 @@ Always use `defineWrappedResponseHandler`:
 ```typescript
 // server/api/guilds/[guild]/settings.get.ts
 export default defineWrappedResponseHandler(
-  async (event) => {
-    const guildId = getRouterParam(event, "guild");
+	async (event) => {
+		const guildId = getRouterParam(event, "guild");
 
-    const settings = await prisma.guild.findUnique({
-      where: { id: guildId }
-    });
+		const settings = await prisma.guild.findUnique({
+			where: { id: guildId },
+		});
 
-    return settings;
-  },
-  {
-    auth: true,              // Require authentication
-    rateLimit: {
-      enabled: true,
-      window: 10000,         // 10 seconds
-      limit: 5               // 5 requests per window
-    }
-  }
+		return settings;
+	},
+	{
+		auth: true, // Require authentication
+		rateLimit: {
+			enabled: true,
+			window: 10000, // 10 seconds
+			limit: 5, // 5 requests per window
+		},
+	},
 );
 ```
 
@@ -194,15 +194,15 @@ Always commit migration files with descriptive names.
 
 1. **Push your branch**
 
-   ```bash
-   git push origin feat/your-feature-name
-   ```
+    ```bash
+    git push origin feat/your-feature-name
+    ```
 
 2. **Create a Pull Request** on GitHub with:
-   - Clear title following Conventional Commits format
-   - Description of what changed and why
-   - Screenshots/videos for UI changes
-   - Link to related issue (if applicable)
+    - Clear title following Conventional Commits format
+    - Description of what changed and why
+    - Screenshots/videos for UI changes
+    - Link to related issue (if applicable)
 
 3. **Respond to feedback** from reviewers
 

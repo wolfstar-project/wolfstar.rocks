@@ -74,7 +74,7 @@ pnpm commitlint --from HEAD~1 --to HEAD --verbose  # Validate commit
 
 ### Prerequisites
 
-- **Node.js**: 22+ (LTS)
+- **Node.js**: 24+ (LTS)
 - **Package Manager**: pnpm (required, not npm or yarn)
 - **Database**: PostgreSQL
 
@@ -101,9 +101,9 @@ This project is optimized for AI-assisted development. The following tools are r
 - **What it is**: Context7 provides real-time documentation access for all project dependencies
 - **When to use**: When you need current API references, usage examples, or best practices
 - **Benefits**:
-  - Always up-to-date library documentation
-  - Framework-specific patterns and conventions
-  - API reference for dependencies
+    - Always up-to-date library documentation
+    - Framework-specific patterns and conventions
+    - API reference for dependencies
 
 **Example libraries to query**:
 
@@ -113,31 +113,33 @@ This project is optimized for AI-assisted development. The following tools are r
 - TailwindCSS and DaisyUI
 - Discord API
 
-#### MCP ESLint
+#### oxlint & oxfmt
 
-**Purpose**: Real-time linting and code quality checks
+**Purpose**: Fast linting and code formatting
 
-- **What it is**: Model Context Protocol (MCP) server for ESLint integration
-- **When to use**: Before committing code, during development, when fixing linting issues
+- **What it is**: Rust-based linter and formatter for JavaScript/TypeScript with performance focus
+- **When to use**: During development and before committing code
 - **Benefits**:
-  - Real-time linting feedback
-  - Automatic fix suggestions
-  - Consistent code quality
-  - Integration with project's ESLint configuration
+    - Extremely fast performance (10-100x faster than ESLint)
+    - Built-in formatting with oxfmt
+    - Category-based rule configuration (correctness, suspicious, perf)
+    - Compatible with ESLint rule names
 
-**Usage**:
+**Configuration**:
 
 ```bash
-# The project uses @antfu/eslint-config
-# MCP ESLint automatically uses the project's eslint.config.mjs
+# The project uses .oxlintrc.json with simplified category presets
+# - correctness: "error" - Detects common bugs
+# - suspicious: "warn" - Identifies suspicious patterns
+# - perf: "warn" - Performance issues
 ```
 
 **Best Practices**:
 
 1. ✅ Use Context7 when unsure about API usage or library patterns
-2. ✅ Use MCP ESLint to validate code before committing
-3. ✅ Reference AGENTS.md first, then use Context7 for library-specific details
-4. ✅ Run `pnpm lint:fix` after MCP ESLint suggests fixes
+2. ✅ Run `pnpm lint` to check for errors before committing
+3. ✅ Run `pnpm lint:fix` to auto-fix issues
+4. ✅ Reference AGENTS.md first, then use Context7 for library-specific details
 
 ---
 
@@ -183,7 +185,7 @@ pnpm typecheck                  # Takes ~22 seconds
                                 # Must pass without errors
 
 # Code formatting
-pnpm format                     # Formats all files with Prettier
+pnpm format                     # Formats all files with oxfmt
 
 # Prisma validation
 pnpm prisma:validate            # Takes ~1.5 seconds
@@ -261,44 +263,44 @@ pnpm prisma:seed                # Seed database with test data
 
 1. **Build Validation**
 
-   ```bash
-   pnpm build
-   ```
+    ```bash
+    pnpm build
+    ```
 
-   - ✅ Must build successfully without errors
-   - ⏱️ Takes ~45-120 seconds (depending on cache state)
-   - ❌ CI will fail if build fails
+    - ✅ Must build successfully without errors
+    - ⏱️ Takes ~45-120 seconds (depending on cache state)
+    - ❌ CI will fail if build fails
 
 2. **Linting**
 
-   ```bash
-   pnpm lint
-   ```
+    ```bash
+    pnpm lint
+    ```
 
-   - ✅ Fix any **errors** (mandatory)
-   - ⚠️ Warnings are acceptable
-   - 💡 Use `pnpm lint:fix` for auto-fixes
-   - ❌ CI will fail if errors exist
+    - ✅ Fix any **errors** (mandatory)
+    - ⚠️ Warnings are acceptable
+    - 💡 Use `pnpm lint:fix` for auto-fixes
+    - ❌ CI will fail if errors exist
 
 3. **Type Checking** (Optional but Recommended)
 
-   ```bash
-   pnpm typecheck
-   ```
+    ```bash
+    pnpm typecheck
+    ```
 
-   - ✅ Must pass without errors
-   - ⏱️ Takes ~22 seconds
-   - 💡 Catches TypeScript issues early
+    - ✅ Must pass without errors
+    - ⏱️ Takes ~22 seconds
+    - 💡 Catches TypeScript issues early
 
 4. **Commit Message Validation**
 
-   ```bash
-   pnpm commitlint --from HEAD~1 --to HEAD --verbose
-   ```
+    ```bash
+    pnpm commitlint --from HEAD~1 --to HEAD --verbose
+    ```
 
-   - ✅ Validates commit message format
-   - 📋 Must follow Conventional Commits standard
-   - ❌ CI may reject improperly formatted commits
+    - ✅ Validates commit message format
+    - 📋 Must follow Conventional Commits standard
+    - ❌ CI may reject improperly formatted commits
 
 ### Commit Message Format
 
@@ -336,7 +338,7 @@ feat: add user dashboard component
 feat(auth): implement Discord OAuth2 flow
 fix(api): resolve guild data fetching issue
 docs: update installation instructions
-style: format code with prettier
+style: format code with oxfmt
 refactor(components): simplify button component logic
 perf(database): optimize guild query performance
 test(api): add unit tests for auth endpoints
@@ -362,15 +364,15 @@ The project uses **Husky v9+** with Git hooks to automatically validate commits 
 When you run `git commit`, Husky automatically triggers:
 
 1. **commit-msg hook** - Validates commit message format
-   - Runs `commitlint` to check Conventional Commits format
-   - Rejects commits with invalid messages
-   - Ensures all commits follow project standards
+    - Runs `commitlint` to check Conventional Commits format
+    - Rejects commits with invalid messages
+    - Ensures all commits follow project standards
 
 2. **pre-commit hook** (via lint-staged) - Lints and formats staged files
-   - Runs `eslint --fix` on staged `.js`, `.ts`, `.vue` files
-   - Runs `prettier --write` on staged files
-   - Only processes files that are staged for commit
-   - Automatically fixes issues when possible
+    - Runs `oxlint --fix` on staged `.js`, `.ts`, `.vue` files
+    - Runs `oxfmt` on staged files for formatting
+    - Only processes files that are staged for commit
+    - Automatically fixes issues when possible
 
 #### Configuration
 
@@ -383,10 +385,10 @@ When you run `git commit`, Husky automatically triggers:
 
 ```json
 {
-  "lint-staged": {
-    "*.{js,ts,vue}": "eslint --fix",
-    "*.{js,ts,vue,json,md}": "prettier --write"
-  }
+	"lint-staged": {
+		"*.{js,ts,mjs,cjs,vue}": ["pnpm oxlint --fix"],
+		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": ["pnpm oxfmt"]
+	}
 }
 ```
 
@@ -400,7 +402,7 @@ git add .
 git commit -m "feat(api): add new endpoint for guild settings"
 
 # Husky automatically runs:
-# → lint-staged (eslint + prettier on staged files)
+# → lint-staged (oxlint + oxfmt on staged files)
 # → commitlint (validates commit message)
 
 # If everything passes:
@@ -555,27 +557,6 @@ pnpm build
 git commit -m "feat(api): add new endpoint for guild settings"
 ```
 
-### 4. Discord Bot Integration Development
-
-**Key Areas**:
-
-- OAuth2 configuration: `server/utils/discord.ts`
-- Guild permissions: Use `manageAbility` utility
-- Rate limiting: Via `@tanstack/pacer` in wrapped handlers
-- Session management: Via nuxt-auth-utils
-
-**Example Flow**:
-
-```typescript
-// Check if user can manage guild
-const hasPermission = manageAbility(guild.permissions);
-if (!hasPermission) {
-  throw createError({ statusCode: 403, message: "Insufficient permissions" });
-}
-```
-
----
-
 ---
 
 ## Technology Stack
@@ -585,13 +566,12 @@ if (!hasPermission) {
 - **Framework**: Nuxt 4 with Vue 3 Composition API
 - **TypeScript**: Full TypeScript support with strict mode
 - **Styling**: TailwindCSS + DaisyUI + NuxtUI components
-- **State Management**: Pinia stores
 - **Authentication**: nuxt-auth-utils with Discord OAuth2
 - **Icons**: Nuxt Icon with ph, ic, heroicons, lucide collections
 
 ### Backend
 
-- **Runtime**: Node.js 22+ with Nitro server
+- **Runtime**: Node.js 24+ with Nitro server
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: Discord OAuth2 with JWT sessions
 - **API**: RESTful APIs with OpenAPI documentation
@@ -600,9 +580,8 @@ if (!hasPermission) {
 ### DevOps
 
 - **Package Manager**: pnpm with workspace configuration
-- **Containerization**: Docker with multi-stage builds
 - **CI/CD**: GitHub Actions for testing and deployment
-- **Deployment**: Cloudflare Pages with NuxtHub
+- **Deployment**: Netlify for production
 - **Monitoring**: Sentry for error tracking
 
 ---
@@ -628,9 +607,6 @@ wolfstar.rocks/
 │   │   ├── guilds/                # Guild pages
 │   │   └── auth/                  # Auth pages
 │   ├── plugins/                   # Nuxt plugins
-│   ├── stores/                    # Pinia stores
-│   │   ├── auth.ts                # Auth store
-│   │   └── guild.ts               # Guild store
 │   ├── themes/                    # UI theme configurations
 │   ├── types/                     # Frontend type definitions
 │   └── utils/                     # Frontend utilities
@@ -655,10 +631,7 @@ wolfstar.rocks/
 │
 ├── shared/                        # Shared code (client + server)
 │   ├── types/                     # Shared type definitions
-│   │   ├── discord.ts             # Discord types
-│   │   └── api.ts                 # API types
 │   └── utils/                     # Shared utilities
-│       └── constants.ts           # Constants
 │
 ├── .github/                       # GitHub configuration
 │   ├── workflows/                 # CI/CD workflows
@@ -666,15 +639,14 @@ wolfstar.rocks/
 │   └── copilot-instructions.md    # Copilot instructions
 │
 ├── .husky/                        # Git hooks
-│   └── commit-msg                 # Commit message validation
-│
-├── prisma/                        # Prisma (legacy location)
+│   ├── commit-msg                 # Commit message validation
+│   └── pre-commit                 # Lint-staged execution
 ├── public/                        # Static assets
 ├── .env                           # Environment variables (local)
 ├── nuxt.config.ts                 # Nuxt configuration
 ├── tsconfig.json                  # TypeScript configuration
 ├── .commitlintrc.json             # Commitlint configuration
-├── eslint.config.mjs              # ESLint configuration
+├── .oxlintrc.json                 # oxlint configuration
 └── package.json                   # Project dependencies
 ```
 
@@ -685,7 +657,7 @@ wolfstar.rocks/
 - File-based routing via `pages/`
 - Reusable components in `components/`
 - Composables for shared logic
-- Pinia stores for global state
+- Composables for reactive state
 
 **`server/`** - All backend code
 
@@ -733,35 +705,35 @@ wolfstar.rocks/
 ```typescript
 // server/api/guilds/[guild]/settings.get.ts
 export default defineWrappedResponseHandler(
-  async (event) => {
-    const guildId = getRouterParam(event, "guild");
+	async (event) => {
+		const guildId = getRouterParam(event, "guild");
 
-    // Your handler logic here
-    const settings = await prisma.guild.findUnique({
-      where: { id: guildId }
-    });
+		// Your handler logic here
+		const settings = await prisma.guild.findUnique({
+			where: { id: guildId },
+		});
 
-    if (!settings) {
-      throw createError({
-        statusCode: 404,
-        message: "Guild not found"
-      });
-    }
+		if (!settings) {
+			throw createError({
+				statusCode: 404,
+				message: "Guild not found",
+			});
+		}
 
-    return settings;
-  },
-  {
-    // Require Discord authentication
-    auth: true,
+		return settings;
+	},
+	{
+		// Require Discord authentication
+		auth: true,
 
-    // Rate limiting configuration
-    rateLimit: {
-      enabled: true,
-      window: 10000, // 10 seconds
-      limit: 5, // 5 requests per window
-      type: "fixed" // or "sliding"
-    }
-  }
+		// Rate limiting configuration
+		rateLimit: {
+			enabled: true,
+			window: 10000, // 10 seconds
+			limit: 5, // 5 requests per window
+			type: "fixed", // or "sliding"
+		},
+	},
 );
 ```
 
@@ -770,46 +742,46 @@ export default defineWrappedResponseHandler(
 ```typescript
 // server/api/guilds/[guild]/settings.patch.ts
 export default defineWrappedResponseHandler(
-  async (event) => {
-    const guildId = getRouterParam(event, "id");
-    const body = await readBody(event);
+	async (event) => {
+		const guildId = getRouterParam(event, "id");
+		const body = await readBody(event);
 
-    // Update guild settings
-    const updatedSettings = await prisma.guildSettings.update({
-      where: { guildId },
-      data: body
-    });
+		// Update guild settings
+		const updatedSettings = await prisma.guildSettings.update({
+			where: { guildId },
+			data: body,
+		});
 
-    return updatedSettings;
-  },
-  {
-    // Require authentication
-    auth: true,
+		return updatedSettings;
+	},
+	{
+		// Require authentication
+		auth: true,
 
-    // Rate limiting
-    rateLimit: {
-      enabled: true,
-      window: 60000, // 60 seconds (1 minute)
-      limit: 10, // 10 requests per minute
-      type: "sliding" // Sliding window for smoother limits
-    },
+		// Rate limiting
+		rateLimit: {
+			enabled: true,
+			window: 60000, // 60 seconds (1 minute)
+			limit: 10, // 10 requests per minute
+			type: "sliding", // Sliding window for smoother limits
+		},
 
-    // Success callback
-    onSuccess: (logger, data) => {
-      logger.info("Guild settings updated successfully", {
-        guildId: data.guildId,
-        updatedAt: data.updatedAt
-      });
-    },
+		// Success callback
+		onSuccess: (logger, data) => {
+			logger.info("Guild settings updated successfully", {
+				guildId: data.guildId,
+				updatedAt: data.updatedAt,
+			});
+		},
 
-    // Error callback (called before error is thrown)
-    onError: (logger, error) => {
-      logger.error("Failed to update guild settings", {
-        error: error.message,
-        statusCode: error.statusCode
-      });
-    }
-  }
+		// Error callback (called before error is thrown)
+		onError: (logger, error) => {
+			logger.error("Failed to update guild settings", {
+				error: error.message,
+				statusCode: error.statusCode,
+			});
+		},
+	},
 );
 ```
 
@@ -818,31 +790,31 @@ export default defineWrappedResponseHandler(
 ```typescript
 // server/api/guilds/[guild]/channels.get.ts
 export default defineWrappedCachedResponseHandler(
-  async (event) => {
-    const guildId = getRouterParam(event, "guild");
+	async (event) => {
+		const guildId = getRouterParam(event, "guild");
 
-    // Fetch channels from Discord API
-    const channels = await fetchGuildChannels(guildId);
+		// Fetch channels from Discord API
+		const channels = await fetchGuildChannels(guildId);
 
-    return channels;
-  },
-  {
-    auth: true,
-    rateLimit: {
-      enabled: true,
-      window: 10000,
-      limit: 5
-    },
+		return channels;
+	},
+	{
+		auth: true,
+		rateLimit: {
+			enabled: true,
+			window: 10000,
+			limit: 5,
+		},
 
-    // Cache options (from Nitro's cachedEventHandler)
-    maxAge: 60 * 60, // Cache for 1 hour
-    swr: true, // Stale-while-revalidate
-    name: "guild-channels", // Cache key prefix
-    getKey: (event) => {
-      const guildId = getRouterParam(event, "guild");
-      return `channels:${guildId}`;
-    }
-  }
+		// Cache options (from Nitro's cachedEventHandler)
+		maxAge: 60 * 60, // Cache for 1 hour
+		swr: true, // Stale-while-revalidate
+		name: "guild-channels", // Cache key prefix
+		getKey: (event) => {
+			const guildId = getRouterParam(event, "guild");
+			return `channels:${guildId}`;
+		},
+	},
 );
 ```
 
@@ -869,17 +841,15 @@ export default defineWrappedCachedResponseHandler(
 
 ### 2. Vue Component Structure
 
-**Required Order** (enforced by ESLint):
+**Required Order** (enforced by oxlint):
 
 ```vue
 <!-- 1. Template (always first) -->
 <template>
-  <div class="container">
-    <h1>{{ title }}</h1>
-    <button @click="handleClick">
-      Click me
-    </button>
-  </div>
+	<div class="container">
+		<h1>{{ title }}</h1>
+		<button @click="handleClick">Click me</button>
+	</div>
 </template>
 
 <!-- 2. Regular script (if needed, rare) -->
@@ -894,7 +864,7 @@ import { computed, onMounted, ref } from "vue";
 
 // Props
 interface Props {
-  initialTitle?: string;
+	initialTitle?: string;
 }
 
 const { initialTitle = "Default Title" } = defineProps<Props>();
@@ -903,7 +873,7 @@ const emit = defineEmits<Emits>();
 
 // Emits
 interface Emits {
-  (e: "update", value: string): void;
+	(e: "update", value: string): void;
 }
 
 // State
@@ -915,14 +885,14 @@ const doubleCount = computed(() => count.value * 2);
 
 // Methods
 function handleClick() {
-  count.value++;
-  emit("update", title.value);
+	count.value++;
+	emit("update", title.value);
 }
 
 // Lifecycle
 onMounted(() => {
-  // eslint-disable-next-line no-console
-  console.log("Component mounted");
+	// eslint-disable-next-line no-console
+	console.log("Component mounted");
 });
 </script>
 
@@ -960,19 +930,19 @@ onMounted(() => {
 ```typescript
 // In API routes
 export default defineWrappedResponseHandler(
-  async (event) => {
-    // Wrapped handler automatically validates session when auth: true
-    const session = await requireUserSession(event);
+	async (event) => {
+		// Wrapped handler automatically validates session when auth: true
+		const session = await requireUserSession(event);
 
-    // session.user contains Discord user data
-    const userId = session.user.id;
-    const username = session.user.username;
+		// session.user contains Discord user data
+		const userId = session.user.id;
+		const username = session.user.username;
 
-    // Your logic here
-  },
-  {
-    auth: true // Requires authentication
-  }
+		// Your logic here
+	},
+	{
+		auth: true, // Requires authentication
+	},
 );
 ```
 
@@ -985,7 +955,7 @@ const { loggedIn, user, session, fetch, clear } = useUserSession();
 
 // Check if user is logged in
 if (!loggedIn.value) {
-  navigateTo("/auth/login");
+	navigateTo("/auth/login");
 }
 
 // Access user data
@@ -1003,10 +973,10 @@ import { manageAbility } from "~/server/utils/permissions";
 const hasPermission = manageAbility(guild.permissions);
 
 if (!hasPermission) {
-  throw createError({
-    statusCode: 403,
-    message: "Insufficient permissions to manage this guild"
-  });
+	throw createError({
+		statusCode: 403,
+		message: "Insufficient permissions to manage this guild",
+	});
 }
 ```
 
@@ -1020,8 +990,8 @@ import { prisma } from "~/server/database/client";
 
 // Usage in API routes
 const guilds = await prisma.guild.findMany({
-  where: { userId: session.user.id },
-  include: { settings: true }
+	where: { userId: session.user.id },
+	include: { settings: true },
 });
 ```
 
@@ -1059,56 +1029,6 @@ model Guild {
 - Use `prisma migrate dev` for development
 - Use `prisma migrate deploy` for production
 
-### 5. State Management with Pinia
-
-**Store Structure**:
-
-```typescript
-// app/stores/guild.ts
-import { defineStore } from "pinia";
-
-export const useGuildStore = defineStore("guild", () => {
-  // State (using composition API style)
-  const selectedGuild = ref<Guild | null>(null);
-  const guilds = ref<Guild[]>([]);
-  const loading = ref(false);
-
-  // Getters (computed)
-  const hasGuilds = computed(() => guilds.value.length > 0);
-  const selectedGuildId = computed(() => selectedGuild.value?.id);
-
-  // Actions (functions)
-  async function fetchGuilds() {
-    loading.value = true;
-    try {
-      const { data } = await useFetch("/api/guilds");
-      guilds.value = data.value || [];
-    }
- finally {
-      loading.value = false;
-    }
-  }
-
-  function selectGuild(guild: Guild) {
-    selectedGuild.value = guild;
-  }
-
-  // Return everything to expose
-  return {
-    // State
-    selectedGuild,
-    guilds,
-    loading,
-    // Getters
-    hasGuilds,
-    selectedGuildId,
-    // Actions
-    fetchGuilds,
-    selectGuild
-  };
-});
-```
-
 **Usage in Components**:
 
 ```vue
@@ -1120,7 +1040,7 @@ const guilds = computed(() => guildStore.guilds);
 
 // Call actions
 onMounted(() => {
-  guildStore.fetchGuilds();
+	guildStore.fetchGuilds();
 });
 </script>
 ```
@@ -1131,21 +1051,19 @@ onMounted(() => {
 
 ```vue
 <template>
-  <!-- Use semantic DaisyUI classes -->
-  <button class="btn btn-primary">
-    Primary Button
-  </button>
+	<!-- Use semantic DaisyUI classes -->
+	<button class="btn btn-primary">Primary Button</button>
 
-  <div class="card bg-base-100 shadow-xl">
-    <div class="card-body">
-      <h2 class="card-title">Card Title</h2>
-      <p>Card content</p>
-    </div>
-  </div>
+	<div class="card bg-base-100 shadow-xl">
+		<div class="card-body">
+			<h2 class="card-title">Card Title</h2>
+			<p>Card content</p>
+		</div>
+	</div>
 
-  <div class="alert alert-info">
-    <span>Information message</span>
-  </div>
+	<div class="alert alert-info">
+		<span>Information message</span>
+	</div>
 </template>
 ```
 
@@ -1153,18 +1071,18 @@ onMounted(() => {
 
 ```vue
 <template>
-  <!-- Mobile first approach -->
-  <div
-    class="
+	<!-- Mobile first approach -->
+	<div
+		class="
     grid
     grid-cols-1
     sm:grid-cols-2
     lg:grid-cols-3
     gap-4
   "
-  >
-    <!-- Content -->
-  </div>
+	>
+		<!-- Content -->
+	</div>
 </template>
 ```
 
@@ -1189,10 +1107,10 @@ onMounted(() => {
 ```typescript
 // H3 errors in server handlers
 throw createError({
-  statusCode: 400,
-  statusMessage: "Bad Request",
-  message: "Invalid guild ID provided",
-  data: { guildId: "expected string" }
+	statusCode: 400,
+	statusMessage: "Bad Request",
+	message: "Invalid guild ID provided",
+	data: { guildId: "expected string" },
 });
 
 // Common status codes:
@@ -1212,12 +1130,12 @@ const { data, error, pending } = await useFetch("/api/guilds");
 
 // Handle errors
 if (error.value) {
-  const statusCode = error.value.statusCode;
-  const message = error.value.message;
+	const statusCode = error.value.statusCode;
+	const message = error.value.message;
 
-  // Show user-friendly error
-  // eslint-disable-next-line no-console
-  console.error("Failed to fetch guilds:", message);
+	// Show user-friendly error
+	// eslint-disable-next-line no-console
+	console.error("Failed to fetch guilds:", message);
 }
 </script>
 ```
@@ -1256,10 +1174,10 @@ import { manageAbility } from "~/server/utils/permissions";
 const canManage = manageAbility(guild.permissions);
 
 if (!canManage) {
-  throw createError({
-    statusCode: 403,
-    message: "You need MANAGE_GUILD permission to access this guild"
-  });
+	throw createError({
+		statusCode: 403,
+		message: "You need MANAGE_GUILD permission to access this guild",
+	});
 }
 ```
 
@@ -1269,25 +1187,25 @@ if (!canManage) {
 - **Staryl Bot**: Social media notifications (Twitch, Instagram, etc.)
 - **OAuth Scopes**: `identify` for user data, `guilds` for server list, `bot` for bot invitations
 - **Permissions**: Use Discord permission bitfield calculations via `@sapphire/bitfield`
-- **Rate Limiting**: Built into wrapped handlers via `@tanstack/pacer`
+- **Rate Limiting**: Built into wrapped handlers with configurable windows and limits
 
 ---
 
 ## Code Style & Formatting
 
-### ESLint Configuration
+### oxlint Configuration
 
-- **Base**: @antfu/eslint-config with Nuxt integration
-- **Formatting**: Prettier integration with 2-space indentation
-- **Quotes**: Double quotes for strings
-- **Semicolons**: Required
+- **Linter**: oxlint (Rust-based, 10-100x faster than ESLint)
+- **Formatter**: oxfmt for consistent code formatting
+- **Category Presets**: correctness (error), suspicious (warn), perf (warn)
+- **Configuration**: `.oxlintrc.json` with simplified category-based rules
 - **Vue**: Specific Vue.js rules with custom block order
 
 ### Block Order for Vue Components
 
 ```vue
 <template>
-  <!-- Template content -->
+	<!-- Template content -->
 </template>
 
 <script>
@@ -1351,7 +1269,7 @@ feat: add user dashboard component
 feat(auth): implement Discord OAuth2 flow
 fix(api): resolve guild data fetching issue
 docs: update installation instructions
-style: format code with prettier
+style: format code with oxfmt
 refactor(components): simplify button component logic
 perf(database): optimize guild query performance
 test(api): add unit tests for auth endpoints
@@ -1382,15 +1300,15 @@ The project uses **Husky v9+** with Git hooks to automatically validate commits 
 When you run `git commit`, Husky automatically triggers:
 
 1. **commit-msg hook** - Validates commit message format
-   - Runs `commitlint` to check Conventional Commits format
-   - Rejects commits with invalid messages
-   - Ensures all commits follow project standards
+    - Runs `commitlint` to check Conventional Commits format
+    - Rejects commits with invalid messages
+    - Ensures all commits follow project standards
 
 2. **pre-commit hook** (via lint-staged) - Lints and formats staged files
-   - Runs `eslint --fix` on staged `.js`, `.ts`, `.vue` files
-   - Runs `prettier --write` on staged files
-   - Only processes files that are staged for commit
-   - Automatically fixes issues when possible
+    - Runs `oxlint --fix` on staged `.js`, `.ts`, `.vue` files
+    - Runs `oxfmt` on staged files for formatting
+    - Only processes files that are staged for commit
+    - Automatically fixes issues when possible
 
 #### Configuration
 
@@ -1403,10 +1321,10 @@ When you run `git commit`, Husky automatically triggers:
 
 ```json
 {
-  "lint-staged": {
-    "*.{js,ts,vue}": "eslint --fix",
-    "*.{js,ts,vue,json,md}": "prettier --write"
-  }
+	"lint-staged": {
+		"*.{js,ts,mjs,cjs,vue}": ["pnpm oxlint --fix"],
+		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": ["pnpm oxfmt"]
+	}
 }
 ```
 
@@ -1420,7 +1338,7 @@ git add .
 git commit -m "feat(api): add new endpoint for guild settings"
 
 # Husky automatically runs:
-# → lint-staged (eslint + prettier on staged files)
+# → lint-staged (oxlint + oxfmt on staged files)
 # → commitlint (validates commit message)
 
 # If everything passes:
@@ -1498,7 +1416,6 @@ git commit -m "message" -n
 
 ### State Management
 
-- Use **Pinia** for global state
 - Store structure: `state`, `getters`, `actions`
 - Use **composables** for reusable logic
 - Implement **proper TypeScript** integration
@@ -1524,14 +1441,14 @@ git commit -m "message" -n
 ```typescript
 // Named exports preferred
 export interface UserData {
-  id: string;
-  name: string;
+	id: string;
+	name: string;
 }
 export type UserRole = "admin" | "user";
 
 // Default exports for components
 export default defineComponent({
-  name: "MyComponent"
+	name: "MyComponent",
 });
 
 export { default as Component } from "./Component.vue";
@@ -1546,25 +1463,25 @@ export * from "./types";
 - **File-based routing** in `server/api/`
 - **RESTful conventions** for endpoints
 - **OpenAPI documentation**: Nitro provides an experimental build-time macro `defineRouteMeta` (it's not a third‑party module). To enable OpenAPI metadata generation:
-  1. Set `nitro.experimental.openAPI = true` in `nuxt.config.ts`.
-  2. Add a `defineRouteMeta({ openAPI: { /* path, method, params, responses */ } })` call immediately above your `export default defineEventHandler(...)` in `server/api` route files.
-  3. Note: the feature is experimental and some tooling may auto-generate these `defineRouteMeta` calls for you.
+    1. Set `nitro.experimental.openAPI = true` in `nuxt.config.ts`.
+    2. Add a `defineRouteMeta({ openAPI: { /* path, method, params, responses */ } })` call immediately above your `export default defineEventHandler(...)` in `server/api` route files.
+    3. Note: the feature is experimental and some tooling may auto-generate these `defineRouteMeta` calls for you.
 
-  Example:
+    Example:
 
-  ```ts
-  // server/api/guilds/[id].get.ts
-  defineRouteMeta({
-    openAPI: {
-      summary: "Get guild",
-      responses: { 200: { description: "Guild object" } }
-    }
-  });
+    ```ts
+    // server/api/guilds/[id].get.ts
+    defineRouteMeta({
+    	openAPI: {
+    		summary: "Get guild",
+    		responses: { 200: { description: "Guild object" } },
+    	},
+    });
 
-  export default defineEventHandler(async (event) => {
-    // handler...
-  });
-  ```
+    export default defineEventHandler(async (event) => {
+    	// handler...
+    });
+    ```
 
 - **Proper HTTP status codes** and error handling
 
@@ -1573,76 +1490,76 @@ export * from "./types";
 - **Discord OAuth2** integration via nuxt-auth-utils
 - **Cookie-based (sealed/encrypted) sessions** with nuxt-auth-utils
 - **Custom auth module** in `modules/auth/`
-  - Route-based authentication via `routeRules` with `auth` meta property
-  - Global `authz` middleware for page-level authorization
-  - `useAuth` composable for client-side auth logic
-  - Fully custom implementation - no external auth module
+    - Route-based authentication via `routeRules` with `auth` meta property
+    - Global `authz` middleware for page-level authorization
+    - `useAuth` composable for client-side auth logic
+    - Fully custom implementation - no external auth module
 - **Authorization resolver plugins** in `app/plugins/authorization-resolver.ts` and `server/plugins/authorization-resolver.ts`
-  - Provides `$authorization` context helper for client and server
-  - Handles user/guild permission resolution
-- **Rate limiting** with @tanstack/pacer (official framework-agnostic rate-limiter usable in Node/Nitro)
+    - Provides `$authorization` context helper for client and server
+    - Handles user/guild permission resolution
+- **Rate limiting** with configurable fixed/sliding window strategies in wrapped handlers
 
 ### Error Handling
 
 ```typescript
 // Basic wrapped event handler
 export default defineWrappedResponseHandler(
-  async (event) => {
-    // Handler logic
-    const guildId = getRouterParam(event, "guild");
-    const settings = await prisma.guild.findUnique({
-      where: { id: guildId }
-    });
-    return settings;
-  },
-  {
-    auth: true,
-    rateLimit: {
-      enabled: true,
-      window: 10000, // 10 seconds
-      limit: 5, // 5 requests per window
-      type: "fixed" // or "sliding"
-    }
-  }
+	async (event) => {
+		// Handler logic
+		const guildId = getRouterParam(event, "guild");
+		const settings = await prisma.guild.findUnique({
+			where: { id: guildId },
+		});
+		return settings;
+	},
+	{
+		auth: true,
+		rateLimit: {
+			enabled: true,
+			window: 10000, // 10 seconds
+			limit: 5, // 5 requests per window
+			type: "fixed", // or "sliding"
+		},
+	},
 );
 
 // Complete example with all options
 export default defineWrappedResponseHandler(
-  async (event) => {
-    const guildId = getRouterParam(event, "guild");
-    const body = await readBody(event);
+	async (event) => {
+		const guildId = getRouterParam(event, "guild");
+		const body = await readBody(event);
 
-    // Update guild settings
-    const updatedSettings = await prisma.guildSettings.update({
-      where: { guildId },
-      data: body
-    });
+		// Update guild settings
+		const updatedSettings = await prisma.guildSettings.update({
+			where: { guildId },
+			data: body,
+		});
 
-    return updatedSettings;
-  },
-  {
-    auth: true,
-    rateLimit: {
-      enabled: true,
-      window: 60000, // 60 seconds (1 minute)
-      limit: 10, // 10 requests per minute
-      type: "sliding" // Sliding window for smoother limits
-    },
-    // Success callback
-    onSuccess: (logger, data) => {
-      logger.info("Guild settings updated successfully", {
-        guildId: data.guildId,
-        updatedAt: data.updatedAt
-      });
-    },
-    // Error callback (called before error is thrown)
-    onError: (logger, error) => {
-      logger.error("Failed to update guild settings", {
-        error: error.message,
-        statusCode: error.statusCode
-      });
-    }
-  }
+		return updatedSettings;
+	},
+	{
+		auth: true,
+		rateLimit: {
+			enabled: true,
+			window: 60000, // 60 seconds (1 minute)
+			limit: 10, // 10 requests per minute
+			type: "sliding", // Sliding window for smoother limits
+		},
+		// Success callback
+		onSuccess: (logger, data) => {
+			logger.info("Guild settings updated successfully", {
+				guildId: data.guildId,
+				updatedAt: data.updatedAt,
+			});
+		},
+		// Error callback (called before error is thrown)
+		onError: (logger, error) => {
+			logger.error("Failed to update guild settings", {
+				error: error.message,
+				statusCode: error.statusCode,
+			});
+		},
+	},
 );
 ```
 
@@ -1709,10 +1626,10 @@ export default defineWrappedResponseHandler(
 
 ```css
 /* Main CSS structure */
-@import 'tailwindcss';
-@import 'tw-animate-css';
-@import '@nuxt/ui';
-@import './keyframes.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@nuxt/ui";
+@import "./keyframes.css";
 @plugin "@tailwindcss/typography";
 @plugin 'daisyui';
 ```
@@ -1795,29 +1712,29 @@ The project uses **Vitest** as the primary testing framework with multiple test 
 
 ```typescript
 // test/unit/utils.test.ts
-import { describe, expect, it } from 'vitest';
-import { myUtility } from '~/shared/utils/myUtility';
+import { describe, expect, it } from "vitest";
+import { myUtility } from "~/shared/utils/myUtility";
 
-describe('myUtility', () => {
-  it('should return expected result', () => {
-    expect(myUtility(input)).toBe(expectedOutput);
-  });
+describe("myUtility", () => {
+	it("should return expected result", () => {
+		expect(myUtility(input)).toBe(expectedOutput);
+	});
 });
 ```
 
 **Nuxt Component Test Example**:
 
 ```typescript
-import { mountSuspended } from '@nuxt/test-utils/runtime';
+import { mountSuspended } from "@nuxt/test-utils/runtime";
 // test/nuxt/MyComponent.test.ts
-import { describe, expect, it } from 'vitest';
-import MyComponent from '~/app/components/MyComponent.vue';
+import { describe, expect, it } from "vitest";
+import MyComponent from "~/app/components/MyComponent.vue";
 
-describe('MyComponent', () => {
-  it('renders correctly', async () => {
-    const wrapper = await mountSuspended(MyComponent);
-    expect(wrapper.text()).toContain('Expected text');
-  });
+describe("MyComponent", () => {
+	it("renders correctly", async () => {
+		const wrapper = await mountSuspended(MyComponent);
+		expect(wrapper.text()).toContain("Expected text");
+	});
 });
 ```
 
@@ -1865,96 +1782,97 @@ These steps mirror the project's CI gates and help ensure a green PR.
 
 1. **Build Validation**
 
-   ```bash
-   pnpm build
-   ```
+    ```bash
+    pnpm build
+    ```
 
-   - ✅ Must build successfully without errors
-   - ⏱️ Takes ~45-120 seconds (depending on cache state)
-   - ❌ CI will fail if build fails
+    - ✅ Must build successfully without errors
+    - ⏱️ Takes ~45-120 seconds (depending on cache state)
+    - ❌ CI will fail if build fails
 
 2. **Linting**
 
-   ```bash
-   pnpm lint
-   ```
+    ```bash
+    pnpm lint
+    ```
 
-   - ✅ Fix any **errors** (mandatory)
-   - ⚠️ Warnings are acceptable
-   - 💡 Use `pnpm lint:fix` for auto-fixes
-   - ❌ CI will fail if errors exist
+    - ✅ Fix any **errors** (mandatory)
+    - ⚠️ Warnings are acceptable
+    - 💡 Use `pnpm lint:fix` for auto-fixes
+    - ❌ CI will fail if errors exist
 
 3. **Type Checking** (Optional but Recommended)
 
-   ```bash
-   pnpm typecheck
-   ```
+    ```bash
+    pnpm typecheck
+    ```
 
-   - ✅ Must pass without errors
-   - ⏱️ Takes ~22 seconds
-   - 💡 Catches TypeScript issues early
+    - ✅ Must pass without errors
+    - ⏱️ Takes ~22 seconds
+    - 💡 Catches TypeScript issues early
 
 4. **Commit Message Validation**
 
-   ```bash
-   pnpm commitlint --from HEAD~1 --to HEAD --verbose
-   ```
+    ```bash
+    pnpm commitlint --from HEAD~1 --to HEAD --verbose
+    ```
 
-   - ✅ Validates commit message format
-   - 📋 Must follow Conventional Commits standard
-   - ❌ CI may reject improperly formatted commits
+    - ✅ Validates commit message format
+    - 📋 Must follow Conventional Commits standard
+    - ❌ CI may reject improperly formatted commits
 
 ### Code Quality Tools
 
 **Automated Enforcement**:
 
 - **Husky v9+** - Git hooks for automatic validation
-  - Pre-commit hook: Runs lint-staged on staged files
-  - Commit-msg hook: Validates commit message format
-  - Automatic execution on every `git commit`
+    - Pre-commit hook: Runs lint-staged on staged files
+    - Commit-msg hook: Validates commit message format
+    - Automatic execution on every `git commit`
 - **lint-staged** - Runs linters only on staged files
-  - Executes `eslint --fix` on `.js`, `.ts`, `.vue` files
-  - Executes `prettier --write` on all applicable files
-  - Automatic fixes applied before commit
+    - Executes `oxlint --fix` on `.js`, `.ts`, `.vue` files
+    - Executes `oxfmt` on all applicable files
+    - Automatic fixes applied before commit
 
 **Manual Tools**:
 
-- **ESLint** - Code linting with @antfu/eslint-config
-  - Command: `pnpm lint` or `pnpm lint:fix`
-  - Enforces code style and best practices
+- **oxlint** - Fast code linting with category-based rules
+    - Command: `pnpm lint` or `pnpm lint:fix`
+    - Enforces code correctness and best practices
+    - 10-100x faster than ESLint
 - **TypeScript** - Type checking with strict mode
-  - Command: `pnpm typecheck`
-  - Catches type errors and improves code safety
-- **Prettier** - Code formatting with @sapphire/prettier-config
-  - Command: `pnpm format`
-  - Ensures consistent code formatting
+    - Command: `pnpm typecheck`
+    - Catches type errors and improves code safety
+- **oxfmt** - Fast code formatting
+    - Command: `pnpm format`
+    - Ensures consistent code formatting
+    - Built into oxlint toolchain
 - **commitlint** - Commit message validation
-  - Command: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
-  - Enforces Conventional Commits standard
+    - Command: `pnpm commitlint --from HEAD~1 --to HEAD --verbose`
+    - Enforces Conventional Commits standard
 
 ### Testing Strategy
 
 **Test Types**:
 
 1. **Unit Tests** (`test/unit/`):
-   - Server utilities in `server/utils/`
-   - Shared utilities in `shared/utils/`
-   - Database models and helpers
-   - Pure TypeScript/JavaScript functions
-   - Run in Node.js environment
+    - Server utilities in `server/utils/`
+    - Shared utilities in `shared/utils/`
+    - Database models and helpers
+    - Pure TypeScript/JavaScript functions
+    - Run in Node.js environment
 
 2. **Nuxt Component Tests** (`test/nuxt/`):
-   - Vue components in `app/components/`
-   - Composables in `app/composables/`
-   - Pages in `app/pages/`
-   - Pinia stores in `app/stores/`
-   - Run in Nuxt environment with auto-imports
+    - Vue components in `app/components/`
+    - Composables in `app/composables/`
+    - Pages in `app/pages/`
+    - Run in Nuxt environment with auto-imports
 
 3. **Browser Tests** (`test/browser/`):
-   - E2E user flows
-   - Discord OAuth integration
-   - Guild dashboard interactions
-   - Run with Playwright in Chromium
+    - E2E user flows
+    - Discord OAuth integration
+    - Guild dashboard interactions
+    - Run with Playwright in Chromium
 
 **Coverage Requirements**:
 
@@ -2036,7 +1954,7 @@ These steps mirror the project's CI gates and help ensure a green PR.
  * @returns Transformed guild and user information
  */
 export async function transformOauthGuildsAndUser(data: OAuthData) {
-  // Implementation
+	// Implementation
 }
 ```
 
@@ -2105,24 +2023,14 @@ const { data } = await useFetch("/api/guilds");
 const globalUser = ref(null); // Bad!
 ```
 
-**✅ Correct - Use Pinia for global state**:
-
-```typescript
-// app/stores/auth.ts
-export const useAuthStore = defineStore("auth", () => {
-  const user = ref(null);
-  return { user };
-});
-```
-
 **✅ Correct - Use composables for local logic**:
 
 ```typescript
 // app/composables/useUser.ts
 export function useUser() {
-  const user = ref(null);
-  // Local logic
-  return { user };
+	const user = ref(null);
+	// Local logic
+	return { user };
 }
 ```
 
@@ -2170,11 +2078,11 @@ pnpm prisma:migrate:dev
 ```typescript
 // Check runtime environment
 if (import.meta.server) {
-  // Server-side code
+	// Server-side code
 }
 
 if (import.meta.client) {
-  // Client-side code
+	// Client-side code
 }
 
 // Check deployment target
@@ -2221,7 +2129,7 @@ pnpm prisma:generate:watch
 
 ### 10. Vue Component Block Order
 
-**Problem**: ESLint errors about block order
+**Problem**: oxlint errors about block order
 
 **Solution**: Always follow this order
 
@@ -2269,10 +2177,10 @@ cat .env  # Verify all required vars are set
 1. **Wait longer** - First builds can take 90-120 seconds
 2. **Check memory** - Ensure sufficient RAM (4GB+ recommended)
 3. **Clear caches**:
-   ```bash
-   rm -rf .nuxt .output node_modules/.cache
-   pnpm build
-   ```
+    ```bash
+    rm -rf .nuxt .output node_modules/.cache
+    pnpm build
+    ```
 4. **Incremental builds** - Subsequent builds should be faster
 
 ### Database Connection Errors
@@ -2321,25 +2229,25 @@ pnpm typecheck
 
 1. **Check file watchers**: Ensure no watcher limit issues (Linux)
 
-   ```bash
-   # Increase file watchers (Linux)
-   echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
-   sudo sysctl -p
-   ```
+    ```bash
+    # Increase file watchers (Linux)
+    echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf
+    sudo sysctl -p
+    ```
 
 2. **Restart dev server**:
 
-   ```bash
-   # Kill and restart
-   pkill node
-   pnpm dev
-   ```
+    ```bash
+    # Kill and restart
+    pkill node
+    pnpm dev
+    ```
 
 3. **Clear Vite cache**:
-   ```bash
-   rm -rf node_modules/.vite
-   pnpm dev
-   ```
+    ```bash
+    rm -rf node_modules/.vite
+    pnpm dev
+    ```
 
 ### Authentication Not Persisting
 
@@ -2371,15 +2279,15 @@ pnpm typecheck
 **Solutions**:
 
 ```bash
-# 1. Clear ESLint cache
-rm -rf node_modules/.cache/eslint
+# 1. Clear oxlint cache
+rm -rf node_modules/.cache/oxlint
 
 # 2. Run fix again
 pnpm lint:fix
 
 # 3. If specific errors persist, check:
-# - eslint.config.mjs for rules
-# - Whether error is from Prettier (formatting issue)
+# - .oxlintrc.json for rules
+# - Whether error is from oxfmt (formatting issue)
 # - Whether it's a genuine code issue requiring manual fix
 ```
 
@@ -2437,7 +2345,7 @@ pnpm prisma:validate            # Validate Prisma schema
 
 These conventions are enforced through:
 
-- **Automated linting** with ESLint (pre-commit and CI)
+- **Automated linting** with oxlint (pre-commit and CI)
 - **Type checking** with TypeScript (pre-commit and CI)
 - **Commit message validation** with commitlint (pre-commit and CI)
 - **Pre-commit hooks** with Husky

@@ -84,7 +84,7 @@ multi-purpose Discord bot for moderation and community management.
 ## 🚀 Self-Hosting WolfStar.rocks Requirements
 
 - **Node.js**: WolfStar.rocks is built on Node.js, so you will need to have
-  Node.js (v22+) installed.
+  Node.js (v24+) installed.
 - **WolfStar Bot**: You need a running instance of WolfStar bot to connect this
   dashboard to.
 - **Discord Bot Application**: A Discord bot application with proper OAuth2

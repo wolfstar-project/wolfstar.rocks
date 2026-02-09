@@ -1,28 +1,18 @@
 {
-  "servers": {
-    "eslint": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "@eslint/mcp"
-      ]
-    },
-    "daisyUI": {
-      "type": "http",
-      "url": "https://gitmcp.io/saadeghi/daisyui"
-    },
-    "browsermcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@browsermcp/mcp@latest"
-      ]
-    },
-    "sentry": {
-      "type": "http",
-      "url": "https://mcp.sentry.dev/mcp"
-    }
-  },
-  "inputs": []
+	"servers": {
+		"daisyUI": {
+			"type": "http",
+			"url": "https://gitmcp.io/saadeghi/daisyui"
+		},
+		"browsermcp": {
+			"type": "stdio",
+			"command": "npx",
+			"args": ["-y", "@browsermcp/mcp@latest"]
+		},
+		"sentry": {
+			"type": "http",
+			"url": "https://mcp.sentry.dev/mcp"
+		}
+	},
+	"inputs": []
 }

@@ -1,0 +1,32 @@
+{
+	"endOfLine": "lf",
+	"printWidth": 150,
+	"quoteProps": "as-needed",
+	"semi": true,
+	"tabWidth": 4,
+	"trailingComma": "all",
+	"useTabs": true,
+	"experimentalTailwindcss": {
+		"stylesheet": "./app/assets/css/main.css",
+		"functions": ["tv", "cn"]
+	},
+	"experimentalSortPackageJson": true,
+	"overrides": [
+		{
+			"files": ["*.yml"],
+			"options": {
+				"tabWidth": 2,
+				"useTabs": false
+			}
+		},
+		{
+			"files": ["README.md"],
+			"options": {
+				"tabWidth": 2,
+				"useTabs": false,
+				"printWidth": 80,
+				"proseWrap": "always"
+			}
+		}
+	]
+}

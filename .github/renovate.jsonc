@@ -6,10 +6,6 @@
   "npm": {
     "packageRules": [
       {
-        "matchPackagePatterns": ["typescript"],
-        "enabled": false
-      },
-      {
         "matchPackageNames": ["prettier", "prettier-*"],
         "groupName": "prettier"
       },

@@ -152,7 +152,14 @@
 		"unicorn/prefer-string-starts-ends-with": "error",
 		"unicorn/prefer-type-error": "error",
 		"unicorn/throw-new-error": "error",
-		// Disabled: null is semantically meaningful in Vue/Nuxt (refs, route params, form defaults, template refs)
+		// ===== Rule Configuration Notes =====
+		// The following rules are disabled or configured to align with Nuxt/Vue patterns and team conventions.
+		// See plans/lint-warnings-systematic-cleanup-complete.md for full rationale.
+
+		// Disabled: null is semantically meaningful in Vue/Nuxt
+		// - Used in refs (ref<T | null>(null)), route params, form defaults, template refs
+		// - Distinct from undefined in Vue's reactivity system
+		// - Required for proper type narrowing in conditionals
 		"unicorn/no-null": "off",
 		"antfu/consistent-list-newline": "warn",
 		"antfu/consistent-chaining": "warn",
@@ -340,7 +347,10 @@
 				"vitest/no-import-node-test": "error",
 				"vitest/prefer-hooks-in-order": "error",
 				"vitest/prefer-lowercase-title": "error",
-				// Disabled: Overly prescriptive test assertion style that reduces test clarity
+				// Disabled: Overly prescriptive test assertion styles
+				// - prefer-to-be-truthy/falsy force specific assertion patterns over toBe(true/false)
+				// - Reduces test clarity by enforcing style over semantic intent
+				// - Developer should choose assertion based on what makes test clearest
 				"vitest/prefer-to-be-truthy": "off",
 				"vitest/prefer-to-be-falsy": "off",
 				"antfu/no-top-level-await": "off",
@@ -372,8 +382,11 @@
 		{
 			"files": ["app/components/**/*.vue", "app/pages/**/@components/**/*.vue"],
 			"rules": {
-				// Component filename casing: Allow PascalCase or kebab-case for components
-				// Rationale: Both naming conventions are acceptable for Vue components
+				// Component filename casing: Allow PascalCase or kebab-case
+				// Rationale: Preserves team convention of PascalCase for Vue components
+				// - PascalCase (UserProfile.vue) is idiomatic in Vue ecosystem
+				// - Visually distinguishes components from utilities
+				// - Avoids mass renames that would break git history
 				"unicorn/filename-case": [
 					"warn",
 					{
@@ -397,8 +410,12 @@
 				"**/*.spec.ts"
 			],
 			"rules": {
-				// TypeScript utility and type files: Allow PascalCase, camelCase, or kebab-case
-				// Rationale: All naming conventions are acceptable for TS utilities, types, test files, and class-based modules
+				// TypeScript files: Allow PascalCase, camelCase, or kebab-case
+				// Rationale: Multiple naming conventions are idiomatic in different contexts:
+				// - PascalCase for type-only files (ConfigurableData.d.ts)
+				// - camelCase for class-based modules (AdderManager.ts, SettingsContext.ts)
+				// - kebab-case for utility modules (auth-utils.ts, discord-api.ts)
+				// Enforcing single style would require mass renames breaking git history
 				"unicorn/filename-case": [
 					"warn",
 					{

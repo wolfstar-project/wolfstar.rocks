@@ -15,35 +15,34 @@ clientsClaim();
 cleanupOutdatedCaches();
 precacheAndRoute(self.__WB_MANIFEST);
 
-// only cache pages and external assets on local build + start or in production
+// Only cache pages and external assets on local build + start or in production
 if (import.meta.env.PROD) {
-  // include webmanifest cache
-  registerRoute(
-    ({ request, sameOrigin }) =>
-      sameOrigin && request.destination === "manifest",
-    new NetworkFirst({
-      cacheName: "wolfstar-webmanifest",
-      plugins: [
-        new CacheableResponsePlugin({ statuses: [200] }),
-        // we only need a few entries
-        new ExpirationPlugin({ maxEntries: 100 }),
-      ],
-    }),
-  );
+	// Include webmanifest cache
+	registerRoute(
+		({ request, sameOrigin }) => sameOrigin && request.destination === "manifest",
+		new NetworkFirst({
+			cacheName: "wolfstar-webmanifest",
+			plugins: [
+				new CacheableResponsePlugin({ statuses: [200] }),
+				// We only need a few entries
+				new ExpirationPlugin({ maxEntries: 100 }),
+			],
+		}),
+	);
 
-  // cache external assets (CDNs)
-  registerRoute(
-    ({ url }) =>
-      url.origin === "https://cdn.discordapp.com"
-      || url.origin === "https://cdn.wolfstar.rocks"
-      || url.origin === "https://media.discordapp.net",
-    new NetworkFirst({
-      cacheName: "wolfstar-cdn-assets",
-      plugins: [
-        new CacheableResponsePlugin({ statuses: [200] }),
-        // we only need a few entries
-        new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 }),
-      ],
-    }),
-  );
+	// Cache external assets (CDNs)
+	registerRoute(
+		({ url }) =>
+			url.origin === "https://cdn.discordapp.com" ||
+			url.origin === "https://cdn.wolfstar.rocks" ||
+			url.origin === "https://media.discordapp.net",
+		new NetworkFirst({
+			cacheName: "wolfstar-cdn-assets",
+			plugins: [
+				new CacheableResponsePlugin({ statuses: [200] }),
+				// We only need a few entries
+				new ExpirationPlugin({ maxAgeSeconds: 60 * 60 * 24 * 7, maxEntries: 100 }),
+			],
+		}),
+	);
 }

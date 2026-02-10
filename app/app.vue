@@ -1,17 +1,17 @@
 <template>
-  <UApp
-    :toaster="{
-      expand: true,
-      duration: 5000
-    }"
-  >
-    <NuxtPwaManifest />
-    <NuxtRouteAnnouncer />
-    <NuxtLoadingIndicator color="bg-neutral" />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </UApp>
+	<UApp
+		:toaster="{
+			expand: true,
+			duration: 5000,
+		}"
+	>
+		<NuxtPwaManifest />
+		<NuxtRouteAnnouncer />
+		<NuxtLoadingIndicator color="bg-neutral" />
+		<NuxtLayout>
+			<NuxtPage />
+		</NuxtLayout>
+	</UApp>
 </template>
 
 <script setup lang="ts">
@@ -20,22 +20,24 @@ const appName = ref<"wolfstar" | "staryl">("wolfstar");
 const { fetch: refreshSession } = useUserSession();
 // Watch for route changes to update appName
 watch(
-  router.currentRoute,
-  (route) => {
-    switch (route.path) {
-      case "/staryl":
-        appName.value = "staryl";
-        break;
-      default:
-        appName.value = "wolfstar";
-    }
-  },
-  { immediate: true },
+	router.currentRoute,
+	(route) => {
+		switch (route.path) {
+			case "/staryl": {
+				appName.value = "staryl";
+				break;
+			}
+			default: {
+				appName.value = "wolfstar";
+			}
+		}
+	},
+	{ immediate: true },
 );
 
 provide(ProviderAppNameKey, appName);
 
 onMounted(() => {
-  $fetch("/api/auth/refresh").then(refreshSession);
+	$fetch("/api/auth/refresh").then(refreshSession);
 });
 </script>

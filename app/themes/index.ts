@@ -16,22 +16,22 @@ import tabs from "./tabs";
 import toaster from "./toaster";
 
 const ui = {
-  avatar,
-  badge,
-  button,
-  container,
-  dropdownMenu,
-  fieldGroup,
-  footer,
-  footerColumns,
-  header,
-  inputMenu,
-  link,
-  main,
-  navigationMenu,
-  skeleton,
-  tabs,
-  toaster,
+	avatar,
+	badge,
+	button,
+	container,
+	dropdownMenu,
+	fieldGroup,
+	footer,
+	footerColumns,
+	header,
+	inputMenu,
+	link,
+	main,
+	navigationMenu,
+	skeleton,
+	tabs,
+	toaster,
 };
 
 export { ui };

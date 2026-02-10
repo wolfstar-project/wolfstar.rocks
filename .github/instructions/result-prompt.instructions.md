@@ -1,5 +1,5 @@
 ---
-applyTo: '**'
+applyTo: "**"
 ---
 
 ## Result template to include in PRs / change responses 📣
@@ -14,38 +14,38 @@ Use this template whenever you report an important code or documentation change.
 - Commit (Conventional): `docs: update examples for clarity`
 - PR title: `docs: update examples for clarity`
 - PR description (short):
-  - **What**: short, clear summary of the change (one line).
-  - **Why**: why this change was necessary (one line).
-  - **Impact**: `documentation-only` OR `code change` (state clearly).
-  - **Verification**: short checklist or link to verification steps below.
+    - **What**: short, clear summary of the change (one line).
+    - **Why**: why this change was necessary (one line).
+    - **Impact**: `documentation-only` OR `code change` (state clearly).
+    - **Verification**: short checklist or link to verification steps below.
 
 ---
 
 ### 2) What I changed 🔧
 
 - Short, itemized list (3–6 bullets). Example placeholders:
-  - Updated `README.md` examples for the authentication flow.
-  - Added `docs/examples/auth-quickstart.md` with runnable snippets.
-  - Small copy edits for clarity in `CONTRIBUTING.md`.
-  - No runtime code changes (documentation-only).
+    - Updated `README.md` examples for the authentication flow.
+    - Added `docs/examples/auth-quickstart.md` with runnable snippets.
+    - Small copy edits for clarity in `CONTRIBUTING.md`.
+    - No runtime code changes (documentation-only).
 
 ---
 
 ### 3) How to verify (quick steps) 🔎
 
 - Content checks (quick):
-  - `git grep -n "examples/auth-quickstart.md" || true` — expected: file present
-  - `git grep -n "Login with Discord" README.md || true` — expected: updated snippet
+    - `git grep -n "examples/auth-quickstart.md" || true` — expected: file present
+    - `git grep -n "Login with Discord" README.md || true` — expected: updated snippet
 - Lint / build / typecheck:
-  - `pnpm lint:fix && pnpm lint`
-  - `pnpm typecheck`
-  - `pnpm build`
-  - Expected: no blocking errors; CI remains green
+    - `pnpm lint:fix && pnpm lint`
+    - `pnpm typecheck`
+    - `pnpm build`
+    - Expected: no blocking errors; CI remains green
 - Manual verification:
-  - Open `docs/examples/auth-quickstart.md` and run the provided curl/command — output should match documented response
+    - Open `docs/examples/auth-quickstart.md` and run the provided curl/command — output should match documented response
 - Final gate before merge:
-  - MCP ESLint reports **zero errors** (if applicable)
-  - All CI checks pass
+    - MCP ESLint reports **zero errors** (if applicable)
+    - All CI checks pass
 
 ---
 

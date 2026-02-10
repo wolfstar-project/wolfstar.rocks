@@ -1,6 +1,6 @@
-<!-- eslint-disable vue/no-template-shadow -->
+<!-- oxlint-disable vue/no-template-shadow -->
 <template>
-  <UNavigationMenu orientation="vertical" :items="mobileLinks" class="-mx-2.5" />
+	<UNavigationMenu orientation="vertical" :items="mobileLinks" class="-mx-2.5" />
 </template>
 
 <script setup lang="ts">

@@ -1,57 +1,54 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "type": "firefox",
-      "request": "launch",
-      "reAttach": true,
-      "name": "Client: Firefox",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-      "pathMappings": [
-        {
-          "url": "webpack:///",
-          "path": "${workspaceFolder}/"
-        },
-        {
-          "url": "webpack:///ignore/",
-          "path": null
-        }
-      ]
-    },
-    {
-      "type": "chrome",
-      "request": "launch",
-      "name": "Client: Chrome",
-      "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}",
-      "sourceMapPathOverrides": {
-        "webpack:///*": "${workspaceRoot}/*"
-      }
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Server: nuxt",
-      "resolveSourceMapLocations": [
-        "${workspaceFolder}/**",
-        "!**/node_modules/**"
-      ],
-      // With this unified configuration:
-      "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["run", "dev", "-o"]
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "firefox",
+			"request": "launch",
+			"reAttach": true,
+			"name": "Client: Firefox",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}",
+			"pathMappings": [
+				{
+					"url": "webpack:///",
+					"path": "${workspaceFolder}/"
+				},
+				{
+					"url": "webpack:///ignore/",
+					"path": null
+				}
+			]
+		},
+		{
+			"type": "chrome",
+			"request": "launch",
+			"name": "Client: Chrome",
+			"url": "http://localhost:3000",
+			"webRoot": "${workspaceFolder}",
+			"sourceMapPathOverrides": {
+				"webpack:///*": "${workspaceRoot}/*"
+			}
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Server: nuxt",
+			"resolveSourceMapLocations": ["${workspaceFolder}/**", "!**/node_modules/**"],
+			// With this unified configuration:
+			"runtimeExecutable": "pnpm",
+			"runtimeArgs": ["run", "dev", "-o"]
 
-      // … any following properties …
-    }
-  ],
-  "compounds": [
-    {
-      "name": "Fullstack: nuxt",
-      "configurations": ["Server: nuxt", "Client: Firefox"]
-    },
-    {
-      "name": "Fullstack: nuxt (Chrome)",
-      "configurations": ["Server: nuxt", "Client: Chrome"]
-    }
-  ]
+			// … any following properties …
+		}
+	],
+	"compounds": [
+		{
+			"name": "Fullstack: nuxt",
+			"configurations": ["Server: nuxt", "Client: Firefox"]
+		},
+		{
+			"name": "Fullstack: nuxt (Chrome)",
+			"configurations": ["Server: nuxt", "Client: Chrome"]
+		}
+	]
 }

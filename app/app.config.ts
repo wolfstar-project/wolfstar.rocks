@@ -1,27 +1,66 @@
 import { ui } from "@/themes/index";
 
-export default defineAppConfig({ ui, footer: [
-  {
-    label: "Links",
-    children: [
-      { label: "Support Server", to: "https://join.wolfstar.rocks", icon: "ph:discord-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-indigo-500" } },
-      { label: "GitHub", to: "https://github.com/wolfstar-project", icon: "ph:github-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-indigo-500" } },
-      { label: "Blog", to: "https://blog.wolfstar.rocks", icon: "ph:newspaper-clipping-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-primary" } },
-    ],
-  },
-  {
-    label: "Donate",
-    children: [
-      { label: "Patreon", to: "https://donate.wolfstar.rocks/patreon", icon: "ph:patreon-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-rose-600" } },
-      { label: "PayPal", to: "https://donate.wolfstar.rocks/paypal", icon: "ph:paypal-logo-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-sky-600" } },
-      { label: "Ko-fi", to: "https://donate.wolfstar.rocks/ko-fi", icon: "ph:coffee-duotone", class: "link-hover", ui: { linkLeadingIcon: "bg-pink-500" } },
-    ],
-  },
-  {
-    label: "Legal",
-    children: [
-      { label: "Terms of Use", to: "/terms", icon: "ph:file-text-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
-      { label: "Privacy Policy", to: "/privacy", icon: "ph:shield-check-fill", class: "link-hover", ui: { linkLeadingIcon: "bg-warning" } },
-    ],
-  },
-] });
+export default defineAppConfig({
+	footer: [
+		{
+			children: [
+				{
+					class: "link-hover",
+					icon: "ph:discord-logo-duotone",
+					label: "Support Server",
+					to: "https://join.wolfstar.rocks",
+					ui: { linkLeadingIcon: "bg-indigo-500" },
+				},
+				{
+					class: "link-hover",
+					icon: "ph:github-logo-duotone",
+					label: "GitHub",
+					to: "https://github.com/wolfstar-project",
+					ui: { linkLeadingIcon: "bg-indigo-500" },
+				},
+				{
+					class: "link-hover",
+					icon: "ph:newspaper-clipping-duotone",
+					label: "Blog",
+					to: "https://blog.wolfstar.rocks",
+					ui: { linkLeadingIcon: "bg-primary" },
+				},
+			],
+			label: "Links",
+		},
+		{
+			children: [
+				{
+					class: "link-hover",
+					icon: "ph:patreon-logo-duotone",
+					label: "Patreon",
+					to: "https://donate.wolfstar.rocks/patreon",
+					ui: { linkLeadingIcon: "bg-rose-600" },
+				},
+				{
+					class: "link-hover",
+					icon: "ph:paypal-logo-duotone",
+					label: "PayPal",
+					to: "https://donate.wolfstar.rocks/paypal",
+					ui: { linkLeadingIcon: "bg-sky-600" },
+				},
+				{
+					class: "link-hover",
+					icon: "ph:coffee-duotone",
+					label: "Ko-fi",
+					to: "https://donate.wolfstar.rocks/ko-fi",
+					ui: { linkLeadingIcon: "bg-pink-500" },
+				},
+			],
+			label: "Donate",
+		},
+		{
+			children: [
+				{ class: "link-hover", icon: "ph:file-text-fill", label: "Terms of Use", to: "/terms", ui: { linkLeadingIcon: "bg-warning" } },
+				{ class: "link-hover", icon: "ph:shield-check-fill", label: "Privacy Policy", to: "/privacy", ui: { linkLeadingIcon: "bg-warning" } },
+			],
+			label: "Legal",
+		},
+	],
+	ui,
+});

@@ -1,12 +1,8 @@
 <template>
-  <nuxt-link
-    class="flex items-center transition-transform hover:scale-105"
-    :to="currentApp.landing"
-    :aria-label="`${currentApp.name} home page`"
-  >
-    <IconsWolfstar class="h-10 w-10" aria-hidden="true" />
-    <span class="ml-2 text-2xl text-ui-100 font-bold">{{ currentApp.name }}</span>
-  </nuxt-link>
+	<nuxt-link class="flex items-center transition-transform hover:scale-105" :to="currentApp.landing" :aria-label="`${currentApp.name} home page`">
+		<IconsWolfstar class="h-10 w-10" aria-hidden="true" />
+		<span class="text-ui-100 ml-2 text-2xl font-bold">{{ currentApp.name }}</span>
+	</nuxt-link>
 </template>
 
 <script lang="ts" setup>

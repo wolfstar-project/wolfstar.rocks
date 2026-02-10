@@ -29,35 +29,27 @@ import type { CachedFetchResult } from "#shared/utils/fetch-cache-config";
  * ```
  */
 export function useCachedFetch(): CachedFetchFunction {
-  // On client, return a function that just uses $fetch (no caching, not stale)
-  if (import.meta.client) {
-    return async <T = unknown>(
-      url: string,
-      options: Parameters<typeof $fetch>[1] = {},
-      _ttl?: number,
-    ): Promise<CachedFetchResult<T>> => {
-      const data = (await $fetch<T>(url, options)) as T;
-      return { data, isStale: false, cachedAt: null };
-    };
-  }
+	// On client, return a function that just uses $fetch (no caching, not stale)
+	if (import.meta.client) {
+		return async <T = unknown>(url: string, options: Parameters<typeof $fetch>[1] = {}, _ttl?: number): Promise<CachedFetchResult<T>> => {
+			const data = (await $fetch<T>(url, options)) as T;
+			return { cachedAt: null, data, isStale: false };
+		};
+	}
 
-  // On server, get the cachedFetch from request context
-  const event = useRequestEvent();
-  const serverCachedFetch = event?.context?.cachedFetch;
+	// On server, get the cachedFetch from request context
+	const event = useRequestEvent();
+	const serverCachedFetch = event?.context?.cachedFetch;
 
-  // If cachedFetch is available from middleware, return it
-  if (serverCachedFetch) {
-    return serverCachedFetch as CachedFetchFunction;
-  }
+	// If cachedFetch is available from middleware, return it
+	if (serverCachedFetch) {
+		return serverCachedFetch as CachedFetchFunction;
+	}
 
-  // Fallback: return a function that uses regular $fetch
-  // (shouldn't happen in normal operation)
-  return async <T = unknown>(
-    url: string,
-    options: Parameters<typeof $fetch>[1] = {},
-    _ttl?: number,
-  ): Promise<CachedFetchResult<T>> => {
-    const data = (await $fetch<T>(url, options)) as T;
-    return { data, isStale: false, cachedAt: null };
-  };
+	// Fallback: return a function that uses regular $fetch
+	// (shouldn't happen in normal operation)
+	return async <T = unknown>(url: string, options: Parameters<typeof $fetch>[1] = {}, _ttl?: number): Promise<CachedFetchResult<T>> => {
+		const data = (await $fetch<T>(url, options)) as T;
+		return { cachedAt: null, data, isStale: false };
+	};
 }

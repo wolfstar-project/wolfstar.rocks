@@ -9,8 +9,8 @@ import { defineConfig } from "prisma/config";
 config({ quiet: true });
 
 export default defineConfig({
-  schema: path.join("server", "database", "schema.prisma"),
-  migrations: {
-    path: path.join("server", "database", "migrations"),
-  },
+	migrations: {
+		path: path.join("server", "database", "migrations"),
+	},
+	schema: path.join("server", "database", "schema.prisma"),
 });

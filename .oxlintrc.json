@@ -1,22 +1,14 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"plugins": ["node", "jsdoc", "import", "unicorn", "typescript", "oxc", "vue", "vitest"],
-	"jsPlugins": [
-		"eslint-plugin-nuxt",
-		"eslint-plugin-antfu",
-		"eslint-plugin-unused-imports",
-		"eslint-plugin-eslint-comments",
-		"eslint-plugin-command",
-		"eslint-plugin-perfectionist",
-		"eslint-plugin-regexp"
-	],
+	"jsPlugins": ["eslint-plugin-antfu", "eslint-plugin-eslint-comments", "eslint-plugin-command", "eslint-plugin-regexp"],
 	"categories": {
 		"correctness": "error",
 		"suspicious": "warn",
-		"perf": "warn"
+		"perf": "warn",
+		"style": "warn"
 	},
 	"rules": {
-		"nuxt/prefer-import-meta": "error",
 		"accessor-pairs": [
 			"error",
 			{
@@ -104,17 +96,6 @@
 			}
 		],
 		"unicode-bom": ["error", "never"],
-		"unused-imports/no-unused-imports": "error",
-		"unused-imports/no-unused-vars": [
-			"error",
-			{
-				"args": "after-used",
-				"argsIgnorePattern": "^_",
-				"ignoreRestSiblings": true,
-				"vars": "all",
-				"varsIgnorePattern": "^_"
-			}
-		],
 		"use-isnan": [
 			"error",
 			{
@@ -129,56 +110,17 @@
 			}
 		],
 		"yoda": ["error", "never"],
+		"func-style": "off",
 		"eslint-comments/no-aggregating-enable": "error",
 		"eslint-comments/no-duplicate-disable": "error",
 		"eslint-comments/no-unlimited-disable": "error",
 		"eslint-comments/no-unused-enable": "error",
 		"command/command": "error",
-		"perfectionist/sort-exports": [
-			"error",
-			{
-				"order": "asc",
-				"type": "natural"
-			}
-		],
-		"perfectionist/sort-imports": [
-			"error",
-			{
-				"groups": [
-					"type-import",
-					["type-parent", "type-sibling", "type-index", "type-internal"],
-					"value-builtin",
-					"value-external",
-					"value-internal",
-					["value-parent", "value-sibling", "value-index"],
-					"side-effect",
-					"ts-equals-import",
-					"unknown"
-				],
-				"newlinesBetween": "ignore",
-				"newlinesInside": "ignore",
-				"order": "asc",
-				"type": "natural"
-			}
-		],
-		"perfectionist/sort-named-exports": [
-			"error",
-			{
-				"order": "asc",
-				"type": "natural"
-			}
-		],
-		"perfectionist/sort-named-imports": [
-			"error",
-			{
-				"order": "asc",
-				"type": "natural"
-			}
-		],
 		"node/no-exports-assign": "error",
 		"node/no-new-require": "error",
 		"jsdoc/check-access": "warn",
 		"jsdoc/check-property-names": "warn",
+		"jsdoc/check-tag-names": "off",
 		"jsdoc/empty-tags": "warn",
 		"jsdoc/implements-on-classes": "warn",
 		"jsdoc/no-defaults": "warn",
@@ -190,7 +132,7 @@
 		"antfu/import-dedupe": "error",
 		"antfu/no-import-dist": "error",
 		"antfu/no-import-node-modules-by-path": "error",
-		"import/consistent-type-specifier-style": ["error", "top-level"],
+		"import/consistent-type-specifier-style": ["error", "prefer-top-level"],
 		"import/first": "error",
 		"import/no-duplicates": "error",
 		"import/no-mutable-exports": "error",
@@ -210,10 +152,12 @@
 		"unicorn/prefer-string-starts-ends-with": "error",
 		"unicorn/prefer-type-error": "error",
 		"unicorn/throw-new-error": "error",
-		"antfu/consistent-list-newline": "error",
-		"antfu/consistent-chaining": "error",
+		// Disabled: null is semantically meaningful in Vue/Nuxt (refs, route params, form defaults, template refs)
+		"unicorn/no-null": "off",
+		"antfu/consistent-list-newline": "warn",
+		"antfu/consistent-chaining": "warn",
 		"antfu/curly": "error",
-		"antfu/if-newline": "error",
+		"antfu/if-newline": "warn",
 		"regexp/confusing-quantifier": "warn",
 		"regexp/control-character-escape": "error",
 		"regexp/match-any": "error",
@@ -295,14 +239,6 @@
 	],
 	"overrides": [
 		{
-			"files": ["**/.config/nuxt.?([cm])[jt]s?(x)", "**/nuxt.config.?([cm])[jt]s?(x)"],
-			"rules": {
-				"nuxt/no-nuxt-config-test-key": "error",
-				"nuxt/nuxt-config-keys-order": "error"
-			},
-			"jsPlugins": ["eslint-plugin-nuxt"]
-		},
-		{
 			"files": ["**/*.?([cm])ts", "**/*.?([cm])tsx", "**/*.vue"],
 			"plugins": ["typescript"],
 			"rules": {
@@ -364,6 +300,7 @@
 						"allowTernary": true
 					}
 				],
+				"no-await-in-loop": "off",
 				"no-unused-vars": "off",
 				"no-useless-constructor": "off",
 				"@typescript-eslint/no-wrapper-object-types": "warn",
@@ -403,9 +340,13 @@
 				"vitest/no-import-node-test": "error",
 				"vitest/prefer-hooks-in-order": "error",
 				"vitest/prefer-lowercase-title": "error",
+				// Disabled: Overly prescriptive test assertion style that reduces test clarity
+				"vitest/prefer-to-be-truthy": "off",
+				"vitest/prefer-to-be-falsy": "off",
 				"antfu/no-top-level-await": "off",
 				"no-unused-expressions": "off",
-				"@typescript-eslint/explicit-function-return-type": "off"
+				"@typescript-eslint/explicit-function-return-type": "off",
+				"eslint-plugin-unicorn/consistent-function-scoping": "off"
 			},
 			"plugins": ["vitest", "typescript"]
 		},
@@ -423,33 +364,52 @@
 				"vue/no-required-prop-with-default": "warn",
 				"antfu/no-top-level-await": "off",
 				"@typescript-eslint/explicit-function-return-type": "off",
-				"vue-a11y/alt-text": "error",
-				"vue-a11y/anchor-has-content": "error",
-				"vue-a11y/aria-props": "error",
-				"vue-a11y/aria-role": "error",
-				"vue-a11y/aria-unsupported-elements": "error",
-				"vue-a11y/click-events-have-key-events": "error",
-				"vue-a11y/form-control-has-label": "error",
-				"vue-a11y/heading-has-content": "error",
-				"vue-a11y/iframe-has-title": "error",
-				"vue-a11y/interactive-supports-focus": "error",
-				"vue-a11y/label-has-for": "error",
-				"vue-a11y/media-has-caption": "warn",
-				"vue-a11y/mouse-events-have-key-events": "error",
-				"vue-a11y/no-access-key": "error",
-				"vue-a11y/no-aria-hidden-on-focusable": "error",
-				"vue-a11y/no-autofocus": "warn",
-				"vue-a11y/no-distracting-elements": "error",
-				"vue-a11y/no-redundant-roles": "error",
-				"vue-a11y/no-role-presentation-on-focusable": "error",
-				"vue-a11y/no-static-element-interactions": "error",
-				"vue-a11y/role-has-required-aria-props": "error",
-				"vue-a11y/tabindex-no-positive": "warn",
 				"import/first": "off",
 				"import/consistent-type-specifier-style": "off"
 			},
-			"jsPlugins": ["eslint-plugin-vue-a11y"],
 			"plugins": ["vue", "typescript"]
+		},
+		{
+			"files": ["app/components/**/*.vue", "app/pages/**/@components/**/*.vue"],
+			"rules": {
+				// Component filename casing: Allow PascalCase or kebab-case for components
+				// Rationale: Both naming conventions are acceptable for Vue components
+				"unicorn/filename-case": [
+					"warn",
+					{
+						"cases": {
+							"kebabCase": true,
+							"pascalCase": true
+						}
+					}
+				]
+			}
+		},
+		{
+			"files": [
+				"**/types/**/*.ts",
+				"**/types/**/*.d.ts",
+				"**/utils/**/*.ts",
+				"**/composables/**/*.ts",
+				"**/mocks/**/*.ts",
+				"server/database/settings/**/*.ts",
+				"**/*.test.ts",
+				"**/*.spec.ts"
+			],
+			"rules": {
+				// TypeScript utility and type files: Allow PascalCase, camelCase, or kebab-case
+				// Rationale: All naming conventions are acceptable for TS utilities, types, test files, and class-based modules
+				"unicorn/filename-case": [
+					"warn",
+					{
+						"cases": {
+							"kebabCase": true,
+							"pascalCase": true,
+							"camelCase": true
+						}
+					}
+				]
+			}
 		},
 		{
 			"files": ["**/*.json", "**/*.json5", "**/*.jsonc"],
@@ -620,165 +580,6 @@
 			"jsPlugins": ["eslint-plugin-jsonc"]
 		},
 		{
-			"files": ["package.json", "**/package.json"],
-			"rules": {
-				"pnpm/json-prefer-workspace-settings": [
-					"error",
-					{
-						"autofix": true
-					}
-				]
-			},
-			"jsPlugins": ["eslint-plugin-pnpm"]
-		},
-		{
-			"files": ["pnpm-workspace.yaml"],
-			"rules": {
-				"pnpm/yaml-enforce-settings": [
-					"error",
-					{
-						"settings": {
-							"shellEmulator": true
-						}
-					}
-				],
-				"pnpm/yaml-no-duplicate-catalog-item": "error",
-				"pnpm/yaml-no-unused-catalog-item": "error",
-				"yaml/sort-keys": [
-					"error",
-					{
-						"order": [
-							"cacheDir",
-							"catalogMode",
-							"cleanupUnusedCatalogs",
-							"dedupeDirectDeps",
-							"deployAllFiles",
-							"enablePrePostScripts",
-							"engineStrict",
-							"extendNodePath",
-							"hoist",
-							"hoistPattern",
-							"hoistWorkspacePackages",
-							"ignoreCompatibilityDb",
-							"ignoreDepScripts",
-							"ignoreScripts",
-							"ignoreWorkspaceRootCheck",
-							"managePackageManagerVersions",
-							"minimumReleaseAge",
-							"minimumReleaseAgeExclude",
-							"modulesDir",
-							"nodeLinker",
-							"nodeVersion",
-							"optimisticRepeatInstall",
-							"packageManagerStrict",
-							"packageManagerStrictVersion",
-							"preferSymlinkedExecutables",
-							"preferWorkspacePackages",
-							"publicHoistPattern",
-							"registrySupportsTimeField",
-							"requiredScripts",
-							"resolutionMode",
-							"savePrefix",
-							"scriptShell",
-							"shamefullyHoist",
-							"shellEmulator",
-							"stateDir",
-							"supportedArchitectures",
-							"symlink",
-							"tag",
-							"trustPolicy",
-							"trustPolicyExclude",
-							"updateNotifier",
-							"packages",
-							"overrides",
-							"patchedDependencies",
-							"catalog",
-							"catalogs",
-							"allowedDeprecatedVersions",
-							"allowNonAppliedPatches",
-							"configDependencies",
-							"ignoredBuiltDependencies",
-							"ignoredOptionalDependencies",
-							"neverBuiltDependencies",
-							"onlyBuiltDependencies",
-							"onlyBuiltDependenciesFile",
-							"packageExtensions",
-							"peerDependencyRules"
-						],
-						"pathPattern": "^$"
-					},
-					{
-						"order": {
-							"type": "asc"
-						},
-						"pathPattern": ".*"
-					}
-				]
-			},
-			"jsPlugins": ["eslint-plugin-pnpm"]
-		},
-		{
-			"files": ["pnpm-workspace.yaml"],
-			"jsPlugins": ["eslint-plugin-yaml"]
-		},
-		{
-			"files": ["**/*.y?(a)ml"],
-			"rules": {
-				"@stylistic/spaced-comment": "off",
-				"yaml/block-mapping": "error",
-				"yaml/block-sequence": "error",
-				"yaml/no-empty-key": "error",
-				"yaml/no-empty-sequence-entry": "error",
-				"yaml/no-irregular-whitespace": "error",
-				"yaml/plain-scalar": "error",
-				"yaml/vue-custom-block/no-parsing-error": "error",
-				"yaml/block-mapping-question-indicator-newline": "error",
-				"yaml/block-sequence-hyphen-indicator-newline": "error",
-				"yaml/flow-mapping-curly-newline": "error",
-				"yaml/flow-mapping-curly-spacing": "error",
-				"yaml/flow-sequence-bracket-newline": "error",
-				"yaml/flow-sequence-bracket-spacing": "error",
-				"yaml/indent": ["error", 2],
-				"yaml/key-spacing": "error",
-				"yaml/no-tab-indent": "error",
-				"yaml/quotes": [
-					"error",
-					{
-						"avoidEscape": true,
-						"prefer": "single"
-					}
-				],
-				"yaml/spaced-comment": "error"
-			},
-			"jsPlugins": ["eslint-plugin-yaml"]
-		},
-		{
-			"files": ["**/*.toml"],
-			"rules": {
-				"@stylistic/spaced-comment": "off",
-				"toml/comma-style": "error",
-				"toml/keys-order": "error",
-				"toml/no-space-dots": "error",
-				"toml/no-unreadable-number-separator": "error",
-				"toml/precision-of-fractional-seconds": "error",
-				"toml/precision-of-integer": "error",
-				"toml/tables-order": "error",
-				"toml/vue-custom-block/no-parsing-error": "error",
-				"toml/array-bracket-newline": "error",
-				"toml/array-bracket-spacing": "error",
-				"toml/array-element-newline": "error",
-				"toml/indent": ["error", 2],
-				"toml/inline-table-curly-spacing": "error",
-				"toml/key-spacing": "error",
-				"toml/padding-line-between-pairs": "error",
-				"toml/padding-line-between-tables": "error",
-				"toml/quoted-keys": "error",
-				"toml/spaced-comment": "error",
-				"toml/table-bracket-spacing": "error"
-			},
-			"jsPlugins": ["eslint-plugin-toml"]
-		},
-		{
 			"files": ["**/scripts/**/*.?([cm])[jt]s?(x)"],
 			"rules": {
 				"antfu/no-top-level-await": "off",
@@ -790,7 +591,23 @@
 			"files": ["**/*.config.?([cm])[jt]s?(x)", "**/*.config.*.?([cm])[jt]s?(x)"],
 			"rules": {
 				"antfu/no-top-level-await": "off",
-				"@typescript-eslint/explicit-function-return-type": "off"
+				"@typescript-eslint/explicit-function-return-type": "off",
+				"no-await-in-loop": "off"
+			},
+			"plugins": ["typescript"]
+		},
+		{
+			"files": ["**/server/database/settings/**/*.ts"],
+			"rules": {
+				"no-await-in-loop": "off"
+			},
+			"plugins": ["typescript"]
+		},
+		{
+			"files": ["**/vitest.config.ts", "**/pwa-assets.config.ts"],
+			"rules": {
+				"antfu/no-top-level-await": "off",
+				"no-await-in-loop": "off"
 			},
 			"plugins": ["typescript"]
 		}

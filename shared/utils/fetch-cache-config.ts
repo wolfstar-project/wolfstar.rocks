@@ -8,11 +8,7 @@
  * Domains that should have their fetch responses cached.
  * Only requests to these domains will be intercepted and cached.
  */
-export const FETCH_CACHE_ALLOWED_DOMAINS = [
-  "wolfstar.rocks",
-  "beta.wolfstar.rocks",
-  "localhost:3000",
-];
+export const FETCH_CACHE_ALLOWED_DOMAINS = ["wolfstar.rocks", "beta.wolfstar.rocks", "localhost:3000"];
 
 /**
  * Default TTL for cached fetch responses (in seconds).
@@ -36,38 +32,37 @@ export const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
  * Check if a URL's host is in the allowed domains list.
  */
 export function isAllowedDomain(url: string | URL): boolean {
-  try {
-    const urlObj = typeof url === "string" ? new URL(url) : url;
-    return FETCH_CACHE_ALLOWED_DOMAINS.includes(urlObj.host);
-  }
-  catch {
-    return false;
-  }
+	try {
+		const urlObj = typeof url === "string" ? new URL(url) : url;
+		return FETCH_CACHE_ALLOWED_DOMAINS.includes(urlObj.host);
+	} catch {
+		return false;
+	}
 }
 
 /**
  * Structure of a cached fetch entry stored in Nitro storage.
  */
 export interface CachedFetchEntry<T = unknown> {
-  /** The response body/data */
-  data: T;
-  /** HTTP status code */
-  status: number;
-  /** Response headers (subset) */
-  headers: Record<string, string>;
-  /** Unix timestamp when the entry was cached */
-  cachedAt: number;
-  /** TTL in seconds */
-  ttl: number;
+	/** The response body/data */
+	data: T;
+	/** HTTP status code */
+	status: number;
+	/** Response headers (subset) */
+	headers: Record<string, string>;
+	/** Unix timestamp when the entry was cached */
+	cachedAt: number;
+	/** TTL in seconds */
+	ttl: number;
 }
 
 /**
  * Check if a cached entry is stale (past its TTL).
  */
 export function isCacheEntryStale(entry: CachedFetchEntry): boolean {
-  const now = Date.now();
-  const expiresAt = entry.cachedAt + entry.ttl * 1000;
-  return now > expiresAt;
+	const now = Date.now();
+	const expiresAt = entry.cachedAt + entry.ttl * 1000;
+	return now > expiresAt;
 }
 
 /**
@@ -76,19 +71,15 @@ export function isCacheEntryStale(entry: CachedFetchEntry): boolean {
  * and potentially trigger client-side revalidation.
  */
 export interface CachedFetchResult<T> {
-  /** The response data */
-  data: T;
-  /** Whether the data came from stale cache (past TTL) */
-  isStale: boolean;
-  /** Unix timestamp when the data was cached, or null if fresh fetch */
-  cachedAt: number | null;
+	/** The response data */
+	data: T;
+	/** Whether the data came from stale cache (past TTL) */
+	isStale: boolean;
+	/** Unix timestamp when the data was cached, or null if fresh fetch */
+	cachedAt: number | null;
 }
 
 /**
  * Type for the cachedFetch function attached to event context.
  */
-export type CachedFetchFunction = <T = unknown>(
-  url: string,
-  options?: Parameters<typeof $fetch>[1],
-  ttl?: number,
-) => Promise<CachedFetchResult<T>>;
+export type CachedFetchFunction = <T = unknown>(url: string, options?: Parameters<typeof $fetch>[1], ttl?: number) => Promise<CachedFetchResult<T>>;

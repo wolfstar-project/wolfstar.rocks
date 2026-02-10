@@ -1,5 +1,5 @@
 <template>
-  <span class="discord-message-inline-code"><slot></slot></span>
+	<span class="discord-message-inline-code"><slot></slot></span>
 </template>
 
 <style scoped>

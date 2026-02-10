@@ -7,5 +7,5 @@ const sentryReporter = Sentry.createConsolaReporter();
 export const logger = consola.addReporter(sentryReporter);
 
 export function useLogger(tag?: string, options: Partial<ConsolaOptions> = {}) {
-  return tag ? logger.create(options).withTag(tag) : logger;
+	return tag ? logger.create(options).withTag(tag) : logger;
 }

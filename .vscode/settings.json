@@ -2,7 +2,10 @@
 	// Disable the default formatter, use eslint instead
 	"prettier.enable": false,
 	"eslint.enable": false,
-	"editor.formatOnSave": false,
+	"editor.formatOnSave": true,
+	"oxc.fmt.configPath": ".oxfmtrc.json",
+	"oxc.fixKind": "safe_fix_or_suggestion",
+	"editor.defaultFormatter": "oxc.oxc-vscode",
 
 	"editor.gotoLocation.multipleDefinitions": "goto",
 	"editor.quickSuggestions": {
@@ -11,8 +14,7 @@
 
 	// Auto fix
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "explicit",
-		"source.organizeImports": "never"
+		"source.fixAll.oxc": "always"
 	},
 	"files.associations": {
 		"*.css": "tailwindcss"
@@ -29,9 +31,7 @@
 		"**/*.agent": true,
 		"**/*.github/agents": true,
 		"**/*.github/instructions": true,
-		"**/*.github/skills": true,
-		"**/*.gemini/skills": true,
-		"**/*.agents/skills": true,
-		"**/*.agent/skills": true
+		"**/*/skills": true,
+		"**/plans": true
 	}
 }

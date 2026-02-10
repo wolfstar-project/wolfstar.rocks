@@ -97,7 +97,7 @@
 		border-radius: inherit;
 		/* Default glow color if no specific button class is present */
 		background: var(--color-neutral);
-		content: '';
+		content: "";
 	}
 
 	&:hover::before {
@@ -147,7 +147,7 @@
 	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(50% 0 0 / 0.05);
 
-	[data-theme='dark'] & {
+	[data-theme="dark"] & {
 		border-color: oklch(100% 0 0 / 0.08);
 		background: oklch(20% 0 0 / 0.3);
 	}
@@ -219,7 +219,7 @@
 	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(30% 0.01 250 / 0.6);
 
-	[data-theme='light'] & {
+	[data-theme="light"] & {
 		background: oklch(95% 0.01 250 / 0.6);
 	}
 }
@@ -230,7 +230,7 @@
 	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(25% 0.016 252 / 0.8);
 
-	[data-theme='light'] & {
+	[data-theme="light"] & {
 		box-shadow: 0 4px 30px oklch(0% 0 0 / 0.05);
 		border-color: oklch(0% 0 0 / 0.1);
 		background: oklch(98% 0 0 / 0.8);
@@ -243,7 +243,7 @@
 	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(40% 0.008 250 / 0.4);
 
-	[data-theme='light'] & {
+	[data-theme="light"] & {
 		background: oklch(90% 0.008 250 / 0.4);
 	}
 }
@@ -253,7 +253,7 @@
 	backdrop-filter: blur(16px) saturate(180%);
 	-webkit-backdrop-filter: blur(16px) saturate(180%);
 
-	[data-theme='dark'] & {
+	[data-theme="dark"] & {
 		backdrop-filter: blur(20px) saturate(180%);
 		-webkit-backdrop-filter: blur(20px) saturate(180%);
 	}
@@ -270,7 +270,7 @@
 	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
 	border: 1px solid oklch(100% 0 0 / 0.15);
 
-	[data-theme='light'] & {
+	[data-theme="light"] & {
 		box-shadow: 0 4px 30px oklch(0% 0 0 / 0.05);
 		border-color: oklch(0% 0 0 / 0.1);
 	}
@@ -317,7 +317,7 @@
 		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.1);
 	}
 
-	[data-theme='dark'] &:hover {
+	[data-theme="dark"] &:hover {
 		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.3);
 	}
 }
@@ -349,9 +349,9 @@
    - The `@media (prefers-reduced-motion: reduce)` block provides the user/system preference fallback.
    Keep both selectors in sync when changing these values.
 */
-:root[data-reduce-motion='true'] *,
-:root[data-reduce-motion='true'] *::before,
-:root[data-reduce-motion='true'] *::after {
+:root[data-reduce-motion="true"] *,
+:root[data-reduce-motion="true"] *::before,
+:root[data-reduce-motion="true"] *::after {
 	animation-duration: 0.01ms !important;
 	animation-iteration-count: 1 !important;
 	transition-duration: 0.01ms !important;

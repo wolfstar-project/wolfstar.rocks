@@ -5,55 +5,48 @@ import deepMerge from "deepmerge";
 
 // Overwrite arrays when merging
 const mergeOptions: DeepMergeOptions = {
-  arrayMerge: (_, sourceArray) => sourceArray,
+	arrayMerge: (_, sourceArray) => sourceArray,
 };
 
 export function useGuildSettingsChanges() {
-  const guildId = useRouteParams("id", null, { transform: String });
+	const guildId = useRouteParams("id", null, { transform: String });
 
-  // Use guild-scoped state key
-  const guildSettingsChanges = useState<GuildData | undefined>(
-    `guild:${guildId.value}:settings:changes`,
-    () => undefined,
-  );
+	// Use guild-scoped state key
+	const guildSettingsChanges = useState<GuildData | undefined>(`guild:${guildId.value}:settings:changes`, () => undefined);
 
-  const mergeGuildSettings = (changes?: Partial<GuildData>) => {
-    if (!changes) {
-      guildSettingsChanges.value = undefined;
-      return;
-    }
+	const mergeGuildSettings = (changes?: Partial<GuildData>) => {
+		if (!changes) {
+			guildSettingsChanges.value = undefined;
+			return;
+		}
 
-    guildSettingsChanges.value = deepMerge<GuildData, Partial<GuildData>>(
-      guildSettingsChanges.value ?? {} as GuildData,
-      changes,
-      mergeOptions,
-    );
-  };
+		guildSettingsChanges.value = deepMerge<GuildData, Partial<GuildData>>(guildSettingsChanges.value ?? ({} as GuildData), changes, mergeOptions);
+	};
 
-  const setGuildSettingsChanges = (changes?: Partial<GuildData>) => {
-    mergeGuildSettings(changes);
-  };
+	const setGuildSettingsChanges = (changes?: Partial<GuildData>) => {
+		mergeGuildSettings(changes);
+	};
 
-  const removeChange = (key: keyof GuildData) => {
-    if (!guildSettingsChanges.value)
-      return;
+	const removeChange = (key: keyof GuildData) => {
+		if (!guildSettingsChanges.value) {
+			return;
+		}
 
-    const current = { ...guildSettingsChanges.value };
-    delete current[key];
+		const current = { ...guildSettingsChanges.value };
+		delete current[key];
 
-    // If no changes remain, set to undefined
-    if (Object.keys(current).length === 0) {
-      guildSettingsChanges.value = undefined;
-    }
-    else {
-      guildSettingsChanges.value = current as GuildData;
-    }
-  };
+		// If no changes remain, set to undefined
+		if (Object.keys(current).length === 0) {
+			guildSettingsChanges.value = undefined;
+		} else {
+			guildSettingsChanges.value = current as GuildData;
+		}
+	};
 
-  return {
-    guildSettingsChanges: readonly(guildSettingsChanges),
-    setGuildSettingsChanges,
-    mergeGuildSettings,
-    removeChange,
-  };
+	return {
+		guildSettingsChanges: readonly(guildSettingsChanges),
+		mergeGuildSettings,
+		removeChange,
+		setGuildSettingsChanges,
+	};
 }

@@ -1,17 +1,17 @@
 <template>
-  <div class="app-layout" :class="appName">
-    <AppHeader />
+	<div class="app-layout" :class="appName">
+		<AppHeader />
 
-    <UMain>
-      <slot></slot>
-    </UMain>
+		<UMain>
+			<slot></slot>
+		</UMain>
 
-    <div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
-      <ScrollToTopButton />
-    </div>
+		<div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
+			<ScrollToTopButton />
+		</div>
 
-    <AppFooter />
-  </div>
+		<AppFooter />
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -38,7 +38,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 		100% 100%;
 	background-repeat: no-repeat;
 	pointer-events: none;
-	content: '';
+	content: "";
 }
 .app-layout.wolfstar {
 	--color: var(--color-branding-wolfstar);

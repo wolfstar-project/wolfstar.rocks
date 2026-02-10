@@ -1,17 +1,17 @@
-@import 'tailwindcss';
-@import '@nuxt/ui';
-@import 'tw-animate-css';
-@import './keyframes.css';
-@import './utilities.css';
+@import "tailwindcss";
+@import "@nuxt/ui";
+@import "tw-animate-css";
+@import "./keyframes.css";
+@import "./utilities.css";
 
 @plugin "@tailwindcss/typography";
 @plugin 'daisyui';
 
 @plugin "daisyui/theme" {
-	name: 'light';
+	name: "light";
 	default: true;
 	prefersdark: false;
-	color-scheme: 'light';
+	color-scheme: "light";
 	--color-base-100: oklch(100% 0 0);
 	--color-base-200: oklch(90% 0 0);
 	--color-base-300: oklch(85% 0 0);
@@ -43,10 +43,10 @@
 }
 
 @plugin "daisyui/theme" {
-	name: 'dark';
+	name: "dark";
 	default: true;
 	prefersdark: true;
-	color-scheme: 'dark';
+	color-scheme: "dark";
 	--color-base-100: oklch(25% 0.016 252);
 	--color-base-200: oklch(23% 0.014 253);
 	--color-base-300: oklch(20% 0.012 254);
@@ -78,10 +78,10 @@
 }
 
 @plugin 'daisyui/theme' {
-	name: 'midnight';
+	name: "midnight";
 	default: false;
 	prefersdark: false;
-	color-scheme: 'dark';
+	color-scheme: "dark";
 	--color-base-100: oklch(0% 0 0);
 	--color-base-200: oklch(10% 0 0);
 	--color-base-300: oklch(27% 0 0);
@@ -120,7 +120,7 @@
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
 	}
 
-	[data-theme='light'] {
+	[data-theme="light"] {
 		--ui-text-dimmed: var(--color-neutral-600);
 		--ui-text-muted: var(--color-neutral-800);
 		--ui-text-toned: var(--color-neutral-900);
@@ -143,7 +143,7 @@
 		--ui-container: var(--container-7xl);
 	}
 
-	[data-theme='dark'] {
+	[data-theme="dark"] {
 		--ui-text-dimmed: var(--color-neutral-500);
 		--ui-text-muted: var(--color-neutral-400);
 		--ui-text-toned: var(--color-neutral-300);

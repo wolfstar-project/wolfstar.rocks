@@ -2,43 +2,45 @@ import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
-const { public: { sentry, environment } } = generateRuntimeConfig();
+const {
+	public: { sentry, environment },
+} = generateRuntimeConfig();
 
 if (sentry.dsn) {
-  Sentry.init({
-    dsn: sentry.dsn,
+	Sentry.init({
+		dsn: sentry.dsn,
 
-    // Set tracesSampleRate to 1.0 to capture 100%
-    // of transactions for tracing.
-    // We recommend adjusting this value in production
-    // Learn more at
-    // https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
-    tracesSampleRate: isDevelopment ? 1.0 : sentry.tracesSampleRate,
+		// Set tracesSampleRate to 1.0 to capture 100%
+		// Of transactions for tracing.
+		// We recommend adjusting this value in production
+		// Learn more at
+		// https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
+		tracesSampleRate: isDevelopment ? 1 : sentry.tracesSampleRate,
 
-    // Define what the valid targets for trace propagation are
-    // Learn more at
-    // https://docs.sentry.io/platforms/javascript/configuration/options/#tracePropagationTargets
-    tracePropagationTargets: [
-      "localhost", // For local development
-      /^\/api\//, // For same-origin API calls
-      "https://api.wolfstar.rocks", // For your backend domain
-      "https://api.wolfstar.rocks", // For your backend domain beta
-    ],
+		// Define what the valid targets for trace propagation are
+		// Learn more at
+		// https://docs.sentry.io/platforms/javascript/configuration/options/#tracePropagationTargets
+		tracePropagationTargets: [
+			"localhost", // For local development
+			/^\/api\//, // For same-origin API calls
+			"https://api.wolfstar.rocks", // For your backend domain
+			"https://api.wolfstar.rocks", // For your backend domain beta
+		],
 
-    environment,
+		environment,
 
-    // Enable logging for Sentry
-    // as it will log useful information to the console
-    // Learn more at
-    // https://docs.sentry.io/platforms/javascript/guides/nuxt/logs/,
-    enableLogs: true,
+		// Enable logging for Sentry
+		// As it will log useful information to the console
+		// Learn more at
+		// https://docs.sentry.io/platforms/javascript/guides/nuxt/logs/,
+		enableLogs: true,
 
-    beforeSendLog: ({ level, ...log }) => {
-      if (level === "info") {
-      // Filter out all info logs
-        return null;
-      }
-      return { level, ...log };
-    },
-  });
+		beforeSendLog: ({ level, ...log }) => {
+			if (level === "info") {
+				// Filter out all info logs
+				return null;
+			}
+			return { level, ...log };
+		},
+	});
 }

@@ -1,18 +1,17 @@
 import type { Selfmod } from "#shared/types/configurableData";
 import type { Ref } from "vue";
-
 import { isEqual } from "ohash/utils";
 
 export function updateSliderValueObj(prop: Selfmod.Union, value: number | number[], multiplier = 1) {
-  return {
-    [prop]: Array.isArray(value) && typeof value[0] === "number" ? value[0] * multiplier : typeof value === "number" ? value * multiplier : 0,
-  };
+	return {
+		[prop]: Array.isArray(value) && typeof value[0] === "number" ? value[0] * multiplier : (typeof value === "number" ? value * multiplier : 0),
+	};
 }
 
 export function updateSliderValueArr(prop: Selfmod.Union, value: number | number[], multiplier = 1) {
-  return {
-    [prop]: Array.isArray(value) ? value.map(v => v * multiplier) : value * multiplier,
-  };
+	return {
+		[prop]: Array.isArray(value) ? value.map((v) => v * multiplier) : value * multiplier,
+	};
 }
 
 /**
@@ -21,7 +20,7 @@ export function updateSliderValueArr(prop: Selfmod.Union, value: number | number
  * @returns The string.
  */
 export default function removeNonAlphaNumeric(str: string) {
-  return str.replace(/[^0-9a-z]/gi, "");
+	return str.replace(/[^0-9a-z]/gi, "");
 }
 
 /**
@@ -33,54 +32,54 @@ export default function removeNonAlphaNumeric(str: string) {
  */
 
 export async function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Promise<Ref<T>> {
-  const storage = useStorage();
-  const raw = await storage.getItem(key);
+	const storage = useStorage();
+	const raw = await storage.getItem(key);
 
-  let parsedValue: T;
-  try {
-    parsedValue = raw ? JSON.parse(raw as string) : initial;
-  }
-  catch {
-    parsedValue = initial;
-  }
+	let parsedValue: T;
+	try {
+		parsedValue = raw ? JSON.parse(raw as string) : initial;
+	} catch {
+		parsedValue = initial;
+	}
 
-  const data = ref(parsedValue) as Ref<T>;
+	const data = ref(parsedValue) as Ref<T>;
 
-  for (const key2 in initial) {
-    if (data.value[key2] === void 0)
-      data.value[key2] = initial[key2];
-  }
+	for (const key2 in initial) {
+		if (data.value[key2] === void 0) {
+			data.value[key2] = initial[key2];
+		}
+	}
 
-  let updating = false;
-  let wrote = "";
+	let updating = false;
+	let wrote = "";
 
-  watch(
-    data,
-    (value) => {
-      if (updating)
-        return;
-      wrote = JSON.stringify(value);
-      storage.setItem(key, wrote);
-    },
-    { deep: true, flush: "post" },
-  );
+	watch(
+		data,
+		(value) => {
+			if (updating) {
+				return;
+			}
+			wrote = JSON.stringify(value);
+			storage.setItem(key, wrote);
+		},
+		{ deep: true, flush: "post" },
+	);
 
-  if (listenToStorage) {
-    useEventListener(window, "storage", (e) => {
-      if (e.key === key && e.newValue && e.newValue !== wrote) {
-        updating = true;
-        try {
-          data.value = JSON.parse(e.newValue);
-        }
-        catch {
-          data.value = initial;
-        }
-        updating = false;
-      }
-    });
-  }
+	if (listenToStorage) {
+		useEventListener(window, "storage", (e) => {
+			if (e.key === key && e.newValue && e.newValue !== wrote) {
+				updating = true;
+				try {
+					data.value = JSON.parse(e.newValue);
+				} catch {
+					data.value = initial;
+				}
+				updating = false;
+			}
+		});
+	}
 
-  return data;
+	return data;
 }
 
 /**
@@ -90,13 +89,13 @@ export async function useObjectStorage<T>(key: string, initial: T, listenToStora
  * @returns The object.
  */
 export function pick<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Pick<Data, Keys> {
-  const result = {} as Pick<Data, Keys>;
+	const result = {} as Pick<Data, Keys>;
 
-  for (const key of keys) {
-    result[key] = data[key];
-  }
+	for (const key of keys) {
+		result[key] = data[key];
+	}
 
-  return result;
+	return result;
 }
 
 /**
@@ -106,13 +105,13 @@ export function pick<Data extends object, Keys extends keyof Data>(data: Data, k
  * @returns The object.
  */
 export function omit<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Omit<Data, Keys> {
-  const result = { ...data };
+	const result = { ...data };
 
-  for (const key of keys) {
-    delete result[key];
-  }
+	for (const key of keys) {
+		delete result[key];
+	}
 
-  return result as Omit<Data, Keys>;
+	return result as Omit<Data, Keys>;
 }
 
 /**
@@ -123,24 +122,24 @@ export function omit<Data extends object, Keys extends keyof Data>(data: Data, k
  * @returns The value.
  */
 export function get(object: Record<string, any> | undefined, path: (string | number)[] | string, defaultValue?: any): any {
-  if (typeof path === "string") {
-    path = path.split(".").map((key) => {
-      const numKey = Number(key);
-      return Number.isNaN(numKey) ? key : numKey;
-    });
-  }
+	if (typeof path === "string") {
+		path = path.split(".").map((key) => {
+			const numKey = Number(key);
+			return Number.isNaN(numKey) ? key : numKey;
+		});
+	}
 
-  let result: any = object;
+	let result: any = object;
 
-  for (const key of path) {
-    if (result === undefined || result === null) {
-      return defaultValue;
-    }
+	for (const key of path) {
+		if (result === undefined || result === null) {
+			return defaultValue;
+		}
 
-    result = result[key];
-  }
+		result = result[key];
+	}
 
-  return result !== undefined ? result : defaultValue;
+	return result !== undefined ? result : defaultValue;
 }
 
 /**
@@ -150,20 +149,22 @@ export function get(object: Record<string, any> | undefined, path: (string | num
  * @param value The value.
  */
 export function set(object: Record<string, any>, path: (string | number)[] | string, value: any): void {
-  if (typeof path === "string") {
-    path = path.split(".").map((key) => {
-      const numKey = Number(key);
-      return Number.isNaN(numKey) ? key : numKey;
-    });
-  }
+	if (typeof path === "string") {
+		path = path.split(".").map((key) => {
+			const numKey = Number(key);
+			return Number.isNaN(numKey) ? key : numKey;
+		});
+	}
 
-  path.reduce((acc, key, i) => {
-    if (acc[key] === undefined)
-      acc[key] = {};
-    if (i === path.length - 1)
-      acc[key] = value;
-    return acc[key];
-  }, object);
+	path.reduce((acc, key, i) => {
+		if (acc[key] === undefined) {
+			acc[key] = {};
+		}
+		if (i === path.length - 1) {
+			acc[key] = value;
+		}
+		return acc[key];
+	}, object);
 }
 /**
  * Converts a value to a number.
@@ -172,15 +173,15 @@ export function set(object: Record<string, any>, path: (string | number)[] | str
  */
 
 export function looseToNumber(val: any): any {
-  const n = Number.parseFloat(val);
-  return Number.isNaN(n) ? val : n;
+	const n = Number.parseFloat(val);
+	return Number.isNaN(n) ? val : n;
 }
 
 export function formatNumber(num: number): string {
-  return new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(num);
+	return new Intl.NumberFormat("en-US", {
+		maximumFractionDigits: 1,
+		notation: "compact",
+	}).format(num);
 }
 
 /**
@@ -191,23 +192,23 @@ export function formatNumber(num: number): string {
  * @returns Whether the values are equal.
  */
 export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((a: T, b: T) => boolean)) {
-  if (value === undefined || currentValue === undefined) {
-    return false;
-  }
+	if (value === undefined || currentValue === undefined) {
+		return false;
+	}
 
-  if (typeof value === "string") {
-    return value === currentValue;
-  }
+	if (typeof value === "string") {
+		return value === currentValue;
+	}
 
-  if (typeof comparator === "function") {
-    return comparator(value, currentValue);
-  }
+	if (typeof comparator === "function") {
+		return comparator(value, currentValue);
+	}
 
-  if (typeof comparator === "string") {
-    return get(value!, comparator) === get(currentValue!, comparator);
-  }
+	if (typeof comparator === "string") {
+		return get(value!, comparator) === get(currentValue!, comparator);
+	}
 
-  return isEqual(value, currentValue);
+	return isEqual(value, currentValue);
 }
 
 /**
@@ -216,5 +217,5 @@ export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((
  * @returns Whether the item is an array of arrays.
  */
 export function isArrayOfArray<A>(item: A[] | A[][]): item is A[][] {
-  return Array.isArray(item[0]);
+	return Array.isArray(item[0]);
 }

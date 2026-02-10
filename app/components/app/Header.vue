@@ -1,35 +1,35 @@
 <template>
-  <UHeader
-    class="app-navbar card-glass"
-    as="header"
-    role="banner"
-    :ui="{
-      root: 'rounded-full px-6 py-2',
-    }"
-  >
-    <template #left>
-      <HeaderLogo class="mr-4" />
-    </template>
+	<UHeader
+		class="app-navbar card-glass"
+		as="header"
+		role="banner"
+		:ui="{
+			root: 'rounded-full px-6 py-2',
+		}"
+	>
+		<template #left>
+			<HeaderLogo class="mr-4" />
+		</template>
 
-    <nav aria-label="Main navigation">
-      <UNavigationMenu
-        :items="desktopLinks"
-        variant="link"
-        class="hidden lg:inline-flex"
-        :ui="{
-          link: 'text-base-content/80 hover:text-base-content/100',
-          root: 'text-base-content/70',
-        }"
-      />
-    </nav>
+		<nav aria-label="Main navigation">
+			<UNavigationMenu
+				:items="desktopLinks"
+				variant="link"
+				class="hidden lg:inline-flex"
+				:ui="{
+					link: 'text-base-content/80 hover:text-base-content/100',
+					root: 'text-base-content/70',
+				}"
+			/>
+		</nav>
 
-    <template #right>
-      <HeaderRight />
-    </template>
-    <template #body>
-      <HeaderBody />
-    </template>
-  </UHeader>
+		<template #right>
+			<HeaderRight />
+		</template>
+		<template #body>
+			<HeaderBody />
+		</template>
+	</UHeader>
 </template>
 
 <script setup lang="ts">
@@ -63,7 +63,7 @@ const { desktopLinks } = useHeader();
 	background: linear-gradient(to right, transparent 230px, oklch(100% 0 0 / 0.1) 230px);
 	height: 1px;
 	pointer-events: none;
-	content: '';
+	content: "";
 }
 
 .branding-container {
@@ -75,16 +75,16 @@ const { desktopLinks } = useHeader();
 	padding-bottom: 0.5rem;
 }
 
-[data-theme='light'] .app-navbar {
+[data-theme="light"] .app-navbar {
 	border-color: oklch(0% 0 0 / 0.05);
 	background: oklch(98% 0 0 / 0.6);
 }
 
-[data-theme='light'] .app-navbar::after {
+[data-theme="light"] .app-navbar::after {
 	background: linear-gradient(to right, transparent 230px, oklch(0% 0 0 / 0.05) 230px);
 }
 
-[data-theme='light'] .branding-container {
+[data-theme="light"] .branding-container {
 	border-bottom-color: oklch(0% 0 0 / 0.1);
 }
 </style>

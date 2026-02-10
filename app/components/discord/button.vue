@@ -1,16 +1,12 @@
 <template>
-  <button
-    class="discord-message-button-primary"
-    type="button"
-    :aria-label="ariaLabel"
-  >
-    <slot></slot>
-  </button>
+	<button class="discord-message-button-primary" type="button" :aria-label="ariaLabel">
+		<slot></slot>
+	</button>
 </template>
 
 <script setup lang="ts">
 defineProps<{
-  ariaLabel?: string;
+	ariaLabel?: string;
 }>();
 </script>
 

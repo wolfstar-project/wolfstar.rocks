@@ -9,20 +9,20 @@
 
 // Stub the @nuxtjs/color-mode global helper
 // The color-mode module injects a script that initializes this on window,
-// but in vitest the script never runs since the HTML page isn't SSR'd.
+// But in vitest the script never runs since the HTML page isn't SSR'd.
 // See: https://github.com/nuxt-modules/color-mode/issues/335
 if (typeof window !== "undefined") {
-  const globalName = "__NUXT_COLOR_MODE__";
+	const globalName = "__NUXT_COLOR_MODE__";
 
-  // @ts-expect-error - dynamic global name
-  if (!window[globalName]) {
-    // @ts-expect-error - dynamic global name
-    window[globalName] = {
-      preference: "system",
-      value: "dark",
-      getColorScheme: () => "dark",
-      addColorScheme: () => {},
-      removeColorScheme: () => {},
-    };
-  }
+	// @ts-expect-error - dynamic global name
+	if (!window[globalName]) {
+		// @ts-expect-error - dynamic global name
+		window[globalName] = {
+			addColorScheme: () => {},
+			getColorScheme: () => "dark",
+			preference: "system",
+			removeColorScheme: () => {},
+			value: "dark",
+		};
+	}
 }

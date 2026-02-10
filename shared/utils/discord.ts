@@ -11,53 +11,43 @@ import { toValue } from "vue";
  * Compatible with both APIUser and User from #auth-utils
  */
 export interface AvatarUser {
-  id: string;
-  avatar: string | null;
+	id: string;
+	avatar: string | null;
 }
 
-function dynamicMakeURL(
-  route: string,
-  hash: string,
-  { forceStatic = false, ...options }: Readonly<ImageURLOptions> = {},
-): string {
-  return makeURL(route, !forceStatic && hash.startsWith("a_") ? { ...options, extension: "gif" } : options);
+function dynamicMakeURL(route: string, hash: string, { forceStatic = false, ...options }: Readonly<ImageURLOptions> = {}): string {
+	return makeURL(route, !forceStatic && hash.startsWith("a_") ? { ...options, extension: "gif" } : options);
 }
 
 function makeURL(
-  route: string,
-  {
-    allowedExtensions = ALLOWED_EXTENSIONS,
-    base = DefaultRestOptions.cdn,
-    extension = "webp",
-    size,
-    animated,
-  }: Readonly<MakeURLOptions> = {},
+	route: string,
+	{ allowedExtensions = ALLOWED_EXTENSIONS, base = DefaultRestOptions.cdn, extension = "webp", size, animated }: Readonly<MakeURLOptions> = {},
 ): string {
-  extension = String(extension).toLowerCase();
+	extension = String(extension).toLowerCase();
 
-  if (!allowedExtensions.includes(extension)) {
-    throw new RangeError(`Invalid extension provided: ${extension}\nMust be one of: ${allowedExtensions.join(", ")}`);
-  }
+	if (!allowedExtensions.includes(extension)) {
+		throw new RangeError(`Invalid extension provided: ${extension}\nMust be one of: ${allowedExtensions.join(", ")}`);
+	}
 
-  if (size && !ALLOWED_SIZES.includes(size)) {
-    throw new RangeError(`Invalid size provided: ${size}\nMust be one of: ${ALLOWED_SIZES.join(", ")}`);
-  }
+	if (size && !ALLOWED_SIZES.includes(size)) {
+		throw new RangeError(`Invalid size provided: ${size}\nMust be one of: ${ALLOWED_SIZES.join(", ")}`);
+	}
 
-  const url = new URL(`${base}${route}.${extension}`);
+	const url = new URL(`${base}${route}.${extension}`);
 
-  if (animated !== undefined) {
-    url.searchParams.set("animated", String(animated));
-  }
+	if (animated !== undefined) {
+		url.searchParams.set("animated", String(animated));
+	}
 
-  if (size) {
-    url.searchParams.set("size", String(size));
-  }
+	if (size) {
+		url.searchParams.set("size", String(size));
+	}
 
-  return url.toString();
+	return url.toString();
 }
 
 function defaultAvatar(index: number, options?: Readonly<ImageURLOptions>): string {
-  return makeURL(`/embed/avatars/${index}`, { ...options, extension: "png" });
+	return makeURL(`/embed/avatars/${index}`, { ...options, extension: "png" });
 }
 
 /**
@@ -67,23 +57,20 @@ function defaultAvatar(index: number, options?: Readonly<ImageURLOptions>): stri
  * @returns Avatar URL string
  */
 export function avatarURL(user: MaybeRef<AvatarUser | APIUser>, options?: Readonly<ImageURLOptions>): string {
-  const userData = toValue(user);
+	const userData = toValue(user);
 
-  if (isNullOrUndefined(userData.avatar)) {
-    return defaultAvatar(Number(BigInt(userData.id) >> BigInt(22)) % 5, options);
-  }
+	if (isNullOrUndefined(userData.avatar)) {
+		return defaultAvatar(Number(BigInt(userData.id) >> 22n) % 5, options);
+	}
 
-  return dynamicMakeURL(`/avatars/${userData.id}/${userData.avatar}`, userData.avatar, options);
+	return dynamicMakeURL(`/avatars/${userData.id}/${userData.avatar}`, userData.avatar, options);
 }
 
-export function guildIconURL(
-  guild: MaybeRef<OauthFlattenedGuild>,
-  options?: Readonly<ImageURLOptions>,
-): string | null {
-  const guildData = toValue(guild);
-  if (isNullOrUndefined(guildData.icon)) {
-    return guildData.acronym;
-  }
+export function guildIconURL(guild: MaybeRef<OauthFlattenedGuild>, options?: Readonly<ImageURLOptions>): string | null {
+	const guildData = toValue(guild);
+	if (isNullOrUndefined(guildData.icon)) {
+		return guildData.acronym;
+	}
 
-  return dynamicMakeURL(`/icons/${guildData.id}/${guildData.icon}`, guildData.icon, options);
+	return dynamicMakeURL(`/icons/${guildData.id}/${guildData.icon}`, guildData.icon, options);
 }

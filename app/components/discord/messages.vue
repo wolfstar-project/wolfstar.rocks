@@ -1,7 +1,7 @@
 <template>
-  <div class="discord-messages">
-    <slot></slot>
-  </div>
+	<div class="discord-messages">
+		<slot></slot>
+	</div>
 </template>
 
 <style scoped>

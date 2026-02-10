@@ -1,145 +1,133 @@
-import {
-  coerceBigIntFields,
-  serializeSettings,
-  writeSettingsTransaction,
-} from "#server/database";
-import {
-  isNullishOrEmpty,
-  isNullOrUndefined,
-} from "@sapphire/utilities";
+import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
 import * as yup from "yup";
 
 const settingsUpdateSchema = yup.object({
-  data: yup
-    .array()
-    .of(yup.tuple([yup.string().required(), yup.mixed().required()])),
+	data: yup.array().of(yup.tuple([yup.string().required(), yup.mixed().required()])),
 });
 
 defineRouteMeta({
-  openAPI: {
-    tags: ["General"],
-    description: "Update guild settings",
-    requestBody: {
-      description: "Settings data to update",
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                key: { type: "string" },
-                value: { type: "object" },
-              },
-              required: ["key", "value"],
-            },
-          },
-        },
-      },
-    },
-    responses: {
-      200: {
-        description: "Successful response with updated settings",
-        content: {
-          "application/text": {
-            schema: { type: "string" },
-          },
-        },
-      },
-      400: {
-        description: "Bad Request - Invalid input data",
-      },
-      401: {
-        description: "Unauthorized - Missing or invalid authentication",
-      },
-      403: {
-        description: "Forbidden - Insufficient permissions",
-      },
-      429: { description: "Rate limit exceeded" },
-    },
-    parameters: [
-      {
-        in: "path",
-        name: "guild",
-        required: true,
-        description: "The guild ID to update settings for",
-      },
-    ],
-  },
+	openAPI: {
+		description: "Update guild settings",
+		parameters: [
+			{
+				description: "The guild ID to update settings for",
+				in: "path",
+				name: "guild",
+				required: true,
+			},
+		],
+		requestBody: {
+			content: {
+				"application/json": {
+					schema: {
+						items: {
+							properties: {
+								key: { type: "string" },
+								value: { type: "object" },
+							},
+							required: ["key", "value"],
+							type: "object",
+						},
+						type: "array",
+					},
+				},
+			},
+			description: "Settings data to update",
+			required: true,
+		},
+		responses: {
+			200: {
+				content: {
+					"application/text": {
+						schema: { type: "string" },
+					},
+				},
+				description: "Successful response with updated settings",
+			},
+			400: {
+				description: "Bad Request - Invalid input data",
+			},
+			401: {
+				description: "Unauthorized - Missing or invalid authentication",
+			},
+			403: {
+				description: "Forbidden - Insufficient permissions",
+			},
+			429: { description: "Rate limit exceeded" },
+		},
+		tags: ["General"],
+	},
 });
 
 export default defineWrappedResponseHandler(
-  async (event) => {
-    const guildId = getGuildParam(event);
+	async (event) => {
+		const guildId = getGuildParam(event);
 
-    // Get and validate body data
-    const body = await readValidatedBody(event, async (body) =>
-      settingsUpdateSchema.validate(body, { strict: true }));
+		// Get and validate body data
+		const body = await readValidatedBody(event, async (body) => settingsUpdateSchema.validate(body, { strict: true }));
 
-    if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
-      throw createError({
-        status: 400,
-        message: "Invalid request body or missing data",
-        data: {
-          field: "body",
-          error: "invalid_request_body",
-          message: "Invalid request body or missing data",
-        },
-      });
-    }
+		if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
+			throw createError({
+				data: {
+					error: "invalid_request_body",
+					field: "body",
+					message: "Invalid request body or missing data",
+				},
+				message: "Invalid request body or missing data",
+				status: 400,
+			});
+		}
 
-    const { data } = body;
+		const { data } = body;
 
-    if (isNullishOrEmpty(data)) {
-      throw createError({
-        status: 400,
-        message: "Data array cannot be empty",
-        data: {
-          field: "data",
-          error: "empty_data_array",
-          message: "Data array cannot be empty",
-        },
-      });
-    }
+		if (isNullishOrEmpty(data)) {
+			throw createError({
+				data: {
+					error: "empty_data_array",
+					field: "data",
+					message: "Data array cannot be empty",
+				},
+				message: "Data array cannot be empty",
+				status: 400,
+			});
+		}
 
-    const guild = await getGuild(guildId);
+		const guild = await getGuild(guildId);
 
-    const member = await getCurrentMember(event, guild.id);
-    // Check permissions
-    await canManage(guild, member);
-    // Update settings
-    using trx = await writeSettingsTransaction(guild.id);
+		const member = await getCurrentMember(event, guild.id);
+		// Check permissions
+		await canManage(guild, member);
+		// Update settings
+		using trx = await writeSettingsTransaction(guild.id);
 
-    if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
-      throw createError({
-        status: 400,
-        message: "Invalid data entries",
-        data: {
-          error: "invalid_data_entries",
-          message: "All data entries must be valid [key, value] tuples",
-        },
-      });
-    }
+		if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
+			throw createError({
+				data: {
+					error: "invalid_data_entries",
+					message: "All data entries must be valid [key, value] tuples",
+				},
+				message: "Invalid data entries",
+				status: 400,
+			});
+		}
 
-    const settingsData = Object.fromEntries(data);
+		const settingsData = Object.fromEntries(data);
 
-    // Coerce BigInt fields from JSON (numbers/strings) to BigInt
-    coerceBigIntFields(settingsData);
+		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
+		coerceBigIntFields(settingsData);
 
-    await trx
-      .write(settingsData)
-      .submit();
-    return serializeSettings(trx.settings);
-  },
-  {
-    auth: true,
-    rateLimit: { enabled: true, window: seconds(1), limit: 2 },
-    onSuccess(logger) {
-      logger.info(`Successfully updated settings`);
-    },
-    onError(logger, error) {
-      logger.error("Failed to update settings:", error);
-    },
-  },
+		await trx.write(settingsData).submit();
+		return serializeSettings(trx.settings);
+	},
+	{
+		auth: true,
+		onError(logger, error) {
+			logger.error("Failed to update settings:", error);
+		},
+		onSuccess(logger) {
+			logger.info(`Successfully updated settings`);
+		},
+		rateLimit: { enabled: true, limit: 2, window: seconds(1) },
+	},
 );

@@ -96,9 +96,9 @@ export function processGroup(group: string) {
 			match[1] === match[2]
 				? // And a === -
 					(match[1] === "-"
-					? // then optimize to -
-						"\\-"
-					: // else optimize to a-
+					? // Then optimize to -
+						String.raw`\-`
+					: // Else optimize to a-
 						`${processLetter(match[1])}\\-`)
 				: // Otherwise a-b
 					`${processLetter(match[1])}-${processLetter(match[2])}`,

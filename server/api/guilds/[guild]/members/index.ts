@@ -25,16 +25,16 @@ defineRouteMeta({
 						schema: {
 							items: {
 								properties: {
-									id: { type: "string", description: "The member's user snowflake ID" },
-									guildId: { type: "string", description: "The guild's snowflake ID" },
-									joinedTimestamp: { type: "integer", nullable: true, description: "Unix timestamp when the member joined" },
+									guildId: { description: "The guild's snowflake ID", type: "string" },
+									id: { description: "The member's user snowflake ID", type: "string" },
+									joinedTimestamp: { description: "Unix timestamp when the member joined", nullable: true, type: "integer" },
 									premiumSinceTimestamp: {
-										type: "integer",
-										nullable: true,
 										description: "Unix timestamp when the member started boosting",
+										nullable: true,
+										type: "integer",
 									},
-									roles: { type: "array", description: "List of roles the member has" },
-									user: { type: "object", description: "The user object" },
+									roles: { description: "List of roles the member has", type: "array" },
+									user: { description: "The user object", type: "object" },
 								},
 								type: "object",
 							},

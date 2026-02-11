@@ -156,7 +156,6 @@ export default defineNuxtConfig({
 		},
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
-			// @ts-expect-error nuxt-security route-specific headers
 			security: {
 				headers: {
 					contentSecurityPolicy: false,
@@ -307,15 +306,6 @@ export default defineNuxtConfig({
 	postcss: {
 		plugins: {
 			"postcss-nested": {},
-		},
-	},
-
-	eslint: {
-		config: {
-			nuxt: {
-				sortConfigKeys: true,
-			},
-			standalone: false,
 		},
 	},
 

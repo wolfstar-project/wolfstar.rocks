@@ -110,6 +110,15 @@
 			}
 		],
 		"yoda": ["error", "never"],
+		// Disabled: Low-impact rules that create noise without significant value
+		// - prefer-destructuring: Destructuring isn't always clearer
+		// - max-params: Function parameters context-dependent
+		// - guard-for-in: Modern code rarely needs this pattern
+		// - max-statements: Function complexity is context-dependent, better handled in code review
+		"prefer-destructuring": "off",
+		"max-params": "off",
+		"guard-for-in": "off",
+		"max-statements": "off",
 		"func-style": "off",
 		"eslint-comments/no-aggregating-enable": "error",
 		"eslint-comments/no-duplicate-disable": "error",
@@ -141,9 +150,16 @@
 		// - group-exports: Forces grouping exports from same module (stylistic preference)
 		// - exports-last: Requires all exports at end of file (conflicts with logical organization)
 		// - sort-imports: Auto-sorted imports can conflict with Nuxt auto-imports and logical grouping
+		// - no-namespace: TypeScript namespaces are valid for organizing imported types
+		// - no-nodejs-modules: Node.js imports are necessary in server code
+		// - no-anonymous-default-export: Named exports preferred but anonymous can be clear in context
 		"import/group-exports": "off",
 		"import/exports-last": "off",
+		"import/no-namespace": "off",
+		"import/no-nodejs-modules": "off",
+		"import/no-anonymous-default-export": "off",
 		"sort-imports": "off",
+		"unicorn/no-nested-ternary": "off",
 		// Disabled: Architectural choice, not a code quality issue
 		// - Named exports are preferred in many codebases for better tree-shaking and explicit imports
 		// - Default exports can cause naming inconsistencies across files
@@ -164,6 +180,13 @@
 		"unicorn/prefer-string-starts-ends-with": "error",
 		"unicorn/prefer-type-error": "error",
 		"unicorn/throw-new-error": "error",
+		// Disabled: Unicorn rules with low practical value
+		// - no-await-expression-member: Accessing members on await is often clearer inline
+		// - prefer-global-this: globalThis vs alternatives is stylistic choice
+		// - consistent-function-scoping: High false-positive rate, requires case-by-case analysis
+		"unicorn/no-await-expression-member": "off",
+		"unicorn/prefer-global-this": "off",
+		"unicorn/consistent-function-scoping": "off",
 		// ===== Rule Configuration Notes =====
 		// The following rules are disabled or configured to align with Nuxt/Vue patterns and team conventions.
 		// See plans/lint-warnings-systematic-cleanup-complete.md for full rationale.
@@ -178,9 +201,17 @@
 		// - no-magic-numbers: Numbers are often self-documenting in context (HTTP codes, timeouts, limits)
 		// - id-length: Short names (id, x, i, db) are idiomatic and clear in context
 		// - no-ternary: Ternary operators are idiomatic JS/TS, forcing if/else reduces readability
+		// - no-continue: Continue statements are idiomatic and often clearer than nested conditions
+		// - init-declarations: Variables often initialized conditionally after declaration
+		// - no-nested-ternary: Nested ternaries can be clear when properly formatted
+		// - sort-keys: Object key ordering is often logical, not alphabetical
 		"no-magic-numbers": "off",
 		"id-length": "off",
 		"no-ternary": "off",
+		"no-continue": "off",
+		"init-declarations": "off",
+		"no-nested-ternary": "off",
+		"sort-keys": "off",
 
 		"antfu/consistent-list-newline": "warn",
 		"antfu/consistent-chaining": "warn",

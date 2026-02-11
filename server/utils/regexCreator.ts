@@ -68,17 +68,17 @@ export function processWordBoundaries(word: string) {
 	const ends = word.endsWith(kWordBoundaryWildcard);
 
 	return starts // Starts and end?
-		? (ends
+		? ends
 			? // Starts and ends
 				WordBoundary.Both
 			: // Only starts
-				WordBoundary.Start)
+				WordBoundary.Start
 		: // Ends?
-			(ends
+			ends
 			? // Ends with wildcard
 				WordBoundary.End
 			: // Does not have wildcards
-				WordBoundary.None);
+				WordBoundary.None;
 }
 
 export function processWordPatternsWithGroups(word: string) {
@@ -95,11 +95,11 @@ export function processGroup(group: string) {
 		onMatch: (match) =>
 			match[1] === match[2]
 				? // And a === -
-					(match[1] === "-"
+					match[1] === "-"
 					? // Then optimize to -
 						String.raw`\-`
 					: // Else optimize to a-
-						`${processLetter(match[1])}\\-`)
+						`${processLetter(match[1])}\\-`
 				: // Otherwise a-b
 					`${processLetter(match[1])}-${processLetter(match[2])}`,
 		outMatch: (match) => [...match].map(processLetter).join(""),

@@ -4,7 +4,7 @@ import { isEqual } from "ohash/utils";
 
 export function updateSliderValueObj(prop: Selfmod.Union, value: number | number[], multiplier = 1) {
 	return {
-		[prop]: Array.isArray(value) && typeof value[0] === "number" ? value[0] * multiplier : (typeof value === "number" ? value * multiplier : 0),
+		[prop]: Array.isArray(value) && typeof value[0] === "number" ? value[0] * multiplier : typeof value === "number" ? value * multiplier : 0,
 	};
 }
 

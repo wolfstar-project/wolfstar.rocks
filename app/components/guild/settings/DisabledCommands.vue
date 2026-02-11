@@ -64,7 +64,11 @@
 										<p class="truncate font-medium text-base-content">{{ command.name }}</p>
 										<p class="truncate text-sm text-base-content/60">{{ command.description }}</p>
 									</div>
-									<USwitch v-if="state[command.name]" v-model="state[command.name]!.isEnabled" :value="state[command.name]!.name" />
+									<USwitch
+										v-if="state[command.name]"
+										:model-value="state[command.name]!.isEnabled"
+										:value="state[command.name]!.name"
+									/>
 								</div>
 							</div>
 

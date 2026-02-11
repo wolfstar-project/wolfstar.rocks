@@ -74,8 +74,10 @@
 
 							<Separator />
 							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
-								<UButton color="success" variant="solid" size="sm" @click="allInCategory(category, true)"> Enable all </UButton>
-								<UButton color="warning" variant="solid" size="sm" @click="allInCategory(category, false)"> Disable all </UButton>
+								<UButton color="success" variant="solid" size="sm" @click="toggleAllInCategory(category, true)"> Enable all </UButton>
+								<UButton color="warning" variant="solid" size="sm" @click="toggleAllInCategory(category, false)">
+									Disable all
+								</UButton>
 								<UButton color="neutral" variant="outline" size="sm" @click="resetCategory(category)"> Reset </UButton>
 							</div>
 						</template>
@@ -114,14 +116,6 @@ const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
 const expandedCategory = ref<string | undefined>(undefined);
-
-function isCategoryOpen(category: string): boolean {
-	return expandedCategory.value === category;
-}
-
-function toggleCategory(category: string): void {
-	expandedCategory.value = isCategoryOpen(category) ? undefined : category;
-}
 
 const state = reactive<Schema>({});
 function initializeLocalCommands() {
@@ -164,7 +158,7 @@ function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
 }
 
-function allInCategory(category: string, enable: boolean) {
+function toggleAllInCategory(category: string, enable: boolean) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
 		const cmd = state[command.name];
@@ -175,6 +169,14 @@ function allInCategory(category: string, enable: boolean) {
 			};
 		}
 	}
+}
+
+function isCategoryOpen(category: string): boolean {
+	return expandedCategory.value === category;
+}
+
+function toggleCategory(category: string): void {
+	expandedCategory.value = isCategoryOpen(category) ? undefined : category;
 }
 
 function resetCategory(category: string) {

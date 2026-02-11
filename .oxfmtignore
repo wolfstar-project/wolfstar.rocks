@@ -34,8 +34,3 @@ package-lock.json
 # Ignore other generated files
 coverage/
 
-# Ignore specific directories that are not relevant for formatting
-.github/skills/
-.gemini/
-.agent/
-.agents/

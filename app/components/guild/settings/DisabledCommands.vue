@@ -91,15 +91,23 @@ import type { DisableCommands } from "#shared/types/configurableData";
 import type { FlattenedCommand } from "#shared/types/discord";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { objectValues } from "@sapphire/utilities/objectValues";
-import * as y from "yup";
+import * as v from "valibot";
 
 const { commands } = defineProps<{
 	commands: FlattenedCommand[];
 }>();
 
-const schema = y.mixed<Record<string, DisableCommands.Command>>().required();
+const schema = v.record(
+	v.string(),
+	v.object({
+		category: v.string(),
+		description: v.string(),
+		isEnabled: v.boolean(),
+		name: v.string(),
+	}),
+);
 
-type Schema = y.InferType<typeof schema>;
+type Schema = v.InferOutput<typeof schema>;
 
 const toast = useToast();
 const { guildSettings } = useGuildSettings();

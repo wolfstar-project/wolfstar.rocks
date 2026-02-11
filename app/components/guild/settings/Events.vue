@@ -58,7 +58,7 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import * as yup from "yup";
+import * as v from "valibot";
 import { ConfigurableMessageEvents, ConfigurableModerationEvents } from "~~/shared/utils/settingsDataEntries";
 
 const { guildData } = useGuildData();
@@ -68,18 +68,24 @@ const toast = useToast();
 // Combine all events for the schema
 const allEvents = [...ConfigurableModerationEvents, ...ConfigurableMessageEvents];
 
-// Create yup schema for all event keys
-// Ensure defaults are concrete booleans (never `undefined`) so the schema's default
-// Generic stays compatible and `schema.getDefault()` yields booleans.
-const schemaObject: Record<string, yup.BooleanSchema<boolean | undefined, yup.AnyObject, boolean, any>> = {};
+// Create valibot schema for all event keys
+const schemaObject: Record<string, v.GenericSchema<boolean | undefined>> = {};
 for (const event of allEvents) {
-	const defaultValue: boolean = guildSettings.value?.[event.key] ?? false;
-	schemaObject[event.key] = yup.boolean().default(defaultValue).optional();
+	schemaObject[event.key] = v.optional(v.boolean(), false);
 }
 
-const schema = yup.object(schemaObject);
+const schema = v.object(schemaObject);
 
-const state = reactive<Record<string, boolean>>(schema.getDefault());
+// Initialize form state with defaults from guild settings
+const createDefaultState = (): Record<string, boolean> => {
+	const defaults: Record<string, boolean> = {};
+	for (const event of allEvents) {
+		defaults[event.key] = guildSettings.value?.[event.key] ?? false;
+	}
+	return defaults;
+};
+
+const state = reactive<Record<string, boolean>>(createDefaultState());
 
 function mapToGuildData(stateData: Record<string, boolean>): Partial<GuildData> {
 	const result: Partial<GuildData> = {};

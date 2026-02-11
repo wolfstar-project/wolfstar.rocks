@@ -67,7 +67,7 @@
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import * as yup from "yup";
+import * as v from "valibot";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -116,36 +116,37 @@ const items = computed(() =>
 );
 
 // Form validation schema
-const schema = yup.object({
-	language: yup
-		.object()
-		.shape({
-			label: yup.string().required(),
-			value: yup.string().required(),
-		})
-		.optional()
-		.default(() => {
-			const currentLangKey = guildSettings.value!.language;
-			const mapping = mapLanguageKeysToNames(currentLangKey);
-			return {
-				label: mapping[1] ?? mapping[0],
-				value: currentLangKey, // Use English name if available, otherwise native name
-			};
+const schema = v.object({
+	language: v.optional(
+		v.object({
+			label: v.string(),
+			value: v.string(),
 		}),
-	prefix: yup
-		.string()
-		.trim()
-		.min(1, "Prefix must be at least 1 character")
-		.max(11, "Prefix cannot be longer than 10 characters")
-		.transform((v) => (v === "" ? undefined : v))
-		.optional()
-		.default(guildSettings.value!.prefix),
+	),
+	prefix: v.optional(
+		v.pipe(
+			v.string(),
+			v.trim(),
+			v.minLength(1, "Prefix must be at least 1 character"),
+			v.maxLength(11, "Prefix cannot be longer than 10 characters"),
+		),
+	),
 });
 
-type Schema = yup.InferType<typeof schema>;
+type Schema = v.InferOutput<typeof schema>;
 
-// Form data reactive state
-const state = reactive<Schema>(schema.getDefault());
+// Form data reactive state - use explicit defaults from guild settings
+const state = reactive<Schema>({
+	language: (() => {
+		const currentLangKey = guildSettings.value!.language;
+		const mapping = mapLanguageKeysToNames(currentLangKey);
+		return {
+			label: mapping[1] ?? mapping[0],
+			value: currentLangKey,
+		};
+	})(),
+	prefix: guildSettings.value!.prefix,
+});
 
 // Map form state to GuildData format
 function mapToGuildData(formState: Schema): Partial<GuildData> {

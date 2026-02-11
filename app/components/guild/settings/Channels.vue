@@ -24,7 +24,7 @@
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<div v-for="config in ConfigurableLoggingChannels" :key="config.key">
 						<SelectChannel
-							v-model="state[config.key]"
+							v-model="state[config.key] as string | null"
 							:guild="guildData"
 							:name="config.name"
 							:label="config.name"
@@ -48,7 +48,7 @@
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<div v-for="config in ConfigurableIgnoreChannels" :key="config.key">
-						<SelectChannels v-model="state[config.key]" :guild="guildData" :label="config.name" />
+						<SelectChannels v-model="state[config.key] as string[]" :guild="guildData" :label="config.name" />
 					</div>
 				</div>
 			</div>
@@ -60,7 +60,7 @@
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from "#shared/utils/settingsDataEntries";
-import * as yup from "yup";
+import * as v from "valibot";
 
 const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();
@@ -68,30 +68,41 @@ const toast = useToast();
 
 // Create dynamic schema for form validation
 const createChannelSchema = () => {
-	const schemaShape: Record<string, any> = {};
+	const schemaShape: Record<string, v.GenericSchema> = {};
 
 	// Add logging channels (string with "none" option)
 	for (const config of ConfigurableLoggingChannels) {
-		schemaShape[config.key] = yup.string().optional().default(null);
+		schemaShape[config.key] = v.nullable(v.string());
 	}
 
 	// Add ignore channels (array of strings)
 	for (const config of ConfigurableIgnoreChannels) {
-		schemaShape[config.key] = yup.array().of(yup.string()).optional().default([]);
+		schemaShape[config.key] = v.optional(v.array(v.string()), []);
 	}
 
-	return yup.object(schemaShape);
+	return v.object(schemaShape);
 };
 
 const schema = createChannelSchema();
 
-type Schema = yup.InferType<typeof schema>;
+type Schema = v.InferOutput<typeof schema>;
 
 // Initialize form state from guild settings
-const state = reactive<Schema>(schema.getDefault());
+const createDefaultState = (): Record<string, string | null | string[]> => {
+	const defaults: Record<string, string | null | string[]> = {};
+	for (const config of ConfigurableLoggingChannels) {
+		defaults[config.key] = null;
+	}
+	for (const config of ConfigurableIgnoreChannels) {
+		defaults[config.key] = [];
+	}
+	return defaults;
+};
+
+const state = reactive<Record<string, string | null | string[]>>(createDefaultState());
 
 // Map form state to GuildData changes
-function mapToGuildData(formState: Schema): Partial<GuildData> {
+function mapToGuildData(formState: Record<string, string | null | string[]>): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
 	for (const config of ConfigurableLoggingChannels) {
@@ -99,7 +110,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		// Include null values for nullable fields (user explicitly cleared)
 		// Only exclude undefined (form doesn't control this key)
 		if (value !== undefined) {
-			changes[config.key as GuildDataKey] = value;
+			changes[config.key as GuildDataKey] = value as any;
 		}
 	}
 
@@ -107,7 +118,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		const value = formState[config.key];
 		// Include empty arrays (user explicitly cleared all ignored channels)
 		if (value !== undefined) {
-			changes[config.key as GuildDataKey] = value;
+			changes[config.key as GuildDataKey] = value as any;
 		}
 	}
 

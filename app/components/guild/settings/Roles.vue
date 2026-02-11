@@ -121,14 +121,13 @@
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { isNullOrUndefined } from "@sapphire/utilities";
-import * as yup from "yup";
+import * as v from "valibot";
 import { ConfigurableRemoveInitialRole, ConfigurableRoles } from "~~/shared/utils/settingsDataEntries";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-// Helper to determine if a key corresponds to an array field (Sync with schema.prisma)
 const arrayKeys = new Set(["rolesAdmin", "rolesModerator", "rolesPublic", "rolesInitial", "rolesMuted"]);
 function isArrayKey(key: string): boolean {
 	return arrayKeys.has(key);
@@ -139,26 +138,36 @@ const standardRoles = ConfigurableRoles.filter((r) => !r.key.startsWith("rolesRe
 
 // Create dynamic schema for form validation
 const createRoleSchema = () => {
-	const schemaShape: Record<string, any> = {
-		rolesRemoveInitial: yup.boolean().required(),
+	const schemaShape: Record<string, v.GenericSchema> = {
+		rolesRemoveInitial: v.boolean(),
 	};
 
 	for (const roleConfig of ConfigurableRoles) {
 		if (isArrayKey(roleConfig.key)) {
-			schemaShape[roleConfig.key] = yup.array().of(yup.string().required()).default([]);
+			schemaShape[roleConfig.key] = v.optional(v.array(v.string()), []);
 		} else {
-			schemaShape[roleConfig.key] = yup.string().nullable().default(null);
+			schemaShape[roleConfig.key] = v.nullable(v.string());
 		}
 	}
 
-	return yup.object(schemaShape);
+	return v.object(schemaShape);
 };
 
 const schema = createRoleSchema();
-type Schema = yup.InferType<typeof schema>;
+// Valibot's InferOutput on Record<string, GenericSchema> resolves to { [x: string]: unknown }.
+// Use explicit type matching the original dynamic Yup schema behavior.
+type Schema = { rolesRemoveInitial: boolean } & Record<string, any>;
 
-// Initialize form state
-const state = reactive<Schema>(schema.getDefault());
+// Initialize form state with defaults
+const createDefaultState = (): Schema => {
+	const defaults: Record<string, any> = { rolesRemoveInitial: false };
+	for (const roleConfig of ConfigurableRoles) {
+		defaults[roleConfig.key] = isArrayKey(roleConfig.key) ? [] : null;
+	}
+	return defaults as Schema;
+};
+
+const state = reactive<Schema>(createDefaultState());
 
 // Loading state
 const loading = computed(() => !guildData.value?.roles || !guildSettings.value);
@@ -166,7 +175,7 @@ const loading = computed(() => !guildData.value?.roles || !guildSettings.value);
 // Compute original values from initialized state (snapshot)
 const originalValues = computed(() => {
 	if (loading.value) {
-		return schema.getDefault();
+		return createDefaultState();
 	}
 
 	const values: Record<string, any> = {};

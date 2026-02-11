@@ -451,6 +451,12 @@
 			}
 		},
 		{
+			"files": ["server/**/*.ts"],
+			"rules": {
+				"jest/require-hook": "off"
+			}
+		},
+		{
 			"files": [
 				"**/types/**/*.ts",
 				"**/types/**/*.d.ts",

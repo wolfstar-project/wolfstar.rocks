@@ -1,9 +1,9 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
-import * as yup from "yup";
+import * as v from "valibot";
 
-const settingsUpdateSchema = yup.object({
-	data: yup.array().of(yup.tuple([yup.string().required(), yup.mixed().required()])),
+const settingsUpdateSchema = v.object({
+	data: v.optional(v.array(v.tuple([v.string(), v.unknown()]))),
 });
 
 defineRouteMeta({
@@ -65,7 +65,7 @@ export default defineWrappedResponseHandler(
 		const guildId = getGuildParam(event);
 
 		// Get and validate body data
-		const body = await readValidatedBody(event, async (body) => settingsUpdateSchema.validate(body, { strict: true }));
+		const body = await readValidatedBody(event, (body) => v.parse(settingsUpdateSchema, body));
 
 		if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
 			throw createError({

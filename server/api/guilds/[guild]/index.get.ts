@@ -1,8 +1,8 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
-import * as yup from "yup";
+import * as v from "valibot";
 
-const querySchema = yup.object({
-	shouldSerialize: yup.boolean().optional(),
+const querySchema = v.object({
+	shouldSerialize: v.optional(v.boolean()),
 });
 
 defineRouteMeta({
@@ -72,7 +72,7 @@ export default defineWrappedResponseHandler(
 
 		const guildId = getGuildParam(event);
 
-		const { shouldSerialize } = await getValidatedQuery(event, (body) => querySchema.validate(body));
+		const { shouldSerialize } = await getValidatedQuery(event, (body) => v.parse(querySchema, body));
 
 		const guild = await getGuild(guildId);
 

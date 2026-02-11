@@ -4,30 +4,49 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { logger, useLogger } from "#shared/utils/logger";
 import { cast, isObject } from "@sapphire/utilities";
-import { defu } from "defu";
 import { isDevelopment } from "std-env";
-import * as yup from "yup";
+import * as v from "valibot";
 
 const debugLogger = useLogger("@wolfstar/debug");
 
 const rateLimitStorage = useStorage("wolfstar:ratelimiter");
 
 /**
- * Yup schema for rate limiting options validation
+ * Valibot schema for rate limiting options validation
  */
-const rateLimitSchema = yup.object({
-	enabled: yup.boolean().default(true).optional(),
-	ipHeader: yup.string().optional(),
-	limit: yup.number().positive().integer().default(5).optional(),
-	scope: yup.string().oneOf(["global", "route"]).default("global").optional(),
-	type: yup.string().oneOf(["fixed", "sliding"]).default("fixed").optional(),
-	whitelist: yup.array().of(yup.string()).optional().default([]),
-	window: yup.number().positive().integer().default(10_000).optional(),
+const rateLimitSchema = v.object({
+	enabled: v.optional(
+		v.pipe(
+			v.boolean(),
+			v.transform((val) => val ?? true),
+		),
+		true,
+	),
+	ipHeader: v.optional(v.string()),
+	limit: v.optional(
+		v.pipe(
+			v.number(),
+			v.integer(),
+			v.minValue(1),
+			v.transform((val) => val ?? 5),
+		),
+		5,
+	),
+	scope: v.optional(v.picklist(["global", "route"]), "global"),
+	type: v.optional(v.picklist(["fixed", "sliding"]), "fixed"),
+	whitelist: v.optional(v.array(v.string()), []),
+	window: v.optional(
+		v.pipe(
+			v.number(),
+			v.integer(),
+			v.minValue(1),
+			v.transform((val) => val ?? 10_000),
+		),
+		10_000,
+	),
 });
-type RateLimitOptions = yup.InferType<typeof rateLimitSchema>;
-type PartialRateLimitOptions = Partial<yup.InferType<typeof rateLimitSchema>>;
-
-const rateLimitDefaults = rateLimitSchema.getDefault() as RateLimitOptions;
+type RateLimitOptions = v.InferOutput<typeof rateLimitSchema>;
+type PartialRateLimitOptions = Partial<RateLimitOptions>;
 
 interface DefinedWrappedResponseHandlerOptions<Data> {
 	onError?: (logger: ConsolaInstance, error: any | Error | H3Error) => void;
@@ -70,27 +89,19 @@ function getIdentifier(event: H3Event, session: UserSessionRequired | null, ipHe
 
 function normalizeRateLimitOptions(options?: PartialRateLimitOptions): RateLimitOptions {
 	try {
-		// Merge with defaults first
-		const merged = defu(options, rateLimitDefaults);
-
-		// Validate and normalize with Yup schema
-		const validated = rateLimitSchema.validateSync(merged, {
-			abortEarly: false,
-			stripUnknown: true,
-		});
-
-		return validated;
+		// Validate and normalize — valibot applies schema defaults for missing fields
+		return v.parse(rateLimitSchema, options ?? {});
 	} catch (error) {
-		if (error instanceof yup.ValidationError) {
+		if (error instanceof v.ValiError) {
 			isDevelopment &&
 				debugLogger.warn("Rate limit options validation failed, using defaults", {
-					errors: error.errors,
+					errors: error.issues.map((i) => i.message),
 					value: options,
 				});
 		}
 
 		// Fallback to defaults on validation error
-		return rateLimitDefaults;
+		return v.parse(rateLimitSchema, {});
 	}
 }
 

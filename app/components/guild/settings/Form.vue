@@ -7,12 +7,12 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
-import type { Schema } from "yup";
+import type { GenericSchema } from "valibot";
 import { isDeepEqual } from "#shared/utils/isDeepEqual";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 
 interface Props {
-	schema: Schema;
+	schema: GenericSchema;
 	state: T;
 	mapToGuildData?: (state: T) => Partial<GuildData>;
 }
@@ -66,10 +66,10 @@ function calculateChanges(currentState: T): { changes: Partial<GuildData>; chang
 	return { changedKeys, changes, revertedKeys };
 }
 
-function handleSubmit(event: FormSubmitEvent<T>) {
+function handleSubmit(event: FormSubmitEvent<any>) {
 	// Ensure the store has the final changes before submission
 	// This is important if the form is submitted before the watcher has a chance to run
-	const { changes } = calculateChanges(event.data);
+	const { changes } = calculateChanges(event.data as T);
 
 	if (objectKeys(changes).length > 0) {
 		setGuildSettingsChanges(changes);

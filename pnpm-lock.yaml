@@ -269,6 +269,9 @@ importers:
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
+      vitest-environment-nuxt:
+        specifier: ^1.0.1
+        version: 1.0.1(@playwright/test@1.58.0)(@vue/test-utils@2.4.6)(magicast@0.5.1)(playwright-core@1.58.0)(typescript@5.8.3)(vite@7.3.1(@types/node@25.0.3)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vitest@4.0.18)
       vue-tsc:
         specifier: ^3.1.8
         version: 3.2.4(typescript@5.8.3)

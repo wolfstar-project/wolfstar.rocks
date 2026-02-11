@@ -11,7 +11,6 @@
 			class="space-y-8"
 			@error="onError"
 		>
-			<!-- Logging Channels Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
@@ -36,7 +35,6 @@
 
 			<Separator />
 
-			<!-- Ignore Channels Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
@@ -66,16 +64,13 @@ const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();
 const toast = useToast();
 
-// Create dynamic schema for form validation
 const createChannelSchema = () => {
 	const schemaShape: Record<string, v.GenericSchema> = {};
 
-	// Add logging channels (string with "none" option)
 	for (const config of ConfigurableLoggingChannels) {
 		schemaShape[config.key] = v.nullable(v.string());
 	}
 
-	// Add ignore channels (array of strings)
 	for (const config of ConfigurableIgnoreChannels) {
 		schemaShape[config.key] = v.optional(v.array(v.string()), []);
 	}
@@ -87,7 +82,6 @@ const schema = createChannelSchema();
 
 type Schema = v.InferOutput<typeof schema>;
 
-// Initialize form state from guild settings
 const createDefaultState = (): Record<string, string | null | string[]> => {
 	const defaults: Record<string, string | null | string[]> = {};
 	for (const config of ConfigurableLoggingChannels) {
@@ -101,7 +95,6 @@ const createDefaultState = (): Record<string, string | null | string[]> => {
 
 const state = reactive<Record<string, string | null | string[]>>(createDefaultState());
 
-// Map form state to GuildData changes
 function mapToGuildData(formState: Record<string, string | null | string[]>): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
@@ -125,7 +118,6 @@ function mapToGuildData(formState: Record<string, string | null | string[]>): Pa
 	return changes;
 }
 
-// Form error handler
 async function onError(event: FormErrorEvent) {
 	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });

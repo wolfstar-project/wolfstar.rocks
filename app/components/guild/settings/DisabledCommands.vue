@@ -20,7 +20,6 @@
 				</div>
 			</div>
 
-			<!-- Commands Form Content -->
 			<GuildSettingsForm
 				v-else
 				:state="state"
@@ -55,7 +54,6 @@
 						</template>
 
 						<template #content>
-							<!-- Commands Grid -->
 							<div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 								<div
 									v-for="command in getCommandsByCategory(category)"
@@ -70,7 +68,6 @@
 								</div>
 							</div>
 
-							<!-- Category Actions -->
 							<Separator />
 							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
 								<UButton color="success" variant="solid" size="sm" @click="enableAllInCategory(category)"> Enable all </UButton>
@@ -112,23 +109,18 @@ type Schema = v.InferOutput<typeof schema>;
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
-// Track the currently expanded accordion category
 const expandedCategory = ref<string | undefined>(undefined);
 
-// Check if a category is currently open
 function isCategoryOpen(category: string): boolean {
 	return expandedCategory.value === category;
 }
 
-// Toggle a category open/closed (single-open behavior)
 function toggleCategory(category: string): void {
 	expandedCategory.value = isCategoryOpen(category) ? undefined : category;
 }
 
-// Local state for commands - reactive record of command states
 const state = reactive<Schema>({});
 
-// Initialize local commands state from props and guild settings
 function initializeLocalCommands() {
 	if (!commands.length || !guildSettings.value) {
 		return;
@@ -152,7 +144,6 @@ function initializeLocalCommands() {
 	Object.assign(state, newLocalCommands);
 }
 
-// Map form state to GuildData changes
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const disabledCommands: string[] = [];
 
@@ -170,7 +161,6 @@ function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
 }
 
-// Enable all commands in a category
 function enableAllInCategory(category: string) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
@@ -184,7 +174,6 @@ function enableAllInCategory(category: string) {
 	}
 }
 
-// Disable all commands in a category
 function disableAllInCategory(category: string) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
@@ -198,7 +187,6 @@ function disableAllInCategory(category: string) {
 	}
 }
 
-// Reset a category to its original saved values
 function resetCategory(category: string) {
 	const commands = getCommandsByCategory(category);
 	const originalDisabledCommands = guildSettings.value?.disabledCommands || [];
@@ -221,7 +209,6 @@ function resetCategory(category: string) {
 	});
 }
 
-// Form error handler
 async function onError(event: FormErrorEvent) {
 	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -234,7 +221,6 @@ async function onError(event: FormErrorEvent) {
 	});
 }
 
-// Computed categories from available commands
 const categories = computed(() => {
 	const uniqueCategories = new Set<string>();
 	for (const command of commands) {
@@ -245,13 +231,10 @@ const categories = computed(() => {
 	return [...uniqueCategories].toSorted();
 });
 
-// Track loading state
 const loading = computed(() => !commands.length || objectValues(state).length === 0);
 
-// Initialize on mount
 onMounted(initializeLocalCommands);
 
-// Re-initialize when guild settings load
 watch(guildSettings, (newSettings) => {
 	if (newSettings) {
 		initializeLocalCommands();

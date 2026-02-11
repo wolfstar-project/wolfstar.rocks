@@ -66,7 +66,7 @@ export function flattenGuild(
 		joinedTimestamp: "joined_at" in guild ? Date.parse(guild.joined_at as string) : null,
 		mfaLevel: guild.mfa_level,
 		name: guild.name,
-		acronym: guildNameToAcronym(guild.name), // Fix misplaced comma
+		acronym: guildNameToAcronym(guild.name),
 		ownerId: guild.owner_id,
 		partnered: guild.features.includes(GuildFeature.Partnered),
 		preferredLocale: guild.preferred_locale as Locale,
@@ -102,7 +102,6 @@ export function flattenGuildEmoji(guildId: string, emoji: APIEmoji): FlattenedGu
 
 // #region Role
 
-// Update flattenRole function to accept guildId parameter
 export function flattenRole(guildId: string, role: APIRole): FlattenedRole {
 	return {
 		color: role.color,
@@ -114,7 +113,7 @@ export function flattenRole(guildId: string, role: APIRole): FlattenedRole {
 		mentionable: role.mentionable,
 		name: role.name,
 		permissions: role.permissions,
-		rawPosition: role.position, // Add guildId with null fallback
+		rawPosition: role.position,
 	};
 }
 

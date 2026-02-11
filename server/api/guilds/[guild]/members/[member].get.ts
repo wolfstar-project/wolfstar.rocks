@@ -101,7 +101,6 @@ export default defineWrappedResponseHandler(
 			});
 		}
 
-		// Fetch member data
 		const member = await getMember(guild.id, memberId);
 
 		return flattenMember(member, guild);

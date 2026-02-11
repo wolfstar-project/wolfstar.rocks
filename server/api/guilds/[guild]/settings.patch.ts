@@ -64,7 +64,6 @@ export default defineWrappedResponseHandler(
 	async (event) => {
 		const guildId = getGuildParam(event);
 
-		// Get and validate body data
 		const body = await readValidatedBody(event, (body) => v.parse(settingsUpdateSchema, body));
 
 		if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
@@ -96,9 +95,8 @@ export default defineWrappedResponseHandler(
 		const guild = await getGuild(guildId);
 
 		const member = await getCurrentMember(event, guild.id);
-		// Check permissions
 		await canManage(guild, member);
-		// Update settings
+
 		using trx = await writeSettingsTransaction(guild.id);
 
 		if (!data.every((entry): entry is [string, any] => entry !== undefined)) {

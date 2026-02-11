@@ -99,7 +99,6 @@ import { Time } from "@sapphire/time-utilities";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import { isDevelopment } from "std-env";
 
-// SEO
 useSeoMetadata({
 	description: "Browse all available WolfStar bot commands and their descriptions.",
 	ogImage: {
@@ -110,13 +109,11 @@ useSeoMetadata({
 	title: "Commands",
 });
 
-// State
 const searchValue = ref("");
 const commands = ref<FlattenedCommand[]>([]);
 const loading = ref(false);
 const refreshing = ref(false);
 
-// Fuse.js fuzzy search
 const { results } = useFuse(searchValue, commands, {
 	fuseOptions: {
 		keys: ["name", "description", "category"],
@@ -165,7 +162,6 @@ async function fetchCommands() {
 	}
 }
 
-// Lifecycle
 onMounted(fetchCommands);
 </script>
 

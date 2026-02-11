@@ -94,7 +94,6 @@ export default defineWrappedResponseHandler(
 			});
 		});
 
-		// Return flattened guild data
 		return flattenRole(guild.id, role);
 	},
 	{

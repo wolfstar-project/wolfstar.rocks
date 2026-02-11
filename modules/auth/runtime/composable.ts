@@ -8,7 +8,6 @@ import authconfig from "#build/auth.config";
 export const useAuth = ({ namespace: _namespace }: { namespace?: string } = {}) => {
 	const { ready, loggedIn, user, session, fetch, openInPopup, clear } = useUserSession();
 
-	// Create a ref to know where to redirect the user when logged in
 	const redirectTo = useState<string>("authRedirect", () => "/");
 
 	const login = async (returnUrl?: string) => {
@@ -69,7 +68,6 @@ export const _usePermissions = ({ namespace = "default" }: { namespace?: string 
 	type Permission = `${string}.${string}` | `${string}`;
 
 	const hasPermission = (permission: Permission) => {
-		// Check for full access roles first
 		if (_hasFullAccess()) {
 			return true;
 		}
@@ -91,7 +89,6 @@ export const _usePermissions = ({ namespace = "default" }: { namespace?: string 
 	};
 
 	const hasAnyPermission = (permissions: Permission[]) => {
-		// Check for full access roles first
 		if (_hasFullAccess()) {
 			return true;
 		}
@@ -103,7 +100,6 @@ export const _usePermissions = ({ namespace = "default" }: { namespace?: string 
 	};
 
 	const hasAllPermissions = (permissions: Permission[]) => {
-		// Check for full access roles first
 		if (_hasFullAccess()) {
 			return true;
 		}

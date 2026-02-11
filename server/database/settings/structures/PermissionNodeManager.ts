@@ -113,7 +113,6 @@ export class PermissionNodeManager {
 		// Generate sorted data and detect useless nodes to remove
 		const { pendingToAdd, pendingToRemove } = await this.generateSorted(settings, nodes);
 
-		// Set up everything
 		const sorted = new Collection<string, PermissionsManagerNode>();
 		for (const pending of pendingToAdd) {
 			sorted.set(pending.id, {

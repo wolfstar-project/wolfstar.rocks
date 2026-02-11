@@ -386,10 +386,8 @@ export default defineWrappedResponseHandler(
 		const guild = await getGuild(guildId);
 
 		const member = await getCurrentMember(event, guild.id);
-		// Check permissions
 		await canManage(guild, member);
 
-		// Read and return settings
 		const settings = await readSettings(guild.id);
 		return serializeSettings(settings);
 	},

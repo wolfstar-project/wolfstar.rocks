@@ -9,7 +9,6 @@ export default defineNuxtPlugin({
 	setup() {
 		const { loggedIn } = useAuth();
 
-		// Create a ref to know where to redirect the user when logged in
 		const redirectTo = useState<string>("authRedirect", () => "/");
 
 		// Client-side watch for logout - redirect to login if on protected page
@@ -26,7 +25,6 @@ export default defineNuxtPlugin({
 				}
 
 				if (!isLoggedIn) {
-					// Save the current path to redirect after login
 					redirectTo.value = currentRoute.fullPath;
 					return navigateTo(
 						{

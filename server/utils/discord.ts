@@ -140,7 +140,6 @@ export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): 
 
 export const getCurrentToken = defineCachedFunction(
 	async (event: H3Event) => {
-		// Get session token
 		const tokens = await event.context.$authorization.resolveServerTokens();
 
 		if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
@@ -194,7 +193,6 @@ export const getCurrentUser = defineCachedFunction(
 			});
 		}
 
-		// Initialize REST client
 		const rest = new REST({
 			authPrefix: "Bearer",
 		}).setToken(tokens.access_token);
@@ -239,7 +237,6 @@ export const getCurrentMember = defineCachedFunction(
 			});
 		}
 
-		// Initialize REST client
 		const rest = new REST({
 			authPrefix: "Bearer",
 		}).setToken(tokens.access_token);

@@ -16,12 +16,10 @@
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
 
-// Props definition
 const { error } = defineProps<{
 	error: NuxtError;
 }>();
 
-// SEO and meta configuration
 useSeoMetadata({
 	description: error.statusText || "An unexpected error occurred.",
 	shouldOgImage: true,

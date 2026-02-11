@@ -417,7 +417,7 @@ useSeoMetadata({
 });
 
 const { user } = useAuth();
-// Refs
+
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();

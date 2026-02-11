@@ -91,7 +91,6 @@ import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 const logger = useLogger("@wolfstar/dashboard");
 const guildId = useRouteParams("id", null, { transform: String });
 
-// Validate guild ID first
 if (!isValidGuildId(guildId.value)) {
 	throw createError({
 		data: {
@@ -254,7 +253,6 @@ onMounted(async () => {
 	isLoading.value = true;
 
 	try {
-		// Fetch guild data first
 		const guildData = await $fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`);
 		const guildSettings = await $fetch<string>(`/api/guilds/${guildId.value}/settings`);
 

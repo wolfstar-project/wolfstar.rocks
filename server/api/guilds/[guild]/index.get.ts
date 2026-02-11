@@ -77,7 +77,6 @@ export default defineWrappedResponseHandler(
 		const guild = await getGuild(guildId);
 
 		const member = await getCurrentMember(event, guild.id);
-		// Check permissions
 		await canManage(guild, member);
 
 		const channels = await api.guilds.getChannels(guild.id).catch(() => {
@@ -87,7 +86,6 @@ export default defineWrappedResponseHandler(
 			});
 		});
 
-		// Return flattened guild data
 		const result = shouldSerialize
 			? await transformGuild(member.user.id, guild as RESTAPIPartialCurrentUserGuild)
 			: flattenGuild({ ...guild, channels });

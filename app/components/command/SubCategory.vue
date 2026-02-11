@@ -53,12 +53,10 @@
 						}"
 					>
 						<template #default="{ item: commandItem }">
-							<!-- Command name -->
 							<div class="min-w-fit font-mono text-base font-bold">
 								{{ commandItem.label }}
 							</div>
 
-							<!-- Command description -->
 							<div class="ml-4 flex-1 truncate text-sm text-base-content/70">
 								{{ commandItem.description || "No description available" }}
 							</div>
@@ -94,7 +92,6 @@ interface Props {
 
 const { commands, searchValue = " ", categoryName } = defineProps<Props>();
 
-// Computed
 const filteredCommands = computed(() => {
 	const search = searchValue.toLowerCase();
 
@@ -105,7 +102,6 @@ const filteredCommands = computed(() => {
 	);
 });
 
-// Computed categories from available commands
 const categories = computed(() => {
 	const uniqueCategories = new Set<string>();
 	for (const command of filteredCommands.value) {
@@ -121,7 +117,6 @@ const categoryItems = computed(() =>
 	})),
 );
 
-// Functions
 function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category);
 }

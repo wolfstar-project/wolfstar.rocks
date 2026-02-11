@@ -45,7 +45,6 @@ export interface UseUserOptions {
 export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOptions) {
 	const cachedFetch = useCachedFetch();
 
-	// Client-side cache
 	const cache = shallowRef<{
 		user: APIUser | null | undefined;
 		guilds: OauthFlattenedGuild[];
@@ -54,7 +53,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 
 	const isLoadingMore = shallowRef(false);
 
-	// Extract search refs from options (Step 2)
 	const searchQuery = computed(() => options?.search?.query?.value ?? null);
 	const showManageableOnly = computed(() => options?.search?.showManageableOnly?.value ?? false);
 	const sortAscending = computed(() => options?.search?.sortAscending?.value ?? true);
@@ -65,7 +63,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 			return userValue ? `user:${userValue.id}:data` : "user:anonymous:data";
 		},
 		async (_nuxtApp, { signal }) => {
-			// Reset cache for new query
 			cache.value = null;
 
 			const { search, ...fetchOptions } = options ?? {};
@@ -81,7 +78,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		},
 	);
 
-	// Fetch more guilds incrementally
 	async function fetchMore(targetSize: number): Promise<void> {
 		if (isLoadingMore.value || !cache.value) {
 			return;
@@ -119,7 +115,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		}
 	}
 
-	// Computed data that uses cache
 	const data = computed(() => {
 		if (cache.value) {
 			return {
@@ -130,7 +125,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		return asyncData.data.value;
 	});
 
-	// Step 3: Create guilds computed
 	const guilds = computed(() => {
 		if (cache.value) {
 			return cache.value.guilds;
@@ -138,7 +132,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		return data.value?.transformedGuilds ?? [];
 	});
 
-	// Step 4: Create manageableGuilds computed
 	const manageableGuilds = computed(() => {
 		if (!showManageableOnly.value) {
 			return guilds.value;
@@ -146,7 +139,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		return guilds.value.filter((guild) => guild.manageable);
 	});
 
-	// Step 5: Use useFuse from VueUse
 	const searchValue = computed(() => searchQuery.value ?? "");
 
 	const { results } = useFuse(searchValue, manageableGuilds, {
@@ -157,9 +149,7 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		matchAllWhenSearchEmpty: true,
 	});
 
-	// Step 6: Create filteredGuilds computed
 	const filteredGuilds = computed(() => {
-		// If no search options provided, return all guilds
 		if (!options?.search) {
 			return guilds.value;
 		}
@@ -186,7 +176,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		});
 	}
 
-	// Whether there are more guilds available
 	const hasMore = computed(() => {
 		if (!cache.value) {
 			return true;

@@ -25,7 +25,6 @@ const { setGuildSettingsChanges, removeChange } = useGuildSettingsChanges();
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
-// Original state snapshot - delay until data is loaded
 const originalState = ref<T | undefined>(undefined);
 const isOriginalStateInitialized = ref(false);
 
@@ -39,26 +38,21 @@ function calculateChanges(currentState: T): { changes: Partial<GuildData>; chang
 		return { changedKeys, changes, revertedKeys };
 	}
 
-	// Map both current and original states to GuildData format for comparison
 	const mappedCurrent = mapToGuildData ? mapToGuildData(currentState) : currentState;
 	const mappedOriginal = mapToGuildData ? mapToGuildData(originalState.value) : originalState.value;
 
-	// Track all keys from both mapped states
 	const allKeys = new Set([...objectKeys(mappedCurrent), ...objectKeys(mappedOriginal)]);
 
-	// Compare each key
 	for (const key of allKeys) {
 		const currentValue = (mappedCurrent as any)[key];
 		const originalValue = (mappedOriginal as any)[key];
 
-		// Check if value has changed from original
 		if (!isDeepEqual(currentValue, originalValue)) {
 			if (currentValue !== undefined) {
 				(changes as any)[key] = currentValue;
 				changedKeys.add(key as keyof GuildData);
 			}
 		} else {
-			// Value has been reverted to original
 			revertedKeys.add(key as keyof GuildData);
 		}
 	}
@@ -80,44 +74,36 @@ function handleError(event: FormErrorEvent) {
 	emit("error", event);
 }
 
-// Watch for state changes to update the global settings store (triggers UI footer)
 watch(
 	() => state,
 	(newState) => {
-		// Skip if original state hasn't been initialized yet
 		if (!isOriginalStateInitialized.value) {
 			return;
 		}
 
 		const { changes, revertedKeys } = calculateChanges(newState);
 
-		// Remove changes for keys that have been reverted to original
 		for (const key of revertedKeys) {
 			removeChange(key);
 		}
 
-		// Update changes for keys that differ from original
 		const hasChanges = objectKeys(changes).length > 0;
 		if (hasChanges) {
 			setGuildSettingsChanges(changes);
 		} else {
-			// Clear all changes if nothing differs from original
 			setGuildSettingsChanges(undefined);
 		}
 	},
 	{ deep: true },
 );
 
-// Watch for when guild settings are loaded, then snapshot original state
 watchEffect(() => {
-	// Only initialize once, when originalGuildSettings becomes defined
 	if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
 		originalState.value = structuredClone(toRaw(state));
 		isOriginalStateInitialized.value = true;
 	}
 });
 
-// Expose form ref methods
 defineExpose({
 	clear: () => formRef.value?.clear(),
 	getErrors: () => formRef.value?.getErrors(),

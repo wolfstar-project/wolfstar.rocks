@@ -16,7 +16,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
 	const { loggedIn } = useAuth({ namespace: authNamespace });
 
-	// Create a ref to know where to redirect the user when logged in
 	const redirectTo = useState<string>("authRedirect", () => "/");
 
 	if (typeof redirectIfLoggedIn === "string" && redirectIfLoggedIn && loggedIn.value) {
@@ -28,7 +27,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	}
 
 	if (!loggedIn.value) {
-		// Save the current path to redirect after login
 		redirectTo.value = to.fullPath;
 		return navigateTo(
 			{

@@ -11,14 +11,10 @@ const mergeOptions: DeepMergeOptions = {
 export function useGuildSettings() {
 	const guildId = useRouteParams("id", null, { transform: String });
 
-	// Use guild-scoped state key
 	const guildSettings = useState<GuildData | undefined>(`guild:${guildId.value}:settings`, () => undefined);
 
-	// Get guild settings changes composable
 	const { guildSettingsChanges } = useGuildSettingsChanges();
 
-	// Computed property that merges settings with changes
-	// Return undefined if settings haven't loaded yet
 	const mergedSettings = computed(() => {
 		if (!guildSettings.value) {
 			return undefined;

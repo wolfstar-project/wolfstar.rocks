@@ -1,6 +1,5 @@
 <template>
 	<div v-if="hasChips" class="flex animate-fade-in flex-wrap gap-3" role="list" aria-label="Command properties">
-		<!-- Permission Level Badge -->
 		<UBadge
 			v-if="command.permissionLevel > 0"
 			color="warning"
@@ -16,7 +15,6 @@
 			{{ permissionLevelLabel }}
 		</UBadge>
 
-		<!-- Guild Only Badge -->
 		<UBadge
 			v-if="isGuildOnly"
 			color="info"
@@ -32,7 +30,6 @@
 			{{ guildOnlyLabel }}
 		</UBadge>
 
-		<!-- Guarded Badge -->
 		<UBadge
 			v-if="command.guarded"
 			color="error"
@@ -71,7 +68,6 @@ const MOBILE_TITLES: Record<number, string> = {
 	6: "Administrators only",
 };
 
-// Computed
 const isGuildOnly = computed(() =>
 	command.preconditions.entries
 		.flatMap((preconditionEntry) => preconditionEntry.entries)

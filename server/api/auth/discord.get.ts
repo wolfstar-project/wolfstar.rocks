@@ -70,7 +70,6 @@ export default defineEventHandler(async (event) => {
 				tokens: RESTPostOAuth2AccessTokenResult;
 			},
 		) {
-			// Save the user and tokens to the session
 			await setUserSession(event, {
 				loggedInAt: Date.now(),
 				secure: {

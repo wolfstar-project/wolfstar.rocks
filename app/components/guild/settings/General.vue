@@ -37,7 +37,6 @@
 					</UFormField>
 				</div>
 
-				<!-- Language Setting -->
 				<div>
 					<UFormField label="Language" name="language">
 						<template #description>
@@ -76,7 +75,6 @@ const { languages } = defineProps<{
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-// Language mapping function
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 	const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
 		"ckb-IR": ["Kurdîya Navîn (Iran)", "Kurdish"],
@@ -101,7 +99,6 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 	return supportedLanguagesMap[langKey] ?? [langKey];
 }
 
-// Computed language options
 const items = computed(() =>
 	languages.map((langKey) => {
 		const mapping = mapLanguageKeysToNames(langKey);
@@ -115,7 +112,6 @@ const items = computed(() =>
 	}),
 );
 
-// Form validation schema
 const schema = v.object({
 	language: v.optional(
 		v.object({
@@ -135,7 +131,6 @@ const schema = v.object({
 
 type Schema = v.InferOutput<typeof schema>;
 
-// Form data reactive state - use explicit defaults from guild settings
 const state = reactive<Schema>({
 	language: (() => {
 		const currentLangKey = guildSettings.value!.language;
@@ -148,7 +143,6 @@ const state = reactive<Schema>({
 	prefix: guildSettings.value!.prefix,
 });
 
-// Map form state to GuildData format
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 

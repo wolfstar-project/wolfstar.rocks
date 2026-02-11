@@ -64,7 +64,6 @@ export default defineWrappedResponseHandler(
 		const guild = await getGuild(guildId);
 
 		const member = await getCurrentMember(event, guild.id);
-		// Check permissions
 		await canManage(guild, member);
 
 		const members = await api.guilds.getMembers(guildId).catch((error) => {

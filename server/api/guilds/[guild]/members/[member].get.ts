@@ -43,10 +43,10 @@ defineRouteMeta({
 									description: "List of roles the member has",
 									items: {
 										properties: {
-											color: { type: "integer", description: "Role color as integer" },
-											id: { type: "string", description: "Role snowflake ID" },
-											name: { type: "string", description: "Role name" },
-											position: { type: "integer", description: "Role position" },
+											color: { description: "Role color as integer", type: "integer" },
+											id: { description: "Role snowflake ID", type: "string" },
+											name: { description: "Role name", type: "string" },
+											position: { description: "Role position", type: "integer" },
 										},
 										type: "object",
 									},

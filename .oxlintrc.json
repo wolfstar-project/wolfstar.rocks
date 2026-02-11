@@ -137,6 +137,18 @@
 		"import/no-duplicates": "error",
 		"import/no-mutable-exports": "error",
 		"import/no-named-default": "error",
+		// Disabled: Import/export organization rules - low value, high noise
+		// - group-exports: Forces grouping exports from same module (stylistic preference)
+		// - exports-last: Requires all exports at end of file (conflicts with logical organization)
+		// - sort-imports: Auto-sorted imports can conflict with Nuxt auto-imports and logical grouping
+		"import/group-exports": "off",
+		"import/exports-last": "off",
+		"sort-imports": "off",
+		// Disabled: Architectural choice, not a code quality issue
+		// - Named exports are preferred in many codebases for better tree-shaking and explicit imports
+		// - Default exports can cause naming inconsistencies across files
+		"import/no-named-export": "off",
+		"import/prefer-default-export": "off",
 		"unicorn/consistent-empty-array-spread": "error",
 		"unicorn/error-message": "error",
 		"unicorn/escape-case": "error",
@@ -161,6 +173,15 @@
 		// - Distinct from undefined in Vue's reactivity system
 		// - Required for proper type narrowing in conditionals
 		"unicorn/no-null": "off",
+
+		// Disabled: Overly prescriptive style rules that reduce code clarity
+		// - no-magic-numbers: Numbers are often self-documenting in context (HTTP codes, timeouts, limits)
+		// - id-length: Short names (id, x, i, db) are idiomatic and clear in context
+		// - no-ternary: Ternary operators are idiomatic JS/TS, forcing if/else reduces readability
+		"no-magic-numbers": "off",
+		"id-length": "off",
+		"no-ternary": "off",
+
 		"antfu/consistent-list-newline": "warn",
 		"antfu/consistent-chaining": "warn",
 		"antfu/curly": "error",

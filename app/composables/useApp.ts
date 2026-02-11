@@ -4,7 +4,7 @@ export const useApp = () => {
 		Staryl: {
 			avatar: "/avatars/staryl.png",
 			description: "An app to help you manage your server's social notifications (Twitch, Instragram and etc.).",
-			explore: "/",
+			explore: "/staryl",
 			invite: Invites.Staryl,
 			name: "Staryl",
 			purposes: ["Social", "Notification"],

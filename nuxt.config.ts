@@ -1,5 +1,4 @@
 import { createResolver } from "nuxt/kit";
-import { isCI } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -133,11 +132,6 @@ export default defineNuxtConfig({
 		},
 	},
 
-	appConfig: {
-		storage: {
-			driver: process.env.NUXT_STORAGE_DRIVER ?? (isCI ? "cloudflare" : "fs"),
-		},
-	},
 	// Runtime configuration
 	runtimeConfig,
 

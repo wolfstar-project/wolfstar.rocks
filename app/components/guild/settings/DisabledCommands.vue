@@ -74,8 +74,8 @@
 
 							<Separator />
 							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
-								<UButton color="success" variant="solid" size="sm" @click="enableAllInCategory(category)"> Enable all </UButton>
-								<UButton color="warning" variant="solid" size="sm" @click="disableAllInCategory(category)"> Disable all </UButton>
+								<UButton color="success" variant="solid" size="sm" @click="allInCategory(category, true)"> Enable all </UButton>
+								<UButton color="warning" variant="solid" size="sm" @click="allInCategory(category, false)"> Disable all </UButton>
 								<UButton color="neutral" variant="outline" size="sm" @click="resetCategory(category)"> Reset </UButton>
 							</div>
 						</template>
@@ -124,7 +124,6 @@ function toggleCategory(category: string): void {
 }
 
 const state = reactive<Schema>({});
-
 function initializeLocalCommands() {
 	if (!commands.length || !guildSettings.value) {
 		return;
@@ -165,27 +164,14 @@ function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
 }
 
-function enableAllInCategory(category: string) {
+function allInCategory(category: string, enable: boolean) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
 		const cmd = state[command.name];
 		if (cmd) {
 			state[command.name] = {
 				...cmd,
-				isEnabled: true,
-			};
-		}
-	}
-}
-
-function disableAllInCategory(category: string) {
-	const commands = getCommandsByCategory(category);
-	for (const command of commands) {
-		const cmd = state[command.name];
-		if (cmd) {
-			state[command.name] = {
-				...cmd,
-				isEnabled: false,
+				isEnabled: enable,
 			};
 		}
 	}
@@ -193,14 +179,13 @@ function disableAllInCategory(category: string) {
 
 function resetCategory(category: string) {
 	const commands = getCommandsByCategory(category);
-	const originalDisabledCommands = guildSettings.value?.disabledCommands || [];
 
 	for (const command of commands) {
 		const cmd = state[command.name];
 		if (cmd) {
 			state[command.name] = {
 				...cmd,
-				isEnabled: !originalDisabledCommands.includes(command.name),
+				isEnabled: true,
 			};
 		}
 	}
@@ -238,10 +223,4 @@ const categories = computed(() => {
 const loading = computed(() => !commands.length || objectValues(state).length === 0);
 
 onMounted(initializeLocalCommands);
-
-watch(guildSettings, (newSettings) => {
-	if (newSettings) {
-		initializeLocalCommands();
-	}
-});
 </script>

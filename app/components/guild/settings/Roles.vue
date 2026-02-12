@@ -43,7 +43,7 @@
 					name="rolesRemoveInitial"
 				>
 					<div class="flex items-center gap-2">
-						<UToggle v-model="state.rolesRemoveInitial" />
+						<USwitch v-model="state.rolesRemoveInitial" />
 					</div>
 				</UFormField>
 			</div>

@@ -1,10 +1,12 @@
+import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
 import { createMockUser } from "../../mocks/discord";
 
-// Mock useCachedFetch at the top of the file (hoisted)
-vi.mock<typeof import("#app/composables/useCachedFetch")>("#app/composables/useCachedFetch", () => ({
-	useCachedFetch: () => async () => ({ data: null }),
-}));
+// Create a mock function for the cached fetch
+const mockCachedFetch = vi.fn().mockResolvedValue({ data: null, isStale: false, cachedAt: null });
+
+// Mock useCachedFetch composable
+mockNuxtImport("useCachedFetch", () => () => mockCachedFetch);
 
 // Note: These tests will need proper Nuxt test environment setup
 // Currently they are placeholders for Phase 4 comprehensive testing
@@ -100,17 +102,18 @@ describe("useUser", () => {
 
 		vi.spyOn(Date, "now").mockReturnValue(mockNow);
 
-		// Mock the API response
+		// Mock the API response for this specific test
 		const mockApiResponse = {
 			guilds: [],
 			transformedGuilds: mockTransformedGuilds,
 			user: mockUser,
 		};
 
-		// Use doMock to avoid hoisting issues
-		vi.doMock<typeof import("#app/composables/useCachedFetch")>("#app/composables/useCachedFetch", () => ({
-			useCachedFetch: () => async () => ({ data: mockApiResponse }),
-		}));
+		mockCachedFetch.mockResolvedValueOnce({
+			data: mockApiResponse,
+			isStale: false,
+			cachedAt: null,
+		});
 
 		const result = useUser(mockUser);
 		await result.execute();

@@ -19,16 +19,13 @@ export default defineConfig({
 			{
 				resolve: {
 					alias: {
-						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},
 				},
 				test: {
 					environment: "node",
-					globals: true,
 					include: ["test/unit/**/*.{test,spec}.ts"],
 					name: "unit",
-					setupFiles: ["./test/setup.ts"],
 				},
 			},
 			await defineVitestProject({
@@ -42,19 +39,23 @@ export default defineConfig({
 					environmentOptions: {
 						nuxt: {
 							overrides: {
-								ogImage: { enabled: false },
+								vue: {
+									runtimeCompiler: true,
+								},
+								experimental: {
+									payloadExtraction: false,
+								},
 								pwa: {
 									pwaAssets: { disabled: true },
 								},
 								sentry: { enabled: false },
-
 								sitemap: { enabled: false },
+								ogImage: { enabled: false },
 							},
 							rootDir: fileURLToPath(new URL(".", import.meta.url)),
 						},
-						setupFiles: ["./test/setup.ts"],
+						setupFiles: ["./test/nuxt/setup.ts"],
 					},
-					globals: true,
 					include: ["test/nuxt/**/*.{test,spec}.ts"],
 					name: "nuxt",
 				},

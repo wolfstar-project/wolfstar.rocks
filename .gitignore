@@ -35,6 +35,7 @@ server/database/generated/
 
 # Testing
 test-results
+**/__screenshots__/
 
 # Test coverage
 coverage/

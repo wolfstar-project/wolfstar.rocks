@@ -96,7 +96,6 @@
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^7.4.3",
-		"@antfu/nip": "^0.1.1",
 		"@commitlint/cli": "^20.4.1",
 		"@commitlint/config-conventional": "^20.4.1",
 		"@discordjs/collection": "^2.1.1",

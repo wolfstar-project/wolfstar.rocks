@@ -62,12 +62,12 @@
 								>
 									<div class="min-w-0 flex-1">
 										<p class="truncate font-medium text-base-content">{{ command.name }}</p>
-										<p class="truncate text-sm text-base-content/60">{{ command.description }}</p>
+										<p class="truncate text-sm text-base-content/60">{{ parseCommandDescription(command.description) }}</p>
 									</div>
 									<USwitch
 										v-if="state[command.name]"
 										:model-value="state[command.name]!.isEnabled"
-										:value="state[command.name]!.name"
+										@update:model-value="(value: boolean) => toggleCommand(command.name, value)"
 									/>
 								</div>
 							</div>
@@ -158,6 +158,17 @@ function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
 }
 
+function parseCommandDescription(description: string): string {
+	return description.replace(/<:(\w{2,32}):\d{17,19}>/g, "$1");
+}
+
+function toggleCommand(name: string, enabled: boolean) {
+	const cmd = state[name];
+	if (cmd) {
+		state[name] = { ...cmd, isEnabled: enabled };
+	}
+}
+
 function toggleAllInCategory(category: string, enable: boolean) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
@@ -180,14 +191,15 @@ function toggleCategory(category: string): void {
 }
 
 function resetCategory(category: string) {
-	const commands = getCommandsByCategory(category);
+	const categoryCommands = getCommandsByCategory(category);
+	const disabledCommands = guildSettings.value?.disabledCommands ?? [];
 
-	for (const command of commands) {
+	for (const command of categoryCommands) {
 		const cmd = state[command.name];
 		if (cmd) {
 			state[command.name] = {
 				...cmd,
-				isEnabled: true,
+				isEnabled: !disabledCommands.includes(command.name),
 			};
 		}
 	}

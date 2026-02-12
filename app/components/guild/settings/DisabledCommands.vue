@@ -23,7 +23,7 @@
 			<GuildSettingsForm
 				v-else
 				:state="state"
-				:schema="schema"
+				:schema="disabledCommandsSchema"
 				:map-to-guild-data="mapToGuildData"
 				class="space-y-4"
 				aria-label="Disabled commands settings form"
@@ -65,9 +65,11 @@
 										<p class="truncate text-sm text-base-content/60">{{ command.description }}</p>
 									</div>
 									<USwitch
-										v-if="state[command.name]"
-										:model-value="state[command.name]!.isEnabled"
-										:value="state[command.name]!.name"
+										v-if="!isNullOrUndefined(getCommand(command.name))"
+										:model-value="getCommand(command.name)?.isEnabled"
+										:value="getCommand(command.name)?.name"
+										:default-value="true"
+										@update:model-value="(isEnabled) => toggleCommand(command.name, isEnabled)"
 									/>
 								</div>
 							</div>
@@ -91,54 +93,57 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types/configurableData";
+// oxlint-disable-next-line typescript/consistent-type-imports
+import { disabledCommandsSchema } from "#shared/schemas";
 import type { FlattenedCommand } from "#shared/types/discord";
 import type { FormErrorEvent } from "@nuxt/ui";
-import { objectValues } from "@sapphire/utilities/objectValues";
-import * as v from "valibot";
+import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
+import type * as v from "valibot";
 
 const { commands } = defineProps<{
 	commands: FlattenedCommand[];
 }>();
 
-const schema = v.record(
-	v.string(),
-	v.object({
-		category: v.string(),
-		description: v.string(),
-		isEnabled: v.boolean(),
-		name: v.string(),
-	}),
-);
-
-type Schema = v.InferOutput<typeof schema>;
+type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
 const expandedCategory = ref<string | undefined>(undefined);
 
-const state = reactive<Schema>({});
-function initializeLocalCommands() {
-	if (!commands.length || !guildSettings.value) {
-		return;
-	}
+const state = reactive<Schema>(createDefaultState(commands, guildSettings.value?.disabledCommands as string[]));
 
-	const newLocalCommands: Record<string, DisableCommands.Command> = {};
+// Loading state
+const loading = computed(() => !commands.length || !guildSettings.value);
 
+const categories = computed(() => {
+	const uniqueCategories = new Set<string>();
 	for (const command of commands) {
+		if (!command.guarded) {
+			uniqueCategories.add(command.category || "General");
+		}
+	}
+	return [...uniqueCategories].toSorted();
+});
+
+// Helper to create default state from commands and settings
+function createDefaultState(cmdList: FlattenedCommand[], disabledCommands: string[] | undefined): Schema {
+	const result: Record<string, DisableCommands.Command> = {};
+
+	for (const command of cmdList) {
 		if (command.guarded) {
 			continue;
 		}
 
-		newLocalCommands[command.name] = {
+		result[command.name] = {
 			category: command.category || "General",
 			description: command.description,
-			isEnabled: !guildSettings.value?.disabledCommands?.includes(command.name),
+			isEnabled: !disabledCommands?.includes(command.name),
 			name: command.name,
 		};
 	}
 
-	Object.assign(state, newLocalCommands);
+	return result;
 }
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
@@ -154,6 +159,18 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 	return { disabledCommands };
 }
 
+function toggleCommand(name: string, isEnabled: boolean) {
+	const cmd = state[name];
+	if (cmd) {
+		state[name] = { ...cmd, isEnabled };
+	}
+}
+
+function getCommand(name: string): DisableCommands.Command | undefined {
+	const cmd = state[name];
+	return cmd ? { ...cmd } : undefined;
+}
+
 function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
 }
@@ -161,13 +178,7 @@ function getCommandsByCategory(category: string): FlattenedCommand[] {
 function toggleAllInCategory(category: string, enable: boolean) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
-		const cmd = state[command.name];
-		if (cmd) {
-			state[command.name] = {
-				...cmd,
-				isEnabled: enable,
-			};
-		}
+		toggleCommand(command.name, enable);
 	}
 }
 
@@ -181,15 +192,8 @@ function toggleCategory(category: string): void {
 
 function resetCategory(category: string) {
 	const commands = getCommandsByCategory(category);
-
 	for (const command of commands) {
-		const cmd = state[command.name];
-		if (cmd) {
-			state[command.name] = {
-				...cmd,
-				isEnabled: true,
-			};
-		}
+		toggleCommand(command.name, !guildSettings.value?.disabledCommands?.includes(command.name));
 	}
 
 	toast.add({
@@ -212,17 +216,24 @@ async function onError(event: FormErrorEvent) {
 	});
 }
 
-const categories = computed(() => {
-	const uniqueCategories = new Set<string>();
-	for (const command of commands) {
-		if (!command.guarded) {
-			uniqueCategories.add(command.category || "General");
+// Watch for loading state change to hydrate local state (immediate mode)
+watch(
+	loading,
+	(isLoading) => {
+		if (!isLoading && guildSettings.value) {
+			const newValues = createDefaultState(commands, guildSettings.value.disabledCommands as string[]);
+
+			// Remove stale keys not in new values
+			for (const key in state) {
+				if (!(key in newValues)) {
+					delete state[key];
+				}
+			}
+
+			// Assign new values
+			Object.assign(state, newValues);
 		}
-	}
-	return [...uniqueCategories].toSorted();
-});
-
-const loading = computed(() => !commands.length || objectValues(state).length === 0);
-
-onMounted(initializeLocalCommands);
+	},
+	{ immediate: true },
+);
 </script>

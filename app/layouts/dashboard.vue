@@ -10,6 +10,18 @@
 				footer: 'bg-base-200/80 border-t border-b border-base-200',
 			}"
 		>
+			<template #header="{ collapsed }">
+				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
+					<UAvatar :src :alt="guildData.name" class="mr-2" />
+					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
+				</div>
+				<div v-else class="flex h-10 w-full animate-pulse items-center justify-center rounded bg-base-300/50">
+					<USkeleton class="mr-2 h-4 w-24 rounded" />
+					<div v-if="!collapsed" class="ms-2">
+						<USkeleton class="h-4 w-24 rounded" />
+					</div>
+				</div>
+			</template>
 			<template #default="{ collapsed }">
 				<UNavigationMenu :collapsed="collapsed" :items="items[0]" orientation="vertical" tooltip popover />
 
@@ -179,6 +191,12 @@ const isReadyToRender = computed(
 
 const isReadyToSubmit = computed(() => !isNullOrUndefined(guildSettingsChanges.value) && objectValues(guildSettingsChanges.value).length > 0);
 
+const src = computed(
+	() =>
+		guildIconURL(guildData as unknown as OauthFlattenedGuild, {
+			size: 64,
+		})!,
+);
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
 	if (isNullOrUndefined(id)) {

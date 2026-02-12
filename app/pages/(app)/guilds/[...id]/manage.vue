@@ -2,12 +2,6 @@
 	<UDashboardPanel id="home">
 		<template #header>
 			<UDashboardNavbar :ui="{ right: 'gap-3' }">
-				<template #title>
-					<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-						<UAvatar :src :alt="guildData.name" class="mr-2" />
-						<h1 class="text-lg font-semibold">{{ guildData.name }}</h1>
-					</div>
-				</template>
 				<template #leading>
 					<UDashboardSidebarCollapse />
 				</template>
@@ -124,12 +118,6 @@ async function fetchCommandsAndLanguages() {
 		loading.value = false;
 	}
 }
-const src = computed(
-	() =>
-		guildIconURL(guildData as unknown as OauthFlattenedGuild, {
-			size: 64,
-		})!,
-);
 
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
 

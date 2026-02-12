@@ -212,7 +212,8 @@
 		"init-declarations": "off",
 		"no-nested-ternary": "off",
 		"sort-keys": "off",
-
+		"no-duplicate-imports": "off",
+		"jest/require-hook": "off",
 		"antfu/consistent-list-newline": "warn",
 		"antfu/consistent-chaining": "warn",
 		"antfu/curly": "error",
@@ -380,13 +381,7 @@
 			}
 		},
 		{
-			"files": [
-				"**/__tests__/**/*.?([cm])[jt]s?(x)",
-				"**/*.spec.?([cm])[jt]s?(x)",
-				"**/*.test.?([cm])[jt]s?(x)",
-				"**/*.bench.?([cm])[jt]s?(x)",
-				"**/*.benchmark.?([cm])[jt]s?(x)"
-			],
+			"files": ["**/test/**/*.?([cm])[jt]s?(x)"],
 			"rules": {
 				"vitest/consistent-test-it": [
 					"error",
@@ -448,12 +443,6 @@
 						}
 					}
 				]
-			}
-		},
-		{
-			"files": ["server/**/*.ts"],
-			"rules": {
-				"jest/require-hook": "off"
 			}
 		},
 		{

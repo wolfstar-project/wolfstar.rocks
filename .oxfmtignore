@@ -34,3 +34,7 @@ package-lock.json
 # Ignore other generated files
 coverage/
 
+# Ignore Agent skills
+
+.agents/skills/
+.agent/skills/

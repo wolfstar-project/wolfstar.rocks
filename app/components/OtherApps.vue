@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ apps: readonly OtherApp[] }>();
+const { apps } = defineProps<{ apps: readonly OtherApp[] }>();
 </script>
 
 <style scoped>

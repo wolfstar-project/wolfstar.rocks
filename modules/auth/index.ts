@@ -51,7 +51,7 @@ export default defineNuxtModule<ModuleOptions>({
 
 				if (options.fullAccessRoles?.length) {
 					rules.auth.roles ||= [];
-					rules.auth.roles = rules.auth.roles.concat(options.fullAccessRoles);
+					rules.auth.roles = [...rules.auth.roles, ...options.fullAccessRoles];
 				}
 			}
 

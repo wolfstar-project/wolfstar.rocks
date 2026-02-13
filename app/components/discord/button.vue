@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
+const { ariaLabel } = defineProps<{
 	ariaLabel?: string;
 }>();
 </script>

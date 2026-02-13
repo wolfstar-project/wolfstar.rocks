@@ -33,7 +33,7 @@
 import type { DropdownMenuItem } from "@nuxt/ui";
 import { avatarURL } from "#shared/utils/discord";
 
-defineProps<{
+const { collapsed } = defineProps<{
 	collapsed?: boolean;
 }>();
 

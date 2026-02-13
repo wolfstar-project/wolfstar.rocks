@@ -1,4 +1,5 @@
 import type { FlattenedCommand } from "#shared/types/discord";
+import type { GuildData } from "~~/server/database";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createMockGuildData } from "~~/test/mocks/guildData";
@@ -18,12 +19,12 @@ mockNuxtImport("useGuildSettings", () => () => ({
 	originalGuildSettings: ref(mockGuildSettings),
 	setGuildSettings: mockSetGuildSettings,
 	loading: ref(false),
-	error: ref(null),
+	error: ref<Error | null>(null),
 	refresh: vi.fn(),
 }));
 
 mockNuxtImport("useGuildSettingsChanges", () => () => ({
-	guildSettingsChanges: ref(undefined),
+	guildSettingsChanges: ref<GuildData | undefined>(undefined),
 	mergeGuildSettings: mockMergeGuildSettings,
 	removeChange: mockRemoveChange,
 	setGuildSettingsChanges: mockSetGuildSettingsChanges,

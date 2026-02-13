@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-defineProps<{
+const { commands, searchValue, categories, loading } = defineProps<{
 	commands: FlattenedCommand[];
 	searchValue: string;
 	categories: string[];

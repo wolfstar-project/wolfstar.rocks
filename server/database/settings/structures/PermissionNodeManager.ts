@@ -43,10 +43,8 @@ export class PermissionNodeManager {
 				id: typeof target === "object" && "id" in target ? target.id : target.user.id,
 			};
 
-			return nodes.concat(node);
+			return [...nodes, node];
 		}
-
-		const previous = nodes[nodeIndex];
 		if (
 			(action === PermissionNodeAction.Allow && previous.allow.includes(command)) ||
 			(action === PermissionNodeAction.Deny && previous.deny.includes(command))
@@ -55,8 +53,8 @@ export class PermissionNodeManager {
 		}
 
 		const node: PermissionsNode = {
-			allow: action === PermissionNodeAction.Allow ? previous.allow.concat(command) : previous.allow,
-			deny: action === PermissionNodeAction.Deny ? previous.deny.concat(command) : previous.deny,
+			allow: action === PermissionNodeAction.Allow ? [...previous.allow, command] : previous.allow,
+			deny: action === PermissionNodeAction.Deny ? [...previous.deny, command] : previous.deny,
 			id: typeof target === "object" && "id" in target ? target.id : target.user.id,
 		};
 

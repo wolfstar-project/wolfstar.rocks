@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ user: ProfileName; size: SizeKey }>();
+const { user, size: sizeKey } = defineProps<{ user: ProfileName; size: SizeKey }>();
 
 const Sizes = {
 	medium: { classes: "h-8 w-8 md:h-12 md:w-12", dimensions: 48 },
@@ -22,8 +22,8 @@ const Sizes = {
 
 type SizeKey = keyof typeof Sizes;
 
-const profile = computed(() => Profiles[props.user]);
-const size = computed(() => Sizes[props.size]);
+const profile = computed(() => Profiles[user]);
+const size = computed(() => Sizes[sizeKey]);
 </script>
 
 <style scoped>

@@ -25,7 +25,7 @@ function simpleHash(str: string): string {
 /**
  * Generate a cache key for a fetch request.
  */
-function generateFetchCacheKey(url: string | URL, method: string = "GET", body?: unknown): string {
+function generateFetchCacheKey(url: string | URL, method = "GET", body?: unknown): string {
 	const urlObj = typeof url === "string" ? new URL(url) : url;
 	const bodyHash = body ? simpleHash(JSON.stringify(body)) : "";
 	const searchHash = urlObj.search ? simpleHash(urlObj.search) : "";

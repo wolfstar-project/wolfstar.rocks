@@ -27,7 +27,14 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
+const {
+	title,
+	color,
+	author,
+	footer,
+	timestamp,
+	theme = "dark",
+} = defineProps<{
 	title?: string;
 	color?: string;
 	author?: { icon?: string; name: string };
@@ -36,7 +43,7 @@ const props = defineProps<{
 	theme?: "light" | "dark";
 }>();
 
-const isDarkTheme = computed(() => props.theme !== "light");
+const isDarkTheme = computed(() => theme !== "light");
 const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "short" });
 </script>
 
@@ -53,7 +60,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 	@apply mt-4 max-h-[300px] max-w-[300px] rounded;
 }
 
-.discord-embed-media-video {
+.discord-embed-text.light .discord-embed-media-video {
 	@apply h-[225px];
 }
 

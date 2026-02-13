@@ -19,7 +19,5 @@ interface SelectFieldWrapperProps {
 	tooltipTitle?: string;
 }
 
-withDefaults(defineProps<SelectFieldWrapperProps>(), {
-	tooltipTitle: undefined,
-});
+const { fieldName, tooltipTitle } = defineProps<SelectFieldWrapperProps>();
 </script>

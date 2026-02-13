@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{ count: number; self?: boolean }>();
+const { count, self } = defineProps<{ count: number; self?: boolean }>();
 </script>
 
 <style>

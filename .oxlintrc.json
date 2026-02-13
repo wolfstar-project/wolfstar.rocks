@@ -403,7 +403,8 @@
 				"antfu/no-top-level-await": "off",
 				"no-unused-expressions": "off",
 				"@typescript-eslint/explicit-function-return-type": "off",
-				"eslint-plugin-unicorn/consistent-function-scoping": "off"
+				"eslint-plugin-unicorn/consistent-function-scoping": "off",
+				"antfu/consistent-list-newline": "off"
 			},
 			"plugins": ["vitest", "typescript"]
 		},

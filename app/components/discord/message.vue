@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ name: ProfileName; ephemeral?: boolean; command?: { user: ProfileName; name: string } }>();
-const profile = computed(() => Profiles[props.name]);
+const { name, ephemeral, command } = defineProps<{ name: ProfileName; ephemeral?: boolean; command?: { user: ProfileName; name: string } }>();
+const profile = computed(() => Profiles[name]);
 </script>
 
 <style scoped>

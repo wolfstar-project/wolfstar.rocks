@@ -40,7 +40,7 @@ import { promiseTimeout } from "@vueuse/core";
 
 const code = useRouteQuery("code", null, { transform: String });
 const state = useRouteQuery("state", undefined, { transform: String });
-const { user } = useAuth();
+const { user, refreshSession } = useAuth();
 
 const route = useRoute();
 
@@ -60,6 +60,9 @@ if (import.meta.client && code) {
 
 async function performCall() {
 	await execute();
+
+	// Refresh client-side session state so the user data is reactive immediately
+	await refreshSession();
 
 	await promiseTimeout(seconds(2));
 

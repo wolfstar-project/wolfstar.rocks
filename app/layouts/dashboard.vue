@@ -35,19 +35,22 @@
 
 		<slot v-if="isReadyToRender"></slot>
 		<div
-			v-else-if="hasError && error"
+			v-else-if="nuxtError"
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
 			role="alert"
 			aria-label="Error loading dashboard"
 		>
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
-				<h2 class="text-xl font-semibold text-base-content">Error Loading Dashboard</h2>
-				<p v-if="error.status === 403">
+				<h2 class="text-xl font-semibold text-base-content">{{ nuxtError.statusMessage || "Error Loading Dashboard" }}</h2>
+				<p v-if="nuxtError.statusCode === 403">
 					You do not have permission to access this guild's dashboard. Please ensure you have the necessary permissions and try again.
 				</p>
 				<p class="text-sm text-base-content/60">
-					An error occurred while loading the dashboard. Please try again later or contact support if the issue persists.
+					{{
+						nuxtError.message ||
+						"An error occurred while loading the dashboard. Please try again later or contact support if the issue persists."
+					}}
 				</p>
 			</div>
 		</div>
@@ -116,11 +119,10 @@ if (!isValidGuildId(guildId.value)) {
 
 const toast = useToast();
 const open = ref(false);
-const error = useState<FetchError | null>("dashboard:error", () => null);
+const nuxtError = useError();
 const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges } = useGuildSettingsChanges();
-const hasError = useState<boolean>("dashboard:hasError", () => false);
 const isLoading = useState<boolean>("dashboard:loading", () => true);
 
 const items = computed<NavigationMenuItem[][]>(() => [
@@ -182,6 +184,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 
 const isReadyToRender = computed(
 	() =>
+		!nuxtError.value &&
 		!isLoading.value &&
 		!isNullOrUndefined(guildData.value) &&
 		!isNullOrUndefined(guildSettings.value) &&
@@ -215,9 +218,6 @@ async function submitChanges() {
 	});
 
 	if (fetchError.value) {
-		hasError.value = true;
-		error.value = fetchError.value;
-
 		logger.error("Error saving guild settings changes for guild Id:", guildId.value, fetchError.value);
 
 		toast.add({
@@ -226,6 +226,12 @@ async function submitChanges() {
 			icon: "i-heroicons-x-circle",
 			title: "Error",
 		});
+
+		return;
+	}
+
+	if (!data.value) {
+		return;
 	}
 
 	// Parse the serialized JSON string response from server
@@ -268,6 +274,10 @@ watch(guildId, (newGuildId, oldGuildId) => {
 });
 
 onMounted(async () => {
+	if (nuxtError.value) {
+		return;
+	}
+
 	isLoading.value = true;
 
 	try {
@@ -277,11 +287,17 @@ onMounted(async () => {
 		setGuildData(guildData);
 		setGuildSettings(JSON.parse(guildSettings));
 
-		hasError.value = false;
+		if (nuxtError.value) {
+			clearError();
+		}
 	} catch (error: any) {
-		hasError.value = true;
 		isLoading.value = false;
-		error.value = error;
+		const normalized = normalizeToNuxtError(error, {
+			message: "Failed to load guild data",
+			statusCode: 500,
+			statusMessage: "Dashboard Load Error",
+		});
+		nuxtError.value = createError(normalized);
 
 		logger.error("Error loading guild data or settings for guild Id:", guildId.value, error);
 

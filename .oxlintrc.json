@@ -291,6 +291,7 @@
 		"coverage/**",
 		"playwright-report/**",
 		"test-results/**",
+		"__screenshots__/**",
 		"server/database/generated/**/*",
 		".github/skills/**/*",
 		".gemini/**/*",

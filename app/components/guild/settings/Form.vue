@@ -104,6 +104,16 @@ watchEffect(() => {
 	}
 });
 
+watch(
+	originalGuildSettings,
+	() => {
+		if (isOriginalStateInitialized.value) {
+			originalState.value = structuredClone(toRaw(state));
+		}
+	},
+	{ flush: "sync" },
+);
+
 defineExpose({
 	clear: () => formRef.value?.clear(),
 	getErrors: () => formRef.value?.getErrors(),

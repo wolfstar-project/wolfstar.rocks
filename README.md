@@ -155,8 +155,8 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
 - `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
 - `pnpm prisma:migrate:dev:create` - Create a new migration in development.
-- `pnpm prisma:migrate:diff` - Create a new migration by comparing database.
-  schema to Prisma schema
+- `pnpm prisma:migrate:diff` - Check for schema drift between migrations and
+  schema (exits with error if differences found).
 - `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database.
 - `pnpm prisma:migrate:status` - Check the status of migrations.
 - `pnpm prisma:migrate:resolve` - Mark a migration as applied or rolled back.
@@ -166,8 +166,7 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm prisma:studio` - Open Prisma Studio for database management.
 - `pnpm prisma:generate` - Generate Prisma client.
 - `pnpm prisma:generate:watch` - Watch for changes and regenerate Prisma client.
-- `pnpm generate-pwa-assets` - Generate PWA assets.
-- `pnpm start` - Start production server.
+- `pnpm generate-pwa-icons` - Generate PWA icons and assets.
 - `pnpm test` - Run all tests.
 - `pnpm test:unit` - Run unit tests.
 - `pnpm test:nuxt` - Run Nuxt environment tests.
@@ -175,12 +174,54 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm test:bench` - Run performance benchmarks.
 - `pnpm typecheck` - Run TypeScript checks.
 
-### Performance Benchmarking
+### Testing & Benchmarks
+
+#### Running Tests
+
+- `pnpm test` - Run all tests with Vitest
+- `pnpm test:unit` - Run unit tests only (Node.js environment)
+- `pnpm test:nuxt` - Run Nuxt component tests (Nuxt environment with browser)
+- `pnpm test:browser` - Run full browser E2E tests with Playwright
+- `pnpm test:bench` - Run performance benchmarks
+
+#### Performance Benchmarks
 
 WolfStar.rocks uses [CodSpeed](https://codspeed.io) for continuous performance
-tracking. Run benchmarks locally with `pnpm test:bench` to profile critical
-utilities and components. CI automatically tracks performance metrics on every
-commit, with results available on the [CodSpeed dashboard][codspeed-link].
+tracking. Benchmarks automatically run in CI on every commit and PR, with
+results visible on the [CodSpeed dashboard][codspeed-link].
+
+**Currently Benchmarked:**
+
+- **`shared/utils/comparators.ts`**
+  - Functions: `differenceArray`, `differenceMap`
+  - Benchmark: `test/unit/shared/utils/comparators.bench.ts`
+- **`server/utils/guildNameToAcronym.ts`**
+  - Function: `guildNameToAcronym`
+  - Benchmark: `test/unit/server/utils/guild-name-to-acronym.bench.ts`
+
+**Adding New Benchmarks:**
+
+1. Create a `.bench.ts` file under `test/unit/` mirroring the path of the code
+   you're benchmarking (e.g., for `shared/utils/myUtil.ts`, create
+   `test/unit/shared/utils/myUtil.bench.ts`)
+2. Import the utility and Vitest's `bench()` function:
+   ```typescript
+   import { bench, describe } from "vitest";
+   import { myUtility } from "../../../../shared/utils/myUtility";
+   ```
+3. Write benchmarks with descriptive names:
+   ```typescript
+   describe("myUtility benchmarks", () => {
+     bench("small dataset (10 items)", () => {
+       myUtility(smallData);
+     });
+     bench("large dataset (1000 items)", () => {
+       myUtility(largeData);
+     });
+   });
+   ```
+4. Run locally: `pnpm test:bench`
+5. CI will automatically track performance when you open a PR
 
 ### Development Guidelines
 

@@ -22,6 +22,7 @@
 		"dev": "nuxt dev",
 		"dev:pwa": "VITE_DEV_PWA=true nuxt dev",
 		"generate": "nuxt generate",
+		"preview": "nuxt preview",
 		"lint": "oxlint && oxfmt --check",
 		"lint:fix": "oxlint --fix && oxfmt",
 		"postinstall": "stale-dep -u && nuxt prepare",

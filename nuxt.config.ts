@@ -140,14 +140,15 @@ export default defineNuxtConfig({
 	},
 
 	routeRules: {
-		"/": { appLayout: "default", prerender: true, robots: true },
-		"/__og-image__/**": { prerender: true },
+		// API routes
+		"/api/**": { isr: 60 },
 		"/api/commands": {
 			proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
 		},
 		"/api/languages": {
 			proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
 		},
+
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -161,12 +162,16 @@ export default defineNuxtConfig({
 		},
 		"/oauth/callback": { robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1" },
 		"/oauth/login": { robots: true },
-		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		"/profile": { appLayout: "default", robots: true },
-		"/sitemap.xml": { prerender: true },
 		"/starly": { appLayout: "default", robots: true },
+
+		// Static pages
+		"/": { appLayout: "default", prerender: true, robots: true },
+		"/__og-image__/**": { prerender: true },
+		"/sitemap.xml": { prerender: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
+		"/privacy": { appLayout: "default", prerender: true, robots: true },
 	},
 
 	sourcemap: {
@@ -292,8 +297,25 @@ export default defineNuxtConfig({
 
 	typescript: {
 		tsConfig: {
+			compilerOptions: {
+				noUnusedLocals: true,
+				allowImportingTsExtensions: true,
+			},
 			exclude: ["../service-worker"],
-			include: ["../test/nuxt"],
+			include: ["../test/unit/app/**/*.ts"],
+		},
+		sharedTsConfig: {
+			include: ["../test/unit/shared/**/*.ts"],
+		},
+		nodeTsConfig: {
+			compilerOptions: {
+				allowImportingTsExtensions: true,
+				paths: {
+					"#server/*": ["../server/*"],
+					"#shared/*": ["../shared/*"],
+				},
+			},
+			include: ["../test/e2e/**/*.ts"],
 		},
 	},
 

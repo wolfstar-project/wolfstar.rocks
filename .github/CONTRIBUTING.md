@@ -137,7 +137,7 @@ Format: `<type>(<scope>): <subject>`
 
 ### Component Structure
 
-Required order (enforced by ESLint):
+Required order (enforced by Oxlint & Oxmft):
 
 1. `<template>`
 2. `<script>` (if needed)

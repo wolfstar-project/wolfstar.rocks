@@ -150,8 +150,8 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm dev:pwa` - Start development server with PWA support.
 - `pnpm build` - Build for production.
 - `pnpm preview` - Preview production build.
-- `pnpm lint` - Run ESLint.
-- `pnpm lint:fix` - Run ESLint and fix issues.
+- `pnpm lint` - Run Oxlint & Oxfmt.
+- `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
 - `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
 - `pnpm prisma:migrate:dev:create` - Create a new migration in development.
 - `pnpm prisma:migrate:diff` - Create a new migration by comparing database.
@@ -181,8 +181,8 @@ multi-purpose Discord bot for moderation and community management.
 
 - **Nuxt 4** - Vue.js framework
 - **TypeScript** - Type safety
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
+- **Oxlint** - Code linting
+- **Oxfmt** - Code formatting
 - **Prisma** - Database ORM
 - **Tailwind CSS** - Utility-first CSS framework
 - **DaisyUI** - Tailwind CSS component library
@@ -194,7 +194,7 @@ multi-purpose Discord bot for moderation and community management.
   Context7 MCP integration (see `.github/agents/wolfstar-dev-agent.md`).
 - **Autonomous Problem-Solving** - Beast Mode with iterative refinement.
 - **Real-time Documentation** - Up-to-date library docs via Context7.
-- **Quality First** - Integrated ESLint, Sentry, and testing workflows.
+- **Quality First** - Integrated Oxlint, Sentry, and testing workflows.
 
 </div>
 

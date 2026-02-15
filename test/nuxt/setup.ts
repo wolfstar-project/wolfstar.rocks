@@ -4,7 +4,7 @@
  * This file stubs globals that are normally initialized by inline scripts
  * injected into the HTML document, which don't run in vitest's nuxt environment.
  *
- * credit to: https://github.com/npmx-dev/npmx.dev/blob/main/test/nuxt/setup.ts
+ * @credits Npmx.dev <https://github.com/npmx-dev/npmx.dev/blob/main/test/nuxt/setup.ts>
  */
 
 // Stub the @nuxtjs/color-mode global helper

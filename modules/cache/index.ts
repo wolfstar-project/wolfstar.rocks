@@ -20,12 +20,14 @@ export default defineNuxtModule({
 			nitroConfig.storage.cache = {
 				...nitroConfig.storage.cache,
 				driver: "netlifyBlobs",
+				name: "cache",
 			};
 
 			// Fetch cache storage (for SWR fetch caching)
 			nitroConfig.storage[FETCH_CACHE_STORAGE_BASE] = {
 				...nitroConfig.storage[FETCH_CACHE_STORAGE_BASE],
 				driver: "netlifyBlobs",
+				name: FETCH_CACHE_STORAGE_BASE,
 			};
 
 			nitroConfig.storage["wolfstar:ratelimiter"] = {

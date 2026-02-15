@@ -24,6 +24,7 @@ Link][invite-link] · [Support Server][discord-link] ·
 [![GitHub issues badge][github-issues-shield]][github-issues-link]
 [![GitHub license badge][github-license-shield]][github-license-link]<br>
 [![PRs welcome badge][pr-welcome-shield]][pr-welcome-link]
+[![Codspeed badge][codspeed-shield]][codspeed-link]
 
 ### Share WolfStar Repository
 
@@ -339,6 +340,10 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [netlify-status-link]:
   https://app.netlify.com/projects/wolfstar-rocks-et34281/deploys
 [official-site]: https://wolfstar.rocks
+[codspeed-link]:
+  https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge
+[codspeed-shield]:
+  https://img.shields.io/endpoint?url=https://codspeed.io/badge.json
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:
   https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge

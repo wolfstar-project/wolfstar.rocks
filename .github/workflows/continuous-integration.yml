@@ -147,6 +147,35 @@ jobs:
       - name: 🖥️ Test project (browser)
         run: pnpm test:browser:prebuilt
 
+  benchmark:
+    name: ⚡ Benchmarks
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-24.04-arm]
+        node: [24]
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: ${{ matrix.node }}
+
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: ⚡ Run benchmarks
+        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f
+        with:
+          run: pnpm test:bench
+          token: ${{ secrets.CODSPEED_TOKEN }}
+
   a11y:
     name: ♿ Accessibility audit
     runs-on: ${{ matrix.os }}

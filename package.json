@@ -46,6 +46,7 @@
 		"test:browser:update": "pnpm build:playwright && pnpm test:browser:prebuilt --update-snapshots",
 		"test:nuxt": "vitest --project nuxt",
 		"test:unit": "vitest --project unit",
+		"test:bench": "vitest bench",
 		"start:playwright:webserver": "NODE_ENV=test pnpm preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"release": "bump && node scripts/release.ts",
@@ -96,6 +97,7 @@
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^7.4.3",
+		"@codspeed/vitest-plugin": "^5.2.0",
 		"@commitlint/cli": "^20.4.1",
 		"@commitlint/config-conventional": "^20.4.1",
 		"@discordjs/collection": "^2.1.1",

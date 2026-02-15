@@ -1,4 +1,5 @@
 import { fileURLToPath } from "node:url";
+import codspeedPlugin from "@codspeed/vitest-plugin";
 import { defineVitestProject } from "@nuxt/test-utils/config";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig } from "vitest/config";
@@ -9,6 +10,7 @@ export default defineConfig({
 	define: {
 		"process.test": "true",
 	},
+	plugins: [codspeedPlugin()],
 	test: {
 		coverage: {
 			enabled: true,
@@ -24,7 +26,7 @@ export default defineConfig({
 				},
 				test: {
 					environment: "node",
-					include: ["test/unit/**/*.{test,spec}.ts"],
+					include: ["test/unit/**/*.{test,spec,bench}.ts"],
 					name: "unit",
 				},
 			},
@@ -56,7 +58,7 @@ export default defineConfig({
 						},
 						setupFiles: ["./test/nuxt/setup.ts"],
 					},
-					include: ["test/nuxt/**/*.{test,spec}.ts"],
+					include: ["test/nuxt/**/*.{test,spec,bench}.ts"],
 					name: "nuxt",
 				},
 			}),

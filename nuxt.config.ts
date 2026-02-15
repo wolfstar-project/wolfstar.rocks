@@ -35,16 +35,17 @@ export default defineNuxtConfig({
 		},
 	},
 
+	$test: {
+		debug: {
+			hydration: true,
+		},
+	},
+
 	$production: {
 		image: {
 			provider: "netlify",
 		},
 		modules: ["nuxt-security"],
-		pwa: {
-			pwaAssets: {
-				disabled: true,
-			},
-		},
 		sentry: {
 			telemetry: false,
 		},

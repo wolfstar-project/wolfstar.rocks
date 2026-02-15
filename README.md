@@ -168,7 +168,19 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm prisma:generate:watch` - Watch for changes and regenerate Prisma client.
 - `pnpm generate-pwa-assets` - Generate PWA assets.
 - `pnpm start` - Start production server.
-- `pnpm type-check` - Run TypeScript checks.
+- `pnpm test` - Run all tests.
+- `pnpm test:unit` - Run unit tests.
+- `pnpm test:nuxt` - Run Nuxt environment tests.
+- `pnpm test:browser` - Run browser tests with Playwright.
+- `pnpm test:bench` - Run performance benchmarks.
+- `pnpm typecheck` - Run TypeScript checks.
+
+### Performance Benchmarking
+
+WolfStar.rocks uses [CodSpeed](https://codspeed.io) for continuous performance
+tracking. Run benchmarks locally with `pnpm test:bench` to profile critical
+utilities and components. CI automatically tracks performance metrics on every
+commit, with results available on the [CodSpeed dashboard][codspeed-link].
 
 ### Development Guidelines
 

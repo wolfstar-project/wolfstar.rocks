@@ -261,8 +261,8 @@ importers:
         specifier: ^3.6.2
         version: 3.6.2(@prisma/client@6.19.2(prisma@6.19.2(magicast@0.5.2)(typescript@5.9.3))(typescript@5.9.3))(prisma@6.19.2(magicast@0.5.2)(typescript@5.9.3))(typescript@5.9.3)
       skilld:
-        specifier: ^0.8.2
-        version: 0.8.2(pg@8.18.0)(unstorage@1.17.4(@netlify/blobs@10.6.0)(db0@0.3.4)(ioredis@5.9.2))
+        specifier: ^0.9.6
+        version: 0.9.6(pg@8.18.0)(unstorage@1.17.4(@netlify/blobs@10.6.0)(db0@0.3.4)(ioredis@5.9.2))
       tailwindcss:
         specifier: ^4.1.18
         version: 4.1.18
@@ -9718,8 +9718,8 @@ packages:
     peerDependencies:
       vue: ^3
 
-  skilld@0.8.2:
-    resolution: {integrity: sha512-9s1KpCYGP4Fjvau3brNUl/+9sWvpfYlTc4fKEynPXptueLGQo+bhAhAsgIvZbHJb+z1HSwnLXSmb4Gyo6QfRVA==}
+  skilld@0.9.6:
+    resolution: {integrity: sha512-7HbHmOAeT6o0+e9q3cyX/aN2WtMjoqP1d7T+LKMl4oYb54/vwtmgoHTteg6xVwwgZ/BrV5dHAHH9TpCfFBvi6g==}
     engines: {node: '>=22.6.0'}
     hasBin: true
 
@@ -10019,6 +10019,7 @@ packages:
   tar@7.5.7:
     resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   taze@19.9.2:
     resolution: {integrity: sha512-If8bq7lSckIMPfXV+C9jjEfdsQnRryh/foKfpX/ah6zI0TrQfUGWSGCaaD32Bqy5/KGRmLZie3EwMSr3Au21XQ==}
@@ -22147,7 +22148,7 @@ snapshots:
       ufo: 1.6.3
       vue: 3.5.28(typescript@5.9.3)
 
-  skilld@0.8.2(pg@8.18.0)(unstorage@1.17.4(@netlify/blobs@10.6.0)(db0@0.3.4)(ioredis@5.9.2)):
+  skilld@0.9.6(pg@8.18.0)(unstorage@1.17.4(@netlify/blobs@10.6.0)(db0@0.3.4)(ioredis@5.9.2)):
     dependencies:
       '@clack/prompts': 1.0.1
       '@huggingface/transformers': 3.8.1
@@ -22162,6 +22163,7 @@ snapshots:
       p-limit: 7.3.0
       pathe: 2.0.3
       retriv: 0.10.0(@huggingface/transformers@3.8.1)(pg@8.18.0)(sqlite-vec@0.1.6)(typescript@6.0.0-beta)
+      semver: 7.7.4
       sqlite-vec: 0.1.6
       std-env: 3.10.0
       typescript: 6.0.0-beta

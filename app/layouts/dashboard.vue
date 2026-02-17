@@ -97,6 +97,7 @@
 import type { GuildData } from "#server/database";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
+import { parseError } from "evlog";
 import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
@@ -207,25 +208,12 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const { data, error: fetchError } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
+	const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
 		body: {
 			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
 		},
 		method: "PATCH",
 	});
-
-	if (fetchError.value) {
-		logger.error("Error saving guild settings changes for guild Id:", guildId.value, fetchError.value);
-
-		toast.add({
-			color: "error",
-			description: "An error occurred while saving changes. Please try again later.",
-			icon: "i-heroicons-x-circle",
-			title: "Error",
-		});
-
-		return;
-	}
 
 	if (!data.value) {
 		return;
@@ -271,10 +259,6 @@ watch(guildId, (newGuildId, oldGuildId) => {
 });
 
 onMounted(async () => {
-	if (nuxtError.value) {
-		return;
-	}
-
 	isLoading.value = true;
 
 	try {
@@ -287,22 +271,28 @@ onMounted(async () => {
 		if (nuxtError.value) {
 			clearError();
 		}
-	} catch (error: any) {
+		// oxlint-disable-next-line unicorn/catch-error-name
+	} catch (err: unknown) {
 		isLoading.value = false;
-		const normalized = normalizeToNuxtError(error, {
-			message: "Failed to load guild data",
-			statusCode: 500,
-			statusMessage: "Dashboard Load Error",
-		});
-		nuxtError.value = createError(normalized);
+		const error = parseError(err);
 
-		logger.error("Error loading guild data or settings for guild Id:", guildId.value, error);
+		log.error("Error loading guild data or settings for guild Id:", guildId.value, error);
 
 		toast.add({
+			title: error.message,
+			description: error.why,
 			color: "error",
-			description: error?.message || "An error occurred while fetching the guild data or settings. Please try again later.",
+			actions: error.link
+				? [
+						{
+							label: "Learn more",
+							onClick: () => {
+								window.open(error.link);
+							},
+						},
+					]
+				: undefined,
 			icon: "i-heroicons-x-circle",
-			title: "Error Loading Data",
 		});
 	} finally {
 		isLoading.value = false;

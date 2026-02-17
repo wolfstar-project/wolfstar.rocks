@@ -29,18 +29,8 @@ if (sentry.dsn) {
 
 		environment,
 
-		// Enable logging for Sentry
-		// As it will log useful information to the console
-		// Learn more at
-		// https://docs.sentry.io/platforms/javascript/guides/nuxt/logs/,
-		enableLogs: true,
-
-		beforeSendLog: ({ level, ...log }) => {
-			if (level === "info") {
-				// Filter out all info logs
-				return null;
-			}
-			return { level, ...log };
-		},
+		// Logs now handled by evlog Sentry drain
+		// Disable Sentry's Consola reporter integration to avoid duplicates
+		enableLogs: false,
 	});
 }

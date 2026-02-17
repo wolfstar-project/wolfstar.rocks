@@ -22,6 +22,7 @@ export default defineNuxtConfig({
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"@vue-macros/nuxt",
+		"evlog/nuxt",
 		"nuxt-auth-utils",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
@@ -48,6 +49,16 @@ export default defineNuxtConfig({
 		modules: ["nuxt-security"],
 		sentry: {
 			telemetry: false,
+		},
+		evlog: {
+			sampling: {
+				rates: {
+					info: 10,
+					debug: 0,
+					error: 100,
+				},
+				keep: [{ status: 400 }],
+			},
 		},
 	},
 
@@ -125,6 +136,14 @@ export default defineNuxtConfig({
 		classSuffix: "",
 		fallback: "light",
 		storageKey: "wolfstar-theme",
+	},
+
+	evlog: {
+		env: {
+			service: "wolfstar-dashboard",
+		},
+		include: ["/api/**"],
+		exclude: ["/api/openapi.json", "/api/docs/**"],
 	},
 
 	ui: {

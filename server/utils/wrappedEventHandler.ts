@@ -1,13 +1,18 @@
 import type { UserSessionRequired } from "#auth-utils";
-import type { ConsolaInstance } from "consola";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
-import { logger, useLogger } from "#shared/utils/logger";
+import { createHash } from "node:crypto";
 import { cast, isObject } from "@sapphire/utilities";
+import { useLogger } from "evlog/nitro";
 import { isDevelopment } from "std-env";
 import * as v from "valibot";
 
-const debugLogger = useLogger("@wolfstar/debug");
+/**
+ * Hash a string value for logging (privacy protection)
+ */
+function hashValue(value: string): string {
+	return createHash("sha256").update(value).digest("hex").slice(0, 12);
+}
 
 const rateLimitStorage = useStorage("wolfstar:ratelimiter");
 
@@ -49,8 +54,8 @@ type RateLimitOptions = v.InferOutput<typeof rateLimitSchema>;
 type PartialRateLimitOptions = Partial<RateLimitOptions>;
 
 interface DefinedWrappedResponseHandlerOptions<Data> {
-	onError?: (logger: ConsolaInstance, error: any | Error | H3Error) => void;
-	onSuccess?: (logger: ConsolaInstance, data: Awaited<Data>) => void;
+	onError?: (logger: ReturnType<typeof useLogger>, error: any | Error | H3Error) => void;
+	onSuccess?: (logger: ReturnType<typeof useLogger>, data: Awaited<Data>) => void;
 	auth?: boolean;
 	rateLimit?: PartialRateLimitOptions;
 }
@@ -87,17 +92,13 @@ function getIdentifier(event: H3Event, session: UserSessionRequired | null, ipHe
 	);
 }
 
-function normalizeRateLimitOptions(options?: PartialRateLimitOptions): RateLimitOptions {
+function normalizeRateLimitOptions(options: PartialRateLimitOptions | undefined, log: ReturnType<typeof useLogger>): RateLimitOptions {
 	try {
 		// Validate and normalize — valibot applies schema defaults for missing fields
 		return v.parse(rateLimitSchema, options ?? {});
 	} catch (error) {
 		if (error instanceof v.ValiError) {
-			isDevelopment &&
-				debugLogger.warn("Rate limit options validation failed, using defaults", {
-					errors: error.issues.map((i) => i.message),
-					value: options,
-				});
+			isDevelopment && log.warn("Rate limit options validation failed, using defaults");
 		}
 
 		// Fallback to defaults on validation error
@@ -117,19 +118,15 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	handler: EventHandler<T, D>,
 	options: DefinedWrappedResponseHandlerOptions<D>,
 ) {
+	const log = useLogger(event);
 	const session = await getUserSession(options, event);
-	if (session) {
-		isDevelopment && debugLogger.debug("User session required and found", session.user.name);
-	}
-
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
 	// Normalize options (includes new `scope`)
-	const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit);
+	const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit, log);
 
 	// Check if IP is whitelisted (skip rate limiting for whitelisted IPs)
 	if (!session && whitelist.length > 0 && whitelist.includes(id)) {
-		isDevelopment && debugLogger.debug(`IP ${id} is whitelisted, skipping rate limit`);
 		return await handler(event);
 	}
 
@@ -143,7 +140,6 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 
 	const savedState = await rateLimitStorage.getItem(storageKey);
 	const initialState = savedState && isObject(savedState) ? cast<Record<string, unknown>>(savedState) : {};
-	isDevelopment && debugLogger.debug(`Rate limit identifier: ${id} scope: ${scope} storageKey: ${storageKey}`);
 
 	// If rate limiting is disabled, run handler immediately
 	if (!enabled) {
@@ -160,7 +156,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			}
 		} catch (error) {
 			// Swallow storage errors to avoid breaking request handling
-			isDevelopment && debugLogger.warn("Failed to persist rate limit state", error);
+			isDevelopment && log.warn("rateLimit.storage.persist.failed", { error });
 		}
 	}
 
@@ -182,7 +178,12 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			if (remaining <= 0) {
 				const msUntilReset = windowStart + windowMs - now;
 				const timeForInterval = windowStart + windowMs;
-				logger.info(`Rate limit exceeded for ${id}. Try again in ${msUntilReset}ms`);
+				log.info("rateLimit.exceeded", {
+					idHash: hashValue(id),
+					limit,
+					windowType: "fixed",
+					resetIn: msUntilReset,
+				});
 				setResponseHeader(event, "x-ratelimit-limit", limit);
 				setResponseHeader(event, "x-ratelimit-remaining", 0);
 				setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
@@ -220,7 +221,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 					}
 				} catch (error) {
 					// Ignore rollback errors but log in dev
-					isDevelopment && debugLogger.warn("Failed to rollback reserved token", error);
+					isDevelopment && log.warn("rateLimit.rollback.failed", { error });
 				}
 				throw error;
 			}
@@ -237,7 +238,12 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				const oldest = timestamps?.[0] ?? now;
 				const msUntilReset = oldest + windowMs - now;
 				const timeForInterval = oldest + windowMs;
-				logger.info(`Rate limit exceeded for ${id}. Try again in ${msUntilReset}ms`);
+				log.info("rateLimit.exceeded", {
+					idHash: hashValue(id),
+					limit,
+					windowType: "sliding",
+					resetIn: msUntilReset,
+				});
 				setResponseHeader(event, "x-ratelimit-limit", limit);
 				setResponseHeader(event, "x-ratelimit-remaining", 0);
 				setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
@@ -275,14 +281,14 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 					}
 				} catch (error) {
 					// Ignore rollback errors but log in dev
-					isDevelopment && debugLogger.warn("Failed to rollback timestamp", error);
+					isDevelopment && log.warn("rateLimit.rollback.failed", { error });
 				}
 				throw error;
 			}
 		}
 
 		default: {
-			logger.warn(`Unknown rate limit window type: ${windowType}, proceeding without rate limiting`);
+			log.warn("rateLimit.windowType.unknown", { windowType });
 		}
 	}
 	// Fallback: if an unknown windowType is provided, just run the handler
@@ -297,15 +303,16 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 	},
 ): EventHandler<T, D> {
 	return defineEventHandler<T>(async (event) => {
+		const log = useLogger(event);
 		try {
 			const result = await applyWrappedHandlerLogic(event, handler, options);
 			if (result && options.onSuccess && typeof options.onSuccess === "function") {
-				options.onSuccess(useLogger("@wolfstar/api"), result);
+				options.onSuccess(log, result);
 			}
 			return result;
 		} catch (error) {
 			if (options.onError && typeof options.onError === "function") {
-				options.onError(useLogger("@wolfstar/api"), error);
+				options.onError(log, error);
 			}
 			throw error;
 		}
@@ -323,15 +330,16 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 ): EventHandler<T, D> {
 	const opts = omit(["rateLimit", "auth", "onError", "onSuccess"], options);
 	return cachedEventHandler<T>(async (event) => {
+		const log = useLogger(event);
 		try {
 			const result = await applyWrappedHandlerLogic(event, handler, options);
 			if (result && options.onSuccess && typeof options.onSuccess === "function") {
-				options.onSuccess(useLogger("@wolfstar/api"), result);
+				options.onSuccess(log, result);
 			}
 			return result;
 		} catch (error) {
 			if (options.onError && typeof options.onError === "function") {
-				options.onError(useLogger("@wolfstar/api"), error);
+				options.onError(log, error);
 			}
 			throw error;
 		}

@@ -76,6 +76,7 @@
 		"consola": "^3.4.2",
 		"defu": "^6.1.4",
 		"dotenv": "^17.2.4",
+		"evlog": "^1.9.0",
 		"fuse.js": "^7.1.0",
 		"import-in-the-middle": "^2.0.6",
 		"nuxt": "^4.3.1",

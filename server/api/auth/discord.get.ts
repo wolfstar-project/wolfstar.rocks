@@ -2,6 +2,7 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
+import { useLogger, createError } from "evlog";
 
 defineRouteMeta({
 	openAPI: {
@@ -36,6 +37,7 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event);
+	const log = useLogger(event);
 	const nextUrl = query.next as string | undefined;
 
 	const authorizationParams: Record<string, string> = {
@@ -53,10 +55,12 @@ export default defineEventHandler(async (event) => {
 		},
 
 		async onError(_event: H3Event, error: NuxtError) {
+			log.error("Discord OAuth error", { error });
 			throw createError({
-				message: error.message,
+				message: "Failed to authenticate with Discord. Please try again.",
 				status: 500,
-				statusText: "Discord OAuth error",
+				why: "Failed to exchange authorization code for tokens or fetch user data from Discord",
+				cause: error,
 			});
 		},
 
@@ -83,6 +87,8 @@ export default defineEventHandler(async (event) => {
 					username: user.username,
 				},
 			});
+
+			log.info("User authenticated with Discord", { userId: user.id, username: user.username });
 		},
 	});
 

@@ -1,5 +1,5 @@
 import type { UserSession } from "#auth-utils";
-import { runtimeConfig } from "#server/utils/runtimeConfig";
+import { useLogger } from "evlog";
 
 async function refreshTokens(refreshToken: string) {
 	const api = useApi();
@@ -24,6 +24,7 @@ function isExpired(expires_in: number | undefined, loggedInAt: number): boolean 
 }
 
 export default defineEventHandler(async (event) => {
+	const logger = useLogger(event);
 	const session: UserSession = await getUserSession(event);
 	if (!session?.secure?.tokens) {
 		return;
@@ -51,7 +52,7 @@ export default defineEventHandler(async (event) => {
 			},
 		});
 	} catch (error) {
-		logger.error("Failed to refresh tokens:", error);
+		logger.error("Failed to refresh tokens:", { error });
 		await clearUserSession(event);
 	}
 });

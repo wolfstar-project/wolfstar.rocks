@@ -97,13 +97,10 @@
 import type { GuildData } from "#server/database";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
-import type { FetchError } from "ofetch";
-import { useLogger } from "#shared/utils/logger";
 import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 
-const logger = useLogger("@wolfstar/dashboard");
 const guildId = useRouteParams("id", null, { transform: String });
 
 if (!isValidGuildId(guildId.value)) {

@@ -1,15 +1,16 @@
+import type { DrainContext } from "evlog";
+import { createDrainPipeline } from "evlog/pipeline";
 import { createSentryDrain } from "evlog/sentry";
 
 export default defineNitroPlugin((nitroApp) => {
-	if (!runtimeConfig.public.sentry.dsn) {
-		return;
-	}
-	// Hook evlog drain
-	nitroApp.hooks.hook(
-		"evlog:drain",
+	const pipeline = createDrainPipeline<DrainContext>();
+	const drain = pipeline(
 		createSentryDrain({
 			dsn: runtimeConfig.public.sentry.dsn,
-			environment: "development",
+			environment: runtimeConfig.public.environment,
 		}),
 	);
+
+	nitroApp.hooks.hook("evlog:drain", drain);
+	nitroApp.hooks.hook("close", () => drain.flush());
 });

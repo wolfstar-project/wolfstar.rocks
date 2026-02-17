@@ -1,4 +1,5 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
+import { createError } from "evlog";
 
 defineRouteMeta({
 	openAPI: {
@@ -85,11 +86,15 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
 	async (event) => {
+		const log = useLogger(event);
+
 		const guildId = getGuildParam(event);
+		log.set({ guild: { id: guildId } });
 
 		const guild = await getGuild(guildId);
 
 		const currentMember = await getCurrentMember(event, guild.id);
+		log.set({ member: { id: currentMember.user.id } });
 
 		await canManage(guild, currentMember);
 
@@ -98,8 +103,11 @@ export default defineWrappedResponseHandler(
 			throw createError({
 				message: "Member ID is required",
 				status: 400,
+				why: "No member ID was provided in the request path",
+				fix: "Include a valid member snowflake ID in the URL",
 			});
 		}
+		log.set({ targetMember: { id: memberId } });
 
 		const member = await getMember(guild.id, memberId);
 
@@ -107,11 +115,8 @@ export default defineWrappedResponseHandler(
 	},
 	{
 		auth: true,
-		onError(logger, error) {
-			logger.error("Failed to retrieve member data:", error);
-		},
-		onSuccess(logger, data) {
-			logger.info(`Successfully retrieved member data for member ID: ${data.id} in guild ID: ${data.guildId}`);
+		onError(log, error) {
+			log.error(error);
 		},
 		rateLimit: { enabled: true, limit: 2, window: seconds(5) },
 	},

@@ -53,14 +53,13 @@ const rateLimitSchema = v.object({
 type RateLimitOptions = v.InferOutput<typeof rateLimitSchema>;
 type PartialRateLimitOptions = Partial<RateLimitOptions>;
 
-interface DefinedWrappedResponseHandlerOptions<Data> {
+interface DefinedWrappedResponseHandlerOptions {
 	onError?: (logger: ReturnType<typeof useLogger>, error: any | Error | H3Error) => void;
-	onSuccess?: (logger: ReturnType<typeof useLogger>, data: Awaited<Data>) => void;
 	auth?: boolean;
 	rateLimit?: PartialRateLimitOptions;
 }
 
-interface DefinedWrappedCachedResponseHandlerOptions<Data> extends DefinedWrappedResponseHandlerOptions<Data>, CacheOptions {}
+interface DefinedWrappedCachedResponseHandlerOptions extends DefinedWrappedResponseHandlerOptions, CacheOptions {}
 
 /**
  * Extracts a unique identifier for rate limiting purposes
@@ -106,7 +105,7 @@ function normalizeRateLimitOptions(options: PartialRateLimitOptions | undefined,
 	}
 }
 
-async function getUserSession(options: DefinedWrappedResponseHandlerOptions<any>, event: H3Event): Promise<UserSessionRequired | null> {
+async function getUserSession(options: DefinedWrappedResponseHandlerOptions, event: H3Event): Promise<UserSessionRequired | null> {
 	if (options.auth) {
 		return await requireUserSession(event);
 	}
@@ -116,7 +115,7 @@ async function getUserSession(options: DefinedWrappedResponseHandlerOptions<any>
 async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	event: H3Event<T>,
 	handler: EventHandler<T, D>,
-	options: DefinedWrappedResponseHandlerOptions<D>,
+	options: DefinedWrappedResponseHandlerOptions,
 ) {
 	const log = useLogger(event);
 	const session = await getUserSession(options, event);
@@ -154,10 +153,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			if (state) {
 				await rateLimitStorage.setItem(storageKey, state);
 			}
-		} catch (error) {
-			// Swallow storage errors to avoid breaking request handling
-			isDevelopment && log.warn("rateLimit.storage.persist.failed", { error });
-		}
+		} catch {}
 	}
 
 	switch (windowType) {
@@ -219,10 +215,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 						cur.count = Math.max(0, cur.count - 1);
 						await persistState(cur as Record<string, unknown>);
 					}
-				} catch (error) {
-					// Ignore rollback errors but log in dev
-					isDevelopment && log.warn("rateLimit.rollback.failed", { error });
-				}
+				} catch {}
 				throw error;
 			}
 		}
@@ -279,17 +272,12 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 						cur.timestamps = cur.timestamps.slice(0, -1);
 						await persistState(cur as Record<string, unknown>);
 					}
-				} catch (error) {
-					// Ignore rollback errors but log in dev
-					isDevelopment && log.warn("rateLimit.rollback.failed", { error });
-				}
+				} catch {}
 				throw error;
 			}
 		}
 
-		default: {
-			log.warn("rateLimit.windowType.unknown", { windowType });
-		}
+		default:
 	}
 	// Fallback: if an unknown windowType is provided, just run the handler
 	return await handler(event);
@@ -297,7 +285,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 
 export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 	handler: EventHandler<T, D>,
-	options: DefinedWrappedResponseHandlerOptions<D> = {
+	options: DefinedWrappedResponseHandlerOptions = {
 		auth: false,
 		rateLimit: { enabled: true, limit: 5, type: "fixed", window: 10_000 },
 	},
@@ -306,9 +294,6 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 		const log = useLogger(event);
 		try {
 			const result = await applyWrappedHandlerLogic(event, handler, options);
-			if (result && options.onSuccess && typeof options.onSuccess === "function") {
-				options.onSuccess(log, result);
-			}
 			return result;
 		} catch (error) {
 			if (options.onError && typeof options.onError === "function") {
@@ -321,21 +306,18 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 
 export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest, D>(
 	handler: EventHandler<T, D>,
-	options: DefinedWrappedCachedResponseHandlerOptions<D> = {
+	options: DefinedWrappedCachedResponseHandlerOptions = {
 		auth: false,
 		maxAge: 60 * 60,
 		rateLimit: { enabled: true, limit: 5, type: "fixed", window: 10_000 },
 		swr: true,
 	},
 ): EventHandler<T, D> {
-	const opts = omit(["rateLimit", "auth", "onError", "onSuccess"], options);
+	const opts = omit(["rateLimit", "auth", "onError"], options);
 	return cachedEventHandler<T>(async (event) => {
 		const log = useLogger(event);
 		try {
 			const result = await applyWrappedHandlerLogic(event, handler, options);
-			if (result && options.onSuccess && typeof options.onSuccess === "function") {
-				options.onSuccess(log, result);
-			}
 			return result;
 		} catch (error) {
 			if (options.onError && typeof options.onError === "function") {

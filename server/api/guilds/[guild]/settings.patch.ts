@@ -1,5 +1,6 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
+import { createError } from "evlog";
 import * as v from "valibot";
 
 const settingsUpdateSchema = v.object({
@@ -62,19 +63,19 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
 	async (event) => {
+		const log = useLogger(event);
+
 		const guildId = getGuildParam(event);
+		log.set({ guild: { id: guildId } });
 
 		const body = await readValidatedBody(event, (body) => v.parse(settingsUpdateSchema, body));
 
 		if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
 			throw createError({
-				data: {
-					error: "invalid_request_body",
-					field: "body",
-					message: "Invalid request body or missing data",
-				},
 				message: "Invalid request body or missing data",
 				status: 400,
+				why: "The request body is missing or does not contain a 'data' field",
+				fix: "Send a JSON body with a 'data' array of [key, value] tuples",
 			});
 		}
 
@@ -82,35 +83,32 @@ export default defineWrappedResponseHandler(
 
 		if (isNullishOrEmpty(data)) {
 			throw createError({
-				data: {
-					error: "empty_data_array",
-					field: "data",
-					message: "Data array cannot be empty",
-				},
 				message: "Data array cannot be empty",
 				status: 400,
+				why: "The 'data' field is present but contains no entries",
+				fix: "Provide at least one [key, value] tuple in the data array",
 			});
 		}
 
 		const guild = await getGuild(guildId);
 
 		const member = await getCurrentMember(event, guild.id);
+		log.set({ member: { id: member.user.id } });
 		await canManage(guild, member);
 
 		using trx = await writeSettingsTransaction(guild.id);
 
 		if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
 			throw createError({
-				data: {
-					error: "invalid_data_entries",
-					message: "All data entries must be valid [key, value] tuples",
-				},
 				message: "Invalid data entries",
 				status: 400,
+				why: "All data entries must be valid [key, value] tuples",
+				fix: "Ensure every entry in the data array is a two-element array",
 			});
 		}
 
 		const settingsData = Object.fromEntries(data);
+		log.set({ settings: { keysUpdated: Object.keys(settingsData).length } });
 
 		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
 		coerceBigIntFields(settingsData);
@@ -120,11 +118,8 @@ export default defineWrappedResponseHandler(
 	},
 	{
 		auth: true,
-		onError(logger, error) {
-			logger.error("Failed to update settings:", error);
-		},
-		onSuccess(logger) {
-			logger.info(`Successfully updated settings`);
+		onError(log, error) {
+			log.error(error);
 		},
 		rateLimit: { enabled: true, limit: 2, window: seconds(1) },
 	},

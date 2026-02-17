@@ -381,11 +381,15 @@ defineRouteMeta({
 
 export default defineWrappedResponseHandler(
 	async (event) => {
+		const log = useLogger(event);
+
 		const guildId = getGuildParam(event);
+		log.set({ guild: { id: guildId } });
 
 		const guild = await getGuild(guildId);
 
 		const member = await getCurrentMember(event, guild.id);
+		log.set({ member: { id: member.user.id } });
 		await canManage(guild, member);
 
 		const settings = await readSettings(guild.id);
@@ -393,11 +397,8 @@ export default defineWrappedResponseHandler(
 	},
 	{
 		auth: true,
-		onError(logger, error) {
-			logger.error("Failed to retrieve settings:", error);
-		},
-		onSuccess(logger) {
-			logger.info(`Successfully retrieved settings`);
+		onError(log, error) {
+			log.error(error);
 		},
 		rateLimit: { enabled: true, limit: 2, window: seconds(5) },
 	},

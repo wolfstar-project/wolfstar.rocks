@@ -1,4 +1,5 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
+import { createError } from "evlog";
 
 defineRouteMeta({
 	openAPI: {
@@ -60,37 +61,36 @@ defineRouteMeta({
 export default defineWrappedResponseHandler(
 	async (event) => {
 		const api = useApi();
+		const log = useLogger(event);
 
 		const guildId = getGuildParam(event);
+		log.set({ guild: { id: guildId } });
 
 		const guild = await getGuild(guildId);
 
 		const currentMember = await getCurrentMember(event, guild.id);
+		log.set({ member: { id: currentMember.user.id } });
 
 		await canManage(guild, currentMember);
 
 		const roleId = getRouterParam(event, "role");
 		if (isNullOrUndefined(roleId)) {
 			throw createError({
-				data: {
-					error: "role_id_required",
-					field: "roleId",
-					message: "Role ID is required",
-				},
-				message: "No role id provided",
+				message: "Role ID is required",
 				status: 400,
+				why: "No role ID was provided in the request path",
+				fix: "Include a valid role snowflake ID in the URL",
 			});
 		}
+		log.set({ role: { id: roleId } });
 
 		const role = await api.guilds.getRole(guild.id, roleId).catch((error) => {
+			log.error(error);
 			throw createError({
-				data: {
-					details: error,
-					error: "role_fetch_failed",
-					message: error.message || "Unknown error",
-				},
 				message: "Failed to fetch role",
 				status: 500,
+				why: `Discord API error while fetching role ${roleId} for guild ${guildId}`,
+				cause: error,
 			});
 		});
 
@@ -98,11 +98,8 @@ export default defineWrappedResponseHandler(
 	},
 	{
 		auth: true,
-		onError(logger, error) {
-			logger.error("Failed to retrieve role data:", error);
-		},
-		onSuccess(logger, data) {
-			logger.info(`Successfully retrieved role data for role ID: ${data.id} in guild ID: ${data.guildId}`);
+		onError(log, error) {
+			log.error(error);
 		},
 		rateLimit: { enabled: true, limit: 2, window: seconds(5) },
 	},

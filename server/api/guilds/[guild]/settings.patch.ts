@@ -1,6 +1,6 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
-import { createError } from "evlog";
+import { createError, useLogger } from "evlog";
 import * as v from "valibot";
 
 const settingsUpdateSchema = v.object({

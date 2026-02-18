@@ -3,7 +3,7 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
 import { cast, isObject } from "@sapphire/utilities";
-import { useLogger } from "evlog/nitro";
+import { useLogger, createError } from "evlog";
 import { isDevelopment } from "std-env";
 import * as v from "valibot";
 
@@ -117,7 +117,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	handler: EventHandler<T, D>,
 	options: DefinedWrappedResponseHandlerOptions,
 ) {
-	const log = useLogger(event);
+	const log = useLogger(event, "wrappedHandler");
 	const session = await getUserSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
@@ -174,7 +174,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			if (remaining <= 0) {
 				const msUntilReset = windowStart + windowMs - now;
 				const timeForInterval = windowStart + windowMs;
-				log.info("rateLimit.exceeded", {
+				log.info("The rate limit has been exceeded", {
 					idHash: hashValue(id),
 					limit,
 					windowType: "fixed",
@@ -186,10 +186,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
 				throw createError({
-					data: {
-						message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
-					},
-					message: "Too Many Requests",
+					message: `Too Many Requests. Try again in ${msUntilReset}ms`,
+					why: "The number of requests has exceeded the configured limit for this time window",
+					fix: "Wait until the rate limit resets before making more requests",
 					status: 429,
 				});
 			}
@@ -231,7 +230,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				const oldest = timestamps?.[0] ?? now;
 				const msUntilReset = oldest + windowMs - now;
 				const timeForInterval = oldest + windowMs;
-				log.info("rateLimit.exceeded", {
+				log.info("The rate limit has been exceeded", {
 					idHash: hashValue(id),
 					limit,
 					windowType: "sliding",
@@ -243,10 +242,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
 				throw createError({
-					data: {
-						message: `Rate limit exceeded. Try again in ${msUntilReset}ms`,
-					},
-					message: "Too Many Requests",
+					message: `Too Many Requests. Try again in ${msUntilReset}ms`,
+					why: "The number of requests has exceeded the configured limit for this time window",
+					fix: "Wait until the rate limit resets before making more requests",
 					status: 429,
 				});
 			}

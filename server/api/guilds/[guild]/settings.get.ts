@@ -1,4 +1,5 @@
 import { readSettings, serializeSettings } from "#server/database";
+import { useLogger } from "evlog";
 
 defineRouteMeta({
 	openAPI: {

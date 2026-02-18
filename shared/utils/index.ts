@@ -3,6 +3,5 @@ export * from "./bits";
 export * from "./comparators";
 export * from "./fetch-cache-config";
 export * from "./isDeepEqual";
-export * from "./logger";
 export * from "./settingsDataEntries";
 export * from "./times";

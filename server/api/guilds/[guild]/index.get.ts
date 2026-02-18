@@ -1,5 +1,5 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
-import { createError } from "evlog";
+import { createError, useLogger } from "evlog";
 import * as v from "valibot";
 
 const querySchema = v.object({

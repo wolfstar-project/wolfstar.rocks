@@ -1,3 +1,4 @@
+import { useLogger } from "evlog";
 defineRouteMeta({
 	openAPI: {
 		description: "Retrieves a list of all channels within a guild. Requires the user to have management permissions for the guild.",

@@ -1,5 +1,5 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
-import { createError } from "evlog";
+import { createError, useLogger } from "evlog";
 
 defineRouteMeta({
 	openAPI: {

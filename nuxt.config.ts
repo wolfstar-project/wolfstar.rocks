@@ -57,7 +57,7 @@ export default defineNuxtConfig({
 					debug: 0,
 					error: 100,
 				},
-				keep: [{ status: 400 }],
+				keep: [{ status: 400 }, { duration: 1000 }],
 			},
 		},
 	},

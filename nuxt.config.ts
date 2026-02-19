@@ -256,12 +256,12 @@ export default defineNuxtConfig({
 				base: "./.cache/fetch",
 				driver: "fsLite",
 			},
-			"oauth-atproto-session": {
-				base: "./.cache/atproto-oauth/session",
+			cache: {
+				base: "./.cache/cache",
 				driver: "fsLite",
 			},
 			"wolfstar:ratelimiter": {
-				base: "./.cache/atproto-oauth/state",
+				base: "./.cache/ratelimiter",
 				driver: "fsLite",
 			},
 		},

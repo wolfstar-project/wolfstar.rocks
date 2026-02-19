@@ -13,6 +13,7 @@ export function useGuildSettingsChanges() {
 
 	// Use guild-scoped state key
 	const guildSettingsChanges = useState<GuildData | undefined>(`guild:${guildId.value}:settings:changes`, () => undefined);
+	const resetCounter = useState<number>(`guild:${guildId.value}:settings:resetCounter`, () => 0);
 
 	const mergeGuildSettings = (changes?: Partial<GuildData>) => {
 		if (!changes) {
@@ -43,10 +44,17 @@ export function useGuildSettingsChanges() {
 		}
 	};
 
+	const resetGuildSettingsChanges = () => {
+		guildSettingsChanges.value = undefined;
+		resetCounter.value += 1;
+	};
+
 	return {
 		guildSettingsChanges: readonly(guildSettingsChanges),
 		mergeGuildSettings,
 		removeChange,
+		resetCounter: readonly(resetCounter),
+		resetGuildSettingsChanges,
 		setGuildSettingsChanges,
 	};
 }

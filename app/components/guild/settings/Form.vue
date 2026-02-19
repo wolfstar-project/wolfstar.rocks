@@ -21,12 +21,13 @@ const { schema, state, mapToGuildData } = defineProps<Props>();
 const emit = defineEmits<{
 	error: [event: FormErrorEvent];
 }>();
-const { setGuildSettingsChanges, removeChange } = useGuildSettingsChanges();
+const { setGuildSettingsChanges, removeChange, resetCounter } = useGuildSettingsChanges();
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
 const originalState = ref<T | undefined>(undefined);
 const isOriginalStateInitialized = ref(false);
+const isResetting = ref(false);
 
 // Calculate changes between current state and original values
 function calculateChanges(currentState: T): { changes: Partial<GuildData>; changedKeys: Set<keyof GuildData>; revertedKeys: Set<keyof GuildData> } {
@@ -77,7 +78,7 @@ function handleError(event: FormErrorEvent) {
 watch(
 	() => state,
 	(newState) => {
-		if (!isOriginalStateInitialized.value) {
+		if (!isOriginalStateInitialized.value || isResetting.value) {
 			return;
 		}
 
@@ -110,6 +111,21 @@ watch(
 		if (isOriginalStateInitialized.value) {
 			originalState.value = structuredClone(toRaw(state));
 		}
+	},
+	{ flush: "sync" },
+);
+
+watch(
+	resetCounter,
+	() => {
+		if (!isOriginalStateInitialized.value || !originalState.value) {
+			return;
+		}
+
+		isResetting.value = true;
+		Object.assign(state, structuredClone(toRaw(originalState.value)));
+		formRef.value?.clear();
+		isResetting.value = false;
 	},
 	{ flush: "sync" },
 );

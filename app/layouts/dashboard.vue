@@ -15,8 +15,8 @@
 					<UAvatar :src :alt="guildData.name" class="mr-2" />
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
-				<div v-else class="flex h-10 w-full animate-pulse items-center justify-center rounded bg-base-300/50">
-					<USkeleton class="mr-2 h-4 w-24 rounded" />
+				<div v-else class="flex h-10 items-center justify-center">
+					<USkeleton class="mr-2 h-10 w-10 rounded-full" />
 					<div v-if="!collapsed" class="ms-2">
 						<USkeleton class="h-4 w-24 rounded" />
 					</div>
@@ -43,7 +43,7 @@
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
 				<h2 class="text-xl font-semibold text-base-content">{{ nuxtError.statusMessage || "Error Loading Dashboard" }}</h2>
-				<p v-if="nuxtError.statusCode === 403">
+				<p v-if="nuxtError.status === 403">
 					You do not have permission to access this guild's dashboard. Please ensure you have the necessary permissions and try again.
 				</p>
 				<p class="text-sm text-base-content/60">
@@ -86,7 +86,6 @@
 		<div v-if="isReadyToSubmit" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
 			<UFieldGroup>
 				<UButton color="primary" icon="heroicons:check" @click="submitChanges"> Save Changes </UButton>
-
 				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges"> Reset Changes </UButton>
 			</UFieldGroup>
 		</div>
@@ -97,21 +96,21 @@
 import type { GuildData } from "#server/database";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
-import { parseError } from "evlog";
+import { parseError, createError } from "evlog";
 import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
+
+const logger = useLogger("wolfstar:dashboard");
 
 const guildId = useRouteParams("id", null, { transform: String });
 
 if (!isValidGuildId(guildId.value)) {
 	throw createError({
-		data: {
-			field: "guildId",
-		},
-		message: "The provided guild ID is not valid. Guild IDs must be 17-19 digit numbers.",
+		why: "Guild IDs must be 17-19 digit numbers.",
 		status: 400,
-		statusText: "Invalid Guild ID",
+		message: "The provided guild ID is not valid.",
+		fix: "Please check the URL and ensure the guild ID is correct.",
 	});
 }
 
@@ -120,7 +119,7 @@ const open = ref(false);
 const nuxtError = useError();
 const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
-const { setGuildSettingsChanges, guildSettingsChanges } = useGuildSettingsChanges();
+const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } = useGuildSettingsChanges();
 const isLoading = useState<boolean>("dashboard:loading", () => true);
 
 const items = computed<NavigationMenuItem[][]>(() => [
@@ -212,6 +211,20 @@ async function submitChanges() {
 		body: {
 			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
 		},
+		transform: (response: string) => {
+			try {
+				return JSON.parse(response);
+			} catch (error) {
+				logger.error(`Failed to parse response from settings update for guild Id: ${guildId.value}`, parseError(error));
+				throw createError({
+					message: "Failed to update guild settings",
+					why: "An unexpected error occurred while processing the server response.",
+					status: 500,
+					fix: "Please try again later. If the issue persists, contact support.",
+					cause: error as Error,
+				});
+			}
+		},
 		method: "PATCH",
 	});
 
@@ -219,11 +232,8 @@ async function submitChanges() {
 		return;
 	}
 
-	// Parse the serialized JSON string response from server
-	const dataParsed = cast<GuildData>(JSON.parse(data.value as string));
-
-	if (!isNullOrUndefined(dataParsed) && objectValues(dataParsed).length !== 0) {
-		setGuildSettings(dataParsed);
+	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
+		setGuildSettings(data.value);
 		setGuildSettingsChanges(undefined);
 
 		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
@@ -238,7 +248,7 @@ async function submitChanges() {
 }
 
 function resetChanges() {
-	setGuildSettingsChanges(undefined);
+	resetGuildSettingsChanges();
 
 	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
 
@@ -253,7 +263,7 @@ function resetChanges() {
 // Clear staged changes when guild ID changes (prevents cross-guild leakage)
 watch(guildId, (newGuildId, oldGuildId) => {
 	if (oldGuildId && newGuildId !== oldGuildId) {
-		setGuildSettingsChanges(undefined);
+		resetGuildSettingsChanges();
 		logger.info(`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`);
 	}
 });
@@ -273,10 +283,9 @@ onMounted(async () => {
 		}
 		// oxlint-disable-next-line unicorn/catch-error-name
 	} catch (err: unknown) {
-		isLoading.value = false;
 		const error = parseError(err);
 
-		log.error("Error loading guild data or settings for guild Id:", guildId.value, error);
+		logger.error(`Error loading guild data or settings for guild Id: ${guildId.value}`, error);
 
 		toast.add({
 			title: error.message,

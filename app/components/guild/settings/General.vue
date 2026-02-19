@@ -124,7 +124,7 @@ const schema = v.object({
 			v.string(),
 			v.trim(),
 			v.minLength(1, "Prefix must be at least 1 character"),
-			v.maxLength(11, "Prefix cannot be longer than 10 characters"),
+			v.maxLength(10, "Prefix cannot be longer than 10 characters"),
 		),
 	),
 });

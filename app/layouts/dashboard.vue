@@ -272,8 +272,11 @@ onMounted(async () => {
 	isLoading.value = true;
 
 	try {
-		const guildData = await $fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`);
-		const guildSettings = await $fetch<string>(`/api/guilds/${guildId.value}/settings`);
+		// Fetch guild data and settings in parallel to halve round-trip latency.
+		const [guildData, guildSettings] = await Promise.all([
+			$fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`),
+			$fetch<string>(`/api/guilds/${guildId.value}/settings`),
+		]);
 
 		setGuildData(guildData);
 		setGuildSettings(JSON.parse(guildSettings));

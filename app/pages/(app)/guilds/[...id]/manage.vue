@@ -55,13 +55,13 @@ const loading = useState<boolean>("guild:loading", () => false);
 const commands = useState<FlattenedCommand[]>("guild:commands", () => []);
 const languages = useState<string[]>("guild:languages", () => []);
 const toast = useToast();
+const logger = useLogger("wolfstar:manage");
 const { guildData } = useGuildData();
 
 const slug = route.params.slug as string | string[];
 
-async function fetchCommandsAndLanguages() {
+async function fetchCommandsList() {
 	loading.value = true;
-
 	try {
 		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
 			data: [],
@@ -83,7 +83,24 @@ async function fetchCommandsAndLanguages() {
 				expire: Date.now() + Time.Day * 6,
 			};
 		}
+	} catch (error: any) {
+		toast.add({
+			closeIcon: "heroicons:x-mark",
+			color: "error",
+			description: error?.message || "Unable to fetch commands",
+			duration: 3000,
+			icon: "heroicons:exclamation-triangle",
+			title: "Failed to load commands",
+		});
+		logger.error("Error fetching commands:", error);
+	} finally {
+		loading.value = false;
+	}
+}
 
+async function fetchLanguagesList() {
+	loading.value = true;
+	try {
 		const languagesStorage = useLocalStorage<ExpirableLocalStorageStructure<string[]>>(LocalStorageKeys.Languages, {
 			data: [],
 			expire: 0,
@@ -108,12 +125,12 @@ async function fetchCommandsAndLanguages() {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: error?.message || "Unable to fetch commands and languages",
+			description: error?.message || "Unable to fetch languages",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Failed to load data",
+			title: "Failed to load languages",
 		});
-		logger.error("Error fetching commands and languages:", error);
+		logger.error("Error fetching languages:", error);
 	} finally {
 		loading.value = false;
 	}
@@ -143,9 +160,29 @@ const renderComponent = computed(() => {
 	}
 });
 
+// Fetch only the data required by the active section.
+// Channels / Events / Roles do not use commands or languages, so we skip
+// The network round-trips (and localStorage reads) entirely.
+onMounted(() => {
+	switch (joinedPath.value) {
+		case "": {
+			// General section (empty slug) uses the languages list for the locale picker
+			void fetchLanguagesList();
+			break;
+		}
+		case "commands": {
+			// DisabledCommands only needs the commands list
+			void fetchCommandsList();
+			break;
+		}
+		default: {
+			// Channels / Events / Roles: no external data needed
+			break;
+		}
+	}
+});
+
 useHead({
 	title: () => title.value,
 });
-
-onMounted(fetchCommandsAndLanguages);
 </script>

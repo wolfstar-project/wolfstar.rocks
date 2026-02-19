@@ -160,12 +160,16 @@ export default defineNuxtConfig({
 	},
 
 	routeRules: {
-		// API routes
-		"/api/**": { isr: 60 },
+		// API routes — only cache public, non-authenticated proxy routes.
+		// Broad ISR on /api/** is intentionally omitted: authenticated routes
+		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
+		// Globally, as that would serve one user's data to another.
 		"/api/commands": {
+			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
 			proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
 		},
 		"/api/languages": {
+			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
 			proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
 		},
 

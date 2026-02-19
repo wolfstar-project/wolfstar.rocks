@@ -30,8 +30,16 @@ export const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
 
 /**
  * Check if a URL's host is in the allowed domains list.
+ *
+ * Relative URLs (e.g. "/api/users") are always treated as same-origin and
+ * therefore allowed — they will never resolve to an external host.
  */
 export function isAllowedDomain(url: string | URL): boolean {
+	// Relative URLs are same-origin: always cache-eligible
+	if (typeof url === "string" && url.startsWith("/")) {
+		return true;
+	}
+
 	try {
 		const urlObj = typeof url === "string" ? new URL(url) : url;
 		return FETCH_CACHE_ALLOWED_DOMAINS.includes(urlObj.host);

@@ -183,7 +183,8 @@ export function createMockCompleteGuild(config?: {
 			id: `33333333333333333${i.toString().padStart(1, "0")}`,
 			name: i === 0 ? "general" : `channel-${i}`,
 			rawPosition: i,
-		}),	);
+		}),
+	);
 
 	// Create roles
 	const roles: FlattenedRole[] = Array.from({ length: numRoles }, (_, i) =>
@@ -192,14 +193,16 @@ export function createMockCompleteGuild(config?: {
 			id: `11111111111111111${i.toString().padStart(1, "0")}`,
 			name: i === 0 ? "@everyone" : `Role ${i}`,
 			rawPosition: i,
-		}),	);
+		}),
+	);
 
 	// Create emojis
 	const emojis: FlattenedEmoji[] = Array.from({ length: numEmojis }, (_, i) =>
 		createMockEmoji({
 			id: `22222222222222222${i.toString().padStart(1, "0")}`,
 			name: `emoji_${i}`,
-		}),	);
+		}),
+	);
 
 	return createMockOauthFlattenedGuild({
 		...guildOverrides,

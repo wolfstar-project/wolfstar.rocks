@@ -3,7 +3,11 @@ import type { GuildData, ReadonlyGuildData } from "#server/database/settings/typ
 import type { Awaitable, PickByValue } from "@sapphire/utilities";
 import prisma from "#server/database/prisma";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
-import { deleteSettingsContext, getSettingsContext, updateSettingsContext } from "#server/database/settings/context/functions";
+import {
+	deleteSettingsContext,
+	getSettingsContext,
+	updateSettingsContext,
+} from "#server/database/settings/context/functions";
 import { maybeParseNumber } from "#server/utils/shared";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
@@ -25,7 +29,12 @@ const transformers = {
 } satisfies Record<PickByValue<ReadonlyGuildData, bigint | null>, typeof maybeParseNumber>;
 
 export function serializeSettings(data: ReadonlyGuildData, space?: string | number) {
-	return JSON.stringify(data, (key, value) => (key in transformers ? transformers[key as keyof typeof transformers](value) : value), space);
+	return JSON.stringify(
+		data,
+		(key, value) =>
+			key in transformers ? transformers[key as keyof typeof transformers](value) : value,
+		space,
+	);
 }
 
 /**
@@ -91,7 +100,9 @@ export function readSettingsCached(guildid: string): ReadonlyGuildData | null {
 
 export async function writeSettings(
 	guildid: string,
-	data: Partial<ReadonlyGuildData> | ((settings: ReadonlyGuildData) => Awaitable<Partial<ReadonlyGuildData>>),
+	data:
+		| Partial<ReadonlyGuildData>
+		| ((settings: ReadonlyGuildData) => Awaitable<Partial<ReadonlyGuildData>>),
 ) {
 	using trx = await writeSettingsTransaction(guildid);
 
@@ -224,7 +235,9 @@ async function fetch(id: string): Promise<GuildData> {
 		return existing;
 	}
 
-	const created = Object.assign(Object.create(null), getDefaultGuildSettings(), { id }) as GuildData;
+	const created = Object.assign(Object.create(null), getDefaultGuildSettings(), {
+		id,
+	}) as GuildData;
 	cache.set(id, created);
 	WeakMapNotInitialized.add(created);
 	return created;

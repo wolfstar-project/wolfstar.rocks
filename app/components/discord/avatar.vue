@@ -1,5 +1,10 @@
 <template>
-	<div class="discord-message-avatar-wrapper" :class="size.classes" role="img" :aria-label="`${profile.name}'s avatar`">
+	<div
+		class="discord-message-avatar-wrapper"
+		:class="size.classes"
+		role="img"
+		:aria-label="`${profile.name}'s avatar`"
+	>
 		<nuxt-img
 			v-if="profile.app"
 			:src="`/avatars/${user}.png`"
@@ -7,8 +12,18 @@
 			:height="size.dimensions"
 			:alt="`${profile.name} avatar`"
 		/>
-		<UIcon v-else-if="user === 'baddie'" name="ph:smiley-angry-fill" class="discord-message-avatar baddie size-full" aria-hidden="true" />
-		<UIcon v-else name="ph:shooting-star-fill" class="h-full w-full text-info" aria-hidden="true" />
+		<UIcon
+			v-else-if="user === 'baddie'"
+			name="ph:smiley-angry-fill"
+			class="discord-message-avatar baddie size-full"
+			aria-hidden="true"
+		/>
+		<UIcon
+			v-else
+			name="ph:shooting-star-fill"
+			class="h-full w-full text-info"
+			aria-hidden="true"
+		/>
 	</div>
 </template>
 

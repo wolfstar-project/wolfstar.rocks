@@ -84,7 +84,8 @@ export function processWordBoundaries(word: string) {
 export function processWordPatternsWithGroups(word: string) {
 	return bidirectionalReplace(kPatternGroupReplacer, word, {
 		onMatch: (match) => `${processGroup(match[1])}+${match[2] ? String.raw`\W*` : ""}`,
-		outMatch: (match, _, next) => `${processWordPattern(match)}${next === word.length ? "" : String.raw`\W*`}`,
+		outMatch: (match, _, next) =>
+			`${processWordPattern(match)}${next === word.length ? "" : String.raw`\W*`}`,
 	}).join("");
 }
 
@@ -109,7 +110,10 @@ export function processGroup(group: string) {
 }
 
 export function processWordPattern(word: string) {
-	return word.replace(kWordReplacer, (letter, nextWord) => `${processLetter(letter)}+${nextWord ? String.raw`\W*` : ""}`);
+	return word.replace(
+		kWordReplacer,
+		(letter, nextWord) => `${processLetter(letter)}+${nextWord ? String.raw`\W*` : ""}`,
+	);
 }
 
 export function processLetter(letter: string) {

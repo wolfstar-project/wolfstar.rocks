@@ -47,14 +47,19 @@ async function main() {
 		const force = process.argv.includes("--force") || process.env.FORCE_PUSH === "true";
 		if (!force) {
 			if (!process.stdout.isTTY) {
-				consola.error("Non-interactive environment detected. Re-run with --force or FORCE_PUSH=true.");
+				consola.error(
+					"Non-interactive environment detected. Re-run with --force or FORCE_PUSH=true.",
+				);
 				process.exitCode = 1;
 				return;
 			}
 
-			const proceed = await consola.prompt(`This will reset the 'release' branch to 'main' (${hash.slice(0, 7)}). Continue?`, {
-				type: "confirm",
-			});
+			const proceed = await consola.prompt(
+				`This will reset the 'release' branch to 'main' (${hash.slice(0, 7)}). Continue?`,
+				{
+					type: "confirm",
+				},
+			);
 
 			if (!proceed) {
 				consola.log("Operation cancelled.");
@@ -98,8 +103,13 @@ async function main() {
 				await git.push(["origin", "release", "--force"]);
 				consola.log("'release' branch has been restored.");
 			} catch (restoreError) {
-				consola.error("Failed to restore 'release' branch. Manual intervention may be required.", restoreError);
-				consola.error(`The state of the 'release' branch before this script was run is saved in the local branch '${recoveryRef}'.`);
+				consola.error(
+					"Failed to restore 'release' branch. Manual intervention may be required.",
+					restoreError,
+				);
+				consola.error(
+					`The state of the 'release' branch before this script was run is saved in the local branch '${recoveryRef}'.`,
+				);
 			}
 		}
 		process.exitCode = 1;

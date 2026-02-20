@@ -4,7 +4,15 @@
 
 		<template #body>
 			<SelectFieldWrapper :field-name :tooltip-title>
-				<USelect v-model="selectedValue" :items :disabled value-key="value" label-key="label" :placeholder class="w-full">
+				<USelect
+					v-model="selectedValue"
+					:items
+					:disabled
+					value-key="value"
+					label-key="label"
+					:placeholder
+					class="w-full"
+				>
 					<template v-if="imageInName" #trailing>
 						<UAvatar :src="imageInName" alt="Emoji" size="2xs" />
 					</template>
@@ -12,7 +20,15 @@
 
 				<template #help>
 					<div class="flex items-center justify-between gap-2">
-						<UButton variant="ghost" color="error" size="sm" :disabled @click="handleReset"> Clear selected </UButton>
+						<UButton
+							variant="ghost"
+							color="error"
+							size="sm"
+							:disabled
+							@click="handleReset"
+						>
+							Clear selected
+						</UButton>
 					</div>
 				</template>
 			</SelectFieldWrapper>
@@ -65,7 +81,16 @@ interface Emits {
 </script>
 
 <script setup lang="ts">
-const { name = "None", disabled = false, label, values, description, tooltipTitle, imageInName, modelValue } = defineProps<SelectOneProps>();
+const {
+	name = "None",
+	disabled = false,
+	label,
+	values,
+	description,
+	tooltipTitle,
+	imageInName,
+	modelValue,
+} = defineProps<SelectOneProps>();
 
 const emit = defineEmits<Emits>();
 

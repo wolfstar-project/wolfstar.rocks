@@ -45,10 +45,15 @@ export default {
 		trailingIcon: "shrink-0",
 	},
 	variants: {
-		color: Object.fromEntries(colors.map((color) => [color, `badge-${color}`])) as Record<UIColors, string>,
+		color: Object.fromEntries(colors.map((color) => [color, `badge-${color}`])) as Record<
+			UIColors,
+			string
+		>,
 		fieldGroup: {
-			horizontal: "not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none",
-			vertical: "not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
+			horizontal:
+				"not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none",
+			vertical:
+				"not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
 		},
 		size: {
 			lg: {

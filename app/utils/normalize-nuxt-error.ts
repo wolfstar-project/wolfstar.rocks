@@ -6,7 +6,10 @@ export interface NuxtErrorShape {
 	message: string;
 }
 
-export function normalizeToNuxtError(error: unknown, fallback: { statusCode: number; statusMessage: string; message: string }): NuxtErrorShape {
+export function normalizeToNuxtError(
+	error: unknown,
+	fallback: { statusCode: number; statusMessage: string; message: string },
+): NuxtErrorShape {
 	// Handle falsy values (null, undefined, false, 0, "")
 	if (isNullOrUndefinedOrZero(error) || isNullOrUndefinedOrEmpty(error) || error === false) {
 		return { ...fallback };

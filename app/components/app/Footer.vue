@@ -1,6 +1,15 @@
 <template>
-	<USeparator size="lg" icon="custom:wolfstar" :ui="{ border: 'border-[1px] border-base-300' }" class="mt-24 p-10 content-visibility-auto" />
-	<UFooter :ui="{ root: 'p-2 content-visibility-auto', top: 'border-default' }" role="contentinfo" aria-label="Site footer">
+	<USeparator
+		size="lg"
+		icon="custom:wolfstar"
+		:ui="{ border: 'border-[1px] border-base-300' }"
+		class="mt-24 p-10 content-visibility-auto"
+	/>
+	<UFooter
+		:ui="{ root: 'p-2 content-visibility-auto', top: 'border-default' }"
+		role="contentinfo"
+		aria-label="Site footer"
+	>
 		<template #top>
 			<UContainer>
 				<UFooterColumns class="p-10" :columns>
@@ -33,12 +42,16 @@
 						<p class="font-semibold">WolfStar Project</p>
 					</div>
 					<div>
-						<p class="text-sm text-base-content/80">Copyright © {{ currentYear }}. All rights reserved.</p>
+						<p class="text-sm text-base-content/80">
+							Copyright © {{ currentYear }}. All rights reserved.
+						</p>
 					</div>
 				</div>
 
 				<div class="mt-4 flex items-end gap-4">
-					<span class="text-sm text-base-content/80"> Version: {{ buildInfo.version }} </span>
+					<span class="text-sm text-base-content/80">
+						Version: {{ buildInfo.version }}
+					</span>
 					<template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
 						<NuxtLink
 							external
@@ -51,7 +64,9 @@
 							Commit: {{ buildInfo.shortCommit }}
 						</NuxtLink>
 					</template>
-					<span class="text-sm text-base-content/80"> Build Date: {{ useDateFormat(buildInfo.time, "YYYY-MM-DD") }} </span>
+					<span class="text-sm text-base-content/80">
+						Build Date: {{ useDateFormat(buildInfo.time, "YYYY-MM-DD") }}
+					</span>
 				</div>
 			</aside>
 		</template>

@@ -13,8 +13,13 @@ export class SettingsContext {
 	public constructor(settings: ReadonlyGuildData) {
 		this.#adders = new AdderManager(settings);
 		this.#permissionNodes = new PermissionNodeManager(settings);
-		this.#wordFilterRegExp = isNullishOrEmpty(settings.selfmodFilterRaw) ? null : new RegExp(create(settings.selfmodFilterRaw), "gi");
-		this.#noMentionSpam = new RateLimitManager(settings.noMentionSpamTimePeriod * 1000, settings.noMentionSpamMentionsAllowed);
+		this.#wordFilterRegExp = isNullishOrEmpty(settings.selfmodFilterRaw)
+			? null
+			: new RegExp(create(settings.selfmodFilterRaw), "gi");
+		this.#noMentionSpam = new RateLimitManager(
+			settings.noMentionSpamTimePeriod * 1000,
+			settings.noMentionSpamMentionsAllowed,
+		);
 	}
 
 	public get adders() {
@@ -40,12 +45,20 @@ export class SettingsContext {
 			this.#permissionNodes.refresh(settings);
 		}
 
-		if (!isNullish(data.noMentionSpamTimePeriod) || !isNullish(data.noMentionSpamMentionsAllowed)) {
-			this.#noMentionSpam = new RateLimitManager(settings.noMentionSpamTimePeriod * 1000, settings.noMentionSpamMentionsAllowed);
+		if (
+			!isNullish(data.noMentionSpamTimePeriod) ||
+			!isNullish(data.noMentionSpamMentionsAllowed)
+		) {
+			this.#noMentionSpam = new RateLimitManager(
+				settings.noMentionSpamTimePeriod * 1000,
+				settings.noMentionSpamMentionsAllowed,
+			);
 		}
 
 		if (!isNullish(data.selfmodFilterRaw)) {
-			this.#wordFilterRegExp = isNullishOrEmpty(settings.selfmodFilterRaw) ? null : new RegExp(create(settings.selfmodFilterRaw), "gi");
+			this.#wordFilterRegExp = isNullishOrEmpty(settings.selfmodFilterRaw)
+				? null
+				: new RegExp(create(settings.selfmodFilterRaw), "gi");
 		}
 	}
 }

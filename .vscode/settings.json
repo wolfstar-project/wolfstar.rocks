@@ -20,7 +20,9 @@
 		"*.css": "tailwindcss"
 	},
 	"files.autoSave": "onFocusChange", // optional but recommended,
-	"tailwindCSS.experimental.classRegex": [["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]],
+	"tailwindCSS.experimental.classRegex": [
+		["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]
+	],
 	"typescript.tsdk": "node_modules\\typescript\\lib",
 	"prisma.pinToPrisma6": true,
 	// Exclude large folders from search

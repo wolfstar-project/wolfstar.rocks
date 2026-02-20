@@ -8,7 +8,9 @@
 					<!-- Feature Details -->
 					<div :id="feature.id" class="scroll-mt-24 text-left">
 						<h3 class="mb-4 flex items-center gap-2 text-3xl font-bold">
-							<div class="flex size-10 items-center justify-center rounded-full bg-primary/20">
+							<div
+								class="flex size-10 items-center justify-center rounded-full bg-primary/20"
+							>
 								<UIcon :name="feature.icon" class="mt-0.5 size-7 text-primary" />
 							</div>
 							{{ feature.title }}
@@ -16,23 +18,38 @@
 						<p class="mb-6 text-lg leading-relaxed opacity-80">
 							{{ feature.description }}
 						</p>
-						<NuxtLink to="#" class="btn btn-outline"> Learn more about {{ feature.label }} </NuxtLink>
+						<NuxtLink to="#" class="btn btn-outline">
+							Learn more about {{ feature.label }}
+						</NuxtLink>
 					</div>
 
 					<!-- Discord Preview -->
 					<div class="w-full">
 						<template v-if="feature.id === 'moderation-tools'">
 							<section class="mt-12 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
-								<div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
+								<div
+									class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
+								>
 									<DiscordMessages class="w-full text-left">
 										<template v-if="featureIndex === AutomodFeature.Spam">
-											<DiscordMessage v-for="n in 2" :key="n" name="baddie"> Guys look at me! </DiscordMessage>
+											<DiscordMessage v-for="n in 2" :key="n" name="baddie">
+												Guys look at me!
+											</DiscordMessage>
 										</template>
 										<DiscordMessage
-											:name="featureIndex === AutomodFeature.Reactions ? 'stella' : 'baddie'"
-											:class="{ 'text-error': featureIndex !== AutomodFeature.Reactions }"
+											:name="
+												featureIndex === AutomodFeature.Reactions
+													? 'stella'
+													: 'baddie'
+											"
+											:class="{
+												'text-error':
+													featureIndex !== AutomodFeature.Reactions,
+											}"
 										>
-											<template v-if="featureIndex === AutomodFeature.Attachments">
+											<template
+												v-if="featureIndex === AutomodFeature.Attachments"
+											>
 												Have you seen this????
 												<div class="grid max-w-96 grid-cols-2 gap-2">
 													<div
@@ -73,40 +90,75 @@
 													</div>
 												</div>
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Capitals">
+											<template
+												v-else-if="featureIndex === AutomodFeature.Capitals"
+											>
 												I CAN TALK IN ALL UPPER CASES,
 												<strong>AND WOLFSTAR WILL NOT STOP ME!</strong>
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Invites">
+											<template
+												v-else-if="featureIndex === AutomodFeature.Invites"
+											>
 												Everyone join my server!
-												<NuxtLink to="https://discord.gg/gqAnRyUXG8" class="text-info">
+												<NuxtLink
+													to="https://discord.gg/gqAnRyUXG8"
+													class="text-info"
+												>
 													https://discord.gg/gqAnRyUXG8
 												</NuxtLink>
-												<DiscordInvite link="https://discord.gg/gqAnRyUXG8" />
+												<DiscordInvite
+													link="https://discord.gg/gqAnRyUXG8"
+												/>
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Links">
+											<template
+												v-else-if="featureIndex === AutomodFeature.Links"
+											>
 												Everyone check out those links!
 												<ul class="ml-5 list-disc">
 													<li>
-														<span class="text-info">https://definitely-not-pishing.com</span>
+														<span class="text-info"
+															>https://definitely-not-pishing.com</span
+														>
 													</li>
 													<li>
-														<span class="text-info">https://redundant-spam-links.net</span>
+														<span class="text-info"
+															>https://redundant-spam-links.net</span
+														>
 													</li>
 													<li>
-														<span class="text-info">https://too-many-links.com</span>
+														<span class="text-info"
+															>https://too-many-links.com</span
+														>
 													</li>
-													<li><span class="text-info">https://trojan-horse.xyz</span></li>
-													<li><span class="text-info">https://not-a-virus.com</span></li>
+													<li>
+														<span class="text-info"
+															>https://trojan-horse.xyz</span
+														>
+													</li>
+													<li>
+														<span class="text-info"
+															>https://not-a-virus.com</span
+														>
+													</li>
 												</ul>
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Mentions">
+											<template
+												v-else-if="featureIndex === AutomodFeature.Mentions"
+											>
 												Everyone notice me!
-												<DiscordMention kind="mention">everyone</DiscordMention>
-												<DiscordMention kind="mention">members</DiscordMention>{{ " "
-												}}<DiscordMention kind="mention">moderators</DiscordMention>
+												<DiscordMention kind="mention"
+													>everyone</DiscordMention
+												>
+												<DiscordMention kind="mention"
+													>members</DiscordMention
+												>{{ " "
+												}}<DiscordMention kind="mention"
+													>moderators</DiscordMention
+												>
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Newlines">
+											<template
+												v-else-if="featureIndex === AutomodFeature.Newlines"
+											>
 												Hehehehe
 												<br />
 												<br />
@@ -117,25 +169,43 @@
 												<br />
 												So many lines!
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Reactions">
+											<template
+												v-else-if="
+													featureIndex === AutomodFeature.Reactions
+												"
+											>
 												Hey folks! I have great news to share!
 												<DiscordReactions>
 													<DiscordReaction :count="7" self>
-														<UIcon name="ph:cheers-fill" class="text-success" aria-hidden="true" />
+														<UIcon
+															name="ph:cheers-fill"
+															class="text-success"
+															aria-hidden="true"
+														/>
 													</DiscordReaction>
 													<DiscordReaction :count="1" class="text-error">
-														<UIcon name="ph:knife-fill" aria-hidden="true" />
+														<UIcon
+															name="ph:knife-fill"
+															aria-hidden="true"
+														/>
 													</DiscordReaction>
 												</DiscordReactions>
 											</template>
-											<template v-else-if="featureIndex === AutomodFeature.Spam"> Guys look at me! </template>
-											<template v-else-if="featureIndex === AutomodFeature.Words">
+											<template
+												v-else-if="featureIndex === AutomodFeature.Spam"
+											>
+												Guys look at me!
+											</template>
+											<template
+												v-else-if="featureIndex === AutomodFeature.Words"
+											>
 												I would like to say that you're a
 												<strong>disgusting</strong> person.
 											</template>
 										</DiscordMessage>
 										<DiscordMessage name="wolfstar">
-											Dear <DiscordMention kind="mention">Baddie</DiscordMention>,
+											Dear
+											<DiscordMention kind="mention">Baddie</DiscordMention>,
 											{{ texts[featureIndex]!.alert }}
 										</DiscordMessage>
 									</DiscordMessages>
@@ -177,42 +247,81 @@
 
 								<div class="prose text-left">
 									<h3 class="mb-4 text-3xl font-bold">
-										<UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+										<UIcon
+											name="ph:shield-fill"
+											class="h-8 w-8"
+											aria-hidden="true"
+										/>
 										WolfStar can act on
-										<span class="underline underline-offset-4">{{ texts[featureIndex]!.title }}</span>
+										<span class="underline underline-offset-4">{{
+											texts[featureIndex]!.title
+										}}</span>
 									</h3>
 
-									<p>Enjoy the power of moderation with WolfStar, a fully customizable moderation bot for your server.</p>
+									<p>
+										Enjoy the power of moderation with WolfStar, a fully
+										customizable moderation bot for your server.
+									</p>
 
-									<p>You can define what WolfStar should do on every infraction:</p>
+									<p>
+										You can define what WolfStar should do on every infraction:
+									</p>
 									<ul>
 										<li>
-											<UIcon name="ph:arrow-u-up-left" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
-											<strong>Alert the user:</strong> send a message notifying the user of their infraction.
+											<UIcon
+												name="ph:arrow-u-up-left"
+												class="my-0 mr-1 h-5 w-5"
+												aria-hidden="true"
+											/>
+											<strong>Alert the user:</strong> send a message
+											notifying the user of their infraction.
 										</li>
 										<li>
-											<UIcon name="ph:flag-fill" class="my-0 mr-1 h-5 w-5 text-warning" aria-hidden="true" />
-											<strong>Post moderation log:</strong> send a message to the moderation log channel for moderators to see.
+											<UIcon
+												name="ph:flag-fill"
+												class="my-0 mr-1 h-5 w-5 text-warning"
+												aria-hidden="true"
+											/>
+											<strong>Post moderation log:</strong> send a message to
+											the moderation log channel for moderators to see.
 										</li>
 										<li>
-											<UIcon name="ph:trash-simple-fill" class="my-0 mr-1 h-5 w-5 text-error" aria-hidden="true" />
-											<strong>Delete the message:</strong> delete the message that triggered the infraction, keeping your
-											channels clean.
+											<UIcon
+												name="ph:trash-simple-fill"
+												class="my-0 mr-1 h-5 w-5 text-error"
+												aria-hidden="true"
+											/>
+											<strong>Delete the message:</strong> delete the message
+											that triggered the infraction, keeping your channels
+											clean.
 										</li>
 									</ul>
 
-									<p>And even what WolfStar should do after repeated infractions!</p>
+									<p>
+										And even what WolfStar should do after repeated infractions!
+									</p>
 									<ul>
 										<li>
-											<UIcon name="ph:shield-check-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" aria-hidden="true" />
-											<strong>Define the punishment action:</strong> from a simple warning to a full ban, and everything in
-											between, with a customizable <strong>punishment duration</strong> ranging from seconds to even years, or
-											permanent.
+											<UIcon
+												name="ph:shield-check-duotone"
+												class="my-0 mr-1 h-5 w-5 text-purple-500"
+												aria-hidden="true"
+											/>
+											<strong>Define the punishment action:</strong> from a
+											simple warning to a full ban, and everything in between,
+											with a customizable
+											<strong>punishment duration</strong> ranging from
+											seconds to even years, or permanent.
 										</li>
 										<li>
-											<UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
-											<strong>Define the threshold:</strong> how many infractions are needed within a period of time before the
-											punishment is applied.
+											<UIcon
+												name="ph:hourglass-duotone"
+												class="my-0 mr-1 h-5 w-5"
+												aria-hidden="true"
+											/>
+											<strong>Define the threshold:</strong> how many
+											infractions are needed within a period of time before
+											the punishment is applied.
 										</li>
 									</ul>
 								</div>
@@ -221,20 +330,33 @@
 							<section class="mt-12 grid gap-4 md:gap-12 lg:grid-cols-2 lg:gap-20">
 								<div class="prose text-left">
 									<h3 class="mb-4 text-3xl font-bold">
-										<UIcon name="ph:shield-fill" class="h-8 w-8" aria-hidden="true" />
+										<UIcon
+											name="ph:shield-fill"
+											class="h-8 w-8"
+											aria-hidden="true"
+										/>
 										A complete suite for
-										<span class="underline underline-offset-4">moderation logs</span>
+										<span class="underline underline-offset-4"
+											>moderation logs</span
+										>
 									</h3>
 
 									<p>
-										Easily searchable moderation logs, with a complete history of every action taken by WolfStar in your server,
-										and with the ability to filter them later by user, action, and more!
+										Easily searchable moderation logs, with a complete history
+										of every action taken by WolfStar in your server, and with
+										the ability to filter them later by user, action, and more!
 									</p>
 
 									<p>
-										<UIcon name="ph:binoculars-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" aria-hidden="true" />
-										WolfStar can also listen for external moderation actions. You prefer banning by hand than by bot? Good news,
-										WolfStar can be configured to listen and log external bans, retrieving the reason from audit logs!
+										<UIcon
+											name="ph:binoculars-duotone"
+											class="my-0 mr-1 h-5 w-5 text-purple-500"
+											aria-hidden="true"
+										/>
+										WolfStar can also listen for external moderation actions.
+										You prefer banning by hand than by bot? Good news, WolfStar
+										can be configured to listen and log external bans,
+										retrieving the reason from audit logs!
 									</p>
 								</div>
 
@@ -282,12 +404,20 @@
 														icon: '/avatars/wolfstar.png',
 														name: 'WolfStar#9286 (854714837388755004)',
 													}"
-													:footer="{ icon: '/avatars/wolfstar.png', text: 'Case 3' }"
+													:footer="{
+														icon: '/avatars/wolfstar.png',
+														text: 'Case 3',
+													}"
 													:timestamp
 												>
-													<span><strong>❯ Type:</strong> {{ moderationActionRender.name }}</span
+													<span
+														><strong>❯ Type:</strong>
+														{{ moderationActionRender.name }}</span
 													><br />
-													<span><strong>❯ User:</strong> @baddie (541738403230777351)</span><br />
+													<span
+														><strong>❯ User:</strong> @baddie
+														(541738403230777351)</span
+													><br />
 													<span><strong>❯ Reason:</strong> spam</span>
 												</DiscordEmbed>
 											</DiscordMessage>
@@ -298,18 +428,32 @@
 												class="btn join-item md:btn-wide"
 												:class="{ 'btn-info': moderationTemporary }"
 												:disabled="moderationAction.temporary === null"
-												@click="((moderationTemporary = !moderationTemporary), (moderationUndo = false))"
+												@click="
+													((moderationTemporary = !moderationTemporary),
+													(moderationUndo = false))
+												"
 											>
-												<UIcon name="ph:hourglass-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
+												<UIcon
+													name="ph:hourglass-duotone"
+													class="my-0 mr-1 h-5 w-5"
+													aria-hidden="true"
+												/>
 												Temporary
 											</button>
 											<button
 												class="btn join-item md:btn-wide"
 												:class="{ 'btn-success': moderationUndo }"
 												:disabled="moderationAction.undo === null"
-												@click="((moderationUndo = !moderationUndo), (moderationTemporary = false))"
+												@click="
+													((moderationUndo = !moderationUndo),
+													(moderationTemporary = false))
+												"
 											>
-												<UIcon name="ph:arrow-counter-clockwise-duotone" class="my-0 mr-1 h-5 w-5" aria-hidden="true" />
+												<UIcon
+													name="ph:arrow-counter-clockwise-duotone"
+													class="my-0 mr-1 h-5 w-5"
+													aria-hidden="true"
+												/>
 												Undo
 											</button>
 										</div>
@@ -329,13 +473,24 @@
 													icon: '/avatars/wolfstar.png',
 													name: 'WolfStar#9286 (854714837388755004)',
 												}"
-												:footer="{ icon: '/avatars/wolfstar.png', text: `Log #${123456 + loggingIndex}` }"
+												:footer="{
+													icon: '/avatars/wolfstar.png',
+													text: `Log #${123456 + loggingIndex}`,
+												}"
 												:timestamp
 											>
-												<span><strong>❯ Action:</strong> {{ loggingEvents[loggingIndex]!.action }}</span
+												<span
+													><strong>❯ Action:</strong>
+													{{ loggingEvents[loggingIndex]!.action }}</span
 												><br />
-												<span v-for="(detail, idx) in loggingEvents[loggingIndex]!.details" :key="idx">
-													<strong>❯ {{ detail.label }}:</strong> {{ detail.value }}<br />
+												<span
+													v-for="(detail, idx) in loggingEvents[
+														loggingIndex
+													]!.details"
+													:key="idx"
+												>
+													<strong>❯ {{ detail.label }}:</strong>
+													{{ detail.value }}<br />
 												</span>
 											</DiscordEmbed>
 										</DiscordMessage>
@@ -379,30 +534,46 @@
 								<div class="prose text-left">
 									<h3 class="mb-4 text-3xl font-bold">
 										<UIcon
-											:name="loggingEvents[loggingIndex]!.icon ?? 'ph:binoculars-duotone'"
+											:name="
+												loggingEvents[loggingIndex]!.icon ??
+												'ph:binoculars-duotone'
+											"
 											class="h-8 w-8"
 											aria-hidden="true"
 										/>
 										Keep track of
-										<span class="underline underline-offset-4">{{ loggingEvents[loggingIndex]!.title }}</span>
+										<span class="underline underline-offset-4">{{
+											loggingEvents[loggingIndex]!.title
+										}}</span>
 									</h3>
 
 									<p>
-										WolfStar can log almost everything that happens in your server, from members joining and leaving, to channel
-										and role updates, message edits and deletions, and much more.
+										WolfStar can log almost everything that happens in your
+										server, from members joining and leaving, to channel and
+										role updates, message edits and deletions, and much more.
 									</p>
 
 									<p>And even what WolfStar should be logging:</p>
 									<ul>
 										<li>
-											<UIcon name="ph:magnifying-glass-duotone" class="my-0 mr-1 h-5 w-5 text-purple-500" aria-hidden="true" />
-											All logs are <strong>fully searchable</strong> and can be filtered by user, action, channel, and more.
-											Keep a complete history of your server's activity.
+											<UIcon
+												name="ph:magnifying-glass-duotone"
+												class="my-0 mr-1 h-5 w-5 text-purple-500"
+												aria-hidden="true"
+											/>
+											All logs are <strong>fully searchable</strong> and can
+											be filtered by user, action, channel, and more. Keep a
+											complete history of your server's activity.
 										</li>
 										<li>
-											<UIcon name="ph:clock-duotone" class="my-0 mr-1 h-5 w-5 text-info" aria-hidden="true" />
-											Logs are sent to your server <strong>in real-time</strong>, so you can stay up to date with everything
-											that's happening.
+											<UIcon
+												name="ph:clock-duotone"
+												class="my-0 mr-1 h-5 w-5 text-info"
+												aria-hidden="true"
+											/>
+											Logs are sent to your server
+											<strong>in real-time</strong>, so you can stay up to
+											date with everything that's happening.
 										</li>
 									</ul>
 								</div>
@@ -527,10 +698,13 @@ function advanceLoggingIndex(value: -1 | 1) {
 }
 
 function advanceModerationIndex(value: -1 | 1) {
-	moderationIndex.value = (moderationIndex.value + value + moderationActions.length) % moderationActions.length;
+	moderationIndex.value =
+		(moderationIndex.value + value + moderationActions.length) % moderationActions.length;
 }
 
-const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(computed(() => moderationActions[moderationIndex.value]));
+const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(
+	computed(() => moderationActions[moderationIndex.value]),
+);
 
 const moderationActionRender = computed(() => {
 	const action = moderationAction.value;

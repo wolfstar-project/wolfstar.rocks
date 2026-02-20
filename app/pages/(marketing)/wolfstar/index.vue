@@ -5,13 +5,19 @@
 	<section class="relative z-10 mt-28 flex flex-col items-center text-center">
 		<h1 class="title animate-fade-in-up pb-4">Imagine a<br />moderation app</h1>
 		<p class="max-w-120 animate-fade-in-up text-base-content/80 animate-fade-in-delay-1">
-			A very customizable multilanguage application to help you moderate your server, with a complete logging suite and more,
+			A very customizable multilanguage application to help you moderate your server, with a
+			complete logging suite and more,
 			<span class="font-bold underline underline-offset-2">100% for free</span>!
 		</p>
 	</section>
 
-	<section class="relative join z-10 mt-16 animate-fade-in-up justify-center animate-fade-in-delay-2">
-		<NuxtLink class="glow-btn glow-btn-branding btn join-item sm:btn-wide" :to="Invites.WolfStar">
+	<section
+		class="relative join z-10 mt-16 animate-fade-in-up justify-center animate-fade-in-delay-2"
+	>
+		<NuxtLink
+			class="glow-btn glow-btn-branding btn join-item sm:btn-wide"
+			:to="Invites.WolfStar"
+		>
 			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
 		</NuxtLink>
 		<NuxtLink class="glow-btn glow-btn-branding btn join-item sm:btn-wide" to="#explore">
@@ -33,17 +39,28 @@
 		<p>WolfStar not only comes with a very complete moderation suite, but also:</p>
 		<ul>
 			<li>
-				<UIcon name="ph:chat-text-duotone" class="my-0 mr-1 h-5 w-5 text-warning" aria-hidden="true" />
-				<strong>A large logging suite:</strong> WolfStar can log almost everything that happens in your server: moderation actions, message
-				updates and deletions, channel updates and deletions, role updates and deletions, server updates, members changing voice channels, and
-				more.
+				<UIcon
+					name="ph:chat-text-duotone"
+					class="my-0 mr-1 h-5 w-5 text-warning"
+					aria-hidden="true"
+				/>
+				<strong>A large logging suite:</strong> WolfStar can log almost everything that
+				happens in your server: moderation actions, message updates and deletions, channel
+				updates and deletions, role updates and deletions, server updates, members changing
+				voice channels, and more.
 			</li>
 			<li>
-				<UIcon name="ph:money-wavy-duotone" class="my-0 mr-1 h-5 w-5 text-error" aria-hidden="true" />
-				<strong>No paywalls:</strong> all of WolfStar's features are <strong>available for free</strong> and all logs are sent to your server
-				as soon as they happen, without any delay. WolfStar Project <strong>will never paywall core features</strong>, and also
-				<strong>strongly believes in Open-Source Software</strong>, making all the apps' source code freely available to everyone, and will
-				always stay that way.
+				<UIcon
+					name="ph:money-wavy-duotone"
+					class="my-0 mr-1 h-5 w-5 text-error"
+					aria-hidden="true"
+				/>
+				<strong>No paywalls:</strong> all of WolfStar's features are
+				<strong>available for free</strong> and all logs are sent to your server as soon as
+				they happen, without any delay. WolfStar Project
+				<strong>will never paywall core features</strong>, and also
+				<strong>strongly believes in Open-Source Software</strong>, making all the apps'
+				source code freely available to everyone, and will always stay that way.
 			</li>
 		</ul>
 	</section>
@@ -52,8 +69,12 @@
 		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
 		<div class="join">
-			<NuxtLink :to="Invites.WolfStar" class="btn join-item btn-ghost"> Invite WolfStar </NuxtLink>
-			<NuxtLink to="https://join.wolfstar.rocks" class="btn join-item btn-ghost"> Support Server </NuxtLink>
+			<NuxtLink :to="Invites.WolfStar" class="btn join-item btn-ghost">
+				Invite WolfStar
+			</NuxtLink>
+			<NuxtLink to="https://join.wolfstar.rocks" class="btn join-item btn-ghost">
+				Support Server
+			</NuxtLink>
 		</div>
 	</section>
 	<OtherApps :apps="[OtherApps.Staryl]" />
@@ -91,7 +112,12 @@ function openFeature(index: number) {
 
 .title {
 	@apply text-4xl leading-[3.05rem] font-bold md:text-6xl md:leading-18;
-	background: linear-gradient(to bottom right, oklch(100% 0 45) 0%, oklch(75% 0.18 15) 50%, var(--color-branding-wolfstar) 100%);
+	background: linear-gradient(
+		to bottom right,
+		oklch(100% 0 45) 0%,
+		oklch(75% 0.18 15) 50%,
+		var(--color-branding-wolfstar) 100%
+	);
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
@@ -103,8 +129,13 @@ function openFeature(index: number) {
 	mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
 	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
 	background-image:
-		radial-gradient(ellipse at 50% 0%, oklch(from var(--branding-wolfstar) l c h / 0.15) 0%, transparent 60%),
-		linear-gradient(to right, oklch(50% 0 0 / 0.03) 1px, transparent 1px), linear-gradient(to bottom, oklch(50% 0 0 / 0.03) 1px, transparent 1px);
+		radial-gradient(
+			ellipse at 50% 0%,
+			oklch(from var(--branding-wolfstar) l c h / 0.15) 0%,
+			transparent 60%
+		),
+		linear-gradient(to right, oklch(50% 0 0 / 0.03) 1px, transparent 1px),
+		linear-gradient(to bottom, oklch(50% 0 0 / 0.03) 1px, transparent 1px);
 	background-size:
 		100% 100%,
 		4rem 4rem,
@@ -117,7 +148,11 @@ function openFeature(index: number) {
 
 .invite-card::before {
 	@apply absolute top-0 left-0 -z-10 h-full w-full -rotate-2 rounded-xl drop-shadow-lg;
-	background: linear-gradient(to bottom right in oklch, var(--color-red-600) 0%, var(--color-purple-600) 70%);
+	background: linear-gradient(
+		to bottom right in oklch,
+		var(--color-red-600) 0%,
+		var(--color-purple-600) 70%
+	);
 	content: "";
 }
 </style>

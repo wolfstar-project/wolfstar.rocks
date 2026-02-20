@@ -23,9 +23,21 @@
 				</div>
 			</template>
 			<template #default="{ collapsed }">
-				<UNavigationMenu :collapsed="collapsed" :items="items[0]" orientation="vertical" tooltip popover />
+				<UNavigationMenu
+					:collapsed="collapsed"
+					:items="items[0]"
+					orientation="vertical"
+					tooltip
+					popover
+				/>
 
-				<UNavigationMenu :collapsed="collapsed" :items="items[1]" orientation="vertical" tooltip class="mt-auto" />
+				<UNavigationMenu
+					:collapsed="collapsed"
+					:items="items[1]"
+					orientation="vertical"
+					tooltip
+					class="mt-auto"
+				/>
 			</template>
 
 			<template #footer="{ collapsed }">
@@ -42,9 +54,12 @@
 		>
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
-				<h2 class="text-xl font-semibold text-base-content">{{ nuxtError.statusMessage || "Error Loading Dashboard" }}</h2>
+				<h2 class="text-xl font-semibold text-base-content">
+					{{ nuxtError.statusMessage || "Error Loading Dashboard" }}
+				</h2>
 				<p v-if="nuxtError.status === 403">
-					You do not have permission to access this guild's dashboard. Please ensure you have the necessary permissions and try again.
+					You do not have permission to access this guild's dashboard. Please ensure you
+					have the necessary permissions and try again.
 				</p>
 				<p class="text-sm text-base-content/60">
 					{{
@@ -54,7 +69,12 @@
 				</p>
 			</div>
 		</div>
-		<div v-else class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4" role="status" aria-label="Loading dashboard">
+		<div
+			v-else
+			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
+			role="status"
+			aria-label="Loading dashboard"
+		>
 			<div class="flex flex-col items-center space-y-4">
 				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
@@ -65,19 +85,41 @@
 					<div
 						v-motion
 						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{ scale: 1, opacity: 1, transition: { repeat: Infinity, repeatType: 'reverse', duration: 600 } }"
+						:enter="{
+							scale: 1,
+							opacity: 1,
+							transition: { repeat: Infinity, repeatType: 'reverse', duration: 600 },
+						}"
 						class="h-2 w-2 rounded-full bg-primary"
 					></div>
 					<div
 						v-motion
 						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{ scale: 1, opacity: 1, transition: { repeat: Infinity, repeatType: 'reverse', duration: 600, delay: 200 } }"
+						:enter="{
+							scale: 1,
+							opacity: 1,
+							transition: {
+								repeat: Infinity,
+								repeatType: 'reverse',
+								duration: 600,
+								delay: 200,
+							},
+						}"
 						class="h-2 w-2 rounded-full bg-primary"
 					></div>
 					<div
 						v-motion
 						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{ scale: 1, opacity: 1, transition: { repeat: Infinity, repeatType: 'reverse', duration: 600, delay: 400 } }"
+						:enter="{
+							scale: 1,
+							opacity: 1,
+							transition: {
+								repeat: Infinity,
+								repeatType: 'reverse',
+								duration: 600,
+								delay: 400,
+							},
+						}"
 						class="h-2 w-2 rounded-full bg-primary"
 					></div>
 				</div>
@@ -85,8 +127,12 @@
 		</div>
 		<div v-if="isReadyToSubmit" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
 			<UFieldGroup>
-				<UButton color="primary" icon="heroicons:check" @click="submitChanges"> Save Changes </UButton>
-				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges"> Reset Changes </UButton>
+				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+					Save Changes
+				</UButton>
+				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+					Reset Changes
+				</UButton>
 			</UFieldGroup>
 		</div>
 	</UDashboardGroup>
@@ -119,7 +165,8 @@ const open = ref(false);
 const nuxtError = useError();
 const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
-const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } = useGuildSettingsChanges();
+const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
+	useGuildSettingsChanges();
 const isLoading = useState<boolean>("dashboard:loading", () => true);
 
 const items = computed<NavigationMenuItem[][]>(() => [
@@ -189,7 +236,11 @@ const isReadyToRender = computed(
 		!isNullOrUndefinedOrZero(objectValues(guildSettings.value).length),
 );
 
-const isReadyToSubmit = computed(() => !isNullOrUndefined(guildSettingsChanges.value) && objectValues(guildSettingsChanges.value).length > 0);
+const isReadyToSubmit = computed(
+	() =>
+		!isNullOrUndefined(guildSettingsChanges.value) &&
+		objectValues(guildSettingsChanges.value).length > 0,
+);
 
 const src = computed(
 	() =>
@@ -215,7 +266,10 @@ async function submitChanges() {
 			try {
 				return JSON.parse(response);
 			} catch (error) {
-				logger.error(`Failed to parse response from settings update for guild Id: ${guildId.value}`, parseError(error));
+				logger.error(
+					`Failed to parse response from settings update for guild Id: ${guildId.value}`,
+					parseError(error),
+				);
 				throw createError({
 					message: "Failed to update guild settings",
 					why: "An unexpected error occurred while processing the server response.",
@@ -264,7 +318,9 @@ function resetChanges() {
 watch(guildId, (newGuildId, oldGuildId) => {
 	if (oldGuildId && newGuildId !== oldGuildId) {
 		resetGuildSettingsChanges();
-		logger.info(`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`);
+		logger.info(
+			`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`,
+		);
 	}
 });
 
@@ -274,7 +330,9 @@ onMounted(async () => {
 	try {
 		// Fetch guild data and settings in parallel to halve round-trip latency.
 		const [guildData, guildSettings] = await Promise.all([
-			$fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(`/api/guilds/${guildId.value}`),
+			$fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
+				`/api/guilds/${guildId.value}`,
+			),
 			$fetch<string>(`/api/guilds/${guildId.value}/settings`),
 		]);
 

@@ -93,7 +93,13 @@ export async function getFileLastUpdated(path: string) {
 
 export async function getEnv(isDevelopment: boolean) {
 	const { commit, shortCommit, branch } = await getGitInfo();
-	const env = isDevelopment ? "dev" : isPreview ? "preview" : branch === "main" ? "canary" : "release";
+	const env = isDevelopment
+		? "dev"
+		: isPreview
+			? "preview"
+			: branch === "main"
+				? "canary"
+				: "release";
 	const previewUrl = getPreviewUrl();
 	const productionUrl = getProductionUrl();
 	return {

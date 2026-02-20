@@ -1108,7 +1108,11 @@ describe("integration tests", () => {
 		const hasElevatedPermissions = (role: Role) => (role.permissions & 0b1000) !== 0;
 		const isValidRole = (role: Role) => role.name.length > 0 && role.id.startsWith("role");
 
-		const isFullyPrivilegedRole = andMix(isValidRole, hasBasicPermissions, hasElevatedPermissions);
+		const isFullyPrivilegedRole = andMix(
+			isValidRole,
+			hasBasicPermissions,
+			hasElevatedPermissions,
+		);
 
 		// Test roles
 		expect(isFullyPrivilegedRole(nextRoles.get("role1")!)).toBeTruthy(); // Admin

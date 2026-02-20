@@ -7,7 +7,8 @@
 				? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:bg-base-200/50 hover:shadow-lg'
 				: 'relative',
 			{
-				'ring-2 ring-primary/20': variant === 'card' && guild.wolfstarIsIn && guild.manageable,
+				'ring-2 ring-primary/20':
+					variant === 'card' && guild.wolfstarIsIn && guild.manageable,
 				'ring-2 ring-error/20': variant === 'card' && !guild.manageable,
 				'opacity-75': variant === 'card' && !guild.manageable,
 			},
@@ -23,7 +24,11 @@
 						:class="statusIndicator.wrapperClasses"
 					>
 						<span class="sr-only">{{ statusIndicator.tooltipText }}</span>
-						<UIcon :name="statusIndicator.iconName" :class="statusIndicator.iconClasses" aria-hidden="true" />
+						<UIcon
+							:name="statusIndicator.iconName"
+							:class="statusIndicator.iconClasses"
+							aria-hidden="true"
+						/>
 					</div>
 				</UTooltip>
 			</div>
@@ -60,18 +65,31 @@
 
 		<!-- Guild Name (optional) - only in card variant -->
 		<div v-if="variant === 'card' && showName && guild" class="w-full text-center">
-			<h3 class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary">
+			<h3
+				class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary"
+			>
 				{{ guild.name }}
 			</h3>
 		</div>
 
 		<!-- Guild Stats (optional) - only in card variant -->
-		<div v-if="variant === 'card' && showStats && guild" class="flex items-center justify-center space-x-2 text-xs text-base-content/60">
-			<span v-if="guild.approximateMemberCount" class="flex items-center space-x-1" title="Total members">
+		<div
+			v-if="variant === 'card' && showStats && guild"
+			class="flex items-center justify-center space-x-2 text-xs text-base-content/60"
+		>
+			<span
+				v-if="guild.approximateMemberCount"
+				class="flex items-center space-x-1"
+				title="Total members"
+			>
 				<UIcon name="ph:users-fill" class="h-2 w-2" aria-hidden="true" />
 				<span>{{ formatNumber(guild.approximateMemberCount) }}</span>
 			</span>
-			<span v-if="guild.approximatePresenceCount" class="flex items-center space-x-1" title="Members online">
+			<span
+				v-if="guild.approximatePresenceCount"
+				class="flex items-center space-x-1"
+				title="Members online"
+			>
 				<UIcon name="ph:wifi-high" class="h-2 w-2 text-success" aria-hidden="true" />
 				<span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
 			</span>
@@ -92,7 +110,14 @@ interface GuildIconProps {
 	showStats?: boolean;
 }
 
-const { guild, size = "md", variant = "card", showStatus = true, showName = false, showStats = false } = defineProps<GuildIconProps>();
+const {
+	guild,
+	size = "md",
+	variant = "card",
+	showStatus = true,
+	showName = false,
+	showStats = false,
+} = defineProps<GuildIconProps>();
 
 const loaded = ref(false);
 const icon = useTemplateRef<HTMLElement | null>("icon");
@@ -176,7 +201,8 @@ const statusIndicator = computed<StatusIndicator>(() => {
 		return {
 			iconClasses: "h-4 w-4",
 			iconName: "heroicons:lock-closed",
-			tooltipText: "WolfStar is active, but you have insufficient permissions to manage this server",
+			tooltipText:
+				"WolfStar is active, but you have insufficient permissions to manage this server",
 			wrapperClasses: "bg-warning/70 hover:bg-warning/60",
 		};
 	}

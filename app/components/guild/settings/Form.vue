@@ -1,5 +1,12 @@
 <template>
-	<UForm ref="form-settings" :schema="schema" :state="state" v-bind="$attrs" @error="handleError" @submit="handleSubmit">
+	<UForm
+		ref="form-settings"
+		:schema="schema"
+		:state="state"
+		v-bind="$attrs"
+		@error="handleError"
+		@submit="handleSubmit"
+	>
 		<slot></slot>
 	</UForm>
 </template>
@@ -30,7 +37,11 @@ const isOriginalStateInitialized = ref(false);
 const isResetting = ref(false);
 
 // Calculate changes between current state and original values
-function calculateChanges(currentState: T): { changes: Partial<GuildData>; changedKeys: Set<keyof GuildData>; revertedKeys: Set<keyof GuildData> } {
+function calculateChanges(currentState: T): {
+	changes: Partial<GuildData>;
+	changedKeys: Set<keyof GuildData>;
+	revertedKeys: Set<keyof GuildData>;
+} {
 	const changes: Partial<GuildData> = {};
 	const changedKeys = new Set<keyof GuildData>();
 	const revertedKeys = new Set<keyof GuildData>();
@@ -40,7 +51,9 @@ function calculateChanges(currentState: T): { changes: Partial<GuildData>; chang
 	}
 
 	const mappedCurrent = mapToGuildData ? mapToGuildData(currentState) : currentState;
-	const mappedOriginal = mapToGuildData ? mapToGuildData(originalState.value) : originalState.value;
+	const mappedOriginal = mapToGuildData
+		? mapToGuildData(originalState.value)
+		: originalState.value;
 
 	const allKeys = new Set([...objectKeys(mappedCurrent), ...objectKeys(mappedOriginal)]);
 

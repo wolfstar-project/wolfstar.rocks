@@ -31,7 +31,11 @@ import type { CachedFetchResult } from "#shared/utils/fetch-cache-config";
 export function useCachedFetch(): CachedFetchFunction {
 	// On client, return a function that just uses $fetch (no caching, not stale)
 	if (import.meta.client) {
-		return async <T = unknown>(url: string, options: Parameters<typeof $fetch>[1] = {}, _ttl?: number): Promise<CachedFetchResult<T>> => {
+		return async <T = unknown>(
+			url: string,
+			options: Parameters<typeof $fetch>[1] = {},
+			_ttl?: number,
+		): Promise<CachedFetchResult<T>> => {
 			const data = (await $fetch<T>(url, options)) as T;
 			return { cachedAt: null, data, isStale: false };
 		};
@@ -48,7 +52,11 @@ export function useCachedFetch(): CachedFetchFunction {
 
 	// Fallback: return a function that uses regular $fetch
 	// (shouldn't happen in normal operation)
-	return async <T = unknown>(url: string, options: Parameters<typeof $fetch>[1] = {}, _ttl?: number): Promise<CachedFetchResult<T>> => {
+	return async <T = unknown>(
+		url: string,
+		options: Parameters<typeof $fetch>[1] = {},
+		_ttl?: number,
+	): Promise<CachedFetchResult<T>> => {
 		const data = (await $fetch<T>(url, options)) as T;
 		return { cachedAt: null, data, isStale: false };
 	};

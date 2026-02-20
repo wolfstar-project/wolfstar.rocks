@@ -1,7 +1,12 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"plugins": ["node", "jsdoc", "import", "unicorn", "typescript", "oxc", "vue", "vitest"],
-	"jsPlugins": ["eslint-plugin-antfu", "eslint-plugin-eslint-comments", "eslint-plugin-command", "eslint-plugin-regexp"],
+	"jsPlugins": [
+		"eslint-plugin-antfu",
+		"eslint-plugin-eslint-comments",
+		"eslint-plugin-command",
+		"eslint-plugin-regexp"
+	],
 	"categories": {
 		"correctness": "error",
 		"suspicious": "warn",
@@ -542,7 +547,14 @@
 				"jsonc/sort-keys": [
 					"error",
 					{
-						"order": ["extends", "compilerOptions", "references", "files", "include", "exclude"],
+						"order": [
+							"extends",
+							"compilerOptions",
+							"references",
+							"files",
+							"include",
+							"exclude"
+						],
 						"pathPattern": "^$"
 					},
 					{

@@ -1,7 +1,9 @@
 <template>
 	<div
 		class="relative flex h-full w-full justify-between p-15"
-		:class="[colorMode === 'light' ? ['bg-white', 'text-gray-900'] : ['bg-gray-900', 'text-white']]"
+		:class="[
+			colorMode === 'light' ? ['bg-white', 'text-gray-900'] : ['bg-gray-900', 'text-white'],
+		]"
 	>
 		<div
 			class="absolute top-0 -right-full flex"

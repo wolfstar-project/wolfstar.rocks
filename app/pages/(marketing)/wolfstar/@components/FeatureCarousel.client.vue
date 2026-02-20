@@ -76,7 +76,8 @@ const features = [
 		title: "100% Free",
 	},
 	{
-		action: async () => await navigateTo("https://github.com/wolfstar-project/wolfstar", { external: true }),
+		action: async () =>
+			await navigateTo("https://github.com/wolfstar-project/wolfstar", { external: true }),
 		description: "Transparent and community driven.",
 		icon: "simple-icons:github",
 		label: "opensource",

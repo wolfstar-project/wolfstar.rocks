@@ -1,7 +1,12 @@
 <template>
 	<div>
 		<div v-for="category in categories" :key="category">
-			<CommandSubCategory :commands="commands" :search-value="searchValue" :category-name="category" :loading />
+			<CommandSubCategory
+				:commands="commands"
+				:search-value="searchValue"
+				:category-name="category"
+				:loading
+			/>
 		</div>
 	</div>
 </template>

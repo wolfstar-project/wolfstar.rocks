@@ -131,7 +131,9 @@ describe("useGuildSettings", () => {
 		};
 
 		// Simulate the behavior where mergedSettings returns undefined if original is undefined
-		const mergedSettings = originalSettings ? deepMerge(originalSettings, changes, mergeOptions) : undefined;
+		const mergedSettings = originalSettings
+			? deepMerge(originalSettings, changes, mergeOptions)
+			: undefined;
 
 		expect(mergedSettings).toBeUndefined();
 	});

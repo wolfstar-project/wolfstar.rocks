@@ -8,7 +8,16 @@
 				"groupName": "prettier",
 			},
 			{
-				"matchPackageNames": ["nuxt", "vite", "nuxt-**", "@nuxt{/,}**", "@nuxtjs{/,}**", "typescript", "yup", "ufo"],
+				"matchPackageNames": [
+					"nuxt",
+					"vite",
+					"nuxt-**",
+					"@nuxt{/,}**",
+					"@nuxtjs{/,}**",
+					"typescript",
+					"yup",
+					"ufo",
+				],
 				"groupName": "nuxt",
 			},
 			{

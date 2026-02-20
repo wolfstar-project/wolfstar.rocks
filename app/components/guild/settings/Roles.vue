@@ -1,5 +1,8 @@
 <template>
-	<GuildSettingsSection title="Roles" subtitle="Here you can configure special roles known to WolfStar for your server.">
+	<GuildSettingsSection
+		title="Roles"
+		subtitle="Here you can configure special roles known to WolfStar for your server."
+	>
 		<!-- Loading Skeleton -->
 		<div v-if="loading" class="space-y-8">
 			<!-- Toggles Skeleton -->
@@ -56,7 +59,9 @@
 					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Configurable Roles</h3>
 				</div>
-				<p class="text-sm text-base-content/70">Assign specific roles for different bot functions and permissions.</p>
+				<p class="text-sm text-base-content/70">
+					Assign specific roles for different bot functions and permissions.
+				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<template v-for="roleConfig in standardRoles" :key="roleConfig.key">
@@ -89,7 +94,9 @@
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Restricted Roles</h3>
 				</div>
-				<p class="text-sm text-base-content/70">Roles used for restricted moderation commands.</p>
+				<p class="text-sm text-base-content/70">
+					Roles used for restricted moderation commands.
+				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<template v-for="roleConfig in restrictedRoles" :key="roleConfig.key">
@@ -122,13 +129,22 @@ import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import * as v from "valibot";
-import { ConfigurableRemoveInitialRole, ConfigurableRoles } from "~~/shared/utils/settingsDataEntries";
+import {
+	ConfigurableRemoveInitialRole,
+	ConfigurableRoles,
+} from "~~/shared/utils/settingsDataEntries";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-const arrayKeys = new Set(["rolesAdmin", "rolesModerator", "rolesPublic", "rolesInitial", "rolesMuted"]);
+const arrayKeys = new Set([
+	"rolesAdmin",
+	"rolesModerator",
+	"rolesPublic",
+	"rolesInitial",
+	"rolesMuted",
+]);
 function isArrayKey(key: string): boolean {
 	return arrayKeys.has(key);
 }
@@ -239,7 +255,8 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 
 // Form error handler
 async function onError(event: FormErrorEvent) {
-	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+	const element =
+		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });
 	const errorMessage = event.errors[0]?.message;
 	toast.add({

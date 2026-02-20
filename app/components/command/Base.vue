@@ -1,5 +1,8 @@
 <template>
-	<article class="space-y-8 card-glass rounded-2xl hover-border-glow p-6 transition-all" aria-label="Command details">
+	<article
+		class="space-y-8 card-glass rounded-2xl hover-border-glow p-6 transition-all"
+		aria-label="Command details"
+	>
 		<!-- Loading Skeleton -->
 		<template v-if="loading">
 			<!-- Command Usage Skeleton -->
@@ -66,7 +69,11 @@
 			<section v-if="command.extendedHelp.usages?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon name="i-heroicons-pencil-square" class="size-5 text-primary" aria-hidden="true" />
+						<UIcon
+							name="i-heroicons-pencil-square"
+							class="size-5 text-primary"
+							aria-hidden="true"
+						/>
 					</div>
 					<span>Command Usage</span>
 				</h3>
@@ -77,7 +84,8 @@
 						role="listitem"
 						class="block hover-lift card-glass rounded-xl border border-gray-700/50 bg-gray-800/70 px-5 py-4 font-mono text-sm text-gray-100 transition-all dark:border-gray-800/50 dark:bg-gray-900/70 dark:text-gray-200"
 					>
-						<span class="text-primary-400">WolfStar</span>, <span class="text-blue-300">{{ command.name }}</span>
+						<span class="text-primary-400">WolfStar</span>,
+						<span class="text-blue-300">{{ command.name }}</span>
 						<span class="text-gray-300">{{ usage }}</span>
 					</code>
 				</div>
@@ -86,16 +94,28 @@
 			<!-- Extended Help -->
 			<section v-if="command.extendedHelp.extendedHelp" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-blue-500/30">
-						<UIcon name="i-heroicons-question-mark-circle" class="size-5 text-blue-500" aria-hidden="true" />
+					<div
+						class="flex size-8 items-center justify-center rounded-full bg-blue-500/30"
+					>
+						<UIcon
+							name="i-heroicons-question-mark-circle"
+							class="size-5 text-blue-500"
+							aria-hidden="true"
+						/>
 					</div>
 					<span>Extended Help</span>
 				</h3>
-				<div class="card-glass rounded-xl border border-base-300/50 bg-base-200/30 px-5 py-4 dark:border-base-content/10 dark:bg-base-300/30">
+				<div
+					class="card-glass rounded-xl border border-base-300/50 bg-base-200/30 px-5 py-4 dark:border-base-content/10 dark:bg-base-300/30"
+				>
 					<div class="prose max-w-none dark:prose-invert prose-p:leading-relaxed">
 						<div
 							class="text-base leading-7 whitespace-pre-line"
-							v-html="sanitizeAndFormat(resolveMultilineString(command.extendedHelp.extendedHelp, true))"
+							v-html="
+								sanitizeAndFormat(
+									resolveMultilineString(command.extendedHelp.extendedHelp, true),
+								)
+							"
 						></div>
 					</div>
 				</div>
@@ -104,8 +124,14 @@
 			<!-- Explained Usage -->
 			<section v-if="command.extendedHelp.explainedUsage?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-purple-500/30">
-						<UIcon name="i-heroicons-code-bracket" class="size-5 text-purple-500" aria-hidden="true" />
+					<div
+						class="flex size-8 items-center justify-center rounded-full bg-purple-500/30"
+					>
+						<UIcon
+							name="i-heroicons-code-bracket"
+							class="size-5 text-purple-500"
+							aria-hidden="true"
+						/>
 					</div>
 					<span>Explained Usage</span>
 				</h3>
@@ -115,10 +141,14 @@
 						:key="idx"
 						class="hover-lift card-glass rounded-r-xl border-l-4 border-purple-500/70 bg-purple-50/50 py-3 pr-4 pl-5 transition-all dark:bg-purple-950/30"
 					>
-						<dt class="mb-1 text-base font-semibold text-purple-600 dark:text-purple-400">
+						<dt
+							class="mb-1 text-base font-semibold text-purple-600 dark:text-purple-400"
+						>
 							{{ arg }}
 						</dt>
-						<dd class="prose max-w-none text-sm leading-relaxed text-gray-700 dark:text-gray-300 dark:prose-invert prose-p:m-0">
+						<dd
+							class="prose max-w-none text-sm leading-relaxed text-gray-700 dark:text-gray-300 dark:prose-invert prose-p:m-0"
+						>
 							<div v-html="sanitizeAndFormat(resolveMultilineString(desc))"></div>
 						</dd>
 					</div>
@@ -128,8 +158,14 @@
 			<!-- Possible Formats -->
 			<section v-if="command.extendedHelp.possibleFormats?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-pink-500/30">
-						<UIcon name="i-heroicons-paint-brush" class="size-5 text-pink-500" aria-hidden="true" />
+					<div
+						class="flex size-8 items-center justify-center rounded-full bg-pink-500/30"
+					>
+						<UIcon
+							name="i-heroicons-paint-brush"
+							class="size-5 text-pink-500"
+							aria-hidden="true"
+						/>
 					</div>
 					<span>Possible Formats</span>
 				</h3>
@@ -152,8 +188,14 @@
 			<!-- Examples -->
 			<section v-if="command.extendedHelp.examples?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-yellow-500/30">
-						<UIcon name="i-heroicons-light-bulb" class="size-5 text-yellow-500" aria-hidden="true" />
+					<div
+						class="flex size-8 items-center justify-center rounded-full bg-yellow-500/30"
+					>
+						<UIcon
+							name="i-heroicons-light-bulb"
+							class="size-5 text-yellow-500"
+							aria-hidden="true"
+						/>
 					</div>
 					<span>Examples</span>
 				</h3>
@@ -169,7 +211,9 @@
 							aria-hidden="true"
 						/>
 						<span class="font-mono">
-							<span class="font-semibold text-primary-600 dark:text-primary-400">WolfStar</span>,
+							<span class="font-semibold text-primary-600 dark:text-primary-400"
+								>WolfStar</span
+							>,
 							<span class="text-blue-600 dark:text-blue-400">{{ command.name }}</span
 							><span v-if="example">{{ ` ${example}` }}</span>
 						</span>
@@ -180,8 +224,14 @@
 			<!-- Reminder -->
 			<section v-if="command.extendedHelp.reminder" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-orange-500/30">
-						<UIcon name="i-heroicons-bell-alert" class="size-5 text-orange-500" aria-hidden="true" />
+					<div
+						class="flex size-8 items-center justify-center rounded-full bg-orange-500/30"
+					>
+						<UIcon
+							name="i-heroicons-bell-alert"
+							class="size-5 text-orange-500"
+							aria-hidden="true"
+						/>
 					</div>
 					<span>Reminder</span>
 				</h3>
@@ -236,7 +286,10 @@ function sanitizeAndFormat(text: string): string {
 			// Italic
 			.replace(/\*(.+?)\*/g, "<em>$1</em>")
 			// Inline code
-			.replace(/`(.+?)`/g, '<code class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono">$1</code>')
+			.replace(
+				/`(.+?)`/g,
+				'<code class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono">$1</code>',
+			)
 			// Links
 			.replace(
 				/\[(.+?)\]\((.+?)\)/g,

@@ -21,12 +21,14 @@ export const ConfigurableRoles: Roles.Role[] = [
 	{
 		key: "rolesModerator",
 		name: "Moderator",
-		tooltip: "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members",
+		tooltip:
+			"The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members",
 	},
 	{
 		key: "rolesMuted",
 		name: "Muted",
-		tooltip: "The muted role, if configured, I will give new muted users this role. Otherwise I will prompt you the creation of one.",
+		tooltip:
+			"The muted role, if configured, I will give new muted users this role. Otherwise I will prompt you the creation of one.",
 	},
 	{
 		key: "rolesRestrictedReaction",
@@ -61,8 +63,16 @@ export const ConfigurableRoles: Roles.Role[] = [
 ];
 
 export const ConfigurableModerationKeys: Moderation.Message[] = [
-	{ description: "Will delete your message to hide the mod.", key: "messagesModerationAutoDelete", name: "Hide Message" },
-	{ description: "DM's the punished person with the reason/duration.", key: "messagesModerationDm", name: "Message User" },
+	{
+		description: "Will delete your message to hide the mod.",
+		key: "messagesModerationAutoDelete",
+		name: "Hide Message",
+	},
+	{
+		description: "DM's the punished person with the reason/duration.",
+		key: "messagesModerationDm",
+		name: "Message User",
+	},
 	{
 		description: "Responds to the punishment command.",
 		key: "messagesModerationMessageDisplay",
@@ -81,13 +91,22 @@ export const ConfigurableModerationKeys: Moderation.Message[] = [
 ];
 
 export const ConfigurableModerationEvents: Events.Event[] = [
-	{ description: "This event posts anonymous moderation logs when a user gets banned.", key: "eventsBanAdd", title: "Ban Added" },
-	{ description: "This event posts anonymous moderation logs when a user gets unbanned", key: "eventsBanRemove", title: "Ban Revoked" },
+	{
+		description: "This event posts anonymous moderation logs when a user gets banned.",
+		key: "eventsBanAdd",
+		title: "Ban Added",
+	},
+	{
+		description: "This event posts anonymous moderation logs when a user gets unbanned",
+		key: "eventsBanRemove",
+		title: "Ban Revoked",
+	},
 ];
 
 export const ConfigurableMessageEvents: Events.Event[] = [
 	{
-		description: "This event posts messages whenever a member reacts to a message with a twemoji, they will be send to the Reaction Logs channel",
+		description:
+			"This event posts messages whenever a member reacts to a message with a twemoji, they will be send to the Reaction Logs channel",
 		key: "eventsTwemojiReactions",
 		title: "Twemoji Reactions",
 	},
@@ -100,7 +119,8 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		name: "Member Add Logs",
 	},
 	{
-		description: "The channel I will send a message to when a member leaves, is kicked, or is banned.",
+		description:
+			"The channel I will send a message to when a member leaves, is kicked, or is banned.",
 		key: "channelsLogsMemberRemove",
 		name: "Member Remove Logs",
 	},
@@ -125,7 +145,8 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		name: "Message Delete Logs",
 	},
 	{
-		description: "The channel I will send a message to when a message from an NSFW channel has been deleted.",
+		description:
+			"The channel I will send a message to when a message from an NSFW channel has been deleted.",
 		key: "channelsLogsMessageDeleteNsfw",
 		name: "NSFW Message Delete Logs",
 	},
@@ -135,28 +156,37 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		name: "Message Update Logs",
 	},
 	{
-		description: "The channel I will send a message to when a message from an NSFW channel has been updated.",
+		description:
+			"The channel I will send a message to when a message from an NSFW channel has been updated.",
 		key: "channelsLogsMessageUpdateNsfw",
 		name: "NSFW Message Update Logs",
 	},
 	{
-		description: "The channel for moderation logs, once enabled, I will post all my moderation cases there.",
+		description:
+			"The channel for moderation logs, once enabled, I will post all my moderation cases there.",
 		key: "channelsLogsModeration",
 		name: "Moderation Logs",
 	},
-	{ description: "The channel I will use to re-upload all images I see.", key: "channelsLogsImage", name: "Image Logs" },
 	{
-		description: "The channel for prune logs, same requirement as normal message logs, but will only send prune messages.",
+		description: "The channel I will use to re-upload all images I see.",
+		key: "channelsLogsImage",
+		name: "Image Logs",
+	},
+	{
+		description:
+			"The channel for prune logs, same requirement as normal message logs, but will only send prune messages.",
 		key: "channelsLogsPrune",
 		name: "Prune Logs",
 	},
 	{
-		description: "The channel for the reaction logs, same requirement as normal message logs, but will only send message reactions",
+		description:
+			"The channel for the reaction logs, same requirement as normal message logs, but will only send message reactions",
 		key: "channelsLogsReaction",
 		name: "Reaction Logs",
 	},
 	{
-		description: "The channel for channel creation logs, if set, I will send a message when another channel is created.",
+		description:
+			"The channel for channel creation logs, if set, I will send a message when another channel is created.",
 		key: "channelsLogsChannelCreate",
 		name: "Channel Create Logs",
 	},
@@ -167,12 +197,14 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		name: "Channel Update Logs",
 	},
 	{
-		description: "The channel for channel deletion logs, if set, I will send a message to this channel when another channel is deleted.",
+		description:
+			"The channel for channel deletion logs, if set, I will send a message to this channel when another channel is deleted.",
 		key: "channelsLogsChannelDelete",
 		name: "Channel Delete Logs",
 	},
 	{
-		description: "The channel for emoji creation logs, if set, I will send a message when an emoji has been created.",
+		description:
+			"The channel for emoji creation logs, if set, I will send a message when an emoji has been created.",
 		key: "channelsLogsEmojiCreate",
 		name: "Emoji Create Logs",
 	},
@@ -183,12 +215,14 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		name: "Emoji Update Logs",
 	},
 	{
-		description: "The channel for emoji deletion logs, if set, I will send a message when an emoji is deleted.",
+		description:
+			"The channel for emoji deletion logs, if set, I will send a message when an emoji is deleted.",
 		key: "channelsLogsEmojiDelete",
 		name: "Emoji Delete Logs",
 	},
 	{
-		description: "The channel for role creation logs, if set, I send a message when a new role is craeted.",
+		description:
+			"The channel for role creation logs, if set, I send a message when a new role is craeted.",
 		key: "channelsLogsRoleCreate",
 		name: "Role Create Logs",
 	},
@@ -199,7 +233,8 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 		name: "Role Update Logs",
 	},
 	{
-		description: "The channel for role deletion logs, if set, I send a message when a role is deleted.",
+		description:
+			"The channel for role deletion logs, if set, I send a message when a role is deleted.",
 		key: "channelsLogsRoleDelete",
 		name: "Role Delete Logs",
 	},
@@ -211,7 +246,11 @@ export const ConfigurableLoggingChannels: Channels.Channel[] = [
 	},
 ];
 export const ConfigurableIgnoreChannels: Channels.IgnoreChannel[] = [
-	{ description: "Channels I should ignore for all types of logging.", key: "channelsIgnoreAll", name: "All logs" },
+	{
+		description: "Channels I should ignore for all types of logging.",
+		key: "channelsIgnoreAll",
+		name: "All logs",
+	},
 	{
 		description: "Channels I should ignore when checking for deleted messages to log.",
 		key: "channelsIgnoreMessageDelete",

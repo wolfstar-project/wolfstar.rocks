@@ -118,8 +118,10 @@ export default {
 			warning: "btn-warning",
 		},
 		fieldGroup: {
-			horizontal: "not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none",
-			vertical: "not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
+			horizontal:
+				"not-only:first:rounded-e-none not-only:last:rounded-s-none not-last:not-first:rounded-none",
+			vertical:
+				"not-only:first:rounded-b-none not-only:last:rounded-t-none not-last:not-first:rounded-none",
 		},
 		leading: {
 			true: "",

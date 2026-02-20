@@ -2,7 +2,8 @@ import { useLogger } from "evlog";
 
 defineRouteMeta({
 	openAPI: {
-		description: "Retrieves a list of all members within a guild. Requires the user to have management permissions for the guild.",
+		description:
+			"Retrieves a list of all members within a guild. Requires the user to have management permissions for the guild.",
 		operationId: "listGuildMembers",
 		parameters: [
 			{
@@ -27,15 +28,29 @@ defineRouteMeta({
 						schema: {
 							items: {
 								properties: {
-									guildId: { description: "The guild's snowflake ID", type: "string" },
-									id: { description: "The member's user snowflake ID", type: "string" },
-									joinedTimestamp: { description: "Unix timestamp when the member joined", nullable: true, type: "integer" },
-									premiumSinceTimestamp: {
-										description: "Unix timestamp when the member started boosting",
+									guildId: {
+										description: "The guild's snowflake ID",
+										type: "string",
+									},
+									id: {
+										description: "The member's user snowflake ID",
+										type: "string",
+									},
+									joinedTimestamp: {
+										description: "Unix timestamp when the member joined",
 										nullable: true,
 										type: "integer",
 									},
-									roles: { description: "List of roles the member has", type: "array" },
+									premiumSinceTimestamp: {
+										description:
+											"Unix timestamp when the member started boosting",
+										nullable: true,
+										type: "integer",
+									},
+									roles: {
+										description: "List of roles the member has",
+										type: "array",
+									},
 									user: { description: "The user object", type: "object" },
 								},
 								type: "object",

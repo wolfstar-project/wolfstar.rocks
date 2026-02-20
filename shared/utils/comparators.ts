@@ -72,14 +72,20 @@ export interface BidirectionalReplaceOptions<T> {
 	outMatch(content: string, previous: number, next: number): T;
 }
 
-export function bidirectionalReplace<T>(regex: RegExp, content: string, options: BidirectionalReplaceOptions<T>) {
+export function bidirectionalReplace<T>(
+	regex: RegExp,
+	content: string,
+	options: BidirectionalReplaceOptions<T>,
+) {
 	const results: T[] = [];
 	let previous = 0;
 	let match: RegExpExecArray | null = null;
 
 	while ((match = regex.exec(content)) !== null) {
 		if (previous !== match.index) {
-			results.push(options.outMatch(content.slice(previous, match.index), previous, match.index));
+			results.push(
+				options.outMatch(content.slice(previous, match.index), previous, match.index),
+			);
 		}
 
 		previous = regex.lastIndex;
@@ -92,9 +98,14 @@ export function bidirectionalReplace<T>(regex: RegExp, content: string, options:
 	return results;
 }
 
-export type BooleanFn<ArgumentTypes extends readonly unknown[], ReturnType extends boolean = boolean> = (...args: ArgumentTypes) => ReturnType;
+export type BooleanFn<
+	ArgumentTypes extends readonly unknown[],
+	ReturnType extends boolean = boolean,
+> = (...args: ArgumentTypes) => ReturnType;
 
-export function andMix<T extends readonly unknown[], R extends boolean>(...fns: readonly BooleanFn<T, R>[]): BooleanFn<T, R> {
+export function andMix<T extends readonly unknown[], R extends boolean>(
+	...fns: readonly BooleanFn<T, R>[]
+): BooleanFn<T, R> {
 	if (fns.length === 0) {
 		throw new Error("You must input at least one function.");
 	}

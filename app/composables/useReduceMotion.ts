@@ -13,7 +13,9 @@ export function useReduceMotion() {
 	});
 
 	// Effective reduce motion: system preference takes precedence
-	const effectiveReduceMotion = computed(() => systemPrefersReducedMotion.value === "reduce" || reduceMotionEnabled.value);
+	const effectiveReduceMotion = computed(
+		() => systemPrefersReducedMotion.value === "reduce" || reduceMotionEnabled.value,
+	);
 
 	const systemPreferenceActive = computed(() => systemPrefersReducedMotion.value === "reduce");
 

@@ -14,8 +14,21 @@
 						content: 'w-48',
 					}"
 				>
-					<div class="flex cursor-pointer items-center gap-2" role="button" aria-label="User menu" aria-haspopup="menu" tabindex="0">
-						<UAvatar v-motion :initial="{ scale: 1 }" :hover="{ scale: 1.1, rotate: 5 }" :src="src" icon="lucide:image" size="2xs" />
+					<div
+						class="flex cursor-pointer items-center gap-2"
+						role="button"
+						aria-label="User menu"
+						aria-haspopup="menu"
+						tabindex="0"
+					>
+						<UAvatar
+							v-motion
+							:initial="{ scale: 1 }"
+							:hover="{ scale: 1.1, rotate: 5 }"
+							:src="src"
+							icon="lucide:image"
+							size="2xs"
+						/>
 						<span class="hidden font-semibold sm:inline">{{ user.name }}</span>
 					</div>
 				</UDropdownMenu>

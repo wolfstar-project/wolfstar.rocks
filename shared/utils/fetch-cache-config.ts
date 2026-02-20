@@ -8,7 +8,11 @@
  * Domains that should have their fetch responses cached.
  * Only requests to these domains will be intercepted and cached.
  */
-export const FETCH_CACHE_ALLOWED_DOMAINS = ["wolfstar.rocks", "beta.wolfstar.rocks", "localhost:3000"];
+export const FETCH_CACHE_ALLOWED_DOMAINS = [
+	"wolfstar.rocks",
+	"beta.wolfstar.rocks",
+	"localhost:3000",
+];
 
 /**
  * Default TTL for cached fetch responses (in seconds).
@@ -90,4 +94,8 @@ export interface CachedFetchResult<T> {
 /**
  * Type for the cachedFetch function attached to event context.
  */
-export type CachedFetchFunction = <T = unknown>(url: string, options?: Parameters<typeof $fetch>[1], ttl?: number) => Promise<CachedFetchResult<T>>;
+export type CachedFetchFunction = <T = unknown>(
+	url: string,
+	options?: Parameters<typeof $fetch>[1],
+	ttl?: number,
+) => Promise<CachedFetchResult<T>>;

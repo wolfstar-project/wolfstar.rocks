@@ -31,7 +31,9 @@ export default defineNuxtModule({
 				const layoutDir = layout.file?.substring(0, layout.file?.lastIndexOf("/") ?? 0);
 
 				// Find children: routes whose file path starts with the layout's directory
-				const children = regularRoutes.filter((route) => route.file.startsWith(`${layoutDir}/`) && route.file !== layout.file);
+				const children = regularRoutes.filter(
+					(route) => route.file.startsWith(`${layoutDir}/`) && route.file !== layout.file,
+				);
 
 				// Mark children as processed
 				children.forEach((child) => processedRoutes.add(child));

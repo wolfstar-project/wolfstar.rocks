@@ -3,7 +3,8 @@ export const useApp = () => {
 	const OtherApps = {
 		Staryl: {
 			avatar: "/avatars/staryl.png",
-			description: "An app to help you manage your server's social notifications (Twitch, Instragram and etc.).",
+			description:
+				"An app to help you manage your server's social notifications (Twitch, Instragram and etc.).",
 			explore: "/staryl",
 			invite: Invites.Staryl,
 			name: "Staryl",

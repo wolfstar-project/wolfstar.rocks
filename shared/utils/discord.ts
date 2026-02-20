@@ -15,22 +15,39 @@ export interface AvatarUser {
 	avatar: string | null;
 }
 
-function dynamicMakeURL(route: string, hash: string, { forceStatic = false, ...options }: Readonly<ImageURLOptions> = {}): string {
-	return makeURL(route, !forceStatic && hash.startsWith("a_") ? { ...options, extension: "gif" } : options);
+function dynamicMakeURL(
+	route: string,
+	hash: string,
+	{ forceStatic = false, ...options }: Readonly<ImageURLOptions> = {},
+): string {
+	return makeURL(
+		route,
+		!forceStatic && hash.startsWith("a_") ? { ...options, extension: "gif" } : options,
+	);
 }
 
 function makeURL(
 	route: string,
-	{ allowedExtensions = ALLOWED_EXTENSIONS, base = DefaultRestOptions.cdn, extension = "webp", size, animated }: Readonly<MakeURLOptions> = {},
+	{
+		allowedExtensions = ALLOWED_EXTENSIONS,
+		base = DefaultRestOptions.cdn,
+		extension = "webp",
+		size,
+		animated,
+	}: Readonly<MakeURLOptions> = {},
 ): string {
 	extension = String(extension).toLowerCase();
 
 	if (!allowedExtensions.includes(extension)) {
-		throw new RangeError(`Invalid extension provided: ${extension}\nMust be one of: ${allowedExtensions.join(", ")}`);
+		throw new RangeError(
+			`Invalid extension provided: ${extension}\nMust be one of: ${allowedExtensions.join(", ")}`,
+		);
 	}
 
 	if (size && !ALLOWED_SIZES.includes(size)) {
-		throw new RangeError(`Invalid size provided: ${size}\nMust be one of: ${ALLOWED_SIZES.join(", ")}`);
+		throw new RangeError(
+			`Invalid size provided: ${size}\nMust be one of: ${ALLOWED_SIZES.join(", ")}`,
+		);
 	}
 
 	const url = new URL(`${base}${route}.${extension}`);
@@ -56,7 +73,10 @@ function defaultAvatar(index: number, options?: Readonly<ImageURLOptions>): stri
  * @param options - Image URL options (size, format, etc.)
  * @returns Avatar URL string
  */
-export function avatarURL(user: MaybeRef<AvatarUser | APIUser>, options?: Readonly<ImageURLOptions>): string {
+export function avatarURL(
+	user: MaybeRef<AvatarUser | APIUser>,
+	options?: Readonly<ImageURLOptions>,
+): string {
 	const userData = toValue(user);
 
 	if (isNullOrUndefined(userData.avatar)) {
@@ -66,7 +86,10 @@ export function avatarURL(user: MaybeRef<AvatarUser | APIUser>, options?: Readon
 	return dynamicMakeURL(`/avatars/${userData.id}/${userData.avatar}`, userData.avatar, options);
 }
 
-export function guildIconURL(guild: MaybeRef<OauthFlattenedGuild>, options?: Readonly<ImageURLOptions>): string | null {
+export function guildIconURL(
+	guild: MaybeRef<OauthFlattenedGuild>,
+	options?: Readonly<ImageURLOptions>,
+): string | null {
 	const guildData = toValue(guild);
 	if (isNullOrUndefined(guildData.icon)) {
 		return guildData.acronym;

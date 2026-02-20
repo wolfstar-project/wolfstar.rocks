@@ -21,7 +21,12 @@
 							aria-label="Bot command prefix"
 						>
 							<template #trailing>
-								<div id="character-count" class="text-xs text-muted tabular-nums" aria-live="polite" role="status">
+								<div
+									id="character-count"
+									class="text-xs text-muted tabular-nums"
+									aria-live="polite"
+									role="status"
+								>
 									{{ state.prefix?.length }}/10
 								</div>
 							</template>
@@ -40,7 +45,9 @@
 				<div>
 					<UFormField label="Language" name="language">
 						<template #description>
-							<p id="language-description" class="text-sm text-base-content/70">Select the language you want for this guild</p>
+							<p id="language-description" class="text-sm text-base-content/70">
+								Select the language you want for this guild
+							</p>
 						</template>
 						<USelectMenu
 							id="language"
@@ -158,7 +165,8 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 }
 
 async function onError(event: FormErrorEvent) {
-	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+	const element =
+		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });
 	const errorMessage = event.errors[0]?.message;
 	toast.add({

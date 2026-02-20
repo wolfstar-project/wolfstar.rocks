@@ -21,7 +21,9 @@ export class PermissionNodeManager {
 	}
 
 	public settingsPropertyFor(target: PermissionNodeValueResolvable) {
-		return (this.isAPIRole(target) ? "permissionsRoles" : "permissionsUsers") satisfies keyof ReadonlyGuildData;
+		return (
+			this.isAPIRole(target) ? "permissionsRoles" : "permissionsUsers"
+		) satisfies keyof ReadonlyGuildData;
 	}
 
 	public async run(member: APIGuildMember, command: WolfCommand) {
@@ -32,10 +34,18 @@ export class PermissionNodeManager {
 		return this.sorted.has(roleId);
 	}
 
-	public add(target: PermissionNodeValueResolvable, command: string, action: PermissionNodeAction): readonly PermissionsNode[] {
+	public add(
+		target: PermissionNodeValueResolvable,
+		command: string,
+		action: PermissionNodeAction,
+	): readonly PermissionsNode[] {
 		const nodes = this.#getPermissionNodes(target);
 
-		const nodeIndex = nodes.findIndex((n) => n.id === (typeof target === "object" && "id" in target ? target.id : target.user.id));
+		const nodeIndex = nodes.findIndex(
+			(n) =>
+				n.id ===
+				(typeof target === "object" && "id" in target ? target.id : target.user.id),
+		);
 		if (nodeIndex === -1) {
 			const node: PermissionsNode = {
 				allow: action === PermissionNodeAction.Allow ? [command] : [],
@@ -53,18 +63,30 @@ export class PermissionNodeManager {
 		}
 
 		const node: PermissionsNode = {
-			allow: action === PermissionNodeAction.Allow ? [...previous.allow, command] : previous.allow,
-			deny: action === PermissionNodeAction.Deny ? [...previous.deny, command] : previous.deny,
+			allow:
+				action === PermissionNodeAction.Allow
+					? [...previous.allow, command]
+					: previous.allow,
+			deny:
+				action === PermissionNodeAction.Deny ? [...previous.deny, command] : previous.deny,
 			id: typeof target === "object" && "id" in target ? target.id : target.user.id,
 		};
 
 		return nodes.with(nodeIndex, node);
 	}
 
-	public remove(target: PermissionNodeValueResolvable, command: string, action: PermissionNodeAction): readonly PermissionsNode[] {
+	public remove(
+		target: PermissionNodeValueResolvable,
+		command: string,
+		action: PermissionNodeAction,
+	): readonly PermissionsNode[] {
 		const nodes = this.#getPermissionNodes(target);
 
-		const nodeIndex = nodes.findIndex((n) => n.id === (typeof target === "object" && "id" in target ? target.id : target.user.id));
+		const nodeIndex = nodes.findIndex(
+			(n) =>
+				n.id ===
+				(typeof target === "object" && "id" in target ? target.id : target.user.id),
+		);
 		if (nodeIndex === -1) {
 			throw new Error("This node does not exist.");
 		}
@@ -77,8 +99,14 @@ export class PermissionNodeManager {
 		}
 
 		const node: PermissionsNode = {
-			allow: action === PermissionNodeAction.Allow ? previous.allow.toSpliced(commandIndex, 1) : previous.allow,
-			deny: action === PermissionNodeAction.Deny ? previous.deny.toSpliced(commandIndex, 1) : previous.deny,
+			allow:
+				action === PermissionNodeAction.Allow
+					? previous.allow.toSpliced(commandIndex, 1)
+					: previous.allow,
+			deny:
+				action === PermissionNodeAction.Deny
+					? previous.deny.toSpliced(commandIndex, 1)
+					: previous.deny,
 			id: typeof target === "object" && "id" in target ? target.id : target.user.id,
 		};
 
@@ -90,7 +118,11 @@ export class PermissionNodeManager {
 	public reset(target: PermissionNodeValueResolvable): readonly PermissionsNode[] {
 		const nodes = this.#getPermissionNodes(target);
 
-		const nodeIndex = nodes.findIndex((n) => n.id === (typeof target === "object" && "id" in target ? target.id : target.user.id));
+		const nodeIndex = nodes.findIndex(
+			(n) =>
+				n.id ===
+				(typeof target === "object" && "id" in target ? target.id : target.user.id),
+		);
 		if (nodeIndex === -1) {
 			throw new Error("This node does not exist.");
 		}
@@ -196,7 +228,10 @@ export class PermissionNodeManager {
 		return "permissions" in target && "hoist" in target && !("user" in target);
 	}
 
-	private async getSortedRoles(settings: ReadonlyGuildData, rawNodes: readonly PermissionsNode[]) {
+	private async getSortedRoles(
+		settings: ReadonlyGuildData,
+		rawNodes: readonly PermissionsNode[],
+	) {
 		const ids = new Set(rawNodes.map((rawNode) => rawNode.id));
 		// I know we should never rely on private methods, however, `Guild#_sortedRoles`
 		// Exists in v13 and is called every time the `Role#position` getter is called,
@@ -245,7 +280,9 @@ export class PermissionNodeManager {
 	}
 
 	#getPermissionNodes(target: PermissionNodeValueResolvable): readonly PermissionsNode[] {
-		return this.isAPIRole(target) ? this.#cachedRawPermissionRoles : this.#cachedRawPermissionUsers;
+		return this.isAPIRole(target)
+			? this.#cachedRawPermissionRoles
+			: this.#cachedRawPermissionUsers;
 	}
 }
 

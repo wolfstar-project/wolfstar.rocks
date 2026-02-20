@@ -1,8 +1,17 @@
 <template>
-	<article class="discord-message" :class="{ 'discord-message-ephemeral': ephemeral }" :aria-label="`Message from ${profile.name}`">
+	<article
+		class="discord-message"
+		:class="{ 'discord-message-ephemeral': ephemeral }"
+		:aria-label="`Message from ${profile.name}`"
+	>
 		<discord-avatar :user="name" size="medium" :class="{ 'mt-6': command }" />
 		<div class="grow gap-2 max-sm:text-xs">
-			<div v-if="command" class="discord-message-reply" role="complementary" aria-label="Reply context">
+			<div
+				v-if="command"
+				class="discord-message-reply"
+				role="complementary"
+				aria-label="Reply context"
+			>
 				<span class="flex items-center gap-1 font-bold">
 					<discord-avatar :user="command.user" size="tiny" />
 					{{ command.user }}
@@ -12,22 +21,47 @@
 			</div>
 			<header class="mb-0.5 flex flex-row items-center">
 				<div class="font-whitney font-bold">{{ profile.name }}</div>
-				<span v-if="profile.app" class="app-badge" role="img" aria-label="Verified application badge">
-					<UIcon v-if="profile.verified" name="ph:check-fat-fill" class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3" aria-hidden="true" />
+				<span
+					v-if="profile.app"
+					class="app-badge"
+					role="img"
+					aria-label="Verified application badge"
+				>
+					<UIcon
+						v-if="profile.verified"
+						name="ph:check-fat-fill"
+						class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3"
+						aria-hidden="true"
+					/>
 					<span class="font-whitney">APP</span>
 				</span>
 			</header>
 			<div class="message-content"><slot></slot></div>
-			<footer v-if="ephemeral" class="discord-message-ephemeral-footer" role="status" aria-label="Ephemeral message notice">
+			<footer
+				v-if="ephemeral"
+				class="discord-message-ephemeral-footer"
+				role="status"
+				aria-label="Ephemeral message notice"
+			>
 				<UIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
-				<button class="discord-message-link" type="button" aria-label="Dismiss ephemeral message">Dismiss message</button>
+				<button
+					class="discord-message-link"
+					type="button"
+					aria-label="Dismiss ephemeral message"
+				>
+					Dismiss message
+				</button>
 			</footer>
 		</div>
 	</article>
 </template>
 
 <script setup lang="ts">
-const { name, ephemeral, command } = defineProps<{ name: ProfileName; ephemeral?: boolean; command?: { user: ProfileName; name: string } }>();
+const { name, ephemeral, command } = defineProps<{
+	name: ProfileName;
+	ephemeral?: boolean;
+	command?: { user: ProfileName; name: string };
+}>();
 const profile = computed(() => Profiles[name]);
 </script>
 

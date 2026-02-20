@@ -12,7 +12,10 @@ export function useGuildSettingsChanges() {
 	const guildId = useRouteParams("id", null, { transform: String });
 
 	// Use guild-scoped state key
-	const guildSettingsChanges = useState<GuildData | undefined>(`guild:${guildId.value}:settings:changes`, () => undefined);
+	const guildSettingsChanges = useState<GuildData | undefined>(
+		`guild:${guildId.value}:settings:changes`,
+		() => undefined,
+	);
 	const resetCounter = useState<number>(`guild:${guildId.value}:settings:resetCounter`, () => 0);
 
 	const mergeGuildSettings = (changes?: Partial<GuildData>) => {
@@ -21,7 +24,11 @@ export function useGuildSettingsChanges() {
 			return;
 		}
 
-		guildSettingsChanges.value = deepMerge<GuildData, Partial<GuildData>>(guildSettingsChanges.value ?? ({} as GuildData), changes, mergeOptions);
+		guildSettingsChanges.value = deepMerge<GuildData, Partial<GuildData>>(
+			guildSettingsChanges.value ?? ({} as GuildData),
+			changes,
+			mergeOptions,
+		);
 	};
 
 	const setGuildSettingsChanges = (changes?: Partial<GuildData>) => {

@@ -56,8 +56,20 @@ export const useFooter = () => {
 		},
 		{
 			children: [
-				{ class: "link-hover", icon: "ph:file-text-fill", label: "Terms of Use", to: "/terms", ui: { linkLeadingIcon: "bg-warning" } },
-				{ class: "link-hover", icon: "ph:shield-check-fill", label: "Privacy Policy", to: "/privacy", ui: { linkLeadingIcon: "bg-warning" } },
+				{
+					class: "link-hover",
+					icon: "ph:file-text-fill",
+					label: "Terms of Use",
+					to: "/terms",
+					ui: { linkLeadingIcon: "bg-warning" },
+				},
+				{
+					class: "link-hover",
+					icon: "ph:shield-check-fill",
+					label: "Privacy Policy",
+					to: "/privacy",
+					ui: { linkLeadingIcon: "bg-warning" },
+				},
 			],
 			label: "Legal",
 		},

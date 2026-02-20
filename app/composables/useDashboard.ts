@@ -7,7 +7,7 @@ const _useDashboard = () => {
 
 	defineShortcuts({
 		"g-h": () => router.push("/"),
-		n: () => (isNotificationsSlideoverOpen.value = !isNotificationsSlideoverOpen.value),
+		"n": () => (isNotificationsSlideoverOpen.value = !isNotificationsSlideoverOpen.value),
 	});
 
 	watch(

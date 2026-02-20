@@ -3,13 +3,19 @@
 		<template v-if="!guildId">
 			<UAlert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
 				<template #description>
-					Please use the <code>Login</code> button instead or click <NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
+					Please use the <code>Login</code> button instead or click
+					<NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
 				</template>
 			</UAlert>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="error">
-				<UAlert variant="solid" color="error" title="Authentication Error" icon="emojione:cross-mark">
+				<UAlert
+					variant="solid"
+					color="error"
+					title="Authentication Error"
+					icon="emojione:cross-mark"
+				>
 					<template #description>
 						{{ error }}
 					</template>

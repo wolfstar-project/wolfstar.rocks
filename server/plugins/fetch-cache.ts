@@ -30,7 +30,14 @@ function generateFetchCacheKey(url: string | URL, method = "GET", body?: unknown
 	const bodyHash = body ? simpleHash(JSON.stringify(body)) : "";
 	const searchHash = urlObj.search ? simpleHash(urlObj.search) : "";
 
-	const parts = [FETCH_CACHE_VERSION, urlObj.host, method.toUpperCase(), urlObj.pathname, searchHash, bodyHash].filter(Boolean);
+	const parts = [
+		FETCH_CACHE_VERSION,
+		urlObj.host,
+		method.toUpperCase(),
+		urlObj.pathname,
+		searchHash,
+		bodyHash,
+	].filter(Boolean);
 
 	return parts.join(":");
 }
@@ -73,7 +80,8 @@ export default defineNitroPlugin((nitroApp) => {
 			} catch (error) {
 				// Storage read failed (e.g., ENOENT on misconfigured storage)
 				// Log and continue without cache
-				import.meta.dev && logger.warn(`[fetch-cache] Storage read failed for ${url}:`, error);
+				import.meta.dev &&
+					logger.warn(`[fetch-cache] Storage read failed for ${url}:`, error);
 			}
 
 			if (cached) {
@@ -94,7 +102,10 @@ export default defineNitroPlugin((nitroApp) => {
 				event.waitUntil(
 					(async () => {
 						try {
-							const freshData = (await $fetch(url, options as Parameters<typeof $fetch>[1])) as T;
+							const freshData = (await $fetch(
+								url,
+								options as Parameters<typeof $fetch>[1],
+							)) as T;
 							const entry: CachedFetchEntry<T> = {
 								cachedAt: Date.now(),
 								data: freshData,
@@ -105,7 +116,8 @@ export default defineNitroPlugin((nitroApp) => {
 							await storage.setItem(cacheKey, entry);
 							import.meta.dev && logger.info(`[fetch-cache] Revalidated: ${url}`);
 						} catch (error) {
-							import.meta.dev && logger.warn(`[fetch-cache] Revalidation failed: ${url}`, error);
+							import.meta.dev &&
+								logger.warn(`[fetch-cache] Revalidation failed: ${url}`, error);
 						}
 					})(),
 				);
@@ -134,7 +146,8 @@ export default defineNitroPlugin((nitroApp) => {
 						await storage.setItem(cacheKey, entry);
 					} catch (error) {
 						// Storage write failed - log but don't fail the request
-						import.meta.dev && logger.warn(`[fetch-cache] Storage write failed for ${url}:`, error);
+						import.meta.dev &&
+							logger.warn(`[fetch-cache] Storage write failed for ${url}:`, error);
 					}
 				})(),
 			);

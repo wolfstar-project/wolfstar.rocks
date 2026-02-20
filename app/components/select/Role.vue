@@ -45,7 +45,14 @@ interface Emits {
 </script>
 
 <script setup lang="ts">
-const { label, modelValue, guild, tooltipTitle, imageInName, disabled = false } = defineProps<SelectRoleProps>();
+const {
+	label,
+	modelValue,
+	guild,
+	tooltipTitle,
+	imageInName,
+	disabled = false,
+} = defineProps<SelectRoleProps>();
 
 defineEmits<Emits>();
 

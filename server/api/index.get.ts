@@ -17,7 +17,11 @@ defineRouteMeta({
 					"application/json": {
 						schema: {
 							properties: {
-								message: { description: "Health check response message", example: "hello world", type: "string" },
+								message: {
+									description: "Health check response message",
+									example: "hello world",
+									type: "string",
+								},
 							},
 							required: ["message"],
 							type: "object",

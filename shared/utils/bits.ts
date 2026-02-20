@@ -2,7 +2,9 @@ import { BitField, enumToObject } from "@sapphire/bitfield";
 import { objectEntries, omitKeysFromObject } from "@sapphire/utilities";
 import { GuildSystemChannelFlags, PermissionFlagsBits } from "discord-api-types/v10";
 
-export const PermissionsBits = new BitField(omitKeysFromObject(PermissionFlagsBits, "ManageEmojisAndStickers"));
+export const PermissionsBits = new BitField(
+	omitKeysFromObject(PermissionFlagsBits, "ManageEmojisAndStickers"),
+);
 export const PermissionsBitsList = objectEntries(PermissionsBits.flags);
 export function toPermissionsArray(bits: bigint) {
 	return PermissionsBits.toArray(bits);

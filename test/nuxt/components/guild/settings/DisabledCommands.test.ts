@@ -122,7 +122,8 @@ describe("disabledCommands", () => {
 	});
 
 	it("renders all command categories as collapsible sections", async () => {
-		const { default: DisabledCommands } = await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
+		const { default: DisabledCommands } =
+			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -137,7 +138,9 @@ describe("disabledCommands", () => {
 		const categoryTriggers = categoryButtons.filter((button) => {
 			const text = button.text();
 			return (
-				(text.includes("Moderation") || text.includes("General") || text.includes("Music")) &&
+				(text.includes("Moderation") ||
+					text.includes("General") ||
+					text.includes("Music")) &&
 				!text.includes("Enable all") &&
 				!text.includes("Disable all") &&
 				!text.includes("Reset")
@@ -149,12 +152,17 @@ describe("disabledCommands", () => {
 		// Use set-based assertion instead of assuming order
 		const categoryLabels = categoryTriggers.map((trigger) => trigger.text());
 		expect(categoryLabels).toStrictEqual(
-			expect.arrayContaining([expect.stringContaining("General"), expect.stringContaining("Moderation"), expect.stringContaining("Music")]),
+			expect.arrayContaining([
+				expect.stringContaining("General"),
+				expect.stringContaining("Moderation"),
+				expect.stringContaining("Music"),
+			]),
 		);
 	});
 
 	it("displays commands in grid for each category", async () => {
-		const { default: DisabledCommands } = await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
+		const { default: DisabledCommands } =
+			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -193,7 +201,8 @@ describe("disabledCommands", () => {
 	});
 
 	it("toggles category open/closed on trigger click", async () => {
-		const { default: DisabledCommands } = await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
+		const { default: DisabledCommands } =
+			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -204,7 +213,8 @@ describe("disabledCommands", () => {
 		const generalButton = categoryButtons.find((btn) => btn.text().includes("General"));
 
 		// Find a specific command element (use "avatar" from General category)
-		const findAvatarCommand = () => wrapper.findAll("p.font-medium").find((el) => el.text() === "avatar");
+		const findAvatarCommand = () =>
+			wrapper.findAll("p.font-medium").find((el) => el.text() === "avatar");
 
 		// Initially, commands should not be visible (accordion closed)
 		let avatarElement = findAvatarCommand();
@@ -230,7 +240,8 @@ describe("disabledCommands", () => {
 	});
 
 	it("only one category open at a time (single-open behavior)", async () => {
-		const { default: DisabledCommands } = await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
+		const { default: DisabledCommands } =
+			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -246,7 +257,8 @@ describe("disabledCommands", () => {
 		await wrapper.vm.$nextTick();
 
 		// Find General and Moderation commands
-		const findCommand = (name: string) => wrapper.findAll("p.font-medium").find((el) => el.text() === name);
+		const findCommand = (name: string) =>
+			wrapper.findAll("p.font-medium").find((el) => el.text() === name);
 
 		// General command (avatar) should be visible
 		let avatarElement = findCommand("avatar");
@@ -277,7 +289,8 @@ describe("disabledCommands", () => {
 	});
 
 	it.skip("category action buttons work (enable all, disable all, reset)", async () => {
-		const { default: DisabledCommands } = await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
+		const { default: DisabledCommands } =
+			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
@@ -319,7 +332,9 @@ describe("disabledCommands", () => {
 					if (commandLabel) {
 						const commandName = commandLabel.textContent?.trim();
 						// Check if this command is in Moderation category
-						const isModerationCommand = mockCommands.some((cmd) => cmd.name === commandName && cmd.category === "Moderation");
+						const isModerationCommand = mockCommands.some(
+							(cmd) => cmd.name === commandName && cmd.category === "Moderation",
+						);
 						if (isModerationCommand) {
 							moderationSwitches.push(switchComp);
 							break;
@@ -354,7 +369,9 @@ describe("disabledCommands", () => {
 
 			// Find all grid items (children of the grid container)
 			const gridItems = [...parent.children];
-			const banGridItem = gridItems.find((item) => item.querySelector("p.font-medium")?.textContent === "ban");
+			const banGridItem = gridItems.find(
+				(item) => item.querySelector("p.font-medium")?.textContent === "ban",
+			);
 
 			if (!banGridItem) {
 				return undefined;
@@ -420,7 +437,8 @@ describe("disabledCommands", () => {
 	});
 
 	it("does not mark form as changed on initial render", async () => {
-		const { default: DisabledCommands } = await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
+		const { default: DisabledCommands } =
+			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,

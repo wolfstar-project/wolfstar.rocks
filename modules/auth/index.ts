@@ -1,7 +1,14 @@
 import type { RouterContext } from "rou3";
 import type { AuthMeta } from "./runtime/types";
 import { defu } from "defu";
-import { addImports, addPlugin, addRouteMiddleware, addTemplate, createResolver, defineNuxtModule } from "nuxt/kit";
+import {
+	addImports,
+	addPlugin,
+	addRouteMiddleware,
+	addTemplate,
+	createResolver,
+	defineNuxtModule,
+} from "nuxt/kit";
 import { createRouter as _createRouter, addRoute, findAllRoutes } from "rou3";
 
 interface ModuleOptions {
@@ -10,7 +17,9 @@ interface ModuleOptions {
 	redirectIfNotAllowed?: string | false;
 }
 
-const createRouter = <T extends Record<string, any> = Record<string, string>>(routes: string[] | Record<string, T>): RouterContext<T> => {
+const createRouter = <T extends Record<string, any> = Record<string, string>>(
+	routes: string[] | Record<string, T>,
+): RouterContext<T> => {
 	const router = _createRouter<T>();
 	if (Array.isArray(routes)) {
 		for (const route of routes) {

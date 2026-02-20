@@ -15,7 +15,10 @@ import type {
 	VideoQualityMode,
 } from "discord-api-types/v10";
 
-export interface PartialOauthFlattenedGuild extends Omit<FlattenedGuild, "joinedTimestamp" | "ownerId" | "features"> {
+export interface PartialOauthFlattenedGuild extends Omit<
+	FlattenedGuild,
+	"joinedTimestamp" | "ownerId" | "features"
+> {
 	joinedTimestamp: FlattenedGuild["joinedTimestamp"] | null;
 	ownerId: FlattenedGuild["ownerId"] | null;
 }
@@ -91,7 +94,10 @@ export interface FlattenedGuild {
 // #endregion
 
 // #region Emoji
-export interface FlattenedEmoji extends Pick<APIEmoji, "animated" | "available" | "id" | "managed" | "name"> {
+export interface FlattenedEmoji extends Pick<
+	APIEmoji,
+	"animated" | "available" | "id" | "managed" | "name"
+> {
 	animated: boolean;
 
 	available: boolean;
@@ -134,12 +140,16 @@ export interface FlattenedPartialChannel {
 	createdTimestamp: number;
 }
 
-export interface FlattenedBaseChannel<T extends GuildChannelTypeWithThreads> extends FlattenedPartialChannel {
+export interface FlattenedBaseChannel<
+	T extends GuildChannelTypeWithThreads,
+> extends FlattenedPartialChannel {
 	type: T;
 	flags?: ChannelFlags;
 }
 
-export interface FlattenedGuildTextBasedChannel<T extends GuildChannelTypeWithThreads> extends FlattenedGuildChannel<T> {
+export interface FlattenedGuildTextBasedChannel<
+	T extends GuildChannelTypeWithThreads,
+> extends FlattenedGuildChannel<T> {
 	lastMessageId?: Snowflake | null;
 	lastPinTimestamp: number | null;
 	rateLimitPerUser?: number;
@@ -147,7 +157,9 @@ export interface FlattenedGuildTextBasedChannel<T extends GuildChannelTypeWithTh
 
 // #region  Guild Channels
 
-export interface FlattenedGuildChannel<T extends GuildChannelTypeWithThreads = GuildChannelTypeWithThreads> extends FlattenedBaseChannel<T> {
+export interface FlattenedGuildChannel<
+	T extends GuildChannelTypeWithThreads = GuildChannelTypeWithThreads,
+> extends FlattenedBaseChannel<T> {
 	guildId: string | null;
 	name: string;
 	parentId: string | null;
@@ -155,8 +167,12 @@ export interface FlattenedGuildChannel<T extends GuildChannelTypeWithThreads = G
 	rawPosition: number;
 }
 
-export interface FlattenedBaseVoiceChannel<T extends ChannelType.GuildStageVoice | ChannelType.GuildVoice>
-	extends FlattenedGuildChannel<T>, Omit<FlattenedGuildTextBasedChannel<T>, "lastPinTimestamp" | "name"> {
+export interface FlattenedBaseVoiceChannel<
+	T extends ChannelType.GuildStageVoice | ChannelType.GuildVoice,
+>
+	extends
+		FlattenedGuildChannel<T>,
+		Omit<FlattenedGuildTextBasedChannel<T>, "lastPinTimestamp" | "name"> {
 	bitrate: number;
 	userLimit: number;
 	rtcRegion: string | null;
@@ -196,7 +212,9 @@ export type FlattenedStageVoiceChannel = FlattenedBaseVoiceChannel<ChannelType.G
 export type FlattenedVoiceChannel = FlattenedBaseVoiceChannel<ChannelType.GuildVoice>;
 
 // #region Forum and Media Channels
-export interface FlattenedThreadOnlyChannel<T extends ChannelType.GuildForum | ChannelType.GuildMedia> extends FlattenedGuildChannel<T> {
+export interface FlattenedThreadOnlyChannel<
+	T extends ChannelType.GuildForum | ChannelType.GuildMedia,
+> extends FlattenedGuildChannel<T> {
 	topic: string | null;
 	lastMessageId: Snowflake | null;
 	rateLimitPerUser: number;
@@ -208,7 +226,10 @@ export interface FlattenedThreadOnlyChannel<T extends ChannelType.GuildForum | C
 	defaultSortOrder: SortOrderType | null;
 }
 
-export interface FlattenedGuildForumTag extends Exclude<APIGuildForumTag, "emoji_id" | "emoji_name"> {
+export interface FlattenedGuildForumTag extends Exclude<
+	APIGuildForumTag,
+	"emoji_id" | "emoji_name"
+> {
 	emoji: FlattenedEmojiGuildForumTag;
 }
 export interface FlattenedEmojiGuildForumTag {
@@ -217,7 +238,10 @@ export interface FlattenedEmojiGuildForumTag {
 }
 // #endregion
 
-export interface FlattenedBaseThreadChannel<T extends ThreadChannelType> extends Pick<FlattenedBaseChannel<T>, "id" | "createdTimestamp"> {
+export interface FlattenedBaseThreadChannel<T extends ThreadChannelType> extends Pick<
+	FlattenedBaseChannel<T>,
+	"id" | "createdTimestamp"
+> {
 	type: ThreadChannelType;
 	archived: boolean;
 	archivedTimestamp: number | null;
@@ -236,13 +260,17 @@ export interface FlattenedBaseThreadChannel<T extends ThreadChannelType> extends
 	rawPosition: number | null;
 }
 
-export type FlattenedAnnouncementThreadChannel = FlattenedBaseThreadChannel<ChannelType.AnnouncementThread>;
+export type FlattenedAnnouncementThreadChannel =
+	FlattenedBaseThreadChannel<ChannelType.AnnouncementThread>;
 
 export type FlattenedPublicThreadChannel = FlattenedBaseThreadChannel<ChannelType.PublicThread>;
 
 export type FlattenedPrivateThreadChannel = FlattenedBaseThreadChannel<ChannelType.PrivateThread>;
 
-export type FlattenedThreadChannel = FlattenedAnnouncementThreadChannel | FlattenedPublicThreadChannel | FlattenedPrivateThreadChannel;
+export type FlattenedThreadChannel =
+	| FlattenedAnnouncementThreadChannel
+	| FlattenedPublicThreadChannel
+	| FlattenedPrivateThreadChannel;
 
 export type FlattenedForumChannel = FlattenedThreadOnlyChannel<ChannelType.GuildForum>;
 

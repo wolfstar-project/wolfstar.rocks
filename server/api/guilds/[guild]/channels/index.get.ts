@@ -1,7 +1,8 @@
 import { useLogger } from "evlog";
 defineRouteMeta({
 	openAPI: {
-		description: "Retrieves a list of all channels within a guild. Requires the user to have management permissions for the guild.",
+		description:
+			"Retrieves a list of all channels within a guild. Requires the user to have management permissions for the guild.",
 		operationId: "listGuildChannels",
 		parameters: [
 			{
@@ -19,16 +20,54 @@ defineRouteMeta({
 						schema: {
 							items: {
 								properties: {
-									createdTimestamp: { description: "Unix timestamp of channel creation", type: "integer" },
-									guildId: { description: "The guild's snowflake ID", example: "123456789012345678", type: "string" },
-									id: { description: "The channel's snowflake ID", example: "987654321098765432", type: "string" },
-									name: { description: "The channel name", example: "general", type: "string" },
-									nsfw: { description: "Whether the channel is NSFW", type: "boolean" },
-									parentId: { description: "The parent category ID", nullable: true, type: "string" },
-									permissionOverwrites: { description: "Permission overwrites for the channel", type: "array" },
-									rawPosition: { description: "The channel's position in the channel list", example: 1, type: "integer" },
-									topic: { description: "The channel topic", nullable: true, type: "string" },
-									type: { description: "The channel type (0 = text, 2 = voice, 4 = category, etc.)", example: 0, type: "integer" },
+									createdTimestamp: {
+										description: "Unix timestamp of channel creation",
+										type: "integer",
+									},
+									guildId: {
+										description: "The guild's snowflake ID",
+										example: "123456789012345678",
+										type: "string",
+									},
+									id: {
+										description: "The channel's snowflake ID",
+										example: "987654321098765432",
+										type: "string",
+									},
+									name: {
+										description: "The channel name",
+										example: "general",
+										type: "string",
+									},
+									nsfw: {
+										description: "Whether the channel is NSFW",
+										type: "boolean",
+									},
+									parentId: {
+										description: "The parent category ID",
+										nullable: true,
+										type: "string",
+									},
+									permissionOverwrites: {
+										description: "Permission overwrites for the channel",
+										type: "array",
+									},
+									rawPosition: {
+										description: "The channel's position in the channel list",
+										example: 1,
+										type: "integer",
+									},
+									topic: {
+										description: "The channel topic",
+										nullable: true,
+										type: "string",
+									},
+									type: {
+										description:
+											"The channel type (0 = text, 2 = voice, 4 = category, etc.)",
+										example: 0,
+										type: "integer",
+									},
 								},
 								type: "object",
 							},

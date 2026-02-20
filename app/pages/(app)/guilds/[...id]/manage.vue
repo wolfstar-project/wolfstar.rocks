@@ -15,7 +15,11 @@
 							@click="isNotificationsSlideoverOpen = true"
 						>
 							<UChip color="error" inset>
-								<UIcon name="lucide:bell" class="size-5 shrink-0" aria-hidden="true" />
+								<UIcon
+									name="lucide:bell"
+									class="size-5 shrink-0"
+									aria-hidden="true"
+								/>
 							</UChip>
 						</UButton>
 					</UTooltip>
@@ -28,7 +32,10 @@
 				<component :is="renderComponent" :commands="commands" :languages="languages" />
 				<template #fallback>
 					<div class="flex h-48 items-center justify-center">
-						<UIcon name="heroicons:arrow-path" class="size-8 animate-spin text-primary" />
+						<UIcon
+							name="heroicons:arrow-path"
+							class="size-8 animate-spin text-primary"
+						/>
 					</div>
 				</template>
 			</ClientOnly>
@@ -63,10 +70,13 @@ const slug = route.params.slug as string | string[];
 async function fetchCommandsList() {
 	loading.value = true;
 	try {
-		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
-			data: [],
-			expire: 0,
-		});
+		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(
+			LocalStorageKeys.Commands,
+			{
+				data: [],
+				expire: 0,
+			},
+		);
 		if (commandsStorage.value && (isDevelopment || commandsStorage.value.expire > Date.now())) {
 			commands.value = commandsStorage.value.data;
 		} else {
@@ -101,11 +111,17 @@ async function fetchCommandsList() {
 async function fetchLanguagesList() {
 	loading.value = true;
 	try {
-		const languagesStorage = useLocalStorage<ExpirableLocalStorageStructure<string[]>>(LocalStorageKeys.Languages, {
-			data: [],
-			expire: 0,
-		});
-		if (languagesStorage.value && (isDevelopment || languagesStorage.value.expire > Date.now())) {
+		const languagesStorage = useLocalStorage<ExpirableLocalStorageStructure<string[]>>(
+			LocalStorageKeys.Languages,
+			{
+				data: [],
+				expire: 0,
+			},
+		);
+		if (
+			languagesStorage.value &&
+			(isDevelopment || languagesStorage.value.expire > Date.now())
+		) {
 			languages.value = languagesStorage.value.data;
 		} else {
 			const languagesData = await $fetch<string[]>("/api/languages", {
@@ -146,7 +162,9 @@ const renderComponent = computed(() => {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue"));
 		}
 		case "commands": {
-			return defineAsyncComponent(() => import("~/components/guild/settings/DisabledCommands.vue"));
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/DisabledCommands.vue"),
+			);
 		}
 		case "events": {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Events.vue"));

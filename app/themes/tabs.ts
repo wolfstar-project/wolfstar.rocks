@@ -79,7 +79,8 @@ export default {
 		{
 			class: {
 				indicator: "bg-primary",
-				trigger: "data-[state=active]:text-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+				trigger:
+					"data-[state=active]:text-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
 			},
 			color: "primary",
 			variant: "pill",
@@ -87,7 +88,8 @@ export default {
 		{
 			class: {
 				indicator: "bg-inverted",
-				trigger: "data-[state=active]:text-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted",
+				trigger:
+					"data-[state=active]:text-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted",
 			},
 			color: "neutral",
 			variant: "pill",
@@ -95,7 +97,8 @@ export default {
 		{
 			class: {
 				indicator: "bg-primary",
-				trigger: "data-[state=active]:text-primary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
+				trigger:
+					"data-[state=active]:text-primary focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
 			},
 			color: "primary",
 			variant: "link",
@@ -103,7 +106,8 @@ export default {
 		{
 			class: {
 				indicator: "bg-inverted",
-				trigger: "data-[state=active]:text-highlighted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted",
+				trigger:
+					"data-[state=active]:text-highlighted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted",
 			},
 			color: "neutral",
 			variant: "link",
@@ -173,13 +177,15 @@ export default {
 		},
 		orientation: {
 			horizontal: {
-				indicator: "left-0 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position)",
+				indicator:
+					"left-0 w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position)",
 				list: "w-full justify-center",
 				root: "flex-col",
 				trigger: "justify-center",
 			},
 			vertical: {
-				indicator: "top-0 h-(--reka-tabs-indicator-size) translate-y-(--reka-tabs-indicator-position)",
+				indicator:
+					"top-0 h-(--reka-tabs-indicator-size) translate-y-(--reka-tabs-indicator-position)",
 				list: "flex-col",
 			},
 		},

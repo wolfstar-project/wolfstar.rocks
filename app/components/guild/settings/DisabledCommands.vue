@@ -1,6 +1,9 @@
 <template>
 	<div>
-		<GuildSettingsSection title="Commands" description="On this page you can disable commands on your server">
+		<GuildSettingsSection
+			title="Commands"
+			description="On this page you can disable commands on your server"
+		>
 			<!-- Unified Form wrapper to match skeleton and content -->
 			<div v-if="loading" class="space-y-4">
 				<div v-for="i in 3" :key="i" class="space-y-2">
@@ -8,8 +11,14 @@
 					<USkeleton class="h-12 w-full" />
 
 					<!-- Commands grid skeleton -->
-					<div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-						<div v-for="j in 8" :key="j" class="flex items-center justify-between rounded-lg border border-base-200 p-3">
+					<div
+						class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+					>
+						<div
+							v-for="j in 8"
+							:key="j"
+							class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+						>
 							<div class="flex-1 space-y-2">
 								<USkeleton class="h-5 w-32" />
 								<USkeleton class="h-4 w-48" />
@@ -40,7 +49,11 @@
 						@update:open="() => toggleCategory(category)"
 					>
 						<template #default="{ open }">
-							<UButton color="neutral" variant="ghost" class="w-full justify-between border-b border-base-200">
+							<UButton
+								color="neutral"
+								variant="ghost"
+								class="w-full justify-between border-b border-base-200"
+							>
 								<span class="truncate text-xl font-medium">{{ category }}</span>
 
 								<template #trailing>
@@ -54,33 +67,60 @@
 						</template>
 
 						<template #content>
-							<div class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+							<div
+								class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+							>
 								<div
 									v-for="command in getCommandsByCategory(category)"
 									:key="command.name"
 									class="flex items-center justify-between rounded-lg border border-base-200 p-3"
 								>
 									<div class="min-w-0 flex-1">
-										<p class="truncate font-medium text-base-content">{{ command.name }}</p>
-										<p class="truncate text-sm text-base-content/60">{{ command.description }}</p>
+										<p class="truncate font-medium text-base-content">
+											{{ command.name }}
+										</p>
+										<p class="truncate text-sm text-base-content/60">
+											{{ command.description }}
+										</p>
 									</div>
 									<USwitch
 										v-if="!isNullOrUndefined(getCommand(command.name))"
 										:model-value="getCommand(command.name)?.isEnabled"
 										:value="getCommand(command.name)?.name"
 										:default-value="true"
-										@update:model-value="(isEnabled) => toggleCommand(command.name, isEnabled)"
+										@update:model-value="
+											(isEnabled) => toggleCommand(command.name, isEnabled)
+										"
 									/>
 								</div>
 							</div>
 
 							<Separator />
 							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
-								<UButton color="success" variant="solid" size="sm" @click="toggleAllInCategory(category, true)"> Enable all </UButton>
-								<UButton color="warning" variant="solid" size="sm" @click="toggleAllInCategory(category, false)">
+								<UButton
+									color="success"
+									variant="solid"
+									size="sm"
+									@click="toggleAllInCategory(category, true)"
+								>
+									Enable all
+								</UButton>
+								<UButton
+									color="warning"
+									variant="solid"
+									size="sm"
+									@click="toggleAllInCategory(category, false)"
+								>
 									Disable all
 								</UButton>
-								<UButton color="neutral" variant="outline" size="sm" @click="resetCategory(category)"> Reset </UButton>
+								<UButton
+									color="neutral"
+									variant="outline"
+									size="sm"
+									@click="resetCategory(category)"
+								>
+									Reset
+								</UButton>
 							</div>
 						</template>
 					</UCollapsible>
@@ -111,7 +151,9 @@ const { guildSettings } = useGuildSettings();
 
 const expandedCategory = ref<string | undefined>(undefined);
 
-const state = reactive<Schema>(createDefaultState(commands, guildSettings.value?.disabledCommands as string[]));
+const state = reactive<Schema>(
+	createDefaultState(commands, guildSettings.value?.disabledCommands as string[]),
+);
 
 // Loading state
 const loading = computed(() => !commands.length || !guildSettings.value);
@@ -127,7 +169,10 @@ const categories = computed(() => {
 });
 
 // Helper to create default state from commands and settings
-function createDefaultState(cmdList: FlattenedCommand[], disabledCommands: string[] | undefined): Schema {
+function createDefaultState(
+	cmdList: FlattenedCommand[],
+	disabledCommands: string[] | undefined,
+): Schema {
 	const result: Record<string, DisableCommands.Command> = {};
 
 	for (const command of cmdList) {
@@ -205,7 +250,8 @@ function resetCategory(category: string) {
 }
 
 async function onError(event: FormErrorEvent) {
-	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+	const element =
+		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
@@ -221,7 +267,10 @@ watch(
 	loading,
 	(isLoading) => {
 		if (!isLoading && guildSettings.value) {
-			const newValues = createDefaultState(commands, guildSettings.value.disabledCommands as string[]);
+			const newValues = createDefaultState(
+				commands,
+				guildSettings.value.disabledCommands as string[],
+			);
 
 			// Remove stale keys not in new values
 			for (const key in state) {

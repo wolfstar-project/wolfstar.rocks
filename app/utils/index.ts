@@ -2,13 +2,26 @@ import type { Selfmod } from "#shared/types/configurableData";
 import type { Ref } from "vue";
 import { isEqual } from "ohash/utils";
 
-export function updateSliderValueObj(prop: Selfmod.Union, value: number | number[], multiplier = 1) {
+export function updateSliderValueObj(
+	prop: Selfmod.Union,
+	value: number | number[],
+	multiplier = 1,
+) {
 	return {
-		[prop]: Array.isArray(value) && typeof value[0] === "number" ? value[0] * multiplier : typeof value === "number" ? value * multiplier : 0,
+		[prop]:
+			Array.isArray(value) && typeof value[0] === "number"
+				? value[0] * multiplier
+				: typeof value === "number"
+					? value * multiplier
+					: 0,
 	};
 }
 
-export function updateSliderValueArr(prop: Selfmod.Union, value: number | number[], multiplier = 1) {
+export function updateSliderValueArr(
+	prop: Selfmod.Union,
+	value: number | number[],
+	multiplier = 1,
+) {
 	return {
 		[prop]: Array.isArray(value) ? value.map((v) => v * multiplier) : value * multiplier,
 	};
@@ -31,7 +44,11 @@ export default function removeNonAlphaNumeric(str: string) {
  * @returns The object.
  */
 
-export async function useObjectStorage<T>(key: string, initial: T, listenToStorage = true): Promise<Ref<T>> {
+export async function useObjectStorage<T>(
+	key: string,
+	initial: T,
+	listenToStorage = true,
+): Promise<Ref<T>> {
 	const storage = useStorage();
 	const raw = await storage.getItem(key);
 
@@ -88,7 +105,10 @@ export async function useObjectStorage<T>(key: string, initial: T, listenToStora
  * @param keys The keys.
  * @returns The object.
  */
-export function pick<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Pick<Data, Keys> {
+export function pick<Data extends object, Keys extends keyof Data>(
+	data: Data,
+	keys: Keys[],
+): Pick<Data, Keys> {
 	const result = {} as Pick<Data, Keys>;
 
 	for (const key of keys) {
@@ -104,7 +124,10 @@ export function pick<Data extends object, Keys extends keyof Data>(data: Data, k
  * @param keys The keys.
  * @returns The object.
  */
-export function omit<Data extends object, Keys extends keyof Data>(data: Data, keys: Keys[]): Omit<Data, Keys> {
+export function omit<Data extends object, Keys extends keyof Data>(
+	data: Data,
+	keys: Keys[],
+): Omit<Data, Keys> {
 	const result = { ...data };
 
 	for (const key of keys) {
@@ -121,7 +144,11 @@ export function omit<Data extends object, Keys extends keyof Data>(data: Data, k
  * @param defaultValue The default value.
  * @returns The value.
  */
-export function get(object: Record<string, any> | undefined, path: (string | number)[] | string, defaultValue?: any): any {
+export function get(
+	object: Record<string, any> | undefined,
+	path: (string | number)[] | string,
+	defaultValue?: any,
+): any {
 	if (typeof path === "string") {
 		path = path.split(".").map((key) => {
 			const numKey = Number(key);
@@ -148,7 +175,11 @@ export function get(object: Record<string, any> | undefined, path: (string | num
  * @param path The path.
  * @param value The value.
  */
-export function set(object: Record<string, any>, path: (string | number)[] | string, value: any): void {
+export function set(
+	object: Record<string, any>,
+	path: (string | number)[] | string,
+	value: any,
+): void {
 	if (typeof path === "string") {
 		path = path.split(".").map((key) => {
 			const numKey = Number(key);
@@ -191,7 +222,11 @@ export function formatNumber(num: number): string {
  * @param comparator The comparator.
  * @returns Whether the values are equal.
  */
-export function compare<T>(value?: T, currentValue?: T, comparator?: string | ((a: T, b: T) => boolean)) {
+export function compare<T>(
+	value?: T,
+	currentValue?: T,
+	comparator?: string | ((a: T, b: T) => boolean),
+) {
 	if (value === undefined || currentValue === undefined) {
 		return false;
 	}

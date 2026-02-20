@@ -13,7 +13,10 @@ export function getSettingsContext(settings: ReadonlyGuildData): SettingsContext
 	return cache.ensure(settings.id, () => new SettingsContext(settings));
 }
 
-export function updateSettingsContext(settings: ReadonlyGuildData, data: Partial<ReadonlyGuildData>): void {
+export function updateSettingsContext(
+	settings: ReadonlyGuildData,
+	data: Partial<ReadonlyGuildData>,
+): void {
 	const existing = cache.get(settings.id);
 	if (existing) {
 		existing.update(settings, data);

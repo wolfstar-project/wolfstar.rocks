@@ -131,7 +131,9 @@ function transformPermissionOverwrites(
 	]);
 }
 
-export function getParentChannel(channel: APIThreadChannel | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>) {
+export function getParentChannel(
+	channel: APIThreadChannel | Exclude<APIChannel, APIDMChannel | APIGroupDMChannel>,
+) {
 	const channelResult = lazy(async () => {
 		if (!channel.parent_id) {
 			return null;
@@ -260,7 +262,9 @@ function flattenChannelAnnouncement(channel: APINewsChannel): FlattenedAnnouncem
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
 		guildId: channel.guild_id ?? null,
 		id: channel.id,
-		lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+		lastPinTimestamp: channel.last_pin_timestamp
+			? Date.parse(channel.last_pin_timestamp)
+			: null,
 		name: channel.name,
 		nsfw: channel.nsfw ?? false,
 		parentId: channel.parent_id ?? null,
@@ -276,7 +280,9 @@ function flattenChannelText(channel: APITextChannel): FlattenedTextChannel {
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
 		guildId: channel.guild_id ?? null,
 		id: channel.id,
-		lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+		lastPinTimestamp: channel.last_pin_timestamp
+			? Date.parse(channel.last_pin_timestamp)
+			: null,
 		name: channel.name,
 		nsfw: channel.nsfw ?? false,
 		parentId: channel.parent_id ?? null,
@@ -288,7 +294,10 @@ function flattenChannelText(channel: APITextChannel): FlattenedTextChannel {
 	};
 }
 
-function flattenChannelVoice(channel: APIGuildVoiceChannel, guildId?: string): FlattenedVoiceChannel {
+function flattenChannelVoice(
+	channel: APIGuildVoiceChannel,
+	guildId?: string,
+): FlattenedVoiceChannel {
 	return {
 		bitrate: channel.bitrate ?? 64_000,
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
@@ -305,7 +314,10 @@ function flattenChannelVoice(channel: APIGuildVoiceChannel, guildId?: string): F
 	};
 }
 
-function flattenChannelStageVoice(channel: APIGuildStageVoiceChannel, guildId?: string): FlattenedStageVoiceChannel {
+function flattenChannelStageVoice(
+	channel: APIGuildStageVoiceChannel,
+	guildId?: string,
+): FlattenedStageVoiceChannel {
 	return {
 		bitrate: channel.bitrate ?? 64_000,
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
@@ -354,7 +366,9 @@ function flattenChannelForum(channel: APIGuildForumChannel): FlattenedForumChann
 		guildId: channel.guild_id ?? null,
 		id: channel.id,
 		lastMessageId: channel.last_message_id ?? null,
-		lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+		lastPinTimestamp: channel.last_pin_timestamp
+			? Date.parse(channel.last_pin_timestamp)
+			: null,
 		name: channel.name,
 		parentId: channel.parent_id ?? null,
 		permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
@@ -383,7 +397,9 @@ function flattenChannelMedia(channel: APIGuildMediaChannel): FlattenedMediaChann
 		guildId: channel.guild_id ?? null,
 		id: channel.id,
 		lastMessageId: channel.last_message_id ?? null,
-		lastPinTimestamp: channel.last_pin_timestamp ? Date.parse(channel.last_pin_timestamp) : null,
+		lastPinTimestamp: channel.last_pin_timestamp
+			? Date.parse(channel.last_pin_timestamp)
+			: null,
 		name: channel.name,
 		parentId: channel.parent_id ?? null,
 		permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
@@ -408,7 +424,9 @@ function flattenChannelThread(channel: APIThreadChannel, guildId?: string): Flat
 		id: channel.id,
 		type: channel.type,
 		archived: channel.thread_metadata?.archived ?? false,
-		archivedTimestamp: channel.thread_metadata?.archive_timestamp ? Date.parse(channel.thread_metadata.archive_timestamp) : null,
+		archivedTimestamp: channel.thread_metadata?.archive_timestamp
+			? Date.parse(channel.thread_metadata.archive_timestamp)
+			: null,
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
 		guildId: channel.guild_id ?? guildId ?? null,
 		name: channel.name,

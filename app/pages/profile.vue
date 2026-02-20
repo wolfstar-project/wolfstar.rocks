@@ -5,9 +5,14 @@
 			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
 		>
 			<!-- decorative left accent (sidebar-like) -->
-			<div class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/40 md:block" aria-hidden="true"></div>
+			<div
+				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/40 md:block"
+				aria-hidden="true"
+			></div>
 			<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
-				<USkeleton class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100" />
+				<USkeleton
+					class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100"
+				/>
 				<div class="space-y-2 text-center">
 					<USkeleton class="h-10 w-48" />
 					<USkeleton class="h-7 w-32" />
@@ -21,7 +26,10 @@
 				<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 					<div
 						class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
-						:class="{ 'transition-transform duration-300 group-hover:scale-105': !effectiveReduceMotion }"
+						:class="{
+							'transition-transform duration-300 group-hover:scale-105':
+								!effectiveReduceMotion,
+						}"
 						role="img"
 					>
 						<NuxtImg
@@ -66,7 +74,11 @@
 							@click="copyUserId"
 						>
 							<template #leading>
-								<UIcon :name="copied ? 'heroicons:check' : 'heroicons:clipboard-document'" />
+								<UIcon
+									:name="
+										copied ? 'heroicons:check' : 'heroicons:clipboard-document'
+									"
+								/>
 							</template>
 							{{ user.id }}
 						</UButton>
@@ -79,8 +91,16 @@
 			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
-			<div class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-secondary/20 md:block" aria-hidden="true"></div>
-			<UTabs v-model="activeTab" variant="transparent" :items class="flex w-full flex-col items-center justify-center">
+			<div
+				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-secondary/20 md:block"
+				aria-hidden="true"
+			></div>
+			<UTabs
+				v-model="activeTab"
+				variant="transparent"
+				:items
+				class="flex w-full flex-col items-center justify-center"
+			>
 				<template #content="{ item }">
 					<div class="p-8">
 						<div v-if="item.value === 'servers'" class="space-y-6">
@@ -89,7 +109,9 @@
 								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
 								<p class="mt-1 text-base-content/60">
 									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
-									<span v-else>Servers you're in ({{ guilds.length ?? 0 }} servers)</span>
+									<span v-else
+										>Servers you're in ({{ guilds.length ?? 0 }} servers)</span
+									>
 								</p>
 							</div>
 
@@ -133,14 +155,29 @@
 										/>
 
 										<!-- Sort Button -->
-										<UButton class="join-item" color="primary" :is-loading @click="toggleSortOrder()">
+										<UButton
+											class="join-item"
+											color="primary"
+											:is-loading
+											@click="toggleSortOrder()"
+										>
 											<template #leading>
 												<UIcon
 													v-motion
 													:initial="{ opacity: 0 }"
-													:enter="{ opacity: 1, transition: { duration: 150 } }"
-													:leave="{ opacity: 0, transition: { duration: 150 } }"
-													:name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'"
+													:enter="{
+														opacity: 1,
+														transition: { duration: 150 },
+													}"
+													:leave="{
+														opacity: 0,
+														transition: { duration: 150 },
+													}"
+													:name="
+														sortAscending
+															? 'lucide:arrow-up-a-z'
+															: 'lucide:arrow-down-z-a'
+													"
 												/>
 											</template>
 										</UButton>
@@ -177,14 +214,29 @@
 										</UButton>
 
 										<!-- Sort Button -->
-										<UButton class="join-item" color="primary" :is-loading @click="toggleSortOrder()">
+										<UButton
+											class="join-item"
+											color="primary"
+											:is-loading
+											@click="toggleSortOrder()"
+										>
 											<template #leading>
 												<UIcon
 													v-motion
 													:initial="{ opacity: 0 }"
-													:enter="{ opacity: 1, transition: { duration: 150 } }"
-													:leave="{ opacity: 0, transition: { duration: 150 } }"
-													:name="sortAscending ? 'lucide:arrow-up-a-z' : 'lucide:arrow-down-z-a'"
+													:enter="{
+														opacity: 1,
+														transition: { duration: 150 },
+													}"
+													:leave="{
+														opacity: 0,
+														transition: { duration: 150 },
+													}"
+													:name="
+														sortAscending
+															? 'lucide:arrow-up-a-z'
+															: 'lucide:arrow-down-z-a'
+													"
 												/>
 											</template>
 										</UButton>
@@ -221,34 +273,53 @@
 						<div v-if="item.value === 'settings'" class="space-y-6">
 							<div class="mb-6">
 								<h2 class="text-2xl font-bold text-base-content">Settings</h2>
-								<p class="mt-1 text-base-content/60">Manage your profile settings and preferences</p>
+								<p class="mt-1 text-base-content/60">
+									Manage your profile settings and preferences
+								</p>
 							</div>
 
 							<!-- Accessibility Settings Card -->
 							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
-										<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
-											<UIcon name="heroicons:eye-20-solid" class="size-4 text-primary" />
+										<div
+											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+										>
+											<UIcon
+												name="heroicons:eye-20-solid"
+												class="size-4 text-primary"
+											/>
 										</div>
 
 										<div>
-											<h3 class="text-lg font-semibold text-base-content">Accessibility</h3>
-											<p class="text-sm text-base-content/60">Customize your viewing experience</p>
+											<h3 class="text-lg font-semibold text-base-content">
+												Accessibility
+											</h3>
+											<p class="text-sm text-base-content/60">
+												Customize your viewing experience
+											</p>
 										</div>
 									</div>
 								</template>
 
 								<div class="space-y-4">
 									<!-- Reduce Motion Toggle -->
-									<div class="flex items-center justify-between rounded-lg border border-base-300 bg-base-200/50 p-4">
+									<div
+										class="flex items-center justify-between rounded-lg border border-base-300 bg-base-200/50 p-4"
+									>
 										<div class="flex-1">
 											<div class="flex items-center gap-2">
-												<UIcon name="heroicons:arrows-right-left" class="h-5 w-5 text-base-content/70" />
-												<h4 class="font-medium text-base-content">Reduce Motion</h4>
+												<UIcon
+													name="heroicons:arrows-right-left"
+													class="h-5 w-5 text-base-content/70"
+												/>
+												<h4 class="font-medium text-base-content">
+													Reduce Motion
+												</h4>
 											</div>
 											<p class="mt-1 text-sm text-base-content/60">
-												Minimize animations and transitions for a calmer experience
+												Minimize animations and transitions for a calmer
+												experience
 											</p>
 										</div>
 										<USwitch
@@ -260,12 +331,21 @@
 									</div>
 
 									<!-- System Preference Info -->
-									<div v-if="effectiveReduceMotion" class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4">
-										<UIcon name="heroicons:information-circle" class="mt-0.5 h-5 w-5 shrink-0 text-info" />
+									<div
+										v-if="effectiveReduceMotion"
+										class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
+									>
+										<UIcon
+											name="heroicons:information-circle"
+											class="mt-0.5 h-5 w-5 shrink-0 text-info"
+										/>
 										<div class="text-sm">
-											<p class="font-medium text-info">System Preference Detected</p>
+											<p class="font-medium text-info">
+												System Preference Detected
+											</p>
 											<p class="mt-1 text-info/80">
-												Your system is configured to reduce motion. This setting is automatically applied and cannot be
+												Your system is configured to reduce motion. This
+												setting is automatically applied and cannot be
 												overridden for your safety.
 											</p>
 										</div>
@@ -274,14 +354,25 @@
 									<!-- Motion Status Indicator -->
 									<div class="flex items-center gap-2 text-sm">
 										<span class="text-base-content/60">Current Status:</span>
-										<UBadge :color="effectiveReduceMotion ? 'primary' : 'neutral'" variant="subtle">
+										<UBadge
+											:color="effectiveReduceMotion ? 'primary' : 'neutral'"
+											variant="subtle"
+										>
 											<template #leading>
 												<UIcon
-													:name="effectiveReduceMotion ? 'heroicons:check-circle' : 'heroicons:x-circle'"
+													:name="
+														effectiveReduceMotion
+															? 'heroicons:check-circle'
+															: 'heroicons:x-circle'
+													"
 													class="h-4 w-4"
 												/>
 											</template>
-											{{ effectiveReduceMotion ? "Motion Reduced" : "Motion Enabled" }}
+											{{
+												effectiveReduceMotion
+													? "Motion Reduced"
+													: "Motion Enabled"
+											}}
 										</UBadge>
 									</div>
 								</div>
@@ -291,20 +382,36 @@
 							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
-										<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
-											<UIcon name="heroicons:lock-closed-20-solid" class="size-4 text-primary" />
+										<div
+											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+										>
+											<UIcon
+												name="heroicons:lock-closed-20-solid"
+												class="size-4 text-primary"
+											/>
 										</div>
 										<div>
-											<h3 class="text-lg font-semibold text-base-content">Privacy</h3>
-											<p class="text-sm text-base-content/60">Manage your privacy preferences</p>
+											<h3 class="text-lg font-semibold text-base-content">
+												Privacy
+											</h3>
+											<p class="text-sm text-base-content/60">
+												Manage your privacy preferences
+											</p>
 										</div>
 									</div>
 								</template>
 								<div class="flex flex-col items-center justify-center py-12">
 									<div class="space-y-2 text-center">
-										<UIcon name="heroicons:sparkles" class="mx-auto mb-4 size-12 text-base-content/30" />
-										<h4 class="text-xl font-semibold text-base-content/60">Coming Soon</h4>
-										<p class="text-sm text-base-content/40">Privacy controls and data management options coming soon</p>
+										<UIcon
+											name="heroicons:sparkles"
+											class="mx-auto mb-4 size-12 text-base-content/30"
+										/>
+										<h4 class="text-xl font-semibold text-base-content/60">
+											Coming Soon
+										</h4>
+										<p class="text-sm text-base-content/40">
+											Privacy controls and data management options coming soon
+										</p>
 									</div>
 								</div>
 							</UCard>
@@ -313,87 +420,160 @@
 							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
-										<div class="flex size-7 items-center justify-center rounded-full bg-primary/10">
-											<UIcon name="heroicons:bell-20-solid" class="size-4 text-primary" />
+										<div
+											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+										>
+											<UIcon
+												name="heroicons:bell-20-solid"
+												class="size-4 text-primary"
+											/>
 										</div>
 										<div>
-											<h3 class="text-lg font-semibold text-base-content">Notifications</h3>
-											<p class="text-sm text-base-content/60">Configure notification preferences</p>
+											<h3 class="text-lg font-semibold text-base-content">
+												Notifications
+											</h3>
+											<p class="text-sm text-base-content/60">
+												Configure notification preferences
+											</p>
 										</div>
 									</div>
 								</template>
 								<div class="flex flex-col items-center justify-center py-12">
 									<div class="space-y-2 text-center">
-										<UIcon name="heroicons:sparkles" class="mx-auto mb-4 size-12 text-base-content/30" />
-										<h4 class="text-xl font-semibold text-base-content/60">Coming Soon</h4>
-										<p class="text-sm text-base-content/40">Notification settings and preferences will be available soon</p>
+										<UIcon
+											name="heroicons:sparkles"
+											class="mx-auto mb-4 size-12 text-base-content/30"
+										/>
+										<h4 class="text-xl font-semibold text-base-content/60">
+											Coming Soon
+										</h4>
+										<p class="text-sm text-base-content/40">
+											Notification settings and preferences will be available
+											soon
+										</p>
 									</div>
 								</div>
 							</UCard>
 						</div>
 						<div v-if="item.value === 'premium'" class="space-y-6">
-							<UCard class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl">
+							<UCard
+								class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl"
+							>
 								<template #header>
 									<div>
-										<h2 class="text-2xl font-bold text-base-content">Premium</h2>
-										<p class="mt-1 text-base-content/60">Unlock advanced features and support the project</p>
+										<h2 class="text-2xl font-bold text-base-content">
+											Premium
+										</h2>
+										<p class="mt-1 text-base-content/60">
+											Unlock advanced features and support the project
+										</p>
 									</div>
 								</template>
 								<div class="space-y-6">
 									<div class="flex flex-col items-center space-y-4 text-center">
-										<div class="flex size-18 items-center justify-center rounded-full bg-primary/20">
-											<UIcon name="heroicons:sparkles-20-solid" class="size-12 text-primary" />
+										<div
+											class="flex size-18 items-center justify-center rounded-full bg-primary/20"
+										>
+											<UIcon
+												name="heroicons:sparkles-20-solid"
+												class="size-12 text-primary"
+											/>
 										</div>
 										<div>
-											<h3 class="text-3xl font-bold text-base-content">Upgrade to Premium</h3>
-											<p class="mt-2 text-base-content/70">Unlock advanced features and get priority support</p>
+											<h3 class="text-3xl font-bold text-base-content">
+												Upgrade to Premium
+											</h3>
+											<p class="mt-2 text-base-content/70">
+												Unlock advanced features and get priority support
+											</p>
 										</div>
 									</div>
 
 									<!-- Feature List -->
 									<div class="grid gap-4 sm:grid-cols-2">
 										<div class="flex items-start gap-3">
-											<div class="flex size-10 items-center justify-center rounded-full bg-success/20">
-												<UIcon name="heroicons:check-circle" class="mt-0.5 size-7 text-success" />
+											<div
+												class="flex size-10 items-center justify-center rounded-full bg-success/20"
+											>
+												<UIcon
+													name="heroicons:check-circle"
+													class="mt-0.5 size-7 text-success"
+												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">Advanced Commands</p>
-												<p class="text-sm text-base-content/60">Access to premium-only commands</p>
+												<p class="font-semibold text-base-content">
+													Advanced Commands
+												</p>
+												<p class="text-sm text-base-content/60">
+													Access to premium-only commands
+												</p>
 											</div>
 										</div>
 										<div class="flex items-start gap-3">
-											<div class="flex size-10 items-center justify-center rounded-full bg-success/20">
-												<UIcon name="heroicons:check-circle" class="mt-0.5 size-7 text-success" />
+											<div
+												class="flex size-10 items-center justify-center rounded-full bg-success/20"
+											>
+												<UIcon
+													name="heroicons:check-circle"
+													class="mt-0.5 size-7 text-success"
+												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">Priority Support</p>
-												<p class="text-sm text-base-content/60">Get help faster from our team</p>
+												<p class="font-semibold text-base-content">
+													Priority Support
+												</p>
+												<p class="text-sm text-base-content/60">
+													Get help faster from our team
+												</p>
 											</div>
 										</div>
 										<div class="flex items-start gap-3">
-											<div class="flex size-10 items-center justify-center rounded-full bg-success/20">
-												<UIcon name="heroicons:check-circle" class="mt-0.5 size-7 text-success" />
+											<div
+												class="flex size-10 items-center justify-center rounded-full bg-success/20"
+											>
+												<UIcon
+													name="heroicons:check-circle"
+													class="mt-0.5 size-7 text-success"
+												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">Custom Settings</p>
-												<p class="text-sm text-base-content/60">Personalize your experience</p>
+												<p class="font-semibold text-base-content">
+													Custom Settings
+												</p>
+												<p class="text-sm text-base-content/60">
+													Personalize your experience
+												</p>
 											</div>
 										</div>
 										<div class="flex items-start gap-3">
-											<div class="flex size-10 items-center justify-center rounded-full bg-success/20">
-												<UIcon name="heroicons:check-circle" class="mt-0.5 size-7 text-success" />
+											<div
+												class="flex size-10 items-center justify-center rounded-full bg-success/20"
+											>
+												<UIcon
+													name="heroicons:check-circle"
+													class="mt-0.5 size-7 text-success"
+												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">Early Access</p>
-												<p class="text-sm text-base-content/60">Try new features first</p>
+												<p class="font-semibold text-base-content">
+													Early Access
+												</p>
+												<p class="text-sm text-base-content/60">
+													Try new features first
+												</p>
 											</div>
 										</div>
 									</div>
 								</div>
 								<template #footer>
-									<UFieldGroup size="md" class="z-10 flex w-full justify-center pt-4">
+									<UFieldGroup
+										size="md"
+										class="z-10 flex w-full justify-center pt-4"
+									>
 										<UButton color="primary">Get Premium</UButton>
-										<UButton color="primary" variant="outline"> Learn More </UButton>
+										<UButton color="primary" variant="outline">
+											Learn More
+										</UButton>
 									</UFieldGroup>
 								</template>
 							</UCard>
@@ -498,7 +678,9 @@ const items = computed<TabsItem[]>(() => [
 ]);
 
 const defaultAvatar = computed(() =>
-	user.value?.id ? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png` : "https://cdn.discordapp.com/embed/avatars/0.png",
+	user.value?.id
+		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
+		: "https://cdn.discordapp.com/embed/avatars/0.png",
 );
 
 function undoSearch() {

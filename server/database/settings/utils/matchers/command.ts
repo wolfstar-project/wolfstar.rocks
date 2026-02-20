@@ -16,11 +16,19 @@ function matchNameAndCategory(name: string, category: string, command: Flattened
 	return command.category === category && matchName(name, command);
 }
 
-function matchNameCategoryAndSubCategory(name: string, category: string, subCategory: string, command: FlattenedCommand): boolean {
+function matchNameCategoryAndSubCategory(
+	name: string,
+	category: string,
+	subCategory: string,
+	command: FlattenedCommand,
+): boolean {
 	return command.subCategory === subCategory && matchNameAndCategory(name, category, command);
 }
 
-export async function matchAny(names: Iterable<string>, command: FlattenedCommand): Promise<boolean> {
+export async function matchAny(
+	names: Iterable<string>,
+	command: FlattenedCommand,
+): Promise<boolean> {
 	for (const name of names) {
 		if (await match(name, command)) {
 			return true;
@@ -125,12 +133,20 @@ async function resolveCommandWithCategory(name: string, category: string): Promi
 	return null;
 }
 
-async function resolveCommandWithCategoryAndSubCategory(name: string, category: string, subCategory: string): Promise<string | null> {
+async function resolveCommandWithCategoryAndSubCategory(
+	name: string,
+	category: string,
+	subCategory: string,
+): Promise<string | null> {
 	const commands = await fetchCommands();
 	const lowerName = name.toLowerCase();
 
 	for (const command of commands) {
-		if (command.name.toLowerCase() === lowerName && command.category === category && command.subCategory === subCategory) {
+		if (
+			command.name.toLowerCase() === lowerName &&
+			command.category === category &&
+			command.subCategory === subCategory
+		) {
 			return command.name;
 		}
 	}
@@ -166,7 +182,9 @@ export async function resolve(name: string): Promise<string | null> {
 		return null;
 	}
 	if (parts.length === 2) {
-		return parts[1] === "*" ? `${category}.*` : resolveCommandWithCategory(parts[1].toLowerCase(), category);
+		return parts[1] === "*"
+			? `${category}.*`
+			: resolveCommandWithCategory(parts[1].toLowerCase(), category);
 	}
 
 	// Handle `${category}.${category}.${string}`:

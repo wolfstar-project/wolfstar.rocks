@@ -66,7 +66,10 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 			cache.value = null;
 
 			const { search, ...fetchOptions } = options ?? {};
-			const { data, isStale } = await cachedFetch<TransformedLoginData>("/api/users", { ...fetchOptions, signal });
+			const { data, isStale } = await cachedFetch<TransformedLoginData>("/api/users", {
+				...fetchOptions,
+				signal,
+			});
 
 			cache.value = {
 				guilds: data.transformedGuilds || [],

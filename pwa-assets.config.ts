@@ -5,7 +5,11 @@
 
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { combinePresetAndAppleSplashScreens, defineConfig, minimal2023Preset } from "@vite-pwa/assets-generator/config";
+import {
+	combinePresetAndAppleSplashScreens,
+	defineConfig,
+	minimal2023Preset,
+} from "@vite-pwa/assets-generator/config";
 
 export default defineConfig({
 	headLinkOptions: {
@@ -46,7 +50,11 @@ export default defineConfig({
 		{
 			darkImageResolver: async (imageName) => {
 				if (imageName.includes("logo.svg")) {
-					const logoPaths = ["public/logo-white.svg", "public-dev/logo-white.svg", "public-staging/logo-white.svg"];
+					const logoPaths = [
+						"public/logo-white.svg",
+						"public-dev/logo-white.svg",
+						"public-staging/logo-white.svg",
+					];
 					for (const logoPath of logoPaths) {
 						try {
 							const whiteLogoPath = resolve(process.cwd(), logoPath);
@@ -59,7 +67,8 @@ export default defineConfig({
 				return undefined;
 			},
 			darkResizeOptions: { background: "black", fit: "contain" },
-			name: (landscape, size, _dark) => `apple-splash-${landscape ? "landscape" : "portrait"}-${size.width}x${size.height}.png`,
+			name: (landscape, size, _dark) =>
+				`apple-splash-${landscape ? "landscape" : "portrait"}-${size.width}x${size.height}.png`,
 			padding: 0.3,
 			resizeOptions: {
 				background: "white",

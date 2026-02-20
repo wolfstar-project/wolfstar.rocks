@@ -1,6 +1,12 @@
 <template>
 	<icons-sokoban-empty>
-		<pattern id="icons-sokoban-floor-checkerboard" viewBox="0 0 32 32" width="32" height="32" patternUnits="userSpaceOnUse">
+		<pattern
+			id="icons-sokoban-floor-checkerboard"
+			viewBox="0 0 32 32"
+			width="32"
+			height="32"
+			patternUnits="userSpaceOnUse"
+		>
 			<rect x="16" y="0" width="16" height="16" fill="#DADADA" />
 			<rect x="0" y="16" width="16" height="16" fill="#DADADA" />
 		</pattern>

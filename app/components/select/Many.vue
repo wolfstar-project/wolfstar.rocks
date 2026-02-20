@@ -21,9 +21,17 @@
 
 				<template #help>
 					<div class="flex items-center justify-between gap-2">
-						<UBadge color="neutral" variant="subtle" size="sm"> {{ selectedValues.length }} selected </UBadge>
+						<UBadge color="neutral" variant="subtle" size="sm">
+							{{ selectedValues.length }} selected
+						</UBadge>
 
-						<UButton variant="ghost" color="error" size="sm" :disabled="disabled || selectedValues.length === 0" @click="clearSelected">
+						<UButton
+							variant="ghost"
+							color="error"
+							size="sm"
+							:disabled="disabled || selectedValues.length === 0"
+							@click="clearSelected"
+						>
 							Clear selected
 						</UButton>
 					</div>
@@ -74,7 +82,16 @@ interface Emits {
 <script setup lang="ts">
 // oxlint-disable no-ternary
 // oxlint-disable no-nested-ternary
-const { name = "None", disabled = false, modelValue = [], values, label, tooltipTitle, description, imageInName } = defineProps<SelectManyProps>();
+const {
+	name = "None",
+	disabled = false,
+	modelValue = [],
+	values,
+	label,
+	tooltipTitle,
+	description,
+	imageInName,
+} = defineProps<SelectManyProps>();
 
 const emit = defineEmits<Emits>();
 
@@ -96,7 +113,10 @@ const items = computed<SelectItem[]>(() =>
 
 const formattedLabel = computed(() => toTitleCase(label));
 const placeholder = computed(() =>
-	isNumber(name) ? name.toString() : (name ?? (selectedValues.value.length ? `${selectedValues.value.length} selected` : "None")),
+	isNumber(name)
+		? name.toString()
+		: (name ??
+			(selectedValues.value.length ? `${selectedValues.value.length} selected` : "None")),
 );
 const fieldName = computed(() => label.trim().toLowerCase().replace(/\s+/g, "-"));
 const searchInput = computed(() => (values.length > 10 ? { placeholder: "Search..." } : false));

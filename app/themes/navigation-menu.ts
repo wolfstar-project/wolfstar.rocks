@@ -57,8 +57,14 @@ export default {
 		{
 			active: false,
 			class: {
-				link: ["hover:text-highlighted hover:before:bg-elevated/50", "transition-all duration-300 before:transition-all hover-scale"],
-				linkLeadingIcon: ["group-hover:text-default group-hover:scale-110", "transition-all duration-200"],
+				link: [
+					"hover:text-highlighted hover:before:bg-elevated/50",
+					"transition-all duration-300 before:transition-all hover-scale",
+				],
+				linkLeadingIcon: [
+					"group-hover:text-default group-hover:scale-110",
+					"transition-all duration-200",
+				],
 			},
 			disabled: false,
 			variant: "pill",
@@ -67,7 +73,8 @@ export default {
 			active: false,
 			class: {
 				link: "data-[state=open]:text-highlighted data-[state=open]:before:bg-elevated/50",
-				linkLeadingIcon: "group-data-[state=open]:text-default group-data-[state=open]:scale-110",
+				linkLeadingIcon:
+					"group-data-[state=open]:text-default group-data-[state=open]:scale-110",
 			},
 			disabled: false,
 			orientation: "horizontal",
@@ -105,7 +112,8 @@ export default {
 			active: true,
 			class: {
 				link: "text-highlighted relative",
-				linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted scale-110",
+				linkLeadingIcon:
+					"text-highlighted group-data-[state=open]:text-highlighted scale-110",
 			},
 			color: "neutral",
 			variant: "pill",
@@ -121,7 +129,10 @@ export default {
 		{
 			active: true,
 			class: {
-				link: ["hover:before:bg-elevated/50 hover:shadow-lg", "before:transition-all duration-300"],
+				link: [
+					"hover:before:bg-elevated/50 hover:shadow-lg",
+					"before:transition-all duration-300",
+				],
 			},
 			disabled: false,
 			highlight: true,
@@ -131,7 +142,10 @@ export default {
 			active: false,
 			class: {
 				link: ["hover:text-highlighted", "transition-all duration-300"],
-				linkLeadingIcon: ["group-hover:text-default group-hover:scale-110", "transition-all duration-200"],
+				linkLeadingIcon: [
+					"group-hover:text-default group-hover:scale-110",
+					"transition-all duration-200",
+				],
 			},
 			disabled: false,
 			variant: "link",
@@ -140,7 +154,8 @@ export default {
 			active: false,
 			class: {
 				link: "data-[state=open]:text-highlighted",
-				linkLeadingIcon: "group-data-[state=open]:text-default group-data-[state=open]:scale-110",
+				linkLeadingIcon:
+					"group-data-[state=open]:text-default group-data-[state=open]:scale-110",
 			},
 			disabled: false,
 			orientation: "horizontal",
@@ -159,7 +174,8 @@ export default {
 			active: true,
 			class: {
 				link: "text-highlighted relative",
-				linkLeadingIcon: "text-highlighted group-data-[state=open]:text-highlighted scale-110",
+				linkLeadingIcon:
+					"text-highlighted group-data-[state=open]:text-highlighted scale-110",
 			},
 			color: "neutral",
 			variant: "link",
@@ -214,7 +230,8 @@ export default {
 		linkTrailing: "group ms-auto inline-flex gap-1.5 items-center",
 		linkTrailingBadge: "shrink-0",
 		linkTrailingBadgeSize: "sm",
-		linkTrailingIcon: "size-5 transform shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200",
+		linkTrailingIcon:
+			"size-5 transform shrink-0 group-data-[state=open]:rotate-180 transition-transform duration-200",
 		list: "isolate min-w-0",
 		root: "relative flex gap-1.5 [&>div]:min-w-0",
 		separator: "px-2 h-px bg-border",
@@ -229,7 +246,10 @@ export default {
 					"hover:before:bg-elevated/50 text-default hover:text-highlighted hover-scale",
 					"transition-all duration-300 before:transition-all",
 				],
-				childLinkIcon: ["text-dimmed group-hover:text-default group-hover:scale-110", "transition-all duration-200"],
+				childLinkIcon: [
+					"text-dimmed group-hover:text-default group-hover:scale-110",
+					"transition-all duration-200",
+				],
 				link: "text-muted",
 				linkLeadingIcon: "text-dimmed",
 			},
@@ -278,7 +298,8 @@ export default {
 				viewportWrapper: "justify-center",
 			},
 			vertical: {
-				viewport: "sm:w-(--reka-navigation-menu-viewport-width) left-(--reka-navigation-menu-viewport-left)",
+				viewport:
+					"sm:w-(--reka-navigation-menu-viewport-width) left-(--reka-navigation-menu-viewport-left)",
 			},
 		},
 		disabled: {

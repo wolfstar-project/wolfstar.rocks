@@ -154,7 +154,10 @@ export default {
 		itemLeadingAvatarSize: "",
 		itemLeadingChip: "shrink-0",
 		itemLeadingChipSize: "",
-		itemLeadingIcon: ["shrink-0 text-base-content/50 group-data-highlighted:not-group-data-disabled:text-base-content", "transition-colors"],
+		itemLeadingIcon: [
+			"shrink-0 text-base-content/50 group-data-highlighted:not-group-data-disabled:text-base-content",
+			"transition-colors",
+		],
 		itemTrailing: "ms-auto inline-flex gap-1.5 items-center",
 		itemTrailingIcon: "shrink-0",
 		label: "font-semibold text-base-content",
@@ -174,7 +177,8 @@ export default {
 		],
 		tagsItemDeleteIcon: "shrink-0",
 		tagsItemText: "truncate",
-		trailing: "group absolute inset-y-0 end-0 flex items-center disabled:cursor-not-allowed disabled:opacity-75",
+		trailing:
+			"group absolute inset-y-0 end-0 flex items-center disabled:cursor-not-allowed disabled:opacity-75",
 		trailingIcon: "shrink-0 text-base-content/50",
 		viewport: "relative divide-y divide-base-200 scroll-py-1 overflow-y-auto flex-1",
 	},

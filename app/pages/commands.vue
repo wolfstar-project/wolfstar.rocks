@@ -6,7 +6,9 @@
 		<!-- Page Header - Hero Style -->
 		<header class="mt-16 flex animate-fade-in-up flex-col items-center space-y-6 text-center">
 			<h1 class="title pb-4">Discover<br />WolfStar Commands</h1>
-			<p class="max-w-2xl animate-fade-in-up text-lg text-base-content/80 animate-fade-in-delay-1">
+			<p
+				class="max-w-2xl animate-fade-in-up text-lg text-base-content/80 animate-fade-in-delay-1"
+			>
 				Browse and search through all available bot commands.
 				<span class="font-semibold">Powerful moderation</span> at your fingertips.
 			</p>
@@ -15,7 +17,10 @@
 		<!-- Commands content -->
 		<div class="animate-fade-in-up space-y-8 animate-fade-in-delay-2">
 			<!-- Search bar -->
-			<section aria-labelledby="search-heading" class="mx-auto flex max-w-3xl flex-col items-stretch gap-4 sm:flex-row sm:items-center">
+			<section
+				aria-labelledby="search-heading"
+				class="mx-auto flex max-w-3xl flex-col items-stretch gap-4 sm:flex-row sm:items-center"
+			>
 				<h2 id="search-heading" class="sr-only">Search Commands</h2>
 				<UInput
 					v-model="searchValue"
@@ -55,16 +60,30 @@
 			</section>
 
 			<!-- Results count for screen readers -->
-			<div v-if="searchValue && !loading" id="search-results-count" class="sr-only" role="status" aria-live="polite">
-				{{ filteredCommandsCount }} command{{ filteredCommandsCount !== 1 ? "s" : "" }} found
+			<div
+				v-if="searchValue && !loading"
+				id="search-results-count"
+				class="sr-only"
+				role="status"
+				aria-live="polite"
+			>
+				{{ filteredCommandsCount }} command{{
+					filteredCommandsCount !== 1 ? "s" : ""
+				}}
+				found
 			</div>
 
 			<!-- Loading state -->
 			<div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
 				<div class="card-glass rounded-2xl py-20 text-center">
 					<div class="relative inline-block">
-						<div class="absolute inset-0 animate-pulse rounded-full bg-primary/20 blur-xl"></div>
-						<UIcon name="i-heroicons-arrow-path" class="relative mx-auto mb-6 h-12 w-12 animate-spin text-primary" />
+						<div
+							class="absolute inset-0 animate-pulse rounded-full bg-primary/20 blur-xl"
+						></div>
+						<UIcon
+							name="i-heroicons-arrow-path"
+							class="relative mx-auto mb-6 h-12 w-12 animate-spin text-primary"
+						/>
 					</div>
 					<p class="mb-2 text-xl font-semibold">Loading commands...</p>
 					<p class="text-sm text-base-content/60">Fetching the latest command data</p>
@@ -72,20 +91,41 @@
 			</div>
 
 			<!-- No results message -->
-			<div v-else-if="commands.length === 0" class="space-y-6 card-glass rounded-2xl py-20 text-center" role="status">
+			<div
+				v-else-if="commands.length === 0"
+				class="space-y-6 card-glass rounded-2xl py-20 text-center"
+				role="status"
+			>
 				<div class="relative inline-block">
 					<div class="absolute inset-0 rounded-full bg-error/20 blur-xl"></div>
-					<UIcon name="i-heroicons-exclamation-circle" class="relative mx-auto h-16 w-16 text-error/80" />
+					<UIcon
+						name="i-heroicons-exclamation-circle"
+						class="relative mx-auto h-16 w-16 text-error/80"
+					/>
 				</div>
 				<div>
 					<h2 class="mb-3 text-2xl font-bold">No commands available</h2>
-					<p class="mx-auto max-w-md text-base-content/70">Unable to load commands at this time. Please try refreshing.</p>
+					<p class="mx-auto max-w-md text-base-content/70">
+						Unable to load commands at this time. Please try refreshing.
+					</p>
 				</div>
-				<UButton icon="i-heroicons-arrow-path" color="primary" variant="outline" size="lg" @click="fetchCommands()"> Try Again </UButton>
+				<UButton
+					icon="i-heroicons-arrow-path"
+					color="primary"
+					variant="outline"
+					size="lg"
+					@click="fetchCommands()"
+				>
+					Try Again
+				</UButton>
 			</div>
 
 			<!-- Categories -->
-			<section v-else aria-labelledby="categories-heading" class="card-glass rounded-2xl hover-border-glow p-6 transition-all sm:p-8">
+			<section
+				v-else
+				aria-labelledby="categories-heading"
+				class="card-glass rounded-2xl hover-border-glow p-6 transition-all sm:p-8"
+			>
 				<h2 id="categories-heading" class="sr-only">Command Categories</h2>
 				<CommandCategory :commands="filteredCommands" :search-value :categories :loading />
 			</section>
@@ -137,10 +177,13 @@ const filteredCommandsCount = computed(() => results.value.length);
 async function fetchCommands() {
 	loading.value = true;
 	try {
-		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(LocalStorageKeys.Commands, {
-			data: [],
-			expire: 0,
-		});
+		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(
+			LocalStorageKeys.Commands,
+			{
+				data: [],
+				expire: 0,
+			},
+		);
 		if (commandsStorage.value && (isDevelopment || commandsStorage.value.expire > Date.now())) {
 			commands.value = commandsStorage.value.data;
 		} else {
@@ -170,7 +213,12 @@ onMounted(fetchCommands);
 
 .title {
 	@apply text-4xl leading-[3.05rem] font-bold md:text-6xl md:leading-18;
-	background: linear-gradient(to bottom right, oklch(100% 0 45) 0%, oklch(75% 0.18 15) 50%, var(--color-branding-wolfstar) 100%);
+	background: linear-gradient(
+		to bottom right,
+		oklch(100% 0 45) 0%,
+		oklch(75% 0.18 15) 50%,
+		var(--color-branding-wolfstar) 100%
+	);
 	background-clip: text;
 	-webkit-background-clip: text;
 	-webkit-text-fill-color: transparent;
@@ -182,8 +230,13 @@ onMounted(fetchCommands);
 	mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
 	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
 	background-image:
-		radial-gradient(ellipse at 50% 0%, oklch(from var(--branding-wolfstar) l c h / 0.15) 0%, transparent 60%),
-		linear-gradient(to right, oklch(50% 0 0 / 0.03) 1px, transparent 1px), linear-gradient(to bottom, oklch(50% 0 0 / 0.03) 1px, transparent 1px);
+		radial-gradient(
+			ellipse at 50% 0%,
+			oklch(from var(--branding-wolfstar) l c h / 0.15) 0%,
+			transparent 60%
+		),
+		linear-gradient(to right, oklch(50% 0 0 / 0.03) 1px, transparent 1px),
+		linear-gradient(to bottom, oklch(50% 0 0 / 0.03) 1px, transparent 1px);
 	background-size:
 		100% 100%,
 		4rem 4rem,

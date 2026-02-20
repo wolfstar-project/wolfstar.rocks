@@ -59,7 +59,8 @@ interface DefinedWrappedResponseHandlerOptions {
 	rateLimit?: PartialRateLimitOptions;
 }
 
-interface DefinedWrappedCachedResponseHandlerOptions extends DefinedWrappedResponseHandlerOptions, CacheOptions {}
+interface DefinedWrappedCachedResponseHandlerOptions
+	extends DefinedWrappedResponseHandlerOptions, CacheOptions {}
 
 /**
  * Extracts a unique identifier for rate limiting purposes
@@ -68,7 +69,11 @@ interface DefinedWrappedCachedResponseHandlerOptions extends DefinedWrappedRespo
  * @param ipHeader - Custom header to use for IP detection (optional)
  * @returns User ID if authenticated, otherwise IP address
  */
-function getIdentifier(event: H3Event, session: UserSessionRequired | null, ipHeader?: string): string {
+function getIdentifier(
+	event: H3Event,
+	session: UserSessionRequired | null,
+	ipHeader?: string,
+): string {
 	if (session) {
 		return session.user.id;
 	}
@@ -91,7 +96,10 @@ function getIdentifier(event: H3Event, session: UserSessionRequired | null, ipHe
 	);
 }
 
-function normalizeRateLimitOptions(options: PartialRateLimitOptions | undefined, log: ReturnType<typeof useLogger>): RateLimitOptions {
+function normalizeRateLimitOptions(
+	options: PartialRateLimitOptions | undefined,
+	log: ReturnType<typeof useLogger>,
+): RateLimitOptions {
 	try {
 		// Validate and normalize — valibot applies schema defaults for missing fields
 		return v.parse(rateLimitSchema, options ?? {});
@@ -105,7 +113,10 @@ function normalizeRateLimitOptions(options: PartialRateLimitOptions | undefined,
 	}
 }
 
-async function getUserSession(options: DefinedWrappedResponseHandlerOptions, event: H3Event): Promise<UserSessionRequired | null> {
+async function getUserSession(
+	options: DefinedWrappedResponseHandlerOptions,
+	event: H3Event,
+): Promise<UserSessionRequired | null> {
 	if (options.auth) {
 		return await requireUserSession(event);
 	}
@@ -122,7 +133,14 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
 	// Normalize options (includes new `scope`)
-	const { enabled, limit, window: windowMs, type: windowType, scope, whitelist } = normalizeRateLimitOptions(options.rateLimit, log);
+	const {
+		enabled,
+		limit,
+		window: windowMs,
+		type: windowType,
+		scope,
+		whitelist,
+	} = normalizeRateLimitOptions(options.rateLimit, log);
 
 	// Check if IP is whitelisted (skip rate limiting for whitelisted IPs)
 	if (!session && whitelist.length > 0 && whitelist.includes(id)) {
@@ -133,12 +151,15 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const { req } = event.node;
 	const { method } = req;
 	const { pathname } = getRequestURL(event);
-	const normalizedPath = pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+	const normalizedPath =
+		pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
 	const scopeKey = `${method}:${normalizedPath}`;
-	const storageKey = scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
+	const storageKey =
+		scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 
 	const savedState = await rateLimitStorage.getItem(storageKey);
-	const initialState = savedState && isObject(savedState) ? cast<Record<string, unknown>>(savedState) : {};
+	const initialState =
+		savedState && isObject(savedState) ? cast<Record<string, unknown>>(savedState) : {};
 
 	// If rate limiting is disabled, run handler immediately
 	if (!enabled) {
@@ -200,7 +221,11 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			const remainingAfter = Math.max(0, limit - count);
 			setResponseHeader(event, "x-ratelimit-limit", limit);
 			setResponseHeader(event, "x-ratelimit-remaining", remainingAfter);
-			setResponseHeader(event, "x-ratelimit-reset", Math.floor((windowStart + windowMs) / 1000));
+			setResponseHeader(
+				event,
+				"x-ratelimit-reset",
+				Math.floor((windowStart + windowMs) / 1000),
+			);
 			setResponseHeader(event, "date", new Date().toUTCString());
 
 			try {
@@ -209,7 +234,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			} catch (error) {
 				// On handler error, try to roll back the reserved token so failures don't consume quota
 				try {
-					const cur = (await rateLimitStorage.getItem(storageKey)) as { count?: number } | null;
+					const cur = (await rateLimitStorage.getItem(storageKey)) as {
+						count?: number;
+					} | null;
 					if (cur && typeof cur.count === "number" && cur.count > 0) {
 						cur.count = Math.max(0, cur.count - 1);
 						await persistState(cur as Record<string, unknown>);
@@ -222,7 +249,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		// Sliding-window algorithm (store timestamps)
 		case "sliding": {
 			const state = (initialState as { timestamps?: number[] }) ?? {};
-			const rawTimestamps = Array.isArray(state.timestamps) ? state.timestamps.filter((t): t is number => typeof t === "number") : [];
+			const rawTimestamps = Array.isArray(state.timestamps)
+				? state.timestamps.filter((t): t is number => typeof t === "number")
+				: [];
 			const windowLowerBound = now - windowMs;
 			const timestamps = rawTimestamps.filter((t) => t > windowLowerBound);
 
@@ -255,7 +284,11 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 
 			const oldest = timestamps[0] ?? now;
 			setResponseHeader(event, "x-ratelimit-limit", limit);
-			setResponseHeader(event, "x-ratelimit-remaining", Math.max(0, limit - timestamps.length));
+			setResponseHeader(
+				event,
+				"x-ratelimit-remaining",
+				Math.max(0, limit - timestamps.length),
+			);
 			setResponseHeader(event, "x-ratelimit-reset", Math.floor((oldest + windowMs) / 1000));
 			setResponseHeader(event, "date", new Date().toUTCString());
 
@@ -265,7 +298,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			} catch (error) {
 				// On handler error, remove the appended timestamp to avoid penalizing failing requests
 				try {
-					const cur = (await rateLimitStorage.getItem(storageKey)) as { timestamps?: number[] } | null;
+					const cur = (await rateLimitStorage.getItem(storageKey)) as {
+						timestamps?: number[];
+					} | null;
 					if (cur && Array.isArray(cur.timestamps)) {
 						cur.timestamps = cur.timestamps.slice(0, -1);
 						await persistState(cur as Record<string, unknown>);

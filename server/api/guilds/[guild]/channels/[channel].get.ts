@@ -28,16 +28,58 @@ defineRouteMeta({
 					"application/json": {
 						schema: {
 							properties: {
-								createdTimestamp: { description: "Unix timestamp of channel creation", example: 1_609_459_200_000, type: "integer" },
-								guildId: { description: "The guild's snowflake ID", example: "123456789012345678", type: "string" },
-								id: { description: "The channel's snowflake ID", example: "987654321098765432", type: "string" },
-								name: { description: "The channel name", example: "general", type: "string" },
-								nsfw: { description: "Whether the channel is NSFW", example: false, type: "boolean" },
-								parentId: { description: "The parent category ID", example: "123456789012345679", nullable: true, type: "string" },
-								permissionOverwrites: { description: "Permission overwrites for the channel", type: "array" },
-								rawPosition: { description: "The channel's position in the channel list", example: 1, type: "integer" },
-								topic: { description: "The channel topic", example: "Welcome to the general chat!", nullable: true, type: "string" },
-								type: { description: "The channel type (0 = text, 2 = voice, 4 = category, etc.)", example: 0, type: "integer" },
+								createdTimestamp: {
+									description: "Unix timestamp of channel creation",
+									example: 1_609_459_200_000,
+									type: "integer",
+								},
+								guildId: {
+									description: "The guild's snowflake ID",
+									example: "123456789012345678",
+									type: "string",
+								},
+								id: {
+									description: "The channel's snowflake ID",
+									example: "987654321098765432",
+									type: "string",
+								},
+								name: {
+									description: "The channel name",
+									example: "general",
+									type: "string",
+								},
+								nsfw: {
+									description: "Whether the channel is NSFW",
+									example: false,
+									type: "boolean",
+								},
+								parentId: {
+									description: "The parent category ID",
+									example: "123456789012345679",
+									nullable: true,
+									type: "string",
+								},
+								permissionOverwrites: {
+									description: "Permission overwrites for the channel",
+									type: "array",
+								},
+								rawPosition: {
+									description: "The channel's position in the channel list",
+									example: 1,
+									type: "integer",
+								},
+								topic: {
+									description: "The channel topic",
+									example: "Welcome to the general chat!",
+									nullable: true,
+									type: "string",
+								},
+								type: {
+									description:
+										"The channel type (0 = text, 2 = voice, 4 = category, etc.)",
+									example: 0,
+									type: "integer",
+								},
 							},
 							type: "object",
 						},
@@ -83,9 +125,12 @@ export default defineWrappedResponseHandler(
 		}
 		log.set({ channel: { id: channelId } });
 
-		const channels = await $fetch<ReturnType<typeof flattenGuildChannel>[]>(`/api/guilds/${guildId}/channels`, {
-			headers: event.headers,
-		}).catch((error) => {
+		const channels = await $fetch<ReturnType<typeof flattenGuildChannel>[]>(
+			`/api/guilds/${guildId}/channels`,
+			{
+				headers: event.headers,
+			},
+		).catch((error) => {
 			log.error(error);
 			throw createError({
 				message: "Failed to fetch channels",

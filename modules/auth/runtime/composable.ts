@@ -12,7 +12,9 @@ export const useAuth = ({ namespace: _namespace }: { namespace?: string } = {}) 
 
 	const login = async (returnUrl?: string) => {
 		const targetUrl = returnUrl || redirectTo.value || useRoute().fullPath;
-		await navigateTo(`/api/auth/discord?next=${encodeURIComponent(targetUrl)}`, { external: true });
+		await navigateTo(`/api/auth/discord?next=${encodeURIComponent(targetUrl)}`, {
+			external: true,
+		});
 	};
 
 	const logout = async () => {
@@ -40,7 +42,10 @@ export const _usePermissions = ({ namespace = "default" }: { namespace?: string 
 	const prefix = namespace !== "default" ? `${namespace}:` : "";
 
 	const _roles = useState<string[]>(`${prefix}roles`, () => []);
-	const _permissions = useState<Record<string, Record<string, boolean>>>(`${prefix}permissions`, () => ({}));
+	const _permissions = useState<Record<string, Record<string, boolean>>>(
+		`${prefix}permissions`,
+		() => ({}),
+	);
 
 	const hasRole = (role: string) => {
 		if (!_roles.value?.includes(role)) {
@@ -85,7 +90,9 @@ export const _usePermissions = ({ namespace = "default" }: { namespace?: string 
 		}
 
 		// Resource-only check - return true if any action is allowed for this resource
-		return Object.keys(_permissions.value?.[permission] || {}).some((action) => _permissions.value?.[permission]?.[action] === true);
+		return Object.keys(_permissions.value?.[permission] || {}).some(
+			(action) => _permissions.value?.[permission]?.[action] === true,
+		);
 	};
 
 	const hasAnyPermission = (permissions: Permission[]) => {

@@ -18,7 +18,8 @@ defineRouteMeta({
 				schema: { type: "string" },
 			},
 			{
-				description: "The state parameter for CSRF protection, must match the original request",
+				description:
+					"The state parameter for CSRF protection, must match the original request",
 				in: "query",
 				name: "state",
 				required: true,
@@ -88,7 +89,10 @@ export default defineEventHandler(async (event) => {
 				},
 			});
 
-			log.info("User authenticated with Discord", { userId: user.id, username: user.username });
+			log.info("User authenticated with Discord", {
+				userId: user.id,
+				username: user.username,
+			});
 		},
 	});
 

@@ -40,7 +40,8 @@ export default {
 		itemWrapper: "flex-1 flex flex-col text-start min-w-0",
 		label: "w-full flex items-center font-semibold text-highlighted animate-fade-in",
 		separator: "-mx-1 my-1 h-px bg-border",
-		viewport: "relative divide-y divide-default scroll-py-1 overflow-y-auto flex-1 animate-fade-in",
+		viewport:
+			"relative divide-y divide-default scroll-py-1 overflow-y-auto flex-1 animate-fade-in",
 	},
 	variants: {
 		active: {

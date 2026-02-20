@@ -60,10 +60,14 @@ describe("useGuildSettingsChanges", () => {
 	});
 
 	it("removes specific keys when changes are reverted", () => {
-		const { guildSettingsChanges, setGuildSettingsChanges, removeChange } = useGuildSettingsChanges();
+		const { guildSettingsChanges, setGuildSettingsChanges, removeChange } =
+			useGuildSettingsChanges();
 
 		// Set multiple changes
-		setGuildSettingsChanges({ commandAutoDelete: [] as GuildData["commandAutoDelete"], prefix: "!" });
+		setGuildSettingsChanges({
+			commandAutoDelete: [] as GuildData["commandAutoDelete"],
+			prefix: "!",
+		});
 
 		// Remove one key using removeChange
 		removeChange("prefix");

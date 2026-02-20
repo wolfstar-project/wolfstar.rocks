@@ -1,5 +1,10 @@
 <template>
-	<div v-if="hasChips" class="flex animate-fade-in flex-wrap gap-3" role="list" aria-label="Command properties">
+	<div
+		v-if="hasChips"
+		class="flex animate-fade-in flex-wrap gap-3"
+		role="list"
+		aria-label="Command properties"
+	>
 		<UBadge
 			v-if="command.permissionLevel > 0"
 			color="warning"
@@ -54,7 +59,15 @@ const { command } = defineProps<{
 	command: FlattenedCommand;
 }>();
 
-const GUILD_ONLY_PRECONDITIONS = new Set(["Administrator", "DJ", "GuildOnly", "Moderator", "NewsOnly", "NSFW", "TextOnly"]);
+const GUILD_ONLY_PRECONDITIONS = new Set([
+	"Administrator",
+	"DJ",
+	"GuildOnly",
+	"Moderator",
+	"NewsOnly",
+	"NSFW",
+	"TextOnly",
+]);
 
 const PERMISSION_TITLES: Record<number, string> = {
 	4: "This can only be ran by staff members.",
@@ -77,10 +90,16 @@ const isGuildOnly = computed(() =>
 );
 
 const permissionLevelLabel = computed(() =>
-	isSmallScreen.value ? MOBILE_TITLES[command.permissionLevel] : PERMISSION_TITLES[command.permissionLevel],
+	isSmallScreen.value
+		? MOBILE_TITLES[command.permissionLevel]
+		: PERMISSION_TITLES[command.permissionLevel],
 );
 
-const guildOnlyLabel = computed(() => (isSmallScreen.value ? "Usable in servers only." : "This can only be used in servers."));
+const guildOnlyLabel = computed(() =>
+	isSmallScreen.value ? "Usable in servers only." : "This can only be used in servers.",
+);
 
-const hasChips = computed(() => command.permissionLevel > 0 || isGuildOnly.value || command.guarded);
+const hasChips = computed(
+	() => command.permissionLevel > 0 || isGuildOnly.value || command.guarded,
+);
 </script>

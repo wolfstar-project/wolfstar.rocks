@@ -65,7 +65,8 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should revert local state when resetCounter increments", async () => {
-		const { default: GuildSettingsForm } = await import("../../../../../app/components/guild/settings/Form.vue");
+		const { default: GuildSettingsForm } =
+			await import("../../../../../app/components/guild/settings/Form.vue");
 
 		// Create a test wrapper component that uses GuildSettingsForm
 		const TestWrapper = defineComponent({
@@ -143,7 +144,8 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should not revert state if originalState is not initialized", async () => {
-		const { default: GuildSettingsForm } = await import("../../../../../app/components/guild/settings/Form.vue");
+		const { default: GuildSettingsForm } =
+			await import("../../../../../app/components/guild/settings/Form.vue");
 
 		// Set originalGuildSettings to undefined to prevent initialization
 		mockOriginalGuildSettings.value = undefined as any;
@@ -185,7 +187,8 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should not retrigger change staging after reset", async () => {
-		const { default: GuildSettingsForm } = await import("../../../../../app/components/guild/settings/Form.vue");
+		const { default: GuildSettingsForm } =
+			await import("../../../../../app/components/guild/settings/Form.vue");
 
 		const TestWrapper = defineComponent({
 			components: { GuildSettingsForm },
@@ -243,7 +246,8 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should work with mapToGuildData function", async () => {
-		const { default: GuildSettingsForm } = await import("../../../../../app/components/guild/settings/Form.vue");
+		const { default: GuildSettingsForm } =
+			await import("../../../../../app/components/guild/settings/Form.vue");
 
 		const TestWrapper = defineComponent({
 			components: { GuildSettingsForm },

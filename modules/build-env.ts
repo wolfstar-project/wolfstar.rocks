@@ -10,11 +10,12 @@ export default defineNuxtModule({
 		name: "npmx:build-env",
 	},
 	async setup(_options, nuxt) {
-		const [{ env, commit, shortCommit, branch }, privacyPolicyDate, termsDate] = await Promise.all([
-			getEnv(nuxt.options.dev),
-			getFileLastUpdated("app/pages/(marketing)/privacy.vue"),
-			getFileLastUpdated("app/pages/(marketing)/terms.vue"),
-		]);
+		const [{ env, commit, shortCommit, branch }, privacyPolicyDate, termsDate] =
+			await Promise.all([
+				getEnv(nuxt.options.dev),
+				getFileLastUpdated("app/pages/(marketing)/privacy.vue"),
+				getFileLastUpdated("app/pages/(marketing)/terms.vue"),
+			]);
 
 		nuxt.options.appConfig = nuxt.options.appConfig || {};
 		nuxt.options.appConfig.env = env;

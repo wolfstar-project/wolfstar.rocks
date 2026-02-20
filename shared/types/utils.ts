@@ -13,10 +13,11 @@ export type PartialString<T> = {
 	[K in keyof T]?: string;
 };
 
-export type ValuesType<T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any>> = T extends readonly any[]
-	? T[number]
-	: T extends ArrayLike<any>
+export type ValuesType<T extends ReadonlyArray<any> | ArrayLike<any> | Record<any, any>> =
+	T extends readonly any[]
 		? T[number]
-		: T extends object
-			? T[keyof T]
-			: never;
+		: T extends ArrayLike<any>
+			? T[number]
+			: T extends object
+				? T[keyof T]
+				: never;

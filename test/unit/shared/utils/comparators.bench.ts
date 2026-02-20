@@ -13,7 +13,9 @@ describe("differenceArray benchmarks", () => {
 		});
 
 		bench(`differenceArray - partial difference (${size} items, 50% changed)`, () => {
-			const modifiedArray = Array.from({ length: size }, (_, i) => (i % 2 === 0 ? i : i + 1000));
+			const modifiedArray = Array.from({ length: size }, (_, i) =>
+				i % 2 === 0 ? i : i + 1000,
+			);
 			differenceArray(baseArray, modifiedArray);
 		});
 
@@ -40,7 +42,12 @@ describe("differenceMap benchmarks", () => {
 		});
 
 		bench(`differenceMap - partial difference (${size} entries, 50% changed)`, () => {
-			const modifiedMap = new Map(Array.from({ length: size }, (_, i) => [i, i % 2 === 0 ? `value-${i}` : `modified-${i}`] as const));
+			const modifiedMap = new Map(
+				Array.from(
+					{ length: size },
+					(_, i) => [i, i % 2 === 0 ? `value-${i}` : `modified-${i}`] as const,
+				),
+			);
 			differenceMap(baseMap, modifiedMap);
 		});
 
@@ -56,7 +63,10 @@ describe("differenceMap benchmarks", () => {
 		});
 
 		bench(`differenceMap - append operation (${size} entries, +10 entries)`, () => {
-			const appendedMap = new Map([...baseMap, ...Array.from({ length: 10 }, (_, i) => [i + size, `value-${i + size}`] as const)]);
+			const appendedMap = new Map([
+				...baseMap,
+				...Array.from({ length: 10 }, (_, i) => [i + size, `value-${i + size}`] as const),
+			]);
 			differenceMap(baseMap, appendedMap);
 		});
 	}

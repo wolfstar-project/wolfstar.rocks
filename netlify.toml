@@ -9,4 +9,8 @@ publish = "dist" # where the built project lives
 NODE_OPTIONS = '--max-old-space-size=4096'
 
 [images]
-remote_images = ["https:\\/\\/cdn.discordapp.com/.*", "https:\\/\\/media.discordapp.net/.*", "https:\\/\\/cdn.wolfstar.rocks/.*"]
+remote_images = [
+	"https:\\/\\/cdn.discordapp.com/.*",
+	"https:\\/\\/media.discordapp.net/.*",
+	"https:\\/\\/cdn.wolfstar.rocks/.*",
+]

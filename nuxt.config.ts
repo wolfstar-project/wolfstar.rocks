@@ -83,11 +83,11 @@ export default defineNuxtConfig({
 			meta: [
 				// Page transitions
 				{
-					content: "RevealTrans(Duration=2.0,Transition=2)",
+					"content": "RevealTrans(Duration=2.0,Transition=2)",
 					"http-equiv": "Page-Enter",
 				},
 				{
-					content: "RevealTrans(Duration=3.0,Transition=12)",
+					"content": "RevealTrans(Duration=3.0,Transition=12)",
 					"http-equiv": "Page-Exit",
 				},
 
@@ -125,7 +125,8 @@ export default defineNuxtConfig({
 
 	site: {
 		defaultLocale: "en-US",
-		description: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+		description:
+			"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
 		indexable: true,
 		name: "WolfStar",
 	},
@@ -184,7 +185,9 @@ export default defineNuxtConfig({
 				},
 			},
 		},
-		"/oauth/callback": { robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1" },
+		"/oauth/callback": {
+			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
+		},
 		"/oauth/login": { robots: true },
 		"/profile": { appLayout: "default", robots: true },
 		"/starly": { appLayout: "default", robots: true },
@@ -256,7 +259,7 @@ export default defineNuxtConfig({
 				base: "./.cache/fetch",
 				driver: "fsLite",
 			},
-			cache: {
+			"cache": {
 				base: "./.cache/cache",
 				driver: "fsLite",
 			},
@@ -426,7 +429,13 @@ export default defineNuxtConfig({
 					"https://*.sentry.io",
 				],
 				"default-src": ["'self'"],
-				"font-src": ["'self'", "https:", "data:", "https://cdn.wolfstar.rocks", "https://rsms.me"],
+				"font-src": [
+					"'self'",
+					"https:",
+					"data:",
+					"https://cdn.wolfstar.rocks",
+					"https://rsms.me",
+				],
 				"form-action": ["'none'"],
 				"frame-ancestors": ["'none'"],
 				"frame-src": ["https:"],
@@ -461,9 +470,20 @@ export default defineNuxtConfig({
 					"https://browser.sentry-cdn.com",
 				],
 				"script-src-attr": ["'self'", "'unsafe-inline'"],
-				"style-src": ["'self'", "'unsafe-inline'", "https:", "https://cdn.wolfstar.rocks", "https://rsms.me/inter/inter.css"],
+				"style-src": [
+					"'self'",
+					"'unsafe-inline'",
+					"https:",
+					"https://cdn.wolfstar.rocks",
+					"https://rsms.me/inter/inter.css",
+				],
 				"upgrade-insecure-requests": true,
-				"worker-src": ["'self'", "blob:", "https://beta.wolfstar.rocks", "https://wolfstar.rocks"],
+				"worker-src": [
+					"'self'",
+					"blob:",
+					"https://beta.wolfstar.rocks",
+					"https://wolfstar.rocks",
+				],
 			},
 			crossOriginEmbedderPolicy: false,
 			permissionsPolicy: {
@@ -486,7 +506,8 @@ export default defineNuxtConfig({
 			colorScheme: "dark light",
 			mobileWebAppCapable: "yes",
 			msapplicationConfig: "/browserconfig.xml",
-			ogDescription: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+			ogDescription:
+				"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
 			ogLocale: "en",
 			ogSiteName: "WolfStar",
 			ogTitle: "WolfStar",
@@ -498,7 +519,8 @@ export default defineNuxtConfig({
 			],
 			twitterCard: "summary_large_image",
 			twitterCreator: "@RedStar071",
-			twitterDescription: "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
+			twitterDescription:
+				"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
 			twitterSite: "@WolfStarBot",
 			twitterTitle: "WolfStar",
 		},

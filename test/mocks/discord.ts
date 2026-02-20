@@ -30,7 +30,9 @@ export function createMockUser(overrides?: Partial<User>): User {
  * @param overrides - Partial overrides for the default mock guild
  * @returns A complete OauthFlattenedGuild object
  */
-export function createMockOauthFlattenedGuild(overrides?: Partial<OauthFlattenedGuild>): OauthFlattenedGuild {
+export function createMockOauthFlattenedGuild(
+	overrides?: Partial<OauthFlattenedGuild>,
+): OauthFlattenedGuild {
 	const defaultGuild: OauthFlattenedGuild = {
 		// Core guild properties
 		id: "123456789012345678",
@@ -89,7 +91,9 @@ export function createMockOauthFlattenedGuild(overrides?: Partial<OauthFlattened
  * @param overrides - Partial overrides for the default mock guild
  * @returns A complete PartialOauthFlattenedGuild object
  */
-export function createMockPartialOauthFlattenedGuild(overrides?: Partial<PartialOauthFlattenedGuild>): PartialOauthFlattenedGuild {
+export function createMockPartialOauthFlattenedGuild(
+	overrides?: Partial<PartialOauthFlattenedGuild>,
+): PartialOauthFlattenedGuild {
 	const baseGuild = createMockOauthFlattenedGuild(overrides);
 	// Remove the OAuth-specific fields
 	const { permissions, manageable, wolfstarIsIn, ...partialGuild } = baseGuild;
@@ -142,7 +146,9 @@ export function createMockEmoji(overrides?: Partial<FlattenedEmoji>): FlattenedE
  * @param overrides - Partial overrides for the default mock channel
  * @returns A complete FlattenedGuildChannel object
  */
-export function createMockChannel(overrides?: Partial<FlattenedGuildChannel>): FlattenedGuildChannel {
+export function createMockChannel(
+	overrides?: Partial<FlattenedGuildChannel>,
+): FlattenedGuildChannel {
 	const defaultChannel: FlattenedGuildChannel = {
 		createdTimestamp: Date.now() - 86_400_000,
 		guildId: "123456789012345678",

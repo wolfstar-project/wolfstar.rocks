@@ -3,7 +3,8 @@ import { createError, useLogger } from "evlog";
 
 defineRouteMeta({
 	openAPI: {
-		description: "Retrieves detailed information about a specific member within a guild, including their roles and permissions.",
+		description:
+			"Retrieves detailed information about a specific member within a guild, including their roles and permissions.",
 		operationId: "getGuildMember",
 		parameters: [
 			{
@@ -27,8 +28,16 @@ defineRouteMeta({
 					"application/json": {
 						schema: {
 							properties: {
-								guildId: { description: "The guild's snowflake ID", example: "123456789012345678", type: "string" },
-								id: { description: "The member's user snowflake ID", example: "987654321098765432", type: "string" },
+								guildId: {
+									description: "The guild's snowflake ID",
+									example: "123456789012345678",
+									type: "string",
+								},
+								id: {
+									description: "The member's user snowflake ID",
+									example: "987654321098765432",
+									type: "string",
+								},
 								joinedTimestamp: {
 									description: "Unix timestamp when the member joined",
 									example: 1_609_459_200_000,
@@ -44,10 +53,19 @@ defineRouteMeta({
 									description: "List of roles the member has",
 									items: {
 										properties: {
-											color: { description: "Role color as integer", type: "integer" },
-											id: { description: "Role snowflake ID", type: "string" },
+											color: {
+												description: "Role color as integer",
+												type: "integer",
+											},
+											id: {
+												description: "Role snowflake ID",
+												type: "string",
+											},
 											name: { description: "Role name", type: "string" },
-											position: { description: "Role position", type: "integer" },
+											position: {
+												description: "Role position",
+												type: "integer",
+											},
 										},
 										type: "object",
 									},
@@ -56,10 +74,24 @@ defineRouteMeta({
 								user: {
 									description: "The user object",
 									properties: {
-										avatar: { description: "Avatar hash", nullable: true, type: "string" },
-										bot: { description: "Whether the user is a bot", type: "boolean" },
-										discriminator: { description: "User discriminator", type: "string" },
-										globalName: { description: "Display name", nullable: true, type: "string" },
+										avatar: {
+											description: "Avatar hash",
+											nullable: true,
+											type: "string",
+										},
+										bot: {
+											description: "Whether the user is a bot",
+											type: "boolean",
+										},
+										discriminator: {
+											description: "User discriminator",
+											type: "string",
+										},
+										globalName: {
+											description: "Display name",
+											nullable: true,
+											type: "string",
+										},
 										id: { description: "User snowflake ID", type: "string" },
 										username: { description: "Username", type: "string" },
 									},

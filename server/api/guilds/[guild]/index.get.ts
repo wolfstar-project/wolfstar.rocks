@@ -33,21 +33,64 @@ defineRouteMeta({
 					"application/json": {
 						schema: {
 							properties: {
-								acronym: { description: "The guild name acronym", example: "MDS", type: "string" },
-								approximateMemberCount: { description: "Approximate number of members", type: "integer" },
-								banner: { description: "The guild banner hash", nullable: true, type: "string" },
+								acronym: {
+									description: "The guild name acronym",
+									example: "MDS",
+									type: "string",
+								},
+								approximateMemberCount: {
+									description: "Approximate number of members",
+									type: "integer",
+								},
+								banner: {
+									description: "The guild banner hash",
+									nullable: true,
+									type: "string",
+								},
 								channels: { description: "List of guild channels", type: "array" },
-								description: { description: "The guild description", nullable: true, type: "string" },
-								features: { description: "Enabled guild features", items: { type: "string" }, type: "array" },
-								icon: { description: "The guild icon hash", nullable: true, type: "string" },
-								id: { description: "The guild's snowflake ID", example: "123456789012345678", type: "string" },
-								name: { description: "The guild name", example: "My Discord Server", type: "string" },
+								description: {
+									description: "The guild description",
+									nullable: true,
+									type: "string",
+								},
+								features: {
+									description: "Enabled guild features",
+									items: { type: "string" },
+									type: "array",
+								},
+								icon: {
+									description: "The guild icon hash",
+									nullable: true,
+									type: "string",
+								},
+								id: {
+									description: "The guild's snowflake ID",
+									example: "123456789012345678",
+									type: "string",
+								},
+								name: {
+									description: "The guild name",
+									example: "My Discord Server",
+									type: "string",
+								},
 								ownerId: { description: "The owner's user ID", type: "string" },
-								permissions: { description: "User's permissions in the guild", type: "integer" },
-								premiumSubscriptionCount: { description: "Number of server boosts", type: "integer" },
-								premiumTier: { description: "Server boost level (0-3)", type: "integer" },
+								permissions: {
+									description: "User's permissions in the guild",
+									type: "integer",
+								},
+								premiumSubscriptionCount: {
+									description: "Number of server boosts",
+									type: "integer",
+								},
+								premiumTier: {
+									description: "Server boost level (0-3)",
+									type: "integer",
+								},
 								roles: { description: "List of guild roles", type: "array" },
-								verificationLevel: { description: "Verification level required", type: "integer" },
+								verificationLevel: {
+									description: "Verification level required",
+									type: "integer",
+								},
 							},
 							type: "object",
 						},
@@ -75,7 +118,9 @@ export default defineWrappedResponseHandler(
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		const { shouldSerialize } = await getValidatedQuery(event, (body) => v.parse(querySchema, body));
+		const { shouldSerialize } = await getValidatedQuery(event, (body) =>
+			v.parse(querySchema, body),
+		);
 
 		const guild = await getGuild(guildId);
 
@@ -96,7 +141,9 @@ export default defineWrappedResponseHandler(
 		const result = shouldSerialize
 			? await transformGuild(member.user.id, guild as RESTAPIPartialCurrentUserGuild)
 			: flattenGuild({ ...guild, channels });
-		log.set({ result: { channelCount: channels.length, serialized: Boolean(shouldSerialize) } });
+		log.set({
+			result: { channelCount: channels.length, serialized: Boolean(shouldSerialize) },
+		});
 		return result;
 	},
 	{

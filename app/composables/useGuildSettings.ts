@@ -11,7 +11,10 @@ const mergeOptions: DeepMergeOptions = {
 export function useGuildSettings() {
 	const guildId = useRouteParams("id", null, { transform: String });
 
-	const guildSettings = useState<GuildData | undefined>(`guild:${guildId.value}:settings`, () => undefined);
+	const guildSettings = useState<GuildData | undefined>(
+		`guild:${guildId.value}:settings`,
+		() => undefined,
+	);
 
 	const { guildSettingsChanges } = useGuildSettingsChanges();
 
@@ -20,7 +23,11 @@ export function useGuildSettings() {
 			return undefined;
 		}
 
-		return deepMerge(guildSettings.value, guildSettingsChanges.value ?? ({} as GuildData), mergeOptions) as GuildData;
+		return deepMerge(
+			guildSettings.value,
+			guildSettingsChanges.value ?? ({} as GuildData),
+			mergeOptions,
+		) as GuildData;
 	});
 
 	const setGuildSettings = (settings?: GuildData) => {

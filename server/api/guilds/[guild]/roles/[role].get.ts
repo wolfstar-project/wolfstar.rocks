@@ -28,16 +28,56 @@ defineRouteMeta({
 					"application/json": {
 						schema: {
 							properties: {
-								color: { description: "The role color as an integer", example: 3_447_003, type: "integer" },
-								guildId: { description: "The guild's snowflake ID", example: "123456789012345678", type: "string" },
-								hoist: { description: "Whether the role is displayed separately", example: true, type: "boolean" },
-								icon: { description: "The role icon hash", nullable: true, type: "string" },
-								id: { description: "The role's snowflake ID", example: "987654321098765432", type: "string" },
-								managed: { description: "Whether the role is managed by an integration", example: false, type: "boolean" },
-								mentionable: { description: "Whether the role can be mentioned", example: true, type: "boolean" },
-								name: { description: "The role name", example: "Moderator", type: "string" },
-								permissions: { description: "The role permissions as a bitfield string", example: "1071698660929", type: "string" },
-								rawPosition: { description: "The role's position in the role list", example: 5, type: "integer" },
+								color: {
+									description: "The role color as an integer",
+									example: 3_447_003,
+									type: "integer",
+								},
+								guildId: {
+									description: "The guild's snowflake ID",
+									example: "123456789012345678",
+									type: "string",
+								},
+								hoist: {
+									description: "Whether the role is displayed separately",
+									example: true,
+									type: "boolean",
+								},
+								icon: {
+									description: "The role icon hash",
+									nullable: true,
+									type: "string",
+								},
+								id: {
+									description: "The role's snowflake ID",
+									example: "987654321098765432",
+									type: "string",
+								},
+								managed: {
+									description: "Whether the role is managed by an integration",
+									example: false,
+									type: "boolean",
+								},
+								mentionable: {
+									description: "Whether the role can be mentioned",
+									example: true,
+									type: "boolean",
+								},
+								name: {
+									description: "The role name",
+									example: "Moderator",
+									type: "string",
+								},
+								permissions: {
+									description: "The role permissions as a bitfield string",
+									example: "1071698660929",
+									type: "string",
+								},
+								rawPosition: {
+									description: "The role's position in the role list",
+									example: 5,
+									type: "integer",
+								},
 							},
 							type: "object",
 						},

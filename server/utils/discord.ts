@@ -1,6 +1,16 @@
-import type { FlattenedGuild, LoginData, OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from "#shared/types/discord";
+import type {
+	FlattenedGuild,
+	LoginData,
+	OauthFlattenedGuild,
+	PartialOauthFlattenedGuild,
+	TransformedLoginData,
+} from "#shared/types/discord";
 import type { DiscordAPIError } from "@discordjs/rest";
-import type { APIGuild, APIGuildMember, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import type {
+	APIGuild,
+	APIGuildMember,
+	RESTAPIPartialCurrentUserGuild,
+} from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
 import { PermissionsBits } from "#shared/utils/bits";
@@ -42,10 +52,16 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 	const commands = await fetchCommands();
 	const conf = commands.find((cmd) => cmd.name === "conf");
 
-	return isAdmin(member, settings.rolesAdmin) && (conf ? ((await nodes.run(member, conf)) ?? true) : true);
+	return (
+		isAdmin(member, settings.rolesAdmin) &&
+		(conf ? ((await nodes.run(member, conf)) ?? true) : true)
+	);
 }
 
-async function getManageable(oauthGuild: RESTAPIPartialCurrentUserGuild, guild: APIGuild | undefined): Promise<boolean> {
+async function getManageable(
+	oauthGuild: RESTAPIPartialCurrentUserGuild,
+	guild: APIGuild | undefined,
+): Promise<boolean> {
 	if (oauthGuild.owner) {
 		return true;
 	}
@@ -54,8 +70,7 @@ async function getManageable(oauthGuild: RESTAPIPartialCurrentUserGuild, guild: 
 	}
 
 	const member = await useApi()
-		.users
-.getGuildMember(guild.id)
+		.users.getGuildMember(guild.id)
 		.catch(() => undefined);
 	if (!member) {
 		return false;
@@ -64,10 +79,12 @@ async function getManageable(oauthGuild: RESTAPIPartialCurrentUserGuild, guild: 
 	return manage(guild, member);
 }
 
-export async function transformGuild(userId: string, data: RESTAPIPartialCurrentUserGuild): Promise<OauthFlattenedGuild> {
+export async function transformGuild(
+	userId: string,
+	data: RESTAPIPartialCurrentUserGuild,
+): Promise<OauthFlattenedGuild> {
 	const guild = await useApi()
-		.guilds
-.get(data.id, {
+		.guilds.get(data.id, {
 			with_counts: true,
 		})
 		.catch(() => undefined);
@@ -75,8 +92,7 @@ export async function transformGuild(userId: string, data: RESTAPIPartialCurrent
 	const channels = isNullOrUndefined(data)
 		? []
 		: await useApi()
-				.guilds
-.getChannels(data.id)
+				.guilds.getChannels(data.id)
 				.catch(() => []);
 
 	const mockGuild = cast<FlattenedGuild>({
@@ -127,14 +143,19 @@ export async function transformGuild(userId: string, data: RESTAPIPartialCurrent
 	};
 }
 
-export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): Promise<TransformedLoginData> {
+export async function transformOauthGuildsAndUser({
+	user,
+	guilds,
+}: LoginData): Promise<TransformedLoginData> {
 	if (!user || !guilds) {
 		return { guilds, user };
 	}
 
 	const userId = user.id;
 
-	const transformedGuilds = await Promise.all(guilds.map((guild) => transformGuild(userId, guild)));
+	const transformedGuilds = await Promise.all(
+		guilds.map((guild) => transformGuild(userId, guild)),
+	);
 	return { transformedGuilds, user };
 }
 
@@ -142,7 +163,11 @@ export const getCurrentToken = defineCachedFunction(
 	async (event: H3Event) => {
 		const tokens = await event.context.$authorization.resolveServerTokens();
 
-		if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
+		if (
+			isNullOrUndefined(tokens) ||
+			!("access_token" in tokens) ||
+			isNullOrUndefined(tokens.access_token)
+		) {
 			throw createError({
 				data: {
 					error: "no_access_token",
@@ -182,7 +207,11 @@ export const getCurrentUser = defineCachedFunction(
 	async (event: H3Event) => {
 		const tokens = await event.context.$authorization.resolveServerTokens();
 
-		if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
+		if (
+			isNullOrUndefined(tokens) ||
+			!("access_token" in tokens) ||
+			isNullOrUndefined(tokens.access_token)
+		) {
 			throw createError({
 				data: {
 					error: "no_access_token",
@@ -226,7 +255,11 @@ export const getCurrentMember = defineCachedFunction(
 	async (event: H3Event, guildId: string) => {
 		const tokens = await event.context.$authorization.resolveServerTokens();
 
-		if (isNullOrUndefined(tokens) || !("access_token" in tokens) || isNullOrUndefined(tokens.access_token)) {
+		if (
+			isNullOrUndefined(tokens) ||
+			!("access_token" in tokens) ||
+			isNullOrUndefined(tokens.access_token)
+		) {
 			throw createError({
 				data: {
 					error: "no_access_token",
@@ -311,13 +344,15 @@ export const getGuildChannels = defineCachedFunction(
 export const getGuild = defineCachedFunction(
 	async (guildId: string) => {
 		const api = useApi();
-		const result = await api.guilds.get(guildId, { with_counts: true }).catch((error: DiscordAPIError) => {
-			throw createError({
-				cause: error,
-				message: `Failed to fetch guild: ${guildId}`,
-				status: 500,
+		const result = await api.guilds
+			.get(guildId, { with_counts: true })
+			.catch((error: DiscordAPIError) => {
+				throw createError({
+					cause: error,
+					message: `Failed to fetch guild: ${guildId}`,
+					status: 500,
+				});
 			});
-		});
 		return result;
 	},
 	{

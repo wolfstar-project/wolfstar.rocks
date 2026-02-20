@@ -1,5 +1,8 @@
 <template>
-	<GuildSettingsSection title="Event Settings" description="Configure which events should be logged and tracked">
+	<GuildSettingsSection
+		title="Event Settings"
+		description="Configure which events should be logged and tracked"
+	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
@@ -13,12 +16,20 @@
 				<h3 class="text-lg font-semibold text-base-content">Moderation Events</h3>
 			</div>
 			<p class="text-sm text-base-content/70">
-				These events involve moderation actions and require that you setup the Moderation Logs channel on
-				<NuxtLink :to="channelsPageLink" class="text-primary hover:underline"> the Channels page </NuxtLink>
+				These events involve moderation actions and require that you setup the Moderation
+				Logs channel on
+				<NuxtLink :to="channelsPageLink" class="text-primary hover:underline">
+					the Channels page
+				</NuxtLink>
 			</p>
 
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<UFormField v-for="event in ConfigurableModerationEvents" :key="`form-field-${event.key}`" :label="event.title" :name="event.key">
+				<UFormField
+					v-for="event in ConfigurableModerationEvents"
+					:key="`form-field-${event.key}`"
+					:label="event.title"
+					:name="event.key"
+				>
 					<template #description>
 						<p class="text-sm text-base-content/70">{{ event.description }}</p>
 					</template>
@@ -33,12 +44,20 @@
 				<h3 class="text-lg font-semibold text-base-content">Message Events</h3>
 			</div>
 			<p class="text-sm text-base-content/70">
-				These events involve message events, the channels to set up vary on the type of event and each channel can be configured on
-				<NuxtLink :to="channelsPageLink" class="text-primary hover:underline"> the Channels page </NuxtLink>
+				These events involve message events, the channels to set up vary on the type of
+				event and each channel can be configured on
+				<NuxtLink :to="channelsPageLink" class="text-primary hover:underline">
+					the Channels page
+				</NuxtLink>
 			</p>
 
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<UFormField v-for="event in ConfigurableMessageEvents" :key="`form-field-${event.key}`" :label="event.title" :name="event.key">
+				<UFormField
+					v-for="event in ConfigurableMessageEvents"
+					:key="`form-field-${event.key}`"
+					:label="event.title"
+					:name="event.key"
+				>
 					<template #description>
 						<p class="text-sm text-base-content/70">{{ event.description }}</p>
 					</template>
@@ -53,7 +72,10 @@
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import * as v from "valibot";
-import { ConfigurableMessageEvents, ConfigurableModerationEvents } from "~~/shared/utils/settingsDataEntries";
+import {
+	ConfigurableMessageEvents,
+	ConfigurableModerationEvents,
+} from "~~/shared/utils/settingsDataEntries";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
@@ -87,7 +109,8 @@ function mapToGuildData(stateData: Record<string, boolean>): Partial<GuildData> 
 }
 
 async function onError(event: FormErrorEvent) {
-	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+	const element =
+		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });
 	const errorMessage = event.errors[0]?.message;
 	toast.add({

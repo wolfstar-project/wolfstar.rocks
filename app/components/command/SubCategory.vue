@@ -1,11 +1,16 @@
 <template>
-	<div v-if="filteredCommands.length > 0" role="region" :aria-labelledby="`category-${categoryName.replace(/\s+/g, '-').toLowerCase()}`">
+	<div
+		v-if="filteredCommands.length > 0"
+		role="region"
+		:aria-labelledby="`category-${categoryName.replace(/\s+/g, '-').toLowerCase()}`"
+	>
 		<UAccordion
 			:items="categoryItems"
 			:ui="{
 				root: 'space-y-3',
 				item: '',
-				content: 'card-glass rounded-2xl overflow-hidden transition-all border border-base-content/10',
+				content:
+					'card-glass rounded-2xl overflow-hidden transition-all border border-base-content/10',
 			}"
 			class="animate-fade-in"
 		>
@@ -17,7 +22,10 @@
 					:aria-expanded="open"
 					:aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
 				>
-					<span :id="`category-${item.value.replace(/\s+/g, '-').toLowerCase()}`" class="truncate text-xl font-bold">
+					<span
+						:id="`category-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
+						class="truncate text-xl font-bold"
+					>
 						{{ item.label }}
 					</span>
 
@@ -33,7 +41,10 @@
 			</template>
 
 			<template #body="{ item }">
-				<div :id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`" class="space-y-3 p-4">
+				<div
+					:id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
+					class="space-y-3 p-4"
+				>
 					<UAccordion
 						:items="
 							getCommandsByCategory(item.label).map((command) => ({
@@ -63,17 +74,32 @@
 						</template>
 
 						<template #body="{ item: commandItem }">
-							<CommandBase :command="getCommandsByCategory(item.label).find((cmd) => cmd.name === commandItem.label)!" :loading />
+							<CommandBase
+								:command="
+									getCommandsByCategory(item.label).find(
+										(cmd) => cmd.name === commandItem.label,
+									)!
+								"
+								:loading
+							/>
 						</template>
 					</UAccordion>
 				</div>
 			</template>
 		</UAccordion>
 	</div>
-	<div v-else-if="searchValue" class="card-glass rounded-2xl px-6 py-12 text-center" role="status">
+	<div
+		v-else-if="searchValue"
+		class="card-glass rounded-2xl px-6 py-12 text-center"
+		role="status"
+	>
 		<div class="relative mb-4 inline-block">
 			<div class="absolute inset-0 rounded-full bg-gray-400/20 blur-xl"></div>
-			<UIcon name="i-heroicons-magnifying-glass" class="relative mx-auto h-12 w-12 text-gray-400" aria-hidden="true" />
+			<UIcon
+				name="i-heroicons-magnifying-glass"
+				class="relative mx-auto h-12 w-12 text-gray-400"
+				aria-hidden="true"
+			/>
 		</div>
 		<h3 class="mb-2 text-lg font-bold">No commands found in {{ categoryName }}</h3>
 		<p class="text-base-content/70">Try adjusting your search or browse other categories.</p>
@@ -98,7 +124,9 @@ const filteredCommands = computed(() => {
 	const filteredCategory = commands.filter((command) => command.category === categoryName);
 
 	return filteredCategory.filter(
-		(command) => command.name.toLowerCase().includes(search) || (command.description && command.description.toLowerCase().includes(search)),
+		(command) =>
+			command.name.toLowerCase().includes(search) ||
+			(command.description && command.description.toLowerCase().includes(search)),
 	);
 });
 

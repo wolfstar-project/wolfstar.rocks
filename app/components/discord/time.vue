@@ -3,7 +3,10 @@
 </template>
 
 <script setup lang="ts">
-const { date = Date.now(), format } = defineProps<{ date?: number; format: keyof typeof TimeFormatters }>();
+const { date = Date.now(), format } = defineProps<{
+	date?: number;
+	format: keyof typeof TimeFormatters;
+}>();
 
 const TimeFormatters = {
 	long: new Intl.DateTimeFormat("en-US", { dateStyle: "full", timeStyle: "short" }),

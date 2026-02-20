@@ -3,10 +3,13 @@
 		<template v-if="!code">
 			<UAlert variant="solid" color="warning" title="Missing Code" icon="twemoji:warning">
 				<template #description>
-					Please use the <code>Login</code> button instead or click <ULink to="/login" class="font-medium underline">here</ULink>.
+					Please use the <code>Login</code> button instead or click
+					<ULink to="/login" class="font-medium underline">here</ULink>.
 				</template>
 				<template #actions>
-					<UButton color="neutral" variant="ghost" to="/login" size="sm"> Return to Login </UButton>
+					<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						Return to Login
+					</UButton>
 				</template>
 			</UAlert>
 		</template>
@@ -22,13 +25,21 @@
 						{{ errorMessage }}
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm"> Try again clicking here </UButton>
+						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+							Try again clicking here
+						</UButton>
 					</template>
 				</UAlert>
 			</template>
 			<template v-else-if="isSuccess">
-				<UAlert color="success" icon="twemoji:check-mark" :title="`Welcome ${user!.username}!`">
-					<template #description> You will be redirected to the main page in a moment. </template>
+				<UAlert
+					color="success"
+					icon="twemoji:check-mark"
+					:title="`Welcome ${user!.username}!`"
+				>
+					<template #description>
+						You will be redirected to the main page in a moment.
+					</template>
 				</UAlert>
 			</template>
 		</ClientOnly>
@@ -88,7 +99,9 @@ const errorMessage = computed(() => {
 		return route.query.error;
 	}
 
-	return error.value ? (error.value.message ?? error.value.cause) : "An error occurred during authentication";
+	return error.value
+		? (error.value.message ?? error.value.cause)
+		: "An error occurred during authentication";
 });
 
 const isPending = computed(() => status.value === "pending");

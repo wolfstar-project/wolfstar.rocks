@@ -57,14 +57,32 @@ defineRouteMeta({
 							description: "TransformedLoginData from shared/types/discord.d.ts",
 							properties: {
 								connections: {
-									description: "RESTGetAPICurrentUserConnectionsResult - User's connections (requires connections scope)",
+									description:
+										"RESTGetAPICurrentUserConnectionsResult - User's connections (requires connections scope)",
 									items: {
 										properties: {
-											id: { description: "Connection account ID", type: "string" },
-											name: { description: "Connection account username", type: "string" },
-											type: { description: "Connection service type", example: "twitch", type: "string" },
-											verified: { description: "Whether the connection is verified", type: "boolean" },
-											visibility: { description: "Visibility of the connection (0 = None, 1 = Everyone)", type: "integer" },
+											id: {
+												description: "Connection account ID",
+												type: "string",
+											},
+											name: {
+												description: "Connection account username",
+												type: "string",
+											},
+											type: {
+												description: "Connection service type",
+												example: "twitch",
+												type: "string",
+											},
+											verified: {
+												description: "Whether the connection is verified",
+												type: "boolean",
+											},
+											visibility: {
+												description:
+													"Visibility of the connection (0 = None, 1 = Everyone)",
+												type: "integer",
+											},
 										},
 										type: "object",
 									},
@@ -72,23 +90,48 @@ defineRouteMeta({
 									type: "array",
 								},
 								guilds: {
-									description: "RESTGetAPICurrentUserGuildsResult - Raw guilds from Discord API",
+									description:
+										"RESTGetAPICurrentUserGuildsResult - Raw guilds from Discord API",
 									items: {
 										properties: {
-											approximate_member_count: { description: "Approximate number of members", type: "integer" },
-											approximate_presence_count: { description: "Approximate number of online members", type: "integer" },
+											approximate_member_count: {
+												description: "Approximate number of members",
+												type: "integer",
+											},
+											approximate_presence_count: {
+												description: "Approximate number of online members",
+												type: "integer",
+											},
 											features: {
 												description: "Enabled guild features",
 												example: ["COMMUNITY", "NEWS", "ANIMATED_ICON"],
 												items: { type: "string" },
 												type: "array",
 											},
-											icon: { description: "Guild icon hash", example: "a_1234567890abcdef", nullable: true, type: "string" },
-											id: { description: "Guild snowflake ID", example: "987654321098765432", type: "string" },
-											name: { description: "Guild name (2-100 characters)", example: "WolfStar Support", type: "string" },
-											owner: { description: "True if the user is the owner of the guild", type: "boolean" },
+											icon: {
+												description: "Guild icon hash",
+												example: "a_1234567890abcdef",
+												nullable: true,
+												type: "string",
+											},
+											id: {
+												description: "Guild snowflake ID",
+												example: "987654321098765432",
+												type: "string",
+											},
+											name: {
+												description: "Guild name (2-100 characters)",
+												example: "WolfStar Support",
+												type: "string",
+											},
+											owner: {
+												description:
+													"True if the user is the owner of the guild",
+												type: "boolean",
+											},
 											permissions: {
-												description: "Total permissions for the user (excludes overwrites)",
+												description:
+													"Total permissions for the user (excludes overwrites)",
 												example: "2199023255551",
 												type: "string",
 											},
@@ -99,93 +142,258 @@ defineRouteMeta({
 									type: "array",
 								},
 								transformedGuilds: {
-									description: "OauthFlattenedGuild[] - Guilds transformed with bot-specific information",
+									description:
+										"OauthFlattenedGuild[] - Guilds transformed with bot-specific information",
 									items: {
-										description: "OauthFlattenedGuild from shared/types/discord.d.ts",
+										description:
+											"OauthFlattenedGuild from shared/types/discord.d.ts",
 										properties: {
-											acronym: { description: "Guild name acronym for icon fallback", example: "WS", type: "string" },
-											afkChannelId: { description: "AFK channel ID", nullable: true, type: "string" },
-											afkTimeout: { description: "AFK timeout in seconds", example: 300, type: "integer" },
-											applicationId: { description: "Application ID if bot-created", nullable: true, type: "string" },
-											approximateMemberCount: { description: "Approximate member count", example: 1500, type: "integer" },
-											approximatePresenceCount: { description: "Approximate online count", example: 350, type: "integer" },
-											banner: { description: "Guild banner hash", nullable: true, type: "string" },
-											defaultMessageNotifications: { description: "Default message notification level", type: "integer" },
-											description: { description: "Guild description", nullable: true, type: "string" },
-											explicitContentFilter: { description: "Explicit content filter level", type: "integer" },
+											acronym: {
+												description: "Guild name acronym for icon fallback",
+												example: "WS",
+												type: "string",
+											},
+											afkChannelId: {
+												description: "AFK channel ID",
+												nullable: true,
+												type: "string",
+											},
+											afkTimeout: {
+												description: "AFK timeout in seconds",
+												example: 300,
+												type: "integer",
+											},
+											applicationId: {
+												description: "Application ID if bot-created",
+												nullable: true,
+												type: "string",
+											},
+											approximateMemberCount: {
+												description: "Approximate member count",
+												example: 1500,
+												type: "integer",
+											},
+											approximatePresenceCount: {
+												description: "Approximate online count",
+												example: 350,
+												type: "integer",
+											},
+											banner: {
+												description: "Guild banner hash",
+												nullable: true,
+												type: "string",
+											},
+											defaultMessageNotifications: {
+												description: "Default message notification level",
+												type: "integer",
+											},
+											description: {
+												description: "Guild description",
+												nullable: true,
+												type: "string",
+											},
+											explicitContentFilter: {
+												description: "Explicit content filter level",
+												type: "integer",
+											},
 											features: {
 												description: "Enabled guild features",
 												items: { type: "string" },
 												type: "array",
 											},
-											icon: { description: "Guild icon hash", nullable: true, type: "string" },
-											id: { description: "Guild snowflake ID", example: "987654321098765432", type: "string" },
-											joinedTimestamp: { description: "When bot joined (if applicable)", nullable: true, type: "integer" },
+											icon: {
+												description: "Guild icon hash",
+												nullable: true,
+												type: "string",
+											},
+											id: {
+												description: "Guild snowflake ID",
+												example: "987654321098765432",
+												type: "string",
+											},
+											joinedTimestamp: {
+												description: "When bot joined (if applicable)",
+												nullable: true,
+												type: "integer",
+											},
 											manageable: {
-												description: "Whether the user can manage bot settings (has MANAGE_GUILD)",
+												description:
+													"Whether the user can manage bot settings (has MANAGE_GUILD)",
 												example: true,
 												type: "boolean",
 											},
-											mfaLevel: { description: "Required MFA level for moderation", type: "integer" },
-											name: { description: "Guild name", example: "WolfStar Support", type: "string" },
-											ownerId: { description: "Owner's user snowflake ID", nullable: true, type: "string" },
-											partnered: { description: "Whether the guild is partnered", type: "boolean" },
+											mfaLevel: {
+												description: "Required MFA level for moderation",
+												type: "integer",
+											},
+											name: {
+												description: "Guild name",
+												example: "WolfStar Support",
+												type: "string",
+											},
+											ownerId: {
+												description: "Owner's user snowflake ID",
+												nullable: true,
+												type: "string",
+											},
+											partnered: {
+												description: "Whether the guild is partnered",
+												type: "boolean",
+											},
 											permissions: {
-												description: "User's computed permissions as integer",
+												description:
+													"User's computed permissions as integer",
 												example: 2_199_023_255_551,
 												type: "integer",
 											},
-											preferredLocale: { description: "Preferred locale", example: "en-US", type: "string" },
-											premiumSubscriptionCount: { description: "Number of boosts", example: 14, type: "integer" },
-											premiumTier: { description: "Premium tier (0-3)", example: 2, type: "integer" },
-											splash: { description: "Guild splash hash", nullable: true, type: "string" },
-											systemChannelId: { description: "System channel ID", nullable: true, type: "string" },
-											vanityURLCode: { description: "Vanity URL code", nullable: true, type: "string" },
-											verificationLevel: { description: "Verification level required", type: "integer" },
-											verified: { description: "Whether the guild is verified", type: "boolean" },
-											widgetEnabled: { description: "Whether widget is enabled", type: "boolean" },
-											wolfstarIsIn: { description: "Whether WolfStar bot is in this guild", example: true, type: "boolean" },
+											preferredLocale: {
+												description: "Preferred locale",
+												example: "en-US",
+												type: "string",
+											},
+											premiumSubscriptionCount: {
+												description: "Number of boosts",
+												example: 14,
+												type: "integer",
+											},
+											premiumTier: {
+												description: "Premium tier (0-3)",
+												example: 2,
+												type: "integer",
+											},
+											splash: {
+												description: "Guild splash hash",
+												nullable: true,
+												type: "string",
+											},
+											systemChannelId: {
+												description: "System channel ID",
+												nullable: true,
+												type: "string",
+											},
+											vanityURLCode: {
+												description: "Vanity URL code",
+												nullable: true,
+												type: "string",
+											},
+											verificationLevel: {
+												description: "Verification level required",
+												type: "integer",
+											},
+											verified: {
+												description: "Whether the guild is verified",
+												type: "boolean",
+											},
+											widgetEnabled: {
+												description: "Whether widget is enabled",
+												type: "boolean",
+											},
+											wolfstarIsIn: {
+												description:
+													"Whether WolfStar bot is in this guild",
+												example: true,
+												type: "boolean",
+											},
 										},
-										required: ["id", "name", "acronym", "permissions", "manageable", "wolfstarIsIn"],
+										required: [
+											"id",
+											"name",
+											"acronym",
+											"permissions",
+											"manageable",
+											"wolfstarIsIn",
+										],
 										type: "object",
 									},
 									type: "array",
 								},
 								user: {
-									description: "RESTGetAPICurrentUserResult - The authenticated Discord user",
+									description:
+										"RESTGetAPICurrentUserResult - The authenticated Discord user",
 									nullable: true,
 									properties: {
-										accent_color: { description: "User's banner color as integer", nullable: true, type: "integer" },
+										accent_color: {
+											description: "User's banner color as integer",
+											nullable: true,
+											type: "integer",
+										},
 										avatar: {
 											description: "User's avatar hash",
 											example: "a_1234567890abcdef1234567890abcdef",
 											nullable: true,
 											type: "string",
 										},
-										avatar_decoration_data: { description: "Avatar decoration data", nullable: true, type: "object" },
-										banner: { description: "User's banner hash", nullable: true, type: "string" },
-										bot: { description: "Whether the user is a bot account", type: "boolean" },
+										avatar_decoration_data: {
+											description: "Avatar decoration data",
+											nullable: true,
+											type: "object",
+										},
+										banner: {
+											description: "User's banner hash",
+											nullable: true,
+											type: "string",
+										},
+										bot: {
+											description: "Whether the user is a bot account",
+											type: "boolean",
+										},
 										discriminator: {
-											description: "User's 4-digit discriminator (legacy, '0' for new usernames)",
+											description:
+												"User's 4-digit discriminator (legacy, '0' for new usernames)",
 											example: "0",
 											type: "string",
 										},
-										email: { description: "User's email (requires email scope)", nullable: true, type: "string" },
-										flags: { description: "User's account flags", type: "integer" },
+										email: {
+											description: "User's email (requires email scope)",
+											nullable: true,
+											type: "string",
+										},
+										flags: {
+											description: "User's account flags",
+											type: "integer",
+										},
 										global_name: {
 											description: "User's display name (global)",
 											example: "WolfStar User",
 											nullable: true,
 											type: "string",
 										},
-										id: { description: "User's Discord snowflake ID", example: "123456789012345678", type: "string" },
-										locale: { description: "User's chosen language option", example: "en-US", type: "string" },
-										mfa_enabled: { description: "Whether the user has two factor enabled", type: "boolean" },
-										premium_type: { description: "Type of Nitro subscription", type: "integer" },
-										public_flags: { description: "User's public flags", type: "integer" },
-										system: { description: "Whether the user is an Official Discord System user", type: "boolean" },
-										username: { description: "User's username (not nickname)", example: "wolfstar_user", type: "string" },
-										verified: { description: "Whether the email has been verified", type: "boolean" },
+										id: {
+											description: "User's Discord snowflake ID",
+											example: "123456789012345678",
+											type: "string",
+										},
+										locale: {
+											description: "User's chosen language option",
+											example: "en-US",
+											type: "string",
+										},
+										mfa_enabled: {
+											description: "Whether the user has two factor enabled",
+											type: "boolean",
+										},
+										premium_type: {
+											description: "Type of Nitro subscription",
+											type: "integer",
+										},
+										public_flags: {
+											description: "User's public flags",
+											type: "integer",
+										},
+										system: {
+											description:
+												"Whether the user is an Official Discord System user",
+											type: "boolean",
+										},
+										username: {
+											description: "User's username (not nickname)",
+											example: "wolfstar_user",
+											type: "string",
+										},
+										verified: {
+											description: "Whether the email has been verified",
+											type: "boolean",
+										},
 									},
 									type: "object",
 								},

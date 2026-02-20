@@ -68,7 +68,12 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 		options.onDifference?.(diff);
 	};
 
-	const inner = (left: unknown, right: unknown, path: DeepEqualPath, report: boolean): boolean => {
+	const inner = (
+		left: unknown,
+		right: unknown,
+		path: DeepEqualPath,
+		report: boolean,
+	): boolean => {
 		const custom = options.customEqual?.(left, right, path);
 		if (custom !== undefined) {
 			if (!custom) {
@@ -82,7 +87,12 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 		}
 
 		// If either is null/undefined or not an object, they can't be deeply equal here.
-		if (typeof left !== "object" || left === null || typeof right !== "object" || right === null) {
+		if (
+			typeof left !== "object" ||
+			left === null ||
+			typeof right !== "object" ||
+			right === null
+		) {
 			reportDifference({ left, path, right }, report);
 			return false;
 		}
@@ -131,7 +141,10 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 		}
 
 		if (leftObj instanceof RegExp) {
-			const equal = rightObj instanceof RegExp && leftObj.source === rightObj.source && leftObj.flags === rightObj.flags;
+			const equal =
+				rightObj instanceof RegExp &&
+				leftObj.source === rightObj.source &&
+				leftObj.flags === rightObj.flags;
 			if (!equal) {
 				reportDifference({ left, path, right }, report);
 			}
@@ -144,7 +157,9 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 				return cacheAndReturn(false);
 			}
 			if (leftObj.size !== rightObj.size) {
-				return cacheAndReturn(inner(leftObj.size, rightObj.size, [...path, "size"], report));
+				return cacheAndReturn(
+					inner(leftObj.size, rightObj.size, [...path, "size"], report),
+				);
 			}
 
 			const rightEntries = [...rightObj.entries()];
@@ -182,7 +197,10 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 
 				// Key wasn't found at all.
 				if (keyCandidates.length === 0) {
-					reportDifference({ left: leftKey, path: [...path, "<mapKey>"], right: undefined }, report);
+					reportDifference(
+						{ left: leftKey, path: [...path, "<mapKey>"], right: undefined },
+						report,
+					);
 				}
 				// Key matched but value didn't.
 				else {
@@ -207,7 +225,10 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 						continue;
 					}
 					const [rightKey] = rightEntries[i]!;
-					reportDifference({ left: undefined, path: [...path, "<mapKey>"], right: rightKey }, report);
+					reportDifference(
+						{ left: undefined, path: [...path, "<mapKey>"], right: rightKey },
+						report,
+					);
 				}
 			}
 
@@ -220,7 +241,9 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 				return cacheAndReturn(false);
 			}
 			if (leftObj.size !== rightObj.size) {
-				return cacheAndReturn(inner(leftObj.size, rightObj.size, [...path, "size"], report));
+				return cacheAndReturn(
+					inner(leftObj.size, rightObj.size, [...path, "size"], report),
+				);
 			}
 
 			const rightValues = [...rightObj.values()];
@@ -246,7 +269,10 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 				}
 
 				equal = false;
-				reportDifference({ left: leftValue, path: [...path, "<setValue>"], right: undefined }, report);
+				reportDifference(
+					{ left: leftValue, path: [...path, "<setValue>"], right: undefined },
+					report,
+				);
 
 				if (mode === "first") {
 					return cacheAndReturn(false);
@@ -262,7 +288,10 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 					if (used.has(i)) {
 						continue;
 					}
-					reportDifference({ left: undefined, path: [...path, "<setValue>"], right: rightValues[i] }, report);
+					reportDifference(
+						{ left: undefined, path: [...path, "<setValue>"], right: rightValues[i] },
+						report,
+					);
 				}
 			}
 
@@ -275,7 +304,9 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 				return cacheAndReturn(false);
 			}
 			if (leftObj.length !== rightObj.length) {
-				return cacheAndReturn(inner(leftObj.length, rightObj.length, [...path, "length"], report));
+				return cacheAndReturn(
+					inner(leftObj.length, rightObj.length, [...path, "length"], report),
+				);
 			}
 
 			let equal = true;
@@ -296,7 +327,9 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 		const leftKeys = objectKeys(leftObj);
 		const rightKeys = objectKeys(rightObj);
 		if (leftKeys.length !== rightKeys.length) {
-			return cacheAndReturn(inner(leftKeys.length, rightKeys.length, [...path, "<keys>"], report));
+			return cacheAndReturn(
+				inner(leftKeys.length, rightKeys.length, [...path, "<keys>"], report),
+			);
 		}
 
 		const leftRecord = leftObj as Record<string, unknown>;
@@ -305,7 +338,10 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 		let equal = true;
 		for (const key of leftKeys) {
 			if (!Object.hasOwn(rightObj, key)) {
-				reportDifference({ left: leftRecord[key], path: [...path, key], right: undefined }, report);
+				reportDifference(
+					{ left: leftRecord[key], path: [...path, key], right: undefined },
+					report,
+				);
 				equal = false;
 				if (mode === "first") {
 					return cacheAndReturn(false);
@@ -348,7 +384,10 @@ export function visitDeepDifferences(
 	left: unknown,
 	right: unknown,
 	visitor: (diff: DeepEqualDifference) => void,
-	options: Omit<IsDeepEqualOptions, "onDifference" | "mode" | "onEqualSuccess" | "onEqualFailed" | "onEqualFalied"> = {},
+	options: Omit<
+		IsDeepEqualOptions,
+		"onDifference" | "mode" | "onEqualSuccess" | "onEqualFailed" | "onEqualFalied"
+	> = {},
 ): boolean {
 	return isDeepEqual(left, right, {
 		...options,

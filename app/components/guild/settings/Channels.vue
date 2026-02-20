@@ -17,7 +17,8 @@
 					<h3 class="text-lg font-semibold text-base-content">Logging Channels</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					Select which channels should receive specific log events. Leave empty to disable logging for that event.
+					Select which channels should receive specific log events. Leave empty to disable
+					logging for that event.
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -41,12 +42,17 @@
 					<h3 class="text-lg font-semibold text-base-content">Ignore Channels</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.
+					Select channels that should be ignored for specific logging events. Messages and
+					events in these channels won't be logged.
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<div v-for="config in ConfigurableIgnoreChannels" :key="config.key">
-						<SelectChannels v-model="state[config.key] as string[]" :guild="guildData" :label="config.name" />
+						<SelectChannels
+							v-model="state[config.key] as string[]"
+							:guild="guildData"
+							:label="config.name"
+						/>
 					</div>
 				</div>
 			</div>
@@ -57,7 +63,10 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import { ConfigurableIgnoreChannels, ConfigurableLoggingChannels } from "#shared/utils/settingsDataEntries";
+import {
+	ConfigurableIgnoreChannels,
+	ConfigurableLoggingChannels,
+} from "#shared/utils/settingsDataEntries";
 import * as v from "valibot";
 
 const { guildData } = useGuildData();
@@ -119,7 +128,8 @@ function mapToGuildData(formState: Record<string, string | null | string[]>): Pa
 }
 
 async function onError(event: FormErrorEvent) {
-	const element = event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+	const element =
+		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
 	element?.scrollIntoView({ behavior: "smooth", block: "center" });
 	const errorMessage = event.errors[0]?.message;
 	toast.add({

@@ -1,7 +1,5 @@
 {
-	"endOfLine": "lf",
-	"printWidth": 150,
-	"quoteProps": "as-needed",
+	"quoteProps": "consistent",
 	"semi": true,
 	"tabWidth": 4,
 	"trailingComma": "all",
@@ -42,5 +40,27 @@
 				"proseWrap": "always"
 			}
 		}
+	],
+	"ignorePatterns": [
+		".nuxt/",
+		"dist/",
+		"node_modules/",
+		"*.config.js",
+		".env",
+		".env.*",
+		"pnpm-lock.yaml",
+		"yarn.lock",
+		"package-lock.json",
+		"*.log",
+		"*.min.js",
+		"*.min.css",
+		"*.png",
+		"*.jpg",
+		"*.jpeg",
+		"*.gif",
+		"*.svg",
+		"coverage/",
+		".agents/",
+		".agent/"
 	]
 }

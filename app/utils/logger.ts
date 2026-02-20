@@ -1,6 +1,6 @@
+import type { ConsolaOptions } from "consola";
 import * as Sentry from "@sentry/nuxt";
-import { consola } from 'consola';
-import type { ConsolaOptions } from 'consola';
+import { consola } from "consola";
 
 const sentryReporter = Sentry.createConsolaReporter();
 

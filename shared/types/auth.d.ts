@@ -1,5 +1,5 @@
-import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { User } from "#auth-utils";
+import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 
 // Auth.d.ts
 declare module "#auth-utils" {

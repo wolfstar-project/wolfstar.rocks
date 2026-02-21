@@ -31,21 +31,14 @@ export function useUnsavedChanges(hasChanges: Ref<boolean>) {
 		}
 	});
 
-	function beforeUnloadHandler(e: BeforeUnloadEvent) {
+	useEventListener(window, "beforeunload", (e) => {
 		if (hasChanges.value) {
 			e.preventDefault();
 			e.returnValue = "";
 		}
-	}
-
-	onMounted(() => {
-		window.addEventListener("beforeunload", beforeUnloadHandler);
 	});
 
-	onUnmounted(() => {
-		window.removeEventListener("beforeunload", beforeUnloadHandler);
-		removeGuard();
-	});
+	onScopeDispose(removeGuard);
 
 	function confirmLeave() {
 		showDialog.value = false;

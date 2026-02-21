@@ -169,6 +169,11 @@ const renderComponent = computed(() => {
 		case "events": {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Events.vue"));
 		}
+		case "moderation": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/Moderation.vue"),
+			);
+		}
 		case "roles": {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue"));
 		}

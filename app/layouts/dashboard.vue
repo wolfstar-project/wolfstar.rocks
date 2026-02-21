@@ -135,6 +135,22 @@
 				</UButton>
 			</UFieldGroup>
 		</div>
+
+		<UModal
+			v-model:open="showDialog"
+			title="Unsaved Changes"
+			description="You have unsaved changes that will be lost if you leave this page."
+			:dismissible="false"
+		>
+			<template #footer>
+				<div class="flex justify-end gap-2">
+					<UButton color="neutral" variant="ghost" @click="cancelLeave">
+						Stay on Page
+					</UButton>
+					<UButton color="error" @click="confirmLeave"> Discard Changes </UButton>
+				</div>
+			</template>
+		</UModal>
 	</UDashboardGroup>
 </template>
 
@@ -241,6 +257,8 @@ const isReadyToSubmit = computed(
 		!isNullOrUndefined(guildSettingsChanges.value) &&
 		objectValues(guildSettingsChanges.value).length > 0,
 );
+
+const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
 const src = computed(
 	() =>

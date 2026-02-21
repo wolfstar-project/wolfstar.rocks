@@ -1,19 +1,24 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+
+function makeRoute(path: string) {
+	return { path } as { path: string };
+}
 
 describe("useUnsavedChanges - Route Guard Logic", () => {
-	const GUILD_MANAGE_PATTERN = /^\/guilds\/(\d+)\/manage/;
+	// Import the real function from the composable
+	let isSameGuildManageArea: typeof import("../../../app/composables/useUnsavedChanges").isSameGuildManageArea;
 
-	function isSameGuildManageArea(toPath: string, fromPath: string): boolean {
-		const fromMatch = fromPath.match(GUILD_MANAGE_PATTERN);
-		const toMatch = toPath.match(GUILD_MANAGE_PATTERN);
-		return Boolean(fromMatch && toMatch && fromMatch[1] === toMatch[1]);
-	}
+	// oxlint-disable-next-line vitest/no-hooks
+	beforeAll(async () => {
+		const mod = await import("../../../app/composables/useUnsavedChanges");
+		isSameGuildManageArea = mod.isSameGuildManageArea;
+	});
 
 	it("should allow navigation within the same guild manage area", () => {
 		expect(
 			isSameGuildManageArea(
-				"/guilds/123456789012345678/manage/channels",
-				"/guilds/123456789012345678/manage",
+				makeRoute("/guilds/123456789012345678/manage/channels"),
+				makeRoute("/guilds/123456789012345678/manage"),
 			),
 		).toBe(true);
 	});
@@ -21,8 +26,8 @@ describe("useUnsavedChanges - Route Guard Logic", () => {
 	it("should allow navigation between different settings tabs", () => {
 		expect(
 			isSameGuildManageArea(
-				"/guilds/123456789012345678/manage/moderation",
-				"/guilds/123456789012345678/manage/channels",
+				makeRoute("/guilds/123456789012345678/manage/moderation"),
+				makeRoute("/guilds/123456789012345678/manage/channels"),
 			),
 		).toBe(true);
 	});
@@ -30,25 +35,32 @@ describe("useUnsavedChanges - Route Guard Logic", () => {
 	it("should block navigation when switching guilds", () => {
 		expect(
 			isSameGuildManageArea(
-				"/guilds/987654321098765432/manage",
-				"/guilds/123456789012345678/manage",
+				makeRoute("/guilds/987654321098765432/manage"),
+				makeRoute("/guilds/123456789012345678/manage"),
 			),
 		).toBe(false);
 	});
 
 	it("should block navigation when leaving guild manage area", () => {
-		expect(isSameGuildManageArea("/guilds", "/guilds/123456789012345678/manage")).toBe(false);
+		expect(
+			isSameGuildManageArea(
+				makeRoute("/guilds"),
+				makeRoute("/guilds/123456789012345678/manage"),
+			),
+		).toBe(false);
 	});
 
 	it("should block navigation to completely different page", () => {
-		expect(isSameGuildManageArea("/", "/guilds/123456789012345678/manage")).toBe(false);
+		expect(
+			isSameGuildManageArea(makeRoute("/"), makeRoute("/guilds/123456789012345678/manage")),
+		).toBe(false);
 	});
 
 	it("should block navigation from manage to guild list", () => {
 		expect(
 			isSameGuildManageArea(
-				"/guilds/123456789012345678",
-				"/guilds/123456789012345678/manage",
+				makeRoute("/guilds/123456789012345678"),
+				makeRoute("/guilds/123456789012345678/manage"),
 			),
 		).toBe(false);
 	});

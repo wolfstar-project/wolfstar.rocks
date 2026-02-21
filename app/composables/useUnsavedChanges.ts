@@ -3,7 +3,7 @@ import type { RouteLocationNormalized } from "vue-router";
 
 const GUILD_MANAGE_PATTERN = /^\/guilds\/(\d+)\/manage/;
 
-function isSameGuildManageArea(
+export function isSameGuildManageArea(
 	to: RouteLocationNormalized,
 	from: RouteLocationNormalized,
 ): boolean {
@@ -34,6 +34,7 @@ export function useUnsavedChanges(hasChanges: Ref<boolean>) {
 	function beforeUnloadHandler(e: BeforeUnloadEvent) {
 		if (hasChanges.value) {
 			e.preventDefault();
+			e.returnValue = "";
 		}
 	}
 

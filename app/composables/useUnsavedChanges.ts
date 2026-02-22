@@ -1,7 +1,7 @@
 import type { Ref } from "vue";
 import type { RouteLocationNormalized } from "vue-router";
 
-const GUILD_MANAGE_PATTERN = /^\/guilds\/(\d+)\/manage/;
+const GUILD_MANAGE_PATTERN = /^\/guilds\/([^/]+)\/manage/;
 
 export function isSameGuildManageArea(
 	to: RouteLocationNormalized,

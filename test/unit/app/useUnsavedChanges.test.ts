@@ -1,26 +1,19 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import type { RouteLocationNormalizedGeneric } from "vue-router";
+import { describe, expect, it } from "vitest";
+import { isSameGuildManageArea } from "../../../app/composables/useUnsavedChanges";
 
 function makeRoute(path: string) {
-	return { path } as { path: string };
+	return { path } as RouteLocationNormalizedGeneric;
 }
 
-describe("useUnsavedChanges - Route Guard Logic", () => {
-	// Import the real function from the composable
-	let isSameGuildManageArea: typeof import("../../../app/composables/useUnsavedChanges").isSameGuildManageArea;
-
-	// oxlint-disable-next-line vitest/no-hooks
-	beforeAll(async () => {
-		const mod = await import("../../../app/composables/useUnsavedChanges");
-		isSameGuildManageArea = mod.isSameGuildManageArea;
-	});
-
+describe("isSameGuildManageArea()", () => {
 	it("should allow navigation within the same guild manage area", () => {
 		expect(
 			isSameGuildManageArea(
 				makeRoute("/guilds/123456789012345678/manage/channels"),
 				makeRoute("/guilds/123456789012345678/manage"),
 			),
-		).toBe(true);
+		).toBeTruthy();
 	});
 
 	it("should allow navigation between different settings tabs", () => {
@@ -29,7 +22,7 @@ describe("useUnsavedChanges - Route Guard Logic", () => {
 				makeRoute("/guilds/123456789012345678/manage/moderation"),
 				makeRoute("/guilds/123456789012345678/manage/channels"),
 			),
-		).toBe(true);
+		).toBeTruthy();
 	});
 
 	it("should block navigation when switching guilds", () => {
@@ -38,7 +31,7 @@ describe("useUnsavedChanges - Route Guard Logic", () => {
 				makeRoute("/guilds/987654321098765432/manage"),
 				makeRoute("/guilds/123456789012345678/manage"),
 			),
-		).toBe(false);
+		).toBeFalsy();
 	});
 
 	it("should block navigation when leaving guild manage area", () => {
@@ -47,13 +40,13 @@ describe("useUnsavedChanges - Route Guard Logic", () => {
 				makeRoute("/guilds"),
 				makeRoute("/guilds/123456789012345678/manage"),
 			),
-		).toBe(false);
+		).toBeFalsy();
 	});
 
 	it("should block navigation to completely different page", () => {
 		expect(
 			isSameGuildManageArea(makeRoute("/"), makeRoute("/guilds/123456789012345678/manage")),
-		).toBe(false);
+		).toBeFalsy();
 	});
 
 	it("should block navigation from manage to guild list", () => {
@@ -62,105 +55,42 @@ describe("useUnsavedChanges - Route Guard Logic", () => {
 				makeRoute("/guilds/123456789012345678"),
 				makeRoute("/guilds/123456789012345678/manage"),
 			),
-		).toBe(false);
-	});
-});
-
-describe("useUnsavedChanges - Navigation Guard Behavior", () => {
-	it("should not block when there are no changes", () => {
-		const hasChanges = false;
-		const isSameArea = false;
-
-		const shouldBlock = hasChanges && !isSameArea;
-		expect(shouldBlock).toBe(false);
+		).toBeFalsy();
 	});
 
-	it("should block when there are changes and leaving the area", () => {
-		const hasChanges = true;
-		const isSameArea = false;
-
-		const shouldBlock = hasChanges && !isSameArea;
-		expect(shouldBlock).toBe(true);
+	it("should allow navigation from manage to a filter sub-path", () => {
+		expect(
+			isSameGuildManageArea(
+				makeRoute("/guilds/123456789012345678/manage/filter/links"),
+				makeRoute("/guilds/123456789012345678/manage"),
+			),
+		).toBeTruthy();
 	});
 
-	it("should not block when there are changes but staying in the same area", () => {
-		const hasChanges = true;
-		const isSameArea = true;
-
-		const shouldBlock = hasChanges && !isSameArea;
-		expect(shouldBlock).toBe(false);
+	it("should allow navigation between filter sub-paths of the same guild", () => {
+		expect(
+			isSameGuildManageArea(
+				makeRoute("/guilds/123456789012345678/manage/filter/words"),
+				makeRoute("/guilds/123456789012345678/manage/filter/capitals"),
+			),
+		).toBeTruthy();
 	});
 
-	it("should allow navigation after skip guard is set", () => {
-		let skipGuard = false;
-		const hasChanges = true;
-		const isSameArea = false;
-
-		// First attempt: should block
-		let shouldBlock = hasChanges && !isSameArea && !skipGuard;
-		expect(shouldBlock).toBe(true);
-
-		// After confirmation, skip guard is set
-		skipGuard = true;
-		shouldBlock = hasChanges && !isSameArea && !skipGuard;
-		expect(shouldBlock).toBe(false);
+	it("should allow navigation from a filter sub-path to a top-level section", () => {
+		expect(
+			isSameGuildManageArea(
+				makeRoute("/guilds/123456789012345678/manage/channels"),
+				makeRoute("/guilds/123456789012345678/manage/filter/invites"),
+			),
+		).toBeTruthy();
 	});
 
-	it("should reset skip guard after navigation proceeds", () => {
-		let skipGuard = true;
-
-		// Guard fires, sees skipGuard is true, resets it
-		if (skipGuard) {
-			skipGuard = false;
-		}
-
-		expect(skipGuard).toBe(false);
-	});
-});
-
-describe("useUnsavedChanges - Dialog State Management", () => {
-	it("should track pending route when blocking navigation", () => {
-		let pendingRoute: string | null = null;
-		let showDialog = false;
-
-		// Simulate blocking navigation
-		pendingRoute = "/guilds";
-		showDialog = true;
-
-		expect(pendingRoute).toBe("/guilds");
-		expect(showDialog).toBe(true);
-	});
-
-	it("should clear state when confirming leave", () => {
-		let pendingRoute: string | null = "/guilds";
-		let showDialog = true;
-		let skipGuard = false;
-		let navigatedTo: string | null = null;
-
-		// Simulate confirmLeave
-		showDialog = false;
-		const route = pendingRoute;
-		pendingRoute = null;
-		if (route) {
-			skipGuard = true;
-			navigatedTo = route;
-		}
-
-		expect(showDialog).toBe(false);
-		expect(pendingRoute).toBeNull();
-		expect(skipGuard).toBe(true);
-		expect(navigatedTo).toBe("/guilds");
-	});
-
-	it("should clear state when canceling leave", () => {
-		let pendingRoute: string | null = "/guilds";
-		let showDialog = true;
-
-		// Simulate cancelLeave
-		showDialog = false;
-		pendingRoute = null;
-
-		expect(showDialog).toBe(false);
-		expect(pendingRoute).toBeNull();
+	it("should block navigation between filter sub-paths of different guilds", () => {
+		expect(
+			isSameGuildManageArea(
+				makeRoute("/guilds/987654321098765432/manage/filter/links"),
+				makeRoute("/guilds/123456789012345678/manage/filter/links"),
+			),
+		).toBeFalsy();
 	});
 });

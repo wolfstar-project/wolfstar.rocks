@@ -159,7 +159,7 @@ import type { GuildData } from "#server/database";
 import type { ValuesType } from "#shared/types/utils";
 import type { NavigationMenuItem } from "@nuxt/ui";
 import { parseError, createError } from "evlog";
-import { cast, isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
+import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 

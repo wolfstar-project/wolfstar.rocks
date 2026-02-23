@@ -30,6 +30,7 @@ export default defineConfig({
 					name: "unit",
 				},
 			},
+			// oxlint-disable-next-line antfu/no-top-level-await
 			await defineVitestProject({
 				test: {
 					browser: {
@@ -56,7 +57,6 @@ export default defineConfig({
 							},
 							rootDir: fileURLToPath(new URL(".", import.meta.url)),
 						},
-						setupFiles: ["./test/nuxt/setup.ts"],
 					},
 					include: ["test/nuxt/**/*.{test,spec,bench}.ts"],
 					name: "nuxt",

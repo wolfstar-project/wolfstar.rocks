@@ -5,6 +5,6 @@
 		"allowJs": true,
 		"checkJs": true
 	},
-	"include": ["scripts", "src"],
+	"include": ["scripts", "src", "benchmarks"],
 	"exclude": []
 }

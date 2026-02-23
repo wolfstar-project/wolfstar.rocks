@@ -1,6 +1,7 @@
 # WolfStar.Rocks [![Discord](https://discord.com/api/guilds/830481105261821952/embed.png)](https://join.wolfstar.rocks)
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/wolfstarbot/wolfstar.rocks?logo=docker&logoColor=white)](https://hub.docker.com/r/wolfstarbot/wolfstar.rocks)
+[![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json&style=flat&label=CodSpeed)](https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge)
 
 ## Set-Up
 

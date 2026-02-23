@@ -213,7 +213,8 @@
 		"server/database/generated/**/*",
 		".gemini/**/*",
 		".agent/**/*",
-		".agents/**/*"
+		".agents/**/*",
+		".skilld/**/*"
 	],
 	"overrides": [
 		{

@@ -2375,3 +2375,10 @@ This codebase emphasizes:
 - ✅ **Maintainability** - Clear patterns, consistent conventions, good documentation
 
 **When in doubt**: Always reference existing patterns in similar files when implementing new features.
+
+<!-- skilld -->
+
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+
+<!-- /skilld -->

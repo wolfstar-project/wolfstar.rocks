@@ -61,6 +61,7 @@
 		"*.svg",
 		"coverage/",
 		".agents/",
-		".agent/"
+		".agent/",
+		".skilld"
 	]
 }

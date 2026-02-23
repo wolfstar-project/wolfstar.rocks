@@ -48,3 +48,6 @@ test-results/
 
 # Agents
 plans
+
+# Skilld references (recreated by `skilld install`)
+.skilld

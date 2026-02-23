@@ -1,0 +1,327 @@
+skills:
+  vue-test-utils-skilld:
+    packageName: "@vue/test-utils"
+    version: 2.4.6
+    packages: "@vue/test-utils@2.4.6"
+    repo: vuejs/test-utils
+    source: "https://github.com/vuejs/test-utils/tree/v2.4.6/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vueuse-core-skilld:
+    packageName: "@vueuse/core"
+    version: 14.2.1
+    packages: "@vueuse/core@14.2.1"
+    repo: vueuse/vueuse
+    source: "https://github.com/vueuse/vueuse/tree/v14.2.1/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vueuse-integrations-skilld:
+    packageName: "@vueuse/integrations"
+    version: 14.2.1
+    packages: "@vueuse/integrations@14.2.1"
+    repo: vueuse/vueuse
+    source: "ungh://vueuse/vueuse/packages/integrations@v14.2.1"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vueuse-motion-skilld:
+    packageName: "@vueuse/motion"
+    version: 3.0.3
+    packages: "@vueuse/motion@3.0.3"
+    repo: vueuse/motion
+    source: "https://github.com/vueuse/motion/tree/v3.0.3/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vueuse-shared-skilld:
+    repo: harlan-zw/vue-ecosystem-skills
+    source: github
+    syncedAt: 2026-02-23
+    generator: external
+    path: skills/vueuse-shared-skilld
+    ref: main
+  nuxt-ui-skilld:
+    packageName: "@nuxt/ui"
+    version: 4.4.0
+    repo: nuxt/ui
+    source: "https://ui.nuxt.com/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  evlog-skilld:
+    packageName: evlog
+    version: 1.9.0
+    repo: HugoRCD/evlog
+    source: "https://evlog.dev/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vitest-skilld:
+    packageName: vitest
+    version: 4.0.18
+    repo: vitest-dev/vitest
+    source: "https://github.com/vitest-dev/vitest/tree/v4.0.18/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  discord-api-types-skilld:
+    packageName: discord-api-types
+    version: 0.38.38
+    repo: discordjs/discord-api-types
+    source: "https://github.com/discordjs/discord-api-types/tree/v0.38.38/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  sapphire-utilities-skilld:
+    packageName: "@sapphire/utilities"
+    version: 3.18.2
+    repo: sapphiredev/utilities
+    source: "https://www.sapphirejs.dev/**"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-skilld:
+    packageName: nuxt
+    version: 4.3.1
+    repo: nuxt/nuxt
+    source: "https://github.com/nuxt/nuxt/tree/v4.3.1/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  valibot-skilld:
+    packageName: valibot
+    version: 1.2.0
+    repo: open-circle/valibot
+    source: "https://valibot.dev/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  std-env-skilld:
+    packageName: std-env
+    version: 3.10.0
+    repo: unjs/std-env
+    source: "ungh://unjs/std-env"
+    syncedAt: 2026-02-23
+    generator: skilld
+  discordjs-collection-skilld:
+    packageName: "@discordjs/collection"
+    version: 2.1.1
+    repo: discordjs/discord.js
+    source: "https://github.com/discordjs/discord.js/tree/main/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-test-utils-skilld:
+    packageName: "@nuxt/test-utils"
+    version: 4.0.0
+    repo: nuxt/test-utils
+    source: "http://nuxt.com/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  sapphire-time-utilities-skilld:
+    packageName: "@sapphire/time-utilities"
+    version: 1.7.14
+    repo: sapphiredev/utilities
+    source: "ungh://sapphiredev/utilities/packages/time-utilities"
+    syncedAt: 2026-02-23
+    generator: skilld
+  sentry-nuxt-skilld:
+    packageName: "@sentry/nuxt"
+    version: 10.38.0
+    repo: getsentry/sentry-javascript
+    source: "https://github.com/getsentry/sentry-javascript/tree/10.38.0/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vueuse-router-skilld:
+    packageName: "@vueuse/router"
+    version: 14.2.1
+    repo: vueuse/vueuse
+    source: "https://github.com/vueuse/vueuse/tree/v14.2.1/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  dotenv-skilld:
+    packageName: dotenv
+    version: 17.2.4
+    repo: motdotla/dotenv
+    source: "ungh://motdotla/dotenv"
+    syncedAt: 2026-02-23
+    generator: skilld
+  rou3-skilld:
+    packageName: rou3
+    version: 0.7.12
+    repo: h3js/rou3
+    source: "ungh://h3js/rou3"
+    syncedAt: 2026-02-23
+    generator: skilld
+  consola-skilld:
+    packageName: consola
+    version: 3.4.2
+    repo: unjs/consola
+    source: "ungh://unjs/consola"
+    syncedAt: 2026-02-23
+    generator: skilld
+  simple-git-skilld:
+    packageName: simple-git
+    version: 3.30.0
+    repo: steveukx/git-js
+    source: "https://github.com/steveukx/git-js/tree/simple-git@3.30.0/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  codspeed-vitest-plugin-skilld:
+    packageName: "@codspeed/vitest-plugin"
+    version: 5.2.0
+    repo: CodSpeedHQ/codspeed-node
+    source: "https://codspeed.io/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  discordjs-core-skilld:
+    packageName: "@discordjs/core"
+    version: 2.4.0
+    repo: discordjs/discord.js
+    source: "https://github.com/discordjs/discord.js/tree/main/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  sapphire-bitfield-skilld:
+    packageName: "@sapphire/bitfield"
+    version: 1.2.4
+    repo: sapphiredev/utilities
+    source: "ungh://sapphiredev/utilities/packages/bitfield"
+    syncedAt: 2026-02-23
+    generator: skilld
+  playwright-test-skilld:
+    packageName: "@playwright/test"
+    version: 1.58.2
+    repo: microsoft/playwright
+    source: "https://github.com/microsoft/playwright/tree/v1.58.2/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  sapphire-ratelimits-skilld:
+    packageName: "@sapphire/ratelimits"
+    version: 2.4.11
+    repo: sapphiredev/utilities
+    source: "ungh://sapphiredev/utilities/packages/ratelimits"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vite-pwa-nuxt-skilld:
+    packageName: "@vite-pwa/nuxt"
+    version: 1.1.1
+    repo: vite-pwa/nuxt
+    source: "https://vite-pwa-org.netlify.app/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  sapphire-snowflake-skilld:
+    packageName: "@sapphire/snowflake"
+    version: 3.5.5
+    repo: sapphiredev/utilities
+    source: "ungh://sapphiredev/utilities/packages/snowflake"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vite-pwa-assets-generator-skilld:
+    packageName: "@vite-pwa/assets-generator"
+    version: 1.0.2
+    repo: vite-pwa/assets-generator
+    source: "https://vite-pwa-org.netlify.app/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  defu-skilld:
+    packageName: defu
+    version: 6.1.4
+    repo: unjs/defu
+    source: "ungh://unjs/defu"
+    syncedAt: 2026-02-23
+    generator: skilld
+  taze-skilld:
+    packageName: taze
+    version: 19.9.2
+    repo: antfu-collective/taze
+    source: "ungh://antfu-collective/taze"
+    syncedAt: 2026-02-23
+    generator: skilld
+  prisma-skilld:
+    packageName: prisma
+    version: 6.19.2
+    repo: prisma/prisma
+    source: "https://www.prisma.io/llms.txt"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-hints-skilld:
+    packageName: "@nuxt/hints"
+    version: 1.0.0-alpha.6
+    repo: nuxt/hints
+    source: "ungh://nuxt/hints"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-image-skilld:
+    packageName: "@nuxt/image"
+    version: 2.0.0
+    repo: nuxt/image
+    source: "https://github.com/nuxt/image/tree/v2.0.0/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vitest-browser-playwright-skilld:
+    packageName: "@vitest/browser-playwright"
+    version: 4.0.18
+    repo: vitest-dev/vitest
+    source: "https://github.com/vitest-dev/vitest/tree/v4.0.18/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-fonts-skilld:
+    packageName: "@nuxt/fonts"
+    version: 0.13.0
+    repo: nuxt/fonts
+    source: "https://github.com/nuxt/fonts/tree/v0.13.0/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vueuse-nuxt-skilld:
+    packageName: "@vueuse/nuxt"
+    version: 14.2.1
+    repo: vueuse/vueuse
+    source: "https://github.com/vueuse/vueuse/tree/v14.2.1/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-a11y-skilld:
+    packageName: "@nuxt/a11y"
+    version: 1.0.0-alpha.1
+    repo: nuxt/a11y
+    source: "ungh://nuxt/a11y"
+    syncedAt: 2026-02-23
+    generator: skilld
+  netlify-nuxt-skilld:
+    packageName: "@netlify/nuxt"
+    version: 0.2.21
+    repo: netlify/primitives
+    source: "ungh://netlify/primitives/packages/nuxt-module"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-auth-utils-skilld:
+    packageName: nuxt-auth-utils
+    version: 0.5.28
+    repo: atinux/nuxt-auth-utils
+    source: "ungh://atinux/nuxt-auth-utils"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxtjs-seo-skilld:
+    packageName: "@nuxtjs/seo"
+    version: 3.4.0
+    repo: harlan-zw/nuxt-seo
+    source: "https://github.com/harlan-zw/nuxt-seo/tree/v3.4.0/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nitro-skilld:
+    packageName: nitro
+    version: 3.0.1-alpha.2
+    repo: nitrojs/nitro
+    source: "ungh://nitrojs/nitro@v3.0.1-alpha.2"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-vitalizer-skilld:
+    packageName: nuxt-vitalizer
+    version: 2.0.0
+    repo: johannschopplich/nuxt-vitalizer
+    source: "ungh://johannschopplich/nuxt-vitalizer"
+    syncedAt: 2026-02-23
+    generator: skilld
+  nuxt-security-skilld:
+    packageName: nuxt-security
+    version: 2.5.1
+    repo: Baroshem/nuxt-security
+    source: "https://github.com/Baroshem/nuxt-security/tree/v2.5.1/docs"
+    syncedAt: 2026-02-23
+    generator: skilld
+  vue-macros-nuxt-skilld:
+    packageName: "@vue-macros/nuxt"
+    version: 3.1.2
+    repo: vue-macros/vue-macros
+    source: "https://github.com/vue-macros/vue-macros/tree/v3.1.2/docs"
+    syncedAt: 2026-02-23
+    generator: skilld

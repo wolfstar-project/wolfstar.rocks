@@ -26,8 +26,11 @@ export default defineConfig({
 				},
 				test: {
 					environment: "node",
-					include: ["test/unit/**/*.{test,spec,bench}.ts"],
+					include: ["test/unit/**/*.{test,spec}.ts"],
 					name: "unit",
+					benchmark: {
+						include: ["test/unit/**/*.{bench}.ts"],
+					},
 				},
 			},
 			// oxlint-disable-next-line antfu/no-top-level-await
@@ -42,6 +45,7 @@ export default defineConfig({
 					environmentOptions: {
 						nuxt: {
 							overrides: {
+								fonts: { providers: { fontshare: false } },
 								vue: {
 									runtimeCompiler: true,
 								},
@@ -58,7 +62,7 @@ export default defineConfig({
 							rootDir: fileURLToPath(new URL(".", import.meta.url)),
 						},
 					},
-					include: ["test/nuxt/**/*.{test,spec,bench}.ts"],
+					include: ["test/nuxt/**/*.{test,spec}.ts"],
 					name: "nuxt",
 				},
 			}),

@@ -72,7 +72,7 @@
 							variant="subtle"
 							to="/login"
 							block
-							class="lg:hidden"
+							class="md:hidden"
 							icon="ic:round-discord"
 							aria-label="Login with Discord"
 						/>
@@ -83,7 +83,7 @@
 							variant="subtle"
 							to="/login"
 							block
-							class="inline-flex"
+							class="hidden md:inline-flex"
 							icon="ic:round-discord"
 							aria-label="Login with Discord"
 						/>

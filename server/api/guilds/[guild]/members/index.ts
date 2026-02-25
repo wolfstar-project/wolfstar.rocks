@@ -1,4 +1,4 @@
-import { useLogger } from "evlog";
+import { useLogger, createError } from "evlog";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -15,15 +15,10 @@ export default defineWrappedResponseHandler(
 		await canManage(guild, member);
 
 		const members = await api.guilds.getMembers(guildId).catch((error) => {
-			log.error(error);
 			throw createError({
-				data: {
-					details: error,
-					error: "members_fetch_failed",
-					message: error.message || "Unknown error",
-				},
+				message: "Failed to fetch members from Discord",
 				status: 500,
-				statusText: "Failed to fetch members",
+				cause: error,
 			});
 		});
 

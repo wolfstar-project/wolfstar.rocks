@@ -4,38 +4,6 @@ import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
 import { useLogger, createError } from "evlog";
 
-defineRouteMeta({
-	openAPI: {
-		description:
-			"Handles the OAuth2 callback from Discord after user authorization. Exchanges the authorization code for access tokens and establishes a user session.",
-		operationId: "discordOAuthCallback",
-		parameters: [
-			{
-				description: "The authorization code returned by Discord after user consent",
-				in: "query",
-				name: "code",
-				required: true,
-				schema: { type: "string" },
-			},
-			{
-				description:
-					"The state parameter for CSRF protection, must match the original request",
-				in: "query",
-				name: "state",
-				required: true,
-				schema: { type: "string" },
-			},
-		],
-		responses: {
-			302: { description: "Redirect to the dashboard on successful authentication" },
-			400: { description: "Invalid or missing authorization code or state" },
-			500: { description: "Failed to exchange code for tokens or fetch user data" },
-		},
-		summary: "Discord OAuth2 callback",
-		tags: ["Authentication"],
-	},
-});
-
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event);
 	const log = useLogger(event);

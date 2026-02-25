@@ -7,60 +7,6 @@ const settingsUpdateSchema = v.object({
 	data: v.optional(v.array(v.tuple([v.string(), v.unknown()]))),
 });
 
-defineRouteMeta({
-	openAPI: {
-		description: "Update guild settings",
-		parameters: [
-			{
-				description: "The guild ID to update settings for",
-				in: "path",
-				name: "guild",
-				required: true,
-			},
-		],
-		requestBody: {
-			content: {
-				"application/json": {
-					schema: {
-						items: {
-							properties: {
-								key: { type: "string" },
-								value: { type: "object" },
-							},
-							required: ["key", "value"],
-							type: "object",
-						},
-						type: "array",
-					},
-				},
-			},
-			description: "Settings data to update",
-			required: true,
-		},
-		responses: {
-			200: {
-				content: {
-					"application/text": {
-						schema: { type: "string" },
-					},
-				},
-				description: "Successful response with updated settings",
-			},
-			400: {
-				description: "Bad Request - Invalid input data",
-			},
-			401: {
-				description: "Unauthorized - Missing or invalid authentication",
-			},
-			403: {
-				description: "Forbidden - Insufficient permissions",
-			},
-			429: { description: "Rate limit exceeded" },
-		},
-		tags: ["General"],
-	},
-});
-
 export default defineWrappedResponseHandler(
 	async (event) => {
 		const log = useLogger(event);

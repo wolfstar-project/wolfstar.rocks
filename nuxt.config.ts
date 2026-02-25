@@ -218,27 +218,8 @@ export default defineNuxtConfig({
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
-		experimental: {
-			openAPI: true,
-		},
 		future: {
 			nativeSWR: true,
-		},
-		openAPI: {
-			// OpenAPI configuration
-			meta: {
-				description: "WolfStar API documentation",
-				title: "WolfStar API",
-				version: "1.0.0",
-			},
-			route: "/api/openapi.json",
-			ui: {
-				scalar: {
-					layout: "alternate",
-					route: "/api/docs",
-					theme: "mars",
-				},
-			},
 		},
 		prerender: {
 			crawlLinks: true,

@@ -1,5 +1,9 @@
 <template>
-	<UContainer class="w-full max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8" role="region" aria-label="Server list">
+	<UContainer
+		class="w-full max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8"
+		role="region"
+		aria-label="Server list"
+	>
 		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row">
 			<div class="flex items-start">
 				<div v-if="loading || filterLoading" class="text-sm text-base-content/60 sm:block">
@@ -9,7 +13,13 @@
 						<div class="h-4 w-24 rounded bg-base-content/20"></div>
 					</div>
 				</div>
-				<div v-else-if="guilds" class="text-sm text-base-content/60 sm:block" role="status" aria-live="polite" aria-atomic="true">
+				<div
+					v-else-if="guilds"
+					class="text-sm text-base-content/60 sm:block"
+					role="status"
+					aria-live="polite"
+					aria-atomic="true"
+				>
 					<span>{{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers</span>
 					<span v-if="searchQuery" class="sr-only">matching "{{ searchQuery }}"</span>
 				</div>
@@ -49,8 +59,16 @@
 			</div>
 
 			<!-- Loading Indicator for Infinite Scroll -->
-			<div v-if="!loading && loadingMore" class="flex justify-center py-4" role="status" aria-label="Loading more servers">
-				<span class="loading loading-lg loading-spinner text-primary" aria-hidden="true"></span>
+			<div
+				v-if="!loading && loadingMore"
+				class="flex justify-center py-4"
+				role="status"
+				aria-label="Loading more servers"
+			>
+				<span
+					class="loading loading-lg loading-spinner text-primary"
+					aria-hidden="true"
+				></span>
 			</div>
 
 			<!-- Error State with Enhanced UX -->
@@ -65,7 +83,9 @@
 				<div
 					class="mx-auto max-w-2xl rounded-xl border p-6"
 					:class="[
-						errorState.color === 'warning' ? 'border-warning/30 bg-warning/10 text-warning' : 'border-error/30 bg-error/10 text-error',
+						errorState.color === 'warning'
+							? 'border-warning/30 bg-warning/10 text-warning'
+							: 'border-error/30 bg-error/10 text-error',
 					]"
 				>
 					<div class="flex items-start gap-4">
@@ -114,7 +134,11 @@
 							{{ searchQuery ? "No matching servers" : "No servers found" }}
 						</h2>
 						<p class="mx-auto max-w-md text-base-content/60">
-							{{ searchQuery ? "Try adjusting your search terms or filters." : "Start by inviting WolfStar to your Discord servers." }}
+							{{
+								searchQuery
+									? "Try adjusting your search terms or filters."
+									: "Start by inviting WolfStar to your Discord servers."
+							}}
 						</p>
 					</div>
 
@@ -166,7 +190,13 @@ const {
 
 // Error handling computed properties
 const isTimeoutError = computed(() => error?.status === 408);
-const isNetworkError = computed(() => (error?.status === 0 || error?.message?.includes("network") || error?.message?.includes("fetch")) ?? false);
+const isNetworkError = computed(
+	() =>
+		(error?.status === 0 ||
+			error?.message?.includes("network") ||
+			error?.message?.includes("fetch")) ??
+		false,
+);
 
 const errorState = computed(() => ({
 	color: (() => {

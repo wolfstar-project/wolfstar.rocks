@@ -67,9 +67,7 @@
 				role="status"
 				aria-live="polite"
 			>
-				{{ filteredCommandsCount }} command{{
-					filteredCommandsCount !== 1 ? "s" : ""
-				}}
+				{{ filteredCommandsCount }} command{{ filteredCommandsCount !== 1 ? "s" : "" }}
 				found
 			</div>
 

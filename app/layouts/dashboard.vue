@@ -210,7 +210,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 					onSelect: () => {
 						open.value = false;
 					},
-					to: `/guilds/${guildId.value}/manage/moderation/filter/capitals`,
+					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
 				},
 			],
 		},

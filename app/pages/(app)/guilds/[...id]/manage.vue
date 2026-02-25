@@ -154,7 +154,9 @@ async function fetchLanguagesList() {
 
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
 
-const title = ref(`${joinedPath.value || "General"} · ${guildData.value.name}`);
+const title = ref(
+	`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value.name}`,
+);
 
 const renderComponent = computed(() => {
 	switch (joinedPath.value as GuildRoutes & FilterRoutes) {
@@ -170,12 +172,15 @@ const renderComponent = computed(() => {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Events.vue"));
 		}
 		case "moderation": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/Moderation.vue"),
-			);
+			return defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue"));
 		}
 		case "roles": {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue"));
+		}
+		case "moderation/capitals": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/filter/Capitals.vue"),
+			);
 		}
 		default: {
 			return defineAsyncComponent(() => import("~/components/guild/settings/General.vue"));

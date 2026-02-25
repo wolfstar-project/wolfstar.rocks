@@ -203,6 +203,16 @@ const items = computed<NavigationMenuItem[][]>(() => [
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/moderation`,
+			children: [
+				{
+					icon: "heroicons:shield-check",
+					label: "Filter Capitals",
+					onSelect: () => {
+						open.value = false;
+					},
+					to: `/guilds/${guildId.value}/manage/moderation/filter/capitals`,
+				},
+			],
 		},
 		{
 			icon: "heroicons:hashtag",

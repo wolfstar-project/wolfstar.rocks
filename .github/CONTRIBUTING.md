@@ -28,7 +28,7 @@ This project adheres to a [Code of Conduct](./CODE_OF_CONDUCT.md). By participat
 1. **Fork and clone the repository**
 
     ```bash
-    git clone https://github.com/YOUR_USERNAME/wolfstar.rocks.git
+    git clone https://github.com/wolfstar-project/wolfstar.rocks.git
     cd wolfstar.rocks
     ```
 

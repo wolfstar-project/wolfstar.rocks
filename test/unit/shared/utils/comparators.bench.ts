@@ -1,5 +1,5 @@
+import { differenceArray, differenceMap } from "#shared/utils/comparators";
 import { bench, describe } from "vitest";
-import { differenceArray, differenceMap } from "../../../../shared/utils/comparators";
 
 describe("differenceArray benchmarks", () => {
 	// Test data preparation

@@ -1,5 +1,5 @@
+import { guildNameToAcronym } from "#server/utils/guildNameToAcronym";
 import { bench, describe } from "vitest";
-import { guildNameToAcronym } from "../../../../server/utils/guildNameToAcronym";
 
 describe("guildNameToAcronym benchmarks", () => {
 	// Short names (1-3 words)

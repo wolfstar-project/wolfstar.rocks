@@ -1,4 +1,3 @@
-import { describe, expect, it, vi } from "vitest";
 import {
 	andMix,
 	asc,
@@ -9,7 +8,8 @@ import {
 	differenceMap,
 	max,
 	orMix,
-} from "../../../../shared/utils/comparators";
+} from "#shared/utils/comparators";
+import { describe, expect, it, vi } from "vitest";
 
 describe(asc, () => {
 	it("should return -1 when first number is smaller", () => {

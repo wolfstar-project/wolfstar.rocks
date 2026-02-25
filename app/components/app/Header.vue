@@ -8,7 +8,14 @@
 		}"
 	>
 		<template #left>
-			<HeaderLogo class="mr-4" />
+			<NuxtLink
+				class="mr-4 flex items-center transition-transform hover:scale-105"
+				:to="currentApp.explore"
+				:aria-label="`${currentApp.name} home page`"
+			>
+				<IconsWolfstar class="h-10 w-10" aria-hidden="true" />
+				<span class="text-ui-100 ml-2 text-2xl font-bold">{{ currentApp.name }}</span>
+			</NuxtLink>
 		</template>
 
 		<nav aria-label="Main navigation">
@@ -24,16 +31,95 @@
 		</nav>
 
 		<template #right>
-			<HeaderRight />
+			<AuthState>
+				<template #default="{ loggedIn }">
+					<div v-if="loggedIn && user">
+						<UDropdownMenu
+							:items
+							arrow
+							:content="{
+								align: 'start',
+								side: 'bottom',
+								sideOffset: 8,
+							}"
+							:ui="{
+								content: 'w-48',
+							}"
+						>
+							<div
+								class="flex cursor-pointer items-center gap-2"
+								role="button"
+								aria-label="User menu"
+								aria-haspopup="menu"
+								tabindex="0"
+							>
+								<UAvatar
+									v-motion
+									:initial="{ scale: 1 }"
+									:hover="{ scale: 1.1, rotate: 5 }"
+									:src="src"
+									icon="lucide:image"
+									size="2xs"
+								/>
+								<span class="hidden font-semibold sm:inline">{{ user.name }}</span>
+							</div>
+						</UDropdownMenu>
+					</div>
+					<div v-else>
+						<UButton
+							size="md"
+							color="primary"
+							variant="subtle"
+							to="/login"
+							block
+							class="lg:hidden"
+							icon="ic:round-discord"
+							aria-label="Login with Discord"
+						/>
+						<UButton
+							label="Login"
+							size="md"
+							color="primary"
+							variant="subtle"
+							to="/login"
+							block
+							class="inline-flex"
+							icon="ic:round-discord"
+							aria-label="Login with Discord"
+						/>
+					</div>
+				</template>
+			</AuthState>
 		</template>
 		<template #body>
-			<HeaderBody />
+			<UNavigationMenu orientation="vertical" :items="mobileLinks" class="-mx-2.5" />
 		</template>
 	</UHeader>
 </template>
 
 <script setup lang="ts">
-const { desktopLinks } = useHeader();
+import type { DropdownMenuItem } from "@nuxt/ui";
+const { desktopLinks, mobileLinks } = useHeader();
+const { user, logout } = useAuth();
+const { currentApp } = useHeader();
+
+const items = ref<DropdownMenuItem[]>([
+	{
+		icon: "lucide:user",
+		label: "Profile",
+		to: "/profile",
+	},
+	{
+		icon: "lucide:log-out",
+		label: "Log Out",
+		onSelect: logout,
+		ui: {
+			itemLeadingIcon: "bg-red-500",
+		},
+	},
+]);
+
+const src = computed(() => avatarURL(user.value!));
 </script>
 
 <style scoped>

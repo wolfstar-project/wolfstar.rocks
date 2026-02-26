@@ -184,7 +184,7 @@ const renderComponent = computed(() => {
 		}
 		case "moderation/invites": {
 			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Invites.vue"),
+				() => import("~/components/guild/settings/filter/invites.vue"),
 			);
 		}
 		default: {

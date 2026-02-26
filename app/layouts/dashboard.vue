@@ -229,7 +229,6 @@ const items = computed<NavigationMenuItem[][]>(() => [
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/roles`,
-			value: "roles",
 		},
 		{
 			icon: "heroicons:bell",
@@ -238,7 +237,6 @@ const items = computed<NavigationMenuItem[][]>(() => [
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/events`,
-			value: "events",
 		},
 		{
 			icon: "heroicons:command-line",
@@ -247,7 +245,6 @@ const items = computed<NavigationMenuItem[][]>(() => [
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/commands`,
-			value: "disabled-commands",
 		},
 	],
 ]);

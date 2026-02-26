@@ -93,9 +93,8 @@
 				<div class="grid grid-cols-2 gap-4">
 					<UFormField label="Action" name="selfmodInvitesHardAction" description="The action to perform as punishment">
 						<USelectMenu
-							v-model="(state.selfmodInvitesHardAction as any)"
+							v-model="selectedHardAction"
 							:items="hardActionItems"
-							value-attribute="value"
 							class="w-full"
 							aria-label="Select punishment action"
 						/>
@@ -200,6 +199,13 @@ function createDefaultState(): Schema {
 }
 
 const state = reactive<Schema>(createDefaultState());
+
+const selectedHardAction = computed({
+	get: () => hardActionItems.find((item) => item.value === state.selfmodInvitesHardAction) ?? hardActionItems[0]!,
+	set: (item) => {
+		state.selfmodInvitesHardAction = item.value;
+	},
+});
 
 watch(
 	loading,

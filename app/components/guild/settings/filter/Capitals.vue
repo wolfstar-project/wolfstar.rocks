@@ -125,9 +125,8 @@
 						description="The action to perform as punishment"
 					>
 						<USelectMenu
-							v-model="state.selfmodCapitalsHardAction as any"
+							v-model="selectedHardAction"
 							:items="hardActionItems"
-							value-attribute="value"
 							class="w-full"
 							aria-label="Select punishment action"
 						/>
@@ -289,6 +288,13 @@ function createDefaultState(): Schema {
 }
 
 const state = reactive<Schema>(createDefaultState());
+
+const selectedHardAction = computed({
+	get: () => hardActionItems.find((item) => item.value === state.selfmodCapitalsHardAction) ?? hardActionItems[0]!,
+	set: (item) => {
+		state.selfmodCapitalsHardAction = item.value;
+	},
+});
 
 watch(
 	loading,

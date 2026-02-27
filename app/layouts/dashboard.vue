@@ -205,28 +205,28 @@ const items = computed<NavigationMenuItem[][]>(() => [
 			to: `/guilds/${guildId.value}/manage/moderation`,
 			children: [
 				{
-					label: "Filter Capitals",
+					label: "Capitals",
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
 				},
 				{
-					label: "Filter Invites",
+					label: "Invites",
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/invites`,
 				},
 				{
-					label: "Filter Links",
+					label: "Links",
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/links`,
 				},
 				{
-					label: "Filter Messages",
+					label: "Messages",
 					onSelect: () => {
 						open.value = false;
 					},

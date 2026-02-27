@@ -202,6 +202,16 @@ const renderComponent = computed(() => {
 				() => import("~/components/guild/settings/filter/MessageDuplication.vue"),
 			);
 		}
+		case "moderation/lines": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/filter/NewLine.vue"),
+			);
+		}
+		case "moderation/reactions": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/filter/Reactions.vue"),
+			);
+		}
 
 		default: {
 			return defineAsyncComponent(() => import("~/components/guild/settings/General.vue"));

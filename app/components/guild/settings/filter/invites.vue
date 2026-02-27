@@ -132,7 +132,11 @@
 						name="hardActionDurationMs"
 						description="How long the punishment should last"
 					>
-						<SelectDuration v-model="state.hardActionDurationMs" :min="1000" />
+						<SelectDuration
+							v-model="state.hardActionDurationMs"
+							:min="1000"
+							:max="31_536_000_000"
+						/>
 					</UFormField>
 				</div>
 
@@ -201,7 +205,10 @@ const hardActionItems = [
 ];
 
 const schema = v.object({
-	hardActionDurationMs: v.union([v.literal(0), v.pipe(v.number(), v.minValue(1000))]),
+	hardActionDurationMs: v.union([
+		v.literal(0),
+		v.pipe(v.number(), v.minValue(1000), v.maxValue(31_536_000_000)),
+	]),
 
 	selfmodInvitesEnabled: v.boolean(),
 	selfmodInvitesHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),

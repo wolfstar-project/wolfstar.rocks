@@ -239,6 +239,20 @@ const items = computed<NavigationMenuItem[][]>(() => [
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/messages`,
 				},
+				{
+					label: "Line Spam",
+					onSelect: () => {
+						open.value = false;
+					},
+					to: `/guilds/${guildId.value}/manage/moderation/lines`,
+				},
+				{
+					label: "Reactions",
+					onSelect: () => {
+						open.value = false;
+					},
+					to: `/guilds/${guildId.value}/manage/moderation/reactions`,
+				},
 			],
 		},
 		{

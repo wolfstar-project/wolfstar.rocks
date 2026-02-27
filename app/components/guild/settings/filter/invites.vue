@@ -38,45 +38,68 @@
 				<div class="space-y-3">
 					<UFormField name="selfmodInvitesEnabled">
 						<div class="flex items-start gap-3">
-							<USwitch v-model="state.selfmodInvitesEnabled" class="mt-0.5" aria-label="Toggle invite link filter" />
+							<USwitch
+								v-model="state.selfmodInvitesEnabled"
+								class="mt-0.5"
+								aria-label="Toggle invite link filter"
+							/>
 							<div>
-								<p class="text-sm font-medium leading-none">
-									Filter {{ state.selfmodInvitesEnabled ? "Enabled" : "Disabled" }}
+								<p class="text-sm leading-none font-medium">
+									Filter
+									{{ state.selfmodInvitesEnabled ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">Whether or not this system should be enabled.</p>
+								<p class="mt-1 text-xs text-muted">
+									Whether or not this system should be enabled.
+								</p>
 							</div>
 						</div>
 					</UFormField>
 
 					<UFormField name="softActionAlerts">
 						<div class="flex items-start gap-3">
-							<USwitch v-model="state.softActionAlerts" class="mt-0.5" aria-label="Toggle alerts soft action" />
+							<USwitch
+								v-model="state.softActionAlerts"
+								class="mt-0.5"
+								aria-label="Toggle alerts soft action"
+							/>
 							<div>
-								<p class="text-sm font-medium leading-none">
+								<p class="text-sm leading-none font-medium">
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">Toggle message alerts in the channel the infraction took place.</p>
+								<p class="mt-1 text-xs text-muted">
+									Toggle message alerts in the channel the infraction took place.
+								</p>
 							</div>
 						</div>
 					</UFormField>
 
 					<UFormField name="softActionLogs">
 						<div class="flex items-start gap-3">
-							<USwitch v-model="state.softActionLogs" class="mt-0.5" aria-label="Toggle logs soft action" />
+							<USwitch
+								v-model="state.softActionLogs"
+								class="mt-0.5"
+								aria-label="Toggle logs soft action"
+							/>
 							<div>
-								<p class="text-sm font-medium leading-none">
+								<p class="text-sm leading-none font-medium">
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">Toggle message logs in the moderation logs channel.</p>
+								<p class="mt-1 text-xs text-muted">
+									Toggle message logs in the moderation logs channel.
+								</p>
 							</div>
 						</div>
 					</UFormField>
 
 					<UFormField name="softActionDeletes">
 						<div class="flex items-start gap-3">
-							<USwitch v-model="state.softActionDeletes" class="mt-0.5" aria-label="Toggle deletes soft action" />
+							<USwitch
+								v-model="state.softActionDeletes"
+								class="mt-0.5"
+								aria-label="Toggle deletes soft action"
+							/>
 							<div>
-								<p class="text-sm font-medium leading-none">
+								<p class="text-sm leading-none font-medium">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">Toggle message deletions.</p>
@@ -91,7 +114,11 @@
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection title="Punishments">
 				<div class="grid grid-cols-2 gap-4">
-					<UFormField label="Action" name="selfmodInvitesHardAction" description="The action to perform as punishment">
+					<UFormField
+						label="Action"
+						name="selfmodInvitesHardAction"
+						description="The action to perform as punishment"
+					>
 						<USelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
@@ -100,8 +127,12 @@
 						/>
 					</UFormField>
 
-					<UFormField label="Duration" name="hardActionDurationMs" description="How long the punishment should last">
-						<SelectDuration v-model="state.hardActionDurationMs" :min="0" />
+					<UFormField
+						label="Duration"
+						name="hardActionDurationMs"
+						description="How long the punishment should last"
+					>
+						<SelectDuration v-model="state.hardActionDurationMs" :min="1000" />
 					</UFormField>
 				</div>
 
@@ -109,7 +140,9 @@
 					<div>
 						<p class="mb-2 text-sm font-medium">
 							Maximum Threshold
-							<span class="ml-1 tabular-nums text-muted">({{ state.selfmodInvitesThresholdMaximum }})</span>
+							<span class="ml-1 text-muted tabular-nums"
+								>({{ state.selfmodInvitesThresholdMaximum }})</span
+							>
 						</p>
 						<USlider
 							v-model="state.selfmodInvitesThresholdMaximum"
@@ -126,7 +159,9 @@
 					<div>
 						<p class="mb-2 text-sm font-medium">
 							Threshold Duration (in seconds)
-							<span class="ml-1 tabular-nums text-muted">({{ state.selfmodInvitesThresholdDurationSeconds }}s)</span>
+							<span class="ml-1 text-muted tabular-nums"
+								>({{ state.selfmodInvitesThresholdDurationSeconds }}s)</span
+							>
 						</p>
 						<USlider
 							v-model="state.selfmodInvitesThresholdDurationSeconds"
@@ -166,7 +201,8 @@ const hardActionItems = [
 ];
 
 const schema = v.object({
-	hardActionDurationMs: v.pipe(v.number(), v.minValue(0)),
+	hardActionDurationMs: v.union([v.literal(0), v.pipe(v.number(), v.minValue(1000))]),
+
 	selfmodInvitesEnabled: v.boolean(),
 	selfmodInvitesHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),
 	selfmodInvitesThresholdDurationSeconds: v.pipe(v.number(), v.minValue(0), v.maxValue(120)),
@@ -201,7 +237,9 @@ function createDefaultState(): Schema {
 const state = reactive<Schema>(createDefaultState());
 
 const selectedHardAction = computed({
-	get: () => hardActionItems.find((item) => item.value === state.selfmodInvitesHardAction) ?? hardActionItems[0]!,
+	get: () =>
+		hardActionItems.find((item) => item.value === state.selfmodInvitesHardAction) ??
+		hardActionItems[0]!,
 	set: (item) => {
 		state.selfmodInvitesHardAction = item.value;
 	},
@@ -219,12 +257,17 @@ watch(
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const softAction = bitwiseSet(
-		bitwiseSet(bitwiseSet(0, 0b100, formState.softActionAlerts), 0b010, formState.softActionLogs),
+		bitwiseSet(
+			bitwiseSet(0, 0b100, formState.softActionAlerts),
+			0b010,
+			formState.softActionLogs,
+		),
 		0b001,
 		formState.softActionDeletes,
 	);
 
-	const durationMs = formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+	const durationMs =
+		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
 
 	return {
 		selfmodInvitesEnabled: formState.selfmodInvitesEnabled,

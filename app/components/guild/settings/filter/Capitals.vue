@@ -137,7 +137,7 @@
 						name="hardActionDurationMs"
 						description="How long the punishment should last"
 					>
-						<SelectDuration v-model="state.hardActionDurationMs" :min="0" />
+						<SelectDuration v-model="state.hardActionDurationMs" :min="1000" />
 					</UFormField>
 				</div>
 
@@ -251,7 +251,8 @@ const hardActionItems = [
 ];
 
 const schema = v.object({
-	hardActionDurationMs: v.pipe(v.number(), v.minValue(0)),
+	hardActionDurationMs: v.union([v.literal(0), v.pipe(v.number(), v.minValue(1000))]),
+
 	selfmodCapitalsEnabled: v.boolean(),
 	selfmodCapitalsHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),
 	selfmodCapitalsMaximum: v.pipe(v.number(), v.minValue(10), v.maxValue(100)),
@@ -290,7 +291,9 @@ function createDefaultState(): Schema {
 const state = reactive<Schema>(createDefaultState());
 
 const selectedHardAction = computed({
-	get: () => hardActionItems.find((item) => item.value === state.selfmodCapitalsHardAction) ?? hardActionItems[0]!,
+	get: () =>
+		hardActionItems.find((item) => item.value === state.selfmodCapitalsHardAction) ??
+		hardActionItems[0]!,
 	set: (item) => {
 		state.selfmodCapitalsHardAction = item.value;
 	},
@@ -317,7 +320,8 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
-	const durationMs = formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+	const durationMs =
+		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
 
 	return {
 		selfmodCapitalsEnabled: formState.selfmodCapitalsEnabled,

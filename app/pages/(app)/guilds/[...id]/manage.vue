@@ -177,6 +177,11 @@ const renderComponent = computed(() => {
 		case "roles": {
 			return defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue"));
 		}
+		case "moderation/word": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/filter/Word.vue"),
+			);
+		}
 		case "moderation/capitals": {
 			return defineAsyncComponent(
 				() => import("~/components/guild/settings/filter/Capitals.vue"),

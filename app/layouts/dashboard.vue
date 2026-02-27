@@ -205,6 +205,13 @@ const items = computed<NavigationMenuItem[][]>(() => [
 			to: `/guilds/${guildId.value}/manage/moderation`,
 			children: [
 				{
+					label: "Bad Words",
+					onSelect: () => {
+						open.value = false;
+					},
+					to: `/guilds/${guildId.value}/manage/moderation/word`,
+				},
+				{
 					label: "Capitals",
 					onSelect: () => {
 						open.value = false;

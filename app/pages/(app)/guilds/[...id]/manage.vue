@@ -194,7 +194,7 @@ const renderComponent = computed(() => {
 		}
 		case "moderation/messages": {
 			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Messages.vue"),
+				() => import("~/components/guild/settings/filter/MessageDuplication.vue"),
 			);
 		}
 

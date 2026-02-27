@@ -226,7 +226,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 					to: `/guilds/${guildId.value}/manage/moderation/links`,
 				},
 				{
-					label: "Messages",
+					label: "Message Duplicates",
 					onSelect: () => {
 						open.value = false;
 					},

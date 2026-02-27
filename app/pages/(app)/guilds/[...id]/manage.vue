@@ -184,9 +184,20 @@ const renderComponent = computed(() => {
 		}
 		case "moderation/invites": {
 			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/invites.vue"),
+				() => import("~/components/guild/settings/filter/Invites.vue"),
 			);
 		}
+		case "moderation/links": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/filter/Links.vue"),
+			);
+		}
+		case "moderation/messages": {
+			return defineAsyncComponent(
+				() => import("~/components/guild/settings/filter/Messages.vue"),
+			);
+		}
+
 		default: {
 			return defineAsyncComponent(() => import("~/components/guild/settings/General.vue"));
 		}

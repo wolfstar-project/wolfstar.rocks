@@ -218,6 +218,20 @@ const items = computed<NavigationMenuItem[][]>(() => [
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/invites`,
 				},
+				{
+					label: "Filter Links",
+					onSelect: () => {
+						open.value = false;
+					},
+					to: `/guilds/${guildId.value}/manage/moderation/links`,
+				},
+				{
+					label: "Filter Messages",
+					onSelect: () => {
+						open.value = false;
+					},
+					to: `/guilds/${guildId.value}/manage/moderation/messages`,
+				},
 			],
 		},
 		{

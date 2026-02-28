@@ -15,8 +15,7 @@ function findChrome() {
 	];
 
 	for (const p of paths) {
-		if (fs.existsSync(p)) 
-return p;
+		if (fs.existsSync(p)) return p;
 	}
 
 	return undefined;

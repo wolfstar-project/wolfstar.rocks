@@ -336,7 +336,7 @@ export default defineNuxtConfig({
 				name: "Inter",
 				preload: true,
 				subsets: ["latin"],
-				weights: [400, 500, 600, 700, 800, 900],
+				weights: [400, 500, 600, 700, 800],
 			},
 		],
 	},

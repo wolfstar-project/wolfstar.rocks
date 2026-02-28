@@ -55,8 +55,7 @@ async function setupCdpRequestInterception(browser) {
 
 	// Listen for new targets so we can attach CDP interception to each page
 	browser.on("targetcreated", async (target) => {
-		if (target.type() !== "page") 
-return;
+		if (target.type() !== "page") return;
 
 		try {
 			const cdp = await target.createCDPSession();

@@ -135,7 +135,7 @@
 		"no-await-in-loop": "off",
 		"antfu/consistent-chaining": "warn",
 		"antfu/curly": "error",
-		"antfu/if-newline": "warn",
+		"antfu/if-newline": "off",
 		"regexp/confusing-quantifier": "warn",
 		"regexp/control-character-escape": "error",
 		"regexp/match-any": "error",
@@ -214,7 +214,8 @@
 		".gemini/**/*",
 		".agent/**/*",
 		".agents/**/*",
-		".skilld/**/*"
+		".skilld/**/*",
+		".claude/**/*"
 	],
 	"overrides": [
 		{

@@ -36,12 +36,12 @@
 				"matchManagers": ["github-actions"],
 				"groupName": "github-actions",
 			},
-	{
-      "matchPackageNames": ["oxlint"],
-      "groupName": "oxlint",
-      "automergeType": "branch",
-      "stabilityDays": 1
-    }
+			{
+				"matchPackageNames": ["oxlint"],
+				"groupName": "oxlint",
+				"automergeType": "branch",
+				"stabilityDays": 1,
+			},
 		],
 	},
 	"github-actions": { "enabled": true },

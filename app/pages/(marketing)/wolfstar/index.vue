@@ -26,11 +26,13 @@
 		</NuxtLink>
 	</section>
 
-	<section id="explore" class="mt-38 w-full scroll-mt-24">
+	<section id="explore" ref="exploreRef" class="mt-38 min-h-200 w-full scroll-mt-24">
 		<div class="mb-16 text-center">
 			<h2 class="text-5xl font-bold">Explore</h2>
-			<FeatureCarousel class="mb-24" @open-feature="openFeature" />
-			<FeatureShowcase v-model:active-feature="selectedFeatureIndex" />
+			<template v-if="exploreLoaded">
+				<FeatureCarousel class="mb-24" @open-feature="openFeature" />
+				<FeatureShowcase v-model:active-feature="selectedFeatureIndex" />
+			</template>
 		</div>
 	</section>
 
@@ -81,8 +83,12 @@
 </template>
 
 <script setup lang="ts">
-import FeatureCarousel from "./@components/FeatureCarousel.client.vue";
-import FeatureShowcase from "./@components/FeatureShowcase.client.vue";
+const FeatureCarousel = defineAsyncComponent(
+	() => import("./@components/FeatureCarousel.client.vue"),
+);
+const FeatureShowcase = defineAsyncComponent(
+	() => import("./@components/FeatureShowcase.client.vue"),
+);
 
 definePageMeta({ alias: ["/"] });
 
@@ -98,8 +104,34 @@ const Invites = useInvites();
 
 const selectedFeatureIndex = ref(0);
 
+// Lazy-mount the Explore section components only when the section approaches
+// the viewport, keeping them out of the initial JS critical path.
+const exploreRef = ref<HTMLElement | null>(null);
+const exploreLoaded = ref(false);
+
+onMounted(() => {
+	// Instantly load if the user navigated directly to the #explore anchor.
+	if (window.location.hash === "#explore") {
+		exploreLoaded.value = true;
+	}
+});
+
+const { stop: stopExploreObserver } = useIntersectionObserver(
+	exploreRef,
+	(entries) => {
+		if (entries[0]?.isIntersecting) {
+			exploreLoaded.value = true;
+			stopExploreObserver();
+		}
+	},
+	// Start loading ~400px before the section enters the viewport so
+	// the components are ready before the user actually sees them.
+	{ rootMargin: "400px" },
+);
+
 function openFeature(index: number) {
 	selectedFeatureIndex.value = index;
+	exploreLoaded.value = true;
 	const element = document.getElementById("explore");
 	if (element) {
 		element.scrollIntoView({ behavior: "smooth" });

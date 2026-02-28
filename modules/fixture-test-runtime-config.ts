@@ -43,8 +43,7 @@ export default defineNuxtModule({
 		name: "fixture-test-runtimeconfig",
 	},
 	setup(_options, nuxt) {
-		if (!process.env.VITEST || !nuxt.options.test) 
-return;
+		if (!process.env.VITEST || !nuxt.options.test) return;
 
 		nuxt.hook("ready", () => {
 			const rc = nuxt.options.runtimeConfig as Record<string, unknown>;
@@ -72,8 +71,7 @@ return;
 			} catch {
 				nuxt.options.runtimeConfig = JSON.parse(
 					JSON.stringify(nuxt.options.runtimeConfig, (_, value) => {
-						if (typeof value === "function") 
-return undefined;
+						if (typeof value === "function") return undefined;
 						return value;
 					}),
 				);

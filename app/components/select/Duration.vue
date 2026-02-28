@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col gap-1 mb-3">
+	<div class="mb-3 flex flex-col gap-1">
 		<div class="flex flex-wrap items-start gap-2">
 			<UFormField :error="error || undefined">
 				<UInput
@@ -103,14 +103,12 @@ function onChangeDuration(event: Event) {
 	const val = Number.parseInt((event.target as HTMLInputElement).value, 10);
 	duration.value = val;
 	const ms = val * unitMap[unit.value];
-	if (validate(ms)) 
-emit("update:modelValue", ms);
+	if (validate(ms)) emit("update:modelValue", ms);
 }
 
 function onChangeUnit(newUnit: string) {
 	unit.value = newUnit;
 	const ms = unitMap[newUnit] * duration.value;
-	if (validate(ms)) 
-emit("update:modelValue", ms);
+	if (validate(ms)) emit("update:modelValue", ms);
 }
 </script>

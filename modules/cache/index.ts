@@ -8,8 +8,7 @@ export default defineNuxtModule({
 		name: "netlify-cache",
 	},
 	async setup(_, nuxt) {
-		if (nuxt.options.test) 
-return;
+		if (nuxt.options.test) return;
 
 		const config = useRuntimeConfig();
 		if (provider !== "netlify") {

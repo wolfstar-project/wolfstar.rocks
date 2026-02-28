@@ -240,10 +240,6 @@ export default defineNuxtConfig({
 				base: "./.cache/fetch",
 				driver: "fsLite",
 			},
-			"cache": {
-				base: "./.cache/cache",
-				driver: "fsLite",
-			},
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",

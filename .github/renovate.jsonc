@@ -4,10 +4,6 @@
 	"npm": {
 		"packageRules": [
 			{
-				"matchPackageNames": ["prettier", "prettier-*"],
-				"groupName": "prettier",
-			},
-			{
 				"matchPackageNames": [
 					"nuxt",
 					"vite",
@@ -40,10 +36,12 @@
 				"matchManagers": ["github-actions"],
 				"groupName": "github-actions",
 			},
-			{
-				"matchPackageNames": ["**eslint**"],
-				"groupName": "eslint",
-			},
+	{
+      "matchPackageNames": ["oxlint"],
+      "groupName": "oxlint",
+      "automergeType": "branch",
+      "stabilityDays": 1
+    }
 		],
 	},
 	"github-actions": { "enabled": true },

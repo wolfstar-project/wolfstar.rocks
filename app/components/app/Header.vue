@@ -63,7 +63,7 @@
 					</div>
 				</UDropdownMenu>
 			</div>
-			<div v-else>
+			<div v-else-if="ready">
 				<UButton
 					size="md"
 					color="primary"
@@ -84,6 +84,27 @@
 					class="hidden md:inline-flex"
 					icon="ic:round-discord"
 					aria-label="Login with Discord"
+				/>
+			</div>
+			<div v-else aria-hidden="true">
+				<UButton
+					size="md"
+					color="primary"
+					variant="subtle"
+					block
+					class="invisible md:hidden"
+					icon="ic:round-discord"
+					tabindex="-1"
+				/>
+				<UButton
+					label="Login"
+					size="md"
+					color="primary"
+					variant="subtle"
+					block
+					class="invisible hidden md:inline-flex"
+					icon="ic:round-discord"
+					tabindex="-1"
 				/>
 			</div>
 		</template>

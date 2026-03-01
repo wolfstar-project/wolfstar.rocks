@@ -31,65 +31,61 @@
 		</nav>
 
 		<template #right>
-			<AuthState>
-				<template #default="{ loggedIn }">
-					<div v-if="loggedIn && user">
-						<UDropdownMenu
-							:items
-							arrow
-							:content="{
-								align: 'start',
-								side: 'bottom',
-								sideOffset: 8,
-							}"
-							:ui="{
-								content: 'w-48',
-							}"
-						>
-							<div
-								class="flex cursor-pointer items-center gap-2"
-								role="button"
-								aria-label="User menu"
-								aria-haspopup="menu"
-								tabindex="0"
-							>
-								<UAvatar
-									v-motion
-									:initial="{ scale: 1 }"
-									:hover="{ scale: 1.1, rotate: 5 }"
-									:src="src"
-									icon="lucide:image"
-									size="2xs"
-								/>
-								<span class="hidden font-semibold sm:inline">{{ user.name }}</span>
-							</div>
-						</UDropdownMenu>
-					</div>
-					<div v-else>
-						<UButton
-							size="md"
-							color="primary"
-							variant="subtle"
-							to="/login"
-							block
-							class="md:hidden"
-							icon="ic:round-discord"
-							aria-label="Login with Discord"
+			<div v-if="ready && loggedIn && user">
+				<UDropdownMenu
+					:items
+					arrow
+					:content="{
+						align: 'start',
+						side: 'bottom',
+						sideOffset: 8,
+					}"
+					:ui="{
+						content: 'w-48',
+					}"
+				>
+					<div
+						class="flex cursor-pointer items-center gap-2"
+						role="button"
+						aria-label="User menu"
+						aria-haspopup="menu"
+						tabindex="0"
+					>
+						<UAvatar
+							v-motion
+							:initial="{ scale: 1 }"
+							:hover="{ scale: 1.1, rotate: 5 }"
+							:src="src"
+							icon="lucide:image"
+							size="2xs"
 						/>
-						<UButton
-							label="Login"
-							size="md"
-							color="primary"
-							variant="subtle"
-							to="/login"
-							block
-							class="hidden md:inline-flex"
-							icon="ic:round-discord"
-							aria-label="Login with Discord"
-						/>
+						<span class="hidden font-semibold sm:inline">{{ user.name }}</span>
 					</div>
-				</template>
-			</AuthState>
+				</UDropdownMenu>
+			</div>
+			<div v-else>
+				<UButton
+					size="md"
+					color="primary"
+					variant="subtle"
+					to="/login"
+					block
+					class="md:hidden"
+					icon="ic:round-discord"
+					aria-label="Login with Discord"
+				/>
+				<UButton
+					label="Login"
+					size="md"
+					color="primary"
+					variant="subtle"
+					to="/login"
+					block
+					class="hidden md:inline-flex"
+					icon="ic:round-discord"
+					aria-label="Login with Discord"
+				/>
+			</div>
 		</template>
 		<template #body>
 			<UNavigationMenu orientation="vertical" :items="mobileLinks" class="-mx-2.5" />
@@ -100,7 +96,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 const { desktopLinks, mobileLinks } = useHeader();
-const { user, logout } = useAuth();
+const { user, logout, loggedIn, ready } = useAuth();
 const { currentApp } = useHeader();
 
 const items = ref<DropdownMenuItem[]>([

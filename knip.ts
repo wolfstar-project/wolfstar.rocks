@@ -54,6 +54,8 @@ const config: KnipConfig = {
 				/** Oxlint plugins don't get picked up yet */
 				"eslint-plugin-regexp",
 				"eslint-plugin-antfu",
+				"@antfu/eslint-config",
+				"eslint",
 
 				/** These are used in the app, but not imported directly, so knip doesn't pick them up. */
 				"@nuxt/icon",
@@ -70,7 +72,12 @@ const config: KnipConfig = {
 				/** These are used in schema prisma, but not imported directly, so knip doesn't pick them up. */
 				"prisma-json-types-generator",
 			],
-			ignoreUnresolved: ["#components", "#build/auth.config", "vite/client"],
+			ignoreUnresolved: [
+				"#components",
+				"#build/auth.config",
+				"#og-image/app/utils",
+				"vite/client",
+			],
 		},
 	},
 };

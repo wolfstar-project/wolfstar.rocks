@@ -178,7 +178,7 @@ jobs:
 
   a11y:
     name: ♿ Accessibility audit
-    runs-on: ${{ matrix.os }} # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         mode: [dark, light]
@@ -208,3 +208,31 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
+  knip:
+    name: 🧹 Unused code check
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [24]
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: ${{ matrix.node }}
+
+      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+        with:
+          cache: true
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🧹 Check for unused code
+        run: pnpm knip
+
+      - name: 🧹 Check for unused production code
+        run: pnpm knip --production

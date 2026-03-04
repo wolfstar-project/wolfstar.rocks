@@ -41,7 +41,7 @@ export default defineNuxtModule({
 				// Add the layout with its children
 				result.push({
 					...layout,
-					children: children.map((child) => ({ ...child })),
+					children: children.map((child) => Object.assign({}, child)),
 					path: layoutPath,
 				});
 			});

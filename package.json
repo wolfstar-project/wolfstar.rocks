@@ -112,6 +112,7 @@
 		"@commitlint/config-conventional": "^20.4.1",
 		"@discordjs/collection": "^2.1.1",
 		"@discordjs/core": "^2.4.0",
+		"@e18e/eslint-plugin": "^0.2.0",
 		"@netlify/nuxt": "^0.2.21",
 		"@nuxt/hints": "^1.0.0-alpha.6",
 		"@nuxt/test-utils": "^4.0.0",

@@ -110,7 +110,7 @@ describe(`GET ${MEMBER_LIST_URL}`, () => {
 		});
 
 		it("each member has id, guildId, user and roles fields", async () => {
-			const data = await $fetch<typeof FIXTURE_FLAT_MEMBER[]>(MEMBER_LIST_URL, {
+			const data = await $fetch<(typeof FIXTURE_FLAT_MEMBER)[]>(MEMBER_LIST_URL, {
 				headers: authHeaders(),
 			});
 			for (const member of data) {
@@ -164,5 +164,3 @@ describe(`GET ${MEMBER_LIST_URL}/:member`, () => {
 		});
 	});
 });
-
-

@@ -103,7 +103,7 @@ export function processGroup(group: string) {
 						`${processLetter(match[1])}\\-`
 				: // Otherwise a-b
 					`${processLetter(match[1])}-${processLetter(match[2])}`,
-		outMatch: (match) => [...match].map(processLetter).join(""),
+		outMatch: (match) => Array.from(match, processLetter).join(""),
 	});
 
 	return `[${output.join("")}]`;

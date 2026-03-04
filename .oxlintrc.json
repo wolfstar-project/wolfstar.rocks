@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"plugins": ["unicorn", "typescript", "oxc", "vue", "vitest"],
-	"jsPlugins": ["eslint-plugin-antfu", "eslint-plugin-regexp"],
+	"jsPlugins": ["@e18e/eslint-plugin", "eslint-plugin-antfu", "eslint-plugin-regexp"],
 	"categories": {
 		"correctness": "error",
 		"suspicious": "warn",
@@ -25,6 +25,12 @@
 				"properties": true
 			}
 		],
+		"oxc/no-map-spread": ["error", { "ignoreArgs": true }],
+		"e18e/prefer-array-from-map": "error",
+		"e18e/prefer-timer-args": "error",
+		"e18e/prefer-date-now": "error",
+		"e18e/prefer-regex-test": "error",
+		"e18e/prefer-array-some": "error",
 		"no-cond-assign": ["error", "always"],
 		"no-console": "warn",
 		"no-debugger": "warn",
@@ -197,7 +203,6 @@
 		"regexp/strict": "error",
 		"regexp/use-ignore-case": "error"
 	},
-
 	"ignorePatterns": [
 		".output/**",
 		".data/**",
@@ -209,7 +214,6 @@
 		"coverage/**",
 		"playwright-report/**",
 		"test-results/**",
-		"__screenshots__/**",
 		"server/database/generated/**/*",
 		".gemini/**/*",
 		".agent/**/*",

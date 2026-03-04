@@ -70,7 +70,8 @@ async function getManageable(
 	}
 
 	const member = await useApi()
-		.users.getGuildMember(guild.id)
+		.users
+.getGuildMember(guild.id)
 		.catch(() => undefined);
 	if (!member) {
 		return false;
@@ -84,7 +85,8 @@ export async function transformGuild(
 	data: RESTAPIPartialCurrentUserGuild,
 ): Promise<OauthFlattenedGuild> {
 	const guild = await useApi()
-		.guilds.get(data.id, {
+		.guilds
+.get(data.id, {
 			with_counts: true,
 		})
 		.catch(() => undefined);
@@ -92,7 +94,8 @@ export async function transformGuild(
 	const channels = isNullOrUndefined(data)
 		? []
 		: await useApi()
-				.guilds.getChannels(data.id)
+				.guilds
+.getChannels(data.id)
 				.catch(() => []);
 
 	const mockGuild = cast<FlattenedGuild>({

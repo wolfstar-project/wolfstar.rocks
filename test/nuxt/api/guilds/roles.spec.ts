@@ -97,4 +97,3 @@ describe(`GET /api/guilds/:guild/roles/:role`, () => {
 		});
 	});
 });
-

@@ -13,7 +13,7 @@ export function guildNameToAcronym(name: string) {
 		.replace(/\s+/g, " ")
 		.replace(/(?:'s|’s)\b/giu, " ");
 
-	const words = [...normalized.matchAll(/(?:\p{L}|\p{N})[\p{L}\p{N}'’-]*/gu)].map((m) => m[0]);
+	const words = Array.from(normalized.matchAll(/(?:\p{L}|\p{N})[\p{L}\p{N}'-]*/gu), (m) => m[0]);
 
 	if (words.length === 1) {
 		const only = words[0];

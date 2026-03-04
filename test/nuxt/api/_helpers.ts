@@ -1,6 +1,6 @@
+import type { H3Event } from "h3";
 // oxlint-disable jest/valid-expect
 import { createError, getHeader } from "h3";
-import type { H3Event } from "h3";
 import { expect } from "vitest";
 
 /**

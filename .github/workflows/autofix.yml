@@ -1,5 +1,5 @@
 # needed to securely identify the workflow
-name: Autofix Continuous Integration
+name: autofix.ci
 
 on:
   pull_request:

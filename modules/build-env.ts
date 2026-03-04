@@ -2,12 +2,15 @@ import type { BuildInfo } from "../shared/types";
 import { createResolver, defineNuxtModule } from "nuxt/kit";
 import { isCI } from "std-env";
 import { getEnv, getFileLastUpdated, version } from "../config/env";
-
+/**
+ * This module provides build-time environment information and serves different public assets based on the environment.
+ * based on: https://github.com/npmx-dev/npmx.dev/blob/main/modules/build-env.ts
+ */
 const { resolve } = createResolver(import.meta.url);
 
 export default defineNuxtModule({
 	meta: {
-		name: "npmx:build-env",
+		name: "wolfstar:build-env",
 	},
 	async setup(_options, nuxt) {
 		const [{ env, commit, shortCommit, branch }, privacyPolicyDate, termsDate] =
@@ -26,7 +29,7 @@ export default defineNuxtModule({
 			privacyPolicyDate,
 			shortCommit,
 			termsDate,
-			time: Number(Date.now()),
+			time: Date.now(),
 			version,
 		} satisfies BuildInfo;
 

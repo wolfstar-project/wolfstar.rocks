@@ -21,18 +21,14 @@ permissions:
 jobs:
   lint:
     name: 🔠 Lint project
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-24.04-arm]
-        node: [24]
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
@@ -45,18 +41,14 @@ jobs:
 
   unit:
     name: 🧪 Unit tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-24.04-arm]
-        node: [24]
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
@@ -77,18 +69,14 @@ jobs:
 
   test:
     name: 🧪 Component tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-24.04-arm]
-        node: [24]
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
@@ -117,11 +105,7 @@ jobs:
 
   browser:
     name: 🖥️ Browser tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-24.04-arm]
-        node: [24]
+    runs-on: ubuntu-24.04-arm
     container:
       image: mcr.microsoft.com/playwright:v1.58.0-noble
 
@@ -130,7 +114,7 @@ jobs:
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
@@ -148,18 +132,14 @@ jobs:
 
   benchmark:
     name: ⚡ Benchmarks
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-24.04-arm]
-        node: [24]
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
@@ -177,19 +157,17 @@ jobs:
 
   a11y:
     name: ♿ Accessibility audit
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         mode: [dark, light]
-        os: [ubuntu-latest]
-        node: [24]
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
@@ -209,18 +187,14 @@ jobs:
           LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
   knip:
     name: 🧹 Unused code check
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: [24]
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: ${{ matrix.node }}
+          node-version: lts/*
 
       - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm

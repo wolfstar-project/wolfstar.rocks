@@ -223,6 +223,12 @@
 	],
 	"overrides": [
 		{
+			"files": ["scripts/**/*.ts"],
+			"rules": {
+				"no-console": "off"
+			}
+		},
+		{
 			"files": ["**/*.?([cm])ts", "**/*.?([cm])tsx", "**/*.vue"],
 			"plugins": ["typescript"],
 			"rules": {

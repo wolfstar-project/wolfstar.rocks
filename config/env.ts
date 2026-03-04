@@ -1,18 +1,25 @@
 import * as process from "node:process";
 import Git from "simple-git";
+import { version as packageVersion } from "../package.json";
+import { getNextVersion } from "../scripts/next-version";
 
-export { version } from "../package.json";
+export { packageVersion as version };
 
 /**
  * Environment variable `PULL_REQUEST` provided by Netlify.
  * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
  *
- * Environment variable `VERCEL_GIT_PULL_REQUEST_ID` provided by Vercel.
- * @see {@link https://vercel.com/docs/environment-variables/system-environment-variables#VERCEL_GIT_PULL_REQUEST_ID}
- *
  * Whether triggered by a GitHub PR
  */
 export const isPR = process.env.PULL_REQUEST === "true";
+
+/**
+ * Environment variable `REVIEW_ID` provided by Netlify.
+ * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#git-metadata}
+ *
+ * Pull request number (if in a PR environment)
+ */
+export const prNumber = process.env.REVIEW_ID || null;
 
 /**
  * Environment variable `BRANCH` provided by Netlify.
@@ -21,6 +28,13 @@ export const isPR = process.env.PULL_REQUEST === "true";
  * Git branch
  */
 export const gitBranch = process.env.BRANCH;
+
+export const isCanary =
+	(process.env.NODE_ENV === "production" ||
+		process.env.NODE_ENV === "preview" ||
+		process.env.NODE_ENV === "canary") &&
+	gitBranch === "main" &&
+	!isPR;
 
 /**
  * Environment variable `CONTEXT` provided by Netlify.
@@ -39,7 +53,8 @@ export const isProduction = process.env.CONTEXT === "production";
  *
  * Preview URL for the current deployment, only available in preview environments.
  */
-export const getPreviewUrl = () => (isPreview ? process.env.URL : undefined);
+export const getPreviewUrl = () =>
+	isPreview ? (process.env.URL ? process.env.URL : undefined) : undefined;
 
 /**
  * Environment variable `URL` provided by Netlify.
@@ -48,7 +63,8 @@ export const getPreviewUrl = () => (isPreview ? process.env.URL : undefined);
  *
  * Production URL for the current deployment, only available in production environments.
  */
-export const getProductionUrl = () => (isProduction ? process.env.URL : undefined);
+export const getProductionUrl = () =>
+	isProduction ? (process.env.URL ? process.env.URL : undefined) : undefined;
 
 const git = Git();
 export async function getGitInfo() {
@@ -91,23 +107,39 @@ export async function getFileLastUpdated(path: string) {
 	}
 }
 
+/**
+ * Resolves the **next** version by analysing conventional commits since the
+ * last reachable `v*` tag.  Delegates to {@link getNextVersion} which is also
+ * used by the `release-tag` and `release-pr` GitHub Actions workflows so the
+ * version shown in the UI matches the tag that will be created *after* deploy.
+ *
+ * Falls back to `package.json` when git is unavailable (e.g. shallow clone).
+ */
+export async function getVersion() {
+	try {
+		const { next } = await getNextVersion();
+		return next;
+	} catch {
+		return packageVersion;
+	}
+}
+
 export async function getEnv(isDevelopment: boolean) {
-	const { commit, shortCommit, branch } = await getGitInfo();
-	const env = isDevelopment
-		? "dev"
-		: isPreview
-			? "preview"
-			: branch === "main"
-				? "canary"
-				: "release";
+	const [{ commit, shortCommit, branch }, version] = await Promise.all([
+		getGitInfo(),
+		getVersion(),
+	]);
+	const env = isDevelopment ? "dev" : isCanary ? "canary" : isPreview ? "preview" : "release";
 	const previewUrl = getPreviewUrl();
 	const productionUrl = getProductionUrl();
 	return {
-		branch,
+		version,
 		commit,
+		shortCommit,
+		branch,
 		env,
 		previewUrl,
 		productionUrl,
-		shortCommit,
+		prNumber,
 	} as const;
 }

@@ -1,11 +1,8 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
 import { createError, useLogger } from "evlog";
-import * as v from "valibot";
-
-const settingsUpdateSchema = v.object({
-	data: v.optional(v.array(v.tuple([v.string(), v.unknown()]))),
-});
+import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -14,7 +11,7 @@ export default defineWrappedResponseHandler(
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		const body = await readValidatedBody(event, (body) => v.parse(settingsUpdateSchema, body));
+		const body = await readValidatedBody(event, (body) => parse(SettingsUpdateSchema, body));
 
 		if (isNullOrUndefined(body) || isNullOrUndefined(body.data)) {
 			throw createError({

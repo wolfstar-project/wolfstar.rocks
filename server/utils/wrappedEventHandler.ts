@@ -2,10 +2,11 @@ import type { UserSessionRequired } from "#auth-utils";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
+import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { cast, isObject } from "@sapphire/utilities";
 import { useLogger, createError } from "evlog";
 import { isDevelopment } from "std-env";
-import * as v from "valibot";
+import { ValiError, parse } from "valibot";
 
 /**
  * Hash a string value for logging (privacy protection)
@@ -16,47 +17,10 @@ function hashValue(value: string): string {
 
 const rateLimitStorage = useStorage("wolfstar:ratelimiter");
 
-/**
- * Valibot schema for rate limiting options validation
- */
-const rateLimitSchema = v.object({
-	enabled: v.optional(
-		v.pipe(
-			v.boolean(),
-			v.transform((val) => val ?? true),
-		),
-		true,
-	),
-	ipHeader: v.optional(v.string()),
-	limit: v.optional(
-		v.pipe(
-			v.number(),
-			v.integer(),
-			v.minValue(1),
-			v.transform((val) => val ?? 5),
-		),
-		5,
-	),
-	scope: v.optional(v.picklist(["global", "route"]), "global"),
-	type: v.optional(v.picklist(["fixed", "sliding"]), "fixed"),
-	whitelist: v.optional(v.array(v.string()), []),
-	window: v.optional(
-		v.pipe(
-			v.number(),
-			v.integer(),
-			v.minValue(1),
-			v.transform((val) => val ?? 10_000),
-		),
-		10_000,
-	),
-});
-type RateLimitOptions = v.InferOutput<typeof rateLimitSchema>;
-type PartialRateLimitOptions = Partial<RateLimitOptions>;
-
 interface DefinedWrappedResponseHandlerOptions {
 	onError?: (logger: ReturnType<typeof useLogger>, error: any | Error | H3Error) => void;
 	auth?: boolean;
-	rateLimit?: PartialRateLimitOptions;
+	rateLimit?: PartialRateLimit;
 }
 
 interface DefinedWrappedCachedResponseHandlerOptions
@@ -97,19 +61,19 @@ function getIdentifier(
 }
 
 function normalizeRateLimitOptions(
-	options: PartialRateLimitOptions | undefined,
+	options: PartialRateLimit | undefined,
 	log: ReturnType<typeof useLogger>,
-): RateLimitOptions {
+): RateLimit {
 	try {
 		// Validate and normalize — valibot applies schema defaults for missing fields
-		return v.parse(rateLimitSchema, options ?? {});
+		return parse(RateLimitSchema, options ?? {});
 	} catch (error) {
-		if (error instanceof v.ValiError) {
+		if (error instanceof ValiError) {
 			isDevelopment && log.warn("Rate limit options validation failed, using defaults");
 		}
 
 		// Fallback to defaults on validation error
-		return v.parse(rateLimitSchema, {});
+		return parse(RateLimitSchema, {});
 	}
 }
 

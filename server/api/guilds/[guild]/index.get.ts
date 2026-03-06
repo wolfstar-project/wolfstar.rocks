@@ -1,10 +1,7 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import { GuildQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
-import * as v from "valibot";
-
-const querySchema = v.object({
-	shouldSerialize: v.optional(v.boolean()),
-});
+import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -15,7 +12,7 @@ export default defineWrappedResponseHandler(
 		log.set({ guild: { id: guildId } });
 
 		const { shouldSerialize } = await getValidatedQuery(event, (body) =>
-			v.parse(querySchema, body),
+			parse(GuildQuerySchema, body),
 		);
 
 		const guild = await getGuild(guildId);

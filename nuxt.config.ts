@@ -379,11 +379,6 @@ export default defineNuxtConfig({
 	// PWA configuration
 	pwa,
 
-	robots: {
-		blockAiBots: true,
-		blockNonSeoBots: true,
-	},
-
 	security: {
 		headers: {
 			contentSecurityPolicy: {

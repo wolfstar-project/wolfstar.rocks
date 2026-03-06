@@ -230,8 +230,8 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { LinksFilterSchema, type LinksFilter } from "#shared/schemas";
 import { bitwiseHas, bitwiseSet } from "#shared/utils/bits";
-import * as v from "valibot";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
@@ -249,23 +249,8 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
-const schema = v.object({
-	hardActionDurationMs: v.union([
-		v.literal(0),
-		v.pipe(v.number(), v.minValue(1000), v.maxValue(31_536_000_000)),
-	]),
-
-	selfmodLinksAllowed: v.array(v.string()),
-	selfmodLinksEnabled: v.boolean(),
-	selfmodLinksHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),
-	selfmodLinksThresholdDurationSeconds: v.pipe(v.number(), v.minValue(0), v.maxValue(120)),
-	selfmodLinksThresholdMaximum: v.pipe(v.number(), v.minValue(0), v.maxValue(60)),
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
-});
-
-type Schema = v.InferOutput<typeof schema>;
+const schema = LinksFilterSchema;
+type Schema = LinksFilter;
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;

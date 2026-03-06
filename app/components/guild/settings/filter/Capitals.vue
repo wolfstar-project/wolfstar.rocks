@@ -237,8 +237,8 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { CapitalsFilterSchema, type CapitalsFilter } from "#shared/schemas";
 import { bitwiseHas, bitwiseSet } from "#shared/utils/bits";
-import * as v from "valibot";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
@@ -254,24 +254,8 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
-const schema = v.object({
-	hardActionDurationMs: v.union([
-		v.literal(0),
-		v.pipe(v.number(), v.minValue(1000), v.maxValue(31_536_000_000)),
-	]),
-
-	selfmodCapitalsEnabled: v.boolean(),
-	selfmodCapitalsHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),
-	selfmodCapitalsMaximum: v.pipe(v.number(), v.minValue(10), v.maxValue(100)),
-	selfmodCapitalsMinimum: v.pipe(v.number(), v.minValue(5), v.maxValue(2000)),
-	selfmodCapitalsThresholdDurationSeconds: v.pipe(v.number(), v.minValue(0), v.maxValue(120)),
-	selfmodCapitalsThresholdMaximum: v.pipe(v.number(), v.minValue(0), v.maxValue(60)),
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
-});
-
-type Schema = v.InferOutput<typeof schema>;
+const schema = CapitalsFilterSchema;
+type Schema = CapitalsFilter;
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;

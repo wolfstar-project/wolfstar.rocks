@@ -218,8 +218,8 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { NewlinesFilterSchema, type NewlinesFilter } from "#shared/schemas";
 import { bitwiseHas, bitwiseSet } from "#shared/utils/bits";
-import * as v from "valibot";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
@@ -235,23 +235,8 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
-const schema = v.object({
-	hardActionDurationMs: v.union([
-		v.literal(0),
-		v.pipe(v.number(), v.minValue(1000), v.maxValue(31_536_000_000)),
-	]),
-
-	selfmodNewlinesEnabled: v.boolean(),
-	selfmodNewlinesHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),
-	selfmodNewlinesMaximum: v.pipe(v.number(), v.minValue(10), v.maxValue(2000)),
-	selfmodNewlinesThresholdDurationSeconds: v.pipe(v.number(), v.minValue(0), v.maxValue(120)),
-	selfmodNewlinesThresholdMaximum: v.pipe(v.number(), v.minValue(0), v.maxValue(60)),
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
-});
-
-type Schema = v.InferOutput<typeof schema>;
+const schema = NewlinesFilterSchema;
+type Schema = NewlinesFilter;
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;

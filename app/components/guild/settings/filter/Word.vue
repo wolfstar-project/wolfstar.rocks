@@ -230,8 +230,8 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { WordFilterSchema, type WordFilter } from "#shared/schemas";
 import { bitwiseHas, bitwiseSet } from "#shared/utils/bits";
-import * as v from "valibot";
 
 function sanitizeWord(raw: string): string {
 	return raw.replace(/[^0-9a-z]/gi, "").toLowerCase();
@@ -253,19 +253,8 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
-const schema = v.object({
-	hardActionDurationMs: v.pipe(v.number(), v.minValue(0)),
-	selfmodFilterEnabled: v.boolean(),
-	selfmodFilterHardAction: v.pipe(v.number(), v.minValue(0), v.maxValue(5)),
-	selfmodFilterRaw: v.array(v.string()),
-	selfmodFilterThresholdDurationSeconds: v.pipe(v.number(), v.minValue(0), v.maxValue(120)),
-	selfmodFilterThresholdMaximum: v.pipe(v.number(), v.minValue(0), v.maxValue(60)),
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
-});
-
-type Schema = v.InferOutput<typeof schema>;
+const schema = WordFilterSchema;
+type Schema = WordFilter;
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;

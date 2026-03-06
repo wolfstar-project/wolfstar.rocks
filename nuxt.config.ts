@@ -165,6 +165,9 @@ export default defineNuxtConfig({
 		// Broad ISR on /api/** is intentionally omitted: authenticated routes
 		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
 		// Globally, as that would serve one user's data to another.
+		"/": { appLayout: "default", prerender: true, robots: true },
+		"/__og-image__/**": getISRConfig(60),
+		"/api/auth/**": { isr: false, cache: false },
 		"/api/commands": {
 			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
 			proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
@@ -173,7 +176,6 @@ export default defineNuxtConfig({
 			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
 			proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
 		},
-
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -189,16 +191,13 @@ export default defineNuxtConfig({
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
 		"/oauth/login": { robots: true },
+		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		"/profile": { appLayout: "default", robots: true },
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
-		"/": { appLayout: "default", prerender: true, robots: true },
-		"/__og-image__/**": { prerender: true },
-		"/sitemap.xml": { prerender: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
-		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
-		"/privacy": { appLayout: "default", prerender: true, robots: true },
+		"/wolfstar": { appLayout: "default", robots: true },
 	},
 
 	sourcemap: {
@@ -511,3 +510,27 @@ export default defineNuxtConfig({
 		disableStylesheets: "entry",
 	},
 });
+
+interface ISRConfigOptions {
+	fallback?: "html" | "json";
+}
+function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {}) {
+	if (options.fallback) {
+		return {
+			isr: {
+				expiration: expirationSeconds,
+				fallback:
+					options.fallback === "html"
+						? "spa.prerender-fallback.html"
+						: "payload-fallback.json",
+				initialHeaders:
+					options.fallback === "json" ? { "content-type": "application/json" } : {},
+			} as { expiration: number },
+		};
+	}
+	return {
+		isr: {
+			expiration: expirationSeconds,
+		},
+	};
+}

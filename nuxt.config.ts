@@ -212,6 +212,7 @@ export default defineNuxtConfig({
 		clientNodeCompat: true,
 		renderJsonPayloads: true,
 		typescriptPlugin: true,
+		typedPages: true,
 	},
 
 	compatibilityDate: "2025-09-20",

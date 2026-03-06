@@ -17,11 +17,12 @@
 			"value-external",
 			"value-internal",
 			["value-parent", "value-sibling", "value-index"],
-			"side-effect",
-			"ts-equals-import",
+			"side_effect",
+			"import",
 			"unknown"
 		],
-		"newlinesBetween": false
+		"newlinesBetween": false,
+		"internalPattern": ["@/**", "~/**", "~~/**", "#server/**", "#shared/**"]
 	},
 	"overrides": [
 		{

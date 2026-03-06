@@ -149,10 +149,10 @@
 	},
 	"nano-staged": {
 		"*.{js,ts,mjs,cjs,vue}": [
-			"pnpm oxlint --fix"
+			"pnpm exec oxlint --fix"
 		],
 		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": [
-			"pnpm oxfmt"
+			"pnpm exec oxfmt"
 		]
 	},
 	"config": {

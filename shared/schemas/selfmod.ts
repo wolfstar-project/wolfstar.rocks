@@ -1,4 +1,16 @@
-import * as v from "valibot";
+import {
+	pipe,
+	number,
+	minValue,
+	maxValue,
+	union,
+	literal,
+	object,
+	boolean,
+	array,
+	string,
+	type InferOutput,
+} from "valibot";
 
 // ---------------------------------------------------------------------------
 // Shared building blocks
@@ -7,25 +19,25 @@ import * as v from "valibot";
 /**
  * Hard-action punishment type: 0 (None) … 5 (Ban).
  */
-const HardActionSchema = v.pipe(v.number(), v.minValue(0), v.maxValue(5));
+const HardActionSchema = pipe(number(), minValue(0), maxValue(5));
 
 /**
  * Threshold window in seconds (0 – 120 s).
  */
-const ThresholdDurationSecondsSchema = v.pipe(v.number(), v.minValue(0), v.maxValue(120));
+const ThresholdDurationSecondsSchema = pipe(number(), minValue(0), maxValue(120));
 
 /**
  * Maximum infraction count before the hard-action triggers (0 – 60).
  */
-const ThresholdMaximumSchema = v.pipe(v.number(), v.minValue(0), v.maxValue(60));
+const ThresholdMaximumSchema = pipe(number(), minValue(0), maxValue(60));
 
 /**
  * Hard-action punishment duration in milliseconds.
  * 0 = no duration (instant / permanent), otherwise 1 000 ms … 1 year.
  */
-export const HardActionDurationSchema = v.union([
-	v.literal(0),
-	v.pipe(v.number(), v.minValue(1000), v.maxValue(31_536_000_000)),
+export const HardActionDurationSchema = union([
+	literal(0),
+	pipe(number(), minValue(1000), maxValue(31_536_000_000)),
 ]);
 
 // ---------------------------------------------------------------------------
@@ -35,114 +47,114 @@ export const HardActionDurationSchema = v.union([
 /**
  * Schema for the Capitals filter settings form.
  */
-export const CapitalsFilterSchema = v.object({
+export const CapitalsFilterSchema = object({
 	hardActionDurationMs: HardActionDurationSchema,
-	selfmodCapitalsEnabled: v.boolean(),
+	selfmodCapitalsEnabled: boolean(),
 	selfmodCapitalsHardAction: HardActionSchema,
-	selfmodCapitalsMaximum: v.pipe(v.number(), v.minValue(10), v.maxValue(100)),
-	selfmodCapitalsMinimum: v.pipe(v.number(), v.minValue(5), v.maxValue(2000)),
+	selfmodCapitalsMaximum: pipe(number(), minValue(10), maxValue(100)),
+	selfmodCapitalsMinimum: pipe(number(), minValue(5), maxValue(2000)),
 	selfmodCapitalsThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodCapitalsThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 /**
  * Schema for the Invites filter settings form.
  */
-export const InvitesFilterSchema = v.object({
+export const InvitesFilterSchema = object({
 	hardActionDurationMs: HardActionDurationSchema,
-	selfmodInvitesEnabled: v.boolean(),
+	selfmodInvitesEnabled: boolean(),
 	selfmodInvitesHardAction: HardActionSchema,
 	selfmodInvitesThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodInvitesThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 /**
  * Schema for the Links filter settings form.
  */
-export const LinksFilterSchema = v.object({
+export const LinksFilterSchema = object({
 	hardActionDurationMs: HardActionDurationSchema,
-	selfmodLinksAllowed: v.array(v.string()),
-	selfmodLinksEnabled: v.boolean(),
+	selfmodLinksAllowed: array(string()),
+	selfmodLinksEnabled: boolean(),
 	selfmodLinksHardAction: HardActionSchema,
 	selfmodLinksThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodLinksThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 /**
  * Schema for the Message Duplication filter settings form.
  */
-export const MessagesFilterSchema = v.object({
+export const MessagesFilterSchema = object({
 	hardActionDurationMs: HardActionDurationSchema,
-	selfmodMessagesEnabled: v.boolean(),
+	selfmodMessagesEnabled: boolean(),
 	selfmodMessagesHardAction: HardActionSchema,
 	selfmodMessagesThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodMessagesThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 /**
  * Schema for the New Lines filter settings form.
  */
-export const NewlinesFilterSchema = v.object({
+export const NewlinesFilterSchema = object({
 	hardActionDurationMs: HardActionDurationSchema,
-	selfmodNewlinesEnabled: v.boolean(),
+	selfmodNewlinesEnabled: boolean(),
 	selfmodNewlinesHardAction: HardActionSchema,
-	selfmodNewlinesMaximum: v.pipe(v.number(), v.minValue(10), v.maxValue(2000)),
+	selfmodNewlinesMaximum: pipe(number(), minValue(10), maxValue(2000)),
 	selfmodNewlinesThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodNewlinesThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 /**
  * Schema for the Reactions filter settings form.
  */
-export const ReactionsFilterSchema = v.object({
+export const ReactionsFilterSchema = object({
 	hardActionDurationMs: HardActionDurationSchema,
-	selfmodReactionsEnabled: v.boolean(),
+	selfmodReactionsEnabled: boolean(),
 	selfmodReactionsHardAction: HardActionSchema,
 	selfmodReactionsThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodReactionsThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 /**
  * Schema for the Word filter settings form.
  */
-export const WordFilterSchema = v.object({
-	hardActionDurationMs: v.pipe(v.number(), v.minValue(0)),
-	selfmodFilterEnabled: v.boolean(),
+export const WordFilterSchema = object({
+	hardActionDurationMs: pipe(number(), minValue(0)),
+	selfmodFilterEnabled: boolean(),
 	selfmodFilterHardAction: HardActionSchema,
-	selfmodFilterRaw: v.array(v.string()),
+	selfmodFilterRaw: array(string()),
 	selfmodFilterThresholdDurationSeconds: ThresholdDurationSecondsSchema,
 	selfmodFilterThresholdMaximum: ThresholdMaximumSchema,
-	softActionAlerts: v.boolean(),
-	softActionDeletes: v.boolean(),
-	softActionLogs: v.boolean(),
+	softActionAlerts: boolean(),
+	softActionDeletes: boolean(),
+	softActionLogs: boolean(),
 });
 
 // ---------------------------------------------------------------------------
 // Inferred types
 // ---------------------------------------------------------------------------
 
-export type CapitalsFilter = v.InferOutput<typeof CapitalsFilterSchema>;
-export type InvitesFilter = v.InferOutput<typeof InvitesFilterSchema>;
-export type LinksFilter = v.InferOutput<typeof LinksFilterSchema>;
-export type MessagesFilter = v.InferOutput<typeof MessagesFilterSchema>;
-export type NewlinesFilter = v.InferOutput<typeof NewlinesFilterSchema>;
-export type ReactionsFilter = v.InferOutput<typeof ReactionsFilterSchema>;
-export type WordFilter = v.InferOutput<typeof WordFilterSchema>;
+export type CapitalsFilter = InferOutput<typeof CapitalsFilterSchema>;
+export type InvitesFilter = InferOutput<typeof InvitesFilterSchema>;
+export type LinksFilter = InferOutput<typeof LinksFilterSchema>;
+export type MessagesFilter = InferOutput<typeof MessagesFilterSchema>;
+export type NewlinesFilter = InferOutput<typeof NewlinesFilterSchema>;
+export type ReactionsFilter = InferOutput<typeof ReactionsFilterSchema>;
+export type WordFilter = InferOutput<typeof WordFilterSchema>;

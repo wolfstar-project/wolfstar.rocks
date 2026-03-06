@@ -150,10 +150,10 @@
 	},
 	"nano-staged": {
 		"*.{js,ts,mjs,cjs,vue}": [
-			"pnpm exec oxlint --fix"
+			"pnpm oxlint --fix"
 		],
 		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": [
-			"pnpm exec oxfmt"
+			"pnpm oxfmt"
 		]
 	},
 	"config": {
@@ -162,7 +162,7 @@
 		}
 	},
 	"engines": {
-		"node": ">=24",
+		"node": "24",
 		"pnpm": ">=10"
 	},
 	"volta": {

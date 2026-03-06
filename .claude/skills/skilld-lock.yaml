@@ -325,3 +325,10 @@ skills:
     source: "https://github.com/vue-macros/vue-macros/tree/v3.1.2/docs"
     syncedAt: 2026-02-23
     generator: skilld
+  nuxt-og-image-skilld:
+    packageName: nuxt-og-image
+    version: 5.1.13
+    repo: nuxt-modules/og-image
+    source: "https://github.com/nuxt-modules/og-image/tree/v5.1.13/docs"
+    syncedAt: 2026-03-06
+    generator: skilld

@@ -64,6 +64,7 @@
 				"name": "self"
 			}
 		],
+		"no-shadow": "off",
 		"no-self-assign": [
 			"error",
 			{

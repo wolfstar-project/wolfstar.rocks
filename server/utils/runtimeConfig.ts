@@ -43,9 +43,6 @@ export function generateRuntimeConfig() {
 				secure: true,
 			},
 		},
-		storage: {
-			fsBase: process.env.NUXT_STORAGE_FS_BASE ?? "node_modules/.cache/app",
-		},
 	};
 }
 

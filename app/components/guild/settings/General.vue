@@ -73,7 +73,10 @@
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import * as v from "valibot";
+import {
+	GeneralSettingsSchema as schema,
+	type GeneralSettingsSchemaType as Schema,
+} from "#shared/schemas";
 
 const { languages } = defineProps<{
 	languages: string[];
@@ -119,25 +122,6 @@ const items = computed(() =>
 	}),
 );
 
-const schema = v.object({
-	language: v.optional(
-		v.object({
-			label: v.string(),
-			value: v.string(),
-		}),
-	),
-	prefix: v.optional(
-		v.pipe(
-			v.string(),
-			v.trim(),
-			v.minLength(1, "Prefix must be at least 1 character"),
-			v.maxLength(10, "Prefix cannot be longer than 10 characters"),
-		),
-	),
-});
-
-type Schema = v.InferOutput<typeof schema>;
-
 const state = reactive<Schema>({
 	language: (() => {
 		const currentLangKey = guildSettings.value!.language;
@@ -172,7 +156,7 @@ async function onError(event: FormErrorEvent) {
 	toast.add({
 		color: "error",
 		description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
-		icon: "heroicons:circle",
+		icon: "heroicons:x-circle",
 		title: "Error",
 	});
 }

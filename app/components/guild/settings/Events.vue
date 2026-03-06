@@ -71,11 +71,11 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import * as v from "valibot";
+import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
 import {
 	ConfigurableMessageEvents,
 	ConfigurableModerationEvents,
-} from "~~/shared/utils/settingsDataEntries";
+} from "#shared/utils/settingsDataEntries";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
@@ -83,24 +83,19 @@ const toast = useToast();
 
 const allEvents = [...ConfigurableModerationEvents, ...ConfigurableMessageEvents];
 
-const schemaObject: Record<string, v.GenericSchema<boolean | undefined>> = {};
-for (const event of allEvents) {
-	schemaObject[event.key] = v.optional(v.boolean(), false);
-}
+const schema = EventsSettingsSchema;
 
-const schema = v.object(schemaObject);
-
-const createDefaultState = (): Record<string, boolean> => {
-	const defaults: Record<string, boolean> = {};
+const createDefaultState = (): EventsSettingsSchemaType => {
+	const defaults: EventsSettingsSchemaType = {} as EventsSettingsSchemaType;
 	for (const event of allEvents) {
 		defaults[event.key] = guildSettings.value?.[event.key] ?? false;
 	}
 	return defaults;
 };
 
-const state = reactive<Record<string, boolean>>(createDefaultState());
+const state = reactive<EventsSettingsSchemaType>(createDefaultState());
 
-function mapToGuildData(stateData: Record<string, boolean>): Partial<GuildData> {
+function mapToGuildData(stateData: EventsSettingsSchemaType): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
 	for (const key in stateData) {
 		result[key as GuildDataKey] = stateData[key] as never;
@@ -115,8 +110,8 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
-		icon: "heroicons:circle",
+		description: `Failed to update event settings. ${errorMessage ?? "Unknown error"}`,
+		icon: "heroicons:x-circle",
 		title: "Error",
 	});
 }

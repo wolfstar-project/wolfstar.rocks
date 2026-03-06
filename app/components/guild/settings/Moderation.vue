@@ -31,30 +31,27 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import * as v from "valibot";
+import {
+	ModerationSettingsSchema as schema,
+	type ModerationSettingsSchemaType as Schema,
+} from "#shared/schemas";
 import { ConfigurableModerationKeys } from "~~/shared/utils/settingsDataEntries";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-const schemaObject: Record<string, v.GenericSchema<boolean | undefined>> = {};
-for (const setting of ConfigurableModerationKeys) {
-	schemaObject[setting.key] = v.optional(v.boolean(), false);
-}
-
-const schema = v.object(schemaObject);
-
-const createDefaultState = (): Record<string, boolean> => {
-	const defaults: Record<string, boolean> = {};
+const createDefaultState = (): Schema => {
+	const defaults: Partial<Schema> = {};
 	for (const setting of ConfigurableModerationKeys) {
-		defaults[setting.key] = guildSettings.value?.[setting.key as GuildDataKey] ?? false;
+		defaults[setting.key] =
+			(guildSettings.value?.[setting.key as GuildDataKey] as boolean | undefined) ?? false;
 	}
-	return defaults;
+	return defaults as Schema;
 };
 
-const state = reactive<Record<string, boolean>>(createDefaultState());
+const state = reactive<Schema>(createDefaultState());
 
-function mapToGuildData(stateData: Record<string, boolean>): Partial<GuildData> {
+function mapToGuildData(stateData: Schema): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
 	for (const setting of ConfigurableModerationKeys) {
 		result[setting.key as GuildDataKey] = stateData[setting.key] as never;

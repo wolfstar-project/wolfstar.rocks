@@ -1,10 +1,10 @@
-import * as v from "valibot";
+import { boolean, object, optional, record, string } from "valibot";
 
-const commandSchema = v.object({
-	category: v.optional(v.string(), "General"),
-	description: v.optional(v.string(), ""),
-	isEnabled: v.optional(v.boolean(), true),
-	name: v.string(),
+const commandSchema = object({
+	category: optional(string(), "General"),
+	description: optional(string(), ""),
+	isEnabled: optional(boolean(), true),
+	name: string(),
 });
 
-export const disabledCommandsSchema = v.optional(v.record(v.string(), commandSchema), {});
+export const disabledCommandsSchema = optional(record(string(), commandSchema), {});

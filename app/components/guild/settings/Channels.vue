@@ -63,36 +63,20 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
 import {
 	ConfigurableIgnoreChannels,
 	ConfigurableLoggingChannels,
 } from "#shared/utils/settingsDataEntries";
-import * as v from "valibot";
 
 const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();
 const toast = useToast();
 
-const createChannelSchema = () => {
-	const schemaShape: Record<string, v.GenericSchema> = {};
+const schema = ChannelsSettingsSchema;
 
-	for (const config of ConfigurableLoggingChannels) {
-		schemaShape[config.key] = v.nullable(v.string());
-	}
-
-	for (const config of ConfigurableIgnoreChannels) {
-		schemaShape[config.key] = v.optional(v.array(v.string()), []);
-	}
-
-	return v.object(schemaShape);
-};
-
-const schema = createChannelSchema();
-
-type Schema = v.InferOutput<typeof schema>;
-
-const createDefaultState = (): Record<string, string | null | string[]> => {
-	const defaults: Record<string, string | null | string[]> = {};
+const createDefaultState = (): ChannelsSettingsSchemaType => {
+	const defaults: ChannelsSettingsSchemaType = {} as ChannelsSettingsSchemaType;
 	for (const config of ConfigurableLoggingChannels) {
 		defaults[config.key] = null;
 	}
@@ -102,9 +86,9 @@ const createDefaultState = (): Record<string, string | null | string[]> => {
 	return defaults;
 };
 
-const state = reactive<Record<string, string | null | string[]>>(createDefaultState());
+const state = reactive<ChannelsSettingsSchemaType>(createDefaultState());
 
-function mapToGuildData(formState: Record<string, string | null | string[]>): Partial<GuildData> {
+function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
 	for (const config of ConfigurableLoggingChannels) {

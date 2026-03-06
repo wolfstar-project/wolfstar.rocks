@@ -46,7 +46,7 @@
 					name="rolesRemoveInitial"
 				>
 					<div class="flex items-center gap-2">
-						<USwitch v-model="state.rolesRemoveInitial" />
+						<USwitch v-model="state.rolesRemoveInitial as boolean" />
 					</div>
 				</UFormField>
 			</div>
@@ -77,7 +77,7 @@
 						<!-- One (Single) -->
 						<SelectRole
 							v-else
-							v-model="state[roleConfig.key]"
+							v-model="state[roleConfig.key] as string | null"
 							:label="roleConfig.name"
 							:guild="guildData"
 							:tooltip-title="roleConfig.tooltip"
@@ -112,7 +112,7 @@
 						<!-- One (Single) -->
 						<SelectRole
 							v-else
-							v-model="state[roleConfig.key]"
+							v-model="state[roleConfig.key] as string | null"
 							:label="roleConfig.name"
 							:guild="guildData"
 							:tooltip-title="roleConfig.tooltip"
@@ -127,8 +127,12 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import {
+	isRoleArrayKey,
+	RolesSettingsSchema as schema,
+	type RolesSettingsSchemaType as Schema,
+} from "#shared/schemas";
 import { isNullOrUndefined } from "@sapphire/utilities";
-import * as v from "valibot";
 import {
 	ConfigurableRemoveInitialRole,
 	ConfigurableRoles,
@@ -138,41 +142,12 @@ const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-const arrayKeys = new Set([
-	"rolesAdmin",
-	"rolesModerator",
-	"rolesPublic",
-	"rolesInitial",
-	"rolesMuted",
-]);
 function isArrayKey(key: string): boolean {
-	return arrayKeys.has(key);
+	return isRoleArrayKey(key);
 }
 
 const restrictedRoles = ConfigurableRoles.filter((r) => r.key.startsWith("rolesRestricted"));
 const standardRoles = ConfigurableRoles.filter((r) => !r.key.startsWith("rolesRestricted"));
-
-// Create dynamic schema for form validation
-const createRoleSchema = () => {
-	const schemaShape: Record<string, v.GenericSchema> = {
-		rolesRemoveInitial: v.boolean(),
-	};
-
-	for (const roleConfig of ConfigurableRoles) {
-		if (isArrayKey(roleConfig.key)) {
-			schemaShape[roleConfig.key] = v.optional(v.array(v.string()), []);
-		} else {
-			schemaShape[roleConfig.key] = v.nullable(v.string());
-		}
-	}
-
-	return v.object(schemaShape);
-};
-
-const schema = createRoleSchema();
-// Valibot's InferOutput on Record<string, GenericSchema> resolves to { [x: string]: unknown }.
-// Use explicit type matching the original dynamic Yup schema behavior.
-type Schema = { rolesRemoveInitial: boolean } & Record<string, any>;
 
 // Initialize form state with defaults
 const createDefaultState = (): Schema => {
@@ -238,7 +213,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
 	// Always include the boolean toggle
-	changes.rolesRemoveInitial = formState.rolesRemoveInitial;
+	changes.rolesRemoveInitial = formState.rolesRemoveInitial as boolean;
 
 	for (const roleConfig of ConfigurableRoles) {
 		const value = formState[roleConfig.key];
@@ -246,7 +221,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		// Include empty arrays for multi-role fields (user explicitly cleared all)
 		// Only exclude undefined (form doesn't control this key)
 		if (value !== undefined) {
-			changes[roleConfig.key as GuildDataKey] = value;
+			changes[roleConfig.key as GuildDataKey] = value as never;
 		}
 	}
 

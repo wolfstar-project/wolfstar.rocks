@@ -57,7 +57,7 @@
 		"start:playwright:webserver": "NODE_ENV=test pnpm preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"release": "bump && node scripts/release.ts",
-		"upgrade:interactive": "taze"
+		"update:interactive": "taze"
 	},
 	"dependencies": {
 		"@iconify-json/emojione": "^1.2.3",

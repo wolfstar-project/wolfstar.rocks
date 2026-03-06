@@ -1,5 +1,5 @@
-import { guildNameToAcronym } from "#server/utils/guildNameToAcronym";
 import { describe, it, expect } from "vitest";
+import { guildNameToAcronym } from "../../../../server/utils/guildNameToAcronym";
 
 describe("guildNameToAcronym", () => {
 	const cases: [string, string][] = [

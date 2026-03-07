@@ -5,7 +5,7 @@ export default defineNuxtModule({
 		configKey: undefined,
 		name: "seo-module-ts-patch",
 	},
-	async setup(options, nuxt) {
+	async setup(_options, nuxt) {
 		nuxt.hook("prepare:types", ({ nodeReferences }) => {
 			nodeReferences.push(
 				...[

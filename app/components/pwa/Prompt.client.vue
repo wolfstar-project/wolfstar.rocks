@@ -7,7 +7,7 @@
 		leave-from-class="opacity-100 translate-y-0"
 		leave-to-class="opacity-0 translate-y-2"
 	>
-		<div v-if="$pwa?.showInstallPrompt && !$pwa?.needRefresh">
+		<div v-if="$pwa?.needRefresh">
 			<div
 				class="flex items-center gap-3 rounded-full bg-base-200 px-4 py-3 shadow-lg ring-1 ring-base-100"
 			>

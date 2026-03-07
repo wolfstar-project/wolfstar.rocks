@@ -20,6 +20,7 @@ import { useEffect } from 'react';
 
 const DiscordPackProvider = dynamic(() => import('@contexts/DiscordPackContext'), { ssr: false });
 const AuthenticatedProvider = dynamic(() => import('@contexts/AuthenticationContext'), { ssr: false });
+const PwaUpdateNotification = dynamic(() => import('@presentational/PwaUpdateNotification'), { ssr: false });
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -127,6 +128,7 @@ const App: NextPage<WolfStarAppProps> = ({ Component, pageProps, emotionCache = 
 							<DiscordPackProvider>
 								<CssBaseline />
 								<Component {...pageProps} />
+								<PwaUpdateNotification />
 								<NextNprogress color="#0A5699" startPosition={0.3} stopDelayMs={200} height={3} />
 							</DiscordPackProvider>
 						</AuthenticatedProvider>

@@ -63,7 +63,7 @@
 		"@iconify-json/emojione": "^1.2.3",
 		"@iconify-json/heroicons": "^1.2.3",
 		"@iconify-json/ic": "^1.2.4",
-		"@iconify-json/lucide": "^1.2.95",
+		"@iconify-json/lucide": "^1.2.96",
 		"@iconify-json/ph": "^1.2.2",
 		"@nuxt/a11y": "^1.0.0-alpha.1",
 		"@nuxt/fonts": "^0.13.0",
@@ -132,11 +132,11 @@
 		"daisyui": "^5.5.19",
 		"defu": "^6.1.4",
 		"discord-api-types": "^0.38.41",
-		"eslint": "^9.39.3",
+		"eslint": "^9.39.4",
 		"eslint-plugin-antfu": "^3.2.2",
 		"eslint-plugin-regexp": "^3.0.0",
 		"husky": "^9.1.7",
-		"knip": "^5.85.0",
+		"knip": "^5.86.0",
 		"nano-staged": "^0.9.0",
 		"oxfmt": "^0.36.0",
 		"oxlint": "^1.51.0",
@@ -146,7 +146,7 @@
 		"taze": "^19.10.0",
 		"typescript": "~5.9.3",
 		"vitest-environment-nuxt": "^1.0.1",
-		"vue-tsc": "^3.2.4"
+		"vue-tsc": "^3.2.5"
 	},
 	"nano-staged": {
 		"*.{js,ts,mjs,cjs,vue}": [

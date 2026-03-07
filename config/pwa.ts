@@ -141,7 +141,7 @@ export const pwa: ModuleOptions = {
 	pwaAssets: {
 		config: false,
 	},
-	registerType: "autoUpdate",
+	registerType: "prompt",
 	scope: "/",
 	srcDir: "../service-worker",
 	strategies: "injectManifest",

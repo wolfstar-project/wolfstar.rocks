@@ -4,7 +4,7 @@ export default defineNuxtModule({
 	meta: {
 		name: "component-in-pages",
 	},
-	async setup(options, nuxt) {
+	async setup(_, nuxt) {
 		nuxt.hook("pages:extend", (pages) => {
 			// Step 1: Filter out routes with @components in the file path
 			const filtered = pages.filter((route) => !route.file?.includes("/@components"));

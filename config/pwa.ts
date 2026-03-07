@@ -25,37 +25,37 @@ export const pwa: ModuleOptions = {
 			{
 				purpose: "any",
 				sizes: "144x144",
-				src: "/icons/android-chrome-144x144.png",
+				src: "/android-chrome-144x144.png",
 				type: "image/png",
 			},
 			{
 				purpose: "any",
 				sizes: "192x192",
-				src: "/icons/android-chrome-192x192.png",
+				src: "/android-chrome-192x192.png",
 				type: "image/png",
 			},
 			{
 				purpose: "any",
 				sizes: "256x256",
-				src: "/icons/android-chrome-256x256.png",
+				src: "/android-chrome-256x256.png",
 				type: "image/png",
 			},
 			{
 				purpose: "any",
 				sizes: "384x384",
-				src: "/icons/android-chrome-384x384.png",
+				src: "/android-chrome-384x384.png",
 				type: "image/png",
 			},
 			{
 				purpose: "any",
 				sizes: "512x512",
-				src: "/icons/android-chrome-512x512.png",
+				src: "/android-chrome-512x512.png",
 				type: "image/png",
 			},
 			{
 				purpose: "maskable",
 				sizes: "512x512",
-				src: "/icons/maskable_icon.png",
+				src: "/maskable_icon.png",
 				type: "image/png",
 			},
 		],
@@ -63,22 +63,22 @@ export const pwa: ModuleOptions = {
 		name: "WolfStar",
 		orientation: "portrait-primary",
 		scope: "/",
-		screenshots: [
+		/*	screenshots: [
 			{
 				form_factor: "wide",
 				label: "WolfStar Dashboard",
 				sizes: "1200x630",
-				src: "/icons/opengraph.png",
+				src: "/opengraph.png",
 				type: "image/png",
 			},
 			{
 				form_factor: "narrow",
 				label: "WolfStar Mobile",
 				sizes: "1170x2532",
-				src: "/icons/apple-splash-portrait-1170x2532.png",
+				src: "/apple-splash-portrait-1170x2532.png",
 				type: "image/png",
 			},
-		],
+		],*/
 		short_name: "WolfStar",
 		shortcuts: [
 			{
@@ -86,7 +86,7 @@ export const pwa: ModuleOptions = {
 				icons: [
 					{
 						sizes: "96x96",
-						src: "/icons/android-chrome-96x96.png",
+						src: "/android-chrome-96x96.png",
 						type: "image/png",
 					},
 				],
@@ -99,7 +99,7 @@ export const pwa: ModuleOptions = {
 				icons: [
 					{
 						sizes: "96x96",
-						src: "/icons/android-chrome-96x96.png",
+						src: "/android-chrome-96x96.png",
 						type: "image/png",
 					},
 				],
@@ -112,7 +112,7 @@ export const pwa: ModuleOptions = {
 				icons: [
 					{
 						sizes: "96x96",
-						src: "/icons/android-chrome-96x96.png",
+						src: "/android-chrome-96x96.png",
 						type: "image/png",
 					},
 				],
@@ -125,7 +125,7 @@ export const pwa: ModuleOptions = {
 				icons: [
 					{
 						sizes: "96x96",
-						src: "/icons/android-chrome-96x96.png",
+						src: "/android-chrome-96x96.png",
 						type: "image/png",
 					},
 				],

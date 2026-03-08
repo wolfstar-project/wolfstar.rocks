@@ -48,25 +48,8 @@
 					</div>
 				</div>
 
-				<div class="mt-4 flex items-end gap-4">
-					<span class="text-sm text-base-content/80">
-						Version: {{ buildInfo.version }}
-					</span>
-					<template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
-						<NuxtLink
-							external
-							:href="`https://github.com/wolfstar-project/wolfstar.rocks/commit/${buildInfo.commit}`"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="text-sm text-base-content/80"
-							:aria-label="`View commit ${buildInfo.shortCommit} on GitHub - opens in new tab`"
-						>
-							Commit: {{ buildInfo.shortCommit }}
-						</NuxtLink>
-					</template>
-					<span class="text-sm text-base-content/80">
-						Build Date: {{ useDateFormat(buildInfo.time, "YYYY-MM-DD") }}
-					</span>
+				<div>
+					<BuildEnvironment :footer="true" :buildInfo />
 				</div>
 			</aside>
 		</template>

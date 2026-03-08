@@ -22,6 +22,10 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 		<NuxtLink
 			v-if="buildInfo.env === 'release'"
 			:to="`https://github.com/wolfstar-project/wolfstar.rocks/releases/tag/v${buildInfo.version}`"
+			target="_blank"
+			rel="noopener noreferrer"
+			:class="footer ? 'text-sm text-base-content/80' : undefined"
+			:aria-label="`View release v${buildInfo.version} on GitHub - opens in new tab`"
 		>
 			v{{ buildInfo.version }}
 		</NuxtLink>
@@ -31,6 +35,10 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 			<span>&middot;</span>
 			<NuxtLink
 				:to="`https://github.com/wolfstar-project/wolfstar.rocks/commit/${buildInfo.commit}`"
+				target="_blank"
+				rel="noopener noreferrer"
+				:class="footer ? 'text-sm text-base-content/80' : undefined"
+				:aria-label="`View commit ${buildInfo.shortCommit} on GitHub - opens in new tab`"
 			>
 				{{ buildInfo.shortCommit }}
 			</NuxtLink>

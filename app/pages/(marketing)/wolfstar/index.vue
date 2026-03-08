@@ -11,6 +11,10 @@
 		</p>
 	</section>
 
+	<section>
+		<BuildEnvironment :footer="false" class="mt-16" />
+	</section>
+
 	<section
 		class="relative join z-10 mt-16 animate-fade-in-up justify-center animate-fade-in-delay-2"
 	>

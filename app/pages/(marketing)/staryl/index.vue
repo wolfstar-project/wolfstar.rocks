@@ -7,6 +7,9 @@
 			<span class="font-bold underline underline-offset-2">100% for free</span>!
 		</p>
 	</section>
+	<section>
+		<BuildEnvironment :footer="false" class="mt-16" />
+	</section>
 	<section class="join mt-16 flex items-center justify-center">
 		<NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
 			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App

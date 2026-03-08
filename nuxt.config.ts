@@ -77,8 +77,6 @@ export default defineNuxtConfig({
 				// DNS prefetch for external domains
 				{ href: "https://cdn.discordapp.com", rel: "dns-prefetch" },
 				{ href: "https://cdn.wolfstar.rocks", rel: "dns-prefetch" },
-				// Preconnect to critical external origins
-				{ crossorigin: "anonymous", href: "https://cdn.discordapp.com", rel: "preconnect" },
 			],
 			meta: [
 				// Page transitions

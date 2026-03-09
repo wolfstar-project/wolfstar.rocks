@@ -63,22 +63,20 @@ export const pwa: ModuleOptions = {
 		name: "WolfStar",
 		orientation: "portrait-primary",
 		scope: "/",
-		/*	screenshots: [
+		screenshots: [
 			{
-				form_factor: "wide",
-				label: "WolfStar Dashboard",
-				sizes: "1200x630",
-				src: "/opengraph.png",
+				label: "WolfStar Homepage",
+				sizes: "1800x1080",
+				src: "/screenshots/dark-1.png",
 				type: "image/png",
 			},
 			{
-				form_factor: "narrow",
-				label: "WolfStar Mobile",
-				sizes: "1170x2532",
-				src: "/apple-splash-portrait-1170x2532.png",
+				label: "WolfStar Homepage (light theme)",
+				sizes: "1800x1080",
+				src: "/screenshots/light-1.png",
 				type: "image/png",
 			},
-		],*/
+		],
 		short_name: "WolfStar",
 		shortcuts: [
 			{

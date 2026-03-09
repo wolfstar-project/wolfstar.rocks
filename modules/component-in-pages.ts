@@ -1,13 +1,47 @@
-import { defineNuxtModule } from "nuxt/kit";
+import { join } from "node:path";
+import { addComponentsDir, defineNuxtModule } from "nuxt/kit";
+
+function isColocatedComponent(filePath: string | undefined): boolean {
+	if (!filePath) return false;
+	const name = filePath.split("/").pop() ?? "";
+	return (
+		filePath.includes("/@components/") ||
+		name.endsWith(".client.vue") ||
+		name.endsWith(".server.vue")
+	);
+}
 
 export default defineNuxtModule({
 	meta: {
 		name: "component-in-pages",
 	},
-	async setup(_, nuxt) {
+	setup(_, nuxt) {
+		const pagesDir = join(nuxt.options.srcDir, nuxt.options.dir.pages ?? "pages");
+
+		// Register co-located Vue components from the pages directory.
+		// Supported conventions:
+		//   @components/ subdirectory  →  pages/guilds/@components/GuildCard.vue
+		//   .client.vue suffix         →  pages/guilds/Sidebar.client.vue
+		//   .server.vue suffix         →  pages/guilds/HeavyList.server.vue
+		//
+		// Using explicit glob patterns avoids extendComponent filtering, which
+		// returns void for non-matching files and does NOT exclude them.
+
+		// All files inside any @components/ folder nested in pages
+		addComponentsDir({
+			path: pagesDir,
+			pattern: [
+				"**/@components/**/*.vue",
+				"**/@components/**/*.client.vue",
+				"**/@components/**/*.server.vue",
+			],
+			pathPrefix: false,
+		});
+
 		nuxt.hook("pages:extend", (pages) => {
-			// Step 1: Filter out routes with @components in the file path
-			const filtered = pages.filter((route) => !route.file?.includes("/@components"));
+			// Step 1: Remove co-located component files from the router so they
+			// don't become page routes.
+			const filtered = pages.filter((route) => !isColocatedComponent(route.file));
 
 			// Step 2: Identify layout routes and regular routes
 			const layouts = [] as typeof pages;
@@ -32,7 +66,8 @@ export default defineNuxtModule({
 
 				// Find children: routes whose file path starts with the layout's directory
 				const children = regularRoutes.filter(
-					(route) => route.file.startsWith(`${layoutDir}/`) && route.file !== layout.file,
+					(route) =>
+						route.file?.startsWith(`${layoutDir}/`) && route.file !== layout.file,
 				);
 
 				// Mark children as processed

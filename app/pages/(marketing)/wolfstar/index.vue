@@ -87,13 +87,6 @@
 </template>
 
 <script setup lang="ts">
-const FeatureCarousel = defineAsyncComponent(
-	() => import("./@components/FeatureCarousel.client.vue"),
-);
-const FeatureShowcase = defineAsyncComponent(
-	() => import("./@components/FeatureShowcase.client.vue"),
-);
-
 definePageMeta({ alias: ["/"] });
 
 useSeoMetadata({

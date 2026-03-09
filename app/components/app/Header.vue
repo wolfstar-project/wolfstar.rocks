@@ -34,7 +34,7 @@
 			<AuthState>
 				<template #default="{ loggedIn }">
 					<div v-if="loggedIn && user">
-						<UDropdownMenu
+						<LazyUDropdownMenu
 							:items
 							arrow
 							:content="{
@@ -53,7 +53,7 @@
 								aria-haspopup="menu"
 								tabindex="0"
 							>
-								<UAvatar
+								<LazyUAvatar
 									v-motion
 									:initial="{ scale: 1 }"
 									:hover="{ scale: 1.1, rotate: 5 }"
@@ -63,7 +63,7 @@
 								/>
 								<span class="hidden font-semibold sm:inline">{{ user?.name }}</span>
 							</div>
-						</UDropdownMenu>
+						</LazyUDropdownMenu>
 					</div>
 					<div v-else>
 						<UButton

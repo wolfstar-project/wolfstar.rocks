@@ -1,7 +1,7 @@
 <template>
 	<button class="tag" type="button">
 		<span v-if="kind === 'mention'" aria-hidden="true">@</span>
-		<icons-app v-else-if="kind === 'app'" class="icon" aria-hidden="true" />
+		<LazyIconsApp v-else-if="kind === 'app'" class="icon" aria-hidden="true" />
 		<slot></slot>
 	</button>
 </template>

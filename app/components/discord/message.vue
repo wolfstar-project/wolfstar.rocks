@@ -4,7 +4,7 @@
 		:class="{ 'discord-message-ephemeral': ephemeral }"
 		:aria-label="`Message from ${profile.name}`"
 	>
-		<discord-avatar :user="name" size="medium" :class="{ 'mt-6': command }" />
+		<DiscordAvatar :user="name" size="medium" :class="{ 'mt-6': command }" />
 		<div class="grow gap-2 max-sm:text-xs">
 			<div
 				v-if="command"
@@ -13,11 +13,11 @@
 				aria-label="Reply context"
 			>
 				<span class="flex items-center gap-1 font-bold">
-					<discord-avatar :user="command.user" size="tiny" />
+					<DiscordAvatar :user="command.user" size="tiny" />
 					{{ command.user }}
 				</span>
 				used
-				<discord-mention kind="app">{{ command.name }}</discord-mention>
+				<LazyDiscordMention kind="app">{{ command.name }}</LazyDiscordMention>
 			</div>
 			<header class="mb-0.5 flex flex-row items-center">
 				<div class="font-whitney font-bold">{{ profile.name }}</div>

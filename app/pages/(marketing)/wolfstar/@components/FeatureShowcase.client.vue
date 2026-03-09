@@ -106,7 +106,7 @@
 												>
 													https://discord.gg/gqAnRyUXG8
 												</NuxtLink>
-												<DiscordInvite
+												<LazyDiscordInvite
 													link="https://discord.gg/gqAnRyUXG8"
 												/>
 											</template>
@@ -175,21 +175,24 @@
 												"
 											>
 												Hey folks! I have great news to share!
-												<DiscordReactions>
-													<DiscordReaction :count="7" self>
+												<LazyDiscordReactions>
+													<LazyDiscordReaction :count="7" self>
 														<UIcon
 															name="ph:cheers-fill"
 															class="text-success"
 															aria-hidden="true"
 														/>
-													</DiscordReaction>
-													<DiscordReaction :count="1" class="text-error">
+													</LazyDiscordReaction>
+													<LazyDiscordReaction
+														:count="1"
+														class="text-error"
+													>
 														<UIcon
 															name="ph:knife-fill"
 															aria-hidden="true"
 														/>
-													</DiscordReaction>
-												</DiscordReactions>
+													</LazyDiscordReaction>
+												</LazyDiscordReactions>
 											</template>
 											<template
 												v-else-if="featureIndex === AutomodFeature.Spam"

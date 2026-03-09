@@ -17,7 +17,7 @@
 					color="primary"
 					size="xs"
 					label="Refresh"
-					@click="$pwa?.updateServiceWorker()"
+					@click="$pwa?.updateServiceWorker(true)"
 				/>
 				<UButton
 					color="neutral"

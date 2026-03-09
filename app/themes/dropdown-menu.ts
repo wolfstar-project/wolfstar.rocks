@@ -24,7 +24,7 @@ export default {
 	slots: {
 		arrow: "fill-default",
 		content:
-			"min-w-32 bg-default shadow-lg rounded-md ring ring-default overflow-hidden data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] origin-(--reka-dropdown-menu-content-transform-origin) flex flex-col card-glass",
+			"min-w-32 bg-base-100 shadow-lg rounded-md ring ring-base-300 overflow-hidden data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] origin-(--reka-dropdown-menu-content-transform-origin) flex flex-col card-glass",
 		group: "p-1 isolate animate-fade-in-up",
 		item: "group relative w-full flex items-start select-none outline-none before:absolute before:z-[-1] before:inset-px before:rounded-md data-disabled:cursor-not-allowed data-disabled:opacity-75 transition-all duration-300",
 		itemDescription: "truncate text-muted transition-colors duration-200",

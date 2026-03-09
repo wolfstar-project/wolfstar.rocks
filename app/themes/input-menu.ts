@@ -1,12 +1,12 @@
 export default {
 	compoundVariants: [
 		{
-			class: "has-focus:bg-elevated",
+			class: "has-focus:bg-base-200",
 			multiple: true,
 			variant: "soft",
 		},
 		{
-			class: "has-focus:bg-elevated",
+			class: "has-focus:bg-base-200",
 			multiple: true,
 			variant: "ghost",
 		},

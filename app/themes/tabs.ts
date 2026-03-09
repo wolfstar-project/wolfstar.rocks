@@ -87,9 +87,9 @@ export default {
 		},
 		{
 			class: {
-				indicator: "bg-inverted",
+				indicator: "bg-neutral",
 				trigger:
-					"data-[state=active]:text-inverted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-inverted",
+					"data-[state=active]:text-neutral-content focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral",
 			},
 			color: "neutral",
 			variant: "pill",
@@ -105,9 +105,9 @@ export default {
 		},
 		{
 			class: {
-				indicator: "bg-inverted",
+				indicator: "bg-neutral",
 				trigger:
-					"data-[state=active]:text-highlighted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-inverted",
+					"data-[state=active]:text-highlighted focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral",
 			},
 			color: "neutral",
 			variant: "link",
@@ -233,12 +233,12 @@ export default {
 			},
 			link: {
 				indicator: "rounded-full",
-				list: "border-default",
+				list: "border-base-300",
 				trigger: "focus:outline-none",
 			},
 			pill: {
 				indicator: "rounded-md shadow-xs",
-				list: "bg-elevated rounded-lg",
+				list: "bg-base-200 rounded-lg",
 				trigger: "grow",
 			},
 			transparent: {

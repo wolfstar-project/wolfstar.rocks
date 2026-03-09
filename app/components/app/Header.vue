@@ -1,8 +1,6 @@
 <template>
 	<UHeader
 		class="app-navbar card-glass"
-		as="header"
-		role="banner"
 		:ui="{
 			root: 'rounded-full px-6 py-2',
 		}"

@@ -34,7 +34,6 @@ export default defineConfig({
 					},
 				},
 			},
-			// oxlint-disable-next-line antfu/no-top-level-await
 			await defineVitestProject({
 				test: {
 					browser: {

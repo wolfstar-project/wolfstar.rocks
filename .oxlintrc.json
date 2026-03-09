@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
 	"plugins": ["unicorn", "typescript", "oxc", "vue", "vitest"],
-	"jsPlugins": ["@e18e/eslint-plugin", "eslint-plugin-antfu", "eslint-plugin-regexp"],
+	"jsPlugins": ["@e18e/eslint-plugin", "eslint-plugin-regexp"],
 	"categories": {
 		"correctness": "error",
 		"suspicious": "warn",
@@ -15,7 +15,6 @@
 				"setWithoutGet": true
 			}
 		],
-		"antfu/no-top-level-await": "error",
 		"eqeqeq": "warn",
 		"new-cap": [
 			"error",
@@ -116,9 +115,6 @@
 			}
 		],
 		"yoda": ["error", "never"],
-		"antfu/import-dedupe": "error",
-		"antfu/no-import-dist": "error",
-		"antfu/no-import-node-modules-by-path": "error",
 		"unicorn/no-nested-ternary": "off",
 		"unicorn/consistent-empty-array-spread": "error",
 		"unicorn/error-message": "error",
@@ -140,9 +136,6 @@
 		"unicorn/consistent-function-scoping": "off",
 		"unicorn/no-null": "off",
 		"no-await-in-loop": "off",
-		"antfu/consistent-chaining": "warn",
-		"antfu/curly": "error",
-		"antfu/if-newline": "off",
 		"regexp/confusing-quantifier": "warn",
 		"regexp/control-character-escape": "error",
 		"regexp/match-any": "error",
@@ -291,7 +284,6 @@
 				"vitest/no-import-node-test": "error",
 				"vitest/prefer-hooks-in-order": "error",
 				"vitest/prefer-lowercase-title": "error",
-				"antfu/no-top-level-await": "off",
 				"no-unused-expressions": "off"
 			}
 		},
@@ -307,8 +299,7 @@
 				"vue/valid-define-emits": "error",
 				"vue/valid-define-props": "error",
 				"vue/no-multiple-slot-args": "warn",
-				"vue/no-required-prop-with-default": "warn",
-				"antfu/no-top-level-await": "off"
+				"vue/no-required-prop-with-default": "warn"
 			}
 		},
 		{
@@ -369,7 +360,6 @@
 			],
 			"plugins": ["typescript"],
 			"rules": {
-				"antfu/no-top-level-await": "off",
 				"no-await-in-loop": "off",
 				"no-console": "off"
 			}

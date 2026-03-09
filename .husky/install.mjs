@@ -1,4 +1,3 @@
-/* oxlint-disable antfu/no-top-level-await  */
 /* oxlint-disable no-console */
 
 // Skip Husky install in production and CI

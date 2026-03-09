@@ -130,7 +130,7 @@ export default {
 			active: true,
 			class: {
 				link: [
-						"hover:before:bg-base-200/50 hover:shadow-lg",
+					"hover:before:bg-base-200/50 hover:shadow-lg",
 					"before:transition-all duration-300",
 				],
 			},
@@ -243,7 +243,7 @@ export default {
 		active: {
 			false: {
 				childLink: [
-						"hover:before:bg-base-200/50 text-default hover:text-highlighted hover-scale",
+					"hover:before:bg-base-200/50 text-default hover:text-highlighted hover-scale",
 					"transition-all duration-300 before:transition-all",
 				],
 				childLinkIcon: [

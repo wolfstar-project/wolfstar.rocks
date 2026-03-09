@@ -1,5 +1,5 @@
-import type { ResolvableValue } from "@unhead/vue";
 import type { OGImageProps } from "@/components/OgImage/Default.vue";
+import type { ResolvableValue } from "@unhead/vue";
 
 interface SiteMetadata {
 	title?: ResolvableValue<string>;

@@ -8,18 +8,40 @@ import { createError, useLogger } from "evlog";
 export default defineEventHandler(async (event) => {
 	const query = getQuery(event);
 	const log = useLogger(event);
-	const nextUrl = query.next as string | undefined;
 
-	// Validate next URL — fall back to "/" if unsafe (prevents open redirect)
-	const safeRedirectUrl = nextUrl && isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+	const authorizationParams: Record<string, string> = { prompt: "none" };
 
-	// Generate signed state + nonce for CSRF protection
-	const { state, nonce } = await createOAuthState(safeRedirectUrl);
+	// Only generate state + cookies during OAuth initiation (no code present).
+	// When callback.vue calls this endpoint again to exchange the code, we must
+	// NOT overwrite the nonce/redirect cookies set during initiation.
+	if (!query.code) {
+		const nextUrl = query.next as string | undefined;
 
-	const authorizationParams: Record<string, string> = {
-		prompt: "none",
-		state,
-	};
+		// Validate next URL — fall back to "/" if unsafe (prevents open redirect)
+		const safeRedirectUrl = nextUrl && isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+
+		// Generate signed state + nonce for CSRF protection
+		const { state, nonce } = await createOAuthState(safeRedirectUrl);
+		authorizationParams.state = state;
+
+		// Set nonce in httpOnly cookie for CSRF verification on callback
+		setCookie(event, "oauth_nonce", nonce, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none", // Must be "none" so it's sent in cross-site redirect
+			maxAge: 5 * 60, // 5 minutes (matches state TTL)
+			path: "/",
+		});
+
+		// Store redirect URL separately — not embedded in state, but HMAC-bound
+		setCookie(event, "oauth_redirect", safeRedirectUrl, {
+			httpOnly: true,
+			secure: true,
+			sameSite: "none",
+			maxAge: 5 * 60,
+			path: "/",
+		});
+	}
 
 	// Create OAuth handler with dynamic state
 	const oauthHandler = defineOAuthDiscordEventHandler({
@@ -67,15 +89,6 @@ export default defineEventHandler(async (event) => {
 				username: user.username,
 			});
 		},
-	});
-
-	// Set nonce in httpOnly cookie for CSRF verification on callback
-	setCookie(event, "oauth_nonce", nonce, {
-		httpOnly: true,
-		secure: true,
-		sameSite: "none", // Must be "none" so it's sent in cross-site redirect
-		maxAge: 5 * 60, // 5 minutes (matches state TTL)
-		path: "/",
 	});
 
 	return oauthHandler(event);

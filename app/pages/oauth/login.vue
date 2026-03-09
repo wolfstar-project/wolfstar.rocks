@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isSafeRedirectPath } from "#shared/utils/redirect";
+
 definePageMeta({ alias: ["/login"] });
 
 useSeoMetadata({
@@ -14,6 +16,7 @@ const { login } = useAuth();
 
 onMounted(() => {
 	const nextUrl = useRouteQuery("next", "/", { transform: String });
-	void login(nextUrl.value);
+	const safeNext = isSafeRedirectPath(nextUrl.value) ? nextUrl.value : "/";
+	void login(safeNext);
 });
 </script>

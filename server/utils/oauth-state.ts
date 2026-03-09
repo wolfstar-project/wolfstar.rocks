@@ -1,7 +1,11 @@
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 
+/**
+ * OAuth state payload — contains only CSRF fields (nonce + timestamp).
+ * The redirect URL is bound in the HMAC signature but NOT embedded here,
+ * so the state string never exposes the destination to the client.
+ */
 export interface OAuthStatePayload {
-	url: string;
 	nonce: string;
 	ts: number;
 }
@@ -68,15 +72,15 @@ function timingSafeEqual(a: string, b: string): boolean {
 }
 
 /**
- * Creates a signed OAuth state parameter + nonce for CSRF protection
+ * Creates a signed OAuth state parameter + nonce for CSRF protection.
  *
- * The state is a base64url-encoded JSON payload containing:
- * - url: the redirect URL
- * - nonce: a random 32-byte hex string (stored in cookie separately)
- * - ts: timestamp in milliseconds
- * - sig: HMAC-SHA256 signature over "url|nonce|ts"
+ * The state payload contains only CSRF fields (nonce + timestamp). The
+ * redirect URL is cryptographically bound via the HMAC signature but is
+ * NOT embedded in the state string, so it is never exposed to the client.
  *
- * @param redirectUrl - The URL to redirect to after OAuth
+ * Signature covers: "nonce|ts|redirectUrl"
+ *
+ * @param redirectUrl - The URL to redirect to after OAuth (HMAC-bound)
  * @returns Object with base64url-encoded state string and nonce
  */
 export async function createOAuthState(
@@ -90,19 +94,14 @@ export async function createOAuthState(
 
 	const ts = Date.now();
 
-	// Create the message to sign: "url|nonce|ts"
-	const message = `${redirectUrl}|${nonce}|${ts}`;
+	// HMAC message binds the redirect URL even though it is not in the payload
+	const message = `${nonce}|${ts}|${redirectUrl}`;
 
 	// Sign the message with HMAC-SHA256
 	const sig = await hmacSign(message, runtimeConfig.session.password);
 
-	// Create the complete payload
-	const payload: SignedOAuthStatePayload = {
-		url: redirectUrl,
-		nonce,
-		ts,
-		sig,
-	};
+	// Payload intentionally omits url — it is stored server-side in a cookie
+	const payload: SignedOAuthStatePayload = { nonce, ts, sig };
 
 	// Base64url-encode the JSON payload
 	const state = toBase64Url(JSON.stringify(payload));
@@ -111,23 +110,25 @@ export async function createOAuthState(
 }
 
 /**
- * Verifies a signed OAuth state parameter
+ * Verifies a signed OAuth state parameter.
  *
  * Checks:
  * 1. The state can be decoded and parsed
  * 2. All required fields are present
  * 3. The nonce matches the expected value (from cookie)
  * 4. The timestamp is within 5 minutes (TTL)
- * 5. The signature is valid (HMAC-SHA256 over "url|nonce|ts")
+ * 5. The signature is valid (HMAC-SHA256 over "nonce|ts|redirectUrl")
  *
  * @param state - The base64url-encoded state string
  * @param expectedNonce - The nonce from the cookie (CSRF protection)
- * @returns The redirect URL if valid, null otherwise
+ * @param redirectUrl - The redirect URL from the cookie (must match HMAC binding)
+ * @returns `true` if the state is valid and the redirect URL is bound, `false` otherwise
  */
 export async function verifyOAuthState(
 	state: string,
 	expectedNonce: string,
-): Promise<string | null> {
+	redirectUrl: string,
+): Promise<boolean> {
 	try {
 		// Decode from base64url
 		const decoded = fromBase64Url(state);
@@ -135,45 +136,38 @@ export async function verifyOAuthState(
 
 		// Check all required fields exist
 		if (
-			typeof payload.url !== "string" ||
 			typeof payload.nonce !== "string" ||
 			typeof payload.ts !== "number" ||
 			typeof payload.sig !== "string"
 		) {
-			return null;
+			return false;
 		}
 
 		// Check nonce matches (CSRF protection)
 		if (payload.nonce !== expectedNonce) {
-			return null;
+			return false;
 		}
 
 		// Check timestamp TTL (5 minutes)
 		const now = Date.now();
 		const age = now - payload.ts;
 		if (age > 5 * 60 * 1000) {
-			return null;
+			return false;
 		}
 
 		// Reject future timestamps (clock skew protection — max 30 seconds in the future)
 		if (age < -30 * 1000) {
-			return null;
+			return false;
 		}
 
-		// Re-compute signature from the payload
-		const message = `${payload.url}|${payload.nonce}|${payload.ts}`;
+		// Re-compute signature including the redirect URL (HMAC binding)
+		const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
 		const expectedSig = await hmacSign(message, runtimeConfig.session.password);
 
 		// Timing-safe signature comparison
-		const signaturesMatch = timingSafeEqual(payload.sig, expectedSig);
-		if (!signaturesMatch) {
-			return null;
-		}
-
-		// All checks passed, return the redirect URL
-		return payload.url;
+		return timingSafeEqual(payload.sig, expectedSig);
 	} catch {
 		// Any error during decode/parse means invalid state
-		return null;
+		return false;
 	}
 }

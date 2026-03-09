@@ -2,6 +2,7 @@ import type { AuthMeta } from "../types";
 // @ts-expect-error vfs
 import config from "#build/auth.config";
 import { defineNuxtRouteMiddleware } from "#imports";
+import { isSafeRedirectPath } from "#shared/utils/redirect";
 
 export default defineNuxtRouteMiddleware(async (to) => {
 	if (to.name === undefined) {
@@ -28,10 +29,11 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
 	if (!loggedIn.value) {
 		redirectTo.value = to.fullPath;
+		const safeNext = isSafeRedirectPath(to.fullPath) ? to.fullPath : "/";
 		return navigateTo(
 			{
 				path: loginRoute,
-				query: { next: to.fullPath },
+				query: { next: safeNext },
 			},
 			{
 				redirectCode: 302,

@@ -77,13 +77,17 @@ async function performCall() {
 
 	await promiseTimeout(seconds(2));
 
-	// Decode redirect URL from state parameter (if present)
+	// Verify the OAuth state server-side and retrieve the stored redirect URL.
+	// The server reads the nonce + oauth_redirect cookies set during initiation,
+	// verifies the HMAC signature, and returns the safe destination URL.
 	let redirectUrl = "/";
 	if (state.value) {
 		try {
-			redirectUrl = atob(state.value);
+			const data = await $fetch<{ redirectUrl: string }>("/api/auth/verify-state", {
+				query: { state: state.value },
+			});
+			redirectUrl = data.redirectUrl ?? "/";
 		} catch {
-			// If decoding fails, use default
 			redirectUrl = "/";
 		}
 	}

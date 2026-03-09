@@ -17,7 +17,13 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 		:class="footer ? 'mt-4 flex items-end gap-4' : 'mb-8 justify-center'"
 		style="animation-delay: 0.05s"
 	>
-		<NuxtTime :datetime="buildTime" year="numeric" month="short" day="numeric" />
+		<NuxtTime
+			:class="footer ? 'text-sm text-base-content/80' : 'text-md text-base-content'"
+			:datetime="buildTime"
+			year="numeric"
+			month="short"
+			day="numeric"
+		/>
 		<span>&middot;</span>
 		<NuxtLink
 			v-if="buildInfo.env === 'release'"

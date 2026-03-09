@@ -179,7 +179,7 @@ function openFeature(index: number) {
 }
 
 .invite-card {
-	@apply relative p-12 text-white;
+	@apply relative isolate p-12 text-white;
 }
 
 .invite-card::before {

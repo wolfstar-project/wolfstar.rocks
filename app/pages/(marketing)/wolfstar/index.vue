@@ -12,11 +12,11 @@
 	</section>
 
 	<section>
-		<BuildEnvironment :footer="false" class="mt-16" />
+		<BuildEnvironment class="mt-10" />
 	</section>
 
 	<section
-		class="relative join z-10 mt-16 animate-fade-in-up justify-center animate-fade-in-delay-2"
+		class="relative join z-10 mt-12 animate-fade-in-up justify-center animate-fade-in-delay-2"
 	>
 		<NuxtLink
 			class="glow-btn glow-btn-branding btn join-item sm:btn-wide"
@@ -30,7 +30,7 @@
 		</NuxtLink>
 	</section>
 
-	<section id="explore" ref="exploreRef" class="mt-38 min-h-200 w-full scroll-mt-24">
+	<section id="explore" ref="exploreRef" class="mt-34 min-h-200 w-full scroll-mt-24">
 		<div class="mb-16 text-center">
 			<h2 class="text-5xl font-bold">Explore</h2>
 			<template v-if="exploreLoaded">

@@ -48,7 +48,7 @@
 					</div>
 				</div>
 
-				<div>
+				<div class="pl-14">
 					<BuildEnvironment :footer="true" :buildInfo />
 				</div>
 			</aside>

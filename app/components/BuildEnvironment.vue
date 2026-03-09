@@ -24,7 +24,7 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 			:to="`https://github.com/wolfstar-project/wolfstar.rocks/releases/tag/v${buildInfo.version}`"
 			target="_blank"
 			rel="noopener noreferrer"
-			:class="footer ? 'text-sm text-base-content/80' : undefined"
+			:class="footer ? 'text-sm text-base-content/80' : 'text-md text-base-content'"
 			:aria-label="`View release v${buildInfo.version} on GitHub - opens in new tab`"
 		>
 			v{{ buildInfo.version }}
@@ -37,7 +37,7 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 				:to="`https://github.com/wolfstar-project/wolfstar.rocks/commit/${buildInfo.commit}`"
 				target="_blank"
 				rel="noopener noreferrer"
-				:class="footer ? 'text-sm text-base-content/80' : undefined"
+				:class="footer ? 'text-sm text-base-content/80' : 'text-md text-base-content'"
 				:aria-label="`View commit ${buildInfo.shortCommit} on GitHub - opens in new tab`"
 			>
 				{{ buildInfo.shortCommit }}

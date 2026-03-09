@@ -1,4 +1,4 @@
-import type { FlattenedCommand } from "#shared/types/discord";
+import type { FlattenedCommand } from "#shared/types";
 import type { GuildData } from "~~/server/database";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";

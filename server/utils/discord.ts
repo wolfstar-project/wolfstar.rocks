@@ -4,7 +4,7 @@ import type {
 	OauthFlattenedGuild,
 	PartialOauthFlattenedGuild,
 	TransformedLoginData,
-} from "#shared/types/discord";
+} from "#shared/types";
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,

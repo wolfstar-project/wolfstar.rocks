@@ -252,7 +252,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FlattenedCommand } from "#shared/types/discord";
+import type { FlattenedCommand } from "#shared/types";
 
 const { command, loading } = defineProps<{
 	command: FlattenedCommand;

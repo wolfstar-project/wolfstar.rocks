@@ -15,7 +15,7 @@ import type {
 	FlattenedThreadChannel,
 	FlattenedUser,
 	FlattenedVoiceChannel,
-} from "#shared/types/discord";
+} from "#shared/types";
 import type {
 	APIChannel,
 	APIDMChannel,

@@ -156,12 +156,12 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { ValuesType } from "#shared/types/utils";
+import type { ValuesType } from "#shared/types";
 import type { NavigationMenuItem } from "@nuxt/ui";
-import { parseError, createError } from "evlog";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
+import { parseError, createError } from "evlog";
 
 const logger = useLogger("wolfstar:dashboard");
 

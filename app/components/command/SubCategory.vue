@@ -107,7 +107,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FlattenedCommand } from "#shared/types/discord";
+import type { FlattenedCommand } from "#shared/types";
 
 interface Props {
 	categoryName: string;

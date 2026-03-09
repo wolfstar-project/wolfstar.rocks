@@ -132,7 +132,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { FlattenedCommand } from "#shared/types/discord";
+import type { FlattenedCommand } from "#shared/types";
 import { Time } from "@sapphire/time-utilities";
 import { useFuse } from "@vueuse/integrations/useFuse";
 import { isDevelopment } from "std-env";

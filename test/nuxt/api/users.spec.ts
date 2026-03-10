@@ -20,10 +20,7 @@ import { describe, expect, it } from "vitest";
 import { FIXTURE_PARTIAL_GUILD, FIXTURE_USER, FIXTURE_USERS_RESPONSE } from "./_fixtures";
 import { TEST_AUTH_HEADER, authHeaders, requireTestSession } from "./_helpers";
 
-// ---------------------------------------------------------------------------
 // Mock endpoint – simulates `server/api/users/index.get.ts` behaviour
-// ---------------------------------------------------------------------------
-
 registerEndpoint("/api/users", {
 	method: "GET",
 	handler: (event) => {
@@ -37,10 +34,6 @@ registerEndpoint("/api/users", {
 		};
 	},
 });
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe("GET /api/users", () => {
 	describe("authentication", () => {

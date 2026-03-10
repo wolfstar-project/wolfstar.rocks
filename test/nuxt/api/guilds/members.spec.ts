@@ -27,10 +27,6 @@ const MISSING_MEMBER_ID = "000000000000000000";
 const SINGLE_MEMBER_URL = `${MEMBER_LIST_URL}/${EXISTING_MEMBER_ID}`;
 const MISSING_MEMBER_URL = `${MEMBER_LIST_URL}/${MISSING_MEMBER_ID}`;
 
-// ---------------------------------------------------------------------------
-// Fixtures
-// ---------------------------------------------------------------------------
-
 const FIXTURE_FLAT_USER = {
 	avatar: "a1b2c3",
 	bot: false,
@@ -49,10 +45,7 @@ const FIXTURE_FLAT_MEMBER = {
 	user: FIXTURE_FLAT_USER,
 };
 
-// ---------------------------------------------------------------------------
 // Member list mock
-// ---------------------------------------------------------------------------
-
 registerEndpoint(MEMBER_LIST_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -61,10 +54,7 @@ registerEndpoint(MEMBER_LIST_URL, {
 	},
 });
 
-// ---------------------------------------------------------------------------
 // Single member mocks – exact static URLs; registerEndpoint does not support :param
-// ---------------------------------------------------------------------------
-
 registerEndpoint(SINGLE_MEMBER_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -85,10 +75,6 @@ registerEndpoint(MISSING_MEMBER_URL, {
 		});
 	},
 });
-
-// ---------------------------------------------------------------------------
-// Tests – member list
-// ---------------------------------------------------------------------------
 
 describe(`GET ${MEMBER_LIST_URL}`, () => {
 	describe("authentication", () => {
@@ -124,10 +110,6 @@ describe(`GET ${MEMBER_LIST_URL}`, () => {
 		});
 	});
 });
-
-// ---------------------------------------------------------------------------
-// Tests – single member
-// ---------------------------------------------------------------------------
 
 describe(`GET ${MEMBER_LIST_URL}/:member`, () => {
 	describe("authentication", () => {

@@ -22,10 +22,7 @@ const MISSING_ROLE_ID = "000000000000000000";
 const ROLE_URL = `/api/guilds/${GUILD_ID}/roles/${EXISTING_ROLE_ID}`;
 const MISSING_ROLE_URL = `/api/guilds/${GUILD_ID}/roles/${MISSING_ROLE_ID}`;
 
-// ---------------------------------------------------------------------------
 // Mock role endpoints – exact static URLs; registerEndpoint does not support :param
-// ---------------------------------------------------------------------------
-
 registerEndpoint(ROLE_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -45,10 +42,6 @@ registerEndpoint(MISSING_ROLE_URL, {
 		});
 	},
 });
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe(`GET /api/guilds/:guild/roles/:role`, () => {
 	describe("authentication", () => {

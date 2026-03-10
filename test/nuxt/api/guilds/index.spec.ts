@@ -30,10 +30,7 @@ import { GUILD_ID, assertRateLimitHeaders, authHeaders, requireTestSession } fro
 
 const GUILD_URL = `/api/guilds/${GUILD_ID}`;
 
-// ---------------------------------------------------------------------------
 // Mock guild endpoint
-// ---------------------------------------------------------------------------
-
 registerEndpoint(GUILD_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -68,10 +65,6 @@ registerEndpoint(GUILD_URL, {
 		};
 	},
 });
-
-// ---------------------------------------------------------------------------
-// Tests
-// ---------------------------------------------------------------------------
 
 describe(`GET ${GUILD_URL}`, () => {
 	describe("authentication", () => {

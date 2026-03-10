@@ -33,10 +33,7 @@ const MISSING_CHANNEL_ID = "000000000000000000";
 const SINGLE_CHANNEL_URL = `${CHANNEL_LIST_URL}/${EXISTING_CHANNEL_ID}`;
 const MISSING_CHANNEL_URL = `${CHANNEL_LIST_URL}/${MISSING_CHANNEL_ID}`;
 
-// ---------------------------------------------------------------------------
 // Channel list mock (also serves the internal $fetch from [channel].get.ts)
-// ---------------------------------------------------------------------------
-
 registerEndpoint(CHANNEL_LIST_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -45,10 +42,7 @@ registerEndpoint(CHANNEL_LIST_URL, {
 	},
 });
 
-// ---------------------------------------------------------------------------
 // Single channel mock – exact static URL; missing URL is unregistered (→ 404)
-// ---------------------------------------------------------------------------
-
 registerEndpoint(SINGLE_CHANNEL_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -56,10 +50,6 @@ registerEndpoint(SINGLE_CHANNEL_URL, {
 		return FIXTURE_CHANNEL;
 	},
 });
-
-// ---------------------------------------------------------------------------
-// Tests – channel list
-// ---------------------------------------------------------------------------
 
 describe(`GET ${CHANNEL_LIST_URL}`, () => {
 	describe("authentication", () => {
@@ -95,10 +85,6 @@ describe(`GET ${CHANNEL_LIST_URL}`, () => {
 		});
 	});
 });
-
-// ---------------------------------------------------------------------------
-// Tests – single channel lookup
-// ---------------------------------------------------------------------------
 
 describe(`GET ${CHANNEL_LIST_URL}/:channel`, () => {
 	describe("authentication", () => {

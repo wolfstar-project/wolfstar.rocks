@@ -8,7 +8,6 @@ export default defineWrappedResponseHandler(
 
 		log.info("Fetched user and guilds data", { userId: user.id, guildCount: guilds.length });
 
-		// Transform and return data with improved error handling
 		const transformedData = await transformOauthGuildsAndUser({
 			guilds,
 			user,

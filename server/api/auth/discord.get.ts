@@ -43,7 +43,6 @@ export default defineEventHandler(async (event) => {
 		});
 	}
 
-	// Create OAuth handler with dynamic state
 	const oauthHandler = defineOAuthDiscordEventHandler({
 		config: {
 			authorizationParams,

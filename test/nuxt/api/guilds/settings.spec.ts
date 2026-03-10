@@ -35,10 +35,7 @@ import { GUILD_ID, authHeaders, requireTestSession } from "../_helpers";
 
 const SETTINGS_URL = `/api/guilds/${GUILD_ID}/settings`;
 
-// ---------------------------------------------------------------------------
 // GET mock
-// ---------------------------------------------------------------------------
-
 registerEndpoint(SETTINGS_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -47,7 +44,6 @@ registerEndpoint(SETTINGS_URL, {
 	},
 });
 
-// ---------------------------------------------------------------------------
 // PATCH mock
 //
 // Body stream is not available in registerEndpoint context (browser-to-Nitro
@@ -55,8 +51,6 @@ registerEndpoint(SETTINGS_URL, {
 // Content-Type header presence as a proxy instead:
 //   "Content-Type: application/json" → ofetch sent a non-null body  → 200
 //   no Content-Type                  → ofetch sent undefined/null    → 400
-// ---------------------------------------------------------------------------
-
 registerEndpoint(SETTINGS_URL, {
 	method: "PATCH",
 	handler: (event) => {
@@ -76,10 +70,6 @@ registerEndpoint(SETTINGS_URL, {
 		return FIXTURE_SERIALIZED_SETTINGS;
 	},
 });
-
-// ---------------------------------------------------------------------------
-// Tests – GET
-// ---------------------------------------------------------------------------
 
 describe(`GET ${SETTINGS_URL}`, () => {
 	describe("authentication", () => {
@@ -114,10 +104,6 @@ describe(`GET ${SETTINGS_URL}`, () => {
 		});
 	});
 });
-
-// ---------------------------------------------------------------------------
-// Tests – PATCH
-// ---------------------------------------------------------------------------
 
 describe(`PATCH ${SETTINGS_URL}`, () => {
 	describe("authentication", () => {

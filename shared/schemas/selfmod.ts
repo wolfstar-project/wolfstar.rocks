@@ -12,10 +12,6 @@ import {
 	type InferOutput,
 } from "valibot";
 
-// ---------------------------------------------------------------------------
-// Shared building blocks
-// ---------------------------------------------------------------------------
-
 /**
  * Hard-action punishment type: 0 (None) … 5 (Ban).
  */
@@ -39,10 +35,6 @@ export const HardActionDurationSchema = union([
 	literal(0),
 	pipe(number(), minValue(1000), maxValue(31_536_000_000)),
 ]);
-
-// ---------------------------------------------------------------------------
-// Per-filter schemas
-// ---------------------------------------------------------------------------
 
 /**
  * Schema for the Capitals filter settings form.
@@ -146,10 +138,6 @@ export const WordFilterSchema = object({
 	softActionDeletes: boolean(),
 	softActionLogs: boolean(),
 });
-
-// ---------------------------------------------------------------------------
-// Inferred types
-// ---------------------------------------------------------------------------
 
 export type CapitalsFilter = InferOutput<typeof CapitalsFilterSchema>;
 export type InvitesFilter = InferOutput<typeof InvitesFilterSchema>;

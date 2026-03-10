@@ -208,7 +208,6 @@ export default defineNuxtConfig({
 
 	experimental: {
 		clientNodeCompat: true,
-		renderJsonPayloads: true,
 		typescriptPlugin: true,
 		typedPages: true,
 	},

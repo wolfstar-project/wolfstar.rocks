@@ -21,11 +21,11 @@ function toComponentName(filePath: string): string {
 		.replace(/\.vue$/, "");
 }
 
-function toComponentMode(filePath: string): "client" | "server" | undefined {
+function toComponentMode(filePath: string): "client" | "server" | "all" {
 	const name = basename(filePath);
 	if (name.endsWith(".client.vue")) return "client";
 	if (name.endsWith(".server.vue")) return "server";
-	return undefined;
+	return "all";
 }
 
 function isColocatedComponent(filePath: string | undefined): boolean {

@@ -14,9 +14,7 @@
 			<UContainer>
 				<UFooterColumns class="p-10" :columns>
 					<template #right>
-						<ClientOnly>
-							<PwaInstallPrompt class="xl:hidden" />
-						</ClientOnly>
+						<PwaInstallPrompt class="xl:hidden" />
 						<div class="flex-auto"></div>
 						<UButton
 							label="Powered by Netlify"

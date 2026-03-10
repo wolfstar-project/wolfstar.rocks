@@ -11,9 +11,7 @@
 		</div>
 
 		<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
-			<ClientOnly>
-				<PwaPrompt />
-			</ClientOnly>
+			<PwaPrompt />
 		</div>
 
 		<AppFooter />

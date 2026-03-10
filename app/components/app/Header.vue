@@ -88,27 +88,25 @@
 					</div>
 				</template>
 				<template #placeholder>
-					<div aria-hidden="true">
-						<UButton
-							size="md"
-							color="primary"
-							variant="subtle"
-							block
-							class="invisible md:hidden"
-							icon="ic:round-discord"
-							tabindex="-1"
-						/>
-						<UButton
-							label="Login"
-							size="md"
-							color="primary"
-							variant="subtle"
-							block
-							class="invisible hidden md:inline-flex"
-							icon="ic:round-discord"
-							tabindex="-1"
-						/>
-					</div>
+					<UButton
+						size="md"
+						color="primary"
+						variant="subtle"
+						block
+						class="invisible md:hidden"
+						icon="ic:round-discord"
+						tabindex="-1"
+					/>
+					<UButton
+						label="Login"
+						size="md"
+						color="primary"
+						variant="subtle"
+						block
+						class="invisible hidden md:inline-flex"
+						icon="ic:round-discord"
+						tabindex="-1"
+					/>
 				</template>
 			</AuthState>
 		</template>

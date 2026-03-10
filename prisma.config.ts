@@ -1,16 +1,12 @@
-import path from "node:path";
-/**
- * Prisma configuration file
- * See: https://www.prisma.io/docs/orm/reference/prisma-config-reference
- */
-import { config } from "dotenv";
-import { defineConfig } from "prisma/config";
-
-config({ quiet: true });
+import { defineConfig, env } from "prisma/config";
+import "dotenv/config";
 
 export default defineConfig({
+	schema: "server/database/schema.prisma",
 	migrations: {
-		path: path.join("server", "database", "migrations"),
+		path: "server/database/migrations",
 	},
-	schema: path.join("server", "database", "schema.prisma"),
+	datasource: {
+		url: env("DATABASE_URL"),
+	},
 });

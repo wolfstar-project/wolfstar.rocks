@@ -1,5 +1,32 @@
-import { join } from "node:path";
-import { addComponentsDir, defineNuxtModule } from "nuxt/kit";
+import { existsSync, readdirSync } from "node:fs";
+import { basename, join } from "node:path";
+import { addComponent, defineNuxtModule } from "nuxt/kit";
+
+function* walkAtComponents(dir: string, inComponents = false): Generator<string> {
+	if (!existsSync(dir)) return;
+	for (const entry of readdirSync(dir, { withFileTypes: true })) {
+		const full = join(dir, entry.name);
+		if (entry.isDirectory()) {
+			yield* walkAtComponents(full, inComponents || entry.name === "@components");
+		} else if (inComponents && entry.name.endsWith(".vue")) {
+			yield full;
+		}
+	}
+}
+
+function toComponentName(filePath: string): string {
+	return basename(filePath)
+		.replace(/\.client\.vue$/, "")
+		.replace(/\.server\.vue$/, "")
+		.replace(/\.vue$/, "");
+}
+
+function toComponentMode(filePath: string): "client" | "server" | undefined {
+	const name = basename(filePath);
+	if (name.endsWith(".client.vue")) return "client";
+	if (name.endsWith(".server.vue")) return "server";
+	return undefined;
+}
 
 function isColocatedComponent(filePath: string | undefined): boolean {
 	if (!filePath) return false;
@@ -15,26 +42,22 @@ export default defineNuxtModule({
 	meta: {
 		name: "component-in-pages",
 	},
-	setup(_, nuxt) {
+	async setup(_, nuxt) {
 		const pagesDir = join(nuxt.options.srcDir, nuxt.options.dir.pages ?? "pages");
 
-		// Register co-located Vue components from the pages directory.
-		// Supported conventions:
-		//   @components/ subdirectory  →  pages/guilds/@components/GuildCard.vue
-		//   .client.vue suffix         →  pages/guilds/Sidebar.client.vue
-		//   .server.vue suffix         →  pages/guilds/HeavyList.server.vue
-		//
-		// A single "**/@components/**/*.vue" glob already matches *.client.vue and
-		// *.server.vue files. Listing them separately creates duplicate registrations
-		// which can cause `Cannot access '__nuxt_component_N_client' before
-		// initialization` errors during SSR module evaluation.
-
-		// All files inside any @components/ folder nested in pages (one pattern, no duplicates)
-		addComponentsDir({
-			path: pagesDir,
-			pattern: ["**/@components/**/*.vue"],
-			pathPrefix: false,
-		});
+		// Register each co-located component individually so Nuxt has a precise,
+		// duplicate-free registration with an explicit name and mode. Using
+		// addComponent instead of addComponentsDir avoids the glob-scanner producing
+		// multiple entries for the same .client.vue / .server.vue file, which can
+		// cause `Cannot access '__nuxt_component_N_client' before initialization`.
+		for (const filePath of walkAtComponents(pagesDir)) {
+			// eslint-disable-next-line no-await-in-loop
+			await addComponent({
+				filePath,
+				mode: toComponentMode(filePath),
+				name: toComponentName(filePath),
+			});
+		}
 
 		nuxt.hook("pages:extend", (pages) => {
 			// Step 1: Remove co-located component files from the router so they

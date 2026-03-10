@@ -24,17 +24,15 @@ export default defineNuxtModule({
 		//   .client.vue suffix         →  pages/guilds/Sidebar.client.vue
 		//   .server.vue suffix         →  pages/guilds/HeavyList.server.vue
 		//
-		// Using explicit glob patterns avoids extendComponent filtering, which
-		// returns void for non-matching files and does NOT exclude them.
+		// A single "**/@components/**/*.vue" glob already matches *.client.vue and
+		// *.server.vue files. Listing them separately creates duplicate registrations
+		// which can cause `Cannot access '__nuxt_component_N_client' before
+		// initialization` errors during SSR module evaluation.
 
-		// All files inside any @components/ folder nested in pages
+		// All files inside any @components/ folder nested in pages (one pattern, no duplicates)
 		addComponentsDir({
 			path: pagesDir,
-			pattern: [
-				"**/@components/**/*.vue",
-				"**/@components/**/*.client.vue",
-				"**/@components/**/*.server.vue",
-			],
+			pattern: ["**/@components/**/*.vue"],
 			pathPrefix: false,
 		});
 

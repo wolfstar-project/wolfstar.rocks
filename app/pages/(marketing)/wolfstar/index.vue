@@ -33,10 +33,12 @@
 	<section id="explore" ref="exploreRef" class="mt-34 min-h-200 w-full scroll-mt-24">
 		<div class="mb-16 text-center">
 			<h2 class="text-5xl font-bold">Explore</h2>
-			<template v-if="exploreLoaded">
-				<FeatureCarousel class="mb-24" @open-feature="openFeature" />
-				<FeatureShowcase v-model:active-feature="selectedFeatureIndex" />
-			</template>
+			<ClientOnly>
+				<template v-if="exploreLoaded">
+					<LazyFeatureCarousel class="mb-24" @open-feature="openFeature" />
+					<LazyFeatureShowcase v-model:active-feature="selectedFeatureIndex" />
+				</template>
+			</ClientOnly>
 		</div>
 	</section>
 
@@ -83,7 +85,7 @@
 			</NuxtLink>
 		</div>
 	</section>
-	<OtherApps :apps="[OtherApps.Staryl]" />
+	<OtherApps :apps="[otherApps.Staryl]" />
 </template>
 
 <script setup lang="ts">
@@ -96,7 +98,7 @@ useSeoMetadata({
 	title: "Home",
 });
 
-const OtherApps = useApp();
+const otherApps = useApp();
 const Invites = useInvites();
 
 const selectedFeatureIndex = ref(0);

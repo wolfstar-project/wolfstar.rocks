@@ -231,7 +231,6 @@ export default defineNuxtConfig({
 		rollupConfig: {
 			external: process.env.NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
 		},
-
 		storage: {
 			"fetch-cache": {
 				base: "./.cache/fetch",

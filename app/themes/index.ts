@@ -32,6 +32,6 @@ const ui = {
 	skeleton,
 	tabs,
 	toaster,
-};
+} as const;
 
-export { ui };
+export default ui;

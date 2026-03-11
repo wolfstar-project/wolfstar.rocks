@@ -1,4 +1,4 @@
-import { ui } from "@/themes/index";
+import ui from "@/themes/index";
 
 export default defineAppConfig({
 	footer: [

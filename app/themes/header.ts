@@ -3,7 +3,7 @@ export default {
 		body: "p-4 sm:p-6 overflow-y-auto",
 		center: "hidden lg:flex",
 		container: "flex items-center justify-between gap-3 h-full",
-		content: "lg:hidden",
+		content: "lg:hidden nav-panel-glass",
 		header: "px-4 sm:px-6 h-(--ui-header-height) shrink-0 flex items-center justify-between gap-3",
 		left: "lg:flex-1 flex items-center gap-1.5",
 		overlay: "lg:hidden",

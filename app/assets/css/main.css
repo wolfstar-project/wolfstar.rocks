@@ -118,8 +118,9 @@
 		--animate-accordion-up: accordion-up 0.2s ease-out;
 		--branding-wolfstar: oklch(63% 0.2502 28.13);
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
+	}
 
-		/* Nuxt UI Colors */
+	[data-theme="light"] {
 		--ui-text-dimmed: var(--color-neutral-600);
 		--ui-text-muted: var(--color-neutral-800);
 		--ui-text-toned: var(--color-neutral-900);
@@ -142,7 +143,7 @@
 		--ui-container: var(--container-7xl);
 	}
 
-	.dark {
+	[data-theme="dark"] {
 		--ui-text-dimmed: var(--color-neutral-500);
 		--ui-text-muted: var(--color-neutral-400);
 		--ui-text-toned: var(--color-neutral-300);

@@ -31,11 +31,11 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
-        # pnpm cache skipped deliberately as the project is not actually installed here
+
+      - name: 📦 Install dependencies (root only, no scripts)
+        run: pnpm install --filter . --ignore-scripts
 
       - name: 🔠 Lint project
         run: pnpm lint
@@ -51,10 +51,8 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
@@ -79,10 +77,8 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
@@ -117,10 +113,8 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
@@ -142,10 +136,8 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
@@ -170,10 +162,8 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install
@@ -200,10 +190,8 @@ jobs:
         with:
           node-version: lts/*
 
-      - uses: pnpm/action-setup@1e1c8eafbd745f64b1ef30a7d7ed7965034c486c # 1e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
         name: 🟧 Install pnpm
-        with:
-          cache: true
 
       - name: 📦 Install dependencies
         run: pnpm install

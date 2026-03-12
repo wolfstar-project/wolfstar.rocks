@@ -76,6 +76,7 @@
 		"@prisma/client": "^6.19.0",
 		"@sapphire/ratelimits": "^2.4.11",
 		"@sentry/nuxt": "^10.42.0",
+		"@takumi-rs/core": "^0.71.7",
 		"@vite-pwa/assets-generator": "^1.0.2",
 		"@vite-pwa/nuxt": "^1.1.1",
 		"@vitest/browser-playwright": "^4.0.18",

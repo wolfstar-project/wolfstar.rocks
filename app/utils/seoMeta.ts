@@ -31,7 +31,7 @@ export function useSeoMetadata({
 	});
 
 	if (shouldOgImage) {
-		defineOgImageComponent("Default", {
+		defineOgImage({
 			description: ogImage?.description ?? description,
 			title: ogImage?.title ?? title,
 			...ogImage,

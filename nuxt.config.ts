@@ -1,5 +1,5 @@
 import { createResolver } from "nuxt/kit";
-import { isTest } from "std-env";
+import { isCI, isTest } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -18,7 +18,7 @@ export default defineNuxtConfig({
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
-		...(isTest ? [] : ["@netlify/nuxt"]),
+		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
 		"@vite-pwa/nuxt",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",

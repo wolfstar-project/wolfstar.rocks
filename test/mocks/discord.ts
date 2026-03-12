@@ -5,7 +5,6 @@ import type {
 	FlattenedGuildChannel,
 	FlattenedRole,
 	OauthFlattenedGuild,
-	PartialOauthFlattenedGuild,
 } from "../../shared/types/discord";
 
 /**
@@ -87,20 +86,6 @@ export function createMockOauthFlattenedGuild(
 }
 
 /**
- * Creates a mock PartialOauthFlattenedGuild for testing
- * @param overrides - Partial overrides for the default mock guild
- * @returns A complete PartialOauthFlattenedGuild object
- */
-export function createMockPartialOauthFlattenedGuild(
-	overrides?: Partial<PartialOauthFlattenedGuild>,
-): PartialOauthFlattenedGuild {
-	const baseGuild = createMockOauthFlattenedGuild(overrides);
-	// Remove the OAuth-specific fields
-	const { permissions, manageable, wolfstarIsIn, ...partialGuild } = baseGuild;
-	return partialGuild;
-}
-
-/**
  * Creates a mock FlattenedRole for testing
  * @param overrides - Partial overrides for the default mock role
  * @returns A complete FlattenedRole object
@@ -127,7 +112,7 @@ export function createMockRole(overrides?: Partial<FlattenedRole>): FlattenedRol
  * @param overrides - Partial overrides for the default mock emoji
  * @returns A complete FlattenedEmoji object
  */
-export function createMockEmoji(overrides?: Partial<FlattenedEmoji>): FlattenedEmoji {
+function createMockEmoji(overrides?: Partial<FlattenedEmoji>): FlattenedEmoji {
 	const defaultEmoji: FlattenedEmoji = {
 		animated: false,
 		available: true,

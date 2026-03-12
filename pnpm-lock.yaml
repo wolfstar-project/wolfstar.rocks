@@ -120,9 +120,6 @@ importers:
       rou3:
         specifier: ^0.7.12
         version: 0.7.12
-      sharp:
-        specifier: 0.34.5
-        version: 0.34.5
       simple-git:
         specifier: ^3.32.3
         version: 3.32.3
@@ -135,9 +132,6 @@ importers:
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
-      utility-types:
-        specifier: ^3.11.0
-        version: 3.11.0
       valibot:
         specifier: ^1.2.0
         version: 1.2.0(typescript@5.9.3)
@@ -175,9 +169,6 @@ importers:
       '@sapphire/bitfield':
         specifier: ^1.2.4
         version: 1.2.4
-      '@sapphire/prettier-config':
-        specifier: ^2.0.0
-        version: 2.0.0
       '@sapphire/snowflake':
         specifier: ^3.5.5
         version: 3.5.5
@@ -193,18 +184,12 @@ importers:
       '@types/node':
         specifier: 24.12.0
         version: 24.12.0
-      '@types/pg':
-        specifier: ^8.18.0
-        version: 8.18.0
       '@vitest/ui':
         specifier: ^4.0.18
         version: 4.0.18(vitest@4.0.18)
       '@vue-macros/nuxt':
         specifier: ^3.1.2
         version: 3.1.2(@vueuse/core@14.2.1(vue@3.5.30(typescript@5.9.3)))(esbuild@0.27.3)(magicast@0.5.2)(nuxt@4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6(@babel/core@7.29.0))(@electric-sql/pglite@0.3.15)(@netlify/blobs@10.7.0)(@parcel/watcher@2.5.6)(@types/node@24.12.0)(@vue/compiler-sfc@3.5.30)(cac@6.7.14)(db0@0.3.4(@electric-sql/pglite@0.3.15))(encoding@0.1.13)(eslint@9.39.4(jiti@2.6.1))(ioredis@5.10.0)(lightningcss@1.31.1)(magicast@0.5.2)(meow@13.2.0)(optionator@0.9.4)(oxlint@1.51.0)(rollup-plugin-visualizer@6.0.11(rollup@4.59.0))(rollup@4.59.0)(terser@5.46.0)(tsx@4.21.0)(typescript@5.9.3)(vite@7.3.1(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.5(typescript@5.9.3))(yaml@2.8.2))(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.31.1)(terser@5.46.0)(tsx@4.21.0)(yaml@2.8.2))(vue-tsc@3.2.5(typescript@5.9.3))(vue@3.5.30(typescript@5.9.3))
-      axe-core:
-        specifier: ^4.11.1
-        version: 4.11.1
       changelogen:
         specifier: ^0.6.2
         version: 0.6.2(magicast@0.5.2)
@@ -3648,10 +3633,6 @@ packages:
 
   '@sapphire/duration@1.2.0':
     resolution: {integrity: sha512-LxjOAFXz81WmrI8XX9YaVcAZDjQj/1p78lZCvkAWZB1nphOwz/D0dU3CBejmhOWx5dO5CszTkLJMNR0xuCK+Zg==}
-    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
-
-  '@sapphire/prettier-config@2.0.0':
-    resolution: {integrity: sha512-Vie8KR5zQ6sbEP4+biW/IR7k55saGfZkTSuRlgvxCBKb4SBJdRWcOBI80i+JxMVIDDZKgXlgYnXEST+FgZiWXA==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   '@sapphire/ratelimits@2.4.11':
@@ -8280,11 +8261,6 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.8.1:
-    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
-    engines: {node: '>=14'}
-    hasBin: true
-
   pretty-bytes@5.6.0:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==}
     engines: {node: '>=6'}
@@ -9488,10 +9464,6 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
-
-  utility-types@3.11.0:
-    resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
-    engines: {node: '>= 4'}
 
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
@@ -13700,10 +13672,6 @@ snapshots:
       '@sapphire/utilities': 3.18.2
 
   '@sapphire/duration@1.2.0': {}
-
-  '@sapphire/prettier-config@2.0.0':
-    dependencies:
-      prettier: 3.8.1
 
   '@sapphire/ratelimits@2.4.11': {}
 
@@ -19165,8 +19133,6 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.8.1: {}
-
   pretty-bytes@5.6.0: {}
 
   pretty-bytes@6.1.1: {}
@@ -20519,8 +20485,6 @@ snapshots:
   urlpattern-polyfill@8.0.2: {}
 
   util-deprecate@1.0.2: {}
-
-  utility-types@3.11.0: {}
 
   uuid@11.1.0: {}
 

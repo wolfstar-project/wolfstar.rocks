@@ -284,7 +284,6 @@ export default defineNuxtConfig({
 				"discord-api-types/v10",
 				"motion-v",
 				"ohash/utils",
-				"prettier",
 				"reka-ui",
 				"reka-ui/namespaced",
 				"std-env",

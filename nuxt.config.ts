@@ -165,7 +165,7 @@ export default defineNuxtConfig({
 		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
 		// Globally, as that would serve one user's data to another.
 		"/": { appLayout: "default", prerender: true, robots: true },
-		"/__og-image__/**": getISRConfig(60),
+		"/_og/**": getISRConfig(60),
 		"/api/auth/**": { isr: false, cache: false },
 		"/api/commands": {
 			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache

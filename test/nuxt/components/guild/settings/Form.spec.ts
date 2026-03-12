@@ -93,12 +93,12 @@ describe("guildSettingsForm - Reset Behavior", () => {
 			template: `
 				<GuildSettingsForm :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
 					<div class="space-y-4">
-						<UFormField label="Prefix" name="prefix">
-							<UInput id="prefix-input" v-model="state.prefix" />
-						</UFormField>
-						<UFormField label="Language" name="language">
-							<UInput id="language-input" v-model="state.language" />
-						</UFormField>
+						<div>
+							<input id="prefix-input" v-model="state.prefix" />
+						</div>
+						<div>
+							<input id="language-input" v-model="state.language" />
+						</div>
 					</div>
 				</GuildSettingsForm>
 			`,
@@ -162,9 +162,9 @@ describe("guildSettingsForm - Reset Behavior", () => {
 			},
 			template: `
 				<GuildSettingsForm :schema="testSchema" :state="state">
-					<UFormField label="Prefix" name="prefix">
-						<UInput id="prefix-input" v-model="state.prefix" />
-					</UFormField>
+					<div>
+						<input id="prefix-input" v-model="state.prefix" />
+					</div>
 				</GuildSettingsForm>
 			`,
 		});
@@ -209,9 +209,9 @@ describe("guildSettingsForm - Reset Behavior", () => {
 			},
 			template: `
 				<GuildSettingsForm :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
-					<UFormField label="Prefix" name="prefix">
-						<UInput id="prefix-input" v-model="state.prefix" />
-					</UFormField>
+					<div>
+						<input id="prefix-input" v-model="state.prefix" />
+					</div>
 				</GuildSettingsForm>
 			`,
 		});
@@ -270,9 +270,9 @@ describe("guildSettingsForm - Reset Behavior", () => {
 			},
 			template: `
 				<GuildSettingsForm :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
-					<UFormField label="Prefix" name="prefix">
-						<UInput id="prefix-input" v-model="state.prefixWrapper.value" />
-					</UFormField>
+					<div>
+						<input id="prefix-input" v-model="state.prefixWrapper.value" />
+					</div>
 				</GuildSettingsForm>
 			`,
 		});

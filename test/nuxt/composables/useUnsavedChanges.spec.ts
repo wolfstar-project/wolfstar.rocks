@@ -1,6 +1,8 @@
-import { mockNuxtImport } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ref } from "vue";
+import type { Ref } from "vue";
+import type { Router } from "vue-router";
+import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { defineComponent, ref } from "vue";
 
 interface RouteArg {
 	fullPath: string;
@@ -8,39 +10,56 @@ interface RouteArg {
 }
 type GuardFn = (to: RouteArg, from: RouteArg) => unknown;
 
-let capturedGuard: GuardFn | undefined;
-
-const mockBeforeEach = vi.fn((guard: GuardFn) => {
-	capturedGuard = guard;
-	return vi.fn();
-});
-const mockPush = vi.fn();
-
-mockNuxtImport("useRouter", () => () => ({
-	beforeEach: mockBeforeEach,
-	push: mockPush,
-}));
-
 function makeRoute(path: string): RouteArg {
 	return { fullPath: path, path };
 }
 
 describe("useUnsavedChanges", () => {
+	let capturedGuard: GuardFn | undefined;
+	let mockBeforeEach: ReturnType<typeof vi.fn>;
+	let mockPush: ReturnType<typeof vi.fn>;
+
 	// oxlint-disable-next-line vitest/no-hooks
 	beforeEach(() => {
-		vi.clearAllMocks();
 		capturedGuard = undefined;
 	});
 
-	it("should register a route guard on init", () => {
-		useUnsavedChanges(ref(false));
+	// oxlint-disable-next-line vitest/no-hooks
+	afterEach(() => {
+		vi.restoreAllMocks();
+	});
+
+	async function setupComposable(hasChanges: Ref<boolean>) {
+		let composable: ReturnType<typeof useUnsavedChanges> | undefined;
+		mockBeforeEach = vi.fn((guard: GuardFn) => {
+			capturedGuard = guard;
+			return vi.fn();
+		});
+		mockPush = vi.fn();
+
+		const TestComponent = defineComponent({
+			setup() {
+				const router = useRouter() as Router;
+				vi.spyOn(router, "beforeEach").mockImplementation(mockBeforeEach as any);
+				vi.spyOn(router, "push").mockImplementation(mockPush as any);
+				composable = useUnsavedChanges(hasChanges);
+				return () => null;
+			},
+		});
+
+		await mountSuspended(TestComponent);
+		return composable!;
+	}
+
+	it("should register a route guard on init", async () => {
+		await setupComposable(ref(false));
 
 		// oxlint-disable-next-line vitest/prefer-called-times
 		expect(mockBeforeEach).toHaveBeenCalledOnce();
 	});
 
-	it("should not block navigation when there are no unsaved changes", () => {
-		useUnsavedChanges(ref(false));
+	it("should not block navigation when there are no unsaved changes", async () => {
+		await setupComposable(ref(false));
 
 		const result = capturedGuard!(
 			makeRoute("/guilds"),
@@ -50,8 +69,8 @@ describe("useUnsavedChanges", () => {
 		expect(result).toBeUndefined();
 	});
 
-	it("should block navigation and show dialog when navigating away with unsaved changes", () => {
-		const { showDialog } = useUnsavedChanges(ref(true));
+	it("should block navigation and show dialog when navigating away with unsaved changes", async () => {
+		const composable = await setupComposable(ref(true));
 
 		const result = capturedGuard!(
 			makeRoute("/guilds"),
@@ -59,11 +78,11 @@ describe("useUnsavedChanges", () => {
 		);
 
 		expect(result).toBeFalsy();
-		expect(showDialog.value).toBeTruthy();
+		expect(composable.showDialog.value).toBeTruthy();
 	});
 
-	it("should not block navigation within the same guild manage area", () => {
-		const { showDialog } = useUnsavedChanges(ref(true));
+	it("should not block navigation within the same guild manage area", async () => {
+		const composable = await setupComposable(ref(true));
 
 		const result = capturedGuard!(
 			makeRoute("/guilds/123456789012345678/manage/channels"),
@@ -71,11 +90,11 @@ describe("useUnsavedChanges", () => {
 		);
 
 		expect(result).toBeUndefined();
-		expect(showDialog.value).toBeFalsy();
+		expect(composable.showDialog.value).toBeFalsy();
 	});
 
-	it("should not block navigation between filter sub-paths of the same guild", () => {
-		const { showDialog } = useUnsavedChanges(ref(true));
+	it("should not block navigation between filter sub-paths of the same guild", async () => {
+		const composable = await setupComposable(ref(true));
 
 		const result = capturedGuard!(
 			makeRoute("/guilds/123456789012345678/manage/filter/links"),
@@ -83,41 +102,41 @@ describe("useUnsavedChanges", () => {
 		);
 
 		expect(result).toBeUndefined();
-		expect(showDialog.value).toBeFalsy();
+		expect(composable.showDialog.value).toBeFalsy();
 	});
 
-	it("confirmLeave should navigate to the pending route and close the dialog", () => {
-		const { confirmLeave, showDialog } = useUnsavedChanges(ref(true));
+	it("confirmLeave should navigate to the pending route and close the dialog", async () => {
+		const composable = await setupComposable(ref(true));
 
 		capturedGuard!(makeRoute("/guilds"), makeRoute("/guilds/123456789012345678/manage"));
-		expect(showDialog.value).toBeTruthy();
+		expect(composable.showDialog.value).toBeTruthy();
 
-		confirmLeave();
+		composable.confirmLeave();
 
-		expect(showDialog.value).toBeFalsy();
+		expect(composable.showDialog.value).toBeFalsy();
 		expect(mockPush).toHaveBeenCalledWith("/guilds");
 	});
 
-	it("cancelLeave should close the dialog without navigating", () => {
-		const { cancelLeave, showDialog } = useUnsavedChanges(ref(true));
+	it("cancelLeave should close the dialog without navigating", async () => {
+		const composable = await setupComposable(ref(true));
 
 		capturedGuard!(makeRoute("/guilds"), makeRoute("/guilds/123456789012345678/manage"));
-		expect(showDialog.value).toBeTruthy();
+		expect(composable.showDialog.value).toBeTruthy();
 
-		cancelLeave();
+		composable.cancelLeave();
 
-		expect(showDialog.value).toBeFalsy();
+		expect(composable.showDialog.value).toBeFalsy();
 		expect(mockPush).not.toHaveBeenCalled();
 	});
 
-	it("skipGuard should allow navigation to proceed after confirmLeave without re-blocking", () => {
-		const { confirmLeave } = useUnsavedChanges(ref(true));
+	it("skipGuard should allow navigation to proceed after confirmLeave without re-blocking", async () => {
+		const composable = await setupComposable(ref(true));
 
 		// Block the navigation
 		capturedGuard!(makeRoute("/guilds"), makeRoute("/guilds/123456789012345678/manage"));
 
 		// Confirm leave sets skipGuard = true
-		confirmLeave();
+		composable.confirmLeave();
 
 		// Next guard invocation should pass through (skipGuard resets it)
 		const result = capturedGuard!(

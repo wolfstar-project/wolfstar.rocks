@@ -130,7 +130,7 @@ watch(
 
 watch(
 	resetCounter,
-	() => {
+	async () => {
 		if (!isOriginalStateInitialized.value || !originalState.value) {
 			return;
 		}
@@ -138,6 +138,7 @@ watch(
 		isResetting.value = true;
 		Object.assign(state, structuredClone(toRaw(originalState.value)));
 		formRef.value?.clear();
+		await nextTick();
 		isResetting.value = false;
 	},
 	{ flush: "sync" },

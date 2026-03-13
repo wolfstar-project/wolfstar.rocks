@@ -51,6 +51,9 @@ const config: KnipConfig = {
 				"unstorage",
 				"vite",
 
+				/**Used in nuxt.config.ts */
+				"@netlify/nuxt",
+
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",
 				"@discordjs/rest",
@@ -68,18 +71,13 @@ const config: KnipConfig = {
 				"nuxt-security",
 				"@takumi-rs/core",
 
-				/** Test utilities (devDependencies flagged in --production mode) */
-				"@vitest/browser-playwright",
-				"@vue/test-utils",
-
 				/** Used for git hooks, not imported directly */
 				"nano-staged",
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: ["#build/auth.config"],
-			ignore: ["pncat.config.ts"],
+			ignoreUnresolved: ["#build/auth.config", "#server/database/generated/client"],
 		},
 	},
 };

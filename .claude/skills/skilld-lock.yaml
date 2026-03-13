@@ -327,8 +327,9 @@ skills:
     generator: skilld
   nuxt-og-image-skilld:
     packageName: nuxt-og-image
-    version: 5.1.13
+    version: 6.0.1
+    packages: "nuxt-og-image@6.0.1"
     repo: nuxt-modules/og-image
-    source: "https://github.com/nuxt-modules/og-image/tree/v5.1.13/docs"
-    syncedAt: 2026-03-06
+    source: "https://github.com/nuxt-modules/og-image/tree/v6.0.1/docs"
+    syncedAt: 2026-03-13
     generator: skilld

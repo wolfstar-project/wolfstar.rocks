@@ -24,4 +24,5 @@ useSeoMetadata({
 	description: error.statusText || "An unexpected error occurred.",
 	title: error.status?.toString(),
 });
+defineOgImage("page.takumi");
 </script>

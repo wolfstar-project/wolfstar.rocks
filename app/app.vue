@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+import { isCI, isTest } from "std-env";
+
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
 const { fetch: refreshSession } = useUserSession();
@@ -38,6 +40,12 @@ watch(
 provide(ProviderAppNameKey, appName);
 
 onMounted(() => {
+	if (!isCI || !isTest) return;
+	// In CI/test environments, we want to bypass the normal session refresh logic
 	$fetch("/api/auth/refresh").then(refreshSession);
 });
+
+// title and description will be inferred
+// this will be overridden by upstream pages that use different templates
+defineOgImage("Page.takumi");
 </script>

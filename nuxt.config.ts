@@ -165,7 +165,7 @@ export default defineNuxtConfig({
 		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
 		// Globally, as that would serve one user's data to another.
 		"/": { appLayout: "default", prerender: true, robots: true },
-		"/_og/**": getISRConfig(60),
+		"/_og/d/**": getISRConfig(60 * 60 * 24),
 		"/api/auth/**": { isr: false, cache: false },
 		"/api/commands": {
 			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
@@ -312,6 +312,7 @@ export default defineNuxtConfig({
 			compilerOptions: {
 				allowImportingTsExtensions: true,
 				paths: {
+					"~/*": ["../app/*"],
 					"#server/*": ["../server/*"],
 					"#shared/*": ["../shared/*"],
 				},
@@ -369,9 +370,6 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
-		defaults: {
-			component: "default",
-		},
 		zeroRuntime: true,
 	},
 	// PWA configuration

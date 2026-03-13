@@ -63,6 +63,9 @@ importers:
       '@takumi-rs/core':
         specifier: ^0.71.7
         version: 0.71.7
+      '@takumi-rs/wasm':
+        specifier: ^0.72.0
+        version: 0.72.0
       '@vite-pwa/assets-generator':
         specifier: ^1.0.2
         version: 1.0.2
@@ -4252,6 +4255,9 @@ packages:
   '@takumi-rs/core@0.71.7':
     resolution: {integrity: sha512-5wWs4GNMOcHsJQ6dhpAe0Fk/2mUy40AL2cETSqrt/H21xsGGSsCacGpPpPoIqK4DwdoJyFxoxLwhDGId8WrzOA==}
     engines: {node: '>= 12.22.0 < 13 || >= 14.17.0 < 15 || >= 15.12.0 < 16 || >= 16.0.0'}
+
+  '@takumi-rs/wasm@0.72.0':
+    resolution: {integrity: sha512-5IoekEovpjzpoHd5LM4hRLRgRwW8RdFdF9TR2kmysB1rJF34z0ynIC/Fr0yhraxvFIP0fCzdinz14YzyTq6nuQ==}
 
   '@tanstack/table-core@8.21.3':
     resolution: {integrity: sha512-ldZXEhOBb8Is7xLs01fR3YEc3DERiz5silj8tnGkFZytt1abEvl/GhUmCE0PMLaMPTa3Jk4HbKmRlHmu+gCftg==}
@@ -15621,6 +15627,8 @@ snapshots:
       '@takumi-rs/core-linux-x64-musl': 0.71.7
       '@takumi-rs/core-win32-arm64-msvc': 0.71.7
       '@takumi-rs/core-win32-x64-msvc': 0.71.7
+
+  '@takumi-rs/wasm@0.72.0': {}
 
   '@tanstack/table-core@8.21.3': {}
 

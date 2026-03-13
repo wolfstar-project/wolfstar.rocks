@@ -25,8 +25,6 @@ export function useSeoMetadata({
 		meta: [{ content: description, name: "description" }],
 	});
 
-	defineOgImage();
-
 	if (import.meta.server) {
 		useSeoMeta({
 			description,

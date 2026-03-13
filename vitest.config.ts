@@ -12,6 +12,11 @@ export default defineConfig({
 	define: {
 		"process.test": "true",
 	},
+	resolve: {
+		alias: {
+			"#site-config/app/composables": `${rootDir}/test/mocks/site-config.ts`,
+		},
+	},
 	test: {
 		coverage: {
 			enabled: true,

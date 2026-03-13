@@ -12,7 +12,7 @@ set -e
 
 if [ -n "${LH_PERF}" ]; then
   echo "⚡ Running Lighthouse performance audit (CLS)..."
-  pnpx @lhci/cli autorun --upload.githubStatusContextSuffix="/perf"
+  pnpm dlx @lhci/cli autorun --upload.githubStatusContextSuffix="/perf"
   echo ""
   echo "✅ Performance audit completed"
   exit 0
@@ -21,11 +21,11 @@ fi
 case "${LIGHTHOUSE_COLOR_MODE}" in
   dark)
     echo "🌙 Running Lighthouse accessibility audit (dark mode)..."
-    pnpx @lhci/cli autorun --upload.githubStatusContextSuffix="/dark"
+    pnpm dlx @lhci/cli autorun --upload.githubStatusContextSuffix="/dark"
     ;;
   light)
     echo "☀️ Running Lighthouse accessibility audit (light mode)..."
-    pnpx @lhci/cli autorun --upload.githubStatusContextSuffix="/light"
+    pnpm dlx @lhci/cli autorun --upload.githubStatusContextSuffix="/light"
     ;;
   *)
     echo "⚠️ Missing or invalid LIGHTHOUSE_COLOR_MODE. Use 'dark' or 'light'."

@@ -3,7 +3,7 @@ name: vite-pwa-assets-generator-skilld
 description: "Zero-config PWA Assets Generator. ALWAYS use when writing code importing \"@vite-pwa/assets-generator\". Consult for debugging, best practices, or modifying @vite-pwa/assets-generator, vite-pwa/assets-generator, vite-pwa assets-generator, vite pwa assets generator, assets-generator, assets generator."
 metadata:
   version: 1.0.2
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # vite-pwa/assets-generator `@vite-pwa/assets-generator`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @vite-pwa/assets-generator
-npx -y skilld search "issues:error handling" -p @vite-pwa/assets-generator
-npx -y skilld search "releases:deprecated" -p @vite-pwa/assets-generator
+skilld search "query" -p @vite-pwa/assets-generator
+skilld search "issues:error handling" -p @vite-pwa/assets-generator
+skilld search "releases:deprecated" -p @vite-pwa/assets-generator
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

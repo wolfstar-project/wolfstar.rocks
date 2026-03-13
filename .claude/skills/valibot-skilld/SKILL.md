@@ -3,7 +3,7 @@ name: valibot-skilld
 description: "The modular and type safe schema library for validating structural data. ALWAYS use when writing code importing \"valibot\". Consult for debugging, best practices, or modifying valibot."
 metadata:
   version: 1.2.0
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # open-circle/valibot `valibot`
@@ -17,12 +17,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p valibot
-npx -y skilld search "issues:error handling" -p valibot
-npx -y skilld search "releases:deprecated" -p valibot
+skilld search "query" -p valibot
+skilld search "issues:error handling" -p valibot
+skilld search "releases:deprecated" -p valibot
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

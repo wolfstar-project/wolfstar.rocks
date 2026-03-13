@@ -3,7 +3,7 @@ name: nuxt-vitalizer-skilld
 description: "Instantly better LCP scores in Google Lighthouse. ALWAYS use when writing code importing \"nuxt-vitalizer\". Consult for debugging, best practices, or modifying nuxt-vitalizer, nuxt vitalizer."
 metadata:
   version: 2.0.0
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # johannschopplich/nuxt-vitalizer `nuxt-vitalizer`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p nuxt-vitalizer
-npx -y skilld search "issues:error handling" -p nuxt-vitalizer
-npx -y skilld search "releases:deprecated" -p nuxt-vitalizer
+skilld search "query" -p nuxt-vitalizer
+skilld search "issues:error handling" -p nuxt-vitalizer
+skilld search "releases:deprecated" -p nuxt-vitalizer
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

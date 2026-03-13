@@ -3,7 +3,7 @@ name: nuxtjs-seo-skilld
 description: "Fully equipped Technical SEO for busy Nuxters. ALWAYS use when writing code importing \"@nuxtjs/seo\". Consult for debugging, best practices, or modifying @nuxtjs/seo, nuxtjs/seo, nuxtjs seo, nuxt-seo, nuxt seo."
 metadata:
   version: 3.4.0
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # harlan-zw/nuxt-seo `@nuxtjs/seo`
@@ -18,12 +18,14 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @nuxtjs/seo
-npx -y skilld search "issues:error handling" -p @nuxtjs/seo
-npx -y skilld search "releases:deprecated" -p @nuxtjs/seo
+skilld search "query" -p @nuxtjs/seo
+skilld search "issues:error handling" -p @nuxtjs/seo
+skilld search "releases:deprecated" -p @nuxtjs/seo
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.
+
+Related: nuxt-og-image-skilld

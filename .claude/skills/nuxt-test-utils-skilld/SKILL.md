@@ -3,7 +3,7 @@ name: nuxt-test-utils-skilld
 description: "Test utilities for Nuxt. ALWAYS use when writing code importing \"@nuxt/test-utils\". Consult for debugging, best practices, or modifying @nuxt/test-utils, nuxt/test-utils, nuxt test-utils, nuxt test utils, test-utils, test utils."
 metadata:
   version: 4.0.0
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # nuxt/test-utils `@nuxt/test-utils`
@@ -18,14 +18,14 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @nuxt/test-utils
-npx -y skilld search "issues:error handling" -p @nuxt/test-utils
-npx -y skilld search "releases:deprecated" -p @nuxt/test-utils
+skilld search "query" -p @nuxt/test-utils
+skilld search "issues:error handling" -p @nuxt/test-utils
+skilld search "releases:deprecated" -p @nuxt/test-utils
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.
 
-Related: std-env-skilld
+Related: consola-skilld, defu-skilld, std-env-skilld

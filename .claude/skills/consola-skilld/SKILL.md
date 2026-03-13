@@ -3,7 +3,7 @@ name: consola-skilld
 description: "Elegant Console Wrapper. ALWAYS use when writing code importing \"consola\". Consult for debugging, best practices, or modifying consola."
 metadata:
   version: 3.4.2
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # unjs/consola `consola`
@@ -17,12 +17,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p consola
-npx -y skilld search "issues:error handling" -p consola
-npx -y skilld search "releases:deprecated" -p consola
+skilld search "query" -p consola
+skilld search "issues:error handling" -p consola
+skilld search "releases:deprecated" -p consola
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

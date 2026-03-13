@@ -3,7 +3,7 @@ name: vueuse-integrations-skilld
 description: "Integration wrappers for utility libraries. ALWAYS use when writing code importing \"@vueuse/integrations\". Consult for debugging, best practices, or modifying @vueuse/integrations, vueuse/integrations, vueuse integrations, vueuse."
 metadata:
   version: 14.2.1
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # vueuse/vueuse `@vueuse/integrations`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @vueuse/integrations
-npx -y skilld search "issues:error handling" -p @vueuse/integrations
-npx -y skilld search "releases:deprecated" -p @vueuse/integrations
+skilld search "query" -p @vueuse/integrations
+skilld search "issues:error handling" -p @vueuse/integrations
+skilld search "releases:deprecated" -p @vueuse/integrations
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

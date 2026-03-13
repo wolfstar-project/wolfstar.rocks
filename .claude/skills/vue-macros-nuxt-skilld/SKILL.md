@@ -3,7 +3,7 @@ name: vue-macros-nuxt-skilld
 description: "nuxt feature from Vue Macros. ALWAYS use when writing code importing \"@vue-macros/nuxt\". Consult for debugging, best practices, or modifying @vue-macros/nuxt, vue-macros/nuxt, vue-macros nuxt, vue macros nuxt, vue-macros, vue macros."
 metadata:
   version: 3.1.2
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # vue-macros/vue-macros `@vue-macros/nuxt`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @vue-macros/nuxt
-npx -y skilld search "issues:error handling" -p @vue-macros/nuxt
-npx -y skilld search "releases:deprecated" -p @vue-macros/nuxt
+skilld search "query" -p @vue-macros/nuxt
+skilld search "issues:error handling" -p @vue-macros/nuxt
+skilld search "releases:deprecated" -p @vue-macros/nuxt
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

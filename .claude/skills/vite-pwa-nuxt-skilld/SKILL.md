@@ -3,7 +3,7 @@ name: vite-pwa-nuxt-skilld
 description: "Zero-config PWA for Nuxt 3. ALWAYS use when writing code importing \"@vite-pwa/nuxt\". Consult for debugging, best practices, or modifying @vite-pwa/nuxt, vite-pwa/nuxt, vite-pwa nuxt, vite pwa nuxt, nuxt."
 metadata:
   version: 1.1.1
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # vite-pwa/nuxt `@vite-pwa/nuxt`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @vite-pwa/nuxt
-npx -y skilld search "issues:error handling" -p @vite-pwa/nuxt
-npx -y skilld search "releases:deprecated" -p @vite-pwa/nuxt
+skilld search "query" -p @vite-pwa/nuxt
+skilld search "issues:error handling" -p @vite-pwa/nuxt
+skilld search "releases:deprecated" -p @vite-pwa/nuxt
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

@@ -3,7 +3,7 @@ name: vueuse-core-skilld
 description: "Collection of essential Vue Composition Utilities. ALWAYS use when writing code importing \"@vueuse/core\". Consult for debugging, best practices, or modifying @vueuse/core, vueuse/core, vueuse core, vueuse."
 metadata:
   version: 14.2.1
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # vueuse/vueuse `@vueuse/core`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @vueuse/core
-npx -y skilld search "issues:error handling" -p @vueuse/core
-npx -y skilld search "releases:deprecated" -p @vueuse/core
+skilld search "query" -p @vueuse/core
+skilld search "issues:error handling" -p @vueuse/core
+skilld search "releases:deprecated" -p @vueuse/core
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

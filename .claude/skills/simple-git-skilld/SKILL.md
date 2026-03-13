@@ -14,7 +14,7 @@ metadata:
 **Deps:** @kwsites/file-exists@^1.1.1, @kwsites/promise-deferred@^1.1.1, debug@^4.4.0
 **Tags:** canary: 3.0.2 (Jan 2022), latest: 3.33.0 (Mar 2026)
 
-**References:** [package.json](./.skilld/pkg/package.json) — exports, entry points • [Docs](./.skilld/docs/_INDEX.md) — API reference, guides • [GitHub Issues](./.skilld/issues/_INDEX.md) — bugs, workarounds, edge cases • [Releases](./.skilld/releases/_INDEX.md) — changelog, breaking changes, new APIs
+**References:** [package.json](./.skilld/pkg/package.json) — exports, entry points • [GitHub Issues](./.skilld/issues/_INDEX.md) — bugs, workarounds, edge cases • [Releases](./.skilld/releases/_INDEX.md) — changelog, breaking changes, new APIs
 
 ## Search
 

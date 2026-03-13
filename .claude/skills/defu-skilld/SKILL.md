@@ -3,7 +3,7 @@ name: defu-skilld
 description: "Recursively assign default properties. Lightweight and Fast!. ALWAYS use when writing code importing \"defu\". Consult for debugging, best practices, or modifying defu."
 metadata:
   version: 6.1.4
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # unjs/defu `defu`
@@ -17,12 +17,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p defu
-npx -y skilld search "issues:error handling" -p defu
-npx -y skilld search "releases:deprecated" -p defu
+skilld search "query" -p defu
+skilld search "issues:error handling" -p defu
+skilld search "releases:deprecated" -p defu
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

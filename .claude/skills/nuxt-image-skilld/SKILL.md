@@ -3,7 +3,7 @@ name: nuxt-image-skilld
 description: "Nuxt Image Module. ALWAYS use when writing code importing \"@nuxt/image\". Consult for debugging, best practices, or modifying @nuxt/image, nuxt/image, nuxt image, image."
 metadata:
   version: 2.0.0
-  generated_at: 2026-02-23
+  generated_at: 2026-03-13
 ---
 
 # nuxt/image `@nuxt/image`
@@ -18,12 +18,12 @@ metadata:
 
 ## Search
 
-Use `npx -y skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases.
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
 
 ```bash
-npx -y skilld search "query" -p @nuxt/image
-npx -y skilld search "issues:error handling" -p @nuxt/image
-npx -y skilld search "releases:deprecated" -p @nuxt/image
+skilld search "query" -p @nuxt/image
+skilld search "issues:error handling" -p @nuxt/image
+skilld search "releases:deprecated" -p @nuxt/image
 ```
 
 Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

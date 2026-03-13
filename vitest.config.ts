@@ -1,7 +1,9 @@
 import { fileURLToPath } from "node:url";
+import { getV8Flags } from "@codspeed/core";
 import codspeedPlugin from "@codspeed/vitest-plugin";
 import { defineVitestProject } from "@nuxt/test-utils/config";
 import { playwright } from "@vitest/browser-playwright";
+import { isCI } from "std-env";
 import { defineConfig } from "vitest/config";
 
 const rootDir = fileURLToPath(new URL(".", import.meta.url));
@@ -10,14 +12,24 @@ export default defineConfig({
 	define: {
 		"process.test": "true",
 	},
-	plugins: [codspeedPlugin()],
 	test: {
 		coverage: {
 			enabled: true,
 			exclude: ["**/node_modules/**"],
 			provider: "v8",
 		},
+		execArgv: isCI ? getV8Flags() : undefined,
 		projects: [
+			{
+				plugins: isCI ? [codspeedPlugin()] : [],
+				test: {
+					name: "benchmark",
+					include: [],
+					benchmark: {
+						include: ["**/*.bench.ts"],
+					},
+				},
+			},
 			{
 				resolve: {
 					alias: {
@@ -30,7 +42,7 @@ export default defineConfig({
 					include: ["test/unit/**/*.{test,spec}.ts"],
 					name: "unit",
 					benchmark: {
-						include: ["test/unit/**/*.{bench}.ts"],
+						include: [],
 					},
 				},
 			},

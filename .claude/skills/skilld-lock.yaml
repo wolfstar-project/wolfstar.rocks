@@ -56,10 +56,11 @@ skills:
     generator: skilld
   vitest-skilld:
     packageName: vitest
-    version: 4.0.18
+    version: 4.1.0
+    packages: "vitest@4.1.0"
     repo: vitest-dev/vitest
-    source: "https://github.com/vitest-dev/vitest/tree/v4.0.18/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/vitest-dev/vitest/tree/v4.1.0/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   discord-api-types-skilld:
     packageName: discord-api-types
@@ -259,10 +260,11 @@ skills:
     generator: skilld
   vitest-browser-playwright-skilld:
     packageName: "@vitest/browser-playwright"
-    version: 4.0.18
+    version: 4.1.0
+    packages: "@vitest/browser-playwright@4.1.0"
     repo: vitest-dev/vitest
-    source: "https://github.com/vitest-dev/vitest/tree/v4.0.18/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/vitest-dev/vitest/tree/v4.1.0/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   nuxt-fonts-skilld:
     packageName: "@nuxt/fonts"

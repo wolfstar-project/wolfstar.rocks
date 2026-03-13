@@ -76,6 +76,7 @@ export default defineConfig({
 								},
 								experimental: {
 									payloadExtraction: false,
+									viteEnvironmentApi: false,
 								},
 								pwa: {
 									pwaAssets: { disabled: true },

@@ -28,7 +28,7 @@
 		"lint": "oxlint && oxfmt --check",
 		"lint:fix": "oxlint --fix && oxfmt",
 		"postinstall": "stale-dep -u && nuxt prepare",
-		"prepare": "node .husky/install.mjs",
+		"prepare": "skilld update -b && node .husky/install.mjs",
 		"generate-pwa-icons": "pwa-assets-generator",
 		"prisma:migrate:dev": "prisma migrate dev",
 		"prisma:migrate:dev:create": "prisma migrate dev --create-only",

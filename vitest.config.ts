@@ -22,6 +22,12 @@ export default defineConfig({
 		projects: [
 			{
 				plugins: isCI ? [codspeedPlugin()] : [],
+				resolve: {
+					alias: {
+						"#server": `${rootDir}/server`,
+						"#shared": `${rootDir}/shared`,
+					},
+				},
 				test: {
 					name: "benchmark",
 					include: [],
@@ -76,6 +82,9 @@ export default defineConfig({
 					},
 					include: ["test/nuxt/**/*.{test,spec}.ts"],
 					name: "nuxt",
+					benchmark: {
+						include: [],
+					},
 				},
 			}),
 		],

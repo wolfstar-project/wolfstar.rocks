@@ -24,6 +24,7 @@ export default defineConfig({
 				plugins: isCI ? [codspeedPlugin()] : [],
 				resolve: {
 					alias: {
+						"~": `${rootDir}/app`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},
@@ -39,6 +40,7 @@ export default defineConfig({
 			{
 				resolve: {
 					alias: {
+						"~": `${rootDir}/app`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},

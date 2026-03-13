@@ -70,6 +70,7 @@ const config: KnipConfig = {
 				"@nuxt/icon",
 				"nuxt-security",
 				"@takumi-rs/core",
+				"@takumi-rs/wasm",
 				"@prisma/client",
 
 				/** Test utilities (devDependencies flagged in --production mode) */

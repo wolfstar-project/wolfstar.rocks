@@ -136,6 +136,7 @@
 		"oxlint": "^1.51.0",
 		"prisma": "^6.19.0",
 		"prisma-json-types-generator": "^3.6.2",
+		"skilld": "^1.2.0",
 		"tailwindcss": "^4.2.1",
 		"taze": "^19.10.0",
 		"typescript": "~5.9.3",

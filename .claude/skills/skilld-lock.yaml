@@ -40,17 +40,19 @@ skills:
     ref: main
   nuxt-ui-skilld:
     packageName: "@nuxt/ui"
-    version: 4.4.0
+    version: 4.5.1
+    packages: "@nuxt/ui@4.5.1"
     repo: nuxt/ui
-    source: "https://ui.nuxt.com/llms.txt"
-    syncedAt: 2026-02-23
+    source: "https://github.com/nuxt/ui/tree/v4.5.1/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   evlog-skilld:
     packageName: evlog
-    version: 1.9.0
+    version: 2.4.1
+    packages: "evlog@2.4.1"
     repo: HugoRCD/evlog
     source: "https://evlog.dev/llms.txt"
-    syncedAt: 2026-02-23
+    syncedAt: 2026-03-13
     generator: skilld
   vitest-skilld:
     packageName: vitest
@@ -61,10 +63,11 @@ skills:
     generator: skilld
   discord-api-types-skilld:
     packageName: discord-api-types
-    version: 0.38.38
+    version: 0.38.41
+    packages: "discord-api-types@0.38.41"
     repo: discordjs/discord-api-types
-    source: "https://github.com/discordjs/discord-api-types/tree/v0.38.38/docs"
-    syncedAt: 2026-02-23
+    source: "ungh://discordjs/discord-api-types"
+    syncedAt: 2026-03-13
     generator: skilld
   sapphire-utilities-skilld:
     packageName: "@sapphire/utilities"
@@ -75,10 +78,11 @@ skills:
     generator: skilld
   nuxt-skilld:
     packageName: nuxt
-    version: 4.3.1
+    version: 4.4.2
+    packages: "nuxt@4.4.2"
     repo: nuxt/nuxt
-    source: "https://github.com/nuxt/nuxt/tree/v4.3.1/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/nuxt/nuxt/tree/v4.4.2/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   valibot-skilld:
     packageName: valibot
@@ -117,10 +121,11 @@ skills:
     generator: skilld
   sentry-nuxt-skilld:
     packageName: "@sentry/nuxt"
-    version: 10.38.0
+    version: 10.42.0
+    packages: "@sentry/nuxt@10.42.0"
     repo: getsentry/sentry-javascript
-    source: "https://github.com/getsentry/sentry-javascript/tree/10.38.0/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/getsentry/sentry-javascript/tree/10.42.0/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   vueuse-router-skilld:
     packageName: "@vueuse/router"
@@ -131,10 +136,11 @@ skills:
     generator: skilld
   dotenv-skilld:
     packageName: dotenv
-    version: 17.2.4
+    version: 17.3.1
+    packages: "dotenv@17.3.1"
     repo: motdotla/dotenv
-    source: "ungh://motdotla/dotenv"
-    syncedAt: 2026-02-23
+    source: "https://www.dotenv.org/**"
+    syncedAt: 2026-03-13
     generator: skilld
   rou3-skilld:
     packageName: rou3
@@ -152,10 +158,11 @@ skills:
     generator: skilld
   simple-git-skilld:
     packageName: simple-git
-    version: 3.30.0
+    version: 3.32.3
+    packages: "simple-git@3.32.3"
     repo: steveukx/git-js
-    source: "https://github.com/steveukx/git-js/tree/simple-git@3.30.0/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/steveukx/git-js/tree/simple-git@3.32.3/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   codspeed-vitest-plugin-skilld:
     packageName: "@codspeed/vitest-plugin"
@@ -222,10 +229,11 @@ skills:
     generator: skilld
   taze-skilld:
     packageName: taze
-    version: 19.9.2
+    version: 19.10.0
+    packages: "taze@19.10.0"
     repo: antfu-collective/taze
     source: "ungh://antfu-collective/taze"
-    syncedAt: 2026-02-23
+    syncedAt: 2026-03-13
     generator: skilld
   prisma-skilld:
     packageName: prisma
@@ -236,10 +244,11 @@ skills:
     generator: skilld
   nuxt-hints-skilld:
     packageName: "@nuxt/hints"
-    version: 1.0.0-alpha.6
+    version: 1.0.0-alpha.10
+    packages: "@nuxt/hints@1.0.0-alpha.10"
     repo: nuxt/hints
     source: "ungh://nuxt/hints"
-    syncedAt: 2026-02-23
+    syncedAt: 2026-03-13
     generator: skilld
   nuxt-image-skilld:
     packageName: "@nuxt/image"
@@ -257,10 +266,11 @@ skills:
     generator: skilld
   nuxt-fonts-skilld:
     packageName: "@nuxt/fonts"
-    version: 0.13.0
+    version: 0.14.0
+    packages: "@nuxt/fonts@0.14.0"
     repo: nuxt/fonts
-    source: "https://github.com/nuxt/fonts/tree/v0.13.0/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/nuxt/fonts/tree/v0.14.0/docs"
+    syncedAt: 2026-03-13
     generator: skilld
   vueuse-nuxt-skilld:
     packageName: "@vueuse/nuxt"
@@ -278,17 +288,19 @@ skills:
     generator: skilld
   netlify-nuxt-skilld:
     packageName: "@netlify/nuxt"
-    version: 0.2.21
+    version: 0.2.30
+    packages: "@netlify/nuxt@0.2.30"
     repo: netlify/primitives
     source: "ungh://netlify/primitives/packages/nuxt-module"
-    syncedAt: 2026-02-23
+    syncedAt: 2026-03-13
     generator: skilld
   nuxt-auth-utils-skilld:
     packageName: nuxt-auth-utils
-    version: 0.5.28
+    version: 0.5.29
+    packages: "nuxt-auth-utils@0.5.29"
     repo: atinux/nuxt-auth-utils
     source: "ungh://atinux/nuxt-auth-utils"
-    syncedAt: 2026-02-23
+    syncedAt: 2026-03-13
     generator: skilld
   nuxtjs-seo-skilld:
     packageName: "@nuxtjs/seo"

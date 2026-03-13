@@ -22,7 +22,6 @@ const { error } = defineProps<{
 
 useSeoMetadata({
 	description: error.statusText || "An unexpected error occurred.",
-	shouldOgImage: true,
 	title: error.status?.toString(),
 });
 </script>

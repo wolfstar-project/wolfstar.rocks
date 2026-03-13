@@ -1,4 +1,3 @@
-import type { OGImageProps } from "@/components/OgImage/Default.vue";
 import type { ResolvableValue } from "@unhead/vue";
 
 interface SiteMetadata {
@@ -8,19 +7,15 @@ interface SiteMetadata {
 	ogType?: "website" | "article" | "profile";
 	twitterCard?: "summary" | "summary_large_image";
 	twitterSite?: string;
-	shouldOgImage?: boolean;
-	ogImage?: OGImageProps;
 }
 
 export function useSeoMetadata({
 	title,
 	description,
-	ogImage,
 	ogSiteName,
 	ogType = "website",
 	twitterCard = "summary_large_image",
 	twitterSite,
-	shouldOgImage = false,
 }: SiteMetadata) {
 	const { url, name: siteName } = useSiteConfig();
 	const route = useRoute();
@@ -30,13 +25,7 @@ export function useSeoMetadata({
 		meta: [{ content: description, name: "description" }],
 	});
 
-	if (shouldOgImage) {
-		defineOgImage({
-			description: ogImage?.description ?? description,
-			title: ogImage?.title ?? title,
-			...ogImage,
-		});
-	}
+	defineOgImage();
 
 	if (import.meta.server) {
 		useSeoMeta({

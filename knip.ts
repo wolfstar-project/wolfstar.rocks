@@ -30,7 +30,6 @@ const config: KnipConfig = {
 				"!.agent/**",
 				"!.claude/**",
 			],
-			ignoreBinaries: ["bump"],
 			husky: false,
 			ignoreDependencies: [
 				"@iconify-json/*",

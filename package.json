@@ -56,7 +56,6 @@
 		"test:bench": "vitest bench",
 		"start:playwright:webserver": "NODE_ENV=test pnpm preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
-		"release": "bump && node scripts/release.ts",
 		"update:interactive": "taze"
 	},
 	"dependencies": {

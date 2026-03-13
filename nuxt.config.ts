@@ -370,7 +370,7 @@ export default defineNuxtConfig({
 
 	ogImage: {
 		defaults: {
-			component: "Default",
+			component: "default",
 		},
 		zeroRuntime: true,
 	},

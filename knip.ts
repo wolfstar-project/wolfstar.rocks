@@ -70,6 +70,11 @@ const config: KnipConfig = {
 				"@nuxt/icon",
 				"nuxt-security",
 				"@takumi-rs/core",
+				"@prisma/client",
+
+				/** Test utilities (devDependencies flagged in --production mode) */
+				"@vitest/browser-playwright",
+				"@vue/test-utils",
 
 				/** Used for git hooks, not imported directly */
 				"nano-staged",

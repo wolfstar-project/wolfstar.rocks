@@ -173,6 +173,9 @@ jobs:
       - name: 📦 Install dependencies
         run: pnpm install
 
+      - name: 🌐 Install Chrome for Puppeteer
+        run: pnpm puppeteer browsers install chrome
+
       - name: 🔼 Generate Prisma Client
         run: pnpm prisma:generate
 
@@ -180,6 +183,23 @@ jobs:
         run: pnpm build:test
         env:
           NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
+
+      - name: 🚀 Start preview server
+        run: pnpm preview &
+        env:
+          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
+
+      - name: ⏳ Wait for server to be ready
+        run: |
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:3000 > /dev/null 2>&1; then
+              echo "Server is ready"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Server failed to start within 30 seconds"
+          exit 1
 
       - name: ♿ Accessibility audit (Unlighthouse)
         run: pnpm test:a11y:prebuilt

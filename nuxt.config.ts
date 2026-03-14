@@ -164,10 +164,6 @@ export default defineNuxtConfig({
 	// Runtime configuration
 	runtimeConfig,
 
-	dir: {
-		modules: resolve("./modules"),
-	},
-
 	routeRules: {
 		// API routes — only cache public, non-authenticated proxy routes.
 		// Broad ISR on /api/** is intentionally omitted: authenticated routes

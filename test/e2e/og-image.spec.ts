@@ -22,7 +22,9 @@ for (const path of paths) {
 			expect(response.headers()["content-type"]).toContain("image/png");
 
 			const imageBuffer = await response.body();
-			expect(imageBuffer.byteLength).toBeGreaterThan(0);
+			expect(imageBuffer).toMatchSnapshot({
+				name: `og-image-for-${path.replace(/\//g, "-")}.png`,
+			});
 		});
 	});
 }

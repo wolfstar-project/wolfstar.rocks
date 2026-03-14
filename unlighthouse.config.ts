@@ -19,5 +19,4 @@ export default {
 	lighthouse: {
 		skipAudits: ["valid-source-maps"],
 	},
-	debug: true,
 };

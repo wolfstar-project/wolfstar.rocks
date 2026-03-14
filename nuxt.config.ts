@@ -1,5 +1,5 @@
 import { createResolver } from "nuxt/kit";
-import { isCI, isTest } from "std-env";
+import { isCI, isTest, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -18,8 +18,8 @@ export default defineNuxtConfig({
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
-		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
 		"@vite-pwa/nuxt",
+		"@nuxtjs/html-validator",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"@vue-macros/nuxt",
@@ -28,6 +28,7 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
+		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
 	],
 
 	$development: {
@@ -150,6 +151,14 @@ export default defineNuxtConfig({
 		experimental: {
 			componentDetection: true,
 		},
+	},
+
+	htmlValidator: {
+		enabled: !isCI || (provider !== "netlify" && !!process.env.VALIDATE_HTML),
+		options: {
+			rules: { "meta-refresh": "off" },
+		},
+		failOnError: true,
 	},
 
 	// Runtime configuration

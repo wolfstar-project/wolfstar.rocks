@@ -156,9 +156,13 @@ jobs:
           run: pnpm test:bench
 
   a11y:
-    name: ♿ Accessibility audit
+    name: ♿ Accessibility audit (${{ matrix.color-scheme }})
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        color-scheme: [light, dark]
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -201,14 +205,16 @@ jobs:
           echo "Server failed to start within 30 seconds"
           exit 1
 
-      - name: ♿ Accessibility audit (Unlighthouse)
+      - name: ♿ Accessibility audit (Unlighthouse – ${{ matrix.color-scheme }})
         run: pnpm test:a11y:prebuilt
+        env:
+          COLOR_SCHEME: ${{ matrix.color-scheme }}
 
       - name: ⬆️ Upload audit report
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
-          name: unlighthouse-report
+          name: unlighthouse-report-${{ matrix.color-scheme }}
           path: .unlighthouse/
           retention-days: 14
 

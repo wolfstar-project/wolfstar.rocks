@@ -58,6 +58,7 @@ const config: KnipConfig = {
 				"@discordjs/rest",
 				"@sapphire/async-queue",
 				"@codspeed/core",
+				"nuxt-og-image",
 				"workbox-*",
 
 				/** Oxlint plugins don't get picked up yet */

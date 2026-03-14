@@ -19,6 +19,7 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 	>
 		<NuxtTime
 			:class="footer ? 'text-sm text-base-content/80' : 'text-md text-base-content'"
+			class="whitespace-nowrap"
 			:datetime="buildTime"
 			year="numeric"
 			month="short"

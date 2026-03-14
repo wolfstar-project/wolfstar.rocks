@@ -1,44 +1,213 @@
-name: Continuous Integration
-
+name: ci
 on:
+  pull_request:
+    branches:
+      - main
+      - release
   push:
     branches:
       - main
-  pull_request:
+  merge_group:
+    branches:
+      - main
+
+# cancel in-progress runs on new commits to same PR (gitub.event.number)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
-  Linting:
-    name: Linting NodeJS
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4
-      - name: Add problem matchers
-        run: echo "::add-matcher::.github/problemMatchers/eslint.json"
-      - name: Use Node.js v20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: yarn
-      - name: Install Dependencies
-        run: yarn --immutable
-      - name: Run ESLint
-        run: yarn lint --fix=false
+  lint:
+    name: 🔠 Lint project
+    runs-on: ubuntu-24.04-arm
 
-  Building:
-    name: Compile source code
-    runs-on: ubuntu-latest
     steps:
-      - name: Checkout Project
-        uses: actions/checkout@v4
-      - name: Add problem matchers
-        run: echo "::add-matcher::.github/problemMatchers/tsc.json"
-      - name: Use Node.js v20
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
         with:
-          node-version: 20
-          cache: yarn
-      - name: Install Dependencies
-        run: yarn --immutable
-      - name: Build code
-        run: yarn build
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies (root only, no scripts)
+        run: pnpm install --filter . --ignore-scripts
+
+      - name: 🔠 Lint project
+        run: pnpm lint
+
+  unit:
+    name: 🧪 Unit tests
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🧪 Unit tests
+        run: pnpm test:unit run --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@0fa95f0e1eeaafde2c782583b36b28ad0d8c77d3 # v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  test:
+    name: 🧪 Component tests
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🌐 Install browser
+        run: pnpm playwright install chromium-headless-shell
+
+      - name: 🧪 Component tests
+        run: pnpm test:nuxt run --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+
+      - name: ⬆︎ Upload coverage reports to Codecov
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
+        with:
+          report_type: test_results
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: ⬆︎ Upload coverage reports to Codecov
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  browser:
+    name: 🖥️ Browser tests
+    runs-on: ubuntu-24.04-arm
+    container:
+      image: mcr.microsoft.com/playwright:v1.58.2-noble
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🔼 Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: 🏗️ Build project
+        run: pnpm build:test
+        env:
+          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
+          VALIDATE_HTML: true
+
+      - name: 🖥️ Test project (browser)
+        run: pnpm test:browser:prebuilt
+
+  benchmark:
+    name: ⚡ Benchmarks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: ⚡ Run benchmarks
+        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f
+        with:
+          mode: simulation
+          run: pnpm test:bench
+
+  a11y:
+    name: ♿ Accessibility audit
+    runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    strategy:
+      matrix:
+        mode: [dark, light]
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🔼 Generate Prisma Client
+        run: pnpm prisma:generate
+
+      - name: 🏗️ Build project
+        run: pnpm build:test
+        env:
+          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
+
+      - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
+        run: pnpm test:a11y:prebuilt
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
+
+  knip:
+    name: 🧹 Unused code check
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        with:
+          node-version: lts/*
+
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # 4e1c8eafbd745f64b1ef30a7d7ed7965034c486c
+        name: 🟧 Install pnpm
+
+      - name: 📦 Install dependencies
+        run: pnpm install
+
+      - name: 🧹 Check for unused code
+        run: pnpm knip
+
+      - name: 🧹 Check for unused production code
+        run: pnpm knip --production

@@ -1,0 +1,28 @@
+---
+name: sapphire-ratelimits-skilld
+description: "Bucket implementation for Ratelimits. ALWAYS use when writing code importing \"@sapphire/ratelimits\". Consult for debugging, best practices, or modifying @sapphire/ratelimits, sapphire/ratelimits, sapphire ratelimits, utilities."
+metadata:
+  version: 2.4.11
+  generated_at: 2026-03-13
+---
+
+# sapphiredev/utilities `@sapphire/ratelimits`
+
+> Bucket implementation for Ratelimits.
+
+**Version:** 2.4.11 (Nov 2024)
+**Tags:** pr-144: 3.0.0-pr-144.6f602eee.0 (Aug 2021), pr-152: 2.0.2-pr-152.76f95fe.0 (Aug 2021), pr-156: 2.1.0-pr-156.a6dae1e0.0 (Aug 2021), pr-159: 2.1.0-pr-159.fae7a606.0 (Aug 2021), pr-160: 3.0.0-pr-160.676f855.0 (Aug 2021), pr-270: 2.2.0-pr-270.b2c4518.0 (Jan 2022), pr-434: 2.4.6-pr-434.77ef153.0 (Jan 2023), pr-567: 2.4.7-pr-567.8638d898.0 (Apr 2023), pr-575: 2.4.7-pr-575.91d23d87.0 (Apr 2023), pr-584: 3.0.0-pr-584.b444d5b.0 (May 2023), pr-587: 3.0.0-pr-587.e9607661.0 (May 2023), pr-589: 3.0.0-pr-589.aa473f9.0 (May 2023), pr-601: 3.0.0-pr-601.2f2c308a.0 (May 2023), pr-684: 2.4.9-pr-684.9d7e2fce.0 (Dec 2023), pr-725: 2.4.10-pr-725.55b1ff7b.0 (Mar 2024), latest: 2.4.11 (Nov 2024), pr-935: 3.0.0-pr-935.7da5c8bb (Nov 2025), next: 2.4.12-next.c1299bac (Mar 2026)
+
+**References:** [package.json](./.skilld/pkg/package.json) — exports, entry points • [README](./.skilld/pkg/README.md) — setup, basic usage • [GitHub Issues](./.skilld/issues/_INDEX.md) — bugs, workarounds, edge cases • [Releases](./.skilld/releases/_INDEX.md) — changelog, breaking changes, new APIs
+
+## Search
+
+Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
+
+```bash
+skilld search "query" -p @sapphire/ratelimits
+skilld search "issues:error handling" -p @sapphire/ratelimits
+skilld search "releases:deprecated" -p @sapphire/ratelimits
+```
+
+Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.

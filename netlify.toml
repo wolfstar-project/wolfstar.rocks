@@ -1,0 +1,16 @@
+#  This is the configuration file for Netlify
+#  https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+command = "pnpm prisma:generate && pnpm run build" # build command
+publish = "dist" # where the built project lives
+
+[build.environment]
+NODE_OPTIONS = '--max-old-space-size=4096'
+
+[images]
+remote_images = [
+	"https:\\/\\/cdn.discordapp.com/.*",
+	"https:\\/\\/media.discordapp.net/.*",
+	"https:\\/\\/cdn.wolfstar.rocks/.*",
+]

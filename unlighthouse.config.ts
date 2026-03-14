@@ -1,4 +1,6 @@
-export default {
+import { defineUnlighthouseConfig } from "unlighthouse/config";
+
+export default defineUnlighthouseConfig({
 	site: "http://localhost:3000",
 	urls: ["/", "/wolfstar", "/staryl", "/commands"],
 	scanner: {
@@ -19,4 +21,4 @@ export default {
 	lighthouse: {
 		skipAudits: ["valid-source-maps"],
 	},
-};
+});

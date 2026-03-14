@@ -141,6 +141,7 @@
 		"tailwindcss": "^4.2.1",
 		"taze": "^19.10.0",
 		"typescript": "~5.9.3",
+		"unlighthouse": "^0.17.7",
 		"vitest-environment-nuxt": "^1.0.1",
 		"vue-tsc": "^3.2.5"
 	},

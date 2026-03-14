@@ -126,6 +126,7 @@ jobs:
       - name: 🏗️ Build project
         run: pnpm build:test
         env:
+          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
           VALIDATE_HTML: true
           NODE_OPTIONS: --max-old-space-size=6144
 
@@ -181,6 +182,7 @@ jobs:
       - name: 🏗️ Build project
         run: pnpm build:test
         env:
+          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
           NODE_OPTIONS: --max-old-space-size=6144
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)

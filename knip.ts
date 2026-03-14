@@ -17,8 +17,7 @@ const config: KnipConfig = {
 				"service-worker/sw.ts",
 				"pwa-assets.config.ts",
 				"taze.config.ts",
-				".lighthouserc.cjs",
-				"lighthouse-setup.cjs",
+				"unlighthouse.config.ts",
 				"scripts/**/*.ts",
 			],
 			project: [
@@ -34,7 +33,6 @@ const config: KnipConfig = {
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",
-				"puppeteer",
 				"vue-tsc",
 				"cz-conventional-changelog",
 

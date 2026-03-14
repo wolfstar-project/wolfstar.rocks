@@ -1,11 +1,11 @@
 /**
  * Shared route mock handlers for WolfStar dashboard API requests.
  *
- * This module contains the URL matching and response generation logic used by:
- * - Lighthouse CI puppeteer setup (lighthouse-setup.cjs)
+ * This module contains the URL matching and response generation logic used by
+ * test utilities and CI audits.
  *
- * It is intentionally written as CJS so it can be required from the CJS
- * Lighthouse setup script and imported from ESM test utilities.
+ * It is intentionally written as CJS so it can be required from CJS scripts
+ * and imported from ESM test utilities.
  *
  * All patterns target the local preview server (http://localhost:3000).
  */

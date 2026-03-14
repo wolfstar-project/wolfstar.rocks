@@ -91,7 +91,6 @@
 		"fuse.js": "^7.1.0",
 		"nuxt": "^4.4.2",
 		"nuxt-auth-utils": "^0.5.29",
-		"nuxt-og-image": "5.1.13",
 		"nuxt-security": "^2.5.1",
 		"nuxt-vitalizer": "^2.0.0",
 		"postcss-nested": "^7.0.2",

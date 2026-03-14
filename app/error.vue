@@ -20,9 +20,10 @@ const { error } = defineProps<{
 	error: NuxtError;
 }>();
 
+// SEO and meta configuration
 useSeoMetadata({
 	description: error.statusText || "An unexpected error occurred.",
+	shouldOgImage: true,
 	title: error.status?.toString(),
 });
-defineOgImage("page.takumi");
 </script>

@@ -68,8 +68,6 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-				"@takumi-rs/core",
-				"@takumi-rs/wasm",
 				"@prisma/client",
 
 				/** Test utilities (devDependencies flagged in --production mode) */

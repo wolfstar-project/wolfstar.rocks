@@ -112,12 +112,11 @@ const isPending = computed(() => status.value === "pending");
 const isError = computed(() => status.value === "error");
 const isSuccess = computed(() => status.value === "success");
 
-useSeoMetadata({
-	description: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
-	ogImage: {
-		description: "A landing page for the OAuth2.0 callback flow",
-		theme: Colors.Blue,
-	},
-	title: "OAuth Callback",
+useRobotsRule(robotBlockingPageProps);
+useSeoMeta({
+	ogDescription: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
+	ogTitle: "OAuth Callback",
+	robots: { none: true },
+	title: "Auth Callback",
 });
 </script>

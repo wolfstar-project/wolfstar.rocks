@@ -18,12 +18,13 @@ export default defineNuxtConfig({
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
-		...(isTest || isCI ? [] : ["@netlify/nuxt", "nuxt-auth-utils"]),
+		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
 		"@vite-pwa/nuxt",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"@vue-macros/nuxt",
 		"evlog/nuxt",
+		"nuxt-auth-utils",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
@@ -164,7 +165,7 @@ export default defineNuxtConfig({
 		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
 		// Globally, as that would serve one user's data to another.
 		"/": { appLayout: "default", prerender: true, robots: true },
-		"/_og/d/**": getISRConfig(60 * 60 * 24),
+		"/__og-image__/**": getISRConfig(60),
 		"/api/auth/**": { isr: false, cache: false },
 		"/api/commands": {
 			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
@@ -369,6 +370,9 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
+		defaults: {
+			component: "Default",
+		},
 		zeroRuntime: true,
 	},
 	// PWA configuration

@@ -44,8 +44,4 @@ onMounted(() => {
 	// In CI/test environments, we want to bypass the normal session refresh logic
 	$fetch("/api/auth/refresh").then(refreshSession);
 });
-
-// title and description will be inferred
-// this will be overridden by upstream pages that use different templates
-defineOgImage("Page.takumi");
 </script>

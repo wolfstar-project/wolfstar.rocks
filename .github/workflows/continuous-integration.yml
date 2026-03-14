@@ -127,7 +127,6 @@ jobs:
         run: pnpm build:test
         env:
           VALIDATE_HTML: true
-          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: 🖥️ Test project (browser)
         run: pnpm test:browser:prebuilt
@@ -180,8 +179,6 @@ jobs:
 
       - name: 🏗️ Build project
         run: pnpm build:test
-        env:
-          NODE_OPTIONS: --max-old-space-size=6144
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: pnpm test:a11y:prebuilt

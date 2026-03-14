@@ -2,7 +2,11 @@ import { defineUnlighthouseConfig } from "unlighthouse/config";
 
 export default defineUnlighthouseConfig(() => {
 	const isCI = !!process.env.CI;
-	const colorScheme = process.env.COLOR_SCHEME ?? "light";
+	const colorScheme = (["light", "dark"] as const).includes(
+		process.env.COLOR_SCHEME as "light" | "dark",
+	)
+		? (process.env.COLOR_SCHEME as "light" | "dark")
+		: "light";
 
 	return {
 		site: "http://localhost:3000",

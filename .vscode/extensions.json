@@ -9,6 +9,7 @@
 		"mikestead.dotenv",
 		"usernamehw.errorlens",
 		"formulahendry.auto-rename-tag",
-		"vitest.explorer"
+		"vitest.explorer",
+		"coderabbit.coderabbit-vscode"
 	]
 }

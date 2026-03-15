@@ -2,6 +2,7 @@ import type { FlattenedCommand } from "#shared/types";
 import type { GuildData } from "~~/server/database";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Mock composables at module scope
@@ -122,8 +123,6 @@ describe("disabledCommands", () => {
 	});
 
 	it("renders all command categories as collapsible sections", async () => {
-		const { default: DisabledCommands } =
-			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -161,8 +160,6 @@ describe("disabledCommands", () => {
 	});
 
 	it("displays commands in grid for each category", async () => {
-		const { default: DisabledCommands } =
-			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -201,8 +198,6 @@ describe("disabledCommands", () => {
 	});
 
 	it("toggles category open/closed on trigger click", async () => {
-		const { default: DisabledCommands } =
-			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -240,8 +235,6 @@ describe("disabledCommands", () => {
 	});
 
 	it("only one category open at a time (single-open behavior)", async () => {
-		const { default: DisabledCommands } =
-			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -289,9 +282,6 @@ describe("disabledCommands", () => {
 	});
 
 	it.skip("category action buttons work (enable all, disable all, reset)", async () => {
-		const { default: DisabledCommands } =
-			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
-
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
@@ -437,8 +427,6 @@ describe("disabledCommands", () => {
 	});
 
 	it("does not mark form as changed on initial render", async () => {
-		const { default: DisabledCommands } =
-			await import("../../../../../app/components/guild/settings/DisabledCommands.vue");
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,

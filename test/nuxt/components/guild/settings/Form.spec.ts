@@ -3,6 +3,7 @@ import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import * as v from "valibot";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
+import Form from "~/components/guild/settings/Form.vue";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Mock guild settings data
@@ -47,7 +48,7 @@ const testSchema = v.object({
 
 type TestSchema = v.InferOutput<typeof testSchema>;
 
-describe("guildSettingsForm - Reset Behavior", () => {
+describe("Form - Reset Behavior", () => {
 	beforeEach(() => {
 		// Clear mocks between tests
 		vi.clearAllMocks();
@@ -65,12 +66,9 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should revert local state when resetCounter increments", async () => {
-		const { default: GuildSettingsForm } =
-			await import("../../../../../app/components/guild/settings/Form.vue");
-
-		// Create a test wrapper component that uses GuildSettingsForm
+		// Create a test wrapper component that uses Form
 		const TestWrapper = defineComponent({
-			components: { GuildSettingsForm },
+			components: { Form },
 			setup() {
 				const state = reactive<TestSchema>({
 					prefix: mockGuildSettings.value.prefix,
@@ -91,7 +89,7 @@ describe("guildSettingsForm - Reset Behavior", () => {
 				return { state, mapToGuildData, testSchema };
 			},
 			template: `
-				<GuildSettingsForm :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
+				<Form :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
 					<div class="space-y-4">
 						<div>
 							<input id="prefix-input" v-model="state.prefix" />
@@ -100,7 +98,7 @@ describe("guildSettingsForm - Reset Behavior", () => {
 							<input id="language-input" v-model="state.language" />
 						</div>
 					</div>
-				</GuildSettingsForm>
+				</Form>
 			`,
 		});
 
@@ -144,14 +142,11 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should not revert state if originalState is not initialized", async () => {
-		const { default: GuildSettingsForm } =
-			await import("../../../../../app/components/guild/settings/Form.vue");
-
 		// Set originalGuildSettings to undefined to prevent initialization
 		mockOriginalGuildSettings.value = undefined as any;
 
 		const TestWrapper = defineComponent({
-			components: { GuildSettingsForm },
+			components: { Form },
 			setup() {
 				const state = reactive<TestSchema>({
 					prefix: "!",
@@ -161,11 +156,11 @@ describe("guildSettingsForm - Reset Behavior", () => {
 				return { state, testSchema };
 			},
 			template: `
-				<GuildSettingsForm :schema="testSchema" :state="state">
+				<Form :schema="testSchema" :state="state">
 					<div>
 						<input id="prefix-input" v-model="state.prefix" />
 					</div>
-				</GuildSettingsForm>
+				</Form>
 			`,
 		});
 
@@ -187,11 +182,8 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should not retrigger change staging after reset", async () => {
-		const { default: GuildSettingsForm } =
-			await import("../../../../../app/components/guild/settings/Form.vue");
-
 		const TestWrapper = defineComponent({
-			components: { GuildSettingsForm },
+			components: { Form },
 			setup() {
 				const state = reactive<TestSchema>({
 					prefix: mockGuildSettings.value.prefix,
@@ -208,11 +200,11 @@ describe("guildSettingsForm - Reset Behavior", () => {
 				return { state, mapToGuildData, testSchema };
 			},
 			template: `
-				<GuildSettingsForm :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
+				<Form :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
 					<div>
 						<input id="prefix-input" v-model="state.prefix" />
 					</div>
-				</GuildSettingsForm>
+				</Form>
 			`,
 		});
 
@@ -246,11 +238,8 @@ describe("guildSettingsForm - Reset Behavior", () => {
 	});
 
 	it("should work with mapToGuildData function", async () => {
-		const { default: GuildSettingsForm } =
-			await import("../../../../../app/components/guild/settings/Form.vue");
-
 		const TestWrapper = defineComponent({
-			components: { GuildSettingsForm },
+			components: { Form },
 			setup() {
 				// Use a custom schema with nested structure
 				const state = reactive({
@@ -269,11 +258,11 @@ describe("guildSettingsForm - Reset Behavior", () => {
 				return { state, mapToGuildData, testSchema };
 			},
 			template: `
-				<GuildSettingsForm :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
+				<Form :schema="testSchema" :state="state" :map-to-guild-data="mapToGuildData">
 					<div>
 						<input id="prefix-input" v-model="state.prefixWrapper.value" />
 					</div>
-				</GuildSettingsForm>
+				</Form>
 			`,
 		});
 

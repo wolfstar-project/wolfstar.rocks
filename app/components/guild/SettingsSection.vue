@@ -14,6 +14,10 @@
 			</component>
 		</template>
 
+		<p v-if="description" class="text-sm text-base-content/70">
+			{{ description }}
+		</p>
+
 		<div class="space-y-4">
 			<slot></slot>
 		</div>
@@ -24,6 +28,7 @@
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
 interface Props {
+	description?: string | number;
 	title?: string | number;
 	disableTypography?: boolean;
 	titleProps?: Record<string, unknown>;
@@ -32,6 +37,7 @@ interface Props {
 }
 
 const {
+	description,
 	headingLevel = "h2",
 	forceSemanticHeading = false,
 	title,

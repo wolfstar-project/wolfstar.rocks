@@ -16,17 +16,16 @@
 			</NuxtLink>
 		</template>
 
-		<nav aria-label="Main navigation">
-			<UNavigationMenu
-				:items="desktopLinks"
-				variant="link"
-				class="hidden lg:inline-flex"
-				:ui="{
-					link: 'text-base-content/80 hover:text-base-content/100',
-					root: 'text-base-content/70',
-				}"
-			/>
-		</nav>
+		<UNavigationMenu
+			:items="desktopLinks"
+			variant="link"
+			class="hidden lg:inline-flex"
+			aria-label="Main navigation"
+			:ui="{
+				link: 'text-base-content/80 hover:text-base-content/100',
+				root: 'text-base-content/70',
+			}"
+		/>
 
 		<template #right>
 			<AuthState>
@@ -111,7 +110,12 @@
 			</AuthState>
 		</template>
 		<template #body>
-			<UNavigationMenu orientation="vertical" :items="mobileLinks" class="-mx-2.5" />
+			<UNavigationMenu
+				orientation="vertical"
+				:items="mobileLinks"
+				class="-mx-2.5"
+				aria-label="Mobile navigation"
+			/>
 		</template>
 	</UHeader>
 </template>

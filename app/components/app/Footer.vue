@@ -7,7 +7,6 @@
 	/>
 	<UFooter
 		:ui="{ root: 'p-2 content-visibility-auto', top: 'border-default' }"
-		role="contentinfo"
 		aria-label="Site footer"
 	>
 		<template #top>

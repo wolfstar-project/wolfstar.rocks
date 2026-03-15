@@ -71,6 +71,9 @@ const config: KnipConfig = {
 				"nuxt-security",
 				"@prisma/client",
 
+				/** Used in the test */
+				"axe-core",
+
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",
 				"@vue/test-utils",

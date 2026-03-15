@@ -57,204 +57,203 @@ afterEach(() => {
 	mountedContainers.length = 0;
 });
 
+import {
+	DiscordButton,
+	DiscordEmbed,
+	DiscordInlineCode,
+	DiscordInvite,
+	DiscordMention,
+	DiscordMessage,
+	DiscordMessages,
+	DiscordReaction,
+	DiscordReactions,
+	DiscordTime,
+	GuildSettingsSection,
+	IconsApp,
+	IconsWolfstar,
+	Separator,
+} from "#components";
+
 describe("component accessibility audits", () => {
-	describe("DiscordMessages", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordMessages } = await import("~/components/discord/messages.vue");
-			const component = await mountSuspended(DiscordMessages, {
-				slots: { default: "<p>Hello world</p>" },
+	describe("Discord components", () => {
+		describe("DiscordMessages", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordMessages, {
+					slots: { default: "<p>Hello world</p>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
-
-	describe("DiscordMessage", () => {
-		it("should have no accessibility violations with basic message", async () => {
-			const { default: DiscordMessage } = await import("~/components/discord/message.vue");
-			const component = await mountSuspended(DiscordMessage, {
-				props: { name: "wolfstar" },
-				slots: { default: "Hello, this is a test message." },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
 		});
 
-		it("should have no accessibility violations with ephemeral message", async () => {
-			const { default: DiscordMessage } = await import("~/components/discord/message.vue");
-			const component = await mountSuspended(DiscordMessage, {
-				props: { name: "wolfstar", ephemeral: true },
-				slots: { default: "Only you can see this." },
+		describe("DiscordMessage", () => {
+			it("should have no accessibility violations with basic message", async () => {
+				const component = await mountSuspended(DiscordMessage, {
+					props: { name: "wolfstar" },
+					slots: { default: "Hello, this is a test message." },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
+
+			it("should have no accessibility violations with ephemeral message", async () => {
+				const component = await mountSuspended(DiscordMessage, {
+					props: { name: "wolfstar", ephemeral: true },
+					slots: { default: "Only you can see this." },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations with command context", async () => {
+				const component = await mountSuspended(DiscordMessage, {
+					props: {
+						name: "wolfstar",
+						command: { user: "stella", name: "help" },
+					},
+					slots: { default: "Here is your help response." },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
 		});
 
-		it("should have no accessibility violations with command context", async () => {
-			const { default: DiscordMessage } = await import("~/components/discord/message.vue");
-			const component = await mountSuspended(DiscordMessage, {
-				props: {
-					name: "wolfstar",
-					command: { user: "stella", name: "help" },
-				},
-				slots: { default: "Here is your help response." },
+		describe("DiscordButton", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordButton, {
+					props: { ariaLabel: "Click me" },
+					slots: { default: "Click" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
 
-	describe("DiscordButton", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordButton } = await import("~/components/discord/button.vue");
-			const component = await mountSuspended(DiscordButton, {
-				props: { ariaLabel: "Click me" },
-				slots: { default: "Click" },
+			it("should have no accessibility violations without explicit aria-label", async () => {
+				const component = await mountSuspended(DiscordButton, {
+					slots: { default: "Submit" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
 		});
 
-		it("should have no accessibility violations without explicit aria-label", async () => {
-			const { default: DiscordButton } = await import("~/components/discord/button.vue");
-			const component = await mountSuspended(DiscordButton, {
-				slots: { default: "Submit" },
+		describe("DiscordEmbed", () => {
+			it("should have no accessibility violations with title only", async () => {
+				const component = await mountSuspended(DiscordEmbed, {
+					props: { title: "Embed Title" },
+					slots: { default: "<p>Embed content here</p>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
 
-	describe("DiscordEmbed", () => {
-		it("should have no accessibility violations with title only", async () => {
-			const { default: DiscordEmbed } = await import("~/components/discord/embed.vue");
-			const component = await mountSuspended(DiscordEmbed, {
-				props: { title: "Embed Title" },
-				slots: { default: "<p>Embed content here</p>" },
+			it("should have no accessibility violations with author and footer", async () => {
+				const component = await mountSuspended(DiscordEmbed, {
+					props: {
+						title: "Moderation Log",
+						color: "#FF0000",
+						author: { name: "WolfStar" },
+						footer: { text: "WolfStar Moderation" },
+						timestamp: new Date("2024-06-01T12:00:00Z"),
+					},
+					slots: { default: "<p>User was warned.</p>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-
-		it("should have no accessibility violations with author and footer", async () => {
-			const { default: DiscordEmbed } = await import("~/components/discord/embed.vue");
-			const component = await mountSuspended(DiscordEmbed, {
-				props: {
-					title: "Moderation Log",
-					color: "#FF0000",
-					author: { name: "WolfStar" },
-					footer: { text: "WolfStar Moderation" },
-					timestamp: new Date("2024-06-01T12:00:00Z"),
-				},
-				slots: { default: "<p>User was warned.</p>" },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
-
-	describe("DiscordMention", () => {
-		it("should have no accessibility violations with mention kind", async () => {
-			const { default: DiscordMention } = await import("~/components/discord/mention.vue");
-			const component = await mountSuspended(DiscordMention, {
-				props: { kind: "mention" },
-				slots: { default: "everyone" },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
 		});
 
-		it("should have no accessibility violations with app kind", async () => {
-			const { default: DiscordMention } = await import("~/components/discord/mention.vue");
-			const component = await mountSuspended(DiscordMention, {
-				props: { kind: "app" },
-				slots: { default: "WolfStar" },
+		describe("DiscordMention", () => {
+			it("should have no accessibility violations with mention kind", async () => {
+				const component = await mountSuspended(DiscordMention, {
+					props: { kind: "mention" },
+					slots: { default: "everyone" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
 
-	describe("DiscordInlineCode", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordInlineCode } =
-				await import("~/components/discord/inline-code.vue");
-			const component = await mountSuspended(DiscordInlineCode, {
-				slots: { default: "!help" },
+			it("should have no accessibility violations with app kind", async () => {
+				const component = await mountSuspended(DiscordMention, {
+					props: { kind: "app" },
+					slots: { default: "WolfStar" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
-
-	describe("DiscordReaction", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordReaction } = await import("~/components/discord/reaction.vue");
-			const component = await mountSuspended(DiscordReaction, {
-				props: { count: 5 },
-				slots: { default: "👍" },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
 		});
 
-		it("should have no accessibility violations with self reaction", async () => {
-			const { default: DiscordReaction } = await import("~/components/discord/reaction.vue");
-			const component = await mountSuspended(DiscordReaction, {
-				props: { count: 3, self: true },
-				slots: { default: "❤️" },
+		describe("DiscordInlineCode", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordInlineCode, {
+					slots: { default: "!help" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
-
-	describe("DiscordReactions", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordReactions } =
-				await import("~/components/discord/reactions.vue");
-			const component = await mountSuspended(DiscordReactions, {
-				slots: { default: "<span>Reaction slot</span>" },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
-
-	describe("DiscordTime", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordTime } = await import("~/components/discord/time.vue");
-			const component = await mountSuspended(DiscordTime, {
-				props: { date: Date.now(), format: "long" },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
-		});
-	});
-
-	describe("DiscordInvite", () => {
-		it("should have no accessibility violations", async () => {
-			const { default: DiscordInvite } = await import("~/components/discord/invite.vue");
-			const component = await mountSuspended(DiscordInvite, {
-				props: { link: "/join", online: 150, members: 3000 },
-			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
 		});
 
-		it("should have no accessibility violations with zero counts", async () => {
-			const { default: DiscordInvite } = await import("~/components/discord/invite.vue");
-			const component = await mountSuspended(DiscordInvite, {
-				props: { link: "/join" },
+		describe("DiscordReaction", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordReaction, {
+					props: { count: 5 },
+					slots: { default: "👍" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
 			});
-			const results = await runAxe(component);
-			expect(results.violations).toEqual([]);
+
+			it("should have no accessibility violations with self reaction", async () => {
+				const component = await mountSuspended(DiscordReaction, {
+					props: { count: 3, self: true },
+					slots: { default: "❤️" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordReactions", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordReactions, {
+					slots: { default: "<span>Reaction slot</span>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordTime", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordTime, {
+					props: { date: Date.now(), format: "long" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordInvite", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordInvite, {
+					props: { link: "/join", online: 150, members: 3000 },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations with zero counts", async () => {
+				const component = await mountSuspended(DiscordInvite, {
+					props: { link: "/join" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
 		});
 	});
 
 	describe("Separator", () => {
 		it("should have no accessibility violations with horizontal orientation", async () => {
-			const { default: Separator } = await import("~/components/Separator.vue");
 			const component = await mountSuspended(Separator, {
 				props: { orientation: "horizontal" },
 			});
@@ -263,7 +262,6 @@ describe("component accessibility audits", () => {
 		});
 
 		it("should have no accessibility violations with vertical orientation", async () => {
-			const { default: Separator } = await import("~/components/Separator.vue");
 			const component = await mountSuspended(Separator, {
 				props: { orientation: "vertical" },
 			});
@@ -274,8 +272,6 @@ describe("component accessibility audits", () => {
 
 	describe("GuildSettingsSection", () => {
 		it("should have no accessibility violations with title", async () => {
-			const { default: GuildSettingsSection } =
-				await import("~/components/guild/SettingsSection.vue");
 			const component = await mountSuspended(GuildSettingsSection, {
 				props: { title: "General Settings" },
 				slots: { default: "<p>Settings content</p>" },
@@ -285,8 +281,6 @@ describe("component accessibility audits", () => {
 		});
 
 		it("should have no accessibility violations without title", async () => {
-			const { default: GuildSettingsSection } =
-				await import("~/components/guild/SettingsSection.vue");
 			const component = await mountSuspended(GuildSettingsSection, {
 				slots: { default: "<p>Content without heading</p>" },
 			});
@@ -295,8 +289,6 @@ describe("component accessibility audits", () => {
 		});
 
 		it("should have no accessibility violations with custom heading level", async () => {
-			const { default: GuildSettingsSection } =
-				await import("~/components/guild/SettingsSection.vue");
 			const component = await mountSuspended(GuildSettingsSection, {
 				props: { title: "Sub Section", headingLevel: "h3" },
 				slots: { default: "<p>Sub section content</p>" },
@@ -308,7 +300,6 @@ describe("component accessibility audits", () => {
 
 	describe("IconsApp", () => {
 		it("should have no accessibility violations", async () => {
-			const { default: IconsApp } = await import("~/components/icons/app.vue");
 			const component = await mountSuspended(IconsApp);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
@@ -317,7 +308,6 @@ describe("component accessibility audits", () => {
 
 	describe("IconsWolfstar", () => {
 		it("should have no accessibility violations", async () => {
-			const { default: IconsWolfstar } = await import("~/components/icons/wolfstar.vue");
 			const component = await mountSuspended(IconsWolfstar);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);

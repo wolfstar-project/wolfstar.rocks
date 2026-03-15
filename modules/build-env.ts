@@ -17,7 +17,7 @@ export default defineNuxtModule({
 		let env: EnvType = "dev";
 		nuxt.options.appConfig = nuxt.options.appConfig || {};
 		nuxt.options.appConfig.env = env;
-		if (process.env.TEST) {
+		if (import.meta.test) {
 			const time = new Date();
 			nuxt.options.appConfig.buildInfo = {
 				env,

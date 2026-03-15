@@ -37,7 +37,7 @@
 				</span>
 			</header>
 			<div class="message-content"><slot></slot></div>
-			<footer
+			<div
 				v-if="ephemeral"
 				class="discord-message-ephemeral-footer"
 				role="status"
@@ -51,7 +51,7 @@
 				>
 					Dismiss message
 				</button>
-			</footer>
+			</div>
 		</div>
 	</article>
 </template>

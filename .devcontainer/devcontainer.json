@@ -5,10 +5,16 @@
 		"ghcr.io/devcontainers/features/node:1": {
 			"version": "lts",
 			"pnpmVersion": "10"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
 		}
 	},
 
-	"postCreateCommand": ["pnpm", "install", "--frozen-lockfile"],
+	"postCreateCommand": [
+		"pnpm install --frozen-lockfile && curl -fsSL https://cli.coderabbit.ai/install.sh | sh"
+	],
 	"remoteUser": "root",
 	"forwardPorts": [3000],
 	"customizations": {
@@ -24,6 +30,7 @@
 				"Vue.volar",
 				"mikestead.dotenv",
 				"usernamehw.errorlens",
+				"coderabbit.coderabbit-vscode",
 				"formulahendry.auto-rename-tag",
 				"vitest.explorer"
 			]

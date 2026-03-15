@@ -275,12 +275,25 @@ function resolveMultilineString(str: string | string[], multiline = false): stri
 }
 
 /**
- * Sanitize and format text with basic markdown support
- * Converts **bold**, *italic*, `code`, and [links](url) to HTML
+ * Escape HTML special characters to prevent XSS when using v-html.
+ */
+function escapeHtml(text: string): string {
+	return text
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;");
+}
+
+/**
+ * Sanitize and format text with basic markdown support.
+ * Escapes HTML entities first, then converts **bold**, *italic*, `code`,
+ * and [links](url) to safe HTML.
  */
 function sanitizeAndFormat(text: string): string {
 	return (
-		text
+		escapeHtml(text)
 			// Bold
 			.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
 			// Italic
@@ -290,9 +303,9 @@ function sanitizeAndFormat(text: string): string {
 				/`(.+?)`/g,
 				'<code class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-sm font-mono">$1</code>',
 			)
-			// Links
+			// Links — only allow http(s) protocols to prevent javascript: injection
 			.replace(
-				/\[(.+?)\]\((.+?)\)/g,
+				/\[(.+?)\]\((https?:\/\/.+?)\)/g,
 				'<a href="$2" target="_blank" rel="noopener noreferrer" class="text-primary-600 dark:text-primary-400 hover:underline">$1</a>',
 			)
 	);

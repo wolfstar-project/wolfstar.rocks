@@ -37,7 +37,7 @@ export function generateRuntimeConfig() {
 		session: {
 			maxAge: 60 * 60 * 24 * 7, // 1 week
 			name: "wolfstar-session",
-			password: process.env.NUXT_SESSION_PASSWORD || "",
+			password: process.env.NUXT_SESSION_PASSWORD ?? "",
 			cookie: {
 				sameSite: "strict" as "lax" | "strict" | "none",
 				secure: true,

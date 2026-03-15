@@ -52,7 +52,7 @@ export default defineNuxtModule({
 				privacyPolicyDate,
 				termsDate,
 				prNumber,
-			} satisfies BuildInfo;
+			} satisfies BuildInfo as BuildInfo;
 		}
 
 		nuxt.options.nitro.publicAssets = nuxt.options.nitro.publicAssets || [];

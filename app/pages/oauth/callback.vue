@@ -1,6 +1,7 @@
 <template>
 	<div class="container mx-auto px-4 py-8">
 		<h1 class="sr-only">OAuth Callback</h1>
+		<h2 class="sr-only">Authentication Status</h2>
 		<template v-if="!code">
 			<UAlert variant="solid" color="warning" title="Missing Code" icon="twemoji:warning">
 				<template #description>

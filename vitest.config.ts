@@ -71,11 +71,7 @@ export default defineConfig({
 						nuxt: {
 							overrides: {
 								fonts: { providers: { fontshare: false } },
-								runtimeConfig: {
-									public: {
-										clientId: "test-client-id",
-									},
-								},
+								modules: [`${rootDir}/test/modules/mock-client-id`],
 								vue: {
 									runtimeCompiler: true,
 								},

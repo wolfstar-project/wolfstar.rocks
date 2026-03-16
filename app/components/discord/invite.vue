@@ -5,7 +5,14 @@
 			<div
 				class="flex h-8 w-8 flex-none items-center justify-center overflow-hidden rounded-full select-none sm:h-12 sm:w-12"
 			>
-				<nuxt-img src="/avatars/wolfstar.png" alt="WolfStar Lounge server icon" />
+				<NuxtImg
+					src="/avatars/wolfstar.png"
+					alt="WolfStar Lounge server icon"
+					width="48"
+					height="48"
+					loading="lazy"
+					decoding="async"
+				/>
 			</div>
 			<div class="ml-4 grow">
 				<nuxt-link class="font-bold" :to="link">WolfStar Lounge</nuxt-link>

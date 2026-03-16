@@ -76,7 +76,10 @@ export default defineNuxtConfig({
 			charset: "utf-8",
 			htmlAttrs: { lang: "en" },
 			link: [
-				// DNS prefetch for external domains
+				// Preconnect for external domains (faster than dns-prefetch: includes TLS handshake)
+				{ href: "https://cdn.discordapp.com", rel: "preconnect", crossorigin: "anonymous" },
+				{ href: "https://cdn.wolfstar.rocks", rel: "preconnect", crossorigin: "anonymous" },
+				// Fallback dns-prefetch for browsers that don't support preconnect
 				{ href: "https://cdn.discordapp.com", rel: "dns-prefetch" },
 				{ href: "https://cdn.wolfstar.rocks", rel: "dns-prefetch" },
 			],
@@ -351,7 +354,7 @@ export default defineNuxtConfig({
 				name: "Inter",
 				preload: true,
 				subsets: ["latin"],
-				weights: [400, 500, 600, 700, 800],
+				weights: [400, 500, 600, 700],
 			},
 		],
 	},

@@ -24,7 +24,7 @@ if (sentry.dsn) {
 			"localhost", // For local development
 			/^\/api\//, // For same-origin API calls
 			"https://api.wolfstar.rocks", // For your backend domain
-			"https://api.wolfstar.rocks", // For your backend domain beta
+			"https://api.beta.wolfstar.rocks", // For your backend domain beta
 		],
 
 		environment,

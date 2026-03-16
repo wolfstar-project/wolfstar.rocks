@@ -67,14 +67,14 @@ export const pwa: ModuleOptions = {
 			{
 				label: "WolfStar Homepage",
 				sizes: "1800x1080",
-				src: "/screenshots/dark-1.png",
-				type: "image/png",
+				src: "/screenshots/dark-1.webp",
+				type: "image/webp",
 			},
 			{
 				label: "WolfStar Homepage (light theme)",
 				sizes: "1800x1080",
-				src: "/screenshots/light-1.png",
-				type: "image/png",
+				src: "/screenshots/light-1.webp",
+				type: "image/webp",
 			},
 		],
 		short_name: "WolfStar",

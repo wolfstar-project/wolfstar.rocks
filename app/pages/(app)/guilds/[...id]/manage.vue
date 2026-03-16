@@ -44,7 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import type { FilterRoutes, GuildRoutes } from "@/types/GuildRoutes";
 import { Time } from "@sapphire/time-utilities";
 import { isDevelopment } from "std-env";
 
@@ -158,66 +157,43 @@ const title = ref(
 	`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value.name}`,
 );
 
-const renderComponent = computed(() => {
-	switch (joinedPath.value as GuildRoutes & FilterRoutes) {
-		case "channels": {
-			return defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue"));
-		}
-		case "commands": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/DisabledCommands.vue"),
-			);
-		}
-		case "events": {
-			return defineAsyncComponent(() => import("~/components/guild/settings/Events.vue"));
-		}
-		case "moderation": {
-			return defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue"));
-		}
-		case "roles": {
-			return defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue"));
-		}
-		case "moderation/word": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Word.vue"),
-			);
-		}
-		case "moderation/capitals": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Capitals.vue"),
-			);
-		}
-		case "moderation/invites": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Invites.vue"),
-			);
-		}
-		case "moderation/links": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Links.vue"),
-			);
-		}
-		case "moderation/messages": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/MessageDuplication.vue"),
-			);
-		}
-		case "moderation/lines": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/NewLine.vue"),
-			);
-		}
-		case "moderation/reactions": {
-			return defineAsyncComponent(
-				() => import("~/components/guild/settings/filter/Reactions.vue"),
-			);
-		}
+// Pre-define async components outside of computed to avoid re-creating
+// wrapper instances on every reactive update, which would unmount/remount.
+const asyncComponentMap: Record<string, ReturnType<typeof defineAsyncComponent>> = {
+	"channels": defineAsyncComponent(() => import("~/components/guild/settings/Channels.vue")),
+	"commands": defineAsyncComponent(
+		() => import("~/components/guild/settings/DisabledCommands.vue"),
+	),
+	"events": defineAsyncComponent(() => import("~/components/guild/settings/Events.vue")),
+	"moderation": defineAsyncComponent(() => import("~/components/guild/settings/Moderation.vue")),
+	"roles": defineAsyncComponent(() => import("~/components/guild/settings/Roles.vue")),
+	"moderation/word": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/Word.vue"),
+	),
+	"moderation/capitals": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/Capitals.vue"),
+	),
+	"moderation/invites": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/Invites.vue"),
+	),
+	"moderation/links": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/Links.vue"),
+	),
+	"moderation/messages": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/MessageDuplication.vue"),
+	),
+	"moderation/lines": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/NewLine.vue"),
+	),
+	"moderation/reactions": defineAsyncComponent(
+		() => import("~/components/guild/settings/filter/Reactions.vue"),
+	),
+};
+const defaultComponent = defineAsyncComponent(
+	() => import("~/components/guild/settings/General.vue"),
+);
 
-		default: {
-			return defineAsyncComponent(() => import("~/components/guild/settings/General.vue"));
-		}
-	}
-});
+const renderComponent = computed(() => asyncComponentMap[joinedPath.value] ?? defaultComponent);
 
 // Fetch only the data required by the active section.
 // Channels / Events / Roles do not use commands or languages, so we skip

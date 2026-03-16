@@ -26,5 +26,5 @@ function handleScroll() {
 	isScrolling.value = window.scrollY > 0;
 }
 
-useEventListener("scroll", handleScroll);
+useEventListener("scroll", handleScroll, { passive: true });
 </script>

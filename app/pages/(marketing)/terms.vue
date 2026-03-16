@@ -1,5 +1,5 @@
 <template>
-	<div class="bg-base-100">
+	<UMain class="bg-base-100">
 		<article class="mx-auto max-w-3xl px-4 py-8 sm:py-12">
 			<!-- Header -->
 			<header class="mt-8 mb-12">
@@ -174,7 +174,7 @@
 				</section>
 			</div>
 		</article>
-	</div>
+	</UMain>
 </template>
 
 <script setup lang="ts">

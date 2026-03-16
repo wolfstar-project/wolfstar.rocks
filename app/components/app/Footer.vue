@@ -11,7 +11,7 @@
 	>
 		<template #top>
 			<UContainer>
-				<UFooterColumns class="p-10" :columns>
+				<UFooterColumns class="p-10" :columns aria-label="Footer navigation">
 					<template #right>
 						<PwaInstallPrompt class="xl:hidden" />
 						<div class="flex-auto"></div>

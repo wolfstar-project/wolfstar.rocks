@@ -1,3 +1,7 @@
+<template>
+	<h1 class="sr-only">Login</h1>
+</template>
+
 <script setup lang="ts">
 import { isSafeRedirectPath } from "#shared/utils/redirect";
 

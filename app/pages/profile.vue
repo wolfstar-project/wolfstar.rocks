@@ -1,6 +1,7 @@
 <!-- oxlint-disable vue/valid-v-else-if -->
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
+		<h1 class="sr-only">User Profile</h1>
 		<section
 			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
 		>
@@ -60,9 +61,9 @@
 					</div>
 				</div>
 				<div class="space-y-2 text-center">
-					<h1 class="text-4xl font-bold text-base-content">
+					<h2 class="text-4xl font-bold text-base-content">
 						{{ user.globalName ?? user.username }}
-					</h1>
+					</h2>
 					<p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
 					<p class="text-sm text-base-content/60">
 						User ID:
@@ -122,6 +123,7 @@
 										<UInput
 											ref="input"
 											v-model="searchQuery"
+											aria-label="Search servers"
 											name="search"
 											type="text"
 											placeholder="Search servers.."

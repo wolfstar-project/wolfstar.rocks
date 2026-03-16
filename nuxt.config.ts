@@ -169,6 +169,8 @@ export default defineNuxtConfig({
 			},
 		},
 		failOnError: true,
+		// OG image routes use an iframe wrapper with separate HTML structure
+		ignore: [/\/__og-image__\//],
 	},
 
 	// Runtime configuration

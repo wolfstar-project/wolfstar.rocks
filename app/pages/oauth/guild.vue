@@ -1,6 +1,7 @@
 <template>
 	<div class="container mx-auto px-4 py-8">
 		<h1 class="sr-only">Guild OAuth Callback</h1>
+		<h2 class="sr-only">Guild Setup Status</h2>
 		<template v-if="!guildId">
 			<UAlert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
 				<template #description>

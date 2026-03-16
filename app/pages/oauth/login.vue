@@ -1,5 +1,8 @@
 <template>
-	<h1 class="sr-only">Login</h1>
+	<div>
+		<h1 class="sr-only">Login</h1>
+		<h2 class="sr-only">Redirecting to Discord</h2>
+	</div>
 </template>
 
 <script setup lang="ts">

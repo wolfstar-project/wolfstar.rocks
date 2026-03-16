@@ -166,6 +166,8 @@ export default defineNuxtConfig({
 				"text-content": "off",
 				// Reka UI/NuxtUI components use ARIA roles that have native equivalents
 				"prefer-native-element": "off",
+				// Layout and pages may both use UMain for styling
+				"no-multiple-main": "off",
 			},
 		},
 		failOnError: true,

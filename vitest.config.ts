@@ -75,6 +75,9 @@ export default defineConfig({
 									public: {
 										clientId: "test-discord-client-id",
 									},
+									session: {
+										password: "test-session-password-at-least-32-chars-long",
+									},
 								},
 								vue: {
 									runtimeCompiler: true,

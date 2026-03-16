@@ -28,6 +28,8 @@ mockNuxtImport("useGuildSettingsChanges", () => () => ({
 	guildSettingsChanges: ref<GuildData | undefined>(undefined),
 	mergeGuildSettings: mockMergeGuildSettings,
 	removeChange: mockRemoveChange,
+	resetCounter: readonly(ref(0)),
+	resetGuildSettingsChanges: vi.fn(),
 	setGuildSettingsChanges: mockSetGuildSettingsChanges,
 }));
 

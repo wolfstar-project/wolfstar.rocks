@@ -256,12 +256,12 @@
 
 /* Navigation panel glass - overrides bg-default's --ui-bg on UHeader mobile panel */
 @utility nav-panel-glass {
-	--ui-bg: oklch(20% 0 0 / 0.6);
+	--ui-bg: oklch(20% 0 0 / 0.85);
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
 
 	[data-theme="light"] & {
-		--ui-bg: oklch(98% 0 0 / 0.6);
+		--ui-bg: oklch(98% 0 0 / 0.85);
 	}
 }
 

@@ -51,3 +51,5 @@ plans
 
 # Skilld references (recreated by `skilld install`)
 .skilld
+package-lock.json
+CLAUDE.md

@@ -128,15 +128,15 @@
 		--ui-text-highlighted: black;
 		--ui-text-inverted: var(--color-white);
 
-		--ui-bg: var(--color-base-300);
-		--ui-bg-muted: var(--color-neutral-50);
-		--ui-bg-elevated: var(--color-neutral-100);
-		--ui-bg-accented: var(--color-neutral-200);
+		--ui-bg: var(--color-base-100);
+		--ui-bg-muted: var(--color-base-200);
+		--ui-bg-elevated: var(--color-base-200);
+		--ui-bg-accented: var(--color-base-300);
 		--ui-bg-inverted: var(--color-neutral-900);
 
-		--ui-border: var(--color-base-100);
+		--ui-border: var(--color-base-200);
 		--ui-border-muted: var(--color-base-200);
-		--ui-border-accented: var(--color-base-200);
+		--ui-border-accented: var(--color-base-300);
 		--ui-border-inverted: var(--color-neutral-900);
 
 		--ui-radius: var(--radius-box);
@@ -151,15 +151,38 @@
 		--ui-text-highlighted: var(--color-white);
 		--ui-text-inverted: var(--color-neutral-900);
 
-		--ui-bg: var(--color-base-300);
-		--ui-bg-muted: var(--color-neutral-800);
-		--ui-bg-elevated: var(--color-neutral-800);
-		--ui-bg-accented: var(--color-neutral-700);
+		--ui-bg: var(--color-base-100);
+		--ui-bg-muted: var(--color-base-200);
+		--ui-bg-elevated: var(--color-base-200);
+		--ui-bg-accented: var(--color-base-300);
 		--ui-bg-inverted: var(--color-white);
 
-		--ui-border: var(--color-base-100);
+		--ui-border: var(--color-base-200);
 		--ui-border-muted: var(--color-base-200);
-		--ui-border-accented: var(--color-base-200);
+		--ui-border-accented: var(--color-base-300);
+		--ui-border-inverted: var(--color-white);
+
+		--ui-radius: var(--radius-box);
+		--ui-container: var(--container-7xl);
+	}
+
+	[data-theme="midnight"] {
+		--ui-text-dimmed: var(--color-neutral-500);
+		--ui-text-muted: var(--color-neutral-400);
+		--ui-text-toned: var(--color-neutral-300);
+		--ui-text: var(--color-neutral-200);
+		--ui-text-highlighted: var(--color-white);
+		--ui-text-inverted: var(--color-neutral-900);
+
+		--ui-bg: var(--color-base-100);
+		--ui-bg-muted: var(--color-base-200);
+		--ui-bg-elevated: var(--color-base-200);
+		--ui-bg-accented: var(--color-base-300);
+		--ui-bg-inverted: var(--color-white);
+
+		--ui-border: var(--color-base-200);
+		--ui-border-muted: var(--color-base-200);
+		--ui-border-accented: var(--color-base-300);
 		--ui-border-inverted: var(--color-white);
 
 		--ui-radius: var(--radius-box);

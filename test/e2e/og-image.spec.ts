@@ -12,7 +12,7 @@ for (const path of paths) {
 				.getAttribute("content");
 			expect(ogImageUrl).toBeTruthy();
 
-			const ogImagePath = new URL(ogImageUrl!, baseURL).pathname;
+			const ogImagePath = new URL(ogImageUrl!).pathname;
 			const localUrl = baseURL?.endsWith("/")
 				? `${baseURL}${ogImagePath.slice(1)}`
 				: `${baseURL}${ogImagePath}`;

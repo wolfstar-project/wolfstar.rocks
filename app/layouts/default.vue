@@ -2,7 +2,7 @@
 	<div class="app-layout" :class="appName">
 		<AppHeader />
 
-		<UMain>
+		<UMain aria-label="Main content">
 			<slot></slot>
 		</UMain>
 

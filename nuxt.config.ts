@@ -164,6 +164,8 @@ export default defineNuxtConfig({
 				"attribute-allowed-values": "off",
 				// NuxtUI UHeader hamburger button is icon-only
 				"text-content": "off",
+				// Reka UI/NuxtUI components use ARIA roles that have native equivalents
+				"prefer-native-element": "off",
 			},
 		},
 		failOnError: true,

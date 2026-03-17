@@ -71,6 +71,15 @@ export default defineConfig({
 						nuxt: {
 							overrides: {
 								fonts: { providers: { fontshare: false } },
+								runtimeConfig: {
+									public: {
+										clientId: "test-discord-client-id",
+									},
+									session: {
+										password:
+											"ci-dummy-session-key-for-prerender-only-not-for-production",
+									},
+								},
 								vue: {
 									runtimeCompiler: true,
 								},

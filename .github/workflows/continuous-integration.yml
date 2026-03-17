@@ -126,8 +126,6 @@ jobs:
       - name: 🏗️ Build project
         run: pnpm build:test
         env:
-          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
-          NUXT_OAUTH_DISCORD_CLIENT_ID: ci-dummy-discord-client-id-for-prerender-only-not-for-production
           VALIDATE_HTML: true
 
       - name: 🖥️ Test project (browser)
@@ -182,8 +180,6 @@ jobs:
       - name: 🏗️ Build project
         run: pnpm build:test
         env:
-          NUXT_SESSION_PASSWORD: ci-dummy-session-key-for-prerender-only-not-for-production
-          NUXT_OAUTH_DISCORD_CLIENT_ID: ci-dummy-discord-client-id-for-prerender-only-not-for-production
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: pnpm test:a11y:prebuilt

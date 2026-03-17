@@ -18,7 +18,7 @@
 	"main": "./nuxt.config.ts",
 	"scripts": {
 		"build": "nuxt build",
-		"build:test": "NODE_ENV=test pnpm build",
+		"build:test": "NODE_OPTIONS='--max-old-space-size=4096' NODE_ENV=test pnpm build",
 		"dev": "nuxt dev",
 		"dev:pwa": "VITE_DEV_PWA=true nuxt dev",
 		"generate": "nuxt generate",

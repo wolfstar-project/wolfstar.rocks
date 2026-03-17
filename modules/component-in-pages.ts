@@ -1,6 +1,14 @@
 import { existsSync, readdirSync } from "node:fs";
 import { basename, join } from "node:path";
-import { addComponent, defineNuxtModule } from "nuxt/kit";
+import { addComponent, addVitePlugin, defineNuxtModule } from "nuxt/kit";
+
+const CLIENT_WRAPPER_PREFIX = "\0virtual:client-wrapper:";
+
+/**
+ * Map of virtual module IDs → wrapper code snippets. Populated during
+ * the `components:extend` hook and served by the companion Vite plugin.
+ */
+const clientWrapperModules = new Map<string, string>();
 
 function* walkAtComponents(dir: string, inComponents = false): Generator<string> {
 	if (!existsSync(dir)) return;
@@ -58,6 +66,59 @@ export default defineNuxtModule({
 				name: toComponentName(filePath),
 			});
 		}
+
+		// Fix TDZ (Temporal Dead Zone) errors for ALL .client.vue components.
+		//
+		// Without this hook Nuxt generates eager module-scope code:
+		//   import { default as __nuxt_component_N_client } from 'Component.client.vue'
+		//   const __nuxt_component_N_client_wrapped = createClientOnly(__nuxt_component_N_client)
+		//
+		// In Vite SSR dev mode the import binding can be uninitialized when
+		// createClientOnly() runs (circular-dep induced TDZ), causing:
+		//   "Cannot access '__nuxt_component_N_client' before initialization"
+		//
+		// The fix: redirect every .client.vue component through a virtual wrapper
+		// module that uses defineAsyncComponent, so the real import is deferred
+		// inside a factory function and TDZ becomes impossible.
+		addVitePlugin({
+			name: "nuxt:client-vue-wrapper",
+			resolveId(id) {
+				if (id.startsWith(CLIENT_WRAPPER_PREFIX)) return id;
+			},
+			load(id) {
+				if (id.startsWith(CLIENT_WRAPPER_PREFIX)) {
+					return clientWrapperModules.get(id);
+				}
+			},
+		});
+
+		nuxt.hook("components:extend", (components) => {
+			for (const component of components) {
+				// Only fix actual .client.vue files — skip Nuxt internal client
+				// components (NuxtRouteAnnouncer, etc.) that don't use the suffix.
+				if (component.mode !== "client" || !component.filePath.endsWith(".client.vue")) {
+					continue;
+				}
+
+				const originalPath = component.filePath;
+				const originalExport = component.export || "default";
+				const virtualId = `${CLIENT_WRAPPER_PREFIX}${component.pascalName}`;
+
+				clientWrapperModules.set(
+					virtualId,
+					[
+						'import { createClientOnly } from "#app/components/client-only"',
+						'import { defineAsyncComponent } from "vue"',
+						`export default createClientOnly(defineAsyncComponent(() => import(${JSON.stringify(originalPath)}).then(r => r.${originalExport} || r)))`,
+					].join("\n"),
+				);
+
+				component.filePath = virtualId;
+				component.mode = "all";
+				component._raw = true;
+				component.export = "default";
+			}
+		});
 
 		nuxt.hook("pages:extend", (pages) => {
 			// Step 1: Remove co-located component files from the router so they

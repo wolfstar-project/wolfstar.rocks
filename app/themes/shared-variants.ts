@@ -6,11 +6,11 @@
  */
 
 export const inputVariants = {
-	ghost: "text-base-content bg-transparent hover:bg-base-200 focus:bg-base-200 disabled:bg-transparent dark:disabled:bg-transparent",
-	none: "text-base-content bg-transparent",
-	outline: "text-base-content bg-base-100 ring ring-inset ring-base-300",
-	soft: "text-base-content bg-base-200/50 hover:bg-base-200 focus:bg-base-200 disabled:bg-base-200/50",
-	subtle: "text-base-content bg-base-200 ring ring-inset ring-base-300",
+	outline: "text-highlighted bg-default ring ring-inset ring-accented",
+	soft: "text-highlighted bg-elevated/50 hover:bg-elevated focus:bg-elevated disabled:bg-elevated/50",
+	subtle: "text-highlighted bg-elevated ring ring-inset ring-accented",
+	ghost: "text-highlighted bg-transparent hover:bg-elevated focus:bg-elevated disabled:bg-transparent dark:disabled:bg-transparent",
+	none: "text-highlighted bg-transparent",
 } as const;
 
 export const selectVariants = {

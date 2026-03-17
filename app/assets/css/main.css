@@ -120,75 +120,6 @@
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
 	}
 
-	[data-theme="light"] {
-		--ui-text-dimmed: var(--color-neutral-600);
-		--ui-text-muted: var(--color-neutral-800);
-		--ui-text-toned: var(--color-neutral-900);
-		--ui-text: black;
-		--ui-text-highlighted: black;
-		--ui-text-inverted: var(--color-white);
-
-		--ui-bg: var(--color-base-100);
-		--ui-bg-muted: var(--color-base-200);
-		--ui-bg-elevated: var(--color-base-200);
-		--ui-bg-accented: var(--color-base-300);
-		--ui-bg-inverted: var(--color-neutral-900);
-
-		--ui-border: var(--color-base-200);
-		--ui-border-muted: var(--color-base-200);
-		--ui-border-accented: var(--color-base-300);
-		--ui-border-inverted: var(--color-neutral-900);
-
-		--ui-radius: var(--radius-box);
-		--ui-container: var(--container-7xl);
-	}
-
-	[data-theme="dark"] {
-		--ui-text-dimmed: var(--color-neutral-500);
-		--ui-text-muted: var(--color-neutral-400);
-		--ui-text-toned: var(--color-neutral-300);
-		--ui-text: var(--color-neutral-200);
-		--ui-text-highlighted: var(--color-white);
-		--ui-text-inverted: var(--color-neutral-900);
-
-		--ui-bg: var(--color-base-100);
-		--ui-bg-muted: var(--color-base-200);
-		--ui-bg-elevated: var(--color-base-200);
-		--ui-bg-accented: var(--color-base-300);
-		--ui-bg-inverted: var(--color-white);
-
-		--ui-border: var(--color-base-200);
-		--ui-border-muted: var(--color-base-200);
-		--ui-border-accented: var(--color-base-300);
-		--ui-border-inverted: var(--color-white);
-
-		--ui-radius: var(--radius-box);
-		--ui-container: var(--container-7xl);
-	}
-
-	[data-theme="midnight"] {
-		--ui-text-dimmed: var(--color-neutral-500);
-		--ui-text-muted: var(--color-neutral-400);
-		--ui-text-toned: var(--color-neutral-300);
-		--ui-text: var(--color-neutral-200);
-		--ui-text-highlighted: var(--color-white);
-		--ui-text-inverted: var(--color-neutral-900);
-
-		--ui-bg: var(--color-base-100);
-		--ui-bg-muted: var(--color-base-200);
-		--ui-bg-elevated: var(--color-base-200);
-		--ui-bg-accented: var(--color-base-300);
-		--ui-bg-inverted: var(--color-white);
-
-		--ui-border: var(--color-base-200);
-		--ui-border-muted: var(--color-base-200);
-		--ui-border-accented: var(--color-base-300);
-		--ui-border-inverted: var(--color-white);
-
-		--ui-radius: var(--radius-box);
-		--ui-container: var(--container-7xl);
-	}
-
 	::-webkit-scrollbar {
 		width: 5px;
 		height: 2px;
@@ -206,6 +137,85 @@
 	.no-scrollbar {
 		scrollbar-width: none;
 		-ms-overflow-style: none;
+	}
+}
+
+/*
+ * Nuxt UI theme variable overrides.
+ * Must be in @layer theme (same layer as @nuxt/ui's defaults) so that
+ * source-order precedence applies and our values win.
+ */
+@layer theme {
+	[data-theme="light"],
+	:root {
+		--ui-text-dimmed: var(--color-neutral-600);
+		--ui-text-muted: var(--color-neutral-800);
+		--ui-text-toned: var(--color-neutral-900);
+		--ui-text: black;
+		--ui-text-highlighted: black;
+		--ui-text-inverted: var(--color-white);
+
+		--ui-bg: var(--color-base-300);
+		--ui-bg-muted: var(--color-neutral-50);
+		--ui-bg-elevated: var(--color-neutral-100);
+		--ui-bg-accented: var(--color-neutral-200);
+		--ui-bg-inverted: var(--color-neutral-900);
+
+		--ui-border: var(--color-base-100);
+		--ui-border-muted: var(--color-base-200);
+		--ui-border-accented: var(--color-base-200);
+		--ui-border-inverted: var(--color-neutral-900);
+
+		--ui-radius: var(--radius-box);
+		--ui-container: var(--container-7xl);
+	}
+
+	[data-theme="dark"],
+	.dark {
+		--ui-text-dimmed: var(--color-neutral-500);
+		--ui-text-muted: var(--color-neutral-400);
+		--ui-text-toned: var(--color-neutral-300);
+		--ui-text: var(--color-neutral-200);
+		--ui-text-highlighted: var(--color-white);
+		--ui-text-inverted: var(--color-neutral-900);
+
+		--ui-bg: var(--color-base-300);
+		--ui-bg-muted: var(--color-neutral-800);
+		--ui-bg-elevated: var(--color-neutral-800);
+		--ui-bg-accented: var(--color-neutral-700);
+		--ui-bg-inverted: var(--color-white);
+
+		--ui-border: var(--color-base-100);
+		--ui-border-muted: var(--color-base-200);
+		--ui-border-accented: var(--color-base-200);
+		--ui-border-inverted: var(--color-white);
+
+		--ui-radius: var(--radius-box);
+		--ui-container: var(--container-7xl);
+	}
+
+	[data-theme="midnight"],
+	.midnight {
+		--ui-text-dimmed: var(--color-neutral-500);
+		--ui-text-muted: var(--color-neutral-400);
+		--ui-text-toned: var(--color-neutral-300);
+		--ui-text: var(--color-neutral-200);
+		--ui-text-highlighted: var(--color-white);
+		--ui-text-inverted: var(--color-neutral-900);
+
+		--ui-bg: var(--color-base-100);
+		--ui-bg-muted: var(--color-base-200);
+		--ui-bg-elevated: var(--color-base-200);
+		--ui-bg-accented: var(--color-base-300);
+		--ui-bg-inverted: var(--color-white);
+
+		--ui-border: var(--color-base-200);
+		--ui-border-muted: var(--color-base-200);
+		--ui-border-accented: var(--color-base-300);
+		--ui-border-inverted: var(--color-white);
+
+		--ui-radius: var(--radius-box);
+		--ui-container: var(--container-7xl);
 	}
 }
 
@@ -232,6 +242,6 @@
 	::before,
 	::backdrop,
 	::file-selector-button {
-		border-color: var(--color-gray-200, currentColor);
+		border-color: var(--color-base-200, currentColor);
 	}
 }

@@ -179,7 +179,6 @@ jobs:
 
       - name: 🏗️ Build project
         run: pnpm build:test
-        env:
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: pnpm test:a11y:prebuilt

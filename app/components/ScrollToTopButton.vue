@@ -6,7 +6,7 @@
 		color="neutral"
 		variant="ghost"
 		size="lg"
-		class="rounded-full"
+		class="rounded-full transition-opacity duration-300"
 		@click="scrollToTop"
 	/>
 </template>

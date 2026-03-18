@@ -360,6 +360,18 @@
 	}
 }
 
+/* -----------------------------------------------------------------------------
+   Page Transitions
+   ----------------------------------------------------------------------------- */
+
+.page-enter-active {
+	animation: page-enter 0.3s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.page-leave-active {
+	animation: page-leave 0.225s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
 /* Reduce Motion Support
    Note: The rules below are intentionally duplicated.
    - The `:root[data-reduce-motion='true']` selector is a JS-controlled override (e.g., a user toggle).

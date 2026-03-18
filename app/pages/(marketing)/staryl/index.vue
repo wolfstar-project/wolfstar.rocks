@@ -1,7 +1,7 @@
 <template>
 	<section class="mt-28 flex flex-col items-center text-center">
-		<h1 class="title pb-4">Imagine a<br />social and feeder network</h1>
-		<p class="max-w-120">
+		<h1 class="title animate-fade-in-up pb-4">Imagine a<br />social and feeder network</h1>
+		<p class="max-w-120 animate-fade-in-up animate-fade-in-delay-1">
 			A very customizable multilanguage application to cover your members' social and feeder
 			network needs, with a few entertainment features and more,
 			<span class="font-bold underline underline-offset-2">100% for free</span>!
@@ -10,7 +10,9 @@
 	<section>
 		<BuildEnvironment :footer="false" class="mt-16" />
 	</section>
-	<section class="join mt-16 flex items-center justify-center">
+	<section
+		class="join mt-16 flex animate-fade-in-up items-center justify-center animate-fade-in-delay-2"
+	>
 		<NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
 			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
 		</NuxtLink>

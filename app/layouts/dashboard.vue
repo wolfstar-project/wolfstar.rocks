@@ -125,7 +125,14 @@
 				</div>
 			</div>
 		</div>
-		<div v-if="isReadyToSubmit" class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
+		<div
+			v-if="isReadyToSubmit"
+			v-motion
+			:initial="{ opacity: 0, y: 8 }"
+			:enter="{ opacity: 1, y: 0, transition: { duration: 300, ease: 'easeOut' } }"
+			:leave="{ opacity: 0, y: 8, transition: { duration: 200, ease: 'easeIn' } }"
+			class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+		>
 			<UFieldGroup>
 				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
 					Save Changes

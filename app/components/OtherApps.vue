@@ -1,5 +1,10 @@
 <template>
-	<section class="prose text-center">
+	<section
+		ref="sectionRef"
+		class="prose text-center"
+		:class="{ 'animate-fade-in-up': isVisible }"
+		:style="!isVisible ? 'opacity: 0' : undefined"
+	>
 		<h2 class="mt-32 text-5xl font-bold">Other Apps</h2>
 		<p>You want a feature that WolfStar doesn't have? We got you covered!</p>
 	</section>
@@ -51,6 +56,20 @@
 
 <script setup lang="ts">
 const { apps } = defineProps<{ apps: readonly OtherApp[] }>();
+
+const sectionRef = ref<HTMLElement | null>(null);
+const isVisible = ref(false);
+
+const { stop } = useIntersectionObserver(
+	sectionRef,
+	(entries) => {
+		if (entries[0]?.isIntersecting) {
+			isVisible.value = true;
+			stop();
+		}
+	},
+	{ rootMargin: "100px" },
+);
 </script>
 
 <style scoped>

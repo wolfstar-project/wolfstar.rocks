@@ -1,4 +1,3 @@
-// Server/utils/errors.ts
 import { createError } from "evlog";
 
 export const errors = {

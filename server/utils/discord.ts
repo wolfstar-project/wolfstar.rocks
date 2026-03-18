@@ -28,6 +28,7 @@ import {
 	Locale,
 	PermissionFlagsBits,
 } from "discord-api-types/v10";
+import { createError } from "evlog";
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 	const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);
@@ -168,14 +169,7 @@ export const getCurrentToken = defineCachedFunction(
 			!("access_token" in tokens) ||
 			isNullOrUndefined(tokens.access_token)
 		) {
-			throw createError({
-				data: {
-					error: "no_access_token",
-					message: "None tokens OR access token not found",
-				},
-				message: "Authentication required",
-				status: 401,
-			});
+			throw errors.unauthorized();
 		}
 
 		return tokens;
@@ -189,16 +183,10 @@ export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
 	const shouldManage = await manage(guild, member);
 	if (!shouldManage) {
 		throw createError({
-			data: {
-				details: {
-					guild: guild.id,
-					member: member.user.id,
-				},
-				error: "insufficient_permissions",
-				message: "Insufficient permissions",
-			},
 			message: "Insufficient permissions",
 			status: 403,
+			why: "You do not have the required permissions to manage this guild",
+			fix: "Ask a server administrator to grant you the Manage Guild permission",
 		});
 	}
 };
@@ -212,14 +200,7 @@ export const getCurrentUser = defineCachedFunction(
 			!("access_token" in tokens) ||
 			isNullOrUndefined(tokens.access_token)
 		) {
-			throw createError({
-				data: {
-					error: "no_access_token",
-					message: "None tokens OR access token not found",
-				},
-				message: "Authentication required",
-				status: 401,
-			});
+			throw errors.unauthorized();
 		}
 
 		const rest = new REST({
@@ -233,6 +214,7 @@ export const getCurrentUser = defineCachedFunction(
 				cause: error,
 				message: "Failed to fetch user data",
 				status: 500,
+				why: "Discord API returned an error when fetching the current user",
 			});
 		});
 
@@ -241,6 +223,7 @@ export const getCurrentUser = defineCachedFunction(
 				cause: error,
 				message: "Failed to fetch user guilds",
 				status: 500,
+				why: "Discord API returned an error when fetching the user's guild list",
 			});
 		});
 
@@ -260,14 +243,7 @@ export const getCurrentMember = defineCachedFunction(
 			!("access_token" in tokens) ||
 			isNullOrUndefined(tokens.access_token)
 		) {
-			throw createError({
-				data: {
-					error: "no_access_token",
-					message: "None tokens OR access token not found",
-				},
-				message: "Authentication required",
-				status: 401,
-			});
+			throw errors.unauthorized();
 		}
 
 		const rest = new REST({
@@ -279,8 +255,9 @@ export const getCurrentMember = defineCachedFunction(
 		const member = await api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
-				message: "Failed to fetch user data",
+				message: "Failed to fetch guild member data",
 				status: 500,
+				why: "Discord API returned an error when fetching the user's guild membership",
 			});
 		});
 
@@ -315,6 +292,7 @@ export const getMember = defineCachedFunction(
 				cause: error,
 				message,
 				status: 500,
+				why: "Discord API returned an error when fetching the guild member",
 			});
 		});
 		return result;
@@ -332,6 +310,7 @@ export const getGuildChannels = defineCachedFunction(
 				cause: error,
 				message: `Failed to fetch channels for guild: ${guildId}`,
 				status: 500,
+				why: "Discord API returned an error when fetching the guild's channel list",
 			});
 		});
 		return result;
@@ -351,6 +330,7 @@ export const getGuild = defineCachedFunction(
 					cause: error,
 					message: `Failed to fetch guild: ${guildId}`,
 					status: 500,
+					why: "Discord API returned an error when fetching guild data",
 				});
 			});
 		return result;

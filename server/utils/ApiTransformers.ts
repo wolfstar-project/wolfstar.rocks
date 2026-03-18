@@ -41,6 +41,7 @@ import type {
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
+import { createError } from "evlog";
 
 // #region Guild
 
@@ -196,7 +197,11 @@ export function flattenChannel(channel: APIThreadChannel | APIChannel): Flattene
 			return flattenChannelMedia(channel);
 		}
 		default: {
-			throw new Error(`Unsupported channel type: unknown`);
+			throw createError({
+				message: "Unsupported channel type",
+				status: 500,
+				why: "Discord returned a channel with an unrecognized type",
+			});
 		}
 	}
 }
@@ -239,7 +244,11 @@ export function flattenGuildChannel(
 			return flattenChannelMedia(channel as APIGuildMediaChannel);
 		}
 		default: {
-			throw new Error(`Unsupported channel type: ${(channel as APIChannel).type}`);
+			throw createError({
+				message: `Unsupported channel type: ${(channel as APIChannel).type}`,
+				status: 500,
+				why: "Discord returned a guild channel with an unrecognized type",
+			});
 		}
 	}
 }

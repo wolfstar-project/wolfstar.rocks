@@ -6,7 +6,8 @@ export default defineWrappedResponseHandler(
 
 		const { user, guilds } = await getCurrentUser(event);
 
-		log.info("Fetched user and guilds data", { userId: user.id, guildCount: guilds.length });
+		log.set({ user: { id: user.id } });
+		log.set({ result: { guildCount: guilds.length } });
 
 		const transformedData = await transformOauthGuildsAndUser({
 			guilds,

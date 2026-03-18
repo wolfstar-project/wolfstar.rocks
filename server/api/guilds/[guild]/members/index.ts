@@ -18,6 +18,7 @@ export default defineWrappedResponseHandler(
 			throw createError({
 				message: "Failed to fetch members from Discord",
 				status: 500,
+				why: "Discord API returned an error when fetching the guild's member list",
 				cause: error,
 			});
 		});

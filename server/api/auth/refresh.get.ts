@@ -23,36 +23,49 @@ function isExpired(expires_in: number | undefined, loggedInAt: number): boolean 
 	return Date.now() + ONE_HOUR >= expiresAt;
 }
 
-export default defineEventHandler(async (event) => {
-	const logger = useLogger(event);
-	const session: UserSession = await getUserSession(event);
-	if (!session?.secure?.tokens) {
-		return;
-	}
+export default defineWrappedResponseHandler(
+	async (event) => {
+		const log = useLogger(event);
+		const session: UserSession = await getUserSession(event);
+		if (!session?.secure?.tokens) {
+			return;
+		}
 
-	const { refresh_token, access_token, expires_in } = session.secure?.tokens ?? {};
-	const isAccessTokenExpired = isExpired(expires_in, session.loggedInAt);
-	if (!isAccessTokenExpired) {
-		return;
-	}
+		const userId = session.user?.id;
+		if (userId) {
+			log.set({ user: { id: userId } });
+		}
 
-	if (!access_token || !refresh_token) {
-		await clearUserSession(event);
-		return;
-	}
+		const { refresh_token, access_token, expires_in } = session.secure?.tokens ?? {};
+		const isAccessTokenExpired = isExpired(expires_in, session.loggedInAt);
+		if (!isAccessTokenExpired) {
+			return;
+		}
 
-	try {
-		const newTokens = await refreshTokens(refresh_token);
+		if (!access_token || !refresh_token) {
+			await clearUserSession(event);
+			return;
+		}
 
-		session.secure.tokens = newTokens as unknown as any;
-		await setUserSession(event, {
-			loggedInAt: Date.now(),
-			secure: {
-				tokens: newTokens,
-			},
-		});
-	} catch (error) {
-		logger.error("Failed to refresh tokens:", { error });
-		await clearUserSession(event);
-	}
-});
+		try {
+			const newTokens = await refreshTokens(refresh_token);
+
+			session.secure.tokens = newTokens as unknown as any;
+			await setUserSession(event, {
+				loggedInAt: Date.now(),
+				secure: {
+					tokens: newTokens,
+				},
+			});
+
+			log.info("Tokens refreshed successfully");
+		} catch (error) {
+			log.error("Failed to refresh tokens", { error });
+			await clearUserSession(event);
+		}
+	},
+	{
+		auth: false,
+		rateLimit: { enabled: true, limit: 3, window: seconds(5) },
+	},
+);

@@ -1,4 +1,4 @@
-import { useLogger } from "evlog";
+import { createError, useLogger } from "evlog";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -17,13 +17,10 @@ export default defineWrappedResponseHandler(
 		const channels = await api.guilds.getChannels(guild.id).catch((error) => {
 			log.error(error);
 			throw createError({
-				data: {
-					details: error,
-					error: "channels_fetch_failed",
-					message: error.message || "Unknown error",
-				},
 				message: "Failed to fetch channels",
 				status: 500,
+				why: "Discord API returned an error when fetching the guild's channel list",
+				cause: error,
 			});
 		});
 

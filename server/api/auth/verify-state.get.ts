@@ -1,5 +1,6 @@
 import { verifyOAuthState } from "#server/utils/oauth-state";
 import { isSafeRedirectPath } from "#shared/utils/redirect";
+import { createError } from "evlog";
 
 /**
  * GET /api/auth/verify-state?state=<token>
@@ -10,35 +11,43 @@ import { isSafeRedirectPath } from "#shared/utils/redirect";
  *
  * Returns { redirectUrl } on success, or 400 on invalid/missing state.
  */
-export default defineEventHandler(async (event) => {
-	const { state } = getQuery(event);
-	const nonce = getCookie(event, "oauth_nonce");
-	const storedRedirectUrl = getCookie(event, "oauth_redirect");
+export default defineWrappedResponseHandler(
+	async (event) => {
+		const { state } = getQuery(event);
+		const nonce = getCookie(event, "oauth_nonce");
+		const storedRedirectUrl = getCookie(event, "oauth_redirect");
 
-	// Always clear cookies after one use to prevent replay attacks
-	deleteCookie(event, "oauth_nonce", { path: "/" });
-	deleteCookie(event, "oauth_redirect", { path: "/" });
+		// Always clear cookies after one use to prevent replay attacks
+		deleteCookie(event, "oauth_nonce", { path: "/" });
+		deleteCookie(event, "oauth_redirect", { path: "/" });
 
-	if (!state || typeof state !== "string" || !nonce || !storedRedirectUrl) {
-		throw createError({
-			statusCode: 400,
-			statusMessage: "Bad Request",
-			message: "State verification failed",
-		});
-	}
+		if (!state || typeof state !== "string" || !nonce || !storedRedirectUrl) {
+			throw createError({
+				message: "State verification failed",
+				status: 400,
+				why: "Required parameters (state, nonce, or redirect URL) are missing or invalid",
+				fix: "Restart the login flow from the beginning",
+			});
+		}
 
-	const isValid = await verifyOAuthState(state, nonce, storedRedirectUrl);
+		const isValid = await verifyOAuthState(state, nonce, storedRedirectUrl);
 
-	if (!isValid) {
-		throw createError({
-			statusCode: 400,
-			statusMessage: "Bad Request",
-			message: "State verification failed",
-		});
-	}
+		if (!isValid) {
+			throw createError({
+				message: "State verification failed",
+				status: 400,
+				why: "The OAuth state signature is invalid or has expired",
+				fix: "Restart the login flow from the beginning",
+			});
+		}
 
-	// Re-validate the URL one final time (defence-in-depth against cookie tampering)
-	const redirectUrl = isSafeRedirectPath(storedRedirectUrl) ? storedRedirectUrl : "/";
+		// Re-validate the URL one final time (defence-in-depth against cookie tampering)
+		const redirectUrl = isSafeRedirectPath(storedRedirectUrl) ? storedRedirectUrl : "/";
 
-	return { redirectUrl };
-});
+		return { redirectUrl };
+	},
+	{
+		auth: false,
+		rateLimit: { enabled: true, limit: 5, window: seconds(10) },
+	},
+);

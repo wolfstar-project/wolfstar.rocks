@@ -2,6 +2,7 @@ import type { PermissionsNode, ReadonlyGuildData } from "#server/database/settin
 import type { APIGuildMember, APIRole, APIUser } from "discord-api-types/v10";
 import { CommandMatcher } from "#server/database/settings/utils/matchers";
 import { Collection } from "@discordjs/collection";
+import { createError } from "evlog";
 
 // oxlint-disable-next-line no-restricted-syntax
 export const enum PermissionNodeAction {
@@ -59,7 +60,12 @@ export class PermissionNodeManager {
 			(action === PermissionNodeAction.Allow && previous.allow.includes(command)) ||
 			(action === PermissionNodeAction.Deny && previous.deny.includes(command))
 		) {
-			throw new Error("This command is duplicated for this node.");
+			throw createError({
+				message: "This command is duplicated for this node",
+				status: 400,
+				why: "The command already exists in this permission node's allow or deny list",
+				fix: "Remove the existing entry before adding it again",
+			});
 		}
 
 		const node: PermissionsNode = {
@@ -88,14 +94,24 @@ export class PermissionNodeManager {
 				(typeof target === "object" && "id" in target ? target.id : target.user.id),
 		);
 		if (nodeIndex === -1) {
-			throw new Error("This node does not exist.");
+			throw createError({
+				message: "This node does not exist",
+				status: 400,
+				why: "No permission node was found for the specified target",
+				fix: "Verify the target role or user ID exists in the permission nodes",
+			});
 		}
 
 		const property = this.getName(action);
 		const previous = nodes[nodeIndex];
 		const commandIndex = previous[property].indexOf(command);
 		if (commandIndex === -1) {
-			throw new Error("This command does not exist for this node.");
+			throw createError({
+				message: "This command does not exist for this node",
+				status: 400,
+				why: "The specified command was not found in this permission node's allow or deny list",
+				fix: "Check that the command name is correct and exists in the node",
+			});
 		}
 
 		const node: PermissionsNode = {
@@ -124,7 +140,12 @@ export class PermissionNodeManager {
 				(typeof target === "object" && "id" in target ? target.id : target.user.id),
 		);
 		if (nodeIndex === -1) {
-			throw new Error("This node does not exist.");
+			throw createError({
+				message: "This node does not exist",
+				status: 400,
+				why: "No permission node was found for the specified target",
+				fix: "Verify the target role or user ID exists in the permission nodes",
+			});
 		}
 
 		return nodes.toSpliced(nodeIndex, 1);

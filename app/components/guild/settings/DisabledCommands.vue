@@ -2,7 +2,7 @@
 	<div>
 		<GuildSettingsSection
 			title="Commands"
-			description="On this page you can disable commands on your server"
+			description="Choose which commands to enable or disable on your server"
 		>
 			<!-- Unified Form wrapper to match skeleton and content -->
 			<div v-if="loading" class="space-y-4">
@@ -243,7 +243,7 @@ function resetCategory(category: string) {
 
 	toast.add({
 		color: "info",
-		description: `${category} commands have been reset to saved values`,
+		description: `${category} commands reverted to saved values.`,
 		icon: "i-heroicons-arrow-path",
 		title: "Category Reset",
 	});
@@ -256,9 +256,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update disabled commands settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save command settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 

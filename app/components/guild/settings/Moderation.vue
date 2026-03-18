@@ -1,7 +1,7 @@
 <template>
 	<GuildSettingsSection
 		title="Punishment Settings"
-		description="These settings affect what WolfStar does when you're punishing (ban, kick, mute, etc) someone."
+		description="Configure how WolfStar handles moderation actions like bans, kicks, and mutes."
 	>
 		<GuildSettingsForm
 			:schema="schema"
@@ -66,9 +66,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update moderation settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save moderation settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 

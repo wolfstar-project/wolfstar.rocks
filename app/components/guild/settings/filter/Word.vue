@@ -346,9 +346,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update word filter settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save word filter settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 </script>

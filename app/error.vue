@@ -22,7 +22,7 @@ const { error } = defineProps<{
 
 // SEO and meta configuration
 useSeoMetadata({
-	description: error.statusText || "An unexpected error occurred.",
+	description: error.statusText || "Something went wrong. Please try again.",
 	shouldOgImage: true,
 	title: error.status?.toString(),
 });

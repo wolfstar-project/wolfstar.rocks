@@ -3,32 +3,33 @@
 		<h1 class="sr-only">OAuth Callback</h1>
 		<h2 class="sr-only">Authentication Status</h2>
 		<template v-if="!code">
-			<UAlert variant="solid" color="warning" title="Missing Code" icon="twemoji:warning">
+			<UAlert variant="solid" color="warning" title="Login Required" icon="twemoji:warning">
 				<template #description>
-					Please use the <code>Login</code> button instead or click
-					<ULink to="/login" class="font-medium underline">here</ULink>.
+					This page can't be accessed directly. Please
+					<ULink to="/login" class="font-medium underline">log in</ULink>
+					to continue.
 				</template>
 				<template #actions>
 					<UButton color="neutral" variant="ghost" to="/login" size="sm">
-						Return to Login
+						Go to Login
 					</UButton>
 				</template>
 			</UAlert>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="isPending">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Loading">
-					<template #description> Completing authentication flow... </template>
+				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
+					<template #description> Connecting to Discord... </template>
 				</UAlert>
 			</template>
 			<template v-else-if="isError">
-				<UAlert color="error" title="Authentication Error" icon="twemoji:cross-mark">
+				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
 					<template #description>
 						{{ errorMessage }}
 					</template>
 					<template #actions>
 						<UButton color="neutral" variant="ghost" to="/login" size="sm">
-							Try again clicking here
+							Try Again
 						</UButton>
 					</template>
 				</UAlert>
@@ -39,9 +40,7 @@
 					icon="twemoji:check-mark"
 					:title="`Welcome ${user!.username}!`"
 				>
-					<template #description>
-						You will be redirected to the main page in a moment.
-					</template>
+					<template #description> Redirecting you to the dashboard... </template>
 				</UAlert>
 			</template>
 		</ClientOnly>
@@ -107,7 +106,7 @@ const errorMessage = computed(() => {
 
 	return error.value
 		? (error.value.message ?? error.value.cause)
-		: "An error occurred during authentication";
+		: "Something went wrong while signing you in. Please try again.";
 });
 
 const isPending = computed(() => status.value === "pending");

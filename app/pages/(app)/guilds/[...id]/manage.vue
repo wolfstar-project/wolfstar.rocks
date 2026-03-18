@@ -96,10 +96,10 @@ async function fetchCommandsList() {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: error?.message || "Unable to fetch commands",
+			description: error?.message || "Couldn't load the command list. Try refreshing.",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Failed to load commands",
+			title: "Commands Unavailable",
 		});
 		logger.error("Error fetching commands:", error);
 	} finally {
@@ -140,10 +140,10 @@ async function fetchLanguagesList() {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: error?.message || "Unable to fetch languages",
+			description: error?.message || "Couldn't load the language list. Try refreshing.",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Failed to load languages",
+			title: "Languages Unavailable",
 		});
 		logger.error("Error fetching languages:", error);
 	} finally {

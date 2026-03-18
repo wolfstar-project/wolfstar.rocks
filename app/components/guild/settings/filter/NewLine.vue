@@ -312,9 +312,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update new line filter settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save line spam filter settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 </script>

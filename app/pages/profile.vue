@@ -110,9 +110,7 @@
 								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
 								<p class="mt-1 text-base-content/60">
 									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
-									<span v-else
-										>Servers you're in ({{ guilds.length ?? 0 }} servers)</span
-									>
+									<span v-else>{{ guilds.length ?? 0 }} servers</span>
 								</p>
 							</div>
 
@@ -126,7 +124,7 @@
 											aria-label="Search servers"
 											name="search"
 											type="text"
-											placeholder="Search servers.."
+											placeholder="Search servers..."
 											icon="heroicons:magnifying-glass-circle"
 											:is-loading
 											is-loading-icon="lucide:loader"
@@ -346,9 +344,8 @@
 												System Preference Detected
 											</p>
 											<p class="mt-1 text-info/80">
-												Your system is configured to reduce motion. This
-												setting is automatically applied and cannot be
-												overridden for your safety.
+												Your system prefers reduced motion. This setting is
+												applied automatically to respect your preference.
 											</p>
 										</div>
 									</div>
@@ -412,7 +409,8 @@
 											Coming Soon
 										</h4>
 										<p class="text-sm text-base-content/40">
-											Privacy controls and data management options coming soon
+											Privacy controls and data management will be available
+											here soon.
 										</p>
 									</div>
 								</div>
@@ -450,8 +448,7 @@
 											Coming Soon
 										</h4>
 										<p class="text-sm text-base-content/40">
-											Notification settings and preferences will be available
-											soon
+											Notification preferences will be available here soon.
 										</p>
 									</div>
 								</div>

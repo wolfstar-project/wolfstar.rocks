@@ -155,9 +155,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update general settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save general settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 </script>

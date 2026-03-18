@@ -3,10 +3,11 @@
 		<h1 class="sr-only">Guild OAuth Callback</h1>
 		<h2 class="sr-only">Guild Setup Status</h2>
 		<template v-if="!guildId">
-			<UAlert variant="solid" color="error" title="Missing Guild ID" icon="emojione:warning">
+			<UAlert variant="solid" color="error" title="Server Not Found" icon="emojione:warning">
 				<template #description>
-					Please use the <code>Login</code> button instead or click
-					<NuxtLink to="/login" class="font-medium underline">here</NuxtLink>.
+					We couldn't determine which server to set up. Please
+					<NuxtLink to="/login" class="font-medium underline">log in</NuxtLink>
+					and select a server from your dashboard.
 				</template>
 			</UAlert>
 		</template>
@@ -15,7 +16,7 @@
 				<UAlert
 					variant="solid"
 					color="error"
-					title="Authentication Error"
+					title="Setup Failed"
 					icon="emojione:cross-mark"
 				>
 					<template #description>
@@ -28,7 +29,7 @@
 			</template>
 			<template v-else>
 				<UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
-					<template #description> Redirecting you to the guild page... </template>
+					<template #description> Taking you to the server dashboard... </template>
 				</UAlert>
 			</template>
 		</ClientOnly>

@@ -58,13 +58,13 @@
 					{{ nuxtError.statusMessage || "Error Loading Dashboard" }}
 				</h2>
 				<p v-if="nuxtError.status === 403">
-					You do not have permission to access this guild's dashboard. Please ensure you
-					have the necessary permissions and try again.
+					You don't have permission to access this server's dashboard. Make sure you have
+					the Manage Server permission and try again.
 				</p>
 				<p class="text-sm text-base-content/60">
 					{{
 						nuxtError.message ||
-						"An error occurred while loading the dashboard. Please try again later or contact support if the issue persists."
+						"Something went wrong while loading the dashboard. Please try again, or contact support if the problem continues."
 					}}
 				</p>
 			</div>
@@ -79,7 +79,7 @@
 				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
 					<h2 class="text-xl font-semibold text-base-content">Loading Dashboard</h2>
-					<p class="text-sm text-base-content/60">Fetching guild settings...</p>
+					<p class="text-sm text-base-content/60">Loading server settings...</p>
 				</div>
 				<div class="flex items-center space-x-2">
 					<div
@@ -338,7 +338,7 @@ async function submitChanges() {
 				);
 				throw createError({
 					message: "Failed to update guild settings",
-					why: "An unexpected error occurred while processing the server response.",
+					why: "Something went wrong while saving your settings.",
 					status: 500,
 					fix: "Please try again later. If the issue persists, contact support.",
 					cause: error as Error,
@@ -360,9 +360,9 @@ async function submitChanges() {
 
 		toast.add({
 			color: "success",
-			description: "Guild settings have been successfully updated.",
+			description: "Your server settings have been saved.",
 			icon: "i-heroicons-check-circle",
-			title: "Success",
+			title: "Settings Saved",
 		});
 	}
 }
@@ -374,9 +374,9 @@ function resetChanges() {
 
 	toast.add({
 		color: "info",
-		description: "All changes have been reset",
+		description: "All changes have been reverted to the last saved state.",
 		icon: "heroicons:arrow-path",
-		title: "Reset",
+		title: "Changes Reset",
 	});
 }
 

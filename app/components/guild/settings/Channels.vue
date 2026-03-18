@@ -1,7 +1,7 @@
 <template>
 	<GuildSettingsSection
 		title="Channel Settings"
-		description="Configure which channels are used for logging events and which channels should be ignored"
+		description="Set up logging channels and choose which channels to exclude from logging"
 	>
 		<GuildSettingsForm
 			:state="state"
@@ -118,9 +118,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update channel settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save channel settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 </script>

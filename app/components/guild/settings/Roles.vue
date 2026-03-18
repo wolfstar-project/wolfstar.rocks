@@ -1,7 +1,7 @@
 <template>
 	<GuildSettingsSection
 		title="Roles"
-		subtitle="Here you can configure special roles known to WolfStar for your server."
+		subtitle="Configure special roles that WolfStar uses on your server."
 	>
 		<!-- Loading Skeleton -->
 		<div v-if="loading" class="space-y-8">
@@ -236,9 +236,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Failed to update role settings. ${errorMessage ?? "Unknown error"}`,
+		description: `Could not save role settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
-		title: "Error",
+		title: "Save Failed",
 	});
 }
 </script>

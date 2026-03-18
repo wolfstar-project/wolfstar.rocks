@@ -69,7 +69,7 @@
 							</div>
 
 							<div class="ml-4 flex-1 truncate text-sm text-base-content/70">
-								{{ commandItem.description || "No description available" }}
+								{{ commandItem.description || "No description yet" }}
 							</div>
 						</template>
 

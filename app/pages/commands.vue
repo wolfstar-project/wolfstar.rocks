@@ -19,7 +19,7 @@
 				<h2 id="search-heading" class="sr-only">Search Commands</h2>
 				<UInput
 					v-model="searchValue"
-					placeholder="Search a command..."
+					placeholder="Search commands..."
 					icon="i-heroicons-magnifying-glass"
 					size="xl"
 					class="flex-1"
@@ -75,7 +75,7 @@
 					<p class="mb-2 text-lg font-semibold text-base-content/80">
 						Loading commands...
 					</p>
-					<p class="text-sm text-base-content/50">Fetching the latest command data</p>
+					<p class="text-sm text-base-content/50">This may take a moment</p>
 				</div>
 			</div>
 
@@ -92,7 +92,7 @@
 				<div>
 					<h2 class="mb-3 text-2xl font-bold">No commands available</h2>
 					<p class="mx-auto max-w-md text-base-content/70">
-						Unable to load commands at this time. Please try refreshing.
+						Couldn't load commands right now. Try refreshing.
 					</p>
 				</div>
 				<UButton
@@ -110,7 +110,7 @@
 			<section
 				v-else
 				aria-labelledby="categories-heading"
-				class="rounded-2xl border border-base-content/10 p-6 sm:p-8"
+				class="rounded-2xl border border-base-content/10 bg-base-200/80 p-6 sm:p-8"
 			>
 				<h2 id="categories-heading" class="sr-only">Command Categories</h2>
 				<CommandCategory :commands="filteredCommands" :search-value :categories :loading />

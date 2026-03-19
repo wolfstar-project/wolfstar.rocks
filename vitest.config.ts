@@ -30,6 +30,7 @@ export default defineConfig({
 				resolve: {
 					alias: {
 						"~": `${rootDir}/app`,
+						"~~": `${rootDir}`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},
@@ -46,6 +47,7 @@ export default defineConfig({
 				resolve: {
 					alias: {
 						"~": `${rootDir}/app`,
+						"~~": `${rootDir}`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},

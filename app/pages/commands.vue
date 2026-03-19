@@ -44,6 +44,7 @@
 					color="primary"
 					variant="soft"
 					size="xl"
+					class="self-start sm:self-auto"
 					:loading="refreshing"
 					:disabled="loading"
 					aria-label="Refresh commands list"
@@ -113,7 +114,12 @@
 				class="rounded-2xl border border-base-content/10 bg-base-200/80 p-6 sm:p-8"
 			>
 				<h2 id="categories-heading" class="sr-only">Command Categories</h2>
-				<CommandCategory :commands="filteredCommands" :search-value :categories :loading />
+				<LazyCommandCategory
+					:commands="filteredCommands"
+					:search-value
+					:categories
+					:loading
+				/>
 			</section>
 		</div>
 	</UContainer>

@@ -30,7 +30,11 @@ export class PermissionNodeManager {
 
 	public async run(member: APIGuildMember, command: WolfCommand) {
 		if (this.#refreshPromise) {
-			await this.#refreshPromise;
+			try {
+				await this.#refreshPromise;
+			} catch {
+				this.#refreshPromise = null;
+			}
 		}
 		return (await this.runUser(member, command)) ?? (await this.runRole(member, command));
 	}

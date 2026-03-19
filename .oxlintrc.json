@@ -209,6 +209,7 @@
 		"playwright-report/**",
 		"test-results/**",
 		"server/database/generated/**/*",
+		".github/hooks/**/*",
 		".gemini/**/*",
 		".agent/**/*",
 		".agents/**/*",

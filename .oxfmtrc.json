@@ -60,6 +60,7 @@
 		"*.jpeg",
 		"*.gif",
 		"*.svg",
+		".github/hooks/**/*",
 		"coverage/",
 		".agents/",
 		".agent/",

@@ -184,6 +184,7 @@ export default defineNuxtConfig({
 		// Broad ISR on /api/** is intentionally omitted: authenticated routes
 		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
 		// Globally, as that would serve one user's data to another.
+		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/__og-image__/**": getISRConfig(60),
 		"/api/auth/**": { isr: false, cache: false },
@@ -518,6 +519,7 @@ export default defineNuxtConfig({
 
 	sitemap: {
 		exclude: ["/oauth/guild", "/oauth/callback", "/guilds/[...id]"],
+		zeroRuntime: true,
 	},
 
 	vitalizer: {

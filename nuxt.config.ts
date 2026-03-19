@@ -332,6 +332,7 @@ export default defineNuxtConfig({
 			compilerOptions: {
 				allowImportingTsExtensions: true,
 				paths: {
+					"~~/*": ["../*"],
 					"~/*": ["../app/*"],
 					"#server/*": ["../server/*"],
 					"#shared/*": ["../shared/*"],

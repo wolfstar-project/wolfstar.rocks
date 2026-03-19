@@ -1,0 +1,400 @@
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+}
+
+@utility icon {
+	vertical-align: text-bottom !important;
+}
+
+/* Performance: Skip rendering of below-fold content until needed */
+@utility content-visibility-auto {
+	content-visibility: auto;
+	contain-intrinsic-size: auto 500px;
+}
+
+/* Performance: Optimize paint for fixed elements */
+@utility will-change-transform {
+	will-change: transform;
+}
+
+@utility prose {
+	@apply max-w-none;
+}
+
+@utility tab-* {
+	tab-size: --value(--tab-size-*);
+}
+
+/* =============================================================================
+   Vercel/Turbo Inspired Effects
+   Modern gradients, patterns, and animations
+   ============================================================================= */
+
+/* -----------------------------------------------------------------------------
+   Background Patterns
+   ----------------------------------------------------------------------------- */
+
+@utility bg-grid-pattern {
+	background-image:
+		linear-gradient(to right, oklch(50% 0 0 / 0.05) 1px, transparent 1px),
+		linear-gradient(to bottom, oklch(50% 0 0 / 0.05) 1px, transparent 1px);
+	background-size: 4rem 4rem;
+}
+
+/* Dot mask for patterns */
+@utility bg-dot-pattern {
+	background-image: radial-gradient(oklch(50% 0 0 / 0.15) 1px, transparent 1px);
+	background-size: 1.5rem 1.5rem;
+}
+
+/* Fade mask for patterns */
+@utility bg-fade-pattern {
+	mask-image: linear-gradient(to bottom, white 0%, transparent 100%);
+	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 100%);
+}
+
+/* -----------------------------------------------------------------------------
+   Gradient Text Effects
+   ----------------------------------------------------------------------------- */
+
+/* Hero gradient - vibrant pink to orange */
+@utility gradient-text-hero {
+	background: linear-gradient(
+		to bottom right,
+		oklch(100% 0 45) 0%,
+		oklch(75% 0.18 15) 50%,
+		var(--color-branding-wolfstar) 100%
+	);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Alternative: Blue to purple gradient */
+@utility gradient-text-cool {
+	background: linear-gradient(to bottom right, oklch(70% 0.2 260) 0%, oklch(65% 0.25 300) 100%);
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+/* Shimmer animation for text */
+@utility animate-shimmer {
+	animation: shimmer 3s ease-in-out infinite;
+	background-size: 200% 100%;
+}
+
+/* -----------------------------------------------------------------------------
+   Button Glow Effects
+   ----------------------------------------------------------------------------- */
+
+@utility btn-glow {
+	position: relative;
+	transition: all 0.3s ease;
+
+	&::before {
+		position: absolute;
+		opacity: 0;
+		z-index: -1;
+		filter: blur(12px);
+		transition: opacity 0.3s ease;
+		inset: -2px;
+		border-radius: inherit;
+		/* Default glow color if no specific button class is present */
+		background: var(--color-neutral);
+		content: "";
+	}
+
+	&:hover::before {
+		opacity: 0.6;
+	}
+
+	/* Adaptive colors based on DaisyUI button classes */
+	&.btn-primary::before {
+		background: var(--color-primary);
+	}
+	&.btn-secondary::before {
+		background: var(--color-secondary);
+	}
+	&.btn-accent::before {
+		background: var(--color-accent);
+	}
+	&.btn-neutral::before {
+		background: var(--color-neutral);
+	}
+	&.btn-info::before {
+		background: var(--color-info);
+	}
+	&.btn-success::before {
+		background: var(--color-success);
+	}
+	&.btn-warning::before {
+		background: var(--color-warning);
+	}
+	&.btn-error::before {
+		background: var(--color-error);
+	}
+
+	/* Custom branding override if needed */
+	&.btn-branding::before {
+		background: var(--branding-wolfstar);
+	}
+}
+
+/* -----------------------------------------------------------------------------
+   Glassmorphism Cards
+   ----------------------------------------------------------------------------- */
+
+@utility card-glass {
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid oklch(100% 0 0 / 0.1);
+	border-radius: var(--radius-box, 0.5rem);
+	background: oklch(50% 0 0 / 0.05);
+
+	[data-theme="dark"] & {
+		border-color: oklch(100% 0 0 / 0.08);
+		background: oklch(20% 0 0 / 0.3);
+	}
+
+	/* Adaptive colors based on DaisyUI background classes */
+	&.bg-primary {
+		border-color: var(--color-primary);
+		background: color-mix(in oklch, var(--color-primary) 30%, transparent);
+	}
+	&.bg-secondary {
+		border-color: var(--color-secondary);
+		background: color-mix(in oklch, var(--color-secondary) 30%, transparent);
+	}
+	&.bg-accent {
+		border-color: var(--color-accent);
+		background: color-mix(in oklch, var(--color-accent) 30%, transparent);
+	}
+	&.bg-neutral {
+		border-color: var(--color-neutral);
+		background: color-mix(in oklch, var(--color-neutral) 30%, transparent);
+	}
+	&.bg-info {
+		border-color: var(--color-info);
+		background: color-mix(in oklch, var(--color-info) 30%, transparent);
+	}
+	&.bg-success {
+		border-color: var(--color-success);
+		background: color-mix(in oklch, var(--color-success) 30%, transparent);
+	}
+	&.bg-warning {
+		border-color: var(--color-warning);
+		background: color-mix(in oklch, var(--color-warning) 30%, transparent);
+	}
+	&.bg-error {
+		border-color: var(--color-error);
+		background: color-mix(in oklch, var(--color-error) 30%, transparent);
+	}
+
+	/* Hover states for colored variants */
+	&.bg-primary:hover {
+		background: color-mix(in oklch, var(--color-primary) 40%, transparent);
+	}
+	&.bg-secondary:hover {
+		background: color-mix(in oklch, var(--color-secondary) 40%, transparent);
+	}
+	&.bg-accent:hover {
+		background: color-mix(in oklch, var(--color-accent) 40%, transparent);
+	}
+	&.bg-neutral:hover {
+		background: color-mix(in oklch, var(--color-neutral) 40%, transparent);
+	}
+	&.bg-info:hover {
+		background: color-mix(in oklch, var(--color-info) 40%, transparent);
+	}
+	&.bg-success:hover {
+		background: color-mix(in oklch, var(--color-success) 40%, transparent);
+	}
+	&.bg-warning:hover {
+		background: color-mix(in oklch, var(--color-warning) 40%, transparent);
+	}
+	&.bg-error:hover {
+		background: color-mix(in oklch, var(--color-error) 40%, transparent);
+	}
+}
+
+@utility card-glass-soft {
+	backdrop-filter: blur(12px) saturate(150%);
+	-webkit-backdrop-filter: blur(12px) saturate(150%);
+	border-radius: var(--radius-box, 0.5rem);
+	background: oklch(30% 0.01 250 / 0.6);
+
+	[data-theme="light"] & {
+		background: oklch(95% 0.01 250 / 0.6);
+	}
+}
+
+@utility card-glass-bordered {
+	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
+	border: 1px solid oklch(100% 0 0 / 0.15);
+	border-radius: var(--radius-box, 0.5rem);
+	background: oklch(25% 0.016 252 / 0.8);
+
+	[data-theme="light"] & {
+		box-shadow: 0 4px 30px oklch(0% 0 0 / 0.05);
+		border-color: oklch(0% 0 0 / 0.1);
+		background: oklch(98% 0 0 / 0.8);
+	}
+}
+
+@utility card-glass-subtle {
+	backdrop-filter: blur(8px) saturate(120%);
+	-webkit-backdrop-filter: blur(8px) saturate(120%);
+	border-radius: var(--radius-box, 0.5rem);
+	background: oklch(40% 0.008 250 / 0.4);
+
+	[data-theme="light"] & {
+		background: oklch(90% 0.008 250 / 0.4);
+	}
+}
+
+/* Navigation panel glass - overrides bg-default's --ui-bg on UHeader mobile panel */
+@utility nav-panel-glass {
+	--ui-bg: oklch(20% 0 0 / 0.85);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+
+	[data-theme="light"] & {
+		--ui-bg: oklch(98% 0 0 / 0.85);
+	}
+}
+
+/* Glass effect for overlays and menus - more subtle, preserves existing background */
+@utility glass-overlay {
+	backdrop-filter: blur(16px) saturate(180%);
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
+
+	[data-theme="dark"] & {
+		backdrop-filter: blur(20px) saturate(180%);
+		-webkit-backdrop-filter: blur(20px) saturate(180%);
+	}
+}
+
+/* Pure blur effect without background override */
+@utility glass-blur {
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+}
+
+/* Bordered variant - add visible borders to glass effects */
+@utility glass-card-bordered {
+	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
+	border: 1px solid oklch(100% 0 0 / 0.15);
+
+	[data-theme="light"] & {
+		box-shadow: 0 4px 30px oklch(0% 0 0 / 0.05);
+		border-color: oklch(0% 0 0 / 0.1);
+	}
+}
+
+/* -----------------------------------------------------------------------------
+   Entrance Animations
+   ----------------------------------------------------------------------------- */
+
+@utility animate-fade-in {
+	animation: fade-in 0.6s ease-out forwards;
+}
+
+@utility animate-fade-in-up {
+	animation: fade-in-up 0.6s ease-out forwards;
+}
+
+@utility animate-fade-in-delay-1 {
+	opacity: 0;
+	animation-delay: 0.1s;
+}
+
+@utility animate-fade-in-delay-2 {
+	opacity: 0;
+	animation-delay: 0.2s;
+}
+
+@utility animate-fade-in-delay-3 {
+	opacity: 0;
+	animation-delay: 0.3s;
+}
+
+/* -----------------------------------------------------------------------------
+   Interactive Hover Effects
+   ----------------------------------------------------------------------------- */
+
+@utility hover-lift {
+	transition:
+		transform 0.3s ease,
+		box-shadow 0.3s ease;
+
+	&:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.1);
+	}
+
+	[data-theme="dark"] &:hover {
+		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.3);
+	}
+}
+
+/* Subtle scale on hover */
+@utility hover-scale {
+	transition: transform 0.2s ease;
+
+	&:hover {
+		transform: scale(1.02);
+	}
+}
+
+/* Border glow on hover */
+@utility hover-border-glow {
+	transition:
+		border-color 0.3s ease,
+		box-shadow 0.3s ease;
+
+	&:hover {
+		box-shadow: 0 0 12px -2px oklch(70% 0.15 20 / 0.4);
+		border-color: oklch(70% 0.15 20 / 0.5);
+	}
+}
+
+/* -----------------------------------------------------------------------------
+   Page Transitions
+   ----------------------------------------------------------------------------- */
+
+.page-enter-active {
+	animation: page-enter 0.3s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+.page-leave-active {
+	animation: page-leave 0.225s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
+
+/* Reduce Motion Support
+   Note: The rules below are intentionally duplicated.
+   - The `:root[data-reduce-motion='true']` selector is a JS-controlled override (e.g., a user toggle).
+   - The `@media (prefers-reduced-motion: reduce)` block provides the user/system preference fallback.
+   Keep both selectors in sync when changing these values.
+*/
+:root[data-reduce-motion="true"] *,
+:root[data-reduce-motion="true"] *::before,
+:root[data-reduce-motion="true"] *::after {
+	animation-duration: 0.01ms !important;
+	animation-iteration-count: 1 !important;
+	transition-duration: 0.01ms !important;
+	scroll-behavior: auto !important;
+}
+
+/* Intentional duplication (see above): prefers-reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}

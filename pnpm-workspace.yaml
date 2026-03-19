@@ -1,0 +1,28 @@
+shellEmulator: true
+
+packages: []
+
+overrides:
+    "@netlify/api": ^14.0.17
+    sharp: 0.34.5
+
+allowedDeprecatedVersions:
+    glob: 7.2.3
+    inflight: 1.0.6
+    sourcemap-codec: 1.4.8
+
+ignoredBuiltDependencies:
+    - "@parcel/watcher"
+    - core-js
+    - esbuild
+    - unrs-resolver
+    - vue-demi
+
+onlyBuiltDependencies:
+    - "@prisma/client"
+    - "@prisma/engines"
+    - "@tailwindcss/oxide"
+    - prisma
+    - sharp@0.34.5
+    - workerd
+    - better-sqlite3

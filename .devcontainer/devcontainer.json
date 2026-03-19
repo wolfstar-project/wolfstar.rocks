@@ -1,0 +1,47 @@
+{
+	"name": "Nuxt 4 Dev Container",
+	"image": "mcr.microsoft.com/vscode/devcontainers/typescript-node",
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "lts",
+			"pnpmVersion": "10"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {
+			"installDirectlyFromGitHubRelease": true,
+			"version": "latest"
+		}
+	},
+
+	"postCreateCommand": [
+		"pnpm install --frozen-lockfile",
+		"curl -fsSL https://cli.coderabbit.ai/install.sh | sh"
+	],
+	"remoteUser": "root",
+	"forwardPorts": [3000],
+	"customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"bradlc.vscode-tailwindcss",
+				"oxc.oxc-vscode",
+				"antfu.goto-alias",
+				"Nuxtr.nuxtr-vscode",
+				"christian-kohler.npm-intellisense",
+				"christian-kohler.path-intellisense",
+				"Vue.volar",
+				"mikestead.dotenv",
+				"usernamehw.errorlens",
+				"coderabbit.coderabbit-vscode",
+				"formulahendry.auto-rename-tag",
+				"vitest.explorer"
+			]
+		}
+	},
+	"portsAttributes": {
+		"3000": {
+			"label": "Application",
+			"onAutoForward": "openPreview"
+		}
+	},
+	"mounts": ["type=volume,target=${containerWorkspaceFolder}/node_modules"]
+}

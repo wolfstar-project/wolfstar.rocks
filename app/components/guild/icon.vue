@@ -98,9 +98,6 @@
 </template>
 
 <script setup lang="ts">
-import type { TransformedLoginData } from "#shared/types";
-import type { ValuesType } from "#shared/types";
-
 interface GuildIconProps {
 	guild: ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>;
 	size?: "sm" | "md" | "lg" | "xl";

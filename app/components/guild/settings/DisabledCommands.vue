@@ -132,12 +132,8 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { DisableCommands } from "#shared/types";
-import type { FlattenedCommand } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type * as v from "valibot";
-// oxlint-disable-next-line typescript/consistent-type-imports
-import { disabledCommandsSchema } from "#shared/schemas";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 
 const { commands } = defineProps<{

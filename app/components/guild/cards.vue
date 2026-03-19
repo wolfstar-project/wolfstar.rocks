@@ -160,7 +160,6 @@
 </template>
 
 <script setup lang="ts">
-import type { TransformedLoginData } from "#shared/types";
 import type { FetchError } from "ofetch";
 import { useInfiniteScroll } from "@vueuse/core";
 

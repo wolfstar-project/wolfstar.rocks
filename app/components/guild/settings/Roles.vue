@@ -127,16 +127,14 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import {
-	isRoleArrayKey,
-	RolesSettingsSchema as schema,
-	type RolesSettingsSchemaType as Schema,
-} from "#shared/schemas";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import {
 	ConfigurableRemoveInitialRole,
 	ConfigurableRoles,
 } from "~~/shared/utils/settingsDataEntries";
+
+const schema = RolesSettingsSchema;
+type Schema = RolesSettingsSchemaType;
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();

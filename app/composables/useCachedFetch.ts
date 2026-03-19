@@ -1,5 +1,3 @@
-import type { CachedFetchResult } from "#shared/utils/fetch-cache-config";
-
 /**
  * Get the cachedFetch function from the current request context.
  *

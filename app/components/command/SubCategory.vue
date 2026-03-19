@@ -107,8 +107,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { FlattenedCommand } from "#shared/types";
-
 interface Props {
 	categoryName: string;
 	searchValue?: string;

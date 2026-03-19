@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
-import { avatarURL } from "#shared/utils/discord";
 
 const { collapsed } = defineProps<{
 	collapsed?: boolean;

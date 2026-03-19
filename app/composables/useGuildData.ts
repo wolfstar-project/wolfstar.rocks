@@ -1,5 +1,3 @@
-import type { TransformedLoginData } from "#shared/types";
-import type { ValuesType } from "#shared/types";
 import { useRouteParams } from "@vueuse/router";
 
 const _useGuildData = () => {

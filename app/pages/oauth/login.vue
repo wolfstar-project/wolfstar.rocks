@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-import { isSafeRedirectPath } from "#shared/utils/redirect";
-
 definePageMeta({ alias: ["/login"] });
 
 useSeoMetadata({

@@ -4,7 +4,7 @@
 		description="Configure how WolfStar handles moderation actions like bans, kicks, and mutes."
 	>
 		<GuildSettingsForm
-			:schema="schema"
+			:schema="ModerationSettingsSchema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
 			aria-label="Moderation settings form"
@@ -31,27 +31,22 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-import {
-	ModerationSettingsSchema as schema,
-	type ModerationSettingsSchemaType as Schema,
-} from "#shared/schemas";
-import { ConfigurableModerationKeys } from "~~/shared/utils/settingsDataEntries";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-const createDefaultState = (): Schema => {
-	const defaults: Partial<Schema> = {};
+const createDefaultState = (): ModerationSettingsSchemaType => {
+	const defaults: Partial<ModerationSettingsSchemaType> = {};
 	for (const setting of ConfigurableModerationKeys) {
 		defaults[setting.key] =
 			(guildSettings.value?.[setting.key as GuildDataKey] as boolean | undefined) ?? false;
 	}
-	return defaults as Schema;
+	return defaults as ModerationSettingsSchemaType;
 };
 
-const state = reactive<Schema>(createDefaultState());
+const state = reactive<ModerationSettingsSchemaType>(createDefaultState());
 
-function mapToGuildData(stateData: Schema): Partial<GuildData> {
+function mapToGuildData(stateData: ModerationSettingsSchemaType): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
 	for (const setting of ConfigurableModerationKeys) {
 		result[setting.key as GuildDataKey] = stateData[setting.key] as never;

@@ -17,7 +17,6 @@
 </template>
 
 <script lang="ts">
-import type { TransformedLoginData } from "#shared/types";
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { SelectManyValue } from "./Many.vue";
 import { ChannelType } from "discord-api-types/v10";

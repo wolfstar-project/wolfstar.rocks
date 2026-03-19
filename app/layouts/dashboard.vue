@@ -163,7 +163,6 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { ValuesType } from "#shared/types";
 import type { NavigationMenuItem } from "@nuxt/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";

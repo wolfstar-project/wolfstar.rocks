@@ -53,8 +53,6 @@
 </template>
 
 <script lang="ts" setup>
-import type { FlattenedCommand } from "#shared/types";
-
 const { command } = defineProps<{
 	command: FlattenedCommand;
 }>();

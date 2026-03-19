@@ -15,7 +15,6 @@
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { GenericSchema } from "valibot";
-import { isDeepEqual } from "#shared/utils/isDeepEqual";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 
 interface Props {

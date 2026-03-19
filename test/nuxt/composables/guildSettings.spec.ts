@@ -1,6 +1,6 @@
 import deepMerge from "deepmerge";
 import { describe, expect, it } from "vitest";
-import { createMockGuildData } from "../../mocks/guildData";
+import { createMockGuildData } from "~~/test/mocks/guildData";
 
 // Overwrite arrays when merging (same as composable)
 const mergeOptions = {

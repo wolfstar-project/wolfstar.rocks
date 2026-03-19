@@ -73,9 +73,10 @@
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
-
-const schema = GeneralSettingsSchema;
-type Schema = GeneralSettingsSchemaType;
+import {
+	GeneralSettingsSchema as schema,
+	type GeneralSettingsSchemaType as Schema,
+} from "#shared/schemas";
 
 const { languages } = defineProps<{
 	languages: string[];

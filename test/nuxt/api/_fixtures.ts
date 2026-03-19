@@ -14,7 +14,7 @@ import {
 	createMockOauthFlattenedGuild,
 	createMockRole,
 	createMockUser,
-} from "../../mocks/discord";
+} from "~~/test/mocks/discord";
 import { GUILD_ID, OWNER_USER_ID } from "./_helpers";
 
 // ─── User ───────────────────────────────────────────────────────────────────

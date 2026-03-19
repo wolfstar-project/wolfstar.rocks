@@ -1,8 +1,8 @@
+import { createOAuthState, verifyOAuthState } from "#server/utils/oauth-state";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { createOAuthState, verifyOAuthState } from "../../../../server/utils/oauth-state";
 
 // Mock the runtimeConfig
-vi.mock("../../../../server/utils/runtimeConfig", () => ({
+vi.mock("#server/utils/runtimeConfig", () => ({
 	runtimeConfig: {
 		session: { password: "test-secret-password-for-unit-tests-32chars" },
 	},

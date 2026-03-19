@@ -230,6 +230,7 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { WordFilterSchema, type WordFilter } from "#shared/schemas";
 
 function sanitizeWord(raw: string): string {
 	return raw.replace(/[^0-9a-z]/gi, "").toLowerCase();

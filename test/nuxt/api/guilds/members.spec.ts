@@ -18,8 +18,13 @@
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it } from "vitest";
-import { createMockRole } from "../../../mocks/discord";
-import { GUILD_ID, MEMBER_USER_ID, authHeaders, requireTestSession } from "../_helpers";
+import { createMockRole } from "~~/test/mocks/discord";
+import {
+	GUILD_ID,
+	MEMBER_USER_ID,
+	authHeaders,
+	requireTestSession,
+} from "~~/test/nuxt/api/_helpers";
 
 const MEMBER_LIST_URL = `/api/guilds/${GUILD_ID}/members`;
 const EXISTING_MEMBER_ID = MEMBER_USER_ID; // "111111111111111111"

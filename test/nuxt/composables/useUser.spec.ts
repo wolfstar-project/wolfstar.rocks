@@ -1,6 +1,6 @@
 import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
-import { createMockUser } from "../../mocks/discord";
+import { createMockUser } from "~~/test/mocks/discord";
 
 // Create a mock function for the cached fetch
 const mockCachedFetch = vi.fn().mockResolvedValue({ data: null, isStale: false, cachedAt: null });

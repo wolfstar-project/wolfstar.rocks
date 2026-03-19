@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createMockOauthFlattenedGuild } from "../../mocks/discord";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
 describe("useGuildData", () => {
 	it("should initialize with undefined guild data", () => {

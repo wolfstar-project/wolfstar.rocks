@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#shared/schemas";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();

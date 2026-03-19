@@ -14,8 +14,8 @@
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
 import { describe, expect, it } from "vitest";
-import { FIXTURE_ROLE } from "../_fixtures";
-import { GUILD_ID, authHeaders, requireTestSession } from "../_helpers";
+import { FIXTURE_ROLE } from "~~/test/nuxt/api/_fixtures";
+import { GUILD_ID, authHeaders, requireTestSession } from "~~/test/nuxt/api/_helpers";
 
 const EXISTING_ROLE_ID = FIXTURE_ROLE.id; // "444444444444444440"
 const MISSING_ROLE_ID = "000000000000000000";

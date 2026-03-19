@@ -63,6 +63,7 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
 
 const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();

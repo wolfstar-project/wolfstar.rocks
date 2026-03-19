@@ -1,9 +1,9 @@
 import type { GuildData } from "#server/database";
+import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 import Moderation from "~/components/guild/settings/Moderation.vue";
-import { ConfigurableModerationKeys } from "~~/shared/utils/settingsDataEntries";
 import { createMockGuildData } from "~~/test/mocks/guildData";
 
 const mockGuildSettings = ref<GuildData | undefined>(createMockGuildData("123456789012345678"));
@@ -95,7 +95,7 @@ describe("moderation guild settings", () => {
 
 		expect(wrapper.text()).toContain("Punishment Settings");
 		expect(wrapper.text()).toContain(
-			"These settings affect what WolfStar does when you're punishing (ban, kick, mute, etc) someone.",
+			"Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
 		);
 	});
 

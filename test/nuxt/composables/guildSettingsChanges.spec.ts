@@ -1,7 +1,7 @@
 import type { GuildData } from "#server/database";
 import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { createMockOauthFlattenedGuild } from "../../mocks/discord";
+import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";
 
 // Mock useRouteParams to provide a controllable guild ID
 const mockGuildId = ref<string | null>("test-guild-id");

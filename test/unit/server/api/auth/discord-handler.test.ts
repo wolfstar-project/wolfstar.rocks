@@ -1,5 +1,5 @@
+import { isSafeRedirectPath } from "#shared/utils/redirect";
 import { describe, expect, it } from "vitest";
-import { isSafeRedirectPath } from "../../../../../shared/utils/redirect";
 
 describe("discord.get.ts - redirect URL validation", () => {
 	it("accepts a valid relative next URL", () => {

@@ -1,11 +1,11 @@
 import type { User } from "#auth-utils";
-import type { ChannelType } from "discord-api-types/v10";
 import type {
 	FlattenedEmoji,
 	FlattenedGuildChannel,
 	FlattenedRole,
 	OauthFlattenedGuild,
-} from "../../shared/types/discord";
+} from "#shared/types/discord";
+import type { ChannelType } from "discord-api-types/v10";
 
 /**
  * Creates a mock User for testing

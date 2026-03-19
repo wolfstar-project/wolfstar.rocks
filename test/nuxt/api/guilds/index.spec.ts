@@ -25,8 +25,13 @@
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { getQuery, setResponseHeader } from "h3";
 import { describe, expect, it } from "vitest";
-import { FIXTURE_CHANNELS, FIXTURE_GUILD } from "../_fixtures";
-import { GUILD_ID, assertRateLimitHeaders, authHeaders, requireTestSession } from "../_helpers";
+import { FIXTURE_CHANNELS, FIXTURE_GUILD } from "~~/test/nuxt/api/_fixtures";
+import {
+	GUILD_ID,
+	assertRateLimitHeaders,
+	authHeaders,
+	requireTestSession,
+} from "~~/test/nuxt/api/_helpers";
 
 const GUILD_URL = `/api/guilds/${GUILD_ID}`;
 

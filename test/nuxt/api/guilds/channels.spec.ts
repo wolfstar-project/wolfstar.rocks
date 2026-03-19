@@ -24,8 +24,8 @@
 
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
-import { FIXTURE_CHANNEL, FIXTURE_CHANNELS } from "../_fixtures";
-import { GUILD_ID, authHeaders, requireTestSession } from "../_helpers";
+import { FIXTURE_CHANNEL, FIXTURE_CHANNELS } from "~~/test/nuxt/api/_fixtures";
+import { GUILD_ID, authHeaders, requireTestSession } from "~~/test/nuxt/api/_helpers";
 
 const CHANNEL_LIST_URL = `/api/guilds/${GUILD_ID}/channels`;
 const EXISTING_CHANNEL_ID = FIXTURE_CHANNEL.id; // "333333333333333330"

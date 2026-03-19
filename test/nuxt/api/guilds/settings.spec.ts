@@ -30,8 +30,8 @@
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { createError, getHeader } from "h3";
 import { describe, expect, it } from "vitest";
-import { FIXTURE_SERIALIZED_SETTINGS } from "../_fixtures";
-import { GUILD_ID, authHeaders, requireTestSession } from "../_helpers";
+import { FIXTURE_SERIALIZED_SETTINGS } from "~~/test/nuxt/api/_fixtures";
+import { GUILD_ID, authHeaders, requireTestSession } from "~~/test/nuxt/api/_helpers";
 
 const SETTINGS_URL = `/api/guilds/${GUILD_ID}/settings`;
 

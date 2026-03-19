@@ -71,6 +71,7 @@
 <script setup lang="ts">
 import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();

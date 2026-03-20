@@ -16,9 +16,10 @@ export class PermissionNodeManager {
 	private sorted = new Collection<string, PermissionsManagerNode>();
 	#cachedRawPermissionRoles: readonly PermissionsNode[] = [];
 	#cachedRawPermissionUsers: readonly PermissionsNode[] = [];
+	#refreshPromise: Promise<readonly PermissionsNode[]> | null = null;
 
 	public constructor(settings: ReadonlyGuildData) {
-		this.refresh(settings);
+		this.#refreshPromise = this.refresh(settings);
 	}
 
 	public settingsPropertyFor(target: PermissionNodeValueResolvable) {
@@ -28,6 +29,13 @@ export class PermissionNodeManager {
 	}
 
 	public async run(member: APIGuildMember, command: WolfCommand) {
+		if (this.#refreshPromise) {
+			try {
+				await this.#refreshPromise;
+			} catch {
+				this.#refreshPromise = null;
+			}
+		}
 		return (await this.runUser(member, command)) ?? (await this.runRole(member, command));
 	}
 
@@ -151,7 +159,13 @@ export class PermissionNodeManager {
 		return nodes.toSpliced(nodeIndex, 1);
 	}
 
-	public async refresh(settings: ReadonlyGuildData): Promise<readonly PermissionsNode[]> {
+	public refresh(settings: ReadonlyGuildData): Promise<readonly PermissionsNode[]> {
+		const result = this.#performRefresh(settings);
+		this.#refreshPromise = result;
+		return result;
+	}
+
+	async #performRefresh(settings: ReadonlyGuildData): Promise<readonly PermissionsNode[]> {
 		const nodes = settings.permissionsRoles;
 		this.#cachedRawPermissionRoles = nodes;
 		this.#cachedRawPermissionUsers = settings.permissionsUsers;

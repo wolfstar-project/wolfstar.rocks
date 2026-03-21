@@ -130,9 +130,12 @@ jobs:
         env:
           VALIDATE_HTML: true
           NODE_OPTIONS: --max-old-space-size=4096
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: 🖥️ Test project (browser)
         run: pnpm vp run test:browser:prebuilt
+        env:
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
   benchmark:
     name: ⚡ Benchmarks
@@ -182,12 +185,15 @@ jobs:
 
       - name: 🏗️ Build project
         run: pnpm vp run build:test
+        env:
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: pnpm vp run test:a11y:prebuilt
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
   knip:
     name: 🧹 Unused code check

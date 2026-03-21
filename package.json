@@ -18,15 +18,13 @@
 	"main": "./nuxt.config.ts",
 	"scripts": {
 		"build": "nuxt build",
-		"build:test": "NODE_ENV=test pnpm build",
+		"build:test": "NODE_ENV=test vp run build",
 		"dev": "nuxt dev",
 		"dev:pwa": "VITE_DEV_PWA=true nuxt dev",
+		"knip:fix": "knip --fix",
+		"lint:fix": "vp lint --fix && vp fmt",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
-		"knip": "knip",
-		"knip:fix": "knip --fix",
-		"lint": "oxlint && oxfmt --check",
-		"lint:fix": "oxlint --fix && oxfmt",
 		"postinstall": "stale-dep -u && nuxt prepare",
 		"prepare": "skilld update -b && node .husky/install.mjs",
 		"generate-pwa-icons": "pwa-assets-generator",
@@ -42,18 +40,18 @@
 		"prisma:studio": "prisma studio",
 		"prisma:generate": "prisma generate",
 		"prisma:generate:watch": "prisma generate --watch",
-		"test": "vitest",
-		"test:a11y": "pnpm build:test && LIGHTHOUSE_COLOR_MODE=dark pnpm test:a11y:prebuilt && LIGHTHOUSE_COLOR_MODE=light pnpm test:a11y:prebuilt",
+		"test": "vp test",
+		"test:a11y": "vp run build:test && LIGHTHOUSE_COLOR_MODE=dark vp run test:a11y:prebuilt && LIGHTHOUSE_COLOR_MODE=light vp run test:a11y:prebuilt",
 		"test:a11y:prebuilt": "./scripts/lighthouse.sh",
-		"test:perf": "pnpm build:test && pnpm test:perf:prebuilt",
+		"test:perf": "vp run build:test && vp run test:perf:prebuilt",
 		"test:perf:prebuilt": "LH_PERF=1 ./scripts/lighthouse.sh",
-		"test:browser": "pnpm build:test && pnpm test:browser:prebuilt",
+		"test:browser": "vp run build:test && vp run test:browser:prebuilt",
 		"test:browser:prebuilt": "playwright test",
-		"test:browser:ui": "pnpm build:test && pnpm test:browser:prebuilt --ui",
-		"test:browser:update": "pnpm build:test && pnpm test:browser:prebuilt --update-snapshots",
-		"test:nuxt": "vitest --project nuxt",
-		"test:unit": "vitest --project unit",
-		"test:bench": "vitest bench",
+		"test:browser:ui": "vp run build:test && vp run test:browser:prebuilt --ui",
+		"test:browser:update": "vp run build:test && vp run test:browser:prebuilt --update-snapshots",
+		"test:nuxt": "vp test --project nuxt",
+		"test:unit": "vp test --project unit",
+		"test:bench": "vp run bench",
 		"start:playwright:webserver": "NODE_ENV=test pnpm preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"update:interactive": "taze"
@@ -131,25 +129,15 @@
 		"eslint-plugin-regexp": "^3.0.0",
 		"husky": "^9.1.7",
 		"knip": "^5.86.0",
-		"nano-staged": "^0.9.0",
-		"oxfmt": "^0.36.0",
-		"oxlint": "^1.51.0",
 		"prisma": "^6.19.0",
 		"prisma-json-types-generator": "^3.6.2",
 		"skilld": "^1.2.0",
 		"tailwindcss": "^4.2.1",
 		"taze": "^19.10.0",
 		"typescript": "~5.9.3",
+		"vite-plus": "^0.1.12",
 		"vitest-environment-nuxt": "^1.0.1",
 		"vue-tsc": "^3.2.5"
-	},
-	"nano-staged": {
-		"*.{js,ts,mjs,cjs,vue}": [
-			"pnpm oxlint --fix"
-		],
-		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": [
-			"pnpm oxfmt"
-		]
 	},
 	"config": {
 		"commitizen": {

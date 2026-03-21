@@ -79,7 +79,7 @@ const config: KnipConfig = {
 				"@vue/test-utils",
 
 				/** Used for git hooks, not imported directly */
-				"nano-staged",
+				"vite-plus",
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",

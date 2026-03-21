@@ -19,5 +19,6 @@ interface SelectFieldWrapperProps {
 	tooltipTitle?: string;
 }
 
+
 const { fieldName, tooltipTitle } = defineProps<SelectFieldWrapperProps>();
 </script>

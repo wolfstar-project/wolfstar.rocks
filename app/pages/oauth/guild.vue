@@ -43,19 +43,24 @@ import { promiseTimeout } from "@vueuse/core";
 const guildId = useRouteParams("id", null, { transform: String });
 const error = ref<string | null>(null);
 
+
 if (import.meta.client && guildId.value && !error.value) {
 	navigateToGuild().catch(logger.error);
 }
+
 
 async function navigateToGuild() {
 	if (isNullOrUndefined(guildId.value)) {
 		throw createError({ status: 400, statusText: "Guild ID is required." });
 	}
 
+
 	await promiseTimeout(1500);
+
 
 	await navigateTo(`/guilds/${guildId.value}/manage`);
 }
+
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({

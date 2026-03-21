@@ -242,7 +242,9 @@ import { CapitalsFilterSchema, type CapitalsFilter } from "#shared/schemas";
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
+
 const loading = computed(() => !guildSettings.value);
+
 
 const hardActionItems = [
 	{ label: "None", value: 0 },
@@ -253,12 +255,15 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
+
 const schema = CapitalsFilterSchema;
 type Schema = CapitalsFilter;
+
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;
 	const softAction = settings?.selfmodCapitalsSoftAction ?? 0;
+
 
 	return {
 		hardActionDurationMs: settings?.selfmodCapitalsHardActionDuration
@@ -278,7 +283,9 @@ function createDefaultState(): Schema {
 	};
 }
 
+
 const state = reactive<Schema>(createDefaultState());
+
 
 const selectedHardAction = computed({
 	get: () =>
@@ -289,6 +296,7 @@ const selectedHardAction = computed({
 	},
 });
 
+
 watch(
 	loading,
 	(isLoading) => {
@@ -298,6 +306,7 @@ watch(
 	},
 	{ immediate: true },
 );
+
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const softAction = bitwiseSet(
@@ -310,8 +319,10 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
+
 	const durationMs =
 		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+
 
 	return {
 		selfmodCapitalsEnabled: formState.selfmodCapitalsEnabled,
@@ -324,6 +335,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		selfmodCapitalsThresholdMaximum: formState.selfmodCapitalsThresholdMaximum,
 	};
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =

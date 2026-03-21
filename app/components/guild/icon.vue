@@ -107,6 +107,7 @@ interface GuildIconProps {
 	showStats?: boolean;
 }
 
+
 const {
 	guild,
 	size = "md",
@@ -116,9 +117,11 @@ const {
 	showStats = false,
 } = defineProps<GuildIconProps>();
 
+
 const loaded = ref(false);
 const icon = useTemplateRef<HTMLElement | null>("icon");
 const prefersReducedMotion = usePreferredReducedMotion();
+
 
 // Intersection Observer to lazy-load the icon image
 const { stop } = useIntersectionObserver(
@@ -145,6 +148,7 @@ const iconSizeClasses = computed(() => {
 	return sizeMap[size];
 });
 
+
 const acronymSizeClasses = computed(() => {
 	const sizeMap = {
 		lg: "text-xl font-bold",
@@ -154,6 +158,7 @@ const acronymSizeClasses = computed(() => {
 	};
 	return sizeMap[size];
 });
+
 
 const iconPixelSize = computed(() => {
 	const sizeMap = {
@@ -166,6 +171,7 @@ const iconPixelSize = computed(() => {
 	return sizeMap[size];
 });
 
+
 const preferredFormat = computed<"gif" | "png">(() => {
 	if (isAnimated.value && prefersReducedMotion.value !== "reduce") {
 		return "gif";
@@ -174,12 +180,14 @@ const preferredFormat = computed<"gif" | "png">(() => {
 	return "png";
 });
 
+
 interface StatusIndicator {
 	wrapperClasses: string;
 	iconName: string;
 	iconClasses: string;
 	tooltipText: string;
 }
+
 
 const statusIndicator = computed<StatusIndicator>(() => {
 	// 1) Bot present
@@ -223,10 +231,12 @@ const statusIndicator = computed<StatusIndicator>(() => {
 	};
 });
 
+
 // Utility functions
 function createUrl(format: "webp" | "png" | "gif", size: number) {
 	return `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.${format}?size=${size}`;
 }
+
 
 function formatNumber(num: number): string {
 	return Intl.NumberFormat("en-US", {
@@ -235,6 +245,7 @@ function formatNumber(num: number): string {
 		notation: "compact",
 	}).format(num);
 }
+
 
 watch(
 	() => guild,

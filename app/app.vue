@@ -42,7 +42,9 @@ watch(
 	{ immediate: true },
 );
 
+
 provide(ProviderAppNameKey, appName);
+
 
 onMounted(() => {
 	if (!isCI || !isTest) return;

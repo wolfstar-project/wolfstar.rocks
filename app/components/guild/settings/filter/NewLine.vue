@@ -223,7 +223,9 @@ import { NewlinesFilterSchema, type NewlinesFilter } from "#shared/schemas";
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
+
 const loading = computed(() => !guildSettings.value);
+
 
 const hardActionItems = [
 	{ label: "None", value: 0 },
@@ -234,12 +236,15 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
+
 const schema = NewlinesFilterSchema;
 type Schema = NewlinesFilter;
+
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;
 	const softAction = settings?.selfmodNewlinesSoftAction ?? 0;
+
 
 	return {
 		hardActionDurationMs: settings?.selfmodNewlinesHardActionDuration
@@ -258,7 +263,9 @@ function createDefaultState(): Schema {
 	};
 }
 
+
 const state = reactive<Schema>(createDefaultState());
+
 
 const selectedHardAction = computed({
 	get: () =>
@@ -269,6 +276,7 @@ const selectedHardAction = computed({
 	},
 });
 
+
 watch(
 	loading,
 	(isLoading) => {
@@ -278,6 +286,7 @@ watch(
 	},
 	{ immediate: true },
 );
+
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const softAction = bitwiseSet(
@@ -290,8 +299,10 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
+
 	const durationMs =
 		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+
 
 	return {
 		selfmodNewlinesEnabled: formState.selfmodNewlinesEnabled,
@@ -303,6 +314,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		selfmodNewlinesThresholdMaximum: formState.selfmodNewlinesThresholdMaximum,
 	};
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =

@@ -143,19 +143,25 @@ const { commands } = defineProps<{
 	commands: FlattenedCommand[];
 }>();
 
+
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
+
 
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
+
 const expandedCategory = ref<string | undefined>(undefined);
+
 
 const state = reactive<Schema>(
 	createDefaultState(commands, guildSettings.value?.disabledCommands as string[]),
 );
 
+
 // Loading state
 const loading = computed(() => !commands.length || !guildSettings.value);
+
 
 const categories = computed(() => {
 	const uniqueCategories = new Set<string>();
@@ -167,6 +173,7 @@ const categories = computed(() => {
 	return [...uniqueCategories].toSorted();
 });
 
+
 // Helper to create default state from commands and settings
 function createDefaultState(
 	cmdList: FlattenedCommand[],
@@ -174,10 +181,12 @@ function createDefaultState(
 ): Schema {
 	const result: Record<string, DisableCommands.Command> = {};
 
+
 	for (const command of cmdList) {
 		if (command.guarded) {
 			continue;
 		}
+
 
 		result[command.name] = {
 			category: command.category || "General",
@@ -187,11 +196,14 @@ function createDefaultState(
 		};
 	}
 
+
 	return result;
 }
 
+
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const disabledCommands: string[] = [];
+
 
 	for (const key in formState) {
 		const cmd = formState[key];
@@ -200,8 +212,10 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		}
 	}
 
+
 	return { disabledCommands };
 }
+
 
 function toggleCommand(name: string, isEnabled: boolean) {
 	const cmd = state[name];
@@ -210,14 +224,17 @@ function toggleCommand(name: string, isEnabled: boolean) {
 	}
 }
 
+
 function getCommand(name: string): DisableCommands.Command | undefined {
 	const cmd = state[name];
 	return cmd ? { ...cmd } : undefined;
 }
 
+
 function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category && !cmd.guarded);
 }
+
 
 function toggleAllInCategory(category: string, enable: boolean) {
 	const commands = getCommandsByCategory(category);
@@ -226,19 +243,23 @@ function toggleAllInCategory(category: string, enable: boolean) {
 	}
 }
 
+
 function isCategoryOpen(category: string): boolean {
 	return expandedCategory.value === category;
 }
 
+
 function toggleCategory(category: string): void {
 	expandedCategory.value = isCategoryOpen(category) ? undefined : category;
 }
+
 
 function resetCategory(category: string) {
 	const commands = getCommandsByCategory(category);
 	for (const command of commands) {
 		toggleCommand(command.name, !guildSettings.value?.disabledCommands?.includes(command.name));
 	}
+
 
 	toast.add({
 		color: "info",
@@ -247,6 +268,7 @@ function resetCategory(category: string) {
 		title: "Category Reset",
 	});
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =
@@ -260,6 +282,7 @@ async function onError(event: FormErrorEvent) {
 		title: "Save Failed",
 	});
 }
+
 
 // Watch for loading state change to hydrate local state (immediate mode)
 watch(

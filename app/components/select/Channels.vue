@@ -36,6 +36,7 @@ export interface SelectChannelsProps {
 	disabled?: boolean;
 }
 
+
 interface Emits {
 	(e: "update:modelValue", value: string[]): void;
 	(e: "change", value: string[]): void;
@@ -53,10 +54,13 @@ const {
 	disabled = false,
 } = defineProps<SelectChannelsProps>();
 
+
 defineEmits<Emits>();
+
 
 // Count of selected channels
 const selectedCount = computed(() => modelValue.length);
+
 
 // Filter and sort channels, then map to SelectManyValue format
 const channelValues = computed<SelectManyValue[]>(() =>

@@ -18,17 +18,21 @@
 <script setup lang="ts">
 const colorMode = useColorMode();
 
+
 const nextTheme = computed(() => (colorMode.value === "dark" ? "light" : "dark"));
+
 
 const switchTheme = () => {
 	colorMode.preference = nextTheme.value;
 };
+
 
 const startViewTransition = (event: MouseEvent) => {
 	if (!document.startViewTransition) {
 		switchTheme();
 		return;
 	}
+
 
 	const x = event.clientX;
 	const y = event.clientY;
@@ -37,9 +41,11 @@ const startViewTransition = (event: MouseEvent) => {
 		Math.max(y, window.innerHeight - y),
 	);
 
+
 	const transition = document.startViewTransition(() => {
 		switchTheme();
 	});
+
 
 	transition.ready.then(() => {
 		const duration = 600;

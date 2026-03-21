@@ -235,9 +235,12 @@ import { LinksFilterSchema, type LinksFilter } from "#shared/schemas";
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
+
 const loading = computed(() => !guildSettings.value);
 
+
 const newLink = ref("");
+
 
 const hardActionItems = [
 	{ label: "None", value: 0 },
@@ -248,12 +251,15 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
+
 const schema = LinksFilterSchema;
 type Schema = LinksFilter;
+
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;
 	const softAction = settings?.selfmodLinksSoftAction ?? 0;
+
 
 	return {
 		hardActionDurationMs: settings?.selfmodLinksHardActionDuration
@@ -272,7 +278,9 @@ function createDefaultState(): Schema {
 	};
 }
 
+
 const state = reactive<Schema>(createDefaultState());
+
 
 const selectedHardAction = computed({
 	get: () =>
@@ -282,6 +290,7 @@ const selectedHardAction = computed({
 		state.selfmodLinksHardAction = item.value;
 	},
 });
+
 
 watch(
 	loading,
@@ -293,11 +302,13 @@ watch(
 	{ immediate: true },
 );
 
+
 function addLink() {
 	const raw = newLink.value.trim();
 	if (!raw) {
 		return;
 	}
+
 
 	try {
 		const url = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
@@ -311,12 +322,14 @@ function addLink() {
 	}
 }
 
+
 function removeLink(link: string) {
 	const index = state.selfmodLinksAllowed.indexOf(link);
 	if (index !== -1) {
 		state.selfmodLinksAllowed.splice(index, 1);
 	}
 }
+
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const softAction = bitwiseSet(
@@ -329,8 +342,10 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
+
 	const durationMs =
 		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+
 
 	return {
 		selfmodLinksAllowed: formState.selfmodLinksAllowed,
@@ -342,6 +357,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		selfmodLinksThresholdMaximum: formState.selfmodLinksThresholdMaximum,
 	};
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =

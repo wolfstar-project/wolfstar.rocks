@@ -36,10 +36,13 @@ const { collapsed } = defineProps<{
 	collapsed?: boolean;
 }>();
 
+
 const colorMode = useColorMode();
 const { user: authUser, clear } = useAuth();
 
+
 const src = computed(() => avatarURL(authUser.value!, { size: 64 }));
+
 
 const user = ref({
 	avatar: {
@@ -48,6 +51,7 @@ const user = ref({
 	},
 	name: authUser.value?.name,
 });
+
 
 const items = computed<DropdownMenuItem[][]>(() => [
 	[

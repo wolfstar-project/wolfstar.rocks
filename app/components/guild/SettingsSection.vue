@@ -27,6 +27,7 @@
 <script setup lang="ts">
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
+
 interface Props {
 	description?: string | number;
 	title?: string | number;
@@ -35,6 +36,7 @@ interface Props {
 	headingLevel?: HeadingLevel;
 	forceSemanticHeading?: boolean;
 }
+
 
 const {
 	description,

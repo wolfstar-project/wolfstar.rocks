@@ -236,12 +236,16 @@ function sanitizeWord(raw: string): string {
 	return raw.replace(/[^0-9a-z]/gi, "").toLowerCase();
 }
 
+
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
+
 const loading = computed(() => !guildSettings.value);
 
+
 const newWord = ref("");
+
 
 const hardActionItems = [
 	{ label: "None", value: 0 },
@@ -252,12 +256,15 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
+
 const schema = WordFilterSchema;
 type Schema = WordFilter;
+
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;
 	const softAction = settings?.selfmodFilterSoftAction ?? 0;
+
 
 	return {
 		hardActionDurationMs: settings?.selfmodFilterHardActionDuration
@@ -276,7 +283,9 @@ function createDefaultState(): Schema {
 	};
 }
 
+
 const state = reactive<Schema>(createDefaultState());
+
 
 const selectedHardAction = computed({
 	get: () =>
@@ -286,6 +295,7 @@ const selectedHardAction = computed({
 		state.selfmodFilterHardAction = item.value;
 	},
 });
+
 
 watch(
 	loading,
@@ -297,6 +307,7 @@ watch(
 	{ immediate: true },
 );
 
+
 function addWord() {
 	const word = sanitizeWord(newWord.value);
 	if (word.length < 3 || state.selfmodFilterRaw.includes(word)) {
@@ -306,12 +317,14 @@ function addWord() {
 	newWord.value = "";
 }
 
+
 function removeWord(word: string) {
 	const index = state.selfmodFilterRaw.indexOf(word);
 	if (index !== -1) {
 		state.selfmodFilterRaw.splice(index, 1);
 	}
 }
+
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const softAction = bitwiseSet(
@@ -324,8 +337,10 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
+
 	const durationMs =
 		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+
 
 	return {
 		selfmodFilterEnabled: formState.selfmodFilterEnabled,
@@ -337,6 +352,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		selfmodFilterThresholdMaximum: formState.selfmodFilterThresholdMaximum,
 	};
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =

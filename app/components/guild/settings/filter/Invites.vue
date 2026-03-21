@@ -192,7 +192,9 @@ import { InvitesFilterSchema, type InvitesFilter } from "#shared/schemas";
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
+
 const loading = computed(() => !guildSettings.value);
+
 
 const hardActionItems = [
 	{ label: "None", value: 0 },
@@ -203,12 +205,15 @@ const hardActionItems = [
 	{ label: "Ban", value: 5 },
 ];
 
+
 const schema = InvitesFilterSchema;
 type Schema = InvitesFilter;
+
 
 function createDefaultState(): Schema {
 	const settings = guildSettings.value;
 	const softAction = settings?.selfmodInvitesSoftAction ?? 0;
+
 
 	return {
 		hardActionDurationMs: settings?.selfmodInvitesHardActionDuration
@@ -226,7 +231,9 @@ function createDefaultState(): Schema {
 	};
 }
 
+
 const state = reactive<Schema>(createDefaultState());
+
 
 const selectedHardAction = computed({
 	get: () =>
@@ -237,6 +244,7 @@ const selectedHardAction = computed({
 	},
 });
 
+
 watch(
 	loading,
 	(isLoading) => {
@@ -246,6 +254,7 @@ watch(
 	},
 	{ immediate: true },
 );
+
 
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const softAction = bitwiseSet(
@@ -258,8 +267,10 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
+
 	const durationMs =
 		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+
 
 	return {
 		selfmodInvitesEnabled: formState.selfmodInvitesEnabled,
@@ -270,6 +281,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		selfmodInvitesThresholdMaximum: formState.selfmodInvitesThresholdMaximum,
 	};
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =

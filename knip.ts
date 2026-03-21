@@ -73,13 +73,14 @@ const config: KnipConfig = {
 
 				/** Used in the test */
 				"axe-core",
+				"@playwright/test",
 
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",
 				"@vue/test-utils",
 
 				/** Used for git hooks, not imported directly */
-				"nano-staged",
+				"vite-plus",
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",

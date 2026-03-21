@@ -114,7 +114,9 @@ interface Props {
 	loading?: boolean;
 }
 
+
 const { commands, searchValue = " ", categoryName } = defineProps<Props>();
+
 
 const filteredCommands = computed(() => {
 	const search = searchValue.toLowerCase();
@@ -128,6 +130,7 @@ const filteredCommands = computed(() => {
 	);
 });
 
+
 const categories = computed(() => {
 	const uniqueCategories = new Set<string>();
 	for (const command of filteredCommands.value) {
@@ -136,12 +139,14 @@ const categories = computed(() => {
 	return [...uniqueCategories].toSorted();
 });
 
+
 const categoryItems = computed(() =>
 	categories.value.map((category) => ({
 		label: category,
 		value: category,
 	})),
 );
+
 
 function getCommandsByCategory(category: string): FlattenedCommand[] {
 	return commands.filter((cmd) => (cmd.category || "General") === category);

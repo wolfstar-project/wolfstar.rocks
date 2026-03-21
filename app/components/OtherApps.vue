@@ -57,8 +57,10 @@
 <script setup lang="ts">
 const { apps } = defineProps<{ apps: readonly OtherApp[] }>();
 
+
 const sectionRef = ref<HTMLElement | null>(null);
 const isVisible = ref(false);
+
 
 const { stop } = useIntersectionObserver(
 	sectionRef,

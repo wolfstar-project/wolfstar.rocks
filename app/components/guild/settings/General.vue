@@ -82,8 +82,10 @@ const { languages } = defineProps<{
 	languages: string[];
 }>();
 
+
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
+
 
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 	const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
@@ -109,6 +111,7 @@ function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 	return supportedLanguagesMap[langKey] ?? [langKey];
 }
 
+
 const items = computed(() =>
 	languages.map((langKey) => {
 		const mapping = mapLanguageKeysToNames(langKey);
@@ -122,6 +125,7 @@ const items = computed(() =>
 	}),
 );
 
+
 const state = reactive<Schema>({
 	language: (() => {
 		const currentLangKey = guildSettings.value!.language;
@@ -134,19 +138,24 @@ const state = reactive<Schema>({
 	prefix: guildSettings.value!.prefix,
 });
 
+
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
+
 
 	if (formState.prefix) {
 		changes.prefix = formState.prefix;
 	}
 
+
 	if (formState.language) {
 		changes.language = formState.language.value;
 	}
 
+
 	return changes;
 }
+
 
 async function onError(event: FormErrorEvent) {
 	const element =

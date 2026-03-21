@@ -51,7 +51,7 @@
 		"test:browser:update": "vp run build:test && vp run test:browser:prebuilt --update-snapshots",
 		"test:nuxt": "vp test --project nuxt",
 		"test:unit": "vp test --project unit",
-		"test:bench": "vp run bench",
+		"test:bench": "vp test bench",
 		"start:playwright:webserver": "NODE_ENV=test pnpm preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"update:interactive": "taze"

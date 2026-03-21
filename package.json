@@ -25,7 +25,7 @@
 		"lint:fix": "vp lint --fix && vp fmt",
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
-		"postinstall": "stale-dep -u && nuxt prepare",
+		"postinstall": "stale-dep -u && nuxt prepare && vp config",
 		"prepare": "skilld update -b && node .husky/install.mjs",
 		"generate-pwa-icons": "pwa-assets-generator",
 		"prisma:migrate:dev": "prisma migrate dev",

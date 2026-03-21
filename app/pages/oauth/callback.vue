@@ -54,7 +54,9 @@ const code = useRouteQuery("code", null, { transform: String });
 const state = useRouteQuery("state", undefined, { transform: String });
 const { user, refreshSession } = useAuth();
 
+
 const route = useRoute();
+
 
 const { error, status, execute } = useFetch("/api/auth/discord", {
 	immediate: false,
@@ -66,17 +68,22 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
 	server: false,
 });
 
+
 if (import.meta.client && code) {
 	void performCall().catch(logger.error);
 }
 
+
 async function performCall() {
 	await execute();
+
 
 	// Refresh client-side session state so the user data is reactive immediately
 	await refreshSession();
 
+
 	await promiseTimeout(seconds(2));
+
 
 	// Verify the OAuth state server-side and retrieve the stored redirect URL.
 	// The server reads the nonce + oauth_redirect cookies set during initiation,
@@ -93,11 +100,13 @@ async function performCall() {
 		}
 	}
 
+
 	await navigateTo(redirectUrl, {
 		redirectCode: 302,
 		replace: true,
 	});
 }
+
 
 const errorMessage = computed(() => {
 	if (route.query.error) {
@@ -109,9 +118,11 @@ const errorMessage = computed(() => {
 		: "Something went wrong while signing you in. Please try again.";
 });
 
+
 const isPending = computed(() => status.value === "pending");
 const isError = computed(() => status.value === "error");
 const isSuccess = computed(() => status.value === "success");
+
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({

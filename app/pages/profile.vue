@@ -589,13 +589,16 @@ import type { TabsItem } from "@nuxt/ui";
 
 definePageMeta({ alias: ["/account"] });
 
+
 useSeoMetadata({
 	description: "Manage your profile, servers and settings",
 	shouldOgImage: true,
 	title: "Profile",
 });
 
+
 const { user } = useAuth();
+
 
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
@@ -604,8 +607,10 @@ const searchQuery = ref<null | string>(null);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
+
 // Error handling state
 const isRetrying = ref(false);
+
 
 // Toggles
 // Is true by default because we want to show only manageable servers
@@ -613,8 +618,10 @@ const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
+
 // Accessibility - Reduce Motion
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion } = useReduceMotion();
+
 
 const preferredFormat = computed<"gif" | "png">(() => {
 	if (isAnimated.value && !effectiveReduceMotion.value) {
@@ -623,6 +630,7 @@ const preferredFormat = computed<"gif" | "png">(() => {
 
 	return "png";
 });
+
 
 // Use the centralized useUser composable instead of manual useFetch
 // Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
@@ -638,11 +646,14 @@ const { data, filteredGuilds, status, error, refresh } = useUser(user, {
 	},
 });
 
+
 // Extract guilds from useUser data
 const guilds = computed(() => data.value?.transformedGuilds ?? []);
 
+
 // Loading state based on status from useUser
 const isLoading = computed(() => status.value === "pending");
+
 
 // Retry handler
 async function handleRetry() {
@@ -653,6 +664,7 @@ async function handleRetry() {
 		isRetrying.value = false;
 	}
 }
+
 
 // Enhanced tabs configuration
 const items = computed<TabsItem[]>(() => [
@@ -676,15 +688,18 @@ const items = computed<TabsItem[]>(() => [
 	},
 ]);
 
+
 const defaultAvatar = computed(() =>
 	user.value?.id
 		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
 		: "https://cdn.discordapp.com/embed/avatars/0.png",
 );
 
+
 function undoSearch() {
 	searchQuery.value = null;
 }
+
 
 async function copyUserId() {
 	if (user.value?.id) {
@@ -692,9 +707,11 @@ async function copyUserId() {
 	}
 }
 
+
 function createUrl(format: "webp" | "png" | "gif", size: number) {
 	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
+
 
 watch(
 	user,

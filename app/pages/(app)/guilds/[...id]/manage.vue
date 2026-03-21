@@ -55,6 +55,7 @@ definePageMeta({
 	path: "/guilds/:id/manage/:slug(.*)*",
 });
 
+
 const route = useRoute();
 const { isNotificationsSlideoverOpen } = useDashboardLayout();
 const loading = useState<boolean>("guild:loading", () => false);
@@ -64,7 +65,9 @@ const toast = useToast();
 const logger = useLogger("wolfstar:manage");
 const { guildData } = useGuildData();
 
+
 const slug = route.params.slug as string | string[];
+
 
 async function fetchCommandsList() {
 	loading.value = true;
@@ -106,6 +109,7 @@ async function fetchCommandsList() {
 		loading.value = false;
 	}
 }
+
 
 async function fetchLanguagesList() {
 	loading.value = true;
@@ -151,11 +155,14 @@ async function fetchLanguagesList() {
 	}
 }
 
+
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
+
 
 const title = ref(
 	`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value.name}`,
 );
+
 
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
@@ -193,7 +200,9 @@ const defaultComponent = defineAsyncComponent(
 	() => import("~/components/guild/settings/General.vue"),
 );
 
+
 const renderComponent = computed(() => asyncComponentMap[joinedPath.value] ?? defaultComponent);
+
 
 // Fetch only the data required by the active section.
 // Channels / Events / Roles do not use commands or languages, so we skip
@@ -216,6 +225,7 @@ onMounted(() => {
 		}
 	}
 });
+
 
 useHead({
 	title: () => title.value,

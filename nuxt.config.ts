@@ -231,6 +231,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
+		viteEnvironmentApi: true,
 		typedPages: true,
 	},
 

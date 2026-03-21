@@ -171,7 +171,9 @@ import { parseError, createError } from "evlog";
 
 const logger = useLogger("wolfstar:dashboard");
 
+
 const guildId = useRouteParams("id", null, { transform: String });
+
 
 if (!isValidGuildId(guildId.value)) {
 	throw createError({
@@ -182,6 +184,7 @@ if (!isValidGuildId(guildId.value)) {
 	});
 }
 
+
 const toast = useToast();
 const open = ref(false);
 const nuxtError = useError();
@@ -190,6 +193,7 @@ const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
 const isLoading = useState<boolean>("dashboard:loading", () => true);
+
 
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
@@ -296,6 +300,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 	],
 ]);
 
+
 const isReadyToRender = computed(
 	() =>
 		!nuxtError.value &&
@@ -306,13 +311,16 @@ const isReadyToRender = computed(
 		!isNullOrUndefinedOrZero(objectValues(guildSettings.value).length),
 );
 
+
 const isReadyToSubmit = computed(
 	() =>
 		!isNullOrUndefined(guildSettingsChanges.value) &&
 		objectValues(guildSettingsChanges.value).length > 0,
 );
 
+
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
+
 
 const src = computed(
 	() =>
@@ -328,6 +336,7 @@ function isValidGuildId(id: string | undefined | null): boolean {
 	const snowflakeRegex = /^\d{17,19}$/;
 	return snowflakeRegex.test(id);
 }
+
 
 async function submitChanges() {
 	const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
@@ -354,15 +363,19 @@ async function submitChanges() {
 		method: "PATCH",
 	});
 
+
 	if (!data.value) {
 		return;
 	}
+
 
 	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
 		setGuildSettings(data.value);
 		setGuildSettingsChanges(undefined);
 
+
 		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
+
 
 		toast.add({
 			color: "success",
@@ -373,10 +386,13 @@ async function submitChanges() {
 	}
 }
 
+
 function resetChanges() {
 	resetGuildSettingsChanges();
 
+
 	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
+
 
 	toast.add({
 		color: "info",
@@ -385,6 +401,7 @@ function resetChanges() {
 		title: "Changes Reset",
 	});
 }
+
 
 // Clear staged changes when guild ID changes (prevents cross-guild leakage)
 watch(guildId, (newGuildId, oldGuildId) => {
@@ -395,6 +412,7 @@ watch(guildId, (newGuildId, oldGuildId) => {
 		);
 	}
 });
+
 
 onMounted(async () => {
 	isLoading.value = true;

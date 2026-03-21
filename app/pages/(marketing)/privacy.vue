@@ -888,5 +888,6 @@ useSeoMetadata({
 	title: "Privacy Policy",
 });
 
+
 const { buildInfo } = useAppConfig();
 </script>

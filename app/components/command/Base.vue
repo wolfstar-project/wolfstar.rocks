@@ -257,6 +257,7 @@ const { command, loading } = defineProps<{
 	loading?: boolean;
 }>();
 
+
 /**
  * Normalize multiline/help values into a single string for template rendering.
  * - Arrays are joined with newlines.
@@ -272,6 +273,7 @@ function resolveMultilineString(str: string | string[], multiline = false): stri
 				.join(multiline ? "\n\n" : " ");
 }
 
+
 /**
  * Escape HTML special characters to prevent XSS when using v-html.
  */
@@ -283,6 +285,7 @@ function escapeHtml(text: string): string {
 		.replace(/"/g, "&quot;")
 		.replace(/'/g, "&#39;");
 }
+
 
 /**
  * Sanitize and format text with basic markdown support.

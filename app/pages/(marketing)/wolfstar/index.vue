@@ -99,6 +99,7 @@
 <script setup lang="ts">
 definePageMeta({ alias: ["/"] });
 
+
 useSeoMetadata({
 	description:
 		"Discover WolfStar, a fully customizable multilingual Discord moderation application designed to help you manage and protect your server. WolfStar offers a comprehensive logging suite that tracks moderation actions, message changes, channel updates, role modifications, and more in real-time. All features are completely free with no paywalls or hidden costs. We're committed to open-source software, providing transparent code for everyone. WolfStar simplifies server management with powerful tools, ensuring your community remains safe and organized effortlessly.",
@@ -106,16 +107,20 @@ useSeoMetadata({
 	title: "Home",
 });
 
+
 const otherApps = useApp();
 const Invites = useInvites();
 
+
 const selectedFeatureIndex = ref(0);
+
 
 // Scroll-triggered reveal for below-fold content sections.
 const moreRef = ref<HTMLElement | null>(null);
 const moreVisible = ref(false);
 const inviteRef = ref<HTMLElement | null>(null);
 const inviteVisible = ref(false);
+
 
 const { stop: stopMoreObserver } = useIntersectionObserver(
 	moreRef,
@@ -128,6 +133,7 @@ const { stop: stopMoreObserver } = useIntersectionObserver(
 	{ rootMargin: "100px" },
 );
 
+
 const { stop: stopInviteObserver } = useIntersectionObserver(
 	inviteRef,
 	(entries) => {
@@ -139,10 +145,12 @@ const { stop: stopInviteObserver } = useIntersectionObserver(
 	{ rootMargin: "100px" },
 );
 
+
 // Lazy-mount the Explore section components only when the section approaches
 // the viewport, keeping them out of the initial JS critical path.
 const exploreRef = ref<HTMLElement | null>(null);
 const exploreLoaded = ref(false);
+
 
 onMounted(() => {
 	// Instantly load if the user navigated directly to the #explore anchor.
@@ -150,6 +158,7 @@ onMounted(() => {
 		exploreLoaded.value = true;
 	}
 });
+
 
 const { stop: stopExploreObserver } = useIntersectionObserver(
 	exploreRef,
@@ -163,6 +172,7 @@ const { stop: stopExploreObserver } = useIntersectionObserver(
 	// the components are ready before the user actually sees them.
 	{ rootMargin: "400px" },
 );
+
 
 function openFeature(index: number) {
 	selectedFeatureIndex.value = index;

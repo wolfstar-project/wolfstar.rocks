@@ -222,9 +222,6 @@ importers:
       eslint-plugin-regexp:
         specifier: ^3.0.0
         version: 3.1.0(eslint@9.39.4(jiti@2.6.1))
-      husky:
-        specifier: ^9.1.7
-        version: 9.1.7
       knip:
         specifier: ^5.86.0
         version: 5.88.1(@types/node@24.12.0)(typescript@5.9.3)
@@ -7983,11 +7980,6 @@ packages:
   human-signals@8.0.1:
     resolution: {integrity: sha512-eKCa6bwnJhvxj14kZk5NCPc6Hb6BdsU9DZcOnmQKSnO1VKrfV0zCvtttPZUsBvjmNDn8rpcJfpwSYnHBjc95MQ==}
     engines: {node: '>=18.18.0'}
-
-  husky@9.1.7:
-    resolution: {integrity: sha512-5gs5ytaNjBrh5Ow3zrvdUUY+0VxIuWVL4i9irt6friV+BqdCfmV11CQTWMiBYWHbXhco+J1kHfTOUkePhCDvMA==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   ico-endec@0.1.6:
     resolution: {integrity: sha512-ZdLU38ZoED3g1j3iEyzcQj+wAkY2xfWNkymszfJPoxucIUhK7NayQ+/C4Kv0nDFMIsbtbEHldv3V8PU494/ueQ==}
@@ -20984,8 +20976,6 @@ snapshots:
   human-signals@5.0.0: {}
 
   human-signals@8.0.1: {}
-
-  husky@9.1.7: {}
 
   ico-endec@0.1.6: {}
 

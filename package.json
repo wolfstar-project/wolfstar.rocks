@@ -26,7 +26,7 @@
 		"generate": "nuxt generate",
 		"preview": "nuxt preview",
 		"postinstall": "stale-dep -u && nuxt prepare && vp config",
-		"prepare": "skilld update -b && node .husky/install.mjs",
+		"prepare": "skilld update -b",
 		"generate-pwa-icons": "pwa-assets-generator",
 		"prisma:migrate:dev": "prisma migrate dev",
 		"prisma:migrate:dev:create": "prisma migrate dev --create-only",

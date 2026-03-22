@@ -414,6 +414,7 @@ export default defineNuxtConfig({
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
+					"https://api.iconify.design",
 					"https://*.netlify.com",
 					"https://*.netlify.app",
 					"https://*.wolfstar.rocks",

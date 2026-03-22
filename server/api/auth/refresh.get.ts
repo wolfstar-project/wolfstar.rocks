@@ -65,7 +65,7 @@ export default defineWrappedResponseHandler(
 		}
 	},
 	{
-		auth: true,
+		auth: false,
 		rateLimit: { enabled: true, limit: 3, window: seconds(5) },
 	},
 );

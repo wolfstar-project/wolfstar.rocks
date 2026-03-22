@@ -6,7 +6,15 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ alias: ["/login"] });
+definePageMeta({
+	alias: ["/login"],
+	middleware: defineNuxtRouteMiddleware((to) => {
+		const { login } = useAuth();
+		const nextUrl = (to.query.next as string) || "/";
+		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+		return login(safeNext);
+	}),
+});
 
 
 useSeoMetadata({
@@ -16,15 +24,5 @@ useSeoMetadata({
 	},
 	shouldOgImage: true,
 	title: "Login",
-});
-
-
-const { login } = useAuth();
-
-
-onMounted(() => {
-	const nextUrl = useRouteQuery("next", "/", { transform: String });
-	const safeNext = isSafeRedirectPath(nextUrl.value) ? nextUrl.value : "/";
-	void login(safeNext);
 });
 </script>

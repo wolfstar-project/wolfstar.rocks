@@ -78,6 +78,12 @@ async function performCall() {
 	await execute();
 
 
+	// Stop if the token exchange failed — the error UI will be shown
+	if (error.value) {
+		return;
+	}
+
+
 	// Refresh client-side session state so the user data is reactive immediately
 	await refreshSession();
 
@@ -101,8 +107,10 @@ async function performCall() {
 	}
 
 
+	// Full page navigation ensures SSR reads the fresh session cookie,
+	// so the target page renders with the correct authenticated state.
 	await navigateTo(redirectUrl, {
-		redirectCode: 302,
+		external: true,
 		replace: true,
 	});
 }

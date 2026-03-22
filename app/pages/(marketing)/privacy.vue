@@ -1,6 +1,6 @@
 <template>
-	<div class="content-fit py-10">
-		<article class="prose">
+	<UContainer class="bg-base-100">
+		<article class="mx-auto max-w-3xl px-4 py-8 sm:py-12">
 			<!-- Header -->
 			<header class="mt-8 mb-12">
 				<div class="mb-6 flex items-baseline justify-between gap-4">
@@ -877,7 +877,7 @@
 				</section>
 			</div>
 		</article>
-	</div>
+	</UContainer>
 </template>
 
 <script setup lang="ts">

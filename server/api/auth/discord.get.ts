@@ -51,7 +51,7 @@ export default defineWrappedResponseHandler(
 			},
 
 			async onError(_event: H3Event, error: NuxtError) {
-				log.error("Discord OAuth error");
+				log.error("Discord OAuth error", { error });
 				throw createError({
 					message: "Failed to authenticate with Discord. Please try again.",
 					status: 500,

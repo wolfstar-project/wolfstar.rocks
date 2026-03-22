@@ -4,11 +4,11 @@
 			<!-- Header -->
 			<header class="mt-8 mb-12">
 				<div class="mb-6 flex items-baseline justify-between gap-4">
-					<h1 class="text-4xl font-bold text-base-content/80 sm:text-5xl">
+					<h1 class="text-4xl font-bold text-base-content sm:text-5xl">
 						WolfStar Terms of Service
 					</h1>
 				</div>
-				<p class="mb-4 text-lg text-base-content/70">
+				<p class="mb-4 text-lg text-base-content/90">
 					Last updated and effective:
 					<NuxtTime
 						locale="en-US"
@@ -17,7 +17,7 @@
 						time-style="medium"
 					/>
 				</p>
-				<div class="space-y-2 text-sm text-base-content/60">
+				<div class="space-y-2 text-sm text-base-content/80">
 					<p>
 						<span class="font-semibold">Owner and data controller:</span> WolfStar
 						Project
@@ -38,7 +38,7 @@
 			<div class="prose prose-lg max-w-none space-y-12">
 				<!-- Terms -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Terms
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -60,7 +60,7 @@
 
 				<!-- Use License -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Use License
 					</h2>
 					<p class="mb-3 leading-relaxed text-base-content">
@@ -82,7 +82,7 @@
 
 				<!-- Disclaimer -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Disclaimer
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -97,7 +97,7 @@
 
 				<!-- Limitations -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Limitations
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -113,7 +113,7 @@
 
 				<!-- Revisions and Errata -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Revisions and errata
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -128,7 +128,7 @@
 
 				<!-- Links -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Links
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -141,7 +141,7 @@
 
 				<!-- Terms of Service Modifications -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Terms of Service modifications
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -153,7 +153,7 @@
 
 				<!-- Your Privacy -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Your Privacy
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -164,7 +164,7 @@
 
 				<!-- Governing Law -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Governing law
 					</h2>
 					<p class="leading-relaxed text-base-content">

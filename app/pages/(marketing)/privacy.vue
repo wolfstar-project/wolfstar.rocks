@@ -4,11 +4,11 @@
 			<!-- Header -->
 			<header class="mt-8 mb-12">
 				<div class="mb-6 flex items-baseline justify-between gap-4">
-					<h1 class="text-4xl font-bold text-base-content/80 sm:text-5xl">
+					<h1 class="text-4xl font-bold text-base-content sm:text-5xl">
 						WolfStar Privacy Policy
 					</h1>
 				</div>
-				<p class="mb-4 text-lg text-base-content/70">
+				<p class="mb-4 text-lg text-base-content/90">
 					Last updated and effective:
 					<NuxtTime
 						locale="en-US"
@@ -17,7 +17,7 @@
 						time-style="medium"
 					/>
 				</p>
-				<div class="space-y-2 text-sm text-base-content/60">
+				<div class="space-y-2 text-sm text-base-content/80">
 					<p>
 						<span class="font-semibold">Owner and data controller:</span> WolfStar
 						Project
@@ -38,7 +38,7 @@
 			<div class="prose prose-lg max-w-none space-y-12">
 				<!-- Welcome Section -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Welcome to WolfStar Project
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -70,7 +70,7 @@
 
 				<!-- Information We Collect -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Information we collect
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -88,7 +88,7 @@
 
 				<!-- What Are Cookies -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						What are cookies?
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -100,7 +100,7 @@
 
 				<!-- What Cookies Do We Use -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						What cookies do we use?
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -109,7 +109,7 @@
 					</p>
 					<ul class="list-none space-y-3 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">h3 (Session Cookie):</span> This is our
 								secure session cookie. It stores the OAuth access token when you
@@ -119,7 +119,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Sentry (error monitoring):</span> Sentry
 								may set first‑party cookies or use local storage to persist session
@@ -129,7 +129,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold"
 									>Hosting provider cookies (Netlify):</span
@@ -145,7 +145,7 @@
 
 				<!-- Local Storage -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Local storage
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -160,7 +160,7 @@
 
 				<!-- Managing Cookies -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Managing cookies
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -174,7 +174,7 @@
 					</p>
 					<ul class="list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<NuxtLink
 								to="https://support.google.com/chrome/answer/95647?hl=en"
 								target="_blank"
@@ -184,7 +184,7 @@
 							</NuxtLink>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<NuxtLink
 								to="https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox"
 								target="_blank"
@@ -194,7 +194,7 @@
 							</NuxtLink>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<NuxtLink
 								to="https://support.microsoft.com/en-us/windows/manage-cookies-in-microsoft-edge-168dab11-0753-043d-7c16-ede5947fc64d"
 								target="_blank"
@@ -204,7 +204,7 @@
 							</NuxtLink>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<NuxtLink
 								to="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac"
 								target="_blank"
@@ -218,7 +218,7 @@
 
 				<!-- Analytics -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Analytics
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -230,23 +230,23 @@
 					</p>
 					<ul class="list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>It does not use cookies</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>It does not collect personal identifiers</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>It does not track users across websites</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>All data is aggregated and anonymised</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Data is collected server-side, not from your browser</span>
 						</li>
 					</ul>
@@ -260,7 +260,7 @@
 
 				<!-- Error Tracking -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Error tracking and monitoring
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -273,27 +273,27 @@
 					</p>
 					<ul class="list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Error messages and stack traces</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Browser type and version</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Operating system</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>IP address (anonymized)</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Page URL where the error occurred</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span
 								>Session replay data (for 10% of sessions and 100% of sessions with
 								errors)</span
@@ -316,7 +316,7 @@
 
 				<!-- Authenticated Users -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Authenticated users
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -330,19 +330,19 @@
 					</p>
 					<ul class="list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Discord User ID</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Username and discriminator</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Avatar</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>List of guilds (servers) where you have permissions</span>
 						</li>
 					</ul>
@@ -356,7 +356,7 @@
 
 				<!-- Data We Collect Automatically -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Data we collect automatically
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -365,7 +365,7 @@
 					</p>
 					<ul class="list-none space-y-3 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">IP Address:</span> Used for security,
 								rate limiting, and general location (country/region) for analytics.
@@ -373,7 +373,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Device Information:</span> Browser type,
 								operating system, device type, and screen resolution to optimize the
@@ -381,7 +381,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Usage Data:</span> Pages visited, time
 								spent on pages, referrer URLs, and interaction patterns to
@@ -390,7 +390,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Bot Interactions:</span> When using the
 								Discord bot, we may collect message content, command usage, and
@@ -403,7 +403,7 @@
 
 				<!-- Where Information is Processed -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Where information is processed
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -418,7 +418,7 @@
 
 				<!-- Our Use of Your Information -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Our use of your information
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -445,7 +445,7 @@
 
 				<!-- Legal Bases -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Our legal bases for handling of your personal data
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -455,7 +455,7 @@
 					</p>
 					<ul class="list-none space-y-3 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								Users have given their consent for one or more specific purposes.
 								Note: Under some legislations the Owner may be allowed to process
@@ -466,21 +466,21 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								Provision of Data is necessary for the performance of an agreement
 								with the User and/or for any pre-contractual obligations thereof.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								Processing is necessary for compliance with a legal obligation to
 								which the Owner is subject.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								Processing is related to a task that is carried out in the public
 								interest or in the exercise of official authority vested in the
@@ -488,7 +488,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								Processing is necessary for the purposes of the legitimate interests
 								pursued by the Owner or by a third party.
@@ -505,7 +505,7 @@
 
 				<!-- Our Disclosure of Your Information -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Our disclosure of your information
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -516,14 +516,14 @@
 					</p>
 					<ul class="list-none space-y-3 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold text-base-content">Consent</span>: We may
 								transfer your information with your consent.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold text-base-content"
 									>Consultants and outside collaborators</span
@@ -537,7 +537,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold text-base-content"
 									>Legal Requirements</span
@@ -554,7 +554,7 @@
 
 				<!-- Unsolicited Information -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Unsolicited information
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -569,7 +569,7 @@
 
 				<!-- Children -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Children
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -593,7 +593,7 @@
 
 				<!-- Links to Other Websites -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Links to other web sites
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -608,7 +608,7 @@
 
 				<!-- Data Retention -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Data retention
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -617,7 +617,7 @@
 					</p>
 					<ul class="list-none space-y-3 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Session Cookies:</span> Automatically
 								deleted when you close your browser or after a period of inactivity
@@ -625,7 +625,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Local Storage Preferences:</span> Remain
 								on your device until you clear your browser data or manually reset
@@ -633,7 +633,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Analytics Data:</span> Retained in
 								aggregate form by Netlify and cannot be linked to individual users.
@@ -641,7 +641,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Error Tracking Data:</span> Retained by
 								Sentry for up to 90 days for debugging purposes, then automatically
@@ -649,7 +649,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">User Account Data:</span> Retained while
 								your account is active and for a reasonable period after account
@@ -657,7 +657,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>
 								<span class="font-semibold">Backups:</span> Database backups are
 								created regularly and automatically deleted after 7 days (168
@@ -674,7 +674,7 @@
 
 				<!-- Security -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Security
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -690,7 +690,7 @@
 
 				<!-- Your Data Rights and Choices -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Your data rights and choices
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -701,27 +701,27 @@
 					<p class="mb-4 leading-relaxed text-base-content">You have the right to:</p>
 					<ul class="mb-4 list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Access information about what data we collect</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Clear your local storage and cookies at any time</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Disconnect your authenticated session</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Request deletion of your personal data</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Request a copy of your data</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-base-content/70">&mdash;</span>
 							<span>Request information about our data practices</span>
 						</li>
 					</ul>
@@ -776,7 +776,7 @@
 
 				<!-- EEA Representative -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Who is WolfStar Project's EEA representative?
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -791,7 +791,7 @@
 
 				<!-- California Privacy Rights -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Your California Privacy Rights
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
@@ -843,12 +843,12 @@
 						Requests Received: We received the following number of data requests between
 						November 24, 2016 and July 20, 2020:
 					</p>
-					<p class="text-base-content/80 italic">No requests to date</p>
+					<p class="text-base-content italic">No requests to date</p>
 				</section>
 
 				<!-- Changes to Privacy Policy -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Changes to this Privacy Policy
 					</h2>
 					<p class="leading-relaxed text-base-content">
@@ -863,7 +863,7 @@
 
 				<!-- Contact -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-base-content/80 uppercase">
 						Contacting us
 					</h2>
 					<p class="leading-relaxed text-base-content">

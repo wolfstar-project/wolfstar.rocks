@@ -10,7 +10,8 @@ definePageMeta({
 	alias: ["/login"],
 	middleware: defineNuxtRouteMiddleware((to) => {
 		const { login } = useAuth();
-		const nextUrl = (to.query.next as string) || "/";
+		const queryNext = to.query.next;
+		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
 		return login(safeNext);
 	}),

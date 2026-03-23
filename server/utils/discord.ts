@@ -30,6 +30,15 @@ import {
 } from "discord-api-types/v10";
 import { createError } from "evlog";
 
+async function getUserIdFromEvent(event: H3Event): Promise<string> {
+	const session = await getUserSession(event);
+	const userId = session.user?.id;
+	if (!userId) {
+		throw errors.unauthorized();
+	}
+	return userId;
+}
+
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 	const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);
 	return roles.length === 0
@@ -84,17 +93,9 @@ export async function transformGuild(
 	userId: string,
 	data: RESTAPIPartialCurrentUserGuild,
 ): Promise<OauthFlattenedGuild> {
-	const guild = await useApi()
-		.guilds.get(data.id, {
-			with_counts: true,
-		})
-		.catch(() => undefined);
+	const guild = await getGuild(data.id).catch(() => undefined);
 
-	const channels = isNullOrUndefined(data)
-		? []
-		: await useApi()
-				.guilds.getChannels(data.id)
-				.catch(() => []);
+	const channels = isNullOrUndefined(data) ? [] : await getGuildChannels(data.id).catch(() => []);
 
 	const mockGuild = cast<FlattenedGuild>({
 		afkChannelId: null,
@@ -153,10 +154,15 @@ export async function transformOauthGuildsAndUser({
 	}
 
 	const userId = user.id;
+	const batchSize = 10;
+	const transformedGuilds: OauthFlattenedGuild[] = [];
 
-	const transformedGuilds = await Promise.all(
-		guilds.map((guild) => transformGuild(userId, guild)),
-	);
+	for (let i = 0; i < guilds.length; i += batchSize) {
+		const batch = guilds.slice(i, i + batchSize);
+		const results = await Promise.all(batch.map((guild) => transformGuild(userId, guild)));
+		transformedGuilds.push(...results);
+	}
+
 	return { transformedGuilds, user };
 }
 
@@ -175,6 +181,7 @@ export const getCurrentToken = defineCachedFunction(
 		return tokens;
 	},
 	{
+		getKey: (event: H3Event) => getUserIdFromEvent(event),
 		maxAge: days(7),
 	},
 );
@@ -230,6 +237,7 @@ export const getCurrentUser = defineCachedFunction(
 		return { guilds, user };
 	},
 	{
+		getKey: (event: H3Event) => getUserIdFromEvent(event),
 		maxAge: hours(1),
 	},
 );
@@ -264,6 +272,10 @@ export const getCurrentMember = defineCachedFunction(
 		return member;
 	},
 	{
+		getKey: async (event: H3Event, guildId: string) => {
+			const userId = await getUserIdFromEvent(event);
+			return `${userId}:${guildId}`;
+		},
 		maxAge: hours(1),
 	},
 );

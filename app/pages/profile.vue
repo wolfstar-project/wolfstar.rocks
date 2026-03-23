@@ -631,7 +631,7 @@ const preferredFormat = computed<"gif" | "png">(() => {
 // Use the centralized useUser composable instead of manual useFetch
 // Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
 // Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { data, filteredGuilds, status, error, refresh } = useUser(user, {
+const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 	timeout: 15_000, // 15 seconds timeout
 	retry: 3, // Max retry attempts
 	retryDelay: 1000, // 1 second delay between retries
@@ -641,10 +641,6 @@ const { data, filteredGuilds, status, error, refresh } = useUser(user, {
 		sortAscending,
 	},
 });
-
-
-// Extract guilds from useUser data
-const guilds = computed(() => data.value?.transformedGuilds ?? []);
 
 
 // Loading state based on status from useUser

@@ -8,13 +8,13 @@
 <script setup lang="ts">
 definePageMeta({
 	alias: ["/login"],
-	middleware: defineNuxtRouteMiddleware(async (to) => {
+	middleware: async (to) => {
 		const { login } = useAuth();
 		const queryNext = to.query.next;
 		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
 		return login(safeNext);
-	}),
+	},
 });
 
 

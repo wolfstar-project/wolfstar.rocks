@@ -30,6 +30,9 @@ import {
 } from "discord-api-types/v10";
 import { createError } from "evlog";
 
+// Limits concurrent guild transform API calls to avoid Discord rate limits
+const GUILD_TRANSFORM_BATCH_SIZE = 10;
+
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);
 	const userId = session.user?.id;
@@ -95,7 +98,7 @@ export async function transformGuild(
 ): Promise<OauthFlattenedGuild> {
 	const guild = await getGuild(data.id).catch(() => undefined);
 
-	const channels = isNullOrUndefined(data) ? [] : await getGuildChannels(data.id).catch(() => []);
+	const channels = await getGuildChannels(data.id).catch(() => []);
 
 	const mockGuild = cast<FlattenedGuild>({
 		afkChannelId: null,
@@ -154,11 +157,10 @@ export async function transformOauthGuildsAndUser({
 	}
 
 	const userId = user.id;
-	const batchSize = 10;
 	const transformedGuilds: OauthFlattenedGuild[] = [];
 
-	for (let i = 0; i < guilds.length; i += batchSize) {
-		const batch = guilds.slice(i, i + batchSize);
+	for (let i = 0; i < guilds.length; i += GUILD_TRANSFORM_BATCH_SIZE) {
+		const batch = guilds.slice(i, i + GUILD_TRANSFORM_BATCH_SIZE);
 		const results = await Promise.all(batch.map((guild) => transformGuild(userId, guild)));
 		transformedGuilds.push(...results);
 	}

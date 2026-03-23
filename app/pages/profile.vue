@@ -52,7 +52,7 @@
 							:width="128"
 							:height="128"
 							sizes="128px"
-							:alt="`${user?.name} avatar`"
+							:alt="`${user?.globalName ?? user?.username} avatar`"
 							class="h-full w-full object-cover"
 							loading="lazy"
 							decoding="async"
@@ -644,7 +644,8 @@ const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 
 
 // Loading state based on status from useUser
-const isLoading = computed(() => status.value === "pending");
+// Include "idle" because useLazyAsyncData starts with idle before transitioning to pending
+const isLoading = computed(() => status.value === "idle" || status.value === "pending");
 
 
 // Retry handler

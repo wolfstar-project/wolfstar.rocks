@@ -13,10 +13,10 @@ export default defineNuxtPlugin(() => {
 				return cachedFetch<T>(
 					url,
 					{
+						...options,
 						baseURL: apiBaseUrl,
 						credentials: "include",
-						headers: { ...options?.headers, "Content-Type": "application/json" },
-						...options,
+						headers: { "Content-Type": "application/json", ...options?.headers },
 					},
 					ttl,
 				);

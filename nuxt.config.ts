@@ -122,10 +122,6 @@ export default defineNuxtConfig({
 
 	css: ["~/assets/css/main.css"],
 
-	vue: {
-		propsDestructure: true,
-	},
-
 	site: {
 		defaultLocale: "en-US",
 		description:
@@ -147,7 +143,6 @@ export default defineNuxtConfig({
 			service: "wolfstar-dashboard",
 		},
 		include: ["/api/**"],
-		exclude: ["/api/openapi.json", "/api/docs/**"],
 	},
 
 	ui: {

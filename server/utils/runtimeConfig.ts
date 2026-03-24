@@ -17,9 +17,7 @@ export function generateRuntimeConfig() {
 			clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
 		},
 		public: {
-			app: {
-				apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
-			},
+			apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			environment: process.env.NODE_ENV ?? "production",
 			sentry: {

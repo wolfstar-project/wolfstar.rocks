@@ -261,14 +261,4 @@ export interface OtherApp {
 	description: string;
 }
 
-export interface ExpirableLocalStorageStructure<T> {
-	expire: number;
-	data: T;
-}
-
-export enum LocalStorageKeys {
-	Commands = "commands",
-	Languages = "languages",
-}
-
 export const EmojiRegexExtractName = /<?a?:(\w{2,32}):\d{17,21}>?/gi;

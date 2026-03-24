@@ -183,7 +183,10 @@ export const getCurrentToken = defineCachedFunction(
 		return tokens;
 	},
 	{
-		getKey: (event: H3Event) => getUserIdFromEvent(event),
+		getKey: async (event: H3Event) => {
+			const userId = await getUserIdFromEvent(event);
+			return userId;
+		},
 		maxAge: days(7),
 	},
 );
@@ -239,7 +242,10 @@ export const getCurrentUser = defineCachedFunction(
 		return { guilds, user };
 	},
 	{
-		getKey: (event: H3Event) => getUserIdFromEvent(event),
+		getKey: async (event: H3Event) => {
+			const userId = await getUserIdFromEvent(event);
+			return userId;
+		},
 		maxAge: hours(1),
 	},
 );
@@ -356,14 +362,15 @@ export const getGuild = defineCachedFunction(
 
 export const fetchCommands = defineCachedFunction(
 	async () => {
-		const commands = await $fetch<WolfCommand[]>(`/api/commands`, {
+		const {
+			public: { apiBaseUrl },
+		} = useRuntimeConfig();
+		const commands = await $fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			method: "GET",
 		});
-
 		return commands;
 	},
 	{

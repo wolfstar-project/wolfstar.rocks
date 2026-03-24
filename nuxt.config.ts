@@ -188,14 +188,6 @@ export default defineNuxtConfig({
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/__og-image__/**": getISRConfig(60),
 		"/api/auth/**": { isr: false, cache: false },
-		"/api/commands": {
-			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
-			proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
-		},
-		"/api/languages": {
-			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
-			proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
-		},
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {

@@ -143,6 +143,7 @@ export default defineNuxtConfig({
 			service: "wolfstar-dashboard",
 		},
 		include: ["/api/**"],
+		exclude: ["/api/_nuxt_icon/**"],
 	},
 
 	ui: {

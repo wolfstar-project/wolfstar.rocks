@@ -168,28 +168,19 @@ export async function transformOauthGuildsAndUser({
 	return { transformedGuilds, user };
 }
 
-export const getCurrentToken = defineCachedFunction(
-	async (event: H3Event) => {
-		const tokens = await event.context.$authorization.resolveServerTokens();
+export async function getCurrentToken(event: H3Event) {
+	const tokens = await event.context.$authorization.resolveServerTokens();
 
-		if (
-			isNullOrUndefined(tokens) ||
-			!("access_token" in tokens) ||
-			isNullOrUndefined(tokens.access_token)
-		) {
-			throw errors.unauthorized();
-		}
+	if (
+		isNullOrUndefined(tokens) ||
+		!("access_token" in tokens) ||
+		isNullOrUndefined(tokens.access_token)
+	) {
+		throw errors.unauthorized();
+	}
 
-		return tokens;
-	},
-	{
-		getKey: async (event: H3Event) => {
-			const userId = await getUserIdFromEvent(event);
-			return userId;
-		},
-		maxAge: days(7),
-	},
-);
+	return tokens;
+}
 
 export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
 	const shouldManage = await manage(guild, member);
@@ -205,15 +196,7 @@ export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
 
 export const getCurrentUser = defineCachedFunction(
 	async (event: H3Event) => {
-		const tokens = await event.context.$authorization.resolveServerTokens();
-
-		if (
-			isNullOrUndefined(tokens) ||
-			!("access_token" in tokens) ||
-			isNullOrUndefined(tokens.access_token)
-		) {
-			throw errors.unauthorized();
-		}
+		const tokens = await getCurrentToken(event);
 
 		const rest = new REST({
 			authPrefix: "Bearer",
@@ -252,15 +235,7 @@ export const getCurrentUser = defineCachedFunction(
 
 export const getCurrentMember = defineCachedFunction(
 	async (event: H3Event, guildId: string) => {
-		const tokens = await event.context.$authorization.resolveServerTokens();
-
-		if (
-			isNullOrUndefined(tokens) ||
-			!("access_token" in tokens) ||
-			isNullOrUndefined(tokens.access_token)
-		) {
-			throw errors.unauthorized();
-		}
+		const tokens = await getCurrentToken(event);
 
 		const rest = new REST({
 			authPrefix: "Bearer",

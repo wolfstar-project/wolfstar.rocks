@@ -134,33 +134,29 @@ onMounted(() => {
 	}
 });
 
-watch([() => commandsError, () => languagesError], (error) => {
-	const errorCommand = unref(error[0]);
-	const errorLanguage = unref(error[1]);
-
-	if (errorCommand) {
+watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
+	if (commandsErr) {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: errorCommand.message || "Couldn't load the command list. Try refreshing.",
+			description: commandsErr.message || "Couldn't load the command list. Try refreshing.",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
 			title: "Commands Unavailable",
 		});
-		logger.error("Error fetching commands:", errorCommand);
+		logger.error("Error fetching commands:", commandsErr);
 	}
 
-	if (errorLanguage) {
+	if (languagesErr) {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description:
-				errorLanguage.message || "Couldn't load the language list. Try refreshing.",
+			description: languagesErr.message || "Couldn't load the language list. Try refreshing.",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
 			title: "Languages Unavailable",
 		});
-		logger.error("Error fetching languages:", errorLanguage);
+		logger.error("Error fetching languages:", languagesErr);
 	}
 });
 

@@ -454,6 +454,7 @@
 								</div>
 							</UCard>
 						</div>
+						<!-- Premium tab (disabled for now)
 						<div v-if="item.value === 'premium'" class="space-y-6">
 							<UCard
 								class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl"
@@ -488,7 +489,6 @@
 										</div>
 									</div>
 
-									<!-- Feature List -->
 									<div class="grid gap-4 sm:grid-cols-2">
 										<div class="flex items-start gap-3">
 											<div
@@ -577,6 +577,7 @@
 								</template>
 							</UCard>
 						</div>
+						-->
 					</div>
 				</template>
 			</UTabs>
@@ -662,7 +663,11 @@ async function handleRetry() {
 const items = computed<TabsItem[]>(() => [
 	{
 		badge: isLoading.value
-			? { color: "primary", trailingIcon: "lucide:loader" }
+			? {
+					color: "primary",
+					trailingIcon: "lucide:loader",
+					ui: { trailingIcon: "animate-spin" },
+				}
 			: { color: "primary", label: `${guilds.value?.length ?? "N/A"}` },
 		icon: "heroicons:server",
 		label: "Servers",
@@ -673,11 +678,11 @@ const items = computed<TabsItem[]>(() => [
 		label: "Settings",
 		value: "settings",
 	},
-	{
+	/* {
 		icon: "heroicons:star",
 		label: "Premium",
 		value: "premium",
-	},
+	}, */
 ]);
 
 

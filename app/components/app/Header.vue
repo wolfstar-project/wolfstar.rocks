@@ -18,7 +18,6 @@
 					label="Beta"
 					size="xs"
 					class="ml-2"
-					aria-label="Beta version"
 				/>
 				<UBadge
 					v-else-if="env === 'dev'"
@@ -26,7 +25,6 @@
 					label="Dev"
 					size="xs"
 					class="ml-2"
-					aria-label="Dev version"
 				/>
 			</NuxtLink>
 		</template>

@@ -122,10 +122,6 @@ export default defineNuxtConfig({
 
 	css: ["~/assets/css/main.css"],
 
-	vue: {
-		propsDestructure: true,
-	},
-
 	site: {
 		defaultLocale: "en-US",
 		description:
@@ -147,7 +143,7 @@ export default defineNuxtConfig({
 			service: "wolfstar-dashboard",
 		},
 		include: ["/api/**"],
-		exclude: ["/api/openapi.json", "/api/docs/**"],
+		exclude: ["/api/_nuxt_icon/**"],
 	},
 
 	ui: {
@@ -188,14 +184,6 @@ export default defineNuxtConfig({
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/__og-image__/**": getISRConfig(60),
 		"/api/auth/**": { isr: false, cache: false },
-		"/api/commands": {
-			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
-			proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
-		},
-		"/api/languages": {
-			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
-			proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
-		},
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -410,6 +398,7 @@ export default defineNuxtConfig({
 					"'self'",
 					"wss:",
 					"ws:",
+					"https://ingesteer.services-prod.nsvcs.net", // Used by Netlify for telemetry (error, performance etc.)
 					"https://cdn.wolfstar.rocks",
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",

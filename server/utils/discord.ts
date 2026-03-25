@@ -30,6 +30,18 @@ import {
 } from "discord-api-types/v10";
 import { createError } from "evlog";
 
+// Limits concurrent guild transform API calls to avoid Discord rate limits
+const GUILD_TRANSFORM_BATCH_SIZE = 10;
+
+async function getUserIdFromEvent(event: H3Event): Promise<string> {
+	const session = await getUserSession(event);
+	const userId = session.user?.id;
+	if (!userId) {
+		throw errors.unauthorized();
+	}
+	return userId;
+}
+
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 	const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);
 	return roles.length === 0
@@ -84,19 +96,12 @@ export async function transformGuild(
 	userId: string,
 	data: RESTAPIPartialCurrentUserGuild,
 ): Promise<OauthFlattenedGuild> {
-	const guild = await useApi()
-		.guilds.get(data.id, {
-			with_counts: true,
-		})
-		.catch(() => undefined);
+	const guild = await getGuild(data.id).catch(() => undefined);
 
-	const channels = isNullOrUndefined(data)
-		? []
-		: await useApi()
-				.guilds.getChannels(data.id)
-				.catch(() => []);
+	const channels = await getGuildChannels(data.id).catch(() => []);
 
 	const mockGuild = cast<FlattenedGuild>({
+		acronym: guildNameToAcronym(data.name),
 		afkChannelId: null,
 		afkTimeout: 60,
 		applicationId: null,
@@ -153,31 +158,30 @@ export async function transformOauthGuildsAndUser({
 	}
 
 	const userId = user.id;
+	const transformedGuilds: OauthFlattenedGuild[] = [];
 
-	const transformedGuilds = await Promise.all(
-		guilds.map((guild) => transformGuild(userId, guild)),
-	);
+	for (let i = 0; i < guilds.length; i += GUILD_TRANSFORM_BATCH_SIZE) {
+		const batch = guilds.slice(i, i + GUILD_TRANSFORM_BATCH_SIZE);
+		const results = await Promise.all(batch.map((guild) => transformGuild(userId, guild)));
+		transformedGuilds.push(...results);
+	}
+
 	return { transformedGuilds, user };
 }
 
-export const getCurrentToken = defineCachedFunction(
-	async (event: H3Event) => {
-		const tokens = await event.context.$authorization.resolveServerTokens();
+export async function getCurrentToken(event: H3Event) {
+	const tokens = await event.context.$authorization.resolveServerTokens();
 
-		if (
-			isNullOrUndefined(tokens) ||
-			!("access_token" in tokens) ||
-			isNullOrUndefined(tokens.access_token)
-		) {
-			throw errors.unauthorized();
-		}
+	if (
+		isNullOrUndefined(tokens) ||
+		!("access_token" in tokens) ||
+		isNullOrUndefined(tokens.access_token)
+	) {
+		throw errors.unauthorized();
+	}
 
-		return tokens;
-	},
-	{
-		maxAge: days(7),
-	},
-);
+	return tokens;
+}
 
 export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
 	const shouldManage = await manage(guild, member);
@@ -193,15 +197,7 @@ export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
 
 export const getCurrentUser = defineCachedFunction(
 	async (event: H3Event) => {
-		const tokens = await event.context.$authorization.resolveServerTokens();
-
-		if (
-			isNullOrUndefined(tokens) ||
-			!("access_token" in tokens) ||
-			isNullOrUndefined(tokens.access_token)
-		) {
-			throw errors.unauthorized();
-		}
+		const tokens = await getCurrentToken(event);
 
 		const rest = new REST({
 			authPrefix: "Bearer",
@@ -230,21 +226,17 @@ export const getCurrentUser = defineCachedFunction(
 		return { guilds, user };
 	},
 	{
+		getKey: async (event: H3Event) => {
+			const userId = await getUserIdFromEvent(event);
+			return userId;
+		},
 		maxAge: hours(1),
 	},
 );
 
 export const getCurrentMember = defineCachedFunction(
 	async (event: H3Event, guildId: string) => {
-		const tokens = await event.context.$authorization.resolveServerTokens();
-
-		if (
-			isNullOrUndefined(tokens) ||
-			!("access_token" in tokens) ||
-			isNullOrUndefined(tokens.access_token)
-		) {
-			throw errors.unauthorized();
-		}
+		const tokens = await getCurrentToken(event);
 
 		const rest = new REST({
 			authPrefix: "Bearer",
@@ -264,6 +256,10 @@ export const getCurrentMember = defineCachedFunction(
 		return member;
 	},
 	{
+		getKey: async (event: H3Event, guildId: string) => {
+			const userId = await getUserIdFromEvent(event);
+			return `${userId}:${guildId}`;
+		},
 		maxAge: hours(1),
 	},
 );
@@ -342,14 +338,15 @@ export const getGuild = defineCachedFunction(
 
 export const fetchCommands = defineCachedFunction(
 	async () => {
-		const commands = await $fetch<WolfCommand[]>(`/api/commands`, {
+		const {
+			public: { apiBaseUrl },
+		} = useRuntimeConfig();
+		const commands = await $fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
 			credentials: "include",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			method: "GET",
 		});
-
 		return commands;
 	},
 	{

@@ -9,7 +9,8 @@ function emit(level: LogLevel, tag: string, args: unknown[]) {
 		args[0] !== null &&
 		!Array.isArray(args[0])
 	) {
-		log[level](args[0] as Record<string, unknown>);
+		const payload = { tag, ...(args[0] as Record<string, unknown>) };
+		log[level](payload);
 	} else {
 		log[level](tag, args.map(String).join(" "));
 	}

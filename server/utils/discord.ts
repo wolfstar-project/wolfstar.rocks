@@ -101,6 +101,7 @@ export async function transformGuild(
 	const channels = await getGuildChannels(data.id).catch(() => []);
 
 	const mockGuild = cast<FlattenedGuild>({
+		acronym: guildNameToAcronym(data.name),
 		afkChannelId: null,
 		afkTimeout: 60,
 		applicationId: null,

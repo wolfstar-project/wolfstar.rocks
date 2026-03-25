@@ -2,7 +2,7 @@ import type { User } from "#auth-utils";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 export interface UseUserSearchOptions {
-	query?: Ref<string | null>;
+	query?: Ref<string | undefined>;
 	showManageableOnly?: Ref<boolean>;
 	sortAscending?: Ref<boolean>;
 }
@@ -35,6 +35,7 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 
 			return { ...data, isStale };
 		},
+		{ server: false },
 	);
 
 	const data = computed(() => asyncData.data.value ?? null);

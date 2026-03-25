@@ -108,10 +108,10 @@
 							<!-- Server Section Header -->
 							<div class="mb-4">
 								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
-								<p class="mt-1 text-base-content/60">
+								<div class="mt-1 text-base-content/60">
 									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
 									<span v-else>{{ guilds.length ?? 0 }} servers</span>
-								</p>
+								</div>
 							</div>
 
 							<!-- Search and Controls Section -->
@@ -325,14 +325,14 @@
 										<USwitch
 											v-model="reduceMotionEnabled"
 											size="lg"
-											:disabled="effectiveReduceMotion"
+											:disabled="systemPreferenceActive"
 											@update:model-value="setReduceMotion"
 										/>
 									</div>
 
 									<!-- System Preference Info -->
 									<div
-										v-if="effectiveReduceMotion"
+										v-if="systemPreferenceActive"
 										class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
 									>
 										<UIcon
@@ -599,7 +599,7 @@ const { user } = useAuth();
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();
-const searchQuery = ref<null | string>(null);
+const searchQuery = ref<string | undefined>(undefined);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
@@ -616,7 +616,8 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 
 
 // Accessibility - Reduce Motion
-const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion } = useReduceMotion();
+const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
+	useReduceMotion();
 
 
 const preferredFormat = computed<"gif" | "png">(() => {
@@ -643,8 +644,6 @@ const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 });
 
 
-// Loading state based on status from useUser
-// Include "idle" because useLazyAsyncData starts with idle before transitioning to pending
 const isLoading = computed(() => status.value === "idle" || status.value === "pending");
 
 
@@ -690,7 +689,7 @@ const defaultAvatar = computed(() =>
 
 
 function undoSearch() {
-	searchQuery.value = null;
+	searchQuery.value = undefined;
 }
 
 

@@ -3,7 +3,7 @@ shellEmulator: true
 packages: []
 
 overrides:
-    "@netlify/api": ^14.0.17
+    "@netlify/api": ^14.0.18
     sharp: 0.34.5
     vite: npm:@voidzero-dev/vite-plus-core@0.1.13
     vitest: npm:@voidzero-dev/vite-plus-test@0.1.13

@@ -35,7 +35,6 @@ export interface SelectRoleProps {
 	disabled?: boolean;
 }
 
-
 interface Emits {
 	(e: "update:modelValue", value: string | null): void;
 	(e: "change", value: string | null): void;
@@ -53,9 +52,7 @@ const {
 	disabled = false,
 } = defineProps<SelectRoleProps>();
 
-
 defineEmits<Emits>();
-
 
 // Find the channel name based on the current value
 const roleName = computed(() => {
@@ -65,7 +62,6 @@ const roleName = computed(() => {
 	const role = guild.roles.find((c) => c.id === modelValue);
 	return role?.name;
 });
-
 
 // Filter and sort channels, then map to SelectOneValue format
 const roleValues = computed<SelectOneValue[]>(() =>

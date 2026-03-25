@@ -183,9 +183,7 @@ interface GuildCardProps {
 	loading?: boolean;
 }
 
-
 const { guild, loading = false } = defineProps<GuildCardProps>();
-
 
 const cardClasses = computed(() => {
 	if (loading || !guild) {
@@ -201,7 +199,6 @@ const cardClasses = computed(() => {
 	};
 });
 
-
 const approximatePresenceCount = computed(() => {
 	if (!guild) {
 		return "N/A";
@@ -210,7 +207,6 @@ const approximatePresenceCount = computed(() => {
 		? formatNumber(guild.approximatePresenceCount)
 		: "N/A";
 });
-
 
 const approximateMemberCount = computed(() => {
 	if (!guild) {

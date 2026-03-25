@@ -175,7 +175,6 @@ interface GuildCardsProps {
 	onRetry?: () => void;
 }
 
-
 const {
 	filteredGuilds,
 	guilds,
@@ -188,7 +187,6 @@ const {
 	onRetry,
 } = defineProps<GuildCardsProps>();
 
-
 // Error handling computed properties
 const isTimeoutError = computed(() => error?.status === 408);
 const isNetworkError = computed(
@@ -198,7 +196,6 @@ const isNetworkError = computed(
 			error?.message?.includes("fetch")) ??
 		false,
 );
-
 
 const errorState = computed(() => ({
 	color: (() => {
@@ -293,17 +290,13 @@ const errorState = computed(() => ({
 	})(),
 }));
 
-
 const INITIAL_COUNT = 20;
 const LOAD_MORE_COUNT = 10;
-
 
 const visibleCount = ref(INITIAL_COUNT);
 const scrollComponent = useTemplateRef<HTMLElement>("scrollComponent");
 
-
 const paginatedGuilds = computed(() => filteredGuilds.slice(0, visibleCount.value));
-
 
 const { isLoading: loadingMore, reset } = useInfiniteScroll(
 	scrollComponent,
@@ -316,11 +309,9 @@ const { isLoading: loadingMore, reset } = useInfiniteScroll(
 	},
 );
 
-
 function reloadPage() {
 	window.location.reload();
 }
-
 
 watch(
 	() => filteredGuilds,

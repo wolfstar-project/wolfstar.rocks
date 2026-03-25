@@ -54,7 +54,6 @@ export interface SelectManyValue {
 	icon?: string;
 }
 
-
 export interface SelectManyProps {
 	/** The label to show on the button */
 	label: string;
@@ -73,7 +72,6 @@ export interface SelectManyProps {
 	/** Disable the field */
 	disabled?: boolean;
 }
-
 
 interface Emits {
 	(e: "update:modelValue", value: string[]): void;
@@ -95,9 +93,7 @@ const {
 	imageInName,
 } = defineProps<SelectManyProps>();
 
-
 const emit = defineEmits<Emits>();
-
 
 const selectedValues = computed({
 	get: () => modelValue,
@@ -107,7 +103,6 @@ const selectedValues = computed({
 	},
 });
 
-
 const items = computed<SelectItem[]>(() =>
 	values.map((value) => ({
 		icon: value.icon,
@@ -115,7 +110,6 @@ const items = computed<SelectItem[]>(() =>
 		value: value.value,
 	})),
 );
-
 
 const formattedLabel = computed(() => toTitleCase(label));
 const placeholder = computed(() =>
@@ -126,7 +120,6 @@ const placeholder = computed(() =>
 );
 const fieldName = computed(() => label.trim().toLowerCase().replace(/\s+/g, "-"));
 const searchInput = computed(() => (values.length > 10 ? { placeholder: "Search..." } : false));
-
 
 // Button label shown in the trigger, e.g. "Member Add Logs: None" or count
 const buttonLabel = computed(() => {
@@ -139,7 +132,6 @@ const buttonLabel = computed(() => {
 			: "None";
 	return `${formattedLabel.value}: ${summary}`;
 });
-
 
 function clearSelected() {
 	selectedValues.value = [];

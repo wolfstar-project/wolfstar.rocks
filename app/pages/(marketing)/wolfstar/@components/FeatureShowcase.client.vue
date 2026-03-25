@@ -594,7 +594,6 @@ import { cast } from "@sapphire/utilities/cast";
 
 const activeFeature = defineModel<number>("activeFeature", { default: 0 });
 
-
 enum AutomodFeature {
 	Attachments,
 	Capitals,
@@ -606,7 +605,6 @@ enum AutomodFeature {
 	Spam,
 	Words,
 }
-
 
 const features = [
 	{
@@ -632,7 +630,6 @@ const features = [
 	description: string;
 	icon: string;
 }[];
-
 
 const texts = [
 	{
@@ -686,7 +683,6 @@ const texts = [
 	alert: string;
 }[];
 
-
 const timestamp = ref(0);
 const featureIndex = ref(0);
 const loggingIndex = ref(0);
@@ -694,30 +690,24 @@ const moderationTemporary = ref(false);
 const moderationUndo = ref(false);
 const moderationIndex = ref(0);
 
-
 const moderationActions = Object.values(ModerationActions);
-
 
 function advanceFeatureIndex(value: -1 | 1) {
 	featureIndex.value = (featureIndex.value + value + texts.length) % texts.length;
 }
 
-
 function advanceLoggingIndex(value: -1 | 1) {
 	loggingIndex.value = (loggingIndex.value + value + loggingEvents.length) % loggingEvents.length;
 }
-
 
 function advanceModerationIndex(value: -1 | 1) {
 	moderationIndex.value =
 		(moderationIndex.value + value + moderationActions.length) % moderationActions.length;
 }
 
-
 const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(
 	computed(() => moderationActions[moderationIndex.value]),
 );
-
 
 const moderationActionRender = computed(() => {
 	const action = moderationAction.value;
@@ -732,9 +722,7 @@ const moderationActionRender = computed(() => {
 	return { color: action.color, name: action.name };
 });
 
-
 const location = useBrowserLocation();
-
 
 // Handle hash navigation
 function handleHashChange() {
@@ -755,15 +743,12 @@ function handleHashChange() {
 	}
 }
 
-
 // Set timestamp on client-side only to prevent hydration mismatch
 onMounted(() => {
 	timestamp.value = Date.now();
 });
 
-
 const cleanup = useEventListener(window, "hashchange", handleHashChange);
-
 
 onUnmounted(cleanup);
 </script>

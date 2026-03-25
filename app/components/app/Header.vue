@@ -126,7 +126,6 @@ const { desktopLinks, mobileLinks } = useHeader();
 const { user, logout } = useAuth();
 const { currentApp } = useHeader();
 
-
 const items = ref<DropdownMenuItem[]>([
 	{
 		icon: "lucide:user",
@@ -142,7 +141,6 @@ const items = ref<DropdownMenuItem[]>([
 		},
 	},
 ]);
-
 
 const src = computed(() => avatarURL(user.value!));
 </script>

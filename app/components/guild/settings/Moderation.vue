@@ -36,7 +36,6 @@ import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#sh
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-
 const createDefaultState = (): ModerationSettingsSchemaType => {
 	const defaults: Partial<ModerationSettingsSchemaType> = {};
 	for (const setting of ConfigurableModerationKeys) {
@@ -46,9 +45,7 @@ const createDefaultState = (): ModerationSettingsSchemaType => {
 	return defaults as ModerationSettingsSchemaType;
 };
 
-
 const state = reactive<ModerationSettingsSchemaType>(createDefaultState());
-
 
 function mapToGuildData(stateData: ModerationSettingsSchemaType): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
@@ -57,7 +54,6 @@ function mapToGuildData(stateData: ModerationSettingsSchemaType): Partial<GuildD
 	}
 	return result;
 }
-
 
 async function onError(event: FormErrorEvent) {
 	const element =
@@ -71,7 +67,6 @@ async function onError(event: FormErrorEvent) {
 		title: "Save Failed",
 	});
 }
-
 
 watch(
 	guildSettings,

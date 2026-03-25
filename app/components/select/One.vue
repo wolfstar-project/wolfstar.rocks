@@ -48,13 +48,11 @@ export interface SelectOneValue {
 	icon?: string;
 }
 
-
 interface SelectOption {
 	label: string;
 	value: string;
 	icon?: string;
 }
-
 
 export interface SelectOneProps {
 	/** The label to show on the button */
@@ -75,7 +73,6 @@ export interface SelectOneProps {
 	disabled?: boolean;
 }
 
-
 interface Emits {
 	(e: "update:modelValue", value: string | null): void;
 	(e: "change", value: string | null): void;
@@ -95,9 +92,7 @@ const {
 	modelValue,
 } = defineProps<SelectOneProps>();
 
-
 const emit = defineEmits<Emits>();
-
 
 const selectedValue = computed({
 	get: () => modelValue ?? resolveValueFromName(name),
@@ -110,7 +105,6 @@ const selectedValue = computed({
 	},
 });
 
-
 const items = computed<SelectOption[]>(() =>
 	values.map((value) => ({
 		icon: value.icon,
@@ -119,17 +113,14 @@ const items = computed<SelectOption[]>(() =>
 	})),
 );
 
-
 const formattedLabel = computed(() => toTitleCase(label));
 const placeholder = computed(() => name || "None");
 const fieldName = computed(() => label.trim().toLowerCase().replace(/\s+/g, "-"));
-
 
 const selectedLabel = computed(() => {
 	const current = items.value.find((item: SelectOption) => item.value === selectedValue.value);
 	return current?.label;
 });
-
 
 // Watchers for name are likely not needed if using modelValue, but keep for backward compat if name is used
 watch(
@@ -141,24 +132,20 @@ watch(
 	},
 );
 
-
 function resolveValueFromName(name?: string) {
 	if (!name) {
 		return undefined;
 	}
 
-
 	const match = values.find((item: SelectOneValue) => item.name === name);
 	return match?.value;
 }
-
 
 function handleReset() {
 	emit("update:modelValue", null);
 	emit("change", null);
 	emit("reset");
 }
-
 
 // Button label shown in the trigger, e.g. "Member Add Logs: None"
 const buttonLabel = computed(() => `${formattedLabel.value}: ${selectedLabel.value ?? "None"}`);

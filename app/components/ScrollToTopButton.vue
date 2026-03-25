@@ -14,7 +14,6 @@
 <script setup lang="ts">
 const isScrolling = ref(false);
 
-
 function scrollToTop() {
 	window.scrollTo({
 		behavior: "smooth",
@@ -23,11 +22,9 @@ function scrollToTop() {
 	});
 }
 
-
 function handleScroll() {
 	isScrolling.value = window.scrollY > 0;
 }
-
 
 useEventListener("scroll", handleScroll, { passive: true });
 </script>

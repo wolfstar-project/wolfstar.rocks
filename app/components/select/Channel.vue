@@ -36,7 +36,6 @@ export interface SelectChannelProps {
 	disabled?: boolean;
 }
 
-
 interface Emits {
 	(e: "update:modelValue", value: string | null): void;
 	(e: "change", value: string | null): void;
@@ -54,9 +53,7 @@ const {
 	disabled = false,
 } = defineProps<SelectChannelProps>();
 
-
 defineEmits<Emits>();
-
 
 // Find the channel name based on the current value
 const channelName = computed(() => {
@@ -66,7 +63,6 @@ const channelName = computed(() => {
 	const channel = guild.channels.find((c) => c.id === modelValue);
 	return channel?.name;
 });
-
 
 // Filter and sort channels, then map to SelectOneValue format
 const channelValues = computed<SelectOneValue[]>(() =>

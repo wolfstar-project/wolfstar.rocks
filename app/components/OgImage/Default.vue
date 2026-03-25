@@ -51,7 +51,6 @@
  * @credits Nuxt SEO <https://nuxtseo.com/>
  */
 
-
 import type { ResolvableValue } from "@unhead/vue";
 import { useOgImageRuntimeConfig } from "#og-image/app/utils";
 import { useSiteConfig } from "#site-config/app/composables";
@@ -66,7 +65,6 @@ export interface OGImageProps {
 	theme?: string;
 }
 
-
 // Convert to typescript props
 const {
 	theme = BrandingColors.Secondary,
@@ -77,15 +75,11 @@ const {
 	icon,
 } = defineProps<OGImageProps>();
 
-
 const HexRegex = /^#(?:[0-9a-f]{3}){1,2}$/i;
-
 
 const runtimeConfig = useOgImageRuntimeConfig();
 
-
 const colorMode = computed(() => propsColorMode || runtimeConfig.colorPreference || "light");
-
 
 const themeHex = computed(() => {
 	// Regex test if valid hex
@@ -117,7 +111,6 @@ const themeHex = computed(() => {
 	return "#FFFFFF";
 });
 
-
 const themeRgb = computed(() =>
 	themeHex.value
 		.replace("#", "")
@@ -126,10 +119,8 @@ const themeRgb = computed(() =>
 		.join(", "),
 );
 
-
 const siteConfig = useSiteConfig();
 const siteName = computed(() => propsSiteName || siteConfig.name);
-
 
 const IconComponent = runtimeConfig.hasNuxtIcon
 	? resolveComponent("Icon")

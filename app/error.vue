@@ -20,7 +20,6 @@ const { error } = defineProps<{
 	error: NuxtError;
 }>();
 
-
 // SEO and meta configuration
 useSeoMetadata({
 	description: error.statusText || "Something went wrong. Please try again.",

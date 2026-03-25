@@ -398,6 +398,7 @@ export default defineNuxtConfig({
 					"'self'",
 					"wss:",
 					"ws:",
+					"https://ingesteer.services-prod.nsvcs.net", // Used by Netlify for telemetry (error, performance etc.)
 					"https://cdn.wolfstar.rocks",
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",

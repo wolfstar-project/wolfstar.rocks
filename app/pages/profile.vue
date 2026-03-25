@@ -588,8 +588,6 @@
 import type { TabsItem } from "@nuxt/ui";
 
 definePageMeta({ alias: ["/account"] });
-
-
 useSeoMetadata({
 	description: "Manage your profile, servers and settings",
 	shouldOgImage: true,
@@ -598,8 +596,6 @@ useSeoMetadata({
 
 
 const { user } = useAuth();
-
-
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();

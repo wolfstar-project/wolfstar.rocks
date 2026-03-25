@@ -6,7 +6,16 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ alias: ["/login"] });
+definePageMeta({
+	alias: ["/login"],
+	middleware: async (to) => {
+		const { login } = useAuth();
+		const queryNext = to.query.next;
+		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
+		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+		return login(safeNext);
+	},
+});
 
 
 useSeoMetadata({
@@ -16,15 +25,5 @@ useSeoMetadata({
 	},
 	shouldOgImage: true,
 	title: "Login",
-});
-
-
-const { login } = useAuth();
-
-
-onMounted(() => {
-	const nextUrl = useRouteQuery("next", "/", { transform: String });
-	const safeNext = isSafeRedirectPath(nextUrl.value) ? nextUrl.value : "/";
-	void login(safeNext);
 });
 </script>

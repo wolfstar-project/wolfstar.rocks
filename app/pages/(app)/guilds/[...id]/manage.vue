@@ -52,13 +52,11 @@ definePageMeta({
 	path: "/guilds/:id/manage/:slug(.*)*",
 });
 
-
 const route = useRoute();
 const { isNotificationsSlideoverOpen } = useDashboardLayout();
 const toast = useToast();
-const logger = useLogger("wolfstar:manage");
+const logger = useLogger("wolfstar:dashboard");
 const { guildData } = useGuildData();
-
 
 const {
 	data: commands,
@@ -71,17 +69,13 @@ const {
 	error: languagesError,
 } = useLanguages({ immediate: false });
 
-
 const slug = route.params.slug as string | string[];
 
-
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
-
 
 const title = ref(
 	`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value.name}`,
 );
-
 
 // Pre-define async components outside of computed to avoid re-creating
 // wrapper instances on every reactive update, which would unmount/remount.
@@ -119,9 +113,7 @@ const defaultComponent = defineAsyncComponent(
 	() => import("~/components/guild/settings/General.vue"),
 );
 
-
 const renderComponent = computed(() => asyncComponentMap[joinedPath.value] ?? defaultComponent);
-
 
 // Fetch only the data required by the active section.
 // Channels / Events / Roles do not use commands or languages, so we skip
@@ -142,36 +134,35 @@ onMounted(() => {
 	}
 });
 
+watch([() => commandsError, () => languagesError], (error) => {
+	const errorCommand = unref(error[0]);
+	const errorLanguage = unref(error[1]);
 
-watch(commandsError, (error) => {
-	if (error) {
+	if (errorCommand) {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: error.message || "Couldn't load the command list. Try refreshing.",
+			description: errorCommand.message || "Couldn't load the command list. Try refreshing.",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
 			title: "Commands Unavailable",
 		});
-		logger.error("Error fetching commands:", error);
+		logger.error("Error fetching commands:", errorCommand);
 	}
-});
 
-
-watch(languagesError, (error) => {
-	if (error) {
+	if (errorLanguage) {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: error.message || "Couldn't load the language list. Try refreshing.",
+			description:
+				errorLanguage.message || "Couldn't load the language list. Try refreshing.",
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
 			title: "Languages Unavailable",
 		});
-		logger.error("Error fetching languages:", error);
+		logger.error("Error fetching languages:", errorLanguage);
 	}
 });
-
 
 useHead({
 	title: () => title.value,

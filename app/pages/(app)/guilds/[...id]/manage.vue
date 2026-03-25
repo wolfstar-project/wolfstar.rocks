@@ -44,9 +44,6 @@
 </template>
 
 <script setup lang="ts">
-import { Time } from "@sapphire/time-utilities";
-import { isDevelopment } from "std-env";
-
 definePageMeta({
 	auth: {
 		required: true,
@@ -58,102 +55,24 @@ definePageMeta({
 
 const route = useRoute();
 const { isNotificationsSlideoverOpen } = useDashboardLayout();
-const loading = useState<boolean>("guild:loading", () => false);
-const commands = useState<FlattenedCommand[]>("guild:commands", () => []);
-const languages = useState<string[]>("guild:languages", () => []);
 const toast = useToast();
 const logger = useLogger("wolfstar:manage");
 const { guildData } = useGuildData();
 
 
+const {
+	data: commands,
+	refresh: refreshCommands,
+	error: commandsError,
+} = useCommands({ immediate: false });
+const {
+	data: languages,
+	refresh: refreshLanguages,
+	error: languagesError,
+} = useLanguages({ immediate: false });
+
+
 const slug = route.params.slug as string | string[];
-
-
-async function fetchCommandsList() {
-	loading.value = true;
-	try {
-		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(
-			LocalStorageKeys.Commands,
-			{
-				data: [],
-				expire: 0,
-			},
-		);
-		if (commandsStorage.value && (isDevelopment || commandsStorage.value.expire > Date.now())) {
-			commands.value = commandsStorage.value.data;
-		} else {
-			const commandsData = await $fetch<FlattenedCommand[]>("/api/commands", {
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				method: "GET",
-			});
-			commands.value = commandsData;
-			commandsStorage.value = {
-				data: commandsData,
-				expire: Date.now() + Time.Day * 6,
-			};
-		}
-	} catch (error: any) {
-		toast.add({
-			closeIcon: "heroicons:x-mark",
-			color: "error",
-			description: error?.message || "Couldn't load the command list. Try refreshing.",
-			duration: 3000,
-			icon: "heroicons:exclamation-triangle",
-			title: "Commands Unavailable",
-		});
-		logger.error("Error fetching commands:", error);
-	} finally {
-		loading.value = false;
-	}
-}
-
-
-async function fetchLanguagesList() {
-	loading.value = true;
-	try {
-		const languagesStorage = useLocalStorage<ExpirableLocalStorageStructure<string[]>>(
-			LocalStorageKeys.Languages,
-			{
-				data: [],
-				expire: 0,
-			},
-		);
-		if (
-			languagesStorage.value &&
-			(isDevelopment || languagesStorage.value.expire > Date.now())
-		) {
-			languages.value = languagesStorage.value.data;
-		} else {
-			const languagesData = await $fetch<string[]>("/api/languages", {
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				method: "GET",
-			});
-			languages.value = languagesData;
-			languagesStorage.value = {
-				data: languagesData,
-				expire: Date.now() + Time.Day * 6,
-			};
-		}
-	} catch (error: any) {
-		toast.add({
-			closeIcon: "heroicons:x-mark",
-			color: "error",
-			description: error?.message || "Couldn't load the language list. Try refreshing.",
-			duration: 3000,
-			icon: "heroicons:exclamation-triangle",
-			title: "Languages Unavailable",
-		});
-		logger.error("Error fetching languages:", error);
-	} finally {
-		loading.value = false;
-	}
-}
 
 
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
@@ -206,23 +125,50 @@ const renderComponent = computed(() => asyncComponentMap[joinedPath.value] ?? de
 
 // Fetch only the data required by the active section.
 // Channels / Events / Roles do not use commands or languages, so we skip
-// The network round-trips (and localStorage reads) entirely.
+// the network round-trips entirely.
 onMounted(() => {
 	switch (joinedPath.value) {
 		case "": {
-			// General section (empty slug) uses the languages list for the locale picker
-			void fetchLanguagesList();
+			void refreshLanguages();
 			break;
 		}
 		case "commands": {
-			// DisabledCommands only needs the commands list
-			void fetchCommandsList();
+			void refreshCommands();
 			break;
 		}
 		default: {
-			// Channels / Events / Roles: no external data needed
 			break;
 		}
+	}
+});
+
+
+watch(commandsError, (error) => {
+	if (error) {
+		toast.add({
+			closeIcon: "heroicons:x-mark",
+			color: "error",
+			description: error.message || "Couldn't load the command list. Try refreshing.",
+			duration: 3000,
+			icon: "heroicons:exclamation-triangle",
+			title: "Commands Unavailable",
+		});
+		logger.error("Error fetching commands:", error);
+	}
+});
+
+
+watch(languagesError, (error) => {
+	if (error) {
+		toast.add({
+			closeIcon: "heroicons:x-mark",
+			color: "error",
+			description: error.message || "Couldn't load the language list. Try refreshing.",
+			duration: 3000,
+			icon: "heroicons:exclamation-triangle",
+			title: "Languages Unavailable",
+		});
+		logger.error("Error fetching languages:", error);
 	}
 });
 

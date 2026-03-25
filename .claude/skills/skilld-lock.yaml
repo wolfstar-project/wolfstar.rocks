@@ -40,19 +40,19 @@ skills:
     ref: main
   nuxt-ui-skilld:
     packageName: "@nuxt/ui"
-    version: 4.5.1
-    packages: "@nuxt/ui@4.5.1"
+    version: 4.6.0
+    packages: "@nuxt/ui@4.6.0"
     repo: nuxt/ui
-    source: "https://ui.nuxt.com/llms.txt"
-    syncedAt: 2026-03-13
+    source: "https://github.com/nuxt/ui/tree/v4.6.0/docs"
+    syncedAt: 2026-03-25
     generator: skilld
   evlog-skilld:
     packageName: evlog
-    version: 2.9.0
-    packages: "evlog@2.9.0"
+    version: 2.10.0
+    packages: "evlog@2.10.0"
     repo: HugoRCD/evlog
-    source: "https://raw.githubusercontent.com/HugoRCD/evlog/main/README.md"
-    syncedAt: 2026-03-22
+    source: "https://evlog.dev/llms.txt"
+    syncedAt: 2026-03-25
     generator: skilld
   vitest-skilld:
     packageName: vitest
@@ -128,11 +128,11 @@ skills:
     generator: skilld
   sentry-nuxt-skilld:
     packageName: "@sentry/nuxt"
-    version: 10.45.0
-    packages: "@sentry/nuxt@10.45.0"
+    version: 10.46.0
+    packages: "@sentry/nuxt@10.46.0"
     repo: getsentry/sentry-javascript
-    source: "https://raw.githubusercontent.com/getsentry/sentry-javascript/master/README.md"
-    syncedAt: 2026-03-22
+    source: "https://github.com/getsentry/sentry-javascript/tree/10.46.0/docs"
+    syncedAt: 2026-03-25
     generator: skilld
   vueuse-router-skilld:
     packageName: "@vueuse/router"
@@ -280,11 +280,11 @@ skills:
     generator: skilld
   vitest-browser-playwright-skilld:
     packageName: "@vitest/browser-playwright"
-    version: 4.1.0
-    packages: "@vitest/browser-playwright@4.1.0"
+    version: 4.1.1
+    packages: "@vitest/browser-playwright@4.1.1"
     repo: vitest-dev/vitest
-    source: "https://github.com/vitest-dev/vitest/tree/v4.1.0/docs"
-    syncedAt: 2026-03-13
+    source: "https://github.com/vitest-dev/vitest/tree/v4.1.1/docs"
+    syncedAt: 2026-03-25
     generator: skilld
   nuxt-fonts-skilld:
     packageName: "@nuxt/fonts"

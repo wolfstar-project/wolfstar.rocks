@@ -167,7 +167,7 @@ interface GuildCardsProps {
 	filteredGuilds: NonNullable<TransformedLoginData["transformedGuilds"]>;
 	guilds: TransformedLoginData["transformedGuilds"] | null;
 	undoSearch: () => void;
-	searchQuery: string | null;
+	searchQuery: string | undefined;
 	loading: boolean;
 	filterLoading?: boolean;
 	error: FetchError<any> | undefined;

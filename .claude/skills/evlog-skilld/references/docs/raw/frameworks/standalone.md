@@ -1,0 +1,197 @@
+# Standalone TypeScript
+
+> Use evlog in standalone TypeScript scripts, CLI tools, queues, cron jobs, and any TypeScript process.
+
+For scripts, CLI tools, queue workers, cron jobs, and any TypeScript process that doesn't use a web framework, evlog provides `createLogger` and `createRequestLogger` from the core package.
+
+<code-collapse>
+
+```txt [Prompt]
+Set up evlog in my TypeScript project for scripts, workers, or CLI tools.
+
+- Install evlog: pnpm add evlog
+- Import initLogger and createLogger (or createRequestLogger) from 'evlog'
+- Call initLogger({ env: { service: 'my-script' } }) once at startup
+- Create a logger per logical operation with createLogger({ jobId, source })
+- Use log.set() to accumulate context as the operation progresses
+- Call log.emit() manually when the operation completes
+
+Docs: https://www.evlog.dev/frameworks/standalone
+Adapters: https://www.evlog.dev/adapters
+```
+
+</code-collapse>
+
+## Quick Start
+
+### 1. Install
+
+```bash
+bun add evlog
+```
+
+### 2. Initialize and create loggers
+
+```typescript [scripts/sync-job.ts]
+import type { DrainContext } from 'evlog'
+import { initLogger, log, createLogger } from 'evlog'
+import { createAxiomDrain } from 'evlog/axiom'
+import { createDrainPipeline } from 'evlog/pipeline'
+
+const pipeline = createDrainPipeline<DrainContext>({ batch: { size: 10 } })
+const drain = pipeline(createAxiomDrain())
+
+initLogger({
+  env: { service: 'my-script', environment: 'production' },
+  drain,
+})
+
+// Every log is automatically drained
+log.info({ action: 'sync_started' })
+
+const syncLog = createLogger({ jobId: 'sync-001', source: 'postgres', target: 's3' })
+syncLog.set({ recordsSynced: 150 })
+syncLog.emit() // drained automatically
+
+// Flush remaining events before exit
+await drain.flush()
+```
+
+<callout color="info" icon="i-lucide-info">
+
+Always call `drain.flush()` before the process exits to ensure all buffered events are sent.
+
+</callout>
+
+<callout color="info" icon="i-custom-vite">
+
+**Using vite-node?** The [`evlog/vite` plugin](/core-concepts/vite-plugin) replaces the `initLogger()` call with compile-time auto-initialization, strips `log.debug()` from production builds, and injects source locations.
+
+</callout>
+
+## createLogger vs createRequestLogger
+
+evlog provides two manual logger constructors:
+
+**createLogger(context)** - For non-HTTP contexts (scripts, CLI, queues):
+
+```typescript
+import { createLogger } from 'evlog'
+
+const log = createLogger({ jobId: 'migrate-001', source: 'postgres' })
+log.set({ recordsProcessed: 500 })
+log.emit()
+```
+
+**createRequestLogger(requestMeta)** - For HTTP-like contexts where you want method/path/status tracking:
+
+```typescript
+import { createRequestLogger } from 'evlog'
+
+const log = createRequestLogger({
+  method: 'POST',
+  path: '/webhook/stripe',
+})
+log.set({ event: 'invoice.paid', customerId: 'cus_123' })
+log.emit()
+```
+
+Both require manual `log.emit()` calls since there is no automatic lifecycle to hook into.
+
+## Wide Events
+
+Build up context progressively, then emit:
+
+```typescript [scripts/migrate-users.ts]
+import { initLogger, createLogger } from 'evlog'
+
+initLogger({
+  env: { service: 'migrate' },
+})
+
+const log = createLogger({ task: 'user-migration' })
+
+const users = await db.query('SELECT * FROM legacy_users')
+log.set({ found: users.length })
+
+let migrated = 0
+for (const user of users) {
+  await newDb.upsert({ id: user.id, email: user.email, plan: user.plan })
+  migrated++
+}
+
+log.set({ migrated, status: 'complete' })
+log.emit()
+```
+
+```bash [Terminal output]
+14:58:15 INFO [migrate] user-migration
+  ├─ migrated: 1250
+  ├─ found: 1250
+  ├─ status: complete
+  └─ task: user-migration
+```
+
+## Error Handling
+
+Use `createError` for structured errors:
+
+```typescript [scripts/sync-job.ts]
+import { createError, parseError } from 'evlog'
+
+try {
+  const result = await externalApi.sync()
+  if (!result.ok) {
+    throw createError({
+      message: 'Sync failed',
+      why: `API returned ${result.status}`,
+      fix: 'Check the API status page and retry',
+    })
+  }
+} catch (error) {
+  log.error(error instanceof Error ? error : new Error(String(error)))
+  log.emit()
+
+  const { message, why, fix } = parseError(error)
+  console.error(`${message}\nWhy: ${why}\nFix: ${fix}`)
+  process.exit(1)
+}
+```
+
+## Configuration
+
+See the [Configuration reference](/core-concepts/configuration) for all available options (`initLogger`, middleware options, sampling, silent mode, etc.).
+
+## Drain & Enrichers
+
+Configure drain in `initLogger`:
+
+```typescript
+import type { DrainContext } from 'evlog'
+import { initLogger } from 'evlog'
+import { createAxiomDrain } from 'evlog/axiom'
+import { createDrainPipeline } from 'evlog/pipeline'
+
+const pipeline = createDrainPipeline<DrainContext>({
+  batch: { size: 50, intervalMs: 5000 },
+  retry: { maxAttempts: 3 },
+})
+const drain = pipeline(createAxiomDrain())
+
+initLogger({
+  env: { service: 'my-script' },
+  drain,
+})
+```
+
+<callout color="info" icon="i-lucide-info">
+
+See the [Adapters](/adapters/overview) docs for all available drain adapters (Axiom, OTLP, PostHog, Sentry, Better Stack).
+
+</callout>
+
+<callout color="neutral" icon="i-lucide-arrow-right">
+
+See the full bun-script example for a complete working script.
+
+</callout>

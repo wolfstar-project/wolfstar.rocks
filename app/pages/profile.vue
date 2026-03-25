@@ -52,7 +52,7 @@
 							:width="128"
 							:height="128"
 							sizes="128px"
-							:alt="`${user?.name} avatar`"
+							:alt="`${user?.globalName ?? user?.username} avatar`"
 							class="h-full w-full object-cover"
 							loading="lazy"
 							decoding="async"
@@ -108,10 +108,10 @@
 							<!-- Server Section Header -->
 							<div class="mb-4">
 								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
-								<p class="mt-1 text-base-content/60">
+								<div class="mt-1 text-base-content/60">
 									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
 									<span v-else>{{ guilds.length ?? 0 }} servers</span>
-								</p>
+								</div>
 							</div>
 
 							<!-- Search and Controls Section -->
@@ -325,14 +325,14 @@
 										<USwitch
 											v-model="reduceMotionEnabled"
 											size="lg"
-											:disabled="effectiveReduceMotion"
+											:disabled="systemPreferenceActive"
 											@update:model-value="setReduceMotion"
 										/>
 									</div>
 
 									<!-- System Preference Info -->
 									<div
-										v-if="effectiveReduceMotion"
+										v-if="systemPreferenceActive"
 										class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
 									>
 										<UIcon
@@ -454,6 +454,7 @@
 								</div>
 							</UCard>
 						</div>
+						<!-- Premium tab (disabled for now)
 						<div v-if="item.value === 'premium'" class="space-y-6">
 							<UCard
 								class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl"
@@ -488,7 +489,6 @@
 										</div>
 									</div>
 
-									<!-- Feature List -->
 									<div class="grid gap-4 sm:grid-cols-2">
 										<div class="flex items-start gap-3">
 											<div
@@ -577,6 +577,7 @@
 								</template>
 							</UCard>
 						</div>
+						-->
 					</div>
 				</template>
 			</UTabs>
@@ -599,7 +600,7 @@ const { user } = useAuth();
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();
-const searchQuery = ref<null | string>(null);
+const searchQuery = ref<string | undefined>(undefined);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
@@ -616,7 +617,8 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 
 
 // Accessibility - Reduce Motion
-const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion } = useReduceMotion();
+const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
+	useReduceMotion();
 
 
 const preferredFormat = computed<"gif" | "png">(() => {
@@ -631,7 +633,7 @@ const preferredFormat = computed<"gif" | "png">(() => {
 // Use the centralized useUser composable instead of manual useFetch
 // Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
 // Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { data, filteredGuilds, status, error, refresh } = useUser(user, {
+const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 	timeout: 15_000, // 15 seconds timeout
 	retry: 3, // Max retry attempts
 	retryDelay: 1000, // 1 second delay between retries
@@ -643,12 +645,7 @@ const { data, filteredGuilds, status, error, refresh } = useUser(user, {
 });
 
 
-// Extract guilds from useUser data
-const guilds = computed(() => data.value?.transformedGuilds ?? []);
-
-
-// Loading state based on status from useUser
-const isLoading = computed(() => status.value === "pending");
+const isLoading = computed(() => status.value === "idle" || status.value === "pending");
 
 
 // Retry handler
@@ -666,7 +663,11 @@ async function handleRetry() {
 const items = computed<TabsItem[]>(() => [
 	{
 		badge: isLoading.value
-			? { color: "primary", trailingIcon: "lucide:loader" }
+			? {
+					color: "primary",
+					trailingIcon: "lucide:loader",
+					ui: { trailingIcon: "animate-spin" },
+				}
 			: { color: "primary", label: `${guilds.value?.length ?? "N/A"}` },
 		icon: "heroicons:server",
 		label: "Servers",
@@ -677,11 +678,11 @@ const items = computed<TabsItem[]>(() => [
 		label: "Settings",
 		value: "settings",
 	},
-	{
+	/* {
 		icon: "heroicons:star",
 		label: "Premium",
 		value: "premium",
-	},
+	}, */
 ]);
 
 
@@ -693,7 +694,7 @@ const defaultAvatar = computed(() =>
 
 
 function undoSearch() {
-	searchQuery.value = null;
+	searchQuery.value = undefined;
 }
 
 

@@ -24,6 +24,11 @@
 					<h3 class="font-bold">{{ item.title }}</h3>
 					<p class="text-sm text-base-content/60">{{ item.description }}</p>
 
+					<!-- Bottom fade for clipped content -->
+					<div
+						class="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-base-300/80 to-transparent"
+					></div>
+
 					<!-- Subtle corner glow -->
 					<div
 						class="absolute -top-4 -right-4 h-16 w-16 rounded-full bg-branding-wolfstar/10 blur-xl transition-all group-hover:bg-branding-wolfstar/30"

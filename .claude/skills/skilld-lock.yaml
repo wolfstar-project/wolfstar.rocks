@@ -280,11 +280,11 @@ skills:
     generator: skilld
   vitest-browser-playwright-skilld:
     packageName: "@vitest/browser-playwright"
-    version: 4.1.1
-    packages: "@vitest/browser-playwright@4.1.1"
+    version: 4.1.2
+    packages: "@vitest/browser-playwright@4.1.2"
     repo: vitest-dev/vitest
-    source: "https://github.com/vitest-dev/vitest/tree/v4.1.1/docs"
-    syncedAt: 2026-03-25
+    source: "https://github.com/vitest-dev/vitest/tree/v4.1.2/docs"
+    syncedAt: 2026-03-26
     generator: skilld
   nuxt-fonts-skilld:
     packageName: "@nuxt/fonts"

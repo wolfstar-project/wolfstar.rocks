@@ -52,7 +52,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 			);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember) {
+async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?: bigint) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -66,7 +66,7 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 	const conf = commands.find((cmd) => cmd.name === "conf");
 
 	return (
-		isAdmin(member, settings.rolesAdmin) &&
+		isAdmin(member, settings.rolesAdmin, oauthPermissions) &&
 		(conf ? ((await nodes.run(member, conf)) ?? true) : true)
 	);
 }
@@ -74,22 +74,27 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 async function getManageable(
 	oauthGuild: RESTAPIPartialCurrentUserGuild,
 	guild: APIGuild | undefined,
+	userId: string,
 ): Promise<boolean> {
 	if (oauthGuild.owner) {
 		return true;
 	}
+
+	const oauthPermissions = BigInt(oauthGuild.permissions);
+	const hasManageGuild = PermissionsBits.has(oauthPermissions, PermissionFlagsBits.ManageGuild);
+
 	if (isNullOrUndefined(guild)) {
-		return PermissionsBits.has(BigInt(oauthGuild.permissions), PermissionFlagsBits.ManageGuild);
+		return hasManageGuild;
 	}
 
 	const member = await useApi()
-		.users.getGuildMember(guild.id)
+		.guilds.getMember(guild.id, userId)
 		.catch(() => undefined);
 	if (!member) {
-		return false;
+		return hasManageGuild;
 	}
 
-	return manage(guild, member);
+	return manage(guild, member, oauthPermissions);
 }
 
 export async function transformGuild(
@@ -143,7 +148,7 @@ export async function transformGuild(
 
 	return {
 		...serialized,
-		manageable: await getManageable(data, guild),
+		manageable: await getManageable(data, guild, userId),
 		permissions: Number(data.permissions),
 		wolfstarIsIn: !isNullOrUndefined(guild),
 	};

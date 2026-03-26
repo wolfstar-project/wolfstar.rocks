@@ -9,10 +9,23 @@
 			<NuxtLink
 				class="mr-4 flex items-center transition-transform hover:scale-105"
 				:to="currentApp.explore"
-				:aria-label="`${currentApp.name} home page`"
 			>
-				<IconsWolfstar class="h-10 w-10" aria-hidden="true" />
+				<IconsWolfstar class="size-10" aria-hidden="true" />
 				<span class="text-ui-100 ml-2 text-2xl font-bold">{{ currentApp.name }}</span>
+				<UBadge
+					v-if="env === 'preview' || env === 'canary'"
+					color="warning"
+					label="Beta"
+					size="xs"
+					class="ml-2"
+				/>
+				<UBadge
+					v-else-if="env === 'dev'"
+					color="error"
+					label="Dev"
+					size="xs"
+					class="ml-2"
+				/>
 			</NuxtLink>
 		</template>
 
@@ -122,6 +135,7 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
+const { env } = useAppConfig();
 const { desktopLinks, mobileLinks } = useHeader();
 const { loggedIn, user, logout } = useAuth();
 const { currentApp } = useHeader();

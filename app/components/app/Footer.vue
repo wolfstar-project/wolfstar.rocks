@@ -71,7 +71,6 @@
 <script setup lang="ts">
 const { buildInfo, footer: columns } = useAppConfig();
 
-
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());
 </script>

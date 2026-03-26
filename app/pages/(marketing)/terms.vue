@@ -185,6 +185,5 @@ useSeoMetadata({
 	title: "Terms of Service",
 });
 
-
 const { buildInfo } = useAppConfig();
 </script>

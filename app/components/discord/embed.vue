@@ -51,7 +51,6 @@ const {
 	theme?: "light" | "dark";
 }>();
 
-
 const isDarkTheme = computed(() => theme !== "light");
 const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "short" });
 </script>

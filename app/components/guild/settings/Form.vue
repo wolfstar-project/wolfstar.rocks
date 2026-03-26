@@ -23,7 +23,6 @@ interface Props {
 	mapToGuildData?: (state: T) => Partial<GuildData>;
 }
 
-
 const { schema, state, mapToGuildData } = defineProps<Props>();
 const emit = defineEmits<{
 	error: [event: FormErrorEvent];
@@ -32,11 +31,9 @@ const { setGuildSettingsChanges, removeChange, resetCounter } = useGuildSettings
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
 
-
 const originalState = ref<T | undefined>(undefined);
 const isOriginalStateInitialized = ref(false);
 const isResetting = ref(false);
-
 
 // Calculate changes between current state and original values
 function calculateChanges(currentState: T): {
@@ -48,25 +45,20 @@ function calculateChanges(currentState: T): {
 	const changedKeys = new Set<keyof GuildData>();
 	const revertedKeys = new Set<keyof GuildData>();
 
-
 	if (!originalState.value) {
 		return { changedKeys, changes, revertedKeys };
 	}
-
 
 	const mappedCurrent = mapToGuildData ? mapToGuildData(currentState) : currentState;
 	const mappedOriginal = mapToGuildData
 		? mapToGuildData(originalState.value)
 		: originalState.value;
 
-
 	const allKeys = new Set([...objectKeys(mappedCurrent), ...objectKeys(mappedOriginal)]);
-
 
 	for (const key of allKeys) {
 		const currentValue = (mappedCurrent as any)[key];
 		const originalValue = (mappedOriginal as any)[key];
-
 
 		if (!isDeepEqual(currentValue, originalValue)) {
 			if (currentValue !== undefined) {
@@ -78,27 +70,22 @@ function calculateChanges(currentState: T): {
 		}
 	}
 
-
 	return { changedKeys, changes, revertedKeys };
 }
-
 
 function handleSubmit(event: FormSubmitEvent<any>) {
 	// Ensure the store has the final changes before submission
 	// This is important if the form is submitted before the watcher has a chance to run
 	const { changes } = calculateChanges(event.data as T);
 
-
 	if (objectKeys(changes).length > 0) {
 		setGuildSettingsChanges(changes);
 	}
 }
 
-
 function handleError(event: FormErrorEvent) {
 	emit("error", event);
 }
-
 
 watch(
 	() => state,
@@ -107,14 +94,11 @@ watch(
 			return;
 		}
 
-
 		const { changes, revertedKeys } = calculateChanges(newState);
-
 
 		for (const key of revertedKeys) {
 			removeChange(key);
 		}
-
 
 		const hasChanges = objectKeys(changes).length > 0;
 		if (hasChanges) {
@@ -126,14 +110,12 @@ watch(
 	{ deep: true },
 );
 
-
 watchEffect(() => {
 	if (!isOriginalStateInitialized.value && originalGuildSettings.value !== undefined) {
 		originalState.value = structuredClone(toRaw(state));
 		isOriginalStateInitialized.value = true;
 	}
 });
-
 
 watch(
 	originalGuildSettings,
@@ -144,7 +126,6 @@ watch(
 	},
 	{ flush: "sync" },
 );
-
 
 watch(
 	resetCounter,
@@ -161,7 +142,6 @@ watch(
 	},
 	{ flush: "sync" },
 );
-
 
 defineExpose({
 	clear: () => formRef.value?.clear(),

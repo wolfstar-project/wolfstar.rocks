@@ -57,7 +57,6 @@ const { command } = defineProps<{
 	command: FlattenedCommand;
 }>();
 
-
 const GUILD_ONLY_PRECONDITIONS = new Set([
 	"Administrator",
 	"DJ",
@@ -68,20 +67,17 @@ const GUILD_ONLY_PRECONDITIONS = new Set([
 	"TextOnly",
 ]);
 
-
 const PERMISSION_TITLES: Record<number, string> = {
 	4: "This can only be ran by staff members.",
 	5: "This can only be ran by moderators and administrators.",
 	6: "This can only be ran by administrators.",
 };
 
-
 const MOBILE_TITLES: Record<number, string> = {
 	4: "Staff members only",
 	5: "Moderators & administrators only",
 	6: "Administrators only",
 };
-
 
 const isGuildOnly = computed(() =>
 	command.preconditions.entries
@@ -91,18 +87,15 @@ const isGuildOnly = computed(() =>
 		.some((predicate) => GUILD_ONLY_PRECONDITIONS.has(predicate)),
 );
 
-
 const permissionLevelLabel = computed(() =>
 	isSmallScreen.value
 		? MOBILE_TITLES[command.permissionLevel]
 		: PERMISSION_TITLES[command.permissionLevel],
 );
 
-
 const guildOnlyLabel = computed(() =>
 	isSmallScreen.value ? "Usable in servers only." : "This can only be used in servers.",
 );
-
 
 const hasChips = computed(
 	() => command.permissionLevel > 0 || isGuildOnly.value || command.guarded,

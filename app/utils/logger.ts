@@ -1,11 +1,33 @@
-import type { ConsolaOptions } from "consola";
-import * as Sentry from "@sentry/nuxt";
-import { consola } from "consola";
+import { log } from "evlog/client";
 
-const sentryReporter = Sentry.createConsolaReporter();
+type LogLevel = "info" | "warn" | "error" | "debug";
 
-export const logger = consola.addReporter(sentryReporter);
+function emit(level: LogLevel, tag: string, args: unknown[]) {
+	if (
+		args.length === 1 &&
+		typeof args[0] === "object" &&
+		args[0] !== null &&
+		!Array.isArray(args[0])
+	) {
+		const payload = { tag, ...(args[0] as Record<string, unknown>) };
+		log[level](payload);
+	} else {
+		log[level](tag, args.map(String).join(" "));
+	}
+}
 
-export function useLogger(tag?: string, options: Partial<ConsolaOptions> = {}) {
-	return tag ? logger.create(options).withTag(tag) : logger;
+export const logger = {
+	info: (...args: unknown[]) => emit("info", "wolfstar", args),
+	warn: (...args: unknown[]) => emit("warn", "wolfstar", args),
+	error: (...args: unknown[]) => emit("error", "wolfstar", args),
+	debug: (...args: unknown[]) => emit("debug", "wolfstar", args),
+};
+
+export function useLogger(tag: string) {
+	return {
+		info: (...args: unknown[]) => emit("info", tag, args),
+		warn: (...args: unknown[]) => emit("warn", tag, args),
+		error: (...args: unknown[]) => emit("error", tag, args),
+		debug: (...args: unknown[]) => emit("debug", tag, args),
+	};
 }

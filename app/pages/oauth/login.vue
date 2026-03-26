@@ -6,6 +6,8 @@
 </template>
 
 <script setup lang="ts">
+const log = useLogger("oauth:login");
+
 definePageMeta({
 	alias: ["/login"],
 	middleware: async (to) => {
@@ -13,10 +15,10 @@ definePageMeta({
 		const queryNext = to.query.next;
 		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+		log.info({ action: "login_redirect", next: safeNext });
 		return login(safeNext);
 	},
 });
-
 
 useSeoMetadata({
 	description: "A landing page for the OAuth2.0 login flow",

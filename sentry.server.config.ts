@@ -28,9 +28,5 @@ if (sentry.dsn) {
 		],
 
 		environment,
-
-		// Logs now handled by evlog Sentry drain
-		// Disable Sentry's Consola reporter integration to avoid duplicates
-		enableLogs: false,
 	});
 }

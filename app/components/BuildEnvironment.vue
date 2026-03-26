@@ -4,7 +4,6 @@ const { footer = false, buildInfo: buildInfoProp } = defineProps<{
 	buildInfo?: BuildInfo;
 }>();
 
-
 const appConfig = useAppConfig();
 const buildInfo = computed(() => buildInfoProp || appConfig.buildInfo);
 const buildTime = computed(() => new Date(buildInfo.value.time));

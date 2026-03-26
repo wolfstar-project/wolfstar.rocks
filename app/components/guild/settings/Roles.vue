@@ -142,15 +142,12 @@ const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-
 function isArrayKey(key: string): boolean {
 	return isRoleArrayKey(key);
 }
 
-
 const restrictedRoles = ConfigurableRoles.filter((r) => r.key.startsWith("rolesRestricted"));
 const standardRoles = ConfigurableRoles.filter((r) => !r.key.startsWith("rolesRestricted"));
-
 
 // Initialize form state with defaults
 const createDefaultState = (): Schema => {
@@ -161,13 +158,10 @@ const createDefaultState = (): Schema => {
 	return defaults as Schema;
 };
 
-
 const state = reactive<Schema>(createDefaultState());
-
 
 // Loading state
 const loading = computed(() => !guildData.value?.roles || !guildSettings.value);
-
 
 // Compute original values from initialized state (snapshot)
 const originalValues = computed(() => {
@@ -202,7 +196,6 @@ const originalValues = computed(() => {
 	return values as Schema;
 });
 
-
 // Watch for loading state change to populate local state
 watch(
 	loading,
@@ -215,15 +208,12 @@ watch(
 	{ immediate: true },
 );
 
-
 // Map form state to GuildData changes
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
-
 	// Always include the boolean toggle
 	changes.rolesRemoveInitial = formState.rolesRemoveInitial as boolean;
-
 
 	for (const roleConfig of ConfigurableRoles) {
 		const value = formState[roleConfig.key];
@@ -235,10 +225,8 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		}
 	}
 
-
 	return changes;
 }
-
 
 // Form error handler
 async function onError(event: FormErrorEvent) {

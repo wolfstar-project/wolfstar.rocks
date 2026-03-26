@@ -595,8 +595,8 @@ useSeoMetadata({
 	title: "Profile",
 });
 
-
 const { user } = useAuth();
+const log = useLogger("profile");
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();
@@ -604,10 +604,8 @@ const searchQuery = ref<string | undefined>(undefined);
 const isAnimated = ref(false);
 const isDefault = ref(false);
 
-
 // Error handling state
 const isRetrying = ref(false);
-
 
 // Toggles
 // Is true by default because we want to show only manageable servers
@@ -615,11 +613,9 @@ const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
-
 // Accessibility - Reduce Motion
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
-
 
 const preferredFormat = computed<"gif" | "png">(() => {
 	if (isAnimated.value && !effectiveReduceMotion.value) {
@@ -628,7 +624,6 @@ const preferredFormat = computed<"gif" | "png">(() => {
 
 	return "png";
 });
-
 
 // Use the centralized useUser composable instead of manual useFetch
 // Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
@@ -644,20 +639,18 @@ const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 	},
 });
 
-
 const isLoading = computed(() => status.value === "idle" || status.value === "pending");
-
 
 // Retry handler
 async function handleRetry() {
 	isRetrying.value = true;
+	log.info({ action: "retry_guild_fetch" });
 	try {
 		await refresh();
 	} finally {
 		isRetrying.value = false;
 	}
 }
-
 
 // Enhanced tabs configuration
 const items = computed<TabsItem[]>(() => [
@@ -685,30 +678,26 @@ const items = computed<TabsItem[]>(() => [
 	}, */
 ]);
 
-
 const defaultAvatar = computed(() =>
 	user.value?.id
 		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
 		: "https://cdn.discordapp.com/embed/avatars/0.png",
 );
 
-
 function undoSearch() {
 	searchQuery.value = undefined;
 }
 
-
 async function copyUserId() {
 	if (user.value?.id) {
 		await copy(user.value.id);
+		log.info({ action: "copy_user_id" });
 	}
 }
-
 
 function createUrl(format: "webp" | "png" | "gif", size: number) {
 	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
 }
-
 
 watch(
 	user,

@@ -1,4 +1,4 @@
-Generate SKILL.md section for "@vitest/browser-playwright" v4.1.1.
+Generate SKILL.md section for "@vitest/browser-playwright" v4.1.2.
 
 ## Security
 

@@ -35,7 +35,6 @@ useSeoMetadata({
 	title: "Staryl",
 });
 
-
 const OtherApps = useApp();
 const Invites = useInvites();
 </script>

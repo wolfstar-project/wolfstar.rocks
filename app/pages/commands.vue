@@ -137,13 +137,10 @@ useSeoMetadata({
 	title: "Commands",
 });
 
-
 const searchValue = ref("");
 const { data: commands, status, refresh } = useCommands();
 
-
 const loading = computed(() => status.value === "pending");
-
 
 const { results } = useFuse(searchValue, commands, {
 	fuseOptions: {
@@ -153,9 +150,7 @@ const { results } = useFuse(searchValue, commands, {
 	matchAllWhenSearchEmpty: true,
 });
 
-
 const filteredCommands = computed(() => results.value.map((result) => result.item));
-
 
 const categories = computed(() => {
 	const uniqueCategories = new Set<string>();
@@ -164,7 +159,6 @@ const categories = computed(() => {
 	}
 	return [...uniqueCategories].toSorted();
 });
-
 
 const filteredCommandsCount = computed(() => results.value.length);
 </script>

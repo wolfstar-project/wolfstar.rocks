@@ -35,9 +35,7 @@ const unitMap: Record<string, number> = {
 	days: 1000 * 60 * 60 * 24,
 };
 
-
 const unitEntries = Object.entries(unitMap);
-
 
 function determineUnit(ms: number): readonly [number, string] {
 	for (let i = 0; i < unitEntries.length; i++) {
@@ -47,17 +45,14 @@ function determineUnit(ms: number): readonly [number, string] {
 		}
 	}
 
-
 	return [Math.floor(ms / unitEntries[0][1]), unitEntries[0][0]] as const;
 }
-
 
 export interface SelectDurationProps {
 	modelValue: number | null;
 	min: number;
 	max?: number;
 }
-
 
 interface Emits {
 	(e: "update:modelValue", value: number): void;
@@ -68,7 +63,6 @@ interface Emits {
 const { modelValue, min, max } = defineProps<SelectDurationProps>();
 const emit = defineEmits<Emits>();
 
-
 const unitItems = [
 	{ label: "Seconds", value: "seconds" },
 	{ label: "Minutes", value: "minutes" },
@@ -76,12 +70,10 @@ const unitItems = [
 	{ label: "Days", value: "days" },
 ];
 
-
 const [inputDuration, inputUnit] = determineUnit(modelValue ?? 0);
 const unit = ref(inputUnit);
 const duration = ref(inputDuration);
 const error = ref("");
-
 
 const durationString = computed({
 	get: () => (Number.isNaN(duration.value) ? "" : String(duration.value)),
@@ -90,7 +82,6 @@ const durationString = computed({
 	},
 });
 
-
 function validate(ms: number): boolean {
 	if (ms < min) {
 		const [val, u] = determineUnit(min);
@@ -98,18 +89,15 @@ function validate(ms: number): boolean {
 		return false;
 	}
 
-
 	if (typeof max === "number" && ms > max) {
 		const [val, u] = determineUnit(max);
 		error.value = `The maximum duration is ${val} ${u}.`;
 		return false;
 	}
 
-
 	error.value = "";
 	return true;
 }
-
 
 function onChangeDuration(event: Event) {
 	const val = Number.parseInt((event.target as HTMLInputElement).value, 10);
@@ -117,7 +105,6 @@ function onChangeDuration(event: Event) {
 	const ms = val * unitMap[unit.value];
 	if (validate(ms)) emit("update:modelValue", ms);
 }
-
 
 function onChangeUnit(newUnit: string) {
 	unit.value = newUnit;

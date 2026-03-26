@@ -69,9 +69,7 @@ const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();
 const toast = useToast();
 
-
 const schema = ChannelsSettingsSchema;
-
 
 const createDefaultState = (): ChannelsSettingsSchemaType => {
 	const defaults: ChannelsSettingsSchemaType = {} as ChannelsSettingsSchemaType;
@@ -84,13 +82,10 @@ const createDefaultState = (): ChannelsSettingsSchemaType => {
 	return defaults;
 };
 
-
 const state = reactive<ChannelsSettingsSchemaType>(createDefaultState());
-
 
 function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
-
 
 	for (const config of ConfigurableLoggingChannels) {
 		const value = formState[config.key];
@@ -101,7 +96,6 @@ function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildDat
 		}
 	}
 
-
 	for (const config of ConfigurableIgnoreChannels) {
 		const value = formState[config.key];
 		// Include empty arrays (user explicitly cleared all ignored channels)
@@ -110,10 +104,8 @@ function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildDat
 		}
 	}
 
-
 	return changes;
 }
-
 
 async function onError(event: FormErrorEvent) {
 	const element =

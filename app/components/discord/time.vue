@@ -8,11 +8,9 @@ const { date = Date.now(), format } = defineProps<{
 	format: keyof typeof TimeFormatters;
 }>();
 
-
 const TimeFormatters = {
 	long: new Intl.DateTimeFormat("en-US", { dateStyle: "full", timeStyle: "short" }),
 };
-
 
 const formatter = computed(() => TimeFormatters[format]);
 </script>

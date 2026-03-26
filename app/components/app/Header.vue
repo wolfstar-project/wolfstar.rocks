@@ -28,8 +28,8 @@
 		/>
 
 		<template #right>
-			<AuthState>
-				<template #default="{ loggedIn }">
+			<ClientOnly>
+				<template #default>
 					<div v-if="loggedIn && user">
 						<LazyUDropdownMenu
 							:items
@@ -86,7 +86,7 @@
 						/>
 					</div>
 				</template>
-				<template #placeholder>
+				<template #fallback>
 					<UButton
 						size="md"
 						color="primary"
@@ -107,7 +107,7 @@
 						tabindex="-1"
 					/>
 				</template>
-			</AuthState>
+			</ClientOnly>
 		</template>
 		<template #body>
 			<UNavigationMenu
@@ -123,9 +123,8 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 const { desktopLinks, mobileLinks } = useHeader();
-const { user, logout } = useAuth();
+const { loggedIn, user, logout } = useAuth();
 const { currentApp } = useHeader();
-
 
 const items = ref<DropdownMenuItem[]>([
 	{
@@ -142,7 +141,6 @@ const items = ref<DropdownMenuItem[]>([
 		},
 	},
 ]);
-
 
 const src = computed(() => avatarURL(user.value!));
 </script>

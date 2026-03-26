@@ -39,7 +39,6 @@ const emit = defineEmits<{
 	(e: "open-feature", index: number): void;
 }>();
 
-
 interface Feature {
 	title: string;
 	description: string;
@@ -47,7 +46,6 @@ interface Feature {
 	icon: string;
 	action?: () => void | Promise<void>;
 }
-
 
 const features = [
 	{

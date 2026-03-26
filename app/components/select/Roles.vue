@@ -34,7 +34,6 @@ export interface SelectRolesProps {
 	disabled?: boolean;
 }
 
-
 interface Emits {
 	(e: "update:modelValue", value: string[]): void;
 	(e: "change", value: string[]): void;
@@ -51,9 +50,7 @@ const {
 	disabled = false,
 } = defineProps<SelectRolesProps>();
 
-
 defineEmits<Emits>();
-
 
 // Generate summary for the button
 const roleSummary = computed(() => {
@@ -62,7 +59,6 @@ const roleSummary = computed(() => {
 	}
 	return `${modelValue.length} selected`;
 });
-
 
 // Filter and sort roles, then map to SelectManyValue format
 const roleValues = computed<SelectManyValue[]>(() =>

@@ -77,12 +77,9 @@ const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
-
 const allEvents = [...ConfigurableModerationEvents, ...ConfigurableMessageEvents];
 
-
 const schema = EventsSettingsSchema;
-
 
 const createDefaultState = (): EventsSettingsSchemaType => {
 	const defaults: EventsSettingsSchemaType = {} as EventsSettingsSchemaType;
@@ -92,9 +89,7 @@ const createDefaultState = (): EventsSettingsSchemaType => {
 	return defaults;
 };
 
-
 const state = reactive<EventsSettingsSchemaType>(createDefaultState());
-
 
 function mapToGuildData(stateData: EventsSettingsSchemaType): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
@@ -103,7 +98,6 @@ function mapToGuildData(stateData: EventsSettingsSchemaType): Partial<GuildData>
 	}
 	return result;
 }
-
 
 async function onError(event: FormErrorEvent) {
 	const element =
@@ -118,9 +112,7 @@ async function onError(event: FormErrorEvent) {
 	});
 }
 
-
 const channelsPageLink = computed(() => `/guilds/${guildData.value.id}/manage/channels`);
-
 
 watch(
 	guildSettings,

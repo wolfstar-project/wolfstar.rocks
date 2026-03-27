@@ -11,6 +11,7 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
+		"@nuxt/content",
 		"@nuxt/ui",
 		"@nuxt/image",
 		"@nuxt/hints",
@@ -206,6 +207,10 @@ export default defineNuxtConfig({
 		// Static pages
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", robots: true },
+
+		// Blog
+		"/blog": { appLayout: "default", prerender: true, robots: true },
+		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 	},
 
 	sourcemap: {

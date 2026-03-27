@@ -30,16 +30,12 @@ useSeoMeta({
 						:to="article.path"
 						:title="article.title"
 						:description="article.description"
-						:image="
-							article.image
-								? {
-										src: article.image.src,
-										alt: article.image.alt,
-										width: index === 0 ? 672 : 437,
-										height: index === 0 ? 378 : 246,
-									}
-								: undefined
-						"
+						:image="{
+							src: article.image,
+							width: index === 0 ? 672 : 437,
+							height: index === 0 ? 378 : 246,
+							alt: `${article.title} image`,
+						}"
 						:date="
 							new Date(article.date).toLocaleDateString('en', {
 								year: 'numeric',
@@ -50,15 +46,14 @@ useSeoMeta({
 						:authors="
 							article.authors.map((author) => ({
 								...author,
-								avatar: author.avatar
-									? {
-											...author.avatar,
-											alt: author.avatar.alt || `${author.name} avatar`,
-										}
-									: undefined,
+								avatar: {
+									...author.avatar,
+									loading: 'lazy',
+									alt: `${author.name} avatar`,
+								},
 							}))
 						"
-						:badge="article.badge"
+						:badge="{ label: article.category, color: 'primary', variant: 'subtle' }"
 						:variant="index === 0 ? 'outline' : 'subtle'"
 						:orientation="index === 0 ? 'horizontal' : 'vertical'"
 						:class="[index === 0 && 'col-span-full']"

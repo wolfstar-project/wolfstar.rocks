@@ -1,9 +1,6 @@
 <script setup lang="ts">
+import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import { kebabCase } from "scule";
-
-definePageMeta({
-	heroBackground: "opacity-30 -z-10",
-});
 
 const route = useRoute();
 const { copy } = useClipboard();
@@ -17,7 +14,7 @@ const [{ data: article }, { data: surround }] = await Promise.all([
 	}),
 ]);
 
-if (!article.value) {
+if (isNullOrUndefined(article.value)) {
 	throw createError({ statusCode: 404, statusMessage: "Article not found", fatal: true });
 }
 
@@ -42,12 +39,56 @@ if (article.value.image) {
 	});
 }
 
+function formatSocialIntentQueryText(handle: string | undefined): string {
+	const credit = handle ? ` by @${handle}` : "";
+	const body = article.value!.title + credit;
+	const link = `${getOrigin()}${article.value!.path}`;
+	return encodeURIComponent(`${body}\n\n${link}`);
+}
+
+const authorHandles: { twitter?: string; bluesky?: string } = {
+	twitter: article.value.authors?.[0]?.twitter,
+	bluesky: article.value.authors?.[0]?.bluesky,
+};
+
+const socialLinks = computed(() =>
+	!article.value
+		? []
+		: [
+				{
+					label: "Bluesky",
+					icon: "i-simple-icons-bluesky",
+					to: `https://bsky.app/intent/compose?text=${formatSocialIntentQueryText(authorHandles.bluesky)}`,
+				},
+				{
+					label: "X",
+					icon: "i-simple-icons-x",
+					to: `https://x.com/intent/tweet?text=${formatSocialIntentQueryText(authorHandles.twitter)}`,
+				},
+			],
+);
+
 function copyLink() {
-	copy(`https://${getOrigin()}{article.value?.path || "/"}`, {
+	copy(`${getOrigin()}${article.value?.path || "/"}`, {
 		title: "Link copied to clipboard",
 		icon: "i-lucide-copy-check",
 	});
 }
+
+const links = [
+	{
+		icon: "i-lucide-pen",
+		label: "Edit this article",
+		to: `https://github.com/wolfstar-project/wolfstar.rocks/edit/main/content/${article.value.stem}.md`,
+		target: "_blank",
+	},
+	{
+		icon: "i-lucide-star",
+		label: "Star on GitHub",
+		to: "https://github.com/wolfstar-project/wolfstar.rocks",
+		target: "_blank",
+	},
+];
 </script>
 
 <template>
@@ -108,7 +149,7 @@ function copyLink() {
 								<span class="sr-only">Copy URL</span>
 								Copy URL
 							</UButton>
-							<!-- 		<UButton
+							<UButton
 								v-for="(link, index) in socialLinks"
 								:key="index"
 								v-bind="link"
@@ -117,7 +158,7 @@ function copyLink() {
 								target="_blank"
 							>
 								<span class="sr-only">Wolfstar on {{ link.label }}</span>
-							</UButton> -->
+							</UButton>
 						</div>
 					</div>
 
@@ -138,7 +179,6 @@ function copyLink() {
 								<UPageLinks title="Links" :links="links" />
 								<USeparator type="dashed" />
 								<SocialLinks />
-								<Ads />
 							</div>
 						</template>
 					</UContentToc>

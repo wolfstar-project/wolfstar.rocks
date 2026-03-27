@@ -2,20 +2,13 @@
 title: WolfStar v7
 description: A proposal for the WolfStar network of independent single-purpose bots.
 date: 2024-02-25
-image:
-    src: /avatars/wolfstar.png
-    alt: WolfStar avatar
+image: /avatars/wolfstar.png
 authors:
     - name: RedStar
       to: https://github.com/RedStar071
       avatar:
           src: https://github.com/RedStar071.png
-          alt: RedStar avatar
-badge:
-    label: Announcement
-tags:
-    - announcement
-    - architecture
+category: Announcement
 ---
 
 ## Why

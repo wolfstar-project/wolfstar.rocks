@@ -1,5 +1,7 @@
 import { defineCollection, defineContentConfig } from "@nuxt/content";
-import { array, boolean, object, optional, string } from "valibot";
+import { array, boolean, object, optional, string, picklist } from "valibot";
+
+const categories = ["Release", "Tutorial", "Announcement", "Article"] as const;
 
 const Image = object({
 	src: string(),
@@ -26,12 +28,7 @@ export default defineContentConfig({
 				authors: array(Author),
 				date: string(),
 				draft: optional(boolean(), false),
-				badge: optional(
-					object({
-						label: string(),
-					}),
-				),
-				tags: optional(array(string())),
+				category: picklist(categories),
 			}),
 		}),
 	},

@@ -3,7 +3,7 @@ title: WolfStar v7
 description: A proposal for the WolfStar network of independent single-purpose bots.
 date: 2024-02-25
 image:
-    src: /avatars/wolfstar.webp
+    src: /avatars/wolfstar.png
     alt: WolfStar avatar
 authors:
     - name: RedStar

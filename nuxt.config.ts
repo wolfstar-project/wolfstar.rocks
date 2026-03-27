@@ -11,8 +11,8 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
-		"@nuxt/content",
 		"@nuxt/ui",
+		"@nuxt/content",
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",

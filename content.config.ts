@@ -22,7 +22,7 @@ export default defineContentConfig({
 			type: "page",
 			source: "blog/**/*.md",
 			schema: object({
-				image: optional(Image),
+				image: optional(string()),
 				authors: array(Author),
 				date: string(),
 				draft: optional(boolean(), false),

@@ -1,32 +1,31 @@
-
 packages: []
 
 allowedDeprecatedVersions:
-  glob: 7.2.3
-  inflight: 1.0.6
-  sourcemap-codec: 1.4.8
+    glob: 7.2.3
+    inflight: 1.0.6
+    sourcemap-codec: 1.4.8
 
 ignoredBuiltDependencies:
-  - "@parcel/watcher"
-  - core-js
-  - esbuild
-  - unrs-resolver
-  - vue-demi
+    - "@parcel/watcher"
+    - core-js
+    - esbuild
+    - unrs-resolver
+    - vue-demi
 
 onlyBuiltDependencies:
-  - "@prisma/client"
-  - "@prisma/engines"
-  - "@tailwindcss/oxide"
-  - prisma
-  - sharp@0.34.5
-  - workerd
-  - better-sqlite3
+    - "@prisma/client"
+    - "@prisma/engines"
+    - "@tailwindcss/oxide"
+    - prisma
+    - sharp@0.34.5
+    - workerd
+    - better-sqlite3
 
 overrides:
-  "@netlify/api": ^14.0.18
-  sharp: 0.34.5
-  vite: npm:@voidzero-dev/vite-plus-core@0.1.14
-  vitest: npm:@voidzero-dev/vite-plus-test@0.1.14
+    "@netlify/api": ^14.0.18
+    sharp: 0.34.5
+    vite: npm:@voidzero-dev/vite-plus-core@0.1.14
+    vitest: npm:@voidzero-dev/vite-plus-test@0.1.14
 patchedDependencies:
-  '@nuxt/test-utils': patches/@nuxt__test-utils.patch
+    "@nuxt/test-utils": patches/@nuxt__test-utils.patch
 shellEmulator: true

@@ -8,7 +8,7 @@ interface SiteMetadata {
 	ogType?: ResolvableValue<"website" | "article" | "profile" | undefined>;
 	twitterCard?: ResolvableValue<"summary" | "summary_large_image" | undefined>;
 	twitterSite?: ResolvableValue<string | undefined>;
-	shouldOgImage?: ResolvableValue<boolean | undefined>;
+	shouldOgImage?: boolean;
 	ogImage?: OGImageProps;
 }
 

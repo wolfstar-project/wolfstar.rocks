@@ -59,6 +59,7 @@ const config: KnipConfig = {
 				"@sapphire/async-queue",
 				"@codspeed/core",
 				"nuxt-og-image",
+				"@takumi-rs/core",
 				"workbox-*",
 
 				/** Oxlint plugins don't get picked up yet */
@@ -85,7 +86,11 @@ const config: KnipConfig = {
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: ["#build/auth.config", "#server/database/generated/client"],
+			ignoreUnresolved: [
+				"#build/auth.config",
+				"#server/database/generated/client",
+				"#og-image/app/utils",
+			],
 		},
 	},
 };

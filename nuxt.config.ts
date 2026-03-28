@@ -182,7 +182,7 @@ export default defineNuxtConfig({
 		// Globally, as that would serve one user's data to another.
 		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
-		"/__og-image__/**": getISRConfig(60),
+		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
@@ -381,9 +381,6 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
-		defaults: {
-			component: "Default",
-		},
 		zeroRuntime: true,
 	},
 	// PWA configuration

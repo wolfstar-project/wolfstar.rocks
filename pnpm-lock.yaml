@@ -123,8 +123,8 @@ importers:
         specifier: ^7.0.2
         version: 7.0.2(postcss@8.5.8)
       rou3:
-        specifier: ^0.7.12
-        version: 0.7.12
+        specifier: ^0.8.0
+        version: 0.8.1
       simple-git:
         specifier: ^3.32.3
         version: 3.33.0
@@ -15553,7 +15553,7 @@ snapshots:
 
   '@opentelemetry/api-logs@0.203.0':
     dependencies:
-      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api': 1.9.1
 
   '@opentelemetry/api-logs@0.207.0':
     dependencies:
@@ -21259,7 +21259,7 @@ snapshots:
       cli-width: 3.0.0
       external-editor: 3.1.0
       figures: 3.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1

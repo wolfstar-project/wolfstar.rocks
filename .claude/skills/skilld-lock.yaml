@@ -152,11 +152,11 @@ skills:
     generator: skilld
   rou3-skilld:
     packageName: rou3
-    version: 0.7.12
-    packages: "rou3@0.7.12"
+    version: 0.8.1
+    packages: "rou3@0.8.1"
     repo: h3js/rou3
     source: "ungh://h3js/rou3"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-03-26
     generator: skilld
   consola-skilld:
     packageName: consola

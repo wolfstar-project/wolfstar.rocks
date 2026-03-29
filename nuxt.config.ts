@@ -22,7 +22,6 @@ export default defineNuxtConfig({
 		"@nuxtjs/html-validator",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
-		"@vue-macros/nuxt",
 		"evlog/nuxt",
 		"nuxt-auth-utils",
 		"nuxt-vitalizer",
@@ -369,13 +368,6 @@ export default defineNuxtConfig({
 	image: {
 		domains: ["cdn.discordapp.com", "media.discordapp.net", "cdn.wolfstar.rocks"],
 		format: ["webp", "jpeg", "jpg", "png", "svg"],
-	},
-
-	macros: {
-		betterDefine: false,
-		defineModels: false,
-		reactivityTransform: true,
-		setupSFC: true,
 	},
 
 	ogImage: {

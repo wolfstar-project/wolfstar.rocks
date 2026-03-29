@@ -1,6 +1,5 @@
 <template>
-	<div
-		class="relative flex h-full w-full justify-between p-15"
+	<OgLayout
 		:class="[
 			colorMode === 'light' ? ['bg-white', 'text-gray-900'] : ['bg-gray-900', 'text-white'],
 		]"
@@ -43,7 +42,7 @@
 				</p>
 			</div>
 		</div>
-	</div>
+	</OgLayout>
 </template>
 
 <script setup lang="ts">

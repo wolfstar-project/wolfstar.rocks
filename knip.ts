@@ -60,6 +60,7 @@ const config: KnipConfig = {
 				"@codspeed/core",
 				"nuxt-og-image",
 				"@takumi-rs/core",
+				"@takumi-rs/wasm",
 				"workbox-*",
 
 				/** Oxlint plugins don't get picked up yet */

@@ -168,8 +168,6 @@ export default defineNuxtConfig({
 			},
 		},
 		failOnError: true,
-		// OG image routes use an iframe wrapper with separate HTML structure
-		ignore: [/\/_og\/d\//],
 	},
 
 	// Runtime configuration
@@ -381,7 +379,9 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
-		zeroRuntime: true,
+		security: {
+			maxQueryParamSize: 2048,
+		},
 	},
 	// PWA configuration
 	pwa,

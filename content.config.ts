@@ -1,5 +1,5 @@
 import { defineCollection, defineContentConfig } from "@nuxt/content";
-import { array, boolean, object, optional, string, picklist } from "valibot";
+import { array, boolean, isoDate, object, optional, picklist, pipe, string } from "valibot";
 
 const categories = ["Release", "Tutorial", "Announcement", "Article"] as const;
 
@@ -26,7 +26,7 @@ export default defineContentConfig({
 			schema: object({
 				image: optional(string()),
 				authors: array(Author),
-				date: string(),
+				date: pipe(string(), isoDate()),
 				draft: optional(boolean(), false),
 				category: picklist(categories),
 			}),

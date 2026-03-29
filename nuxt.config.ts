@@ -12,6 +12,7 @@ export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",
+		"@nuxt/content",
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -206,6 +207,10 @@ export default defineNuxtConfig({
 		// Static pages
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", robots: true },
+
+		// Blog
+		"/blog": { appLayout: "default", prerender: true, robots: true },
+		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 	},
 
 	sourcemap: {

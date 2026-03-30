@@ -181,8 +181,7 @@
 
 <script setup lang="ts">
 useSeoMetadata({
-	description:
-		"WolfStar Project's Terms of Service - Learn about the terms and conditions for using our services",
+	description: "Learn about the terms and conditions for using our services",
 	shouldOgImage: true,
 	title: "Terms of Service",
 });

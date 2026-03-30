@@ -1,13 +1,13 @@
 import type { ResolvableValue } from "@unhead/vue";
-import type { OGImageProps } from "~/components/OgImage/Default.vue";
+import type { OGImageProps } from "~/components/OgImage/Page.takumi.vue";
 
 interface SiteMetadata {
-	title?: ResolvableValue<string>;
-	description?: ResolvableValue<string>;
-	ogSiteName?: string;
-	ogType?: "website" | "article" | "profile";
-	twitterCard?: "summary" | "summary_large_image";
-	twitterSite?: string;
+	title?: ResolvableValue<string | undefined>;
+	description?: ResolvableValue<string | undefined>;
+	ogSiteName?: ResolvableValue<string | undefined>;
+	ogType?: ResolvableValue<"website" | "article" | "profile" | undefined>;
+	twitterCard?: ResolvableValue<"summary" | "summary_large_image" | undefined>;
+	twitterSite?: ResolvableValue<string | undefined>;
 	shouldOgImage?: boolean;
 	ogImage?: OGImageProps;
 }
@@ -31,7 +31,7 @@ export function useSeoMetadata({
 	});
 
 	if (shouldOgImage) {
-		defineOgImageComponent("Default", {
+		defineOgImage("Page", {
 			description: ogImage?.description ?? description,
 			title: ogImage?.title ?? title,
 			...ogImage,

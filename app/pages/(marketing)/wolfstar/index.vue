@@ -101,7 +101,7 @@ definePageMeta({ alias: ["/"] });
 
 useSeoMetadata({
 	description:
-		"Discover WolfStar, a fully customizable multilingual Discord moderation application designed to help you manage and protect your server. WolfStar offers a comprehensive logging suite that tracks moderation actions, message changes, channel updates, role modifications, and more in real-time. All features are completely free with no paywalls or hidden costs. We're committed to open-source software, providing transparent code for everyone. WolfStar simplifies server management with powerful tools, ensuring your community remains safe and organized effortlessly.",
+		"Discover WolfStar, a fully customizable multilingual Discord moderation application designed to help you manage and protect your server.",
 	shouldOgImage: true,
 	title: "Home",
 });

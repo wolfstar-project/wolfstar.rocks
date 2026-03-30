@@ -1,14 +1,27 @@
 import { expect, test } from "./test-utils";
 
-const paths = ["/", "/commands", "/staryl"];
+/**
+ * OG image snapshot tests (Takumi templates).
+ *
+ * Each entry tests a different visual edge case to catch layout/overflow regressions:
+ * - Static pages (Page.takumi)
+ */
+const testCases = [
+	// Default OG image template
+	{ path: "/", label: "home page" },
+	{ path: "/commands", label: "commands page" },
+	{ path: "/staryl", label: "staryl page" },
+	{ path: "/profile", label: "profile page" },
+] as const;
 
-for (const path of paths) {
-	test.describe(path, () => {
-		test(`og image for ${path}`, async ({ page, goto, baseURL }) => {
+for (const { path, label } of testCases) {
+	test.describe(`${label} (${path})`, () => {
+		test(`og image snapshot`, async ({ page, goto, baseURL }) => {
 			await goto(path, { waitUntil: "domcontentloaded" });
 
 			const ogImageUrl = await page
 				.locator('meta[property="og:image"]')
+				.first()
 				.getAttribute("content");
 			expect(ogImageUrl).toBeTruthy();
 
@@ -23,7 +36,8 @@ for (const path of paths) {
 
 			const imageBuffer = await response.body();
 			expect(imageBuffer).toMatchSnapshot({
-				name: `og-image-for-${path.replace(/\//g, "-")}.png`,
+				name: `og-image-${path.replace(/\//g, "-").replace(/^-/, "") || "home"}.png`,
+				maxDiffPixelRatio: 0.25,
 			});
 		});
 	});

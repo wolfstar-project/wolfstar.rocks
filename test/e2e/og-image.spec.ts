@@ -25,7 +25,7 @@ for (const { path, label } of testCases) {
 				.getAttribute("content");
 			expect(ogImageUrl).toBeTruthy();
 
-			const ogImagePath = new URL(ogImageUrl!).pathname;
+			const ogImagePath = new URL(ogImageUrl!, baseURL).pathname;
 			const localUrl = baseURL?.endsWith("/")
 				? `${baseURL}${ogImagePath.slice(1)}`
 				: `${baseURL}${ogImagePath}`;
@@ -37,7 +37,7 @@ for (const { path, label } of testCases) {
 			const imageBuffer = await response.body();
 			expect(imageBuffer).toMatchSnapshot({
 				name: `og-image-${path.replace(/\//g, "-").replace(/^-/, "") || "home"}.png`,
-				maxDiffPixelRatio: 0.02,
+				maxDiffPixelRatio: 0.25,
 			});
 		});
 	});

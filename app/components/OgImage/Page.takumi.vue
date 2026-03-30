@@ -9,12 +9,12 @@
 					: `radial-gradient(circle at 50% 10%, rgba(${themeRgb}, 0.4) 0%, #ffffff 65%)`,
 		}"
 	>
-		<div class="relative flex w-full flex-col items-center justify-center text-center">
-			<div v-if="Boolean(icon)" class="mb-8 flex items-center justify-center">
+		<div class="relative flex w-full flex-col items-start justify-center text-left">
+			<div v-if="Boolean(icon)" class="mb-8 flex items-center justify-start">
 				<IconComponent :name="icon" size="120px" style="opacity: 0.85" />
 			</div>
 			<h1
-				class="items-r m-0 text-[75px] leading-none font-extrabold tracking-tight"
+				class="m-0 text-[75px] leading-none font-extrabold tracking-tight"
 				style="display: block; text-overflow: ellipsis"
 				:style="{ lineClamp: description ? 2 : 3 }"
 			>

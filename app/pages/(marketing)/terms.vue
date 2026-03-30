@@ -157,8 +157,10 @@
 						Your Privacy
 					</h2>
 					<p class="leading-relaxed text-base-content">
-						Please read our Privacy Policy, found
-						<NuxtLink to="/privacy" class="underline hover:opacity-70">here</NuxtLink>.
+						Please read our
+						<NuxtLink to="/privacy" class="underline hover:opacity-70"
+							>Privacy Policy</NuxtLink
+						>.
 					</p>
 				</section>
 

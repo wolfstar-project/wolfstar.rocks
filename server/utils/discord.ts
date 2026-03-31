@@ -127,6 +127,7 @@ export async function transformGuild(
 		ownerId: data.owner ? userId : null,
 		partnered: false,
 		permissions: Number(data.permissions),
+		features: data.features,
 		preferredLocale: Locale.EnglishUS,
 		premiumSubscriptionCount: null,
 		premiumTier: GuildPremiumTier.None,
@@ -263,7 +264,7 @@ export const getCurrentMember = defineCachedFunction(
 	{
 		getKey: async (event: H3Event, guildId: string) => {
 			const userId = await getUserIdFromEvent(event);
-			return `${userId}:${guildId}`;
+			return `user:${userId}:guild:${guildId}`;
 		},
 		maxAge: hours(1),
 	},
@@ -300,6 +301,7 @@ export const getMember = defineCachedFunction(
 	},
 	{
 		maxAge: hours(1),
+		getKey: (guildId, userId) => `user:${userId}:guild:${guildId}`,
 	},
 );
 
@@ -338,6 +340,7 @@ export const getGuild = defineCachedFunction(
 	},
 	{
 		maxAge: hours(1),
+		getKey: (guildId) => `guild:${guildId}`,
 	},
 );
 
@@ -356,5 +359,6 @@ export const fetchCommands = defineCachedFunction(
 	},
 	{
 		maxAge: hours(1),
+		getKey: () => "commands",
 	},
 );

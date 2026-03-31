@@ -52,7 +52,7 @@
 		"test:nuxt": "vp test --project nuxt",
 		"test:unit": "vp test --project unit",
 		"test:bench": "vp test bench",
-		"start:playwright:webserver": "NODE_ENV=test pnpm preview --port 5678",
+		"start:playwright:webserver": "NODE_ENV=test vp run preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"update:interactive": "taze"
 	},

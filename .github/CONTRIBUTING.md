@@ -211,7 +211,7 @@ export default defineWrappedResponseHandler(
 );
 ```
 
-Use `createError` for error responses with proper status codes. Use `onSuccess`/`onError` callbacks for logging.
+Use `createError` for error responses with proper status codes. Use the `onError` callback for error logging.
 
 ### Naming conventions
 

@@ -45,7 +45,6 @@
 import type { ResolvableValue } from "@unhead/vue";
 import { useOgImageRuntimeConfig } from "#og-image/app/utils";
 import { useSiteConfig } from "#site-config/app/composables";
-import { computed, defineComponent, h, resolveComponent } from "vue";
 
 export interface OGImageProps {
 	colorMode?: "dark" | "light";
@@ -54,11 +53,12 @@ export interface OGImageProps {
 	icon?: string | boolean;
 	theme?: string;
 }
+const { name } = useRoute();
 
 // Convert to typescript props
 const {
 	theme = BrandingColors.Secondary,
-	title = "title",
+	title = name,
 	colorMode: propsColorMode,
 	description,
 	icon,

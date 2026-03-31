@@ -37,7 +37,7 @@
 - Always wrap handlers with `defineWrappedResponseHandler` for auth + rate limiting
 - Use `defineWrappedCachedResponseHandler` for cached responses
 - Use `createError` for error responses with proper status codes
-- Use `onSuccess`/`onError` callbacks for logging
+- Use the `onError` callback for error logging
 
 ## Vue Component Patterns
 

@@ -129,7 +129,7 @@ pnpm prisma:push      # Push schema changes (development)
 pnpm prisma:migrate:dev   # Create and apply migration
 pnpm prisma:generate  # Regenerate Prisma client
 pnpm prisma:studio    # Visual database editor (http://localhost:5555)
-pnpm prisma:validate  # Validate schema
+pnpm prisma validate  # Validate schema
 ```
 
 ### Project structure

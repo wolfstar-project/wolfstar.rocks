@@ -153,7 +153,7 @@ importers:
         version: 0.1.14(@opentelemetry/api@1.9.1)(@types/node@24.12.0)(@vitest/ui@4.1.2)(@voidzero-dev/vite-plus-core@0.1.14(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3)
     devDependencies:
       '@codspeed/vitest-plugin':
-        specifier: ^5.2.0
+        specifier: 5.2.0
         version: 5.2.0(@voidzero-dev/vite-plus-core@0.1.14(@types/node@24.12.0)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(@voidzero-dev/vite-plus-test@0.1.14)(tinybench@2.9.0)
       '@commitlint/cli':
         specifier: ^20.4.3
@@ -204,7 +204,7 @@ importers:
         specifier: 24.12.0
         version: 24.12.0
       '@vitest/ui':
-        specifier: ^4.1.2
+        specifier: 4.1.2
         version: 4.1.2(@voidzero-dev/vite-plus-test@0.1.14)
       changelogen:
         specifier: ^0.6.2
@@ -15621,7 +15621,7 @@ snapshots:
 
   '@opentelemetry/api-logs@0.203.0':
     dependencies:
-      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/api': 1.9.1
 
   '@opentelemetry/api-logs@0.207.0':
     dependencies:
@@ -21133,7 +21133,7 @@ snapshots:
       cli-width: 3.0.0
       external-editor: 3.1.0
       figures: 3.2.0
-      lodash: 4.17.21
+      lodash: 4.17.23
       mute-stream: 0.0.8
       ora: 5.4.1
       run-async: 2.4.1

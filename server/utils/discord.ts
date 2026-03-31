@@ -22,6 +22,7 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import {
 	GuildDefaultMessageNotifications,
 	GuildExplicitContentFilter,
+	GuildFeature,
 	GuildMFALevel,
 	GuildPremiumTier,
 	GuildVerificationLevel,
@@ -125,7 +126,7 @@ export async function transformGuild(
 		mfaLevel: GuildMFALevel.None,
 		name: data.name,
 		ownerId: data.owner ? userId : null,
-		partnered: false,
+		partnered: data.features.includes(GuildFeature.Partnered),
 		permissions: Number(data.permissions),
 		features: data.features,
 		preferredLocale: Locale.EnglishUS,
@@ -136,7 +137,7 @@ export async function transformGuild(
 		systemChannelId: null,
 		vanityURLCode: null,
 		verificationLevel: GuildVerificationLevel.None,
-		verified: false,
+		verified: data.features.includes(GuildFeature.Verified),
 		widgetEnabled: false,
 	});
 

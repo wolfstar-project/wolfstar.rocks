@@ -49,9 +49,8 @@
 ```bash
 pnpm dev              # Development server (http://localhost:3000)
 pnpm build            # Production build
-pnpm start            # Production server (requires build first)
-pnpm lint             # Run linter (oxlint + oxfmt)
-pnpm lint:fix         # Auto-fix lint issues
+pnpm preview          # Preview production build locally
+pnpm lint:fix         # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck        # TypeScript type checking
 pnpm test             # Run all Vitest tests
 pnpm test:nuxt        # Nuxt component tests

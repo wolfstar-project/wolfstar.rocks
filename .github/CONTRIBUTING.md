@@ -107,13 +107,13 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
 # Development
 pnpm dev              # Start development server
 pnpm build            # Production build
-pnpm start            # Preview production build (requires build first)
+pnpm preview          # Preview production build (requires build first)
 
 # Code Quality
-pnpm lint             # Run linter (oxlint + oxfmt)
+pnpm vp lint          # Run linter (oxlint + oxfmt)
 pnpm lint:fix         # Auto-fix lint issues
 pnpm typecheck        # TypeScript type checking
-pnpm format           # Format all files with oxfmt
+pnpm vp fmt           # Format all files with oxfmt
 
 # Testing
 pnpm test             # Run all Vitest tests
@@ -134,7 +134,7 @@ pnpm prisma validate  # Validate schema
 
 ### Project structure
 
-```
+```text
 app/                            # Nuxt 4 app directory
 ├── components/                 # Vue components (PascalCase.vue)
 ├── composables/                # Vue composables (useFeature.ts)
@@ -232,7 +232,7 @@ Use `createError` for error responses with proper status codes. Use the `onError
 - Define props with TypeScript: `defineProps<{ text: string }>()`
 - Keep functions under 50 lines
 - Lean on Nuxt auto-imports instead of manual Vue/Nuxt imports
-- Accessibility is a first-class consideration -- always consider ARIA attributes and keyboard navigation
+- Accessibility is a first-class consideration — prefer semantic HTML and native elements first; add ARIA only when needed, and always ensure correct accessible name/role/value and full keyboard support
 
 Block order (enforced by oxlint & oxfmt):
 
@@ -340,13 +340,13 @@ Where frontend changes are made, please include before and after screenshots in 
 
 If your pull request directly addresses an open issue, use the following inside your PR description:
 
-```
+```text
 Fixes #123
 ```
 
 or
 
-```
+```text
 Closes https://github.com/wolfstar-project/wolfstar.rocks/issues/123
 ```
 
@@ -354,7 +354,7 @@ This links the pull request to the issue and automatically closes it when the PR
 
 ## Pre-commit hooks
 
-The project uses `lint-staged` with Husky to automatically lint and format files on commit. Commit messages are validated against the Conventional Commits format.
+Git hooks are managed via the `.vite-hooks/` directory. The `pre-commit` hook runs `pnpm vp staged` to automatically lint and format staged files before a commit. Commit messages are validated against the Conventional Commits format by the configured Git hooks.
 
 ## Using AI
 

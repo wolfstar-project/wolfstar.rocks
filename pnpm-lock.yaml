@@ -14,9 +14,6 @@ patchedDependencies:
   '@nuxt/test-utils':
     hash: 8438d6588e19230d3392ce53e45dd8e9bff54eaa3ce18092602fefd40c2eefe9
     path: patches/@nuxt__test-utils.patch
-  '@nuxt/vite-builder':
-    hash: 50080d781f103b6b79e8c25d271c21935a160108bc6d6c8b360ff025f83b6809
-    path: patches/@nuxt__vite-builder.patch
 
 importers:
 
@@ -15296,7 +15293,7 @@ snapshots:
       - vue
       - yjs
 
-  '@nuxt/vite-builder@4.4.2(patch_hash=50080d781f103b6b79e8c25d271c21935a160108bc6d6c8b360ff025f83b6809)(19645adbfa22c8de944f0cd1ae60d53c)':
+  '@nuxt/vite-builder@4.4.2(19645adbfa22c8de944f0cd1ae60d53c)':
     dependencies:
       '@nuxt/kit': 4.4.2(magicast@0.5.2)
       '@rollup/plugin-replace': 6.0.3(rollup@4.60.0)
@@ -22868,7 +22865,7 @@ snapshots:
       '@nuxt/nitro-server': 4.4.2(3e6face88629e3b0cf9b20daad6b2eb0)
       '@nuxt/schema': 4.4.2
       '@nuxt/telemetry': 2.7.0(@nuxt/kit@4.4.2(magicast@0.5.2))
-      '@nuxt/vite-builder': 4.4.2(patch_hash=50080d781f103b6b79e8c25d271c21935a160108bc6d6c8b360ff025f83b6809)(19645adbfa22c8de944f0cd1ae60d53c)
+      '@nuxt/vite-builder': 4.4.2(19645adbfa22c8de944f0cd1ae60d53c)
       '@unhead/vue': 2.1.12(vue@3.5.31(typescript@5.9.3))
       '@vue/shared': 3.5.31
       c12: 3.3.3(magicast@0.5.2)

@@ -436,6 +436,7 @@ export default defineConfig({
 			"dist/",
 			"node_modules/",
 			"*.config.js",
+			".node-version",
 			".env",
 			".env.*",
 			"pnpm-lock.yaml",

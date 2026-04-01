@@ -29,7 +29,6 @@ overrides:
 
 patchedDependencies:
     "@nuxt/test-utils": patches/@nuxt__test-utils.patch
-    "@nuxt/vite-builder": patches/@nuxt__vite-builder.patch
 
 peerDependencyRules:
     allowAny:

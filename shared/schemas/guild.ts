@@ -1,4 +1,4 @@
-import { object, optional, boolean, type InferOutput } from "valibot";
+import { object, optional, boolean } from "valibot";
 
 /**
  * Schema for guild route query parameters.
@@ -7,5 +7,3 @@ import { object, optional, boolean, type InferOutput } from "valibot";
 export const GuildQuerySchema = object({
 	shouldSerialize: optional(boolean()),
 });
-
-export type GuildQuery = InferOutput<typeof GuildQuerySchema>;

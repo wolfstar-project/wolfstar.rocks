@@ -21,7 +21,7 @@ import type { DeepReadonly } from "@sapphire/utilities";
 import type { SelectOneValue } from "./One.vue";
 import { ChannelType } from "discord-api-types/v10";
 
-export interface SelectChannelProps {
+interface SelectChannelProps {
 	/** The label to show on the button */
 	label: string;
 	/** The current selected channel ID */

@@ -19,7 +19,7 @@
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { SelectManyValue } from "./Many.vue";
 
-export interface SelectRolesProps {
+interface SelectRolesProps {
 	/** The label to show on the button */
 	label: string;
 	/** The current selected role IDs */

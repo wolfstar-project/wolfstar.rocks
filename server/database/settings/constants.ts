@@ -160,4 +160,4 @@ export function getDefaultGuildSettings() {
 	return cachedDefaultGuildSettings;
 }
 
-export type DefaultGuildData = Omit<ReadonlyGuildData, "id">;
+type DefaultGuildData = Omit<ReadonlyGuildData, "id">;

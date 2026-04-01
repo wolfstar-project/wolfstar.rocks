@@ -48,7 +48,7 @@ function determineUnit(ms: number): readonly [number, string] {
 	return [Math.floor(ms / unitEntries[0][1]), unitEntries[0][0]] as const;
 }
 
-export interface SelectDurationProps {
+interface SelectDurationProps {
 	modelValue: number | null;
 	min: number;
 	max?: number;

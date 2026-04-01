@@ -462,6 +462,10 @@ export default defineNuxtConfig({
 			},
 		},
 		rateLimiter: false,
+		sri: false,
+		ssg: {
+			hashScripts: false,
+		},
 	},
 
 	sentry: {

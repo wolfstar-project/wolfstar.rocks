@@ -50,6 +50,24 @@ export function flattenGuild(
 		channels: RESTGetAPIGuildChannelsResult;
 	},
 ): FlattenedGuild {
+	if (!Array.isArray(guild.roles)) {
+		logger.warn(
+			`[flattenGuild] guild ${guild.id}: expected roles to be an array, got ${typeof guild.roles}`,
+		);
+	}
+
+	if (!Array.isArray(guild.channels)) {
+		logger.warn(
+			`[flattenGuild] guild ${guild.id}: expected channels to be an array, got ${typeof guild.channels}`,
+		);
+	}
+
+	if (!Array.isArray(guild.emojis)) {
+		logger.warn(
+			`[flattenGuild] guild ${guild.id}: expected emojis to be an array, got ${typeof guild.emojis}`,
+		);
+	}
+
 	return {
 		afkChannelId: guild.afk_channel_id,
 		afkTimeout: guild.afk_timeout,

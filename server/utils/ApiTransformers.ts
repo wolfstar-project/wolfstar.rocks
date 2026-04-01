@@ -73,14 +73,20 @@ export function flattenGuild(
 		preferredLocale: guild.preferred_locale as Locale,
 		premiumSubscriptionCount: guild.premium_subscription_count ?? 0,
 		premiumTier: guild.premium_tier,
-		roles: guild.roles.map((role) => flattenRole(guild.id, role)),
+		roles: Array.isArray(guild.roles)
+			? guild.roles.map((role) => flattenRole(guild.id, role))
+			: [],
 		splash: guild.splash,
 		systemChannelId: guild.system_channel_id,
 		vanityURLCode: guild.vanity_url_code,
 		verificationLevel: guild.verification_level,
 		verified: guild.features.includes(GuildFeature.Verified),
-		channels: guild.channels.map((channel) => flattenGuildChannel(channel as any)) ?? [],
-		emojis: guild.emojis.map((emoji) => flattenGuildEmoji(guild.id, emoji)),
+		channels: Array.isArray(guild.channels)
+			? guild.channels.map((channel) => flattenGuildChannel(channel as any))
+			: [],
+		emojis: Array.isArray(guild.emojis)
+			? guild.emojis.map((emoji) => flattenGuildEmoji(guild.id, emoji))
+			: [],
 	};
 }
 

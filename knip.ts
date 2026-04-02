@@ -7,7 +7,7 @@ const config: KnipConfig = {
 				"service-worker/sw.ts",
 				"pwa-assets.config.ts",
 				"taze.config.ts",
-				"modules/*.ts",
+				"modules/**/*.ts",
 				".lighthouserc.cjs",
 				"lighthouse-setup.cjs",
 				"scripts/**/*.ts",

@@ -22,6 +22,7 @@ import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import {
 	GuildDefaultMessageNotifications,
 	GuildExplicitContentFilter,
+	GuildFeature,
 	GuildMFALevel,
 	GuildPremiumTier,
 	GuildVerificationLevel,
@@ -52,7 +53,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 			);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?: bigint) {
+async function manage(guild: APIGuild, member: APIGuildMember) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -62,13 +63,8 @@ async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?
 
 	const settings = await readSettings(guild.id);
 	const nodes = readSettingsPermissionNodes(settings);
-	const commands = await fetchCommands();
-	const conf = commands.find((cmd) => cmd.name === "conf");
 
-	return (
-		isAdmin(member, settings.rolesAdmin, oauthPermissions) &&
-		(conf ? ((await nodes.run(member, conf)) ?? true) : true)
-	);
+	return isAdmin(member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true);
 }
 
 async function getManageable(
@@ -94,7 +90,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member, oauthPermissions);
+	return manage(guild, member);
 }
 
 export async function transformGuild(
@@ -125,8 +121,9 @@ export async function transformGuild(
 		mfaLevel: GuildMFALevel.None,
 		name: data.name,
 		ownerId: data.owner ? userId : null,
-		partnered: false,
+		partnered: data.features.includes(GuildFeature.Partnered),
 		permissions: Number(data.permissions),
+		features: data.features,
 		preferredLocale: Locale.EnglishUS,
 		premiumSubscriptionCount: null,
 		premiumTier: GuildPremiumTier.None,
@@ -135,7 +132,7 @@ export async function transformGuild(
 		systemChannelId: null,
 		vanityURLCode: null,
 		verificationLevel: GuildVerificationLevel.None,
-		verified: false,
+		verified: data.features.includes(GuildFeature.Verified),
 		widgetEnabled: false,
 	});
 
@@ -263,7 +260,7 @@ export const getCurrentMember = defineCachedFunction(
 	{
 		getKey: async (event: H3Event, guildId: string) => {
 			const userId = await getUserIdFromEvent(event);
-			return `${userId}:${guildId}`;
+			return `user:${userId}:guild:${guildId}`;
 		},
 		maxAge: hours(1),
 	},
@@ -300,6 +297,7 @@ export const getMember = defineCachedFunction(
 	},
 	{
 		maxAge: hours(1),
+		getKey: (guildId, userId) => `user:${userId}:guild:${guildId}`,
 	},
 );
 
@@ -338,6 +336,7 @@ export const getGuild = defineCachedFunction(
 	},
 	{
 		maxAge: hours(1),
+		getKey: (guildId) => `guild:${guildId}`,
 	},
 );
 
@@ -356,5 +355,6 @@ export const fetchCommands = defineCachedFunction(
 	},
 	{
 		maxAge: hours(1),
+		getKey: () => "commands",
 	},
 );

@@ -328,11 +328,11 @@ skills:
     generator: skilld
   nuxtjs-seo-skilld:
     packageName: "@nuxtjs/seo"
-    version: 3.4.0
-    packages: "@nuxtjs/seo@3.4.0"
+    version: 5.0.2
+    packages: "@nuxtjs/seo@5.0.2"
     repo: harlan-zw/nuxt-seo
-    source: "https://nuxtseo.com/llms.txt"
-    syncedAt: 2026-03-13
+    source: "https://github.com/harlan-zw/nuxt-seo/tree/v5.0.2/docs"
+    syncedAt: 2026-03-28
     generator: skilld
   nitro-skilld:
     packageName: nitro
@@ -367,11 +367,11 @@ skills:
     generator: skilld
   nuxt-og-image-skilld:
     packageName: nuxt-og-image
-    version: 5.1.13
-    packages: "nuxt-og-image@5.1.13"
+    version: 6.2.6
+    packages: "nuxt-og-image@6.2.6"
     repo: nuxt-modules/og-image
-    source: "https://nuxtseo.com/llms.txt"
-    syncedAt: 2026-03-15
+    source: "https://github.com/nuxt-modules/og-image/tree/v6.2.6/docs"
+    syncedAt: 2026-03-28
     generator: skilld
   prisma-client-skilld:
     packageName: "@prisma/client"

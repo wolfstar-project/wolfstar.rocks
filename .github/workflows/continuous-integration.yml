@@ -1,4 +1,5 @@
 name: ci
+
 on:
   pull_request:
     branches:
@@ -130,6 +131,7 @@ jobs:
         env:
           VALIDATE_HTML: true
           NODE_OPTIONS: --max-old-space-size=4096
+          NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: 🖥️ Test project (browser)
@@ -186,6 +188,7 @@ jobs:
       - name: 🏗️ Build project
         run: pnpm vp run build:test
         env:
+          NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)

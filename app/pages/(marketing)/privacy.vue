@@ -882,8 +882,7 @@
 
 <script setup lang="ts">
 useSeoMetadata({
-	description:
-		"WolfStar Project's Privacy Policy - Learn how we collect, use, and protect your data",
+	description: "Learn how we collect, use, and protect your data",
 	shouldOgImage: true,
 	title: "Privacy Policy",
 });

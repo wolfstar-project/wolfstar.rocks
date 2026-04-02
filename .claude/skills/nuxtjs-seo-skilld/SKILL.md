@@ -2,30 +2,13 @@
 name: nuxtjs-seo-skilld
 description: "Fully equipped Technical SEO for busy Nuxters. ALWAYS use when writing code importing \"@nuxtjs/seo\". Consult for debugging, best practices, or modifying @nuxtjs/seo, nuxtjs/seo, nuxtjs seo, nuxt-seo, nuxt seo."
 metadata:
-  version: 3.4.0
-  generated_at: 2026-03-13
+  version: 5.0.2
+  generated_at: 2026-03-28
 ---
 
-# harlan-zw/nuxt-seo `@nuxtjs/seo`
+# harlan-zw/nuxt-seo `@nuxtjs/seo@5.0.2`
+**Tags:** latest: 5.0.2
 
-> Fully equipped Technical SEO for busy Nuxters.
-
-**Version:** 3.4.0 (Jan 2026)
-**Deps:** @nuxt/kit@^4.3.0, @nuxtjs/robots@^5.7.0, @nuxtjs/sitemap@^7.6.0, nuxt-link-checker@^4.3.9, nuxt-og-image@^5.1.13, nuxt-schema-org@^5.0.10, nuxt-seo-utils@^7.0.19, nuxt-site-config@^3.2.19
-**Tags:** latest: 3.4.0 (Jan 2026)
-
-**References:** [package.json](./.skilld/pkg/package.json) — exports, entry points • [README](./.skilld/pkg/README.md) — setup, basic usage • [Docs](./.skilld/docs/_INDEX.md) — API reference, guides • [GitHub Issues](./.skilld/issues/_INDEX.md) — bugs, workarounds, edge cases • [GitHub Discussions](./.skilld/discussions/_INDEX.md) — Q&A, patterns, recipes • [Releases](./.skilld/releases/_INDEX.md) — changelog, breaking changes, new APIs
-
-## Search
-
-Use `skilld search` instead of grepping `.skilld/` directories — hybrid semantic + keyword search across all indexed docs, issues, and releases. If `skilld` is unavailable, use `npx -y skilld search`.
-
-```bash
-skilld search "query" -p @nuxtjs/seo
-skilld search "issues:error handling" -p @nuxtjs/seo
-skilld search "releases:deprecated" -p @nuxtjs/seo
-```
-
-Filters: `docs:`, `issues:`, `releases:` prefix narrows by source type.
+**References:** [Docs](./references/docs/_INDEX.md) • [Issues](./references/issues/_INDEX.md) • [Discussions](./references/discussions/_INDEX.md) • [Releases](./references/releases/_INDEX.md)
 
 Related: nuxt-og-image-skilld

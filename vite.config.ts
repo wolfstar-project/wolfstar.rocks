@@ -436,6 +436,7 @@ export default defineConfig({
 			"dist/",
 			"node_modules/",
 			"*.config.js",
+			".node-version",
 			".env",
 			".env.*",
 			"pnpm-lock.yaml",
@@ -502,11 +503,6 @@ export default defineConfig({
 			() =>
 				defineVitestProject({
 					define: { "process.test": "true" },
-					resolve: {
-						alias: {
-							"#site-config/app/composables": `${rootDir}/test/mocks/site-config.ts`,
-						},
-					},
 					test: {
 						browser: {
 							enabled: true,

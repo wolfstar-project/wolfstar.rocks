@@ -22,7 +22,6 @@ export default defineNuxtConfig({
 		"@nuxtjs/html-validator",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
-		"@vue-macros/nuxt",
 		"evlog/nuxt",
 		"nuxt-auth-utils",
 		"nuxt-vitalizer",
@@ -168,8 +167,6 @@ export default defineNuxtConfig({
 			},
 		},
 		failOnError: true,
-		// OG image routes use an iframe wrapper with separate HTML structure
-		ignore: [/\/__og-image__\//],
 	},
 
 	// Runtime configuration
@@ -182,7 +179,7 @@ export default defineNuxtConfig({
 		// Globally, as that would serve one user's data to another.
 		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
-		"/__og-image__/**": getISRConfig(60),
+		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
@@ -373,18 +370,10 @@ export default defineNuxtConfig({
 		format: ["webp", "jpeg", "jpg", "png", "svg"],
 	},
 
-	macros: {
-		betterDefine: false,
-		defineModels: false,
-		reactivityTransform: true,
-		setupSFC: true,
-	},
-
 	ogImage: {
-		defaults: {
-			component: "Default",
+		security: {
+			maxQueryParamSize: 2048,
 		},
-		zeroRuntime: true,
 	},
 	// PWA configuration
 	pwa,
@@ -473,6 +462,10 @@ export default defineNuxtConfig({
 			},
 		},
 		rateLimiter: false,
+		sri: false,
+		ssg: {
+			hashScripts: false,
+		},
 	},
 
 	sentry: {

@@ -1,5 +1,5 @@
 ---
-name: pr-code-quality
+description: Automated code quality review for pull requests and pushes to main/release branches.
 
 on:
     pull_request:
@@ -18,6 +18,7 @@ permissions:
     checks: read
     statuses: read
     actions: read
+    pull-requests: read
 
 timeout-minutes: 20
 

@@ -20,10 +20,11 @@
 #
 # For more information: https://github.github.com/gh-aw/introduction/overview/
 #
+# Automated code quality review for pull requests and pushes to main/release branches.
 #
-# gh-aw-metadata: {"schema_version":"v3","frontmatter_hash":"8c71bc7caa09491d7dd59d5c892eae5f80959f23716bcde1fcc4100061c861e6","compiler_version":"v0.65.3","strict":true,"agent_id":"copilot"}
+# gh-aw-metadata: {"schema_version":"v3","frontmatter_hash":"4c0289c2556aadf57853feb0ba0e3c6d39da32287155c16c6c4e9c680cb60ce5","compiler_version":"v0.65.3","strict":true,"agent_id":"copilot"}
 
-name: "pr-code-quality"
+name: "WolfStar Code Quality Reviewer"
 "on":
   pull_request:
     types:
@@ -42,7 +43,7 @@ concurrency:
   group: "gh-aw-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref || github.run_id }}"
   cancel-in-progress: true
 
-run-name: "pr-code-quality"
+run-name: "WolfStar Code Quality Reviewer"
 
 jobs:
   activation:
@@ -75,7 +76,7 @@ jobs:
           GH_AW_INFO_VERSION: "latest"
           GH_AW_INFO_AGENT_VERSION: "latest"
           GH_AW_INFO_CLI_VERSION: "v0.65.3"
-          GH_AW_INFO_WORKFLOW_NAME: "pr-code-quality"
+          GH_AW_INFO_WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
           GH_AW_INFO_EXPERIMENTAL: "false"
           GH_AW_INFO_SUPPORTS_TOOLS_ALLOWLIST: "true"
           GH_AW_INFO_STAGED: "false"
@@ -151,14 +152,14 @@ jobs:
         run: |
           bash ${RUNNER_TEMP}/gh-aw/actions/create_prompt_first.sh
           {
-          cat << 'GH_AW_PROMPT_b3abd0ec71198ab4_EOF'
+          cat << 'GH_AW_PROMPT_ea67dd576ab3a9e8_EOF'
           <system>
-          GH_AW_PROMPT_b3abd0ec71198ab4_EOF
+          GH_AW_PROMPT_ea67dd576ab3a9e8_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/xpia.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/temp_folder_prompt.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/markdown.md"
           cat "${RUNNER_TEMP}/gh-aw/prompts/safe_outputs_prompt.md"
-          cat << 'GH_AW_PROMPT_b3abd0ec71198ab4_EOF'
+          cat << 'GH_AW_PROMPT_ea67dd576ab3a9e8_EOF'
           <safe-output-tools>
           Tools: add_comment, create_pull_request_review_comment(max:20), submit_pull_request_review, missing_tool, missing_data, noop
           </safe-output-tools>
@@ -190,12 +191,12 @@ jobs:
           {{/if}}
           </github-context>
 
-          GH_AW_PROMPT_b3abd0ec71198ab4_EOF
+          GH_AW_PROMPT_ea67dd576ab3a9e8_EOF
           cat "${RUNNER_TEMP}/gh-aw/prompts/github_mcp_tools_with_safeoutputs_prompt.md"
-          cat << 'GH_AW_PROMPT_b3abd0ec71198ab4_EOF'
+          cat << 'GH_AW_PROMPT_ea67dd576ab3a9e8_EOF'
           </system>
           {{#runtime-import .github/workflows/pr-code-quality.md}}
-          GH_AW_PROMPT_b3abd0ec71198ab4_EOF
+          GH_AW_PROMPT_ea67dd576ab3a9e8_EOF
           } > "$GH_AW_PROMPT"
       - name: Interpolate variables and render templates
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
@@ -269,6 +270,7 @@ jobs:
       actions: read
       checks: read
       contents: read
+      pull-requests: read
       statuses: read
     env:
       DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
@@ -352,12 +354,12 @@ jobs:
           mkdir -p ${RUNNER_TEMP}/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/safeoutputs
           mkdir -p /tmp/gh-aw/mcp-logs/safeoutputs
-          cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/config.json << 'GH_AW_SAFE_OUTPUTS_CONFIG_60066b91b66843ad_EOF'
+          cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/config.json << 'GH_AW_SAFE_OUTPUTS_CONFIG_2cf730636add7a69_EOF'
           {"add_comment":{"max":1,"target":"triggering"},"create_pull_request_review_comment":{"max":20,"side":"RIGHT"},"missing_data":{},"missing_tool":{},"noop":{"max":1,"report-as-issue":"true"},"submit_pull_request_review":{"footer":"if-body","max":1}}
-          GH_AW_SAFE_OUTPUTS_CONFIG_60066b91b66843ad_EOF
+          GH_AW_SAFE_OUTPUTS_CONFIG_2cf730636add7a69_EOF
       - name: Write Safe Outputs Tools
         run: |
-          cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/tools_meta.json << 'GH_AW_SAFE_OUTPUTS_TOOLS_META_7d270a083cf2b15c_EOF'
+          cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/tools_meta.json << 'GH_AW_SAFE_OUTPUTS_TOOLS_META_e11547622db97e03_EOF'
           {
             "description_suffixes": {
               "add_comment": " CONSTRAINTS: Maximum 1 comment(s) can be added. Target: triggering.",
@@ -367,8 +369,8 @@ jobs:
             "repo_params": {},
             "dynamic_tools": []
           }
-          GH_AW_SAFE_OUTPUTS_TOOLS_META_7d270a083cf2b15c_EOF
-          cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/validation.json << 'GH_AW_SAFE_OUTPUTS_VALIDATION_bbbf80c399f4342d_EOF'
+          GH_AW_SAFE_OUTPUTS_TOOLS_META_e11547622db97e03_EOF
+          cat > ${RUNNER_TEMP}/gh-aw/safeoutputs/validation.json << 'GH_AW_SAFE_OUTPUTS_VALIDATION_a8815e4dd1109699_EOF'
           {
             "add_comment": {
               "defaultMax": 1,
@@ -501,7 +503,7 @@ jobs:
               }
             }
           }
-          GH_AW_SAFE_OUTPUTS_VALIDATION_bbbf80c399f4342d_EOF
+          GH_AW_SAFE_OUTPUTS_VALIDATION_a8815e4dd1109699_EOF
           node ${RUNNER_TEMP}/gh-aw/actions/generate_safe_outputs_tools.cjs
       - name: Generate Safe Outputs MCP Server Config
         id: safe-outputs-config
@@ -569,7 +571,7 @@ jobs:
           export MCP_GATEWAY_DOCKER_COMMAND='docker run -i --rm --network host -v /var/run/docker.sock:/var/run/docker.sock -e MCP_GATEWAY_PORT -e MCP_GATEWAY_DOMAIN -e MCP_GATEWAY_API_KEY -e MCP_GATEWAY_PAYLOAD_DIR -e MCP_GATEWAY_PAYLOAD_SIZE_THRESHOLD -e DEBUG -e MCP_GATEWAY_LOG_DIR -e GH_AW_MCP_LOG_DIR -e GH_AW_SAFE_OUTPUTS -e GH_AW_SAFE_OUTPUTS_CONFIG_PATH -e GH_AW_SAFE_OUTPUTS_TOOLS_PATH -e GH_AW_ASSETS_BRANCH -e GH_AW_ASSETS_MAX_SIZE_KB -e GH_AW_ASSETS_ALLOWED_EXTS -e DEFAULT_BRANCH -e GITHUB_MCP_SERVER_TOKEN -e GITHUB_MCP_GUARD_MIN_INTEGRITY -e GITHUB_MCP_GUARD_REPOS -e GITHUB_REPOSITORY -e GITHUB_SERVER_URL -e GITHUB_SHA -e GITHUB_WORKSPACE -e GITHUB_TOKEN -e GITHUB_RUN_ID -e GITHUB_RUN_NUMBER -e GITHUB_RUN_ATTEMPT -e GITHUB_JOB -e GITHUB_ACTION -e GITHUB_EVENT_NAME -e GITHUB_EVENT_PATH -e GITHUB_ACTOR -e GITHUB_ACTOR_ID -e GITHUB_TRIGGERING_ACTOR -e GITHUB_WORKFLOW -e GITHUB_WORKFLOW_REF -e GITHUB_WORKFLOW_SHA -e GITHUB_REF -e GITHUB_REF_NAME -e GITHUB_REF_TYPE -e GITHUB_HEAD_REF -e GITHUB_BASE_REF -e GH_AW_SAFE_OUTPUTS_PORT -e GH_AW_SAFE_OUTPUTS_API_KEY -v /tmp/gh-aw/mcp-payloads:/tmp/gh-aw/mcp-payloads:rw -v /opt:/opt:ro -v /tmp:/tmp:rw -v '"${GITHUB_WORKSPACE}"':'"${GITHUB_WORKSPACE}"':rw ghcr.io/github/gh-aw-mcpg:v0.2.10'
 
           mkdir -p /home/runner/.copilot
-          cat << GH_AW_MCP_CONFIG_1d6a6f072253631f_EOF | bash ${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.sh
+          cat << GH_AW_MCP_CONFIG_d73907b8de06f5ea_EOF | bash ${RUNNER_TEMP}/gh-aw/actions/start_mcp_gateway.sh
           {
             "mcpServers": {
               "github": {
@@ -610,7 +612,7 @@ jobs:
               "payloadDir": "${MCP_GATEWAY_PAYLOAD_DIR}"
             }
           }
-          GH_AW_MCP_CONFIG_1d6a6f072253631f_EOF
+          GH_AW_MCP_CONFIG_d73907b8de06f5ea_EOF
       - name: Download activation artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
@@ -849,7 +851,7 @@ jobs:
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
           GH_AW_NOOP_MAX: "1"
-          GH_AW_WORKFLOW_NAME: "pr-code-quality"
+          GH_AW_WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
@@ -863,7 +865,7 @@ jobs:
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
           GH_AW_MISSING_TOOL_CREATE_ISSUE: "true"
-          GH_AW_WORKFLOW_NAME: "pr-code-quality"
+          GH_AW_WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
@@ -877,7 +879,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-          GH_AW_WORKFLOW_NAME: "pr-code-quality"
+          GH_AW_WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
           GH_AW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GH_AW_AGENT_CONCLUSION: ${{ needs.agent.result }}
           GH_AW_WORKFLOW_ID: "pr-code-quality"
@@ -901,7 +903,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           GH_AW_AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
-          GH_AW_WORKFLOW_NAME: "pr-code-quality"
+          GH_AW_WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
           GH_AW_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           GH_AW_AGENT_CONCLUSION: ${{ needs.agent.result }}
           GH_AW_NOOP_MESSAGE: ${{ steps.noop.outputs.noop_message }}
@@ -982,8 +984,8 @@ jobs:
         if: always() && steps.detection_guard.outputs.run_detection == 'true'
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
-          WORKFLOW_NAME: "pr-code-quality"
-          WORKFLOW_DESCRIPTION: "No description provided"
+          WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
+          WORKFLOW_DESCRIPTION: "Automated code quality review for pull requests and pushes to main/release branches."
           HAS_PATCH: ${{ needs.agent.outputs.has_patch }}
         with:
           script: |
@@ -1091,7 +1093,7 @@ jobs:
       GH_AW_ENGINE_ID: "copilot"
       GH_AW_ENGINE_MODEL: ${{ needs.agent.outputs.model }}
       GH_AW_WORKFLOW_ID: "pr-code-quality"
-      GH_AW_WORKFLOW_NAME: "pr-code-quality"
+      GH_AW_WORKFLOW_NAME: "WolfStar Code Quality Reviewer"
     outputs:
       code_push_failure_count: ${{ steps.process_safe_outputs.outputs.code_push_failure_count }}
       code_push_failure_errors: ${{ steps.process_safe_outputs.outputs.code_push_failure_errors }}

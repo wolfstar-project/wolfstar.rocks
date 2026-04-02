@@ -53,7 +53,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 			);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?: bigint) {
+async function manage(guild: APIGuild, member: APIGuildMember) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -63,13 +63,8 @@ async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?
 
 	const settings = await readSettings(guild.id);
 	const nodes = readSettingsPermissionNodes(settings);
-	const commands = await fetchCommands();
-	const conf = commands.find((cmd) => cmd.name === "conf");
 
-	return (
-		isAdmin(member, settings.rolesAdmin, oauthPermissions) &&
-		(conf ? ((await nodes.run(member, conf)) ?? true) : true)
-	);
+	return isAdmin(member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true);
 }
 
 async function getManageable(
@@ -95,7 +90,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member, oauthPermissions);
+	return manage(guild, member);
 }
 
 export async function transformGuild(

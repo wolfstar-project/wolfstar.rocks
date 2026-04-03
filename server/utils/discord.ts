@@ -31,9 +31,6 @@ import {
 } from "discord-api-types/v10";
 import { createError } from "evlog";
 
-// Limits concurrent guild transform API calls to avoid Discord rate limits
-const GUILD_TRANSFORM_BATCH_SIZE = 10;
-
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);
 	const userId = session.user?.id;
@@ -104,7 +101,7 @@ export async function transformGuild(
 	const mockGuild = cast<FlattenedGuild>({
 		acronym: guildNameToAcronym(data.name),
 		afkChannelId: null,
-		afkTimeout: 60,
+		afkTimeout: 0,
 		applicationId: null,
 		approximateMemberCount: data.approximate_member_count ?? 0,
 		approximatePresenceCount: data.approximate_presence_count ?? 0,
@@ -113,6 +110,7 @@ export async function transformGuild(
 		channels,
 		defaultMessageNotifications: GuildDefaultMessageNotifications.OnlyMentions,
 		description: null,
+		widgetEnabled: false,
 		emojis: [],
 		explicitContentFilter: GuildExplicitContentFilter.Disabled,
 		icon: data.icon,
@@ -121,8 +119,7 @@ export async function transformGuild(
 		mfaLevel: GuildMFALevel.None,
 		name: data.name,
 		ownerId: data.owner ? userId : null,
-		partnered: data.features.includes(GuildFeature.Partnered),
-		permissions: Number(data.permissions),
+		partnered: data.features.includes(GuildFeature.Partnered) ?? false,
 		features: data.features,
 		preferredLocale: Locale.EnglishUS,
 		premiumSubscriptionCount: null,
@@ -132,8 +129,7 @@ export async function transformGuild(
 		systemChannelId: null,
 		vanityURLCode: null,
 		verificationLevel: GuildVerificationLevel.None,
-		verified: data.features.includes(GuildFeature.Verified),
-		widgetEnabled: false,
+		verified: data.features.includes(GuildFeature.Verified) ?? false,
 	});
 
 	const serialized: PartialOauthFlattenedGuild = isNullOrUndefined(guild)
@@ -160,13 +156,10 @@ export async function transformOauthGuildsAndUser({
 	}
 
 	const userId = user.id;
-	const transformedGuilds: OauthFlattenedGuild[] = [];
 
-	for (let i = 0; i < guilds.length; i += GUILD_TRANSFORM_BATCH_SIZE) {
-		const batch = guilds.slice(i, i + GUILD_TRANSFORM_BATCH_SIZE);
-		const results = await Promise.all(batch.map((guild) => transformGuild(userId, guild)));
-		transformedGuilds.push(...results);
-	}
+	const transformedGuilds: OauthFlattenedGuild[] = await Promise.all(
+		guilds.map((guild) => transformGuild(userId, guild)),
+	);
 
 	return { transformedGuilds, user };
 }

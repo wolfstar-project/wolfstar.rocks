@@ -1,11 +1,11 @@
 import { PrismaClient } from "#server/database/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-export interface GetDbParams {
+interface GetDbParams {
 	connectionString: string;
 }
 
-export function getDb({ connectionString }: GetDbParams) {
+function getDb({ connectionString }: GetDbParams) {
 	const pool = new PrismaPg({ connectionString });
 
 	const prisma = new PrismaClient({ adapter: pool });

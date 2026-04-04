@@ -27,15 +27,6 @@ export function updateSliderValueArr(
 }
 
 /**
- * Removes non-alphanumeric characters from a string.
- * @param str The string.
- * @returns The string.
- */
-export default function removeNonAlphaNumeric(str: string) {
-	return str.replace(/[^0-9a-z]/gi, "");
-}
-
-/**
  * Uses object storage.
  * @param key The key.
  * @param initial The initial value.
@@ -115,25 +106,6 @@ export function pick<Data extends object, Keys extends keyof Data>(
 	}
 
 	return result;
-}
-
-/**
- * Omits keys from an object.
- * @param data The object.
- * @param keys The keys.
- * @returns The object.
- */
-export function omit<Data extends object, Keys extends keyof Data>(
-	data: Data,
-	keys: Keys[],
-): Omit<Data, Keys> {
-	const result = { ...data };
-
-	for (const key of keys) {
-		delete result[key];
-	}
-
-	return result as Omit<Data, Keys>;
 }
 
 /**

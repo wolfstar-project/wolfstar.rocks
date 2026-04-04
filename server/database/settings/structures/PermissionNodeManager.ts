@@ -5,7 +5,7 @@ import { Collection } from "@discordjs/collection";
 import { createError } from "evlog";
 
 // oxlint-disable-next-line no-restricted-syntax
-export const enum PermissionNodeAction {
+const enum PermissionNodeAction {
 	Allow,
 	Deny,
 }

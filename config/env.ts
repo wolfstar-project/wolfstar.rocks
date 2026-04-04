@@ -3,15 +3,13 @@ import Git from "simple-git";
 import { version as packageVersion } from "../package.json";
 import { getNextVersion } from "../scripts/next-version";
 
-export { packageVersion as version };
-
 /**
  * Environment variable `PULL_REQUEST` provided by Netlify.
  * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
  *
  * Whether triggered by a GitHub PR
  */
-export const isPR = process.env.PULL_REQUEST === "true";
+const isPR = process.env.PULL_REQUEST === "true";
 
 /**
  * Environment variable `REVIEW_ID` provided by Netlify.
@@ -19,7 +17,7 @@ export const isPR = process.env.PULL_REQUEST === "true";
  *
  * Pull request number (if in a PR environment)
  */
-export const prNumber = process.env.REVIEW_ID || null;
+const prNumber = process.env.REVIEW_ID || null;
 
 /**
  * Environment variable `BRANCH` provided by Netlify.
@@ -27,7 +25,7 @@ export const prNumber = process.env.REVIEW_ID || null;
  *
  * Git branch
  */
-export const gitBranch = process.env.BRANCH;
+const gitBranch = process.env.BRANCH;
 
 export const isCanary =
 	(process.env.NODE_ENV === "production" ||
@@ -43,8 +41,8 @@ export const isCanary =
  *
  * Whether this is some sort of preview environment.
  */
-export const isPreview = isPR || (process.env.CONTEXT && process.env.CONTEXT !== "production");
-export const isProduction = process.env.CONTEXT === "production";
+const isPreview = isPR || (process.env.CONTEXT && process.env.CONTEXT !== "production");
+const isProduction = process.env.CONTEXT === "production";
 
 /**
  * Environment variable `URL` provided by Netlify.
@@ -67,7 +65,7 @@ export const getProductionUrl = () =>
 	isProduction ? (process.env.URL ? process.env.URL : undefined) : undefined;
 
 const git = Git();
-export async function getGitInfo() {
+async function getGitInfo() {
 	let branch;
 	try {
 		branch = gitBranch || (await git.revparse(["--abbrev-ref", "HEAD"]));

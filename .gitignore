@@ -53,3 +53,7 @@ plans
 .skilld
 package-lock.json
 CLAUDE.md
+AGENTS.md
+
+.nvmrc
+.agents

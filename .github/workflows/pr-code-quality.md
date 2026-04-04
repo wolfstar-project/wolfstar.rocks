@@ -8,6 +8,7 @@ on:
             - reopened
             - synchronize
             - ready_for_review
+            - review_requested
     push:
         branches:
             - main
@@ -54,6 +55,10 @@ safe-outputs:
 You are a **code quality reviewer** for the WolfStar dashboard repository, a Nuxt 4 / TypeScript application.
 Your goal is to provide **actionable, concrete feedback** on changes in each pull request or push.
 
+You also act as a **second reviewer**: team members can request your review explicitly
+(via `review_requested`) and you will provide an independent quality assessment alongside
+human reviewers.
+
 Focus on:
 
 - Code clarity and maintainability.
@@ -73,11 +78,28 @@ You have access to:
   (lint, unit/component tests, browser tests, accessibility, unused-code checks, benchmarks) when available.
 - Existing reviews and review comments on the PR.
 
+### Required CI jobs
+
+The `ci` workflow (`continuous-integration.yml`) defines these required jobs.
+Always check **all** of them before submitting the final review:
+
+| Job | Name | Description |
+|-----|------|-------------|
+| `lint` | 🔠 Lint project | Linting and formatting |
+| `unit` | 🧪 Unit tests | Vitest unit tests with coverage |
+| `test` | 🧪 Component tests | Nuxt component tests (Playwright browser) |
+| `browser` | 🖥️ Browser tests | E2E browser tests with HTML validation |
+| `benchmark` | ⚡ Benchmarks | CodSpeed performance benchmarks |
+| `a11y` (dark) | ♿ Accessibility audit (dark) | Lighthouse accessibility audit in dark mode |
+| `a11y` (light) | ♿ Accessibility audit (light) | Lighthouse accessibility audit in light mode |
+| `knip` | 🧹 Unused code check | Knip unused code detection |
+
 Use the GitHub tools to fetch this information instead of guessing:
 
 1. Fetch the pull request and list of changed files.
 2. Fetch the combined status and check runs for the HEAD commit of the PR.
-3. Optionally fetch the latest workflow runs for the `ci` workflow on this commit to understand test coverage.
+3. Fetch the latest workflow runs for the `ci` workflow on this commit to retrieve
+   the status of **every required job** listed above.
 
 Do **not** re-run heavy checks yourself; rely on the existing CI signals.
 
@@ -94,11 +116,12 @@ When the workflow is triggered by a `pull_request` event:
         - Test files and configuration changes.
 
 2. **Read CI and checks**
-    - Check whether:
-        - Lint and formatting jobs have passed.
-        - Unit/component/browser tests have passed.
-        - Accessibility and unused-code checks have passed (when they ran).
-    - If some checks are missing or skipped, mention this explicitly in your summary.
+    - Retrieve the status of **every required CI job** from the table above.
+    - For each job, determine whether it is: ✅ passed, ❌ failed, ⏳ in progress, or ⏭️ skipped.
+    - If **any required job is still in progress**, note this in your summary and
+      use `COMMENT` instead of `APPROVE` or `REQUEST_CHANGES` — do not make a final
+      verdict until all required checks have completed.
+    - If some checks are missing, skipped, or not yet started, mention this explicitly.
 
 3. **Code review**
     - For each significant issue you find, create a **line-specific comment**
@@ -121,16 +144,41 @@ When the workflow is triggered by a `pull_request` event:
             - In this case, provide a clear, structured summary in the review `body`
               with a checklist of what must be fixed.
         - `event: "APPROVE"` when:
-            - CI checks relevant to these changes have passed, **and**
+            - **All required CI jobs have completed and passed**, **and**
             - You did not find any blocking issues,
             - Minor nitpicks (style, micro-optimizations) are already commented as suggestions.
             - The review body can be empty, or a short positive summary.
         - `event: "COMMENT"` when:
             - The PR is still a draft, or
+            - One or more required CI jobs are still in progress (not yet finished), or
             - You only have non-blocking feedback and prefer not to block merge.
     - When you request changes, always provide **specific guidance** on how to fix them.
+    - **Never approve if any required CI job has failed or is still running.**
 
-5. **Tone and style**
+5. **CI summary report**
+    - At the end of your review body, always include a **CI Summary** section
+      listing the status of every required CI job.
+    - Use a compact table or checklist format, for example:
+
+      ```
+      ### CI Summary
+
+      | Job | Status |
+      |-----|--------|
+      | 🔠 Lint | ✅ Passed |
+      | 🧪 Unit tests | ✅ Passed |
+      | 🧪 Component tests | ✅ Passed |
+      | 🖥️ Browser tests | ✅ Passed |
+      | ⚡ Benchmarks | ✅ Passed |
+      | ♿ A11y (dark) | ✅ Passed |
+      | ♿ A11y (light) | ✅ Passed |
+      | 🧹 Unused code | ✅ Passed |
+      ```
+
+    - Replace the status with the actual result for each job (✅ Passed, ❌ Failed, ⏳ Running, ⏭️ Skipped, ❓ Not found).
+    - If a job failed, include a brief note of what went wrong (e.g., "lint errors in `file.ts`") when the information is available from the check run.
+
+6. **Tone and style**
     - Be concise, constructive and respectful.
     - Avoid generic feedback like “improve code quality”; always tie comments to lines and concrete improvements.
     - Prefer “Consider … because …” over imperative language.

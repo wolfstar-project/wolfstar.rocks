@@ -159,10 +159,11 @@ When the workflow is triggered by a `pull_request` event:
 5. **CI summary report**
     - At the end of your review body, always include a **CI Summary** section
       listing the status of every required CI job.
-    - Use a compact table or checklist format, for example:
+    - **Always wrap the CI Summary in a collapsed section** so it doesn’t dominate the review:
 
-      ```
-      ### CI Summary
+      ```markdown
+      <details>
+      <summary>📋 CI Summary</summary>
 
       | Job | Status |
       |-----|--------|
@@ -174,6 +175,8 @@ When the workflow is triggered by a `pull_request` event:
       | ♿ A11y (dark) | ✅ Passed |
       | ♿ A11y (light) | ✅ Passed |
       | 🧹 Unused code | ✅ Passed |
+
+      </details>
       ```
 
     - Replace the status with the actual result for each job (✅ Passed, ❌ Failed, ⏳ Running, ⏭️ Skipped, ❓ Not found).
@@ -183,6 +186,41 @@ When the workflow is triggered by a `pull_request` event:
     - Be concise, constructive and respectful.
     - Avoid generic feedback like “improve code quality”; always tie comments to lines and concrete improvements.
     - Prefer “Consider … because …” over imperative language.
+
+7. **Use collapsed sections for long feedback**
+    - When a review comment or the review body covers **multiple topics or categories**,
+      wrap each topic in a collapsible `<details>` block so the comment stays scannable.
+    - Always leave a **short visible summary** above the collapsed sections so the author
+      can understand the overall picture at a glance without expanding anything.
+    - Use this HTML pattern:
+
+      ```markdown
+      **Short visible summary of the feedback.**
+
+      <details>
+      <summary>🔍 Accessibility concerns (2 items)</summary>
+
+      Detailed explanation of accessibility issues …
+
+      </details>
+
+      <details>
+      <summary>⚡ Performance notes</summary>
+
+      Detailed explanation of performance observations …
+
+      </details>
+      ```
+
+    - Apply collapsed sections in these situations:
+        - **Inline review comments** that discuss more than one aspect of a code change
+          (e.g., accessibility + performance + pattern consistency in the same file).
+        - **The review body** when you have feedback across multiple categories
+          (group by: bugs, accessibility, performance, style/patterns).
+        - **The CI Summary** table — always wrap it in a collapsed section so it doesn’t
+          dominate the review body.
+    - Keep each `<summary>` line short and descriptive, with an emoji prefix matching the
+      category (♿ accessibility, ⚡ performance, 🐛 bugs, 🧹 style, 🔒 security).
 
 ## Behavior on push events (no pull request)
 

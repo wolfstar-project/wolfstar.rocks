@@ -139,6 +139,7 @@
 										:is-loading
 										is-loading-icon="lucide:loader"
 										icon="heroicons:shield-check"
+										aria-label="Toggle manageable only"
 										@click="toggleShowManageableOnly()"
 									/>
 
@@ -147,6 +148,7 @@
 										class="join-item"
 										color="primary"
 										:is-loading
+										:aria-label="sortAscending ? 'Sort Z to A' : 'Sort A to Z'"
 										@click="toggleSortOrder()"
 									>
 										<template #leading>
@@ -178,6 +180,7 @@
 										:is-loading
 										is-loading-icon="lucide:loader"
 										icon="heroicons:arrow-path-20-solid"
+										aria-label="Refresh servers"
 										@click="refresh()"
 									/>
 								</UFieldGroup>
@@ -206,6 +209,7 @@
 										class="join-item"
 										color="primary"
 										:is-loading
+										:aria-label="sortAscending ? 'Sort Z to A' : 'Sort A to Z'"
 										@click="toggleSortOrder()"
 									>
 										<template #leading>

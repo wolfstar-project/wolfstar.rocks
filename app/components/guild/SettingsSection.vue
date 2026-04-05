@@ -1,22 +1,26 @@
 <template>
-	<div class="mb-6 w-full">
-		<template v-if="title">
-			<div v-if="disableTypography && !forceSemanticHeading" v-bind="titleProps">
-				{{ title }}
-			</div>
-			<component
-				:is="headingLevel"
-				v-else
-				:class="[disableTypography ? '' : 'divider divider-start text-xl font-semibold']"
-				v-bind="titleProps"
-			>
-				{{ title }}
-			</component>
-		</template>
+	<div class="w-full space-y-6">
+		<div v-if="title || description" class="space-y-1">
+			<template v-if="title">
+				<div v-if="disableTypography && !forceSemanticHeading" v-bind="titleProps">
+					{{ title }}
+				</div>
+				<component
+					:is="headingLevel"
+					v-else
+					:class="[
+						disableTypography ? '' : 'divider divider-start text-xl font-semibold',
+					]"
+					v-bind="titleProps"
+				>
+					{{ title }}
+				</component>
+			</template>
 
-		<p v-if="description" class="text-sm text-base-content/70">
-			{{ description }}
-		</p>
+			<p v-if="description" class="text-sm text-base-content/70">
+				{{ description }}
+			</p>
+		</div>
 
 		<div class="space-y-4">
 			<slot></slot>

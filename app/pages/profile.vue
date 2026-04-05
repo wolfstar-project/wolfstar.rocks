@@ -105,6 +105,7 @@
 				<template #content="{ item }">
 					<div class="p-6 md:p-8">
 						<div v-if="item.value === 'servers'" class="space-y-6">
+							<h2 class="sr-only">Servers</h2>
 							<!-- Search and Controls Section -->
 							<div class="mb-4 flex flex-wrap items-center gap-4">
 								<UInput

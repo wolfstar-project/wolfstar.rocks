@@ -3,11 +3,11 @@
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
 		<h1 class="sr-only">User Profile</h1>
 		<section
-			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
+			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-6 shadow-sm md:flex-row md:border-4 md:p-8"
 		>
 			<!-- decorative left accent (sidebar-like) -->
 			<div
-				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/40 md:block"
+				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/30 md:block"
 				aria-hidden="true"
 			></div>
 			<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
@@ -89,11 +89,11 @@
 		</section>
 
 		<section
-			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
+			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 md:border-4"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
 			<div
-				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-secondary/20 md:block"
+				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-secondary/30 md:block"
 				aria-hidden="true"
 			></div>
 			<UTabs
@@ -103,159 +103,150 @@
 				class="flex w-full flex-col items-center justify-center"
 			>
 				<template #content="{ item }">
-					<div class="p-8">
+					<div class="p-6 md:p-8">
 						<div v-if="item.value === 'servers'" class="space-y-6">
-							<!-- Server Section Header -->
-							<div class="mb-4">
-								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
-								<div class="mt-1 text-base-content/60">
-									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
-									<span v-else>{{ guilds.length ?? 0 }} servers</span>
-								</div>
-							</div>
-
+							<h2 class="sr-only">Servers</h2>
 							<!-- Search and Controls Section -->
-							<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
-								<div class="flex items-end gap-2">
-									<UFieldGroup class="flex items-start gap-2">
-										<UInput
-											ref="input"
-											v-model="searchQuery"
-											aria-label="Search servers"
-											name="search"
-											type="text"
-											placeholder="Search servers..."
-											icon="heroicons:magnifying-glass-circle"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											class="flex max-w-xs items-start"
-										>
-											<template v-if="searchQuery?.length" #trailing>
-												<UButton
-													color="neutral"
-													variant="link"
-													size="sm"
-													icon="lucide:circle-x"
-													aria-label="Clear input"
-													@click="undoSearch()"
-												/>
-											</template>
-										</UInput>
-									</UFieldGroup>
-									<!-- Mobile Buttons (no view toggle) -->
-									<UFieldGroup size="sm" class="join flex items-end sm:hidden">
-										<!-- Manageable Only Toggle Button -->
+							<div class="mb-4 flex flex-wrap items-center gap-4">
+								<UInput
+									ref="input"
+									v-model="searchQuery"
+									aria-label="Search servers"
+									name="search"
+									type="text"
+									placeholder="Search servers..."
+									icon="heroicons:magnifying-glass-circle"
+									:is-loading
+									is-loading-icon="lucide:loader"
+									class="flex max-w-xs items-start"
+								>
+									<template v-if="searchQuery?.length" #trailing>
 										<UButton
-											class="join-item"
-											color="primary"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:shield-check"
-											@click="toggleShowManageableOnly()"
+											color="neutral"
+											variant="link"
+											size="sm"
+											icon="lucide:circle-x"
+											aria-label="Clear input"
+											@click="undoSearch()"
 										/>
+									</template>
+								</UInput>
+								<!-- Mobile Buttons (no view toggle) -->
+								<UFieldGroup size="sm" class="join flex items-end sm:hidden">
+									<!-- Manageable Only Toggle Button -->
+									<UButton
+										class="join-item"
+										color="primary"
+										:is-loading
+										is-loading-icon="lucide:loader"
+										icon="heroicons:shield-check"
+										aria-label="Toggle manageable only"
+										@click="toggleShowManageableOnly()"
+									/>
 
-										<!-- Sort Button -->
-										<UButton
-											class="join-item"
-											color="primary"
-											:is-loading
-											@click="toggleSortOrder()"
-										>
-											<template #leading>
-												<UIcon
-													v-motion
-													:initial="{ opacity: 0 }"
-													:enter="{
-														opacity: 1,
-														transition: { duration: 150 },
-													}"
-													:leave="{
-														opacity: 0,
-														transition: { duration: 150 },
-													}"
-													:name="
-														sortAscending
-															? 'lucide:arrow-up-a-z'
-															: 'lucide:arrow-down-z-a'
-													"
-												/>
-											</template>
-										</UButton>
+									<!-- Sort Button -->
+									<UButton
+										class="join-item"
+										color="primary"
+										:is-loading
+										:aria-label="sortAscending ? 'Sort Z to A' : 'Sort A to Z'"
+										@click="toggleSortOrder()"
+									>
+										<template #leading>
+											<UIcon
+												v-motion
+												:initial="{ opacity: 0 }"
+												:enter="{
+													opacity: 1,
+													transition: { duration: 150 },
+												}"
+												:leave="{
+													opacity: 0,
+													transition: { duration: 150 },
+												}"
+												:name="
+													sortAscending
+														? 'lucide:arrow-up-a-z'
+														: 'lucide:arrow-down-z-a'
+												"
+											/>
+										</template>
+									</UButton>
 
-										<!-- Refresh Button -->
-										<UButton
-											v-if="filteredGuilds.length === 0"
-											class="join-item"
-											color="primary"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:arrow-path-20-solid"
-											@click="refresh()"
-										/>
-									</UFieldGroup>
+									<!-- Refresh Button -->
+									<UButton
+										v-if="filteredGuilds.length === 0"
+										class="join-item"
+										color="primary"
+										:is-loading
+										is-loading-icon="lucide:loader"
+										icon="heroicons:arrow-path-20-solid"
+										aria-label="Refresh servers"
+										@click="refresh()"
+									/>
+								</UFieldGroup>
 
-									<!-- Desktop Buttons (with view toggle) -->
-									<UFieldGroup size="sm" class="join hidden items-end sm:flex">
-										<!--
+								<!-- Desktop Buttons (with view toggle) -->
+								<UFieldGroup size="sm" class="join hidden items-end sm:flex">
+									<!--
                     Manageable
                     Only
                     Toggle
                     Button
                     -->
-										<UButton
-											class="join-item"
-											color="primary"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:shield-check"
-											@click="toggleShowManageableOnly()"
-										>
-											<span>Manageable</span>
-										</UButton>
+									<UButton
+										class="join-item"
+										color="primary"
+										:is-loading
+										is-loading-icon="lucide:loader"
+										icon="heroicons:shield-check"
+										@click="toggleShowManageableOnly()"
+									>
+										<span>Manageable</span>
+									</UButton>
 
-										<!-- Sort Button -->
-										<UButton
-											class="join-item"
-											color="primary"
-											:is-loading
-											@click="toggleSortOrder()"
-										>
-											<template #leading>
-												<UIcon
-													v-motion
-													:initial="{ opacity: 0 }"
-													:enter="{
-														opacity: 1,
-														transition: { duration: 150 },
-													}"
-													:leave="{
-														opacity: 0,
-														transition: { duration: 150 },
-													}"
-													:name="
-														sortAscending
-															? 'lucide:arrow-up-a-z'
-															: 'lucide:arrow-down-z-a'
-													"
-												/>
-											</template>
-										</UButton>
+									<!-- Sort Button -->
+									<UButton
+										class="join-item"
+										color="primary"
+										:is-loading
+										:aria-label="sortAscending ? 'Sort Z to A' : 'Sort A to Z'"
+										@click="toggleSortOrder()"
+									>
+										<template #leading>
+											<UIcon
+												v-motion
+												:initial="{ opacity: 0 }"
+												:enter="{
+													opacity: 1,
+													transition: { duration: 150 },
+												}"
+												:leave="{
+													opacity: 0,
+													transition: { duration: 150 },
+												}"
+												:name="
+													sortAscending
+														? 'lucide:arrow-up-a-z'
+														: 'lucide:arrow-down-z-a'
+												"
+											/>
+										</template>
+									</UButton>
 
-										<!-- Refresh Button -->
-										<UButton
-											v-if="filteredGuilds.length === 0"
-											class="join-item"
-											color="primary"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:arrow-path-20-solid"
-											@click="refresh()"
-										>
-											<span>Refresh</span>
-										</UButton>
-									</UFieldGroup>
-								</div>
-								<!-- Search Input for Desktop -->
+									<!-- Refresh Button -->
+									<UButton
+										v-if="filteredGuilds.length === 0"
+										class="join-item"
+										color="primary"
+										:is-loading
+										is-loading-icon="lucide:loader"
+										icon="heroicons:arrow-path-20-solid"
+										@click="refresh()"
+									>
+										<span>Refresh</span>
+									</UButton>
+								</UFieldGroup>
 							</div>
 							<div class="space-y-4 md:space-y-2">
 								<GuildCards

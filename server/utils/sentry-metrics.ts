@@ -126,7 +126,6 @@ export async function instrumentDiscordApiCall<T>(
 	);
 }
 
-
 export async function withApiMetrics<T>(event: H3Event, fn: () => Promise<T>): Promise<T> {
 	const startTime = Date.now();
 	const route = getMetricRoute(event);
@@ -142,29 +141,27 @@ export async function withApiMetrics<T>(event: H3Event, fn: () => Promise<T>): P
 			},
 		},
 		async (span) => {
-
-							try {
-					const result = await fn();
-					span.setStatus({ code: 1, message: "ok" });
-					return result;
-				} catch (error) {
-
-					const statusCode = extractStatusCode(error);
-					span.setAttribute("http.status_code", statusCode);
-					span.setStatus({ code: 2, message: "internal_error" });
-					Sentry.metrics.count("api.error", 1, {
-						attributes: { route, status: String(statusCode) },
-					});
-					throw error;
-				} finally {
-					Sentry.metrics.count("api.request", 1, {
-						attributes: { route, method },
-					});
-					Sentry.metrics.distribution("api.request.duration", Date.now() - startTime, {
-						unit: "millisecond",
-						attributes: { route },
-					});
-				}
+			try {
+				const result = await fn();
+				span.setStatus({ code: 1, message: "ok" });
+				return result;
+			} catch (error) {
+				const statusCode = extractStatusCode(error);
+				span.setAttribute("http.status_code", statusCode);
+				span.setStatus({ code: 2, message: "internal_error" });
+				Sentry.metrics.count("api.error", 1, {
+					attributes: { route, status: String(statusCode) },
+				});
+				throw error;
+			} finally {
+				Sentry.metrics.count("api.request", 1, {
+					attributes: { route, method },
+				});
+				Sentry.metrics.distribution("api.request.duration", Date.now() - startTime, {
+					unit: "millisecond",
+					attributes: { route },
+				});
+			}
 		},
 	);
 }

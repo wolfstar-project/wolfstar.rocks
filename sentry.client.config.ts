@@ -27,7 +27,7 @@ if (sentry.dsn) {
 					...context,
 					name: location.pathname
 						.replace(/\/\d{15,21}/g, "/:id")
-						.replace(/\/[a-f0-9]{32}/gi, "/:hash"),
+						.replace(/\/[a-f0-9]{32}/gi, "/:id"),
 				}),
 				shouldCreateSpanForRequest: (url) =>
 					!url.includes("_nuxt_icon") &&

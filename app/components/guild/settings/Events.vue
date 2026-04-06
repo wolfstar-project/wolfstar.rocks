@@ -19,7 +19,10 @@
 				<p class="text-sm text-base-content/70">
 					These events involve moderation actions. Please set up a Moderation Logs channel
 					on
-					<NuxtLink :to="channelsPageLink" class="text-primary hover:underline">
+					<NuxtLink
+						:to="channelsPageLink"
+						class="text-primary underline hover:no-underline"
+					>
 						the Channels page</NuxtLink
 					>.
 				</p>
@@ -49,7 +52,10 @@
 				<p class="text-sm text-base-content/70">
 					These events track message activity. The required channels vary by event type
 					and can be configured on
-					<NuxtLink :to="channelsPageLink" class="text-primary hover:underline">
+					<NuxtLink
+						:to="channelsPageLink"
+						class="text-primary underline hover:no-underline"
+					>
 						the Channels page</NuxtLink
 					>.
 				</p>

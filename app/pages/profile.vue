@@ -326,7 +326,7 @@
 											v-model="reduceMotionEnabled"
 											size="lg"
 											:disabled="systemPreferenceActive"
-											@update:model-value="setReduceMotion"
+											@update:model-value="handleSetReduceMotion"
 										/>
 									</div>
 
@@ -587,6 +587,7 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
+import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({ alias: ["/account"] });
 useSeoMetadata({
@@ -645,8 +646,11 @@ const isLoading = computed(() => status.value === "idle" || status.value === "pe
 async function handleRetry() {
 	isRetrying.value = true;
 	log.info({ action: "retry_guild_fetch" });
+	Sentry.metrics.count("profile.guild_fetch.retry", 1);
 	try {
-		await refresh();
+		await Sentry.startSpan({ name: "profile.guild_fetch.retry", op: "ui.action" }, () =>
+			refresh(),
+		);
 	} finally {
 		isRetrying.value = false;
 	}
@@ -678,6 +682,23 @@ const items = computed<TabsItem[]>(() => [
 	}, */
 ]);
 
+watch(activeTab, (tab) => {
+	Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
+	Sentry.addBreadcrumb({ category: "navigation", message: `Profile tab: ${tab}`, level: "info" });
+});
+
+watch(guilds, (value) => {
+	if (value.length > 0) {
+		Sentry.metrics.distribution("profile.guilds.count", value.length);
+	}
+});
+
+watch(error, (err) => {
+	if (err) {
+		Sentry.metrics.count("profile.guild_fetch.error", 1);
+	}
+});
+
 const defaultAvatar = computed(() =>
 	user.value?.id
 		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
@@ -692,7 +713,15 @@ async function copyUserId() {
 	if (user.value?.id) {
 		await copy(user.value.id);
 		log.info({ action: "copy_user_id" });
+		Sentry.metrics.count("profile.user_id.copy", 1);
 	}
+}
+
+function handleSetReduceMotion(value: boolean) {
+	setReduceMotion(value);
+	Sentry.metrics.count("profile.settings.reduce_motion", 1, {
+		attributes: { enabled: String(value) },
+	});
 }
 
 function createUrl(format: "webp" | "png" | "gif", size: number) {

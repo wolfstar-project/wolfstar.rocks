@@ -8,6 +8,7 @@ import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
+import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry-metrics";
 
 /**
  * Hash a string value for logging (privacy protection)
@@ -17,57 +18,6 @@ function hashValue(value: string): string {
 }
 
 const rateLimitStorage = useStorage("wolfstar:ratelimiter");
-
-/**
- * Normalizes a request path by replacing numeric path segments (Discord snowflake IDs,
- * numeric IDs) with :id placeholders to keep metric cardinality bounded.
- */
-function getMetricRoute(event: H3Event): string {
-	const { method } = event.node.req;
-	const { pathname } = getRequestURL(event);
-	const normalizedPathname = pathname !== "/" ? pathname.replace(/\/$/, "") : pathname;
-	const normalized = normalizedPathname.replace(/\/\d+(?=\/|$)/g, "/:id");
-	return `${method ?? "UNKNOWN"} ${normalized}`;
-}
-
-async function withApiMetrics<T>(event: H3Event, fn: () => Promise<T>): Promise<T> {
-	const startTime = Date.now();
-	const route = getMetricRoute(event);
-
-	try {
-		return await fn();
-	} catch (error) {
-		Sentry.metrics.count("api.error", 1, {
-			attributes: { route, status: String(extractStatusCode(error)) },
-		});
-		throw error;
-	} finally {
-		Sentry.metrics.distribution("api.latency", Date.now() - startTime, {
-			unit: "millisecond",
-			attributes: { route },
-		});
-	}
-}
-
-function extractStatusCode(error: unknown): number {
-	if (
-		error &&
-		typeof error === "object" &&
-		"statusCode" in error &&
-		typeof error.statusCode === "number"
-	) {
-		return error.statusCode;
-	}
-	if (
-		error &&
-		typeof error === "object" &&
-		"status" in error &&
-		typeof error.status === "number"
-	) {
-		return error.status;
-	}
-	return 500;
-}
 
 interface DefinedWrappedResponseHandlerOptions {
 	onError?: (logger: ReturnType<typeof useLogger>, error: any | Error | H3Error) => void;
@@ -173,7 +123,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const storageKey =
 		scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 
-	const savedState = await rateLimitStorage.getItem(storageKey);
+	const savedState = await instrumentCacheGet(storageKey, () =>
+		rateLimitStorage.getItem(storageKey),
+	);
 	const initialState =
 		savedState && isObject(savedState) ? cast<Record<string, unknown>>(savedState) : {};
 
@@ -188,7 +140,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	async function persistState(state: Record<string, unknown> | null) {
 		try {
 			if (state) {
-				await rateLimitStorage.setItem(storageKey, state);
+				await instrumentCachePut(storageKey, () =>
+					rateLimitStorage.setItem(storageKey, state),
+				);
 			}
 		} catch {}
 	}
@@ -221,6 +175,17 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				setResponseHeader(event, "x-ratelimit-remaining", 0);
 				setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
 				setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
+
+				Sentry.metrics.count("rate_limit.hit", 1, {
+					attributes: { route: scopeKey, window_type: windowType },
+				});
+
+				const rateLimitSpan = Sentry.getActiveSpan();
+				if (rateLimitSpan) {
+					rateLimitSpan.setAttribute("rate_limit.hit", true);
+					rateLimitSpan.setAttribute("rate_limit.route", scopeKey);
+					rateLimitSpan.setAttribute("rate_limit.window_type", windowType);
+				}
 
 				throw createError({
 					message: `Too Many Requests. Try again in ${msUntilReset}ms`,
@@ -285,6 +250,17 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				setResponseHeader(event, "x-ratelimit-remaining", 0);
 				setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
 				setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
+
+				Sentry.metrics.count("rate_limit.hit", 1, {
+					attributes: { route: scopeKey, window_type: windowType },
+				});
+
+				const rateLimitSpan = Sentry.getActiveSpan();
+				if (rateLimitSpan) {
+					rateLimitSpan.setAttribute("rate_limit.hit", true);
+					rateLimitSpan.setAttribute("rate_limit.route", scopeKey);
+					rateLimitSpan.setAttribute("rate_limit.window_type", windowType);
+				}
 
 				throw createError({
 					message: `Too Many Requests. Try again in ${msUntilReset}ms`,
@@ -364,20 +340,17 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 	},
 ): EventHandler<T, D> {
 	const opts = omit(["rateLimit", "auth", "onError"], options);
-	const cached = cachedEventHandler<T>(async (event) => {
+	return cachedEventHandler<T>(async (event) => {
 		const log = useLogger(event);
-		try {
-			const result = await applyWrappedHandlerLogic(event, handler, options);
-			return result;
-		} catch (error) {
-			if (options.onError && typeof options.onError === "function") {
-				options.onError(log, error);
+		return withApiMetrics(event, async () => {
+			try {
+				return await applyWrappedHandlerLogic(event, handler, options);
+			} catch (error) {
+				if (options.onError && typeof options.onError === "function") {
+					options.onError(log, error);
+				}
+				throw error;
 			}
-			throw error;
-		}
+		});
 	}, opts);
-
-	return defineEventHandler<T>(async (event) => {
-		return withApiMetrics(event, () => cached(event));
-	});
 }

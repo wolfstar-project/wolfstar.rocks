@@ -11,21 +11,6 @@ if (sentry.dsn) {
 		// Dsn: useRuntimeConfig().public.sentry.dsn
 		// Modify depending on your custom runtime config
 		dsn: sentry.dsn,
-
-		// Enable logging for Sentry
-		// As it will log useful information to the console
-		// Learn more at
-		// https://docs.sentry.io/platforms/javascript/guides/nuxt/logs/,
-		enableLogs: true,
-
-		beforeSendLog: ({ level, ...log }) => {
-			if (level === "info") {
-				// Filter out all info logs
-				return null;
-			}
-			return { level, ...log };
-		},
-
 		// Specify a set of allowed URLs to reduce noise from third-party services
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#allowurls
 		allowUrls: [/https?:\/\/((cdn|www|beta)\.)?wolfstar\.rocks/],
@@ -36,6 +21,20 @@ if (sentry.dsn) {
 
 		// Replay may only be enabled for the client-side
 		integrations: [
+			// oxlint-disable-next-line import/namespace
+			Sentry.browserTracingIntegration({
+				beforeStartSpan: (context) => ({
+					...context,
+					name: location.pathname
+						.replace(/\/\d{15,21}/g, "/:id")
+						.replace(/\/[a-f0-9]{32}/gi, "/:hash"),
+				}),
+				shouldCreateSpanForRequest: (url) =>
+					!url.includes("_nuxt_icon") &&
+					!url.includes("__nuxt_error") &&
+					!url.includes("/health"),
+				enableInp: true,
+			}),
 			// oxlint-disable-next-line import/namespace
 			Sentry.replayIntegration(),
 		],

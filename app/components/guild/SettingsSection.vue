@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full space-y-6">
-		<div v-if="title || description" class="space-y-1">
+		<header v-if="title || description" class="space-y-1">
 			<template v-if="title">
 				<div v-if="disableTypography && !forceSemanticHeading" v-bind="titleProps">
 					{{ title }}
@@ -20,7 +20,7 @@
 			<p v-if="description" class="text-sm text-base-content/70">
 				{{ description }}
 			</p>
-		</div>
+		</header>
 
 		<div class="space-y-4">
 			<slot></slot>

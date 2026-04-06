@@ -17,11 +17,11 @@
 					<h3 class="text-lg font-semibold text-base-content">Moderation Events</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					These events involve moderation actions and require that you setup the
-					Moderation Logs channel on
+					These events involve moderation actions. Please set up a Moderation Logs channel
+					on
 					<NuxtLink :to="channelsPageLink" class="text-primary hover:underline">
-						the Channels page
-					</NuxtLink>
+						the Channels page</NuxtLink
+					>.
 				</p>
 			</div>
 
@@ -47,11 +47,11 @@
 					<h3 class="text-lg font-semibold text-base-content">Message Events</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					These events involve message events, the channels to set up vary on the type of
-					event and each channel can be configured on
+					These events track message activity. The required channels vary by event type
+					and can be configured on
 					<NuxtLink :to="channelsPageLink" class="text-primary hover:underline">
-						the Channels page
-					</NuxtLink>
+						the Channels page</NuxtLink
+					>.
 				</p>
 			</div>
 

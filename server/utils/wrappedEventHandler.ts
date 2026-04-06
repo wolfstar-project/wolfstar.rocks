@@ -30,6 +30,25 @@ function getMetricRoute(event: H3Event): string {
 	return `${method ?? "UNKNOWN"} ${normalized}`;
 }
 
+async function withApiMetrics<T>(event: H3Event, fn: () => Promise<T>): Promise<T> {
+	const startTime = Date.now();
+	const route = getMetricRoute(event);
+
+	try {
+		return await fn();
+	} catch (error) {
+		Sentry.metrics.count("api.error", 1, {
+			attributes: { route, status: String(extractStatusCode(error)) },
+		});
+		throw error;
+	} finally {
+		Sentry.metrics.distribution("api.latency", Date.now() - startTime, {
+			unit: "millisecond",
+			attributes: { route },
+		});
+	}
+}
+
 function extractStatusCode(error: unknown): number {
 	if (
 		error &&
@@ -322,26 +341,16 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 ): EventHandler<T, D> {
 	return defineEventHandler<T>(async (event) => {
 		const log = useLogger(event);
-		const startTime = Date.now();
-		const route = getMetricRoute(event);
-
-		try {
-			const result = await applyWrappedHandlerLogic(event, handler, options);
-			return result;
-		} catch (error) {
-			Sentry.metrics.count("api.error", 1, {
-				attributes: { route, status: String(extractStatusCode(error)) },
-			});
-			if (options.onError && typeof options.onError === "function") {
-				options.onError(log, error);
+		return withApiMetrics(event, async () => {
+			try {
+				return await applyWrappedHandlerLogic(event, handler, options);
+			} catch (error) {
+				if (options.onError && typeof options.onError === "function") {
+					options.onError(log, error);
+				}
+				throw error;
 			}
-			throw error;
-		} finally {
-			Sentry.metrics.distribution("api.latency", Date.now() - startTime, {
-				unit: "millisecond",
-				attributes: { route },
-			});
-		}
+		});
 	});
 }
 
@@ -369,21 +378,6 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 	}, opts);
 
 	return defineEventHandler<T>(async (event) => {
-		const startTime = Date.now();
-		const route = getMetricRoute(event);
-
-		try {
-			return await cached(event);
-		} catch (error) {
-			Sentry.metrics.count("api.error", 1, {
-				attributes: { route, status: String(extractStatusCode(error)) },
-			});
-			throw error;
-		} finally {
-			Sentry.metrics.distribution("api.latency", Date.now() - startTime, {
-				unit: "millisecond",
-				attributes: { route },
-			});
-		}
+		return withApiMetrics(event, () => cached(event));
 	});
 }

@@ -688,7 +688,7 @@ watch(activeTab, (tab) => {
 });
 
 watch(guilds, (value) => {
-	if (value.length > 0) {
+	if (Array.isArray(value) && value.length > 0) {
 		Sentry.metrics.distribution("profile.guilds.count", value.length);
 	}
 });

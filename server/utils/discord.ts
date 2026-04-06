@@ -205,29 +205,29 @@ export const getCurrentUser = defineCachedFunction(
 			attributes: { endpoint: "users.getCurrent" },
 		});
 		const user = await instrumentDiscordApiCall("users.getCurrent", () =>
-			api.users.getCurrent().catch((error: DiscordAPIError) => {
-				throw createError({
-					cause: error,
-					message: "Failed to fetch user data",
-					status: 500,
-					why: "Discord API returned an error when fetching the current user",
-				});
-			}),
-		);
+			api.users.getCurrent(),
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: "Failed to fetch user data",
+				status: 500,
+				why: "Discord API returned an error when fetching the current user",
+			});
+		});
 
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getGuilds" },
 		});
 		const guilds = await instrumentDiscordApiCall("users.getGuilds", () =>
-			api.users.getGuilds().catch((error: DiscordAPIError) => {
-				throw createError({
-					cause: error,
-					message: "Failed to fetch user guilds",
-					status: 500,
-					why: "Discord API returned an error when fetching the user's guild list",
-				});
-			}),
-		);
+			api.users.getGuilds(),
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: "Failed to fetch user guilds",
+				status: 500,
+				why: "Discord API returned an error when fetching the user's guild list",
+			});
+		});
 
 		return { guilds, user };
 	},
@@ -255,17 +255,16 @@ export const getCurrentMember = defineCachedFunction(
 		});
 		const member = await instrumentDiscordApiCall(
 			"users.getGuildMember",
-			() =>
-				api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
-					throw createError({
-						cause: error,
-						message: "Failed to fetch guild member data",
-						status: 500,
-						why: "Discord API returned an error when fetching the user's guild membership",
-					});
-				}),
+			() => api.users.getGuildMember(guildId),
 			{ guild_id: guildId },
-		);
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: "Failed to fetch guild member data",
+				status: 500,
+				why: "Discord API returned an error when fetching the user's guild membership",
+			});
+		});
 
 		return member;
 	},
@@ -287,32 +286,31 @@ export const getMember = defineCachedFunction(
 		});
 		const result = await instrumentDiscordApiCall(
 			"guilds.getMember",
-			() =>
-				api.guilds.getMember(guildId, userId).catch((error) => {
-					const discordError = error as DiscordAPIError;
-
-					let message = "";
-					switch (discordError.code) {
-						case 10_007: {
-							// Unknown Member
-							message = `Unknown Member: ${userId} in Guild: ${guildId}`;
-
-							break;
-						}
-						default: {
-							message = `Failed to fetch member: ${userId} in Guild: ${guildId}`;
-						}
-					}
-
-					throw createError({
-						cause: error,
-						message,
-						status: 500,
-						why: "Discord API returned an error when fetching the guild member",
-					});
-				}),
+			() => api.guilds.getMember(guildId, userId),
 			{ guild_id: guildId },
-		);
+		).catch((error) => {
+			const discordError = error as DiscordAPIError;
+
+			let message = "";
+			switch (discordError.code) {
+				case 10_007: {
+					// Unknown Member
+					message = `Unknown Member: ${userId} in Guild: ${guildId}`;
+
+					break;
+				}
+				default: {
+					message = `Failed to fetch member: ${userId} in Guild: ${guildId}`;
+				}
+			}
+
+			throw createError({
+				cause: error,
+				message,
+				status: 500,
+				why: "Discord API returned an error when fetching the guild member",
+			});
+		});
 		return result;
 	},
 	{
@@ -329,17 +327,16 @@ export const getGuildChannels = defineCachedFunction(
 		});
 		const result = await instrumentDiscordApiCall(
 			"guilds.getChannels",
-			() =>
-				api.guilds.getChannels(guildId).catch((error: DiscordAPIError) => {
-					throw createError({
-						cause: error,
-						message: `Failed to fetch channels for guild: ${guildId}`,
-						status: 500,
-						why: "Discord API returned an error when fetching the guild's channel list",
-					});
-				}),
+			() => api.guilds.getChannels(guildId),
 			{ guild_id: guildId },
-		);
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: `Failed to fetch channels for guild: ${guildId}`,
+				status: 500,
+				why: "Discord API returned an error when fetching the guild's channel list",
+			});
+		});
 		return result;
 	},
 	{
@@ -355,17 +352,16 @@ export const getGuild = defineCachedFunction(
 		});
 		const result = await instrumentDiscordApiCall(
 			"guilds.get",
-			() =>
-				api.guilds.get(guildId, { with_counts: true }).catch((error: DiscordAPIError) => {
-					throw createError({
-						cause: error,
-						message: `Failed to fetch guild: ${guildId}`,
-						status: 500,
-						why: "Discord API returned an error when fetching guild data",
-					});
-				}),
+			() => api.guilds.get(guildId, { with_counts: true }),
 			{ guild_id: guildId },
-		);
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: `Failed to fetch guild: ${guildId}`,
+				status: 500,
+				why: "Discord API returned an error when fetching guild data",
+			});
+		});
 		return result;
 	},
 	{

@@ -4,6 +4,7 @@ import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { cast, isObject } from "@sapphire/utilities";
+import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
@@ -16,6 +17,37 @@ function hashValue(value: string): string {
 }
 
 const rateLimitStorage = useStorage("wolfstar:ratelimiter");
+
+/**
+ * Normalizes a request path by replacing numeric path segments (Discord snowflake IDs,
+ * numeric IDs) with :id placeholders to keep metric cardinality bounded.
+ */
+function getMetricRoute(event: H3Event): string {
+	const { method } = event.node.req;
+	const { pathname } = getRequestURL(event);
+	const normalized = pathname.replace(/\/\d+/g, "/:id");
+	return `${method ?? "UNKNOWN"} ${normalized}`;
+}
+
+function extractStatusCode(error: unknown): number {
+	if (
+		error &&
+		typeof error === "object" &&
+		"statusCode" in error &&
+		typeof error.statusCode === "number"
+	) {
+		return error.statusCode;
+	}
+	if (
+		error &&
+		typeof error === "object" &&
+		"status" in error &&
+		typeof error.status === "number"
+	) {
+		return error.status;
+	}
+	return 500;
+}
 
 interface DefinedWrappedResponseHandlerOptions {
 	onError?: (logger: ReturnType<typeof useLogger>, error: any | Error | H3Error) => void;
@@ -289,14 +321,25 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 ): EventHandler<T, D> {
 	return defineEventHandler<T>(async (event) => {
 		const log = useLogger(event);
+		const startTime = Date.now();
+		const route = getMetricRoute(event);
+
 		try {
 			const result = await applyWrappedHandlerLogic(event, handler, options);
 			return result;
 		} catch (error) {
+			Sentry.metrics.count("api.error", 1, {
+				attributes: { route, status: String(extractStatusCode(error)) },
+			});
 			if (options.onError && typeof options.onError === "function") {
 				options.onError(log, error);
 			}
 			throw error;
+		} finally {
+			Sentry.metrics.distribution("api.latency", Date.now() - startTime, {
+				unit: "millisecond",
+				attributes: { route },
+			});
 		}
 	});
 }
@@ -311,7 +354,7 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 	},
 ): EventHandler<T, D> {
 	const opts = omit(["rateLimit", "auth", "onError"], options);
-	return cachedEventHandler<T>(async (event) => {
+	const cached = cachedEventHandler<T>(async (event) => {
 		const log = useLogger(event);
 		try {
 			const result = await applyWrappedHandlerLogic(event, handler, options);
@@ -323,4 +366,23 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 			throw error;
 		}
 	}, opts);
+
+	return defineEventHandler<T>(async (event) => {
+		const startTime = Date.now();
+		const route = getMetricRoute(event);
+
+		try {
+			return await cached(event);
+		} catch (error) {
+			Sentry.metrics.count("api.error", 1, {
+				attributes: { route, status: String(extractStatusCode(error)) },
+			});
+			throw error;
+		} finally {
+			Sentry.metrics.distribution("api.latency", Date.now() - startTime, {
+				unit: "millisecond",
+				attributes: { route },
+			});
+		}
+	});
 }

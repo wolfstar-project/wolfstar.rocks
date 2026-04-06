@@ -25,7 +25,8 @@ const rateLimitStorage = useStorage("wolfstar:ratelimiter");
 function getMetricRoute(event: H3Event): string {
 	const { method } = event.node.req;
 	const { pathname } = getRequestURL(event);
-	const normalized = pathname.replace(/\/\d+/g, "/:id");
+	const normalizedPathname = pathname !== "/" ? pathname.replace(/\/$/, "") : pathname;
+	const normalized = normalizedPathname.replace(/\/\d+(?=\/|$)/g, "/:id");
 	return `${method ?? "UNKNOWN"} ${normalized}`;
 }
 

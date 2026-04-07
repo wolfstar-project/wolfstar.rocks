@@ -75,6 +75,9 @@ const config: KnipConfig = {
 				/** Used for git hooks, not imported directly */
 				"vite-plus",
 
+				/** Used for cli */
+				"@shelve/cli",
+
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],

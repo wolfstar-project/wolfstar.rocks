@@ -47,6 +47,9 @@ safe-outputs:
     add-comment:
         max: 1
         target: "triggering"
+
+    noop:
+        report-as-issue: false
 ---
 
 # WolfStar Code Quality Reviewer

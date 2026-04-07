@@ -19,6 +19,7 @@ import { REST } from "@discordjs/rest";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
+import * as Sentry from "@sentry/nuxt";
 import {
 	GuildDefaultMessageNotifications,
 	GuildExplicitContentFilter,
@@ -30,9 +31,6 @@ import {
 	PermissionFlagsBits,
 } from "discord-api-types/v10";
 import { createError } from "evlog";
-
-// Limits concurrent guild transform API calls to avoid Discord rate limits
-const GUILD_TRANSFORM_BATCH_SIZE = 10;
 
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);
@@ -53,7 +51,7 @@ function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
 			);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?: bigint) {
+async function manage(guild: APIGuild, member: APIGuildMember) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -63,13 +61,8 @@ async function manage(guild: APIGuild, member: APIGuildMember, oauthPermissions?
 
 	const settings = await readSettings(guild.id);
 	const nodes = readSettingsPermissionNodes(settings);
-	const commands = await fetchCommands();
-	const conf = commands.find((cmd) => cmd.name === "conf");
 
-	return (
-		isAdmin(member, settings.rolesAdmin, oauthPermissions) &&
-		(conf ? ((await nodes.run(member, conf)) ?? true) : true)
-	);
+	return isAdmin(member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true);
 }
 
 async function getManageable(
@@ -95,7 +88,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member, oauthPermissions);
+	return manage(guild, member);
 }
 
 export async function transformGuild(
@@ -109,7 +102,7 @@ export async function transformGuild(
 	const mockGuild = cast<FlattenedGuild>({
 		acronym: guildNameToAcronym(data.name),
 		afkChannelId: null,
-		afkTimeout: 60,
+		afkTimeout: 0,
 		applicationId: null,
 		approximateMemberCount: data.approximate_member_count ?? 0,
 		approximatePresenceCount: data.approximate_presence_count ?? 0,
@@ -118,6 +111,7 @@ export async function transformGuild(
 		channels,
 		defaultMessageNotifications: GuildDefaultMessageNotifications.OnlyMentions,
 		description: null,
+		widgetEnabled: false,
 		emojis: [],
 		explicitContentFilter: GuildExplicitContentFilter.Disabled,
 		icon: data.icon,
@@ -126,8 +120,7 @@ export async function transformGuild(
 		mfaLevel: GuildMFALevel.None,
 		name: data.name,
 		ownerId: data.owner ? userId : null,
-		partnered: data.features.includes(GuildFeature.Partnered),
-		permissions: Number(data.permissions),
+		partnered: data.features.includes(GuildFeature.Partnered) ?? false,
 		features: data.features,
 		preferredLocale: Locale.EnglishUS,
 		premiumSubscriptionCount: null,
@@ -137,8 +130,7 @@ export async function transformGuild(
 		systemChannelId: null,
 		vanityURLCode: null,
 		verificationLevel: GuildVerificationLevel.None,
-		verified: data.features.includes(GuildFeature.Verified),
-		widgetEnabled: false,
+		verified: data.features.includes(GuildFeature.Verified) ?? false,
 	});
 
 	const serialized: PartialOauthFlattenedGuild = isNullOrUndefined(guild)
@@ -165,13 +157,10 @@ export async function transformOauthGuildsAndUser({
 	}
 
 	const userId = user.id;
-	const transformedGuilds: OauthFlattenedGuild[] = [];
 
-	for (let i = 0; i < guilds.length; i += GUILD_TRANSFORM_BATCH_SIZE) {
-		const batch = guilds.slice(i, i + GUILD_TRANSFORM_BATCH_SIZE);
-		const results = await Promise.all(batch.map((guild) => transformGuild(userId, guild)));
-		transformedGuilds.push(...results);
-	}
+	const transformedGuilds: OauthFlattenedGuild[] = await Promise.all(
+		guilds.map((guild) => transformGuild(userId, guild)),
+	);
 
 	return { transformedGuilds, user };
 }
@@ -212,7 +201,12 @@ export const getCurrentUser = defineCachedFunction(
 
 		const api = useApi(rest);
 
-		const user = await api.users.getCurrent().catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "users.getCurrent" },
+		});
+		const user = await instrumentDiscordApiCall("users.getCurrent", () =>
+			api.users.getCurrent(),
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: "Failed to fetch user data",
@@ -221,7 +215,12 @@ export const getCurrentUser = defineCachedFunction(
 			});
 		});
 
-		const guilds = await api.users.getGuilds().catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "users.getGuilds" },
+		});
+		const guilds = await instrumentDiscordApiCall("users.getGuilds", () =>
+			api.users.getGuilds(),
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: "Failed to fetch user guilds",
@@ -251,7 +250,14 @@ export const getCurrentMember = defineCachedFunction(
 
 		const api = useApi(rest);
 
-		const member = await api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "users.getGuildMember", guild_id: guildId },
+		});
+		const member = await instrumentDiscordApiCall(
+			"users.getGuildMember",
+			() => api.users.getGuildMember(guildId),
+			{ guild_id: guildId },
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: "Failed to fetch guild member data",
@@ -275,7 +281,14 @@ export const getMember = defineCachedFunction(
 	async (guildId: string, userId: string) => {
 		const api = useApi();
 
-		const result = await api.guilds.getMember(guildId, userId).catch((error) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "guilds.getMember", guild_id: guildId },
+		});
+		const result = await instrumentDiscordApiCall(
+			"guilds.getMember",
+			() => api.guilds.getMember(guildId, userId),
+			{ guild_id: guildId },
+		).catch((error) => {
 			const discordError = error as DiscordAPIError;
 
 			let message = "";
@@ -309,7 +322,14 @@ export const getMember = defineCachedFunction(
 export const getGuildChannels = defineCachedFunction(
 	async (guildId: string) => {
 		const api = useApi();
-		const result = await api.guilds.getChannels(guildId).catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "guilds.getChannels", guild_id: guildId },
+		});
+		const result = await instrumentDiscordApiCall(
+			"guilds.getChannels",
+			() => api.guilds.getChannels(guildId),
+			{ guild_id: guildId },
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: `Failed to fetch channels for guild: ${guildId}`,
@@ -327,16 +347,21 @@ export const getGuildChannels = defineCachedFunction(
 export const getGuild = defineCachedFunction(
 	async (guildId: string) => {
 		const api = useApi();
-		const result = await api.guilds
-			.get(guildId, { with_counts: true })
-			.catch((error: DiscordAPIError) => {
-				throw createError({
-					cause: error,
-					message: `Failed to fetch guild: ${guildId}`,
-					status: 500,
-					why: "Discord API returned an error when fetching guild data",
-				});
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "guilds.get", guild_id: guildId },
+		});
+		const result = await instrumentDiscordApiCall(
+			"guilds.get",
+			() => api.guilds.get(guildId, { with_counts: true }),
+			{ guild_id: guildId },
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: `Failed to fetch guild: ${guildId}`,
+				status: 500,
+				why: "Discord API returned an error when fetching guild data",
 			});
+		});
 		return result;
 	},
 	{
@@ -350,12 +375,17 @@ export const fetchCommands = defineCachedFunction(
 		const {
 			public: { apiBaseUrl },
 		} = useRuntimeConfig();
-		const commands = await $fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
+		Sentry.metrics.count("bot_api.call", 1, {
+			attributes: { endpoint: "commands.fetch" },
 		});
+		const commands = await instrumentBotApiCall("commands.fetch", () =>
+			$fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}),
+		);
 		return commands;
 	},
 	{

@@ -31,7 +31,7 @@ const ThresholdMaximumSchema = pipe(number(), minValue(0), maxValue(60));
  * Hard-action punishment duration in milliseconds.
  * 0 = no duration (instant / permanent), otherwise 1 000 ms … 1 year.
  */
-export const HardActionDurationSchema = union([
+const HardActionDurationSchema = union([
 	literal(0),
 	pipe(number(), minValue(1000), maxValue(31_536_000_000)),
 ]);

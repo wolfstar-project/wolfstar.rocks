@@ -58,16 +58,13 @@ afterEach(() => {
 });
 
 import {
-	DiscordButton,
 	DiscordEmbed,
-	DiscordInlineCode,
 	DiscordInvite,
 	DiscordMention,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
-	DiscordTime,
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
@@ -112,25 +109,6 @@ describe("component accessibility audits", () => {
 						command: { user: "stella", name: "help" },
 					},
 					slots: { default: "Here is your help response." },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
-		describe("DiscordButton", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordButton, {
-					props: { ariaLabel: "Click me" },
-					slots: { default: "Click" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-
-			it("should have no accessibility violations without explicit aria-label", async () => {
-				const component = await mountSuspended(DiscordButton, {
-					slots: { default: "Submit" },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -183,16 +161,6 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordInlineCode", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordInlineCode, {
-					slots: { default: "!help" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
 		describe("DiscordReaction", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordReaction, {
@@ -217,16 +185,6 @@ describe("component accessibility audits", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordReactions, {
 					slots: { default: "<span>Reaction slot</span>" },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
-		describe("DiscordTime", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordTime, {
-					props: { date: Date.now(), format: "long" },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);

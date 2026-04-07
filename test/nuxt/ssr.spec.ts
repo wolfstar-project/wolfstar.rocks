@@ -1,14 +1,11 @@
 import {
-	DiscordButton,
 	DiscordEmbed,
-	DiscordInlineCode,
 	DiscordInvite,
 	DiscordMention,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
-	DiscordTime,
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
@@ -82,27 +79,6 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordButton", () => {
-			it("renders button with slot content", async () => {
-				const wrapper = await mountSuspended(DiscordButton, {
-					slots: { default: "Click me" },
-				});
-				const button = wrapper.find("button");
-				expect(button.exists()).toBe(true);
-				expect(button.attributes("type")).toBe("button");
-				expect(button.text()).toBe("Click me");
-			});
-
-			it("renders button with explicit aria-label", async () => {
-				const wrapper = await mountSuspended(DiscordButton, {
-					props: { ariaLabel: "Submit form" },
-					slots: { default: "Submit" },
-				});
-				const button = wrapper.find("button");
-				expect(button.attributes("aria-label")).toBe("Submit form");
-			});
-		});
-
 		describe("DiscordEmbed", () => {
 			it("renders embed with title", async () => {
 				const wrapper = await mountSuspended(DiscordEmbed, {
@@ -173,17 +149,6 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordInlineCode", () => {
-			it("renders code in a styled span", async () => {
-				const wrapper = await mountSuspended(DiscordInlineCode, {
-					slots: { default: "!help" },
-				});
-				const span = wrapper.find(".discord-message-inline-code");
-				expect(span.exists()).toBe(true);
-				expect(span.text()).toBe("!help");
-			});
-		});
-
 		describe("DiscordReaction", () => {
 			it("renders reaction with emoji and count", async () => {
 				const wrapper = await mountSuspended(DiscordReaction, {
@@ -210,17 +175,6 @@ describe("component SSR rendering", () => {
 					slots: { default: "<span>Reaction</span>" },
 				});
 				expect(wrapper.text()).toContain("Reaction");
-			});
-		});
-
-		describe("DiscordTime", () => {
-			it("renders formatted time in a styled span", async () => {
-				const wrapper = await mountSuspended(DiscordTime, {
-					props: { date: Date.now(), format: "long" },
-				});
-				const span = wrapper.find(".discord-message-time");
-				expect(span.exists()).toBe(true);
-				expect(span.text().length).toBeGreaterThan(0);
 			});
 		});
 

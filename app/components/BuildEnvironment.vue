@@ -23,7 +23,7 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 			month="short"
 			day="numeric"
 		/>
-		<span>&middot;</span>
+		<span :class="footer ? 'text-base-content/80' : 'text-base-content'">&middot;</span>
 		<NuxtLink
 			v-if="buildInfo.env === 'release'"
 			:to="`https://github.com/wolfstar-project/wolfstar.rocks/releases/tag/v${buildInfo.version}`"
@@ -34,10 +34,15 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 		>
 			v{{ buildInfo.version }}
 		</NuxtLink>
-		<span v-else class="tracking-wider">{{ buildInfo.env }}</span>
+		<span
+			v-else
+			:class="footer ? 'text-sm text-base-content/80' : 'text-md text-base-content'"
+			class="tracking-wider"
+			>{{ buildInfo.env }}</span
+		>
 
 		<template v-if="buildInfo.commit && buildInfo.branch !== 'release'">
-			<span>&middot;</span>
+			<span :class="footer ? 'text-base-content/80' : 'text-base-content'">&middot;</span>
 			<NuxtLink
 				:to="`https://github.com/wolfstar-project/wolfstar.rocks/commit/${buildInfo.commit}`"
 				target="_blank"

@@ -1,4 +1,3 @@
-import { fileURLToPath } from "node:url";
 import { getV8Flags } from "@codspeed/core";
 import codspeedPlugin from "@codspeed/vitest-plugin";
 import { defineVitestProject } from "@nuxt/test-utils/config";
@@ -6,7 +5,7 @@ import { isCI } from "std-env";
 import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
-const rootDir = fileURLToPath(new URL(".", import.meta.url));
+const rootDir = import.meta.dirname;
 
 export default defineConfig({
 	run: {
@@ -15,7 +14,7 @@ export default defineConfig({
 				command: "vp lint && vp fmt --check",
 			},
 			knip: {
-				command: "knip",
+				command: "knip && knip --production --exclude dependencies",
 			},
 		},
 	},
@@ -534,7 +533,7 @@ export default defineConfig({
 									sitemap: { enabled: false },
 									ogImage: { enabled: false },
 								},
-								rootDir: fileURLToPath(new URL(".", import.meta.url)),
+								rootDir,
 							},
 						},
 						include: ["test/nuxt/**/*.{test,spec}.ts"],

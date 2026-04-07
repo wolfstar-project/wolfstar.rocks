@@ -1,72 +1,70 @@
 <template>
 	<GuildSettingsSection title="General Settings">
-		<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-			<GuildSettingsForm
-				:schema="schema"
-				:state="state"
-				:map-to-guild-data="mapToGuildData"
-				class="space-y-4"
-				aria-label="General guild settings form"
-				@error="onError"
-			>
-				<div>
-					<UFormField label="Prefix" name="prefix">
-						<UInput
-							id="prefix"
-							v-model="state.prefix"
-							placeholder="Enter prefix"
-							color="primary"
-							class="w-full"
-							aria-describedby="prefix-description character-count"
-							aria-label="Bot command prefix"
-						>
-							<template #trailing>
-								<div
-									id="character-count"
-									class="text-xs text-muted tabular-nums"
-									aria-live="polite"
-									role="status"
-								>
-									{{ state.prefix?.length }}/10
-								</div>
-							</template>
-						</UInput>
-						<template #error="{ error }">
-							<p class="text-sm text-error">{{ error }}</p>
+		<GuildSettingsForm
+			:schema="schema"
+			:state="state"
+			:map-to-guild-data="mapToGuildData"
+			class="grid grid-cols-1 gap-6 md:grid-cols-2"
+			aria-label="General guild settings form"
+			@error="onError"
+		>
+			<div>
+				<UFormField label="Prefix" name="prefix">
+					<UInput
+						id="prefix"
+						v-model="state.prefix"
+						placeholder="Enter prefix"
+						color="primary"
+						class="w-full"
+						aria-describedby="prefix-description character-count"
+						aria-label="Bot command prefix"
+					>
+						<template #trailing>
+							<div
+								id="character-count"
+								class="text-xs text-muted tabular-nums"
+								aria-live="polite"
+								role="status"
+							>
+								{{ state.prefix?.length }}/10
+							</div>
 						</template>
-						<template #description>
-							<p id="prefix-description" class="text-sm text-base-content/70">
-								This is your server's prefix, use it to trigger WolfStar commands.
-							</p>
-						</template>
-					</UFormField>
-				</div>
+					</UInput>
+					<template #error="{ error }">
+						<p class="text-sm text-error">{{ error }}</p>
+					</template>
+					<template #description>
+						<p id="prefix-description" class="text-sm text-base-content/70">
+							This is your server's prefix, use it to trigger WolfStar commands.
+						</p>
+					</template>
+				</UFormField>
+			</div>
 
-				<div>
-					<UFormField label="Language" name="language">
-						<template #description>
-							<p id="language-description" class="text-sm text-base-content/70">
-								Select the language you want for this guild
-							</p>
-						</template>
-						<USelectMenu
-							id="language"
-							v-model="state.language"
-							color="primary"
-							placeholder="Select language..."
-							class="w-full"
-							:items="items"
-							value-attribute="value"
-							aria-label="Select bot language"
-							aria-describedby="language-description"
-						/>
-						<template #error="{ error }">
-							<p class="text-sm text-error">{{ error }}</p>
-						</template>
-					</UFormField>
-				</div>
-			</GuildSettingsForm>
-		</div>
+			<div>
+				<UFormField label="Language" name="language">
+					<template #description>
+						<p id="language-description" class="text-sm text-base-content/70">
+							Select the language you want for this guild
+						</p>
+					</template>
+					<USelectMenu
+						id="language"
+						v-model="state.language"
+						color="primary"
+						placeholder="Select language..."
+						class="w-full"
+						:items="items"
+						value-attribute="value"
+						aria-label="Select bot language"
+						aria-describedby="language-description"
+					/>
+					<template #error="{ error }">
+						<p class="text-sm text-error">{{ error }}</p>
+					</template>
+				</UFormField>
+			</div>
+		</GuildSettingsForm>
 	</GuildSettingsSection>
 </template>
 

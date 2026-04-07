@@ -12,7 +12,7 @@
 			size="md"
 			role="listitem"
 			:aria-label="`Permission level: ${permissionLevelLabel}`"
-			class="hover-lift border-warning-300 bg-warning-50 font-semibold text-warning-800 focus:ring-2 focus:ring-warning-500 focus:ring-offset-2 focus:outline-none dark:border-warning-700 dark:bg-warning-950/30 dark:text-warning-200"
+			class="border-warning-300 bg-warning-50 font-semibold text-warning-800 dark:border-warning-700 dark:bg-warning-950/30 dark:text-warning-200"
 		>
 			<template #leading>
 				<UIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
@@ -27,7 +27,7 @@
 			size="md"
 			role="listitem"
 			:aria-label="`Server requirement: ${guildOnlyLabel}`"
-			class="border-info-300 bg-info-50 font-semibold text-info-800 transition-all hover:scale-105 focus:ring-2 focus:ring-info-500 focus:ring-offset-2 focus:outline-none dark:border-info-700 dark:bg-info-950/30 dark:text-info-200"
+			class="border-info-300 bg-info-50 font-semibold text-info-800 dark:border-info-700 dark:bg-info-950/30 dark:text-info-200"
 		>
 			<template #leading>
 				<UIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
@@ -42,7 +42,7 @@
 			size="md"
 			role="listitem"
 			aria-label="This command cannot be disabled"
-			class="border-error-300 bg-error-50 font-semibold text-error-800 transition-all hover:scale-105 focus:ring-2 focus:ring-error-500 focus:ring-offset-2 focus:outline-none dark:border-error-700 dark:bg-error-950/30 dark:text-error-200"
+			class="border-error-300 bg-error-50 font-semibold text-error-800 dark:border-error-700 dark:bg-error-950/30 dark:text-error-200"
 		>
 			<template #leading>
 				<UIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />

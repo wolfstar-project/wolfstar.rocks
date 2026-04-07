@@ -1,4 +1,4 @@
-import { object, optional, tuple, array, string, unknown, type InferOutput } from "valibot";
+import { object, optional, tuple, array, string, unknown } from "valibot";
 
 /**
  * Schema for the guild settings PATCH body.
@@ -7,5 +7,3 @@ import { object, optional, tuple, array, string, unknown, type InferOutput } fro
 export const SettingsUpdateSchema = object({
 	data: optional(array(tuple([string(), unknown()]))),
 });
-
-export type SettingsUpdate = InferOutput<typeof SettingsUpdateSchema>;

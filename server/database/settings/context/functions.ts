@@ -5,10 +5,6 @@ import { Collection } from "@discordjs/collection";
 
 const cache = new Collection<Snowflake, SettingsContext>();
 
-export function getSettingsContextByGuildId(guildId: Snowflake): SettingsContext | null {
-	return cache.get(guildId) ?? null;
-}
-
 export function getSettingsContext(settings: ReadonlyGuildData): SettingsContext {
 	return cache.ensure(settings.id, () => new SettingsContext(settings));
 }
@@ -24,8 +20,4 @@ export function updateSettingsContext(
 		const context = new SettingsContext(settings);
 		cache.set(settings.id, context);
 	}
-}
-
-export function deleteSettingsContext(guildId: Snowflake) {
-	cache.delete(guildId);
 }

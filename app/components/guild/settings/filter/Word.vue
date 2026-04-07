@@ -14,7 +14,7 @@
 			</div>
 			<div class="space-y-3">
 				<USkeleton class="h-7 w-32" />
-				<div class="grid grid-cols-2 gap-4">
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<USkeleton class="h-10 w-full" />
 					<USkeleton class="h-10 w-full" />
 				</div>
@@ -119,7 +119,7 @@
 
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection title="Punishments">
-				<div class="grid grid-cols-2 gap-4">
+				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<UFormField
 						label="Action"
 						name="selfmodCapitalsHardAction"

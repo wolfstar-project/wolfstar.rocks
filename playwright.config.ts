@@ -1,6 +1,5 @@
 import type { ConfigOptions } from "@nuxt/test-utils/playwright";
 import process from "node:process";
-import { fileURLToPath } from "node:url";
 import { defineConfig, devices } from "@playwright/test";
 
 const baseURL = "http://localhost:5678";
@@ -24,7 +23,7 @@ export default defineConfig<ConfigOptions>({
 		baseURL,
 		trace: "on-first-retry",
 		nuxt: {
-			rootDir: fileURLToPath(new URL(".", import.meta.url)),
+			rootDir: import.meta.dirname,
 			host: baseURL,
 		},
 	},

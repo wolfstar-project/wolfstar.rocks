@@ -1,14 +1,10 @@
 import type { Guild as GuildData } from "#server/database/generated/client";
-import type { DeepReadonly, PickByValue } from "@sapphire/utilities";
+import type { DeepReadonly } from "@sapphire/utilities";
 import type { Snowflake } from "discord-api-types/v10";
 
 export type GuildDataKey = keyof GuildData;
-export type GuildDataValue = GuildData[GuildDataKey];
 
 export type ReadonlyGuildData = DeepReadonly<GuildData>;
-export type ReadonlyGuildDataValue = DeepReadonly<GuildDataValue>;
-
-export type GuildSettingsOfType<T> = PickByValue<GuildData, T>;
 
 export type { Guild as GuildData } from "#server/database/generated/client";
 

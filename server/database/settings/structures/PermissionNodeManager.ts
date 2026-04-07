@@ -5,7 +5,7 @@ import { Collection } from "@discordjs/collection";
 import { createError } from "evlog";
 
 // oxlint-disable-next-line no-restricted-syntax
-export const enum PermissionNodeAction {
+const enum PermissionNodeAction {
 	Allow,
 	Deny,
 }
@@ -28,7 +28,7 @@ export class PermissionNodeManager {
 		) satisfies keyof ReadonlyGuildData;
 	}
 
-	public async run(member: APIGuildMember, command: WolfCommand) {
+	public async run(member: APIGuildMember, commandName: string) {
 		if (this.#refreshPromise) {
 			try {
 				await this.#refreshPromise;
@@ -36,7 +36,9 @@ export class PermissionNodeManager {
 				this.#refreshPromise = null;
 			}
 		}
-		return (await this.runUser(member, command)) ?? (await this.runRole(member, command));
+		return (
+			(await this.runUser(member, commandName)) ?? (await this.runRole(member, commandName))
+		);
 	}
 
 	public has(roleId: string) {
@@ -64,6 +66,8 @@ export class PermissionNodeManager {
 
 			return [...nodes, node];
 		}
+
+		const previous = nodes[nodeIndex]!;
 		if (
 			(action === PermissionNodeAction.Allow && previous.allow.includes(command)) ||
 			(action === PermissionNodeAction.Deny && previous.deny.includes(command))
@@ -111,7 +115,7 @@ export class PermissionNodeManager {
 		}
 
 		const property = this.getName(action);
-		const previous = nodes[nodeIndex];
+		const previous = nodes[nodeIndex]!;
 		const commandIndex = previous[property].indexOf(command);
 		if (commandIndex === -1) {
 			throw createError({
@@ -202,7 +206,7 @@ export class PermissionNodeManager {
 		return copy ?? nodes;
 	}
 
-	private async runUser(member: APIGuildMember, command: WolfCommand) {
+	private async runUser(member: APIGuildMember, commandName: string) {
 		// Assume sorted data
 		const permissionNodeRoles = this.#cachedRawPermissionUsers;
 		const memberId = member.user.id;
@@ -210,10 +214,10 @@ export class PermissionNodeManager {
 			if (node.id !== memberId) {
 				continue;
 			}
-			if (await CommandMatcher.matchAny(node.allow, command)) {
+			if (await CommandMatcher.matchAny(node.allow, commandName)) {
 				return true;
 			}
-			if (await CommandMatcher.matchAny(node.deny, command)) {
+			if (await CommandMatcher.matchAny(node.deny, commandName)) {
 				return false;
 			}
 		}
@@ -221,7 +225,7 @@ export class PermissionNodeManager {
 		return null;
 	}
 
-	private async runRole(member: APIGuildMember, command: WolfCommand) {
+	private async runRole(member: APIGuildMember, commandName: string) {
 		const { roles } = member;
 
 		// Assume sorted data
@@ -229,10 +233,10 @@ export class PermissionNodeManager {
 			if (!roles.includes(id)) {
 				continue;
 			}
-			if (await CommandMatcher.matchAny(node.allow, command)) {
+			if (await CommandMatcher.matchAny(node.allow, commandName)) {
 				return true;
 			}
-			if (await CommandMatcher.matchAny(node.deny, command)) {
+			if (await CommandMatcher.matchAny(node.deny, commandName)) {
 				return false;
 			}
 		}

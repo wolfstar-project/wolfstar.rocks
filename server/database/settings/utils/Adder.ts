@@ -1,4 +1,4 @@
-export class AdderError extends Error {
+class AdderError extends Error {
 	/**
 	 * The amount of points the adder reached when it threw this error.
 	 */

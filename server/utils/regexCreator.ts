@@ -3,15 +3,15 @@
 /* oxlint-disable regexp/no-empty-lookarounds-assertion */
 import { bidirectionalReplace } from "#shared/utils/comparators";
 
-export const kWordStartBoundary = String.raw`(?<=^|\W)`;
-export const kWordEndBoundary = String.raw`(?=$|\W)`;
-export const kWordBoundaryWildcard = "*";
-export const kWordReplacer = /.(?=(.)?)/g;
-export const kRegExpSymbols = /[-/\\^$*+?.()|[\]{}]/;
-export const kPatternGroupReplacer = /\[([^\]]+)\](?=(.)?)/g;
-export const kGroupRangeReplacer = /(.)-(.)/g;
+const kWordStartBoundary = String.raw`(?<=^|\W)`;
+const kWordEndBoundary = String.raw`(?=$|\W)`;
+const kWordBoundaryWildcard = "*";
+const kWordReplacer = /.(?=(.)?)/g;
+const kRegExpSymbols = /[-/\\^$*+?.()|[\]{}]/;
+const kPatternGroupReplacer = /\[([^\]]+)\](?=(.)?)/g;
+const kGroupRangeReplacer = /(.)-(.)/g;
 
-export const enum WordBoundary {
+const enum WordBoundary {
 	None,
 	Start,
 	End,
@@ -63,7 +63,7 @@ export function create(words: readonly string[]) {
 	return patterns.join("|");
 }
 
-export function processWordBoundaries(word: string) {
+function processWordBoundaries(word: string) {
 	const starts = word.startsWith(kWordBoundaryWildcard);
 	const ends = word.endsWith(kWordBoundaryWildcard);
 
@@ -81,7 +81,7 @@ export function processWordBoundaries(word: string) {
 				WordBoundary.None;
 }
 
-export function processWordPatternsWithGroups(word: string) {
+function processWordPatternsWithGroups(word: string) {
 	return bidirectionalReplace(kPatternGroupReplacer, word, {
 		onMatch: (match) => `${processGroup(match[1])}+${match[2] ? String.raw`\W*` : ""}`,
 		outMatch: (match, _, next) =>
@@ -89,7 +89,7 @@ export function processWordPatternsWithGroups(word: string) {
 	}).join("");
 }
 
-export function processGroup(group: string) {
+function processGroup(group: string) {
 	const output = bidirectionalReplace(kGroupRangeReplacer, group, {
 		// Given a-b
 		// If a === b
@@ -109,13 +109,13 @@ export function processGroup(group: string) {
 	return `[${output.join("")}]`;
 }
 
-export function processWordPattern(word: string) {
+function processWordPattern(word: string) {
 	return word.replace(
 		kWordReplacer,
 		(letter, nextWord) => `${processLetter(letter)}+${nextWord ? String.raw`\W*` : ""}`,
 	);
 }
 
-export function processLetter(letter: string) {
+function processLetter(letter: string) {
 	return kRegExpSymbols.test(letter) ? `\\${letter}` : letter;
 }

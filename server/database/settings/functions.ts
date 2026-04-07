@@ -1,10 +1,8 @@
-import type { AdderKey } from "#server/database/settings/structures/AdderManager";
 import type { GuildData, ReadonlyGuildData } from "#server/database/settings/types";
 import type { Awaitable, PickByValue } from "@sapphire/utilities";
 import prisma from "#server/database/prisma";
 import { getDefaultGuildSettings } from "#server/database/settings/constants";
 import {
-	deleteSettingsContext,
 	getSettingsContext,
 	updateSettingsContext,
 } from "#server/database/settings/context/functions";
@@ -68,49 +66,12 @@ export function coerceBigIntFields(data: Record<string, unknown>): void {
 	}
 }
 
-export function deleteSettingsCached(guildId: string) {
-	locks.delete(guildId);
-	cache.delete(guildId);
-	deleteSettingsContext(guildId);
-}
-
 export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
 	return cache.get(guildId) ?? processFetch(guildId);
 }
 
-export function readSettingsAdder(settings: ReadonlyGuildData, key: AdderKey) {
-	return getSettingsContext(settings).adders[key];
-}
-
 export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
 	return getSettingsContext(settings).permissionNodes;
-}
-
-export function readSettingsNoMentionSpam(settings: ReadonlyGuildData) {
-	return getSettingsContext(settings).noMentionSpam;
-}
-
-export function readSettingsWordFilterRegExp(settings: ReadonlyGuildData) {
-	return getSettingsContext(settings).wordFilterRegExp;
-}
-
-export function readSettingsCached(guildid: string): ReadonlyGuildData | null {
-	return cache.get(guildid) ?? null;
-}
-
-export async function writeSettings(
-	guildid: string,
-	data:
-		| Partial<ReadonlyGuildData>
-		| ((settings: ReadonlyGuildData) => Awaitable<Partial<ReadonlyGuildData>>),
-) {
-	using trx = await writeSettingsTransaction(guildid);
-
-	if (typeof data === "function") {
-		data = await data(trx.settings);
-	}
-
-	await trx.write(data).submit();
 }
 
 export async function writeSettingsTransaction(id: string) {
@@ -125,7 +86,7 @@ export async function writeSettingsTransaction(id: string) {
 	return new Transaction(settings, queue);
 }
 
-export class Transaction {
+class Transaction {
 	#changes = Object.create(null) as Partial<ReadonlyGuildData>;
 	#hasChanges = false;
 	#locking = true;

@@ -93,14 +93,11 @@
 		class="card-glass rounded-2xl px-6 py-12 text-center"
 		role="status"
 	>
-		<div class="relative mb-4 inline-block">
-			<div class="absolute inset-0 rounded-full bg-gray-400/20 blur-xl"></div>
-			<UIcon
-				name="i-heroicons-magnifying-glass"
-				class="relative mx-auto h-12 w-12 text-gray-400"
-				aria-hidden="true"
-			/>
-		</div>
+		<UIcon
+			name="i-heroicons-magnifying-glass"
+			class="mx-auto mb-4 h-12 w-12 text-base-content/30"
+			aria-hidden="true"
+		/>
 		<h3 class="mb-2 text-lg font-bold">No commands found in {{ categoryName }}</h3>
 		<p class="text-base-content/70">Try adjusting your search or browse other categories.</p>
 	</div>

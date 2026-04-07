@@ -54,7 +54,7 @@ export interface SelectManyValue {
 	icon?: string;
 }
 
-export interface SelectManyProps {
+interface SelectManyProps {
 	/** The label to show on the button */
 	label: string;
 	/** The name of the current value (summary text) */

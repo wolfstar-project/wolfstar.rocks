@@ -49,23 +49,30 @@ function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigin
 			perms |= BigInt(role.permissions);
 		}
 	}
-	// has ADMINISTRATOR
-	if (perms & PermissionFlagsBits.Administrator) return PermissionFlagsBits.Administrator;
 	return perms;
 }
 
+// `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
+// fall back to computing permissions from the member's roles against guild.roles.
+// Administrator implies every permission including ManageGuild.
 function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
-	const rawPermissions = cast<{ permissions: string }>(member).permissions;
+	if (roles.length > 0) {
+		return hasAtLeastOneKeyInMap(
+			new Map(roles.map((role) => [role, true])),
+			member.roles.map((r) => r),
+		);
+	}
+
+	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
 	const memberRolePermissions =
 		rawPermissions !== undefined
 			? BigInt(rawPermissions)
 			: computePermissions(member.roles, guild.roles);
-	return roles.length === 0
-		? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-		: hasAtLeastOneKeyInMap(
-				new Map(roles.map((role) => [role, true])),
-				member.roles.map((r) => r),
-			);
+
+	return (
+		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.Administrator) ||
+		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
+	);
 }
 
 async function manage(guild: APIGuild, member: APIGuildMember) {
@@ -100,9 +107,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	const member = await useApi()
-		.users.getGuildMember(guild.id)
-		.catch(() => undefined);
+	const member = await getMember(guild.id, userId).catch(() => undefined);
 	if (!member) {
 		return hasManageGuild;
 	}

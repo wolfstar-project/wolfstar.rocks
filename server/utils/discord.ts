@@ -9,6 +9,7 @@ import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,
 	APIGuildMember,
+	APIRole,
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
@@ -41,30 +42,32 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-// `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
-// it is only present on interaction-attached members and GET /users/@me/guilds/{id}/member.
-// When absent, fall back to the pre-computed `hasManageGuild` from the OAuth guild object.
-function isAdmin(
-	member: APIGuildMember,
-	roles: readonly string[],
-	hasManageGuild = false,
-): boolean {
-	if (roles.length > 0) {
-		return hasAtLeastOneKeyInMap(
-			new Map(roles.map((role) => [role, true])),
-			member.roles.map((r) => r),
-		);
+function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigint {
+	let perms = 0n;
+	for (const role of guildRoles) {
+		if (memberRoles.includes(role.id) || role.name === "@everyone") {
+			perms |= BigInt(role.permissions);
+		}
 	}
-
-	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
-	if (rawPermissions === undefined) {
-		return hasManageGuild;
-	}
-
-	return PermissionsBits.has(BigInt(rawPermissions), PermissionFlagsBits.ManageGuild);
+	// has ADMINISTRATOR
+	if (perms & PermissionFlagsBits.Administrator) return PermissionFlagsBits.Administrator;
+	return perms;
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember, hasManageGuild = false) {
+function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
+	const rawPermissions = cast<{ permissions: string }>(member).permissions;
+	const memberRolePermissions = BigInt(rawPermissions)
+		? BigInt(rawPermissions)
+		: computePermissions(member.roles, guild.roles);
+	return roles.length === 0
+		? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
+		: hasAtLeastOneKeyInMap(
+				new Map(roles.map((role) => [role, true])),
+				member.roles.map((r) => r),
+			);
+}
+
+async function manage(guild: APIGuild, member: APIGuildMember) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -76,8 +79,7 @@ async function manage(guild: APIGuild, member: APIGuildMember, hasManageGuild = 
 	const nodes = readSettingsPermissionNodes(settings);
 
 	return (
-		isAdmin(member, settings.rolesAdmin, hasManageGuild) &&
-		((await nodes.run(member, "conf")) ?? true)
+		isAdmin(guild, member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true)
 	);
 }
 
@@ -98,13 +100,13 @@ async function getManageable(
 	}
 
 	const member = await useApi()
-		.guilds.getMember(guild.id, userId)
+		.users.getGuildMember(guild.id)
 		.catch(() => undefined);
 	if (!member) {
 		return hasManageGuild;
 	}
 
-	return manage(guild, member, hasManageGuild);
+	return manage(guild, member);
 }
 
 export async function transformGuild(

@@ -96,11 +96,11 @@ skills:
     generator: skilld
   std-env-skilld:
     packageName: std-env
-    version: 3.10.0
-    packages: "std-env@3.10.0"
+    version: 4.0.0
+    packages: "std-env@4.0.0"
     repo: unjs/std-env
     source: "ungh://unjs/std-env"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-03-29
     generator: skilld
   discordjs-collection-skilld:
     packageName: "@discordjs/collection"

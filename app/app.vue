@@ -40,6 +40,8 @@ provide(ProviderAppNameKey, appName);
 onMounted(() => {
 	if (!import.meta.test) return;
 	// In test environments, trigger a refresh explicitly instead of relying on the normal session flow.
-	void $fetch("/api/auth/refresh").then(refreshSession).catch(() => {});
+	void $fetch("/api/auth/refresh")
+		.then(refreshSession)
+		.catch(() => {});
 });
 </script>

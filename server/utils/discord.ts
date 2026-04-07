@@ -42,7 +42,7 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 }
 
 function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-	const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);
+	const memberRolePermissions = BigInt(cast<{ permissions?: string }>(member).permissions ?? "0");
 	return roles.length === 0
 		? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
 		: hasAtLeastOneKeyInMap(

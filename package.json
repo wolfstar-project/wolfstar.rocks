@@ -116,6 +116,7 @@
 		"@sapphire/snowflake": "^3.5.5",
 		"@sapphire/time-utilities": "^1.7.14",
 		"@sapphire/utilities": "^3.18.2",
+		"@shelve/cli": "^4.1.7",
 		"@tailwindcss/typography": "^0.5.19",
 		"@takumi-rs/core": "1.0.0-beta.20",
 		"@takumi-rs/wasm": "1.0.0-beta.20",

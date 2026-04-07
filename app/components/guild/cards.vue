@@ -107,7 +107,7 @@
 							variant="outline"
 							size="sm"
 							icon="heroicons:arrow-path"
-							@click="reloadPage"
+							to="/login"
 						>
 							Reload Page
 						</UButton>
@@ -308,10 +308,6 @@ const { isLoading: loadingMore, reset } = useInfiniteScroll(
 		distance: 10,
 	},
 );
-
-function reloadPage() {
-	window.location.reload();
-}
 
 watch(
 	() => filteredGuilds,

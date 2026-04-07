@@ -1,6 +1,6 @@
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
-		<header class="mt-8 flex animate-fade-in-up flex-col items-center space-y-6 text-center">
+		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-base-content/90 md:text-5xl">
 				WolfStar Commands
 			</h1>

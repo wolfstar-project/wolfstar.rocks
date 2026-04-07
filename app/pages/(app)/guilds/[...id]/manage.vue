@@ -44,6 +44,8 @@
 </template>
 
 <script setup lang="ts">
+import * as Sentry from "@sentry/nuxt";
+
 definePageMeta({
 	auth: {
 		required: true,
@@ -119,13 +121,27 @@ const renderComponent = computed(() => asyncComponentMap[joinedPath.value] ?? de
 // Channels / Events / Roles do not use commands or languages, so we skip
 // the network round-trips entirely.
 onMounted(() => {
+	const section = joinedPath.value || "general";
+	Sentry.metrics.count("dashboard.section.view", 1, {
+		attributes: { section, guild_id: guildData.value?.id ?? "unknown" },
+	});
+	Sentry.addBreadcrumb({
+		category: "navigation",
+		message: `Dashboard section: ${section}`,
+		level: "info",
+	});
+
 	switch (joinedPath.value) {
 		case "": {
-			void refreshLanguages();
+			void Sentry.startSpan({ name: "dashboard.fetch.languages", op: "ui.fetch" }, () =>
+				refreshLanguages(),
+			);
 			break;
 		}
 		case "commands": {
-			void refreshCommands();
+			void Sentry.startSpan({ name: "dashboard.fetch.commands", op: "ui.fetch" }, () =>
+				refreshCommands(),
+			);
 			break;
 		}
 		default: {
@@ -136,6 +152,9 @@ onMounted(() => {
 
 watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 	if (commandsErr) {
+		Sentry.metrics.count("dashboard.fetch.error", 1, {
+			attributes: { type: "commands" },
+		});
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
@@ -148,6 +167,9 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 	}
 
 	if (languagesErr) {
+		Sentry.metrics.count("dashboard.fetch.error", 1, {
+			attributes: { type: "languages" },
+		});
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",

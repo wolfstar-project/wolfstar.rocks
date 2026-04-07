@@ -4,9 +4,11 @@ import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
 import { cast, isObject } from "@sapphire/utilities";
+import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
+import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry-metrics";
 
 /**
  * Hash a string value for logging (privacy protection)
@@ -121,7 +123,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const storageKey =
 		scope === "route" ? `rate-limiter-state:${scopeKey}:${id}` : `rate-limiter-state:${id}`;
 
-	const savedState = await rateLimitStorage.getItem(storageKey);
+	const savedState = await instrumentCacheGet(storageKey, () =>
+		rateLimitStorage.getItem(storageKey),
+	);
 	const initialState =
 		savedState && isObject(savedState) ? cast<Record<string, unknown>>(savedState) : {};
 
@@ -136,7 +140,9 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	async function persistState(state: Record<string, unknown> | null) {
 		try {
 			if (state) {
-				await rateLimitStorage.setItem(storageKey, state);
+				await instrumentCachePut(storageKey, () =>
+					rateLimitStorage.setItem(storageKey, state),
+				);
 			}
 		} catch {}
 	}
@@ -169,6 +175,17 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				setResponseHeader(event, "x-ratelimit-remaining", 0);
 				setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
 				setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
+
+				Sentry.metrics.count("rate_limit.hit", 1, {
+					attributes: { route: scopeKey, window_type: windowType },
+				});
+
+				const rateLimitSpan = Sentry.getActiveSpan();
+				if (rateLimitSpan) {
+					rateLimitSpan.setAttribute("rate_limit.hit", true);
+					rateLimitSpan.setAttribute("rate_limit.route", scopeKey);
+					rateLimitSpan.setAttribute("rate_limit.window_type", windowType);
+				}
 
 				throw createError({
 					message: `Too Many Requests. Try again in ${msUntilReset}ms`,
@@ -234,6 +251,17 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 				setResponseHeader(event, "x-ratelimit-reset", Math.floor(timeForInterval / 1000));
 				setResponseHeader(event, "retry-after", Math.ceil(msUntilReset / 1000));
 
+				Sentry.metrics.count("rate_limit.hit", 1, {
+					attributes: { route: scopeKey, window_type: windowType },
+				});
+
+				const rateLimitSpan = Sentry.getActiveSpan();
+				if (rateLimitSpan) {
+					rateLimitSpan.setAttribute("rate_limit.hit", true);
+					rateLimitSpan.setAttribute("rate_limit.route", scopeKey);
+					rateLimitSpan.setAttribute("rate_limit.window_type", windowType);
+				}
+
 				throw createError({
 					message: `Too Many Requests. Try again in ${msUntilReset}ms`,
 					why: "The number of requests has exceeded the configured limit for this time window",
@@ -289,15 +317,16 @@ export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
 ): EventHandler<T, D> {
 	return defineEventHandler<T>(async (event) => {
 		const log = useLogger(event);
-		try {
-			const result = await applyWrappedHandlerLogic(event, handler, options);
-			return result;
-		} catch (error) {
-			if (options.onError && typeof options.onError === "function") {
-				options.onError(log, error);
+		return withApiMetrics(event, async () => {
+			try {
+				return await applyWrappedHandlerLogic(event, handler, options);
+			} catch (error) {
+				if (options.onError && typeof options.onError === "function") {
+					options.onError(log, error);
+				}
+				throw error;
 			}
-			throw error;
-		}
+		});
 	});
 }
 
@@ -313,14 +342,15 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 	const opts = omit(["rateLimit", "auth", "onError"], options);
 	return cachedEventHandler<T>(async (event) => {
 		const log = useLogger(event);
-		try {
-			const result = await applyWrappedHandlerLogic(event, handler, options);
-			return result;
-		} catch (error) {
-			if (options.onError && typeof options.onError === "function") {
-				options.onError(log, error);
+		return withApiMetrics(event, async () => {
+			try {
+				return await applyWrappedHandlerLogic(event, handler, options);
+			} catch (error) {
+				if (options.onError && typeof options.onError === "function") {
+					options.onError(log, error);
+				}
+				throw error;
 			}
-			throw error;
-		}
+		});
 	}, opts);
 }

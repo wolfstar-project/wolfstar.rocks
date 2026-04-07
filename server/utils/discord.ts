@@ -19,6 +19,7 @@ import { REST } from "@discordjs/rest";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
+import * as Sentry from "@sentry/nuxt";
 import {
 	GuildDefaultMessageNotifications,
 	GuildExplicitContentFilter,
@@ -200,7 +201,12 @@ export const getCurrentUser = defineCachedFunction(
 
 		const api = useApi(rest);
 
-		const user = await api.users.getCurrent().catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "users.getCurrent" },
+		});
+		const user = await instrumentDiscordApiCall("users.getCurrent", () =>
+			api.users.getCurrent(),
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: "Failed to fetch user data",
@@ -209,7 +215,12 @@ export const getCurrentUser = defineCachedFunction(
 			});
 		});
 
-		const guilds = await api.users.getGuilds().catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "users.getGuilds" },
+		});
+		const guilds = await instrumentDiscordApiCall("users.getGuilds", () =>
+			api.users.getGuilds(),
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: "Failed to fetch user guilds",
@@ -239,7 +250,14 @@ export const getCurrentMember = defineCachedFunction(
 
 		const api = useApi(rest);
 
-		const member = await api.users.getGuildMember(guildId).catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "users.getGuildMember", guild_id: guildId },
+		});
+		const member = await instrumentDiscordApiCall(
+			"users.getGuildMember",
+			() => api.users.getGuildMember(guildId),
+			{ guild_id: guildId },
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: "Failed to fetch guild member data",
@@ -263,7 +281,14 @@ export const getMember = defineCachedFunction(
 	async (guildId: string, userId: string) => {
 		const api = useApi();
 
-		const result = await api.guilds.getMember(guildId, userId).catch((error) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "guilds.getMember", guild_id: guildId },
+		});
+		const result = await instrumentDiscordApiCall(
+			"guilds.getMember",
+			() => api.guilds.getMember(guildId, userId),
+			{ guild_id: guildId },
+		).catch((error) => {
 			const discordError = error as DiscordAPIError;
 
 			let message = "";
@@ -297,7 +322,14 @@ export const getMember = defineCachedFunction(
 export const getGuildChannels = defineCachedFunction(
 	async (guildId: string) => {
 		const api = useApi();
-		const result = await api.guilds.getChannels(guildId).catch((error: DiscordAPIError) => {
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "guilds.getChannels", guild_id: guildId },
+		});
+		const result = await instrumentDiscordApiCall(
+			"guilds.getChannels",
+			() => api.guilds.getChannels(guildId),
+			{ guild_id: guildId },
+		).catch((error: DiscordAPIError) => {
 			throw createError({
 				cause: error,
 				message: `Failed to fetch channels for guild: ${guildId}`,
@@ -315,16 +347,21 @@ export const getGuildChannels = defineCachedFunction(
 export const getGuild = defineCachedFunction(
 	async (guildId: string) => {
 		const api = useApi();
-		const result = await api.guilds
-			.get(guildId, { with_counts: true })
-			.catch((error: DiscordAPIError) => {
-				throw createError({
-					cause: error,
-					message: `Failed to fetch guild: ${guildId}`,
-					status: 500,
-					why: "Discord API returned an error when fetching guild data",
-				});
+		Sentry.metrics.count("discord_api.call", 1, {
+			attributes: { endpoint: "guilds.get", guild_id: guildId },
+		});
+		const result = await instrumentDiscordApiCall(
+			"guilds.get",
+			() => api.guilds.get(guildId, { with_counts: true }),
+			{ guild_id: guildId },
+		).catch((error: DiscordAPIError) => {
+			throw createError({
+				cause: error,
+				message: `Failed to fetch guild: ${guildId}`,
+				status: 500,
+				why: "Discord API returned an error when fetching guild data",
 			});
+		});
 		return result;
 	},
 	{
@@ -338,12 +375,17 @@ export const fetchCommands = defineCachedFunction(
 		const {
 			public: { apiBaseUrl },
 		} = useRuntimeConfig();
-		const commands = await $fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
+		Sentry.metrics.count("bot_api.call", 1, {
+			attributes: { endpoint: "commands.fetch" },
 		});
+		const commands = await instrumentBotApiCall("commands.fetch", () =>
+			$fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}),
+		);
 		return commands;
 	},
 	{

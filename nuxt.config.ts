@@ -22,7 +22,6 @@ export default defineNuxtConfig({
 		"@nuxtjs/html-validator",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
-		"@vue-macros/nuxt",
 		"evlog/nuxt",
 		"nuxt-auth-utils",
 		"nuxt-vitalizer",
@@ -122,10 +121,6 @@ export default defineNuxtConfig({
 
 	css: ["~/assets/css/main.css"],
 
-	vue: {
-		propsDestructure: true,
-	},
-
 	site: {
 		defaultLocale: "en-US",
 		description:
@@ -147,7 +142,7 @@ export default defineNuxtConfig({
 			service: "wolfstar-dashboard",
 		},
 		include: ["/api/**"],
-		exclude: ["/api/openapi.json", "/api/docs/**"],
+		exclude: ["/api/_nuxt_icon/**"],
 	},
 
 	ui: {
@@ -172,8 +167,6 @@ export default defineNuxtConfig({
 			},
 		},
 		failOnError: true,
-		// OG image routes use an iframe wrapper with separate HTML structure
-		ignore: [/\/__og-image__\//],
 	},
 
 	// Runtime configuration
@@ -186,16 +179,8 @@ export default defineNuxtConfig({
 		// Globally, as that would serve one user's data to another.
 		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
-		"/__og-image__/**": getISRConfig(60),
+		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
-		"/api/commands": {
-			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
-			proxy: `${runtimeConfig.public.app.apiBaseUrl}/commands`,
-		},
-		"/api/languages": {
-			isr: 60 * 60, // 1 h — public bot-API proxy, safe to cache
-			proxy: `${runtimeConfig.public.app.apiBaseUrl}/languages`,
-		},
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -231,6 +216,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
+		viteEnvironmentApi: true,
 		typedPages: true,
 	},
 
@@ -384,18 +370,10 @@ export default defineNuxtConfig({
 		format: ["webp", "jpeg", "jpg", "png", "svg"],
 	},
 
-	macros: {
-		betterDefine: false,
-		defineModels: false,
-		reactivityTransform: true,
-		setupSFC: true,
-	},
-
 	ogImage: {
-		defaults: {
-			component: "Default",
+		security: {
+			maxQueryParamSize: 2048,
 		},
-		zeroRuntime: true,
 	},
 	// PWA configuration
 	pwa,
@@ -409,10 +387,12 @@ export default defineNuxtConfig({
 					"'self'",
 					"wss:",
 					"ws:",
+					"https://ingesteer.services-prod.nsvcs.net", // Used by Netlify for telemetry (error, performance etc.)
 					"https://cdn.wolfstar.rocks",
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
+					"https://api.iconify.design",
 					"https://*.netlify.com",
 					"https://*.netlify.app",
 					"https://*.wolfstar.rocks",
@@ -482,6 +462,10 @@ export default defineNuxtConfig({
 			},
 		},
 		rateLimiter: false,
+		sri: false,
+		ssg: {
+			hashScripts: false,
+		},
 	},
 
 	sentry: {

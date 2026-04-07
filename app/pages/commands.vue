@@ -1,6 +1,6 @@
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
-		<header class="mt-8 flex animate-fade-in-up flex-col items-center space-y-6 text-center">
+		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
 			<h1 class="text-4xl font-bold tracking-tight text-base-content/90 md:text-5xl">
 				WolfStar Commands
 			</h1>
@@ -45,10 +45,9 @@
 					variant="soft"
 					size="xl"
 					class="self-start sm:self-auto"
-					:loading="refreshing"
-					:disabled="loading"
+					:loading="status === 'pending'"
 					aria-label="Refresh commands list"
-					@click="fetchCommands()"
+					@click="refresh()"
 				>
 					<span class="hidden sm:inline">Refresh</span>
 				</UButton>
@@ -101,7 +100,7 @@
 					color="primary"
 					variant="outline"
 					size="lg"
-					@click="fetchCommands()"
+					@click="refresh()"
 				>
 					Try Again
 				</UButton>
@@ -126,9 +125,7 @@
 </template>
 
 <script lang="ts" setup>
-import { Time } from "@sapphire/time-utilities";
 import { useFuse } from "@vueuse/integrations/useFuse";
-import { isDevelopment } from "std-env";
 
 useSeoMetadata({
 	description: "Browse all available WolfStar bot commands and their descriptions.",
@@ -141,9 +138,9 @@ useSeoMetadata({
 });
 
 const searchValue = ref("");
-const commands = ref<FlattenedCommand[]>([]);
-const loading = ref(false);
-const refreshing = ref(false);
+const { data: commands, status, refresh } = useCommands();
+
+const loading = computed(() => status.value === "pending");
 
 const { results } = useFuse(searchValue, commands, {
 	fuseOptions: {
@@ -164,37 +161,4 @@ const categories = computed(() => {
 });
 
 const filteredCommandsCount = computed(() => results.value.length);
-
-async function fetchCommands() {
-	loading.value = true;
-	try {
-		const commandsStorage = useLocalStorage<ExpirableLocalStorageStructure<FlattenedCommand[]>>(
-			LocalStorageKeys.Commands,
-			{
-				data: [],
-				expire: 0,
-			},
-		);
-		if (commandsStorage.value && (isDevelopment || commandsStorage.value.expire > Date.now())) {
-			commands.value = commandsStorage.value.data;
-		} else {
-			const commandsData = await $fetch<FlattenedCommand[]>("/api/commands", {
-				credentials: "include",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				method: "GET",
-			});
-			commands.value = commandsData;
-			commandsStorage.value = {
-				data: commandsData,
-				expire: Date.now() + Time.Day * 6,
-			};
-		}
-	} finally {
-		loading.value = false;
-	}
-}
-
-onMounted(fetchCommands);
 </script>

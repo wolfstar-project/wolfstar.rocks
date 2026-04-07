@@ -3,16 +3,6 @@ import type { Nullish } from "@sapphire/utilities";
 import { Adder } from "#server/database/settings/utils/Adder";
 import { isNullishOrZero } from "@sapphire/utilities";
 
-export type AdderKey =
-	| "attachments"
-	| "capitals"
-	| "links"
-	| "messages"
-	| "newlines"
-	| "invites"
-	| "words"
-	| "reactions";
-
 export class AdderManager {
 	public attachments: Adder<string> | null;
 	public capitals: Adder<string> | null;

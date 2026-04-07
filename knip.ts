@@ -4,19 +4,10 @@ const config: KnipConfig = {
 	workspaces: {
 		".": {
 			entry: [
-				"app/pages/**/*.vue!",
-				"app/components/**/*.vue!",
-				"app/composables/**/*.ts!",
-				"app/plugins/**/*.ts!",
-				"app/utils/**/*.ts!",
-				"app/themes/**/*.ts!",
-				"server/**/*.ts!",
-				"modules/**/*.ts!",
-				"config/**/*.ts!",
-				"shared/**/*.ts!",
 				"service-worker/sw.ts",
 				"pwa-assets.config.ts",
 				"taze.config.ts",
+				"modules/**/*.ts",
 				".lighthouserc.cjs",
 				"lighthouse-setup.cjs",
 				"scripts/**/*.ts",
@@ -59,6 +50,8 @@ const config: KnipConfig = {
 				"@sapphire/async-queue",
 				"@codspeed/core",
 				"nuxt-og-image",
+				"@takumi-rs/core",
+				"@takumi-rs/wasm",
 				"workbox-*",
 
 				/** Oxlint plugins don't get picked up yet */
@@ -73,18 +66,43 @@ const config: KnipConfig = {
 
 				/** Used in the test */
 				"axe-core",
+				"@playwright/test",
 
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",
 				"@vue/test-utils",
 
 				/** Used for git hooks, not imported directly */
-				"nano-staged",
+				"vite-plus",
+
+				/** Used for cli */
+				"@shelve/cli",
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: ["#build/auth.config", "#server/database/generated/client"],
+			ignoreUnresolved: [
+				"#build/auth.config",
+				"#server/database/generated/client",
+				"#og-image/app/utils",
+			],
+			ignoreFiles: [
+				"**/*.unused.*",
+				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,
+			],
+			ignoreMembers: [
+				/** Enum members in app/utils/constants.ts used as color values at runtime */
+				"Secondary",
+				"Amber",
+				"Amber300",
+				"DeepOrange",
+				"LightBlue",
+				"Orange",
+				"Red",
+				"Red300",
+				"Yellow",
+				"Yellow300",
+			],
 		},
 	},
 };

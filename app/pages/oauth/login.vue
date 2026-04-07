@@ -6,7 +6,19 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({ alias: ["/login"] });
+const log = useLogger("oauth:login");
+
+definePageMeta({
+	alias: ["/login"],
+	middleware: async (to) => {
+		const { login } = useAuth();
+		const queryNext = to.query.next;
+		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
+		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+		log.info({ action: "login_redirect", next: safeNext });
+		return login(safeNext);
+	},
+});
 
 useSeoMetadata({
 	description: "A landing page for the OAuth2.0 login flow",
@@ -15,13 +27,5 @@ useSeoMetadata({
 	},
 	shouldOgImage: true,
 	title: "Login",
-});
-
-const { login } = useAuth();
-
-onMounted(() => {
-	const nextUrl = useRouteQuery("next", "/", { transform: String });
-	const safeNext = isSafeRedirectPath(nextUrl.value) ? nextUrl.value : "/";
-	void login(safeNext);
 });
 </script>

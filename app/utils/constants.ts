@@ -14,38 +14,17 @@ export const colors = [
 export type UIColors = (typeof colors)[number];
 
 export enum BrandingColors {
-	Primary = "#050505",
 	Secondary = "#fd171b",
 }
 
-export enum ThemeColors {
-	themeLight = "#ffffff",
-	themeDark = "#121212",
-}
-
 export enum Colors {
-	White = "#e7e7e8",
 	Amber = "#ffc107",
 	Amber300 = "#ffd54f",
-	Blue = "#2196f3",
-	BlueGrey = "#607d8b",
-	Brown = "#795548",
-	Cyan = "#00bcd4",
 	DeepOrange = "#ff5722",
-	DeepPurple = "#673ab7",
-	Green = "#4caf50",
-	Grey = "#9e9e9e",
-	Indigo = "#3f51b5",
 	LightBlue = "#03a9f4",
-	LightGreen = "#8bc34a",
-	Lime = "#cddc39",
-	Lime300 = "#dce775",
 	Orange = "#ff9800",
-	Pink = "#e91e63",
-	Purple = "#9c27b0",
 	Red = "#f44336",
 	Red300 = "#e57373",
-	Teal = "#009688",
 	Yellow = "#ffeb3b",
 	Yellow300 = "#fff176",
 }
@@ -259,16 +238,6 @@ export interface OtherApp {
 	invite: string;
 	purposes: readonly string[];
 	description: string;
-}
-
-export interface ExpirableLocalStorageStructure<T> {
-	expire: number;
-	data: T;
-}
-
-export enum LocalStorageKeys {
-	Commands = "commands",
-	Languages = "languages",
 }
 
 export const EmojiRegexExtractName = /<?a?:(\w{2,32}):\d{17,21}>?/gi;

@@ -10,6 +10,7 @@
 		"usernamehw.errorlens",
 		"formulahendry.auto-rename-tag",
 		"vitest.explorer",
-		"coderabbit.coderabbit-vscode"
+		"coderabbit.coderabbit-vscode",
+		"VoidZero.vite-plus-extension-pack"
 	]
 }

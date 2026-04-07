@@ -20,7 +20,7 @@
 import type { DeepReadonly } from "@sapphire/utilities";
 import type { SelectOneValue } from "./One.vue";
 
-export interface SelectRoleProps {
+interface SelectRoleProps {
 	/** The label to show on the button */
 	label: string;
 	/** The current selected channel ID */

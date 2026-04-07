@@ -54,7 +54,7 @@ interface SelectOption {
 	icon?: string;
 }
 
-export interface SelectOneProps {
+interface SelectOneProps {
 	/** The label to show on the button */
 	label: string;
 	/** The name of the current value */

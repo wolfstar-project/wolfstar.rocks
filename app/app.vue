@@ -9,12 +9,7 @@
 		<NuxtRouteAnnouncer />
 		<NuxtLoadingIndicator color="bg-neutral" />
 		<NuxtLayout>
-			<NuxtPage
-				:transition="{
-					name: 'page',
-					mode: 'out-in',
-				}"
-			/>
+			<NuxtPage />
 		</NuxtLayout>
 	</UApp>
 </template>

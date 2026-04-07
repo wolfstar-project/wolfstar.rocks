@@ -53,6 +53,7 @@ import { promiseTimeout } from "@vueuse/core";
 const code = useRouteQuery("code", null, { transform: String });
 const state = useRouteQuery("state", undefined, { transform: String });
 const { user, refreshSession } = useAuth();
+const log = useLogger("oauth:callback");
 
 const route = useRoute();
 
@@ -67,11 +68,16 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
 });
 
 if (import.meta.client && code) {
-	void performCall().catch(logger.error);
+	void performCall().catch(log.error);
 }
 
 async function performCall() {
 	await execute();
+
+	// Stop if the token exchange failed — the error UI will be shown
+	if (error.value) {
+		return;
+	}
 
 	// Refresh client-side session state so the user data is reactive immediately
 	await refreshSession();
@@ -93,8 +99,10 @@ async function performCall() {
 		}
 	}
 
+	// Full page navigation ensures SSR reads the fresh session cookie,
+	// so the target page renders with the correct authenticated state.
 	await navigateTo(redirectUrl, {
-		redirectCode: 302,
+		external: true,
 		replace: true,
 	});
 }

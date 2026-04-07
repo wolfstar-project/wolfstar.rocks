@@ -9,7 +9,6 @@ const {
 if (sentry.dsn) {
 	Sentry.init({
 		dsn: sentry.dsn,
-
 		// Set tracesSampleRate to 1.0 to capture 100%
 		// Of transactions for tracing.
 		// We recommend adjusting this value in production
@@ -28,9 +27,5 @@ if (sentry.dsn) {
 		],
 
 		environment,
-
-		// Logs now handled by evlog Sentry drain
-		// Disable Sentry's Consola reporter integration to avoid duplicates
-		enableLogs: false,
 	});
 }

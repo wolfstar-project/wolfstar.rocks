@@ -1,15 +1,15 @@
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 
-export type DeepEqualPathSegment = string | number;
-export type DeepEqualPath = readonly DeepEqualPathSegment[];
+type DeepEqualPathSegment = string | number;
+type DeepEqualPath = readonly DeepEqualPathSegment[];
 
-export interface DeepEqualDifference {
+interface DeepEqualDifference {
 	path: DeepEqualPath;
 	left: unknown;
 	right: unknown;
 }
 
-export interface IsDeepEqualOptions {
+interface IsDeepEqualOptions {
 	/**
 	 * Called when a difference is found.
 	 *
@@ -374,24 +374,4 @@ export function isDeepEqual(a: unknown, b: unknown, options: IsDeepEqualOptions 
 	}
 
 	return result;
-}
-
-/**
- * Visits differences between two values, invoking `visitor` for each difference found.
- * Returns `true` if no differences were found.
- */
-export function visitDeepDifferences(
-	left: unknown,
-	right: unknown,
-	visitor: (diff: DeepEqualDifference) => void,
-	options: Omit<
-		IsDeepEqualOptions,
-		"onDifference" | "mode" | "onEqualSuccess" | "onEqualFailed" | "onEqualFalied"
-	> = {},
-): boolean {
-	return isDeepEqual(left, right, {
-		...options,
-		mode: "all",
-		onDifference: visitor,
-	});
 }

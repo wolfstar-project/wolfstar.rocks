@@ -1,53 +1,53 @@
-import { mockNuxtImport } from "@nuxt/test-utils/runtime";
-import { describe, expect, it, vi } from "vitest";
-import { createMockUser } from "~~/test/mocks/discord";
+import { registerEndpoint } from "@nuxt/test-utils/runtime";
+import { beforeEach, describe, expect, it } from "vitest";
+import { createMockOauthFlattenedGuild, createMockUser } from "~~/test/mocks/discord";
 
-// Create a mock function for the cached fetch
-const mockCachedFetch = vi.fn().mockResolvedValue({ data: null, isStale: false, cachedAt: null });
+let mockApiResponse: Record<string, unknown> = { transformedGuilds: [], user: null };
 
-// Mock useCachedFetch composable
-mockNuxtImport("useCachedFetch", () => () => mockCachedFetch);
+registerEndpoint("/api/users", {
+	method: "GET",
+	handler: () => mockApiResponse,
+});
 
-// Note: These tests will need proper Nuxt test environment setup
-// Currently they are placeholders for Phase 4 comprehensive testing
 describe("useUser", () => {
+	beforeEach(() => {
+		mockApiResponse = { transformedGuilds: [], user: null };
+
+		// Clear Nuxt's async data cache to prevent key reuse between tests.
+		// Without this, useLazyAsyncData reuses stale entries from previous
+		// tests that share the same key, causing the handler to never run.
+		clearNuxtData();
+		const nuxtApp = useNuxtApp();
+		for (const key of Object.keys(nuxtApp._asyncData)) {
+			delete nuxtApp._asyncData[key];
+		}
+		for (const key of Object.keys(nuxtApp._asyncDataPromises)) {
+			delete nuxtApp._asyncDataPromises[key];
+		}
+	});
+
 	it("should accept timeout option and pass to fetch", () => {
 		const mockUser = createMockUser();
-		const timeout = 5000;
-
-		// This test will fail until we implement the options parameter
-		// We need to verify that the timeout option is passed through to cachedFetch
 		expect(() => {
-			useUser(mockUser, { timeout });
+			useUser(mockUser, { timeout: 5000 });
 		}).not.toThrow();
 	});
 
 	it("should accept retry options and pass to fetch", () => {
 		const mockUser = createMockUser();
-		const retry = 3;
-		const retryDelay = 1000;
-
-		// This test will fail until we implement the options parameter
-		// We need to verify that retry options are passed through to cachedFetch
 		expect(() => {
-			useUser(mockUser, { retry, retryDelay });
+			useUser(mockUser, { retry: 3, retryDelay: 1000 });
 		}).not.toThrow();
 	});
 
 	it("should handle null user gracefully", () => {
-		const nullUser = null;
-
-		// This test will fail because useUser will try to access .id on null
-		// We need to add a null check
 		expect(() => {
-			useUser(nullUser);
+			useUser(null);
 		}).not.toThrow();
 	});
 
 	it("should work without options parameter (backwards compatibility)", () => {
 		const mockUser = createMockUser();
-
-		// This should continue to work (backwards compatibility)
 		expect(() => {
 			useUser(mockUser);
 		}).not.toThrow();
@@ -56,72 +56,103 @@ describe("useUser", () => {
 	it("should accept partial fetch options", () => {
 		const mockUser = createMockUser();
 
-		// Should accept only timeout
 		expect(() => {
 			useUser(mockUser, { timeout: 10_000 });
 		}).not.toThrow();
 
-		// Should accept only retry
 		expect(() => {
 			useUser(mockUser, { retry: 2 });
 		}).not.toThrow();
 	});
 
-	it("should cache data with fetchAt timestamp", async () => {
+	it("should return guilds as empty array when data is null", () => {
 		const mockUser = createMockUser();
-		const mockNow = 1_609_459_200_000; // 2021-01-01 00:00:00
-
-		// Mock Date.now() to return a specific timestamp
-		vi.spyOn(Date, "now").mockReturnValue(mockNow);
-
-		const nuxtApp = useNuxtApp();
-		const key = `user:${mockUser.id}:data`;
-
-		// Simulate cached data in nuxtApp.static.data
-		nuxtApp.static.data[key] = {
-			fetchAt: mockNow,
-			transformedGuilds: [{ id: "1", name: "Guild 1" }],
-		};
-
-		useUser(mockUser);
-
-		// Verify the cached data has fetchAt timestamp
-		expect(nuxtApp.static.data[key]).toBeDefined();
-		expect(nuxtApp.static.data[key].fetchAt).toBe(mockNow);
-
-		vi.restoreAllMocks();
+		const result = useUser(mockUser);
+		expect(result.guilds.value).toStrictEqual([]);
 	});
 
-	it("should transform data to include transformedGuilds and fetchAt", async () => {
+	it("should return filteredGuilds as empty array when data is null", () => {
 		const mockUser = createMockUser();
-		const mockNow = 1_609_459_200_000;
+		const result = useUser(mockUser);
+		expect(result.filteredGuilds.value).toStrictEqual([]);
+	});
+
+	it("should transform data to include transformedGuilds after fetch", async () => {
+		const mockUser = createMockUser();
 		const mockTransformedGuilds = [
-			{ id: "1", name: "Guild 1" },
-			{ id: "2", name: "Guild 2" },
+			createMockOauthFlattenedGuild({ id: "1", name: "Guild 1" }),
+			createMockOauthFlattenedGuild({ id: "2", name: "Guild 2" }),
 		];
 
-		vi.spyOn(Date, "now").mockReturnValue(mockNow);
-
-		// Mock the API response for this specific test
-		const mockApiResponse = {
-			guilds: [],
-			transformedGuilds: mockTransformedGuilds,
-			user: mockUser,
-		};
-
-		mockCachedFetch.mockResolvedValueOnce({
-			data: mockApiResponse,
-			isStale: false,
-			cachedAt: null,
-		});
+		mockApiResponse = { transformedGuilds: mockTransformedGuilds, user: mockUser };
 
 		const result = useUser(mockUser);
 		await result.execute();
 
-		// Verify the transformed output contains transformedGuilds and fetchAt
 		expect(result.data.value).toBeDefined();
 		expect(result.data.value?.transformedGuilds).toStrictEqual(mockTransformedGuilds);
+		expect(result.guilds.value).toHaveLength(2);
+	});
 
-		vi.restoreAllMocks();
+	it("should sort filteredGuilds by manageable > wolfstarIsIn > alphabetical", async () => {
+		const mockUser = createMockUser();
+		const guilds = [
+			createMockOauthFlattenedGuild({
+				id: "1",
+				name: "Zebra",
+				manageable: false,
+				wolfstarIsIn: false,
+			}),
+			createMockOauthFlattenedGuild({
+				id: "2",
+				name: "Alpha",
+				manageable: true,
+				wolfstarIsIn: true,
+			}),
+			createMockOauthFlattenedGuild({
+				id: "3",
+				name: "Beta",
+				manageable: true,
+				wolfstarIsIn: false,
+			}),
+			createMockOauthFlattenedGuild({
+				id: "4",
+				name: "Gamma",
+				manageable: false,
+				wolfstarIsIn: true,
+			}),
+		];
+
+		mockApiResponse = { transformedGuilds: guilds, user: mockUser };
+
+		const result = useUser(mockUser);
+		await result.execute();
+
+		const sorted = result.filteredGuilds.value;
+		expect(sorted.map((g) => g.name)).toStrictEqual(["Alpha", "Beta", "Gamma", "Zebra"]);
+	});
+
+	it("should pass fetch options through to useUser without errors", async () => {
+		const mockUser = createMockUser();
+		mockApiResponse = { transformedGuilds: [], user: mockUser };
+
+		const result = useUser(mockUser, { timeout: 5000 });
+		await result.execute();
+
+		expect(result.status.value).toBe("success");
+		expect(result.error.value).toBeUndefined();
+	});
+
+	it("should expose guilds computed separately from data", async () => {
+		const mockUser = createMockUser();
+		const mockGuilds = [createMockOauthFlattenedGuild({ id: "1", name: "Test" })];
+
+		mockApiResponse = { transformedGuilds: mockGuilds, user: mockUser };
+
+		const result = useUser(mockUser);
+		await result.execute();
+
+		expect(result.guilds.value).toStrictEqual(mockGuilds);
+		expect(result.data.value?.transformedGuilds).toStrictEqual(mockGuilds);
 	});
 });

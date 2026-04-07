@@ -96,7 +96,7 @@
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 				</div>
 				<!-- Guild Name -->
-				<h3 class="line-clamp-2 text-base font-bold text-base-content">
+				<h3 class="line-clamp-2 min-h-12 text-base font-bold text-base-content">
 					{{ guild.name }}
 				</h3>
 

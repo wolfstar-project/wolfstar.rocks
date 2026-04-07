@@ -41,17 +41,30 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-	const memberRolePermissions = BigInt(cast<{ permissions?: string }>(member).permissions ?? "0");
-	return roles.length === 0
-		? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-		: hasAtLeastOneKeyInMap(
-				new Map(roles.map((role) => [role, true])),
-				member.roles.map((r) => r),
-			);
+// `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
+// it is only present on interaction-attached members and GET /users/@me/guilds/{id}/member.
+// When absent, fall back to the pre-computed `hasManageGuild` from the OAuth guild object.
+function isAdmin(
+	member: APIGuildMember,
+	roles: readonly string[],
+	hasManageGuild = false,
+): boolean {
+	if (roles.length > 0) {
+		return hasAtLeastOneKeyInMap(
+			new Map(roles.map((role) => [role, true])),
+			member.roles.map((r) => r),
+		);
+	}
+
+	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
+	if (rawPermissions === undefined) {
+		return hasManageGuild;
+	}
+
+	return PermissionsBits.has(BigInt(rawPermissions), PermissionFlagsBits.ManageGuild);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember) {
+async function manage(guild: APIGuild, member: APIGuildMember, hasManageGuild = false) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -62,7 +75,10 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 	const settings = await readSettings(guild.id);
 	const nodes = readSettingsPermissionNodes(settings);
 
-	return isAdmin(member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true);
+	return (
+		isAdmin(member, settings.rolesAdmin, hasManageGuild) &&
+		((await nodes.run(member, "conf")) ?? true)
+	);
 }
 
 async function getManageable(
@@ -88,7 +104,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member);
+	return manage(guild, member, hasManageGuild);
 }
 
 export async function transformGuild(

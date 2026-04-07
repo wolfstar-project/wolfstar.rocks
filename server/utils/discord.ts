@@ -56,9 +56,10 @@ function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigin
 
 function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
 	const rawPermissions = cast<{ permissions: string }>(member).permissions;
-	const memberRolePermissions = BigInt(rawPermissions)
-		? BigInt(rawPermissions)
-		: computePermissions(member.roles, guild.roles);
+	const memberRolePermissions =
+		rawPermissions !== undefined
+			? BigInt(rawPermissions)
+			: computePermissions(member.roles, guild.roles);
 	return roles.length === 0
 		? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
 		: hasAtLeastOneKeyInMap(

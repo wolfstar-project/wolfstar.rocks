@@ -137,8 +137,8 @@ importers:
         specifier: ^0.8.5
         version: 0.8.5(@nuxt/kit@4.4.2(magicast@0.5.2))(@nuxt/schema@4.4.2)
       std-env:
-        specifier: ^3.10.0
-        version: 3.10.0
+        specifier: ^4.0.0
+        version: 4.0.0
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0

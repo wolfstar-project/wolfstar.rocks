@@ -440,7 +440,12 @@ onMounted(async () => {
 					color: "error",
 					icon: "heroicons:x-circle",
 				});
-				router.back();
+				if (import.meta.client && window.history.length > 1) {
+					router.back();
+				} else {
+					await navigateTo("/");
+				}
+				break;
 			}
 			default: {
 				toast.add({
@@ -457,7 +462,7 @@ onMounted(async () => {
 								},
 							]
 						: undefined,
-					icon: "i-heroicons-x-circle",
+					icon: "heroicons:x-circle",
 				});
 			}
 		}

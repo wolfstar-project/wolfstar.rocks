@@ -183,6 +183,7 @@ if (!isValidGuildId(guildId.value)) {
 }
 
 const toast = useToast();
+const router = useRouter();
 const open = ref(false);
 const nuxtError = useError();
 const { setGuildData, guildData } = useGuildData();
@@ -420,22 +421,46 @@ onMounted(async () => {
 
 		logger.error(`Error loading guild data or settings for guild Id: ${guildId.value}`, error);
 
-		toast.add({
-			title: error.message,
-			description: error.why,
-			color: "error",
-			actions: error.link
-				? [
-						{
-							label: "Learn more",
-							onClick: () => {
-								window.open(error.link);
-							},
-						},
-					]
-				: undefined,
-			icon: "i-heroicons-x-circle",
-		});
+		switch (error.status) {
+			case 403:
+				{
+					toast.add({
+						title: "Access Denied",
+						description: "You don't have permission to access this server's dashboard.",
+						color: "error",
+						icon: "heroicons:x-circle",
+					});
+				}
+				break;
+			case 401: {
+				toast.add({
+					title: "Unauthorized",
+					description:
+						"Your session has expired or are not authorized. Please log in again to access the dashboard.",
+					color: "error",
+					icon: "heroicons:x-circle",
+				});
+				router.back();
+			}
+			default: {
+				toast.add({
+					title: error.message,
+					description: error.why,
+					color: "error",
+					actions: error.link
+						? [
+								{
+									label: "Learn more",
+									onClick: () => {
+										window.open(error.link);
+									},
+								},
+							]
+						: undefined,
+					icon: "i-heroicons-x-circle",
+				});
+			}
+		}
 	} finally {
 		isLoading.value = false;
 	}

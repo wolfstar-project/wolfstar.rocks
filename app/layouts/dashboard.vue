@@ -422,8 +422,8 @@ onMounted(async () => {
 		logger.error(`Error loading guild data or settings for guild Id: ${guildId.value}`, error);
 
 		switch (error.status) {
-			case 403:
-				{
+		case 403: {
+			toast.add({
 					toast.add({
 						title: "Access Denied",
 						description: "You don't have permission to access this server's dashboard.",

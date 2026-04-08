@@ -436,7 +436,7 @@ onMounted(async () => {
 				toast.add({
 					title: "Unauthorized",
 					description:
-						"Your session has expired or are not authorized. Please log in again to access the dashboard.",
+				"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
 					color: "error",
 					icon: "heroicons:x-circle",
 				});

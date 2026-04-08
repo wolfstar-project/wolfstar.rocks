@@ -422,21 +422,26 @@ onMounted(async () => {
 		logger.error(`Error loading guild data or settings for guild Id: ${guildId.value}`, error);
 
 		switch (error.status) {
-		case 403: {
-			toast.add({
-					toast.add({
-						title: "Access Denied",
-						description: "You don't have permission to access this server's dashboard.",
-						color: "error",
-						icon: "heroicons:x-circle",
-					});
+			case 403: {
+				toast.add({
+					title: "Access Denied",
+					description: "You don't have permission to access this server's dashboard.",
+					color: "error",
+					icon: "heroicons:x-circle",
+				});
+				showError({ status: 403, statusText: "Access Denied" });
+				if (import.meta.client && window.history.length > 1) {
+					router.back();
+				} else {
+					await navigateTo("/");
 				}
 				break;
+			}
 			case 401: {
 				toast.add({
 					title: "Unauthorized",
 					description:
-				"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
+						"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
 					color: "error",
 					icon: "heroicons:x-circle",
 				});
@@ -464,6 +469,7 @@ onMounted(async () => {
 						: undefined,
 					icon: "heroicons:x-circle",
 				});
+				showError({ status: error.status || 500, message: error.message });
 			}
 		}
 	} finally {

@@ -7,11 +7,11 @@ export const useClipboard = () => {
 
 	const toast = useToast();
 
-	const copy = async (source: string, toastOptions?: ToastOptions) => {
+	const copy = async (source: string, options?: ToastOptions) => {
 		try {
 			await _copy(source);
-			if (toastOptions) {
-				toast.add(toastOptions);
+			if (options) {
+				toast.add(options);
 			}
 		} catch (error) {
 			toast.add({

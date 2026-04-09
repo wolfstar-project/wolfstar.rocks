@@ -1,36 +1,42 @@
 <template>
-	<div>
-		<GuildSettingsSection title="Information">
-			<dl class="grid grid-cols-2 gap-4 md:grid-cols-3" aria-label="Server statistics">
-				<div v-for="stat in serverStats" :key="stat.label">
-					<dt class="text-sm text-muted">{{ stat.label }}</dt>
-					<dd class="text-lg font-bold text-base-content">
-						{{ stat.value.toLocaleString() }}
-					</dd>
-				</div>
-			</dl>
+	<div class="card-glass-bordered p-6">
+		<h2 class="mb-6 text-xl font-bold tracking-wide text-base-content uppercase">
+			Server Info
+		</h2>
 
-			<div class="mt-4 flex flex-wrap gap-4">
-				<UButton
-					color="primary"
-					variant="link"
-					:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
-					@click="copyServerId"
-				>
-					{{ copied ? "Copied!" : "Copy Server ID" }}
-				</UButton>
-				<UButton
-					color="primary"
-					variant="link"
-					icon="heroicons:question-mark-circle"
-					to="https://discord.gg/gqAnRyUXG8"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Need Help?
-				</UButton>
+		<dl class="space-y-4" aria-label="Server statistics">
+			<div
+				v-for="stat in serverStats"
+				:key="stat.label"
+				class="flex items-baseline justify-between"
+			>
+				<dt class="font-semibold text-error">{{ stat.label }}:</dt>
+				<dd class="text-lg font-bold text-base-content">
+					{{ stat.value.toLocaleString() }}
+				</dd>
 			</div>
-		</GuildSettingsSection>
+		</dl>
+
+		<div class="mt-6 flex flex-col items-center gap-3">
+			<UButton
+				color="error"
+				variant="link"
+				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
+				@click="copyServerId"
+			>
+				{{ copied ? "Copied!" : "Copy Server ID" }}
+			</UButton>
+			<UButton
+				color="error"
+				variant="link"
+				icon="heroicons:question-mark-circle"
+				to="https://discord.gg/gqAnRyUXG8"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				Need Help?
+			</UButton>
+		</div>
 	</div>
 	<GuildSettingsSection title="General Settings">
 		<GuildSettingsForm

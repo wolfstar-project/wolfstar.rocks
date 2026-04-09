@@ -1,4 +1,37 @@
 <template>
+	<div>
+		<GuildSettingsSection title="Information">
+			<dl class="grid grid-cols-2 gap-4 md:grid-cols-3" aria-label="Server statistics">
+				<div v-for="stat in serverStats" :key="stat.label">
+					<dt class="text-sm text-muted">{{ stat.label }}</dt>
+					<dd class="text-lg font-bold text-base-content">
+						{{ stat.value.toLocaleString() }}
+					</dd>
+				</div>
+			</dl>
+
+			<div class="mt-4 flex flex-wrap gap-4">
+				<UButton
+					color="primary"
+					variant="link"
+					:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
+					@click="copyServerId"
+				>
+					{{ copied ? "Copied!" : "Copy Server ID" }}
+				</UButton>
+				<UButton
+					color="primary"
+					variant="link"
+					icon="heroicons:question-mark-circle"
+					to="https://discord.gg/gqAnRyUXG8"
+					target="_blank"
+					rel="noopener noreferrer"
+				>
+					Need Help?
+				</UButton>
+			</div>
+		</GuildSettingsSection>
+	</div>
 	<GuildSettingsSection title="General Settings">
 		<GuildSettingsForm
 			:schema="schema"
@@ -75,13 +108,53 @@ import {
 	GeneralSettingsSchema as schema,
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
+import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
 	languages: string[];
 }>();
 
 const { guildSettings } = useGuildSettings();
+const { guildData } = useGuildData();
 const toast = useToast();
+const { copy, copied } = useClipboard();
+
+const serverStats = computed(() => {
+	const guild = guildData.value;
+	const channels = guild?.channels ?? [];
+	return [
+		{ label: "Members", value: guild?.approximateMemberCount ?? 0 },
+		{
+			label: "Categories",
+			value: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
+		},
+		{
+			label: "Text Channels",
+			value: channels.filter(
+				(c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement,
+			).length,
+		},
+		{
+			label: "Voice Channels",
+			value: channels.filter(
+				(c) => c.type === ChannelType.GuildVoice || c.type === ChannelType.GuildStageVoice,
+			).length,
+		},
+		{ label: "Roles", value: guild?.roles.length ?? 0 },
+	];
+});
+
+function copyServerId() {
+	const id = guildData.value?.id;
+	if (id) {
+		copy(id, {
+			title: "Server ID Copied",
+			description: "The server ID has been copied to your clipboard.",
+			icon: "heroicons:check",
+			color: "success",
+		});
+	}
+}
 
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 	const supportedLanguagesMap: Record<string, [string] | [string, string]> = {

@@ -429,7 +429,6 @@ onMounted(async () => {
 					color: "error",
 					icon: "heroicons:x-circle",
 				});
-				showError({ status: 403, statusText: "Access Denied" });
 				if (import.meta.client && window.history.length > 1) {
 					router.back();
 				} else {
@@ -469,7 +468,11 @@ onMounted(async () => {
 						: undefined,
 					icon: "heroicons:x-circle",
 				});
-				showError({ status: error.status || 500, message: error.message });
+				showError({
+					status: error.status || 500,
+					message: error.message,
+					data: { why: error.why, fix: error.fix, link: error.link },
+				});
 			}
 		}
 	} finally {

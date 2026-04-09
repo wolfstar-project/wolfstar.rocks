@@ -9,6 +9,7 @@ generator json {
 
 datasource db {
   provider = "postgresql"
+  // URL is provided via prisma.config.ts (CLI) and `@prisma/adapter-pg` (runtime)
 }
 
 model Guild {

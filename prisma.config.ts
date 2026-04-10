@@ -1,4 +1,4 @@
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 import "dotenv/config";
 
 export default defineConfig({
@@ -7,6 +7,7 @@ export default defineConfig({
 		path: "server/database/migrations",
 	},
 	datasource: {
-		url: env("DATABASE_URL"),
+		// Use process.env so non-Prisma tools (knip) can load this file without DATABASE_URL
+		url: process.env.DATABASE_URL ?? "",
 	},
 });

@@ -4,6 +4,7 @@
 		<h1 class="sr-only">User Profile</h1>
 		<section
 			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
+			aria-label="User profile"
 		>
 			<!-- decorative left accent (sidebar-like) -->
 			<div
@@ -32,6 +33,7 @@
 								!effectiveReduceMotion,
 						}"
 						role="img"
+						:aria-label="`${user?.globalName ?? user?.username} avatar`"
 					>
 						<NuxtImg
 							v-if="isDefault"
@@ -90,6 +92,7 @@
 
 		<section
 			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
+			aria-label="Account management"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
 			<div
@@ -151,6 +154,7 @@
 											:is-loading
 											is-loading-icon="lucide:loader"
 											icon="heroicons:shield-check"
+											aria-label="Toggle manageable servers only"
 											@click="toggleShowManageableOnly()"
 										/>
 
@@ -159,6 +163,7 @@
 											class="join-item"
 											color="primary"
 											:is-loading
+											aria-label="Toggle sort order"
 											@click="toggleSortOrder()"
 										>
 											<template #leading>
@@ -190,6 +195,7 @@
 											:is-loading
 											is-loading-icon="lucide:loader"
 											icon="heroicons:arrow-path-20-solid"
+											aria-label="Refresh servers"
 											@click="refresh()"
 										/>
 									</UFieldGroup>

@@ -53,7 +53,7 @@
 									{{ state.selfmodNewlinesEnabled ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Whether or not this system should be enabled.
+									Flags messages with excessive line breaks.
 								</p>
 							</div>
 						</div>
@@ -71,7 +71,7 @@
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Toggle message alerts in the channel the infraction took place.
+									Posts an alert in the channel where the violation occurred.
 								</p>
 							</div>
 						</div>
@@ -89,7 +89,7 @@
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Toggle message logs in the moderation logs channel.
+									Sends a log entry to the moderation logs channel.
 								</p>
 							</div>
 						</div>
@@ -106,7 +106,9 @@
 								<p class="text-sm leading-none font-medium">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">Toggle message deletions.</p>
+								<p class="mt-1 text-xs text-muted">
+									Automatically deletes the offending message.
+								</p>
 							</div>
 						</div>
 					</UFormField>
@@ -121,7 +123,7 @@
 					<UFormField
 						label="Action"
 						name="selfmodNewlinesHardAction"
-						description="The action to perform as punishment"
+						description="What happens when a member exceeds the limit"
 					>
 						<USelectMenu
 							v-model="selectedHardAction"
@@ -134,7 +136,7 @@
 					<UFormField
 						label="Duration"
 						name="hardActionDurationMs"
-						description="How long the punishment should last"
+						description="How long the mute or ban lasts"
 					>
 						<SelectDuration
 							v-model="state.hardActionDurationMs"
@@ -147,7 +149,7 @@
 				<div class="mt-4 space-y-5">
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Maximum Threshold
+							Violations before punishment
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodNewlinesThresholdMaximum }})</span
 							>
@@ -156,7 +158,7 @@
 							v-model="state.selfmodNewlinesThresholdMaximum"
 							:min="0"
 							:max="60"
-							aria-label="New lines selfmod filter maximum threshold slider"
+							aria-label="New lines filter violations before punishment slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0</span>
@@ -166,7 +168,7 @@
 
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Threshold Duration (in seconds)
+							Time window (seconds)
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodNewlinesThresholdDurationSeconds }}s)</span
 							>
@@ -175,7 +177,7 @@
 							v-model="state.selfmodNewlinesThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="New lines selfmod filter threshold duration slider"
+							aria-label="New lines filter time window slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>
@@ -311,7 +313,7 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save line spam filter settings. ${errorMessage ?? "Please try again."}`,
+		description: `Couldn't save line spam filter settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
 		title: "Save Failed",
 	});

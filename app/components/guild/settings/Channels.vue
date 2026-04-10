@@ -39,7 +39,7 @@
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
-					<h3 class="text-lg font-semibold text-base-content">Ignore Channels</h3>
+					<h3 class="text-lg font-semibold text-base-content">Excluded Channels</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
 					Select channels that should be ignored for specific logging events. Messages and
@@ -114,7 +114,7 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save channel settings. ${errorMessage ?? "Please try again."}`,
+		description: `Couldn't save channel settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
 		title: "Save Failed",
 	});

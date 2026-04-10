@@ -102,28 +102,22 @@
 
 				<!-- Guild Stats -->
 				<div class="flex items-center justify-center gap-4 text-xs text-base-content/60">
-					<span
-						class="flex items-center gap-1"
-						title="Total members"
-						aria-label="Total members"
-					>
+					<span class="flex items-center gap-1" title="Total members">
 						<UIcon
 							name="heroicons:user-group"
 							class="size-3 text-base-content/70"
 							aria-hidden="true"
 						/>
+						<span class="sr-only">Total members:</span>
 						<span>{{ approximateMemberCount }}</span>
 					</span>
-					<span
-						class="flex items-center gap-1"
-						title="Members online"
-						aria-label="Members online"
-					>
+					<span class="flex items-center gap-1" title="Members online">
 						<UIcon
 							name="heroicons:signal"
 							class="size-3 text-success"
 							aria-hidden="true"
 						/>
+						<span class="sr-only">Members online:</span>
 						<span>{{ approximatePresenceCount }}</span>
 					</span>
 				</div>
@@ -159,7 +153,7 @@
 					<div
 						v-else
 						class="flex h-9 w-full cursor-not-allowed items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 transition-all duration-200"
-						role="status"
+						role="note"
 						:aria-label="`No permission to manage ${guild.name}`"
 					>
 						<UIcon

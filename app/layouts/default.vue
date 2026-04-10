@@ -1,8 +1,14 @@
 <template>
 	<div class="app-layout" :class="appName">
+		<a
+			href="#maincontent"
+			class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-100 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-content focus:shadow-lg"
+		>
+			Skip to main content
+		</a>
 		<AppHeader />
 
-		<UMain aria-label="Main content">
+		<UMain id="maincontent" tabindex="-1" aria-label="Main content">
 			<slot></slot>
 		</UMain>
 

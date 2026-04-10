@@ -116,7 +116,7 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save event settings. ${errorMessage ?? "Please try again."}`,
+		description: `Couldn't save event settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
 		title: "Save Failed",
 	});

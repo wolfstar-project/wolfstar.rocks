@@ -51,7 +51,7 @@
 					<guild-card
 						v-for="guild in paginatedGuilds"
 						:key="guild.id"
-						v-memo="[guild.id, guild.name, guild.manageable]"
+						v-memo="[guild.id, guild.name, guild.manageable, guild.wolfstarIsIn]"
 						:guild
 						role="listitem"
 					/>

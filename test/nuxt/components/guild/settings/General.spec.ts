@@ -71,11 +71,11 @@ function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
 		mapLanguageKeysToNames: (langKey: string) => [string] | [string, string];
 		mapToGuildData: (formState: {
 			prefix: string;
-			language: { label: string; value: string };
+			language: string;
 		}) => Partial<GuildData>;
 		state: {
 			prefix: string;
-			language: { label: string; value: string };
+			language: string;
 		};
 	};
 }
@@ -124,10 +124,7 @@ describe("general guild settings", () => {
 
 		expect((prefixInput.element as HTMLInputElement).value).toBe("!");
 		expect(setupState.state.prefix).toBe("!");
-		expect(setupState.state.language).toStrictEqual({
-			label: "English, United States",
-			value: "en-US",
-		});
+		expect(setupState.state.language).toBe("en-US");
 	});
 
 	it("mapToGuildData correctly transforms form state", async () => {
@@ -183,7 +180,7 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const selectMenu = wrapper.findComponent({ name: "USelectMenu" });
+		const selectMenu = wrapper.findComponent({ name: "USelect" });
 
 		expect(selectMenu.exists()).toBeTruthy();
 		expect(selectMenu.props("items")).toStrictEqual([

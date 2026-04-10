@@ -14,12 +14,7 @@ import {
  * Validates the bot command prefix and language selection.
  */
 export const GeneralSettingsSchema = object({
-	language: optional(
-		object({
-			label: string(),
-			value: string(),
-		}),
-	),
+	language: optional(string()),
 	prefix: optional(
 		pipe(
 			string(),

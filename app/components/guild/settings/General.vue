@@ -92,14 +92,15 @@
 							The language WolfStar uses for responses in this server.
 						</p>
 					</template>
-					<USelectMenu
+					<USelect
 						id="language"
 						v-model="state.language"
 						color="primary"
 						placeholder="Select language..."
 						class="w-full"
 						:items="items"
-						value-attribute="value"
+						value-key="value"
+						label-key="label"
 						aria-label="Select bot language"
 						aria-describedby="language-description"
 					/>
@@ -205,14 +206,7 @@ const items = computed(() =>
 );
 
 const state = reactive<Schema>({
-	language: (() => {
-		const currentLangKey = guildSettings.value!.language;
-		const mapping = mapLanguageKeysToNames(currentLangKey);
-		return {
-			label: mapping[1] ?? mapping[0],
-			value: currentLangKey,
-		};
-	})(),
+	language: guildSettings.value!.language,
 	prefix: guildSettings.value!.prefix,
 });
 
@@ -224,7 +218,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 	}
 
 	if (formState.language) {
-		changes.language = formState.language.value;
+		changes.language = formState.language;
 	}
 
 	return changes;

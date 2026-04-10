@@ -149,8 +149,6 @@
 					<div
 						v-else
 						class="flex h-9 w-full cursor-not-allowed items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 transition-all duration-200"
-						role="note"
-						:aria-label="`No permission to manage ${guild.name}`"
 					>
 						<UIcon
 							name="heroicons:no-symbol"

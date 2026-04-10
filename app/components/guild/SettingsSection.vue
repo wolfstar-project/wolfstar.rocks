@@ -20,7 +20,7 @@ const theme = tv({
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
-export interface SettingsSectionProps {
+interface SettingsSectionProps {
 	description?: string | number;
 	title?: string | number;
 	disableTypography?: boolean;
@@ -30,7 +30,7 @@ export interface SettingsSectionProps {
 	ui?: Partial<typeof theme.slots>;
 }
 
-export interface SettingsSectionSlots {
+interface SettingsSectionSlots {
 	default?(props?: {}): VNode[];
 }
 </script>

@@ -28,6 +28,7 @@ const config: KnipConfig = {
 				"puppeteer",
 				"vue-tsc",
 				"cz-conventional-changelog",
+				"tailwind-variants",
 
 				/** Framework-provided: re-exported or bundled by Nuxt/Nitro/Vite */
 				"vue",

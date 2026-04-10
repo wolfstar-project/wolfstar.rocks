@@ -179,7 +179,7 @@
 							v-model="state.selfmodLinksThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Links filter time window slider"
+							aria-label="Links filter time window (seconds) slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>

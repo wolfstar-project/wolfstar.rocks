@@ -173,7 +173,7 @@
 							v-model="state.selfmodInvitesThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Invites filter time window slider"
+							aria-label="Invites filter time window (seconds) slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>

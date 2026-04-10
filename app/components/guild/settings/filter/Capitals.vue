@@ -178,7 +178,7 @@
 							v-model="state.selfmodCapitalsThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Capitals filter time window slider"
+							aria-label="Capitals filter time window (seconds) slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>

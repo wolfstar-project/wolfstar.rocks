@@ -173,7 +173,7 @@
 							v-model="state.selfmodMessagesThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Messages filter time window slider"
+							aria-label="Messages filter time window (seconds) slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>

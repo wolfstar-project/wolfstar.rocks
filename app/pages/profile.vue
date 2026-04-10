@@ -32,8 +32,6 @@
 							'transition-transform duration-300 group-hover:scale-105':
 								!effectiveReduceMotion,
 						}"
-						role="img"
-						:aria-label="`${user?.globalName ?? user?.username} avatar`"
 					>
 						<NuxtImg
 							v-if="isDefault"

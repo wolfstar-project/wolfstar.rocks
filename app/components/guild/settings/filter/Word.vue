@@ -124,7 +124,7 @@
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<UFormField
 						label="Action"
-						name="selfmodCapitalsHardAction"
+						name="selfmodFilterHardAction"
 						description="What happens when a member exceeds the limit"
 					>
 						<USelectMenu

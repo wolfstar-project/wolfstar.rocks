@@ -181,8 +181,8 @@ const cardClasses = computed(() => {
 		"hover:-translate-y-1 hover:shadow-2xl focus-visible:-translate-y-1 focus-visible:shadow-2xl focus-visible:outline-none focus-visible:ring-2 motion-reduce:hover:shadow-xl motion-reduce:hover:translate-y-0": true,
 		"hover:border-primary/40 focus-visible:border-primary/50 focus-visible:ring-primary/40":
 			!guild.wolfstarIsIn && guild.manageable,
-		"opacity-75 ring-2 ring-error/20": !guild.manageable,
-		"ring-2 ring-success/20 hover:border-success/40 focus-visible:border-success/50 focus-visible:ring-success/40":
+		"opacity-75 outline outline-2 outline-error/20": !guild.manageable,
+		"outline outline-2 outline-success/20 hover:border-success/40 focus-visible:border-success/50 focus-visible:ring-success/40":
 			guild.wolfstarIsIn && guild.manageable,
 	};
 });

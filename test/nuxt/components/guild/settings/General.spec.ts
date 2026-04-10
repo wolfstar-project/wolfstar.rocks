@@ -180,10 +180,10 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const selectMenu = wrapper.findComponent({ name: "USelect" });
+		const select = wrapper.findComponent({ name: "USelect" });
 
-		expect(selectMenu.exists()).toBeTruthy();
-		expect(selectMenu.props("items")).toStrictEqual([
+		expect(select.exists()).toBeTruthy();
+		expect(select.props("items")).toStrictEqual([
 			{
 				label: "English, United States",
 				value: "en-US",

@@ -38,11 +38,6 @@ const config: KnipConfig = {
 				"@unhead/vue",
 				"ufo",
 				"ohash/*",
-				"unstorage",
-				"vite",
-
-				/**Used in nuxt.config.ts */
-				"@netlify/nuxt",
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",
@@ -62,18 +57,13 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-				"@prisma/client",
+				"@netlify/nuxt",
 
 				/** Used in the test */
 				"axe-core",
-				"@playwright/test",
 
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",
-				"@vue/test-utils",
-
-				/** Used for git hooks, not imported directly */
-				"vite-plus",
 
 				/** Used for cli */
 				"@shelve/cli",
@@ -81,11 +71,7 @@ const config: KnipConfig = {
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: [
-				"#build/auth.config",
-				"#server/database/generated/client",
-				"#og-image/app/utils",
-			],
+			ignoreUnresolved: ["#server/database/generated/client", "#build/auth.config"],
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,

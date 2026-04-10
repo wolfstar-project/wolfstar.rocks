@@ -81,18 +81,24 @@
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 				</div>
 				<!-- Guild Name -->
-				<span class="w-full truncate text-center text-xs font-medium text-base-content">
+				<span
+					class="w-full truncate text-center text-xs font-medium"
+					:class="guild.manageable ? 'text-base-content' : 'text-base-content/50'"
+				>
 					{{ guild.name }}
 				</span>
 			</div>
 
 			<!-- Desktop: Vertical layout (original) -->
 			<div class="hidden h-full w-full flex-col items-center gap-3 text-center md:flex">
-				<div class="flex flex-col items-center">
+				<div class="flex flex-col items-center" :class="{ 'opacity-60': !guild.manageable }">
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 				</div>
 				<!-- Guild Name -->
-				<h3 class="line-clamp-2 min-h-12 text-base font-bold text-base-content">
+				<h3
+					class="line-clamp-2 min-h-12 text-base font-bold"
+					:class="guild.manageable ? 'text-base-content' : 'text-base-content/50'"
+				>
 					{{ guild.name }}
 				</h3>
 
@@ -181,7 +187,7 @@ const cardClasses = computed(() => {
 		"hover:-translate-y-1 hover:shadow-2xl focus-visible:-translate-y-1 focus-visible:shadow-2xl focus-visible:outline-none focus-visible:ring-2 motion-reduce:hover:shadow-xl motion-reduce:hover:translate-y-0": true,
 		"hover:border-primary/40 focus-visible:border-primary/50 focus-visible:ring-primary/40":
 			!guild.wolfstarIsIn && guild.manageable,
-		"opacity-75 outline outline-2 outline-error/20": !guild.manageable,
+		"outline outline-2 outline-error/20": !guild.manageable,
 		"outline outline-2 outline-success/20 hover:border-success/40 focus-visible:border-success/50 focus-visible:ring-success/40":
 			guild.wolfstarIsIn && guild.manageable,
 	};

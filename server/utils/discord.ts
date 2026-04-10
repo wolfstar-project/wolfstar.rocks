@@ -9,6 +9,7 @@ import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,
 	APIGuildMember,
+	APIRole,
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
@@ -41,14 +42,37 @@ async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	return userId;
 }
 
-function isAdmin(member: APIGuildMember, roles: readonly string[]): boolean {
-	const memberRolePermissions = BigInt(cast<{ permissions: string }>(member).permissions);
-	return roles.length === 0
-		? PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
-		: hasAtLeastOneKeyInMap(
-				new Map(roles.map((role) => [role, true])),
-				member.roles.map((r) => r),
-			);
+function computePermissions(memberRoles: string[], guildRoles: APIRole[]): bigint {
+	let perms = 0n;
+	for (const role of guildRoles) {
+		if (memberRoles.includes(role.id) || role.name === "@everyone") {
+			perms |= BigInt(role.permissions);
+		}
+	}
+	return perms;
+}
+
+// `permissions` is absent on bot-token GET /guilds/{id}/members/{id} responses;
+// fall back to computing permissions from the member's roles against guild.roles.
+// Administrator implies every permission including ManageGuild.
+function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string[]): boolean {
+	if (roles.length > 0) {
+		return hasAtLeastOneKeyInMap(
+			new Map(roles.map((role) => [role, true])),
+			member.roles.map((r) => r),
+		);
+	}
+
+	const rawPermissions = cast<{ permissions?: string }>(member).permissions;
+	const memberRolePermissions =
+		rawPermissions !== undefined
+			? BigInt(rawPermissions)
+			: computePermissions(member.roles, guild.roles);
+
+	return (
+		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.Administrator) ||
+		PermissionsBits.has(memberRolePermissions, PermissionFlagsBits.ManageGuild)
+	);
 }
 
 async function manage(guild: APIGuild, member: APIGuildMember) {
@@ -62,7 +86,9 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 	const settings = await readSettings(guild.id);
 	const nodes = readSettingsPermissionNodes(settings);
 
-	return isAdmin(member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true);
+	return (
+		isAdmin(guild, member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true)
+	);
 }
 
 async function getManageable(
@@ -81,9 +107,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	const member = await useApi()
-		.guilds.getMember(guild.id, userId)
-		.catch(() => undefined);
+	const member = await getMember(guild.id, userId).catch(() => undefined);
 	if (!member) {
 		return hasManageGuild;
 	}

@@ -57,7 +57,7 @@
 					<UInput
 						id="prefix"
 						v-model="state.prefix"
-						placeholder="Enter prefix"
+						placeholder="!"
 						color="primary"
 						class="w-full"
 						aria-describedby="prefix-description character-count"
@@ -79,7 +79,7 @@
 					</template>
 					<template #description>
 						<p id="prefix-description" class="text-sm text-base-content/70">
-							This is your server's prefix, use it to trigger WolfStar commands.
+							The prefix used to trigger WolfStar commands in this server.
 						</p>
 					</template>
 				</UFormField>
@@ -89,7 +89,7 @@
 				<UFormField label="Language" name="language">
 					<template #description>
 						<p id="language-description" class="text-sm text-base-content/70">
-							Select the language you want for this guild
+							The language WolfStar uses for responses in this server.
 						</p>
 					</template>
 					<USelectMenu
@@ -237,7 +237,7 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save general settings. ${errorMessage ?? "Please try again."}`,
+		description: `Couldn't save general settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
 		title: "Save Failed",
 	});

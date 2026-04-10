@@ -1,7 +1,7 @@
 <template>
 	<GuildSettingsSection
 		title="Roles"
-		subtitle="Configure special roles that WolfStar uses on your server."
+		subtitle="Configure the roles WolfStar uses for moderation, permissions, and automation."
 	>
 		<!-- Loading Skeleton -->
 		<div v-if="loading" class="space-y-8">
@@ -60,7 +60,7 @@
 					<h3 class="text-lg font-semibold text-base-content">Configurable Roles</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					Assign specific roles for different bot functions and permissions.
+					Assign roles for core bot functions like moderation and auto-assignment.
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -95,7 +95,7 @@
 					<h3 class="text-lg font-semibold text-base-content">Restricted Roles</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					Roles used for restricted moderation commands.
+					Roles applied when a restriction command is used.
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

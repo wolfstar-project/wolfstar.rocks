@@ -57,6 +57,7 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
+				"@netlify/nuxt",
 
 				/** Used in the test */
 				"axe-core",
@@ -70,7 +71,7 @@ const config: KnipConfig = {
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: ["#build/auth.config"],
+			ignoreUnresolved: ["#server/database/generated/client", "#build/auth.config"],
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,

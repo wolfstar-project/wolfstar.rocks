@@ -7,7 +7,7 @@
 			:state="state"
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
-			aria-label="General guild settings form"
+			aria-label="Channel settings form"
 			class="space-y-8"
 			@error="onError"
 		>

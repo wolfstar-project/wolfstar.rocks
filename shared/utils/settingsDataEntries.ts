@@ -33,27 +33,27 @@ export const ConfigurableRoles: Roles.Role[] = [
 	{
 		key: "rolesRestrictedReaction",
 		name: "Restricted Reaction",
-		tooltip: "The role that is used for the restrictReaction moderation command.",
+		tooltip: "Assigned to members whose reactions are restricted.",
 	},
 	{
 		key: "rolesRestrictedEmbed",
 		name: "Restricted Embed",
-		tooltip: "The role that is used for the restrictEmbed moderation command.",
+		tooltip: "Assigned to members who are restricted from embedding links.",
 	},
 	{
 		key: "rolesRestrictedAttachment",
 		name: "Restricted Attachment",
-		tooltip: "The role that is used for the restrictAttachment moderation command.",
+		tooltip: "Assigned to members who are restricted from uploading attachments.",
 	},
 	{
 		key: "rolesRestrictedEmoji",
 		name: "Restricted Emoji",
-		tooltip: "The role that is used for the restrictEmoji moderation command.",
+		tooltip: "Assigned to members who are restricted from using external emojis.",
 	},
 	{
 		key: "rolesRestrictedVoice",
 		name: "Restricted Voice",
-		tooltip: "The role that is used for the restrictVoice moderation command.",
+		tooltip: "Assigned to members who are restricted from joining voice channels.",
 	},
 	{
 		key: "rolesPublic",

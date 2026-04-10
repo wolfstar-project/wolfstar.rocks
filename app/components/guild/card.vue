@@ -88,11 +88,7 @@
 
 			<!-- Desktop: Vertical layout (original) -->
 			<div class="hidden h-full w-full flex-col items-center gap-3 text-center md:flex">
-				<div
-					class="flex flex-col items-center"
-					role="img"
-					:aria-label="`${guild.name} server icon`"
-				>
+				<div class="flex flex-col items-center">
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 				</div>
 				<!-- Guild Name -->

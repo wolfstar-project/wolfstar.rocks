@@ -46,7 +46,7 @@
 					tag="div"
 					class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
 					role="list"
-					aria-label="Guilds list"
+					aria-label="Servers list"
 				>
 					<guild-card
 						v-for="guild in paginatedGuilds"

@@ -1,23 +1,24 @@
 <template>
-	<div class="card-glass-bordered p-6">
-		<h2 class="mb-6 text-xl font-bold tracking-wide text-base-content uppercase">
-			Server Info
-		</h2>
-
-		<dl class="space-y-4" aria-label="Server statistics">
+	<GuildSettingsSection
+		headingLevel="h1"
+		title="Server Info"
+		class="overflow-hidden rounded-md border-2 border-base-200 bg-base-200/30 p-6"
+		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
+	>
+		<dl class="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-3" aria-label="Server statistics">
 			<div
 				v-for="stat in serverStats"
 				:key="stat.label"
-				class="flex items-baseline justify-between"
+				class="flex items-baseline justify-between md:justify-start md:gap-2"
 			>
-				<dt class="font-semibold text-error">{{ stat.label }}:</dt>
+				<dt class="font-semibold text-base-content/70">{{ stat.label }}:</dt>
 				<dd class="text-lg font-bold text-base-content">
 					{{ stat.value.toLocaleString() }}
 				</dd>
 			</div>
 		</dl>
 
-		<div class="mt-6 flex flex-col items-center gap-3">
+		<div class="mt-6 flex flex-col items-center gap-3 md:flex-row md:items-start">
 			<UButton
 				color="error"
 				variant="link"
@@ -37,8 +38,12 @@
 				Need Help?
 			</UButton>
 		</div>
-	</div>
-	<GuildSettingsSection title="General Settings">
+	</GuildSettingsSection>
+	<GuildSettingsSection
+		title="General Settings"
+		class="overflow-hidden rounded-md border-2 border-base-200 bg-base-200/30 p-6"
+		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
+	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"

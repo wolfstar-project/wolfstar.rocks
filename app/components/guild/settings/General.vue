@@ -57,7 +57,7 @@
 					<UInput
 						id="prefix"
 						v-model="state.prefix"
-						placeholder="!"
+						placeholder="Select a command prefix"
 						color="primary"
 						class="w-full"
 						aria-describedby="prefix-description character-count"

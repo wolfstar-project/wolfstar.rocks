@@ -8,14 +8,21 @@ export const useFooter = () => {
 					class: "link-hover",
 					icon: "ph:discord-logo-duotone",
 					label: "Support Server",
-					to: "https://join.wolfstar.rocks",
+					to: "https://chat.wolfstar.rocks",
 					ui: { linkLeadingIcon: "bg-indigo-500" },
+				},
+				{
+					class: "link-hover",
+					icon: "ph:twitter-logo-duotone",
+					label: "Twitter",
+					to: "https://social.wolfstar.rocks/twitter",
+					ui: { linkLeadingIcon: "bg-sky-400" },
 				},
 				{
 					class: "link-hover",
 					icon: "ph:github-logo-duotone",
 					label: "GitHub",
-					to: "https://github.com/wolfstar-project",
+					to: "https://repo.wolfstar.rocks",
 					ui: { linkLeadingIcon: "bg-indigo-500" },
 				},
 				{

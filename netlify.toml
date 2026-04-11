@@ -14,3 +14,21 @@ remote_images = [
 	"https:\\/\\/media.discordapp.net/.*",
 	"https:\\/\\/cdn.wolfstar.rocks/.*",
 ]
+
+[[redirects]]
+from = "https://repo.wolfstar.rocks"
+to = "https://github.com/wolfstar-project/wolfstar.rocks"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://chat.wolfstar.rocks"
+to = "https://discord.gg/gqAnRyUXG8"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://social.wolfstar.rocks/twitter"
+to = "https://twitter.com/WolfstarApp"
+status = 301
+force = true

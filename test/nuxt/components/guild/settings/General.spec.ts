@@ -69,10 +69,7 @@ mockNuxtImport("useToast", () => () => ({
 function getSetupState(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
 	return (wrapper.vm.$ as any).setupState as {
 		mapLanguageKeysToNames: (langKey: string) => [string] | [string, string];
-		mapToGuildData: (formState: {
-			prefix: string;
-			language: string;
-		}) => Partial<GuildData>;
+		mapToGuildData: (formState: { prefix: string; language: string }) => Partial<GuildData>;
 		state: {
 			prefix: string;
 			language: string;

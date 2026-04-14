@@ -91,7 +91,10 @@
 
 			<!-- Desktop: Vertical layout (original) -->
 			<div class="hidden h-full w-full flex-col items-center gap-3 text-center md:flex">
-				<div class="flex flex-col items-center" :class="{ 'opacity-60': !guild.manageable }">
+				<div
+					class="flex flex-col items-center"
+					:class="{ 'opacity-60': !guild.manageable }"
+				>
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 				</div>
 				<!-- Guild Name -->

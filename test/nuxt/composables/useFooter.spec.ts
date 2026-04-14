@@ -27,9 +27,9 @@ describe("useFooter", () => {
 		expect(columns.value[2].label).toBe("Legal");
 	});
 
-	it("should have 3 children in the Links column", () => {
+	it("should have 4 children in the Links column", () => {
 		const { columns } = useFooter();
-		expect(columns.value[0].children).toHaveLength(3);
+		expect(columns.value[0].children).toHaveLength(4);
 	});
 
 	it("should have 3 children in the Donate column", () => {

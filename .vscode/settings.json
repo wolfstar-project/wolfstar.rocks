@@ -23,7 +23,6 @@
 		["tw`(.*?)`", "tw\\('(.*?)'\\)", "tw\\(\\s*('(.*?)'|\"(.*?)\")\\s*\\)"]
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib",
-	"prisma.pinToPrisma6": true,
 	// Exclude large folders from search
 	"search.exclude": {
 		"**/node_modules": true,

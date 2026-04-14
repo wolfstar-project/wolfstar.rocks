@@ -256,11 +256,11 @@ skills:
     generator: skilld
   prisma-skilld:
     packageName: prisma
-    version: 6.19.2
-    packages: "prisma@6.19.2"
+    version: 7.7.0
+    packages: "prisma@7.7.0"
     repo: prisma/prisma
-    source: "https://www.prisma.io/llms.txt"
-    syncedAt: 2026-03-13
+    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
+    syncedAt: 2026-04-09
     generator: skilld
   nuxt-hints-skilld:
     packageName: "@nuxt/hints"
@@ -375,10 +375,11 @@ skills:
     generator: skilld
   prisma-client-skilld:
     packageName: "@prisma/client"
-    version: 6.19.2
+    version: 7.7.0
+    packages: "@prisma/client@7.7.0"
     repo: prisma/prisma
-    source: "https://github.com/prisma/prisma/tree/6.19.2/docs"
-    syncedAt: 2026-03-13
+    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
+    syncedAt: 2026-04-09
     generator: skilld
   changelogen-skilld:
     packageName: changelogen
@@ -403,10 +404,11 @@ skills:
     generator: skilld
   prisma-adapter-pg-skilld:
     packageName: "@prisma/adapter-pg"
-    version: 6.19.2
+    version: 7.7.0
+    packages: "@prisma/adapter-pg@7.7.0"
     repo: prisma/prisma
-    source: "https://www.prisma.io/**"
-    syncedAt: 2026-03-13
+    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
+    syncedAt: 2026-04-09
     generator: skilld
   stale-dep-skilld:
     packageName: stale-dep

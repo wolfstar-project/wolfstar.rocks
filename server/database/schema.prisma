@@ -1,7 +1,6 @@
 generator client {
-  provider   = "prisma-client"
-  output     = "./generated"
-  engineType = "client"
+  provider = "prisma-client"
+  output   = "./generated"
 }
 
 generator json {
@@ -10,7 +9,7 @@ generator json {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // URL is provided via prisma.config.ts (CLI) and `@prisma/adapter-pg` (runtime)
 }
 
 model Guild {

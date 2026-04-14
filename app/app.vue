@@ -15,8 +15,6 @@
 </template>
 
 <script setup lang="ts">
-import { isCI, isTest } from "std-env";
-
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
 const { fetch: refreshSession } = useUserSession();
@@ -40,8 +38,10 @@ watch(
 provide(ProviderAppNameKey, appName);
 
 onMounted(() => {
-	if (!isCI || !isTest) return;
-	// In CI/test environments, we want to bypass the normal session refresh logic
-	$fetch("/api/auth/refresh").then(refreshSession);
+	if (!import.meta.test) return;
+	// In test environments, trigger a refresh explicitly instead of relying on the normal session flow.
+	void $fetch("/api/auth/refresh")
+		.then(refreshSession)
+		.catch(() => {});
 });
 </script>

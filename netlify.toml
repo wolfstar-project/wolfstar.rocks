@@ -16,8 +16,8 @@ remote_images = [
 ]
 
 [[redirects]]
-from = "https://repo.wolfstar.rocks"
-to = "https://github.com/wolfstar-project/wolfstar.rocks"
+from = "https://repo.wolfstar.rocks/*"
+to = "https://github.com/wolfstar-project/wolfstar.rocks/:splat"
 status = 301
 force = true
 

@@ -2,25 +2,30 @@
 	<GuildSettingsSection
 		headingLevel="h1"
 		title="Server Info"
-		class="overflow-hidden rounded-md border-2 border-base-200 bg-base-200/30 p-6"
+		description="Your server at a glance. Adjust settings below or explore sections in the sidebar."
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
-		<dl class="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-3" aria-label="Server statistics">
+		<dl
+			class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4"
+			aria-label="Server statistics"
+		>
 			<div
 				v-for="stat in serverStats"
 				:key="stat.label"
-				class="flex items-baseline justify-between md:justify-start md:gap-2"
+				class="flex min-w-0 items-baseline justify-between md:justify-start md:gap-2"
 			>
-				<dt class="font-semibold text-base-content/70">{{ stat.label }}:</dt>
-				<dd class="text-lg font-bold text-base-content">
+				<dt class="truncate text-sm font-semibold text-base-content/70 md:text-base">
+					{{ stat.label }}:
+				</dt>
+				<dd class="shrink-0 text-base font-bold text-base-content md:text-lg">
 					{{ stat.value.toLocaleString() }}
 				</dd>
 			</div>
 		</dl>
 
-		<div class="mt-6 flex flex-col items-center gap-3 md:flex-row md:items-start">
+		<div class="mt-4 flex flex-col items-center gap-3 md:flex-row md:items-start">
 			<UButton
-				color="error"
+				color="neutral"
 				variant="link"
 				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
 				@click="copyServerId"
@@ -28,7 +33,7 @@
 				{{ copied ? "Copied!" : "Copy Server ID" }}
 			</UButton>
 			<UButton
-				color="error"
+				color="neutral"
 				variant="link"
 				icon="heroicons:question-mark-circle"
 				to="https://discord.gg/gqAnRyUXG8"
@@ -39,9 +44,10 @@
 			</UButton>
 		</div>
 	</GuildSettingsSection>
+
 	<GuildSettingsSection
 		title="General Settings"
-		class="overflow-hidden rounded-md border-2 border-base-200 bg-base-200/30 p-6"
+		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<GuildSettingsForm

@@ -24,8 +24,8 @@ onlyBuiltDependencies:
 overrides:
     "@netlify/api": ^14.0.18
     sharp: 0.34.5
-    vite: npm:@voidzero-dev/vite-plus-core@0.1.18
-    vitest: npm:@voidzero-dev/vite-plus-test@0.1.18
+    vite: npm:@voidzero-dev/vite-plus-core@0.1.14
+    vitest: npm:@voidzero-dev/vite-plus-test@0.1.14
 
 patchedDependencies:
     "@nuxt/test-utils": patches/@nuxt__test-utils.patch

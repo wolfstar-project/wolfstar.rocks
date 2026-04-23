@@ -2,7 +2,7 @@
 
 > evlog adds ~3µs per request. Faster than pino, consola, and winston in most scenarios while emitting richer, more useful events.
 
-evlog adds **~3µs of overhead per request** — that's 0.003ms, orders of magnitude below any HTTP framework or database call. Performance is tracked on every pull request via CodSpeed.
+evlog adds **~3µs of overhead per request**, that's 0.003ms, orders of magnitude below any HTTP framework or database call. Performance is tracked on every pull request via CodSpeed.
 
 ## evlog vs alternatives
 
@@ -214,11 +214,11 @@ All benchmarks run with JSON output to no-op destinations. pino writes to `/dev/
 </tbody>
 </table>
 
-evlog wins **4 out of 7** head-to-head comparisons — and the wins that matter most are decisive: **8x faster** than pino in the wide event lifecycle, **2.8x faster** logger creation, and **3.5x faster** deep nested logging. consola edges ahead on simple strings and burst (it uses a no-op reporter with no serialization), but evlog produces a single correlated event per request where traditional loggers emit N separate lines.
+evlog wins **4 out of 7** head-to-head comparisons, and the wins that matter most are decisive: **8x faster** than pino in the wide event lifecycle, **2.8x faster** logger creation, and **3.5x faster** deep nested logging. consola edges ahead on simple strings and burst (it uses a no-op reporter with no serialization), but evlog produces a single correlated event per request where traditional loggers emit N separate lines.
 
 <callout color="info" icon="i-lucide-info">
 
-**Why this matters**: in the wide event lifecycle (the real-world pattern), evlog is 8x faster than pino and 14.7x faster than winston — while sending 75% less data to your log drain and giving you one queryable event instead of 4 disconnected lines.
+**Why this matters**: in the wide event lifecycle (the real-world pattern), evlog is 8x faster than pino and 14.7x faster than winston while sending 75% less data to your log drain and giving you one queryable event instead of 4 disconnected lines.
 
 </callout>
 
@@ -228,7 +228,7 @@ This benchmark simulates a real API request:
 
 <code-group>
 
-```typescript [evlog — 1 event]
+```typescript [evlog (1 event)]
 const log = createLogger({ method: 'POST', path: '/api/checkout', requestId: 'req_abc' })
 log.set({ user: { id: 'usr_123', plan: 'pro' } })
 log.set({ cart: { items: 3, total: 9999 } })
@@ -236,7 +236,7 @@ log.set({ payment: { method: 'card', last4: '4242' } })
 log.emit({ status: 200 })
 ```
 
-```typescript [pino — 4 log lines]
+```typescript [pino (4 log lines)]
 const child = pinoLogger.child({ method: 'POST', path: '/api/checkout', requestId: 'req_abc' })
 child.info({ user: { id: 'usr_123', plan: 'pro' } }, 'user context')
 child.info({ cart: { items: 3, total: 9999 } }, 'cart context')
@@ -250,11 +250,11 @@ Same CPU cost, but evlog gives you everything in one place.
 
 ## Why is evlog faster?
 
-The numbers above aren't magic — they come from deliberate architectural choices:
+The numbers above aren't magic, they come from deliberate architectural choices:
 
 **In-place mutations, not copies.** `log.set()` writes directly into the context object via a recursive `mergeInto` function. Other loggers clone objects on every call (object spread, `Object.assign`). evlog never allocates intermediate objects during context accumulation.
 
-**No serialization until drain.** Context stays as plain JavaScript objects throughout the request lifecycle. `JSON.stringify` runs exactly once, at emit time. Traditional loggers serialize on every `.info()` call — that's 4x serialization for 4 log lines.
+**No serialization until drain.** Context stays as plain JavaScript objects throughout the request lifecycle. `JSON.stringify` runs exactly once, at emit time. Traditional loggers serialize on every `.info()` call, that's 4x serialization for 4 log lines.
 
 **Lazy allocation.** Timestamps, sampling context, and override objects are only created when actually needed. If tail sampling is disabled (the common case), its context object is never allocated. The `Date` instance used for ISO timestamps is reused across calls.
 
@@ -424,7 +424,7 @@ Every entry point is tree-shakeable. You only pay for what you import.
   
   <tr>
     <td>
-      browser
+      http
     </td>
     
     <td align="right">
@@ -434,7 +434,7 @@ Every entry point is tree-shakeable. You only pay for what you import.
 </tbody>
 </table>
 
-A typical Nuxt setup loads `logger` + `utils` — about **5.2 kB gzip**. Bundle size is tracked on every PR and compared against the `main` baseline.
+A typical Nuxt setup loads `logger` + `utils`, about **5.2 kB gzip**. Bundle size is tracked on every PR and compared against the `main` baseline.
 
 ## Detailed benchmarks
 
@@ -976,7 +976,7 @@ A typical Nuxt setup loads `logger` + `utils` — about **5.2 kB gzip**. Bundle 
 
 ### Can you trust these numbers?
 
-Every benchmark in this page is **open source** and **reproducible**. The benchmark files live in `packages/evlog/bench/` — you can read the exact code, run it on your machine, and verify the results.
+Every benchmark in this page is **open source** and **reproducible**. The benchmark files live in `packages/evlog/bench/`. You can read the exact code, run it on your machine, and verify the results.
 
 All libraries are tested under the same conditions:
 
@@ -994,7 +994,7 @@ Performance regressions are tracked on every pull request via two systems:
 
 ### Run it yourself
 
-```bash
+```bash [Terminal]
 cd packages/evlog
 
 bun run bench                          # all benchmarks

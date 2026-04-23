@@ -65,7 +65,7 @@ Compatible agents (Cursor, Claude Code, etc.) can discover and use skills automa
 To manually install with the skills CLI:
 
 ```bash [Terminal]
-npx skills add hugorcd/evlog
+npx skills add https://www.evlog.dev
 ```
 
 ## What the Skill Does
@@ -188,8 +188,8 @@ The skill includes reference documents that provide:
 ## Next Steps
 
 - [Quick Start](/getting-started/quick-start) - Get started with evlog
-- [Wide Events](/core-concepts/wide-events) - Learn wide event design
-- [Structured Errors](/core-concepts/structured-errors) - Error handling patterns
+- [Wide Events](/logging/wide-events) - Learn wide event design
+- [Structured Errors](/logging/structured-errors) - Error handling patterns
 
 
 

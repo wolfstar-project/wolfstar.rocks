@@ -36,7 +36,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The OTLP adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createOTLPDrain } from 'evlog/otlp'
 ```
 
@@ -281,7 +281,7 @@ export default defineNuxtConfig({
 
 ### Override Options
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 const drain = createOTLPDrain({
   endpoint: 'http://localhost:4318',
   serviceName: 'my-api',
@@ -484,7 +484,7 @@ service:
       exporters: [debug]
 ```
 
-```bash
+```bash [Terminal]
 docker run --rm -p 4318:4318 \
   -v $(pwd)/otel-collector.yaml:/etc/otelcol/config.yaml \
   otel/opentelemetry-collector:latest
@@ -730,7 +730,7 @@ evlog maps wide events to the OTLP log format:
 
 ### Missing endpoint error
 
-```text
+```text [Console]
 [evlog/otlp] Missing endpoint. Set OTLP_ENDPOINT or OTEL_EXPORTER_OTLP_ENDPOINT
 ```
 

@@ -27,7 +27,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The PostHog adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createPostHogDrain } from 'evlog/posthog'
 ```
 
@@ -187,7 +187,7 @@ export default defineNuxtConfig({
 
 Pass options directly to override any configuration:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 const drain = createPostHogDrain({
   host: 'https://eu.i.posthog.com',
   timeout: 10000,
@@ -370,7 +370,7 @@ Once your logs are flowing, use the **Logs** tab in PostHog to query them:
 
 If you prefer sending logs as PostHog custom events (e.g., for product analytics, cohorts, or funnels), use `createPostHogEventsDrain()`:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 import { createPostHogEventsDrain } from 'evlog/posthog'
 
 const drain = createPostHogEventsDrain({
@@ -755,7 +755,7 @@ The `distinct_id` follows a fallback chain:
 
 You can use both drains simultaneously to get the best of both worlds:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 import { createPostHogDrain, createPostHogEventsDrain } from 'evlog/posthog'
 
 const logs = createPostHogDrain()
@@ -770,7 +770,7 @@ const drain = async (ctx) => {
 
 ### Missing apiKey error
 
-```text
+```text [Console]
 [evlog/posthog] Missing apiKey. Set POSTHOG_API_KEY env var or pass to createPostHogDrain()
 ```
 

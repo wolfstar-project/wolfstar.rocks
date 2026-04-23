@@ -28,7 +28,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog hono @hono/node-server
 ```
 
@@ -94,6 +94,8 @@ All fields are merged into a single wide event emitted when the request complete
   └─ requestId: 4a8ff3a8-...
 ```
 
+Hono does not attach **log.fork()** yet (access the logger via `c.get('log')` only). If you schedule async work after the response, post-emit **[evlog] warnings** still help you notice stale `set()` calls. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
 ## Error Handling
 
 Use `createError` for structured errors with `why`, `fix`, and `link` fields:
@@ -118,6 +120,8 @@ app.get('/checkout', (c) => {
 Handle errors globally with `app.onError` to return structured JSON responses:
 
 ```typescript [src/index.ts]
+import type { ContentfulStatusCode } from 'hono/utils/http-status'
+
 app.onError((error, c) => {
   c.get('log').error(error)
   const parsed = parseError(error)
@@ -129,10 +133,12 @@ app.onError((error, c) => {
       fix: parsed.fix,
       link: parsed.link,
     },
-    parsed.status,
+    parsed.status as ContentfulStatusCode,
   )
 })
 ```
+
+`parseError()` types `status` as a `number`, while Hono’s `c.json()` second argument expects `ContentfulStatusCode`. The cast matches what you already return at runtime and satisfies TypeScript.
 
 The error is captured and logged with both the custom context and structured error fields:
 
@@ -220,15 +226,15 @@ app.use(evlog({
 
 ## Client-Side Logging
 
-Use `evlog/browser` to send structured logs from any frontend to your Hono server. This works with any client framework (React, Vue, Svelte, vanilla JS).
+Use `evlog/http` to send structured logs from any frontend to your Hono server. This works with any client framework (React, Vue, Svelte, vanilla JS).
 
 ### Browser setup
 
 ```typescript [client.ts]
 import { initLogger, log } from 'evlog'
-import { createBrowserLogDrain } from 'evlog/browser'
+import { createHttpLogDrain } from 'evlog/http'
 
-const drain = createBrowserLogDrain({
+const drain = createHttpLogDrain({
   drain: { endpoint: '/v1/ingest' },
 })
 initLogger({ drain })
@@ -254,14 +260,14 @@ app.post('/v1/ingest', async (c) => {
 
 <callout color="neutral" icon="i-lucide-globe">
 
-See the full [Browser Drain](/adapters/browser) adapter docs for batching, retry, sendBeacon fallback, and authentication options.
+See the full [HTTP drain](/adapters/http) adapter docs for batching, retry, sendBeacon fallback, and authentication options.
 
 </callout>
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog
 bun install
 bun run example:hono
@@ -270,12 +276,21 @@ bun run example:hono
 Open http://localhost:3000 to explore the interactive test UI.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/hono">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/hono">
 
 Browse the complete Hono example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+Deepen your **Hono** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

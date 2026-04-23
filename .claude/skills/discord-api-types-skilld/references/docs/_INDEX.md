@@ -1,0 +1,415 @@
+---
+total: 400
+---
+
+# Docs Index
+
+- [index](./index.md): Home | discord-api-types documentation
+- [Search the documentation](./search.md): Search the documentation | discord-api-types documentation
+
+## api/next (2)
+
+- [discord-api-types/globals](./api/next/discord-api-types-globals.md): discord-api-types/globals | API | discord-api-types documentation
+- [discord-api-types/v10](./api/next/discord-api-types-v10.md): discord-api-types/v10 | API | discord-api-types documentation
+
+## api/next/discord-api-types-v10/enum (112)
+
+- [ActivityFlags](./api/next/discord-api-types-v10/enum/ActivityFlags.md): ActivityFlags | API | discord-api-types documentation
+- [ActivityLocationKind](./api/next/discord-api-types-v10/enum/ActivityLocationKind.md): ActivityLocationKind | API | discord-api-types documentation
+- [ActivityPlatform](./api/next/discord-api-types-v10/enum/ActivityPlatform.md): ActivityPlatform | API | discord-api-types documentation
+- [ActivityType](./api/next/discord-api-types-v10/enum/ActivityType.md): ActivityType | API | discord-api-types documentation
+- [AllowedMentionsTypes](./api/next/discord-api-types-v10/enum/AllowedMentionsTypes.md): AllowedMentionsTypes | API | discord-api-types documentation
+- [ApplicationCommandOptionType](./api/next/discord-api-types-v10/enum/ApplicationCommandOptionType.md): ApplicationCommandOptionType | API | discord-api-types documentation
+- [ApplicationCommandPermissionType](./api/next/discord-api-types-v10/enum/ApplicationCommandPermissionType.md): ApplicationCommandPermissionType | API | discord-api-types documentation
+- [ApplicationCommandType](./api/next/discord-api-types-v10/enum/ApplicationCommandType.md): ApplicationCommandType | API | discord-api-types documentation
+- [ApplicationFlags](./api/next/discord-api-types-v10/enum/ApplicationFlags.md): ApplicationFlags | API | discord-api-types documentation
+- [ApplicationIntegrationType](./api/next/discord-api-types-v10/enum/ApplicationIntegrationType.md): ApplicationIntegrationType | API | discord-api-types documentation
+- [ApplicationRoleConnectionMetadataType](./api/next/discord-api-types-v10/enum/ApplicationRoleConnectionMetadataType.md): ApplicationRoleConnectionMetadataType | API | discord-api-types documentation
+- [ApplicationWebhookEventStatus](./api/next/discord-api-types-v10/enum/ApplicationWebhookEventStatus.md): ApplicationWebhookEventStatus | API | discord-api-types documentation
+- [ApplicationWebhookEventType](./api/next/discord-api-types-v10/enum/ApplicationWebhookEventType.md): ApplicationWebhookEventType | API | discord-api-types documentation
+- [ApplicationWebhookType](./api/next/discord-api-types-v10/enum/ApplicationWebhookType.md): ApplicationWebhookType | API | discord-api-types documentation
+- [AttachmentFlags](./api/next/discord-api-types-v10/enum/AttachmentFlags.md): AttachmentFlags | API | discord-api-types documentation
+- [AuditLogEvent](./api/next/discord-api-types-v10/enum/AuditLogEvent.md): AuditLogEvent | API | discord-api-types documentation
+- [AuditLogOptionsType](./api/next/discord-api-types-v10/enum/AuditLogOptionsType.md): AuditLogOptionsType | API | discord-api-types documentation
+- [AutoModerationActionType](./api/next/discord-api-types-v10/enum/AutoModerationActionType.md): AutoModerationActionType | API | discord-api-types documentation
+- [AutoModerationRuleEventType](./api/next/discord-api-types-v10/enum/AutoModerationRuleEventType.md): AutoModerationRuleEventType | API | discord-api-types documentation
+- [AutoModerationRuleKeywordPresetType](./api/next/discord-api-types-v10/enum/AutoModerationRuleKeywordPresetType.md): AutoModerationRuleKeywordPresetType | API | discord-api-types documentation
+- [AutoModerationRuleTriggerType](./api/next/discord-api-types-v10/enum/AutoModerationRuleTriggerType.md): AutoModerationRuleTriggerType | API | discord-api-types documentation
+- [BaseThemeType](./api/next/discord-api-types-v10/enum/BaseThemeType.md): BaseThemeType | API | discord-api-types documentation
+- [ButtonStyle](./api/next/discord-api-types-v10/enum/ButtonStyle.md): ButtonStyle | API | discord-api-types documentation
+- [ChannelFlags](./api/next/discord-api-types-v10/enum/ChannelFlags.md): ChannelFlags | API | discord-api-types documentation
+- [ChannelType](./api/next/discord-api-types-v10/enum/ChannelType.md): ChannelType | API | discord-api-types documentation
+- [ComponentType](./api/next/discord-api-types-v10/enum/ComponentType.md): ComponentType | API | discord-api-types documentation
+- [ConnectionService](./api/next/discord-api-types-v10/enum/ConnectionService.md): ConnectionService | API | discord-api-types documentation
+- [ConnectionVisibility](./api/next/discord-api-types-v10/enum/ConnectionVisibility.md): ConnectionVisibility | API | discord-api-types documentation
+- [EmbedType](./api/next/discord-api-types-v10/enum/EmbedType.md): EmbedType | API | discord-api-types documentation
+- [EntitlementOwnerType](./api/next/discord-api-types-v10/enum/EntitlementOwnerType.md): EntitlementOwnerType | API | discord-api-types documentation
+- [EntitlementType](./api/next/discord-api-types-v10/enum/EntitlementType.md): EntitlementType | API | discord-api-types documentation
+- [EntryPointCommandHandlerType](./api/next/discord-api-types-v10/enum/EntryPointCommandHandlerType.md): EntryPointCommandHandlerType | API | discord-api-types documentation
+- [ForumLayoutType](./api/next/discord-api-types-v10/enum/ForumLayoutType.md): ForumLayoutType | API | discord-api-types documentation
+- [GatewayCloseCodes](./api/next/discord-api-types-v10/enum/GatewayCloseCodes.md): GatewayCloseCodes | API | discord-api-types documentation
+- [GatewayDispatchEvents](./api/next/discord-api-types-v10/enum/GatewayDispatchEvents.md): GatewayDispatchEvents | API | discord-api-types documentation
+- [GatewayIntentBits](./api/next/discord-api-types-v10/enum/GatewayIntentBits.md): GatewayIntentBits | API | discord-api-types documentation
+- [GatewayOpcodes](./api/next/discord-api-types-v10/enum/GatewayOpcodes.md): GatewayOpcodes | API | discord-api-types documentation
+- [GuildDefaultMessageNotifications](./api/next/discord-api-types-v10/enum/GuildDefaultMessageNotifications.md): GuildDefaultMessageNotifications | API | discord-api-types documentation
+- [GuildExplicitContentFilter](./api/next/discord-api-types-v10/enum/GuildExplicitContentFilter.md): GuildExplicitContentFilter | API | discord-api-types documentation
+- [GuildFeature](./api/next/discord-api-types-v10/enum/GuildFeature.md): GuildFeature | API | discord-api-types documentation
+- [GuildHubType](./api/next/discord-api-types-v10/enum/GuildHubType.md): GuildHubType | API | discord-api-types documentation
+- [GuildMemberFlags](./api/next/discord-api-types-v10/enum/GuildMemberFlags.md): GuildMemberFlags | API | discord-api-types documentation
+- [GuildMFALevel](./api/next/discord-api-types-v10/enum/GuildMFALevel.md): GuildMFALevel | API | discord-api-types documentation
+- [GuildNSFWLevel](./api/next/discord-api-types-v10/enum/GuildNSFWLevel.md): GuildNSFWLevel | API | discord-api-types documentation
+- [GuildOnboardingMode](./api/next/discord-api-types-v10/enum/GuildOnboardingMode.md): GuildOnboardingMode | API | discord-api-types documentation
+- [GuildOnboardingPromptType](./api/next/discord-api-types-v10/enum/GuildOnboardingPromptType.md): GuildOnboardingPromptType | API | discord-api-types documentation
+- [GuildPremiumTier](./api/next/discord-api-types-v10/enum/GuildPremiumTier.md): GuildPremiumTier | API | discord-api-types documentation
+- [GuildScheduledEventEntityType](./api/next/discord-api-types-v10/enum/GuildScheduledEventEntityType.md): GuildScheduledEventEntityType | API | discord-api-types documentation
+- [GuildScheduledEventPrivacyLevel](./api/next/discord-api-types-v10/enum/GuildScheduledEventPrivacyLevel.md): GuildScheduledEventPrivacyLevel | API | discord-api-types documentation
+- [GuildScheduledEventRecurrenceRuleFrequency](./api/next/discord-api-types-v10/enum/GuildScheduledEventRecurrenceRuleFrequency.md): GuildScheduledEventRecurrenceRuleFrequency | API | discord-api-types documentation
+- [GuildScheduledEventRecurrenceRuleMonth](./api/next/discord-api-types-v10/enum/GuildScheduledEventRecurrenceRuleMonth.md): GuildScheduledEventRecurrenceRuleMonth | API | discord-api-types documentation
+- [GuildScheduledEventRecurrenceRuleWeekday](./api/next/discord-api-types-v10/enum/GuildScheduledEventRecurrenceRuleWeekday.md): GuildScheduledEventRecurrenceRuleWeekday | API | discord-api-types documentation
+- [GuildScheduledEventStatus](./api/next/discord-api-types-v10/enum/GuildScheduledEventStatus.md): GuildScheduledEventStatus | API | discord-api-types documentation
+- [GuildSystemChannelFlags](./api/next/discord-api-types-v10/enum/GuildSystemChannelFlags.md): GuildSystemChannelFlags | API | discord-api-types documentation
+- [GuildVerificationLevel](./api/next/discord-api-types-v10/enum/GuildVerificationLevel.md): GuildVerificationLevel | API | discord-api-types documentation
+- [GuildWidgetStyle](./api/next/discord-api-types-v10/enum/GuildWidgetStyle.md): GuildWidgetStyle | API | discord-api-types documentation
+- [ImageFormat](./api/next/discord-api-types-v10/enum/ImageFormat.md): ImageFormat | API | discord-api-types documentation
+- [IntegrationExpireBehavior](./api/next/discord-api-types-v10/enum/IntegrationExpireBehavior.md): IntegrationExpireBehavior | API | discord-api-types documentation
+- [InteractionContextType](./api/next/discord-api-types-v10/enum/InteractionContextType.md): InteractionContextType | API | discord-api-types documentation
+- [InteractionResponseType](./api/next/discord-api-types-v10/enum/InteractionResponseType.md): InteractionResponseType | API | discord-api-types documentation
+- [InteractionType](./api/next/discord-api-types-v10/enum/InteractionType.md): InteractionType | API | discord-api-types documentation
+- [InviteFlags](./api/next/discord-api-types-v10/enum/InviteFlags.md): InviteFlags | API | discord-api-types documentation
+- [InviteTargetType](./api/next/discord-api-types-v10/enum/InviteTargetType.md): InviteTargetType | API | discord-api-types documentation
+- [InviteType](./api/next/discord-api-types-v10/enum/InviteType.md): InviteType | API | discord-api-types documentation
+- [Locale](./api/next/discord-api-types-v10/enum/Locale.md): Locale | API | discord-api-types documentation
+- [MembershipScreeningFieldType](./api/next/discord-api-types-v10/enum/MembershipScreeningFieldType.md): MembershipScreeningFieldType | API | discord-api-types documentation
+- [MessageActivityType](./api/next/discord-api-types-v10/enum/MessageActivityType.md): MessageActivityType | API | discord-api-types documentation
+- [MessageFlags](./api/next/discord-api-types-v10/enum/MessageFlags.md): MessageFlags | API | discord-api-types documentation
+- [MessageReferenceType](./api/next/discord-api-types-v10/enum/MessageReferenceType.md): MessageReferenceType | API | discord-api-types documentation
+- [MessageSearchAuthorType](./api/next/discord-api-types-v10/enum/MessageSearchAuthorType.md): MessageSearchAuthorType | API | discord-api-types documentation
+- [MessageSearchEmbedType](./api/next/discord-api-types-v10/enum/MessageSearchEmbedType.md): MessageSearchEmbedType | API | discord-api-types documentation
+- [MessageSearchHasType](./api/next/discord-api-types-v10/enum/MessageSearchHasType.md): MessageSearchHasType | API | discord-api-types documentation
+- [MessageSearchSortMode](./api/next/discord-api-types-v10/enum/MessageSearchSortMode.md): MessageSearchSortMode | API | discord-api-types documentation
+- [MessageType](./api/next/discord-api-types-v10/enum/MessageType.md): MessageType | API | discord-api-types documentation
+- [NameplatePalette](./api/next/discord-api-types-v10/enum/NameplatePalette.md): NameplatePalette | API | discord-api-types documentation
+- [OAuth2Scopes](./api/next/discord-api-types-v10/enum/OAuth2Scopes.md): OAuth2Scopes | API | discord-api-types documentation
+- [OverwriteType](./api/next/discord-api-types-v10/enum/OverwriteType.md): OverwriteType | API | discord-api-types documentation
+- [PollLayoutType](./api/next/discord-api-types-v10/enum/PollLayoutType.md): PollLayoutType | API | discord-api-types documentation
+- [PresenceUpdateStatus](./api/next/discord-api-types-v10/enum/PresenceUpdateStatus.md): PresenceUpdateStatus | API | discord-api-types documentation
+- [ReactionType](./api/next/discord-api-types-v10/enum/ReactionType.md): ReactionType | API | discord-api-types documentation
+- [RelationshipType](./api/next/discord-api-types-v10/enum/RelationshipType.md): RelationshipType | API | discord-api-types documentation
+- [RESTJSONErrorCodes](./api/next/discord-api-types-v10/enum/RESTJSONErrorCodes.md): RESTJSONErrorCodes | API | discord-api-types documentation
+- [RoleFlags](./api/next/discord-api-types-v10/enum/RoleFlags.md): RoleFlags | API | discord-api-types documentation
+- [RPCCloseEventCodes](./api/next/discord-api-types-v10/enum/RPCCloseEventCodes.md): RPCCloseEventCodes | API | discord-api-types documentation
+- [RPCCommands](./api/next/discord-api-types-v10/enum/RPCCommands.md): RPCCommands | API | discord-api-types documentation
+- [RPCDeviceType](./api/next/discord-api-types-v10/enum/RPCDeviceType.md): RPCDeviceType | API | discord-api-types documentation
+- [RPCErrorCodes](./api/next/discord-api-types-v10/enum/RPCErrorCodes.md): RPCErrorCodes | API | discord-api-types documentation
+- [RPCEvents](./api/next/discord-api-types-v10/enum/RPCEvents.md): RPCEvents | API | discord-api-types documentation
+- [RPCVoiceSettingsModeType](./api/next/discord-api-types-v10/enum/RPCVoiceSettingsModeType.md): RPCVoiceSettingsModeType | API | discord-api-types documentation
+- [RPCVoiceShortcutKeyComboKeyType](./api/next/discord-api-types-v10/enum/RPCVoiceShortcutKeyComboKeyType.md): RPCVoiceShortcutKeyComboKeyType | API | discord-api-types documentation
+- [SelectMenuDefaultValueType](./api/next/discord-api-types-v10/enum/SelectMenuDefaultValueType.md): SelectMenuDefaultValueType | API | discord-api-types documentation
+- [SeparatorSpacingSize](./api/next/discord-api-types-v10/enum/SeparatorSpacingSize.md): SeparatorSpacingSize | API | discord-api-types documentation
+- [SKUFlags](./api/next/discord-api-types-v10/enum/SKUFlags.md): SKUFlags | API | discord-api-types documentation
+- [SKUType](./api/next/discord-api-types-v10/enum/SKUType.md): SKUType | API | discord-api-types documentation
+- [SortOrderType](./api/next/discord-api-types-v10/enum/SortOrderType.md): SortOrderType | API | discord-api-types documentation
+- [StageInstancePrivacyLevel](./api/next/discord-api-types-v10/enum/StageInstancePrivacyLevel.md): StageInstancePrivacyLevel | API | discord-api-types documentation
+- [StatusDisplayType](./api/next/discord-api-types-v10/enum/StatusDisplayType.md): StatusDisplayType | API | discord-api-types documentation
+- [StickerFormatType](./api/next/discord-api-types-v10/enum/StickerFormatType.md): StickerFormatType | API | discord-api-types documentation
+- [StickerType](./api/next/discord-api-types-v10/enum/StickerType.md): StickerType | API | discord-api-types documentation
+- [SubscriptionStatus](./api/next/discord-api-types-v10/enum/SubscriptionStatus.md): SubscriptionStatus | API | discord-api-types documentation
+- [TeamMemberMembershipState](./api/next/discord-api-types-v10/enum/TeamMemberMembershipState.md): TeamMemberMembershipState | API | discord-api-types documentation
+- [TeamMemberRole](./api/next/discord-api-types-v10/enum/TeamMemberRole.md): TeamMemberRole | API | discord-api-types documentation
+- [TextInputStyle](./api/next/discord-api-types-v10/enum/TextInputStyle.md): TextInputStyle | API | discord-api-types documentation
+- [ThreadAutoArchiveDuration](./api/next/discord-api-types-v10/enum/ThreadAutoArchiveDuration.md): ThreadAutoArchiveDuration | API | discord-api-types documentation
+- [ThreadMemberFlags](./api/next/discord-api-types-v10/enum/ThreadMemberFlags.md): ThreadMemberFlags | API | discord-api-types documentation
+- [UnfurledMediaItemLoadingState](./api/next/discord-api-types-v10/enum/UnfurledMediaItemLoadingState.md): UnfurledMediaItemLoadingState | API | discord-api-types documentation
+- [UserFlags](./api/next/discord-api-types-v10/enum/UserFlags.md): UserFlags | API | discord-api-types documentation
+- [UserPremiumType](./api/next/discord-api-types-v10/enum/UserPremiumType.md): UserPremiumType | API | discord-api-types documentation
+- [VideoQualityMode](./api/next/discord-api-types-v10/enum/VideoQualityMode.md): VideoQualityMode | API | discord-api-types documentation
+- [VoiceChannelEffectSendAnimationType](./api/next/discord-api-types-v10/enum/VoiceChannelEffectSendAnimationType.md): VoiceChannelEffectSendAnimationType | API | discord-api-types documentation
+- [VoiceConnectionStates](./api/next/discord-api-types-v10/enum/VoiceConnectionStates.md): VoiceConnectionStates | API | discord-api-types documentation
+- [WebhookType](./api/next/discord-api-types-v10/enum/WebhookType.md): WebhookType | API | discord-api-types documentation
+
+## api/next/discord-api-types-v10/interface (284)
+
+- [_BaseBasePayload](./api/next/discord-api-types-v10/interface/_BaseBasePayload.md): BaseBasePayload | API | discord-api-types documentation
+- [_BasePayload](./api/next/discord-api-types-v10/interface/_BasePayload.md): BasePayload | API | discord-api-types documentation
+- [_DataPayload <Event,D>](./api/next/discord-api-types-v10/interface/_DataPayload.md): DataPayload | API | discord-api-types documentation
+- [_NonDispatchPayload](./api/next/discord-api-types-v10/interface/_NonDispatchPayload.md): NonDispatchPayload | API | discord-api-types documentation
+- [APIActionRowComponent <T>](./api/next/discord-api-types-v10/interface/APIActionRowComponent.md): APIActionRowComponent | API | discord-api-types documentation
+- [APIActivityInstance](./api/next/discord-api-types-v10/interface/APIActivityInstance.md): APIActivityInstance | API | discord-api-types documentation
+- [APIActivityLocation](./api/next/discord-api-types-v10/interface/APIActivityLocation.md): APIActivityLocation | API | discord-api-types documentation
+- [APIAllowedMentions](./api/next/discord-api-types-v10/interface/APIAllowedMentions.md): APIAllowedMentions | API | discord-api-types documentation
+- [APIApplication](./api/next/discord-api-types-v10/interface/APIApplication.md): APIApplication | API | discord-api-types documentation
+- [APIApplicationCommand](./api/next/discord-api-types-v10/interface/APIApplicationCommand.md): APIApplicationCommand | API | discord-api-types documentation
+- [APIApplicationCommandAutocompleteResponse](./api/next/discord-api-types-v10/interface/APIApplicationCommandAutocompleteResponse.md): APIApplicationCommandAutocompleteResponse | API | discord-api-types documentation
+- [APIApplicationCommandChannelOption](./api/next/discord-api-types-v10/interface/APIApplicationCommandChannelOption.md): APIApplicationCommandChannelOption | API | discord-api-types documentation
+- [APIApplicationCommandIntegerOptionBase](./api/next/discord-api-types-v10/interface/APIApplicationCommandIntegerOptionBase.md): APIApplicationCommandIntegerOptionBase | API | discord-api-types documentation
+- [APIApplicationCommandInteractionDataIntegerOption <Type>](./api/next/discord-api-types-v10/interface/APIApplicationCommandInteractionDataIntegerOption.md): APIApplicationCommandInteractionDataIntegerOption | API | discord-api-types documentation
+- [APIApplicationCommandInteractionDataNumberOption <Type>](./api/next/discord-api-types-v10/interface/APIApplicationCommandInteractionDataNumberOption.md): APIApplicationCommandInteractionDataNumberOption | API | discord-api-types documentation
+- [APIApplicationCommandInteractionDataStringOption](./api/next/discord-api-types-v10/interface/APIApplicationCommandInteractionDataStringOption.md): APIApplicationCommandInteractionDataStringOption | API | discord-api-types documentation
+- [APIApplicationCommandInteractionDataSubcommandGroupOption <Type>](./api/next/discord-api-types-v10/interface/APIApplicationCommandInteractionDataSubcommandGroupOption.md): APIApplicationCommandInteractionDataSubcommandGroupOption | API | discord-api-types documentation
+- [APIApplicationCommandInteractionDataSubcommandOption <Type>](./api/next/discord-api-types-v10/interface/APIApplicationCommandInteractionDataSubcommandOption.md): APIApplicationCommandInteractionDataSubcommandOption | API | discord-api-types documentation
+- [APIApplicationCommandInteractionMetadata](./api/next/discord-api-types-v10/interface/APIApplicationCommandInteractionMetadata.md): APIApplicationCommandInteractionMetadata | API | discord-api-types documentation
+- [APIApplicationCommandNumberOptionBase](./api/next/discord-api-types-v10/interface/APIApplicationCommandNumberOptionBase.md): APIApplicationCommandNumberOptionBase | API | discord-api-types documentation
+- [APIApplicationCommandOptionBase <Type>](./api/next/discord-api-types-v10/interface/APIApplicationCommandOptionBase.md): APIApplicationCommandOptionBase | API | discord-api-types documentation
+- [APIApplicationCommandOptionChoice <ValueType>](./api/next/discord-api-types-v10/interface/APIApplicationCommandOptionChoice.md): APIApplicationCommandOptionChoice | API | discord-api-types documentation
+- [APIApplicationCommandPermission](./api/next/discord-api-types-v10/interface/APIApplicationCommandPermission.md): APIApplicationCommandPermission | API | discord-api-types documentation
+- [APIApplicationCommandStringOptionBase](./api/next/discord-api-types-v10/interface/APIApplicationCommandStringOptionBase.md): APIApplicationCommandStringOptionBase | API | discord-api-types documentation
+- [APIApplicationCommandSubcommandGroupOption](./api/next/discord-api-types-v10/interface/APIApplicationCommandSubcommandGroupOption.md): APIApplicationCommandSubcommandGroupOption | API | discord-api-types documentation
+- [APIApplicationCommandSubcommandOption](./api/next/discord-api-types-v10/interface/APIApplicationCommandSubcommandOption.md): APIApplicationCommandSubcommandOption | API | discord-api-types documentation
+- [APIApplicationInstallParams](./api/next/discord-api-types-v10/interface/APIApplicationInstallParams.md): APIApplicationInstallParams | API | discord-api-types documentation
+- [APIApplicationIntegrationTypeConfiguration](./api/next/discord-api-types-v10/interface/APIApplicationIntegrationTypeConfiguration.md): APIApplicationIntegrationTypeConfiguration | API | discord-api-types documentation
+- [APIApplicationRoleConnection](./api/next/discord-api-types-v10/interface/APIApplicationRoleConnection.md): APIApplicationRoleConnection | API | discord-api-types documentation
+- [APIApplicationRoleConnectionMetadata](./api/next/discord-api-types-v10/interface/APIApplicationRoleConnectionMetadata.md): APIApplicationRoleConnectionMetadata | API | discord-api-types documentation
+- [APIAttachment](./api/next/discord-api-types-v10/interface/APIAttachment.md): APIAttachment | API | discord-api-types documentation
+- [APIAuditLog](./api/next/discord-api-types-v10/interface/APIAuditLog.md): APIAuditLog | API | discord-api-types documentation
+- [APIAuditLogChangeData <K,D>](./api/next/discord-api-types-v10/interface/APIAuditLogChangeData.md): APIAuditLogChangeData | API | discord-api-types documentation
+- [APIAuditLogEntry](./api/next/discord-api-types-v10/interface/APIAuditLogEntry.md): APIAuditLogEntry | API | discord-api-types documentation
+- [APIAuditLogOptions](./api/next/discord-api-types-v10/interface/APIAuditLogOptions.md): APIAuditLogOptions | API | discord-api-types documentation
+- [APIAutocompleteApplicationCommandInteractionData](./api/next/discord-api-types-v10/interface/APIAutocompleteApplicationCommandInteractionData.md): APIAutocompleteApplicationCommandInteractionData | API | discord-api-types documentation
+- [APIAutoModerationAction](./api/next/discord-api-types-v10/interface/APIAutoModerationAction.md): APIAutoModerationAction | API | discord-api-types documentation
+- [APIAutoModerationActionMetadata](./api/next/discord-api-types-v10/interface/APIAutoModerationActionMetadata.md): APIAutoModerationActionMetadata | API | discord-api-types documentation
+- [APIAutoModerationRule](./api/next/discord-api-types-v10/interface/APIAutoModerationRule.md): APIAutoModerationRule | API | discord-api-types documentation
+- [APIAutoModerationRuleTriggerMetadata](./api/next/discord-api-types-v10/interface/APIAutoModerationRuleTriggerMetadata.md): APIAutoModerationRuleTriggerMetadata | API | discord-api-types documentation
+- [APIAvatarDecorationData](./api/next/discord-api-types-v10/interface/APIAvatarDecorationData.md): APIAvatarDecorationData | API | discord-api-types documentation
+- [APIBan](./api/next/discord-api-types-v10/interface/APIBan.md): APIBan | API | discord-api-types documentation
+- [APIBaseApplicationCommandInteractionData <Type>](./api/next/discord-api-types-v10/interface/APIBaseApplicationCommandInteractionData.md): APIBaseApplicationCommandInteractionData | API | discord-api-types documentation
+- [APIBaseAutoPopulatedSelectMenuComponent <T,D>](./api/next/discord-api-types-v10/interface/APIBaseAutoPopulatedSelectMenuComponent.md): APIBaseAutoPopulatedSelectMenuComponent | API | discord-api-types documentation
+- [APIBaseComponent <T>](./api/next/discord-api-types-v10/interface/APIBaseComponent.md): APIBaseComponent | API | discord-api-types documentation
+- [APIBaseGuild](./api/next/discord-api-types-v10/interface/APIBaseGuild.md): APIBaseGuild | API | discord-api-types documentation
+- [APIBaseGuildMember](./api/next/discord-api-types-v10/interface/APIBaseGuildMember.md): APIBaseGuildMember | API | discord-api-types documentation
+- [APIBaseInteraction <Type,Data>](./api/next/discord-api-types-v10/interface/APIBaseInteraction.md): APIBaseInteraction | API | discord-api-types documentation
+- [APIBaseInteractionMetadata <Type>](./api/next/discord-api-types-v10/interface/APIBaseInteractionMetadata.md): APIBaseInteractionMetadata | API | discord-api-types documentation
+- [APIBaseMessage](./api/next/discord-api-types-v10/interface/APIBaseMessage.md): APIBaseMessage | API | discord-api-types documentation
+- [APIBaseMessageNoChannel](./api/next/discord-api-types-v10/interface/APIBaseMessageNoChannel.md): APIBaseMessageNoChannel | API | discord-api-types documentation
+- [APIBaseModalSubmitComponent <T>](./api/next/discord-api-types-v10/interface/APIBaseModalSubmitComponent.md): APIBaseModalSubmitComponent | API | discord-api-types documentation
+- [APIBasePartialChannel](./api/next/discord-api-types-v10/interface/APIBasePartialChannel.md): APIBasePartialChannel | API | discord-api-types documentation
+- [APIBasePoll](./api/next/discord-api-types-v10/interface/APIBasePoll.md): APIBasePoll | API | discord-api-types documentation
+- [APIBasePollAnswer](./api/next/discord-api-types-v10/interface/APIBasePollAnswer.md): APIBasePollAnswer | API | discord-api-types documentation
+- [APIBaseSelectMenuComponent <T>](./api/next/discord-api-types-v10/interface/APIBaseSelectMenuComponent.md): APIBaseSelectMenuComponent | API | discord-api-types documentation
+- [APIBaseVoiceGuildMember](./api/next/discord-api-types-v10/interface/APIBaseVoiceGuildMember.md): APIBaseVoiceGuildMember | API | discord-api-types documentation
+- [APIBaseVoiceState](./api/next/discord-api-types-v10/interface/APIBaseVoiceState.md): APIBaseVoiceState | API | discord-api-types documentation
+- [APIButtonBase ](./api/next/discord-api-types-v10/interface/APIButtonBase.md): APIButtonBase | API | discord-api-types documentation
+- [APIButtonComponentBase ](./api/next/discord-api-types-v10/interface/APIButtonComponentBase.md): APIButtonComponentBase | API | discord-api-types documentation
+- [APIButtonComponentWithCustomId](./api/next/discord-api-types-v10/interface/APIButtonComponentWithCustomId.md): APIButtonComponentWithCustomId | API | discord-api-types documentation
+- [APIButtonComponentWithSKUId](./api/next/discord-api-types-v10/interface/APIButtonComponentWithSKUId.md): APIButtonComponentWithSKUId | API | discord-api-types documentation
+- [APIButtonComponentWithURL](./api/next/discord-api-types-v10/interface/APIButtonComponentWithURL.md): APIButtonComponentWithURL | API | discord-api-types documentation
+- [APIChannelBase <T>](./api/next/discord-api-types-v10/interface/APIChannelBase.md): APIChannelBase | API | discord-api-types documentation
+- [APIChannelMention](./api/next/discord-api-types-v10/interface/APIChannelMention.md): APIChannelMention | API | discord-api-types documentation
+- [APIChannelSelectComponent](./api/next/discord-api-types-v10/interface/APIChannelSelectComponent.md): APIChannelSelectComponent | API | discord-api-types documentation
+- [APIChatInputApplicationCommandInteractionData](./api/next/discord-api-types-v10/interface/APIChatInputApplicationCommandInteractionData.md): APIChatInputApplicationCommandInteractionData | API | discord-api-types documentation
+- [APICheckboxComponent](./api/next/discord-api-types-v10/interface/APICheckboxComponent.md): APICheckboxComponent | API | discord-api-types documentation
+- [APICheckboxGroupComponent](./api/next/discord-api-types-v10/interface/APICheckboxGroupComponent.md): APICheckboxGroupComponent | API | discord-api-types documentation
+- [APICheckboxGroupOption](./api/next/discord-api-types-v10/interface/APICheckboxGroupOption.md): APICheckboxGroupOption | API | discord-api-types documentation
+- [APICollectibles](./api/next/discord-api-types-v10/interface/APICollectibles.md): APICollectibles | API | discord-api-types documentation
+- [APICommandAutocompleteInteractionResponseCallbackData](./api/next/discord-api-types-v10/interface/APICommandAutocompleteInteractionResponseCallbackData.md): APICommandAutocompleteInteractionResponseCallbackData | API | discord-api-types documentation
+- [APIConnection](./api/next/discord-api-types-v10/interface/APIConnection.md): APIConnection | API | discord-api-types documentation
+- [APIContainerComponent](./api/next/discord-api-types-v10/interface/APIContainerComponent.md): APIContainerComponent | API | discord-api-types documentation
+- [APIDMChannel](./api/next/discord-api-types-v10/interface/APIDMChannel.md): APIDMChannel | API | discord-api-types documentation
+- [APIDMChannelBase <T>](./api/next/discord-api-types-v10/interface/APIDMChannelBase.md): APIDMChannelBase | API | discord-api-types documentation
+- [APIEmbed](./api/next/discord-api-types-v10/interface/APIEmbed.md): APIEmbed | API | discord-api-types documentation
+- [APIEmbedAuthor](./api/next/discord-api-types-v10/interface/APIEmbedAuthor.md): APIEmbedAuthor | API | discord-api-types documentation
+- [APIEmbedField](./api/next/discord-api-types-v10/interface/APIEmbedField.md): APIEmbedField | API | discord-api-types documentation
+- [APIEmbedFooter](./api/next/discord-api-types-v10/interface/APIEmbedFooter.md): APIEmbedFooter | API | discord-api-types documentation
+- [APIEmbedImage](./api/next/discord-api-types-v10/interface/APIEmbedImage.md): APIEmbedImage | API | discord-api-types documentation
+- [APIEmbedProvider](./api/next/discord-api-types-v10/interface/APIEmbedProvider.md): APIEmbedProvider | API | discord-api-types documentation
+- [APIEmbedThumbnail](./api/next/discord-api-types-v10/interface/APIEmbedThumbnail.md): APIEmbedThumbnail | API | discord-api-types documentation
+- [APIEmbedVideo](./api/next/discord-api-types-v10/interface/APIEmbedVideo.md): APIEmbedVideo | API | discord-api-types documentation
+- [APIEmoji](./api/next/discord-api-types-v10/interface/APIEmoji.md): APIEmoji | API | discord-api-types documentation
+- [APIEntitlement](./api/next/discord-api-types-v10/interface/APIEntitlement.md): APIEntitlement | API | discord-api-types documentation
+- [APIExtendedInvite](./api/next/discord-api-types-v10/interface/APIExtendedInvite.md): APIExtendedInvite | API | discord-api-types documentation
+- [APIExternalGuildScheduledEvent](./api/next/discord-api-types-v10/interface/APIExternalGuildScheduledEvent.md): APIExternalGuildScheduledEvent | API | discord-api-types documentation
+- [APIFileComponent](./api/next/discord-api-types-v10/interface/APIFileComponent.md): APIFileComponent | API | discord-api-types documentation
+- [APIFileUploadComponent](./api/next/discord-api-types-v10/interface/APIFileUploadComponent.md): APIFileUploadComponent | API | discord-api-types documentation
+- [APIFlaggedGuildMember](./api/next/discord-api-types-v10/interface/APIFlaggedGuildMember.md): APIFlaggedGuildMember | API | discord-api-types documentation
+- [APIFollowedChannel](./api/next/discord-api-types-v10/interface/APIFollowedChannel.md): APIFollowedChannel | API | discord-api-types documentation
+- [APIGatewayBotInfo](./api/next/discord-api-types-v10/interface/APIGatewayBotInfo.md): APIGatewayBotInfo | API | discord-api-types documentation
+- [APIGatewayInfo](./api/next/discord-api-types-v10/interface/APIGatewayInfo.md): APIGatewayInfo | API | discord-api-types documentation
+- [APIGatewaySessionStartLimit](./api/next/discord-api-types-v10/interface/APIGatewaySessionStartLimit.md): APIGatewaySessionStartLimit | API | discord-api-types documentation
+- [APIGroupDMChannel](./api/next/discord-api-types-v10/interface/APIGroupDMChannel.md): APIGroupDMChannel | API | discord-api-types documentation
+- [APIGuild](./api/next/discord-api-types-v10/interface/APIGuild.md): APIGuild | API | discord-api-types documentation
+- [APIGuildApplicationCommandPermissions](./api/next/discord-api-types-v10/interface/APIGuildApplicationCommandPermissions.md): APIGuildApplicationCommandPermissions | API | discord-api-types documentation
+- [APIGuildCategoryChannel](./api/next/discord-api-types-v10/interface/APIGuildCategoryChannel.md): APIGuildCategoryChannel | API | discord-api-types documentation
+- [APIGuildChannel <T>](./api/next/discord-api-types-v10/interface/APIGuildChannel.md): APIGuildChannel | API | discord-api-types documentation
+- [APIGuildForumChannel](./api/next/discord-api-types-v10/interface/APIGuildForumChannel.md): APIGuildForumChannel | API | discord-api-types documentation
+- [APIGuildForumDefaultReactionEmoji](./api/next/discord-api-types-v10/interface/APIGuildForumDefaultReactionEmoji.md): APIGuildForumDefaultReactionEmoji | API | discord-api-types documentation
+- [APIGuildForumTag](./api/next/discord-api-types-v10/interface/APIGuildForumTag.md): APIGuildForumTag | API | discord-api-types documentation
+- [APIGuildIntegration](./api/next/discord-api-types-v10/interface/APIGuildIntegration.md): APIGuildIntegration | API | discord-api-types documentation
+- [APIGuildIntegrationApplication](./api/next/discord-api-types-v10/interface/APIGuildIntegrationApplication.md): APIGuildIntegrationApplication | API | discord-api-types documentation
+- [APIGuildMember](./api/next/discord-api-types-v10/interface/APIGuildMember.md): APIGuildMember | API | discord-api-types documentation
+- [APIGuildMemberAvatar](./api/next/discord-api-types-v10/interface/APIGuildMemberAvatar.md): APIGuildMemberAvatar | API | discord-api-types documentation
+- [APIGuildMemberJoined](./api/next/discord-api-types-v10/interface/APIGuildMemberJoined.md): APIGuildMemberJoined | API | discord-api-types documentation
+- [APIGuildMemberNoUser](./api/next/discord-api-types-v10/interface/APIGuildMemberNoUser.md): APIGuildMemberNoUser | API | discord-api-types documentation
+- [APIGuildMembershipScreening](./api/next/discord-api-types-v10/interface/APIGuildMembershipScreening.md): APIGuildMembershipScreening | API | discord-api-types documentation
+- [APIGuildMembershipScreeningField](./api/next/discord-api-types-v10/interface/APIGuildMembershipScreeningField.md): APIGuildMembershipScreeningField | API | discord-api-types documentation
+- [APIGuildMemberUser](./api/next/discord-api-types-v10/interface/APIGuildMemberUser.md): APIGuildMemberUser | API | discord-api-types documentation
+- [APIGuildOnboarding](./api/next/discord-api-types-v10/interface/APIGuildOnboarding.md): APIGuildOnboarding | API | discord-api-types documentation
+- [APIGuildOnboardingPrompt](./api/next/discord-api-types-v10/interface/APIGuildOnboardingPrompt.md): APIGuildOnboardingPrompt | API | discord-api-types documentation
+- [APIGuildOnboardingPromptOption](./api/next/discord-api-types-v10/interface/APIGuildOnboardingPromptOption.md): APIGuildOnboardingPromptOption | API | discord-api-types documentation
+- [APIGuildPreview](./api/next/discord-api-types-v10/interface/APIGuildPreview.md): APIGuildPreview | API | discord-api-types documentation
+- [APIGuildScheduledEventBase <Type>](./api/next/discord-api-types-v10/interface/APIGuildScheduledEventBase.md): APIGuildScheduledEventBase | API | discord-api-types documentation
+- [APIGuildScheduledEventEntityMetadata](./api/next/discord-api-types-v10/interface/APIGuildScheduledEventEntityMetadata.md): APIGuildScheduledEventEntityMetadata | API | discord-api-types documentation
+- [APIGuildScheduledEventRecurrenceRule](./api/next/discord-api-types-v10/interface/APIGuildScheduledEventRecurrenceRule.md): APIGuildScheduledEventRecurrenceRule | API | discord-api-types documentation
+- [APIGuildScheduledEventRecurrenceRuleNWeekday](./api/next/discord-api-types-v10/interface/APIGuildScheduledEventRecurrenceRuleNWeekday.md): APIGuildScheduledEventRecurrenceRuleNWeekday | API | discord-api-types documentation
+- [APIGuildScheduledEventUser](./api/next/discord-api-types-v10/interface/APIGuildScheduledEventUser.md): APIGuildScheduledEventUser | API | discord-api-types documentation
+- [APIGuildTextChannel <T>](./api/next/discord-api-types-v10/interface/APIGuildTextChannel.md): APIGuildTextChannel | API | discord-api-types documentation
+- [APIGuildWelcomeScreen](./api/next/discord-api-types-v10/interface/APIGuildWelcomeScreen.md): APIGuildWelcomeScreen | API | discord-api-types documentation
+- [APIGuildWelcomeScreenChannel](./api/next/discord-api-types-v10/interface/APIGuildWelcomeScreenChannel.md): APIGuildWelcomeScreenChannel | API | discord-api-types documentation
+- [APIGuildWidget](./api/next/discord-api-types-v10/interface/APIGuildWidget.md): APIGuildWidget | API | discord-api-types documentation
+- [APIGuildWidgetChannel](./api/next/discord-api-types-v10/interface/APIGuildWidgetChannel.md): APIGuildWidgetChannel | API | discord-api-types documentation
+- [APIGuildWidgetMember](./api/next/discord-api-types-v10/interface/APIGuildWidgetMember.md): APIGuildWidgetMember | API | discord-api-types documentation
+- [APIGuildWidgetSettings](./api/next/discord-api-types-v10/interface/APIGuildWidgetSettings.md): APIGuildWidgetSettings | API | discord-api-types documentation
+- [APIIncidentsData](./api/next/discord-api-types-v10/interface/APIIncidentsData.md): APIIncidentsData | API | discord-api-types documentation
+- [APIIntegrationAccount](./api/next/discord-api-types-v10/interface/APIIntegrationAccount.md): APIIntegrationAccount | API | discord-api-types documentation
+- [APIInteractionDataOptionBase <T,D>](./api/next/discord-api-types-v10/interface/APIInteractionDataOptionBase.md): APIInteractionDataOptionBase | API | discord-api-types documentation
+- [APIInteractionDataResolved](./api/next/discord-api-types-v10/interface/APIInteractionDataResolved.md): APIInteractionDataResolved | API | discord-api-types documentation
+- [APIInteractionDataResolvedChannelBase <T>](./api/next/discord-api-types-v10/interface/APIInteractionDataResolvedChannelBase.md): APIInteractionDataResolvedChannelBase | API | discord-api-types documentation
+- [APIInteractionDataResolvedGuildMember](./api/next/discord-api-types-v10/interface/APIInteractionDataResolvedGuildMember.md): APIInteractionDataResolvedGuildMember | API | discord-api-types documentation
+- [APIInteractionGuildMember](./api/next/discord-api-types-v10/interface/APIInteractionGuildMember.md): APIInteractionGuildMember | API | discord-api-types documentation
+- [APIInteractionResponseChannelMessageWithSource](./api/next/discord-api-types-v10/interface/APIInteractionResponseChannelMessageWithSource.md): APIInteractionResponseChannelMessageWithSource | API | discord-api-types documentation
+- [APIInteractionResponseDeferredChannelMessageWithSource](./api/next/discord-api-types-v10/interface/APIInteractionResponseDeferredChannelMessageWithSource.md): APIInteractionResponseDeferredChannelMessageWithSource | API | discord-api-types documentation
+- [APIInteractionResponseDeferredMessageUpdate](./api/next/discord-api-types-v10/interface/APIInteractionResponseDeferredMessageUpdate.md): APIInteractionResponseDeferredMessageUpdate | API | discord-api-types documentation
+- [APIInteractionResponseLaunchActivity](./api/next/discord-api-types-v10/interface/APIInteractionResponseLaunchActivity.md): APIInteractionResponseLaunchActivity | API | discord-api-types documentation
+- [APIInteractionResponsePong](./api/next/discord-api-types-v10/interface/APIInteractionResponsePong.md): APIInteractionResponsePong | API | discord-api-types documentation
+- [APIInteractionResponseUpdateMessage](./api/next/discord-api-types-v10/interface/APIInteractionResponseUpdateMessage.md): APIInteractionResponseUpdateMessage | API | discord-api-types documentation
+- [APIInvite](./api/next/discord-api-types-v10/interface/APIInvite.md): APIInvite | API | discord-api-types documentation
+- [APIInviteChannel](./api/next/discord-api-types-v10/interface/APIInviteChannel.md): APIInviteChannel | API | discord-api-types documentation
+- [APIInviteStageInstance](./api/next/discord-api-types-v10/interface/APIInviteStageInstance.md): APIInviteStageInstance | API | discord-api-types documentation
+- [APILabelComponent](./api/next/discord-api-types-v10/interface/APILabelComponent.md): APILabelComponent | API | discord-api-types documentation
+- [APIMediaGalleryComponent](./api/next/discord-api-types-v10/interface/APIMediaGalleryComponent.md): APIMediaGalleryComponent | API | discord-api-types documentation
+- [APIMediaGalleryItem](./api/next/discord-api-types-v10/interface/APIMediaGalleryItem.md): APIMediaGalleryItem | API | discord-api-types documentation
+- [APIMessage](./api/next/discord-api-types-v10/interface/APIMessage.md): APIMessage | API | discord-api-types documentation
+- [APIMessageActivity](./api/next/discord-api-types-v10/interface/APIMessageActivity.md): APIMessageActivity | API | discord-api-types documentation
+- [APIMessageApplicationCommandInteractionData](./api/next/discord-api-types-v10/interface/APIMessageApplicationCommandInteractionData.md): APIMessageApplicationCommandInteractionData | API | discord-api-types documentation
+- [APIMessageApplicationCommandInteractionDataResolved](./api/next/discord-api-types-v10/interface/APIMessageApplicationCommandInteractionDataResolved.md): APIMessageApplicationCommandInteractionDataResolved | API | discord-api-types documentation
+- [APIMessageCall](./api/next/discord-api-types-v10/interface/APIMessageCall.md): APIMessageCall | API | discord-api-types documentation
+- [APIMessageChannelSelectInteractionData](./api/next/discord-api-types-v10/interface/APIMessageChannelSelectInteractionData.md): APIMessageChannelSelectInteractionData | API | discord-api-types documentation
+- [APIMessageComponentBaseInteractionData <CType>](./api/next/discord-api-types-v10/interface/APIMessageComponentBaseInteractionData.md): APIMessageComponentBaseInteractionData | API | discord-api-types documentation
+- [APIMessageComponentEmoji](./api/next/discord-api-types-v10/interface/APIMessageComponentEmoji.md): APIMessageComponentEmoji | API | discord-api-types documentation
+- [APIMessageComponentInteractionMetadata](./api/next/discord-api-types-v10/interface/APIMessageComponentInteractionMetadata.md): APIMessageComponentInteractionMetadata | API | discord-api-types documentation
+- [APIMessageInteraction](./api/next/discord-api-types-v10/interface/APIMessageInteraction.md): APIMessageInteraction | API | discord-api-types documentation
+- [APIMessageMentionableSelectInteractionData](./api/next/discord-api-types-v10/interface/APIMessageMentionableSelectInteractionData.md): APIMessageMentionableSelectInteractionData | API | discord-api-types documentation
+- [APIMessageMentions](./api/next/discord-api-types-v10/interface/APIMessageMentions.md): APIMessageMentions | API | discord-api-types documentation
+- [APIMessagePin](./api/next/discord-api-types-v10/interface/APIMessagePin.md): APIMessagePin | API | discord-api-types documentation
+- [APIMessageReference](./api/next/discord-api-types-v10/interface/APIMessageReference.md): APIMessageReference | API | discord-api-types documentation
+- [APIMessageRoleSelectInteractionData](./api/next/discord-api-types-v10/interface/APIMessageRoleSelectInteractionData.md): APIMessageRoleSelectInteractionData | API | discord-api-types documentation
+- [APIMessageRoleSubscriptionData](./api/next/discord-api-types-v10/interface/APIMessageRoleSubscriptionData.md): APIMessageRoleSubscriptionData | API | discord-api-types documentation
+- [APIMessageSearchIndexNotReadyResponse](./api/next/discord-api-types-v10/interface/APIMessageSearchIndexNotReadyResponse.md): APIMessageSearchIndexNotReadyResponse | API | discord-api-types documentation
+- [APIMessageSearchResult](./api/next/discord-api-types-v10/interface/APIMessageSearchResult.md): APIMessageSearchResult | API | discord-api-types documentation
+- [APIMessageSharedClientTheme](./api/next/discord-api-types-v10/interface/APIMessageSharedClientTheme.md): APIMessageSharedClientTheme | API | discord-api-types documentation
+- [APIMessageSnapshot](./api/next/discord-api-types-v10/interface/APIMessageSnapshot.md): APIMessageSnapshot | API | discord-api-types documentation
+- [APIMessageStringSelectInteractionData](./api/next/discord-api-types-v10/interface/APIMessageStringSelectInteractionData.md): APIMessageStringSelectInteractionData | API | discord-api-types documentation
+- [APIMessageUserSelectInteractionData](./api/next/discord-api-types-v10/interface/APIMessageUserSelectInteractionData.md): APIMessageUserSelectInteractionData | API | discord-api-types documentation
+- [APIModalInteractionResponse](./api/next/discord-api-types-v10/interface/APIModalInteractionResponse.md): APIModalInteractionResponse | API | discord-api-types documentation
+- [APIModalInteractionResponseCallbackData](./api/next/discord-api-types-v10/interface/APIModalInteractionResponseCallbackData.md): APIModalInteractionResponseCallbackData | API | discord-api-types documentation
+- [APIModalSubmission](./api/next/discord-api-types-v10/interface/APIModalSubmission.md): APIModalSubmission | API | discord-api-types documentation
+- [APIModalSubmitChannelSelectComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitChannelSelectComponent.md): APIModalSubmitChannelSelectComponent | API | discord-api-types documentation
+- [APIModalSubmitCheckboxComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitCheckboxComponent.md): APIModalSubmitCheckboxComponent | API | discord-api-types documentation
+- [APIModalSubmitCheckboxGroupComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitCheckboxGroupComponent.md): APIModalSubmitCheckboxGroupComponent | API | discord-api-types documentation
+- [APIModalSubmitFileUploadComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitFileUploadComponent.md): APIModalSubmitFileUploadComponent | API | discord-api-types documentation
+- [APIModalSubmitInteractionMetadata](./api/next/discord-api-types-v10/interface/APIModalSubmitInteractionMetadata.md): APIModalSubmitInteractionMetadata | API | discord-api-types documentation
+- [APIModalSubmitMentionableSelectComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitMentionableSelectComponent.md): APIModalSubmitMentionableSelectComponent | API | discord-api-types documentation
+- [APIModalSubmitRadioGroupComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitRadioGroupComponent.md): APIModalSubmitRadioGroupComponent | API | discord-api-types documentation
+- [APIModalSubmitRoleSelectComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitRoleSelectComponent.md): APIModalSubmitRoleSelectComponent | API | discord-api-types documentation
+- [APIModalSubmitStringSelectComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitStringSelectComponent.md): APIModalSubmitStringSelectComponent | API | discord-api-types documentation
+- [APIModalSubmitTextInputComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitTextInputComponent.md): APIModalSubmitTextInputComponent | API | discord-api-types documentation
+- [APIModalSubmitUserSelectComponent](./api/next/discord-api-types-v10/interface/APIModalSubmitUserSelectComponent.md): APIModalSubmitUserSelectComponent | API | discord-api-types documentation
+- [APINameableChannel](./api/next/discord-api-types-v10/interface/APINameableChannel.md): APINameableChannel | API | discord-api-types documentation
+- [APINameplateData](./api/next/discord-api-types-v10/interface/APINameplateData.md): APINameplateData | API | discord-api-types documentation
+- [APIOverwrite](./api/next/discord-api-types-v10/interface/APIOverwrite.md): APIOverwrite | API | discord-api-types documentation
+- [APIPartialChannel](./api/next/discord-api-types-v10/interface/APIPartialChannel.md): APIPartialChannel | API | discord-api-types documentation
+- [APIPartialEmoji](./api/next/discord-api-types-v10/interface/APIPartialEmoji.md): APIPartialEmoji | API | discord-api-types documentation
+- [APIPartialGuild](./api/next/discord-api-types-v10/interface/APIPartialGuild.md): APIPartialGuild | API | discord-api-types documentation
+- [APIPartialInteractionGuild](./api/next/discord-api-types-v10/interface/APIPartialInteractionGuild.md): APIPartialInteractionGuild | API | discord-api-types documentation
+- [APIPinChannel <T>](./api/next/discord-api-types-v10/interface/APIPinChannel.md): APIPinChannel | API | discord-api-types documentation
+- [APIPoll](./api/next/discord-api-types-v10/interface/APIPoll.md): APIPoll | API | discord-api-types documentation
+- [APIPollAnswer](./api/next/discord-api-types-v10/interface/APIPollAnswer.md): APIPollAnswer | API | discord-api-types documentation
+- [APIPollAnswerCount](./api/next/discord-api-types-v10/interface/APIPollAnswerCount.md): APIPollAnswerCount | API | discord-api-types documentation
+- [APIPollDefaults](./api/next/discord-api-types-v10/interface/APIPollDefaults.md): APIPollDefaults | API | discord-api-types documentation
+- [APIPollMedia](./api/next/discord-api-types-v10/interface/APIPollMedia.md): APIPollMedia | API | discord-api-types documentation
+- [APIPollResults](./api/next/discord-api-types-v10/interface/APIPollResults.md): APIPollResults | API | discord-api-types documentation
+- [APIPremiumRequiredInteractionResponse](./api/next/discord-api-types-v10/interface/APIPremiumRequiredInteractionResponse.md): APIPremiumRequiredInteractionResponse | API | discord-api-types documentation
+- [APIRadioGroupComponent](./api/next/discord-api-types-v10/interface/APIRadioGroupComponent.md): APIRadioGroupComponent | API | discord-api-types documentation
+- [APIRadioGroupOption](./api/next/discord-api-types-v10/interface/APIRadioGroupOption.md): APIRadioGroupOption | API | discord-api-types documentation
+- [APIReaction](./api/next/discord-api-types-v10/interface/APIReaction.md): APIReaction | API | discord-api-types documentation
+- [APIReactionCountDetails](./api/next/discord-api-types-v10/interface/APIReactionCountDetails.md): APIReactionCountDetails | API | discord-api-types documentation
+- [APIRole](./api/next/discord-api-types-v10/interface/APIRole.md): APIRole | API | discord-api-types documentation
+- [APIRoleColors](./api/next/discord-api-types-v10/interface/APIRoleColors.md): APIRoleColors | API | discord-api-types documentation
+- [APIRoleTags](./api/next/discord-api-types-v10/interface/APIRoleTags.md): APIRoleTags | API | discord-api-types documentation
+- [APISectionComponent](./api/next/discord-api-types-v10/interface/APISectionComponent.md): APISectionComponent | API | discord-api-types documentation
+- [APISelectMenuDefaultValue <T>](./api/next/discord-api-types-v10/interface/APISelectMenuDefaultValue.md): APISelectMenuDefaultValue | API | discord-api-types documentation
+- [APISelectMenuOption](./api/next/discord-api-types-v10/interface/APISelectMenuOption.md): APISelectMenuOption | API | discord-api-types documentation
+- [APISeparatorComponent](./api/next/discord-api-types-v10/interface/APISeparatorComponent.md): APISeparatorComponent | API | discord-api-types documentation
+- [APISKU](./api/next/discord-api-types-v10/interface/APISKU.md): APISKU | API | discord-api-types documentation
+- [APISlowmodeChannel <T>](./api/next/discord-api-types-v10/interface/APISlowmodeChannel.md): APISlowmodeChannel | API | discord-api-types documentation
+- [APISortableChannel](./api/next/discord-api-types-v10/interface/APISortableChannel.md): APISortableChannel | API | discord-api-types documentation
+- [APISoundboardSound](./api/next/discord-api-types-v10/interface/APISoundboardSound.md): APISoundboardSound | API | discord-api-types documentation
+- [APIStageInstance](./api/next/discord-api-types-v10/interface/APIStageInstance.md): APIStageInstance | API | discord-api-types documentation
+- [APIStageInstanceGuildScheduledEvent](./api/next/discord-api-types-v10/interface/APIStageInstanceGuildScheduledEvent.md): APIStageInstanceGuildScheduledEvent | API | discord-api-types documentation
+- [APISticker](./api/next/discord-api-types-v10/interface/APISticker.md): APISticker | API | discord-api-types documentation
+- [APIStickerPack](./api/next/discord-api-types-v10/interface/APIStickerPack.md): APIStickerPack | API | discord-api-types documentation
+- [APIStringSelectComponent](./api/next/discord-api-types-v10/interface/APIStringSelectComponent.md): APIStringSelectComponent | API | discord-api-types documentation
+- [APISubscription](./api/next/discord-api-types-v10/interface/APISubscription.md): APISubscription | API | discord-api-types documentation
+- [APITeam](./api/next/discord-api-types-v10/interface/APITeam.md): APITeam | API | discord-api-types documentation
+- [APITeamMember](./api/next/discord-api-types-v10/interface/APITeamMember.md): APITeamMember | API | discord-api-types documentation
+- [APITemplate](./api/next/discord-api-types-v10/interface/APITemplate.md): APITemplate | API | discord-api-types documentation
+- [APITemplateSerializedSourceGuild](./api/next/discord-api-types-v10/interface/APITemplateSerializedSourceGuild.md): APITemplateSerializedSourceGuild | API | discord-api-types documentation
+- [APITextBasedChannel <T>](./api/next/discord-api-types-v10/interface/APITextBasedChannel.md): APITextBasedChannel | API | discord-api-types documentation
+- [APITextDisplayComponent](./api/next/discord-api-types-v10/interface/APITextDisplayComponent.md): APITextDisplayComponent | API | discord-api-types documentation
+- [APITextInputComponent](./api/next/discord-api-types-v10/interface/APITextInputComponent.md): APITextInputComponent | API | discord-api-types documentation
+- [APIThreadChannel <Type>](./api/next/discord-api-types-v10/interface/APIThreadChannel.md): APIThreadChannel | API | discord-api-types documentation
+- [APIThreadList](./api/next/discord-api-types-v10/interface/APIThreadList.md): APIThreadList | API | discord-api-types documentation
+- [APIThreadMember](./api/next/discord-api-types-v10/interface/APIThreadMember.md): APIThreadMember | API | discord-api-types documentation
+- [APIThreadMetadata](./api/next/discord-api-types-v10/interface/APIThreadMetadata.md): APIThreadMetadata | API | discord-api-types documentation
+- [APIThreadOnlyChannel <T>](./api/next/discord-api-types-v10/interface/APIThreadOnlyChannel.md): APIThreadOnlyChannel | API | discord-api-types documentation
+- [APIThumbnailComponent](./api/next/discord-api-types-v10/interface/APIThumbnailComponent.md): APIThumbnailComponent | API | discord-api-types documentation
+- [APIUnavailableGuild](./api/next/discord-api-types-v10/interface/APIUnavailableGuild.md): APIUnavailableGuild | API | discord-api-types documentation
+- [APIUnfurledMediaItem](./api/next/discord-api-types-v10/interface/APIUnfurledMediaItem.md): APIUnfurledMediaItem | API | discord-api-types documentation
+- [APIUser](./api/next/discord-api-types-v10/interface/APIUser.md): APIUser | API | discord-api-types documentation
+- [APIUserApplicationCommandInteractionData](./api/next/discord-api-types-v10/interface/APIUserApplicationCommandInteractionData.md): APIUserApplicationCommandInteractionData | API | discord-api-types documentation
+- [APIUserPrimaryGuild](./api/next/discord-api-types-v10/interface/APIUserPrimaryGuild.md): APIUserPrimaryGuild | API | discord-api-types documentation
+- [APIUserWithMember](./api/next/discord-api-types-v10/interface/APIUserWithMember.md): APIUserWithMember | API | discord-api-types documentation
+- [APIVoiceChannelBase <T>](./api/next/discord-api-types-v10/interface/APIVoiceChannelBase.md): APIVoiceChannelBase | API | discord-api-types documentation
+- [APIVoiceGuildScheduledEvent](./api/next/discord-api-types-v10/interface/APIVoiceGuildScheduledEvent.md): APIVoiceGuildScheduledEvent | API | discord-api-types documentation
+- [APIVoiceRegion](./api/next/discord-api-types-v10/interface/APIVoiceRegion.md): APIVoiceRegion | API | discord-api-types documentation
+- [APIVoiceState](./api/next/discord-api-types-v10/interface/APIVoiceState.md): APIVoiceState | API | discord-api-types documentation
+- [APIWebhook](./api/next/discord-api-types-v10/interface/APIWebhook.md): APIWebhook | API | discord-api-types documentation
+- [APIWebhookEventApplicationAuthorizedData](./api/next/discord-api-types-v10/interface/APIWebhookEventApplicationAuthorizedData.md): APIWebhookEventApplicationAuthorizedData | API | discord-api-types documentation
+- [APIWebhookEventApplicationDeauthorizedData](./api/next/discord-api-types-v10/interface/APIWebhookEventApplicationDeauthorizedData.md): APIWebhookEventApplicationDeauthorizedData | API | discord-api-types documentation
+- [APIWebhookEventBase <Type,Event>](./api/next/discord-api-types-v10/interface/APIWebhookEventBase.md): APIWebhookEventBase | API | discord-api-types documentation
+- [APIWebhookEventEventBase <Type,Data>](./api/next/discord-api-types-v10/interface/APIWebhookEventEventBase.md): APIWebhookEventEventBase | API | discord-api-types documentation
+- [BaseRPCCertifiedDevice <Type>](./api/next/discord-api-types-v10/interface/BaseRPCCertifiedDevice.md): BaseRPCCertifiedDevice | API | discord-api-types documentation
+- [BaseRPCMessage <Cmd>](./api/next/discord-api-types-v10/interface/BaseRPCMessage.md): BaseRPCMessage | API | discord-api-types documentation
+- [CDNQuery](./api/next/discord-api-types-v10/interface/CDNQuery.md): CDNQuery | API | discord-api-types documentation
+- [CDNRoutesDeclarations](./api/next/discord-api-types-v10/interface/CDNRoutesDeclarations.md): CDNRoutesDeclarations | API | discord-api-types documentation
+- [GatewayActivity](./api/next/discord-api-types-v10/interface/GatewayActivity.md): GatewayActivity | API | discord-api-types documentation
+- [GatewayActivityAssets](./api/next/discord-api-types-v10/interface/GatewayActivityAssets.md): GatewayActivityAssets | API | discord-api-types documentation
+- [GatewayActivityButton](./api/next/discord-api-types-v10/interface/GatewayActivityButton.md): GatewayActivityButton | API | discord-api-types documentation
+- [GatewayActivityParty](./api/next/discord-api-types-v10/interface/GatewayActivityParty.md): GatewayActivityParty | API | discord-api-types documentation
+- [GatewayActivitySecrets](./api/next/discord-api-types-v10/interface/GatewayActivitySecrets.md): GatewayActivitySecrets | API | discord-api-types documentation
+- [GatewayActivityTimestamps](./api/next/discord-api-types-v10/interface/GatewayActivityTimestamps.md): GatewayActivityTimestamps | API | discord-api-types documentation
+- [GatewayApplicationCommandPermissionsUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayApplicationCommandPermissionsUpdateDispatchData.md): GatewayApplicationCommandPermissionsUpdateDispatchData | API | discord-api-types documentation
+- [GatewayAutoModerationActionExecutionDispatchData](./api/next/discord-api-types-v10/interface/GatewayAutoModerationActionExecutionDispatchData.md): GatewayAutoModerationActionExecutionDispatchData | API | discord-api-types documentation
+- [GatewayChannelPinsUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayChannelPinsUpdateDispatchData.md): GatewayChannelPinsUpdateDispatchData | API | discord-api-types documentation
+- [GatewayGuildAuditLogEntryCreateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildAuditLogEntryCreateDispatchData.md): GatewayGuildAuditLogEntryCreateDispatchData | API | discord-api-types documentation
+- [GatewayGuildBanModifyDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildBanModifyDispatchData.md): GatewayGuildBanModifyDispatchData | API | discord-api-types documentation
+- [GatewayGuildCreateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildCreateDispatchData.md): GatewayGuildCreateDispatchData | API | discord-api-types documentation
+- [GatewayGuildDeleteDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildDeleteDispatchData.md): GatewayGuildDeleteDispatchData | API | discord-api-types documentation
+- [GatewayGuildEmojisUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildEmojisUpdateDispatchData.md): GatewayGuildEmojisUpdateDispatchData | API | discord-api-types documentation
+- [GatewayGuildIntegrationsUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildIntegrationsUpdateDispatchData.md): GatewayGuildIntegrationsUpdateDispatchData | API | discord-api-types documentation
+- [GatewayGuildMemberAddDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildMemberAddDispatchData.md): GatewayGuildMemberAddDispatchData | API | discord-api-types documentation
+- [GatewayGuildMemberRemoveDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildMemberRemoveDispatchData.md): GatewayGuildMemberRemoveDispatchData | API | discord-api-types documentation
+- [GatewayGuildMembersChunkDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildMembersChunkDispatchData.md): GatewayGuildMembersChunkDispatchData | API | discord-api-types documentation
+- [GatewayGuildMembersChunkPresence](./api/next/discord-api-types-v10/interface/GatewayGuildMembersChunkPresence.md): GatewayGuildMembersChunkPresence | API | discord-api-types documentation
+- [GatewayGuildMemberUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildMemberUpdateDispatchData.md): GatewayGuildMemberUpdateDispatchData | API | discord-api-types documentation
+- [GatewayGuildRoleDeleteDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildRoleDeleteDispatchData.md): GatewayGuildRoleDeleteDispatchData | API | discord-api-types documentation
+- [GatewayGuildRoleModifyDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildRoleModifyDispatchData.md): GatewayGuildRoleModifyDispatchData | API | discord-api-types documentation
+- [GatewayGuildScheduledEventUserAddDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildScheduledEventUserAddDispatchData.md): GatewayGuildScheduledEventUserAddDispatchData | API | discord-api-types documentation
+- [GatewayGuildScheduledEventUserRemoveDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildScheduledEventUserRemoveDispatchData.md): GatewayGuildScheduledEventUserRemoveDispatchData | API | discord-api-types documentation
+- [GatewayGuildSoundboardSoundDeleteDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildSoundboardSoundDeleteDispatchData.md): GatewayGuildSoundboardSoundDeleteDispatchData | API | discord-api-types documentation
+- [GatewayGuildSoundboardSoundsUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildSoundboardSoundsUpdateDispatchData.md): GatewayGuildSoundboardSoundsUpdateDispatchData | API | discord-api-types documentation
+- [GatewayGuildStickersUpdateDispatchData](./api/next/discord-api-types-v10/interface/GatewayGuildStickersUpdateDispatchData.md): GatewayGuildStickersUpdateDispatchData | API | discord-api-types documentation
+- [GatewayHeartbeat](./api/next/discord-api-types-v10/interface/GatewayHeartbeat.md): GatewayHeartbeat | API | discord-api-types documentation
+- [GatewayHeartbeatAck](./api/next/discord-api-types-v10/interface/GatewayHeartbeatAck.md): GatewayHeartbeatAck | API | discord-api-types documentation
+- [GatewayHeartbeatRequest](./api/next/discord-api-types-v10/interface/GatewayHeartbeatRequest.md): GatewayHeartbeatRequest | API | discord-api-types documentation
+- [GatewayHello](./api/next/discord-api-types-v10/interface/GatewayHello.md): GatewayHello | API | discord-api-types documentation
+- [GatewayHelloData](./api/next/discord-api-types-v10/interface/GatewayHelloData.md): GatewayHelloData | API | discord-api-types documentation
+- [GatewayIdentify](./api/next/discord-api-types-v10/interface/GatewayIdentify.md): GatewayIdentify | API | discord-api-types documentation

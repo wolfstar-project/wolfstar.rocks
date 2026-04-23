@@ -126,6 +126,8 @@ One request, one log line with all context:
   └─ requestId: a1b2c3d4-...
 ```
 
+Nitro uses **useLogger(event)** (event-bound scope), not `AsyncLocalStorage`, so **log.fork() is not available** here yet. Post-emit warnings still apply if code calls `set()` after the wide event was emitted. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
 ## Error Handling
 
 `createError` produces structured errors with `why`, `fix`, and `link` fields that help both humans and AI agents understand what went wrong.
@@ -343,3 +345,12 @@ export default defineNitroPlugin((nitroApp) => {
 Errors are always kept by default. You have to explicitly set `error: 0` to drop them.
 
 </callout>
+
+## Next Steps
+
+Deepen your **Nitro** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields

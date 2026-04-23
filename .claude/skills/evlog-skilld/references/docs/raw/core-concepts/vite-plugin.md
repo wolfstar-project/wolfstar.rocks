@@ -1,6 +1,6 @@
 # Vite Plugin
 
-> Build-time optimizations for any Vite-based framework — auto-init, debug stripping, source location injection, and optional auto-imports.
+> Build-time optimizations for any Vite-based framework. Auto-init, debug stripping, source location injection, and optional auto-imports.
 
 The `evlog/vite` plugin adds build-time DX features to any Vite-based project. It works with SvelteKit, Hono, Express, Fastify, Elysia, and any framework using Vite as its build tool.
 
@@ -14,7 +14,7 @@ The `evlog/vite` plugin adds build-time DX features to any Vite-based project. I
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -43,9 +43,9 @@ That's it. The plugin automatically:
 
 ### Auto-initialization
 
-The plugin injects logger configuration at compile time via Vite's `define` hook. Your code can use `log`, `createLogger()`, and `createRequestLogger()` immediately — no `initLogger()` call required.
+The plugin injects logger configuration at compile time via Vite's `define` hook. Your code can use `log`, `createLogger()`, and `createRequestLogger()` immediately, no `initLogger()` call required.
 
-```typescript
+```typescript [logger-setup.ts]
 // Before (manual setup)
 import { initLogger, createLogger } from 'evlog'
 initLogger({ env: { service: 'my-api' } })
@@ -60,7 +60,7 @@ The `service`, `environment`, `pretty`, `silent`, `enabled`, and `sampling` opti
 
 ### Debug stripping
 
-By default, all `log.debug()` calls are removed from production builds. This is a compile-time transformation — the calls are completely eliminated from the output, not just silenced.
+By default, all `log.debug()` calls are removed from production builds. This is a compile-time transformation, the calls are completely eliminated from the output, not just silenced.
 
 ```typescript [vite.config.ts]
 evlog({
@@ -92,13 +92,13 @@ evlog({
 
 Before transform:
 
-```typescript
+```typescript [src/checkout.ts]
 log.info({ action: 'checkout', total: 99 })
 ```
 
 After transform:
 
-```typescript
+```typescript [src/checkout.ts]
 log.info({ action: 'checkout', total: 99, __source: 'src/checkout.ts:42' })
 ```
 
@@ -429,7 +429,7 @@ export default defineNuxtConfig({
 
 ## Vite Compatibility
 
-The plugin supports **Vite 7+** and is optimized for **Vite 8** (Rolldown). On Vite 8, transform hooks use Rolldown-native `filter` and `moduleType` for maximum performance — non-matching files are skipped entirely on the Rust side without crossing the JS bridge.
+The plugin supports **Vite 7+** and is optimized for **Vite 8** (Rolldown). On Vite 8, transform hooks use Rolldown-native `filter` and `moduleType` for maximum performance, non-matching files are skipped entirely on the Rust side without crossing the JS bridge.
 
 
 

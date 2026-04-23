@@ -1,4 +1,4 @@
-Generate SKILL.md section for "@nuxt/ui" v4.6.0.
+Generate SKILL.md section for "@nuxt/ui" v4.6.1.
 
 ## Security
 

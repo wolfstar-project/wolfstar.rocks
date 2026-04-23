@@ -204,7 +204,7 @@ The cleanup task deletes all rows in `evlog_events` where `created_at` is older 
 
 You can trigger cleanup manually via the API endpoint:
 
-```bash
+```bash [Terminal]
 curl https://your-app.com/api/_cron/evlog-cleanup
 ```
 
@@ -212,7 +212,7 @@ curl https://your-app.com/api/_cron/evlog-cleanup
 
 If the `CRON_SECRET` environment variable is set, the endpoint requires a Bearer token:
 
-```bash
+```bash [Terminal]
 curl -H "Authorization: Bearer your-secret" \
   https://your-app.com/api/_cron/evlog-cleanup
 ```

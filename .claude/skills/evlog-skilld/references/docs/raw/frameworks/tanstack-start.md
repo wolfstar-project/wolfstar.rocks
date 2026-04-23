@@ -6,7 +6,7 @@ TanStack Start uses [Nitro v3](/frameworks/nitro) as its server layer, so evlog 
 
 <callout color="info" icon="i-lucide-info">
 
-**TanStack Router vs TanStack Start** — TanStack Router is a client-side router and doesn't need server-side logging. This page covers **TanStack Start**, the full-stack framework. If you're using TanStack Router in SPA mode, see [Client Logging](/core-concepts/client-logging) instead.
+**TanStack Router vs TanStack Start**: TanStack Router is a client-side router and doesn't need server-side logging. This page covers **TanStack Start**, the full-stack framework. If you're using TanStack Router in SPA mode, see [Client Logging](/logging/client-logging) instead.
 
 </callout>
 
@@ -34,7 +34,7 @@ Starting from a TanStack Start project created with `npm create @tanstack/start@
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -81,7 +81,7 @@ That's it. evlog automatically captures every request as a wide event with metho
 
 <callout color="info" icon="i-custom-vite">
 
-**Using Vite?** TanStack Start is Vite-based. The [`evlog/vite`](/core-concepts/vite-plugin) plugin strips `log.debug()` from production builds and injects source locations — add it to your `vite.config.ts` alongside the TanStack Start plugin.
+**Using Vite?** TanStack Start is Vite-based. The [`evlog/vite`](/core-concepts/vite-plugin) plugin strips `log.debug()` from production builds and injects source locations, add it to your `vite.config.ts` alongside the TanStack Start plugin.
 
 </callout>
 
@@ -182,7 +182,7 @@ The error is captured and logged with both the custom context and structured err
 
 Use `parseError` to extract the structured fields from any error response:
 
-```tsx
+```tsx [src/routes/checkout.tsx]
 import { parseError } from 'evlog'
 
 try {
@@ -302,8 +302,8 @@ export default definePlugin((nitroApp) => {
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog/examples/tanstack-start
 bun install
 bun run dev
@@ -312,12 +312,21 @@ bun run dev
 Open http://localhost:3000 and navigate to the evlog Demo page to test the API endpoints.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/tanstack-start">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/tanstack-start">
 
 Browse the complete TanStack Start example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+Deepen your **TanStack Start** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

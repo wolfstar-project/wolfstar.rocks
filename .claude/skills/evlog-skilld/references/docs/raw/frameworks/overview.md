@@ -416,6 +416,38 @@ evlog provides native integrations for every major TypeScript framework. The sam
   
   <tr>
     <td>
+      <a href="/frameworks/aws-lambda">
+        AWS Lambda
+      </a>
+    </td>
+    
+    <td>
+      <code>
+        evlog
+      </code>
+    </td>
+    
+    <td>
+      Manual
+    </td>
+    
+    <td>
+      <code>
+        createLogger()
+      </code>
+      
+       / <code>
+        createRequestLogger()
+      </code>
+    </td>
+    
+    <td>
+      Guide
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
       <a href="/frameworks/standalone">
         Standalone
       </a>
@@ -537,7 +569,7 @@ Uses Nitro v3 module with async context for seamless logging in server functions
 
 </card>
 
-<card color="neutral" icon="i-simple-icons-reactrouter" title="React Router" to="/frameworks/react-router">
+<card color="neutral" icon="i-custom-reactrouter" title="React Router" to="/frameworks/react-router">
 
 Middleware with `context.get(loggerContext)` and `useLogger()` for loaders and services.
 
@@ -583,6 +615,12 @@ Factory for creating request-scoped loggers with Cloudflare-specific context.
 
 </card>
 
+<card color="neutral" icon="i-custom-lambda" title="AWS Lambda" to="/frameworks/aws-lambda">
+
+`initLogger` once per runtime; `createLogger` per invocation (SQS, events, HTTP API).
+
+</card>
+
 <card color="neutral" icon="i-simple-icons-typescript" title="Standalone" to="/frameworks/standalone">
 
 For scripts, CLI tools, queues, and any TypeScript process.
@@ -598,7 +636,7 @@ Build your own middleware with the evlog toolkit API.
 
 <callout color="info" icon="i-lucide-info">
 
-All frameworks support the same features: [wide events](/core-concepts/wide-events), [structured errors](/core-concepts/structured-errors), [drain adapters](/adapters/overview), [enrichers](/enrichers/overview), [sampling](/core-concepts/best-practices), and [AI SDK integration](/core-concepts/ai-sdk).
+All frameworks support the same features: [wide events](/logging/wide-events), [structured errors](/logging/structured-errors), [drain adapters](/adapters/overview), [enrichers](/enrichers/overview), [sampling](/core-concepts/sampling), and [AI SDK integration](/logging/ai-sdk).
 
 </callout>
 
@@ -606,8 +644,8 @@ All frameworks support the same features: [wide events](/core-concepts/wide-even
 
 For any Vite-based project, the [`evlog/vite` plugin](/core-concepts/vite-plugin) adds build-time optimizations:
 
-- **Auto-initialization** — no `initLogger()` call needed
-- **Debug stripping** — `log.debug()` removed from production builds
-- **Source location** — inject `__source: 'file:line'` into log calls
+- **Auto-initialization**: no `initLogger()` call needed
+- **Debug stripping**: `log.debug()` removed from production builds
+- **Source location**: inject `__source: 'file:line'` into log calls
 
 Works with SvelteKit, Hono (via vite-node), and any Vite-powered setup. Nuxt users get these features via the `evlog/nuxt` module options.

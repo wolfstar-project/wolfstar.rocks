@@ -32,7 +32,7 @@ This is a guide-level integration. It uses the generic `createRequestLogger` API
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -165,3 +165,10 @@ initLogger({
 See the [Adapters](/adapters/overview) docs for all available drain adapters.
 
 </callout>
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields

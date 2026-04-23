@@ -26,7 +26,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The Sentry adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createSentryDrain } from 'evlog/sentry'
 ```
 
@@ -202,7 +202,7 @@ export default defineNuxtConfig({
 
 Pass options directly to override any configuration:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 const drain = createSentryDrain({
   dsn: 'https://key@o0.ingest.sentry.io/123',
   tags: { team: 'backend' },
@@ -377,7 +377,7 @@ Sentry Structured Logs support high-cardinality attributes, making them a great 
 
 ### Missing DSN error
 
-```text
+```text [Console]
 [evlog/sentry] Missing DSN. Set SENTRY_DSN env var or pass to createSentryDrain()
 ```
 
@@ -387,7 +387,7 @@ Make sure your environment variable is set and the server was restarted after ad
 
 If the DSN is malformed (missing public key or project ID), the adapter will throw an error. Verify your DSN format:
 
-```text
+```text [Sentry DSN format]
 https://<public-key>@<host>/<project-id>
 ```
 

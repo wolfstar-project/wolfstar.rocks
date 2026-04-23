@@ -21,7 +21,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 </code-collapse>
 
-```typescript
+```typescript [server/plugins/evlog-enrich.ts]
 import {
   createUserAgentEnricher,
   createGeoEnricher,
@@ -36,13 +36,13 @@ Parse browser, OS, and device type from the `User-Agent` header.
 
 **Sets:** `event.userAgent`
 
-```typescript
+```typescript [user-agent-enricher.ts]
 const enrich = createUserAgentEnricher()
 ```
 
 **Output shape:**
 
-```typescript
+```typescript [user-agent-types.ts]
 interface UserAgentInfo {
   raw: string                                      // Original User-Agent string
   browser?: { name: string; version?: string }     // Chrome, Firefox, Safari, Edge
@@ -53,7 +53,7 @@ interface UserAgentInfo {
 
 **Example output:**
 
-```json
+```json [Example wide event: userAgent]
 {
   "userAgent": {
     "raw": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/120.0.0.0",
@@ -74,13 +74,13 @@ Extract geographic data from platform-injected headers.
 
 **Sets:** `event.geo`
 
-```typescript
+```typescript [geo-enricher.ts]
 const enrich = createGeoEnricher()
 ```
 
 **Output shape:**
 
-```typescript
+```typescript [geo-types.ts]
 interface GeoInfo {
   country?: string      // ISO country code (e.g., "US", "FR")
   region?: string       // Region/state name
@@ -173,13 +173,13 @@ Capture request and response payload sizes from `Content-Length` headers.
 
 **Sets:** `event.requestSize`
 
-```typescript
+```typescript [request-size-enricher.ts]
 const enrich = createRequestSizeEnricher()
 ```
 
 **Output shape:**
 
-```typescript
+```typescript [request-size-types.ts]
 interface RequestSizeInfo {
   requestBytes?: number    // Request Content-Length
   responseBytes?: number   // Response Content-Length
@@ -188,7 +188,7 @@ interface RequestSizeInfo {
 
 **Example output:**
 
-```json
+```json [Example wide event: requestSize]
 {
   "requestSize": {
     "requestBytes": 1234,
@@ -209,13 +209,13 @@ Extract W3C trace context from the `traceparent` and `tracestate` headers.
 
 **Sets:** `event.traceContext`, `event.traceId`, `event.spanId`
 
-```typescript
+```typescript [trace-context-enricher.ts]
 const enrich = createTraceContextEnricher()
 ```
 
 **Output shape:**
 
-```typescript
+```typescript [trace-context-types.ts]
 interface TraceContextInfo {
   traceparent?: string   // Full traceparent header value
   tracestate?: string    // Full tracestate header value
@@ -226,7 +226,7 @@ interface TraceContextInfo {
 
 **Example output:**
 
-```json
+```json [Example wide event: traceContext]
 {
   "traceContext": {
     "traceparent": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01",

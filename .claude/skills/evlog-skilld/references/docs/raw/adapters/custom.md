@@ -139,7 +139,7 @@ export function createMyAdapter(config: MyAdapterConfig) {
 
 Then pass the adapter to your framework like any other drain:
 
-```typescript
+```typescript [lib/my-adapter.ts]
 const drain = createMyAdapter({
   apiKey: process.env.MY_SERVICE_API_KEY!,
 })

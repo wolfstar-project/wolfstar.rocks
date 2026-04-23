@@ -27,7 +27,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog express
 ```
 
@@ -120,6 +120,25 @@ app.get('/users/:id', async (req, res) => {
 
 Both `req.log` and `useLogger()` return the same logger instance. `useLogger()` uses `AsyncLocalStorage` to propagate the logger across async boundaries.
 
+## Background work (`log.fork`)
+
+Fire-and-forget async work that finishes **after** the response can no longer update the request wide event (the logger is sealed after emit). Use **req.log.fork(label, fn)** so `useLogger()` inside `fn` targets a **child** logger that emits its own event with `operation` and `_parentRequestId`. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+```typescript [src/index.ts]
+import { evlog, useLogger } from 'evlog/express'
+
+app.use(evlog())
+
+app.post('/orders', (req, res) => {
+  req.log.set({ orderId: 'ord_1' })
+  req.log.fork!('fulfill_order', async () => {
+    const log = useLogger()
+    log.set({ step: 'inventory_ok' })
+  })
+  res.json({ ok: true })
+})
+```
+
 ## Error Handling
 
 Use `createError` for structured errors with `why`, `fix`, and `link` fields. Express uses a 4-argument error handler middleware:
@@ -155,7 +174,6 @@ The error is captured and logged with both the custom context and structured err
 ```bash [Terminal output]
 14:58:20 ERROR [my-api] GET /checkout 402 in 3ms
   ├─ error: name=EvlogError message=Payment failed status=402
-  ├─ cart: items=3 total=9999
   └─ requestId: 880a50ac-...
 ```
 
@@ -236,15 +254,15 @@ app.use(evlog({
 
 ## Client-Side Logging
 
-Use `evlog/browser` to send structured logs from any frontend to your Express server. This works with any client framework (React, Vue, Svelte, vanilla JS).
+Use `evlog/http` to send structured logs from any frontend to your Express server. This works with any client framework (React, Vue, Svelte, vanilla JS).
 
 ### Browser setup
 
 ```typescript [client.ts]
 import { initLogger, log } from 'evlog'
-import { createBrowserLogDrain } from 'evlog/browser'
+import { createHttpLogDrain } from 'evlog/http'
 
-const drain = createBrowserLogDrain({
+const drain = createHttpLogDrain({
   drain: { endpoint: '/v1/ingest' },
 })
 initLogger({ drain })
@@ -270,14 +288,14 @@ app.post('/v1/ingest', express.json(), (req, res) => {
 
 <callout color="neutral" icon="i-lucide-globe">
 
-See the full [Browser Drain](/adapters/browser) adapter docs for batching, retry, sendBeacon fallback, and authentication options.
+See the full [HTTP drain](/adapters/http) adapter docs for batching, retry, sendBeacon fallback, and authentication options.
 
 </callout>
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog
 bun install
 bun run example:express
@@ -286,12 +304,21 @@ bun run example:express
 Open http://localhost:3000 to explore the interactive test UI.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/express">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/express">
 
 Browse the complete Express example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+Deepen your **Express** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

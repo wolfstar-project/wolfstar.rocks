@@ -1,0 +1,379 @@
+# Client Logging
+
+> Capture browser events with structured logging. Same API as the server, with automatic console styling, user identity context, and optional server transport.
+
+Server logs tell you what happened on the backend. Client logs complete the picture: user interactions, page views, frontend errors, and performance signals that never reach the server unless you capture them.
+
+## Quick Start
+
+evlog provides a client-side logging API that works in any browser environment:
+
+<code-group>
+
+```typescript [app/plugins/logger.client.ts (Nuxt)]
+import { initLog, log } from 'evlog/client'
+
+export default defineNuxtPlugin(() => {
+  initLog({ service: 'web' })
+
+  log.info({ action: 'app_init', path: window.location.pathname })
+})
+```
+
+```typescript [app/providers.tsx (React / Next.js)]
+'use client'
+import { useEffect } from 'react'
+import { initLog, log } from 'evlog/client'
+
+export function LogProvider({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    initLog({ service: 'web' })
+    log.info({ action: 'app_init', path: window.location.pathname })
+  }, [])
+
+  return <>{children}</>
+}
+```
+
+```typescript [src/app.ts (Any frontend)]
+import { initLog, log } from 'evlog/client'
+
+initLog({ service: 'web' })
+log.info({ action: 'app_init', path: window.location.pathname })
+```
+
+</code-group>
+
+The `log` object works anywhere in your client code: components, composables, event handlers.
+
+## Minimum level (`minLevel`)
+
+Use `initLog({ minLevel: 'warn' })` to keep the browser console quiet (warnings and errors only). Severity order: `debug` < `info` < `warn` < `error`. Default is `'debug'` (all levels).
+
+For a **debug toggle** without reloading, call `setMinLevel('debug')` or `setMinLevel('warn')` from `evlog/client` when the user opts in or out of verbose logs.
+
+`minLevel` applies to both console output and [server transport](#sending-logs-to-the-server) payloads.
+
+## Two Call Signatures
+
+The `log` API accepts two forms depending on the context.
+
+### Object Form (structured context)
+
+Pass an object to capture structured data, just like server-side `log.set()`:
+
+```typescript [pages/products.vue]
+log.info({ action: 'page_view', path: '/products', referrer: document.referrer })
+```
+
+```bash [Browser console]
+[web] info  { action: 'page_view', path: '/products', referrer: 'https://google.com' }
+```
+
+### Tag + Message Form (quick logs)
+
+Pass a tag and a message for quick, readable logs:
+
+```typescript [composables/useAuth.ts]
+log.info('auth', 'User logged in')
+```
+
+```bash [Browser console]
+[auth] User logged in
+```
+
+### Available Levels
+
+Both forms support four levels: `log.info()`, `log.warn()`, `log.error()`, and `log.debug()`.
+
+In the browser, `log.debug()` is emitted with `console.log` (not `console.debug`) so lines stay visible with the default DevTools **Info** filter; the structured event still has `level: 'debug'`.
+
+## Identity Context
+
+Track which user generated a log with `setIdentity()`:
+
+```typescript [composables/useAuth.ts]
+import { setIdentity, clearIdentity, log } from 'evlog/client'
+
+// After login
+setIdentity({ userId: 'usr_123', plan: 'pro' })
+
+log.info({ action: 'dashboard_view' })
+// → { userId: 'usr_123', plan: 'pro', action: 'dashboard_view', ... }
+
+// After logout
+clearIdentity()
+```
+
+Identity fields are automatically merged into every log event until cleared. This lets you correlate browser events to specific users in your observability tools.
+
+## Configuration
+
+`initLog()` accepts the following options:
+
+<table>
+<thead>
+  <tr>
+    <th>
+      Option
+    </th>
+    
+    <th>
+      Default
+    </th>
+    
+    <th>
+      Description
+    </th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td>
+      <code>
+        enabled
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        true
+      </code>
+    </td>
+    
+    <td>
+      Enable or disable all client logging
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
+        console
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        true
+      </code>
+    </td>
+    
+    <td>
+      Output logs to the browser console
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
+        pretty
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        true
+      </code>
+    </td>
+    
+    <td>
+      Use colored, formatted console output
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
+        minLevel
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        'debug'
+      </code>
+    </td>
+    
+    <td>
+      Minimum severity: <code>
+        debug
+      </code>
+      
+       < <code>
+        info
+      </code>
+      
+       < <code>
+        warn
+      </code>
+      
+       < <code>
+        error
+      </code>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
+        service
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        'client'
+      </code>
+    </td>
+    
+    <td>
+      Service name included in every log event
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
+        transport
+      </code>
+    </td>
+    
+    <td>
+      -
+    </td>
+    
+    <td>
+      Send logs to a server endpoint (see below)
+    </td>
+  </tr>
+</tbody>
+</table>
+
+```typescript [app/plugins/logger.client.ts]
+initLog({
+  service: 'web',
+  transport: {
+    enabled: true,
+    endpoint: '/api/_evlog/ingest', // default endpoint
+  },
+})
+```
+
+<callout color="info" icon="i-lucide-info">
+
+`enabled`, `console`, and `pretty` all default to `true`. You only need to set them if you want to change the defaults.
+
+</callout>
+
+## Sending Logs to the Server
+
+By default, client logs only appear in the browser console. To persist them, you have two options:
+
+### Built-in Transport
+
+The simplest approach is to enable the built-in transport in `initLog()`. Each log is sent individually via `fetch` with `keepalive: true`. Good for low-volume apps.
+
+<code-group>
+
+```typescript [app/plugins/logger.client.ts (Nuxt)]
+import { initLog } from 'evlog/client'
+
+export default defineNuxtPlugin(() => {
+  initLog({
+    service: 'web',
+    transport: {
+      enabled: true,
+      endpoint: '/api/_evlog/ingest',
+    },
+  })
+})
+```
+
+```typescript [src/app.ts (Any frontend)]
+import { initLog } from 'evlog/client'
+
+initLog({
+  service: 'web',
+  transport: {
+    enabled: true,
+    endpoint: '/api/_evlog/ingest',
+  },
+})
+```
+
+</code-group>
+
+<callout color="info" icon="i-lucide-info">
+
+In Nuxt with the evlog module, the server ingest endpoint is auto-registered. For other frameworks, you need to create the endpoint yourself. See the [HTTP drain](/adapters/http#server-endpoint) docs for Express and Hono examples.
+
+</callout>
+
+### HTTP drain pipeline
+
+For higher volume or when you need batching, retries, and page-exit flushing, use the HTTP drain (`evlog/http`). This works with any frontend and has no framework dependency.
+
+<code-group>
+
+```typescript [app/plugins/logger.client.ts (Nuxt)]
+import { initLogger, log } from 'evlog'
+import { createHttpLogDrain } from 'evlog/http'
+
+export default defineNuxtPlugin(() => {
+  const drain = createHttpLogDrain({
+    drain: { endpoint: '/api/_evlog/ingest' },
+    pipeline: {
+      batch: { size: 25, intervalMs: 2000 },
+      retry: { maxAttempts: 2 },
+    },
+  })
+
+  initLogger({ drain })
+  log.info({ action: 'app_init' })
+})
+```
+
+```typescript [src/app.ts (Any frontend)]
+import { initLogger, log } from 'evlog'
+import { createHttpLogDrain } from 'evlog/http'
+
+const drain = createHttpLogDrain({
+  drain: { endpoint: 'https://logs.example.com/v1/ingest' },
+  pipeline: {
+    batch: { size: 25, intervalMs: 2000 },
+    retry: { maxAttempts: 2 },
+  },
+})
+
+initLogger({ drain })
+log.info({ action: 'app_init' })
+```
+
+</code-group>
+
+The HTTP drain automatically:
+
+- **Batches** events by size and time interval
+- **Retries** failed sends with exponential backoff
+- **Flushes** buffered events via `sendBeacon` when the page becomes hidden (tab switch, navigation, close)
+
+<callout color="neutral" icon="i-lucide-arrow-right">
+
+See the [HTTP drain](/adapters/http) adapter docs for full configuration reference, authentication, and server endpoint examples.
+
+</callout>
+
+## Next Steps
+
+- [HTTP drain](/adapters/http) - Batching, retry, and sendBeacon fallback
+- [Pipeline](/adapters/pipeline) - Advanced pipeline configuration
+- [Structured Errors](/logging/structured-errors) - Surface client errors with actionable context
+
+
+
+---
+
+- [HTTP drain](/adapters/http)
+- [Wide Events](/logging/wide-events)

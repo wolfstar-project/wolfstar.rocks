@@ -314,7 +314,7 @@ That's it. This middleware gets **every feature** for free: route filtering, dra
 
 Once built, your integration is used like any other:
 
-```typescript
+```typescript [src/index.ts]
 import { initLogger } from 'evlog'
 import { evlog, useLogger } from './my-framework-evlog'
 import { createAxiomDrain } from 'evlog/axiom'
@@ -388,7 +388,7 @@ Study these built-in integrations for framework-specific patterns:
     </td>
     
     <td>
-      <a href="https://github.com/HugoRCD/evlog/blob/main/packages/evlog/src/hono/index.ts" rel="nofollow">
+      <a href="https://github.com/hugorcd/evlog/blob/main/packages/evlog/src/hono/index.ts" rel="nofollow">
         hono/index.ts
       </a>
     </td>
@@ -414,7 +414,7 @@ Study these built-in integrations for framework-specific patterns:
     </td>
     
     <td>
-      <a href="https://github.com/HugoRCD/evlog/blob/main/packages/evlog/src/express/index.ts" rel="nofollow">
+      <a href="https://github.com/hugorcd/evlog/blob/main/packages/evlog/src/express/index.ts" rel="nofollow">
         express/index.ts
       </a>
     </td>
@@ -444,7 +444,7 @@ Study these built-in integrations for framework-specific patterns:
     </td>
     
     <td>
-      <a href="https://github.com/HugoRCD/evlog/blob/main/packages/evlog/src/elysia/index.ts" rel="nofollow">
+      <a href="https://github.com/hugorcd/evlog/blob/main/packages/evlog/src/elysia/index.ts" rel="nofollow">
         elysia/index.ts
       </a>
     </td>
@@ -476,7 +476,7 @@ Study these built-in integrations for framework-specific patterns:
     </td>
     
     <td>
-      <a href="https://github.com/HugoRCD/evlog/blob/main/packages/evlog/src/fastify/index.ts" rel="nofollow">
+      <a href="https://github.com/hugorcd/evlog/blob/main/packages/evlog/src/fastify/index.ts" rel="nofollow">
         fastify/index.ts
       </a>
     </td>
@@ -489,3 +489,10 @@ Study these built-in integrations for framework-specific patterns:
 Built an integration for a framework we don't support? Open a PR - the community will thank you.
 
 </callout>
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields

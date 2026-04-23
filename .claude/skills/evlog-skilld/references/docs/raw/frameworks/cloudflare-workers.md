@@ -10,9 +10,9 @@ The `evlog/workers` adapter provides factory functions for creating request-scop
 Set up evlog in my Cloudflare Worker.
 
 - Install evlog: pnpm add evlog
-- Import initLogger and createRequestLogger from 'evlog'
-- Call initLogger({ service: 'my-worker' }) at the top level
-- In the fetch handler, create a logger with createRequestLogger({ method, path })
+- Import initWorkersLogger and createWorkersLogger from 'evlog/workers'
+- Call initWorkersLogger({ env: { service: 'my-worker' } }) at the top level
+- In the fetch handler, create a logger with createWorkersLogger(request)
 - Use log.set() to accumulate context throughout the request
 - Call log.emit() manually before returning the response (no middleware lifecycle)
 
@@ -26,7 +26,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -181,6 +181,13 @@ enabled = false
 
 ## Run Locally
 
-```bash
+```bash [Terminal]
 wrangler dev
 ```
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields

@@ -1,8 +1,8 @@
 # Introduction
 
-> A TypeScript logging library focused on wide events and structured error handling. Replace scattered logs with one comprehensive event per request.
+> A structured logging library for TypeScript. Simple logging, wide events, and structured errors, from quick one-liners to comprehensive request-scoped events.
 
-**evlog** is a TypeScript logging library that replaces scattered log lines with comprehensive wide events and structured errors.
+**evlog** is a structured logging library for TypeScript. It gives you simple one-liner logs, wide events that accumulate context over any operation, and structured errors that explain *why* something failed and *how* to fix it.
 
 Inspired by Logging Sucks by Boris Tane.
 
@@ -13,21 +13,21 @@ Traditional logging is broken. Your logs are scattered across dozens of files. E
 **evlog** takes a different approach:
 
 <card-group>
+<card icon="i-lucide-terminal" title="Structured Logging">
+
+Replace `console.log` with typed, structured events that flow through a drain pipeline.
+
+</card>
+
 <card icon="i-lucide-layers" title="Wide Events">
 
-One comprehensive log event per request, containing all the context you need.
+Accumulate context over any unit of work (a request, script, or job) and emit once.
 
 </card>
 
 <card icon="i-lucide-shield-alert" title="Structured Errors">
 
 Errors that explain why they occurred and how to fix them.
-
-</card>
-
-<card icon="i-lucide-git-branch" title="Request Scoping">
-
-Accumulate context throughout the request lifecycle, emit once at the end.
 
 </card>
 
@@ -38,60 +38,65 @@ Human-readable in development, machine-parseable JSON in production.
 </card>
 </card-group>
 
-## What are Wide Events?
+## Three Ways to Log
 
-Instead of scattering logs throughout your code:
+evlog provides three APIs for different contexts. You can use all three in the same project.
 
-```typescript [Traditional logging]
-logger.info('Request started')
-logger.info('User authenticated', { userId: user.id })
-logger.info('Fetching cart', { cartId: cart.id })
-logger.info('Processing payment')
-logger.info('Payment successful')
-logger.info('Request completed')
+### Simple Logging
+
+Fire-and-forget structured logs. Replace `console.log`, consola, or pino:
+
+```typescript [src/index.ts]
+import { log } from 'evlog'
+
+log.info('auth', 'User logged in')
+log.error({ action: 'payment', error: 'card_declined', userId: 42 })
 ```
 
-You accumulate context and emit once:
+### Wide Events
+
+Accumulate context progressively over any operation, then emit a single comprehensive event:
 
 <code-group>
 
-```typescript [Code]
-// server/api/checkout.post.ts
-const log = useLogger(event)
+```typescript [scripts/sync-job.ts]
+import { createLogger } from 'evlog'
 
-log.set({ user: { id: 1, plan: 'pro' } })
-log.set({ cart: { id: 42, items: 3, total: 9999 } })
-log.set({ payment: { method: 'card', status: 'success' } })
-
-return { success: true }
+const log = createLogger({ jobId: 'sync-001', queue: 'emails' })
+log.set({ batch: { size: 50, processed: 50 } })
+log.emit()
 ```
 
-```bash [Output]
-[INFO] POST /api/checkout (234ms)
-  user: { id: 1, plan: 'pro' }
-  cart: { id: 42, items: 3, total: 9999 }
-  payment: { method: 'card', status: 'success' }
-  status: 200
+```typescript [src/worker.ts]
+import { createRequestLogger } from 'evlog'
+
+const log = createRequestLogger({ method: 'POST', path: '/api/checkout' })
+log.set({ user: { id: 1, plan: 'pro' } })
+log.emit()
+```
+
+```typescript [server/api/checkout.post.ts]
+import { useLogger } from 'evlog'
+
+export default defineEventHandler(async (event) => {
+  const log = useLogger(event)
+  log.set({ user: { id: 1, plan: 'pro' } })
+  return { success: true }
+  // auto-emitted on response end
+})
 ```
 
 </code-group>
 
-One log, all context. Everything you need to understand what happened during that request.
+One log, all context. Everything you need to understand what happened.
 
-## Structured Errors
+### Structured Errors
 
-Traditional errors are opaque:
-
-```typescript
-throw new Error('Payment failed')
-```
-
-Structured errors provide actionable context:
+Errors with actionable context: `why` it happened, how to `fix` it, and a `link` to docs:
 
 <code-group>
 
-```typescript [Code]
-// server/api/checkout.post.ts
+```typescript [server/api/checkout.post.ts]
 import { createError } from 'evlog'
 
 throw createError({
@@ -117,8 +122,6 @@ throw createError({
 
 </code-group>
 
-With `why`, `fix`, and `link` fields, anyone debugging (human or AI) can immediately understand the root cause and how to resolve it.
-
 ## Why Context Matters
 
 We're entering an era where AI agents build, debug, and maintain applications. These agents need **structured context** to work effectively:
@@ -133,6 +136,7 @@ Traditional `console.log` and generic `throw new Error()` provide no actionable 
 
 - [Installation](/getting-started/installation) - Install evlog in your project
 - [Quick Start](/getting-started/quick-start) - Get up and running in minutes
+- [Logging Overview](/logging/overview) - Understand the three logging modes in depth
 
 
 

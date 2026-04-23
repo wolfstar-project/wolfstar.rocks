@@ -1,6 +1,6 @@
 # Quick Start
 
-> Get up and running with evlog in minutes. Learn useLogger, createError, parseError, and the log API for wide events and structured errors.
+> Get up and running with evlog in minutes. Learn the log API, createLogger for wide events, useLogger for requests, and structured errors.
 
 This guide covers the core APIs you'll use most often with evlog.
 
@@ -10,26 +10,100 @@ In Nuxt, evlog **auto-imports** all functions (`useLogger`, `log`, `createError`
 
 </callout>
 
-## useLogger (Server-Side)
+## log (Simple Logging)
 
-Use `useLogger(event)` in any Nuxt/Nitro API route to get a request-scoped logger:
+The simplest way to use evlog. Fire-and-forget structured logs, anywhere in your code:
+
+<code-group>
+
+```typescript [Server]
+import { log } from 'evlog'
+
+log.info('auth', 'User logged in')
+log.error({ action: 'payment', error: 'card_declined' })
+log.warn('cache', 'Cache miss')
+```
+
+```bash [Output]
+10:23:45.612 [auth] User logged in
+10:23:45.613 ERROR [my-app] action=payment error=card_declined
+10:23:45.614 [cache] Cache miss
+```
+
+</code-group>
+
+Two call styles:
+
+- **Tagged**: `log.info('tag', 'message')` for quick, readable console output
+- **Structured**: `log.info({ key: value })` for rich events that flow through the drain pipeline
+
+<callout color="neutral" icon="i-lucide-arrow-right">
+
+See the full [Simple Logging](/logging/simple-logging) guide for all patterns and drain integration.
+
+</callout>
+
+## createLogger (Wide Events)
+
+When you need to **accumulate context** across multiple steps of an operation, whether a script, background job, queue worker, or workflow, use `createLogger`:
+
+<code-group>
+
+```typescript [scripts/sync-job.ts]
+import { initLogger, createLogger } from 'evlog'
+
+initLogger({ env: { service: 'sync-worker' } })
+
+const log = createLogger({ jobId: job.id, queue: 'emails' })
+
+log.set({ batch: { size: 50 } })
+log.set({ batch: { processed: 50 } })
+log.emit()
+```
+
+```bash [Output (Pretty)]
+10:23:45.612 INFO [sync-worker] in 1204ms
+  ├─ jobId: job_abc123
+  ├─ queue: emails
+  └─ batch: size=50 processed=50
+```
+
+</code-group>
+
+`createLogger()` accepts any initial context as a plain object. It returns a logger with `set`, `error`, `info`, `warn`, `emit`, and `getContext`.
+
+For HTTP request contexts specifically, use `createRequestLogger()` which pre-populates `method`, `path`, and `requestId`:
+
+```typescript [src/worker.ts]
+import { createRequestLogger } from 'evlog'
+
+const log = createRequestLogger({ method: 'POST', path: '/api/checkout' })
+```
+
+<callout color="info" icon="i-lucide-info">
+
+With `createLogger` and `createRequestLogger`, you must call `log.emit()` manually. In framework integrations, this happens automatically.
+
+</callout>
+
+## useLogger (Retrieve the Request Logger)
+
+When using a framework integration (Nuxt, Hono, Express, etc.), the middleware automatically creates a wide event logger on request start and emits it on response end. `useLogger(event)` retrieves that logger from the request context:
 
 <code-group>
 
 ```typescript [server/api/checkout.post.ts]
+import { useLogger } from 'evlog'
+
 export default defineEventHandler(async (event) => {
-  // Get the request-scoped logger (auto-imported in Nuxt)
   const log = useLogger(event)
 
-  // Accumulate context throughout the request
   log.set({ user: { id: 1, plan: 'pro' } })
   log.set({ cart: { items: 3, total: 9999 } })
 
-  // Process checkout...
   const order = await processCheckout()
   log.set({ orderId: order.id })
 
-  // Logger auto-emits when request ends - nothing else to do!
   return { success: true, orderId: order.id }
 })
 ```
@@ -45,18 +119,18 @@ export default defineEventHandler(async (event) => {
 
 <callout color="success" icon="i-lucide-check">
 
-The logger automatically emits when the request ends. No manual `emit()` call needed.
+`useLogger` doesn't create a logger, the framework middleware already did that. It just retrieves it from the event context so you can add data with `set()`.
 
 </callout>
 
-### When to use useLogger vs createLogger vs log
+### When to use what
 
 <table>
 <thead>
   <tr>
     <th>
       Use <code>
-        useLogger(event)
+        log
       </code>
     </th>
     
@@ -64,11 +138,15 @@ The logger automatically emits when the request ends. No manual `emit()` call ne
       Use <code>
         createLogger()
       </code>
+      
+       / <code>
+        createRequestLogger()
+      </code>
     </th>
     
     <th>
       Use <code>
-        log
+        useLogger(event)
       </code>
     </th>
   </tr>
@@ -77,43 +155,43 @@ The logger automatically emits when the request ends. No manual `emit()` call ne
 <tbody>
   <tr>
     <td>
-      API routes, middleware, server plugins
+      Quick one-off events
     </td>
     
     <td>
-      Scripts, jobs, workers, queues, workflows
+      Scripts, jobs, workers, queues, HTTP without a framework
     </td>
     
     <td>
-      One-off events outside request context
+      API routes with a framework integration
     </td>
   </tr>
   
   <tr>
     <td>
-      When you need to accumulate context in a request
+      No context accumulation needed
     </td>
     
     <td>
-      When you need to accumulate context outside a request
+      Accumulate context over an operation
     </td>
     
     <td>
-      Quick debugging messages
+      Retrieve the request-scoped logger
     </td>
   </tr>
   
   <tr>
-    <td>
-      For wide events (one log per request)
-    </td>
-    
-    <td>
-      For wide events (one log per operation)
-    </td>
-    
     <td>
       Client-side logging
+    </td>
+    
+    <td>
+      Wide events (one log per operation)
+    </td>
+    
+    <td>
+      Access the auto-managed wide event
     </td>
   </tr>
 </tbody>
@@ -133,7 +211,7 @@ export default defineNuxtConfig({
 
   evlog: {
     env: {
-      service: 'default-service', // Fallback service name
+      service: 'default-service',
     },
     routes: {
       '/api/auth/**': { service: 'auth-service' },
@@ -158,8 +236,9 @@ Logs from routes matching these patterns will automatically include the configur
 Override the service name for specific routes using the second parameter of `useLogger`:
 
 ```typescript [server/api/legacy/process.post.ts]
+import { useLogger } from 'evlog'
+
 export default defineEventHandler((event) => {
-  // Explicitly set service name for this handler
   const log = useLogger(event, 'legacy-service')
 
   log.set({ action: 'process_legacy_request' })
@@ -174,57 +253,13 @@ export default defineEventHandler((event) => {
 
 </callout>
 
-## createLogger (Standalone)
-
-Use `createLogger()` when you need a wide event logger outside of an HTTP request context: scripts, background jobs, queue workers, workflows, etc.
-
-<code-group>
-
-```typescript [scripts/sync-job.ts]
-import { initLogger, createLogger } from 'evlog'
-
-initLogger({ env: { service: 'sync-worker' } })
-
-const log = createLogger({ jobId: job.id, queue: 'emails' })
-
-log.set({ batch: { size: 50 } })
-log.set({ batch: { processed: 50 } })
-log.emit() // Manual emit required
-```
-
-```bash [Output (Pretty)]
-10:23:45.612 INFO [sync-worker] in 1204ms
-  ├─ jobId: job_abc123
-  ├─ queue: emails
-  └─ batch: size=50 processed=50
-```
-
-</code-group>
-
-`createLogger()` accepts any initial context as a plain object. It returns the same `RequestLogger` interface (`set`, `error`, `info`, `warn`, `emit`, `getContext`).
-
-For HTTP request contexts specifically, use `createRequestLogger()` which pre-populates `method`, `path`, and `requestId`:
-
-```typescript
-import { createRequestLogger } from 'evlog'
-
-const log = createRequestLogger({ method: 'POST', path: '/api/checkout' })
-```
-
-<callout color="info" icon="i-lucide-info">
-
-In standalone mode (both `createLogger` and `createRequestLogger`), you must call `log.emit()` manually. In Nuxt/Nitro, this happens automatically at request end.
-
-</callout>
-
 ## createError (Structured Errors)
 
 Use `createError()` to throw errors with actionable context:
 
 <code-group>
 
-```typescript [Code]
-// server/api/checkout.post.ts
+```typescript [server/api/checkout.post.ts]
 import { createError } from 'evlog'
 
 throw createError({
@@ -365,6 +400,24 @@ throw createError({
       Original error (if wrapping)
     </td>
   </tr>
+  
+  <tr>
+    <td>
+      <code>
+        internal
+      </code>
+    </td>
+    
+    <td>
+      No
+    </td>
+    
+    <td>
+      Backend-only fields for logs and wide events — never included in HTTP JSON or <code>
+        parseError()
+      </code>
+    </td>
+  </tr>
 </tbody>
 </table>
 
@@ -381,7 +434,6 @@ export async function checkout(cart: Cart) {
   } catch (err) {
     const error = parseError(err)
 
-    // Direct access to all fields
     toast.add({
       title: error.message,
       description: error.why,
@@ -397,33 +449,6 @@ export async function checkout(cart: Cart) {
   }
 }
 ```
-
-## log (Simple Logging)
-
-For quick one-off logs anywhere in your code:
-
-<code-group>
-
-```typescript [Server]
-// server/utils/auth.ts
-log.info('auth', 'User logged in')
-log.error({ action: 'payment', error: 'card_declined' })
-log.warn('cache', 'Cache miss')
-```
-
-```bash [Output]
-10:23:45.612 [auth] User logged in
-10:23:45.613 ERROR [my-app] action=payment error=card_declined
-10:23:45.614 [cache] Cache miss
-```
-
-</code-group>
-
-<callout color="warning" icon="i-lucide-lightbulb">
-
-Prefer wide events (`useLogger`) over simple logs when possible. Use `log` for truly one-off events that don't belong to a request.
-
-</callout>
 
 ## log (Client-Side)
 
@@ -461,67 +486,23 @@ export function useAnalytics() {
 
 </code-group>
 
-In pretty mode (development), client logs appear with colored tags in the browser console:
+<callout color="neutral" icon="i-lucide-arrow-right">
 
-```text
-[my-app] info { action: 'checkout', status: 'success' }
-```
-
-<callout color="info" icon="i-lucide-info">
-
-Client-side `log` is designed for debugging and development. For production analytics, use dedicated services like Plausible, PostHog, or Mixpanel.
+See [Client Logging](/logging/client-logging) for transport configuration, identity context, and browser drain setup.
 
 </callout>
 
-## Wide Event Fields
-
-Every wide event should include context from different layers:
-
-<code-group>
-
-```typescript [Code]
-// server/api/checkout.post.ts
-const log = useLogger(event)
-
-// Request context (often auto-populated)
-log.set({ method: 'POST', path: '/api/checkout' })
-
-// User context
-log.set({ userId: 1, subscription: 'pro' })
-
-// Business context
-log.set({ cart: { items: 3, total: 9999 }, coupon: 'SAVE10' })
-
-// Outcome
-log.set({ status: 200, duration: 234 })
-```
-
-```json [JSON Output (Production)]
-{
-  "level": "info",
-  "method": "POST",
-  "path": "/api/checkout",
-  "userId": 1,
-  "subscription": "pro",
-  "cart": { "items": 3, "total": 9999 },
-  "coupon": "SAVE10",
-  "status": 200,
-  "duration": 234
-}
-```
-
-</code-group>
-
 ## Next Steps
 
-- [Wide Events](/core-concepts/wide-events) - Learn how to design effective wide events
-- [Typed Fields](/core-concepts/typed-fields) - Add compile-time type safety to your wide events
-- [Structured Errors](/core-concepts/structured-errors) - Master error handling with evlog
-- [Best Practices](/core-concepts/best-practices) - Security guidelines and production tips
+- [Logging Overview](/logging/overview): Understand all three logging modes
+- [Wide Events](/logging/wide-events): Learn how to design effective wide events
+- [Typed Fields](/core-concepts/typed-fields): Add compile-time type safety to your wide events
+- [Structured Errors](/logging/structured-errors): Master error handling with evlog
+- [Best Practices](/core-concepts/best-practices): Security guidelines and production tips
 
 
 
 ---
 
-- [Wide Events](/core-concepts/wide-events)
-- [Structured Errors](/core-concepts/structured-errors)
+- [Logging Overview](/logging/overview)
+- [Structured Errors](/logging/structured-errors)

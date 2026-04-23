@@ -1,4 +1,4 @@
-Generate SKILL.md section for "@sentry/nuxt" v10.46.0.
+Generate SKILL.md section for "@sentry/nuxt" v10.49.0.
 
 ## Security
 

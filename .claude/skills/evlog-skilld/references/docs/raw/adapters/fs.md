@@ -31,7 +31,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The File System adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createFsDrain } from 'evlog/fs'
 ```
 
@@ -92,7 +92,7 @@ Logs start appearing in `.evlog/logs/` immediately.
 
 ## File Structure
 
-```text
+```text [.evlog/logs directory layout]
 .evlog/
   logs/
     2026-03-14.jsonl    ← one file per day
@@ -234,7 +234,7 @@ A `.gitignore` is automatically created on first write, inside the `.evlog/` anc
 
 ### Examples
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 // Keep only the last 7 days of logs
 createFsDrain({ maxFiles: 7 })
 
@@ -255,7 +255,7 @@ createFsDrain({ dir: '/var/log/myapp' })
 
 By default, a new file is created each day (`2026-03-14.jsonl`). When `maxSizePerFile` is set, the adapter creates suffixed files when the current file exceeds the limit:
 
-```text
+```text [Rotated log files]
 .evlog/logs/
   2026-03-14.jsonl      ← base file (full)
   2026-03-14.1.jsonl    ← first rotation
@@ -270,7 +270,7 @@ When `maxFiles` is set, the adapter automatically deletes the oldest `.jsonl` fi
 
 Use the FS adapter alongside a network drain for local backup:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 import { createFsDrain } from 'evlog/fs'
 import { createAxiomDrain } from 'evlog/axiom'
 
@@ -286,13 +286,13 @@ const drain = async (ctx) => {
 
 ### Stream in real-time
 
-```bash
+```bash [Terminal]
 tail -f .evlog/logs/2026-03-14.jsonl
 ```
 
 ### Search with jq
 
-```bash
+```bash [Terminal]
 # Find errors
 cat .evlog/logs/2026-03-14.jsonl | jq 'select(.level == "error")'
 
@@ -305,7 +305,7 @@ cat .evlog/logs/2026-03-14.jsonl | jq 'select(.path == "/api/checkout")'
 
 ### Search with grep
 
-```bash
+```bash [Terminal]
 # Find all errors
 grep '"level":"error"' .evlog/logs/2026-03-14.jsonl
 
@@ -317,7 +317,7 @@ grep 'req_abc123' .evlog/logs/*.jsonl
 
 For advanced use cases, use the lower-level write functions:
 
-```typescript
+```typescript [src/index.ts]
 import { writeToFs, writeBatchToFs } from 'evlog/fs'
 
 await writeToFs(event, {

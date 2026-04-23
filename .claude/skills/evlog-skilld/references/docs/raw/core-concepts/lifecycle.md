@@ -1,8 +1,188 @@
-# Request Lifecycle
+# Lifecycle
 
-> Understand the full lifecycle of a request in evlog, from creation to drain. Every step from logger creation, context accumulation, sampling, enrichment, to external delivery.
+> Understand the full lifecycle of an evlog event, from creation to drain. Covers all three modes (simple logging, wide events, request logging), sampling, enrichment, and delivery.
 
-Every request that passes through evlog follows the same pipeline. Understanding this pipeline helps you know exactly when your hooks fire, where context is added, and how events reach your observability platform.
+evlog events follow a pipeline from creation to delivery. The pipeline differs slightly depending on which logging mode you use, but the core stages (emit, sample, enrich, drain) are shared.
+
+## Overview by Mode
+
+<table>
+<thead>
+  <tr>
+    <th>
+      Stage
+    </th>
+    
+    <th>
+      <code>
+        log
+      </code>
+      
+       (simple)
+    </th>
+    
+    <th>
+      <code>
+        createLogger
+      </code>
+      
+       / <code>
+        createRequestLogger
+      </code>
+    </th>
+    
+    <th>
+      Framework middleware
+    </th>
+  </tr>
+</thead>
+
+<tbody>
+  <tr>
+    <td>
+      <strong>
+        Create
+      </strong>
+    </td>
+    
+    <td>
+      Implicit per call
+    </td>
+    
+    <td>
+      <code>
+        createLogger({...})
+      </code>
+      
+       or <code>
+        createRequestLogger({...})
+      </code>
+    </td>
+    
+    <td>
+      Auto on request start
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <strong>
+        Accumulate
+      </strong>
+    </td>
+    
+    <td>
+      N/A (single call)
+    </td>
+    
+    <td>
+      <code>
+        log.set()
+      </code>
+      
+       multiple times
+    </td>
+    
+    <td>
+      <code>
+        log.set()
+      </code>
+      
+       via <code>
+        useLogger(event)
+      </code>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <strong>
+        Emit
+      </strong>
+    </td>
+    
+    <td>
+      Immediate
+    </td>
+    
+    <td>
+      Manual <code>
+        log.emit()
+      </code>
+    </td>
+    
+    <td>
+      Auto on response end
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <strong>
+        Sample
+      </strong>
+    </td>
+    
+    <td>
+      Head sampling only
+    </td>
+    
+    <td>
+      Head + tail sampling
+    </td>
+    
+    <td>
+      Head + tail sampling
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <strong>
+        Enrich
+      </strong>
+    </td>
+    
+    <td>
+      Via global drain
+    </td>
+    
+    <td>
+      Via global drain
+    </td>
+    
+    <td>
+      Via hooks or callbacks
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <strong>
+        Drain
+      </strong>
+    </td>
+    
+    <td>
+      Via global drain
+    </td>
+    
+    <td>
+      Via global drain
+    </td>
+    
+    <td>
+      Via hooks or callbacks
+    </td>
+  </tr>
+</tbody>
+</table>
+
+After **emit** (including when sampling returns no output), the request logger is **sealed**: later `set` / `error` / `info` / `warn` calls are ignored with a console warning. For background work that needs its own event, use **log.fork()** where your integration supports it. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+## Request Logging Pipeline
+
+For framework-managed request logging, every request follows this pipeline. The middleware creates the logger and `useLogger(event)` retrieves it:
 
 ```mdc
 Request In
@@ -67,6 +247,8 @@ Request In
 ### 1. Route Filtering
 
 When a request arrives, evlog checks whether the path matches the configured `include` / `exclude` patterns. If the route is excluded, no logger is created and the request proceeds without any logging overhead.
+
+By default, all routes are logged. Use `include` to restrict logging to specific patterns:
 
 ```typescript [nuxt.config.ts]
 export default defineNuxtConfig({
@@ -161,13 +343,15 @@ For matched routes, evlog creates a `RequestLogger` and attaches it to the reque
 </tbody>
 </table>
 
-The logger is stored on the event context so it's accessible via `useLogger(event)`.
+The logger is stored on the event context. `useLogger(event)` is a shortcut to retrieve it, it doesn't create a new logger.
 
 ### 3. Context Accumulation
 
 During the handler, you call `log.set()` to attach context. Each call deep-merges into the existing context, so you can call it as many times as needed:
 
 ```typescript [server/api/checkout.post.ts]
+import { useLogger } from 'evlog'
+
 const log = useLogger(event)
 
 const user = await getUser(event)
@@ -221,7 +405,9 @@ If any rule or hook sets `shouldKeep = true`, the event **bypasses head sampling
 
 ### 6. Head Sampling
 
-If the event wasn't force-kept by tail sampling, head sampling applies. This is a random coin flip per log level:
+If the event wasn't force-kept by tail sampling, head sampling applies. This is a random coin flip per log level.
+
+By default, all levels are kept at 100% (no sampling). Configure `sampling.rates` to reduce volume in production:
 
 ```typescript [nuxt.config.ts]
 evlog: {
@@ -233,7 +419,7 @@ evlog: {
 
 - `info: 10` - keep 10% of info-level events
 - `warn: 50` - keep 50% of warnings
-- `error` defaults to **100%** (never sampled out)
+- `error` defaults to **100%** (never sampled out, even if you set a rate)
 
 If the event is sampled out, processing stops entirely: no console output, no enrichment, no drain.
 
@@ -241,9 +427,9 @@ If the event is sampled out, processing stops entirely: no console output, no en
 
 The `WideEvent` object is built from the accumulated context:
 
-```json
+```json [WideEvent]
 {
-  "timestamp": "2025-01-15T10:30:00.000Z",
+  "timestamp": "2026-01-15T10:30:00.000Z",
   "level": "info",
   "service": "my-app",
   "method": "POST",
@@ -256,7 +442,7 @@ The `WideEvent` object is built from the accumulated context:
 }
 ```
 
-The event is printed to the console, pretty-formatted in development and as JSON in production.
+The event is printed to the console, pretty-formatted in development and as JSON in production. This is the default behavior, no configuration needed.
 
 ### 8. Enrich (`evlog:enrich`)
 
@@ -626,9 +812,44 @@ Both paths converge at the same emit/enrich/drain pipeline. The only difference 
 </tbody>
 </table>
 
+## Simple Logging Pipeline
+
+When using the `log` singleton, the pipeline is shorter:
+
+1. **Call**: `log.info({ action: 'deploy' })` or `log.info('tag', 'message')`
+2. **Emit**: The event is built and printed immediately
+3. **Drain**: If a global `drain` was configured via `initLogger()`, the event is sent to external services
+
+Tagged logs (`log.info('tag', 'message')`) are console-only in pretty mode. Object-form logs (`log.info({ ... })`) always flow through the drain pipeline.
+
+## Standalone Wide Event Pipeline
+
+When using `createLogger()` outside a framework:
+
+1. **Create**: `createLogger({ jobId: 'sync-001' })`
+2. **Accumulate**: `log.set()`, `log.info()`, `log.warn()`, `log.error()` over the operation
+3. **Emit**: Manual `log.emit()` call
+4. **Sample**: Head sampling applies based on computed level. Tail sampling via `initLogger({ sampling: { keep: [...] } })`
+5. **Drain**: If a global `drain` was configured, the event is sent
+
+```typescript [scripts/migrate.ts]
+import { initLogger, createLogger } from 'evlog'
+import { createAxiomDrain } from 'evlog/axiom'
+
+initLogger({
+  env: { service: 'worker' },
+  drain: createAxiomDrain(),
+  sampling: { rates: { info: 10 } },
+})
+
+const log = createLogger({ task: 'migrate' })
+log.set({ records: 500, status: 'complete' })
+log.emit()
+```
+
 ## Next Steps
 
-- [Wide Events](/core-concepts/wide-events) - Design effective wide events
+- [Wide Events](/logging/wide-events) - Design effective wide events
 - [Sampling](/core-concepts/sampling) - Configure head and tail sampling
 - [Adapters](/adapters/overview) - Send events to external platforms
 - [Enrichers](/enrichers/overview) - Add derived context automatically
@@ -637,5 +858,5 @@ Both paths converge at the same emit/enrich/drain pipeline. The only difference 
 
 ---
 
-- [Wide Events](/core-concepts/wide-events)
+- [Wide Events](/logging/wide-events)
 - [Sampling](/core-concepts/sampling)

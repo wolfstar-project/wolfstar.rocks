@@ -1,12 +1,12 @@
 # React Router
 
-> Using evlog with React Router — automatic wide events, structured errors, drain adapters, enrichers, and tail sampling in React Router applications.
+> Automatic wide events, structured errors, drain adapters, enrichers, and tail sampling in React Router applications.
 
 The `evlog/react-router` middleware auto-creates a request-scoped logger accessible via `context.get(loggerContext)` or `useLogger()` and emits a wide event when the response completes.
 
 <callout color="info" icon="i-lucide-info">
 
-React Router has three modes: **Framework**, **Data**, and **Declarative**. The `evlog/react-router` middleware requires the middleware API, which is available in **Framework** and **Data** modes only. Declarative mode does not support middleware — use `evlog/browser` for client-side logging instead.
+React Router has three modes: **Framework**, **Data**, and **Declarative**. The `evlog/react-router` middleware requires the middleware API, which is available in **Framework** and **Data** modes only. Declarative mode does not support middleware: use `evlog/client` for console logging and `evlog/http` if you need a batched HTTP drain to your server.
 
 </callout>
 
@@ -35,7 +35,7 @@ Adapters: https://www.evlog.dev/adapters/overview
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog react-router @react-router/node @react-router/serve
 ```
 
@@ -149,7 +149,7 @@ export async function findUser(userId: string) {
 }
 ```
 
-Then call the service from your loader — `useLogger()` returns the same logger instance:
+Then call the service from your loader: `useLogger()` returns the same logger instance:
 
 ```typescript [app/routes/users.$id.tsx]
 import { loggerContext } from 'evlog/react-router'
@@ -161,6 +161,25 @@ export async function loader({ params, context }: Route.LoaderArgs) {
 
   const user = await findUser(params.id!)
   return { user }
+}
+```
+
+## Background work (`log.fork`)
+
+The logger from `loggerContext` supports `fork` for child wide events. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+```typescript [app/routes/orders.tsx]
+import { loggerContext } from 'evlog/react-router'
+import { useLogger } from 'evlog/react-router'
+import type { Route } from './+types/orders'
+
+export async function action({ context }: Route.ActionArgs) {
+  const log = context.get(loggerContext)
+  log.fork!('background', async () => {
+    const child = useLogger()
+    child.set({ step: 'complete' })
+  })
+  return { ok: true }
 }
 ```
 
@@ -280,8 +299,8 @@ export const middleware: Route.MiddlewareFunction[] = [
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog
 bun install
 bun run example:react-router
@@ -290,12 +309,19 @@ bun run example:react-router
 Open http://localhost:5173 to explore the interactive test UI.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/react-router">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/react-router">
 
 Browse the complete React Router example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

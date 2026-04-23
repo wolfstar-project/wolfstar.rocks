@@ -26,7 +26,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -133,6 +133,23 @@ export const GET: RequestHandler = async ({ params }) => {
 ```
 
 Both `event.locals.log` and `useLogger()` return the same logger instance. `useLogger()` uses `AsyncLocalStorage` to propagate the logger across async boundaries.
+
+## Background work (`log.fork`)
+
+Use `locals.log.fork(label, fn)` for a child wide event. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+```typescript [src/routes/api/orders/+server.ts]
+import { useLogger } from 'evlog/sveltekit'
+import type { RequestHandler } from './$types'
+
+export const POST: RequestHandler = async ({ locals }) => {
+  locals.log.fork!('process', async () => {
+    const log = useLogger()
+    log.set({ step: 'done' })
+  })
+  return new Response(JSON.stringify({ ok: true }))
+}
+```
 
 ## Error Handling
 
@@ -245,8 +262,8 @@ export const { handle, handleError } = createEvlogHooks({
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog
 bun install
 bun run example:sveltekit
@@ -255,12 +272,21 @@ bun run example:sveltekit
 Open http://localhost:5173 to explore the interactive test UI.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/sveltekit">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/sveltekit">
 
 Browse the complete SvelteKit example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+Deepen your **SvelteKit** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

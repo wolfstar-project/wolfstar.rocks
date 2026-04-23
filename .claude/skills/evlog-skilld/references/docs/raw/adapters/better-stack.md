@@ -26,7 +26,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The Better Stack adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createBetterStackDrain } from 'evlog/better-stack'
 ```
 
@@ -181,7 +181,7 @@ export default defineNuxtConfig({
 
 Pass options directly to override any configuration:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 const drain = createBetterStackDrain({
   sourceToken: 'my-token',
   timeout: 10000,
@@ -307,7 +307,7 @@ Better Stack provides a powerful log search interface:
 
 ### Missing source token error
 
-```text
+```text [Console]
 [evlog/better-stack] Missing source token. Set BETTER_STACK_SOURCE_TOKEN env var or pass to createBetterStackDrain()
 ```
 

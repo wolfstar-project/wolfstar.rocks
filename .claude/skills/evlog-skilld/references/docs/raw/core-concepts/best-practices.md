@@ -104,6 +104,24 @@ Logs are often accessible to your entire team and may be stored in third-party s
 
 </callout>
 
+## Auto-Redaction
+
+The simplest way to protect PII is to enable built-in auto-redaction:
+
+```typescript [nuxt.config.ts]
+evlog: {
+  redact: true,
+}
+```
+
+This automatically masks credit cards (`****1111`), emails (`a***@***.com`), IPs, phone numbers, JWTs, Bearer tokens, and IBANs in all wide events — before console output and before any drain. See [Auto-Redaction](/core-concepts/redaction) for the full configuration reference.
+
+<callout color="success" icon="i-lucide-shield-check">
+
+Auto-redaction is a safety net, not a replacement for careful logging. Always prefer explicit field selection and combine with `redact: true` for defense in depth.
+
+</callout>
+
 ## Sanitization Patterns
 
 ### Manual Field Selection
@@ -111,6 +129,8 @@ Logs are often accessible to your entire team and may be stored in third-party s
 The safest approach is to explicitly select which fields to log:
 
 ```typescript [server/api/user/update.post.ts]
+import { useLogger } from 'evlog'
+
 export default defineEventHandler(async (event) => {
   const log = useLogger(event)
   const body = await readBody(event)
@@ -171,6 +191,8 @@ export function sanitize<T extends Record<string, unknown>>(
 Usage:
 
 ```typescript [server/api/checkout.post.ts]
+import { useLogger } from 'evlog'
+
 export default defineEventHandler(async (event) => {
   const log = useLogger(event)
   const { user, card } = await readBody(event)
@@ -240,6 +262,7 @@ Before deploying to production, verify:
 
 ### Data Security
 
+- [ ] Auto-redaction is enabled (`redact: true`)
 - [ ] No passwords or secrets in logs
 - [ ] No full credit card numbers (only last 4 digits)
 - [ ] No API keys or tokens
@@ -257,7 +280,7 @@ Before deploying to production, verify:
 
 Use consistent, grouped field names across your codebase:
 
-```typescript
+```typescript [server/api/checkout.post.ts]
 // ✅ Good - grouped and descriptive
 log.set({
   user: { id, plan, accountAge },
@@ -456,8 +479,9 @@ Use `$production` override to keep full logging in development while sampling in
 
 ## Next Steps
 
-- [Wide Events](/core-concepts/wide-events) - Design effective wide events
-- [Structured Errors](/core-concepts/structured-errors) - Error handling patterns
+- [Auto-Redaction](/core-concepts/redaction) - Built-in PII protection with smart masking
+- [Wide Events](/logging/wide-events) - Design effective wide events
+- [Structured Errors](/logging/structured-errors) - Error handling patterns
 
 
 

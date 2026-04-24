@@ -111,7 +111,7 @@
 		"@e18e/eslint-plugin": "^0.2.0",
 		"@netlify/nuxt": "^0.2.36",
 		"@nuxt/hints": "^1.0.2",
-		"@nuxt/test-utils": "^4.0.0",
+		"@nuxt/test-utils": "4.0.0",
 		"@sapphire/bitfield": "^1.2.4",
 		"@sapphire/snowflake": "^3.5.5",
 		"@sapphire/time-utilities": "^1.7.14",

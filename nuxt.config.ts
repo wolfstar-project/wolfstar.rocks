@@ -372,7 +372,7 @@ export default defineNuxtConfig({
 
 	ogImage: {
 		security: {
-			maxQueryParamSize: 2048,
+			strict: true,
 		},
 	},
 	// PWA configuration

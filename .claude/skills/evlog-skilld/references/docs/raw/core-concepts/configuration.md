@@ -8,8 +8,9 @@ evlog has two configuration surfaces: **global options** set once at startup, an
 
 These options apply to all frameworks. Call `initLogger()` once at application startup for standalone frameworks (Hono, Express, Fastify, Elysia, NestJS, SvelteKit, Cloudflare Workers). For Nuxt and Nitro, these are set via module config and passed through automatically.
 
-```typescript
+```typescript [src/index.ts]
 import { initLogger } from 'evlog'
+import { createAxiomDrain } from 'evlog/axiom'
 
 initLogger({
   enabled: true,
@@ -17,6 +18,7 @@ initLogger({
   pretty: false,
   silent: false,
   stringify: true,
+  minLevel: 'info',
   sampling: { rates: { info: 10 }, keep: [{ status: 400 }] },
   drain: createAxiomDrain(),
 })
@@ -181,6 +183,38 @@ initLogger({
   <tr>
     <td>
       <code>
+        minLevel
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        'debug' | 'info' | 'warn' | 'error'
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        'debug'
+      </code>
+    </td>
+    
+    <td>
+      Minimum severity for the global <code>
+        log
+      </code>
+      
+       API only (not <code>
+        createLogger
+      </code>
+      
+       / request wide events). Order: debug < info < warn < error
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
         sampling
       </code>
     </td>
@@ -200,6 +234,38 @@ initLogger({
     <td>
       Head and tail sampling configuration. See <a href="/core-concepts/sampling">
         Sampling
+      </a>
+    </td>
+  </tr>
+  
+  <tr>
+    <td>
+      <code>
+        redact
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        boolean | RedactConfig
+      </code>
+    </td>
+    
+    <td>
+      <code>
+        true
+      </code>
+      
+       in production
+    </td>
+    
+    <td>
+      Enabled by default in production. <code>
+        false
+      </code>
+      
+       to disable. Object for fine-grained control. See <a href="/core-concepts/redaction">
+        Auto-Redaction
       </a>
     </td>
   </tr>
@@ -229,6 +295,13 @@ initLogger({
   </tr>
 </tbody>
 </table>
+
+### `minLevel` vs sampling
+
+- **minLevel** is a **hard threshold** on the simple `log.*` API: levels below the threshold are never emitted. It does **not** apply to wide events from `useLogger` / `createLogger().emit()` — use **sampling.rates** (and tail `keep`) for request volume.
+- **Head sampling** (`sampling.rates`) is **probabilistic** on what is already allowed by `minLevel` for simple logs.
+
+Evaluation order for `log.info` / `log.debug` / etc.: `enabled` → `minLevel` → head sampling → output.
 
 ### Environment Context
 
@@ -420,10 +493,13 @@ The `env` option controls the fields included in every log event. Most values ar
 
 Use `silent` when your deployment platform captures stdout as its primary log ingestion (GCP Cloud Run, AWS Lambda, Fly.io, Railway, etc.) and you want a drain adapter to control the output format.
 
-```typescript
+```typescript [src/index.ts]
+import { initLogger } from 'evlog'
+import { createAxiomDrain } from 'evlog/axiom'
+
 initLogger({
   silent: process.env.NODE_ENV === 'production',
-  drain: createCloudLoggingDrain(),
+  drain: createAxiomDrain(),
 })
 ```
 
@@ -645,7 +721,7 @@ await app.register(evlog, {
 
 When a middleware `drain` is set, it takes precedence over the global drain from `initLogger()`. If no middleware drain is set, the global drain is used as fallback, with the benefit of receiving the full enriched event with request context (method, path, headers).
 
-```typescript
+```typescript [src/index.ts]
 import { initLogger } from 'evlog'
 import { createAxiomDrain } from 'evlog/axiom'
 

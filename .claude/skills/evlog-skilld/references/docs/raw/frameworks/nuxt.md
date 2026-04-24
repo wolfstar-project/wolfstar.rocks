@@ -713,3 +713,12 @@ export default defineNuxtConfig({
   },
 })
 ```
+
+## Next Steps
+
+Deepen your **Nuxt** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields

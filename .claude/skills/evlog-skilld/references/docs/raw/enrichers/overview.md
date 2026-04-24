@@ -189,7 +189,7 @@ Write your own enricher for any derived context.
 
 By default, enrichers preserve existing fields. If your application code already sets `event.userAgent`, the enricher won't overwrite it. Pass `{ overwrite: true }` to change this:
 
-```typescript
+```typescript [enricher-factory-options.ts]
 createUserAgentEnricher({ overwrite: true })
 ```
 

@@ -39,7 +39,7 @@ bun add @nuxthub/core @evlog/nuxthub
 
 Or with `nuxi`:
 
-```bash
+```bash [Terminal]
 npx nuxi module add @nuxthub/core @evlog/nuxthub
 ```
 

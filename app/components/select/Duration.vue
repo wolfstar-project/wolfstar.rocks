@@ -5,7 +5,7 @@
 				<UInput
 					v-model="durationString"
 					type="tel"
-					placeholder="Duration"
+					placeholder="10"
 					:color="error ? 'error' : 'primary'"
 					@input="onChangeDuration"
 				/>

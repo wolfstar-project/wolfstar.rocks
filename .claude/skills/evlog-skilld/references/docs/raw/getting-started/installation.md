@@ -1,6 +1,6 @@
 # Install evlog
 
-> Install evlog in your TypeScript project.
+> Install evlog in your TypeScript project. Supports Nuxt, Next.js, SvelteKit, Hono, Express, Fastify, Elysia, NestJS, and standalone scripts.
 
 evlog supports Nuxt, Next.js, SvelteKit, Nitro, NestJS, and any TypeScript server framework.
 
@@ -31,7 +31,7 @@ bun add evlog
 If you use an AI assistant (Claude Code, Cursor, etc.), install the evlog skill for guided setup and code review:
 
 ```bash [Terminal]
-npx skills add hugorcd/evlog
+npx skills add https://www.evlog.dev
 ```
 
 Your AI assistant can then help you set up evlog, review your logging patterns, and migrate existing code to wide events. See [Agent Skills](/getting-started/agent-skills) for details.
@@ -71,7 +71,7 @@ Uses Nitro v3 module with async context.
 
 </card>
 
-<card color="neutral" icon="i-simple-icons-reactrouter" title="React Router" to="/frameworks/react-router">
+<card color="neutral" icon="i-custom-reactrouter" title="React Router" to="/frameworks/react-router">
 
 Middleware with `context.get(loggerContext)`.
 
@@ -133,7 +133,7 @@ evlog requires TypeScript 5.0 or higher for optimal type inference.
 ## Next Steps
 
 - [Quick Start](/getting-started/quick-start) - Learn the core concepts and start using evlog
-- [Wide Events](/core-concepts/wide-events) - Understand the wide event pattern
+- [Wide Events](/logging/wide-events) - Understand the wide event pattern
 - [Adapters](/adapters/overview) - Send logs to Axiom, PostHog, Sentry, and more
 
 

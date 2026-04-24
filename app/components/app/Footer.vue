@@ -56,7 +56,7 @@
 			<ColorModeButton />
 
 			<UButton
-				to="https://github.com/wolfstar-project/wolfstar"
+				to="https://repo.wolfstar.rocks"
 				target="_blank"
 				rel="noopener noreferrer"
 				icon="lucide:github"

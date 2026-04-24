@@ -27,7 +27,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -61,8 +61,8 @@ Next.js supports an `instrumentation.ts` file at the project root for server sta
 
 These two APIs serve different purposes and can be used independently or together:
 
-- **createEvlog()** — per-request wide events via `withEvlog()`
-- **createInstrumentation()** — server startup (`register()`) + unhandled error reporting (`onRequestError()`) across all routes, including SSR and RSC
+- **createEvlog()**: per-request wide events via `withEvlog()`
+- **createInstrumentation()**: server startup (`register()`) + unhandled error reporting (`onRequestError()`) across all routes, including SSR and RSC
 - Both can coexist: `register()` initializes and locks the logger first, so `createEvlog()` respects it. Each can have its own `drain`.
 
 </callout>
@@ -84,7 +84,7 @@ export const { register, onRequestError } = createInstrumentation({
 
 Next.js evaluates `instrumentation.ts` in both Node.js and Edge runtimes. Load your real `lib/evlog.ts` only when `NEXT_RUNTIME === 'nodejs'` so Edge bundles never pull Node-only drains (fs, adapters, etc.).
 
-**Recommended** — `defineNodeInstrumentation` gates the Node runtime, dynamic-imports your module once (cached), and forwards `register` / `onRequestError`:
+**Recommended**: `defineNodeInstrumentation` gates the Node runtime, dynamic-imports your module once (cached), and forwards `register` / `onRequestError`:
 
 ```typescript [instrumentation.ts]
 import { defineNodeInstrumentation } from 'evlog/next/instrumentation'
@@ -92,7 +92,7 @@ import { defineNodeInstrumentation } from 'evlog/next/instrumentation'
 export const { register, onRequestError } = defineNodeInstrumentation(() => import('./lib/evlog'))
 ```
 
-**Manual** — same behavior with explicit handlers; use this if you want full control in the root file (extra branches, per-error logic, or a different import strategy). Without a shared helper, each `onRequestError` typically re-runs `import('./lib/evlog')` unless you add your own cache.
+**Manual**: same behavior with explicit handlers; use this if you want full control in the root file (extra branches, per-error logic, or a different import strategy). Without a shared helper, each `onRequestError` typically re-runs `import('./lib/evlog')` unless you add your own cache.
 
 ```typescript [instrumentation.ts]
 export async function register() {
@@ -114,12 +114,12 @@ export async function onRequestError(
 }
 ```
 
-Both styles are supported: the helper is optional sugar, not a takeover. `defineNodeInstrumentation` only forwards Next’s two hooks to whatever you export from `lib/evlog` — it does not prevent other work in your app.
+Both styles are supported: the helper is optional sugar, not a takeover. `defineNodeInstrumentation` only forwards Next’s two hooks to whatever you export from `lib/evlog`. It does not prevent other work in your app.
 
 ### Custom behavior (evlog + your code)
 
-- **Root instrumentation.ts** — Next’s stable surface here is `register` and `onRequestError`. The evlog helper exports exactly those; it does not reserve the whole file. If you need **additional** top-level exports later (when Next documents them), use the **manual** wiring and compose by hand, or keep evlog’s hooks minimal and put everything else in `lib/evlog.ts`.
-- **lib/evlog.ts (recommended for composition)** — wrap evlog’s handlers so you stay free to add startup work, metrics, or extra logging without fighting the helper:
+- **Root instrumentation.ts**: Next’s stable surface here is `register` and `onRequestError`. The evlog helper exports exactly those; it does not reserve the whole file. If you need **additional** top-level exports later (when Next documents them), use the **manual** wiring and compose by hand, or keep evlog’s hooks minimal and put everything else in `lib/evlog.ts`.
+- **lib/evlog.ts (recommended for composition)**: wrap evlog’s handlers so you stay free to add startup work, metrics, or extra logging without fighting the helper:
 
 ```typescript [lib/evlog.ts]
 import { createInstrumentation } from 'evlog/next/instrumentation'
@@ -144,12 +144,12 @@ export function onRequestError(
 }
 ```
 
-Then keep `instrumentation.ts` as a thin import (`defineNodeInstrumentation` or manual) that only loads `./lib/evlog` on Node — your customization lives next to `createEvlog()` in one place.
+Then keep `instrumentation.ts` as a thin import (`defineNodeInstrumentation` or manual) that only loads `./lib/evlog` on Node. Your customization lives next to `createEvlog()` in one place.
 
 Next.js automatically calls these exports:
 
-- `register()` — Runs once when the server starts. Initializes the evlog logger with your configured drain, sampling, and options. When `captureOutput` is enabled, `stdout` and `stderr` writes are captured as structured log events.
-- `onRequestError()` — Called on every unhandled request error. Emits a structured error log with the error message, digest, stack trace, request path/method, and routing context (`routerKind`, `routePath`, `routeType`, `renderSource`).
+- `register()`: Runs once when the server starts. Initializes the evlog logger with your configured drain, sampling, and options. When `captureOutput` is enabled, `stdout` and `stderr` writes are captured as structured log events.
+- `onRequestError()`: Called on every unhandled request error. Emits a structured error log with the error message, digest, stack trace, request path/method, and routing context (`routerKind`, `routePath`, `routeType`, `renderSource`).
 
 <callout color="info" icon="i-lucide-info">
 
@@ -308,6 +308,23 @@ All fields are merged into a single wide event emitted when the handler complete
   ├─ cart: items=3 total=14999 currency=USD
   ├─ payment: method=card cardLast4=4242
   └─ requestId: a1b2c3d4-...
+```
+
+## Background work (`log.fork`)
+
+Inside `withEvlog`, `useLogger()` returns a logger with **fork** for child wide events. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+```typescript [app/api/orders/route.ts]
+import { withEvlog, useLogger } from '@/lib/evlog'
+
+export const POST = withEvlog(async () => {
+  const log = useLogger()
+  log.fork!('enqueue', async () => {
+    const child = useLogger()
+    child.set({ job: 'queued' })
+  })
+  return Response.json({ ok: true })
+})
 ```
 
 ## Error Handling
@@ -772,15 +789,15 @@ export function Dashboard({ user }: { user: { id: string } }) {
 }
 ```
 
-## Browser Drain
+## HTTP drain
 
 For advanced use cases, send structured `DrainContext` events directly from the browser to a custom endpoint:
 
-```typescript
-import { createBrowserLogDrain } from 'evlog/browser'
+```typescript [lib/http-drain.ts]
+import { createHttpLogDrain } from 'evlog/http'
 
-const drain = createBrowserLogDrain({
-  drain: { endpoint: '/api/evlog/browser-ingest' },
+const drain = createHttpLogDrain({
+  drain: { endpoint: '/api/evlog/http-ingest' },
   pipeline: { batch: { size: 10, intervalMs: 5000 } },
 })
 
@@ -790,7 +807,7 @@ await drain.flush()
 
 The server endpoint receives batched events:
 
-```typescript [app/api/evlog/browser-ingest/route.ts]
+```typescript [app/api/evlog/http-ingest/route.ts]
 export async function POST(request: Request) {
   const events = await request.json()
   // Forward to your drain pipeline, Axiom, etc.
@@ -800,8 +817,8 @@ export async function POST(request: Request) {
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog/examples/nextjs
 bun install
 bun run dev
@@ -810,12 +827,21 @@ bun run dev
 Open http://localhost:3000 to explore the example.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/nextjs">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/nextjs">
 
 Browse the complete Next.js example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+Deepen your **Next.js** integration:
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

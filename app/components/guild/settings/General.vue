@@ -1,5 +1,55 @@
 <template>
-	<GuildSettingsSection title="General Settings">
+	<GuildSettingsSection
+		headingLevel="h1"
+		title="Server Info"
+		description="Your server at a glance. Adjust settings below or explore sections in the sidebar."
+		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
+	>
+		<dl
+			class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4"
+			aria-label="Server statistics"
+		>
+			<div
+				v-for="stat in serverStats"
+				:key="stat.label"
+				class="flex min-w-0 items-baseline justify-between md:justify-start md:gap-2"
+			>
+				<dt class="truncate text-sm font-semibold text-base-content/70 md:text-base">
+					{{ stat.label }}:
+				</dt>
+				<dd class="shrink-0 text-base font-bold text-base-content md:text-lg">
+					{{ stat.value.toLocaleString() }}
+				</dd>
+			</div>
+		</dl>
+
+		<div class="mt-4 flex flex-col items-center gap-3 md:flex-row md:items-start">
+			<UButton
+				color="neutral"
+				variant="link"
+				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
+				@click="copyServerId"
+			>
+				{{ copied ? "Copied!" : "Copy Server ID" }}
+			</UButton>
+			<UButton
+				color="neutral"
+				variant="link"
+				icon="heroicons:question-mark-circle"
+				to="https://discord.gg/gqAnRyUXG8"
+				target="_blank"
+				rel="noopener noreferrer"
+			>
+				Need Help?
+			</UButton>
+		</div>
+	</GuildSettingsSection>
+
+	<GuildSettingsSection
+		title="General Settings"
+		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
+	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
@@ -13,7 +63,7 @@
 					<UInput
 						id="prefix"
 						v-model="state.prefix"
-						placeholder="Enter prefix"
+						placeholder="Select a command prefix"
 						color="primary"
 						class="w-full"
 						aria-describedby="prefix-description character-count"
@@ -35,7 +85,7 @@
 					</template>
 					<template #description>
 						<p id="prefix-description" class="text-sm text-base-content/70">
-							This is your server's prefix, use it to trigger WolfStar commands.
+							The prefix used to trigger WolfStar commands in this server.
 						</p>
 					</template>
 				</UFormField>
@@ -45,7 +95,7 @@
 				<UFormField label="Language" name="language">
 					<template #description>
 						<p id="language-description" class="text-sm text-base-content/70">
-							Select the language you want for this guild
+							The language WolfStar uses for responses in this server.
 						</p>
 					</template>
 					<USelectMenu
@@ -75,13 +125,53 @@ import {
 	GeneralSettingsSchema as schema,
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
+import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
 	languages: string[];
 }>();
 
 const { guildSettings } = useGuildSettings();
+const { guildData } = useGuildData();
 const toast = useToast();
+const { copy, copied } = useClipboard();
+
+const serverStats = computed(() => {
+	const guild = guildData.value;
+	const channels = guild?.channels ?? [];
+	return [
+		{ label: "Members", value: guild?.approximateMemberCount ?? 0 },
+		{
+			label: "Categories",
+			value: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
+		},
+		{
+			label: "Text Channels",
+			value: channels.filter(
+				(c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement,
+			).length,
+		},
+		{
+			label: "Voice Channels",
+			value: channels.filter(
+				(c) => c.type === ChannelType.GuildVoice || c.type === ChannelType.GuildStageVoice,
+			).length,
+		},
+		{ label: "Roles", value: guild?.roles.length ?? 0 },
+	];
+});
+
+function copyServerId() {
+	const id = guildData.value?.id;
+	if (id) {
+		copy(id, {
+			title: "Server ID Copied",
+			description: "The server ID has been copied to your clipboard.",
+			icon: "heroicons:check",
+			color: "success",
+		});
+	}
+}
 
 function mapLanguageKeysToNames(langKey: string): [string] | [string, string] {
 	const supportedLanguagesMap: Record<string, [string] | [string, string]> = {
@@ -153,7 +243,7 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save general settings. ${errorMessage ?? "Please try again."}`,
+		description: `Couldn't save general settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
 		title: "Save Failed",
 	});

@@ -21,7 +21,7 @@ export default defineNitroPlugin((nitroApp) => {
 
 The `evlog:enrich` hook receives an `EnrichContext`:
 
-```typescript
+```typescript [enrich-context.ts]
 interface EnrichContext {
   /** The emitted wide event (mutable) */
   event: WideEvent
@@ -107,7 +107,7 @@ export default defineNitroPlugin((nitroApp) => {
 
 ### Feature Flags
 
-```typescript
+```typescript [server/plugins/evlog-enrich.ts]
 nitroApp.hooks.hook('evlog:enrich', (ctx) => {
   ctx.event.featureFlags = {
     newCheckout: isEnabled('new-checkout'),
@@ -118,7 +118,7 @@ nitroApp.hooks.hook('evlog:enrich', (ctx) => {
 
 ### Response Time Classification
 
-```typescript
+```typescript [server/plugins/evlog-enrich.ts]
 nitroApp.hooks.hook('evlog:enrich', (ctx) => {
   const duration = ctx.event.duration as number | undefined
   if (duration === undefined) return

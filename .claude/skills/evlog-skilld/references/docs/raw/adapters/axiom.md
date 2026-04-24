@@ -26,7 +26,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The Axiom adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createAxiomDrain } from 'evlog/axiom'
 ```
 
@@ -243,7 +243,7 @@ export default defineNuxtConfig({
 
 Pass options directly to override any configuration:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 const drain = createAxiomDrain({
   dataset: 'production-logs',
   timeout: 10000,
@@ -428,7 +428,7 @@ const drain = createAxiomDrain({
 
 evlog sends structured wide events that are perfect for Axiom's APL query language:
 
-```apl
+```apl [Axiom APL queries]
 // Find slow requests
 ['your-dataset']
 | where duration > 1000
@@ -450,7 +450,7 @@ evlog sends structured wide events that are perfect for Axiom's APL query langua
 
 ### Missing dataset or token error
 
-```text
+```text [Console]
 [evlog/axiom] Missing dataset or token. Set AXIOM_DATASET and AXIOM_TOKEN
 ```
 

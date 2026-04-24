@@ -1,4 +1,4 @@
-Generate SKILL.md section for "@sentry/nuxt" v10.46.0.
+Generate SKILL.md section for "@sentry/nuxt" v10.49.0.
 
 ## Security
 
@@ -48,7 +48,7 @@ Find from releases/changelog:
 - **Signature changes** where old code compiles but behaves wrong (changed parameter order, return types, default values)
 - **Breaking changes** in recent versions (v2 → v3 migrations, major version bumps)
 
-Search: `skilld search "deprecated" -p @sentry/nuxt`, `skilld search "breaking" -p @sentry/nuxt`, `skilld search "v10.46" -p @sentry/nuxt`, `skilld search "v10.45" -p @sentry/nuxt`, `skilld search "v10.44" -p @sentry/nuxt`, `skilld search "Features" -p @sentry/nuxt`
+Search: `skilld search "deprecated" -p @sentry/nuxt`, `skilld search "breaking" -p @sentry/nuxt`, `skilld search "v10.49" -p @sentry/nuxt`, `skilld search "v10.48" -p @sentry/nuxt`, `skilld search "v10.47" -p @sentry/nuxt`, `skilld search "Features" -p @sentry/nuxt`
 
 **Scan release history:** Read `./references/releases/_INDEX.md` for a timeline. Focus on [MAJOR] and [MINOR] releases — these contain breaking changes and renamed/deprecated APIs that LLMs trained on older data will get wrong.
 

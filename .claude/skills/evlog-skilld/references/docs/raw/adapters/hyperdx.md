@@ -26,7 +26,7 @@ Framework setup: https://www.evlog.dev/frameworks
 
 The HyperDX adapter comes bundled with evlog:
 
-```typescript
+```typescript [src/index.ts]
 import { createHyperDXDrain } from 'evlog/hyperdx'
 ```
 
@@ -247,7 +247,7 @@ You can also nest keys under `runtimeConfig.evlog.hyperdx`; both match how the a
 
 Pass options directly to override any configuration:
 
-```typescript
+```typescript [server/plugins/evlog-drain.ts]
 const drain = createHyperDXDrain({
   apiKey: process.env.HYPERDX_API_KEY!,
   endpoint: 'https://in-otel.hyperdx.io',
@@ -449,7 +449,7 @@ From HyperDX — OpenTelemetry:
 
 HyperDX documents this collector configuration (HTTP and gRPC exporters):
 
-```yaml
+```yaml [OpenTelemetry HyperDX exporters]
 exporters:
   # HTTP setup
   otlphttp/hdx:
@@ -480,7 +480,7 @@ Use the HyperDX UI to search and explore wide events:
 
 ### Missing apiKey error
 
-```text
+```text [Console]
 [evlog/hyperdx] Missing apiKey. Set HYPERDX_API_KEY or NUXT_HYPERDX_API_KEY, or pass to createHyperDXDrain()
 ```
 

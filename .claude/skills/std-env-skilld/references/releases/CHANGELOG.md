@@ -1,0 +1,433 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See standard-version for commit guidelines.
+
+## v4.1.0
+
+compare changes
+
+###  Enhancements
+
+- **providers:** Detect edgeone-pages ci (b0f8384)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+
+## v4.0.0-rc.1
+
+compare changes
+
+###  Enhancements
+
+- Agent detection (#179)
+- Check `MODE` variable for `isDevelopment` and `isProduction` flags (#114)
+
+###  Performance
+
+- No need to pass env ref (44bab37)
+
+###  Fixes
+
+- Jenkins detection (#171)
+
+###  Refactors
+
+-  Remove env and process shims (d4de8a4)
+-  Improve codebase (653b127)
+- Default `nodeEnv` to `undefined` (c78098a)
+- Remove `toBoolean` util (23bfb8f)
+
+###  Build
+
+-  Esm-only dist (d31cca3)
+
+###  Chore
+
+- Migrate to oxlint, oxfmt and tsgo (3de70cf)
+- Update lockfile (c6e909c)
+- Update (06201cc)
+- Apply automated updates (8f0d79f)
+- Update deps (8168254)
+- Prepare for v4 rc (58118f5)
+
+####  Breaking Changes
+
+-  Remove env and process shims (d4de8a4)
+-  Improve codebase (653b127)
+-  Esm-only dist (d31cca3)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Mark R. Florkowski (@markflorkowski)
+- Gustavo Perdomo <gperdomor@gmail.com>
+
+## v3.10.0
+
+compare changes
+
+###  Enhancements
+
+- Detect `DENO_DEPLOY` for deno deploy EA (#167)
+- Detect google cloud run / job (#161)
+
+###  Refactors
+
+- Stricter type checks (995d525)
+- Improve jsdocs (#166)
+
+###  Build
+
+- Add `type: "module"` to package.json (cb104d3)
+
+###  Chore
+
+- Update dependencies (0a81775)
+- Lint (bd107d6)
+- Remove jiti dependency (f99e26a)
+
+###  Contributors
+
+- Álvaro <alvaro@nxtfwd.com>
+- Pooya Parsa (@pi0)
+
+## v3.9.0
+
+compare changes
+
+###  Enhancements
+
+- Detect cloudflare workers build ci (#156)
+
+###  Chore
+
+- Update deps (4e8f48d)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+
+## v3.8.1
+
+compare changes
+
+###  Fixes
+
+- **providers:** Detect `CODESANDBOX_HOST` (#154)
+
+###  Chore
+
+- Update deps (1124522)
+- Lint (31d957d)
+- Update ci (9a787f3)
+
+###  Contributors
+
+- Daniel Roe (@danielroe)
+- Pooya Parsa (@pi0)
+
+## v3.8.0
+
+compare changes
+
+###  Enhancements
+
+- **provider:** Add deno-deploy (#117)
+- **providers:** Detect `FIREBASE_APP_HOSTING` ci (#146)
+
+###  Build
+
+- Update unbuild (41e7a6a)
+
+###  Chore
+
+- Update lockfile (7528b13)
+- Remove lagon (#109)
+- Update repo (f97a04b)
+- Update deps (6cbedab)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Markthree (@markthree)
+- Maxime Pauvert (@maximepvrt)
+
+## v3.7.0
+
+compare changes
+
+###  Enhancements
+
+- **provider:** Add railway support (#106)
+
+###  Fixes
+
+- Check bun runtime before node (#107)
+
+###  Refactors
+
+- Clarify runtimes and `isNode` behavior (#108)
+
+###  Chore
+
+- **release:** V3.6.0 (33d70be)
+- Update dev dependencies (d865b1b)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Omar <omaraziz.dev@proton.me>
+
+## v3.6.0
+
+compare changes
+
+###  Enhancements
+
+- Add zeabur provider (#93)
+- **providers:** Add codesphere detection (#95)
+
+###  Fixes
+
+- **isColorSupported:** Inverted condition for `TERM=dumb` (#97)
+
+###  Types
+
+- Type `runtime` export (#92)
+
+###  Chore
+
+- **release:** V3.5.0 (e1bfb39)
+- Update lockfile (2685bb6)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Trung Dang (@NamesMT)
+- Conner Bachmann (@Intevel)
+- Yuanlin Lin (@yuaanlin)
+
+## v3.5.0
+
+compare changes
+
+###  Enhancements
+
+- Add `aws_amplify` provider (#91)
+
+###  Chore
+
+- Update dependencies (9addee3)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Kaushik Gnanaskandan <kaushik.subman@gmail.com>
+
+## v3.4.3
+
+compare changes
+
+###  Fixes
+
+- Conditional check for `process.versions?.bun` (#75)
+
+###  Chore
+
+- Update build dependencies (cd6cbf7)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+
+## v3.4.2
+
+compare changes
+
+###  Build
+
+- `es6` compatibiliy for commonjs bundle (#74)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+
+## v3.4.1
+
+compare changes
+
+###  Fixes
+
+- Access `process` from `globalThis` (#73)
+
+###  Contributors
+
+- Patrick Pircher
+
+## v3.4.0
+
+compare changes
+
+###  Enhancements
+
+- Universal `env` shim (#61)
+- **providers:** Detect `VERCEL` and `VERCEL_ENV` (#58)
+- `isColorSupported` flag (b80677b)
+- Expose providerInfo (3c547d8)
+- Platform agnostic process (48b4fc0)
+- **process:** Support `process.versions` (1ad71f6)
+- **env:** Support `import.meta.env` and `Deno.env` (ceb04d5)
+- Export `nodeVersion` and `nodeMajorVersion` (#60)
+- Detect stackblitz using `process.versions.webcontainer` (#63)
+- Detect the underlying runtime (#66)
+
+###  Performance
+
+- Reduce dependency on `process` proxy for flags (0d7b84f)
+- Decouple `nodeENV` from env proxy (89c0411)
+
+###  Fixes
+
+- Add default fallback for platform flag (d71ce85)
+- Update bun runtime detection (#67)
+- Use `globalThis.Bun` for check (ca852ac)
+
+###  Refactors
+
+- Split flags (584e9f4)
+- Improve process and env types (581c674)
+- Cleanup provider detection (3091a5b)
+- **provider:** Remove dependency from `process` shim (c1c5a68)
+- Decouple flags from process shim (6b087e2)
+- Remove `_process` export (ce21499)
+
+###  Build
+
+- Minify dist by default (4e67307)
+
+###  Chore
+
+- Update dev dependencies (c98a7ab)
+- Add autofix ci (d817123)
+- Fix prettierrc (b720e2b)
+- Improve docs (1d4ef96)
+- Add typecheck script (0694e19)
+- Fix internal types and expose `EnvObject` (058abc6)
+- Update title (25ebcfb)
+- Create playground (6d92124)
+- Add bun playground (0a576f2)
+- Update docs (19a7651)
+- Fix ci (4b0ae64)
+- Update unbuild to v2 (23cb666)
+- Update node playground to jiti (12efa68)
+- Split global types (ec4c8f7)
+
+###  Styles
+
+- Format with prettier v3 (d198921)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Tom Lienard (@QuiiBz)
+- Nozomu Ikuta
+
+## v3.3.3
+
+compare changes
+
+###  Fixes
+
+- **pkg:** Add `types` field to the `exports` (#51)
+- Support static `process.env.NODE_ENV` (#45)
+
+###  Chore
+
+- Fix coverage test (92152a1)
+- Git ignore `coverage` dir (cd52a9e)
+- Lint (3832bcd)
+- Update dev dependencies (acd471d)
+
+###  Tests
+
+- Add defaults test (17009d9)
+- Expect any provider (a7d8c43)
+
+###  Contributors
+
+- Pooya Parsa (@pi0)
+- Ntnyq (@ntnyq)
+
+## v3.3.2
+
+###  Fixes
+
+- Detect `isTest` from `NODE_ENV` as well (#39)
+
+###  Chore
+
+- Update dev dependencies (cdb65ab)
+- Use changelogen for release (62b8d85)
+
+###  Styles
+
+- Format with prettier (0469d74)
+
+###  Contributors
+
+- Pooya Parsa <pooya@pi0.io>
+- Daniel Roe <daniel@roe.dev>
+
+### 3.3.1 (2022-11-14)
+
+## 3.3.0 (2022-10-15)
+
+### Features
+
+- detect cleavr provider (#36) (c24c8ed)
+
+### 3.2.1 (2022-08-12)
+
+## 3.2.0 (2022-08-12)
+
+### Features
+
+- detect `cloudflare_pages` provider (#31) (411b3c0)
+
+### 3.1.1 (2022-04-15)
+
+### Bug Fixes
+
+- **pkg:** emit cjs dist (a64d409)
+
+## 3.1.0 (2022-04-15)
+
+### Features
+
+- detect stormkit environment (#21) (88874af)
+
+### 3.0.1 (2021-11-05)
+
+### Bug Fixes
+
+- set `ci: false` for unkown envs (2d5a646)
+
+## 3.0.0 (2021-11-03)
+
+### Bug Fixes
+
+- provider name type (5681ed4)
+- type fix (4bac82a)
+
+## 3.0.0-0 (2021-11-02)
+
+###  BREAKING CHANGES
+
+- v3 rewrite (#15)
+
+### Features
+
+- v3 rewrite (#15) (7a3d4fb)
+
+### 2.3.1 (2021-09-29)

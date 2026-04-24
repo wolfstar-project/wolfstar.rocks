@@ -26,7 +26,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog
 ```
 
@@ -75,7 +75,7 @@ evlog provides two manual logger constructors:
 
 **createLogger(context)** - For non-HTTP contexts (scripts, CLI, queues):
 
-```typescript
+```typescript [scripts/job.ts]
 import { createLogger } from 'evlog'
 
 const log = createLogger({ jobId: 'migrate-001', source: 'postgres' })
@@ -85,7 +85,7 @@ log.emit()
 
 **createRequestLogger(requestMeta)** - For HTTP-like contexts where you want method/path/status tracking:
 
-```typescript
+```typescript [scripts/webhook-handler.ts]
 import { createRequestLogger } from 'evlog'
 
 const log = createRequestLogger({
@@ -166,7 +166,7 @@ See the [Configuration reference](/core-concepts/configuration) for all availabl
 
 Configure drain in `initLogger`:
 
-```typescript
+```typescript [scripts/init-logger.ts]
 import type { DrainContext } from 'evlog'
 import { initLogger } from 'evlog'
 import { createAxiomDrain } from 'evlog/axiom'
@@ -195,3 +195,10 @@ See the [Adapters](/adapters/overview) docs for all available drain adapters (Ax
 See the full bun-script example for a complete working script.
 
 </callout>
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields

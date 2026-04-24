@@ -72,15 +72,17 @@ Head sampling is random. A `10%` rate means roughly 1 in 10 info logs are kept, 
 
 Head sampling is blind: it doesn't know if a request was slow, failed, or hit a critical path. Tail sampling fixes this by evaluating **after** the request completes and force-keeping logs that match specific conditions.
 
-```typescript
-// Works the same across all frameworks
-sampling: {
-  rates: { info: 10 },
-  keep: [
-    { status: 400 },              // HTTP status >= 400
-    { duration: 1000 },           // Request took >= 1s
-    { path: '/api/payments/**' }, // Critical path (glob)
-  ],
+```typescript [nuxt.config.ts]
+// Sampling config, works the same across all frameworks
+evlog: {
+  sampling: {
+    rates: { info: 10 },
+    keep: [
+      { status: 400 },              // HTTP status >= 400
+      { duration: 1000 },           // Request took >= 1s
+      { path: '/api/payments/**' }, // Critical path (glob)
+    ],
+  },
 }
 ```
 
@@ -473,11 +475,11 @@ In Nuxt, use the `$production` override to keep full logging in development whil
 ## Next Steps
 
 - [Best Practices](/core-concepts/best-practices) - Security and production checklist
-- [Wide Events](/core-concepts/wide-events) - Design effective wide events
+- [Wide Events](/logging/wide-events) - Design effective wide events
 
 
 
 ---
 
 - [Best Practices](/core-concepts/best-practices)
-- [Wide Events](/core-concepts/wide-events)
+- [Wide Events](/logging/wide-events)

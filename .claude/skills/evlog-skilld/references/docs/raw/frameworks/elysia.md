@@ -27,7 +27,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog elysia
 ```
 
@@ -116,6 +116,24 @@ app.get('/users/:id', async ({ params }) => {
 ```
 
 Both `log` in context and `useLogger()` return the same logger instance. `useLogger()` uses `AsyncLocalStorage` to propagate the logger across async boundaries.
+
+## Background work (`log.fork`)
+
+Use `log.fork(label, fn)` from the route context for a child wide event. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+```typescript [src/index.ts]
+import { evlog, useLogger } from 'evlog/elysia'
+
+app
+  .use(evlog())
+  .post('/orders', ({ log }) => {
+    log.fork!('ship', async () => {
+      const l = useLogger()
+      l.set({ shipped: true })
+    })
+    return { ok: true }
+  })
+```
 
 ## Error Handling
 
@@ -235,15 +253,15 @@ app.use(evlog({
 
 ## Client-Side Logging
 
-Use `evlog/browser` to send structured logs from any frontend to your Elysia server. This works with any client framework (React, Vue, Svelte, vanilla JS).
+Use `evlog/http` to send structured logs from any frontend to your Elysia server. This works with any client framework (React, Vue, Svelte, vanilla JS).
 
 ### Browser setup
 
 ```typescript [client.ts]
 import { initLogger, log } from 'evlog'
-import { createBrowserLogDrain } from 'evlog/browser'
+import { createHttpLogDrain } from 'evlog/http'
 
-const drain = createBrowserLogDrain({
+const drain = createHttpLogDrain({
   drain: { endpoint: '/v1/ingest' },
 })
 initLogger({ drain })
@@ -269,14 +287,14 @@ app.post('/v1/ingest', async ({ body }) => {
 
 <callout color="neutral" icon="i-lucide-globe">
 
-See the full [Browser Drain](/adapters/browser) adapter docs for batching, retry, sendBeacon fallback, and authentication options.
+See the full [HTTP drain](/adapters/http) adapter docs for batching, retry, sendBeacon fallback, and authentication options.
 
 </callout>
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog
 bun install
 bun run example:elysia
@@ -285,12 +303,19 @@ bun run example:elysia
 Open http://localhost:3000 to explore the interactive test UI.
 
 <card-group>
-<card icon="i-custom-elysia" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/elysia">
+<card icon="i-custom-elysia" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/elysia">
 
 Browse the complete Elysia example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

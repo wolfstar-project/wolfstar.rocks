@@ -55,7 +55,7 @@
 									Filter {{ state.selfmodFilterEnabled ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Whether or not this system should be enabled.
+									Blocks messages containing specific words or phrases.
 								</p>
 							</div>
 						</div>
@@ -73,7 +73,7 @@
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Toggle message alerts in the channel the infraction took place.
+									Posts an alert in the channel where the violation occurred.
 								</p>
 							</div>
 						</div>
@@ -91,7 +91,7 @@
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Toggle message logs in the moderation logs channel.
+									Sends a log entry to the moderation logs channel.
 								</p>
 							</div>
 						</div>
@@ -108,7 +108,9 @@
 								<p class="text-sm leading-none font-medium">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">Toggle message deletions.</p>
+								<p class="mt-1 text-xs text-muted">
+									Automatically deletes the offending message.
+								</p>
 							</div>
 						</div>
 					</UFormField>
@@ -122,8 +124,8 @@
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<UFormField
 						label="Action"
-						name="selfmodCapitalsHardAction"
-						description="The action to perform as punishment"
+						name="selfmodFilterHardAction"
+						description="What happens when a member exceeds the limit"
 					>
 						<USelectMenu
 							v-model="selectedHardAction"
@@ -136,7 +138,7 @@
 					<UFormField
 						label="Duration"
 						name="hardActionDurationMs"
-						description="How long the punishment should last"
+						description="How long the mute or ban lasts"
 					>
 						<SelectDuration
 							v-model="state.hardActionDurationMs"
@@ -149,7 +151,7 @@
 				<div class="mt-4 space-y-5">
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Maximum Threshold
+							Violations before punishment
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodFilterThresholdMaximum }})</span
 							>
@@ -158,7 +160,7 @@
 							v-model="state.selfmodFilterThresholdMaximum"
 							:min="0"
 							:max="60"
-							aria-label="Words selfmod filter maximum threshold slider"
+							aria-label="Words filter violations before punishment slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0</span>
@@ -168,7 +170,7 @@
 
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Threshold Duration (in seconds)
+							Time window (seconds)
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodFilterThresholdDurationSeconds }}s)</span
 							>
@@ -177,7 +179,7 @@
 							v-model="state.selfmodFilterThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Word selfmod filter threshold duration slider"
+							aria-label="Word filter time window (seconds) slider"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>
@@ -345,7 +347,7 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save word filter settings. ${errorMessage ?? "Please try again."}`,
+		description: `Couldn't save word filter settings. ${errorMessage ?? "Please try again."}`,
 		icon: "heroicons:x-circle",
 		title: "Save Failed",
 	});

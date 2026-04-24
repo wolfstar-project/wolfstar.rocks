@@ -27,7 +27,7 @@ Adapters: https://www.evlog.dev/adapters
 
 ### 1. Install
 
-```bash
+```bash [Terminal]
 bun add evlog fastify
 ```
 
@@ -120,6 +120,22 @@ app.get('/users/:id', async (request) => {
 ```
 
 Both `request.log` and `useLogger()` return the same logger instance. `useLogger()` uses `AsyncLocalStorage` to propagate the logger across async boundaries.
+
+## Background work (`log.fork`)
+
+Use `request.log.fork(label, fn)` for async work that should emit a **separate** child wide event after the response. See [Wide events — After emit](/logging/wide-events#after-emit-sealing-and-background-work).
+
+```typescript [src/index.ts]
+import { evlog, useLogger } from 'evlog/fastify'
+
+app.post('/orders', async (request, reply) => {
+  request.log.fork!('fulfill', async () => {
+    const log = useLogger()
+    log.set({ step: 'ok' })
+  })
+  return { ok: true }
+})
+```
 
 ## Error Handling
 
@@ -234,8 +250,8 @@ await app.register(evlog, {
 
 ## Run Locally
 
-```bash
-git clone https://github.com/HugoRCD/evlog.git
+```bash [Terminal]
+git clone https://github.com/hugorcd/evlog.git
 cd evlog
 bun install
 bun run example:fastify
@@ -244,12 +260,19 @@ bun run example:fastify
 Open http://localhost:3000 to explore the interactive test UI.
 
 <card-group>
-<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/HugoRCD/evlog/tree/main/examples/fastify">
+<card icon="i-simple-icons-github" title="Source Code" to="https://github.com/hugorcd/evlog/tree/main/examples/fastify">
 
 Browse the complete Fastify example source on GitHub.
 
 </card>
 </card-group>
+
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design comprehensive events with context layering
+- [Adapters](/adapters/overview): Send logs to Axiom, Sentry, PostHog, and more
+- [Sampling](/core-concepts/sampling): Control log volume with head and tail sampling
+- [Structured Errors](/logging/structured-errors): Throw errors with `why`, `fix`, and `link` fields
 
 
 

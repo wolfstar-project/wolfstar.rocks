@@ -1,0 +1,9056 @@
+discord-api-types/v10 | API | discord-api-types documentation
+
+[Skip to main content](#__docusaurus_skipToContent_fallback)
+
+ discord-api-types Introduction to the module
+
+API
+
+- next 
+- 0.38.42
+
+GitHub
+
+Search
+
+- API v10
+- API v9
+- Global Types
+- Voice v4
+- Voice v8
+
+This is documentation for an unreleased version. For the latest API, see version **0.38.42**.
+
+- Home page
+
+Version: Next
+
+On this page
+
+# discord-api-types/v10
+
+## Index [__](#Index)
+
+### References
+
+- __FormattingPatterns
+- __Permissions
+- __Snowflake
+
+### Namespaces
+
+- __Utils
+
+### Enumerations
+
+- __ActivityFlags
+- __ActivityLocationKind
+- __ActivityPlatform
+- __ActivityType
+- __AllowedMentionsTypes
+- __ApplicationCommandOptionType
+- __ApplicationCommandPermissionType
+- __ApplicationCommandType
+- __ApplicationFlags
+- __ApplicationIntegrationType
+- __ApplicationRoleConnectionMetadataType
+- __ApplicationWebhookEventStatus
+- __ApplicationWebhookEventType
+- __ApplicationWebhookType
+- __AttachmentFlags
+- __AuditLogEvent
+- __AuditLogOptionsType
+- __AutoModerationActionType
+- __AutoModerationRuleEventType
+- __AutoModerationRuleKeywordPresetType
+- __AutoModerationRuleTriggerType
+- __BaseThemeType
+- __ButtonStyle
+- __ChannelFlags
+- __ChannelType
+- __ComponentType
+- __ConnectionService
+- __ConnectionVisibility
+- __EmbedType
+- __EntitlementOwnerType
+- __EntitlementType
+- __EntryPointCommandHandlerType
+- __ForumLayoutType
+- __GatewayCloseCodes
+- __GatewayDispatchEvents
+- __GatewayIntentBits
+- __GatewayOpcodes
+- __GuildDefaultMessageNotifications
+- __GuildExplicitContentFilter
+- __GuildFeature
+- __GuildHubType
+- __GuildMemberFlags
+- __GuildMFALevel
+- __GuildNSFWLevel
+- __GuildOnboardingMode
+- __GuildOnboardingPromptType
+- __GuildPremiumTier
+- __GuildScheduledEventEntityType
+- __GuildScheduledEventPrivacyLevel
+- __GuildScheduledEventRecurrenceRuleFrequency
+- __GuildScheduledEventRecurrenceRuleMonth
+- __GuildScheduledEventRecurrenceRuleWeekday
+- __GuildScheduledEventStatus
+- __GuildSystemChannelFlags
+- __GuildVerificationLevel
+- __GuildWidgetStyle
+- __ImageFormat
+- __IntegrationExpireBehavior
+- __InteractionContextType
+- __InteractionResponseType
+- __InteractionType
+- __InviteFlags
+- __InviteTargetType
+- __InviteType
+- __Locale
+- __MembershipScreeningFieldType
+- __MessageActivityType
+- __MessageFlags
+- __MessageReferenceType
+- __MessageSearchAuthorType
+- __MessageSearchEmbedType
+- __MessageSearchHasType
+- __MessageSearchSortMode
+- __MessageType
+- __NameplatePalette
+- __OAuth2Scopes
+- __OverwriteType
+- __PollLayoutType
+- __PresenceUpdateStatus
+- __ReactionType
+- __RelationshipType
+- __RESTJSONErrorCodes
+- __RoleFlags
+- __RPCCloseEventCodes
+- __RPCCommands
+- __RPCDeviceType
+- __RPCErrorCodes
+- __RPCEvents
+- __RPCVoiceSettingsModeType
+- __RPCVoiceShortcutKeyComboKeyType
+- __SelectMenuDefaultValueType
+- __SeparatorSpacingSize
+- __SKUFlags
+- __SKUType
+- __SortOrderType
+- __StageInstancePrivacyLevel
+- __StatusDisplayType
+- __StickerFormatType
+- __StickerType
+- __SubscriptionStatus
+- __TeamMemberMembershipState
+- __TeamMemberRole
+- __TextInputStyle
+- __ThreadAutoArchiveDuration
+- __ThreadMemberFlags
+- __UnfurledMediaItemLoadingState
+- __UserFlags
+- __UserPremiumType
+- __VideoQualityMode
+- __VoiceChannelEffectSendAnimationType
+- __VoiceConnectionStates
+- __WebhookType
+
+### Interfaces
+
+- ___BaseBasePayload
+- ___BasePayload
+- ___DataPayload
+- ___NonDispatchPayload
+- __APIActionRowComponent
+- __APIActivityInstance
+- __APIActivityLocation
+- __APIAllowedMentions
+- __APIApplication
+- __APIApplicationCommand
+- __APIApplicationCommandAutocompleteResponse
+- __APIApplicationCommandChannelOption
+- __APIApplicationCommandIntegerOptionBase
+- __APIApplicationCommandInteractionDataIntegerOption
+- __APIApplicationCommandInteractionDataNumberOption
+- __APIApplicationCommandInteractionDataStringOption
+- __APIApplicationCommandInteractionDataSubcommandGroupOption
+- __APIApplicationCommandInteractionDataSubcommandOption
+- __APIApplicationCommandInteractionMetadata
+- __APIApplicationCommandNumberOptionBase
+- __APIApplicationCommandOptionBase
+- __APIApplicationCommandOptionChoice
+- __APIApplicationCommandPermission
+- __APIApplicationCommandStringOptionBase
+- __APIApplicationCommandSubcommandGroupOption
+- __APIApplicationCommandSubcommandOption
+- __APIApplicationInstallParams
+- __APIApplicationIntegrationTypeConfiguration
+- __APIApplicationRoleConnection
+- __APIApplicationRoleConnectionMetadata
+- __APIAttachment
+- __APIAuditLog
+- __APIAuditLogChangeData
+- __APIAuditLogEntry
+- __APIAuditLogOptions
+- __APIAutocompleteApplicationCommandInteractionData
+- __APIAutoModerationAction
+- __APIAutoModerationActionMetadata
+- __APIAutoModerationRule
+- __APIAutoModerationRuleTriggerMetadata
+- __APIAvatarDecorationData
+- __APIBan
+- __APIBaseApplicationCommandInteractionData
+- __APIBaseAutoPopulatedSelectMenuComponent
+- __APIBaseComponent
+- __APIBaseGuild
+- __APIBaseGuildMember
+- __APIBaseInteraction
+- __APIBaseInteractionMetadata
+- __APIBaseMessage
+- __APIBaseMessageNoChannel
+- __APIBaseModalSubmitComponent
+- __APIBasePartialChannel
+- __APIBasePoll
+- __APIBasePollAnswer
+- __APIBaseSelectMenuComponent
+- __APIBaseVoiceGuildMember
+- __APIBaseVoiceState
+- __APIButtonBase
+- __APIButtonComponentBase
+- __APIButtonComponentWithCustomId
+- __APIButtonComponentWithSKUId
+- __APIButtonComponentWithURL
+- __APIChannelBase
+- __APIChannelMention
+- __APIChannelSelectComponent
+- __APIChatInputApplicationCommandInteractionData
+- __APICheckboxComponent
+- __APICheckboxGroupComponent
+- __APICheckboxGroupOption
+- __APICollectibles
+- __APICommandAutocompleteInteractionResponseCallbackData
+- __APIConnection
+- __APIContainerComponent
+- __APIDMChannel
+- __APIDMChannelBase
+- __APIEmbed
+- __APIEmbedAuthor
+- __APIEmbedField
+- __APIEmbedFooter
+- __APIEmbedImage
+- __APIEmbedProvider
+- __APIEmbedThumbnail
+- __APIEmbedVideo
+- __APIEmoji
+- __APIEntitlement
+- __APIExtendedInvite
+- __APIExternalGuildScheduledEvent
+- __APIFileComponent
+- __APIFileUploadComponent
+- __APIFlaggedGuildMember
+- __APIFollowedChannel
+- __APIGatewayBotInfo
+- __APIGatewayInfo
+- __APIGatewaySessionStartLimit
+- __APIGroupDMChannel
+- __APIGuild
+- __APIGuildApplicationCommandPermissions
+- __APIGuildCategoryChannel
+- __APIGuildChannel
+- __APIGuildForumChannel
+- __APIGuildForumDefaultReactionEmoji
+- __APIGuildForumTag
+- __APIGuildIntegration
+- __APIGuildIntegrationApplication
+- __APIGuildMember
+- __APIGuildMemberAvatar
+- __APIGuildMemberJoined
+- __APIGuildMemberNoUser
+- __APIGuildMembershipScreening
+- __APIGuildMembershipScreeningField
+- __APIGuildMemberUser
+- __APIGuildOnboarding
+- __APIGuildOnboardingPrompt
+- __APIGuildOnboardingPromptOption
+- __APIGuildPreview
+- __APIGuildScheduledEventBase
+- __APIGuildScheduledEventEntityMetadata
+- __APIGuildScheduledEventRecurrenceRule
+- __APIGuildScheduledEventRecurrenceRuleNWeekday
+- __APIGuildScheduledEventUser
+- __APIGuildTextChannel
+- __APIGuildWelcomeScreen
+- __APIGuildWelcomeScreenChannel
+- __APIGuildWidget
+- __APIGuildWidgetChannel
+- __APIGuildWidgetMember
+- __APIGuildWidgetSettings
+- __APIIncidentsData
+- __APIIntegrationAccount
+- __APIInteractionDataOptionBase
+- __APIInteractionDataResolved
+- __APIInteractionDataResolvedChannelBase
+- __APIInteractionDataResolvedGuildMember
+- __APIInteractionGuildMember
+- __APIInteractionResponseChannelMessageWithSource
+- __APIInteractionResponseDeferredChannelMessageWithSource
+- __APIInteractionResponseDeferredMessageUpdate
+- __APIInteractionResponseLaunchActivity
+- __APIInteractionResponsePong
+- __APIInteractionResponseUpdateMessage
+- __APIInvite
+- __APIInviteChannel
+- __APIInviteStageInstance
+- __APILabelComponent
+- __APIMediaGalleryComponent
+- __APIMediaGalleryItem
+- __APIMessage
+- __APIMessageActivity
+- __APIMessageApplicationCommandInteractionData
+- __APIMessageApplicationCommandInteractionDataResolved
+- __APIMessageCall
+- __APIMessageChannelSelectInteractionData
+- __APIMessageComponentBaseInteractionData
+- __APIMessageComponentEmoji
+- __APIMessageComponentInteractionMetadata
+- __APIMessageInteraction
+- __APIMessageMentionableSelectInteractionData
+- __APIMessageMentions
+- __APIMessagePin
+- __APIMessageReference
+- __APIMessageRoleSelectInteractionData
+- __APIMessageRoleSubscriptionData
+- __APIMessageSearchIndexNotReadyResponse
+- __APIMessageSearchResult
+- __APIMessageSharedClientTheme
+- __APIMessageSnapshot
+- __APIMessageStringSelectInteractionData
+- __APIMessageUserSelectInteractionData
+- __APIModalInteractionResponse
+- __APIModalInteractionResponseCallbackData
+- __APIModalSubmission
+- __APIModalSubmitChannelSelectComponent
+- __APIModalSubmitCheckboxComponent
+- __APIModalSubmitCheckboxGroupComponent
+- __APIModalSubmitFileUploadComponent
+- __APIModalSubmitInteractionMetadata
+- __APIModalSubmitMentionableSelectComponent
+- __APIModalSubmitRadioGroupComponent
+- __APIModalSubmitRoleSelectComponent
+- __APIModalSubmitStringSelectComponent
+- __APIModalSubmitTextInputComponent
+- __APIModalSubmitUserSelectComponent
+- __APINameableChannel
+- __APINameplateData
+- __APIOverwrite
+- __APIPartialChannel
+- __APIPartialEmoji
+- __APIPartialGuild
+- __APIPartialInteractionGuild
+- __APIPinChannel
+- __APIPoll
+- __APIPollAnswer
+- __APIPollAnswerCount
+- __APIPollDefaults
+- __APIPollMedia
+- __APIPollResults
+- __APIPremiumRequiredInteractionResponse
+- __APIRadioGroupComponent
+- __APIRadioGroupOption
+- __APIReaction
+- __APIReactionCountDetails
+- __APIRole
+- __APIRoleColors
+- __APIRoleTags
+- __APISectionComponent
+- __APISelectMenuDefaultValue
+- __APISelectMenuOption
+- __APISeparatorComponent
+- __APISKU
+- __APISlowmodeChannel
+- __APISortableChannel
+- __APISoundboardSound
+- __APIStageInstance
+- __APIStageInstanceGuildScheduledEvent
+- __APISticker
+- __APIStickerPack
+- __APIStringSelectComponent
+- __APISubscription
+- __APITeam
+- __APITeamMember
+- __APITemplate
+- __APITemplateSerializedSourceGuild
+- __APITextBasedChannel
+- __APITextDisplayComponent
+- __APITextInputComponent
+- __APIThreadChannel
+- __APIThreadList
+- __APIThreadMember
+- __APIThreadMetadata
+- __APIThreadOnlyChannel
+- __APIThumbnailComponent
+- __APIUnavailableGuild
+- __APIUnfurledMediaItem
+- __APIUser
+- __APIUserApplicationCommandInteractionData
+- __APIUserPrimaryGuild
+- __APIUserWithMember
+- __APIVoiceChannelBase
+- __APIVoiceGuildScheduledEvent
+- __APIVoiceRegion
+- __APIVoiceState
+- __APIWebhook
+- __APIWebhookEventApplicationAuthorizedData
+- __APIWebhookEventApplicationDeauthorizedData
+- __APIWebhookEventBase
+- __APIWebhookEventEventBase
+- __BaseRPCCertifiedDevice
+- __BaseRPCMessage
+- __CDNQuery
+- __CDNRoutesDeclarations
+- __GatewayActivity
+- __GatewayActivityAssets
+- __GatewayActivityButton
+- __GatewayActivityParty
+- __GatewayActivitySecrets
+- __GatewayActivityTimestamps
+- __GatewayApplicationCommandPermissionsUpdateDispatchData
+- __GatewayAutoModerationActionExecutionDispatchData
+- __GatewayChannelPinsUpdateDispatchData
+- __GatewayGuildAuditLogEntryCreateDispatchData
+- __GatewayGuildBanModifyDispatchData
+- __GatewayGuildCreateDispatchData
+- __GatewayGuildDeleteDispatchData
+- __GatewayGuildEmojisUpdateDispatchData
+- __GatewayGuildIntegrationsUpdateDispatchData
+- __GatewayGuildMemberAddDispatchData
+- __GatewayGuildMemberRemoveDispatchData
+- __GatewayGuildMembersChunkDispatchData
+- __GatewayGuildMembersChunkPresence
+- __GatewayGuildMemberUpdateDispatchData
+- __GatewayGuildRoleDeleteDispatchData
+- __GatewayGuildRoleModifyDispatchData
+- __GatewayGuildScheduledEventUserAddDispatchData
+- __GatewayGuildScheduledEventUserRemoveDispatchData
+- __GatewayGuildSoundboardSoundDeleteDispatchData
+- __GatewayGuildSoundboardSoundsUpdateDispatchData
+- __GatewayGuildStickersUpdateDispatchData
+- __GatewayHeartbeat
+- __GatewayHeartbeatAck
+- __GatewayHeartbeatRequest
+- __GatewayHello
+- __GatewayHelloData
+- __GatewayIdentify
+- __GatewayIdentifyData
+- __GatewayIdentifyProperties
+- __GatewayIntegrationDeleteDispatchData
+- __GatewayInvalidSession
+- __GatewayInviteCreateDispatchData
+- __GatewayInviteDeleteDispatchData
+- __GatewayMessageCreateDispatchData
+- __GatewayMessageDeleteBulkDispatchData
+- __GatewayMessageDeleteDispatchData
+- __GatewayMessageEventExtraFields
+- __GatewayMessagePollVoteDispatchData
+- __GatewayMessageReactionAddDispatchData
+- __GatewayMessageReactionRemoveData
+- __GatewayMessageReactionRemoveDispatchData
+- __GatewayMessageReactionRemoveEmojiDispatchData
+- __GatewayMessageUpdateDispatchData
+- __GatewayOpcodeRateLimitMetadataMap
+- __GatewayPresenceClientStatus
+- __GatewayPresenceUpdate
+- __GatewayPresenceUpdateData
+- __GatewayRateLimitedDispatchData
+- __GatewayReadyDispatchData
+- __GatewayReconnect
+- __GatewayRequestGuildMemberRateLimitMetadata
+- __GatewayRequestGuildMembers
+- __GatewayRequestGuildMembersDataBase
+- __GatewayRequestGuildMembersDataWithQuery
+- __GatewayRequestGuildMembersDataWithUserIds
+- __GatewayRequestSoundboardSounds
+- __GatewayRequestSoundboardSoundsData
+- __GatewayResume
+- __GatewayResumeData
+- __GatewaySoundboardSoundsDispatchData
+- __GatewayThreadCreateDispatchData
+- __GatewayThreadDeleteDispatchData
+- __GatewayThreadListSync
+- __GatewayThreadMembersUpdate
+- __GatewayTypingStartDispatchData
+- __GatewayUpdatePresence
+- __GatewayURLQuery
+- __GatewayVoiceChannelEffectSendDispatchData
+- __GatewayVoiceServerUpdateDispatchData
+- __GatewayVoiceStateUpdate
+- __GatewayVoiceStateUpdateData
+- __GatewayWebhooksUpdateDispatchData
+- __ModalSubmitActionRowComponent
+- __ModalSubmitLabelComponent
+- __ModalSubmitTextDisplayComponent
+- __Relationship
+- __RESTAPIChannelPatchOverwrite
+- __RESTAPIGuildCreateOverwrite
+- __RESTAPIGuildCreateRole
+- __RESTAPIGuildOnboardingPrompt
+- __RESTAPIGuildOnboardingPromptOption
+- __RESTAPIInteractionCallbackActivityInstanceResource
+- __RESTAPIInteractionCallbackObject
+- __RESTAPIInteractionCallbackResourceObject
+- __RESTAPIPartialCurrentUserGuild
+- __RESTAPIPoll
+- __RESTError
+- __RESTErrorFieldInformation
+- __RESTErrorGroupWrapper
+- __RESTGetAPIApplicationCommandsQuery
+- __RESTGetAPIApplicationEmojisResult
+- __RESTGetAPIAuditLogQuery
+- __RESTGetAPIChannelMessageReactionUsersQuery
+- __RESTGetAPIChannelMessagesPinsQuery
+- __RESTGetAPIChannelMessagesPinsResult
+- __RESTGetAPIChannelMessagesQuery
+- __RESTGetAPIChannelThreadMemberQuery
+- __RESTGetAPIChannelThreadMembersQuery
+- __RESTGetAPIChannelThreadsArchivedQuery
+- __RESTGetAPIChannelUsersThreadsArchivedResult
+- __RESTGetAPICurrentUserGuildsQuery
+- __RESTGetAPIEntitlementsQuery
+- __RESTGetAPIGuildBansQuery
+- __RESTGetAPIGuildMembersQuery
+- __RESTGetAPIGuildMembersSearchQuery
+- __RESTGetAPIGuildMessagesSearchQuery
+- __RESTGetAPIGuildPruneCountQuery
+- __RESTGetAPIGuildPruneCountResult
+- __RESTGetAPIGuildQuery
+- __RESTGetAPIGuildScheduledEventQuery
+- __RESTGetAPIGuildScheduledEventsQuery
+- __RESTGetAPIGuildScheduledEventUsersQuery
+- __RESTGetAPIGuildSoundboardSoundsResult
+- __RESTGetAPIGuildVanityUrlResult
+- __RESTGetAPIGuildWidgetImageQuery
+- __RESTGetAPIInviteQuery
+- __RESTGetAPIOAuth2CurrentAuthorizationResult
+- __RESTGetAPIPollAnswerVotersQuery
+- __RESTGetAPIPollAnswerVotersResult
+- __RESTGetAPISKUSubscriptionsQuery
+- __RESTGetAPIWebhookWithTokenMessageQuery
+- __RESTGetStickerPacksResult
+- __RESTOAuth2AdvancedBotAuthorizationQuery
+- __RESTOAuth2AdvancedBotAuthorizationQueryResult
+- __RESTOAuth2AuthorizationQuery
+- __RESTOAuth2BotAuthorizationQuery
+- __RESTOAuth2ImplicitAuthorizationQuery
+- __RESTPatchAPIChannelJSONBody
+- __RESTPatchAPIChannelMessageJSONBody
+- __RESTPatchAPICurrentGuildMemberJSONBody
+- __RESTPatchAPICurrentGuildMemberNicknameJSONBody
+- __RESTPatchAPICurrentUserJSONBody
+- __RESTPatchAPIGuildEmojiJSONBody
+- __RESTPatchAPIGuildJSONBody
+- __RESTPatchAPIGuildMemberJSONBody
+- __RESTPatchAPIGuildMemberVerificationJSONBody
+- __RESTPatchAPIGuildRoleJSONBody
+- __RESTPatchAPIGuildScheduledEventJSONBody
+- __RESTPatchAPIGuildSoundboardSoundJSONBody
+- __RESTPatchAPIGuildStickerJSONBody
+- __RESTPatchAPIGuildVoiceStateCurrentMemberJSONBody
+- __RESTPatchAPIGuildVoiceStateUserJSONBody
+- __RESTPatchAPIStageInstanceJSONBody
+- __RESTPatchAPIWebhookJSONBody
+- __RESTPostAPIAutoModerationRuleJSONBody
+- __RESTPostAPIBaseApplicationCommandsJSONBody
+- __RESTPostAPIChannelFollowersJSONBody
+- __RESTPostAPIChannelInviteJSONBody
+- __RESTPostAPIChannelMessageJSONBody
+- __RESTPostAPIChannelMessagesBulkDeleteJSONBody
+- __RESTPostAPIChannelMessagesThreadsJSONBody
+- __RESTPostAPIChannelThreadsJSONBody
+- __RESTPostAPIChannelWebhookJSONBody
+- __RESTPostAPIChatInputApplicationCommandsJSONBody
+- __RESTPostAPIContextMenuApplicationCommandsJSONBody
+- __RESTPostAPICurrentUserCreateDMChannelJSONBody
+- __RESTPostAPIEntitlementJSONBody
+- __RESTPostAPIGuildBulkBanJSONBody
+- __RESTPostAPIGuildBulkBanResult
+- __RESTPostAPIGuildEmojiJSONBody
+- __RESTPostAPIGuildPruneJSONBody
+- __RESTPostAPIGuildPruneResult
+- __RESTPostAPIGuildRoleJSONBody
+- __RESTPostAPIGuildScheduledEventJSONBody
+- __RESTPostAPIGuildsJSONBody
+- __RESTPostAPIGuildsMFAJSONBody
+- __RESTPostAPIGuildSoundboardSoundJSONBody
+- __RESTPostAPIGuildStickerFormDataBody
+- __RESTPostAPIGuildTemplatesJSONBody
+- __RESTPostAPIInteractionCallbackQuery
+- __RESTPostAPIInteractionCallbackWithResponseResult
+- __RESTPostAPIPrimaryEntryPointApplicationCommandJSONBody
+- __RESTPostAPISoundboardSendSoundJSONBody
+- __RESTPostAPIStageInstanceJSONBody
+- __RESTPostAPITemplateCreateGuildJSONBody
+- __RESTPostAPIWebhookWithTokenJSONBody
+- __RESTPostAPIWebhookWithTokenQuery
+- __RESTPostOAuth2AccessTokenResult
+- __RESTPostOAuth2AccessTokenWithBotAndGuildsScopeResult
+- __RESTPostOAuth2AccessTokenWithBotAndWebhookIncomingScopeResult
+- __RESTPostOAuth2AuthorizationQueryResult
+- __RESTPostOAuth2ClientCredentialsURLEncodedData
+- __RESTPostOAuth2TokenRevocationQuery
+- __RESTPutAPIApplicationCommandPermissionsJSONBody
+- __RESTPutAPIChannelPermissionJSONBody
+- __RESTPutAPIChannelRecipientJSONBody
+- __RESTPutAPICurrentUserApplicationRoleConnectionJSONBody
+- __RESTPutAPIGuildBanJSONBody
+- __RESTPutAPIGuildIncidentActionsJSONBody
+- __RESTPutAPIGuildMemberJSONBody
+- __RESTRateLimit
+- __RoutesDeclarations
+- __RPCAcceptActivityInviteArgs
+- __RPCAcceptActivityInviteResult
+- __RPCAcceptActivityInviteResultData
+- __RPCActivityInviteDispatch
+- __RPCActivityInviteDispatchData
+- __RPCActivityInviteUserArgs
+- __RPCActivityInviteUserResult
+- __RPCActivityInviteUserResultData
+- __RPCActivityJoinDispatch
+- __RPCActivityJoinDispatchData
+- __RPCActivityJoinRequestDispatch
+- __RPCActivityJoinRequestDispatchData
+- __RPCActivitySpectateDispatch
+- __RPCActivitySpectateDispatchData
+- __RPCAPIBaseMessageParsedContentText
+- __RPCAPIMessage
+- __RPCAPIMessageParsedContentMention
+- __RPCAPIMessageParsedContentOriginalMatch
+- __RPCAPIMessageParsedContentText
+- __RPCAuthenticateArgs
+- __RPCAuthenticateResult
+- __RPCAuthenticateResultData
+- __RPCAuthorizeArgs
+- __RPCAuthorizeResult
+- __RPCAuthorizeResultData
+- __RPCBraintreePopupBridgeCallbackArgs
+- __RPCBraintreePopupBridgeCallbackResult
+- __RPCBraintreePopupBridgeCallbackResultData
+- __RPCBrowserHandoffArgs
+- __RPCBrowserHandoffResultData
+- __RPCBrowserResult
+- __RPCChannelCreateDispatch
+- __RPCChannelCreateDispatchData
+- __RPCCloseActivityJoinRequestArgs
+- __RPCCloseActivityJoinRequestResult
+- __RPCCloseActivityJoinRequestResultData
+- __RPCCommandAcceptActivityInvitePayload
+- __RPCCommandActivityInviteUserPayload
+- __RPCCommandAuthenticatePayload
+- __RPCCommandAuthorizePayload
+- __RPCCommandBraintreePopupBridgeCallbackPayload
+- __RPCCommandBrowserPayload
+- __RPCCommandCloseActivityJoinRequestPayload
+- __RPCCommandConnectionsCallbackPayload
+- __RPCCommandCreateChannelInvitePayload
+- __RPCCommandDeepLinkPayload
+- __RPCCommandGetApplicationTicketPayload
+- __RPCCommandGetChannelPayload
+- __RPCCommandGetChannelsPayload
+- __RPCCommandGetEntitlementsPayload
+- __RPCCommandGetEntitlementTicketPayload
+- __RPCCommandGetGuildPayload
+- __RPCCommandGetGuildsPayload
+- __RPCCommandGetImagePayload
+- __RPCCommandGetNetworkingConfigPayload
+- __RPCCommandGetRelationshipsPayload
+- __RPCCommandGetSelectedVoiceChannelPayload
+- __RPCCommandGetSkusPayload
+- __RPCCommandGetUserPayload
+- __RPCCommandGetVoiceSettingsPayload
+- __RPCCommandGiftCodeBrowserPayload
+- __RPCCommandGuildTemplateBrowserPayload
+- __RPCCommandInviteBrowserPayload
+- __RPCCommandMessage
+- __RPCCommandNetworkingCreateTokenPayload
+- __RPCCommandNetworkingPeerMetricsPayload
+- __RPCCommandNetworkingSystemMetricsPayload
+- __RPCCommandOpenOverlayActivityInvitePayload
+- __RPCCommandOpenOverlayGuildInvitePayload
+- __RPCCommandOpenOverlayVoiceSettingsPayload
+- __RPCCommandOverlayPayload
+- __RPCCommandSelectTextChannelPayload
+- __RPCCommandSelectVoiceChannelPayload
+- __RPCCommandSendActivityJoinInvitePayload
+- __RPCCommandSetActivityPayload
+- __RPCCommandSetCertifiedDevicesPayload
+- __RPCCommandSetOverlayLockedPayload
+- __RPCCommandSetUserVoiceSettings2Payload
+- __RPCCommandSetUserVoiceSettingsPayload
+- __RPCCommandSetVoiceSettings2Payload
+- __RPCCommandSetVoiceSettingsPayload
+- __RPCCommandStartPurchasePayload
+- __RPCCommandValidateApplicationPayload
+- __RPCConnectionsCallbackArgs
+- __RPCConnectionsCallbackResult
+- __RPCConnectionsCallbackResultData
+- __RPCCreateChannelInviteArgs
+- __RPCCreateChannelInviteResult
+- __RPCCurrentUserUpdateDispatch
+- __RPCCurrentUserUpdateDispatchData
+- __RPCDeepLinkArgs
+- __RPCDeepLinkResult
+- __RPCDeepLinkResultData
+- __RPCDeviceModel
+- __RPCDeviceVendor
+- __RPCEntitlementCreateDispatch
+- __RPCEntitlementCreateDispatchData
+- __RPCEntitlementDeleteDispatch
+- __RPCEntitlementDeleteDispatchData
+- __RPCErrorDispatch
+- __RPCErrorDispatchData
+- __RPCGameJoinDispatch
+- __RPCGameJoinDispatchData
+- __RPCGameSpectateDispatch
+- __RPCGameSpectateDispatchData
+- __RPCGetApplicationTicketArgs
+- __RPCGetApplicationTicketResult
+- __RPCGetApplicationTicketResultData
+- __RPCGetChannelArgs
+- __RPCGetChannelResult
+- __RPCGetChannelResultData
+- __RPCGetChannelsArgs
+- __RPCGetChannelsResult
+- __RPCGetChannelsResultData
+- __RPCGetEntitlementsArgs
+- __RPCGetEntitlementsResult
+- __RPCGetEntitlementsResultData
+- __RPCGetEntitlementTicketArgs
+- __RPCGetEntitlementTicketResult
+- __RPCGetEntitlementTicketResultData
+- __RPCGetGuildArgs
+- __RPCGetGuildResult
+- __RPCGetGuildResultData
+- __RPCGetGuildsArgs
+- __RPCGetGuildsResult
+- __RPCGetGuildsResultData
+- __RPCGetImageArgs
+- __RPCGetImageResult
+- __RPCGetImageResultData
+- __RPCGetNetworkingConfigArgs
+- __RPCGetNetworkingConfigResult
+- __RPCGetNetworkingConfigResultData
+- __RPCGetRelationshipsArgs
+- __RPCGetRelationshipsResult
+- __RPCGetSelectedVoiceChannelArgs
+- __RPCGetSelectedVoiceChannelResult
+- __RPCGetSkusArgs
+- __RPCGetSkusResult
+- __RPCGetUserArgs
+- __RPCGetUserResult
+- __RPCGetVoiceSettingsArgs
+- __RPCGetVoiceSettingsResult
+- __RPCGetVoiceSettingsResultData
+- __RPCGiftCodeBrowserArgs
+- __RPCGiftCodeBrowserResult
+- __RPCGiftCodeBrowserResultData
+- __RPCGuildCreateDispatch
+- __RPCGuildCreateDispatchData
+- __RPCGuildStatusDispatch
+- __RPCGuildStatusDispatchData
+- __RPCGuildTemplateBrowserArgs
+- __RPCGuildTemplateBrowserResult
+- __RPCGuildTemplateBrowserResultData
+- __RPCInviteBrowserArgs
+- __RPCInviteBrowserResult
+- __RPCInviteBrowserResultData
+- __RPCMessageCreateDispatch
+- __RPCMessageCreateDispatchData
+- __RPCMessageDeleteDispatch
+- __RPCMessageDeleteDispatchData
+- __RPCMessageUpdateDispatch
+- __RPCMessageUpdateDispatchData
+- __RPCNetworkingCreateTokenArgs
+- __RPCNetworkingCreateTokenResult
+- __RPCNetworkingCreateTokenResultData
+- __RPCNetworkingPeerMetricsArgs
+- __RPCNetworkingPeerMetricsResult
+- __RPCNetworkingPeerMetricsResultData
+- __RPCNetworkingSystemMetricsArgs
+- __RPCNetworkingSystemMetricsResult
+- __RPCNetworkingSystemMetricsResultData
+- __RPCNotificationCreateDispatch
+- __RPCNotificationCreateDispatchData
+- __RPCOAuth2Application
+- __RPCOpenOverlayActivityInviteArgs
+- __RPCOpenOverlayActivityInviteResult
+- __RPCOpenOverlayActivityInviteResultData
+- __RPCOpenOverlayGuildInviteArgs
+- __RPCOpenOverlayGuildInviteResult
+- __RPCOpenOverlayGuildInviteResultData
+- __RPCOpenOverlayVoiceSettingsArgs
+- __RPCOpenOverlayVoiceSettingsResult
+- __RPCOpenOverlayVoiceSettingsResultData
+- __RPCOverlayArgs
+- __RPCOverlayDispatch
+- __RPCOverlayDispatchData
+- __RPCOverlayResult
+- __RPCOverlayResultData
+- __RPCOverlayUpdateDispatch
+- __RPCOverlayUpdateDispatchData
+- __RPCReadyDispatch
+- __RPCReadyDispatchData
+- __RPCRelationshipUpdateDispatch
+- __RPCRelationshipUpdateDispatchData
+- __RPCSelectTextChannelArgs
+- __RPCSelectTextChannelResult
+- __RPCSelectVoiceChannelArgs
+- __RPCSelectVoiceChannelResult
+- __RPCSendActivityJoinInviteArgs
+- __RPCSendActivityJoinInviteResult
+- __RPCSendActivityJoinInviteResultData
+- __RPCServerConfiguration
+- __RPCSetActivityArgs
+- __RPCSetActivityResult
+- __RPCSetActivityResultData
+- __RPCSetCertifiedDevicesArgs
+- __RPCSetCertifiedDevicesResult
+- __RPCSetOverlayLockedArgs
+- __RPCSetOverlayLockedResult
+- __RPCSetOverlayLockedResultData
+- __RPCSetUserVoiceSettings2Result
+- __RPCSetUserVoiceSettingsArgs
+- __RPCSetUserVoiceSettingsResult
+- __RPCSetVoiceSettings2Result
+- __RPCSetVoiceSettingsResult
+- __RPCSpeakingStartDispatch
+- __RPCSpeakingStartDispatchData
+- __RPCSpeakingStopDispatch
+- __RPCSpeakingStopDispatchData
+- __RPCStartPurchaseArgs
+- __RPCStartPurchaseResult
+- __RPCStartPurchaseResultData
+- __RPCSubscribeActivityInvite
+- __RPCSubscribeActivityJoin
+- __RPCSubscribeActivityJoinRequest
+- __RPCSubscribeActivitySpectate
+- __RPCSubscribeChannelCreate
+- __RPCSubscribeCurrentUserUpdate
+- __RPCSubscribeEntitlementCreate
+- __RPCSubscribeEntitlementDelete
+- __RPCSubscribeGameJoin
+- __RPCSubscribeGameSpectate
+- __RPCSubscribeGuildCreate
+- __RPCSubscribeGuildStatus
+- __RPCSubscribeGuildStatusArgs
+- __RPCSubscribeMessage
+- __RPCSubscribeMessageCreate
+- __RPCSubscribeMessageCreateArgs
+- __RPCSubscribeMessageDelete
+- __RPCSubscribeMessageDeleteArgs
+- __RPCSubscribeMessageUpdate
+- __RPCSubscribeMessageUpdateArgs
+- __RPCSubscribeNotificationCreate
+- __RPCSubscribeOverlay
+- __RPCSubscribeOverlayUpdate
+- __RPCSubscribeRelationshipUpdate
+- __RPCSubscribeResult
+- __RPCSubscribeResultData
+- __RPCSubscribeSpeakingStart
+- __RPCSubscribeSpeakingStartArgs
+- __RPCSubscribeSpeakingStop
+- __RPCSubscribeSpeakingStopArgs
+- __RPCSubscribeVoiceChannelSelect
+- __RPCSubscribeVoiceConnectionStatus
+- __RPCSubscribeVoiceSettingsUpdate
+- __RPCSubscribeVoiceSettingsUpdate2
+- __RPCSubscribeVoiceStateCreate
+- __RPCSubscribeVoiceStateCreateArgs
+- __RPCSubscribeVoiceStateDelete
+- __RPCSubscribeVoiceStateDeleteArgs
+- __RPCSubscribeVoiceStateUpdate
+- __RPCSubscribeVoiceStateUpdateArgs
+- __RPCUnsubscribeResult
+- __RPCUnsubscribeResultData
+- __RPCValidateApplicationArgs
+- __RPCValidateApplicationResult
+- __RPCValidateApplicationResultData
+- __RPCVoiceAvailableDevice
+- __RPCVoiceChannelSelectDispatch
+- __RPCVoiceChannelSelectDispatchData
+- __RPCVoiceConnectionStatusDispatch
+- __RPCVoiceConnectionStatusDispatchData
+- __RPCVoiceConnectionStatusPing
+- __RPCVoicePan
+- __RPCVoiceSettingsInput
+- __RPCVoiceSettingsMode
+- __RPCVoiceSettingsOutput
+- __RPCVoiceSettingsUpdate2Dispatch
+- __RPCVoiceSettingsUpdate2DispatchData
+- __RPCVoiceSettingsUpdateDispatch
+- __RPCVoiceShortcutKeyCombo
+- __RPCVoiceStateCreateDispatch
+- __RPCVoiceStateCreateDispatchData
+- __RPCVoiceStateDeleteDispatch
+- __RPCVoiceStateDeleteDispatchData
+- __RPCVoiceStateUpdateDispatch
+- __RPCVoiceStateUpdateDispatchData
+
+### Type Aliases
+
+- ___AddUndefinedToPossiblyUndefinedPropertiesOfInterface
+- ___DistributiveKeys
+- ___DistributiveOmit
+- ___DistributivePick
+- ___Keys
+- ___NonNullableFields
+- ___Nullable
+- ___Omit
+- ___Pick
+- ___StrictPartial
+- ___StrictRequired
+- ___UnionToIntersection
+- __AchievementIconFormat
+- __APIAnnouncementThreadChannel
+- __APIApplicationCommandAttachmentOption
+- __APIApplicationCommandAutocompleteDMInteraction
+- __APIApplicationCommandAutocompleteGuildInteraction
+- __APIApplicationCommandAutocompleteInteraction
+- __APIApplicationCommandBasicOption
+- __APIApplicationCommandBooleanOption
+- __APIApplicationCommandDMInteraction
+- __APIApplicationCommandGuildInteraction
+- __APIApplicationCommandIntegerOption
+- __APIApplicationCommandInteraction
+- __APIApplicationCommandInteractionData
+- __APIApplicationCommandInteractionDataAttachmentOption
+- __APIApplicationCommandInteractionDataBasicOption
+- __APIApplicationCommandInteractionDataBooleanOption
+- __APIApplicationCommandInteractionDataChannelOption
+- __APIApplicationCommandInteractionDataMentionableOption
+- __APIApplicationCommandInteractionDataOption
+- __APIApplicationCommandInteractionDataRoleOption
+- __APIApplicationCommandInteractionDataUserOption
+- __APIApplicationCommandInteractionWrapper
+- __APIApplicationCommandMentionableOption
+- __APIApplicationCommandNumberOption
+- __APIApplicationCommandOption
+- __APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper
+- __APIApplicationCommandRoleOption
+- __APIApplicationCommandStringOption
+- __APIApplicationCommandUserOption
+- __APIApplicationEmoji
+- __APIApplicationIntegrationTypesConfigMap
+- __APIAuditLogChange
+- __APIAuditLogChangeKey$Add
+- __APIAuditLogChangeKey$Remove
+- __APIAuditLogChangeKeyActions
+- __APIAuditLogChangeKeyAFKChannelId
+- __APIAuditLogChangeKeyAFKTimeout
+- __APIAuditLogChangeKeyAllow
+- __APIAuditLogChangeKeyApplicationId
+- __APIAuditLogChangeKeyArchived
+- __APIAuditLogChangeKeyAsset
+- __APIAuditLogChangeKeyAutoArchiveDuration
+- __APIAuditLogChangeKeyAvailable
+- __APIAuditLogChangeKeyAvailableTags
+- __APIAuditLogChangeKeyAvatarHash
+- __APIAuditLogChangeKeyBannerHash
+- __APIAuditLogChangeKeyBitrate
+- __APIAuditLogChangeKeyChannelId
+- __APIAuditLogChangeKeyCode
+- __APIAuditLogChangeKeyColor
+- __APIAuditLogChangeKeyCommunicationDisabledUntil
+- __APIAuditLogChangeKeyDeaf
+- __APIAuditLogChangeKeyDefaultAutoArchiveDuration
+- __APIAuditLogChangeKeyDefaultMessageNotifications
+- __APIAuditLogChangeKeyDefaultReactionEmoji
+- __APIAuditLogChangeKeyDefaultThreadRateLimitPerUser
+- __APIAuditLogChangeKeyDeny
+- __APIAuditLogChangeKeyDescription
+- __APIAuditLogChangeKeyDiscoverySplashHash
+- __APIAuditLogChangeKeyEmojiId
+- __APIAuditLogChangeKeyEmojiName
+- __APIAuditLogChangeKeyEnabled
+- __APIAuditLogChangeKeyEnableEmoticons
+- __APIAuditLogChangeKeyEntityType
+- __APIAuditLogChangeKeyEventType
+- __APIAuditLogChangeKeyExemptChannels
+- __APIAuditLogChangeKeyExemptRoles
+- __APIAuditLogChangeKeyExpireBehavior
+- __APIAuditLogChangeKeyExpireGracePeriod
+- __APIAuditLogChangeKeyExplicitContentFilter
+- __APIAuditLogChangeKeyFlags
+- __APIAuditLogChangeKeyFormatType
+- __APIAuditLogChangeKeyGuildId
+- __APIAuditLogChangeKeyHoist
+- __APIAuditLogChangeKeyIconHash
+- __APIAuditLogChangeKeyId
+- __APIAuditLogChangeKeyImageHash
+- __APIAuditLogChangeKeyInviterId
+- __APIAuditLogChangeKeyLocation
+- __APIAuditLogChangeKeyLocked
+- __APIAuditLogChangeKeyMaxAge
+- __APIAuditLogChangeKeyMaxUses
+- __APIAuditLogChangeKeyMentionable
+- __APIAuditLogChangeKeyMFALevel
+- __APIAuditLogChangeKeyMute
+- __APIAuditLogChangeKeyName
+- __APIAuditLogChangeKeyNick
+- __APIAuditLogChangeKeyNSFW
+- __APIAuditLogChangeKeyOwnerId
+- __APIAuditLogChangeKeyPermissionOverwrites
+- __APIAuditLogChangeKeyPermissions
+- __APIAuditLogChangeKeyPosition
+- __APIAuditLogChangeKeyPreferredLocale
+- __APIAuditLogChangeKeyPremiumProgressBarEnabled
+- __APIAuditLogChangeKeyPrivacyLevel
+- __APIAuditLogChangeKeyPruneDeleteDays
+- __APIAuditLogChangeKeyPublicUpdatesChannelId
+- __APIAuditLogChangeKeyRateLimitPerUser
+- __APIAuditLogChangeKeyRecurrenceRule
+- __APIAuditLogChangeKeyRegion
+- __APIAuditLogChangeKeyRTCRegion
+- __APIAuditLogChangeKeyRulesChannelId
+- __APIAuditLogChangeKeySafetyAlertsChannelId
+- __APIAuditLogChangeKeySnowflake
+- __APIAuditLogChangeKeySoundId
+- __APIAuditLogChangeKeySplashHash
+- __APIAuditLogChangeKeyStatus
+- __APIAuditLogChangeKeySystemChannelFlags
+- __APIAuditLogChangeKeySystemChannelId
+- __APIAuditLogChangeKeyTags
+- __APIAuditLogChangeKeyTemporary
+- __APIAuditLogChangeKeyTopic
+- __APIAuditLogChangeKeyTriggerMetadata
+- __APIAuditLogChangeKeyTriggerType
+- __APIAuditLogChangeKeyType
+- __APIAuditLogChangeKeyUserId
+- __APIAuditLogChangeKeyUserLimit
+- __APIAuditLogChangeKeyUses
+- __APIAuditLogChangeKeyVanityURLCode
+- __APIAuditLogChangeKeyVerificationLevel
+- __APIAuditLogChangeKeyVideoQualityMode
+- __APIAuditLogChangeKeyVolume
+- __APIAuditLogChangeKeyWidgetChannelId
+- __APIAuditLogChangeKeyWidgetEnabled
+- __APIAuthorizingIntegrationOwnersMap
+- __APIAutoPopulatedSelectMenuComponent
+- __APIButtonComponent
+- __APIChannel
+- __APIChannelPatchOverwrite
+- __APIChatInputApplicationCommandDMInteraction
+- __APIChatInputApplicationCommandGuildInteraction
+- __APIChatInputApplicationCommandInteraction
+- __APIChatInputApplicationCommandInteractionDataResolved
+- __APIComponentInActionRow
+- __APIComponentInContainer
+- __APIComponentInLabel
+- __APIComponentInMessageActionRow
+- __APIComponentInModalActionRow
+- __APIContextMenuDMInteraction
+- __APIContextMenuGuildInteraction
+- __APIContextMenuInteraction
+- __APIContextMenuInteractionData
+- __APIDMInteraction
+- __APIDMInteractionWrapper
+- __APIGuildChannelResolvable
+- __APIGuildCreateOverwrite
+- __APIGuildCreatePartialChannel
+- __APIGuildCreateRole
+- __APIGuildIntegrationType
+- __APIGuildInteraction
+- __APIGuildInteractionWrapper
+- __APIGuildMediaChannel
+- __APIGuildScheduledEvent
+- __APIGuildStageVoiceChannel
+- __APIGuildVoiceChannel
+- __APIInteraction
+- __APIInteractionDataResolvedChannel
+- __APIInteractionResponse
+- __APIInteractionResponseCallbackData
+- __APIInviteGuild
+- __APIMentionableSelectComponent
+- __APIMessageApplicationCommandDMInteraction
+- __APIMessageApplicationCommandGuildInteraction
+- __APIMessageApplicationCommandInteraction
+- __APIMessageButtonInteractionData
+- __APIMessageComponent
+- __APIMessageComponentButtonInteraction
+- __APIMessageComponentDMInteraction
+- __APIMessageComponentGuildInteraction
+- __APIMessageComponentInteraction
+- __APIMessageComponentInteractionData
+- __APIMessageComponentSelectMenuInteraction
+- __APIMessageInteractionMetadata
+- __APIMessageReferenceSend
+- __APIMessageSelectMenuInteractionData
+- __APIMessageSnapshotFields
+- __APIMessageTopLevelComponent
+- __APIModalComponent
+- __APIModalInteractionResponseCallbackComponent
+- __APIModalSubmissionComponent
+- __APIModalSubmitDMInteraction
+- __APIModalSubmitGuildInteraction
+- __APIModalSubmitInteraction
+- __APINewsChannel
+- __APIPingInteraction
+- __APIPrimaryEntryPointCommandDMInteraction
+- __APIPrimaryEntryPointCommandGuildInteraction
+- __APIPrimaryEntryPointCommandInteraction
+- __APIPrimaryEntryPointCommandInteractionData
+- __APIPrivateThreadChannel
+- __APIPublicThreadChannel
+- __APIRoleSelectComponent
+- __APISectionAccessoryComponent
+- __APISelectMenuComponent
+- __APIStickerItem
+- __APITextChannel
+- __APIUserApplicationCommandDMInteraction
+- __APIUserApplicationCommandGuildInteraction
+- __APIUserApplicationCommandInteraction
+- __APIUserApplicationCommandInteractionDataResolved
+- __APIUserInteractionDataResolved
+- __APIUserSelectComponent
+- __APIWebhookEvent
+- __APIWebhookEventBody
+- __APIWebhookEventEntitlementCreateData
+- __APIWebhookEventEntitlementDeleteData
+- __APIWebhookEventEntitlementUpdateData
+- __APIWebhookEventQuestUserEnrollmentData
+- __APIWebhookSourceChannel
+- __APIWebhookSourceGuild
+- __ApplicationAssetFormat
+- __ApplicationCommandOptionAllowedChannelType
+- __ApplicationCoverFormat
+- __ApplicationIconFormat
+- __AuditLogRuleTriggerType
+- __DefaultUserAvatar
+- __DefaultUserAvatarAssets
+- __DefaultUserAvatarFormat
+- __EmojiFormat
+- __GatewayActivityEmoji
+- __GatewayActivityUpdateData
+- __GatewayApplicationCommandPermissionsUpdateDispatch
+- __GatewayAutoModerationActionExecutionDispatch
+- __GatewayAutoModerationRuleCreateDispatch
+- __GatewayAutoModerationRuleCreateDispatchData
+- __GatewayAutoModerationRuleDeleteDispatch
+- __GatewayAutoModerationRuleDeleteDispatchData
+- __GatewayAutoModerationRuleModifyDispatch
+- __GatewayAutoModerationRuleModifyDispatchData
+- __GatewayAutoModerationRuleUpdateDispatch
+- __GatewayAutoModerationRuleUpdateDispatchData
+- __GatewayChannelCreateDispatch
+- __GatewayChannelCreateDispatchData
+- __GatewayChannelDeleteDispatch
+- __GatewayChannelDeleteDispatchData
+- __GatewayChannelModifyDispatch
+- __GatewayChannelModifyDispatchData
+- __GatewayChannelPinsUpdateDispatch
+- __GatewayChannelUpdateDispatch
+- __GatewayChannelUpdateDispatchData
+- __GatewayDispatchPayload
+- __GatewayEntitlementCreateDispatch
+- __GatewayEntitlementCreateDispatchData
+- __GatewayEntitlementDeleteDispatch
+- __GatewayEntitlementDeleteDispatchData
+- __GatewayEntitlementModifyDispatch
+- __GatewayEntitlementModifyDispatchData
+- __GatewayEntitlementUpdateDispatch
+- __GatewayEntitlementUpdateDispatchData
+- __GatewayGuildAuditLogEntryCreateDispatch
+- __GatewayGuildBanAddDispatch
+- __GatewayGuildBanAddDispatchData
+- __GatewayGuildBanModifyDispatch
+- __GatewayGuildBanRemoveDispatch
+- __GatewayGuildBanRemoveDispatchData
+- __GatewayGuildCreateDispatch
+- __GatewayGuildDeleteDispatch
+- __GatewayGuildEmojisUpdateDispatch
+- __GatewayGuildIntegrationsUpdateDispatch
+- __GatewayGuildMemberAddDispatch
+- __GatewayGuildMemberRemoveDispatch
+- __GatewayGuildMembersChunkDispatch
+- __GatewayGuildMemberUpdateDispatch
+- __GatewayGuildModifyDispatch
+- __GatewayGuildModifyDispatchData
+- __GatewayGuildRoleCreateDispatch
+- __GatewayGuildRoleCreateDispatchData
+- __GatewayGuildRoleDeleteDispatch
+- __GatewayGuildRoleModifyDispatch
+- __GatewayGuildRoleUpdateDispatch
+- __GatewayGuildRoleUpdateDispatchData
+- __GatewayGuildScheduledEventCreateDispatch
+- __GatewayGuildScheduledEventCreateDispatchData
+- __GatewayGuildScheduledEventDeleteDispatch
+- __GatewayGuildScheduledEventDeleteDispatchData
+- __GatewayGuildScheduledEventUpdateDispatch
+- __GatewayGuildScheduledEventUpdateDispatchData
+- __GatewayGuildScheduledEventUserAddDispatch
+- __GatewayGuildScheduledEventUserRemoveDispatch
+- __GatewayGuildSoundboardSoundCreateDispatch
+- __GatewayGuildSoundboardSoundCreateDispatchData
+- __GatewayGuildSoundboardSoundDeleteDispatch
+- __GatewayGuildSoundboardSoundsUpdateDispatch
+- __GatewayGuildSoundboardSoundUpdateDispatch
+- __GatewayGuildSoundboardSoundUpdateDispatchData
+- __GatewayGuildStickersUpdateDispatch
+- __GatewayGuildUpdateDispatch
+- __GatewayGuildUpdateDispatchData
+- __GatewayHeartbeatData
+- __GatewayIntegrationCreateDispatch
+- __GatewayIntegrationCreateDispatchData
+- __GatewayIntegrationDeleteDispatch
+- __GatewayIntegrationUpdateDispatch
+- __GatewayIntegrationUpdateDispatchData
+- __GatewayInteractionCreateDispatch
+- __GatewayInteractionCreateDispatchData
+- __GatewayInvalidSessionData
+- __GatewayInviteCreateDispatch
+- __GatewayInviteDeleteDispatch
+- __GatewayMessageCreateDispatch
+- __GatewayMessageDeleteBulkDispatch
+- __GatewayMessageDeleteDispatch
+- __GatewayMessagePollVoteAddDispatch
+- __GatewayMessagePollVoteRemoveDispatch
+- __GatewayMessageReactionAddDispatch
+- __GatewayMessageReactionData
+- __GatewayMessageReactionRemoveAllDispatch
+- __GatewayMessageReactionRemoveAllDispatchData
+- __GatewayMessageReactionRemoveDispatch
+- __GatewayMessageReactionRemoveEmojiDispatch
+- __GatewayMessageUpdateDispatch
+- __GatewayPresenceUpdateDispatch
+- __GatewayPresenceUpdateDispatchData
+- __GatewayRateLimitedDispatch
+- __GatewayRateLimitedMetadata
+- __GatewayRateLimitedRequestGuildMembersDispatch
+- __GatewayRateLimitedRequestGuildMembersDispatchData
+- __GatewayReadyDispatch
+- __GatewayReceivePayload
+- __GatewayRequestGuildMembersData
+- __GatewayResumedDispatch
+- __GatewaySendPayload
+- __GatewaySoundboardSoundsDispatch
+- __GatewayStageInstanceCreateDispatch
+- __GatewayStageInstanceCreateDispatchData
+- __GatewayStageInstanceDeleteDispatch
+- __GatewayStageInstanceDeleteDispatchData
+- __GatewayStageInstanceUpdateDispatch
+- __GatewayStageInstanceUpdateDispatchData
+- __GatewaySubscriptionCreateDispatch
+- __GatewaySubscriptionCreateDispatchData
+- __GatewaySubscriptionDeleteDispatch
+- __GatewaySubscriptionDeleteDispatchData
+- __GatewaySubscriptionModifyDispatch
+- __GatewaySubscriptionModifyDispatchData
+- __GatewaySubscriptionUpdateDispatch
+- __GatewaySubscriptionUpdateDispatchData
+- __GatewayThreadCreateDispatch
+- __GatewayThreadDeleteDispatch
+- __GatewayThreadListSyncDispatch
+- __GatewayThreadListSyncDispatchData
+- __GatewayThreadMembersUpdateDispatch
+- __GatewayThreadMembersUpdateDispatchData
+- __GatewayThreadMemberUpdateDispatch
+- __GatewayThreadMemberUpdateDispatchData
+- __GatewayThreadModifyDispatch
+- __GatewayThreadUpdateDispatch
+- __GatewayThreadUpdateDispatchData
+- __GatewayTypingStartDispatch
+- __GatewayUserUpdateDispatch
+- __GatewayUserUpdateDispatchData
+- __GatewayVoiceChannelEffectSendDispatch
+- __GatewayVoiceServerUpdateDispatch
+- __GatewayVoiceState
+- __GatewayVoiceStateUpdateDispatch
+- __GatewayVoiceStateUpdateDispatchData
+- __GatewayWebhooksUpdateDispatch
+- __GetAPIVoiceRegionsResult
+- __GuildBannerFormat
+- __GuildChannelType
+- __GuildDiscoverySplashFormat
+- __GuildIconFormat
+- __GuildMemberAvatarFormat
+- __GuildMemberBannerFormat
+- __GuildScheduledEventCoverFormat
+- __GuildScheduledEventRecurrenceRuleNWeekday
+- __GuildSplashFormat
+- __GuildTagBadgeFormat
+- __GuildTextChannelType
+- __ImageSize
+- __LocaleString
+- __LocalizationMap
+- __ModalSubmitComponent
+- __PartialAPIMessageInteractionGuildMember
+- __PresenceUpdateReceiveStatus
+- __RESTAPIAttachment
+- __RESTAPIGuildChannelResolvable
+- __RESTAPIGuildCreatePartialChannel
+- __RESTAPIMessageReference
+- __RESTAPIModifyGuildOnboardingPromptData
+- __RESTAPIModifyGuildOnboardingPromptOptionData
+- __RESTAPIPollCreate
+- __RESTDeleteAPIApplicationEmojiResult
+- __RESTDeleteAPIAutoModerationRuleResult
+- __RESTDeleteAPIChannelAllMessageReactionsResult
+- __RESTDeleteAPIChannelMessageOwnReaction
+- __RESTDeleteAPIChannelMessageOwnReactionResult
+- __RESTDeleteAPIChannelMessageReactionResult
+- __RESTDeleteAPIChannelMessageResult
+- __RESTDeleteAPIChannelMessagesPinResult
+- __RESTDeleteAPIChannelMessageUserReactionResult
+- __RESTDeleteAPIChannelPermissionResult
+- __RESTDeleteAPIChannelPinResult
+- __RESTDeleteAPIChannelRecipientResult
+- __RESTDeleteAPIChannelResult
+- __RESTDeleteAPIChannelThreadMembersResult
+- __RESTDeleteAPICurrentUserGuildResult
+- __RESTDeleteAPIEntitlementResult
+- __RESTDeleteAPIGuildBanResult
+- __RESTDeleteAPIGuildEmojiResult
+- __RESTDeleteAPIGuildIntegrationResult
+- __RESTDeleteAPIGuildMemberResult
+- __RESTDeleteAPIGuildMemberRoleResult
+- __RESTDeleteAPIGuildResult
+- __RESTDeleteAPIGuildRoleResult
+- __RESTDeleteAPIGuildScheduledEventResult
+- __RESTDeleteAPIGuildSoundboardSoundResult
+- __RESTDeleteAPIGuildStickerResult
+- __RESTDeleteAPIGuildTemplateResult
+- __RESTDeleteAPIInteractionFollowupResult
+- __RESTDeleteAPIInteractionOriginalResponseResult
+- __RESTDeleteAPIInviteResult
+- __RESTDeleteAPIStageInstanceResult
+- __RESTDeleteAPIWebhookResult
+- __RESTDeleteAPIWebhookWithTokenMessageResult
+- __RESTDeleteAPIWebhookWithTokenResult
+- __RESTErrorData
+- __RESTGetAPIApplicationActivityInstanceResult
+- __RESTGetAPIApplicationCommandPermissionsResult
+- __RESTGetAPIApplicationCommandResult
+- __RESTGetAPIApplicationCommandsResult
+- __RESTGetAPIApplicationEmojiResult
+- __RESTGetAPIApplicationGuildCommandResult
+- __RESTGetAPIApplicationGuildCommandsQuery
+- __RESTGetAPIApplicationGuildCommandsResult
+- __RESTGetAPIApplicationRoleConnectionMetadataResult
+- __RESTGetAPIAuditLogResult
+- __RESTGetAPIAutoModerationRuleResult
+- __RESTGetAPIAutoModerationRulesResult
+- __RESTGetAPIChannelInvitesResult
+- __RESTGetAPIChannelMessageReactionUsersResult
+- __RESTGetAPIChannelMessageResult
+- __RESTGetAPIChannelMessagesResult
+- __RESTGetAPIChannelPinsResult
+- __RESTGetAPIChannelResult
+- __RESTGetAPIChannelThreadMemberResult
+- __RESTGetAPIChannelThreadMembersResult
+- __RESTGetAPIChannelThreadsArchivedPrivateResult
+- __RESTGetAPIChannelThreadsArchivedPublicResult
+- __RESTGetAPIChannelWebhooksResult
+- __RESTGetAPICurrentUserApplicationRoleConnectionResult
+- __RESTGetAPICurrentUserConnectionsResult
+- __RESTGetAPICurrentUserGuildsResult
+- __RESTGetAPICurrentUserResult
+- __RESTGetAPIEntitlementResult
+- __RESTGetAPIEntitlementsResult
+- __RESTGetAPIGatewayBotResult
+- __RESTGetAPIGatewayResult
+- __RESTGetAPIGuildApplicationCommandsPermissionsResult
+- __RESTGetAPIGuildBanResult
+- __RESTGetAPIGuildBansResult
+- __RESTGetAPIGuildChannelsResult
+- __RESTGetAPIGuildEmojiResult
+- __RESTGetAPIGuildEmojisResult
+- __RESTGetAPIGuildIntegrationsResult
+- __RESTGetAPIGuildInvitesResult
+- __RESTGetAPIGuildMemberResult
+- __RESTGetAPIGuildMembersResult
+- __RESTGetAPIGuildMembersSearchResult
+- __RESTGetAPIGuildMemberVerificationResult
+- __RESTGetAPIGuildMessagesSearchResult
+- __RESTGetAPIGuildOnboardingResult
+- __RESTGetAPIGuildPreviewResult
+- __RESTGetAPIGuildResult
+- __RESTGetAPIGuildRoleMemberCountsResult
+- __RESTGetAPIGuildRoleResult
+- __RESTGetAPIGuildRolesResult
+- __RESTGetAPIGuildScheduledEventResult
+- __RESTGetAPIGuildScheduledEventsResult
+- __RESTGetAPIGuildScheduledEventUsersResult
+- __RESTGetAPIGuildSoundboardSoundResult
+- __RESTGetAPIGuildStickerResult
+- __RESTGetAPIGuildStickersResult
+- __RESTGetAPIGuildTemplatesResult
+- __RESTGetAPIGuildThreadsResult
+- __RESTGetAPIGuildVoiceRegionsResult
+- __RESTGetAPIGuildVoiceStateCurrentMemberResult
+- __RESTGetAPIGuildVoiceStateUserResult
+- __RESTGetAPIGuildWebhooksResult
+- __RESTGetAPIGuildWelcomeScreenResult
+- __RESTGetAPIGuildWidgetImageResult
+- __RESTGetAPIGuildWidgetJSONResult
+- __RESTGetAPIGuildWidgetSettingsResult
+- __RESTGetAPIInteractionFollowupResult
+- __RESTGetAPIInteractionOriginalResponseResult
+- __RESTGetAPIInviteResult
+- __RESTGetAPIOAuth2CurrentApplicationResult
+- __RESTGetAPISKUsResult
+- __RESTGetAPISKUSubscriptionResult
+- __RESTGetAPISKUSubscriptionsResult
+- __RESTGetAPISoundboardDefaultSoundsResult
+- __RESTGetAPIStageInstanceResult
+- __RESTGetAPIStickerPack
+- __RESTGetAPIStickerPackResult
+- __RESTGetAPIStickerResult
+- __RESTGetAPITemplateResult
+- __RESTGetAPIUserResult
+- __RESTGetAPIVoiceRegionsResult
+- __RESTGetAPIWebhookResult
+- __RESTGetAPIWebhookWithTokenMessageResult
+- __RESTGetAPIWebhookWithTokenResult
+- __RESTGetCurrentApplicationResult
+- __RESTGetCurrentUserGuildMemberResult
+- __RESTGetNitroStickerPacksResult
+- __RESTOAuth2AuthorizationQueryResult
+- __RESTOAuth2ImplicitAuthorizationURLFragmentResult
+- __RESTOAuth2TokenOptionalClientCredentials
+- __RESTPatchAPIApplicationCommandJSONBody
+- __RESTPatchAPIApplicationCommandResult
+- __RESTPatchAPIApplicationEmojiJSONBody
+- __RESTPatchAPIApplicationEmojiResult
+- __RESTPatchAPIApplicationGuildCommandJSONBody
+- __RESTPatchAPIApplicationGuildCommandResult
+- __RESTPatchAPIAutoModerationRuleJSONBody
+- __RESTPatchAPIAutoModerationRuleResult
+- __RESTPatchAPIChannelMessageFormDataBody
+- __RESTPatchAPIChannelMessageResult
+- __RESTPatchAPIChannelResult
+- __RESTPatchAPICurrentGuildMemberNicknameResult
+- __RESTPatchAPICurrentGuildMemberResult
+- __RESTPatchAPICurrentUserResult
+- __RESTPatchAPIGuildChannelPositionsJSONBody
+- __RESTPatchAPIGuildChannelPositionsResult
+- __RESTPatchAPIGuildEmojiResult
+- __RESTPatchAPIGuildMemberResult
+- __RESTPatchAPIGuildMemberVerificationResult
+- __RESTPatchAPIGuildResult
+- __RESTPatchAPIGuildRolePositionsJSONBody
+- __RESTPatchAPIGuildRolePositionsResult
+- __RESTPatchAPIGuildRoleResult
+- __RESTPatchAPIGuildScheduledEventResult
+- __RESTPatchAPIGuildSoundboardSoundResult
+- __RESTPatchAPIGuildStickerResult
+- __RESTPatchAPIGuildTemplateJSONBody
+- __RESTPatchAPIGuildTemplateResult
+- __RESTPatchAPIGuildVoiceStateCurrentMemberResult
+- __RESTPatchAPIGuildVoiceStateUserResult
+- __RESTPatchAPIGuildWelcomeScreenJSONBody
+- __RESTPatchAPIGuildWelcomeScreenResult
+- __RESTPatchAPIGuildWidgetSettingsJSONBody
+- __RESTPatchAPIGuildWidgetSettingsResult
+- __RESTPatchAPIInteractionFollowupFormDataBody
+- __RESTPatchAPIInteractionFollowupJSONBody
+- __RESTPatchAPIInteractionFollowupResult
+- __RESTPatchAPIInteractionOriginalResponseFormDataBody
+- __RESTPatchAPIInteractionOriginalResponseJSONBody
+- __RESTPatchAPIInteractionOriginalResponseResult
+- __RESTPatchAPIStageInstanceResult
+- __RESTPatchAPIWebhookResult
+- __RESTPatchAPIWebhookWithTokenJSONBody
+- __RESTPatchAPIWebhookWithTokenMessageFormDataBody
+- __RESTPatchAPIWebhookWithTokenMessageJSONBody
+- __RESTPatchAPIWebhookWithTokenMessageQuery
+- __RESTPatchAPIWebhookWithTokenMessageResult
+- __RESTPatchAPIWebhookWithTokenResult
+- __RESTPatchCurrentApplicationJSONBody
+- __RESTPatchCurrentApplicationResult
+- __RESTPostAPIApplicationCommandsJSONBody
+- __RESTPostAPIApplicationCommandsResult
+- __RESTPostAPIApplicationEmojiJSONBody
+- __RESTPostAPIApplicationEmojiResult
+- __RESTPostAPIApplicationGuildCommandsJSONBody
+- __RESTPostAPIApplicationGuildCommandsResult
+- __RESTPostAPIAutoModerationRuleResult
+- __RESTPostAPIChannelFollowersResult
+- __RESTPostAPIChannelInviteResult
+- __RESTPostAPIChannelMessageCrosspostResult
+- __RESTPostAPIChannelMessageFormDataBody
+- __RESTPostAPIChannelMessageResult
+- __RESTPostAPIChannelMessagesBulkDeleteResult
+- __RESTPostAPIChannelMessagesThreadsResult
+- __RESTPostAPIChannelThreadsResult
+- __RESTPostAPIChannelTypingResult
+- __RESTPostAPIChannelWebhookResult
+- __RESTPostAPICurrentUserCreateDMChannelResult
+- __RESTPostAPIEntitlementBody
+- __RESTPostAPIEntitlementConsumeResult
+- __RESTPostAPIEntitlementResult
+- __RESTPostAPIGuildChannelJSONBody
+- __RESTPostAPIGuildChannelResult
+- __RESTPostAPIGuildEmojiResult
+- __RESTPostAPIGuildForumThreadsFormDataBody
+- __RESTPostAPIGuildForumThreadsJSONBody
+- __RESTPostAPIGuildRoleResult
+- __RESTPostAPIGuildScheduledEventResult
+- __RESTPostAPIGuildsMFAResult
+- __RESTPostAPIGuildSoundboardSoundResult
+- __RESTPostAPIGuildsResult
+- __RESTPostAPIGuildStickerResult
+- __RESTPostAPIGuildTemplatesResult
+- __RESTPostAPIInteractionCallbackFormDataBody
+- __RESTPostAPIInteractionCallbackJSONBody
+- __RESTPostAPIInteractionCallbackResult
+- __RESTPostAPIInteractionFollowupFormDataBody
+- __RESTPostAPIInteractionFollowupJSONBody
+- __RESTPostAPIInteractionFollowupResult
+- __RESTPostAPIPollExpireResult
+- __RESTPostAPISendSoundboardSoundResult
+- __RESTPostAPIStageInstanceResult
+- __RESTPostAPITemplateCreateGuildResult
+- __RESTPostAPIWebhookWithTokenFormDataBody
+- __RESTPostAPIWebhookWithTokenGitHubQuery
+- __RESTPostAPIWebhookWithTokenGitHubResult
+- __RESTPostAPIWebhookWithTokenGitHubWaitResult
+- __RESTPostAPIWebhookWithTokenResult
+- __RESTPostAPIWebhookWithTokenSlackQuery
+- __RESTPostAPIWebhookWithTokenSlackResult
+- __RESTPostAPIWebhookWithTokenSlackWaitResult
+- __RESTPostAPIWebhookWithTokenWaitResult
+- __RESTPostOAuth2AccessTokenURLEncodedData
+- __RESTPostOAuth2AccessTokenWithBotAndGuildsAndWebhookIncomingScopeResult
+- __RESTPostOAuth2ClientCredentialsResult
+- __RESTPostOAuth2RefreshTokenResult
+- __RESTPostOAuth2RefreshTokenURLEncodedData
+- __RESTPutAPIApplicationCommandPermissionsResult
+- __RESTPutAPIApplicationCommandsJSONBody
+- __RESTPutAPIApplicationCommandsResult
+- __RESTPutAPIApplicationGuildCommandsJSONBody
+- __RESTPutAPIApplicationGuildCommandsResult
+- __RESTPutAPIApplicationRoleConnectionMetadataJSONBody
+- __RESTPutAPIApplicationRoleConnectionMetadataResult
+- __RESTPutAPIChannelMessageReactionResult
+- __RESTPutAPIChannelMessagesPinResult
+- __RESTPutAPIChannelPermissionResult
+- __RESTPutAPIChannelPinResult
+- __RESTPutAPIChannelRecipientResult
+- __RESTPutAPIChannelThreadMembersResult
+- __RESTPutAPICurrentUserApplicationRoleConnectionResult
+- __RESTPutAPIGuildApplicationCommandsPermissionsJSONBody
+- __RESTPutAPIGuildApplicationCommandsPermissionsResult
+- __RESTPutAPIGuildBanResult
+- __RESTPutAPIGuildIncidentActionsResult
+- __RESTPutAPIGuildMemberResult
+- __RESTPutAPIGuildMemberRoleResult
+- __RESTPutAPIGuildOnboardingJSONBody
+- __RESTPutAPIGuildOnboardingResult
+- __RESTPutAPIGuildTemplateSyncResult
+- __RoleIconFormat
+- __RPCCertifiedDevice
+- __RPCCommandsResult
+- __RPCCommandSubscribePayload
+- __RPCCommandUnsubscribePayload
+- __RPCCreateChannelInviteResultData
+- __RPCEventsDispatch
+- __RPCGetRelationshipsResultData
+- __RPCGetSelectedVoiceChannelResultData
+- __RPCGetSkusResultData
+- __RPCGetUserResultData
+- __RPCMessage
+- __RPCMessagePayload
+- __RPCSelectTextChannelResultData
+- __RPCSelectVoiceChannelResultData
+- __RPCSetCertifiedDevicesResultData
+- __RPCSetUserVoiceSettings2Args
+- __RPCSetUserVoiceSettings2ResultData
+- __RPCSetUserVoiceSettingsResultData
+- __RPCSetVoiceSettings2Args
+- __RPCSetVoiceSettings2ResultData
+- __RPCSetVoiceSettingsArgs
+- __RPCSetVoiceSettingsResultData
+- __RPCSubscribeActivityInviteArgs
+- __RPCSubscribeActivityJoinArgs
+- __RPCSubscribeActivityJoinRequestArgs
+- __RPCSubscribeActivitySpectateArgs
+- __RPCSubscribeArgs
+- __RPCSubscribeChannelCreateArgs
+- __RPCSubscribeCurrentUserUpdateArgs
+- __RPCSubscribeEntitlementCreateArgs
+- __RPCSubscribeEntitlementDeleteArgs
+- __RPCSubscribeGameJoinArgs
+- __RPCSubscribeGameSpectateArgs
+- __RPCSubscribeGuildCreateArgs
+- __RPCSubscribeNotificationCreateArgs
+- __RPCSubscribeOverlayArgs
+- __RPCSubscribeOverlayUpdateArgs
+- __RPCSubscribeRelationshipUpdateArgs
+- __RPCSubscribeVoiceChannelSelectArgs
+- __RPCSubscribeVoiceConnectionStatusArgs
+- __RPCSubscribeVoiceSettingsUpdate2Args
+- __RPCSubscribeVoiceSettingsUpdateArgs
+- __RPCUnsubscribeArgs
+- __RPCVoiceSettingsUpdateDispatchData
+- __StickerFormat
+- __StickerPackBannerFormat
+- __StorePageAssetFormat
+- __TeamIconFormat
+- __TextChannelType
+- __ThreadChannelType
+- __UserAvatarFormat
+- __UserBannerFormat
+
+### Variables
+
+- __APIApplicationCommandPermissionsConstant
+- __APIVersion
+- __CannotSendMessagesToThisUserErrorCodes
+- __CDNRoutes
+- __GatewayVersion
+- __OAuth2Routes
+- __PermissionFlagsBits
+- __RouteBases
+- __Routes
+- __RPCVersion
+- __StickerPackApplicationId
+- __urlSafeCharacters
+
+## References [__](#References)
+
+### [__](#FormattingPatterns) __FormattingPatterns
+
+Re-exports FormattingPatterns
+
+### [__](#Permissions) __Permissions
+
+Re-exports Permissions
+
+### [__](#Snowflake) __Snowflake
+
+Re-exports Snowflake
+
+## Type Aliases [__](#Type Aliases)
+
+### [__](#_AddUndefinedToPossiblyUndefinedPropertiesOfInterface) ___AddUndefinedToPossiblyUndefinedPropertiesOfInterface
+
+___AddUndefinedToPossiblyUndefinedPropertiesOfInterface<Base>: {[K inkeyofBase ]:Base[K] extendsExclude<Base[K],undefined> ? _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<Base[K]> : _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<Base[K]> |undefined }
+
+#### Type parameters
+
+- **Base**
+
+### [__](#_DistributiveKeys) ___DistributiveKeys
+
+___DistributiveKeys<T>: T extendsunknown ? _Keys<T> :never
+
+#### Type parameters
+
+- **T**
+
+### [__](#_DistributiveOmit) ___DistributiveOmit
+
+___DistributiveOmit<T,K>: T extendsunknown ?{P inkeyof [_Omit<T,K> ]: _Omit<T,K>[P] } :never
+
+Allows omitting of keys from unions that are disjoint
+
+---
+
+#### Type parameters
+
+- **T**
+- **K**: _DistributiveKeys<T>
+
+### [__](#_DistributivePick) ___DistributivePick
+
+___DistributivePick<T,K>: T extendsunknown ?keyof _Pick<T,K> extendsnever ?never :{P inkeyof [_Pick<T,K> ]: _Pick<T,K>[P] } :never
+
+Allows picking of keys from unions that are disjoint
+
+---
+
+#### Type parameters
+
+- **T**
+- **K**: _DistributiveKeys<T>
+
+### [__](#_Keys) ___Keys
+
+___Keys<T>: keyofT
+
+#### Type parameters
+
+- **T**
+
+### [__](#_NonNullableFields) ___NonNullableFields
+
+___NonNullableFields<T>: {[P inkeyofT ]:NonNullable<T[P]> }
+
+#### Type parameters
+
+- **T**
+
+### [__](#_Nullable) ___Nullable
+
+___Nullable<T>: {[P inkeyofT ]:T[P] |null }
+
+#### Type parameters
+
+- **T**
+
+### [__](#_Omit) ___Omit
+
+___Omit<T,K>: Omit<T,Extract<keyofT,K>>
+
+#### Type parameters
+
+- **T**
+- **K**
+
+### [__](#_Pick) ___Pick
+
+___Pick<T,K>: Pick<T,Extract<keyofT,K>>
+
+#### Type parameters
+
+- **T**
+- **K**
+
+### [__](#_StrictPartial) ___StrictPartial
+
+___StrictPartial<Base>: _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<Partial<Base>>
+
+#### Type parameters
+
+- **Base**
+
+### [__](#_StrictRequired) ___StrictRequired
+
+___StrictRequired<Base>: Required<{[K inkeyofBase ]:Exclude<Base[K],undefined> }>
+
+#### Type parameters
+
+- **Base**
+
+### [__](#_UnionToIntersection) ___UnionToIntersection
+
+___UnionToIntersection<U>: (U extendsany ?(k:U) =>void :never) extends(k:infer I) =>void ?I :never
+
+#### Type parameters
+
+- **U**
+
+### [__](#AchievementIconFormat) __AchievementIconFormat
+
+__AchievementIconFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#APIAnnouncementThreadChannel) __APIAnnouncementThreadChannel
+
+__APIAnnouncementThreadChannel: APIThreadChannel<ChannelType.AnnouncementThread>
+
+### [__](#APIApplicationCommandAttachmentOption) __APIApplicationCommandAttachmentOption
+
+__APIApplicationCommandAttachmentOption: APIApplicationCommandOptionBase<ApplicationCommandOptionType.Attachment>
+
+### [__](#APIApplicationCommandAutocompleteDMInteraction) __APIApplicationCommandAutocompleteDMInteraction
+
+__APIApplicationCommandAutocompleteDMInteraction: APIDMInteractionWrapper< APIApplicationCommandAutocompleteInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIApplicationCommandAutocompleteGuildInteraction) __APIApplicationCommandAutocompleteGuildInteraction
+
+__APIApplicationCommandAutocompleteGuildInteraction: APIGuildInteractionWrapper< APIApplicationCommandAutocompleteInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIApplicationCommandAutocompleteInteraction) __APIApplicationCommandAutocompleteInteraction
+
+__APIApplicationCommandAutocompleteInteraction: APIBaseInteraction<InteractionType.ApplicationCommandAutocomplete, APIAutocompleteApplicationCommandInteractionData> &Required<Pick< APIBaseInteraction<InteractionType.ApplicationCommandAutocomplete,Required<Pick< APIAutocompleteApplicationCommandInteractionData,options>>>,data>>
+
+### [__](#APIApplicationCommandBasicOption) __APIApplicationCommandBasicOption
+
+__APIApplicationCommandBasicOption: APIApplicationCommandAttachmentOption | APIApplicationCommandBooleanOption | APIApplicationCommandChannelOption | APIApplicationCommandIntegerOption | APIApplicationCommandMentionableOption | APIApplicationCommandNumberOption | APIApplicationCommandRoleOption | APIApplicationCommandStringOption | APIApplicationCommandUserOption
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
+
+</dd></dl>
+
+### [__](#APIApplicationCommandBooleanOption) __APIApplicationCommandBooleanOption
+
+__APIApplicationCommandBooleanOption: APIApplicationCommandOptionBase<ApplicationCommandOptionType.Boolean>
+
+### [__](#APIApplicationCommandDMInteraction) __APIApplicationCommandDMInteraction
+
+__APIApplicationCommandDMInteraction: APIChatInputApplicationCommandDMInteraction | APIContextMenuDMInteraction | APIPrimaryEntryPointCommandDMInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIApplicationCommandGuildInteraction) __APIApplicationCommandGuildInteraction
+
+__APIApplicationCommandGuildInteraction: APIChatInputApplicationCommandGuildInteraction | APIContextMenuGuildInteraction | APIPrimaryEntryPointCommandGuildInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIApplicationCommandIntegerOption) __APIApplicationCommandIntegerOption
+
+__APIApplicationCommandIntegerOption: APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper< APIApplicationCommandIntegerOptionBase, APIApplicationCommandOptionChoice<number>>
+
+### [__](#APIApplicationCommandInteraction) __APIApplicationCommandInteraction
+
+__APIApplicationCommandInteraction: APIChatInputApplicationCommandInteraction | APIContextMenuInteraction | APIPrimaryEntryPointCommandInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIApplicationCommandInteractionData) __APIApplicationCommandInteractionData
+
+__APIApplicationCommandInteractionData: APIChatInputApplicationCommandInteractionData | APIContextMenuInteractionData | APIPrimaryEntryPointCommandInteractionData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
+
+</dd></dl>
+
+### [__](#APIApplicationCommandInteractionDataAttachmentOption) __APIApplicationCommandInteractionDataAttachmentOption
+
+__APIApplicationCommandInteractionDataAttachmentOption: APIInteractionDataOptionBase<ApplicationCommandOptionType.Attachment, Snowflake>
+
+### [__](#APIApplicationCommandInteractionDataBasicOption) __APIApplicationCommandInteractionDataBasicOption
+
+__APIApplicationCommandInteractionDataBasicOption<Type>: APIApplicationCommandInteractionDataAttachmentOption | APIApplicationCommandInteractionDataBooleanOption | APIApplicationCommandInteractionDataChannelOption | APIApplicationCommandInteractionDataIntegerOption<Type> | APIApplicationCommandInteractionDataMentionableOption | APIApplicationCommandInteractionDataNumberOption<Type> | APIApplicationCommandInteractionDataRoleOption | APIApplicationCommandInteractionDataStringOption | APIApplicationCommandInteractionDataUserOption
+
+#### Type parameters
+
+- **Type**: InteractionType = InteractionType
+
+### [__](#APIApplicationCommandInteractionDataBooleanOption) __APIApplicationCommandInteractionDataBooleanOption
+
+__APIApplicationCommandInteractionDataBooleanOption: APIInteractionDataOptionBase<ApplicationCommandOptionType.Boolean,boolean>
+
+### [__](#APIApplicationCommandInteractionDataChannelOption) __APIApplicationCommandInteractionDataChannelOption
+
+__APIApplicationCommandInteractionDataChannelOption: APIInteractionDataOptionBase<ApplicationCommandOptionType.Channel, Snowflake>
+
+### [__](#APIApplicationCommandInteractionDataMentionableOption) __APIApplicationCommandInteractionDataMentionableOption
+
+__APIApplicationCommandInteractionDataMentionableOption: APIInteractionDataOptionBase<ApplicationCommandOptionType.Mentionable, Snowflake>
+
+### [__](#APIApplicationCommandInteractionDataOption) __APIApplicationCommandInteractionDataOption
+
+__APIApplicationCommandInteractionDataOption<Type>: APIApplicationCommandInteractionDataBasicOption<Type> | APIApplicationCommandInteractionDataSubcommandGroupOption<Type> | APIApplicationCommandInteractionDataSubcommandOption<Type>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-interaction-data-option-structure
+
+</dd></dl>
+
+---
+
+#### Type parameters
+
+- **Type**: InteractionType = InteractionType
+
+### [__](#APIApplicationCommandInteractionDataRoleOption) __APIApplicationCommandInteractionDataRoleOption
+
+__APIApplicationCommandInteractionDataRoleOption: APIInteractionDataOptionBase<ApplicationCommandOptionType.Role, Snowflake>
+
+### [__](#APIApplicationCommandInteractionDataUserOption) __APIApplicationCommandInteractionDataUserOption
+
+__APIApplicationCommandInteractionDataUserOption: APIInteractionDataOptionBase<ApplicationCommandOptionType.User, Snowflake>
+
+### [__](#APIApplicationCommandInteractionWrapper) __APIApplicationCommandInteractionWrapper
+
+__APIApplicationCommandInteractionWrapper<Data>: APIBaseInteraction<InteractionType.ApplicationCommand,Data> &Required<Pick< APIBaseInteraction<InteractionType.ApplicationCommand,Data>,app_permissions |channel_id |channel |data>>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+---
+
+#### Type parameters
+
+- **Data**: APIApplicationCommandInteractionData
+
+### [__](#APIApplicationCommandMentionableOption) __APIApplicationCommandMentionableOption
+
+__APIApplicationCommandMentionableOption: APIApplicationCommandOptionBase<ApplicationCommandOptionType.Mentionable>
+
+### [__](#APIApplicationCommandNumberOption) __APIApplicationCommandNumberOption
+
+__APIApplicationCommandNumberOption: APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper< APIApplicationCommandNumberOptionBase, APIApplicationCommandOptionChoice<number>>
+
+### [__](#APIApplicationCommandOption) __APIApplicationCommandOption
+
+__APIApplicationCommandOption: APIApplicationCommandBasicOption | APIApplicationCommandSubcommandGroupOption | APIApplicationCommandSubcommandOption
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#application-command-object-application-command-option-structure
+
+</dd></dl>
+
+### [__](#APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper) __APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper
+
+__APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper<Base,ChoiceType>: (Base &{autocomplete:true;choices?:[] }) |(Base &{autocomplete?:false;choices?:ChoiceType[] })
+
+#### Type parameters
+
+- **Base**: APIApplicationCommandOptionBase< ApplicationCommandOptionType>
+- **ChoiceType**: APIApplicationCommandOptionChoice
+
+### [__](#APIApplicationCommandRoleOption) __APIApplicationCommandRoleOption
+
+__APIApplicationCommandRoleOption: APIApplicationCommandOptionBase<ApplicationCommandOptionType.Role>
+
+### [__](#APIApplicationCommandStringOption) __APIApplicationCommandStringOption
+
+__APIApplicationCommandStringOption: APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper< APIApplicationCommandStringOptionBase, APIApplicationCommandOptionChoice<string>>
+
+### [__](#APIApplicationCommandUserOption) __APIApplicationCommandUserOption
+
+__APIApplicationCommandUserOption: APIApplicationCommandOptionBase<ApplicationCommandOptionType.User>
+
+### [__](#APIApplicationEmoji) __APIApplicationEmoji
+
+__APIApplicationEmoji: _NonNullableFields<Required<Pick< APIEmoji,animated |id |name |user>>> &{available:true;managed:false;require_colons:true;roles:[] }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#emoji-object-applicationowned-emoji
+
+</dd></dl>
+
+### [__](#APIApplicationIntegrationTypesConfigMap) __APIApplicationIntegrationTypesConfigMap
+
+__APIApplicationIntegrationTypesConfigMap: {key in [ApplicationIntegrationType ]?: APIApplicationIntegrationTypeConfiguration }
+
+### [__](#APIAuditLogChange) __APIAuditLogChange
+
+__APIAuditLogChange: APIAuditLogChangeKey$Add | APIAuditLogChangeKey$Remove | APIAuditLogChangeKeyActions | APIAuditLogChangeKeyAFKChannelId | APIAuditLogChangeKeyAFKTimeout | APIAuditLogChangeKeyAllow | APIAuditLogChangeKeyApplicationId | APIAuditLogChangeKeyArchived | APIAuditLogChangeKeyAsset | APIAuditLogChangeKeyAutoArchiveDuration | APIAuditLogChangeKeyAvailable | APIAuditLogChangeKeyAvailableTags | APIAuditLogChangeKeyAvatarHash | APIAuditLogChangeKeyBannerHash | APIAuditLogChangeKeyBitrate | APIAuditLogChangeKeyChannelId | APIAuditLogChangeKeyCode | APIAuditLogChangeKeyColor | APIAuditLogChangeKeyCommunicationDisabledUntil | APIAuditLogChangeKeyDeaf | APIAuditLogChangeKeyDefaultAutoArchiveDuration | APIAuditLogChangeKeyDefaultMessageNotifications | APIAuditLogChangeKeyDefaultReactionEmoji | APIAuditLogChangeKeyDefaultThreadRateLimitPerUser | APIAuditLogChangeKeyDeny | APIAuditLogChangeKeyDescription | APIAuditLogChangeKeyDiscoverySplashHash | APIAuditLogChangeKeyEmojiId | APIAuditLogChangeKeyEmojiName | APIAuditLogChangeKeyEnabled | APIAuditLogChangeKeyEnableEmoticons | APIAuditLogChangeKeyEntityType | APIAuditLogChangeKeyEventType | APIAuditLogChangeKeyExemptChannels | APIAuditLogChangeKeyExemptRoles | APIAuditLogChangeKeyExpireBehavior | APIAuditLogChangeKeyExpireGracePeriod | APIAuditLogChangeKeyExplicitContentFilter | APIAuditLogChangeKeyFlags | APIAuditLogChangeKeyFormatType | APIAuditLogChangeKeyGuildId | APIAuditLogChangeKeyHoist | APIAuditLogChangeKeyIconHash | APIAuditLogChangeKeyId | APIAuditLogChangeKeyImageHash | APIAuditLogChangeKeyInviterId | APIAuditLogChangeKeyLocation | APIAuditLogChangeKeyLocked | APIAuditLogChangeKeyMaxAge | APIAuditLogChangeKeyMaxUses | APIAuditLogChangeKeyMentionable | APIAuditLogChangeKeyMFALevel | APIAuditLogChangeKeyMute | APIAuditLogChangeKeyName | APIAuditLogChangeKeyNick | APIAuditLogChangeKeyNSFW | APIAuditLogChangeKeyOwnerId | APIAuditLogChangeKeyPermissionOverwrites | APIAuditLogChangeKeyPermissions | APIAuditLogChangeKeyPosition | APIAuditLogChangeKeyPreferredLocale | APIAuditLogChangeKeyPremiumProgressBarEnabled | APIAuditLogChangeKeyPrivacyLevel | APIAuditLogChangeKeyPruneDeleteDays | APIAuditLogChangeKeyPublicUpdatesChannelId | APIAuditLogChangeKeyRateLimitPerUser | APIAuditLogChangeKeyRecurrenceRule | APIAuditLogChangeKeyRegion | APIAuditLogChangeKeyRTCRegion | APIAuditLogChangeKeyRulesChannelId | APIAuditLogChangeKeySafetyAlertsChannelId | APIAuditLogChangeKeySoundId | APIAuditLogChangeKeySplashHash | APIAuditLogChangeKeyStatus | APIAuditLogChangeKeySystemChannelFlags | APIAuditLogChangeKeySystemChannelId | APIAuditLogChangeKeyTags | APIAuditLogChangeKeyTemporary | APIAuditLogChangeKeyTopic | APIAuditLogChangeKeyTriggerMetadata | APIAuditLogChangeKeyTriggerType | APIAuditLogChangeKeyType | APIAuditLogChangeKeyUserId | APIAuditLogChangeKeyUserLimit | APIAuditLogChangeKeyUses | APIAuditLogChangeKeyVanityURLCode | APIAuditLogChangeKeyVerificationLevel | APIAuditLogChangeKeyVideoQualityMode | APIAuditLogChangeKeyVolume | APIAuditLogChangeKeyWidgetChannelId | APIAuditLogChangeKeyWidgetEnabled
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/audit-log#audit-log-change-object-audit-log-change-structure
+
+</dd></dl>
+
+### [__](#APIAuditLogChangeKey$Add) __APIAuditLogChangeKey$Add
+
+__APIAuditLogChangeKey$Add: APIAuditLogChangeData<$add,Pick< APIRole,id |name>[]>
+
+Returned when new role(s) are added
+
+### [__](#APIAuditLogChangeKey$Remove) __APIAuditLogChangeKey$Remove
+
+__APIAuditLogChangeKey$Remove: APIAuditLogChangeData<$remove,Pick< APIRole,id |name>[]>
+
+Returned when role(s) are removed
+
+### [__](#APIAuditLogChangeKeyActions) __APIAuditLogChangeKeyActions
+
+__APIAuditLogChangeKeyActions: APIAuditLogChangeData<actions, APIAutoModerationAction[]>
+
+Returned when an auto moderation rule's actions is changed
+
+### [__](#APIAuditLogChangeKeyAFKChannelId) __APIAuditLogChangeKeyAFKChannelId
+
+__APIAuditLogChangeKeyAFKChannelId: APIAuditLogChangeData<afk_channel_id, Snowflake>
+
+Returned when a guild's afk_channel_id is changed
+
+### [__](#APIAuditLogChangeKeyAFKTimeout) __APIAuditLogChangeKeyAFKTimeout
+
+__APIAuditLogChangeKeyAFKTimeout: APIAuditLogChangeData<afk_timeout,number>
+
+Returned when a guild's afk_timeout is changed
+
+### [__](#APIAuditLogChangeKeyAllow) __APIAuditLogChangeKeyAllow
+
+__APIAuditLogChangeKeyAllow: APIAuditLogChangeData<allow,string>
+
+Returned when an overwrite's allowed permissions bitfield is changed
+
+### [__](#APIAuditLogChangeKeyApplicationId) __APIAuditLogChangeKeyApplicationId
+
+__APIAuditLogChangeKeyApplicationId: APIAuditLogChangeData<application_id, Snowflake>
+
+The application ID of the added or removed Webhook or Bot
+
+### [__](#APIAuditLogChangeKeyArchived) __APIAuditLogChangeKeyArchived
+
+__APIAuditLogChangeKeyArchived: APIAuditLogChangeData<archived,boolean>
+
+Returned when a thread's archive status is changed
+
+### [__](#APIAuditLogChangeKeyAsset) __APIAuditLogChangeKeyAsset
+
+__APIAuditLogChangeKeyAsset: APIAuditLogChangeData<asset,>
+
+Empty string
+
+### [__](#APIAuditLogChangeKeyAutoArchiveDuration) __APIAuditLogChangeKeyAutoArchiveDuration
+
+__APIAuditLogChangeKeyAutoArchiveDuration: APIAuditLogChangeData<auto_archive_duration,number>
+
+Returned when a thread's auto archive duration is changed
+
+### [__](#APIAuditLogChangeKeyAvailable) __APIAuditLogChangeKeyAvailable
+
+__APIAuditLogChangeKeyAvailable: APIAuditLogChangeData<available,boolean>
+
+Returned when a sticker's availability is changed
+
+### [__](#APIAuditLogChangeKeyAvailableTags) __APIAuditLogChangeKeyAvailableTags
+
+__APIAuditLogChangeKeyAvailableTags: APIAuditLogChangeData<available_tags, APIGuildForumTag[]>
+
+Returned when a guild forum's available tags gets changed
+
+### [__](#APIAuditLogChangeKeyAvatarHash) __APIAuditLogChangeKeyAvatarHash
+
+__APIAuditLogChangeKeyAvatarHash: APIAuditLogChangeData<avatar_hash,string>
+
+Returned when a user's avatar_hash is changed
+
+### [__](#APIAuditLogChangeKeyBannerHash) __APIAuditLogChangeKeyBannerHash
+
+__APIAuditLogChangeKeyBannerHash: APIAuditLogChangeData<banner_hash,string>
+
+Returned when a guild's banner hash is changed
+
+### [__](#APIAuditLogChangeKeyBitrate) __APIAuditLogChangeKeyBitrate
+
+__APIAuditLogChangeKeyBitrate: APIAuditLogChangeData<bitrate,number>
+
+Returned when a voice channel's bitrate is changed
+
+### [__](#APIAuditLogChangeKeyChannelId) __APIAuditLogChangeKeyChannelId
+
+__APIAuditLogChangeKeyChannelId: APIAuditLogChangeData<channel_id, Snowflake>
+
+Returned when an invite's or guild scheduled event's channel_id is changed
+
+### [__](#APIAuditLogChangeKeyCode) __APIAuditLogChangeKeyCode
+
+__APIAuditLogChangeKeyCode: APIAuditLogChangeData<code,string>
+
+Returned when an invite's code is changed
+
+### [__](#APIAuditLogChangeKeyColor) __APIAuditLogChangeKeyColor
+
+__APIAuditLogChangeKeyColor: APIAuditLogChangeData<color,number>
+
+Returned when a role's color is changed
+
+### [__](#APIAuditLogChangeKeyCommunicationDisabledUntil) __APIAuditLogChangeKeyCommunicationDisabledUntil
+
+__APIAuditLogChangeKeyCommunicationDisabledUntil: APIAuditLogChangeData<communication_disabled_until,string>
+
+Returned when a user's timeout is changed
+
+### [__](#APIAuditLogChangeKeyDeaf) __APIAuditLogChangeKeyDeaf
+
+__APIAuditLogChangeKeyDeaf: APIAuditLogChangeData<deaf,boolean>
+
+Returned when a user's deaf status is changed
+
+### [__](#APIAuditLogChangeKeyDefaultAutoArchiveDuration) __APIAuditLogChangeKeyDefaultAutoArchiveDuration
+
+__APIAuditLogChangeKeyDefaultAutoArchiveDuration: APIAuditLogChangeData<default_auto_archive_duration,number>
+
+Returned when a channel's default auto archive duration for newly created threads is changed
+
+### [__](#APIAuditLogChangeKeyDefaultMessageNotifications) __APIAuditLogChangeKeyDefaultMessageNotifications
+
+__APIAuditLogChangeKeyDefaultMessageNotifications: APIAuditLogChangeData<default_message_notifications, GuildDefaultMessageNotifications>
+
+Returned when a guild's default_message_notifications is changed
+
+### [__](#APIAuditLogChangeKeyDefaultReactionEmoji) __APIAuditLogChangeKeyDefaultReactionEmoji
+
+__APIAuditLogChangeKeyDefaultReactionEmoji: APIAuditLogChangeData<default_reaction_emoji, APIGuildForumDefaultReactionEmoji>
+
+Returned when a guild forum's default reaction emoji gets changed
+
+### [__](#APIAuditLogChangeKeyDefaultThreadRateLimitPerUser) __APIAuditLogChangeKeyDefaultThreadRateLimitPerUser
+
+__APIAuditLogChangeKeyDefaultThreadRateLimitPerUser: APIAuditLogChangeData<default_thread_rate_limit_per_user,number>
+
+Returned when a thread's amount of seconds a user has to wait before creating another thread gets changed
+
+### [__](#APIAuditLogChangeKeyDeny) __APIAuditLogChangeKeyDeny
+
+__APIAuditLogChangeKeyDeny: APIAuditLogChangeData<deny,string>
+
+Returned when an overwrite's denied permissions bitfield is changed
+
+### [__](#APIAuditLogChangeKeyDescription) __APIAuditLogChangeKeyDescription
+
+__APIAuditLogChangeKeyDescription: APIAuditLogChangeData<description,string>
+
+Returned when a guild's or sticker's or guild scheduled event's description is changed
+
+### [__](#APIAuditLogChangeKeyDiscoverySplashHash) __APIAuditLogChangeKeyDiscoverySplashHash
+
+__APIAuditLogChangeKeyDiscoverySplashHash: APIAuditLogChangeData<discovery_splash_hash,string>
+
+Returned when a guild's discovery splash is changed
+
+### [__](#APIAuditLogChangeKeyEmojiId) __APIAuditLogChangeKeyEmojiId
+
+__APIAuditLogChangeKeyEmojiId: APIAuditLogChangeData<emoji_id, Snowflake>
+
+Returned when a soundboard's custom emoji is changed
+
+### [__](#APIAuditLogChangeKeyEmojiName) __APIAuditLogChangeKeyEmojiName
+
+__APIAuditLogChangeKeyEmojiName: APIAuditLogChangeData<emoji_name,string>
+
+Returned when a soundboard's unicode emoji is changed
+
+### [__](#APIAuditLogChangeKeyEnabled) __APIAuditLogChangeKeyEnabled
+
+__APIAuditLogChangeKeyEnabled: APIAuditLogChangeData<enabled,boolean>
+
+Returned when an auto moderation rule's enabled status is changed
+
+### [__](#APIAuditLogChangeKeyEnableEmoticons) __APIAuditLogChangeKeyEnableEmoticons
+
+__APIAuditLogChangeKeyEnableEmoticons: APIAuditLogChangeData<enable_emoticons,boolean>
+
+Returned when an integration's enable_emoticons is changed
+
+### [__](#APIAuditLogChangeKeyEntityType) __APIAuditLogChangeKeyEntityType
+
+__APIAuditLogChangeKeyEntityType: APIAuditLogChangeData<entity_type, GuildScheduledEventEntityType>
+
+Returned when entity type of a guild scheduled event is changed
+
+### [__](#APIAuditLogChangeKeyEventType) __APIAuditLogChangeKeyEventType
+
+__APIAuditLogChangeKeyEventType: APIAuditLogChangeData<event_type, AutoModerationRuleEventType>
+
+Returned when an auto moderation rule's event type is changed
+
+### [__](#APIAuditLogChangeKeyExemptChannels) __APIAuditLogChangeKeyExemptChannels
+
+__APIAuditLogChangeKeyExemptChannels: APIAuditLogChangeData<exempt_channels, Snowflake[]>
+
+Returned when an auto moderation rule's exempt channels is changed
+
+### [__](#APIAuditLogChangeKeyExemptRoles) __APIAuditLogChangeKeyExemptRoles
+
+__APIAuditLogChangeKeyExemptRoles: APIAuditLogChangeData<exempt_roles, Snowflake[]>
+
+Returned when an auto moderation rule's exempt roles is changed
+
+### [__](#APIAuditLogChangeKeyExpireBehavior) __APIAuditLogChangeKeyExpireBehavior
+
+__APIAuditLogChangeKeyExpireBehavior: APIAuditLogChangeData<expire_behavior, IntegrationExpireBehavior>
+
+Returned when an integration's expire_behavior is changed
+
+### [__](#APIAuditLogChangeKeyExpireGracePeriod) __APIAuditLogChangeKeyExpireGracePeriod
+
+__APIAuditLogChangeKeyExpireGracePeriod: APIAuditLogChangeData<expire_grace_period,number>
+
+Returned when an integration's expire_grace_period is changed
+
+### [__](#APIAuditLogChangeKeyExplicitContentFilter) __APIAuditLogChangeKeyExplicitContentFilter
+
+__APIAuditLogChangeKeyExplicitContentFilter: APIAuditLogChangeData<explicit_content_filter, GuildExplicitContentFilter>
+
+Returned when a guild's explicit_content_filter is changed
+
+### [__](#APIAuditLogChangeKeyFlags) __APIAuditLogChangeKeyFlags
+
+__APIAuditLogChangeKeyFlags: APIAuditLogChangeData<flags,number>
+
+Returned when a channel flag gets changed
+
+### [__](#APIAuditLogChangeKeyFormatType) __APIAuditLogChangeKeyFormatType
+
+__APIAuditLogChangeKeyFormatType: APIAuditLogChangeData<format_type, StickerFormatType>
+
+Returned when a sticker's format_type is changed
+
+### [__](#APIAuditLogChangeKeyGuildId) __APIAuditLogChangeKeyGuildId
+
+__APIAuditLogChangeKeyGuildId: APIAuditLogChangeData<guild_id, Snowflake>
+
+Returned when a sticker's guild_id is changed
+
+### [__](#APIAuditLogChangeKeyHoist) __APIAuditLogChangeKeyHoist
+
+__APIAuditLogChangeKeyHoist: APIAuditLogChangeData<hoist,boolean>
+
+Returned when a role's hoist status is changed
+
+### [__](#APIAuditLogChangeKeyIconHash) __APIAuditLogChangeKeyIconHash
+
+__APIAuditLogChangeKeyIconHash: APIAuditLogChangeData<icon_hash,string>
+
+Returned when a guild's icon is changed
+
+### [__](#APIAuditLogChangeKeyId) __APIAuditLogChangeKeyId
+
+__APIAuditLogChangeKeyId: APIAuditLogChangeData<id, Snowflake>
+
+The ID of the changed entity - sometimes used in conjunction with other keys
+
+### [__](#APIAuditLogChangeKeyImageHash) __APIAuditLogChangeKeyImageHash
+
+__APIAuditLogChangeKeyImageHash: APIAuditLogChangeData<image_hash,string>
+
+Returned when a guild's scheduled event's cover image is changed
+
+### [__](#APIAuditLogChangeKeyInviterId) __APIAuditLogChangeKeyInviterId
+
+__APIAuditLogChangeKeyInviterId: APIAuditLogChangeData<inviter_id, Snowflake>
+
+Returned when an invite's inviter_id is changed
+
+### [__](#APIAuditLogChangeKeyLocation) __APIAuditLogChangeKeyLocation
+
+__APIAuditLogChangeKeyLocation: APIAuditLogChangeData<location,string>
+
+Returned when location of a guild scheduled event is changed
+
+### [__](#APIAuditLogChangeKeyLocked) __APIAuditLogChangeKeyLocked
+
+__APIAuditLogChangeKeyLocked: APIAuditLogChangeData<locked,boolean>
+
+Returned when a thread's lock status is changed
+
+### [__](#APIAuditLogChangeKeyMaxAge) __APIAuditLogChangeKeyMaxAge
+
+__APIAuditLogChangeKeyMaxAge: APIAuditLogChangeData<max_age,number>
+
+Returned when an invite's max_age is changed
+
+### [__](#APIAuditLogChangeKeyMaxUses) __APIAuditLogChangeKeyMaxUses
+
+__APIAuditLogChangeKeyMaxUses: APIAuditLogChangeData<max_uses,number>
+
+Returned when an invite's max_uses is changed
+
+### [__](#APIAuditLogChangeKeyMentionable) __APIAuditLogChangeKeyMentionable
+
+__APIAuditLogChangeKeyMentionable: APIAuditLogChangeData<mentionable,boolean>
+
+Returned when a role's mentionable status is changed
+
+### [__](#APIAuditLogChangeKeyMFALevel) __APIAuditLogChangeKeyMFALevel
+
+__APIAuditLogChangeKeyMFALevel: APIAuditLogChangeData<mfa_level, GuildMFALevel>
+
+Returned when a guild's mfa_level is changed
+
+### [__](#APIAuditLogChangeKeyMute) __APIAuditLogChangeKeyMute
+
+__APIAuditLogChangeKeyMute: APIAuditLogChangeData<mute,boolean>
+
+Returned when a user's mute status is changed
+
+### [__](#APIAuditLogChangeKeyName) __APIAuditLogChangeKeyName
+
+__APIAuditLogChangeKeyName: APIAuditLogChangeData<name,string>
+
+Returned when an entity's name is changed
+
+### [__](#APIAuditLogChangeKeyNick) __APIAuditLogChangeKeyNick
+
+__APIAuditLogChangeKeyNick: APIAuditLogChangeData<nick,string>
+
+Returned when a user's nick is changed
+
+### [__](#APIAuditLogChangeKeyNSFW) __APIAuditLogChangeKeyNSFW
+
+__APIAuditLogChangeKeyNSFW: APIAuditLogChangeData<nsfw,boolean>
+
+Returned when a channel's NSFW restriction is changed
+
+### [__](#APIAuditLogChangeKeyOwnerId) __APIAuditLogChangeKeyOwnerId
+
+__APIAuditLogChangeKeyOwnerId: APIAuditLogChangeData<owner_id, Snowflake>
+
+Returned when a guild's owner_id is changed
+
+### [__](#APIAuditLogChangeKeyPermissionOverwrites) __APIAuditLogChangeKeyPermissionOverwrites
+
+__APIAuditLogChangeKeyPermissionOverwrites: APIAuditLogChangeData<permission_overwrites, APIOverwrite[]>
+
+Returned when a channel's permission overwrites is changed
+
+### [__](#APIAuditLogChangeKeyPermissions) __APIAuditLogChangeKeyPermissions
+
+__APIAuditLogChangeKeyPermissions: APIAuditLogChangeData<permissions,string>
+
+Returned when a permission bitfield is changed
+
+### [__](#APIAuditLogChangeKeyPosition) __APIAuditLogChangeKeyPosition
+
+__APIAuditLogChangeKeyPosition: APIAuditLogChangeData<position,number>
+
+Returned when a channel's position is changed
+
+### [__](#APIAuditLogChangeKeyPreferredLocale) __APIAuditLogChangeKeyPreferredLocale
+
+__APIAuditLogChangeKeyPreferredLocale: APIAuditLogChangeData<preferred_locale,string>
+
+Returned when a guild's preferred_locale is changed
+
+### [__](#APIAuditLogChangeKeyPremiumProgressBarEnabled) __APIAuditLogChangeKeyPremiumProgressBarEnabled
+
+__APIAuditLogChangeKeyPremiumProgressBarEnabled: APIAuditLogChangeData<premium_progress_bar_enabled,boolean>
+
+Returned when a guild's boost progress bar is enabled
+
+### [__](#APIAuditLogChangeKeyPrivacyLevel) __APIAuditLogChangeKeyPrivacyLevel
+
+__APIAuditLogChangeKeyPrivacyLevel: APIAuditLogChangeData<privacy_level, StageInstancePrivacyLevel>
+
+Returned when privacy level of a stage instance or guild scheduled event is changed
+
+### [__](#APIAuditLogChangeKeyPruneDeleteDays) __APIAuditLogChangeKeyPruneDeleteDays
+
+__APIAuditLogChangeKeyPruneDeleteDays: APIAuditLogChangeData<prune_delete_days,number>
+
+Returned when there is a change in number of days after which inactive and role-unassigned members are kicked
+
+### [__](#APIAuditLogChangeKeyPublicUpdatesChannelId) __APIAuditLogChangeKeyPublicUpdatesChannelId
+
+__APIAuditLogChangeKeyPublicUpdatesChannelId: APIAuditLogChangeData<public_updates_channel_id,string>
+
+Returned when a guild's public_updates_channel_id is changed
+
+### [__](#APIAuditLogChangeKeyRateLimitPerUser) __APIAuditLogChangeKeyRateLimitPerUser
+
+__APIAuditLogChangeKeyRateLimitPerUser: APIAuditLogChangeData<rate_limit_per_user,number>
+
+Returned when a channel's amount of seconds a user has to wait before sending another message is changed
+
+### [__](#APIAuditLogChangeKeyRecurrenceRule) __APIAuditLogChangeKeyRecurrenceRule
+
+__APIAuditLogChangeKeyRecurrenceRule: APIAuditLogChangeData<recurrence_rule, APIGuildScheduledEventRecurrenceRule>
+
+Returned when a guild scheduled event's recurrence_rule is changed
+
+### [__](#APIAuditLogChangeKeyRegion) __APIAuditLogChangeKeyRegion
+
+__APIAuditLogChangeKeyRegion: APIAuditLogChangeData<region,string>
+
+Returned when a guild's region is changed
+
+### [__](#APIAuditLogChangeKeyRTCRegion) __APIAuditLogChangeKeyRTCRegion
+
+__APIAuditLogChangeKeyRTCRegion: APIAuditLogChangeData<rtc_region,string>
+
+Returned when a channel's rtc_region is changed
+
+### [__](#APIAuditLogChangeKeyRulesChannelId) __APIAuditLogChangeKeyRulesChannelId
+
+__APIAuditLogChangeKeyRulesChannelId: APIAuditLogChangeData<rules_channel_id,string>
+
+Returned when a guild's rules_channel_id is changed
+
+### [__](#APIAuditLogChangeKeySafetyAlertsChannelId) __APIAuditLogChangeKeySafetyAlertsChannelId
+
+__APIAuditLogChangeKeySafetyAlertsChannelId: APIAuditLogChangeData<safety_alerts_channel_id,string>
+
+Returned when a guild's safety_alerts_channel_id is changed
+
+### [__](#APIAuditLogChangeKeySnowflake) __APIAuditLogChangeKeySnowflake
+
+__APIAuditLogChangeKeySnowflake: APIAuditLogChangeData< Snowflake,unknown>
+
+Represents a change where the key is a snowflake. Currently, the only known instance of this is returned when permissions for a command were updated
+
+### [__](#APIAuditLogChangeKeySoundId) __APIAuditLogChangeKeySoundId
+
+__APIAuditLogChangeKeySoundId: APIAuditLogChangeData<sound_id, Snowflake>
+
+Returned when a soundboard is create or deleted
+
+### [__](#APIAuditLogChangeKeySplashHash) __APIAuditLogChangeKeySplashHash
+
+__APIAuditLogChangeKeySplashHash: APIAuditLogChangeData<splash_hash,string>
+
+Returned when a guild's splash is changed
+
+### [__](#APIAuditLogChangeKeyStatus) __APIAuditLogChangeKeyStatus
+
+__APIAuditLogChangeKeyStatus: APIAuditLogChangeData<status, GuildScheduledEventStatus>
+
+Returned when status of a guild scheduled event is changed
+
+### [__](#APIAuditLogChangeKeySystemChannelFlags) __APIAuditLogChangeKeySystemChannelFlags
+
+__APIAuditLogChangeKeySystemChannelFlags: APIAuditLogChangeData<system_channel_flags, GuildSystemChannelFlags>
+
+Returned when a guild's system_channel_flags is changed
+
+### [__](#APIAuditLogChangeKeySystemChannelId) __APIAuditLogChangeKeySystemChannelId
+
+__APIAuditLogChangeKeySystemChannelId: APIAuditLogChangeData<system_channel_id, Snowflake>
+
+Returned when a guild's system_channel_id is changed
+
+### [__](#APIAuditLogChangeKeyTags) __APIAuditLogChangeKeyTags
+
+__APIAuditLogChangeKeyTags: APIAuditLogChangeData<tags,string>
+
+Returned when a sticker's related emoji is changed
+
+### [__](#APIAuditLogChangeKeyTemporary) __APIAuditLogChangeKeyTemporary
+
+__APIAuditLogChangeKeyTemporary: APIAuditLogChangeData<temporary,boolean>
+
+Returned when an invite's temporary status is changed
+
+### [__](#APIAuditLogChangeKeyTopic) __APIAuditLogChangeKeyTopic
+
+__APIAuditLogChangeKeyTopic: APIAuditLogChangeData<topic,string>
+
+Returned when a channel's topic is changed
+
+### [__](#APIAuditLogChangeKeyTriggerMetadata) __APIAuditLogChangeKeyTriggerMetadata
+
+__APIAuditLogChangeKeyTriggerMetadata: APIAuditLogChangeData<trigger_metadata, APIAutoModerationRuleTriggerMetadata>
+
+Returned when an auto moderation rule's trigger metadata is changed
+
+### [__](#APIAuditLogChangeKeyTriggerType) __APIAuditLogChangeKeyTriggerType
+
+__APIAuditLogChangeKeyTriggerType: APIAuditLogChangeData<trigger_type, AutoModerationRuleTriggerType>
+
+Returned when an auto moderation rule's trigger type is changed (only in rule creation or deletion)
+
+### [__](#APIAuditLogChangeKeyType) __APIAuditLogChangeKeyType
+
+__APIAuditLogChangeKeyType: APIAuditLogChangeData<type,number |string>
+
+The type of entity created
+
+### [__](#APIAuditLogChangeKeyUserId) __APIAuditLogChangeKeyUserId
+
+__APIAuditLogChangeKeyUserId: APIAuditLogChangeData<user_id, Snowflake>
+
+Returned when a sounboard is created
+
+### [__](#APIAuditLogChangeKeyUserLimit) __APIAuditLogChangeKeyUserLimit
+
+__APIAuditLogChangeKeyUserLimit: APIAuditLogChangeData<user_limit,number>
+
+Returned when a voice channel's user_limit is changed
+
+### [__](#APIAuditLogChangeKeyUses) __APIAuditLogChangeKeyUses
+
+__APIAuditLogChangeKeyUses: APIAuditLogChangeData<uses,number>
+
+Returned when an invite's uses is changed
+
+### [__](#APIAuditLogChangeKeyVanityURLCode) __APIAuditLogChangeKeyVanityURLCode
+
+__APIAuditLogChangeKeyVanityURLCode: APIAuditLogChangeData<vanity_url_code,string>
+
+Returned when a guild's vanity_url_code is changed
+
+### [__](#APIAuditLogChangeKeyVerificationLevel) __APIAuditLogChangeKeyVerificationLevel
+
+__APIAuditLogChangeKeyVerificationLevel: APIAuditLogChangeData<verification_level, GuildVerificationLevel>
+
+Returned when a guild's verification_level is changed
+
+### [__](#APIAuditLogChangeKeyVideoQualityMode) __APIAuditLogChangeKeyVideoQualityMode
+
+__APIAuditLogChangeKeyVideoQualityMode: APIAuditLogChangeData<video_quality_mode, VideoQualityMode>
+
+Returned when a channel's video_quality_mode is changed
+
+### [__](#APIAuditLogChangeKeyVolume) __APIAuditLogChangeKeyVolume
+
+__APIAuditLogChangeKeyVolume: APIAuditLogChangeData<volume,number>
+
+Returned when a soundboard's volume is changed
+
+### [__](#APIAuditLogChangeKeyWidgetChannelId) __APIAuditLogChangeKeyWidgetChannelId
+
+__APIAuditLogChangeKeyWidgetChannelId: APIAuditLogChangeData<widget_channel_id, Snowflake>
+
+Returned when a guild's widget_channel_id is changed
+
+### [__](#APIAuditLogChangeKeyWidgetEnabled) __APIAuditLogChangeKeyWidgetEnabled
+
+__APIAuditLogChangeKeyWidgetEnabled: APIAuditLogChangeData<widget_enabled,boolean>
+
+Returned when a guild's widget is enabled
+
+### [__](#APIAuthorizingIntegrationOwnersMap) __APIAuthorizingIntegrationOwnersMap
+
+__APIAuthorizingIntegrationOwnersMap: {key in [ApplicationIntegrationType ]?: Snowflake }
+
+### [__](#APIAutoPopulatedSelectMenuComponent) __APIAutoPopulatedSelectMenuComponent
+
+__APIAutoPopulatedSelectMenuComponent: APIChannelSelectComponent | APIMentionableSelectComponent | APIRoleSelectComponent | APIUserSelectComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference
+
+</dd></dl>
+
+### [__](#APIButtonComponent) __APIButtonComponent
+
+__APIButtonComponent: APIButtonComponentWithCustomId | APIButtonComponentWithSKUId | APIButtonComponentWithURL
+
+A Button is an interactive component that can only be used in messages. It creates clickable elements that users can interact with, sending an interaction to your app when clicked.
+
+Buttons must be placed inside an Action Row or a Section's accessory field.
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#button
+
+</dd></dl>
+
+### [__](#APIChannel) __APIChannel
+
+__APIChannel: APIAnnouncementThreadChannel | APIDMChannel | APIGroupDMChannel | APIGuildCategoryChannel | APIGuildForumChannel | APIGuildMediaChannel | APIGuildStageVoiceChannel | APIGuildVoiceChannel | APINewsChannel | APIPrivateThreadChannel | APIPublicThreadChannel | APITextChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#channel-object-channel-structure
+
+</dd></dl>
+
+### [__](#APIChannelPatchOverwrite) __APIChannelPatchOverwrite
+
+__APIChannelPatchOverwrite: RESTAPIChannelPatchOverwrite
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIChannelPatchOverwrite instead
+
+</dd></dl>
+
+### [__](#APIChatInputApplicationCommandDMInteraction) __APIChatInputApplicationCommandDMInteraction
+
+__APIChatInputApplicationCommandDMInteraction: APIDMInteractionWrapper< APIChatInputApplicationCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIChatInputApplicationCommandGuildInteraction) __APIChatInputApplicationCommandGuildInteraction
+
+__APIChatInputApplicationCommandGuildInteraction: APIGuildInteractionWrapper< APIChatInputApplicationCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIChatInputApplicationCommandInteraction) __APIChatInputApplicationCommandInteraction
+
+__APIChatInputApplicationCommandInteraction: APIApplicationCommandInteractionWrapper< APIChatInputApplicationCommandInteractionData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIChatInputApplicationCommandInteractionDataResolved) __APIChatInputApplicationCommandInteractionDataResolved
+
+__APIChatInputApplicationCommandInteractionDataResolved: APIInteractionDataResolved
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Renamed to `APIInteractionDataResolved`
+
+</dd></dl>
+
+### [__](#APIComponentInActionRow) __APIComponentInActionRow
+
+__APIComponentInActionRow: APIComponentInMessageActionRow | APIComponentInModalActionRow
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#action-row
+
+</dd></dl>
+
+### [__](#APIComponentInContainer) __APIComponentInContainer
+
+__APIComponentInContainer: APIActionRowComponent< APIComponentInMessageActionRow> | APIFileComponent | APIMediaGalleryComponent | APISectionComponent | APISeparatorComponent | APITextDisplayComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#container
+
+</dd></dl>
+
+### [__](#APIComponentInLabel) __APIComponentInLabel
+
+__APIComponentInLabel: APICheckboxComponent | APICheckboxGroupComponent | APIFileUploadComponent | APIRadioGroupComponent | APISelectMenuComponent | APITextInputComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#label-label-child-components
+
+</dd></dl>
+
+### [__](#APIComponentInMessageActionRow) __APIComponentInMessageActionRow
+
+__APIComponentInMessageActionRow: APIButtonComponent | APISelectMenuComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#action-row
+
+</dd></dl>
+
+### [__](#APIComponentInModalActionRow) __APIComponentInModalActionRow
+
+__APIComponentInModalActionRow: APITextInputComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#action-row
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#APIContextMenuDMInteraction) __APIContextMenuDMInteraction
+
+__APIContextMenuDMInteraction: APIMessageApplicationCommandDMInteraction | APIUserApplicationCommandDMInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIContextMenuGuildInteraction) __APIContextMenuGuildInteraction
+
+__APIContextMenuGuildInteraction: APIMessageApplicationCommandGuildInteraction | APIUserApplicationCommandGuildInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIContextMenuInteraction) __APIContextMenuInteraction
+
+__APIContextMenuInteraction: APIMessageApplicationCommandInteraction | APIUserApplicationCommandInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIContextMenuInteractionData) __APIContextMenuInteractionData
+
+__APIContextMenuInteractionData: APIMessageApplicationCommandInteractionData | APIUserApplicationCommandInteractionData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
+
+</dd></dl>
+
+### [__](#APIDMInteraction) __APIDMInteraction
+
+__APIDMInteraction: APIApplicationCommandAutocompleteDMInteraction | APIApplicationCommandDMInteraction | APIMessageComponentDMInteraction | APIModalSubmitDMInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIDMInteractionWrapper) __APIDMInteractionWrapper
+
+__APIDMInteractionWrapper<Original>: Omit<Original,guild_id |member> &Required<Pick<Original,user>>
+
+#### Type parameters
+
+- **Original**: APIBaseInteraction< InteractionType,unknown>
+
+### [__](#APIGuildChannelResolvable) __APIGuildChannelResolvable
+
+__APIGuildChannelResolvable: RESTAPIGuildChannelResolvable
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIGuildChannelResolvable instead
+
+</dd></dl>
+
+### [__](#APIGuildCreateOverwrite) __APIGuildCreateOverwrite
+
+__APIGuildCreateOverwrite: RESTAPIGuildCreateOverwrite
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIGuildCreateOverwrite instead
+
+</dd></dl>
+
+### [__](#APIGuildCreatePartialChannel) __APIGuildCreatePartialChannel
+
+__APIGuildCreatePartialChannel: RESTAPIGuildCreatePartialChannel
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIGuildCreatePartialChannel instead
+
+</dd></dl>
+
+### [__](#APIGuildCreateRole) __APIGuildCreateRole
+
+__APIGuildCreateRole: RESTAPIGuildCreateRole
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIGuildCreateRole instead
+
+</dd></dl>
+
+### [__](#APIGuildIntegrationType) __APIGuildIntegrationType
+
+__APIGuildIntegrationType: discord |guild_subscription |twitch |youtube
+
+### [__](#APIGuildInteraction) __APIGuildInteraction
+
+__APIGuildInteraction: APIApplicationCommandAutocompleteGuildInteraction | APIApplicationCommandGuildInteraction | APIMessageComponentGuildInteraction | APIModalSubmitGuildInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIGuildInteractionWrapper) __APIGuildInteractionWrapper
+
+__APIGuildInteractionWrapper<Original>: Omit<Original,user> &Required<Pick<Original,guild_id |member>>
+
+#### Type parameters
+
+- **Original**: APIBaseInteraction< InteractionType,unknown>
+
+### [__](#APIGuildMediaChannel) __APIGuildMediaChannel
+
+__APIGuildMediaChannel: APIThreadOnlyChannel<ChannelType.GuildMedia>
+
+### [__](#APIGuildScheduledEvent) __APIGuildScheduledEvent
+
+__APIGuildScheduledEvent: APIExternalGuildScheduledEvent | APIStageInstanceGuildScheduledEvent | APIVoiceGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#guild-scheduled-event-object-guild-scheduled-event-structure
+
+</dd></dl>
+
+### [__](#APIGuildStageVoiceChannel) __APIGuildStageVoiceChannel
+
+__APIGuildStageVoiceChannel: APIVoiceChannelBase<ChannelType.GuildStageVoice>
+
+### [__](#APIGuildVoiceChannel) __APIGuildVoiceChannel
+
+__APIGuildVoiceChannel: APIVoiceChannelBase<ChannelType.GuildVoice>
+
+### [__](#APIInteraction) __APIInteraction
+
+__APIInteraction: APIApplicationCommandAutocompleteInteraction | APIApplicationCommandInteraction | APIMessageComponentInteraction | APIModalSubmitInteraction | APIPingInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIInteractionDataResolvedChannel) __APIInteractionDataResolvedChannel
+
+__APIInteractionDataResolvedChannel: APIInteractionDataResolvedChannelBase<Exclude< ChannelType, ThreadChannelType>> |(APIInteractionDataResolvedChannelBase< ThreadChannelType> &Pick< APIThreadChannel,parent_id |thread_metadata>)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#channel-object
+
+</dd></dl>
+
+### [__](#APIInteractionResponse) __APIInteractionResponse
+
+__APIInteractionResponse: APIApplicationCommandAutocompleteResponse | APIInteractionResponseChannelMessageWithSource | APIInteractionResponseDeferredChannelMessageWithSource | APIInteractionResponseDeferredMessageUpdate | APIInteractionResponseLaunchActivity | APIInteractionResponsePong | APIInteractionResponseUpdateMessage | APIModalInteractionResponse | APIPremiumRequiredInteractionResponse
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object
+
+</dd></dl>
+
+### [__](#APIInteractionResponseCallbackData) __APIInteractionResponseCallbackData
+
+__APIInteractionResponseCallbackData: Omit< RESTPostAPIWebhookWithTokenJSONBody,avatar_url |username>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-response-object-interaction-callback-data-structure
+
+</dd></dl>
+
+### [__](#APIInviteGuild) __APIInviteGuild
+
+__APIInviteGuild: Pick< APIGuild,banner |description |features |icon |id |name |nsfw_level |premium_subscription_count |splash |vanity_url_code |verification_level>
+
+### [__](#APIMentionableSelectComponent) __APIMentionableSelectComponent
+
+__APIMentionableSelectComponent: APIBaseAutoPopulatedSelectMenuComponent<ComponentType.MentionableSelect,SelectMenuDefaultValueType.Role |SelectMenuDefaultValueType.User>
+
+A Mentionable Select is an interactive component that allows users to select one or more mentionables in a message. Options are automatically populated based on available mentionables in the server.
+
+Mentionable Selects can be configured for both single-select and multi-select behavior. When a user finishes making their choice(s), your app receives an interaction.
+
+Mentionable Selects must be placed inside an Action Row and are only available in messages. An Action Row can contain only one select menu and cannot contain buttons if it has a select menu.
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#mentionable-select
+
+</dd></dl>
+
+### [__](#APIMessageApplicationCommandDMInteraction) __APIMessageApplicationCommandDMInteraction
+
+__APIMessageApplicationCommandDMInteraction: APIDMInteractionWrapper< APIMessageApplicationCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIMessageApplicationCommandGuildInteraction) __APIMessageApplicationCommandGuildInteraction
+
+__APIMessageApplicationCommandGuildInteraction: APIGuildInteractionWrapper< APIMessageApplicationCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIMessageApplicationCommandInteraction) __APIMessageApplicationCommandInteraction
+
+__APIMessageApplicationCommandInteraction: APIApplicationCommandInteractionWrapper< APIMessageApplicationCommandInteractionData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIMessageButtonInteractionData) __APIMessageButtonInteractionData
+
+__APIMessageButtonInteractionData: APIMessageComponentBaseInteractionData<ComponentType.Button>
+
+### [__](#APIMessageComponent) __APIMessageComponent
+
+__APIMessageComponent: APIActionRowComponent< APIComponentInMessageActionRow> | APIButtonComponent | APIContainerComponent | APIFileComponent | APIMediaGalleryComponent | APISectionComponent | APISelectMenuComponent | APISeparatorComponent | APITextDisplayComponent | APIThumbnailComponent
+
+All components that can appear in messages.
+
+For more specific sets, see APIMessageTopLevelComponent, APIComponentInMessageActionRow, APIComponentInContainer, and APISectionAccessoryComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference
+
+</dd></dl>
+
+### [__](#APIMessageComponentButtonInteraction) __APIMessageComponentButtonInteraction
+
+__APIMessageComponentButtonInteraction: APIBaseInteraction<InteractionType.MessageComponent, APIMessageButtonInteractionData> &Required<Pick< APIBaseInteraction<InteractionType.MessageComponent, APIMessageButtonInteractionData>,app_permissions |channel_id |channel |data |message>>
+
+### [__](#APIMessageComponentDMInteraction) __APIMessageComponentDMInteraction
+
+__APIMessageComponentDMInteraction: APIDMInteractionWrapper< APIMessageComponentInteraction>
+
+### [__](#APIMessageComponentGuildInteraction) __APIMessageComponentGuildInteraction
+
+__APIMessageComponentGuildInteraction: APIGuildInteractionWrapper< APIMessageComponentInteraction>
+
+### [__](#APIMessageComponentInteraction) __APIMessageComponentInteraction
+
+__APIMessageComponentInteraction: APIBaseInteraction<InteractionType.MessageComponent, APIMessageComponentInteractionData> &Required<Pick< APIBaseInteraction<InteractionType.MessageComponent, APIMessageComponentInteractionData>,app_permissions |channel_id |channel |data |message>>
+
+### [__](#APIMessageComponentInteractionData) __APIMessageComponentInteractionData
+
+__APIMessageComponentInteractionData: APIMessageButtonInteractionData | APIMessageSelectMenuInteractionData
+
+### [__](#APIMessageComponentSelectMenuInteraction) __APIMessageComponentSelectMenuInteraction
+
+__APIMessageComponentSelectMenuInteraction: APIBaseInteraction<InteractionType.MessageComponent, APIMessageSelectMenuInteractionData> &Required<Pick< APIBaseInteraction<InteractionType.MessageComponent, APIMessageSelectMenuInteractionData>,app_permissions |channel_id |channel |data |message>>
+
+### [__](#APIMessageInteractionMetadata) __APIMessageInteractionMetadata
+
+__APIMessageInteractionMetadata: APIApplicationCommandInteractionMetadata | APIMessageComponentInteractionMetadata | APIModalSubmitInteractionMetadata
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#message-interaction-metadata-object
+
+</dd></dl>
+
+### [__](#APIMessageReferenceSend) __APIMessageReferenceSend
+
+__APIMessageReferenceSend: RESTAPIMessageReference
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIMessageReference instead
+
+</dd></dl>
+
+### [__](#APIMessageSelectMenuInteractionData) __APIMessageSelectMenuInteractionData
+
+__APIMessageSelectMenuInteractionData: APIMessageChannelSelectInteractionData | APIMessageMentionableSelectInteractionData | APIMessageRoleSelectInteractionData | APIMessageStringSelectInteractionData | APIMessageUserSelectInteractionData
+
+### [__](#APIMessageSnapshotFields) __APIMessageSnapshotFields
+
+__APIMessageSnapshotFields: Pick< APIMessage,attachments |components |content |edited_timestamp |embeds |flags |mention_roles |mentions |sticker_items |stickers |timestamp |type>
+
+https://discord.com/developers/docs/resources/message#message-snapshot-object
+
+### [__](#APIMessageTopLevelComponent) __APIMessageTopLevelComponent
+
+__APIMessageTopLevelComponent: APIActionRowComponent< APIComponentInMessageActionRow> | APIContainerComponent | APIFileComponent | APIMediaGalleryComponent | APISectionComponent | APISeparatorComponent | APITextDisplayComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference
+
+</dd></dl>
+
+### [__](#APIModalComponent) __APIModalComponent
+
+__APIModalComponent: APIActionRowComponent< APIComponentInModalActionRow> | APIComponentInLabel | APIComponentInModalActionRow | APILabelComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference
+
+</dd></dl>
+
+### [__](#APIModalInteractionResponseCallbackComponent) __APIModalInteractionResponseCallbackComponent
+
+__APIModalInteractionResponseCallbackComponent: APIActionRowComponent< APIComponentInModalActionRow> | APILabelComponent | APITextDisplayComponent
+
+### [__](#APIModalSubmissionComponent) __APIModalSubmissionComponent
+
+__APIModalSubmissionComponent: ModalSubmitActionRowComponent | ModalSubmitLabelComponent | ModalSubmitTextDisplayComponent
+
+### [__](#APIModalSubmitDMInteraction) __APIModalSubmitDMInteraction
+
+__APIModalSubmitDMInteraction: APIDMInteractionWrapper< APIModalSubmitInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIModalSubmitGuildInteraction) __APIModalSubmitGuildInteraction
+
+__APIModalSubmitGuildInteraction: APIGuildInteractionWrapper< APIModalSubmitInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIModalSubmitInteraction) __APIModalSubmitInteraction
+
+__APIModalSubmitInteraction: APIBaseInteraction<InteractionType.ModalSubmit, APIModalSubmission> &Required<Pick< APIBaseInteraction<InteractionType.ModalSubmit, APIModalSubmission>,data>>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APINewsChannel) __APINewsChannel
+
+__APINewsChannel: APIGuildTextChannel<ChannelType.GuildAnnouncement>
+
+### [__](#APIPingInteraction) __APIPingInteraction
+
+__APIPingInteraction: Omit< APIBaseInteraction<InteractionType.Ping,never>,locale>
+
+### [__](#APIPrimaryEntryPointCommandDMInteraction) __APIPrimaryEntryPointCommandDMInteraction
+
+__APIPrimaryEntryPointCommandDMInteraction: APIDMInteractionWrapper< APIPrimaryEntryPointCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIPrimaryEntryPointCommandGuildInteraction) __APIPrimaryEntryPointCommandGuildInteraction
+
+__APIPrimaryEntryPointCommandGuildInteraction: APIGuildInteractionWrapper< APIPrimaryEntryPointCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIPrimaryEntryPointCommandInteraction) __APIPrimaryEntryPointCommandInteraction
+
+__APIPrimaryEntryPointCommandInteraction: APIApplicationCommandInteractionWrapper< APIPrimaryEntryPointCommandInteractionData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIPrimaryEntryPointCommandInteractionData) __APIPrimaryEntryPointCommandInteractionData
+
+__APIPrimaryEntryPointCommandInteractionData: APIBaseApplicationCommandInteractionData<ApplicationCommandType.PrimaryEntryPoint>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object-interaction-data
+
+</dd></dl>
+
+### [__](#APIPrivateThreadChannel) __APIPrivateThreadChannel
+
+__APIPrivateThreadChannel: APIThreadChannel<ChannelType.PrivateThread>
+
+### [__](#APIPublicThreadChannel) __APIPublicThreadChannel
+
+__APIPublicThreadChannel: APIThreadChannel<ChannelType.PublicThread>
+
+### [__](#APIRoleSelectComponent) __APIRoleSelectComponent
+
+__APIRoleSelectComponent: APIBaseAutoPopulatedSelectMenuComponent<ComponentType.RoleSelect,SelectMenuDefaultValueType.Role>
+
+A Role Select is an interactive component that allows users to select one or more roles in a message. Options are automatically populated based on the server's available roles.
+
+Role Selects can be configured for both single-select and multi-select behavior. When a user finishes making their choice(s) your app receives an interaction.
+
+Role Selects must be placed inside an Action Row and are only available in messages. An Action Row can contain only one select menu and cannot contain buttons if it has a select menu.
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#role-select
+
+</dd></dl>
+
+### [__](#APISectionAccessoryComponent) __APISectionAccessoryComponent
+
+__APISectionAccessoryComponent: APIButtonComponent | APIThumbnailComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#section
+
+</dd></dl>
+
+### [__](#APISelectMenuComponent) __APISelectMenuComponent
+
+__APISelectMenuComponent: APIChannelSelectComponent | APIMentionableSelectComponent | APIRoleSelectComponent | APIStringSelectComponent | APIUserSelectComponent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference
+
+</dd></dl>
+
+### [__](#APIStickerItem) __APIStickerItem
+
+__APIStickerItem: Pick< APISticker,format_type |id |name>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#sticker-item-object
+
+</dd></dl>
+
+### [__](#APITextChannel) __APITextChannel
+
+__APITextChannel: APIGuildTextChannel<ChannelType.GuildText>
+
+### [__](#APIUserApplicationCommandDMInteraction) __APIUserApplicationCommandDMInteraction
+
+__APIUserApplicationCommandDMInteraction: APIDMInteractionWrapper< APIUserApplicationCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIUserApplicationCommandGuildInteraction) __APIUserApplicationCommandGuildInteraction
+
+__APIUserApplicationCommandGuildInteraction: APIGuildInteractionWrapper< APIUserApplicationCommandInteraction>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIUserApplicationCommandInteraction) __APIUserApplicationCommandInteraction
+
+__APIUserApplicationCommandInteraction: APIApplicationCommandInteractionWrapper< APIUserApplicationCommandInteractionData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#interaction-object
+
+</dd></dl>
+
+### [__](#APIUserApplicationCommandInteractionDataResolved) __APIUserApplicationCommandInteractionDataResolved
+
+__APIUserApplicationCommandInteractionDataResolved: APIUserInteractionDataResolved
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Renamed to `APIUserInteractionDataResolved`
+
+</dd></dl>
+
+### [__](#APIUserInteractionDataResolved) __APIUserInteractionDataResolved
+
+__APIUserInteractionDataResolved: Pick< APIInteractionDataResolved,members> &Required<Pick< APIInteractionDataResolved,users>>
+
+`users` and optional `members` from APIInteractionDataResolved, for user commands and user selects
+
+### [__](#APIUserSelectComponent) __APIUserSelectComponent
+
+__APIUserSelectComponent: APIBaseAutoPopulatedSelectMenuComponent<ComponentType.UserSelect,SelectMenuDefaultValueType.User>
+
+A User Select is an interactive component that allows users to select one or more users in a message. Options are automatically populated based on the server's available users.
+
+User Selects can be configured for both single-select and multi-select behavior. When a user finishes making their choice(s) your app receives an interaction.
+
+User Selects must be placed inside an Action Row and are only available in messages. An Action Row can contain only one select menu and cannot contain buttons if it has a select menu.
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/components/reference#user-select
+
+</dd></dl>
+
+### [__](#APIWebhookEvent) __APIWebhookEvent
+
+__APIWebhookEvent: APIWebhookEventBase<ApplicationWebhookType.Event, APIWebhookEventBody> | APIWebhookEventBase<ApplicationWebhookType.Ping,never>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/events/webhook-events#webhook-event-payloads
+
+</dd></dl>
+
+### [__](#APIWebhookEventBody) __APIWebhookEventBody
+
+__APIWebhookEventBody: APIWebhookEventEventBase<ApplicationWebhookEventType.ApplicationAuthorized, APIWebhookEventApplicationAuthorizedData> | APIWebhookEventEventBase<ApplicationWebhookEventType.ApplicationDeauthorized, APIWebhookEventApplicationDeauthorizedData> | APIWebhookEventEventBase<ApplicationWebhookEventType.EntitlementCreate, APIWebhookEventEntitlementCreateData> | APIWebhookEventEventBase<ApplicationWebhookEventType.EntitlementDelete, APIWebhookEventEntitlementDeleteData> | APIWebhookEventEventBase<ApplicationWebhookEventType.EntitlementUpdate, APIWebhookEventEntitlementUpdateData> | APIWebhookEventEventBase<ApplicationWebhookEventType.QuestUserEnrollment, APIWebhookEventQuestUserEnrollmentData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/events/webhook-events#event-body-object
+
+</dd></dl>
+
+### [__](#APIWebhookEventEntitlementCreateData) __APIWebhookEventEntitlementCreateData
+
+__APIWebhookEventEntitlementCreateData: APIEntitlement
+
+### [__](#APIWebhookEventEntitlementDeleteData) __APIWebhookEventEntitlementDeleteData
+
+__APIWebhookEventEntitlementDeleteData: APIEntitlement
+
+### [__](#APIWebhookEventEntitlementUpdateData) __APIWebhookEventEntitlementUpdateData
+
+__APIWebhookEventEntitlementUpdateData: APIEntitlement
+
+### [__](#APIWebhookEventQuestUserEnrollmentData) __APIWebhookEventQuestUserEnrollmentData
+
+__APIWebhookEventQuestUserEnrollmentData: never
+
+### [__](#APIWebhookSourceChannel) __APIWebhookSourceChannel
+
+__APIWebhookSourceChannel: Required< _NonNullableFields<Pick< APIPartialChannel,id |name>>>
+
+Source channel of channel follower webhooks.
+
+### [__](#APIWebhookSourceGuild) __APIWebhookSourceGuild
+
+__APIWebhookSourceGuild: Pick< APIPartialGuild,icon |id |name>
+
+Source guild of channel follower webhooks.
+
+### [__](#ApplicationAssetFormat) __ApplicationAssetFormat
+
+__ApplicationAssetFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#ApplicationCommandOptionAllowedChannelType) __ApplicationCommandOptionAllowedChannelType
+
+__ApplicationCommandOptionAllowedChannelType: Exclude< ChannelType,ChannelType.DM |ChannelType.GroupDM |ChannelType.GuildDirectory>
+
+### [__](#ApplicationCoverFormat) __ApplicationCoverFormat
+
+__ApplicationCoverFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#ApplicationIconFormat) __ApplicationIconFormat
+
+__ApplicationIconFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#AuditLogRuleTriggerType) __AuditLogRuleTriggerType
+
+__AuditLogRuleTriggerType: `${ [AutoModerationRuleTriggerType](https://discord-api-types.dev/api/next/discord-api-types-v10/enum/AutoModerationRuleTriggerType)}`
+
+### [__](#DefaultUserAvatar) __DefaultUserAvatar
+
+__DefaultUserAvatar: DefaultUserAvatarFormat
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use DefaultUserAvatarFormat instead.
+
+</dd></dl>
+
+### [__](#DefaultUserAvatarAssets) __DefaultUserAvatarAssets
+
+__DefaultUserAvatarAssets: 0 |1 |2 |3 |4 |5
+
+### [__](#DefaultUserAvatarFormat) __DefaultUserAvatarFormat
+
+__DefaultUserAvatarFormat: Extract< ImageFormat,ImageFormat.PNG>
+
+### [__](#EmojiFormat) __EmojiFormat
+
+__EmojiFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+### [__](#GatewayActivityEmoji) __GatewayActivityEmoji
+
+__GatewayActivityEmoji: Partial<Pick< APIEmoji,animated |id>> &Pick< APIEmoji,name>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-emoji
+
+</dd></dl>
+
+### [__](#GatewayActivityUpdateData) __GatewayActivityUpdateData
+
+__GatewayActivityUpdateData: Pick< GatewayActivity,name |state |type |url>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#activity-object-activity-structure
+
+</dd></dl>
+
+### [__](#GatewayApplicationCommandPermissionsUpdateDispatch) __GatewayApplicationCommandPermissionsUpdateDispatch
+
+__GatewayApplicationCommandPermissionsUpdateDispatch: _DataPayload<GatewayDispatchEvents.ApplicationCommandPermissionsUpdate, GatewayApplicationCommandPermissionsUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#application-command-permissions-update
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationActionExecutionDispatch) __GatewayAutoModerationActionExecutionDispatch
+
+__GatewayAutoModerationActionExecutionDispatch: _DataPayload<GatewayDispatchEvents.AutoModerationActionExecution, GatewayAutoModerationActionExecutionDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-action-execution
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleCreateDispatch) __GatewayAutoModerationRuleCreateDispatch
+
+__GatewayAutoModerationRuleCreateDispatch: _DataPayload<GatewayDispatchEvents.AutoModerationRuleCreate, GatewayAutoModerationRuleCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-create
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleCreateDispatchData) __GatewayAutoModerationRuleCreateDispatchData
+
+__GatewayAutoModerationRuleCreateDispatchData: GatewayAutoModerationRuleModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-create
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleDeleteDispatch) __GatewayAutoModerationRuleDeleteDispatch
+
+__GatewayAutoModerationRuleDeleteDispatch: _DataPayload<GatewayDispatchEvents.AutoModerationRuleDelete, GatewayAutoModerationRuleDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-delete
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleDeleteDispatchData) __GatewayAutoModerationRuleDeleteDispatchData
+
+__GatewayAutoModerationRuleDeleteDispatchData: GatewayAutoModerationRuleModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-delete
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleModifyDispatch) __GatewayAutoModerationRuleModifyDispatch
+
+__GatewayAutoModerationRuleModifyDispatch: _DataPayload<GatewayDispatchEvents.AutoModerationRuleCreate |GatewayDispatchEvents.AutoModerationRuleDelete |GatewayDispatchEvents.AutoModerationRuleUpdate, GatewayAutoModerationRuleModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-create
+- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-update
+- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-delete
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleModifyDispatchData) __GatewayAutoModerationRuleModifyDispatchData
+
+__GatewayAutoModerationRuleModifyDispatchData: APIAutoModerationRule
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-create
+- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-update
+- https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-delete
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleUpdateDispatch) __GatewayAutoModerationRuleUpdateDispatch
+
+__GatewayAutoModerationRuleUpdateDispatch: _DataPayload<GatewayDispatchEvents.AutoModerationRuleUpdate, GatewayAutoModerationRuleUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-update
+
+</dd></dl>
+
+### [__](#GatewayAutoModerationRuleUpdateDispatchData) __GatewayAutoModerationRuleUpdateDispatchData
+
+__GatewayAutoModerationRuleUpdateDispatchData: GatewayAutoModerationRuleModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#auto-moderation-rule-update
+
+</dd></dl>
+
+### [__](#GatewayChannelCreateDispatch) __GatewayChannelCreateDispatch
+
+__GatewayChannelCreateDispatch: _DataPayload<GatewayDispatchEvents.ChannelCreate, GatewayChannelCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-create
+
+</dd></dl>
+
+### [__](#GatewayChannelCreateDispatchData) __GatewayChannelCreateDispatchData
+
+__GatewayChannelCreateDispatchData: GatewayChannelModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-create
+
+</dd></dl>
+
+### [__](#GatewayChannelDeleteDispatch) __GatewayChannelDeleteDispatch
+
+__GatewayChannelDeleteDispatch: _DataPayload<GatewayDispatchEvents.ChannelDelete, GatewayChannelDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-delete
+
+</dd></dl>
+
+### [__](#GatewayChannelDeleteDispatchData) __GatewayChannelDeleteDispatchData
+
+__GatewayChannelDeleteDispatchData: GatewayChannelModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-delete
+
+</dd></dl>
+
+### [__](#GatewayChannelModifyDispatch) __GatewayChannelModifyDispatch
+
+__GatewayChannelModifyDispatch: _DataPayload<GatewayDispatchEvents.ChannelCreate |GatewayDispatchEvents.ChannelDelete |GatewayDispatchEvents.ChannelUpdate, GatewayChannelModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#channel-create
+- https://discord.com/developers/docs/topics/gateway-events#channel-update
+- https://discord.com/developers/docs/topics/gateway-events#channel-delete
+
+</dd></dl>
+
+### [__](#GatewayChannelModifyDispatchData) __GatewayChannelModifyDispatchData
+
+__GatewayChannelModifyDispatchData: APIChannel &{guild_id: Snowflake;type:Exclude< GuildChannelType, ThreadChannelType> }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#channel-create
+- https://discord.com/developers/docs/topics/gateway-events#channel-update
+- https://discord.com/developers/docs/topics/gateway-events#channel-delete
+
+</dd></dl>
+
+### [__](#GatewayChannelPinsUpdateDispatch) __GatewayChannelPinsUpdateDispatch
+
+__GatewayChannelPinsUpdateDispatch: _DataPayload<GatewayDispatchEvents.ChannelPinsUpdate, GatewayChannelPinsUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-pins-update
+
+</dd></dl>
+
+### [__](#GatewayChannelUpdateDispatch) __GatewayChannelUpdateDispatch
+
+__GatewayChannelUpdateDispatch: _DataPayload<GatewayDispatchEvents.ChannelUpdate, GatewayChannelUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-update
+
+</dd></dl>
+
+### [__](#GatewayChannelUpdateDispatchData) __GatewayChannelUpdateDispatchData
+
+__GatewayChannelUpdateDispatchData: GatewayChannelModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#channel-update
+
+</dd></dl>
+
+### [__](#GatewayDispatchPayload) __GatewayDispatchPayload
+
+__GatewayDispatchPayload: GatewayApplicationCommandPermissionsUpdateDispatch | GatewayAutoModerationActionExecutionDispatch | GatewayAutoModerationRuleCreateDispatch | GatewayAutoModerationRuleDeleteDispatch | GatewayAutoModerationRuleUpdateDispatch | GatewayChannelCreateDispatch | GatewayChannelDeleteDispatch | GatewayChannelPinsUpdateDispatch | GatewayChannelUpdateDispatch | GatewayEntitlementCreateDispatch | GatewayEntitlementDeleteDispatch | GatewayEntitlementUpdateDispatch | GatewayGuildAuditLogEntryCreateDispatch | GatewayGuildBanAddDispatch | GatewayGuildBanRemoveDispatch | GatewayGuildCreateDispatch | GatewayGuildDeleteDispatch | GatewayGuildEmojisUpdateDispatch | GatewayGuildIntegrationsUpdateDispatch | GatewayGuildMemberAddDispatch | GatewayGuildMemberRemoveDispatch | GatewayGuildMembersChunkDispatch | GatewayGuildMemberUpdateDispatch | GatewayGuildModifyDispatch | GatewayGuildRoleCreateDispatch | GatewayGuildRoleDeleteDispatch | GatewayGuildRoleUpdateDispatch | GatewayGuildScheduledEventCreateDispatch | GatewayGuildScheduledEventDeleteDispatch | GatewayGuildScheduledEventUpdateDispatch | GatewayGuildScheduledEventUserAddDispatch | GatewayGuildScheduledEventUserRemoveDispatch | GatewayGuildSoundboardSoundCreateDispatch | GatewayGuildSoundboardSoundDeleteDispatch | GatewayGuildSoundboardSoundsUpdateDispatch | GatewayGuildSoundboardSoundUpdateDispatch | GatewayGuildStickersUpdateDispatch | GatewayIntegrationCreateDispatch | GatewayIntegrationDeleteDispatch | GatewayIntegrationUpdateDispatch | GatewayInteractionCreateDispatch | GatewayInviteCreateDispatch | GatewayInviteDeleteDispatch | GatewayMessageCreateDispatch | GatewayMessageDeleteBulkDispatch | GatewayMessageDeleteDispatch | GatewayMessagePollVoteAddDispatch | GatewayMessagePollVoteRemoveDispatch | GatewayMessageReactionAddDispatch | GatewayMessageReactionRemoveAllDispatch | GatewayMessageReactionRemoveDispatch | GatewayMessageReactionRemoveEmojiDispatch | GatewayMessageUpdateDispatch | GatewayPresenceUpdateDispatch | GatewayRateLimitedDispatch | GatewayReadyDispatch | GatewayResumedDispatch | GatewaySoundboardSoundsDispatch | GatewayStageInstanceCreateDispatch | GatewayStageInstanceDeleteDispatch | GatewayStageInstanceUpdateDispatch | GatewaySubscriptionCreateDispatch | GatewaySubscriptionDeleteDispatch | GatewaySubscriptionUpdateDispatch | GatewayThreadCreateDispatch | GatewayThreadDeleteDispatch | GatewayThreadListSyncDispatch | GatewayThreadMembersUpdateDispatch | GatewayThreadMemberUpdateDispatch | GatewayThreadUpdateDispatch | GatewayTypingStartDispatch | GatewayUserUpdateDispatch | GatewayVoiceChannelEffectSendDispatch | GatewayVoiceServerUpdateDispatch | GatewayVoiceStateUpdateDispatch | GatewayWebhooksUpdateDispatch
+
+### [__](#GatewayEntitlementCreateDispatch) __GatewayEntitlementCreateDispatch
+
+__GatewayEntitlementCreateDispatch: _DataPayload<GatewayDispatchEvents.EntitlementCreate, GatewayEntitlementCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#entitlement-create
+
+</dd></dl>
+
+### [__](#GatewayEntitlementCreateDispatchData) __GatewayEntitlementCreateDispatchData
+
+__GatewayEntitlementCreateDispatchData: GatewayEntitlementModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#entitlement-create
+
+</dd></dl>
+
+### [__](#GatewayEntitlementDeleteDispatch) __GatewayEntitlementDeleteDispatch
+
+__GatewayEntitlementDeleteDispatch: _DataPayload<GatewayDispatchEvents.EntitlementDelete, GatewayEntitlementDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#entitlement-delete
+
+</dd></dl>
+
+### [__](#GatewayEntitlementDeleteDispatchData) __GatewayEntitlementDeleteDispatchData
+
+__GatewayEntitlementDeleteDispatchData: GatewayEntitlementModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#entitlement-delete
+
+</dd></dl>
+
+### [__](#GatewayEntitlementModifyDispatch) __GatewayEntitlementModifyDispatch
+
+__GatewayEntitlementModifyDispatch: _DataPayload<GatewayDispatchEvents.EntitlementCreate |GatewayDispatchEvents.EntitlementDelete |GatewayDispatchEvents.EntitlementUpdate, GatewayEntitlementModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#entitlement-create
+- https://discord.com/developers/docs/topics/gateway-events#entitlement-update
+- https://discord.com/developers/docs/topics/gateway-events#entitlement-delete
+
+</dd></dl>
+
+### [__](#GatewayEntitlementModifyDispatchData) __GatewayEntitlementModifyDispatchData
+
+__GatewayEntitlementModifyDispatchData: APIEntitlement
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#entitlement-create
+- https://discord.com/developers/docs/topics/gateway-events#entitlement-update
+- https://discord.com/developers/docs/topics/gateway-events#entitlement-delete
+
+</dd></dl>
+
+### [__](#GatewayEntitlementUpdateDispatch) __GatewayEntitlementUpdateDispatch
+
+__GatewayEntitlementUpdateDispatch: _DataPayload<GatewayDispatchEvents.EntitlementUpdate, GatewayEntitlementUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#entitlement-update
+
+</dd></dl>
+
+### [__](#GatewayEntitlementUpdateDispatchData) __GatewayEntitlementUpdateDispatchData
+
+__GatewayEntitlementUpdateDispatchData: GatewayEntitlementModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#entitlement-update
+
+</dd></dl>
+
+### [__](#GatewayGuildAuditLogEntryCreateDispatch) __GatewayGuildAuditLogEntryCreateDispatch
+
+__GatewayGuildAuditLogEntryCreateDispatch: _DataPayload<GatewayDispatchEvents.GuildAuditLogEntryCreate, GatewayGuildAuditLogEntryCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-audit-log-entry-create
+
+</dd></dl>
+
+### [__](#GatewayGuildBanAddDispatch) __GatewayGuildBanAddDispatch
+
+__GatewayGuildBanAddDispatch: _DataPayload<GatewayDispatchEvents.GuildBanAdd, GatewayGuildBanAddDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-ban-add
+
+</dd></dl>
+
+### [__](#GatewayGuildBanAddDispatchData) __GatewayGuildBanAddDispatchData
+
+__GatewayGuildBanAddDispatchData: GatewayGuildBanModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-ban-add
+
+</dd></dl>
+
+### [__](#GatewayGuildBanModifyDispatch) __GatewayGuildBanModifyDispatch
+
+__GatewayGuildBanModifyDispatch: _DataPayload<GatewayDispatchEvents.GuildBanAdd |GatewayDispatchEvents.GuildBanRemove, GatewayGuildBanModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#guild-ban-add
+- https://discord.com/developers/docs/topics/gateway-events#guild-ban-remove
+
+</dd></dl>
+
+### [__](#GatewayGuildBanRemoveDispatch) __GatewayGuildBanRemoveDispatch
+
+__GatewayGuildBanRemoveDispatch: _DataPayload<GatewayDispatchEvents.GuildBanRemove, GatewayGuildBanRemoveDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-ban-remove
+
+</dd></dl>
+
+### [__](#GatewayGuildBanRemoveDispatchData) __GatewayGuildBanRemoveDispatchData
+
+__GatewayGuildBanRemoveDispatchData: GatewayGuildBanModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-ban-remove
+
+</dd></dl>
+
+### [__](#GatewayGuildCreateDispatch) __GatewayGuildCreateDispatch
+
+__GatewayGuildCreateDispatch: _DataPayload<GatewayDispatchEvents.GuildCreate, GatewayGuildCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-create
+
+</dd></dl>
+
+### [__](#GatewayGuildDeleteDispatch) __GatewayGuildDeleteDispatch
+
+__GatewayGuildDeleteDispatch: _DataPayload<GatewayDispatchEvents.GuildDelete, GatewayGuildDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-delete
+
+</dd></dl>
+
+### [__](#GatewayGuildEmojisUpdateDispatch) __GatewayGuildEmojisUpdateDispatch
+
+__GatewayGuildEmojisUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildEmojisUpdate, GatewayGuildEmojisUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-emojis-update
+
+</dd></dl>
+
+### [__](#GatewayGuildIntegrationsUpdateDispatch) __GatewayGuildIntegrationsUpdateDispatch
+
+__GatewayGuildIntegrationsUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildIntegrationsUpdate, GatewayGuildIntegrationsUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-integrations-update
+
+</dd></dl>
+
+### [__](#GatewayGuildMemberAddDispatch) __GatewayGuildMemberAddDispatch
+
+__GatewayGuildMemberAddDispatch: _DataPayload<GatewayDispatchEvents.GuildMemberAdd, GatewayGuildMemberAddDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-member-add
+
+</dd></dl>
+
+### [__](#GatewayGuildMemberRemoveDispatch) __GatewayGuildMemberRemoveDispatch
+
+__GatewayGuildMemberRemoveDispatch: _DataPayload<GatewayDispatchEvents.GuildMemberRemove, GatewayGuildMemberRemoveDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-member-remove
+
+</dd></dl>
+
+### [__](#GatewayGuildMembersChunkDispatch) __GatewayGuildMembersChunkDispatch
+
+__GatewayGuildMembersChunkDispatch: _DataPayload<GatewayDispatchEvents.GuildMembersChunk, GatewayGuildMembersChunkDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-members-chunk
+
+</dd></dl>
+
+### [__](#GatewayGuildMemberUpdateDispatch) __GatewayGuildMemberUpdateDispatch
+
+__GatewayGuildMemberUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildMemberUpdate, GatewayGuildMemberUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-member-update
+
+</dd></dl>
+
+### [__](#GatewayGuildModifyDispatch) __GatewayGuildModifyDispatch
+
+__GatewayGuildModifyDispatch: _DataPayload<GatewayDispatchEvents.GuildUpdate, GatewayGuildModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-update
+
+</dd></dl>
+
+### [__](#GatewayGuildModifyDispatchData) __GatewayGuildModifyDispatchData
+
+__GatewayGuildModifyDispatchData: APIGuild
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-update
+
+</dd></dl>
+
+### [__](#GatewayGuildRoleCreateDispatch) __GatewayGuildRoleCreateDispatch
+
+__GatewayGuildRoleCreateDispatch: _DataPayload<GatewayDispatchEvents.GuildRoleCreate, GatewayGuildRoleCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-role-create
+
+</dd></dl>
+
+### [__](#GatewayGuildRoleCreateDispatchData) __GatewayGuildRoleCreateDispatchData
+
+__GatewayGuildRoleCreateDispatchData: GatewayGuildRoleModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-role-create
+
+</dd></dl>
+
+### [__](#GatewayGuildRoleDeleteDispatch) __GatewayGuildRoleDeleteDispatch
+
+__GatewayGuildRoleDeleteDispatch: _DataPayload<GatewayDispatchEvents.GuildRoleDelete, GatewayGuildRoleDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-role-delete
+
+</dd></dl>
+
+### [__](#GatewayGuildRoleModifyDispatch) __GatewayGuildRoleModifyDispatch
+
+__GatewayGuildRoleModifyDispatch: _DataPayload<GatewayDispatchEvents.GuildRoleCreate |GatewayDispatchEvents.GuildRoleUpdate, GatewayGuildRoleModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#guild-role-create
+- https://discord.com/developers/docs/topics/gateway-events#guild-role-update
+
+</dd></dl>
+
+### [__](#GatewayGuildRoleUpdateDispatch) __GatewayGuildRoleUpdateDispatch
+
+__GatewayGuildRoleUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildRoleUpdate, GatewayGuildRoleUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-role-update
+
+</dd></dl>
+
+### [__](#GatewayGuildRoleUpdateDispatchData) __GatewayGuildRoleUpdateDispatchData
+
+__GatewayGuildRoleUpdateDispatchData: GatewayGuildRoleModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-role-update
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventCreateDispatch) __GatewayGuildScheduledEventCreateDispatch
+
+__GatewayGuildScheduledEventCreateDispatch: _DataPayload<GatewayDispatchEvents.GuildScheduledEventCreate, GatewayGuildScheduledEventCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventCreateDispatchData) __GatewayGuildScheduledEventCreateDispatchData
+
+__GatewayGuildScheduledEventCreateDispatchData: APIGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-create
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventDeleteDispatch) __GatewayGuildScheduledEventDeleteDispatch
+
+__GatewayGuildScheduledEventDeleteDispatch: _DataPayload<GatewayDispatchEvents.GuildScheduledEventDelete, GatewayGuildScheduledEventDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-delete
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventDeleteDispatchData) __GatewayGuildScheduledEventDeleteDispatchData
+
+__GatewayGuildScheduledEventDeleteDispatchData: APIGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-delete
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventUpdateDispatch) __GatewayGuildScheduledEventUpdateDispatch
+
+__GatewayGuildScheduledEventUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildScheduledEventUpdate, GatewayGuildScheduledEventUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-update
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventUpdateDispatchData) __GatewayGuildScheduledEventUpdateDispatchData
+
+__GatewayGuildScheduledEventUpdateDispatchData: APIGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-update
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventUserAddDispatch) __GatewayGuildScheduledEventUserAddDispatch
+
+__GatewayGuildScheduledEventUserAddDispatch: _DataPayload<GatewayDispatchEvents.GuildScheduledEventUserAdd, GatewayGuildScheduledEventUserAddDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-add
+
+</dd></dl>
+
+### [__](#GatewayGuildScheduledEventUserRemoveDispatch) __GatewayGuildScheduledEventUserRemoveDispatch
+
+__GatewayGuildScheduledEventUserRemoveDispatch: _DataPayload<GatewayDispatchEvents.GuildScheduledEventUserRemove, GatewayGuildScheduledEventUserAddDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-scheduled-event-user-remove
+
+</dd></dl>
+
+### [__](#GatewayGuildSoundboardSoundCreateDispatch) __GatewayGuildSoundboardSoundCreateDispatch
+
+__GatewayGuildSoundboardSoundCreateDispatch: _DataPayload<GatewayDispatchEvents.GuildSoundboardSoundCreate, GatewayGuildSoundboardSoundCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-create
+
+</dd></dl>
+
+### [__](#GatewayGuildSoundboardSoundCreateDispatchData) __GatewayGuildSoundboardSoundCreateDispatchData
+
+__GatewayGuildSoundboardSoundCreateDispatchData: APISoundboardSound
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-create
+
+</dd></dl>
+
+### [__](#GatewayGuildSoundboardSoundDeleteDispatch) __GatewayGuildSoundboardSoundDeleteDispatch
+
+__GatewayGuildSoundboardSoundDeleteDispatch: _DataPayload<GatewayDispatchEvents.GuildSoundboardSoundDelete, GatewayGuildSoundboardSoundDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-delete
+
+</dd></dl>
+
+### [__](#GatewayGuildSoundboardSoundsUpdateDispatch) __GatewayGuildSoundboardSoundsUpdateDispatch
+
+__GatewayGuildSoundboardSoundsUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildSoundboardSoundsUpdate, GatewayGuildSoundboardSoundsUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sounds-update
+
+</dd></dl>
+
+### [__](#GatewayGuildSoundboardSoundUpdateDispatch) __GatewayGuildSoundboardSoundUpdateDispatch
+
+__GatewayGuildSoundboardSoundUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildSoundboardSoundUpdate, GatewayGuildSoundboardSoundUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-update
+
+</dd></dl>
+
+### [__](#GatewayGuildSoundboardSoundUpdateDispatchData) __GatewayGuildSoundboardSoundUpdateDispatchData
+
+__GatewayGuildSoundboardSoundUpdateDispatchData: APISoundboardSound
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-soundboard-sound-update
+
+</dd></dl>
+
+### [__](#GatewayGuildStickersUpdateDispatch) __GatewayGuildStickersUpdateDispatch
+
+__GatewayGuildStickersUpdateDispatch: _DataPayload<GatewayDispatchEvents.GuildStickersUpdate, GatewayGuildStickersUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-stickers-update
+
+</dd></dl>
+
+### [__](#GatewayGuildUpdateDispatch) __GatewayGuildUpdateDispatch
+
+__GatewayGuildUpdateDispatch: GatewayGuildModifyDispatch
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-update
+
+</dd></dl>
+
+### [__](#GatewayGuildUpdateDispatchData) __GatewayGuildUpdateDispatchData
+
+__GatewayGuildUpdateDispatchData: GatewayGuildModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#guild-update
+
+</dd></dl>
+
+### [__](#GatewayHeartbeatData) __GatewayHeartbeatData
+
+__GatewayHeartbeatData: number |null
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway#sending-heartbeats
+
+</dd></dl>
+
+### [__](#GatewayIntegrationCreateDispatch) __GatewayIntegrationCreateDispatch
+
+__GatewayIntegrationCreateDispatch: _DataPayload<GatewayDispatchEvents.IntegrationCreate, GatewayIntegrationCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#integration-create
+
+</dd></dl>
+
+### [__](#GatewayIntegrationCreateDispatchData) __GatewayIntegrationCreateDispatchData
+
+__GatewayIntegrationCreateDispatchData: APIGuildIntegration &{guild_id: Snowflake }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#integration-create
+
+</dd></dl>
+
+### [__](#GatewayIntegrationDeleteDispatch) __GatewayIntegrationDeleteDispatch
+
+__GatewayIntegrationDeleteDispatch: _DataPayload<GatewayDispatchEvents.IntegrationDelete, GatewayIntegrationDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#integration-update
+
+</dd></dl>
+
+### [__](#GatewayIntegrationUpdateDispatch) __GatewayIntegrationUpdateDispatch
+
+__GatewayIntegrationUpdateDispatch: _DataPayload<GatewayDispatchEvents.IntegrationUpdate, GatewayIntegrationUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#integration-update
+
+</dd></dl>
+
+### [__](#GatewayIntegrationUpdateDispatchData) __GatewayIntegrationUpdateDispatchData
+
+__GatewayIntegrationUpdateDispatchData: APIGuildIntegration &{guild_id: Snowflake }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#integration-update
+
+</dd></dl>
+
+### [__](#GatewayInteractionCreateDispatch) __GatewayInteractionCreateDispatch
+
+__GatewayInteractionCreateDispatch: _DataPayload<GatewayDispatchEvents.InteractionCreate, GatewayInteractionCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#interaction-create
+
+</dd></dl>
+
+### [__](#GatewayInteractionCreateDispatchData) __GatewayInteractionCreateDispatchData
+
+__GatewayInteractionCreateDispatchData: APIInteraction
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#interaction-create
+
+</dd></dl>
+
+### [__](#GatewayInvalidSessionData) __GatewayInvalidSessionData
+
+__GatewayInvalidSessionData: boolean
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#invalid-session
+
+</dd></dl>
+
+### [__](#GatewayInviteCreateDispatch) __GatewayInviteCreateDispatch
+
+__GatewayInviteCreateDispatch: _DataPayload<GatewayDispatchEvents.InviteCreate, GatewayInviteCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#invite-create
+
+</dd></dl>
+
+### [__](#GatewayInviteDeleteDispatch) __GatewayInviteDeleteDispatch
+
+__GatewayInviteDeleteDispatch: _DataPayload<GatewayDispatchEvents.InviteDelete, GatewayInviteDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#invite-delete
+
+</dd></dl>
+
+### [__](#GatewayMessageCreateDispatch) __GatewayMessageCreateDispatch
+
+__GatewayMessageCreateDispatch: _DataPayload<GatewayDispatchEvents.MessageCreate, GatewayMessageCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-create
+
+</dd></dl>
+
+### [__](#GatewayMessageDeleteBulkDispatch) __GatewayMessageDeleteBulkDispatch
+
+__GatewayMessageDeleteBulkDispatch: _DataPayload<GatewayDispatchEvents.MessageDeleteBulk, GatewayMessageDeleteBulkDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-delete-bulk
+
+</dd></dl>
+
+### [__](#GatewayMessageDeleteDispatch) __GatewayMessageDeleteDispatch
+
+__GatewayMessageDeleteDispatch: _DataPayload<GatewayDispatchEvents.MessageDelete, GatewayMessageDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-delete
+
+</dd></dl>
+
+### [__](#GatewayMessagePollVoteAddDispatch) __GatewayMessagePollVoteAddDispatch
+
+__GatewayMessagePollVoteAddDispatch: _DataPayload<GatewayDispatchEvents.MessagePollVoteAdd, GatewayMessagePollVoteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-add
+
+</dd></dl>
+
+### [__](#GatewayMessagePollVoteRemoveDispatch) __GatewayMessagePollVoteRemoveDispatch
+
+__GatewayMessagePollVoteRemoveDispatch: _DataPayload<GatewayDispatchEvents.MessagePollVoteRemove, GatewayMessagePollVoteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-poll-vote-remove
+
+</dd></dl>
+
+### [__](#GatewayMessageReactionAddDispatch) __GatewayMessageReactionAddDispatch
+
+__GatewayMessageReactionAddDispatch: _DataPayload<GatewayDispatchEvents.MessageReactionAdd, GatewayMessageReactionAddDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-reaction-add
+
+</dd></dl>
+
+### [__](#GatewayMessageReactionData) __GatewayMessageReactionData
+
+__GatewayMessageReactionData<E,O>: _DataPayload<E,Omit< GatewayMessageReactionAddDispatchData,O>>
+
+#### Type parameters
+
+- **E**: GatewayDispatchEvents
+- **O**: string = never
+
+### [__](#GatewayMessageReactionRemoveAllDispatch) __GatewayMessageReactionRemoveAllDispatch
+
+__GatewayMessageReactionRemoveAllDispatch: _DataPayload<GatewayDispatchEvents.MessageReactionRemoveAll, GatewayMessageReactionRemoveAllDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all
+
+</dd></dl>
+
+### [__](#GatewayMessageReactionRemoveAllDispatchData) __GatewayMessageReactionRemoveAllDispatchData
+
+__GatewayMessageReactionRemoveAllDispatchData: GatewayMessageReactionRemoveData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-all
+
+</dd></dl>
+
+### [__](#GatewayMessageReactionRemoveDispatch) __GatewayMessageReactionRemoveDispatch
+
+__GatewayMessageReactionRemoveDispatch: _DataPayload<GatewayDispatchEvents.MessageReactionRemove, GatewayMessageReactionRemoveDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove
+
+</dd></dl>
+
+### [__](#GatewayMessageReactionRemoveEmojiDispatch) __GatewayMessageReactionRemoveEmojiDispatch
+
+__GatewayMessageReactionRemoveEmojiDispatch: _DataPayload<GatewayDispatchEvents.MessageReactionRemoveEmoji, GatewayMessageReactionRemoveEmojiDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-reaction-remove-emoji
+
+</dd></dl>
+
+### [__](#GatewayMessageUpdateDispatch) __GatewayMessageUpdateDispatch
+
+__GatewayMessageUpdateDispatch: _DataPayload<GatewayDispatchEvents.MessageUpdate, GatewayMessageUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#message-update
+
+</dd></dl>
+
+### [__](#GatewayPresenceUpdateDispatch) __GatewayPresenceUpdateDispatch
+
+__GatewayPresenceUpdateDispatch: _DataPayload<GatewayDispatchEvents.PresenceUpdate, GatewayPresenceUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#presence-update
+
+</dd></dl>
+
+### [__](#GatewayPresenceUpdateDispatchData) __GatewayPresenceUpdateDispatchData
+
+__GatewayPresenceUpdateDispatchData: GatewayPresenceUpdate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#presence-update
+
+</dd></dl>
+
+### [__](#GatewayRateLimitedDispatch) __GatewayRateLimitedDispatch
+
+__GatewayRateLimitedDispatch<Opcode>: _DataPayload<GatewayDispatchEvents.RateLimited, GatewayRateLimitedDispatchData<Opcode>>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/events/gateway-events#rate-limited
+
+</dd></dl>
+
+---
+
+#### Type parameters
+
+- **Opcode**: keyof GatewayOpcodeRateLimitMetadataMap = keyof GatewayOpcodeRateLimitMetadataMap
+
+### [__](#GatewayRateLimitedMetadata) __GatewayRateLimitedMetadata
+
+__GatewayRateLimitedMetadata: GatewayOpcodeRateLimitMetadataMapkeyof [GatewayOpcodeRateLimitMetadataMap]
+
+Types of metadata that can be received in a GatewayRateLimitedDispatchData.meta field
+
+### [__](#GatewayRateLimitedRequestGuildMembersDispatch) __GatewayRateLimitedRequestGuildMembersDispatch
+
+__GatewayRateLimitedRequestGuildMembersDispatch: GatewayRateLimitedDispatch<GatewayOpcodes.RequestGuildMembers>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/events/gateway-events#rate-limited
+
+</dd></dl>
+
+### [__](#GatewayRateLimitedRequestGuildMembersDispatchData) __GatewayRateLimitedRequestGuildMembersDispatchData
+
+__GatewayRateLimitedRequestGuildMembersDispatchData: GatewayRateLimitedDispatchData<GatewayOpcodes.RequestGuildMembers>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/events/gateway-events#rate-limited
+
+</dd></dl>
+
+### [__](#GatewayReadyDispatch) __GatewayReadyDispatch
+
+__GatewayReadyDispatch: _DataPayload<GatewayDispatchEvents.Ready, GatewayReadyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#ready
+
+</dd></dl>
+
+### [__](#GatewayReceivePayload) __GatewayReceivePayload
+
+__GatewayReceivePayload: GatewayDispatchPayload | GatewayHeartbeatAck | GatewayHeartbeatRequest | GatewayHello | GatewayInvalidSession | GatewayReconnect
+
+### [__](#GatewayRequestGuildMembersData) __GatewayRequestGuildMembersData
+
+__GatewayRequestGuildMembersData: GatewayRequestGuildMembersDataWithQuery | GatewayRequestGuildMembersDataWithUserIds
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#request-guild-members
+
+</dd></dl>
+
+### [__](#GatewayResumedDispatch) __GatewayResumedDispatch
+
+__GatewayResumedDispatch: _DataPayload<GatewayDispatchEvents.Resumed,never>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#resumed
+
+</dd></dl>
+
+### [__](#GatewaySendPayload) __GatewaySendPayload
+
+__GatewaySendPayload: GatewayHeartbeat | GatewayIdentify | GatewayRequestGuildMembers | GatewayRequestSoundboardSounds | GatewayResume | GatewayUpdatePresence | GatewayVoiceStateUpdate
+
+### [__](#GatewaySoundboardSoundsDispatch) __GatewaySoundboardSoundsDispatch
+
+__GatewaySoundboardSoundsDispatch: _DataPayload<GatewayDispatchEvents.SoundboardSounds, GatewaySoundboardSoundsDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/events/gateway-events#soundboard-sounds
+
+</dd></dl>
+
+### [__](#GatewayStageInstanceCreateDispatch) __GatewayStageInstanceCreateDispatch
+
+__GatewayStageInstanceCreateDispatch: _DataPayload<GatewayDispatchEvents.StageInstanceCreate, GatewayStageInstanceCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#stage-instance-create
+
+</dd></dl>
+
+### [__](#GatewayStageInstanceCreateDispatchData) __GatewayStageInstanceCreateDispatchData
+
+__GatewayStageInstanceCreateDispatchData: APIStageInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#stage-instance-create
+
+</dd></dl>
+
+### [__](#GatewayStageInstanceDeleteDispatch) __GatewayStageInstanceDeleteDispatch
+
+__GatewayStageInstanceDeleteDispatch: _DataPayload<GatewayDispatchEvents.StageInstanceDelete, GatewayStageInstanceDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#stage-instance-delete
+
+</dd></dl>
+
+### [__](#GatewayStageInstanceDeleteDispatchData) __GatewayStageInstanceDeleteDispatchData
+
+__GatewayStageInstanceDeleteDispatchData: APIStageInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#stage-instance-delete
+
+</dd></dl>
+
+### [__](#GatewayStageInstanceUpdateDispatch) __GatewayStageInstanceUpdateDispatch
+
+__GatewayStageInstanceUpdateDispatch: _DataPayload<GatewayDispatchEvents.StageInstanceUpdate, GatewayStageInstanceUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#stage-instance-update
+
+</dd></dl>
+
+### [__](#GatewayStageInstanceUpdateDispatchData) __GatewayStageInstanceUpdateDispatchData
+
+__GatewayStageInstanceUpdateDispatchData: APIStageInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#stage-instance-update
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionCreateDispatch) __GatewaySubscriptionCreateDispatch
+
+__GatewaySubscriptionCreateDispatch: _DataPayload<GatewayDispatchEvents.SubscriptionCreate, GatewaySubscriptionCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#subscription-create
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionCreateDispatchData) __GatewaySubscriptionCreateDispatchData
+
+__GatewaySubscriptionCreateDispatchData: GatewaySubscriptionModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#subscription-create
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionDeleteDispatch) __GatewaySubscriptionDeleteDispatch
+
+__GatewaySubscriptionDeleteDispatch: _DataPayload<GatewayDispatchEvents.SubscriptionDelete, GatewaySubscriptionDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#subscription-delete
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionDeleteDispatchData) __GatewaySubscriptionDeleteDispatchData
+
+__GatewaySubscriptionDeleteDispatchData: GatewaySubscriptionModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#subscription-delete
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionModifyDispatch) __GatewaySubscriptionModifyDispatch
+
+__GatewaySubscriptionModifyDispatch: _DataPayload<GatewayDispatchEvents.SubscriptionCreate |GatewayDispatchEvents.SubscriptionDelete |GatewayDispatchEvents.SubscriptionUpdate, GatewaySubscriptionModifyDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#subscription-create
+- https://discord.com/developers/docs/topics/gateway-events#subscription-update
+- https://discord.com/developers/docs/topics/gateway-events#subscription-delete
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionModifyDispatchData) __GatewaySubscriptionModifyDispatchData
+
+__GatewaySubscriptionModifyDispatchData: APISubscription
+
+<dl><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#subscription-create
+- https://discord.com/developers/docs/topics/gateway-events#subscription-update
+- https://discord.com/developers/docs/topics/gateway-events#subscription-delete
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionUpdateDispatch) __GatewaySubscriptionUpdateDispatch
+
+__GatewaySubscriptionUpdateDispatch: _DataPayload<GatewayDispatchEvents.SubscriptionUpdate, GatewaySubscriptionUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#subscription-update
+
+</dd></dl>
+
+### [__](#GatewaySubscriptionUpdateDispatchData) __GatewaySubscriptionUpdateDispatchData
+
+__GatewaySubscriptionUpdateDispatchData: GatewaySubscriptionModifyDispatchData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#subscription-update
+
+</dd></dl>
+
+### [__](#GatewayThreadCreateDispatch) __GatewayThreadCreateDispatch
+
+__GatewayThreadCreateDispatch: _DataPayload<GatewayDispatchEvents.ThreadCreate, GatewayThreadCreateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-create
+
+</dd></dl>
+
+### [__](#GatewayThreadDeleteDispatch) __GatewayThreadDeleteDispatch
+
+__GatewayThreadDeleteDispatch: _DataPayload<GatewayDispatchEvents.ThreadDelete, GatewayThreadDeleteDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-delete
+
+</dd></dl>
+
+### [__](#GatewayThreadListSyncDispatch) __GatewayThreadListSyncDispatch
+
+__GatewayThreadListSyncDispatch: _DataPayload<GatewayDispatchEvents.ThreadListSync, GatewayThreadListSyncDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-list-sync
+
+</dd></dl>
+
+### [__](#GatewayThreadListSyncDispatchData) __GatewayThreadListSyncDispatchData
+
+__GatewayThreadListSyncDispatchData: GatewayThreadListSync
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-list-sync
+
+</dd></dl>
+
+### [__](#GatewayThreadMembersUpdateDispatch) __GatewayThreadMembersUpdateDispatch
+
+__GatewayThreadMembersUpdateDispatch: _DataPayload<GatewayDispatchEvents.ThreadMembersUpdate, GatewayThreadMembersUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-members-update
+
+</dd></dl>
+
+### [__](#GatewayThreadMembersUpdateDispatchData) __GatewayThreadMembersUpdateDispatchData
+
+__GatewayThreadMembersUpdateDispatchData: RawGatewayThreadMembersUpdate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-members-update
+
+</dd></dl>
+
+### [__](#GatewayThreadMemberUpdateDispatch) __GatewayThreadMemberUpdateDispatch
+
+__GatewayThreadMemberUpdateDispatch: _DataPayload<GatewayDispatchEvents.ThreadMemberUpdate, GatewayThreadMemberUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-member-update
+
+</dd></dl>
+
+### [__](#GatewayThreadMemberUpdateDispatchData) __GatewayThreadMemberUpdateDispatchData
+
+__GatewayThreadMemberUpdateDispatchData: APIThreadMember &{guild_id: Snowflake }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-member-update
+
+</dd></dl>
+
+### [__](#GatewayThreadModifyDispatch) __GatewayThreadModifyDispatch
+
+__GatewayThreadModifyDispatch: _DataPayload<GatewayDispatchEvents.ThreadCreate |GatewayDispatchEvents.ThreadDelete |GatewayDispatchEvents.ThreadUpdate, APIThreadChannel>
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+This type doesn't accurately reflect the Discord API. Use GatewayThreadCreateDispatch, GatewayThreadUpdateDispatch, or GatewayThreadDeleteDispatch instead.
+
+</dd><dt>**@see**</dt>
+<dd>
+
+- https://discord.com/developers/docs/topics/gateway-events#thread-create
+- https://discord.com/developers/docs/topics/gateway-events#thread-update
+- https://discord.com/developers/docs/topics/gateway-events#thread-delete
+
+</dd></dl>
+
+### [__](#GatewayThreadUpdateDispatch) __GatewayThreadUpdateDispatch
+
+__GatewayThreadUpdateDispatch: _DataPayload<GatewayDispatchEvents.ThreadUpdate, GatewayThreadUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-update
+
+</dd></dl>
+
+### [__](#GatewayThreadUpdateDispatchData) __GatewayThreadUpdateDispatchData
+
+__GatewayThreadUpdateDispatchData: APIThreadChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#thread-update
+
+</dd></dl>
+
+### [__](#GatewayTypingStartDispatch) __GatewayTypingStartDispatch
+
+__GatewayTypingStartDispatch: _DataPayload<GatewayDispatchEvents.TypingStart, GatewayTypingStartDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#typing-start
+
+</dd></dl>
+
+### [__](#GatewayUserUpdateDispatch) __GatewayUserUpdateDispatch
+
+__GatewayUserUpdateDispatch: _DataPayload<GatewayDispatchEvents.UserUpdate, GatewayUserUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#user-update
+
+</dd></dl>
+
+### [__](#GatewayUserUpdateDispatchData) __GatewayUserUpdateDispatchData
+
+__GatewayUserUpdateDispatchData: APIUser
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#user-update
+
+</dd></dl>
+
+### [__](#GatewayVoiceChannelEffectSendDispatch) __GatewayVoiceChannelEffectSendDispatch
+
+__GatewayVoiceChannelEffectSendDispatch: _DataPayload<GatewayDispatchEvents.VoiceChannelEffectSend, GatewayVoiceChannelEffectSendDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#voice-channel-effect-send
+
+</dd></dl>
+
+### [__](#GatewayVoiceServerUpdateDispatch) __GatewayVoiceServerUpdateDispatch
+
+__GatewayVoiceServerUpdateDispatch: _DataPayload<GatewayDispatchEvents.VoiceServerUpdate, GatewayVoiceServerUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#voice-server-update
+
+</dd></dl>
+
+### [__](#GatewayVoiceState) __GatewayVoiceState
+
+__GatewayVoiceState: APIVoiceState
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/voice#voice-state-object
+
+</dd><dt>**@deprecated**</dt>
+<dd>
+
+This is deprecated, use APIVoiceState
+
+</dd></dl>
+
+### [__](#GatewayVoiceStateUpdateDispatch) __GatewayVoiceStateUpdateDispatch
+
+__GatewayVoiceStateUpdateDispatch: _DataPayload<GatewayDispatchEvents.VoiceStateUpdate, GatewayVoiceStateUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#voice-state-update
+
+</dd></dl>
+
+### [__](#GatewayVoiceStateUpdateDispatchData) __GatewayVoiceStateUpdateDispatchData
+
+__GatewayVoiceStateUpdateDispatchData: APIVoiceState
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#voice-state-update
+
+</dd></dl>
+
+### [__](#GatewayWebhooksUpdateDispatch) __GatewayWebhooksUpdateDispatch
+
+__GatewayWebhooksUpdateDispatch: _DataPayload<GatewayDispatchEvents.WebhooksUpdate, GatewayWebhooksUpdateDispatchData>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway-events#webhooks-update
+
+</dd></dl>
+
+### [__](#GetAPIVoiceRegionsResult) __GetAPIVoiceRegionsResult
+
+__GetAPIVoiceRegionsResult: RESTGetAPIVoiceRegionsResult
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+This was exported with the wrong name, use RESTGetAPIVoiceRegionsResult instead
+
+</dd></dl>
+
+### [__](#GuildBannerFormat) __GuildBannerFormat
+
+__GuildBannerFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+### [__](#GuildChannelType) __GuildChannelType
+
+__GuildChannelType: Exclude< ChannelType,ChannelType.DM |ChannelType.GroupDM>
+
+### [__](#GuildDiscoverySplashFormat) __GuildDiscoverySplashFormat
+
+__GuildDiscoverySplashFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#GuildIconFormat) __GuildIconFormat
+
+__GuildIconFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+### [__](#GuildMemberAvatarFormat) __GuildMemberAvatarFormat
+
+__GuildMemberAvatarFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+### [__](#GuildMemberBannerFormat) __GuildMemberBannerFormat
+
+__GuildMemberBannerFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+### [__](#GuildScheduledEventCoverFormat) __GuildScheduledEventCoverFormat
+
+__GuildScheduledEventCoverFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#GuildScheduledEventRecurrenceRuleNWeekday) __GuildScheduledEventRecurrenceRuleNWeekday
+
+__GuildScheduledEventRecurrenceRuleNWeekday: APIGuildScheduledEventRecurrenceRuleNWeekday
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use APIGuildScheduledEventRecurrenceRuleNWeekday instead
+
+</dd></dl>
+
+### [__](#GuildSplashFormat) __GuildSplashFormat
+
+__GuildSplashFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#GuildTagBadgeFormat) __GuildTagBadgeFormat
+
+__GuildTagBadgeFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#GuildTextChannelType) __GuildTextChannelType
+
+__GuildTextChannelType: Exclude< TextChannelType,ChannelType.DM |ChannelType.GroupDM>
+
+### [__](#ImageSize) __ImageSize
+
+__ImageSize: 1024 |2048 |4096 |16 |32 |64 |128 |256 |512 |(number &{})
+
+### [__](#LocaleString) __LocaleString
+
+__LocaleString: `${ [Locale](https://discord-api-types.dev/api/next/discord-api-types-v10/enum/Locale)}`
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use Locale instead.
+
+</dd></dl>
+
+### [__](#LocalizationMap) __LocalizationMap
+
+__LocalizationMap: Partial<Record< Locale,string |null>>
+
+### [__](#ModalSubmitComponent) __ModalSubmitComponent
+
+__ModalSubmitComponent: APIModalSubmitChannelSelectComponent | APIModalSubmitCheckboxComponent | APIModalSubmitCheckboxGroupComponent | APIModalSubmitFileUploadComponent | APIModalSubmitMentionableSelectComponent | APIModalSubmitRadioGroupComponent | APIModalSubmitRoleSelectComponent | APIModalSubmitStringSelectComponent | APIModalSubmitTextInputComponent | APIModalSubmitUserSelectComponent
+
+### [__](#PartialAPIMessageInteractionGuildMember) __PartialAPIMessageInteractionGuildMember
+
+__PartialAPIMessageInteractionGuildMember: Pick< APIGuildMember,avatar |communication_disabled_until |deaf |joined_at |mute |nick |pending |premium_since |roles>
+
+### [__](#PresenceUpdateReceiveStatus) __PresenceUpdateReceiveStatus
+
+__PresenceUpdateReceiveStatus: Exclude< PresenceUpdateStatus,PresenceUpdateStatus.Invisible>
+
+### [__](#RESTAPIAttachment) __RESTAPIAttachment
+
+__RESTAPIAttachment: Partial<Pick< APIAttachment,description |duration_secs |filename |title |waveform>> &{id: Snowflake |number }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/message#attachment-object-attachment-structure
+
+</dd></dl>
+
+### [__](#RESTAPIGuildChannelResolvable) __RESTAPIGuildChannelResolvable
+
+__RESTAPIGuildChannelResolvable: Exclude< APIChannel, APIDMChannel | APIGroupDMChannel>
+
+### [__](#RESTAPIGuildCreatePartialChannel) __RESTAPIGuildCreatePartialChannel
+
+__RESTAPIGuildCreatePartialChannel: _StrictPartial< _DistributivePick< RESTAPIGuildChannelResolvable,available_tags |bitrate |default_auto_archive_duration |default_forum_layout |default_reaction_emoji |default_sort_order |default_thread_rate_limit_per_user |flags |nsfw |position |rate_limit_per_user |rtc_region |topic |type |user_limit |video_quality_mode>> &{id?:number |string;name:string;parent_id?:number |string |null;permission_overwrites?: RESTAPIGuildCreateOverwrite[] }
+
+### [__](#RESTAPIMessageReference) __RESTAPIMessageReference
+
+__RESTAPIMessageReference: _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<Required<Pick< APIMessageReference,message_id>>> & _StrictPartial< APIMessageReference> &{fail_if_not_exists?:boolean }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure
+
+</dd></dl>
+
+### [__](#RESTAPIModifyGuildOnboardingPromptData) __RESTAPIModifyGuildOnboardingPromptData
+
+__RESTAPIModifyGuildOnboardingPromptData: RESTAPIGuildOnboardingPrompt
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIGuildOnboardingPrompt instead.
+
+</dd></dl>
+
+### [__](#RESTAPIModifyGuildOnboardingPromptOptionData) __RESTAPIModifyGuildOnboardingPromptOptionData
+
+__RESTAPIModifyGuildOnboardingPromptOptionData: RESTAPIGuildOnboardingPromptOption
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIGuildOnboardingPromptOption instead.
+
+</dd></dl>
+
+### [__](#RESTAPIPollCreate) __RESTAPIPollCreate
+
+__RESTAPIPollCreate: RESTAPIPoll
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTAPIPoll instead
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIApplicationEmojiResult) __RESTDeleteAPIApplicationEmojiResult
+
+__RESTDeleteAPIApplicationEmojiResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#delete-application-emoji
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIAutoModerationRuleResult) __RESTDeleteAPIAutoModerationRuleResult
+
+__RESTDeleteAPIAutoModerationRuleResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/auto-moderation#delete-auto-moderation-rule
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelAllMessageReactionsResult) __RESTDeleteAPIChannelAllMessageReactionsResult
+
+__RESTDeleteAPIChannelAllMessageReactionsResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#delete-all-reactions
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelMessageOwnReaction) __RESTDeleteAPIChannelMessageOwnReaction
+
+__RESTDeleteAPIChannelMessageOwnReaction: RESTDeleteAPIChannelMessageOwnReactionResult
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTDeleteAPIChannelMessageOwnReactionResult instead
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelMessageOwnReactionResult) __RESTDeleteAPIChannelMessageOwnReactionResult
+
+__RESTDeleteAPIChannelMessageOwnReactionResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#delete-own-reaction
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelMessageReactionResult) __RESTDeleteAPIChannelMessageReactionResult
+
+__RESTDeleteAPIChannelMessageReactionResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#delete-all-reactions-for-emoji
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelMessageResult) __RESTDeleteAPIChannelMessageResult
+
+__RESTDeleteAPIChannelMessageResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#delete-message
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelMessagesPinResult) __RESTDeleteAPIChannelMessagesPinResult
+
+__RESTDeleteAPIChannelMessagesPinResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/message#unpin-message
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelMessageUserReactionResult) __RESTDeleteAPIChannelMessageUserReactionResult
+
+__RESTDeleteAPIChannelMessageUserReactionResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#delete-user-reaction
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelPermissionResult) __RESTDeleteAPIChannelPermissionResult
+
+__RESTDeleteAPIChannelPermissionResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#delete-channel-permission
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelPinResult) __RESTDeleteAPIChannelPinResult
+
+__RESTDeleteAPIChannelPinResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/message#unpin-message-deprecated
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTDeleteAPIChannelRecipientResult) __RESTDeleteAPIChannelRecipientResult
+
+__RESTDeleteAPIChannelRecipientResult: unknown
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#group-dm-remove-recipient
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelResult) __RESTDeleteAPIChannelResult
+
+__RESTDeleteAPIChannelResult: APIChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#deleteclose-channel
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIChannelThreadMembersResult) __RESTDeleteAPIChannelThreadMembersResult
+
+__RESTDeleteAPIChannelThreadMembersResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#leave-thread
+
+</dd></dl>
+
+### [__](#RESTDeleteAPICurrentUserGuildResult) __RESTDeleteAPICurrentUserGuildResult
+
+__RESTDeleteAPICurrentUserGuildResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#leave-guild
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIEntitlementResult) __RESTDeleteAPIEntitlementResult
+
+__RESTDeleteAPIEntitlementResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/entitlement#delete-test-entitlement
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildBanResult) __RESTDeleteAPIGuildBanResult
+
+__RESTDeleteAPIGuildBanResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#remove-guild-ban
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildEmojiResult) __RESTDeleteAPIGuildEmojiResult
+
+__RESTDeleteAPIGuildEmojiResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#delete-guild-emoji
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildIntegrationResult) __RESTDeleteAPIGuildIntegrationResult
+
+__RESTDeleteAPIGuildIntegrationResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#delete-guild-integration
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildMemberResult) __RESTDeleteAPIGuildMemberResult
+
+__RESTDeleteAPIGuildMemberResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#remove-guild-member
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildMemberRoleResult) __RESTDeleteAPIGuildMemberRoleResult
+
+__RESTDeleteAPIGuildMemberRoleResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#remove-guild-member-role
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildResult) __RESTDeleteAPIGuildResult
+
+__RESTDeleteAPIGuildResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/change-log#guild-create-deprecation
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTDeleteAPIGuildRoleResult) __RESTDeleteAPIGuildRoleResult
+
+__RESTDeleteAPIGuildRoleResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#delete-guild-role
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildScheduledEventResult) __RESTDeleteAPIGuildScheduledEventResult
+
+__RESTDeleteAPIGuildScheduledEventResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#delete-guild-scheduled-event
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildSoundboardSoundResult) __RESTDeleteAPIGuildSoundboardSoundResult
+
+__RESTDeleteAPIGuildSoundboardSoundResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/soundboard#delete-guild-soundboard-sound
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildStickerResult) __RESTDeleteAPIGuildStickerResult
+
+__RESTDeleteAPIGuildStickerResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#delete-guild-sticker
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIGuildTemplateResult) __RESTDeleteAPIGuildTemplateResult
+
+__RESTDeleteAPIGuildTemplateResult: APITemplate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#delete-guild-template
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIInteractionFollowupResult) __RESTDeleteAPIInteractionFollowupResult
+
+__RESTDeleteAPIInteractionFollowupResult: RESTDeleteAPIWebhookWithTokenMessageResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#delete-followup-message
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIInteractionOriginalResponseResult) __RESTDeleteAPIInteractionOriginalResponseResult
+
+__RESTDeleteAPIInteractionOriginalResponseResult: RESTDeleteAPIWebhookWithTokenMessageResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#delete-original-interaction-response
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIInviteResult) __RESTDeleteAPIInviteResult
+
+__RESTDeleteAPIInviteResult: APIInvite
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/invite#delete-invite
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIStageInstanceResult) __RESTDeleteAPIStageInstanceResult
+
+__RESTDeleteAPIStageInstanceResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/stage-instance#delete-stage-instance
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIWebhookResult) __RESTDeleteAPIWebhookResult
+
+__RESTDeleteAPIWebhookResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#delete-webhook
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIWebhookWithTokenMessageResult) __RESTDeleteAPIWebhookWithTokenMessageResult
+
+__RESTDeleteAPIWebhookWithTokenMessageResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#delete-webhook-message
+
+</dd></dl>
+
+### [__](#RESTDeleteAPIWebhookWithTokenResult) __RESTDeleteAPIWebhookWithTokenResult
+
+__RESTDeleteAPIWebhookWithTokenResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#delete-webhook-with-token
+
+</dd></dl>
+
+### [__](#RESTErrorData) __RESTErrorData
+
+__RESTErrorData: RESTErrorFieldInformation | RESTErrorGroupWrapper |string |{}
+
+### [__](#RESTGetAPIApplicationActivityInstanceResult) __RESTGetAPIApplicationActivityInstanceResult
+
+__RESTGetAPIApplicationActivityInstanceResult: APIActivityInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application#get-application-activity-instance
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationCommandPermissionsResult) __RESTGetAPIApplicationCommandPermissionsResult
+
+__RESTGetAPIApplicationCommandPermissionsResult: APIGuildApplicationCommandPermissions
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-application-command-permissions
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationCommandResult) __RESTGetAPIApplicationCommandResult
+
+__RESTGetAPIApplicationCommandResult: APIApplicationCommand
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-global-application-command
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationCommandsResult) __RESTGetAPIApplicationCommandsResult
+
+__RESTGetAPIApplicationCommandsResult: APIApplicationCommand[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-global-application-commands
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationEmojiResult) __RESTGetAPIApplicationEmojiResult
+
+__RESTGetAPIApplicationEmojiResult: APIApplicationEmoji
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#get-application-emoji
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationGuildCommandResult) __RESTGetAPIApplicationGuildCommandResult
+
+__RESTGetAPIApplicationGuildCommandResult: Omit< APIApplicationCommand,dm_permission>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationGuildCommandsQuery) __RESTGetAPIApplicationGuildCommandsQuery
+
+__RESTGetAPIApplicationGuildCommandsQuery: RESTGetAPIApplicationCommandsQuery
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationGuildCommandsResult) __RESTGetAPIApplicationGuildCommandsResult
+
+__RESTGetAPIApplicationGuildCommandsResult: Omit< APIApplicationCommand,dm_permission>[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-guild-application-commands
+
+</dd></dl>
+
+### [__](#RESTGetAPIApplicationRoleConnectionMetadataResult) __RESTGetAPIApplicationRoleConnectionMetadataResult
+
+__RESTGetAPIApplicationRoleConnectionMetadataResult: APIApplicationRoleConnectionMetadata[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application-role-connection-metadata#get-application-role-connection-metadata-records
+
+</dd></dl>
+
+### [__](#RESTGetAPIAuditLogResult) __RESTGetAPIAuditLogResult
+
+__RESTGetAPIAuditLogResult: APIAuditLog
+
+### [__](#RESTGetAPIAutoModerationRuleResult) __RESTGetAPIAutoModerationRuleResult
+
+__RESTGetAPIAutoModerationRuleResult: APIAutoModerationRule
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/auto-moderation#get-auto-moderation-rule
+
+</dd></dl>
+
+### [__](#RESTGetAPIAutoModerationRulesResult) __RESTGetAPIAutoModerationRulesResult
+
+__RESTGetAPIAutoModerationRulesResult: APIAutoModerationRule[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/auto-moderation#list-auto-moderation-rules-for-guild
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelInvitesResult) __RESTGetAPIChannelInvitesResult
+
+__RESTGetAPIChannelInvitesResult: APIExtendedInvite[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#get-channel-invites
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelMessageReactionUsersResult) __RESTGetAPIChannelMessageReactionUsersResult
+
+__RESTGetAPIChannelMessageReactionUsersResult: APIUser[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#get-reactions
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelMessageResult) __RESTGetAPIChannelMessageResult
+
+__RESTGetAPIChannelMessageResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#get-channel-message
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelMessagesResult) __RESTGetAPIChannelMessagesResult
+
+__RESTGetAPIChannelMessagesResult: APIMessage[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#get-channel-messages
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelPinsResult) __RESTGetAPIChannelPinsResult
+
+__RESTGetAPIChannelPinsResult: APIMessage[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/message#get-pinned-messages-deprecated
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTGetAPIChannelResult) __RESTGetAPIChannelResult
+
+__RESTGetAPIChannelResult: APIChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#get-channel
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelThreadMemberResult) __RESTGetAPIChannelThreadMemberResult
+
+__RESTGetAPIChannelThreadMemberResult: APIThreadMember
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#get-thread-member
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelThreadMembersResult) __RESTGetAPIChannelThreadMembersResult
+
+__RESTGetAPIChannelThreadMembersResult: APIThreadMember[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#list-thread-members
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelThreadsArchivedPrivateResult) __RESTGetAPIChannelThreadsArchivedPrivateResult
+
+__RESTGetAPIChannelThreadsArchivedPrivateResult: RESTGetAPIChannelUsersThreadsArchivedResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#list-private-archived-threads
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelThreadsArchivedPublicResult) __RESTGetAPIChannelThreadsArchivedPublicResult
+
+__RESTGetAPIChannelThreadsArchivedPublicResult: RESTGetAPIChannelUsersThreadsArchivedResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#list-public-archived-threads
+
+</dd></dl>
+
+### [__](#RESTGetAPIChannelWebhooksResult) __RESTGetAPIChannelWebhooksResult
+
+__RESTGetAPIChannelWebhooksResult: APIWebhook[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#get-channel-webhooks
+
+</dd></dl>
+
+### [__](#RESTGetAPICurrentUserApplicationRoleConnectionResult) __RESTGetAPICurrentUserApplicationRoleConnectionResult
+
+__RESTGetAPICurrentUserApplicationRoleConnectionResult: APIApplicationRoleConnection
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#get-user-application-role-connection
+
+</dd></dl>
+
+### [__](#RESTGetAPICurrentUserConnectionsResult) __RESTGetAPICurrentUserConnectionsResult
+
+__RESTGetAPICurrentUserConnectionsResult: APIConnection[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#get-user-connections
+
+</dd></dl>
+
+### [__](#RESTGetAPICurrentUserGuildsResult) __RESTGetAPICurrentUserGuildsResult
+
+__RESTGetAPICurrentUserGuildsResult: RESTAPIPartialCurrentUserGuild[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#get-current-user-guilds
+
+</dd></dl>
+
+### [__](#RESTGetAPICurrentUserResult) __RESTGetAPICurrentUserResult
+
+__RESTGetAPICurrentUserResult: APIUser
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#get-current-user
+
+</dd></dl>
+
+### [__](#RESTGetAPIEntitlementResult) __RESTGetAPIEntitlementResult
+
+__RESTGetAPIEntitlementResult: APIEntitlement
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/entitlement#get-entitlement
+
+</dd></dl>
+
+### [__](#RESTGetAPIEntitlementsResult) __RESTGetAPIEntitlementsResult
+
+__RESTGetAPIEntitlementsResult: APIEntitlement[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/entitlement#list-entitlements
+
+</dd></dl>
+
+### [__](#RESTGetAPIGatewayBotResult) __RESTGetAPIGatewayBotResult
+
+__RESTGetAPIGatewayBotResult: APIGatewayBotInfo
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway#get-gateway-bot
+
+</dd></dl>
+
+### [__](#RESTGetAPIGatewayResult) __RESTGetAPIGatewayResult
+
+__RESTGetAPIGatewayResult: APIGatewayInfo
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/gateway#get-gateway
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildApplicationCommandsPermissionsResult) __RESTGetAPIGuildApplicationCommandsPermissionsResult
+
+__RESTGetAPIGuildApplicationCommandsPermissionsResult: APIGuildApplicationCommandPermissions[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#get-guild-application-command-permissions
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildBanResult) __RESTGetAPIGuildBanResult
+
+__RESTGetAPIGuildBanResult: APIBan
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-ban
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildBansResult) __RESTGetAPIGuildBansResult
+
+__RESTGetAPIGuildBansResult: APIBan[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-bans
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildChannelsResult) __RESTGetAPIGuildChannelsResult
+
+__RESTGetAPIGuildChannelsResult: APIGuildChannel[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-channels
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildEmojiResult) __RESTGetAPIGuildEmojiResult
+
+__RESTGetAPIGuildEmojiResult: APIEmoji
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#get-guild-emoji
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildEmojisResult) __RESTGetAPIGuildEmojisResult
+
+__RESTGetAPIGuildEmojisResult: APIEmoji[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#list-guild-emojis
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildIntegrationsResult) __RESTGetAPIGuildIntegrationsResult
+
+__RESTGetAPIGuildIntegrationsResult: APIGuildIntegration[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-integrations
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildInvitesResult) __RESTGetAPIGuildInvitesResult
+
+__RESTGetAPIGuildInvitesResult: APIExtendedInvite[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-invites
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildMemberResult) __RESTGetAPIGuildMemberResult
+
+__RESTGetAPIGuildMemberResult: APIGuildMember
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-member
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildMembersResult) __RESTGetAPIGuildMembersResult
+
+__RESTGetAPIGuildMembersResult: APIGuildMember[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#list-guild-members
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildMembersSearchResult) __RESTGetAPIGuildMembersSearchResult
+
+__RESTGetAPIGuildMembersSearchResult: APIGuildMember[]
+
+### [__](#RESTGetAPIGuildMemberVerificationResult) __RESTGetAPIGuildMemberVerificationResult
+
+__RESTGetAPIGuildMemberVerificationResult: APIGuildMembershipScreening
+
+### [__](#RESTGetAPIGuildMessagesSearchResult) __RESTGetAPIGuildMessagesSearchResult
+
+__RESTGetAPIGuildMessagesSearchResult: APIMessageSearchIndexNotReadyResponse | APIMessageSearchResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://docs.discord.com/developers/resources/message#search-guild-messages-response-body
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildOnboardingResult) __RESTGetAPIGuildOnboardingResult
+
+__RESTGetAPIGuildOnboardingResult: APIGuildOnboarding
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-onboarding
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildPreviewResult) __RESTGetAPIGuildPreviewResult
+
+__RESTGetAPIGuildPreviewResult: APIGuildPreview
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-preview
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildResult) __RESTGetAPIGuildResult
+
+__RESTGetAPIGuildResult: APIGuild
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildRoleMemberCountsResult) __RESTGetAPIGuildRoleMemberCountsResult
+
+__RESTGetAPIGuildRoleMemberCountsResult: Record< Snowflake,number>
+
+A record mapping role IDs to the number of members that have that role.
+
+<dl><dt>**@remarks**</dt>
+<dd>
+
+This does not include the `@everyone` role.
+
+</dd><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-role-member-counts
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildRoleResult) __RESTGetAPIGuildRoleResult
+
+__RESTGetAPIGuildRoleResult: APIRole
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-role
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildRolesResult) __RESTGetAPIGuildRolesResult
+
+__RESTGetAPIGuildRolesResult: APIRole[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-roles
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildScheduledEventResult) __RESTGetAPIGuildScheduledEventResult
+
+__RESTGetAPIGuildScheduledEventResult: APIGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildScheduledEventsResult) __RESTGetAPIGuildScheduledEventsResult
+
+__RESTGetAPIGuildScheduledEventsResult: APIGuildScheduledEvent[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#list-scheduled-events-for-guild
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildScheduledEventUsersResult) __RESTGetAPIGuildScheduledEventUsersResult
+
+__RESTGetAPIGuildScheduledEventUsersResult: APIGuildScheduledEventUser[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#get-guild-scheduled-event-users
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildSoundboardSoundResult) __RESTGetAPIGuildSoundboardSoundResult
+
+__RESTGetAPIGuildSoundboardSoundResult: APISoundboardSound
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/soundboard#get-guild-soundboard-sound
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildStickerResult) __RESTGetAPIGuildStickerResult
+
+__RESTGetAPIGuildStickerResult: APISticker
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#get-guild-sticker
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildStickersResult) __RESTGetAPIGuildStickersResult
+
+__RESTGetAPIGuildStickersResult: APISticker[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#list-guild-stickers
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildTemplatesResult) __RESTGetAPIGuildTemplatesResult
+
+__RESTGetAPIGuildTemplatesResult: APITemplate[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#get-guild-templates
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildThreadsResult) __RESTGetAPIGuildThreadsResult
+
+__RESTGetAPIGuildThreadsResult: APIThreadList
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#list-active-guild-threads
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildVoiceRegionsResult) __RESTGetAPIGuildVoiceRegionsResult
+
+__RESTGetAPIGuildVoiceRegionsResult: APIVoiceRegion[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-voice-regions
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildVoiceStateCurrentMemberResult) __RESTGetAPIGuildVoiceStateCurrentMemberResult
+
+__RESTGetAPIGuildVoiceStateCurrentMemberResult: APIVoiceState
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/voice#get-current-user-voice-state
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildVoiceStateUserResult) __RESTGetAPIGuildVoiceStateUserResult
+
+__RESTGetAPIGuildVoiceStateUserResult: APIVoiceState
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/voice#get-user-voice-state
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildWebhooksResult) __RESTGetAPIGuildWebhooksResult
+
+__RESTGetAPIGuildWebhooksResult: APIWebhook[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#get-guild-webhooks
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildWelcomeScreenResult) __RESTGetAPIGuildWelcomeScreenResult
+
+__RESTGetAPIGuildWelcomeScreenResult: APIGuildWelcomeScreen
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-welcome-screen
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildWidgetImageResult) __RESTGetAPIGuildWidgetImageResult
+
+__RESTGetAPIGuildWidgetImageResult: ArrayBuffer
+
+Note: while the return type is `ArrayBuffer`, the expected result is a buffer of sorts (depends if in browser or on node.js/deno).
+
+### [__](#RESTGetAPIGuildWidgetJSONResult) __RESTGetAPIGuildWidgetJSONResult
+
+__RESTGetAPIGuildWidgetJSONResult: APIGuildWidget
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-widget
+
+</dd></dl>
+
+### [__](#RESTGetAPIGuildWidgetSettingsResult) __RESTGetAPIGuildWidgetSettingsResult
+
+__RESTGetAPIGuildWidgetSettingsResult: APIGuildWidgetSettings
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#get-guild-widget-settings
+
+</dd></dl>
+
+### [__](#RESTGetAPIInteractionFollowupResult) __RESTGetAPIInteractionFollowupResult
+
+__RESTGetAPIInteractionFollowupResult: RESTGetAPIWebhookWithTokenMessageResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#get-followup-message
+
+</dd></dl>
+
+### [__](#RESTGetAPIInteractionOriginalResponseResult) __RESTGetAPIInteractionOriginalResponseResult
+
+__RESTGetAPIInteractionOriginalResponseResult: RESTGetAPIWebhookWithTokenMessageResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#get-original-interaction-response
+
+</dd></dl>
+
+### [__](#RESTGetAPIInviteResult) __RESTGetAPIInviteResult
+
+__RESTGetAPIInviteResult: APIInvite
+
+### [__](#RESTGetAPIOAuth2CurrentApplicationResult) __RESTGetAPIOAuth2CurrentApplicationResult
+
+__RESTGetAPIOAuth2CurrentApplicationResult: Omit< APIApplication,flags>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/oauth2#get-current-bot-application-information
+
+</dd></dl>
+
+### [__](#RESTGetAPISKUsResult) __RESTGetAPISKUsResult
+
+__RESTGetAPISKUsResult: APISKU[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sku#list-skus
+
+</dd></dl>
+
+### [__](#RESTGetAPISKUSubscriptionResult) __RESTGetAPISKUSubscriptionResult
+
+__RESTGetAPISKUSubscriptionResult: APISubscription
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/subscription#get-sku-subscription
+
+</dd></dl>
+
+### [__](#RESTGetAPISKUSubscriptionsResult) __RESTGetAPISKUSubscriptionsResult
+
+__RESTGetAPISKUSubscriptionsResult: APISubscription[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/subscription#list-sku-subscriptions
+
+</dd></dl>
+
+### [__](#RESTGetAPISoundboardDefaultSoundsResult) __RESTGetAPISoundboardDefaultSoundsResult
+
+__RESTGetAPISoundboardDefaultSoundsResult: APISoundboardSound[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/soundboard#list-soundboard-default-sounds
+
+</dd></dl>
+
+### [__](#RESTGetAPIStageInstanceResult) __RESTGetAPIStageInstanceResult
+
+__RESTGetAPIStageInstanceResult: APIStageInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/stage-instance#get-stage-instance
+
+</dd></dl>
+
+### [__](#RESTGetAPIStickerPack) __RESTGetAPIStickerPack
+
+__RESTGetAPIStickerPack: RESTGetAPIStickerPackResult
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTGetAPIStickerPackResult instead
+
+</dd></dl>
+
+### [__](#RESTGetAPIStickerPackResult) __RESTGetAPIStickerPackResult
+
+__RESTGetAPIStickerPackResult: APIStickerPack
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#get-sticker-pack
+
+</dd></dl>
+
+### [__](#RESTGetAPIStickerResult) __RESTGetAPIStickerResult
+
+__RESTGetAPIStickerResult: APISticker
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#get-sticker
+
+</dd></dl>
+
+### [__](#RESTGetAPITemplateResult) __RESTGetAPITemplateResult
+
+__RESTGetAPITemplateResult: APITemplate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#get-guild-template
+
+</dd></dl>
+
+### [__](#RESTGetAPIUserResult) __RESTGetAPIUserResult
+
+__RESTGetAPIUserResult: APIUser
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#get-user
+
+</dd></dl>
+
+### [__](#RESTGetAPIVoiceRegionsResult) __RESTGetAPIVoiceRegionsResult
+
+__RESTGetAPIVoiceRegionsResult: APIVoiceRegion[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/voice#list-voice-regions
+
+</dd></dl>
+
+### [__](#RESTGetAPIWebhookResult) __RESTGetAPIWebhookResult
+
+__RESTGetAPIWebhookResult: APIWebhook
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#get-webhook
+
+</dd></dl>
+
+### [__](#RESTGetAPIWebhookWithTokenMessageResult) __RESTGetAPIWebhookWithTokenMessageResult
+
+__RESTGetAPIWebhookWithTokenMessageResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#get-webhook-message
+
+</dd></dl>
+
+### [__](#RESTGetAPIWebhookWithTokenResult) __RESTGetAPIWebhookWithTokenResult
+
+__RESTGetAPIWebhookWithTokenResult: Omit< APIWebhook,user>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#get-webhook-with-token
+
+</dd></dl>
+
+### [__](#RESTGetCurrentApplicationResult) __RESTGetCurrentApplicationResult
+
+__RESTGetCurrentApplicationResult: APIApplication
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application#get-current-application
+
+</dd></dl>
+
+### [__](#RESTGetCurrentUserGuildMemberResult) __RESTGetCurrentUserGuildMemberResult
+
+__RESTGetCurrentUserGuildMemberResult: APIGuildMember
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#get-current-user-guild-member
+
+</dd></dl>
+
+### [__](#RESTGetNitroStickerPacksResult) __RESTGetNitroStickerPacksResult
+
+__RESTGetNitroStickerPacksResult: RESTGetStickerPacksResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#list-sticker-packs
+
+</dd><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTGetStickerPacksResult instead
+
+</dd></dl>
+
+### [__](#RESTOAuth2AuthorizationQueryResult) __RESTOAuth2AuthorizationQueryResult
+
+__RESTOAuth2AuthorizationQueryResult: RESTPostOAuth2AuthorizationQueryResult
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTPostOAuth2AuthorizationQueryResult instead
+
+</dd></dl>
+
+### [__](#RESTOAuth2ImplicitAuthorizationURLFragmentResult) __RESTOAuth2ImplicitAuthorizationURLFragmentResult
+
+__RESTOAuth2ImplicitAuthorizationURLFragmentResult: Omit< RESTPostOAuth2AccessTokenResult,refresh_token>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/oauth2#implicit-grant-redirect-url-example
+
+</dd></dl>
+
+### [__](#RESTOAuth2TokenOptionalClientCredentials) __RESTOAuth2TokenOptionalClientCredentials
+
+__RESTOAuth2TokenOptionalClientCredentials: {client_id: Snowflake;client_secret:string } |{client_id?:never;client_secret?:never }
+
+### [__](#RESTPatchAPIApplicationCommandJSONBody) __RESTPatchAPIApplicationCommandJSONBody
+
+__RESTPatchAPIApplicationCommandJSONBody: _StrictPartial< RESTPostAPIApplicationCommandsJSONBody>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
+
+</dd></dl>
+
+### [__](#RESTPatchAPIApplicationCommandResult) __RESTPatchAPIApplicationCommandResult
+
+__RESTPatchAPIApplicationCommandResult: APIApplicationCommand
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#edit-global-application-command
+
+</dd></dl>
+
+### [__](#RESTPatchAPIApplicationEmojiJSONBody) __RESTPatchAPIApplicationEmojiJSONBody
+
+__RESTPatchAPIApplicationEmojiJSONBody: Pick< RESTPatchAPIGuildEmojiJSONBody,name>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#modify-application-emoji
+
+</dd></dl>
+
+### [__](#RESTPatchAPIApplicationEmojiResult) __RESTPatchAPIApplicationEmojiResult
+
+__RESTPatchAPIApplicationEmojiResult: APIApplicationEmoji
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#modify-application-emoji
+
+</dd></dl>
+
+### [__](#RESTPatchAPIApplicationGuildCommandJSONBody) __RESTPatchAPIApplicationGuildCommandJSONBody
+
+__RESTPatchAPIApplicationGuildCommandJSONBody: _StrictPartial<Omit< RESTPostAPIChatInputApplicationCommandsJSONBody,dm_permission> |Omit< RESTPostAPIContextMenuApplicationCommandsJSONBody,dm_permission>>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
+
+</dd></dl>
+
+### [__](#RESTPatchAPIApplicationGuildCommandResult) __RESTPatchAPIApplicationGuildCommandResult
+
+__RESTPatchAPIApplicationGuildCommandResult: Omit< APIApplicationCommand,dm_permission>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#edit-guild-application-command
+
+</dd></dl>
+
+### [__](#RESTPatchAPIAutoModerationRuleJSONBody) __RESTPatchAPIAutoModerationRuleJSONBody
+
+__RESTPatchAPIAutoModerationRuleJSONBody: Omit<Partial< RESTPostAPIAutoModerationRuleJSONBody>,trigger_type>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule
+
+</dd></dl>
+
+### [__](#RESTPatchAPIAutoModerationRuleResult) __RESTPatchAPIAutoModerationRuleResult
+
+__RESTPatchAPIAutoModerationRuleResult: APIAutoModerationRule
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/auto-moderation#modify-auto-moderation-rule
+
+</dd></dl>
+
+### [__](#RESTPatchAPIChannelMessageFormDataBody) __RESTPatchAPIChannelMessageFormDataBody
+
+__RESTPatchAPIChannelMessageFormDataBody: (Record<`files[${bigint}]`,unknown> &{payload_json?:string }) |(Record<`files[${bigint}]`,unknown> & RESTPatchAPIChannelMessageJSONBody)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#edit-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIChannelMessageResult) __RESTPatchAPIChannelMessageResult
+
+__RESTPatchAPIChannelMessageResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#edit-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIChannelResult) __RESTPatchAPIChannelResult
+
+__RESTPatchAPIChannelResult: APIChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#modify-channel
+
+</dd></dl>
+
+### [__](#RESTPatchAPICurrentGuildMemberNicknameResult) __RESTPatchAPICurrentGuildMemberNicknameResult
+
+__RESTPatchAPICurrentGuildMemberNicknameResult: _StrictRequired< RESTPatchAPICurrentGuildMemberNicknameJSONBody>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-current-user-nick
+
+</dd><dt>**@deprecated**</dt>
+<dd>
+
+Use Current Member instead.
+
+</dd></dl>
+
+### [__](#RESTPatchAPICurrentGuildMemberResult) __RESTPatchAPICurrentGuildMemberResult
+
+__RESTPatchAPICurrentGuildMemberResult: APIGuildMember
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-current-member
+
+</dd></dl>
+
+### [__](#RESTPatchAPICurrentUserResult) __RESTPatchAPICurrentUserResult
+
+__RESTPatchAPICurrentUserResult: APIUser
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#modify-current-user
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildChannelPositionsJSONBody) __RESTPatchAPIGuildChannelPositionsJSONBody
+
+__RESTPatchAPIGuildChannelPositionsJSONBody: {id: Snowflake;lock_permissions?:boolean |null;parent_id?: Snowflake |null;position?:number |null }[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildChannelPositionsResult) __RESTPatchAPIGuildChannelPositionsResult
+
+__RESTPatchAPIGuildChannelPositionsResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-channel-positions
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildEmojiResult) __RESTPatchAPIGuildEmojiResult
+
+__RESTPatchAPIGuildEmojiResult: APIEmoji
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#modify-guild-emoji
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildMemberResult) __RESTPatchAPIGuildMemberResult
+
+__RESTPatchAPIGuildMemberResult: APIGuildMember
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#add-guild-member
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildMemberVerificationResult) __RESTPatchAPIGuildMemberVerificationResult
+
+__RESTPatchAPIGuildMemberVerificationResult: APIGuildMembershipScreening
+
+<dl><dt>**@unstable**</dt>
+<dd>
+
+https://github.com/discord/discord-api-docs/pull/2547
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildResult) __RESTPatchAPIGuildResult
+
+__RESTPatchAPIGuildResult: APIGuild
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildRolePositionsJSONBody) __RESTPatchAPIGuildRolePositionsJSONBody
+
+__RESTPatchAPIGuildRolePositionsJSONBody: {id: Snowflake;position?:number }[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildRolePositionsResult) __RESTPatchAPIGuildRolePositionsResult
+
+__RESTPatchAPIGuildRolePositionsResult: APIRole[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-role-positions
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildRoleResult) __RESTPatchAPIGuildRoleResult
+
+__RESTPatchAPIGuildRoleResult: APIRole
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-role
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildScheduledEventResult) __RESTPatchAPIGuildScheduledEventResult
+
+__RESTPatchAPIGuildScheduledEventResult: APIGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#modify-guild-scheduled-event
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildSoundboardSoundResult) __RESTPatchAPIGuildSoundboardSoundResult
+
+__RESTPatchAPIGuildSoundboardSoundResult: APISoundboardSound
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/soundboard#modify-guild-soundboard-sound
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildStickerResult) __RESTPatchAPIGuildStickerResult
+
+__RESTPatchAPIGuildStickerResult: APISticker
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#modify-guild-sticker
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildTemplateJSONBody) __RESTPatchAPIGuildTemplateJSONBody
+
+__RESTPatchAPIGuildTemplateJSONBody: _StrictPartial< RESTPostAPIGuildTemplatesJSONBody>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#modify-guild-template
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildTemplateResult) __RESTPatchAPIGuildTemplateResult
+
+__RESTPatchAPIGuildTemplateResult: APITemplate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#modify-guild-template
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildVoiceStateCurrentMemberResult) __RESTPatchAPIGuildVoiceStateCurrentMemberResult
+
+__RESTPatchAPIGuildVoiceStateCurrentMemberResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/voice#modify-current-user-voice-state
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildVoiceStateUserResult) __RESTPatchAPIGuildVoiceStateUserResult
+
+__RESTPatchAPIGuildVoiceStateUserResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/voice#modify-user-voice-state
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildWelcomeScreenJSONBody) __RESTPatchAPIGuildWelcomeScreenJSONBody
+
+__RESTPatchAPIGuildWelcomeScreenJSONBody: _Nullable< _StrictPartial< APIGuildWelcomeScreen>> &{enabled?:boolean |null }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildWelcomeScreenResult) __RESTPatchAPIGuildWelcomeScreenResult
+
+__RESTPatchAPIGuildWelcomeScreenResult: APIGuildWelcomeScreen
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-welcome-screen
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildWidgetSettingsJSONBody) __RESTPatchAPIGuildWidgetSettingsJSONBody
+
+__RESTPatchAPIGuildWidgetSettingsJSONBody: _StrictPartial< APIGuildWidgetSettings>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-widget
+
+</dd></dl>
+
+### [__](#RESTPatchAPIGuildWidgetSettingsResult) __RESTPatchAPIGuildWidgetSettingsResult
+
+__RESTPatchAPIGuildWidgetSettingsResult: APIGuildWidgetSettings
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-widget
+
+</dd></dl>
+
+### [__](#RESTPatchAPIInteractionFollowupFormDataBody) __RESTPatchAPIInteractionFollowupFormDataBody
+
+__RESTPatchAPIInteractionFollowupFormDataBody: RESTPatchAPIWebhookWithTokenMessageFormDataBody
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIInteractionFollowupJSONBody) __RESTPatchAPIInteractionFollowupJSONBody
+
+__RESTPatchAPIInteractionFollowupJSONBody: RESTPatchAPIWebhookWithTokenMessageJSONBody
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIInteractionFollowupResult) __RESTPatchAPIInteractionFollowupResult
+
+__RESTPatchAPIInteractionFollowupResult: RESTPatchAPIWebhookWithTokenMessageResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#edit-followup-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIInteractionOriginalResponseFormDataBody) __RESTPatchAPIInteractionOriginalResponseFormDataBody
+
+__RESTPatchAPIInteractionOriginalResponseFormDataBody: RESTPatchAPIWebhookWithTokenMessageFormDataBody
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+
+</dd></dl>
+
+### [__](#RESTPatchAPIInteractionOriginalResponseJSONBody) __RESTPatchAPIInteractionOriginalResponseJSONBody
+
+__RESTPatchAPIInteractionOriginalResponseJSONBody: RESTPatchAPIWebhookWithTokenMessageJSONBody
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+
+</dd></dl>
+
+### [__](#RESTPatchAPIInteractionOriginalResponseResult) __RESTPatchAPIInteractionOriginalResponseResult
+
+__RESTPatchAPIInteractionOriginalResponseResult: RESTPatchAPIWebhookWithTokenMessageResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#edit-original-interaction-response
+
+</dd></dl>
+
+### [__](#RESTPatchAPIStageInstanceResult) __RESTPatchAPIStageInstanceResult
+
+__RESTPatchAPIStageInstanceResult: APIStageInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/stage-instance#modify-stage-instance
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookResult) __RESTPatchAPIWebhookResult
+
+__RESTPatchAPIWebhookResult: APIWebhook
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#modify-webhook
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookWithTokenJSONBody) __RESTPatchAPIWebhookWithTokenJSONBody
+
+__RESTPatchAPIWebhookWithTokenJSONBody: Omit< RESTPatchAPIWebhookJSONBody,channel_id>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookWithTokenMessageFormDataBody) __RESTPatchAPIWebhookWithTokenMessageFormDataBody
+
+__RESTPatchAPIWebhookWithTokenMessageFormDataBody: (Record<`files[${bigint}]`,unknown> &{payload_json?:string }) |(Record<`files[${bigint}]`,unknown> & RESTPatchAPIWebhookWithTokenMessageJSONBody)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#edit-webhook-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookWithTokenMessageJSONBody) __RESTPatchAPIWebhookWithTokenMessageJSONBody
+
+__RESTPatchAPIWebhookWithTokenMessageJSONBody: _AddUndefinedToPossiblyUndefinedPropertiesOfInterface< _Nullable<Pick< RESTPostAPIWebhookWithTokenJSONBody,allowed_mentions |components |content |embeds |flags>>> &{attachments?: RESTAPIAttachment[];poll?: RESTAPIPoll }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#edit-webhook-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookWithTokenMessageQuery) __RESTPatchAPIWebhookWithTokenMessageQuery
+
+__RESTPatchAPIWebhookWithTokenMessageQuery: Pick< RESTPostAPIWebhookWithTokenQuery,thread_id |with_components>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#edit-webhook-message-query-string-params
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookWithTokenMessageResult) __RESTPatchAPIWebhookWithTokenMessageResult
+
+__RESTPatchAPIWebhookWithTokenMessageResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#edit-webhook-message
+
+</dd></dl>
+
+### [__](#RESTPatchAPIWebhookWithTokenResult) __RESTPatchAPIWebhookWithTokenResult
+
+__RESTPatchAPIWebhookWithTokenResult: RESTGetAPIWebhookWithTokenResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#modify-webhook-with-token
+
+</dd></dl>
+
+### [__](#RESTPatchCurrentApplicationJSONBody) __RESTPatchCurrentApplicationJSONBody
+
+__RESTPatchCurrentApplicationJSONBody: _StrictPartial< _Nullable<Pick< APIApplication,cover_image |event_webhooks_url |icon>> &Pick< APIApplication,custom_install_url |description |event_webhooks_status |event_webhooks_types |flags |install_params |integration_types_config |interactions_endpoint_url |role_connections_verification_url |tags>>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application#edit-current-application
+
+</dd></dl>
+
+### [__](#RESTPatchCurrentApplicationResult) __RESTPatchCurrentApplicationResult
+
+__RESTPatchCurrentApplicationResult: APIApplication
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application#edit-current-application
+
+</dd></dl>
+
+### [__](#RESTPostAPIApplicationCommandsJSONBody) __RESTPostAPIApplicationCommandsJSONBody
+
+__RESTPostAPIApplicationCommandsJSONBody: RESTPostAPIChatInputApplicationCommandsJSONBody | RESTPostAPIContextMenuApplicationCommandsJSONBody | RESTPostAPIPrimaryEntryPointApplicationCommandJSONBody
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
+
+</dd></dl>
+
+### [__](#RESTPostAPIApplicationCommandsResult) __RESTPostAPIApplicationCommandsResult
+
+__RESTPostAPIApplicationCommandsResult: APIApplicationCommand
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#create-global-application-command
+
+</dd></dl>
+
+### [__](#RESTPostAPIApplicationEmojiJSONBody) __RESTPostAPIApplicationEmojiJSONBody
+
+__RESTPostAPIApplicationEmojiJSONBody: Pick< RESTPostAPIGuildEmojiJSONBody,image |name>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#create-application-emoji-json-params
+
+</dd></dl>
+
+### [__](#RESTPostAPIApplicationEmojiResult) __RESTPostAPIApplicationEmojiResult
+
+__RESTPostAPIApplicationEmojiResult: APIApplicationEmoji
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#create-application-emoji
+
+</dd></dl>
+
+### [__](#RESTPostAPIApplicationGuildCommandsJSONBody) __RESTPostAPIApplicationGuildCommandsJSONBody
+
+__RESTPostAPIApplicationGuildCommandsJSONBody: Omit< RESTPostAPIChatInputApplicationCommandsJSONBody,dm_permission> |Omit< RESTPostAPIContextMenuApplicationCommandsJSONBody,dm_permission>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command
+
+</dd></dl>
+
+### [__](#RESTPostAPIApplicationGuildCommandsResult) __RESTPostAPIApplicationGuildCommandsResult
+
+__RESTPostAPIApplicationGuildCommandsResult: Omit< APIApplicationCommand,dm_permission>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#create-guild-application-command
+
+</dd></dl>
+
+### [__](#RESTPostAPIAutoModerationRuleResult) __RESTPostAPIAutoModerationRuleResult
+
+__RESTPostAPIAutoModerationRuleResult: APIAutoModerationRule
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/auto-moderation#create-auto-moderation-rule
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelFollowersResult) __RESTPostAPIChannelFollowersResult
+
+__RESTPostAPIChannelFollowersResult: APIFollowedChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#follow-news-channel
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelInviteResult) __RESTPostAPIChannelInviteResult
+
+__RESTPostAPIChannelInviteResult: APIExtendedInvite
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#create-channel-invite
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelMessageCrosspostResult) __RESTPostAPIChannelMessageCrosspostResult
+
+__RESTPostAPIChannelMessageCrosspostResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#crosspost-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelMessageFormDataBody) __RESTPostAPIChannelMessageFormDataBody
+
+__RESTPostAPIChannelMessageFormDataBody: (Record<`files[${bigint}]`,unknown> &{payload_json?:string }) |(Record<`files[${bigint}]`,unknown> & RESTPostAPIChannelMessageJSONBody)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#create-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelMessageResult) __RESTPostAPIChannelMessageResult
+
+__RESTPostAPIChannelMessageResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#create-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelMessagesBulkDeleteResult) __RESTPostAPIChannelMessagesBulkDeleteResult
+
+__RESTPostAPIChannelMessagesBulkDeleteResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#bulk-delete-messages
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelMessagesThreadsResult) __RESTPostAPIChannelMessagesThreadsResult
+
+__RESTPostAPIChannelMessagesThreadsResult: APIChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#start-thread-from-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelThreadsResult) __RESTPostAPIChannelThreadsResult
+
+__RESTPostAPIChannelThreadsResult: APIAnnouncementThreadChannel | APIPrivateThreadChannel | APIPublicThreadChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#start-thread-without-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelTypingResult) __RESTPostAPIChannelTypingResult
+
+__RESTPostAPIChannelTypingResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#trigger-typing-indicator
+
+</dd></dl>
+
+### [__](#RESTPostAPIChannelWebhookResult) __RESTPostAPIChannelWebhookResult
+
+__RESTPostAPIChannelWebhookResult: APIWebhook
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#create-webhook
+
+</dd></dl>
+
+### [__](#RESTPostAPICurrentUserCreateDMChannelResult) __RESTPostAPICurrentUserCreateDMChannelResult
+
+__RESTPostAPICurrentUserCreateDMChannelResult: APIChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#create-dm
+
+</dd></dl>
+
+### [__](#RESTPostAPIEntitlementBody) __RESTPostAPIEntitlementBody
+
+__RESTPostAPIEntitlementBody: RESTPostAPIEntitlementJSONBody
+
+<dl><dt>**@deprecated**</dt>
+<dd>
+
+Use RESTPostAPIEntitlementJSONBody instead
+
+</dd></dl>
+
+### [__](#RESTPostAPIEntitlementConsumeResult) __RESTPostAPIEntitlementConsumeResult
+
+__RESTPostAPIEntitlementConsumeResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/entitlement#consume-an-entitlement
+
+</dd></dl>
+
+### [__](#RESTPostAPIEntitlementResult) __RESTPostAPIEntitlementResult
+
+__RESTPostAPIEntitlementResult: Partial<Omit< APIEntitlement,ends_at |starts_at>>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/entitlement#create-test-entitlement
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildChannelJSONBody) __RESTPostAPIGuildChannelJSONBody
+
+__RESTPostAPIGuildChannelJSONBody: _DistributiveOmit< RESTAPIGuildCreatePartialChannel,id>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#create-guild-channel
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildChannelResult) __RESTPostAPIGuildChannelResult
+
+__RESTPostAPIGuildChannelResult: APIChannel
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#create-guild-channel
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildEmojiResult) __RESTPostAPIGuildEmojiResult
+
+__RESTPostAPIGuildEmojiResult: APIEmoji
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/emoji#create-guild-emoji
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildForumThreadsFormDataBody) __RESTPostAPIGuildForumThreadsFormDataBody
+
+__RESTPostAPIGuildForumThreadsFormDataBody: RESTPostAPIChannelMessagesThreadsJSONBody &{message:string }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildForumThreadsJSONBody) __RESTPostAPIGuildForumThreadsJSONBody
+
+__RESTPostAPIGuildForumThreadsJSONBody: RESTPostAPIChannelMessagesThreadsJSONBody &{applied_tags?: Snowflake[];message: RESTPostAPIChannelMessageJSONBody }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#start-thread-in-forum-or-media-channel
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildRoleResult) __RESTPostAPIGuildRoleResult
+
+__RESTPostAPIGuildRoleResult: APIRole
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#create-guild-role
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildScheduledEventResult) __RESTPostAPIGuildScheduledEventResult
+
+__RESTPostAPIGuildScheduledEventResult: APIGuildScheduledEvent
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-scheduled-event#create-guild-scheduled-event
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildsMFAResult) __RESTPostAPIGuildsMFAResult
+
+__RESTPostAPIGuildsMFAResult: RESTPostAPIGuildsMFAJSONBody
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/change-log#guild-create-deprecation
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTPostAPIGuildSoundboardSoundResult) __RESTPostAPIGuildSoundboardSoundResult
+
+__RESTPostAPIGuildSoundboardSoundResult: APISoundboardSound
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/soundboard#create-guild-soundboard-sound
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildsResult) __RESTPostAPIGuildsResult
+
+__RESTPostAPIGuildsResult: APIGuild
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/change-log#guild-create-deprecation
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTPostAPIGuildStickerResult) __RESTPostAPIGuildStickerResult
+
+__RESTPostAPIGuildStickerResult: APISticker
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/sticker#create-guild-sticker
+
+</dd></dl>
+
+### [__](#RESTPostAPIGuildTemplatesResult) __RESTPostAPIGuildTemplatesResult
+
+__RESTPostAPIGuildTemplatesResult: APITemplate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#create-guild-template
+
+</dd></dl>
+
+### [__](#RESTPostAPIInteractionCallbackFormDataBody) __RESTPostAPIInteractionCallbackFormDataBody
+
+__RESTPostAPIInteractionCallbackFormDataBody: (Record<`files[${bigint}]`,unknown> &{payload_json?:string }) |(Record<`files[${bigint}]`,unknown> & RESTPostAPIInteractionCallbackJSONBody)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
+
+</dd></dl>
+
+### [__](#RESTPostAPIInteractionCallbackJSONBody) __RESTPostAPIInteractionCallbackJSONBody
+
+__RESTPostAPIInteractionCallbackJSONBody: APIInteractionResponse
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
+
+</dd></dl>
+
+### [__](#RESTPostAPIInteractionCallbackResult) __RESTPostAPIInteractionCallbackResult
+
+__RESTPostAPIInteractionCallbackResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#create-interaction-response
+
+</dd></dl>
+
+### [__](#RESTPostAPIInteractionFollowupFormDataBody) __RESTPostAPIInteractionFollowupFormDataBody
+
+__RESTPostAPIInteractionFollowupFormDataBody: (Record<`files[${bigint}]`,unknown> &{payload_json?:string }) |(Record<`files[${bigint}]`,unknown> & RESTPostAPIInteractionFollowupJSONBody)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIInteractionFollowupJSONBody) __RESTPostAPIInteractionFollowupJSONBody
+
+__RESTPostAPIInteractionFollowupJSONBody: APIInteractionResponseCallbackData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIInteractionFollowupResult) __RESTPostAPIInteractionFollowupResult
+
+__RESTPostAPIInteractionFollowupResult: RESTPostAPIWebhookWithTokenWaitResult
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/receiving-and-responding#create-followup-message
+
+</dd></dl>
+
+### [__](#RESTPostAPIPollExpireResult) __RESTPostAPIPollExpireResult
+
+__RESTPostAPIPollExpireResult: APIMessage
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/poll#expire-poll
+
+</dd></dl>
+
+### [__](#RESTPostAPISendSoundboardSoundResult) __RESTPostAPISendSoundboardSoundResult
+
+__RESTPostAPISendSoundboardSoundResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/soundboard#send-soundboard-sound
+
+</dd></dl>
+
+### [__](#RESTPostAPIStageInstanceResult) __RESTPostAPIStageInstanceResult
+
+__RESTPostAPIStageInstanceResult: APIStageInstance
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/stage-instance#create-stage-instance
+
+</dd></dl>
+
+### [__](#RESTPostAPITemplateCreateGuildResult) __RESTPostAPITemplateCreateGuildResult
+
+__RESTPostAPITemplateCreateGuildResult: APIGuild
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/change-log#guild-create-deprecation
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTPostAPIWebhookWithTokenFormDataBody) __RESTPostAPIWebhookWithTokenFormDataBody
+
+__RESTPostAPIWebhookWithTokenFormDataBody: (Record<`files[${bigint}]`,unknown> &{payload_json?:string }) |(Record<`files[${bigint}]`,unknown> & RESTPostAPIWebhookWithTokenJSONBody)
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-webhook
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenGitHubQuery) __RESTPostAPIWebhookWithTokenGitHubQuery
+
+__RESTPostAPIWebhookWithTokenGitHubQuery: Pick< RESTPostAPIWebhookWithTokenQuery,thread_id |wait>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-githubcompatible-webhook-query-string-params
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenGitHubResult) __RESTPostAPIWebhookWithTokenGitHubResult
+
+__RESTPostAPIWebhookWithTokenGitHubResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-githubcompatible-webhook
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenGitHubWaitResult) __RESTPostAPIWebhookWithTokenGitHubWaitResult
+
+__RESTPostAPIWebhookWithTokenGitHubWaitResult: APIMessage
+
+Received when a call to https://discord.com/developers/docs/resources/webhook#execute-webhook receives the `wait` query parameter set to `true`
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-githubcompatible-webhook-query-string-params
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenResult) __RESTPostAPIWebhookWithTokenResult
+
+__RESTPostAPIWebhookWithTokenResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-webhook
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenSlackQuery) __RESTPostAPIWebhookWithTokenSlackQuery
+
+__RESTPostAPIWebhookWithTokenSlackQuery: Pick< RESTPostAPIWebhookWithTokenQuery,thread_id |wait>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook-query-string-params
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenSlackResult) __RESTPostAPIWebhookWithTokenSlackResult
+
+__RESTPostAPIWebhookWithTokenSlackResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenSlackWaitResult) __RESTPostAPIWebhookWithTokenSlackWaitResult
+
+__RESTPostAPIWebhookWithTokenSlackWaitResult: APIMessage
+
+Received when a call to https://discord.com/developers/docs/resources/webhook#execute-webhook receives the `wait` query parameter set to `true`
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-slackcompatible-webhook-query-string-params
+
+</dd></dl>
+
+### [__](#RESTPostAPIWebhookWithTokenWaitResult) __RESTPostAPIWebhookWithTokenWaitResult
+
+__RESTPostAPIWebhookWithTokenWaitResult: APIMessage
+
+Received when a call to https://discord.com/developers/docs/resources/webhook#execute-webhook receives the `wait` query parameter set to `true`
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/webhook#execute-webhook-query-string-params
+
+</dd></dl>
+
+### [__](#RESTPostOAuth2AccessTokenURLEncodedData) __RESTPostOAuth2AccessTokenURLEncodedData
+
+__RESTPostOAuth2AccessTokenURLEncodedData: RESTOAuth2TokenOptionalClientCredentials &{code:string;grant_type:authorization_code;redirect_uri?:string }
+
+<dl><dt>**@remarks**</dt>
+<dd>
+
+This endpoint requires either HTTP Basic authentication using `client_id:client_secret`, or the `client_id` and `client_secret` must be provided in the form body.
+
+</dd><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-redirect-url-example
+
+</dd></dl>
+
+### [__](#RESTPostOAuth2AccessTokenWithBotAndGuildsAndWebhookIncomingScopeResult) __RESTPostOAuth2AccessTokenWithBotAndGuildsAndWebhookIncomingScopeResult
+
+__RESTPostOAuth2AccessTokenWithBotAndGuildsAndWebhookIncomingScopeResult: RESTPostOAuth2AccessTokenWithBotAndGuildsScopeResult & RESTPostOAuth2AccessTokenWithBotAndWebhookIncomingScopeResult
+
+### [__](#RESTPostOAuth2ClientCredentialsResult) __RESTPostOAuth2ClientCredentialsResult
+
+__RESTPostOAuth2ClientCredentialsResult: RESTOAuth2ImplicitAuthorizationURLFragmentResult
+
+### [__](#RESTPostOAuth2RefreshTokenResult) __RESTPostOAuth2RefreshTokenResult
+
+__RESTPostOAuth2RefreshTokenResult: RESTPostOAuth2AccessTokenResult
+
+### [__](#RESTPostOAuth2RefreshTokenURLEncodedData) __RESTPostOAuth2RefreshTokenURLEncodedData
+
+__RESTPostOAuth2RefreshTokenURLEncodedData: RESTOAuth2TokenOptionalClientCredentials &{grant_type:refresh_token;refresh_token:string }
+
+<dl><dt>**@remarks**</dt>
+<dd>
+
+This endpoint requires either HTTP Basic authentication using `client_id:client_secret`, or the `client_id` and `client_secret` must be provided in the form body.
+
+</dd><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/oauth2#authorization-code-grant-refresh-token-exchange-example
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationCommandPermissionsResult) __RESTPutAPIApplicationCommandPermissionsResult
+
+__RESTPutAPIApplicationCommandPermissionsResult: APIGuildApplicationCommandPermissions
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#edit-application-command-permissions
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationCommandsJSONBody) __RESTPutAPIApplicationCommandsJSONBody
+
+__RESTPutAPIApplicationCommandsJSONBody: RESTPostAPIApplicationCommandsJSONBody[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationCommandsResult) __RESTPutAPIApplicationCommandsResult
+
+__RESTPutAPIApplicationCommandsResult: APIApplicationCommand[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-global-application-commands
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationGuildCommandsJSONBody) __RESTPutAPIApplicationGuildCommandsJSONBody
+
+__RESTPutAPIApplicationGuildCommandsJSONBody: ((Omit< RESTPostAPIChatInputApplicationCommandsJSONBody,dm_permission> &Pick<Partial< APIApplicationCommand>,id>) |(Omit< RESTPostAPIContextMenuApplicationCommandsJSONBody,dm_permission> &Pick<Partial< APIApplicationCommand>,id>))[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationGuildCommandsResult) __RESTPutAPIApplicationGuildCommandsResult
+
+__RESTPutAPIApplicationGuildCommandsResult: Omit< APIApplicationCommand,dm_permission>[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#bulk-overwrite-guild-application-commands
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationRoleConnectionMetadataJSONBody) __RESTPutAPIApplicationRoleConnectionMetadataJSONBody
+
+__RESTPutAPIApplicationRoleConnectionMetadataJSONBody: APIApplicationRoleConnectionMetadata[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
+
+</dd></dl>
+
+### [__](#RESTPutAPIApplicationRoleConnectionMetadataResult) __RESTPutAPIApplicationRoleConnectionMetadataResult
+
+__RESTPutAPIApplicationRoleConnectionMetadataResult: APIApplicationRoleConnectionMetadata[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/application-role-connection-metadata#update-application-role-connection-metadata-records
+
+</dd></dl>
+
+### [__](#RESTPutAPIChannelMessageReactionResult) __RESTPutAPIChannelMessageReactionResult
+
+__RESTPutAPIChannelMessageReactionResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#create-reaction
+
+</dd></dl>
+
+### [__](#RESTPutAPIChannelMessagesPinResult) __RESTPutAPIChannelMessagesPinResult
+
+__RESTPutAPIChannelMessagesPinResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/message#pin-message
+
+</dd></dl>
+
+### [__](#RESTPutAPIChannelPermissionResult) __RESTPutAPIChannelPermissionResult
+
+__RESTPutAPIChannelPermissionResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#edit-channel-permissions
+
+</dd></dl>
+
+### [__](#RESTPutAPIChannelPinResult) __RESTPutAPIChannelPinResult
+
+__RESTPutAPIChannelPinResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/message#pin-message-deprecated
+
+</dd><dt>**@deprecated**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RESTPutAPIChannelRecipientResult) __RESTPutAPIChannelRecipientResult
+
+__RESTPutAPIChannelRecipientResult: unknown
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#group-dm-add-recipient
+
+</dd></dl>
+
+### [__](#RESTPutAPIChannelThreadMembersResult) __RESTPutAPIChannelThreadMembersResult
+
+__RESTPutAPIChannelThreadMembersResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/channel#join-thread
+
+</dd></dl>
+
+### [__](#RESTPutAPICurrentUserApplicationRoleConnectionResult) __RESTPutAPICurrentUserApplicationRoleConnectionResult
+
+__RESTPutAPICurrentUserApplicationRoleConnectionResult: APIApplicationRoleConnection
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/user#update-user-application-role-connection
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildApplicationCommandsPermissionsJSONBody) __RESTPutAPIGuildApplicationCommandsPermissionsJSONBody
+
+__RESTPutAPIGuildApplicationCommandsPermissionsJSONBody: Pick< APIGuildApplicationCommandPermissions,id |permissions>[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildApplicationCommandsPermissionsResult) __RESTPutAPIGuildApplicationCommandsPermissionsResult
+
+__RESTPutAPIGuildApplicationCommandsPermissionsResult: APIGuildApplicationCommandPermissions[]
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#batch-edit-application-command-permissions
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildBanResult) __RESTPutAPIGuildBanResult
+
+__RESTPutAPIGuildBanResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#create-guild-ban
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildIncidentActionsResult) __RESTPutAPIGuildIncidentActionsResult
+
+__RESTPutAPIGuildIncidentActionsResult: APIIncidentsData
+
+### [__](#RESTPutAPIGuildMemberResult) __RESTPutAPIGuildMemberResult
+
+__RESTPutAPIGuildMemberResult: APIGuildMember |undefined
+
+### [__](#RESTPutAPIGuildMemberRoleResult) __RESTPutAPIGuildMemberRoleResult
+
+__RESTPutAPIGuildMemberRoleResult: never
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#add-guild-member-role
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildOnboardingJSONBody) __RESTPutAPIGuildOnboardingJSONBody
+
+__RESTPutAPIGuildOnboardingJSONBody: _AddUndefinedToPossiblyUndefinedPropertiesOfInterface<Partial<Pick< APIGuildOnboarding,default_channel_ids |enabled |mode>>> &{prompts?: RESTAPIGuildOnboardingPrompt[] }
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildOnboardingResult) __RESTPutAPIGuildOnboardingResult
+
+__RESTPutAPIGuildOnboardingResult: APIGuildOnboarding
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild#modify-guild-onboarding
+
+</dd></dl>
+
+### [__](#RESTPutAPIGuildTemplateSyncResult) __RESTPutAPIGuildTemplateSyncResult
+
+__RESTPutAPIGuildTemplateSyncResult: APITemplate
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/resources/guild-template#sync-guild-template
+
+</dd></dl>
+
+### [__](#RoleIconFormat) __RoleIconFormat
+
+__RoleIconFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#RPCCertifiedDevice) __RPCCertifiedDevice
+
+__RPCCertifiedDevice<Type>: Type extendsRPCDeviceType.AudioInput ? BaseRPCCertifiedDevice<Type> &{automatic_gain_control:boolean;echo_cancellation:boolean;hardware_mute:boolean;noise_suppression:boolean } : BaseRPCCertifiedDevice<Type>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#setcertifieddevices-device-object
+
+</dd></dl>
+
+---
+
+#### Type parameters
+
+- **Type**: RPCDeviceType = RPCDeviceType
+
+### [__](#RPCCommandsResult) __RPCCommandsResult
+
+__RPCCommandsResult: RPCAcceptActivityInviteResult | RPCActivityInviteUserResult | RPCAuthenticateResult | RPCAuthorizeResult | RPCBraintreePopupBridgeCallbackResult | RPCBrowserResult | RPCCloseActivityJoinRequestResult | RPCConnectionsCallbackResult | RPCCreateChannelInviteResult | RPCDeepLinkResult | RPCGetApplicationTicketResult | RPCGetChannelResult | RPCGetChannelsResult | RPCGetEntitlementsResult | RPCGetEntitlementTicketResult | RPCGetGuildResult | RPCGetGuildsResult | RPCGetImageResult | RPCGetNetworkingConfigResult | RPCGetRelationshipsResult | RPCGetSelectedVoiceChannelResult | RPCGetSkusResult | RPCGetUserResult | RPCGetVoiceSettingsResult | RPCGiftCodeBrowserResult | RPCGuildTemplateBrowserResult | RPCInviteBrowserResult | RPCNetworkingCreateTokenResult | RPCNetworkingPeerMetricsResult | RPCNetworkingSystemMetricsResult | RPCOpenOverlayActivityInviteResult | RPCOpenOverlayGuildInviteResult | RPCOpenOverlayVoiceSettingsResult | RPCOverlayResult | RPCSelectTextChannelResult | RPCSelectVoiceChannelResult | RPCSendActivityJoinInviteResult | RPCSetActivityResult | RPCSetCertifiedDevicesResult | RPCSetOverlayLockedResult | RPCSetUserVoiceSettings2Result | RPCSetUserVoiceSettingsResult | RPCSetVoiceSettings2Result | RPCSetVoiceSettingsResult | RPCStartPurchaseResult | RPCSubscribeResult | RPCUnsubscribeResult | RPCValidateApplicationResult
+
+### [__](#RPCCommandSubscribePayload) __RPCCommandSubscribePayload
+
+__RPCCommandSubscribePayload: RPCSubscribeActivityInvite | RPCSubscribeActivityJoin | RPCSubscribeActivityJoinRequest | RPCSubscribeActivitySpectate | RPCSubscribeChannelCreate | RPCSubscribeCurrentUserUpdate | RPCSubscribeEntitlementCreate | RPCSubscribeEntitlementDelete | RPCSubscribeGameJoin | RPCSubscribeGameSpectate | RPCSubscribeGuildCreate | RPCSubscribeGuildStatus | RPCSubscribeMessageCreate | RPCSubscribeMessageDelete | RPCSubscribeMessageUpdate | RPCSubscribeNotificationCreate | RPCSubscribeOverlay | RPCSubscribeOverlayUpdate | RPCSubscribeRelationshipUpdate | RPCSubscribeSpeakingStart | RPCSubscribeSpeakingStop | RPCSubscribeVoiceChannelSelect | RPCSubscribeVoiceConnectionStatus | RPCSubscribeVoiceSettingsUpdate | RPCSubscribeVoiceSettingsUpdate2 | RPCSubscribeVoiceStateCreate | RPCSubscribeVoiceStateDelete | RPCSubscribeVoiceStateUpdate
+
+### [__](#RPCCommandUnsubscribePayload) __RPCCommandUnsubscribePayload
+
+__RPCCommandUnsubscribePayload: RPCCommandSubscribePayload
+
+### [__](#RPCCreateChannelInviteResultData) __RPCCreateChannelInviteResultData
+
+__RPCCreateChannelInviteResultData: APIInvite &{created_at:string;guild_id: Snowflake;max_age:number;max_uses:number;temporary:boolean;uses:number }
+
+<dl><dt>**@unstable**</dt>
+<dd>
+
+Channel invite
+
+</dd></dl>
+
+### [__](#RPCEventsDispatch) __RPCEventsDispatch
+
+__RPCEventsDispatch: RPCActivityInviteDispatch | RPCActivityJoinDispatch | RPCActivityJoinRequestDispatch | RPCActivitySpectateDispatch | RPCChannelCreateDispatch | RPCCurrentUserUpdateDispatch | RPCEntitlementCreateDispatch | RPCEntitlementDeleteDispatch | RPCErrorDispatch | RPCGameJoinDispatch | RPCGameSpectateDispatch | RPCGuildCreateDispatch | RPCGuildStatusDispatch | RPCMessageCreateDispatch | RPCMessageDeleteDispatch | RPCMessageUpdateDispatch | RPCNotificationCreateDispatch | RPCOverlayDispatch | RPCOverlayUpdateDispatch | RPCReadyDispatch | RPCRelationshipUpdateDispatch | RPCSpeakingStartDispatch | RPCSpeakingStopDispatch | RPCVoiceChannelSelectDispatch | RPCVoiceConnectionStatusDispatch | RPCVoiceSettingsUpdate2Dispatch | RPCVoiceSettingsUpdateDispatch | RPCVoiceStateCreateDispatch | RPCVoiceStateDeleteDispatch | RPCVoiceStateUpdateDispatch
+
+### [__](#RPCGetRelationshipsResultData) __RPCGetRelationshipsResultData
+
+__RPCGetRelationshipsResultData: Relationship[]
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCGetSelectedVoiceChannelResultData) __RPCGetSelectedVoiceChannelResultData
+
+__RPCGetSelectedVoiceChannelResultData: RPCGetChannelResultData |null
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#getselectedvoicechannel
+
+</dd></dl>
+
+### [__](#RPCGetSkusResultData) __RPCGetSkusResultData
+
+__RPCGetSkusResultData: unknown[]
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCGetUserResultData) __RPCGetUserResultData
+
+__RPCGetUserResultData: APIUser
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCMessage) __RPCMessage
+
+__RPCMessage: RPCCommandsResult | RPCEventsDispatch
+
+### [__](#RPCMessagePayload) __RPCMessagePayload
+
+__RPCMessagePayload: RPCCommandAcceptActivityInvitePayload | RPCCommandActivityInviteUserPayload | RPCCommandAuthenticatePayload | RPCCommandAuthorizePayload | RPCCommandBraintreePopupBridgeCallbackPayload | RPCCommandBrowserPayload | RPCCommandCloseActivityJoinRequestPayload | RPCCommandConnectionsCallbackPayload | RPCCommandCreateChannelInvitePayload | RPCCommandDeepLinkPayload | RPCCommandGetApplicationTicketPayload | RPCCommandGetChannelPayload | RPCCommandGetChannelsPayload | RPCCommandGetEntitlementsPayload | RPCCommandGetEntitlementTicketPayload | RPCCommandGetGuildPayload | RPCCommandGetGuildsPayload | RPCCommandGetImagePayload | RPCCommandGetNetworkingConfigPayload | RPCCommandGetRelationshipsPayload | RPCCommandGetSelectedVoiceChannelPayload | RPCCommandGetSkusPayload | RPCCommandGetUserPayload | RPCCommandGetVoiceSettingsPayload | RPCCommandGiftCodeBrowserPayload | RPCCommandGuildTemplateBrowserPayload | RPCCommandInviteBrowserPayload | RPCCommandNetworkingCreateTokenPayload | RPCCommandNetworkingPeerMetricsPayload | RPCCommandNetworkingSystemMetricsPayload | RPCCommandOpenOverlayActivityInvitePayload | RPCCommandOpenOverlayGuildInvitePayload | RPCCommandOpenOverlayVoiceSettingsPayload | RPCCommandOverlayPayload | RPCCommandSelectTextChannelPayload | RPCCommandSelectVoiceChannelPayload | RPCCommandSendActivityJoinInvitePayload | RPCCommandSetActivityPayload | RPCCommandSetCertifiedDevicesPayload | RPCCommandSetOverlayLockedPayload | RPCCommandSetUserVoiceSettings2Payload | RPCCommandSetUserVoiceSettingsPayload | RPCCommandSetVoiceSettings2Payload | RPCCommandSetVoiceSettingsPayload | RPCCommandStartPurchasePayload | RPCCommandSubscribePayload | RPCCommandUnsubscribePayload | RPCCommandValidateApplicationPayload
+
+### [__](#RPCSelectTextChannelResultData) __RPCSelectTextChannelResultData
+
+__RPCSelectTextChannelResultData: RPCGetChannelResultData |null
+
+Returns the Channel response, or `null` if none.
+
+### [__](#RPCSelectVoiceChannelResultData) __RPCSelectVoiceChannelResultData
+
+__RPCSelectVoiceChannelResultData: RPCGetChannelResultData |null
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#selectvoicechannel
+
+</dd></dl>
+
+### [__](#RPCSetCertifiedDevicesResultData) __RPCSetCertifiedDevicesResultData
+
+__RPCSetCertifiedDevicesResultData: null
+
+### [__](#RPCSetUserVoiceSettings2Args) __RPCSetUserVoiceSettings2Args
+
+__RPCSetUserVoiceSettings2Args: RPCSetUserVoiceSettingsArgs
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSetUserVoiceSettings2ResultData) __RPCSetUserVoiceSettings2ResultData
+
+__RPCSetUserVoiceSettings2ResultData: RPCSetUserVoiceSettingsResultData
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSetUserVoiceSettingsResultData) __RPCSetUserVoiceSettingsResultData
+
+__RPCSetUserVoiceSettingsResultData: Required< RPCSetUserVoiceSettingsArgs>
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#setuservoicesettings-set-user-voice-settings-argument-and-response-structure
+
+</dd></dl>
+
+### [__](#RPCSetVoiceSettings2Args) __RPCSetVoiceSettings2Args
+
+__RPCSetVoiceSettings2Args: RPCSetVoiceSettingsArgs
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSetVoiceSettings2ResultData) __RPCSetVoiceSettings2ResultData
+
+__RPCSetVoiceSettings2ResultData: RPCSetVoiceSettingsResultData
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSetVoiceSettingsArgs) __RPCSetVoiceSettingsArgs
+
+__RPCSetVoiceSettingsArgs: RPCGetVoiceSettingsResultData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#setvoicesettings-set-voice-settings-argument-and-response-structure
+
+</dd><dt>**@remarks**</dt>
+<dd>
+
+Discord only supports a single modifier of voice settings at a time over RPC. If an app changes voice settings, it will lock voice settings so that other apps connected simultaneously lose the ability to change voice settings. Settings reset to what they were before being changed after the controlling app disconnects. When an app that has previously set voice settings connects, the client will swap to that app's configured voice settings and lock voice settings again.
+
+</dd></dl>
+
+### [__](#RPCSetVoiceSettingsResultData) __RPCSetVoiceSettingsResultData
+
+__RPCSetVoiceSettingsResultData: RPCGetVoiceSettingsResultData
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#setvoicesettings-set-voice-settings-argument-and-response-structure
+
+</dd></dl>
+
+### [__](#RPCSubscribeActivityInviteArgs) __RPCSubscribeActivityInviteArgs
+
+__RPCSubscribeActivityInviteArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeActivityJoinArgs) __RPCSubscribeActivityJoinArgs
+
+__RPCSubscribeActivityJoinArgs: Record<string,never>
+
+### [__](#RPCSubscribeActivityJoinRequestArgs) __RPCSubscribeActivityJoinRequestArgs
+
+__RPCSubscribeActivityJoinRequestArgs: Record<string,never>
+
+### [__](#RPCSubscribeActivitySpectateArgs) __RPCSubscribeActivitySpectateArgs
+
+__RPCSubscribeActivitySpectateArgs: Record<string,never>
+
+### [__](#RPCSubscribeArgs) __RPCSubscribeArgs
+
+__RPCSubscribeArgs: RPCSubscribeActivityInviteArgs | RPCSubscribeActivityJoinArgs | RPCSubscribeActivityJoinRequestArgs | RPCSubscribeActivitySpectateArgs | RPCSubscribeChannelCreateArgs | RPCSubscribeCurrentUserUpdateArgs | RPCSubscribeEntitlementCreateArgs | RPCSubscribeEntitlementDeleteArgs | RPCSubscribeGameJoinArgs | RPCSubscribeGameSpectateArgs | RPCSubscribeGuildCreateArgs | RPCSubscribeGuildStatusArgs | RPCSubscribeMessageCreateArgs | RPCSubscribeMessageDeleteArgs | RPCSubscribeMessageUpdateArgs | RPCSubscribeNotificationCreateArgs | RPCSubscribeOverlayArgs | RPCSubscribeOverlayUpdateArgs | RPCSubscribeRelationshipUpdateArgs | RPCSubscribeSpeakingStartArgs | RPCSubscribeSpeakingStopArgs | RPCSubscribeVoiceChannelSelectArgs | RPCSubscribeVoiceConnectionStatusArgs | RPCSubscribeVoiceSettingsUpdate2Args | RPCSubscribeVoiceSettingsUpdateArgs | RPCSubscribeVoiceStateCreateArgs | RPCSubscribeVoiceStateDeleteArgs | RPCSubscribeVoiceStateUpdateArgs
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#subscribe
+
+</dd></dl>
+
+### [__](#RPCSubscribeChannelCreateArgs) __RPCSubscribeChannelCreateArgs
+
+__RPCSubscribeChannelCreateArgs: Record<string,never>
+
+### [__](#RPCSubscribeCurrentUserUpdateArgs) __RPCSubscribeCurrentUserUpdateArgs
+
+__RPCSubscribeCurrentUserUpdateArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeEntitlementCreateArgs) __RPCSubscribeEntitlementCreateArgs
+
+__RPCSubscribeEntitlementCreateArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeEntitlementDeleteArgs) __RPCSubscribeEntitlementDeleteArgs
+
+__RPCSubscribeEntitlementDeleteArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeGameJoinArgs) __RPCSubscribeGameJoinArgs
+
+__RPCSubscribeGameJoinArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeGameSpectateArgs) __RPCSubscribeGameSpectateArgs
+
+__RPCSubscribeGameSpectateArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeGuildCreateArgs) __RPCSubscribeGuildCreateArgs
+
+__RPCSubscribeGuildCreateArgs: Record<string,never>
+
+### [__](#RPCSubscribeNotificationCreateArgs) __RPCSubscribeNotificationCreateArgs
+
+__RPCSubscribeNotificationCreateArgs: Record<string,never>
+
+### [__](#RPCSubscribeOverlayArgs) __RPCSubscribeOverlayArgs
+
+__RPCSubscribeOverlayArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeOverlayUpdateArgs) __RPCSubscribeOverlayUpdateArgs
+
+__RPCSubscribeOverlayUpdateArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeRelationshipUpdateArgs) __RPCSubscribeRelationshipUpdateArgs
+
+__RPCSubscribeRelationshipUpdateArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeVoiceChannelSelectArgs) __RPCSubscribeVoiceChannelSelectArgs
+
+__RPCSubscribeVoiceChannelSelectArgs: Record<string,never>
+
+### [__](#RPCSubscribeVoiceConnectionStatusArgs) __RPCSubscribeVoiceConnectionStatusArgs
+
+__RPCSubscribeVoiceConnectionStatusArgs: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeVoiceSettingsUpdate2Args) __RPCSubscribeVoiceSettingsUpdate2Args
+
+__RPCSubscribeVoiceSettingsUpdate2Args: Record<string,never>
+
+<dl><dt>**@unstable**</dt>
+<dd></dd>
+</dl>
+
+### [__](#RPCSubscribeVoiceSettingsUpdateArgs) __RPCSubscribeVoiceSettingsUpdateArgs
+
+__RPCSubscribeVoiceSettingsUpdateArgs: Record<string,never>
+
+### [__](#RPCUnsubscribeArgs) __RPCUnsubscribeArgs
+
+__RPCUnsubscribeArgs: RPCSubscribeArgs
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/rpc#unsubscribe
+
+</dd></dl>
+
+### [__](#RPCVoiceSettingsUpdateDispatchData) __RPCVoiceSettingsUpdateDispatchData
+
+__RPCVoiceSettingsUpdateDispatchData: RPCGetVoiceSettingsResultData
+
+### [__](#StickerFormat) __StickerFormat
+
+__StickerFormat: Extract< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie |ImageFormat.PNG>
+
+### [__](#StickerPackBannerFormat) __StickerPackBannerFormat
+
+__StickerPackBannerFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#StorePageAssetFormat) __StorePageAssetFormat
+
+__StorePageAssetFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#TeamIconFormat) __TeamIconFormat
+
+__TeamIconFormat: Exclude< ImageFormat,ImageFormat.GIF |ImageFormat.Lottie>
+
+### [__](#TextChannelType) __TextChannelType
+
+__TextChannelType: ChannelType.AnnouncementThread |ChannelType.DM |ChannelType.GroupDM |ChannelType.GuildAnnouncement |ChannelType.GuildStageVoice |ChannelType.GuildText |ChannelType.GuildVoice |ChannelType.PrivateThread |ChannelType.PublicThread
+
+### [__](#ThreadChannelType) __ThreadChannelType
+
+__ThreadChannelType: ChannelType.AnnouncementThread |ChannelType.PrivateThread |ChannelType.PublicThread
+
+### [__](#UserAvatarFormat) __UserAvatarFormat
+
+__UserAvatarFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+### [__](#UserBannerFormat) __UserBannerFormat
+
+__UserBannerFormat: Exclude< ImageFormat,ImageFormat.Lottie>
+
+## Variables [__](#Variables)
+
+### [__](#APIApplicationCommandPermissionsConstant) __constAPIApplicationCommandPermissionsConstant
+
+__APIApplicationCommandPermissionsConstant: {AllChannels:(guildId:string |bigint) =>string;Everyone:(guildId:string |bigint) =>string } = ...
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/interactions/application-commands#application-command-permissions-object-application-command-permissions-constants
+
+</dd></dl>
+
+---
+
+#### Type declaration
+
+- ##### AllChannels:(guildId:string |bigint) =>string
+  -
+    - __(guildId:string |bigint):string
+    - #### Parameters
+      - ##### guildId: string |bigint #### Returns string
+- ##### Everyone:(guildId:string |bigint) =>string
+  -
+    - __(guildId:string |bigint):string
+    - #### Parameters
+      - ##### guildId: string |bigint #### Returns string
+
+### [__](#APIVersion) __constAPIVersion
+
+__APIVersion: 10 = '10'
+
+### [__](#CannotSendMessagesToThisUserErrorCodes) __constCannotSendMessagesToThisUserErrorCodes
+
+__CannotSendMessagesToThisUserErrorCodes: readonly[CannotSendMessagesToThisUser,CannotSendMessagesToThisUserDueToHavingNoMutualGuilds] = ...
+
+JSON Error Codes that represent "Cannot send messages to this user". Discord uses two different error codes for this error:
+
+- RESTJSONErrorCodes.CannotSendMessagesToThisUser (50_007)
+- RESTJSONErrorCodes.CannotSendMessagesToThisUserDueToHavingNoMutualGuilds (50_278)
+
+### [__](#CDNRoutes) __constCDNRoutes
+
+__CDNRoutes: CDNRoutesDeclarations = ...
+
+### [__](#GatewayVersion) __constGatewayVersion
+
+__GatewayVersion: 10 = '10'
+
+### [__](#OAuth2Routes) __constOAuth2Routes
+
+__OAuth2Routes: {authorizationURL:https://discord.com/api/v10/oauth2/authorize;tokenRevocationURL:https://discord.com/api/v10/oauth2/token/revoke;tokenURL:https://discord.com/api/v10/oauth2/token } = ...
+
+#### Type declaration
+
+- ##### readonlyauthorizationURL:https://discord.com/api/v10/oauth2/authorize
+- ##### readonlytokenRevocationURL:https://discord.com/api/v10/oauth2/token/revoke<dl><dt>**@see**</dt><dd>https://tools.ietf.org/html/rfc7009</dd></dl>
+- ##### readonlytokenURL:https://discord.com/api/v10/oauth2/token
+
+### [__](#PermissionFlagsBits) __constPermissionFlagsBits
+
+__PermissionFlagsBits: {AddReactions:bigint;Administrator:bigint;AttachFiles:bigint;BanMembers:bigint;BypassSlowmode:bigint;ChangeNickname:bigint;Connect:bigint;CreateEvents:bigint;CreateGuildExpressions:bigint;CreateInstantInvite:bigint;CreatePrivateThreads:bigint;CreatePublicThreads:bigint;DeafenMembers:bigint;EmbedLinks:bigint;KickMembers:bigint;ManageChannels:bigint;ManageEmojisAndStickers:bigint;ManageEvents:bigint;ManageGuild:bigint;ManageGuildExpressions:bigint;ManageMessages:bigint;ManageNicknames:bigint;ManageRoles:bigint;ManageThreads:bigint;ManageWebhooks:bigint;MentionEveryone:bigint;ModerateMembers:bigint;MoveMembers:bigint;MuteMembers:bigint;PinMessages:bigint;PrioritySpeaker:bigint;ReadMessageHistory:bigint;RequestToSpeak:bigint;SendMessages:bigint;SendMessagesInThreads:bigint;SendPolls:bigint;SendTTSMessages:bigint;SendVoiceMessages:bigint;Speak:bigint;Stream:bigint;UseApplicationCommands:bigint;UseEmbeddedActivities:bigint;UseExternalApps:bigint;UseExternalEmojis:bigint;UseExternalSounds:bigint;UseExternalStickers:bigint;UseSoundboard:bigint;UseVAD:bigint;ViewAuditLog:bigint;ViewChannel:bigint;ViewCreatorMonetizationAnalytics:bigint;ViewGuildInsights:bigint } = ...
+
+<dl><dt>**@see**</dt>
+<dd>
+
+https://discord.com/developers/docs/topics/permissions#permissions-bitwise-permission-flags
+
+These flags are exported as `BigInt`s and NOT numbers. Wrapping them in `Number()` may cause issues, try to use BigInts as much as possible or modules that can replicate them in some way
+
+</dd></dl>
+
+---
+
+#### Type declaration
+
+- ##### readonlyAddReactions:bigint Allows for the addition of reactions to messages. This permission does not apply to reacting with an existing reaction on a message Applies to channel types: Text, Voice, Stage
+- ##### readonlyAdministrator:bigint Allows all permissions and bypasses channel permission overwrites
+- ##### readonlyAttachFiles:bigint Allows for uploading images and files Applies to channel types: Text, Voice, Stage
+- ##### readonlyBanMembers:bigint Allows banning members
+- ##### readonlyBypassSlowmode:bigint Allows bypassing slowmode restrictions Applies to channel types: Text, Voice, Stage
+- ##### readonlyChangeNickname:bigint Allows for modification of own nickname
+- ##### readonlyConnect:bigint Allows for joining of a voice channel Applies to channel types: Voice, Stage
+- ##### readonlyCreateEvents:bigint Allows for creating scheduled events, and editing and deleting those created by the current user Applies to channel types: Voice, Stage
+- ##### readonlyCreateGuildExpressions:bigint Allows for creating emojis, stickers, and soundboard sounds, and editing and deleting those created by the current user
+- ##### readonlyCreateInstantInvite:bigint Allows creation of instant invites Applies to channel types: Text, Voice, Stage
+- ##### readonlyCreatePrivateThreads:bigint Allows for creating private threads Applies to channel types: Text
+- ##### readonlyCreatePublicThreads:bigint Allows for creating public and announcement threads Applies to channel types: Text
+- ##### readonlyDeafenMembers:bigint Allows for deafening of members in a voice channel Applies to channel types: Voice
+- ##### readonlyEmbedLinks:bigint Links sent by users with this permission will be auto-embedded Applies to channel types: Text, Voice, Stage
+- ##### readonlyKickMembers:bigint Allows kicking members
+- ##### readonlyManageChannels:bigint Allows management and editing of channels Applies to channel types: Text, Voice, Stage
+- ##### readonlyManageEmojisAndStickers:bigint Allows management and editing of emojis, stickers, and soundboard sounds<dl><dt>**@deprecated**</dt><dd>This is the old name for PermissionFlagsBits.ManageGuildExpressions</dd></dl>
+- ##### readonlyManageEvents:bigint Allows for editing and deleting scheduled events created by all users Applies to channel types: Voice, Stage
+- ##### readonlyManageGuild:bigint Allows management and editing of the guild
+- ##### readonlyManageGuildExpressions:bigint Allows for editing and deleting emojis, stickers, and soundboard sounds created by all users
+- ##### readonlyManageMessages:bigint Allows for deletion of other users messages Applies to channel types: Text, Voice, Stage
+- ##### readonlyManageNicknames:bigint Allows for modification of other users nicknames
+- ##### readonlyManageRoles:bigint Allows management and editing of roles Applies to channel types: Text, Voice, Stage
+- ##### readonlyManageThreads:bigint Allows for deleting and archiving threads, and viewing all private threads Applies to channel types: Text
+- ##### readonlyManageWebhooks:bigint Allows management and editing of webhooks Applies to channel types: Text, Voice, Stage
+- ##### readonlyMentionEveryone:bigint Allows for using the `@everyone` tag to notify all users in a channel, and the `@here` tag to notify all online users in a channel Applies to channel types: Text, Voice, Stage
+- ##### readonlyModerateMembers:bigint Allows for timing out users to prevent them from sending or reacting to messages in chat and threads, and from speaking in voice and stage channels
+- ##### readonlyMoveMembers:bigint Allows for moving of members between voice channels Applies to channel types: Voice, Stage
+- ##### readonlyMuteMembers:bigint Allows for muting members in a voice channel Applies to channel types: Voice, Stage
+- ##### readonlyPinMessages:bigint Allows pinning and unpinning messages Applies to channel types: Text
+- ##### readonlyPrioritySpeaker:bigint Allows for using priority speaker in a voice channel Applies to channel types: Voice
+- ##### readonlyReadMessageHistory:bigint Allows for reading of message history Applies to channel types: Text, Voice, Stage
+- ##### readonlyRequestToSpeak:bigint Allows for requesting to speak in stage channels Applies to channel types: Stage
+- ##### readonlySendMessages:bigint Allows for sending messages in a channel and creating threads in a forum (does not allow sending messages in threads) Applies to channel types: Text, Voice, Stage
+- ##### readonlySendMessagesInThreads:bigint Allows for sending messages in threads Applies to channel types: Text
+- ##### readonlySendPolls:bigint Allows sending polls Applies to channel types: Text, Voice, Stage
+- ##### readonlySendTTSMessages:bigint Allows for sending of `/tts` messages Applies to channel types: Text, Voice, Stage
+- ##### readonlySendVoiceMessages:bigint Allows sending voice messages Applies to channel types: Text, Voice, Stage
+- ##### readonlySpeak:bigint Allows for speaking in a voice channel Applies to channel types: Voice
+- ##### readonlyStream:bigint Allows the user to go live Applies to channel types: Voice, Stage
+- ##### readonlyUseApplicationCommands:bigint Allows members to use application commands, including slash commands and context menu commands Applies to channel types: Text, Voice, Stage
+- ##### readonlyUseEmbeddedActivities:bigint Allows for using Activities (applications with the ApplicationFlags.Embedded flag) Applies to channel types: Text, Voice
+- ##### readonlyUseExternalApps:bigint Allows user-installed apps to send public responses. When disabled, users will still be allowed to use their apps but the responses will be ephemeral. This only applies to apps not also installed to the server Applies to channel types: Text, Voice, Stage
+- ##### readonlyUseExternalEmojis:bigint Allows the usage of custom emojis from other servers Applies to channel types: Text, Voice, Stage
+- ##### readonlyUseExternalSounds:bigint Allows the usage of custom soundboard sounds from other servers Applies to channel types: Voice
+- ##### readonlyUseExternalStickers:bigint Allows the usage of custom stickers from other servers Applies to channel types: Text, Voice, Stage
+- ##### readonlyUseSoundboard:bigint Allows for using soundboard in a voice channel Applies to channel types: Voice
+- ##### readonlyUseVAD:bigint Allows for using voice-activity-detection in a voice channel Applies to channel types: Voice
+- ##### readonlyViewAuditLog:bigint Allows for viewing of audit logs
+- ##### readonlyViewChannel:bigint Allows guild members to view a channel, which includes reading messages in text channels and joining voice channels Applies to channel types: Text, Voice, Stage
+- ##### readonlyViewCreatorMonetizationAnalytics:bigint Allows for viewing role subscription insights
+- ##### readonlyViewGuildInsights:bigint Allows for viewing guild insights
+
+### [__](#RouteBases) __constRouteBases
+
+__RouteBases: {api:https://discord.com/api/v10;cdn:https://cdn.discordapp.com;gift:https://discord.gift;invite:https://discord.gg;media:https://media.discordapp.net;scheduledEvent:https://discord.com/events;template:https://discord.new } = ...
+
+#### Type declaration
+
+- ##### readonlyapi:https://discord.com/api/v10
+- ##### readonlycdn:https://cdn.discordapp.com
+- ##### readonlygift:https://discord.gift
+- ##### readonlyinvite:https://discord.gg
+- ##### readonlymedia:https://media.discordapp.net
+- ##### readonlyscheduledEvent:https://discord.com/events
+- ##### readonlytemplate:https://discord.new
+
+### [__](#Routes) __constRoutes
+
+__Routes: RoutesDeclarations = ...
+
+### [__](#RPCVersion) __constRPCVersion
+
+__RPCVersion: 1 = '1'
+
+### [__](#StickerPackApplicationId) __constStickerPackApplicationId
+
+__StickerPackApplicationId: 710982414301790216 = '710982414301790216'
+
+### [__](#urlSafeCharacters) __consturlSafeCharacters
+
+__urlSafeCharacters: {test:any } = ...
+
+#### Type declaration
+
+- ##### test:function
+  - __**test**(input:string):boolean ---
+  - #### Parameters
+    - ##### input: string #### Returns boolean
+
+**Page Options**
+
+Hide Inherited
+
+- [__FormattingPatterns](#FormattingPatterns)
+- [__Permissions](#Permissions)
+- [__Snowflake](#Snowflake)
+- [___AddUndefinedToPossiblyUndefinedPropertiesOfInterface](#_AddUndefinedToPossiblyUndefinedPropertiesOfInterface)
+- [___DistributiveKeys](#_DistributiveKeys)
+- [___DistributiveOmit](#_DistributiveOmit)
+- [___DistributivePick](#_DistributivePick)
+- [___Keys](#_Keys)
+- [___NonNullableFields](#_NonNullableFields)
+- [___Nullable](#_Nullable)
+- [___Omit](#_Omit)
+- [___Pick](#_Pick)
+- [___StrictPartial](#_StrictPartial)
+- [___StrictRequired](#_StrictRequired)
+- [___UnionToIntersection](#_UnionToIntersection)
+- [__AchievementIconFormat](#AchievementIconFormat)
+- [__APIAnnouncementThreadChannel](#APIAnnouncementThreadChannel)
+- [__APIApplicationCommandAttachmentOption](#APIApplicationCommandAttachmentOption)
+- [__APIApplicationCommandAutocompleteDMInteraction](#APIApplicationCommandAutocompleteDMInteraction)
+- [__APIApplicationCommandAutocompleteGuildInteraction](#APIApplicationCommandAutocompleteGuildInteraction)
+- [__APIApplicationCommandAutocompleteInteraction](#APIApplicationCommandAutocompleteInteraction)
+- [__APIApplicationCommandBasicOption](#APIApplicationCommandBasicOption)
+- [__APIApplicationCommandBooleanOption](#APIApplicationCommandBooleanOption)
+- [__APIApplicationCommandDMInteraction](#APIApplicationCommandDMInteraction)
+- [__APIApplicationCommandGuildInteraction](#APIApplicationCommandGuildInteraction)
+- [__APIApplicationCommandIntegerOption](#APIApplicationCommandIntegerOption)
+- [__APIApplicationCommandInteraction](#APIApplicationCommandInteraction)
+- [__APIApplicationCommandInteractionData](#APIApplicationCommandInteractionData)
+- [__APIApplicationCommandInteractionDataAttachmentOption](#APIApplicationCommandInteractionDataAttachmentOption)
+- [__APIApplicationCommandInteractionDataBasicOption](#APIApplicationCommandInteractionDataBasicOption)
+- [__APIApplicationCommandInteractionDataBooleanOption](#APIApplicationCommandInteractionDataBooleanOption)
+- [__APIApplicationCommandInteractionDataChannelOption](#APIApplicationCommandInteractionDataChannelOption)
+- [__APIApplicationCommandInteractionDataMentionableOption](#APIApplicationCommandInteractionDataMentionableOption)
+- [__APIApplicationCommandInteractionDataOption](#APIApplicationCommandInteractionDataOption)
+- [__APIApplicationCommandInteractionDataRoleOption](#APIApplicationCommandInteractionDataRoleOption)
+- [__APIApplicationCommandInteractionDataUserOption](#APIApplicationCommandInteractionDataUserOption)
+- [__APIApplicationCommandInteractionWrapper](#APIApplicationCommandInteractionWrapper)
+- [__APIApplicationCommandMentionableOption](#APIApplicationCommandMentionableOption)
+- [__APIApplicationCommandNumberOption](#APIApplicationCommandNumberOption)
+- [__APIApplicationCommandOption](#APIApplicationCommandOption)
+- [__APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper](#APIApplicationCommandOptionWithAutocompleteOrChoicesWrapper)
+- [__APIApplicationCommandRoleOption](#APIApplicationCommandRoleOption)
+- [__APIApplicationCommandStringOption](#APIApplicationCommandStringOption)
+- [__APIApplicationCommandUserOption](#APIApplicationCommandUserOption)
+- [__APIApplicationEmoji](#APIApplicationEmoji)
+- [__APIApplicationIntegrationTypesConfigMap](#APIApplicationIntegrationTypesConfigMap)
+- [__APIAuditLogChange](#APIAuditLogChange)
+- [__APIAuditLogChangeKey$Add](#APIAuditLogChangeKey$Add)
+- [__APIAuditLogChangeKey$Remove](#APIAuditLogChangeKey$Remove)
+- [__APIAuditLogChangeKeyActions](#APIAuditLogChangeKeyActions)
+- [__APIAuditLogChangeKeyAFKChannelId](#APIAuditLogChangeKeyAFKChannelId)
+- [__APIAuditLogChangeKeyAFKTimeout](#APIAuditLogChangeKeyAFKTimeout)
+- [__APIAuditLogChangeKeyAllow](#APIAuditLogChangeKeyAllow)
+- [__APIAuditLogChangeKeyApplicationId](#APIAuditLogChangeKeyApplicationId)
+- [__APIAuditLogChangeKeyArchived](#APIAuditLogChangeKeyArchived)
+- [__APIAuditLogChangeKeyAsset](#APIAuditLogChangeKeyAsset)
+- [__APIAuditLogChangeKeyAutoArchiveDuration](#APIAuditLogChangeKeyAutoArchiveDuration)
+- [__APIAuditLogChangeKeyAvailable](#APIAuditLogChangeKeyAvailable)
+- [__APIAuditLogChangeKeyAvailableTags](#APIAuditLogChangeKeyAvailableTags)
+- [__APIAuditLogChangeKeyAvatarHash](#APIAuditLogChangeKeyAvatarHash)
+- [__APIAuditLogChangeKeyBannerHash](#APIAuditLogChangeKeyBannerHash)
+- [__APIAuditLogChangeKeyBitrate](#APIAuditLogChangeKeyBitrate)
+- [__APIAuditLogChangeKeyChannelId](#APIAuditLogChangeKeyChannelId)
+- [__APIAuditLogChangeKeyCode](#APIAuditLogChangeKeyCode)
+- [__APIAuditLogChangeKeyColor](#APIAuditLogChangeKeyColor)
+- [__APIAuditLogChangeKeyCommunicationDisabledUntil](#APIAuditLogChangeKeyCommunicationDisabledUntil)
+- [__APIAuditLogChangeKeyDeaf](#APIAuditLogChangeKeyDeaf)
+- [__APIAuditLogChangeKeyDefaultAutoArchiveDuration](#APIAuditLogChangeKeyDefaultAutoArchiveDuration)
+- [__APIAuditLogChangeKeyDefaultMessageNotifications](#APIAuditLogChangeKeyDefaultMessageNotifications)
+- [__APIAuditLogChangeKeyDefaultReactionEmoji](#APIAuditLogChangeKeyDefaultReactionEmoji)
+- [__APIAuditLogChangeKeyDefaultThreadRateLimitPerUser](#APIAuditLogChangeKeyDefaultThreadRateLimitPerUser)
+- [__APIAuditLogChangeKeyDeny](#APIAuditLogChangeKeyDeny)
+- [__APIAuditLogChangeKeyDescription](#APIAuditLogChangeKeyDescription)
+- [__APIAuditLogChangeKeyDiscoverySplashHash](#APIAuditLogChangeKeyDiscoverySplashHash)
+- [__APIAuditLogChangeKeyEmojiId](#APIAuditLogChangeKeyEmojiId)
+- [__APIAuditLogChangeKeyEmojiName](#APIAuditLogChangeKeyEmojiName)
+- [__APIAuditLogChangeKeyEnabled](#APIAuditLogChangeKeyEnabled)
+- [__APIAuditLogChangeKeyEnableEmoticons](#APIAuditLogChangeKeyEnableEmoticons)
+- [__APIAuditLogChangeKeyEntityType](#APIAuditLogChangeKeyEntityType)
+- [__APIAuditLogChangeKeyEventType](#APIAuditLogChangeKeyEventType)
+- [__APIAuditLogChangeKeyExemptChannels](#APIAuditLogChangeKeyExemptChannels)
+- [__APIAuditLogChangeKeyExemptRoles](#APIAuditLogChangeKeyExemptRoles)
+- [__APIAuditLogChangeKeyExpireBehavior](#APIAuditLogChangeKeyExpireBehavior)
+- [__APIAuditLogChangeKeyExpireGracePeriod](#APIAuditLogChangeKeyExpireGracePeriod)
+- [__APIAuditLogChangeKeyExplicitContentFilter](#APIAuditLogChangeKeyExplicitContentFilter)
+- [__APIAuditLogChangeKeyFlags](#APIAuditLogChangeKeyFlags)
+- [__APIAuditLogChangeKeyFormatType](#APIAuditLogChangeKeyFormatType)
+- [__APIAuditLogChangeKeyGuildId](#APIAuditLogChangeKeyGuildId)
+- [__APIAuditLogChangeKeyHoist](#APIAuditLogChangeKeyHoist)
+- [__APIAuditLogChangeKeyIconHash](#APIAuditLogChangeKeyIconHash)
+- [__APIAuditLogChangeKeyId](#APIAuditLogChangeKeyId)
+- [__APIAuditLogChangeKeyImageHash](#APIAuditLogChangeKeyImageHash)
+- [__APIAuditLogChangeKeyInviterId](#APIAuditLogChangeKeyInviterId)
+- [__APIAuditLogChangeKeyLocation](#APIAuditLogChangeKeyLocation)
+- [__APIAuditLogChangeKeyLocked](#APIAuditLogChangeKeyLocked)
+- [__APIAuditLogChangeKeyMaxAge](#APIAuditLogChangeKeyMaxAge)
+- [__APIAuditLogChangeKeyMaxUses](#APIAuditLogChangeKeyMaxUses)
+- [__APIAuditLogChangeKeyMentionable](#APIAuditLogChangeKeyMentionable)
+- [__APIAuditLogChangeKeyMFALevel](#APIAuditLogChangeKeyMFALevel)
+- [__APIAuditLogChangeKeyMute](#APIAuditLogChangeKeyMute)
+- [__APIAuditLogChangeKeyName](#APIAuditLogChangeKeyName)
+- [__APIAuditLogChangeKeyNick](#APIAuditLogChangeKeyNick)
+- [__APIAuditLogChangeKeyNSFW](#APIAuditLogChangeKeyNSFW)
+- [__APIAuditLogChangeKeyOwnerId](#APIAuditLogChangeKeyOwnerId)
+- [__APIAuditLogChangeKeyPermissionOverwrites](#APIAuditLogChangeKeyPermissionOverwrites)
+- [__APIAuditLogChangeKeyPermissions](#APIAuditLogChangeKeyPermissions)
+- [__APIAuditLogChangeKeyPosition](#APIAuditLogChangeKeyPosition)
+- [__APIAuditLogChangeKeyPreferredLocale](#APIAuditLogChangeKeyPreferredLocale)
+- [__APIAuditLogChangeKeyPremiumProgressBarEnabled](#APIAuditLogChangeKeyPremiumProgressBarEnabled)
+- [__APIAuditLogChangeKeyPrivacyLevel](#APIAuditLogChangeKeyPrivacyLevel)
+- [__APIAuditLogChangeKeyPruneDeleteDays](#APIAuditLogChangeKeyPruneDeleteDays)
+- [__APIAuditLogChangeKeyPublicUpdatesChannelId](#APIAuditLogChangeKeyPublicUpdatesChannelId)
+- [__APIAuditLogChangeKeyRateLimitPerUser](#APIAuditLogChangeKeyRateLimitPerUser)
+- [__APIAuditLogChangeKeyRecurrenceRule](#APIAuditLogChangeKeyRecurrenceRule)
+- [__APIAuditLogChangeKeyRegion](#APIAuditLogChangeKeyRegion)
+- [__APIAuditLogChangeKeyRTCRegion](#APIAuditLogChangeKeyRTCRegion)
+- [__APIAuditLogChangeKeyRulesChannelId](#APIAuditLogChangeKeyRulesChannelId)
+- [__APIAuditLogChangeKeySafetyAlertsChannelId](#APIAuditLogChangeKeySafetyAlertsChannelId)
+- [__APIAuditLogChangeKeySnowflake](#APIAuditLogChangeKeySnowflake)
+- [__APIAuditLogChangeKeySoundId](#APIAuditLogChangeKeySoundId)
+- [__APIAuditLogChangeKeySplashHash](#APIAuditLogChangeKeySplashHash)
+- [__APIAuditLogChangeKeyStatus](#APIAuditLogChangeKeyStatus)
+- [__APIAuditLogChangeKeySystemChannelFlags](#APIAuditLogChangeKeySystemChannelFlags)
+- [__APIAuditLogChangeKeySystemChannelId](#APIAuditLogChangeKeySystemChannelId)
+- [__APIAuditLogChangeKeyTags](#APIAuditLogChangeKeyTags)
+- [__APIAuditLogChangeKeyTemporary](#APIAuditLogChangeKeyTemporary)
+- [__APIAuditLogChangeKeyTopic](#APIAuditLogChangeKeyTopic)
+- [__APIAuditLogChangeKeyTriggerMetadata](#APIAuditLogChangeKeyTriggerMetadata)
+- [__APIAuditLogChangeKeyTriggerType](#APIAuditLogChangeKeyTriggerType)
+- [__APIAuditLogChangeKeyType](#APIAuditLogChangeKeyType)
+- [__APIAuditLogChangeKeyUserId](#APIAuditLogChangeKeyUserId)
+- [__APIAuditLogChangeKeyUserLimit](#APIAuditLogChangeKeyUserLimit)
+- [__APIAuditLogChangeKeyUses](#APIAuditLogChangeKeyUses)
+- [__APIAuditLogChangeKeyVanityURLCode](#APIAuditLogChangeKeyVanityURLCode)
+- [__APIAuditLogChangeKeyVerificationLevel](#APIAuditLogChangeKeyVerificationLevel)
+- [__APIAuditLogChangeKeyVideoQualityMode](#APIAuditLogChangeKeyVideoQualityMode)
+- [__APIAuditLogChangeKeyVolume](#APIAuditLogChangeKeyVolume)
+- [__APIAuditLogChangeKeyWidgetChannelId](#APIAuditLogChangeKeyWidgetChannelId)
+- [__APIAuditLogChangeKeyWidgetEnabled](#APIAuditLogChangeKeyWidgetEnabled)
+- [__APIAuthorizingIntegrationOwnersMap](#APIAuthorizingIntegrationOwnersMap)
+- [__APIAutoPopulatedSelectMenuComponent](#APIAutoPopulatedSelectMenuComponent)
+- [__APIButtonComponent](#APIButtonComponent)
+- [__APIChannel](#APIChannel)
+- [__APIChannelPatchOverwrite](#APIChannelPatchOverwrite)
+- [__APIChatInputApplicationCommandDMInteraction](#APIChatInputApplicationCommandDMInteraction)
+- [__APIChatInputApplicationCommandGuildInteraction](#APIChatInputApplicationCommandGuildInteraction)
+- [__APIChatInputApplicationCommandInteraction](#APIChatInputApplicationCommandInteraction)
+- [__APIChatInputApplicationCommandInteractionDataResolved](#APIChatInputApplicationCommandInteractionDataResolved)
+- [__APIComponentInActionRow](#APIComponentInActionRow)
+- [__APIComponentInContainer](#APIComponentInContainer)
+- [__APIComponentInLabel](#APIComponentInLabel)
+- [__APIComponentInMessageActionRow](#APIComponentInMessageActionRow)
+- [__APIComponentInModalActionRow](#APIComponentInModalActionRow)
+- [__APIContextMenuDMInteraction](#APIContextMenuDMInteraction)
+- [__APIContextMenuGuildInteraction](#APIContextMenuGuildInteraction)
+- [__APIContextMenuInteraction](#APIContextMenuInteraction)
+- [__APIContextMenuInteractionData](#APIContextMenuInteractionData)
+- [__APIDMInteraction](#APIDMInteraction)
+- [__APIDMInteractionWrapper](#APIDMInteractionWrapper)
+- [__APIGuildChannelResolvable](#APIGuildChannelResolvable)
+- [__APIGuildCreateOverwrite](#APIGuildCreateOverwrite)
+- [__APIGuildCreatePartialChannel](#APIGuildCreatePartialChannel)
+- [__APIGuildCreateRole](#APIGuildCreateRole)
+- [__APIGuildIntegrationType](#APIGuildIntegrationType)
+- [__APIGuildInteraction](#APIGuildInteraction)
+- [__APIGuildInteractionWrapper](#APIGuildInteractionWrapper)
+- [__APIGuildMediaChannel](#APIGuildMediaChannel)
+- [__APIGuildScheduledEvent](#APIGuildScheduledEvent)
+- [__APIGuildStageVoiceChannel](#APIGuildStageVoiceChannel)
+- [__APIGuildVoiceChannel](#APIGuildVoiceChannel)
+- [__APIInteraction](#APIInteraction)
+- [__APIInteractionDataResolvedChannel](#APIInteractionDataResolvedChannel)
+- [__APIInteractionResponse](#APIInteractionResponse)
+- [__APIInteractionResponseCallbackData](#APIInteractionResponseCallbackData)
+- [__APIInviteGuild](#APIInviteGuild)
+- [__APIMentionableSelectComponent](#APIMentionableSelectComponent)
+- [__APIMessageApplicationCommandDMInteraction](#APIMessageApplicationCommandDMInteraction)
+- [__APIMessageApplicationCommandGuildInteraction](#APIMessageApplicationCommandGuildInteraction)
+- [__APIMessageApplicationCommandInteraction](#APIMessageApplicationCommandInteraction)
+- [__APIMessageButtonInteractionData](#APIMessageButtonInteractionData)
+- [__APIMessageComponent](#APIMessageComponent)
+- [__APIMessageComponentButtonInteraction](#APIMessageComponentButtonInteraction)
+- [__APIMessageComponentDMInteraction](#APIMessageComponentDMInteraction)
+- [__APIMessageComponentGuildInteraction](#APIMessageComponentGuildInteraction)
+- [__APIMessageComponentInteraction](#APIMessageComponentInteraction)
+- [__APIMessageComponentInteractionData](#APIMessageComponentInteractionData)
+- [__APIMessageComponentSelectMenuInteraction](#APIMessageComponentSelectMenuInteraction)
+- [__APIMessageInteractionMetadata](#APIMessageInteractionMetadata)
+- [__APIMessageReferenceSend](#APIMessageReferenceSend)
+- [__APIMessageSelectMenuInteractionData](#APIMessageSelectMenuInteractionData)
+- [__APIMessageSnapshotFields](#APIMessageSnapshotFields)
+- [__APIMessageTopLevelComponent](#APIMessageTopLevelComponent)
+- [__APIModalComponent](#APIModalComponent)
+- [__APIModalInteractionResponseCallbackComponent](#APIModalInteractionResponseCallbackComponent)
+- [__APIModalSubmissionComponent](#APIModalSubmissionComponent)
+- [__APIModalSubmitDMInteraction](#APIModalSubmitDMInteraction)
+- [__APIModalSubmitGuildInteraction](#APIModalSubmitGuildInteraction)
+- [__APIModalSubmitInteraction](#APIModalSubmitInteraction)
+- [__APINewsChannel](#APINewsChannel)
+- [__APIPingInteraction](#APIPingInteraction)
+- [__APIPrimaryEntryPointCommandDMInteraction](#APIPrimaryEntryPointCommandDMInteraction)
+- [__APIPrimaryEntryPointCommandGuildInteraction](#APIPrimaryEntryPointCommandGuildInteraction)
+- [__APIPrimaryEntryPointCommandInteraction](#APIPrimaryEntryPointCommandInteraction)
+- [__APIPrimaryEntryPointCommandInteractionData](#APIPrimaryEntryPointCommandInteractionData)
+- [__APIPrivateThreadChannel](#APIPrivateThreadChannel)
+- [__APIPublicThreadChannel](#APIPublicThreadChannel)
+- [__APIRoleSelectComponent](#APIRoleSelectComponent)
+- [__APISectionAccessoryComponent](#APISectionAccessoryComponent)
+- [__APISelectMenuComponent](#APISelectMenuComponent)
+- [__APIStickerItem](#APIStickerItem)
+- [__APITextChannel](#APITextChannel)
+- [__APIUserApplicationCommandDMInteraction](#APIUserApplicationCommandDMInteraction)
+- [__APIUserApplicationCommandGuildInteraction](#APIUserApplicationCommandGuildInteraction)
+- [__APIUserApplicationCommandInteraction](#APIUserApplicationCommandInteraction)
+- [__APIUserApplicationCommandInteractionDataResolved](#APIUserApplicationCommandInteractionDataResolved)
+- [__APIUserInteractionDataResolved](#APIUserInteractionDataResolved)
+- [__APIUserSelectComponent](#APIUserSelectComponent)
+- [__APIWebhookEvent](#APIWebhookEvent)
+- [__APIWebhookEventBody](#APIWebhookEventBody)
+- [__APIWebhookEventEntitlementCreateData](#APIWebhookEventEntitlementCreateData)
+- [__APIWebhookEventEntitlementDeleteData](#APIWebhookEventEntitlementDeleteData)
+- [__APIWebhookEventEntitlementUpdateData](#APIWebhookEventEntitlementUpdateData)
+- [__APIWebhookEventQuestUserEnrollmentData](#APIWebhookEventQuestUserEnrollmentData)
+- [__APIWebhookSourceChannel](#APIWebhookSourceChannel)
+- [__APIWebhookSourceGuild](#APIWebhookSourceGuild)
+- [__ApplicationAssetFormat](#ApplicationAssetFormat)
+- [__ApplicationCommandOptionAllowedChannelType](#ApplicationCommandOptionAllowedChannelType)
+- [__ApplicationCoverFormat](#ApplicationCoverFormat)
+- [__ApplicationIconFormat](#ApplicationIconFormat)
+- [__AuditLogRuleTriggerType](#AuditLogRuleTriggerType)
+- [__DefaultUserAvatar](#DefaultUserAvatar)
+- [__DefaultUserAvatarAssets](#DefaultUserAvatarAssets)
+- [__DefaultUserAvatarFormat](#DefaultUserAvatarFormat)
+- [__EmojiFormat](#EmojiFormat)
+- [__GatewayActivityEmoji](#GatewayActivityEmoji)
+- [__GatewayActivityUpdateData](#GatewayActivityUpdateData)
+- [__GatewayApplicationCommandPermissionsUpdateDispatch](#GatewayApplicationCommandPermissionsUpdateDispatch)
+- [__GatewayAutoModerationActionExecutionDispatch](#GatewayAutoModerationActionExecutionDispatch)
+- [__GatewayAutoModerationRuleCreateDispatch](#GatewayAutoModerationRuleCreateDispatch)
+- [__GatewayAutoModerationRuleCreateDispatchData](#GatewayAutoModerationRuleCreateDispatchData)
+- [__GatewayAutoModerationRuleDeleteDispatch](#GatewayAutoModerationRuleDeleteDispatch)
+- [__GatewayAutoModerationRuleDeleteDispatchData](#GatewayAutoModerationRuleDeleteDispatchData)
+- [__GatewayAutoModerationRuleModifyDispatch](#GatewayAutoModerationRuleModifyDispatch)
+- [__GatewayAutoModerationRuleModifyDispatchData](#GatewayAutoModerationRuleModifyDispatchData)
+- [__GatewayAutoModerationRuleUpdateDispatch](#GatewayAutoModerationRuleUpdateDispatch)
+- [__GatewayAutoModerationRuleUpdateDispatchData](#GatewayAutoModerationRuleUpdateDispatchData)
+- [__GatewayChannelCreateDispatch](#GatewayChannelCreateDispatch)
+- [__GatewayChannelCreateDispatchData](#GatewayChannelCreateDispatchData)
+- [__GatewayChannelDeleteDispatch](#GatewayChannelDeleteDispatch)
+- [__GatewayChannelDeleteDispatchData](#GatewayChannelDeleteDispatchData)
+- [__GatewayChannelModifyDispatch](#GatewayChannelModifyDispatch)
+- [__GatewayChannelModifyDispatchData](#GatewayChannelModifyDispatchData)
+- [__GatewayChannelPinsUpdateDispatch](#GatewayChannelPinsUpdateDispatch)
+- [__GatewayChannelUpdateDispatch](#GatewayChannelUpdateDispatch)
+- [__GatewayChannelUpdateDispatchData](#GatewayChannelUpdateDispatchData)
+- [__GatewayDispatchPayload](#GatewayDispatchPayload)
+- [__GatewayEntitlementCreateDispatch](#GatewayEntitlementCreateDispatch)
+- [__GatewayEntitlementCreateDispatchData](#GatewayEntitlementCreateDispatchData)
+- [__GatewayEntitlementDeleteDispatch](#GatewayEntitlementDeleteDispatch)
+- [__GatewayEntitlementDeleteDispatchData](#GatewayEntitlementDeleteDispatchData)
+- [__GatewayEntitlementModifyDispatch](#GatewayEntitlementModifyDispatch)
+- [__GatewayEntitlementModifyDispatchData](#GatewayEntitlementModifyDispatchData)
+- [__GatewayEntitlementUpdateDispatch](#GatewayEntitlementUpdateDispatch)
+- [__GatewayEntitlementUpdateDispatchData](#GatewayEntitlementUpdateDispatchData)
+- [__GatewayGuildAuditLogEntryCreateDispatch](#GatewayGuildAuditLogEntryCreateDispatch)
+- [__GatewayGuildBanAddDispatch](#GatewayGuildBanAddDispatch)
+- [__GatewayGuildBanAddDispatchData](#GatewayGuildBanAddDispatchData)
+- [__GatewayGuildBanModifyDispatch](#GatewayGuildBanModifyDispatch)
+- [__GatewayGuildBanRemoveDispatch](#GatewayGuildBanRemoveDispatch)
+- [__GatewayGuildBanRemoveDispatchData](#GatewayGuildBanRemoveDispatchData)
+- [__GatewayGuildCreateDispatch](#GatewayGuildCreateDispatch)
+- [__GatewayGuildDeleteDispatch](#GatewayGuildDeleteDispatch)
+- [__GatewayGuildEmojisUpdateDispatch](#GatewayGuildEmojisUpdateDispatch)
+- [__GatewayGuildIntegrationsUpdateDispatch](#GatewayGuildIntegrationsUpdateDispatch)
+- [__GatewayGuildMemberAddDispatch](#GatewayGuildMemberAddDispatch)
+- [__GatewayGuildMemberRemoveDispatch](#GatewayGuildMemberRemoveDispatch)
+- [__GatewayGuildMembersChunkDispatch](#GatewayGuildMembersChunkDispatch)
+- [__GatewayGuildMemberUpdateDispatch](#GatewayGuildMemberUpdateDispatch)
+- [__GatewayGuildModifyDispatch](#GatewayGuildModifyDispatch)
+- [__GatewayGuildModifyDispatchData](#GatewayGuildModifyDispatchData)
+- [__GatewayGuildRoleCreateDispatch](#GatewayGuildRoleCreateDispatch)
+- [__GatewayGuildRoleCreateDispatchData](#GatewayGuildRoleCreateDispatchData)
+- [__GatewayGuildRoleDeleteDispatch](#GatewayGuildRoleDeleteDispatch)
+- [__GatewayGuildRoleModifyDispatch](#GatewayGuildRoleModifyDispatch)
+- [__GatewayGuildRoleUpdateDispatch](#GatewayGuildRoleUpdateDispatch)
+- [__GatewayGuildRoleUpdateDispatchData](#GatewayGuildRoleUpdateDispatchData)
+- [__GatewayGuildScheduledEventCreateDispatch](#GatewayGuildScheduledEventCreateDispatch)
+- [__GatewayGuildScheduledEventCreateDispatchData](#GatewayGuildScheduledEventCreateDispatchData)
+- [__GatewayGuildScheduledEventDeleteDispatch](#GatewayGuildScheduledEventDeleteDispatch)
+- [__GatewayGuildScheduledEventDeleteDispatchData](#GatewayGuildScheduledEventDeleteDispatchData)
+- [__GatewayGuildScheduledEventUpdateDispatch](#GatewayGuildScheduledEventUpdateDispatch)
+- [__GatewayGuildScheduledEventUpdateDispatchData](#GatewayGuildScheduledEventUpdateDispatchData)
+- [__GatewayGuildScheduledEventUserAddDispatch](#GatewayGuildScheduledEventUserAddDispatch)
+- [__GatewayGuildScheduledEventUserRemoveDispatch](#GatewayGuildScheduledEventUserRemoveDispatch)
+- [__GatewayGuildSoundboardSoundCreateDispatch](#GatewayGuildSoundboardSoundCreateDispatch)
+- [__GatewayGuildSoundboardSoundCreateDispatchData](#GatewayGuildSoundboardSoundCreateDispatchData)
+- [__GatewayGuildSoundboardSoundDeleteDispatch](#GatewayGuildSoundboardSoundDeleteDispatch)
+- [__GatewayGuildSoundboardSoundsUpdateDispatch](#GatewayGuildSoundboardSoundsUpdateDispatch)
+- [__GatewayGuildSoundboardSoundUpdateDispatch](#GatewayGuildSoundboardSoundUpdateDispatch)
+- [__GatewayGuildSoundboardSoundUpdateDispatchData](#GatewayGuildSoundboardSoundUpdateDispatchData)
+- [__GatewayGuildStickersUpdateDispatch](#GatewayGuildStickersUpdateDispatch)
+- [__GatewayGuildUpdateDispatch](#GatewayGuildUpdateDispatch)
+- [__GatewayGuildUpdateDispatchData](#GatewayGuildUpdateDispatchData)
+- [__GatewayHeartbeatData](#GatewayHeartbeatData)
+- [__GatewayIntegrationCreateDispatch](#GatewayIntegrationCreateDispatch)
+- [__GatewayIntegrationCreateDispatchData](#GatewayIntegrationCreateDispatchData)
+- [__GatewayIntegrationDeleteDispatch](#GatewayIntegrationDeleteDispatch)
+- [__GatewayIntegrationUpdateDispatch](#GatewayIntegrationUpdateDispatch)
+- [__GatewayIntegrationUpdateDispatchData](#GatewayIntegrationUpdateDispatchData)
+- [__GatewayInteractionCreateDispatch](#GatewayInteractionCreateDispatch)
+- [__GatewayInteractionCreateDispatchData](#GatewayInteractionCreateDispatchData)
+- [__GatewayInvalidSessionData](#GatewayInvalidSessionData)
+- [__GatewayInviteCreateDispatch](#GatewayInviteCreateDispatch)
+- [__GatewayInviteDeleteDispatch](#GatewayInviteDeleteDispatch)
+- [__GatewayMessageCreateDispatch](#GatewayMessageCreateDispatch)
+- [__GatewayMessageDeleteBulkDispatch](#GatewayMessageDeleteBulkDispatch)
+- [__GatewayMessageDeleteDispatch](#GatewayMessageDeleteDispatch)
+- [__GatewayMessagePollVoteAddDispatch](#GatewayMessagePollVoteAddDispatch)
+- [__GatewayMessagePollVoteRemoveDispatch](#GatewayMessagePollVoteRemoveDispatch)
+- [__GatewayMessageReactionAddDispatch](#GatewayMessageReactionAddDispatch)
+- [__GatewayMessageReactionData](#GatewayMessageReactionData)
+- [__GatewayMessageReactionRemoveAllDispatch](#GatewayMessageReactionRemoveAllDispatch)
+- [__GatewayMessageReactionRemoveAllDispatchData](#GatewayMessageReactionRemoveAllDispatchData)
+- [__GatewayMessageReactionRemoveDispatch](#GatewayMessageReactionRemoveDispatch)
+- [__GatewayMessageReactionRemoveEmojiDispatch](#GatewayMessageReactionRemoveEmojiDispatch)
+- [__GatewayMessageUpdateDispatch](#GatewayMessageUpdateDispatch)
+- [__GatewayPresenceUpdateDispatch](#GatewayPresenceUpdateDispatch)
+- [__GatewayPresenceUpdateDispatchData](#GatewayPresenceUpdateDispatchData)
+- [__GatewayRateLimitedDispatch](#GatewayRateLimitedDispatch)
+- [__GatewayRateLimitedMetadata](#GatewayRateLimitedMetadata)
+- [__GatewayRateLimitedRequestGuildMembersDispatch](#GatewayRateLimitedRequestGuildMembersDispatch)
+- [__GatewayRateLimitedRequestGuildMembersDispatchData](#GatewayRateLimitedRequestGuildMembersDispatchData)
+- [__GatewayReadyDispatch](#GatewayReadyDispatch)
+- [__GatewayReceivePayload](#GatewayReceivePayload)
+- [__GatewayRequestGuildMembersData](#GatewayRequestGuildMembersData)
+- [__GatewayResumedDispatch](#GatewayResumedDispatch)
+- [__GatewaySendPayload](#GatewaySendPayload)
+- [__GatewaySoundboardSoundsDispatch](#GatewaySoundboardSoundsDispatch)
+- [__GatewayStageInstanceCreateDispatch](#GatewayStageInstanceCreateDispatch)
+- [__GatewayStageInstanceCreateDispatchData](#GatewayStageInstanceCreateDispatchData)
+- [__GatewayStageInstanceDeleteDispatch](#GatewayStageInstanceDeleteDispatch)
+- [__GatewayStageInstanceDeleteDispatchData](#GatewayStageInstanceDeleteDispatchData)
+- [__GatewayStageInstanceUpdateDispatch](#GatewayStageInstanceUpdateDispatch)
+- [__GatewayStageInstanceUpdateDispatchData](#GatewayStageInstanceUpdateDispatchData)
+- [__GatewaySubscriptionCreateDispatch](#GatewaySubscriptionCreateDispatch)
+- [__GatewaySubscriptionCreateDispatchData](#GatewaySubscriptionCreateDispatchData)
+- [__GatewaySubscriptionDeleteDispatch](#GatewaySubscriptionDeleteDispatch)
+- [__GatewaySubscriptionDeleteDispatchData](#GatewaySubscriptionDeleteDispatchData)
+- [__GatewaySubscriptionModifyDispatch](#GatewaySubscriptionModifyDispatch)
+- [__GatewaySubscriptionModifyDispatchData](#GatewaySubscriptionModifyDispatchData)
+- [__GatewaySubscriptionUpdateDispatch](#GatewaySubscriptionUpdateDispatch)
+- [__GatewaySubscriptionUpdateDispatchData](#GatewaySubscriptionUpdateDispatchData)
+- [__GatewayThreadCreateDispatch](#GatewayThreadCreateDispatch)
+- [__GatewayThreadDeleteDispatch](#GatewayThreadDeleteDispatch)
+- [__GatewayThreadListSyncDispatch](#GatewayThreadListSyncDispatch)
+- [__GatewayThreadListSyncDispatchData](#GatewayThreadListSyncDispatchData)
+- [__GatewayThreadMembersUpdateDispatch](#GatewayThreadMembersUpdateDispatch)
+- [__GatewayThreadMembersUpdateDispatchData](#GatewayThreadMembersUpdateDispatchData)
+- [__GatewayThreadMemberUpdateDispatch](#GatewayThreadMemberUpdateDispatch)
+- [__GatewayThreadMemberUpdateDispatchData](#GatewayThreadMemberUpdateDispatchData)
+- [__GatewayThreadModifyDispatch](#GatewayThreadModifyDispatch)
+- [__GatewayThreadUpdateDispatch](#GatewayThreadUpdateDispatch)
+- [__GatewayThreadUpdateDispatchData](#GatewayThreadUpdateDispatchData)
+- [__GatewayTypingStartDispatch](#GatewayTypingStartDispatch)
+- [__GatewayUserUpdateDispatch](#GatewayUserUpdateDispatch)
+- [__GatewayUserUpdateDispatchData](#GatewayUserUpdateDispatchData)
+- [__GatewayVoiceChannelEffectSendDispatch](#GatewayVoiceChannelEffectSendDispatch)
+- [__GatewayVoiceServerUpdateDispatch](#GatewayVoiceServerUpdateDispatch)
+- [__GatewayVoiceState](#GatewayVoiceState)
+- [__GatewayVoiceStateUpdateDispatch](#GatewayVoiceStateUpdateDispatch)
+- [__GatewayVoiceStateUpdateDispatchData](#GatewayVoiceStateUpdateDispatchData)
+- [__GatewayWebhooksUpdateDispatch](#GatewayWebhooksUpdateDispatch)
+- [__GetAPIVoiceRegionsResult](#GetAPIVoiceRegionsResult)
+- [__GuildBannerFormat](#GuildBannerFormat)
+- [__GuildChannelType](#GuildChannelType)
+- [__GuildDiscoverySplashFormat](#GuildDiscoverySplashFormat)
+- [__GuildIconFormat](#GuildIconFormat)
+- [__GuildMemberAvatarFormat](#GuildMemberAvatarFormat)
+- [__GuildMemberBannerFormat](#GuildMemberBannerFormat)
+- [__GuildScheduledEventCoverFormat](#GuildScheduledEventCoverFormat)
+- [__GuildScheduledEventRecurrenceRuleNWeekday](#GuildScheduledEventRecurrenceRuleNWeekday)
+- [__GuildSplashFormat](#GuildSplashFormat)
+- [__GuildTagBadgeFormat](#GuildTagBadgeFormat)
+- [__GuildTextChannelType](#GuildTextChannelType)
+- [__ImageSize](#ImageSize)
+- [__LocaleString](#LocaleString)
+- [__LocalizationMap](#LocalizationMap)
+- [__ModalSubmitComponent](#ModalSubmitComponent)
+- [__PartialAPIMessageInteractionGuildMember](#PartialAPIMessageInteractionGuildMember)
+- [__PresenceUpdateReceiveStatus](#PresenceUpdateReceiveStatus)
+- [__RESTAPIAttachment](#RESTAPIAttachment)
+- [__RESTAPIGuildChannelResolvable](#RESTAPIGuildChannelResolvable)
+- [__RESTAPIGuildCreatePartialChannel](#RESTAPIGuildCreatePartialChannel)
+- [__RESTAPIMessageReference](#RESTAPIMessageReference)
+- [__RESTAPIModifyGuildOnboardingPromptData](#RESTAPIModifyGuildOnboardingPromptData)
+- [__RESTAPIModifyGuildOnboardingPromptOptionData](#RESTAPIModifyGuildOnboardingPromptOptionData)
+- [__RESTAPIPollCreate](#RESTAPIPollCreate)
+- [__RESTDeleteAPIApplicationEmojiResult](#RESTDeleteAPIApplicationEmojiResult)
+- [__RESTDeleteAPIAutoModerationRuleResult](#RESTDeleteAPIAutoModerationRuleResult)
+- [__RESTDeleteAPIChannelAllMessageReactionsResult](#RESTDeleteAPIChannelAllMessageReactionsResult)
+- [__RESTDeleteAPIChannelMessageOwnReaction](#RESTDeleteAPIChannelMessageOwnReaction)
+- [__RESTDeleteAPIChannelMessageOwnReactionResult](#RESTDeleteAPIChannelMessageOwnReactionResult)
+- [__RESTDeleteAPIChannelMessageReactionResult](#RESTDeleteAPIChannelMessageReactionResult)
+- [__RESTDeleteAPIChannelMessageResult](#RESTDeleteAPIChannelMessageResult)
+- [__RESTDeleteAPIChannelMessagesPinResult](#RESTDeleteAPIChannelMessagesPinResult)
+- [__RESTDeleteAPIChannelMessageUserReactionResult](#RESTDeleteAPIChannelMessageUserReactionResult)
+- [__RESTDeleteAPIChannelPermissionResult](#RESTDeleteAPIChannelPermissionResult)
+- [__RESTDeleteAPIChannelPinResult](#RESTDeleteAPIChannelPinResult)
+- [__RESTDeleteAPIChannelRecipientResult](#RESTDeleteAPIChannelRecipientResult)
+- [__RESTDeleteAPIChannelResult](#RESTDeleteAPIChannelResult)
+- [__RESTDeleteAPIChannelThreadMembersResult](#RESTDeleteAPIChannelThreadMembersResult)
+- [__RESTDeleteAPICurrentUserGuildResult](#RESTDeleteAPICurrentUserGuildResult)
+- [__RESTDeleteAPIEntitlementResult](#RESTDeleteAPIEntitlementResult)
+- [__RESTDeleteAPIGuildBanResult](#RESTDeleteAPIGuildBanResult)
+- [__RESTDeleteAPIGuildEmojiResult](#RESTDeleteAPIGuildEmojiResult)
+- [__RESTDeleteAPIGuildIntegrationResult](#RESTDeleteAPIGuildIntegrationResult)
+- [__RESTDeleteAPIGuildMemberResult](#RESTDeleteAPIGuildMemberResult)
+- [__RESTDeleteAPIGuildMemberRoleResult](#RESTDeleteAPIGuildMemberRoleResult)
+- [__RESTDeleteAPIGuildResult](#RESTDeleteAPIGuildResult)
+- [__RESTDeleteAPIGuildRoleResult](#RESTDeleteAPIGuildRoleResult)
+- [__RESTDeleteAPIGuildScheduledEventResult](#RESTDeleteAPIGuildScheduledEventResult)
+- [__RESTDeleteAPIGuildSoundboardSoundResult](#RESTDeleteAPIGuildSoundboardSoundResult)
+- [__RESTDeleteAPIGuildStickerResult](#RESTDeleteAPIGuildStickerResult)
+- [__RESTDeleteAPIGuildTemplateResult](#RESTDeleteAPIGuildTemplateResult)
+- [__RESTDeleteAPIInteractionFollowupResult](#RESTDeleteAPIInteractionFollowupResult)
+- [__RESTDeleteAPIInteractionOriginalResponseResult](#RESTDeleteAPIInteractionOriginalResponseResult)
+- [__RESTDeleteAPIInviteResult](#RESTDeleteAPIInviteResult)
+- [__RESTDeleteAPIStageInstanceResult](#RESTDeleteAPIStageInstanceResult)
+- [__RESTDeleteAPIWebhookResult](#RESTDeleteAPIWebhookResult)
+- [__RESTDeleteAPIWebhookWithTokenMessageResult](#RESTDeleteAPIWebhookWithTokenMessageResult)
+- [__RESTDeleteAPIWebhookWithTokenResult](#RESTDeleteAPIWebhookWithTokenResult)
+- [__RESTErrorData](#RESTErrorData)
+- [__RESTGetAPIApplicationActivityInstanceResult](#RESTGetAPIApplicationActivityInstanceResult)
+- [__RESTGetAPIApplicationCommandPermissionsResult](#RESTGetAPIApplicationCommandPermissionsResult)
+- [__RESTGetAPIApplicationCommandResult](#RESTGetAPIApplicationCommandResult)
+- [__RESTGetAPIApplicationCommandsResult](#RESTGetAPIApplicationCommandsResult)
+- [__RESTGetAPIApplicationEmojiResult](#RESTGetAPIApplicationEmojiResult)
+- [__RESTGetAPIApplicationGuildCommandResult](#RESTGetAPIApplicationGuildCommandResult)
+- [__RESTGetAPIApplicationGuildCommandsQuery](#RESTGetAPIApplicationGuildCommandsQuery)
+- [__RESTGetAPIApplicationGuildCommandsResult](#RESTGetAPIApplicationGuildCommandsResult)
+- [__RESTGetAPIApplicationRoleConnectionMetadataResult](#RESTGetAPIApplicationRoleConnectionMetadataResult)
+- [__RESTGetAPIAuditLogResult](#RESTGetAPIAuditLogResult)
+- [__RESTGetAPIAutoModerationRuleResult](#RESTGetAPIAutoModerationRuleResult)
+- [__RESTGetAPIAutoModerationRulesResult](#RESTGetAPIAutoModerationRulesResult)
+- [__RESTGetAPIChannelInvitesResult](#RESTGetAPIChannelInvitesResult)
+- [__RESTGetAPIChannelMessageReactionUsersResult](#RESTGetAPIChannelMessageReactionUsersResult)
+- [__RESTGetAPIChannelMessageResult](#RESTGetAPIChannelMessageResult)
+- [__RESTGetAPIChannelMessagesResult](#RESTGetAPIChannelMessagesResult)
+- [__RESTGetAPIChannelPinsResult](#RESTGetAPIChannelPinsResult)
+- [__RESTGetAPIChannelResult](#RESTGetAPIChannelResult)
+- [__RESTGetAPIChannelThreadMemberResult](#RESTGetAPIChannelThreadMemberResult)
+- [__RESTGetAPIChannelThreadMembersResult](#RESTGetAPIChannelThreadMembersResult)
+- [__RESTGetAPIChannelThreadsArchivedPrivateResult](#RESTGetAPIChannelThreadsArchivedPrivateResult)
+- [__RESTGetAPIChannelThreadsArchivedPublicResult](#RESTGetAPIChannelThreadsArchivedPublicResult)
+- [__RESTGetAPIChannelWebhooksResult](#RESTGetAPIChannelWebhooksResult)
+- [__RESTGetAPICurrentUserApplicationRoleConnectionResult](#RESTGetAPICurrentUserApplicationRoleConnectionResult)
+- [__RESTGetAPICurrentUserConnectionsResult](#RESTGetAPICurrentUserConnectionsResult)
+- [__RESTGetAPICurrentUserGuildsResult](#RESTGetAPICurrentUserGuildsResult)
+- [__RESTGetAPICurrentUserResult](#RESTGetAPICurrentUserResult)
+- [__RESTGetAPIEntitlementResult](#RESTGetAPIEntitlementResult)
+- [__RESTGetAPIEntitlementsResult](#RESTGetAPIEntitlementsResult)
+- [__RESTGetAPIGatewayBotResult](#RESTGetAPIGatewayBotResult)
+- [__RESTGetAPIGatewayResult](#RESTGetAPIGatewayResult)
+- [__RESTGetAPIGuildApplicationCommandsPermissionsResult](#RESTGetAPIGuildApplicationCommandsPermissionsResult)
+- [__RESTGetAPIGuildBanResult](#RESTGetAPIGuildBanResult)
+- [__RESTGetAPIGuildBansResult](#RESTGetAPIGuildBansResult)
+- [__RESTGetAPIGuildChannelsResult](#RESTGetAPIGuildChannelsResult)
+- [__RESTGetAPIGuildEmojiResult](#RESTGetAPIGuildEmojiResult)
+- [__RESTGetAPIGuildEmojisResult](#RESTGetAPIGuildEmojisResult)
+- [__RESTGetAPIGuildIntegrationsResult](#RESTGetAPIGuildIntegrationsResult)
+- [__RESTGetAPIGuildInvitesResult](#RESTGetAPIGuildInvitesResult)
+- [__RESTGetAPIGuildMemberResult](#RESTGetAPIGuildMemberResult)
+- [__RESTGetAPIGuildMembersResult](#RESTGetAPIGuildMembersResult)
+- [__RESTGetAPIGuildMembersSearchResult](#RESTGetAPIGuildMembersSearchResult)
+- [__RESTGetAPIGuildMemberVerificationResult](#RESTGetAPIGuildMemberVerificationResult)
+- [__RESTGetAPIGuildMessagesSearchResult](#RESTGetAPIGuildMessagesSearchResult)
+- [__RESTGetAPIGuildOnboardingResult](#RESTGetAPIGuildOnboardingResult)
+- [__RESTGetAPIGuildPreviewResult](#RESTGetAPIGuildPreviewResult)
+- [__RESTGetAPIGuildResult](#RESTGetAPIGuildResult)
+- [__RESTGetAPIGuildRoleMemberCountsResult](#RESTGetAPIGuildRoleMemberCountsResult)
+- [__RESTGetAPIGuildRoleResult](#RESTGetAPIGuildRoleResult)
+- [__RESTGetAPIGuildRolesResult](#RESTGetAPIGuildRolesResult)
+- [__RESTGetAPIGuildScheduledEventResult](#RESTGetAPIGuildScheduledEventResult)
+- [__RESTGetAPIGuildScheduledEventsResult](#RESTGetAPIGuildScheduledEventsResult)
+- [__RESTGetAPIGuildScheduledEventUsersResult](#RESTGetAPIGuildScheduledEventUsersResult)
+- [__RESTGetAPIGuildSoundboardSoundResult](#RESTGetAPIGuildSoundboardSoundResult)
+- [__RESTGetAPIGuildStickerResult](#RESTGetAPIGuildStickerResult)
+- [__RESTGetAPIGuildStickersResult](#RESTGetAPIGuildStickersResult)
+- [__RESTGetAPIGuildTemplatesResult](#RESTGetAPIGuildTemplatesResult)
+- [__RESTGetAPIGuildThreadsResult](#RESTGetAPIGuildThreadsResult)
+- [__RESTGetAPIGuildVoiceRegionsResult](#RESTGetAPIGuildVoiceRegionsResult)
+- [__RESTGetAPIGuildVoiceStateCurrentMemberResult](#RESTGetAPIGuildVoiceStateCurrentMemberResult)
+- [__RESTGetAPIGuildVoiceStateUserResult](#RESTGetAPIGuildVoiceStateUserResult)
+- [__RESTGetAPIGuildWebhooksResult](#RESTGetAPIGuildWebhooksResult)
+- [__RESTGetAPIGuildWelcomeScreenResult](#RESTGetAPIGuildWelcomeScreenResult)
+- [__RESTGetAPIGuildWidgetImageResult](#RESTGetAPIGuildWidgetImageResult)
+- [__RESTGetAPIGuildWidgetJSONResult](#RESTGetAPIGuildWidgetJSONResult)
+- [__RESTGetAPIGuildWidgetSettingsResult](#RESTGetAPIGuildWidgetSettingsResult)
+- [__RESTGetAPIInteractionFollowupResult](#RESTGetAPIInteractionFollowupResult)
+- [__RESTGetAPIInteractionOriginalResponseResult](#RESTGetAPIInteractionOriginalResponseResult)
+- [__RESTGetAPIInviteResult](#RESTGetAPIInviteResult)
+- [__RESTGetAPIOAuth2CurrentApplicationResult](#RESTGetAPIOAuth2CurrentApplicationResult)
+- [__RESTGetAPISKUsResult](#RESTGetAPISKUsResult)
+- [__RESTGetAPISKUSubscriptionResult](#RESTGetAPISKUSubscriptionResult)
+- [__RESTGetAPISKUSubscriptionsResult](#RESTGetAPISKUSubscriptionsResult)
+- [__RESTGetAPISoundboardDefaultSoundsResult](#RESTGetAPISoundboardDefaultSoundsResult)
+- [__RESTGetAPIStageInstanceResult](#RESTGetAPIStageInstanceResult)
+- [__RESTGetAPIStickerPack](#RESTGetAPIStickerPack)
+- [__RESTGetAPIStickerPackResult](#RESTGetAPIStickerPackResult)
+- [__RESTGetAPIStickerResult](#RESTGetAPIStickerResult)
+- [__RESTGetAPITemplateResult](#RESTGetAPITemplateResult)
+- [__RESTGetAPIUserResult](#RESTGetAPIUserResult)
+- [__RESTGetAPIVoiceRegionsResult](#RESTGetAPIVoiceRegionsResult)
+- [__RESTGetAPIWebhookResult](#RESTGetAPIWebhookResult)
+- [__RESTGetAPIWebhookWithTokenMessageResult](#RESTGetAPIWebhookWithTokenMessageResult)
+- [__RESTGetAPIWebhookWithTokenResult](#RESTGetAPIWebhookWithTokenResult)
+- [__RESTGetCurrentApplicationResult](#RESTGetCurrentApplicationResult)
+- [__RESTGetCurrentUserGuildMemberResult](#RESTGetCurrentUserGuildMemberResult)
+- [__RESTGetNitroStickerPacksResult](#RESTGetNitroStickerPacksResult)
+- [__RESTOAuth2AuthorizationQueryResult](#RESTOAuth2AuthorizationQueryResult)
+- [__RESTOAuth2ImplicitAuthorizationURLFragmentResult](#RESTOAuth2ImplicitAuthorizationURLFragmentResult)
+- [__RESTOAuth2TokenOptionalClientCredentials](#RESTOAuth2TokenOptionalClientCredentials)
+- [__RESTPatchAPIApplicationCommandJSONBody](#RESTPatchAPIApplicationCommandJSONBody)
+- [__RESTPatchAPIApplicationCommandResult](#RESTPatchAPIApplicationCommandResult)
+- [__RESTPatchAPIApplicationEmojiJSONBody](#RESTPatchAPIApplicationEmojiJSONBody)
+- [__RESTPatchAPIApplicationEmojiResult](#RESTPatchAPIApplicationEmojiResult)
+- [__RESTPatchAPIApplicationGuildCommandJSONBody](#RESTPatchAPIApplicationGuildCommandJSONBody)
+- [__RESTPatchAPIApplicationGuildCommandResult](#RESTPatchAPIApplicationGuildCommandResult)
+- [__RESTPatchAPIAutoModerationRuleJSONBody](#RESTPatchAPIAutoModerationRuleJSONBody)
+- [__RESTPatchAPIAutoModerationRuleResult](#RESTPatchAPIAutoModerationRuleResult)
+- [__RESTPatchAPIChannelMessageFormDataBody](#RESTPatchAPIChannelMessageFormDataBody)
+- [__RESTPatchAPIChannelMessageResult](#RESTPatchAPIChannelMessageResult)
+- [__RESTPatchAPIChannelResult](#RESTPatchAPIChannelResult)
+- [__RESTPatchAPICurrentGuildMemberNicknameResult](#RESTPatchAPICurrentGuildMemberNicknameResult)
+- [__RESTPatchAPICurrentGuildMemberResult](#RESTPatchAPICurrentGuildMemberResult)
+- [__RESTPatchAPICurrentUserResult](#RESTPatchAPICurrentUserResult)
+- [__RESTPatchAPIGuildChannelPositionsJSONBody](#RESTPatchAPIGuildChannelPositionsJSONBody)
+- [__RESTPatchAPIGuildChannelPositionsResult](#RESTPatchAPIGuildChannelPositionsResult)
+- [__RESTPatchAPIGuildEmojiResult](#RESTPatchAPIGuildEmojiResult)
+- [__RESTPatchAPIGuildMemberResult](#RESTPatchAPIGuildMemberResult)
+- [__RESTPatchAPIGuildMemberVerificationResult](#RESTPatchAPIGuildMemberVerificationResult)
+- [__RESTPatchAPIGuildResult](#RESTPatchAPIGuildResult)
+- [__RESTPatchAPIGuildRolePositionsJSONBody](#RESTPatchAPIGuildRolePositionsJSONBody)
+- [__RESTPatchAPIGuildRolePositionsResult](#RESTPatchAPIGuildRolePositionsResult)
+- [__RESTPatchAPIGuildRoleResult](#RESTPatchAPIGuildRoleResult)
+- [__RESTPatchAPIGuildScheduledEventResult](#RESTPatchAPIGuildScheduledEventResult)
+- [__RESTPatchAPIGuildSoundboardSoundResult](#RESTPatchAPIGuildSoundboardSoundResult)
+- [__RESTPatchAPIGuildStickerResult](#RESTPatchAPIGuildStickerResult)
+- [__RESTPatchAPIGuildTemplateJSONBody](#RESTPatchAPIGuildTemplateJSONBody)
+- [__RESTPatchAPIGuildTemplateResult](#RESTPatchAPIGuildTemplateResult)
+- [__RESTPatchAPIGuildVoiceStateCurrentMemberResult](#RESTPatchAPIGuildVoiceStateCurrentMemberResult)
+- [__RESTPatchAPIGuildVoiceStateUserResult](#RESTPatchAPIGuildVoiceStateUserResult)
+- [__RESTPatchAPIGuildWelcomeScreenJSONBody](#RESTPatchAPIGuildWelcomeScreenJSONBody)
+- [__RESTPatchAPIGuildWelcomeScreenResult](#RESTPatchAPIGuildWelcomeScreenResult)
+- [__RESTPatchAPIGuildWidgetSettingsJSONBody](#RESTPatchAPIGuildWidgetSettingsJSONBody)
+- [__RESTPatchAPIGuildWidgetSettingsResult](#RESTPatchAPIGuildWidgetSettingsResult)
+- [__RESTPatchAPIInteractionFollowupFormDataBody](#RESTPatchAPIInteractionFollowupFormDataBody)
+- [__RESTPatchAPIInteractionFollowupJSONBody](#RESTPatchAPIInteractionFollowupJSONBody)
+- [__RESTPatchAPIInteractionFollowupResult](#RESTPatchAPIInteractionFollowupResult)
+- [__RESTPatchAPIInteractionOriginalResponseFormDataBody](#RESTPatchAPIInteractionOriginalResponseFormDataBody)
+- [__RESTPatchAPIInteractionOriginalResponseJSONBody](#RESTPatchAPIInteractionOriginalResponseJSONBody)
+- [__RESTPatchAPIInteractionOriginalResponseResult](#RESTPatchAPIInteractionOriginalResponseResult)
+- [__RESTPatchAPIStageInstanceResult](#RESTPatchAPIStageInstanceResult)
+- [__RESTPatchAPIWebhookResult](#RESTPatchAPIWebhookResult)
+- [__RESTPatchAPIWebhookWithTokenJSONBody](#RESTPatchAPIWebhookWithTokenJSONBody)
+- [__RESTPatchAPIWebhookWithTokenMessageFormDataBody](#RESTPatchAPIWebhookWithTokenMessageFormDataBody)
+- [__RESTPatchAPIWebhookWithTokenMessageJSONBody](#RESTPatchAPIWebhookWithTokenMessageJSONBody)
+- [__RESTPatchAPIWebhookWithTokenMessageQuery](#RESTPatchAPIWebhookWithTokenMessageQuery)
+- [__RESTPatchAPIWebhookWithTokenMessageResult](#RESTPatchAPIWebhookWithTokenMessageResult)
+- [__RESTPatchAPIWebhookWithTokenResult](#RESTPatchAPIWebhookWithTokenResult)
+- [__RESTPatchCurrentApplicationJSONBody](#RESTPatchCurrentApplicationJSONBody)
+- [__RESTPatchCurrentApplicationResult](#RESTPatchCurrentApplicationResult)
+- [__RESTPostAPIApplicationCommandsJSONBody](#RESTPostAPIApplicationCommandsJSONBody)
+- [__RESTPostAPIApplicationCommandsResult](#RESTPostAPIApplicationCommandsResult)
+- [__RESTPostAPIApplicationEmojiJSONBody](#RESTPostAPIApplicationEmojiJSONBody)
+- [__RESTPostAPIApplicationEmojiResult](#RESTPostAPIApplicationEmojiResult)
+- [__RESTPostAPIApplicationGuildCommandsJSONBody](#RESTPostAPIApplicationGuildCommandsJSONBody)
+- [__RESTPostAPIApplicationGuildCommandsResult](#RESTPostAPIApplicationGuildCommandsResult)
+- [__RESTPostAPIAutoModerationRuleResult](#RESTPostAPIAutoModerationRuleResult)
+- [__RESTPostAPIChannelFollowersResult](#RESTPostAPIChannelFollowersResult)
+- [__RESTPostAPIChannelInviteResult](#RESTPostAPIChannelInviteResult)
+- [__RESTPostAPIChannelMessageCrosspostResult](#RESTPostAPIChannelMessageCrosspostResult)
+- [__RESTPostAPIChannelMessageFormDataBody](#RESTPostAPIChannelMessageFormDataBody)
+- [__RESTPostAPIChannelMessageResult](#RESTPostAPIChannelMessageResult)
+- [__RESTPostAPIChannelMessagesBulkDeleteResult](#RESTPostAPIChannelMessagesBulkDeleteResult)
+- [__RESTPostAPIChannelMessagesThreadsResult](#RESTPostAPIChannelMessagesThreadsResult)
+- [__RESTPostAPIChannelThreadsResult](#RESTPostAPIChannelThreadsResult)
+- [__RESTPostAPIChannelTypingResult](#RESTPostAPIChannelTypingResult)
+- [__RESTPostAPIChannelWebhookResult](#RESTPostAPIChannelWebhookResult)
+- [__RESTPostAPICurrentUserCreateDMChannelResult](#RESTPostAPICurrentUserCreateDMChannelResult)
+- [__RESTPostAPIEntitlementBody](#RESTPostAPIEntitlementBody)
+- [__RESTPostAPIEntitlementConsumeResult](#RESTPostAPIEntitlementConsumeResult)
+- [__RESTPostAPIEntitlementResult](#RESTPostAPIEntitlementResult)
+- [__RESTPostAPIGuildChannelJSONBody](#RESTPostAPIGuildChannelJSONBody)
+- [__RESTPostAPIGuildChannelResult](#RESTPostAPIGuildChannelResult)
+- [__RESTPostAPIGuildEmojiResult](#RESTPostAPIGuildEmojiResult)
+- [__RESTPostAPIGuildForumThreadsFormDataBody](#RESTPostAPIGuildForumThreadsFormDataBody)
+- [__RESTPostAPIGuildForumThreadsJSONBody](#RESTPostAPIGuildForumThreadsJSONBody)
+- [__RESTPostAPIGuildRoleResult](#RESTPostAPIGuildRoleResult)
+- [__RESTPostAPIGuildScheduledEventResult](#RESTPostAPIGuildScheduledEventResult)
+- [__RESTPostAPIGuildsMFAResult](#RESTPostAPIGuildsMFAResult)
+- [__RESTPostAPIGuildSoundboardSoundResult](#RESTPostAPIGuildSoundboardSoundResult)
+- [__RESTPostAPIGuildsResult](#RESTPostAPIGuildsResult)
+- [__RESTPostAPIGuildStickerResult](#RESTPostAPIGuildStickerResult)
+- [__RESTPostAPIGuildTemplatesResult](#RESTPostAPIGuildTemplatesResult)
+- [__RESTPostAPIInteractionCallbackFormDataBody](#RESTPostAPIInteractionCallbackFormDataBody)
+- [__RESTPostAPIInteractionCallbackJSONBody](#RESTPostAPIInteractionCallbackJSONBody)
+- [__RESTPostAPIInteractionCallbackResult](#RESTPostAPIInteractionCallbackResult)
+- [__RESTPostAPIInteractionFollowupFormDataBody](#RESTPostAPIInteractionFollowupFormDataBody)
+- [__RESTPostAPIInteractionFollowupJSONBody](#RESTPostAPIInteractionFollowupJSONBody)
+- [__RESTPostAPIInteractionFollowupResult](#RESTPostAPIInteractionFollowupResult)
+- [__RESTPostAPIPollExpireResult](#RESTPostAPIPollExpireResult)
+- [__RESTPostAPISendSoundboardSoundResult](#RESTPostAPISendSoundboardSoundResult)
+- [__RESTPostAPIStageInstanceResult](#RESTPostAPIStageInstanceResult)
+- [__RESTPostAPITemplateCreateGuildResult](#RESTPostAPITemplateCreateGuildResult)
+- [__RESTPostAPIWebhookWithTokenFormDataBody](#RESTPostAPIWebhookWithTokenFormDataBody)
+- [__RESTPostAPIWebhookWithTokenGitHubQuery](#RESTPostAPIWebhookWithTokenGitHubQuery)
+- [__RESTPostAPIWebhookWithTokenGitHubResult](#RESTPostAPIWebhookWithTokenGitHubResult)
+- [__RESTPostAPIWebhookWithTokenGitHubWaitResult](#RESTPostAPIWebhookWithTokenGitHubWaitResult)
+- [__RESTPostAPIWebhookWithTokenResult](#RESTPostAPIWebhookWithTokenResult)
+- [__RESTPostAPIWebhookWithTokenSlackQuery](#RESTPostAPIWebhookWithTokenSlackQuery)
+- [__RESTPostAPIWebhookWithTokenSlackResult](#RESTPostAPIWebhookWithTokenSlackResult)
+- [__RESTPostAPIWebhookWithTokenSlackWaitResult](#RESTPostAPIWebhookWithTokenSlackWaitResult)
+- [__RESTPostAPIWebhookWithTokenWaitResult](#RESTPostAPIWebhookWithTokenWaitResult)
+- [__RESTPostOAuth2AccessTokenURLEncodedData](#RESTPostOAuth2AccessTokenURLEncodedData)
+- [__RESTPostOAuth2AccessTokenWithBotAndGuildsAndWebhookIncomingScopeResult](#RESTPostOAuth2AccessTokenWithBotAndGuildsAndWebhookIncomingScopeResult)
+- [__RESTPostOAuth2ClientCredentialsResult](#RESTPostOAuth2ClientCredentialsResult)
+- [__RESTPostOAuth2RefreshTokenResult](#RESTPostOAuth2RefreshTokenResult)
+- [__RESTPostOAuth2RefreshTokenURLEncodedData](#RESTPostOAuth2RefreshTokenURLEncodedData)
+- [__RESTPutAPIApplicationCommandPermissionsResult](#RESTPutAPIApplicationCommandPermissionsResult)
+- [__RESTPutAPIApplicationCommandsJSONBody](#RESTPutAPIApplicationCommandsJSONBody)
+- [__RESTPutAPIApplicationCommandsResult](#RESTPutAPIApplicationCommandsResult)
+- [__RESTPutAPIApplicationGuildCommandsJSONBody](#RESTPutAPIApplicationGuildCommandsJSONBody)
+- [__RESTPutAPIApplicationGuildCommandsResult](#RESTPutAPIApplicationGuildCommandsResult)
+- [__RESTPutAPIApplicationRoleConnectionMetadataJSONBody](#RESTPutAPIApplicationRoleConnectionMetadataJSONBody)
+- [__RESTPutAPIApplicationRoleConnectionMetadataResult](#RESTPutAPIApplicationRoleConnectionMetadataResult)
+- [__RESTPutAPIChannelMessageReactionResult](#RESTPutAPIChannelMessageReactionResult)
+- [__RESTPutAPIChannelMessagesPinResult](#RESTPutAPIChannelMessagesPinResult)
+- [__RESTPutAPIChannelPermissionResult](#RESTPutAPIChannelPermissionResult)
+- [__RESTPutAPIChannelPinResult](#RESTPutAPIChannelPinResult)
+- [__RESTPutAPIChannelRecipientResult](#RESTPutAPIChannelRecipientResult)
+- [__RESTPutAPIChannelThreadMembersResult](#RESTPutAPIChannelThreadMembersResult)
+- [__RESTPutAPICurrentUserApplicationRoleConnectionResult](#RESTPutAPICurrentUserApplicationRoleConnectionResult)
+- [__RESTPutAPIGuildApplicationCommandsPermissionsJSONBody](#RESTPutAPIGuildApplicationCommandsPermissionsJSONBody)
+- [__RESTPutAPIGuildApplicationCommandsPermissionsResult](#RESTPutAPIGuildApplicationCommandsPermissionsResult)
+- [__RESTPutAPIGuildBanResult](#RESTPutAPIGuildBanResult)
+- [__RESTPutAPIGuildIncidentActionsResult](#RESTPutAPIGuildIncidentActionsResult)
+- [__RESTPutAPIGuildMemberResult](#RESTPutAPIGuildMemberResult)
+- [__RESTPutAPIGuildMemberRoleResult](#RESTPutAPIGuildMemberRoleResult)
+- [__RESTPutAPIGuildOnboardingJSONBody](#RESTPutAPIGuildOnboardingJSONBody)
+- [__RESTPutAPIGuildOnboardingResult](#RESTPutAPIGuildOnboardingResult)
+- [__RESTPutAPIGuildTemplateSyncResult](#RESTPutAPIGuildTemplateSyncResult)
+- [__RoleIconFormat](#RoleIconFormat)
+- [__RPCCertifiedDevice](#RPCCertifiedDevice)
+- [__RPCCommandsResult](#RPCCommandsResult)
+- [__RPCCommandSubscribePayload](#RPCCommandSubscribePayload)
+- [__RPCCommandUnsubscribePayload](#RPCCommandUnsubscribePayload)
+- [__RPCCreateChannelInviteResultData](#RPCCreateChannelInviteResultData)
+- [__RPCEventsDispatch](#RPCEventsDispatch)
+- [__RPCGetRelationshipsResultData](#RPCGetRelationshipsResultData)
+- [__RPCGetSelectedVoiceChannelResultData](#RPCGetSelectedVoiceChannelResultData)
+- [__RPCGetSkusResultData](#RPCGetSkusResultData)
+- [__RPCGetUserResultData](#RPCGetUserResultData)
+- [__RPCMessage](#RPCMessage)
+- [__RPCMessagePayload](#RPCMessagePayload)
+- [__RPCSelectTextChannelResultData](#RPCSelectTextChannelResultData)
+- [__RPCSelectVoiceChannelResultData](#RPCSelectVoiceChannelResultData)
+- [__RPCSetCertifiedDevicesResultData](#RPCSetCertifiedDevicesResultData)
+- [__RPCSetUserVoiceSettings2Args](#RPCSetUserVoiceSettings2Args)
+- [__RPCSetUserVoiceSettings2ResultData](#RPCSetUserVoiceSettings2ResultData)
+- [__RPCSetUserVoiceSettingsResultData](#RPCSetUserVoiceSettingsResultData)
+- [__RPCSetVoiceSettings2Args](#RPCSetVoiceSettings2Args)
+- [__RPCSetVoiceSettings2ResultData](#RPCSetVoiceSettings2ResultData)
+- [__RPCSetVoiceSettingsArgs](#RPCSetVoiceSettingsArgs)
+- [__RPCSetVoiceSettingsResultData](#RPCSetVoiceSettingsResultData)
+- [__RPCSubscribeActivityInviteArgs](#RPCSubscribeActivityInviteArgs)
+- [__RPCSubscribeActivityJoinArgs](#RPCSubscribeActivityJoinArgs)
+- [__RPCSubscribeActivityJoinRequestArgs](#RPCSubscribeActivityJoinRequestArgs)
+- [__RPCSubscribeActivitySpectateArgs](#RPCSubscribeActivitySpectateArgs)
+- [__RPCSubscribeArgs](#RPCSubscribeArgs)
+- [__RPCSubscribeChannelCreateArgs](#RPCSubscribeChannelCreateArgs)
+- [__RPCSubscribeCurrentUserUpdateArgs](#RPCSubscribeCurrentUserUpdateArgs)
+- [__RPCSubscribeEntitlementCreateArgs](#RPCSubscribeEntitlementCreateArgs)
+- [__RPCSubscribeEntitlementDeleteArgs](#RPCSubscribeEntitlementDeleteArgs)
+- [__RPCSubscribeGameJoinArgs](#RPCSubscribeGameJoinArgs)
+- [__RPCSubscribeGameSpectateArgs](#RPCSubscribeGameSpectateArgs)
+- [__RPCSubscribeGuildCreateArgs](#RPCSubscribeGuildCreateArgs)
+- [__RPCSubscribeNotificationCreateArgs](#RPCSubscribeNotificationCreateArgs)
+- [__RPCSubscribeOverlayArgs](#RPCSubscribeOverlayArgs)
+- [__RPCSubscribeOverlayUpdateArgs](#RPCSubscribeOverlayUpdateArgs)
+- [__RPCSubscribeRelationshipUpdateArgs](#RPCSubscribeRelationshipUpdateArgs)
+- [__RPCSubscribeVoiceChannelSelectArgs](#RPCSubscribeVoiceChannelSelectArgs)
+- [__RPCSubscribeVoiceConnectionStatusArgs](#RPCSubscribeVoiceConnectionStatusArgs)
+- [__RPCSubscribeVoiceSettingsUpdate2Args](#RPCSubscribeVoiceSettingsUpdate2Args)
+- [__RPCSubscribeVoiceSettingsUpdateArgs](#RPCSubscribeVoiceSettingsUpdateArgs)
+- [__RPCUnsubscribeArgs](#RPCUnsubscribeArgs)
+- [__RPCVoiceSettingsUpdateDispatchData](#RPCVoiceSettingsUpdateDispatchData)
+- [__StickerFormat](#StickerFormat)
+- [__StickerPackBannerFormat](#StickerPackBannerFormat)
+- [__StorePageAssetFormat](#StorePageAssetFormat)
+- [__TeamIconFormat](#TeamIconFormat)
+- [__TextChannelType](#TextChannelType)
+- [__ThreadChannelType](#ThreadChannelType)
+- [__UserAvatarFormat](#UserAvatarFormat)
+- [__UserBannerFormat](#UserBannerFormat)
+- [__APIApplicationCommandPermissionsConstant](#APIApplicationCommandPermissionsConstant)
+- [__APIVersion](#APIVersion)
+- [__CannotSendMessagesToThisUserErrorCodes](#CannotSendMessagesToThisUserErrorCodes)
+- [__CDNRoutes](#CDNRoutes)
+- [__GatewayVersion](#GatewayVersion)
+- [__OAuth2Routes](#OAuth2Routes)
+- [__PermissionFlagsBits](#PermissionFlagsBits)
+- [__RouteBases](#RouteBases)
+- [__Routes](#Routes)
+- [__RPCVersion](#RPCVersion)
+- [__StickerPackApplicationId](#StickerPackApplicationId)
+- [__urlSafeCharacters](#urlSafeCharacters)
+
+Donate
+
+- GitHub Sponsors
+- Ko-fi
+- Patreon
+
+Our Platforms
+
+- Discord Server
+- GitHub Organization
+
+
+
+Copyright  2021 - 2026 The discord.js Community and its contributors.

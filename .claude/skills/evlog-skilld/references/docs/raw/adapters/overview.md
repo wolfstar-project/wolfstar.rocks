@@ -104,6 +104,12 @@ Send logs to Better Stack for log management and alerting.
 
 </card>
 
+<card icon="i-simple-icons-datadog" title="Datadog" to="/adapters/datadog">
+
+Send logs to Datadog Logs via the native HTTP intake API.
+
+</card>
+
 <card icon="i-lucide-hard-drive" title="File System" to="/adapters/fs">
 
 Write logs to local NDJSON files for debugging and AI agent integration.
@@ -116,9 +122,9 @@ Build your own adapter for any destination.
 
 </card>
 
-<card icon="i-lucide-globe" title="Browser" to="/adapters/browser">
+<card icon="i-lucide-globe" title="HTTP" to="/adapters/http">
 
-Send browser logs to your server without framework coupling.
+Send client logs to your server over HTTP without framework coupling.
 
 </card>
 
@@ -166,7 +172,7 @@ See the full bun-script example for a realistic batch processing script.
 
 Send logs to multiple services simultaneously by composing drains:
 
-```typescript
+```typescript [src/index.ts]
 import { createAxiomDrain } from 'evlog/axiom'
 import { createOTLPDrain } from 'evlog/otlp'
 
@@ -336,6 +342,10 @@ SENTRY_DSN=https://key@o0.ingest.sentry.io/123
 
 # Better Stack (NUXT_BETTER_STACK_* or BETTER_STACK_*)
 BETTER_STACK_SOURCE_TOKEN=your-source-token
+
+# Datadog (NUXT_DATADOG_* or DATADOG_* or DD_*)
+DD_API_KEY=your-api-key
+DD_SITE=datadoghq.eu
 ```
 
 Adapters auto-read from these variables, so just call `createXDrain()` with no arguments.
@@ -350,4 +360,5 @@ Adapters auto-read from these variables, so just call `createXDrain()` with no a
 - [PostHog](/adapters/posthog)
 - [Sentry](/adapters/sentry)
 - [Better Stack](/adapters/better-stack)
+- [Datadog](/adapters/datadog)
 - [File System](/adapters/fs)

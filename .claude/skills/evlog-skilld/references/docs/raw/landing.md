@@ -82,7 +82,7 @@ Batched writes, automatic retries with backoff, and fan-out to multiple destinat
 </template>
 </features-feature-adapters>
 
-<features-feature-client-drain link="/core-concepts/client-logging" link-label="Client logging guide">
+<features-feature-client-drain link="/logging/client-logging" link-label="Client logging guide">
 <template v-slot:headline="">
 
 Client Logs
@@ -122,7 +122,7 @@ Two-tier filtering: head sampling drops noise by level, tail sampling rescues cr
 </template>
 </features-feature-sampling>
 
-<features-feature-ai-sdk link="/core-concepts/ai-sdk" link-label="AI SDK integration">
+<features-feature-ai-sdk link="/logging/ai-sdk" link-label="AI SDK integration">
 <template v-slot:headline="">
 
 AI Observability
@@ -139,12 +139,12 @@ Make AI calls <br />
 
 <template v-slot:description="">
 
-Your AI endpoints are black boxes. You don't know how many tokens each request burns, which tools the model called, or how fast the stream was. Wrap your model with one line and every call is captured into the wide event. Cost tracking, tool visibility, streaming performance, cache hits, reasoning tokens.
+Your AI endpoints are black boxes. You don't know how many tokens each request burns, which tools the model called, or how fast the stream was. Wrap your model with one line and every call is captured into the wide event. Cost estimation, tool execution timing, streaming performance, cache hits, reasoning tokens, and multi-step agent breakdowns.
 
 </template>
 </features-feature-ai-sdk>
 
-<features-feature-performance link="/core-concepts/performance" link-label="Full benchmark results">
+<features-feature-performance link="/core-concepts/performance" link-label="Benchmark results">
 <template v-slot:headline="">
 
 Performance
@@ -161,7 +161,7 @@ Add logging, <br />
 
 <template v-slot:description="">
 
-Zero dependencies, 5.2 kB gzip, ~3µs per request. Benchmarked against pino, consola, and winston — 8x faster than pino in wide event scenarios while producing richer, more useful output.
+Zero dependencies, 5.2 kB gzip, ~3µs per request. Benchmarked against pino, consola, and winston. 8x faster than pino in wide event scenarios while producing richer, more useful output.
 
 </template>
 </features-feature-performance>
@@ -217,6 +217,7 @@ export default defineEventHandler(async (event) => {
 
 ```ts [app/api/checkout/route.ts]
 import { withEvlog, useLogger } from '@/lib/evlog'
+import { createError } from 'evlog'
 
 export const POST = withEvlog(async (req) => {
   const log = useLogger()
@@ -279,7 +280,7 @@ export const POST: RequestHandler = async ({ request }) => {
 <template v-slot:nitro="">
 
 ```ts [routes/api/checkout.post.ts]
-import { defineHandler } from 'nitro/h3'
+import { defineHandler, readBody } from 'nitro/h3'
 import { useLogger, createError } from 'evlog/nitro/v3'
 
 export default defineHandler(async (event) => {
@@ -383,6 +384,7 @@ export async function action({ request, context }: Route.ActionArgs) {
 ```ts [app.module.ts]
 import { Module } from '@nestjs/common'
 import { EvlogModule } from 'evlog/nestjs'
+import { createAxiomDrain } from 'evlog/axiom'
 
 @Module({
   imports: [
@@ -392,10 +394,6 @@ import { EvlogModule } from 'evlog/nestjs'
   ],
 })
 export class AppModule {}
-
-// In any service or controller:
-const log = useLogger()
-log.set({ cart: { items: cart.items.length, total: cart.total } })
 ```
 
 </template>
@@ -404,6 +402,7 @@ log.set({ cart: { items: cart.items.length, total: cart.total } })
 
 ```ts [src/index.ts]
 import { evlog, useLogger } from 'evlog/express'
+import { createAxiomDrain } from 'evlog/axiom'
 
 const app = express()
 app.use(evlog({ drain: createAxiomDrain() }))
@@ -428,6 +427,7 @@ app.post('/checkout', async (req, res) => {
 
 ```ts [src/index.ts]
 import { evlog, type EvlogVariables } from 'evlog/hono'
+import { createAxiomDrain } from 'evlog/axiom'
 
 const app = new Hono<EvlogVariables>()
 app.use(evlog({ drain: createAxiomDrain() }))
@@ -451,7 +451,8 @@ app.post('/checkout', async (c) => {
 <template v-slot:fastify="">
 
 ```ts [src/index.ts]
-import { evlog, useLogger } from 'evlog/fastify'
+import { evlog } from 'evlog/fastify'
+import { createAxiomDrain } from 'evlog/axiom'
 
 const app = Fastify({ logger: false })
 await app.register(evlog, { drain: createAxiomDrain() })
@@ -474,12 +475,13 @@ app.post('/checkout', async (request) => {
 <template v-slot:elysia="">
 
 ```ts [src/index.ts]
-import { evlog, useLogger } from 'evlog/elysia'
+import { evlog } from 'evlog/elysia'
+import { createAxiomDrain } from 'evlog/axiom'
 
 const app = new Elysia()
   .use(evlog({ drain: createAxiomDrain() }))
-  .post('/checkout', async ({ log }) => {
-    const { cartId } = await req.body
+  .post('/checkout', async ({ log, body }) => {
+    const { cartId } = body
 
     const cart = await db.findCart(cartId)
     log.set({ cart: { items: cart.items.length, total: cart.total } })
@@ -496,16 +498,13 @@ const app = new Elysia()
 <template v-slot:cloudflare="">
 
 ```ts [src/worker.ts]
-import { initLogger, createRequestLogger } from 'evlog'
+import { initWorkersLogger, createWorkersLogger } from 'evlog/workers'
 
-initLogger({ service: 'checkout-worker' })
+initWorkersLogger({ env: { service: 'checkout-worker' } })
 
 export default {
   async fetch(request, env) {
-    const log = createRequestLogger({
-      method: request.method,
-      path: new URL(request.url).pathname,
-    })
+    const log = createWorkersLogger(request)
 
     const { cartId } = await request.json()
     const cart = await env.DB.findCart(cartId)
@@ -522,11 +521,11 @@ export default {
 <template v-slot:bun="">
 
 ```ts [scripts/migrate-users.ts]
-import { initLogger, createRequestLogger } from 'evlog'
+import { initLogger, createLogger } from 'evlog'
 
-initLogger({ service: 'migrate' })
+initLogger({ env: { service: 'migrate' } })
 
-const log = createRequestLogger({ task: 'user-migration' })
+const log = createLogger({ task: 'user-migration' })
 
 const users = await db.query('SELECT * FROM legacy_users')
 log.set({ found: users.length })

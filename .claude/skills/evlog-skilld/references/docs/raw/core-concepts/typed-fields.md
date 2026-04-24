@@ -37,7 +37,7 @@ TypeScript catches typos and unknown fields at compile time, before they reach p
 
 evlog sets some fields internally (`status`, `service`). These are always accepted regardless of your type, through the `InternalFields` type:
 
-```typescript
+```typescript [server/api/checkout.post.ts]
 log.set({ status: 200 })    // OK - internal field
 log.set({ service: 'api' }) // OK - internal field
 ```
@@ -48,7 +48,7 @@ You don't need to include `status` or `service` in your interface.
 
 Without a generic, `useLogger` accepts any fields as usual:
 
-```typescript
+```typescript [server/api/example.ts]
 const log = useLogger(event)
 log.set({ anything: true, nested: { deep: 'value' } }) // OK
 ```
@@ -63,7 +63,7 @@ When using typed fields with `useLogger<T>`, you **must** use an explicit import
 
 </callout>
 
-```typescript
+```typescript [server/api/checkout.post.ts]
 // Works - explicit import preserves type checking
 import { useLogger } from 'evlog'
 const log = useLogger<MyFields>(event)
@@ -146,7 +146,7 @@ export default defineEventHandler(async (event) => {
 
 Include only the fields your routes actually set. The interface doesn't need to mirror your entire data model:
 
-```typescript
+```typescript [server/types/evlog.ts]
 // Too broad - most routes won't set all these
 interface EverythingFields {
   user: FullUserProfile
@@ -162,9 +162,15 @@ interface CheckoutFields {
 }
 ```
 
+## Next Steps
+
+- [Wide Events](/logging/wide-events): Design effective wide events with context layering
+- [Best Practices](/core-concepts/best-practices): Security guidelines for preventing sensitive data leakage
+- [Configuration](/core-concepts/configuration): All `initLogger` and middleware options
+
 
 
 ---
 
-- [Wide Events](/core-concepts/wide-events)
+- [Wide Events](/logging/wide-events)
 - [Best Practices](/core-concepts/best-practices)

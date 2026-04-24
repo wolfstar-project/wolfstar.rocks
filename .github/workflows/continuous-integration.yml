@@ -115,14 +115,14 @@ jobs:
           VALIDATE_HTML: true
           NODE_OPTIONS: --max-old-space-size=4096
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
-          NUXT_OG_IMAGE_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: 🖥️ Test project (browser)
         run: vp run test:browser:prebuilt
         env:
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
-          NUXT_OG_IMAGE_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
 
   benchmark:
     name: ⚡ Benchmarks
@@ -164,7 +164,7 @@ jobs:
         run: vp run build:test
         env:
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
-          NUXT_OG_IMAGE_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
@@ -172,7 +172,7 @@ jobs:
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
-          NUXT_OG_IMAGE_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
   knip:

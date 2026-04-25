@@ -70,7 +70,7 @@ export default defineWrappedResponseHandler(
 		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
 		coerceBigIntFields(settingsData);
 
-		const beforeSettings = serializeSettings(trx.settings);
+		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<string, unknown>;
 		await trx.write(settingsData).submit();
 		const afterSettings = serializeSettings(trx.settings);
 
@@ -79,7 +79,7 @@ export default defineWrappedResponseHandler(
 				actor: { type: "user", id: member.user.id, displayName: member.user.username },
 				target: { type: "guild", id: guild.id },
 				outcome: "success",
-				changes: auditDiff(beforeSettings, afterSettings),
+				changes: auditDiff(beforeSettings, JSON.parse(afterSettings) as Record<string, unknown>),
 			}),
 		);
 

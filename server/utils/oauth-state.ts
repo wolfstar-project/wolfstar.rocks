@@ -122,6 +122,12 @@ export async function createOAuthState(
  * @param state - The base64url-encoded state string
  * @param expectedNonce - The nonce from the cookie (CSRF protection)
  * @param redirectUrl - The redirect URL from the cookie (must match HMAC binding)
+ * @returns `{ valid: true }` on success, or `{ valid: false; reason }` on failure where `reason` is one of:
+ *   - `"decode-failed"` — state could not be base64url-decoded or JSON-parsed
+ *   - `"missing-fields"` — parsed payload is missing required fields (`nonce`, `ts`, `sig`)
+ *   - `"nonce-mismatch"` — nonce in payload does not match the expected cookie nonce
+ *   - `"expired"` — timestamp is older than 5 minutes or more than 30 s in the future
+ *   - `"bad-hmac"` — HMAC-SHA256 signature verification failed
  */
 export type OAuthStateVerifyResult =
 	| { valid: true }

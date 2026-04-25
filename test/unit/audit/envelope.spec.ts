@@ -82,7 +82,9 @@ describe("hashEnvelope", () => {
 			timestamp: "2026-01-01T00:00:00.000Z",
 			prevHash: null,
 		};
-		expect(hashEnvelope(minimal)).toMatchInlineSnapshot(`"${hashEnvelope(minimal)}"`);
+		expect(hashEnvelope(minimal)).toMatchInlineSnapshot(
+			`"ec758c8401f8507d34eb537142c9479790f184d226737a23fd691f62bd74e2d0"`,
+		);
 	});
 
 	it("different prevHash produces different hash", () => {

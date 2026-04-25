@@ -68,7 +68,6 @@ export function createPostgresAuditDrain(): DrainFn {
 						try {
 							await tx.auditEvent.create({
 								data: {
-									id: hash,
 									hash,
 									prevHash: head.hash,
 									action,

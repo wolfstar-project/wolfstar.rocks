@@ -53,7 +53,6 @@
 		"test:unit": "vp test --project unit",
 		"test:bench": "vp test bench",
 		"start:playwright:webserver": "NODE_ENV=test vp run preview --port 5678",
-		"audit:verify": "tsx scripts/audit-verify.ts",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"update:interactive": "taze"
 	},

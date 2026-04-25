@@ -221,29 +221,31 @@ model User {
 }
 
 model AuditEvent {
-  id         String   @id
   action     String
-  actorType  String
-  actorId    String
-  actorName  String?
-  targetType String?
-  targetId   String?
+  actorType  String   @map("actor_type")
+  actorId    String   @map("actor_id")
+  actorName  String?  @map("actor_name")
+  targetType String?  @map("target_type")
+  targetId   String?  @map("target_id")
   outcome    String
-  tenantId   String?
+  tenantId   String?  @map("tenant_id")
   reason     String?  @db.VarChar(500)
   timestamp  DateTime
   changes    Json?
   context    Json?
-  prevHash   String?
-  hash       String   @unique
+  prevHash   String?  @map("prev_hash")
+  hash       String   @id
 
   @@index([action, timestamp])
   @@index([actorId, timestamp])
   @@index([tenantId, timestamp])
+  @@map("audit_event")
 }
 
 model AuditChainHead {
   id        String   @id @default("default")
   hash      String?
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("audit_chain_head")
 }

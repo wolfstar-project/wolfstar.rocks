@@ -489,6 +489,10 @@ export default defineConfig({
 						"~~": `${rootDir}`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
+						// Stub for the Prisma-generated client (not checked in; generated at build time).
+						// vi.mock() in each test overrides the actual values — this stub only satisfies
+						// Vite's module resolution so the test file can be loaded.
+						"#server/database/generated/client": `${rootDir}/test/__stubs__/prisma-generated-client`,
 					},
 				},
 				test: {

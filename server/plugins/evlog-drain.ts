@@ -25,4 +25,5 @@ export default defineNitroPlugin((nitroApp) => {
 			)
 		: auditOnly(createPostgresAuditDrain(), { await: true });
 	nitroApp.hooks.hook("evlog:drain", auditDrain);
+	nitroApp.hooks.hook("close", () => (auditDrain as { flush?: () => Promise<void> }).flush?.());
 });

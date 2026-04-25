@@ -126,7 +126,7 @@ describe("verifyOAuthState", () => {
 		if (!verifyResult.valid) expect(verifyResult.reason).toBe("nonce-mismatch");
 	});
 
-	it("should return null for a tampered signature", async () => {
+	it("should return { valid: false, reason: 'bad-hmac' } for a tampered signature", async () => {
 		const now = new Date("2024-01-01T00:00:00.000Z");
 		vi.setSystemTime(now);
 

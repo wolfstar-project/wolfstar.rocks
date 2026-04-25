@@ -29,16 +29,16 @@ describe("audit action registry", () => {
 	}
 
 	it("AuditActionName type covers all registered actions", () => {
-		// Type-level check: if the union is incomplete, TypeScript would flag the assertion below
-		const names: AuditActionName[] = [
-			"guild.settings.update",
-			"guild.settings.access-denied",
-			"user.login",
-			"user.logout",
-			"session.refresh",
-			"oauth.state.invalid",
-		];
-		expect(names).toHaveLength(6);
+		// Exhaustiveness: every member of AuditActionName must appear here, or TS errors.
+		const cover: Record<AuditActionName, true> = {
+			"guild.settings.update": true,
+			"guild.settings.access-denied": true,
+			"user.login": true,
+			"user.logout": true,
+			"session.refresh": true,
+			"oauth.state.invalid": true,
+		};
+		expect(Object.keys(cover)).toHaveLength(6);
 	});
 
 	it("creator returns AuditInput with actor preserved", () => {

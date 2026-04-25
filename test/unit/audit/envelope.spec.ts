@@ -92,4 +92,17 @@ describe("hashEnvelope", () => {
 		const b = { ...FIXTURE_ENVELOPE, prevHash: "abc123" };
 		expect(hashEnvelope(a)).not.toBe(hashEnvelope(b));
 	});
+
+	it("nested array values are preserved and not sorted", () => {
+		const env: AuditEnvelope = {
+			action: "guild.settings.update",
+			outcome: "success",
+			actor: { type: "user", id: "1" },
+			timestamp: "2026-01-01T00:00:00.000Z",
+			prevHash: null,
+			changes: { roles: ["c", "a", "b"] },
+		};
+		const parsed = JSON.parse(canonicalize(env));
+		expect(parsed.changes.roles).toEqual(["c", "a", "b"]);
+	});
 });

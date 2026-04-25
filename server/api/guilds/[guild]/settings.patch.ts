@@ -42,14 +42,20 @@ export default defineWrappedResponseHandler(
 		try {
 			await canManage(guild, member);
 		} catch (canManageErr) {
-			log.audit(
-				guildSettingsAccessDenied({
-					actor: { type: "user", id: member.user.id, displayName: member.user.username },
-					target: { type: "guild", id: guild.id },
-					outcome: "denied",
-					reason: "Insufficient permissions to manage guild settings",
-				}),
-			);
+			const status =
+				canManageErr instanceof Error && "statusCode" in canManageErr
+					? (canManageErr as { statusCode: number }).statusCode
+					: null;
+			if (status === 403) {
+				log.audit(
+					guildSettingsAccessDenied({
+						actor: { type: "user", id: member.user.id, displayName: member.user.username },
+						target: { type: "guild", id: guild.id },
+						outcome: "denied",
+						reason: "Insufficient permissions to manage guild settings",
+					}),
+				);
+			}
 			throw canManageErr;
 		}
 

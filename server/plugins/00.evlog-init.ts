@@ -12,6 +12,10 @@ export default defineNitroPlugin(() => {
 				"discord.botToken",
 				"headers.authorization",
 				"headers.cookie",
+				"headers.set-cookie",
+				"headers.x-api-key",
+				"headers.x-auth-token",
+				"headers.proxy-authorization",
 			],
 		},
 	});

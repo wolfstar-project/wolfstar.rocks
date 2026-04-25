@@ -5,6 +5,7 @@ import { type AuditEnvelope, hashEnvelope } from "#shared/audit/envelope";
 import { consola } from "consola";
 
 const MAX_RETRIES = 5;
+const BASE_RETRY_DELAY_MS = 10;
 
 export function createPostgresAuditDrain(): DrainFn {
 	return async (ctx: DrainContext): Promise<void> => {
@@ -80,8 +81,8 @@ export function createPostgresAuditDrain(): DrainFn {
 									tenantId,
 									reason,
 									timestamp,
-									changes: changes ?? undefined,
-									context: context ?? undefined,
+									changes,
+									context,
 								},
 							});
 						} catch (err) {
@@ -100,14 +101,19 @@ export function createPostgresAuditDrain(): DrainFn {
 							data: { hash },
 						});
 					},
-					{ isolationLevel: Prisma.TransactionIsolationLevel.Serializable },
+					{
+						isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+						timeout: 3000,
+						maxWait: 1500,
+					},
 				);
 				return;
 			} catch (err) {
-				// P2034 = serialization failure — retry with exponential backoff
+				// P2034 = serialization failure — retry with exponential backoff + jitter
 				if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2034") {
 					if (attempt < MAX_RETRIES - 1) {
-						await new Promise((r) => setTimeout(r, 10 * 2 ** attempt));
+						const jitter = Math.random() * BASE_RETRY_DELAY_MS;
+						await new Promise((r) => setTimeout(r, BASE_RETRY_DELAY_MS * 2 ** attempt + jitter));
 						continue;
 					}
 					consola.error("[audit] Exhausted retries on P2034 serialization failure", err);

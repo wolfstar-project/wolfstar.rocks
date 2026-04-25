@@ -8,7 +8,7 @@ export default defineNitroPlugin((nitroApp) => {
 		createTraceContextEnricher(),
 		auditEnricher({
 			tenantId: (ctx) =>
-				(ctx as { event?: { guild?: { id?: string } } }).event?.guild?.id ?? undefined,
+				(ctx as { event?: { guild?: { id?: string } } }).event?.guild?.id,
 			bridge: { getSession: resolveActor },
 		}),
 	];

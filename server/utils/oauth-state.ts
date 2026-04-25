@@ -109,6 +109,9 @@ export async function createOAuthState(
 	return { state, nonce };
 }
 
+const STATE_TTL_MS = 5 * 60 * 1000;
+const CLOCK_SKEW_TOLERANCE_MS = 30 * 1000;
+
 /**
  * Verifies a signed OAuth state parameter.
  *
@@ -141,41 +144,43 @@ export async function verifyOAuthState(
 	expectedNonce: string,
 	redirectUrl: string,
 ): Promise<OAuthStateVerifyResult> {
+	let decoded: string;
 	try {
-		const decoded = fromBase64Url(state);
-		let payload: SignedOAuthStatePayload;
-		try {
-			payload = JSON.parse(decoded);
-		} catch {
-			return { valid: false, reason: "decode-failed" };
-		}
-
-		if (
-			typeof payload.nonce !== "string" ||
-			typeof payload.ts !== "number" ||
-			typeof payload.sig !== "string"
-		) {
-			return { valid: false, reason: "missing-fields" };
-		}
-
-		if (payload.nonce !== expectedNonce) {
-			return { valid: false, reason: "nonce-mismatch" };
-		}
-
-		const now = Date.now();
-		const age = now - payload.ts;
-		if (age > 5 * 60 * 1000 || age < -30 * 1000) {
-			return { valid: false, reason: "expired" };
-		}
-
-		const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
-		const expectedSig = await hmacSign(message, runtimeConfig.session.password);
-		if (!timingSafeEqual(payload.sig, expectedSig)) {
-			return { valid: false, reason: "bad-hmac" };
-		}
-
-		return { valid: true };
+		decoded = fromBase64Url(state);
 	} catch {
 		return { valid: false, reason: "decode-failed" };
 	}
+
+	let payload: SignedOAuthStatePayload;
+	try {
+		payload = JSON.parse(decoded);
+	} catch {
+		return { valid: false, reason: "decode-failed" };
+	}
+
+	if (
+		typeof payload.nonce !== "string" ||
+		typeof payload.ts !== "number" ||
+		typeof payload.sig !== "string"
+	) {
+		return { valid: false, reason: "missing-fields" };
+	}
+
+	if (payload.nonce !== expectedNonce) {
+		return { valid: false, reason: "nonce-mismatch" };
+	}
+
+	const now = Date.now();
+	const age = now - payload.ts;
+	if (age > STATE_TTL_MS || age < -CLOCK_SKEW_TOLERANCE_MS) {
+		return { valid: false, reason: "expired" };
+	}
+
+	const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
+	const expectedSig = await hmacSign(message, runtimeConfig.session.password);
+	if (!timingSafeEqual(payload.sig, expectedSig)) {
+		return { valid: false, reason: "bad-hmac" };
+	}
+
+	return { valid: true };
 }

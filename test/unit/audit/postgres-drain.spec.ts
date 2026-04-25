@@ -113,11 +113,11 @@ describe("createPostgresAuditDrain", () => {
 		});
 		await drain(ctx);
 		const createCall = mockTx.auditEvent.create.mock.calls[0]?.[0]?.data;
-		if (createCall) {
-			expect(JSON.stringify(createCall)).not.toContain("email");
-			expect(JSON.stringify(createCall)).not.toContain("127.0.0.1");
-			expect(JSON.stringify(createCall)).not.toContain("cookie");
-		}
+		expect(createCall).toBeDefined();
+		const serialized = JSON.stringify(createCall);
+		expect(serialized).not.toContain("user@example.com");
+		expect(serialized).not.toContain("127.0.0.1");
+		expect(serialized).not.toContain("session=abc");
 	});
 
 	it("the written hash matches hashEnvelope output for the same input", async () => {
@@ -159,6 +159,7 @@ describe("createPostgresAuditDrain", () => {
 		mockTx.auditEvent.create.mockRejectedValue(p2002);
 
 		await expect(drain(makeCtx())).resolves.not.toThrow();
+		expect(mockTx.auditEvent.create).toHaveBeenCalled();
 	});
 
 	it("retries on P2034 serialization failure and eventually throws after exhaustion", async () => {
@@ -168,5 +169,7 @@ describe("createPostgresAuditDrain", () => {
 		vi.mocked(prisma.$transaction).mockRejectedValue(p2034);
 
 		await expect(drain(makeCtx())).rejects.toThrow();
+		// Drain documents 5 attempts (MAX_RETRIES). Adjust if the constant changes.
+		expect(prisma.$transaction).toHaveBeenCalledTimes(5);
 	}, 10_000);
 });

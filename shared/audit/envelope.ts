@@ -13,6 +13,25 @@ export interface AuditEnvelope {
 	prevHash: string | null;
 }
 
+/**
+ * Returns a deterministic, stable JSON string for the given audit envelope.
+ *
+ * Object keys are sorted by Unicode code point at every nesting level.
+ * Arrays are preserved as-is (order is not changed) so array-valued fields
+ * (e.g., `changes.roles`) remain stable across calls.
+ *
+ * **Preconditions** — the envelope and everything reachable from it must be
+ * JSON-serializable without loss:
+ * - No `BigInt` values (throws at `JSON.stringify` time)
+ * - No circular references (throws at `JSON.stringify` time)
+ * - No `undefined` values inside objects or arrays (they are silently dropped
+ *   by `JSON.stringify`, which would corrupt the hash)
+ * - No `Date`, `Map`, or `Set` values (they serialize to `{}` or ISO strings,
+ *   not their enumerable properties — use plain objects/strings instead)
+ *
+ * The drain already ensures these preconditions by extracting only known
+ * primitive fields from the audit event before building the envelope.
+ */
 export function canonicalize(env: AuditEnvelope): string {
 	return JSON.stringify(sortKeysDeep(env));
 }
@@ -22,7 +41,7 @@ function sortKeysDeep(obj: unknown): unknown {
 	if (obj !== null && typeof obj === "object") {
 		return Object.fromEntries(
 			Object.entries(obj as Record<string, unknown>)
-				.toSorted(([a], [b]) => a.localeCompare(b))
+				.toSorted(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
 				.map(([k, v]) => [k, sortKeysDeep(v)]),
 		);
 	}

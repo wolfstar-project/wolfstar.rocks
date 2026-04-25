@@ -44,10 +44,13 @@ export default defineWrappedResponseHandler(
 		}
 
 		if (!access_token || !refresh_token) {
+			const actor = userId
+				? { type: "user" as const, id: userId }
+				: { type: "system" as const, id: "session-cleanup" };
 			log.audit(
 				userLogout({
-					actor: { type: "user", id: userId ?? "unknown" },
-					outcome: "success",
+					actor,
+					outcome: "denied",
 					reason: "Session cleared due to missing tokens",
 				}),
 			);
@@ -74,12 +77,16 @@ export default defineWrappedResponseHandler(
 			);
 			log.info("Tokens refreshed successfully");
 		} catch (error) {
+			const reason =
+				error instanceof Error && error.message.includes("invalid_grant")
+					? "Refresh token revoked or expired"
+					: "Token refresh failed";
 			log.error("Failed to refresh tokens", { error });
 			log.audit(
 				sessionRefresh({
 					actor: { type: "user", id: userId ?? "unknown" },
 					outcome: "failure",
-					reason: "Token refresh failed",
+					reason,
 				}),
 			);
 			await clearUserSession(event);

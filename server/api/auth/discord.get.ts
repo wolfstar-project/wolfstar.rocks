@@ -2,13 +2,14 @@ import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
 import { createOAuthState } from "#server/utils/oauth-state";
+import { userLogin } from "#shared/audit/actions";
 import { isSafeRedirectPath } from "#shared/utils/redirect";
-import { createError, useLogger } from "evlog";
+import { createError, useLogger, withAuditMethods } from "evlog";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
 		const query = getQuery(event);
-		const log = useLogger(event);
+		const log = withAuditMethods(useLogger(event));
 
 		const authorizationParams: Record<string, string> = { prompt: "none" };
 
@@ -85,6 +86,12 @@ export default defineWrappedResponseHandler(
 				});
 
 				log.set({ user: { id: user.id, username: user.username } });
+				log.audit(
+					userLogin({
+						actor: { type: "user", id: user.id, displayName: user.username },
+						outcome: "success",
+					}),
+				);
 				log.info("User authenticated with Discord");
 			},
 		});

@@ -1,12 +1,13 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
-import { createError, useLogger } from "evlog";
+import { auditDiff, createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const log = useLogger(event);
+		const log = withAuditMethods(useLogger(event));
 
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
@@ -37,7 +38,20 @@ export default defineWrappedResponseHandler(
 
 		const member = await getCurrentMember(event, guild.id);
 		log.set({ member: { id: member.user.id } });
-		await canManage(guild, member);
+
+		try {
+			await canManage(guild, member);
+		} catch (canManageErr) {
+			log.audit(
+				guildSettingsAccessDenied({
+					actor: { type: "user", id: member.user.id, displayName: member.user.username },
+					target: { type: "guild", id: guild.id },
+					outcome: "denied",
+					reason: "Insufficient permissions to manage guild settings",
+				}),
+			);
+			throw canManageErr;
+		}
 
 		using trx = await writeSettingsTransaction(guild.id);
 
@@ -56,8 +70,20 @@ export default defineWrappedResponseHandler(
 		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
 		coerceBigIntFields(settingsData);
 
+		const beforeSettings = serializeSettings(trx.settings);
 		await trx.write(settingsData).submit();
-		return serializeSettings(trx.settings);
+		const afterSettings = serializeSettings(trx.settings);
+
+		log.audit(
+			guildSettingsUpdate({
+				actor: { type: "user", id: member.user.id, displayName: member.user.username },
+				target: { type: "guild", id: guild.id },
+				outcome: "success",
+				changes: auditDiff(beforeSettings, afterSettings),
+			}),
+		);
+
+		return afterSettings;
 	},
 	{
 		auth: true,

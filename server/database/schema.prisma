@@ -219,3 +219,31 @@ model User {
 
   @@map("user")
 }
+
+model AuditEvent {
+  id         String   @id
+  action     String
+  actorType  String
+  actorId    String
+  actorName  String?
+  targetType String?
+  targetId   String?
+  outcome    String
+  tenantId   String?
+  reason     String?  @db.VarChar(500)
+  timestamp  DateTime
+  changes    Json?
+  context    Json?
+  prevHash   String?
+  hash       String   @unique
+
+  @@index([action, timestamp])
+  @@index([actorId, timestamp])
+  @@index([tenantId, timestamp])
+}
+
+model AuditChainHead {
+  id        String   @id @default("default")
+  hash      String?
+  updatedAt DateTime @updatedAt
+}

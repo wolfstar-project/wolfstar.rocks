@@ -1,5 +1,6 @@
 import type { UserSession } from "#auth-utils";
-import { useLogger } from "evlog";
+import { sessionRefresh, userLogout } from "#shared/audit/actions";
+import { useLogger, withAuditMethods } from "evlog";
 
 async function refreshTokens(refreshToken: string) {
 	const api = useApi();
@@ -25,7 +26,7 @@ function isExpired(expires_in: number | undefined, loggedInAt: number): boolean 
 
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const log = useLogger(event);
+		const log = withAuditMethods(useLogger(event));
 		const session: UserSession = await getUserSession(event);
 		if (!session?.secure?.tokens) {
 			return;
@@ -43,6 +44,13 @@ export default defineWrappedResponseHandler(
 		}
 
 		if (!access_token || !refresh_token) {
+			log.audit(
+				userLogout({
+					actor: { type: "user", id: userId ?? "unknown" },
+					outcome: "success",
+					reason: "Session cleared due to missing tokens",
+				}),
+			);
 			await clearUserSession(event);
 			return;
 		}
@@ -58,9 +66,22 @@ export default defineWrappedResponseHandler(
 				},
 			});
 
+			log.audit(
+				sessionRefresh({
+					actor: { type: "user", id: userId ?? "unknown" },
+					outcome: "success",
+				}),
+			);
 			log.info("Tokens refreshed successfully");
 		} catch (error) {
 			log.error("Failed to refresh tokens", { error });
+			log.audit(
+				sessionRefresh({
+					actor: { type: "user", id: userId ?? "unknown" },
+					outcome: "failure",
+					reason: "Token refresh failed",
+				}),
+			);
 			await clearUserSession(event);
 		}
 	},

@@ -88,7 +88,7 @@ describe("verifyOAuthState", () => {
 		const { state, nonce } = await createOAuthState(redirectUrl);
 
 		const result = await verifyOAuthState(state, nonce, redirectUrl);
-		expect(result).toBe(true);
+		expect(result.valid).toBe(true);
 	});
 
 	it("should return false when redirectUrl does not match HMAC binding", async () => {
@@ -99,7 +99,8 @@ describe("verifyOAuthState", () => {
 
 		// Tampered redirect URL — not the one that was HMAC-signed
 		const result = await verifyOAuthState(state, nonce, "/evil/path");
-		expect(result).toBe(false);
+		expect(result.valid).toBe(false);
+		if (!result.valid) expect(result.reason).toBe("bad-hmac");
 	});
 
 	it("should return false for a tampered nonce in payload", async () => {
@@ -121,7 +122,8 @@ describe("verifyOAuthState", () => {
 
 		// nonce check fails before HMAC check
 		const verifyResult = await verifyOAuthState(tamperedState, nonce, "/guilds/123");
-		expect(verifyResult).toBe(false);
+		expect(verifyResult.valid).toBe(false);
+		if (!verifyResult.valid) expect(verifyResult.reason).toBe("nonce-mismatch");
 	});
 
 	it("should return null for a tampered signature", async () => {
@@ -144,13 +146,17 @@ describe("verifyOAuthState", () => {
 			.replace(/=/g, "");
 
 		const verifyResult = await verifyOAuthState(tamperedState, nonce, "/guilds/123");
-		expect(verifyResult).toBe(false);
+		expect(verifyResult.valid).toBe(false);
+		if (!verifyResult.valid) expect(verifyResult.reason).toBe("bad-hmac");
 	});
 
 	it("should return false for garbage/empty input", async () => {
-		expect(await verifyOAuthState("", "nonce123", "/")).toBe(false);
-		expect(await verifyOAuthState("garbage!!!", "nonce123", "/")).toBe(false);
-		expect(await verifyOAuthState("not-valid-base64", "nonce", "/")).toBe(false);
+		const r1 = await verifyOAuthState("", "nonce123", "/");
+		expect(r1.valid).toBe(false);
+		const r2 = await verifyOAuthState("garbage!!!", "nonce123", "/");
+		expect(r2.valid).toBe(false);
+		const r3 = await verifyOAuthState("not-valid-base64", "nonce", "/");
+		expect(r3.valid).toBe(false);
 	});
 
 	it("should return false for wrong nonce (CSRF protection)", async () => {
@@ -161,7 +167,8 @@ describe("verifyOAuthState", () => {
 
 		// Use wrong nonce
 		const result = await verifyOAuthState(state, "wrong-nonce-value", "/guilds/123");
-		expect(result).toBe(false);
+		expect(result.valid).toBe(false);
+		if (!result.valid) expect(result.reason).toBe("nonce-mismatch");
 	});
 
 	it("should return false for expired state (>5 min old)", async () => {
@@ -174,7 +181,8 @@ describe("verifyOAuthState", () => {
 		vi.advanceTimersByTime(6 * 60 * 1000);
 
 		const result = await verifyOAuthState(state, nonce, "/guilds/123");
-		expect(result).toBe(false);
+		expect(result.valid).toBe(false);
+		if (!result.valid) expect(result.reason).toBe("expired");
 	});
 
 	it("should return false if ts field is missing", async () => {
@@ -195,7 +203,8 @@ describe("verifyOAuthState", () => {
 			.replace(/=/g, "");
 
 		const result = await verifyOAuthState(modifiedState, nonce, "/guilds/123");
-		expect(result).toBe(false);
+		expect(result.valid).toBe(false);
+		if (!result.valid) expect(result.reason).toBe("missing-fields");
 	});
 
 	it("should return false for malformed JSON", async () => {
@@ -206,7 +215,8 @@ describe("verifyOAuthState", () => {
 			.replace(/=/g, "");
 
 		const result = await verifyOAuthState(malformed, "nonce123", "/");
-		expect(result).toBe(false);
+		expect(result.valid).toBe(false);
+		if (!result.valid) expect(result.reason).toBe("decode-failed");
 	});
 
 	it("should return false for state with timestamp in the future (>30s)", async () => {
@@ -221,7 +231,7 @@ describe("verifyOAuthState", () => {
 		vi.setSystemTime(new Date(presentTime.getTime() - 60_000));
 
 		const result = await verifyOAuthState(state, nonce, "/guilds/123");
-		expect(result).toBe(false);
+		expect(result.valid).toBe(false);
 	});
 
 	it("should handle redirect URL with unicode characters correctly", async () => {
@@ -232,6 +242,6 @@ describe("verifyOAuthState", () => {
 		const { state, nonce } = await createOAuthState(unicodeUrl);
 
 		const result = await verifyOAuthState(state, nonce, unicodeUrl);
-		expect(result).toBe(true);
+		expect(result.valid).toBe(true);
 	});
 });

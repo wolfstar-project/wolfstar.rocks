@@ -122,52 +122,54 @@ export async function createOAuthState(
  * @param state - The base64url-encoded state string
  * @param expectedNonce - The nonce from the cookie (CSRF protection)
  * @param redirectUrl - The redirect URL from the cookie (must match HMAC binding)
- * @returns `true` if the state is valid and the redirect URL is bound, `false` otherwise
  */
+export type OAuthStateVerifyResult =
+	| { valid: true }
+	| {
+			valid: false;
+			reason: "decode-failed" | "missing-fields" | "nonce-mismatch" | "expired" | "bad-hmac";
+	  };
+
 export async function verifyOAuthState(
 	state: string,
 	expectedNonce: string,
 	redirectUrl: string,
-): Promise<boolean> {
+): Promise<OAuthStateVerifyResult> {
 	try {
-		// Decode from base64url
 		const decoded = fromBase64Url(state);
-		const payload: SignedOAuthStatePayload = JSON.parse(decoded);
+		let payload: SignedOAuthStatePayload;
+		try {
+			payload = JSON.parse(decoded);
+		} catch {
+			return { valid: false, reason: "decode-failed" };
+		}
 
-		// Check all required fields exist
 		if (
 			typeof payload.nonce !== "string" ||
 			typeof payload.ts !== "number" ||
 			typeof payload.sig !== "string"
 		) {
-			return false;
+			return { valid: false, reason: "missing-fields" };
 		}
 
-		// Check nonce matches (CSRF protection)
 		if (payload.nonce !== expectedNonce) {
-			return false;
+			return { valid: false, reason: "nonce-mismatch" };
 		}
 
-		// Check timestamp TTL (5 minutes)
 		const now = Date.now();
 		const age = now - payload.ts;
-		if (age > 5 * 60 * 1000) {
-			return false;
+		if (age > 5 * 60 * 1000 || age < -30 * 1000) {
+			return { valid: false, reason: "expired" };
 		}
 
-		// Reject future timestamps (clock skew protection — max 30 seconds in the future)
-		if (age < -30 * 1000) {
-			return false;
-		}
-
-		// Re-compute signature including the redirect URL (HMAC binding)
 		const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
 		const expectedSig = await hmacSign(message, runtimeConfig.session.password);
+		if (!timingSafeEqual(payload.sig, expectedSig)) {
+			return { valid: false, reason: "bad-hmac" };
+		}
 
-		// Timing-safe signature comparison
-		return timingSafeEqual(payload.sig, expectedSig);
+		return { valid: true };
 	} catch {
-		// Any error during decode/parse means invalid state
-		return false;
+		return { valid: false, reason: "decode-failed" };
 	}
 }

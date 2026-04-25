@@ -53,6 +53,7 @@
 		"test:unit": "vp test --project unit",
 		"test:bench": "vp test bench",
 		"start:playwright:webserver": "NODE_ENV=test vp run preview --port 5678",
+		"audit:verify": "tsx scripts/audit-verify.ts",
 		"typecheck": "stale-dep && nuxt typecheck",
 		"update:interactive": "taze"
 	},
@@ -85,7 +86,7 @@
 		"@vueuse/nuxt": "^14.2.1",
 		"@vueuse/router": "^14.2.1",
 		"dotenv": "^17.3.1",
-		"evlog": "^2.10.0",
+		"evlog": "^2.14.0",
 		"fuse.js": "^7.1.0",
 		"nuxt": "^4.4.2",
 		"nuxt-auth-utils": "^0.5.29",
@@ -135,6 +136,7 @@
 		"skilld": "^1.6.2",
 		"tailwindcss": "^4.2.1",
 		"taze": "^19.10.0",
+		"tsx": "^4.21.0",
 		"typescript": "~5.9.3",
 		"vitest": "npm:@voidzero-dev/vite-plus-test@0.1.14",
 		"vue-tsc": "^3.2.5"

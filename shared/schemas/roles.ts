@@ -8,8 +8,6 @@ const ROLES_ARRAY_KEYS = new Set([
 	"rolesAdmin",
 	"rolesModerator",
 	"rolesPublic",
-	"rolesInitial",
-	"rolesMuted",
 ]);
 
 export function isRoleArrayKey(key: string): boolean {

@@ -112,6 +112,14 @@ export async function createOAuthState(
 const STATE_TTL_MS = 5 * 60 * 1000;
 const CLOCK_SKEW_TOLERANCE_MS = 30 * 1000;
 
+/** Discriminated union returned by {@link verifyOAuthState}. */
+export type OAuthStateVerifyResult =
+	| { valid: true }
+	| {
+			valid: false;
+			reason: "decode-failed" | "missing-fields" | "nonce-mismatch" | "expired" | "bad-hmac";
+	  };
+
 /**
  * Verifies a signed OAuth state parameter.
  *
@@ -132,13 +140,6 @@ const CLOCK_SKEW_TOLERANCE_MS = 30 * 1000;
  *   - `"expired"` — timestamp is older than 5 minutes or more than 30 s in the future
  *   - `"bad-hmac"` — HMAC-SHA256 signature verification failed
  */
-export type OAuthStateVerifyResult =
-	| { valid: true }
-	| {
-			valid: false;
-			reason: "decode-failed" | "missing-fields" | "nonce-mismatch" | "expired" | "bad-hmac";
-	  };
-
 export async function verifyOAuthState(
 	state: string,
 	expectedNonce: string,

@@ -109,6 +109,17 @@ export async function createOAuthState(
 	return { state, nonce };
 }
 
+const STATE_TTL_MS = 5 * 60 * 1000;
+const CLOCK_SKEW_TOLERANCE_MS = 30 * 1000;
+
+/** Discriminated union returned by {@link verifyOAuthState}. */
+export type OAuthStateVerifyResult =
+	| { valid: true }
+	| {
+			valid: false;
+			reason: "decode-failed" | "missing-fields" | "nonce-mismatch" | "expired" | "bad-hmac";
+	  };
+
 /**
  * Verifies a signed OAuth state parameter.
  *
@@ -122,52 +133,64 @@ export async function createOAuthState(
  * @param state - The base64url-encoded state string
  * @param expectedNonce - The nonce from the cookie (CSRF protection)
  * @param redirectUrl - The redirect URL from the cookie (must match HMAC binding)
- * @returns `true` if the state is valid and the redirect URL is bound, `false` otherwise
+ * @returns `{ valid: true }` on success, or `{ valid: false; reason }` on failure where `reason` is one of:
+ *   - `"decode-failed"` — state could not be base64url-decoded or JSON-parsed
+ *   - `"missing-fields"` — parsed payload is missing required fields (`nonce`, `ts`, `sig`)
+ *   - `"nonce-mismatch"` — nonce in payload does not match the expected cookie nonce
+ *   - `"expired"` — timestamp is older than 5 minutes or more than 30 s in the future
+ *   - `"bad-hmac"` — HMAC-SHA256 signature verification failed
  */
 export async function verifyOAuthState(
 	state: string,
 	expectedNonce: string,
 	redirectUrl: string,
-): Promise<boolean> {
+): Promise<OAuthStateVerifyResult> {
+	let decoded: string;
 	try {
-		// Decode from base64url
-		const decoded = fromBase64Url(state);
-		const payload: SignedOAuthStatePayload = JSON.parse(decoded);
-
-		// Check all required fields exist
-		if (
-			typeof payload.nonce !== "string" ||
-			typeof payload.ts !== "number" ||
-			typeof payload.sig !== "string"
-		) {
-			return false;
-		}
-
-		// Check nonce matches (CSRF protection)
-		if (payload.nonce !== expectedNonce) {
-			return false;
-		}
-
-		// Check timestamp TTL (5 minutes)
-		const now = Date.now();
-		const age = now - payload.ts;
-		if (age > 5 * 60 * 1000) {
-			return false;
-		}
-
-		// Reject future timestamps (clock skew protection — max 30 seconds in the future)
-		if (age < -30 * 1000) {
-			return false;
-		}
-
-		// Re-compute signature including the redirect URL (HMAC binding)
-		const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
-		const expectedSig = await hmacSign(message, runtimeConfig.session.password);
-
-		// Timing-safe signature comparison
-		return timingSafeEqual(payload.sig, expectedSig);
+		decoded = fromBase64Url(state);
 	} catch {
-		// Any error during decode/parse means invalid state
-		return false;
+		return { valid: false, reason: "decode-failed" };
 	}
+
+	let payload: SignedOAuthStatePayload;
+	try {
+		const parsed: unknown = JSON.parse(decoded);
+		if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+			return { valid: false, reason: "missing-fields" };
+		}
+		payload = parsed as SignedOAuthStatePayload;
+	} catch {
+		return { valid: false, reason: "decode-failed" };
+	}
+
+	if (
+		typeof payload.nonce !== "string" ||
+		typeof payload.ts !== "number" ||
+		typeof payload.sig !== "string"
+	) {
+		return { valid: false, reason: "missing-fields" };
+	}
+
+	if (payload.nonce !== expectedNonce) {
+		return { valid: false, reason: "nonce-mismatch" };
+	}
+
+	const now = Date.now();
+	const age = now - payload.ts;
+	if (age > STATE_TTL_MS || age < -CLOCK_SKEW_TOLERANCE_MS) {
+		return { valid: false, reason: "expired" };
+	}
+
+	const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
+	let expectedSig: string;
+	try {
+		expectedSig = await hmacSign(message, runtimeConfig.session.password);
+	} catch {
+		return { valid: false, reason: "bad-hmac" };
+	}
+	if (!timingSafeEqual(payload.sig, expectedSig)) {
+		return { valid: false, reason: "bad-hmac" };
+	}
+
+	return { valid: true };
 }

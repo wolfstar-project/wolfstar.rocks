@@ -104,8 +104,8 @@ importers:
         specifier: ^17.3.1
         version: 17.4.2
       evlog:
-        specifier: ^2.10.0
-        version: 2.13.0(@nuxt/kit@4.4.2(magicast@0.5.2))(@voidzero-dev/vite-plus-core@0.1.19(@types/node@24.12.2)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(h3@1.15.11)(hono@4.12.12)(ofetch@1.5.1)(react@19.2.5)
+        specifier: ^2.14.0
+        version: 2.14.0(@nuxt/kit@4.4.2(magicast@0.5.2))(@voidzero-dev/vite-plus-core@0.1.19(@types/node@24.12.2)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(h3@1.15.11)(hono@4.12.12)(ofetch@1.5.1)(react@19.2.5)
       fuse.js:
         specifier: ^7.1.0
         version: 7.3.0
@@ -248,6 +248,9 @@ importers:
       taze:
         specifier: ^19.10.0
         version: 19.10.0
+      tsx:
+        specifier: ^4.21.0
+        version: 4.21.0
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
@@ -7741,8 +7744,8 @@ packages:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
     engines: {node: '>=0.8.x'}
 
-  evlog@2.13.0:
-    resolution: {integrity: sha512-/tpm+MgS7p00O5400b+t7thKgeNBRPj56InQF1+XUloAuZIKtTN1NQlbQq3B+KvnYoBk+Md985sB7HAcJgd0uQ==}
+  evlog@2.14.0:
+    resolution: {integrity: sha512-DoL3g8L4N4ZaGEdA7C3QW4yUZ7Em6GU8Fe6uKOf4/1m6+bqKlnKSYiInH6DYhNMncK45xsi+H11spJ6Il1+N2w==}
     peerDependencies:
       '@nestjs/common': '>=11.1.18'
       '@nuxt/kit': ^4.4.2
@@ -21109,7 +21112,7 @@ snapshots:
 
   events@3.3.0: {}
 
-  evlog@2.13.0(@nuxt/kit@4.4.2(magicast@0.5.2))(@voidzero-dev/vite-plus-core@0.1.19(@types/node@24.12.2)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(h3@1.15.11)(hono@4.12.12)(ofetch@1.5.1)(react@19.2.5):
+  evlog@2.14.0(@nuxt/kit@4.4.2(magicast@0.5.2))(@voidzero-dev/vite-plus-core@0.1.19(@types/node@24.12.2)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.3))(h3@1.15.11)(hono@4.12.12)(ofetch@1.5.1)(react@19.2.5):
     optionalDependencies:
       '@nuxt/kit': 4.4.2(magicast@0.5.2)
       h3: 1.15.11

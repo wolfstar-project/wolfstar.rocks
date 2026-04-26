@@ -33,6 +33,9 @@ deno.lock
 # Prisma generated files
 server/database/generated/
 
+# TypeScript build artifacts in server/database (not the TypeScript sources)
+server/database/**/*.js
+
 # Testing
 test-results
 
@@ -42,6 +45,9 @@ coverage/
 # Playwright
 playwright-report/
 test-results/
+
+# Audit log (dev-only FS drain, never commit)
+.audit/
 
 # Benchmarks
 .codspeed

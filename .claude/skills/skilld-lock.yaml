@@ -48,11 +48,11 @@ skills:
     generator: skilld
   evlog-skilld:
     packageName: evlog
-    version: 2.13.0
-    packages: "evlog@2.13.0"
+    version: 2.14.0
+    packages: "evlog@2.14.0"
     repo: HugoRCD/evlog
     source: "https://evlog.dev/llms.txt"
-    syncedAt: 2026-04-23
+    syncedAt: 2026-04-26
     generator: skilld
   vitest-skilld:
     packageName: vitest

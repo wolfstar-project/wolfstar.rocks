@@ -5,7 +5,6 @@ import { createFsDrain } from "evlog/fs";
 import { createDrainPipeline } from "evlog/pipeline";
 import { createSentryDrain } from "evlog/sentry";
 import { isDevelopment } from "std-env";
-import consola from "consola";
 
 type FlushableDrain = DrainFn & { flush?: () => Promise<void> };
 
@@ -48,7 +47,7 @@ export default defineNitroPlugin((nitroApp) => {
 		try {
 			await auditDrain.flush?.();
 		} catch (err) {
-			consola.error("[audit] Failed to flush audit drain on close", err);
+			console.error("[audit] Failed to flush audit drain on close", err);
 		}
 	});
 });

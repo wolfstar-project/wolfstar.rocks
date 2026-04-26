@@ -126,13 +126,12 @@ export function createPostgresAuditDrain(): DrainFn {
 				);
 				return;
 			} catch (err) {
-				// P2034 = serialization failure — retry with exponential backoff + jitter
+				// P2034 = serialization failure — retry with exponential backoff + full jitter
 				if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2034") {
 					if (attempt < MAX_RETRIES - 1) {
-						const jitter = Math.random() * BASE_RETRY_DELAY_MS;
-						await new Promise((r) =>
-							setTimeout(r, BASE_RETRY_DELAY_MS * 2 ** attempt + jitter),
-						);
+						const backoff = BASE_RETRY_DELAY_MS * 2 ** attempt;
+						const jitter = Math.random() * backoff;
+						await new Promise((r) => setTimeout(r, backoff + jitter));
 						continue;
 					}
 					consola.error("[audit] Exhausted retries on P2034 serialization failure", err);

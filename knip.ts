@@ -39,6 +39,7 @@ const config: KnipConfig = {
 				"@unhead/vue",
 				"ufo",
 				"ohash/*",
+				"consola",
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",
@@ -72,7 +73,7 @@ const config: KnipConfig = {
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: ["#server/database/generated/client", "#build/auth.config"],
+			ignoreUnresolved: ["#build/auth.config"],
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,

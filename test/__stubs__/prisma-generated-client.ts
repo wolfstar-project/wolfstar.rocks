@@ -6,11 +6,14 @@
  * from the generated client; the actual values are always replaced by
  * `vi.mock()` factories in the test files themselves.
  */
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/client";
 
 export const Prisma = {
 	TransactionIsolationLevel: { Serializable: "Serializable" } as Record<string, string>,
-	PrismaClientKnownRequestError,
+	PrismaClientKnownRequestError: class extends Error {
+		code: string;
+		constructor(message: string, { code }: { code: string }) {
+			super(message);
+			this.code = code;
+		}
+	},
 };
-
-export { PrismaClientKnownRequestError };

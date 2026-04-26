@@ -21,9 +21,8 @@ function auditOnly(baseDrain: FlushableDrain): FlushableDrain {
 		if (!ctx.event.audit) return;
 		await baseDrain(ctx);
 	};
-	const { flush } = baseDrain;
-	if (flush) {
-		return Object.assign(fn, { flush: () => flush() });
+	if (baseDrain.flush) {
+		return Object.assign(fn, { flush: () => baseDrain.flush!() });
 	}
 	return fn;
 }
@@ -44,5 +43,11 @@ export default defineNitroPlugin((nitroApp) => {
 			)
 		: auditOnly(createPostgresAuditDrain());
 	nitroApp.hooks.hook("evlog:drain", auditDrain);
-	nitroApp.hooks.hook("close", () => auditDrain.flush?.());
+	nitroApp.hooks.hook("close", async () => {
+		try {
+			await auditDrain.flush?.();
+		} catch (err) {
+			console.error("[audit] Failed to flush audit drain on close", err);
+		}
+	});
 });

@@ -4,11 +4,7 @@ import { ConfigurableRoles } from "../utils/settingsDataEntries";
 /**
  * Keys whose guild-data value is an array of role IDs (vs. a single role ID / null).
  */
-const ROLES_ARRAY_KEYS = new Set([
-	"rolesAdmin",
-	"rolesModerator",
-	"rolesPublic",
-]);
+const ROLES_ARRAY_KEYS = new Set(["rolesAdmin", "rolesModerator", "rolesPublic"]);
 
 export function isRoleArrayKey(key: string): boolean {
 	return ROLES_ARRAY_KEYS.has(key);

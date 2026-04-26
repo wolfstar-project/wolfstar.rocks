@@ -235,6 +235,7 @@ describe("verifyOAuthState", () => {
 
 		const result = await verifyOAuthState(state, nonce, "/guilds/123");
 		expect(result.valid).toBe(false);
+		if (!result.valid) expect(result.reason).toBe("expired");
 	});
 
 	it("should handle redirect URL with unicode characters correctly", async () => {

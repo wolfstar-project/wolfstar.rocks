@@ -182,7 +182,12 @@ export async function verifyOAuthState(
 	}
 
 	const message = `${payload.nonce}|${payload.ts}|${redirectUrl}`;
-	const expectedSig = await hmacSign(message, runtimeConfig.session.password);
+	let expectedSig: string;
+	try {
+		expectedSig = await hmacSign(message, runtimeConfig.session.password);
+	} catch {
+		return { valid: false, reason: "bad-hmac" };
+	}
 	if (!timingSafeEqual(payload.sig, expectedSig)) {
 		return { valid: false, reason: "bad-hmac" };
 	}

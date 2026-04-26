@@ -2,7 +2,6 @@ import type { DrainContext, DrainFn } from "evlog";
 import { Prisma } from "#server/database/generated/client";
 import prisma from "#server/database/prisma";
 import { type AuditEnvelope, hashEnvelope } from "#shared/audit/envelope";
-import { consola } from "consola";
 
 const MAX_RETRIES = 5;
 const BASE_RETRY_DELAY_MS = 10;
@@ -134,7 +133,6 @@ export function createPostgresAuditDrain(): DrainFn {
 						await new Promise((r) => setTimeout(r, backoff + jitter));
 						continue;
 					}
-					consola.error("[audit] Exhausted retries on P2034 serialization failure", err);
 				}
 				throw err;
 			}

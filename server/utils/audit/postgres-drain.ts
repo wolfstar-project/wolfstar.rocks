@@ -16,14 +16,14 @@ export function createPostgresAuditDrain(): DrainFn {
 		const action = audit.action;
 		const actorType = audit.actor.type;
 		const actorId = audit.actor.id;
-		const actorName = audit.actor.displayName ?? null;
-		const targetType = audit.target?.type ?? null;
-		const targetId = audit.target?.id ?? null;
+		const actorName = audit.actor.displayName;
+		const targetType = audit.target?.type;
+		const targetId = audit.target?.id;
 		const outcome = audit.outcome;
-		const tenantId = audit.tenantId ?? null;
-		const reason = audit.reason ?? null;
+		const tenantId = audit.tenantId;
+		const reason = audit.reason;
 		const timestamp = new Date(ctx.event.timestamp);
-		const changes = audit.changes ?? null;
+		const changes = audit.changes;
 
 		// Only safe context fields — explicitly exclude ip, full headers
 		const context: AuditEnvelope["context"] = audit.context

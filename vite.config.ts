@@ -215,6 +215,7 @@ export default defineConfig({
 			"regexp/sort-flags": "error",
 			"regexp/strict": "error",
 			"regexp/use-ignore-case": "error",
+			"vitest/require-mock-type-parameters": "off",
 		},
 		ignorePatterns: [
 			".output/**",
@@ -304,6 +305,7 @@ export default defineConfig({
 					"vitest/no-import-node-test": "error",
 					"vitest/prefer-hooks-in-order": "error",
 					"vitest/prefer-lowercase-title": "error",
+					"vitest/require-mock-type-parameters": "off",
 					"no-unused-expressions": "off",
 				},
 			},

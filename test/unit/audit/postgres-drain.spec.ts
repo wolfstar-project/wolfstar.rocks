@@ -11,6 +11,7 @@ vi.mock("#server/database/prisma", () => {
 		},
 		auditEvent: {
 			create: vi.fn<() => Promise<object>>().mockResolvedValue({}),
+			findUnique: vi.fn<() => Promise<{ hash: string } | null>>().mockResolvedValue(null),
 		},
 	};
 	return {
@@ -56,6 +57,9 @@ function getMockTx() {
 			create: vi
 				.fn<(args: { data: Record<string, unknown> }) => Promise<object>>()
 				.mockResolvedValue({}),
+			findUnique: vi
+				.fn<(args: { where: { hash: string } }) => Promise<{ hash: string } | null>>()
+				.mockResolvedValue(null),
 		},
 	};
 }
@@ -82,6 +86,7 @@ describe("createPostgresAuditDrain", () => {
 	let mockTx: ReturnType<typeof getMockTx>;
 
 	beforeEach(() => {
+		vi.clearAllMocks();
 		drain = createPostgresAuditDrain();
 		mockTx = getMockTx();
 		vi.mocked(prisma.$transaction).mockImplementation(
@@ -192,6 +197,10 @@ describe("createPostgresAuditDrain", () => {
 			code: "P2002",
 		});
 		mockTx.auditEvent.create.mockRejectedValue(p2002);
+		// Return the same hash that the drain computed so the invariant check passes
+		mockTx.auditEvent.findUnique.mockImplementation(({ where }: { where: { hash: string } }) =>
+			Promise.resolve({ hash: where.hash }),
+		);
 
 		await expect(drain(makeCtx())).resolves.not.toThrow();
 		expect(mockTx.auditEvent.create).toHaveBeenCalled();

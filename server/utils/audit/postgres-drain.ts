@@ -23,7 +23,9 @@ export function createPostgresAuditDrain(): DrainFn {
 		const tenantId = audit.tenantId;
 		const reason = audit.reason;
 		const timestamp = new Date(ctx.event.timestamp);
-		const changes = audit.changes;
+		// Normalize undefined to null so the envelope hash is stable and matches
+		// the null stored in the DB when no changes are recorded.
+		const changes = audit.changes ?? null;
 
 		// Only safe context fields — explicitly exclude ip, full headers
 		const context: AuditEnvelope["context"] = audit.context

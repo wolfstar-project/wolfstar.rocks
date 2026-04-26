@@ -39,7 +39,6 @@ const config: KnipConfig = {
 				"@unhead/vue",
 				"ufo",
 				"ohash/*",
-				"consola",
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",

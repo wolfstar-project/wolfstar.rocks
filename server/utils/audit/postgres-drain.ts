@@ -133,6 +133,11 @@ export function createPostgresAuditDrain(): DrainFn {
 						await new Promise((r) => setTimeout(r, backoff + jitter));
 						continue;
 					}
+					// Exhausted retries for P2034 serialization failure
+					throw new Error(
+						`[audit] Exhausted ${MAX_RETRIES} retry attempts for serialization failure`,
+						{ cause: err },
+					);
 				}
 				throw err;
 			}

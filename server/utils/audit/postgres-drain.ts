@@ -91,6 +91,18 @@ export function createPostgresAuditDrain(): DrainFn {
 								err instanceof Prisma.PrismaClientKnownRequestError &&
 								err.code === "P2002"
 							) {
+								// Defensively verify that the existing row's hash matches the recomputed one
+								// to catch any invariant violations from concurrent writes or timestamp drift
+								const existing = await tx.auditEvent.findUnique({
+									where: { hash },
+									select: { hash: true },
+								});
+								if (!existing || existing.hash !== hash) {
+									throw new Error(
+										`[audit] P2002 collision but hash mismatch: expected ${hash}, got ${existing?.hash}`,
+										{ cause: err },
+									);
+								}
 								return;
 							}
 							throw err;
@@ -116,7 +128,9 @@ export function createPostgresAuditDrain(): DrainFn {
 				if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2034") {
 					if (attempt < MAX_RETRIES - 1) {
 						const jitter = Math.random() * BASE_RETRY_DELAY_MS;
-						await new Promise((r) => setTimeout(r, BASE_RETRY_DELAY_MS * 2 ** attempt + jitter));
+						await new Promise((r) =>
+							setTimeout(r, BASE_RETRY_DELAY_MS * 2 ** attempt + jitter),
+						);
 						continue;
 					}
 					consola.error("[audit] Exhausted retries on P2034 serialization failure", err);

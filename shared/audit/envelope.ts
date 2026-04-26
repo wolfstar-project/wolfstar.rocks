@@ -51,3 +51,39 @@ function sortKeysDeep(obj: unknown): unknown {
 export function hashEnvelope(env: AuditEnvelope): string {
 	return createHash("sha256").update(canonicalize(env)).digest("hex");
 }
+
+/**
+ * An `AuditEnvelope` paired with its stored SHA-256 hash from the database.
+ * Used by `verifyChain` to validate chain integrity without a DB dependency.
+ */
+export interface AuditChainEntry {
+	envelope: AuditEnvelope;
+	storedHash: string;
+}
+
+/**
+ * Verifies the integrity of an ordered slice of audit events.
+ *
+ * For every entry the function:
+ * 1. Re-hashes the envelope with `hashEnvelope` and compares it to `storedHash`.
+ * 2. Checks that `envelope.prevHash` equals the preceding entry's `storedHash`
+ *    (skipped for the first entry, which may reference an earlier slice).
+ *
+ * @returns `{ valid: true }` when the entire slice is intact, or
+ *          `{ valid: false; index; reason }` identifying the first broken link.
+ */
+export function verifyChain(
+	events: AuditChainEntry[],
+): { valid: true } | { valid: false; index: number; reason: "hash-mismatch" | "prev-hash-mismatch" } {
+	for (let i = 0; i < events.length; i++) {
+		const entry = events[i]!;
+		const computed = hashEnvelope(entry.envelope);
+		if (computed !== entry.storedHash) {
+			return { valid: false, index: i, reason: "hash-mismatch" };
+		}
+		if (i > 0 && entry.envelope.prevHash !== events[i - 1]?.storedHash) {
+			return { valid: false, index: i, reason: "prev-hash-mismatch" };
+		}
+	}
+	return { valid: true };
+}

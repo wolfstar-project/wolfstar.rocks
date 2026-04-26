@@ -1,5 +1,5 @@
+import type { AuditActionName } from "#shared/audit/actions";
 import {
-	AuditActionName,
 	guildSettingsAccessDenied,
 	guildSettingsUpdate,
 	oauthStateInvalid,

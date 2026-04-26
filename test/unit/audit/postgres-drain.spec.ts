@@ -115,9 +115,44 @@ describe("createPostgresAuditDrain", () => {
 		const createCall = mockTx.auditEvent.create.mock.calls[0]?.[0]?.data;
 		expect(createCall).toBeDefined();
 		const serialized = JSON.stringify(createCall);
+		// Value-level checks
 		expect(serialized).not.toContain("user@example.com");
 		expect(serialized).not.toContain("127.0.0.1");
 		expect(serialized).not.toContain("session=abc");
+		// Key-level checks — ensure the property names themselves are not leaked
+		expect(serialized).not.toContain('"email"');
+		expect(serialized).not.toContain('"ip"');
+		expect(serialized).not.toContain('"cookie"');
+	});
+
+	it("stores and hashes the top-level audit.tenantId field correctly", async () => {
+		const ctx = makeCtx({ tenantId: "tenant-123" });
+		const capturedData: Record<string, unknown>[] = [];
+		mockTx.auditEvent.create.mockImplementation(
+			({ data }: { data: Record<string, unknown> }) => {
+				capturedData.push(data);
+				return Promise.resolve({});
+			},
+		);
+
+		await drain(ctx);
+
+		expect(capturedData).toHaveLength(1);
+		const data = capturedData[0]!;
+		expect(data.tenantId).toBe("tenant-123");
+		const expectedHash = hashEnvelope({
+			action: "guild.settings.update",
+			outcome: "success",
+			actor: { type: "user", id: "111" },
+			target: { type: "guild", id: "222" },
+			tenantId: "tenant-123",
+			reason: undefined,
+			changes: null,
+			timestamp: "2026-01-01T00:00:00.000Z",
+			context: { requestId: "req-1", traceId: "trace-1", userAgent: "TestAgent" },
+			prevHash: null,
+		} as Parameters<typeof hashEnvelope>[0]);
+		expect(data.hash).toBe(expectedHash);
 	});
 
 	it("the written hash matches hashEnvelope output for the same input", async () => {

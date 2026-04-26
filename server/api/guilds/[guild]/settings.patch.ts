@@ -43,8 +43,8 @@ export default defineWrappedResponseHandler(
 			await canManage(guild, member);
 		} catch (canManageErr) {
 			const status =
-				canManageErr instanceof Error && "statusCode" in canManageErr
-					? (canManageErr as { statusCode: number }).statusCode
+				canManageErr instanceof Error && "status" in canManageErr
+					? (canManageErr as { status: number }).status
 					: null;
 			if (status === 403) {
 				log.audit(
@@ -78,18 +78,18 @@ export default defineWrappedResponseHandler(
 
 		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<string, unknown>;
 		await trx.write(settingsData).submit();
-		const afterSettings = serializeSettings(trx.settings);
+		const afterSettings = JSON.parse(serializeSettings(trx.settings)) as Record<string, unknown>;
 
 		log.audit(
 			guildSettingsUpdate({
 				actor: { type: "user", id: member.user.id, displayName: member.user.username },
 				target: { type: "guild", id: guild.id },
 				outcome: "success",
-				changes: auditDiff(beforeSettings, JSON.parse(afterSettings) as Record<string, unknown>),
+				changes: auditDiff(beforeSettings, afterSettings),
 			}),
 		);
 
-		return afterSettings;
+		return JSON.stringify(afterSettings);
 	},
 	{
 		auth: true,

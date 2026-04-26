@@ -69,9 +69,12 @@ export default defineWrappedResponseHandler(
 				},
 			});
 
+			const successActor = userId
+				? { type: "user" as const, id: userId }
+				: { type: "system" as const, id: "session-cleanup" };
 			log.audit(
 				sessionRefresh({
-					actor: { type: "user", id: userId ?? "unknown" },
+					actor: successActor,
 					outcome: "success",
 				}),
 			);
@@ -82,9 +85,12 @@ export default defineWrappedResponseHandler(
 					? "Refresh token revoked or expired"
 					: "Token refresh failed";
 			log.error("Failed to refresh tokens", { error });
+			const failureActor = userId
+				? { type: "user" as const, id: userId }
+				: { type: "system" as const, id: "session-cleanup" };
 			log.audit(
 				sessionRefresh({
-					actor: { type: "user", id: userId ?? "unknown" },
+					actor: failureActor,
 					outcome: "failure",
 					reason,
 				}),

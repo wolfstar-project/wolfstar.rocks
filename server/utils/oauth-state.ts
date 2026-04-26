@@ -154,7 +154,11 @@ export async function verifyOAuthState(
 
 	let payload: SignedOAuthStatePayload;
 	try {
-		payload = JSON.parse(decoded);
+		const parsed: unknown = JSON.parse(decoded);
+		if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+			return { valid: false, reason: "missing-fields" };
+		}
+		payload = parsed as SignedOAuthStatePayload;
 	} catch {
 		return { valid: false, reason: "decode-failed" };
 	}

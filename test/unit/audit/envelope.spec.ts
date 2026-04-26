@@ -45,7 +45,9 @@ describe("canonicalize", () => {
 
 	it("does not include whitespace in the output", () => {
 		const result = canonicalize(FIXTURE_ENVELOPE);
-		expect(result).not.toMatch(/\s/);
+		// Verify compact JSON: re-stringifying the parsed result must equal the original.
+		// This allows string values containing spaces while still rejecting pretty-print formatting.
+		expect(result).toEqual(JSON.stringify(JSON.parse(result)));
 	});
 
 	it("sorts nested object keys recursively", () => {

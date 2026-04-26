@@ -153,10 +153,13 @@ describe("verifyOAuthState", () => {
 	it("should return false for garbage/empty input", async () => {
 		const r1 = await verifyOAuthState("", "nonce123", "/");
 		expect(r1.valid).toBe(false);
+		if (!r1.valid) expect(r1.reason).toBe("decode-failed");
 		const r2 = await verifyOAuthState("garbage!!!", "nonce123", "/");
 		expect(r2.valid).toBe(false);
+		if (!r2.valid) expect(r2.reason).toBe("decode-failed");
 		const r3 = await verifyOAuthState("not-valid-base64", "nonce", "/");
 		expect(r3.valid).toBe(false);
+		if (!r3.valid) expect(r3.reason).toBe("decode-failed");
 	});
 
 	it("should return false for wrong nonce (CSRF protection)", async () => {

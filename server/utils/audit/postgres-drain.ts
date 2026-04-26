@@ -20,7 +20,7 @@ export function createPostgresAuditDrain(): DrainFn {
 		const targetType = audit.target?.type ?? null;
 		const targetId = audit.target?.id ?? null;
 		const outcome = audit.outcome;
-		const tenantId = audit.context?.tenantId ?? null;
+		const tenantId = audit.tenantId ?? null;
 		const reason = audit.reason ?? null;
 		const timestamp = new Date(ctx.event.timestamp);
 		const changes = audit.changes ?? null;
@@ -103,6 +103,9 @@ export function createPostgresAuditDrain(): DrainFn {
 					},
 					{
 						isolationLevel: Prisma.TransactionIsolationLevel.Serializable,
+						// timeout: max ms Prisma waits for the transaction to complete.
+						// maxWait: max ms Prisma waits to acquire a connection from the pool.
+						// Raise both if P2024 (pool timeout) appears under high concurrency.
 						timeout: 3000,
 						maxWait: 1500,
 					},

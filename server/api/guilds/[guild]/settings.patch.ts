@@ -49,7 +49,11 @@ export default defineWrappedResponseHandler(
 			if (status === 403) {
 				log.audit(
 					guildSettingsAccessDenied({
-						actor: { type: "user", id: member.user.id, displayName: member.user.username },
+						actor: {
+							type: "user",
+							id: member.user.id,
+							displayName: member.user.username,
+						},
 						target: { type: "guild", id: guild.id },
 						outcome: "denied",
 						reason: "Insufficient permissions to manage guild settings",
@@ -76,9 +80,15 @@ export default defineWrappedResponseHandler(
 		// Coerce BigInt fields from JSON (numbers/strings) to BigInt
 		coerceBigIntFields(settingsData);
 
-		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<string, unknown>;
+		const beforeSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
+			string,
+			unknown
+		>;
 		await trx.write(settingsData).submit();
-		const afterSettings = JSON.parse(serializeSettings(trx.settings)) as Record<string, unknown>;
+		const afterSettings = JSON.parse(serializeSettings(trx.settings)) as Record<
+			string,
+			unknown
+		>;
 
 		log.audit(
 			guildSettingsUpdate({

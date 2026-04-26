@@ -1,4 +1,10 @@
-import { type AuditEnvelope, canonicalize, hashEnvelope } from "#shared/audit/envelope";
+import {
+	type AuditChainEntry,
+	type AuditEnvelope,
+	canonicalize,
+	hashEnvelope,
+	verifyChain,
+} from "#shared/audit/envelope";
 import { describe, expect, it } from "vitest";
 
 const FIXTURE_ENVELOPE: AuditEnvelope = {
@@ -106,5 +112,71 @@ describe("hashEnvelope", () => {
 		};
 		const parsed = JSON.parse(canonicalize(env));
 		expect(parsed.changes.roles).toEqual(["c", "a", "b"]);
+	});
+});
+
+describe("verifyChain", () => {
+	function buildEntry(overrides: Partial<AuditEnvelope>): AuditChainEntry {
+		const envelope: AuditEnvelope = {
+			action: "guild.settings.update",
+			outcome: "success",
+			actor: { type: "user", id: "111" },
+			timestamp: "2026-01-01T00:00:00.000Z",
+			prevHash: null,
+			...overrides,
+		};
+		return { envelope, storedHash: hashEnvelope(envelope) };
+	}
+
+	it("returns { valid: true } for a correctly linked multi-entry chain", () => {
+		const entry0 = buildEntry({ prevHash: null });
+		const entry1 = buildEntry({
+			prevHash: entry0.storedHash,
+			timestamp: "2026-01-01T00:00:01.000Z",
+		});
+		const entry2 = buildEntry({
+			prevHash: entry1.storedHash,
+			timestamp: "2026-01-01T00:00:02.000Z",
+		});
+
+		expect(verifyChain([entry0, entry1, entry2])).toEqual({ valid: true });
+	});
+
+	it("detects hash-mismatch when an envelope field is mutated after hashing", () => {
+		const entry0 = buildEntry({ prevHash: null });
+		const entry1 = buildEntry({
+			prevHash: entry0.storedHash,
+			timestamp: "2026-01-01T00:00:01.000Z",
+		});
+		const entry2 = buildEntry({
+			prevHash: entry1.storedHash,
+			timestamp: "2026-01-01T00:00:02.000Z",
+		});
+
+		// Mutate entry1's envelope after storedHash was already computed
+		entry1.envelope.changes = { tampered: true };
+
+		expect(verifyChain([entry0, entry1, entry2])).toEqual({
+			valid: false,
+			index: 1,
+			reason: "hash-mismatch",
+		});
+	});
+
+	it("detects prev-hash-mismatch when prevHash is wrong but storedHash is consistent with the envelope", () => {
+		const entry0 = buildEntry({ prevHash: null });
+		// Build entry1 with a deliberately wrong prevHash so storedHash is computed
+		// from the broken envelope — the per-entry hash check passes, but the
+		// back-link to entry0 is severed.
+		const entry1 = buildEntry({
+			prevHash: "0000000000000000000000000000000000000000000000000000000000000000",
+			timestamp: "2026-01-01T00:00:01.000Z",
+		});
+
+		expect(verifyChain([entry0, entry1])).toEqual({
+			valid: false,
+			index: 1,
+			reason: "prev-hash-mismatch",
+		});
 	});
 });

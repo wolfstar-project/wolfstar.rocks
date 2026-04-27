@@ -23,7 +23,7 @@
 			</div>
 		</dl>
 
-		<div class="mt-4 flex flex-col items-center gap-3 md:flex-row md:items-start">
+		<div class="mt-4 flex flex-col items-start gap-3 md:flex-row">
 			<UButton
 				color="neutral"
 				variant="link"
@@ -116,15 +116,76 @@
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
+
+	<ActivitySection
+		title="Recent Activity"
+		:total="auditLogTotal"
+		:status="auditLogStatus"
+		:item-count="auditEntries.length"
+		:max-visible="0"
+		empty-icon="heroicons:clipboard-document-list"
+		empty-title="No settings changes yet"
+		empty-description="Changes you make to this server's settings will appear here so you can track who changed what."
+		refresh-label="Refresh audit log"
+		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		@refresh="refreshAuditLog()"
+	>
+		<div class="flex items-center justify-between gap-1.5">
+			<UInput
+				v-model="globalFilter"
+				class="max-w-sm"
+				icon="i-lucide-search"
+				placeholder="Filter..."
+			/>
+		</div>
+
+		<UTable
+			ref="table"
+			:data="auditEntries"
+			:columns="auditLogColumns"
+			:loading="auditLogStatus === 'pending'"
+			:pagination-options="{
+				getPaginationRowModel: getPaginationRowModel(),
+			}"
+			class="shrink-0"
+			:ui="{
+				base: 'table-fixed border-separate border-spacing-0',
+				thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
+				tbody: '[&>tr]:last:[&>td]:border-b-0',
+				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+				td: 'border-b border-default',
+				separator: 'h-0',
+			}"
+		/>
+		<div
+			v-if="auditLogTotal > auditLogPageSize"
+			class="mt-4 flex items-center justify-between border-t border-default pt-4"
+		>
+			<p class="text-sm text-muted">
+				Showing
+				{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
+				{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
+			</p>
+			<UPagination
+				:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
+				:items-per-page="table?.tableApi?.getState().pagination.pageSize"
+				:total="table?.tableApi?.getFilteredRowModel().rows.length"
+				@update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
+			/>
+		</div>
+	</ActivitySection>
 </template>
 
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import type { TableColumn } from "@nuxt/ui";
 import {
 	GeneralSettingsSchema as schema,
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
+import { getPaginationRowModel } from "@tanstack/table-core";
+import { formatTimeAgo } from "@vueuse/core";
 import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
@@ -133,8 +194,75 @@ const { languages } = defineProps<{
 
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
+
 const toast = useToast();
+const table = useTemplateRef("table");
+
 const { copy, copied } = useClipboard();
+
+const UAvatar = resolveComponent("UAvatar");
+
+const auditLogPage = ref(1);
+const globalFilter = ref("");
+const auditLogPageSize = 10;
+const auditLogOffset = computed(() => (auditLogPage.value - 1) * auditLogPageSize);
+
+const {
+	entries: auditEntries,
+	total: auditLogTotal,
+	refresh: refreshAuditLog,
+	status: auditLogStatus,
+} = useAuditLog({
+	guildId: guildData.value.id,
+	limit: auditLogPageSize,
+	offset: auditLogOffset,
+});
+
+const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
+	{
+		accessorKey: "id",
+		header: "Case",
+	},
+	{
+		accessorKey: "member",
+		header: "Member",
+		cell: ({ row }) => {
+			return h("div", { class: "flex items-center gap-3" }, [
+				h(UAvatar, {
+					...auditLogMemberAvatar(row.original.member),
+					size: "lg",
+				}),
+				h("div", undefined, [
+					h(
+						"p",
+						{ class: "font-medium text-highlighted" },
+						auditLogMemberName(row.original.member),
+					),
+					h("p", { class: "" }, `@${row.original.member.user.username}`),
+				]),
+			]);
+		},
+	},
+	{
+		id: "description",
+		header: "Action",
+		cell: ({ row }) => auditLogActionDescription(row.original),
+	},
+	{
+		accessorKey: "timestamp",
+		header: "When",
+		cell: ({ row }) => {
+			return h(
+				"time",
+				{
+					class: "whitespace-nowrap text-xs text-base-content/50",
+					datetime: new Date(row.original.timestamp).toISOString(),
+				},
+				formatTimeAgo(new Date(row.original.timestamp)),
+			);
+		},
+	},
+];
 
 const serverStats = computed(() => {
 	const guild = guildData.value;

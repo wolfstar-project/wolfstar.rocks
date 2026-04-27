@@ -46,9 +46,6 @@ coverage/
 playwright-report/
 test-results/
 
-# Audit log (dev-only FS drain, never commit)
-.audit/
-
 # Benchmarks
 .codspeed
 
@@ -66,4 +63,3 @@ AGENTS.md
 
 .agents
 .nvmrc
-.audit/

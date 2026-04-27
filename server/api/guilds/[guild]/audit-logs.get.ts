@@ -72,7 +72,7 @@ export default defineWrappedResponseHandler(
 			outcome: row.outcome as DashboardAuditEntry["outcome"],
 			member: memberMap.get(row.actorId) ?? fallbackMember(row.actorId),
 			changes: patchToChanges((row.changes ?? {}) as { before?: unknown; after?: unknown }),
-			reason: row.reason ?? undefined,
+			reason: row.reason,
 			timestamp: row.timestamp.toISOString(),
 		}));
 

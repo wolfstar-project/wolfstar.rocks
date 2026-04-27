@@ -46,8 +46,6 @@ export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("close", async () => {
 		try {
 			await auditDrain.flush?.();
-		} catch (err) {
-			console.error("[audit] Failed to flush audit drain on close", err);
-		}
+		} catch {}
 	});
 });

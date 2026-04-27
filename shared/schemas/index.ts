@@ -1,3 +1,4 @@
+export * from "./audit-log";
 export * from "./channels";
 export * from "./disabled-commands";
 export * from "./events";

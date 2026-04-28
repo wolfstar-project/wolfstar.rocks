@@ -34,7 +34,8 @@ export function useAuditLog({
 			immediate: immediate !== false,
 			watch: [resolvedLimit, resolvedOffset],
 			getCachedData: (key, nuxt, { cause }) => {
-				if (cause === "refresh:manual" || cause === "refresh:hook") return undefined;
+				if (cause === "refresh:manual" || cause === "refresh:hook" || cause === "watch")
+					return undefined;
 				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
 					| AuditLogResponse
 					| undefined;

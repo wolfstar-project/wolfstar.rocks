@@ -215,6 +215,7 @@ export default defineConfig({
 			"regexp/sort-flags": "error",
 			"regexp/strict": "error",
 			"regexp/use-ignore-case": "error",
+			"vitest/require-mock-type-parameters": "off",
 		},
 		ignorePatterns: [
 			".output/**",
@@ -304,6 +305,7 @@ export default defineConfig({
 					"vitest/no-import-node-test": "error",
 					"vitest/prefer-hooks-in-order": "error",
 					"vitest/prefer-lowercase-title": "error",
+					"vitest/require-mock-type-parameters": "off",
 					"no-unused-expressions": "off",
 				},
 			},
@@ -487,6 +489,12 @@ export default defineConfig({
 					alias: {
 						"~": `${rootDir}/app`,
 						"~~": `${rootDir}`,
+						// Stub for the Prisma-generated client (not checked in; generated at build time).
+						// vi.mock() in each test overrides the actual values — this stub only satisfies
+						// Vite's module resolution so the test file can be loaded.
+						// NOTE: Must come before the "#server" prefix alias so the more-specific path
+						// wins on first-match alias resolution (Rollup alias plugin processes in order).
+						"#server/database/generated/client": `${rootDir}/test/__stubs__/prisma-generated-client`,
 						"#server": `${rootDir}/server`,
 						"#shared": `${rootDir}/shared`,
 					},

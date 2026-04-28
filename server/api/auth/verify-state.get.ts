@@ -1,6 +1,7 @@
 import { verifyOAuthState } from "#server/utils/oauth-state";
+import { oauthStateInvalid } from "#shared/audit/actions";
 import { isSafeRedirectPath } from "#shared/utils/redirect";
-import { createError } from "evlog";
+import { createError, useLogger, withAuditMethods } from "evlog";
 
 /**
  * GET /api/auth/verify-state?state=<token>
@@ -13,6 +14,7 @@ import { createError } from "evlog";
  */
 export default defineWrappedResponseHandler(
 	async (event) => {
+		const log = withAuditMethods(useLogger(event));
 		const { state } = getQuery(event);
 		const nonce = getCookie(event, "oauth_nonce");
 		const storedRedirectUrl = getCookie(event, "oauth_redirect");
@@ -22,6 +24,13 @@ export default defineWrappedResponseHandler(
 		deleteCookie(event, "oauth_redirect", { path: "/" });
 
 		if (!state || typeof state !== "string" || !nonce || !storedRedirectUrl) {
+			log.audit(
+				oauthStateInvalid({
+					actor: { type: "system", id: "oauth-flow" },
+					outcome: "denied",
+					reason: "missing-fields",
+				}),
+			);
 			throw createError({
 				message: "State verification failed",
 				status: 400,
@@ -30,9 +39,16 @@ export default defineWrappedResponseHandler(
 			});
 		}
 
-		const isValid = await verifyOAuthState(state, nonce, storedRedirectUrl);
+		const result = await verifyOAuthState(state, nonce, storedRedirectUrl);
 
-		if (!isValid) {
+		if (!result.valid) {
+			log.audit(
+				oauthStateInvalid({
+					actor: { type: "system", id: "oauth-flow" },
+					outcome: "denied",
+					reason: result.reason,
+				}),
+			);
 			throw createError({
 				message: "State verification failed",
 				status: 400,

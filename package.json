@@ -127,7 +127,7 @@
 		"daisyui": "^5.5.19",
 		"defu": "^6.1.4",
 		"discord-api-types": "^0.38.42",
-		"eslint": "^9.39.4",
+		"eslint": "^10.0.0",
 		"eslint-plugin-regexp": "^3.0.0",
 		"knip": "^5.86.0",
 		"prisma": "^7.7.0",

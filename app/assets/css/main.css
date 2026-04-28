@@ -5,7 +5,7 @@
 @import "./utilities.css";
 
 @plugin "@tailwindcss/typography";
-@plugin "daisyui/index.js";
+@plugin "daisyui";
 
 @plugin "daisyui/theme" {
 	name: "light";

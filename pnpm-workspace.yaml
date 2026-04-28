@@ -21,6 +21,8 @@ onlyBuiltDependencies:
     - workerd
     - better-sqlite3
 
+dedupePeers: true
+
 overrides:
     "@netlify/api": ^14.0.18
     sharp: 0.34.5

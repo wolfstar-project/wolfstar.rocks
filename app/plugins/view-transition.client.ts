@@ -28,6 +28,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 	// Respect browser-initiated visual transitions (e.g. swipe-back)
 	window.addEventListener("popstate", (event) => {
+		pendingPopstate = true;
 		hasUAVisualTransition = (event as PopStateEventExtended).hasUAVisualTransition ?? false;
 		if (hasUAVisualTransition) {
 			transition?.skipTransition();
@@ -70,6 +71,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 		let changeRoute: () => void;
 		const ready = new Promise<void>((resolve) => (changeRoute = resolve));
+
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
+		}
 
 		try {
 			transition = document.startViewTransition(() => {

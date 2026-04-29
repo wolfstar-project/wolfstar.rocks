@@ -32,11 +32,24 @@ test.describe("View Transitions", () => {
 		expect(callCount).toBe(1);
 	});
 
-	test("OAuth pages do not trigger a View Transition", async () => {
-		// OAuth opt-out verified statically in unit tests
-		// (There are no guarantees of a direct "Login" link on the marketing page,
-		// so we avoid fabricating UI interactions that may not exist.)
-		expect(true).toBe(true);
+	test("OAuth pages do not trigger a View Transition", async ({ page, goto }) => {
+		await page.addInitScript(() => {
+			window.__vtCallCount = 0;
+			const original = document.startViewTransition?.bind(document);
+			if (original) {
+				document.startViewTransition = (
+					callbackOptions?: ViewTransitionUpdateCallback | StartViewTransitionOptions,
+				) => {
+					window.__vtCallCount++;
+					return original(callbackOptions);
+				};
+			}
+		});
+
+		await goto("/login", { waitUntil: "networkidle" });
+
+		const callCount = await page.evaluate(() => window.__vtCallCount);
+		expect(callCount).toBe(0);
 	});
 
 	test("System reduced-motion prevents a View Transition", async ({ page, goto }) => {

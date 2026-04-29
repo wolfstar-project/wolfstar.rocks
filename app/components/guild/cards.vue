@@ -168,6 +168,10 @@ interface GuildCardsProps {
 	onRetry?: () => void;
 }
 
+interface DocumentWithActiveVT extends Document {
+	readonly activeViewTransition: ViewTransition | null;
+}
+
 const {
 	filteredGuilds,
 	guilds,
@@ -179,6 +183,8 @@ const {
 	isRetrying = false,
 	onRetry,
 } = defineProps<GuildCardsProps>();
+
+const { effectiveReduceMotion } = useReduceMotion();
 
 // Error handling computed properties
 const isTimeoutError = computed(() => error?.status === 408);
@@ -291,6 +297,14 @@ const errorVisible = ref(showError.value);
 if (import.meta.client) {
 	watch(showError, (newVal) => {
 		if (!document.startViewTransition) {
+			errorVisible.value = newVal;
+			return;
+		}
+		if (effectiveReduceMotion.value) {
+			errorVisible.value = newVal;
+			return;
+		}
+		if ((document as DocumentWithActiveVT).activeViewTransition) {
 			errorVisible.value = newVal;
 			return;
 		}

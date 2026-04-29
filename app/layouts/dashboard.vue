@@ -157,6 +157,7 @@ const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
 const isLoading = useState<boolean>("dashboard:loading", () => true);
+const { effectiveReduceMotion } = useReduceMotion();
 
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
@@ -326,15 +327,18 @@ async function submitChanges() {
 	}
 
 	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
-		if (document.startViewTransition) {
+		if (!document.startViewTransition || effectiveReduceMotion.value) {
+			setGuildSettings(data.value!);
+			setGuildSettingsChanges(undefined);
+		} else {
+			if (document.activeViewTransition) {
+				document.activeViewTransition.skipTransition();
+			}
 			document.startViewTransition(async () => {
 				setGuildSettings(data.value!);
 				setGuildSettingsChanges(undefined);
 				await nextTick();
 			});
-		} else {
-			setGuildSettings(data.value);
-			setGuildSettingsChanges(undefined);
 		}
 
 		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
@@ -349,13 +353,16 @@ async function submitChanges() {
 }
 
 function resetChanges() {
-	if (document.startViewTransition) {
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		resetGuildSettingsChanges();
+	} else {
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
+		}
 		document.startViewTransition(async () => {
 			resetGuildSettingsChanges();
 			await nextTick();
 		});
-	} else {
-		resetGuildSettingsChanges();
 	}
 
 	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);

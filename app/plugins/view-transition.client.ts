@@ -16,72 +16,85 @@ type PopStateEventExtended = PopStateEvent & { hasUAVisualTransition?: boolean }
  */
 export default defineNuxtPlugin((nuxtApp) => {
 	if (!document.startViewTransition) return;
-
-	const router = useRouter();
 	const { effectiveReduceMotion } = useReduceMotion();
 
-	let currentTransition: ViewTransition | undefined;
+	let transition: ViewTransition | undefined;
 	let finishTransition: (() => void) | undefined;
+	let hasUAVisualTransition = false;
 	let pendingPopstate = false;
-	let pendingUAVisual = false;
 
 	const resetTransitionState = () => {
-		currentTransition = undefined;
+		transition = undefined;
 		finishTransition = undefined;
+		hasUAVisualTransition = false;
 	};
 
-	window.addEventListener("popstate", (event: PopStateEventExtended) => {
-		pendingPopstate = true;
-		pendingUAVisual = event.hasUAVisualTransition ?? false;
-		if (pendingUAVisual) currentTransition?.skipTransition();
+	// Respect browser-initiated visual transitions (e.g. swipe-back)
+	window.addEventListener("popstate", (event) => {
+		hasUAVisualTransition = (event as PopStateEventExtended).hasUAVisualTransition ?? false;
+		if (hasUAVisualTransition) {
+			transition?.skipTransition();
+		}
 	});
 
+	const router = useRouter();
+
 	router.beforeResolve(async (to, from) => {
+		if (to.matched.length === 0) return;
 		// Capture and reset per-navigation flags before any early return so they never leak.
 		const isPopstate = pendingPopstate;
-		const hasUAVisual = pendingUAVisual;
 		pendingPopstate = false;
-		pendingUAVisual = false;
 
-		if (to.matched.length === 0) return;
+		const toPath = to.path;
+		const fromPath = from.path;
+
+		//  Respect if vieTransition is disabled on the page
 		if (to.meta.viewTransition === false) return;
-		if (hasUAVisual) return;
+
+		// Respect prefers-reduced-motion
 		if (effectiveReduceMotion.value) return;
 
-		const input: ClassifyInput = { toPath: to.path, fromPath: from.path, isPopstate };
+		// Skip if browser already handled the visual transition
+		if (hasUAVisualTransition) return;
+
+		const input: ClassifyInput = { toPath, fromPath, isPopstate };
 		const types = classifyNavigation(input);
 		if (types.length === 0) return;
 
 		const promise = new Promise<void>((resolve) => {
 			finishTransition = resolve;
 		});
-		let changeRoute!: () => void;
-		const ready = new Promise<void>((resolve) => {
-			changeRoute = resolve;
-		});
 
-		const vt = document.startViewTransition(() => {
-			changeRoute();
+		let changeRoute: () => void;
+		const ready = new Promise<void>((resolve) => (changeRoute = resolve));
+
+		transition = document.startViewTransition(() => {
+			changeRoute!();
 			return promise;
 		});
-		currentTransition = vt;
 
-		const typed = vt as unknown as ViewTransitionTyped;
+		const typed = transition as unknown as ViewTransitionTyped;
 		for (const type of types) typed.types.add(type);
 
-		vt.finished.then(resetTransitionState);
+		transition.finished.then(resetTransitionState);
 
 		return ready;
 	});
 
-	const abortTransition = () => {
-		currentTransition?.skipTransition();
+	// Abort on errors
+	router.onError(() => {
 		finishTransition?.();
 		resetTransitionState();
-	};
-	router.onError(abortTransition);
-	nuxtApp.hook("app:error", abortTransition);
-	nuxtApp.hook("vue:error", abortTransition);
+	});
+	nuxtApp.hook("app:error", () => {
+		finishTransition?.();
+		resetTransitionState();
+	});
+	nuxtApp.hook("vue:error", () => {
+		finishTransition?.();
+		resetTransitionState();
+	});
+
 	nuxtApp.hook("page:finish", () => {
 		finishTransition?.();
 		resetTransitionState();

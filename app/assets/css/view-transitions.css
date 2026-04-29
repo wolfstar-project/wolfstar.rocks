@@ -1,1 +1,44 @@
-/* View Transition styles — populated in Phase 2 */
+/* Baseline tempo for all view transitions */
+::view-transition-group(*) {
+	animation-duration: 250ms;
+	animation-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Forward navigation: new page slides in from the right */
+html:active-view-transition-type(nav-forward) {
+	&::view-transition-old(root) {
+		animation-name: vt-slide-out-left;
+	}
+
+	&::view-transition-new(root) {
+		animation-name: vt-slide-in-right;
+	}
+}
+
+/* Back navigation: new page slides in from the left */
+html:active-view-transition-type(nav-back) {
+	&::view-transition-old(root) {
+		animation-name: vt-slide-out-right;
+	}
+
+	&::view-transition-new(root) {
+		animation-name: vt-slide-in-left;
+	}
+}
+
+/* Marketing routes get a slightly shorter tempo */
+html:active-view-transition-type(route-marketing) {
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation-duration: 200ms;
+	}
+}
+
+/* A11y kill-switch: respects OS reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}

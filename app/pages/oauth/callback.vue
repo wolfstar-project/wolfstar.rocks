@@ -50,6 +50,10 @@
 <script setup lang="ts">
 import { promiseTimeout } from "@vueuse/core";
 
+definePageMeta({
+	viewTransition: false,
+});
+
 const code = useRouteQuery("code", null, { transform: String });
 const state = useRouteQuery("state", undefined, { transform: String });
 const { user, refreshSession } = useAuth();

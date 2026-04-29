@@ -40,6 +40,10 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import { promiseTimeout } from "@vueuse/core";
 
+definePageMeta({
+	viewTransition: false,
+});
+
 const guildId = useRouteQuery("guild_id", null, { transform: String });
 const error = ref<string | null>(null);
 const log = useLogger("oauth:guild");

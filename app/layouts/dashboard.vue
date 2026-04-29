@@ -83,54 +83,20 @@
 				</div>
 				<div class="flex items-center space-x-2">
 					<div
-						v-motion
-						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{
-							scale: 1,
-							opacity: 1,
-							transition: { repeat: Infinity, repeatType: 'reverse', duration: 600 },
-						}"
-						class="h-2 w-2 rounded-full bg-primary"
+						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
 					></div>
 					<div
-						v-motion
-						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{
-							scale: 1,
-							opacity: 1,
-							transition: {
-								repeat: Infinity,
-								repeatType: 'reverse',
-								duration: 600,
-								delay: 200,
-							},
-						}"
-						class="h-2 w-2 rounded-full bg-primary"
+						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
 					></div>
 					<div
-						v-motion
-						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{
-							scale: 1,
-							opacity: 1,
-							transition: {
-								repeat: Infinity,
-								repeatType: 'reverse',
-								duration: 600,
-								delay: 400,
-							},
-						}"
-						class="h-2 w-2 rounded-full bg-primary"
+						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
 					></div>
 				</div>
 			</div>
 		</div>
 		<div
 			v-if="isReadyToSubmit"
-			v-motion
-			:initial="{ opacity: 0, y: 8 }"
-			:enter="{ opacity: 1, y: 0, transition: { duration: 300, ease: 'easeOut' } }"
-			:leave="{ opacity: 0, y: 8, transition: { duration: 200, ease: 'easeIn' } }"
+			style="view-transition-name: save-changes-bar"
 			class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
 		>
 			<UFieldGroup>
@@ -360,8 +326,16 @@ async function submitChanges() {
 	}
 
 	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
-		setGuildSettings(data.value);
-		setGuildSettingsChanges(undefined);
+		if (document.startViewTransition) {
+			document.startViewTransition(async () => {
+				setGuildSettings(data.value!);
+				setGuildSettingsChanges(undefined);
+				await nextTick();
+			});
+		} else {
+			setGuildSettings(data.value);
+			setGuildSettingsChanges(undefined);
+		}
 
 		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
 
@@ -375,7 +349,14 @@ async function submitChanges() {
 }
 
 function resetChanges() {
-	resetGuildSettingsChanges();
+	if (document.startViewTransition) {
+		document.startViewTransition(async () => {
+			resetGuildSettingsChanges();
+			await nextTick();
+		});
+	} else {
+		resetGuildSettingsChanges();
+	}
 
 	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
 

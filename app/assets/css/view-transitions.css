@@ -42,3 +42,21 @@ html:active-view-transition-type(route-marketing) {
 		animation: none !important;
 	}
 }
+
+/* Save-changes floating bar */
+::view-transition-old(save-changes-bar) {
+	animation: vt-slide-out-down 200ms ease-in;
+}
+
+::view-transition-new(save-changes-bar) {
+	animation: vt-slide-in-up 300ms ease-out;
+}
+
+/* Guild error state */
+::view-transition-old(guild-error-state) {
+	animation: vt-fade-scale-out 200ms ease-in;
+}
+
+::view-transition-new(guild-error-state) {
+	animation: vt-fade-scale-in 300ms ease-out;
+}

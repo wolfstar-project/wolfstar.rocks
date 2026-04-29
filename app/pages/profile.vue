@@ -162,25 +162,16 @@
 											color="primary"
 											:is-loading
 											aria-label="Toggle sort order"
-											@click="toggleSortOrder()"
+											@click="handleSortToggle()"
 										>
 											<template #leading>
 												<UIcon
-													v-motion
-													:initial="{ opacity: 0 }"
-													:enter="{
-														opacity: 1,
-														transition: { duration: 150 },
-													}"
-													:leave="{
-														opacity: 0,
-														transition: { duration: 150 },
-													}"
 													:name="
 														sortAscending
 															? 'lucide:arrow-up-a-z'
 															: 'lucide:arrow-down-z-a'
 													"
+													style="view-transition-name: sort-icon-mobile"
 												/>
 											</template>
 										</UButton>
@@ -222,25 +213,16 @@
 											class="join-item"
 											color="primary"
 											:is-loading
-											@click="toggleSortOrder()"
+											@click="handleSortToggle()"
 										>
 											<template #leading>
 												<UIcon
-													v-motion
-													:initial="{ opacity: 0 }"
-													:enter="{
-														opacity: 1,
-														transition: { duration: 150 },
-													}"
-													:leave="{
-														opacity: 0,
-														transition: { duration: 150 },
-													}"
 													:name="
 														sortAscending
 															? 'lucide:arrow-up-a-z'
 															: 'lucide:arrow-down-z-a'
 													"
+													style="view-transition-name: sort-icon-desktop"
 												/>
 											</template>
 										</UButton>
@@ -617,6 +599,17 @@ const isRetrying = ref(false);
 const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
+
+function handleSortToggle() {
+	if (!document.startViewTransition) {
+		toggleSortOrder();
+		return;
+	}
+	document.startViewTransition(async () => {
+		toggleSortOrder();
+		await nextTick();
+	});
+}
 
 // Accessibility - Reduce Motion
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =

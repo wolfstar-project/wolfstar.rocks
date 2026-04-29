@@ -36,4 +36,26 @@ test.describe("Hydration", () => {
 			});
 		}
 	});
+
+	test.describe("navigation with View Transitions does not cause hydration errors", () => {
+		test("/ -> /staryl client-side navigation", async ({ page, goto }) => {
+			const consoleErrors: string[] = [];
+			page.on("console", (msg) => {
+				if (
+					msg.type() === "error" ||
+					(msg.type() === "warning" && msg.text().includes("[nuxt]"))
+				) {
+					consoleErrors.push(msg.text());
+				}
+			});
+
+			await goto("/", { waitUntil: "networkidle" });
+			const navLink = page.getByRole("link", { name: /staryl/i }).first();
+			await expect(navLink).toBeVisible();
+			await navLink.click();
+			await page.waitForURL(/staryl/);
+
+			expect(consoleErrors).toHaveLength(0);
+		});
+	});
 });

@@ -58,6 +58,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 		const types = classifyNavigation(input);
 		if (types.length === 0) return;
 
+		// Skip any in-flight transition before starting a new one so that
+		// startViewTransition does not throw when one is already active.
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
+		}
+
 		const promise = new Promise<void>((resolve) => {
 			finishTransition = resolve;
 		});
@@ -65,13 +71,23 @@ export default defineNuxtPlugin((nuxtApp) => {
 		let changeRoute: () => void;
 		const ready = new Promise<void>((resolve) => (changeRoute = resolve));
 
-		transition = document.startViewTransition(() => {
-			changeRoute!();
-			return promise;
-		});
+		try {
+			transition = document.startViewTransition(() => {
+				changeRoute!();
+				return promise;
+			});
+		} catch {
+			// If startViewTransition still throws, clean up and let navigation
+			// proceed without a transition so the router does not hang.
+			finishTransition?.();
+			resetTransitionState();
+			return;
+		}
 
-		const typed = transition as unknown as ViewTransitionTyped;
-		for (const type of types) typed.types.add(type);
+		if ("types" in transition && transition.types instanceof Set) {
+			const typed = transition as ViewTransitionTyped;
+			for (const type of types) typed.types.add(type);
+		}
 
 		transition.finished.then(resetTransitionState);
 

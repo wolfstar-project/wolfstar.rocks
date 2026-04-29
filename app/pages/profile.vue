@@ -600,20 +600,28 @@ const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
-function handleSortToggle() {
-	if (!document.startViewTransition) {
-		toggleSortOrder();
-		return;
-	}
-	document.startViewTransition(async () => {
-		toggleSortOrder();
-		await nextTick();
-	});
-}
-
 // Accessibility - Reduce Motion
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
+
+const isTransitioning = ref(false);
+
+function handleSortToggle() {
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		toggleSortOrder();
+		return;
+	}
+	if (isTransitioning.value) return;
+	isTransitioning.value = true;
+	document
+		.startViewTransition(async () => {
+			toggleSortOrder();
+			await nextTick();
+		})
+		.finished.finally(() => {
+			isTransitioning.value = false;
+		});
+}
 
 const preferredFormat = computed<"gif" | "png">(() => {
 	if (isAnimated.value && !effectiveReduceMotion.value) {

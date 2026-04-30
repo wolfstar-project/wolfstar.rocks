@@ -1,3 +1,4 @@
+import type { DashboardAuditAction } from "#shared/types/audit-log";
 import { defineAuditAction } from "evlog";
 
 const ACTION_NAMES = {
@@ -10,6 +11,11 @@ const ACTION_NAMES = {
 } as const satisfies Record<string, string>;
 
 export type AuditActionName = (typeof ACTION_NAMES)[keyof typeof ACTION_NAMES];
+
+export const DASHBOARD_AUDIT_ACTIONS: readonly DashboardAuditAction[] = [
+	"guild.settings.update",
+	"guild.settings.access-denied",
+] as const;
 
 export const guildSettingsUpdate = defineAuditAction(ACTION_NAMES.guildSettingsUpdate);
 export const guildSettingsAccessDenied = defineAuditAction(ACTION_NAMES.guildSettingsAccessDenied);

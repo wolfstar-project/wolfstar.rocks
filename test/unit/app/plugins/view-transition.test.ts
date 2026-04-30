@@ -130,7 +130,9 @@ describe("view-transition.client plugin", () => {
 
 	it("skips the in-flight transition and starts a new one when activeViewTransition exists", async () => {
 		const skipTransition = vi.fn();
-		(document as { activeViewTransition?: { skipTransition: () => void } }).activeViewTransition = { skipTransition };
+		(
+			document as { activeViewTransition?: { skipTransition: () => void } }
+		).activeViewTransition = { skipTransition };
 		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
 		expect(mockStartVT).toHaveBeenCalled();
 	});

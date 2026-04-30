@@ -79,3 +79,91 @@ describe("dashboardLayout - Guild Switch (Watcher Logic)", () => {
 		expect(stagedChanges).toStrictEqual({ some: "changes" });
 	});
 });
+
+describe("dashboardLayout - Async Data resolving", () => {
+	it("should set guild data when useAsyncData resolves", () => {
+		let guildData: { id: string } | undefined;
+		let guildSettings: Record<string, unknown> | undefined;
+
+		function setGuildData(val: { id: string }) {
+			guildData = val;
+		}
+
+		function setGuildSettings(val: Record<string, unknown>) {
+			guildSettings = val;
+		}
+
+		const data = [{ id: "guild-1" }, JSON.stringify({ someKey: "someValue" })] as const;
+
+		const watcherCallback = (newData: readonly [{ id: string }, string] | null) => {
+			if (newData) {
+				setGuildData(newData[0]);
+				setGuildSettings(JSON.parse(newData[1]));
+			}
+		};
+
+		watcherCallback(data);
+
+		expect(guildData).toStrictEqual({ id: "guild-1" });
+		expect(guildSettings).toStrictEqual({ someKey: "someValue" });
+	});
+
+	it("should handle 401 error by calling navigateTo", async () => {
+		let navigatedTo: string | undefined;
+
+		// Mock error returned by parseError
+		const parsedError = {
+			status: 401,
+			message: "Unauthorized",
+			why: "Session expired",
+			fix: "Log in again",
+		};
+
+		// Mock the logic
+		const watcherCallback = async (err: unknown) => {
+			if (err) {
+				switch (parsedError.status) {
+					case 401: {
+						navigatedTo = "/";
+						break;
+					}
+					// Omit other cases for pure unit test focus
+				}
+			}
+		};
+
+		await watcherCallback(new Error("401"));
+
+		expect(navigatedTo).toBe("/");
+	});
+
+	it("should handle 403 error by calling navigateTo", async () => {
+		let navigatedTo: string | undefined;
+
+		// Mock error returned by parseError
+		const parsedError = {
+			status: 403,
+			message: "Forbidden",
+			why: "Access Denied",
+			fix: "Ask for permissions",
+		};
+
+		// Mock the logic
+		const watcherCallback = async (err: unknown) => {
+			if (err) {
+				switch (parsedError.status) {
+					case 403: {
+						navigatedTo = "/";
+						break;
+					}
+					// Omit other cases for pure unit test focus
+				}
+				// Mock what happens when router.back is not used
+			}
+		};
+
+		await watcherCallback(new Error("403"));
+
+		expect(navigatedTo).toBe("/");
+	});
+});

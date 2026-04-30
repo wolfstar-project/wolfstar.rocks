@@ -190,7 +190,119 @@ const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
-const isLoading = useState<boolean>("dashboard:loading", () => true);
+
+const { user } = useUserSession();
+const { guilds: userGuilds } = useUser(user);
+const seedGuild = userGuilds.value?.find((g) => g.id === guildId.value);
+if (seedGuild) {
+	setGuildData(seedGuild);
+}
+
+const requestFetch = useRequestFetch();
+
+const {
+	data,
+	pending: isLoading,
+	error,
+} = useAsyncData(
+	() => `dashboard:guild:${guildId.value}`,
+	() =>
+		Promise.all([
+			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
+				`/api/guilds/${guildId.value}`,
+			),
+			requestFetch<string>(`/api/guilds/${guildId.value}/settings`),
+		]),
+);
+
+watch(
+	data,
+	(newData) => {
+		if (newData) {
+			setGuildData(newData[0]);
+			setGuildSettings(JSON.parse(newData[1]));
+
+			if (nuxtError.value) {
+				clearError();
+			}
+		}
+	},
+	{ immediate: true },
+);
+
+watch(
+	error,
+	async (err) => {
+		if (err) {
+			const parsedError = parseError(err);
+
+			logger.error(
+				`Error loading guild data or settings for guild Id: ${guildId.value}`,
+				parsedError,
+			);
+
+			switch (parsedError.status) {
+				case 403: {
+					toast.add({
+						title: "Access Denied",
+						description: "You don't have permission to access this server's dashboard.",
+						color: "error",
+						icon: "heroicons:x-circle",
+					});
+					if (import.meta.client && window.history.length > 1) {
+						router.back();
+					} else {
+						await navigateTo("/");
+					}
+					break;
+				}
+				case 401: {
+					toast.add({
+						title: "Unauthorized",
+						description:
+							"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
+						color: "error",
+						icon: "heroicons:x-circle",
+					});
+					if (import.meta.client && window.history.length > 1) {
+						router.back();
+					} else {
+						await navigateTo("/");
+					}
+					break;
+				}
+				default: {
+					toast.add({
+						title: parsedError.message,
+						description: parsedError.why,
+						color: "error",
+						actions: parsedError.link
+							? [
+									{
+										label: "Learn more",
+										onClick: () => {
+											window.open(parsedError.link);
+										},
+									},
+								]
+							: undefined,
+						icon: "heroicons:x-circle",
+					});
+					showError({
+						status: parsedError.status || 500,
+						message: parsedError.message,
+						data: {
+							why: parsedError.why,
+							fix: parsedError.fix,
+							link: parsedError.link,
+						},
+					});
+				}
+			}
+		}
+	},
+	{ immediate: true },
+);
 
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
@@ -394,89 +506,6 @@ watch(guildId, (newGuildId, oldGuildId) => {
 		logger.info(
 			`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`,
 		);
-	}
-});
-
-onMounted(async () => {
-	isLoading.value = true;
-
-	try {
-		// Fetch guild data and settings in parallel to halve round-trip latency.
-		const [guildData, guildSettings] = await Promise.all([
-			$fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
-				`/api/guilds/${guildId.value}`,
-			),
-			$fetch<string>(`/api/guilds/${guildId.value}/settings`),
-		]);
-
-		setGuildData(guildData);
-		setGuildSettings(JSON.parse(guildSettings));
-
-		if (nuxtError.value) {
-			clearError();
-		}
-		// oxlint-disable-next-line unicorn/catch-error-name
-	} catch (err: unknown) {
-		const error = parseError(err);
-
-		logger.error(`Error loading guild data or settings for guild Id: ${guildId.value}`, error);
-
-		switch (error.status) {
-			case 403: {
-				toast.add({
-					title: "Access Denied",
-					description: "You don't have permission to access this server's dashboard.",
-					color: "error",
-					icon: "heroicons:x-circle",
-				});
-				if (import.meta.client && window.history.length > 1) {
-					router.back();
-				} else {
-					await navigateTo("/");
-				}
-				break;
-			}
-			case 401: {
-				toast.add({
-					title: "Unauthorized",
-					description:
-						"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
-					color: "error",
-					icon: "heroicons:x-circle",
-				});
-				if (import.meta.client && window.history.length > 1) {
-					router.back();
-				} else {
-					await navigateTo("/");
-				}
-				break;
-			}
-			default: {
-				toast.add({
-					title: error.message,
-					description: error.why,
-					color: "error",
-					actions: error.link
-						? [
-								{
-									label: "Learn more",
-									onClick: () => {
-										window.open(error.link);
-									},
-								},
-							]
-						: undefined,
-					icon: "heroicons:x-circle",
-				});
-				showError({
-					status: error.status || 500,
-					message: error.message,
-					data: { why: error.why, fix: error.fix, link: error.link },
-				});
-			}
-		}
-	} finally {
-		isLoading.value = false;
 	}
 });
 </script>

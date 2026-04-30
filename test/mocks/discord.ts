@@ -5,7 +5,8 @@ import type {
 	FlattenedRole,
 	OauthFlattenedGuild,
 } from "#shared/types/discord";
-import type { ChannelType } from "discord-api-types/v10";
+import type { APIChannel, APIGuild, APIGuildMember, ChannelType } from "discord-api-types/v10";
+import { vi } from "vitest";
 
 /**
  * Creates a mock User for testing
@@ -202,4 +203,67 @@ export function createMockCompleteGuild(config?: {
 		id: guildId,
 		roles,
 	});
+}
+
+/**
+ * Creates a vitest spy for getGuild that returns a mock APIGuild.
+ * Returns the spy so callers can adjust mockResolvedValue if needed.
+ */
+export function mockGetGuild(overrides?: Partial<APIGuild>) {
+	const defaultGuild = {
+		id: "123456789012345678",
+		name: "Test Guild",
+		owner_id: "987654321098765432",
+		roles: [],
+		channels: [],
+		emojis: [],
+		features: [],
+		icon: null,
+	} as unknown as APIGuild;
+
+	return vi.fn().mockResolvedValue({ ...defaultGuild, ...overrides });
+}
+
+/**
+ * Creates a vitest spy for getGuildChannels that returns a channel array.
+ */
+export function mockGetGuildChannels(channels: APIChannel[] = []) {
+	return vi.fn().mockResolvedValue(channels);
+}
+
+/**
+ * Creates a vitest spy for getCurrentMember (or getMember) that returns a mock APIGuildMember.
+ */
+export function mockGetMember(overrides?: Partial<APIGuildMember>) {
+	const defaultMember = {
+		user: {
+			id: "111111111111111111",
+			username: "testmember",
+			discriminator: "0",
+			global_name: null,
+			avatar: null,
+		},
+		roles: [],
+		joined_at: new Date().toISOString(),
+		deaf: false,
+		mute: false,
+		flags: 0,
+		permissions: "8",
+	} as unknown as APIGuildMember;
+
+	return vi.fn().mockResolvedValue({ ...defaultMember, ...overrides });
+}
+
+/**
+ * Creates a vitest spy for readSettings that returns minimal guild settings.
+ */
+export function mockReadSettings(overrides?: Record<string, unknown>) {
+	const defaultSettings = {
+		id: "123456789012345678",
+		rolesAdmin: [],
+		permissionsRoles: [],
+		permissionsUsers: [],
+	};
+
+	return vi.fn().mockResolvedValue({ ...defaultSettings, ...overrides });
 }

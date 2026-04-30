@@ -128,16 +128,11 @@ describe("view-transition.client plugin", () => {
 		expect(mockStartVT).not.toHaveBeenCalled();
 	});
 
-	it("skips the transition when a document active transition already exists", async () => {
-		(document as { activeViewTransition?: object }).activeViewTransition = {};
+	it("skips the in-flight transition and starts a new one when activeViewTransition exists", async () => {
+		const skipTransition = vi.fn();
+		(document as { activeViewTransition?: { skipTransition: () => void } }).activeViewTransition = { skipTransition };
 		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
-		expect(mockStartVT).not.toHaveBeenCalled();
-	});
-
-	it("skips the transition when a document active transition already exists", async () => {
-		(document as { activeViewTransition?: object }).activeViewTransition = {};
-		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
-		expect(mockStartVT).not.toHaveBeenCalled();
+		expect(mockStartVT).toHaveBeenCalled();
 	});
 
 	it("skips the transition for UA-initiated visual transitions (e.g. Safari swipe-back)", async () => {

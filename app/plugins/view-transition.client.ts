@@ -1,3 +1,5 @@
+import { classifyNavigation, type ClassifyInput } from "~/utils/viewTransitionClassifier";
+
 interface ViewTransitionTyped extends ViewTransition {
 	readonly types: Set<string>;
 }
@@ -71,10 +73,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 		let changeRoute: () => void;
 		const ready = new Promise<void>((resolve) => (changeRoute = resolve));
-
-		if (document.activeViewTransition) {
-			document.activeViewTransition.skipTransition();
-		}
 
 		try {
 			transition = document.startViewTransition(() => {

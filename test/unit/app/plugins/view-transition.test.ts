@@ -134,6 +134,7 @@ describe("view-transition.client plugin", () => {
 			document as { activeViewTransition?: { skipTransition: () => void } }
 		).activeViewTransition = { skipTransition };
 		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
+		expect(skipTransition).toHaveBeenCalled();
 		expect(mockStartVT).toHaveBeenCalled();
 	});
 

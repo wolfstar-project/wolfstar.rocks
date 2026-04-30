@@ -38,7 +38,7 @@ test.describe("Hydration", () => {
 	});
 
 	test.describe("navigation with View Transitions does not cause hydration errors", () => {
-		test("/ -> /staryl client-side navigation", async ({ page, goto }) => {
+		test("/ -> /commands client-side navigation", async ({ page, goto }) => {
 			const consoleErrors: string[] = [];
 			page.on("console", (msg) => {
 				if (
@@ -50,10 +50,12 @@ test.describe("Hydration", () => {
 			});
 
 			await goto("/", { waitUntil: "networkidle" });
-			const navLink = page.getByRole("link", { name: /staryl/i }).first();
+			const navLink = page
+				.getByRole("navigation", { name: "Main navigation" })
+				.getByRole("link", { name: /commands/i });
 			await expect(navLink).toBeVisible();
 			await navLink.click();
-			await page.waitForURL(/staryl/);
+			await page.waitForURL(/commands/);
 
 			expect(consoleErrors).toHaveLength(0);
 		});

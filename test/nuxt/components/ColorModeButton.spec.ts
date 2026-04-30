@@ -3,11 +3,6 @@ import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { ref } from "vue";
 import ColorModeButton from "~/components/ColorModeButton.vue";
 
-interface TestDocument extends Document {
-	startViewTransition: ((callback?: () => void | Promise<void>) => ViewTransition) | undefined;
-	activeViewTransition: ViewTransition | null;
-}
-
 const mockColorMode = {
 	preference: "dark",
 	value: "dark",
@@ -24,24 +19,33 @@ vi.mock("#imports", async (importOriginal) => {
 	};
 });
 
-describe("ColorModeButton", () => {
-	let doc: TestDocument;
+function setActiveViewTransition(value: ViewTransition | null): void {
+	Object.defineProperty(document, "activeViewTransition", {
+		configurable: true,
+		writable: true,
+		value,
+	});
+}
 
+describe("ColorModeButton", () => {
 	beforeEach(() => {
 		mockColorMode.preference = "dark";
 		mockColorMode.value = "dark";
 		mockEffectiveReduceMotion.value = false;
 
-		doc = document as unknown as TestDocument;
-		doc.startViewTransition = vi.fn((cb?: () => void | Promise<void>) => {
-			cb?.();
-			return {
-				ready: Promise.resolve(),
-				finished: Promise.resolve(),
-				skipTransition: vi.fn(),
-			} as unknown as ViewTransition;
+		Object.defineProperty(document, "startViewTransition", {
+			configurable: true,
+			writable: true,
+			value: vi.fn((cb?: () => void | Promise<void>) => {
+				cb?.();
+				return {
+					ready: Promise.resolve(),
+					finished: Promise.resolve(),
+					skipTransition: vi.fn(),
+				} as unknown as ViewTransition;
+			}),
 		});
-		doc.activeViewTransition = null;
+		setActiveViewTransition(null);
 	});
 
 	afterEach(() => {
@@ -49,23 +53,31 @@ describe("ColorModeButton", () => {
 	});
 
 	it("swaps theme and DOES NOT call startViewTransition when startViewTransition is undefined", async () => {
-		const savedSVT = doc.startViewTransition;
-		doc.startViewTransition = undefined;
+		const savedSVT = document.startViewTransition;
+		Object.defineProperty(document, "startViewTransition", {
+			configurable: true,
+			writable: true,
+			value: undefined,
+		});
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(mockColorMode.preference).toBe("light");
-		doc.startViewTransition = savedSVT;
+		Object.defineProperty(document, "startViewTransition", {
+			configurable: true,
+			writable: true,
+			value: savedSVT,
+		});
 	});
 
 	it("swaps theme and DOES NOT call startViewTransition when activeViewTransition is truthy", async () => {
-		doc.activeViewTransition = {
+		setActiveViewTransition({
 			ready: Promise.resolve(),
 			finished: Promise.resolve(),
 			skipTransition: vi.fn(),
-		} as unknown as ViewTransition;
+		} as unknown as ViewTransition);
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
-		expect(doc.startViewTransition).not.toHaveBeenCalled();
+		expect(document.startViewTransition).not.toHaveBeenCalled();
 		expect(mockColorMode.preference).toBe("light");
 	});
 
@@ -73,14 +85,14 @@ describe("ColorModeButton", () => {
 		mockEffectiveReduceMotion.value = true;
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
-		expect(doc.startViewTransition).not.toHaveBeenCalled();
+		expect(document.startViewTransition).not.toHaveBeenCalled();
 		expect(mockColorMode.preference).toBe("light");
 	});
 
 	it("calls startViewTransition exactly once on happy path", async () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
-		expect(doc.startViewTransition).toHaveBeenCalledTimes(1);
+		expect(document.startViewTransition).toHaveBeenCalledTimes(1);
 		expect(mockColorMode.preference).toBe("light");
 	});
 });

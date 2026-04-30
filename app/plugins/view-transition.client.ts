@@ -40,10 +40,11 @@ export default defineNuxtPlugin((nuxtApp) => {
 	const router = useRouter();
 
 	router.beforeResolve(async (to, from) => {
-		if (to.matched.length === 0) return;
 		// Capture and reset per-navigation flags before any early return so they never leak.
 		const isPopstate = pendingPopstate;
 		pendingPopstate = false;
+
+		if (to.matched.length === 0) return;
 
 		const toPath = to.path;
 		const fromPath = from.path;

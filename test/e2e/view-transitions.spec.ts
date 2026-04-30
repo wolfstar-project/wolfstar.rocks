@@ -23,10 +23,12 @@ test.describe("View Transitions", () => {
 
 		await goto("/", { waitUntil: "networkidle" });
 
-		const navLink = page.getByRole("link", { name: /staryl/i }).first();
+		const navLink = page
+			.getByRole("navigation", { name: "Main navigation" })
+			.getByRole("link", { name: /commands/i });
 		await expect(navLink).toBeVisible();
 		await navLink.click();
-		await page.waitForURL(/staryl/);
+		await page.waitForURL(/commands/);
 
 		const callCount = await page.evaluate(() => window.__vtCallCount);
 		expect(callCount).toBe(1);
@@ -70,10 +72,12 @@ test.describe("View Transitions", () => {
 
 		await goto("/", { waitUntil: "networkidle" });
 
-		const navLinkReduced = page.getByRole("link", { name: /staryl/i }).first();
+		const navLinkReduced = page
+			.getByRole("navigation", { name: "Main navigation" })
+			.getByRole("link", { name: /commands/i });
 		await expect(navLinkReduced).toBeVisible();
 		await navLinkReduced.click();
-		await page.waitForURL(/staryl/);
+		await page.waitForURL(/commands/);
 
 		const callCount = await page.evaluate(() => window.__vtCallCount);
 		expect(callCount).toBe(0);
@@ -103,10 +107,12 @@ test.describe("View Transitions", () => {
 
 		await goto("/", { waitUntil: "networkidle" });
 
-		const navLinkUser = page.getByRole("link", { name: /staryl/i }).first();
+		const navLinkUser = page
+			.getByRole("navigation", { name: "Main navigation" })
+			.getByRole("link", { name: /commands/i });
 		await expect(navLinkUser).toBeVisible();
 		await navLinkUser.click();
-		await page.waitForURL(/staryl/);
+		await page.waitForURL(/commands/);
 
 		const callCount = await page.evaluate(() => window.__vtCallCount);
 		expect(callCount).toBe(0);

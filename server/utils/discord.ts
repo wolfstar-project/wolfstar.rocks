@@ -1,3 +1,4 @@
+import type { ReadonlyGuildData } from "#server/database";
 import type {
 	FlattenedGuild,
 	LoginData,
@@ -32,6 +33,7 @@ import {
 	PermissionFlagsBits,
 } from "discord-api-types/v10";
 import { createError } from "evlog";
+import { mapWithConcurrency } from "./map-with-concurrency";
 
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);
@@ -75,7 +77,7 @@ function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string
 	);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember) {
+async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -83,11 +85,12 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 		return true;
 	}
 
-	const settings = await readSettings(guild.id);
-	const nodes = readSettingsPermissionNodes(settings);
+	const resolvedSettings = settings ?? (await readSettings(guild.id));
+	const nodes = readSettingsPermissionNodes(resolvedSettings);
 
 	return (
-		isAdmin(guild, member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true)
+		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
+		((await nodes.run(member, "conf")) ?? true)
 	);
 }
 
@@ -95,6 +98,7 @@ async function getManageable(
 	oauthGuild: RESTAPIPartialCurrentUserGuild,
 	guild: APIGuild | undefined,
 	userId: string,
+	settings?: ReadonlyGuildData,
 ): Promise<boolean> {
 	if (oauthGuild.owner) {
 		return true;
@@ -112,16 +116,18 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member);
+	return manage(guild, member, settings);
 }
 
 export async function transformGuild(
 	userId: string,
 	data: RESTAPIPartialCurrentUserGuild,
+	options: { includeChannels?: boolean } = {},
 ): Promise<OauthFlattenedGuild> {
+	const { includeChannels = true } = options;
 	const guild = await getGuild(data.id).catch(() => undefined);
 
-	const channels = await getGuildChannels(data.id).catch(() => []);
+	const channels = includeChannels ? await getGuildChannels(data.id).catch(() => []) : [];
 
 	const mockGuild = cast<FlattenedGuild>({
 		acronym: guildNameToAcronym(data.name),
@@ -182,8 +188,8 @@ export async function transformOauthGuildsAndUser({
 
 	const userId = user.id;
 
-	const transformedGuilds: OauthFlattenedGuild[] = await Promise.all(
-		guilds.map((guild) => transformGuild(userId, guild)),
+	const transformedGuilds: OauthFlattenedGuild[] = await mapWithConcurrency(guilds, 8, (guild) =>
+		transformGuild(userId, guild, { includeChannels: false }),
 	);
 
 	return { transformedGuilds, user };
@@ -203,8 +209,12 @@ export async function getCurrentToken(event: H3Event) {
 	return tokens;
 }
 
-export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
-	const shouldManage = await manage(guild, member);
+export const canManage = async (
+	guild: APIGuild,
+	member: APIGuildMember,
+	settings?: ReadonlyGuildData,
+) => {
+	const shouldManage = await manage(guild, member, settings);
 	if (!shouldManage) {
 		throw createError({
 			message: "Insufficient permissions",
@@ -228,30 +238,32 @@ export const getCurrentUser = defineCachedFunction(
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getCurrent" },
 		});
-		const user = await instrumentDiscordApiCall("users.getCurrent", () =>
-			api.users.getCurrent(),
-		).catch((error: DiscordAPIError) => {
-			throw createError({
-				cause: error,
-				message: "Failed to fetch user data",
-				status: 500,
-				why: "Discord API returned an error when fetching the current user",
-			});
-		});
-
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getGuilds" },
 		});
-		const guilds = await instrumentDiscordApiCall("users.getGuilds", () =>
-			api.users.getGuilds(),
-		).catch((error: DiscordAPIError) => {
-			throw createError({
-				cause: error,
-				message: "Failed to fetch user guilds",
-				status: 500,
-				why: "Discord API returned an error when fetching the user's guild list",
-			});
-		});
+
+		const [user, guilds] = await Promise.all([
+			instrumentDiscordApiCall("users.getCurrent", () => api.users.getCurrent()).catch(
+				(error: DiscordAPIError) => {
+					throw createError({
+						cause: error,
+						message: "Failed to fetch user data",
+						status: 500,
+						why: "Discord API returned an error when fetching the current user",
+					});
+				},
+			),
+			instrumentDiscordApiCall("users.getGuilds", () => api.users.getGuilds()).catch(
+				(error: DiscordAPIError) => {
+					throw createError({
+						cause: error,
+						message: "Failed to fetch user guilds",
+						status: 500,
+						why: "Discord API returned an error when fetching the user's guild list",
+					});
+				},
+			),
+		]);
 
 		return { guilds, user };
 	},

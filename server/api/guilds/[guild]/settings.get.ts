@@ -12,9 +12,10 @@ export default defineWrappedResponseHandler(
 
 		const member = await getCurrentMember(event, guild.id);
 		log.set({ member: { id: member.user.id } });
-		await canManage(guild, member);
 
 		const settings = await readSettings(guild.id);
+		await canManage(guild, member, settings);
+
 		return serializeSettings(settings);
 	},
 	{

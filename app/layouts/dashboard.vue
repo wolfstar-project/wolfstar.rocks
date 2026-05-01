@@ -168,6 +168,7 @@ import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError, createError } from "evlog";
+import { parseGuildSettings, classifyGuildError } from "~/utils/guild-dashboard";
 
 const logger = useLogger("wolfstar:dashboard");
 
@@ -227,16 +228,16 @@ watch(
 		if (newData) {
 			setGuildData(newData[0]);
 
-			let parsedSettings: ReturnType<typeof JSON.parse>;
-			try {
-				parsedSettings = JSON.parse(newData[1]);
-			} catch (parseErr) {
-				logger.error(
-					`Failed to parse guild settings payload for guild Id: ${guildId.value}`,
-					parseError(parseErr),
-				);
-				parsedSettings = guildSettings.value ?? {};
-			}
+			const parsedSettings = parseGuildSettings(
+				newData[1],
+				guildSettings.value ?? {},
+				(parseErr) => {
+					logger.error(
+						`Failed to parse guild settings payload for guild Id: ${guildId.value}`,
+						parseError(parseErr),
+					);
+				},
+			);
 
 			setGuildSettings(parsedSettings);
 
@@ -259,14 +260,16 @@ watch(
 				parsedError,
 			);
 
-			switch (parsedError.status) {
-				case 403: {
-					toast.add({
-						title: "Access Denied",
-						description: "You don't have permission to access this server's dashboard.",
-						color: "error",
-						icon: "heroicons:x-circle",
-					});
+			switch (classifyGuildError(parsedError.status)) {
+				case "forbidden": {
+					if (import.meta.client) {
+						toast.add({
+							title: "Access Denied",
+							description: "You don't have permission to access this server's dashboard.",
+							color: "error",
+							icon: "heroicons:x-circle",
+						});
+					}
 					if (import.meta.client && window.history.length > 1) {
 						router.back();
 					} else {
@@ -274,14 +277,16 @@ watch(
 					}
 					break;
 				}
-				case 401: {
-					toast.add({
-						title: "Unauthorized",
-						description:
-							"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
-						color: "error",
-						icon: "heroicons:x-circle",
-					});
+				case "unauthorized": {
+					if (import.meta.client) {
+						toast.add({
+							title: "Unauthorized",
+							description:
+								"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
+							color: "error",
+							icon: "heroicons:x-circle",
+						});
+					}
 					if (import.meta.client && window.history.length > 1) {
 						router.back();
 					} else {
@@ -290,22 +295,24 @@ watch(
 					break;
 				}
 				default: {
-					toast.add({
-						title: parsedError.message,
-						description: parsedError.why,
-						color: "error",
-						actions: parsedError.link
-							? [
-									{
-										label: "Learn more",
-										onClick: () => {
-											window.open(parsedError.link);
+					if (import.meta.client) {
+						toast.add({
+							title: parsedError.message,
+							description: parsedError.why,
+							color: "error",
+							actions: parsedError.link
+								? [
+										{
+											label: "Learn more",
+											onClick: () => {
+												window.open(parsedError.link, "_blank", "noopener,noreferrer");
+											},
 										},
-									},
-								]
-							: undefined,
-						icon: "heroicons:x-circle",
-					});
+									]
+								: undefined,
+							icon: "heroicons:x-circle",
+						});
+					}
 					showError({
 						status: parsedError.status || 500,
 						message: parsedError.message,

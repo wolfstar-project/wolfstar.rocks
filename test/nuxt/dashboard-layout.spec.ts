@@ -1,10 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import { classifyGuildError, parseGuildSettings } from "~/utils/guild-dashboard";
 
 describe("dashboardLayout - Guild Switch (Watcher Logic)", () => {
 	it("should clear staged changes when guild ID changes", () => {
-		// This test verifies the watcher logic in dashboard.vue
-		// The watcher should call setGuildSettingsChanges(undefined) when guild ID changes
-
 		let stagedChanges: Record<string, unknown> | undefined = { some: "changes" };
 		let guildId = "guild-1";
 
@@ -80,90 +78,59 @@ describe("dashboardLayout - Guild Switch (Watcher Logic)", () => {
 	});
 });
 
-describe("dashboardLayout - Async Data resolving", () => {
-	it("should set guild data when useAsyncData resolves", () => {
-		let guildData: { id: string } | undefined;
-		let guildSettings: Record<string, unknown> | undefined;
-
-		function setGuildData(val: { id: string }) {
-			guildData = val;
-		}
-
-		function setGuildSettings(val: Record<string, unknown>) {
-			guildSettings = val;
-		}
-
-		const data = [{ id: "guild-1" }, JSON.stringify({ someKey: "someValue" })] as const;
-
-		const watcherCallback = (newData: readonly [{ id: string }, string] | null) => {
-			if (newData) {
-				setGuildData(newData[0]);
-				setGuildSettings(JSON.parse(newData[1]));
-			}
-		};
-
-		watcherCallback(data);
-
-		expect(guildData).toStrictEqual({ id: "guild-1" });
-		expect(guildSettings).toStrictEqual({ someKey: "someValue" });
+describe("classifyGuildError", () => {
+	it("classifies status 403 as forbidden", () => {
+		expect(classifyGuildError(403)).toBe("forbidden");
 	});
 
-	it("should handle 401 error by calling navigateTo", async () => {
-		let navigatedTo: string | undefined;
-
-		// Mock error returned by parseError
-		const parsedError = {
-			status: 401,
-			message: "Unauthorized",
-			why: "Session expired",
-			fix: "Log in again",
-		};
-
-		// Mock the logic
-		const watcherCallback = async (err: unknown) => {
-			if (err) {
-				switch (parsedError.status) {
-					case 401: {
-						navigatedTo = "/";
-						break;
-					}
-					// Omit other cases for pure unit test focus
-				}
-			}
-		};
-
-		await watcherCallback(new Error("401"));
-
-		expect(navigatedTo).toBe("/");
+	it("classifies status 401 as unauthorized", () => {
+		expect(classifyGuildError(401)).toBe("unauthorized");
 	});
 
-	it("should handle 403 error by calling navigateTo", async () => {
-		let navigatedTo: string | undefined;
+	it("classifies status 500 as default", () => {
+		expect(classifyGuildError(500)).toBe("default");
+	});
 
-		// Mock error returned by parseError
-		const parsedError = {
-			status: 403,
-			message: "Forbidden",
-			why: "Access Denied",
-			fix: "Ask for permissions",
-		};
+	it("classifies undefined status as default", () => {
+		expect(classifyGuildError(undefined)).toBe("default");
+	});
 
-		// Mock the logic
-		const watcherCallback = async (err: unknown) => {
-			if (err) {
-				switch (parsedError.status) {
-					case 403: {
-						navigatedTo = "/";
-						break;
-					}
-					// Omit other cases for pure unit test focus
-				}
-				// Mock what happens when router.back is not used
-			}
-		};
-
-		await watcherCallback(new Error("403"));
-
-		expect(navigatedTo).toBe("/");
+	it("classifies status 404 as default", () => {
+		expect(classifyGuildError(404)).toBe("default");
 	});
 });
+
+describe("parseGuildSettings", () => {
+	it("parses valid JSON and returns the object", () => {
+		const result = parseGuildSettings('{"key":"value"}', {});
+		expect(result).toStrictEqual({ key: "value" });
+	});
+
+	it("returns the fallback when JSON is malformed", () => {
+		const fallback = { existing: "data" };
+		const result = parseGuildSettings("not-json", fallback);
+		expect(result).toBe(fallback);
+	});
+
+	it("calls onError with the caught exception when JSON is malformed", () => {
+		const onError = vi.fn();
+		parseGuildSettings("{bad json", {}, onError);
+		expect(onError).toHaveBeenCalledOnce();
+		expect(onError.mock.calls[0]?.[0]).toBeInstanceOf(SyntaxError);
+	});
+
+	it("does not call onError when JSON is valid", () => {
+		const onError = vi.fn();
+		parseGuildSettings('{"ok":true}', {}, onError);
+		expect(onError).not.toHaveBeenCalled();
+	});
+
+	it("handles empty object JSON", () => {
+		expect(parseGuildSettings("{}", { fallback: true })).toStrictEqual({});
+	});
+
+	it("handles array JSON", () => {
+		expect(parseGuildSettings("[1,2,3]", {})).toStrictEqual([1, 2, 3]);
+	});
+});
+

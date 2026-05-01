@@ -123,12 +123,15 @@ describe("index.get - cached getGuildChannels and readSettings deduplication", (
 			mockGetValidatedQuery.mockResolvedValue({ shouldSerialize: true });
 		});
 
-		it("calls transformGuild with includeChannels: false", async () => {
+		it("calls transformGuild with includeChannels: false and pre-fetched data", async () => {
 			await callHandler(mockEvent);
 
 			expect(mockTransformGuild).toHaveBeenCalledOnce();
 			expect(mockTransformGuild).toHaveBeenCalledWith(mockMember.user.id, mockGuild, {
 				includeChannels: false,
+				prefetchedGuild: mockGuild,
+				prefetchedMember: mockMember,
+				prefetchedSettings: mockSettings,
 			});
 		});
 

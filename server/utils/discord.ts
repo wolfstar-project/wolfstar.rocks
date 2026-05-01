@@ -131,9 +131,11 @@ export async function transformGuild(
 		prefetchedGuild?: APIGuild | null;
 		/** Pre-fetched member data. `null` = no member. `undefined` = fetch if needed. */
 		prefetchedMember?: APIGuildMember | null;
+		/** Pre-fetched settings — skips the `readSettings` DB call inside `manage()`. */
+		prefetchedSettings?: ReadonlyGuildData;
 	} = {},
 ): Promise<OauthFlattenedGuild> {
-	const { includeChannels = true, prefetchedGuild, prefetchedMember } = options;
+	const { includeChannels = true, prefetchedGuild, prefetchedMember, prefetchedSettings } = options;
 	const guild =
 		prefetchedGuild !== undefined ? prefetchedGuild : await getGuild(data.id).catch(() => null);
 
@@ -189,7 +191,7 @@ export async function transformGuild(
 			data,
 			guild ?? undefined,
 			userId,
-			undefined,
+			prefetchedSettings,
 			prefetchedMember,
 		),
 		permissions: Number(data.permissions),

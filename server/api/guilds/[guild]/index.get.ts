@@ -45,7 +45,12 @@ export default defineWrappedResponseHandler(
 					...(await transformGuild(
 						member.user.id,
 						guild as RESTAPIPartialCurrentUserGuild,
-						{ includeChannels: false },
+						{
+							includeChannels: false,
+							prefetchedGuild: guild,
+							prefetchedMember: member,
+							prefetchedSettings: settings,
+						},
 					)),
 					channels,
 				}

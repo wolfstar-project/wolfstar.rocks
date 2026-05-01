@@ -142,7 +142,14 @@ export async function transformGuild(
 		prefetchedSettings,
 	} = options;
 	const guild =
-		prefetchedGuild !== undefined ? prefetchedGuild : await getGuild(data.id).catch(() => null);
+		prefetchedGuild !== undefined
+			? prefetchedGuild
+			: await getGuild(data.id).catch((error) => {
+					// getGuild already converts 404s to null; only handle unexpected 404s here
+					if (error?.status === 404 || error?.cause?.status === 404) return null;
+					// Rethrow all other errors (5xx, timeouts, etc.)
+					throw error;
+				});
 
 	const channels =
 		includeChannels && !isNullOrUndefined(guild)
@@ -217,7 +224,14 @@ export async function transformOauthGuildsAndUser({
 	// Phase 1: Fetch guild presence data for all guilds concurrently.
 	// getGuild returns null (cached) for guilds the bot is not in, eliminating
 	// repeated uncached 404 Discord API calls on every request.
-	const guildData = await mapWithConcurrency(guilds, 16, (g) => getGuild(g.id).catch(() => null));
+	const guildData = await mapWithConcurrency(guilds, 16, (g) =>
+		getGuild(g.id).catch((error) => {
+			// getGuild already converts 404s to null; only handle unexpected 404s here
+			if (error?.status === 404 || error?.cause?.status === 404) return null;
+			// Rethrow all other errors (5xx, timeouts, etc.)
+			throw error;
+		}),
+	);
 
 	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
 	// Separates the sequential getGuild→getMember chain into two independent parallel phases.

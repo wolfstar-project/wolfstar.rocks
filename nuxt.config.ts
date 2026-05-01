@@ -184,6 +184,7 @@ export default defineNuxtConfig({
 		"/api/users": {
 			headers: {
 				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
+				"Vary": "Cookie, Authorization",
 			},
 		},
 

@@ -1,4 +1,5 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import { readSettings } from "#server/database";
 import { GuildQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
 import { parse } from "valibot";
@@ -26,7 +27,8 @@ export default defineWrappedResponseHandler(
 		const member = await getCurrentMember(event, guild.id);
 		log.set({ member: { id: member.user.id } });
 
-		await canManage(guild, member);
+		const settings = await readSettings(guild.id);
+		await canManage(guild, member, settings);
 
 		const channels = await getGuildChannels(guild.id).catch((error) => {
 			log.error(error);
@@ -47,6 +49,7 @@ export default defineWrappedResponseHandler(
 							includeChannels: false,
 							prefetchedGuild: guild,
 							prefetchedMember: member,
+							prefetchedSettings: settings,
 						},
 					)),
 					channels,

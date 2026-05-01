@@ -17,6 +17,10 @@ export function classifyGuildError(status: number | undefined): GuildErrorClass 
  * plain object (e.g. an array or primitive).  The optional `onError` callback
  * is invoked with the caught error so callers can log it without coupling this
  * pure helper to any logging infrastructure.
+ *
+ * **Note:** the plain-object check uses `Object.getPrototypeOf(parsed) === Object.prototype`
+ * intentionally — objects with null prototypes or non-plain class instances are rejected in
+ * favour of the `fallback`, since guild settings are always plain JSON objects.
  */
 export function parseGuildSettings(
 	raw: string,

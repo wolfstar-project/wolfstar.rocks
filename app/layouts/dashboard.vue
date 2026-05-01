@@ -174,7 +174,7 @@ function isSafeUrl(url: unknown): url is string {
 	if (typeof url !== "string") return false;
 	try {
 		const { protocol } = new URL(url);
-		return protocol === "http:" || protocol === "https:";
+		return protocol === "https:";
 	} catch {
 		return false;
 	}

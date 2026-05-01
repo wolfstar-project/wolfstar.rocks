@@ -193,10 +193,16 @@ const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges
 
 const { user } = useUserSession();
 const { guilds: userGuilds } = useUser(user);
-const seedGuild = userGuilds.value?.find((g) => g.id === guildId.value);
-if (seedGuild) {
-	setGuildData(seedGuild);
-}
+watch(
+	[guildId, userGuilds],
+	([newGuildId, newUserGuilds]) => {
+		const seedGuild = newUserGuilds?.find((g) => g.id === newGuildId);
+		if (seedGuild) {
+			setGuildData(seedGuild);
+		}
+	},
+	{ immediate: true },
+);
 
 const requestFetch = useRequestFetch();
 
@@ -220,7 +226,19 @@ watch(
 	(newData) => {
 		if (newData) {
 			setGuildData(newData[0]);
-			setGuildSettings(JSON.parse(newData[1]));
+
+			let parsedSettings: ReturnType<typeof JSON.parse>;
+			try {
+				parsedSettings = JSON.parse(newData[1]);
+			} catch (parseErr) {
+				logger.error(
+					`Failed to parse guild settings payload for guild Id: ${guildId.value}`,
+					parseError(parseErr),
+				);
+				parsedSettings = guildSettings.value ?? {};
+			}
+
+			setGuildSettings(parsedSettings);
 
 			if (nuxtError.value) {
 				clearError();

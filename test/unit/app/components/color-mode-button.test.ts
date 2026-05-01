@@ -23,7 +23,8 @@ function mountButton() {
 				ClientOnly: { template: "<slot/>" },
 				UButton: {
 					inheritAttrs: false,
-					template: '<button v-bind="$attrs" @click="$emit(\'click\', $event)">btn</button>',
+					template:
+						'<button v-bind="$attrs" @click="$emit(\'click\', $event)">btn</button>',
 					emits: ["click"],
 				},
 			},

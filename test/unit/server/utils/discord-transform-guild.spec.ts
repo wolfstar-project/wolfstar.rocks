@@ -135,7 +135,7 @@ describe("transformGuild", () => {
 	});
 
 	it("returns channels:[] and wolfstarIsIn:false when guild is not in bot", async () => {
-		mockGuildsGet.mockRejectedValue(new Error("Not found"));
+		mockGuildsGet.mockRejectedValue(Object.assign(new Error("Not found"), { status: 404 }));
 
 		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
 

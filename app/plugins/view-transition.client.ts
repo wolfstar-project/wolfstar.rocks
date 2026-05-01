@@ -100,6 +100,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 	// Abort on errors
 	router.onError(() => {
+		transition?.skipTransition();
 		finishTransition?.();
 		resetTransitionState();
 	});

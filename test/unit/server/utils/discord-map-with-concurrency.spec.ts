@@ -1,4 +1,4 @@
-import { mapWithConcurrency } from "#server/utils/map-with-concurrency";
+import { mapWithConcurrency } from "#server/utils/mapWithConcurrency";
 import { describe, expect, it, vi } from "vitest";
 
 describe("mapWithConcurrency", () => {

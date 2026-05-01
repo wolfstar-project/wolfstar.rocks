@@ -1,5 +1,5 @@
 import { readSettings, serializeSettings } from "#server/database";
-import { useLogger } from "evlog";
+import { createError, useLogger } from "evlog";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -9,6 +9,14 @@ export default defineWrappedResponseHandler(
 		log.set({ guild: { id: guildId } });
 
 		const guild = await getGuild(guildId);
+		if (!guild) {
+			throw createError({
+				message: "Guild not found",
+				status: 404,
+				why: `The bot is not a member of guild ${guildId}`,
+				fix: "check bot is a member of the guild",
+			});
+		}
 
 		const member = await getCurrentMember(event, guild.id);
 		log.set({ member: { id: member.user.id } });

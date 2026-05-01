@@ -7,7 +7,9 @@ const mockColorMode = { preference: "dark", value: "dark" };
 const mockEffectiveReduceMotion = ref(false);
 
 mockNuxtImport("useColorMode", () => () => mockColorMode);
-mockNuxtImport("useReduceMotion", () => () => ({ effectiveReduceMotion: mockEffectiveReduceMotion }));
+mockNuxtImport("useReduceMotion", () => () => ({
+	effectiveReduceMotion: mockEffectiveReduceMotion,
+}));
 
 describe("ColorModeButton", () => {
 	beforeEach(() => {

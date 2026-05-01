@@ -13,7 +13,8 @@ export function classifyGuildError(status: number | undefined): GuildErrorClass 
 
 /**
  * Safely parses a raw JSON string of guild settings.  Falls back to
- * `fallback` when the string is malformed.  The optional `onError` callback
+ * `fallback` when the string is malformed or when the parsed value is not a
+ * plain object (e.g. an array or primitive).  The optional `onError` callback
  * is invoked with the caught error so callers can log it without coupling this
  * pure helper to any logging infrastructure.
  */
@@ -23,7 +24,16 @@ export function parseGuildSettings(
 	onError?: (err: unknown) => void,
 ): Record<string, unknown> {
 	try {
-		return JSON.parse(raw) as Record<string, unknown>;
+		const parsed: unknown = JSON.parse(raw);
+		if (
+			typeof parsed === "object" &&
+			parsed !== null &&
+			!Array.isArray(parsed) &&
+			Object.getPrototypeOf(parsed) === Object.prototype
+		) {
+			return parsed as Record<string, unknown>;
+		}
+		return fallback;
 	} catch (err) {
 		onError?.(err);
 		return fallback;

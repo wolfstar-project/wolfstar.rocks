@@ -170,6 +170,16 @@ import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError, createError } from "evlog";
 import { parseGuildSettings, classifyGuildError } from "~/utils/guild-dashboard";
 
+function isSafeUrl(url: unknown): url is string {
+	if (typeof url !== "string") return false;
+	try {
+		const { protocol } = new URL(url);
+		return protocol === "http:" || protocol === "https:";
+	} catch {
+		return false;
+	}
+}
+
 const logger = useLogger("wolfstar:dashboard");
 
 const guildId = useRouteParams("id", null, { transform: String });
@@ -296,16 +306,17 @@ watch(
 				}
 				default: {
 					if (import.meta.client) {
+						const link = isSafeUrl(parsedError.link) ? parsedError.link : null;
 						toast.add({
 							title: parsedError.message,
 							description: parsedError.why,
 							color: "error",
-							actions: parsedError.link
+							actions: link
 								? [
 										{
 											label: "Learn more",
 											onClick: () => {
-												window.open(parsedError.link, "_blank", "noopener,noreferrer");
+												window.open(link, "_blank", "noopener,noreferrer");
 											},
 										},
 									]

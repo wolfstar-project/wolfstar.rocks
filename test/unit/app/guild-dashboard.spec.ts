@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { classifyGuildError, parseGuildSettings } from "~/utils/guild-dashboard";
 
-describe("dashboardLayout - Guild Switch (Watcher Logic)", () => {
+describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 	it("should clear staged changes when guild ID changes", () => {
 		let stagedChanges: Record<string, unknown> | undefined = { some: "changes" };
 		let guildId = "guild-1";
@@ -126,11 +126,17 @@ describe("parseGuildSettings", () => {
 	});
 
 	it("handles empty object JSON", () => {
-		expect(parseGuildSettings("{}", { fallback: true })).toStrictEqual({});
+		expect(parseGuildSettings("{}", {})).toStrictEqual({});
 	});
 
-	it("handles array JSON", () => {
-		expect(parseGuildSettings("[1,2,3]", {})).toStrictEqual([1, 2, 3]);
+	it("returns the fallback for non-object JSON (array)", () => {
+		const fallback = { fallback: true };
+		expect(parseGuildSettings("[1,2,3]", fallback)).toBe(fallback);
+	});
+
+	it("returns the fallback for non-object JSON (number)", () => {
+		const fallback = { fallback: true };
+		expect(parseGuildSettings("42", fallback)).toBe(fallback);
 	});
 });
 

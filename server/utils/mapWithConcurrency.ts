@@ -7,7 +7,7 @@ export async function mapWithConcurrency<T, U>(
 		throw new RangeError(`mapWithConcurrency: limit must be a positive integer, got ${limit}`);
 	}
 
-	const results: U[] = new Array<U>(items.length);
+	const results: U[] = Array.from<U>({ length: items.length });
 	let nextIndex = 0;
 	let failed = false;
 

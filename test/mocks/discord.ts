@@ -215,7 +215,6 @@ export function mockGetGuild(overrides?: Partial<APIGuild>) {
 		name: "Test Guild",
 		owner_id: "987654321098765432",
 		roles: [],
-		channels: [],
 		emojis: [],
 		features: [],
 		icon: null,

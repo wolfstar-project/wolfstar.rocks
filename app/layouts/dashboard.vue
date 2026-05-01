@@ -275,7 +275,8 @@ watch(
 					if (import.meta.client) {
 						toast.add({
 							title: "Access Denied",
-							description: "You don't have permission to access this server's dashboard.",
+							description:
+								"You don't have permission to access this server's dashboard.",
 							color: "error",
 							icon: "heroicons:x-circle",
 						});

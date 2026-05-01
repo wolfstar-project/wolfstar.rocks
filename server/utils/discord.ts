@@ -135,7 +135,12 @@ export async function transformGuild(
 		prefetchedSettings?: ReadonlyGuildData;
 	} = {},
 ): Promise<OauthFlattenedGuild> {
-	const { includeChannels = true, prefetchedGuild, prefetchedMember, prefetchedSettings } = options;
+	const {
+		includeChannels = true,
+		prefetchedGuild,
+		prefetchedMember,
+		prefetchedSettings,
+	} = options;
 	const guild =
 		prefetchedGuild !== undefined ? prefetchedGuild : await getGuild(data.id).catch(() => null);
 

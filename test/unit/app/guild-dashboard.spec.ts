@@ -139,4 +139,3 @@ describe("parseGuildSettings", () => {
 		expect(parseGuildSettings("42", fallback)).toBe(fallback);
 	});
 });
-

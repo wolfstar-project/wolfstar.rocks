@@ -249,7 +249,7 @@ watch(
 				},
 			);
 
-			setGuildSettings(parsedSettings);
+			setGuildSettings(parsedSettings as GuildData);
 
 			if (nuxtError.value) {
 				clearError();

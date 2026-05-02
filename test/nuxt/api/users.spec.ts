@@ -27,7 +27,11 @@ registerEndpoint("/api/users", {
 		// Throws 401 when TEST_AUTH_HEADER is absent (mirrors requireUserSession)
 		const userId = requireTestSession(event);
 
-		setResponseHeader(event, "Cache-Control", "private, max-age=30, stale-while-revalidate=300");
+		setResponseHeader(
+			event,
+			"Cache-Control",
+			"private, max-age=30, stale-while-revalidate=300",
+		);
 
 		return {
 			guilds: [FIXTURE_PARTIAL_GUILD],

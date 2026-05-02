@@ -169,7 +169,7 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0
       '@e18e/eslint-plugin':
-        specifier: ^0.2.0
+        specifier: 0.2.0
         version: 0.2.0(eslint@9.39.4)(oxlint@1.60.0)
       '@netlify/nuxt':
         specifier: ^0.2.36
@@ -226,10 +226,10 @@ importers:
         specifier: ^0.38.42
         version: 0.38.42
       eslint:
-        specifier: ^9.39.4
+        specifier: 9.39.4
         version: 9.39.4(jiti@2.6.1)
       eslint-plugin-regexp:
-        specifier: ^3.0.0
+        specifier: 3.1.0
         version: 3.1.0(eslint@9.39.4)
       knip:
         specifier: ^5.86.0

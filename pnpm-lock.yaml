@@ -157,46 +157,46 @@ importers:
         specifier: 5.2.0
         version: 5.2.0(@voidzero-dev/vite-plus-core@0.1.19)(@voidzero-dev/vite-plus-test@0.1.19)(tinybench@2.9.0)
       '@commitlint/cli':
-        specifier: ^20.4.3
+        specifier: 20.5.0
         version: 20.5.0(@types/node@24.12.2)(conventional-commits-parser@6.3.0)(typescript@6.0.2)
       '@commitlint/config-conventional':
-        specifier: ^20.4.3
+        specifier: 20.5.0
         version: 20.5.0
       '@discordjs/collection':
-        specifier: ^2.1.1
+        specifier: 2.1.1
         version: 2.1.1
       '@discordjs/core':
-        specifier: ^2.4.0
+        specifier: 2.4.0
         version: 2.4.0
       '@e18e/eslint-plugin':
         specifier: 0.2.0
         version: 0.2.0(eslint@9.39.4)(oxlint@1.60.0)
       '@netlify/nuxt':
-        specifier: ^0.2.36
+        specifier: 0.2.36
         version: 0.2.36(db0@0.3.4)(encoding@0.1.13)(ioredis@5.10.1)(magicast@0.5.2)(rollup@4.60.0)
       '@nuxt/hints':
-        specifier: ^1.0.2
+        specifier: 1.0.2
         version: 1.0.2(@electric-sql/pglite@0.4.1)(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@netlify/blobs@10.7.4)(@voidzero-dev/vite-plus-core@0.1.19)(@voidzero-dev/vite-plus-test@0.1.19)(db0@0.3.4)(encoding@0.1.13)(ioredis@5.10.1)(magicast@0.5.2)(mysql2@3.15.3)(rolldown@1.0.0-rc.10)(typescript@6.0.2)(vue@3.5.31)
       '@nuxt/test-utils':
         specifier: ^4.0.0
         version: 4.0.0(patch_hash=8438d6588e19230d3392ce53e45dd8e9bff54eaa3ce18092602fefd40c2eefe9)(@playwright/test@1.59.1)(@vitest/ui@4.1.2)(@voidzero-dev/vite-plus-core@0.1.19)(@voidzero-dev/vite-plus-test@0.1.19)(@vue/test-utils@2.4.6)(magicast@0.5.2)(playwright-core@1.59.1)(typescript@6.0.2)
       '@sapphire/bitfield':
-        specifier: ^1.2.4
+        specifier: 1.2.4
         version: 1.2.4
       '@sapphire/snowflake':
-        specifier: ^3.5.5
+        specifier: 3.5.5
         version: 3.5.5
       '@sapphire/time-utilities':
-        specifier: ^1.7.14
+        specifier: 1.7.14
         version: 1.7.14
       '@sapphire/utilities':
-        specifier: ^3.18.2
+        specifier: 3.18.2
         version: 3.18.2
       '@shelve/cli':
-        specifier: ^4.2.0
+        specifier: 4.2.0
         version: 4.2.0(magicast@0.5.2)
       '@tailwindcss/typography':
-        specifier: ^0.5.19
+        specifier: 0.5.19
         version: 0.5.19(tailwindcss@4.2.2)
       '@takumi-rs/core':
         specifier: 1.0.12
@@ -211,19 +211,19 @@ importers:
         specifier: 4.1.2
         version: 4.1.2(@voidzero-dev/vite-plus-test@0.1.19)
       changelogen:
-        specifier: ^0.6.2
+        specifier: 0.6.2
         version: 0.6.2(magicast@0.5.2)
       cz-conventional-changelog:
-        specifier: ^3.3.0
+        specifier: 3.3.0
         version: 3.3.0(@types/node@24.12.2)(typescript@6.0.2)
       daisyui:
-        specifier: ^5.5.19
+        specifier: 5.5.19
         version: 5.5.19
       defu:
-        specifier: ^6.1.4
+        specifier: 6.1.7
         version: 6.1.7
       discord-api-types:
-        specifier: ^0.38.42
+        specifier: 0.38.42
         version: 0.38.42
       eslint:
         specifier: 9.39.4
@@ -232,34 +232,34 @@ importers:
         specifier: 3.1.0
         version: 3.1.0(eslint@9.39.4)
       knip:
-        specifier: ^5.86.0
+        specifier: 5.88.1
         version: 5.88.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@24.12.2)(typescript@6.0.2)
       prisma:
-        specifier: ^7.7.0
+        specifier: 7.7.0
         version: 7.7.0(@types/react@19.2.14)(magicast@0.5.2)(react-dom@19.2.5)(react@19.2.5)(typescript@6.0.2)
       prisma-json-types-generator:
-        specifier: ^4.1.1
+        specifier: 4.1.1
         version: 4.1.1(@prisma/client@7.7.0)(prisma@7.7.0)(typescript@6.0.2)
       skilld:
-        specifier: ^1.6.2
+        specifier: 1.6.2
         version: 1.6.2(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(crawlee@3.16.0)(magicast@0.5.2)(pg@8.20.0)(playwright@1.59.1)(unstorage@1.17.5)(ws@8.20.0)(zod@4.3.6)
       tailwindcss:
-        specifier: ^4.2.1
+        specifier: 4.2.2
         version: 4.2.2
       taze:
-        specifier: ^19.10.0
+        specifier: 19.10.0
         version: 19.10.0
       tsx:
-        specifier: ^4.21.0
+        specifier: 4.21.0
         version: 4.21.0
       typescript:
-        specifier: ~6.0.0
+        specifier: 6.0.2
         version: 6.0.2
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@0.1.19
         version: '@voidzero-dev/vite-plus-test@0.1.19(@opentelemetry/api@1.9.1)(@types/node@24.12.2)(@vitest/coverage-v8@4.1.2)(@vitest/ui@4.1.2)(@voidzero-dev/vite-plus-core@0.1.19)(esbuild@0.27.4)(jiti@2.6.1)(terser@5.46.2)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)'
       vue-tsc:
-        specifier: ^3.2.5
+        specifier: 3.2.6
         version: 3.2.6(typescript@6.0.2)
 
 packages:

@@ -13,6 +13,7 @@ const MARKETING_PATHS = [
 	"/terms",
 	"/commands",
 	"/profile",
+	"/account",
 ];
 
 export function classifyNavigation(input: ClassifyInput): string[] {

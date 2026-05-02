@@ -612,15 +612,23 @@ function handleSortToggle() {
 		return;
 	}
 	if (isTransitioning.value) return;
+	if (document.activeViewTransition) {
+		document.activeViewTransition.skipTransition();
+	}
 	isTransitioning.value = true;
-	document
-		.startViewTransition(async () => {
-			toggleSortOrder();
-			await nextTick();
-		})
-		.finished.finally(() => {
-			isTransitioning.value = false;
-		});
+	try {
+		document
+			.startViewTransition(async () => {
+				toggleSortOrder();
+				await nextTick();
+			})
+			.finished.finally(() => {
+				isTransitioning.value = false;
+			});
+	} catch {
+		isTransitioning.value = false;
+		toggleSortOrder();
+	}
 }
 
 const preferredFormat = computed<"gif" | "png">(() => {

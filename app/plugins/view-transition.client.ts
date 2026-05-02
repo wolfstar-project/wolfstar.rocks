@@ -55,8 +55,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 		// Respect prefers-reduced-motion
 		if (effectiveReduceMotion.value) return;
 
-		// Skip if browser already handled the visual transition
-		if (hasUAVisualTransition) return;
+		// Skip if browser already handled the visual transition.
+		// Clear the flag so subsequent navigations are not permanently disabled.
+		if (hasUAVisualTransition) {
+			hasUAVisualTransition = false;
+			return;
+		}
 
 		const input: ClassifyInput = { toPath, fromPath, isPopstate };
 		const types = classifyNavigation(input);

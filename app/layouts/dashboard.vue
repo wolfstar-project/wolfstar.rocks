@@ -94,20 +94,29 @@
 				</div>
 			</div>
 		</div>
-		<div
-			v-if="isReadyToSubmit"
-			style="view-transition-name: save-changes-bar"
-			class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+		<Transition
+			enter-active-class="transition-[opacity,transform] duration-300 ease-out"
+			enter-from-class="opacity-0 translate-y-2"
+			enter-to-class="opacity-100 translate-y-0"
+			leave-active-class="transition-[opacity,transform] duration-200 ease-in"
+			leave-from-class="opacity-100 translate-y-0"
+			leave-to-class="opacity-0 translate-y-2"
 		>
-			<UFieldGroup>
-				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-					Save Changes
-				</UButton>
-				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-					Reset Changes
-				</UButton>
-			</UFieldGroup>
-		</div>
+			<div
+				v-if="isReadyToSubmit"
+				style="view-transition-name: save-changes-bar"
+				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+			>
+				<UFieldGroup>
+					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+						Save Changes
+					</UButton>
+					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+						Reset Changes
+					</UButton>
+				</UFieldGroup>
+			</div>
+		</Transition>
 
 		<UModal
 			v-model:open="showDialog"

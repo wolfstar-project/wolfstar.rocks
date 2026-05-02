@@ -7,7 +7,9 @@ export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
 	const postgresAudit = createPostgresAuditDrain();
 
-	const auditPipeline = createDrainPipeline<DrainContext>({ batch: { size: 50, intervalMs: 5000 } });
+	const auditPipeline = createDrainPipeline<DrainContext>({
+		batch: { size: 50, intervalMs: 5000 },
+	});
 	const auditDrain = auditPipeline(async (batch) => {
 		const auditBatch = batch.filter((ctx) => ctx.event.audit);
 		const results = await Promise.allSettled(
@@ -28,7 +30,9 @@ export default defineNitroPlugin((nitroApp) => {
 
 	if (config.public.sentry.dsn) {
 		const sentry = createSentryDrain();
-		const sentryPipeline = createDrainPipeline<DrainContext>({ batch: { size: 50, intervalMs: 5000 } });
+		const sentryPipeline = createDrainPipeline<DrainContext>({
+			batch: { size: 50, intervalMs: 5000 },
+		});
 		const sentryDrain = sentryPipeline(async (batch) => {
 			const results = await Promise.allSettled(
 				batch.map((ctx) => Promise.resolve(sentry(ctx))),

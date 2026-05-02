@@ -38,17 +38,15 @@ const mocks = vi.hoisted(() => {
 });
 
 vi.mock("evlog/pipeline", () => ({
-	createDrainPipeline: vi.fn(
-		() => (batchHandler: (batch: unknown[]) => Promise<void>) => {
-			const flush = vi.fn().mockResolvedValue(undefined);
-			// Bypass buffering: call batchHandler immediately with a single-item batch
-			const drainFn = vi.fn((ctx: unknown) => batchHandler([ctx]));
-			drainFn.flush = flush;
+	createDrainPipeline: vi.fn(() => (batchHandler: (batch: unknown[]) => Promise<void>) => {
+		const flush = vi.fn().mockResolvedValue(undefined);
+		// Bypass buffering: call batchHandler immediately with a single-item batch
+		const drainFn = vi.fn((ctx: unknown) => batchHandler([ctx]));
+		drainFn.flush = flush;
 
-			mocks.mockDrains.push({ fn: drainFn, flush, batchHandler });
-			return drainFn;
-		},
-	),
+		mocks.mockDrains.push({ fn: drainFn, flush, batchHandler });
+		return drainFn;
+	}),
 }));
 
 vi.mock("evlog/sentry", () => ({
@@ -59,12 +57,10 @@ vi.mock("#server/utils/audit/postgres-drain", () => ({
 	createPostgresAuditDrain: vi.fn(() => (ctx: unknown) => mocks.postgresState.impl(ctx)),
 }));
 
+import type { DrainContext } from "evlog";
+// ---- Helpers ----------------------------------------------------------------
 // Importing the plugin triggers defineNitroPlugin, which populates registeredHooks and mockDrains
 import "#server/plugins/evlog-drain";
-
-// ---- Helpers ----------------------------------------------------------------
-
-import type { DrainContext } from "evlog";
 
 function makeAuditCtx(): DrainContext {
 	return {

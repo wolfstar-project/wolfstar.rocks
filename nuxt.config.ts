@@ -181,6 +181,13 @@ export default defineNuxtConfig({
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
+		"/api/users": {
+			headers: {
+				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
+				"Vary": "Cookie, Authorization",
+			},
+		},
+
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {

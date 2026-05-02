@@ -16,6 +16,7 @@
  */
 
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
+import { setResponseHeader } from "h3";
 import { describe, expect, it } from "vitest";
 import { FIXTURE_PARTIAL_GUILD, FIXTURE_USER, FIXTURE_USERS_RESPONSE } from "./_fixtures";
 import { TEST_AUTH_HEADER, authHeaders, requireTestSession } from "./_helpers";

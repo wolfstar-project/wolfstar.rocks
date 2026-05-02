@@ -34,6 +34,14 @@ html:active-view-transition-type(route-marketing) {
 	}
 }
 
+/* Dashboard routes get a slightly longer tempo for heavier guild UI */
+html:active-view-transition-type(route-dashboard) {
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation-duration: 300ms;
+	}
+}
+
 /* A11y kill-switch: respects OS reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
 	::view-transition-group(*),

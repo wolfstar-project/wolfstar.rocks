@@ -9,14 +9,16 @@ export default defineNitroPlugin((nitroApp) => {
 
 	const auditPipeline = createDrainPipeline<DrainContext>({ batch: { size: 50, intervalMs: 5000 } });
 	const auditDrain = auditPipeline(async (batch) => {
+		const auditBatch = batch.filter((ctx) => ctx.event.audit);
 		const results = await Promise.allSettled(
-			batch.filter((ctx) => ctx.event.audit).map((ctx) => Promise.resolve(postgresAudit(ctx))),
+			auditBatch.map((ctx) => Promise.resolve(postgresAudit(ctx))),
 		);
-		for (const result of results) {
+		for (const [index, result] of results.entries()) {
 			if (result.status === "rejected") {
 				console.error(
 					"[evlog] postgres audit drain failed, event not persisted:",
 					result.reason,
+					{ action: auditBatch[index]?.event.audit?.action },
 				);
 			}
 		}

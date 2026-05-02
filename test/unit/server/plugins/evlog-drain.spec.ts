@@ -31,7 +31,7 @@ const mocks = vi.hoisted(() => {
 	};
 
 	(globalThis as Record<string, unknown>).useRuntimeConfig = () => ({
-		public: { sentry: { dsn: "https://test@o0.ingest.sentry.io/1" } },
+		public: { sentry: { dsn: "https://fake-token@invalid.example.invalid/1" } },
 	});
 
 	return { mockDrains, postgresState, sentryState, registeredHooks };

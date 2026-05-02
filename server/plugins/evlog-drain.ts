@@ -47,7 +47,8 @@ export default defineNitroPlugin((nitroApp) => {
 		try {
 			await auditDrain.flush?.();
 		} catch (err) {
-			logger.error("[audit] Failed to flush audit drain on close", err);
+			// oxlint-disable-next-line no-console
+			console.error("[audit] Failed to flush audit drain on close", err);
 		}
 	});
 });

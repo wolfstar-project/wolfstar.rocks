@@ -1,3 +1,4 @@
+import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { pwa } from "./config/pwa";
@@ -143,6 +144,20 @@ export default defineNuxtConfig({
 		},
 		include: ["/api/**"],
 		exclude: ["/api/_nuxt_icon/**"],
+		paths: [
+			...(auditRedactPreset.paths ?? []),
+			"user.email",
+			"user.password",
+			"user.accessToken",
+			"user.refreshToken",
+			"discord.botToken",
+			"headers.authorization",
+			"headers.cookie",
+			"headers.set-cookie",
+			"headers.x-api-key",
+			"headers.x-auth-token",
+			"headers.proxy-authorization",
+		],
 	},
 
 	ui: {

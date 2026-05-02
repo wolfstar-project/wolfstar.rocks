@@ -5,36 +5,46 @@ import { createSentryDrain } from "evlog/sentry";
 
 export default defineNitroPlugin((nitroApp) => {
 	const config = useRuntimeConfig();
-	const sentry = config.public.sentry.dsn ? createSentryDrain() : undefined;
 	const postgresAudit = createPostgresAuditDrain();
 
-	const pipeline = createDrainPipeline<DrainContext>({
-		batch: { size: 50, intervalMs: 5000 },
-	});
-
-	const drain = pipeline(async (batch) => {
-		const tasks: Promise<any>[] = [];
-
-		for (const ctx of batch) {
-			// 1. If the event is an audit event, send it to Postgres
-			if (ctx.event.audit) {
-				// Wrap in Promise.resolve because the drain can be sync or async
-				tasks.push(Promise.resolve(postgresAudit(ctx)));
-			}
-
-			// 2. Send the event to Sentry
-			if (sentry) {
-				tasks.push(Promise.resolve(sentry(ctx)));
+	const auditPipeline = createDrainPipeline<DrainContext>({ batch: { size: 50, intervalMs: 5000 } });
+	const auditDrain = auditPipeline(async (batch) => {
+		const results = await Promise.allSettled(
+			batch.filter((ctx) => ctx.event.audit).map((ctx) => Promise.resolve(postgresAudit(ctx))),
+		);
+		for (const result of results) {
+			if (result.status === "rejected") {
+				console.error(
+					"[evlog] postgres audit drain failed, event not persisted:",
+					result.reason,
+				);
 			}
 		}
-
-		// Execute all writes in parallel for this batch
-		await Promise.allSettled(tasks);
 	});
 
-	nitroApp.hooks.hook("evlog:drain", drain);
+	nitroApp.hooks.hook("evlog:drain", auditDrain);
+
+	if (config.public.sentry.dsn) {
+		const sentry = createSentryDrain();
+		const sentryPipeline = createDrainPipeline<DrainContext>({ batch: { size: 50, intervalMs: 5000 } });
+		const sentryDrain = sentryPipeline(async (batch) => {
+			const results = await Promise.allSettled(
+				batch.map((ctx) => Promise.resolve(sentry(ctx))),
+			);
+			for (const result of results) {
+				if (result.status === "rejected") {
+					console.warn("[evlog] sentry drain failed:", result.reason);
+				}
+			}
+		});
+
+		nitroApp.hooks.hook("evlog:drain", sentryDrain);
+		nitroApp.hooks.hook("close", async () => {
+			await sentryDrain.flush();
+		});
+	}
 
 	nitroApp.hooks.hook("close", async () => {
-		await drain.flush();
+		await auditDrain.flush();
 	});
 });

@@ -64,12 +64,10 @@
 								tabindex="0"
 							>
 								<LazyUAvatar
-									v-motion
-									:initial="{ scale: 1 }"
-									:hover="{ scale: 1.1, rotate: 5 }"
 									:src="src"
 									icon="lucide:image"
 									size="2xs"
+									style="view-transition-name: user-avatar"
 								/>
 								<span class="hidden font-semibold sm:inline">{{ user?.name }}</span>
 							</div>

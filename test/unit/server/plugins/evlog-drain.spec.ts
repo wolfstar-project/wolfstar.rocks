@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // All mutable state must live in vi.hoisted() so it is available inside vi.mock() factories.
 // vi.mock() factories are hoisted before imports; vi.hoisted() runs before them.
 const mocks = vi.hoisted(() => {
-	// Drain mocks populated in order during plugin init: [0] = auditDrain, [1] = sentryDrain
+	// Drain mocks populated during plugin init
 	interface MockDrain {
 		fn: (...args: unknown[]) => unknown;
 		flush: ReturnType<typeof vi.fn>;
@@ -44,6 +44,7 @@ vi.mock("evlog/pipeline", () => ({
 			// Bypass buffering: call batchHandler immediately with a single-item batch
 			const drainFn = vi.fn((ctx: unknown) => batchHandler([ctx]));
 			drainFn.flush = flush;
+
 			mocks.mockDrains.push({ fn: drainFn, flush, batchHandler });
 			return drainFn;
 		},
@@ -87,6 +88,41 @@ function makeNonAuditCtx(): DrainContext {
 	} as DrainContext;
 }
 
+function findDrainHook(tag: "audit" | "sentry"): ((...args: unknown[]) => unknown) | undefined {
+	// Find the correct hook by invoking candidates with a test context and checking side-effects
+	const hooks = mocks.registeredHooks["evlog:drain"] ?? [];
+
+	for (const hook of hooks) {
+		// Clear previous calls to get accurate detection
+		mocks.postgresState.impl.mockClear();
+		mocks.sentryState.impl.mockClear();
+
+		// Test the hook with an audit context
+		const testCtx = makeAuditCtx();
+		hook(testCtx);
+
+		// Check which implementation was called
+		const isAuditDrain = mocks.postgresState.impl.mock.calls.length > 0;
+		const isSentryDrain = mocks.sentryState.impl.mock.calls.length > 0;
+
+		if (tag === "audit" && isAuditDrain) {
+			// Reset mocks before returning
+			mocks.postgresState.impl.mockClear();
+			mocks.sentryState.impl.mockClear();
+			return hook;
+		}
+
+		if (tag === "sentry" && isSentryDrain) {
+			// Reset mocks before returning
+			mocks.postgresState.impl.mockClear();
+			mocks.sentryState.impl.mockClear();
+			return hook;
+		}
+	}
+
+	return undefined;
+}
+
 // ---- Tests ------------------------------------------------------------------
 
 describe("evlog-drain plugin", () => {
@@ -105,7 +141,7 @@ describe("evlog-drain plugin", () => {
 			const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 			mocks.postgresState.impl.mockRejectedValueOnce(new Error("DB connection lost"));
 
-			const auditDrainHook = mocks.registeredHooks["evlog:drain"]?.[0];
+			const auditDrainHook = findDrainHook("audit");
 			expect(auditDrainHook).toBeDefined();
 			await auditDrainHook!(makeAuditCtx());
 
@@ -115,7 +151,7 @@ describe("evlog-drain plugin", () => {
 		});
 
 		it("does not invoke postgres drain for non-audit events", async () => {
-			const auditDrainHook = mocks.registeredHooks["evlog:drain"]?.[0];
+			const auditDrainHook = findDrainHook("audit");
 			expect(auditDrainHook).toBeDefined();
 			await auditDrainHook!(makeNonAuditCtx());
 
@@ -126,7 +162,7 @@ describe("evlog-drain plugin", () => {
 			const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
 			mocks.postgresState.impl.mockRejectedValueOnce(new Error("transient"));
 
-			const auditDrainHook = mocks.registeredHooks["evlog:drain"]?.[0];
+			const auditDrainHook = findDrainHook("audit");
 			await expect(auditDrainHook!(makeAuditCtx())).resolves.toBeUndefined();
 
 			consoleError.mockRestore();
@@ -138,7 +174,7 @@ describe("evlog-drain plugin", () => {
 			const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
 			mocks.sentryState.impl.mockRejectedValueOnce(new Error("Sentry unreachable"));
 
-			const sentryDrainHook = mocks.registeredHooks["evlog:drain"]?.[1];
+			const sentryDrainHook = findDrainHook("sentry");
 			expect(sentryDrainHook).toBeDefined();
 			await sentryDrainHook!(makeAuditCtx());
 
@@ -151,7 +187,7 @@ describe("evlog-drain plugin", () => {
 			const consoleWarn = vi.spyOn(console, "warn").mockImplementation(() => {});
 			mocks.sentryState.impl.mockRejectedValueOnce(new Error("Sentry unreachable"));
 
-			const sentryDrainHook = mocks.registeredHooks["evlog:drain"]?.[1];
+			const sentryDrainHook = findDrainHook("sentry");
 			await expect(sentryDrainHook!(makeAuditCtx())).resolves.toBeUndefined();
 
 			consoleWarn.mockRestore();
@@ -160,17 +196,27 @@ describe("evlog-drain plugin", () => {
 
 	describe("close hook", () => {
 		it("flushes the audit drain", async () => {
+			// Find the audit drain by identifying which hook calls postgresState.impl
+			const auditHook = findDrainHook("audit");
+			const auditDrain = mocks.mockDrains.find((d) => d.fn === auditHook);
+
 			for (const handler of mocks.registeredHooks["close"] ?? []) {
 				await handler();
 			}
-			expect(mocks.mockDrains[0]?.flush).toHaveBeenCalledOnce();
+
+			expect(auditDrain?.flush).toHaveBeenCalledOnce();
 		});
 
 		it("flushes the sentry drain when sentry is configured", async () => {
+			// Find the sentry drain by identifying which hook calls sentryState.impl
+			const sentryHook = findDrainHook("sentry");
+			const sentryDrain = mocks.mockDrains.find((d) => d.fn === sentryHook);
+
 			for (const handler of mocks.registeredHooks["close"] ?? []) {
 				await handler();
 			}
-			expect(mocks.mockDrains[1]?.flush).toHaveBeenCalledOnce();
+
+			expect(sentryDrain?.flush).toHaveBeenCalledOnce();
 		});
 	});
 });

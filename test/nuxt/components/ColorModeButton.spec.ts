@@ -16,6 +16,7 @@ describe("ColorModeButton", () => {
 		mockColorMode.preference = "dark";
 		mockColorMode.value = "dark";
 		mockEffectiveReduceMotion.value = false;
+		localStorage.removeItem("user-prefers-reduced-motion");
 
 		Object.defineProperty(document, "startViewTransition", {
 			configurable: true,
@@ -79,6 +80,8 @@ describe("ColorModeButton", () => {
 
 	it("swaps theme and does not call startViewTransition when effectiveReduceMotion is true", async () => {
 		mockEffectiveReduceMotion.value = true;
+		// Also set localStorage so the real composable returns true if mockNuxtImport doesn't intercept
+		localStorage.setItem("user-prefers-reduced-motion", "true");
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).not.toHaveBeenCalled();

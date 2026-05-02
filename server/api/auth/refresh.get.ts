@@ -1,5 +1,6 @@
 import type { UserSession } from "#auth-utils";
-import { useLogger } from "evlog";
+import { sessionRefresh, userLogout } from "#shared/audit/actions";
+import { useLogger, withAuditMethods } from "evlog";
 
 async function refreshTokens(refreshToken: string) {
 	const api = useApi();
@@ -25,7 +26,7 @@ function isExpired(expires_in: number | undefined, loggedInAt: number): boolean 
 
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const log = useLogger(event);
+		const log = withAuditMethods(useLogger(event));
 		const session: UserSession = await getUserSession(event);
 		if (!session?.secure?.tokens) {
 			return;
@@ -43,6 +44,16 @@ export default defineWrappedResponseHandler(
 		}
 
 		if (!access_token || !refresh_token) {
+			const actor = userId
+				? { type: "user" as const, id: userId }
+				: { type: "system" as const, id: "session-cleanup" };
+			log.audit(
+				userLogout({
+					actor,
+					outcome: "denied",
+					reason: "Session cleared due to missing tokens",
+				}),
+			);
 			await clearUserSession(event);
 			return;
 		}
@@ -58,9 +69,32 @@ export default defineWrappedResponseHandler(
 				},
 			});
 
+			const successActor = userId
+				? { type: "user" as const, id: userId }
+				: { type: "system" as const, id: "session-cleanup" };
+			log.audit(
+				sessionRefresh({
+					actor: successActor,
+					outcome: "success",
+				}),
+			);
 			log.info("Tokens refreshed successfully");
 		} catch (error) {
+			const reason =
+				error instanceof Error && error.message.includes("invalid_grant")
+					? "Refresh token revoked or expired"
+					: "Token refresh failed";
 			log.error("Failed to refresh tokens", { error });
+			const failureActor = userId
+				? { type: "user" as const, id: userId }
+				: { type: "system" as const, id: "session-cleanup" };
+			log.audit(
+				sessionRefresh({
+					actor: failureActor,
+					outcome: "failure",
+					reason,
+				}),
+			);
 			await clearUserSession(event);
 		}
 	},

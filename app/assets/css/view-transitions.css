@@ -1,0 +1,70 @@
+/* Baseline tempo for all view transitions */
+::view-transition-group(*) {
+	animation-duration: 250ms;
+	animation-timing-function: cubic-bezier(0.2, 0, 0.2, 1);
+}
+
+/* Forward navigation: new page slides in from the right */
+html:active-view-transition-type(nav-forward) {
+	&::view-transition-old(root) {
+		animation-name: vt-slide-out-left;
+	}
+
+	&::view-transition-new(root) {
+		animation-name: vt-slide-in-right;
+	}
+}
+
+/* Back navigation: new page slides in from the left */
+html:active-view-transition-type(nav-back) {
+	&::view-transition-old(root) {
+		animation-name: vt-slide-out-right;
+	}
+
+	&::view-transition-new(root) {
+		animation-name: vt-slide-in-left;
+	}
+}
+
+/* Marketing routes get a slightly shorter tempo */
+html:active-view-transition-type(route-marketing) {
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation-duration: 200ms;
+	}
+}
+
+/* Dashboard routes get a slightly longer tempo for heavier guild UI */
+html:active-view-transition-type(route-dashboard) {
+	&::view-transition-old(root),
+	&::view-transition-new(root) {
+		animation-duration: 300ms;
+	}
+}
+
+/* A11y kill-switch: respects OS reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}
+
+/* Save-changes floating bar */
+::view-transition-old(save-changes-bar) {
+	animation: vt-slide-out-down 200ms ease-in;
+}
+
+::view-transition-new(save-changes-bar) {
+	animation: vt-slide-in-up 300ms ease-out;
+}
+
+/* Guild error state */
+::view-transition-old(guild-error-state) {
+	animation: vt-fade-scale-out 200ms ease-in;
+}
+
+::view-transition-new(guild-error-state) {
+	animation: vt-fade-scale-in 300ms ease-out;
+}

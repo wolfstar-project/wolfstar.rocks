@@ -3,6 +3,9 @@ import { expect, test } from "./test-utils";
 const PAGES = ["/", "/staryl", "/terms", "/privacy"] as const;
 const MARKETING_PAGES = ["/", "/staryl"] as const;
 
+/** Netlify image-proxy path prefix — 404s from this path are CDN infra noise, not app errors. */
+const NETLIFY_IMAGE_PROXY_PATH = "/.netlify/images";
+
 test.describe("Hydration", () => {
 	test.describe("responds 200", () => {
 		for (const page of PAGES) {
@@ -35,5 +38,32 @@ test.describe("Hydration", () => {
 				expect(hydrationErrors).toHaveLength(0);
 			});
 		}
+	});
+
+	test.describe("navigation with View Transitions does not cause hydration errors", () => {
+		test("/ -> /commands client-side navigation", async ({ page, goto }) => {
+			const consoleErrors: string[] = [];
+			page.on("console", (msg) => {
+				if (
+					msg.type() === "error" ||
+					(msg.type() === "warning" && msg.text().includes("[nuxt]"))
+				) {
+					// Ignore Netlify image-proxy 404s — these are infra noise, not app errors
+					const text = msg.text();
+					if (text.includes(NETLIFY_IMAGE_PROXY_PATH)) return;
+					consoleErrors.push(text);
+				}
+			});
+
+			await goto("/", { waitUntil: "networkidle" });
+			const navLink = page
+				.getByRole("navigation", { name: "Main navigation" })
+				.getByRole("link", { name: /commands/i });
+			await expect(navLink).toBeVisible();
+			await navLink.click();
+			await page.waitForURL(/commands/);
+
+			expect(consoleErrors).toHaveLength(0);
+		});
 	});
 });

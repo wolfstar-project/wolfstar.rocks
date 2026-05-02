@@ -62,6 +62,7 @@ const config: KnipConfig = {
 
 				/** Used in the test */
 				"axe-core",
+				"jsdom",
 
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",
@@ -72,7 +73,7 @@ const config: KnipConfig = {
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
 			],
-			ignoreUnresolved: ["#server/database/generated/client", "#build/auth.config"],
+			ignoreUnresolved: ["#build/auth.config"],
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,

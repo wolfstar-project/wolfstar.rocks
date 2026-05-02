@@ -83,65 +83,40 @@
 				</div>
 				<div class="flex items-center space-x-2">
 					<div
-						v-motion
-						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{
-							scale: 1,
-							opacity: 1,
-							transition: { repeat: Infinity, repeatType: 'reverse', duration: 600 },
-						}"
-						class="h-2 w-2 rounded-full bg-primary"
+						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
 					></div>
 					<div
-						v-motion
-						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{
-							scale: 1,
-							opacity: 1,
-							transition: {
-								repeat: Infinity,
-								repeatType: 'reverse',
-								duration: 600,
-								delay: 200,
-							},
-						}"
-						class="h-2 w-2 rounded-full bg-primary"
+						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
 					></div>
 					<div
-						v-motion
-						:initial="{ scale: 0.8, opacity: 0.5 }"
-						:enter="{
-							scale: 1,
-							opacity: 1,
-							transition: {
-								repeat: Infinity,
-								repeatType: 'reverse',
-								duration: 600,
-								delay: 400,
-							},
-						}"
-						class="h-2 w-2 rounded-full bg-primary"
+						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
 					></div>
 				</div>
 			</div>
 		</div>
-		<div
-			v-if="isReadyToSubmit"
-			v-motion
-			:initial="{ opacity: 0, y: 8 }"
-			:enter="{ opacity: 1, y: 0, transition: { duration: 300, ease: 'easeOut' } }"
-			:leave="{ opacity: 0, y: 8, transition: { duration: 200, ease: 'easeIn' } }"
-			class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+		<Transition
+			enter-active-class="transition-[opacity,transform] duration-300 ease-out"
+			enter-from-class="opacity-0 translate-y-2"
+			enter-to-class="opacity-100 translate-y-0"
+			leave-active-class="transition-[opacity,transform] duration-200 ease-in"
+			leave-from-class="opacity-100 translate-y-0"
+			leave-to-class="opacity-0 translate-y-2"
 		>
-			<UFieldGroup>
-				<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-					Save Changes
-				</UButton>
-				<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-					Reset Changes
-				</UButton>
-			</UFieldGroup>
-		</div>
+			<div
+				v-if="isReadyToSubmit"
+				style="view-transition-name: save-changes-bar"
+				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+			>
+				<UFieldGroup>
+					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+						Save Changes
+					</UButton>
+					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+						Reset Changes
+					</UButton>
+				</UFieldGroup>
+			</div>
+		</Transition>
 
 		<UModal
 			v-model:open="showDialog"
@@ -168,6 +143,17 @@ import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError, createError } from "evlog";
+import { parseGuildSettings, classifyGuildError } from "~/utils/guild-dashboard";
+
+function isSafeUrl(url: unknown): url is string {
+	if (typeof url !== "string") return false;
+	try {
+		const { protocol } = new URL(url);
+		return protocol === "https:";
+	} catch {
+		return false;
+	}
+}
 
 const logger = useLogger("wolfstar:dashboard");
 
@@ -190,7 +176,147 @@ const { setGuildData, guildData } = useGuildData();
 const { setGuildSettings, guildSettings } = useGuildSettings();
 const { setGuildSettingsChanges, guildSettingsChanges, resetGuildSettingsChanges } =
 	useGuildSettingsChanges();
-const isLoading = useState<boolean>("dashboard:loading", () => true);
+
+const { user } = useUserSession();
+const { guilds: userGuilds } = useUser(user);
+watch(
+	[guildId, userGuilds],
+	([newGuildId, newUserGuilds]) => {
+		const seedGuild = newUserGuilds?.find((g) => g.id === newGuildId);
+		if (seedGuild) {
+			setGuildData(seedGuild);
+		}
+	},
+	{ immediate: true },
+);
+
+const requestFetch = useRequestFetch();
+
+const {
+	data,
+	pending: isLoading,
+	error,
+} = useAsyncData(
+	() => `dashboard:guild:${guildId.value}`,
+	() =>
+		Promise.all([
+			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
+				`/api/guilds/${guildId.value}`,
+			),
+			requestFetch<string>(`/api/guilds/${guildId.value}/settings`),
+		]),
+);
+
+watch(
+	data,
+	(newData) => {
+		if (newData) {
+			setGuildData(newData[0]);
+
+			const parsedSettings = parseGuildSettings(
+				newData[1],
+				guildSettings.value ?? {},
+				(parseErr) => {
+					logger.error(
+						`Failed to parse guild settings payload for guild Id: ${guildId.value}`,
+						parseError(parseErr),
+					);
+				},
+			);
+
+			setGuildSettings(parsedSettings as GuildData);
+
+			if (nuxtError.value) {
+				clearError();
+			}
+		}
+	},
+	{ immediate: true },
+);
+
+watch(
+	error,
+	async (err) => {
+		if (err) {
+			const parsedError = parseError(err);
+
+			logger.error(
+				`Error loading guild data or settings for guild Id: ${guildId.value}`,
+				parsedError,
+			);
+
+			switch (classifyGuildError(parsedError.status)) {
+				case "forbidden": {
+					if (import.meta.client) {
+						toast.add({
+							title: "Access Denied",
+							description:
+								"You don't have permission to access this server's dashboard.",
+							color: "error",
+							icon: "heroicons:x-circle",
+						});
+					}
+					if (import.meta.client && window.history.length > 1) {
+						router.back();
+					} else {
+						await navigateTo("/");
+					}
+					break;
+				}
+				case "unauthorized": {
+					if (import.meta.client) {
+						toast.add({
+							title: "Unauthorized",
+							description:
+								"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
+							color: "error",
+							icon: "heroicons:x-circle",
+						});
+					}
+					if (import.meta.client && window.history.length > 1) {
+						router.back();
+					} else {
+						await navigateTo("/");
+					}
+					break;
+				}
+				default: {
+					if (import.meta.client) {
+						const link = isSafeUrl(parsedError.link) ? parsedError.link : null;
+						toast.add({
+							title: parsedError.message,
+							description: parsedError.why,
+							color: "error",
+							actions: link
+								? [
+										{
+											label: "Learn more",
+											onClick: () => {
+												window.open(link, "_blank", "noopener,noreferrer");
+											},
+										},
+									]
+								: undefined,
+							icon: "heroicons:x-circle",
+						});
+					}
+					showError({
+						status: parsedError.status || 500,
+						message: parsedError.message,
+						data: {
+							why: parsedError.why,
+							fix: parsedError.fix,
+							link: parsedError.link,
+						},
+					});
+				}
+			}
+		}
+	},
+	{ immediate: true },
+);
+
+const { effectiveReduceMotion } = useReduceMotion();
 
 const items = computed<NavigationMenuItem[][]>(() => [
 	[
@@ -360,8 +486,19 @@ async function submitChanges() {
 	}
 
 	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
-		setGuildSettings(data.value);
-		setGuildSettingsChanges(undefined);
+		if (!document.startViewTransition || effectiveReduceMotion.value) {
+			setGuildSettings(data.value!);
+			setGuildSettingsChanges(undefined);
+		} else {
+			if (document.activeViewTransition) {
+				document.activeViewTransition.skipTransition();
+			}
+			document.startViewTransition(async () => {
+				setGuildSettings(data.value!);
+				setGuildSettingsChanges(undefined);
+				await nextTick();
+			});
+		}
 
 		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
 
@@ -375,7 +512,17 @@ async function submitChanges() {
 }
 
 function resetChanges() {
-	resetGuildSettingsChanges();
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		resetGuildSettingsChanges();
+	} else {
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
+		}
+		document.startViewTransition(async () => {
+			resetGuildSettingsChanges();
+			await nextTick();
+		});
+	}
 
 	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
 
@@ -394,89 +541,6 @@ watch(guildId, (newGuildId, oldGuildId) => {
 		logger.info(
 			`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`,
 		);
-	}
-});
-
-onMounted(async () => {
-	isLoading.value = true;
-
-	try {
-		// Fetch guild data and settings in parallel to halve round-trip latency.
-		const [guildData, guildSettings] = await Promise.all([
-			$fetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
-				`/api/guilds/${guildId.value}`,
-			),
-			$fetch<string>(`/api/guilds/${guildId.value}/settings`),
-		]);
-
-		setGuildData(guildData);
-		setGuildSettings(JSON.parse(guildSettings));
-
-		if (nuxtError.value) {
-			clearError();
-		}
-		// oxlint-disable-next-line unicorn/catch-error-name
-	} catch (err: unknown) {
-		const error = parseError(err);
-
-		logger.error(`Error loading guild data or settings for guild Id: ${guildId.value}`, error);
-
-		switch (error.status) {
-			case 403: {
-				toast.add({
-					title: "Access Denied",
-					description: "You don't have permission to access this server's dashboard.",
-					color: "error",
-					icon: "heroicons:x-circle",
-				});
-				if (import.meta.client && window.history.length > 1) {
-					router.back();
-				} else {
-					await navigateTo("/");
-				}
-				break;
-			}
-			case 401: {
-				toast.add({
-					title: "Unauthorized",
-					description:
-						"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
-					color: "error",
-					icon: "heroicons:x-circle",
-				});
-				if (import.meta.client && window.history.length > 1) {
-					router.back();
-				} else {
-					await navigateTo("/");
-				}
-				break;
-			}
-			default: {
-				toast.add({
-					title: error.message,
-					description: error.why,
-					color: "error",
-					actions: error.link
-						? [
-								{
-									label: "Learn more",
-									onClick: () => {
-										window.open(error.link);
-									},
-								},
-							]
-						: undefined,
-					icon: "heroicons:x-circle",
-				});
-				showError({
-					status: error.status || 500,
-					message: error.message,
-					data: { why: error.why, fix: error.fix, link: error.link },
-				});
-			}
-		}
-	} finally {
-		isLoading.value = false;
 	}
 });
 </script>

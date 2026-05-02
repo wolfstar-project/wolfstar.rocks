@@ -75,6 +75,10 @@ multi-purpose Discord bot for moderation and community management.
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
   devices.
 - **OAuth Integration**: Secure Discord authentication and authorization.
+- **Audit Trail**: All security-relevant actions (guild settings changes,
+  logins, token refreshes, and OAuth CSRF denials) are captured via a
+  tamper-evident audit log. Each event is persisted to PostgreSQL with a SHA-256
+  hash chain, making the audit trail verifiable and tamper-evident.
 - **Multi-language Support**: Support for multiple languages (coming soon).
 - **Dashboard Analytics**: View server statistics and bot usage metrics.
 

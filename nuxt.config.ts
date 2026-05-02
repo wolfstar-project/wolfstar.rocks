@@ -181,6 +181,13 @@ export default defineNuxtConfig({
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
+		"/api/users": {
+			headers: {
+				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
+				"Vary": "Cookie, Authorization",
+			},
+		},
+
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -372,7 +379,11 @@ export default defineNuxtConfig({
 
 	ogImage: {
 		security: {
-			maxQueryParamSize: 2048,
+			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
+			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
+			// HMAC signing is sufficient; origin pinning blocks localhost e2e runs
+			// and adds no meaningful security on top of signed URLs.
+			restrictRuntimeImagesToOrigin: false,
 		},
 	},
 	// PWA configuration

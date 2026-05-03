@@ -10,7 +10,7 @@
 				root: 'space-y-3',
 				item: '',
 				content:
-					'card-glass rounded-2xl overflow-hidden transition-all border border-base-content/10',
+					'rounded-2xl rounded-t-none overflow-hidden transition-all border border-t-0 border-base-content/10 bg-base-200/30',
 			}"
 			class="animate-fade-in"
 		>
@@ -18,7 +18,8 @@
 				<UButton
 					color="neutral"
 					variant="ghost"
-					class="w-full justify-between rounded-xl border border-base-content/5 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80 dark:bg-base-300/30 dark:hover:bg-base-300/50"
+					class="w-full justify-between rounded-2xl border border-base-content/10 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80"
+					:class="{ 'rounded-b-none': open }"
 					:aria-expanded="open"
 					:aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
 				>
@@ -58,7 +59,7 @@
 							item: 'border-0',
 							content: 'border-0 pt-4',
 							trigger:
-								'bg-base-content/10 hover:bg-base-content/15 dark:bg-base-content/5 dark:hover:bg-base-content/10 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-base-content/10',
+								'bg-base-content/10 hover:bg-base-content/15 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-base-content/10',
 							trailingIcon: 'text-base-content/60 size-5 shrink-0',
 							label: 'flex items-center gap-4 flex-1 min-w-0',
 						}"

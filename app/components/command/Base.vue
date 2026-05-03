@@ -1,5 +1,5 @@
 <template>
-	<article class="space-y-8 card-glass rounded-2xl p-6" aria-label="Command details">
+	<article class="space-y-8 rounded-2xl p-6" aria-label="Command details">
 		<!-- Loading Skeleton -->
 		<template v-if="loading">
 			<!-- Command Usage Skeleton -->
@@ -79,7 +79,7 @@
 						v-for="(usage, idx) in command.extendedHelp.usages"
 						:key="idx"
 						role="listitem"
-						class="block card-glass rounded-xl border border-base-content/10 bg-base-300/70 px-5 py-4 font-mono text-sm text-base-content transition-all"
+						class="block rounded-xl border border-base-content/10 bg-base-300/70 px-5 py-4 font-mono text-sm text-base-content transition-all"
 					>
 						<span class="text-primary">WolfStar</span>,
 						<span class="text-primary/80">{{ command.name }}</span>
@@ -100,9 +100,7 @@
 					</div>
 					<span>Extended Help</span>
 				</h3>
-				<div
-					class="card-glass rounded-xl border border-base-300/50 bg-base-200/30 px-5 py-4 dark:border-base-content/10 dark:bg-base-300/30"
-				>
+				<div class="rounded-xl border border-base-content/10 bg-base-200/30 px-5 py-4">
 					<div class="prose max-w-none dark:prose-invert prose-p:leading-relaxed">
 						<div
 							class="text-base leading-7 whitespace-pre-line"
@@ -132,7 +130,7 @@
 					<div
 						v-for="([arg, desc], idx) in command.extendedHelp.explainedUsage"
 						:key="idx"
-						class="card-glass rounded-r-xl border-l-4 border-primary/50 bg-primary/5 py-3 pr-4 pl-5 transition-all dark:bg-primary/10"
+						class="rounded-r-xl border-l-4 border-primary/50 bg-primary/5 py-3 pr-4 pl-5 transition-all"
 					>
 						<dt class="mb-1 text-base font-semibold text-primary">
 							{{ arg }}
@@ -162,7 +160,7 @@
 					<div
 						v-for="([type, example], idx) in command.extendedHelp.possibleFormats"
 						:key="idx"
-						class="card-glass rounded-r-xl border-l-4 border-primary/50 bg-primary/5 py-3 pr-4 pl-5 transition-all dark:bg-primary/10"
+						class="rounded-r-xl border-l-4 border-primary/50 bg-primary/5 py-3 pr-4 pl-5 transition-all"
 					>
 						<dt class="mb-1 text-base font-semibold text-primary">
 							{{ type }}
@@ -190,7 +188,7 @@
 					<li
 						v-for="(example, idx) in command.extendedHelp.examples"
 						:key="idx"
-						class="flex items-start gap-3 card-glass rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm transition-all dark:border-primary/30 dark:bg-primary/10"
+						class="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm transition-all"
 					>
 						<UIcon
 							name="i-heroicons-arrow-right"
@@ -218,9 +216,7 @@
 					</div>
 					<span>Reminder</span>
 				</h3>
-				<div
-					class="card-glass rounded-xl border border-primary/20 bg-primary/5 p-5 transition-all dark:border-primary/30 dark:bg-primary/10"
-				>
+				<div class="rounded-xl border border-primary/20 bg-primary/5 p-5 transition-all">
 					<div
 						class="prose max-w-none text-sm leading-relaxed text-base-content/90 dark:prose-invert prose-p:m-0"
 						v-html="sanitizeAndFormat(command.extendedHelp.reminder)"

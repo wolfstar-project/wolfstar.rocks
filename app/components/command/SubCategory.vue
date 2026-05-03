@@ -91,7 +91,7 @@
 	</div>
 	<div
 		v-else-if="searchValue"
-		class="card-glass rounded-2xl px-6 py-12 text-center"
+		class="rounded-2xl bg-base-200/30 px-6 py-12 text-center"
 		role="status"
 	>
 		<UIcon

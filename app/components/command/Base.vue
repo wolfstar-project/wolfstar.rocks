@@ -1,5 +1,5 @@
 <template>
-	<article class="space-y-8 card-glass rounded-2xl p-6" aria-label="Command details">
+	<article class="space-y-8 rounded-2xl p-6" aria-label="Command details">
 		<!-- Loading Skeleton -->
 		<template v-if="loading">
 			<!-- Command Usage Skeleton -->

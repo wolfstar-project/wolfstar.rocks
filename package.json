@@ -131,7 +131,7 @@
 		"eslint-plugin-regexp": "3.1.0",
 		"knip": "5.88.1",
 		"prisma": "7.7.0",
-		"prisma-json-types-generator": "4.1.1",
+		"prisma-json-types-generator": "5.0.0",
 		"skilld": "1.6.2",
 		"tailwindcss": "4.2.2",
 		"taze": "19.10.0",

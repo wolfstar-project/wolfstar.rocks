@@ -1,54 +1,56 @@
-import type { DrainContext, DrainFn } from "evlog";
 import { createPostgresAuditDrain } from "#server/utils/audit/postgres-drain";
-import { signed } from "evlog";
-import { createFsDrain } from "evlog/fs";
+import { type DrainContext } from "evlog";
 import { createDrainPipeline } from "evlog/pipeline";
 import { createSentryDrain } from "evlog/sentry";
-import { isDevelopment } from "std-env";
-
-type FlushableDrain = DrainFn & { flush?: () => Promise<void> };
-
-/**
- * Wraps a drain so it only receives events that carry an `audit` payload.
- * Non-audit events (regular logs, errors) are silently dropped.
- * The `flush` method from `baseDrain` is forwarded when present.
- *
- * @param baseDrain - The underlying drain to forward audit events to.
- * @returns A new drain that filters to audit-only events, with `flush` preserved.
- */
-function auditOnly(baseDrain: FlushableDrain): FlushableDrain {
-	const fn = async (ctx: DrainContext): Promise<void> => {
-		if (!ctx.event.audit) return;
-		await baseDrain(ctx);
-	};
-	if (baseDrain.flush) {
-		return Object.assign(fn, { flush: () => baseDrain.flush!() });
-	}
-	return fn;
-}
 
 export default defineNitroPlugin((nitroApp) => {
-	const pipeline = createDrainPipeline<DrainContext>();
-	if (runtimeConfig.public.sentry.dsn) {
-		const drain = pipeline(createSentryDrain());
+	const config = useRuntimeConfig();
+	const postgresAudit = createPostgresAuditDrain();
 
-		nitroApp.hooks.hook("evlog:drain", drain);
-		nitroApp.hooks.hook("close", () => drain.flush());
+	const auditPipeline = createDrainPipeline<DrainContext>({
+		batch: { size: 50, intervalMs: 5000 },
+	});
+	const auditDrain = auditPipeline(async (batch) => {
+		const auditBatch = batch.filter((ctx) => ctx.event.audit);
+		const results = await Promise.allSettled(
+			auditBatch.map((ctx) => Promise.resolve(postgresAudit(ctx))),
+		);
+		for (const [index, result] of results.entries()) {
+			if (result.status === "rejected") {
+				console.error(
+					"[evlog] postgres audit drain failed, event not persisted:",
+					result.reason,
+					{ action: auditBatch[index]?.event.audit?.action },
+				);
+			}
+		}
+	});
+
+	nitroApp.hooks.hook("evlog:drain", auditDrain);
+
+	if (config.public.sentry.dsn) {
+		const sentry = createSentryDrain();
+		const sentryPipeline = createDrainPipeline<DrainContext>({
+			batch: { size: 50, intervalMs: 5000 },
+		});
+		const sentryDrain = sentryPipeline(async (batch) => {
+			const results = await Promise.allSettled(
+				batch.map((ctx) => Promise.resolve(sentry(ctx))),
+			);
+			for (const result of results) {
+				if (result.status === "rejected") {
+					console.warn("[evlog] sentry drain failed:", result.reason);
+				}
+			}
+		});
+
+		nitroApp.hooks.hook("evlog:drain", sentryDrain);
+		nitroApp.hooks.hook("close", async () => {
+			await sentryDrain.flush();
+		});
 	}
 
-	// Audit drain — registered unconditionally regardless of Sentry config
-	const auditDrain = isDevelopment
-		? auditOnly(
-				signed(createFsDrain({ dir: ".audit", maxFiles: 30 }), { strategy: "hash-chain" }),
-			)
-		: auditOnly(createPostgresAuditDrain());
-	nitroApp.hooks.hook("evlog:drain", auditDrain);
 	nitroApp.hooks.hook("close", async () => {
-		try {
-			await auditDrain.flush?.();
-		} catch (err) {
-			// oxlint-disable-next-line no-console
-			console.error("[audit] Failed to flush audit drain on close", err);
-		}
+		await auditDrain.flush();
 	});
 });

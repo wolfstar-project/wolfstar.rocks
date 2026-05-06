@@ -28,6 +28,7 @@ jobs:
         with:
           scopes: |
             a11y
+            agents
             blog
             deps
             docs

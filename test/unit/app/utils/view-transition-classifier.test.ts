@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyNavigation } from "~/utils/viewTransitionClassifier";
+import { classifyNavigation } from "~/utils/view-transition-classifier";
 
 describe("classifyNavigation", () => {
 	it("tags nav-forward + route-marketing for a marketing forward nav", () => {

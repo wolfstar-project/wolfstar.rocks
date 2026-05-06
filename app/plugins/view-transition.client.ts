@@ -1,4 +1,4 @@
-import { classifyNavigation, type ClassifyInput } from "~/utils/viewTransitionClassifier";
+import { classifyNavigation, type ClassifyInput } from "~/utils/view-transition-classifier";
 
 interface ViewTransitionTyped extends ViewTransition {
 	readonly types: Set<string>;

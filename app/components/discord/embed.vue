@@ -73,7 +73,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 }
 
 .discord-embed-text.light .discord-embed-media-video {
-	@apply h-56.25;
+	@apply h-[225px];
 }
 
 .discord-embed-custom-emoji {

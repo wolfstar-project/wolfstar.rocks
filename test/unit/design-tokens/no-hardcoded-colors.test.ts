@@ -2,7 +2,7 @@
  * Design Token Guardrail
  *
  * Prevents regressions where hardcoded color literals creep into .vue files.
- * Scans <template> and <style> blocks for forbidden patterns. Hex literals in
+ * Scans <template>, <script>, and <style> blocks for forbidden patterns. Hex literals in
  * CSS variable declarations (--foo: #hex) are allowed as an explicit opt-in.
  *
  * Allow-listed files are exempt from all checks (see ALLOW_LIST below).
@@ -64,21 +64,26 @@ const HEX_IN_STYLE_RE = /:\s*[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b
 /** oklch/rgb/rgba literals in <style> blocks (not in custom property declarations). */
 // Note: allowances for var()-based patterns are handled inline in the test loop.
 
-function extractBlocks(source: string): { templates: string[]; styles: string[] } {
+function extractBlocks(source: string): { templates: string[]; scripts: string[]; styles: string[] } {
 	const templates: string[] = [];
+	const scripts: string[] = [];
 	const styles: string[] = [];
 
 	const templateRe = /<template(?:\s[^>]*)?>[\s\S]*?<\/template>/gi;
+	const scriptRe = /<script(?:\s[^>]*)?>[\s\S]*?<\/script>/gi;
 	const styleRe = /<style(?:\s[^>]*)?>[\s\S]*?<\/style>/gi;
 
 	for (const match of source.matchAll(templateRe)) {
 		templates.push(match[0]);
 	}
+	for (const match of source.matchAll(scriptRe)) {
+		scripts.push(match[0]);
+	}
 	for (const match of source.matchAll(styleRe)) {
 		styles.push(match[0]);
 	}
 
-	return { templates, styles };
+	return { templates, scripts, styles };
 }
 
 const files = glob(["app/components/**/*.vue", "app/pages/**/*.vue", "app/layouts/**/*.vue"], {
@@ -95,7 +100,7 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 		}
 
 		const source = readFileSync(join(ROOT, file), "utf-8");
-		const { templates, styles } = extractBlocks(source);
+		const { templates, scripts, styles } = extractBlocks(source);
 
 		it(`${relPath} — no raw Tailwind palette classes in <template>`, () => {
 			for (const block of templates) {
@@ -105,6 +110,20 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 					if (match) {
 						expect.fail(
 							`${relPath}:${i + 1} — raw Tailwind color class "${match[0]}" found. Use a semantic token (text-primary, bg-success, etc.) instead.`,
+						);
+					}
+				}
+			}
+		});
+
+		it(`${relPath} — no raw Tailwind palette classes in <script> string literals`, () => {
+			for (const block of scripts) {
+				const lines = block.split("\n");
+				for (const [i, line] of lines.entries()) {
+					const match = line.match(TAILWIND_RAW_COLOR_RE);
+					if (match) {
+						expect.fail(
+							`${relPath}:${i + 1} — raw Tailwind color class "${match[0]}" found in <script>. Use a semantic token (text-primary, bg-success, etc.) instead.`,
 						);
 					}
 				}

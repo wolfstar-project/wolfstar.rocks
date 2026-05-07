@@ -3,7 +3,7 @@ export default {
 		body: "p-4 sm:p-6 overflow-y-auto",
 		center: "hidden lg:flex",
 		container:
-			"rounded-full px-5 py-2 flex items-center gap-3 w-fit pointer-events-auto card-glass drop-shadow-sm",
+			"rounded-full px-5 py-2 flex items-center gap-6 w-fit pointer-events-auto card-glass drop-shadow-sm",
 		content: "lg:hidden nav-panel-glass pointer-events-auto",
 		header: "p-4 sm:p-6 flex items-center justify-between",
 		left: "flex items-center gap-1.5",

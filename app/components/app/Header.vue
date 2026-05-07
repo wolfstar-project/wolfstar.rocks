@@ -1,10 +1,5 @@
 <template>
-	<UHeader
-		class="app-navbar card-glass"
-		:ui="{
-			root: 'rounded-full px-6 py-2',
-		}"
-	>
+	<UHeader class="app-navbar">
 		<template #left>
 			<NuxtLink
 				class="mr-4 flex items-center transition-transform hover:scale-105"

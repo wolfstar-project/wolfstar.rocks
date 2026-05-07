@@ -15,7 +15,7 @@ import { describe, expect, it } from "vitest";
 
 const ROOT = join(import.meta.dirname, "../../..");
 
-/** Files or path patterns fully exempt from the token guardrail. */
+/** Exact file paths fully exempt from the token guardrail. */
 const ALLOW_LIST = new Set([
 	// Satori/Takumi requires resolved static colors (no var() support)
 	"app/components/OgImage/Page.takumi.vue",
@@ -58,8 +58,8 @@ const TAILWIND_RAW_COLOR_RE = new RegExp(
 	`\\b(${PALETTE_PREFIXES.join("|")})-(?:${PALETTE_COLORS.join("|")})-\\d{2,3}\\b`,
 );
 
-/** Hex color literal NOT inside a CSS custom property declaration. */
-const HEX_IN_STYLE_RE = /(?<!--[\w-]+\s*:\s*)#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b/i;
+/** Hex color literal in a CSS declaration value (excluding CSS custom property declarations). */
+const HEX_IN_STYLE_RE = /:\s*[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b/i;
 
 /** oklch/rgb/rgba literals in <style> blocks (not in custom property declarations). */
 // Note: allowances for var()-based patterns are handled inline in the test loop.
@@ -115,6 +115,9 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 			for (const block of styles) {
 				const lines = block.split("\n");
 				for (const [i, line] of lines.entries()) {
+					const isCssVarDecl = /^\s*--[\w-]+\s*:/.test(line);
+					if (isCssVarDecl) continue;
+
 					if (HEX_IN_STYLE_RE.test(line)) {
 						expect.fail(
 							`${relPath}:${i + 1} — hardcoded hex color in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,

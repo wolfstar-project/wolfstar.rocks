@@ -77,7 +77,7 @@ WolfStar.rocks employs a sophisticated aesthetic, blending an evocative, illustr
 
 ### Border Radius
 
-DaisyUI is configured with a uniform `0.5rem` (8px) for all radii. Practical Tailwind class convention:
+DaisyUI base radius token is `0.5rem` (8px). The app intentionally applies a slightly larger card radius via Tailwind utilities for hierarchy and readability:
 
 | Context            | Class          | Value |
 | ------------------ | -------------- | ----- |

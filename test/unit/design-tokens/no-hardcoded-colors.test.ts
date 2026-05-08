@@ -8,7 +8,7 @@
  * Allow-listed files are exempt from all checks (see ALLOW_LIST below).
  */
 
-import { readFileSync, readdirSync, statSync } from "node:fs";
+import { globSync, readFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { describe, expect, it } from "vitest";
 
@@ -93,36 +93,19 @@ function extractBlocks(source: string): { templates: Block[]; scripts: Block[]; 
 	return { templates, scripts, styles };
 }
 
-function listVueFiles(directory: string): string[] {
-	const entries = readdirSync(directory);
-	const files: string[] = [];
-
-	for (const entry of entries) {
-		const fullPath = join(directory, entry);
-		const stats = statSync(fullPath);
-
-		if (stats.isDirectory()) {
-			files.push(...listVueFiles(fullPath));
-			continue;
-		}
-
-		if (entry.endsWith(".vue") && !entry.endsWith(".unused.vue")) {
-			files.push(relative(ROOT, fullPath).replaceAll("\\", "/"));
-		}
-	}
-
-	return files;
+function normalizePath(path: string): string {
+	return path.replaceAll("\\", "/");
 }
 
 const files = [
-	...listVueFiles(join(ROOT, "app/components")),
-	...listVueFiles(join(ROOT, "app/pages")),
-	...listVueFiles(join(ROOT, "app/layouts")),
-];
+	...globSync("app/components/**/*.vue", { cwd: ROOT }),
+	...globSync("app/pages/**/*.vue", { cwd: ROOT }),
+	...globSync("app/layouts/**/*.vue", { cwd: ROOT }),
+].filter((file) => !file.endsWith(".unused.vue")).map(normalizePath);
 
 describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 	for (const file of files) {
-		const relPath = relative(ROOT, join(ROOT, file)).replaceAll("\\", "/");
+		const relPath = normalizePath(relative(ROOT, join(ROOT, file)));
 
 		if (ALLOW_LIST.has(relPath)) {
 			continue;

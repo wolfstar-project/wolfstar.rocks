@@ -6,7 +6,7 @@
 			<UAlert variant="solid" color="error" title="Server Not Found" icon="emojione:warning">
 				<template #description>
 					We couldn't determine which server to set up. Please
-					<NuxtLink to="/login" class="font-medium underline">log in</NuxtLink>
+					<NuxtLink to="/login" class="font-medium underline">sign in</NuxtLink>
 					and select a server from your dashboard.
 				</template>
 			</UAlert>

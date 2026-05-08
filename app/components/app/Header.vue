@@ -144,7 +144,7 @@ const items = ref<DropdownMenuItem[]>([
 		label: "Sign out",
 		onSelect: logout,
 		ui: {
-			itemLeadingIcon: "bg-error",
+			itemLeadingIcon: "text-error",
 		},
 	},
 ]);

@@ -58,7 +58,7 @@ const TAILWIND_RAW_COLOR_RE = new RegExp(
 );
 
 /** Hex color literal in a CSS declaration value (excluding CSS custom property declarations). */
-const HEX_IN_STYLE_RE = /:[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b/i;
+const HEX_IN_STYLE_RE = /^\s*[\w-]+\s*:[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b/i;
 
 /** oklch/rgb/rgba literals in <style> blocks (not in custom property declarations). */
 // Note: allowances for var()-based patterns are handled inline in the test loop.

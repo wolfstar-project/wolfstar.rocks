@@ -368,6 +368,32 @@ export default defineNuxtConfig({
 				subsets: ["latin"],
 				weights: [400, 500, 600, 700],
 			},
+			{
+				name: "Whitney",
+				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Book.woff", format: "woff" }],
+				weight: 400,
+				display: "swap",
+			},
+			{
+				name: "Whitney",
+				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Medium.woff", format: "woff" }],
+				weight: 500,
+				display: "swap",
+			},
+			{
+				name: "Whitney",
+				src: [
+					{ url: "https://cdn.skyra.pw/whitney-font/v2/Semibold.woff", format: "woff" },
+				],
+				weight: 600,
+				display: "swap",
+			},
+			{
+				name: "Whitney",
+				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Bold.woff", format: "woff" }],
+				weight: 700,
+				display: "swap",
+			},
 		],
 	},
 

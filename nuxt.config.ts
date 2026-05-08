@@ -363,7 +363,7 @@ export default defineNuxtConfig({
 		families: [
 			{
 				global: true,
-				name: "Inter",
+				name: "Geist",
 				preload: true,
 				subsets: ["latin"],
 				weights: [400, 500, 600, 700],

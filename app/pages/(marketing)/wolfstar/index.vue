@@ -3,7 +3,9 @@
 	<div class="hero-pattern" aria-hidden="true"></div>
 
 	<section class="relative z-10 mt-28 flex flex-col items-center text-center">
-		<h1 class="title animate-fade-in-up pb-4">Imagine a<br />moderation app</h1>
+		<h1 class="title animate-fade-in-up gradient-text-hero pb-4">
+			Imagine a<br />moderation app
+		</h1>
 		<p class="max-w-120 animate-fade-in-up text-base-content/80 animate-fade-in-delay-1">
 			A very customizable multilanguage application to help you moderate your server, with a
 			complete logging suite and more,
@@ -179,15 +181,6 @@ function openFeature(index: number) {
 
 .title {
 	@apply text-4xl leading-[3.05rem] font-bold md:text-6xl md:leading-18;
-	background: linear-gradient(
-		to bottom right,
-		oklch(100% 0 45) 0%,
-		oklch(75% 0.18 15) 50%,
-		var(--color-branding-wolfstar) 100%
-	);
-	background-clip: text;
-	-webkit-background-clip: text;
-	-webkit-text-fill-color: transparent;
 }
 
 /* Hero background pattern */

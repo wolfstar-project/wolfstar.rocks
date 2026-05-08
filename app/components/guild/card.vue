@@ -7,13 +7,13 @@
 		<template v-if="loading">
 			<!-- Mobile Skeleton -->
 			<div class="flex flex-col items-center gap-2 md:hidden">
-				<USkeleton class="h-20 w-20 rounded-2xl" />
+				<USkeleton class="h-20 w-20 rounded-xl" />
 				<USkeleton class="h-4 w-3/4 rounded" />
 			</div>
 
 			<!-- Desktop Skeleton -->
 			<div class="hidden flex-col items-center space-y-4 md:flex">
-				<USkeleton class="h-20 w-20 rounded-2xl" />
+				<USkeleton class="h-20 w-20 rounded-xl" />
 				<div class="flex min-h-16 w-full flex-col justify-center space-y-2">
 					<USkeleton class="mx-auto h-4 w-3/4 rounded" />
 					<div class="flex items-center justify-center space-x-4">

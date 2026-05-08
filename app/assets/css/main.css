@@ -121,6 +121,10 @@
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
 	}
 
+	html {
+		scrollbar-gutter: stable;
+	}
+
 	::-webkit-scrollbar {
 		width: 5px;
 		height: 2px;

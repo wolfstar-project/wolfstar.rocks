@@ -141,10 +141,10 @@ const items = ref<DropdownMenuItem[]>([
 	},
 	{
 		icon: "lucide:log-out",
-		label: "Log Out",
+		label: "Sign out",
 		onSelect: logout,
 		ui: {
-			itemLeadingIcon: "text-error",
+			itemLeadingIcon: "bg-error",
 		},
 	},
 ]);

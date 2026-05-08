@@ -8,9 +8,8 @@
  * Allow-listed files are exempt from all checks (see ALLOW_LIST below).
  */
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
-import { sync as glob } from "fast-glob";
 import { describe, expect, it } from "vitest";
 
 const ROOT = join(import.meta.dirname, "../../..");
@@ -59,41 +58,71 @@ const TAILWIND_RAW_COLOR_RE = new RegExp(
 );
 
 /** Hex color literal in a CSS declaration value (excluding CSS custom property declarations). */
-const HEX_IN_STYLE_RE = /:\s*[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b/i;
+const HEX_IN_STYLE_RE = /:[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})\b/i;
 
 /** oklch/rgb/rgba literals in <style> blocks (not in custom property declarations). */
 // Note: allowances for var()-based patterns are handled inline in the test loop.
 
-function extractBlocks(source: string): { templates: string[]; scripts: string[]; styles: string[] } {
-	const templates: string[] = [];
-	const scripts: string[] = [];
-	const styles: string[] = [];
+interface Block {
+	content: string;
+	startLine: number;
+}
+
+function extractBlocks(source: string): { templates: Block[]; scripts: Block[]; styles: Block[] } {
+	const templates: Block[] = [];
+	const scripts: Block[] = [];
+	const styles: Block[] = [];
 
 	const templateRe = /<template(?:\s[^>]*)?>[\s\S]*?<\/template>/gi;
 	const scriptRe = /<script(?:\s[^>]*)?>[\s\S]*?<\/script>/gi;
 	const styleRe = /<style(?:\s[^>]*)?>[\s\S]*?<\/style>/gi;
 
 	for (const match of source.matchAll(templateRe)) {
-		templates.push(match[0]);
+		const startLine = source.slice(0, match.index ?? 0).split("\n").length;
+		templates.push({ content: match[0], startLine });
 	}
 	for (const match of source.matchAll(scriptRe)) {
-		scripts.push(match[0]);
+		const startLine = source.slice(0, match.index ?? 0).split("\n").length;
+		scripts.push({ content: match[0], startLine });
 	}
 	for (const match of source.matchAll(styleRe)) {
-		styles.push(match[0]);
+		const startLine = source.slice(0, match.index ?? 0).split("\n").length;
+		styles.push({ content: match[0], startLine });
 	}
 
 	return { templates, scripts, styles };
 }
 
-const files = glob(["app/components/**/*.vue", "app/pages/**/*.vue", "app/layouts/**/*.vue"], {
-	cwd: ROOT,
-	ignore: ["**/*.unused.vue"],
-});
+function listVueFiles(directory: string): string[] {
+	const entries = readdirSync(directory);
+	const files: string[] = [];
+
+	for (const entry of entries) {
+		const fullPath = join(directory, entry);
+		const stats = statSync(fullPath);
+
+		if (stats.isDirectory()) {
+			files.push(...listVueFiles(fullPath));
+			continue;
+		}
+
+		if (entry.endsWith(".vue") && !entry.endsWith(".unused.vue")) {
+			files.push(relative(ROOT, fullPath).replaceAll("\\", "/"));
+		}
+	}
+
+	return files;
+}
+
+const files = [
+	...listVueFiles(join(ROOT, "app/components")),
+	...listVueFiles(join(ROOT, "app/pages")),
+	...listVueFiles(join(ROOT, "app/layouts")),
+];
 
 describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 	for (const file of files) {
-		const relPath = relative(ROOT, join(ROOT, file));
+		const relPath = relative(ROOT, join(ROOT, file)).replaceAll("\\", "/");
 
 		if (ALLOW_LIST.has(relPath)) {
 			continue;
@@ -103,13 +132,13 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 		const { templates, scripts, styles } = extractBlocks(source);
 
 		it(`${relPath} — no raw Tailwind palette classes in <template>`, () => {
-			for (const block of templates) {
-				const lines = block.split("\n");
+			for (const { content, startLine } of templates) {
+				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
 					const match = line.match(TAILWIND_RAW_COLOR_RE);
 					if (match) {
 						expect.fail(
-							`${relPath}:${i + 1} — raw Tailwind color class "${match[0]}" found. Use a semantic token (text-primary, bg-success, etc.) instead.`,
+							`${relPath}:${startLine + i} — raw Tailwind color class "${match[0]}" found. Use a semantic token (text-primary, bg-success, etc.) instead.`,
 						);
 					}
 				}
@@ -117,13 +146,13 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 		});
 
 		it(`${relPath} — no raw Tailwind palette classes in <script> string literals`, () => {
-			for (const block of scripts) {
-				const lines = block.split("\n");
+			for (const { content, startLine } of scripts) {
+				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
 					const match = line.match(TAILWIND_RAW_COLOR_RE);
 					if (match) {
 						expect.fail(
-							`${relPath}:${i + 1} — raw Tailwind color class "${match[0]}" found in <script>. Use a semantic token (text-primary, bg-success, etc.) instead.`,
+							`${relPath}:${startLine + i} — raw Tailwind color class "${match[0]}" found in <script>. Use a semantic token (text-primary, bg-success, etc.) instead.`,
 						);
 					}
 				}
@@ -131,15 +160,15 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 		});
 
 		it(`${relPath} — no hex literals in <style>`, () => {
-			for (const block of styles) {
-				const lines = block.split("\n");
+			for (const { content, startLine } of styles) {
+				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
 					const isCssVarDecl = /^\s*--[\w-]+\s*:/.test(line);
 					if (isCssVarDecl) continue;
 
 					if (HEX_IN_STYLE_RE.test(line)) {
 						expect.fail(
-							`${relPath}:${i + 1} — hardcoded hex color in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,
+							`${relPath}:${startLine + i} — hardcoded hex color in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,
 						);
 					}
 				}
@@ -147,8 +176,8 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 		});
 
 		it(`${relPath} — no inline oklch/rgb/rgba in <style> (outside CSS var declarations)`, () => {
-			for (const block of styles) {
-				const lines = block.split("\n");
+			for (const { content, startLine } of styles) {
+				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
 					const isCssVarDecl = /^\s*--[\w-]+\s*:/.test(line);
 					if (isCssVarDecl) continue;
@@ -170,7 +199,7 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 					if (isZeroChromaNeutral) continue;
 
 					expect.fail(
-						`${relPath}:${i + 1} — inline color function in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,
+						`${relPath}:${startLine + i} — inline color function in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,
 					);
 				}
 			}

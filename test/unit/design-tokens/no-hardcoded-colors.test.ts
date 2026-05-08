@@ -58,7 +58,8 @@ const TAILWIND_RAW_COLOR_RE = new RegExp(
 );
 
 /** Hex color literal in a CSS declaration value (excluding CSS custom property declarations). */
-const HEX_IN_STYLE_RE = /^\s*[\w-]+\s*:[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})(?![0-9a-f])/i;
+const HEX_IN_STYLE_RE =
+	/^\s*[\w-]+\s*:[^;{}]*#(?:[0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})(?![0-9a-f])/i;
 
 /** oklch/rgb/rgba literals in <style> blocks (not in custom property declarations). */
 // Note: allowances for var()-based patterns are handled inline in the test loop.
@@ -101,7 +102,9 @@ const files = [
 	...globSync("app/components/**/*.vue", { cwd: ROOT }),
 	...globSync("app/pages/**/*.vue", { cwd: ROOT }),
 	...globSync("app/layouts/**/*.vue", { cwd: ROOT }),
-].map(normalizePath).filter((file) => !file.endsWith(".unused.vue"));
+]
+	.map(normalizePath)
+	.filter((file) => !file.endsWith(".unused.vue"));
 
 describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 	for (const file of files) {

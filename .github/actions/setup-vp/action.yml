@@ -1,0 +1,41 @@
+name: Setup vp (with retry)
+description: Wraps voidzero-dev/setup-vp with a single retry to survive transient viteplus.dev outages.
+
+inputs:
+  node-version:
+    description: Node.js version to use
+    required: false
+    default: "lts/*"
+  cache:
+    description: Enable dependency caching
+    required: false
+    default: "false"
+  run-install:
+    description: Run vp install after setup
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Setup vp
+      id: setup-vp-attempt
+      continue-on-error: true
+      uses: voidzero-dev/setup-vp@8ecb39174989ce55af90f45cf55b02738599831d # v1.6.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.cache }}
+        run-install: ${{ inputs.run-install }}
+
+    - name: Wait before retry
+      if: steps.setup-vp-attempt.outcome == 'failure'
+      shell: bash
+      run: sleep 15
+
+    - name: Setup vp (retry)
+      if: steps.setup-vp-attempt.outcome == 'failure'
+      uses: voidzero-dev/setup-vp@8ecb39174989ce55af90f45cf55b02738599831d # v1.6.0
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.cache }}
+        run-install: ${{ inputs.run-install }}

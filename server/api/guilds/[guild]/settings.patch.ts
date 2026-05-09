@@ -35,6 +35,14 @@ export default defineWrappedResponseHandler(
 		}
 
 		const guild = await getGuild(guildId);
+		if (!guild) {
+			throw createError({
+				message: "Guild not found",
+				status: 404,
+				why: `The bot is not a member of guild ${guildId}`,
+				fix: "check bot is a member of the guild",
+			});
+		}
 
 		const member = await getCurrentMember(event, guild.id);
 		log.set({ member: { id: member.user.id } });

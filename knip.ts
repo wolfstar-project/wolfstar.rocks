@@ -62,6 +62,7 @@ const config: KnipConfig = {
 
 				/** Used in the test */
 				"axe-core",
+				"jsdom",
 
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",

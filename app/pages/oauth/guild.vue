@@ -6,7 +6,7 @@
 			<UAlert variant="solid" color="error" title="Server Not Found" icon="emojione:warning">
 				<template #description>
 					We couldn't determine which server to set up. Please
-					<NuxtLink to="/login" class="font-medium underline">log in</NuxtLink>
+					<NuxtLink to="/login" class="font-medium underline">sign in</NuxtLink>
 					and select a server from your dashboard.
 				</template>
 			</UAlert>
@@ -37,10 +37,14 @@
 </template>
 
 <script setup lang="ts">
-import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
 import { promiseTimeout } from "@vueuse/core";
+import { normalizeGuildIdQuery } from "~/utils/normalize-guild-id-query";
 
-const guildId = useRouteQuery("guild_id", null, { transform: String });
+definePageMeta({
+	viewTransition: false,
+});
+
+const guildId = useRouteQuery("guild_id", undefined, { transform: normalizeGuildIdQuery });
 const error = ref<string | null>(null);
 const log = useLogger("oauth:guild");
 
@@ -49,7 +53,7 @@ if (import.meta.client && guildId.value && !error.value) {
 }
 
 async function navigateToGuild() {
-	if (isNullOrUndefined(guildId.value)) {
+	if (!guildId.value) {
 		throw createError({ status: 400, statusText: "Guild ID is required." });
 	}
 

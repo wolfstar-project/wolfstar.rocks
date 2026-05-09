@@ -21,6 +21,12 @@ export default defineWrappedResponseHandler(
 			});
 		});
 
+		setResponseHeader(
+			event,
+			"Cache-Control",
+			"private, max-age=30, stale-while-revalidate=300",
+		);
+
 		return { ...transformedData, guilds };
 	},
 	{

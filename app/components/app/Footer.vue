@@ -23,7 +23,7 @@
 							icon="simple-icons:netlify"
 							color="neutral"
 							variant="soft"
-							:ui="{ leadingIcon: 'bg-green-500' }"
+							:ui="{ leadingIcon: 'bg-success' }"
 							aria-label="Powered by Netlify - opens in new tab"
 						/>
 					</template>

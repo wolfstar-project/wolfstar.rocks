@@ -28,10 +28,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          run-install: false
+          run-install: "false"
 
       - name: 📦 Install dependencies (root only, no scripts)
         run: vp install --filter . --ignore-scripts
@@ -46,10 +46,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: 🧪 Unit tests
         run: vp test --project unit --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
@@ -67,10 +67,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: 🌐 Install browser
         run: vp exec playwright install chromium-headless-shell
@@ -101,10 +101,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: 🔼 Generate Prisma Client
         run: vp run prisma:generate
@@ -131,10 +131,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: ⚡ Run benchmarks
         uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f
@@ -152,10 +152,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: 🔼 Generate Prisma Client
         run: vp run prisma:generate
@@ -182,10 +182,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: 🧹 Check for unused code
         run: vp run knip

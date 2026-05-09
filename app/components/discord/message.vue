@@ -68,8 +68,10 @@ const profile = computed(() => Profiles[name]);
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-badge {
+	--blurple: #5865f2;
+
 	@apply ml-1 flex flex-row items-center rounded-md px-1 py-0.5 font-bold text-white;
-	background-color: #5865f2;
+	background-color: var(--blurple);
 	font-size: 0.625rem;
 	line-height: 0.625rem;
 }

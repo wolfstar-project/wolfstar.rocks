@@ -1,11 +1,14 @@
 <template>
 	<div
-		class="my-2 flex max-w-[520px] text-sm leading-relaxed"
+		class="my-2 flex max-w-130 text-sm leading-relaxed"
 		:class="[isDarkTheme ? 'text-discord-light' : 'text-discord-dark']"
 	>
-		<div class="discord-embed" :style="{ 'border-color': color ?? '#1E1F22' }">
-			<div v-if="title" class="font-whitney mb-2 text-base font-bold">{{ title }}</div>
-			<div v-if="author" class="font-whitney mt-2 flex items-center gap-2 text-base">
+		<div
+			class="discord-embed"
+			:style="{ 'border-color': color ?? 'var(--discord-embed-default-border)' }"
+		>
+			<div v-if="title" class="mb-2 font-whitney text-base font-bold">{{ title }}</div>
+			<div v-if="author" class="mt-2 flex items-center gap-2 font-whitney text-base">
 				<nuxt-img
 					v-if="author.icon"
 					:src="author.icon"
@@ -58,6 +61,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-embed {
+	--discord-embed-default-border: #1e1f22;
 	@apply mt-1 max-w-fit border-l-4 p-3;
 	border-radius: 0.25rem;
 	background-color: var(--color-base-100);
@@ -65,7 +69,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 
 /* Media features */
 .discord-embed-media {
-	@apply mt-4 max-h-[300px] max-w-[300px] rounded;
+	@apply mt-4 max-h-75 max-w-75 rounded;
 }
 
 .discord-embed-text.light .discord-embed-media-video {
@@ -77,6 +81,6 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 }
 
 .discord-embed-custom-emoji-image {
-	@apply h-[18px] w-[18px] align-bottom;
+	@apply h-4.5 w-4.5 align-bottom;
 }
 </style>

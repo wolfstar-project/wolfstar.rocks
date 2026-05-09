@@ -19,10 +19,10 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: ./.github/actions/setup-vp
         with:
           node-version: lts/*
-          cache: true
+          cache: "true"
 
       - name: 🔠 Fix lint errors
         run: vp run lint:fix

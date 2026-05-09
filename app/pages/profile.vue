@@ -162,25 +162,16 @@
 											color="primary"
 											:is-loading
 											aria-label="Toggle sort order"
-											@click="toggleSortOrder()"
+											@click="handleSortToggle()"
 										>
 											<template #leading>
 												<UIcon
-													v-motion
-													:initial="{ opacity: 0 }"
-													:enter="{
-														opacity: 1,
-														transition: { duration: 150 },
-													}"
-													:leave="{
-														opacity: 0,
-														transition: { duration: 150 },
-													}"
 													:name="
 														sortAscending
 															? 'lucide:arrow-up-a-z'
 															: 'lucide:arrow-down-z-a'
 													"
+													style="view-transition-name: sort-icon-mobile"
 												/>
 											</template>
 										</UButton>
@@ -222,25 +213,16 @@
 											class="join-item"
 											color="primary"
 											:is-loading
-											@click="toggleSortOrder()"
+											@click="handleSortToggle()"
 										>
 											<template #leading>
 												<UIcon
-													v-motion
-													:initial="{ opacity: 0 }"
-													:enter="{
-														opacity: 1,
-														transition: { duration: 150 },
-													}"
-													:leave="{
-														opacity: 0,
-														transition: { duration: 150 },
-													}"
 													:name="
 														sortAscending
 															? 'lucide:arrow-up-a-z'
 															: 'lucide:arrow-down-z-a'
 													"
+													style="view-transition-name: sort-icon-desktop"
 												/>
 											</template>
 										</UButton>
@@ -621,6 +603,33 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 // Accessibility - Reduce Motion
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
+
+const isTransitioning = ref(false);
+
+function handleSortToggle() {
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		toggleSortOrder();
+		return;
+	}
+	if (isTransitioning.value) return;
+	if (document.activeViewTransition) {
+		document.activeViewTransition.skipTransition();
+	}
+	isTransitioning.value = true;
+	try {
+		document
+			.startViewTransition(async () => {
+				toggleSortOrder();
+				await nextTick();
+			})
+			.finished.finally(() => {
+				isTransitioning.value = false;
+			});
+	} catch {
+		isTransitioning.value = false;
+		toggleSortOrder();
+	}
+}
 
 const preferredFormat = computed<"gif" | "png">(() => {
 	if (isAnimated.value && !effectiveReduceMotion.value) {

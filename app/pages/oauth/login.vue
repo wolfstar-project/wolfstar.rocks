@@ -10,6 +10,7 @@ const log = useLogger("oauth:login");
 
 definePageMeta({
 	alias: ["/login"],
+	viewTransition: false,
 	middleware: async (to) => {
 		const { login } = useAuth();
 		const queryNext = to.query.next;

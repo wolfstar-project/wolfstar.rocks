@@ -1,3 +1,4 @@
+import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { pwa } from "./config/pwa";
@@ -143,6 +144,22 @@ export default defineNuxtConfig({
 		},
 		include: ["/api/**"],
 		exclude: ["/api/_nuxt_icon/**"],
+		redact: {
+			paths: [
+				...(auditRedactPreset.paths ?? []),
+				"user.email",
+				"user.password",
+				"user.accessToken",
+				"user.refreshToken",
+				"discord.botToken",
+				"headers.authorization",
+				"headers.cookie",
+				"headers.set-cookie",
+				"headers.x-api-key",
+				"headers.x-auth-token",
+				"headers.proxy-authorization",
+			],
+		},
 	},
 
 	ui: {
@@ -181,6 +198,13 @@ export default defineNuxtConfig({
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
+		"/api/users": {
+			headers: {
+				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
+				"Vary": "Cookie, Authorization",
+			},
+		},
+
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -339,10 +363,36 @@ export default defineNuxtConfig({
 		families: [
 			{
 				global: true,
-				name: "Inter",
+				name: "Geist",
 				preload: true,
 				subsets: ["latin"],
 				weights: [400, 500, 600, 700],
+			},
+			{
+				name: "Whitney",
+				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Book.woff", format: "woff" }],
+				weight: 400,
+				display: "swap",
+			},
+			{
+				name: "Whitney",
+				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Medium.woff", format: "woff" }],
+				weight: 500,
+				display: "swap",
+			},
+			{
+				name: "Whitney",
+				src: [
+					{ url: "https://cdn.skyra.pw/whitney-font/v2/Semibold.woff", format: "woff" },
+				],
+				weight: 600,
+				display: "swap",
+			},
+			{
+				name: "Whitney",
+				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Bold.woff", format: "woff" }],
+				weight: 700,
+				display: "swap",
 			},
 		],
 	},

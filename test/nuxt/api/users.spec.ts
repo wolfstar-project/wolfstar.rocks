@@ -16,6 +16,7 @@
  */
 
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
+import { setResponseHeader } from "h3";
 import { describe, expect, it } from "vitest";
 import { FIXTURE_PARTIAL_GUILD, FIXTURE_USER, FIXTURE_USERS_RESPONSE } from "./_fixtures";
 import { TEST_AUTH_HEADER, authHeaders, requireTestSession } from "./_helpers";
@@ -26,6 +27,12 @@ registerEndpoint("/api/users", {
 	handler: (event) => {
 		// Throws 401 when TEST_AUTH_HEADER is absent (mirrors requireUserSession)
 		const userId = requireTestSession(event);
+
+		setResponseHeader(
+			event,
+			"Cache-Control",
+			"private, max-age=30, stale-while-revalidate=300",
+		);
 
 		return {
 			guilds: [FIXTURE_PARTIAL_GUILD],
@@ -99,6 +106,15 @@ describe("GET /api/users", () => {
 				headers: authHeaders(customId),
 			});
 			expect(data.user.id).toBe(customId);
+		});
+	});
+
+	describe("caching", () => {
+		it("sets Cache-Control to private with max-age and stale-while-revalidate", async () => {
+			const res = await $fetch.raw("/api/users", { headers: authHeaders() });
+			expect(res.headers.get("cache-control")).toBe(
+				"private, max-age=30, stale-while-revalidate=300",
+			);
 		});
 	});
 });

@@ -412,8 +412,9 @@ skills:
     generator: skilld
   stale-dep-skilld:
     packageName: stale-dep
-    version: 0.8.5
+    version: 0.8.6
+    packages: "stale-dep@0.8.6"
     repo: sxzz/stale-dep
-    source: "ungh://sxzz/stale-dep"
-    syncedAt: 2026-03-13
+    source: "https://raw.githubusercontent.com/sxzz/stale-dep/main/README.md"
+    syncedAt: 2026-05-12
     generator: skilld

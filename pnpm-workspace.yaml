@@ -41,12 +41,12 @@ peerDependencyRules:
 shellEmulator: true
 
 allowBuilds:
-  '@parcel/watcher': set this to true or false
-  '@prisma/engines': set this to true or false
-  '@sentry/cli': set this to true or false
-  esbuild: set this to true or false
-  onnxruntime-node: set this to true or false
-  prisma: set this to true or false
-  protobufjs: set this to true or false
-  sharp: set this to true or false
-  vue-demi: set this to true or false
+  "@parcel/watcher": false
+  "@prisma/engines": true
+  "@sentry/cli": false
+  esbuild: false
+  onnxruntime-node: false
+  prisma: true
+  protobufjs: false
+  sharp: true
+  vue-demi: false

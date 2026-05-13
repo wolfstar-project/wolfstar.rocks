@@ -312,11 +312,11 @@ skills:
     generator: skilld
   netlify-nuxt-skilld:
     packageName: "@netlify/nuxt"
-    version: 0.2.36
-    packages: "@netlify/nuxt@0.2.36"
+    version: 0.3.0
+    packages: "@netlify/nuxt@0.3.0"
     repo: netlify/primitives
     source: "https://raw.githubusercontent.com/netlify/primitives/main/packages/nuxt-module/README.md"
-    syncedAt: 2026-03-22
+    syncedAt: 2026-05-13
     generator: skilld
   nuxt-auth-utils-skilld:
     packageName: nuxt-auth-utils

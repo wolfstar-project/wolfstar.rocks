@@ -1,4 +1,4 @@
-Generate SKILL.md section for "@netlify/nuxt" v0.2.36.
+Generate SKILL.md section for "@netlify/nuxt" v0.3.0.
 
 ## Security
 
@@ -29,7 +29,7 @@ Find from releases/changelog:
 - **Signature changes** where old code compiles but behaves wrong (changed parameter order, return types, default values)
 - **Breaking changes** in recent versions (v2 → v3 migrations, major version bumps)
 
-Search: `skilld search "deprecated" -p @netlify/nuxt`, `skilld search "breaking" -p @netlify/nuxt`, `skilld search "v0.2" -p @netlify/nuxt`, `skilld search "v0.1" -p @netlify/nuxt`, `skilld search "Features" -p @netlify/nuxt`
+Search: `skilld search "deprecated" -p @netlify/nuxt`, `skilld search "breaking" -p @netlify/nuxt`, `skilld search "v0.3" -p @netlify/nuxt`, `skilld search "v0.2" -p @netlify/nuxt`, `skilld search "v0.1" -p @netlify/nuxt`, `skilld search "Features" -p @netlify/nuxt`
 
 **Item scoring** — include only items scoring ≥ 3. Items scoring 0 MUST be excluded:
 
@@ -65,7 +65,7 @@ Each item: BREAKING/DEPRECATED/NEW label + API name + what changed + source link
 
 ## Rules
 
-- **API Changes:** 10 detailed items + compact "Also changed" line for remaining, MAX 68 lines
+- **API Changes:** 15 detailed items + compact "Also changed" line for remaining, MAX 111 lines
 - **Every detailed item MUST have a `./references/...#section)` link** with a section anchor (`#heading-slug`) or line reference (`:L<line>` or `:L<start>:<end>`). If you cannot cite a specific location in a release, changelog entry, or migration doc, do NOT include the item
 - **Recency:** Only include changes from the current major version and the previous→current migration. Exclude changes from older major versions entirely — users already migrated past them
 - Focus on APIs that CHANGED, not general conventions or gotchas

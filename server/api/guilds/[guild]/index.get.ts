@@ -1,11 +1,11 @@
 import type { RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
+import { readSettings } from "#server/database";
 import { GuildQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
 import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const api = useApi();
 		const log = useLogger(event);
 
 		const guildId = getGuildParam(event);
@@ -16,12 +16,21 @@ export default defineWrappedResponseHandler(
 		);
 
 		const guild = await getGuild(guildId);
+		if (!guild) {
+			throw createError({
+				message: "Guild not found",
+				status: 404,
+				why: `The bot is not a member of guild ${guildId}`,
+			});
+		}
 
 		const member = await getCurrentMember(event, guild.id);
 		log.set({ member: { id: member.user.id } });
-		await canManage(guild, member);
 
-		const channels = await api.guilds.getChannels(guild.id).catch((error) => {
+		const settings = await readSettings(guild.id);
+		await canManage(guild, member, settings);
+
+		const channels = await getGuildChannels(guild.id).catch((error) => {
 			log.error(error);
 			throw createError({
 				message: "Failed to fetch channels",
@@ -32,7 +41,19 @@ export default defineWrappedResponseHandler(
 		});
 
 		const result = shouldSerialize
-			? await transformGuild(member.user.id, guild as RESTAPIPartialCurrentUserGuild)
+			? {
+					...(await transformGuild(
+						member.user.id,
+						guild as RESTAPIPartialCurrentUserGuild,
+						{
+							includeChannels: false,
+							prefetchedGuild: guild,
+							prefetchedMember: member,
+							prefetchedSettings: settings,
+						},
+					)),
+					channels,
+				}
 			: flattenGuild({ ...guild, channels });
 		log.set({
 			result: { channelCount: channels.length, serialized: Boolean(shouldSerialize) },

@@ -1,3 +1,4 @@
+import type { ReadonlyGuildData } from "#server/database";
 import type {
 	FlattenedGuild,
 	LoginData,
@@ -75,7 +76,7 @@ function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string
 	);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember) {
+async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -83,11 +84,12 @@ async function manage(guild: APIGuild, member: APIGuildMember) {
 		return true;
 	}
 
-	const settings = await readSettings(guild.id);
-	const nodes = readSettingsPermissionNodes(settings);
+	const resolvedSettings = settings ?? (await readSettings(guild.id));
+	const nodes = readSettingsPermissionNodes(resolvedSettings);
 
 	return (
-		isAdmin(guild, member, settings.rolesAdmin) && ((await nodes.run(member, "conf")) ?? true)
+		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
+		((await nodes.run(member, "conf")) ?? true)
 	);
 }
 
@@ -95,6 +97,8 @@ async function getManageable(
 	oauthGuild: RESTAPIPartialCurrentUserGuild,
 	guild: APIGuild | undefined,
 	userId: string,
+	settings?: ReadonlyGuildData,
+	prefetchedMember?: APIGuildMember | null,
 ): Promise<boolean> {
 	if (oauthGuild.owner) {
 		return true;
@@ -107,21 +111,50 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	const member = await getMember(guild.id, userId).catch(() => undefined);
+	const member =
+		prefetchedMember !== undefined
+			? (prefetchedMember ?? undefined)
+			: await getMember(guild.id, userId).catch(() => undefined);
 	if (!member) {
 		return hasManageGuild;
 	}
 
-	return manage(guild, member);
+	return manage(guild, member, settings);
 }
 
 export async function transformGuild(
 	userId: string,
 	data: RESTAPIPartialCurrentUserGuild,
+	options: {
+		includeChannels?: boolean;
+		/** Pre-fetched guild data. `null` = bot not in guild. `undefined` = fetch now. */
+		prefetchedGuild?: APIGuild | null;
+		/** Pre-fetched member data. `null` = no member. `undefined` = fetch if needed. */
+		prefetchedMember?: APIGuildMember | null;
+		/** Pre-fetched settings — skips the `readSettings` DB call inside `manage()`. */
+		prefetchedSettings?: ReadonlyGuildData;
+	} = {},
 ): Promise<OauthFlattenedGuild> {
-	const guild = await getGuild(data.id).catch(() => undefined);
+	const {
+		includeChannels = true,
+		prefetchedGuild,
+		prefetchedMember,
+		prefetchedSettings,
+	} = options;
+	const guild =
+		prefetchedGuild !== undefined
+			? prefetchedGuild
+			: await getGuild(data.id).catch((error) => {
+					// getGuild already converts 404s to null; only handle unexpected 404s here
+					if (error?.status === 404 || error?.cause?.status === 404) return null;
+					// Rethrow all other errors (5xx, timeouts, etc.)
+					throw error;
+				});
 
-	const channels = await getGuildChannels(data.id).catch(() => []);
+	const channels =
+		includeChannels && !isNullOrUndefined(guild)
+			? await getGuildChannels(data.id).catch(() => [])
+			: [];
 
 	const mockGuild = cast<FlattenedGuild>({
 		acronym: guildNameToAcronym(data.name),
@@ -166,7 +199,13 @@ export async function transformGuild(
 
 	return {
 		...serialized,
-		manageable: await getManageable(data, guild, userId),
+		manageable: await getManageable(
+			data,
+			guild ?? undefined,
+			userId,
+			prefetchedSettings,
+			prefetchedMember,
+		),
 		permissions: Number(data.permissions),
 		wolfstarIsIn: !isNullOrUndefined(guild),
 	};
@@ -182,8 +221,44 @@ export async function transformOauthGuildsAndUser({
 
 	const userId = user.id;
 
-	const transformedGuilds: OauthFlattenedGuild[] = await Promise.all(
-		guilds.map((guild) => transformGuild(userId, guild)),
+	// Phase 1: Fetch guild presence data for all guilds concurrently.
+	// getGuild returns null (cached) for guilds the bot is not in, eliminating
+	// repeated uncached 404 Discord API calls on every request.
+	const guildData = await mapWithConcurrency(guilds, 16, (g) =>
+		getGuild(g.id).catch((error) => {
+			// getGuild already converts 404s to null; only handle unexpected 404s here
+			if (error?.status === 404 || error?.cause?.status === 404) return null;
+			// Rethrow all other errors (5xx, timeouts, etc.)
+			throw error;
+		}),
+	);
+
+	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
+	// Separates the sequential getGuild→getMember chain into two independent parallel phases.
+	const memberData = await mapWithConcurrency(
+		guilds.map((oauthGuild, i) => ({ oauthGuild, guild: guildData[i] ?? null })),
+		16,
+		async ({ oauthGuild, guild }) => {
+			if (isNullOrUndefined(guild) || oauthGuild.owner) return null;
+			return getMember(guild.id, userId).catch(() => null);
+		},
+	);
+
+	// Phase 3: Transform using pre-fetched data. Each transform now runs without
+	// additional Discord API calls; only readSettings DB calls remain.
+	const transformedGuilds: OauthFlattenedGuild[] = await mapWithConcurrency(
+		guilds.map((oauthGuild, i) => ({
+			oauthGuild,
+			guild: guildData[i] ?? null,
+			member: memberData[i] ?? null,
+		})),
+		16,
+		({ oauthGuild, guild, member }) =>
+			transformGuild(userId, oauthGuild, {
+				includeChannels: false,
+				prefetchedGuild: guild,
+				prefetchedMember: member,
+			}),
 	);
 
 	return { transformedGuilds, user };
@@ -203,8 +278,12 @@ export async function getCurrentToken(event: H3Event) {
 	return tokens;
 }
 
-export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
-	const shouldManage = await manage(guild, member);
+export const canManage = async (
+	guild: APIGuild,
+	member: APIGuildMember,
+	settings?: ReadonlyGuildData,
+) => {
+	const shouldManage = await manage(guild, member, settings);
 	if (!shouldManage) {
 		throw createError({
 			message: "Insufficient permissions",
@@ -228,30 +307,32 @@ export const getCurrentUser = defineCachedFunction(
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getCurrent" },
 		});
-		const user = await instrumentDiscordApiCall("users.getCurrent", () =>
-			api.users.getCurrent(),
-		).catch((error: DiscordAPIError) => {
-			throw createError({
-				cause: error,
-				message: "Failed to fetch user data",
-				status: 500,
-				why: "Discord API returned an error when fetching the current user",
-			});
-		});
-
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getGuilds" },
 		});
-		const guilds = await instrumentDiscordApiCall("users.getGuilds", () =>
-			api.users.getGuilds(),
-		).catch((error: DiscordAPIError) => {
-			throw createError({
-				cause: error,
-				message: "Failed to fetch user guilds",
-				status: 500,
-				why: "Discord API returned an error when fetching the user's guild list",
-			});
-		});
+
+		const [user, guilds] = await Promise.all([
+			instrumentDiscordApiCall("users.getCurrent", () => api.users.getCurrent()).catch(
+				(error: DiscordAPIError) => {
+					throw createError({
+						cause: error,
+						message: "Failed to fetch user data",
+						status: 500,
+						why: "Discord API returned an error when fetching the current user",
+					});
+				},
+			),
+			instrumentDiscordApiCall("users.getGuilds", () => api.users.getGuilds()).catch(
+				(error: DiscordAPIError) => {
+					throw createError({
+						cause: error,
+						message: "Failed to fetch user guilds",
+						status: 500,
+						why: "Discord API returned an error when fetching the user's guild list",
+					});
+				},
+			),
+		]);
 
 		return { guilds, user };
 	},
@@ -379,6 +460,9 @@ export const getGuild = defineCachedFunction(
 			() => api.guilds.get(guildId, { with_counts: true }),
 			{ guild_id: guildId },
 		).catch((error: DiscordAPIError) => {
+			// 404 means the bot is not a member of this guild; return null so the result
+			// is cached by defineCachedFunction and avoids a Discord API call per request.
+			if (error.status === 404) return null;
 			throw createError({
 				cause: error,
 				message: `Failed to fetch guild: ${guildId}`,

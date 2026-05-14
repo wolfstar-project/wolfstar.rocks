@@ -72,14 +72,7 @@
 			</div>
 
 			<!-- Error State with Enhanced UX -->
-			<div
-				v-if="!loading && error"
-				v-motion
-				:initial="{ opacity: 0, scale: 0.95 }"
-				:enter="{ opacity: 1, scale: 1, transition: { duration: 300, ease: 'easeOut' } }"
-				:leave="{ opacity: 0, scale: 0.95, transition: { duration: 200, ease: 'easeIn' } }"
-				class="py-8"
-			>
+			<div v-if="errorVisible" style="view-transition-name: guild-error-state" class="py-8">
 				<div
 					class="mx-auto max-w-2xl rounded-xl border p-6"
 					:class="[
@@ -175,6 +168,10 @@ interface GuildCardsProps {
 	onRetry?: () => void;
 }
 
+interface DocumentWithActiveVT extends Document {
+	readonly activeViewTransition: ViewTransition | null;
+}
+
 const {
 	filteredGuilds,
 	guilds,
@@ -186,6 +183,8 @@ const {
 	isRetrying = false,
 	onRetry,
 } = defineProps<GuildCardsProps>();
+
+const { effectiveReduceMotion } = useReduceMotion();
 
 // Error handling computed properties
 const isTimeoutError = computed(() => error?.status === 408);
@@ -291,6 +290,30 @@ const errorState = computed(() => ({
 }));
 
 const INITIAL_COUNT = 20;
+
+const showError = computed(() => !loading && !!error);
+const errorVisible = ref(showError.value);
+
+if (import.meta.client) {
+	watch(showError, (newVal) => {
+		if (!document.startViewTransition) {
+			errorVisible.value = newVal;
+			return;
+		}
+		if (effectiveReduceMotion.value) {
+			errorVisible.value = newVal;
+			return;
+		}
+		if ((document as DocumentWithActiveVT).activeViewTransition) {
+			errorVisible.value = newVal;
+			return;
+		}
+		document.startViewTransition(async () => {
+			errorVisible.value = newVal;
+			await nextTick();
+		});
+	});
+}
 const LOAD_MORE_COUNT = 10;
 
 const visibleCount = ref(INITIAL_COUNT);

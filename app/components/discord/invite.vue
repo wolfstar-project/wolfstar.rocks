@@ -18,7 +18,7 @@
 				<nuxt-link class="font-bold" :to="link">WolfStar Lounge</nuxt-link>
 				<div class="flex flex-row items-center">
 					<span
-						class="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-green-500 sm:h-2 sm:w-2"
+						class="mr-1 inline-block h-1.5 w-1.5 rounded-full bg-success sm:h-2 sm:w-2"
 					></span>
 					<span>{{ online.toLocaleString() }} Online</span>
 

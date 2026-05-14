@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "./keyframes.css";
 @import "./utilities.css";
+@import "./view-transitions.css";
 
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
@@ -118,6 +119,10 @@
 		--animate-accordion-up: accordion-up 0.2s ease-out;
 		--branding-wolfstar: oklch(63% 0.2502 28.13);
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
+	}
+
+	html {
+		scrollbar-gutter: stable;
 	}
 
 	::-webkit-scrollbar {

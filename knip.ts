@@ -49,6 +49,7 @@ const config: KnipConfig = {
 				"@takumi-rs/core",
 				"@takumi-rs/wasm",
 				"workbox-*",
+				"rolldown",
 
 				/** Oxlint plugins don't get picked up yet */
 				"@e18e/eslint-plugin",

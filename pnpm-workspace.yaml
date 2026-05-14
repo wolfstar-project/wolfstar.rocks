@@ -5,21 +5,18 @@ allowedDeprecatedVersions:
     inflight: 1.0.6
     sourcemap-codec: 1.4.8
 
-ignoredBuiltDependencies:
-    - "@parcel/watcher"
-    - core-js
-    - esbuild
-    - unrs-resolver
-    - vue-demi
+# pnpm v11: hoisting config must live here (no longer read from .npmrc)
+shamefullyHoist: true
+hoistPattern:
+    - "*prisma*"
+publicHoistPattern:
+    - "*import-in-the-middle*"
+    - "*require-in-the-middle*"
 
-onlyBuiltDependencies:
-    - "@prisma/client"
-    - "@prisma/engines"
-    - "@tailwindcss/oxide"
-    - prisma
-    - sharp@0.34.5
-    - workerd
-    - better-sqlite3
+confirmModulesPurge: false
+
+dedupePeers: true
+strictDepBuilds: false
 
 overrides:
     "@netlify/api": ^14.0.18
@@ -36,3 +33,21 @@ peerDependencyRules:
         - "vitest"
 
 shellEmulator: true
+
+# pnpm v11: allowBuilds replaces onlyBuiltDependencies + ignoredBuiltDependencies
+allowBuilds:
+    "@parcel/watcher": false
+    "@prisma/client": true
+    "@prisma/engines": true
+    "@sentry/cli": false
+    "@tailwindcss/oxide": true
+    better-sqlite3: true
+    core-js: false
+    esbuild: false
+    onnxruntime-node: false
+    prisma: true
+    protobufjs: false
+    sharp: true
+    unrs-resolver: false
+    vue-demi: false
+    workerd: true

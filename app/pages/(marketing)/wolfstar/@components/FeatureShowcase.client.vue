@@ -307,7 +307,7 @@
 										<li>
 											<UIcon
 												name="ph:shield-check-duotone"
-												class="my-0 mr-1 h-5 w-5 text-purple-500"
+												class="my-0 mr-1 h-5 w-5 text-primary"
 												aria-hidden="true"
 											/>
 											<strong>Define the punishment action:</strong> from a
@@ -353,7 +353,7 @@
 									<p>
 										<UIcon
 											name="ph:binoculars-duotone"
-											class="my-0 mr-1 h-5 w-5 text-purple-500"
+											class="my-0 mr-1 h-5 w-5 text-primary"
 											aria-hidden="true"
 										/>
 										WolfStar can also listen for external moderation actions.
@@ -561,7 +561,7 @@
 										<li>
 											<UIcon
 												name="ph:magnifying-glass-duotone"
-												class="my-0 mr-1 h-5 w-5 text-purple-500"
+												class="my-0 mr-1 h-5 w-5 text-primary"
 												aria-hidden="true"
 											/>
 											All logs are <strong>fully searchable</strong> and can

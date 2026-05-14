@@ -1,10 +1,5 @@
 <template>
-	<UHeader
-		class="app-navbar card-glass"
-		:ui="{
-			root: 'rounded-full px-6 py-2',
-		}"
-	>
+	<UHeader class="app-navbar">
 		<template #left>
 			<NuxtLink
 				class="mr-4 flex items-center transition-transform hover:scale-105"
@@ -64,12 +59,10 @@
 								tabindex="0"
 							>
 								<LazyUAvatar
-									v-motion
-									:initial="{ scale: 1 }"
-									:hover="{ scale: 1.1, rotate: 5 }"
 									:src="src"
 									icon="lucide:image"
 									size="2xs"
+									style="view-transition-name: user-avatar"
 								/>
 								<span class="hidden font-semibold sm:inline">{{ user?.name }}</span>
 							</div>
@@ -84,10 +77,10 @@
 							block
 							class="md:hidden"
 							icon="ic:round-discord"
-							aria-label="Login with Discord"
+							aria-label="Sign in with Discord"
 						/>
 						<UButton
-							label="Login"
+							label="Sign in"
 							size="md"
 							color="primary"
 							variant="subtle"
@@ -95,7 +88,7 @@
 							block
 							class="hidden md:inline-flex"
 							icon="ic:round-discord"
-							aria-label="Login with Discord"
+							aria-label="Sign in with Discord"
 						/>
 					</div>
 				</template>
@@ -110,7 +103,7 @@
 						tabindex="-1"
 					/>
 					<UButton
-						label="Login"
+						label="Sign in"
 						size="md"
 						color="primary"
 						variant="subtle"
@@ -148,10 +141,10 @@ const items = ref<DropdownMenuItem[]>([
 	},
 	{
 		icon: "lucide:log-out",
-		label: "Log Out",
+		label: "Sign out",
 		onSelect: logout,
 		ui: {
-			itemLeadingIcon: "bg-red-500",
+			itemLeadingIcon: "text-error",
 		},
 	},
 ]);
@@ -163,15 +156,13 @@ const src = computed(() => avatarURL(user.value!));
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-	position: relative; /* Ensure pseudo-element is positioned relative to this */
+	position: relative; /* needed for ::after gradient bottom border */
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
 	transition: all 0.3s ease;
-	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-	border-right: 1px solid oklch(100% 0 0 / 0.1);
+	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
+	/* border-bottom handled by ::after pseudo-element */
 	border-right: 1px solid oklch(0% 0 0 / 0.05);
-	/* border-bottom removed, handled by ::after */
-	border-left: 1px solid oklch(100% 0 0 / 0.1);
 	border-left: 1px solid oklch(0% 0 0 / 0.05);
 	background: oklch(20% 0 0 / 0.6);
 	width: min(calc(100% - 2rem), var(--container-7xl));
@@ -192,9 +183,8 @@ const src = computed(() => avatarURL(user.value!));
 .branding-container {
 	display: inline-flex;
 	align-items: center;
-	margin-bottom: -0.5rem; /* Align with bottom of navbar */
-	/* border-bottom removed from here if it was conflicting or needed removal */
-	border-bottom: 1px solid oklch(100% 0 0 / 0.1); /* Keep or remove? The user request is about the main border. */
+	margin-bottom: -0.5rem; /* align with bottom of navbar */
+	border-bottom: 1px solid oklch(100% 0 0 / 0.1);
 	padding-bottom: 0.5rem;
 }
 

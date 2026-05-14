@@ -6,7 +6,7 @@
 			<UAlert variant="solid" color="warning" title="Login Required" icon="twemoji:warning">
 				<template #description>
 					This page can't be accessed directly. Please
-					<ULink to="/login" class="font-medium underline">log in</ULink>
+					<ULink to="/login" class="font-medium underline">sign in</ULink>
 					to continue.
 				</template>
 				<template #actions>
@@ -49,6 +49,10 @@
 
 <script setup lang="ts">
 import { promiseTimeout } from "@vueuse/core";
+
+definePageMeta({
+	viewTransition: false,
+});
 
 const code = useRouteQuery("code", null, { transform: String });
 const state = useRouteQuery("state", undefined, { transform: String });

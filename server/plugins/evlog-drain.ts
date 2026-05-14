@@ -24,7 +24,7 @@ export default defineNitroPlugin((nitroApp) => {
 		for (const ctx of batch) {
 			if (ctx.event.audit) {
 				tasks.push({
-					promise: Promise.resolve(auditOnly(postgresAudit)(ctx)),
+					promise: Promise.resolve(postgresAudit(ctx)),
 					tag: "postgres",
 					ctx,
 				});

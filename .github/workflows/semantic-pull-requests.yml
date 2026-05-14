@@ -33,6 +33,7 @@ jobs:
             deps
             docs
             cli
+            evlog
             i18n
             ui
           subjectPattern: ^(?![A-Z]).+$

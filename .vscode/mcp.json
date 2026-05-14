@@ -1,22 +1,42 @@
 {
 	"servers": {
+		"nuxt": {
+			"type": "http",
+			"url": "https://nuxt.com/mcp",
+			"tools": ["*"]
+		},
 		"daisyUI": {
 			"type": "http",
-			"url": "https://gitmcp.io/saadeghi/daisyui"
+			"url": "https://gitmcp.io/saadeghi/daisyui",
+			"tools": ["*"]
 		},
+		"nuxt-ui": {
+			"type": "http",
+			"url": "https://ui.nuxt.com/mcp",
+			"tools": ["*"]
+		},
+
 		"browsermcp": {
 			"type": "stdio",
 			"command": "npx",
-			"args": ["-y", "@browsermcp/mcp@latest"]
+			"args": ["-y", "@browsermcp/mcp@latest"],
+			"tools": ["*"]
 		},
 		"sentry": {
-			"type": "http",
-			"url": "https://mcp.sentry.dev/mcp"
+			"type": "stdio",
+			"command": "npx",
+			"tools": ["*"],
+			"args": ["@sentry/mcp-server@latest", "--host=$SENTRY_HOST"],
+			"env": {
+				"SENTRY_HOST": "https://wolfstar-3t.sentry.io",
+				"SENTRY_ACCESS_TOKEN": "$COPILOT_MCP_SENTRY_ACCESS_TOKEN"
+			}
 		},
 		"chrome-devtools": {
 			"type": "stdio",
 			"command": "npx",
-			"args": ["-y", "chrome-devtools-mcp@latest"]
+			"args": ["-y", "chrome-devtools-mcp@latest"],
+			"tools": ["*"]
 		}
 	},
 	"inputs": []

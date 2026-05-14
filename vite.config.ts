@@ -1,4 +1,4 @@
-import { getV8Flags } from "@codspeed/core";
+import { createRequire } from "node:module";
 import codspeedPlugin from "@codspeed/vitest-plugin";
 import { defineVitestProject } from "@nuxt/test-utils/config";
 import { isCI } from "std-env";
@@ -6,6 +6,20 @@ import { defineConfig } from "vite-plus";
 import { playwright } from "vite-plus/test/browser-playwright";
 
 const rootDir = import.meta.dirname;
+const require = createRequire(import.meta.url);
+
+function getCodspeedV8Flags() {
+	if (!isCI) {
+		return undefined;
+	}
+
+	try {
+		const { getV8Flags } = require("@codspeed/core") as typeof import("@codspeed/core");
+		return getV8Flags();
+	} catch {
+		return undefined;
+	}
+}
 
 export default defineConfig({
 	run: {
@@ -480,7 +494,7 @@ export default defineConfig({
 					name: "benchmark",
 					include: [],
 					benchmark: { include: ["**/*.bench.ts"] },
-					execArgv: isCI ? getV8Flags() : undefined,
+					execArgv: getCodspeedV8Flags(),
 				},
 			},
 			{
@@ -504,7 +518,7 @@ export default defineConfig({
 					include: ["test/unit/**/*.{test,spec}.ts"],
 					name: "unit",
 					benchmark: { include: [] },
-					execArgv: isCI ? getV8Flags() : undefined,
+					execArgv: getCodspeedV8Flags(),
 				},
 			},
 			() =>

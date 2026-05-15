@@ -14,7 +14,7 @@ node_modules
 .pnpm-store
 
 # Logs
-logs
+/logs
 *.log
 
 # Misc

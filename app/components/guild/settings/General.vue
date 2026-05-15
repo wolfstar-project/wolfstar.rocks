@@ -220,12 +220,22 @@ const {
 
 const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 	{
-		accessorKey: "id",
-		header: "Case",
+		accessorKey: "timestamp",
+		header: "Date",
+		cell: ({ row }) => {
+			return h(
+				"time",
+				{
+					class: "whitespace-nowrap text-xs text-base-content/50",
+					datetime: new Date(row.original.timestamp).toISOString(),
+				},
+				new Date(row.original.timestamp).toLocaleString(),
+			);
+		},
 	},
 	{
 		accessorKey: "member",
-		header: "Member",
+		header: "User",
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(UAvatar, {
@@ -247,20 +257,6 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 		id: "description",
 		header: "Action",
 		cell: ({ row }) => auditLogActionDescription(row.original),
-	},
-	{
-		accessorKey: "timestamp",
-		header: "When",
-		cell: ({ row }) => {
-			return h(
-				"time",
-				{
-					class: "whitespace-nowrap text-xs text-base-content/50",
-					datetime: new Date(row.original.timestamp).toISOString(),
-				},
-				formatTimeAgo(new Date(row.original.timestamp)),
-			);
-		},
 	},
 ];
 

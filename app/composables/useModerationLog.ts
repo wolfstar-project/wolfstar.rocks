@@ -1,19 +1,12 @@
-import type { DashboardAuditEntry } from "#shared/types/audit-log";
+import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { MaybeRefOrGetter } from "vue";
 
-interface AuditLogResponse {
-	entries: DashboardAuditEntry[];
+interface ModerationLogResponse {
+	entries: ModerationLogEntry[];
 	total: number;
 }
 
-interface AuditLogFilters {
-	actorId?: string;
-	from?: string;
-	to?: string;
-	q?: string;
-}
-
-export function useAuditLog({
+export function useModerationLog({
 	guildId,
 	immediate,
 	limit,
@@ -24,7 +17,14 @@ export function useAuditLog({
 	immediate?: boolean;
 	limit?: MaybeRefOrGetter<number>;
 	offset?: MaybeRefOrGetter<number>;
-	filters?: MaybeRefOrGetter<AuditLogFilters>;
+	filters?: MaybeRefOrGetter<{
+		userId?: string;
+		moderatorId?: string;
+		typeCode?: number;
+		from?: string;
+		to?: string;
+		q?: string;
+	}>;
 }) {
 	const resolvedLimit = computed(() => (limit !== undefined ? toValue(limit) : undefined));
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
@@ -32,21 +32,26 @@ export function useAuditLog({
 
 	const asyncData = useLazyAsyncData(
 		() =>
-			`guild:${toValue(guildId)}:logs:activity:${JSON.stringify(resolvedFilters.value ?? {})}`,
+			`guild:${toValue(guildId)}:logs:moderation:${JSON.stringify(resolvedFilters.value || {})}`,
 		() => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
 			const f = resolvedFilters.value;
 			if (f) {
-				if (f.actorId) query.actorId = f.actorId;
+				if (f.userId) query.userId = f.userId;
+				if (f.moderatorId) query.moderatorId = f.moderatorId;
+				if (f.typeCode !== undefined) query.typeCode = f.typeCode;
 				if (f.from) query.from = f.from;
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<AuditLogResponse>(`/api/guilds/${toValue(guildId)}/logs`, {
-				query,
-			});
+			return $fetch<ModerationLogResponse>(
+				`/api/guilds/${toValue(guildId)}/logs/moderation`,
+				{
+					query,
+				},
+			);
 		},
 		{
 			immediate: immediate !== false,
@@ -55,7 +60,7 @@ export function useAuditLog({
 				if (cause === "refresh:manual" || cause === "refresh:hook" || cause === "watch")
 					return undefined;
 				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
-					| AuditLogResponse
+					| ModerationLogResponse
 					| undefined;
 			},
 		},

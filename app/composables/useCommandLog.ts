@@ -1,19 +1,12 @@
-import type { DashboardAuditEntry } from "#shared/types/audit-log";
+import type { CommandLogEntry } from "#shared/types/command-log";
 import type { MaybeRefOrGetter } from "vue";
 
-interface AuditLogResponse {
-	entries: DashboardAuditEntry[];
+interface CommandLogResponse {
+	entries: CommandLogEntry[];
 	total: number;
 }
 
-interface AuditLogFilters {
-	actorId?: string;
-	from?: string;
-	to?: string;
-	q?: string;
-}
-
-export function useAuditLog({
+export function useCommandLog({
 	guildId,
 	immediate,
 	limit,
@@ -24,7 +17,14 @@ export function useAuditLog({
 	immediate?: boolean;
 	limit?: MaybeRefOrGetter<number>;
 	offset?: MaybeRefOrGetter<number>;
-	filters?: MaybeRefOrGetter<AuditLogFilters>;
+	filters?: MaybeRefOrGetter<{
+		userId?: string;
+		commandName?: string;
+		success?: "all" | "success" | "failure";
+		from?: string;
+		to?: string;
+		q?: string;
+	}>;
 }) {
 	const resolvedLimit = computed(() => (limit !== undefined ? toValue(limit) : undefined));
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
@@ -32,19 +32,21 @@ export function useAuditLog({
 
 	const asyncData = useLazyAsyncData(
 		() =>
-			`guild:${toValue(guildId)}:logs:activity:${JSON.stringify(resolvedFilters.value ?? {})}`,
+			`guild:${toValue(guildId)}:logs:commands:${JSON.stringify(resolvedFilters.value || {})}`,
 		() => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
 			const f = resolvedFilters.value;
 			if (f) {
-				if (f.actorId) query.actorId = f.actorId;
+				if (f.userId) query.userId = f.userId;
+				if (f.commandName) query.commandName = f.commandName;
+				if (f.success) query.success = f.success;
 				if (f.from) query.from = f.from;
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<AuditLogResponse>(`/api/guilds/${toValue(guildId)}/logs`, {
+			return $fetch<CommandLogResponse>(`/api/guilds/${toValue(guildId)}/logs/commands`, {
 				query,
 			});
 		},
@@ -55,7 +57,7 @@ export function useAuditLog({
 				if (cause === "refresh:manual" || cause === "refresh:hook" || cause === "watch")
 					return undefined;
 				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
-					| AuditLogResponse
+					| CommandLogResponse
 					| undefined;
 			},
 		},

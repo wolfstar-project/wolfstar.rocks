@@ -4,8 +4,7 @@ import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
 import { GUILD_ID, authHeaders, requireTestSession } from "~~/test/nuxt/api/_helpers";
 
-const NEW_URL = `/api/guilds/${GUILD_ID}/logs/dashboard-activity`;
-const LEGACY_URL = `/api/guilds/${GUILD_ID}/audit-logs`;
+const LOGS_URL = `/api/guilds/${GUILD_ID}/logs`;
 
 const MOCK_ENTRY: DashboardAuditEntry = {
 	id: "abc123",
@@ -31,7 +30,7 @@ const MOCK_ENTRY: DashboardAuditEntry = {
 	timestamp: "2026-05-15T00:00:00.000Z",
 };
 
-registerEndpoint(NEW_URL, {
+registerEndpoint(LOGS_URL, {
 	method: "GET",
 	handler: (event) => {
 		requireTestSession(event);
@@ -39,15 +38,7 @@ registerEndpoint(NEW_URL, {
 	},
 });
 
-registerEndpoint(LEGACY_URL, {
-	method: "GET",
-	handler: (event) => {
-		requireTestSession(event);
-		return { entries: [MOCK_ENTRY], total: 1 };
-	},
-});
-
-const ACTOR_FILTER_URL = `${NEW_URL}?actorId=987654321098765432`;
+const ACTOR_FILTER_URL = `${LOGS_URL}?actorId=987654321098765432`;
 registerEndpoint(ACTOR_FILTER_URL, {
 	method: "GET",
 	handler: (event) => {
@@ -56,10 +47,10 @@ registerEndpoint(ACTOR_FILTER_URL, {
 	},
 });
 
-describe(`GET ${NEW_URL}`, () => {
+describe(`GET ${LOGS_URL}`, () => {
 	describe("authentication", () => {
 		it("returns 401 when no auth header", async () => {
-			const err = await $fetch(NEW_URL).catch((e: unknown) => e);
+			const err = await $fetch(LOGS_URL).catch((e: unknown) => e);
 			expect((err as { statusCode?: number }).statusCode).toBe(401);
 		});
 	});
@@ -67,7 +58,7 @@ describe(`GET ${NEW_URL}`, () => {
 	describe("happy path", () => {
 		it("returns entries and total", async () => {
 			const result = await $fetch<{ entries: DashboardAuditEntry[]; total: number }>(
-				NEW_URL,
+				LOGS_URL,
 				{
 					headers: authHeaders(),
 				},
@@ -85,16 +76,5 @@ describe(`GET ${NEW_URL}`, () => {
 			);
 			expect(result.entries[0]?.member.user.id).toBe("987654321098765432");
 		});
-	});
-});
-
-describe(`GET ${LEGACY_URL} (shim)`, () => {
-	it("returns same shape as new endpoint (backward compat)", async () => {
-		const result = await $fetch<{ entries: DashboardAuditEntry[]; total: number }>(LEGACY_URL, {
-			headers: authHeaders(),
-		});
-		expect(result.entries).toHaveLength(1);
-		expect(result.entries[0]).toHaveProperty("action");
-		expect(result.entries[0]).toHaveProperty("timestamp");
 	});
 });

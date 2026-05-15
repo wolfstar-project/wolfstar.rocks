@@ -63,6 +63,7 @@ export default defineWrappedResponseHandler(
 							displayName: member.user.username,
 						},
 						target: { type: "guild", id: guild.id },
+
 						outcome: "denied",
 						reason: "Insufficient permissions to manage guild settings",
 					}),

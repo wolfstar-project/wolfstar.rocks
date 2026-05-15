@@ -8,6 +8,7 @@ const ACTION_NAMES = {
 	userLogout: "user.logout",
 	sessionRefresh: "session.refresh",
 	oauthStateInvalid: "oauth.state.invalid",
+	commandExecuted: "command.executed",
 } as const satisfies Record<string, string>;
 
 export type AuditActionName = (typeof ACTION_NAMES)[keyof typeof ACTION_NAMES];
@@ -23,3 +24,4 @@ export const userLogin = defineAuditAction(ACTION_NAMES.userLogin);
 export const userLogout = defineAuditAction(ACTION_NAMES.userLogout);
 export const sessionRefresh = defineAuditAction(ACTION_NAMES.sessionRefresh);
 export const oauthStateInvalid = defineAuditAction(ACTION_NAMES.oauthStateInvalid);
+export const commandExecuted = defineAuditAction(ACTION_NAMES.commandExecuted);

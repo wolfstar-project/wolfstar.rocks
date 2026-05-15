@@ -36,3 +36,6 @@ export async function resolveAuditMembers(
 	}
 	return map;
 }
+
+// Alias for use by moderation and command log endpoints.
+export const resolveGuildMembers = resolveAuditMembers;

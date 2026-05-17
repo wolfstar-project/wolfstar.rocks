@@ -1,13 +1,23 @@
 <template>
-	<div class="flex flex-col gap-4">
-		<LogsFilterBar v-model="filters.q" />
+	<div class="w-full flex-1 divide-y divide-accented">
+		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
+			<UInput
+				v-model="q"
+				icon="i-lucide-search"
+				placeholder="Search logs..."
+				aria-label="Search logs"
+				class="max-w-sm min-w-48"
+			/>
+		</div>
 		<div :aria-busy="status === 'pending'" class="relative">
 			<UTable :data="entries" :columns="columns" class="min-h-100">
 				<template #empty>
 					<UEmpty
 						icon="i-lucide-gavel"
 						title="No moderation cases found"
-						description="No cases match the current filters."
+						:description="
+							debouncedQ ? 'No cases match the current filters.' : undefined
+						"
 					/>
 				</template>
 			</UTable>
@@ -18,7 +28,7 @@
 				<LoadingSpinner size="lg" />
 			</div>
 		</div>
-		<div class="flex justify-end border-t border-base-200 pt-4">
+		<div class="flex justify-end px-4 py-3.5">
 			<UPagination
 				v-if="total > limit"
 				v-model:page="page"
@@ -36,9 +46,9 @@ import { moderationActionVariant } from "~/utils/constants";
 
 const UBadge = resolveComponent("UBadge");
 const UUser = resolveComponent("UUser");
+const { guildData } = useGuildData();
 
-const props = defineProps<{
-	guildId: string;
+const { warningsOnly } = defineProps<{
 	warningsOnly?: boolean;
 }>();
 
@@ -47,12 +57,19 @@ const limit = ref(20);
 const offset = computed(() => (page.value - 1) * limit.value);
 
 const filters = ref<{ q?: string; typeCode?: number }>({});
-if (props.warningsOnly) {
+if (warningsOnly) {
 	filters.value.typeCode = 1;
 }
 
+const q = ref("");
+const debouncedQ = refDebounced(q, 300);
+watch(debouncedQ, (val) => {
+	filters.value.q = val || undefined;
+});
+
+const guildId = computed(() => guildData.value.id);
 const { entries, total, status } = useModerationLog({
-	guildId: computed(() => props.guildId),
+	guildId,
 	limit,
 	offset,
 	filters,

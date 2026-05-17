@@ -1,71 +1,64 @@
 <template>
-	<UDashboardPanel grow>
-		<UDashboardNavbar title="Logs" />
+	<UDashboardPanel id="home">
+		<template #header>
+			<UDashboardNavbar :ui="{ right: 'gap-3' }">
+				<template #leading>
+					<UDashboardSidebarCollapse />
+				</template>
+			</UDashboardNavbar>
+		</template>
 
-		<div class="flex h-full flex-col p-4">
-			<UTabs
-				:items="tabs"
-				:model-value="currentTabId"
-				:unmount-on-hide="false"
-				class="w-full"
-				@update:model-value="onTabChange"
-			>
-				<template #moderation>
+		<template #body>
+			<UTabs v-model="activeTab" :items="tabs" :unmount-on-hide="false" class="w-full">
+				<template #content="{ item }">
 					<div class="mt-4">
-						<LogsModerationLogTable :guild-id="guildId" />
-					</div>
-				</template>
-				<template #warnings>
-					<div class="mt-4">
-						<LogsModerationLogTable :guild-id="guildId" warnings-only />
-					</div>
-				</template>
-				<template #commands>
-					<div class="mt-4">
-						<LogsCommandLogTable :guild-id="guildId" />
-					</div>
-				</template>
-				<template #activity>
-					<div class="mt-4">
-						<LogsDashboardActivityTable :guild-id="guildId" />
+						<GuildLogsModerationLogTable v-if="item.value === 'moderation'" />
+						<GuildLogsModerationLogTable
+							v-else-if="item.value === 'warnings'"
+							warnings-only
+						/>
+						<GuildLogsCommandLogTable v-else-if="item.value === 'commands'" />
+						<GuildLogsDashboardActivityTable v-else-if="item.value === 'activity'" />
 					</div>
 				</template>
 			</UTabs>
-		</div>
+		</template>
 	</UDashboardPanel>
 </template>
 
 <script setup lang="ts">
+import type { TabsItem } from "@nuxt/ui";
+import { useRouteParams } from "@vueuse/router";
+
 definePageMeta({
 	auth: { required: true },
 	layout: "dashboard",
 	path: "/guilds/:id/logs/:tab(moderation|warnings|commands|activity)?",
 });
 
-const route = useRoute();
 const router = useRouter();
 
-const guildId = computed(() => {
-	const id = route.params.id;
-	return Array.isArray(id) ? id[0] : id;
+const tab = useRouteParams("tab", "moderation", { transform: String });
+const guildId = useRouteParams("id", undefined, { transform: String });
+
+const tabs = computed<TabsItem[]>(() => [
+	{ value: "moderation", label: "Moderation" },
+	{ value: "warnings", label: "Warnings" },
+	{ value: "commands", label: "Commands" },
+	{ value: "activity", label: "Dashboard Activity" },
+]);
+
+const activeTab = computed({
+	get() {
+		if (tabs.value.some((t) => t.value === tab.value)) {
+			return tab.value;
+		}
+		return "moderation";
+	},
+	set(value: string | number) {
+		router.replace(`/guilds/${guildId.value}/logs/${value}`);
+	},
 });
-
-const tabs = [
-	{ value: "moderation", label: "Moderation", slot: "moderation" },
-	{ value: "warnings", label: "Warnings", slot: "warnings" },
-	{ value: "commands", label: "Commands", slot: "commands" },
-	{ value: "activity", label: "Dashboard Activity", slot: "activity" },
-];
-
-const currentTabId = computed(() => {
-	const tab = route.params.tab;
-	const raw = Array.isArray(tab) ? (tab[0] ?? "moderation") : tab || "moderation";
-	return tabs.some((t) => t.value === raw) ? raw : "moderation";
-});
-
-function onTabChange(value: string | number) {
-	router.replace(`/guilds/${guildId.value}/logs/${value}`);
-}
 
 useSeoMetadata({
 	title: "Logs",

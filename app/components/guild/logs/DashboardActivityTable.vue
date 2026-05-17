@@ -1,13 +1,23 @@
 <template>
-	<div class="flex flex-col gap-4">
-		<LogsFilterBar v-model="filters.q" />
+	<div class="w-full flex-1 divide-y divide-accented">
+		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
+			<UInput
+				v-model="q"
+				icon="i-lucide-search"
+				placeholder="Search logs..."
+				aria-label="Search logs"
+				class="max-w-sm min-w-48"
+			/>
+		</div>
 		<div :aria-busy="status === 'pending'" class="relative">
 			<UTable :data="entries" :columns="columns" class="min-h-100">
 				<template #empty>
 					<UEmpty
 						icon="i-lucide-activity"
-						title="No activity found"
-						description="No activity matches the current filters."
+						title="No logs found"
+						:description="
+							debouncedQ ? 'No activity matches the current filters.' : undefined
+						"
 					/>
 				</template>
 			</UTable>
@@ -18,7 +28,7 @@
 				<LoadingSpinner size="lg" />
 			</div>
 		</div>
-		<div class="flex justify-end border-t border-base-200 pt-4">
+		<div class="flex justify-end px-4 py-3.5">
 			<UPagination
 				v-if="total > limit"
 				v-model:page="page"
@@ -34,10 +44,7 @@ import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { TableColumn } from "@nuxt/ui";
 
 const UUser = resolveComponent("UUser");
-
-const props = defineProps<{
-	guildId: string;
-}>();
+const { guildData } = useGuildData();
 
 const page = ref(1);
 const limit = ref(20);
@@ -45,8 +52,16 @@ const offset = computed(() => (page.value - 1) * limit.value);
 
 const filters = ref<{ q?: string }>({});
 
+const q = ref("");
+const debouncedQ = refDebounced(q, 300);
+watch(debouncedQ, (val) => {
+	filters.value.q = val || undefined;
+});
+
+const guildId = computed(() => guildData.value.id);
+
 const { entries, total, status } = useAuditLog({
-	guildId: computed(() => props.guildId),
+	guildId,
 	limit,
 	offset,
 	filters,

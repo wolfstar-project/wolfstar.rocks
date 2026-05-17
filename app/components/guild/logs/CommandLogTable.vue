@@ -1,6 +1,13 @@
 <template>
-	<div class="flex flex-col gap-4">
-		<LogsFilterBar v-model="filters.q">
+	<div class="w-full flex-1 divide-y divide-accented">
+		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
+			<UInput
+				v-model="q"
+				icon="i-lucide-search"
+				placeholder="Search logs..."
+				aria-label="Search logs"
+				class="max-w-sm min-w-48"
+			/>
 			<USelect
 				v-model="filters.success"
 				:items="[
@@ -8,17 +15,13 @@
 					{ label: 'Success', value: 'success' },
 					{ label: 'Failed', value: 'failure' },
 				]"
-				label="Status"
+				aria-label="Filter by status"
 			/>
-		</LogsFilterBar>
+		</div>
 		<div :aria-busy="status === 'pending'" class="relative">
 			<UTable :data="entries" :columns="columns" class="min-h-100">
 				<template #empty>
-					<UEmpty
-						icon="i-lucide-terminal"
-						title="No commands found"
-						description="Command logging requires WolfStar bot integration. Contact your server owner."
-					/>
+					<UEmpty icon="i-lucide-terminal" title="No logs found" />
 				</template>
 			</UTable>
 			<div
@@ -28,7 +31,7 @@
 				<LoadingSpinner size="lg" />
 			</div>
 		</div>
-		<div class="flex justify-end border-t border-base-200 pt-4">
+		<div class="flex justify-end px-4 py-3.5">
 			<UPagination
 				v-if="total > limit"
 				v-model:page="page"
@@ -45,10 +48,7 @@ import type { TableColumn } from "@nuxt/ui";
 
 const UBadge = resolveComponent("UBadge");
 const UUser = resolveComponent("UUser");
-
-const props = defineProps<{
-	guildId: string;
-}>();
+const { guildData } = useGuildData();
 
 const page = ref(1);
 const limit = ref(20);
@@ -56,8 +56,16 @@ const offset = computed(() => (page.value - 1) * limit.value);
 
 const filters = ref<{ q?: string; success?: "all" | "success" | "failure" }>({ success: "all" });
 
+const q = ref("");
+const debouncedQ = refDebounced(q, 300);
+watch(debouncedQ, (val) => {
+	filters.value.q = val || undefined;
+});
+
+const guildId = computed(() => guildData.value.id);
+
 const { entries, total, status } = useCommandLog({
-	guildId: computed(() => props.guildId),
+	guildId,
 	limit,
 	offset,
 	filters,

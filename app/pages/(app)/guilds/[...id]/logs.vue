@@ -5,32 +5,30 @@
 		<div class="flex h-full flex-col p-4">
 			<UTabs
 				:items="tabs"
-				:default-index="defaultTabIndex"
-				@change="onTabChange"
+				:model-value="currentTabId"
+				:unmount-on-hide="false"
 				class="w-full"
+				@update:model-value="onTabChange"
 			>
-				<template #item="{ item }">
-					<KeepAlive>
-						<div class="mt-4">
-							<LogsModerationLogTable
-								v-if="item.id === 'moderation'"
-								:guild-id="guildId"
-							/>
-							<LogsModerationLogTable
-								v-else-if="item.id === 'warnings'"
-								:guild-id="guildId"
-								warnings-only
-							/>
-							<LogsCommandLogTable
-								v-else-if="item.id === 'commands'"
-								:guild-id="guildId"
-							/>
-							<LogsDashboardActivityTable
-								v-else-if="item.id === 'activity'"
-								:guild-id="guildId"
-							/>
-						</div>
-					</KeepAlive>
+				<template #moderation>
+					<div class="mt-4">
+						<LogsModerationLogTable :guild-id="guildId" />
+					</div>
+				</template>
+				<template #warnings>
+					<div class="mt-4">
+						<LogsModerationLogTable :guild-id="guildId" warnings-only />
+					</div>
+				</template>
+				<template #commands>
+					<div class="mt-4">
+						<LogsCommandLogTable :guild-id="guildId" />
+					</div>
+				</template>
+				<template #activity>
+					<div class="mt-4">
+						<LogsDashboardActivityTable :guild-id="guildId" />
+					</div>
 				</template>
 			</UTabs>
 		</div>
@@ -53,27 +51,20 @@ const guildId = computed(() => {
 });
 
 const tabs = [
-	{ id: "moderation", label: "Moderation" },
-	{ id: "warnings", label: "Warnings" },
-	{ id: "commands", label: "Commands" },
-	{ id: "activity", label: "Dashboard Activity" },
+	{ value: "moderation", label: "Moderation", slot: "moderation" },
+	{ value: "warnings", label: "Warnings", slot: "warnings" },
+	{ value: "commands", label: "Commands", slot: "commands" },
+	{ value: "activity", label: "Dashboard Activity", slot: "activity" },
 ];
 
 const currentTabId = computed(() => {
 	const tab = route.params.tab;
-	return Array.isArray(tab) ? tab[0] : tab || "moderation";
+	const raw = Array.isArray(tab) ? (tab[0] ?? "moderation") : tab || "moderation";
+	return tabs.some((t) => t.value === raw) ? raw : "moderation";
 });
 
-const defaultTabIndex = computed(() => {
-	const index = tabs.findIndex((t) => t.id === currentTabId.value);
-	return index !== -1 ? index : 0;
-});
-
-function onTabChange(index: number) {
-	const tab = tabs[index];
-	if (tab) {
-		router.replace(`/guilds/${guildId.value}/logs/${tab.id}`);
-	}
+function onTabChange(value: string | number) {
+	router.replace(`/guilds/${guildId.value}/logs/${value}`);
 }
 
 useSeoMetadata({

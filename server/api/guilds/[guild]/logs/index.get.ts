@@ -98,6 +98,6 @@ export default defineWrappedResponseHandler(
 		onError(log, error) {
 			log.error(error);
 		},
-		rateLimit: { enabled: true, limit: 2, window: seconds(5) },
+		rateLimit: { enabled: true, limit: 15, window: seconds(60) },
 	},
 );

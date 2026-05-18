@@ -74,7 +74,7 @@ export default defineWrappedResponseHandler(
 
 		using trx = await writeSettingsTransaction(guild.id);
 
-		if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
+		if (!data.every((entry): entry is [string, unknown] => entry !== undefined)) {
 			throw createError({
 				message: "Invalid data entries",
 				status: 400,

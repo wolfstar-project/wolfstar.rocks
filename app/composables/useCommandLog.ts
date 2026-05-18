@@ -1,3 +1,4 @@
+import type { CommandLogEntry } from "#shared/types/command-log";
 import type { MaybeRefOrGetter } from "vue";
 
 interface CommandLogResponse {

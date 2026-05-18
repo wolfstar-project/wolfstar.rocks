@@ -73,6 +73,7 @@
 <script setup lang="ts">
 import type { CommandLogEntry } from "#shared/types/command-log";
 import type { TableColumn } from "@nuxt/ui";
+import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 
 const UBadge = resolveComponent("UBadge");
@@ -116,18 +117,19 @@ const columns: TableColumn<CommandLogEntry>[] = [
 		id: "actor",
 		header: "User",
 		cell: ({ row }) => {
+			const member = row.original.member;
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(UAvatar, {
-					...auditLogMemberAvatar(row.original.member),
+					...(member ? auditLogMemberAvatar(member) : { src: undefined }),
 					size: "lg",
 				}),
 				h("div", undefined, [
 					h(
 						"p",
 						{ class: "font-medium text-highlighted" },
-						auditLogMemberName(row.original.member),
+						member ? auditLogMemberName(member) : row.original.userId,
 					),
-					h("p", { class: "" }, `@${row.original.member.user.username}`),
+					h("p", { class: "" }, `@${member?.user?.username ?? row.original.userId}`),
 				]),
 			]);
 		},

@@ -102,7 +102,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 						{ class: "font-medium text-highlighted" },
 						auditLogMemberName(row.original.member),
 					),
-					h("p", { class: "" }, `@${row.original.member.user.username}`),
+					h("p", { class: "" }, `@${row.original.member.user?.username ?? "unknown"}`),
 				]),
 			]);
 		},

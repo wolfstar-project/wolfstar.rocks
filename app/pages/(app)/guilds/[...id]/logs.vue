@@ -1,7 +1,7 @@
 <template>
 	<UDashboardPanel id="home">
 		<template #header>
-			<UDashboardNavbar :ui="{ right: 'gap-3' }">
+			<UDashboardNavbar title="Logs" :ui="{ right: 'gap-3' }">
 				<template #leading>
 					<UDashboardSidebarCollapse />
 				</template>
@@ -9,7 +9,13 @@
 		</template>
 
 		<template #body>
-			<UTabs v-model="activeTab" :items="tabs" :unmount-on-hide="false" class="w-full">
+			<UTabs
+				v-model="activeTab"
+				:items="tabs"
+				:unmount-on-hide="false"
+				class="w-full"
+				:ui="{ list: 'px-4' }"
+			>
 				<template #content="{ item }">
 					<div class="mt-4">
 						<GuildLogsModerationLogTable v-if="item.value === 'moderation'" />

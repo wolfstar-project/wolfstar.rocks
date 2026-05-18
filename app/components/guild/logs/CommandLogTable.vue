@@ -8,6 +8,7 @@
 				aria-label="Search logs"
 				class="max-w-sm min-w-48"
 			/>
+			<span class="text-sm text-muted">Status</span>
 			<USelect
 				v-model="filters.success"
 				:items="[
@@ -21,7 +22,14 @@
 		<div :aria-busy="status === 'pending'" class="relative">
 			<UTable :data="entries" :columns="columns" class="min-h-100">
 				<template #empty>
-					<UEmpty icon="i-lucide-terminal" title="No logs found" />
+					<UEmpty
+						v-if="status !== 'pending'"
+						icon="i-lucide-terminal"
+						title="No logs found"
+						:description="
+							debouncedQ ? 'No commands match the current filters.' : undefined
+						"
+					/>
 				</template>
 			</UTable>
 			<div
@@ -45,6 +53,7 @@
 <script setup lang="ts">
 import type { CommandLogEntry } from "#shared/types/command-log";
 import type { TableColumn } from "@nuxt/ui";
+import { formatTimeAgo } from "@vueuse/core";
 
 const UBadge = resolveComponent("UBadge");
 const UUser = resolveComponent("UUser");
@@ -80,9 +89,10 @@ const columns: TableColumn<CommandLogEntry>[] = [
 				"time",
 				{
 					datetime: row.original.executedAt,
+					title: new Date(row.original.executedAt).toLocaleString(),
 					class: "whitespace-nowrap text-sm text-muted",
 				},
-				new Date(row.original.executedAt).toLocaleString(),
+				formatTimeAgo(new Date(row.original.executedAt)),
 			),
 	},
 	{

@@ -13,6 +13,7 @@
 			<UTable :data="entries" :columns="columns" class="min-h-100">
 				<template #empty>
 					<UEmpty
+						v-if="status !== 'pending'"
 						icon="i-lucide-activity"
 						title="No logs found"
 						:description="
@@ -42,6 +43,7 @@
 <script setup lang="ts">
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { TableColumn } from "@nuxt/ui";
+import { formatTimeAgo } from "@vueuse/core";
 
 const UUser = resolveComponent("UUser");
 const { guildData } = useGuildData();
@@ -89,8 +91,12 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 		cell: ({ row }) =>
 			h(
 				"time",
-				{ datetime: row.original.timestamp, class: "whitespace-nowrap text-sm text-muted" },
-				new Date(row.original.timestamp).toLocaleString(),
+				{
+					datetime: row.original.timestamp,
+					title: new Date(row.original.timestamp).toLocaleString(),
+					class: "whitespace-nowrap text-sm text-muted",
+				},
+				formatTimeAgo(new Date(row.original.timestamp)),
 			),
 	},
 ];

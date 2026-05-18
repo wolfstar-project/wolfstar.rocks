@@ -13,8 +13,9 @@
 			<UTable :data="entries" :columns="columns" class="min-h-100">
 				<template #empty>
 					<UEmpty
+						v-if="status !== 'pending'"
 						icon="i-lucide-gavel"
-						title="No moderation cases found"
+						:title="warningsOnly ? 'No warnings found' : 'No moderation cases found'"
 						:description="
 							debouncedQ ? 'No cases match the current filters.' : undefined
 						"
@@ -42,7 +43,7 @@
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { TableColumn } from "@nuxt/ui";
-import { moderationActionVariant } from "~/utils/constants";
+import { formatTimeAgo } from "@vueuse/core";
 
 const UBadge = resolveComponent("UBadge");
 const UUser = resolveComponent("UUser");
@@ -138,8 +139,14 @@ const columns: TableColumn<ModerationLogEntry>[] = [
 		cell: ({ row }) =>
 			h(
 				"time",
-				{ datetime: row.original.createdAt ?? "", class: "text-sm text-muted" },
-				row.original.createdAt ? new Date(row.original.createdAt).toLocaleString() : "—",
+				{
+					datetime: row.original.createdAt ?? "",
+					title: row.original.createdAt
+						? new Date(row.original.createdAt).toLocaleString()
+						: "",
+					class: "whitespace-nowrap text-sm text-muted",
+				},
+				row.original.createdAt ? formatTimeAgo(new Date(row.original.createdAt)) : "—",
 			),
 	},
 ];

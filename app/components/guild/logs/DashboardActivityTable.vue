@@ -9,26 +9,23 @@
 				class="max-w-sm min-w-48"
 			/>
 		</div>
-		<div :aria-busy="status === 'pending'" class="relative">
-			<UTable :data="entries" :columns="columns" class="min-h-100">
-				<template #empty>
-					<UEmpty
-						v-if="status !== 'pending'"
-						icon="i-lucide-activity"
-						title="No logs found"
-						:description="
-							debouncedQ ? 'No activity matches the current filters.' : undefined
-						"
-					/>
-				</template>
-			</UTable>
-			<div
-				v-if="status === 'pending'"
-				class="absolute inset-0 flex items-center justify-center bg-base-100/50 backdrop-blur-sm"
-			>
-				<LoadingSpinner size="lg" />
-			</div>
-		</div>
+		<UTable
+			:data="entries"
+			:columns="columns"
+			:loading="status === 'pending' || status === 'idle'"
+			class="min-h-100"
+		>
+			<template #empty>
+				<UEmpty
+					v-if="status !== 'pending' && status !== 'idle'"
+					icon="i-lucide-activity"
+					title="No logs found"
+					:description="
+						debouncedQ ? 'No activity matches the current filters.' : undefined
+					"
+				/>
+			</template>
+		</UTable>
 		<div class="flex justify-end px-4 py-3.5">
 			<UPagination
 				v-if="total > limit"

@@ -8,6 +8,16 @@
 				aria-label="Search logs"
 				class="max-w-sm min-w-48"
 			/>
+			<USelect
+				v-if="!warningsOnly"
+				v-model="selectedTypeCode"
+				:items="actionTypeItems"
+				value-key="value"
+				label-key="label"
+				icon="i-lucide-filter"
+				class="w-48"
+				aria-label="Filter by action type"
+			/>
 		</div>
 		<div :aria-busy="status === 'pending'" class="relative">
 			<UTable :data="entries" :columns="columns" class="min-h-100">
@@ -43,6 +53,7 @@
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { TableColumn } from "@nuxt/ui";
+import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
 import { formatTimeAgo } from "@vueuse/core";
 
 const UBadge = resolveComponent("UBadge");
@@ -61,6 +72,16 @@ const filters = ref<{ q?: string; typeCode?: number }>({});
 if (warningsOnly) {
 	filters.value.typeCode = 1;
 }
+
+const selectedTypeCode = ref<number | null>(null);
+const actionTypeItems: Array<{ label: string; value: number | null }> = [
+	{ label: "All actions", value: null },
+	...MODERATION_TYPE_FILTER_VALUES,
+];
+
+watch(selectedTypeCode, (val) => {
+	filters.value.typeCode = val ?? undefined;
+});
 
 const q = ref("");
 const debouncedQ = refDebounced(q, 300);

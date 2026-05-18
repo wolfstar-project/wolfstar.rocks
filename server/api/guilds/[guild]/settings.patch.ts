@@ -2,7 +2,7 @@ import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from 
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
-import { auditDiff, createError, useLogger, withAuditMethods } from "evlog";
+import { createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(
@@ -104,7 +104,7 @@ export default defineWrappedResponseHandler(
 				actor: { type: "user", id: member.user.id, displayName: member.user.username },
 				target: { type: "guild", id: guild.id },
 				outcome: "success",
-				changes: auditDiff(beforeSettings, afterSettings),
+				changes: { before: beforeSettings, after: afterSettings },
 			}),
 		);
 

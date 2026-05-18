@@ -1,8 +1,8 @@
 <template>
 	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
+		<div class="flex items-center justify-between gap-2 overflow-x-auto px-4 py-3.5">
 			<UInput
-				v-model="q"
+				v-model="debouncedQ"
 				icon="i-lucide-search"
 				placeholder="Search logs..."
 				aria-label="Search logs"
@@ -10,10 +10,22 @@
 			/>
 		</div>
 		<UTable
+			ref="table"
 			:data="entries"
 			:columns="columns"
 			:loading="status === 'pending' || status === 'idle'"
-			class="min-h-100"
+			:pagination-options="{
+				getPaginationRowModel: getPaginationRowModel(),
+			}"
+			class="min-h-100 shrink-0"
+			:ui="{
+				base: 'table-fixed border-separate border-spacing-0',
+				thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
+				tbody: '[&>tr]:last:[&>td]:border-b-0',
+				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+				td: 'border-b border-default',
+				separator: 'h-0',
+			}"
 		>
 			<template #empty>
 				<UEmpty
@@ -26,12 +38,20 @@
 				/>
 			</template>
 		</UTable>
-		<div class="flex justify-end px-4 py-3.5">
+		<div
+			v-if="total > page"
+			class="mt-4 flex items-center justify-between border-t border-default pt-4"
+		>
+			<p class="text-sm text-muted">
+				Showing
+				{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
+				{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
+			</p>
 			<UPagination
-				v-if="total > limit"
-				v-model:page="page"
-				:total="total"
-				:page-size="limit"
+				:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
+				:items-per-page="table?.tableApi?.getState().pagination.pageSize"
+				:total="table?.tableApi?.getFilteredRowModel().rows.length"
+				@update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
 			/>
 		</div>
 	</div>
@@ -40,22 +60,20 @@
 <script setup lang="ts">
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { TableColumn } from "@nuxt/ui";
+import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 
-const UUser = resolveComponent("UUser");
+const UAvatar = resolveComponent("UAvatar");
+const table = useTemplateRef("table");
 const { guildData } = useGuildData();
 
 const page = ref(1);
 const limit = ref(20);
-const offset = computed(() => (page.value - 1) * limit.value);
-
 const filters = ref<{ q?: string }>({});
+const query = ref("");
 
-const q = ref("");
-const debouncedQ = refDebounced(q, 300);
-watch(debouncedQ, (val) => {
-	filters.value.q = val || undefined;
-});
+const debouncedQ = refDebounced(query, 300);
+const offset = computed(() => (page.value - 1) * limit.value);
 
 const guildId = computed(() => guildData.value.id);
 
@@ -70,12 +88,22 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 	{
 		id: "actor",
 		header: "User",
-		cell: ({ row }) =>
-			h(UUser, {
-				name: auditLogMemberName(row.original.member),
-				avatar: auditLogMemberAvatar(row.original.member),
-				size: "sm",
-			}),
+		cell: ({ row }) => {
+			return h("div", { class: "flex items-center gap-3" }, [
+				h(UAvatar, {
+					...auditLogMemberAvatar(row.original.member),
+					size: "lg",
+				}),
+				h("div", undefined, [
+					h(
+						"p",
+						{ class: "font-medium text-highlighted" },
+						auditLogMemberName(row.original.member),
+					),
+					h("p", { class: "" }, `@${row.original.member.user.username}`),
+				]),
+			]);
+		},
 	},
 	{
 		id: "description",
@@ -97,6 +125,10 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 			),
 	},
 ];
+
+watch(debouncedQ, (val) => {
+	filters.value.q = val || undefined;
+});
 
 watch(
 	[filters],

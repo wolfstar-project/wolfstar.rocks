@@ -1,8 +1,17 @@
 <template>
-	<GuildSettingsSection :title="title" :ui="{ heading: 'text-xl font-bold tracking-wide' }">
-		<div class="mb-3 flex items-center justify-between">
+	<component
+		:is="plain ? 'div' : GuildSettingsSection"
+		v-bind="!plain ? { title, ui: { heading: 'text-xl font-bold tracking-wide' } } : {}"
+	>
+		<div
+			:class="
+				plain
+					? 'flex items-center justify-between px-4 py-3'
+					: 'mb-3 flex items-center justify-between'
+			"
+		>
 			<p class="text-sm text-base-content/70">
-				{{ itemCount }} change{{ itemCount === 1 ? "" : "s" }} recorded
+				{{ itemCount }} {{ recordLabel }}{{ itemCount === 1 ? "" : "s" }} recorded
 			</p>
 			<UButton
 				color="neutral"
@@ -29,11 +38,13 @@
 		<div v-if="total > maxVisible" class="mt-2 text-center">
 			<slot name="viewAll" />
 		</div>
-	</GuildSettingsSection>
+	</component>
 </template>
 
 <script setup lang="ts">
 type AsyncDataStatus = "idle" | "pending" | "success" | "error";
+
+const GuildSettingsSection = resolveComponent("GuildSettingsSection");
 
 const {
 	title,
@@ -41,16 +52,20 @@ const {
 	status,
 	itemCount,
 	maxVisible = 5,
+	plain = false,
+	recordLabel = "change",
 	emptyIcon,
 	emptyTitle,
 	emptyDescription,
 	refreshLabel,
 } = defineProps<{
-	title: string;
+	title?: string;
 	total: number;
 	status: AsyncDataStatus;
 	itemCount: number;
 	maxVisible?: number;
+	plain?: boolean;
+	recordLabel?: string;
 	emptyIcon?: string;
 	emptyTitle?: string;
 	emptyDescription?: string;

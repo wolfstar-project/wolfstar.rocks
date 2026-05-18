@@ -19,34 +19,34 @@
 				aria-label="Filter by action type"
 			/>
 		</div>
-		<div :aria-busy="status === 'pending'" class="relative">
-			<UTable :data="entries" :columns="columns" class="min-h-100">
-				<template #empty>
-					<UEmpty
-						v-if="status !== 'pending'"
-						icon="i-lucide-gavel"
-						:title="warningsOnly ? 'No warnings found' : 'No moderation cases found'"
-						:description="
-							debouncedQ ? 'No cases match the current filters.' : undefined
-						"
-					/>
-				</template>
-			</UTable>
-			<div
-				v-if="status === 'pending'"
-				class="absolute inset-0 flex items-center justify-center bg-base-100/50 backdrop-blur-sm"
-			>
-				<LoadingSpinner size="lg" />
-			</div>
-		</div>
-		<div class="flex justify-end px-4 py-3.5">
-			<UPagination
-				v-if="total > limit"
-				v-model:page="page"
-				:total="total"
-				:page-size="limit"
+		<ActivitySection
+			:plain="true"
+			:total="total"
+			:status="status"
+			:item-count="entries.length"
+			:max-visible="total"
+			empty-icon="i-lucide-gavel"
+			:empty-title="warningsOnly ? 'No warnings found' : 'No moderation cases found'"
+			:empty-description="debouncedQ ? 'No cases match the current filters.' : undefined"
+			refresh-label="Refresh moderation log"
+			record-label="case"
+			@refresh="refresh()"
+		>
+			<UTable
+				:data="entries"
+				:columns="columns"
+				:loading="status === 'pending'"
+				class="min-h-100"
 			/>
-		</div>
+			<div class="flex justify-end border-t border-accented px-4 py-3.5">
+				<UPagination
+					v-if="total > limit"
+					v-model:page="page"
+					:total="total"
+					:page-size="limit"
+				/>
+			</div>
+		</ActivitySection>
 	</div>
 </template>
 
@@ -90,7 +90,7 @@ watch(debouncedQ, (val) => {
 });
 
 const guildId = computed(() => guildData.value.id);
-const { entries, total, status } = useModerationLog({
+const { entries, total, status, refresh } = useModerationLog({
 	guildId,
 	limit,
 	offset,

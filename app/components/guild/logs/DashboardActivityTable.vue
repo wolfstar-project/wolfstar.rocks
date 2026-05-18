@@ -2,58 +2,60 @@
 	<div class="w-full flex-1 divide-y divide-accented">
 		<div class="flex items-center justify-between gap-2 overflow-x-auto px-4 py-3.5">
 			<UInput
-				v-model="debouncedQ"
+				v-model="query"
 				icon="i-lucide-search"
 				placeholder="Search logs..."
 				aria-label="Search logs"
 				class="max-w-sm min-w-48"
 			/>
 		</div>
-		<UTable
-			ref="table"
-			:data="entries"
-			:columns="columns"
-			:loading="status === 'pending' || status === 'idle'"
-			:pagination-options="{
-				getPaginationRowModel: getPaginationRowModel(),
-			}"
-			class="min-h-100 shrink-0"
-			:ui="{
-				base: 'table-fixed border-separate border-spacing-0',
-				thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
-				tbody: '[&>tr]:last:[&>td]:border-b-0',
-				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
-				td: 'border-b border-default',
-				separator: 'h-0',
-			}"
+		<ActivitySection
+			:plain="true"
+			:total="total"
+			:status="status"
+			:item-count="entries.length"
+			:max-visible="total"
+			empty-icon="i-lucide-activity"
+			empty-title="No logs found"
+			:empty-description="debouncedQ ? 'No activity matches the current filters.' : undefined"
+			refresh-label="Refresh activity log"
+			@refresh="refresh()"
 		>
-			<template #empty>
-				<UEmpty
-					v-if="status !== 'pending' && status !== 'idle'"
-					icon="i-lucide-activity"
-					title="No logs found"
-					:description="
-						debouncedQ ? 'No activity matches the current filters.' : undefined
-					"
-				/>
-			</template>
-		</UTable>
-		<div
-			v-if="total > page"
-			class="mt-4 flex items-center justify-between border-t border-default pt-4"
-		>
-			<p class="text-sm text-muted">
-				Showing
-				{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-				{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
-			</p>
-			<UPagination
-				:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
-				:items-per-page="table?.tableApi?.getState().pagination.pageSize"
-				:total="table?.tableApi?.getFilteredRowModel().rows.length"
-				@update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
+			<UTable
+				ref="table"
+				:data="entries"
+				:columns="columns"
+				:loading="status === 'pending' || status === 'idle'"
+				:pagination-options="{
+					getPaginationRowModel: getPaginationRowModel(),
+				}"
+				class="min-h-100 shrink-0"
+				:ui="{
+					base: 'table-fixed border-separate border-spacing-0',
+					thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
+					tbody: '[&>tr]:last:[&>td]:border-b-0',
+					th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+					td: 'border-b border-default',
+					separator: 'h-0',
+				}"
 			/>
-		</div>
+			<div
+				v-if="total > page"
+				class="mt-4 flex items-center justify-between border-t border-default pt-4"
+			>
+				<p class="text-sm text-muted">
+					Showing
+					{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
+					{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
+				</p>
+				<UPagination
+					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
+					:items-per-page="table?.tableApi?.getState().pagination.pageSize"
+					:total="table?.tableApi?.getFilteredRowModel().rows.length"
+					@update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
+				/>
+			</div>
+		</ActivitySection>
 	</div>
 </template>
 
@@ -77,7 +79,7 @@ const offset = computed(() => (page.value - 1) * limit.value);
 
 const guildId = computed(() => guildData.value.id);
 
-const { entries, total, status } = useAuditLog({
+const { entries, total, status, refresh } = useAuditLog({
 	guildId,
 	limit,
 	offset,
@@ -108,7 +110,10 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 	{
 		id: "description",
 		header: "Action",
-		cell: ({ row }) => h("span", { class: "text-sm" }, auditLogActionDescription(row.original)),
+		cell: ({ row }) => {
+			const text = auditLogActionDescription(row.original);
+			return h("span", { class: "line-clamp-2 text-sm", title: text }, text);
+		},
 	},
 	{
 		accessorKey: "timestamp",

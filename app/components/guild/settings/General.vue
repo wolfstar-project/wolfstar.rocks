@@ -130,15 +130,6 @@
 		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		@refresh="refreshAuditLog()"
 	>
-		<div class="flex items-center justify-between gap-1.5">
-			<UInput
-				v-model="globalFilter"
-				class="max-w-sm"
-				icon="i-lucide-search"
-				placeholder="Filter..."
-			/>
-		</div>
-
 		<UTable
 			ref="table"
 			:data="auditEntries"
@@ -157,22 +148,6 @@
 				separator: 'h-0',
 			}"
 		/>
-		<div
-			v-if="auditLogTotal > auditLogPageSize"
-			class="mt-4 flex items-center justify-between border-t border-default pt-4"
-		>
-			<p class="text-sm text-muted">
-				Showing
-				{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-				{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
-			</p>
-			<UPagination
-				:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
-				:items-per-page="table?.tableApi?.getState().pagination.pageSize"
-				:total="table?.tableApi?.getFilteredRowModel().rows.length"
-				@update:page="(p: number) => table?.tableApi?.setPageIndex(p - 1)"
-			/>
-		</div>
 	</ActivitySection>
 </template>
 
@@ -185,7 +160,6 @@ import {
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
 import { getPaginationRowModel } from "@tanstack/table-core";
-import { formatTimeAgo } from "@vueuse/core";
 import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
@@ -196,16 +170,14 @@ const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
 
 const toast = useToast();
-const table = useTemplateRef("table");
 
 const { copy, copied } = useClipboard();
 
 const UAvatar = resolveComponent("UAvatar");
 
 const auditLogPage = ref(1);
-const globalFilter = ref("");
-const auditLogPageSize = 10;
-const auditLogOffset = computed(() => (auditLogPage.value - 1) * auditLogPageSize);
+const page = ref(10);
+const offset = computed(() => (auditLogPage.value - 1) * page.value);
 
 const {
 	entries: auditEntries,
@@ -214,8 +186,8 @@ const {
 	status: auditLogStatus,
 } = useAuditLog({
 	guildId: guildData.value.id,
-	limit: auditLogPageSize,
-	offset: auditLogOffset,
+	limit: page,
+	offset,
 });
 
 const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
@@ -226,7 +198,7 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 			return h(
 				"time",
 				{
-					class: "whitespace-nowrap text-xs text-base-content/50",
+					class: "whitespace-nowrap text-xs text-highlighted",
 					datetime: new Date(row.original.timestamp).toISOString(),
 				},
 				new Date(row.original.timestamp).toLocaleString(),

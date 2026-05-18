@@ -6,23 +6,45 @@ import { DashboardActivityQuerySchema } from "#shared/schemas";
 import { auditDiff, createError, useLogger } from "evlog";
 import { parse } from "valibot";
 
-function patchToChanges(raw: { before?: unknown; after?: unknown }): DashboardAuditChanges {
-	if (!raw.before && !raw.after) return {};
-	const diff = auditDiff(raw.before, raw.after);
-	const before = (raw.before ?? {}) as Record<string, unknown>;
+// Ported from the WolfStar bot's auditLogEmbeds.ts — traverses a JSON-patch path.
+function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+	const parts = path.split("/").filter(Boolean);
+	let current: unknown = obj;
+	for (const part of parts) {
+		if (current === null || current === undefined || typeof current !== "object")
+			return undefined;
+		current = (current as Record<string, unknown>)[part];
+	}
+	return current;
+}
+
+function patchToChanges(raw: {
+	before?: Record<string, unknown>;
+	after?: Record<string, unknown>;
+}): DashboardAuditChanges {
+	if (!raw || typeof raw !== "object") return {};
+
+	const before = raw.before ?? {};
+	const after = raw.after ?? {};
 	const added: Record<string, unknown> = {};
 	const removed: Record<string, unknown> = {};
 	const changed: Record<string, { from: unknown; to: unknown }> = {};
-	for (const op of diff.patch) {
-		const key = op.path.replace(/^\//, "").replace(/\//g, ".");
+
+	const diff = auditDiff(before, after);
+
+	for (const op of diff.patch.slice(0, 10)) {
+		const key = op.path.replace(/^\//, "").replaceAll("/", ".");
 		if (op.op === "add") {
 			added[key] = op.value;
 		} else if (op.op === "remove") {
-			removed[key] = before[key];
-		} else {
-			changed[key] = { from: before[key], to: op.value };
+			removed[key] = getNestedValue(before, op.path);
+		} else if (op.op === "replace") {
+			const from = getNestedValue(before, op.path);
+			const to = op.value;
+			changed[key] = { from, to };
 		}
 	}
+
 	return {
 		...(Object.keys(added).length > 0 && { added }),
 		...(Object.keys(removed).length > 0 && { removed }),
@@ -82,11 +104,11 @@ export default defineWrappedCachedResponseHandler(
 
 		const entries: DashboardAuditEntry[] = rows.map((row) => ({
 			id: row.hash,
-			guildId: row.tenantId,
+			guildId: row.tenantId ?? guild.id,
 			action: row.action as DashboardAuditEntry["action"],
 			outcome: row.outcome as DashboardAuditEntry["outcome"],
 			member: memberMap.get(row.actorId) ?? fallbackMember(row.actorId),
-			changes: patchToChanges((row.changes ?? {}) as { before?: unknown; after?: unknown }),
+			changes: patchToChanges(row.changes ?? {}),
 			reason: row.reason,
 			timestamp: row.timestamp.toISOString(),
 		}));

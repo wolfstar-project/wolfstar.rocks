@@ -32,7 +32,7 @@ export function useAuditLog({
 
 	const asyncData = useLazyAsyncData(
 		() =>
-			`guild:${toValue(guildId)}:logs:activity:${JSON.stringify(resolvedFilters.value ?? {})}`,
+			`guild:${toValue(guildId)}:logs:activity:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value ?? {})}`,
 		() => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
@@ -52,8 +52,7 @@ export function useAuditLog({
 			immediate: immediate !== false,
 			watch: [resolvedLimit, resolvedOffset, resolvedFilters],
 			getCachedData: (key, nuxt, { cause }) => {
-				if (cause === "refresh:manual" || cause === "refresh:hook" || cause === "watch")
-					return undefined;
+				if (cause === "refresh:manual" || cause === "refresh:hook") return undefined;
 				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
 					| AuditLogResponse
 					| undefined;

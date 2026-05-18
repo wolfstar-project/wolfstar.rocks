@@ -32,7 +32,7 @@ export function useModerationLog({
 
 	const asyncData = useLazyAsyncData(
 		() =>
-			`guild:${toValue(guildId)}:logs:moderation:${JSON.stringify(resolvedFilters.value || {})}`,
+			`guild:${toValue(guildId)}:logs:moderation:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value || {})}`,
 		() => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
@@ -57,8 +57,7 @@ export function useModerationLog({
 			immediate: immediate !== false,
 			watch: [resolvedLimit, resolvedOffset, resolvedFilters],
 			getCachedData: (key, nuxt, { cause }) => {
-				if (cause === "refresh:manual" || cause === "refresh:hook" || cause === "watch")
-					return undefined;
+				if (cause === "refresh:manual" || cause === "refresh:hook") return undefined;
 				return (nuxt.isHydrating ? nuxt.payload.data[key] : nuxt.static.data[key]) as
 					| ModerationLogResponse
 					| undefined;

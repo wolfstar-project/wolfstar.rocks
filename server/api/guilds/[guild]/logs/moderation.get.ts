@@ -30,7 +30,7 @@ function mapModerationRow(
 	};
 }
 
-export default defineWrappedResponseHandler(
+export default defineWrappedCachedResponseHandler(
 	async (event) => {
 		const log = useLogger(event);
 
@@ -88,6 +88,13 @@ export default defineWrappedResponseHandler(
 	},
 	{
 		auth: true,
+		maxAge: 30,
+		swr: true,
+		getKey: (event) => {
+			const guildId = getGuildParam(event);
+			const url = getRequestURL(event);
+			return `guild:${guildId}:logs:moderation${url.search}`;
+		},
 		onError(log, error) {
 			log.error(error);
 		},

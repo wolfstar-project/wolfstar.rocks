@@ -5,7 +5,7 @@ import { CommandLogQuerySchema } from "#shared/schemas";
 import { useLogger } from "evlog";
 import { parse } from "valibot";
 
-export default defineWrappedResponseHandler(
+export default defineWrappedCachedResponseHandler(
 	async (event) => {
 		const log = useLogger(event);
 
@@ -75,6 +75,13 @@ export default defineWrappedResponseHandler(
 	},
 	{
 		auth: true,
+		maxAge: 30,
+		swr: true,
+		getKey: (event) => {
+			const guildId = getGuildParam(event);
+			const url = getRequestURL(event);
+			return `guild:${guildId}:logs:commands${url.search}`;
+		},
 		onError(log, error) {
 			log.error(error);
 		},

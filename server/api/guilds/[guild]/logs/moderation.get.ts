@@ -89,7 +89,7 @@ export default defineWrappedCachedResponseHandler(
 	{
 		auth: true,
 		maxAge: 30,
-		swr: true,
+		swr: false,
 		getKey: (event) => {
 			const guildId = getGuildParam(event);
 			const url = getRequestURL(event);

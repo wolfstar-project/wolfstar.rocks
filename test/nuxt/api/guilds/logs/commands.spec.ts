@@ -18,7 +18,7 @@
  * A single handler uses getQuery() to branch on filter params.
  */
 
-import type { CommandLogEntry } from "#shared/types/command-log";
+import type { CommandLogData } from "#server/database";
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { getQuery } from "h3";
 import { describe, expect, it } from "vitest";
@@ -52,7 +52,7 @@ describe(`GET ${URL}`, () => {
 
 	describe("empty state", () => {
 		it("returns empty entries and zero total when no rows", async () => {
-			const result = await $fetch<{ entries: CommandLogEntry[]; total: number }>(URL, {
+			const result = await $fetch<{ entries: CommandLogData[]; total: number }>(URL, {
 				headers: authHeaders(),
 			});
 			expect(result.total).toBe(0);
@@ -62,7 +62,7 @@ describe(`GET ${URL}`, () => {
 
 	describe("with rows", () => {
 		it("filters by commandName returns entries for that command", async () => {
-			const result = await $fetch<{ entries: CommandLogEntry[]; total: number }>(
+			const result = await $fetch<{ entries: CommandLogData[]; total: number }>(
 				`${URL}?commandName=ban`,
 				{ headers: authHeaders() },
 			);
@@ -70,7 +70,7 @@ describe(`GET ${URL}`, () => {
 		});
 
 		it("filters by success=failure returns failed entries", async () => {
-			const result = await $fetch<{ entries: CommandLogEntry[]; total: number }>(
+			const result = await $fetch<{ entries: CommandLogData[]; total: number }>(
 				`${URL}?success=failure`,
 				{ headers: authHeaders() },
 			);
@@ -78,7 +78,7 @@ describe(`GET ${URL}`, () => {
 		});
 
 		it("free-text search returns matching entries", async () => {
-			const result = await $fetch<{ entries: CommandLogEntry[]; total: number }>(
+			const result = await $fetch<{ entries: CommandLogData[]; total: number }>(
 				`${URL}?q=ban`,
 				{ headers: authHeaders() },
 			);

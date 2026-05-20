@@ -5,3 +5,4 @@ export * from "./fetch-cache-config";
 export * from "./isDeepEqual";
 export * from "./settingsDataEntries";
 export * from "./times";
+export * from "./audit-field-metadata";

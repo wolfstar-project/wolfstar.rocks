@@ -29,10 +29,12 @@ jobs:
           scopes: |
             a11y
             agents
+            audit-log
             blog
             deps
             docs
             cli
+            evlog
             i18n
             ui
           subjectPattern: ^(?![A-Z]).+$

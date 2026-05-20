@@ -1,7 +1,7 @@
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import prisma from "#server/database/prisma";
 import { patchToChanges } from "#server/utils/audit/patch-to-changes";
-import { fallbackMember, resolveAuditMembers } from "#server/utils/audit/resolve-members";
+import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { DASHBOARD_AUDIT_ACTIONS } from "#shared/audit/actions";
 import { DashboardActivityQuerySchema } from "#shared/schemas";
 import { createError, useLogger } from "evlog";
@@ -52,7 +52,7 @@ export default defineWrappedCachedResponseHandler(
 			prisma.auditEvent.count({ where }),
 		]);
 
-		const memberMap = await resolveAuditMembers(
+		const memberMap = await resolveGuildMembers(
 			guild.id,
 			rows.map((r) => r.actorId),
 		);

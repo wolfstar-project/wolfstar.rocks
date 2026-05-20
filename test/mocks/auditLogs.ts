@@ -1,21 +1,23 @@
+import type { CommandLogData } from "#server/database";
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
-import type { CommandLogEntry } from "#shared/types/command-log";
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { GUILD_ID } from "~~/test/nuxt/api/_helpers";
 
-export const MOCK_COMMAND_ENTRY: CommandLogEntry = {
+export const MOCK_COMMAND_ENTRY: CommandLogData = {
 	id: "00000000-0000-0000-0000-000000000001",
 	guildId: GUILD_ID,
 	userId: "111111111111111111",
-	member: null,
 	commandName: "ban",
+	commandType: "CHAT_INPUT",
+	commandId: null,
 	subcommand: null,
 	channelId: "333333333333333330",
 	success: false,
 	errorReason: "User not found",
-	executedAt: "2026-05-15T00:00:00.000Z",
+	executedAt: new Date("2026-05-15T00:00:00.000Z"),
 	latencyMs: 120,
+	metadata: null,
 };
 
 export const MOCK_AUDIT_ENTRY: DashboardAuditEntry = {

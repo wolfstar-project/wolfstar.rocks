@@ -1,8 +1,8 @@
-import type { CommandLogEntry } from "#shared/types/command-log";
+import type { CommandLogData } from "#server/database";
 import type { MaybeRefOrGetter } from "vue";
 
 interface CommandLogResponse {
-	entries: CommandLogEntry[];
+	entries: CommandLogData[];
 	total: number;
 }
 

@@ -2,7 +2,7 @@
 	<div class="w-full flex-1 divide-y divide-accented">
 		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
 			<UInput
-				v-model="q"
+				v-model="query"
 				icon="i-lucide-search"
 				placeholder="Search logs..."
 				aria-label="Search logs"
@@ -71,8 +71,9 @@
 </template>
 
 <script setup lang="ts">
-import type { CommandLogEntry } from "#shared/types/command-log";
+import type { CommandLogData } from "#server/database";
 import type { TableColumn } from "@nuxt/ui";
+import type { APIGuildMember } from "discord-api-types/v10";
 import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 
@@ -98,7 +99,7 @@ const { entries, total, status, refresh } = useCommandLog({
 	filters,
 });
 
-const columns: TableColumn<CommandLogEntry>[] = [
+const columns: TableColumn<CommandLogData>[] = [
 	{
 		accessorKey: "executedAt",
 		header: "Time",
@@ -117,7 +118,8 @@ const columns: TableColumn<CommandLogEntry>[] = [
 		id: "actor",
 		header: "User",
 		cell: ({ row }) => {
-			const member = row.original.member;
+			const metadata = row.original.metadata as { member: APIGuildMember } | null;
+			const member = metadata?.member;
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(UAvatar, {
 					...(member ? auditLogMemberAvatar(member) : { src: undefined }),

@@ -2,25 +2,10 @@ import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { getQuery } from "h3";
 import { describe, expect, it } from "vitest";
+import { MOCK_MODERATION_ENTRY } from "~~/test/mocks/auditLogs";
 import { GUILD_ID, authHeaders, requireTestSession } from "~~/test/nuxt/api/_helpers";
 
 const URL = `/api/guilds/${GUILD_ID}/logs/moderation`;
-
-const MOCK_MODERATION_ENTRY: ModerationLogEntry = {
-	caseId: 1,
-	guildId: GUILD_ID,
-	userId: "111111111111111111",
-	targetMember: null,
-	moderatorId: "222222222222222222",
-	moderatorMember: null,
-	typeCode: 1,
-	typeName: "Warning",
-	reason: "Spamming",
-	imageURL: null,
-	duration: null,
-	metadata: { archived: false, completed: false, temporary: false },
-	createdAt: "2026-05-15T00:00:00.000Z",
-};
 
 // Single handler dispatches based on query params since registerEndpoint matches path only.
 registerEndpoint(URL, {

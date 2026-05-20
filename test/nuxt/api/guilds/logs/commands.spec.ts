@@ -22,23 +22,10 @@ import type { CommandLogEntry } from "#shared/types/command-log";
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { getQuery } from "h3";
 import { describe, expect, it } from "vitest";
+import { MOCK_COMMAND_ENTRY } from "~~/test/mocks/auditLogs";
 import { GUILD_ID, authHeaders, requireTestSession } from "~~/test/nuxt/api/_helpers";
 
 const URL = `/api/guilds/${GUILD_ID}/logs/commands`;
-
-const MOCK_COMMAND_ENTRY: CommandLogEntry = {
-	id: "00000000-0000-0000-0000-000000000001",
-	guildId: GUILD_ID,
-	userId: "111111111111111111",
-	member: null,
-	commandName: "ban",
-	subcommand: null,
-	channelId: "333333333333333330",
-	success: false,
-	errorReason: "User not found",
-	executedAt: "2026-05-15T00:00:00.000Z",
-	latencyMs: 120,
-};
 
 // Single handler — registerEndpoint matches path only; use getQuery() to branch.
 registerEndpoint(URL, {

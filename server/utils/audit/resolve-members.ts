@@ -19,7 +19,7 @@ export function fallbackMember(userId: string): APIGuildMember {
 	};
 }
 
-export async function resolveAuditMembers(
+export async function resolveGuildMembers(
 	guildId: string,
 	userIds: string[],
 ): Promise<Map<string, APIGuildMember>> {
@@ -36,6 +36,3 @@ export async function resolveAuditMembers(
 	}
 	return map;
 }
-
-// Alias for use by moderation and command log endpoints.
-export const resolveGuildMembers = resolveAuditMembers;

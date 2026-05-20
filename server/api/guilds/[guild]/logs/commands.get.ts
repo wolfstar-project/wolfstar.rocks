@@ -63,14 +63,16 @@ export default defineWrappedCachedResponseHandler(
 				id: row.id,
 				guildId: row.guildId,
 				userId: row.userId,
-				metadata: { member },
 				commandName: row.commandName,
+				commandType: row.commandType,
+				commandId: row.commandId ?? null,
 				subcommand: row.subcommand ?? null,
 				channelId: row.channelId ?? null,
 				success: row.success,
 				errorReason: row.errorReason ?? null,
 				executedAt: row.executedAt,
 				latencyMs: row.latencyMs ?? null,
+				metadata: { member },
 			};
 		});
 

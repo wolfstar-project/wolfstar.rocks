@@ -24,4 +24,3 @@ export const userLogin = defineAuditAction(ACTION_NAMES.userLogin);
 export const userLogout = defineAuditAction(ACTION_NAMES.userLogout);
 export const sessionRefresh = defineAuditAction(ACTION_NAMES.sessionRefresh);
 export const oauthStateInvalid = defineAuditAction(ACTION_NAMES.oauthStateInvalid);
-export const commandExecuted = defineAuditAction(ACTION_NAMES.commandExecuted);

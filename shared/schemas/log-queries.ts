@@ -50,6 +50,3 @@ export const DashboardActivityQuerySchema = object({
 	to: optionalIsoDate,
 	q: optionalString(200),
 });
-
-// Backward-compatible alias — remove after Phase 4 consumers are migrated.
-export { DashboardActivityQuerySchema as AuditLogQuerySchemaV2 };

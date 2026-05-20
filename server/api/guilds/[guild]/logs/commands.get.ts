@@ -1,4 +1,4 @@
-import type { CommandLogEntry } from "#shared/types/command-log";
+import { CommandLogData } from "#server/database";
 import prisma from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { CommandLogQuerySchema } from "#shared/schemas";
@@ -57,19 +57,22 @@ export default defineWrappedCachedResponseHandler(
 			...new Set(rows.map((r) => r.userId)),
 		]);
 
-		const entries: CommandLogEntry[] = rows.map((row) => ({
-			id: row.id,
-			guildId: row.guildId,
-			userId: row.userId,
-			member: memberMap.get(row.userId) ?? fallbackMember(row.userId),
-			commandName: row.commandName,
-			subcommand: row.subcommand ?? null,
-			channelId: row.channelId ?? null,
-			success: row.success,
-			errorReason: row.errorReason ?? null,
-			executedAt: row.executedAt.toISOString(),
-			latencyMs: row.latencyMs ?? null,
-		}));
+		const entries: CommandLogData[] = rows.map((row) => {
+			const member = memberMap.get(row.userId) ?? fallbackMember(row.userId);
+			return {
+				id: row.id,
+				guildId: row.guildId,
+				userId: row.userId,
+				metadata: { member },
+				commandName: row.commandName,
+				subcommand: row.subcommand ?? null,
+				channelId: row.channelId ?? null,
+				success: row.success,
+				errorReason: row.errorReason ?? null,
+				executedAt: row.executedAt,
+				latencyMs: row.latencyMs ?? null,
+			};
+		});
 
 		return { entries, total };
 	},

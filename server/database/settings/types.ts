@@ -6,7 +6,10 @@ export type GuildDataKey = keyof GuildData;
 
 export type ReadonlyGuildData = DeepReadonly<GuildData>;
 
-export type { Guild as GuildData } from "#server/database/generated/client";
+export type {
+	Guild as GuildData,
+	CommandLog as CommandLogData,
+} from "#server/database/generated/client";
 
 export interface PermissionsNode {
 	allow: readonly Snowflake[];

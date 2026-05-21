@@ -49,6 +49,7 @@ const config: KnipConfig = {
 				"@takumi-rs/core",
 				"@takumi-rs/wasm",
 				"workbox-*",
+				"rolldown",
 
 				/** Oxlint plugins don't get picked up yet */
 				"@e18e/eslint-plugin",
@@ -62,7 +63,6 @@ const config: KnipConfig = {
 
 				/** Used in the test */
 				"axe-core",
-				"jsdom",
 
 				/** Test utilities (devDependencies flagged in --production mode) */
 				"@vitest/browser-playwright",

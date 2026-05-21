@@ -110,7 +110,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 ## Auth E2E Testing
 
-Auth E2E tests live in `test/e2e-createpage/` and use `@nuxt/test-utils/e2e` (`createPage` + `setup`) to spin up a real Nuxt server and drive a headless Chromium browser.
+Auth E2E tests live in `test/e2e/` and use `@nuxt/test-utils/e2e` (`createPage` + `setup`) to spin up a real Nuxt server and drive a headless Chromium browser.
 
 ### Project Config
 
@@ -152,7 +152,7 @@ describe("my feature", async () => {
 
 ### Session Seeding
 
-To test authenticated flows, use `seedSession` from `test/e2e-createpage/helpers/seed-session.ts`. This POST to the test-only endpoint `server/api/__test__/seed-session.post.ts` (returns 404 unless `NODE_ENV === 'test'`), which seals a real session cookie into the browser context.
+To test authenticated flows, use `seedSession` from `test/e2e/helpers/seed-session.ts`. This POST to the test-only endpoint `server/api/__test__/seed-session.post.ts` (returns 404 unless `NODE_ENV === 'test'`), which seals a real session cookie into the browser context.
 
 ```ts
 import { seedSession } from "./helpers/seed-session";
@@ -165,7 +165,7 @@ await seedSession(page, FIXTURE_DISCORD_USER);
 
 ### OAuth Mocking
 
-Use helpers from `test/e2e-createpage/helpers/mock-discord-oauth.ts` to stub Discord OAuth endpoints without leaving the test domain:
+Use helpers from `test/e2e/helpers/mock-discord-oauth.ts` to stub Discord OAuth endpoints without leaving the test domain:
 
 - `mockDiscordExchangeSuccess(page, user)` — stubs `/api/auth/discord` + `/api/_auth/session`
 - `mockDiscordExchangeFail(page)` — stubs `/api/auth/discord` to return 500
@@ -175,13 +175,13 @@ Use helpers from `test/e2e-createpage/helpers/mock-discord-oauth.ts` to stub Dis
 
 ### Key Files
 
-| File                                                | Purpose                                                        |
-| --------------------------------------------------- | -------------------------------------------------------------- |
-| `test/e2e-createpage/setup.ts`                      | Shared `ROOT_DIR`, `TEST_SESSION_PASSWORD`, `TEST_NUXT_CONFIG` |
-| `test/fixtures/discord-user.ts`                     | `FIXTURE_DISCORD_USER` constant and `SessionUser` type         |
-| `test/e2e-createpage/helpers/seed-session.ts`       | `seedSession(page, user)` helper                               |
-| `test/e2e-createpage/helpers/mock-discord-oauth.ts` | Page-level OAuth mocks                                         |
-| `server/api/__test__/seed-session.post.ts`          | Test-only session seeding endpoint                             |
+| File                                       | Purpose                                                        |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| `test/e2e/setup.ts`                        | Shared `ROOT_DIR`, `TEST_SESSION_PASSWORD`, `TEST_NUXT_CONFIG` |
+| `test/fixtures/discord-user.ts`            | `FIXTURE_DISCORD_USER` constant and `SessionUser` type         |
+| `test/e2e/helpers/seed-session.ts`         | `seedSession(page, user)` helper                               |
+| `test/e2e/helpers/mock-discord-oauth.ts`   | Page-level OAuth mocks                                         |
+| `server/api/__test__/seed-session.post.ts` | Test-only session seeding endpoint                             |
 
 ## Audit Logging
 

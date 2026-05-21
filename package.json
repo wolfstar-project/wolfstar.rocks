@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/package.json",
 	"name": "@wolfstar-project/dashboard",
-	"version": "2.0.0",
+	"version": "0.0.0",
 	"private": true,
 	"description": "WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
 	"homepage": "https://wolfstar.rocks",

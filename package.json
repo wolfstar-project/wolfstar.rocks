@@ -51,6 +51,7 @@
 		"test:browser:update": "vp run build:test && vp run test:browser:prebuilt --update-snapshots",
 		"test:nuxt": "vp test --project nuxt",
 		"test:unit": "vp test --project unit",
+		"test:auth-e2e": "NODE_ENV=test NUXT_SESSION_PASSWORD=auth-e2e-test-session-pwd-min-32-chars! vp test --project auth-e2e",
 		"test:bench": "vp test bench",
 		"start:playwright:webserver": "NODE_ENV=test vp run preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",

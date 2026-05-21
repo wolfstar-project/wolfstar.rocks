@@ -108,6 +108,81 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
+## Auth E2E Testing
+
+Auth E2E tests live in `test/e2e-createpage/` and use `@nuxt/test-utils/e2e` (`createPage` + `setup`) to spin up a real Nuxt server and drive a headless Chromium browser.
+
+### Project Config
+
+Vitest project name: `auth-e2e`. Configured in `vite.config.ts` with:
+
+- `environment: "node"`, `pool: "forks"`, `poolOptions.forks.singleFork: true` (prevents multiple Nuxt servers running in parallel)
+- `testTimeout: 60_000` (Nuxt startup + OAuth round-trips can be slow)
+- `env.NODE_ENV: "test"` and `env.NUXT_SESSION_PASSWORD` set so the test server can seal/unseal sessions
+
+Run with:
+
+```bash
+pnpm test:auth-e2e
+```
+
+### Test Structure
+
+Each spec file wraps tests in `describe('...', async () => { await setup(...); ... })`. `setup()` starts the Nuxt server once per describe block.
+
+```ts
+import { createPage, setup } from "@nuxt/test-utils/e2e";
+import { ROOT_DIR, TEST_NUXT_CONFIG } from "./setup";
+
+describe("my feature", async () => {
+	await setup({
+		rootDir: ROOT_DIR,
+		browser: true,
+		browserOptions: { type: "chromium", launch: { headless: true } },
+		nuxtConfig: TEST_NUXT_CONFIG,
+	});
+
+	test("...", async () => {
+		const page = await createPage("/some-path");
+		// ... assertions
+		await page.close();
+	});
+});
+```
+
+### Session Seeding
+
+To test authenticated flows, use `seedSession` from `test/e2e-createpage/helpers/seed-session.ts`. This POST to the test-only endpoint `server/api/__test__/seed-session.post.ts` (returns 404 unless `NODE_ENV === 'test'`), which seals a real session cookie into the browser context.
+
+```ts
+import { seedSession } from "./helpers/seed-session";
+import { FIXTURE_DISCORD_USER } from "../fixtures/discord-user";
+
+const page = await createPage("/");
+await seedSession(page, FIXTURE_DISCORD_USER);
+// All subsequent page.goto() calls will include the session cookie
+```
+
+### OAuth Mocking
+
+Use helpers from `test/e2e-createpage/helpers/mock-discord-oauth.ts` to stub Discord OAuth endpoints without leaving the test domain:
+
+- `mockDiscordExchangeSuccess(page, user)` — stubs `/api/auth/discord` + `/api/_auth/session`
+- `mockDiscordExchangeFail(page)` — stubs `/api/auth/discord` to return 500
+- `mockVerifyStateSuccess(page, redirectUrl?)` — stubs `/api/auth/verify-state`
+- `mockVerifyStateFail(page)` — stubs `/api/auth/verify-state` to return 400
+- `stubDiscordAuthorize(page)` — stubs `https://discord.com/oauth2/authorize` so navigation does not escape the test
+
+### Key Files
+
+| File                                                | Purpose                                                        |
+| --------------------------------------------------- | -------------------------------------------------------------- |
+| `test/e2e-createpage/setup.ts`                      | Shared `ROOT_DIR`, `TEST_SESSION_PASSWORD`, `TEST_NUXT_CONFIG` |
+| `test/fixtures/discord-user.ts`                     | `FIXTURE_DISCORD_USER` constant and `SessionUser` type         |
+| `test/e2e-createpage/helpers/seed-session.ts`       | `seedSession(page, user)` helper                               |
+| `test/e2e-createpage/helpers/mock-discord-oauth.ts` | Page-level OAuth mocks                                         |
+| `server/api/__test__/seed-session.post.ts`          | Test-only session seeding endpoint                             |
+
 ## Audit Logging
 
 All security-relevant actions are captured via `evlog`'s `log.audit()` pipeline, persisted to `AuditEvent` in PostgreSQL with a tamper-evident SHA-256 hash chain.

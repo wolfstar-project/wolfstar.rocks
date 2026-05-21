@@ -521,6 +521,30 @@ export default defineConfig({
 					execArgv: getCodspeedV8Flags(),
 				},
 			},
+			{
+				define: { "process.test": "true" },
+				resolve: {
+					alias: {
+						"~": `${rootDir}/app`,
+						"~~": `${rootDir}`,
+						"#server": `${rootDir}/server`,
+						"#shared": `${rootDir}/shared`,
+					},
+				},
+				test: {
+					name: "auth-e2e",
+					environment: "node",
+					include: ["test/e2e-createpage/**/*.spec.ts"],
+					testTimeout: 60_000,
+					pool: "forks",
+					poolOptions: { forks: { singleFork: true } },
+					benchmark: { include: [] },
+					env: {
+						NODE_ENV: "test",
+						NUXT_SESSION_PASSWORD: "auth-e2e-test-session-pwd-min-32-chars!",
+					},
+				},
+			},
 			() =>
 				defineVitestProject({
 					define: { "process.test": "true" },

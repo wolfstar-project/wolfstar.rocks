@@ -142,6 +142,30 @@ jobs:
           mode: simulation
           run: vp run test:bench
 
+  auth-e2e:
+    name: 🔐 Auth E2E tests
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: ./.github/actions/setup-vp
+        with:
+          node-version: lts/*
+          cache: "true"
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🌐 Install Playwright browser
+        run: npx playwright install chromium-headless-shell
+
+      - name: 🔐 Auth E2E tests
+        run: vp test --project auth-e2e --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+        env:
+          NODE_ENV: test
+          NUXT_SESSION_PASSWORD: auth-e2e-test-session-pwd-min-32-chars!
+
   a11y:
     name: ♿ Accessibility audit
     runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834

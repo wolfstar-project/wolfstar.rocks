@@ -1,17 +1,9 @@
-import { createPage, setup } from "@nuxt/test-utils/e2e";
-import { describe, expect, test } from "vitest";
-import { FIXTURE_DISCORD_USER } from "../fixtures/discord-user";
-import { seedSession } from "./helpers/seed-session";
-import { ROOT_DIR, TEST_NUXT_CONFIG } from "./setup";
+import { createPage } from "@nuxt/test-utils/e2e";
+import { FIXTURE_DISCORD_USER } from "../../fixtures/discord-user";
+import { seedSession } from "../helpers/seed-session";
+import { expect, test } from "../test-utils";
 
-describe("authenticated state", async () => {
-	await setup({
-		rootDir: ROOT_DIR,
-		browser: true,
-		browserOptions: { type: "chromium", launch: { headless: true } },
-		nuxtConfig: TEST_NUXT_CONFIG,
-	});
-
+test.describe("authenticated state", async () => {
 	test("unauthenticated user is redirected to login when accessing protected route", async () => {
 		const page = await createPage();
 
@@ -52,7 +44,7 @@ describe("authenticated state", async () => {
 				name: FIXTURE_DISCORD_USER.globalName ?? FIXTURE_DISCORD_USER.username,
 				level: 2,
 			}),
-		).toBeVisible({ timeout: 10_000 });
+		).toBeVisible();
 
 		await page.close();
 	});

@@ -1,16 +1,8 @@
-import { createPage, setup } from "@nuxt/test-utils/e2e";
-import { describe, expect, test } from "vitest";
-import { stubDiscordAuthorize } from "./helpers/mock-discord-oauth";
-import { ROOT_DIR, TEST_NUXT_CONFIG } from "./setup";
+import { createPage } from "@nuxt/test-utils/e2e";
+import { stubDiscordAuthorize } from "../helpers/mock-discord-oauth";
+import { expect, test } from "../test-utils";
 
-describe("oauth login page", async () => {
-	await setup({
-		rootDir: ROOT_DIR,
-		browser: true,
-		browserOptions: { type: "chromium", launch: { headless: true } },
-		nuxtConfig: TEST_NUXT_CONFIG,
-	});
-
+test.describe("oauth login page", async () => {
 	test("sets CSRF cookies and redirects to Discord", async () => {
 		const page = await createPage();
 

@@ -151,11 +151,10 @@ jobs:
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: 🖥️ Test project (browser)
-        run: vp run test:browser:prebuilt -- --reporter=html,junit
+        run: vp run test:browser:prebuilt
         env:
           NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
           NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
-          PLAYWRIGHT_JUNIT_OUTPUT_FILE: test-report.junit.xml
 
       - name: ⬆︎ Upload test results to Codecov
         if: ${{ !cancelled() }}

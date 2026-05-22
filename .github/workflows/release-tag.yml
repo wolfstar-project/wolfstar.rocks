@@ -5,6 +5,10 @@ on:
     branches:
       - release
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions: {}
 
 jobs:
@@ -13,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
-      contents: write
+      contents: write # push tags and create releases
     outputs:
       version: ${{ steps.version.outputs.next }}
       skipped: ${{ steps.check.outputs.skip }}

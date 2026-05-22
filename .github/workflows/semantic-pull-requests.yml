@@ -37,16 +37,14 @@ jobs:
             deps
             discord
             docs
-            evlog
             guild
             oauth
-            prisma
+            database
             pwa
             sentry
             seo
             test
             ui
-            view-transitions
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"

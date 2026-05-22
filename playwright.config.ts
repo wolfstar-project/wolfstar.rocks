@@ -9,7 +9,9 @@ export default defineConfig<ConfigOptions>({
 	fullyParallel: true,
 	forbidOnly: Boolean(process.env.CI),
 	retries: process.env.CI ? 2 : 0,
-	reporter: "html",
+	reporter: process.env.CI
+		? [["html"], ["junit", { outputFile: "test-report.junit.xml" }]]
+		: "html",
 	timeout: 120_000,
 	webServer: {
 		command: "pnpm start:playwright:webserver",

@@ -98,8 +98,6 @@ jobs:
 
       - name: 🧪 Component tests
         run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
-        env:
-          NODE_OPTIONS: --max-old-space-size=8192
 
       - name: ⬆︎ Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -145,7 +143,6 @@ jobs:
         run: vp run build:test
         env:
           VALIDATE_HTML: true
-          NODE_OPTIONS: --max-old-space-size=4096
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
 
       - name: 🖥️ Test project (browser)

@@ -29,12 +29,24 @@ jobs:
           scopes: |
             a11y
             agents
-            blog
+            api
+            auth
+            ci
+            config
+            dashboard
             deps
+            discord
             docs
-            cli
-            i18n
+            evlog
+            guild
+            oauth
+            prisma
+            pwa
+            sentry
+            seo
+            test
             ui
+            view-transitions
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"

@@ -31,9 +31,7 @@ test.describe("oauth login page", async () => {
 		const page = await createPage();
 
 		await stubDiscordAuthorize(page);
-		await page.goto(
-			"/oauth/login?next=%2Fguilds%2F123456789%2Fmanage",
-		);
+		await page.goto("/oauth/login?next=%2Fguilds%2F123456789%2Fmanage");
 		await page.waitForURL(/discord\.com/, { timeout: 15_000 });
 
 		const cookies = await page.context().cookies();

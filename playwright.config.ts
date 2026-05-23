@@ -16,7 +16,7 @@ export default defineConfig<ConfigOptions>({
 	webServer: {
 		command: "pnpm start:playwright:webserver",
 		url: baseURL,
-		reuseExistingServer: false,
+		reuseExistingServer: !process.env.CI,
 		timeout: 60_000,
 	},
 	// We currently only test on one browser on one platform

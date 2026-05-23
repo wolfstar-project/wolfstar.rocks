@@ -33,7 +33,6 @@ test.describe("oauth login page", async () => {
 		await stubDiscordAuthorize(page);
 		await page.goto(
 			"/oauth/login?next=%2Fguilds%2F123456789%2Fmanage",
-			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		);
 		await page.waitForURL(/discord\.com/, { timeout: 15_000 });
 

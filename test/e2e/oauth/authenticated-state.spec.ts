@@ -68,8 +68,8 @@ test.describe("authenticated state", async () => {
 
 		await page.goto("/guilds/123456789012345678/manage");
 
-		// Give the router middleware time to run; if auth fails it redirects away
-		await page.waitForTimeout(2_000);
+		// Wait for the manage route to load deterministically instead of a fixed sleep
+		await page.waitForURL(/\/guilds\/123456789012345678\/manage/, { timeout: 10_000 });
 
 		// Should still be on the guild page, not redirected to login
 		expect(page.url()).toMatch(/\/guilds\/123456789012345678\/manage/);

@@ -158,7 +158,7 @@ jobs:
         run: vp run prisma:generate
 
       - name: 🌐 Install Playwright browser
-        run: npx playwright install chromium-headless-shell
+        run: vp exec playwright install chromium-headless-shell
 
       - name: 🔐 Auth E2E tests
         run: vp test --project auth-e2e --reporter=default --reporter=junit --outputFile=test-report.junit.xml

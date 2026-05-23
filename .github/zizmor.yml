@@ -1,0 +1,13 @@
+# Existing privileged PR automation is intentionally isolated to these workflows:
+# they do not checkout pull request head code, and they only comment or set status.
+rules:
+  dangerous-triggers:
+    ignore:
+      - enforce-release-source.yml
+      - semantic-pull-requests.yml
+  # The Playwright container image is version-pinned (v1.59.1-noble) but not
+  # SHA256-pinned because Microsoft's MCR does not publish stable multi-arch
+  # digests for ARM64 runners.
+  unpinned-images:
+    ignore:
+      - ci.yml

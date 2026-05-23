@@ -27,11 +27,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          run-install: "false"
+          run-install: false
 
       - name: 📦 Install dependencies (root only, no scripts)
         run: vp install --filter . --ignore-scripts
@@ -45,20 +47,37 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          cache: "true"
+          cache: true
 
       - name: 🧪 Unit tests
         run: vp test --project unit --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
 
       - name: ⬆︎ Upload test results to Codecov
         if: ${{ !cancelled() }}
-        uses: codecov/test-results-action@0fa95f0e1eeaafde2c782583b36b28ad0d8c77d3 # v1
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          disable_search: true
+          files: test-report.junit.xml
+          flags: unit
+          report_type: test_results
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: ⬆︎ Upload coverage reports to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: coverage/clover.xml
+          flags: unit
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   test:
     name: 🧪 Component tests
@@ -66,11 +85,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          cache: "true"
+          cache: true
 
       - name: 🌐 Install browser
         run: vp exec playwright install chromium-headless-shell
@@ -80,15 +101,24 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 
-      - name: ⬆︎ Upload coverage reports to Codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         with:
+          disable_search: true
+          files: test-report.junit.xml
+          flags: component
           report_type: test_results
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: ⬆︎ Upload coverage reports to Codecov
-        uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: coverage/clover.xml
+          flags: component
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
@@ -100,11 +130,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          cache: "true"
+          cache: true
 
       - name: 🔼 Generate Prisma Client
         run: vp run prisma:generate
@@ -115,14 +147,20 @@ jobs:
           VALIDATE_HTML: true
           NODE_OPTIONS: --max-old-space-size=4096
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
-          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
-          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: 🖥️ Test project (browser)
         run: vp run test:browser:prebuilt
+
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: test-report.junit.xml
+          flags: browser
+          report_type: test_results
         env:
-          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
-          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   benchmark:
     name: ⚡ Benchmarks
@@ -130,14 +168,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          cache: "true"
+          cache: true
 
       - name: ⚡ Run benchmarks
-        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f
+        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f # v4.10.6
         with:
           mode: simulation
           run: vp run test:bench
@@ -151,11 +191,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          cache: "true"
+          cache: true
 
       - name: 🔼 Generate Prisma Client
         run: vp run prisma:generate
@@ -164,16 +206,12 @@ jobs:
         run: vp run build:test
         env:
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
-          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
-          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: vp run test:a11y:prebuilt
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
-          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
-          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
   knip:
     name: 🧹 Unused code check
@@ -181,11 +219,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
 
-      - uses: ./.github/actions/setup-vp
+      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:
           node-version: lts/*
-          cache: "true"
+          cache: true
 
       - name: 🧹 Check for unused code
         run: vp run knip

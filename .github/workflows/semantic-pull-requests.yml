@@ -29,11 +29,21 @@ jobs:
           scopes: |
             a11y
             agents
-            blog
+            api
+            auth
+            ci
+            config
+            dashboard
             deps
+            discord
             docs
-            cli
-            i18n
+            guild
+            oauth
+            database
+            pwa
+            sentry
+            seo
+            test
             ui
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |

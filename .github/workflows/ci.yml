@@ -98,6 +98,8 @@ jobs:
 
       - name: 🧪 Component tests
         run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
 
       - name: ⬆︎ Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -124,7 +126,7 @@ jobs:
     name: 🖥️ Browser tests
     runs-on: ubuntu-24.04-arm
     container:
-      image: mcr.microsoft.com/playwright:v1.59.1-noble@sha256:2eef2b38616cfd4b26265720e4e2f66ca93c2b263c796a93f534732ae2e86953
+      image: mcr.microsoft.com/playwright:v1.59.1-noble
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -143,10 +145,16 @@ jobs:
         run: vp run build:test
         env:
           VALIDATE_HTML: true
+          NODE_OPTIONS: --max-old-space-size=4096
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: 🖥️ Test project (browser)
         run: vp run test:browser:prebuilt
+        env:
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
 
       - name: ⬆︎ Upload test results to Codecov
         if: ${{ !cancelled() }}
@@ -174,7 +182,7 @@ jobs:
           cache: true
 
       - name: ⚡ Run benchmarks
-        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f # v3.3.0
+        uses: CodSpeedHQ/action@4deb3275dd364fb96fb074c953133d29ec96f80f # v4.10.6
         with:
           mode: simulation
           run: vp run test:bench
@@ -203,12 +211,16 @@ jobs:
         run: vp run build:test
         env:
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: vp run test:a11y:prebuilt
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
           LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
+          NUXT_IMAGE_PROXY_SECRET: ci-test-og-image-secret-at-least-32-characters-long
+          NUXT_SESSION_PASSWORD: ci-test-session-password-at-least-32-characters-long
 
   knip:
     name: 🧹 Unused code check

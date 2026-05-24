@@ -1,7 +1,7 @@
 import type { ModuleOptions } from "@vite-pwa/nuxt";
 import { isCI, isDevelopment } from "std-env";
 
-const isStorybook = process.env.STORYBOOK === "true";
+const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
 
 export const pwa: ModuleOptions = {
 	client: {

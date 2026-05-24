@@ -5,7 +5,7 @@ import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
-const isStorybook = process.env.STORYBOOK === "true";
+const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
 
 const { resolve } = createResolver(import.meta.url);
 

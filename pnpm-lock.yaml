@@ -23,9 +23,6 @@ catalogs:
     '@storybook/addon-themes':
       specifier: ^10.3.5
       version: 10.4.1
-    '@storybook/blocks':
-      specifier: ^8.6.14
-      version: 8.6.14
     msw-storybook-addon:
       specifier: ^2.0.7
       version: 2.0.7
@@ -233,9 +230,6 @@ importers:
       '@storybook/addon-themes':
         specifier: catalog:storybook
         version: 10.4.1(storybook@10.4.1)
-      '@storybook/blocks':
-        specifier: catalog:storybook
-        version: 8.6.14(react-dom@19.2.5)(react@19.2.5)(storybook@10.4.1)
       '@tailwindcss/typography':
         specifier: 0.5.19
         version: 0.5.19(tailwindcss@4.2.2)
@@ -5027,18 +5021,6 @@ packages:
     peerDependencies:
       storybook: ^10.4.1
 
-  '@storybook/blocks@8.6.14':
-    resolution: {integrity: sha512-rBMHAfA39AGHgkrDze4RmsnQTMw1ND5fGWobr9pDcJdnDKWQWNRD7Nrlxj0gFlN3n4D9lEZhWGdFrCbku7FVAQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-      storybook: ^8.6.14
-    peerDependenciesMeta:
-      react:
-        optional: true
-      react-dom:
-        optional: true
-
   '@storybook/builder-vite@10.3.4':
     resolution: {integrity: sha512-dNQyBZpBKvwmhSTpjrsuxxY8FqFCh0hgu5+46h2WbgQ2Te3pO458heWkGb+QO7mC6FmkXO6j6zgYzXticD6F2A==}
     peerDependencies:
@@ -5083,13 +5065,6 @@ packages:
 
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
-
-  '@storybook/icons@1.6.0':
-    resolution: {integrity: sha512-hcFZIjW8yQz8O8//2WTIXylm5Xsgc+lW9ISLgUk1xGmptIJQRdlhVIXCpSyLrQaaRiyhQRaVg7l3BD9S216BHw==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0-beta
 
   '@storybook/icons@2.0.2':
     resolution: {integrity: sha512-KZBCpXsshAIjczYNXR/rlxEtCUX/eAbpFNwKi8bcOomrLA4t/SyPz5RF+lVPO2oZBUE4sAkt43mfJUevQDSEEw==}
@@ -17719,15 +17694,6 @@ snapshots:
       storybook: 10.4.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@testing-library/dom@10.4.1)(@types/react@19.2.14)(prettier@3.8.1)(react-dom@19.2.5)(react@19.2.5)(vite-plus@0.1.19)
       ts-dedent: 2.2.0
 
-  '@storybook/blocks@8.6.14(react-dom@19.2.5)(react@19.2.5)(storybook@10.4.1)':
-    dependencies:
-      '@storybook/icons': 1.6.0(react-dom@19.2.5)(react@19.2.5)
-      storybook: 10.4.1(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@testing-library/dom@10.4.1)(@types/react@19.2.14)(prettier@3.8.1)(react-dom@19.2.5)(react@19.2.5)(vite-plus@0.1.19)
-      ts-dedent: 2.2.0
-    optionalDependencies:
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
-
   '@storybook/builder-vite@10.3.4(@voidzero-dev/vite-plus-core@0.1.19)(esbuild@0.28.0)(rollup@4.60.0)(storybook@10.4.1)':
     dependencies:
       '@storybook/csf-plugin': 10.3.4(@voidzero-dev/vite-plus-core@0.1.19)(esbuild@0.28.0)(rollup@4.60.0)(storybook@10.4.1)
@@ -17758,11 +17724,6 @@ snapshots:
       vite: '@voidzero-dev/vite-plus-core@0.1.19(@types/node@24.12.2)(esbuild@0.28.0)(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)'
 
   '@storybook/global@5.0.0': {}
-
-  '@storybook/icons@1.6.0(react-dom@19.2.5)(react@19.2.5)':
-    dependencies:
-      react: 19.2.5
-      react-dom: 19.2.5(react@19.2.5)
 
   '@storybook/icons@2.0.2(react-dom@19.2.5)(react@19.2.5)':
     dependencies:

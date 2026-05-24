@@ -1,12 +1,19 @@
-import { createPage } from "@nuxt/test-utils/e2e";
+import { createPage, setup } from "@nuxt/test-utils/e2e";
+import { expect } from "@playwright/test";
 import { stubDiscordAuthorize } from "../helpers/mock-discord-oauth";
-import { expect, test } from "../test-utils";
+import { ROOT_DIR, TEST_NUXT_CONFIG } from "./setup";
 
-test.describe("oauth login page", async () => {
-	test("sets CSRF cookies and redirects to Discord", async () => {
+describe("oauth login page", async () => {
+	await setup({
+		rootDir: ROOT_DIR,
+		browser: true,
+		browserOptions: { type: "chromium", launch: { headless: true } },
+		nuxtConfig: TEST_NUXT_CONFIG,
+	});
+
+	it("sets CSRF cookies and redirects to Discord", async () => {
 		const page = await createPage();
 
-		// Stub Discord to prevent leaving the test domain
 		await stubDiscordAuthorize(page);
 
 		await page.goto("/oauth/login");
@@ -27,7 +34,7 @@ test.describe("oauth login page", async () => {
 		await page.close();
 	});
 
-	test("stores safe ?next param in oauth_redirect cookie", async () => {
+	it("stores safe ?next param in oauth_redirect cookie", async () => {
 		const page = await createPage();
 
 		await stubDiscordAuthorize(page);
@@ -41,7 +48,7 @@ test.describe("oauth login page", async () => {
 		await page.close();
 	});
 
-	test("rejects unsafe ?next param and falls back to /", async () => {
+	it("rejects unsafe ?next param and falls back to /", async () => {
 		const page = await createPage();
 
 		await stubDiscordAuthorize(page);
@@ -55,7 +62,7 @@ test.describe("oauth login page", async () => {
 		await page.close();
 	});
 
-	test("/login alias redirects to Discord", async () => {
+	it("/login alias redirects to Discord", async () => {
 		const page = await createPage();
 
 		await stubDiscordAuthorize(page);

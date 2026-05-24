@@ -534,7 +534,7 @@ export default defineConfig({
 				test: {
 					name: "auth-e2e",
 					environment: "node",
-					include: ["test/e2e/**/*.spec.ts"],
+					include: ["test/e2e/oauth/**/*.spec.ts"],
 					testTimeout: 60_000,
 					pool: "forks",
 					poolOptions: { forks: { singleFork: true } },

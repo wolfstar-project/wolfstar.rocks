@@ -1,13 +1,20 @@
-import { createPage } from "@nuxt/test-utils/e2e";
+import { createPage, setup } from "@nuxt/test-utils/e2e";
+import { expect } from "@playwright/test";
 import { FIXTURE_DISCORD_USER } from "../../fixtures/discord-user";
 import { seedSession } from "../helpers/seed-session";
-import { expect, test } from "../test-utils";
+import { ROOT_DIR, TEST_NUXT_CONFIG } from "./setup";
 
-test.describe("authenticated state", async () => {
-	test("unauthenticated user is redirected to login when accessing protected route", async () => {
+describe("authenticated state", async () => {
+	await setup({
+		rootDir: ROOT_DIR,
+		browser: true,
+		browserOptions: { type: "chromium", launch: { headless: true } },
+		nuxtConfig: TEST_NUXT_CONFIG,
+	});
+
+	it("unauthenticated user is redirected to login when accessing protected route", async () => {
 		const page = await createPage();
 
-		// Stub Discord to prevent leaving the test domain
 		await page.route("https://discord.com/oauth2/authorize**", (route) =>
 			route.fulfill({
 				status: 200,
@@ -32,13 +39,12 @@ test.describe("authenticated state", async () => {
 		await page.close();
 	});
 
-	test("authenticated user sees their name on the profile page", async () => {
+	it("authenticated user sees their name on the profile page", async () => {
 		const page = await createPage("/");
 		await seedSession(page, FIXTURE_DISCORD_USER);
 
 		await page.goto("/profile");
 
-		// Profile page shows globalName ?? username in an h2
 		await expect(
 			page.getByRole("heading", {
 				name: FIXTURE_DISCORD_USER.globalName ?? FIXTURE_DISCORD_USER.username,
@@ -49,11 +55,10 @@ test.describe("authenticated state", async () => {
 		await page.close();
 	});
 
-	test("authenticated user is not redirected from protected route", async () => {
+	it("authenticated user is not redirected from protected route", async () => {
 		const page = await createPage("/");
 		await seedSession(page, FIXTURE_DISCORD_USER);
 
-		// Mock guild APIs to prevent API errors from obscuring the auth check
 		await page.route("**/api/guilds/**", (route) =>
 			route.fulfill({
 				status: 200,
@@ -68,10 +73,8 @@ test.describe("authenticated state", async () => {
 
 		await page.goto("/guilds/123456789012345678/manage");
 
-		// Wait for the manage route to load deterministically instead of a fixed sleep
 		await page.waitForURL(/\/guilds\/123456789012345678\/manage/, { timeout: 10_000 });
 
-		// Should still be on the guild page, not redirected to login
 		expect(page.url()).toMatch(/\/guilds\/123456789012345678\/manage/);
 
 		await page.close();

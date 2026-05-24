@@ -124,7 +124,6 @@
 		"@storybook/addon-a11y": "catalog:storybook",
 		"@storybook/addon-docs": "catalog:storybook",
 		"@storybook/addon-themes": "catalog:storybook",
-		"@storybook/blocks": "catalog:storybook",
 		"@tailwindcss/typography": "0.5.19",
 		"@takumi-rs/core": "1.1.2",
 		"@takumi-rs/wasm": "1.1.2",

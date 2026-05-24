@@ -63,3 +63,7 @@ plans
 package-lock.json
 
 .nvmrc
+
+# Storybook
+*storybook.log
+storybook-static

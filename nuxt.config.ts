@@ -5,6 +5,7 @@ import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
+const isStorybook = process.env.STORYBOOK === "true";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -15,7 +16,6 @@ export default defineNuxtConfig({
 		"@nuxt/ui",
 		"@nuxt/image",
 		"@nuxt/hints",
-		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
@@ -28,7 +28,8 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
+		...(isStorybook ? [] : ["@nuxt/fonts"]),
+		...(isTest || isCI || isStorybook ? [] : ["@netlify/nuxt"]),
 	],
 
 	$development: {
@@ -240,7 +241,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		viteEnvironmentApi: true,
+		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
 	},
 

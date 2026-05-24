@@ -21,7 +21,9 @@ const config: KnipConfig = {
 				"!.agent/**",
 				"!.claude/**",
 			],
-			husky: false,
+			msw: {
+				entry: [".storybook/.public/mockServiceWorker.js"],
+			},
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",

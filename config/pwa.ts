@@ -1,6 +1,8 @@
 import type { ModuleOptions } from "@vite-pwa/nuxt";
 import { isCI, isDevelopment } from "std-env";
 
+const isStorybook = process.env.STORYBOOK === "true";
+
 export const pwa: ModuleOptions = {
 	client: {
 		installPrompt: true,
@@ -137,8 +139,10 @@ export const pwa: ModuleOptions = {
 	},
 	mode: isCI ? "production" : "development",
 	pwaAssets: {
+		disabled: isStorybook,
 		config: false,
 	},
+
 	registerType: "prompt",
 	scope: "/",
 	srcDir: "../service-worker",

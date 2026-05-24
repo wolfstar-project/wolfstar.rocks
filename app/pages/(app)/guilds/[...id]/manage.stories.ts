@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
-import { pageDecorator } from "../../../../../.storybook/decorators";
 import ManagePage from "./manage.vue";
 
 const meta: Meta<typeof ManagePage> = {
 	component: ManagePage,
 	title: "Pages/Dashboard/Manage",
 	decorators: [
-		pageDecorator,
 		() => ({
 			template: `
 				<UDashboardGroup>

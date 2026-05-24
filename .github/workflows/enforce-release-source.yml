@@ -1,0 +1,32 @@
+name: chore
+
+on:
+  pull_request_target:
+    branches:
+      - release
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+
+permissions: {}
+
+jobs:
+  enforce-source:
+    if: github.repository == 'wolfstar-project/wolfstar.rocks'
+    runs-on: ubuntu-slim
+    name: 🚦 Enforce release source
+    steps:
+      - name: Check PR is from main
+        env:
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if [ "$HEAD_REPO" != "wolfstar-project/wolfstar.rocks" ] || [ "$HEAD_REF" != "main" ]; then
+            echo "::error::PRs to 'release' must come from wolfstar-project/wolfstar.rocks:main (got ${HEAD_REPO}:${HEAD_REF})"
+            exit 1
+          fi

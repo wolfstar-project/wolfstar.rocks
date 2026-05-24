@@ -5,7 +5,6 @@ allowedDeprecatedVersions:
     inflight: 1.0.6
     sourcemap-codec: 1.4.8
 
-# pnpm v11: hoisting config must live here (no longer read from .npmrc)
 shamefullyHoist: true
 hoistPattern:
     - "*prisma*"
@@ -34,7 +33,6 @@ peerDependencyRules:
 
 shellEmulator: true
 
-# pnpm v11: allowBuilds replaces onlyBuiltDependencies + ignoredBuiltDependencies
 allowBuilds:
     "@parcel/watcher": false
     "@prisma/client": true
@@ -51,3 +49,12 @@ allowBuilds:
     unrs-resolver: false
     vue-demi: false
     workerd: true
+
+minimumReleaseAge: 2880
+
+minimumReleaseAgeExclude:
+    # Nuxt
+    - "@nuxt/*"
+    - "@nuxtjs/*"
+    - "nuxt"
+    - "nuxt-*"

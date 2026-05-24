@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { mockGuildList, mockUser } from "./fixtures";
+import { mockCommands, mockGuildList, mockUser } from "./fixtures";
 
 export const handlers = [
 	http.get("/api/auth/session", () =>
@@ -24,4 +24,7 @@ export const handlers = [
 			language: "en-US",
 		}),
 	),
+
+	// External WolfStar bot API — proxied through createApiComposable("/commands")
+	http.get(/\/commands$/, () => HttpResponse.json(mockCommands)),
 ];

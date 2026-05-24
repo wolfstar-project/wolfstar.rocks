@@ -111,7 +111,7 @@ jobs:
           BODY="${BODY}---\n\n"
           BODY="${BODY}> Merging this PR will:\n"
           BODY="${BODY}> - Deploy to \`wolfstar.rocks\` via Netlify\n"
-          BODY="${BODY}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release"
+          BODY="${BODY}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release\n"
 
           # Write body to file, truncating if needed (GitHub limits PR body to 65536 chars)
           echo -e "$BODY" > /tmp/pr-body.md
@@ -125,7 +125,7 @@ jobs:
             TRUNCATED="${TRUNCATED}---\n\n"
             TRUNCATED="${TRUNCATED}> Merging this PR will:\n"
             TRUNCATED="${TRUNCATED}> - Deploy to \`wolfstar.rocks\` via Netlify\n"
-            TRUNCATED="${TRUNCATED}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release"
+            TRUNCATED="${TRUNCATED}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release\n"
             echo -e "$TRUNCATED" > /tmp/pr-body.md
           fi
 

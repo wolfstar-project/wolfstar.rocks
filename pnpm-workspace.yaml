@@ -35,6 +35,7 @@ catalogs:
         "@storybook/addon-a11y": "^10.3.5"
         "@storybook/addon-docs": "^10.3.5"
         "@storybook/addon-themes": "^10.3.5"
+        "@storybook/blocks": "^8.6.14"
         "msw-storybook-addon": "^2.0.7"
         "storybook": "^10.3.1"
 

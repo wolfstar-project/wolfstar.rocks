@@ -106,7 +106,6 @@
 		"vite-plus": "^0.1.14"
 	},
 	"devDependencies": {
-		"@chromatic-com/playwright": "^0.14.2",
 		"@codspeed/vitest-plugin": "5.4.0",
 		"@commitlint/cli": "21.0.1",
 		"@commitlint/config-conventional": "21.0.1",
@@ -125,6 +124,7 @@
 		"@storybook/addon-a11y": "catalog:storybook",
 		"@storybook/addon-docs": "catalog:storybook",
 		"@storybook/addon-themes": "catalog:storybook",
+		"@storybook/blocks": "catalog:storybook",
 		"@tailwindcss/typography": "0.5.19",
 		"@takumi-rs/core": "1.1.2",
 		"@takumi-rs/wasm": "1.1.2",

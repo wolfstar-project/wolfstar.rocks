@@ -106,6 +106,7 @@
 		"vite-plus": "^0.1.14"
 	},
 	"devDependencies": {
+		"@chromatic-com/playwright": "^0.14.2",
 		"@codspeed/vitest-plugin": "5.4.0",
 		"@commitlint/cli": "21.0.1",
 		"@commitlint/config-conventional": "21.0.1",

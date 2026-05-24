@@ -37,6 +37,7 @@ jobs:
             deps
             discord
             docs
+            e2e
             guild
             oauth
             database

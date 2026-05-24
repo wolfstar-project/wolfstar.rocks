@@ -422,6 +422,7 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
+		enabled: !isStorybook,
 		security: {
 			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
 			secret: process.env.NUXT_IMAGE_PROXY_SECRET,

@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
-      contents: write # push tags and create releases
+      contents: write # create release tags and GitHub releases
     outputs:
       version: ${{ steps.version.outputs.next }}
       skipped: ${{ steps.check.outputs.skip }}
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true
 
       - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
         with:

@@ -1,4 +1,5 @@
 import type { OauthFlattenedGuild, WolfCommand } from "#shared/types/discord";
+import type { Locale } from "discord-api-types/v10";
 
 export const MOCK_GUILD_ID = "123456789012345678";
 export const MOCK_USER_ID = "987654321098765432";

@@ -17,9 +17,9 @@ export const handlers = [
 
 	http.get("/api/guilds", () => HttpResponse.json(mockGuildList)),
 
-	http.get("/api/guilds/:guildId/settings", () =>
+	http.get("/api/guilds/:guildId/settings", ({ params }) =>
 		HttpResponse.json({
-			guildId: "123456789012345678",
+			guildId: params["guildId"] ?? "123456789012345678",
 			prefix: "!",
 			language: "en-US",
 		}),

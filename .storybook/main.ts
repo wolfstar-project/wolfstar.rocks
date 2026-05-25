@@ -70,6 +70,14 @@ const config = {
 				while ((match = re.exec(dts)) !== null) {
 					const [, name, rel] = match;
 					if (!name || !rel) continue;
+					// Virtual module IDs (e.g. \0virtual:client-wrapper:*) are not real
+					// file paths — resolve() would produce an invalid absolute path.
+					// Re-export them verbatim so Nuxt's registered Vite plugin
+					// (nuxt:client-vue-wrapper) can resolve and load them at runtime.
+					if (rel.startsWith("\0") || rel.includes("virtual:")) {
+						lines.push(`export { default as ${name} } from ${JSON.stringify(rel)}`);
+						continue;
+					}
 					const abs = resolve(buildDir, rel).replaceAll("\\", "/");
 					lines.push(`export { default as ${name} } from ${JSON.stringify(abs)}`);
 				}
@@ -113,14 +121,6 @@ const config = {
 			},
 		});
 
-		newConfig.plugins.push({
-			name: "ignore-internals",
-			transform(_, id) {
-				if (id.includes("/app/pages/blog/") && id.endsWith(".md")) {
-					return "export default {}";
-				}
-			},
-		});
 		// Replace the built-in vue-docgen plugin with a fault-tolerant version.
 		// vue-docgen-api can crash on components that import types from other
 		// .vue files (it tries to parse the SFC with @babel/parser as plain TS).

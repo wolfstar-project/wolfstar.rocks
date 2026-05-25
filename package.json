@@ -56,8 +56,7 @@
 		"typecheck": "stale-dep && nuxt typecheck",
 		"update:interactive": "taze",
 		"storybook": "STORYBOOK=true storybook dev -p 6006",
-		"build-storybook": "STORYBOOK=true storybook build",
-		"chromatic": "chromatic"
+		"build-storybook": "STORYBOOK=true storybook build"
 	},
 	"dependencies": {
 		"@iconify-json/emojione": "^1.2.3",

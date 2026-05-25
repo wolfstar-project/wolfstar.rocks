@@ -1,9 +1,9 @@
 import type { OauthFlattenedGuild, WolfCommand } from "#shared/types/discord";
 
-export const MOCK_GUILD_ID = "123456789012345678";
-export const MOCK_USER_ID = "987654321098765432";
+const MOCK_GUILD_ID = "123456789012345678";
+const MOCK_USER_ID = "987654321098765432";
 
-export const mockGuild: OauthFlattenedGuild = {
+const mockGuild: OauthFlattenedGuild = {
 	id: MOCK_GUILD_ID,
 	name: "WolfStar Dev",
 	acronym: "WD",
@@ -38,7 +38,7 @@ export const mockGuild: OauthFlattenedGuild = {
 	widgetEnabled: false,
 };
 
-export const mockGuildNotManaged: OauthFlattenedGuild = {
+const mockGuildNotManaged: OauthFlattenedGuild = {
 	...mockGuild,
 	id: "111111111111111111",
 	name: "Other Server",
@@ -48,7 +48,7 @@ export const mockGuildNotManaged: OauthFlattenedGuild = {
 	wolfstarIsIn: false,
 };
 
-export const mockGuildList: OauthFlattenedGuild[] = [mockGuild, mockGuildNotManaged];
+const mockGuildList: OauthFlattenedGuild[] = [mockGuild, mockGuildNotManaged];
 
 export const mockUser = {
 	id: MOCK_USER_ID,

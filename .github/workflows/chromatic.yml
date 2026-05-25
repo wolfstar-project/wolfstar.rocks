@@ -16,13 +16,13 @@ permissions:
 jobs:
   chromatic:
     name: 📚 Chromatic
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-24.04-arm
 
     steps:
       - name: ☑️ Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
+          fetch-depth: 0
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
@@ -32,17 +32,11 @@ jobs:
           node-version: lts/*
           cache: true
 
-      - name: 🟧 Enable pinned pnpm via Corepack
-        run: |
-          corepack enable
-          corepack prepare pnpm@11.1.0 --activate
-          pnpm --version
+      - name: 🟧 Install pnpm globally
+        run: vp install -g pnpm
 
       - name: 🧪 Run Chromatic Visual and Accessibility Tests
         uses: chromaui/action@f191a0224b10e1a38b2091cefb7b7a2337009116 # v16.0.0
-        with:
-          buildScriptName: build-storybook
-          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
         env:
           CHROMATIC_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
           CHROMATIC_SHA: ${{ github.event.pull_request.head.sha || github.sha }}

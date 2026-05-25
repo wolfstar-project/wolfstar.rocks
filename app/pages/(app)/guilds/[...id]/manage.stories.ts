@@ -7,7 +7,17 @@ const meta: Meta<typeof ManagePage> = {
 	decorators: [
 		() => ({
 			template: `
-				<UDashboardGroup>
+				<UDashboardGroup unit="rem">
+					<UDashboardSidebar
+						id="default"
+						collapsible
+						resizable
+						:ui="{
+							header: 'bg-base-200/80',
+							body: 'bg-base-200/80 border-r border-base-200',
+							footer: 'bg-base-200/80 border-t border-b border-base-200',
+						}"
+					/>
 					<story />
 				</UDashboardGroup>
 			`,

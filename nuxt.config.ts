@@ -28,7 +28,7 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isStorybook ? [] : ["@nuxt/fonts"]),
+		"@nuxt/fonts",
 		...(isTest || isCI || isStorybook ? [] : ["@netlify/nuxt"]),
 	],
 

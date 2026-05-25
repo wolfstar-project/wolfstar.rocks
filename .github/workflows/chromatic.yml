@@ -23,7 +23,6 @@ jobs:
       - name: ☑️ Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          fetch-depth: 0
           repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
@@ -34,7 +33,10 @@ jobs:
           cache: true
 
       - name: 🟧 Enable pinned pnpm via Corepack
-        run: corepack prepare pnpm@11.1.0 --activate
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.1.0 --activate
+          pnpm --version
 
       - name: 🧪 Run Chromatic Visual and Accessibility Tests
         uses: chromaui/action@f191a0224b10e1a38b2091cefb7b7a2337009116 # v16.0.0

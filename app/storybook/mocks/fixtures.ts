@@ -78,7 +78,7 @@ export const mockCommands: WolfCommand[] = [
 		guarded: false,
 		permissionLevel: 6,
 		extendedHelp: {
-			examples: ["!ban @User Spamming", "!ban @User"],
+			examples: ["w!ban @User Spamming", "w!ban @User"],
 			usages: ["ban <user> [reason]"],
 		},
 		preconditions: emptyPreconditions,
@@ -92,7 +92,7 @@ export const mockCommands: WolfCommand[] = [
 		guarded: false,
 		permissionLevel: 5,
 		extendedHelp: {
-			examples: ["!kick @User Misbehaving"],
+			examples: ["w!kick @User Misbehaving"],
 			usages: ["kick <user> [reason]"],
 		},
 		preconditions: emptyPreconditions,
@@ -106,7 +106,7 @@ export const mockCommands: WolfCommand[] = [
 		guarded: false,
 		permissionLevel: 5,
 		extendedHelp: {
-			examples: ["!mute @User Spamming", "!mute @User 10m Spamming"],
+			examples: ["w!mute @User Spamming", "w!mute @User 10m Spamming"],
 			usages: ["mute <user> [duration] [reason]"],
 		},
 		preconditions: emptyPreconditions,
@@ -120,7 +120,7 @@ export const mockCommands: WolfCommand[] = [
 		guarded: true,
 		permissionLevel: 0,
 		extendedHelp: {
-			examples: ["!help", "!help ban"],
+			examples: ["w!help", "w!help ban"],
 			usages: ["help [command]"],
 		},
 		preconditions: emptyPreconditions,
@@ -134,7 +134,7 @@ export const mockCommands: WolfCommand[] = [
 		guarded: true,
 		permissionLevel: 0,
 		extendedHelp: {
-			examples: ["!ping"],
+			examples: ["w!ping"],
 			usages: ["ping"],
 		},
 		preconditions: emptyPreconditions,

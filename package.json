@@ -87,6 +87,7 @@
 		"@vueuse/motion": "^3.0.3",
 		"@vueuse/nuxt": "^14.2.1",
 		"@vueuse/router": "^14.2.1",
+		"chromatic": "^17.0.0",
 		"dotenv": "^17.3.1",
 		"evlog": "^2.14.0",
 		"fuse.js": "^7.1.0",

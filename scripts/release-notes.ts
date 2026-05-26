@@ -73,6 +73,7 @@ async function main() {
 	const to = process.argv[3] || "HEAD";
 
 	if (!from) {
+		console.error("Usage: node scripts/release-notes.ts <from-ref> [to-ref]");
 		process.exit(1);
 	}
 
@@ -105,8 +106,11 @@ async function main() {
 			output += `\n### ❤️ Contributors\n\n${lines}`;
 		}
 	}
+
+	console.log(output);
 }
 
 main().catch((err) => {
+	console.error(err);
 	process.exit(1);
 });

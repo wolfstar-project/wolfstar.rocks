@@ -7,14 +7,14 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 permissions: {}
 
 jobs:
   tag:
     name: 🏷️ Tag release and create GitHub Release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
       contents: write # create release tags and GitHub releases

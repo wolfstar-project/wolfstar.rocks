@@ -75,8 +75,9 @@ const slug = route.params.slug as string | string[];
 
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
 
-const title = ref(
-	`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value.name}`,
+const title = computed(
+	() =>
+		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value?.name ?? ""}`,
 );
 
 // Pre-define async components outside of computed to avoid re-creating

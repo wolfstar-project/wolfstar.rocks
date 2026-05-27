@@ -1,6 +1,7 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
+	treatConfigHintsAsErrors: true,
 	workspaces: {
 		".": {
 			entry: [
@@ -31,12 +32,6 @@ const config: KnipConfig = {
 				"tailwind-variants",
 
 				/** Framework-provided: re-exported or bundled by Nuxt/Nitro/Vite */
-				"vue",
-				"vue-router",
-				"h3",
-				"nitropack/*",
-				"ofetch",
-				"@unhead/vue",
 				"ufo",
 				"ohash/*",
 
@@ -59,7 +54,6 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-				"@netlify/nuxt",
 
 				/** Used in the test */
 				"axe-core",

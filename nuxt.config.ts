@@ -1,3 +1,4 @@
+import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
@@ -28,7 +29,7 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
+		...(isTest || isCI ? [] : [netlifyNuxt]),
 	],
 
 	$development: {

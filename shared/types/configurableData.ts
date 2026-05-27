@@ -51,7 +51,8 @@ export namespace DisableCommands {
 	}
 }
 
-export namespace General {
+// oxlint-disable-next-line no-unused-vars --- Used for type exports only, not imported directly
+namespace General {
 	export interface Form {
 		prefix: string;
 	}
@@ -100,7 +101,8 @@ export namespace Channels {
 	}
 }
 
-export namespace Selfmod {
+// oxlint-disable-next-line no-unused-vars --- Used for type exports only, not imported directly
+namespace Selfmod {
 	type SelfmodKeyHelper<P1 extends string[]> =
 		`selfmod${Capitalize<P1[0]>}${P1[1] extends string ? Capitalize<P1[1]> : ""}${P1[2] extends string
 			? Capitalize<P1[2]>

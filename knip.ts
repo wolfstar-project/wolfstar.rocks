@@ -54,6 +54,7 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
+				"@netlify/nuxt",
 
 				/** Used in the test */
 				"axe-core",

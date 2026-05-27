@@ -1,4 +1,3 @@
-import type { User } from "#auth-utils";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 export interface UseUserSearchOptions {

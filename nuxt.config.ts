@@ -361,38 +361,26 @@ export default defineNuxtConfig({
 	},
 
 	fonts: {
+		providers: {
+			fontshare: false,
+		},
 		families: [
 			{
 				global: true,
 				name: "Geist",
-				preload: true,
-				subsets: ["latin"],
+				provider: "local",
+				weights: [400, 500, 600, 700],
+			},
+			{
+				global: true,
+				name: "Geist Mono",
+				provider: "local",
 				weights: [400, 500, 600, 700],
 			},
 			{
 				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Book.woff", format: "woff" }],
-				weight: 400,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Medium.woff", format: "woff" }],
-				weight: 500,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [
-					{ url: "https://cdn.skyra.pw/whitney-font/v2/Semibold.woff", format: "woff" },
-				],
-				weight: 600,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Bold.woff", format: "woff" }],
-				weight: 700,
+				provider: "local",
+				weights: [400, 500, 600, 700],
 				display: "swap",
 			},
 		],
@@ -455,13 +443,7 @@ export default defineNuxtConfig({
 					"https://*.sentry.io",
 				],
 				"default-src": ["'self'"],
-				"font-src": [
-					"'self'",
-					"https:",
-					"data:",
-					"https://cdn.wolfstar.rocks",
-					"https://rsms.me",
-				],
+				"font-src": ["'self'", "data:"],
 				"form-action": ["'none'"],
 				"frame-ancestors": ["'none'"],
 				"frame-src": ["https:"],

@@ -138,7 +138,7 @@
 		"eslint": "9.39.4",
 		"eslint-plugin-regexp": "3.1.0",
 		"jsdom": "26.1.0",
-		"knip": "5.88.1",
+		"knip": "6.14.2",
 		"msw": "catalog:msw",
 		"msw-storybook-addon": "catalog:storybook",
 		"prisma": "7.7.0",

@@ -361,12 +361,20 @@ export default defineNuxtConfig({
 	},
 
 	fonts: {
+		providers: {
+			fontshare: false,
+		},
 		families: [
 			{
 				global: true,
 				name: "Geist",
-				preload: true,
-				subsets: ["latin"],
+				provider: "local",
+				weights: [400, 500, 600, 700],
+			},
+			{
+				global: true,
+				name: "Geist Mono",
+				provider: "local",
 				weights: [400, 500, 600, 700],
 			},
 			{

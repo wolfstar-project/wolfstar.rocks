@@ -69,7 +69,7 @@
 		"@nuxt/ui": "^4.5.1",
 		"@nuxtjs/html-validator": "2.1.0",
 		"@nuxtjs/seo": "^5.0.2",
-		"@playwright/test": "^1.58.2",
+		"@playwright/test": "^1.60.0",
 		"@prisma/adapter-pg": "^7.7.0",
 		"@prisma/client": "^7.7.0",
 		"@sapphire/ratelimits": "^2.4.11",
@@ -121,7 +121,7 @@
 		"@takumi-rs/core": "1.1.2",
 		"@takumi-rs/wasm": "1.1.2",
 		"@types/node": "24.12.2",
-		"@vitest/ui": "4.1.6",
+		"@vitest/ui": "4.1.7",
 		"changelogen": "0.6.2",
 		"cz-conventional-changelog": "3.3.0",
 		"daisyui": "5.5.19",
@@ -129,8 +129,8 @@
 		"discord-api-types": "0.38.42",
 		"eslint": "9.39.4",
 		"eslint-plugin-regexp": "3.1.0",
-		"jsdom": "^26.1.0",
-		"knip": "5.88.1",
+		"jsdom": "26.1.0",
+		"knip": "6.14.2",
 		"prisma": "7.7.0",
 		"prisma-json-types-generator": "5.0.0",
 		"rolldown": "^1.0.0-rc.10",
@@ -148,7 +148,7 @@
 		}
 	},
 	"engines": {
-		"node": "24",
+		"node": ">=24",
 		"pnpm": ">=10"
 	},
 	"packageManager": "pnpm@11.1.0"

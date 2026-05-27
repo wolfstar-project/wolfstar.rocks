@@ -54,7 +54,6 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-				"@netlify/nuxt",
 
 				/** Used in the test */
 				"axe-core",
@@ -72,7 +71,6 @@ const config: KnipConfig = {
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,
-				"test/__stubs__/prisma-generated-client.ts" /* Referenced via Vite alias in vite.config.ts, not a direct import */,
 			],
 			ignoreMembers: [
 				/** Enum members in app/utils/constants.ts used as color values at runtime */

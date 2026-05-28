@@ -2,6 +2,7 @@ import type { Preview } from "@storybook-vue/nuxt";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { fn } from "storybook/test";
+import { handlers } from "~/storybook/mocks/handlers";
 import wolfstarDark from "./theme";
 
 initialize();
@@ -20,6 +21,9 @@ const preview: Preview = {
 		},
 		docs: {
 			theme: wolfstarDark,
+		},
+		msw: {
+			handlers,
 		},
 	},
 	decorators: [

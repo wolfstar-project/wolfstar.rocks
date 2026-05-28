@@ -31,7 +31,7 @@ catalogs:
         "msw": "^2.13.2"
 
     storybook:
-        "@storybook-vue/nuxt": "https://pkg.pr.new/@storybook-vue/nuxt@1021"
+        "@storybook-vue/nuxt": "9.1.0-29411911.f34c865"
         "@storybook/addon-a11y": "^10.3.5"
         "@storybook/addon-docs": "^10.3.5"
         "@storybook/addon-themes": "^10.3.5"

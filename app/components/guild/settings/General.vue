@@ -24,12 +24,13 @@
 		</dl>
 
 		<div class="mt-4 flex flex-col items-center gap-3 md:flex-row md:items-start">
-			<UButton
-				color="neutral"
-				variant="link"
-				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
-				@click="copyServerId"
-			>
+			<UButton color="neutral" variant="link" @click="copyServerId">
+				<template #leading>
+					<span class="t-icon-swap" :data-state="copied ? 'b' : 'a'" aria-hidden="true">
+						<UIcon name="heroicons:clipboard-document" class="t-icon" data-icon="a" />
+						<UIcon name="heroicons:check" class="t-icon" data-icon="b" />
+					</span>
+				</template>
 				{{ copied ? "Copied!" : "Copy Server ID" }}
 			</UButton>
 			<UButton

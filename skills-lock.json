@@ -12,6 +12,12 @@
 			"sourceType": "github",
 			"skillPath": "skills/git-commit/SKILL.md",
 			"computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21"
+		},
+		"transitions-dev": {
+			"source": "Jakubantalik/transitions.dev",
+			"sourceType": "github",
+			"skillPath": "skills/transitions-dev/SKILL.md",
+			"computedHash": "2bd1d5142edb75c988faf5562e01c659623f713a11c3a5f94f5744b9801ccd2a"
 		}
 	}
 }

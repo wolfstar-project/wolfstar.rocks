@@ -55,8 +55,6 @@ test-results/
 # Lighthouse
 .lighthouseci
 
-# Agents
-plans
 
 # Skilld references (recreated by `skilld install`)
 .skilld
@@ -67,3 +65,6 @@ package-lock.json
 # Storybook
 *storybook.log
 storybook-static
+
+# Claude misc
+.claude/state

@@ -1,16 +1,13 @@
 import type { UserSession } from "#auth-utils";
 import type { RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { sessionRefresh, userLogout } from "#shared/audit/actions";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
+import { sessionRefresh, userLogout } from "#shared/audit/actions";
 import { useLogger, withAuditMethods } from "evlog";
 
 const REFRESH_BUFFER_MS = 60 * 60 * 1000;
 
-export function isAccessTokenExpired(
-	expires_in: number | undefined,
-	loggedInAt: number,
-): boolean {
+export function isAccessTokenExpired(expires_in: number | undefined, loggedInAt: number): boolean {
 	if (!expires_in) {
 		return true;
 	}
@@ -19,9 +16,7 @@ export function isAccessTokenExpired(
 	return Date.now() + REFRESH_BUFFER_MS >= expiresAt;
 }
 
-async function requestTokenRefresh(
-	refreshToken: string,
-): Promise<RESTPostOAuth2AccessTokenResult> {
+async function requestTokenRefresh(refreshToken: string): Promise<RESTPostOAuth2AccessTokenResult> {
 	const api = useApi();
 
 	return api.oauth2.refreshToken({

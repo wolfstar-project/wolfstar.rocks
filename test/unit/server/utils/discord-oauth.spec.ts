@@ -1,23 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const {
-	mockGetCurrent,
-	mockGetGuilds,
-	mockGetGuildMember,
-	mockRefreshSessionTokens,
-} = vi.hoisted(() => {
-	const mockGetCurrent = vi.fn();
-	const mockGetGuilds = vi.fn();
-	const mockGetGuildMember = vi.fn();
-	const mockRefreshSessionTokens = vi.fn();
+const { mockGetCurrent, mockGetGuilds, mockGetGuildMember, mockRefreshSessionTokens } = vi.hoisted(
+	() => {
+		const mockGetCurrent = vi.fn();
+		const mockGetGuilds = vi.fn();
+		const mockGetGuildMember = vi.fn();
+		const mockRefreshSessionTokens = vi.fn();
 
-	return {
-		mockGetCurrent,
-		mockGetGuildMember,
-		mockGetGuilds,
-		mockRefreshSessionTokens,
-	};
-});
+		return {
+			mockGetCurrent,
+			mockGetGuildMember,
+			mockGetGuilds,
+			mockRefreshSessionTokens,
+		};
+	},
+);
 
 vi.mock("#server/utils/oauth-tokens", () => ({
 	refreshSessionTokens: mockRefreshSessionTokens,

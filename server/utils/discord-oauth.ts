@@ -128,7 +128,7 @@ export function toDiscordFetchError(
 	}
 
 	const messages = {
-		guilds: {
+		"guilds": {
 			message: "Failed to fetch user guilds",
 			why: "Discord API returned an error when fetching the user's guild list",
 		},
@@ -136,7 +136,7 @@ export function toDiscordFetchError(
 			message: "Failed to fetch guild member data",
 			why: "Discord API returned an error when fetching the user's guild membership",
 		},
-		user: {
+		"user": {
 			message: "Failed to fetch user data",
 			why: "Discord API returned an error when fetching the current user",
 		},

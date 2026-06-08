@@ -55,10 +55,7 @@ vi.mock("#server/utils/runtimeConfig", () => ({
 }));
 
 import type { H3Event } from "h3";
-import {
-	isAccessTokenExpired,
-	refreshSessionTokens,
-} from "#server/utils/oauth-tokens";
+import { isAccessTokenExpired, refreshSessionTokens } from "#server/utils/oauth-tokens";
 
 const fakeEvent = {} as H3Event;
 

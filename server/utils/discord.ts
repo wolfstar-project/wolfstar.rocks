@@ -15,9 +15,12 @@ import type {
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
+import {
+	fetchCurrentUserAndGuildsWithRetry,
+	fetchGuildMemberWithRetry,
+} from "#server/utils/discord-oauth";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
-import { REST } from "@discordjs/rest";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullOrUndefined";
@@ -298,12 +301,6 @@ export const getCurrentUser = defineCachedFunction(
 	async (event: H3Event) => {
 		const tokens = await getCurrentToken(event);
 
-		const rest = new REST({
-			authPrefix: "Bearer",
-		}).setToken(tokens.access_token);
-
-		const api = useApi(rest);
-
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getCurrent" },
 		});
@@ -311,30 +308,7 @@ export const getCurrentUser = defineCachedFunction(
 			attributes: { endpoint: "users.getGuilds" },
 		});
 
-		const [user, guilds] = await Promise.all([
-			instrumentDiscordApiCall("users.getCurrent", () => api.users.getCurrent()).catch(
-				(error: DiscordAPIError) => {
-					throw createError({
-						cause: error,
-						message: "Failed to fetch user data",
-						status: 500,
-						why: "Discord API returned an error when fetching the current user",
-					});
-				},
-			),
-			instrumentDiscordApiCall("users.getGuilds", () => api.users.getGuilds()).catch(
-				(error: DiscordAPIError) => {
-					throw createError({
-						cause: error,
-						message: "Failed to fetch user guilds",
-						status: 500,
-						why: "Discord API returned an error when fetching the user's guild list",
-					});
-				},
-			),
-		]);
-
-		return { guilds, user };
+		return fetchCurrentUserAndGuildsWithRetry(event, tokens);
 	},
 	{
 		getKey: async (event: H3Event) => {
@@ -349,29 +323,11 @@ export const getCurrentMember = defineCachedFunction(
 	async (event: H3Event, guildId: string) => {
 		const tokens = await getCurrentToken(event);
 
-		const rest = new REST({
-			authPrefix: "Bearer",
-		}).setToken(tokens.access_token);
-
-		const api = useApi(rest);
-
 		Sentry.metrics.count("discord_api.call", 1, {
 			attributes: { endpoint: "users.getGuildMember", guild_id: guildId },
 		});
-		const member = await instrumentDiscordApiCall(
-			"users.getGuildMember",
-			() => api.users.getGuildMember(guildId),
-			{ guild_id: guildId },
-		).catch((error: DiscordAPIError) => {
-			throw createError({
-				cause: error,
-				message: "Failed to fetch guild member data",
-				status: 500,
-				why: "Discord API returned an error when fetching the user's guild membership",
-			});
-		});
 
-		return member;
+		return fetchGuildMemberWithRetry(event, tokens, guildId);
 	},
 	{
 		getKey: async (event: H3Event, guildId: string) => {

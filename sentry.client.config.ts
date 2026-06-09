@@ -19,7 +19,8 @@ if (sentry.dsn) {
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#sendDefaultPii
 		sendDefaultPii: true,
 
-		// Replay may only be enabled for the client-side
+		// Replay is loaded lazily below to keep its rrweb-based bundle out of the
+		// initial critical path; only tracing is initialized eagerly here.
 		integrations: [
 			// oxlint-disable-next-line import/namespace
 			Sentry.browserTracingIntegration({
@@ -35,8 +36,6 @@ if (sentry.dsn) {
 					!url.includes("/health"),
 				enableInp: true,
 			}),
-			// oxlint-disable-next-line import/namespace
-			Sentry.replayIntegration(),
 		],
 
 		// Set tracesSampleRate to 1.0 to capture 100%
@@ -65,4 +64,19 @@ if (sentry.dsn) {
 		replaysOnErrorSampleRate: 1,
 		environment,
 	});
+
+	// Defer Session Replay until the browser is idle so its sizable bundle never
+	// competes with first paint or hydration. Loaded from the Sentry CDN (allowed
+	// by CSP), which also keeps it out of the initial app bundle.
+	const loadReplay = () => {
+		void Sentry.lazyLoadIntegration("replayIntegration").then((replayIntegration) => {
+			Sentry.addIntegration(replayIntegration());
+		});
+	};
+
+	if (typeof window.requestIdleCallback === "function") {
+		window.requestIdleCallback(loadReplay);
+	} else {
+		setTimeout(loadReplay, 2000);
+	}
 }

@@ -86,7 +86,13 @@ export default defineWrappedResponseHandler(
 					},
 				});
 
-				await invalidateCurrentUserCache(user.id);
+				const cacheInvalidation = invalidateCurrentUserCache(user.id).catch((error) => {
+					log.error("Failed to invalidate current user cache after login", {
+						error,
+						userId: user.id,
+					});
+				});
+				event.waitUntil?.(cacheInvalidation);
 
 				log.set({ user: { id: user.id, username: user.username } });
 				log.audit(

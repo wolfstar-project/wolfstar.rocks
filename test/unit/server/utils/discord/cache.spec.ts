@@ -8,7 +8,7 @@ const { mockRemoveItem } = vi.hoisted(() => {
 	return { mockRemoveItem };
 });
 
-import { invalidateCurrentUserCache, invalidateGuildCache } from "#server/utils/discord-cache";
+import { invalidateCurrentUserCache, invalidateGuildCache } from "#server/utils/discord/cache";
 
 describe("invalidateCurrentUserCache", () => {
 	beforeEach(() => {

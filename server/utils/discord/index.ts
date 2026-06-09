@@ -21,11 +21,11 @@ import {
 	invalidateGuildCache,
 	shouldRefreshCurrentUserCache,
 	shouldRefreshGuildCache,
-} from "#server/utils/discord-cache";
+} from "#server/utils/discord/cache";
 import {
 	fetchCurrentUserAndGuildsWithRetry,
 	fetchGuildMemberWithRetry,
-} from "#server/utils/discord-oauth";
+} from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";

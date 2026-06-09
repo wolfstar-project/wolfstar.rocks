@@ -1,7 +1,7 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
-import { invalidateCurrentUserCache } from "#server/utils/discord-cache";
+import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
 import { createOAuthState } from "#server/utils/oauth-state";
 import { userLogin } from "#shared/audit/actions";
 import { isSafeRedirectPath } from "#shared/utils/redirect";

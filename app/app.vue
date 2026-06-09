@@ -36,11 +36,4 @@ watch(
 );
 
 provide(ProviderAppNameKey, appName);
-
-onMounted(() => {
-	if (import.meta.test) return;
-	void $fetch("/api/auth/refresh")
-		.then(refreshSession)
-		.catch(() => {});
-});
 </script>

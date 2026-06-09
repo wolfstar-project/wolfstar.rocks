@@ -16,9 +16,16 @@ import type {
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
 import {
+	CURRENT_USER_CACHE_NAME,
+	GUILD_CACHE_NAME,
+	invalidateGuildCache,
+	shouldRefreshCurrentUserCache,
+	shouldRefreshGuildCache,
+} from "#server/utils/discord/cache";
+import {
 	fetchCurrentUserAndGuildsWithRetry,
 	fetchGuildMemberWithRetry,
-} from "#server/utils/discord-oauth";
+} from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
@@ -311,11 +318,13 @@ export const getCurrentUser = defineCachedFunction(
 		return fetchCurrentUserAndGuildsWithRetry(event, tokens);
 	},
 	{
+		name: CURRENT_USER_CACHE_NAME,
 		getKey: async (event: H3Event) => {
 			const userId = await getUserIdFromEvent(event);
 			return userId;
 		},
 		maxAge: hours(1),
+		shouldBypassCache: async (event: H3Event) => shouldRefreshCurrentUserCache(event),
 	},
 );
 
@@ -416,8 +425,8 @@ export const getGuild = defineCachedFunction(
 			() => api.guilds.get(guildId, { with_counts: true }),
 			{ guild_id: guildId },
 		).catch((error: DiscordAPIError) => {
-			// 404 means the bot is not a member of this guild; return null so the result
-			// is cached by defineCachedFunction and avoids a Discord API call per request.
+			// 404 means the bot is not a member of this guild. Do not cache null — membership
+			// can change immediately after a bot invite.
 			if (error.status === 404) return null;
 			throw createError({
 				cause: error,
@@ -429,10 +438,19 @@ export const getGuild = defineCachedFunction(
 		return result;
 	},
 	{
+		name: GUILD_CACHE_NAME,
 		maxAge: hours(1),
 		getKey: (guildId) => `guild:${guildId}`,
+		validate: (entry) => entry.value !== null && entry.value !== undefined,
 	},
 );
+
+export async function resolveGuildForRequest(event: H3Event, guildId: string) {
+	if (shouldRefreshGuildCache(event)) {
+		await invalidateGuildCache(guildId);
+	}
+	return getGuild(guildId);
+}
 
 export const fetchCommands = defineCachedFunction(
 	async () => {

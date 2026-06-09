@@ -131,6 +131,12 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	auth: {
+		// Avoid eager session hydration on marketing pages; protected routes and
+		// HeaderAuth fetch explicitly when a session is needed.
+		loadStrategy: "none",
+	},
+
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -554,6 +560,8 @@ export default defineNuxtConfig({
 	},
 
 	vitalizer: {
+		disablePrefetchLinks: true,
+		disablePreloadLinks: true,
 		disableStylesheets: "entry",
 	},
 });

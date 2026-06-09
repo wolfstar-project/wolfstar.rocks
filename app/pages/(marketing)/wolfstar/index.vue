@@ -161,9 +161,9 @@ const { stop: stopExploreObserver } = useIntersectionObserver(
 			stopExploreObserver();
 		}
 	},
-	// Start loading ~400px before the section enters the viewport so
-	// the components are ready before the user actually sees them.
-	{ rootMargin: "400px" },
+	// Keep margin at 0 so below-fold Discord showcase chunks stay off the
+	// initial hydration path (a large rootMargin was loading them during LCP).
+	{ rootMargin: "0px" },
 );
 
 function openFeature(index: number) {

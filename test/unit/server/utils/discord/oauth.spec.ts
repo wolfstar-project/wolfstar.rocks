@@ -40,7 +40,7 @@ import {
 	fetchCurrentUserAndGuildsWithRetry,
 	fetchGuildMemberWithRetry,
 	isDiscordUnauthorized,
-} from "#server/utils/discord-oauth";
+} from "#server/utils/discord/oauth";
 
 const fakeEvent = {} as H3Event;
 

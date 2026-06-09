@@ -50,8 +50,9 @@ export async function refreshSessionTokens(
 	}
 
 	const { refresh_token, access_token, expires_in } = session.secure.tokens;
+	const expired = isAccessTokenExpired(expires_in, session.loggedInAt);
 
-	if (!options.force && !isAccessTokenExpired(expires_in, session.loggedInAt)) {
+	if (!options.force && !expired) {
 		return session.secure.tokens;
 	}
 

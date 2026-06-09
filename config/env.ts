@@ -106,17 +106,17 @@ export async function getFileLastUpdated(path: string) {
 }
 
 /**
- * Resolves the **next** version by analysing conventional commits since the
- * last reachable `v*` tag.  Delegates to {@link getNextVersion} which is also
- * used by the `release-tag` and `release-pr` GitHub Actions workflows so the
- * version shown in the UI matches the tag that will be created *after* deploy.
+ * Resolves the **current** release version from the latest reachable `v*` tag
+ * on `origin/release`. Delegates to {@link getNextVersion} for tag discovery;
+ * the UI must show the deployed release, not the computed next bump (that is
+ * only used by `release-tag` / `release-pr` workflows).
  *
  * Falls back to `package.json` when git is unavailable (e.g. shallow clone).
  */
 export async function getVersion() {
 	try {
-		const { next } = await getNextVersion();
-		return next;
+		const { current } = await getNextVersion();
+		return current;
 	} catch {
 		return packageVersion;
 	}

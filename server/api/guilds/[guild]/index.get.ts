@@ -15,7 +15,7 @@ export default defineWrappedResponseHandler(
 			parse(GuildQuerySchema, body),
 		);
 
-		const guild = await getGuild(guildId);
+		const guild = await resolveGuildForRequest(event, guildId);
 		if (!guild) {
 			throw createError({
 				message: "Guild not found",

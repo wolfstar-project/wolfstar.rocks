@@ -15,6 +15,7 @@ export interface UseUserOptions {
 
 export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOptions) {
 	const cachedFetch = useCachedFetch();
+	const forceGuildRefresh = ref(false);
 
 	const searchQuery = computed(() => options?.search?.query?.value ?? null);
 	const showManageableOnly = computed(() => options?.search?.showManageableOnly?.value ?? false);
@@ -27,8 +28,12 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		},
 		async (_nuxtApp, { signal }) => {
 			const { search, ...fetchOptions } = options ?? {};
+			const refreshGuilds = forceGuildRefresh.value;
+			forceGuildRefresh.value = false;
+
 			const { data, isStale } = await cachedFetch<TransformedLoginData>("/api/users", {
 				...fetchOptions,
+				query: refreshGuilds ? { refresh: "true" } : undefined,
 				signal,
 			});
 
@@ -36,6 +41,11 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		},
 		{ server: false },
 	);
+
+	async function refreshGuildList() {
+		forceGuildRefresh.value = true;
+		return asyncData.refresh();
+	}
 
 	const data = computed(() => asyncData.data.value ?? null);
 
@@ -87,5 +97,6 @@ export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOp
 		data,
 		guilds,
 		filteredGuilds,
+		refresh: refreshGuildList,
 	};
 }

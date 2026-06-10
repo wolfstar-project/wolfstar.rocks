@@ -132,6 +132,12 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	auth: {
+		// Avoid eager session hydration on marketing pages; protected routes and
+		// HeaderAuth fetch explicitly when a session is needed.
+		loadStrategy: "none",
+	},
+
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -227,8 +233,10 @@ export default defineNuxtConfig({
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
+		"/commands": { appLayout: "default", prerender: true, robots: true },
+		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
-		"/wolfstar": { appLayout: "default", robots: true },
+		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 	},
 
 	sourcemap: {
@@ -249,6 +257,12 @@ export default defineNuxtConfig({
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
+		// Pre-compress prerendered HTML and /_nuxt assets so the server (and any
+		// origin without edge compression) serves gzip/brotli with correct headers.
+		compressPublicAssets: {
+			brotli: true,
+			gzip: true,
+		},
 		future: {
 			nativeSWR: true,
 		},
@@ -367,12 +381,14 @@ export default defineNuxtConfig({
 		},
 		families: [
 			{
+				display: "swap",
 				global: true,
 				name: "Geist",
 				provider: "local",
 				weights: [400, 500, 600, 700],
 			},
 			{
+				display: "swap",
 				global: true,
 				name: "Geist Mono",
 				provider: "local",
@@ -546,6 +562,8 @@ export default defineNuxtConfig({
 	},
 
 	vitalizer: {
+		disablePrefetchLinks: true,
+		disablePreloadLinks: true,
 		disableStylesheets: "entry",
 	},
 });

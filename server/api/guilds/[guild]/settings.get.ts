@@ -8,7 +8,7 @@ export default defineWrappedResponseHandler(
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		const guild = await getGuild(guildId);
+		const guild = await resolveGuildForRequest(event, guildId);
 		if (!guild) {
 			throw createError({
 				message: "Guild not found",

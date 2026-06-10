@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import type { ReadonlyGuildData } from "#server/database";
 import type {
 	FlattenedGuild,
@@ -152,7 +153,9 @@ export async function transformGuild(
 		prefetchedSettings,
 	} = options;
 	const guild =
-		prefetchedGuild !== undefined ? prefetchedGuild : await fetchBotGuildFromDiscord(data.id);
+		prefetchedGuild !== undefined
+			? prefetchedGuild
+			: (await probeBotGuildMembership(data.id)).guild;
 
 	const channels =
 		includeChannels && !isNullOrUndefined(guild)
@@ -227,8 +230,8 @@ export async function transformOauthGuildsAndUser({
 	// Phase 1: Live bot-membership probe for every guild. Cached getGuild can stay
 	// positive for up to an hour after the bot leaves, which caused stale profile lists.
 	const guildData = await mapWithConcurrency(guilds, 16, async (g) => {
-		const guild = await fetchBotGuildFromDiscord(g.id);
-		if (!guild) {
+		const { guild, confirmedAbsent } = await probeBotGuildMembership(g.id);
+		if (confirmedAbsent) {
 			await invalidateGuildCache(g.id);
 		}
 		return guild;
@@ -436,12 +439,32 @@ export const getGuild = defineCachedFunction(
 	},
 );
 
+/**
+ * Live-probes bot guild membership. Returns `confirmedAbsent: true` only when
+ * Discord responds 404 (bot not in guild). On transient probe failures, falls
+ * back to the cached `getGuild` entry so a valid cache is not discarded.
+ */
+async function probeBotGuildMembership(
+	guildId: string,
+): Promise<{ guild: APIGuild | null; confirmedAbsent: boolean }> {
+	try {
+		const guild = await fetchBotGuildFromDiscord(guildId);
+		return { guild, confirmedAbsent: guild === null };
+	} catch (error) {
+		logger.warn(`[discord] Live guild probe failed for ${guildId}, falling back to cache`, {
+			error,
+		});
+		const guild = await getGuild(guildId).catch(() => null);
+		return { guild, confirmedAbsent: false };
+	}
+}
+
 export async function resolveGuildForRequest(event: H3Event, guildId: string) {
 	if (shouldRefreshGuildCache(event)) {
 		await invalidateGuildCache(guildId);
 	}
-	const guild = await fetchBotGuildFromDiscord(guildId);
-	if (!guild) {
+	const { guild, confirmedAbsent } = await probeBotGuildMembership(guildId);
+	if (confirmedAbsent) {
 		await invalidateGuildCache(guildId);
 		return null;
 	}

@@ -3,11 +3,30 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // All Nuxt server auto-import globals that discord.ts uses at module-init time
 // (defineCachedFunction / hours) must be present before the module is evaluated.
 // vi.hoisted() runs before any static import is resolved.
-const { mockGetChannels, mockGuildsGet } = vi.hoisted(() => {
+const { mockGetChannels, mockGuildsGet, guildCache } = vi.hoisted(() => {
 	const mockGetChannels = vi.fn();
 	const mockGuildsGet = vi.fn();
+	const guildCache = new Map<string, unknown>();
 
-	(globalThis as Record<string, unknown>).defineCachedFunction = (fn: unknown) => fn;
+	(globalThis as Record<string, unknown>).defineCachedFunction = (
+		fn: (...args: unknown[]) => unknown,
+		opts?: {
+			getKey?: (...args: unknown[]) => string;
+			validate?: (entry: { value: unknown }) => boolean;
+		},
+	) => {
+		return async (...args: unknown[]) => {
+			const key = opts?.getKey?.(...args) ?? String(args[0]);
+			if (guildCache.has(key)) {
+				return guildCache.get(key);
+			}
+			const result = await fn(...args);
+			if (opts?.validate === undefined || opts.validate({ value: result })) {
+				guildCache.set(key, result);
+			}
+			return result;
+		};
+	};
 	(globalThis as Record<string, unknown>).hours = (n: number) => n * 3600;
 	(globalThis as Record<string, unknown>).useApi = () => ({
 		guilds: {
@@ -45,8 +64,14 @@ const { mockGetChannels, mockGuildsGet } = vi.hoisted(() => {
 	});
 	(globalThis as Record<string, unknown>).guildNameToAcronym = (name: string) =>
 		name.slice(0, 2).toUpperCase();
+	(globalThis as Record<string, unknown>).logger = {
+		warn: vi.fn(),
+		info: vi.fn(),
+		error: vi.fn(),
+		debug: vi.fn(),
+	};
 
-	return { mockGetChannels, mockGuildsGet };
+	return { mockGetChannels, mockGuildsGet, guildCache };
 });
 
 vi.mock("@sentry/nuxt", () => ({
@@ -91,6 +116,7 @@ const mockApiGuild = {
 describe("transformGuild", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
+		guildCache.clear();
 	});
 
 	it("does not call getGuildChannels and returns channels:[] when includeChannels is false", async () => {
@@ -143,5 +169,17 @@ describe("transformGuild", () => {
 		expect(result.manageable).toBe(true);
 		expect(result.channels).toEqual([]);
 		expect(mockGetChannels).not.toHaveBeenCalled();
+	});
+
+	it("falls back to cached guild when live probe fails with a non-404 error", async () => {
+		guildCache.set(`guild:${oauthGuild.id}`, mockApiGuild);
+		mockGuildsGet.mockRejectedValue(
+			Object.assign(new Error("Service unavailable"), { status: 503 }),
+		);
+
+		const result = await transformGuild(userId, oauthGuild, { includeChannels: false });
+
+		expect(result.wolfstarIsIn).toBe(true);
+		expect(mockGuildsGet).toHaveBeenCalled();
 	});
 });

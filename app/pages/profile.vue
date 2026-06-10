@@ -75,11 +75,18 @@
 							@click="copyUserId"
 						>
 							<template #leading>
-								<UIcon
-									:name="
-										copied ? 'heroicons:check' : 'heroicons:clipboard-document'
-									"
-								/>
+								<span
+									class="t-icon-swap"
+									:data-state="copied ? 'b' : 'a'"
+									aria-hidden="true"
+								>
+									<UIcon
+										name="heroicons:clipboard-document"
+										class="t-icon"
+										data-icon="a"
+									/>
+									<UIcon name="heroicons:check" class="t-icon" data-icon="b" />
+								</span>
 							</template>
 							{{ user.id }}
 						</UButton>

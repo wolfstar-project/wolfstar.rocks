@@ -451,7 +451,7 @@ async function probeBotGuildMembership(
 		const guild = await fetchBotGuildFromDiscord(guildId);
 		return { guild, confirmedAbsent: guild === null };
 	} catch (error) {
-		logger.warn(`[discord] Live guild probe failed for ${guildId}, falling back to cache`, {
+		console.warn(`[discord] Live guild probe failed for ${guildId}, falling back to cache`, {
 			error,
 		});
 		const guild = await getGuild(guildId).catch(() => null);

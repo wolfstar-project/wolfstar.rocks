@@ -255,7 +255,6 @@
 									:undo-search
 									:search-query
 									:loading="isLoading"
-									:filter-loading="filterLoading"
 									:filter-key="showManageableOnly"
 									:is-retrying
 									:on-retry="handleRetry"
@@ -612,17 +611,30 @@ const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPrefe
 
 const isTransitioning = ref(false);
 const isFilterTransitioning = ref(false);
-const filterLoading = ref(false);
 
-async function handleManageableToggle() {
-	if (filterLoading.value) return;
-	filterLoading.value = true;
+function handleManageableToggle() {
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		toggleShowManageableOnly();
+		return;
+	}
+	if (isFilterTransitioning.value || isTransitioning.value) return;
+	if (document.activeViewTransition) {
+		document.activeViewTransition.skipTransition();
+	}
 	isFilterTransitioning.value = true;
-	toggleShowManageableOnly();
-	await nextTick();
-	await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-	filterLoading.value = false;
-	isFilterTransitioning.value = false;
+	try {
+		document
+			.startViewTransition(async () => {
+				toggleShowManageableOnly();
+				await nextTick();
+			})
+			.finished.finally(() => {
+				isFilterTransitioning.value = false;
+			});
+	} catch {
+		isFilterTransitioning.value = false;
+		toggleShowManageableOnly();
+	}
 }
 
 function handleSortToggle() {
@@ -630,7 +642,7 @@ function handleSortToggle() {
 		toggleSortOrder();
 		return;
 	}
-	if (isTransitioning.value) return;
+	if (isTransitioning.value || isFilterTransitioning.value) return;
 	if (document.activeViewTransition) {
 		document.activeViewTransition.skipTransition();
 	}

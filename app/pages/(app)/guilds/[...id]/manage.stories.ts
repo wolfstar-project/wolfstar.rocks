@@ -25,9 +25,9 @@ const meta: Meta<typeof ManagePage> = {
 	],
 	parameters: {
 		layout: "fullscreen",
-		// Route must supply the guild ID path parameter
+		// Route must supply the guild snowflake; "manage" is a static path segment, not part of :id
 		nuxt: {
-			route: { params: { id: ["123456789012345678", "manage"] } },
+			route: { params: { id: "123456789012345678" } },
 		},
 	},
 };

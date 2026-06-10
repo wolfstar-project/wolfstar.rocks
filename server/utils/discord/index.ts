@@ -432,7 +432,7 @@ export const getGuild = defineCachedFunction(
 		name: GUILD_CACHE_NAME,
 		maxAge: hours(1),
 		getKey: (guildId) => `guild:${guildId}`,
-		validate: (entry) => entry.value !== null && entry.value !== undefined,
+		validate: (entry) => !isNullOrUndefined(entry.value),
 	},
 );
 

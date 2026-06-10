@@ -12,6 +12,7 @@ export const handlers = [
 		HttpResponse.json({
 			user: mockUser,
 			guilds: mockGuildList,
+			transformedGuilds: mockGuildList,
 		}),
 	),
 

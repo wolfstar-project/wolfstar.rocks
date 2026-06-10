@@ -29,6 +29,7 @@ export const Authenticated: Story = {
 					HttpResponse.json({
 						user: mockUser,
 						guilds: mockGuildList,
+						transformedGuilds: mockGuildList,
 					}),
 				),
 			],
@@ -63,6 +64,7 @@ export const LoggedOut: Story = {
 					HttpResponse.json({
 						user: null,
 						guilds: [],
+						transformedGuilds: [],
 					}),
 				),
 			],

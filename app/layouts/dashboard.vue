@@ -191,6 +191,8 @@ watch(
 );
 
 const requestFetch = useRequestFetch();
+const route = useRoute();
+const refreshGuildCache = computed(() => route.query.refresh === "true");
 
 const {
 	data,
@@ -198,13 +200,18 @@ const {
 	error,
 } = useAsyncData(
 	() => `dashboard:guild:${guildId.value}`,
-	() =>
-		Promise.all([
+	() => {
+		const refreshQuery = refreshGuildCache.value ? { refresh: "true" } : undefined;
+		return Promise.all([
 			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
 				`/api/guilds/${guildId.value}`,
+				{ query: refreshQuery },
 			),
-			requestFetch<string>(`/api/guilds/${guildId.value}/settings`),
-		]),
+			requestFetch<string>(`/api/guilds/${guildId.value}/settings`, {
+				query: refreshQuery,
+			}),
+		]);
+	},
 );
 
 watch(

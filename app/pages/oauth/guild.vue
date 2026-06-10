@@ -59,7 +59,7 @@ async function navigateToGuild() {
 
 	await promiseTimeout(1500);
 
-	await navigateTo(`/guilds/${guildId.value}/manage`);
+	await navigateTo(`/guilds/${guildId.value}/manage?refresh=true`);
 }
 
 useRobotsRule(robotBlockingPageProps);

@@ -1,7 +1,7 @@
 <template>
 	<section class="mt-28 flex flex-col items-center text-center">
-		<h1 class="title animate-fade-in-up pb-4">Imagine a<br />social and feeder network</h1>
-		<p class="max-w-120 animate-fade-in-up animate-fade-in-delay-1">
+		<h1 class="title animate-fade-in-up-safe pb-4">Imagine a<br />social and feeder network</h1>
+		<p class="max-w-120 animate-fade-in-up-safe [animation-delay:0.1s]">
 			A very customizable multilanguage application to cover your members' social and feeder
 			network needs, with a few entertainment features and more,
 			<span class="font-bold underline underline-offset-2">100% for free</span>!

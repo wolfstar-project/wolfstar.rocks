@@ -52,11 +52,11 @@ test-results/
 # Lighthouse
 .lighthouseci
 
-# Agents
-plans
 
 # Skilld references (recreated by `skilld install`)
 .skilld
 package-lock.json
 
 .nvmrc
+
+.claude/state

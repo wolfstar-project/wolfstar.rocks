@@ -75,7 +75,7 @@ describe("decodeModerationMetadata", () => {
 	});
 
 	it("ignores unknown bits", () => {
-		const result = decodeModerationMetadata(0x1f);
+		const result = decodeModerationMetadata(0x1F);
 		expect(result.archived).toBe(true);
 		expect(result.completed).toBe(true);
 		expect(result.temporary).toBe(true);

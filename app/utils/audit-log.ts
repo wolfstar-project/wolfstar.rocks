@@ -3,7 +3,7 @@ import type { AuditFieldType } from "#shared/utils/audit-field-metadata";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { getAuditFieldMetadata } from "#shared/utils/audit-field-metadata";
 
-interface AuditChangeResolver {
+export interface AuditChangeResolver {
 	roles: Map<string, { name: string }>;
 	channels: Map<string, { name: string }>;
 }
@@ -111,7 +111,7 @@ export function auditLogMemberAvatar(member: APIGuildMember) {
 	};
 }
 
-function auditLogChangeLines(
+export function auditLogChangeLines(
 	entry: DashboardAuditEntry,
 	resolver: AuditChangeResolver,
 ): AuditChangeLine[] {

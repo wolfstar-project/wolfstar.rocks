@@ -21,24 +21,25 @@ describe("guildAddURL", () => {
 		expect(url).toContain("permissions=491121748");
 	});
 
-	it("should include a redirect_uri ending with /oauth/guild", () => {
-		const url = guildAddURL("123");
-		expect(url).toMatch(/redirect_uri=.*%2Foauth%2Fguild/);
-	});
-
-	it("should include scope=bot", () => {
+	it("should include bot and command scopes", () => {
 		const url = guildAddURL("123");
 		expect(url).toContain("scope=bot");
+		expect(url).toContain("applications.commands");
 	});
 
-	it("should include response_type=code", () => {
+	it("should lock the install to the selected guild", () => {
 		const url = guildAddURL("123");
-		expect(url).toContain("response_type=code");
+		expect(url).toContain("disable_guild_select=true");
+		expect(url).toContain("integration_type=0");
 	});
 
-	it("should include prompt=none", () => {
+	it("should not force a non-interactive code grant flow", () => {
 		const url = guildAddURL("123");
-		expect(url).toContain("prompt=none");
+		const parsedUrl = new URL(url);
+
+		expect(parsedUrl.searchParams.has("prompt")).toBe(false);
+		expect(parsedUrl.searchParams.has("response_type")).toBe(false);
+		expect(parsedUrl.searchParams.has("redirect_uri")).toBe(false);
 	});
 });
 

@@ -214,6 +214,25 @@ export const ModerationActions: Record<string, ModerationAction> = {
 	},
 };
 
+const MODERATION_VARIANT_MAP: Record<string, string> = {
+	Ban: "error",
+	Kick: "warning",
+	Mute: "warning",
+	Softban: "error",
+	Timeout: "warning",
+	VoiceKick: "warning",
+	VoiceMute: "warning",
+	Warning: "neutral",
+	Unban: "success",
+	Unmute: "success",
+	UnVoiceMute: "success",
+	Untimeout: "success",
+};
+
+export function moderationActionVariant(typeName: string): string {
+	return MODERATION_VARIANT_MAP[typeName] ?? "neutral";
+}
+
 // oxlint-disable-next-line symbol-description
 export const ProviderAppNameKey = Symbol() as InjectionKey<Ref<"wolfstar" | "staryl">>;
 

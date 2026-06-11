@@ -7,7 +7,13 @@ export default defineNitroPlugin((nitroApp) => {
 		createUserAgentEnricher(),
 		createTraceContextEnricher(),
 		auditEnricher({
-			tenantId: (ctx) => (ctx as { event?: { guild?: { id?: string } } }).event?.guild?.id,
+			tenantId: (ctx) => {
+				if (ctx.event.audit?.target?.type === "guild") {
+					return ctx.event.audit.target.id;
+				}
+				const match = ctx.request?.path?.match(/\/guilds\/(\d+)/);
+				return match?.[1];
+			},
 			bridge: { getSession: resolveActor },
 		}),
 	];

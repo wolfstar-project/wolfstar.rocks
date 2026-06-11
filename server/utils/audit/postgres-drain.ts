@@ -19,7 +19,7 @@ export function createPostgresAuditDrain(): DrainFn {
 		const targetType = audit.target?.type;
 		const targetId = audit.target?.id;
 		const outcome = audit.outcome;
-		const tenantId = audit.tenantId;
+		const tenantId = audit.context?.tenantId;
 		const reason = audit.reason;
 		const timestamp = new Date(ctx.event.timestamp);
 		// Normalize undefined to null so the envelope hash is stable and matches

@@ -15,6 +15,7 @@
 		<ClientOnly>
 			<DeferredMount>
 				<div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
+					<LazyFeedbackButton />
 					<LazyScrollToTopButton />
 				</div>
 			</DeferredMount>

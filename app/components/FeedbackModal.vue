@@ -49,6 +49,7 @@
 </template>
 
 <script setup lang="ts">
+import { parseError } from "evlog";
 import * as v from "valibot";
 
 const open = defineModel<boolean>("open", { default: false });
@@ -79,6 +80,7 @@ watch(open, (isOpen) => {
 	}
 });
 
+const logger = useLogger("wolfstar:feedback");
 const formRef = useTemplateRef("formRef");
 const isSubmitting = ref(false);
 
@@ -108,7 +110,7 @@ async function onSubmit() {
 			title: "Feedback Sent",
 		});
 	} catch (error) {
-		console.error(error);
+		logger.error("Failed to send feedback", parseError(error));
 		void import("@sentry/nuxt")
 			.then(({ captureException }) => captureException(error))
 			.catch(() => {});

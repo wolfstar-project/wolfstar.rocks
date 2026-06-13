@@ -1,11 +1,7 @@
 # Existing privileged PR automation is intentionally isolated to these workflows:
 # they do not checkout pull request head code, and they only comment or set status.
-# Generated gh-aw files are excluded: the compiler uses version-tagged actions and
-# intentional template expansion by design.
 rules:
   dangerous-triggers:
     ignore:
       - enforce-release-source.yml
       - semantic-pull-requests.yml
-      - agentics-maintenance.yml
-      - "*.lock.yml"

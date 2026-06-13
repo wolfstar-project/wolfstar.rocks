@@ -130,8 +130,15 @@ describe("createPostgresAuditDrain", () => {
 		expect(serialized).not.toContain('"cookie"');
 	});
 
-	it("stores and hashes the top-level audit.tenantId field correctly", async () => {
-		const ctx = makeCtx({ tenantId: "tenant-123" });
+	it("stores and hashes audit.context.tenantId correctly", async () => {
+		const ctx = makeCtx({
+			context: {
+				requestId: "req-1",
+				traceId: "trace-1",
+				userAgent: "TestAgent",
+				tenantId: "tenant-123",
+			},
+		});
 		const capturedData: Record<string, unknown>[] = [];
 		mockTx.auditEvent.create.mockImplementation(
 			({ data }: { data: Record<string, unknown> }) => {

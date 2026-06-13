@@ -25,6 +25,7 @@ Ask one question at a time. Move to the next phase only after the current phase 
 Ask: **"What do you want to automate?"**
 
 Capture:
+
 - Workflow name (kebab-case candidate)
 - Brief description
 - Optional emoji
@@ -34,6 +35,7 @@ Capture:
 Ask: **"When should this run?"**
 
 Follow up only if needed:
+
 - Which event type(s)?
 - Any filters (labels, branches, commands)?
 - Scheduled cadence (daily/weekly/hourly)?
@@ -43,10 +45,12 @@ Map to the `on:` block.
 ### Phase 3: Scope (Read/Write)
 
 Ask:
+
 - **"What should it read?"** (issues, PRs, code, discussions, CI data)
 - **"What should it create or update?"** (comments, issues, PRs, labels)
 
 Map to:
+
 - `permissions:` (keep read-only for agent job)
 - `tools:`
 - `safe-outputs:`
@@ -54,15 +58,18 @@ Map to:
 ### Phase 4: Data Strategy
 
 Ask:
+
 - **"What data does the agent need to make decisions?"**
 - Follow up: **"Can we pre-fetch and aggregate that data with shell commands so the agent only reads compact JSON?"**
 
 Capture:
+
 - Whether `steps:` should pre-fetch GitHub data with `gh` + `jq`
 - Output paths under `/tmp/gh-aw/data/`
 - Whether batch work should use sub-agents
 
 Map to:
+
 - `steps:`
 - Prompt references to pre-computed file paths
 
@@ -71,6 +78,7 @@ Map to:
 Ask: **"Should it block merging, just advise, or silently log?"**
 
 Capture:
+
 - Visibility expectations (comment, issue, no visible output)
 - No-op behavior expectation
 
@@ -81,12 +89,14 @@ Guide toward safe output behavior and explicit `noop` instructions.
 Ask: **"Does it need external APIs, web access, package installs, or MCP servers?"**
 
 Follow up:
+
 - **"Any third-party services or MCP servers to include (for example Slack, Jira, Datadog, custom internal MCP)?"**
 - **"Are you deploying on GitHub.com, GHEC with custom endpoints, or GHES?"**
 - For each integration, identify required auth from source docs and map it to GitHub Actions secrets + workflow env variables.
 - Ask for exact external domains (FQDN/wildcard).
 
 Map to:
+
 - `network.allowed`
 - Optional MCP/GitHub tool usage in `tools:`
 - `secrets:` / `env:` wiring for integration tokens
@@ -97,6 +107,7 @@ Map to:
 Ask only if ambiguous: **"Any AI engine preference?"**
 
 If no preference, suggest default:
+
 - "I'd suggest Copilot since you haven't mentioned a preference. Sound good?"
 
 Map to `engine:` only when not default.
@@ -109,81 +120,81 @@ Present a structured summary and ask for approval before generation.
 
 ### Trigger Mapping
 
-| User says... | Maps to |
-|---|---|
-| "when someone opens a PR" | `on: pull_request:` with `types: [opened]` |
-| "when a PR is updated" | `on: pull_request:` with `types: [opened, synchronize]` |
-| "every morning", "daily" | fuzzy schedule shorthand `on: schedule: daily on weekdays` (compiler expands to cron) |
-| "every Monday", "weekly" | fuzzy schedule shorthand `on: schedule: weekly` (compiler expands to cron) |
-| "when I say /review" | `on: slash_command:` with `name: review` (or requested command) |
-| "when an issue is labeled bug" | `on: issues:` with `types: [labeled]` and label filter guidance |
-| "run when label ai-review is added" | `on: label_command:` with `name`/`names`, optional event scoping, and label-as-command semantics |
-| "run on PRs from forks" | `on: pull_request:` plus explicit `forks:` allowlist and fork security guardrails |
-| "sometimes automatic, sometimes manual" | semi-active pattern: combine `schedule`/event triggers with `workflow_dispatch` |
-| "manually", "on demand" | `on: workflow_dispatch:` |
-| "when a deployment fails" | `on: deployment_status:` |
-| "when another workflow finishes" | `on: workflow_run:` |
+| User says...                            | Maps to                                                                                          |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| "when someone opens a PR"               | `on: pull_request:` with `types: [opened]`                                                       |
+| "when a PR is updated"                  | `on: pull_request:` with `types: [opened, synchronize]`                                          |
+| "every morning", "daily"                | fuzzy schedule shorthand `on: schedule: daily on weekdays` (compiler expands to cron)            |
+| "every Monday", "weekly"                | fuzzy schedule shorthand `on: schedule: weekly` (compiler expands to cron)                       |
+| "when I say /review"                    | `on: slash_command:` with `name: review` (or requested command)                                  |
+| "when an issue is labeled bug"          | `on: issues:` with `types: [labeled]` and label filter guidance                                  |
+| "run when label ai-review is added"     | `on: label_command:` with `name`/`names`, optional event scoping, and label-as-command semantics |
+| "run on PRs from forks"                 | `on: pull_request:` plus explicit `forks:` allowlist and fork security guardrails                |
+| "sometimes automatic, sometimes manual" | semi-active pattern: combine `schedule`/event triggers with `workflow_dispatch`                  |
+| "manually", "on demand"                 | `on: workflow_dispatch:`                                                                         |
+| "when a deployment fails"               | `on: deployment_status:`                                                                         |
+| "when another workflow finishes"        | `on: workflow_run:`                                                                              |
 
 ### Safe Output Mapping
 
-| User says... | Maps to |
-|---|---|
-| "post a comment" | `add-comment` |
-| "create an issue" | `create-issue` |
-| "update issue title/body" | `update-issue` |
-| "close the issue" | `close-issue` |
-| "assign someone", "remove assignment" | `assign-to-user`, `unassign-from-user` |
-| "set issue type/field/milestone" | `set-issue-type`, `set-issue-field`, `assign-milestone` |
-| "open a PR", "submit changes" | `create-pull-request` |
-| "update PR description/title" | `update-pull-request` |
-| "close the PR", "merge the PR" | `close-pull-request`, `merge-pull-request` |
-| "mark PR ready", "sync PR branch" | `mark-pull-request-as-ready-for-review`, `update-branch` |
-| "commit a fix to the PR branch" | `push-to-pull-request-branch` |
-| "approve / request changes" | `submit-pull-request-review` |
+| User says...                                      | Maps to                                                                                                            |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| "post a comment"                                  | `add-comment`                                                                                                      |
+| "create an issue"                                 | `create-issue`                                                                                                     |
+| "update issue title/body"                         | `update-issue`                                                                                                     |
+| "close the issue"                                 | `close-issue`                                                                                                      |
+| "assign someone", "remove assignment"             | `assign-to-user`, `unassign-from-user`                                                                             |
+| "set issue type/field/milestone"                  | `set-issue-type`, `set-issue-field`, `assign-milestone`                                                            |
+| "open a PR", "submit changes"                     | `create-pull-request`                                                                                              |
+| "update PR description/title"                     | `update-pull-request`                                                                                              |
+| "close the PR", "merge the PR"                    | `close-pull-request`, `merge-pull-request`                                                                         |
+| "mark PR ready", "sync PR branch"                 | `mark-pull-request-as-ready-for-review`, `update-branch`                                                           |
+| "commit a fix to the PR branch"                   | `push-to-pull-request-branch`                                                                                      |
+| "approve / request changes"                       | `submit-pull-request-review`                                                                                       |
 | "inline review comment", "reply to review thread" | `create-pull-request-review-comment`, `reply-to-pull-request-review-comment`, `resolve-pull-request-review-thread` |
-| "start or edit discussion", "close discussion" | `create-discussion`, `update-discussion`, `close-discussion` |
-| "request reviewer", "hide comment" | `add-reviewer`, `hide-comment` |
-| "create/update project", "project status update" | `create-project`, `update-project`, `create-project-status-update` |
-| "update release", "upload release asset" | `update-release`, `upload-asset` |
-| "create/auto-fix code scan alert" | `create-code-scanning-alert`, `autofix-code-scanning-alert` |
-| "start an agent session", "assign to an agent" | `create-agent-session`, `assign-to-agent` |
-| "store persistent memory comment" | `comment-memory` |
-| "link a sub-issue" | `link-sub-issue` |
-| "add labels", "remove labels" | `add-labels`, `remove-labels` |
-| "nothing visible", "just analyze" | no safe outputs required |
+| "start or edit discussion", "close discussion"    | `create-discussion`, `update-discussion`, `close-discussion`                                                       |
+| "request reviewer", "hide comment"                | `add-reviewer`, `hide-comment`                                                                                     |
+| "create/update project", "project status update"  | `create-project`, `update-project`, `create-project-status-update`                                                 |
+| "update release", "upload release asset"          | `update-release`, `upload-asset`                                                                                   |
+| "create/auto-fix code scan alert"                 | `create-code-scanning-alert`, `autofix-code-scanning-alert`                                                        |
+| "start an agent session", "assign to an agent"    | `create-agent-session`, `assign-to-agent`                                                                          |
+| "store persistent memory comment"                 | `comment-memory`                                                                                                   |
+| "link a sub-issue"                                | `link-sub-issue`                                                                                                   |
+| "add labels", "remove labels"                     | `add-labels`, `remove-labels`                                                                                      |
+| "nothing visible", "just analyze"                 | no safe outputs required                                                                                           |
 
 ### Network Mapping
 
-| User says... | Maps to |
-|---|---|
-| "calls an external API" | ask for exact FQDN/wildcard, then add to `network.allowed` |
-| "installs npm packages" | include `node` in `network.allowed` |
-| "runs pip install" | include `python` in `network.allowed` |
-| "builds Go code" | include `go` in `network.allowed` |
-| "no external access" | `network.allowed: [defaults]` (or `[]` if explicitly zero network) |
+| User says...            | Maps to                                                            |
+| ----------------------- | ------------------------------------------------------------------ |
+| "calls an external API" | ask for exact FQDN/wildcard, then add to `network.allowed`         |
+| "installs npm packages" | include `node` in `network.allowed`                                |
+| "runs pip install"      | include `python` in `network.allowed`                              |
+| "builds Go code"        | include `go` in `network.allowed`                                  |
+| "no external access"    | `network.allowed: [defaults]` (or `[]` if explicitly zero network) |
 
 ### Tool Mapping
 
-| User says... | Maps to |
-|---|---|
-| "read GitHub issues/PRs/workflows" | `tools.github` with `mode: gh-proxy` and minimal `toolsets` |
-| "use full MCP server/tool definitions" | `tools.github` with `mode: local` |
-| "use other MCP servers but keep token cost down" | `tools.cli-proxy: true` (hybrid CLI-proxy mode) |
-| "edit files" | `edit` tool (default unless restricted) |
-| "run commands/tests" | `bash` tool (default unless restricted) |
-| "browse web pages/docs" | `web-fetch` and/or `web-search` |
-| "test UI flows" | `playwright` |
+| User says...                                     | Maps to                                                     |
+| ------------------------------------------------ | ----------------------------------------------------------- |
+| "read GitHub issues/PRs/workflows"               | `tools.github` with `mode: gh-proxy` and minimal `toolsets` |
+| "use full MCP server/tool definitions"           | `tools.github` with `mode: local`                           |
+| "use other MCP servers but keep token cost down" | `tools.cli-proxy: true` (hybrid CLI-proxy mode)             |
+| "edit files"                                     | `edit` tool (default unless restricted)                     |
+| "run commands/tests"                             | `bash` tool (default unless restricted)                     |
+| "browse web pages/docs"                          | `web-fetch` and/or `web-search`                             |
+| "test UI flows"                                  | `playwright`                                                |
 
 ### Pattern Heuristics
 
-| User says... | Recommended named pattern |
-|---|---|
-| "triage issues automatically" | `IssueOps` |
-| "run on /commands with human approval loops" | `ChatOps` |
-| "run every weekday and keep improving" | `DailyOps` |
-| "monitor workflow failures and trends" | `MonitorOps` |
-| "process a big backlog in chunks" | `BatchOps` |
-| "run manually with input parameters" | `DispatchOps` |
+| User says...                                 | Recommended named pattern |
+| -------------------------------------------- | ------------------------- |
+| "triage issues automatically"                | `IssueOps`                |
+| "run on /commands with human approval loops" | `ChatOps`                 |
+| "run every weekday and keep improving"       | `DailyOps`                |
+| "monitor workflow failures and trends"       | `MonitorOps`              |
+| "process a big backlog in chunks"            | `BatchOps`                |
+| "run manually with input parameters"         | `DispatchOps`             |
 
 ### Integration Auth Mapping
 
@@ -192,9 +203,9 @@ When the user names a third-party service or MCP server:
 1. Confirm whether native tool, MCP server, or safe-output job is the right integration path.
 2. Look up the integration's auth requirements and required scopes before finalizing the design.
 3. Provide a concrete setup checklist with:
-   - required GitHub Actions secrets (names to create)
-   - workflow env variables that consume those secrets
-   - minimum token scopes/permissions needed
+    - required GitHub Actions secrets (names to create)
+    - workflow env variables that consume those secrets
+    - minimum token scopes/permissions needed
 
 Output format to use:
 
@@ -210,13 +221,13 @@ Never suggest committing plaintext tokens.
 
 ### Data Strategy Mapping
 
-| User says... | Maps to |
-|---|---|
-| "analyze PRs", "review issues", "check status" | add `steps:` that pre-fetch with `gh` + `jq` |
-| "read the diff", "look at changed files" | add `steps:` using `gh pr diff` or `gh pr view --json files` |
-| "search for patterns across repos" | add `steps:` using `gh search` + `jq` filters |
-| "just respond to a comment" | no pre-fetch needed (event payload is enough) |
-| "process each item individually" | suggest sub-agent pattern with `model: small` |
+| User says...                                   | Maps to                                                      |
+| ---------------------------------------------- | ------------------------------------------------------------ |
+| "analyze PRs", "review issues", "check status" | add `steps:` that pre-fetch with `gh` + `jq`                 |
+| "read the diff", "look at changed files"       | add `steps:` using `gh pr diff` or `gh pr view --json files` |
+| "search for patterns across repos"             | add `steps:` using `gh search` + `jq` filters                |
+| "just respond to a comment"                    | no pre-fetch needed (event payload is enough)                |
+| "process each item individually"               | suggest sub-agent pattern with `model: small`                |
 
 ## Token Optimization Defaults
 
@@ -262,27 +273,25 @@ After confirmation, generate one workflow file using the same skeleton style as 
 ---
 emoji: <emoji>
 description: <brief description>
-on:
-  <trigger config>
+on: <trigger config>
 permissions:
-  contents: read
-  issues: read
-  pull-requests: read
+    contents: read
+    issues: read
+    pull-requests: read
 tools:
-  github:
-    mode: gh-proxy
-    toolsets: [default]
+    github:
+        mode: gh-proxy
+        toolsets: [default]
 steps:
-  - name: <optional data prefetch>
-    run: |
-      mkdir -p /tmp/gh-aw/data
-      <gh + jq commands that produce compact JSON>
-safe-outputs:
-  <safe-output-types-if-needed>
+    - name: <optional data prefetch>
+      run: |
+          mkdir -p /tmp/gh-aw/data
+          <gh + jq commands that produce compact JSON>
+safe-outputs: <safe-output-types-if-needed>
 network:
-  allowed:
-    - defaults
-    - <additional entries if needed>
+    allowed:
+        - defaults
+        - <additional entries if needed>
 ---
 
 # <Workflow Name>
@@ -320,6 +329,7 @@ Before final output, run this internal self-check:
 ## References (load only when needed)
 
 In-repo references:
+
 - `.github/aw/syntax.md` (index → `.github/aw/syntax-core.md`, `.github/aw/syntax-agentic.md`, `.github/aw/syntax-tools-imports.md`)
 - `.github/aw/safe-outputs.md` (index → `.github/aw/safe-outputs-content.md`, `.github/aw/safe-outputs-management.md`, `.github/aw/safe-outputs-automation.md`, `.github/aw/safe-outputs-runtime.md`)
 - `.github/aw/network.md`
@@ -330,6 +340,7 @@ In-repo references:
 - `.github/aw/create-agentic-workflow.md`
 
 Portable HTTPS references:
+
 - `https://github.com/github/gh-aw/blob/main/.github/aw/syntax.md` (index → `.../syntax-core.md`, `.../syntax-agentic.md`, `.../syntax-tools-imports.md`)
 - `https://github.com/github/gh-aw/blob/main/.github/aw/safe-outputs.md` (index → `.../safe-outputs-content.md`, `.../safe-outputs-management.md`, `.../safe-outputs-automation.md`, `.../safe-outputs-runtime.md`)
 - `https://github.com/github/gh-aw/blob/main/.github/aw/network.md`

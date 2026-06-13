@@ -107,7 +107,11 @@ async function onSubmit() {
 			icon: "i-heroicons-check-circle",
 			title: "Feedback Sent",
 		});
-	} catch {
+	} catch (error) {
+		console.error(error);
+		void import("@sentry/nuxt")
+			.then(({ captureException }) => captureException(error))
+			.catch(() => {});
 		toast.add({
 			color: "error",
 			description: "Failed to send feedback. Please try again.",

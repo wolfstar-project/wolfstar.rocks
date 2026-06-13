@@ -6,15 +6,7 @@ rules:
       - enforce-release-source.yml
       - semantic-pull-requests.yml
 
-  # Generated files from gh-aw compiler — actions are pinned to version tags by
-  # the compiler (not commit SHAs) and template expansion is intentional in the
-  # gh-aw harness.
-  unpinned-uses:
-    ignore:
-      - agentics-maintenance.yml
-      - "*.lock.yml"
-
-  template-injection:
-    ignore:
-      - agentics-maintenance.yml
-      - "*.lock.yml"
+# Generated files from the gh-aw compiler — excluded entirely from analysis.
+ignore:
+  - agentics-maintenance.yml
+  - "*.lock.yml"

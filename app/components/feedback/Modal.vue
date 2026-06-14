@@ -5,12 +5,19 @@
 		description="Report a bug or share your thoughts with the WolfStar team."
 	>
 		<template #body>
-			<UForm ref="formRef" :schema :state class="space-y-4" @submit="onSubmit">
-				<UFormField name="name" label="Name" required>
+			<UForm
+				ref="formRef"
+				:schema
+				:state
+				class="space-y-4"
+				@submit="onSubmit"
+				@error="onError"
+			>
+				<UFormField v-if="!isDashboard" name="name" label="Name" required>
 					<UInput v-model="state.name" placeholder="Your name" class="w-full" />
 				</UFormField>
 
-				<UFormField name="email" label="Email" required>
+				<UFormField v-if="!isDashboard" name="email" label="Email" required>
 					<UInput
 						v-model="state.email"
 						type="email"
@@ -49,39 +56,37 @@
 </template>
 
 <script setup lang="ts">
-import { parseError } from "evlog";
-import * as v from "valibot";
+import type { FormErrorEvent } from "@nuxt/ui";
+import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/schemas";
+import { captureFeedback } from "@sentry/nuxt";
+
+const { isDashboard = false } = defineProps<{
+	isDashboard?: boolean;
+}>();
 
 const open = defineModel<boolean>("open", { default: false });
-
 const toast = useToast();
 const { user } = useUserSession();
+const formRef = useTemplateRef("formRef");
 
-const schema = v.object({
-	name: v.pipe(v.string(), v.minLength(1, "Name is required")),
-	email: v.pipe(v.string(), v.email("Enter a valid email address")),
-	message: v.pipe(v.string(), v.minLength(10, "Message must be at least 10 characters")),
-});
+function resetState() {
+	state.name = user.value?.name ?? "";
+	state.email = user.value?.email ?? "";
+	state.message = "";
+}
 
-type FeedbackState = v.InferInput<typeof schema>;
-
-const state = reactive<FeedbackState>({
+const state = reactive<Schema>({
 	name: user.value?.name ?? "",
 	email: user.value?.email ?? "",
 	message: "",
 });
 
-// Reset state when modal opens so stale data doesn't persist
 watch(open, (isOpen) => {
 	if (isOpen) {
-		state.name = user.value?.name ?? "";
-		state.email = user.value?.email ?? "";
-		state.message = "";
+		resetState();
 	}
 });
 
-const logger = useLogger("wolfstar:feedback");
-const formRef = useTemplateRef("formRef");
 const isSubmitting = ref(false);
 
 async function submit() {
@@ -92,9 +97,7 @@ async function onSubmit() {
 	if (!import.meta.client) return;
 
 	isSubmitting.value = true;
-
 	try {
-		const { captureFeedback } = await import("@sentry/nuxt");
 		captureFeedback({
 			name: state.name,
 			email: state.email,
@@ -109,19 +112,21 @@ async function onSubmit() {
 			icon: "i-heroicons-check-circle",
 			title: "Feedback Sent",
 		});
-	} catch (error) {
-		logger.error("Failed to send feedback", parseError(error));
-		void import("@sentry/nuxt")
-			.then(({ captureException }) => captureException(error))
-			.catch(() => {});
-		toast.add({
-			color: "error",
-			description: "Failed to send feedback. Please try again.",
-			icon: "i-heroicons-x-circle",
-			title: "Something went wrong",
-		});
 	} finally {
 		isSubmitting.value = false;
 	}
+}
+
+async function onError(event: FormErrorEvent) {
+	const element =
+		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
+	element?.scrollIntoView({ behavior: "smooth", block: "center" });
+	const errorMessage = event.errors[0]?.message;
+	toast.add({
+		color: "error",
+		description: `Couldn't send feedback. ${errorMessage ?? "Please try again."}`,
+		icon: "i-heroicons-x-circle",
+		title: "Send Feedback Failed",
+	});
 }
 </script>

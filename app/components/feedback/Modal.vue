@@ -47,7 +47,7 @@
 				>
 					Cancel
 				</UButton>
-				<UButton color="primary" :loading="isSubmitting" icon="lucide:send" @click="submit">
+				<UButton color="primary" :loading="isSubmitting" icon="lucide:send">
 					Send Feedback
 				</UButton>
 			</div>
@@ -67,13 +67,6 @@ const { isDashboard = false } = defineProps<{
 const open = defineModel<boolean>("open", { default: false });
 const toast = useToast();
 const { user } = useUserSession();
-const formRef = useTemplateRef("formRef");
-
-function resetState() {
-	state.name = user.value?.name ?? "";
-	state.email = user.value?.email ?? "";
-	state.message = "";
-}
 
 const state = reactive<Schema>({
 	name: user.value?.name ?? "",
@@ -81,17 +74,7 @@ const state = reactive<Schema>({
 	message: "",
 });
 
-watch(open, (isOpen) => {
-	if (isOpen) {
-		resetState();
-	}
-});
-
 const isSubmitting = ref(false);
-
-async function submit() {
-	await formRef.value?.submit();
-}
 
 async function onSubmit() {
 	if (!import.meta.client) return;

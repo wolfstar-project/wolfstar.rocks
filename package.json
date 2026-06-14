@@ -55,7 +55,10 @@
 		"test:bench": "vp test bench",
 		"start:playwright:webserver": "NODE_ENV=test vp run preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
-		"update:interactive": "taze"
+		"update:interactive": "taze",
+		"storybook": "STORYBOOK=true storybook dev -p 6006",
+		"build-storybook": "STORYBOOK=true storybook build",
+		"chromatic": "chromatic"
 	},
 	"dependencies": {
 		"@iconify-json/emojione": "^1.2.3",
@@ -85,6 +88,7 @@
 		"@vueuse/motion": "^3.0.3",
 		"@vueuse/nuxt": "^14.2.1",
 		"@vueuse/router": "^14.2.1",
+		"chromatic": "^17.0.0",
 		"dotenv": "^17.3.1",
 		"evlog": "^2.14.0",
 		"fuse.js": "^7.1.0",
@@ -118,6 +122,10 @@
 		"@sapphire/time-utilities": "1.7.14",
 		"@sapphire/utilities": "3.18.2",
 		"@shelve/cli": "4.2.0",
+		"@storybook-vue/nuxt": "catalog:storybook",
+		"@storybook/addon-a11y": "catalog:storybook",
+		"@storybook/addon-docs": "catalog:storybook",
+		"@storybook/addon-themes": "catalog:storybook",
 		"@tailwindcss/typography": "0.5.19",
 		"@takumi-rs/core": "1.1.2",
 		"@takumi-rs/wasm": "1.1.2",
@@ -132,10 +140,13 @@
 		"eslint-plugin-regexp": "3.1.0",
 		"jsdom": "26.1.0",
 		"knip": "6.14.2",
+		"msw": "catalog:msw",
+		"msw-storybook-addon": "catalog:storybook",
 		"prisma": "7.7.0",
 		"prisma-json-types-generator": "5.0.0",
 		"rolldown": "^1.0.0-rc.10",
 		"skilld": "1.7.0",
+		"storybook": "catalog:storybook",
 		"tailwindcss": "4.2.2",
 		"taze": "19.10.0",
 		"tsx": "4.21.0",
@@ -152,5 +163,8 @@
 		"node": ">=24",
 		"pnpm": ">=10"
 	},
-	"packageManager": "pnpm@11.1.0"
+	"packageManager": "pnpm@11.1.0",
+	"storybook": {
+		"url": "https://storybook.wolfstar.rocks"
+	}
 }

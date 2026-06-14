@@ -1,5 +1,5 @@
 <template>
-	<FeedbackModal v-model:open="isFeedbackOpen" is-dashboard />
+	<FeedbackModal v-model:open="isFeedbackOpen" />
 	<UDropdownMenu
 		:items="items"
 		:content="{ align: 'center', collisionPadding: 12 }"

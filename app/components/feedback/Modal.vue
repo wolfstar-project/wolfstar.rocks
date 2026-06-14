@@ -60,21 +60,22 @@ import type { FormErrorEvent } from "@nuxt/ui";
 import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/schemas";
 import { captureFeedback } from "@sentry/nuxt";
 
-const { isDashboard = false } = defineProps<{
-	isDashboard?: boolean;
-}>();
-
 const open = defineModel<boolean>("open", { default: false });
 const toast = useToast();
+const route = useRoute();
 const { user } = useUserSession();
+const isSubmitting = ref(false);
+const { effectiveReduceMotion } = useReduceMotion();
+
+const isDashboard = computed(
+	() => route.path.startsWith("/guilds/") && route.path.includes("/manage"),
+);
 
 const state = reactive<Schema>({
 	name: user.value?.name ?? "",
 	email: user.value?.email ?? "",
 	message: "",
 });
-
-const isSubmitting = ref(false);
 
 async function onSubmit() {
 	if (!import.meta.client) return;
@@ -103,7 +104,10 @@ async function onSubmit() {
 async function onError(event: FormErrorEvent) {
 	const element =
 		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;
-	element?.scrollIntoView({ behavior: "smooth", block: "center" });
+	element?.scrollIntoView({
+		behavior: effectiveReduceMotion.value ? "auto" : "smooth",
+		block: "center",
+	});
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",

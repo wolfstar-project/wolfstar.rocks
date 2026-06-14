@@ -42,6 +42,7 @@
 				<!-- Guild Cards Grid -->
 				<TransitionGroup
 					v-else-if="paginatedGuilds.length > 0"
+					:key="String(filterKey)"
 					name="guild-list"
 					tag="div"
 					class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
@@ -163,6 +164,7 @@ interface GuildCardsProps {
 	searchQuery: string | undefined;
 	loading: boolean;
 	filterLoading?: boolean;
+	filterKey?: boolean;
 	error: FetchError<any> | undefined;
 	isRetrying?: boolean;
 	onRetry?: () => void;
@@ -179,6 +181,7 @@ const {
 	searchQuery,
 	loading,
 	filterLoading = false,
+	filterKey,
 	error,
 	isRetrying = false,
 	onRetry,

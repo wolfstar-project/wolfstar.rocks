@@ -427,6 +427,14 @@ const items = computed<NavigationMenuItem[][]>(() => [
 			},
 			to: `/guilds/${guildId.value}/manage/commands`,
 		},
+		{
+			icon: "lucide:logs",
+			label: "Logs",
+			onSelect: () => {
+				open.value = false;
+			},
+			to: `/guilds/${guildId.value}/logs`,
+		},
 	],
 ]);
 

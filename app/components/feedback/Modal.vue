@@ -6,6 +6,7 @@
 	>
 		<template #body>
 			<UForm
+				id="feedback-form"
 				ref="formRef"
 				:schema
 				:state
@@ -47,7 +48,13 @@
 				>
 					Cancel
 				</UButton>
-				<UButton color="primary" :loading="isSubmitting" icon="lucide:send">
+				<UButton
+					type="submit"
+					form="feedback-form"
+					color="primary"
+					:loading="isSubmitting"
+					icon="i-lucide-send"
+				>
 					Send Feedback
 				</UButton>
 			</div>
@@ -88,12 +95,13 @@ async function onSubmit() {
 			message: state.message,
 		});
 
+		state.message = "";
 		open.value = false;
 
 		toast.add({
 			color: "success",
 			description: "Your feedback has been sent. Thank you!",
-			icon: "i-heroicons-check-circle",
+			icon: "heroicons:check-circle",
 			title: "Feedback Sent",
 		});
 	} finally {
@@ -112,7 +120,7 @@ async function onError(event: FormErrorEvent) {
 	toast.add({
 		color: "error",
 		description: `Couldn't send feedback. ${errorMessage ?? "Please try again."}`,
-		icon: "i-heroicons-x-circle",
+		icon: "heroicons:x-circle",
 		title: "Send Feedback Failed",
 	});
 }

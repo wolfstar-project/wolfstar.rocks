@@ -5,3 +5,6 @@ rules:
     ignore:
       - enforce-release-source.yml
       - semantic-pull-requests.yml
+      # This workflow is not dangerous, but it's not a good fit for Zizmor
+      - maintain-agents-md.lock.yml
+      - agentics-maintenance.yml

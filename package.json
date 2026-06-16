@@ -17,6 +17,7 @@
 	"type": "module",
 	"main": "./nuxt.config.ts",
 	"scripts": {
+		"audit:verify": "tsx scripts/audit-verify.ts",
 		"build": "nuxt build",
 		"build:test": "NODE_ENV=test vp run build",
 		"dev": "nuxt dev",

@@ -30,16 +30,21 @@ jobs:
             a11y
             agents
             api
+            audit-log
             auth
+            blog
             ci
+            cli
             config
             dashboard
+            database
             deps
             discord
             docs
+            evlog
             guild
+            i18n
             oauth
-            database
             pwa
             sentry
             seo

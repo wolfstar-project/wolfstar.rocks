@@ -5,25 +5,6 @@
 				<template #leading>
 					<UDashboardSidebarCollapse />
 				</template>
-				<template #right>
-					<UTooltip text="Notifications" :shortcuts="['N']">
-						<UButton
-							color="neutral"
-							variant="ghost"
-							square
-							aria-label="Open notifications panel"
-							@click="isNotificationsSlideoverOpen = true"
-						>
-							<UChip color="error" inset>
-								<UIcon
-									name="lucide:bell"
-									class="size-5 shrink-0"
-									aria-hidden="true"
-								/>
-							</UChip>
-						</UButton>
-					</UTooltip>
-				</template>
 			</UDashboardNavbar>
 		</template>
 
@@ -55,7 +36,6 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { isNotificationsSlideoverOpen } = useDashboardLayout();
 const toast = useToast();
 const logger = useLogger("wolfstar:dashboard");
 const { guildData } = useGuildData();

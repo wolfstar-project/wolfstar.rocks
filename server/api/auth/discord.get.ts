@@ -49,7 +49,7 @@ export default defineWrappedResponseHandler(
 		const oauthHandler = defineOAuthDiscordEventHandler({
 			config: {
 				authorizationParams,
-				scope: ["guilds.members.read"],
+				scope: ["guilds.members.read", "email"],
 			},
 
 			async onError(_event: H3Event, error: NuxtError) {
@@ -83,6 +83,7 @@ export default defineWrappedResponseHandler(
 						id: user.id,
 						name: user.global_name ?? user.username,
 						username: user.username,
+						email: user.email ?? null,
 					},
 				});
 

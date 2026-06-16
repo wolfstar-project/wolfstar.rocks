@@ -9,3 +9,4 @@ export * from "./rate-limit";
 export * from "./roles";
 export * from "./selfmod";
 export * from "./settings";
+export * from "./feedback";

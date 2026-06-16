@@ -12,7 +12,7 @@ This agent helps you work with **GitHub Agentic Workflows (gh-aw)**, a CLI exten
 
 This is a **dispatcher agent** that routes your request to the appropriate specialized prompt based on your task:
 
-- **Creating new workflows**: Routes to `create` prompt
+- **Creating new workflows**: Routes to `agentic-workflow-designer` skill first (interview/clarification), then to `create` prompt once requirements are confirmed
 - **Updating existing workflows**: Routes to `update` prompt
 - **Debugging workflows**: Routes to `debug` prompt
 - **Upgrading workflows**: Routes to `upgrade-agentic-workflows` prompt
@@ -58,7 +58,9 @@ When you interact with this agent, it will:
 
 **Load when**: User wants to create a new workflow from scratch, add automation, or design a workflow that doesn't exist yet
 
-**Prompt file**: `.github/aw/create-agentic-workflow.md`
+**Step 1 — Interview** (when requirements are unclear or incomplete): Load `skills/agentic-workflow-designer/SKILL.md` to run a structured interview and confirm requirements before writing any files.
+
+**Step 2 — Create** (once requirements are confirmed): Load `.github/aw/create-agentic-workflow.md` to produce the final workflow `.md` file.
 
 **Use cases**:
 

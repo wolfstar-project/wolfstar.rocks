@@ -77,6 +77,8 @@ The repository is a **Nuxt 4 full-stack dashboard** for the WolfStar Discord mod
 
 7. **Noop if nothing changed**: If `AGENTS.md` is already accurate and current, emit a `noop` with a brief explanation.
 
+8. **Persist the review cursor**: After the run completes successfully (whether a PR was opened or a `noop` was emitted), save the current datetime as the new `last-run` value in cache memory using the same key used in step 1. This advances the review window so subsequent runs do not re-examine already-processed PRs. If the cache write fails, log the error but do not fail the run.
+
 ## Safe Outputs
 
 - Use `create-pull-request` to open a PR when AGENTS.md needs updating.

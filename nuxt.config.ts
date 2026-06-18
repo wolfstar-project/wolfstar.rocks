@@ -525,10 +525,7 @@ export default defineNuxtConfig({
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
 		sourcemaps: {
-			filesToDeleteAfterUpload: [
-				".*/**/public/**/*.map",
-				".output/**/public/**/*.map",
-			],
+			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
 		},
 	},
 

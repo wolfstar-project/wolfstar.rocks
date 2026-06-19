@@ -524,6 +524,9 @@ export default defineNuxtConfig({
 	sentry: {
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
+		sourcemaps: {
+			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
+		},
 	},
 
 	seo: {

@@ -32,9 +32,8 @@ describe("preloadSettingsForGuilds", () => {
 			{ id: "guild-2", rolesAdmin: [] },
 		]);
 
-		const { preloadSettingsForGuilds, readSettings } = await import(
-			"#server/database/settings/functions"
-		);
+		const { preloadSettingsForGuilds, readSettings } =
+			await import("#server/database/settings/functions");
 
 		await preloadSettingsForGuilds(["guild-1", "guild-2"]);
 
@@ -62,9 +61,8 @@ describe("preloadSettingsForGuilds", () => {
 	it("seeds default settings for guilds missing from the database", async () => {
 		mockFindMany.mockResolvedValue([]);
 
-		const { preloadSettingsForGuilds, readSettings } = await import(
-			"#server/database/settings/functions"
-		);
+		const { preloadSettingsForGuilds, readSettings } =
+			await import("#server/database/settings/functions");
 
 		await preloadSettingsForGuilds(["guild-new"]);
 

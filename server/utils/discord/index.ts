@@ -15,7 +15,11 @@ import type {
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { readSettings, readSettingsPermissionNodes } from "#server/database";
+import {
+	preloadSettingsForGuilds,
+	readSettings,
+	readSettingsPermissionNodes,
+} from "#server/database";
 import {
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
@@ -248,8 +252,14 @@ export async function transformOauthGuildsAndUser({
 		},
 	);
 
+	// Phase 2.5: Batch-load guild settings with one query instead of N findUnique calls.
+	const guildIdsNeedingSettings = guilds
+		.filter((oauthGuild, index) => !oauthGuild.owner && guildData[index] !== null)
+		.map((oauthGuild) => oauthGuild.id);
+	await preloadSettingsForGuilds(guildIdsNeedingSettings);
+
 	// Phase 3: Transform using pre-fetched data. Each transform now runs without
-	// additional Discord API calls; only readSettings DB calls remain.
+	// additional Discord API calls; readSettings hits the warmed process cache.
 	const transformedGuilds: OauthFlattenedGuild[] = await mapWithConcurrency(
 		guilds.map((oauthGuild, i) => ({
 			oauthGuild,

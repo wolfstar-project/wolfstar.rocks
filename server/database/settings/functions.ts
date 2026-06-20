@@ -70,6 +70,40 @@ export function readSettings(guildId: string): Awaitable<ReadonlyGuildData> {
 	return cache.get(guildId) ?? processFetch(guildId);
 }
 
+/**
+ * Batch-load guild settings into the process cache with a single query.
+ * Used by `/api/users` to avoid N concurrent `findUnique` calls per request.
+ */
+export async function preloadSettingsForGuilds(guildIds: readonly string[]): Promise<void> {
+	const uniqueIds = [...new Set(guildIds)];
+	const missing = uniqueIds.filter((id) => !cache.has(id) && !queue.has(id));
+	if (missing.length === 0) {
+		return;
+	}
+
+	const existing = await prisma.guild.findMany({
+		where: { id: { in: missing } },
+	});
+
+	for (const guild of existing) {
+		cache.set(guild.id, guild);
+		getSettingsContext(guild);
+	}
+
+	for (const id of missing) {
+		if (cache.has(id)) {
+			continue;
+		}
+
+		const created = Object.assign(Object.create(null), getDefaultGuildSettings(), {
+			id,
+		}) as GuildData;
+		cache.set(id, created);
+		WeakMapNotInitialized.add(created);
+		getSettingsContext(created);
+	}
+}
+
 export function readSettingsPermissionNodes(settings: ReadonlyGuildData) {
 	return getSettingsContext(settings).permissionNodes;
 }

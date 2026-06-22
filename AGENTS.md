@@ -268,3 +268,10 @@ Prefer these semantic classes before reaching for palette colors:
 | Error state          | `text-error`, `border-error`                           |
 | Gradient hero text   | `gradient-text-hero`, `gradient-text-cool`             |
 | Card surfaces        | `card-glass`, `card-glass-soft`, `card-glass-bordered` |
+
+<!-- skilld -->
+
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+
+<!-- /skilld -->

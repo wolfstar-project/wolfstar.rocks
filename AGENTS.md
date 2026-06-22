@@ -62,6 +62,8 @@ pnpm dev:pwa                     # Development server with local PWA behavior en
 pnpm build                       # Production build
 pnpm build:test                  # Test-mode production build through vite-plus
 pnpm generate                    # Static generation
+pnpm generate-pwa-icons          # Regenerate PWA icon assets
+pnpm knip:fix                    # Auto-fix unused files, exports, and dependencies
 pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
@@ -69,11 +71,15 @@ pnpm test                        # Run all Vitest projects
 pnpm test:unit                   # Run unit tests
 pnpm test:nuxt                   # Nuxt component/API tests
 pnpm test:browser                # Playwright E2E tests against a prebuilt app
+pnpm test:browser:prebuilt       # Playwright E2E tests against an existing prebuilt app
 pnpm test:browser:ui             # Playwright UI mode against a prebuilt app
 pnpm test:browser:update         # Update Playwright snapshots
 pnpm test:a11y                   # Lighthouse accessibility checks in dark and light modes
+pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
 pnpm test:perf                   # Lighthouse performance checks
+pnpm test:perf:prebuilt          # Lighthouse performance checks against an existing prebuilt app
 pnpm test:bench                  # Vitest benchmark suite
+pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
 pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
@@ -87,6 +93,7 @@ pnpm prisma:generate             # Regenerate Prisma client
 pnpm prisma:generate:watch       # Regenerate Prisma client in watch mode
 pnpm prisma:seed                 # Seed the database
 pnpm prisma:studio               # Visual database editor (http://localhost:5555)
+pnpm update:interactive          # Interactive dependency updates with taze
 ```
 
 ## Prisma and Database Conventions
@@ -151,6 +158,12 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
+
+## Sentry and Source Maps
+
+- Client source maps are hidden via `sourcemap.client: "hidden"` and uploaded to Sentry through `@sentry/nuxt`.
+- Keep `sentry.sourcemaps.filesToDeleteAfterUpload` in `nuxt.config.ts` whenever changing source-map or build-output behavior so uploaded `.map` files are removed from `.output/**/public` and hidden deploy output directories.
+- Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/utils/runtimeConfig.ts`; keep DSNs and sampling in runtime config, not hardcoded values.
 
 ## Audit Logging
 

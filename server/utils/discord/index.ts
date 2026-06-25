@@ -1,3 +1,4 @@
+// oxlint-disable no-console
 import type { ReadonlyGuildData } from "#server/database";
 import type {
 	FlattenedGuild,
@@ -16,9 +17,16 @@ import type {
 import type { H3Event } from "h3";
 import { readSettings, readSettingsPermissionNodes } from "#server/database";
 import {
+	CURRENT_USER_CACHE_NAME,
+	GUILD_CACHE_NAME,
+	invalidateGuildCache,
+	shouldRefreshCurrentUserCache,
+	shouldRefreshGuildCache,
+} from "#server/utils/discord/cache";
+import {
 	fetchCurrentUserAndGuildsWithRetry,
 	fetchGuildMemberWithRetry,
-} from "#server/utils/discord-oauth";
+} from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
@@ -147,12 +155,7 @@ export async function transformGuild(
 	const guild =
 		prefetchedGuild !== undefined
 			? prefetchedGuild
-			: await getGuild(data.id).catch((error) => {
-					// getGuild already converts 404s to null; only handle unexpected 404s here
-					if (error?.status === 404 || error?.cause?.status === 404) return null;
-					// Rethrow all other errors (5xx, timeouts, etc.)
-					throw error;
-				});
+			: (await probeBotGuildMembership(data.id)).guild;
 
 	const channels =
 		includeChannels && !isNullOrUndefined(guild)
@@ -224,17 +227,15 @@ export async function transformOauthGuildsAndUser({
 
 	const userId = user.id;
 
-	// Phase 1: Fetch guild presence data for all guilds concurrently.
-	// getGuild returns null (cached) for guilds the bot is not in, eliminating
-	// repeated uncached 404 Discord API calls on every request.
-	const guildData = await mapWithConcurrency(guilds, 16, (g) =>
-		getGuild(g.id).catch((error) => {
-			// getGuild already converts 404s to null; only handle unexpected 404s here
-			if (error?.status === 404 || error?.cause?.status === 404) return null;
-			// Rethrow all other errors (5xx, timeouts, etc.)
-			throw error;
-		}),
-	);
+	// Phase 1: Live bot-membership probe for every guild. Cached getGuild can stay
+	// positive for up to an hour after the bot leaves, which caused stale profile lists.
+	const guildData = await mapWithConcurrency(guilds, 16, async (g) => {
+		const { guild, confirmedAbsent } = await probeBotGuildMembership(g.id);
+		if (confirmedAbsent) {
+			await invalidateGuildCache(g.id);
+		}
+		return guild;
+	});
 
 	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
 	// Separates the sequential getGuild→getMember chain into two independent parallel phases.
@@ -311,11 +312,13 @@ export const getCurrentUser = defineCachedFunction(
 		return fetchCurrentUserAndGuildsWithRetry(event, tokens);
 	},
 	{
+		name: CURRENT_USER_CACHE_NAME,
 		getKey: async (event: H3Event) => {
 			const userId = await getUserIdFromEvent(event);
 			return userId;
 		},
 		maxAge: hours(1),
+		shouldBypassCache: async (event: H3Event) => shouldRefreshCurrentUserCache(event),
 	},
 );
 
@@ -405,34 +408,68 @@ export const getGuildChannels = defineCachedFunction(
 	},
 );
 
+export async function fetchBotGuildFromDiscord(guildId: string): Promise<APIGuild | null> {
+	const api = useApi();
+	Sentry.metrics.count("discord_api.call", 1, {
+		attributes: { endpoint: "guilds.get", guild_id: guildId },
+	});
+	return instrumentDiscordApiCall(
+		"guilds.get",
+		() => api.guilds.get(guildId, { with_counts: true }),
+		{ guild_id: guildId },
+	).catch((error: DiscordAPIError) => {
+		// 404 means the bot is not a member of this guild.
+		if (error.status === 404) return null;
+		throw createError({
+			cause: error,
+			message: `Failed to fetch guild: ${guildId}`,
+			status: 500,
+			why: "Discord API returned an error when fetching guild data",
+		});
+	});
+}
+
 export const getGuild = defineCachedFunction(
-	async (guildId: string) => {
-		const api = useApi();
-		Sentry.metrics.count("discord_api.call", 1, {
-			attributes: { endpoint: "guilds.get", guild_id: guildId },
-		});
-		const result = await instrumentDiscordApiCall(
-			"guilds.get",
-			() => api.guilds.get(guildId, { with_counts: true }),
-			{ guild_id: guildId },
-		).catch((error: DiscordAPIError) => {
-			// 404 means the bot is not a member of this guild; return null so the result
-			// is cached by defineCachedFunction and avoids a Discord API call per request.
-			if (error.status === 404) return null;
-			throw createError({
-				cause: error,
-				message: `Failed to fetch guild: ${guildId}`,
-				status: 500,
-				why: "Discord API returned an error when fetching guild data",
-			});
-		});
-		return result;
-	},
+	async (guildId: string) => fetchBotGuildFromDiscord(guildId),
 	{
+		name: GUILD_CACHE_NAME,
 		maxAge: hours(1),
 		getKey: (guildId) => `guild:${guildId}`,
+		validate: (entry) => !isNullOrUndefined(entry.value),
 	},
 );
+
+/**
+ * Live-probes bot guild membership. Returns `confirmedAbsent: true` only when
+ * Discord responds 404 (bot not in guild). On transient probe failures, falls
+ * back to the cached `getGuild` entry so a valid cache is not discarded.
+ */
+async function probeBotGuildMembership(
+	guildId: string,
+): Promise<{ guild: APIGuild | null; confirmedAbsent: boolean }> {
+	try {
+		const guild = await fetchBotGuildFromDiscord(guildId);
+		return { guild, confirmedAbsent: guild === null };
+	} catch (error) {
+		console.warn(`[discord] Live guild probe failed for ${guildId}, falling back to cache`, {
+			error,
+		});
+		const guild = await getGuild(guildId).catch(() => null);
+		return { guild, confirmedAbsent: false };
+	}
+}
+
+export async function resolveGuildForRequest(event: H3Event, guildId: string) {
+	if (shouldRefreshGuildCache(event)) {
+		await invalidateGuildCache(guildId);
+	}
+	const { guild, confirmedAbsent } = await probeBotGuildMembership(guildId);
+	if (confirmedAbsent) {
+		await invalidateGuildCache(guildId);
+		return null;
+	}
+	return guild;
+}
 
 export const fetchCommands = defineCachedFunction(
 	async () => {

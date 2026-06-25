@@ -1,3 +1,4 @@
+import { invalidateGuildCache, shouldRefreshCurrentUserCache } from "#server/utils/discord/cache";
 import { createError, useLogger } from "evlog";
 
 export default defineWrappedResponseHandler(
@@ -5,6 +6,10 @@ export default defineWrappedResponseHandler(
 		const log = useLogger(event);
 
 		const { user, guilds } = await getCurrentUser(event);
+
+		if (shouldRefreshCurrentUserCache(event)) {
+			await Promise.all(guilds.map((guild) => invalidateGuildCache(guild.id)));
+		}
 
 		log.set({ user: { id: user.id } });
 		log.set({ result: { guildCount: guilds.length } });

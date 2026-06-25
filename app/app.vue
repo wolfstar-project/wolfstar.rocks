@@ -17,7 +17,7 @@
 <script setup lang="ts">
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
-const { fetch: refreshSession } = useUserSession();
+
 // Watch for route changes to update appName
 watch(
 	router.currentRoute,
@@ -36,11 +36,4 @@ watch(
 );
 
 provide(ProviderAppNameKey, appName);
-
-onMounted(() => {
-	if (import.meta.test) return;
-	void $fetch("/api/auth/refresh")
-		.then(refreshSession)
-		.catch(() => {});
-});
 </script>

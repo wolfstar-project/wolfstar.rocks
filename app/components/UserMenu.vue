@@ -1,4 +1,5 @@
 <template>
+	<FeedbackModal v-model:open="isFeedbackOpen" />
 	<UDropdownMenu
 		:items="items"
 		:content="{ align: 'center', collisionPadding: 12 }"
@@ -36,6 +37,7 @@ const { collapsed } = defineProps<{
 	collapsed?: boolean;
 }>();
 
+const isFeedbackOpen = ref(false);
 const colorMode = useColorMode();
 const { user: authUser, clear } = useAuth();
 
@@ -62,6 +64,14 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			icon: "lucide:user",
 			label: "Profile",
 			to: "/profile",
+		},
+		{
+			icon: "lucide:bug",
+			label: "Report a Bug",
+			onSelect(e: Event) {
+				e.preventDefault();
+				isFeedbackOpen.value = true;
+			},
 		},
 	],
 	[

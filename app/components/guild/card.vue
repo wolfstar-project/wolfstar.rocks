@@ -58,6 +58,7 @@
 				<NuxtLink
 					v-else-if="guild.manageable"
 					:to="guildAddURL(guild.id)"
+					external
 					class="group relative"
 					:aria-label="`Invite bot to ${guild.name}`"
 				>
@@ -145,6 +146,7 @@
 					<NuxtLink
 						v-else-if="guild.manageable"
 						:to="guildAddURL(guild.id)"
+						external
 						class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
 						:aria-label="`Invite WolfStar bot to ${guild.name}`"
 					>

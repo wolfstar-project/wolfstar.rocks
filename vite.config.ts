@@ -475,7 +475,12 @@ export default defineConfig({
 	},
 	staged: {
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
-		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": "vp fmt",
+		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
+			const filtered = files.filter(
+				(f) => !f.includes("/.claude/") && !f.startsWith(".claude/"),
+			);
+			return filtered.length ? `vp fmt ${filtered.join(" ")}` : [];
+		},
 	},
 	test: {
 		projects: [

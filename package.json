@@ -17,6 +17,8 @@
 	"type": "module",
 	"main": "./nuxt.config.ts",
 	"scripts": {
+		"audit:verify": "tsx scripts/audit-verify.ts",
+		"design:lint": "designmd lint .claude/DESIGN.md",
 		"build": "nuxt build",
 		"build:test": "NODE_ENV=test vp run build",
 		"dev": "nuxt dev",
@@ -109,6 +111,7 @@
 		"@discordjs/collection": "2.1.1",
 		"@discordjs/core": "2.4.0",
 		"@e18e/eslint-plugin": "0.4.1",
+    "@google/design.md": "^0.3.0",
 		"@netlify/nuxt": "0.3.6",
 		"@nuxt/hints": "1.1.2",
 		"@nuxt/test-utils": "4.0.0",

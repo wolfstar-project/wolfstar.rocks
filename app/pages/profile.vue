@@ -149,11 +149,13 @@
 										<UButton
 											class="join-item"
 											color="primary"
+											:variant="showManageableOnly ? 'solid' : 'outline'"
 											:is-loading
 											is-loading-icon="lucide:loader"
 											icon="heroicons:shield-check"
 											aria-label="Toggle manageable servers only"
-											@click="toggleShowManageableOnly()"
+											:aria-pressed="showManageableOnly"
+											@click="handleManageableToggle()"
 										/>
 
 										<!-- Sort Button -->
@@ -200,10 +202,12 @@
 										<UButton
 											class="join-item"
 											color="primary"
+											:variant="showManageableOnly ? 'solid' : 'outline'"
 											:is-loading
 											is-loading-icon="lucide:loader"
 											icon="heroicons:shield-check"
-											@click="toggleShowManageableOnly()"
+											:aria-pressed="showManageableOnly"
+											@click="handleManageableToggle()"
 										>
 											<span>Manageable</span>
 										</UButton>
@@ -251,6 +255,7 @@
 									:undo-search
 									:search-query
 									:loading="isLoading"
+									:filter-key="showManageableOnly"
 									:is-retrying
 									:on-retry="handleRetry"
 								/>
@@ -605,13 +610,39 @@ const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPrefe
 	useReduceMotion();
 
 const isTransitioning = ref(false);
+const isFilterTransitioning = ref(false);
+
+function handleManageableToggle() {
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		toggleShowManageableOnly();
+		return;
+	}
+	if (isFilterTransitioning.value || isTransitioning.value) return;
+	if (document.activeViewTransition) {
+		document.activeViewTransition.skipTransition();
+	}
+	isFilterTransitioning.value = true;
+	try {
+		document
+			.startViewTransition(async () => {
+				toggleShowManageableOnly();
+				await nextTick();
+			})
+			.finished.finally(() => {
+				isFilterTransitioning.value = false;
+			});
+	} catch {
+		isFilterTransitioning.value = false;
+		toggleShowManageableOnly();
+	}
+}
 
 function handleSortToggle() {
 	if (!document.startViewTransition || effectiveReduceMotion.value) {
 		toggleSortOrder();
 		return;
 	}
-	if (isTransitioning.value) return;
+	if (isTransitioning.value || isFilterTransitioning.value) return;
 	if (document.activeViewTransition) {
 		document.activeViewTransition.skipTransition();
 	}

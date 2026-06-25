@@ -55,6 +55,9 @@ const config: KnipConfig = {
 				"@nuxt/icon",
 				"nuxt-security",
 
+				/** Used in the app in guild/logs components */
+				"@tanstack/table-core",
+
 				/** Used in the test */
 				"axe-core",
 

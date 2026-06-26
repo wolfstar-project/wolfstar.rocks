@@ -12,13 +12,22 @@
 			<slot></slot>
 		</UMain>
 
-		<div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
-			<ScrollToTopButton />
-		</div>
+		<ClientOnly>
+			<DeferredMount>
+				<div class="fixed right-4 bottom-4 z-50 flex items-center justify-end">
+					<LazyFeedbackButton />
+					<LazyScrollToTopButton />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
 
-		<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
-			<PwaPrompt />
-		</div>
+		<ClientOnly>
+			<DeferredMount>
+				<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
+					<LazyPwaPrompt />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
 
 		<AppFooter />
 	</div>

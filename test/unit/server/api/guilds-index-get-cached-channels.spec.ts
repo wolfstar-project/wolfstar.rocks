@@ -23,6 +23,10 @@ const {
 	(globalThis as Record<string, unknown>).defineWrappedResponseHandler = (fn: unknown) => fn;
 	(globalThis as Record<string, unknown>).getGuildParam = vi.fn().mockReturnValue("guild-123");
 	(globalThis as Record<string, unknown>).getGuild = mockGetGuild;
+	(globalThis as Record<string, unknown>).resolveGuildForRequest = (
+		_event: unknown,
+		guildId: string,
+	) => mockGetGuild(guildId);
 	(globalThis as Record<string, unknown>).getCurrentMember = mockGetCurrentMember;
 	(globalThis as Record<string, unknown>).canManage = mockCanManage;
 	(globalThis as Record<string, unknown>).getGuildChannels = mockGetGuildChannels;

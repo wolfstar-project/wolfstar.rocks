@@ -9,6 +9,7 @@ declare module "#auth-utils" {
 		globalName: string | null;
 		username: string;
 		avatar: string | null;
+		email: string | null;
 	}
 
 	export interface UserSession {

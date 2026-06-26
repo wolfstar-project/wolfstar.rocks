@@ -1,5 +1,4 @@
 import type { GuildData } from "#server/database";
-import type { FlattenedCommand } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";

@@ -1,3 +1,5 @@
+import { isMarketingPath } from "./marketing-routes";
+
 export interface ClassifyInput {
 	toPath: string;
 	fromPath: string;
@@ -5,21 +7,8 @@ export interface ClassifyInput {
 	hasUAVisualTransition?: boolean;
 }
 
-const MARKETING_PATHS = [
-	"/",
-	"/wolfstar",
-	"/staryl",
-	"/privacy",
-	"/terms",
-	"/commands",
-	"/profile",
-	"/account",
-];
-
 export function classifyNavigation(input: ClassifyInput): string[] {
-	const isMarketing = MARKETING_PATHS.some(
-		(p) => input.toPath === p || input.toPath.startsWith(p + "/"),
-	);
+	const isMarketing = isMarketingPath(input.toPath);
 	const isDashboard = input.toPath.startsWith("/guilds/");
 
 	if (!isMarketing && !isDashboard) return [];

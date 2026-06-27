@@ -1,0 +1,60 @@
+# utils
+
+> Use the utils/ directory to auto-import your utility functions throughout your application.
+
+The main purpose of the [`app/utils/` directory](/docs/4.x/directory-structure/app/utils) is to allow a semantic distinction between your Vue composables and other auto-imported utility functions.
+
+## Usage
+
+**Method 1:** Using named export
+
+```ts [utils/index.ts]twoslash
+export const { format: formatNumber } = Intl.NumberFormat('en-GB', {
+  notation: 'compact',
+  maximumFractionDigits: 1,
+})
+```
+
+**Method 2:** Using default export
+
+```ts [utils/random-entry.ts or utils/randomEntry.ts]twoslash
+// It will be available as randomEntry() (camelCase of file name without extension)
+export default function (arr: Array<any>) {
+  return arr[Math.floor(Math.random() * arr.length)]
+}
+```
+
+You can now use auto imported utility functions in `.js`, `.ts` and `.vue` files
+
+```vue [app/app.vue]
+<template>
+  <p>{{ formatNumber(1234) }}</p>
+</template>
+```
+
+<read-more to="/docs/4.x/guide/concepts/auto-imports">
+
+
+
+</read-more>
+
+<link-example to="/docs/4.x/examples/features/auto-imports">
+
+
+
+</link-example>
+
+<tip>
+
+The way `app/utils/` auto-imports work and are scanned is identical to the [`app/composables/`](/docs/4.x/directory-structure/app/composables) directory.
+
+</tip>
+
+<important>
+
+These utils are only available within the Vue part of your app. <br />
+
+
+Only `server/utils` are auto-imported in the [`server/`](/docs/4.x/directory-structure/server#server-utilities) directory.
+
+</important>

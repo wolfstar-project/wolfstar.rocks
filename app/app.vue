@@ -15,6 +15,8 @@
 </template>
 
 <script setup lang="ts">
+useSessionRefresh();
+
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
 

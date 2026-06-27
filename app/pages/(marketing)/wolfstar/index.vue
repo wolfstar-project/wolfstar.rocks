@@ -42,12 +42,7 @@
 		</div>
 	</section>
 
-	<section
-		ref="moreRef"
-		class="prose"
-		:class="{ 'animate-fade-in-up': moreVisible }"
-		:style="!moreVisible ? 'opacity: 0' : undefined"
-	>
+	<section class="prose animate-on-scroll">
 		<h3 class="mt-32 text-center text-3xl font-bold">And more!</h3>
 		<p>WolfStar not only comes with a very complete moderation suite, but also:</p>
 		<ul>
@@ -78,12 +73,7 @@
 		</ul>
 	</section>
 
-	<section
-		ref="inviteRef"
-		class="invite-card mt-32 flex flex-col items-center"
-		:class="{ 'animate-fade-in-up': inviteVisible }"
-		:style="!inviteVisible ? 'opacity: 0' : undefined"
-	>
+	<section class="invite-card mt-32 flex animate-on-scroll flex-col items-center">
 		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
 		<div class="join">
@@ -113,34 +103,6 @@ const Invites = useInvites();
 
 const selectedFeatureIndex = ref(0);
 
-// Scroll-triggered reveal for below-fold content sections.
-const moreRef = ref<HTMLElement | null>(null);
-const moreVisible = ref(false);
-const inviteRef = ref<HTMLElement | null>(null);
-const inviteVisible = ref(false);
-
-const { stop: stopMoreObserver } = useIntersectionObserver(
-	moreRef,
-	(entries) => {
-		if (entries[0]?.isIntersecting) {
-			moreVisible.value = true;
-			stopMoreObserver();
-		}
-	},
-	{ rootMargin: "100px" },
-);
-
-const { stop: stopInviteObserver } = useIntersectionObserver(
-	inviteRef,
-	(entries) => {
-		if (entries[0]?.isIntersecting) {
-			inviteVisible.value = true;
-			stopInviteObserver();
-		}
-	},
-	{ rootMargin: "100px" },
-);
-
 // Lazy-mount the Explore section components only when the section approaches
 // the viewport, keeping them out of the initial JS critical path.
 const exploreRef = ref<HTMLElement | null>(null);
@@ -169,10 +131,7 @@ const { stop: stopExploreObserver } = useIntersectionObserver(
 function openFeature(index: number) {
 	selectedFeatureIndex.value = index;
 	exploreLoaded.value = true;
-	const element = document.getElementById("explore");
-	if (element) {
-		element.scrollIntoView({ behavior: "smooth" });
-	}
+	window.location.hash = "#explore";
 }
 </script>
 

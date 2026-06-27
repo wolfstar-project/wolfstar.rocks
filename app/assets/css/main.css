@@ -5,6 +5,10 @@
 @import "./utilities.css";
 @import "./view-transitions.css";
 
+:root {
+	scroll-behavior: smooth;
+}
+
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 

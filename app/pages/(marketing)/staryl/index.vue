@@ -22,7 +22,7 @@
 		</NuxtLink>
 	</section>
 
-	<h2 class="mt-72 text-center text-5xl font-bold">COMING SOON...</h2>
+	<h2 class="mt-72 animate-on-scroll text-center text-5xl font-bold">COMING SOON...</h2>
 
 	<OtherApps :apps="[OtherApps.WolfStar]" />
 </template>

@@ -1,29 +1,9 @@
-import type { VueWrapper } from "@vue/test-utils";
-import type { AxeResults, RunOptions } from "axe-core";
 import { AppLogoMark } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { renderToString } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSSRApp, nextTick } from "vue";
-import "axe-core";
-
-// axe-core is a UMD module that exposes itself as window.axe in the browser
-declare const axe: {
-	run: (context: Element, options?: RunOptions) => Promise<AxeResults>;
-};
-
-const axeRunOptions: RunOptions = {
-	resultTypes: ["violations"],
-	rules: {
-		// Page-level rules that don't apply to an isolated component
-		"landmark-one-main": { enabled: false },
-		"region": { enabled: false },
-		"page-has-heading-one": { enabled: false },
-		// Theme variables don't resolve reliably in isolated component tests;
-		// contrast is validated via full-page Lighthouse instead.
-		"color-contrast": { enabled: false },
-	},
-};
+import { runAxe } from "../../utils/axe";
 
 /**
  * Substrings Vue logs (dev build) when the client render does not match the
@@ -46,12 +26,6 @@ function createContainer(): HTMLElement {
 	document.body.appendChild(container);
 	mountedContainers.push(container);
 	return container;
-}
-
-async function runAxe(wrapper: VueWrapper): Promise<AxeResults> {
-	const container = createContainer();
-	container.appendChild(wrapper.element.cloneNode(true));
-	return axe.run(container, axeRunOptions);
 }
 
 afterEach(() => {

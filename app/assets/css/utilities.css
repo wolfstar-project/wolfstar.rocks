@@ -415,6 +415,12 @@
 	animation: none !important;
 }
 
+/* The * selector above does not cover :root itself, so scroll-behavior: smooth set on
+   :root in main.css must be disabled separately for the app-level reduced-motion toggle. */
+:root[data-reduce-motion="true"] {
+	scroll-behavior: auto !important;
+}
+
 /* Intentional duplication (see above): prefers-reduced-motion fallback */
 @media (prefers-reduced-motion: reduce) {
 	*,

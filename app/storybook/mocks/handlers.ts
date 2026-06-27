@@ -21,6 +21,9 @@ export const handlers = [
 	// The dashboard layout fetches the single guild to hydrate guild state.
 	http.get("/api/guilds/:guildId", () => HttpResponse.json(mockGuild)),
 
+	// The dashboard activity feed (General.vue) requests the guild audit log.
+	http.get("/api/guilds/:guildId/logs", () => HttpResponse.json({ entries: [], total: 0 })),
+
 	http.get("/api/guilds/:guildId/settings", () =>
 		HttpResponse.json({
 			guildId: "123456789012345678",

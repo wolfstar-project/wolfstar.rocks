@@ -17,6 +17,33 @@ const config = {
 	async viteFinal(newConfig) {
 		newConfig.plugins ??= [];
 
+		// Nuxt's `createClientOnly` HOC (applied to every `.client.vue` component)
+		// renders `undefined` and then dereferences `res.children` under the
+		// Storybook production build, throwing
+		// "Cannot read properties of undefined (reading 'children')" for any
+		// client-only component (header auth, PWA prompts, marketing showcases…).
+		// Storybook has no SSR, so the HOC is unnecessary here: rewrite it to a
+		// passthrough so `.client` components render directly. The early `return`
+		// leaves the rest of the function as dead code, so this stays valid if the
+		// upstream implementation changes; the regex simply no-ops when unmatched.
+		newConfig.plugins.unshift({
+			name: "storybook-nuxt-client-only-passthrough",
+			enforce: "pre",
+			transform(code: string, id: string) {
+				if (
+					!id.includes("nuxt/dist/app/components/client-only") ||
+					!code.includes("createClientOnly")
+				) {
+					return null;
+				}
+				const patched = code.replace(
+					/export function createClientOnly\((\w+)\)\s*\{/,
+					"export function createClientOnly($1) { return $1;",
+				);
+				return patched === code ? null : patched;
+			},
+		});
+
 		// Fix: nuxt:components:imports-alias relies on internal Nuxt state that is
 		// cleaned up after nuxt.close() in @storybook-vue/nuxt's loadNuxtViteConfig.
 		// When that state is gone, `import X from '#components'` is left unresolved

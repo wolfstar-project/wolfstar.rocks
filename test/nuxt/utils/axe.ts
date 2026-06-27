@@ -13,7 +13,7 @@ declare const axe: {
  * context (a single `main`, resolved theme variables) that isolated component
  * mounts don't provide; contrast is validated via full-page Lighthouse instead.
  */
-export const axeRunOptions: RunOptions = {
+const axeRunOptions: RunOptions = {
 	resultTypes: ["violations"],
 	rules: {
 		"landmark-one-main": { enabled: false },

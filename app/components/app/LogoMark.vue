@@ -3,9 +3,8 @@
 		width="1020"
 		height="250"
 		viewBox="0 0 1020 250"
-		role="img"
 		focusable="false"
-		:aria-label="label"
+		aria-hidden="true"
 		xmlns="http://www.w3.org/2000/svg"
 		:class="className"
 	>
@@ -25,8 +24,7 @@
 </template>
 
 <script setup lang="ts">
-const { class: className = "fill-current", label = "WolfStar" } = defineProps<{
+const { class: className = "fill-current" } = defineProps<{
 	class?: string;
-	label?: string;
 }>();
 </script>

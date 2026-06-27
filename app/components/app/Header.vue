@@ -6,11 +6,9 @@
 				:to="currentApp.explore"
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
-				<span
-					v-else
-					class="text-ui-100 ml-2 text-2xl font-bold"
-					>{{ currentApp.name }}</span
-				>
+				<span v-else class="text-ui-100 ml-2 text-2xl font-bold">{{
+					currentApp.name
+				}}</span>
 				<UBadge
 					v-if="env === 'preview' || env === 'canary'"
 					color="warning"

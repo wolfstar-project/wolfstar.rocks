@@ -31,7 +31,7 @@
 									class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 								>
 									<DiscordMessages
-										class="border-ui w-full rounded-2xl bg-base-200 p-4 text-left font-whitney"
+										class="border-ui w-full rounded-2xl p-4 text-left font-whitney"
 									>
 										<template v-if="featureIndex === AutomodFeature.Spam">
 											<DiscordMessage v-for="n in 2" :key="n" name="baddie">
@@ -430,7 +430,7 @@
 
 										<UFieldGroup class="mt-4 self-start md:self-center">
 											<UButton
-												class="justify-center md:btn-wide"
+												class="justify-center"
 												:color="moderationTemporary ? 'info' : 'neutral'"
 												:variant="moderationTemporary ? 'solid' : 'outline'"
 												icon="ph:hourglass-duotone"
@@ -443,7 +443,7 @@
 												Temporary
 											</UButton>
 											<UButton
-												class="justify-center md:btn-wide"
+												class="justify-center"
 												:color="moderationUndo ? 'success' : 'neutral'"
 												:variant="moderationUndo ? 'solid' : 'outline'"
 												icon="ph:arrow-counter-clockwise-duotone"

@@ -85,11 +85,12 @@ const profile = computed(() => Profiles[name]);
 
 .discord-message {
 	@apply flex w-full flex-row gap-2 rounded-xl p-2 align-top sm:gap-4 sm:p-4;
+	background-color: var(--discord-surface);
 }
 
 .discord-message:not(.discord-message-ephemeral):hover {
-	background-color: var(--color-base-100);
-	background-color: oklch(from var(--color-base-200) calc(l + 0.04) c h);
+	background-color: var(--discord-surface);
+	background-color: oklch(from var(--discord-surface) calc(l + 0.04) c h);
 }
 
 .discord-message-ephemeral {

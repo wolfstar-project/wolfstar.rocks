@@ -94,7 +94,7 @@ jobs:
           cache: true
 
       - name: 🌐 Install browser
-        run: vp exec playwright install chromium-headless-shell
+        run: vp exec playwright install --with-deps chromium-headless-shell
 
       - name: 🧪 Component tests
         run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml

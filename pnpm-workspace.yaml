@@ -25,6 +25,7 @@ overrides:
 
 patchedDependencies:
     "@nuxt/test-utils": patches/@nuxt__test-utils.patch
+    "nuxt-security": patches/nuxt-security.patch
 
 catalogs:
     msw:

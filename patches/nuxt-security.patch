@@ -1,0 +1,13 @@
+diff --git a/dist/runtime/server/middleware/corsHandler.js b/dist/runtime/server/middleware/corsHandler.js
+--- a/dist/runtime/server/middleware/corsHandler.js
++++ b/dist/runtime/server/middleware/corsHandler.js
+@@ -1,6 +1,9 @@
+ import { defineEventHandler, handleCors } from "h3";
+ import { resolveSecurityRules } from "../../nitro/context/index.js";
+ export default defineEventHandler((event) => {
++  if (import.meta.prerender) {
++    return;
++  }
+   const rules = resolveSecurityRules(event);
+   if (rules.enabled && rules.corsHandler) {
+     const { corsHandler } = rules;

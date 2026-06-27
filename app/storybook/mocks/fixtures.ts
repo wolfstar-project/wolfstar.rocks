@@ -4,7 +4,7 @@ import type { Locale } from "discord-api-types/v10";
 const MOCK_GUILD_ID = "123456789012345678";
 const MOCK_USER_ID = "987654321098765432";
 
-const mockGuild: OauthFlattenedGuild = {
+export const mockGuild: OauthFlattenedGuild = {
 	id: MOCK_GUILD_ID,
 	name: "WolfStar Dev",
 	acronym: "WD",

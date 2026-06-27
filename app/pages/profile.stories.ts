@@ -49,7 +49,7 @@ export const ErrorInternal: Story = {
 		},
 		docs: {
 			description: {
-				story: "Profile page when the session fetch fails — shows error message.",
+				story: "Profile page when the user fetch (/api/users) returns a 500, showing an error message.",
 			},
 		},
 	},

@@ -516,6 +516,14 @@ export default defineNuxtConfig({
 				fullscreen: "*",
 			},
 		},
+		// Disabled because the runtime CORS middleware imports `handleCors` from h3 v2
+		// (pulled in by Nuxt 4.4.x), while Nitro's prerenderer dispatches events using
+		// h3 v1 (plain-object headers). During `nuxt build` the crawler triggers
+		// `isPreflightRequest`, which calls `event.req.headers.get()` on the v1 event and
+		// crashes every prerendered route. The default `origin` is the site's own URL, so
+		// CORS here only ever allowed same-origin requests — dropping it is a no-op for the
+		// same-origin dashboard while restoring a working prerender/build.
+		corsHandler: false,
 		rateLimiter: false,
 		sri: false,
 		ssg: {

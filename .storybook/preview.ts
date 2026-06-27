@@ -2,6 +2,11 @@ import type { Preview } from "@storybook-vue/nuxt";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { initialize, mswLoader } from "msw-storybook-addon";
 import { fn } from "storybook/test";
+// Import the real component so the runtime-compiled decorator template below
+// resolves it. Runtime templates do not get Nuxt's build-time component
+// auto-imports, so a bare `<UApp>` would render as an inert custom element
+// (no TooltipProvider) instead of the Nuxt UI app root.
+import { UApp } from "#components";
 import { handlers } from "~/storybook/mocks/handlers";
 import wolfstarDark from "./theme";
 
@@ -31,8 +36,9 @@ const preview: Preview = {
 		// that `<UApp>` installs. The real app wraps everything in `<UApp>` via
 		// app.vue, but stories bypass it, so components like UTooltip throw
 		// "Injection TooltipProviderContext not found". Wrap every story in
-		// `<UApp>` to supply that context.
-		() => ({ template: "<UApp><story /></UApp>" }),
+		// `<UApp>` (registered explicitly so the runtime template resolves it) to
+		// supply that context.
+		() => ({ components: { UApp }, template: "<UApp><story /></UApp>" }),
 		withThemeByDataAttribute({
 			themes: {
 				Light: "light",

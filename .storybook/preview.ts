@@ -27,6 +27,12 @@ const preview: Preview = {
 		},
 	},
 	decorators: [
+		// Nuxt UI components (tooltips, overlays, toasts) require the providers
+		// that `<UApp>` installs. The real app wraps everything in `<UApp>` via
+		// app.vue, but stories bypass it, so components like UTooltip throw
+		// "Injection TooltipProviderContext not found". Wrap every story in
+		// `<UApp>` to supply that context.
+		() => ({ template: "<UApp><story /></UApp>" }),
 		withThemeByDataAttribute({
 			themes: {
 				Light: "light",

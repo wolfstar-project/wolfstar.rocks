@@ -38,28 +38,79 @@
 - Use `defineWrappedCachedResponseHandler` for cached responses
 - Use `createError` for error responses with proper status codes
 - Use the `onError` callback for error logging
+- Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
+- For paginated guild log routes, use stable cache keys that include the guild id, route segment, and `url.search`
 
 ## Vue Component Patterns
 
 - Block order: template -> script -> script setup -> styles
 - Never create reactive state at module scope; use composables in `app/composables/`
+- Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`
+
+## Auth and Feedback
+
+- Discord OAuth requests the `guilds.members.read` and `email` scopes in `server/api/auth/discord.get.ts`
+- The `#auth-utils` `User` type includes `email: string | null`; always handle existing sessions where `user.email` is still `null`
+- Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
+- Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
 
 ## Development Commands
 
 ```bash
-pnpm dev              # Development server (http://localhost:3000)
-pnpm build            # Production build
-pnpm preview          # Preview production build locally
-pnpm lint:fix         # Run linter and auto-fix issues (oxlint + oxfmt)
-pnpm typecheck        # TypeScript type checking
-pnpm test             # Run all Vitest tests
-pnpm test:nuxt        # Nuxt component tests
-pnpm test:browser     # Playwright E2E tests
-pnpm prisma:push      # Push schema changes (development)
-pnpm prisma:migrate:dev   # Create and apply migration
-pnpm prisma:generate  # Regenerate Prisma client
-pnpm prisma:studio    # Visual database editor (http://localhost:5555)
+pnpm dev                         # Development server (http://localhost:3000)
+pnpm dev:pwa                     # Development server with local PWA behavior enabled
+pnpm build                       # Production build
+pnpm build:test                  # Test-mode production build through vite-plus
+pnpm generate                    # Static generation
+pnpm generate-pwa-icons          # Regenerate PWA icon assets
+pnpm knip:fix                    # Auto-fix unused files, exports, and dependencies
+pnpm preview                     # Preview production build locally
+pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
+pnpm typecheck                   # TypeScript type checking
+pnpm test                        # Run all Vitest projects
+pnpm test:unit                   # Run unit tests
+pnpm test:nuxt                   # Nuxt component/API tests
+pnpm test:browser                # Playwright E2E tests against a prebuilt app
+pnpm test:browser:prebuilt       # Playwright E2E tests against an existing prebuilt app
+pnpm test:browser:ui             # Playwright UI mode against a prebuilt app
+pnpm test:browser:update         # Update Playwright snapshots
+pnpm test:a11y                   # Lighthouse accessibility checks in dark and light modes
+pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
+pnpm test:perf                   # Lighthouse performance checks
+pnpm test:perf:prebuilt          # Lighthouse performance checks against an existing prebuilt app
+pnpm test:bench                  # Vitest benchmark suite
+pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
+pnpm audit:verify                # Replay and verify the AuditEvent hash chain
+pnpm prisma:push                 # Push schema changes (development)
+pnpm prisma:migrate:dev          # Create and apply migration
+pnpm prisma:migrate:dev:create   # Create a migration without applying it
+pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
+pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
+pnpm prisma:migrate:status       # Inspect migration status
+pnpm prisma:migrate:resolve      # Resolve migration history state
+pnpm prisma:migrate:reset        # Reset the local database
+pnpm prisma:generate             # Regenerate Prisma client
+pnpm prisma:generate:watch       # Regenerate Prisma client in watch mode
+pnpm prisma:seed                 # Seed the database
+pnpm prisma:studio               # Visual database editor (http://localhost:5555)
+pnpm update:interactive          # Interactive dependency updates with taze
 ```
+
+## Prisma and Database Conventions
+
+- Prisma schema lives in `server/database/schema.prisma`; migrations live in `server/database/migrations/`
+- Treat migrations as append-only once merged
+- Use raw SQL migrations for database features Prisma cannot express, such as partial indexes on nullable columns
+- Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
+- `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
+
+## Guild Logs and Activity Patterns
+
+- Guild log routes live under `server/api/guilds/[guild]/logs/`
+- Use `defineWrappedCachedResponseHandler` with `auth: true`, explicit `maxAge`, `swr: false`, `onError`, and route-specific rate limits for log endpoints
+- Validate log route filters with `DashboardActivityQuerySchema`, `CommandLogQuerySchema`, or `ModerationLogQuerySchema` from `shared/schemas/log-queries.ts`
+- Use `resolveGuildMembers()` and `fallbackMember()` from `server/utils/audit/resolve-members.ts` when log rows need Discord member metadata
+- Client-side log data access lives in focused composables (`useAuditLog`, `useCommandLog`, `useModerationLog`) that accept `MaybeRefOrGetter` inputs and expose computed `entries` and `total`
 
 ## View Transitions
 
@@ -108,6 +159,12 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
+## Sentry and Source Maps
+
+- Client source maps are hidden via `sourcemap.client: "hidden"` and uploaded to Sentry through `@sentry/nuxt`.
+- Keep `sentry.sourcemaps.filesToDeleteAfterUpload` in `nuxt.config.ts` whenever changing source-map or build-output behavior so uploaded `.map` files are removed from `.output/**/public` and hidden deploy output directories.
+- Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/utils/runtimeConfig.ts`; keep DSNs and sampling in runtime config, not hardcoded values.
+
 ## Audit Logging
 
 All security-relevant actions are captured via `evlog`'s `log.audit()` pipeline, persisted to `AuditEvent` in PostgreSQL with a tamper-evident SHA-256 hash chain.
@@ -124,6 +181,8 @@ Defined in `shared/audit/actions.ts`:
 | `userLogout`                | `user.logout`                  | Session cleared due to missing/invalid tokens |
 | `sessionRefresh`            | `session.refresh`              | Token refresh succeeds or fails               |
 | `oauthStateInvalid`         | `oauth.state.invalid`          | CSRF state verification fails                 |
+
+Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain.
 
 ### Instrumentation Pattern
 
@@ -157,10 +216,21 @@ log.audit(
 
 - `shared/audit/actions.ts` — typed action creators
 - `shared/audit/envelope.ts` — canonical hash/envelope helpers
+- `shared/utils/audit-field-metadata.ts` — field labels and render metadata for dashboard-managed guild settings
+- `server/middleware/evlog-session-bridge.ts` — propagates `nuxt-auth-utils` session users into evlog context
 - `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain (P2002 swallowed, P2034 retried 5x)
 - `server/utils/audit/actor-bridge.ts` — resolves actor from request context
+- `server/utils/audit/patch-to-changes.ts` — converts `auditDiff()` JSON patches into dashboard-friendly change groups
+- `server/utils/audit/resolve-members.ts` — resolves Discord guild members for log display with fallback placeholders
 - `server/plugins/evlog-drain.ts` — routes audit events to the drain
 - `server/plugins/evlog-enrich.ts` — enriches events with UA, trace, and audit context
+- `scripts/audit-verify.ts` — offline hash-chain verifier run with `pnpm audit:verify`
+
+### Dashboard Activity Feed
+
+- `DASHBOARD_AUDIT_ACTIONS` controls which audit actions appear in the dashboard activity feed
+- Add new dashboard-visible actions to both the exported action creators and `DASHBOARD_AUDIT_ACTIONS`
+- Keep audit `changes` payloads JSON-serializable; `AuditEnvelope` rejects `BigInt`, `Date`, `Map`, `Set`, circular references, and `undefined` array entries before hashing
 
 ## Design Token Discipline
 
@@ -198,3 +268,10 @@ Prefer these semantic classes before reaching for palette colors:
 | Error state          | `text-error`, `border-error`                           |
 | Gradient hero text   | `gradient-text-hero`, `gradient-text-cool`             |
 | Card surfaces        | `card-glass`, `card-glass-soft`, `card-glass-bordered` |
+
+<!-- skilld -->
+
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+
+<!-- /skilld -->

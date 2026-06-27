@@ -1,0 +1,65 @@
+# Server Engine
+
+> Nuxt is powered by a new server engine: Nitro.
+
+While building Nuxt, we created a new server engine: Nitro.
+
+It is shipped with many features:
+
+- Cross-platform support for Node.js, browsers, service workers and more.
+- Serverless support out-of-the-box.
+- API routes support.
+- Automatic code-splitting and async-loaded chunks.
+- Hybrid mode for static + serverless sites.
+- Development server with hot module reloading.
+
+## API Layer
+
+Server [API endpoints](/docs/4.x/directory-structure/server#server-routes) and [Middleware](/docs/4.x/directory-structure/server#server-middleware) are added by Nitro that internally uses h3.
+
+Key features include:
+
+- Handlers can directly return objects/arrays for an automatically-handled JSON response
+- Handlers can return promises, which will be awaited (`res.end()` and `next()` are also supported)
+- Helper functions for body parsing, cookie handling, redirects, headers and more
+
+Check out the h3 docs for more information.
+
+<read-more to="/docs/4.x/directory-structure/server#server-routes">
+
+Learn more about the API layer in the `server/` directory.
+
+</read-more>
+
+## Direct API Calls
+
+Nitro allows 'direct' calling of routes via the globally-available [`$fetch`](/docs/4.x/api/utils/dollarfetch) helper. This will make an API call to the server if run on the browser, but will directly call the relevant function if run on the server, **saving an additional API call**.
+
+[`$fetch`](/docs/4.x/api/utils/dollarfetch) API is using ofetch, with key features including:
+
+- Automatic parsing of JSON responses (with access to raw response if needed)
+- Request body and params are automatically handled, with correct `Content-Type` headers
+
+For more information on `$fetch` features, check out ofetch.
+
+## Typed API Routes
+
+When using API routes (or middleware), Nitro will generate typings for these routes as long as you are returning a value instead of using `res.end()` to send a response.
+
+You can access these types when using [`$fetch()`](/docs/4.x/api/utils/dollarfetch) or [`useFetch()`](/docs/4.x/api/composables/use-fetch).
+
+## Standalone Server
+
+Nitro produces a standalone server dist that is independent of `node_modules`.
+
+The server in Nuxt 2 is not standalone and requires part of Nuxt core to be involved by running `nuxt start` (with the `nuxt-start` or `nuxt` distributions) or custom programmatic usage, which is fragile and prone to breakage and not suitable for serverless and service worker environments.
+
+Nuxt generates this dist when running `nuxt build` into a [`.output`](/docs/4.x/directory-structure/output) directory.
+
+The output contains runtime code to run your Nuxt server in any environment (including experimental browser service workers!) and serve your static files, making it a true hybrid framework for the JAMstack. In addition, Nuxt implements a native storage layer, supporting multi-source drivers and local assets.
+
+<read-more to="https://github.com/nitrojs/nitro" icon="i-simple-icons-github" target="_blank">
+
+Read more about Nitro engine on GitHub.
+
+</read-more>

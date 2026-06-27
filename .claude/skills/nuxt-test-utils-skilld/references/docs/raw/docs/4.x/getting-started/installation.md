@@ -1,0 +1,124 @@
+# Installation
+
+> Get started with Nuxt quickly with our online starters or start locally with your terminal.
+
+## Play Online
+
+If you just want to play around with Nuxt in your browser without setting up a project, you can use this online sandbox:
+
+<card-group>
+<card color="info" icon="i-simple-icons-stackblitz" target="_blank" title="Open on StackBlitz" to="https://stackblitz.com/github/nuxt/starter?file=app%2Fapp.vue">
+
+Online playground with code editor and terminal access.
+
+</card>
+</card-group>
+
+## New Project
+
+<steps>
+
+### Prerequisites
+
+- **Node.js** - `22.x` or newer (but we recommend the active LTS release)
+- **Text editor** - There is no IDE requirement, but we recommend Visual Studio Code with the official Vue extension (previously known as Volar) or WebStorm, which, along with other JetBrains IDEs, offers great Nuxt support right out-of-the-box. If you use another editor, such as Neovim, you can configure Vue Language Server support by following the Vue Language Tools setup guides.
+- **Terminal** - In order to run Nuxt commands
+
+<callout>
+<collapsible name="additional notes for an optimal setup">
+
+- **Node.js**: Make sure to use an even numbered version (22, 24, etc.)
+- **Neovim**: When configuring the Vue TypeScript plugin, make sure `location` points to the `@vue/language-server` package directory, not its binary. See the Neovim setup guide for a working configuration.
+- **WSL**: If you are using Windows and experience slow HMR, you may want to try using WSL (Windows Subsystem for Linux) which may solve some performance issues.
+- **Windows slow DNS resolution**: Instead of using `localhost:3000` for local dev server on Windows, use `127.0.0.1` for much faster loading experience on browsers.
+
+</collapsible>
+</callout>
+
+### Create a New Project
+
+Open a terminal (if you're using Visual Studio Code, you can open an integrated terminal) and use the following command to create a new starter project:
+
+<code-group sync="pm">
+
+```bash [npm]
+npm create nuxt@latest <project-name>
+```
+
+```bash [yarn]
+yarn create nuxt <project-name>
+```
+
+```bash [pnpm]
+pnpm create nuxt@latest <project-name>
+```
+
+```bash [bun]
+bun create nuxt@latest <project-name>
+```
+
+```bash [deno]
+deno -A npm:create-nuxt@latest <project-name>
+```
+
+</code-group>
+
+Open your project folder in Visual Studio Code:
+
+```bash [Terminal]
+code <project-name>
+```
+
+Or change directory into your new project from your terminal:
+
+```bash
+cd <project-name>
+```
+
+### Development Server
+
+Now you'll be able to start your Nuxt app in development mode:
+
+<code-group sync="pm">
+
+```bash [npm]
+npm run dev -- -o
+```
+
+```bash [yarn]
+yarn dev --open
+```
+
+```bash [pnpm]
+pnpm dev -o
+```
+
+```bash [bun]
+bun run dev -o
+
+# To use the Bun runtime during development
+# bun --bun run dev -o
+```
+
+```bash [deno]
+deno run dev -o
+```
+
+</code-group>
+
+<tip icon="i-lucide-circle-check">
+
+Well done! A browser window should automatically open for http://localhost:3000.
+
+</tip>
+</steps>
+
+## Next Steps
+
+Now that you've created your Nuxt project, you are ready to start building your application.
+
+<read-more title="Nuxt Concepts" to="/docs/4.x/guide/concepts">
+
+
+
+</read-more>

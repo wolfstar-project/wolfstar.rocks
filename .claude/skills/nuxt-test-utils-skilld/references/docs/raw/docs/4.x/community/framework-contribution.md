@@ -1,0 +1,160 @@
+# Framework
+
+> Some specific points about contributions to the framework repository.
+
+Once you've read the [general contribution guide](/docs/4.x/community/contribution), here are some specific points to make about contributions to the `nuxt/nuxt` repository.
+
+## Monorepo Guide
+
+- `packages/kit`: Toolkit for authoring Nuxt modules, published as `@nuxt/kit`.
+- `packages/nuxt`: The core of Nuxt, published as `nuxt`.
+- `packages/schema`: Cross-version Nuxt typedefs and defaults, published as `@nuxt/schema`.
+- `packages/rspack`: The Rspack bundler for Nuxt, published as `@nuxt/rspack-builder`.
+- `packages/vite`: The Vite bundler for Nuxt, published as `@nuxt/vite-builder`.
+- `packages/webpack`: The webpack bundler for Nuxt, published as `@nuxt/webpack-builder`.
+
+## Setup
+
+To contribute to Nuxt, you need to set up a local environment.
+
+1. Fork the `nuxt/nuxt`  repository to your own GitHub account and then clone it to your local device.
+2. Ensure using the latest Node.js
+3. Enable Corepack to have `pnpm` and `yarn````bash [Terminal]
+corepack enable
+```
+4. Run `pnpm install --frozen-lockfile` to Install the dependencies with pnpm:
+```bash [Terminal]
+pnpm install --frozen-lockfile
+```
+
+<note>
+
+If you are adding a dependency, please use `pnpm add`. <br />
+
+
+The `pnpm-lock.yaml` file is the source of truth for all Nuxt dependencies.
+
+</note>
+5. Activate the passive development system
+```bash [Terminal]
+pnpm dev:prepare
+```
+6. Check out a branch where you can work and commit your changes:
+```bash [Terminal]
+git checkout -b my-new-branch
+```
+
+Then, test your changes against the [playground](/docs/4.x/community/framework-contribution#playground) and [test](/docs/4.x/community/framework-contribution#testing) your changes before submitting a pull request.
+
+### Playground
+
+While working on a pull request, you will likely want to check if your changes are working correctly.
+
+You can modify the example app in `playground/`, and run:
+
+```bash [Terminal]
+pnpm dev
+```
+
+<important>
+
+Please make sure not to commit it to your branch, but it could be helpful to add some example code to your PR description. This can help reviewers and other Nuxt users understand the feature you've built in-depth.
+
+</important>
+
+### Testing
+
+Every new feature should have a corresponding unit test (if possible). The `test/` directory in this repository is currently a work in progress, but do your best to create a new test following the example of what's already there.
+
+Before creating a PR or marking it as ready-to-review, ensure that all tests pass by running:
+
+```bash [Terminal]
+pnpm test
+```
+
+### Linting
+
+You might have noticed already that we use ESLint to enforce a coding standard.
+
+Before committing your changes, to verify that the code style is correct, run:
+
+```bash [Terminal]
+pnpm lint
+```
+
+<note>
+
+You can use `pnpm lint --fix` to fix most of the style changes. <br />
+
+
+If there are still errors left, you must correct them manually.
+
+</note>
+
+### Documentation
+
+If you are adding a new feature or refactoring or changing the behavior of Nuxt in any other manner, you'll likely want to document the changes. Please include any changes to the docs in the same PR. You don't have to write documentation up on the first commit (but please do so as soon as your pull request is mature enough).
+
+<important>
+
+Make sure to make changes according to the [Documentation Style Guide](/docs/4.x/community/contribution#documentation-style-guide).
+
+</important>
+
+### Final Checklist
+
+When submitting your PR, there is a simple template that you have to fill out. Please tick all appropriate "answers" in the checklists.
+
+## Documentation Guide
+
+If you spot an area where we can improve documentation or error messages, please do open a PR - even if it's just to fix a typo!
+
+<important>
+
+Make sure to make changes according to the [Documentation Style Guide](/docs/4.x/community/contribution#documentation-style-guide).
+
+</important>
+
+### Quick Edits
+
+If you spot a typo or want to rephrase a sentence, you can click on the **Edit this page** link located on the right aside in the **Community** section.
+
+Make the change directly in the GitHub interface and open a Pull Request.
+
+### Longer Edits
+
+The documentation content is inside the `docs/` directory of the nuxt/nuxt repository and written in markdown.
+
+<note>
+
+To preview the docs locally, follow the steps on nuxt/nuxt.com repository.
+
+</note>
+
+<note>
+
+We recommend that you install the MDC extension for VS Code.
+
+</note>
+
+### Linting Docs
+
+Documentation is linted using MarkdownLint and case police to keep the documentation cohesive.
+
+```bash [Terminal]
+pnpm lint:docs
+```
+
+<note>
+
+You can also run `pnpm lint:docs:fix` to highlight and resolve any lint issues.
+
+</note>
+
+### Open a PR
+
+Please make sure your PR title adheres to the conventional commits guidelines.
+
+```bash [Example of PR title]
+docs: update the section about the nuxt.config.ts file
+```

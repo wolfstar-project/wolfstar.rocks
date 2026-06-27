@@ -18,9 +18,9 @@
 						<p class="mb-6 text-lg leading-relaxed opacity-80">
 							{{ feature.description }}
 						</p>
-						<NuxtLink to="#" class="btn btn-outline">
+						<UButton to="#" color="neutral" variant="outline" class="w-fit">
 							Learn more about {{ feature.label }}
-						</NuxtLink>
+						</UButton>
 					</div>
 
 					<!-- Discord Preview -->
@@ -30,7 +30,9 @@
 								<div
 									class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 								>
-									<DiscordMessages class="w-full text-left">
+									<DiscordMessages
+										class="border-ui w-full rounded-2xl bg-base-200 p-4 text-left font-whitney"
+									>
 										<template v-if="featureIndex === AutomodFeature.Spam">
 											<DiscordMessage v-for="n in 2" :key="n" name="baddie">
 												Guys look at me!
@@ -426,40 +428,34 @@
 											</DiscordMessage>
 										</DiscordMessages>
 
-										<div class="join mt-4 self-start md:self-center">
-											<button
-												class="btn join-item md:btn-wide"
-												:class="{ 'btn-info': moderationTemporary }"
+										<UFieldGroup class="mt-4 self-start md:self-center">
+											<UButton
+												class="justify-center md:btn-wide"
+												:color="moderationTemporary ? 'info' : 'neutral'"
+												:variant="moderationTemporary ? 'solid' : 'outline'"
+												icon="ph:hourglass-duotone"
 												:disabled="moderationAction.temporary === null"
 												@click="
 													((moderationTemporary = !moderationTemporary),
 													(moderationUndo = false))
 												"
 											>
-												<UIcon
-													name="ph:hourglass-duotone"
-													class="my-0 mr-1 h-5 w-5"
-													aria-hidden="true"
-												/>
 												Temporary
-											</button>
-											<button
-												class="btn join-item md:btn-wide"
-												:class="{ 'btn-success': moderationUndo }"
+											</UButton>
+											<UButton
+												class="justify-center md:btn-wide"
+												:color="moderationUndo ? 'success' : 'neutral'"
+												:variant="moderationUndo ? 'solid' : 'outline'"
+												icon="ph:arrow-counter-clockwise-duotone"
 												:disabled="moderationAction.undo === null"
 												@click="
 													((moderationUndo = !moderationUndo),
 													(moderationTemporary = false))
 												"
 											>
-												<UIcon
-													name="ph:arrow-counter-clockwise-duotone"
-													class="my-0 mr-1 h-5 w-5"
-													aria-hidden="true"
-												/>
 												Undo
-											</button>
-										</div>
+											</UButton>
+										</UFieldGroup>
 									</div>
 								</div>
 							</section>

@@ -89,7 +89,7 @@ const profile = computed(() => Profiles[name]);
 
 .discord-message:not(.discord-message-ephemeral):hover {
 	background-color: var(--color-base-100);
-	background-color: oklch(from var(--color-base-200) calc(l + 0.01) c h);
+	background-color: oklch(from var(--color-base-200) calc(l + 0.04) c h);
 }
 
 .discord-message-ephemeral {

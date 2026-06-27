@@ -18,7 +18,7 @@ permissions: {}
 jobs:
   enforce-source:
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
-    runs-on: ubuntu-slim
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     name: 🚦 Enforce release source
     steps:
       - name: Check PR is from main

@@ -1,12 +1,12 @@
 import type { Preview } from "@storybook-vue/nuxt";
-import { withThemeByDataAttribute } from "@storybook/addon-themes";
-import { initialize, mswLoader } from "msw-storybook-addon";
-import { fn } from "storybook/test";
 // Import the real component so the runtime-compiled decorator template below
 // resolves it. Runtime templates do not get Nuxt's build-time component
 // auto-imports, so a bare `<UApp>` would render as an inert custom element
 // (no TooltipProvider) instead of the Nuxt UI app root.
 import { UApp } from "#components";
+import { withThemeByDataAttribute } from "@storybook/addon-themes";
+import { initialize, mswLoader } from "msw-storybook-addon";
+import { fn } from "storybook/test";
 import { handlers } from "~/storybook/mocks/handlers";
 import wolfstarDark from "./theme";
 

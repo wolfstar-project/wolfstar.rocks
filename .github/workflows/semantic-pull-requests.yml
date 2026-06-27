@@ -48,6 +48,7 @@ jobs:
             pwa
             sentry
             seo
+            session
             test
             ui
           subjectPattern: ^(?![A-Z]).+$

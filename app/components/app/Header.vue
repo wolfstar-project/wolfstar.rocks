@@ -7,7 +7,7 @@
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
 				<span
-					v-if="currentApp.name !== 'WolfStar'"
+					v-else
 					class="text-ui-100 ml-2 text-2xl font-bold"
 					>{{ currentApp.name }}</span
 				>

@@ -28,7 +28,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - uses: voidzero-dev/setup-vp@ca1c46663915d6c1042ae23bd39ab85718bfb0fa # v1.10.0
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
         with:
           node-version: lts/*
           run-install: false
@@ -64,9 +64,18 @@ jobs:
           git tag -a "$VERSION" -m "Release $VERSION"
           git push origin "$VERSION"
 
+      # setup-vp runs twice in this job by design: the first call (run-install: false)
+      # only provisions the toolchain so the version/tag steps can run, and this second
+      # call performs the sfw-guarded dependency install, gated on a new tag actually
+      # being created. node-version is inherited from the first call (both default to
+      # the latest LTS).
       - name: 📦 Install dependencies
         if: steps.check.outputs.skip == 'false'
-        run: vp install --filter . --ignore-scripts
+        uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          sfw: true
+          run-install: |
+            - args: ['--filter', '.', '--ignore-scripts']
 
       - name: 📝 Generate release notes
         if: steps.check.outputs.skip == 'false'

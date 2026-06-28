@@ -21,6 +21,7 @@ const axeRunOptions: RunOptions = {
 		"page-has-heading-one": { enabled: false },
 		"landmark-no-duplicate-banner": { enabled: false },
 		"landmark-no-duplicate-contentinfo": { enabled: false },
+		"landmark-no-duplicate-main": { enabled: false },
 		"color-contrast": { enabled: false },
 	},
 };

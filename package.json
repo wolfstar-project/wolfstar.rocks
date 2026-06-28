@@ -123,7 +123,7 @@
 		"@sapphire/snowflake": "3.5.5",
 		"@sapphire/time-utilities": "1.7.14",
 		"@sapphire/utilities": "3.18.2",
-		"@shelve/cli": "4.2.0",
+		"@shelve/cli": "5.0.1",
 		"@storybook-vue/nuxt": "catalog:storybook",
 		"@storybook/addon-a11y": "catalog:storybook",
 		"@storybook/addon-docs": "catalog:storybook",

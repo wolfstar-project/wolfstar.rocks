@@ -222,8 +222,8 @@ importers:
         specifier: 3.18.2
         version: 3.18.2
       '@shelve/cli':
-        specifier: 4.2.0
-        version: 4.2.0(magicast@0.5.3)
+        specifier: 5.0.1
+        version: 5.0.1(magicast@0.5.3)
       '@storybook-vue/nuxt':
         specifier: catalog:storybook
         version: 9.1.0-29411911.f34c865(@types/node@24.12.4)(@voidzero-dev/vite-plus-core@0.1.19)(esbuild@0.28.0)(eslint@9.39.4)(magicast@0.5.3)(meow@13.2.0)(nuxt@4.4.2)(optionator@0.9.4)(rolldown@1.0.1)(rollup-plugin-visualizer@7.0.1)(rollup@4.60.0)(storybook@10.4.6)(terser@5.48.0)(tsx@4.22.3)(typescript@6.0.3)(vue-tsc@3.3.2)(vue@3.5.38)(yaml@2.9.0)
@@ -341,11 +341,6 @@ packages:
 
   '@antfu/install-pkg@1.1.0':
     resolution: {integrity: sha512-MGQsmw10ZyI+EJo45CdSER4zEb+p31LpDAFp2Z3gkSd1yqVZGi0Ebx++YTEMonJy4oChEMLsxZ64j8FH6sSqtQ==}
-
-  '@antfu/ni@30.0.0':
-    resolution: {integrity: sha512-DqBVB3XqXH4VsDpER7iLlEtayMC98iXrY7kwBzp1v6LGc/6U6+qnN3+X0bcPK63LMXJCRG2D/XDq7dvtKDGogg==}
-    engines: {node: '>=20.19.0'}
-    hasBin: true
 
   '@antfu/ni@30.1.0':
     resolution: {integrity: sha512-3VuAbPjgY52rQNn4wABaXMhBU2Oq91uy6L8nX49eJ35OLI68CyckGU+HZxcaHix4ymuGM2nFL1D6sLpgODK5xw==}
@@ -2205,6 +2200,87 @@ packages:
   '@mswjs/interceptors@0.41.9':
     resolution: {integrity: sha512-VVPPgHyQ6ShqnrmDWuxjmUIsO9gWyOZFmuOfLd9LfBGQJwZfy0gvv9pbHSJuoFNIYC7ZDX9aoFwowjcdSC4E8w==}
     engines: {node: '>=18'}
+
+  '@napi-rs/keyring-darwin-arm64@1.3.0':
+    resolution: {integrity: sha512-pl76hJvdYUBn6I24bXiOBMA9nbDapo3I5B+f3OorjDU4dUMSypXeKbOVehJe8fhgTiH24flMyTS3aAIy43xegQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@napi-rs/keyring-darwin-x64@1.3.0':
+    resolution: {integrity: sha512-YcJtEV5LA3cvA4z3BurgxH5IhTsW1JfIvcAAcqcecwk06Si9F9NqkxbZVIfDwQ8oRHgaBmT3zZJnLAotCrVahw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@napi-rs/keyring-freebsd-x64@1.3.0':
+    resolution: {integrity: sha512-vlLf31TGhfRAaxLDBhg8b89ss0HHD/lyNmL5F3UjSaz5CUXElsJmKYq9fqA/B+cZKUEUcLHHGhF0I/CqcFdaVw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@napi-rs/keyring-linux-arm-gnueabihf@1.3.0':
+    resolution: {integrity: sha512-KiWdMMu/Inz/bHHIAGrnF7r54FZDYXuHO6UFF/rhIrshUsxbMG1Rl9lEymNtqqsVo927G0VYcb02FzWQ3iBQRQ==}
+    engines: {node: '>= 10'}
+    cpu: [arm]
+    os: [linux]
+
+  '@napi-rs/keyring-linux-arm64-gnu@1.3.0':
+    resolution: {integrity: sha512-eyKGpY40lm9Jvs1aD294XRH4y7+TlJM0YVAryZeXA6TX0mb4gMkxVXwSQv7MCwgah7raeUd0dKUb4BPAYIgcMg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/keyring-linux-arm64-musl@1.3.0':
+    resolution: {integrity: sha512-iIK6JWHXAJqDrEyLY3TmswwloVyt2vj+04TZnew+uSJ9gnDO8EwRbp3/iw3LpWaXiDO7VomGO6y8I0Id8uBZSw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/keyring-linux-riscv64-gnu@1.3.0':
+    resolution: {integrity: sha512-/PGqrwn6EwgtK6vccASSXJRfOSP4vN1F4ASsIQ+7MdrK6hNvAJ1FZPrIuD5gGGdxezo3F++To2Wq7DbuGIeuNQ==}
+    engines: {node: '>= 10'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/keyring-linux-x64-gnu@1.3.0':
+    resolution: {integrity: sha512-2PDK1WKWTu9lBGq9VvNEkSlQD3O7YwVpmnyN2M3cy4v7NJ/8gDMd9GXv3G+FVXN13uhp4gnnPBS+ScefmEeD2A==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@napi-rs/keyring-linux-x64-musl@1.3.0':
+    resolution: {integrity: sha512-oJ2HkX8YUo46QBkn0pG+HuIKQNqr523q6vBobCn+P95s4C4K6/kLBqHY/1bg5J4ap31DzsznhnFKcfBNBsjCnw==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@napi-rs/keyring-win32-arm64-msvc@1.3.0':
+    resolution: {integrity: sha512-tOd3c/uAaeoE4ycVlmAdSvygz0Zt3zdca6Y7gokBeIbaRDWpjDIUOpU3MvML59XAaqyuKGsVVu0F/DZb1lHPmw==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@napi-rs/keyring-win32-ia32-msvc@1.3.0':
+    resolution: {integrity: sha512-sPSqeAFZMGqP1R++M2JTza7GQJJ/TpCo6JU6Vcd4jnebvOaEDs9b7eipakU1PJdSvhpC2yXMCNRk9gXfrhuwHQ==}
+    engines: {node: '>= 10'}
+    cpu: [ia32]
+    os: [win32]
+
+  '@napi-rs/keyring-win32-x64-msvc@1.3.0':
+    resolution: {integrity: sha512-4DnCWXwDc0HRKwyRlG5y0VhKZW2tNRQfKKfyj6IX/KWfDNyq9hn4n+GL1auyDcOO/v8PwnhmYo2+rOOqCkvvOg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@napi-rs/keyring@1.3.0':
+    resolution: {integrity: sha512-WrOw/bcXm0f9qHkumlT1QlArXSTWqaY9sunsDpOk+yCCorCKMxvWT/a3xko4EYHVdeZoh00yI2TydXn6eyICDA==}
+    engines: {node: '>= 10'}
 
   '@napi-rs/wasm-runtime@1.1.4':
     resolution: {integrity: sha512-3NQNNgA1YSlJb/kMH1ildASP9HW7/7kYnRI2szWJaofaS1hWmbGI4H+d3+22aGzXXN9IJ+n+GiFVcGipJP18ow==}
@@ -5411,8 +5487,8 @@ packages:
       pinia:
         optional: true
 
-  '@shelve/cli@4.2.0':
-    resolution: {integrity: sha512-CAq7CDVKdH+Q/ll2oY6DgIZrlgLF/bEJQQTLHs1Jf8K+BUSZiI9AAbe9oG/+LlmrpRGs70BO0eYkQopf0hXj6Q==}
+  '@shelve/cli@5.0.1':
+    resolution: {integrity: sha512-1BS2JvJ+Prp+aAllpstx8nYqEVGHc4OKNdyD6g6fp0m/hHGrdVTCru7GTwk9ypVOKrj6M0m+zVEIr3sazVnB/g==}
     hasBin: true
 
   '@shikijs/core@4.0.2':
@@ -13608,19 +13684,12 @@ snapshots:
       package-manager-detector: 1.6.0
       tinyexec: 1.2.4
 
-  '@antfu/ni@30.0.0':
-    dependencies:
-      fzf: 0.5.2
-      package-manager-detector: 1.6.0
-      tinyexec: 1.2.4
-      tinyglobby: 0.2.16
-
   '@antfu/ni@30.1.0':
     dependencies:
       fzf: 0.5.2
       package-manager-detector: 1.6.0
-      tinyexec: 1.2.2
-      tinyglobby: 0.2.16
+      tinyexec: 1.2.4
+      tinyglobby: 0.2.17
 
   '@anthropic-ai/sdk@0.91.1(zod@4.4.3)':
     dependencies:
@@ -15695,6 +15764,57 @@ snapshots:
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
 
+  '@napi-rs/keyring-darwin-arm64@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-darwin-x64@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-freebsd-x64@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-linux-arm-gnueabihf@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-linux-arm64-gnu@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-linux-arm64-musl@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-linux-riscv64-gnu@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-linux-x64-gnu@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-linux-x64-musl@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-win32-arm64-msvc@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-win32-ia32-msvc@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring-win32-x64-msvc@1.3.0':
+    optional: true
+
+  '@napi-rs/keyring@1.3.0':
+    optionalDependencies:
+      '@napi-rs/keyring-darwin-arm64': 1.3.0
+      '@napi-rs/keyring-darwin-x64': 1.3.0
+      '@napi-rs/keyring-freebsd-x64': 1.3.0
+      '@napi-rs/keyring-linux-arm-gnueabihf': 1.3.0
+      '@napi-rs/keyring-linux-arm64-gnu': 1.3.0
+      '@napi-rs/keyring-linux-arm64-musl': 1.3.0
+      '@napi-rs/keyring-linux-riscv64-gnu': 1.3.0
+      '@napi-rs/keyring-linux-x64-gnu': 1.3.0
+      '@napi-rs/keyring-linux-x64-musl': 1.3.0
+      '@napi-rs/keyring-win32-arm64-msvc': 1.3.0
+      '@napi-rs/keyring-win32-ia32-msvc': 1.3.0
+      '@napi-rs/keyring-win32-x64-msvc': 1.3.0
+
   '@napi-rs/wasm-runtime@1.1.4(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:
       '@emnapi/core': 1.10.0
@@ -16109,12 +16229,12 @@ snapshots:
       giget: 3.2.0
       jiti: 2.6.1
       listhen: 1.9.0
-      nypm: 0.6.6
+      nypm: 0.6.7
       ofetch: 1.5.1
       ohash: 2.0.11
       pathe: 2.0.3
       perfect-debounce: 2.1.0
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       scule: 1.3.0
       semver: 7.8.5
       srvx: 0.11.16
@@ -16188,11 +16308,11 @@ snapshots:
       launch-editor: 2.13.2
       local-pkg: 1.2.1
       magicast: 0.5.3
-      nypm: 0.6.6
+      nypm: 0.6.7
       ohash: 2.0.11
       pathe: 2.0.3
       perfect-debounce: 2.1.0
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       semver: 7.8.5
       simple-git: 3.36.0
       sirv: 3.0.2
@@ -16385,7 +16505,7 @@ snapshots:
       mlly: 1.8.2
       ohash: 2.0.11
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       rc9: 3.0.1
       scule: 1.3.0
       semver: 7.8.5
@@ -16492,10 +16612,10 @@ snapshots:
       mocked-exports: 0.1.1
       nitropack: 2.13.2(@electric-sql/pglite@0.4.1)(@netlify/blobs@10.7.9)(mysql2@3.15.3)(rolldown@1.0.1)
       nuxt: 4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6)(@electric-sql/pglite@0.4.1)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@netlify/blobs@10.7.9)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(@voidzero-dev/vite-plus-core@0.1.19)(@vue/compiler-sfc@3.5.38)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.0)(eslint@9.39.4)(ioredis@5.10.1)(magicast@0.5.3)(meow@13.2.0)(mysql2@3.15.3)(optionator@0.9.4)(rolldown@1.0.1)(rollup-plugin-visualizer@7.0.1)(rollup@4.60.0)(terser@5.48.0)(tsx@4.22.3)(typescript@6.0.3)(vue-tsc@3.3.2)(yaml@2.9.0)
-      nypm: 0.6.6
+      nypm: 0.6.7
       ohash: 2.0.11
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       rou3: 0.8.1
       std-env: 4.1.0
       ufo: 1.6.4
@@ -16554,7 +16674,7 @@ snapshots:
       '@vue/shared': 3.5.34
       defu: 6.1.7
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       std-env: 4.1.0
 
   '@nuxt/telemetry@2.7.0(@nuxt/kit@4.4.2)':
@@ -16820,9 +16940,9 @@ snapshots:
       mlly: 1.8.2
       mocked-exports: 0.1.1
       nuxt: 4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6)(@electric-sql/pglite@0.4.1)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@netlify/blobs@10.7.9)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(@voidzero-dev/vite-plus-core@0.1.19)(@vue/compiler-sfc@3.5.38)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.0)(eslint@9.39.4)(ioredis@5.10.1)(magicast@0.5.3)(meow@13.2.0)(mysql2@3.15.3)(optionator@0.9.4)(rolldown@1.0.1)(rollup-plugin-visualizer@7.0.1)(rollup@4.60.0)(terser@5.48.0)(tsx@4.22.3)(typescript@6.0.3)(vue-tsc@3.3.2)(yaml@2.9.0)
-      nypm: 0.6.6
+      nypm: 0.6.7
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       postcss: 8.5.14
       seroval: 1.5.1
       std-env: 4.1.0
@@ -16903,7 +17023,7 @@ snapshots:
       nuxt-site-config: 4.0.8(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       nuxtseo-shared: 5.1.3(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       ufo: 1.6.4
     optionalDependencies:
       zod: 4.4.3
@@ -17015,7 +17135,7 @@ snapshots:
       nuxtseo-shared: 5.1.3(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       ofetch: 1.5.1
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       radix3: 1.1.2
       ufo: 1.6.4
       ultrahtml: 1.6.0
@@ -19063,12 +19183,14 @@ snapshots:
       '@sentry/core': 10.49.0
       vue: 3.5.38(typescript@6.0.3)
 
-  '@shelve/cli@4.2.0(magicast@0.5.3)':
+  '@shelve/cli@5.0.1(magicast@0.5.3)':
     dependencies:
-      '@antfu/ni': 30.0.0
-      '@clack/prompts': 1.2.0
+      '@antfu/ni': 30.1.0
+      '@clack/prompts': 1.6.0
+      '@napi-rs/keyring': 1.3.0
       c12: 3.3.4(magicast@0.5.3)
       citty: 0.2.2
+      consola: 3.4.2
       defu: 6.1.7
       dotenv: 17.4.2
       npm-registry-fetch: 19.1.1
@@ -19077,6 +19199,8 @@ snapshots:
       pkg-types: 2.3.0
       rc9: 3.0.1
       semver: 7.7.4
+      std-env: 4.1.0
+      tinyexec: 1.2.4
       tinyglobby: 0.2.16
       tree-kill: 1.2.2
     transitivePeerDependencies:
@@ -23755,7 +23879,7 @@ snapshots:
   local-pkg@1.1.2:
     dependencies:
       mlly: 1.8.2
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       quansync: 0.2.11
 
   local-pkg@1.2.1:
@@ -24951,7 +25075,7 @@ snapshots:
       nuxtseo-shared: 5.1.3(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       ofetch: 1.5.1
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       radix3: 1.1.2
       ufo: 1.6.4
       ultrahtml: 1.6.0
@@ -25006,7 +25130,7 @@ snapshots:
       oxc-parser: 0.127.0
       oxc-walker: 0.7.0(oxc-parser@0.127.0)
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       radix3: 1.1.2
       std-env: 4.1.0
       strip-literal: 3.1.0
@@ -25109,7 +25233,7 @@ snapshots:
       nuxt-site-config: 4.0.8(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       nuxtseo-layer-devtools: 0.5.1(@netlify/blobs@10.7.9)(@nuxt/schema@4.4.2)(@tiptap/extensions@3.22.3)(@tiptap/y-tiptap@3.0.2)(@voidzero-dev/vite-plus-core@0.1.19)(axios@1.14.0)(db0@0.3.4)(embla-carousel@8.6.0)(ioredis@5.10.1)(jwt-decode@4.0.0)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(react-dom@19.2.5)(react@19.2.5)(tailwindcss@4.3.0)(typescript@6.0.3)(valibot@1.4.0)(vue-router@5.0.4)(vue@3.5.38)(yjs@13.6.29)(zod@4.4.3)
       nuxtseo-shared: 0.9.0(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
     optionalDependencies:
       '@unhead/vue': 2.1.13(vue@3.5.38)
       unhead: 2.1.13
@@ -25196,7 +25320,7 @@ snapshots:
       nuxt-site-config: 4.0.8(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       nuxtseo-shared: 5.1.3(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       scule: 1.3.0
       tinyglobby: 0.2.17
       ufo: 1.6.4
@@ -25230,7 +25354,7 @@ snapshots:
       nuxt-site-config-kit: 4.0.8(magicast@0.5.3)(vue@3.5.38)
       nuxtseo-shared: 5.1.3(@nuxt/schema@4.4.2)(@voidzero-dev/vite-plus-core@0.1.19)(magicast@0.5.3)(nuxt-site-config@4.0.8)(nuxt@4.4.2)(vue@3.5.38)(zod@4.4.3)
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       site-config-stack: 4.0.8(vue@3.5.38)
       ufo: 1.6.4
     transitivePeerDependencies:
@@ -25488,7 +25612,7 @@ snapshots:
       nuxt: 4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6)(@electric-sql/pglite@0.4.1)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@netlify/blobs@10.7.9)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(@voidzero-dev/vite-plus-core@0.1.19)(@vue/compiler-sfc@3.5.38)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.0)(eslint@9.39.4)(ioredis@5.10.1)(magicast@0.5.3)(meow@13.2.0)(mysql2@3.15.3)(optionator@0.9.4)(rolldown@1.0.1)(rollup-plugin-visualizer@7.0.1)(rollup@4.60.0)(terser@5.48.0)(tsx@4.22.3)(typescript@6.0.3)(vue-tsc@3.3.2)(yaml@2.9.0)
       ofetch: 1.5.1
       pathe: 2.0.3
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       radix3: 1.1.2
       sirv: 3.0.2
       std-env: 4.1.0
@@ -28338,7 +28462,7 @@ snapshots:
       mlly: 1.8.2
       pathe: 2.0.3
       picomatch: 4.0.4
-      pkg-types: 2.3.0
+      pkg-types: 2.3.1
       scule: 1.3.0
       strip-literal: 3.1.0
       tinyglobby: 0.2.17

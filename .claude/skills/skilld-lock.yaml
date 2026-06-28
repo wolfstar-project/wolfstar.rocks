@@ -404,11 +404,11 @@ skills:
     generator: skilld
   prisma-adapter-pg-skilld:
     packageName: "@prisma/adapter-pg"
-    version: 7.7.0
-    packages: "@prisma/adapter-pg@7.7.0"
+    version: 7.8.0
+    packages: "@prisma/adapter-pg@7.8.0"
     repo: prisma/prisma
-    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
-    syncedAt: 2026-04-09
+    source: "https://github.com/prisma/prisma/tree/7.8.0/docs"
+    syncedAt: 2026-06-28
     generator: skilld
   stale-dep-skilld:
     packageName: stale-dep

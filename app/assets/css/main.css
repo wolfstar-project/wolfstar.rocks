@@ -5,6 +5,10 @@
 @import "./utilities.css";
 @import "./view-transitions.css";
 
+:root {
+	scroll-behavior: smooth;
+}
+
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 
@@ -171,6 +175,9 @@
 		--ui-border-accented: var(--color-base-200);
 		--ui-border-inverted: var(--color-neutral-900);
 
+		/* Lightest/elevated surface for Discord message mockups */
+		--discord-surface: var(--color-base-100);
+
 		--ui-radius: var(--radius-box);
 		--ui-container: var(--container-7xl);
 	}
@@ -195,6 +202,9 @@
 		--ui-border-accented: var(--color-base-200);
 		--ui-border-inverted: var(--color-white);
 
+		/* Lightest/elevated surface for Discord message mockups */
+		--discord-surface: var(--color-base-100);
+
 		--ui-radius: var(--radius-box);
 		--ui-container: var(--container-7xl);
 	}
@@ -218,6 +228,9 @@
 		--ui-border-muted: var(--color-base-200);
 		--ui-border-accented: var(--color-base-300);
 		--ui-border-inverted: var(--color-white);
+
+		/* base-100 is pure black in midnight; use lightest base instead */
+		--discord-surface: var(--color-base-300);
 
 		--ui-radius: var(--radius-box);
 		--ui-container: var(--container-7xl);

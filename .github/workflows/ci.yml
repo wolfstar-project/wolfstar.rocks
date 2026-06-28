@@ -23,7 +23,7 @@ permissions:
 jobs:
   lint:
     name: 🔠 Lint project
-    runs-on: ubuntu-24.04-arm
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -43,7 +43,7 @@ jobs:
 
   unit:
     name: 🧪 Unit tests
-    runs-on: ubuntu-24.04-arm
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -81,7 +81,7 @@ jobs:
 
   test:
     name: 🧪 Component tests
-    runs-on: ubuntu-24.04-arm
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -94,7 +94,7 @@ jobs:
           cache: true
 
       - name: 🌐 Install browser
-        run: vp exec playwright install chromium-headless-shell
+        run: vp exec playwright install --with-deps chromium-headless-shell
 
       - name: 🧪 Component tests
         run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
@@ -124,7 +124,7 @@ jobs:
 
   browser:
     name: 🖥️ Browser tests
-    runs-on: ubuntu-24.04-arm
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
     container:
       image: mcr.microsoft.com/playwright:v1.60.0-noble@sha256:9bd26ad900bb5e0f4dee75839e957a89ae89c2b7ab1e76050e559790e946b948
 
@@ -164,7 +164,7 @@ jobs:
 
   benchmark:
     name: ⚡ Benchmarks
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -184,7 +184,7 @@ jobs:
 
   a11y:
     name: ♿ Accessibility audit
-    runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: blacksmith-4vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
     strategy:
       matrix:
         mode: [dark, light]
@@ -215,7 +215,7 @@ jobs:
 
   perf:
     name: ⚡ Performance
-    runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: blacksmith-4vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -242,7 +242,7 @@ jobs:
 
   knip:
     name: 🧹 Unused code check
-    runs-on: ubuntu-24.04-arm
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

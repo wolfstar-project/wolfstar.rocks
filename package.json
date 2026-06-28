@@ -56,7 +56,10 @@
 		"test:bench": "vp test bench",
 		"start:playwright:webserver": "NODE_ENV=test vp run preview --port 5678",
 		"typecheck": "stale-dep && nuxt typecheck",
-		"update:interactive": "taze"
+		"update:interactive": "taze",
+		"storybook": "STORYBOOK=true storybook dev -p 6006",
+		"build-storybook": "STORYBOOK=true storybook build",
+		"chromatic": "chromatic"
 	},
 	"dependencies": {
 		"@iconify-json/emojione": "^1.2.3",
@@ -86,6 +89,7 @@
 		"@vueuse/motion": "^3.0.3",
 		"@vueuse/nuxt": "^14.2.1",
 		"@vueuse/router": "^14.2.1",
+		"chromatic": "^17.0.0",
 		"dotenv": "^17.3.1",
 		"evlog": "^2.14.0",
 		"fuse.js": "^7.1.0",
@@ -102,7 +106,7 @@
 		"tw-animate-css": "^1.4.0",
 		"valibot": "^1.2.0",
 		"vite": "^8.0.3",
-		"vite-plus": "^0.1.14"
+		"vite-plus": "0.1.22"
 	},
 	"devDependencies": {
 		"@codspeed/vitest-plugin": "5.4.0",
@@ -120,6 +124,10 @@
 		"@sapphire/time-utilities": "1.7.14",
 		"@sapphire/utilities": "3.18.2",
 		"@shelve/cli": "4.2.0",
+		"@storybook-vue/nuxt": "catalog:storybook",
+		"@storybook/addon-a11y": "catalog:storybook",
+		"@storybook/addon-docs": "catalog:storybook",
+		"@storybook/addon-themes": "catalog:storybook",
 		"@tailwindcss/typography": "0.5.19",
 		"@takumi-rs/core": "1.6.0",
 		"@takumi-rs/wasm": "1.6.0",
@@ -134,10 +142,13 @@
 		"eslint-plugin-regexp": "3.1.0",
 		"jsdom": "29.1.1",
 		"knip": "6.14.2",
+		"msw": "catalog:msw",
+		"msw-storybook-addon": "catalog:storybook",
 		"prisma": "7.8.0",
 		"prisma-json-types-generator": "5.1.0",
 		"rolldown": "^1.0.1",
 		"skilld": "1.7.4",
+		"storybook": "catalog:storybook",
 		"tailwindcss": "4.3.0",
 		"taze": "19.14.1",
 		"tsx": "4.22.3",
@@ -154,5 +165,8 @@
 		"node": ">=24",
 		"pnpm": ">=10"
 	},
-	"packageManager": "pnpm@11.3.0"
+	"packageManager": "pnpm@11.3.0",
+	"storybook": {
+		"url": "https://storybook.wolfstar.rocks"
+	}
 }

@@ -309,6 +309,17 @@
 	animation: fade-in-up 0.6s ease-out forwards;
 }
 
+/* Scroll-driven reveal: animates fade-in-up tied to the element's viewport entry.
+   Wrapped in @supports so browsers without scroll-driven animations show the element
+   immediately (no opacity:0 stuck state). */
+@utility animate-on-scroll {
+	@supports (animation-timeline: view()) {
+		animation: fade-in-up linear both;
+		animation-timeline: view();
+		animation-range: entry 0% entry 30%;
+	}
+}
+
 /* LCP-safe entrance: animates transform only (no opacity), so above-the-fold
    hero text paints immediately and does not delay Largest Contentful Paint. */
 @utility animate-fade-in-up-safe {
@@ -397,6 +408,19 @@
 	scroll-behavior: auto !important;
 }
 
+/* Scroll-driven animations use scroll progress, not time, so animation-duration: 0.01ms
+   does not neutralize them. Override animate-on-scroll explicitly so elements are always
+   visible under reduced motion. */
+:root[data-reduce-motion="true"] .animate-on-scroll {
+	animation: none !important;
+}
+
+/* The * selector above does not cover :root itself, so scroll-behavior: smooth set on
+   :root in main.css must be disabled separately for the app-level reduced-motion toggle. */
+:root[data-reduce-motion="true"] {
+	scroll-behavior: auto !important;
+}
+
 /* Intentional duplication (see above): prefers-reduced-motion fallback */
 @media (prefers-reduced-motion: reduce) {
 	*,
@@ -406,5 +430,9 @@
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+
+	.animate-on-scroll {
+		animation: none !important;
 	}
 }

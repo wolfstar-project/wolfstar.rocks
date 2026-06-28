@@ -1,0 +1,44 @@
+# setResponseStatus
+
+> setResponseStatus sets the status (and optionally the statusText) of the response.
+
+Nuxt provides composables and utilities for first-class server-side-rendering support.
+
+`setResponseStatus` sets the status (and optionally the statusText) of the response.
+
+<important>
+
+`setResponseStatus` can only be called in the [Nuxt context](/docs/4.x/guide/going-further/nuxt-app#the-nuxt-context).
+
+</important>
+
+```ts
+const event = useRequestEvent()
+
+// event will be undefined in the browser
+if (event) {
+  // Set the status code to 404 for a custom 404 page
+  setResponseStatus(event, 404)
+
+  // Set the status message as well
+  setResponseStatus(event, 404, 'Page Not Found')
+}
+```
+
+<note>
+
+In the browser, `setResponseStatus` will have no effect.
+
+</note>
+
+<read-more to="/docs/4.x/getting-started/error-handling">
+
+
+
+</read-more>
+
+
+
+---
+
+- Source

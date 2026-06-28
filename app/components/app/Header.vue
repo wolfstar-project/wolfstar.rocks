@@ -4,6 +4,7 @@
 			<NuxtLink
 				class="mr-4 flex items-center transition-transform hover:scale-105"
 				:to="currentApp.explore"
+				:aria-label="`${currentApp.name} home`"
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
 				<span v-else class="text-ui-100 ml-2 text-2xl font-bold">{{

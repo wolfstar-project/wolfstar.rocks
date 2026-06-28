@@ -1,5 +1,3 @@
-import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
 import {
 	AppFooter,
 	AppHeader,
@@ -17,6 +15,8 @@ import {
 	IconsWolfstar,
 	Separator,
 } from "#components";
+import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { describe, expect, it } from "vitest";
 import { runAxe } from "./utils/axe";
 
 // Stub used when auditing AppHeader so the header doesn't depend on the lazy auth

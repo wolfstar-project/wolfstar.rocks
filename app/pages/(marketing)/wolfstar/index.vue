@@ -3,10 +3,10 @@
 	<div class="hero-pattern" aria-hidden="true"></div>
 
 	<section class="relative z-10 mt-28 flex flex-col items-center text-center">
-		<h1 class="title animate-fade-in-up gradient-text-hero pb-4">
+		<h1 class="title animate-fade-in-up-safe gradient-text-hero pb-4">
 			Imagine a<br />moderation app
 		</h1>
-		<p class="max-w-120 animate-fade-in-up text-base-content/80 animate-fade-in-delay-1">
+		<p class="max-w-120 animate-fade-in-up-safe text-base-content/80 [animation-delay:0.1s]">
 			A very customizable multilanguage application to help you moderate your server, with a
 			complete logging suite and more,
 			<span class="font-bold underline underline-offset-2">100% for free</span>!
@@ -42,12 +42,7 @@
 		</div>
 	</section>
 
-	<section
-		ref="moreRef"
-		class="prose"
-		:class="{ 'animate-fade-in-up': moreVisible }"
-		:style="!moreVisible ? 'opacity: 0' : undefined"
-	>
+	<section class="prose animate-on-scroll">
 		<h3 class="mt-32 text-center text-3xl font-bold">And more!</h3>
 		<p>WolfStar not only comes with a very complete moderation suite, but also:</p>
 		<ul>
@@ -78,12 +73,7 @@
 		</ul>
 	</section>
 
-	<section
-		ref="inviteRef"
-		class="invite-card mt-32 flex flex-col items-center"
-		:class="{ 'animate-fade-in-up': inviteVisible }"
-		:style="!inviteVisible ? 'opacity: 0' : undefined"
-	>
+	<section class="invite-card mt-32 flex animate-on-scroll flex-col items-center">
 		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
 		<div class="join">
@@ -113,34 +103,6 @@ const Invites = useInvites();
 
 const selectedFeatureIndex = ref(0);
 
-// Scroll-triggered reveal for below-fold content sections.
-const moreRef = ref<HTMLElement | null>(null);
-const moreVisible = ref(false);
-const inviteRef = ref<HTMLElement | null>(null);
-const inviteVisible = ref(false);
-
-const { stop: stopMoreObserver } = useIntersectionObserver(
-	moreRef,
-	(entries) => {
-		if (entries[0]?.isIntersecting) {
-			moreVisible.value = true;
-			stopMoreObserver();
-		}
-	},
-	{ rootMargin: "100px" },
-);
-
-const { stop: stopInviteObserver } = useIntersectionObserver(
-	inviteRef,
-	(entries) => {
-		if (entries[0]?.isIntersecting) {
-			inviteVisible.value = true;
-			stopInviteObserver();
-		}
-	},
-	{ rootMargin: "100px" },
-);
-
 // Lazy-mount the Explore section components only when the section approaches
 // the viewport, keeping them out of the initial JS critical path.
 const exploreRef = ref<HTMLElement | null>(null);
@@ -161,18 +123,15 @@ const { stop: stopExploreObserver } = useIntersectionObserver(
 			stopExploreObserver();
 		}
 	},
-	// Start loading ~400px before the section enters the viewport so
-	// the components are ready before the user actually sees them.
-	{ rootMargin: "400px" },
+	// Keep margin at 0 so below-fold Discord showcase chunks stay off the
+	// initial hydration path (a large rootMargin was loading them during LCP).
+	{ rootMargin: "0px" },
 );
 
 function openFeature(index: number) {
 	selectedFeatureIndex.value = index;
 	exploreLoaded.value = true;
-	const element = document.getElementById("explore");
-	if (element) {
-		element.scrollIntoView({ behavior: "smooth" });
-	}
+	window.location.hash = "#explore";
 }
 </script>
 

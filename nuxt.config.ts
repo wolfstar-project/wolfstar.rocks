@@ -6,6 +6,7 @@ import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
+const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -29,7 +30,7 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI ? [] : [netlifyNuxt]),
+		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
 	$development: {
@@ -131,6 +132,12 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	auth: {
+		// Avoid eager session hydration on marketing pages; protected routes and
+		// HeaderAuth fetch explicitly when a session is needed.
+		loadStrategy: "none",
+	},
+
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -226,8 +233,10 @@ export default defineNuxtConfig({
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
+		"/commands": { appLayout: "default", prerender: true, robots: true },
+		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
-		"/wolfstar": { appLayout: "default", robots: true },
+		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 	},
 
 	sourcemap: {
@@ -241,13 +250,19 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		viteEnvironmentApi: true,
+		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
 	},
 
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
+		// Pre-compress prerendered HTML and /_nuxt assets so the server (and any
+		// origin without edge compression) serves gzip/brotli with correct headers.
+		compressPublicAssets: {
+			brotli: true,
+			gzip: true,
+		},
 		future: {
 			nativeSWR: true,
 		},
@@ -361,38 +376,28 @@ export default defineNuxtConfig({
 	},
 
 	fonts: {
+		providers: {
+			fontshare: false,
+		},
 		families: [
 			{
+				display: "swap",
 				global: true,
 				name: "Geist",
-				preload: true,
-				subsets: ["latin"],
+				provider: "local",
+				weights: [400, 500, 600, 700],
+			},
+			{
+				display: "swap",
+				global: true,
+				name: "Geist Mono",
+				provider: "local",
 				weights: [400, 500, 600, 700],
 			},
 			{
 				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Book.woff", format: "woff" }],
-				weight: 400,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Medium.woff", format: "woff" }],
-				weight: 500,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [
-					{ url: "https://cdn.skyra.pw/whitney-font/v2/Semibold.woff", format: "woff" },
-				],
-				weight: 600,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Bold.woff", format: "woff" }],
-				weight: 700,
+				provider: "local",
+				weights: [400, 500, 600, 700],
 				display: "swap",
 			},
 		],
@@ -422,6 +427,7 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
+		enabled: !isStorybook,
 		security: {
 			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
 			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
@@ -455,13 +461,7 @@ export default defineNuxtConfig({
 					"https://*.sentry.io",
 				],
 				"default-src": ["'self'"],
-				"font-src": [
-					"'self'",
-					"https:",
-					"data:",
-					"https://cdn.wolfstar.rocks",
-					"https://rsms.me",
-				],
+				"font-src": ["'self'", "data:"],
 				"form-action": ["'none'"],
 				"frame-ancestors": ["'none'"],
 				"frame-src": ["https:"],
@@ -526,6 +526,9 @@ export default defineNuxtConfig({
 	sentry: {
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
+		sourcemaps: {
+			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
+		},
 	},
 
 	seo: {
@@ -562,6 +565,8 @@ export default defineNuxtConfig({
 	},
 
 	vitalizer: {
+		disablePrefetchLinks: true,
+		disablePreloadLinks: true,
 		disableStylesheets: "entry",
 	},
 });

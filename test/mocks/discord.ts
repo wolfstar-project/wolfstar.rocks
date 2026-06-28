@@ -1,10 +1,3 @@
-import type { User } from "#auth-utils";
-import type {
-	FlattenedEmoji,
-	FlattenedGuildChannel,
-	FlattenedRole,
-	OauthFlattenedGuild,
-} from "#shared/types/discord";
 import type { ChannelType } from "discord-api-types/v10";
 
 /**

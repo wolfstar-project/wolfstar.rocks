@@ -15,9 +15,11 @@
 </template>
 
 <script setup lang="ts">
+useSessionRefresh();
+
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");
-const { fetch: refreshSession } = useUserSession();
+
 // Watch for route changes to update appName
 watch(
 	router.currentRoute,
@@ -36,12 +38,4 @@ watch(
 );
 
 provide(ProviderAppNameKey, appName);
-
-onMounted(() => {
-	if (!import.meta.test) return;
-	// In test environments, trigger a refresh explicitly instead of relying on the normal session flow.
-	void $fetch("/api/auth/refresh")
-		.then(refreshSession)
-		.catch(() => {});
-});
 </script>

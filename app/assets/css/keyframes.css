@@ -36,6 +36,17 @@
 	}
 }
 
+/* Transform-only variant for above-the-fold LCP text: the element is painted
+   at full opacity immediately, so the entrance motion never delays LCP. */
+@keyframes fade-in-up-safe {
+	from {
+		transform: translateY(20px);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
 @keyframes shimmer {
 	0%,
 	100% {

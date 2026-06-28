@@ -15,9 +15,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	const loginRoute = auth?.loginRoute || config.loginRoute;
 	const redirectIfLoggedIn = auth?.redirectIfLoggedIn ?? false;
 
-	const { loggedIn } = useAuth({ namespace: authNamespace });
+	const { loggedIn, fetch: fetchSession } = useAuth({ namespace: authNamespace });
 
 	const redirectTo = useState<string>("authRedirect", () => "/");
+
+	if (authRequired || (typeof redirectIfLoggedIn === "string" && redirectIfLoggedIn)) {
+		await fetchSession();
+	}
 
 	if (typeof redirectIfLoggedIn === "string" && redirectIfLoggedIn && loggedIn.value) {
 		return navigateTo({ path: redirectIfLoggedIn }, { redirectCode: 302 });

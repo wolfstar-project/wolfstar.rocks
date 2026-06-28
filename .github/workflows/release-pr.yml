@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   release-pr:
     name: 🚀 Create or update release PR
-    runs-on: ubuntu-slim
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
       contents: read

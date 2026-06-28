@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   tag:
     name: 🏷️ Tag release and create GitHub Release
-    runs-on: ubuntu-slim
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
       contents: write # create release tags and GitHub releases

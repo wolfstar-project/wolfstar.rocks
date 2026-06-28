@@ -13,7 +13,9 @@
 			<UContainer>
 				<UFooterColumns class="p-10" :columns aria-label="Footer navigation">
 					<template #right>
-						<PwaInstallPrompt class="xl:hidden" />
+						<ClientOnly>
+							<PwaInstallPrompt class="xl:hidden" />
+						</ClientOnly>
 						<div class="flex-auto"></div>
 						<UButton
 							label="Powered by Netlify"

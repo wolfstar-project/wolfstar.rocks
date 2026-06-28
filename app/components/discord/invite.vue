@@ -1,5 +1,7 @@
 <template>
-	<div class="mt-2 rounded-md bg-base-200 px-2 pt-2 pb-2 drop-shadow-lg sm:px-4 sm:pb-4">
+	<div
+		class="mt-2 rounded-md bg-base-200 px-2 pt-2 pb-2 text-base-content drop-shadow-lg sm:px-4 sm:pb-4"
+	>
 		<span class="text-xs font-extrabold uppercase">You've been invited to join a server</span>
 		<div class="mt-2 flex">
 			<div
@@ -29,7 +31,7 @@
 				</div>
 			</div>
 			<div>
-				<nuxt-link :to="link" class="btn btn-error max-sm:btn-sm">Join</nuxt-link>
+				<UButton :to="link" color="error" size="sm" class="sm:text-base">Join</UButton>
 			</div>
 		</div>
 	</div>

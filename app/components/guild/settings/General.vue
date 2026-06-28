@@ -23,7 +23,7 @@
 			</div>
 		</dl>
 
-		<div class="mt-4 flex flex-col items-center gap-3 md:flex-row md:items-start">
+		<div class="mt-4 flex flex-col items-start gap-3 md:flex-row">
 			<UButton
 				color="neutral"
 				variant="link"
@@ -116,15 +116,50 @@
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
+
+	<ActivitySection
+		title="Recent Activity"
+		:total="auditLogTotal"
+		:status="auditLogStatus"
+		:item-count="auditEntries.length"
+		:max-visible="0"
+		empty-icon="heroicons:clipboard-document-list"
+		empty-title="No settings changes yet"
+		empty-description="Changes you make to this server's settings will appear here so you can track who changed what."
+		refresh-label="Refresh audit log"
+		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		@refresh="refreshAuditLog()"
+	>
+		<UTable
+			ref="table"
+			:data="auditEntries"
+			:columns="auditLogColumns"
+			:loading="auditLogStatus === 'pending'"
+			:pagination-options="{
+				getPaginationRowModel: getPaginationRowModel(),
+			}"
+			class="shrink-0"
+			:ui="{
+				base: 'table-fixed border-separate border-spacing-0',
+				thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
+				tbody: '[&>tr]:last:[&>td]:border-b-0',
+				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
+				td: 'border-b border-default',
+				separator: 'h-0',
+			}"
+		/>
+	</ActivitySection>
 </template>
 
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
+import type { TableColumn } from "@nuxt/ui";
 import {
 	GeneralSettingsSchema as schema,
 	type GeneralSettingsSchemaType as Schema,
 } from "#shared/schemas";
+import { getPaginationRowModel } from "@tanstack/table-core";
 import { ChannelType } from "discord-api-types/v10";
 
 const { languages } = defineProps<{
@@ -133,8 +168,69 @@ const { languages } = defineProps<{
 
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
+
 const toast = useToast();
+
 const { copy, copied } = useClipboard();
+
+const UAvatar = resolveComponent("UAvatar");
+
+const auditLogPage = ref(1);
+const page = ref(10);
+const offset = computed(() => (auditLogPage.value - 1) * page.value);
+
+const {
+	entries: auditEntries,
+	total: auditLogTotal,
+	refresh: refreshAuditLog,
+	status: auditLogStatus,
+} = useAuditLog({
+	guildId: guildData.value.id,
+	limit: page,
+	offset,
+});
+
+const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
+	{
+		accessorKey: "timestamp",
+		header: "Date",
+		cell: ({ row }) => {
+			return h(
+				"time",
+				{
+					class: "whitespace-nowrap text-xs text-highlighted",
+					datetime: new Date(row.original.timestamp).toISOString(),
+				},
+				new Date(row.original.timestamp).toLocaleString(),
+			);
+		},
+	},
+	{
+		accessorKey: "member",
+		header: "User",
+		cell: ({ row }) => {
+			return h("div", { class: "flex items-center gap-3" }, [
+				h(UAvatar, {
+					...auditLogMemberAvatar(row.original.member),
+					size: "lg",
+				}),
+				h("div", undefined, [
+					h(
+						"p",
+						{ class: "font-medium text-highlighted" },
+						auditLogMemberName(row.original.member),
+					),
+					h("p", { class: "" }, `@${row.original.member.user.username}`),
+				]),
+			]);
+		},
+	},
+	{
+		id: "description",
+		header: "Action",
+		cell: ({ row }) => auditLogActionDescription(row.original),
+	},
+];
 
 const serverStats = computed(() => {
 	const guild = guildData.value;

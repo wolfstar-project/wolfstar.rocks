@@ -14,7 +14,7 @@ node_modules
 .pnpm-store
 
 # Logs
-logs
+/logs
 *.log
 
 # Misc
@@ -46,20 +46,22 @@ coverage/
 playwright-report/
 test-results/
 
-# Audit log (dev-only FS drain, never commit)
-.audit/
-
 # Benchmarks
 .codspeed
 
 # Lighthouse
 .lighthouseci
 
-# Agents
-plans
 
 # Skilld references (recreated by `skilld install`)
 .skilld
 package-lock.json
 
 .nvmrc
+
+# Storybook
+*storybook.log
+storybook-static
+
+# Claude misc
+.claude/state

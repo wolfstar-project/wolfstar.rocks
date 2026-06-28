@@ -1,0 +1,21 @@
+# State Management
+
+> This example shows how to use the `useState` composable to create a reactive and SSR-friendly shared state across components.
+
+<read-more to="/docs/getting-started/state-management">
+
+
+
+</read-more>
+
+<read-more to="/docs/api/composables/use-state">
+
+
+
+</read-more>
+
+<sandbox branch="main" dir="examples/features/state-management" file="app.vue" repo="nuxt/examples">
+
+
+
+</sandbox>

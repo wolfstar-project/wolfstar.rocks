@@ -26,11 +26,11 @@ html:active-view-transition-type(nav-back) {
 	}
 }
 
-/* Marketing routes get a slightly shorter tempo */
+/* Marketing routes get a snappier tempo to keep navigation feeling instant */
 html:active-view-transition-type(route-marketing) {
 	&::view-transition-old(root),
 	&::view-transition-new(root) {
-		animation-duration: 200ms;
+		animation-duration: 150ms;
 	}
 }
 

@@ -81,3 +81,10 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
+
+<!-- skilld -->
+
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+
+<!-- /skilld -->

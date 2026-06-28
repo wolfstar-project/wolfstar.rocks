@@ -1,6 +1,7 @@
 import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
+import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
 import { createOAuthState } from "#server/utils/oauth-state";
 import { userLogin } from "#shared/audit/actions";
 import { isSafeRedirectPath } from "#shared/utils/redirect";
@@ -48,7 +49,7 @@ export default defineWrappedResponseHandler(
 		const oauthHandler = defineOAuthDiscordEventHandler({
 			config: {
 				authorizationParams,
-				scope: ["guilds.members.read"],
+				scope: ["guilds.members.read", "email"],
 			},
 
 			async onError(_event: H3Event, error: NuxtError) {
@@ -82,8 +83,17 @@ export default defineWrappedResponseHandler(
 						id: user.id,
 						name: user.global_name ?? user.username,
 						username: user.username,
+						email: user.email ?? null,
 					},
 				});
+
+				const cacheInvalidation = invalidateCurrentUserCache(user.id).catch((error) => {
+					log.error("Failed to invalidate current user cache after login", {
+						error,
+						userId: user.id,
+					});
+				});
+				event.waitUntil?.(cacheInvalidation);
 
 				log.set({ user: { id: user.id, username: user.username } });
 				log.audit(

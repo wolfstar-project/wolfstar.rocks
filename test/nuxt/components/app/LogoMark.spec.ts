@@ -1,9 +1,7 @@
 import { AppLogoMark } from "#components";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { renderToString } from "@vue/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSSRApp, nextTick } from "vue";
-import { runAxe } from "../../utils/axe";
 
 /**
  * Substrings Vue logs (dev build) when the client render does not match the
@@ -34,6 +32,7 @@ afterEach(() => {
 	vi.restoreAllMocks();
 });
 
+// Accessibility audits for AppLogoMark live in test/nuxt/a11y.spec.ts.
 describe("AppLogoMark", () => {
 	describe("hydration", () => {
 		it("hydrates server-rendered markup without mismatch warnings", async () => {
@@ -88,22 +87,6 @@ describe("AppLogoMark", () => {
 			expect(container.querySelector("svg")?.getAttribute("class")).toBe("h-20 w-45");
 
 			app.unmount();
-		});
-	});
-
-	describe("accessibility", () => {
-		it("has no axe-core violations", async () => {
-			const wrapper = await mountSuspended(AppLogoMark);
-			const results = await runAxe(wrapper);
-			expect(results.violations).toEqual([]);
-		});
-
-		it("marks the decorative logo as aria-hidden so it is ignored by assistive tech", async () => {
-			const wrapper = await mountSuspended(AppLogoMark);
-			const svg = wrapper.find("svg");
-			expect(svg.exists()).toBe(true);
-			expect(svg.attributes("aria-hidden")).toBe("true");
-			expect(svg.attributes("role")).toBeUndefined();
 		});
 	});
 });

@@ -97,7 +97,11 @@ export default defineNuxtPlugin((nuxtApp) => {
 			for (const type of types) typed.types.add(type);
 		}
 
-		transition.finished.then(resetTransitionState);
+		// Reset once the transition settles. When a navigation is interrupted or its
+		// destination route throws, the browser skips the transition and rejects with
+		// "AbortError: Transition was skipped". Settle on both outcomes so it never
+		// surfaces as an unhandled rejection.
+		void Promise.allSettled([transition.ready, transition.finished]).then(resetTransitionState);
 
 		return ready;
 	});

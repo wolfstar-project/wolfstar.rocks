@@ -272,15 +272,22 @@ Use `createError` for error responses with proper status codes. Use the `onError
 
 ### Import order
 
-1. Type imports first (`import type { ... }`)
-2. External packages
-3. Internal aliases (`#shared/`, `#server/`, etc.)
-4. No blank lines between groups
+`oxfmt` (`experimentalSortImports` in `vite.config.ts`) sorts imports into the following groups, with no blank lines between them:
+
+1. External type imports (`import type { ... } from "h3"`)
+2. Internal type imports (`import type { ... } from "#shared/..."`)
+3. Node.js built-ins (`node:crypto`, `node:path`)
+4. External packages
+5. Internal aliases (`#shared/`, `#server/`, `@/`, `~/`)
+6. Relative imports (`./`, `../`)
 
 ```typescript
+import type { H3Event } from "h3";
 import type { GuildSettings } from "#shared/types";
+import { createHash } from "node:crypto";
 import { parse } from "valibot";
 import { GuildSettingsSchema } from "#shared/schemas/guild-settings";
+import { resolveMember } from "./resolve-members";
 ```
 
 ### Naming conventions

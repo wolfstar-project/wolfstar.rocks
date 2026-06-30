@@ -24,11 +24,17 @@ function getCodspeedV8Flags() {
 export default defineConfig({
 	run: {
 		tasks: {
-			lint: {
+			"lint": {
 				command: "vp lint && vp fmt --check",
 			},
-			knip: {
+			"knip": {
 				command: "knip && knip --production --exclude dependencies",
+			},
+			"zizmor": {
+				command: "zizmor --pedantic .",
+			},
+			"zizmor:fix": {
+				command: "zizmor --pedantic --fix .",
 			},
 		},
 	},

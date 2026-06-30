@@ -55,6 +55,10 @@ export function useHeader() {
 			label: "Commands",
 			to: "/commands",
 		},
+		{
+			label: "Blog",
+			to: "/blog",
+		},
 	]);
 
 	const mobileLinks = computed(() => [
@@ -87,6 +91,10 @@ export function useHeader() {
 		{
 			label: "Commands",
 			to: "/commands",
+		},
+		{
+			label: "Blog",
+			to: "/blog",
 		},
 		...(currentApp.value.invite !== "#"
 			? [

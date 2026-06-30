@@ -32,3 +32,20 @@ from = "https://social.wolfstar.rocks/twitter"
 to = "https://twitter.com/WolfstarApp"
 status = 301
 force = true
+
+[[redirects]]
+from = "https://blog.wolfstar.rocks/*"
+to = "https://wolfstar.rocks/blog/:splat"
+status = 301
+force = true
+
+[[redirects]]
+from = "https://blog.wolfstar.rocks"
+to = "https://wolfstar.rocks/blog"
+status = 301
+force = true
+
+[[redirects]]
+from = "/wolfstar-v7"
+to = "/blog/wolfstar-v7"
+status = 301

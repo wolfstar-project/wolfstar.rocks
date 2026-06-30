@@ -5,6 +5,8 @@
 @import "./utilities.css";
 @import "./view-transitions.css";
 
+@source "../../../content/**/*";
+
 :root {
 	scroll-behavior: smooth;
 }

@@ -13,7 +13,9 @@
 			<UContainer>
 				<UFooterColumns class="p-10" :columns aria-label="Footer navigation">
 					<template #right>
-						<PwaInstallPrompt class="xl:hidden" />
+						<ClientOnly>
+							<PwaInstallPrompt class="xl:hidden" />
+						</ClientOnly>
 						<div class="flex-auto"></div>
 						<UButton
 							label="Powered by Netlify"
@@ -32,7 +34,7 @@
 		</template>
 
 		<template #left>
-			<aside>
+			<div>
 				<div class="flex items-center gap-4">
 					<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
 						<icons-wolfstar class="h-12 w-12" aria-hidden="true" />
@@ -50,7 +52,7 @@
 				<div class="pl-14 sm:pl-12">
 					<BuildEnvironment :footer="true" :buildInfo />
 				</div>
-			</aside>
+			</div>
 		</template>
 		<template #right>
 			<ColorModeButton />

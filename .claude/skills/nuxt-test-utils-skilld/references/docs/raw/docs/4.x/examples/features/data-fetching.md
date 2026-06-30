@@ -1,0 +1,21 @@
+# Data Fetching
+
+> This example demonstrates data fetching with Nuxt using built-in composables and API routes.
+
+<read-more to="/docs/getting-started/data-fetching">
+
+
+
+</read-more>
+
+<read-more to="/docs/guide/directory-structure/server">
+
+
+
+</read-more>
+
+<sandbox branch="main" dir="examples/features/data-fetching" file="app.vue" repo="nuxt/examples">
+
+
+
+</sandbox>

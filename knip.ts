@@ -22,7 +22,9 @@ const config: KnipConfig = {
 				"!.agent/**",
 				"!.claude/**",
 			],
-			husky: false,
+			msw: {
+				entry: [".storybook/.public/mockServiceWorker.js"],
+			},
 			ignoreDependencies: [
 				"@iconify-json/*",
 				"@commitlint/cli",
@@ -54,6 +56,9 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
+
+				/** Used in the app in guild/logs components */
+				"@tanstack/table-core",
 
 				/** Used in the test */
 				"axe-core",

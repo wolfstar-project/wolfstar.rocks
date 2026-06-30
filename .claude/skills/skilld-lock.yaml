@@ -80,11 +80,11 @@ skills:
     generator: skilld
   nuxt-skilld:
     packageName: nuxt
-    version: 4.4.2
-    packages: "nuxt@4.4.2"
+    version: 4.4.8
+    packages: "nuxt@4.4.8"
     repo: nuxt/nuxt
     source: "https://nuxt.com/llms.txt"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-06-27
     generator: skilld
   valibot-skilld:
     packageName: valibot
@@ -112,11 +112,11 @@ skills:
     generator: skilld
   nuxt-test-utils-skilld:
     packageName: "@nuxt/test-utils"
-    version: 4.0.0
-    packages: "@nuxt/test-utils@4.0.0"
+    version: 4.0.3
+    packages: "@nuxt/test-utils@4.0.3"
     repo: nuxt/test-utils
     source: "http://nuxt.com/llms.txt"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-06-27
     generator: skilld
   sapphire-time-utilities-skilld:
     packageName: "@sapphire/time-utilities"
@@ -280,11 +280,11 @@ skills:
     generator: skilld
   vitest-browser-playwright-skilld:
     packageName: "@vitest/browser-playwright"
-    version: 4.1.6
-    packages: "@vitest/browser-playwright@4.1.6"
+    version: 4.1.7
+    packages: "@vitest/browser-playwright@4.1.7"
     repo: vitest-dev/vitest
-    source: "https://raw.githubusercontent.com/vitest-dev/vitest/main/packages/browser-playwright/README.md"
-    syncedAt: 2026-05-12
+    source: "https://github.com/vitest-dev/vitest/tree/v4.1.7/docs"
+    syncedAt: 2026-06-22
     generator: skilld
   nuxt-fonts-skilld:
     packageName: "@nuxt/fonts"
@@ -367,11 +367,11 @@ skills:
     generator: skilld
   nuxt-og-image-skilld:
     packageName: nuxt-og-image
-    version: 6.4.8
-    packages: "nuxt-og-image@6.4.8"
+    version: 6.5.3
+    packages: "nuxt-og-image@6.5.3"
     repo: nuxt-modules/og-image
-    source: "https://raw.githubusercontent.com/nuxt-modules/og-image/main/README.md"
-    syncedAt: 2026-05-12
+    source: "https://nuxtseo.com/llms.txt"
+    syncedAt: 2026-06-27
     generator: skilld
   prisma-client-skilld:
     packageName: "@prisma/client"
@@ -396,19 +396,19 @@ skills:
     generator: skilld
   knip-skilld:
     packageName: knip
-    version: 5.88.1
-    packages: "knip@5.88.1"
+    version: 6.14.2
+    packages: "knip@6.14.2"
     repo: webpro-nl/knip
-    source: "https://raw.githubusercontent.com/webpro-nl/knip/main/packages/knip/README.md"
-    syncedAt: 2026-03-22
+    source: "ungh://webpro-nl/knip/packages/knip@knip@6.14.2"
+    syncedAt: 2026-06-22
     generator: skilld
   prisma-adapter-pg-skilld:
     packageName: "@prisma/adapter-pg"
-    version: 7.7.0
-    packages: "@prisma/adapter-pg@7.7.0"
+    version: 7.8.0
+    packages: "@prisma/adapter-pg@7.8.0"
     repo: prisma/prisma
-    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
-    syncedAt: 2026-04-09
+    source: "https://github.com/prisma/prisma/tree/7.8.0/docs"
+    syncedAt: 2026-06-28
     generator: skilld
   stale-dep-skilld:
     packageName: stale-dep

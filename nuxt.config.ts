@@ -6,6 +6,7 @@ import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
+const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -29,7 +30,7 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI ? [] : [netlifyNuxt]),
+		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
 	$development: {
@@ -249,7 +250,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		viteEnvironmentApi: true,
+		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
 	},
 
@@ -426,6 +427,7 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
+		enabled: !isStorybook,
 		security: {
 			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
 			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
@@ -524,6 +526,9 @@ export default defineNuxtConfig({
 	sentry: {
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
+		sourcemaps: {
+			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
+		},
 	},
 
 	seo: {

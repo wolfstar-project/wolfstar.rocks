@@ -1,63 +1,8 @@
-import type { VueWrapper } from "@vue/test-utils";
-import type { AxeResults, RunOptions } from "axe-core";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { afterEach, describe, expect, it } from "vitest";
-import "axe-core";
-
-// axe-core is a UMD module that exposes itself as window.axe in the browser
-declare const axe: {
-	run: (context: Element, options?: RunOptions) => Promise<AxeResults>;
-};
-
-// Track mounted containers for cleanup
-const mountedContainers: HTMLElement[] = [];
-
-const axeRunOptions: RunOptions = {
-	// Only compute violations to reduce work per run
-	resultTypes: ["violations"],
-	// Disable rules that don't apply to isolated component testing
-	rules: {
-		// These rules check page-level concerns that don't apply to isolated components
-		"landmark-one-main": { enabled: false },
-		"region": { enabled: false },
-		"page-has-heading-one": { enabled: false },
-		// Duplicate landmarks are expected when testing multiple header/footer components
-		"landmark-no-duplicate-banner": { enabled: false },
-		"landmark-no-duplicate-contentinfo": { enabled: false },
-		"landmark-no-duplicate-main": { enabled: false },
-		// Color contrast checks are unreliable in isolated component tests because
-		// DaisyUI/Tailwind theme variables resolve differently without the full page
-		// context (data-theme attribute on <html>). Contrast should be validated via
-		// full-page Lighthouse or manual audits instead.
-		"color-contrast": { enabled: false },
-	},
-};
-
-/**
- * Run axe accessibility audit on a mounted component.
- * Mounts the component in an isolated container to avoid cross-test pollution.
- */
-async function runAxe(wrapper: VueWrapper): Promise<AxeResults> {
-	const container = document.createElement("div");
-	container.id = `test-container-${Date.now()}`;
-	document.body.appendChild(container);
-	mountedContainers.push(container);
-
-	const el = wrapper.element.cloneNode(true) as HTMLElement;
-	container.appendChild(el);
-
-	return axe.run(container, axeRunOptions);
-}
-
-// Clean up mounted containers after each test
-afterEach(() => {
-	for (const container of mountedContainers) {
-		container.remove();
-	}
-	mountedContainers.length = 0;
-});
-
 import {
+	AppFooter,
+	AppHeader,
+	AppHeaderAuth,
+	AppLogoMark,
 	DiscordEmbed,
 	DiscordInvite,
 	DiscordMention,
@@ -70,6 +15,23 @@ import {
 	IconsWolfstar,
 	Separator,
 } from "#components";
+import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { describe, expect, it } from "vitest";
+import { runAxe } from "./utils/axe";
+
+// Stub used when auditing AppHeader so the header doesn't depend on the lazy auth
+// dropdown's async session fetch. The stub keeps an accessible name so it doesn't
+// introduce its own violations; AppHeaderAuth is audited separately with the real
+// component below.
+const SignInStub = {
+	template: `<button type="button" aria-label="Sign in with Discord">Sign in</button>`,
+};
+
+function mountAppHeader() {
+	return mountSuspended(AppHeader, {
+		global: { stubs: { AppHeaderAuth: SignInStub, LazyAppHeaderAuth: SignInStub } },
+	});
+}
 
 describe("component accessibility audits", () => {
 	describe("Discord components", () => {
@@ -269,6 +231,96 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(IconsWolfstar);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppFooter", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("exposes the footer landmark with an accessible name", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			expect(wrapper.find("[aria-label='Site footer']").exists()).toBe(true);
+		});
+
+		it("marks the decorative logo as an image and hides the inner svg from AT", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			const logo = wrapper.find("[role='img'][aria-label='WolfStar logo']");
+			expect(logo.exists()).toBe(true);
+			expect(logo.find("svg").attributes("aria-hidden")).toBe("true");
+		});
+
+		it("gives the external links accessible names that announce a new tab", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			expect(
+				wrapper.find("[aria-label='Powered by Netlify - opens in new tab']").exists(),
+			).toBe(true);
+			expect(
+				wrapper.find("[aria-label='Visit WolfStar on GitHub - opens in new tab']").exists(),
+			).toBe(true);
+		});
+	});
+
+	describe("AppHeader", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountAppHeader();
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("renders the banner landmark", async () => {
+			const wrapper = await mountAppHeader();
+			expect(wrapper.find("header").exists()).toBe(true);
+		});
+
+		it("names the primary navigation for assistive tech", async () => {
+			const wrapper = await mountAppHeader();
+			expect(wrapper.find("[aria-label='Main navigation']").exists()).toBe(true);
+		});
+
+		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
+			const wrapper = await mountAppHeader();
+			const svg = wrapper.find("svg");
+			expect(svg.exists()).toBe(true);
+			expect(svg.attributes("aria-hidden")).toBe("true");
+			expect(svg.classes()).toContain("h-20");
+			expect(svg.classes()).toContain("w-45");
+		});
+	});
+
+	describe("AppHeaderAuth", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("renders sign-in buttons that link to /login with an accessible name", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth);
+			const signInLinks = wrapper.findAll("a[href='/login']");
+			expect(signInLinks.length).toBeGreaterThan(0);
+			for (const link of signInLinks) {
+				expect(link.attributes("aria-label")).toBe("Sign in with Discord");
+			}
+		});
+	});
+
+	describe("AppLogoMark", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppLogoMark);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("marks the decorative logo as aria-hidden so it is ignored by assistive tech", async () => {
+			const wrapper = await mountSuspended(AppLogoMark);
+			const svg = wrapper.find("svg");
+			expect(svg.exists()).toBe(true);
+			expect(svg.attributes("aria-hidden")).toBe("true");
+			expect(svg.attributes("role")).toBeUndefined();
 		});
 	});
 });

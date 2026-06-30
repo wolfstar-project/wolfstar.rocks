@@ -4,9 +4,12 @@
 			<NuxtLink
 				class="mr-4 flex items-center transition-transform hover:scale-105"
 				:to="currentApp.explore"
+				:aria-label="`${currentApp.name} home`"
 			>
-				<IconsWolfstar class="size-10" aria-hidden="true" />
-				<span class="text-ui-100 ml-2 text-2xl font-bold">{{ currentApp.name }}</span>
+				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
+				<span v-else class="text-ui-100 ml-2 text-2xl font-bold">{{
+					currentApp.name
+				}}</span>
 				<UBadge
 					v-if="env === 'preview' || env === 'canary'"
 					color="warning"

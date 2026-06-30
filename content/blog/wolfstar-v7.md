@@ -4,8 +4,13 @@ description: A proposal for the WolfStar network of independent single-purpose b
 date: 2024-02-25
 tags:
     - edits
-author: RedStar
-image: wolfstar
+category: Announcement
+image: /logo.svg
+authors:
+    - name: RedStar
+      avatar:
+          src: https://github.com/wolfstar-project.png
+      to: https://github.com/wolfstar-project
 ---
 
 ## Why.

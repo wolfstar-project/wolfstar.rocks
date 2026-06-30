@@ -4,12 +4,15 @@ import BlogSlug from "~/pages/(marketing)/blog/[slug].vue";
 
 const mockPost = {
 	path: "/blog/wolfstar-v7",
+	stem: "blog/wolfstar-v7",
 	title: "WolfStar v7",
 	description: "Introducing WolfStar v7",
 	date: "2024-01-01",
-	author: "RedStar",
+	category: "Announcement",
+	image: "/logo.svg",
 	draft: false,
 	tags: [],
+	authors: [{ name: "RedStar", to: "https://github.com/wolfstar-project" }],
 	body: { toc: { links: [] } },
 };
 
@@ -18,15 +21,12 @@ function makeQueryChain(resolvedValue: unknown) {
 	for (const method of ["where", "path", "limit", "skip"]) {
 		chain[method] = () => chain;
 	}
-	// .order() is the final call in the surround chain — return a Promise
-	// so Promise.all resolves it correctly instead of treating it as a plain object.
 	chain["order"] = () => Promise.resolve(resolvedValue);
 	chain["all"] = () => Promise.resolve(resolvedValue);
 	chain["first"] = () => Promise.resolve(resolvedValue);
 	return chain;
 }
 
-// Use vi.hoisted so the mock references are stable across the hoisting boundary
 const { queryCollectionMock, queryCollectionItemSurroundingsMock } = vi.hoisted(() => ({
 	queryCollectionMock: vi.fn(() => makeQueryChain(mockPost)),
 	queryCollectionItemSurroundingsMock: vi.fn(() => makeQueryChain([null, null])),
@@ -42,5 +42,6 @@ describe("blog slug page", () => {
 		});
 		expect(wrapper.html()).toBeTruthy();
 		expect(wrapper.text()).toContain("WolfStar v7");
+		expect(wrapper.text()).toContain("Announcement");
 	});
 });

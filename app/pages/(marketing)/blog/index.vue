@@ -1,26 +1,99 @@
 <template>
-	<UPage>
-		<UPageHero title="Blog" description="News and updates from the WolfStar Project." />
+	<UContainer v-if="page">
+		<UPageHero :title="page.title" :description="page.description" orientation="horizontal">
+			<template #description>
+				{{ page.description }}
+
+				<UButton
+					to="/blog/rss.xml"
+					color="neutral"
+					external
+					icon="i-lucide-rss"
+					variant="subtle"
+					size="xs"
+					target="_blank"
+				>
+					RSS
+				</UButton>
+			</template>
+		</UPageHero>
+
 		<UPageBody>
-			<UBlogPosts>
-				<UBlogPost
-					v-for="post in posts"
-					:key="post.path"
-					:title="post.title"
-					:description="post.description"
-					:date="post.date"
-					:authors="[{ name: post.author }]"
-					:to="post.path"
-				/>
-			</UBlogPosts>
+			<UContainer>
+				<UBlogPosts class="mb-12 md:grid-cols-2 lg:grid-cols-3">
+					<UBlogPost
+						v-for="(article, index) in articles"
+						:key="article.path"
+						:to="article.path"
+						:title="article.title"
+						:description="article.description"
+						:image="
+							article.image
+								? {
+										src: article.image,
+										width: index === 0 ? 672 : 437,
+										height: index === 0 ? 378 : 246,
+										alt: `${article.title} image`,
+									}
+								: undefined
+						"
+						:date="formatDateByLocale('en', article.date)"
+						:authors="
+							article.authors.map((author) => ({
+								...author,
+								avatar: author.avatar
+									? { ...author.avatar, alt: `${author.name} avatar` }
+									: undefined,
+							}))
+						"
+						:badge="{ label: article.category, color: 'primary', variant: 'subtle' }"
+						:variant="index === 0 ? 'outline' : 'subtle'"
+						:orientation="index === 0 ? 'horizontal' : 'vertical'"
+						:class="[index === 0 && 'col-span-full']"
+					/>
+				</UBlogPosts>
+			</UContainer>
 		</UPageBody>
-	</UPage>
+	</UContainer>
 </template>
 
 <script setup lang="ts">
-useSeoMeta({ title: "Blog", description: "News and updates from the WolfStar Project." });
-
-const { data: posts } = await useAsyncData("blog-posts", () =>
-	queryCollection("blog").where("draft", "=", false).order("date", "DESC").all(),
+const { data: page } = await useAsyncData("blog-landing", () =>
+	queryCollection("landing").path("/blog").first(),
 );
+
+if (!page.value) {
+	throw createError({ statusCode: 404, statusMessage: "Page not found", fatal: true });
+}
+
+const { fetchList, articles } = useBlog();
+
+const title = page.value.head?.title || page.value.title;
+const description = page.value.head?.description || page.value.description;
+
+useHead({
+	link: [
+		{
+			rel: "alternate",
+			type: "application/atom+xml",
+			title: "WolfStar Blog RSS",
+			href: "/blog/rss.xml",
+		},
+	],
+});
+
+useSeoMeta({
+	titleTemplate: "%s",
+	title,
+	description,
+	ogDescription: description,
+	ogTitle: title,
+});
+
+defineOgImage("Page", {
+	title,
+	description,
+});
+
+await fetchList();
 </script>

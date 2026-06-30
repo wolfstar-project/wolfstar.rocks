@@ -1,6 +1,13 @@
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import BlogIndex from "~/pages/(marketing)/blog/index.vue";
+
+const mockLanding = {
+	path: "/blog",
+	title: "The WolfStar Blog",
+	description: "Read the latest news about WolfStar.",
+	head: { title: "WolfStar Blog" },
+};
 
 const mockPosts = [
 	{
@@ -8,9 +15,11 @@ const mockPosts = [
 		title: "WolfStar v7",
 		description: "Introducing WolfStar v7",
 		date: "2024-01-01",
-		author: "RedStar",
+		category: "Announcement",
+		image: "/logo.svg",
 		draft: false,
 		tags: [],
+		authors: [{ name: "RedStar" }],
 	},
 ];
 
@@ -24,11 +33,21 @@ function makeQueryChain(resolvedValue: unknown) {
 	return chain;
 }
 
-mockNuxtImport("queryCollection", () => () => makeQueryChain(mockPosts));
+const { queryCollectionMock } = vi.hoisted(() => ({
+	queryCollectionMock: vi.fn((collection: string) => {
+		if (collection === "landing") {
+			return makeQueryChain(mockLanding);
+		}
+		return makeQueryChain(mockPosts);
+	}),
+}));
+
+mockNuxtImport("queryCollection", () => queryCollectionMock);
 
 describe("blog index page", () => {
 	it("renders without error", async () => {
 		const wrapper = await mountSuspended(BlogIndex);
 		expect(wrapper.html()).toBeTruthy();
+		expect(wrapper.text()).toContain("WolfStar v7");
 	});
 });

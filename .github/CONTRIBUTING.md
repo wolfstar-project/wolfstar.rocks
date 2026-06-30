@@ -169,7 +169,7 @@ GH_TOKEN="$(gh auth token)" pnpm vp run zizmor:fix
 
 ### Clearing caches during development
 
-Nitro persists `defineCachedEventHandler` results to disk at `.nuxt/cache/nitro/`. This cache **survives dev server restarts**. If you're iterating on a cached API route and want fresh results, delete the relevant cache directory:
+Nitro persists `defineWrappedCachedResponseHandler` results to disk at `.nuxt/cache/nitro/`. This cache **survives dev server restarts**. If you're iterating on a cached API route and want fresh results, delete the relevant cache directory:
 
 ```bash
 # Clear all Nitro handler caches

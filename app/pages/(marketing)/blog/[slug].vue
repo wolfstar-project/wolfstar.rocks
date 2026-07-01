@@ -1,6 +1,9 @@
 <template>
 	<UContainer>
-		<UPage v-if="article">
+		<UPage
+			v-if="article"
+			:ui="{ root: 'lg:grid-cols-12', center: 'lg:col-span-9', right: 'lg:col-span-3' }"
+		>
 			<UPageHeader
 				:title="article.title"
 				:description="article.description"
@@ -37,57 +40,54 @@
 				</div>
 			</UPageHeader>
 
-			<UPage
-				:ui="{ root: 'lg:grid-cols-12', center: 'lg:col-span-9', right: 'lg:col-span-3' }"
-			>
-				<UPageBody>
-					<ContentRenderer v-if="article.body" :value="article" />
+			<UPageBody>
+				<ContentRenderer v-if="article.body" :value="article" />
 
-					<div class="not-prose mt-12 flex items-center justify-between">
-						<ULink to="/blog" class="text-primary"> ← Back to blog </ULink>
-						<div class="flex items-center justify-end gap-1.5">
-							<UButton
-								icon="i-lucide-link"
-								variant="ghost"
-								color="neutral"
-								@click="copyLink"
-							>
-								<span class="sr-only">Copy URL</span>
-								Copy URL
-							</UButton>
-							<UButton
-								v-for="(link, index) in socialLinks"
-								:key="index"
-								v-bind="link"
-								variant="ghost"
-								color="neutral"
-								target="_blank"
-							>
-								<span class="sr-only">WolfStar on {{ link.label }}</span>
-							</UButton>
-						</div>
+				<div class="not-prose mt-12 flex items-center justify-between">
+					<ULink to="/blog" class="text-primary"> ← Back to blog </ULink>
+					<div class="flex items-center justify-end gap-1.5">
+						<UButton
+							icon="i-lucide-link"
+							variant="ghost"
+							color="neutral"
+							@click="copyLink"
+						>
+							<span class="sr-only">Copy URL</span>
+							Copy URL
+						</UButton>
+						<UButton
+							v-for="(link, index) in socialLinks"
+							:key="index"
+							v-bind="link"
+							variant="ghost"
+							color="neutral"
+							target="_blank"
+						>
+							<span class="sr-only">WolfStar on {{ link.label }}</span>
+						</UButton>
 					</div>
+				</div>
 
-					<USeparator v-if="surround?.length" />
+				<USeparator v-if="surround?.length" />
 
-					<UContentSurround :surround="surround ?? undefined" />
-				</UPageBody>
+				<UContentSurround :surround="surround ?? undefined" />
+			</UPageBody>
 
-				<template #right>
-					<UContentToc
-						v-if="article.body?.toc"
-						:links="article.body.toc.links"
-						title="Table of Contents"
-						highlight
-					>
-						<template #bottom>
-							<div class="hidden space-y-6 lg:block">
-								<UPageLinks title="Links" :links="sidebarLinks" />
-							</div>
-						</template>
-					</UContentToc>
-				</template>
-			</UPage>
+			<template #right>
+				<UContentToc
+					v-if="article.body?.toc"
+					:links="article.body.toc.links"
+					title="Table of Contents"
+					aria-label="Table of Contents"
+					highlight
+				>
+					<template #bottom>
+						<div class="hidden space-y-6 lg:block">
+							<UPageLinks title="Links" aria-label="Links" :links="sidebarLinks" />
+						</div>
+					</template>
+				</UContentToc>
+			</template>
 		</UPage>
 	</UContainer>
 </template>

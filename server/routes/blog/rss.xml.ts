@@ -4,8 +4,12 @@ import { Feed } from "feed";
 import { joinURL } from "ufo";
 
 export default defineEventHandler(async (event: H3Event) => {
-	const site = useSiteConfig(event);
-	const baseUrl = site.url.replace(/\/$/, "");
+	const site = getSiteConfig(event);
+	const baseUrl = (
+		site.url ??
+		process.env.NUXT_PUBLIC_SITE_URL ??
+		"https://wolfstar.rocks"
+	).replace(/\/$/, "");
 	const siteUrl = joinURL(baseUrl, "blog");
 
 	const feed = new Feed({

@@ -44,4 +44,12 @@ describe("blog slug page", () => {
 		expect(wrapper.text()).toContain("WolfStar v7");
 		expect(wrapper.text()).toContain("Announcement");
 	});
+
+	it("throws a 404 error when the post is not found", async () => {
+		queryCollectionMock.mockReturnValueOnce(makeQueryChain(null));
+
+		await expect(mountSuspended(BlogSlug, { route: "/blog/missing" })).rejects.toMatchObject({
+			statusCode: 404,
+		});
+	});
 });

@@ -34,14 +34,14 @@ status = 301
 force = true
 
 [[redirects]]
-from = "https://blog.wolfstar.rocks/*"
-to = "https://wolfstar.rocks/blog/:splat"
+from = "https://blog.wolfstar.rocks"
+to = "https://wolfstar.rocks/blog"
 status = 301
 force = true
 
 [[redirects]]
-from = "https://blog.wolfstar.rocks"
-to = "https://wolfstar.rocks/blog"
+from = "https://blog.wolfstar.rocks/*"
+to = "https://wolfstar.rocks/blog/:splat"
 status = 301
 force = true
 
@@ -49,3 +49,4 @@ force = true
 from = "/wolfstar-v7"
 to = "/blog/wolfstar-v7"
 status = 301
+force = true

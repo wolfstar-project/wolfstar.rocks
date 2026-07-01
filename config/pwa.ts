@@ -16,6 +16,10 @@ export const pwa: ModuleOptions = {
 	filename: "sw.ts",
 	injectManifest: {
 		globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+		// Blog post images are runtime content, not app-shell assets. Keep them out
+		// of the precache manifest so large images (e.g. OG images) don't exceed
+		// workbox's file-size limit and fail the build.
+		globIgnores: ["**/assets/blog/**"],
 	},
 	injectRegister: "auto",
 	manifest: {

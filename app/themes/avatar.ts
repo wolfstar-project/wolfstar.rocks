@@ -1,4 +1,5 @@
 export default {
+	base: "avatar",
 	defaultVariants: {
 		shape: "circle",
 		size: "md",
@@ -7,7 +8,7 @@ export default {
 		fallback: "avatar-placeholder truncate leading-none font-medium text-base-content",
 		icon: "shrink-0 text-base-content",
 		image: "h-full w-full rounded-[inherit] object-cover",
-		root: "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-200 align-middle select-none",
+		root: "avatar inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-base-200 align-middle select-none",
 	},
 	variants: {
 		shape: {

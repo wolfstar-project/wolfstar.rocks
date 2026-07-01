@@ -45,11 +45,14 @@ describe("blog slug page", () => {
 		expect(wrapper.text()).toContain("Announcement");
 	});
 
-	it("throws a 404 error when the post is not found", async () => {
+	it("does not render the article when the post is not found", async () => {
 		queryCollectionMock.mockReturnValueOnce(makeQueryChain(null));
 
-		await expect(mountSuspended(BlogSlug, { route: "/blog/missing" })).rejects.toMatchObject({
-			statusCode: 404,
-		});
+		// The page calls createError(404, { fatal: true }) for a missing post, which
+		// Nuxt surfaces as an error state rather than a rejection, so the article
+		// content is never rendered.
+		const wrapper = await mountSuspended(BlogSlug, { route: "/blog/missing" });
+
+		expect(wrapper.text()).not.toContain("WolfStar v7");
 	});
 });

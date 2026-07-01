@@ -40,6 +40,7 @@ const config: KnipConfig = {
 				/** Framework-provided: re-exported or bundled by Nuxt/Nitro/Vite */
 				"ufo",
 				"ohash/*",
+				"scule",
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",

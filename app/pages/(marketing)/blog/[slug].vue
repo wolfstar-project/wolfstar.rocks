@@ -78,12 +78,16 @@
 					v-if="article.body?.toc"
 					:links="article.body.toc.links"
 					title="Table of Contents"
-					aria-label="Table of Contents"
+					aria-label="Table of contents"
 					highlight
 				>
 					<template #bottom>
 						<div class="hidden space-y-6 lg:block">
-							<UPageLinks title="Links" aria-label="Links" :links="sidebarLinks" />
+							<UPageLinks
+								title="Links"
+								:links="sidebarLinks"
+								aria-label="Article links"
+							/>
 						</div>
 					</template>
 				</UContentToc>

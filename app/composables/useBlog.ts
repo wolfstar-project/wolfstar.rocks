@@ -1,7 +1,11 @@
 import type { BlogArticle } from "#shared/types/blog";
 
 export const useBlog = () => {
-	const { data: articles, refresh, status } = useAsyncData<BlogArticle[]>(
+	const {
+		data: articles,
+		refresh,
+		status,
+	} = useAsyncData<BlogArticle[]>(
 		"blog",
 		async () => {
 			return queryCollection("blog")

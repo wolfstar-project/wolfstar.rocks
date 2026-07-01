@@ -1,7 +1,7 @@
 import type { BlogArticle } from "#shared/types/blog";
 
 export const useBlog = () => {
-	const { data: articles, refresh } = useAsyncData<BlogArticle[]>(
+	const { data: articles, refresh, status } = useAsyncData<BlogArticle[]>(
 		"blog",
 		async () => {
 			return queryCollection("blog")
@@ -16,7 +16,10 @@ export const useBlog = () => {
 	);
 
 	async function fetchList() {
-		if (!articles.value?.length) {
+		// Only trigger a fetch when useAsyncData hasn't run yet. Guarding on the
+		// result length would re-fetch on every call for a genuinely empty list
+		// (all drafts) and double-fetch on first render, since the default is [].
+		if (status.value === "idle") {
 			return refresh();
 		}
 	}

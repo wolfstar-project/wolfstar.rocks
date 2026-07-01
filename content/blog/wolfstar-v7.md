@@ -5,12 +5,12 @@ date: 2024-02-25
 tags:
     - edits
 category: Announcement
-image: /logo.svg
+image: /assets/blog/wolfstar-v7.png
 authors:
     - name: RedStar
       avatar:
-          src: https://github.com/wolfstar-project.png
-      to: https://github.com/wolfstar-project
+          src: https://github.com/RedStar071.png
+      to: https://x.com/redstar071
 ---
 
 ## Why.

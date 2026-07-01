@@ -1,6 +1,10 @@
 <template>
-	<UContainer v-if="page">
-		<UPageHero :title="page.title" :description="page.description" orientation="horizontal">
+	<UContainer v-if="page" class="pt-20 sm:pt-24">
+		<UPageHero
+			:title="page.title"
+			:description="page.description"
+			:ui="{ container: 'pb-12 sm:pb-16 lg:pb-20' }"
+		>
 			<template #description>
 				{{ page.description }}
 
@@ -41,6 +45,7 @@
 						:authors="
 							article.authors.map((author) => ({
 								...author,
+								size: 'sm' as const,
 								avatar: author.avatar
 									? { ...author.avatar, alt: `${author.name} avatar` }
 									: undefined,

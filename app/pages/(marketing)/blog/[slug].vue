@@ -29,6 +29,7 @@
 						v-for="(author, index) in article.authors"
 						:key="index"
 						v-bind="author"
+						size="sm"
 						:description="
 							author.to ? `@${author.to.split('/').pop()}` : author.description
 						"

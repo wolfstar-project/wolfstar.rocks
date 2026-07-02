@@ -17,16 +17,16 @@
 					@click="item.action"
 				>
 					<div
-						class="flex size-10 items-center justify-center rounded-full bg-base-content/5 p-2 transition-colors group-hover:bg-branding-wolfstar/20 group-hover:text-branding-wolfstar"
+						class="flex size-10 items-center justify-center rounded-full bg-default/5 p-2 transition-colors group-hover:bg-branding-wolfstar/20 group-hover:text-branding-wolfstar"
 					>
 						<UIcon :name="item.icon" class="h-6 w-6" />
 					</div>
 					<h3 class="font-bold">{{ item.title }}</h3>
-					<p class="text-sm text-base-content/60">{{ item.description }}</p>
+					<p class="text-sm text-muted">{{ item.description }}</p>
 
 					<!-- Bottom fade for clipped content -->
 					<div
-						class="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-base-300/80 to-transparent"
+						class="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-linear-to-t from-accented/80 to-transparent"
 						aria-hidden="true"
 					></div>
 

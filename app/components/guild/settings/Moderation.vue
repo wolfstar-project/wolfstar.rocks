@@ -19,7 +19,7 @@
 					:name="setting.key"
 				>
 					<template #description>
-						<p class="text-sm text-base-content/70">{{ setting.description }}</p>
+						<p class="text-sm text-toned">{{ setting.description }}</p>
 					</template>
 					<USwitch v-model="state[setting.key]" :aria-label="`Toggle ${setting.name}`" />
 				</UFormField>

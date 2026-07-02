@@ -11,15 +11,15 @@
 		<BuildEnvironment :footer="false" class="mt-16" />
 	</section>
 	<section
-		class="join mt-16 flex animate-fade-in-up items-center justify-center animate-fade-in-delay-2"
+		class="mt-16 flex animate-fade-in-up items-center justify-center gap-2 animate-fade-in-delay-2"
 	>
-		<NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
+		<UButton :to="Invites.Staryl" class="sm:min-w-48" color="neutral" size="lg">
 			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
-		</NuxtLink>
-		<NuxtLink class="btn join-item sm:btn-wide" to="#explore">
+		</UButton>
+		<UButton class="sm:min-w-48" color="neutral" size="lg" to="#explore" variant="outline">
 			<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
 			Explore
-		</NuxtLink>
+		</UButton>
 	</section>
 
 	<h2 class="mt-72 animate-on-scroll text-center text-5xl font-bold">COMING SOON...</h2>

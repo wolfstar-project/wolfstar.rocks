@@ -4,11 +4,11 @@
 			<!-- Header -->
 			<header class="mt-8 mb-12">
 				<div class="mb-6 flex items-baseline justify-between gap-4">
-					<h1 class="text-4xl font-bold text-base-content/80 sm:text-5xl">
+					<h1 class="text-4xl font-bold text-toned sm:text-5xl">
 						WolfStar Privacy Policy
 					</h1>
 				</div>
-				<p class="mb-4 text-lg text-base-content/70">
+				<p class="mb-4 text-lg text-toned">
 					Last updated and effective:
 					<NuxtTime
 						locale="en-US"
@@ -17,7 +17,7 @@
 						time-style="medium"
 					/>
 				</p>
-				<div class="space-y-2 text-sm text-base-content/60">
+				<div class="space-y-2 text-sm text-muted">
 					<p>
 						<span class="font-semibold">Owner and data controller:</span> WolfStar
 						Project
@@ -38,10 +38,10 @@
 			<div class="prose prose-lg max-w-none space-y-12">
 				<!-- Welcome Section -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Welcome to WolfStar Project
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						WolfStar Project provides a chat bot for the
 						<NuxtLink
 							to="https://discord.com/privacy"
@@ -70,14 +70,14 @@
 
 				<!-- Information We Collect -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Information we collect
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						When you interact with us through the Services, we may collect information
 						from you, as further described below:
 					</p>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						<span class="font-semibold">Information You Provide:</span> We collect
 						information from you when you voluntarily provide such information, such as
 						when you use any of the Services. Information we collect may include but not
@@ -88,10 +88,10 @@
 
 				<!-- What Are Cookies -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						What are cookies?
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						Cookies are small text files stored on your device when you visit a website.
 						Their purpose is to enhance your browsing experience by remembering certain
 						preferences and settings.
@@ -100,16 +100,16 @@
 
 				<!-- What Cookies Do We Use -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						What cookies do we use?
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						We only use essential technical cookies for purposes strictly necessary for
 						the site's functionality. We do not use third-party advertising cookies.
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">h3 (Session Cookie):</span> This is our
 								secure session cookie. It stores the OAuth access token when you
@@ -119,7 +119,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Sentry (error monitoring):</span> Sentry
 								may set first‑party cookies or use local storage to persist session
@@ -129,7 +129,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold"
 									>Hosting provider cookies (Netlify):</span
@@ -145,10 +145,8 @@
 
 				<!-- Local Storage -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Local storage
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Local storage</h2>
+					<p class="leading-relaxed text-default">
 						In addition to session cookies, we use your browser's Local Storage to save
 						your display preferences. This allows us to remember the theme (light/dark)
 						and other settings you have selected, so you don't have to reconfigure them
@@ -160,21 +158,21 @@
 
 				<!-- Managing Cookies -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Managing cookies
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						You can configure your browser to accept, reject, or delete cookies
 						according to your preferences. However, please note that rejecting essential
 						cookies may prevent full access to the application.
 					</p>
-					<p class="mb-3 leading-relaxed text-base-content">
+					<p class="mb-3 leading-relaxed text-default">
 						Below are links with instructions for cookie management in the most commonly
 						used browsers:
 					</p>
-					<ul class="list-none space-y-2 pl-0 text-base-content">
+					<ul class="list-none space-y-2 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<NuxtLink
 								to="https://support.google.com/chrome/answer/95647?hl=en"
 								target="_blank"
@@ -184,7 +182,7 @@
 							</NuxtLink>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<NuxtLink
 								to="https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox"
 								target="_blank"
@@ -194,7 +192,7 @@
 							</NuxtLink>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<NuxtLink
 								to="https://support.microsoft.com/en-us/windows/manage-cookies-in-microsoft-edge-168dab11-0753-043d-7c16-ede5947fc64d"
 								target="_blank"
@@ -204,7 +202,7 @@
 							</NuxtLink>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<NuxtLink
 								to="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac"
 								target="_blank"
@@ -218,39 +216,37 @@
 
 				<!-- Analytics -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Analytics
-					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Analytics</h2>
+					<p class="mb-4 leading-relaxed text-default">
 						We use Netlify Analytics to understand how visitors use our website. This
 						helps us improve the user experience and identify issues.
 					</p>
-					<p class="mb-3 leading-relaxed text-base-content">
+					<p class="mb-3 leading-relaxed text-default">
 						Netlify Analytics is designed with privacy in mind:
 					</p>
-					<ul class="list-none space-y-2 pl-0 text-base-content">
+					<ul class="list-none space-y-2 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>It does not use cookies</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>It does not collect personal identifiers</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>It does not track users across websites</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>All data is aggregated and anonymised</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Data is collected server-side, not from your browser</span>
 						</li>
 					</ul>
-					<p class="mt-4 leading-relaxed text-base-content">
+					<p class="mt-4 leading-relaxed text-default">
 						The only information collected includes: page URLs, referrer,
 						country/region, device type, browser, and operating system. This data cannot
 						be used to identify individual users. All analytics data is processed
@@ -260,47 +256,47 @@
 
 				<!-- Error Tracking -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Error tracking and monitoring
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						We use Sentry for error tracking and application monitoring. This helps us
 						identify and fix bugs, improve performance, and ensure a better user
 						experience.
 					</p>
-					<p class="mb-3 leading-relaxed text-base-content">
+					<p class="mb-3 leading-relaxed text-default">
 						Sentry may collect the following information when errors occur:
 					</p>
-					<ul class="list-none space-y-2 pl-0 text-base-content">
+					<ul class="list-none space-y-2 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Error messages and stack traces</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Browser type and version</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Operating system</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>IP address (anonymized)</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Page URL where the error occurred</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span
 								>Session replay data (for 10% of sessions and 100% of sessions with
 								errors)</span
 							>
 						</li>
 					</ul>
-					<p class="mt-4 leading-relaxed text-base-content">
+					<p class="mt-4 leading-relaxed text-default">
 						Session replays capture user interactions (clicks, scrolls, navigation) to
 						help us understand how errors occur. Personal information entered in forms
 						is automatically masked. Sentry may set first‑party cookies or use local
@@ -316,37 +312,37 @@
 
 				<!-- Authenticated Users -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Authenticated users
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						When you connect your Discord account to WolfStar, we store your OAuth
 						access token in a secure, HTTP-only, encrypted session cookie. This token is
 						used solely to authenticate requests on your behalf and access your Discord
 						guilds where WolfStar is installed.
 					</p>
-					<p class="mb-3 leading-relaxed text-base-content">
+					<p class="mb-3 leading-relaxed text-default">
 						The information we collect from Discord includes:
 					</p>
-					<ul class="list-none space-y-2 pl-0 text-base-content">
+					<ul class="list-none space-y-2 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Discord User ID</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Username and discriminator</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Avatar</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>List of guilds (servers) where you have permissions</span>
 						</li>
 					</ul>
-					<p class="mt-4 leading-relaxed text-base-content">
+					<p class="mt-4 leading-relaxed text-default">
 						We do not store your Discord password or credentials. We only access data
 						necessary to provide the features you use. You can disconnect your account
 						at any time from your profile page, which will delete your session and
@@ -356,16 +352,16 @@
 
 				<!-- Data We Collect Automatically -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Data we collect automatically
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						When you interact with us through the Services, we automatically receive and
 						store certain information to provide and improve our services:
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">IP Address:</span> Used for security,
 								rate limiting, and general location (country/region) for analytics.
@@ -373,7 +369,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Device Information:</span> Browser type,
 								operating system, device type, and screen resolution to optimize the
@@ -381,7 +377,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Usage Data:</span> Pages visited, time
 								spent on pages, referrer URLs, and interaction patterns to
@@ -390,7 +386,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Bot Interactions:</span> When using the
 								Discord bot, we may collect message content, command usage, and
@@ -403,10 +399,10 @@
 
 				<!-- Where Information is Processed -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Where information is processed
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						The Company is based in Italy and the Services are hosted in Germany (by
 						Hetzner Online GmbH). No matter where you are located you consent to
 						processing and transferring of your information in and to Germany, Italy,
@@ -418,10 +414,10 @@
 
 				<!-- Our Use of Your Information -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Our use of your information
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						We use the information you provide in a manner that is consistent with this
 						Privacy Policy. If you provide information for a certain reason, we may use
 						the information in connection with the reason for which it was provided. For
@@ -445,17 +441,17 @@
 
 				<!-- Legal Bases -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Our legal bases for handling of your personal data
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						The laws in some jurisdictions require companies to tell you about the legal
 						ground they rely on to use or disclose your personal data. To the extent
 						those laws apply, our legal grounds are as follows:
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								Users have given their consent for one or more specific purposes.
 								Note: Under some legislations the Owner may be allowed to process
@@ -466,21 +462,21 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								Provision of Data is necessary for the performance of an agreement
 								with the User and/or for any pre-contractual obligations thereof.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								Processing is necessary for compliance with a legal obligation to
 								which the Owner is subject.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								Processing is related to a task that is carried out in the public
 								interest or in the exercise of official authority vested in the
@@ -488,14 +484,14 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								Processing is necessary for the purposes of the legitimate interests
 								pursued by the Owner or by a third party.
 							</span>
 						</li>
 					</ul>
-					<p class="mt-4 leading-relaxed text-base-content">
+					<p class="mt-4 leading-relaxed text-default">
 						In any case, the Owner will gladly help to clarify the specific legal basis
 						that applies to the processing, and in particular whether the provision of
 						Personal Data is a statutory or contractual requirement, or a requirement
@@ -505,27 +501,27 @@
 
 				<!-- Our Disclosure of Your Information -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Our disclosure of your information
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						The Company is not in the business of selling your information. We consider
 						this information to be a vital part of our relationship with you. There are,
 						however, certain circumstances in which we may share your information with
 						certain third parties, as set forth below:
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
-								<span class="font-semibold text-base-content">Consent</span>: We may
+								<span class="font-semibold text-default">Consent</span>: We may
 								transfer your information with your consent.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
-								<span class="font-semibold text-base-content"
+								<span class="font-semibold text-default"
 									>Consultants and outside collaborators</span
 								>: Like many businesses, we sometimes request the help of other
 								companies or individuals to perform certain functions. Examples of
@@ -537,12 +533,11 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
-								<span class="font-semibold text-base-content"
-									>Legal Requirements</span
-								>: We may disclose your information if required to do so by law or
-								in the good faith belief that such action is necessary to (i) comply
+								<span class="font-semibold text-default">Legal Requirements</span>:
+								We may disclose your information if required to do so by law or in
+								the good faith belief that such action is necessary to (i) comply
 								with a legal obligation, (ii) protect and defend the rights or
 								property of the Company or Related Companies, (iii) protect the
 								personal safety of users of the Services or the public, or (iv)
@@ -554,10 +549,10 @@
 
 				<!-- Unsolicited Information -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Unsolicited information
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						You may provide us with ideas for new products or modifications to existing
 						products, and other unsolicited submissions (collectively, “Unsolicited
 						Information”). All Unsolicited Information shall be deemed to be
@@ -569,10 +564,8 @@
 
 				<!-- Children -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Children
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Children</h2>
+					<p class="leading-relaxed text-default">
 						Our Services are for users age 13 and over and we do not knowingly collect
 						personal information from children under the age of 13. If you are a parent
 						or guardian of a child under the age of 13 and believe he or she has
@@ -593,10 +586,10 @@
 
 				<!-- Links to Other Websites -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Links to other web sites
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						This Privacy Policy applies only to the Services. The Services may contain
 						links to other web sites not operated or controlled by us (the “Third Party
 						Sites”). The policies and procedures we described here do not apply to the
@@ -608,16 +601,14 @@
 
 				<!-- Data Retention -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Data retention
-					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Data retention</h2>
+					<p class="mb-4 leading-relaxed text-default">
 						We retain different types of data for different periods, based on the
 						purpose of collection and legal requirements:
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Session Cookies:</span> Automatically
 								deleted when you close your browser or after a period of inactivity
@@ -625,7 +616,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Local Storage Preferences:</span> Remain
 								on your device until you clear your browser data or manually reset
@@ -633,7 +624,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Analytics Data:</span> Retained in
 								aggregate form by Netlify and cannot be linked to individual users.
@@ -641,7 +632,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Error Tracking Data:</span> Retained by
 								Sentry for up to 90 days for debugging purposes, then automatically
@@ -649,7 +640,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">User Account Data:</span> Retained while
 								your account is active and for a reasonable period after account
@@ -657,7 +648,7 @@
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Backups:</span> Database backups are
 								created regularly and automatically deleted after 7 days (168
@@ -665,7 +656,7 @@
 							</span>
 						</li>
 					</ul>
-					<p class="mt-4 leading-relaxed text-base-content">
+					<p class="mt-4 leading-relaxed text-default">
 						We generally retain personal data for so long as it may be relevant to the
 						purposes identified herein. To dispose of personal data, we may anonymize
 						it, delete it or take other appropriate steps.
@@ -674,10 +665,8 @@
 
 				<!-- Security -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Security
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Security</h2>
+					<p class="leading-relaxed text-default">
 						We take reasonable steps to protect the information provided via the
 						Services from loss, misuse, and unauthorized access, disclosure, alteration,
 						or destruction. However, no Internet or email transmission is ever fully
@@ -690,42 +679,42 @@
 
 				<!-- Your Data Rights and Choices -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Your data rights and choices
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						We believe that users should be treated equally no matter where they are,
 						and so we are making the following options to control your data available to
 						all users, regardless of their location.
 					</p>
-					<p class="mb-4 leading-relaxed text-base-content">You have the right to:</p>
-					<ul class="mb-4 list-none space-y-2 pl-0 text-base-content">
+					<p class="mb-4 leading-relaxed text-default">You have the right to:</p>
+					<ul class="mb-4 list-none space-y-2 pl-0 text-default">
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Access information about what data we collect</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Clear your local storage and cookies at any time</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Disconnect your authenticated session</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Request deletion of your personal data</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Request a copy of your data</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<span class="shrink-0 text-default/50">&mdash;</span>
 							<span>Request information about our data practices</span>
 						</li>
 					</ul>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						Individuals in California, the European Economic Area, Canada, Costa Rica
 						and some other jurisdictions have certain legal rights to obtain
 						confirmation of whether we hold personal data about them, to access personal
@@ -736,12 +725,12 @@
 						though such actions typically will not have retroactive effect. They also
 						will not affect our ability to continue processing data in lawful ways.
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
-						<li class="text-base font-semibold text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
+						<li class="text-base font-semibold text-default">
 							How can I access the personal data you have about me?
 						</li>
 					</ul>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						If you would like to submit a data access request, you can do so by sending
 						an email to
 						<NuxtLink
@@ -752,13 +741,13 @@
 						>. Upon request we will start the process and provide you a link to access
 						the personal data the Services has on you within 30 standard working days.
 					</p>
-					<ul class="list-none space-y-3 pl-0 text-base-content">
-						<li class="text-base font-semibold text-base-content">
+					<ul class="list-none space-y-3 pl-0 text-default">
+						<li class="text-base font-semibold text-default">
 							How do I correct, update, amend, or delete the personal data you have
 							about me?
 						</li>
 					</ul>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						You can request modifications to your data from us directly. Please write us
 						at
 						<NuxtLink
@@ -776,10 +765,10 @@
 
 				<!-- EEA Representative -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Who is WolfStar Project's EEA representative?
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						As the Company is currently exclusively based within the EEA and the Company
 						is of such a small size that we do not have the funds to for a registered
 						EEA representative the Company will handle any data protection matters,
@@ -791,19 +780,19 @@
 
 				<!-- California Privacy Rights -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Your California Privacy Rights
 					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						Consumers residing in California are afforded certain additional rights with
 						respect to their personal information under the California Consumer Privacy
 						Act or (“CCPA”) and the “Shine the Light” Law. If you are a California
 						resident, this section applies to you.
 					</p>
-					<p class="mb-2 text-base font-semibold text-base-content">
+					<p class="mb-2 text-base font-semibold text-default">
 						California Consumer Privacy Act
 					</p>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						<span class="font-semibold"
 							>Our Collection and Use of Personal Information</span
 						>: We collect the following categories of personal information: Discord User
@@ -818,13 +807,13 @@
 						personal information for the business and commercial purposes described in
 						“OUR USE OF YOUR INFORMATION” above.
 					</p>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						<span class="font-semibold">Disclosure of Personal Information</span>: may
 						share your personal information with third parties as described in the “OUR
 						DISCLOSURE OF YOUR INFORMATION” section above. We disclose the categories of
 						personal information mentioned above for business or commercial purposes.
 					</p>
-					<p class="mb-4 leading-relaxed text-base-content">
+					<p class="mb-4 leading-relaxed text-default">
 						<span class="font-semibold">No Sale of Personal Information</span>: The CCPA
 						sets forth certain obligations for businesses that sell personal
 						information. We do not sell the personal information of our users.
@@ -839,19 +828,19 @@
 						are in the “YOUR DATA RIGHTS AND CHOICES” section above. We will not
 						discriminate against you if you exercise your rights under the CCPA.
 					</p>
-					<p class="mb-2 leading-relaxed text-base-content">
+					<p class="mb-2 leading-relaxed text-default">
 						Requests Received: We received the following number of data requests between
 						November 24, 2016 and July 20, 2020:
 					</p>
-					<p class="text-base-content/80 italic">No requests to date</p>
+					<p class="text-toned italic">No requests to date</p>
 				</section>
 
 				<!-- Changes to Privacy Policy -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Changes to this Privacy Policy
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						We reserve the right to update or modify this Privacy Policy at any time and
 						from time to time without prior notice. Please review this policy
 						periodically, and especially before you provide any information. This
@@ -863,10 +852,8 @@
 
 				<!-- Contact -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Contacting us
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Contacting us</h2>
+					<p class="leading-relaxed text-default">
 						Please also feel free to contact us if you have any questions about this
 						Privacy Policy or the information practices of the Services. You may contact
 						us as follows:

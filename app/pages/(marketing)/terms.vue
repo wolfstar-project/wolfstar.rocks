@@ -1,14 +1,14 @@
 <template>
-	<UContainer class="bg-base-100">
+	<UContainer class="bg-default">
 		<article class="mx-auto max-w-3xl px-4 py-8 sm:py-12">
 			<!-- Header -->
 			<header class="mt-8 mb-12">
 				<div class="mb-6 flex items-baseline justify-between gap-4">
-					<h1 class="text-4xl font-bold text-base-content/80 sm:text-5xl">
+					<h1 class="text-4xl font-bold text-toned sm:text-5xl">
 						WolfStar Terms of Service
 					</h1>
 				</div>
-				<p class="mb-4 text-lg text-base-content/70">
+				<p class="mb-4 text-lg text-toned">
 					Last updated and effective:
 					<NuxtTime
 						locale="en-US"
@@ -17,7 +17,7 @@
 						time-style="medium"
 					/>
 				</p>
-				<div class="space-y-2 text-sm text-base-content/60">
+				<div class="space-y-2 text-sm text-muted">
 					<p>
 						<span class="font-semibold">Owner and data controller:</span> WolfStar
 						Project
@@ -38,10 +38,8 @@
 			<div class="prose prose-lg max-w-none space-y-12">
 				<!-- Terms -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Terms
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Terms</h2>
+					<p class="leading-relaxed text-default">
 						By accessing this service, accessible through the
 						<NuxtLink
 							to="https://discord.com/privacy"
@@ -60,14 +58,12 @@
 
 				<!-- Use License -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Use License
-					</h2>
-					<p class="mb-3 leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Use License</h2>
+					<p class="mb-3 leading-relaxed text-default">
 						To view what license applies to the Service please consult their respective
 						LICENSE documents:
 					</p>
-					<ul class="list-disc space-y-2 pl-6 text-base-content">
+					<ul class="list-disc space-y-2 pl-6 text-default">
 						<li>
 							<NuxtLink
 								to="https://github.com/wolfstar-project/wolfstar/blob/main/LICENSE"
@@ -82,10 +78,8 @@
 
 				<!-- Disclaimer -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Disclaimer
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Disclaimer</h2>
+					<p class="leading-relaxed text-default">
 						All the materials in the Service is provided "as is". WolfStar Project makes
 						no warranties, may it be expressed or implied, therefore negates all other
 						warranties. Furthermore, WolfStar Project does not make any representations
@@ -97,10 +91,8 @@
 
 				<!-- Limitations -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Limitations
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Limitations</h2>
+					<p class="leading-relaxed text-default">
 						WolfStar Project or its suppliers will not be hold accountable for any
 						damages that will arise with the use or inability to use the materials on
 						the Service, even if WolfStar Project or an authorize representative of this
@@ -113,10 +105,10 @@
 
 				<!-- Revisions and Errata -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Revisions and errata
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						The materials appearing on the Service may include technical, typographical,
 						or photographic errors. WolfStar Project will not promise that any of the
 						materials in this Service are accurate, complete, or current. WolfStar
@@ -128,10 +120,8 @@
 
 				<!-- Links -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Links
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Links</h2>
+					<p class="leading-relaxed text-default">
 						WolfStar Project has not reviewed all of the sites linked to its Service and
 						is not responsible for the contents of any such linked site. The presence of
 						any link does not imply endorsement by WolfStar Project of the site. The use
@@ -141,10 +131,10 @@
 
 				<!-- Terms of Service Modifications -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">
 						Terms of Service modifications
 					</h2>
-					<p class="leading-relaxed text-base-content">
+					<p class="leading-relaxed text-default">
 						WolfStar Project may revise these Terms of Service for its Service at any
 						time without prior notice. By using this Service, you are agreeing to be
 						bound by the current version of these Terms of Service.
@@ -153,10 +143,8 @@
 
 				<!-- Your Privacy -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Your Privacy
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Your Privacy</h2>
+					<p class="leading-relaxed text-default">
 						Please read our
 						<NuxtLink to="/privacy" class="underline hover:opacity-70"
 							>Privacy Policy</NuxtLink
@@ -166,10 +154,8 @@
 
 				<!-- Governing Law -->
 				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Governing law
-					</h2>
-					<p class="leading-relaxed text-base-content">
+					<h2 class="mb-4 text-lg tracking-wider text-muted uppercase">Governing law</h2>
+					<p class="leading-relaxed text-default">
 						Any claim related to WolfStar Project's Service shall be governed by the
 						laws of Italy without regards to its conflict of law provisions.
 					</p>

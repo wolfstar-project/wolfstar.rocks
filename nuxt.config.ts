@@ -190,7 +190,7 @@ export default defineNuxtConfig({
 		options: {
 			rules: {
 				"meta-refresh": "off",
-				// NuxtUI/DaisyUI theme class merging produces duplicate utility classes
+				// Nuxt UI theme class merging produces duplicate utility classes
 				"no-dup-class": "off",
 				// NuxtUI components may render empty id attributes internally
 				"attribute-allowed-values": "off",

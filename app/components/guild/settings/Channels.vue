@@ -14,9 +14,9 @@
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Logging Channels</h3>
+					<h3 class="text-lg font-semibold text-default">Logging Channels</h3>
 				</div>
-				<p class="text-sm text-base-content/70">
+				<p class="text-sm text-toned">
 					Select which channels should receive specific log events. Leave empty to disable
 					logging for that event.
 				</p>
@@ -39,9 +39,9 @@
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
-					<h3 class="text-lg font-semibold text-base-content">Excluded Channels</h3>
+					<h3 class="text-lg font-semibold text-default">Excluded Channels</h3>
 				</div>
-				<p class="text-sm text-base-content/70">
+				<p class="text-sm text-toned">
 					Select channels that should be ignored for specific logging events. Messages and
 					events in these channels won't be logged.
 				</p>

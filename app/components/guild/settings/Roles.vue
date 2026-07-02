@@ -37,7 +37,7 @@
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">General Options</h3>
+					<h3 class="text-lg font-semibold text-default">General Options</h3>
 				</div>
 
 				<UFormField
@@ -57,9 +57,9 @@
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Configurable Roles</h3>
+					<h3 class="text-lg font-semibold text-default">Configurable Roles</h3>
 				</div>
-				<p class="text-sm text-base-content/70">
+				<p class="text-sm text-toned">
 					Assign roles for core bot functions like moderation and auto-assignment.
 				</p>
 
@@ -92,11 +92,9 @@
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Restricted Roles</h3>
+					<h3 class="text-lg font-semibold text-default">Restricted Roles</h3>
 				</div>
-				<p class="text-sm text-base-content/70">
-					Roles applied when a restriction command is used.
-				</p>
+				<p class="text-sm text-toned">Roles applied when a restriction command is used.</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<template v-for="roleConfig in restrictedRoles" :key="roleConfig.key">

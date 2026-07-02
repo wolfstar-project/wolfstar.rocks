@@ -14,9 +14,9 @@
 			<div class="space-y-2">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Moderation Events</h3>
+					<h3 class="text-lg font-semibold text-default">Moderation Events</h3>
 				</div>
-				<p class="text-sm text-base-content/70">
+				<p class="text-sm text-toned">
 					These events involve moderation actions. Please set up a Moderation Logs channel
 					on
 					<NuxtLink
@@ -36,7 +36,7 @@
 					:name="event.key"
 				>
 					<template #description>
-						<p class="text-sm text-base-content/70">{{ event.description }}</p>
+						<p class="text-sm text-toned">{{ event.description }}</p>
 					</template>
 					<USwitch v-model="state[event.key]" :aria-label="`Toggle ${event.title}`" />
 				</UFormField>
@@ -47,9 +47,9 @@
 			<div class="space-y-2">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:chat-bubble-left-right" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Message Events</h3>
+					<h3 class="text-lg font-semibold text-default">Message Events</h3>
 				</div>
-				<p class="text-sm text-base-content/70">
+				<p class="text-sm text-toned">
 					These events track message activity. The required channels vary by event type
 					and can be configured on
 					<NuxtLink
@@ -69,7 +69,7 @@
 					:name="event.key"
 				>
 					<template #description>
-						<p class="text-sm text-base-content/70">{{ event.description }}</p>
+						<p class="text-sm text-toned">{{ event.description }}</p>
 					</template>
 					<USwitch v-model="state[event.key]" :aria-label="`Toggle ${event.title}`" />
 				</UFormField>

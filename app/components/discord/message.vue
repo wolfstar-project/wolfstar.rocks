@@ -98,7 +98,7 @@ const profile = computed(() => Profiles[name]);
 }
 
 .discord-message-ephemeral-footer {
-	@apply mt-1.5 flex items-center gap-1 text-sm text-base-content/60;
+	@apply mt-1.5 flex items-center gap-1 text-sm text-muted;
 }
 
 .discord-message-ephemeral-footer > .discord-message-link {
@@ -130,7 +130,7 @@ const profile = computed(() => Profiles[name]);
 	margin-bottom: calc(-4px + var(--custom-message-spacing-vertical-container-cozy));
 	margin-left: calc(-0.5 * var(--spine-width));
 
-	@apply border-base-content/20;
+	@apply border-default/20;
 	border-width: var(--spine-width) 0 0 var(--spine-width);
 	border-style: solid;
 	border-top-left-radius: 6px;

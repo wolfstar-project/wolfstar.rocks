@@ -5,9 +5,9 @@
 			collapsible
 			resizable
 			:ui="{
-				header: 'bg-base-200/80',
-				body: 'bg-base-200/80 border-r border-base-200',
-				footer: 'bg-base-200/80 border-t border-b border-base-200',
+				header: 'bg-muted/80',
+				body: 'bg-muted/80 border-r border-muted',
+				footer: 'bg-muted/80 border-t border-b border-muted',
 			}"
 		>
 			<template #header="{ collapsed }">
@@ -54,14 +54,14 @@
 		>
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
-				<h2 class="text-xl font-semibold text-base-content">
+				<h2 class="text-xl font-semibold text-default">
 					{{ nuxtError.statusMessage || "Error Loading Dashboard" }}
 				</h2>
 				<p v-if="nuxtError.status === 403">
 					You don't have permission to access this server's dashboard. Make sure you have
 					the Manage Server permission and try again.
 				</p>
-				<p class="text-sm text-base-content/60">
+				<p class="text-sm text-muted">
 					{{
 						nuxtError.message ||
 						"Something went wrong while loading the dashboard. Please try again, or contact support if the problem continues."
@@ -78,8 +78,8 @@
 			<div class="flex flex-col items-center space-y-4">
 				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
-					<h2 class="text-xl font-semibold text-base-content">Loading Dashboard</h2>
-					<p class="text-sm text-base-content/60">Loading server settings...</p>
+					<h2 class="text-xl font-semibold text-default">Loading Dashboard</h2>
+					<p class="text-sm text-muted">Loading server settings...</p>
 				</div>
 				<div class="flex items-center space-x-2">
 					<div

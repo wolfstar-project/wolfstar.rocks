@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="mt-2 rounded-md bg-base-200 px-2 pt-2 pb-2 text-base-content drop-shadow-lg sm:px-4 sm:pb-4"
+		class="mt-2 rounded-md bg-muted px-2 pt-2 pb-2 text-default drop-shadow-lg sm:px-4 sm:pb-4"
 	>
 		<span class="text-xs font-extrabold uppercase">You've been invited to join a server</span>
 		<div class="mt-2 flex">
@@ -25,7 +25,7 @@
 					<span>{{ online.toLocaleString() }} Online</span>
 
 					<span
-						class="mr-1 ml-2 inline-block h-1.5 w-1.5 rounded-full bg-base-content/80 sm:h-2 sm:w-2 md:ml-4"
+						class="mr-1 ml-2 inline-block h-1.5 w-1.5 rounded-full bg-muted sm:h-2 sm:w-2 md:ml-4"
 					></span>
 					<span>{{ members.toLocaleString() }} Members</span>
 				</div>

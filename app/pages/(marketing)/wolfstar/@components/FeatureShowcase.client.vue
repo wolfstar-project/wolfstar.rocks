@@ -59,7 +59,7 @@
 													>
 														<UIcon
 															name="ph:image-duotone"
-															class="h-24 w-24 animate-pulse text-base-content/20"
+															class="h-24 w-24 animate-pulse text-muted/50"
 															aria-hidden="true"
 														/>
 													</div>
@@ -68,7 +68,7 @@
 													>
 														<UIcon
 															name="ph:image-duotone"
-															class="h-24 w-24 animate-pulse text-base-content/20"
+															class="h-24 w-24 animate-pulse text-muted/50"
 															aria-hidden="true"
 														/>
 													</div>
@@ -77,7 +77,7 @@
 													>
 														<UIcon
 															name="ph:image-duotone"
-															class="h-24 w-24 animate-pulse text-base-content/20"
+															class="h-24 w-24 animate-pulse text-muted/50"
 															aria-hidden="true"
 														/>
 													</div>
@@ -86,7 +86,7 @@
 													>
 														<UIcon
 															name="ph:image-duotone"
-															class="h-24 w-24 animate-pulse text-base-content/20"
+															class="h-24 w-24 animate-pulse text-muted/50"
 															aria-hidden="true"
 														/>
 													</div>
@@ -223,23 +223,26 @@
 											aria-label="Previous automod feature"
 											@click="advanceFeatureIndex(-1)"
 										/>
-										<label
+										<UTooltip
 											v-for="(text, index) of texts"
 											:key="index"
-											class="radio-feature-container"
-											:data-tip="text.tooltip"
-											:for="`automod-feature-${index}`"
+											:text="text.tooltip"
 										>
-											<input
-												:id="`automod-feature-${index}`"
-												v-model="featureIndex"
-												type="radio"
-												name="automod-feature"
-												class="radio-feature"
-												:value="index"
-											/>
-											<span class="sr-only">{{ text.tooltip }}</span>
-										</label>
+											<label
+												class="radio-feature-container"
+												:for="`automod-feature-${index}`"
+											>
+												<input
+													:id="`automod-feature-${index}`"
+													v-model="featureIndex"
+													type="radio"
+													name="automod-feature"
+													class="radio-feature"
+													:value="index"
+												/>
+												<span class="sr-only">{{ text.tooltip }}</span>
+											</label>
+										</UTooltip>
 										<UIcon
 											name="ph:caret-down-bold"
 											class="radio-feature-arrow -rotate-90 lg:rotate-0"
@@ -374,23 +377,26 @@
 											aria-label="Previous moderation action"
 											@click="advanceModerationIndex(-1)"
 										/>
-										<label
+										<UTooltip
 											v-for="(action, index) of moderationActions"
 											:key="action.name"
-											class="radio-feature-container"
-											:data-tip="action.name"
-											:for="`moderation-feature-${index}`"
+											:text="action.name"
 										>
-											<input
-												:id="`moderation-feature-${index}`"
-												v-model="moderationIndex"
-												type="radio"
-												name="moderation-log"
-												class="radio-feature"
-												:value="index"
-											/>
-											<span class="sr-only">{{ action.name }}</span>
-										</label>
+											<label
+												class="radio-feature-container"
+												:for="`moderation-feature-${index}`"
+											>
+												<input
+													:id="`moderation-feature-${index}`"
+													v-model="moderationIndex"
+													type="radio"
+													name="moderation-log"
+													class="radio-feature"
+													:value="index"
+												/>
+												<span class="sr-only">{{ action.name }}</span>
+											</label>
+										</UTooltip>
 										<UIcon
 											name="ph:caret-down-bold"
 											class="radio-feature-arrow -rotate-90 lg:rotate-0"
@@ -503,23 +509,26 @@
 											aria-label="Previous logging event"
 											@click="advanceLoggingIndex(-1)"
 										/>
-										<label
+										<UTooltip
 											v-for="(event, index) of loggingEvents"
 											:key="index"
-											class="radio-feature-container"
-											:data-tip="event.tooltip"
-											:for="`logging-feature-${index}`"
+											:text="event.tooltip"
 										>
-											<input
-												:id="`logging-feature-${index}`"
-												v-model="loggingIndex"
-												type="radio"
-												name="logging-feature"
-												class="radio-feature"
-												:value="index"
-											/>
-											<span class="sr-only">{{ event.tooltip }}</span>
-										</label>
+											<label
+												class="radio-feature-container"
+												:for="`logging-feature-${index}`"
+											>
+												<input
+													:id="`logging-feature-${index}`"
+													v-model="loggingIndex"
+													type="radio"
+													name="logging-feature"
+													class="radio-feature"
+													:value="index"
+												/>
+												<span class="sr-only">{{ event.tooltip }}</span>
+											</label>
+										</UTooltip>
 										<UIcon
 											name="ph:caret-down-bold"
 											class="radio-feature-arrow -rotate-90 lg:rotate-0"
@@ -760,12 +769,11 @@ onUnmounted(cleanup);
 }
 
 .radio-feature-container {
-	@apply tooltip tooltip-top lg:tooltip-right;
 	display: inherit;
 }
 
 .radio-feature {
-	@apply h-4 w-4 cursor-pointer appearance-none rounded-full bg-base-content/20;
+	@apply h-4 w-4 cursor-pointer appearance-none rounded-full bg-muted/50;
 }
 
 .radio-feature-arrow {
@@ -782,15 +790,15 @@ onUnmounted(cleanup);
 }
 
 .radio-feature:not(:checked):hover {
-	@apply bg-base-content/40;
+	@apply bg-muted;
 }
 
 .radio-feature:checked {
-	@apply bg-base-content/80;
+	@apply bg-accented;
 }
 
 .radio-feature:checked:hover {
-	@apply bg-base-content;
+	@apply bg-default;
 }
 
 .radio-feature {

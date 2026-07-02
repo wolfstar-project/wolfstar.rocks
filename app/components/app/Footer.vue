@@ -2,7 +2,7 @@
 	<USeparator
 		size="lg"
 		icon="custom:wolfstar"
-		:ui="{ border: 'border-[1px] border-base-300' }"
+		:ui="{ border: 'border-[1px] border-accented' }"
 		class="mt-24 p-10 content-visibility-auto"
 	/>
 	<UFooter
@@ -43,7 +43,7 @@
 						<p class="font-semibold">WolfStar Project</p>
 					</div>
 					<div>
-						<p class="text-sm text-base-content/80">
+						<p class="text-sm text-toned">
 							Copyright © {{ currentYear }}. All rights reserved.
 						</p>
 					</div>

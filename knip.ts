@@ -12,6 +12,10 @@ const config: KnipConfig = {
 				".lighthouserc.cjs",
 				"lighthouse-setup.cjs",
 				"scripts/**/*.ts",
+				/** Loaded by @nuxt/content at build time, not imported directly */
+				"content.config.ts",
+				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
+				"app/components/content/**/*.vue",
 			],
 			project: [
 				"**/*.{ts,vue,cjs,mjs}",
@@ -36,6 +40,7 @@ const config: KnipConfig = {
 				/** Framework-provided: re-exported or bundled by Nuxt/Nitro/Vite */
 				"ufo",
 				"ohash/*",
+				"scule",
 
 				/** Transitive deps used directly but provided by parent packages */
 				"deepmerge",

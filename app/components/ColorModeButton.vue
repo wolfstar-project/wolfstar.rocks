@@ -1,7 +1,7 @@
 <template>
 	<ClientOnly>
 		<UButton
-			:aria-label="`Switch theme (current: ${colorMode.preference})`"
+			:aria-label="`Switch to ${nextTheme} theme`"
 			:icon="themeIcon"
 			color="neutral"
 			variant="ghost"

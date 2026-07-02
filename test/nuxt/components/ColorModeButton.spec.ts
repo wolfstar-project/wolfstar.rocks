@@ -59,7 +59,7 @@ describe("ColorModeButton", () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(svtSpy).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorMode.preference).toBe("midnight");
 	});
 
 	it("swaps theme and does not call startViewTransition when activeViewTransition is truthy", async () => {
@@ -75,7 +75,7 @@ describe("ColorModeButton", () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorMode.preference).toBe("midnight");
 	});
 
 	it("swaps theme and does not call startViewTransition when effectiveReduceMotion is true", async () => {
@@ -85,13 +85,13 @@ describe("ColorModeButton", () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorMode.preference).toBe("midnight");
 	});
 
 	it("calls startViewTransition exactly once on happy path", async () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).toHaveBeenCalledTimes(1);
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorMode.preference).toBe("midnight");
 	});
 });

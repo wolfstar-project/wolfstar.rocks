@@ -6,7 +6,7 @@
 		<h1 class="title animate-fade-in-up-safe gradient-text-hero pb-4">
 			Imagine a<br />moderation app
 		</h1>
-		<p class="max-w-120 animate-fade-in-up-safe text-base-content/80 [animation-delay:0.1s]">
+		<p class="max-w-120 animate-fade-in-up-safe text-toned [animation-delay:0.1s]">
 			A very customizable multilanguage application to help you moderate your server, with a
 			complete logging suite and more,
 			<span class="font-bold underline underline-offset-2">100% for free</span>!
@@ -18,18 +18,21 @@
 	</section>
 
 	<section
-		class="relative join z-10 mt-12 animate-fade-in-up justify-center animate-fade-in-delay-2"
+		class="relative z-10 mt-12 flex animate-fade-in-up justify-center gap-2 animate-fade-in-delay-2"
 	>
-		<NuxtLink
-			class="glow-btn glow-btn-branding btn join-item sm:btn-wide"
-			:to="Invites.WolfStar"
-		>
+		<UButton class="btn-glow sm:min-w-48" color="neutral" size="lg" :to="Invites.WolfStar">
 			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
-		</NuxtLink>
-		<NuxtLink class="glow-btn glow-btn-branding btn join-item sm:btn-wide" to="#explore">
+		</UButton>
+		<UButton
+			class="btn-glow sm:min-w-48"
+			color="neutral"
+			size="lg"
+			to="#explore"
+			variant="outline"
+		>
 			<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
 			Explore
-		</NuxtLink>
+		</UButton>
 	</section>
 
 	<section id="explore" ref="exploreRef" class="mt-34 min-h-200 w-full scroll-mt-24">
@@ -76,13 +79,13 @@
 	<section class="invite-card mt-32 flex animate-on-scroll flex-col items-center">
 		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
-		<div class="join">
-			<NuxtLink :to="Invites.WolfStar" class="btn join-item btn-ghost">
+		<div class="flex flex-wrap justify-center gap-2">
+			<UButton :to="Invites.WolfStar" color="neutral" variant="ghost">
 				Invite WolfStar
-			</NuxtLink>
-			<NuxtLink to="https://join.wolfstar.rocks" class="btn join-item btn-ghost">
+			</UButton>
+			<UButton color="neutral" to="https://join.wolfstar.rocks" variant="ghost">
 				Support Server
-			</NuxtLink>
+			</UButton>
 		</div>
 	</section>
 	<OtherApps :apps="[otherApps.Staryl]" />

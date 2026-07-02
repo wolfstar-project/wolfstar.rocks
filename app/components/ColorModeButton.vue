@@ -1,8 +1,8 @@
 <template>
 	<ClientOnly>
 		<UButton
-			:aria-label="`Switch to ${nextTheme} mode`"
-			:icon="`lucide:${nextTheme === 'dark' ? 'sun' : 'moon'}`"
+			:aria-label="`Switch to ${nextTheme} theme`"
+			:icon="themeIcon"
 			color="neutral"
 			variant="ghost"
 			size="sm"
@@ -20,10 +20,37 @@ interface DocumentWithActiveVT extends Document {
 	readonly activeViewTransition: ViewTransition | null;
 }
 
+const THEMES = ["light", "dark", "midnight"] as const;
+type ThemeName = (typeof THEMES)[number];
+
 const colorMode = useColorMode();
 const { effectiveReduceMotion } = useReduceMotion();
 
-const nextTheme = computed(() => (colorMode.value === "dark" ? "light" : "dark"));
+const themeIcon = computed(() => {
+	const preference = colorMode.preference;
+	const activeTheme =
+		preference === "system" ? (colorMode.value as ThemeName) : (preference as ThemeName);
+
+	switch (activeTheme) {
+		case "light":
+			return "lucide:sun";
+		case "dark":
+			return "lucide:moon";
+		case "midnight":
+			return "lucide:sparkles";
+		default:
+			return "lucide:sun-moon";
+	}
+});
+
+const nextTheme = computed((): ThemeName => {
+	const preference = colorMode.preference;
+	const current =
+		preference === "system" ? (colorMode.value as ThemeName) : (preference as ThemeName);
+	const index = THEMES.indexOf(current);
+	const nextIndex = index === -1 ? 0 : (index + 1) % THEMES.length;
+	return THEMES[nextIndex] ?? "light";
+});
 
 const switchTheme = () => {
 	colorMode.preference = nextTheme.value;

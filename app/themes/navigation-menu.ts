@@ -18,16 +18,16 @@ export default {
 		{
 			class: {
 				childItem: "ps-1.5 -ms-px animate-fade-in-delay-1",
-				childList: "ms-5 border-s border-base-300",
+				childList: "ms-5 border-s border-accented",
 				content:
-					"data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden bg-base-200/60 backdrop-blur-sm",
+					"data-[state=open]:animate-[collapsible-down_200ms_ease-out] data-[state=closed]:animate-[collapsible-up_200ms_ease-out] overflow-hidden bg-muted/60 backdrop-blur-sm",
 			},
 			collapsed: false,
 			orientation: "vertical",
 		},
 		{
 			class: {
-				content: "shadow-sm rounded-sm min-h-6 p-1 bg-base-200/60 backdrop-blur-sm",
+				content: "shadow-sm rounded-sm min-h-6 p-1 bg-muted/60 backdrop-blur-sm",
 				link: "px-1.5",
 			},
 			collapsed: true,
@@ -58,7 +58,7 @@ export default {
 			active: false,
 			class: {
 				link: [
-					"hover:text-highlighted hover:before:bg-base-200/50",
+					"hover:text-highlighted hover:before:bg-muted/50",
 					"transition-all duration-300 before:transition-all hover-scale",
 				],
 				linkLeadingIcon: [
@@ -72,7 +72,7 @@ export default {
 		{
 			active: false,
 			class: {
-				link: "data-[state=open]:text-highlighted data-[state=open]:before:bg-base-200/50",
+				link: "data-[state=open]:text-highlighted data-[state=open]:before:bg-muted/50",
 				linkLeadingIcon:
 					"group-data-[state=open]:text-default group-data-[state=open]:scale-110",
 			},
@@ -82,7 +82,7 @@ export default {
 		},
 		{
 			class: {
-				link: "data-[state=open]:before:bg-base-200/50 data-[state=open]:shadow-lg",
+				link: "data-[state=open]:before:bg-muted/50 data-[state=open]:shadow-lg",
 			},
 			disabled: false,
 			highlight: true,
@@ -92,7 +92,7 @@ export default {
 		{
 			active: false,
 			class: {
-				link: "data-[state=open]:before:bg-base-200/50",
+				link: "data-[state=open]:before:bg-muted/50",
 			},
 			disabled: false,
 			highlight: false,
@@ -121,7 +121,7 @@ export default {
 		{
 			active: true,
 			class: {
-				link: "before:bg-base-200 shadow-md",
+				link: "before:bg-muted shadow-md",
 			},
 			highlight: false,
 			variant: "pill",
@@ -130,7 +130,7 @@ export default {
 			active: true,
 			class: {
 				link: [
-					"hover:before:bg-base-200/50 hover:shadow-lg",
+					"hover:before:bg-muted/50 hover:shadow-lg",
 					"before:transition-all duration-300",
 				],
 			},
@@ -205,7 +205,7 @@ export default {
 		variant: "pill",
 	},
 	slots: {
-		arrow: "relative top-[50%] size-2.5 rotate-45 border border-base-300 bg-base-200 z-[1] rounded-xs",
+		arrow: "relative top-[50%] size-2.5 rotate-45 border border-accented bg-muted z-[1] rounded-xs",
 		childItem: "animate-fade-in-up",
 		childLabel: "text-xs text-highlighted animate-fade-in",
 		childLink:
@@ -216,7 +216,7 @@ export default {
 		childLinkLabelExternalIcon: "inline-block size-3 align-top text-dimmed",
 		childLinkWrapper: "min-w-0",
 		childList: "isolate",
-		content: "animate-fade-in bg-base-200/60 backdrop-blur-sm",
+		content: "animate-fade-in bg-muted/60 backdrop-blur-sm",
 		indicator:
 			"absolute data-[state=visible]:animate-[fade-in_100ms_ease-out] data-[state=hidden]:animate-[fade-out_100ms_ease-in] data-[state=hidden]:opacity-0 bottom-0 z-[2] w-(--reka-navigation-menu-indicator-size) translate-x-(--reka-navigation-menu-indicator-position) flex h-2.5 items-end justify-center overflow-hidden transition-[translate,width] duration-200",
 		item: "min-w-0 animate-fade-in-up",
@@ -236,14 +236,14 @@ export default {
 		root: "relative flex gap-1.5 [&>div]:min-w-0",
 		separator: "px-2 h-px bg-border",
 		viewport:
-			"relative overflow-hidden bg-base-200/60 backdrop-blur-sm shadow-lg rounded-md ring ring-base-300 h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
+			"relative overflow-hidden bg-muted/60 backdrop-blur-sm shadow-lg rounded-md ring ring-accented h-(--reka-navigation-menu-viewport-height) w-full transition-[width,height,left] duration-200 origin-[top_center] data-[state=open]:animate-[scale-in_100ms_ease-out] data-[state=closed]:animate-[scale-out_100ms_ease-in] z-[1]",
 		viewportWrapper: "absolute top-full left-0 flex w-full",
 	},
 	variants: {
 		active: {
 			false: {
 				childLink: [
-					"hover:before:bg-base-200/50 text-default hover:text-highlighted hover-scale",
+					"hover:before:bg-muted/50 text-default hover:text-highlighted hover-scale",
 					"transition-all duration-300 before:transition-all",
 				],
 				childLinkIcon: [
@@ -254,7 +254,7 @@ export default {
 				linkLeadingIcon: "text-dimmed",
 			},
 			true: {
-				childLink: "before:bg-base-200 text-highlighted hover-lift",
+				childLink: "before:bg-muted text-highlighted hover-lift",
 				childLinkIcon: "text-default",
 			},
 		},

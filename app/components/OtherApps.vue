@@ -8,7 +8,7 @@
 		<div
 			v-for="app of apps"
 			:key="app.name"
-			class="other-apps-layout rounded-xl bg-base-200 shadow-xl"
+			class="other-apps-layout rounded-xl bg-muted shadow-xl"
 		>
 			<nuxt-img
 				:src="app.avatar"
@@ -23,26 +23,27 @@
 					{{ app.name }}
 				</h3>
 				<div class="mt-2 flex flex-wrap gap-1">
-					<span
+					<UBadge
 						v-for="purpose of app.purposes"
 						:key="purpose"
-						class="badge badge-neutral"
+						color="neutral"
+						variant="subtle"
 					>
 						{{ purpose }}
-					</span>
+					</UBadge>
 				</div>
 			</div>
 			<div class="other-apps-description">
 				<p class="grow">{{ app.description }}</p>
-				<div class="join mt-4 flex justify-end">
-					<nuxt-link class="btn join-item btn-neutral" :to="app.explore">
+				<div class="mt-4 flex justify-end gap-2">
+					<UButton :to="app.explore" color="neutral" variant="solid">
 						<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
 						Explore
-					</nuxt-link>
-					<nuxt-link class="btn join-item btn-neutral" :to="app.invite">
+					</UButton>
+					<UButton :to="app.invite" color="neutral" variant="solid">
 						<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add
 						App
-					</nuxt-link>
+					</UButton>
 				</div>
 			</div>
 		</div>

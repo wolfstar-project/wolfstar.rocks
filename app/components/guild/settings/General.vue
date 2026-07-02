@@ -14,10 +14,10 @@
 				:key="stat.label"
 				class="flex min-w-0 items-baseline justify-between md:justify-start md:gap-2"
 			>
-				<dt class="truncate text-sm font-semibold text-base-content/70 md:text-base">
+				<dt class="truncate text-sm font-semibold text-toned md:text-base">
 					{{ stat.label }}:
 				</dt>
-				<dd class="shrink-0 text-base font-bold text-base-content md:text-lg">
+				<dd class="shrink-0 text-base font-bold text-default md:text-lg">
 					{{ stat.value.toLocaleString() }}
 				</dd>
 			</div>
@@ -47,7 +47,7 @@
 
 	<GuildSettingsSection
 		title="General Settings"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="rounded-md border border-muted bg-muted/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<GuildSettingsForm
@@ -84,7 +84,7 @@
 						<p class="text-sm text-error">{{ error }}</p>
 					</template>
 					<template #description>
-						<p id="prefix-description" class="text-sm text-base-content/70">
+						<p id="prefix-description" class="text-sm text-toned">
 							The prefix used to trigger WolfStar commands in this server.
 						</p>
 					</template>
@@ -94,7 +94,7 @@
 			<div>
 				<UFormField label="Language" name="language">
 					<template #description>
-						<p id="language-description" class="text-sm text-base-content/70">
+						<p id="language-description" class="text-sm text-toned">
 							The language WolfStar uses for responses in this server.
 						</p>
 					</template>
@@ -127,7 +127,7 @@
 		empty-title="No settings changes yet"
 		empty-description="Changes you make to this server's settings will appear here so you can track who changed what."
 		refresh-label="Refresh audit log"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="rounded-md border border-muted bg-muted/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		@refresh="refreshAuditLog()"
 	>
 		<UTable
@@ -141,7 +141,7 @@
 			class="shrink-0"
 			:ui="{
 				base: 'table-fixed border-separate border-spacing-0',
-				thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
+				thead: '[&>tr]:bg-muted/50 [&>tr]:after:content-none',
 				tbody: '[&>tr]:last:[&>td]:border-b-0',
 				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
 				td: 'border-b border-default',

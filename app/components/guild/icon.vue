@@ -4,7 +4,7 @@
 		ref="icon"
 		:class="[
 			variant === 'card'
-				? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:bg-base-200/50 hover:shadow-lg'
+				? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-accented bg-default p-4 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:bg-muted/50 hover:shadow-lg'
 				: 'relative',
 			{
 				'ring-2 ring-primary/20':
@@ -38,7 +38,10 @@
 					:class="iconSizeClasses"
 					role="img"
 				>
-					<div v-if="!loaded" class="h-full w-full skeleton"></div>
+					<div
+						v-if="!loaded"
+						class="h-full w-full animate-pulse rounded-[inherit] bg-elevated"
+					></div>
 					<NuxtImg
 						v-if="!isDefault && loaded"
 						:src="createUrl(preferredFormat, iconPixelSize)"
@@ -54,7 +57,7 @@
 					/>
 					<div
 						v-else-if="isDefault && loaded"
-						class="flex items-center justify-center rounded-full bg-linear-to-br from-primary/20 to-secondary/20 text-base-content"
+						class="flex items-center justify-center rounded-full bg-linear-to-br from-primary/20 to-secondary/20 text-default"
 						:class="iconSizeClasses"
 					>
 						<span :class="acronymSizeClasses">{{ guild.acronym }}</span>
@@ -66,7 +69,7 @@
 		<!-- Guild Name (optional) - only in card variant -->
 		<div v-if="variant === 'card' && showName && guild" class="w-full text-center">
 			<h3
-				class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary"
+				class="line-clamp-1 text-xs font-medium text-default transition-colors group-hover:text-primary"
 			>
 				{{ guild.name }}
 			</h3>
@@ -75,7 +78,7 @@
 		<!-- Guild Stats (optional) - only in card variant -->
 		<div
 			v-if="variant === 'card' && showStats && guild"
-			class="flex items-center justify-center space-x-2 text-xs text-base-content/60"
+			class="flex items-center justify-center space-x-2 text-xs text-muted"
 		>
 			<span
 				v-if="guild.approximateMemberCount"
@@ -134,7 +137,7 @@ const { stop } = useIntersectionObserver(
 // Make these computed to avoid SSR hydration issues
 const isDefault = ref(false);
 const isAnimated = ref(false);
-// Size-based classes for DaisyUI Avatar
+// Size-based classes for guild avatar display
 const iconSizeClasses = computed(() => {
 	const sizeMap = {
 		lg: "size-20",

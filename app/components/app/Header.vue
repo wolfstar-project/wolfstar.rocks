@@ -33,8 +33,8 @@
 			class="hidden lg:inline-flex"
 			aria-label="Main navigation"
 			:ui="{
-				link: 'text-base-content/80 hover:text-base-content/100',
-				root: 'text-base-content/70',
+				link: 'text-toned hover:text-default',
+				root: 'text-toned',
 			}"
 		/>
 

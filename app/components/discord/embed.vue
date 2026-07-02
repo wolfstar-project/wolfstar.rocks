@@ -67,8 +67,8 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 	--discord-embed-default-border: #1e1f22;
 	@apply mt-1 max-w-fit border-l-4 p-3;
 	border-radius: 0.25rem;
-	background-color: var(--color-base-200);
-	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h);
+	background-color: var(--wolfstar-surface-200);
+	background-color: oklch(from var(--wolfstar-surface-200) calc(l - 0.02) c h);
 }
 
 /* Media features */

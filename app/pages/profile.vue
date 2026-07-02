@@ -3,7 +3,7 @@
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
 		<h1 class="sr-only">User Profile</h1>
 		<section
-			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
+			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-muted bg-muted/30 p-8 md:flex-row md:border-4 md:p-12"
 			aria-label="User profile"
 		>
 			<!-- decorative left accent (sidebar-like) -->
@@ -13,7 +13,7 @@
 			></div>
 			<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
 				<USkeleton
-					class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100"
+					class="h-24 w-24 rounded-full ring-2 ring-muted ring-offset-4 ring-offset-default"
 				/>
 				<div class="space-y-2 text-center">
 					<USkeleton class="h-10 w-48" />
@@ -27,7 +27,7 @@
 			<template v-else>
 				<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 					<div
-						class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
+						class="flex items-center justify-center rounded-full ring-accented ring-offset-default"
 						:class="{
 							'transition-transform duration-300 group-hover:scale-105':
 								!effectiveReduceMotion,
@@ -61,17 +61,17 @@
 					</div>
 				</div>
 				<div class="space-y-2 text-center">
-					<h2 class="text-4xl font-bold text-base-content">
+					<h2 class="text-4xl font-bold text-default">
 						{{ user.globalName ?? user.username }}
 					</h2>
-					<p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
-					<p class="text-sm text-base-content/60">
+					<p class="text-lg font-medium text-toned">@{{ user.username }}</p>
+					<p class="text-sm text-muted">
 						User ID:
 						<UButton
 							variant="outline"
 							size="xs"
 							color="neutral"
-							class="text-sm text-base-content/60 hover:text-base-content"
+							class="text-sm text-muted hover:text-default"
 							@click="copyUserId"
 						>
 							<template #leading>
@@ -89,7 +89,7 @@
 		</section>
 
 		<section
-			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
+			class="relative flex flex-col items-center justify-center divide-y divide-default/50 overflow-hidden rounded-xl border-2 border-muted bg-muted/20 shadow-lg md:border-4"
 			aria-label="Account management"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
@@ -99,7 +99,7 @@
 			></div>
 			<UTabs
 				v-model="activeTab"
-				variant="transparent"
+				variant="link"
 				:items
 				class="flex w-full flex-col items-center justify-center"
 			>
@@ -108,8 +108,8 @@
 						<div v-if="item.value === 'servers'" class="space-y-6">
 							<!-- Server Section Header -->
 							<div class="mb-4">
-								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
-								<div class="mt-1 text-base-content/60">
+								<h2 class="text-2xl font-bold text-default">Servers</h2>
+								<div class="mt-1 text-muted">
 									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
 									<span v-else>{{ guilds.length ?? 0 }} servers</span>
 								</div>
@@ -144,10 +144,9 @@
 										</UInput>
 									</UFieldGroup>
 									<!-- Mobile Buttons (no view toggle) -->
-									<UFieldGroup size="sm" class="join flex items-end sm:hidden">
+									<UFieldGroup size="sm" class="flex items-end sm:hidden">
 										<!-- Manageable Only Toggle Button -->
 										<UButton
-											class="join-item"
 											color="primary"
 											:variant="showManageableOnly ? 'solid' : 'outline'"
 											:is-loading
@@ -160,7 +159,6 @@
 
 										<!-- Sort Button -->
 										<UButton
-											class="join-item"
 											color="primary"
 											:is-loading
 											aria-label="Toggle sort order"
@@ -181,7 +179,6 @@
 										<!-- Refresh Button -->
 										<UButton
 											v-if="filteredGuilds.length === 0"
-											class="join-item"
 											color="primary"
 											:is-loading
 											is-loading-icon="lucide:loader"
@@ -192,7 +189,7 @@
 									</UFieldGroup>
 
 									<!-- Desktop Buttons (with view toggle) -->
-									<UFieldGroup size="sm" class="join hidden items-end sm:flex">
+									<UFieldGroup size="sm" class="hidden items-end sm:flex">
 										<!--
                     Manageable
                     Only
@@ -200,7 +197,6 @@
                     Button
                     -->
 										<UButton
-											class="join-item"
 											color="primary"
 											:variant="showManageableOnly ? 'solid' : 'outline'"
 											:is-loading
@@ -214,7 +210,6 @@
 
 										<!-- Sort Button -->
 										<UButton
-											class="join-item"
 											color="primary"
 											:is-loading
 											@click="handleSortToggle()"
@@ -234,7 +229,6 @@
 										<!-- Refresh Button -->
 										<UButton
 											v-if="filteredGuilds.length === 0"
-											class="join-item"
 											color="primary"
 											:is-loading
 											is-loading-icon="lucide:loader"
@@ -263,14 +257,14 @@
 						</div>
 						<div v-if="item.value === 'settings'" class="space-y-6">
 							<div class="mb-6">
-								<h2 class="text-2xl font-bold text-base-content">Settings</h2>
-								<p class="mt-1 text-base-content/60">
+								<h2 class="text-2xl font-bold text-default">Settings</h2>
+								<p class="mt-1 text-muted">
 									Manage your profile settings and preferences
 								</p>
 							</div>
 
 							<!-- Accessibility Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<UCard class="border border-muted/60 bg-default shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
 										<div
@@ -283,10 +277,10 @@
 										</div>
 
 										<div>
-											<h3 class="text-lg font-semibold text-base-content">
+											<h3 class="text-lg font-semibold text-default">
 												Accessibility
 											</h3>
-											<p class="text-sm text-base-content/60">
+											<p class="text-sm text-muted">
 												Customize your viewing experience
 											</p>
 										</div>
@@ -296,19 +290,19 @@
 								<div class="space-y-4">
 									<!-- Reduce Motion Toggle -->
 									<div
-										class="flex items-center justify-between rounded-lg border border-base-300 bg-base-200/50 p-4"
+										class="flex items-center justify-between rounded-lg border border-accented bg-muted/50 p-4"
 									>
 										<div class="flex-1">
 											<div class="flex items-center gap-2">
 												<UIcon
 													name="heroicons:arrows-right-left"
-													class="h-5 w-5 text-base-content/70"
+													class="h-5 w-5 text-toned"
 												/>
-												<h4 class="font-medium text-base-content">
+												<h4 class="font-medium text-default">
 													Reduce Motion
 												</h4>
 											</div>
-											<p class="mt-1 text-sm text-base-content/60">
+											<p class="mt-1 text-sm text-muted">
 												Minimize animations and transitions for a calmer
 												experience
 											</p>
@@ -343,7 +337,7 @@
 
 									<!-- Motion Status Indicator -->
 									<div class="flex items-center gap-2 text-sm">
-										<span class="text-base-content/60">Current Status:</span>
+										<span class="text-muted">Current Status:</span>
 										<UBadge
 											:color="effectiveReduceMotion ? 'primary' : 'neutral'"
 											variant="subtle"
@@ -369,7 +363,7 @@
 							</UCard>
 
 							<!-- Privacy Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<UCard class="border border-muted/60 bg-default shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
 										<div
@@ -381,10 +375,10 @@
 											/>
 										</div>
 										<div>
-											<h3 class="text-lg font-semibold text-base-content">
+											<h3 class="text-lg font-semibold text-default">
 												Privacy
 											</h3>
-											<p class="text-sm text-base-content/60">
+											<p class="text-sm text-muted">
 												Manage your privacy preferences
 											</p>
 										</div>
@@ -394,12 +388,12 @@
 									<div class="space-y-2 text-center">
 										<UIcon
 											name="heroicons:sparkles"
-											class="mx-auto mb-4 size-12 text-base-content/30"
+											class="mx-auto mb-4 size-12 text-muted/40"
 										/>
-										<h4 class="text-xl font-semibold text-base-content/60">
+										<h4 class="text-xl font-semibold text-muted">
 											Coming Soon
 										</h4>
-										<p class="text-sm text-base-content/40">
+										<p class="text-sm text-dimmed">
 											Privacy controls and data management will be available
 											here soon.
 										</p>
@@ -408,7 +402,7 @@
 							</UCard>
 
 							<!-- Notifications Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<UCard class="border border-muted/60 bg-default shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
 										<div
@@ -420,10 +414,10 @@
 											/>
 										</div>
 										<div>
-											<h3 class="text-lg font-semibold text-base-content">
+											<h3 class="text-lg font-semibold text-default">
 												Notifications
 											</h3>
-											<p class="text-sm text-base-content/60">
+											<p class="text-sm text-muted">
 												Configure notification preferences
 											</p>
 										</div>
@@ -433,12 +427,12 @@
 									<div class="space-y-2 text-center">
 										<UIcon
 											name="heroicons:sparkles"
-											class="mx-auto mb-4 size-12 text-base-content/30"
+											class="mx-auto mb-4 size-12 text-muted/40"
 										/>
-										<h4 class="text-xl font-semibold text-base-content/60">
+										<h4 class="text-xl font-semibold text-muted">
 											Coming Soon
 										</h4>
-										<p class="text-sm text-base-content/40">
+										<p class="text-sm text-dimmed">
 											Notification preferences will be available here soon.
 										</p>
 									</div>
@@ -452,10 +446,10 @@
 							>
 								<template #header>
 									<div>
-										<h2 class="text-2xl font-bold text-base-content">
+										<h2 class="text-2xl font-bold text-default">
 											Premium
 										</h2>
-										<p class="mt-1 text-base-content/60">
+										<p class="mt-1 text-muted">
 											Unlock advanced features and support the project
 										</p>
 									</div>
@@ -471,10 +465,10 @@
 											/>
 										</div>
 										<div>
-											<h3 class="text-3xl font-bold text-base-content">
+											<h3 class="text-3xl font-bold text-default">
 												Upgrade to Premium
 											</h3>
-											<p class="mt-2 text-base-content/70">
+											<p class="mt-2 text-toned">
 												Unlock advanced features and get priority support
 											</p>
 										</div>
@@ -491,10 +485,10 @@
 												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">
+												<p class="font-semibold text-default">
 													Advanced Commands
 												</p>
-												<p class="text-sm text-base-content/60">
+												<p class="text-sm text-muted">
 													Access to premium-only commands
 												</p>
 											</div>
@@ -509,10 +503,10 @@
 												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">
+												<p class="font-semibold text-default">
 													Priority Support
 												</p>
-												<p class="text-sm text-base-content/60">
+												<p class="text-sm text-muted">
 													Get help faster from our team
 												</p>
 											</div>
@@ -527,10 +521,10 @@
 												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">
+												<p class="font-semibold text-default">
 													Custom Settings
 												</p>
-												<p class="text-sm text-base-content/60">
+												<p class="text-sm text-muted">
 													Personalize your experience
 												</p>
 											</div>
@@ -545,10 +539,10 @@
 												/>
 											</div>
 											<div>
-												<p class="font-semibold text-base-content">
+												<p class="font-semibold text-default">
 													Early Access
 												</p>
-												<p class="text-sm text-base-content/60">
+												<p class="text-sm text-muted">
 													Try new features first
 												</p>
 											</div>

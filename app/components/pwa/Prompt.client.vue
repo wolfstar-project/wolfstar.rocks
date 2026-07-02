@@ -9,7 +9,7 @@
 	>
 		<div v-if="$pwa?.needRefresh">
 			<div
-				class="flex items-center gap-3 rounded-full bg-base-200 px-4 py-3 shadow-lg ring-1 ring-base-100"
+				class="flex items-center gap-3 rounded-full bg-muted px-4 py-3 shadow-lg ring-1 ring-default"
 			>
 				<span class="text-lg">✨</span>
 				<div class="text-sm font-medium">Update available</div>

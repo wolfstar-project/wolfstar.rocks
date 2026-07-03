@@ -23,7 +23,7 @@
 }
 
 @utility prose {
-	@apply max-w-none;
+	@apply max-w-none text-default prose-headings:text-highlighted prose-p:text-toned prose-strong:text-highlighted prose-li:text-toned;
 }
 
 @utility tab-* {

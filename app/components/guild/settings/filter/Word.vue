@@ -194,14 +194,16 @@
 			<!-- Section 3: Filtered Words -->
 			<GuildSettingsSection title="Filtered Words">
 				<div class="space-y-4">
-					<form class="flex gap-2" @submit.prevent="addWord">
-						<UInput
-							v-model="newWord"
-							placeholder="e.g. badword"
-							class="w-64"
-							aria-label="Add filtered word"
-						/>
-						<UButton type="submit" color="primary"> Confirm </UButton>
+					<form @submit.prevent="addWord">
+						<UFieldGroup>
+							<UInput
+								v-model="newWord"
+								placeholder="e.g. badword"
+								class="w-64"
+								aria-label="Add filtered word"
+							/>
+							<UButton type="submit" color="primary"> Confirm </UButton>
+						</UFieldGroup>
 					</form>
 
 					<div v-if="state.selfmodFilterRaw.length > 0" class="flex flex-wrap gap-2">

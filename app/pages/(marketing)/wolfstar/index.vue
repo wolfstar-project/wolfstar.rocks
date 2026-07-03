@@ -18,21 +18,17 @@
 	</section>
 
 	<section
-		class="relative z-10 mt-12 flex animate-fade-in-up justify-center gap-2 animate-fade-in-delay-2"
+		class="relative z-10 mt-12 flex animate-fade-in-up justify-center animate-fade-in-delay-2"
 	>
-		<UButton class="btn-glow sm:min-w-48" color="neutral" size="lg" :to="Invites.WolfStar">
-			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
-		</UButton>
-		<UButton
-			class="btn-glow sm:min-w-48"
-			color="neutral"
-			size="lg"
-			to="#explore"
-			variant="outline"
-		>
-			<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
-			Explore
-		</UButton>
+		<UFieldGroup size="lg">
+			<UButton class="sm:min-w-48" color="neutral" :to="Invites.WolfStar">
+				<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
+			</UButton>
+			<UButton class="sm:min-w-48" color="neutral" to="#explore" variant="outline">
+				<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
+				Explore
+			</UButton>
+		</UFieldGroup>
 	</section>
 
 	<section id="explore" ref="exploreRef" class="mt-34 min-h-200 w-full scroll-mt-24">
@@ -79,14 +75,14 @@
 	<section class="invite-card mt-32 flex animate-on-scroll flex-col items-center">
 		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
 
-		<div class="flex flex-wrap justify-center gap-2">
+		<UFieldGroup class="flex-wrap justify-center">
 			<UButton :to="Invites.WolfStar" color="neutral" variant="ghost">
 				Invite WolfStar
 			</UButton>
 			<UButton color="neutral" to="https://join.wolfstar.rocks" variant="ghost">
 				Support Server
 			</UButton>
-		</div>
+		</UFieldGroup>
 	</section>
 	<OtherApps :apps="[otherApps.Staryl]" />
 </template>

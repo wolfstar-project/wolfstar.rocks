@@ -194,14 +194,16 @@
 			<!-- Section 3: Options -->
 			<GuildSettingsSection title="Options">
 				<div class="space-y-4">
-					<form class="flex gap-2" @submit.prevent="addLink">
-						<UInput
-							v-model="newLink"
-							placeholder="e.g. example.com"
-							class="w-64"
-							aria-label="Add allowed link"
-						/>
-						<UButton type="submit" color="primary"> Confirm </UButton>
+					<form @submit.prevent="addLink">
+						<UFieldGroup>
+							<UInput
+								v-model="newLink"
+								placeholder="e.g. example.com"
+								class="w-64"
+								aria-label="Add allowed link"
+							/>
+							<UButton type="submit" color="primary"> Confirm </UButton>
+						</UFieldGroup>
 					</form>
 
 					<div v-if="state.selfmodLinksAllowed.length > 0" class="flex flex-wrap gap-2">

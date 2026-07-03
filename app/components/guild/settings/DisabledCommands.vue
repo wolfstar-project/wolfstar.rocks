@@ -96,11 +96,10 @@
 							</div>
 
 							<Separator />
-							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
+							<UFieldGroup size="sm" class="flex-wrap justify-end p-4">
 								<UButton
 									color="success"
 									variant="solid"
-									size="sm"
 									@click="toggleAllInCategory(category, true)"
 								>
 									Enable all
@@ -108,7 +107,6 @@
 								<UButton
 									color="warning"
 									variant="solid"
-									size="sm"
 									@click="toggleAllInCategory(category, false)"
 								>
 									Disable all
@@ -116,12 +114,11 @@
 								<UButton
 									color="neutral"
 									variant="outline"
-									size="sm"
 									@click="resetCategory(category)"
 								>
 									Reset
 								</UButton>
-							</div>
+							</UFieldGroup>
 						</template>
 					</UCollapsible>
 				</div>

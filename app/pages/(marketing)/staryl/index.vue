@@ -11,15 +11,17 @@
 		<BuildEnvironment :footer="false" class="mt-16" />
 	</section>
 	<section
-		class="mt-16 flex animate-fade-in-up items-center justify-center gap-2 animate-fade-in-delay-2"
+		class="mt-16 flex animate-fade-in-up items-center justify-center animate-fade-in-delay-2"
 	>
-		<UButton :to="Invites.Staryl" class="sm:min-w-48" color="neutral" size="lg">
-			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
-		</UButton>
-		<UButton class="sm:min-w-48" color="neutral" size="lg" to="#explore" variant="outline">
-			<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
-			Explore
-		</UButton>
+		<UFieldGroup size="lg">
+			<UButton :to="Invites.Staryl" class="sm:min-w-48" color="neutral">
+				<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
+			</UButton>
+			<UButton class="sm:min-w-48" color="neutral" to="#explore" variant="outline">
+				<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
+				Explore
+			</UButton>
+		</UFieldGroup>
 	</section>
 
 	<h2 class="mt-72 animate-on-scroll text-center text-5xl font-bold">COMING SOON...</h2>

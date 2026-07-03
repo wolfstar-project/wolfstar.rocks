@@ -35,7 +35,7 @@
 			</div>
 			<div class="other-apps-description">
 				<p class="grow">{{ app.description }}</p>
-				<div class="mt-4 flex justify-end gap-2">
+				<UFieldGroup class="mt-4 justify-end">
 					<UButton :to="app.explore" color="neutral" variant="solid">
 						<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
 						Explore
@@ -44,7 +44,7 @@
 						<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add
 						App
 					</UButton>
-				</div>
+				</UFieldGroup>
 			</div>
 		</div>
 	</div>

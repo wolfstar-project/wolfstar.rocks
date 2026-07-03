@@ -125,12 +125,12 @@
 			:dismissible="false"
 		>
 			<template #footer>
-				<div class="flex justify-end gap-2">
+				<UFieldGroup class="justify-end">
 					<UButton color="neutral" variant="ghost" @click="cancelLeave">
 						Stay on Page
 					</UButton>
 					<UButton color="error" @click="confirmLeave"> Discard Changes </UButton>
-				</div>
+				</UFieldGroup>
 			</template>
 		</UModal>
 	</UDashboardGroup>

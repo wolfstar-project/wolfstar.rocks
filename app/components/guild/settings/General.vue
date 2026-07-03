@@ -23,7 +23,7 @@
 			</div>
 		</dl>
 
-		<div class="mt-4 flex flex-col items-start gap-3 md:flex-row">
+		<UFieldGroup class="mt-4 flex-col items-start md:flex-row">
 			<UButton
 				color="neutral"
 				variant="link"
@@ -42,7 +42,7 @@
 			>
 				Need Help?
 			</UButton>
-		</div>
+		</UFieldGroup>
 	</GuildSettingsSection>
 
 	<GuildSettingsSection

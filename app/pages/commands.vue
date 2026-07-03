@@ -12,45 +12,40 @@
 
 		<div class="space-y-8">
 			<!-- Search bar -->
-			<section
-				aria-labelledby="search-heading"
-				class="mx-auto flex max-w-3xl flex-col items-stretch gap-4 sm:flex-row sm:items-center"
-			>
+			<section aria-labelledby="search-heading" class="mx-auto w-full max-w-3xl">
 				<h2 id="search-heading" class="sr-only">Search Commands</h2>
-				<UInput
-					v-model="searchValue"
-					placeholder="Search commands..."
-					icon="i-heroicons-magnifying-glass"
-					size="xl"
-					class="flex-1"
-					aria-label="Search for commands by name or description"
-					:aria-describedby="searchValue ? 'search-results-count' : undefined"
-				>
-					<template v-if="searchValue" #trailing>
-						<UButton
-							color="neutral"
-							variant="link"
-							icon="i-heroicons-x-mark-20-solid"
-							:padded="false"
-							aria-label="Clear search"
-							@click="searchValue = ''"
-						/>
-					</template>
-				</UInput>
+				<UFieldGroup size="xl" class="w-full">
+					<UInput
+						v-model="searchValue"
+						placeholder="Search commands..."
+						icon="i-heroicons-magnifying-glass"
+						class="min-w-0 flex-1"
+						aria-label="Search for commands by name or description"
+						:aria-describedby="searchValue ? 'search-results-count' : undefined"
+					>
+						<template v-if="searchValue" #trailing>
+							<UButton
+								color="neutral"
+								variant="link"
+								icon="i-heroicons-x-mark-20-solid"
+								:padded="false"
+								aria-label="Clear search"
+								@click="searchValue = ''"
+							/>
+						</template>
+					</UInput>
 
-				<!-- Refresh button -->
-				<UButton
-					icon="i-heroicons-arrow-path"
-					color="primary"
-					variant="soft"
-					size="xl"
-					class="self-start sm:self-auto"
-					:loading="status === 'pending'"
-					aria-label="Refresh commands list"
-					@click="refresh()"
-				>
-					<span class="hidden sm:inline">Refresh</span>
-				</UButton>
+					<UButton
+						icon="i-heroicons-arrow-path"
+						color="primary"
+						variant="soft"
+						:loading="status === 'pending'"
+						aria-label="Refresh commands list"
+						@click="refresh()"
+					>
+						<span class="hidden sm:inline">Refresh</span>
+					</UButton>
+				</UFieldGroup>
 			</section>
 
 			<!-- Results count for screen readers -->

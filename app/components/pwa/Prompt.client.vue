@@ -13,19 +13,20 @@
 			>
 				<span class="text-lg">✨</span>
 				<div class="text-sm font-medium">Update available</div>
-				<UButton
-					color="primary"
-					size="xs"
-					label="Refresh"
-					@click="$pwa?.updateServiceWorker(true)"
-				/>
-				<UButton
-					color="neutral"
-					variant="ghost"
-					size="xs"
-					icon="heroicons:x-mark-20-solid"
-					@click="$pwa?.cancelPrompt()"
-				/>
+				<UFieldGroup size="xs">
+					<UButton
+						color="primary"
+						label="Refresh"
+						@click="$pwa?.updateServiceWorker(true)"
+					/>
+					<UButton
+						color="neutral"
+						variant="ghost"
+						icon="heroicons:x-mark-20-solid"
+						aria-label="Dismiss update prompt"
+						@click="$pwa?.cancelPrompt()"
+					/>
+				</UFieldGroup>
 			</div>
 		</div>
 	</Transition>

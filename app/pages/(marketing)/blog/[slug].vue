@@ -45,7 +45,7 @@
 
 				<div class="not-prose mt-12 flex items-center justify-between">
 					<ULink to="/blog" class="text-primary"> ← Back to blog </ULink>
-					<div class="flex items-center justify-end gap-1.5">
+					<UFieldGroup class="justify-end">
 						<UButton
 							icon="i-lucide-link"
 							variant="ghost"
@@ -65,7 +65,7 @@
 						>
 							<span class="sr-only">WolfStar on {{ link.label }}</span>
 						</UButton>
-					</div>
+					</UFieldGroup>
 				</div>
 
 				<USeparator v-if="surround?.length" />

@@ -2,8 +2,8 @@ import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
-import { createOAuthState } from "#server/utils/oauth-state";
-import { userLogin } from "#shared/audit/actions";
+import { createOAuthState, verifyOAuthState } from "#server/utils/oauth-state";
+import { oauthStateInvalid, userLogin } from "#shared/audit/actions";
 import { isSafeRedirectPath } from "#shared/utils/redirect";
 import { createError, useLogger, withAuditMethods } from "evlog";
 
@@ -13,6 +13,10 @@ export default defineWrappedResponseHandler(
 		const log = withAuditMethods(useLogger(event));
 
 		const authorizationParams: Record<string, string> = { prompt: "none" };
+
+		// Redirect URL returned to the client after a successful code exchange.
+		// Populated during the callback leg from the HMAC-bound cookie.
+		let callbackRedirectUrl = "/";
 
 		// Only generate state + cookies during OAuth initiation (no code present).
 		// When callback.vue calls this endpoint again to exchange the code, we must
@@ -44,6 +48,54 @@ export default defineWrappedResponseHandler(
 				maxAge: 5 * 60,
 				path: "/",
 			});
+		} else {
+			// Callback leg: verify and consume the CSRF state BEFORE any code
+			// exchange or session mutation. A failed state must never change
+			// authentication state.
+			const state = query.state;
+			const nonce = getCookie(event, "oauth_nonce");
+			const storedRedirectUrl = getCookie(event, "oauth_redirect");
+
+			// Always clear cookies after one use to prevent replay attacks
+			deleteCookie(event, "oauth_nonce", { path: "/" });
+			deleteCookie(event, "oauth_redirect", { path: "/" });
+
+			if (!state || typeof state !== "string" || !nonce || !storedRedirectUrl) {
+				log.audit(
+					oauthStateInvalid({
+						actor: { type: "system", id: "oauth-flow" },
+						outcome: "denied",
+						reason: "missing-fields",
+					}),
+				);
+				throw createError({
+					message: "State verification failed",
+					status: 400,
+					why: "Required parameters (state, nonce, or redirect URL) are missing or invalid",
+					fix: "Restart the login flow from the beginning",
+				});
+			}
+
+			const result = await verifyOAuthState(state, nonce, storedRedirectUrl);
+
+			if (!result.valid) {
+				log.audit(
+					oauthStateInvalid({
+						actor: { type: "system", id: "oauth-flow" },
+						outcome: "denied",
+						reason: result.reason,
+					}),
+				);
+				throw createError({
+					message: "State verification failed",
+					status: 400,
+					why: "The OAuth state signature is invalid or has expired",
+					fix: "Restart the login flow from the beginning",
+				});
+			}
+
+			// Re-validate the URL one final time (defence-in-depth against cookie tampering)
+			callbackRedirectUrl = isSafeRedirectPath(storedRedirectUrl) ? storedRedirectUrl : "/";
 		}
 
 		const oauthHandler = defineOAuthDiscordEventHandler({
@@ -106,7 +158,16 @@ export default defineWrappedResponseHandler(
 			},
 		});
 
-		return oauthHandler(event);
+		// Initiation leg: the handler redirects the browser to Discord.
+		if (!query.code) {
+			return oauthHandler(event);
+		}
+
+		// Callback leg: run the code exchange (creates the session via
+		// onSuccess), then give the client the safe destination from the
+		// HMAC-bound cookie so no separate post-session state check is needed.
+		await oauthHandler(event);
+		return { redirectUrl: callbackRedirectUrl };
 	},
 	{
 		auth: false,

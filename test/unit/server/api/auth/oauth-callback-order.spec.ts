@@ -2,23 +2,19 @@ import type { H3Event } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
- * Characterization tests for the OAuth callback sequencing (plan 002).
+ * Sequencing tests for `/api/auth/discord` (plans 002 + 003).
  *
- * These tests drive the REAL `/api/auth/discord` route module. The finding
- * under test: during the callback leg (`?code=...`) the endpoint exchanges
- * the authorization code and creates a session WITHOUT validating the CSRF
- * `state`; state verification happens later in a separate endpoint
- * (`/api/auth/verify-state`) that the client calls only AFTER the session
- * already exists.
- *
- * Plan 003 must flip the `it.fails` invariants below into passing tests by
- * making the exchange endpoint verify (and consume) the state atomically
- * before any token exchange or session mutation.
+ * The callback leg (`?code=...&state=...`) must atomically verify and consume
+ * the CSRF state BEFORE exchanging the authorization code or mutating the
+ * session. A failed state must never change authentication state, and the
+ * one-time cookies must be consumed on both success and failure.
  */
 
 const {
 	mockSetUserSession,
 	mockSetCookie,
+	mockGetCookie,
+	mockDeleteCookie,
 	mockVerifyOAuthState,
 	mockCreateOAuthState,
 	callOrder,
@@ -29,6 +25,8 @@ const {
 		callOrder.push("setUserSession");
 	});
 	const mockSetCookie = vi.fn();
+	const mockGetCookie = vi.fn();
+	const mockDeleteCookie = vi.fn();
 	const mockVerifyOAuthState = vi.fn(async () => {
 		callOrder.push("verifyOAuthState");
 		return { valid: true as const };
@@ -40,17 +38,17 @@ const {
 	const queryRef: { current: Record<string, unknown> } = { current: {} };
 
 	// Simulates nuxt-auth-utils: a successful Discord code exchange invokes
-	// onSuccess with user + tokens.
+	// onSuccess with user + tokens and returns its result.
 	const mockDefineOAuthDiscordEventHandler = vi.fn(
 		(opts: {
 			onSuccess: (
 				event: unknown,
 				payload: { user: Record<string, unknown>; tokens: Record<string, unknown> },
-			) => Promise<void>;
+			) => Promise<unknown>;
 		}) => {
 			return async (event: unknown) => {
 				callOrder.push("tokenExchange");
-				await opts.onSuccess(event, {
+				return opts.onSuccess(event, {
 					user: {
 						id: "user-1",
 						username: "tester",
@@ -68,6 +66,8 @@ const {
 	g.defineWrappedResponseHandler = (fn: unknown) => fn;
 	g.getQuery = () => queryRef.current;
 	g.setCookie = mockSetCookie;
+	g.getCookie = mockGetCookie;
+	g.deleteCookie = mockDeleteCookie;
 	g.setUserSession = mockSetUserSession;
 	g.defineOAuthDiscordEventHandler = mockDefineOAuthDiscordEventHandler;
 	g.seconds = (n: number) => n * 1000;
@@ -75,7 +75,8 @@ const {
 	return {
 		mockSetUserSession,
 		mockSetCookie,
-		mockDefineOAuthDiscordEventHandler,
+		mockGetCookie,
+		mockDeleteCookie,
 		mockVerifyOAuthState,
 		mockCreateOAuthState,
 		callOrder,
@@ -123,10 +124,23 @@ function makeEvent(): H3Event {
 	} as unknown as H3Event;
 }
 
+function givenValidCallbackCookies() {
+	mockGetCookie.mockImplementation((_event: unknown, name: string) => {
+		if (name === "oauth_nonce") return "cookie-nonce";
+		if (name === "oauth_redirect") return "/profile";
+		return undefined;
+	});
+}
+
 describe("/api/auth/discord callback sequencing", () => {
 	beforeEach(() => {
 		vi.clearAllMocks();
 		callOrder.length = 0;
+		mockGetCookie.mockReturnValue(undefined);
+		mockVerifyOAuthState.mockImplementation(async () => {
+			callOrder.push("verifyOAuthState");
+			return { valid: true as const };
+		});
 	});
 
 	it("generates state and nonce cookies during initiation (no code)", async () => {
@@ -140,40 +154,75 @@ describe("/api/auth/discord callback sequencing", () => {
 		expect(cookieNames).toContain("oauth_redirect");
 	});
 
-	it("currently exchanges the code and creates a session without any state validation (documented regression)", async () => {
-		queryRef.current = { code: "auth-code" };
-
-		await callHandler(makeEvent());
-
-		// Regression: the session is created even though the endpoint never
-		// saw — let alone verified — the CSRF state.
-		expect(callOrder).toEqual(["tokenExchange", "setUserSession"]);
-		expect(mockVerifyOAuthState).not.toHaveBeenCalled();
-		expect(mockSetUserSession).toHaveBeenCalledTimes(1);
-	});
-
-	// SECURITY INVARIANT (plan 003 must make this pass): state verification
-	// must happen before the token exchange, in the same request.
-	it.fails("verifies the OAuth state before exchanging the code", async () => {
+	it("verifies the OAuth state before exchanging the code or creating a session", async () => {
 		queryRef.current = { code: "auth-code", state: "client-state" };
+		givenValidCallbackCookies();
+
+		const response = await callHandler(makeEvent());
+
+		expect(mockVerifyOAuthState).toHaveBeenCalledWith(
+			"client-state",
+			"cookie-nonce",
+			"/profile",
+		);
+		expect(callOrder).toEqual(["verifyOAuthState", "tokenExchange", "setUserSession"]);
+		expect(response).toEqual({ redirectUrl: "/profile" });
+	});
+
+	it("consumes the one-time cookies on success", async () => {
+		queryRef.current = { code: "auth-code", state: "client-state" };
+		givenValidCallbackCookies();
 
 		await callHandler(makeEvent());
 
-		expect(mockVerifyOAuthState).toHaveBeenCalled();
-		expect(callOrder.indexOf("verifyOAuthState")).toBeLessThan(
-			callOrder.indexOf("tokenExchange"),
-		);
+		const deleted = mockDeleteCookie.mock.calls.map((call) => call[1]);
+		expect(deleted).toContain("oauth_nonce");
+		expect(deleted).toContain("oauth_redirect");
 	});
 
-	// SECURITY INVARIANT (plan 003 must make this pass): a callback without a
-	// valid state must never create or refresh a session.
-	it.fails("does not create a session when the state is missing", async () => {
+	it("rejects and never exchanges or creates a session when the state is missing", async () => {
 		queryRef.current = { code: "auth-code" };
+		givenValidCallbackCookies();
 
-		await callHandler(makeEvent()).catch(() => {
-			// plan 003 should reject with a 400 — swallow it for the assertion
-		});
+		await expect(callHandler(makeEvent())).rejects.toThrow("State verification failed");
+
+		expect(callOrder).toEqual([]);
+		expect(mockSetUserSession).not.toHaveBeenCalled();
+	});
+
+	it("rejects and consumes cookies when the state is invalid", async () => {
+		queryRef.current = { code: "auth-code", state: "tampered-state" };
+		givenValidCallbackCookies();
+		mockVerifyOAuthState.mockResolvedValue({ valid: false, reason: "bad-hmac" });
+
+		await expect(callHandler(makeEvent())).rejects.toThrow("State verification failed");
 
 		expect(mockSetUserSession).not.toHaveBeenCalled();
+		expect(callOrder).not.toContain("tokenExchange");
+		const deleted = mockDeleteCookie.mock.calls.map((call) => call[1]);
+		expect(deleted).toContain("oauth_nonce");
+		expect(deleted).toContain("oauth_redirect");
+	});
+
+	it("rejects when the nonce or redirect cookie is absent", async () => {
+		queryRef.current = { code: "auth-code", state: "client-state" };
+
+		await expect(callHandler(makeEvent())).rejects.toThrow("State verification failed");
+
+		expect(mockVerifyOAuthState).not.toHaveBeenCalled();
+		expect(mockSetUserSession).not.toHaveBeenCalled();
+	});
+
+	it("falls back to a safe redirect when the stored redirect URL is unsafe", async () => {
+		queryRef.current = { code: "auth-code", state: "client-state" };
+		mockGetCookie.mockImplementation((_event: unknown, name: string) => {
+			if (name === "oauth_nonce") return "cookie-nonce";
+			if (name === "oauth_redirect") return "https://evil.example.com/phish";
+			return undefined;
+		});
+
+		const response = await callHandler(makeEvent());
+
+		expect(response).toEqual({ redirectUrl: "/" });
 	});
 });

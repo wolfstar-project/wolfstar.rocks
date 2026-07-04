@@ -29,7 +29,7 @@ export const useFooter = () => {
 					class: "link-hover",
 					icon: "ph:newspaper-clipping-duotone",
 					label: "Blog",
-					to: "https://blog.wolfstar.rocks",
+					to: "/blog",
 					ui: { linkLeadingIcon: "bg-primary" },
 				},
 			],

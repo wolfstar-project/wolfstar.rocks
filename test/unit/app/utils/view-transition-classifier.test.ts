@@ -43,4 +43,32 @@ describe("classifyNavigation", () => {
 		const result = classifyNavigation({ toPath: "/", fromPath: "/", isPopstate: false });
 		expect(result).toEqual([]);
 	});
+
+	it("tags nav-forward + route-marketing for forward nav to /blog", () => {
+		const result = classifyNavigation({
+			toPath: "/blog",
+			fromPath: "/",
+			isPopstate: false,
+		});
+		expect(result).toEqual(["nav-forward", "route-marketing"]);
+	});
+
+	it("tags nav-forward + route-marketing for forward nav to a blog post slug", () => {
+		const result = classifyNavigation({
+			toPath: "/blog/wolfstar-v7",
+			fromPath: "/blog",
+			isPopstate: false,
+		});
+		expect(result).toEqual(["nav-forward", "route-marketing"]);
+	});
+
+	it("tags nav-back + route-marketing for popstate back nav to /blog", () => {
+		const result = classifyNavigation({
+			toPath: "/blog",
+			fromPath: "/blog/wolfstar-v7",
+			isPopstate: true,
+			hasUAVisualTransition: false,
+		});
+		expect(result).toEqual(["nav-back", "route-marketing"]);
+	});
 });

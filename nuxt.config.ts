@@ -15,6 +15,7 @@ export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",
+		"@nuxt/content",
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -32,6 +33,15 @@ export default defineNuxtConfig({
 		"@nuxt/test-utils/module",
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
+
+	content: {
+		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
+		// requiring better-sqlite3 as an additional native dependency.
+		experimental: {
+			// @ts-expect-error -- sqliteConnector is a valid @nuxt/content experimental option
+			sqliteConnector: "native",
+		},
+	},
 
 	$development: {
 		site: {
@@ -237,6 +247,8 @@ export default defineNuxtConfig({
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
+		"/blog": { appLayout: "default", prerender: true, robots: true },
+		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 	},
 
 	sourcemap: {

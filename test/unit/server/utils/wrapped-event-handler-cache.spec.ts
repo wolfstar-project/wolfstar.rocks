@@ -2,16 +2,16 @@ import type { H3Event } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
- * Characterization tests for `defineWrappedCachedResponseHandler` (plan 002).
+ * Security-ordering tests for `defineWrappedCachedResponseHandler`
+ * (plans 002 + 004).
  *
  * These tests drive the REAL wrapper from `server/utils/wrappedEventHandler.ts`
  * with a deterministic fake `cachedEventHandler` that mimics Nitro's cache:
  * a warm key returns the stored response WITHOUT invoking the resolver.
  *
- * Finding under test: the wrapper places authentication (and rate limiting)
- * inside the cached resolver, so warm cache hits skip `requireUserSession`
- * entirely. Plan 004 must flip the `it.fails` invariants below into passing
- * tests by running the guards before cache resolution.
+ * Invariant: authentication, rate limiting, and the `authorize` hook execute
+ * on EVERY request — the cache stores data only, so a warm hit must never
+ * bypass request-specific security checks.
  */
 
 const {
@@ -140,28 +140,17 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
-	it("currently serves warm hits without re-running authentication (documented regression)", async () => {
-		const { handler, resolvedBody } = buildHandler();
+	it("serves warm hits from cache without re-running the data resolver", async () => {
+		const { handler, innerHandler, resolvedBody } = buildHandler();
 
-		// Warm the cache as an authorized manager
 		await handler(makeEvent("guild-1"));
-		expect(mockRequireUserSession).toHaveBeenCalledTimes(1);
-
-		// Second request for the same key: session check would now REJECT
-		mockRequireUserSession.mockRejectedValue(
-			Object.assign(new Error("Unauthorized"), { status: 401 }),
-		);
-
 		const result = await handler(makeEvent("guild-1"));
 
-		// Regression: the cached body is returned and auth never executed again
 		expect(result).toEqual(resolvedBody);
-		expect(mockRequireUserSession).toHaveBeenCalledTimes(1);
+		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
-	// SECURITY INVARIANT (plan 004 must make this pass): every request —
-	// including warm cache hits — must run `requireUserSession`.
-	it.fails("runs authentication on every request, including warm cache hits", async () => {
+	it("runs authentication on every request, including warm cache hits", async () => {
 		const { handler } = buildHandler();
 
 		await handler(makeEvent("guild-1"));
@@ -170,10 +159,8 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		expect(mockRequireUserSession).toHaveBeenCalledTimes(2);
 	});
 
-	// SECURITY INVARIANT (plan 004 must make this pass): an unauthenticated
-	// request must be rejected even when the cache is warm.
-	it.fails("rejects unauthenticated requests on a warm cache", async () => {
-		const { handler } = buildHandler();
+	it("rejects unauthenticated requests on a warm cache", async () => {
+		const { handler, innerHandler } = buildHandler();
 
 		await handler(makeEvent("guild-1"));
 		mockRequireUserSession.mockRejectedValue(
@@ -181,6 +168,48 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		);
 
 		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Unauthorized");
+		expect(innerHandler).toHaveBeenCalledTimes(1);
+	});
+
+	it("runs the authorize hook on every request and blocks revoked users from warm hits", async () => {
+		const resolvedBody = { rows: ["log-entry"], total: 1 };
+		const innerHandler = vi.fn().mockResolvedValue(resolvedBody);
+		const authorize = vi.fn().mockResolvedValue(undefined);
+		const handler = defineWrappedCachedResponseHandler(innerHandler, {
+			auth: true,
+			maxAge: 30,
+			swr: false,
+			rateLimit: { enabled: false },
+			authorize,
+			getKey: (event: H3Event) =>
+				`guild:${(event as unknown as { context: { params: { guild: string } } }).context.params.guild}`,
+		});
+
+		// Warm the cache as a manager
+		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
+		expect(authorize).toHaveBeenCalledTimes(1);
+		expect(authorize).toHaveBeenCalledWith(expect.anything(), managerSession);
+
+		// Same user loses guild permissions between requests
+		authorize.mockRejectedValue(Object.assign(new Error("Forbidden"), { status: 403 }));
+
+		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Forbidden");
+		expect(authorize).toHaveBeenCalledTimes(2);
+		// The cached body was resolved exactly once and never leaked to the
+		// forbidden request
+		expect(innerHandler).toHaveBeenCalledTimes(1);
+	});
+
+	it("lets two authorized managers share the same cached result", async () => {
+		const { handler, innerHandler, resolvedBody } = buildHandler();
+
+		mockRequireUserSession.mockResolvedValueOnce({ user: { id: "manager-a" } });
+		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
+
+		mockRequireUserSession.mockResolvedValueOnce({ user: { id: "manager-b" } });
+		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
+
+		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
 	it("passes cache options through and keeps wrapper-only options out of Nitro", () => {
@@ -194,6 +223,7 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		expect(opts).not.toHaveProperty("auth");
 		expect(opts).not.toHaveProperty("rateLimit");
 		expect(opts).not.toHaveProperty("onError");
+		expect(opts).not.toHaveProperty("authorize");
 	});
 
 	it("uses cache keys that do not vary by session identity", () => {

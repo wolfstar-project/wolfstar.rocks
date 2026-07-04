@@ -23,6 +23,13 @@ interface DefinedWrappedResponseHandlerOptions {
 	onError?: (logger: ReturnType<typeof useLogger>, error: any | Error | H3Error) => void;
 	auth?: boolean;
 	rateLimit?: PartialRateLimit;
+	/**
+	 * Per-request authorization (e.g. guild permission checks) that must run
+	 * before any cached data resolution. Unlike the handler body, this executes
+	 * on EVERY request — including warm cache hits — so revoked permissions are
+	 * always enforced.
+	 */
+	authorize?: (event: H3Event, session: UserSessionRequired | null) => Promise<void> | void;
 }
 
 interface DefinedWrappedCachedResponseHandlerOptions
@@ -98,6 +105,15 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const session = await getUserSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
+	// Run per-request authorization before the (possibly cached) handler so
+	// permission checks are never skipped by a warm cache hit
+	const invoke = async () => {
+		if (options.authorize) {
+			await options.authorize(event, session);
+		}
+		return handler(event);
+	};
+
 	// Normalize options (includes new `scope`)
 	const {
 		enabled,
@@ -110,7 +126,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 
 	// Check if IP is whitelisted (skip rate limiting for whitelisted IPs)
 	if (!session && whitelist.length > 0 && whitelist.includes(id)) {
-		return await handler(event);
+		return await invoke();
 	}
 
 	// Build storage key: global (per-user) by default, or method:path:user when scope === 'route'
@@ -131,7 +147,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 
 	// If rate limiting is disabled, run handler immediately
 	if (!enabled) {
-		return await handler(event);
+		return await invoke();
 	}
 
 	const now = Date.now();
@@ -210,7 +226,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			setResponseHeader(event, "date", new Date().toUTCString());
 
 			try {
-				const res = await handler(event);
+				const res = await invoke();
 				return res;
 			} catch (error) {
 				// On handler error, try to roll back the reserved token so failures don't consume quota
@@ -285,7 +301,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 			setResponseHeader(event, "date", new Date().toUTCString());
 
 			try {
-				const res = await handler(event);
+				const res = await invoke();
 				return res;
 			} catch (error) {
 				// On handler error, remove the appended timestamp to avoid penalizing failing requests
@@ -305,7 +321,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		default:
 	}
 	// Fallback: if an unknown windowType is provided, just run the handler
-	return await handler(event);
+	return await invoke();
 }
 
 export function defineWrappedResponseHandler<T extends EventHandlerRequest, D>(
@@ -339,12 +355,18 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 		swr: true,
 	},
 ): EventHandler<T, D> {
-	const opts = omit(["rateLimit", "auth", "onError"], options);
-	return cachedEventHandler<T>(async (event) => {
+	const opts = omit(["rateLimit", "auth", "onError", "authorize"], options);
+
+	// Only the DATA RESOLUTION is cached. Authentication, rate limiting, and
+	// the `authorize` hook run in the outer handler on every request — a warm
+	// cache hit must never bypass request-specific security checks.
+	const cached = cachedEventHandler<T>((event) => handler(event), opts);
+
+	return defineEventHandler<T>(async (event) => {
 		const log = useLogger(event);
 		return withApiMetrics(event, async () => {
 			try {
-				return await applyWrappedHandlerLogic(event, handler, options);
+				return await applyWrappedHandlerLogic(event, cached, options);
 			} catch (error) {
 				if (options.onError && typeof options.onError === "function") {
 					options.onError(log, error);
@@ -352,5 +374,5 @@ export function defineWrappedCachedResponseHandler<T extends EventHandlerRequest
 				throw error;
 			}
 		});
-	}, opts);
+	});
 }

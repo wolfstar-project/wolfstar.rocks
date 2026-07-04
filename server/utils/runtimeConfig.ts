@@ -2,6 +2,11 @@ import type { NitroRuntimeConfig } from "nitropack/types";
 import { cast } from "@sapphire/utilities/cast";
 import { config } from "dotenv";
 
+// `useRuntimeConfig` is injected by Nitro's auto-imports in server builds and is absent when
+// `nuxt.config.ts` loads this file at build time; declare only its signature so both type
+// contexts accept the runtime feature check below.
+declare const useRuntimeConfig: (() => NitroRuntimeConfig) | undefined;
+
 let runtimeConfigInstance: NitroRuntimeConfig;
 
 export function generateRuntimeConfig() {

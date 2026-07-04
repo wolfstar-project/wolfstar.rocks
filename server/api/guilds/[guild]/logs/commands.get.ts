@@ -1,4 +1,4 @@
-import { CommandLogData } from "#server/database";
+import type { CommandLogData } from "#server/database";
 import prisma from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { CommandLogQuerySchema } from "#shared/schemas";

@@ -2,17 +2,18 @@ import type { H3Event } from "h3";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
- * Characterization tests for the rate-limit reservation logic in
- * `defineWrappedResponseHandler` (plan 002).
+ * Rate-limit reservation tests for `defineWrappedResponseHandler`
+ * (plans 002 + 005).
  *
- * Findings under test:
- * 1. Reservations are read-modify-write without a critical section, so two
- *    concurrent requests can both reserve from the same state and overwrite
- *    each other's writes.
- * 2. Rollback after a handler error mutates the LATEST shared state, so it
- *    can remove another request's reservation instead of its own.
+ * Invariants:
+ * 1. Reservations happen inside a per-key critical section, so concurrent
+ *    requests in the same instance cannot reserve from stale shared state.
+ * 2. Rollback after a handler error removes only the failing request's own
+ *    reservation (identified by a reservation token).
  *
- * Plan 005 must flip the `it.fails` invariants below into passing tests.
+ * The critical section is an in-process keyed mutex: the production storage
+ * driver (Cloudflare KV over HTTP) has no atomic primitive, so cross-instance
+ * races remain a documented limitation.
  */
 
 const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
@@ -107,7 +108,7 @@ describe("rate-limit reservations under concurrency", () => {
 		vi.useRealTimers();
 	});
 
-	it("currently lets two concurrent requests both reserve from the same fixed-window state (documented race)", async () => {
+	it("allows exactly `limit` concurrent requests through", async () => {
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {
 			auth: true,
@@ -119,90 +120,28 @@ describe("rate-limit reservations under concurrency", () => {
 		const second = handler(makeEvent());
 		await flushMicrotasks();
 
-		// Both requests have issued their storage read; release them together
-		expect(gate.pending).toHaveLength(2);
+		// The keyed mutex serializes the reservations: only the first request's
+		// storage read is in flight; the second waits for the lock
+		expect(gate.pending).toHaveLength(1);
 		gate.hold = false;
-		for (const release of gate.pending.splice(0)) {
-			release();
-		}
-
-		const results = await Promise.allSettled([first, second]);
-
-		// Race: with limit=1, both requests succeed because both read count=0
-		expect(results.map((r) => r.status)).toEqual(["fulfilled", "fulfilled"]);
-		expect(innerHandler).toHaveBeenCalledTimes(2);
-		// The overwritten state records only one of the two reservations
-		expect(storageState.get("rate-limiter-state:user-1")).toMatchObject({ count: 1 });
-	});
-
-	// INVARIANT (plan 005 must make this pass): concurrent requests must not
-	// exceed the configured limit.
-	it.fails("allows exactly `limit` concurrent requests through", async () => {
-		const innerHandler = vi.fn().mockResolvedValue("ok");
-		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
-			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 10_000 },
-		});
-
-		gate.hold = true;
-		const first = handler(makeEvent());
-		const second = handler(makeEvent());
-		await flushMicrotasks();
-		gate.hold = false;
-		for (const release of gate.pending.splice(0)) {
-			release();
+		while (gate.pending.length > 0) {
+			for (const release of gate.pending.splice(0)) {
+				release();
+			}
+			await flushMicrotasks();
 		}
 
 		const results = await Promise.allSettled([first, second]);
 		const fulfilled = results.filter((r) => r.status === "fulfilled");
+		const rejected = results.filter((r) => r.status === "rejected");
 
 		expect(fulfilled).toHaveLength(1);
+		expect(rejected).toHaveLength(1);
 		expect(innerHandler).toHaveBeenCalledTimes(1);
+		expect(storageState.get("rate-limiter-state:user-1")).toMatchObject({ count: 1 });
 	});
 
-	it("currently rolls back another request's sliding-window reservation on handler error (documented bug)", async () => {
-		vi.useFakeTimers();
-		vi.setSystemTime(1_000);
-
-		let rejectFirst: (error: Error) => void = () => undefined;
-		const firstHandlerDone = new Promise((_resolve, reject) => {
-			rejectFirst = reject;
-		});
-		const innerHandler = vi
-			.fn()
-			// Request A blocks until we fail it after B completed
-			.mockImplementationOnce(() => firstHandlerDone)
-			// Request B succeeds immediately
-			.mockResolvedValueOnce("ok");
-
-		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
-			rateLimit: { enabled: true, limit: 5, type: "sliding", window: 60_000 },
-		});
-
-		// Request A reserves timestamp 1000 and starts its (blocked) handler
-		const first = handler(makeEvent());
-		await flushMicrotasks();
-		expect(storageState.get("rate-limiter-state:user-1")).toEqual({ timestamps: [1_000] });
-
-		// Request B reserves timestamp 2000 and completes
-		vi.setSystemTime(2_000);
-		await handler(makeEvent());
-		expect(storageState.get("rate-limiter-state:user-1")).toEqual({
-			timestamps: [1_000, 2_000],
-		});
-
-		// Request A's handler now fails → rollback pops the LAST timestamp,
-		// which belongs to request B, not to request A.
-		rejectFirst(new Error("handler exploded"));
-		await expect(first).rejects.toThrow("handler exploded");
-
-		expect(storageState.get("rate-limiter-state:user-1")).toEqual({ timestamps: [1_000] });
-	});
-
-	// INVARIANT (plan 005 must make this pass): rollback must remove only the
-	// failing request's own reservation.
-	it.fails("rolls back only the failing request's own reservation", async () => {
+	it("rolls back only the failing request's own reservation", async () => {
 		vi.useFakeTimers();
 		vi.setSystemTime(1_000);
 
@@ -246,5 +185,59 @@ describe("rate-limit reservations under concurrency", () => {
 		}
 
 		expect(innerHandler).toHaveBeenCalledTimes(10);
+		// Disabled rate limiting must not pay a storage round trip
+		expect(storageState.size).toBe(0);
+	});
+
+	it("resets the fixed window after it expires", async () => {
+		vi.useFakeTimers();
+		vi.setSystemTime(1_000);
+
+		const innerHandler = vi.fn().mockResolvedValue("ok");
+		const handler = defineWrappedResponseHandler(innerHandler, {
+			auth: true,
+			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 10_000 },
+		});
+
+		await handler(makeEvent());
+		await expect(handler(makeEvent())).rejects.toThrow("Too Many Requests");
+
+		vi.setSystemTime(12_001);
+		await expect(handler(makeEvent())).resolves.toBe("ok");
+		expect(innerHandler).toHaveBeenCalledTimes(2);
+	});
+
+	it("fails open when the rate-limit storage cannot be read", async () => {
+		const innerHandler = vi.fn().mockResolvedValue("ok");
+		const handler = defineWrappedResponseHandler(innerHandler, {
+			auth: true,
+			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 10_000 },
+		});
+
+		const g = globalThis as Record<string, unknown>;
+		const originalUseStorage = g.useStorage;
+		g.useStorage = () => ({
+			getItem: async () => {
+				throw new Error("KV unavailable");
+			},
+			setItem: async () => {
+				throw new Error("KV unavailable");
+			},
+		});
+
+		try {
+			// The wrapper module captured its storage at import time, so patching
+			// useStorage here is not enough — drive the failure through the shared
+			// instrumented mocks instead.
+			const sentryMetrics = await import("#server/utils/sentry-metrics");
+			vi.mocked(sentryMetrics.instrumentCacheGet).mockRejectedValueOnce(
+				new Error("KV unavailable"),
+			);
+
+			await expect(handler(makeEvent())).resolves.toBe("ok");
+			expect(innerHandler).toHaveBeenCalledTimes(1);
+		} finally {
+			g.useStorage = originalUseStorage;
+		}
 	});
 });

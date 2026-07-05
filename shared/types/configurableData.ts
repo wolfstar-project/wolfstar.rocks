@@ -51,12 +51,6 @@ export namespace DisableCommands {
 	}
 }
 
-export namespace General {
-	export interface Form {
-		prefix: string;
-	}
-}
-
 export namespace Channels {
 	export interface Channel {
 		description: string;

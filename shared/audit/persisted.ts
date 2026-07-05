@@ -51,7 +51,10 @@ export function envelopeFromPersistedRow(row: PersistedAuditRow): AuditEnvelope 
 	};
 }
 
-export type ChainTopologyProblem =
+// Not exported by name: it is only ever accessed through
+// `ChainVerificationResult["topologyProblems"]`, which already carries the
+// full union to consumers.
+type ChainTopologyProblem =
 	| { kind: "no-root"; detail: string }
 	| { kind: "multiple-roots"; hashes: string[] }
 	| { kind: "fork"; atHash: string; childHashes: string[] }

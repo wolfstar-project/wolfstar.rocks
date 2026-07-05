@@ -23,6 +23,7 @@ export function parseTracesSampleRate(raw: string | undefined): number {
 	}
 	const value = Number(raw);
 	if (!Number.isFinite(value) || value < 0 || value > 1) {
+		// oxlint-disable-next-line no-console --- runs before any logger exists (nuxt.config load)
 		console.warn(
 			`[runtimeConfig] Invalid NUXT_PUBLIC_SENTRY_TRACES_SAMPLE_RATE "${raw}" — expected a number from 0 to 1; falling back to ${DEFAULT_TRACES_SAMPLE_RATE}`,
 		);

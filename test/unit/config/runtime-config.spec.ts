@@ -1,3 +1,4 @@
+/* oxlint-disable no-console --- assertions spy on the parser's console.warn fallback */
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**

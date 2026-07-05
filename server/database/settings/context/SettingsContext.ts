@@ -1,6 +1,7 @@
 import type { ReadonlyGuildData } from "#server/database/settings/types";
 import { AdderManager } from "#server/database/settings/structures/AdderManager";
 import { PermissionNodeManager } from "#server/database/settings/structures/PermissionNodeManager";
+import { create } from "#server/utils/regexCreator";
 import { RateLimitManager } from "@sapphire/ratelimits";
 import { isNullish, isNullishOrEmpty } from "@sapphire/utilities";
 

@@ -41,11 +41,15 @@ function determineUnit(ms: number): readonly [number, string] {
 	for (let i = 0; i < unitEntries.length; i++) {
 		const next = unitEntries[i + 1];
 		if (!next || ms < next[1] || i === unitEntries.length - 2) {
-			return [Math.floor(ms / unitEntries[i][1]), unitEntries[i][0]] as const;
+			// The loop guard keeps `i` in bounds, so the index access cannot be undefined
+			const entry = unitEntries[i]!;
+			return [Math.floor(ms / entry[1]), entry[0]] as const;
 		}
 	}
 
-	return [Math.floor(ms / unitEntries[0][1]), unitEntries[0][0]] as const;
+	// `unitMap` is a non-empty literal, so the first entry always exists
+	const first = unitEntries[0]!;
+	return [Math.floor(ms / first[1]), first[0]] as const;
 }
 
 interface SelectDurationProps {
@@ -102,13 +106,13 @@ function validate(ms: number): boolean {
 function onChangeDuration(event: Event) {
 	const val = Number.parseInt((event.target as HTMLInputElement).value, 10);
 	duration.value = val;
-	const ms = val * unitMap[unit.value];
+	const ms = val * unitMap[unit.value]!;
 	if (validate(ms)) emit("update:modelValue", ms);
 }
 
 function onChangeUnit(newUnit: string) {
 	unit.value = newUnit;
-	const ms = unitMap[newUnit] * duration.value;
+	const ms = unitMap[newUnit]! * duration.value;
 	if (validate(ms)) emit("update:modelValue", ms);
 }
 </script>

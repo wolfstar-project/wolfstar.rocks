@@ -61,9 +61,10 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData, GuildDataKey } from "#server/database";
+import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
+import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 
 const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();
@@ -88,19 +89,19 @@ function mapToGuildData(formState: ChannelsSettingsSchemaType): Partial<GuildDat
 	const changes: Partial<GuildData> = {};
 
 	for (const config of ConfigurableLoggingChannels) {
-		const value = formState[config.key];
+		const value = formState[config.key] as string | null | undefined;
 		// Include null values for nullable fields (user explicitly cleared)
 		// Only exclude undefined (form doesn't control this key)
 		if (value !== undefined) {
-			changes[config.key as GuildDataKey] = value as any;
+			setGuildDataChange(changes, config.key, value);
 		}
 	}
 
 	for (const config of ConfigurableIgnoreChannels) {
-		const value = formState[config.key];
+		const value = formState[config.key] as string[] | undefined;
 		// Include empty arrays (user explicitly cleared all ignored channels)
 		if (value !== undefined) {
-			changes[config.key as GuildDataKey] = value as any;
+			setGuildDataChange(changes, config.key, value);
 		}
 	}
 

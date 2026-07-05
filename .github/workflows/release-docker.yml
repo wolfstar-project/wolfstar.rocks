@@ -19,9 +19,10 @@ env:
 jobs:
   publish-stable:
     name: 🚀 Publish stable image to GHCR
-    # Only publish `stable` from an actual release tag (release-tag.yml pushes `v*`);
-    # a manual workflow_dispatch from a branch or non-tag ref must not overwrite it.
-    if: github.repository == 'wolfstar-project/wolfstar.rocks' && github.ref_type == 'tag'
+    # Only the automatic `v*` tag push (release-tag.yml) may move `stable`. The push
+    # trigger is already filtered to `tags: v*`, so gating on `push` excludes every
+    # manual workflow_dispatch, even one started from an old or non-release tag.
+    if: github.repository == 'wolfstar-project/wolfstar.rocks' && github.event_name == 'push'
     permissions:
       contents: read # reusable workflow checks out the repository
       packages: write # push the stable image to GHCR

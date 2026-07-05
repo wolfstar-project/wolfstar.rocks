@@ -3,6 +3,8 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
+import { Collection } from "@discordjs/collection";
+import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
@@ -103,25 +105,17 @@ async function getUserSession(
 // compare-and-swap primitive, so this bounds reservation races to the single
 // server instance; cross-instance races remain possible and are an accepted
 // limitation of the storage backend.
-const rateLimitKeyLocks = new Map<string, Array<() => void>>();
+const rateLimitKeyLocks = new Collection<string, AsyncQueue>();
 
 async function withKeyLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
-	const queue = rateLimitKeyLocks.get(key) ?? [];
-	rateLimitKeyLocks.set(key, queue);
-
-	await new Promise<void>((resolve) => {
-		queue.push(resolve);
-		if (queue.length === 1) resolve();
-	});
-
+	const queue = rateLimitKeyLocks.ensure(key, () => new AsyncQueue());
+	await queue.wait();
 	try {
 		return await fn();
 	} finally {
 		queue.shift();
-		if (queue.length === 0) {
+		if (queue.remaining === 0) {
 			rateLimitKeyLocks.delete(key);
-		} else {
-			queue[0]!();
 		}
 	}
 }

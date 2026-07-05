@@ -29,9 +29,10 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData, GuildDataKey } from "#server/database";
+import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#shared/schemas";
+import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
@@ -39,8 +40,7 @@ const toast = useToast();
 const createDefaultState = (): ModerationSettingsSchemaType => {
 	const defaults: Partial<ModerationSettingsSchemaType> = {};
 	for (const setting of ConfigurableModerationKeys) {
-		defaults[setting.key] =
-			(guildSettings.value?.[setting.key as GuildDataKey] as boolean | undefined) ?? false;
+		defaults[setting.key] = guildSettings.value?.[setting.key] ?? false;
 	}
 	return defaults as ModerationSettingsSchemaType;
 };
@@ -50,7 +50,7 @@ const state = reactive<ModerationSettingsSchemaType>(createDefaultState());
 function mapToGuildData(stateData: ModerationSettingsSchemaType): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
 	for (const setting of ConfigurableModerationKeys) {
-		result[setting.key as GuildDataKey] = stateData[setting.key] as never;
+		setGuildDataChange(result, setting.key, stateData[setting.key]);
 	}
 	return result;
 }
@@ -73,8 +73,7 @@ watch(
 	(newSettings) => {
 		if (newSettings) {
 			for (const setting of ConfigurableModerationKeys) {
-				state[setting.key] =
-					(newSettings[setting.key as GuildDataKey] as boolean | undefined) ?? false;
+				state[setting.key] = newSettings[setting.key] ?? false;
 			}
 		}
 	},

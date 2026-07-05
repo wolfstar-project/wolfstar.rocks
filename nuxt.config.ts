@@ -1,7 +1,6 @@
-import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isTest, provider } from "std-env";
+import { isCI, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -31,7 +30,6 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
 	content: {
@@ -56,9 +54,6 @@ export default defineNuxtConfig({
 	},
 
 	$production: {
-		image: {
-			provider: "netlify",
-		},
 		modules: ["nuxt-security"],
 		sentry: {
 			telemetry: false,
@@ -186,7 +181,7 @@ export default defineNuxtConfig({
 	},
 
 	htmlValidator: {
-		enabled: !isCI || (provider !== "netlify" && !!process.env.VALIDATE_HTML),
+		enabled: !isCI || (provider !== "railway" && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
@@ -248,6 +243,9 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+
+		// Former blog.wolfstar.rocks permalink; used in external links/backlinks.
+		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
 	},
 
 	sourcemap: {
@@ -459,14 +457,11 @@ export default defineNuxtConfig({
 					"'self'",
 					"wss:",
 					"ws:",
-					"https://ingesteer.services-prod.nsvcs.net", // Used by Netlify for telemetry (error, performance etc.)
 					"https://cdn.wolfstar.rocks",
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
-					"https://*.netlify.com",
-					"https://*.netlify.app",
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",
 					"https://*.sentry.io",

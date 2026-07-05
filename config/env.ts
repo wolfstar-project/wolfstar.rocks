@@ -2,30 +2,15 @@ import * as process from "node:process";
 import Git from "simple-git";
 import { version as packageVersion } from "../package.json";
 import { getNextVersion } from "../scripts/next-version";
+import {
+	getDeployContext,
+	getPreviewUrlFromContext,
+	getProductionUrlFromContext,
+} from "./deploy-context";
 
-/**
- * Environment variable `PULL_REQUEST` provided by Netlify.
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
- *
- * Whether triggered by a GitHub PR
- */
-const isPR = process.env.PULL_REQUEST === "true";
+const deployContext = getDeployContext();
 
-/**
- * Environment variable `REVIEW_ID` provided by Netlify.
- * @see {@link https://docs.netlify.com/configure-builds/environment-variables/#git-metadata}
- *
- * Pull request number (if in a PR environment)
- */
-const prNumber = process.env.REVIEW_ID || null;
-
-/**
- * Environment variable `BRANCH` provided by Netlify.
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#git-metadata}
- *
- * Git branch
- */
-const gitBranch = process.env.BRANCH;
+const { isPR, prNumber, gitBranch } = deployContext;
 
 export const isCanary =
 	(process.env.NODE_ENV === "production" ||
@@ -34,35 +19,9 @@ export const isCanary =
 	gitBranch === "main" &&
 	!isPR;
 
-/**
- * Environment variable `CONTEXT` provided by Netlify.
- * `dev`, `production`, `deploy-preview`, `branch-deploy`, `preview-server`, or a branch name
- * @see {@link https://docs.netlify.com/build/configure-builds/environment-variables/#build-metadata}
- *
- * Whether this is some sort of preview environment.
- */
-const isPreview = isPR || (process.env.CONTEXT && process.env.CONTEXT !== "production");
-const isProduction = process.env.CONTEXT === "production";
+export const getPreviewUrl = () => getPreviewUrlFromContext(deployContext);
 
-/**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
- *
- * Preview URL for the current deployment, only available in preview environments.
- */
-export const getPreviewUrl = () =>
-	isPreview ? (process.env.URL ? process.env.URL : undefined) : undefined;
-
-/**
- * Environment variable `URL` provided by Netlify.
- * This is always the current deploy URL, regardless of env.
- * @see {@link https://docs.netlify.com/build/functions/environment-variables/#functions}
- *
- * Production URL for the current deployment, only available in production environments.
- */
-export const getProductionUrl = () =>
-	isProduction ? (process.env.URL ? process.env.URL : undefined) : undefined;
+export const getProductionUrl = () => getProductionUrlFromContext(deployContext);
 
 const git = Git();
 async function getGitInfo() {
@@ -75,8 +34,7 @@ async function getGitInfo() {
 
 	let commit;
 	try {
-		// Netlify: COMMIT_REF
-		commit = process.env.COMMIT_REF || (await git.revparse(["HEAD"]));
+		commit = deployContext.commitRef || (await git.revparse(["HEAD"]));
 	} catch {
 		commit = "unknown";
 	}
@@ -97,7 +55,6 @@ async function getGitInfo() {
 
 export async function getFileLastUpdated(path: string) {
 	try {
-		// Get ISO date of last commit for file
 		const date = await git.log(["-1", "--format=%cI", "--", path]);
 		return date.latest?.date || new Date().toISOString();
 	} catch {
@@ -127,6 +84,7 @@ export async function getEnv(isDevelopment: boolean) {
 		getGitInfo(),
 		getVersion(),
 	]);
+	const { isPreview } = deployContext;
 	const env = isDevelopment ? "dev" : isCanary ? "canary" : isPreview ? "preview" : "release";
 	const previewUrl = getPreviewUrl();
 	const productionUrl = getProductionUrl();

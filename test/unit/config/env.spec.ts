@@ -1,16 +1,50 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const ALL_ENV_VARS = ["CONTEXT", "URL", "PULL_REQUEST", "REVIEW_ID", "BRANCH", "NODE_ENV"];
+const ALL_VENDOR_ENV_VARS = [
+	"NETLIFY",
+	"CONTEXT",
+	"URL",
+	"PULL_REQUEST",
+	"REVIEW_ID",
+	"BRANCH",
+	"COMMIT_REF",
+	"VERCEL",
+	"VERCEL_ENV",
+	"VERCEL_URL",
+	"VERCEL_GIT_COMMIT_REF",
+	"VERCEL_GIT_COMMIT_SHA",
+	"VERCEL_GIT_PULL_REQUEST_ID",
+	"VERCEL_PROJECT_PRODUCTION_URL",
+	"RAILWAY_PROJECT_ID",
+	"RAILWAY_ENVIRONMENT_NAME",
+	"RAILWAY_PUBLIC_DOMAIN",
+	"RAILWAY_GIT_BRANCH",
+	"RAILWAY_GIT_COMMIT_SHA",
+	"NODE_ENV",
+] as const;
+
+function stubVendorEnv(vendor: "netlify" | "vercel" | "railway") {
+	for (const envVar of ALL_VENDOR_ENV_VARS) {
+		vi.stubEnv(envVar, undefined);
+	}
+
+	switch (vendor) {
+		case "netlify":
+			vi.stubEnv("NETLIFY", "true");
+			break;
+		case "vercel":
+			vi.stubEnv("VERCEL", "1");
+			break;
+		case "railway":
+			vi.stubEnv("RAILWAY_PROJECT_ID", "test-project-id");
+			break;
+	}
+}
 
 describe("isCanary", () => {
 	beforeEach(() => {
 		vi.resetModules();
-	});
-
-	beforeEach(() => {
-		for (const envVar of ALL_ENV_VARS) {
-			vi.stubEnv(envVar, undefined);
-		}
+		stubVendorEnv("netlify");
 	});
 
 	afterEach(() => {
@@ -62,17 +96,35 @@ describe("isCanary", () => {
 
 		expect(isCanary).toBe(false);
 	});
+
+	it("returns true on Vercel production deploys from main (non-PR)", async () => {
+		vi.resetModules();
+		stubVendorEnv("vercel");
+		vi.stubEnv("NODE_ENV", "production");
+		vi.stubEnv("VERCEL_ENV", "production");
+		vi.stubEnv("VERCEL_GIT_COMMIT_REF", "main");
+		const { isCanary } = await import("../../../config/env");
+
+		expect(isCanary).toBe(true);
+	});
+
+	it("returns false on Vercel preview deploys triggered by a pull request", async () => {
+		vi.resetModules();
+		stubVendorEnv("vercel");
+		vi.stubEnv("NODE_ENV", "production");
+		vi.stubEnv("VERCEL_ENV", "preview");
+		vi.stubEnv("VERCEL_GIT_COMMIT_REF", "main");
+		vi.stubEnv("VERCEL_GIT_PULL_REQUEST_ID", "42");
+		const { isCanary } = await import("../../../config/env");
+
+		expect(isCanary).toBe(false);
+	});
 });
 
 describe("getEnv", () => {
 	beforeEach(() => {
 		vi.resetModules();
-	});
-
-	beforeEach(() => {
-		for (const envVar of ALL_ENV_VARS) {
-			vi.stubEnv(envVar, undefined);
-		}
+		stubVendorEnv("netlify");
 	});
 
 	afterEach(() => {
@@ -150,18 +202,51 @@ describe("getEnv", () => {
 
 		expect(result.env).toBe("dev");
 	});
+
+	it('returns "preview" for Vercel preview deployments', async () => {
+		vi.resetModules();
+		stubVendorEnv("vercel");
+		vi.stubEnv("VERCEL_ENV", "preview");
+		vi.stubEnv("VERCEL_GIT_COMMIT_REF", "feat/foo");
+		vi.stubEnv("VERCEL_GIT_PULL_REQUEST_ID", "99");
+		const { getEnv } = await import("../../../config/env");
+		const result = await getEnv(false);
+
+		expect(result.env).toBe("preview");
+		expect(result.prNumber).toBe("99");
+	});
+
+	it('returns "preview" for Railway ephemeral PR environments', async () => {
+		vi.resetModules();
+		stubVendorEnv("railway");
+		vi.stubEnv("RAILWAY_ENVIRONMENT_NAME", "pr-42");
+		vi.stubEnv("RAILWAY_PUBLIC_DOMAIN", "preview.up.railway.app");
+		vi.stubEnv("RAILWAY_GIT_BRANCH", "feat/foo");
+		const { getEnv } = await import("../../../config/env");
+		const result = await getEnv(false);
+
+		expect(result.env).toBe("preview");
+		expect(result.prNumber).toBeNull();
+	});
+
+	it('returns "release" for Railway production deploys from non-main branch', async () => {
+		vi.resetModules();
+		stubVendorEnv("railway");
+		vi.stubEnv("NODE_ENV", "production");
+		vi.stubEnv("RAILWAY_ENVIRONMENT_NAME", "production");
+		vi.stubEnv("RAILWAY_PUBLIC_DOMAIN", "wolfstar.rocks");
+		vi.stubEnv("RAILWAY_GIT_BRANCH", "v1.0.0");
+		const { getEnv } = await import("../../../config/env");
+		const result = await getEnv(false);
+
+		expect(result.env).toBe("release");
+	});
 });
 
 describe("getPreviewUrl", () => {
 	beforeEach(() => {
-		// Reset consts evaluated at module init time
 		vi.resetModules();
-	});
-
-	beforeEach(() => {
-		for (const envVar of ALL_ENV_VARS) {
-			vi.stubEnv(envVar, undefined);
-		}
+		stubVendorEnv("netlify");
 	});
 
 	afterEach(() => {
@@ -222,18 +307,33 @@ describe("getPreviewUrl", () => {
 
 		expect(getPreviewUrl()).toBe(expectedUrl);
 	});
+
+	it("returns Vercel preview URL with https prefix", async () => {
+		vi.resetModules();
+		stubVendorEnv("vercel");
+		vi.stubEnv("VERCEL_ENV", "preview");
+		vi.stubEnv("VERCEL_URL", "wolfstar-git-feat.vercel.app");
+		const { getPreviewUrl } = await import("../../../config/env");
+
+		expect(getPreviewUrl()).toBe("https://wolfstar-git-feat.vercel.app");
+	});
+
+	it("returns Railway preview URL with https prefix", async () => {
+		vi.resetModules();
+		stubVendorEnv("railway");
+		vi.stubEnv("RAILWAY_ENVIRONMENT_NAME", "pr-42");
+		vi.stubEnv("RAILWAY_PUBLIC_DOMAIN", "preview.up.railway.app");
+		vi.stubEnv("RAILWAY_GIT_BRANCH", "feat/foo");
+		const { getPreviewUrl } = await import("../../../config/env");
+
+		expect(getPreviewUrl()).toBe("https://preview.up.railway.app");
+	});
 });
 
 describe("getProductionUrl", () => {
 	beforeEach(() => {
-		// Reset consts evaluated at module init time
 		vi.resetModules();
-	});
-
-	beforeEach(() => {
-		for (const envVar of ALL_ENV_VARS) {
-			vi.stubEnv(envVar, undefined);
-		}
+		stubVendorEnv("netlify");
 	});
 
 	afterEach(() => {
@@ -285,6 +385,26 @@ describe("getProductionUrl", () => {
 		const { getProductionUrl } = await import("../../../config/env");
 
 		expect(getProductionUrl()).toBe(expectedUrl);
+	});
+
+	it("returns Vercel production URL with https prefix", async () => {
+		vi.resetModules();
+		stubVendorEnv("vercel");
+		vi.stubEnv("VERCEL_ENV", "production");
+		vi.stubEnv("VERCEL_URL", "wolfstar.vercel.app");
+		const { getProductionUrl } = await import("../../../config/env");
+
+		expect(getProductionUrl()).toBe("https://wolfstar.vercel.app");
+	});
+
+	it("returns Railway production URL with https prefix", async () => {
+		vi.resetModules();
+		stubVendorEnv("railway");
+		vi.stubEnv("RAILWAY_ENVIRONMENT_NAME", "production");
+		vi.stubEnv("RAILWAY_PUBLIC_DOMAIN", "wolfstar.rocks");
+		const { getProductionUrl } = await import("../../../config/env");
+
+		expect(getProductionUrl()).toBe("https://wolfstar.rocks");
 	});
 });
 

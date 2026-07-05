@@ -243,6 +243,9 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+
+		// Former blog.wolfstar.rocks permalink; used in external links/backlinks.
+		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
 	},
 
 	sourcemap: {

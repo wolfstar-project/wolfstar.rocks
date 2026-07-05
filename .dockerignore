@@ -12,9 +12,8 @@ node_modules
 dist
 functions
 
-# Git history is needed in the builder stage: `next-version.ts` and the
-# git-based commit/branch fallback in config/env.ts shell out to real `git`
-# commands to populate the version/commit footer shown in BuildEnvironment.vue.
+# Git
+.git
 .github
 
 # Local env files

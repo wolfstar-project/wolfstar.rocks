@@ -103,20 +103,25 @@ async function getUserSession(
 // compare-and-swap primitive, so this bounds reservation races to the single
 // server instance; cross-instance races remain possible and are an accepted
 // limitation of the storage backend.
-const rateLimitKeyLocks = new Map<string, Promise<unknown>>();
+const rateLimitKeyLocks = new Map<string, Array<() => void>>();
 
 async function withKeyLock<T>(key: string, fn: () => Promise<T>): Promise<T> {
-	const previous = rateLimitKeyLocks.get(key) ?? Promise.resolve();
-	const run = previous.catch(() => undefined).then(fn);
-	const tail = run.catch(() => undefined);
-	rateLimitKeyLocks.set(key, tail);
+	const queue = rateLimitKeyLocks.get(key) ?? [];
+	rateLimitKeyLocks.set(key, queue);
+
+	await new Promise<void>((resolve) => {
+		queue.push(resolve);
+		if (queue.length === 1) resolve();
+	});
+
 	try {
-		return await run;
+		return await fn();
 	} finally {
-		// Only the last holder clears the entry; a queued waiter has already
-		// replaced it synchronously with its own tail
-		if (rateLimitKeyLocks.get(key) === tail) {
+		queue.shift();
+		if (queue.length === 0) {
 			rateLimitKeyLocks.delete(key);
+		} else {
+			queue[0]!();
 		}
 	}
 }
@@ -327,14 +332,14 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	const session = await getUserSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
-	// Run per-request authorization before the (possibly cached) handler so
-	// permission checks are never skipped by a warm cache hit
-	const invoke = async () => {
-		if (options.authorize) {
-			await options.authorize(event, session);
-		}
-		return handler(event);
-	};
+	// Run per-request authorization before rate limiting and the (possibly
+	// cached) handler so denied requests never consume quota and permission
+	// checks are never skipped by a warm cache hit
+	if (options.authorize) {
+		await options.authorize(event, session);
+	}
+
+	const invoke = async () => handler(event);
 
 	// Normalize options (includes new `scope`)
 	const {

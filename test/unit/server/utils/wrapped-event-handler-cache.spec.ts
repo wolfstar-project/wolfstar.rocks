@@ -200,6 +200,29 @@ describe("defineWrappedCachedResponseHandler cache/auth ordering", () => {
 		expect(innerHandler).toHaveBeenCalledTimes(1);
 	});
 
+	it("does not consume rate-limit quota when authorize rejects on a warm hit", async () => {
+		const resolvedBody = { rows: ["log-entry"], total: 1 };
+		const innerHandler = vi.fn().mockResolvedValue(resolvedBody);
+		const authorize = vi.fn().mockResolvedValue(undefined);
+		const handler = defineWrappedCachedResponseHandler(innerHandler, {
+			auth: true,
+			maxAge: 30,
+			swr: false,
+			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 60_000 },
+			authorize,
+			getKey: (event: H3Event) =>
+				`guild:${(event as unknown as { context: { params: { guild: string } } }).context.params.guild}`,
+		});
+
+		await expect(handler(makeEvent("guild-1"))).resolves.toEqual(resolvedBody);
+		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+
+		authorize.mockRejectedValue(Object.assign(new Error("Forbidden"), { status: 403 }));
+
+		await expect(handler(makeEvent("guild-1"))).rejects.toThrow("Forbidden");
+		expect(rateLimitState.get("rate-limiter-state:manager-user")).toMatchObject({ count: 1 });
+	});
+
 	it("lets two authorized managers share the same cached result", async () => {
 		const { handler, innerHandler, resolvedBody } = buildHandler();
 

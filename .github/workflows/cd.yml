@@ -5,15 +5,33 @@ on:
   push:
     branches:
       - main
+    # Keep in sync with the inputs COPYed in the Dockerfile so any change that can
+    # alter the production bundle republishes the `latest` image.
     paths:
       - "app/**"
-      - "server/**"
-      - "shared/**"
+      - "config/**"
+      - "content/**"
+      - "modules/**"
+      - "patches/**"
       - "public/**"
+      - "server/**"
+      - "service-worker/**"
+      - "shared/**"
+      - "scripts/next-version.ts"
+      - "content.config.ts"
+      - "nuxt.config.ts"
+      - "prisma.config.ts"
+      - "sentry.client.config.ts"
+      - "sentry.server.config.ts"
+      - "tsconfig.json"
+      - "vite.config.ts"
+      - ".nuxtrc"
       - "Dockerfile"
-      - ".github/workflows/cd.yml"
+      - ".dockerignore"
       - "package.json"
       - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/cd.yml"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

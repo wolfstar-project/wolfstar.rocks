@@ -71,6 +71,15 @@ WORKDIR /usr/src/app
 # `.output`, so the runner needs nothing from node_modules or the source tree.
 COPY --chown=node:node --from=builder /usr/src/app/.output .output
 
+# At runtime Nitro writes fs-backed storage (fetch cache, rate limiter) and the
+# tamper-evident audit journal under the working directory. Create those directories
+# and hand the working directory to the unprivileged node user so the first cache,
+# rate-limit, or audit write doesn't fail with EACCES. Avoid recursively chowning
+# `.output` (already node-owned via COPY) to keep the final image layer small.
+RUN mkdir -p .cache/fetch .cache/ratelimiter .audit \
+	&& chown node:node /usr/src/app \
+	&& chown -R node:node .cache .audit
+
 USER node
 
 EXPOSE 3000

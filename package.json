@@ -95,7 +95,6 @@
 		"evlog": "^2.14.0",
 		"feed": "^5.2.1",
 		"fuse.js": "^7.1.0",
-		"ioredis": "^5.11.1",
 		"nuxt": "^4.4.2",
 		"nuxt-auth-utils": "^0.5.29",
 		"nuxt-og-image": "6.5.1",

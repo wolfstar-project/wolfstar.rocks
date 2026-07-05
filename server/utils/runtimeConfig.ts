@@ -34,11 +34,6 @@ export function parseTracesSampleRate(raw: string | undefined): number {
 
 export function generateRuntimeConfig() {
 	return {
-		// Connection string for the shared Redis instance backing the fetch cache,
-		// SWR cache, and rate limiter when deployed to Vercel (see modules/cache.ts).
-		redis: {
-			url: process.env.REDIS_URL,
-		},
 		discord: {
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,

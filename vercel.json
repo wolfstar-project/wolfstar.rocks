@@ -1,4 +1,30 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"trailingSlash": false
+	"trailingSlash": false,
+	"redirects": [
+		{
+			"source": "/(.*)",
+			"has": [{ "type": "host", "value": "repo.wolfstar.rocks" }],
+			"destination": "https://github.com/wolfstar-project/wolfstar.rocks/$1",
+			"permanent": true
+		},
+		{
+			"source": "/(.*)",
+			"has": [{ "type": "host", "value": "chat.wolfstar.rocks" }],
+			"destination": "https://discord.gg/gqAnRyUXG8",
+			"permanent": true
+		},
+		{
+			"source": "/twitter",
+			"has": [{ "type": "host", "value": "social.wolfstar.rocks" }],
+			"destination": "https://twitter.com/WolfstarApp",
+			"permanent": true
+		},
+		{
+			"source": "/(.*)",
+			"has": [{ "type": "host", "value": "blog.wolfstar.rocks" }],
+			"destination": "https://wolfstar.rocks/blog/$1",
+			"permanent": true
+		}
+	]
 }

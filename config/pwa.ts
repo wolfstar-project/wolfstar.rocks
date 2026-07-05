@@ -20,12 +20,6 @@ export const pwa: ModuleOptions = {
 		// of the precache manifest so large images (e.g. OG images) don't exceed
 		// workbox's file-size limit and fail the build.
 		globIgnores: ["**/assets/blog/**"],
-		// Match the app's `sourcemap.client: "hidden"`: still emit sw.js.map for
-		// Sentry to pick up, but without a `sourceMappingURL` comment in sw.js.
-		// Without this, browsers request /sw.js.map after Sentry's
-		// filesToDeleteAfterUpload step removes it from .output/public, producing
-		// an unhandled 500 (ENOENT) on every service worker fetch.
-		sourcemap: "hidden",
 	},
 	injectRegister: "auto",
 	manifest: {

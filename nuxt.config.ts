@@ -56,9 +56,6 @@ export default defineNuxtConfig({
 	},
 
 	$production: {
-		image: {
-			provider: "netlify",
-		},
 		modules: ["nuxt-security"],
 		sentry: {
 			telemetry: false,

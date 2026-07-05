@@ -1,8 +1,8 @@
 import * as process from "node:process";
 
-export type DeployVendor = "netlify" | "vercel" | "railway" | "local";
+type DeployVendor = "netlify" | "vercel" | "railway" | "local";
 
-export interface DeployContext {
+interface DeployContext {
 	vendor: DeployVendor;
 	isPR: boolean;
 	prNumber: string | null;

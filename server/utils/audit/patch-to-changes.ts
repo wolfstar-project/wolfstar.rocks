@@ -53,6 +53,12 @@ export interface CompactSettingsChangeOp {
 export interface CompactSettingsChanges {
 	v: 2;
 	patch: CompactSettingsChangeOp[];
+	/**
+	 * Never set — declared so the compact payload overlaps evlog's weak
+	 * `AuditFields["changes"]` type (`{ before?; after? }`) without a cast
+	 */
+	before?: never;
+	after?: never;
 }
 
 function isCompactChanges(raw: Record<string, unknown>): raw is Record<string, unknown> & {

@@ -31,6 +31,13 @@ ENV HUSKY="0"
 # self-contained node-server preset so `.output` runs standalone in the runner stage.
 ENV NITRO_PRESET="node-server"
 
+# Docker build stages don't inherit the platform's service variables automatically;
+# each one needed at build time (prerendering runs here) must be declared as an ARG
+# and re-exported as ENV. Missing this made @nuxt/sitemap fail prerender with
+# "Sitemap Site URL missing!" even though NUXT_PUBLIC_SITE_URL was set on the service.
+ARG NUXT_PUBLIC_SITE_URL
+ENV NUXT_PUBLIC_SITE_URL=$NUXT_PUBLIC_SITE_URL
+
 COPY --chown=node:node patches/ patches/
 COPY --chown=node:node prisma.config.ts prisma.config.ts
 COPY --chown=node:node app/ app/

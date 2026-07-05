@@ -25,6 +25,14 @@ ENTRYPOINT ["dumb-init", "--"]
 
 FROM base AS builder
 
+# scripts/next-version.ts (execFileSync "git", ...) and the simple-git fallback in
+# config/env.ts shell out to the `git` binary at build time to resolve the real
+# semantic version and commit/branch. The Alpine `base` stage ships no git, so
+# without it getVersion() silently falls back to package.json's "0.0.0" and
+# getGitInfo() to "unknown" even with .git copied in below. Installed only in the
+# builder stage so the runner image stays git-free.
+RUN apk add --no-cache git
+
 ENV NODE_ENV="development"
 ENV HUSKY="0"
 # Nitro auto-detects hosting providers (e.g. Netlify) from CI env vars; force the
@@ -37,6 +45,21 @@ ENV NITRO_PRESET="node-server"
 # "Sitemap Site URL missing!" even though NUXT_PUBLIC_SITE_URL was set on the service.
 ARG NUXT_PUBLIC_SITE_URL
 ENV NUXT_PUBLIC_SITE_URL=$NUXT_PUBLIC_SITE_URL
+
+# Railway populates these automatically per-deploy, but (like NUXT_PUBLIC_SITE_URL
+# above) they still need an explicit ARG to reach this build stage. This lets
+# config/deploy-context.ts resolve the real commit/branch without needing `git`
+# at all when running on Railway specifically.
+ARG RAILWAY_PROJECT_ID
+ARG RAILWAY_ENVIRONMENT_NAME
+ARG RAILWAY_GIT_BRANCH
+ARG RAILWAY_GIT_COMMIT_SHA
+ARG RAILWAY_PUBLIC_DOMAIN
+ENV RAILWAY_PROJECT_ID=$RAILWAY_PROJECT_ID
+ENV RAILWAY_ENVIRONMENT_NAME=$RAILWAY_ENVIRONMENT_NAME
+ENV RAILWAY_GIT_BRANCH=$RAILWAY_GIT_BRANCH
+ENV RAILWAY_GIT_COMMIT_SHA=$RAILWAY_GIT_COMMIT_SHA
+ENV RAILWAY_PUBLIC_DOMAIN=$RAILWAY_PUBLIC_DOMAIN
 
 COPY --chown=node:node patches/ patches/
 COPY --chown=node:node prisma.config.ts prisma.config.ts
@@ -56,6 +79,11 @@ COPY --chown=node:node sentry.server.config.ts .
 COPY --chown=node:node tsconfig.json .
 COPY --chown=node:node vite.config.ts .
 COPY --chown=node:node .nuxtrc .
+# Needed so scripts/next-version.ts and the simple-git fallback in
+# config/env.ts can resolve the real semantic version and commit/branch
+# instead of falling back to package.json's "0.0.0" placeholder and
+# "unknown". See .dockerignore for why .git is no longer excluded.
+COPY --chown=node:node .git .git
 
 RUN pnpm install --frozen-lockfile \
 	&& pnpm run prisma:generate \

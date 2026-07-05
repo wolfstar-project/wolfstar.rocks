@@ -32,31 +32,75 @@ function dedupeShallowAncestors(map: Record<string, unknown>): Record<string, un
 	return result;
 }
 
-export function patchToChanges(raw: {
-	before?: Record<string, unknown>;
-	after?: Record<string, unknown>;
-}): DashboardAuditChanges {
-	if (!raw || typeof raw !== "object") return {};
+/**
+ * One change operation persisted in the compact (v2) audit payload.
+ * `value` carries the new value (add/replace); `from` carries the previous
+ * value (remove/replace) so the dashboard can render before→after without the
+ * full settings snapshots.
+ */
+export interface CompactSettingsChangeOp {
+	op: "add" | "remove" | "replace";
+	path: string;
+	value?: unknown;
+	from?: unknown;
+}
 
-	const before = raw.before ?? {};
-	const after = raw.after ?? {};
+/**
+ * Compact audit `changes` payload written since plan 008. The `v` field
+ * disambiguates it from legacy `{ before, after }` full-snapshot rows, which
+ * remain readable forever (or until retention guarantees none exist).
+ */
+export interface CompactSettingsChanges {
+	v: 2;
+	patch: CompactSettingsChangeOp[];
+}
+
+function isCompactChanges(raw: Record<string, unknown>): raw is Record<string, unknown> & {
+	v: 2;
+	patch: CompactSettingsChangeOp[];
+} {
+	return raw["v"] === 2 && Array.isArray(raw["patch"]);
+}
+
+/**
+ * Computes the compact change set persisted with `guild.settings.update`
+ * audit events: only the fields that actually changed, with both old and new
+ * values. Inputs must already be JSON-safe (the settings snapshots come from
+ * `serializeSettings`), so the result satisfies `AuditEnvelope`'s
+ * serialization preconditions.
+ */
+export function compactSettingsChanges(
+	before: Record<string, unknown>,
+	after: Record<string, unknown>,
+): CompactSettingsChanges {
+	const diff = auditDiff(before, after);
+	const patch: CompactSettingsChangeOp[] = diff.patch.map((op) => {
+		const entry: CompactSettingsChangeOp = { op: op.op, path: op.path };
+		if (op.op !== "remove") {
+			entry.value = op.value;
+		}
+		if (op.op !== "add") {
+			entry.from = getNestedValue(before, op.path);
+		}
+		return entry;
+	});
+	return { v: 2, patch };
+}
+
+function groupOps(ops: CompactSettingsChangeOp[]): DashboardAuditChanges {
 	const added: Record<string, unknown> = {};
 	const removed: Record<string, unknown> = {};
 	const changed: Record<string, { from: unknown; to: unknown }> = {};
 
-	const diff = auditDiff(before, after);
-
-	for (const op of diff.patch.slice(0, 25)) {
+	for (const op of ops.slice(0, 25)) {
 		const key = op.path.replace(/^\//, "").replaceAll("/", ".");
 		if (op.op === "add") {
 			added[key] = op.value;
 		} else if (op.op === "remove") {
-			removed[key] = getNestedValue(before, op.path);
+			removed[key] = op.from;
 		} else if (op.op === "replace") {
-			const from = getNestedValue(before, op.path);
-			const to = op.value;
-			if (!isEquivalentDefault(from, to)) {
-				changed[key] = { from, to };
+			if (!isEquivalentDefault(op.from, op.value)) {
+				changed[key] = { from: op.from, to: op.value };
 			}
 		}
 	}
@@ -75,4 +119,39 @@ export function patchToChanges(raw: {
 		...(Object.keys(deduped.removed).length > 0 && { removed: deduped.removed }),
 		...(Object.keys(deduped.changed).length > 0 && { changed: deduped.changed }),
 	};
+}
+
+/**
+ * Converts a persisted audit `changes` payload into dashboard-friendly
+ * added/removed/changed groups. Reads both shapes:
+ * - compact v2 rows (`{ v: 2, patch }`) written since plan 008
+ * - legacy rows carrying full `{ before, after }` snapshots, diffed here
+ */
+export function patchToChanges(
+	raw:
+		| {
+				before?: Record<string, unknown>;
+				after?: Record<string, unknown>;
+		  }
+		| Record<string, unknown>,
+): DashboardAuditChanges {
+	if (!raw || typeof raw !== "object") return {};
+
+	const record = raw as Record<string, unknown>;
+	if (isCompactChanges(record)) {
+		return groupOps(record.patch.filter((op) => op && typeof op === "object"));
+	}
+
+	const before = (record["before"] as Record<string, unknown> | undefined) ?? {};
+	const after = (record["after"] as Record<string, unknown> | undefined) ?? {};
+
+	const diff = auditDiff(before, after);
+	const ops: CompactSettingsChangeOp[] = diff.patch.map((op) => ({
+		op: op.op,
+		path: op.path,
+		value: op.value,
+		from: op.op === "add" ? undefined : getNestedValue(before, op.path),
+	}));
+
+	return groupOps(ops);
 }

@@ -93,6 +93,23 @@ describe("getDeployContext", () => {
 		});
 	});
 
+	it("treats a non-production Railway environment without a public domain as a preview", () => {
+		vi.stubEnv("RAILWAY_PROJECT_ID", "project-id");
+		vi.stubEnv("RAILWAY_ENVIRONMENT_NAME", "staging");
+		vi.stubEnv("RAILWAY_GIT_BRANCH", "main");
+		vi.stubEnv("RAILWAY_GIT_COMMIT_SHA", "ghi789");
+
+		expect(getDeployContext()).toEqual({
+			vendor: "railway",
+			isPR: false,
+			prNumber: null,
+			gitBranch: "main",
+			isPreview: true,
+			isProduction: false,
+			commitRef: "ghi789",
+		});
+	});
+
 	it("prefers Netlify when multiple vendor markers are present", () => {
 		vi.stubEnv("NETLIFY", "true");
 		vi.stubEnv("VERCEL", "1");
@@ -165,6 +182,23 @@ describe("deploy URL helpers", () => {
 		};
 
 		expect(getProductionUrlFromContext(previewContext)).toBeUndefined();
+		expect(getProductionUrlFromContext(productionContext)).toBe("https://wolfstar.rocks");
+	});
+
+	it("prefers the configured Vercel production domain over the deployment URL", () => {
+		vi.stubEnv("VERCEL_URL", "wolfstar-abc123.vercel.app");
+		vi.stubEnv("VERCEL_PROJECT_PRODUCTION_URL", "wolfstar.rocks");
+
+		const productionContext = {
+			vendor: "vercel" as const,
+			isPR: false,
+			prNumber: null,
+			gitBranch: "main",
+			isPreview: false,
+			isProduction: true,
+			commitRef: undefined,
+		};
+
 		expect(getProductionUrlFromContext(productionContext)).toBe("https://wolfstar.rocks");
 	});
 });

@@ -229,6 +229,17 @@ describe("getEnv", () => {
 		expect(result.prNumber).toBeNull();
 	});
 
+	it('returns "preview" for non-production Railway environments without a public domain', async () => {
+		vi.resetModules();
+		stubVendorEnv("railway");
+		vi.stubEnv("RAILWAY_ENVIRONMENT_NAME", "staging");
+		vi.stubEnv("RAILWAY_GIT_BRANCH", "main");
+		const { getEnv } = await import("../../../config/env");
+		const result = await getEnv(false);
+
+		expect(result.env).toBe("preview");
+	});
+
 	it('returns "release" for Railway production deploys from non-main branch', async () => {
 		vi.resetModules();
 		stubVendorEnv("railway");
@@ -395,6 +406,17 @@ describe("getProductionUrl", () => {
 		const { getProductionUrl } = await import("../../../config/env");
 
 		expect(getProductionUrl()).toBe("https://wolfstar.vercel.app");
+	});
+
+	it("prefers the configured production domain over the deployment URL on Vercel", async () => {
+		vi.resetModules();
+		stubVendorEnv("vercel");
+		vi.stubEnv("VERCEL_ENV", "production");
+		vi.stubEnv("VERCEL_URL", "wolfstar-abc123.vercel.app");
+		vi.stubEnv("VERCEL_PROJECT_PRODUCTION_URL", "wolfstar.rocks");
+		const { getProductionUrl } = await import("../../../config/env");
+
+		expect(getProductionUrl()).toBe("https://wolfstar.rocks");
 	});
 
 	it("returns Railway production URL with https prefix", async () => {

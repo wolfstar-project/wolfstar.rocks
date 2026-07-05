@@ -79,7 +79,7 @@ function resolveRailwayContext(): DeployContext {
 	const environmentName = process.env.RAILWAY_ENVIRONMENT_NAME?.toLowerCase();
 	const gitBranch = process.env.RAILWAY_GIT_BRANCH;
 	const isProduction = environmentName === "production";
-	const isPreview = Boolean(process.env.RAILWAY_PUBLIC_DOMAIN) && !isProduction;
+	const isPreview = environmentName !== undefined && !isProduction;
 	const isPR =
 		Boolean(gitBranch) &&
 		environmentName !== undefined &&
@@ -148,7 +148,7 @@ export function getProductionUrlFromContext(context: DeployContext): string | un
 			return normalizeUrl(process.env.URL);
 		case "vercel":
 			return normalizeUrl(
-				process.env.VERCEL_URL ?? process.env.VERCEL_PROJECT_PRODUCTION_URL,
+				process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL,
 			);
 		case "railway":
 			return normalizeUrl(process.env.RAILWAY_PUBLIC_DOMAIN);

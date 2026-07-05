@@ -25,6 +25,14 @@ ENTRYPOINT ["dumb-init", "--"]
 
 FROM base AS builder
 
+# scripts/next-version.ts (execFileSync "git", ...) and the simple-git fallback in
+# config/env.ts shell out to the `git` binary at build time to resolve the real
+# semantic version and commit/branch. The Alpine `base` stage ships no git, so
+# without it getVersion() silently falls back to package.json's "0.0.0" and
+# getGitInfo() to "unknown" even with .git copied in below. Installed only in the
+# builder stage so the runner image stays git-free.
+RUN apk add --no-cache git
+
 ENV NODE_ENV="development"
 ENV HUSKY="0"
 # Nitro auto-detects hosting providers (e.g. Netlify) from CI env vars; force the

@@ -34,10 +34,10 @@ export function parseTracesSampleRate(raw: string | undefined): number {
 
 export function generateRuntimeConfig() {
 	return {
-		cloudflare: {
-			accountId: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID,
-			apiToken: process.env.NUXT_CLOUDFLARE_API_TOKEN,
-			namespaceId: process.env.NUXT_CLOUDFLARE_NAMESPACE_ID,
+		// Connection string for the shared Redis instance backing the fetch cache,
+		// SWR cache, and rate limiter when deployed to Vercel (see modules/cache.ts).
+		redis: {
+			url: process.env.REDIS_URL,
 		},
 		discord: {
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,

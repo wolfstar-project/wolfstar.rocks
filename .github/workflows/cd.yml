@@ -19,9 +19,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: write
+permissions: {}
 
 env:
   HUSKY: 0
@@ -30,5 +28,7 @@ jobs:
   publish:
     name: Publish WolfStar.rocks latest image to GHCR
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
-    uses: wolfstar-project/.github/.github/workflows/reusable-publish-image.yml@main
-    secrets: inherit
+    permissions:
+      contents: read # reusable workflow checks out the repository
+      packages: write # push the latest image to GHCR
+    uses: wolfstar-project/.github/.github/workflows/reusable-publish-image.yml@553d031d3f5dc09ca41b4e1410bf4049c7e6b646

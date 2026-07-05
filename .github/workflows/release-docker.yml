@@ -1,0 +1,38 @@
+name: release-docker
+
+on:
+  # Fires right after release-tag.yml pushes a new `v*` tag on the `release` branch.
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  HUSKY: 0
+
+jobs:
+  publish-stable:
+    name: 🚀 Publish stable image to GHCR
+    if: github.repository == 'wolfstar-project/wolfstar.rocks'
+    uses: wolfstar-project/.github/.github/workflows/reusable-publish-image.yml@main
+    secrets: inherit
+    with:
+      tag: stable
+
+  publish-version:
+    name: 🏷️ Publish versioned image to GHCR
+    # Only tag with the version string when this run was triggered by an actual
+    # release tag (release-tag.yml); a manual workflow_dispatch has no tag ref.
+    if: github.repository == 'wolfstar-project/wolfstar.rocks' && github.ref_type == 'tag'
+    uses: wolfstar-project/.github/.github/workflows/reusable-publish-image.yml@main
+    secrets: inherit
+    with:
+      tag: ${{ github.ref_name }}

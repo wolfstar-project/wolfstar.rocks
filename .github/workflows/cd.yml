@@ -1,0 +1,34 @@
+name: cd
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "app/**"
+      - "server/**"
+      - "shared/**"
+      - "public/**"
+      - "Dockerfile"
+      - ".github/workflows/cd.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  HUSKY: 0
+
+jobs:
+  publish:
+    name: Publish WolfStar.rocks latest image to GHCR
+    if: github.repository == 'wolfstar-project/wolfstar.rocks'
+    uses: wolfstar-project/.github/.github/workflows/reusable-publish-image.yml@main
+    secrets: inherit

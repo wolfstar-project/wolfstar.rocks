@@ -83,7 +83,6 @@ const config: KnipConfig = {
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,
-				"test/__stubs__/prisma-generated-client.ts" /* Referenced only via the vite.config.ts test-project alias, not a static import */,
 			],
 			ignoreMembers: [
 				/** Enum members in app/utils/constants.ts used as color values at runtime */

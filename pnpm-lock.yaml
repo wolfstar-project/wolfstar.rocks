@@ -102,6 +102,9 @@ importers:
       '@vercel/functions':
         specifier: ^3.7.5
         version: 3.7.5(@aws-sdk/credential-provider-web-identity@3.972.39)(ws@8.21.0)
+      '@vercel/speed-insights':
+        specifier: ^2.0.0
+        version: 2.0.0(nuxt@4.4.2)(react@19.2.5)(vue-router@5.0.4)(vue@3.5.38)
       '@vite-pwa/assets-generator':
         specifier: ^1.0.2
         version: 1.0.2
@@ -6211,6 +6214,32 @@ packages:
   '@vercel/oidc@3.8.0':
     resolution: {integrity: sha512-r00laGW6Pv778RoR6M2NxX91ycSj+PBwVo+fOb9Bif+F0IyUKt25zrvBzfEzQpeAzbqOgPZyQibEWDdDFApd+A==}
     engines: {node: '>= 20'}
+
+  '@vercel/speed-insights@2.0.0':
+    resolution: {integrity: sha512-jwkNcrTeafWxjmWq4AHBaptSqZiJkYU5adLC9QBSqeim0GcqDMgN5Ievh8OG1rJ6W3A4l1oiP7qr9CWxGuzu3w==}
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      nuxt: '>= 3'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: 3.5.38
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      nuxt:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
 
   '@vite-pwa/assets-generator@1.0.2':
     resolution: {integrity: sha512-MCbrb508JZHqe7bUibmZj/lyojdhLRnfkmyXnkrCM2zVrjTgL89U8UEfInpKTvPeTnxsw2hmyZxnhsdNR6yhwg==}
@@ -19546,6 +19575,13 @@ snapshots:
       '@vercel/cli-config': 0.2.0
       '@vercel/cli-exec': 1.0.0
       jose: 5.10.0
+
+  '@vercel/speed-insights@2.0.0(nuxt@4.4.2)(react@19.2.5)(vue-router@5.0.4)(vue@3.5.38)':
+    optionalDependencies:
+      nuxt: 4.4.2(@babel/core@7.29.0)(@babel/plugin-syntax-jsx@7.28.6)(@electric-sql/pglite@0.4.1)(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(@parcel/watcher@2.5.6)(@types/node@24.12.4)(@vercel/functions@3.7.5)(@voidzero-dev/vite-plus-core@0.1.19)(@vue/compiler-sfc@3.5.38)(cac@6.7.14)(db0@0.3.4)(esbuild@0.28.0)(eslint@9.39.4)(ioredis@5.10.1)(magicast@0.5.3)(meow@13.2.0)(mysql2@3.15.3)(optionator@0.9.4)(rolldown@1.0.1)(rollup-plugin-visualizer@7.0.1)(rollup@4.60.0)(terser@5.48.0)(tsx@4.22.3)(typescript@6.0.3)(vue-tsc@3.3.2)(yaml@2.9.0)
+      react: 19.2.5
+      vue: 3.5.38(typescript@6.0.3)
+      vue-router: 5.0.4(@voidzero-dev/vite-plus-core@0.1.19)(@vue/compiler-sfc@3.5.38)(esbuild@0.28.0)(rolldown@1.0.1)(rollup@4.60.0)(vue@3.5.38)
 
   '@vite-pwa/assets-generator@1.0.2':
     dependencies:

@@ -1,6 +1,6 @@
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isDevelopment, isTest, provider } from "std-env";
+import { isCI, isDevelopment, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -139,10 +139,16 @@ export default defineNuxtConfig({
 
 	scripts: {
 		registry: {
-			// Disabled outside real production builds so dev servers and the
-			// `NODE_ENV=test` Playwright preview never inject or proxy analytics.
+			// Disabled for `nuxt dev` (isDevelopment) and for the Playwright test
+			// build (WOLFSTAR_DISABLE_ANALYTICS, set by the `build:test` script).
+			// Neither `std-env`'s `isTest` nor Nuxt's own `$test` config overlay work
+			// here: `vp run build` (used by `build:test`) resets `NODE_ENV` to
+			// "production" before Nuxt evaluates this file or picks an overlay, so
+			// anything keyed off `NODE_ENV` always resolves as a real production
+			// build. `WOLFSTAR_DISABLE_ANALYTICS` is a project-specific env var `vp`
+			// has no reason to touch, so it survives untouched into this file.
 			umamiAnalytics:
-				isDevelopment || isTest
+				isDevelopment || process.env.WOLFSTAR_DISABLE_ANALYTICS === "1"
 					? false
 					: {
 							websiteId: "93caedd3-95de-4dad-8da2-72f086d0a7e5",

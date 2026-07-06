@@ -39,16 +39,16 @@ const gitBranch = process.env.BRANCH || process.env.VERCEL_GIT_COMMIT_REF;
 /**
  * Whether this is the canary environment (main.wolfstar.rocks).
  *
- * Detected as any non-PR deploy from the `main` branch. `NODE_ENV` is checked
- * rather than `VERCEL_ENV` because Vercel's own env/production distinction
- * doesn't separate "the latest main build" from "a tagged release build" —
- * this project sets `NODE_ENV` to `canary` (or leaves it at `production`/
- * `preview`) per-environment to make that distinction explicit.
+ * Detected as any non-PR Vercel deploy from the `main` branch
+ * (which may receive `VERCEL_ENV === 'production'`, `'preview'`, or a
+ * custom `'canary'` environment depending on the project configuration).
+ *
+ * @see {@link https://vercel.com/docs/environment-variables/system-environment-variables#VERCEL_ENV}
  */
 export const isCanary =
-	(process.env.NODE_ENV === "production" ||
-		process.env.NODE_ENV === "preview" ||
-		process.env.NODE_ENV === "canary") &&
+	(process.env.VERCEL_ENV === "production" ||
+		process.env.VERCEL_ENV === "preview" ||
+		process.env.VERCEL_ENV === "canary") &&
 	gitBranch === "main" &&
 	!isPR;
 

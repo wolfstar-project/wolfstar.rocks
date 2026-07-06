@@ -13,7 +13,6 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
-[![Netlify deploy status badge][netlify-status-shield]][netlify-status-link]
 [![GitHub latest release badge][github-release-shield]][github-release-link]
 [![GitHub release date badge][github-releasedate-shield]][github-releasedate-link]<br/>
 [![Discord community badge][discord-shield]][discord-link]
@@ -71,7 +70,6 @@ multi-purpose Discord bot for moderation and community management.
   smooth user experience.
 - **Guild Management**: Manage your Discord server's settings, roles, and
   permissions through an intuitive web interface.
-- **Real-time Updates**: Live updates for guild data and bot status.
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
   devices.
 - **OAuth Integration**: Secure Discord authentication and authorization.
@@ -79,8 +77,15 @@ multi-purpose Discord bot for moderation and community management.
   logins, token refreshes, and OAuth CSRF denials) are captured via a
   tamper-evident audit log. Each event is persisted to PostgreSQL with a SHA-256
   hash chain, making the audit trail verifiable and tamper-evident.
-- **Multi-language Support**: Support for multiple languages (coming soon).
-- **Dashboard Analytics**: View server statistics and bot usage metrics.
+- **Accessibility**: Built with semantic HTML, keyboard navigation, and
+  reduced-motion support.
+
+**On the roadmap**
+
+- **Real-time Updates**: Live updates for guild data and bot status.
+- **Multi-language Support**: Dashboard localization beyond the current
+  server-language setting.
+- **Dashboard Analytics**: Server statistics and bot usage metrics.
 
 </div>
 
@@ -155,7 +160,6 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm dev:pwa` - Start development server with PWA support.
 - `pnpm build` - Build for production.
 - `pnpm preview` - Preview production build.
-- `pnpm lint` - Run Oxlint & Oxfmt.
 - `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
 - `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
 - `pnpm prisma:migrate:dev:create` - Create a new migration in development.
@@ -392,10 +396,6 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://img.shields.io/github/stars/wolfstar-project/wolfstar.rocks?color=ffcb47&labelColor=black&style=flat-square
 [issues-link]:
   https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks.svg?style=flat
-[netlify-status-shield]:
-  https://api.netlify.com/api/v1/badges/80592647-d7bf-49b3-b82c-d0a3b3d7b3d0/deploy-status
-[netlify-status-link]:
-  https://app.netlify.com/projects/wolfstar-rocks-et34281/deploys
 [official-site]: https://wolfstar.rocks
 [codspeed-link]:
   https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge

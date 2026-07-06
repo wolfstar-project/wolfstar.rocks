@@ -1,7 +1,6 @@
-import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isTest, provider } from "std-env";
+import { isCI, isDevelopment, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -20,6 +19,7 @@ export default defineNuxtConfig({
 		"@nuxt/hints",
 		"@nuxt/fonts",
 		"@nuxt/a11y",
+		"@nuxt/scripts",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
@@ -31,14 +31,12 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
 		// requiring better-sqlite3 as an additional native dependency.
 		experimental: {
-			// @ts-expect-error -- sqliteConnector is a valid @nuxt/content experimental option
 			sqliteConnector: "native",
 		},
 	},
@@ -57,9 +55,6 @@ export default defineNuxtConfig({
 	},
 
 	$production: {
-		image: {
-			provider: "netlify",
-		},
 		modules: ["nuxt-security"],
 		sentry: {
 			telemetry: false,
@@ -142,6 +137,29 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	scripts: {
+		registry: {
+			// Disabled for `nuxt dev` (isDevelopment) and for the Playwright test
+			// build (WOLFSTAR_DISABLE_ANALYTICS, set by the `build:test` script).
+			// Neither `std-env`'s `isTest` nor Nuxt's own `$test` config overlay work
+			// here: `vp run build` (used by `build:test`) resets `NODE_ENV` to
+			// "production" before Nuxt evaluates this file or picks an overlay, so
+			// anything keyed off `NODE_ENV` always resolves as a real production
+			// build. `WOLFSTAR_DISABLE_ANALYTICS` is a project-specific env var `vp`
+			// has no reason to touch, so it survives untouched into this file.
+			umamiAnalytics:
+				isDevelopment || process.env.WOLFSTAR_DISABLE_ANALYTICS === "1"
+					? false
+					: {
+							websiteId: "93caedd3-95de-4dad-8da2-72f086d0a7e5",
+							hostUrl: "https://umami.wolfstar.rocks",
+							// Self-hosted instance — override the default cloud.umami.is script src.
+							scriptInput: { src: "https://umami.wolfstar.rocks/script.js" },
+							trigger: "onNuxtReady",
+						},
+		},
+	},
+
 	auth: {
 		// Avoid eager session hydration on marketing pages; protected routes and
 		// HeaderAuth fetch explicitly when a session is needed.
@@ -187,7 +205,7 @@ export default defineNuxtConfig({
 	},
 
 	htmlValidator: {
-		enabled: !isCI || (provider !== "netlify" && !!process.env.VALIDATE_HTML),
+		enabled: !isCI || (provider !== "vercel" && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
@@ -241,7 +259,6 @@ export default defineNuxtConfig({
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		"/profile": { appLayout: "default", robots: true },
 		"/starly": { appLayout: "default", robots: true },
-
 		// Static pages
 		"/commands": { appLayout: "default", prerender: true, robots: true },
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
@@ -249,6 +266,8 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+		// Former blog.wolfstar.rocks permalink; used in external links/backlinks.
+		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
 	},
 
 	sourcemap: {
@@ -291,6 +310,8 @@ export default defineNuxtConfig({
 		rollupConfig: {
 			external: process.env.NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
 		},
+		// Storage configuration for local development
+		// In production (Vercel), this is overridden by modules/cache.ts
 		storage: {
 			"fetch-cache": {
 				base: "./.cache/fetch",
@@ -299,6 +320,11 @@ export default defineNuxtConfig({
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",
+			},
+		},
+		typescript: {
+			tsConfig: {
+				include: ["../test/unit/server/**/*.ts"],
 			},
 		},
 	},
@@ -391,6 +417,9 @@ export default defineNuxtConfig({
 		providers: {
 			fontshare: false,
 		},
+		experimental: {
+			disableLocalFallbacks: true,
+		},
 		families: [
 			{
 				display: "swap",
@@ -460,14 +489,11 @@ export default defineNuxtConfig({
 					"'self'",
 					"wss:",
 					"ws:",
-					"https://ingesteer.services-prod.nsvcs.net", // Used by Netlify for telemetry (error, performance etc.)
 					"https://cdn.wolfstar.rocks",
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
-					"https://*.netlify.com",
-					"https://*.netlify.app",
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",
 					"https://*.sentry.io",
@@ -539,7 +565,11 @@ export default defineNuxtConfig({
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
 		sourcemaps: {
-			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
+			filesToDeleteAfterUpload: [
+				".*/**/public/**/*.map",
+				".output/**/public/**/*.map",
+				".vercel/output/**/*.map",
+			],
 		},
 	},
 

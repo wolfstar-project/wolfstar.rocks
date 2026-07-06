@@ -1,6 +1,6 @@
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, provider } from "std-env";
+import { isCI, isDevelopment, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -13,13 +13,13 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
-		"@vercel/speed-insights/nuxt",
 		"@nuxt/ui",
 		"@nuxt/content",
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
 		"@nuxt/a11y",
+		"@nuxt/scripts",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
@@ -137,6 +137,29 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	scripts: {
+		registry: {
+			// Disabled for `nuxt dev` (isDevelopment) and for the Playwright test
+			// build (WOLFSTAR_DISABLE_ANALYTICS, set by the `build:test` script).
+			// Neither `std-env`'s `isTest` nor Nuxt's own `$test` config overlay work
+			// here: `vp run build` (used by `build:test`) resets `NODE_ENV` to
+			// "production" before Nuxt evaluates this file or picks an overlay, so
+			// anything keyed off `NODE_ENV` always resolves as a real production
+			// build. `WOLFSTAR_DISABLE_ANALYTICS` is a project-specific env var `vp`
+			// has no reason to touch, so it survives untouched into this file.
+			umamiAnalytics:
+				isDevelopment || process.env.WOLFSTAR_DISABLE_ANALYTICS === "1"
+					? false
+					: {
+							websiteId: "93caedd3-95de-4dad-8da2-72f086d0a7e5",
+							hostUrl: "https://umami.wolfstar.rocks",
+							// Self-hosted instance — override the default cloud.umami.is script src.
+							scriptInput: { src: "https://umami.wolfstar.rocks/script.js" },
+							trigger: "onNuxtReady",
+						},
+		},
+	},
+
 	auth: {
 		// Avoid eager session hydration on marketing pages; protected routes and
 		// HeaderAuth fetch explicitly when a session is needed.
@@ -245,19 +268,6 @@ export default defineNuxtConfig({
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 		// Former blog.wolfstar.rocks permalink; used in external links/backlinks.
 		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
-		// proxy for insights
-		"/_v/script.js": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/script.js",
-		},
-		"/_v/view": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/view",
-		},
-		"/_v/event": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/event",
-		},
-		"/_v/session": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/session",
-		},
 	},
 
 	sourcemap: {

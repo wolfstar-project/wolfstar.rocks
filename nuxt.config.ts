@@ -258,19 +258,6 @@ export default defineNuxtConfig({
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
 		// Former blog.wolfstar.rocks permalink; used in external links/backlinks.
 		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
-		// proxy for insights
-		"/_v/script.js": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/script.js",
-		},
-		"/_v/view": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/view",
-		},
-		"/_v/event": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/event",
-		},
-		"/_v/session": {
-			proxy: "https://wolfstar.rocks/_vercel/insights/session",
-		},
 	},
 
 	sourcemap: {

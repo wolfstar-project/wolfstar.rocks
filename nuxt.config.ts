@@ -181,7 +181,7 @@ export default defineNuxtConfig({
 	},
 
 	htmlValidator: {
-		enabled: !isCI || (provider !== "railway" && !!process.env.VALIDATE_HTML),
+		enabled: !isCI || (provider !== "vercel" && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
@@ -288,6 +288,8 @@ export default defineNuxtConfig({
 		rollupConfig: {
 			external: process.env.NITRO_PRESET !== "node-server" ? ["pg-native"] : undefined,
 		},
+		// Storage configuration for local development
+		// In production (Vercel), this is overridden by modules/cache.ts
 		storage: {
 			"fetch-cache": {
 				base: "./.cache/fetch",
@@ -296,6 +298,11 @@ export default defineNuxtConfig({
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",
+			},
+		},
+		typescript: {
+			tsConfig: {
+				include: ["../test/unit/server/**/*.ts"],
 			},
 		},
 	},
@@ -387,6 +394,9 @@ export default defineNuxtConfig({
 	fonts: {
 		providers: {
 			fontshare: false,
+		},
+		experimental: {
+			disableLocalFallbacks: true,
 		},
 		families: [
 			{
@@ -533,7 +543,11 @@ export default defineNuxtConfig({
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
 		sourcemaps: {
-			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
+			filesToDeleteAfterUpload: [
+				".*/**/public/**/*.map",
+				".output/**/public/**/*.map",
+				".vercel/output/**/*.map",
+			],
 		},
 	},
 

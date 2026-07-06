@@ -34,11 +34,6 @@ export function parseTracesSampleRate(raw: string | undefined): number {
 
 export function generateRuntimeConfig() {
 	return {
-		cloudflare: {
-			accountId: process.env.NUXT_CLOUDFLARE_ACCOUNT_ID,
-			apiToken: process.env.NUXT_CLOUDFLARE_API_TOKEN,
-			namespaceId: process.env.NUXT_CLOUDFLARE_NAMESPACE_ID,
-		},
 		discord: {
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,

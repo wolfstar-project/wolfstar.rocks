@@ -1,6 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-const ALL_ENV_VARS = ["CONTEXT", "URL", "PULL_REQUEST", "REVIEW_ID", "BRANCH", "NODE_ENV"];
+const ALL_ENV_VARS = [
+	"CONTEXT",
+	"URL",
+	"PULL_REQUEST",
+	"REVIEW_ID",
+	"BRANCH",
+	"NODE_ENV",
+	"VERCEL_ENV",
+	"VERCEL_GIT_PULL_REQUEST_ID",
+	"VERCEL_GIT_COMMIT_REF",
+	"VERCEL_URL",
+	"VERCEL_PROJECT_PRODUCTION_URL",
+];
 
 describe("isCanary", () => {
 	beforeEach(() => {
@@ -17,32 +29,32 @@ describe("isCanary", () => {
 		vi.unstubAllEnvs();
 	});
 
-	it('returns true when NODE_ENV is "production" and branch is "main"', async () => {
-		vi.stubEnv("NODE_ENV", "production");
+	it('returns true when VERCEL_ENV is "production" and branch is "main"', async () => {
+		vi.stubEnv("VERCEL_ENV", "production");
 		vi.stubEnv("BRANCH", "main");
 		const { isCanary } = await import("../../../config/env");
 
 		expect(isCanary).toBe(true);
 	});
 
-	it('returns true when NODE_ENV is "preview" and branch is "main" (non-PR)', async () => {
-		vi.stubEnv("NODE_ENV", "preview");
+	it('returns true when VERCEL_ENV is "preview" and branch is "main" (non-PR)', async () => {
+		vi.stubEnv("VERCEL_ENV", "preview");
 		vi.stubEnv("BRANCH", "main");
 		const { isCanary } = await import("../../../config/env");
 
 		expect(isCanary).toBe(true);
 	});
 
-	it('returns true when NODE_ENV is "canary" and branch is "main"', async () => {
-		vi.stubEnv("NODE_ENV", "canary");
+	it('returns true when VERCEL_ENV is "canary" and branch is "main"', async () => {
+		vi.stubEnv("VERCEL_ENV", "canary");
 		vi.stubEnv("BRANCH", "main");
 		const { isCanary } = await import("../../../config/env");
 
 		expect(isCanary).toBe(true);
 	});
 
-	it('returns false when NODE_ENV is "preview", branch is "main", but is a PR', async () => {
-		vi.stubEnv("NODE_ENV", "preview");
+	it('returns false when VERCEL_ENV is "preview", branch is "main", but is a PR', async () => {
+		vi.stubEnv("VERCEL_ENV", "preview");
 		vi.stubEnv("BRANCH", "main");
 		vi.stubEnv("PULL_REQUEST", "true");
 		const { isCanary } = await import("../../../config/env");
@@ -55,8 +67,8 @@ describe("isCanary", () => {
 		["preview (non-main branch)", "preview", "feat/foo"],
 		["development", "development", undefined],
 		["unset", undefined, undefined],
-	])("returns false when NODE_ENV is %s", async (_label, value, branch) => {
-		if (value !== undefined) vi.stubEnv("NODE_ENV", value);
+	])("returns false when VERCEL_ENV is %s", async (_label, value, branch) => {
+		if (value !== undefined) vi.stubEnv("VERCEL_ENV", value);
 		if (branch !== undefined) vi.stubEnv("BRANCH", branch);
 		const { isCanary } = await import("../../../config/env");
 
@@ -86,8 +98,8 @@ describe("getEnv", () => {
 		expect(result.env).toBe("dev");
 	});
 
-	it('returns "canary" for Netlify preview deploys from main branch (non-PR)', async () => {
-		vi.stubEnv("NODE_ENV", "preview");
+	it('returns "canary" for Vercel preview deploys from main branch (non-PR)', async () => {
+		vi.stubEnv("VERCEL_ENV", "preview");
 		vi.stubEnv("BRANCH", "main");
 		const { getEnv } = await import("../../../config/env");
 		const result = await getEnv(false);
@@ -95,8 +107,8 @@ describe("getEnv", () => {
 		expect(result.env).toBe("canary");
 	});
 
-	it('returns "canary" for custom NODE_ENV "canary" on main branch', async () => {
-		vi.stubEnv("NODE_ENV", "canary");
+	it('returns "canary" for custom VERCEL_ENV "canary" on main branch', async () => {
+		vi.stubEnv("VERCEL_ENV", "canary");
 		vi.stubEnv("BRANCH", "main");
 		const { getEnv } = await import("../../../config/env");
 		const result = await getEnv(false);
@@ -124,8 +136,8 @@ describe("getEnv", () => {
 		expect(result.env).toBe("preview");
 	});
 
-	it('returns "canary" for Netlify production deploys from main branch', async () => {
-		vi.stubEnv("NODE_ENV", "production");
+	it('returns "canary" for Vercel production deploys from main branch', async () => {
+		vi.stubEnv("VERCEL_ENV", "production");
 		vi.stubEnv("BRANCH", "main");
 		const { getEnv } = await import("../../../config/env");
 		const result = await getEnv(false);
@@ -143,7 +155,7 @@ describe("getEnv", () => {
 	});
 
 	it('prioritises "dev" over "canary" in development mode', async () => {
-		vi.stubEnv("NODE_ENV", "preview");
+		vi.stubEnv("VERCEL_ENV", "preview");
 		vi.stubEnv("BRANCH", "main");
 		const { getEnv } = await import("../../../config/env");
 		const result = await getEnv(true);
@@ -222,6 +234,14 @@ describe("getPreviewUrl", () => {
 
 		expect(getPreviewUrl()).toBe(expectedUrl);
 	});
+
+	it("returns the Vercel preview URL from VERCEL_URL when URL is unset", async () => {
+		vi.stubEnv("VERCEL_ENV", "preview");
+		vi.stubEnv("VERCEL_URL", "wolfstar-rocks-preview.vercel.app");
+		const { getPreviewUrl } = await import("../../../config/env");
+
+		expect(getPreviewUrl()).toBe("https://wolfstar-rocks-preview.vercel.app");
+	});
 });
 
 describe("getProductionUrl", () => {
@@ -285,6 +305,14 @@ describe("getProductionUrl", () => {
 		const { getProductionUrl } = await import("../../../config/env");
 
 		expect(getProductionUrl()).toBe(expectedUrl);
+	});
+
+	it("returns the Vercel production URL from VERCEL_PROJECT_PRODUCTION_URL when URL is unset", async () => {
+		vi.stubEnv("VERCEL_ENV", "production");
+		vi.stubEnv("VERCEL_PROJECT_PRODUCTION_URL", "wolfstar.rocks");
+		const { getProductionUrl } = await import("../../../config/env");
+
+		expect(getProductionUrl()).toBe("https://wolfstar.rocks");
 	});
 });
 

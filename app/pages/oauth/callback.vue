@@ -67,6 +67,9 @@ const { error, status, execute } = useFetch("/api/auth/discord", {
 	method: "GET",
 	query: {
 		code,
+		// Sent so the server can verify the CSRF state before exchanging the
+		// code and creating the session.
+		state,
 	},
 	server: false,
 });
@@ -88,9 +91,10 @@ async function performCall() {
 
 	await promiseTimeout(seconds(2));
 
-	// Verify the OAuth state server-side and retrieve the stored redirect URL.
-	// The server reads the nonce + oauth_redirect cookies set during initiation,
-	// verifies the HMAC signature, and returns the safe destination URL.
+	// The CSRF state was already verified by /api/auth/discord before the session
+	// was created (execute() above), so reaching here means the state was valid.
+	// This call consumes the nonce + oauth_redirect cookies to resolve the stored
+	// destination URL and clear them for single use.
 	let redirectUrl = "/";
 	if (state.value) {
 		try {

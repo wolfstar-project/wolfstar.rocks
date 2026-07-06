@@ -4,14 +4,10 @@ import { provider } from "std-env";
 
 // Storage key for fetch cache - must match shared/utils/fetch-cache-config.ts
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
-
+// Storage key for payload cache - must match server/plugins/payload-cache.ts
+const PAYLOAD_CACHE_STORAGE_KEY = "payload-cache";
 // Rate limiter buckets - must match server/utils/wrappedEventHandler.ts
 const RATELIMITER_STORAGE_KEY = "wolfstar:ratelimiter";
-// Storage key for the runtime payload cache. No server/plugins/payload-cache.ts
-// exists yet in this repo (npmx.dev's ISR payload-cache plugin hasn't been
-// ported) — this override is inert until that plugin is added and reads/writes
-// this same key.
-const PAYLOAD_CACHE_STORAGE_KEY = "payload-cache";
 
 export default defineNuxtModule({
 	meta: {

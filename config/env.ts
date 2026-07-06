@@ -87,8 +87,8 @@ export const getPreviewUrl = () =>
 	isPreview
 		? process.env.URL
 			? process.env.URL
-			: process.env.NUXT_ENV_VERCEL_URL
-				? `https://${process.env.NUXT_ENV_VERCEL_URL}`
+			: process.env.VERCEL_URL
+				? `https://${process.env.VERCEL_URL}`
 				: undefined
 		: undefined;
 
@@ -107,8 +107,8 @@ export const getProductionUrl = () =>
 	isProduction
 		? process.env.URL
 			? process.env.URL
-			: process.env.NUXT_ENV_VERCEL_PROJECT_PRODUCTION_URL
-				? `https://${process.env.NUXT_ENV_VERCEL_PROJECT_PRODUCTION_URL}`
+			: process.env.VERCEL_PROJECT_PRODUCTION_URL
+				? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
 				: undefined
 		: undefined;
 

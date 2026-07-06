@@ -10,6 +10,8 @@ const ALL_ENV_VARS = [
 	"VERCEL_ENV",
 	"VERCEL_GIT_PULL_REQUEST_ID",
 	"VERCEL_GIT_COMMIT_REF",
+	"VERCEL_URL",
+	"VERCEL_PROJECT_PRODUCTION_URL",
 ];
 
 describe("isCanary", () => {
@@ -232,6 +234,14 @@ describe("getPreviewUrl", () => {
 
 		expect(getPreviewUrl()).toBe(expectedUrl);
 	});
+
+	it("returns the Vercel preview URL from VERCEL_URL when URL is unset", async () => {
+		vi.stubEnv("VERCEL_ENV", "preview");
+		vi.stubEnv("VERCEL_URL", "wolfstar-rocks-preview.vercel.app");
+		const { getPreviewUrl } = await import("../../../config/env");
+
+		expect(getPreviewUrl()).toBe("https://wolfstar-rocks-preview.vercel.app");
+	});
 });
 
 describe("getProductionUrl", () => {
@@ -295,6 +305,14 @@ describe("getProductionUrl", () => {
 		const { getProductionUrl } = await import("../../../config/env");
 
 		expect(getProductionUrl()).toBe(expectedUrl);
+	});
+
+	it("returns the Vercel production URL from VERCEL_PROJECT_PRODUCTION_URL when URL is unset", async () => {
+		vi.stubEnv("VERCEL_ENV", "production");
+		vi.stubEnv("VERCEL_PROJECT_PRODUCTION_URL", "wolfstar.rocks");
+		const { getProductionUrl } = await import("../../../config/env");
+
+		expect(getProductionUrl()).toBe("https://wolfstar.rocks");
 	});
 });
 

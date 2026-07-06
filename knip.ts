@@ -78,6 +78,9 @@ const config: KnipConfig = {
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
+
+				/** Loaded at runtime by unstorage's vercel-runtime-cache driver via createRequire; no static import */
+				"@vercel/functions",
 			],
 			ignoreUnresolved: ["#build/auth.config"],
 			ignoreFiles: [

@@ -65,3 +65,5 @@ storybook-static
 
 # Claude misc
 .claude/state
+.vercel
+.env*

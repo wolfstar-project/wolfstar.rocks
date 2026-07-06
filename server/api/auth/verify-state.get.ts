@@ -8,7 +8,9 @@ import { createError, useLogger, withAuditMethods } from "evlog";
  *
  * Verifies the signed OAuth CSRF state and returns the stored redirect URL.
  * Reads the nonce and redirect URL from httpOnly cookies set during OAuth
- * initiation, then clears both cookies regardless of outcome.
+ * initiation, then clears both cookies only once the state verifies so a stray
+ * retry or cross-site GET cannot delete the cookies the callback guard in
+ * `/api/auth/discord` still depends on mid-flow.
  *
  * Returns { redirectUrl } on success, or 400 on invalid/missing state.
  */
@@ -18,10 +20,6 @@ export default defineWrappedResponseHandler(
 		const { state } = getQuery(event);
 		const nonce = getCookie(event, "oauth_nonce");
 		const storedRedirectUrl = getCookie(event, "oauth_redirect");
-
-		// Always clear cookies after one use to prevent replay attacks
-		deleteCookie(event, "oauth_nonce", { path: "/" });
-		deleteCookie(event, "oauth_redirect", { path: "/" });
 
 		if (!state || typeof state !== "string" || !nonce || !storedRedirectUrl) {
 			log.audit(
@@ -56,6 +54,14 @@ export default defineWrappedResponseHandler(
 				fix: "Restart the login flow from the beginning",
 			});
 		}
+
+		// Consume the single-use cookies only now that the state has verified.
+		// Clearing them earlier (on any request, before validation) would let a
+		// stray retry or cross-site GET to this endpoint during the OAuth window
+		// delete the cookies the callback guard in /api/auth/discord depends on,
+		// turning a valid in-flight login into a hard 400 failure.
+		deleteCookie(event, "oauth_nonce", { path: "/" });
+		deleteCookie(event, "oauth_redirect", { path: "/" });
 
 		// Re-validate the URL one final time (defence-in-depth against cookie tampering)
 		const redirectUrl = isSafeRedirectPath(storedRedirectUrl) ? storedRedirectUrl : "/";

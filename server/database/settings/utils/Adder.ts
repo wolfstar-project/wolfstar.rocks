@@ -82,8 +82,7 @@ export class Adder<T> extends Array<{ id: T; end: number }> {
 		let entry: { id: T; end: number };
 
 		while (i < this.length) {
-			// The loop guard keeps `i` in bounds, so the index access cannot be undefined
-			entry = this[i]!;
+			entry = this[i];
 			if (entry.id === id) {
 				this.splice(i, 1);
 				deleted++;
@@ -111,7 +110,7 @@ export class Adder<T> extends Array<{ id: T; end: number }> {
 	public sweep() {
 		const now = Date.now();
 		let i = 0;
-		while (i < this.length && this[i]!.end <= now) {
+		while (i < this.length && this[i].end <= now) {
 			i++;
 		}
 		if (i !== 0) {

@@ -52,8 +52,6 @@ const config: KnipConfig = {
 				"@takumi-rs/wasm",
 				"workbox-*",
 				"rolldown",
-				/** Provided transitively by @nuxtjs/seo; used directly for its route-rule type */
-				"@nuxtjs/robots",
 
 				/** Oxlint plugins don't get picked up yet */
 				"@e18e/eslint-plugin",
@@ -78,9 +76,6 @@ const config: KnipConfig = {
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
-
-				/** Loaded at runtime by unstorage's vercel-runtime-cache driver via createRequire; no static import */
-				"@vercel/functions",
 			],
 			ignoreUnresolved: ["#build/auth.config"],
 			ignoreFiles: [

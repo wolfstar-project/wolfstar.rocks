@@ -17,7 +17,7 @@ vi.mock("evlog", () => ({
 	}),
 }));
 
-import { compactSettingsChanges, patchToChanges } from "#server/utils/audit/patch-to-changes";
+import { patchToChanges } from "#server/utils/audit/patch-to-changes";
 
 describe("patchToChanges", () => {
 	it("returns empty object when all ops are equivalent defaults", () => {
@@ -87,107 +87,5 @@ describe("patchToChanges", () => {
 			Object.keys(result.added ?? {}).length +
 			Object.keys(result.removed ?? {}).length;
 		expect(total).toBeLessThanOrEqual(25);
-	});
-});
-
-describe("compactSettingsChanges (plan 008 write-time payload)", () => {
-	it("stores only the changed field for a one-field update", () => {
-		const before = { prefix: "!", language: "en-US", rolesAdmin: ["r1"] };
-		const after = { prefix: "?", language: "en-US", rolesAdmin: ["r1"] };
-
-		const compact = compactSettingsChanges(before, after);
-
-		expect(compact.v).toBe(2);
-		expect(compact.patch).toEqual([{ op: "replace", path: "/prefix", value: "?", from: "!" }]);
-	});
-
-	it("produces an empty patch for a no-op update", () => {
-		const settings = { prefix: "!", rolesAdmin: ["r1"] };
-		const compact = compactSettingsChanges({ ...settings }, { ...settings });
-		expect(compact.patch).toEqual([]);
-	});
-
-	it("captures added and removed nullable fields with their old values", () => {
-		const compact = compactSettingsChanges(
-			{ rolesMuted: "role-1" },
-			{ channelsLogsImage: "chan-1" },
-		);
-
-		const remove = compact.patch.find((op) => op.op === "remove");
-		const add = compact.patch.find((op) => op.op === "add");
-		expect(remove).toEqual({ op: "remove", path: "/rolesMuted", from: "role-1" });
-		expect(add).toEqual({ op: "add", path: "/channelsLogsImage", value: "chan-1" });
-	});
-
-	it("passes through JSON-serialized BigInt-backed durations", () => {
-		// serializeSettings turns BigInt durations into numbers/strings before
-		// this function runs — verify those survive intact
-		const compact = compactSettingsChanges(
-			{ selfmodLinksHardActionDuration: null },
-			{ selfmodLinksHardActionDuration: 60000 },
-		);
-		expect(compact.patch).toEqual([
-			{ op: "replace", path: "/selfmodLinksHardActionDuration", value: 60000, from: null },
-		]);
-	});
-
-	it("serializes far smaller than the legacy full snapshots for a representative update", () => {
-		const manySettings: Record<string, unknown> = {};
-		for (let i = 0; i < 150; i++) manySettings[`setting${i}`] = `value-${i}`;
-		const before = { ...manySettings, prefix: "!" };
-		const after = { ...manySettings, prefix: "?" };
-
-		const legacyBytes = JSON.stringify({ before, after }).length;
-		const compactBytes = JSON.stringify(compactSettingsChanges(before, after)).length;
-
-		expect(compactBytes).toBeLessThan(legacyBytes / 10);
-	});
-});
-
-describe("patchToChanges compact (v2) rows", () => {
-	it("renders a v2 row identically to the equivalent legacy row", () => {
-		const before = { prefix: "!", rolesAdmin: ["r1"], rolesMuted: "role-1" };
-		const after = { prefix: "?", rolesAdmin: ["r1", "r2"] };
-
-		const legacy = patchToChanges({ before, after });
-		const compact = patchToChanges(
-			compactSettingsChanges(before, after) as unknown as Record<string, unknown>,
-		);
-
-		expect(compact).toEqual(legacy);
-	});
-
-	it("reads a stored v2 payload without recomputing a diff", () => {
-		const result = patchToChanges({
-			v: 2,
-			patch: [
-				{ op: "replace", path: "/prefix", value: "?", from: "!" },
-				{ op: "add", path: "/rolesPublic", value: ["r9"] },
-				{ op: "remove", path: "/rolesMuted", from: "role-1" },
-			],
-		});
-
-		expect(result).toEqual({
-			added: { rolesPublic: ["r9"] },
-			removed: { rolesMuted: "role-1" },
-			changed: { prefix: { from: "!", to: "?" } },
-		});
-	});
-
-	it("skips equivalent-default replaces in v2 rows", () => {
-		const result = patchToChanges({
-			v: 2,
-			patch: [{ op: "replace", path: "/rolesAdmin", value: [], from: [] }],
-		});
-		expect(result).toEqual({});
-	});
-
-	it("returns empty groups for malformed or unknown-version payloads", () => {
-		expect(
-			patchToChanges({ v: 3, patch: "nope" } as unknown as Record<string, unknown>),
-		).toEqual({});
-		expect(
-			patchToChanges({ v: 2, patch: [null, 42] } as unknown as Record<string, unknown>),
-		).toEqual({});
 	});
 });

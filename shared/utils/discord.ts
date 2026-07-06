@@ -86,18 +86,8 @@ export function avatarURL(
 	return dynamicMakeURL(`/avatars/${userData.id}/${userData.avatar}`, userData.avatar, options);
 }
 
-/**
- * Minimal guild type that can be used for icon URL generation
- * Compatible with OauthFlattenedGuild and partial guild objects
- */
-export interface IconGuild {
-	id: string;
-	icon: string | null;
-	acronym: string;
-}
-
 export function guildIconURL(
-	guild: MaybeRef<IconGuild | OauthFlattenedGuild>,
+	guild: MaybeRef<OauthFlattenedGuild>,
 	options?: Readonly<ImageURLOptions>,
 ): string | null {
 	const guildData = toValue(guild);

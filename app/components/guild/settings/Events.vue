@@ -79,10 +79,9 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
+import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
@@ -104,8 +103,8 @@ const state = reactive<EventsSettingsSchemaType>(createDefaultState());
 
 function mapToGuildData(stateData: EventsSettingsSchemaType): Partial<GuildData> {
 	const result: Partial<GuildData> = {};
-	for (const event of allEvents) {
-		setGuildDataChange(result, event.key, stateData[event.key]);
+	for (const key in stateData) {
+		result[key as GuildDataKey] = stateData[key] as never;
 	}
 	return result;
 }

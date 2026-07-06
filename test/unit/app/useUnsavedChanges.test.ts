@@ -1,9 +1,9 @@
-import type { RouteLocationNormalized } from "vue-router";
+import type { RouteLocationNormalizedGeneric } from "vue-router";
 import { describe, expect, it } from "vitest";
 import { isSameGuildManageArea } from "~/composables/useUnsavedChanges";
 
 function makeRoute(path: string) {
-	return { path } as RouteLocationNormalized;
+	return { path } as RouteLocationNormalizedGeneric;
 }
 
 describe("isSameGuildManageArea()", () => {

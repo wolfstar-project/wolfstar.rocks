@@ -14,7 +14,6 @@
 - Add comments only to explain complex logic or non-obvious implementations
 - Write unit tests for core functionality using `vitest`
 - Write end-to-end tests using Playwright and `@nuxt/test-utils`
-- Consolidate component accessibility (axe) assertions into `test/nuxt/a11y.spec.ts` instead of scattering `runAxe()` checks across individual component spec files; keep hydration/behavior tests in the component's own spec file
 - Keep functions focused and manageable (generally under 50 lines)
 - Use error handling patterns consistently
 - Ensure you write strictly type-safe code, for example by ensuring you always check when accessing an array value by index
@@ -37,8 +36,6 @@
 - Routes go under `server/api/` with HTTP suffix (`.get.ts`, `.post.ts`)
 - Always wrap handlers with `defineWrappedResponseHandler` for auth + rate limiting
 - Use `defineWrappedCachedResponseHandler` for cached responses
-- Rate limiting (`server/utils/wrappedEventHandler.ts`) reserves a fixed- or sliding-window quota in storage before the handler runs and rolls the reservation back if the handler throws; it fails open (lets the request through) if the rate-limit storage read/write itself errors
-- Use the `authorize` option (not an inline check in the handler body) for per-request permission checks — e.g. `canManage()` — that must run on every request, including warm cache hits on `defineWrappedCachedResponseHandler` routes
 - Use `createError` for error responses with proper status codes
 - Use the `onError` callback for error logging
 - Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
@@ -52,7 +49,7 @@
 
 ## Auth and Feedback
 
-- `server/api/auth/discord.get.ts` requests the `guilds.members.read` and `email` scopes and handles both legs of the OAuth flow: with no `code` query param it initiates (sets HMAC-signed nonce/redirect cookies via `createOAuthState()`); with a `code` present it is the callback, which verifies and consumes the CSRF state via `verifyOAuthState()` in `server/utils/oauth-state.ts` **before** any code exchange, then returns `{ redirectUrl }`. There is no separate `verify-state` endpoint — do not reintroduce one
+- Discord OAuth requests the `guilds.members.read` and `email` scopes in `server/api/auth/discord.get.ts`
 - The `#auth-utils` `User` type includes `email: string | null`; always handle existing sessions where `user.email` is still `null`
 - Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
 - Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
@@ -84,12 +81,6 @@ pnpm test:perf:prebuilt          # Lighthouse performance checks against an exis
 pnpm test:bench                  # Vitest benchmark suite
 pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
 pnpm audit:verify                # Replay and verify the AuditEvent hash chain
-pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
-pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
-pnpm build-storybook             # Build static Storybook output
-pnpm chromatic                   # Publish Storybook to Chromatic for visual review
-pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
-pnpm vp run zizmor:fix           # Auto-fix zizmor findings
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
 pnpm prisma:migrate:dev:create   # Create a migration without applying it
@@ -119,7 +110,6 @@ pnpm update:interactive          # Interactive dependency updates with taze
 - Use `defineWrappedCachedResponseHandler` with `auth: true`, explicit `maxAge`, `swr: false`, `onError`, and route-specific rate limits for log endpoints
 - Validate log route filters with `DashboardActivityQuerySchema`, `CommandLogQuerySchema`, or `ModerationLogQuerySchema` from `shared/schemas/log-queries.ts`
 - Use `resolveGuildMembers()` and `fallbackMember()` from `server/utils/audit/resolve-members.ts` when log rows need Discord member metadata
-- Guild permission checks (`canManage()`) belong in the `authorize` option, not the handler body, so they still run when the response is served from cache
 - Client-side log data access lives in focused composables (`useAuditLog`, `useCommandLog`, `useModerationLog`) that accept `MaybeRefOrGetter` inputs and expose computed `entries` and `total`
 
 ## View Transitions
@@ -163,10 +153,9 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 - **Build issues:** Clear `.nuxt`, `.output`, and `node_modules/.cache`, then rebuild
 - **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
-- **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URL` matches Discord Developer Portal exactly
+- **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URI` matches Discord Developer Portal exactly
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
-- **Duplicate/incompatible `vue` or `discord-api-types` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
@@ -235,8 +224,7 @@ log.audit(
 - `server/utils/audit/resolve-members.ts` — resolves Discord guild members for log display with fallback placeholders
 - `server/plugins/evlog-drain.ts` — routes audit events to the drain
 - `server/plugins/evlog-enrich.ts` — enriches events with UA, trace, and audit context
-- `shared/audit/persisted.ts` — reconstructs chain order from `prevHash` linkage (timestamps are not assumed unique) and reports topology problems (forks, cycles, multiple/no roots, unreachable rows, head mismatch) plus hash/link failures
-- `scripts/audit-verify.ts` — offline hash-chain verifier run with `pnpm audit:verify`; loads all `AuditEvent` rows and the `AuditChainHead` row, then delegates to `verifyPersistedAuditChain()` in `shared/audit/persisted.ts`
+- `scripts/audit-verify.ts` — offline hash-chain verifier run with `pnpm audit:verify`
 
 ### Dashboard Activity Feed
 

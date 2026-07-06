@@ -413,7 +413,7 @@ When adding or changing user-facing pages, include or update stories so reviewer
 1. Create a feature branch from `main`
 2. Make your changes with clear, descriptive commits
 3. Push your branch and open a pull request
-4. Ensure CI checks pass (lint, typecheck, build, and tests)
+4. Ensure CI checks pass (lint, typecheck, build, tests)
 5. Request review from maintainers
 
 ### Commit messages and PR titles

@@ -1,5 +1,4 @@
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { GuildMemberFlags } from "discord-api-types/v10";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it, vi } from "vitest";
 import { computed, ref } from "vue";
@@ -47,7 +46,6 @@ describe("ModerationLogTable", () => {
 					deaf: false,
 					mute: false,
 					joined_at: "",
-					flags: 0 as GuildMemberFlags,
 				},
 				moderatorId: "200000000000000002",
 				moderatorMember: {
@@ -62,7 +60,6 @@ describe("ModerationLogTable", () => {
 					deaf: false,
 					mute: false,
 					joined_at: "",
-					flags: 0 as GuildMemberFlags,
 				},
 				typeCode: 1,
 				typeName: "Ban",

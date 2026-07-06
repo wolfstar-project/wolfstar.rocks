@@ -213,43 +213,6 @@ describe("createPostgresAuditDrain", () => {
 		expect(mockTx.auditEvent.create).toHaveBeenCalled();
 	});
 
-	it("writes rows that the persisted-row mapper rehashes to the same digest (writer/verifier anti-drift)", async () => {
-		const { envelopeFromPersistedRow } = await import("#shared/audit/persisted");
-		const { hashEnvelope: rehash } = await import("#shared/audit/envelope");
-
-		await drain(
-			makeCtx({
-				actor: { type: "user", id: "111", displayName: "Tester" },
-				reason: "settings edit",
-				changes: { before: { prefix: "!" }, after: { prefix: "?" } },
-			}),
-		);
-
-		const data = mockTx.auditEvent.create.mock.calls[0]?.[0]?.data as Record<string, unknown>;
-		expect(data).toBeDefined();
-
-		const recomputed = rehash(
-			envelopeFromPersistedRow({
-				action: data.action as string,
-				actorType: data.actorType as string,
-				actorId: data.actorId as string,
-				actorName: (data.actorName as string | undefined) ?? null,
-				targetType: (data.targetType as string | undefined) ?? null,
-				targetId: (data.targetId as string | undefined) ?? null,
-				outcome: data.outcome as string,
-				tenantId: (data.tenantId as string | undefined) ?? null,
-				reason: (data.reason as string | undefined) ?? null,
-				timestamp: data.timestamp as Date,
-				changes: data.changes ?? null,
-				context: data.context ?? null,
-				prevHash: (data.prevHash as string | null | undefined) ?? null,
-				hash: data.hash as string,
-			}),
-		);
-
-		expect(recomputed).toBe(data.hash);
-	});
-
 	it("retries on P2034 serialization failure and eventually throws after exhaustion", async () => {
 		const p2034 = new Prisma.PrismaClientKnownRequestError("Serialization failure", {
 			code: "P2034",

@@ -125,14 +125,13 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
+import type { GuildData, GuildDataKey } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import {
 	isRoleArrayKey,
 	RolesSettingsSchema as schema,
 	type RolesSettingsSchemaType as Schema,
 } from "#shared/schemas";
-import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { isNullOrUndefined } from "@sapphire/utilities";
 import {
 	ConfigurableRemoveInitialRole,
@@ -152,11 +151,11 @@ const standardRoles = ConfigurableRoles.filter((r) => !r.key.startsWith("rolesRe
 
 // Initialize form state with defaults
 const createDefaultState = (): Schema => {
-	const defaults: Schema = { rolesRemoveInitial: false };
+	const defaults: Record<string, any> = { rolesRemoveInitial: false };
 	for (const roleConfig of ConfigurableRoles) {
 		defaults[roleConfig.key] = isArrayKey(roleConfig.key) ? [] : null;
 	}
-	return defaults;
+	return defaults as Schema;
 };
 
 const state = reactive<Schema>(createDefaultState());
@@ -170,27 +169,31 @@ const originalValues = computed(() => {
 		return createDefaultState();
 	}
 
-	const values = createDefaultState();
+	const values: Record<string, any> = {};
 
 	// Bool toggle
 	if (guildSettings.value && !isNullOrUndefined(guildSettings.value.rolesRemoveInitial)) {
 		values.rolesRemoveInitial = guildSettings.value.rolesRemoveInitial;
+	} else {
+		values.rolesRemoveInitial = false;
 	}
 
 	// Roles
 	for (const roleConfig of ConfigurableRoles) {
-		const key = roleConfig.key;
+		const key = roleConfig.key as GuildDataKey;
 		if (guildSettings.value && !isNullOrUndefined(guildSettings.value[key])) {
 			const val = guildSettings.value[key];
 			if (isArrayKey(roleConfig.key)) {
-				values[key] = Array.isArray(val) ? [...val] : [];
+				values[roleConfig.key] = Array.isArray(val) ? [...val] : [];
 			} else {
-				values[key] = typeof val === "string" ? val : null;
+				values[roleConfig.key] = val;
 			}
+		} else {
+			values[roleConfig.key] = isArrayKey(roleConfig.key) ? [] : null;
 		}
 	}
 
-	return values;
+	return values as Schema;
 });
 
 // Watch for loading state change to populate local state
@@ -210,22 +213,16 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
 	// Always include the boolean toggle
-	if (typeof formState.rolesRemoveInitial === "boolean") {
-		setGuildDataChange(changes, "rolesRemoveInitial", formState.rolesRemoveInitial);
-	}
+	changes.rolesRemoveInitial = formState.rolesRemoveInitial as boolean;
 
 	for (const roleConfig of ConfigurableRoles) {
 		const value = formState[roleConfig.key];
-		if (value === undefined) {
-			continue;
+		// Include null values for nullable single-role fields (user explicitly cleared)
+		// Include empty arrays for multi-role fields (user explicitly cleared all)
+		// Only exclude undefined (form doesn't control this key)
+		if (value !== undefined) {
+			changes[roleConfig.key as GuildDataKey] = value as never;
 		}
-
-		if (isArrayKey(roleConfig.key)) {
-			setGuildDataChange(changes, roleConfig.key, Array.isArray(value) ? value : []);
-			continue;
-		}
-
-		setGuildDataChange(changes, roleConfig.key, typeof value === "string" ? value : null);
 	}
 
 	return changes;

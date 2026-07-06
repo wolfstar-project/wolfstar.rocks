@@ -5,7 +5,6 @@ import { API } from "@discordjs/core/http-only";
 import { REST } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { isNullishOrEmpty } from "@sapphire/utilities/isNullOrUndefinedOrEmpty";
-import { createError, getRouterParam } from "h3";
 
 export function useApi(rest?: REST) {
 	rest ??= useRest();

@@ -19,12 +19,6 @@ strictDepBuilds: false
 
 overrides:
     "@netlify/api": ^14.0.18
-    # Keep a single discord-api-types instance; two copies make structurally
-    # identical Discord payload types nominally incompatible during typecheck
-    discord-api-types: 0.38.48
-    # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
-    # vue copies make VueUse and app refs incompatible during typecheck
-    vue: 3.5.38
     sharp: 0.34.5
     vite: npm:@voidzero-dev/vite-plus-core@0.1.19
     vitest: npm:@voidzero-dev/vite-plus-test@0.1.19

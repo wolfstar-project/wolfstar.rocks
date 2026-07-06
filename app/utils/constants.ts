@@ -1,5 +1,3 @@
-import type { InjectionKey, Ref } from "vue";
-
 export const robotBlockingPageProps =
 	"nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1";
 

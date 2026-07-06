@@ -7,7 +7,6 @@ import {
 	isAllowedDomain,
 	isCacheEntryStale,
 } from "#shared/utils/fetch-cache-config";
-import { log } from "evlog";
 import { $fetch } from "ofetch";
 
 /**
@@ -82,7 +81,7 @@ export default defineNitroPlugin((nitroApp) => {
 				// Storage read failed (e.g., ENOENT on misconfigured storage)
 				// Log and continue without cache
 				import.meta.dev &&
-					log.warn("fetch-cache", `Storage read failed for ${url}: ${error}`);
+					logger.warn(`[fetch-cache] Storage read failed for ${url}:`, error);
 			}
 
 			if (cached) {
@@ -90,13 +89,13 @@ export default defineNitroPlugin((nitroApp) => {
 
 				if (!isStale) {
 					// Cache hit, data is fresh
-					import.meta.dev && log.info("fetch-cache", `HIT (fresh): ${url}`);
+					import.meta.dev && logger.info(`[fetch-cache] HIT (fresh): ${url}`);
 					return { cachedAt: cached.cachedAt, data: cached.data, isStale: false };
 				}
 
 				// Cache hit but stale - return stale data and revalidate in background
 
-				import.meta.dev && log.info("fetch-cache", `HIT (stale, revalidating): ${url}`);
+				import.meta.dev && logger.info(`[fetch-cache] HIT (stale, revalidating): ${url}`);
 
 				// Background revalidation using event.waitUntil()
 				// This ensures the revalidation completes even in serverless environments
@@ -115,10 +114,10 @@ export default defineNitroPlugin((nitroApp) => {
 								ttl,
 							};
 							await storage.setItem(cacheKey, entry);
-							import.meta.dev && log.info("fetch-cache", `Revalidated: ${url}`);
+							import.meta.dev && logger.info(`[fetch-cache] Revalidated: ${url}`);
 						} catch (error) {
 							import.meta.dev &&
-								log.warn("fetch-cache", `Revalidation failed: ${url}: ${error}`);
+								logger.warn(`[fetch-cache] Revalidation failed: ${url}`, error);
 						}
 					})(),
 				);
@@ -128,7 +127,7 @@ export default defineNitroPlugin((nitroApp) => {
 			}
 
 			// Cache miss - fetch and return immediately, cache in background
-			import.meta.dev && log.info("fetch-cache", `MISS: ${url}`);
+			import.meta.dev && logger.info(`[fetch-cache] MISS: ${url}`);
 
 			const data = (await $fetch(url, options as Parameters<typeof $fetch>[1])) as T;
 			const cachedAt = Date.now();
@@ -148,7 +147,7 @@ export default defineNitroPlugin((nitroApp) => {
 					} catch (error) {
 						// Storage write failed - log but don't fail the request
 						import.meta.dev &&
-							log.warn("fetch-cache", `Storage write failed for ${url}: ${error}`);
+							logger.warn(`[fetch-cache] Storage write failed for ${url}:`, error);
 					}
 				})(),
 			);

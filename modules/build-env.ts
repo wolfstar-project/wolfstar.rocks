@@ -63,6 +63,9 @@ export default defineNuxtModule({
 	},
 });
 
-// The `CustomAppConfig` augmentation for `env`/`buildInfo` lives in
-// `shared/types/env.ts` so every type context that consumes `useAppConfig()`
-// sees it; this module file is only checked in the node context.
+declare module "@nuxt/schema" {
+	interface AppConfig {
+		env: BuildInfo["env"];
+		buildInfo: BuildInfo;
+	}
+}

@@ -61,13 +61,12 @@ const log = useLogger("oauth:callback");
 
 const route = useRoute();
 
-const { data, error, status, execute } = useFetch<{ redirectUrl: string }>("/api/auth/discord", {
+const { error, status, execute } = useFetch("/api/auth/discord", {
 	immediate: false,
 	key: "callback",
 	method: "GET",
 	query: {
 		code,
-		state,
 	},
 	server: false,
 });
@@ -77,13 +76,9 @@ if (import.meta.client && code) {
 }
 
 async function performCall() {
-	// The exchange endpoint atomically verifies the CSRF state BEFORE trading
-	// the code for tokens and creating a session, and returns the safe
-	// destination URL stored during initiation.
 	await execute();
 
-	// Stop if state validation or the token exchange failed — the error UI
-	// will be shown and no session was created
+	// Stop if the token exchange failed — the error UI will be shown
 	if (error.value) {
 		return;
 	}
@@ -93,7 +88,20 @@ async function performCall() {
 
 	await promiseTimeout(seconds(2));
 
-	const redirectUrl = data.value?.redirectUrl ?? "/";
+	// Verify the OAuth state server-side and retrieve the stored redirect URL.
+	// The server reads the nonce + oauth_redirect cookies set during initiation,
+	// verifies the HMAC signature, and returns the safe destination URL.
+	let redirectUrl = "/";
+	if (state.value) {
+		try {
+			const data = await $fetch<{ redirectUrl: string }>("/api/auth/verify-state", {
+				query: { state: state.value },
+			});
+			redirectUrl = data.redirectUrl ?? "/";
+		} catch {
+			redirectUrl = "/";
+		}
+	}
 
 	// Full page navigation ensures SSR reads the fresh session cookie,
 	// so the target page renders with the correct authenticated state.

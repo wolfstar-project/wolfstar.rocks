@@ -2,78 +2,59 @@
 /**
  * Audit chain integrity verifier.
  *
- * Loads all AuditEvent rows plus the persisted chain head, reconstructs the
- * chain from `prevHash` linkage (timestamps are not assumed unique), rebuilds
- * the exact envelope the drain hashed for every row, and verifies hashes,
- * links, topology, and the stored head.
- *
- * Output reports row hashes and problem categories only — never `changes`,
- * `context`, or other payload data.
- *
- * Exit codes: 0 = chain valid, 1 = invalid or fatal error.
+ * Reads all AuditEvent rows ordered by timestamp and re-derives the expected
+ * SHA-256 hash chain, reporting any breaks. Exits with code 1 if violations
+ * are found.
  */
 
+import type { AuditEnvelope } from "../shared/audit/envelope.js";
 import { PrismaClient } from "../server/database/generated/client/index.js";
-import { verifyPersistedAuditChain } from "../shared/audit/persisted.js";
+import { canonicalize, hashEnvelope } from "../shared/audit/envelope.js";
 
 const prisma = new PrismaClient();
 
 async function main() {
-	const [rows, head] = await Promise.all([
-		prisma.auditEvent.findMany(),
-		prisma.auditChainHead.findUnique({ where: { id: "default" } }),
-	]);
+	const rows = await prisma.auditEvent.findMany({
+		orderBy: { timestamp: "asc" },
+	});
 
 	console.log(`Verifying ${rows.length} audit event(s)...`);
 
-	const result = verifyPersistedAuditChain(rows, head?.hash ?? null);
+	let violations = 0;
+	for (const row of rows) {
+		const envelope: AuditEnvelope = {
+			action: row.action,
+			actor: { type: "user", id: row.actorId },
+			outcome: row.outcome,
+			timestamp: row.timestamp.toISOString(),
+			context: {
+				tenantId: row.tenantId,
+				requestId: row.requestId ?? undefined,
+				traceId: row.traceId ?? undefined,
+			},
+		};
+		const canonical = canonicalize(envelope);
+		const expectedHash = hashEnvelope(canonical);
 
-	for (const problem of result.topologyProblems) {
-		switch (problem.kind) {
-			case "no-root":
-				console.error(`[FAIL] topology: ${problem.detail}`);
-				break;
-			case "multiple-roots":
-				console.error(`[FAIL] topology: multiple roots: ${problem.hashes.join(", ")}`);
-				break;
-			case "fork":
-				console.error(
-					`[FAIL] topology: fork after ${problem.atHash} → ${problem.childHashes.join(", ")}`,
-				);
-				break;
-			case "cycle":
-				console.error(`[FAIL] topology: cycle detected at ${problem.atHash}`);
-				break;
-			case "unreachable-rows":
-				console.error(
-					`[FAIL] topology: ${problem.hashes.length} row(s) unreachable from the root: ${problem.hashes.join(", ")}`,
-				);
-				break;
-			case "head-mismatch":
-				console.error(
-					`[FAIL] head: stored chain head ${problem.stored ?? "<null>"} does not match final row ${problem.expected ?? "<null>"}`,
-				);
-				break;
+		if (expectedHash !== row.hash) {
+			console.error(`[FAIL] hash mismatch for event ${row.hash}`);
+			console.error(`  expected : ${expectedHash}`);
+			console.error(`  stored   : ${row.hash}`);
+			violations++;
 		}
 	}
 
-	if (result.linkProblem) {
-		console.error(
-			`[FAIL] chain: ${result.linkProblem.reason} at position ${result.linkProblem.index} (row ${result.linkProblem.hash})`,
-		);
-	}
-
-	if (result.valid) {
+	if (violations === 0) {
 		console.log("All audit events passed integrity check.");
 	} else {
-		console.error("Audit chain verification FAILED.");
-		process.exitCode = 1;
+		console.error(`${violations} integrity violation(s) found.`);
+		process.exit(1);
 	}
 }
 
 main()
 	.catch((err) => {
 		console.error("Fatal error:", err);
-		process.exitCode = 1;
+		process.exit(1);
 	})
 	.finally(() => prisma.$disconnect());

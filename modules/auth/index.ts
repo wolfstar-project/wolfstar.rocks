@@ -122,5 +122,14 @@ declare module "nitropack" {
 	}
 }
 
-// The `#app` and `vue-router` augmentations live in `runtime/page-meta.d.ts`;
-// this file is type-checked in the node context, where `#app` does not resolve.
+declare module "#app" {
+	interface PageMeta {
+		auth?: AuthMeta;
+	}
+}
+
+declare module "vue-router" {
+	interface RouteMeta {
+		auth?: AuthMeta;
+	}
+}

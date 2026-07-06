@@ -96,7 +96,7 @@
 					</div>
 					<div class="mt-4 flex justify-end">
 						<UButton
-							v-if="error?.status === 401"
+							v-if="error.status === 401"
 							color="error"
 							variant="outline"
 							size="sm"

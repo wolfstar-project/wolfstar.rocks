@@ -1,6 +1,6 @@
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, provider } from "std-env";
+import { isCI, isDevelopment, isTest, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -13,13 +13,13 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
-		"@vercel/speed-insights",
 		"@nuxt/ui",
 		"@nuxt/content",
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
 		"@nuxt/a11y",
+		"@nuxt/scripts",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
@@ -135,6 +135,19 @@ export default defineNuxtConfig({
 			"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
 		indexable: true,
 		name: "WolfStar",
+	},
+
+	scripts: {
+		registry: {
+			// Disabled outside real production builds so dev servers and the
+			// `NODE_ENV=test` Playwright preview never inject or proxy analytics.
+			plausibleAnalytics:
+				isDevelopment || isTest
+					? false
+					: {
+							domain: "wolfstar.rocks",
+						},
+		},
 	},
 
 	auth: {

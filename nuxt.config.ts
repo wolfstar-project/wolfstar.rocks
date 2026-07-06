@@ -145,7 +145,7 @@ export default defineNuxtConfig({
 				isDevelopment || isTest
 					? false
 					: {
-							websiteId: "768d0d91-6fab-4679-93aa-6c41145736aa",
+							websiteId: "93caedd3-95de-4dad-8da2-72f086d0a7e5",
 							hostUrl: "https://umami.wolfstar.rocks",
 							// Self-hosted instance — override the default cloud.umami.is script src.
 							scriptInput: { src: "https://umami.wolfstar.rocks/script.js" },

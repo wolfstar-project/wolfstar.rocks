@@ -3,9 +3,9 @@
 	"trailingSlash": false,
 	"redirects": [
 		{
-			"source": "/(.*)",
+			"source": "/:path*",
 			"has": [{ "type": "host", "value": "repo.wolfstar.rocks" }],
-			"destination": "https://github.com/wolfstar-project/wolfstar.rocks/$1",
+			"destination": "https://github.com/wolfstar-project/wolfstar.rocks/:path*",
 			"permanent": true
 		},
 		{
@@ -21,9 +21,9 @@
 			"permanent": true
 		},
 		{
-			"source": "/(.*)",
+			"source": "/:path*",
 			"has": [{ "type": "host", "value": "blog.wolfstar.rocks" }],
-			"destination": "https://wolfstar.rocks/blog/$1",
+			"destination": "https://wolfstar.rocks/blog/:path*",
 			"permanent": true
 		}
 	]

@@ -13,6 +13,7 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
+		"@vercel/speed-insights",
 		"@nuxt/ui",
 		"@nuxt/content",
 		"@nuxt/image",

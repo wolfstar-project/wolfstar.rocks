@@ -13,23 +13,23 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
+		"@vercel/speed-insights/nuxt",
 		"@nuxt/ui",
 		"@nuxt/content",
 		"@nuxt/image",
 		"@nuxt/hints",
-		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
-		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
 		"nuxt-auth-utils",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
+		...(isStorybook ? [] : ["@nuxt/fonts"]),
 	],
 
 	content: {
@@ -235,7 +235,6 @@ export default defineNuxtConfig({
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		"/profile": { appLayout: "default", robots: true },
 		"/starly": { appLayout: "default", robots: true },
-
 		// Static pages
 		"/commands": { appLayout: "default", prerender: true, robots: true },
 		"/staryl": { appLayout: "default", prerender: true, robots: true },
@@ -243,9 +242,21 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
-
 		// Former blog.wolfstar.rocks permalink; used in external links/backlinks.
 		"/wolfstar-v7": { redirect: { statusCode: 301, to: "/blog/wolfstar-v7" } },
+		// proxy for insights
+		"/_v/script.js": {
+			proxy: "https://wolfstar.rocks/_vercel/insights/script.js",
+		},
+		"/_v/view": {
+			proxy: "https://wolfstar.rocks/_vercel/insights/view",
+		},
+		"/_v/event": {
+			proxy: "https://wolfstar.rocks/_vercel/insights/event",
+		},
+		"/_v/session": {
+			proxy: "https://wolfstar.rocks/_vercel/insights/session",
+		},
 	},
 
 	sourcemap: {

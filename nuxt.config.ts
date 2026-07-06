@@ -141,11 +141,15 @@ export default defineNuxtConfig({
 		registry: {
 			// Disabled outside real production builds so dev servers and the
 			// `NODE_ENV=test` Playwright preview never inject or proxy analytics.
-			plausibleAnalytics:
+			umamiAnalytics:
 				isDevelopment || isTest
 					? false
 					: {
-							domain: "wolfstar.rocks",
+							websiteId: "768d0d91-6fab-4679-93aa-6c41145736aa",
+							hostUrl: "https://umami.wolfstar.rocks",
+							// Self-hosted instance — override the default cloud.umami.is script src.
+							scriptInput: { src: "https://umami.wolfstar.rocks/script.js" },
+							trigger: "onNuxtReady",
 						},
 		},
 	},

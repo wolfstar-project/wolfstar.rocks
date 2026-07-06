@@ -68,7 +68,7 @@ const isPreview =
 	(process.env.CONTEXT && process.env.CONTEXT !== "production") ||
 	process.env.VERCEL_ENV === "preview" ||
 	process.env.VERCEL_ENV === "development";
-export const isProduction =
+const isProduction =
 	process.env.CONTEXT === "production" || process.env.VERCEL_ENV === "production";
 
 /**

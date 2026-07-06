@@ -4,8 +4,14 @@ import { provider } from "std-env";
 
 // Storage key for fetch cache - must match shared/utils/fetch-cache-config.ts
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
+
 // Rate limiter buckets - must match server/utils/wrappedEventHandler.ts
 const RATELIMITER_STORAGE_KEY = "wolfstar:ratelimiter";
+// Storage key for the runtime payload cache. No server/plugins/payload-cache.ts
+// exists yet in this repo (npmx.dev's ISR payload-cache plugin hasn't been
+// ported) — this override is inert until that plugin is added and reads/writes
+// this same key.
+const PAYLOAD_CACHE_STORAGE_KEY = "payload-cache";
 
 export default defineNuxtModule({
 	meta: {
@@ -33,6 +39,12 @@ export default defineNuxtModule({
 				// Fetch cache storage (for SWR fetch caching)
 				nitroConfig.storage[FETCH_CACHE_STORAGE_BASE] = {
 					...nitroConfig.storage[FETCH_CACHE_STORAGE_BASE],
+					driver: "vercel-runtime-cache",
+				};
+
+				// Payload cache storage (for runtime payload caching)
+				nitroConfig.storage[PAYLOAD_CACHE_STORAGE_KEY] = {
+					...nitroConfig.storage[PAYLOAD_CACHE_STORAGE_KEY],
 					driver: "vercel-runtime-cache",
 				};
 

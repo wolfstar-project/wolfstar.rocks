@@ -49,6 +49,7 @@ const tokens = {
 	refresh_token: "refresh-token",
 	expires_in: 604_800,
 	token_type: "Bearer",
+	scope: "identify guilds",
 };
 
 const mockUser = { id: "user-1", username: "testuser" };

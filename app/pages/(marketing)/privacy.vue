@@ -222,12 +222,20 @@
 						Analytics
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
-						We use Vercel Speed Insights to measure page performance (page load speed
-						and Core Web Vitals) and understand how visitors experience our website.
-						This helps us improve performance and identify issues.
+						We use Umami, a privacy-focused analytics platform, to understand how
+						visitors use our website. This helps us improve content, navigation, and the
+						overall experience. Umami runs on our own infrastructure at
+						<NuxtLink
+							to="https://umami.wolfstar.rocks"
+							target="_blank"
+							class="underline hover:opacity-70"
+						>
+							umami.wolfstar.rocks
+						</NuxtLink>
+						.
 					</p>
 					<p class="mb-3 leading-relaxed text-base-content">
-						Vercel Speed Insights is designed with privacy in mind:
+						Umami is designed with privacy in mind:
 					</p>
 					<ul class="list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
@@ -236,7 +244,7 @@
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>It does not collect personal identifiers or IP addresses</span>
+							<span>It does not collect personal identifiers</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
@@ -252,16 +260,16 @@
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span
-								>Data is measured by a script running in your browser (using native
-								browser performance APIs) and reported directly to Vercel
-							</span>
+								>Analytics are self-hosted, so visitor data stays on infrastructure
+								we control rather than being sent to a third-party analytics
+								vendor</span
+							>
 						</li>
 					</ul>
 					<p class="mt-4 leading-relaxed text-base-content">
-						The only information collected includes: page route/URL, approximate network
-						speed, browser, device type and operating system, country/region, and page
-						performance measurements (Web Vitals). This data cannot be used to identify
-						individual users and is processed by Vercel on our behalf.
+						The only information collected includes: page route/URL, referrer, browser,
+						device type and operating system, and country/region. This data cannot be
+						used to identify individual users.
 					</p>
 				</section>
 
@@ -643,8 +651,9 @@
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Analytics Data:</span> Retained in
-								anonymous form by Vercel and cannot be linked to individual users.
-								Retained according to Vercel's data retention policy.
+								anonymous form on our self-hosted Umami instance and cannot be
+								linked to individual users. Data is retained until we manually
+								delete it.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">

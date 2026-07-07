@@ -2,10 +2,60 @@ import type { APIUser, RESTPostOAuth2AccessTokenResult } from "discord-api-types
 import type { H3Event } from "h3";
 import type { NuxtError } from "nuxt/app";
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
-import { createOAuthState } from "#server/utils/oauth-state";
-import { userLogin } from "#shared/audit/actions";
+import { createOAuthState, verifyOAuthState } from "#server/utils/oauth-state";
+import { oauthStateInvalid, userLogin } from "#shared/audit/actions";
 import { isSafeRedirectPath } from "#shared/utils/redirect";
 import { createError, useLogger, withAuditMethods } from "evlog";
+
+/**
+ * Verifies the OAuth CSRF state on the callback request and throws a 400 when
+ * it is missing or invalid.
+ *
+ * This MUST run before the authorization code is exchanged and the session is
+ * created: once `setUserSession` authenticates the browser the mutation cannot
+ * be undone, so an invalid state has to fail the request before that point.
+ * The nonce + redirect cookies are intentionally left in place so the later
+ * `/api/auth/verify-state` call can consume them to resolve the redirect URL.
+ */
+async function assertValidOAuthState(event: H3Event): Promise<void> {
+	const log = withAuditMethods(useLogger(event));
+	const { state } = getQuery(event);
+	const nonce = getCookie(event, "oauth_nonce");
+	const storedRedirectUrl = getCookie(event, "oauth_redirect");
+
+	if (typeof state !== "string" || !nonce || !storedRedirectUrl) {
+		log.audit(
+			oauthStateInvalid({
+				actor: { type: "system", id: "oauth-flow" },
+				outcome: "denied",
+				reason: "missing-fields",
+			}),
+		);
+		throw createError({
+			message: "State verification failed",
+			status: 400,
+			why: "Required parameters (state, nonce, or redirect URL) are missing or invalid",
+			fix: "Restart the login flow from the beginning",
+		});
+	}
+
+	const result = await verifyOAuthState(state, nonce, storedRedirectUrl);
+	if (!result.valid) {
+		log.audit(
+			oauthStateInvalid({
+				actor: { type: "system", id: "oauth-flow" },
+				outcome: "denied",
+				reason: result.reason,
+			}),
+		);
+		throw createError({
+			message: "State verification failed",
+			status: 400,
+			why: "The OAuth state signature is invalid or has expired",
+			fix: "Restart the login flow from the beginning",
+		});
+	}
+}
 
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -14,10 +64,15 @@ export default defineWrappedResponseHandler(
 
 		const authorizationParams: Record<string, string> = { prompt: "none" };
 
-		// Only generate state + cookies during OAuth initiation (no code present).
-		// When callback.vue calls this endpoint again to exchange the code, we must
-		// NOT overwrite the nonce/redirect cookies set during initiation.
-		if (!query.code) {
+		if (query.code) {
+			// OAuth callback: verify the CSRF state before the code is exchanged
+			// and a session is created (see assertValidOAuthState). The nonce +
+			// redirect cookies set during initiation are reused here.
+			await assertValidOAuthState(event);
+		} else {
+			// OAuth initiation (no code present): generate state + cookies. We must
+			// NOT overwrite the nonce/redirect cookies on the later code-exchange
+			// request, which is why this only runs during initiation.
 			const nextUrl = query.next as string | undefined;
 
 			// Validate next URL — fall back to "/" if unsafe (prevents open redirect)

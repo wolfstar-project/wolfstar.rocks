@@ -11,10 +11,11 @@
 	</UForm>
 </template>
 
-<script setup lang="ts" generic="T extends Record<string, any>">
+<script setup lang="ts" generic="T extends Record<string, unknown>">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
+import type { FormError, FormErrorEvent, FormSubmitEvent } from "@nuxt/ui";
 import type { GenericSchema } from "valibot";
+import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { objectKeys } from "@sapphire/utilities/objectKeys";
 
 interface Props {
@@ -30,6 +31,10 @@ const emit = defineEmits<{
 const { setGuildSettingsChanges, removeChange, resetCounter } = useGuildSettingsChanges();
 const { originalGuildSettings } = useGuildSettings();
 const formRef = useTemplateRef("form-settings");
+
+function toMappedGuildData(formState: T): Partial<GuildData> {
+	return mapToGuildData ? mapToGuildData(formState) : (formState as Partial<GuildData>);
+}
 
 const originalState = ref<T | undefined>(undefined);
 const isOriginalStateInitialized = ref(false);
@@ -49,31 +54,32 @@ function calculateChanges(currentState: T): {
 		return { changedKeys, changes, revertedKeys };
 	}
 
-	const mappedCurrent = mapToGuildData ? mapToGuildData(currentState) : currentState;
-	const mappedOriginal = mapToGuildData
-		? mapToGuildData(originalState.value)
-		: originalState.value;
+	const mappedCurrent = toMappedGuildData(currentState);
+	const mappedOriginal = toMappedGuildData(originalState.value);
 
-	const allKeys = new Set([...objectKeys(mappedCurrent), ...objectKeys(mappedOriginal)]);
+	const allKeys = new Set<keyof GuildData>([
+		...(objectKeys(mappedCurrent) as Array<keyof GuildData>),
+		...(objectKeys(mappedOriginal) as Array<keyof GuildData>),
+	]);
 
 	for (const key of allKeys) {
-		const currentValue = (mappedCurrent as any)[key];
-		const originalValue = (mappedOriginal as any)[key];
+		const currentValue = mappedCurrent[key];
+		const originalValue = mappedOriginal[key];
 
 		if (!isDeepEqual(currentValue, originalValue)) {
 			if (currentValue !== undefined) {
-				(changes as any)[key] = currentValue;
-				changedKeys.add(key as keyof GuildData);
+				setGuildDataChange(changes, key, currentValue);
+				changedKeys.add(key);
 			}
 		} else {
-			revertedKeys.add(key as keyof GuildData);
+			revertedKeys.add(key);
 		}
 	}
 
 	return { changedKeys, changes, revertedKeys };
 }
 
-function handleSubmit(event: FormSubmitEvent<any>) {
+function handleSubmit(event: FormSubmitEvent<unknown>) {
 	// Ensure the store has the final changes before submission
 	// This is important if the form is submitted before the watcher has a chance to run
 	const { changes } = calculateChanges(event.data as T);
@@ -146,7 +152,7 @@ watch(
 defineExpose({
 	clear: () => formRef.value?.clear(),
 	getErrors: () => formRef.value?.getErrors(),
-	setErrors: (errors: any) => formRef.value?.setErrors(errors),
-	validate: (options?: any) => formRef.value?.validate(options),
+	setErrors: (errors: FormError[]) => formRef.value?.setErrors(errors),
+	validate: () => formRef.value?.validate({ silent: false }),
 });
 </script>

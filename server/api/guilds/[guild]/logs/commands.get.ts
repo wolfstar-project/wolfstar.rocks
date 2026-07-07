@@ -1,4 +1,4 @@
-import { CommandLogData } from "#server/database";
+import type { CommandLogData } from "#server/database";
 import prisma from "#server/database/prisma";
 import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { CommandLogQuerySchema } from "#shared/schemas";
@@ -12,12 +12,10 @@ export default defineWrappedCachedResponseHandler(
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
+		// Authorization runs in the `authorize` hook on every request; the
+		// cached resolver only needs the guild for data assembly.
 		const guild = await getGuild(guildId);
 		if (!guild) throw createError({ status: 404, message: "Guild not found" });
-
-		const member = await getCurrentMember(event, guild.id);
-		log.set({ member: { id: member.user.id } });
-		await canManage(guild, member);
 
 		const { limit, offset, userId, commandName, success, from, to, q } =
 			await getValidatedQuery(event, (body) => parse(CommandLogQuerySchema, body));
@@ -82,6 +80,16 @@ export default defineWrappedCachedResponseHandler(
 		auth: true,
 		maxAge: 30,
 		swr: false,
+		authorize: async (event) => {
+			const guildId = getGuildParam(event);
+			const guild = await getGuild(guildId);
+			if (!guild) {
+				throw createError({ message: "Guild not found", status: 404 });
+			}
+			const member = await getCurrentMember(event, guild.id);
+			useLogger(event).set({ guild: { id: guildId }, member: { id: member.user.id } });
+			await canManage(guild, member);
+		},
 		getKey: (event) => {
 			const guildId = getGuildParam(event);
 			const url = getRequestURL(event);

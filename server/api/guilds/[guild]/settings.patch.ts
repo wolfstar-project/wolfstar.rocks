@@ -1,4 +1,5 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
@@ -104,7 +105,9 @@ export default defineWrappedResponseHandler(
 				actor: { type: "user", id: member.user.id, displayName: member.user.username },
 				target: { type: "guild", id: guild.id },
 				outcome: "success",
-				changes: { before: beforeSettings, after: afterSettings },
+				// Persist only the fields that changed (with old and new values)
+				// instead of the two full settings snapshots
+				changes: compactSettingsChanges(beforeSettings, afterSettings),
 			}),
 		);
 

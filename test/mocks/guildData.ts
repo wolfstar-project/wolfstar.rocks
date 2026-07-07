@@ -16,6 +16,8 @@ export function createMockGuildData(id: string, overrides: Partial<GuildData> = 
 		channelsLogsChannelCreate: null,
 		channelsLogsChannelDelete: null,
 		channelsLogsChannelUpdate: null,
+		channelsLogsCommand: null,
+		channelsLogsSettings: null,
 		channelsLogsEmojiCreate: null,
 		channelsLogsEmojiDelete: null,
 		channelsLogsEmojiUpdate: null,

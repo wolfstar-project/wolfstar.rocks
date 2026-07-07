@@ -83,7 +83,8 @@ function processWordBoundaries(word: string) {
 
 function processWordPatternsWithGroups(word: string) {
 	return bidirectionalReplace(kPatternGroupReplacer, word, {
-		onMatch: (match) => `${processGroup(match[1])}+${match[2] ? String.raw`\W*` : ""}`,
+		// `kPatternGroupReplacer` always captures group 1, so the index access cannot be undefined
+		onMatch: (match) => `${processGroup(match[1]!)}+${match[2] ? String.raw`\W*` : ""}`,
 		outMatch: (match, _, next) =>
 			`${processWordPattern(match)}${next === word.length ? "" : String.raw`\W*`}`,
 	}).join("");
@@ -100,9 +101,9 @@ function processGroup(group: string) {
 					? // Then optimize to -
 						String.raw`\-`
 					: // Else optimize to a-
-						`${processLetter(match[1])}\\-`
+						`${processLetter(match[1]!)}\\-`
 				: // Otherwise a-b
-					`${processLetter(match[1])}-${processLetter(match[2])}`,
+					`${processLetter(match[1]!)}-${processLetter(match[2]!)}`,
 		outMatch: (match) => Array.from(match, processLetter).join(""),
 	});
 

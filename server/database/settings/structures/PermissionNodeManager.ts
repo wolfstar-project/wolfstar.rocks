@@ -1,6 +1,7 @@
 import type { PermissionsNode, ReadonlyGuildData } from "#server/database/settings/types";
 import type { APIGuildMember, APIRole, APIUser } from "discord-api-types/v10";
 import { CommandMatcher } from "#server/database/settings/utils/matchers";
+import { useApi } from "#server/utils/shared";
 import { Collection } from "@discordjs/collection";
 import { createError } from "evlog";
 

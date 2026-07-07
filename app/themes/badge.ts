@@ -1,4 +1,5 @@
-import { colors } from "@/utils/constants";
+import type { UIColors } from "~/utils/constants";
+import { colors } from "~/utils/constants";
 
 export default {
 	compoundVariants: [

@@ -41,7 +41,7 @@ import type {
 import { DiscordSnowflake } from "@sapphire/snowflake";
 import { lazy } from "@sapphire/utilities";
 import { ChannelType, GuildFeature } from "discord-api-types/v10";
-import { createError } from "evlog";
+import { createError, log } from "evlog";
 
 // #region Guild
 
@@ -51,20 +51,23 @@ export function flattenGuild(
 	},
 ): FlattenedGuild {
 	if (!Array.isArray(guild.roles)) {
-		logger.warn(
-			`[flattenGuild] guild ${guild.id}: expected roles to be an array, got ${typeof guild.roles}`,
+		log.warn(
+			"flattenGuild",
+			`guild ${guild.id}: expected roles to be an array, got ${typeof guild.roles}`,
 		);
 	}
 
 	if (!Array.isArray(guild.channels)) {
-		logger.warn(
-			`[flattenGuild] guild ${guild.id}: expected channels to be an array, got ${typeof guild.channels}`,
+		log.warn(
+			"flattenGuild",
+			`guild ${guild.id}: expected channels to be an array, got ${typeof guild.channels}`,
 		);
 	}
 
 	if (!Array.isArray(guild.emojis)) {
-		logger.warn(
-			`[flattenGuild] guild ${guild.id}: expected emojis to be an array, got ${typeof guild.emojis}`,
+		log.warn(
+			"flattenGuild",
+			`guild ${guild.id}: expected emojis to be an array, got ${typeof guild.emojis}`,
 		);
 	}
 

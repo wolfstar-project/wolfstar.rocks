@@ -39,7 +39,6 @@ export default defineNuxtConfig({
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
 		// requiring better-sqlite3 as an additional native dependency.
 		experimental: {
-			// @ts-expect-error -- sqliteConnector is a valid @nuxt/content experimental option
 			sqliteConnector: "native",
 		},
 	},

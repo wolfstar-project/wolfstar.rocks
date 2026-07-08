@@ -136,6 +136,13 @@
 		--spectrum-blue: oklch(43% 0.184 261.5);
 		--spectrum-purple: oklch(60.3% 0.257 320.9);
 		--boost-pink: oklch(76.9% 0.229 328.9);
+
+		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
+		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);
+		--home-blurple-soft: oklch(from var(--color-primary) l c h / 0.12);
+		--home-shadow-glow: 0 0 0 3px var(--home-blurple-soft);
+		--home-ls-label: 0.04em;
+		--home-ls-tight: -0.02em;
 	}
 
 	html {

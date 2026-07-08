@@ -7,20 +7,20 @@
 				:aria-label="`${currentApp.name} home`"
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
-				<span v-else class="text-xl font-bold text-base-content">{{
+				<span v-else class="text-base font-bold text-base-content">{{
 					currentApp.name
 				}}</span>
 			</NuxtLink>
 		</template>
 
-		<div class="hidden rounded-full bg-base-200 px-6 py-2.5 lg:inline-flex">
+		<div class="inline-flex gap-1 rounded-full bg-base-200 p-1">
 			<UNavigationMenu
 				:items="desktopLinks"
 				variant="link"
 				aria-label="Main navigation"
 				:ui="{
-					link: 'rounded-full px-4 py-2 text-sm text-muted hover:text-base-content',
-					root: 'gap-1',
+					link: 'rounded-full px-4 py-2 text-sm font-medium text-muted hover:text-base-content',
+					root: 'gap-0',
 				}"
 			/>
 		</div>
@@ -30,7 +30,7 @@
 				<UButton
 					v-if="currentApp.invite !== '#'"
 					label="Add App"
-					size="md"
+					size="sm"
 					color="primary"
 					:to="currentApp.invite"
 					class="hidden rounded-lg font-semibold md:inline-flex"
@@ -80,8 +80,9 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-	--ui-header-height: 5.5rem;
+	--ui-header-height: 4rem;
 	width: 100%;
 	border-radius: 0;
+	border-bottom: 1px solid var(--home-border-subtle);
 }
 </style>

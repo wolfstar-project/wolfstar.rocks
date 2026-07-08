@@ -1,5 +1,10 @@
 <template>
-	<Section labelled-by="home-testimonials-heading" spacing="lg" class="home-testimonials-band">
+	<Section
+		labelled-by="home-testimonials-heading"
+		spacing="none"
+		band
+		class="home-testimonials-band py-20 pb-22"
+	>
 		<SectionHeader
 			eyebrow="Loved by mods"
 			title="What server owners say."
@@ -14,7 +19,7 @@
 				tag="figure"
 				class="m-0 flex flex-col"
 			>
-				<blockquote class="flex-1 text-[15px] leading-relaxed text-base-content/90">
+				<blockquote class="flex-1 text-[15px] leading-relaxed text-base-content">
 					"{{ quote.quote }}"
 				</blockquote>
 				<figcaption class="mt-4">

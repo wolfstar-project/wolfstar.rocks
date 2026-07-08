@@ -4,8 +4,8 @@
 		labelled-by="home-apps-heading"
 		scroll-margin
 		contained
-		spacing="lg"
-		class="home-apps-section"
+		spacing="none"
+		class="py-22"
 	>
 		<SectionHeader
 			eyebrow="Other Apps"
@@ -28,7 +28,7 @@
 					height="64"
 					:alt="`${app.name}'s avatar`"
 					loading="lazy"
-					class="mb-4 h-16 w-16 rounded-xl"
+					class="mb-4 h-16 w-16 rounded-lg"
 				/>
 				<div class="mb-2 flex flex-wrap items-center justify-center gap-2">
 					<span class="text-xl font-bold text-base-content">{{ app.name }}</span>
@@ -44,7 +44,7 @@
 					{{ app.description }}
 				</p>
 				<div class="flex flex-wrap justify-center gap-2">
-					<UButton :to="app.explore" color="neutral" variant="soft" size="sm">
+					<UButton :to="app.explore" color="neutral" variant="outline" size="sm">
 						Explore
 					</UButton>
 					<UButton :to="app.invite" color="primary" size="sm" icon="ph:plus-circle-fill">
@@ -57,10 +57,10 @@
 				class="home-apps-placeholder flex items-center justify-center rounded-xl p-10 text-center"
 			>
 				<div>
-					<div class="mb-1.5 font-semibold text-base-content/80">
+					<div class="mb-1.5 text-base font-semibold text-base-content/80">
 						More apps in the works
 					</div>
-					<div class="text-sm text-muted">
+					<div class="text-[13px] text-muted">
 						Follow the
 						<NuxtLink to="/blog" class="link-hover underline">blog</NuxtLink> for what's
 						next.
@@ -79,10 +79,6 @@ const { apps } = defineProps<{
 
 <style scoped>
 @reference "@/assets/css/main.css";
-
-.home-apps-section {
-	background-color: var(--color-base-300);
-}
 
 .home-apps-placeholder {
 	border: 1px dashed oklch(from var(--color-base-content) l c h / 0.2);

@@ -51,6 +51,10 @@
 	background-color: var(--spectrum-purple);
 }
 
+@utility shadow-glow {
+	box-shadow: var(--home-shadow-glow);
+}
+
 /* =============================================================================
    Vercel/Turbo Inspired Effects
    Modern gradients, patterns, and animations

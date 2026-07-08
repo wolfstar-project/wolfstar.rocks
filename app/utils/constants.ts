@@ -431,6 +431,8 @@ export const ProviderAppNameKey = Symbol() as InjectionKey<Ref<"wolfstar" | "sta
 
 export const Profiles = {
 	baddie: { app: false, name: "Baddie", verified: false },
+	louduser: { app: false, name: "loud-user", verified: false },
+	redstar: { app: false, name: "redstar071", verified: false },
 	stella: { app: false, name: "Stella", verified: false },
 	wolfstar: { app: true, name: "WolfStar", verified: true },
 } as const satisfies Record<string, Profile>;

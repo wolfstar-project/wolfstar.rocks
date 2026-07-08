@@ -1,16 +1,10 @@
 <template>
 	<section
-		class="home-hero relative overflow-hidden pt-28 pb-16"
+		class="home-hero relative overflow-hidden pt-25 pb-14"
 		aria-labelledby="home-hero-heading"
 	>
-		<div
-			class="home-hero-skyline pointer-events-none absolute inset-0"
-			aria-hidden="true"
-		></div>
-		<div class="home-hero-glow pointer-events-none absolute inset-0" aria-hidden="true"></div>
-
 		<Container class="relative z-10">
-			<div class="flex flex-col items-center text-center">
+			<div class="mx-auto flex max-w-200 flex-col items-center text-center">
 				<div
 					class="mb-6 flex animate-fade-in-up-safe flex-wrap items-center justify-center gap-2"
 				>
@@ -53,13 +47,13 @@
 				</p>
 
 				<div
-					class="mt-10 flex animate-fade-in-up-safe flex-col gap-3 [animation-delay:0.15s] sm:flex-row sm:justify-center"
+					class="mt-8 flex animate-fade-in-up-safe flex-col gap-3 [animation-delay:0.15s] sm:flex-row sm:justify-center"
 				>
 					<UButton
 						:to="inviteUrl"
 						size="lg"
 						color="primary"
-						class="btn-glow justify-center sm:min-w-48"
+						class="btn-glow justify-center sm:min-w-45"
 						icon="ph:plus-circle-fill"
 					>
 						Add to Discord
@@ -69,7 +63,7 @@
 						size="lg"
 						color="neutral"
 						variant="outline"
-						class="hero-outline-btn justify-center sm:min-w-48"
+						class="hero-outline-btn justify-center sm:min-w-45"
 						icon="ph:magnifying-glass-fill"
 					>
 						Explore features
@@ -101,27 +95,13 @@ const spectrumBar = [
 <style scoped>
 @reference "@/assets/css/main.css";
 
-.home-hero-glow {
-	background-image: radial-gradient(
-		ellipse 70% 55% at 50% 0%,
-		oklch(from var(--color-primary) l c h / 0.22) 0%,
-		transparent 70%
-	);
-}
-
-.home-hero-skyline {
-	--skyline-base: oklch(12% 0.01 280 / 0.95);
-	background-image: linear-gradient(to top, var(--skyline-base) 0%, transparent 45%);
-	mask-image: linear-gradient(to bottom, white 0%, transparent 92%);
-	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 92%);
-}
-
 .home-hero-title {
-	@apply text-4xl leading-[1.1] font-bold tracking-[-0.04em] md:text-[3.375rem];
+	@apply text-4xl leading-[1.1] font-bold md:text-[3.75rem];
+	letter-spacing: var(--home-ls-tight);
 }
 
 .home-hero-subtitle {
-	@apply text-lg leading-[1.2] font-normal tracking-[-0.01em] text-base-content/80;
+	@apply text-xl leading-relaxed font-normal text-base-content/80;
 }
 
 .hero-overlay-badge {

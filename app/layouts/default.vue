@@ -52,7 +52,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	background-image:
 		radial-gradient(
 			ellipse at 50% 0%,
-			oklch(from var(--color) l c h / 0.15) 0%,
+			oklch(from var(--color) l c h / 0.2) 0%,
 			transparent 80%
 		),
 		linear-gradient(to bottom, var(--color-base-100) 0%, transparent 20%);
@@ -64,7 +64,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	content: "";
 }
 .app-layout.wolfstar {
-	--color: var(--color-branding-wolfstar);
+	--color: var(--color-primary);
 }
 .app-layout.staryl {
 	--color: var(--color-branding-staryl);

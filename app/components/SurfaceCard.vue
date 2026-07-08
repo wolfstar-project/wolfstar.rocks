@@ -38,7 +38,7 @@ const rootClass = computed(() =>
 @reference "@/assets/css/main.css";
 
 .home-surface-card {
-	background-color: var(--color-neutral);
-	border: 1px solid oklch(from var(--color-base-content) l c h / 0.08);
+	background-color: var(--color-base-300);
+	border: 1px solid var(--home-border-subtle);
 }
 </style>

@@ -4,12 +4,15 @@
 			cn('home-section-header', align === 'center' ? 'text-center' : 'text-left', className)
 		"
 	>
-		<p v-if="eyebrow" class="mb-3 text-xs font-bold tracking-wider text-primary uppercase">
+		<p
+			v-if="eyebrow"
+			class="home-section-eyebrow mb-3 text-xs font-bold tracking-[var(--home-ls-label)] text-primary uppercase"
+		>
 			{{ eyebrow }}
 		</p>
 		<h2
 			:id="headingId"
-			class="text-4xl leading-[1.1] font-bold tracking-[-0.02em] text-base-content"
+			class="text-4xl leading-[1.1] font-bold tracking-[var(--home-ls-tight)] text-base-content"
 		>
 			{{ title }}
 		</h2>
@@ -17,7 +20,7 @@
 			v-if="description"
 			:class="
 				cn(
-					'mt-4 text-lg leading-[1.2] text-base-content/70',
+					'mt-3 text-[15px] leading-relaxed text-base-content/80',
 					align === 'center' ? 'mx-auto max-w-140' : 'max-w-prose',
 				)
 			"

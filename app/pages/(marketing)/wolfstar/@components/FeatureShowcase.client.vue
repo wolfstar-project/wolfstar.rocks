@@ -44,10 +44,12 @@
 													? 'stella'
 													: 'baddie'
 											"
-											:class="{
-												'text-error':
-													featureIndex !== AutomodFeature.Reactions,
-											}"
+											:class="
+												cn(
+													featureIndex !== AutomodFeature.Reactions &&
+														'text-error',
+												)
+											"
 										>
 											<template
 												v-if="featureIndex === AutomodFeature.Attachments"

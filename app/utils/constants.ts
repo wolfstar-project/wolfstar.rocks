@@ -10,6 +10,7 @@ export const colors = [
 	"error",
 	"info",
 	"warning",
+	"accent",
 	"neutral",
 ] as const;
 
@@ -29,6 +30,36 @@ export enum Colors {
 	Red300 = "#e57373",
 	Yellow = "#ffeb3b",
 	Yellow300 = "#fff176",
+}
+
+export interface HomeStat {
+	accent: HomeAccent;
+	label: string;
+	value: string;
+}
+
+export interface HomeFeature {
+	accent?: HomeAccent;
+	big: boolean;
+	description: string;
+	icon: string;
+	title: string;
+}
+
+export interface HomeDashboardMember {
+	avatarClass: string;
+	badgeClass: string;
+	initials: string;
+	name: string;
+	nameClass: string;
+	role: string;
+	status: string;
+}
+
+export interface HomeTestimonial {
+	name: string;
+	quote: string;
+	role: string;
 }
 
 export interface ModerationAction {
@@ -233,6 +264,19 @@ const MODERATION_VARIANT_MAP: Record<string, string> = {
 
 export function moderationActionVariant(typeName: string): string {
 	return MODERATION_VARIANT_MAP[typeName] ?? "neutral";
+}
+
+export function homeAccentClass(accent: HomeAccent): string {
+	const map: Record<HomeAccent, string> = {
+		accent: "bg-accent",
+		error: "bg-error",
+		info: "bg-info",
+		primary: "bg-primary",
+		secondary: "bg-secondary",
+		success: "bg-success",
+		warning: "bg-warning",
+	};
+	return map[accent];
 }
 
 // oxlint-disable-next-line symbol-description

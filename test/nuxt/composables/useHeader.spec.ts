@@ -47,28 +47,22 @@ describe("useHeader", () => {
 		expect(labels).toContain("Features");
 	});
 
-	it("should include Applications in desktop links", async () => {
+	it("should include Other Apps in desktop links", async () => {
 		const { desktopLinks } = await setup();
 		const labels = desktopLinks.value.map((l: any) => l.label);
-		expect(labels).toContain("Applications");
+		expect(labels).toContain("Other Apps");
 	});
 
-	it("should include Commands in desktop links", async () => {
+	it("should include Support in desktop links", async () => {
 		const { desktopLinks } = await setup();
 		const labels = desktopLinks.value.map((l: any) => l.label);
-		expect(labels).toContain("Commands");
+		expect(labels).toContain("Support");
 	});
 
-	it("should include Invite App in desktop links when invite is not '#'", async () => {
-		const { desktopLinks } = await setup("wolfstar");
+	it("should include Docs in desktop links", async () => {
+		const { desktopLinks } = await setup();
 		const labels = desktopLinks.value.map((l: any) => l.label);
-		expect(labels).toContain("Invite App");
-	});
-
-	it("should not include Invite App in desktop links when invite is '#'", async () => {
-		const { desktopLinks } = await setup("staryl");
-		const labels = desktopLinks.value.map((l: any) => l.label);
-		expect(labels).not.toContain("Invite App");
+		expect(labels).toContain("Docs");
 	});
 
 	it("should include GitHub link in mobile links", async () => {

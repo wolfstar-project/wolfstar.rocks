@@ -13,88 +13,40 @@ export function useHeader() {
 
 	const desktopLinks = computed(() => [
 		{
-			children: [
-				{
-					description: "Tools to help you moderate your server",
-					label: "Moderation Tools",
-					to: "#moderation-tools",
-				},
-				{
-					description: "Track and log events in your server",
-					label: "Advanced Logging",
-					to: "#advanced-logging",
-				},
-			],
 			label: "Features",
+			to: "/#features",
 		},
 		{
-			children: [
-				{
-					icon: "ph:shield-duotone",
-					label: "WolfStar",
-					to: "/",
-				},
-				{
-					icon: "lucide:twitch",
-					label: "Staryl",
-					to: "/staryl",
-				},
-			],
-			label: "Applications",
+			label: "Other Apps",
+			to: "/#apps",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
 		{
-			label: "Commands",
+			label: "Support",
+			to: "https://join.wolfstar.rocks",
+		},
+		{
+			label: "Docs",
 			to: "/commands",
-		},
-		{
-			label: "Blog",
-			to: "/blog",
 		},
 	]);
 
 	const mobileLinks = computed(() => [
 		{
-			children: [
-				{
-					label: "Moderation Tools",
-				},
-				{
-					label: "Advanced Logging",
-				},
-			],
 			label: "Features",
+			to: "/#features",
 		},
 		{
-			children: [
-				{
-					icon: "ph:shield-duotone",
-					label: "WolfStar",
-					to: "/",
-				},
-				{
-					icon: "lucide:twitch",
-					label: "Staryl",
-					to: "/staryl",
-				},
-			],
-			label: "Applications",
+			label: "Other Apps",
+			to: "/#apps",
 		},
 		{
-			label: "Commands",
+			icon: "ph:discord-logo-duotone",
+			label: "Support",
+			to: "https://join.wolfstar.rocks",
+		},
+		{
+			label: "Docs",
 			to: "/commands",
-		},
-		{
-			label: "Blog",
-			to: "/blog",
 		},
 		...(currentApp.value.invite !== "#"
 			? [

@@ -1,13 +1,19 @@
 <template>
-	<UHeader class="app-navbar">
+	<UHeader
+		class="app-navbar"
+		:ui="{
+			root: 'w-full border-b border-base-content/5',
+			container: 'max-w-7xl mx-auto px-4 sm:px-6',
+		}"
+	>
 		<template #left>
 			<NuxtLink
-				class="mr-4 flex items-center transition-transform hover:scale-105"
+				class="flex items-center gap-2.5"
 				:to="currentApp.explore"
 				:aria-label="`${currentApp.name} home`"
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
-				<span v-else class="text-ui-100 ml-2 text-2xl font-bold">{{
+				<span v-else class="text-xl font-bold text-base-content">{{
 					currentApp.name
 				}}</span>
 				<UBadge
@@ -15,54 +21,58 @@
 					color="warning"
 					label="Beta"
 					size="xs"
-					class="ml-2"
 				/>
-				<UBadge
-					v-else-if="env === 'dev'"
-					color="error"
-					label="Dev"
-					size="xs"
-					class="ml-2"
-				/>
+				<UBadge v-else-if="env === 'dev'" color="error" label="Dev" size="xs" />
 			</NuxtLink>
 		</template>
 
-		<UNavigationMenu
-			:items="desktopLinks"
-			variant="link"
-			class="hidden lg:inline-flex"
-			aria-label="Main navigation"
-			:ui="{
-				link: 'text-base-content/80 hover:text-base-content/100',
-				root: 'text-base-content/70',
-			}"
-		/>
+		<div class="hidden rounded-full bg-base-200 px-5 py-1.5 lg:inline-flex">
+			<UNavigationMenu
+				:items="desktopLinks"
+				variant="link"
+				aria-label="Main navigation"
+				:ui="{
+					link: 'rounded-full px-4 py-1.5 text-sm text-muted hover:text-base-content',
+					root: 'gap-1',
+				}"
+			/>
+		</div>
 
 		<template #right>
-			<ClientOnly>
-				<LazyAppHeaderAuth />
-				<template #fallback>
-					<UButton
-						size="md"
-						color="primary"
-						variant="subtle"
-						block
-						class="invisible md:hidden"
-						icon="ic:round-discord"
-						tabindex="-1"
-					/>
-					<UButton
-						label="Sign in"
-						size="md"
-						color="primary"
-						variant="subtle"
-						block
-						class="invisible hidden md:inline-flex"
-						icon="ic:round-discord"
-						tabindex="-1"
-					/>
-				</template>
-			</ClientOnly>
+			<div class="flex items-center gap-2">
+				<UButton
+					v-if="currentApp.invite !== '#'"
+					label="Add App"
+					size="md"
+					color="primary"
+					:to="currentApp.invite"
+					class="hidden rounded-lg font-semibold md:inline-flex"
+				/>
+				<ClientOnly>
+					<LazyAppHeaderAuth />
+					<template #fallback>
+						<UButton
+							size="md"
+							color="primary"
+							variant="subtle"
+							block
+							class="invisible md:hidden"
+							icon="ic:round-discord"
+							tabindex="-1"
+						/>
+						<UButton
+							label="Sign in"
+							size="md"
+							color="primary"
+							variant="subtle"
+							block
+							class="invisible hidden md:inline-flex"
+							icon="ic:round-discord"
+							tabindex="-1"
+						/>
+					</template>
+				</ClientOnly>
+			</div>
 		</template>
 		<template #body>
 			<UNavigationMenu
@@ -84,48 +94,12 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-	position: relative; /* needed for ::after gradient bottom border */
-	backdrop-filter: blur(16px);
-	-webkit-backdrop-filter: blur(16px);
-	transition: all 0.3s ease;
-	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
-	/* border-bottom handled by ::after pseudo-element */
-	border-right: 1px solid oklch(0% 0 0 / 0.05);
-	border-left: 1px solid oklch(0% 0 0 / 0.05);
-	background: oklch(20% 0 0 / 0.6);
-	width: min(calc(100% - 2rem), var(--container-7xl));
-}
-
-.app-navbar::after {
-	position: absolute;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	/* Start border after ~230px (Logo width + padding) */
-	background: linear-gradient(to right, transparent 230px, oklch(100% 0 0 / 0.1) 230px);
-	height: 1px;
-	pointer-events: none;
-	content: "";
-}
-
-.branding-container {
-	display: inline-flex;
-	align-items: center;
-	margin-bottom: -0.5rem; /* align with bottom of navbar */
-	border-bottom: 1px solid oklch(100% 0 0 / 0.1);
-	padding-bottom: 0.5rem;
+	width: 100%;
+	border-radius: 0;
+	background: var(--color-base-300);
 }
 
 [data-theme="light"] .app-navbar {
-	border-color: oklch(0% 0 0 / 0.05);
-	background: oklch(98% 0 0 / 0.6);
-}
-
-[data-theme="light"] .app-navbar::after {
-	background: linear-gradient(to right, transparent 230px, oklch(0% 0 0 / 0.05) 230px);
-}
-
-[data-theme="light"] .branding-container {
-	border-bottom-color: oklch(0% 0 0 / 0.1);
+	background: var(--color-base-200);
 }
 </style>

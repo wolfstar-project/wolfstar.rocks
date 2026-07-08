@@ -40,7 +40,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-layout {
-	@apply flex min-h-screen flex-col bg-grid-pattern;
+	@apply flex min-h-screen flex-col;
 	position: relative;
 	background-color: var(--color-base-100);
 }

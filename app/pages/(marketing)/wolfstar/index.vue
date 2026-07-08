@@ -1,95 +1,29 @@
 <template>
-	<!-- Hero Background Pattern -->
-	<div class="hero-pattern" aria-hidden="true"></div>
+	<div class="text-base-content">
+		<HeroSection
+			:build-time="buildTime"
+			:build-version="buildInfo.version"
+			:invite-url="Invites.WolfStar"
+		/>
 
-	<section class="relative z-10 mt-28 flex flex-col items-center text-center">
-		<h1 class="title animate-fade-in-up-safe gradient-text-hero pb-4">
-			Imagine a<br />moderation app
-		</h1>
-		<p class="max-w-120 animate-fade-in-up-safe text-base-content/80 [animation-delay:0.1s]">
-			A very customizable multilanguage application to help you moderate your server, with a
-			complete logging suite and more,
-			<span class="font-bold underline underline-offset-2">100% for free</span>!
-		</p>
-	</section>
+		<StatsSection :stats="stats" />
 
-	<section>
-		<BuildEnvironment class="mt-10" />
-	</section>
+		<FeaturesSection :features="bentoFeatures" />
 
-	<section
-		class="relative join z-10 mt-12 animate-fade-in-up justify-center animate-fade-in-delay-2"
-	>
-		<NuxtLink
-			class="glow-btn glow-btn-branding btn join-item sm:btn-wide"
-			:to="Invites.WolfStar"
-		>
-			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
-		</NuxtLink>
-		<NuxtLink class="glow-btn glow-btn-branding btn join-item sm:btn-wide" to="#explore">
-			<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
-			Explore
-		</NuxtLink>
-	</section>
+		<DashboardSection :members="members" />
 
-	<section id="explore" ref="exploreRef" class="mt-34 min-h-200 w-full scroll-mt-24">
-		<div class="mb-16 text-center">
-			<h2 class="text-5xl font-bold">Explore</h2>
-			<template v-if="exploreLoaded">
-				<LazyFeatureCarousel class="mb-24" @open-feature="openFeature" />
-				<LazyFeatureShowcase v-model:active-feature="selectedFeatureIndex" />
-			</template>
-		</div>
-	</section>
+		<TestimonialsSection :testimonials="testimonials" />
 
-	<section class="prose animate-on-scroll">
-		<h3 class="mt-32 text-center text-3xl font-bold">And more!</h3>
-		<p>WolfStar not only comes with a very complete moderation suite, but also:</p>
-		<ul>
-			<li>
-				<UIcon
-					name="ph:chat-text-duotone"
-					class="my-0 mr-1 h-5 w-5 text-warning"
-					aria-hidden="true"
-				/>
-				<strong>A large logging suite:</strong> WolfStar can log almost everything that
-				happens in your server: moderation actions, message updates and deletions, channel
-				updates and deletions, role updates and deletions, server updates, members changing
-				voice channels, and more.
-			</li>
-			<li>
-				<UIcon
-					name="ph:money-wavy-duotone"
-					class="my-0 mr-1 h-5 w-5 text-error"
-					aria-hidden="true"
-				/>
-				<strong>No paywalls:</strong> all of WolfStar's features are
-				<strong>available for free</strong> and all logs are sent to your server as soon as
-				they happen, without any delay. WolfStar Project
-				<strong>will never paywall core features</strong>, and also
-				<strong>strongly believes in Open-Source Software</strong>, making all the apps'
-				source code freely available to everyone, and will always stay that way.
-			</li>
-		</ul>
-	</section>
+		<OtherApps :apps="[otherApps.Staryl]" />
 
-	<section class="invite-card mt-32 flex animate-on-scroll flex-col items-center">
-		<h3 class="mb-4 text-3xl font-bold">Liking what you see?</h3>
-
-		<div class="join">
-			<NuxtLink :to="Invites.WolfStar" class="btn join-item btn-ghost">
-				Invite WolfStar
-			</NuxtLink>
-			<NuxtLink to="https://join.wolfstar.rocks" class="btn join-item btn-ghost">
-				Support Server
-			</NuxtLink>
-		</div>
-	</section>
-	<OtherApps :apps="[otherApps.Staryl]" />
+		<CtaSection :invite-url="Invites.WolfStar" />
+	</div>
 </template>
 
 <script setup lang="ts">
-definePageMeta({ alias: ["/"] });
+definePageMeta({
+	alias: ["/"],
+});
 
 useSeoMetadata({
 	description:
@@ -100,78 +34,123 @@ useSeoMetadata({
 
 const otherApps = useApp();
 const Invites = useInvites();
+const { buildInfo } = useAppConfig();
+const buildTime = computed(() => new Date(buildInfo.time));
 
-const selectedFeatureIndex = ref(0);
+const stats: HomeStat[] = [
+	{ accent: "primary", label: "Servers protected", value: "10,000+" },
+	{ accent: "success", label: "Members moderated", value: "2.4M" },
+	{ accent: "accent", label: "Uptime", value: "99.9%" },
+	{ accent: "error", label: "Languages", value: "12" },
+];
 
-// Lazy-mount the Explore section components only when the section approaches
-// the viewport, keeping them out of the initial JS critical path.
-const exploreRef = ref<HTMLElement | null>(null);
-const exploreLoaded = ref(false);
-
-onMounted(() => {
-	// Instantly load if the user navigated directly to the #explore anchor.
-	if (window.location.hash === "#explore") {
-		exploreLoaded.value = true;
-	}
-});
-
-const { stop: stopExploreObserver } = useIntersectionObserver(
-	exploreRef,
-	(entries) => {
-		if (entries[0]?.isIntersecting) {
-			exploreLoaded.value = true;
-			stopExploreObserver();
-		}
+const bentoFeatures: HomeFeature[] = [
+	{
+		accent: "primary",
+		big: true,
+		description:
+			"Configurable spam, invite, and mass-mention filters catch trouble before your team has to.",
+		icon: "ph:shield-check-fill",
+		title: "Smart AutoMod",
 	},
-	// Keep margin at 0 so below-fold Discord showcase chunks stay off the
-	// initial hydration path (a large rootMargin was loading them during LCP).
-	{ rootMargin: "0px" },
-);
+	{
+		big: false,
+		description:
+			"Moderation actions, message edits, channel and role changes, voice moves — logged straight to your server.",
+		icon: "ph:scroll-fill",
+		title: "Complete Logging Suite",
+	},
+	{
+		big: false,
+		description: "Give staff exactly the access they need, down to the command.",
+		icon: "ph:users-three-fill",
+		title: "Granular Roles & Permissions",
+	},
+	{
+		big: false,
+		description:
+			"A fully translated interface and command set, so every member reads WolfStar in their own language.",
+		icon: "ph:translate-fill",
+		title: "Multilingual by Default",
+	},
+	{
+		big: false,
+		description:
+			"Search a complete history of every action taken on your server, and who took it.",
+		icon: "ph:clock-counter-clockwise-fill",
+		title: "Full Audit History",
+	},
+	{
+		big: false,
+		description: "Every feature is free forever. The full source is open for anyone to read.",
+		icon: "ph:heart-fill",
+		title: "No Paywalls, Ever",
+	},
+];
 
-function openFeature(index: number) {
-	selectedFeatureIndex.value = index;
-	exploreLoaded.value = true;
-	window.location.hash = "#explore";
-}
+const members: HomeDashboardMember[] = [
+	{
+		avatarClass: "bg-error/15 text-error",
+		badgeClass: "badge-error",
+		initials: "RF",
+		name: "redstar071",
+		nameClass: "text-base-content",
+		role: "Owner",
+		status: "online",
+	},
+	{
+		avatarClass: "bg-primary/15 text-primary",
+		badgeClass: "badge-primary",
+		initials: "ST",
+		name: "staryl",
+		nameClass: "text-base-content",
+		role: "Admin",
+		status: "online",
+	},
+	{
+		avatarClass: "bg-success/15 text-success",
+		badgeClass: "badge-success",
+		initials: "SD",
+		name: "stella.dev",
+		nameClass: "text-base-content",
+		role: "Moderator",
+		status: "idle",
+	},
+	{
+		avatarClass: "bg-secondary/15 text-secondary",
+		badgeClass: "badge-secondary",
+		initials: "NW",
+		name: "nightwolf",
+		nameClass: "text-base-content",
+		role: "Booster",
+		status: "dnd",
+	},
+	{
+		avatarClass: "bg-base-content/10 text-base-content/70",
+		badgeClass: "badge-neutral",
+		initials: "LC",
+		name: "lumacore",
+		nameClass: "text-base-content",
+		role: "Member",
+		status: "online",
+	},
+];
+
+const testimonials: HomeTestimonial[] = [
+	{
+		name: "redstar071",
+		quote: "WolfStar replaced three other bots for us — the logging alone is worth it.",
+		role: "Owner · WolfStar HQ",
+	},
+	{
+		name: "lumacore",
+		quote: "Setup took five minutes. AutoMod has caught every raid since.",
+		role: "Moderator · Dev Lab",
+	},
+	{
+		name: "stella.dev",
+		quote: "Finally a mod bot that ships in our language.",
+		role: "Community Manager · Art Club",
+	},
+];
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.title {
-	@apply text-4xl leading-[3.05rem] font-bold md:text-6xl md:leading-18;
-}
-
-/* Hero background pattern */
-.hero-pattern {
-	@apply pointer-events-none fixed inset-0 -z-10;
-	mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
-	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 70%);
-	background-image:
-		radial-gradient(
-			ellipse at 50% 0%,
-			oklch(from var(--branding-wolfstar) l c h / 0.15) 0%,
-			transparent 60%
-		),
-		linear-gradient(to right, oklch(50% 0 0 / 0.03) 1px, transparent 1px),
-		linear-gradient(to bottom, oklch(50% 0 0 / 0.03) 1px, transparent 1px);
-	background-size:
-		100% 100%,
-		4rem 4rem,
-		4rem 4rem;
-}
-
-.invite-card {
-	@apply relative isolate p-12 text-white;
-}
-
-.invite-card::before {
-	@apply absolute top-0 left-0 -z-10 h-full w-full -rotate-2 rounded-xl drop-shadow-lg;
-	background: linear-gradient(
-		to bottom right in oklch,
-		var(--color-red-600) 0%,
-		var(--color-purple-600) 70%
-	);
-	content: "";
-}
-</style>

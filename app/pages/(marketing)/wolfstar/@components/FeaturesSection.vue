@@ -14,7 +14,7 @@
 		/>
 
 		<div
-			class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-flow-dense lg:auto-rows-[150px] lg:grid-cols-4"
+			class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-flow-dense lg:auto-rows-[minmax(12.5rem,auto)] lg:grid-cols-4"
 		>
 			<SurfaceCard
 				v-for="feature of features"

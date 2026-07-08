@@ -1,11 +1,5 @@
 <template>
-	<UHeader
-		class="app-navbar"
-		:ui="{
-			root: 'w-full border-b border-base-content/5',
-			container: 'max-w-7xl mx-auto px-4 sm:px-6',
-		}"
-	>
+	<UHeader class="app-navbar">
 		<template #left>
 			<NuxtLink
 				class="flex items-center gap-2.5"
@@ -16,23 +10,16 @@
 				<span v-else class="text-xl font-bold text-base-content">{{
 					currentApp.name
 				}}</span>
-				<UBadge
-					v-if="env === 'preview' || env === 'canary'"
-					color="warning"
-					label="Beta"
-					size="xs"
-				/>
-				<UBadge v-else-if="env === 'dev'" color="error" label="Dev" size="xs" />
 			</NuxtLink>
 		</template>
 
-		<div class="hidden rounded-full bg-base-200 px-5 py-1.5 lg:inline-flex">
+		<div class="hidden rounded-full bg-base-200 px-6 py-2.5 lg:inline-flex">
 			<UNavigationMenu
 				:items="desktopLinks"
 				variant="link"
 				aria-label="Main navigation"
 				:ui="{
-					link: 'rounded-full px-4 py-1.5 text-sm text-muted hover:text-base-content',
+					link: 'rounded-full px-4 py-2 text-sm text-muted hover:text-base-content',
 					root: 'gap-1',
 				}"
 			/>
@@ -86,7 +73,6 @@
 </template>
 
 <script setup lang="ts">
-const { env } = useAppConfig();
 const { desktopLinks, mobileLinks, currentApp } = useHeader();
 </script>
 
@@ -94,12 +80,8 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 @reference "@/assets/css/main.css";
 
 .app-navbar {
+	--ui-header-height: 5.5rem;
 	width: 100%;
 	border-radius: 0;
-	background: var(--color-base-300);
-}
-
-[data-theme="light"] .app-navbar {
-	background: var(--color-base-200);
 }
 </style>

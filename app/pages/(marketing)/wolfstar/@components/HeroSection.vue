@@ -39,7 +39,7 @@
 					aria-hidden="true"
 				>
 					<span
-						v-for="color of colors"
+						v-for="color of spectrumBar"
 						:key="color"
 						:class="cn('h-1 w-7 rounded-full', homeAccentClass(color))"
 					></span>
@@ -87,6 +87,15 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	buildVersion: string;
 	inviteUrl: string;
 }>();
+
+const spectrumBar = [
+	"spectrum-red",
+	"spectrum-orange",
+	"spectrum-yellow",
+	"spectrum-green",
+	"spectrum-blue",
+	"spectrum-purple",
+] as const satisfies HomeAccent[];
 </script>
 
 <style scoped>

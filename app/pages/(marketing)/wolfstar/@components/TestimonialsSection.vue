@@ -1,5 +1,5 @@
 <template>
-	<Section labelled-by="home-testimonials-heading">
+	<Section labelled-by="home-testimonials-heading" spacing="lg" class="home-testimonials-band">
 		<SectionHeader
 			eyebrow="Loved by mods"
 			title="What server owners say."
@@ -31,3 +31,11 @@ const { testimonials } = defineProps<{
 	testimonials: HomeTestimonial[];
 }>();
 </script>
+
+<style scoped>
+@reference "@/assets/css/main.css";
+
+.home-testimonials-band {
+	background-color: var(--color-base-200);
+}
+</style>

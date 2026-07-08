@@ -44,6 +44,6 @@ const {
 @reference "@/assets/css/main.css";
 
 .home-section--band {
-	background-color: oklch(from var(--color-base-200) l c h / 0.35);
+	background-color: oklch(from var(--color-base-100) l c h / 0.35);
 }
 </style>

@@ -18,7 +18,7 @@ const {
 	surfaceClass,
 	tag = "div",
 } = defineProps<{
-	accent?: UIColors;
+	accent?: HomeAccent;
 	class?: string;
 	padding?: "none" | "md" | "lg";
 	surfaceClass?: string;

@@ -40,54 +40,13 @@
 				</div>
 			</SurfaceCard>
 		</div>
-
-		<div ref="showcaseRef" class="mt-16 min-h-100 w-full">
-			<template v-if="showcaseLoaded">
-				<LazyFeatureCarousel class="mb-12" @open-feature="openFeature" />
-				<LazyFeatureShowcase v-model:active-feature="selectedFeatureIndex" />
-			</template>
-		</div>
 	</Section>
 </template>
 
 <script setup lang="ts">
 import { cn } from "cnfast";
-const SHOWCASE_FEATURE_HASHES = ["#moderation-tools", "#advanced-logging"] as const;
 
 defineProps<{
 	features: HomeFeature[];
 }>();
-
-const selectedFeatureIndex = ref(0);
-const showcaseRef = ref<HTMLElement | null>(null);
-const showcaseLoaded = ref(false);
-
-function shouldLoadShowcase(hash: string): boolean {
-	return (
-		hash === "#features" ||
-		SHOWCASE_FEATURE_HASHES.includes(hash as (typeof SHOWCASE_FEATURE_HASHES)[number])
-	);
-}
-
-function openFeature(index: number) {
-	selectedFeatureIndex.value = index;
-	showcaseLoaded.value = true;
-}
-
-onMounted(() => {
-	if (shouldLoadShowcase(window.location.hash)) {
-		showcaseLoaded.value = true;
-	}
-});
-
-const { stop: stopShowcaseObserver } = useIntersectionObserver(
-	showcaseRef,
-	(entries) => {
-		if (entries[0]?.isIntersecting) {
-			showcaseLoaded.value = true;
-			stopShowcaseObserver();
-		}
-	},
-	{ rootMargin: "0px" },
-);
 </script>

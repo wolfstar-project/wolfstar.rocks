@@ -25,7 +25,7 @@ test.describe("View Transitions", () => {
 
 		const navLink = page
 			.getByRole("navigation", { name: "Main navigation" })
-			.getByRole("link", { name: /commands/i });
+			.getByRole("link", { name: /docs/i });
 		await expect(navLink).toBeVisible();
 		await navLink.click();
 		await page.waitForURL(/commands/);
@@ -74,7 +74,7 @@ test.describe("View Transitions", () => {
 
 		const navLinkReduced = page
 			.getByRole("navigation", { name: "Main navigation" })
-			.getByRole("link", { name: /commands/i });
+			.getByRole("link", { name: /docs/i });
 		await expect(navLinkReduced).toBeVisible();
 		await navLinkReduced.click();
 		await page.waitForURL(/commands/);
@@ -109,7 +109,7 @@ test.describe("View Transitions", () => {
 
 		const navLinkUser = page
 			.getByRole("navigation", { name: "Main navigation" })
-			.getByRole("link", { name: /commands/i });
+			.getByRole("link", { name: /docs/i });
 		await expect(navLinkUser).toBeVisible();
 		await navLinkUser.click();
 		await page.waitForURL(/commands/);

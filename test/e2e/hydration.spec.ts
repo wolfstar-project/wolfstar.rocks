@@ -58,7 +58,7 @@ test.describe("Hydration", () => {
 			await goto("/", { waitUntil: "networkidle" });
 			const navLink = page
 				.getByRole("navigation", { name: "Main navigation" })
-				.getByRole("link", { name: /commands/i });
+				.getByRole("link", { name: /docs/i });
 			await expect(navLink).toBeVisible();
 			await navLink.click();
 			await page.waitForURL(/commands/);

@@ -13,7 +13,7 @@
 			</NuxtLink>
 		</template>
 
-		<div class="inline-flex gap-1 rounded-full bg-base-200 p-1">
+		<div class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex">
 			<UNavigationMenu
 				:items="desktopLinks"
 				variant="link"

@@ -69,9 +69,14 @@
 					</p>
 				</div>
 				<div v-if="feature.big" class="mt-5 flex flex-wrap gap-2">
-					<span class="badge badge-soft badge-error">Spam</span>
+					<span class="badge badge-soft badge-error">Bad Words</span>
+					<span class="badge badge-soft badge-warning">Capitals</span>
 					<span class="badge badge-soft badge-primary">Invites</span>
-					<span class="badge badge-soft badge-warning">Mentions</span>
+					<span class="badge badge-soft badge-info">Links</span>
+					<span class="badge badge-soft badge-secondary">Spam</span>
+					<span class="badge badge-soft badge-accent">Line Spam</span>
+					<span class="badge badge-soft badge-success">Reactions</span>
+					<span class="badge badge-soft badge-neutral">Mentions</span>
 				</div>
 			</SurfaceCard>
 		</div>

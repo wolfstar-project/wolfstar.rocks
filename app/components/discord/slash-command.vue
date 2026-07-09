@@ -1,10 +1,5 @@
 <template>
-	<div
-		v-if="variant === 'composed'"
-		class="discord-slash-command-composed"
-		role="group"
-		:aria-label="`Slash command /${name}`"
-	>
+	<div class="discord-slash-command-composed" role="group" :aria-label="`Slash command /${name}`">
 		<span class="discord-slash-command-composed-name">/{{ name }}</span>
 		<template v-for="option in options" :key="option.name">
 			<span
@@ -22,23 +17,6 @@
 		</template>
 		<slot />
 	</div>
-
-	<div
-		v-else
-		class="discord-slash-command"
-		:class="{ 'discord-slash-command-active': active }"
-		role="option"
-		:aria-selected="active"
-		:aria-label="ariaLabel"
-	>
-		<DiscordAvatar :user="bot" size="tiny" class="discord-slash-command-avatar" />
-		<div class="discord-slash-command-content">
-			<span class="discord-slash-command-name">/{{ name }}</span>
-			<span v-if="description" class="discord-slash-command-description">{{
-				description
-			}}</span>
-		</div>
-	</div>
 </template>
 
 <script setup lang="ts">
@@ -50,68 +28,14 @@ export interface SlashCommandOption {
 	required?: boolean;
 }
 
-const {
-	bot = "wolfstar",
-	name,
-	description,
-	active = false,
-	variant = "suggestion",
-	options = [],
-} = defineProps<{
-	bot?: ProfileName;
+const { name, options = [] } = defineProps<{
 	name: string;
-	description?: string;
-	active?: boolean;
-	variant?: "suggestion" | "composed";
 	options?: SlashCommandOption[];
 }>();
-
-const ariaLabel = computed(() => {
-	const profile = Profiles[bot];
-	const parts = [`${profile.name} slash command: /${name}`];
-	if (description) parts.push(description);
-	return parts.join(". ");
-});
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
-
-.discord-slash-command {
-	--discord-slash-command-hover: hsla(223, 6.7%, 20.6%, 1);
-	--discord-slash-command-active: hsla(220, 6.5%, 24%, 1);
-	--discord-slash-command-name: hsl(0, 0%, 100%, 1);
-	--discord-slash-command-description: hsla(220, 2.7%, 66.1%, 1);
-
-	@apply flex min-h-11 cursor-pointer items-center gap-3 rounded-md px-2 py-1.5;
-}
-
-.discord-slash-command:hover,
-.discord-slash-command-active {
-	background-color: var(--discord-slash-command-hover);
-}
-
-.discord-slash-command-active {
-	background-color: var(--discord-slash-command-active);
-}
-
-.discord-slash-command-avatar {
-	@apply shrink-0;
-}
-
-.discord-slash-command-content {
-	@apply flex min-w-0 flex-1 items-baseline gap-2;
-}
-
-.discord-slash-command-name {
-	@apply shrink-0 font-whitney font-semibold;
-	color: var(--discord-slash-command-name);
-}
-
-.discord-slash-command-description {
-	@apply truncate text-sm;
-	color: var(--discord-slash-command-description);
-}
 
 .discord-slash-command-composed {
 	--discord-slash-command-composed-bg: hsla(223, 6.7%, 20.6%, 1);

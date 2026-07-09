@@ -15,9 +15,10 @@
 		/>
 
 		<ClientOnly>
-			<LazyFeatureShowcase hide-feature-header />
+			<LazyModerationShowcase hide-feature-header show-moderation-logs />
+			<LazyModerationShowcase hide-feature-header :active-feature="1" class="mt-12" />
 			<template #fallback>
-				<div class="mx-auto min-h-100 w-full max-w-250" aria-hidden="true" />
+				<div class="mx-auto min-h-200 w-full max-w-250" aria-hidden="true" />
 			</template>
 		</ClientOnly>
 	</Section>

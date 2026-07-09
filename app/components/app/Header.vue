@@ -80,7 +80,7 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-	--ui-header-height: 4rem;
+	--ui-header-height: 5rem;
 	width: 100%;
 	border-radius: 0;
 	border-bottom: 1px solid var(--home-border-subtle);

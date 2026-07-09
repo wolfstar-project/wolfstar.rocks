@@ -8,7 +8,9 @@
 
 		<StatsSection :stats />
 
-		<ShowcaseSection />
+		<ModerationShowcaseSection />
+
+		<CommandsSection />
 
 		<FeaturesSection :features="bentoFeatures" />
 

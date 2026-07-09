@@ -6,13 +6,13 @@
 	>
 		<p
 			v-if="eyebrow"
-			class="home-section-eyebrow mb-3 text-xs font-bold tracking-[var(--home-ls-label)] text-primary uppercase"
+			class="home-section-eyebrow mb-3 text-xs font-bold tracking-(--home-ls-label) text-primary uppercase"
 		>
 			{{ eyebrow }}
 		</p>
 		<h2
 			:id="headingId"
-			class="text-4xl leading-[1.1] font-bold tracking-[var(--home-ls-tight)] text-base-content"
+			class="text-4xl leading-[1.1] font-bold tracking-(--home-ls-tight) text-base-content"
 		>
 			{{ title }}
 		</h2>

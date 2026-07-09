@@ -72,6 +72,7 @@ export interface HomeDashboardMember {
 }
 
 export interface HomeTestimonial {
+	big?: boolean;
 	name: string;
 	quote: string;
 	role: string;
@@ -84,13 +85,24 @@ export interface ModerationAction {
 	undo: Colors | null;
 }
 
+type LoggingEventDetailPart =
+	| { type: "mention"; name: string }
+	| { type: "role"; name: string; color?: string }
+	| { type: "roles"; items: { name: string; color?: string }[] }
+	| { type: "text"; content: string };
+
+interface LoggingEventLogDetail {
+	label: string;
+	parts: LoggingEventDetailPart[];
+}
+
 export interface LoggingEventDetail {
 	tooltip: string;
 	title: string;
 	icon: string;
 	color: string;
 	action: string;
-	details: { label: string; value: string }[];
+	details: LoggingEventLogDetail[];
 }
 
 export const bentoFeatures: HomeFeature[] = [
@@ -203,6 +215,7 @@ export const dashboardMembers: HomeDashboardMember[] = [
 
 export const testimonials: HomeTestimonial[] = [
 	{
+		big: true,
 		name: "redstar071",
 		quote: "WolfStar replaced three other bots for us — the logging alone is worth it.",
 		role: "Owner · WolfStar HQ",
@@ -224,8 +237,17 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "User Joined",
 		color: "#FFA500",
 		details: [
-			{ label: "User", value: "@newmember (123456789012345678)" },
-			{ label: "Account Created", value: "2023-01-01 12:00:00 UTC" },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "newmember" },
+					{ type: "text", content: " (123456789012345678)" },
+				],
+			},
+			{
+				label: "Account Created",
+				parts: [{ type: "text", content: "2023-01-01 12:00:00 UTC" }],
+			},
 		],
 		icon: "ph:user-plus-fill",
 		title: "member joins",
@@ -235,9 +257,23 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "User Left",
 		color: "#FF6B6B",
 		details: [
-			{ label: "User", value: "@oldmember (987654321098765432)" },
-			{ label: "Roles", value: "@Member, @Verified" },
-			{ label: "Joined At", value: "2023-06-15 08:30:00 UTC" },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "oldmember" },
+					{ type: "text", content: " (987654321098765432)" },
+				],
+			},
+			{
+				label: "Roles",
+				parts: [
+					{
+						type: "roles",
+						items: [{ name: "Member" }, { name: "Verified", color: "#57F287" }],
+					},
+				],
+			},
+			{ label: "Joined At", parts: [{ type: "text", content: "2023-06-15 08:30:00 UTC" }] },
 		],
 		icon: "ph:user-minus-fill",
 		title: "member leaves",
@@ -247,9 +283,18 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Message Deleted",
 		color: "#E74C3C",
 		details: [
-			{ label: "User", value: "@someone (456789012345678901)" },
-			{ label: "Channel", value: "#general" },
-			{ label: "Content", value: "This message has been deleted" },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "someone" },
+					{ type: "text", content: " (456789012345678901)" },
+				],
+			},
+			{ label: "Channel", parts: [{ type: "text", content: "#general" }] },
+			{
+				label: "Content",
+				parts: [{ type: "text", content: "This message has been deleted" }],
+			},
 		],
 		icon: "ph:trash-simple-fill",
 		title: "message deletions",
@@ -259,10 +304,16 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Message Edited",
 		color: "#3498DB",
 		details: [
-			{ label: "User", value: "@editor (234567890123456789)" },
-			{ label: "Channel", value: "#chat" },
-			{ label: "Before", value: "Original message" },
-			{ label: "After", value: "Edited message" },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "editor" },
+					{ type: "text", content: " (234567890123456789)" },
+				],
+			},
+			{ label: "Channel", parts: [{ type: "text", content: "#chat" }] },
+			{ label: "Before", parts: [{ type: "text", content: "Original message" }] },
+			{ label: "After", parts: [{ type: "text", content: "Edited message" }] },
 		],
 		icon: "ph:pencil-simple-fill",
 		title: "message edits",
@@ -272,9 +323,15 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Channel Created",
 		color: "#2ECC71",
 		details: [
-			{ label: "Channel", value: "#new-channel" },
-			{ label: "Type", value: "Text Channel" },
-			{ label: "Created By", value: "@admin (112233445566778899)" },
+			{ label: "Channel", parts: [{ type: "text", content: "#new-channel" }] },
+			{ label: "Type", parts: [{ type: "text", content: "Text Channel" }] },
+			{
+				label: "Created By",
+				parts: [
+					{ type: "mention", name: "admin" },
+					{ type: "text", content: " (112233445566778899)" },
+				],
+			},
 		],
 		icon: "ph:hash-fill",
 		title: "channel creation",
@@ -284,9 +341,15 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Channel Deleted",
 		color: "#E67E22",
 		details: [
-			{ label: "Channel", value: "#old-channel" },
-			{ label: "Type", value: "Text Channel" },
-			{ label: "Deleted By", value: "@admin (112233445566778899)" },
+			{ label: "Channel", parts: [{ type: "text", content: "#old-channel" }] },
+			{ label: "Type", parts: [{ type: "text", content: "Text Channel" }] },
+			{
+				label: "Deleted By",
+				parts: [
+					{ type: "mention", name: "admin" },
+					{ type: "text", content: " (112233445566778899)" },
+				],
+			},
 		],
 		icon: "ph:hash-straight-fill",
 		title: "channel deletion",
@@ -296,9 +359,18 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Channel Updated",
 		color: "#F39C12",
 		details: [
-			{ label: "Channel", value: "#general" },
-			{ label: "Changes", value: "Name changed from #old-general to #general" },
-			{ label: "Updated By", value: "@admin (112233445566778899)" },
+			{ label: "Channel", parts: [{ type: "text", content: "#general" }] },
+			{
+				label: "Changes",
+				parts: [{ type: "text", content: "Name changed from #old-general to #general" }],
+			},
+			{
+				label: "Updated By",
+				parts: [
+					{ type: "mention", name: "admin" },
+					{ type: "text", content: " (112233445566778899)" },
+				],
+			},
 		],
 		icon: "ph:hash-fill",
 		title: "channel updates",
@@ -308,9 +380,15 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Role Created",
 		color: "#9B59B6",
 		details: [
-			{ label: "Role", value: "@NewRole" },
-			{ label: "Color", value: "#5865F2" },
-			{ label: "Created By", value: "@admin (112233445566778899)" },
+			{ label: "Role", parts: [{ type: "role", name: "NewRole", color: "#5865F2" }] },
+			{ label: "Color", parts: [{ type: "text", content: "#5865F2" }] },
+			{
+				label: "Created By",
+				parts: [
+					{ type: "mention", name: "admin" },
+					{ type: "text", content: " (112233445566778899)" },
+				],
+			},
 		],
 		icon: "ph:shield-plus-fill",
 		title: "role creation",
@@ -320,9 +398,15 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Role Updated",
 		color: "#1ABC9C",
 		details: [
-			{ label: "Role", value: "@Moderator" },
-			{ label: "Changes", value: "Permissions updated" },
-			{ label: "Updated By", value: "@admin (112233445566778899)" },
+			{ label: "Role", parts: [{ type: "role", name: "Moderator", color: "#1ABC9C" }] },
+			{ label: "Changes", parts: [{ type: "text", content: "Permissions updated" }] },
+			{
+				label: "Updated By",
+				parts: [
+					{ type: "mention", name: "admin" },
+					{ type: "text", content: " (112233445566778899)" },
+				],
+			},
 		],
 		icon: "ph:shield-check-fill",
 		title: "role updates",
@@ -332,9 +416,15 @@ export const loggingEvents: LoggingEventDetail[] = [
 		action: "Role Deleted",
 		color: "#E91E63",
 		details: [
-			{ label: "Role", value: "@OldRole" },
-			{ label: "Color", value: "#99AAB5" },
-			{ label: "Deleted By", value: "@admin (112233445566778899)" },
+			{ label: "Role", parts: [{ type: "role", name: "OldRole", color: "#99AAB5" }] },
+			{ label: "Color", parts: [{ type: "text", content: "#99AAB5" }] },
+			{
+				label: "Deleted By",
+				parts: [
+					{ type: "mention", name: "admin" },
+					{ type: "text", content: " (112233445566778899)" },
+				],
+			},
 		],
 		icon: "ph:shield-slash-fill",
 		title: "role deletion",
@@ -444,6 +534,151 @@ export interface Profile {
 }
 
 export type ProfileName = keyof typeof Profiles;
+
+type ShowcaseCommandEmbedPart =
+	| { type: "mention"; name: string }
+	| { type: "text"; content: string };
+
+interface ShowcaseCommandOption {
+	name: string;
+	value?: string;
+	description?: string;
+	focused?: boolean;
+}
+
+interface ShowcaseCommandEmbedLine {
+	label: string;
+	parts: ShowcaseCommandEmbedPart[];
+}
+
+interface ShowcaseCommand {
+	tooltip: string;
+	name: string;
+	description: string;
+	invoker: ProfileName;
+	options: ShowcaseCommandOption[];
+	embedColor: string;
+	embedFooter: string;
+	embedLines: ShowcaseCommandEmbedLine[];
+}
+
+export const showcaseCommands: ShowcaseCommand[] = [
+	{
+		tooltip: "Warn",
+		name: "warn",
+		description: "Warn a member in the server",
+		invoker: "stella",
+		options: [
+			{ name: "user", value: "baddie" },
+			{ name: "reason", value: "spam", focused: true },
+		],
+		embedColor: Colors.Yellow,
+		embedFooter: "Case 3",
+		embedLines: [
+			{ label: "Type", parts: [{ type: "text", content: "Warning" }] },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "baddie" },
+					{ type: "text", content: " (541738403230777351)" },
+				],
+			},
+			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
+		],
+	},
+	{
+		tooltip: "Ban",
+		name: "ban",
+		description: "Ban a member from the server",
+		invoker: "stella",
+		options: [
+			{ name: "user", value: "baddie" },
+			{ name: "reason", value: "repeated infractions", focused: true },
+		],
+		embedColor: Colors.Red,
+		embedFooter: "Case 4",
+		embedLines: [
+			{ label: "Type", parts: [{ type: "text", content: "Ban" }] },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "baddie" },
+					{ type: "text", content: " (541738403230777351)" },
+				],
+			},
+			{ label: "Reason", parts: [{ type: "text", content: "repeated infractions" }] },
+		],
+	},
+	{
+		tooltip: "Kick",
+		name: "kick",
+		description: "Kick a member from the server",
+		invoker: "stella",
+		options: [
+			{ name: "user", value: "baddie" },
+			{ name: "reason", value: "rule violation", focused: true },
+		],
+		embedColor: Colors.Orange,
+		embedFooter: "Case 5",
+		embedLines: [
+			{ label: "Type", parts: [{ type: "text", content: "Kick" }] },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "baddie" },
+					{ type: "text", content: " (541738403230777351)" },
+				],
+			},
+			{ label: "Reason", parts: [{ type: "text", content: "rule violation" }] },
+		],
+	},
+	{
+		tooltip: "Mute",
+		name: "mute",
+		description: "Mute a member in the server",
+		invoker: "stella",
+		options: [
+			{ name: "user", value: "baddie" },
+			{ name: "duration", value: "1h" },
+			{ name: "reason", value: "excessive noise", focused: true },
+		],
+		embedColor: Colors.Amber,
+		embedFooter: "Case 6",
+		embedLines: [
+			{ label: "Type", parts: [{ type: "text", content: "Mute" }] },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "baddie" },
+					{ type: "text", content: " (541738403230777351)" },
+				],
+			},
+			{ label: "Duration", parts: [{ type: "text", content: "1 hour" }] },
+			{ label: "Reason", parts: [{ type: "text", content: "excessive noise" }] },
+		],
+	},
+	{
+		tooltip: "Case",
+		name: "case",
+		description: "View or manage moderation cases",
+		invoker: "stella",
+		options: [{ name: "view", value: "3", focused: true }],
+		embedColor: Colors.LightBlue,
+		embedFooter: "Case 3",
+		embedLines: [
+			{ label: "Type", parts: [{ type: "text", content: "Warning" }] },
+			{
+				label: "User",
+				parts: [
+					{ type: "mention", name: "baddie" },
+					{ type: "text", content: " (541738403230777351)" },
+				],
+			},
+			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
+			{ label: "Moderator", parts: [{ type: "mention", name: "stella" }] },
+		],
+	},
+];
 
 export interface OtherApp {
 	name: string;

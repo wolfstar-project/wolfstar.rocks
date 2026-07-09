@@ -276,16 +276,14 @@
 											)
 										"
 									>
-										<UIcon
-											name="ph:caret-down-bold"
+										<button
+											type="button"
 											class="radio-feature-arrow rotate-90 lg:rotate-180"
-											role="button"
-											tabindex="0"
 											aria-label="Previous automod feature"
 											@click="advanceFeatureIndex(-1)"
-											@keydown.enter="advanceFeatureIndex(-1)"
-											@keydown.space.prevent="advanceFeatureIndex(-1)"
-										/>
+										>
+											<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										</button>
 										<label
 											v-for="(text, automodIndex) of texts"
 											:key="automodIndex"
@@ -303,16 +301,14 @@
 											/>
 											<span class="sr-only">{{ text.tooltip }}</span>
 										</label>
-										<UIcon
-											name="ph:caret-down-bold"
+										<button
+											type="button"
 											class="radio-feature-arrow -rotate-90 lg:rotate-0"
-											role="button"
-											tabindex="0"
 											aria-label="Next automod feature"
 											@click="advanceFeatureIndex(1)"
-											@keydown.enter="advanceFeatureIndex(1)"
-											@keydown.space.prevent="advanceFeatureIndex(1)"
-										/>
+										>
+											<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										</button>
 									</div>
 								</div>
 
@@ -428,10 +424,17 @@
 							</section>
 
 							<section
-								v-if="!hideFeatureHeader"
-								class="mt-12 grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12"
+								v-if="!hideFeatureHeader || showModerationLogs"
+								:class="
+									cn(
+										'mt-12 grid gap-6',
+										hideFeatureHeader
+											? 'grid-cols-1'
+											: 'items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12',
+									)
+								"
 							>
-								<div class="showcase-copy text-left">
+								<div v-if="!hideFeatureHeader" class="showcase-copy text-left">
 									<h3
 										class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
 									>
@@ -468,18 +471,34 @@
 									</p>
 								</div>
 
-								<div class="flex flex-col items-center gap-4 lg:flex-row">
-									<div class="flex flex-row items-center gap-1 lg:flex-col">
-										<UIcon
-											name="ph:caret-down-bold"
+								<div
+									:class="
+										cn(
+											'flex gap-4',
+											hideFeatureHeader
+												? 'flex-col items-stretch'
+												: 'flex-col items-center lg:flex-row',
+										)
+									"
+								>
+									<div
+										:class="
+											cn(
+												'flex items-center gap-1',
+												hideFeatureHeader
+													? 'order-2 justify-center'
+													: 'flex-row lg:flex-col',
+											)
+										"
+									>
+										<button
+											type="button"
 											class="radio-feature-arrow rotate-90 lg:rotate-180"
-											role="button"
-											tabindex="0"
 											aria-label="Previous moderation action"
 											@click="advanceModerationIndex(-1)"
-											@keydown.enter="advanceModerationIndex(-1)"
-											@keydown.space.prevent="advanceModerationIndex(-1)"
-										/>
+										>
+											<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										</button>
 										<label
 											v-for="(
 												action, moderationActionIndex
@@ -499,19 +518,24 @@
 											/>
 											<span class="sr-only">{{ action.name }}</span>
 										</label>
-										<UIcon
-											name="ph:caret-down-bold"
+										<button
+											type="button"
 											class="radio-feature-arrow -rotate-90 lg:rotate-0"
-											role="button"
-											tabindex="0"
 											aria-label="Next moderation action"
 											@click="advanceModerationIndex(1)"
-											@keydown.enter="advanceModerationIndex(1)"
-											@keydown.space.prevent="advanceModerationIndex(1)"
-										/>
+										>
+											<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										</button>
 									</div>
 
-									<div class="flex w-full flex-col items-start">
+									<div
+										:class="
+											cn(
+												'flex w-full flex-col items-start',
+												hideFeatureHeader && 'order-1',
+											)
+										"
+									>
 										<SurfaceCard
 											padding="none"
 											class="w-full overflow-hidden shadow-glow"
@@ -666,8 +690,54 @@
 															]!.details"
 															:key="idx"
 														>
-															<strong>❯ {{ detail.label }}:</strong>
-															{{ detail.value }}<br />
+															<strong>❯ {{ detail.label }}:</strong
+															><span
+																class="showcase-embed-detail-parts"
+																><template
+																	v-for="(
+																		part, partIdx
+																	) in detail.parts"
+																	:key="partIdx"
+																	><DiscordMention
+																		v-if="
+																			part.type === 'mention'
+																		"
+																		kind="mention"
+																		>{{
+																			part.name
+																		}}</DiscordMention
+																	><DiscordRole
+																		v-else-if="
+																			part.type === 'role'
+																		"
+																		:color="part.color"
+																		>{{
+																			part.name
+																		}}</DiscordRole
+																	><template
+																		v-else-if="
+																			part.type === 'roles'
+																		"
+																		><template
+																			v-for="(
+																				role, roleIdx
+																			) in part.items"
+																			:key="role.name"
+																			><span
+																				v-if="roleIdx > 0"
+																				>, </span
+																			><DiscordRole
+																				:color="role.color"
+																				>{{
+																					role.name
+																				}}</DiscordRole
+																			></template
+																		></template
+																	><template v-else>{{
+																		part.content
+																	}}</template></template
+																></span
+															><br />
 														</span>
 													</DiscordEmbed>
 												</DiscordMessage>
@@ -685,16 +755,14 @@
 											)
 										"
 									>
-										<UIcon
-											name="ph:caret-down-bold"
+										<button
+											type="button"
 											class="radio-feature-arrow rotate-90 lg:rotate-180"
-											role="button"
-											tabindex="0"
 											aria-label="Previous logging event"
 											@click="advanceLoggingIndex(-1)"
-											@keydown.enter="advanceLoggingIndex(-1)"
-											@keydown.space.prevent="advanceLoggingIndex(-1)"
-										/>
+										>
+											<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										</button>
 										<label
 											v-for="(event, loggingEventIndex) of loggingEvents"
 											:key="loggingEventIndex"
@@ -712,16 +780,14 @@
 											/>
 											<span class="sr-only">{{ event.tooltip }}</span>
 										</label>
-										<UIcon
-											name="ph:caret-down-bold"
+										<button
+											type="button"
 											class="radio-feature-arrow -rotate-90 lg:rotate-0"
-											role="button"
-											tabindex="0"
 											aria-label="Next logging event"
 											@click="advanceLoggingIndex(1)"
-											@keydown.enter="advanceLoggingIndex(1)"
-											@keydown.space.prevent="advanceLoggingIndex(1)"
-										/>
+										>
+											<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										</button>
 									</div>
 								</div>
 
@@ -801,8 +867,9 @@
 import { cast } from "@sapphire/utilities/cast";
 import { cn } from "cnfast";
 
-const { hideFeatureHeader = false } = defineProps<{
+const { hideFeatureHeader = false, showModerationLogs = false } = defineProps<{
 	hideFeatureHeader?: boolean;
+	showModerationLogs?: boolean;
 }>();
 
 const activeFeature = defineModel<number>("activeFeature", { default: 0 });
@@ -989,6 +1056,15 @@ onUnmounted(cleanup);
 	background-color: oklch(from var(--color-base-content) l c h / 0.04);
 }
 
+.showcase-embed-detail-parts {
+	@apply inline;
+}
+
+.showcase-embed-detail-parts :deep(.tag) {
+	@apply inline-flex align-baseline;
+	margin: 0;
+}
+
 :deep(.brand-embed .discord-embed) {
 	border-color: oklch(from var(--color-primary) l c h / 0.35);
 	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h) !important;
@@ -1004,7 +1080,7 @@ onUnmounted(cleanup);
 }
 
 .radio-feature-arrow {
-	@apply size-4 cursor-pointer text-muted transition-colors hover:text-base-content sm:size-4;
+	@apply inline-flex size-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-muted transition-colors hover:text-base-content sm:size-4;
 }
 
 @media not (hover: hover) {

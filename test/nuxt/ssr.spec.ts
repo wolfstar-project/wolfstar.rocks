@@ -6,6 +6,11 @@ import {
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
+	DiscordRole,
+	DiscordSlashCommand,
+	DiscordSlashCommandInput,
+	DiscordSlashCommandSuggestion,
+	DiscordSlashCommandSuggestions,
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
@@ -146,6 +151,86 @@ describe("component SSR rendering", () => {
 				const button = wrapper.find("button");
 				expect(button.exists()).toBe(true);
 				expect(button.text()).toContain("WolfStar");
+			});
+		});
+
+		describe("DiscordRole", () => {
+			it("renders role mention with @ prefix and custom color", async () => {
+				const wrapper = await mountSuspended(DiscordRole, {
+					props: { color: "#5865F2" },
+					slots: { default: "Moderator" },
+				});
+				const button = wrapper.find("button");
+				expect(button.exists()).toBe(true);
+				expect(button.text()).toContain("@");
+				expect(button.text()).toContain("Moderator");
+				expect(button.attributes("style")).toContain("--role-color: #5865F2");
+			});
+		});
+
+		describe("DiscordSlashCommand", () => {
+			it("renders composed variant with option values", async () => {
+				const wrapper = await mountSuspended(DiscordSlashCommand, {
+					props: {
+						name: "warn",
+						options: [
+							{ name: "member", value: "@baddie", focused: true },
+							{ name: "reason", description: "Reason for the warning" },
+						],
+					},
+				});
+				const group = wrapper.find("[role='group']");
+				expect(group.exists()).toBe(true);
+				expect(group.attributes("aria-label")).toBe("Slash command /warn");
+				expect(wrapper.text()).toContain("@baddie");
+				expect(wrapper.text()).toContain("Reason for the warning");
+			});
+		});
+
+		describe("DiscordSlashCommandSuggestion", () => {
+			it("renders suggestion with app label and aria-selected state", async () => {
+				const wrapper = await mountSuspended(DiscordSlashCommandSuggestion, {
+					props: {
+						name: "warn",
+						description: "Warn a member",
+						active: true,
+					},
+				});
+				const option = wrapper.find("[role='option']");
+				expect(option.exists()).toBe(true);
+				expect(option.attributes("aria-selected")).toBe("true");
+				expect(wrapper.text()).toContain("/warn");
+				expect(wrapper.text()).toContain("Warn a member");
+				expect(wrapper.text()).toContain("WolfStar");
+			});
+		});
+
+		describe("DiscordSlashCommandSuggestions", () => {
+			it("renders matching header and listbox", async () => {
+				const wrapper = await mountSuspended({
+					components: { DiscordSlashCommandSuggestion, DiscordSlashCommandSuggestions },
+					template: `
+						<DiscordSlashCommandSuggestions prefix="/war">
+							<DiscordSlashCommandSuggestion
+								name="warn"
+								description="Warn a member"
+								:active="true"
+							/>
+						</DiscordSlashCommandSuggestions>
+					`,
+				});
+				expect(wrapper.text()).toContain("Commands matching /war");
+				expect(wrapper.find("[role='listbox']").exists()).toBe(true);
+			});
+		});
+
+		describe("DiscordSlashCommandInput", () => {
+			it("renders typed slash command with cursor", async () => {
+				const wrapper = await mountSuspended(DiscordSlashCommandInput, {
+					props: { value: "/warn" },
+				});
+				expect(wrapper.text()).toContain("/warn");
+				expect(wrapper.find(".discord-slash-command-input-cursor").exists()).toBe(true);
 			});
 		});
 

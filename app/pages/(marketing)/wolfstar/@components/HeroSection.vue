@@ -76,6 +76,7 @@
 
 <script setup lang="ts">
 import { cn } from "cnfast";
+
 const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	buildTime: Date;
 	buildVersion: string;

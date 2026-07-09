@@ -241,6 +241,24 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toContain("/warn");
 				expect(wrapper.find(".discord-slash-command-input-cursor").exists()).toBe(true);
 			});
+
+			it("renders composed slash command inline in the input field", async () => {
+				const wrapper = await mountSuspended(DiscordSlashCommandInput, {
+					props: {
+						name: "ban",
+						options: [
+							{ name: "user", value: "baddie" },
+							{ name: "reason", value: "repeated infractions", focused: true },
+						],
+					},
+				});
+				expect(wrapper.text()).toContain("/ban");
+				expect(wrapper.text()).toContain("user:");
+				expect(wrapper.text()).toContain("baddie");
+				expect(wrapper.text()).toContain("reason:");
+				expect(wrapper.text()).toContain("repeated infractions");
+				expect(wrapper.find(".discord-slash-command-composed").exists()).toBe(true);
+			});
 		});
 
 		describe("DiscordReaction", () => {

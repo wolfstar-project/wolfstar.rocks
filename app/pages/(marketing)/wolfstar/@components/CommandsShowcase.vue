@@ -74,14 +74,10 @@
 						</template>
 					</DiscordSlashCommandSuggestions>
 
-					<div class="px-3 pt-2">
-						<DiscordSlashCommand
-							:name="activeCommand.name"
-							:options="activeCommand.options"
-						/>
-					</div>
-
-					<DiscordSlashCommandInput :value="commandInputValue" />
+					<DiscordSlashCommandInput
+						:name="activeCommand.name"
+						:options="activeCommand.options"
+					/>
 				</div>
 			</div>
 		</SurfaceCard>
@@ -134,8 +130,6 @@ const matchedCommands = computed(() => {
 	const prefix = commandSearchPrefix.value.slice(1).toLowerCase();
 	return showcaseCommands.filter((command) => command.name.startsWith(prefix));
 });
-
-const commandInputValue = computed(() => `/${activeCommand.value.name}`);
 
 function setCommandChipRef(name: string, element: Element | ComponentPublicInstance | null) {
 	if (element instanceof HTMLButtonElement) {

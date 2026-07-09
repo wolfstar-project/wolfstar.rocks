@@ -9,7 +9,8 @@
 		</button>
 
 		<div class="discord-slash-command-input-field">
-			<span class="discord-slash-command-input-value">{{ value }}</span>
+			<DiscordSlashCommand v-if="name" :name="name" :options="options" />
+			<span v-else class="discord-slash-command-input-value">{{ value }}</span>
 			<span class="discord-slash-command-input-cursor" aria-hidden="true" />
 		</div>
 
@@ -24,11 +25,31 @@
 </template>
 
 <script setup lang="ts">
-const { value } = defineProps<{
-	value: string;
+import type { SlashCommandOption } from "./slash-command.vue";
+
+const {
+	name,
+	options = [],
+	value = "",
+} = defineProps<{
+	name?: string;
+	options?: SlashCommandOption[];
+	value?: string;
 }>();
 
-const ariaLabel = computed(() => `Message input: ${value}`);
+const ariaLabel = computed(() => {
+	if (name) {
+		const optionText = options
+			.map((option) => {
+				const valueText = option.value ?? option.description ?? option.name;
+				return `${option.name}: ${valueText}`;
+			})
+			.join(" ");
+		return `Message input: /${name}${optionText ? ` ${optionText}` : ""}`;
+	}
+
+	return `Message input: ${value}`;
+});
 </script>
 
 <style scoped>
@@ -50,7 +71,7 @@ const ariaLabel = computed(() => `Message input: ${value}`);
 }
 
 .discord-slash-command-input-field {
-	@apply flex min-w-0 flex-1 items-center font-whitney text-sm;
+	@apply flex min-w-0 flex-1 items-center overflow-x-auto font-whitney text-sm;
 	color: var(--discord-slash-command-input-text);
 }
 
@@ -59,7 +80,7 @@ const ariaLabel = computed(() => `Message input: ${value}`);
 }
 
 .discord-slash-command-input-cursor {
-	@apply ml-px inline-block h-4 w-px;
+	@apply ml-px inline-block h-4 w-px shrink-0;
 	background-color: var(--discord-slash-command-input-cursor);
 	animation: discord-slash-command-input-cursor-blink 1.1s step-end infinite;
 }

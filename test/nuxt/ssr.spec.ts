@@ -69,7 +69,7 @@ describe("component SSR rendering", () => {
 				});
 				const reply = wrapper.find("[role='complementary']");
 				expect(reply.exists()).toBe(true);
-				expect(reply.text()).toContain("stella");
+				expect(reply.text()).toContain("Stella");
 				expect(reply.text()).toContain("used");
 			});
 

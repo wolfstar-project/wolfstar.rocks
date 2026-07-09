@@ -1025,7 +1025,7 @@ onMounted(() => {
 	timestamp.value = Date.now();
 });
 
-const cleanup = useEventListener(window, "hashchange", handleHashChange);
+const cleanup = useEventListener("hashchange", handleHashChange);
 
 onUnmounted(cleanup);
 </script>

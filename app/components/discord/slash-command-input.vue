@@ -14,11 +14,11 @@
 		</div>
 
 		<div class="discord-slash-command-input-tools" aria-hidden="true">
-			<UIcon name="ph:gift-duotone" class="discord-slash-command-input-tool" />
-			<UIcon name="ph:text-aa-bold" class="discord-slash-command-input-tool" />
-			<UIcon name="ph:sticker-duotone" class="discord-slash-command-input-tool" />
-			<UIcon name="ph:smiley-duotone" class="discord-slash-command-input-tool" />
-			<UIcon name="ph:squares-four-duotone" class="discord-slash-command-input-tool" />
+			<UIcon name="discord:gift" class="discord-slash-command-input-tool size-4.5" />
+			<UIcon name="discord:gif" class="discord-slash-command-input-tool size-4.5" />
+			<UIcon name="discord:sticker" class="discord-slash-command-input-tool size-4.5" />
+			<UIcon name="discord:emoji" class="discord-slash-command-input-tool size-4.5" />
+			<UIcon name="discord:apps" class="discord-slash-command-input-tool size-4.5" />
 		</div>
 	</div>
 </template>
@@ -35,9 +35,9 @@ const ariaLabel = computed(() => `Message input: ${value}`);
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-input {
-	--discord-slash-command-input-bg: hsl(0, 28%, 16%);
+	--discord-slash-command-input-bg: hsla(223, 6.7%, 20.6%, 1);
 	--discord-slash-command-input-text: hsl(0, 0%, 100%, 1);
-	--discord-slash-command-input-muted: hsla(0, 0%, 100%, 0.72);
+	--discord-slash-command-input-muted: hsla(220, 2.7%, 66.1%, 1);
 	--discord-slash-command-input-cursor: hsl(0, 0%, 100%, 1);
 
 	@apply flex min-h-11 items-center gap-3 px-3 py-2;

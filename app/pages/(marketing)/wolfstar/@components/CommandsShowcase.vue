@@ -3,7 +3,7 @@
 		<SurfaceCard padding="none" class="overflow-hidden shadow-glow">
 			<div class="showcase-channel-header">
 				<UIcon
-					name="ph:folder-fill"
+					name="discord:text-channel"
 					class="size-4.5 shrink-0 text-muted"
 					aria-hidden="true"
 				/>
@@ -59,6 +59,7 @@
 								:name="command.name"
 								:description="command.description"
 								:active="activeCommand.name === command.name"
+								@select="selectCommand(command.name)"
 							/>
 						</template>
 						<template #matched>
@@ -68,6 +69,7 @@
 								:name="command.name"
 								:description="command.description"
 								:active="activeCommand.name === command.name"
+								@select="selectCommand(command.name)"
 							/>
 						</template>
 					</DiscordSlashCommandSuggestions>
@@ -84,40 +86,27 @@
 			</div>
 		</SurfaceCard>
 
-		<div class="mt-4 flex items-center justify-center gap-1">
-			<button
-				type="button"
-				class="radio-feature-arrow rotate-90"
-				aria-label="Previous command"
-				@click="advanceCommandIndex(-1)"
-			>
-				<UIcon name="ph:caret-down-bold" aria-hidden="true" />
-			</button>
-			<label
-				v-for="(command, index) of showcaseCommands"
-				:key="command.name"
-				class="radio-feature-container"
-				:data-tip="command.tooltip"
-				:for="`command-feature-${index}`"
-			>
-				<input
-					:id="`command-feature-${index}`"
-					v-model="commandIndex"
-					type="radio"
-					name="command-feature"
-					class="radio-feature"
-					:value="index"
-				/>
-				<span class="sr-only">{{ command.tooltip }}</span>
-			</label>
-			<button
-				type="button"
-				class="radio-feature-arrow -rotate-90"
-				aria-label="Next command"
-				@click="advanceCommandIndex(1)"
-			>
-				<UIcon name="ph:caret-down-bold" aria-hidden="true" />
-			</button>
+		<div
+			class="showcase-command-scroll no-scrollbar mt-4 overflow-x-auto"
+			role="tablist"
+			aria-label="Browse commands"
+		>
+			<div class="flex w-max min-w-full gap-2 px-1 pb-1">
+				<button
+					v-for="(command, index) of showcaseCommands"
+					:key="command.name"
+					:ref="(element) => setCommandChipRef(command.name, element)"
+					type="button"
+					role="tab"
+					class="showcase-command-chip"
+					:class="{ 'showcase-command-chip-active': commandIndex === index }"
+					:aria-selected="commandIndex === index"
+					:aria-label="command.tooltip"
+					@click="commandIndex = index"
+				>
+					/{{ command.name }}
+				</button>
+			</div>
 		</div>
 	</div>
 </template>
@@ -125,6 +114,7 @@
 <script setup lang="ts">
 const commandIndex = ref(0);
 const timestamp = ref(0);
+const commandChipElements = new Map<string, HTMLButtonElement>();
 
 const activeCommand = computed(() => {
 	const command = showcaseCommands[commandIndex.value];
@@ -147,10 +137,28 @@ const matchedCommands = computed(() => {
 
 const commandInputValue = computed(() => `/${activeCommand.value.name}`);
 
-function advanceCommandIndex(value: -1 | 1) {
-	commandIndex.value =
-		(commandIndex.value + value + showcaseCommands.length) % showcaseCommands.length;
+function setCommandChipRef(name: string, element: Element | ComponentPublicInstance | null) {
+	if (element instanceof HTMLButtonElement) {
+		commandChipElements.set(name, element);
+		return;
+	}
+
+	commandChipElements.delete(name);
 }
+
+function selectCommand(name: string) {
+	const index = showcaseCommands.findIndex((command) => command.name === name);
+	if (index !== -1) {
+		commandIndex.value = index;
+	}
+}
+
+watch(commandIndex, async () => {
+	await nextTick();
+	commandChipElements
+		.get(activeCommand.value.name)
+		?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+});
 
 onMounted(() => {
 	timestamp.value = Date.now();
@@ -202,42 +210,24 @@ onMounted(() => {
 	margin: 0;
 }
 
-.radio-feature-container {
-	@apply tooltip tooltip-top;
-	display: inherit;
+.showcase-command-scroll {
+	scroll-snap-type: x proximity;
 }
 
-.radio-feature {
-	@apply size-3.5 cursor-pointer appearance-none rounded-full bg-base-content/15 sm:size-4;
+.showcase-command-chip {
+	@apply shrink-0 rounded-full border border-base-content/10 bg-base-content/5 px-3 py-1.5 text-sm font-medium text-muted transition-colors;
+	scroll-snap-align: center;
 }
 
-.radio-feature-arrow {
-	@apply inline-flex size-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-muted transition-colors hover:text-base-content sm:size-4;
+.showcase-command-chip:hover {
+	@apply text-base-content;
 }
 
-@media not (hover: hover) {
-	.radio-feature {
-		@apply size-5;
-	}
-
-	.radio-feature-arrow {
-		@apply size-5;
-	}
+.showcase-command-chip-active {
+	@apply border-primary/30 bg-primary/15 text-primary shadow-glow;
 }
 
-.radio-feature:not(:checked):hover {
-	@apply bg-base-content/30;
-}
-
-.radio-feature:checked {
-	@apply bg-primary shadow-glow;
-}
-
-.radio-feature:checked:hover {
-	@apply bg-primary;
-}
-
-.radio-feature {
-	transition: background-color 0.25s linear;
+.showcase-command-chip-active:hover {
+	@apply text-primary;
 }
 </style>

@@ -30,42 +30,36 @@
 		</nav>
 
 		<div class="discord-slash-command-suggestions-panel">
-			<div class="discord-slash-command-suggestions-scroll">
-				<div
-					role="listbox"
-					:aria-label="listboxLabel"
-					class="discord-slash-command-suggestions-list"
-				>
-					<template v-if="$slots['frequently-used']">
-						<p class="discord-slash-command-suggestions-header" role="presentation">
-							<UIcon
-								name="ph:clock-counter-clockwise-fill"
-								class="discord-slash-command-suggestions-header-icon"
-								aria-hidden="true"
-							/>
-							Frequently Used
-						</p>
-						<slot name="frequently-used" />
-					</template>
+			<div
+				role="listbox"
+				:aria-label="listboxLabel"
+				class="discord-slash-command-suggestions-list"
+			>
+				<template v-if="$slots['frequently-used']">
+					<p class="discord-slash-command-suggestions-header" role="presentation">
+						<UIcon
+							name="ph:clock-counter-clockwise-fill"
+							class="discord-slash-command-suggestions-header-icon"
+							aria-hidden="true"
+						/>
+						Frequently Used
+					</p>
+					<slot name="frequently-used" />
+				</template>
 
-					<template v-if="$slots.matched">
-						<p class="discord-slash-command-suggestions-header" role="presentation">
-							<UIcon
-								name="ph:terminal-window-fill"
-								class="discord-slash-command-suggestions-header-icon"
-								aria-hidden="true"
-							/>
-							Matched Command
-						</p>
-						<slot name="matched" />
-					</template>
+				<template v-if="$slots.matched">
+					<p class="discord-slash-command-suggestions-header" role="presentation">
+						<UIcon
+							name="ph:terminal-window-fill"
+							class="discord-slash-command-suggestions-header-icon"
+							aria-hidden="true"
+						/>
+						Matched Command
+					</p>
+					<slot name="matched" />
+				</template>
 
-					<slot v-if="!$slots['frequently-used'] && !$slots.matched" />
-				</div>
-
-				<div class="discord-slash-command-suggestions-scrollbar" aria-hidden="true">
-					<div class="discord-slash-command-suggestions-scrollbar-thumb" />
-				</div>
+				<slot v-if="!$slots['frequently-used'] && !$slots.matched" />
 			</div>
 		</div>
 	</section>
@@ -140,21 +134,24 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	@apply size-3.5 shrink-0;
 }
 
-.discord-slash-command-suggestions-scroll {
-	@apply relative max-h-48;
-}
-
 .discord-slash-command-suggestions-list {
-	@apply overflow-hidden pr-3;
+	@apply max-h-48 overflow-y-auto pr-1;
+	scrollbar-width: thin;
+	scrollbar-color: var(--discord-slash-command-suggestions-scrollbar-thumb)
+		var(--discord-slash-command-suggestions-scrollbar-track);
 }
 
-.discord-slash-command-suggestions-scrollbar {
-	@apply pointer-events-none absolute top-1 right-0.5 bottom-1 w-1 rounded-full;
+.discord-slash-command-suggestions-list::-webkit-scrollbar {
+	width: 4px;
+}
+
+.discord-slash-command-suggestions-list::-webkit-scrollbar-track {
+	border-radius: 9999px;
 	background-color: var(--discord-slash-command-suggestions-scrollbar-track);
 }
 
-.discord-slash-command-suggestions-scrollbar-thumb {
-	@apply absolute top-1 right-0 left-0 h-10 rounded-full;
+.discord-slash-command-suggestions-list::-webkit-scrollbar-thumb {
+	border-radius: 9999px;
 	background-color: var(--discord-slash-command-suggestions-scrollbar-thumb);
 }
 </style>

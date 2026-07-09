@@ -5,6 +5,10 @@
 		role="option"
 		:aria-selected="active"
 		:aria-label="ariaLabel"
+		tabindex="0"
+		@click="emit('select')"
+		@keydown.enter.prevent="emit('select')"
+		@keydown.space.prevent="emit('select')"
 	>
 		<DiscordAvatar :user="bot" size="tiny" class="discord-slash-command-suggestion-avatar" />
 		<div class="discord-slash-command-suggestion-content">
@@ -33,6 +37,10 @@ const {
 }>();
 
 const resolvedAppLabel = computed(() => appLabel ?? Profiles[bot].name);
+
+const emit = defineEmits<{
+	select: [];
+}>();
 
 const ariaLabel = computed(() => {
 	const parts = [`${resolvedAppLabel.value} slash command: /${name}`];

@@ -14,7 +14,7 @@
 			>
 				<span class="flex items-center gap-1 font-bold">
 					<DiscordAvatar :user="command.user" size="tiny" />
-					{{ command.user }}
+					{{ commandProfile?.name }}
 				</span>
 				used
 				<LazyDiscordMention kind="app">{{ command.name }}</LazyDiscordMention>
@@ -57,12 +57,14 @@
 </template>
 
 <script setup lang="ts">
-const { name, ephemeral, command } = defineProps<{
+const props = defineProps<{
 	name: ProfileName;
 	ephemeral?: boolean;
 	command?: { user: ProfileName; name: string };
 }>();
-const profile = computed(() => Profiles[name]);
+const { name, ephemeral, command } = toRefs(props);
+const profile = computed(() => Profiles[name.value]);
+const commandProfile = computed(() => (command.value ? Profiles[command.value.user] : undefined));
 </script>
 
 <style scoped>
@@ -106,10 +108,17 @@ const profile = computed(() => Profiles[name]);
 }
 
 .discord-message-reply {
-	--avatar-size: 48px;
-	--gutter: 16px;
+	--avatar-size: 32px;
+	--gutter: 8px;
 
 	@apply relative mb-1 flex items-center gap-1 text-sm;
+}
+
+@media (width >= 48rem) {
+	.discord-message-reply {
+		--avatar-size: 48px;
+		--gutter: 16px;
+	}
 }
 
 .discord-message-reply::before {

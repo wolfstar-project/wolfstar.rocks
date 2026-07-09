@@ -206,20 +206,29 @@ describe("component SSR rendering", () => {
 		});
 
 		describe("DiscordSlashCommandSuggestions", () => {
-			it("renders matching header and listbox", async () => {
+			it("renders frequently used and matched command sections", async () => {
 				const wrapper = await mountSuspended({
 					components: { DiscordSlashCommandSuggestion, DiscordSlashCommandSuggestions },
 					template: `
 						<DiscordSlashCommandSuggestions prefix="/war">
-							<DiscordSlashCommandSuggestion
-								name="warn"
-								description="Warn a member"
-								:active="true"
-							/>
+							<template #frequently-used>
+								<DiscordSlashCommandSuggestion
+									name="warn"
+									description="Warn a member"
+								/>
+							</template>
+							<template #matched>
+								<DiscordSlashCommandSuggestion
+									name="warn"
+									description="Warn a member"
+									:active="true"
+								/>
+							</template>
 						</DiscordSlashCommandSuggestions>
 					`,
 				});
-				expect(wrapper.text()).toContain("Commands matching /war");
+				expect(wrapper.text()).toContain("Frequently Used");
+				expect(wrapper.text()).toContain("Matched Command");
 				expect(wrapper.find("[role='listbox']").exists()).toBe(true);
 			});
 		});

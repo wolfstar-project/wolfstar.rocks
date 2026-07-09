@@ -195,11 +195,19 @@ describe("component accessibility audits", () => {
 					components: { DiscordSlashCommandSuggestion, DiscordSlashCommandSuggestions },
 					template: `
 						<DiscordSlashCommandSuggestions prefix="/war">
-							<DiscordSlashCommandSuggestion
-								name="warn"
-								description="Warn a member"
-								:active="true"
-							/>
+							<template #frequently-used>
+								<DiscordSlashCommandSuggestion
+									name="warn"
+									description="Warn a member"
+								/>
+							</template>
+							<template #matched>
+								<DiscordSlashCommandSuggestion
+									name="warn"
+									description="Warn a member"
+									:active="true"
+								/>
+							</template>
 						</DiscordSlashCommandSuggestions>
 					`,
 				});

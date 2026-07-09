@@ -11,29 +11,8 @@
 				<span class="text-xs text-muted">— WolfStar HQ</span>
 			</div>
 
-			<div class="showcase-card-body">
-				<div class="showcase-command-picker border-b">
-					<DiscordSlashCommandSuggestions :prefix="commandSearchPrefix">
-						<DiscordSlashCommandSuggestion
-							v-for="(command, index) of showcaseCommands"
-							:key="command.name"
-							:name="command.name"
-							:description="command.description"
-							:active="commandIndex === index"
-						/>
-					</DiscordSlashCommandSuggestions>
-
-					<DiscordSlashCommandInput :value="commandInputValue" />
-				</div>
-
-				<div class="border-b px-5 py-4">
-					<DiscordSlashCommand
-						:name="activeCommand.name"
-						:options="activeCommand.options"
-					/>
-				</div>
-
-				<div class="p-5">
+			<div class="showcase-card-body flex flex-col">
+				<div class="showcase-discord-messages p-5 pb-3">
 					<DiscordMessages class="showcase-discord-feed w-full text-left">
 						<DiscordMessage
 							name="wolfstar"
@@ -69,6 +48,38 @@
 							</DiscordEmbed>
 						</DiscordMessage>
 					</DiscordMessages>
+				</div>
+
+				<div class="showcase-command-picker border-t">
+					<DiscordSlashCommandSuggestions :prefix="commandSearchPrefix">
+						<template #frequently-used>
+							<DiscordSlashCommandSuggestion
+								v-for="command of frequentlyUsedCommands"
+								:key="`frequently-used-${command.name}`"
+								:name="command.name"
+								:description="command.description"
+								:active="activeCommand.name === command.name"
+							/>
+						</template>
+						<template #matched>
+							<DiscordSlashCommandSuggestion
+								v-for="command of matchedCommands"
+								:key="`matched-${command.name}`"
+								:name="command.name"
+								:description="command.description"
+								:active="activeCommand.name === command.name"
+							/>
+						</template>
+					</DiscordSlashCommandSuggestions>
+
+					<div class="px-3 pt-2">
+						<DiscordSlashCommand
+							:name="activeCommand.name"
+							:options="activeCommand.options"
+						/>
+					</div>
+
+					<DiscordSlashCommandInput :value="commandInputValue" />
 				</div>
 			</div>
 		</SurfaceCard>
@@ -125,6 +136,15 @@ const commandSearchPrefix = computed(() => {
 	return `/${name.length > 3 ? name.slice(0, 3) : name}`;
 });
 
+const frequentlyUsedCommands = computed(() =>
+	showcaseCommands.filter((command) => command.frequentlyUsed),
+);
+
+const matchedCommands = computed(() => {
+	const prefix = commandSearchPrefix.value.slice(1).toLowerCase();
+	return showcaseCommands.filter((command) => command.name.startsWith(prefix));
+});
+
 const commandInputValue = computed(() => `/${activeCommand.value.name}`);
 
 function advanceCommandIndex(value: -1 | 1) {
@@ -149,12 +169,14 @@ onMounted(() => {
 	background-color: var(--color-base-300);
 }
 
-.showcase-card-body > .border-b {
+.showcase-card-body > .border-t,
+.showcase-command-picker {
 	border-color: var(--home-border-subtle);
 }
 
-.showcase-command-picker {
-	border-color: var(--home-border-subtle);
+.showcase-discord-messages :deep(.discord-messages) {
+	@apply rounded-none shadow-none;
+	background-color: transparent;
 }
 
 .showcase-discord-feed {
@@ -163,7 +185,7 @@ onMounted(() => {
 }
 
 :deep(.showcase-discord-feed .discord-message) {
-	@apply rounded-lg px-0 py-2 sm:px-1 sm:py-2.5;
+	@apply rounded-lg px-2 py-2 sm:px-4 sm:py-2.5;
 	background-color: transparent;
 }
 

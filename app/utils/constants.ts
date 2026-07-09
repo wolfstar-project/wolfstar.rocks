@@ -556,6 +556,7 @@ interface ShowcaseCommand {
 	name: string;
 	description: string;
 	invoker: ProfileName;
+	frequentlyUsed?: boolean;
 	options: ShowcaseCommandOption[];
 	embedColor: string;
 	embedFooter: string;
@@ -568,6 +569,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		name: "warn",
 		description: "Warn a member in the server",
 		invoker: "stella",
+		frequentlyUsed: true,
 		options: [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "spam", focused: true },
@@ -591,6 +593,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		name: "ban",
 		description: "Ban a member from the server",
 		invoker: "stella",
+		frequentlyUsed: true,
 		options: [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "repeated infractions", focused: true },
@@ -614,6 +617,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		name: "kick",
 		description: "Kick a member from the server",
 		invoker: "stella",
+		frequentlyUsed: true,
 		options: [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "rule violation", focused: true },

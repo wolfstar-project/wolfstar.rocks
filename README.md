@@ -405,7 +405,7 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
 [codspeed-link]:
   https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge
 [codspeed-shield]:
-  https://shieldcn.dev/badge/CodSpeed-benchmarks-blue?variant=branded&logo=codspeed
+  https://img.shields.io/endpoint?url=https://codspeed.io/badge.json
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:
   https://shieldcn.dev/badge/PRs-welcome-ffcb47?variant=branded

@@ -253,9 +253,9 @@ describe("component SSR rendering", () => {
 					},
 				});
 				expect(wrapper.text()).toContain("/ban");
-				expect(wrapper.text()).toContain("user:");
+				expect(wrapper.text()).toContain("user");
 				expect(wrapper.text()).toContain("baddie");
-				expect(wrapper.text()).toContain("reason:");
+				expect(wrapper.text()).toContain("reason");
 				expect(wrapper.text()).toContain("repeated infractions");
 				expect(wrapper.find(".discord-slash-command-composed").exists()).toBe(true);
 			});

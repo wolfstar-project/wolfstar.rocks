@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-interface SlashCommandOption {
+export interface SlashCommandOption {
 	name: string;
 	value?: string;
 	description?: string;

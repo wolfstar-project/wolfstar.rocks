@@ -8,8 +8,11 @@
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
+				<!-- Decorative watermark: override IconsWolfstar's baked-in role/aria-label so only the logo mark below is exposed as the "WolfStar logo" image -->
 				<icons-wolfstar
 					class="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 opacity-5"
+					role="presentation"
+					:aria-label="undefined"
 					aria-hidden="true"
 				/>
 				<div

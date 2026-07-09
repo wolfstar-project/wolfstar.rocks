@@ -88,7 +88,7 @@ importers:
         specifier: ^5.0.2
         version: 5.3.2(98e31a5b8b87d58861b50247c65073a6)
       '@playwright/test':
-        specifier: ^1.60.0
+        specifier: ^1.61.1
         version: 1.61.1
       '@prisma/adapter-pg':
         specifier: ^7.8.0

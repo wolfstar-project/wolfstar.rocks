@@ -222,11 +222,8 @@
 						Analytics
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
-						We use Netlify Analytics, a privacy-focused, server-side analytics service
-						provided by our hosting provider, to understand how visitors use our
-						website. Netlify Analytics is generated from server logs rather than a
-						client-side script, so it is not affected by ad blockers and does not run
-						any tracking code in your browser.
+						We use Netlify Analytics to understand how visitors use our website. This
+						helps us improve the user experience and identify issues.
 					</p>
 					<p class="mb-3 leading-relaxed text-base-content">
 						Netlify Analytics is designed with privacy in mind:
@@ -242,7 +239,7 @@
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>It does not run any client-side tracking script</span>
+							<span>It does not track users across websites</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
@@ -250,16 +247,14 @@
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span
-								>Data is processed by our hosting provider (Netlify) rather than a
-								separate third-party analytics vendor</span
-							>
+							<span>Data is collected server-side, not from your browser</span>
 						</li>
 					</ul>
 					<p class="mt-4 leading-relaxed text-base-content">
-						The only information collected includes: page route/URL, referrer, browser,
-						device type and operating system, and country/region. This data cannot be
-						used to identify individual users.
+						The only information collected includes: page URLs, referrer,
+						country/region, device type, browser, and operating system. This data cannot
+						be used to identify individual users. All analytics data is processed
+						server-side by our hosting provider.
 					</p>
 				</section>
 
@@ -641,8 +636,8 @@
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Analytics Data:</span> Retained in
-								anonymous, aggregated form by Netlify Analytics and cannot be linked
-								to individual users.
+								aggregate form by Netlify and cannot be linked to individual users.
+								Retained according to Netlify's data retention policy.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">

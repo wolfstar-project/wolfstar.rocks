@@ -41,7 +41,9 @@
 					</div>
 				</nav>
 
-				<DiscordScrollbar class="discord-slash-command-suggestions-scroll">
+				<DiscordScrollbar
+					class="discord-slash-command-suggestions-scroll discord-slash-command-suggestions-scroll-fill"
+				>
 					<div class="discord-slash-command-suggestions-list">
 						<p class="discord-slash-command-suggestions-header" role="presentation">
 							<UIcon
@@ -58,7 +60,12 @@
 
 			<DiscordScrollbar
 				v-if="slots.matched"
-				class="discord-slash-command-suggestions-scroll discord-slash-command-suggestions-scroll-matched"
+				class="discord-slash-command-suggestions-scroll"
+				:class="
+					slots['frequently-used']
+						? 'discord-slash-command-suggestions-scroll-matched'
+						: 'discord-slash-command-suggestions-scroll-fill'
+				"
 			>
 				<div
 					class="discord-slash-command-suggestions-list discord-slash-command-suggestions-list-matched"
@@ -69,7 +76,7 @@
 
 			<DiscordScrollbar
 				v-if="!slots['frequently-used'] && !slots.matched"
-				class="discord-slash-command-suggestions-scroll"
+				class="discord-slash-command-suggestions-scroll discord-slash-command-suggestions-scroll-fill"
 			>
 				<slot />
 			</DiscordScrollbar>
@@ -128,18 +135,22 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-panel {
-	@apply flex max-h-48 flex-col overflow-hidden py-2 pr-1;
+	@apply flex min-h-0 flex-col py-2;
 }
 
 .discord-slash-command-suggestions-scroll {
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply min-h-0 min-w-0;
+	@apply min-h-0 min-w-0 self-stretch overflow-hidden;
+}
+
+.discord-slash-command-suggestions-scroll-fill {
+	@apply max-h-48 min-h-0 flex-1;
 }
 
 .discord-slash-command-suggestions-scroll-matched {
-	@apply shrink-0;
+	@apply max-h-48 shrink-0;
 }
 
 .discord-slash-command-suggestions-frequently-used {

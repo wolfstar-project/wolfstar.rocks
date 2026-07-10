@@ -13,6 +13,7 @@ import {
 	DiscordSlashCommandSuggestion,
 	DiscordSlashCommandSuggestionMatched,
 	DiscordSlashCommandSuggestions,
+	DiscordScrollbar,
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
@@ -264,7 +265,46 @@ describe("component SSR rendering", () => {
 				expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(
 					true,
 				);
+				expect(
+					wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length,
+				).toBe(8);
+				expect(
+					wrapper
+						.find(".discord-scrollbar-viewport")
+						.find(".discord-slash-command-suggestions-sidebar")
+						.exists(),
+				).toBe(false);
 				expect(wrapper.find("[role='listbox']").exists()).toBe(true);
+				expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
+				expect(wrapper.findAll(".discord-scrollbar").length).toBeGreaterThanOrEqual(2);
+			});
+		});
+
+		describe("DiscordScrollbar", () => {
+			it("renders custom track and hides native scrollbar viewport", async () => {
+				const wrapper = await mountSuspended(DiscordScrollbar, {
+					slots: {
+						default: `
+							<p>Line 1</p>
+							<p>Line 2</p>
+							<p>Line 3</p>
+						`,
+					},
+				});
+
+				expect(wrapper.find(".discord-scrollbar-viewport").exists()).toBe(true);
+				expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
+				expect(wrapper.find(".discord-scrollbar-thumb").exists()).toBe(true);
+			});
+
+			it("renders optional arrow controls when showArrows is true", async () => {
+				const wrapper = await mountSuspended(DiscordScrollbar, {
+					props: { showArrows: true },
+					slots: { default: "<p>Scrollable content</p>" },
+				});
+
+				expect(wrapper.find(".discord-scrollbar-arrow-up").exists()).toBe(true);
+				expect(wrapper.find(".discord-scrollbar-arrow-down").exists()).toBe(true);
 			});
 		});
 
@@ -419,6 +459,13 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("Frequently Used");
 			expect(wrapper.text()).not.toContain("Matched Command");
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
+			expect(wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length).toBe(
+				8,
+			);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(3);
+			expect(wrapper.text()).toContain("/warn");
+			expect(wrapper.text()).toContain("/ban");
+			expect(wrapper.text()).toContain("/kick");
 			expect(wrapper.findAll("input[name='matched-command']").length).toBeGreaterThan(0);
 			expect(wrapper.findAll(".showcase-channel-header").length).toBe(1);
 		});

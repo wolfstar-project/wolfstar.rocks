@@ -30,6 +30,7 @@ const ALLOW_LIST = new Set([
 	"app/components/discord/slash-command-suggestion-matched.vue",
 	"app/components/discord/slash-command-suggestions.vue",
 	"app/components/discord/slash-command-input.vue",
+	"app/components/discord/scrollbar.vue",
 ]);
 
 /** Tailwind color palette names that map to raw colors (not semantic tokens). */

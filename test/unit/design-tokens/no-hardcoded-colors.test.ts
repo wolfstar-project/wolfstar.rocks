@@ -20,12 +20,14 @@ const ALLOW_LIST = new Set([
 	"app/components/OgImage/Page.takumi.vue",
 	// Discord-domain components maintain Discord brand fidelity with scoped vars
 	"app/components/discord/message.vue",
+	"app/components/discord/message-command-reply.vue",
 	"app/components/discord/embed.vue",
 	"app/components/discord/mention.vue",
 	"app/components/discord/role.vue",
 	"app/components/discord/reaction.vue",
 	"app/components/discord/slash-command.vue",
 	"app/components/discord/slash-command-suggestion.vue",
+	"app/components/discord/slash-command-suggestion-matched.vue",
 	"app/components/discord/slash-command-suggestions.vue",
 	"app/components/discord/slash-command-input.vue",
 ]);

@@ -1,41 +1,47 @@
 <template>
 	<section class="discord-slash-command-suggestions" :aria-label="ariaLabel">
-		<nav class="discord-slash-command-suggestions-sidebar" aria-hidden="true">
+		<div
+			role="listbox"
+			:aria-label="listboxLabel"
+			class="discord-slash-command-suggestions-panel"
+		>
 			<div
-				class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
+				v-if="slots['frequently-used']"
+				class="discord-slash-command-suggestions-frequently-used"
 			>
-				<UIcon
-					name="ph:clock-counter-clockwise-fill"
-					class="discord-slash-command-suggestions-sidebar-icon"
-				/>
-			</div>
+				<nav class="discord-slash-command-suggestions-sidebar" aria-hidden="true">
+					<div
+						class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
+					>
+						<UIcon
+							name="ph:clock-counter-clockwise-fill"
+							class="discord-slash-command-suggestions-sidebar-icon"
+						/>
+					</div>
 
-			<div class="discord-slash-command-suggestions-sidebar-item">
-				<nuxt-img
-					src="/avatars/wolfstar.png"
-					width="24"
-					height="24"
-					alt=""
-					class="discord-slash-command-suggestions-sidebar-avatar"
-				/>
-			</div>
+					<div class="discord-slash-command-suggestions-sidebar-item">
+						<nuxt-img
+							src="/avatars/wolfstar.png"
+							width="24"
+							height="24"
+							alt=""
+							class="discord-slash-command-suggestions-sidebar-avatar"
+						/>
+					</div>
 
-			<div
-				v-for="bot in mockSidebarBots"
-				:key="bot.label"
-				class="discord-slash-command-suggestions-sidebar-item"
-			>
-				<UIcon :name="bot.icon" class="discord-slash-command-suggestions-sidebar-icon" />
-			</div>
-		</nav>
+					<div
+						v-for="bot in mockSidebarBots"
+						:key="bot.label"
+						class="discord-slash-command-suggestions-sidebar-item"
+					>
+						<UIcon
+							:name="bot.icon"
+							class="discord-slash-command-suggestions-sidebar-icon"
+						/>
+					</div>
+				</nav>
 
-		<div class="discord-slash-command-suggestions-panel">
-			<div
-				role="listbox"
-				:aria-label="listboxLabel"
-				class="discord-slash-command-suggestions-list"
-			>
-				<template v-if="$slots['frequently-used']">
+				<div class="discord-slash-command-suggestions-list">
 					<p class="discord-slash-command-suggestions-header" role="presentation">
 						<UIcon
 							name="ph:clock-counter-clockwise-fill"
@@ -45,31 +51,43 @@
 						Frequently Used
 					</p>
 					<slot name="frequently-used" />
-				</template>
-
-				<template v-if="$slots.matched">
-					<p class="discord-slash-command-suggestions-header" role="presentation">
-						<UIcon
-							name="ph:terminal-window-fill"
-							class="discord-slash-command-suggestions-header-icon"
-							aria-hidden="true"
-						/>
-						Matched Command
-					</p>
-					<slot name="matched" />
-				</template>
-
-				<slot v-if="!$slots['frequently-used'] && !$slots.matched" />
+				</div>
 			</div>
+
+			<div
+				v-if="slots.matched"
+				class="discord-slash-command-suggestions-list discord-slash-command-suggestions-list-matched"
+			>
+				<slot name="matched" />
+			</div>
+
+			<slot v-if="!slots['frequently-used'] && !slots.matched" />
 		</div>
 	</section>
 </template>
 
-<script setup lang="ts">
-const { listboxLabel = "Slash command suggestions", prefix } = defineProps<{
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface SlashCommandSuggestionsProps {
 	listboxLabel?: string;
 	prefix: string;
-}>();
+}
+
+interface SlashCommandSuggestionsSlots {
+	"frequently-used"?(props?: Record<string, never>): VNode[];
+	"matched"?(props?: Record<string, never>): VNode[];
+	"default"?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<SlashCommandSuggestionsSlots>();
+
+const { listboxLabel = "Slash command suggestions", prefix } =
+	defineProps<SlashCommandSuggestionsProps>();
+
+const slots = useSlots();
 
 const mockSidebarBots = [
 	{ icon: "ph:rocket-launch-fill", label: "Staryl" },
@@ -95,8 +113,32 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-scrollbar-track: hsla(220, 2.7%, 66.1%, 0.12);
 	--discord-slash-command-suggestions-scrollbar-thumb: hsla(220, 2.7%, 66.1%, 0.45);
 
-	@apply grid grid-cols-[40px_minmax(0,1fr)];
 	background-color: var(--discord-slash-command-suggestions-bg);
+}
+
+.discord-slash-command-suggestions-panel {
+	@apply max-h-48 overflow-y-auto py-2 pr-1;
+	scrollbar-width: thin;
+	scrollbar-color: var(--discord-slash-command-suggestions-scrollbar-thumb)
+		var(--discord-slash-command-suggestions-scrollbar-track);
+}
+
+.discord-slash-command-suggestions-panel::-webkit-scrollbar {
+	width: 4px;
+}
+
+.discord-slash-command-suggestions-panel::-webkit-scrollbar-track {
+	border-radius: 9999px;
+	background-color: var(--discord-slash-command-suggestions-scrollbar-track);
+}
+
+.discord-slash-command-suggestions-panel::-webkit-scrollbar-thumb {
+	border-radius: 9999px;
+	background-color: var(--discord-slash-command-suggestions-scrollbar-thumb);
+}
+
+.discord-slash-command-suggestions-frequently-used {
+	@apply grid grid-cols-[40px_minmax(0,1fr)];
 }
 
 .discord-slash-command-suggestions-sidebar {
@@ -121,10 +163,6 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	@apply size-full rounded-full object-cover;
 }
 
-.discord-slash-command-suggestions-panel {
-	@apply min-w-0 py-2 pr-1;
-}
-
 .discord-slash-command-suggestions-header {
 	@apply flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-bold tracking-wide uppercase;
 	color: var(--discord-slash-command-suggestions-header);
@@ -135,23 +173,10 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-list {
-	@apply max-h-48 overflow-y-auto pr-1;
-	scrollbar-width: thin;
-	scrollbar-color: var(--discord-slash-command-suggestions-scrollbar-thumb)
-		var(--discord-slash-command-suggestions-scrollbar-track);
+	@apply min-w-0;
 }
 
-.discord-slash-command-suggestions-list::-webkit-scrollbar {
-	width: 4px;
-}
-
-.discord-slash-command-suggestions-list::-webkit-scrollbar-track {
-	border-radius: 9999px;
-	background-color: var(--discord-slash-command-suggestions-scrollbar-track);
-}
-
-.discord-slash-command-suggestions-list::-webkit-scrollbar-thumb {
-	border-radius: 9999px;
-	background-color: var(--discord-slash-command-suggestions-scrollbar-thumb);
+.discord-slash-command-suggestions-list-matched {
+	@apply py-0;
 }
 </style>

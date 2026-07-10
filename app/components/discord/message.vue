@@ -1,24 +1,20 @@
 <template>
 	<article
 		class="discord-message"
-		:class="{ 'discord-message-ephemeral': ephemeral }"
+		:class="{
+			'discord-message-ephemeral': ephemeral,
+			'discord-message-with-command': command,
+		}"
 		:aria-label="`Message from ${profile.name}`"
 	>
-		<DiscordAvatar :user="name" size="medium" :class="{ 'mt-6': command }" />
-		<div class="grow gap-2 max-sm:text-xs">
-			<div
-				v-if="command"
-				class="discord-message-reply"
-				role="complementary"
-				aria-label="Reply context"
-			>
-				<span class="flex items-center gap-1 font-bold">
-					<DiscordAvatar :user="command.user" size="tiny" />
-					{{ commandProfile?.name }}
-				</span>
-				used
-				<LazyDiscordMention kind="app">{{ command.name }}</LazyDiscordMention>
-			</div>
+		<DiscordAvatar :user="name" size="medium" class="discord-message-avatar" />
+		<DiscordMessageCommandReply
+			v-if="command"
+			:user="command.user"
+			:command-name="command.name"
+			class="discord-message-command-reply-slot"
+		/>
+		<div class="discord-message-content">
 			<header class="mb-0.5 flex flex-row items-center">
 				<div class="font-whitney font-bold">{{ profile.name }}</div>
 				<span
@@ -64,7 +60,6 @@ const props = defineProps<{
 }>();
 const { name, ephemeral, command } = toRefs(props);
 const profile = computed(() => Profiles[name.value]);
-const commandProfile = computed(() => (command.value ? Profiles[command.value.user] : undefined));
 </script>
 
 <style scoped>
@@ -90,6 +85,34 @@ const commandProfile = computed(() => (command.value ? Profiles[command.value.us
 	background-color: var(--discord-surface);
 }
 
+.discord-message-with-command {
+	--command-reply-avatar-size: 32px;
+	--command-reply-gutter: 8px;
+
+	@apply grid items-start;
+	grid-template-columns: auto minmax(0, 1fr);
+	grid-template-rows: auto auto;
+}
+
+@media (width >= 48rem) {
+	.discord-message-with-command {
+		--command-reply-avatar-size: 48px;
+		--command-reply-gutter: 16px;
+	}
+}
+
+.discord-message-with-command > .discord-message-avatar {
+	@apply col-start-1 row-start-2 self-start;
+}
+
+.discord-message-command-reply-slot {
+	@apply col-start-2 row-start-1 min-w-0;
+}
+
+.discord-message-with-command > .discord-message-content {
+	@apply col-start-2 row-start-2 min-w-0;
+}
+
 .discord-message:not(.discord-message-ephemeral):hover {
 	background-color: var(--discord-surface);
 	background-color: oklch(from var(--discord-surface) calc(l + 0.04) c h);
@@ -105,43 +128,5 @@ const commandProfile = computed(() => (command.value ? Profiles[command.value.us
 
 .discord-message-ephemeral-footer > .discord-message-link {
 	@apply cursor-pointer border-0 bg-transparent p-0 text-info hover:underline hover:underline-offset-1;
-}
-
-.discord-message-reply {
-	--avatar-size: 32px;
-	--gutter: 8px;
-
-	@apply relative mb-1 flex items-center gap-1 text-sm;
-}
-
-@media (width >= 48rem) {
-	.discord-message-reply {
-		--avatar-size: 48px;
-		--gutter: 16px;
-	}
-}
-
-.discord-message-reply::before {
-	--spine-width: 2px;
-	--reply-spacing: 4px;
-	--custom-message-spacing-vertical-container-cozy: 0.125rem;
-
-	content: "";
-	@apply absolute box-border block;
-
-	top: 50%;
-	right: 100%;
-	bottom: 0;
-	left: calc(-1 * (0.5 * var(--avatar-size) + var(--gutter)));
-	margin-top: calc(-0.5 * var(--spine-width));
-
-	margin-right: var(--reply-spacing);
-	margin-bottom: calc(-4px + var(--custom-message-spacing-vertical-container-cozy));
-	margin-left: calc(-0.5 * var(--spine-width));
-
-	@apply border-base-content/20;
-	border-width: var(--spine-width) 0 0 var(--spine-width);
-	border-style: solid;
-	border-top-left-radius: 6px;
 }
 </style>

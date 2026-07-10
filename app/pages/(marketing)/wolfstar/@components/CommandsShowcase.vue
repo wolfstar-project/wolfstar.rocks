@@ -1,106 +1,122 @@
 <template>
 	<div class="mx-auto w-full max-w-250">
-		<SurfaceCard padding="none" class="overflow-hidden shadow-glow">
-			<div class="showcase-channel-header">
-				<UIcon
-					name="discord:text-channel"
-					class="size-4.5 shrink-0 text-muted"
-					aria-hidden="true"
-				/>
-				<span class="text-[15px] font-semibold text-base-content">mod-commands</span>
-				<span class="text-xs text-muted">— WolfStar HQ</span>
-			</div>
-
-			<div class="showcase-card-body flex flex-col">
-				<div class="showcase-discord-messages p-5 pb-3">
-					<DiscordMessages class="showcase-discord-feed w-full text-left">
-						<DiscordMessage
-							name="wolfstar"
-							:command="{ user: activeCommand.invoker, name: activeCommand.name }"
-						>
-							<DiscordEmbed
-								:color="activeCommand.embedColor"
-								:footer="{
-									icon: '/avatars/wolfstar.png',
-									text: activeCommand.embedFooter,
-								}"
-								:timestamp
-							>
-								<span
-									v-for="(line, lineIdx) in activeCommand.embedLines"
-									:key="line.label"
-								>
-									<strong>❯ {{ line.label }}:</strong
-									><span class="showcase-embed-detail-parts"
-										><template
-											v-for="(part, partIdx) in line.parts"
-											:key="`${lineIdx}-${partIdx}`"
-											><DiscordMention
-												v-if="part.type === 'mention'"
-												kind="mention"
-												>{{ part.name }}</DiscordMention
-											><template v-else>{{
-												part.content
-											}}</template></template
-										></span
-									><br />
-								</span>
-							</DiscordEmbed>
-						</DiscordMessage>
-					</DiscordMessages>
-				</div>
-
-				<div class="showcase-command-picker border-t">
-					<DiscordSlashCommandSuggestions :prefix="commandSearchPrefix">
-						<template #frequently-used>
-							<DiscordSlashCommandSuggestion
-								v-for="command of frequentlyUsedCommands"
-								:key="`frequently-used-${command.name}`"
-								:name="command.name"
-								:description="command.description"
-								:active="activeCommand.name === command.name"
-								@select="selectCommand(command.name)"
-							/>
-						</template>
-						<template #matched>
-							<DiscordSlashCommandSuggestion
-								v-for="command of matchedCommands"
-								:key="`matched-${command.name}`"
-								:name="command.name"
-								:description="command.description"
-								:active="activeCommand.name === command.name"
-								@select="selectCommand(command.name)"
-							/>
-						</template>
-					</DiscordSlashCommandSuggestions>
-
-					<DiscordSlashCommandInput
-						:name="activeCommand.name"
-						:options="activeCommand.options"
+		<div class="flex flex-col items-stretch gap-4">
+			<SurfaceCard padding="none" class="overflow-hidden shadow-glow">
+				<div class="showcase-channel-header">
+					<UIcon
+						name="discord:text-channel"
+						class="size-4.5 shrink-0 text-muted"
+						aria-hidden="true"
 					/>
+					<span class="text-[15px] font-semibold text-base-content">mod-commands</span>
+					<span class="text-xs text-muted">— WolfStar HQ</span>
 				</div>
-			</div>
-		</SurfaceCard>
 
-		<div
-			class="showcase-command-scroll no-scrollbar mt-4 overflow-x-auto"
-			role="tablist"
-			aria-label="Browse commands"
-		>
-			<div class="flex w-max min-w-full gap-2 px-1 pb-1">
+				<div class="showcase-card-body flex flex-col">
+					<div class="showcase-discord-messages p-5 pb-3">
+						<DiscordMessages class="showcase-discord-feed w-full text-left">
+							<DiscordMessage
+								name="wolfstar"
+								:command="{
+									user: activeDisplayCommand.invoker,
+									name: activeDisplayCommand.name,
+								}"
+							>
+								<DiscordEmbed
+									:color="activeDisplayCommand.embedColor"
+									:footer="{
+										icon: '/avatars/wolfstar.png',
+										text: activeDisplayCommand.embedFooter,
+									}"
+									:timestamp
+								>
+									<span
+										v-for="(line, lineIdx) in activeDisplayCommand.embedLines"
+										:key="line.label"
+									>
+										<strong>❯ {{ line.label }}:</strong
+										><span class="showcase-embed-detail-parts"
+											><template
+												v-for="(part, partIdx) in line.parts"
+												:key="`${lineIdx}-${partIdx}`"
+												><DiscordMention
+													v-if="part.type === 'mention'"
+													kind="mention"
+													>{{ part.name }}</DiscordMention
+												><template v-else>{{
+													part.content
+												}}</template></template
+											></span
+										><br />
+									</span>
+								</DiscordEmbed>
+							</DiscordMessage>
+						</DiscordMessages>
+					</div>
+
+					<div class="showcase-command-picker border-t">
+						<DiscordSlashCommandSuggestions :prefix="activeSearchPrefix">
+							<template v-if="pickerMode === 'frequently-used'" #frequently-used>
+								<DiscordSlashCommandSuggestion
+									v-for="command of frequentlyUsedCommands"
+									:key="`frequently-used-${command.name}`"
+									:name="command.name"
+									:description="command.description"
+									:active="activeDisplayCommand.name === command.name"
+									@select="selectFrequentlyUsedCommand(command.name)"
+								/>
+							</template>
+							<template v-else #matched>
+								<DiscordSlashCommandSuggestionMatched
+									:name="activeMatchedCommand.name"
+									:options="activeMatchedCommand.options"
+									active
+								/>
+							</template>
+						</DiscordSlashCommandSuggestions>
+
+						<DiscordSlashCommandInput
+							:name="activeDisplayCommand.name"
+							:options="activeDisplayCommand.options"
+						/>
+					</div>
+				</div>
+			</SurfaceCard>
+
+			<div class="flex items-center justify-center gap-1">
 				<button
-					v-for="(command, index) of showcaseCommands"
-					:key="command.name"
-					:ref="(element) => setCommandChipRef(command.name, element)"
 					type="button"
-					role="tab"
-					class="showcase-command-chip"
-					:class="{ 'showcase-command-chip-active': commandIndex === index }"
-					:aria-selected="commandIndex === index"
-					:aria-label="command.tooltip"
-					@click="commandIndex = index"
+					class="radio-feature-arrow rotate-90"
+					aria-label="Previous matched command"
+					@click="selectMatchedCommand(-1)"
 				>
-					/{{ command.name }}
+					<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+				</button>
+				<label
+					v-for="(command, matchedCommandIndex) of matchedShowcaseCommands"
+					:key="command.name"
+					class="radio-feature-container"
+					:data-tip="command.tooltip"
+					:for="`matched-command-${matchedCommandIndex}`"
+				>
+					<input
+						:id="`matched-command-${matchedCommandIndex}`"
+						v-model="matchedIndex"
+						type="radio"
+						name="matched-command"
+						class="radio-feature"
+						:value="matchedCommandIndex"
+						@change="pickerMode = 'matched'"
+					/>
+					<span class="sr-only">{{ command.tooltip }}</span>
+				</label>
+				<button
+					type="button"
+					class="radio-feature-arrow -rotate-90"
+					aria-label="Next matched command"
+					@click="selectMatchedCommand(1)"
+				>
+					<UIcon name="ph:caret-down-bold" aria-hidden="true" />
 				</button>
 			</div>
 		</div>
@@ -108,17 +124,31 @@
 </template>
 
 <script setup lang="ts">
+type PickerMode = "frequently-used" | "matched";
+
 const commandIndex = ref(0);
+const matchedIndex = ref(0);
+const pickerMode = ref<PickerMode>("frequently-used");
 const timestamp = ref(0);
-const commandChipElements = new Map<string, HTMLButtonElement>();
+
+const matchedShowcaseCommands = showcaseCommands;
 
 const activeCommand = computed(() => {
 	const command = showcaseCommands[commandIndex.value];
 	return command ?? showcaseCommands[0]!;
 });
 
-const commandSearchPrefix = computed(() => {
-	const name = activeCommand.value.name;
+const activeMatchedCommand = computed(() => {
+	const command = matchedShowcaseCommands[matchedIndex.value];
+	return command ?? matchedShowcaseCommands[0]!;
+});
+
+const activeDisplayCommand = computed(() =>
+	pickerMode.value === "matched" ? activeMatchedCommand.value : activeCommand.value,
+);
+
+const activeSearchPrefix = computed(() => {
+	const name = activeDisplayCommand.value.name;
 	return `/${name.length > 3 ? name.slice(0, 3) : name}`;
 });
 
@@ -126,33 +156,20 @@ const frequentlyUsedCommands = computed(() =>
 	showcaseCommands.filter((command) => command.frequentlyUsed),
 );
 
-const matchedCommands = computed(() => {
-	const prefix = commandSearchPrefix.value.slice(1).toLowerCase();
-	return showcaseCommands.filter((command) => command.name.startsWith(prefix));
-});
-
-function setCommandChipRef(name: string, element: Element | ComponentPublicInstance | null) {
-	if (element instanceof HTMLButtonElement) {
-		commandChipElements.set(name, element);
-		return;
-	}
-
-	commandChipElements.delete(name);
-}
-
-function selectCommand(name: string) {
+function selectFrequentlyUsedCommand(name: string) {
 	const index = showcaseCommands.findIndex((command) => command.name === name);
 	if (index !== -1) {
 		commandIndex.value = index;
+		pickerMode.value = "frequently-used";
 	}
 }
 
-watch(commandIndex, async () => {
-	await nextTick();
-	commandChipElements
-		.get(activeCommand.value.name)
-		?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-});
+function selectMatchedCommand(value: -1 | 1) {
+	matchedIndex.value =
+		(matchedIndex.value + value + matchedShowcaseCommands.length) %
+		matchedShowcaseCommands.length;
+	pickerMode.value = "matched";
+}
 
 onMounted(() => {
 	timestamp.value = Date.now();
@@ -204,24 +221,42 @@ onMounted(() => {
 	margin: 0;
 }
 
-.showcase-command-scroll {
-	scroll-snap-type: x proximity;
+.radio-feature-container {
+	@apply tooltip tooltip-top;
+	display: inherit;
 }
 
-.showcase-command-chip {
-	@apply shrink-0 rounded-full border border-base-content/10 bg-base-content/5 px-3 py-1.5 text-sm font-medium text-muted transition-colors;
-	scroll-snap-align: center;
+.radio-feature {
+	@apply size-3.5 cursor-pointer appearance-none rounded-full bg-base-content/15 sm:size-4;
 }
 
-.showcase-command-chip:hover {
-	@apply text-base-content;
+.radio-feature-arrow {
+	@apply inline-flex size-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-muted transition-colors hover:text-base-content sm:size-4;
 }
 
-.showcase-command-chip-active {
-	@apply border-primary/30 bg-primary/15 text-primary shadow-glow;
+@media not (hover: hover) {
+	.radio-feature {
+		@apply size-5;
+	}
+
+	.radio-feature-arrow {
+		@apply size-5;
+	}
 }
 
-.showcase-command-chip-active:hover {
-	@apply text-primary;
+.radio-feature:not(:checked):hover {
+	@apply bg-base-content/30;
+}
+
+.radio-feature:checked {
+	@apply bg-primary shadow-glow;
+}
+
+.radio-feature:checked:hover {
+	@apply bg-primary;
+}
+
+.radio-feature {
+	transition: background-color 0.25s linear;
 }
 </style>

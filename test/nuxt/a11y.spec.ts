@@ -18,6 +18,7 @@ import {
 	DiscordSlashCommand,
 	DiscordSlashCommandInput,
 	DiscordSlashCommandSuggestion,
+	DiscordSlashCommandSuggestionMatched,
 	DiscordSlashCommandSuggestions,
 	ModerationShowcase,
 	ModerationShowcaseSection,
@@ -189,10 +190,36 @@ describe("component accessibility audits", () => {
 			});
 		});
 
+		describe("DiscordSlashCommandSuggestionMatched", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended({
+					components: { DiscordSlashCommandSuggestionMatched },
+					template: `
+						<div role="listbox" aria-label="Matched slash commands">
+							<DiscordSlashCommandSuggestionMatched
+								name="ban"
+								:options="[
+									{ name: 'user', value: 'baddie' },
+									{ name: 'reason', value: 'repeated infractions', focused: true },
+								]"
+								:active="true"
+							/>
+						</div>
+					`,
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
 		describe("DiscordSlashCommandSuggestions", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
-					components: { DiscordSlashCommandSuggestion, DiscordSlashCommandSuggestions },
+					components: {
+						DiscordSlashCommandSuggestion,
+						DiscordSlashCommandSuggestionMatched,
+						DiscordSlashCommandSuggestions,
+					},
 					template: `
 						<DiscordSlashCommandSuggestions prefix="/war">
 							<template #frequently-used>
@@ -202,9 +229,12 @@ describe("component accessibility audits", () => {
 								/>
 							</template>
 							<template #matched>
-								<DiscordSlashCommandSuggestion
+								<DiscordSlashCommandSuggestionMatched
 									name="warn"
-									description="Warn a member"
+									:options="[
+										{ name: 'user', value: 'baddie' },
+										{ name: 'reason', value: 'spam', focused: true },
+									]"
 									:active="true"
 								/>
 							</template>

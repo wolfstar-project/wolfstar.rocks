@@ -216,60 +216,6 @@
 					</ul>
 				</section>
 
-				<!-- Analytics -->
-				<section>
-					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-						Analytics
-					</h2>
-					<p class="mb-4 leading-relaxed text-base-content">
-						We use Umami, a privacy-focused analytics platform, to understand how
-						visitors use our website. This helps us improve content, navigation, and the
-						overall experience. Umami runs on our own infrastructure at
-						<NuxtLink
-							to="https://umami.wolfstar.rocks"
-							target="_blank"
-							class="underline hover:opacity-70"
-						>
-							umami.wolfstar.rocks
-						</NuxtLink>
-						.
-					</p>
-					<p class="mb-3 leading-relaxed text-base-content">
-						Umami is designed with privacy in mind:
-					</p>
-					<ul class="list-none space-y-2 pl-0 text-base-content">
-						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>It does not use cookies</span>
-						</li>
-						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>It does not collect personal identifiers</span>
-						</li>
-						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>It does not track users across websites</span>
-						</li>
-						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>All data is aggregated and anonymised</span>
-						</li>
-						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span
-								>Analytics are self-hosted, so visitor data stays on infrastructure
-								we control rather than being sent to a third-party analytics
-								vendor</span
-							>
-						</li>
-					</ul>
-					<p class="mt-4 leading-relaxed text-base-content">
-						The only information collected includes: page route/URL, referrer, browser,
-						device type and operating system, and country/region. This data cannot be
-						used to identify individual users.
-					</p>
-				</section>
-
 				<!-- Error Tracking -->
 				<section>
 					<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
@@ -379,9 +325,8 @@
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span>
-								<span class="font-semibold">IP Address:</span> Used for security,
-								rate limiting, and general location (country/region) for analytics.
-								IP addresses are anonymized in analytics and error tracking.
+								<span class="font-semibold">IP Address:</span> Used for security and
+								rate limiting. IP addresses are anonymized in error tracking.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
@@ -647,15 +592,6 @@
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span>
-								<span class="font-semibold">Analytics Data:</span> Retained in
-								anonymous form on our self-hosted Umami instance and cannot be
-								linked to individual users. Data is retained until we manually
-								delete it.
-							</span>
-						</li>
-						<li class="flex items-start gap-3 leading-relaxed">
-							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>
 								<span class="font-semibold">Error Tracking Data:</span> Retained by
 								Sentry for up to 90 days for debugging purposes, then automatically
 								deleted.
@@ -827,9 +763,9 @@
 						identifies or can be reasonably associated with you. For examples of the
 						precise data points we collect and the sources of such collection, please
 						see the sections above including "INFORMATION WE COLLECT", "WHAT COOKIES DO
-						WE USE", "ANALYTICS", and "ERROR TRACKING AND MONITORING". We collect
-						personal information for the business and commercial purposes described in
-						“OUR USE OF YOUR INFORMATION” above.
+						WE USE", and "ERROR TRACKING AND MONITORING". We collect personal
+						information for the business and commercial purposes described in “OUR USE
+						OF YOUR INFORMATION” above.
 					</p>
 					<p class="mb-4 leading-relaxed text-base-content">
 						<span class="font-semibold">Disclosure of Personal Information</span>: may

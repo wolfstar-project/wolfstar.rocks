@@ -322,9 +322,9 @@
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">IP Address:</span> Used for
-									security and rate limiting. IP addresses are anonymized in
-									error tracking.
+									<span class="font-semibold">IP Address:</span> Used for security
+									and rate limiting. IP addresses are anonymized in error
+									tracking.
 								</span>
 							</li>
 							<li class="flex items-start gap-3 leading-relaxed">

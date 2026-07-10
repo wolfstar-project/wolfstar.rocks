@@ -276,7 +276,10 @@ describe("component SSR rendering", () => {
 				).toBe(false);
 				expect(wrapper.find("[role='listbox']").exists()).toBe(true);
 				expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
-				expect(wrapper.findAll(".discord-scrollbar").length).toBeGreaterThanOrEqual(2);
+				expect(wrapper.findAll(".discord-scrollbar").length).toBe(1);
+				expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(
+					true,
+				);
 			});
 		});
 
@@ -453,7 +456,7 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("CommandsShowcase", () => {
-		it("renders unified showcase with frequently used picker and matched command dots", async () => {
+		it("renders frequently used picker without matched row in default mode", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 
 			expect(wrapper.text()).toContain("Frequently Used");
@@ -463,24 +466,29 @@ describe("component SSR rendering", () => {
 				8,
 			);
 			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(3);
+			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.text()).toContain("/warn");
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.text()).toContain("/kick");
-			expect(wrapper.findAll("input[name='matched-command']").length).toBeGreaterThan(0);
+			expect(wrapper.findAll("input[name='matched-command']").length).toBe(
+				showcaseCommands.length,
+			);
 			expect(wrapper.findAll(".showcase-channel-header").length).toBe(1);
 		});
 
-		it("cycles matched command examples via radio navigation", async () => {
+		it("keeps frequently used visible when cycling matched command examples", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 
 			expect(wrapper.text()).toContain("/warn");
+			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 
 			await wrapper.find('[aria-label="Next matched command"]').trigger("click");
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(true);
-			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(false);
+			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(3);
 		});
 	});
 

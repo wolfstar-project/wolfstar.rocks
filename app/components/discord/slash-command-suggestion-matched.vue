@@ -14,22 +14,24 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import type { SlashCommandOption } from "./slash-command.vue";
 
-const {
-	active = false,
-	name,
-	options = [],
-} = defineProps<{
+interface SlashCommandSuggestionMatchedProps {
 	active?: boolean;
 	name: string;
 	options?: SlashCommandOption[];
-}>();
+}
 
-const emit = defineEmits<{
+interface SlashCommandSuggestionMatchedEmits {
 	select: [];
-}>();
+}
+</script>
+
+<script setup lang="ts">
+const { active = false, name, options = [] } = defineProps<SlashCommandSuggestionMatchedProps>();
+
+const emit = defineEmits<SlashCommandSuggestionMatchedEmits>();
 
 const ariaLabel = computed(() => {
 	const optionText = options

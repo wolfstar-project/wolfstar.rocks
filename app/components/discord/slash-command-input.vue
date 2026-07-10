@@ -24,18 +24,18 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import type { SlashCommandOption } from "./slash-command.vue";
 
-const {
-	name,
-	options = [],
-	value = "",
-} = defineProps<{
+interface SlashCommandInputProps {
 	name?: string;
 	options?: SlashCommandOption[];
 	value?: string;
-}>();
+}
+</script>
+
+<script setup lang="ts">
+const { name, options = [], value = "" } = defineProps<SlashCommandInputProps>();
 
 const ariaLabel = computed(() => {
 	if (name) {

@@ -21,6 +21,20 @@
 	</div>
 </template>
 
+<script lang="ts">
+interface SlashCommandSuggestionProps {
+	active?: boolean;
+	appLabel?: string;
+	bot?: ProfileName;
+	description?: string;
+	name: string;
+}
+
+interface SlashCommandSuggestionEmits {
+	select: [];
+}
+</script>
+
 <script setup lang="ts">
 const {
 	active = false,
@@ -28,19 +42,11 @@ const {
 	bot = "wolfstar",
 	description,
 	name,
-} = defineProps<{
-	active?: boolean;
-	appLabel?: string;
-	bot?: ProfileName;
-	description?: string;
-	name: string;
-}>();
+} = defineProps<SlashCommandSuggestionProps>();
 
 const resolvedAppLabel = computed(() => appLabel ?? Profiles[bot].name);
 
-const emit = defineEmits<{
-	select: [];
-}>();
+const emit = defineEmits<SlashCommandSuggestionEmits>();
 
 const ariaLabel = computed(() => {
 	const parts = [`${resolvedAppLabel.value} slash command: /${name}`];

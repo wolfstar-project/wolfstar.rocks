@@ -23,7 +23,9 @@
 	</span>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+import type { VNode } from "vue";
+
 export interface SlashCommandOption {
 	name: string;
 	value?: string;
@@ -32,10 +34,20 @@ export interface SlashCommandOption {
 	required?: boolean;
 }
 
-const { name, options = [] } = defineProps<{
+interface SlashCommandProps {
 	name: string;
 	options?: SlashCommandOption[];
-}>();
+}
+
+interface SlashCommandSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<SlashCommandSlots>();
+
+const { name, options = [] } = defineProps<SlashCommandProps>();
 </script>
 
 <style scoped>

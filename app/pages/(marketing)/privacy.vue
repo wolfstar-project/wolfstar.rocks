@@ -213,48 +213,6 @@
 						</ul>
 					</section>
 
-					<!-- Analytics -->
-					<section>
-						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
-							Analytics
-						</h2>
-						<p class="mb-4 leading-relaxed text-base-content">
-							We use Netlify Analytics to understand how visitors use our website.
-							This helps us improve the user experience and identify issues.
-						</p>
-						<p class="mb-3 leading-relaxed text-base-content">
-							Netlify Analytics is designed with privacy in mind:
-						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not use cookies</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not collect personal identifiers</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>It does not track users across websites</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>All data is aggregated and anonymised</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>Data is collected server-side, not from your browser</span>
-							</li>
-						</ul>
-						<p class="mt-4 leading-relaxed text-base-content">
-							The only information collected includes: page URLs, referrer,
-							country/region, device type, browser, and operating system. This data
-							cannot be used to identify individual users. All analytics data is
-							processed server-side by our hosting provider.
-						</p>
-					</section>
-
 					<!-- Error Tracking -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
@@ -365,8 +323,7 @@
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
 									<span class="font-semibold">IP Address:</span> Used for
-									security, rate limiting, and general location (country/region)
-									for analytics. IP addresses are anonymized in analytics and
+									security and rate limiting. IP addresses are anonymized in
 									error tracking.
 								</span>
 							</li>
@@ -638,14 +595,6 @@
 							<li class="flex items-start gap-3 leading-relaxed">
 								<span class="shrink-0 text-base-content/50">&mdash;</span>
 								<span>
-									<span class="font-semibold">Analytics Data:</span> Retained in
-									aggregate form by Netlify and cannot be linked to individual
-									users. Retained according to Netlify's data retention policy.
-								</span>
-							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
-								<span>
 									<span class="font-semibold">Error Tracking Data:</span> Retained
 									by Sentry for up to 90 days for debugging purposes, then
 									automatically deleted.
@@ -820,8 +769,8 @@
 							other information that identifies or can be reasonably associated with
 							you. For examples of the precise data points we collect and the sources
 							of such collection, please see the sections above including "INFORMATION
-							WE COLLECT", "WHAT COOKIES DO WE USE", "ANALYTICS", and "ERROR TRACKING
-							AND MONITORING". We collect personal information for the business and
+							WE COLLECT", "WHAT COOKIES DO WE USE", and "ERROR TRACKING AND
+							MONITORING". We collect personal information for the business and
 							commercial purposes described in “OUR USE OF YOUR INFORMATION” above.
 						</p>
 						<p class="mb-4 leading-relaxed text-base-content">

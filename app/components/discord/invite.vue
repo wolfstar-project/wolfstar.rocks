@@ -37,10 +37,14 @@
 	</div>
 </template>
 
+<script lang="ts">
+interface InviteProps {
+	link: string;
+	online?: number;
+	members?: number;
+}
+</script>
+
 <script setup lang="ts">
-const {
-	link,
-	online = 0,
-	members = 0,
-} = defineProps<{ link: string; online?: number; members?: number }>();
+const { link, online = 0, members = 0 } = defineProps<InviteProps>();
 </script>

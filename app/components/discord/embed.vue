@@ -40,22 +40,37 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-const {
-	title,
-	color,
-	author,
-	footer,
-	timestamp,
-	theme = "dark",
-} = defineProps<{
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface EmbedAuthor {
+	icon?: string;
+	name: string;
+}
+
+interface EmbedFooter {
+	icon?: string;
+	text: string;
+}
+
+interface EmbedProps {
 	title?: string;
 	color?: string;
-	author?: { icon?: string; name: string };
-	footer?: { icon?: string; text: string };
+	author?: EmbedAuthor;
+	footer?: EmbedFooter;
 	timestamp?: number | Date;
 	theme?: "light" | "dark";
-}>();
+}
+
+interface EmbedSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<EmbedSlots>();
+
+const { title, color, author, footer, timestamp, theme = "dark" } = defineProps<EmbedProps>();
 
 const isDarkTheme = computed(() => theme !== "light");
 const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "short" });

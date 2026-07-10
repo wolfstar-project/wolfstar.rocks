@@ -5,8 +5,22 @@
 	</button>
 </template>
 
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface RoleProps {
+	color?: string;
+}
+
+interface RoleSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
 <script setup lang="ts">
-const { color = "#99AAB5" } = defineProps<{ color?: string }>();
+defineSlots<RoleSlots>();
+
+const { color = "#99AAB5" } = defineProps<RoleProps>();
 
 const tagStyle = computed(() => ({
 	"--role-color": color,

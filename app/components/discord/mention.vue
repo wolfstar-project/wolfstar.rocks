@@ -6,8 +6,22 @@
 	</button>
 </template>
 
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface MentionProps {
+	kind?: "mention" | "app";
+}
+
+interface MentionSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
 <script setup lang="ts">
-const { kind = "mention" } = defineProps<{ kind?: "mention" | "app" }>();
+defineSlots<MentionSlots>();
+
+const { kind = "mention" } = defineProps<MentionProps>();
 </script>
 
 <style scoped>

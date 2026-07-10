@@ -52,12 +52,29 @@
 	</article>
 </template>
 
-<script setup lang="ts">
-const props = defineProps<{
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface MessageCommand {
+	user: ProfileName;
+	name: string;
+}
+
+interface MessageProps {
 	name: ProfileName;
 	ephemeral?: boolean;
-	command?: { user: ProfileName; name: string };
-}>();
+	command?: MessageCommand;
+}
+
+interface MessageSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<MessageSlots>();
+
+const props = defineProps<MessageProps>();
 const { name, ephemeral, command } = toRefs(props);
 const profile = computed(() => Profiles[name.value]);
 </script>

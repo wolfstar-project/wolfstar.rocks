@@ -4,10 +4,22 @@
 	</button>
 </template>
 
-<script setup lang="ts">
-const { ariaLabel } = defineProps<{
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface ButtonUnusedProps {
 	ariaLabel?: string;
-}>();
+}
+
+interface ButtonUnusedSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<ButtonUnusedSlots>();
+
+const { ariaLabel } = defineProps<ButtonUnusedProps>();
 </script>
 
 <style scoped>

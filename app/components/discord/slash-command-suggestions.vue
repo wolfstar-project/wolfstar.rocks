@@ -41,27 +41,38 @@
 					</div>
 				</nav>
 
-				<div class="discord-slash-command-suggestions-list">
-					<p class="discord-slash-command-suggestions-header" role="presentation">
-						<UIcon
-							name="ph:clock-counter-clockwise-fill"
-							class="discord-slash-command-suggestions-header-icon"
-							aria-hidden="true"
-						/>
-						Frequently Used
-					</p>
-					<slot name="frequently-used" />
-				</div>
+				<DiscordScrollbar class="discord-slash-command-suggestions-scroll">
+					<div class="discord-slash-command-suggestions-list">
+						<p class="discord-slash-command-suggestions-header" role="presentation">
+							<UIcon
+								name="ph:clock-counter-clockwise-fill"
+								class="discord-slash-command-suggestions-header-icon"
+								aria-hidden="true"
+							/>
+							Frequently Used
+						</p>
+						<slot name="frequently-used" />
+					</div>
+				</DiscordScrollbar>
 			</div>
 
-			<div
+			<DiscordScrollbar
 				v-if="slots.matched"
-				class="discord-slash-command-suggestions-list discord-slash-command-suggestions-list-matched"
+				class="discord-slash-command-suggestions-scroll discord-slash-command-suggestions-scroll-matched"
 			>
-				<slot name="matched" />
-			</div>
+				<div
+					class="discord-slash-command-suggestions-list discord-slash-command-suggestions-list-matched"
+				>
+					<slot name="matched" />
+				</div>
+			</DiscordScrollbar>
 
-			<slot v-if="!slots['frequently-used'] && !slots.matched" />
+			<DiscordScrollbar
+				v-if="!slots['frequently-used'] && !slots.matched"
+				class="discord-slash-command-suggestions-scroll"
+			>
+				<slot />
+			</DiscordScrollbar>
 		</div>
 	</section>
 </template>
@@ -117,32 +128,26 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-panel {
-	@apply max-h-48 overflow-y-auto py-2 pr-1;
-	scrollbar-width: thin;
-	scrollbar-color: var(--discord-slash-command-suggestions-scrollbar-thumb)
-		var(--discord-slash-command-suggestions-scrollbar-track);
+	@apply flex max-h-48 flex-col overflow-hidden py-2 pr-1;
 }
 
-.discord-slash-command-suggestions-panel::-webkit-scrollbar {
-	width: 4px;
+.discord-slash-command-suggestions-scroll {
+	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
+	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
+
+	@apply min-h-0 min-w-0;
 }
 
-.discord-slash-command-suggestions-panel::-webkit-scrollbar-track {
-	border-radius: 9999px;
-	background-color: var(--discord-slash-command-suggestions-scrollbar-track);
-}
-
-.discord-slash-command-suggestions-panel::-webkit-scrollbar-thumb {
-	border-radius: 9999px;
-	background-color: var(--discord-slash-command-suggestions-scrollbar-thumb);
+.discord-slash-command-suggestions-scroll-matched {
+	@apply shrink-0;
 }
 
 .discord-slash-command-suggestions-frequently-used {
-	@apply grid grid-cols-[40px_minmax(0,1fr)];
+	@apply grid min-h-0 flex-1 grid-cols-[40px_minmax(0,1fr)];
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply flex flex-col items-center gap-1.5 py-2;
+	@apply flex flex-col items-center gap-1.5 self-stretch py-2;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 

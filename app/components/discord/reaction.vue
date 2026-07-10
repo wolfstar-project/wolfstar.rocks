@@ -5,8 +5,23 @@
 	</div>
 </template>
 
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface ReactionProps {
+	count: number;
+	self?: boolean;
+}
+
+interface ReactionSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
 <script setup lang="ts">
-const { count, self } = defineProps<{ count: number; self?: boolean }>();
+defineSlots<ReactionSlots>();
+
+const { count, self } = defineProps<ReactionProps>();
 </script>
 
 <style>

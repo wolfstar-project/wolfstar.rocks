@@ -14,11 +14,15 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-const { commandName, user } = defineProps<{
+<script lang="ts">
+interface MessageCommandReplyProps {
 	commandName: string;
 	user: ProfileName;
-}>();
+}
+</script>
+
+<script setup lang="ts">
+const { commandName, user } = defineProps<MessageCommandReplyProps>();
 
 const profile = computed(() => Profiles[user]);
 

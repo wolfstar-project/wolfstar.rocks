@@ -99,10 +99,8 @@
 					:key="command.name"
 					class="radio-feature-container"
 					:data-tip="command.tooltip"
-					:for="`matched-command-${index}`"
 				>
 					<input
-						:id="`matched-command-${index}`"
 						v-model="commandIndex"
 						type="radio"
 						name="matched-command"

@@ -1,173 +1,157 @@
 <template>
-	<section
-		:class="
-			cn(
-				'mt-12 grid gap-6',
-				hideFeatureHeader
-					? 'grid-cols-1'
-					: 'items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12',
-			)
-		"
-	>
-		<div v-if="!hideFeatureHeader" class="showcase-copy text-left">
-			<h3 class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content">
-				<UIcon name="ph:shield-fill" class="size-6 text-primary" aria-hidden="true" />
-				A complete suite for
-				<span class="text-primary underline decoration-primary/30 underline-offset-4"
-					>moderation logs</span
-				>
-			</h3>
+	<div>
+		<SectionHeader
+			eyebrow="In Action"
+			title="Moderation that shows its work."
+			description="Every action WolfStar takes is visible in the channel, and logged for later."
+			heading-id="home-showcase-heading"
+			class="mb-10"
+		/>
 
-			<p class="text-[15px] leading-relaxed text-base-content/80">
-				Easily searchable moderation logs, with a complete history of every action taken by
-				WolfStar in your server, and with the ability to filter them later by user, action,
-				and more!
-			</p>
+		<section class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+			<div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
+				<div class="flex w-full flex-col items-start">
+					<SurfaceCard
+						padding="none"
+						class="showcase-surface-shield w-full overflow-hidden shadow-glow"
+					>
+						<div class="showcase-channel-header">
+							<UIcon
+								name="ph:folder-fill"
+								class="size-4.5 shrink-0 text-muted"
+								aria-hidden="true"
+							/>
+							<span class="text-[15px] font-semibold text-base-content">mod-log</span>
+							<span class="text-xs text-muted">— WolfStar HQ</span>
+						</div>
+						<div class="showcase-card-body p-5">
+							<DiscordMessages class="showcase-discord-feed w-full text-left">
+								<DiscordMessage name="wolfstar">
+									<DiscordEmbed
+										:color="moderationActionRender.color"
+										:author="{
+											icon: '/avatars/wolfstar.png',
+											name: 'WolfStar#9286 (854714837388755004)',
+										}"
+										:footer="{
+											icon: '/avatars/wolfstar.png',
+											text: 'Case 3',
+										}"
+										:timestamp
+									>
+										<span
+											><strong>❯ Type:</strong>
+											{{ moderationActionRender.name }}</span
+										><br />
+										<span
+											><strong>❯ User:</strong> @baddie
+											(541738403230777351)</span
+										><br />
+										<span><strong>❯ Reason:</strong> spam</span>
+									</DiscordEmbed>
+								</DiscordMessage>
+							</DiscordMessages>
+						</div>
+					</SurfaceCard>
 
-			<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
-				<UIcon
-					name="ph:binoculars-duotone"
-					class="mr-1 inline size-4 text-primary"
-					aria-hidden="true"
-				/>
-				WolfStar can also listen for external moderation actions. You prefer banning by hand
-				than by bot? Good news, WolfStar can be configured to listen and log external bans,
-				retrieving the reason from audit logs!
-			</p>
-		</div>
+					<UFieldGroup class="mt-4 self-start md:self-center">
+						<UButton
+							class="justify-center"
+							:color="moderationTemporary ? 'info' : 'neutral'"
+							:variant="moderationTemporary ? 'solid' : 'outline'"
+							icon="ph:hourglass-duotone"
+							:disabled="moderationAction.temporary === null"
+							@click="
+								((moderationTemporary = !moderationTemporary),
+								(moderationUndo = false))
+							"
+						>
+							Temporary
+						</UButton>
+						<UButton
+							class="justify-center"
+							:color="moderationUndo ? 'success' : 'neutral'"
+							:variant="moderationUndo ? 'solid' : 'outline'"
+							icon="ph:arrow-counter-clockwise-duotone"
+							:disabled="moderationAction.undo === null"
+							@click="
+								((moderationUndo = !moderationUndo), (moderationTemporary = false))
+							"
+						>
+							Undo
+						</UButton>
+					</UFieldGroup>
+				</div>
 
-		<div
-			:class="
-				cn(
-					'flex gap-4',
-					hideFeatureHeader
-						? 'flex-col items-stretch'
-						: 'flex-col items-center lg:flex-row',
-				)
-			"
-		>
-			<div
-				:class="
-					cn(
-						'flex items-center gap-1',
-						hideFeatureHeader ? 'order-2 justify-center' : 'flex-row lg:flex-col',
-					)
-				"
-			>
-				<button
-					type="button"
-					class="radio-feature-arrow rotate-90 lg:rotate-180"
-					aria-label="Previous moderation action"
-					@click="advanceModerationIndex(-1)"
-				>
-					<UIcon name="ph:caret-down-bold" aria-hidden="true" />
-				</button>
-				<label
-					v-for="(action, moderationActionIndex) of moderationActions"
-					:key="action.name"
-					class="radio-feature-container"
-					:data-tip="action.name"
-					:for="`moderation-feature-${moderationActionIndex}`"
-				>
-					<input
-						:id="`moderation-feature-${moderationActionIndex}`"
-						v-model="moderationIndex"
-						type="radio"
-						name="moderation-log"
-						class="radio-feature"
-						:value="moderationActionIndex"
-					/>
-					<span class="sr-only">{{ action.name }}</span>
-				</label>
-				<button
-					type="button"
-					class="radio-feature-arrow -rotate-90 lg:rotate-0"
-					aria-label="Next moderation action"
-					@click="advanceModerationIndex(1)"
-				>
-					<UIcon name="ph:caret-down-bold" aria-hidden="true" />
-				</button>
-			</div>
-
-			<div :class="cn('flex w-full flex-col items-start', hideFeatureHeader && 'order-1')">
-				<SurfaceCard
-					padding="none"
-					class="showcase-surface-shield w-full overflow-hidden shadow-glow"
-				>
-					<div class="showcase-channel-header">
-						<UIcon
-							name="ph:folder-fill"
-							class="size-4.5 shrink-0 text-muted"
-							aria-hidden="true"
+				<div class="flex flex-row items-center gap-1 lg:flex-col">
+					<button
+						type="button"
+						class="radio-feature-arrow rotate-90 lg:rotate-180"
+						aria-label="Previous moderation action"
+						@click="advanceModerationIndex(-1)"
+					>
+						<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+					</button>
+					<label
+						v-for="(action, moderationActionIndex) of moderationActions"
+						:key="action.name"
+						class="radio-feature-container"
+						:data-tip="action.name"
+						:for="`moderation-feature-${moderationActionIndex}`"
+					>
+						<input
+							:id="`moderation-feature-${moderationActionIndex}`"
+							v-model="moderationIndex"
+							type="radio"
+							name="moderation-log"
+							class="radio-feature"
+							:value="moderationActionIndex"
 						/>
-						<span class="text-[15px] font-semibold text-base-content">mod-log</span>
-						<span class="text-xs text-muted">— WolfStar HQ</span>
-					</div>
-					<div class="showcase-card-body p-5">
-						<DiscordMessages class="showcase-discord-feed w-full text-left">
-							<DiscordMessage name="wolfstar">
-								<DiscordEmbed
-									:color="moderationActionRender.color"
-									:author="{
-										icon: '/avatars/wolfstar.png',
-										name: 'WolfStar#9286 (854714837388755004)',
-									}"
-									:footer="{
-										icon: '/avatars/wolfstar.png',
-										text: 'Case 3',
-									}"
-									:timestamp
-								>
-									<span
-										><strong>❯ Type:</strong>
-										{{ moderationActionRender.name }}</span
-									><br />
-									<span
-										><strong>❯ User:</strong> @baddie (541738403230777351)</span
-									><br />
-									<span><strong>❯ Reason:</strong> spam</span>
-								</DiscordEmbed>
-							</DiscordMessage>
-						</DiscordMessages>
-					</div>
-				</SurfaceCard>
-
-				<UFieldGroup class="mt-4 self-start md:self-center">
-					<UButton
-						class="justify-center"
-						:color="moderationTemporary ? 'info' : 'neutral'"
-						:variant="moderationTemporary ? 'solid' : 'outline'"
-						icon="ph:hourglass-duotone"
-						:disabled="moderationAction.temporary === null"
-						@click="
-							((moderationTemporary = !moderationTemporary), (moderationUndo = false))
-						"
+						<span class="sr-only">{{ action.name }}</span>
+					</label>
+					<button
+						type="button"
+						class="radio-feature-arrow -rotate-90 lg:rotate-0"
+						aria-label="Next moderation action"
+						@click="advanceModerationIndex(1)"
 					>
-						Temporary
-					</UButton>
-					<UButton
-						class="justify-center"
-						:color="moderationUndo ? 'success' : 'neutral'"
-						:variant="moderationUndo ? 'solid' : 'outline'"
-						icon="ph:arrow-counter-clockwise-duotone"
-						:disabled="moderationAction.undo === null"
-						@click="((moderationUndo = !moderationUndo), (moderationTemporary = false))"
-					>
-						Undo
-					</UButton>
-				</UFieldGroup>
+						<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+					</button>
+				</div>
 			</div>
-		</div>
-	</section>
+
+			<div class="showcase-copy text-left">
+				<h3 class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content">
+					<UIcon name="ph:shield-fill" class="size-6 text-primary" aria-hidden="true" />
+					A complete suite for
+					<span class="text-primary underline decoration-primary/30 underline-offset-4"
+						>moderation logs</span
+					>
+				</h3>
+
+				<p class="text-[15px] leading-relaxed text-base-content/80">
+					Easily searchable moderation logs, with a complete history of every action taken
+					by WolfStar in your server, and with the ability to filter them later by user,
+					action, and more!
+				</p>
+
+				<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
+					<UIcon
+						name="ph:binoculars-duotone"
+						class="mr-1 inline size-4 text-primary"
+						aria-hidden="true"
+					/>
+					WolfStar can also listen for external moderation actions. You prefer banning by
+					hand than by bot? Good news, WolfStar can be configured to listen and log
+					external bans, retrieving the reason from audit logs!
+				</p>
+			</div>
+		</section>
+	</div>
 </template>
 
 <script setup lang="ts">
 import { cast } from "@sapphire/utilities/cast";
-import { cn } from "cnfast";
-
-const { hideFeatureHeader = false } = defineProps<{
-	hideFeatureHeader?: boolean;
-}>();
 
 const timestamp = ref(0);
 const moderationTemporary = ref(false);

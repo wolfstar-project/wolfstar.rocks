@@ -18,24 +18,24 @@
 							<DiscordMessage
 								name="wolfstar"
 								:command="{
-									user: activeDisplayCommand.invoker,
-									name: activeDisplayCommand.name,
+									user: activeCommand.invoker,
+									name: activeCommand.name,
 								}"
 							>
 								<DiscordEmbed
-									:color="activeDisplayCommand.embedColor"
+									:color="activeCommand.embedColor"
 									:footer="{
 										icon: '/avatars/wolfstar.png',
-										text: activeDisplayCommand.embedFooter,
+										text: activeCommand.embedFooter,
 									}"
 									:timestamp
 								>
 									<span
-										v-for="(line, lineIdx) in activeDisplayCommand.embedLines"
+										v-for="(line, lineIdx) in activeCommand.embedLines"
 										:key="line.label"
 									>
-										<strong>❯ {{ line.label }}:</strong
-										><span class="showcase-embed-detail-parts"
+										<strong>❯ {{ line.label }}:</strong>
+										<span class="showcase-embed-detail-parts"
 											><template
 												v-for="(part, partIdx) in line.parts"
 												:key="`${lineIdx}-${partIdx}`"
@@ -55,30 +55,32 @@
 					</div>
 
 					<div class="showcase-command-picker border-t">
-						<DiscordSlashCommandSuggestions :prefix="activeSearchPrefix">
-							<template v-if="pickerMode === 'frequently-used'" #frequently-used>
+						<DiscordSlashCommandSuggestions :prefix="commandSearchPrefix">
+							<template #frequently-used>
 								<DiscordSlashCommandSuggestion
 									v-for="command of frequentlyUsedCommands"
 									:key="`frequently-used-${command.name}`"
 									:name="command.name"
 									:description="command.description"
-									:active="activeDisplayCommand.name === command.name"
+									:active="activeCommand.name === command.name"
 									@select="selectFrequentlyUsedCommand(command.name)"
 								/>
 							</template>
-							<template v-else #matched>
+							<template v-if="pickerMode === 'matched'" #matched>
 								<DiscordSlashCommandSuggestionMatched
-									:name="activeMatchedCommand.name"
-									:options="activeMatchedCommand.options"
+									:name="activeCommand.name"
+									:options="activeCommand.options"
 									active
 								/>
 							</template>
 						</DiscordSlashCommandSuggestions>
 
 						<DiscordSlashCommandInput
-							:name="activeDisplayCommand.name"
-							:options="activeDisplayCommand.options"
+							v-if="pickerMode === 'matched'"
+							:name="activeCommand.name"
+							:options="activeCommand.options"
 						/>
+						<DiscordSlashCommandInput v-else :value="commandInputValue" />
 					</div>
 				</div>
 			</SurfaceCard>
@@ -93,19 +95,19 @@
 					<UIcon name="ph:caret-down-bold" aria-hidden="true" />
 				</button>
 				<label
-					v-for="(command, matchedCommandIndex) of matchedShowcaseCommands"
+					v-for="(command, index) of showcaseCommands"
 					:key="command.name"
 					class="radio-feature-container"
 					:data-tip="command.tooltip"
-					:for="`matched-command-${matchedCommandIndex}`"
+					:for="`matched-command-${index}`"
 				>
 					<input
-						:id="`matched-command-${matchedCommandIndex}`"
-						v-model="matchedIndex"
+						:id="`matched-command-${index}`"
+						v-model="commandIndex"
 						type="radio"
 						name="matched-command"
 						class="radio-feature"
-						:value="matchedCommandIndex"
+						:value="index"
 						@change="pickerMode = 'matched'"
 					/>
 					<span class="sr-only">{{ command.tooltip }}</span>
@@ -127,30 +129,20 @@
 type PickerMode = "frequently-used" | "matched";
 
 const commandIndex = ref(0);
-const matchedIndex = ref(0);
 const pickerMode = ref<PickerMode>("frequently-used");
 const timestamp = ref(0);
-
-const matchedShowcaseCommands = showcaseCommands;
 
 const activeCommand = computed(() => {
 	const command = showcaseCommands[commandIndex.value];
 	return command ?? showcaseCommands[0]!;
 });
 
-const activeMatchedCommand = computed(() => {
-	const command = matchedShowcaseCommands[matchedIndex.value];
-	return command ?? matchedShowcaseCommands[0]!;
-});
-
-const activeDisplayCommand = computed(() =>
-	pickerMode.value === "matched" ? activeMatchedCommand.value : activeCommand.value,
-);
-
-const activeSearchPrefix = computed(() => {
-	const name = activeDisplayCommand.value.name;
+const commandSearchPrefix = computed(() => {
+	const name = activeCommand.value.name;
 	return `/${name.length > 3 ? name.slice(0, 3) : name}`;
 });
+
+const commandInputValue = computed(() => `/${activeCommand.value.name}`);
 
 const frequentlyUsedCommands = computed(() =>
 	showcaseCommands.filter((command) => command.frequentlyUsed),
@@ -165,9 +157,8 @@ function selectFrequentlyUsedCommand(name: string) {
 }
 
 function selectMatchedCommand(value: -1 | 1) {
-	matchedIndex.value =
-		(matchedIndex.value + value + matchedShowcaseCommands.length) %
-		matchedShowcaseCommands.length;
+	commandIndex.value =
+		(commandIndex.value + value + showcaseCommands.length) % showcaseCommands.length;
 	pickerMode.value = "matched";
 }
 

@@ -1,60 +1,41 @@
 <!-- oxlint-disable vue/no-template-shadow -->
 <template>
 	<div class="w-full">
-		<div
-			class="relative mx-auto w-full"
-			:class="hideFeatureHeader ? 'max-w-250' : 'min-h-100 max-w-7xl'"
-		>
+		<div class="relative mx-auto min-h-100 w-full max-w-7xl">
 			<div v-for="(feature, index) in features" :key="feature.id" class="animate-fade-in">
 				<div v-if="activeFeature === index">
 					<div :id="feature.id" class="scroll-mt-24">
-						<template v-if="!hideFeatureHeader">
-							<div class="mb-8 text-left">
-								<h3
-									class="mb-4 flex items-center gap-3 text-2xl font-bold text-base-content"
+						<div class="mb-8 text-left">
+							<h3
+								class="mb-4 flex items-center gap-3 text-2xl font-bold text-base-content"
+							>
+								<div
+									class="flex size-10 items-center justify-center rounded-lg bg-primary/10"
 								>
-									<div
-										class="flex size-10 items-center justify-center rounded-lg bg-primary/10"
-									>
-										<UIcon
-											:name="feature.icon"
-											class="size-5 text-primary"
-											aria-hidden="true"
-										/>
-									</div>
-									{{ feature.title }}
-								</h3>
-								<p
-									class="mb-6 max-w-prose text-[15px] leading-relaxed text-base-content/80"
-								>
-									{{ feature.description }}
-								</p>
-								<UButton to="#" color="neutral" variant="outline" class="w-fit">
-									Learn more about {{ feature.label }}
-								</UButton>
-							</div>
-						</template>
+									<UIcon
+										:name="feature.icon"
+										class="size-5 text-primary"
+										aria-hidden="true"
+									/>
+								</div>
+								{{ feature.title }}
+							</h3>
+							<p
+								class="mb-6 max-w-prose text-[15px] leading-relaxed text-base-content/80"
+							>
+								{{ feature.description }}
+							</p>
+							<UButton to="#" color="neutral" variant="outline" class="w-fit">
+								Learn more about {{ feature.label }}
+							</UButton>
+						</div>
 
 						<template v-if="feature.id === 'moderation-tools'">
 							<section
-								:class="
-									cn(
-										'grid gap-6',
-										hideFeatureHeader
-											? 'grid-cols-1'
-											: 'items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12',
-									)
-								"
+								class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12"
 							>
 								<div
-									:class="
-										cn(
-											'flex flex-col gap-4',
-											hideFeatureHeader
-												? 'items-stretch'
-												: 'flex-col-reverse items-center max-lg:order-last lg:flex-row',
-										)
-									"
+									class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
 								>
 									<SurfaceCard
 										padding="none"
@@ -266,16 +247,7 @@
 										</div>
 									</SurfaceCard>
 
-									<div
-										:class="
-											cn(
-												'flex items-center gap-1',
-												hideFeatureHeader
-													? 'justify-center'
-													: 'flex-row lg:flex-col',
-											)
-										"
-									>
+									<div class="flex flex-row items-center gap-1 lg:flex-col">
 										<button
 											type="button"
 											class="radio-feature-arrow rotate-90 lg:rotate-180"
@@ -312,7 +284,7 @@
 									</div>
 								</div>
 
-								<div v-if="!hideFeatureHeader" class="showcase-copy text-left">
+								<div class="showcase-copy text-left">
 									<h3
 										class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
 									>
@@ -423,33 +395,14 @@
 								</div>
 							</section>
 
-							<ModerationLogsShowcase
-								v-if="!hideFeatureHeader || showModerationLogs"
-								:hide-feature-header
-							/>
+							<ModerationLogsShowcase />
 						</template>
 
 						<template v-else-if="feature.id === 'advanced-logging'">
 							<section
-								:class="
-									cn(
-										'grid gap-6',
-										hideFeatureHeader
-											? 'grid-cols-1'
-											: 'items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12',
-									)
-								"
+								class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12"
 							>
-								<div
-									:class="
-										cn(
-											'flex flex-col gap-4',
-											hideFeatureHeader
-												? 'items-stretch'
-												: 'items-center lg:flex-row',
-										)
-									"
-								>
+								<div class="flex flex-col items-center gap-4 lg:flex-row">
 									<SurfaceCard
 										padding="none"
 										class="showcase-surface-shield w-full overflow-hidden shadow-glow"
@@ -495,8 +448,8 @@
 															]!.details"
 															:key="idx"
 														>
-															<strong>❯ {{ detail.label }}:</strong
-															><span
+															<strong>❯ {{ detail.label }}:</strong>
+															<span
 																class="showcase-embed-detail-parts"
 																><template
 																	v-for="(
@@ -550,16 +503,7 @@
 										</div>
 									</SurfaceCard>
 
-									<div
-										:class="
-											cn(
-												'flex items-center gap-1',
-												hideFeatureHeader
-													? 'justify-center'
-													: 'flex-row lg:flex-col',
-											)
-										"
-									>
+									<div class="flex flex-row items-center gap-1 lg:flex-col">
 										<button
 											type="button"
 											class="radio-feature-arrow rotate-90 lg:rotate-180"
@@ -596,7 +540,7 @@
 									</div>
 								</div>
 
-								<div v-if="!hideFeatureHeader" class="showcase-copy text-left">
+								<div class="showcase-copy text-left">
 									<h3
 										class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
 									>
@@ -669,13 +613,6 @@
 </template>
 
 <script setup lang="ts">
-import { cn } from "cnfast";
-
-const { hideFeatureHeader = false, showModerationLogs = false } = defineProps<{
-	hideFeatureHeader?: boolean;
-	showModerationLogs?: boolean;
-}>();
-
 const activeFeature = defineModel<number>("activeFeature", { default: 0 });
 
 enum AutomodFeature {

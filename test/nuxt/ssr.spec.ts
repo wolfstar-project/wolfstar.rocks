@@ -17,6 +17,7 @@ import {
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
+	ModerationLogsShowcase,
 	ModerationShowcaseSection,
 	Separator,
 } from "#components";
@@ -456,6 +457,14 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("CommandsShowcase", () => {
+		it("renders section header in full section mode", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			expect(wrapper.text()).toContain("Moderation at your fingertips.");
+			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
+			expect(wrapper.find(".showcase-section").exists()).toBe(true);
+		});
+
 		it("renders frequently used picker without matched row in default mode", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 
@@ -489,6 +498,15 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(true);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
 			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(3);
+		});
+	});
+
+	describe("ModerationLogsShowcase", () => {
+		it("renders moderation logs section header in full section mode", async () => {
+			const wrapper = await mountSuspended(ModerationLogsShowcase);
+
+			expect(wrapper.text()).toContain("Moderation that shows its work.");
+			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
 		});
 	});
 

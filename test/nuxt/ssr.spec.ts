@@ -1,4 +1,5 @@
 import {
+	CommandsSection,
 	CommandsShowcase,
 	DiscordEmbed,
 	DiscordInvite,
@@ -456,15 +457,16 @@ describe("component SSR rendering", () => {
 		});
 	});
 
-	describe("CommandsShowcase", () => {
+	describe("CommandsSection", () => {
 		it("renders section header in full section mode", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(CommandsSection);
 
 			expect(wrapper.text()).toContain("Moderation at your fingertips.");
 			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
-			expect(wrapper.find(".showcase-section").exists()).toBe(true);
 		});
+	});
 
+	describe("CommandsShowcase", () => {
 		it("renders frequently used picker without matched row in default mode", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 

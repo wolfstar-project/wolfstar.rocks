@@ -21,19 +21,19 @@ export default {
 		},
 		size: {
 			lg: {
-				root: "size-24",
+				root: "size-12",
 			},
 			md: {
-				root: "size-16",
-			},
-			sm: {
 				root: "size-10",
 			},
+			sm: {
+				root: "size-8",
+			},
 			xl: {
-				root: "size-32",
+				root: "size-14",
 			},
 			xs: {
-				root: "size-8",
+				root: "size-6",
 			},
 		},
 		status: {

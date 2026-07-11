@@ -134,9 +134,11 @@ onMounted(() => {
 }
 
 .showcase-command-picker {
+	--showcase-command-picker-bg: hsl(220, 7%, 12%);
+
 	position: relative;
 	z-index: 1;
-	background-color: hsl(220, 7%, 12%);
+	background-color: var(--showcase-command-picker-bg);
 }
 
 .showcase-discord-messages :deep(.discord-messages) {

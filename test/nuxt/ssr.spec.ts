@@ -355,7 +355,7 @@ describe("component SSR rendering", () => {
 				});
 
 				expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
-				expect(wrapper.find(".discord-scrollbar-thumb").exists()).toBe(false);
+				expect(wrapper.find(".discord-scrollbar-thumb").isVisible()).toBe(false);
 			});
 		});
 

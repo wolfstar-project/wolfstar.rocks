@@ -247,7 +247,9 @@ describe("component SSR rendering", () => {
 				});
 				const group = wrapper.find("[role='group']");
 				expect(group.exists()).toBe(true);
-				expect(group.attributes("aria-label")).toBe("Slash command /warn");
+				expect(group.attributes("aria-label")).toBe(
+					"Slash command /warn member: @baddie reason: Reason for the warning",
+				);
 				expect(wrapper.text()).toContain("@baddie");
 				expect(wrapper.text()).toContain("Reason for the warning");
 			});
@@ -268,7 +270,7 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toContain("/conf");
 				expect(wrapper.text()).toContain("menu");
 				expect(wrapper.text()).toContain("save");
-				expect(wrapper.text()).toContain("scope:");
+				expect(wrapper.text()).toContain("scope");
 				expect(wrapper.text()).toContain("all");
 			});
 		});

@@ -504,25 +504,23 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("ModerationLogsShowcase", () => {
-		it("renders moderation logs section header in full section mode", async () => {
+		it("renders the In Action section header on SSR", async () => {
 			const wrapper = await mountSuspended(ModerationLogsShowcase);
 
+			expect(wrapper.text()).toContain("In Action");
 			expect(wrapper.text()).toContain("Moderation that shows its work.");
 			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
 		});
 	});
 
 	describe("ModerationShowcaseSection", () => {
-		it("renders moderation and logging section headers on SSR", async () => {
+		it("renders moderation section header on SSR without duplicate logging headers", async () => {
 			const wrapper = await mountSuspended(ModerationShowcaseSection);
 
 			expect(wrapper.text()).toContain("Moderation that shows its work.");
-			expect(wrapper.text()).toContain("Advanced Logging");
-			expect(wrapper.text()).toContain(
-				"advanced logging capabilities to keep track of everything that happens in your server.",
-			);
 			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
-			expect(wrapper.find("#home-logging-showcase-heading").exists()).toBe(true);
+			expect(wrapper.findAll("#home-showcase-heading")).toHaveLength(1);
+			expect(wrapper.find("#home-logging-showcase-heading").exists()).toBe(false);
 		});
 	});
 

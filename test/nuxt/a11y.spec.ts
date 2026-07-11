@@ -20,7 +20,7 @@ import {
 	DiscordSlashCommandSuggestion,
 	DiscordSlashCommandSuggestionMatched,
 	DiscordSlashCommandSuggestions,
-	ModerationLogsShowcase,
+	ModerationShowcase,
 	ModerationShowcaseSection,
 	FeaturesSection,
 	GuildSettingsSection,
@@ -553,9 +553,11 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("ModerationLogsShowcase", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(ModerationLogsShowcase);
+		describe("ModerationShowcase", () => {
+			it("should have no accessibility violations with advanced logging", async () => {
+				const component = await mountSuspended(ModerationShowcase, {
+					props: { activeFeature: 1 },
+				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

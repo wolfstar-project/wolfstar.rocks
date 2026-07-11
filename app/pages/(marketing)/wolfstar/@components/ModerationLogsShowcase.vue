@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<SectionHeader
+			v-if="!embedded"
 			eyebrow="In Action"
 			title="Moderation that shows its work."
 			description="Every action WolfStar takes is visible in the channel, and logged for later."
@@ -8,9 +9,25 @@
 			class="mb-10"
 		/>
 
-		<section class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
-			<div class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row">
-				<div class="flex w-full flex-col items-start">
+		<section
+			:class="
+				cn(
+					embedded
+						? 'mt-12 grid grid-cols-1 gap-6'
+						: 'grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12',
+				)
+			"
+		>
+			<div
+				:class="
+					cn(
+						embedded
+							? 'flex flex-col items-stretch gap-4'
+							: 'flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row',
+					)
+				"
+			>
+				<div :class="cn('flex w-full flex-col items-start', embedded && 'order-1')">
 					<SurfaceCard
 						padding="none"
 						class="showcase-surface-shield w-full overflow-hidden shadow-glow"
@@ -83,7 +100,14 @@
 					</UFieldGroup>
 				</div>
 
-				<div class="flex flex-row items-center gap-1 lg:flex-col">
+				<div
+					:class="
+						cn(
+							'flex items-center gap-1',
+							embedded ? 'order-2 justify-center' : 'flex-row lg:flex-col',
+						)
+					"
+				>
 					<button
 						type="button"
 						class="radio-feature-arrow rotate-90 lg:rotate-180"
@@ -97,8 +121,10 @@
 						:key="action.name"
 						class="radio-feature-container"
 						:data-tip="action.name"
+						:for="`moderation-feature-${moderationActionIndex}`"
 					>
 						<input
+							:id="`moderation-feature-${moderationActionIndex}`"
 							v-model="moderationIndex"
 							type="radio"
 							name="moderation-log"
@@ -118,7 +144,7 @@
 				</div>
 			</div>
 
-			<div class="showcase-copy text-left">
+			<div v-if="!embedded" class="showcase-copy text-left">
 				<h3 class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content">
 					<UIcon name="ph:shield-fill" class="size-6 text-primary" aria-hidden="true" />
 					A complete suite for
@@ -150,6 +176,11 @@
 
 <script setup lang="ts">
 import { cast } from "@sapphire/utilities/cast";
+import { cn } from "cnfast";
+
+const { embedded = false } = defineProps<{
+	embedded?: boolean;
+}>();
 
 const timestamp = ref(0);
 const moderationTemporary = ref(false);

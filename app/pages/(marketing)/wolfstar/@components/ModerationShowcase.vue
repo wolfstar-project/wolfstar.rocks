@@ -7,6 +7,11 @@
 					<div :id="feature.id" class="scroll-mt-24">
 						<div class="mb-8 text-left">
 							<h3
+								:id="
+									feature.id === 'advanced-logging'
+										? 'home-logging-showcase-heading'
+										: undefined
+								"
 								class="mb-4 flex items-center gap-3 text-2xl font-bold text-base-content"
 							>
 								<div
@@ -261,8 +266,10 @@
 											:key="automodIndex"
 											class="radio-feature-container"
 											:data-tip="text.tooltip"
+											:for="`automod-feature-${automodIndex}`"
 										>
 											<input
+												:id="`automod-feature-${automodIndex}`"
 												v-model="featureIndex"
 												type="radio"
 												name="automod-feature"
@@ -393,7 +400,7 @@
 								</div>
 							</section>
 
-							<ModerationLogsShowcase />
+							<ModerationLogsShowcase embedded />
 						</template>
 
 						<template v-else-if="feature.id === 'advanced-logging'">
@@ -515,8 +522,10 @@
 											:key="loggingEventIndex"
 											class="radio-feature-container"
 											:data-tip="event.tooltip"
+											:for="`logging-feature-${loggingEventIndex}`"
 										>
 											<input
+												:id="`logging-feature-${loggingEventIndex}`"
 												v-model="loggingIndex"
 												type="radio"
 												name="logging-feature"

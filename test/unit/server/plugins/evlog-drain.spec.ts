@@ -41,11 +41,7 @@ vi.mock("evlog/pipeline", () => ({
 	createDrainPipeline: vi.fn(() => (batchHandler: (batch: unknown[]) => Promise<void>) => {
 		const flush = vi.fn().mockResolvedValue(undefined);
 		// Bypass buffering: call batchHandler immediately with a single-item batch
-		const drainFn = vi.fn((ctx: unknown) => batchHandler([ctx])) as unknown as ((
-			ctx: unknown,
-		) => Promise<void>) & {
-			flush: typeof flush;
-		};
+		const drainFn = vi.fn((ctx: unknown) => batchHandler([ctx]));
 		drainFn.flush = flush;
 
 		mocks.mockDrains.push({ fn: drainFn, flush, batchHandler });

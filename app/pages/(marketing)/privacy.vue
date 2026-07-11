@@ -132,7 +132,7 @@
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span>
 								<span class="font-semibold"
-									>Hosting provider cookies (Vercel):</span
+									>Hosting provider cookies (Netlify):</span
 								>
 								Our hosting/CDN may set essential operational cookies (caching,
 								routing, preview or identity/session features). These are
@@ -222,12 +222,11 @@
 						Analytics
 					</h2>
 					<p class="mb-4 leading-relaxed text-base-content">
-						We use Vercel Speed Insights to measure page performance (page load speed
-						and Core Web Vitals) and understand how visitors experience our website.
-						This helps us improve performance and identify issues.
+						We use Netlify Analytics to understand how visitors use our website. This
+						helps us improve the user experience and identify issues.
 					</p>
 					<p class="mb-3 leading-relaxed text-base-content">
-						Vercel Speed Insights is designed with privacy in mind:
+						Netlify Analytics is designed with privacy in mind:
 					</p>
 					<ul class="list-none space-y-2 pl-0 text-base-content">
 						<li class="flex items-start gap-3 leading-relaxed">
@@ -236,7 +235,7 @@
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span>It does not collect personal identifiers or IP addresses</span>
+							<span>It does not collect personal identifiers</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
@@ -244,24 +243,18 @@
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span
-								>All data is anonymous and cannot be used to reconstruct a browsing
-								session or identify a user</span
-							>
+							<span>All data is aggregated and anonymised</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
-							<span
-								>Data is measured by a script running in your browser (using native
-								browser performance APIs) and reported directly to Vercel
-							</span>
+							<span>Data is collected server-side, not from your browser</span>
 						</li>
 					</ul>
 					<p class="mt-4 leading-relaxed text-base-content">
-						The only information collected includes: page route/URL, approximate network
-						speed, browser, device type and operating system, country/region, and page
-						performance measurements (Web Vitals). This data cannot be used to identify
-						individual users and is processed by Vercel on our behalf.
+						The only information collected includes: page URLs, referrer,
+						country/region, device type, browser, and operating system. This data cannot
+						be used to identify individual users. All analytics data is processed
+						server-side by our hosting provider.
 					</p>
 				</section>
 
@@ -643,8 +636,8 @@
 							<span class="shrink-0 text-base-content/50">&mdash;</span>
 							<span>
 								<span class="font-semibold">Analytics Data:</span> Retained in
-								anonymous form by Vercel and cannot be linked to individual users.
-								Retained according to Vercel's data retention policy.
+								aggregate form by Netlify and cannot be linked to individual users.
+								Retained according to Netlify's data retention policy.
 							</span>
 						</li>
 						<li class="flex items-start gap-3 leading-relaxed">

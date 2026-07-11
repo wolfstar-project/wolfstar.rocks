@@ -13,8 +13,9 @@ Link][invite-link] · [Support Server][discord-link] ·
 
 <!-- SHIELD GROUP -->
 
+[![Netlify deploy status badge][netlify-status-shield]][netlify-status-link]
 [![GitHub latest release badge][github-release-shield]][github-release-link]
-[![GitHub release date badge][github-releasedate-shield]][github-releasedate-link]<br/>
+[![GitHub last commit badge][github-last-commit-shield]][github-last-commit-link]<br/>
 [![Discord community badge][discord-shield]][discord-link]
 [![Codecov coverage badge][codecov-shield]][codecov-link]
 [![GitHub contributors badge][github-contributors-shield]][github-contributors-link]<br/>
@@ -357,45 +358,49 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://github.com/wolfstar-project/.github/blob/main/.github/CONTRIBUTING.md
 [codecov-link]: https://codecov.io/gh/wolfstar-project/wolfstar.rocks
 [codecov-shield]:
-  https://img.shields.io/codecov/c/github/wolfstar-project/wolfstar.rocks?labelColor=black&style=flat-square&logo=codecov&logoColor=white
+  https://shieldcn.dev/codecov/github/wolfstar-project/wolfstar.rocks?variant=branded
 [codespaces-link]: https://codespaces.new/wolfstar-project/wolfstar.rocks
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [discord-link]: https://join.wolfstar.rocks
 [discord-shield]:
-  https://img.shields.io/discord/830481105261821952?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=flat-square
+  https://shieldcn.dev/discord/830481105261821952?variant=branded
 [discord-shield-badge]:
   https://img.shields.io/discord/1127171173982154893?color=5865F2&label=discord&labelColor=black&logo=discord&logoColor=white&style=for-the-badge
 [github-contributors-link]:
   https://github.com/wolfstar-project/wolfstar.rocks/graphs/contributors
 [github-contributors-shield]:
-  https://img.shields.io/github/contributors/wolfstar-project/wolfstar.rocks?color=c4f042&labelColor=black&style=flat-square
+  https://shieldcn.dev/github/contributors/wolfstar-project/wolfstar.rocks?variant=branded
 [github-forks-link]:
   https://github.com/wolfstar-project/wolfstar.rocks/network/members
 [github-forks-shield]:
-  https://img.shields.io/github/forks/wolfstar-project/wolfstar.rocks?color=8ae8ff&labelColor=black&style=flat-square
+  https://shieldcn.dev/github/forks/wolfstar-project/wolfstar.rocks?variant=branded
 [github-issues-link]: https://github.com/wolfstar-project/wolfstar.rocks/issues
 [github-issues-shield]:
-  https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks?color=ff80eb&labelColor=black&style=flat-square
+  https://shieldcn.dev/github/issues/wolfstar-project/wolfstar.rocks?variant=branded
 [github-license-link]:
   https://github.com/wolfstar-project/wolfstar.rocks/blob/main/LICENSE
 [github-license-shield]:
-  https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square
+  https://shieldcn.dev/github/license/wolfstar-project/wolfstar.rocks?variant=branded
 [github-project-link]:
   https://github.com/wolfstar-project/wolfstar.rocks/projects
 [github-release-link]:
   https://github.com/wolfstar-project/wolfstar.rocks/releases
 [github-release-shield]:
-  https://img.shields.io/github/v/release/wolfstar-project/wolfstar.rocks?color=369eff&labelColor=black&logo=github&style=flat-square
-[github-releasedate-link]:
-  https://github.com/wolfstar-project/wolfstar.rocks/releases
-[github-releasedate-shield]:
-  https://img.shields.io/github/release-date/wolfstar-project/wolfstar.rocks?labelColor=black&style=flat-square
+  https://shieldcn.dev/github/release/wolfstar-project/wolfstar.rocks?variant=branded
+[github-last-commit-link]:
+  https://github.com/wolfstar-project/wolfstar.rocks/commits
+[github-last-commit-shield]:
+  https://shieldcn.dev/github/last-commit/wolfstar-project/wolfstar.rocks?variant=branded
 [github-stars-link]:
   https://github.com/wolfstar-project/wolfstar.rocks/network/stargazers
 [github-stars-shield]:
-  https://img.shields.io/github/stars/wolfstar-project/wolfstar.rocks?color=ffcb47&labelColor=black&style=flat-square
+  https://shieldcn.dev/github/stars/wolfstar-project/wolfstar.rocks?variant=branded
 [issues-link]:
   https://img.shields.io/github/issues/wolfstar-project/wolfstar.rocks.svg?style=flat
+[netlify-status-shield]:
+  https://api.netlify.com/api/v1/badges/80592647-d7bf-49b3-b82c-d0a3b3d7b3d0/deploy-status
+[netlify-status-link]:
+  https://app.netlify.com/projects/wolfstar-rocks-et34281/deploys
 [official-site]: https://wolfstar.rocks
 [codspeed-link]:
   https://codspeed.io/wolfstar-project/wolfstar.rocks?utm_source=badge
@@ -403,7 +408,7 @@ Copyright © 2024 [WolfStar][profile-link]. <br /> This project is
   https://img.shields.io/endpoint?url=https://codspeed.io/badge.json
 [pr-welcome-link]: https://github.com/wolfstar-project/wolfstar.rocks/pulls
 [pr-welcome-shield]:
-  https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
+  https://shieldcn.dev/badge/PRs-welcome-ffcb47?variant=branded
 [profile-link]: https://github.com/wolfstar-project
 [share-linkedin-shield]:
   https://img.shields.io/badge/-share%20on%20linkedin-black?labelColor=black&logo=linkedin&logoColor=white&style=flat-square

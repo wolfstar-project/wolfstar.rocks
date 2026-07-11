@@ -1,4 +1,3 @@
-import type { OAuthStateVerifyResult } from "#server/utils/oauth-state";
 import type { H3Event } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -28,9 +27,9 @@ const {
 	const mockSetCookie = vi.fn();
 	const mockGetCookie = vi.fn();
 	const mockDeleteCookie = vi.fn();
-	const mockVerifyOAuthState = vi.fn(async (): Promise<OAuthStateVerifyResult> => {
+	const mockVerifyOAuthState = vi.fn(async () => {
 		callOrder.push("verifyOAuthState");
-		return { valid: true };
+		return { valid: true as const };
 	});
 	const mockCreateOAuthState = vi.fn(async () => ({
 		state: "generated-state",

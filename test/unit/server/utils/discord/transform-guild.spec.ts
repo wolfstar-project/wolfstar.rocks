@@ -97,7 +97,6 @@ const oauthGuild: RESTAPIPartialCurrentUserGuild = {
 	id: "guild-456",
 	name: "Test Guild",
 	icon: null,
-	banner: null,
 	owner: true,
 	permissions: "8",
 	features: [],

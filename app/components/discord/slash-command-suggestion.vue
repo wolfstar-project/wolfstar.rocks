@@ -91,7 +91,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-description {
-	@apply truncate text-xs leading-snug;
+	@apply truncate font-whitney text-xs leading-snug;
 	color: var(--discord-slash-command-suggestion-description);
 }
 

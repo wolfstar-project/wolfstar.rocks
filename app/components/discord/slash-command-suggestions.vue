@@ -130,26 +130,28 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-scrollbar-track: hsla(220, 2.7%, 66.1%, 0.12);
 	--discord-slash-command-suggestions-scrollbar-thumb: hsla(220, 2.7%, 66.1%, 0.45);
 
+	@apply font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);
 }
 
 .discord-slash-command-suggestions-panel {
-	@apply min-w-0 py-2 pr-1;
+	@apply min-w-0;
 }
 
 .discord-slash-command-suggestions-scroll {
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply max-h-48 min-h-0 min-w-0;
+	@apply max-h-48 min-h-0 min-w-0 pl-10;
 }
 
 .discord-slash-command-suggestions-frequently-used {
-	@apply grid grid-cols-[40px_minmax(0,1fr)];
+	@apply relative min-w-0;
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply sticky top-0 flex flex-col items-center gap-1.5 self-start py-2;
+	@apply absolute top-0 left-0 flex w-10 flex-col items-center gap-1.5 overflow-y-auto py-2;
+	max-height: 100%;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 
@@ -171,7 +173,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-header {
-	@apply flex items-center gap-1.5 px-2 py-1.5 text-[11px] font-bold tracking-wide uppercase;
+	@apply flex items-center gap-1.5 px-2 py-1.5 font-whitney text-[11px] font-bold tracking-wide uppercase;
 	color: var(--discord-slash-command-suggestions-header);
 }
 

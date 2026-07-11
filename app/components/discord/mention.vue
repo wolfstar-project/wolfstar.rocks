@@ -27,7 +27,7 @@ const { kind = "mention" } = defineProps<MentionProps>();
 <style scoped>
 @reference "@/assets/css/main.css";
 .tag {
-	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-medium;
+	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-whitney font-medium;
 	vertical-align: baseline;
 	margin: 0;
 	background-color: hsla(235, 85.6%, 64.7%, 0.5);

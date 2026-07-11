@@ -24,6 +24,6 @@ const formatter = computed(() => TimeFormatters[format]);
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-message-time {
-	@apply rounded-md bg-base-content/10 px-0.5;
+	@apply rounded-md bg-base-content/10 px-0.5 font-whitney;
 }
 </style>

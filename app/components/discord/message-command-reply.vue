@@ -37,7 +37,7 @@ const ariaLabel = computed(() => `${profile.value.name} used the ${commandName} 
 	--command-reply-spine-color: oklch(from var(--color-base-content) l c h / 0.2);
 	--command-reply-roundness: 6px;
 
-	@apply relative mb-0 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-sm;
+	@apply relative mb-0 flex flex-wrap items-center gap-x-1 gap-y-0.5 font-whitney text-sm;
 }
 
 .discord-message-command-reply-user {

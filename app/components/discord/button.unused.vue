@@ -25,7 +25,7 @@ const { ariaLabel } = defineProps<ButtonUnusedProps>();
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-message-button-primary {
-	@apply btn mt-1;
+	@apply btn mt-1 font-whitney;
 	background-color: hsl(235 85.6% 64.7% / 1);
 	background-color: oklch(57.7% 0.209 273.88);
 	color: white;

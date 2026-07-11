@@ -31,7 +31,7 @@ const tagStyle = computed(() => ({
 @reference "@/assets/css/main.css";
 
 .tag {
-	@apply inline-flex items-baseline gap-1 rounded-[2px] px-1 py-0.5 font-medium transition-colors duration-150;
+	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-whitney font-medium transition-colors duration-150;
 	vertical-align: baseline;
 	margin: 0;
 	background-color: oklch(from var(--role-color) l c h / 0.15);

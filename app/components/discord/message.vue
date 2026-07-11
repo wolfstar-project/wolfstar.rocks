@@ -16,7 +16,7 @@
 		/>
 		<div class="discord-message-content">
 			<header class="mb-0.5 flex flex-row items-center">
-				<div class="font-whitney font-bold">{{ profile.name }}</div>
+				<div class="font-bold">{{ profile.name }}</div>
 				<span
 					v-if="profile.app"
 					class="app-badge"
@@ -29,7 +29,7 @@
 						class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3"
 						aria-hidden="true"
 					/>
-					<span class="font-whitney">APP</span>
+					<span>APP</span>
 				</span>
 			</header>
 			<div class="message-content"><slot></slot></div>
@@ -98,7 +98,7 @@ const profile = computed(() => Profiles[name.value]);
 }
 
 .discord-message {
-	@apply flex w-full flex-row gap-2 rounded-xl p-2 align-top sm:gap-4 sm:p-4;
+	@apply flex w-full flex-row gap-2 rounded-xl p-2 align-top font-whitney sm:gap-4 sm:p-4;
 	background-color: var(--discord-surface);
 }
 

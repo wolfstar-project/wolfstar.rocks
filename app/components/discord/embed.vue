@@ -7,11 +7,8 @@
 			class="discord-embed"
 			:style="{ 'border-color': color ?? 'var(--discord-embed-default-border)' }"
 		>
-			<div v-if="title" class="mb-2 font-whitney text-base font-bold">{{ title }}</div>
-			<div
-				v-if="author"
-				class="mt-2 flex items-center gap-2 font-whitney text-base font-semibold"
-			>
+			<div v-if="title" class="mb-2 text-base font-bold">{{ title }}</div>
+			<div v-if="author" class="mt-2 flex items-center gap-2 text-base font-semibold">
 				<nuxt-img
 					v-if="author.icon"
 					:src="author.icon"
@@ -80,7 +77,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 @reference "@/assets/css/main.css";
 .discord-embed {
 	--discord-embed-default-border: #1e1f22;
-	@apply mt-1 max-w-fit border-l-4 p-3;
+	@apply mt-1 max-w-fit border-l-4 p-3 font-whitney;
 	border-radius: 0.25rem;
 	background-color: var(--color-base-200);
 	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h);

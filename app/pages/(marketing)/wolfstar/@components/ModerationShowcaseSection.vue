@@ -25,7 +25,5 @@
 .showcase-section {
 	position: relative;
 	z-index: 1;
-	isolation: isolate;
-	background-color: var(--color-base-100);
 }
 </style>

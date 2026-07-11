@@ -17,7 +17,7 @@
 						<div
 							v-for="j in 8"
 							:key="j"
-							class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+							class="flex items-center justify-between rounded-lg border border-muted p-3"
 						>
 							<div class="flex-1 space-y-2">
 								<USkeleton class="h-5 w-32" />
@@ -52,7 +52,7 @@
 							<UButton
 								color="neutral"
 								variant="ghost"
-								class="w-full justify-between border-b border-base-200"
+								class="w-full justify-between border-b border-muted"
 							>
 								<span class="truncate text-xl font-medium">{{ category }}</span>
 
@@ -73,13 +73,13 @@
 								<div
 									v-for="command in getCommandsByCategory(category)"
 									:key="command.name"
-									class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+									class="flex items-center justify-between rounded-lg border border-muted p-3"
 								>
 									<div class="min-w-0 flex-1">
-										<p class="truncate font-medium text-base-content">
+										<p class="truncate font-medium text-default">
 											{{ command.name }}
 										</p>
-										<p class="truncate text-sm text-base-content/60">
+										<p class="truncate text-sm text-muted">
 											{{ command.description }}
 										</p>
 									</div>
@@ -96,11 +96,10 @@
 							</div>
 
 							<Separator />
-							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
+							<UFieldGroup size="sm" class="flex-wrap justify-end p-4">
 								<UButton
 									color="success"
 									variant="solid"
-									size="sm"
 									@click="toggleAllInCategory(category, true)"
 								>
 									Enable all
@@ -108,7 +107,6 @@
 								<UButton
 									color="warning"
 									variant="solid"
-									size="sm"
 									@click="toggleAllInCategory(category, false)"
 								>
 									Disable all
@@ -116,12 +114,11 @@
 								<UButton
 									color="neutral"
 									variant="outline"
-									size="sm"
 									@click="resetCategory(category)"
 								>
 									Reset
 								</UButton>
-							</div>
+							</UFieldGroup>
 						</template>
 					</UCollapsible>
 				</div>

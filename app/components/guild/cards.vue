@@ -1,21 +1,21 @@
 <template>
 	<UContainer
-		class="w-full max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8"
+		class="w-full max-w-7xl px-4 py-4 text-default sm:px-6 sm:py-6 lg:px-8"
 		role="region"
 		aria-label="Server list"
 	>
 		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row">
 			<div class="flex items-start">
-				<div v-if="loading || filterLoading" class="text-sm text-base-content/60 sm:block">
+				<div v-if="loading || filterLoading" class="text-sm text-muted sm:block">
 					<div class="flex animate-pulse items-center">
-						<div class="h-4 w-24 rounded bg-base-content/20"></div>
-						<div class="mx-1 h-4 w-4 rounded bg-base-content/20"></div>
-						<div class="h-4 w-24 rounded bg-base-content/20"></div>
+						<div class="h-4 w-24 rounded bg-muted/50"></div>
+						<div class="mx-1 h-4 w-4 rounded bg-muted/50"></div>
+						<div class="h-4 w-24 rounded bg-muted/50"></div>
 					</div>
 				</div>
 				<div
 					v-else-if="guilds"
-					class="text-sm text-base-content/60 sm:block"
+					class="text-sm text-muted sm:block"
 					role="status"
 					aria-live="polite"
 					aria-atomic="true"
@@ -124,10 +124,10 @@
 			<div v-if="!loading && !error && filteredGuilds.length === 0">
 				<div class="flex flex-col items-center justify-center space-y-6 py-16">
 					<div class="py-16 text-center" role="status" aria-live="polite">
-						<h2 class="mb-2 text-xl font-bold text-base-content/80">
+						<h2 class="mb-2 text-xl font-bold text-toned">
 							{{ searchQuery ? "No matching servers" : "No servers found" }}
 						</h2>
-						<p class="mx-auto max-w-md text-base-content/60">
+						<p class="mx-auto max-w-md text-muted">
 							{{
 								searchQuery
 									? "Try adjusting your search terms or filters."

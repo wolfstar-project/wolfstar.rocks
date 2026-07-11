@@ -20,12 +20,12 @@
 		</div>
 
 		<template #actions>
-			<div class="mt-2 flex gap-2">
-				<UButton size="sm" @click="$pwa?.install()"> Install </UButton>
-				<UButton size="sm" color="error" variant="ghost" @click="$pwa?.cancelInstall()">
+			<UFieldGroup size="sm" class="mt-2">
+				<UButton @click="$pwa?.install()"> Install </UButton>
+				<UButton color="error" variant="ghost" @click="$pwa?.cancelInstall()">
 					Dismiss
 				</UButton>
-			</div>
+			</UFieldGroup>
 		</template>
 	</UAlert>
 </template>

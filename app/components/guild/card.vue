@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="relative flex h-full transform-gpu flex-col rounded-xl border border-base-300/70 bg-base-100 p-2 shadow-lg transition-all duration-300 ease-out motion-reduce:transform-none motion-reduce:transition-none md:p-4"
+		class="relative flex h-full transform-gpu flex-col rounded-xl border border-accented/70 bg-default p-2 shadow-lg transition-all duration-300 ease-out motion-reduce:transform-none motion-reduce:transition-none md:p-4"
 		:class="cardClasses"
 	>
 		<!-- Skeleton Loading State -->
@@ -50,7 +50,7 @@
 					>
 						<UIcon
 							name="heroicons:adjustments-horizontal"
-							class="size-5 text-success-content"
+							class="text-success-content size-5"
 							aria-hidden="true"
 						/>
 					</div>
@@ -68,7 +68,7 @@
 					>
 						<UIcon
 							name="heroicons:rocket-launch"
-							class="size-5 text-primary-content"
+							class="size-5 text-inverted"
 							aria-hidden="true"
 						/>
 					</div>
@@ -84,7 +84,7 @@
 				<!-- Guild Name -->
 				<span
 					class="w-full truncate text-center text-xs font-medium"
-					:class="guild.manageable ? 'text-base-content' : 'text-base-content/50'"
+					:class="guild.manageable ? 'text-default' : 'text-default/50'"
 				>
 					{{ guild.name }}
 				</span>
@@ -101,17 +101,17 @@
 				<!-- Guild Name -->
 				<h3
 					class="line-clamp-2 min-h-12 text-base font-bold"
-					:class="guild.manageable ? 'text-base-content' : 'text-base-content/50'"
+					:class="guild.manageable ? 'text-default' : 'text-default/50'"
 				>
 					{{ guild.name }}
 				</h3>
 
 				<!-- Guild Stats -->
-				<div class="flex items-center justify-center gap-4 text-xs text-base-content/60">
+				<div class="flex items-center justify-center gap-4 text-xs text-muted">
 					<span class="flex items-center gap-1" title="Total members">
 						<UIcon
 							name="heroicons:user-group"
-							class="size-3 text-base-content/70"
+							class="size-3 text-toned"
 							aria-hidden="true"
 						/>
 						<span class="sr-only">Total members:</span>
@@ -159,7 +159,7 @@
 					</NuxtLink>
 					<div
 						v-else
-						class="flex h-9 w-full cursor-not-allowed items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 transition-all duration-200"
+						class="flex h-9 w-full cursor-not-allowed items-center justify-center rounded-lg bg-accented/50 px-3 text-xs font-medium text-default/50 transition-all duration-200"
 					>
 						<UIcon
 							name="heroicons:no-symbol"

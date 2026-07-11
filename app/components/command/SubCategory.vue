@@ -10,7 +10,7 @@
 				root: 'space-y-3',
 				item: '',
 				content:
-					'rounded-2xl rounded-t-none overflow-hidden transition-all border border-t-0 border-base-content/10 bg-base-200/30',
+					'rounded-2xl rounded-t-none overflow-hidden transition-all border border-t-0 border-default/10 bg-muted/30',
 			}"
 			class="animate-fade-in"
 		>
@@ -18,7 +18,7 @@
 				<UButton
 					color="neutral"
 					variant="ghost"
-					class="w-full justify-between rounded-2xl border border-base-content/10 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80"
+					class="w-full justify-between rounded-2xl border border-default/10 bg-muted/50 px-6 py-4 transition-all hover:bg-muted/80"
 					:class="{ 'rounded-b-none': open }"
 					:aria-expanded="open"
 					:aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
@@ -59,8 +59,8 @@
 							item: 'border-0',
 							content: 'border-0 pt-4',
 							trigger:
-								'bg-base-content/10 hover:bg-base-content/15 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-base-content/10',
-							trailingIcon: 'text-base-content/60 size-5 shrink-0',
+								'bg-default/10 hover:bg-default/15 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-default/10',
+							trailingIcon: 'text-muted size-5 shrink-0',
 							label: 'flex items-center gap-4 flex-1 min-w-0',
 						}"
 					>
@@ -69,7 +69,7 @@
 								{{ commandItem.label }}
 							</div>
 
-							<div class="ml-4 flex-1 truncate text-sm text-base-content/70">
+							<div class="ml-4 flex-1 truncate text-sm text-toned">
 								{{ commandItem.description || "No description yet" }}
 							</div>
 						</template>
@@ -91,16 +91,16 @@
 	</div>
 	<div
 		v-else-if="searchValue"
-		class="rounded-2xl bg-base-200/30 px-6 py-12 text-center"
+		class="rounded-2xl bg-muted/30 px-6 py-12 text-center"
 		role="status"
 	>
 		<UIcon
 			name="i-heroicons-magnifying-glass"
-			class="mx-auto mb-4 h-12 w-12 text-base-content/30"
+			class="mx-auto mb-4 h-12 w-12 text-muted/40"
 			aria-hidden="true"
 		/>
 		<h3 class="mb-2 text-lg font-bold">No commands found in {{ categoryName }}</h3>
-		<p class="text-base-content/70">Try adjusting your search or browse other categories.</p>
+		<p class="text-toned">Try adjusting your search or browse other categories.</p>
 	</div>
 </template>
 

@@ -265,9 +265,6 @@ importers:
       cz-conventional-changelog:
         specifier: 3.3.0
         version: 3.3.0(@types/node@24.12.4)(typescript@6.0.3)
-      daisyui:
-        specifier: 5.5.20
-        version: 5.5.20
       defu:
         specifier: 6.1.7
         version: 6.1.7
@@ -7801,9 +7798,6 @@ packages:
   cz-conventional-changelog@3.3.0:
     resolution: {integrity: sha512-U466fIzU5U22eES5lTNiNbZ+d8dfcHcssH4o7QsdWaCcRs/feIPCxKYSWkYBNs5mny7MvEfwpTLWjvbm94hecw==}
     engines: {node: '>= 10'}
-
-  daisyui@5.5.20:
-    resolution: {integrity: sha512-HemJcjl0Gk9rQ8BcgofN6p+EURrqftQG9wK1Hkxs98i49xe68+QxpNvry+PyxwkIUgrbMpNmZ5ZWjmtffAjfhQ==}
 
   data-uri-to-buffer@4.0.1:
     resolution: {integrity: sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==}
@@ -22280,8 +22274,6 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
       - typescript
-
-  daisyui@5.5.20: {}
 
   data-uri-to-buffer@4.0.1: {}
 

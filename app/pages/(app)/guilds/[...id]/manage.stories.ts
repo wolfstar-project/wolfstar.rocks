@@ -29,9 +29,9 @@ const meta: Meta<typeof ManagePage> = {
 						collapsible
 						resizable
 						:ui="{
-							header: 'bg-base-200/80',
-							body: 'bg-base-200/80 border-r border-base-200',
-							footer: 'bg-base-200/80 border-t border-b border-base-200',
+							header: 'bg-muted/80',
+							body: 'bg-muted/80 border-r border-muted',
+							footer: 'bg-muted/80 border-t border-b border-muted',
 						}"
 					/>
 					<story />

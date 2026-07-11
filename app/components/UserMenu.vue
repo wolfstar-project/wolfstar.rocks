@@ -5,8 +5,8 @@
 		:content="{ align: 'center', collisionPadding: 12 }"
 		:ui="{
 			content: collapsed
-				? 'w-48 bg-base-200/90 border border-base-200 shadow-md rounded-md'
-				: 'w-(--reka-dropdown-menu-trigger-width) bg-base-200/90 border border-base-200 shadow-md rounded-md',
+				? 'w-48 bg-muted/90 border border-muted shadow-md rounded-md'
+				: 'w-(--reka-dropdown-menu-trigger-width) bg-muted/90 border border-muted shadow-md rounded-md',
 		}"
 		aria-label="User account menu"
 	>

@@ -79,11 +79,11 @@
 						v-for="(usage, idx) in command.extendedHelp.usages"
 						:key="idx"
 						role="listitem"
-						class="block rounded-xl border border-base-content/10 bg-base-300/70 px-5 py-4 font-mono text-sm text-base-content transition-all"
+						class="block rounded-xl border border-default/10 bg-accented/70 px-5 py-4 font-mono text-sm text-default transition-all"
 					>
 						<span class="text-primary">WolfStar</span>,
 						<span class="text-primary/80">{{ command.name }}</span>
-						<span class="text-base-content/70">{{ usage }}</span>
+						<span class="text-toned">{{ usage }}</span>
 					</code>
 				</div>
 			</section>
@@ -100,7 +100,7 @@
 					</div>
 					<span>Extended Help</span>
 				</h3>
-				<div class="rounded-xl border border-base-content/10 bg-base-200/30 px-5 py-4">
+				<div class="rounded-xl border border-default/10 bg-muted/30 px-5 py-4">
 					<div class="prose max-w-none dark:prose-invert prose-p:leading-relaxed">
 						<div
 							class="text-base leading-7 whitespace-pre-line"
@@ -136,7 +136,7 @@
 							{{ arg }}
 						</dt>
 						<dd
-							class="prose max-w-none text-sm leading-relaxed text-base-content/80 dark:prose-invert prose-p:m-0"
+							class="prose max-w-none text-sm leading-relaxed text-toned dark:prose-invert prose-p:m-0"
 						>
 							<div v-html="sanitizeAndFormat(resolveMultilineString(desc))"></div>
 						</dd>
@@ -165,7 +165,7 @@
 						<dt class="mb-1 text-base font-semibold text-primary">
 							{{ type }}
 						</dt>
-						<dd class="text-sm text-base-content/80">
+						<dd class="text-sm text-toned">
 							{{ example }}
 						</dd>
 					</div>
@@ -218,7 +218,7 @@
 				</h3>
 				<div class="rounded-xl border border-primary/20 bg-primary/5 p-5 transition-all">
 					<div
-						class="prose max-w-none text-sm leading-relaxed text-base-content/90 dark:prose-invert prose-p:m-0"
+						class="prose max-w-none text-sm leading-relaxed text-default/90 dark:prose-invert prose-p:m-0"
 						v-html="sanitizeAndFormat(command.extendedHelp.reminder)"
 					></div>
 				</div>
@@ -278,7 +278,7 @@ function sanitizeAndFormat(text: string): string {
 			// Inline code
 			.replace(
 				/`(.+?)`/g,
-				'<code class="px-1.5 py-0.5 rounded bg-base-300/50 text-sm font-mono">$1</code>',
+				'<code class="px-1.5 py-0.5 rounded bg-accented/50 text-sm font-mono">$1</code>',
 			)
 			// Links — only allow http(s) protocols to prevent javascript: injection
 			.replace(

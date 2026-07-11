@@ -52,8 +52,6 @@ const config: KnipConfig = {
 				"@takumi-rs/wasm",
 				"workbox-*",
 				"rolldown",
-				/** Provided transitively by @nuxtjs/seo; used directly for its route-rule type */
-				"@nuxtjs/robots",
 
 				/** Oxlint plugins don't get picked up yet */
 				"@e18e/eslint-plugin",

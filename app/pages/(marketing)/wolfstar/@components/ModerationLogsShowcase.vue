@@ -121,10 +121,8 @@
 						:key="action.name"
 						class="radio-feature-container"
 						:data-tip="action.name"
-						:for="`moderation-feature-${moderationActionIndex}`"
 					>
 						<input
-							:id="`moderation-feature-${moderationActionIndex}`"
 							v-model="moderationIndex"
 							type="radio"
 							name="moderation-log"

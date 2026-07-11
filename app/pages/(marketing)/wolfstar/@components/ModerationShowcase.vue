@@ -266,10 +266,8 @@
 											:key="automodIndex"
 											class="radio-feature-container"
 											:data-tip="text.tooltip"
-											:for="`automod-feature-${automodIndex}`"
 										>
 											<input
-												:id="`automod-feature-${automodIndex}`"
 												v-model="featureIndex"
 												type="radio"
 												name="automod-feature"
@@ -522,10 +520,8 @@
 											:key="loggingEventIndex"
 											class="radio-feature-container"
 											:data-tip="event.tooltip"
-											:for="`logging-feature-${loggingEventIndex}`"
 										>
 											<input
-												:id="`logging-feature-${loggingEventIndex}`"
 												v-model="loggingIndex"
 												type="radio"
 												name="logging-feature"

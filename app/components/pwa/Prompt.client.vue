@@ -25,25 +25,29 @@ interface DocumentWithActiveVT extends Document {
 const skewProtection = useSkewProtection();
 const isOnline = skewProtection.isOnline;
 const isAppOutdated = skewProtection.isAppOutdated;
+const serverVersion = skewProtection.serverVersion;
 const isPrerendered = !!useNuxtApp().payload.prerenderedAt;
 
 const chunksOutdated = ref(false);
-const dismissed = ref(false);
+// Tracks which server version was last dismissed, rather than a sticky
+// boolean, so a later deployment (a new serverVersion) re-opens the prompt
+// instead of being silenced for the rest of the tab's lifetime.
+const dismissedServerVersion = ref<string | undefined>(undefined);
 
 skewProtection.onCurrentChunksOutdated(() => {
 	chunksOutdated.value = true;
 });
 
-const isOpen = computed(
-	() =>
-		isOnline.value &&
-		!dismissed.value &&
-		(chunksOutdated.value || (isAppOutdated.value && !isPrerendered)),
-);
+const isOpen = computed(() => {
+	if (!isOnline.value) return false;
+	if (chunksOutdated.value) return true;
+	if (isPrerendered) return false;
+	return isAppOutdated.value && serverVersion.value !== dismissedServerVersion.value;
+});
 
 function dismiss() {
-	dismissed.value = true;
 	chunksOutdated.value = false;
+	dismissedServerVersion.value = serverVersion.value;
 }
 
 function reload() {

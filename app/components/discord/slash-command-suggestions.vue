@@ -142,16 +142,15 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply max-h-48 min-h-0 min-w-0 pl-10;
+	@apply max-h-48 min-h-0 min-w-0;
 }
 
 .discord-slash-command-suggestions-frequently-used {
-	@apply relative min-w-0;
+	@apply grid grid-cols-[40px_minmax(0,1fr)] items-start overflow-hidden;
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply absolute top-0 left-0 flex w-10 flex-col items-center gap-1.5 overflow-y-auto py-2;
-	max-height: 100%;
+	@apply sticky top-0 flex max-h-48 flex-col items-center gap-1.5 self-start overflow-y-auto py-2;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 

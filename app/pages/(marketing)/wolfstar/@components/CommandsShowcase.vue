@@ -54,7 +54,7 @@
 						</DiscordMessages>
 					</div>
 
-					<div class="showcase-command-picker border-t">
+					<div class="showcase-command-picker">
 						<DiscordSlashCommandSuggestions :prefix="activeSearchPrefix">
 							<template #frequently-used>
 								<DiscordSlashCommandSuggestion
@@ -99,6 +99,7 @@
 					:key="command.name"
 					class="radio-feature-container"
 					:data-tip="command.tooltip"
+					@click="selectMatchedCommandByIndex(matchedCommandIndex)"
 				>
 					<input
 						v-model="matchedIndex"
@@ -106,7 +107,6 @@
 						name="matched-command"
 						class="radio-feature"
 						:value="matchedCommandIndex"
-						@change="pickerMode = 'matched'"
 					/>
 					<span class="sr-only">{{ command.tooltip }}</span>
 				</label>
@@ -173,6 +173,11 @@ function selectMatchedCommand(value: -1 | 1) {
 	pickerMode.value = "matched";
 }
 
+function selectMatchedCommandByIndex(index: number) {
+	matchedIndex.value = index;
+	pickerMode.value = "matched";
+}
+
 onMounted(() => {
 	timestamp.value = Date.now();
 });
@@ -190,8 +195,7 @@ onMounted(() => {
 	background-color: var(--color-base-300);
 }
 
-.showcase-card-body > .border-t,
-.showcase-command-picker {
+.showcase-card-body > .border-t {
 	border-color: var(--home-border-subtle);
 }
 

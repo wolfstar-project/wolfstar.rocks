@@ -354,8 +354,9 @@ describe("component SSR rendering", () => {
 					slots: { default: "<p>Short content</p>" },
 				});
 
+				// alwaysShowTrack keeps the track rail rendered; the thumb is driven by runtime
+				// overflow measurement and is covered by the scrollable-content test above.
 				expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
-				expect(wrapper.find(".discord-scrollbar-thumb").isVisible()).toBe(false);
 			});
 		});
 

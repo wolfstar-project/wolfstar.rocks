@@ -1,5 +1,5 @@
 <template>
-	<Section labelled-by="home-commands-heading" spacing="none" class="pb-24">
+	<Section labelled-by="home-commands-heading" spacing="none" class="commands-section pb-24">
 		<SectionHeader
 			eyebrow="Commands"
 			title="Moderation at your fingertips."
@@ -7,12 +7,13 @@
 			heading-id="home-commands-heading"
 			class="mb-10"
 		/>
-
-		<ClientOnly>
-			<LazyCommandsShowcase />
-			<template #fallback>
-				<div class="mx-auto min-h-100 w-full max-w-250" aria-hidden="true" />
-			</template>
-		</ClientOnly>
+		<LazyCommandsShowcase />
 	</Section>
 </template>
+
+<style scoped>
+.commands-section {
+	position: relative;
+	z-index: 2;
+}
+</style>

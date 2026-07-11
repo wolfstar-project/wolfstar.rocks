@@ -24,6 +24,11 @@ export function useHeader() {
 					label: "Advanced Logging",
 					to: "#advanced-logging",
 				},
+				{
+					description: "Searchable moderation history for every action",
+					label: "Moderation Logs",
+					to: "#moderation-logs",
+				},
 			],
 			label: "Features",
 		},
@@ -69,6 +74,9 @@ export function useHeader() {
 				},
 				{
 					label: "Advanced Logging",
+				},
+				{
+					label: "Moderation Logs",
 				},
 			],
 			label: "Features",

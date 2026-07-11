@@ -18,7 +18,6 @@ import {
 	GuildSettingsSection,
 	IconsApp,
 	IconsWolfstar,
-	ModerationLogsShowcase,
 	ModerationShowcaseSection,
 	Separator,
 } from "#components";
@@ -69,7 +68,7 @@ describe("component SSR rendering", () => {
 				const wrapper = await mountSuspended(DiscordMessage, {
 					props: {
 						name: "wolfstar",
-						command: { user: "stella", name: "help" },
+						reply: { kind: "command", user: "stella", commandName: "help" },
 					},
 					slots: { default: "Help response" },
 				});
@@ -77,7 +76,44 @@ describe("component SSR rendering", () => {
 				expect(reply.exists()).toBe(true);
 				expect(reply.text()).toContain("Stella");
 				expect(reply.text()).toContain("used");
-				expect(reply.find(".discord-message-command-reply-spine").exists()).toBe(true);
+				expect(reply.text()).toContain("help");
+				expect(reply.text()).not.toContain("/help");
+				expect(reply.find(".discord-message-reply-spine").exists()).toBe(true);
+				expect(reply.find(".discord-message-reply-command").exists()).toBe(true);
+				expect(reply.find(".discord-message-reply-command-icon").exists()).toBe(true);
+			});
+
+			it("formats slash command names like Discord", async () => {
+				const wrapper = await mountSuspended(DiscordMessage, {
+					props: {
+						name: "wolfstar",
+						reply: { kind: "command", user: "stella", commandName: "/conf-menu" },
+					},
+					slots: { default: "Saved changes" },
+				});
+				const reply = wrapper.find(".discord-message-reply-command-name");
+				expect(reply.exists()).toBe(true);
+				expect(reply.text()).toBe("conf menu");
+			});
+
+			it("renders message reply context with user and preview", async () => {
+				const wrapper = await mountSuspended(DiscordMessage, {
+					props: {
+						name: "wolfstar",
+						reply: {
+							kind: "message",
+							user: "stella",
+							content: "Can someone help me with moderation?",
+						},
+					},
+					slots: { default: "Sure, here is how to get started." },
+				});
+				const reply = wrapper.find("[role='complementary']");
+				expect(reply.exists()).toBe(true);
+				expect(reply.text()).toContain("Stella");
+				expect(reply.text()).toContain("Can someone help me with moderation?");
+				expect(reply.text()).not.toContain("used");
+				expect(reply.find(".discord-message-reply-spine").exists()).toBe(true);
 			});
 
 			it("renders profile name in header", async () => {
@@ -311,6 +347,16 @@ describe("component SSR rendering", () => {
 				expect(wrapper.find(".discord-scrollbar-arrow-up").exists()).toBe(true);
 				expect(wrapper.find(".discord-scrollbar-arrow-down").exists()).toBe(true);
 			});
+
+			it("renders idle track when alwaysShowTrack is true", async () => {
+				const wrapper = await mountSuspended(DiscordScrollbar, {
+					props: { alwaysShowTrack: true },
+					slots: { default: "<p>Short content</p>" },
+				});
+
+				expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
+				expect(wrapper.find(".discord-scrollbar-thumb").exists()).toBe(false);
+			});
 		});
 
 		describe("DiscordSlashCommandInput", () => {
@@ -467,7 +513,7 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("CommandsShowcase", () => {
-		it("renders frequently used picker without matched row in default mode", async () => {
+		it("renders frequently used and additional command suggestions", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 
 			expect(wrapper.text()).toContain("Frequently Used");
@@ -476,51 +522,55 @@ describe("component SSR rendering", () => {
 			expect(wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length).toBe(
 				8,
 			);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(3);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(5);
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.text()).toContain("/warn");
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.text()).toContain("/kick");
-			expect(wrapper.findAll("input[name='matched-command']").length).toBe(
-				showcaseCommands.length,
-			);
+			expect(wrapper.text()).toContain("/mute");
+			expect(wrapper.text()).toContain("/case");
+			expect(wrapper.findAll("input[name='matched-command']").length).toBe(0);
 			expect(wrapper.findAll(".showcase-channel-header").length).toBe(1);
 		});
 
-		it("keeps frequently used visible when cycling matched command examples", async () => {
+		it("selects a command when clicking a suggestion", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 
-			expect(wrapper.text()).toContain("/warn");
+			expect(wrapper.text()).toContain("spam");
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 
-			await wrapper.find('[aria-label="Next matched command"]').trigger("click");
+			const kickSuggestion = wrapper
+				.findAll(".discord-slash-command-suggestion")
+				.find((suggestion) => suggestion.text().includes("/kick"));
+			expect(kickSuggestion).toBeDefined();
+			await kickSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.text()).toContain("/ban");
-			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(true);
+			expect(wrapper.text()).toContain("rule violation");
+			expect(wrapper.text()).not.toContain("spam");
+			expect(wrapper.find(".discord-slash-command-suggestion-active").text()).toContain(
+				"/kick",
+			);
+			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(3);
-		});
-	});
-
-	describe("ModerationLogsShowcase", () => {
-		it("renders the In Action section header on SSR", async () => {
-			const wrapper = await mountSuspended(ModerationLogsShowcase);
-
-			expect(wrapper.text()).toContain("In Action");
-			expect(wrapper.text()).toContain("Moderation that shows its work.");
-			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(5);
 		});
 	});
 
 	describe("ModerationShowcaseSection", () => {
-		it("renders moderation section header on SSR without duplicate logging headers", async () => {
+		it("renders all three moderation feature areas on SSR", async () => {
 			const wrapper = await mountSuspended(ModerationShowcaseSection);
 
+			expect(wrapper.text()).toContain("In Action");
 			expect(wrapper.text()).toContain("Moderation that shows its work.");
+			expect(wrapper.text()).toContain("Advanced Auto Moderator");
+			expect(wrapper.text()).toContain("Advanced Logging");
 			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
 			expect(wrapper.findAll("#home-showcase-heading")).toHaveLength(1);
-			expect(wrapper.find("#home-logging-showcase-heading").exists()).toBe(false);
+			expect(wrapper.find("#home-logging-showcase-heading").exists()).toBe(true);
+			expect(wrapper.find("#moderation-tools").exists()).toBe(true);
+			expect(wrapper.find("#advanced-logging").exists()).toBe(true);
+			expect(wrapper.find("#moderation-logs").exists()).toBe(true);
 		});
 	});
 

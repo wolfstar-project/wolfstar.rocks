@@ -6,16 +6,7 @@
 		spacing="none"
 		class="showcase-section pb-24"
 	>
-		<LazyModerationLogsShowcase />
-
-		<div class="mt-12">
-			<ClientOnly>
-				<LazyModerationShowcase :active-feature="1" />
-				<template #fallback>
-					<div class="mx-auto min-h-100 w-full max-w-250" aria-hidden="true" />
-				</template>
-			</ClientOnly>
-		</div>
+		<LazyModerationShowcase />
 	</Section>
 </template>
 
@@ -24,6 +15,5 @@
 
 .showcase-section {
 	position: relative;
-	z-index: 1;
 }
 </style>

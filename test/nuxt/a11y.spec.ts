@@ -89,9 +89,25 @@ describe("component accessibility audits", () => {
 				const component = await mountSuspended(DiscordMessage, {
 					props: {
 						name: "wolfstar",
-						command: { user: "stella", name: "help" },
+						reply: { kind: "command", user: "stella", commandName: "help" },
 					},
 					slots: { default: "Here is your help response." },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations with message reply context", async () => {
+				const component = await mountSuspended(DiscordMessage, {
+					props: {
+						name: "wolfstar",
+						reply: {
+							kind: "message",
+							user: "stella",
+							content: "Can someone help me with moderation?",
+						},
+					},
+					slots: { default: "Sure, here is how to get started." },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -554,10 +570,8 @@ describe("component accessibility audits", () => {
 		});
 
 		describe("ModerationShowcase", () => {
-			it("should have no accessibility violations with advanced logging", async () => {
-				const component = await mountSuspended(ModerationShowcase, {
-					props: { activeFeature: 1 },
-				});
+			it("should have no accessibility violations with all features visible", async () => {
+				const component = await mountSuspended(ModerationShowcase);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

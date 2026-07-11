@@ -6,7 +6,11 @@
 			</div>
 		</div>
 
-		<div v-show="isScrollable" class="discord-scrollbar-track" aria-hidden="true">
+		<div
+			v-show="isScrollable || alwaysShowTrack"
+			class="discord-scrollbar-track"
+			aria-hidden="true"
+		>
 			<button
 				v-if="showArrows"
 				type="button"
@@ -20,6 +24,7 @@
 
 			<div ref="thumbRailRef" class="discord-scrollbar-thumb-rail">
 				<div
+					v-show="isScrollable"
 					class="discord-scrollbar-thumb"
 					:style="{
 						height: `${thumbHeight}px`,
@@ -46,6 +51,7 @@
 import type { VNode } from "vue";
 
 interface DiscordScrollbarProps {
+	alwaysShowTrack?: boolean;
 	showArrows?: boolean;
 }
 
@@ -60,7 +66,7 @@ defineSlots<DiscordScrollbarSlots>();
 const MIN_THUMB_HEIGHT = 24;
 const SCROLL_STEP = 40;
 
-const { showArrows = false } = defineProps<DiscordScrollbarProps>();
+const { alwaysShowTrack = false, showArrows = false } = defineProps<DiscordScrollbarProps>();
 
 const viewportRef = useTemplateRef<HTMLDivElement>("viewportRef");
 const contentRef = useTemplateRef<HTMLDivElement>("contentRef");

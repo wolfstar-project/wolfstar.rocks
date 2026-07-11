@@ -3,19 +3,14 @@
 		class="discord-message"
 		:class="{
 			'discord-message-ephemeral': ephemeral,
-			'discord-message-with-command': command,
+			'discord-message-with-reply': reply,
 		}"
 		:aria-label="`Message from ${profile.name}`"
 	>
 		<DiscordAvatar :user="name" size="medium" class="discord-message-avatar" />
-		<DiscordMessageCommandReply
-			v-if="command"
-			:user="command.user"
-			:command-name="command.name"
-			class="discord-message-command-reply-slot"
-		/>
+		<DiscordMessageReply v-if="reply" v-bind="reply" class="discord-message-reply-slot" />
 		<div class="discord-message-content">
-			<header class="mb-0.5 flex flex-row items-center">
+			<div class="mb-0.5 flex flex-row items-center">
 				<div class="font-bold">{{ profile.name }}</div>
 				<span
 					v-if="profile.app"
@@ -31,7 +26,7 @@
 					/>
 					<span>APP</span>
 				</span>
-			</header>
+			</div>
 			<div class="message-content"><slot></slot></div>
 			<div
 				v-if="ephemeral"
@@ -55,15 +50,22 @@
 <script lang="ts">
 import type { VNode } from "vue";
 
-interface MessageCommand {
-	user: ProfileName;
-	name: string;
-}
+type MessageReply =
+	| {
+			kind: "command";
+			user: ProfileName;
+			commandName: string;
+	  }
+	| {
+			kind: "message";
+			user: ProfileName;
+			content: string;
+	  };
 
 interface MessageProps {
 	name: ProfileName;
 	ephemeral?: boolean;
-	command?: MessageCommand;
+	reply?: MessageReply;
 }
 
 interface MessageSlots {
@@ -75,7 +77,7 @@ interface MessageSlots {
 defineSlots<MessageSlots>();
 
 const props = defineProps<MessageProps>();
-const { name, ephemeral, command } = toRefs(props);
+const { name, ephemeral, reply } = toRefs(props);
 const profile = computed(() => Profiles[name.value]);
 </script>
 
@@ -102,9 +104,9 @@ const profile = computed(() => Profiles[name.value]);
 	background-color: var(--discord-surface);
 }
 
-.discord-message-with-command {
-	--command-reply-avatar-size: 32px;
-	--command-reply-gutter: 8px;
+.discord-message-with-reply {
+	--message-reply-avatar-size: 32px;
+	--message-reply-gutter: 8px;
 
 	@apply grid items-start;
 	grid-template-columns: auto minmax(0, 1fr);
@@ -112,21 +114,21 @@ const profile = computed(() => Profiles[name.value]);
 }
 
 @media (width >= 48rem) {
-	.discord-message-with-command {
-		--command-reply-avatar-size: 48px;
-		--command-reply-gutter: 16px;
+	.discord-message-with-reply {
+		--message-reply-avatar-size: 48px;
+		--message-reply-gutter: 16px;
 	}
 }
 
-.discord-message-with-command > .discord-message-avatar {
+.discord-message-with-reply > .discord-message-avatar {
 	@apply col-start-1 row-start-2 self-start;
 }
 
-.discord-message-command-reply-slot {
+.discord-message-reply-slot {
 	@apply col-start-2 row-start-1 min-w-0;
 }
 
-.discord-message-with-command > .discord-message-content {
+.discord-message-with-reply > .discord-message-content {
 	@apply col-start-2 row-start-2 min-w-0;
 }
 

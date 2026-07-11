@@ -9,7 +9,7 @@
 				v-if="slots['frequently-used']"
 				class="discord-slash-command-suggestions-frequently-used"
 			>
-				<nav class="discord-slash-command-suggestions-sidebar" aria-hidden="true">
+				<div class="discord-slash-command-suggestions-sidebar" aria-hidden="true">
 					<div
 						class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
 					>
@@ -39,9 +39,12 @@
 							class="discord-slash-command-suggestions-sidebar-icon"
 						/>
 					</div>
-				</nav>
+				</div>
 
-				<DiscordScrollbar class="discord-slash-command-suggestions-scroll">
+				<DiscordScrollbar
+					always-show-track
+					class="discord-slash-command-suggestions-scroll"
+				>
 					<div class="discord-slash-command-suggestions-list">
 						<p class="discord-slash-command-suggestions-header" role="presentation">
 							<UIcon
@@ -64,6 +67,7 @@
 
 			<DiscordScrollbar
 				v-else-if="slots.matched"
+				always-show-track
 				class="discord-slash-command-suggestions-scroll"
 			>
 				<div
@@ -75,6 +79,7 @@
 
 			<DiscordScrollbar
 				v-else-if="!slots['frequently-used'] && !slots.matched"
+				always-show-track
 				class="discord-slash-command-suggestions-scroll"
 			>
 				<slot />
@@ -146,11 +151,11 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-frequently-used {
-	@apply grid grid-cols-[40px_minmax(0,1fr)] items-start overflow-hidden;
+	@apply grid min-h-48 grid-cols-[40px_minmax(0,1fr)];
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply sticky top-0 flex max-h-48 flex-col items-center gap-1.5 self-start overflow-y-auto py-2;
+	@apply sticky top-0 flex h-full min-h-48 flex-col items-center gap-1.5 self-stretch py-2;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 

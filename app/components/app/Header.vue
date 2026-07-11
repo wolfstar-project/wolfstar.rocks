@@ -1,5 +1,5 @@
 <template>
-	<UHeader class="app-navbar">
+	<UHeader class="app-navbar" title="WolfStar" aria-label="Site header">
 		<template #left>
 			<NuxtLink
 				class="flex items-center gap-2.5"

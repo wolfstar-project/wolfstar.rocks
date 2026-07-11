@@ -42,6 +42,9 @@ const dismissedVersion = ref<string | undefined>(undefined);
 skewProtection.onCurrentChunksOutdated(() => {
 	chunksOutdated.value = true;
 });
+// isAppOutdated only reacts to the polling path once something registers
+// this hook -- it's what populates `manifest` in the first place.
+skewProtection.onAppOutdated(() => {});
 
 const isOpen = computed(() => {
 	if (!isOnline.value) return false;

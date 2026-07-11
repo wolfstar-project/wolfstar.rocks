@@ -6,7 +6,6 @@ const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORY
 export const pwa: ModuleOptions = {
 	client: {
 		installPrompt: true,
-		periodicSyncForUpdates: 3600,
 	},
 	devOptions: {
 		enabled: process.env.VITE_DEV_PWA === "true",
@@ -147,7 +146,10 @@ export const pwa: ModuleOptions = {
 		config: false,
 	},
 
-	registerType: "prompt",
+	// New-deployment detection and the reload prompt are now owned by
+	// nuxt-skew-protection; the service worker just applies asset updates
+	// silently in the background.
+	registerType: "autoUpdate",
 	scope: "/",
 	srcDir: "../service-worker",
 	strategies: "injectManifest",

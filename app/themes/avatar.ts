@@ -20,20 +20,32 @@ export default {
 			},
 		},
 		size: {
-			lg: {
-				root: "size-12",
+			"3xs": {
+				root: "size-4 text-[8px]",
 			},
-			md: {
-				root: "size-10",
+			"2xs": {
+				root: "size-5 text-[10px]",
 			},
-			sm: {
-				root: "size-8",
+			"xs": {
+				root: "size-6 text-xs",
 			},
-			xl: {
-				root: "size-14",
+			"sm": {
+				root: "size-7 text-sm",
 			},
-			xs: {
-				root: "size-6",
+			"md": {
+				root: "size-8 text-base",
+			},
+			"lg": {
+				root: "size-9 text-lg",
+			},
+			"xl": {
+				root: "size-10 text-xl",
+			},
+			"2xl": {
+				root: "size-11 text-[22px]",
+			},
+			"3xl": {
+				root: "size-12 text-2xl",
 			},
 		},
 		status: {

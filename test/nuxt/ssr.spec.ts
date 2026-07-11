@@ -87,13 +87,36 @@ describe("component SSR rendering", () => {
 				const wrapper = await mountSuspended(DiscordMessage, {
 					props: {
 						name: "wolfstar",
-						reply: { kind: "command", user: "stella", commandName: "/conf-menu" },
+						reply: {
+							kind: "command",
+							user: "stella",
+							commandName: "conf",
+							subcommand: "menu",
+						},
 					},
 					slots: { default: "Saved changes" },
 				});
 				const reply = wrapper.find(".discord-message-reply-command-name");
 				expect(reply.exists()).toBe(true);
 				expect(reply.text()).toBe("conf menu");
+			});
+
+			it("formats grouped slash command paths", async () => {
+				const wrapper = await mountSuspended(DiscordMessage, {
+					props: {
+						name: "wolfstar",
+						reply: {
+							kind: "command",
+							user: "stella",
+							commandName: "conf",
+							subcommandGroup: "menu",
+							subcommand: "save",
+						},
+					},
+					slots: { default: "Saved changes" },
+				});
+				const reply = wrapper.find(".discord-message-reply-command-name");
+				expect(reply.text()).toBe("conf menu save");
 			});
 
 			it("renders message reply context with user and preview", async () => {
@@ -227,6 +250,26 @@ describe("component SSR rendering", () => {
 				expect(group.attributes("aria-label")).toBe("Slash command /warn");
 				expect(wrapper.text()).toContain("@baddie");
 				expect(wrapper.text()).toContain("Reason for the warning");
+			});
+
+			it("renders subcommand path segments before options", async () => {
+				const wrapper = await mountSuspended(DiscordSlashCommand, {
+					props: {
+						name: "conf",
+						subcommandGroup: "menu",
+						subcommand: "save",
+						options: [{ name: "scope", value: "all", focused: true }],
+					},
+				});
+				const group = wrapper.find("[role='group']");
+				expect(group.attributes("aria-label")).toBe(
+					"Slash command /conf menu save scope: all",
+				);
+				expect(wrapper.text()).toContain("/conf");
+				expect(wrapper.text()).toContain("menu");
+				expect(wrapper.text()).toContain("save");
+				expect(wrapper.text()).toContain("scope:");
+				expect(wrapper.text()).toContain("all");
 			});
 		});
 

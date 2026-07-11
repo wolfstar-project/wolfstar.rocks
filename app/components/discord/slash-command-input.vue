@@ -9,7 +9,13 @@
 		</button>
 
 		<div class="discord-slash-command-input-field">
-			<DiscordSlashCommand v-if="name" :name="name" :options="options" />
+			<DiscordSlashCommand
+				v-if="name"
+				:name="name"
+				:subcommand="subcommand"
+				:subcommand-group="subcommandGroup"
+				:options="options"
+			/>
 			<span v-else class="discord-slash-command-input-value">{{ value }}</span>
 			<span class="discord-slash-command-input-cursor" aria-hidden="true" />
 		</div>
@@ -25,27 +31,42 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandOption } from "./slash-command.vue";
+import type { SlashCommandOption } from "#shared/types/slash-command";
 
 interface SlashCommandInputProps {
 	name?: string;
+	subcommand?: string;
+	subcommandGroup?: string;
 	options?: SlashCommandOption[];
 	value?: string;
 }
 </script>
 
 <script setup lang="ts">
-const { name, options = [], value = "" } = defineProps<SlashCommandInputProps>();
+import { formatSlashCommandDisplayName } from "#shared/utils/format-slash-command-display-name";
+
+const {
+	name,
+	subcommand,
+	subcommandGroup,
+	options = [],
+	value = "",
+} = defineProps<SlashCommandInputProps>();
 
 const ariaLabel = computed(() => {
 	if (name) {
+		const path = formatSlashCommandDisplayName({
+			commandName: name,
+			subcommand,
+			subcommandGroup,
+		});
 		const optionText = options
 			.map((option) => {
 				const valueText = option.value ?? option.description ?? option.name;
 				return `${option.name}: ${valueText}`;
 			})
 			.join(" ");
-		return `Message input: /${name}${optionText ? ` ${optionText}` : ""}`;
+		return `Message input: /${path}${optionText ? ` ${optionText}` : ""}`;
 	}
 
 	return `Message input: ${value}`;

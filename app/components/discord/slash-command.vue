@@ -1,10 +1,12 @@
 <template>
-	<span
-		class="discord-slash-command-composed"
-		role="group"
-		:aria-label="`Slash command /${name}`"
-	>
+	<span class="discord-slash-command-composed" role="group" :aria-label="ariaLabel">
 		<span class="discord-slash-command-composed-name">/{{ name }}</span>
+		<span v-if="commandPath.subcommandGroup" class="discord-slash-command-composed-segment">
+			{{ commandPath.subcommandGroup }}
+		</span>
+		<span v-if="commandPath.subcommand" class="discord-slash-command-composed-segment">
+			{{ commandPath.subcommand }}
+		</span>
 		<template v-for="option in options" :key="option.name">
 			<span
 				class="discord-slash-command-option"
@@ -24,20 +26,10 @@
 </template>
 
 <script lang="ts">
+import type { SlashCommandInvocation } from "#shared/types/slash-command";
 import type { VNode } from "vue";
 
-export interface SlashCommandOption {
-	name: string;
-	value?: string;
-	description?: string;
-	focused?: boolean;
-	required?: boolean;
-}
-
-interface SlashCommandProps {
-	name: string;
-	options?: SlashCommandOption[];
-}
+interface SlashCommandProps extends SlashCommandInvocation {}
 
 interface SlashCommandSlots {
 	default?(props?: Record<string, never>): VNode[];
@@ -45,9 +37,44 @@ interface SlashCommandSlots {
 </script>
 
 <script setup lang="ts">
+import {
+	formatSlashCommandDisplayName,
+	validateSlashCommandDisplayParts,
+} from "#shared/utils/format-slash-command-display-name";
+
 defineSlots<SlashCommandSlots>();
 
-const { name, options = [] } = defineProps<SlashCommandProps>();
+const props = withDefaults(defineProps<SlashCommandProps>(), {
+	options: () => [],
+});
+
+const commandPath = computed(() => {
+	try {
+		return validateSlashCommandDisplayParts({
+			commandName: props.name,
+			subcommand: props.subcommand,
+			subcommandGroup: props.subcommandGroup,
+		});
+	} catch {
+		return { commandName: props.name };
+	}
+});
+
+const ariaLabel = computed(() => {
+	const path = formatSlashCommandDisplayName({
+		commandName: props.name,
+		subcommand: props.subcommand,
+		subcommandGroup: props.subcommandGroup,
+	});
+	const optionText = props.options
+		.map((option) => {
+			const valueText = option.value ?? option.description ?? option.name;
+			return `${option.name}: ${valueText}`;
+		})
+		.join(" ");
+
+	return `Slash command /${path}${optionText ? ` ${optionText}` : ""}`;
+});
 </script>
 
 <style scoped>
@@ -63,9 +90,14 @@ const { name, options = [] } = defineProps<SlashCommandProps>();
 	@apply inline font-whitney text-sm whitespace-nowrap;
 }
 
-.discord-slash-command-composed-name {
+.discord-slash-command-composed-name,
+.discord-slash-command-composed-segment {
 	@apply font-semibold;
 	color: var(--discord-slash-command-composed-name);
+}
+
+.discord-slash-command-composed-segment::before {
+	content: " ";
 }
 
 .discord-slash-command-option {

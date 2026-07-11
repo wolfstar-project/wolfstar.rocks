@@ -48,14 +48,14 @@
 </template>
 
 <script lang="ts">
+import type { SlashCommandDisplayInput } from "#shared/utils/format-slash-command-display-name";
 import type { VNode } from "vue";
 
 type MessageReply =
-	| {
+	| ({
 			kind: "command";
 			user: ProfileName;
-			commandName: string;
-	  }
+	  } & SlashCommandDisplayInput)
 	| {
 			kind: "message";
 			user: ProfileName;

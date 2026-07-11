@@ -25,12 +25,13 @@
 </template>
 
 <script lang="ts">
+import type { SlashCommandDisplayInput } from "#shared/utils/format-slash-command-display-name";
+
 type MessageReplyProps =
-	| {
+	| ({
 			kind: "command";
 			user: ProfileName;
-			commandName: string;
-	  }
+	  } & SlashCommandDisplayInput)
 	| {
 			kind: "message";
 			user: ProfileName;
@@ -39,6 +40,8 @@ type MessageReplyProps =
 </script>
 
 <script setup lang="ts">
+import { formatSlashCommandDisplayName } from "#shared/utils/format-slash-command-display-name";
+
 const props = defineProps<MessageReplyProps>();
 
 const profile = computed(() => Profiles[props.user]);
@@ -48,7 +51,7 @@ const formattedCommandName = computed(() => {
 		return "";
 	}
 
-	return props.commandName.replace(/^\//, "").replaceAll("-", " ");
+	return formatSlashCommandDisplayName(props);
 });
 
 const ariaLabel = computed(() => {

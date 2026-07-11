@@ -10,17 +10,20 @@
 		@keydown.enter.prevent="emit('select')"
 		@keydown.space.prevent="emit('select')"
 	>
-		<DiscordSlashCommand :name="name" :options="options" />
+		<DiscordSlashCommand
+			:name="name"
+			:subcommand="subcommand"
+			:subcommand-group="subcommandGroup"
+			:options="options"
+		/>
 	</div>
 </template>
 
 <script lang="ts">
-import type { SlashCommandOption } from "./slash-command.vue";
+import type { SlashCommandInvocation } from "#shared/types/slash-command";
 
-interface SlashCommandSuggestionMatchedProps {
+interface SlashCommandSuggestionMatchedProps extends SlashCommandInvocation {
 	active?: boolean;
-	name: string;
-	options?: SlashCommandOption[];
 }
 
 interface SlashCommandSuggestionMatchedEmits {
@@ -29,18 +32,31 @@ interface SlashCommandSuggestionMatchedEmits {
 </script>
 
 <script setup lang="ts">
-const { active = false, name, options = [] } = defineProps<SlashCommandSuggestionMatchedProps>();
+import { formatSlashCommandDisplayName } from "#shared/utils/format-slash-command-display-name";
+
+const {
+	active = false,
+	name,
+	subcommand,
+	subcommandGroup,
+	options = [],
+} = defineProps<SlashCommandSuggestionMatchedProps>();
 
 const emit = defineEmits<SlashCommandSuggestionMatchedEmits>();
 
 const ariaLabel = computed(() => {
+	const path = formatSlashCommandDisplayName({
+		commandName: name,
+		subcommand,
+		subcommandGroup,
+	});
 	const optionText = options
 		.map((option) => {
 			const valueText = option.value ?? option.description ?? option.name;
 			return `${option.name}: ${valueText}`;
 		})
 		.join(" ");
-	return `Slash command: /${name}${optionText ? ` ${optionText}` : ""}`;
+	return `Slash command: /${path}${optionText ? ` ${optionText}` : ""}`;
 });
 </script>
 

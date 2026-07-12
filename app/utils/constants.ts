@@ -551,17 +551,33 @@ interface ShowcaseCommandEmbedLine {
 	parts: ShowcaseCommandEmbedPart[];
 }
 
-interface ShowcaseCommand {
+interface ShowcaseCommandBase {
 	tooltip: string;
 	name: string;
+	subcommand?: string;
 	description: string;
 	invoker: ProfileName;
 	frequentlyUsed?: boolean;
 	options: ShowcaseCommandOption[];
+}
+
+interface ShowcaseCommandEmbedResponse {
+	responseType: "embed";
 	embedColor: string;
 	embedFooter: string;
 	embedLines: ShowcaseCommandEmbedLine[];
 }
+
+interface ShowcaseCommandComponentsResponse {
+	responseType: "components";
+	accentColor: string;
+	lines: string[];
+	selectPlaceholder: string;
+	buttonLabel: string;
+}
+
+export type ShowcaseCommand = ShowcaseCommandBase &
+	(ShowcaseCommandEmbedResponse | ShowcaseCommandComponentsResponse);
 
 export const showcaseCommands: ShowcaseCommand[] = [
 	{
@@ -574,6 +590,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "spam", focused: true },
 		],
+		responseType: "embed",
 		embedColor: Colors.Yellow,
 		embedFooter: "Case 3",
 		embedLines: [
@@ -598,6 +615,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "repeated infractions", focused: true },
 		],
+		responseType: "embed",
 		embedColor: Colors.Red,
 		embedFooter: "Case 4",
 		embedLines: [
@@ -622,6 +640,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "rule violation", focused: true },
 		],
+		responseType: "embed",
 		embedColor: Colors.Orange,
 		embedFooter: "Case 5",
 		embedLines: [
@@ -646,6 +665,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "duration", value: "1h" },
 			{ name: "reason", value: "excessive noise", focused: true },
 		],
+		responseType: "embed",
 		embedColor: Colors.Amber,
 		embedFooter: "Case 6",
 		embedLines: [
@@ -667,6 +687,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		description: "View or manage moderation cases",
 		invoker: "stella",
 		options: [{ name: "view", value: "3", focused: true }],
+		responseType: "embed",
 		embedColor: Colors.LightBlue,
 		embedFooter: "Case 3",
 		embedLines: [
@@ -681,6 +702,35 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
 			{ label: "Moderator", parts: [{ type: "mention", name: "stella" }] },
 		],
+	},
+	{
+		tooltip: "Conf Menu",
+		name: "conf",
+		subcommand: "menu",
+		description: "Browse and edit server configuration",
+		invoker: "redstar",
+		options: [],
+		responseType: "components",
+		accentColor: Colors.Red,
+		lines: [
+			"Currently at: 📁 Root",
+			"Use the menu below to navigate:",
+			"",
+			"📁 permissions",
+			"📁 channels",
+			"📁 events",
+			"📁 messages",
+			"📁 roles",
+			"📁 selfmod",
+			"📁 no-mention-spam",
+			"⚙️ prefix",
+			"⚙️ language",
+			"⚙️ disable-natural-prefix",
+			"⚙️ disabled-commands",
+			"⚙️ disabled-channels",
+		],
+		selectPlaceholder: "Choose an option...",
+		buttonLabel: "Stop",
 	},
 ];
 

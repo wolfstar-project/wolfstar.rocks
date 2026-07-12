@@ -593,7 +593,7 @@ describe("component SSR rendering", () => {
 			expect(wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length).toBe(
 				8,
 			);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(5);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists()).toBe(
 				true,
 			);
@@ -604,7 +604,7 @@ describe("component SSR rendering", () => {
 				wrapper
 					.find(".discord-scrollbar-viewport")
 					.findAll(".discord-slash-command-suggestion").length,
-			).toBe(5);
+			).toBe(6);
 			expect(
 				wrapper
 					.find(".discord-scrollbar-viewport")
@@ -642,7 +642,23 @@ describe("component SSR rendering", () => {
 			);
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(5);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
+		});
+
+		it("renders the components-v2 mock for the conf menu command", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			const confSuggestion = wrapper
+				.findAll(".discord-slash-command-suggestion")
+				.find((suggestion) => suggestion.text().includes("/conf"));
+			expect(confSuggestion).toBeDefined();
+			await confSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-embed").exists()).toBe(false);
+			expect(wrapper.text()).toContain("Currently at");
+			expect(wrapper.text()).toContain("Choose an option...");
+			expect(wrapper.text()).toContain("Stop");
 		});
 	});
 

@@ -21,9 +21,11 @@
 									kind: 'command',
 									user: activeDisplayCommand.invoker,
 									commandName: activeDisplayCommand.name,
+									subcommand: activeDisplayCommand.subcommand,
 								}"
 							>
 								<DiscordEmbed
+									v-if="activeDisplayCommand.responseType === 'embed'"
 									:color="activeDisplayCommand.embedColor"
 									:footer="{
 										icon: '/avatars/wolfstar.png',
@@ -49,6 +51,33 @@
 										><br />
 									</span>
 								</DiscordEmbed>
+								<DiscordV2Container
+									v-else
+									:accent-color="activeDisplayCommand.accentColor"
+								>
+									<DiscordV2TextDisplay>
+										<div
+											v-for="(line, lineIdx) in activeDisplayCommand.lines"
+											:key="lineIdx"
+										>
+											{{ line }}
+										</div>
+									</DiscordV2TextDisplay>
+									<DiscordV2Separator />
+									<DiscordV2ActionRow>
+										<DiscordV2StringSelect
+											:placeholder="activeDisplayCommand.selectPlaceholder"
+										/>
+									</DiscordV2ActionRow>
+									<DiscordV2Separator />
+									<DiscordV2ActionRow>
+										<DiscordV2Button
+											variant="danger"
+											icon="ph:stop-fill"
+											:label="activeDisplayCommand.buttonLabel"
+										/>
+									</DiscordV2ActionRow>
+								</DiscordV2Container>
 							</DiscordMessage>
 						</DiscordMessages>
 					</div>
@@ -77,6 +106,7 @@
 
 						<DiscordSlashCommandInput
 							:name="activeDisplayCommand.name"
+							:subcommand="activeDisplayCommand.subcommand"
 							:options="activeDisplayCommand.options"
 						/>
 					</div>

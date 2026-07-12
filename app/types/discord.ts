@@ -2,9 +2,9 @@ import type { SlashCommandDisplayInput } from "#shared/utils/format-slash-comman
 import type { ProfileName } from "@/utils/constants";
 
 // #region Message Reply
-export type MessageReplyKind = "command" | "message";
+type MessageReplyKind = "command" | "message";
 
-export type MessageReplyProps<K extends MessageReplyKind> = K extends "command"
+type MessageReplyProps<K extends MessageReplyKind> = K extends "command"
 	? SlashCommandDisplayInput & {
 			kind: "command";
 			user: ProfileName;

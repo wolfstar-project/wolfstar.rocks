@@ -47,15 +47,6 @@ export function useHeader() {
 			],
 			label: "Applications",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
 		{
 			label: "Commands",
 			to: "/commands",
@@ -104,15 +95,6 @@ export function useHeader() {
 			label: "Blog",
 			to: "/blog",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
 		{
 			icon: "lucide:github",
 			label: "GitHub",

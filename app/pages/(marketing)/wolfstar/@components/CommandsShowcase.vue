@@ -65,16 +65,14 @@
 									@select="selectCommand(command.name)"
 								/>
 							</template>
-							<template #matched>
-								<DiscordSlashCommandSuggestion
-									v-for="command of otherCommands"
-									:key="`other-${command.name}`"
-									:name="command.name"
-									:description="command.description"
-									:active="activeDisplayCommand.name === command.name"
-									@select="selectCommand(command.name)"
-								/>
-							</template>
+							<DiscordSlashCommandSuggestion
+								v-for="command of otherCommands"
+								:key="`other-${command.name}`"
+								:name="command.name"
+								:description="command.description"
+								:active="activeDisplayCommand.name === command.name"
+								@select="selectCommand(command.name)"
+							/>
 						</DiscordSlashCommandSuggestions>
 
 						<DiscordSlashCommandInput

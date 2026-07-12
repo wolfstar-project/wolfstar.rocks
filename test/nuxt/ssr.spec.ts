@@ -315,7 +315,7 @@ describe("component SSR rendering", () => {
 		});
 
 		describe("DiscordSlashCommandSuggestions", () => {
-			it("renders frequently used section with sidebar and matched section without header", async () => {
+			it("renders scrollable command list, independent sidebar, and matched footer", async () => {
 				const wrapper = await mountSuspended({
 					components: {
 						DiscordSlashCommandSuggestion,
@@ -345,6 +345,9 @@ describe("component SSR rendering", () => {
 				});
 				expect(wrapper.text()).toContain("Frequently Used");
 				expect(wrapper.text()).not.toContain("Matched Command");
+				expect(
+					wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists(),
+				).toBe(true);
 				expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(
 					true,
 				);
@@ -357,12 +360,34 @@ describe("component SSR rendering", () => {
 						.find(".discord-slash-command-suggestions-sidebar")
 						.exists(),
 				).toBe(false);
+				expect(wrapper.find(".discord-slash-command-suggestions-recent").exists()).toBe(
+					true,
+				);
+				expect(
+					wrapper
+						.find(".discord-scrollbar-viewport")
+						.find(".discord-slash-command-suggestions-header")
+						.exists(),
+				).toBe(true);
+				expect(
+					wrapper
+						.find(".discord-scrollbar-viewport")
+						.find(".discord-slash-command-suggestion-matched")
+						.exists(),
+				).toBe(false);
 				expect(wrapper.find("[role='listbox']").exists()).toBe(true);
 				expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
 				expect(wrapper.findAll(".discord-scrollbar").length).toBe(1);
-				expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(
+				expect(wrapper.find(".discord-slash-command-suggestions-matched").exists()).toBe(
 					true,
 				);
+				expect(
+					wrapper
+						.find(
+							".discord-slash-command-suggestions-matched .discord-slash-command-suggestion-matched",
+						)
+						.exists(),
+				).toBe(true);
 			});
 		});
 
@@ -569,6 +594,24 @@ describe("component SSR rendering", () => {
 				8,
 			);
 			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(5);
+			expect(wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists()).toBe(
+				true,
+			);
+			expect(wrapper.find(".discord-slash-command-suggestions-recent").exists()).toBe(true);
+			expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
+			expect(wrapper.findAll(".discord-scrollbar").length).toBe(1);
+			expect(
+				wrapper
+					.find(".discord-scrollbar-viewport")
+					.findAll(".discord-slash-command-suggestion").length,
+			).toBe(5);
+			expect(
+				wrapper
+					.find(".discord-scrollbar-viewport")
+					.find(".discord-slash-command-suggestions-header")
+					.exists(),
+			).toBe(true);
+			expect(wrapper.find(".discord-slash-command-suggestions-matched").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.text()).toContain("/warn");
 			expect(wrapper.text()).toContain("/ban");

@@ -4,40 +4,49 @@
 			role="listbox"
 			:aria-label="listboxLabel"
 			class="discord-slash-command-suggestions-panel"
+			:class="{
+				'discord-slash-command-suggestions-panel-with-matched':
+					slots['frequently-used'] && slots.matched,
+				'discord-slash-command-suggestions-panel-with-frequently-used':
+					!!slots['frequently-used'],
+			}"
 		>
 			<div
 				v-if="slots['frequently-used']"
 				class="discord-slash-command-suggestions-frequently-used"
+				@wheel="onSuggestionsWheel"
 			>
-				<div class="discord-slash-command-suggestions-sidebar" aria-hidden="true">
-					<div
-						class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
-					>
-						<UIcon
-							name="ph:clock-counter-clockwise-fill"
-							class="discord-slash-command-suggestions-sidebar-icon"
-						/>
-					</div>
+				<div class="discord-slash-command-suggestions-sidebar-scroll" aria-hidden="true">
+					<div class="discord-slash-command-suggestions-sidebar">
+						<div
+							class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
+						>
+							<UIcon
+								name="discord:recentely-used"
+								class="discord-slash-command-suggestions-sidebar-icon"
+							/>
+						</div>
 
-					<div class="discord-slash-command-suggestions-sidebar-item">
-						<nuxt-img
-							src="/avatars/wolfstar.png"
-							width="24"
-							height="24"
-							alt=""
-							class="discord-slash-command-suggestions-sidebar-avatar"
-						/>
-					</div>
+						<div class="discord-slash-command-suggestions-sidebar-item">
+							<nuxt-img
+								src="/avatars/wolfstar.png"
+								width="24"
+								height="24"
+								alt=""
+								class="discord-slash-command-suggestions-sidebar-avatar"
+							/>
+						</div>
 
-					<div
-						v-for="bot in mockSidebarBots"
-						:key="bot.label"
-						class="discord-slash-command-suggestions-sidebar-item"
-					>
-						<UIcon
-							:name="bot.icon"
-							class="discord-slash-command-suggestions-sidebar-icon"
-						/>
+						<div
+							v-for="bot in mockSidebarBots"
+							:key="bot.label"
+							class="discord-slash-command-suggestions-sidebar-item"
+						>
+							<UIcon
+								:name="bot.icon"
+								class="discord-slash-command-suggestions-sidebar-icon"
+							/>
+						</div>
 					</div>
 				</div>
 
@@ -46,23 +55,27 @@
 					class="discord-slash-command-suggestions-scroll"
 				>
 					<div class="discord-slash-command-suggestions-list">
-						<p class="discord-slash-command-suggestions-header" role="presentation">
-							<UIcon
-								name="ph:clock-counter-clockwise-fill"
-								class="discord-slash-command-suggestions-header-icon"
-								aria-hidden="true"
-							/>
-							Frequently Used
-						</p>
-						<slot name="frequently-used" />
-						<div
-							v-if="slots.matched"
-							class="discord-slash-command-suggestions-list-matched"
-						>
-							<slot name="matched" />
-						</div>
+						<section class="discord-slash-command-suggestions-recent">
+							<p class="discord-slash-command-suggestions-header" role="presentation">
+								<UIcon
+									name="discord:recentely-used"
+									class="discord-slash-command-suggestions-header-icon"
+									aria-hidden="true"
+								/>
+								Frequently Used
+							</p>
+							<slot name="frequently-used" />
+						</section>
+						<slot />
 					</div>
 				</DiscordScrollbar>
+			</div>
+
+			<div
+				v-if="slots['frequently-used'] && slots.matched"
+				class="discord-slash-command-suggestions-matched"
+			>
+				<slot name="matched" />
 			</div>
 
 			<DiscordScrollbar
@@ -70,9 +83,7 @@
 				always-show-track
 				class="discord-slash-command-suggestions-scroll"
 			>
-				<div
-					class="discord-slash-command-suggestions-list discord-slash-command-suggestions-list-matched"
-				>
+				<div class="discord-slash-command-suggestions-list">
 					<slot name="matched" />
 				</div>
 			</DiscordScrollbar>
@@ -121,6 +132,25 @@ const mockSidebarBots = [
 ] as const;
 
 const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
+
+function onSuggestionsWheel(event: WheelEvent) {
+	const root = event.currentTarget;
+	if (!(root instanceof HTMLElement)) return;
+
+	const viewport = root.querySelector(".discord-scrollbar-viewport");
+	if (!(viewport instanceof HTMLElement)) return;
+
+	const maxScrollTop = viewport.scrollHeight - viewport.clientHeight;
+	if (maxScrollTop <= 0) return;
+
+	const nextScrollTop = viewport.scrollTop + event.deltaY;
+	const canScrollUp = event.deltaY < 0 && viewport.scrollTop > 0;
+	const canScrollDown = event.deltaY > 0 && viewport.scrollTop < maxScrollTop;
+	if (!canScrollUp && !canScrollDown) return;
+
+	event.preventDefault();
+	viewport.scrollTop = Math.min(Math.max(nextScrollTop, 0), maxScrollTop);
+}
 </script>
 
 <style scoped>
@@ -143,20 +173,49 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	@apply min-w-0;
 }
 
+.discord-slash-command-suggestions-panel-with-matched {
+	@apply flex max-h-48 min-h-0 flex-col;
+}
+
 .discord-slash-command-suggestions-scroll {
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply max-h-48 min-h-0 min-w-0;
+	@apply h-full max-h-full min-h-0 min-w-0;
+}
+
+.discord-slash-command-suggestions-panel:not(
+		.discord-slash-command-suggestions-panel-with-frequently-used
+	)
+	.discord-slash-command-suggestions-scroll {
+	@apply max-h-48;
+}
+
+.discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-viewport) {
+	overscroll-behavior: contain;
 }
 
 .discord-slash-command-suggestions-frequently-used {
-	@apply grid min-h-48 grid-cols-[40px_minmax(0,1fr)];
+	@apply grid h-48 max-h-48 min-h-0 grid-cols-[40px_minmax(0,1fr)] items-stretch;
+}
+
+.discord-slash-command-suggestions-panel-with-matched
+	.discord-slash-command-suggestions-frequently-used {
+	@apply h-auto max-h-none flex-1;
+}
+
+.discord-slash-command-suggestions-sidebar-scroll {
+	@apply min-h-0 self-stretch;
+	overflow: hidden;
+	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply sticky top-0 flex h-full min-h-48 flex-col items-center gap-1.5 self-stretch py-2;
-	background-color: var(--discord-slash-command-suggestions-sidebar);
+	@apply flex flex-col items-center gap-1.5 py-1.5;
+}
+
+.discord-slash-command-suggestions-panel-with-matched .discord-slash-command-suggestions-scroll {
+	@apply max-h-none flex-1;
 }
 
 .discord-slash-command-suggestions-sidebar-item {
@@ -189,7 +248,11 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	@apply min-w-0;
 }
 
-.discord-slash-command-suggestions-list-matched {
-	@apply pt-0;
+.discord-slash-command-suggestions-recent {
+	@apply min-w-0;
+}
+
+.discord-slash-command-suggestions-matched {
+	@apply shrink-0;
 }
 </style>

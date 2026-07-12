@@ -48,19 +48,8 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandDisplayInput } from "#shared/utils/format-slash-command-display-name";
 import type { VNode } from "vue";
-
-type MessageReply =
-	| ({
-			kind: "command";
-			user: ProfileName;
-	  } & SlashCommandDisplayInput)
-	| {
-			kind: "message";
-			user: ProfileName;
-			content: string;
-	  };
+import type { MessageReply } from "~/types/discord";
 
 interface MessageProps {
 	name: ProfileName;

@@ -20,46 +20,45 @@
 				<span class="discord-message-reply-command-name">{{ formattedCommandName }}</span>
 			</span>
 		</template>
-		<span v-else class="discord-message-reply-preview">{{ content }}</span>
+		<span v-else class="discord-message-reply-preview">{{ previewContent }}</span>
 	</div>
 </template>
 
-<script lang="ts">
-import type { SlashCommandDisplayInput } from "#shared/utils/format-slash-command-display-name";
-
-type MessageReplyProps =
-	| ({
-			kind: "command";
-			user: ProfileName;
-	  } & SlashCommandDisplayInput)
-	| {
-			kind: "message";
-			user: ProfileName;
-			content: string;
-	  };
-</script>
-
 <script setup lang="ts">
+import type { MessageReplyComponentProps } from "~/types/discord";
 import { formatSlashCommandDisplayName } from "#shared/utils/format-slash-command-display-name";
 
-const props = defineProps<MessageReplyProps>();
+const { kind, user, commandName, subcommand, subcommandGroup, content } =
+	defineProps<MessageReplyComponentProps>();
 
-const profile = computed(() => Profiles[props.user]);
+const profile = computed(() => Profiles[user]);
 
 const formattedCommandName = computed(() => {
-	if (props.kind !== "command") {
+	if (kind !== "command" || commandName === undefined) {
 		return "";
 	}
 
-	return formatSlashCommandDisplayName(props);
+	return formatSlashCommandDisplayName({
+		commandName,
+		subcommand,
+		subcommandGroup,
+	});
+});
+
+const previewContent = computed(() => {
+	if (kind !== "message" || content === undefined) {
+		return "";
+	}
+
+	return content;
 });
 
 const ariaLabel = computed(() => {
-	if (props.kind === "command") {
+	if (kind === "command") {
 		return `${profile.value.name} used the ${formattedCommandName.value} slash command`;
 	}
 
-	return `Replying to ${profile.value.name}: ${props.content}`;
+	return `Replying to ${profile.value.name}: ${previewContent.value}`;
 });
 </script>
 
@@ -74,7 +73,7 @@ const ariaLabel = computed(() => {
 	--discord-command-chip-text: hsl(235, 86.2%, 95%, 1);
 	--discord-interaction-muted: hsla(220, 2.7%, 66.1%, 1);
 
-	@apply relative mb-0.5 flex min-w-0 flex-nowrap items-center gap-x-1 font-whitney text-xs leading-4;
+	@apply relative mb-0 flex min-w-0 flex-nowrap items-center gap-x-1 font-whitney text-xs leading-4;
 }
 
 .discord-message-reply-avatar {

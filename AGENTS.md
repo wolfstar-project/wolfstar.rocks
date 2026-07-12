@@ -49,6 +49,7 @@
 - Block order: template -> script -> script setup -> styles
 - Never create reactive state at module scope; use composables in `app/composables/`
 - Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`
+- In guild-settings `mapToGuildData()`/`calculateChanges()` functions, assign values onto `Partial<GuildData>` with `setGuildDataChange()` from `#shared/utils/guild-settings-map` instead of an `as any`/`as never` cast — it skips `undefined` so untouched keys stay out of PATCH payloads while keeping key/value types checked
 
 ## Auth and Feedback
 

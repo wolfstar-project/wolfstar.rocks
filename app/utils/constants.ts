@@ -522,8 +522,8 @@ export const ProviderAppNameKey = Symbol() as InjectionKey<Ref<"wolfstar" | "sta
 
 export const Profiles = {
 	baddie: { app: false, name: "Baddie", verified: false },
-	louduser: { app: false, name: "loud-user", verified: false },
-	redstar: { app: false, name: "redstar071", verified: false },
+	louduser: { app: false, name: "Loud User", verified: false },
+	redstar: { app: false, name: "RedStar", verified: false },
 	stella: { app: false, name: "Stella", verified: false },
 	wolfstar: { app: true, name: "WolfStar", verified: true },
 } as const satisfies Record<string, Profile>;
@@ -549,28 +549,28 @@ export type SlashCommandAppName =
 	| "catbot"
 	| "dyno"
 	| "fmbot"
-	| "morecommands"
+	| "utilsbot"
 	| "staryl"
 	| "wolfstar"
-	| "wolfy";
+	| "ring";
 
 export const SlashCommandApps: Record<SlashCommandAppName, SlashCommandApp> = {
 	catbot: { label: "Cat bot", icon: "ph:cat-fill" },
 	dyno: { label: "Dyno", icon: "ph:flame-fill" },
 	fmbot: { label: ".fmbot", icon: "ph:vinyl-record-fill" },
-	morecommands: { label: "MoreCommands", icon: "ph:terminal-window-fill" },
+	utilsbot: { label: "UtilsBot", icon: "ph:terminal-window-fill" },
 	staryl: { label: "Staryl", avatar: "/avatars/staryl.png" },
 	wolfstar: { label: "WolfStar", avatar: "/avatars/wolfstar.png" },
-	wolfy: { label: "Wolfy", icon: "ph:planet-fill" },
+	ring: { label: "Ring", icon: "ph:planet-fill" },
 };
 
 /** Order of the app rail rendered on the left of the suggestion panel. */
 export const SlashCommandRailApps: SlashCommandAppName[] = [
 	"wolfstar",
 	"staryl",
-	"wolfy",
+	"ring",
 	"fmbot",
-	"morecommands",
+	"utilsbot",
 	"catbot",
 	"dyno",
 ];

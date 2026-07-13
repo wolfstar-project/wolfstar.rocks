@@ -85,7 +85,10 @@
 					</div>
 
 					<div class="showcase-command-picker">
-						<DiscordSlashCommandSuggestions :prefix="activeSearchPrefix">
+						<DiscordSlashCommandSuggestions
+							v-model:selected-app="selectedApp"
+							:prefix="activeSearchPrefix"
+						>
 							<template #frequently-used>
 								<DiscordSlashCommandSuggestion
 									v-for="command of frequentlyUsedCommands"
@@ -96,10 +99,14 @@
 									@select="selectCommand(command.name)"
 								/>
 							</template>
-							<DiscordSlashCommandSuggestionGroup app="wolfstar">
+
+							<DiscordSlashCommandSuggestionGroup
+								v-if="selectedApp === null || selectedApp === 'wolfstar'"
+								app="wolfstar"
+							>
 								<DiscordSlashCommandSuggestion
-									v-for="command of otherCommands"
-									:key="`other-${command.name}`"
+									v-for="command of listedWolfstarCommands"
+									:key="`wolfstar-${command.name}`"
 									:name="command.name"
 									:description="command.description"
 									:active="activeDisplayCommand.name === command.name"
@@ -107,11 +114,15 @@
 								/>
 							</DiscordSlashCommandSuggestionGroup>
 
-							<DiscordSlashCommandSuggestionGroup app="staryl">
+							<DiscordSlashCommandSuggestionGroup
+								v-for="app of listedMockApps"
+								:key="app"
+								:app
+							>
 								<DiscordSlashCommandSuggestion
-									v-for="command of starylCommands"
-									:key="`staryl-${command.name}`"
-									app="staryl"
+									v-for="command of mockAppCommands[app]"
+									:key="`${app}-${command.name}`"
+									:app
 									:name="command.name"
 									:description="command.description"
 									disabled
@@ -133,6 +144,7 @@
 
 <script setup lang="ts">
 const selectedCommandIndex = ref(0);
+const selectedApp = ref<SlashCommandAppName | null>(null);
 const timestamp = ref(0);
 
 const activeDisplayCommand = computed(() => {
@@ -151,16 +163,42 @@ const frequentlyUsedCommands = computed(() =>
 
 const otherCommands = computed(() => showcaseCommands.filter((command) => !command.frequentlyUsed));
 
-const starylCommands = [
-	{
-		name: "twitch-subscriptions show",
-		description: "Show all Twitch subscriptions for this server.",
-	},
-	{
-		name: "twitch-subscriptions add",
-		description: "Add a new Twitch subscription for a streamer.",
-	},
-] as const;
+/** Picking WolfStar in the app rail lists every command, not just the ones outside "Frequently Used". */
+const listedWolfstarCommands = computed(() =>
+	selectedApp.value === "wolfstar" ? showcaseCommands : otherCommands.value,
+);
+
+interface MockAppCommand {
+	name: string;
+	description: string;
+}
+
+const mockAppCommands: Record<Exclude<SlashCommandAppName, "wolfstar">, MockAppCommand[]> = {
+	catbot: [{ name: "cat", description: "Send a random cat picture." }],
+	dyno: [{ name: "modlogs", description: "View moderation logs for a member." }],
+	fmbot: [
+		{ name: "fm", description: "Show what you are listening to right now." },
+		{ name: "addfriend", description: "Add a friend to your .fmbot friends." },
+	],
+	utilsbot: [{ name: "poll", description: "Start a poll in this channel." }],
+	staryl: [
+		{
+			name: "twitch-subscriptions show",
+			description: "Show all Twitch subscriptions for this server.",
+		},
+		{
+			name: "twitch-subscriptions add",
+			description: "Add a new Twitch subscription for a streamer.",
+		},
+	],
+	ring: [{ name: "info", description: "Get information about the bot." }],
+};
+
+const listedMockApps = computed<Exclude<SlashCommandAppName, "wolfstar">[]>(() => {
+	if (selectedApp.value === null) return ["staryl"];
+	if (selectedApp.value === "wolfstar") return [];
+	return [selectedApp.value];
+});
 
 function selectCommand(name: string) {
 	const index = showcaseCommands.findIndex((command) => command.name === name);

@@ -1,8 +1,6 @@
 <template>
 	<section class="discord-slash-command-suggestions" :aria-label="ariaLabel">
 		<div
-			role="listbox"
-			:aria-label="listboxLabel"
 			class="discord-slash-command-suggestions-panel"
 			:class="{
 				'discord-slash-command-suggestions-panel-with-matched':
@@ -16,40 +14,65 @@
 				class="discord-slash-command-suggestions-frequently-used"
 			>
 				<div class="discord-slash-command-suggestions-inner">
-					<div
+					<nav
 						class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
-						aria-hidden="true"
+						:aria-label="railLabel"
 					>
 						<div class="discord-slash-command-suggestions-sidebar">
-							<div
-								class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
+							<button
+								type="button"
+								class="discord-slash-command-suggestions-sidebar-item"
+								:class="{
+									'discord-slash-command-suggestions-sidebar-item-active':
+										selectedApp === null,
+								}"
+								:aria-pressed="selectedApp === null"
 								title="Frequently Used"
+								aria-label="Frequently Used"
+								@click="selectedApp = null"
 							>
 								<span class="discord-slash-command-suggestions-sidebar-recent">
 									<UIcon
 										name="discord:recently-used"
 										class="discord-slash-command-suggestions-sidebar-icon"
+										aria-hidden="true"
 									/>
 								</span>
-							</div>
+							</button>
 
-							<div
+							<button
 								v-for="app in SlashCommandRailApps"
 								:key="app"
+								type="button"
 								class="discord-slash-command-suggestions-sidebar-item"
+								:class="{
+									'discord-slash-command-suggestions-sidebar-item-active':
+										selectedApp === app,
+								}"
+								:aria-pressed="selectedApp === app"
 								:title="SlashCommandApps[app].label"
+								:aria-label="`${SlashCommandApps[app].label} commands`"
+								@click="selectedApp = app"
 							>
 								<DiscordSlashCommandAppIcon :app size="rail" />
-							</div>
+							</button>
 						</div>
-					</div>
+					</nav>
 
 					<DiscordScrollbar
+						:key="selectedApp ?? 'frequently-used'"
 						always-show-track
 						class="discord-slash-command-suggestions-scroll"
 					>
-						<div class="discord-slash-command-suggestions-list">
-							<section class="discord-slash-command-suggestions-recent">
+						<div
+							role="listbox"
+							:aria-label="listboxLabel"
+							class="discord-slash-command-suggestions-list"
+						>
+							<section
+								v-if="selectedApp === null"
+								class="discord-slash-command-suggestions-recent"
+							>
 								<p
 									class="discord-slash-command-suggestions-header"
 									role="presentation"
@@ -71,6 +94,8 @@
 
 			<div
 				v-if="slots['frequently-used'] && slots.matched"
+				role="listbox"
+				:aria-label="matchedLabel"
 				class="discord-slash-command-suggestions-matched"
 			>
 				<slot name="matched" />
@@ -81,7 +106,11 @@
 				always-show-track
 				class="discord-slash-command-suggestions-scroll"
 			>
-				<div class="discord-slash-command-suggestions-list">
+				<div
+					role="listbox"
+					:aria-label="listboxLabel"
+					class="discord-slash-command-suggestions-list"
+				>
 					<slot name="matched" />
 				</div>
 			</DiscordScrollbar>
@@ -91,7 +120,9 @@
 				always-show-track
 				class="discord-slash-command-suggestions-scroll"
 			>
-				<slot />
+				<div role="listbox" :aria-label="listboxLabel">
+					<slot />
+				</div>
 			</DiscordScrollbar>
 		</div>
 	</section>
@@ -102,7 +133,9 @@ import type { VNode } from "vue";
 
 interface SlashCommandSuggestionsProps {
 	listboxLabel?: string;
+	matchedLabel?: string;
 	prefix: string;
+	railLabel?: string;
 }
 
 interface SlashCommandSuggestionsSlots {
@@ -115,8 +148,15 @@ interface SlashCommandSuggestionsSlots {
 <script setup lang="ts">
 defineSlots<SlashCommandSuggestionsSlots>();
 
-const { listboxLabel = "Slash command suggestions", prefix } =
-	defineProps<SlashCommandSuggestionsProps>();
+const {
+	listboxLabel = "Slash command suggestions",
+	matchedLabel = "Matched slash command",
+	prefix,
+	railLabel = "Applications",
+} = defineProps<SlashCommandSuggestionsProps>();
+
+/** `null` shows the frequently used list; an app name filters to that app's commands. */
+const selectedApp = defineModel<SlashCommandAppName | null>("selectedApp", { default: null });
 
 const slots = useSlots();
 
@@ -130,6 +170,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-bg: hsl(220, 7%, 12%);
 	--discord-slash-command-suggestions-sidebar: hsl(220, 7%, 9%);
 	--discord-slash-command-suggestions-sidebar-active: hsla(220, 6.5%, 24%, 1);
+	--discord-slash-command-suggestions-sidebar-hover: hsla(223, 6.7%, 20.6%, 1);
 	--discord-slash-command-suggestions-sidebar-icon: hsla(220, 2.7%, 66.1%, 1);
 	--discord-slash-command-suggestions-header: hsla(220, 2.7%, 66.1%, 1);
 	--discord-slash-command-suggestions-scrollbar-track: hsla(220, 2.7%, 66.1%, 0.12);
@@ -204,11 +245,24 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-item {
-	@apply flex size-10 shrink-0 items-center justify-center rounded-lg;
+	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent p-0;
+	transition: background-color 120ms ease;
 }
 
-.discord-slash-command-suggestions-sidebar-item-active {
+.discord-slash-command-suggestions-sidebar-item:hover,
+.discord-slash-command-suggestions-sidebar-item:focus-visible {
+	background-color: var(--discord-slash-command-suggestions-sidebar-hover);
+}
+
+.discord-slash-command-suggestions-sidebar-item-active,
+.discord-slash-command-suggestions-sidebar-item-active:hover {
 	background-color: var(--discord-slash-command-suggestions-sidebar-active);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.discord-slash-command-suggestions-sidebar-item {
+		transition: none;
+	}
 }
 
 .discord-slash-command-suggestions-sidebar-recent {

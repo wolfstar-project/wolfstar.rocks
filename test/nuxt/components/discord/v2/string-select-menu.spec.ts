@@ -176,4 +176,21 @@ describe("DiscordV2StringSelectMenu", () => {
 		expect(trigger.attributes("aria-expanded")).toBe("false");
 		expect(wrapper.find("[role='listbox']").isVisible()).toBe(false);
 	});
+
+	it("renders Iconify twemoji names as SVG icons instead of literal text", async () => {
+		const wrapper = await mountSuspended(StringSelectMenu, {
+			props: {
+				options: [{ value: "prefix", label: "prefix", emoji: "twemoji:gear" }],
+			},
+			attachTo: document.body,
+		});
+		const trigger = wrapper.find("button[role='combobox']");
+		await trigger.trigger("click");
+
+		const option = wrapper.find("[role='option']");
+		const emojiEl = option.find(".discord-v2-string-select-menu-option-emoji");
+		expect(emojiEl.exists()).toBe(true);
+		expect(option.text()).not.toContain("twemoji:gear");
+		expect(emojiEl.text()).toBe("");
+	});
 });

@@ -5,7 +5,7 @@ export interface StringSelectMenuOption {
 	value: string;
 	label: string;
 	description?: string;
-	/** Unicode emoji, or an image URL/path (`http…`, `/…`, `./…`). */
+	/** Unicode emoji, Iconify name (`twemoji:file-folder`), or image URL/path (`http…`, `/…`, `./…`). */
 	emoji?: string;
 	emojiName?: string;
 	disabled?: boolean;

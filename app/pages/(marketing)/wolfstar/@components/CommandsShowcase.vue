@@ -60,7 +60,7 @@
 											v-for="(line, lineIdx) in activeDisplayCommand.lines"
 											:key="lineIdx"
 										>
-											{{ line }}
+											<ShowcaseTwemojiText :line="line" />
 										</div>
 									</DiscordV2TextDisplay>
 									<DiscordV2Separator />
@@ -143,6 +143,8 @@
 </template>
 
 <script setup lang="ts">
+import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
+
 const selectedCommandIndex = ref(0);
 const selectedApp = ref<SlashCommandAppName | null>(null);
 const timestamp = ref(0);

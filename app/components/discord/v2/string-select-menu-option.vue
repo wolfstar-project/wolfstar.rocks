@@ -18,6 +18,12 @@
 			:alt="option.emojiName ?? ''"
 			class="discord-v2-string-select-menu-option-emoji"
 		/>
+		<UIcon
+			v-else-if="emojiIsIconify"
+			:name="option.emoji!"
+			class="discord-v2-string-select-menu-option-emoji size-5"
+			aria-hidden="true"
+		/>
 		<span
 			v-else-if="option.emoji"
 			class="discord-v2-string-select-menu-option-emoji"
@@ -67,6 +73,11 @@ const emojiIsImage = computed(() => {
 	return Boolean(
 		emoji && (emoji.includes("http") || emoji.startsWith("/") || emoji.startsWith("./")),
 	);
+});
+
+const emojiIsIconify = computed(() => {
+	const emoji = option.emoji;
+	return Boolean(emoji && emoji.includes(":") && !emojiIsImage.value);
 });
 </script>
 

@@ -41,7 +41,7 @@ const isFeedbackOpen = ref(false);
 const colorMode = useColorMode();
 const { user: authUser, clear } = useAuth();
 
-const src = computed(() => avatarURL(authUser.value!, { size: 64 }));
+const src = computed(() => authUser.value?.image ?? undefined);
 
 const user = ref({
 	avatar: {

@@ -28,7 +28,7 @@ export default defineNuxtConfig({
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
-		"nuxt-auth-utils",
+		"@onmax/nuxt-better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
@@ -142,11 +142,11 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
-	auth: {
-		// Avoid eager session hydration on marketing pages; protected routes and
-		// HeaderAuth fetch explicitly when a session is needed.
-		loadStrategy: "none",
-	},
+	// Shared configKey: `modules/auth` (this repo's custom authz layer, keys:
+	// loginRoute/fullAccessRoles/redirectIfNotAllowed) and @onmax/nuxt-better-auth
+	// (keys: clientOnly/serverConfig/clientConfig/redirects/etc.) both read this
+	// object — no field names overlap, so it's safe to share.
+	auth: {},
 
 	colorMode: {
 		preference: "system", // Default theme

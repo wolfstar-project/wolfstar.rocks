@@ -3,36 +3,37 @@ import authconfig from "#build/auth.config";
 
 /**
  * Composable for managing Discord authentication
- * Uses nuxt-auth-utils under the hood
+ * Uses @onmax/nuxt-better-auth under the hood
  */
 export const useAuth = ({ namespace: _namespace }: { namespace?: string } = {}) => {
-	const { ready, loggedIn, user, session, fetch, openInPopup, clear } = useUserSession();
+	const { ready, loggedIn, user, session, fetchSession, signOut } = useUserSession();
 
 	const redirectTo = useState<string>("authRedirect", () => "/");
 
 	const login = async (returnUrl?: string) => {
 		const targetUrl = returnUrl || redirectTo.value || useRoute().fullPath;
-		await navigateTo(`/api/auth/discord?next=${encodeURIComponent(targetUrl)}`, {
-			external: true,
+		await useAuthClient()?.signIn.social({
+			provider: "discord",
+			callbackURL: `/oauth/callback?next=${encodeURIComponent(targetUrl)}`,
+			errorCallbackURL: "/oauth/callback",
 		});
 	};
 
 	const logout = async () => {
-		await clear();
+		await signOut();
 		await navigateTo("/");
 	};
 
 	return {
-		clear,
-		fetch,
+		clear: signOut,
+		fetch: fetchSession,
 		isAuthenticated: computed(() => loggedIn.value),
 		loggedIn,
 		login,
 		logout,
-		openInPopup,
 		ready,
 		redirectTo,
-		refreshSession: fetch,
+		refreshSession: fetchSession,
 		session,
 		user,
 	};

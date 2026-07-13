@@ -47,7 +47,7 @@ import { createError } from "evlog";
 
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
 	const session = await getUserSession(event);
-	const userId = session.user?.id;
+	const userId = session?.user?.id;
 	if (!userId) {
 		throw errors.unauthorized();
 	}

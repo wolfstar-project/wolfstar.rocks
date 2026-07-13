@@ -2,7 +2,7 @@
 	<div class="container mx-auto px-4 py-8">
 		<h1 class="sr-only">OAuth Callback</h1>
 		<h2 class="sr-only">Authentication Status</h2>
-		<template v-if="!code">
+		<template v-if="!hasCallbackParams">
 			<UAlert variant="solid" color="warning" title="Login Required" icon="twemoji:warning">
 				<template #description>
 					This page can't be accessed directly. Please
@@ -17,12 +17,7 @@
 			</UAlert>
 		</template>
 		<ClientOnly v-else>
-			<template v-if="isPending">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
-					<template #description> Connecting to Discord... </template>
-				</UAlert>
-			</template>
-			<template v-else-if="isError">
+			<template v-if="isError">
 				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
 					<template #description>
 						{{ errorMessage }}
@@ -34,12 +29,13 @@
 					</template>
 				</UAlert>
 			</template>
-			<template v-else-if="isSuccess">
-				<UAlert
-					color="success"
-					icon="twemoji:check-mark"
-					:title="`Welcome ${user!.username}!`"
-				>
+			<template v-else-if="!ready">
+				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
+					<template #description> Connecting to Discord... </template>
+				</UAlert>
+			</template>
+			<template v-else-if="user">
+				<UAlert color="success" icon="twemoji:check-mark" :title="`Welcome ${user.name}!`">
 					<template #description> Redirecting you to the dashboard... </template>
 				</UAlert>
 			</template>
@@ -54,68 +50,47 @@ definePageMeta({
 	viewTransition: false,
 });
 
-const code = useRouteQuery("code", null, { transform: String });
-const state = useRouteQuery("state", undefined, { transform: String });
-const { user, refreshSession } = useAuth();
+const route = useRoute();
+const nextParam = useRouteQuery("next", "/", { transform: String });
 const log = useLogger("oauth:callback");
 
-const route = useRoute();
+// Better Auth already completed the Discord code exchange and set the
+// session cookie server-side before redirecting the browser here — this page
+// only has to wait for the session to hydrate, then continue on to `next`.
+const { user, ready, loggedIn, fetch: fetchSession } = useAuth();
 
-const { data, error, status, execute } = useFetch<{ redirectUrl: string }>("/api/auth/discord", {
-	immediate: false,
-	key: "callback",
-	method: "GET",
-	query: {
-		code,
-		state,
-	},
-	server: false,
-});
+const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
 
-if (import.meta.client && code) {
+if (import.meta.client && !route.query.error) {
 	void performCall().catch(log.error);
 }
 
 async function performCall() {
-	// The exchange endpoint atomically verifies the CSRF state BEFORE trading
-	// the code for tokens and creating a session, and returns the safe
-	// destination URL stored during initiation.
-	await execute();
+	if (!ready.value) {
+		await fetchSession();
+	}
 
-	// Stop if state validation or the token exchange failed — the error UI
-	// will be shown and no session was created
-	if (error.value) {
+	if (!loggedIn.value) {
 		return;
 	}
 
-	// Refresh client-side session state so the user data is reactive immediately
-	await refreshSession();
-
 	await promiseTimeout(seconds(2));
 
-	const redirectUrl = data.value?.redirectUrl ?? "/";
+	const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
 
-	// Full page navigation ensures SSR reads the fresh session cookie,
-	// so the target page renders with the correct authenticated state.
-	await navigateTo(redirectUrl, {
+	// Full page navigation ensures SSR reads the fresh session cookie, so the
+	// target page renders with the correct authenticated state.
+	await navigateTo(safeNext, {
 		external: true,
 		replace: true,
 	});
 }
 
-const errorMessage = computed(() => {
-	if (route.query.error) {
-		return route.query.error;
-	}
+const errorMessage = computed(
+	() => route.query.error ?? "Something went wrong while signing you in. Please try again.",
+);
 
-	return error.value
-		? (error.value.message ?? error.value.cause)
-		: "Something went wrong while signing you in. Please try again.";
-});
-
-const isPending = computed(() => status.value === "pending");
-const isError = computed(() => status.value === "error");
-const isSuccess = computed(() => status.value === "success");
+const isError = computed(() => Boolean(route.query.error));
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({

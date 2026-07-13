@@ -55,12 +55,12 @@ export default defineNuxtModule<ModuleOptions>({
 					.toReversed(),
 			) as Record<string, any>;
 
-			if (rules.auth) {
-				rules.auth.loginRoute ??= options.loginRoute;
+			if (rules.authz) {
+				rules.authz.loginRoute ??= options.loginRoute;
 
 				if (options.fullAccessRoles?.length) {
-					rules.auth.roles ||= [];
-					rules.auth.roles = [...rules.auth.roles, ...options.fullAccessRoles];
+					rules.authz.roles ||= [];
+					rules.authz.roles = [...rules.authz.roles, ...options.fullAccessRoles];
 				}
 			}
 
@@ -95,9 +95,9 @@ export default defineNuxtModule<ModuleOptions>({
 		nuxt.hook("pages:resolved", (pages) => {
 			pages.forEach((page) => {
 				const rules = getRules(page.path);
-				if (rules?.auth) {
+				if (rules?.authz) {
 					page.meta ||= {};
-					page.meta.auth ??= rules.auth;
+					page.meta.authz ??= rules.authz;
 				}
 			});
 		});

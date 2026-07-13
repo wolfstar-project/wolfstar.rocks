@@ -87,5 +87,5 @@ const items = ref<DropdownMenuItem[]>([
 	},
 ]);
 
-const src = computed(() => (user.value ? avatarURL(user.value) : undefined));
+const src = computed(() => user.value?.image ?? undefined);
 </script>

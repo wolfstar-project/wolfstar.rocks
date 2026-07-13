@@ -8,7 +8,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 	if (to.name === undefined) {
 		return;
 	}
-	const auth = to.meta?.auth as AuthMeta | undefined;
+	const auth = to.meta?.authz as AuthMeta | undefined;
 	const authRequired = auth?.required ?? false;
 	const authNamespace = auth?.namespace;
 

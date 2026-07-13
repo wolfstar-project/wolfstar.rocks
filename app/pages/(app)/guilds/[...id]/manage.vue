@@ -28,7 +28,7 @@
 import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({
-	auth: {
+	authz: {
 		required: true,
 	},
 	layout: "dashboard",

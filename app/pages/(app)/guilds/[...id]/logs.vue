@@ -37,7 +37,7 @@ import type { TabsItem } from "@nuxt/ui";
 import { useRouteParams } from "@vueuse/router";
 
 definePageMeta({
-	auth: { required: true },
+	authz: { required: true },
 	layout: "dashboard",
 	path: "/guilds/:id/logs/:tab(moderation|warnings|commands|activity)?",
 });

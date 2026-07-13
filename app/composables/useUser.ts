@@ -1,3 +1,4 @@
+import type { AuthUser } from "#nuxt-better-auth";
 import { useFuse } from "@vueuse/integrations/useFuse";
 
 export interface UseUserSearchOptions {
@@ -13,7 +14,7 @@ export interface UseUserOptions {
 	search?: UseUserSearchOptions;
 }
 
-export function useUser(user: MaybeRefOrGetter<User | null>, options?: UseUserOptions) {
+export function useUser(user: MaybeRefOrGetter<AuthUser | null>, options?: UseUserOptions) {
 	const cachedFetch = useCachedFetch();
 	const forceGuildRefresh = ref(false);
 

@@ -1,4 +1,4 @@
-import type { UserSessionRequired } from "#auth-utils";
+import type { AppSession } from "#nuxt-better-auth";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
@@ -34,7 +34,7 @@ interface DefinedWrappedResponseHandlerOptions {
 	 * on EVERY request — including warm cache hits — so revoked permissions are
 	 * always enforced.
 	 */
-	authorize?: (event: H3Event, session: UserSessionRequired | null) => Promise<void> | void;
+	authorize?: (event: H3Event, session: AppSession | null) => Promise<void> | void;
 }
 
 interface DefinedWrappedCachedResponseHandlerOptions
@@ -47,11 +47,7 @@ interface DefinedWrappedCachedResponseHandlerOptions
  * @param ipHeader - Custom header to use for IP detection (optional)
  * @returns User ID if authenticated, otherwise IP address
  */
-function getIdentifier(
-	event: H3Event,
-	session: UserSessionRequired | null,
-	ipHeader?: string,
-): string {
+function getIdentifier(event: H3Event, session: AppSession | null, ipHeader?: string): string {
 	if (session) {
 		return session.user.id;
 	}
@@ -94,7 +90,7 @@ function normalizeRateLimitOptions(
 async function getUserSession(
 	options: DefinedWrappedResponseHandlerOptions,
 	event: H3Event,
-): Promise<UserSessionRequired | null> {
+): Promise<AppSession | null> {
 	if (options.auth) {
 		return await requireUserSession(event);
 	}

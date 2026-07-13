@@ -52,7 +52,7 @@
 							:width="128"
 							:height="128"
 							sizes="128px"
-							:alt="`${user?.globalName ?? user?.username} avatar`"
+							:alt="`${discordUser?.global_name ?? discordUser?.username} avatar`"
 							class="h-full w-full object-cover"
 							loading="lazy"
 							decoding="async"
@@ -62,9 +62,11 @@
 				</div>
 				<div class="space-y-2 text-center">
 					<h2 class="text-4xl font-bold text-base-content">
-						{{ user.globalName ?? user.username }}
+						{{ discordUser?.global_name ?? discordUser?.username ?? user?.name }}
 					</h2>
-					<p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
+					<p class="text-lg font-medium text-base-content/80">
+						@{{ discordUser?.username }}
+					</p>
 					<p class="text-sm text-base-content/60">
 						User ID:
 						<UButton
@@ -673,7 +675,7 @@ const preferredFormat = computed<"gif" | "png">(() => {
 // Use the centralized useUser composable instead of manual useFetch
 // Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
 // Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
+const { data, guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 	timeout: 15_000, // 15 seconds timeout
 	retry: 3, // Max retry attempts
 	retryDelay: 1000, // 1 second delay between retries
@@ -683,6 +685,12 @@ const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 		sortAscending,
 	},
 });
+
+// Better Auth's session user only exposes a flat, already-resolved avatar
+// URL — the raw Discord user (avatar hash, username, global_name) needed for
+// animated-avatar detection and format-specific CDN URLs comes from the live
+// Discord API response `useUser()` already fetches for the guild list.
+const discordUser = computed(() => data.value?.user);
 
 const isLoading = computed(() => status.value === "idle" || status.value === "pending");
 
@@ -769,15 +777,15 @@ function handleSetReduceMotion(value: boolean) {
 }
 
 function createUrl(format: "webp" | "png" | "gif", size: number) {
-	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
+	return `https://cdn.discordapp.com/avatars/${discordUser.value?.id}/${discordUser.value?.avatar}.${format}?size=${size}`;
 }
 
 watch(
-	user,
-	(user) => {
-		if (user?.avatar) {
+	discordUser,
+	(discordUser) => {
+		if (discordUser?.avatar) {
 			isDefault.value = false;
-			isAnimated.value = user.avatar.startsWith("a_");
+			isAnimated.value = discordUser.avatar.startsWith("a_");
 		} else {
 			isDefault.value = true;
 			isAnimated.value = false;

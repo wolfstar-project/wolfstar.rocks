@@ -348,6 +348,9 @@ describe("component SSR rendering", () => {
 				expect(
 					wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists(),
 				).toBe(true);
+				expect(wrapper.find(".discord-slash-command-suggestions-inner").exists()).toBe(
+					true,
+				);
 				expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(
 					true,
 				);
@@ -593,10 +596,13 @@ describe("component SSR rendering", () => {
 			expect(wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length).toBe(
 				8,
 			);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(8);
+			expect(wrapper.findAll(".discord-slash-command-suggestion-disabled").length).toBe(2);
+			expect(wrapper.findAll(".discord-slash-command-suggestion-group").length).toBe(2);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists()).toBe(
 				true,
 			);
+			expect(wrapper.find(".discord-slash-command-suggestions-inner").exists()).toBe(true);
 			expect(wrapper.find(".discord-slash-command-suggestions-recent").exists()).toBe(true);
 			expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
 			expect(wrapper.findAll(".discord-scrollbar").length).toBe(1);
@@ -604,7 +610,7 @@ describe("component SSR rendering", () => {
 				wrapper
 					.find(".discord-scrollbar-viewport")
 					.findAll(".discord-slash-command-suggestion").length,
-			).toBe(6);
+			).toBe(8);
 			expect(
 				wrapper
 					.find(".discord-scrollbar-viewport")
@@ -642,7 +648,24 @@ describe("component SSR rendering", () => {
 			);
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(8);
+		});
+
+		it("keeps third-party app rows non-selectable", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			const starylSuggestion = wrapper
+				.findAll(".discord-slash-command-suggestion")
+				.find((suggestion) => suggestion.text().includes("/twitch-subscriptions show"));
+			expect(starylSuggestion).toBeDefined();
+			expect(starylSuggestion!.attributes("aria-disabled")).toBe("true");
+
+			await starylSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-slash-command-suggestion-active").text()).toContain(
+				"/warn",
+			);
 		});
 
 		it("renders the components-v2 mock for the conf menu command", async () => {

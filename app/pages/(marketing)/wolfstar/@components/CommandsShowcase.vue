@@ -96,14 +96,27 @@
 									@select="selectCommand(command.name)"
 								/>
 							</template>
-							<DiscordSlashCommandSuggestion
-								v-for="command of otherCommands"
-								:key="`other-${command.name}`"
-								:name="command.name"
-								:description="command.description"
-								:active="activeDisplayCommand.name === command.name"
-								@select="selectCommand(command.name)"
-							/>
+							<DiscordSlashCommandSuggestionGroup app="wolfstar">
+								<DiscordSlashCommandSuggestion
+									v-for="command of otherCommands"
+									:key="`other-${command.name}`"
+									:name="command.name"
+									:description="command.description"
+									:active="activeDisplayCommand.name === command.name"
+									@select="selectCommand(command.name)"
+								/>
+							</DiscordSlashCommandSuggestionGroup>
+
+							<DiscordSlashCommandSuggestionGroup app="staryl">
+								<DiscordSlashCommandSuggestion
+									v-for="command of starylCommands"
+									:key="`staryl-${command.name}`"
+									app="staryl"
+									:name="command.name"
+									:description="command.description"
+									disabled
+								/>
+							</DiscordSlashCommandSuggestionGroup>
 						</DiscordSlashCommandSuggestions>
 
 						<DiscordSlashCommandInput
@@ -137,6 +150,17 @@ const frequentlyUsedCommands = computed(() =>
 );
 
 const otherCommands = computed(() => showcaseCommands.filter((command) => !command.frequentlyUsed));
+
+const starylCommands = [
+	{
+		name: "twitch-subscriptions show",
+		description: "Show all Twitch subscriptions for this server.",
+	},
+	{
+		name: "twitch-subscriptions add",
+		description: "Add a new Twitch subscription for a streamer.",
+	},
+] as const;
 
 function selectCommand(name: string) {
 	const index = showcaseCommands.findIndex((command) => command.name === name);

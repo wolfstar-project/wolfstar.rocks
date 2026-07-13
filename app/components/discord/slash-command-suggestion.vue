@@ -1,16 +1,24 @@
 <template>
 	<div
 		class="discord-slash-command-suggestion"
-		:class="{ 'discord-slash-command-suggestion-active': active }"
+		:class="{
+			'discord-slash-command-suggestion-active': active,
+			'discord-slash-command-suggestion-disabled': disabled,
+		}"
 		role="option"
 		:aria-selected="active"
+		:aria-disabled="disabled || undefined"
 		:aria-label="ariaLabel"
-		tabindex="0"
-		@click="emit('select')"
-		@keydown.enter.prevent="emit('select')"
-		@keydown.space.prevent="emit('select')"
+		:tabindex="disabled ? -1 : 0"
+		@click="select()"
+		@keydown.enter.prevent="select()"
+		@keydown.space.prevent="select()"
 	>
-		<DiscordAvatar :user="bot" size="tiny" class="discord-slash-command-suggestion-avatar" />
+		<DiscordSlashCommandAppIcon
+			:app
+			size="row"
+			class="discord-slash-command-suggestion-avatar"
+		/>
 		<div class="discord-slash-command-suggestion-content">
 			<span class="discord-slash-command-suggestion-name">/{{ name }}</span>
 			<span v-if="description" class="discord-slash-command-suggestion-description">{{
@@ -24,9 +32,12 @@
 <script lang="ts">
 interface SlashCommandSuggestionProps {
 	active?: boolean;
+	app?: SlashCommandAppName;
+	/** Overrides the registry label, e.g. "WolfStar Beta" for a beta build. */
 	appLabel?: string;
-	bot?: ProfileName;
 	description?: string;
+	/** Renders the row as a non-selectable listbox option (third-party apps in the mock menu). */
+	disabled?: boolean;
 	name: string;
 }
 
@@ -38,15 +49,21 @@ interface SlashCommandSuggestionEmits {
 <script setup lang="ts">
 const {
 	active = false,
+	app = "wolfstar",
 	appLabel,
-	bot = "wolfstar",
 	description,
+	disabled = false,
 	name,
 } = defineProps<SlashCommandSuggestionProps>();
 
-const resolvedAppLabel = computed(() => appLabel ?? Profiles[bot].name);
+const resolvedAppLabel = computed(() => appLabel ?? SlashCommandApps[app].label);
 
 const emit = defineEmits<SlashCommandSuggestionEmits>();
+
+function select() {
+	if (disabled) return;
+	emit("select");
+}
 
 const ariaLabel = computed(() => {
 	const parts = [`${resolvedAppLabel.value} slash command: /${name}`];
@@ -65,10 +82,10 @@ const ariaLabel = computed(() => {
 	--discord-slash-command-suggestion-description: hsla(220, 2.7%, 66.1%, 1);
 	--discord-slash-command-suggestion-app: hsla(220, 2.7%, 66.1%, 1);
 
-	@apply grid min-h-11 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5;
+	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5;
 }
 
-.discord-slash-command-suggestion:hover,
+.discord-slash-command-suggestion:not(.discord-slash-command-suggestion-disabled):hover,
 .discord-slash-command-suggestion-active {
 	background-color: var(--discord-slash-command-suggestion-hover);
 }
@@ -77,8 +94,12 @@ const ariaLabel = computed(() => {
 	background-color: var(--discord-slash-command-suggestion-active);
 }
 
+.discord-slash-command-suggestion-disabled {
+	@apply cursor-default;
+}
+
 .discord-slash-command-suggestion-avatar {
-	@apply shrink-0 self-start;
+	@apply shrink-0;
 }
 
 .discord-slash-command-suggestion-content {
@@ -86,17 +107,17 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-name {
-	@apply font-whitney text-sm font-semibold;
+	@apply font-whitney text-[15px] leading-tight font-semibold;
 	color: var(--discord-slash-command-suggestion-name);
 }
 
 .discord-slash-command-suggestion-description {
-	@apply truncate font-whitney text-xs leading-snug;
+	@apply truncate font-whitney text-[13px] leading-snug;
 	color: var(--discord-slash-command-suggestion-description);
 }
 
 .discord-slash-command-suggestion-app {
-	@apply shrink-0 self-start pt-0.5 text-xs;
+	@apply shrink-0 font-whitney text-[13px];
 	color: var(--discord-slash-command-suggestion-app);
 }
 </style>

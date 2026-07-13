@@ -536,6 +536,45 @@ export interface Profile {
 
 export type ProfileName = keyof typeof Profiles;
 
+/** Applications rendered inside the Discord slash-command suggestion panel. */
+export interface SlashCommandApp {
+	label: string;
+	/** Avatar image served from `public/avatars`. Takes precedence over `icon`. */
+	avatar?: string;
+	/** Icon fallback for apps without an avatar asset. */
+	icon?: string;
+}
+
+export type SlashCommandAppName =
+	| "catbot"
+	| "dyno"
+	| "fmbot"
+	| "morecommands"
+	| "staryl"
+	| "wolfstar"
+	| "wolfy";
+
+export const SlashCommandApps: Record<SlashCommandAppName, SlashCommandApp> = {
+	catbot: { label: "Cat bot", icon: "ph:cat-fill" },
+	dyno: { label: "Dyno", icon: "ph:flame-fill" },
+	fmbot: { label: ".fmbot", icon: "ph:vinyl-record-fill" },
+	morecommands: { label: "MoreCommands", icon: "ph:terminal-window-fill" },
+	staryl: { label: "Staryl", avatar: "/avatars/staryl.png" },
+	wolfstar: { label: "WolfStar", avatar: "/avatars/wolfstar.png" },
+	wolfy: { label: "Wolfy", icon: "ph:planet-fill" },
+};
+
+/** Order of the app rail rendered on the left of the suggestion panel. */
+export const SlashCommandRailApps: SlashCommandAppName[] = [
+	"wolfstar",
+	"staryl",
+	"wolfy",
+	"fmbot",
+	"morecommands",
+	"catbot",
+	"dyno",
+];
+
 type ShowcaseCommandEmbedPart =
 	| { type: "mention"; name: string }
 	| { type: "text"; content: string };

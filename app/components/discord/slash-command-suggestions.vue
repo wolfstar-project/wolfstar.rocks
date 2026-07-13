@@ -14,61 +14,59 @@
 			<div
 				v-if="slots['frequently-used']"
 				class="discord-slash-command-suggestions-frequently-used"
-				@wheel="onSuggestionsWheel"
 			>
-				<div class="discord-slash-command-suggestions-sidebar-scroll" aria-hidden="true">
-					<div class="discord-slash-command-suggestions-sidebar">
-						<div
-							class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
-						>
-							<UIcon
-								name="discord:recentely-used"
-								class="discord-slash-command-suggestions-sidebar-icon"
-							/>
-						</div>
+				<div class="discord-slash-command-suggestions-inner">
+					<div
+						class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
+						aria-hidden="true"
+					>
+						<div class="discord-slash-command-suggestions-sidebar">
+							<div
+								class="discord-slash-command-suggestions-sidebar-item discord-slash-command-suggestions-sidebar-item-active"
+								title="Frequently Used"
+							>
+								<span class="discord-slash-command-suggestions-sidebar-recent">
+									<UIcon
+										name="discord:recently-used"
+										class="discord-slash-command-suggestions-sidebar-icon"
+									/>
+								</span>
+							</div>
 
-						<div class="discord-slash-command-suggestions-sidebar-item">
-							<nuxt-img
-								src="/avatars/wolfstar.png"
-								width="24"
-								height="24"
-								alt=""
-								class="discord-slash-command-suggestions-sidebar-avatar"
-							/>
-						</div>
-
-						<div
-							v-for="bot in mockSidebarBots"
-							:key="bot.label"
-							class="discord-slash-command-suggestions-sidebar-item"
-						>
-							<UIcon
-								:name="bot.icon"
-								class="discord-slash-command-suggestions-sidebar-icon"
-							/>
+							<div
+								v-for="app in SlashCommandRailApps"
+								:key="app"
+								class="discord-slash-command-suggestions-sidebar-item"
+								:title="SlashCommandApps[app].label"
+							>
+								<DiscordSlashCommandAppIcon :app size="rail" />
+							</div>
 						</div>
 					</div>
+
+					<DiscordScrollbar
+						always-show-track
+						class="discord-slash-command-suggestions-scroll"
+					>
+						<div class="discord-slash-command-suggestions-list">
+							<section class="discord-slash-command-suggestions-recent">
+								<p
+									class="discord-slash-command-suggestions-header"
+									role="presentation"
+								>
+									<UIcon
+										name="discord:recently-used"
+										class="discord-slash-command-suggestions-header-icon"
+										aria-hidden="true"
+									/>
+									Frequently Used
+								</p>
+								<slot name="frequently-used" />
+							</section>
+							<slot />
+						</div>
+					</DiscordScrollbar>
 				</div>
-
-				<DiscordScrollbar
-					always-show-track
-					class="discord-slash-command-suggestions-scroll"
-				>
-					<div class="discord-slash-command-suggestions-list">
-						<section class="discord-slash-command-suggestions-recent">
-							<p class="discord-slash-command-suggestions-header" role="presentation">
-								<UIcon
-									name="discord:recentely-used"
-									class="discord-slash-command-suggestions-header-icon"
-									aria-hidden="true"
-								/>
-								Frequently Used
-							</p>
-							<slot name="frequently-used" />
-						</section>
-						<slot />
-					</div>
-				</DiscordScrollbar>
 			</div>
 
 			<div
@@ -122,35 +120,7 @@ const { listboxLabel = "Slash command suggestions", prefix } =
 
 const slots = useSlots();
 
-const mockSidebarBots = [
-	{ icon: "ph:rocket-launch-fill", label: "Staryl" },
-	{ icon: "ph:terminal-window-fill", label: "MoreCommands" },
-	{ icon: "ph:planet-fill", label: "Wolfy" },
-	{ icon: "ph:diamond-fill", label: "Fmbot" },
-	{ icon: "ph:cat-fill", label: "Cat bot" },
-	{ icon: "ph:flame-fill", label: "Dyno" },
-] as const;
-
 const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
-
-function onSuggestionsWheel(event: WheelEvent) {
-	const root = event.currentTarget;
-	if (!(root instanceof HTMLElement)) return;
-
-	const viewport = root.querySelector(".discord-scrollbar-viewport");
-	if (!(viewport instanceof HTMLElement)) return;
-
-	const maxScrollTop = viewport.scrollHeight - viewport.clientHeight;
-	if (maxScrollTop <= 0) return;
-
-	const nextScrollTop = viewport.scrollTop + event.deltaY;
-	const canScrollUp = event.deltaY < 0 && viewport.scrollTop > 0;
-	const canScrollDown = event.deltaY > 0 && viewport.scrollTop < maxScrollTop;
-	if (!canScrollUp && !canScrollDown) return;
-
-	event.preventDefault();
-	viewport.scrollTop = Math.min(Math.max(nextScrollTop, 0), maxScrollTop);
-}
 </script>
 
 <style scoped>
@@ -164,6 +134,8 @@ function onSuggestionsWheel(event: WheelEvent) {
 	--discord-slash-command-suggestions-header: hsla(220, 2.7%, 66.1%, 1);
 	--discord-slash-command-suggestions-scrollbar-track: hsla(220, 2.7%, 66.1%, 0.12);
 	--discord-slash-command-suggestions-scrollbar-thumb: hsla(220, 2.7%, 66.1%, 0.45);
+	--discord-slash-command-suggestions-rail-width: 48px;
+	--discord-slash-command-suggestions-height: 18rem;
 
 	@apply font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);
@@ -174,21 +146,23 @@ function onSuggestionsWheel(event: WheelEvent) {
 }
 
 .discord-slash-command-suggestions-panel-with-matched {
-	@apply flex max-h-48 min-h-0 flex-col;
+	@apply flex min-h-0 flex-col;
+	max-height: var(--discord-slash-command-suggestions-height);
 }
 
 .discord-slash-command-suggestions-scroll {
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply h-full max-h-full min-h-0 min-w-0;
+	@apply h-full max-h-full min-h-0 min-w-0 flex-1;
 }
 
 .discord-slash-command-suggestions-panel:not(
 		.discord-slash-command-suggestions-panel-with-frequently-used
 	)
 	.discord-slash-command-suggestions-scroll {
-	@apply max-h-48;
+	@apply flex-none;
+	max-height: var(--discord-slash-command-suggestions-height);
 }
 
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-viewport) {
@@ -196,7 +170,13 @@ function onSuggestionsWheel(event: WheelEvent) {
 }
 
 .discord-slash-command-suggestions-frequently-used {
-	@apply grid h-48 max-h-48 min-h-0 grid-cols-[40px_minmax(0,1fr)] items-stretch;
+	@apply min-h-0;
+}
+
+.discord-slash-command-suggestions-panel-with-frequently-used
+	.discord-slash-command-suggestions-frequently-used {
+	height: var(--discord-slash-command-suggestions-height);
+	max-height: var(--discord-slash-command-suggestions-height);
 }
 
 .discord-slash-command-suggestions-panel-with-matched
@@ -204,35 +184,40 @@ function onSuggestionsWheel(event: WheelEvent) {
 	@apply h-auto max-h-none flex-1;
 }
 
+.discord-slash-command-suggestions-inner {
+	@apply flex h-full min-h-0;
+}
+
 .discord-slash-command-suggestions-sidebar-scroll {
-	@apply min-h-0 self-stretch;
-	overflow: hidden;
+	@apply h-full min-h-0 shrink-0 self-stretch overflow-x-hidden overflow-y-auto;
+	width: var(--discord-slash-command-suggestions-rail-width);
+	overscroll-behavior: contain;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply flex flex-col items-center gap-1.5 py-1.5;
+	@apply flex w-full flex-col items-center gap-0.5 py-2;
 }
 
 .discord-slash-command-suggestions-panel-with-matched .discord-slash-command-suggestions-scroll {
-	@apply max-h-none flex-1;
+	@apply max-h-none;
 }
 
 .discord-slash-command-suggestions-sidebar-item {
-	@apply flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-full;
+	@apply flex size-10 shrink-0 items-center justify-center rounded-lg;
 }
 
 .discord-slash-command-suggestions-sidebar-item-active {
 	background-color: var(--discord-slash-command-suggestions-sidebar-active);
 }
 
-.discord-slash-command-suggestions-sidebar-icon {
-	@apply size-4;
-	color: var(--discord-slash-command-suggestions-sidebar-icon);
+.discord-slash-command-suggestions-sidebar-recent {
+	@apply flex size-8 items-center justify-center;
 }
 
-.discord-slash-command-suggestions-sidebar-avatar {
-	@apply size-full rounded-full object-cover;
+.discord-slash-command-suggestions-sidebar-icon {
+	@apply size-5;
+	color: var(--discord-slash-command-suggestions-sidebar-icon);
 }
 
 .discord-slash-command-suggestions-header {
@@ -245,7 +230,7 @@ function onSuggestionsWheel(event: WheelEvent) {
 }
 
 .discord-slash-command-suggestions-list {
-	@apply min-w-0;
+	@apply min-w-0 px-1 pb-1;
 }
 
 .discord-slash-command-suggestions-recent {
@@ -253,6 +238,6 @@ function onSuggestionsWheel(event: WheelEvent) {
 }
 
 .discord-slash-command-suggestions-matched {
-	@apply shrink-0;
+	@apply shrink-0 px-1 pb-1;
 }
 </style>

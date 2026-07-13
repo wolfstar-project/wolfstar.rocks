@@ -64,8 +64,8 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-suggestion-matched {
-	--discord-slash-command-suggestion-matched-hover: hsla(223, 6.7%, 20.6%, 1);
-	--discord-slash-command-suggestion-matched-active: hsla(220, 6.5%, 24%, 1);
+	--discord-slash-command-suggestion-matched-hover: oklch(32.11% 0.0094 268.56);
+	--discord-slash-command-suggestion-matched-active: oklch(35.52% 0.0099 264.44);
 
 	@apply min-h-11 cursor-pointer rounded-md px-3 py-2;
 }

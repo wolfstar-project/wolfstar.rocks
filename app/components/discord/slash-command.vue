@@ -81,11 +81,11 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-composed {
-	--discord-slash-command-composed-name: hsl(0, 0%, 100%, 1);
-	--discord-slash-command-option-name: hsla(220, 2.7%, 66.1%, 1);
-	--discord-slash-command-option-value: hsl(0, 0%, 100%, 1);
-	--discord-slash-command-option-focused: hsla(235, 85.6%, 64.7%, 0.35);
-	--discord-slash-command-option-placeholder: hsla(220, 2.7%, 50%, 1);
+	--discord-slash-command-composed-name: oklch(100% 0 0);
+	--discord-slash-command-option-name: oklch(73.06% 0.0048 264.53);
+	--discord-slash-command-option-value: oklch(100% 0 0);
+	--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.35);
+	--discord-slash-command-option-placeholder: oklch(59.38% 0.0075 264.51);
 
 	@apply inline font-whitney text-sm whitespace-nowrap;
 }

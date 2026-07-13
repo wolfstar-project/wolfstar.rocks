@@ -29,22 +29,22 @@ const { count, self } = defineProps<ReactionProps>();
 .discord-reaction {
 	@apply flex w-fit cursor-pointer items-center gap-1 rounded-md border px-1 font-whitney;
 	border-color: transparent;
-	background-color: hsla(220, 6.5%, 18%, 1);
+	background-color: oklch(29.64% 0.0077 264.45);
 }
 
 .discord-reaction:hover {
-	border-color: hsla(0, 0%, 100%, 0.2);
-	background-color: hsla(223, 6.7%, 20.6%, 1);
+	border-color: oklch(100% 0 0 / 0.2);
+	background-color: oklch(32.11% 0.0094 268.56);
 }
 
 .discord-reaction.self {
 	@apply border;
-	border-color: hsla(235, 85.6%, 64.7%, 1);
-	background-color: hsla(235, 85.6%, 64.7%, 0.15);
+	border-color: oklch(57.7% 0.209 273.88);
+	background-color: oklch(57.7% 0.209 273.88 / 0.15);
 }
 
 .discord-reaction.self:hover {
-	border-color: hsla(235, 85.6%, 64.7%, 1);
-	background-color: hsla(235, 85.6%, 64.7%, 0.15);
+	border-color: oklch(57.7% 0.209 273.88);
+	background-color: oklch(57.7% 0.209 273.88 / 0.15);
 }
 </style>

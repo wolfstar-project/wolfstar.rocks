@@ -41,6 +41,6 @@ const tagStyle = computed(() => ({
 .tag:hover,
 .tag:focus-visible {
 	background-color: var(--role-color);
-	color: hsl(0, 0%, 100%, 1);
+	color: oklch(100% 0 0);
 }
 </style>

@@ -46,8 +46,8 @@ const dimension = computed(() => Dimensions[size]);
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-app-icon {
-	--discord-slash-command-app-icon-bg: hsla(220, 6.5%, 24%, 1);
-	--discord-slash-command-app-icon-glyph: hsla(220, 2.7%, 66.1%, 1);
+	--discord-slash-command-app-icon-bg: oklch(35.52% 0.0099 264.44);
+	--discord-slash-command-app-icon-glyph: oklch(73.06% 0.0048 264.53);
 
 	@apply inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full;
 	background-color: var(--discord-slash-command-app-icon-bg);

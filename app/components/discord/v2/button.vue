@@ -27,12 +27,12 @@ const { variant = "secondary", disabled = true } = defineProps<ButtonProps>();
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-v2-button {
-	--discord-v2-button-primary: hsla(235, 85.6%, 64.7%, 1);
-	--discord-v2-button-secondary: hsla(223, 6.7%, 20.6%, 1);
-	--discord-v2-button-success: hsla(139, 47.3%, 33.9%, 1);
-	--discord-v2-button-danger: hsla(359, 82.6%, 59.4%, 1);
-	--discord-v2-button-link: hsla(235, 85.6%, 64.7%, 1);
-	--discord-v2-button-text: hsla(0, 0%, 100%, 1);
+	--discord-v2-button-primary: oklch(57.7% 0.209 273.88);
+	--discord-v2-button-secondary: oklch(32.11% 0.0094 268.56);
+	--discord-v2-button-success: oklch(53.33% 0.117 150.74);
+	--discord-v2-button-danger: oklch(63.17% 0.208 24.62);
+	--discord-v2-button-link: oklch(57.7% 0.209 273.88);
+	--discord-v2-button-text: oklch(100% 0 0);
 
 	@apply flex w-fit items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium;
 	color: var(--discord-v2-button-text);

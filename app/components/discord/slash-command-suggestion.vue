@@ -76,11 +76,11 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-suggestion {
-	--discord-slash-command-suggestion-hover: hsla(223, 6.7%, 20.6%, 1);
-	--discord-slash-command-suggestion-active: hsla(220, 6.5%, 24%, 1);
-	--discord-slash-command-suggestion-name: hsl(0, 0%, 100%, 1);
-	--discord-slash-command-suggestion-description: hsla(220, 2.7%, 66.1%, 1);
-	--discord-slash-command-suggestion-app: hsla(220, 2.7%, 66.1%, 1);
+	--discord-slash-command-suggestion-hover: oklch(32.11% 0.0094 268.56);
+	--discord-slash-command-suggestion-active: oklch(35.52% 0.0099 264.44);
+	--discord-slash-command-suggestion-name: oklch(100% 0 0);
+	--discord-slash-command-suggestion-description: oklch(73.06% 0.0048 264.53);
+	--discord-slash-command-suggestion-app: oklch(73.06% 0.0048 264.53);
 
 	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5;
 }

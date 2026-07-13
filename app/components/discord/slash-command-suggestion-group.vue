@@ -38,7 +38,7 @@ const label = computed(() => labelOverride ?? SlashCommandApps[app].label);
 }
 
 .discord-slash-command-suggestion-group-header {
-	--discord-slash-command-suggestion-group-header: hsl(0, 0%, 100%, 1);
+	--discord-slash-command-suggestion-group-header: oklch(100% 0 0);
 
 	@apply flex items-center gap-1.5 px-2 py-1.5 font-whitney text-sm font-semibold;
 	color: var(--discord-slash-command-suggestion-group-header);

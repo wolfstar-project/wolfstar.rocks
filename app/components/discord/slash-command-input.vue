@@ -77,10 +77,10 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-input {
-	--discord-slash-command-input-bg: hsla(223, 6.7%, 20.6%, 1);
-	--discord-slash-command-input-text: hsl(0, 0%, 100%, 1);
-	--discord-slash-command-input-muted: hsla(220, 2.7%, 66.1%, 1);
-	--discord-slash-command-input-cursor: hsl(0, 0%, 100%, 1);
+	--discord-slash-command-input-bg: oklch(32.11% 0.0094 268.56);
+	--discord-slash-command-input-text: oklch(100% 0 0);
+	--discord-slash-command-input-muted: oklch(73.06% 0.0048 264.53);
+	--discord-slash-command-input-cursor: oklch(100% 0 0);
 
 	@apply flex min-h-11 items-center gap-3 px-3 py-2;
 	background-color: var(--discord-slash-command-input-bg);

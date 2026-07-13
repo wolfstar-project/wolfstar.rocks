@@ -74,10 +74,10 @@ const emojiIsImage = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-v2-string-select-menu-option {
-	--discord-v2-string-select-menu-option-hover: hsla(0, 0%, 100%, 0.1);
-	--discord-v2-string-select-menu-option-label: hsla(210, 9.1%, 87.1%, 1);
-	--discord-v2-string-select-menu-option-description: hsla(220, 2.7%, 66.1%, 1);
-	--discord-v2-string-select-menu-option-check: hsla(235, 85.6%, 64.7%, 1);
+	--discord-v2-string-select-menu-option-hover: oklch(100% 0 0 / 0.1);
+	--discord-v2-string-select-menu-option-label: oklch(89.95% 0.0052 247.88);
+	--discord-v2-string-select-menu-option-description: oklch(73.06% 0.0048 264.53);
+	--discord-v2-string-select-menu-option-check: oklch(57.7% 0.209 273.88);
 
 	@apply flex cursor-pointer items-center gap-2.5 px-3 py-2 text-sm;
 	color: var(--discord-v2-string-select-menu-option-label);

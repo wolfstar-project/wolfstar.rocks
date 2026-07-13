@@ -126,9 +126,9 @@ function scrollByStep(direction: 1 | -1) {
 @reference "@/assets/css/main.css";
 
 .discord-scrollbar {
-	--discord-scrollbar-track: hsla(220, 2.7%, 66.1%, 0.12);
-	--discord-scrollbar-thumb: hsla(220, 2.7%, 66.1%, 0.45);
-	--discord-scrollbar-arrow: hsla(220, 2.7%, 66.1%, 0.7);
+	--discord-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
+	--discord-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
+	--discord-scrollbar-arrow: oklch(73.06% 0.0048 264.53 / 0.7);
 
 	@apply grid max-h-[inherit] min-h-0 min-w-0 grid-cols-[minmax(0,1fr)_4px] gap-0;
 }

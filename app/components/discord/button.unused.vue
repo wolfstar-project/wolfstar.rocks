@@ -26,13 +26,11 @@ const { ariaLabel } = defineProps<ButtonUnusedProps>();
 @reference "@/assets/css/main.css";
 .discord-message-button-primary {
 	@apply btn mt-1 font-whitney;
-	background-color: hsl(235 85.6% 64.7% / 1);
 	background-color: oklch(57.7% 0.209 273.88);
 	color: white;
 }
 
 .discord-message-button-primary:hover {
-	background-color: hsl(235 51.4% 52.4% / 1);
 	background-color: oklch(49.62% 0.176 274.09);
 }
 </style>

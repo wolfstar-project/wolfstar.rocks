@@ -167,14 +167,14 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-suggestions {
-	--discord-slash-command-suggestions-bg: hsl(220, 7%, 12%);
-	--discord-slash-command-suggestions-sidebar: hsl(220, 7%, 9%);
-	--discord-slash-command-suggestions-sidebar-active: hsla(220, 6.5%, 24%, 1);
-	--discord-slash-command-suggestions-sidebar-hover: hsla(223, 6.7%, 20.6%, 1);
-	--discord-slash-command-suggestions-sidebar-icon: hsla(220, 2.7%, 66.1%, 1);
-	--discord-slash-command-suggestions-header: hsla(220, 2.7%, 66.1%, 1);
-	--discord-slash-command-suggestions-scrollbar-track: hsla(220, 2.7%, 66.1%, 0.12);
-	--discord-slash-command-suggestions-scrollbar-thumb: hsla(220, 2.7%, 66.1%, 0.45);
+	--discord-slash-command-suggestions-bg: oklch(23.42% 0.0059 264.45);
+	--discord-slash-command-suggestions-sidebar: oklch(20.18% 0.0046 264.47);
+	--discord-slash-command-suggestions-sidebar-active: oklch(35.52% 0.0099 264.44);
+	--discord-slash-command-suggestions-sidebar-hover: oklch(32.11% 0.0094 268.56);
+	--discord-slash-command-suggestions-sidebar-icon: oklch(73.06% 0.0048 264.53);
+	--discord-slash-command-suggestions-header: oklch(73.06% 0.0048 264.53);
+	--discord-slash-command-suggestions-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
+	--discord-slash-command-suggestions-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	--discord-slash-command-suggestions-height: 18rem;
 
@@ -256,6 +256,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 
 .discord-slash-command-suggestions-sidebar-item-active,
 .discord-slash-command-suggestions-sidebar-item-active:hover {
+	border-radius: 12px;
 	background-color: var(--discord-slash-command-suggestions-sidebar-active);
 }
 
@@ -270,7 +271,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-icon {
-	@apply size-5;
+	@apply size-10;
 	color: var(--discord-slash-command-suggestions-sidebar-icon);
 }
 

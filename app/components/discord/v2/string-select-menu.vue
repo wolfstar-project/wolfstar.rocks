@@ -224,10 +224,10 @@ onClickOutside(rootRef, () => close());
 }
 
 .discord-v2-string-select-menu-trigger {
-	--discord-v2-string-select-menu-bg: hsla(225, 6.3%, 12.5%, 1);
-	--discord-v2-string-select-menu-border: hsla(225, 6.3%, 12.5%, 1);
-	--discord-v2-string-select-menu-text: hsla(210, 9.1%, 87.1%, 1);
-	--discord-v2-string-select-menu-placeholder-text: hsla(220, 2.7%, 66.1%, 1);
+	--discord-v2-string-select-menu-bg: oklch(23.89% 0.0059 271.16);
+	--discord-v2-string-select-menu-border: oklch(23.89% 0.0059 271.16);
+	--discord-v2-string-select-menu-text: oklch(89.95% 0.0052 247.88);
+	--discord-v2-string-select-menu-placeholder-text: oklch(73.06% 0.0048 264.53);
 
 	@apply flex h-9 w-full items-center justify-between gap-2 rounded border px-2 text-sm font-medium;
 	background-color: var(--discord-v2-string-select-menu-bg);
@@ -266,9 +266,9 @@ onClickOutside(rootRef, () => close());
 }
 
 .discord-v2-string-select-menu-panel {
-	--discord-v2-string-select-menu-panel-bg: hsla(220, 6.5%, 18%, 1);
-	--discord-v2-string-select-menu-panel-scroll-track: hsla(0, 0%, 0%, 0);
-	--discord-v2-string-select-menu-panel-scroll-thumb: hsla(0, 0%, 0%, 0.3);
+	--discord-v2-string-select-menu-panel-bg: oklch(29.64% 0.0077 264.45);
+	--discord-v2-string-select-menu-panel-scroll-track: oklch(0% 0 0 / 0);
+	--discord-v2-string-select-menu-panel-scroll-thumb: oklch(0% 0 0 / 0.3);
 
 	@apply absolute top-full left-0 z-[1002] mt-1 w-full max-w-100 overflow-hidden rounded;
 	background-color: var(--discord-v2-string-select-menu-panel-bg);

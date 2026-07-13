@@ -76,6 +76,10 @@ const config: KnipConfig = {
 
 				/** Used in nuxt.config.ts for postcss */
 				"postcss-nested",
+
+				/** Staged for the in-progress nuxt-auth-utils -> better-auth migration; wired up in a follow-up */
+				"better-auth",
+				"@onmax/nuxt-better-auth",
 			],
 			ignoreUnresolved: ["#build/auth.config"],
 			ignoreFiles: [

@@ -7,10 +7,6 @@
 
 @source "../../../content/**/*";
 
-:root {
-	scroll-behavior: smooth;
-}
-
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 
@@ -143,10 +139,11 @@
 		--home-shadow-glow: 0 0 0 3px var(--home-blurple-soft);
 		--home-ls-label: 0.04em;
 		--home-ls-tight: -0.02em;
+
+		scroll-behavior: smooth;
 	}
 
 	html {
-		@apply font-sans;
 		scrollbar-gutter: stable;
 	}
 
@@ -264,7 +261,8 @@
 }
 
 @theme {
-	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
+	--font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
+	--default-font-family: var(--font-geist);
 	--color-branding-wolfstar: var(--branding-wolfstar);
 	--color-branding-staryl: var(--branding-staryl);
 }

@@ -487,6 +487,7 @@ export default defineNuxtConfig({
 					"https://api.iconify.design",
 					"https://*.netlify.com",
 					"https://*.netlify.app",
+					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",
 					"https://*.sentry.io",

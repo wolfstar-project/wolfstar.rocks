@@ -26,3 +26,7 @@ export interface MessageReplyComponentProps {
 	content?: string;
 }
 // #endregion
+
+// #region String Select Menu
+export type { StringSelectMenuOption } from "./string-select-menu";
+// #endregion

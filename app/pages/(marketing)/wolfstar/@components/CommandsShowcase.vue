@@ -65,8 +65,10 @@
 									</DiscordV2TextDisplay>
 									<DiscordV2Separator />
 									<DiscordV2ActionRow>
-										<DiscordV2StringSelect
+										<DiscordV2StringSelectMenu
+											:options="activeDisplayCommand.selectOptions"
 											:placeholder="activeDisplayCommand.selectPlaceholder"
+											aria-label="Server configuration category"
 										/>
 									</DiscordV2ActionRow>
 									<DiscordV2Separator />

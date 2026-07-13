@@ -20,6 +20,7 @@ import {
 	DiscordSlashCommandSuggestion,
 	DiscordSlashCommandSuggestionMatched,
 	DiscordSlashCommandSuggestions,
+	DiscordV2StringSelectMenu,
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	FeaturesSection,
@@ -297,6 +298,35 @@ describe("component accessibility audits", () => {
 				const component = await mountSuspended(DiscordReactions, {
 					slots: { default: "<span>Reaction slot</span>" },
 				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordV2StringSelectMenu", () => {
+			const selectOptions = [
+				{ value: "prefix", label: "prefix", emoji: "⚙️", description: "Command prefix" },
+				{
+					value: "language",
+					label: "language",
+					emoji: "⚙️",
+					description: "Response language",
+				},
+			];
+
+			it("should have no accessibility violations when closed", async () => {
+				const component = await mountSuspended(DiscordV2StringSelectMenu, {
+					props: { options: selectOptions, ariaLabel: "Configuration category" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations when open", async () => {
+				const component = await mountSuspended(DiscordV2StringSelectMenu, {
+					props: { options: selectOptions, ariaLabel: "Configuration category" },
+				});
+				await component.find("button[role='combobox']").trigger("click");
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

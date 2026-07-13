@@ -1,4 +1,5 @@
 import type { InjectionKey, Ref } from "vue";
+import type { StringSelectMenuOption } from "~/types/string-select-menu";
 
 export const robotBlockingPageProps =
 	"nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1";
@@ -573,6 +574,7 @@ interface ShowcaseCommandComponentsResponse {
 	accentColor: string;
 	lines: string[];
 	selectPlaceholder: string;
+	selectOptions: StringSelectMenuOption[];
 	buttonLabel: string;
 }
 
@@ -730,6 +732,45 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			"⚙️ disabled-channels",
 		],
 		selectPlaceholder: "Choose an option...",
+		selectOptions: [
+			{
+				value: "permissions",
+				label: "permissions",
+				emoji: "📁",
+				description: "Command permission nodes",
+			},
+			{
+				value: "channels",
+				label: "channels",
+				emoji: "📁",
+				description: "Logging and ignored channels",
+			},
+			{ value: "events", label: "events", emoji: "📁", description: "Server event toggles" },
+			{
+				value: "messages",
+				label: "messages",
+				emoji: "📁",
+				description: "Automated message content",
+			},
+			{ value: "roles", label: "roles", emoji: "📁", description: "Role assignments" },
+			{
+				value: "selfmod",
+				label: "selfmod",
+				emoji: "📁",
+				description: "Automatic moderation rules",
+			},
+			{
+				value: "no-mention-spam",
+				label: "no-mention-spam",
+				emoji: "📁",
+				description: "Mention spam protection",
+			},
+			{ value: "prefix", label: "prefix", emoji: "⚙️", description: "Command prefix" },
+			{ value: "language", label: "language", emoji: "⚙️", description: "Response language" },
+			{ value: "disable-natural-prefix", label: "disable-natural-prefix", emoji: "⚙️" },
+			{ value: "disabled-commands", label: "disabled-commands", emoji: "⚙️" },
+			{ value: "disabled-channels", label: "disabled-channels", emoji: "⚙️" },
+		],
 		buttonLabel: "Stop",
 	},
 ];

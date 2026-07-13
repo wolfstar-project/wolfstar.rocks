@@ -21,6 +21,7 @@ export default defineNuxtConfig({
 		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
+		"nuxt-skew-protection",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
@@ -447,6 +448,25 @@ export default defineNuxtConfig({
 			restrictRuntimeImagesToOrigin: false,
 		},
 	},
+
+	skewProtection: {
+		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
+		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
+		storage:
+			provider === "netlify"
+				? { driver: "netlify-blobs", name: "skew-protection" }
+				: undefined,
+		// Force polling rather than the SSE/WS default: this app's Netlify deploy
+		// isn't confirmed to support long-lived streaming connections through its
+		// serverless functions, and polling needs no platform-specific handling.
+		updateStrategy: "polling",
+		// The persistent-previous-build-assets feature uploads build output to
+		// storage during `nitro:init`, which on Netlify would need Blobs write
+		// access from the build image itself (unverified) rather than from a
+		// deployed function; keep it off until that's confirmed safe.
+		bundleAssets: false,
+	},
+
 	// PWA configuration
 	pwa,
 

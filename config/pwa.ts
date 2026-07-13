@@ -6,7 +6,6 @@ const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORY
 export const pwa: ModuleOptions = {
 	client: {
 		installPrompt: true,
-		periodicSyncForUpdates: 3600,
 	},
 	devOptions: {
 		enabled: process.env.VITE_DEV_PWA === "true",
@@ -147,6 +146,11 @@ export const pwa: ModuleOptions = {
 		config: false,
 	},
 
+	// New-deployment detection and the reload prompt are owned by
+	// nuxt-skew-protection. Keep the PWA in "prompt" mode so a new service
+	// worker installs but waits instead of auto-reloading the page: "autoUpdate"
+	// would refresh users before they can act on the skew-protection prompt. The
+	// prompt's reload action activates the waiting worker (see Prompt.client.vue).
 	registerType: "prompt",
 	scope: "/",
 	srcDir: "../service-worker",

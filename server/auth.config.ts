@@ -17,7 +17,10 @@ export default defineServerAuth(() => ({
 			clientId: runtimeConfig.discord.clientId ?? "",
 			clientSecret: runtimeConfig.discord.clientSecret ?? "",
 			scope: ["guilds.members.read", "email"],
-			prompt: "none",
+			// Do not set `prompt: "none"`: Discord only skips the consent screen for
+			// users who have already authorized these scopes, and returns an OAuth
+			// error otherwise, which breaks first-time sign-in. Default consent
+			// behavior works for both new and returning users.
 			// Keep the Discord snowflake as the Better Auth user id — the rest of
 			// this app (rate limiting, guild permission checks, the bot's shared
 			// `user` table) keys everything off that id, not a generated one.

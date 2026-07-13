@@ -27,7 +27,9 @@ const isOnline = skewProtection.isOnline;
 const isAppOutdated = skewProtection.isAppOutdated;
 const serverVersion = skewProtection.serverVersion;
 const manifest = skewProtection.manifest;
-const isPrerendered = !!useNuxtApp().payload.prerenderedAt;
+const nuxtApp = useNuxtApp();
+const { $pwa } = nuxtApp;
+const isPrerendered = !!nuxtApp.payload.prerenderedAt;
 
 const chunksOutdated = ref(false);
 // Identifies the deployment currently being advertised. The SSE/WS strategies
@@ -59,6 +61,15 @@ function dismiss() {
 }
 
 function reload() {
+	// A new deployment ships a new service worker that installs but waits
+	// (registerType: "prompt"). Activate it so the reload is served the freshly
+	// precached assets instead of the previous version held by the old worker;
+	// updateServiceWorker(true) skips waiting and reloads once the new worker
+	// takes control. Fall back to a plain reload when no worker update is pending.
+	if ($pwa?.getSWRegistration()?.waiting) {
+		void $pwa.updateServiceWorker(true);
+		return;
+	}
 	reloadNuxtApp({ force: true, persistState: true });
 }
 
@@ -67,6 +78,10 @@ const visible = ref(isOpen.value);
 
 if (import.meta.client) {
 	watch(isOpen, (newVal) => {
+		// When the prompt opens for a new deployment, proactively check for the
+		// matching service-worker update so it is waiting (and can be activated)
+		// by the time the user chooses to reload.
+		if (newVal) void $pwa?.getSWRegistration()?.update();
 		if (!document.startViewTransition || effectiveReduceMotion.value) {
 			visible.value = newVal;
 			return;

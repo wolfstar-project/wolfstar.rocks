@@ -146,10 +146,12 @@ export const pwa: ModuleOptions = {
 		config: false,
 	},
 
-	// New-deployment detection and the reload prompt are now owned by
-	// nuxt-skew-protection; the service worker just applies asset updates
-	// silently in the background.
-	registerType: "autoUpdate",
+	// New-deployment detection and the reload prompt are owned by
+	// nuxt-skew-protection. Keep the PWA in "prompt" mode so a new service
+	// worker installs but waits instead of auto-reloading the page: "autoUpdate"
+	// would refresh users before they can act on the skew-protection prompt. The
+	// prompt's reload action activates the waiting worker (see Prompt.client.vue).
+	registerType: "prompt",
 	scope: "/",
 	srcDir: "../service-worker",
 	strategies: "injectManifest",

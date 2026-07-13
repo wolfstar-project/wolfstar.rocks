@@ -146,6 +146,7 @@
 	}
 
 	html {
+		@apply font-sans;
 		scrollbar-gutter: stable;
 	}
 
@@ -263,6 +264,7 @@
 }
 
 @theme {
+	--font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
 	--color-branding-wolfstar: var(--branding-wolfstar);
 	--color-branding-staryl: var(--branding-staryl);
 }

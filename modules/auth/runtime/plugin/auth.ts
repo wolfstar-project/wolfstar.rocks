@@ -15,7 +15,7 @@ export default defineNuxtPlugin({
 		if (import.meta.client) {
 			const currentRoute = useRoute();
 			watch(loggedIn, async (isLoggedIn) => {
-				const auth = currentRoute.meta?.auth as AuthMeta | undefined;
+				const auth = currentRoute.meta?.authz as AuthMeta | undefined;
 
 				const loginRoute = auth?.loginRoute || config.loginRoute;
 				const authRequired = auth?.required ?? false;

@@ -25,48 +25,12 @@
 				</div>
 			</div>
 			<template v-else>
-				<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
-					<div
-						class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
-						:class="{
-							'transition-transform duration-300 group-hover:scale-105':
-								!effectiveReduceMotion,
-						}"
-					>
-						<NuxtImg
-							v-if="isDefault"
-							:src="defaultAvatar"
-							alt="Default Avatar"
-							class="h-full w-full object-cover"
-							:width="128"
-							:height="128"
-							format="png"
-							loading="lazy"
-							decoding="async"
-							crossorigin="anonymous"
-						/>
-						<NuxtImg
-							v-else
-							:src="createUrl(preferredFormat, 256)"
-							:format="preferredFormat === 'gif' ? undefined : 'webp'"
-							:width="128"
-							:height="128"
-							sizes="128px"
-							:alt="`${discordUser?.global_name ?? discordUser?.username} avatar`"
-							class="h-full w-full object-cover"
-							loading="lazy"
-							decoding="async"
-							crossorigin="anonymous"
-						/>
-					</div>
-				</div>
+				<ProfileAvatar :user="user" :effective-reduce-motion="effectiveReduceMotion" />
 				<div class="space-y-2 text-center">
 					<h2 class="text-4xl font-bold text-base-content">
-						{{ discordUser?.global_name ?? discordUser?.username ?? user?.name }}
+						{{ user?.name }}
 					</h2>
-					<p class="text-lg font-medium text-base-content/80">
-						@{{ discordUser?.username }}
-					</p>
+					<p class="text-lg font-medium text-base-content/80">@{{ user?.username }}</p>
 					<p class="text-sm text-base-content/60">
 						User ID:
 						<UButton
@@ -589,14 +553,13 @@ useSeoMetadata({
 	title: "Profile",
 });
 
-const { user } = useUserSession();
+const { user: authUser } = useUserSession();
+
 const log = useLogger("profile");
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();
 const searchQuery = ref<string | undefined>(undefined);
-const isAnimated = ref(false);
-const isDefault = ref(false);
 
 // Error handling state
 const isRetrying = ref(false);
@@ -664,18 +627,7 @@ function handleSortToggle() {
 	}
 }
 
-const preferredFormat = computed<"gif" | "png">(() => {
-	if (isAnimated.value && !effectiveReduceMotion.value) {
-		return "gif";
-	}
-
-	return "png";
-});
-
-// Use the centralized useUser composable instead of manual useFetch
-// Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
-// Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { data, guilds, filteredGuilds, status, error, refresh } = useUser(user, {
+const { user, guilds, filteredGuilds, status, error, refresh } = useUser(authUser, {
 	timeout: 15_000, // 15 seconds timeout
 	retry: 3, // Max retry attempts
 	retryDelay: 1000, // 1 second delay between retries
@@ -685,12 +637,6 @@ const { data, guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 		sortAscending,
 	},
 });
-
-// Better Auth's session user only exposes a flat, already-resolved avatar
-// URL — the raw Discord user (avatar hash, username, global_name) needed for
-// animated-avatar detection and format-specific CDN URLs comes from the live
-// Discord API response `useUser()` already fetches for the guild list.
-const discordUser = computed(() => data.value?.user);
 
 const isLoading = computed(() => status.value === "idle" || status.value === "pending");
 
@@ -734,28 +680,22 @@ const items = computed<TabsItem[]>(() => [
 	}, */
 ]);
 
-watch(activeTab, (tab) => {
-	Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
-	Sentry.addBreadcrumb({ category: "navigation", message: `Profile tab: ${tab}`, level: "info" });
-});
-
-watch(guilds, (value) => {
-	if (Array.isArray(value) && value.length > 0) {
+watch([activeTab, guilds, error], ([tab, value, err], [prevTab, prevValue, prevErr]) => {
+	if (tab !== prevTab) {
+		Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
+		Sentry.addBreadcrumb({
+			category: "navigation",
+			message: `Profile tab: ${tab}`,
+			level: "info",
+		});
+	}
+	if (value !== prevValue && Array.isArray(value) && value.length > 0) {
 		Sentry.metrics.distribution("profile.guilds.count", value.length);
 	}
-});
-
-watch(error, (err) => {
-	if (err) {
+	if (err && err !== prevErr) {
 		Sentry.metrics.count("profile.guild_fetch.error", 1);
 	}
 });
-
-const defaultAvatar = computed(() =>
-	user.value?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
-		: "https://cdn.discordapp.com/embed/avatars/0.png",
-);
 
 function undoSearch() {
 	searchQuery.value = undefined;
@@ -775,22 +715,4 @@ function handleSetReduceMotion(value: boolean) {
 		attributes: { enabled: String(value) },
 	});
 }
-
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-	return `https://cdn.discordapp.com/avatars/${discordUser.value?.id}/${discordUser.value?.avatar}.${format}?size=${size}`;
-}
-
-watch(
-	discordUser,
-	(discordUser) => {
-		if (discordUser?.avatar) {
-			isDefault.value = false;
-			isAnimated.value = discordUser.avatar.startsWith("a_");
-		} else {
-			isDefault.value = true;
-			isAnimated.value = false;
-		}
-	},
-	{ immediate: true },
-);
 </script>

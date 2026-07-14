@@ -14,7 +14,7 @@ export interface UseUserOptions {
 	search?: UseUserSearchOptions;
 }
 
-export function useUser(user: MaybeRefOrGetter<AuthUser | null>, options?: UseUserOptions) {
+export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: UseUserOptions) {
 	const cachedFetch = useCachedFetch();
 	const forceGuildRefresh = ref(false);
 
@@ -24,7 +24,7 @@ export function useUser(user: MaybeRefOrGetter<AuthUser | null>, options?: UseUs
 
 	const asyncData = useLazyAsyncData(
 		() => {
-			const userValue = toValue(user);
+			const userValue = toValue(authUser);
 			return userValue ? `user:${userValue.id}:data` : "user:anonymous:data";
 		},
 		async (_nuxtApp, { signal }) => {
@@ -49,6 +49,12 @@ export function useUser(user: MaybeRefOrGetter<AuthUser | null>, options?: UseUs
 	}
 
 	const data = computed(() => asyncData.data.value ?? null);
+
+	const user = computed<DiscordProfileUser | null>(() =>
+		data.value?.user
+			? { ...data.value.user, name: data.value.user.global_name ?? data.value.user.username }
+			: null,
+	);
 
 	const guilds = computed(() => data.value?.transformedGuilds ?? []);
 
@@ -97,6 +103,7 @@ export function useUser(user: MaybeRefOrGetter<AuthUser | null>, options?: UseUs
 		...asyncData,
 		data,
 		guilds,
+		user,
 		filteredGuilds,
 		refresh: refreshGuildList,
 	};

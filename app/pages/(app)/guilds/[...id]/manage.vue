@@ -28,9 +28,7 @@
 import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({
-	authz: {
-		required: true,
-	},
+	auth: "user",
 	layout: "dashboard",
 	path: "/guilds/:id/manage/:slug(.*)*",
 });

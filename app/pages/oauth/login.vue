@@ -12,12 +12,15 @@ definePageMeta({
 	alias: ["/login"],
 	viewTransition: false,
 	middleware: async (to) => {
-		const { login } = useAuth();
 		const queryNext = to.query.next;
 		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
 		log.info({ action: "login_redirect", next: safeNext });
-		return login(safeNext);
+		await useAuthClient()?.signIn.social({
+			provider: "discord",
+			callbackURL: `/oauth/callback?next=${encodeURIComponent(safeNext)}`,
+			errorCallbackURL: "/oauth/callback",
+		});
 	},
 });
 

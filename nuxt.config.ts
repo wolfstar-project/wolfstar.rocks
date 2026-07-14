@@ -142,6 +142,10 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	auth: {
+		redirectQueryKey: "next",
+	},
+
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag

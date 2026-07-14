@@ -57,7 +57,12 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-const { loggedIn, user, logout, fetch: fetchSession } = useAuth();
+const { loggedIn, user, signOut, fetchSession } = useUserSession();
+
+async function logout() {
+	await signOut();
+	await navigateTo("/");
+}
 
 onMounted(() => {
 	const loadSession = () => {

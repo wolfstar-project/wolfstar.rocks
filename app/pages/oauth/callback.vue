@@ -57,7 +57,7 @@ const log = useLogger("oauth:callback");
 // Better Auth already completed the Discord code exchange and set the
 // session cookie server-side before redirecting the browser here — this page
 // only has to wait for the session to hydrate, then continue on to `next`.
-const { user, ready, loggedIn, fetch: fetchSession } = useAuth();
+const { user, ready, loggedIn, fetchSession } = useUserSession();
 
 const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
 

@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 useSessionRefresh();
+useAuthIdentity();
 
 const router = useRouter();
 const appName = ref<"wolfstar" | "staryl">("wolfstar");

@@ -27,7 +27,10 @@ function simpleHash(str: string): string {
  * Generate a cache key for a fetch request.
  */
 function generateFetchCacheKey(url: string | URL, method = "GET", body?: unknown): string {
-	const urlObj = typeof url === "string" ? new URL(url) : url;
+	// Relative URLs (e.g. "/api/commands") are same-origin and cache-eligible per
+	// isAllowedDomain; resolve them against a fixed base so `new URL` doesn't throw
+	// (it requires a base for relative inputs). Absolute URLs ignore the base.
+	const urlObj = typeof url === "string" ? new URL(url, "http://localhost") : url;
 	const bodyHash = body ? simpleHash(JSON.stringify(body)) : "";
 	const searchHash = urlObj.search ? simpleHash(urlObj.search) : "";
 

@@ -237,9 +237,7 @@ export default defineNuxtConfig({
 		},
 		"/oauth/login": { robots: true },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile is a per-user authenticated page: never statically prerender it
-		// (crawlLinks would otherwise reach it via links on prerendered pages).
-		"/profile": { appLayout: "default", prerender: false, robots: true },
+		"/profile": { appLayout: "default", robots: true },
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages

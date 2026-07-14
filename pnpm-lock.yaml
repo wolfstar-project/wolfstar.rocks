@@ -168,9 +168,6 @@ importers:
       postcss-nested:
         specifier: ^7.0.2
         version: 7.0.2(postcss@8.5.15)
-      rou3:
-        specifier: ^0.8.0
-        version: 0.8.1
       simple-git:
         specifier: ^3.32.3
         version: 3.36.0
@@ -274,9 +271,6 @@ importers:
       daisyui:
         specifier: 5.5.20
         version: 5.5.20
-      defu:
-        specifier: 6.1.7
-        version: 6.1.7
       discord-api-types:
         specifier: 0.38.48
         version: 0.38.48

@@ -142,12 +142,6 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
-	// Shared configKey: `modules/auth` (this repo's custom authz layer, keys:
-	// loginRoute/fullAccessRoles/redirectIfNotAllowed) and @onmax/nuxt-better-auth
-	// (keys: clientOnly/serverConfig/clientConfig/redirects/etc.) both read this
-	// object — no field names overlap, so it's safe to share.
-	auth: {},
-
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag

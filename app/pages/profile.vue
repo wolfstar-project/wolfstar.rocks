@@ -589,7 +589,7 @@ useSeoMetadata({
 	title: "Profile",
 });
 
-const { user } = useAuth();
+const { user } = useUserSession();
 const log = useLogger("profile");
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");

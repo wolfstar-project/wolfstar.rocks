@@ -30,6 +30,31 @@
 	tab-size: --value(--tab-size-*);
 }
 
+/* Spectrum accent fills — drive the hero rule and card accent stripes from the
+   design system's --spectrum-* tokens (declared in main.css). */
+@utility bg-spectrum-red {
+	background-color: var(--spectrum-red);
+}
+@utility bg-spectrum-orange {
+	background-color: var(--spectrum-orange);
+}
+@utility bg-spectrum-yellow {
+	background-color: var(--spectrum-yellow);
+}
+@utility bg-spectrum-green {
+	background-color: var(--spectrum-green);
+}
+@utility bg-spectrum-blue {
+	background-color: var(--spectrum-blue);
+}
+@utility bg-spectrum-purple {
+	background-color: var(--spectrum-purple);
+}
+
+@utility shadow-glow {
+	box-shadow: var(--home-shadow-glow);
+}
+
 /* =============================================================================
    Vercel/Turbo Inspired Effects
    Modern gradients, patterns, and animations

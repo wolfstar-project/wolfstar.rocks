@@ -27,15 +27,22 @@
 	</div>
 </template>
 
+<script lang="ts">
+type AvatarSizeKey = "medium" | "tiny";
+
+interface AvatarProps {
+	user: ProfileName;
+	size: AvatarSizeKey;
+}
+</script>
+
 <script setup lang="ts">
-const { user, size: sizeKey } = defineProps<{ user: ProfileName; size: SizeKey }>();
+const { user, size: sizeKey } = defineProps<AvatarProps>();
 
 const Sizes = {
 	medium: { classes: "h-8 w-8 md:h-12 md:w-12", dimensions: 48 },
 	tiny: { classes: "h-4 w-4", dimensions: 16 },
 } as const;
-
-type SizeKey = keyof typeof Sizes;
 
 const profile = computed(() => Profiles[user]);
 const size = computed(() => Sizes[sizeKey]);

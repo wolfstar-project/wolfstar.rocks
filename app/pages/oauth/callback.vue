@@ -29,7 +29,7 @@
 					</template>
 				</UAlert>
 			</template>
-			<template v-else-if="!ready">
+			<template v-else-if="isSessionLoading || !ready">
 				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
 					<template #description> Connecting to Discord... </template>
 				</UAlert>
@@ -37,6 +37,18 @@
 			<template v-else-if="user">
 				<UAlert color="success" icon="twemoji:check-mark" :title="`Welcome ${user.name}!`">
 					<template #description> Redirecting you to the dashboard... </template>
+				</UAlert>
+			</template>
+			<template v-else-if="isSessionMissing">
+				<UAlert color="error" title="Session Not Found" icon="twemoji:cross-mark">
+					<template #description>
+						Your login session could not be loaded. Please sign in again.
+					</template>
+					<template #actions>
+						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+							Try Again
+						</UButton>
+					</template>
 				</UAlert>
 			</template>
 		</ClientOnly>
@@ -53,48 +65,55 @@ definePageMeta({
 const route = useRoute();
 const nextParam = useRouteQuery("next", "/", { transform: String });
 const log = useLogger("oauth:callback");
+const isSessionMissing = ref(false);
 
-// Better Auth already completed the Discord code exchange and set the
-// session cookie server-side before redirecting the browser here — this page
-// only has to wait for the session to hydrate, then continue on to `next`.
+// Better Auth has already completed the Discord code exchange and set the
+// session cookie server-side before redirecting the browser here.
 const { user, ready, loggedIn, fetchSession } = useUserSession();
 
 const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
-
-if (import.meta.client && !route.query.error) {
-	void performCall().catch(log.error);
-}
-
-async function performCall() {
-	if (!ready.value) {
-		await fetchSession();
-	}
-
-	if (!loggedIn.value) {
-		return;
-	}
-
-	await promiseTimeout(seconds(2));
-
-	const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
-
-	// Full page navigation ensures SSR reads the fresh session cookie, so the
-	// target page renders with the correct authenticated state.
-	await navigateTo(safeNext, {
-		external: true,
-		replace: true,
-	});
-}
-
+const isError = computed(() => Boolean(route.query.error));
+const isSessionLoading = ref(!isError.value);
 const errorMessage = computed(
 	() => route.query.error ?? "Something went wrong while signing you in. Please try again.",
 );
 
-const isError = computed(() => Boolean(route.query.error));
+onMounted(() => {
+	if (!isError.value) {
+		void completeSignIn();
+	}
+});
+
+async function completeSignIn() {
+	try {
+		await fetchSession({ force: true });
+
+		if (!loggedIn.value) {
+			isSessionMissing.value = true;
+			return;
+		}
+
+		await promiseTimeout(seconds(2));
+
+		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
+
+		// Full page navigation ensures SSR reads the fresh session cookie, so the
+		// target page renders with the correct authenticated state.
+		await navigateTo(safeNext, {
+			external: true,
+			replace: true,
+		});
+	} catch (error) {
+		isSessionMissing.value = true;
+		log.error(error);
+	} finally {
+		isSessionLoading.value = false;
+	}
+}
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({
-	ogDescription: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
+	ogDescription: "A landing page for the OAuth callback flow, use the Login button instead.",
 	ogTitle: "OAuth Callback",
 	robots: { none: true },
 	title: "Auth Callback",

@@ -10,6 +10,7 @@ export default defineServerAuth(() => ({
 		discord: {
 			clientId: runtimeConfig.discord.clientId,
 			clientSecret: runtimeConfig.discord.clientSecret,
+			redirectURI: runtimeConfig.discord.redirectURI,
 			// `guilds` is required for GET /users/@me/guilds (the dashboard guild list);
 			// `guilds.members.read` only covers per-guild member lookups.
 			scope: ["guilds", "guilds.members.read", "email"],

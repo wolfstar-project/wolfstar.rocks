@@ -3,6 +3,7 @@ import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { defineServerAuth } from "@onmax/nuxt-better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
+import { isDevelopment } from "std-env";
 
 export default defineServerAuth(() => ({
 	socialProviders: {
@@ -24,6 +25,18 @@ export default defineServerAuth(() => ({
 			}),
 			overrideUserInfoOnSignIn: true,
 		},
+	},
+	baseURL: {
+		allowedHosts: [
+			"localhost:3000",
+			"localhost:5173",
+			"wolfstar.rocks",
+			"beta.wolfstar.rocks",
+			"main.wolfstar.rocks",
+			"*.netlify.app",
+			"*.vercel.app",
+		],
+		protocol: isDevelopment ? "http" : "https",
 	},
 	advanced: {
 		cookiePrefix: runtimeConfig.session.name,

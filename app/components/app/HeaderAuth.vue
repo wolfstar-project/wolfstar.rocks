@@ -70,8 +70,11 @@ import type { DropdownMenuItem } from "@nuxt/ui";
 const { signOut, fetchSession } = useUserSession();
 
 async function logout() {
-	await signOut();
-	await navigateTo("/");
+	await signOut({
+		onSuccess: () => {
+			void navigateTo("/");
+		},
+	});
 }
 
 onMounted(() => {

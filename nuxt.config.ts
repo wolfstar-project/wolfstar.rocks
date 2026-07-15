@@ -238,10 +238,19 @@ export default defineNuxtConfig({
 		// Redirect-only OAuth entry point: its middleware immediately redirects to
 		// Discord, so prerendering only produces an empty redirect stub that fails
 		// html-validation (no <title>/<body>, missing lang). Never prerender it.
-		"/oauth/login": { prerender: false, robots: true },
+		"/oauth/login": {
+			prerender: false,
+			robots: true,
+			auth: { only: "guest", redirectTo: "/profile" },
+		},
 		"/login": { prerender: false },
+		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		"/profile": { appLayout: "default", robots: true },
+		"/profile": {
+			appLayout: "default",
+			robots: true,
+			auth: { only: "user", redirectTo: "/login" },
+		},
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages

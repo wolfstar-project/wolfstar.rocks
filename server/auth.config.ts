@@ -22,6 +22,13 @@ export default defineServerAuth(() => ({
 			overrideUserInfoOnSignIn: true,
 		},
 	},
+	trustedOrigins: [
+		"http://localhost:3000",
+		"https://wolfstar.rocks",
+		"https://main.wolfstar.rocks",
+		"https://beta.wolfstar.rocks",
+		"https://your-preview.workers.dev",
+	],
 	baseURL: {
 		allowedHosts: [
 			"localhost:3000",

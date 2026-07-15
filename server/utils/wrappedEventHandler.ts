@@ -8,6 +8,7 @@ import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
+import { isClientOutdated } from "nuxt-skew-protection/server";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
 import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry-metrics";
@@ -317,12 +318,31 @@ function throwRateLimited(
 	});
 }
 
+function throwClientOutdated(event: H3Event, log: WrappedLogger): never {
+	log.info("Outdated client rejected before handler execution");
+	setResponseHeader(event, "x-client-outdated", "true");
+
+	throw createError({
+		message: "Client version outdated. Please refresh.",
+		why: "The browser session is running a build that no longer matches the deployed server",
+		fix: "Refresh the page to load the latest version",
+		status: 409,
+	});
+}
+
 async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	event: H3Event<T>,
 	handler: EventHandler<T, D>,
 	options: DefinedWrappedResponseHandlerOptions,
 ) {
 	const log = useLogger(event, "wrappedHandler");
+
+	// Reject outdated browser sessions before auth, rate limiting, or cached
+	// resolution so stale clients never consume quota or receive new-server data
+	if (!isDevelopment && isClientOutdated(event)) {
+		throwClientOutdated(event, log);
+	}
+
 	const session = await getUserSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 

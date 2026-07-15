@@ -97,6 +97,13 @@ vi.mock("#server/utils/sentry-metrics", () => ({
 	withApiMetrics: vi.fn((_event: unknown, fn: () => unknown) => fn()),
 }));
 
+// The real module pulls in Nitro's storage runtime (`#nitro-internal-virtual/storage`),
+// which is unavailable outside a Nitro build; stub the outdated-client check so the
+// wrapper imports cleanly and stays a no-op for these cache/auth ordering tests.
+vi.mock("nuxt-skew-protection/server", () => ({
+	isClientOutdated: vi.fn(() => false),
+}));
+
 import { defineWrappedCachedResponseHandler } from "#server/utils/wrappedEventHandler";
 
 function makeEvent(guildId: string): H3Event {

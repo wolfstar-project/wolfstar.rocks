@@ -16,6 +16,7 @@
 				>
 					<div
 						class="flex cursor-pointer items-center gap-2"
+						:class="mobile ? 'w-full' : undefined"
 						role="button"
 						aria-label="User menu"
 						aria-haspopup="menu"
@@ -27,12 +28,17 @@
 							size="2xs"
 							style="view-transition-name: user-avatar"
 						/>
-						<span class="hidden font-semibold sm:inline">{{ user.name }}</span>
+						<span
+							class="font-semibold"
+							:class="mobile ? 'inline' : 'hidden sm:inline'"
+							>{{ user.name }}</span
+						>
 					</div>
 				</LazyUDropdownMenu>
 			</div>
 			<div v-else>
 				<UButton
+					v-if="!mobile"
 					size="md"
 					color="primary"
 					variant="subtle"
@@ -49,7 +55,7 @@
 					variant="subtle"
 					to="/login"
 					block
-					class="hidden md:inline-flex"
+					:class="mobile ? undefined : 'hidden md:inline-flex'"
 					icon="ic:round-discord"
 					aria-label="Sign in with Discord"
 				/>
@@ -58,7 +64,7 @@
 		<template #placeholder>
 			<div class="flex items-center gap-2">
 				<USkeleton class="size-6 rounded-full" />
-				<USkeleton class="hidden h-4 w-16 sm:block" />
+				<USkeleton class="h-4 w-16" :class="mobile ? undefined : 'hidden sm:block'" />
 			</div>
 		</template>
 	</BetterAuthState>
@@ -67,27 +73,12 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
 
-const { signOut, fetchSession } = useUserSession();
+const { mobile = false } = defineProps<{
+	/** Renders a full-width variant suited for the mobile navigation drawer. */
+	mobile?: boolean;
+}>();
 
-async function logout() {
-	await signOut({
-		onSuccess: () => {
-			void navigateTo("/");
-		},
-	});
-}
-
-onMounted(() => {
-	const loadSession = () => {
-		void fetchSession();
-	};
-
-	if (typeof window.requestIdleCallback === "function") {
-		window.requestIdleCallback(loadSession, { timeout: 5000 });
-	} else {
-		setTimeout(loadSession, 1);
-	}
-});
+const { signOut } = useUserSession();
 
 const items = ref<DropdownMenuItem[]>([
 	{
@@ -104,4 +95,12 @@ const items = ref<DropdownMenuItem[]>([
 		},
 	},
 ]);
+
+async function logout() {
+	await signOut({
+		onSuccess: () => {
+			void navigateTo("/");
+		},
+	});
+}
 </script>

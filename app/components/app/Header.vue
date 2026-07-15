@@ -71,6 +71,24 @@
 				class="-mx-2.5"
 				aria-label="Mobile navigation"
 			/>
+
+			<Separator class="my-6" />
+
+			<ClientOnly>
+				<LazyAppHeaderAuth mobile />
+				<template #fallback>
+					<UButton
+						label="Sign in"
+						size="md"
+						color="primary"
+						variant="subtle"
+						block
+						class="invisible"
+						icon="ic:round-discord"
+						tabindex="-1"
+					/>
+				</template>
+			</ClientOnly>
 		</template>
 	</UHeader>
 </template>

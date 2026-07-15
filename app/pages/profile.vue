@@ -3,7 +3,7 @@
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
 		<h1 class="sr-only">User Profile</h1>
 		<section
-			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
+			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:border-4 md:p-12"
 			aria-label="User profile"
 		>
 			<!-- decorative left accent (sidebar-like) -->
@@ -13,7 +13,7 @@
 			></div>
 			<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
 				<USkeleton
-					class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100"
+					class="h-32 w-32 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 md:h-40 md:w-40"
 				/>
 				<div class="space-y-2 text-center">
 					<USkeleton class="h-10 w-48" />
@@ -27,7 +27,7 @@
 			<template v-else>
 				<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 					<div
-						class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
+						class="flex h-32 w-32 shrink-0 items-center justify-center rounded-full ring-base-300 ring-offset-base-100 md:h-40 md:w-40"
 						:class="{
 							'transition-transform duration-300 group-hover:scale-105':
 								!effectiveReduceMotion,
@@ -38,8 +38,8 @@
 							:src="defaultAvatar"
 							alt="Default Avatar"
 							class="h-full w-full object-cover"
-							:width="128"
-							:height="128"
+							:width="160"
+							:height="160"
 							format="png"
 							loading="lazy"
 							decoding="async"
@@ -49,9 +49,9 @@
 							v-else
 							:src="createUrl(preferredFormat, 256)"
 							:format="preferredFormat === 'gif' ? undefined : 'webp'"
-							:width="128"
-							:height="128"
-							sizes="128px"
+							:width="160"
+							:height="160"
+							sizes="(min-width: 768px) 160px, 128px"
 							:alt="`${user?.globalName ?? user?.username} avatar`"
 							class="h-full w-full object-cover"
 							loading="lazy"

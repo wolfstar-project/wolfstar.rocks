@@ -7,11 +7,8 @@
 			class="discord-embed"
 			:style="{ 'border-color': color ?? 'var(--discord-embed-default-border)' }"
 		>
-			<div v-if="title" class="mb-2 font-whitney text-base font-bold">{{ title }}</div>
-			<div
-				v-if="author"
-				class="mt-2 flex items-center gap-2 font-whitney text-base font-semibold"
-			>
+			<div v-if="title" class="mb-2 text-base font-bold">{{ title }}</div>
+			<div v-if="author" class="mt-2 flex items-center gap-2 text-base font-semibold">
 				<nuxt-img
 					v-if="author.icon"
 					:src="author.icon"
@@ -40,22 +37,37 @@
 	</div>
 </template>
 
-<script setup lang="ts">
-const {
-	title,
-	color,
-	author,
-	footer,
-	timestamp,
-	theme = "dark",
-} = defineProps<{
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface EmbedAuthor {
+	icon?: string;
+	name: string;
+}
+
+interface EmbedFooter {
+	icon?: string;
+	text: string;
+}
+
+interface EmbedProps {
 	title?: string;
 	color?: string;
-	author?: { icon?: string; name: string };
-	footer?: { icon?: string; text: string };
+	author?: EmbedAuthor;
+	footer?: EmbedFooter;
 	timestamp?: number | Date;
 	theme?: "light" | "dark";
-}>();
+}
+
+interface EmbedSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<EmbedSlots>();
+
+const { title, color, author, footer, timestamp, theme = "dark" } = defineProps<EmbedProps>();
 
 const isDarkTheme = computed(() => theme !== "light");
 const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "short" });
@@ -65,7 +77,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 @reference "@/assets/css/main.css";
 .discord-embed {
 	--discord-embed-default-border: #1e1f22;
-	@apply mt-1 max-w-fit border-l-4 p-3;
+	@apply mt-1 max-w-fit border-l-4 p-3 font-whitney;
 	border-radius: 0.25rem;
 	background-color: var(--color-base-200);
 	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h);

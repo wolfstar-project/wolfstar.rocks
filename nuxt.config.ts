@@ -237,7 +237,11 @@ export default defineNuxtConfig({
 		"/oauth/callback": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
-		"/oauth/login": { robots: true },
+		// Redirect-only OAuth entry point: its middleware immediately redirects to
+		// Discord, so prerendering only produces an empty redirect stub that fails
+		// html-validation (no <title>/<body>, missing lang). Never prerender it.
+		"/oauth/login": { prerender: false, robots: true },
+		"/login": { prerender: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		"/profile": { appLayout: "default", robots: true },
 		"/starly": { appLayout: "default", robots: true },
@@ -280,6 +284,9 @@ export default defineNuxtConfig({
 		},
 		prerender: {
 			crawlLinks: true,
+			// Keep the redirect-only OAuth login route out of the crawl/prerender set
+			// even if a page links to it; its stub HTML otherwise fails html-validation.
+			ignore: ["/login", "/oauth/login"],
 		},
 		publicAssets: [
 			{

@@ -6,20 +6,36 @@
 	</button>
 </template>
 
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface MentionProps {
+	kind?: "mention" | "app";
+}
+
+interface MentionSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
 <script setup lang="ts">
-const { kind = "mention" } = defineProps<{ kind?: "mention" | "app" }>();
+defineSlots<MentionSlots>();
+
+const { kind = "mention" } = defineProps<MentionProps>();
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 .tag {
-	@apply gap-1 rounded-md px-1 py-0.5 font-medium;
-	background-color: hsla(235, 85.6%, 64.7%, 0.5);
-	color: hsl(235, 86.2%, 95%, 1);
+	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-whitney font-medium;
+	vertical-align: baseline;
+	margin: 0;
+	background-color: oklch(57.7% 0.209 273.88 / 0.5);
+	color: oklch(93.89% 0.027 281.72);
 
 	@media (prefers-color-scheme: light) {
-		background-color: hsla(235, 85.6%, 64.7%, 0.25);
-		color: hsl(235, 86.2%, 50%, 1);
+		background-color: oklch(57.7% 0.209 273.88 / 0.25);
+		color: oklch(45.08% 0.281 265.53);
 	}
 }
 
@@ -29,13 +45,13 @@ const { kind = "mention" } = defineProps<{ kind?: "mention" | "app" }>();
 
 .tag:hover,
 .tag:focus-visible {
-	background-color: hsl(235, 85.6%, 64.7%, 1);
-	color: hsl(0, 0%, 100%, 1);
+	background-color: oklch(57.7% 0.209 273.88);
+	color: oklch(100% 0 0);
 	@apply transition-colors duration-150;
 
 	@media (prefers-color-scheme: light) {
-		background-color: hsl(235, 85.6%, 55%, 1);
-		color: hsl(0, 0%, 100%, 1);
+		background-color: oklch(48.43% 0.261 268.3);
+		color: oklch(100% 0 0);
 	}
 }
 </style>

@@ -7,10 +7,6 @@
 
 @source "../../../content/**/*";
 
-:root {
-	scroll-behavior: smooth;
-}
-
 @plugin "@tailwindcss/typography";
 @plugin "daisyui";
 
@@ -125,6 +121,26 @@
 		--animate-accordion-up: accordion-up 0.2s ease-out;
 		--branding-wolfstar: oklch(63% 0.2502 28.13);
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
+
+		/* Spectrum ring — boost / badge accents from the WolfStar design system.
+		   Mirrors the design's --spectrum-* tokens (#FD0000, #FC8B00, #FEE400,
+		   #119E0B, #0644B2, #C12EDB) and the Nitro boost pink (#FF73FA). */
+		--spectrum-red: oklch(62.4% 0.256 29.2);
+		--spectrum-orange: oklch(74.5% 0.177 58.6);
+		--spectrum-yellow: oklch(91.2% 0.19 101);
+		--spectrum-green: oklch(60.7% 0.202 142.4);
+		--spectrum-blue: oklch(43% 0.184 261.5);
+		--spectrum-purple: oklch(60.3% 0.257 320.9);
+		--boost-pink: oklch(76.9% 0.229 328.9);
+
+		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
+		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);
+		--home-blurple-soft: oklch(from var(--color-primary) l c h / 0.12);
+		--home-shadow-glow: 0 0 0 3px var(--home-blurple-soft);
+		--home-ls-label: 0.04em;
+		--home-ls-tight: -0.02em;
+
+		scroll-behavior: smooth;
 	}
 
 	html {
@@ -245,6 +261,8 @@
 }
 
 @theme {
+	--font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
+	--default-font-family: var(--font-geist);
 	--color-branding-wolfstar: var(--branding-wolfstar);
 	--color-branding-staryl: var(--branding-staryl);
 }

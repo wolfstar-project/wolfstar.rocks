@@ -1,5 +1,5 @@
 import type { GuildData } from "#server/database";
-import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
+import { ConfigurableModerationKeys } from "#shared/utils/settings-data-entries";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";

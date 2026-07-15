@@ -1,5 +1,5 @@
 import { array, boolean, nullable, object, optional, string, type InferOutput } from "valibot";
-import { ConfigurableRoles } from "../utils/settingsDataEntries";
+import { ConfigurableRoles } from "../utils/settings-data-entries";
 
 /**
  * Keys whose guild-data value is an array of role IDs (vs. a single role ID / null).

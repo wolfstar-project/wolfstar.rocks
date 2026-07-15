@@ -2,7 +2,7 @@ import { boolean, object, optional, type GenericSchema, type InferOutput } from 
 import {
 	ConfigurableMessageEvents,
 	ConfigurableModerationEvents,
-} from "../utils/settingsDataEntries";
+} from "../utils/settings-data-entries";
 
 /**
  * Schema for the Events settings form.

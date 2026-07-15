@@ -1,4 +1,4 @@
-import { isDeepEqual } from "#shared/utils/isDeepEqual";
+import { isDeepEqual } from "#shared/utils/is-deep-equal";
 import { describe, expect, it, vi } from "vitest";
 
 describe("isDeepEqual", () => {

@@ -1,5 +1,5 @@
 import { boolean, object, optional, type GenericSchema, type InferOutput } from "valibot";
-import { ConfigurableModerationKeys } from "../utils/settingsDataEntries";
+import { ConfigurableModerationKeys } from "../utils/settings-data-entries";
 
 /**
  * Schema for the Moderation settings form.

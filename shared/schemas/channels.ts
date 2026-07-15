@@ -10,7 +10,7 @@ import {
 import {
 	ConfigurableIgnoreChannels,
 	ConfigurableLoggingChannels,
-} from "../utils/settingsDataEntries";
+} from "../utils/settings-data-entries";
 
 /**
  * Schema for the Channels settings form.

@@ -3,7 +3,7 @@
  * Mirrors the WolfStar bot's configuration.ts key registry for use in audit log rendering.
  *
  * CONTRACT:
- * - label: verbatim string from shared/utils/settingsDataEntries.ts (name or title field).
+ * - label: verbatim string from shared/utils/settings-data-entries.ts (name or title field).
  *   Do NOT rename, abbreviate, or transform these strings.
  * - type: AuditFieldType — controls which renderer formatTypedValue uses.
  * - array: true when the GuildData field stores an array of IDs (e.g. rolesAdmin = string[]).
@@ -18,7 +18,7 @@ import {
 	ConfigurableModerationKeys,
 	ConfigurableRemoveInitialRole,
 	ConfigurableRoles,
-} from "./settingsDataEntries";
+} from "./settings-data-entries";
 
 export type AuditFieldType =
 	| "boolean"

@@ -137,7 +137,7 @@ import { isNullOrUndefined } from "@sapphire/utilities";
 import {
 	ConfigurableRemoveInitialRole,
 	ConfigurableRoles,
-} from "~~/shared/utils/settingsDataEntries";
+} from "~~/shared/utils/settings-data-entries";
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();

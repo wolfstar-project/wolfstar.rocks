@@ -1,5 +1,5 @@
 export * from "./audit-log";
-export * from "./configurableData";
+export * from "./configurable-data";
 export * from "./discord";
 export * from "./env";
 export * from "./prisma";

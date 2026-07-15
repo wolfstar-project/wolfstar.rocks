@@ -246,8 +246,12 @@ export default defineNuxtConfig({
 		"/login": { prerender: false },
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
+		// /profile is a per-user authenticated page: never statically prerender it
+		// (crawlLinks would otherwise reach it via links on prerendered pages and
+		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
 		"/profile": {
 			appLayout: "default",
+			prerender: false,
 			robots: true,
 			auth: { only: "user", redirectTo: "/login" },
 		},

@@ -93,6 +93,11 @@ async function completeSignIn() {
 			return;
 		}
 
+		// Session is ready: stop showing the loading state now so the welcome
+		// banner is visible during the delay below, instead of only appearing
+		// after navigation has already started.
+		isSessionLoading.value = false;
+
 		await promiseTimeout(seconds(2));
 
 		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";

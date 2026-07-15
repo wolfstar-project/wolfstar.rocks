@@ -13,10 +13,6 @@ export default defineServerAuth(() => ({
 			// `guilds` is required for GET /users/@me/guilds (the dashboard guild list);
 			// `guilds.members.read` only covers per-guild member lookups.
 			scope: ["guilds", "guilds.members.read", "email"],
-			// better-auth defaults to prompt=none, which suppresses Discord's consent
-			// screen and breaks first-time sign-ins and any request for new scopes.
-			// Force consent so the guild-list scope above can actually be granted.
-			prompt: "consent",
 			mapProfileToUser: (profile: DiscordProfile) => ({
 				id: profile.id,
 				name: profile.global_name ?? profile.username,

@@ -18,10 +18,10 @@ dedupePeers: true
 strictDepBuilds: false
 
 overrides:
-    "@netlify/api": ^14.0.18
+    "@netlify/api": ^14.0.19
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
-    discord-api-types: 0.38.48
+    discord-api-types: 0.38.49
     # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
     # vue copies make VueUse and app refs incompatible during typecheck
     vue: 3.5.38
@@ -34,15 +34,15 @@ patchedDependencies:
 
 catalogs:
     msw:
-        "msw": "^2.13.2"
+        "msw": "^2.15.0"
 
     storybook:
         "@storybook-vue/nuxt": "9.1.0-29411911.f34c865"
-        "@storybook/addon-a11y": "^10.3.5"
-        "@storybook/addon-docs": "^10.3.5"
-        "@storybook/addon-themes": "^10.3.5"
+        "@storybook/addon-a11y": "^10.5.0"
+        "@storybook/addon-docs": "^10.5.0"
+        "@storybook/addon-themes": "^10.5.0"
         "msw-storybook-addon": "^2.0.7"
-        "storybook": "^10.3.1"
+        "storybook": "^10.5.0"
 
 peerDependencyRules:
     allowAny:

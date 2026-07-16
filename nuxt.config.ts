@@ -263,6 +263,9 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
+		// ISR (1 hour) rather than prerendering against the external API at build time.
+		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
 	},
 
 	sourcemap: {

@@ -239,7 +239,6 @@ export default defineNuxtConfig({
 		// Discord, so prerendering only produces an empty redirect stub that fails
 		// html-validation (no <title>/<body>, missing lang). Never prerender it.
 		"/oauth/login": {
-			prerender: false,
 			robots: true,
 			auth: { only: "guest", redirectTo: "/profile" },
 		},
@@ -251,7 +250,6 @@ export default defineNuxtConfig({
 		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
 		"/profile": {
 			appLayout: "default",
-			prerender: false,
 			robots: true,
 			auth: { only: "user", redirectTo: "/login" },
 		},

@@ -36,6 +36,7 @@
 							v-if="version.markdown"
 							:value="version.markdown"
 							:cache-key="version.tag"
+							:parser-options="headingIdParserOptions(version.tag)"
 						/>
 					</template>
 				</UChangelogVersion>
@@ -56,6 +57,25 @@ interface UnghRelease {
 }
 
 const site = useSiteConfig();
+
+/**
+ * Release notes render one `<MDC>` per version, each with a fresh slugger, so
+ * shared section headings ("Fixes", "Chore", ...) would emit duplicate ids
+ * across the page. Scope every release's heading ids by its tag to keep them
+ * unique and satisfy html-validate's `no-dup-id` rule during prerender.
+ */
+function headingIdParserOptions(tag: string) {
+	return {
+		rehype: {
+			plugins: {
+				"changelog-heading-ids": {
+					instance: rehypeChangelogHeadingIds,
+					options: { prefix: tag },
+				},
+			},
+		},
+	};
+}
 
 const title = "Changelog";
 const description = "Track every release, improvement, and fix across the WolfStar Project.";

@@ -1,7 +1,7 @@
 <template>
 	<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 		<div
-			class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
+			class="flex h-32 w-32 shrink-0 items-center justify-center rounded-full ring-base-300 ring-offset-base-100 md:h-40 md:w-40"
 			:class="{
 				'transition-transform duration-300 group-hover:scale-105': !effectiveReduceMotion,
 			}"
@@ -11,8 +11,8 @@
 				:src="defaultAvatar"
 				alt="Default Avatar"
 				class="h-full w-full object-cover"
-				:width="128"
-				:height="128"
+				:width="160"
+				:height="160"
 				format="png"
 				loading="lazy"
 				decoding="async"
@@ -22,9 +22,9 @@
 				v-else
 				:src="createUrl(preferredFormat, 256)"
 				:format="preferredFormat === 'gif' ? undefined : 'webp'"
-				:width="128"
-				:height="128"
-				sizes="128px"
+				:width="160"
+				:height="160"
+				sizes="(min-width: 768px) 160px, 128px"
 				:alt="`${user?.global_name ?? user?.username} avatar`"
 				class="h-full w-full object-cover"
 				loading="lazy"

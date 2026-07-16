@@ -1,6 +1,6 @@
 <template>
 	<section
-		class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
+		class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:border-4 md:p-12"
 		aria-label="User profile"
 	>
 		<!-- decorative left accent (sidebar-like) -->
@@ -10,7 +10,7 @@
 		></div>
 		<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
 			<USkeleton
-				class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100"
+				class="h-32 w-32 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 md:h-40 md:w-40"
 			/>
 			<div class="space-y-2 text-center">
 				<USkeleton class="h-10 w-48" />

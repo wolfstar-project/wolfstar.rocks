@@ -318,6 +318,10 @@ export default defineNuxtConfig({
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",
 			},
+			"wolfstar:auth-ratelimiter": {
+				base: "./.cache/auth-ratelimiter",
+				driver: "fsLite",
+			},
 		},
 	},
 

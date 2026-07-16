@@ -1,9 +1,20 @@
+import type { SecondaryStorage } from "better-auth";
 import type { DiscordProfile } from "better-auth/social-providers";
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { defineServerAuth } from "@onmax/nuxt-better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
 import { isDevelopment } from "std-env";
+
+const authRateLimitStorage = useStorage("wolfstar:auth-ratelimiter");
+
+// Adapts the Nitro/unstorage mount above to better-auth's SecondaryStorage
+// shape so its rate-limit counters survive across serverless invocations.
+const authSecondaryStorage: SecondaryStorage = {
+	get: (key) => authRateLimitStorage.getItem(key),
+	set: (key, value) => authRateLimitStorage.setItem(key, value),
+	delete: (key) => authRateLimitStorage.removeItem(key),
+};
 
 export default defineServerAuth(() => ({
 	socialProviders: {
@@ -44,6 +55,18 @@ export default defineServerAuth(() => ({
 	},
 	advanced: {
 		cookiePrefix: runtimeConfig.session.name,
+	},
+	secondaryStorage: authSecondaryStorage,
+	rateLimit: {
+		enabled: true,
+		window: 60,
+		max: 100,
+		storage: "secondary-storage",
+		customRules: {
+			// OAuth sign-in initiation is the only unauthenticated entry point
+			// (Discord-only login, no email/password) worth a tighter window.
+			"/sign-in/social": { window: 10, max: 5 },
+		},
 	},
 	session: {
 		cookieCache: {

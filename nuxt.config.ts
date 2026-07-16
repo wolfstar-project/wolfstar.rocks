@@ -509,6 +509,7 @@ export default defineNuxtConfig({
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
+					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://*.netlify.com",
 					"https://*.netlify.app",
 					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths

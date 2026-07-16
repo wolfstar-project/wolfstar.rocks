@@ -250,6 +250,7 @@ export default defineNuxtConfig({
 		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
 		"/profile": {
 			appLayout: "default",
+			prerender: false,
 			robots: true,
 			auth: { only: "user", redirectTo: "/login" },
 		},
@@ -293,6 +294,9 @@ export default defineNuxtConfig({
 		},
 		prerender: {
 			crawlLinks: true,
+			// Keep redirect-only and per-user routes out of the prerender crawl;
+			// their auth-redirect stubs do not produce complete HTML documents.
+			ignore: ["/login", "/oauth/login", "/profile"],
 		},
 		publicAssets: [
 			{

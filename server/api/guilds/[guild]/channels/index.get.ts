@@ -1,39 +1,21 @@
-import { createError, useLogger } from "evlog";
+import { useLogger } from "evlog";
 
+/**
+ * Proxies to the internal bot API: GET /guilds/:guild/channels
+ */
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const api = useApi();
 		const log = useLogger(event);
-
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		const guild = await getGuild(guildId);
-		if (!guild) {
-			throw createError({
-				message: "Guild not found",
-				status: 404,
-				why: `The bot is not a member of guild ${guildId}`,
-				fix: "check bot is a member of the guild",
-			});
-		}
-
-		const member = await getCurrentMember(event, guild.id);
-		log.set({ member: { id: member.user.id } });
-		await canManage(guild, member);
-
-		const channels = await api.guilds.getChannels(guild.id).catch((error) => {
-			log.error(error);
-			throw createError({
-				message: "Failed to fetch channels",
-				status: 500,
-				why: "Discord API returned an error when fetching the guild's channel list",
-				cause: error,
-			});
+		const channels = await fetchBotApi(event, `/guilds/${guildId}/channels`);
+		log.set({
+			result: {
+				channelCount: Array.isArray(channels) ? channels.length : undefined,
+			},
 		});
-
-		log.set({ result: { channelCount: channels.length } });
-		return channels.map((channel) => flattenGuildChannel(channel as any));
+		return channels;
 	},
 	{
 		auth: true,

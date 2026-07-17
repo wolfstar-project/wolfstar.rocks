@@ -1,7 +1,7 @@
 import { useLogger } from "evlog";
 
 /**
- * Proxies to the internal bot API: GET /guilds/:guild/settings
+ * Proxies to the internal bot API: GET /guilds/:guild/roles
  */
 export default defineWrappedResponseHandler(
 	async (event) => {
@@ -9,7 +9,11 @@ export default defineWrappedResponseHandler(
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		return await fetchBotApi(event, `/guilds/${guildId}/settings`);
+		const roles = await fetchBotApi(event, `/guilds/${guildId}/roles`);
+		log.set({
+			result: { roleCount: Array.isArray(roles) ? roles.length : undefined },
+		});
+		return roles;
 	},
 	{
 		auth: true,

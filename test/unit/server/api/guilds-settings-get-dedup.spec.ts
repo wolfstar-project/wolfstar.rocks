@@ -1,46 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// vi.hoisted() ensures globals are present before the route module is evaluated.
-const {
-	mockReadSettings,
-	mockSerializeSettings,
-	mockGetGuild,
-	mockGetCurrentMember,
-	mockCanManage,
-} = vi.hoisted(() => {
-	const mockReadSettings = vi.fn();
-	const mockSerializeSettings = vi.fn();
-	const mockGetGuild = vi.fn();
-	const mockGetCurrentMember = vi.fn();
-	const mockCanManage = vi.fn().mockResolvedValue(undefined);
+const { mockFetchBotApi, mockUseLoggerSet } = vi.hoisted(() => {
+	const mockFetchBotApi = vi.fn();
+	const mockUseLoggerSet = vi.fn();
 
 	(globalThis as Record<string, unknown>).defineWrappedResponseHandler = (fn: unknown) => fn;
 	(globalThis as Record<string, unknown>).getGuildParam = vi.fn().mockReturnValue("guild-123");
-	(globalThis as Record<string, unknown>).getGuild = mockGetGuild;
-	(globalThis as Record<string, unknown>).resolveGuildForRequest = (
-		_event: unknown,
-		guildId: string,
-	) => mockGetGuild(guildId);
-	(globalThis as Record<string, unknown>).getCurrentMember = mockGetCurrentMember;
-	(globalThis as Record<string, unknown>).canManage = mockCanManage;
+	(globalThis as Record<string, unknown>).fetchBotApi = mockFetchBotApi;
 	(globalThis as Record<string, unknown>).seconds = (n: number) => n;
 
-	return {
-		mockReadSettings,
-		mockSerializeSettings,
-		mockGetGuild,
-		mockGetCurrentMember,
-		mockCanManage,
-	};
+	return { mockFetchBotApi, mockUseLoggerSet };
 });
 
-vi.mock("#server/database", () => ({
-	readSettings: mockReadSettings,
-	serializeSettings: mockSerializeSettings,
-}));
-
 vi.mock("evlog", () => ({
-	useLogger: vi.fn().mockReturnValue({ set: vi.fn(), error: vi.fn() }),
+	useLogger: vi.fn().mockReturnValue({ set: mockUseLoggerSet, error: vi.fn() }),
+	createError: vi.fn((opts: Record<string, unknown>) =>
+		Object.assign(new Error(String(opts["message"])), opts),
+	),
 }));
 
 import type { H3Event } from "h3";
@@ -48,43 +24,22 @@ import settingsGetHandler from "#server/api/guilds/[guild]/settings.get";
 
 const callHandler = settingsGetHandler as unknown as (event: H3Event) => Promise<unknown>;
 
-const mockGuild = { id: "guild-123", owner_id: "owner-456", roles: [] };
-const mockMember = { user: { id: "user-789" }, roles: [], permissions: "8" };
-const mockSettings = { id: "guild-123", rolesAdmin: [] };
-
-describe("settings.get - readSettings deduplication", () => {
+describe("settings.get - bot API proxy", () => {
 	const mockEvent = {} as H3Event;
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		mockGetGuild.mockResolvedValue(mockGuild);
-		mockGetCurrentMember.mockResolvedValue(mockMember);
-		mockReadSettings.mockResolvedValue(mockSettings);
-		mockSerializeSettings.mockReturnValue(JSON.stringify(mockSettings));
-		mockCanManage.mockResolvedValue(undefined);
+		mockFetchBotApi.mockResolvedValue('{"id":"guild-123","prefix":"!"}');
 	});
 
-	it("calls readSettings exactly once per request", async () => {
+	it("proxies to /guilds/:guild/settings on the internal bot API", async () => {
 		await callHandler(mockEvent);
 
-		expect(mockReadSettings).toHaveBeenCalledOnce();
-		expect(mockReadSettings).toHaveBeenCalledWith("guild-123");
+		expect(mockFetchBotApi).toHaveBeenCalledWith(mockEvent, "/guilds/guild-123/settings");
 	});
 
-	it("passes pre-fetched settings to canManage as third argument", async () => {
-		await callHandler(mockEvent);
-
-		expect(mockCanManage).toHaveBeenCalledOnce();
-		expect(mockCanManage).toHaveBeenCalledWith(mockGuild, mockMember, mockSettings);
-	});
-
-	it("returns the result of serializeSettings called with the pre-fetched settings", async () => {
-		const expected = JSON.stringify(mockSettings);
-
+	it("returns the bot API response unchanged", async () => {
 		const result = await callHandler(mockEvent);
-
-		expect(mockSerializeSettings).toHaveBeenCalledOnce();
-		expect(mockSerializeSettings).toHaveBeenCalledWith(mockSettings);
-		expect(result).toBe(expected);
+		expect(result).toBe('{"id":"guild-123","prefix":"!"}');
 	});
 });

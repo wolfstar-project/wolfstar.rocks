@@ -14,5 +14,3 @@ metadata:
 ## Search
 
 Use `skilld search "query" -p @nuxt/hints` instead of grepping `.skilld/` directories. Run `skilld search --guide -p @nuxt/hints` for full syntax, filters, and operators.
-
-Related: consola-skilld, defu-skilld, valibot-skilld

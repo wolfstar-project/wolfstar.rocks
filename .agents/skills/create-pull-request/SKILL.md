@@ -137,7 +137,7 @@ git push origin HEAD --force-with-lease
 
 ## Create the Pull Request
 
-**IMPORTANT**: Read and use the PR template at `.github/pull_request_template.md` or `.github/PULL_REQUEST_TEMPLATE.md`. The PR body format must **strictly match** the template structure. Do not deviate from the template format.
+**IMPORTANT**: Read and use the PR template at `.github/pull_request_template.md`. The PR body format must **strictly match** the template structure. Do not deviate from the template format.
 
 When filling out the template:
 - Replace `#XXXX` with the actual issue number, or keep as `#XXXX` if no issue exists (for small fixes)

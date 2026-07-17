@@ -32,10 +32,7 @@ export const handlers = [
 		}),
 	),
 
-	// External WolfStar bot API — proxied through createApiComposable("/commands")
-	http.get(/\/commands$/, () => HttpResponse.json(mockCommands)),
-
-	// External WolfStar bot API, proxied through createApiComposable("/languages").
-	// The dashboard manage page requests this on mount for the default section.
-	http.get(/\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
+	// Same-origin bot-data proxies used by createApiComposable
+	http.get(/\/api\/commands$/, () => HttpResponse.json(mockCommands)),
+	http.get(/\/api\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
 ];

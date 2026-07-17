@@ -1,3 +1,3 @@
 export function useCommands(options?: ApiComposableOptions) {
-	return createApiComposable<FlattenedCommand[]>("wolfstar:commands", "/commands", [], options);
+	return createApiComposable<WolfCommand[]>("wolfstar:commands", "/api/commands", [], options);
 }

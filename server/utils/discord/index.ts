@@ -28,6 +28,10 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
+import {
+	type BotApiCommand,
+	normalizeBotCommands,
+} from "#shared/utils/bot-api-commands";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
@@ -476,21 +480,60 @@ export const fetchCommands = defineCachedFunction(
 		const {
 			public: { apiBaseUrl },
 		} = useRuntimeConfig();
+		if (!apiBaseUrl) {
+			throw createError({
+				message: "Bot API base URL is not configured",
+				status: 500,
+				why: "NUXT_PUBLIC_API_BASE_URL is missing",
+				fix: "Set NUXT_PUBLIC_API_BASE_URL to the WolfStar bot API origin (e.g. https://api.wolfstar.rocks)",
+			});
+		}
 		Sentry.metrics.count("bot_api.call", 1, {
 			attributes: { endpoint: "commands.fetch" },
 		});
 		const commands = await instrumentBotApiCall("commands.fetch", () =>
-			$fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
+			$fetch<BotApiCommand[]>(`${apiBaseUrl}/commands`, {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			}),
 		);
-		return commands;
+		return normalizeBotCommands(commands);
 	},
 	{
 		maxAge: hours(1),
 		getKey: () => "commands",
+	},
+);
+
+export const fetchLanguages = defineCachedFunction(
+	async () => {
+		const {
+			public: { apiBaseUrl },
+		} = useRuntimeConfig();
+		if (!apiBaseUrl) {
+			throw createError({
+				message: "Bot API base URL is not configured",
+				status: 500,
+				why: "NUXT_PUBLIC_API_BASE_URL is missing",
+				fix: "Set NUXT_PUBLIC_API_BASE_URL to the WolfStar bot API origin (e.g. https://api.wolfstar.rocks)",
+			});
+		}
+		Sentry.metrics.count("bot_api.call", 1, {
+			attributes: { endpoint: "languages.fetch" },
+		});
+		return await instrumentBotApiCall("languages.fetch", () =>
+			$fetch<string[]>(`${apiBaseUrl}/languages`, {
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}),
+		);
+	},
+	{
+		maxAge: hours(1),
+		getKey: () => "languages",
 	},
 );

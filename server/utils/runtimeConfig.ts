@@ -46,7 +46,9 @@ export function generateRuntimeConfig() {
 			redirectURI: process.env.NUXT_OAUTH_DISCORD_REDIRECT_URL,
 		},
 		public: {
-			apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
+			// Internal WolfStar bot API. Production default is api.wolfstar.rocks;
+			// override with NUXT_PUBLIC_API_BASE_URL for local bot instances.
+			apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL || "https://api.wolfstar.rocks",
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			environment: process.env.NODE_ENV ?? "production",
 			sentry: {

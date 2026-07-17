@@ -28,10 +28,7 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
-import {
-	type BotApiCommand,
-	normalizeBotCommands,
-} from "#shared/utils/bot-api-commands";
+import { type BotApiCommand, normalizeBotCommands } from "#shared/utils/bot-api-commands";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";

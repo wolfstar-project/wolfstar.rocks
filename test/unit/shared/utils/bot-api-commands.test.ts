@@ -49,9 +49,9 @@ describe("normalizeBotCommand", () => {
 	});
 
 	it("preserves a non-null subCategory", () => {
-		expect(
-			normalizeBotCommand({ ...sampleBotCommand, subCategory: "Voice" }).subCategory,
-		).toBe("Voice");
+		expect(normalizeBotCommand({ ...sampleBotCommand, subCategory: "Voice" }).subCategory).toBe(
+			"Voice",
+		);
 	});
 });
 

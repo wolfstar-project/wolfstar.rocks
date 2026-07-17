@@ -14,7 +14,7 @@ metadata:
 
 ## Search
 
-Use `skilld search "query" -p @nuxtjs/seo` instead of grepping `.skilld/` directories. Run `skilld search --guide -p @nuxtjs/seo` for full syntax, filters, and operators.
+Use `pnpm exec skilld search "query" -p @nuxtjs/seo` instead of grepping `.skilld/` directories. Run `pnpm exec skilld search --guide -p @nuxtjs/seo` for full syntax, filters, and operators.
 
 <!-- skilld:api-changes -->
 ## API Changes

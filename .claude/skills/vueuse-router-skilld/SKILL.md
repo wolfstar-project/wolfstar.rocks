@@ -14,7 +14,7 @@ metadata:
 
 ## Search
 
-Use `skilld search "query" -p @vueuse/router` instead of grepping `.skilld/` directories. Run `skilld search --guide -p @vueuse/router` for full syntax, filters, and operators.
+Use `pnpm exec skilld search "query" -p @vueuse/router` instead of grepping `.skilld/` directories. Run `pnpm exec skilld search --guide -p @vueuse/router` for full syntax, filters, and operators.
 
 <!-- skilld:best-practices -->
 ## Best Practices for @vueuse/router v14.3.0

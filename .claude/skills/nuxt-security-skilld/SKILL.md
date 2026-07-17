@@ -13,6 +13,6 @@ metadata:
 
 ## Search
 
-Use `skilld search "query" -p nuxt-security` instead of grepping `.skilld/` directories. Run `skilld search --guide -p nuxt-security` for full syntax, filters, and operators.
+Use `pnpm exec skilld search "query" -p nuxt-security` instead of grepping `.skilld/` directories. Run `pnpm exec skilld search --guide -p nuxt-security` for full syntax, filters, and operators.
 
 Related: defu-skilld

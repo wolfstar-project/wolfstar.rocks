@@ -13,4 +13,4 @@ metadata:
 
 ## Search
 
-Use `skilld search "query" -p discord-api-types` instead of grepping `.skilld/` directories. Run `skilld search --guide -p discord-api-types` for full syntax, filters, and operators.
+Use `pnpm exec skilld search "query" -p discord-api-types` instead of grepping `.skilld/` directories. Run `pnpm exec skilld search --guide -p discord-api-types` for full syntax, filters, and operators.

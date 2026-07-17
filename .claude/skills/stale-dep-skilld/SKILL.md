@@ -13,6 +13,6 @@ metadata:
 
 ## Search
 
-Use `skilld search "query" -p stale-dep` instead of grepping `.skilld/` directories. Run `skilld search --guide -p stale-dep` for full syntax, filters, and operators.
+Use `pnpm exec skilld search "query" -p stale-dep` instead of grepping `.skilld/` directories. Run `pnpm exec skilld search --guide -p stale-dep` for full syntax, filters, and operators.
 
 Related: consola-skilld

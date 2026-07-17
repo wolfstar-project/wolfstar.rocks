@@ -13,4 +13,4 @@ metadata:
 
 ## Search
 
-Use `skilld search "query" -p simple-git` instead of grepping `.skilld/` directories. Run `skilld search --guide -p simple-git` for full syntax, filters, and operators.
+Use `pnpm exec skilld search "query" -p simple-git` instead of grepping `.skilld/` directories. Run `pnpm exec skilld search --guide -p simple-git` for full syntax, filters, and operators.

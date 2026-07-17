@@ -1,11 +1,7 @@
 import type { DiscordAPIError } from "@discordjs/rest";
-import type {
-	APIUser,
-	RESTAPIPartialCurrentUserGuild,
-	RESTPostOAuth2AccessTokenResult,
-} from "discord-api-types/v10";
+import type { APIUser, RESTAPIPartialCurrentUserGuild } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { refreshSessionTokens } from "#server/utils/oauth-tokens";
+import { type DiscordAccessToken, refreshSessionTokens } from "#server/utils/oauth-tokens";
 import { REST } from "@discordjs/rest";
 import { createError } from "evlog";
 
@@ -52,7 +48,7 @@ export async function fetchCurrentUserAndGuilds(accessToken: string): Promise<{
 
 async function resolveAccessTokenAfterUnauthorized(
 	event: H3Event,
-	tokens: RESTPostOAuth2AccessTokenResult,
+	tokens: DiscordAccessToken,
 ): Promise<string> {
 	const refreshed = await refreshSessionTokens(event, { force: true });
 
@@ -65,7 +61,7 @@ async function resolveAccessTokenAfterUnauthorized(
 
 export async function fetchCurrentUserAndGuildsWithRetry(
 	event: H3Event,
-	tokens: RESTPostOAuth2AccessTokenResult,
+	tokens: DiscordAccessToken,
 ): Promise<{
 	user: APIUser;
 	guilds: RESTAPIPartialCurrentUserGuild[];
@@ -91,7 +87,7 @@ export async function fetchCurrentUserAndGuildsWithRetry(
 
 export async function fetchGuildMemberWithRetry(
 	event: H3Event,
-	tokens: RESTPostOAuth2AccessTokenResult,
+	tokens: DiscordAccessToken,
 	guildId: string,
 ) {
 	const call = (accessToken: string) => {

@@ -12,6 +12,11 @@
 			"sourceType": "github",
 			"skillPath": "skills/git-commit/SKILL.md",
 			"computedHash": "2607fc60629b82b257136dd2a7a373f0a4466c0b49df7746d845d59313c99b21"
+		},
+		"nuxt-better-auth": {
+			"source": "better-auth.nuxt.dev",
+			"sourceType": "well-known",
+			"computedHash": "cb62a8ac1df0559044ed654baac9e8d8b0f093e5b4c6ae7fea2fda8a13a612d8"
 		}
 	}
 }

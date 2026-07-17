@@ -1,5 +1,5 @@
 export function useSessionRefresh() {
-	const { fetch: refetchSession } = useUserSession();
+	const { fetchSession: refetchSession } = useUserSession();
 	const documentVisibility = useDocumentVisibility();
 
 	async function refreshAndSync(): Promise<void> {

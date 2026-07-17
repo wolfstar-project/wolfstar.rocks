@@ -28,7 +28,7 @@ export default defineNuxtConfig({
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
-		"nuxt-auth-utils",
+		"@onmax/nuxt-better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
@@ -143,9 +143,7 @@ export default defineNuxtConfig({
 	},
 
 	auth: {
-		// Avoid eager session hydration on marketing pages; protected routes and
-		// HeaderAuth fetch explicitly when a session is needed.
-		loadStrategy: "none",
+		redirectQueryKey: "next",
 	},
 
 	colorMode: {
@@ -240,10 +238,22 @@ export default defineNuxtConfig({
 		// Redirect-only OAuth entry point: its middleware immediately redirects to
 		// Discord, so prerendering only produces an empty redirect stub that fails
 		// html-validation (no <title>/<body>, missing lang). Never prerender it.
-		"/oauth/login": { prerender: false, robots: true },
+		"/oauth/login": {
+			robots: true,
+			auth: { only: "guest", redirectTo: "/profile" },
+		},
 		"/login": { prerender: false },
+		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		"/profile": { appLayout: "default", robots: true },
+		// /profile is a per-user authenticated page: never statically prerender it
+		// (crawlLinks would otherwise reach it via links on prerendered pages and
+		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
+		"/profile": {
+			appLayout: "default",
+			prerender: false,
+			robots: true,
+			auth: { only: "user", redirectTo: "/login" },
+		},
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
@@ -284,9 +294,9 @@ export default defineNuxtConfig({
 		},
 		prerender: {
 			crawlLinks: true,
-			// Keep the redirect-only OAuth login route out of the crawl/prerender set
-			// even if a page links to it; its stub HTML otherwise fails html-validation.
-			ignore: ["/login", "/oauth/login"],
+			// Keep redirect-only and per-user routes out of the prerender crawl;
+			// their auth-redirect stubs do not produce complete HTML documents.
+			ignore: ["/login", "/oauth/login", "/profile"],
 		},
 		publicAssets: [
 			{
@@ -305,6 +315,10 @@ export default defineNuxtConfig({
 			},
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
+				driver: "fsLite",
+			},
+			"wolfstar:auth-ratelimiter": {
+				base: "./.cache/auth-ratelimiter",
 				driver: "fsLite",
 			},
 		},
@@ -494,6 +508,7 @@ export default defineNuxtConfig({
 					"https://api.iconify.design",
 					"https://*.netlify.com",
 					"https://*.netlify.app",
+					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",
 					"https://*.sentry.io",

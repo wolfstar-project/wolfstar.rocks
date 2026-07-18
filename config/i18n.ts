@@ -33,10 +33,11 @@ const locales: LocaleObjectData[] = [
 		language: "en-US",
 	},
 	{
-		code: "it-IT",
-		file: "it-IT.json",
-		name: "Italiano",
-		language: "it-IT",
+		// Matches WolfStar/Skyra bot language keys (e.g. guild settings `language`)
+		code: "es-ES",
+		file: "es-ES.json",
+		name: "Español",
+		language: "es-ES",
 	},
 ];
 

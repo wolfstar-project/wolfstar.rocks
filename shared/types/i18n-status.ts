@@ -19,9 +19,9 @@ export interface I18nStatus {
 }
 
 export interface I18nLocaleStatus {
-	/** Locale code (e.g. 'it-IT') */
+	/** Locale code (e.g. 'es-ES') */
 	lang: Locale;
-	/** Display name (e.g. 'Italiano') */
+	/** Display name (e.g. 'Español') */
 	label: string;
 	/** locale direction - rtl | ltr */
 	dir: Directions;

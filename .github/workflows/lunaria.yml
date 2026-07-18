@@ -12,17 +12,18 @@ permissions: {}
 
 jobs:
   lunaria-overview:
-    name: Generate Lunaria Overview
+    name: 🌝 Generate Lunaria Overview
     runs-on: blacksmith-4vcpu-ubuntu-2404-arm
     permissions:
       contents: read
-      pull-requests: write
+      pull-requests: write # post Lunaria overview comments on pull requests
 
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           # Necessary for Lunaria to work properly
+          # Makes the action clone the entire git history
           fetch-depth: 0
           persist-credentials: false
 

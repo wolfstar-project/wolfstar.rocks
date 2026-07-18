@@ -67,9 +67,6 @@
 	},
 	"i18n": {
 		"missing_keys": "No missing keys | 1 missing key | {count} missing keys",
-		"complete": "Translation complete",
-		"incomplete": "{percent}% translated",
-		"help_translate": "Help translate",
 		"edit_on_github": "Edit on GitHub"
 	},
 	"translation_status": {

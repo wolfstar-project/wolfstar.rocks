@@ -67,9 +67,6 @@
 	},
 	"i18n": {
 		"missing_keys": "Ninguna clave faltante | 1 clave faltante | {count} claves faltantes",
-		"complete": "Traducción completa",
-		"incomplete": "{percent}% traducido",
-		"help_translate": "Ayuda a traducir",
 		"edit_on_github": "Editar en GitHub"
 	},
 	"translation_status": {

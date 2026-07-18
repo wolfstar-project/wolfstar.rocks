@@ -38,6 +38,13 @@ export default defineConfig({
 			},
 			"i18n:check": {
 				command: "node --experimental-transform-types scripts/compare-translations.ts",
+				// Off because the script rewrites locale files (never cacheable), and
+				// caching triggers a vp spawn failure on the CI arm runner.
+				// See https://github.com/voidzero-dev/vite-task/issues/506
+				cache: false,
+			},
+			"i18n:report": {
+				command: "node --experimental-transform-types scripts/find-invalid-translations.ts",
 			},
 			"i18n:schema": {
 				command: "node --experimental-transform-types scripts/generate-i18n-schema.ts",
@@ -489,6 +496,8 @@ export default defineConfig({
 		],
 	},
 	staged: {
+		"i18n/locales/*":
+			"node --experimental-transform-types ./lunaria/lunaria.ts && node --experimental-transform-types scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json && git add i18n/schema.json",
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
 		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
 			const filtered = files.filter(

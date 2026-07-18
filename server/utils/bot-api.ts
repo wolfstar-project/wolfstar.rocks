@@ -121,9 +121,7 @@ async function buildBotAuthCookie(event: H3Event): Promise<string> {
  * Build outbound Cookie header for sapphire-plugin-api when a Discord session exists.
  * Returns an empty object when the user is anonymous (public bot routes).
  */
-export async function getOptionalBotAuthHeaders(
-	event: H3Event,
-): Promise<Record<string, string>> {
+export async function getOptionalBotAuthHeaders(event: H3Event): Promise<Record<string, string>> {
 	const session = await getUserSession(event);
 	if (!session?.user?.id) {
 		return {};

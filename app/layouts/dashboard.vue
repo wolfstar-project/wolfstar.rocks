@@ -473,21 +473,17 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const { data: response } = await $api<string | GuildData>(
-		`/guilds/${guildId.value}/settings`,
-		{
-			body: {
-				guild_id: guildId.value,
-				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-			},
-			method: "PATCH",
+	const { data: response } = await $api<string | GuildData>(`/guilds/${guildId.value}/settings`, {
+		body: {
+			guild_id: guildId.value,
+			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
 		},
-	);
+		method: "PATCH",
+	});
 
 	let parsed: GuildData;
 	try {
-		parsed =
-			typeof response === "string" ? (JSON.parse(response) as GuildData) : response;
+		parsed = typeof response === "string" ? (JSON.parse(response) as GuildData) : response;
 	} catch (error) {
 		logger.error(
 			`Failed to parse response from settings update for guild Id: ${guildId.value}`,

@@ -24,8 +24,7 @@ export default defineWrappedResponseHandler(
 		log.set({ botApi: { path, method } });
 
 		const query = getQuery(event);
-		const body =
-			method === "GET" || method === "DELETE" ? undefined : await readBody(event);
+		const body = method === "GET" || method === "DELETE" ? undefined : await readBody(event);
 
 		return await fetchBotApi(event, path, {
 			auth: !isPublicBotApiPath(path),

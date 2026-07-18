@@ -1,36 +1,94 @@
+import type { CommandLogData } from "#server/database";
+import prisma from "#server/database/prisma";
+import { fallbackMember, resolveGuildMembers } from "#server/utils/audit/resolve-members";
 import { CommandLogQuerySchema } from "#shared/schemas";
-import { createError, useLogger } from "evlog";
+import { useLogger } from "evlog";
 import { parse } from "valibot";
 
-/**
- * Proxies to the internal bot API: GET /guilds/:guild/command-logs
- * (dashboard path remains /api/guilds/:guild/logs/commands)
- */
 export default defineWrappedCachedResponseHandler(
 	async (event) => {
 		const log = useLogger(event);
+
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		const query = await getValidatedQuery(event, (body) => parse(CommandLogQuerySchema, body));
+		// Authorization runs in the `authorize` hook on every request; the
+		// cached resolver only needs the guild for data assembly.
+		const guild = await getGuild(guildId);
+		if (!guild) throw createError({ status: 404, message: "Guild not found" });
 
-		return await fetchBotApi(event, `/guilds/${guildId}/command-logs`, {
-			query: query as Record<string, unknown>,
+		const { limit, offset, userId, commandName, success, from, to, q } =
+			await getValidatedQuery(event, (body) => parse(CommandLogQuerySchema, body));
+
+		const where = {
+			guildId,
+			...(userId && { userId }),
+			...(commandName && { commandName }),
+			...(success !== "all" && { success: success === "success" }),
+			...(from || to
+				? {
+						executedAt: {
+							...(from && { gte: new Date(from) }),
+							...(to && { lte: new Date(to) }),
+						},
+					}
+				: {}),
+			...(q && {
+				OR: [
+					{ commandName: { contains: q, mode: "insensitive" as const } },
+					{ errorReason: { contains: q, mode: "insensitive" as const } },
+				],
+			}),
+		};
+
+		const [rows, total] = await Promise.all([
+			prisma.commandLog.findMany({
+				where,
+				orderBy: { executedAt: "desc" },
+				take: limit,
+				skip: offset,
+			}),
+			prisma.commandLog.count({ where }),
+		]);
+
+		const memberMap = await resolveGuildMembers(guildId, [
+			...new Set(rows.map((r) => r.userId)),
+		]);
+
+		const entries: CommandLogData[] = rows.map((row) => {
+			const member = memberMap.get(row.userId) ?? fallbackMember(row.userId);
+			return {
+				id: row.id,
+				guildId: row.guildId,
+				userId: row.userId,
+				commandName: row.commandName,
+				commandType: row.commandType,
+				commandId: row.commandId ?? null,
+				subcommand: row.subcommand ?? null,
+				channelId: row.channelId ?? null,
+				success: row.success,
+				errorReason: row.errorReason ?? null,
+				executedAt: row.executedAt,
+				latencyMs: row.latencyMs ?? null,
+				metadata: { member },
+			};
 		});
+
+		return { entries, total };
 	},
 	{
 		auth: true,
 		maxAge: 30,
 		swr: false,
 		authorize: async (event) => {
-			const session = await getUserSession(event);
-			if (!session?.user?.id) {
-				throw createError({ status: 401, message: "Unauthorized" });
+			const guildId = getGuildParam(event);
+			const guild = await getGuild(guildId);
+			if (!guild) {
+				throw createError({ message: "Guild not found", status: 404 });
 			}
-			useLogger(event).set({
-				guild: { id: getGuildParam(event) },
-				member: { id: session.user.id },
-			});
+			const member = await getCurrentMember(event, guild.id);
+			useLogger(event).set({ guild: { id: guildId }, member: { id: member.user.id } });
+			await canManage(guild, member);
 		},
 		getKey: (event) => {
 			const guildId = getGuildParam(event);
@@ -40,6 +98,6 @@ export default defineWrappedCachedResponseHandler(
 		onError(log, error) {
 			log.error(error);
 		},
-		rateLimit: { enabled: true, limit: 5, window: seconds(10) },
+		rateLimit: { enabled: true, limit: 30, window: seconds(60) },
 	},
 );

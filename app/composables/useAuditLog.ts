@@ -30,10 +30,12 @@ export function useAuditLog({
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
 	const resolvedFilters = computed(() => (filters !== undefined ? toValue(filters) : undefined));
 
+	const { $api } = useNuxtApp();
+
 	const asyncData = useLazyAsyncData(
 		() =>
 			`guild:${toValue(guildId)}:logs:activity:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value ?? {})}`,
-		() => {
+		async () => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
@@ -44,9 +46,11 @@ export function useAuditLog({
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<AuditLogResponse>(`/api/guilds/${toValue(guildId)}/logs`, {
-				query,
-			});
+			const { data } = await $api<AuditLogResponse>(
+				`/guilds/${toValue(guildId)}/audit-logs`,
+				{ query },
+			);
+			return data;
 		},
 		{
 			immediate: immediate !== false,

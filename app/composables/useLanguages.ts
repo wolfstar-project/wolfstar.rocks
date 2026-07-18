@@ -1,3 +1,3 @@
 export function useLanguages(options?: ApiComposableOptions) {
-	return createApiComposable<string[]>("wolfstar:languages", "/api/languages", [], options);
+	return createApiComposable<string[]>("wolfstar:languages", "/languages", [], options);
 }

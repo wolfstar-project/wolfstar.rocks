@@ -117,6 +117,31 @@ async function buildBotAuthCookie(event: H3Event): Promise<string> {
 	);
 }
 
+/**
+ * Build outbound Cookie header for sapphire-plugin-api when a Discord session exists.
+ * Returns an empty object when the user is anonymous (public bot routes).
+ */
+export async function getOptionalBotAuthHeaders(
+	event: H3Event,
+): Promise<Record<string, string>> {
+	const session = await getUserSession(event);
+	if (!session?.user?.id) {
+		return {};
+	}
+	try {
+		const cookieValue = await buildBotAuthCookie(event);
+		return { Cookie: `${getBotAuthCookieName()}=${cookieValue}` };
+	} catch {
+		return {};
+	}
+}
+
+/** Bot API paths that do not require a sapphire auth cookie. */
+export function isPublicBotApiPath(path: string): boolean {
+	const normalized = path.startsWith("/") ? path : `/${path}`;
+	return normalized === "/commands" || normalized === "/languages";
+}
+
 function toErrorCause(error: unknown): Error | undefined {
 	return error instanceof Error ? error : undefined;
 }

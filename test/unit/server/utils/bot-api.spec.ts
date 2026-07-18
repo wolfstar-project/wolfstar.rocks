@@ -1,6 +1,7 @@
 import {
 	decryptSapphireAuth,
 	encryptSapphireAuth,
+	isPublicBotApiPath,
 	type SapphireAuthPayload,
 } from "#server/utils/bot-api";
 import { describe, expect, it } from "vitest";
@@ -53,5 +54,13 @@ describe("sapphire auth cookie crypto", () => {
 		const tampered = `AAAA${data!.slice(4)}.${iv}`;
 		expect(decryptSapphireAuth(tampered, SECRET)).toBeNull();
 		expect(decryptSapphireAuth("not-a-token", SECRET)).toBeNull();
+	});
+});
+
+describe("isPublicBotApiPath", () => {
+	it("marks commands and languages as public", () => {
+		expect(isPublicBotApiPath("/commands")).toBe(true);
+		expect(isPublicBotApiPath("languages")).toBe(true);
+		expect(isPublicBotApiPath("/guilds/1/settings")).toBe(false);
 	});
 });

@@ -1,15 +1,30 @@
-import { useLogger } from "evlog";
+import { readSettings, serializeSettings } from "#server/database";
+import { createError, useLogger } from "evlog";
 
-/**
- * Proxies to the internal bot API: GET /guilds/:guild/settings
- */
 export default defineWrappedResponseHandler(
 	async (event) => {
 		const log = useLogger(event);
+
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
 
-		return await fetchBotApi(event, `/guilds/${guildId}/settings`);
+		const guild = await resolveGuildForRequest(event, guildId);
+		if (!guild) {
+			throw createError({
+				message: "Guild not found",
+				status: 404,
+				why: `The bot is not a member of guild ${guildId}`,
+				fix: "check bot is a member of the guild",
+			});
+		}
+
+		const member = await getCurrentMember(event, guild.id);
+		log.set({ member: { id: member.user.id } });
+
+		const settings = await readSettings(guild.id);
+		await canManage(guild, member, settings);
+
+		return serializeSettings(settings);
 	},
 	{
 		auth: true,

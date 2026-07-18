@@ -3,8 +3,8 @@ export interface ApiComposableOptions {
 }
 
 /**
- * Lazy-fetch composable for same-origin dashboard API routes (e.g. `/api/commands`).
- * Uses the request-scoped fetch cache on SSR and plain `$fetch` on the client.
+ * Lazy-fetch composable for WolfStar bot API routes via `$api`
+ * (e.g. `/commands`, `/languages`, `/guilds/:id`).
  */
 export function createApiComposable<T>(
 	key: string,
@@ -12,12 +12,12 @@ export function createApiComposable<T>(
 	defaultValue: T,
 	options?: ApiComposableOptions,
 ) {
-	const cachedFetch = useCachedFetch();
+	const { $api } = useNuxtApp();
 
 	const asyncData = useLazyAsyncData(
 		key,
 		async () => {
-			const { data, isStale } = await cachedFetch<T>(endpoint);
+			const { data, isStale } = await $api<T>(endpoint);
 			return { data, isStale };
 		},
 		{ immediate: options?.immediate !== false },

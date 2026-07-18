@@ -1,14 +1,28 @@
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { createError, useLogger } from "evlog";
 
-/**
- * Proxies to the internal bot API: GET /guilds/:guild/roles/:role
- */
 export default defineWrappedResponseHandler(
 	async (event) => {
+		const api = useApi();
 		const log = useLogger(event);
+
 		const guildId = getGuildParam(event);
 		log.set({ guild: { id: guildId } });
+
+		const guild = await getGuild(guildId);
+		if (!guild) {
+			throw createError({
+				message: "Guild not found",
+				status: 404,
+				why: `The bot is not a member of guild ${guildId}`,
+				fix: "check bot is a member of the guild",
+			});
+		}
+
+		const currentMember = await getCurrentMember(event, guild.id);
+		log.set({ member: { id: currentMember.user.id } });
+
+		await canManage(guild, currentMember);
 
 		const roleId = getRouterParam(event, "role");
 		if (isNullOrUndefined(roleId)) {
@@ -21,7 +35,17 @@ export default defineWrappedResponseHandler(
 		}
 		log.set({ role: { id: roleId } });
 
-		return await fetchBotApi(event, `/guilds/${guildId}/roles/${roleId}`);
+		const role = await api.guilds.getRole(guild.id, roleId).catch((error) => {
+			log.error(error);
+			throw createError({
+				message: "Failed to fetch role",
+				status: 500,
+				why: `Discord API error while fetching role ${roleId} for guild ${guildId}`,
+				cause: error,
+			});
+		});
+
+		return flattenRole(guild.id, role);
 	},
 	{
 		auth: true,

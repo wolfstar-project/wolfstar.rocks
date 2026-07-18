@@ -11,7 +11,7 @@ const meta: Meta<typeof CommandsPage> = {
 	parameters: {
 		layout: "fullscreen",
 		msw: {
-			handlers: [http.get(/\/api\/commands$/, () => HttpResponse.json(mockCommands))],
+			handlers: [http.get(/\/api\/bot\/commands$/, () => HttpResponse.json(mockCommands))],
 		},
 	},
 };
@@ -24,7 +24,7 @@ export const WithCommands: Story = {};
 export const Empty: Story = {
 	parameters: {
 		msw: {
-			handlers: [http.get(/\/api\/commands$/, () => HttpResponse.json([]))],
+			handlers: [http.get(/\/api\/bot\/commands$/, () => HttpResponse.json([]))],
 		},
 	},
 };
@@ -36,7 +36,7 @@ export const Loading: Story = {
 			// stable for the snapshot. A fixed timeout (e.g. 60s) would either
 			// resolve mid-capture or trip Chromatic's per-story capture timeout.
 			handlers: [
-				http.get(/\/api\/commands$/, async () => {
+				http.get(/\/api\/bot\/commands$/, async () => {
 					await delay("infinite");
 					return HttpResponse.json(mockCommands);
 				}),

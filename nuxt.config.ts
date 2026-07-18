@@ -220,15 +220,12 @@ export default defineNuxtConfig({
 				"Vary": "Cookie, Authorization",
 			},
 		},
-		// Public bot-data proxies — safe to CDN-cache (no user-specific data).
-		"/api/commands": {
+		// Bot API BFF used by `$api` on the client — never CDN-cache (may carry auth).
+		"/api/bot/**": {
+			isr: false,
+			cache: false,
 			headers: {
-				"Cache-Control": "public, max-age=3600, stale-while-revalidate=21600",
-			},
-		},
-		"/api/languages": {
-			headers: {
-				"Cache-Control": "public, max-age=86400, stale-while-revalidate=86400",
+				"Cache-Control": "private, no-store",
 			},
 		},
 

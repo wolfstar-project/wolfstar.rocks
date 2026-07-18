@@ -1,11 +1,9 @@
 /**
- * Contract tests for public bot-data proxy endpoints.
+ * Contract tests for the `$api` client BFF (`/api/bot/**`).
  *
- * Real handlers:
- *  - `server/api/commands.get.ts`
- *  - `server/api/languages.get.ts`
+ * Real handler: `server/api/bot/[...path].ts`
  *
- * These routes are unauthenticated proxies to the internal WolfStar bot API
+ * These routes forward to the internal WolfStar bot API
  * (`NUXT_PUBLIC_API_BASE_URL`). Contract tests mock the Nitro endpoints to
  * validate URL wiring and response shape without hitting the live bot API.
  */
@@ -30,19 +28,19 @@ const MOCK_COMMANDS: WolfCommand[] = [
 
 const MOCK_LANGUAGES = ["en-US", "it", "es-ES"];
 
-registerEndpoint("/api/commands", {
+registerEndpoint("/api/bot/commands", {
 	method: "GET",
 	handler: () => MOCK_COMMANDS,
 });
 
-registerEndpoint("/api/languages", {
+registerEndpoint("/api/bot/languages", {
 	method: "GET",
 	handler: () => MOCK_LANGUAGES,
 });
 
-describe("GET /api/commands", () => {
-	it("returns a list of normalized WolfCommand objects", async () => {
-		const data = await $fetch<WolfCommand[]>("/api/commands");
+describe("GET /api/bot/commands", () => {
+	it("returns a list of command objects", async () => {
+		const data = await $fetch<WolfCommand[]>("/api/bot/commands");
 		expect(Array.isArray(data)).toBe(true);
 		expect(data).toHaveLength(1);
 		expect(data[0]?.name).toBe("voicekick");
@@ -50,9 +48,9 @@ describe("GET /api/commands", () => {
 	});
 });
 
-describe("GET /api/languages", () => {
+describe("GET /api/bot/languages", () => {
 	it("returns a list of language codes", async () => {
-		const data = await $fetch<string[]>("/api/languages");
+		const data = await $fetch<string[]>("/api/bot/languages");
 		expect(data).toStrictEqual(MOCK_LANGUAGES);
 	});
 });

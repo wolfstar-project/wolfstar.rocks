@@ -20,9 +20,11 @@ export interface BotApiCommand {
  * Normalize a bot API command into the dashboard's WolfCommand shape
  * (`aliases` + non-null `subCategory`).
  */
-export function normalizeBotCommand(command: BotApiCommand): WolfCommand {
+export function normalizeBotCommand(
+	command: BotApiCommand & { aliases?: string[] },
+): WolfCommand {
 	return {
-		aliases: command.alias ?? [],
+		aliases: command.alias ?? command.aliases ?? [],
 		category: command.category,
 		description: command.description,
 		extendedHelp: command.extendedHelp,
@@ -34,6 +36,8 @@ export function normalizeBotCommand(command: BotApiCommand): WolfCommand {
 	};
 }
 
-export function normalizeBotCommands(commands: BotApiCommand[]): WolfCommand[] {
+export function normalizeBotCommands(
+	commands: Array<BotApiCommand & { aliases?: string[] }>,
+): WolfCommand[] {
 	return commands.map(normalizeBotCommand);
 }

@@ -48,6 +48,13 @@ describe("normalizeBotCommand", () => {
 		expect(normalizeBotCommand(withoutAlias).aliases).toStrictEqual([]);
 	});
 
+	it("falls back to aliases when alias is absent", () => {
+		const { alias: _alias, ...withoutAlias } = sampleBotCommand;
+		expect(
+			normalizeBotCommand({ ...withoutAlias, aliases: ["legacy"] }).aliases,
+		).toStrictEqual(["legacy"]);
+	});
+
 	it("preserves a non-null subCategory", () => {
 		expect(normalizeBotCommand({ ...sampleBotCommand, subCategory: "Voice" }).subCategory).toBe(
 			"Voice",

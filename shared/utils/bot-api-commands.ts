@@ -1,20 +1,5 @@
-import type { FlattenedCommand, Preconditions, WolfCommand } from "#shared/types/discord";
-
-/**
- * Raw command payload from the WolfStar bot API (`/commands`).
- * The bot serializes Sapphire `aliases` as the singular `alias` field.
- */
-export interface BotApiCommand {
-	alias?: string[];
-	category: string;
-	description: string;
-	extendedHelp: FlattenedCommand["extendedHelp"];
-	guarded: boolean;
-	name: string;
-	permissionLevel: number;
-	preconditions: Preconditions;
-	subCategory?: string | null;
-}
+import type { BotApiCommand } from "#shared/types/bot-api";
+import type { WolfCommand } from "#shared/types/discord";
 
 /**
  * Normalize a bot API command into the dashboard's WolfCommand shape

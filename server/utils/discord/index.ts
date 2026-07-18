@@ -7,6 +7,7 @@ import type {
 	PartialOauthFlattenedGuild,
 	TransformedLoginData,
 } from "#shared/types";
+import type { BotApiCommand } from "#shared/types/bot-api";
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,
@@ -28,7 +29,7 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
-import { type BotApiCommand, normalizeBotCommands } from "#shared/utils/bot-api-commands";
+import { normalizeBotCommands } from "#shared/utils/bot-api-commands";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";

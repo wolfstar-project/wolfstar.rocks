@@ -1,4 +1,4 @@
-import type { BotApiCommand } from "#shared/utils/bot-api-commands";
+import type { BotApiCommand } from "#shared/types/bot-api";
 import { normalizeBotCommands } from "#shared/utils/bot-api-commands";
 
 export function useCommands(options?: ApiComposableOptions) {

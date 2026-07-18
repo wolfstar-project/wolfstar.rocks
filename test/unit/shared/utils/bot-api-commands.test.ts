@@ -1,4 +1,4 @@
-import type { BotApiCommand } from "#shared/utils/bot-api-commands";
+import type { BotApiCommand } from "#shared/types/bot-api";
 import { normalizeBotCommand, normalizeBotCommands } from "#shared/utils/bot-api-commands";
 import { describe, expect, it } from "vitest";
 

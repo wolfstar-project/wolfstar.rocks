@@ -1,5 +1,6 @@
 export * from "./discord";
 export * from "./bits";
+export * from "./bot-api";
 export * from "./bot-api-commands";
 export * from "./comparators";
 export * from "./fetch-cache-config";

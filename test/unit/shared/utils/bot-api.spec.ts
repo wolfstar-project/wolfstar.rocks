@@ -1,8 +1,9 @@
+import type { SapphireAuthPayload } from "#shared/types/bot-api";
 import {
 	decryptSapphireAuth,
 	encryptSapphireAuth,
-	type SapphireAuthPayload,
-} from "#server/utils/bot-api";
+	getOptionalBotAuthHeaders,
+} from "#shared/utils/bot-api";
 import { describe, expect, it } from "vitest";
 
 // aes-256-cbc requires a 32-byte key — match Discord client-secret length.
@@ -53,5 +54,39 @@ describe("sapphire auth cookie crypto", () => {
 		const tampered = `AAAA${data!.slice(4)}.${iv}`;
 		expect(decryptSapphireAuth(tampered, SECRET)).toBeNull();
 		expect(decryptSapphireAuth("not-a-token", SECRET)).toBeNull();
+	});
+});
+
+describe("getOptionalBotAuthHeaders", () => {
+	it("returns an empty object when credentials are missing", () => {
+		expect(
+			getOptionalBotAuthHeaders({
+				accessToken: null,
+				secret: SECRET,
+				userId: "1",
+			}),
+		).toStrictEqual({});
+		expect(
+			getOptionalBotAuthHeaders({
+				accessToken: "token",
+				secret: "",
+				userId: "1",
+			}),
+		).toStrictEqual({});
+	});
+
+	it("builds a Cookie header that decrypts to the session payload", () => {
+		const headers = getOptionalBotAuthHeaders({
+			accessToken: "access-token",
+			cookieName: "SAPPHIRE_AUTH",
+			secret: SECRET,
+			userId: "123456789012345678",
+		});
+
+		expect(headers.Cookie).toMatch(/^SAPPHIRE_AUTH=.[^\n\r.\u2028\u2029]*\..+$/);
+		const token = headers.Cookie!.slice("SAPPHIRE_AUTH=".length);
+		const decrypted = decryptSapphireAuth(token, SECRET);
+		expect(decrypted?.id).toBe("123456789012345678");
+		expect(decrypted?.token).toBe("access-token");
 	});
 });

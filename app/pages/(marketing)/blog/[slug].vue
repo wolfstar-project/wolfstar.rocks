@@ -128,17 +128,20 @@ useSeoMeta({
 	description,
 	ogDescription: description,
 	ogTitle: `${title} · WolfStar Blog`,
+	...(post.image ? { ogImage: `${site.url}${post.image}` } : {}),
 });
 
-defineOgImage("BlogPost", {
-	title,
-	description,
-	date: post.date,
-	authors: post.authors.map((author) => ({
-		name: author.name,
-		avatar: author.avatar?.src,
-	})),
-});
+if (!post.image) {
+	defineOgImage("BlogPost", {
+		title,
+		description,
+		date: post.date,
+		authors: post.authors.map((author) => ({
+			name: author.name,
+			avatar: author.avatar?.src,
+		})),
+	});
+}
 
 function formatSocialIntentQueryText(handle: string | undefined): string {
 	const credit = handle ? ` by @${handle}` : "";

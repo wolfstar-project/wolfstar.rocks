@@ -71,6 +71,12 @@ pnpm knip:fix                    # Auto-fix unused files, exports, and dependenc
 pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
+pnpm vp run i18n:check           # Audit locale files against en.json
+pnpm i18n:check:fix              # Sync locale keys (EN placeholders for missing)
+pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
+pnpm i18n:report:fix             # Remove unused keys from all locale files
+pnpm vp run i18n:schema          # Regenerate i18n/schema.json from en.json
+pnpm vp run build:lunaria        # Build Lunaria dashboard + status.json
 pnpm test                        # Run all Vitest projects
 pnpm test:unit                   # Run unit tests
 pnpm test:nuxt                   # Nuxt component/API tests

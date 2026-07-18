@@ -2,6 +2,8 @@ import { defineNuxtModule, useRuntimeConfig } from "nuxt/kit";
 import { provider } from "std-env";
 // Storage key for fetch cache - must match shared/utils/fetch-cache-config.ts
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
+// Storage key for payload cache - must match server/plugins/payload-cache.ts
+const PAYLOAD_CACHE_STORAGE_KEY = "payload-cache";
 
 export default defineNuxtModule({
 	meta: {
@@ -30,6 +32,13 @@ export default defineNuxtModule({
 				...nitroConfig.storage[FETCH_CACHE_STORAGE_BASE],
 				driver: "netlifyBlobs",
 				name: FETCH_CACHE_STORAGE_BASE,
+			};
+
+			// Runtime _payload.json cache (avoids a second SSR for ISR/cache routes)
+			nitroConfig.storage[PAYLOAD_CACHE_STORAGE_KEY] = {
+				...nitroConfig.storage[PAYLOAD_CACHE_STORAGE_KEY],
+				driver: "netlifyBlobs",
+				name: PAYLOAD_CACHE_STORAGE_KEY,
 			};
 
 			nitroConfig.storage["wolfstar:ratelimiter"] = {

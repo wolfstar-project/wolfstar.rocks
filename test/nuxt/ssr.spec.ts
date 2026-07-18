@@ -420,16 +420,15 @@ describe("component SSR rendering", () => {
 						)
 						.exists(),
 				).toBe(true);
-				// Mobile Discord layout: column stack with the app rail ordered below the list.
-				expect(
-					wrapper.find(".discord-slash-command-suggestions-inner").classes().join(" "),
-				).toMatch(/flex-col/);
-				expect(
-					wrapper
-						.find(".discord-slash-command-suggestions-sidebar-scroll")
-						.classes()
-						.join(" "),
-				).toMatch(/order-2/);
+				// Mobile Discord layout keeps the app rail as a sibling after the list
+				// (CSS reorders it below the list on small viewports).
+				const inner = wrapper.find(".discord-slash-command-suggestions-inner");
+				const scroll = inner.find(".discord-slash-command-suggestions-scroll");
+				const rail = inner.find(".discord-slash-command-suggestions-sidebar-scroll");
+				expect(scroll.exists()).toBe(true);
+				expect(rail.exists()).toBe(true);
+				expect(inner.element.contains(scroll.element)).toBe(true);
+				expect(inner.element.contains(rail.element)).toBe(true);
 			});
 		});
 

@@ -83,16 +83,6 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h);
 }
 
-/*
- * Vue's whitespace:condense removes whitespace-only text nodes between elements
- * (e.g. </strong><DiscordMention> or </strong><template>). A non-breaking space
- * after bold labels restores Type/User/Reason and log-field spacing for every
- * DiscordEmbed caller — text values and mention/role components alike.
- */
-.discord-embed :deep(strong)::after {
-	content: "\00a0";
-}
-
 /* Media features */
 .discord-embed-media {
 	@apply mt-4 max-h-75 max-w-75 rounded;
@@ -108,5 +98,16 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 
 .discord-embed-custom-emoji-image {
 	@apply h-4.5 w-4.5 align-bottom;
+}
+</style>
+
+<!--
+  Unscoped on purpose: slot content keeps the caller scope id, so a scoped
+  :deep(strong)::after does not always win in DevTools / cascade. Vue's
+  whitespace:condense also drops spaces between </strong> and following nodes.
+-->
+<style>
+.discord-embed strong::after {
+	content: " ";
 }
 </style>

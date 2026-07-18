@@ -82,7 +82,8 @@ const ariaLabel = computed(() => {
 	--discord-slash-command-suggestion-description: oklch(73.06% 0.0048 264.53);
 	--discord-slash-command-suggestion-app: oklch(73.06% 0.0048 264.53);
 
-	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5;
+	/* Mobile Discord: name + app label share the top row; description sits tight underneath. */
+	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2.5 gap-y-0 rounded-md px-2 py-2 sm:items-center sm:gap-3 sm:py-1.5;
 }
 
 .discord-slash-command-suggestion:not(.discord-slash-command-suggestion-disabled):hover,
@@ -99,11 +100,11 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-avatar {
-	@apply shrink-0;
+	@apply mt-0.5 shrink-0 sm:mt-0;
 }
 
 .discord-slash-command-suggestion-content {
-	@apply flex min-w-0 flex-col gap-0.5;
+	@apply flex min-w-0 flex-col gap-0;
 }
 
 .discord-slash-command-suggestion-name {
@@ -117,7 +118,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-app {
-	@apply shrink-0 font-whitney text-[13px];
+	@apply shrink-0 self-start pt-0.5 font-whitney text-[11px] leading-tight tracking-wide uppercase sm:self-auto sm:pt-0 sm:text-[13px] sm:normal-case sm:tracking-normal;
 	color: var(--discord-slash-command-suggestion-app);
 }
 </style>

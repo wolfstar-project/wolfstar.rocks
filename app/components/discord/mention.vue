@@ -27,9 +27,14 @@ const { kind = "mention" } = defineProps<MentionProps>();
 <style scoped>
 @reference "@/assets/css/main.css";
 .tag {
+	/*
+	 * Mentions are inline-flex components, not text nodes. Vue's whitespace:condense
+	 * drops spaces between tags, so keep a small leading margin for inline flow.
+	 */
 	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-whitney font-medium;
 	vertical-align: baseline;
 	margin: 0;
+	margin-inline-start: 0.15em;
 	background-color: oklch(57.7% 0.209 273.88 / 0.5);
 	color: oklch(93.89% 0.027 281.72);
 

@@ -37,8 +37,8 @@
 										v-for="(line, lineIdx) in activeDisplayCommand.embedLines"
 										:key="line.label"
 									>
-										<strong>❯ {{ line.label }}:</strong>
-										<template
+										<strong>❯ {{ line.label }}:</strong
+										><template
 											v-for="(part, partIdx) in line.parts"
 											:key="`${lineIdx}-${partIdx}`"
 											><DiscordMention

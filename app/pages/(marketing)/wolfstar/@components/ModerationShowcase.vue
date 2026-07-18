@@ -174,11 +174,9 @@
 													Everyone notice me!
 													<DiscordMention kind="mention"
 														>everyone</DiscordMention
-													>
-													<DiscordMention kind="mention"
+													><DiscordMention kind="mention"
 														>members</DiscordMention
-													>{{ " "
-													}}<DiscordMention kind="mention"
+													><DiscordMention kind="mention"
 														>moderators</DiscordMention
 													>
 												</template>
@@ -426,8 +424,8 @@
 													:timestamp
 												>
 													<span
-														><strong>❯ Action:</strong>
-														{{
+														><strong>❯ Action:</strong
+														>{{
 															loggingEvents[loggingIndex]!.action
 														}}</span
 													><br />
@@ -437,8 +435,8 @@
 														]!.details"
 														:key="idx"
 													>
-														<strong>❯ {{ detail.label }}:</strong>
-														<template
+														<strong>❯ {{ detail.label }}:</strong
+														><template
 															v-for="(part, partIdx) in detail.parts"
 															:key="partIdx"
 															><DiscordMention
@@ -613,17 +611,18 @@
 														:timestamp
 													>
 														<span
-															><strong>❯ Type:</strong>
-															{{ moderationActionRender.name }}</span
+															><strong>❯ Type:</strong
+															>{{
+																moderationActionRender.name
+															}}</span
 														><br />
 														<span
-															><strong>❯ User:</strong>
-															<DiscordMention kind="mention"
+															><strong>❯ User:</strong
+															><DiscordMention kind="mention"
 																>baddie</DiscordMention
-															>
-															(541738403230777351)</span
+															>{{ " " }}(541738403230777351)</span
 														><br />
-														<span><strong>❯ Reason:</strong> spam</span>
+														<span><strong>❯ Reason:</strong>spam</span>
 													</DiscordEmbed>
 												</DiscordMessage>
 											</DiscordMessages>

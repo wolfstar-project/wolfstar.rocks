@@ -195,6 +195,25 @@ describe("component SSR rendering", () => {
 				});
 				expect(wrapper.text()).toContain("WolfStar Moderation");
 			});
+
+			it("keeps a gap between bold labels and following mention components", async () => {
+				const wrapper = await mountSuspended({
+					components: { DiscordEmbed, DiscordMention },
+					template: `
+						<DiscordEmbed>
+							<span><strong>❯ Type:</strong>Warning</span>
+							<span><strong>❯ User:</strong><DiscordMention kind="mention">baddie</DiscordMention></span>
+							<span><strong>❯ Reason:</strong>spam</span>
+						</DiscordEmbed>
+					`,
+				});
+				const html = wrapper.html();
+				expect(html).toContain("<strong");
+				expect(wrapper.text()).toMatch(/Type:\s*Warning/);
+				expect(wrapper.text()).toMatch(/User:\s*@?baddie/);
+				expect(wrapper.text()).toMatch(/Reason:\s*spam/);
+				expect(wrapper.find(".tag").exists()).toBe(true);
+			});
 		});
 
 		describe("DiscordMention", () => {
@@ -217,6 +236,16 @@ describe("component SSR rendering", () => {
 				const button = wrapper.find("button");
 				expect(button.exists()).toBe(true);
 				expect(button.text()).toContain("WolfStar");
+			});
+
+			it("uses inline-flex so mention chips keep component spacing from surrounding text", async () => {
+				const wrapper = await mountSuspended(DiscordMention, {
+					props: { kind: "mention" },
+					slots: { default: "baddie" },
+				});
+				const button = wrapper.find("button.tag");
+				expect(button.exists()).toBe(true);
+				expect(button.classes()).toContain("tag");
 			});
 		});
 
@@ -391,6 +420,16 @@ describe("component SSR rendering", () => {
 						)
 						.exists(),
 				).toBe(true);
+				// Mobile Discord layout: column stack with the app rail ordered below the list.
+				expect(
+					wrapper.find(".discord-slash-command-suggestions-inner").classes().join(" "),
+				).toMatch(/flex-col/);
+				expect(
+					wrapper
+						.find(".discord-slash-command-suggestions-sidebar-scroll")
+						.classes()
+						.join(" "),
+				).toMatch(/order-2/);
 			});
 		});
 

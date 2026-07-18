@@ -18,6 +18,11 @@
 			/>
 			<span v-else class="discord-slash-command-input-value">{{ value }}</span>
 			<span class="discord-slash-command-input-cursor" aria-hidden="true" />
+			<UIcon
+				name="discord:emoji"
+				class="discord-slash-command-input-emoji ml-auto size-4.5 shrink-0 sm:hidden"
+				aria-hidden="true"
+			/>
 		</div>
 
 		<div class="discord-slash-command-input-tools" aria-hidden="true">
@@ -27,6 +32,10 @@
 			<UIcon name="discord:emoji" class="discord-slash-command-input-tool size-4.5" />
 			<UIcon name="discord:apps" class="discord-slash-command-input-tool size-4.5" />
 		</div>
+
+		<button type="button" class="discord-slash-command-input-send" aria-label="Send message">
+			<UIcon name="ph:paper-plane-tilt-fill" class="size-4" aria-hidden="true" />
+		</button>
 	</div>
 </template>
 
@@ -78,22 +87,34 @@ const ariaLabel = computed(() => {
 
 .discord-slash-command-input {
 	--discord-slash-command-input-bg: oklch(32.11% 0.0094 268.56);
+	--discord-slash-command-input-field-bg: oklch(27.39% 0.0055 264.46);
 	--discord-slash-command-input-text: oklch(100% 0 0);
 	--discord-slash-command-input-muted: oklch(73.06% 0.0048 264.53);
 	--discord-slash-command-input-cursor: oklch(100% 0 0);
+	--discord-slash-command-input-send: oklch(57.7% 0.209 273.88);
 
-	@apply flex min-h-11 items-center gap-3 px-3 py-2;
+	@apply flex min-h-11 items-center gap-2 px-2 py-2 sm:gap-3 sm:px-3;
 	background-color: var(--discord-slash-command-input-bg);
 }
 
 .discord-slash-command-input-add {
-	@apply inline-flex shrink-0 items-center justify-center rounded-full border-0 bg-transparent p-0;
+	@apply inline-flex size-9 shrink-0 items-center justify-center rounded-full border-0 p-0 sm:size-auto sm:bg-transparent;
 	color: var(--discord-slash-command-input-muted);
+	background-color: var(--discord-slash-command-input-field-bg);
+
+	@media (width >= 40rem) {
+		background-color: transparent;
+	}
 }
 
 .discord-slash-command-input-field {
-	@apply flex min-w-0 flex-1 items-center overflow-x-auto font-whitney text-sm;
+	@apply flex min-w-0 flex-1 items-center overflow-x-auto rounded-full px-3 py-2 font-whitney text-sm sm:rounded-none sm:bg-transparent sm:px-0 sm:py-0;
 	color: var(--discord-slash-command-input-text);
+	background-color: var(--discord-slash-command-input-field-bg);
+
+	@media (width >= 40rem) {
+		background-color: transparent;
+	}
 }
 
 .discord-slash-command-input-value {
@@ -113,6 +134,16 @@ const ariaLabel = computed(() => {
 
 .discord-slash-command-input-tool {
 	@apply size-4.5;
+}
+
+.discord-slash-command-input-emoji {
+	color: var(--discord-slash-command-input-muted);
+}
+
+.discord-slash-command-input-send {
+	@apply inline-flex size-9 shrink-0 items-center justify-center rounded-full border-0 p-0 sm:hidden;
+	background-color: var(--discord-slash-command-input-send);
+	color: oklch(100% 0 0);
 }
 
 @keyframes discord-slash-command-input-cursor-blink {

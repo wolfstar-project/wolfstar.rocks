@@ -1,51 +1,20 @@
 <template>
-	<div
-		v-if="filteredCommands.length > 0"
-		role="region"
-		:aria-labelledby="`category-${categoryName.replace(/\s+/g, '-').toLowerCase()}`"
-	>
+	<div v-if="filteredCommands.length > 0" class="animate-fade-in">
 		<UAccordion
 			:items="categoryItems"
 			:ui="{
 				root: 'space-y-3',
 				item: '',
+				trigger:
+					'w-full justify-between rounded-2xl border border-base-content/10 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80 data-[state=open]:rounded-b-none',
 				content:
 					'rounded-2xl rounded-t-none overflow-hidden transition-all border border-t-0 border-base-content/10 bg-base-200/30',
+				label: 'truncate text-xl font-bold',
+				trailingIcon: 'size-5 shrink-0',
 			}"
-			class="animate-fade-in"
 		>
-			<template #default="{ item, open }">
-				<UButton
-					color="neutral"
-					variant="ghost"
-					class="w-full justify-between rounded-2xl border border-base-content/10 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80"
-					:class="{ 'rounded-b-none': open }"
-					:aria-expanded="open"
-					:aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
-				>
-					<span
-						:id="`category-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
-						class="truncate text-xl font-bold"
-					>
-						{{ item.label }}
-					</span>
-
-					<template #trailing>
-						<UIcon
-							name="i-heroicons-chevron-down-20-solid"
-							class="size-5 shrink-0 transform transition-transform duration-200"
-							:class="[open && 'rotate-180']"
-							aria-hidden="true"
-						/>
-					</template>
-				</UButton>
-			</template>
-
 			<template #body="{ item }">
-				<div
-					:id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
-					class="space-y-3 p-4"
-				>
+				<div class="space-y-3 p-4">
 					<UAccordion
 						:items="
 							getCommandsByCategory(item.label).map((command) => ({

@@ -38,6 +38,11 @@
 							:cache-key="version.tag"
 							:parser-options="headingIdParserOptions(version.tag)"
 						/>
+						<ChangelogContributors
+							v-if="version.contributors.length"
+							:id-prefix="version.tag"
+							:contributors="version.contributors"
+						/>
 					</template>
 				</UChangelogVersion>
 			</UChangelogVersions>
@@ -48,6 +53,12 @@
 </template>
 
 <script setup lang="ts">
+import type {
+	ChangelogContributorItem,
+	ReleaseContributor,
+} from "~/utils/parse-release-contributors";
+import { parseReleaseContributors } from "~/utils/parse-release-contributors";
+
 interface UnghRelease {
 	tag: string;
 	name: string;
@@ -56,6 +67,12 @@ interface UnghRelease {
 	author?: string;
 }
 
+interface UnghContributor {
+	username: string;
+	contributions: number;
+}
+
+const REPO = "wolfstar-project/wolfstar.rocks";
 const site = useSiteConfig();
 
 /**
@@ -77,19 +94,49 @@ function headingIdParserOptions(tag: string) {
 	};
 }
 
+function enrichContributors(
+	parsed: ReleaseContributor[],
+	contributionCounts: Record<string, number>,
+): ChangelogContributorItem[] {
+	return parsed.map((contributor) => {
+		const key = contributor.username.toLowerCase();
+		const commits = contributionCounts[key];
+		return {
+			name: contributor.name,
+			username: contributor.username,
+			commits: commits ?? 0,
+			hasContributed: commits !== undefined,
+			avatarSrc: `https://github.com/${contributor.username}.png`,
+		};
+	});
+}
+
 const title = "Changelog";
 const description = "Track every release, improvement, and fix across the WolfStar Project.";
 
-const { data: versions } = await useFetch(
-	"https://ungh.cc/repos/wolfstar-project/wolfstar.rocks/releases",
-	{
-		key: "changelog-releases",
-		transform: (data: { releases?: UnghRelease[] }) =>
-			(data.releases ?? []).map((release) => ({
+const { data: contributionCounts } = await useFetch(`https://ungh.cc/repos/${REPO}/contributors`, {
+	key: "changelog-repo-contributors",
+	transform: (data: { contributors?: UnghContributor[] }) => {
+		const record: Record<string, number> = {};
+		for (const contributor of data.contributors ?? []) {
+			record[contributor.username.toLowerCase()] = contributor.contributions;
+		}
+		return record;
+	},
+	default: () => ({}),
+});
+
+const { data: versions } = await useFetch(`https://ungh.cc/repos/${REPO}/releases`, {
+	key: "changelog-releases",
+	transform: (data: { releases?: UnghRelease[] }) =>
+		(data.releases ?? []).map((release) => {
+			const { bodyMarkdown, contributors } = parseReleaseContributors(release.markdown ?? "");
+			return {
 				tag: release.tag,
 				title: release.name || release.tag,
 				date: release.publishedAt,
-				markdown: release.markdown,
+				markdown: bodyMarkdown,
+				contributors: enrichContributors(contributors, contributionCounts.value ?? {}),
 				authors: release.author
 					? [
 							{
@@ -101,10 +148,10 @@ const { data: versions } = await useFetch(
 							},
 						]
 					: [],
-			})),
-		default: () => [],
-	},
-);
+			};
+		}),
+	default: () => [],
+});
 
 useSeoMeta({
 	titleTemplate: "%s",

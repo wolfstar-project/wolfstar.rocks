@@ -3,6 +3,8 @@ import {
 	AppHeader,
 	AppHeaderAuth,
 	AppLogoMark,
+	ChangelogContributorMention,
+	ChangelogContributors,
 	CommandsSection,
 	CommandsShowcase,
 	CtaSection,
@@ -408,6 +410,43 @@ describe("component accessibility audits", () => {
 	describe("IconsWolfstar", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended(IconsWolfstar);
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("ChangelogContributorMention", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(ChangelogContributorMention, {
+				props: {
+					name: "RedStar",
+					username: "RedStar071",
+					commits: 1847,
+					hasContributed: true,
+					avatarSrc: "https://github.com/RedStar071.png",
+				},
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("ChangelogContributors", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended(ChangelogContributors, {
+				props: {
+					idPrefix: "v1.0.0",
+					contributors: [
+						{
+							name: "RedStar",
+							username: "RedStar071",
+							commits: 1847,
+							hasContributed: true,
+							avatarSrc: "https://github.com/RedStar071.png",
+						},
+					],
+				},
+			});
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
 		});

@@ -43,9 +43,10 @@ export default defineNuxtModule({
 					const { env } = await getEnv(!isCI);
 					if (env === "dev" || env === "release" || env === "canary") {
 						throw error;
-					} else {
-						console.error(error);
 					}
+					// Preview builds: keep shipping even if Lunaria git status fails.
+					// oxlint-disable-next-line no-console -- build-time diagnostic only
+					console.error(error);
 				}
 			});
 		}

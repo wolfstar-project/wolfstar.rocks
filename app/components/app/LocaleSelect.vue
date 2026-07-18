@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+
 const { locale, locales, setLocale, t } = useI18n();
 const { setPreferredLocale } = usePreferredLocale();
 
@@ -25,7 +27,7 @@ const localeItems = computed(() =>
 const currentLocale = computed({
 	get: () => locale.value,
 	set: (code: string) => {
-		if (!code || !locales.value.some((entry) => entry.code === code)) return;
+		if (!isAppLocaleCode(code)) return;
 		setPreferredLocale(code);
 		void setLocale(code);
 	},

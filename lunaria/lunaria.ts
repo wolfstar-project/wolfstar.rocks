@@ -1,9 +1,9 @@
-import process from "node:process";
+import type { I18nStatus } from "../shared/types/i18n-status.ts";
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import process from "node:process";
 import { currentLocales } from "../config/i18n.ts";
-import type { I18nStatus } from "../shared/types/i18n-status.ts";
 import config from "../lunaria.config.ts";
 
 // Skip during git merges — history may be inconsistent.
@@ -28,20 +28,22 @@ function countKeys(obj: NestedRecord): number {
 	return count;
 }
 
-function collectMissingKeys(
-	source: NestedRecord,
-	target: NestedRecord,
-	prefix = "",
-): string[] {
+function collectMissingKeys(source: NestedRecord, target: NestedRecord, prefix = ""): string[] {
 	const missing: string[] = [];
 	for (const key of Object.keys(source)) {
 		const path = prefix ? `${prefix}.${key}` : key;
 		const sourceValue = source[key];
 		const targetValue = target[key];
 
-		if (typeof sourceValue === "object" && sourceValue !== null && !Array.isArray(sourceValue)) {
+		if (
+			typeof sourceValue === "object" &&
+			sourceValue !== null &&
+			!Array.isArray(sourceValue)
+		) {
 			const nextTarget =
-				typeof targetValue === "object" && targetValue !== null && !Array.isArray(targetValue)
+				typeof targetValue === "object" &&
+				targetValue !== null &&
+				!Array.isArray(targetValue)
 					? (targetValue as NestedRecord)
 					: {};
 			missing.push(...collectMissingKeys(sourceValue as NestedRecord, nextTarget, path));
@@ -60,7 +62,9 @@ function buildJsonStatus(): I18nStatus {
 	const { defaultLocale, repository } = config;
 	const repoName = repository.name;
 	const branch =
-		"branch" in repository && typeof repository.branch === "string" ? repository.branch : "main";
+		"branch" in repository && typeof repository.branch === "string"
+			? repository.branch
+			: "main";
 	const githubBase = `https://github.com/${repoName}`;
 
 	const appLocales = currentLocales.filter((l) => l.code !== defaultLocale.lang && l.name);
@@ -89,7 +93,8 @@ function buildJsonStatus(): I18nStatus {
 				totalKeys,
 				completedKeys,
 				missingKeys,
-				percentComplete: totalKeys > 0 ? Math.round((completedKeys / totalKeys) * 100) : 100,
+				percentComplete:
+					totalKeys > 0 ? Math.round((completedKeys / totalKeys) * 100) : 100,
 				githubEditUrl: `${githubBase}/blob/${branch}/${localeFilePath}`,
 				githubHistoryUrl: `${githubBase}/commits/${branch}/${localeFilePath}`,
 			};
@@ -112,10 +117,10 @@ function fallbackDashboardHtml(status: I18nStatus): string {
         </summary>
         <p><a href="${locale.githubEditUrl}">Edit on GitHub</a></p>
         ${
-					locale.missingKeys.length
-						? `<ul>${locale.missingKeys.map((key) => `<li>${key}</li>`).join("")}</ul>`
-						: "<p>This translation is complete.</p>"
-				}
+			locale.missingKeys.length
+				? `<ul>${locale.missingKeys.map((key) => `<li>${key}</li>`).join("")}</ul>`
+				: "<p>This translation is complete.</p>"
+		}
       </details>`,
 		)
 		.join("\n");

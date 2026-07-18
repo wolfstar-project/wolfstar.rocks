@@ -21,7 +21,11 @@
 			</p>
 		</header>
 
-		<section v-if="status" class="space-y-4" :aria-label="t('translation_status.progress_by_locale')">
+		<section
+			v-if="status"
+			class="space-y-4"
+			:aria-label="t('translation_status.progress_by_locale')"
+		>
 			<p class="text-sm text-muted">
 				{{ t("translation_status.source_locale") }}:
 				<strong class="text-base-content">

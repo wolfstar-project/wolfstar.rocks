@@ -39,7 +39,9 @@ export function useI18nStatus() {
 
 	const isSourceLocale = computed(() => {
 		const sourceLang = status.value?.sourceLocale.lang ?? "en";
-		return currentLocale.value === sourceLang || currentLocale.value.startsWith(`${sourceLang}-`);
+		return (
+			currentLocale.value === sourceLang || currentLocale.value.startsWith(`${sourceLang}-`)
+		);
 	});
 
 	const githubEditUrl = computed(() => {

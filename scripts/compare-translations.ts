@@ -1,8 +1,8 @@
 /* oxlint-disable no-console */
 import type { LocaleObject } from "@nuxtjs/i18n";
-import * as process from "node:process";
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { basename, join, resolve } from "node:path";
+import * as process from "node:process";
 import { deepCopy } from "@intlify/shared";
 import { countryLocaleVariants, currentLocales } from "../config/i18n.ts";
 import { COLORS } from "./utils/colors.ts";
@@ -337,7 +337,9 @@ const runAllLocales = async (referenceContent: NestedObject, fix = false): Promi
 
 	const referenceKeysCount = results.length > 0 ? results[0]!.referenceKeys.length : 0;
 
-	console.log(`${COLORS.cyan}=== Translation Audit${fix ? " (with --fix)" : ""} ===${COLORS.reset}`);
+	console.log(
+		`${COLORS.cyan}=== Translation Audit${fix ? " (with --fix)" : ""} ===${COLORS.reset}`,
+	);
 	console.log(`Reference: ${REFERENCE_FILE_NAME} (${referenceKeysCount} keys)`);
 	console.log(`Checking ${localeFiles.length} locale(s)...`);
 
@@ -347,7 +349,13 @@ const runAllLocales = async (referenceContent: NestedObject, fix = false): Promi
 
 			if (res.missing.length > 0) {
 				if (fix) {
-					logSection("ADDED MISSING KEYS (with EN placeholder)", res.missing, COLORS.green, "", "");
+					logSection(
+						"ADDED MISSING KEYS (with EN placeholder)",
+						res.missing,
+						COLORS.green,
+						"",
+						"",
+					);
 				} else {
 					logSection(
 						"MISSING KEYS (in en.json but not in this locale)",
@@ -378,7 +386,9 @@ const runAllLocales = async (referenceContent: NestedObject, fix = false): Promi
 		);
 	}
 	if (totalMissing > 0) {
-		console.log(`${COLORS.yellow}  Missing keys across all locales: ${totalMissing}${COLORS.reset}`);
+		console.log(
+			`${COLORS.yellow}  Missing keys across all locales: ${totalMissing}${COLORS.reset}`,
+		);
 	}
 	if (totalRemoved > 0) {
 		console.log(`${COLORS.magenta}  Removed extra keys: ${totalRemoved}${COLORS.reset}`);

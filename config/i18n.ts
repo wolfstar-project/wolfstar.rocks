@@ -17,10 +17,7 @@ interface LocaleObjectData extends LocaleObject {
  * e.g. `en` → `en-US` / `en-GB`, mirroring npmx.dev's merge model.
  * Keep empty until a base language gains regional overrides.
  */
-export const countryLocaleVariants: Record<
-	string,
-	(LocaleObjectData & { country?: boolean })[]
-> = {
+export const countryLocaleVariants: Record<string, (LocaleObjectData & { country?: boolean })[]> = {
 	// Example for future expansion:
 	// en: [
 	// 	{ country: true, code: "en-US", name: "English (US)" },
@@ -63,7 +60,7 @@ function buildLocales() {
 		return acc;
 	}, [] as LocaleObjectData[]);
 
-	return useLocales.sort((a, b) => a.code.localeCompare(b.code));
+	return useLocales.toSorted((a, b) => a.code.localeCompare(b.code));
 }
 
 export const currentLocales = buildLocales();

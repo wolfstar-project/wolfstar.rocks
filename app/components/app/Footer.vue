@@ -20,7 +20,11 @@
 				>
 					<div>
 						<div class="mb-3 flex items-center gap-3">
-							<div class="w-10 rounded-full" role="img" :aria-label="t('footer.logo')">
+							<div
+								class="w-10 rounded-full"
+								role="img"
+								:aria-label="t('footer.logo')"
+							>
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
 							<span class="font-bold">WolfStar</span>

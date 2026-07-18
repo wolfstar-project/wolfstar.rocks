@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
+import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 const { collapsed } = defineProps<{
 	collapsed?: boolean;
@@ -65,11 +66,12 @@ const languageChildren = computed<DropdownMenuItem[]>(() =>
 		label: entry.name ?? entry.code,
 		onSelect(e: Event) {
 			e.preventDefault();
+			if (!isAppLocaleCode(entry.code)) return;
 			setPreferredLocale(entry.code);
 			void setLocale(entry.code);
 		},
 		onUpdateChecked(checked: boolean) {
-			if (checked) {
+			if (checked && isAppLocaleCode(entry.code)) {
 				setPreferredLocale(entry.code);
 				void setLocale(entry.code);
 			}

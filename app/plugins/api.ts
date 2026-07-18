@@ -1,5 +1,5 @@
 import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
-import { getBotApiOauthSecret, getOptionalBotApiAuthHeaders } from "#shared/utils/botApi";
+import { getOptionalBotApiAuthHeaders } from "#shared/utils/botApi";
 
 /**
  * Provides `$api` for the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`),
@@ -8,7 +8,8 @@ import { getBotApiOauthSecret, getOptionalBotApiAuthHeaders } from "#shared/util
  *
  * On the server, when a Discord session exists, a sapphire `SAPPHIRE_AUTH`
  * cookie is attached so SSR can authorize guild routes without relying on a
- * browser cookie set on the API domain.
+ * browser cookie set on the API domain. The cookie is encrypted with
+ * `NUXT_OAUTH_DISCORD_CLIENT_SECRET` (same secret sapphire-plugin-api uses).
  */
 export default defineNuxtPlugin(() => {
 	const cachedFetch = useCachedFetch();
@@ -39,7 +40,7 @@ export default defineNuxtPlugin(() => {
 							headers,
 							getOptionalBotApiAuthHeaders({
 								accessToken: tokens?.access_token,
-								secret: getBotApiOauthSecret(clientSecret),
+								secret: clientSecret ?? "",
 								userId: user?.id,
 							}),
 						);

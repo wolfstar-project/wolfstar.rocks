@@ -13,16 +13,9 @@ export function getBotApiAuthCookieName(): string {
 }
 
 /**
- * Resolve the aes-256-cbc secret shared with sapphire-plugin-api.
- * Prefers `NUXT_BOT_API_OAUTH_SECRET`, then an optional Discord client-secret fallback.
- */
-export function getBotApiOauthSecret(discordClientSecretFallback = ""): string {
-	return process.env.NUXT_BOT_API_OAUTH_SECRET || discordClientSecretFallback || "";
-}
-
-/**
  * Encrypt a sapphire-plugin-api auth payload (aes-256-cbc), matching
  * `@sapphire/plugin-api` Auth.encrypt so api.wolfstar.rocks accepts the cookie.
+ * The secret is the Discord OAuth client secret (`NUXT_OAUTH_DISCORD_CLIENT_SECRET`).
  */
 export function encryptBotApiAuth(data: BotApiAuthPayload, secret: string): string {
 	const iv = randomBytes(16);

@@ -100,12 +100,13 @@
 								/>
 							</template>
 
+							<!-- WolfStar group only when that app is selected — avoids duplicating WolfStar under Frequently Used. -->
 							<DiscordSlashCommandSuggestionGroup
-								v-if="selectedApp === null || selectedApp === 'wolfstar'"
+								v-if="selectedApp === 'wolfstar'"
 								app="wolfstar"
 							>
 								<DiscordSlashCommandSuggestion
-									v-for="command of listedWolfstarCommands"
+									v-for="command of showcaseCommands"
 									:key="`wolfstar-${command.name}`"
 									:name="command.name"
 									:description="command.description"
@@ -114,13 +115,14 @@
 								/>
 							</DiscordSlashCommandSuggestionGroup>
 
+							<!-- On Frequently Used, show Staryl (first command) where the WolfStar duplicate used to be. -->
 							<DiscordSlashCommandSuggestionGroup
 								v-for="app of listedMockApps"
 								:key="app"
 								:app
 							>
 								<DiscordSlashCommandSuggestion
-									v-for="command of mockAppCommands[app]"
+									v-for="command of listedCommandsForMockApp(app)"
 									:key="`${app}-${command.name}`"
 									:app
 									:name="command.name"
@@ -159,15 +161,13 @@ const activeSearchPrefix = computed(() => {
 	return `/${name.length > 3 ? name.slice(0, 3) : name}`;
 });
 
+/** Cap Frequently Used at 5 rows so the picker viewport shows a full page of commands. */
+const FREQUENTLY_USED_VISIBLE_COUNT = 5;
+
 const frequentlyUsedCommands = computed(() =>
-	showcaseCommands.filter((command) => command.frequentlyUsed),
-);
-
-const otherCommands = computed(() => showcaseCommands.filter((command) => !command.frequentlyUsed));
-
-/** Picking WolfStar in the app rail lists every command, not just the ones outside "Frequently Used". */
-const listedWolfstarCommands = computed(() =>
-	selectedApp.value === "wolfstar" ? showcaseCommands : otherCommands.value,
+	showcaseCommands
+		.filter((command) => command.frequentlyUsed)
+		.slice(0, FREQUENTLY_USED_VISIBLE_COUNT),
 );
 
 interface MockAppCommand {
@@ -201,6 +201,15 @@ const listedMockApps = computed<Exclude<SlashCommandAppName, "wolfstar">[]>(() =
 	if (selectedApp.value === "wolfstar") return [];
 	return [selectedApp.value];
 });
+
+/** On the Frequently Used rail, only surface Staryl's first command (replaces the old WolfStar duplicate block). */
+function listedCommandsForMockApp(app: Exclude<SlashCommandAppName, "wolfstar">) {
+	const commands = mockAppCommands[app];
+	if (selectedApp.value === null && app === "staryl") {
+		return commands.slice(0, 1);
+	}
+	return commands;
+}
 
 function selectCommand(name: string) {
 	const index = showcaseCommands.findIndex((command) => command.name === name);

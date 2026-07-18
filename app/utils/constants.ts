@@ -701,6 +701,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		name: "mute",
 		description: "Mute a member in the server",
 		invoker: "stella",
+		frequentlyUsed: true,
 		options: [
 			{ name: "user", value: "baddie" },
 			{ name: "duration", value: "1h" },
@@ -750,6 +751,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		subcommand: "menu",
 		description: "Browse and edit server configuration",
 		invoker: "redstar",
+		frequentlyUsed: true,
 		options: [],
 		responseType: "components",
 		accentColor: Colors.Red,

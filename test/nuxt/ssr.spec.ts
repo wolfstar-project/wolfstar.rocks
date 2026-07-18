@@ -634,9 +634,13 @@ describe("component SSR rendering", () => {
 			expect(wrapper.findAll(".discord-slash-command-suggestions-sidebar-item").length).toBe(
 				8,
 			);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(8);
-			expect(wrapper.findAll(".discord-slash-command-suggestion-disabled").length).toBe(2);
-			expect(wrapper.findAll(".discord-slash-command-suggestion-group").length).toBe(2);
+			// 5 Frequently Used WolfStar rows + Staryl's first command (replaces the old WolfStar duplicate group).
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
+			expect(wrapper.findAll(".discord-slash-command-suggestion-disabled").length).toBe(1);
+			expect(wrapper.findAll(".discord-slash-command-suggestion-group").length).toBe(1);
+			expect(wrapper.find(".discord-slash-command-suggestion-group").text()).toContain(
+				"Staryl",
+			);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar-scroll").exists()).toBe(
 				true,
 			);
@@ -648,7 +652,7 @@ describe("component SSR rendering", () => {
 				wrapper
 					.find(".discord-scrollbar-viewport")
 					.findAll(".discord-slash-command-suggestion").length,
-			).toBe(8);
+			).toBe(6);
 			expect(
 				wrapper
 					.find(".discord-scrollbar-viewport")
@@ -661,7 +665,9 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/ban");
 			expect(wrapper.text()).toContain("/kick");
 			expect(wrapper.text()).toContain("/mute");
-			expect(wrapper.text()).toContain("/case");
+			expect(wrapper.text()).toContain("/conf");
+			expect(wrapper.text()).toContain("/twitch-subscriptions show");
+			expect(wrapper.text()).not.toContain("/twitch-subscriptions add");
 			expect(wrapper.findAll("input[name='matched-command']").length).toBe(0);
 			expect(wrapper.findAll(".showcase-channel-header").length).toBe(1);
 		});
@@ -686,7 +692,7 @@ describe("component SSR rendering", () => {
 			);
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(8);
+			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
 		});
 
 		it("keeps third-party app rows non-selectable", async () => {

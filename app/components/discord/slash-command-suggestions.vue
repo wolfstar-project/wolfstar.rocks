@@ -176,7 +176,8 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
 	--discord-slash-command-suggestions-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
 	--discord-slash-command-suggestions-rail-width: 48px;
-	--discord-slash-command-suggestions-height: 18rem;
+	/* Frequently Used header (~2rem) + 5 suggestion rows (3rem each). */
+	--discord-slash-command-suggestions-height: calc(2rem + 5 * 3rem);
 
 	@apply font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);

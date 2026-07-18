@@ -118,7 +118,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-app {
-	@apply shrink-0 self-start pt-0.5 font-whitney text-[11px] leading-tight tracking-wide uppercase sm:self-auto sm:pt-0 sm:text-[13px] sm:normal-case sm:tracking-normal;
+	@apply shrink-0 self-start pt-0.5 font-whitney text-[11px] leading-tight tracking-wide uppercase sm:self-auto sm:pt-0 sm:text-[13px] sm:tracking-normal sm:normal-case;
 	color: var(--discord-slash-command-suggestion-app);
 }
 </style>

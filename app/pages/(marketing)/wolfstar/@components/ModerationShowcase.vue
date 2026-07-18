@@ -612,9 +612,7 @@
 													>
 														<span
 															><strong>❯ Type:</strong
-															>{{
-																moderationActionRender.name
-															}}</span
+															>{{ moderationActionRender.name }}</span
 														><br />
 														<span
 															><strong>❯ User:</strong

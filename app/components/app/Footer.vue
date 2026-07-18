@@ -4,7 +4,7 @@
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
 		}"
-		aria-label="Site footer"
+		:aria-label="t('footer.site_footer')"
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
@@ -20,21 +20,20 @@
 				>
 					<div>
 						<div class="mb-3 flex items-center gap-3">
-							<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
+							<div class="w-10 rounded-full" role="img" :aria-label="t('footer.logo')">
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
 							<span class="font-bold">WolfStar</span>
 						</div>
 						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
-							A fully customizable, multilingual Discord moderation app. Free forever,
-							open source.
+							{{ t("footer.tagline") }}
 						</p>
 						<div class="mt-6 flex flex-col items-start gap-3">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<UButton
-								label="Powered by Netlify"
+								:label="t('footer.powered_by_netlify')"
 								to="https://www.netlify.com"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -42,14 +41,14 @@
 								color="neutral"
 								variant="soft"
 								:ui="{ leadingIcon: 'bg-success' }"
-								aria-label="Powered by Netlify - opens in new tab"
+								:aria-label="t('footer.powered_by_netlify_aria')"
 							/>
 						</div>
 					</div>
 					<nav
 						v-for="column of columns"
 						:key="column.label"
-						:aria-label="`Footer ${column.label} links`"
+						:aria-label="t('footer.column_links', { label: column.label })"
 					>
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
@@ -71,11 +70,12 @@
 
 		<template #left>
 			<p class="text-sm text-base-content/80">
-				WolfStar Project — Copyright © {{ currentYear }}. All rights reserved.
+				{{ t("footer.copyright", { year: currentYear }) }}
 			</p>
 		</template>
 		<template #right>
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
+			<AppLocaleSelect />
 			<ColorModeButton />
 
 			<UButton
@@ -83,7 +83,7 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				icon="lucide:github"
-				aria-label="Visit WolfStar on GitHub - opens in new tab"
+				:aria-label="t('footer.github_aria')"
 				color="neutral"
 				variant="ghost"
 			/>
@@ -92,6 +92,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 

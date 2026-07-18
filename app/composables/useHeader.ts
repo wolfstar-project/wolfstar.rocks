@@ -1,4 +1,6 @@
 export function useHeader() {
+	const { t } = useI18n();
+
 	// Safely inject appName with fallback to prevent SSR issues
 	const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 
@@ -15,22 +17,22 @@ export function useHeader() {
 		{
 			children: [
 				{
-					description: "Tools to help you moderate your server",
-					label: "Moderation Tools",
+					description: t("nav.moderation_tools_description"),
+					label: t("nav.moderation_tools"),
 					to: "#moderation-tools",
 				},
 				{
-					description: "Track and log events in your server",
-					label: "Advanced Logging",
+					description: t("nav.advanced_logging_description"),
+					label: t("nav.advanced_logging"),
 					to: "#advanced-logging",
 				},
 				{
-					description: "Searchable moderation history for every action",
-					label: "Moderation Logs",
+					description: t("nav.moderation_logs_description"),
+					label: t("nav.moderation_logs"),
 					to: "#moderation-logs",
 				},
 			],
-			label: "Features",
+			label: t("nav.features"),
 		},
 		{
 			children: [
@@ -45,14 +47,14 @@ export function useHeader() {
 					to: "/staryl",
 				},
 			],
-			label: "Applications",
+			label: t("nav.applications"),
 		},
 		{
-			label: "Commands",
+			label: t("nav.commands"),
 			to: "/commands",
 		},
 		{
-			label: "Blog",
+			label: t("nav.blog"),
 			to: "/blog",
 		},
 	]);
@@ -61,16 +63,16 @@ export function useHeader() {
 		{
 			children: [
 				{
-					label: "Moderation Tools",
+					label: t("nav.moderation_tools"),
 				},
 				{
-					label: "Advanced Logging",
+					label: t("nav.advanced_logging"),
 				},
 				{
-					label: "Moderation Logs",
+					label: t("nav.moderation_logs"),
 				},
 			],
-			label: "Features",
+			label: t("nav.features"),
 		},
 		{
 			children: [
@@ -85,19 +87,19 @@ export function useHeader() {
 					to: "/staryl",
 				},
 			],
-			label: "Applications",
+			label: t("nav.applications"),
 		},
 		{
-			label: "Commands",
+			label: t("nav.commands"),
 			to: "/commands",
 		},
 		{
-			label: "Blog",
+			label: t("nav.blog"),
 			to: "/blog",
 		},
 		{
 			icon: "lucide:github",
-			label: "GitHub",
+			label: t("nav.github"),
 			rel: "noopener noreferrer",
 			target: "_blank",
 			to: "https://github.com/wolfstar-project/wolfstar.rocks",

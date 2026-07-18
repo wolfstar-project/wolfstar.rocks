@@ -36,6 +36,15 @@ export default defineConfig({
 			"zizmor:fix": {
 				command: "zizmor --pedantic --fix .",
 			},
+			"i18n:check": {
+				command: "node --experimental-transform-types scripts/compare-translations.ts",
+			},
+			"i18n:schema": {
+				command: "node --experimental-transform-types scripts/generate-i18n-schema.ts",
+			},
+			"build:lunaria": {
+				command: "node --experimental-transform-types ./lunaria/lunaria.ts",
+			},
 		},
 	},
 	lint: {

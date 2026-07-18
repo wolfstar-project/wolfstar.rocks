@@ -10,13 +10,13 @@ import { getOptionalBotApiAuthHeaders } from "#shared/utils/botApi";
  * cookie is attached so SSR can authorize guild routes without relying on a
  * browser cookie set on the API domain. The cookie is encrypted with
  * `NUXT_OAUTH_DISCORD_CLIENT_SECRET` (same secret sapphire-plugin-api uses).
+ *
+ * `discord.clientSecret` is private runtime config — only read on the server.
  */
 export default defineNuxtPlugin(() => {
 	const cachedFetch = useCachedFetch();
-	const {
-		discord: { clientSecret },
-		public: { apiBaseUrl },
-	} = useRuntimeConfig();
+	const runtimeConfig = useRuntimeConfig();
+	const apiBaseUrl = runtimeConfig.public.apiBaseUrl;
 
 	return {
 		provide: {
@@ -40,7 +40,7 @@ export default defineNuxtPlugin(() => {
 							headers,
 							getOptionalBotApiAuthHeaders({
 								accessToken: tokens?.access_token,
-								secret: clientSecret ?? "",
+								secret: runtimeConfig.discord?.clientSecret ?? "",
 								userId: user?.id,
 							}),
 						);

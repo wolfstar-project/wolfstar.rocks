@@ -1,5 +1,5 @@
-import type { BotApiCommand } from "#shared/types/bot-api";
-import { normalizeBotCommands } from "#shared/utils/bot-api-commands";
+import type { BotApiCommand } from "#shared/types/botApi";
+import { normalizeBotApiCommands } from "#shared/utils/botApi";
 
 export function useCommands(options?: ApiComposableOptions) {
 	const result = createApiComposable<BotApiCommand[]>(
@@ -11,6 +11,6 @@ export function useCommands(options?: ApiComposableOptions) {
 
 	return {
 		...result,
-		data: computed(() => normalizeBotCommands(result.data.value)),
+		data: computed(() => normalizeBotApiCommands(result.data.value)),
 	};
 }

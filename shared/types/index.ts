@@ -1,5 +1,5 @@
 export * from "./audit-log";
-export * from "./bot-api";
+export * from "./botApi";
 export * from "./configurableData";
 export * from "./discord";
 export * from "./env";

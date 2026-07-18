@@ -3,7 +3,7 @@ import type { FlattenedCommand, Preconditions } from "#shared/types/discord";
 /**
  * Payload encrypted into the sapphire-plugin-api `SAPPHIRE_AUTH` cookie.
  */
-export interface SapphireAuthPayload {
+export interface BotApiAuthPayload {
 	expires: number;
 	id: string;
 	refresh: string;
@@ -24,4 +24,13 @@ export interface BotApiCommand {
 	permissionLevel: number;
 	preconditions: Preconditions;
 	subCategory?: string | null;
+}
+
+export interface BotApiAuthSessionInput {
+	accessToken?: string | null;
+	cookieName?: string;
+	/** Token lifetime for the sapphire cookie. Defaults to 1 hour. */
+	expiresInMs?: number;
+	secret: string;
+	userId?: string | null;
 }

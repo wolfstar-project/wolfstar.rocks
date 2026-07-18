@@ -1,5 +1,5 @@
 import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
-import { getBotOauthSecret, getOptionalBotAuthHeaders } from "#shared/utils/bot-api";
+import { getBotApiOauthSecret, getOptionalBotApiAuthHeaders } from "#shared/utils/botApi";
 
 /**
  * Provides `$api` for the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`),
@@ -37,9 +37,9 @@ export default defineNuxtPlugin(() => {
 						const tokens = user ? await authorization.resolveServerTokens() : null;
 						Object.assign(
 							headers,
-							getOptionalBotAuthHeaders({
+							getOptionalBotApiAuthHeaders({
 								accessToken: tokens?.access_token,
-								secret: getBotOauthSecret(clientSecret),
+								secret: getBotApiOauthSecret(clientSecret),
 								userId: user?.id,
 							}),
 						);

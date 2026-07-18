@@ -1,5 +1,4 @@
 import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
-import { getOptionalBotApiAuthHeaders } from "#shared/utils/botApi";
 
 /**
  * Provides `$api` for the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`),
@@ -11,7 +10,9 @@ import { getOptionalBotApiAuthHeaders } from "#shared/utils/botApi";
  * browser cookie set on the API domain. The cookie is encrypted with
  * `NUXT_OAUTH_DISCORD_CLIENT_SECRET` (same secret sapphire-plugin-api uses).
  *
- * `discord.clientSecret` is private runtime config — only read on the server.
+ * Crypto helpers live in `server/utils/botApi` and are loaded only inside the
+ * `import.meta.server` branch so `node:crypto` never enters the client bundle.
+ * Private `discord.clientSecret` is also read only on the server.
  */
 export default defineNuxtPlugin(() => {
 	const cachedFetch = useCachedFetch();
@@ -34,7 +35,10 @@ export default defineNuxtPlugin(() => {
 					const event = useRequestEvent();
 					const authorization = event?.context.$authorization;
 					if (authorization) {
-						const user = await authorization.resolveServerUser();
+						const [{ getOptionalBotApiAuthHeaders }, user] = await Promise.all([
+							import("~~/server/utils/botApi"),
+							authorization.resolveServerUser(),
+						]);
 						const tokens = user ? await authorization.resolveServerTokens() : null;
 						Object.assign(
 							headers,

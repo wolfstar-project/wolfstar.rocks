@@ -1,10 +1,10 @@
 import type { BotApiAuthPayload } from "#shared/types/botApi";
+import { describe, expect, it } from "vitest";
 import {
 	decryptBotApiAuth,
 	encryptBotApiAuth,
 	getOptionalBotApiAuthHeaders,
-} from "#shared/utils/botApi";
-import { describe, expect, it } from "vitest";
+} from "../../../../server/utils/botApi";
 
 // aes-256-cbc requires a 32-byte key — match Discord client-secret length.
 const SECRET = "0123456789abcdef0123456789abcdef";

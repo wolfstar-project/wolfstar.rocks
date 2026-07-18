@@ -1,9 +1,4 @@
-import type {
-	BotApiAuthPayload,
-	BotApiAuthSessionInput,
-	BotApiCommand,
-} from "#shared/types/botApi";
-import type { WolfCommand } from "#shared/types/discord";
+import type { BotApiAuthPayload, BotApiAuthSessionInput } from "#shared/types/botApi";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 
 export const DEFAULT_BOT_API_AUTH_COOKIE = "SAPPHIRE_AUTH";
@@ -67,30 +62,4 @@ export function getOptionalBotApiAuthHeaders(
 	return {
 		Cookie: `${input.cookieName ?? getBotApiAuthCookieName()}=${cookieValue}`,
 	};
-}
-
-/**
- * Normalize a bot API command into the dashboard's WolfCommand shape
- * (`aliases` + non-null `subCategory`).
- */
-export function normalizeBotApiCommand(
-	command: BotApiCommand & { aliases?: string[] },
-): WolfCommand {
-	return {
-		aliases: command.alias ?? command.aliases ?? [],
-		category: command.category,
-		description: command.description,
-		extendedHelp: command.extendedHelp,
-		guarded: command.guarded,
-		name: command.name,
-		permissionLevel: command.permissionLevel,
-		preconditions: command.preconditions,
-		subCategory: command.subCategory ?? "",
-	};
-}
-
-export function normalizeBotApiCommands(
-	commands: Array<BotApiCommand & { aliases?: string[] }>,
-): WolfCommand[] {
-	return commands.map(normalizeBotApiCommand);
 }

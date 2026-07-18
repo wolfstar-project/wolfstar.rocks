@@ -1,13 +1,13 @@
 // oxlint-disable no-console
 import type { ReadonlyGuildData } from "#server/database";
 import type {
+	FlattenedCommand,
 	FlattenedGuild,
 	LoginData,
 	OauthFlattenedGuild,
 	PartialOauthFlattenedGuild,
 	TransformedLoginData,
 } from "#shared/types";
-import type { BotApiCommand } from "#shared/types/botApi";
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
 	APIGuild,
@@ -29,7 +29,6 @@ import {
 	fetchGuildMemberWithRetry,
 } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
-import { normalizeBotApiCommands } from "#shared/utils/botApi";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
 import { hasAtLeastOneKeyInMap } from "@sapphire/utilities/hasAtLeastOneKeyInMap";
@@ -489,15 +488,14 @@ export const fetchCommands = defineCachedFunction(
 		Sentry.metrics.count("bot_api.call", 1, {
 			attributes: { endpoint: "commands.fetch" },
 		});
-		const commands = await instrumentBotApiCall("commands.fetch", () =>
-			$fetch<BotApiCommand[]>(`${apiBaseUrl}/commands`, {
+		return await instrumentBotApiCall("commands.fetch", () =>
+			$fetch<FlattenedCommand[]>(`${apiBaseUrl}/commands`, {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			}),
 		);
-		return normalizeBotApiCommands(commands);
 	},
 	{
 		maxAge: hours(1),

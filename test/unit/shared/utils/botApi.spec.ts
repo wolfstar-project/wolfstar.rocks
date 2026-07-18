@@ -3,8 +3,6 @@ import {
 	decryptBotApiAuth,
 	encryptBotApiAuth,
 	getOptionalBotApiAuthHeaders,
-	normalizeBotApiCommand,
-	normalizeBotApiCommands,
 } from "#shared/utils/botApi";
 import { describe, expect, it } from "vitest";
 
@@ -90,74 +88,5 @@ describe("getOptionalBotApiAuthHeaders", () => {
 		const decrypted = decryptBotApiAuth(token, SECRET);
 		expect(decrypted?.id).toBe("123456789012345678");
 		expect(decrypted?.token).toBe("access-token");
-	});
-});
-
-const sampleBotApiCommand = {
-	alias: ["vk", "vkick"],
-	category: "Moderation",
-	description: "Kick a user from voice",
-	extendedHelp: {
-		usages: ["User"],
-		examples: ["@Pete"],
-	},
-	guarded: false,
-	name: "voicekick",
-	permissionLevel: 5,
-	preconditions: {
-		entries: [],
-		mode: 0,
-		runCondition: 0,
-	},
-	subCategory: null,
-};
-
-describe("normalizeBotApiCommand", () => {
-	it("maps bot API alias to dashboard aliases and coerces null subCategory", () => {
-		expect(normalizeBotApiCommand(sampleBotApiCommand)).toStrictEqual({
-			aliases: ["vk", "vkick"],
-			category: "Moderation",
-			description: "Kick a user from voice",
-			extendedHelp: {
-				usages: ["User"],
-				examples: ["@Pete"],
-			},
-			guarded: false,
-			name: "voicekick",
-			permissionLevel: 5,
-			preconditions: {
-				entries: [],
-				mode: 0,
-				runCondition: 0,
-			},
-			subCategory: "",
-		});
-	});
-
-	it("defaults missing alias to an empty array", () => {
-		const { alias: _alias, ...withoutAlias } = sampleBotApiCommand;
-		expect(normalizeBotApiCommand(withoutAlias).aliases).toStrictEqual([]);
-	});
-
-	it("falls back to aliases when alias is absent", () => {
-		const { alias: _alias, ...withoutAlias } = sampleBotApiCommand;
-		expect(
-			normalizeBotApiCommand({ ...withoutAlias, aliases: ["legacy"] }).aliases,
-		).toStrictEqual(["legacy"]);
-	});
-
-	it("preserves a non-null subCategory", () => {
-		expect(
-			normalizeBotApiCommand({ ...sampleBotApiCommand, subCategory: "Voice" }).subCategory,
-		).toBe("Voice");
-	});
-});
-
-describe("normalizeBotApiCommands", () => {
-	it("normalizes each command in the list", () => {
-		const result = normalizeBotApiCommands([sampleBotApiCommand]);
-		expect(result).toHaveLength(1);
-		expect(result[0]?.aliases).toStrictEqual(["vk", "vkick"]);
-		expect(result[0]?.subCategory).toBe("");
 	});
 });

@@ -1,16 +1,5 @@
-import type { BotApiCommand } from "#shared/types/botApi";
-import { normalizeBotApiCommands } from "#shared/utils/botApi";
+import type { FlattenedCommand } from "#shared/types/discord";
 
 export function useCommands(options?: ApiComposableOptions) {
-	const result = createApiComposable<BotApiCommand[]>(
-		"wolfstar:commands",
-		"/commands",
-		[],
-		options,
-	);
-
-	return {
-		...result,
-		data: computed(() => normalizeBotApiCommands(result.data.value)),
-	};
+	return createApiComposable<FlattenedCommand[]>("wolfstar:commands", "/commands", [], options);
 }

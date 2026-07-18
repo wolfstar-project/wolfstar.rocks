@@ -220,15 +220,6 @@ export default defineNuxtConfig({
 				"Vary": "Cookie, Authorization",
 			},
 		},
-		// Bot API BFF used by `$api` on the client — never CDN-cache (may carry auth).
-		"/api/bot/**": {
-			isr: false,
-			cache: false,
-			headers: {
-				"Cache-Control": "private, no-store",
-			},
-		},
-
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {

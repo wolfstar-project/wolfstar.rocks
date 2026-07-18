@@ -1,12 +1,13 @@
 import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
 
 /**
- * Provides `$api` for the internal WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`).
+ * Provides `$api` for the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`),
+ * matching the legacy dashboard `apiFetch` behavior: call the bot origin
+ * directly with `credentials: "include"`.
  *
- * - Server: calls the bot origin directly and attaches a sapphire `SAPPHIRE_AUTH`
- *   cookie when a Discord session is available.
- * - Client: cannot set cross-origin Cookie headers, so requests go through the
- *   same-origin BFF at `/api/bot/**` which injects auth server-side.
+ * On the server, when a Discord session exists, a sapphire `SAPPHIRE_AUTH`
+ * cookie is attached so SSR can authorize guild routes without relying on a
+ * browser cookie set on the API domain.
  */
 export default defineNuxtPlugin(() => {
 	const cachedFetch = useCachedFetch();
@@ -21,41 +22,26 @@ export default defineNuxtPlugin(() => {
 				options?: Parameters<CachedFetchFunction>[1],
 				ttl?: Parameters<CachedFetchFunction>[2],
 			) => {
+				const headers: Record<string, string> = {
+					"Content-Type": "application/json",
+					...(options?.headers as Record<string, string> | undefined),
+				};
+
 				if (import.meta.server) {
 					const event = useRequestEvent();
-					const authHeaders =
-						event !== undefined
-							? await (
-									await import("#server/utils/bot-api")
-								).getOptionalBotAuthHeaders(event)
-							: {};
-
-					return cachedFetch<T>(
-						url,
-						{
-							...options,
-							baseURL: apiBaseUrl,
-							credentials: "include",
-							headers: {
-								"Content-Type": "application/json",
-								...options?.headers,
-								...authHeaders,
-							},
-						},
-						ttl,
-					);
+					if (event !== undefined) {
+						const { getOptionalBotAuthHeaders } = await import("#server/utils/bot-api");
+						Object.assign(headers, await getOptionalBotAuthHeaders(event));
+					}
 				}
 
 				return cachedFetch<T>(
 					url,
 					{
 						...options,
-						baseURL: "/api/bot",
+						baseURL: apiBaseUrl,
 						credentials: "include",
-						headers: {
-							"Content-Type": "application/json",
-							...options?.headers,
-						},
+						headers,
 					},
 					ttl,
 				);

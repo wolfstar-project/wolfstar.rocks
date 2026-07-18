@@ -1,7 +1,6 @@
 import type { H3Event } from "h3";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
 import { createError } from "evlog";
-import { $fetch, FetchError } from "ofetch";
 
 const DEFAULT_AUTH_COOKIE = "SAPPHIRE_AUTH";
 
@@ -10,31 +9,6 @@ export interface SapphireAuthPayload {
 	id: string;
 	refresh: string;
 	token: string;
-}
-
-type BotHttpMethod = "GET" | "PATCH" | "POST" | "PUT" | "DELETE";
-
-interface FetchBotApiOptions {
-	body?: Record<string, unknown> | unknown[] | string | null;
-	method?: BotHttpMethod;
-	query?: Record<string, unknown>;
-	/** When false, skip sapphire auth cookie (public bot routes). Default true. */
-	auth?: boolean;
-}
-
-function getBotApiBaseUrl(): string {
-	const {
-		public: { apiBaseUrl },
-	} = useRuntimeConfig();
-	if (!apiBaseUrl) {
-		throw createError({
-			message: "Bot API base URL is not configured",
-			status: 500,
-			why: "NUXT_PUBLIC_API_BASE_URL is missing",
-			fix: "Set NUXT_PUBLIC_API_BASE_URL to the WolfStar bot API origin (e.g. https://api.wolfstar.rocks)",
-		});
-	}
-	return apiBaseUrl.replace(/\/$/, "");
 }
 
 function getBotAuthCookieName(): string {
@@ -131,78 +105,5 @@ export async function getOptionalBotAuthHeaders(event: H3Event): Promise<Record<
 		return { Cookie: `${getBotAuthCookieName()}=${cookieValue}` };
 	} catch {
 		return {};
-	}
-}
-
-/** Bot API paths that do not require a sapphire auth cookie. */
-export function isPublicBotApiPath(path: string): boolean {
-	const normalized = path.startsWith("/") ? path : `/${path}`;
-	return normalized === "/commands" || normalized === "/languages";
-}
-
-function toErrorCause(error: unknown): Error | undefined {
-	return error instanceof Error ? error : undefined;
-}
-
-function mapBotFetchError(error: unknown, path: string): never {
-	if (error instanceof FetchError) {
-		const status = error.statusCode ?? error.response?.status ?? 502;
-		const payload = error.data as { error?: string; message?: string } | string | undefined;
-		const message =
-			(typeof payload === "object" && payload !== null
-				? (payload.error ?? payload.message)
-				: typeof payload === "string"
-					? payload
-					: undefined) ||
-			error.message ||
-			"Bot API request failed";
-
-		throw createError({
-			message,
-			status,
-			why: `The internal bot API rejected ${path}`,
-			fix: "Retry the request; if it persists, check bot API availability and auth cookies",
-			cause: toErrorCause(error),
-		});
-	}
-
-	throw createError({
-		message: "Bot API request failed",
-		status: 502,
-		why: `Unexpected error calling ${path} on the internal bot API`,
-		cause: toErrorCause(error),
-	});
-}
-
-/**
- * Call the internal WolfStar bot API (`api.wolfstar.rocks` by default).
- * Authenticated routes receive a sapphire-compatible `SAPPHIRE_AUTH` cookie
- * built from the current better-auth Discord session.
- */
-export async function fetchBotApi<T = unknown>(
-	event: H3Event,
-	path: string,
-	options: FetchBotApiOptions = {},
-): Promise<T> {
-	const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-	const url = `${getBotApiBaseUrl()}${normalizedPath}`;
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
-	};
-
-	if (options.auth !== false) {
-		const cookieValue = await buildBotAuthCookie(event);
-		headers.Cookie = `${getBotAuthCookieName()}=${cookieValue}`;
-	}
-
-	try {
-		return await $fetch<T>(url, {
-			body: options.body,
-			headers,
-			method: options.method,
-			query: options.query,
-		});
-	} catch (error) {
-		mapBotFetchError(error, normalizedPath);
 	}
 }

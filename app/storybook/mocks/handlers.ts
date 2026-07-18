@@ -18,18 +18,16 @@ export const handlers = [
 
 	http.get("/api/guilds", () => HttpResponse.json(mockGuildList)),
 
-	// `$api` client BFF (`/api/bot/**` → bot API paths)
-	http.get("/api/bot/guilds/:guildId", () => HttpResponse.json(mockGuild)),
-	http.get("/api/bot/guilds/:guildId/audit-logs", () =>
-		HttpResponse.json({ entries: [], total: 0 }),
-	),
-	http.get("/api/bot/guilds/:guildId/settings", () =>
+	// `$api` hits NUXT_PUBLIC_API_BASE_URL directly (legacy-style).
+	http.get("*/guilds/:guildId", () => HttpResponse.json(mockGuild)),
+	http.get("*/guilds/:guildId/audit-logs", () => HttpResponse.json({ entries: [], total: 0 })),
+	http.get("*/guilds/:guildId/settings", () =>
 		HttpResponse.json({
 			guildId: "123456789012345678",
 			prefix: "!",
 			language: "en-US",
 		}),
 	),
-	http.get(/\/api\/bot\/commands$/, () => HttpResponse.json(mockCommands)),
-	http.get(/\/api\/bot\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
+	http.get(/\/commands$/, () => HttpResponse.json(mockCommands)),
+	http.get(/\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
 ];

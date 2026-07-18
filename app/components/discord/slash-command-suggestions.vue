@@ -195,7 +195,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply order-1 h-full max-h-full min-h-0 min-w-0 flex-1 sm:order-none;
+	@apply h-full max-h-full min-h-0 min-w-0 flex-1 max-md:order-1;
 }
 
 .discord-slash-command-suggestions-panel:not(
@@ -226,23 +226,23 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-inner {
-	/* Mobile Discord: list on top, horizontal app rail underneath. */
-	@apply flex h-full min-h-0 flex-col sm:flex-row;
+	/* Desktop base (row + left rail). Below md: Discord mobile column + bottom rail. */
+	@apply flex h-full min-h-0 max-md:flex-col;
 }
 
 .discord-slash-command-suggestions-sidebar-scroll {
-	@apply order-2 min-h-0 shrink-0 self-stretch overflow-x-auto overflow-y-hidden sm:order-none sm:h-full sm:overflow-x-hidden sm:overflow-y-auto;
-	width: 100%;
+	@apply h-full min-h-0 shrink-0 self-stretch overflow-x-hidden overflow-y-auto max-md:order-2 max-md:overflow-x-auto max-md:overflow-y-hidden;
+	width: var(--discord-slash-command-suggestions-rail-width);
 	overscroll-behavior: contain;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 
-	@media (width >= 40rem) {
-		width: var(--discord-slash-command-suggestions-rail-width);
+	@media (width < 48rem) {
+		width: 100%;
 	}
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply flex w-max min-w-full flex-row items-center gap-1 px-2 py-1.5 sm:w-full sm:flex-col sm:gap-0.5 sm:px-0 sm:py-2;
+	@apply flex w-full flex-col items-center gap-0.5 py-2 max-md:w-max max-md:min-w-full max-md:flex-row max-md:gap-1 max-md:px-2 max-md:py-1.5;
 }
 
 .discord-slash-command-suggestions-panel-with-matched .discord-slash-command-suggestions-scroll {
@@ -250,7 +250,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-item {
-	@apply flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-transparent p-0 sm:size-10 sm:rounded-lg;
+	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent p-0 max-md:size-9 max-md:rounded-full;
 	transition: background-color 120ms ease;
 }
 
@@ -261,11 +261,11 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 
 .discord-slash-command-suggestions-sidebar-item-active,
 .discord-slash-command-suggestions-sidebar-item-active:hover {
-	border-radius: 9999px;
+	border-radius: 12px;
 	background-color: var(--discord-slash-command-suggestions-sidebar-active);
 
-	@media (width >= 40rem) {
-		border-radius: 12px;
+	@media (width < 48rem) {
+		border-radius: 9999px;
 	}
 }
 
@@ -276,11 +276,11 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-recent {
-	@apply flex size-7 items-center justify-center sm:size-8;
+	@apply flex size-8 items-center justify-center max-md:size-7;
 }
 
 .discord-slash-command-suggestions-sidebar-icon {
-	@apply size-8 sm:size-10;
+	@apply size-10 max-md:size-8;
 	color: var(--discord-slash-command-suggestions-sidebar-icon);
 }
 

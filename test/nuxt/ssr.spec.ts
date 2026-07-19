@@ -8,13 +8,13 @@ import {
 	DiscordInvite,
 	DiscordMention,
 	DiscordMemberList,
+	DiscordMessageComposer,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
 	DiscordRole,
 	DiscordSlashCommand,
-	DiscordSlashCommandInput,
 	DiscordSlashCommandSuggestion,
 	DiscordSlashCommandSuggestionMatched,
 	DiscordSlashCommandSuggestions,
@@ -571,39 +571,17 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandInput", () => {
-			it("renders typed slash command with cursor", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommandInput, {
-					props: { value: "/warn" },
-				});
-				expect(wrapper.text()).toContain("/warn");
-				expect(wrapper.find(".discord-slash-command-input-cursor").exists()).toBe(true);
-			});
-
-			it("renders composed slash command inline in the input field", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommandInput, {
-					props: {
-						name: "ban",
-						options: [
-							{ name: "user", value: "baddie" },
-							{ name: "reason", value: "repeated infractions", focused: true },
-						],
-					},
-				});
-				expect(wrapper.text()).toContain("/ban");
-				expect(wrapper.text()).toContain("user");
-				expect(wrapper.text()).toContain("baddie");
-				expect(wrapper.text()).toContain("reason");
-				expect(wrapper.text()).toContain("repeated infractions");
-				expect(wrapper.find(".discord-slash-command-composed").exists()).toBe(true);
-			});
-
-			it("renders a Discord-style channel placeholder when empty", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommandInput, {
+		describe("DiscordMessageComposer", () => {
+			it("renders the translated channel placeholder and toolbar", async () => {
+				const wrapper = await mountSuspended(DiscordMessageComposer, {
 					props: { channelName: "mod-commands" },
 				});
-				expect(wrapper.text()).toContain("Message #mod-commands");
-				expect(wrapper.findAll(".discord-slash-command-input-tool").length).toBe(4);
+				const input = wrapper.find(".discord-message-composer-input");
+
+				expect(input.attributes("placeholder")).toBe("Messaggio in #mod-commands");
+				expect(input.attributes()).toHaveProperty("readonly");
+				expect(wrapper.findAll(".discord-message-composer-action")).toHaveLength(7);
+				expect(wrapper.find("[aria-label='Notifiche']").exists()).toBe(true);
 			});
 		});
 
@@ -784,6 +762,8 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-channel-welcome").exists()).toBe(true);
 			expect(wrapper.find(".discord-channel-welcome-edit").exists()).toBe(true);
 			expect(wrapper.find(".discord-chat-messages[role='log']").exists()).toBe(true);
+			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
+			expect(wrapper.find(".discord-slash-command-input").exists()).toBe(false);
 			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
 			expect(wrapper.find(".discord-member-list-summary").exists()).toBe(false);
 			expect(wrapper.text()).toContain("Online — 7");

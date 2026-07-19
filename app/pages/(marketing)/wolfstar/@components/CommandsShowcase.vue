@@ -145,12 +145,7 @@
 									</DiscordSlashCommandSuggestionGroup>
 								</DiscordSlashCommandSuggestions>
 
-								<DiscordSlashCommandInput
-									:name="activeDisplayCommand.name"
-									:subcommand="activeDisplayCommand.subcommand"
-									:options="activeDisplayCommand.options"
-									channel-name="mod-commands"
-								/>
+								<DiscordMessageComposer channel-name="mod-commands" />
 							</div>
 						</div>
 

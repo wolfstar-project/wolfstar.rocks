@@ -31,7 +31,6 @@ const ALLOW_LIST = new Set([
 	"app/components/discord/slash-command-suggestion-group.vue",
 	"app/components/discord/slash-command-suggestion-matched.vue",
 	"app/components/discord/slash-command-suggestions.vue",
-	"app/components/discord/slash-command-input.vue",
 	"app/components/discord/scrollbar.vue",
 ]);
 

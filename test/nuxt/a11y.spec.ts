@@ -14,13 +14,13 @@ import {
 	DiscordInvite,
 	DiscordMention,
 	DiscordMemberList,
+	DiscordMessageComposer,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
 	DiscordRole,
 	DiscordSlashCommand,
-	DiscordSlashCommandInput,
 	DiscordSlashCommandSuggestion,
 	DiscordSlashCommandSuggestionMatched,
 	DiscordSlashCommandSuggestions,
@@ -338,10 +338,10 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandInput", () => {
+		describe("DiscordMessageComposer", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordSlashCommandInput, {
-					props: { value: "/warn" },
+				const component = await mountSuspended(DiscordMessageComposer, {
+					props: { channelName: "mod-commands" },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);

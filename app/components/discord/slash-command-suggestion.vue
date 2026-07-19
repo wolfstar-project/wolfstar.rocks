@@ -20,7 +20,9 @@
 			class="discord-slash-command-suggestion-avatar"
 		/>
 		<div class="discord-slash-command-suggestion-content">
-			<span class="discord-slash-command-suggestion-name">/{{ name }}</span>
+			<span class="discord-slash-command-suggestion-name"
+				>/<span class="discord-slash-command-suggestion-name-path">{{ name }}</span></span
+			>
 			<span v-if="description" class="discord-slash-command-suggestion-description">{{
 				description
 			}}</span>
@@ -111,13 +113,18 @@ const ariaLabel = computed(() => {
 	color: var(--discord-slash-command-suggestion-name);
 }
 
+/* Discord mobile/autocomplete inserts a gap between `/` and the command path. */
+.discord-slash-command-suggestion-name-path::before {
+	content: "\00a0";
+}
+
 .discord-slash-command-suggestion-description {
 	@apply truncate font-whitney text-[13px] leading-snug;
 	color: var(--discord-slash-command-suggestion-description);
 }
 
 .discord-slash-command-suggestion-app {
-	@apply shrink-0 font-whitney text-[13px] max-md:self-start max-md:pt-0.5 max-md:text-[11px] max-md:leading-tight max-md:tracking-wide max-md:uppercase;
+	@apply shrink-0 font-whitney text-[13px] max-md:self-start max-md:pt-0.5 max-md:text-[11px] max-md:leading-tight max-md:font-bold max-md:tracking-wide max-md:uppercase;
 	color: var(--discord-slash-command-suggestion-app);
 }
 </style>

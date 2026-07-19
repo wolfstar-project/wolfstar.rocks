@@ -420,8 +420,7 @@ describe("component SSR rendering", () => {
 						)
 						.exists(),
 				).toBe(true);
-				// Mobile Discord layout keeps the app rail as a sibling after the list
-				// (CSS reorders it below the list on small viewports).
+				// Mobile Discord layout: list first, app rail after (desktop CSS orders rail left).
 				const inner = wrapper.find(".discord-slash-command-suggestions-inner");
 				const scroll = inner.find(".discord-slash-command-suggestions-scroll");
 				const rail = inner.find(".discord-slash-command-suggestions-sidebar-scroll");
@@ -429,6 +428,10 @@ describe("component SSR rendering", () => {
 				expect(rail.exists()).toBe(true);
 				expect(inner.element.contains(scroll.element)).toBe(true);
 				expect(inner.element.contains(rail.element)).toBe(true);
+				const children = [...inner.element.children];
+				expect(children.indexOf(scroll.element)).toBeLessThan(
+					children.indexOf(rail.element),
+				);
 			});
 		});
 

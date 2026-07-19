@@ -14,6 +14,38 @@
 				class="discord-slash-command-suggestions-frequently-used"
 			>
 				<div class="discord-slash-command-suggestions-inner">
+					<!-- List first in DOM so mobile (column) matches Discord: commands above, app rail below. -->
+					<DiscordScrollbar
+						:key="selectedApp ?? 'frequently-used'"
+						always-show-track
+						class="discord-slash-command-suggestions-scroll"
+					>
+						<div
+							role="listbox"
+							:aria-label="listboxLabel"
+							class="discord-slash-command-suggestions-list"
+						>
+							<section
+								v-if="selectedApp === null"
+								class="discord-slash-command-suggestions-recent"
+							>
+								<p
+									class="discord-slash-command-suggestions-header"
+									role="presentation"
+								>
+									<UIcon
+										name="discord:recently-used"
+										class="discord-slash-command-suggestions-header-icon"
+										aria-hidden="true"
+									/>
+									Frequently Used
+								</p>
+								<slot name="frequently-used" />
+							</section>
+							<slot />
+						</div>
+					</DiscordScrollbar>
+
 					<nav
 						class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
 						:aria-label="railLabel"
@@ -58,37 +90,6 @@
 							</button>
 						</div>
 					</nav>
-
-					<DiscordScrollbar
-						:key="selectedApp ?? 'frequently-used'"
-						always-show-track
-						class="discord-slash-command-suggestions-scroll"
-					>
-						<div
-							role="listbox"
-							:aria-label="listboxLabel"
-							class="discord-slash-command-suggestions-list"
-						>
-							<section
-								v-if="selectedApp === null"
-								class="discord-slash-command-suggestions-recent"
-							>
-								<p
-									class="discord-slash-command-suggestions-header"
-									role="presentation"
-								>
-									<UIcon
-										name="discord:recently-used"
-										class="discord-slash-command-suggestions-header-icon"
-										aria-hidden="true"
-									/>
-									Frequently Used
-								</p>
-								<slot name="frequently-used" />
-							</section>
-							<slot />
-						</div>
-					</DiscordScrollbar>
 				</div>
 			</div>
 
@@ -196,7 +197,8 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	@apply h-full max-h-full min-h-0 min-w-0 flex-1 max-md:order-1;
+	/* Desktop: list sits to the right of the rail (DOM order is list → rail). */
+	@apply h-full max-h-full min-h-0 min-w-0 flex-1 md:order-2;
 }
 
 .discord-slash-command-suggestions-panel:not(
@@ -208,6 +210,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-viewport) {
+	@apply h-full min-h-0;
 	overscroll-behavior: contain;
 }
 
@@ -227,12 +230,13 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-inner {
-	/* Desktop base (row + left rail). Below md: Discord mobile column + bottom rail. */
+	/* Desktop: row + left rail via md:order. Mobile: column — list above, rail below. */
 	@apply flex h-full min-h-0 max-md:flex-col;
 }
 
 .discord-slash-command-suggestions-sidebar-scroll {
-	@apply h-full min-h-0 shrink-0 self-stretch overflow-x-hidden overflow-y-auto max-md:order-2 max-md:overflow-x-auto max-md:overflow-y-hidden;
+	/* Never h-full on mobile: in a column flex that ate the list viewport (empty panel + rail-only look). */
+	@apply min-h-0 shrink-0 self-stretch overflow-x-hidden overflow-y-auto max-md:h-auto max-md:w-full max-md:overflow-x-auto max-md:overflow-y-hidden md:order-1 md:h-full;
 	width: var(--discord-slash-command-suggestions-rail-width);
 	overscroll-behavior: contain;
 	background-color: var(--discord-slash-command-suggestions-sidebar);

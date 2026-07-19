@@ -93,8 +93,9 @@
 								<DiscordSlashCommandSuggestion
 									v-for="command of frequentlyUsedCommands"
 									:key="`frequently-used-${command.name}`"
-									:name="command.name"
+									:name="frequentlyUsedDisplayName(command)"
 									:description="command.description"
+									app-label="WolfStar Beta"
 									:active="activeDisplayCommand.name === command.name"
 									@select="selectCommand(command.name)"
 								/>
@@ -104,12 +105,14 @@
 							<DiscordSlashCommandSuggestionGroup
 								v-if="selectedApp === 'wolfstar'"
 								app="wolfstar"
+								label="WolfStar Beta"
 							>
 								<DiscordSlashCommandSuggestion
 									v-for="command of showcaseCommands"
 									:key="`wolfstar-${command.name}`"
-									:name="command.name"
+									:name="frequentlyUsedDisplayName(command)"
 									:description="command.description"
+									app-label="WolfStar Beta"
 									:active="activeDisplayCommand.name === command.name"
 									@select="selectCommand(command.name)"
 								/>
@@ -169,6 +172,11 @@ const frequentlyUsedCommands = computed(() =>
 		.filter((command) => command.frequentlyUsed)
 		.slice(0, FREQUENTLY_USED_VISIBLE_COUNT),
 );
+
+/** Discord autocomplete shows command + subcommand as a single path (e.g. `conf menu`). */
+function frequentlyUsedDisplayName(command: (typeof showcaseCommands)[number]) {
+	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
+}
 
 interface MockAppCommand {
 	name: string;

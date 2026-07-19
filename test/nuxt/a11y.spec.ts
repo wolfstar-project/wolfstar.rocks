@@ -7,9 +7,13 @@ import {
 	CommandsShowcase,
 	CtaSection,
 	DashboardSection,
+	DiscordChannelHeader,
+	DiscordChannelWelcome,
+	DiscordChat,
 	DiscordEmbed,
 	DiscordInvite,
 	DiscordMention,
+	DiscordMemberList,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
@@ -61,6 +65,77 @@ describe("component accessibility audits", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordMessages, {
 					slots: { default: "<p>Hello world</p>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelHeader", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelHeader, {
+					props: {
+						name: "mod-commands",
+						type: "text",
+						searchPlaceholder: "Search WolfStar Laboratory",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelWelcome", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelWelcome, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						dateTime: "2026-07-16",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChat", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChat, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						messages: [
+							{
+								id: "message-1",
+								author: "wolfstar",
+								content: "Saved all changes.",
+								timestamp: "Today at 15:49",
+							},
+						],
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordMemberList", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordMemberList, {
+					props: {
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								app: true,
+								verified: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+						showRoles: true,
+					},
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);

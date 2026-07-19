@@ -1,9 +1,13 @@
 import {
 	CommandsSection,
 	CommandsShowcase,
+	DiscordChannelHeader,
+	DiscordChannelWelcome,
+	DiscordChat,
 	DiscordEmbed,
 	DiscordInvite,
 	DiscordMention,
+	DiscordMemberList,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
@@ -33,6 +37,99 @@ describe("component SSR rendering", () => {
 				});
 				expect(wrapper.find(".discord-messages").exists()).toBe(true);
 				expect(wrapper.text()).toContain("Hello world");
+			});
+		});
+
+		describe("DiscordChannelHeader", () => {
+			it("renders channel name, search placeholder, and toolbar chrome", async () => {
+				const wrapper = await mountSuspended(DiscordChannelHeader, {
+					props: {
+						name: "mod-commands",
+						type: "text",
+						searchPlaceholder: "Search WolfStar Laboratory",
+					},
+				});
+
+				expect(wrapper.find(".discord-channel-header").exists()).toBe(true);
+				expect(wrapper.text()).toContain("mod-commands");
+				expect(wrapper.text()).toContain("Search WolfStar Laboratory");
+				expect(wrapper.find(".discord-channel-header-toolbar").exists()).toBe(true);
+				expect(wrapper.findAll(".discord-channel-header-action").length).toBe(6);
+			});
+		});
+
+		describe("DiscordChannelWelcome", () => {
+			it("renders channel context, edit control, and date divider", async () => {
+				const wrapper = await mountSuspended(DiscordChannelWelcome, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						dateTime: "2026-07-16",
+					},
+				});
+
+				expect(wrapper.text()).toContain("Welcome to #mod-commands!");
+				expect(wrapper.text()).toContain("This is the start of the #mod-commands channel.");
+				expect(wrapper.find(".discord-channel-welcome-edit").exists()).toBe(true);
+				expect(wrapper.text()).toContain("Edit Channel");
+				expect(wrapper.find("time").attributes("datetime")).toBe("2026-07-16");
+			});
+		});
+
+		describe("DiscordChat", () => {
+			it("renders messages from data inside a scrollable log", async () => {
+				const wrapper = await mountSuspended(DiscordChat, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						messages: [
+							{
+								id: "message-1",
+								author: "wolfstar",
+								content: "Saved all changes.",
+								timestamp: "Today at 15:49",
+							},
+						],
+					},
+				});
+
+				expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
+				expect(wrapper.find(".discord-channel-welcome").exists()).toBe(true);
+				expect(wrapper.find("[role='log']").attributes("aria-live")).toBe("polite");
+				expect(wrapper.findAll(".discord-message")).toHaveLength(1);
+				expect(wrapper.text()).toContain("Saved all changes.");
+				expect(wrapper.text()).toContain("Today at 15:49");
+			});
+		});
+
+		describe("DiscordMemberList", () => {
+			it("renders online and offline sections with optional roles", async () => {
+				const wrapper = await mountSuspended(DiscordMemberList, {
+					props: {
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								app: true,
+								verified: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+						showRoles: true,
+					},
+				});
+
+				expect(wrapper.text()).toContain("Online — 1");
+				expect(wrapper.text()).toContain("Offline — 1");
+				expect(wrapper.text()).toContain("Moderation");
+				expect(wrapper.find(".discord-member-list-summary").exists()).toBe(false);
+				expect(wrapper.findAll(".discord-member-list-member")).toHaveLength(2);
+				expect(wrapper.find(".discord-member-list-section-offline").exists()).toBe(true);
+				expect(wrapper.find(".discord-member-list-app").attributes("role")).toBe("img");
+				expect(wrapper.find(".discord-member-list-avatar .discord-presence").exists()).toBe(
+					false,
+				);
 			});
 		});
 
@@ -500,6 +597,14 @@ describe("component SSR rendering", () => {
 				expect(wrapper.text()).toContain("repeated infractions");
 				expect(wrapper.find(".discord-slash-command-composed").exists()).toBe(true);
 			});
+
+			it("renders a Discord-style channel placeholder when empty", async () => {
+				const wrapper = await mountSuspended(DiscordSlashCommandInput, {
+					props: { channelName: "mod-commands" },
+				});
+				expect(wrapper.text()).toContain("Message #mod-commands");
+				expect(wrapper.findAll(".discord-slash-command-input-tool").length).toBe(4);
+			});
 		});
 
 		describe("DiscordReaction", () => {
@@ -650,14 +755,15 @@ describe("component SSR rendering", () => {
 			expect(wrapper.find(".discord-slash-command-suggestions-inner").exists()).toBe(true);
 			expect(wrapper.find(".discord-slash-command-suggestions-recent").exists()).toBe(true);
 			expect(wrapper.find(".discord-scrollbar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-scrollbar").length).toBe(1);
+			expect(wrapper.findAll(".discord-scrollbar").length).toBe(3);
+			const suggestionsScroll = wrapper.find(".discord-slash-command-suggestions-scroll");
 			expect(
-				wrapper
+				suggestionsScroll
 					.find(".discord-scrollbar-viewport")
 					.findAll(".discord-slash-command-suggestion").length,
 			).toBe(6);
 			expect(
-				wrapper
+				suggestionsScroll
 					.find(".discord-scrollbar-viewport")
 					.find(".discord-slash-command-suggestions-header")
 					.exists(),
@@ -672,7 +778,16 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/twitch-subscriptions show");
 			expect(wrapper.text()).not.toContain("/twitch-subscriptions add");
 			expect(wrapper.findAll("input[name='matched-command']").length).toBe(0);
-			expect(wrapper.findAll(".showcase-channel-header").length).toBe(1);
+			expect(wrapper.findAll(".discord-channel-header").length).toBe(1);
+			expect(wrapper.find(".showcase-discord-shell").exists()).toBe(true);
+			expect(wrapper.find(".showcase-discord-main").exists()).toBe(true);
+			expect(wrapper.find(".discord-channel-welcome").exists()).toBe(true);
+			expect(wrapper.find(".discord-channel-welcome-edit").exists()).toBe(true);
+			expect(wrapper.find(".discord-chat-messages[role='log']").exists()).toBe(true);
+			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
+			expect(wrapper.find(".discord-member-list-summary").exists()).toBe(false);
+			expect(wrapper.text()).toContain("Online — 7");
+			expect(wrapper.text()).toContain("Offline — 2");
 		});
 
 		it("selects a command when clicking a suggestion", async () => {

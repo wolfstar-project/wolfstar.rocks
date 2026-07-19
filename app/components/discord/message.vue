@@ -26,6 +26,9 @@
 					/>
 					<span>APP</span>
 				</span>
+				<time v-if="timestamp" class="discord-message-timestamp" :datetime>
+					{{ timestamp }}
+				</time>
 			</header>
 			<div class="message-content"><slot></slot></div>
 			<div
@@ -55,6 +58,8 @@ interface MessageProps {
 	name: ProfileName;
 	ephemeral?: boolean;
 	reply?: MessageReply;
+	timestamp?: string;
+	datetime?: string;
 }
 
 interface MessageSlots {
@@ -66,7 +71,7 @@ interface MessageSlots {
 defineSlots<MessageSlots>();
 
 const props = defineProps<MessageProps>();
-const { name, ephemeral, reply } = toRefs(props);
+const { name, ephemeral, reply, timestamp, datetime } = toRefs(props);
 const profile = computed(() => Profiles[name.value]);
 </script>
 
@@ -79,6 +84,10 @@ const profile = computed(() => Profiles[name.value]);
 	background-color: var(--blurple);
 	font-size: 0.625rem;
 	line-height: 0.625rem;
+}
+
+.discord-message-timestamp {
+	@apply ml-1.5 text-[10px] font-medium text-muted sm:text-xs;
 }
 
 @media (width >= 48rem) {

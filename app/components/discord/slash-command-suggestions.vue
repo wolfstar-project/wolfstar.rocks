@@ -281,11 +281,13 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-recent {
+	/* Same 32px footprint as DiscordSlashCommandAppIcon rail so the active
+	   squircle (40px / radius 12px) frames the clock like the app icons. */
 	@apply flex size-8 items-center justify-center max-md:size-7;
 }
 
 .discord-slash-command-suggestions-sidebar-icon {
-	@apply size-10 max-md:size-8;
+	@apply size-8 max-md:size-7;
 	color: var(--discord-slash-command-suggestions-sidebar-icon);
 }
 

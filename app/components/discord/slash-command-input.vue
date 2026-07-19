@@ -8,7 +8,7 @@
 			<UIcon name="ph:plus-bold" class="size-4.5" aria-hidden="true" />
 		</button>
 
-		<div class="discord-slash-command-input-field">
+		<div class="discord-slash-command-input-field" tabindex="0">
 			<DiscordSlashCommand
 				v-if="name"
 				:name="name"
@@ -16,7 +16,7 @@
 				:subcommand-group="subcommandGroup"
 				:options="options"
 			/>
-			<span v-else class="discord-slash-command-input-value">{{ value }}</span>
+			<span v-else class="discord-slash-command-input-value">{{ displayValue }}</span>
 			<span class="discord-slash-command-input-cursor" aria-hidden="true" />
 			<UIcon
 				name="discord:emoji"
@@ -26,11 +26,10 @@
 		</div>
 
 		<div class="discord-slash-command-input-tools" aria-hidden="true">
-			<UIcon name="discord:gift" class="discord-slash-command-input-tool size-4.5" />
-			<UIcon name="discord:gif" class="discord-slash-command-input-tool size-4.5" />
-			<UIcon name="discord:sticker" class="discord-slash-command-input-tool size-4.5" />
-			<UIcon name="discord:emoji" class="discord-slash-command-input-tool size-4.5" />
-			<UIcon name="discord:apps" class="discord-slash-command-input-tool size-4.5" />
+			<UIcon name="discord:gift" class="discord-slash-command-input-tool size-5" />
+			<UIcon name="discord:gif" class="discord-slash-command-input-tool size-5" />
+			<UIcon name="discord:sticker" class="discord-slash-command-input-tool size-5" />
+			<UIcon name="discord:emoji" class="discord-slash-command-input-tool size-5" />
 		</div>
 
 		<button type="button" class="discord-slash-command-input-send" aria-label="Send message">
@@ -48,6 +47,8 @@ interface SlashCommandInputProps {
 	subcommandGroup?: string;
 	options?: SlashCommandOption[];
 	value?: string;
+	/** Used for the empty-state Discord placeholder: `Message #channel`. */
+	channelName?: string;
 }
 </script>
 
@@ -60,7 +61,14 @@ const {
 	subcommandGroup,
 	options = [],
 	value = "",
+	channelName,
 } = defineProps<SlashCommandInputProps>();
+
+const displayValue = computed(() => {
+	if (value) return value;
+	if (channelName) return `Message #${channelName}`;
+	return "";
+});
 
 const ariaLabel = computed(() => {
 	if (name) {
@@ -78,7 +86,7 @@ const ariaLabel = computed(() => {
 		return `Message input: /${path}${optionText ? ` ${optionText}` : ""}`;
 	}
 
-	return `Message input: ${value}`;
+	return `Message input: ${displayValue.value}`;
 });
 </script>
 
@@ -86,37 +94,29 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-input {
-	--discord-slash-command-input-bg: oklch(32.11% 0.0094 268.56);
-	--discord-slash-command-input-field-bg: oklch(27.39% 0.0055 264.46);
-	--discord-slash-command-input-text: oklch(100% 0 0);
-	--discord-slash-command-input-muted: oklch(73.06% 0.0048 264.53);
-	--discord-slash-command-input-cursor: oklch(100% 0 0);
-	--discord-slash-command-input-send: oklch(57.7% 0.209 273.88);
+	--discord-slash-command-input-bg: oklch(from var(--color-base-content) l c h / 0.08);
+	--discord-slash-command-input-text: oklch(from var(--color-base-content) l c h / 0.95);
+	--discord-slash-command-input-muted: oklch(from var(--color-base-content) l c h / 0.55);
+	--discord-slash-command-input-cursor: oklch(from var(--color-base-content) l c h / 0.9);
+	--discord-slash-command-input-send: var(--color-primary);
 
-	@apply flex min-h-11 items-center gap-3 px-3 py-2 max-md:gap-2 max-md:px-2;
+	@apply mx-3 mb-3 flex min-h-11 items-center gap-3 rounded-lg px-3 py-2.5 max-md:mx-2 max-md:mb-2 max-md:gap-2 max-md:px-2;
 	background-color: var(--discord-slash-command-input-bg);
 }
 
 .discord-slash-command-input-add {
-	@apply inline-flex shrink-0 items-center justify-center rounded-full border-0 bg-transparent p-0 max-md:size-9;
+	@apply inline-flex size-6 shrink-0 items-center justify-center rounded-full border-0 p-0 max-md:size-8;
 	color: var(--discord-slash-command-input-muted);
-
-	@media (width < 48rem) {
-		background-color: var(--discord-slash-command-input-field-bg);
-	}
+	background-color: oklch(from var(--color-base-content) l c h / 0.12);
 }
 
 .discord-slash-command-input-field {
-	@apply flex min-w-0 flex-1 items-center overflow-x-auto font-whitney text-sm max-md:rounded-full max-md:px-3 max-md:py-2;
+	@apply flex min-w-0 flex-1 items-center overflow-x-auto font-whitney text-sm;
 	color: var(--discord-slash-command-input-text);
-
-	@media (width < 48rem) {
-		background-color: var(--discord-slash-command-input-field-bg);
-	}
 }
 
 .discord-slash-command-input-value {
-	@apply truncate;
+	@apply truncate text-muted;
 }
 
 .discord-slash-command-input-cursor {
@@ -126,12 +126,12 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-input-tools {
-	@apply hidden shrink-0 items-center gap-2.5 md:flex;
+	@apply hidden shrink-0 items-center gap-3 md:flex;
 	color: var(--discord-slash-command-input-muted);
 }
 
 .discord-slash-command-input-tool {
-	@apply size-4.5;
+	@apply size-5;
 }
 
 .discord-slash-command-input-emoji {
@@ -141,7 +141,7 @@ const ariaLabel = computed(() => {
 .discord-slash-command-input-send {
 	@apply inline-flex size-9 shrink-0 items-center justify-center rounded-full border-0 p-0 md:hidden;
 	background-color: var(--discord-slash-command-input-send);
-	color: oklch(100% 0 0);
+	color: var(--color-primary-content);
 }
 
 @keyframes discord-slash-command-input-cursor-blink {

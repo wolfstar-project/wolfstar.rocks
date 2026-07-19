@@ -27,6 +27,26 @@ export interface MessageReplyComponentProps {
 }
 // #endregion
 
+// #region Channel preview
+export interface DiscordChatMessage {
+	id: string;
+	author: ProfileName;
+	content?: string;
+	timestamp?: string;
+}
+
+export interface DiscordMemberListMember {
+	id: string;
+	name: string;
+	avatar?: string;
+	icon?: string;
+	role?: string;
+	description?: string;
+	app?: boolean;
+	verified?: boolean;
+}
+// #endregion
+
 // #region String Select Menu
 export type { StringSelectMenuOption } from "./string-select-menu";
 // #endregion

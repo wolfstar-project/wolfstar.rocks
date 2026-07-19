@@ -10,7 +10,7 @@
 		@keydown.enter.prevent="emit('select')"
 		@keydown.space.prevent="emit('select')"
 	>
-		<DiscordSlashCommand
+		<DiscordChatInputCommand
 			:name="name"
 			:subcommand="subcommand"
 			:subcommand-group="subcommandGroup"
@@ -20,8 +20,6 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandInvocation } from "#shared/types/slash-command";
-
 interface SlashCommandSuggestionMatchedProps extends SlashCommandInvocation {
 	active?: boolean;
 }
@@ -32,8 +30,6 @@ interface SlashCommandSuggestionMatchedEmits {
 </script>
 
 <script setup lang="ts">
-import { formatSlashCommandDisplayName } from "#shared/utils/format-slash-command-display-name";
-
 const {
 	active = false,
 	name,

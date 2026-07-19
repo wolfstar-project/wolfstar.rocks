@@ -1,7 +1,7 @@
 <template>
 	<section class="discord-slash-command-suggestion-group" role="group" :aria-label="label">
 		<p class="discord-slash-command-suggestion-group-header" role="presentation">
-			<DiscordSlashCommandAppIcon :app size="header" />
+			<DiscordChatInputCommandAppIcon :app size="header" />
 			{{ label }}
 		</p>
 		<slot />

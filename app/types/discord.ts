@@ -1,4 +1,3 @@
-import type { SlashCommandDisplayInput } from "#shared/utils/format-slash-command-display-name";
 import type { ProfileName } from "@/utils/constants";
 
 // #region Message Reply

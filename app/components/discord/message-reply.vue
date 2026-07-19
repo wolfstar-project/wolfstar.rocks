@@ -26,7 +26,6 @@
 
 <script setup lang="ts">
 import type { MessageReplyComponentProps } from "~/types/discord";
-import { formatSlashCommandDisplayName } from "#shared/utils/format-slash-command-display-name";
 
 const { kind, user, commandName, subcommand, subcommandGroup, content } =
 	defineProps<MessageReplyComponentProps>();

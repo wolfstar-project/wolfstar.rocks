@@ -20,10 +20,10 @@ import {
 	DiscordReaction,
 	DiscordReactions,
 	DiscordRole,
-	DiscordSlashCommand,
-	DiscordSlashCommandSuggestion,
-	DiscordSlashCommandSuggestionMatched,
-	DiscordSlashCommandSuggestions,
+	DiscordChatInputCommand,
+	DiscordChatInputCommandSuggestion,
+	DiscordChatInputCommandMatched,
+	DiscordChatInputCommandSuggestions,
 	DiscordV2StringSelectMenu,
 	ModerationShowcase,
 	ModerationShowcaseSection,
@@ -247,9 +247,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommand", () => {
+		describe("DiscordChatInputCommand", () => {
 			it("should have no accessibility violations with composed variant", async () => {
-				const component = await mountSuspended(DiscordSlashCommand, {
+				const component = await mountSuspended(DiscordChatInputCommand, {
 					props: {
 						name: "warn",
 						options: [
@@ -263,13 +263,13 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestion", () => {
+		describe("DiscordChatInputCommandSuggestion", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
-					components: { DiscordSlashCommandSuggestion },
+					components: { DiscordChatInputCommandSuggestion },
 					template: `
 						<div role="listbox" aria-label="Slash command suggestions">
-							<DiscordSlashCommandSuggestion
+							<DiscordChatInputCommandSuggestion
 								name="warn"
 								description="Warn a member"
 								:active="true"
@@ -282,13 +282,13 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestionMatched", () => {
+		describe("DiscordChatInputCommandMatched", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
-					components: { DiscordSlashCommandSuggestionMatched },
+					components: { DiscordChatInputCommandMatched },
 					template: `
 						<div role="listbox" aria-label="Matched slash commands">
-							<DiscordSlashCommandSuggestionMatched
+							<DiscordChatInputCommandMatched
 								name="ban"
 								:options="[
 									{ name: 'user', value: 'baddie' },
@@ -304,24 +304,24 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestions", () => {
+		describe("DiscordChatInputCommandSuggestions", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
 					components: {
-						DiscordSlashCommandSuggestion,
-						DiscordSlashCommandSuggestionMatched,
-						DiscordSlashCommandSuggestions,
+						DiscordChatInputCommandSuggestion,
+						DiscordChatInputCommandMatched,
+						DiscordChatInputCommandSuggestions,
 					},
 					template: `
-						<DiscordSlashCommandSuggestions prefix="/war">
+						<DiscordChatInputCommandSuggestions prefix="/war">
 							<template #frequently-used>
-								<DiscordSlashCommandSuggestion
+								<DiscordChatInputCommandSuggestion
 									name="warn"
 									description="Warn a member"
 								/>
 							</template>
 							<template #matched>
-								<DiscordSlashCommandSuggestionMatched
+								<DiscordChatInputCommandMatched
 									name="warn"
 									:options="[
 										{ name: 'user', value: 'baddie' },
@@ -330,7 +330,7 @@ describe("component accessibility audits", () => {
 									:active="true"
 								/>
 							</template>
-						</DiscordSlashCommandSuggestions>
+						</DiscordChatInputCommandSuggestions>
 					`,
 				});
 				const results = await runAxe(component);

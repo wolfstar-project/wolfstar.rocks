@@ -14,7 +14,7 @@
 		@keydown.enter.prevent="select()"
 		@keydown.space.prevent="select()"
 	>
-		<DiscordSlashCommandAppIcon
+		<DiscordChatInputCommandAppIcon
 			:app
 			size="row"
 			class="discord-slash-command-suggestion-avatar"

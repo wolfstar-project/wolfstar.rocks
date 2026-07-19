@@ -95,12 +95,12 @@
 							</DiscordChat>
 
 							<div class="showcase-command-picker">
-								<DiscordSlashCommandSuggestions
+								<DiscordChatInputCommandSuggestions
 									v-model:selected-app="selectedApp"
 									:prefix="activeSearchPrefix"
 								>
 									<template #frequently-used>
-										<DiscordSlashCommandSuggestion
+										<DiscordChatInputCommandSuggestion
 											v-for="command of frequentlyUsedCommands"
 											:key="`frequently-used-${command.name}`"
 											:name="frequentlyUsedDisplayName(command)"
@@ -112,12 +112,12 @@
 									</template>
 
 									<!-- WolfStar group only when that app is selected — avoids duplicating WolfStar under Frequently Used. -->
-									<DiscordSlashCommandSuggestionGroup
+									<DiscordChatInputCommandGroup
 										v-if="selectedApp === 'wolfstar'"
 										app="wolfstar"
 										label="WolfStar Beta"
 									>
-										<DiscordSlashCommandSuggestion
+										<DiscordChatInputCommandSuggestion
 											v-for="command of showcaseCommands"
 											:key="`wolfstar-${command.name}`"
 											:name="frequentlyUsedDisplayName(command)"
@@ -126,15 +126,15 @@
 											:active="activeDisplayCommand.name === command.name"
 											@select="selectCommand(command.name)"
 										/>
-									</DiscordSlashCommandSuggestionGroup>
+									</DiscordChatInputCommandGroup>
 
 									<!-- On Frequently Used, show Staryl (first command) where the WolfStar duplicate used to be. -->
-									<DiscordSlashCommandSuggestionGroup
+									<DiscordChatInputCommandGroup
 										v-for="app of listedMockApps"
 										:key="app"
 										:app
 									>
-										<DiscordSlashCommandSuggestion
+										<DiscordChatInputCommandSuggestion
 											v-for="command of listedCommandsForMockApp(app)"
 											:key="`${app}-${command.name}`"
 											:app
@@ -142,8 +142,8 @@
 											:description="command.description"
 											disabled
 										/>
-									</DiscordSlashCommandSuggestionGroup>
-								</DiscordSlashCommandSuggestions>
+									</DiscordChatInputCommandGroup>
+								</DiscordChatInputCommandSuggestions>
 
 								<DiscordChatMessageComposer channel-name="mod-commands" />
 							</div>

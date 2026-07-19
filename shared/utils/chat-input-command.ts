@@ -1,32 +1,10 @@
-type SlashCommandNameOnly = {
-	commandName: string;
-	subcommand?: undefined;
-	subcommandGroup?: undefined;
-};
-
-type SlashCommandDirectSubcommand = {
-	commandName: string;
-	subcommand: string;
-	subcommandGroup?: undefined;
-};
-
-type SlashCommandGroupedSubcommand = {
-	commandName: string;
-	subcommandGroup: string;
-	subcommand: string;
-};
-
-export type SlashCommandDisplayParts =
-	| SlashCommandNameOnly
-	| SlashCommandDirectSubcommand
-	| SlashCommandGroupedSubcommand;
-
-export type SlashCommandDisplayInput = {
-	commandName: string;
-	subcommand?: string;
-	subcommandGroup?: string;
-	subcommandSubgroup?: string;
-};
+import type {
+	SlashCommandDefinition,
+	SlashCommandDisplayInput,
+	SlashCommandDisplayParts,
+	SlashCommandGroupedSubcommand,
+	SlashCommandInvocation,
+} from "../types/chat-input-command";
 
 function formatSlashCommandSegment(segment: string): string {
 	return segment.replace(/^\//, "").replaceAll("-", " ");
@@ -83,4 +61,34 @@ export function formatSlashCommandDisplayName(input: SlashCommandDisplayInput): 
 	}
 
 	return segments.map(formatSlashCommandSegment).join(" ");
+}
+
+export function validateSlashCommandDefinition(definition: SlashCommandDefinition): void {
+	const hasSubcommands =
+		definition.subcommands !== undefined && definition.subcommands.length > 0;
+	const hasGroups =
+		definition.subcommandGroups !== undefined && definition.subcommandGroups.length > 0;
+	const hasOptions = definition.options !== undefined && definition.options.length > 0;
+
+	if ((hasSubcommands || hasGroups) && hasOptions) {
+		throw new Error("commands with subcommands cannot have top-level options");
+	}
+
+	for (const group of definition.subcommandGroups ?? []) {
+		if (group.subcommands.length === 0) {
+			throw new Error(
+				`subcommand group "${group.name}" must contain at least one subcommand`,
+			);
+		}
+	}
+}
+
+export function toSlashCommandDisplayInput(
+	invocation: SlashCommandInvocation,
+): Pick<SlashCommandDisplayInput, "commandName" | "subcommand" | "subcommandGroup"> {
+	return {
+		commandName: invocation.name,
+		subcommand: invocation.subcommand,
+		subcommandGroup: invocation.subcommandGroup,
+	};
 }

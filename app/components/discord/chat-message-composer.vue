@@ -69,12 +69,12 @@ const composerLabel = computed(() => `Message composer for ${channelName}`);
 @reference "@/assets/css/main.css";
 
 .discord-message-composer {
-	--discord-message-composer-bg: oklch(from var(--color-base-content) l c h / 0.08);
+	--discord-message-composer-bg: oklch(from var(--color-base-content) l c h / 0.12);
 	--discord-message-composer-text: oklch(from var(--color-base-content) l c h / 0.92);
 	--discord-message-composer-muted: oklch(from var(--color-base-content) l c h / 0.58);
 	--discord-message-composer-hover: oklch(from var(--color-base-content) l c h / 0.1);
 
-	@apply mx-5 mb-5 flex h-11 min-w-0 shrink-0 items-center gap-1 rounded-lg px-1.5 font-whitney;
+	@apply mx-3 mb-2 flex h-10 min-w-0 shrink-0 items-center gap-0.5 rounded px-2 font-whitney;
 	background-color: var(--discord-message-composer-bg);
 	color: var(--discord-message-composer-muted);
 }
@@ -84,7 +84,7 @@ const composerLabel = computed(() => `Message composer for ${channelName}`);
 }
 
 .discord-message-composer-button {
-	@apply inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-md border-0 bg-transparent p-0;
+	@apply inline-flex size-7 shrink-0 cursor-pointer items-center justify-center rounded border-0 bg-transparent p-0;
 	color: inherit;
 }
 
@@ -115,7 +115,6 @@ const composerLabel = computed(() => `Message composer for ${channelName}`);
 .discord-message-composer-actions {
 	@apply flex shrink-0 items-center gap-0.5;
 }
-
 @media (width < 40rem) {
 	.discord-message-composer-action-secondary {
 		display: none;
@@ -128,7 +127,7 @@ const composerLabel = computed(() => `Message composer for ${channelName}`);
 	}
 
 	.discord-message-composer {
-		@apply mx-2 mb-2;
+		@apply mx-2 mb-1.5;
 	}
 }
 </style>

@@ -25,12 +25,12 @@ const ALLOW_LIST = new Set([
 	"app/components/discord/mention.vue",
 	"app/components/discord/role.vue",
 	"app/components/discord/reaction.vue",
-	"app/components/discord/slash-command.vue",
-	"app/components/discord/slash-command-app-icon.vue",
-	"app/components/discord/slash-command-suggestion.vue",
-	"app/components/discord/slash-command-suggestion-group.vue",
-	"app/components/discord/slash-command-suggestion-matched.vue",
-	"app/components/discord/slash-command-suggestions.vue",
+	"app/components/discord/chat-input-command/index.vue",
+	"app/components/discord/chat-input-command/app-icon.vue",
+	"app/components/discord/chat-input-command/suggestion.vue",
+	"app/components/discord/chat-input-command/group.vue",
+	"app/components/discord/chat-input-command/matched.vue",
+	"app/components/discord/chat-input-command/suggestions.vue",
 	"app/components/discord/scrollbar.vue",
 ]);
 

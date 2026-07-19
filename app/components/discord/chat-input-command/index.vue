@@ -26,7 +26,6 @@
 </template>
 
 <script lang="ts">
-import type { SlashCommandInvocation } from "#shared/types/slash-command";
 import type { VNode } from "vue";
 
 interface SlashCommandProps extends SlashCommandInvocation {}
@@ -37,11 +36,6 @@ interface SlashCommandSlots {
 </script>
 
 <script setup lang="ts">
-import {
-	formatSlashCommandDisplayName,
-	validateSlashCommandDisplayParts,
-} from "#shared/utils/format-slash-command-display-name";
-
 defineSlots<SlashCommandSlots>();
 
 const props = withDefaults(defineProps<SlashCommandProps>(), {

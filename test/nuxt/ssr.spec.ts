@@ -14,10 +14,10 @@ import {
 	DiscordReaction,
 	DiscordReactions,
 	DiscordRole,
-	DiscordSlashCommand,
-	DiscordSlashCommandSuggestion,
-	DiscordSlashCommandSuggestionMatched,
-	DiscordSlashCommandSuggestions,
+	DiscordChatInputCommand,
+	DiscordChatInputCommandSuggestion,
+	DiscordChatInputCommandMatched,
+	DiscordChatInputCommandSuggestions,
 	DiscordScrollbar,
 	GuildSettingsSection,
 	IconsApp,
@@ -360,9 +360,9 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordSlashCommand", () => {
+		describe("DiscordChatInputCommand", () => {
 			it("renders composed variant with option values", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommand, {
+				const wrapper = await mountSuspended(DiscordChatInputCommand, {
 					props: {
 						name: "warn",
 						options: [
@@ -381,7 +381,7 @@ describe("component SSR rendering", () => {
 			});
 
 			it("renders subcommand path segments before options", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommand, {
+				const wrapper = await mountSuspended(DiscordChatInputCommand, {
 					props: {
 						name: "conf",
 						subcommandGroup: "menu",
@@ -401,9 +401,9 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestion", () => {
+		describe("DiscordChatInputCommandSuggestion", () => {
 			it("renders suggestion with app label and aria-selected state", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommandSuggestion, {
+				const wrapper = await mountSuspended(DiscordChatInputCommandSuggestion, {
 					props: {
 						name: "warn",
 						description: "Warn a member",
@@ -419,9 +419,9 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestionMatched", () => {
+		describe("DiscordChatInputCommandMatched", () => {
 			it("renders matched suggestion with colon-style inline command", async () => {
-				const wrapper = await mountSuspended(DiscordSlashCommandSuggestionMatched, {
+				const wrapper = await mountSuspended(DiscordChatInputCommandMatched, {
 					props: {
 						name: "ban",
 						options: [
@@ -440,24 +440,24 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestions", () => {
+		describe("DiscordChatInputCommandSuggestions", () => {
 			it("renders scrollable command list, independent sidebar, and matched footer", async () => {
 				const wrapper = await mountSuspended({
 					components: {
-						DiscordSlashCommandSuggestion,
-						DiscordSlashCommandSuggestionMatched,
-						DiscordSlashCommandSuggestions,
+						DiscordChatInputCommandSuggestion,
+						DiscordChatInputCommandMatched,
+						DiscordChatInputCommandSuggestions,
 					},
 					template: `
-						<DiscordSlashCommandSuggestions prefix="/war">
+						<DiscordChatInputCommandSuggestions prefix="/war">
 							<template #frequently-used>
-								<DiscordSlashCommandSuggestion
+								<DiscordChatInputCommandSuggestion
 									name="warn"
 									description="Warn a member"
 								/>
 							</template>
 							<template #matched>
-								<DiscordSlashCommandSuggestionMatched
+								<DiscordChatInputCommandMatched
 									name="warn"
 									:options="[
 										{ name: 'user', value: 'baddie' },
@@ -466,7 +466,7 @@ describe("component SSR rendering", () => {
 									:active="true"
 								/>
 							</template>
-						</DiscordSlashCommandSuggestions>
+						</DiscordChatInputCommandSuggestions>
 					`,
 				});
 				expect(wrapper.text()).toContain("Frequently Used");
@@ -572,16 +572,17 @@ describe("component SSR rendering", () => {
 		});
 
 		describe("DiscordChatMessageComposer", () => {
-			it("renders the translated channel placeholder and toolbar", async () => {
+			it("renders the channel placeholder and toolbar", async () => {
 				const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 					props: { channelName: "mod-commands" },
 				});
 				const input = wrapper.find(".discord-message-composer-input");
 
-				expect(input.attributes("placeholder")).toBe("Messaggio in #mod-commands");
+				expect(input.attributes("placeholder")).toBe("Message #mod-commands");
 				expect(input.attributes()).toHaveProperty("readonly");
-				expect(wrapper.findAll(".discord-message-composer-action")).toHaveLength(7);
-				expect(wrapper.find("[aria-label='Notifiche']").exists()).toBe(true);
+				expect(wrapper.findAll(".discord-message-composer-action")).toHaveLength(4);
+				expect(wrapper.find("[aria-label='Choose an emoji']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Notifiche']").exists()).toBe(false);
 			});
 		});
 

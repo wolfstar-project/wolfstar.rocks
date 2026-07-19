@@ -48,7 +48,7 @@
 					</DiscordScrollbar>
 
 					<nav
-						class="discord-slash-command-suggestions-sidebar-scroll"
+						class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
 						:aria-label="railLabel"
 					>
 						<div class="discord-slash-command-suggestions-sidebar">
@@ -180,8 +180,6 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	/* Chunky short thumb; track stays nearly invisible like Discord. */
 	--discord-slash-command-suggestions-scrollbar-track: transparent;
 	--discord-slash-command-suggestions-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.55);
-	/* Sidebar / rail scrollbar: thinner and quieter than the list bar. */
-	--discord-slash-command-suggestions-sidebar-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.35);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	/* Frequently Used header (~2rem) + 5 suggestion rows (3rem each). */
 	--discord-slash-command-suggestions-height: calc(2rem + 5 * 3rem);
@@ -252,38 +250,15 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-scroll {
-	/* Never h-full on mobile: in a column flex that ate the list viewport (empty panel + rail-only look). */
+	/* Never h-full on mobile: in a column flex that ate the list viewport (empty panel + rail-only look).
+	   Scroll remains via wheel/touch; native browser scrollbar is hidden (no-scrollbar). */
 	@apply min-h-0 shrink-0 self-stretch overflow-x-hidden overflow-y-auto max-md:h-auto max-md:w-full max-md:overflow-x-auto max-md:overflow-y-hidden md:order-1 md:h-full;
 	width: var(--discord-slash-command-suggestions-rail-width);
 	overscroll-behavior: contain;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
-	/* Thin, quiet rail scrollbar — distinct from the list DiscordScrollbar. */
-	scrollbar-width: thin;
-	scrollbar-color: var(--discord-slash-command-suggestions-sidebar-scrollbar-thumb) transparent;
 
 	@media (width < 48rem) {
 		width: 100%;
-		scrollbar-width: none;
-	}
-}
-
-.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar {
-	width: 2px;
-	height: 2px;
-}
-
-.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar-thumb {
-	border-radius: 9999px;
-	background: var(--discord-slash-command-suggestions-sidebar-scrollbar-thumb);
-}
-
-@media (width < 48rem) {
-	.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar {
-		display: none;
 	}
 }
 

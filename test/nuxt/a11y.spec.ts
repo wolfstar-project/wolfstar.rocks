@@ -10,11 +10,11 @@ import {
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
+	DiscordChatMessageComposer,
 	DiscordEmbed,
 	DiscordInvite,
 	DiscordMention,
 	DiscordMemberList,
-	DiscordMessageComposer,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
@@ -338,9 +338,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordMessageComposer", () => {
+		describe("DiscordChatMessageComposer", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordMessageComposer, {
+				const component = await mountSuspended(DiscordChatMessageComposer, {
 					props: { channelName: "mod-commands" },
 				});
 				const results = await runAxe(component);

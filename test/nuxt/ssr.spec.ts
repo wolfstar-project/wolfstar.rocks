@@ -8,7 +8,7 @@ import {
 	DiscordInvite,
 	DiscordMention,
 	DiscordMemberList,
-	DiscordMessageComposer,
+	DiscordChatMessageComposer,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
@@ -571,9 +571,9 @@ describe("component SSR rendering", () => {
 			});
 		});
 
-		describe("DiscordMessageComposer", () => {
+		describe("DiscordChatMessageComposer", () => {
 			it("renders the translated channel placeholder and toolbar", async () => {
-				const wrapper = await mountSuspended(DiscordMessageComposer, {
+				const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 					props: { channelName: "mod-commands" },
 				});
 				const input = wrapper.find(".discord-message-composer-input");

@@ -51,13 +51,10 @@ interface ComposerAction {
 }
 
 const ComposerActions: readonly ComposerAction[] = [
-	{ icon: "ph:bell", label: "Notifications" },
-	{ icon: "ph:magic-wand", label: "App tools", secondary: true },
-	{ icon: "ph:translate", label: "Translate", secondary: true },
 	{ icon: "discord:gift", label: "Gift a user", secondary: true },
 	{ icon: "discord:sticker", label: "Choose a sticker", optional: true },
 	{ icon: "discord:emoji", label: "Choose an emoji" },
-	{ icon: "ph:squares-four", label: "Other actions", optional: true },
+	{ icon: "discord:apps", label: "Open app bar", optional: true },
 ];
 </script>
 
@@ -77,7 +74,7 @@ const composerLabel = computed(() => `Message composer for ${channelName}`);
 	--discord-message-composer-muted: oklch(from var(--color-base-content) l c h / 0.58);
 	--discord-message-composer-hover: oklch(from var(--color-base-content) l c h / 0.1);
 
-	@apply mx-3 mb-3 flex h-11 min-w-0 shrink-0 items-center gap-1 rounded-lg px-1.5 font-whitney;
+	@apply mx-5 mb-5 flex h-11 min-w-0 shrink-0 items-center gap-1 rounded-lg px-1.5 font-whitney;
 	background-color: var(--discord-message-composer-bg);
 	color: var(--discord-message-composer-muted);
 }

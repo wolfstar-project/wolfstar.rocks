@@ -145,7 +145,7 @@
 									</DiscordSlashCommandSuggestionGroup>
 								</DiscordSlashCommandSuggestions>
 
-								<DiscordMessageComposer channel-name="mod-commands" />
+								<DiscordChatMessageComposer channel-name="mod-commands" />
 							</div>
 						</div>
 

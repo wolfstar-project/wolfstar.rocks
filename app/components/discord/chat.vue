@@ -51,7 +51,15 @@ defineSlots<ChatSlots>();
 }
 
 .discord-chat-scrollbar {
+	--discord-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.08);
+	--discord-scrollbar-thumb: transparent;
+
 	@apply h-full max-h-full min-h-0 flex-1;
+}
+
+/* Outer channel scrollbar: thinner / quieter than the slash-command picker list bar. */
+.discord-chat-scrollbar :deep(.discord-scrollbar) {
+	grid-template-columns: minmax(0, 1fr) 2px;
 }
 
 .discord-chat-messages {

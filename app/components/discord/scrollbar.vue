@@ -53,6 +53,10 @@ import type { VNode } from "vue";
 interface DiscordScrollbarProps {
 	alwaysShowTrack?: boolean;
 	showArrows?: boolean;
+	/** Minimum thumb height in px. */
+	minThumbHeight?: number;
+	/** Maximum thumb height in px — keeps Discord picker thumbs short and chunky. */
+	maxThumbHeight?: number;
 }
 
 interface DiscordScrollbarSlots {
@@ -63,10 +67,14 @@ interface DiscordScrollbarSlots {
 <script setup lang="ts">
 defineSlots<DiscordScrollbarSlots>();
 
-const MIN_THUMB_HEIGHT = 24;
 const SCROLL_STEP = 40;
 
-const { alwaysShowTrack = false, showArrows = false } = defineProps<DiscordScrollbarProps>();
+const {
+	alwaysShowTrack = false,
+	showArrows = false,
+	minThumbHeight = 24,
+	maxThumbHeight,
+} = defineProps<DiscordScrollbarProps>();
 
 const viewportRef = useTemplateRef<HTMLDivElement>("viewportRef");
 const contentRef = useTemplateRef<HTMLDivElement>("contentRef");
@@ -97,10 +105,12 @@ function updateThumb() {
 	}
 
 	const railHeight = thumbRail.clientHeight;
-	const computedThumbHeight = Math.max(
-		(clientHeight / scrollHeight) * railHeight,
-		MIN_THUMB_HEIGHT,
-	);
+	const proportionalHeight = (clientHeight / scrollHeight) * railHeight;
+	const cappedMax =
+		maxThumbHeight === undefined
+			? proportionalHeight
+			: Math.min(proportionalHeight, maxThumbHeight);
+	const computedThumbHeight = Math.max(cappedMax, minThumbHeight);
 	const maxThumbOffset = Math.max(railHeight - computedThumbHeight, 0);
 	const maxScrollTop = scrollHeight - clientHeight;
 

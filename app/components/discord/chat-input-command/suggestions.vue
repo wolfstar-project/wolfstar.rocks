@@ -17,7 +17,8 @@
 					<!-- List first in DOM so mobile (column) matches Discord: commands above, app rail below. -->
 					<DiscordScrollbar
 						:key="selectedApp ?? 'frequently-used'"
-						always-show-track
+						:min-thumb-height="14"
+						:max-thumb-height="40"
 						class="discord-slash-command-suggestions-scroll"
 					>
 						<div
@@ -47,7 +48,7 @@
 					</DiscordScrollbar>
 
 					<nav
-						class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
+						class="discord-slash-command-suggestions-sidebar-scroll"
 						:aria-label="railLabel"
 					>
 						<div class="discord-slash-command-suggestions-sidebar">
@@ -104,7 +105,8 @@
 
 			<DiscordScrollbar
 				v-else-if="slots.matched"
-				always-show-track
+				:min-thumb-height="14"
+				:max-thumb-height="40"
 				class="discord-slash-command-suggestions-scroll"
 			>
 				<div
@@ -118,7 +120,8 @@
 
 			<DiscordScrollbar
 				v-else-if="!slots['frequently-used'] && !slots.matched"
-				always-show-track
+				:min-thumb-height="14"
+				:max-thumb-height="40"
 				class="discord-slash-command-suggestions-scroll"
 			>
 				<div role="listbox" :aria-label="listboxLabel">
@@ -174,13 +177,17 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-sidebar-hover: oklch(32.11% 0.0094 268.56);
 	--discord-slash-command-suggestions-sidebar-icon: oklch(73.06% 0.0048 264.53);
 	--discord-slash-command-suggestions-header: oklch(73.06% 0.0048 264.53);
-	--discord-slash-command-suggestions-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
-	--discord-slash-command-suggestions-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
+	/* Chunky short thumb; track stays nearly invisible like Discord. */
+	--discord-slash-command-suggestions-scrollbar-track: transparent;
+	--discord-slash-command-suggestions-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.55);
+	/* Sidebar / rail scrollbar: thinner and quieter than the list bar. */
+	--discord-slash-command-suggestions-sidebar-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.35);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	/* Frequently Used header (~2rem) + 5 suggestion rows (3rem each). */
 	--discord-slash-command-suggestions-height: calc(2rem + 5 * 3rem);
 
-	@apply font-whitney;
+	/* Floating Discord panel: solid fill, inset to match composer, tiny gap below. */
+	@apply mx-3 mb-0.5 overflow-hidden rounded-md font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);
 }
 
@@ -197,8 +204,18 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
 	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
 
-	/* Desktop: list sits to the right of the rail (DOM order is list → rail). */
+	/* Desktop: list sits to the right of the rail (DOM order is list → rail).
+	   Class is on the DiscordScrollbar root — set columns here, not via :deep(). */
 	@apply h-full max-h-full min-h-0 min-w-0 flex-1 md:order-2;
+	grid-template-columns: minmax(0, 1fr) 8px;
+}
+
+.discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb-rail) {
+	@apply my-1.5;
+}
+
+.discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb) {
+	@apply rounded-full;
 }
 
 .discord-slash-command-suggestions-panel:not(
@@ -240,9 +257,33 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	width: var(--discord-slash-command-suggestions-rail-width);
 	overscroll-behavior: contain;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
+	/* Thin, quiet rail scrollbar — distinct from the list DiscordScrollbar. */
+	scrollbar-width: thin;
+	scrollbar-color: var(--discord-slash-command-suggestions-sidebar-scrollbar-thumb) transparent;
 
 	@media (width < 48rem) {
 		width: 100%;
+		scrollbar-width: none;
+	}
+}
+
+.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar {
+	width: 2px;
+	height: 2px;
+}
+
+.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar-thumb {
+	border-radius: 9999px;
+	background: var(--discord-slash-command-suggestions-sidebar-scrollbar-thumb);
+}
+
+@media (width < 48rem) {
+	.discord-slash-command-suggestions-sidebar-scroll::-webkit-scrollbar {
+		display: none;
 	}
 }
 

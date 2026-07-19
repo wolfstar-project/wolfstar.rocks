@@ -1,20 +1,14 @@
-import type { SecondaryStorage } from "better-auth";
 import type { DiscordProfile } from "better-auth/social-providers";
+import { createAuthSecondaryStorage } from "#server/utils/auth-rate-limit-storage";
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { defineServerAuth } from "@onmax/nuxt-better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
 import { isDevelopment } from "std-env";
 
-const authRateLimitStorage = useStorage("wolfstar:auth-ratelimiter");
-
-// Adapts the Nitro/unstorage mount above to better-auth's SecondaryStorage
-// shape so its rate-limit counters survive across serverless invocations.
-const authSecondaryStorage: SecondaryStorage = {
-	get: (key) => authRateLimitStorage.getItem(key),
-	set: (key, value) => authRateLimitStorage.setItem(key, value),
-	delete: (key) => authRateLimitStorage.removeItem(key),
-};
+// Adapts the Nitro/unstorage mount to better-auth's SecondaryStorage shape so
+// its rate-limit counters survive across serverless invocations.
+const authSecondaryStorage = createAuthSecondaryStorage(useStorage("wolfstar:auth-ratelimiter"));
 
 export default defineServerAuth(() => ({
 	socialProviders: {

@@ -78,7 +78,7 @@ const profile = computed(() => Profiles[name.value]);
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-badge {
-	--blurple: #5865f2;
+	--blurple: oklch(57.74% 0.2091 273.85);
 
 	@apply ml-1 flex flex-row items-center rounded-md px-1 py-0.5 font-bold text-white;
 	background-color: var(--blurple);

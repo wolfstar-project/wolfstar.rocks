@@ -154,7 +154,9 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-content {
-	@apply min-w-0;
+	/* Keep overflow visible so position:sticky descendants (e.g. slash-command
+	   section headers) stick against .discord-scrollbar-viewport, not here. */
+	@apply min-w-0 overflow-visible;
 }
 
 .discord-scrollbar-track {

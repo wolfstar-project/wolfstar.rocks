@@ -34,15 +34,35 @@ export interface DiscordChatMessage {
 	timestamp?: string;
 }
 
+export type DiscordMemberPresence = "online" | "idle" | "dnd" | "offline";
+
 export interface DiscordMemberListMember {
 	id: string;
 	name: string;
 	avatar?: string;
 	icon?: string;
 	role?: string;
+	/** Custom status / activity line under the display name. */
 	description?: string;
 	app?: boolean;
 	verified?: boolean;
+	/** Presence indicator on the avatar (defaults to online for non-offline sections). */
+	presence?: DiscordMemberPresence;
+	/**
+	 * Highest role color as an `oklch(...)` CSS color.
+	 * Colors the member display name (Discord role-colored members).
+	 */
+	color?: string;
+	/**
+	 * When true with a `role`, the member is listed under a hoisted role
+	 * section above Online (Discord “Display role members separately”).
+	 */
+	pinned?: boolean;
+	/**
+	 * Optional row background (CSS `background-image` value) for Discord
+	 * profile decorations — e.g. nebula layers for Developers.
+	 */
+	rowBackground?: string;
 }
 // #endregion
 

@@ -41,20 +41,58 @@ describe("component SSR rendering", () => {
 		});
 
 		describe("DiscordChannelHeader", () => {
-			it("renders channel name, search placeholder, and toolbar chrome", async () => {
+			it("renders channel name, topic, search placeholder, and toolbar chrome", async () => {
 				const wrapper = await mountSuspended(DiscordChannelHeader, {
 					props: {
 						name: "mod-commands",
 						type: "text",
-						searchPlaceholder: "Search WolfStar Laboratory",
+						topic: "WolfStar moderation commands — try a slash command below.",
+						searchPlaceholder: "Search",
+						onlineCount: 19,
+						notificationCount: 48,
 					},
 				});
 
 				expect(wrapper.find(".discord-channel-header").exists()).toBe(true);
 				expect(wrapper.text()).toContain("mod-commands");
-				expect(wrapper.text()).toContain("Search WolfStar Laboratory");
+				expect(wrapper.text()).toContain(
+					"WolfStar moderation commands — try a slash command below.",
+				);
+				expect(wrapper.text()).toContain("Search");
 				expect(wrapper.find(".discord-channel-header-toolbar").exists()).toBe(true);
-				expect(wrapper.findAll(".discord-channel-header-action").length).toBe(6);
+				expect(wrapper.find(".discord-channel-header-divider").exists()).toBe(true);
+				expect(wrapper.find(".discord-channel-header-topic").exists()).toBe(true);
+				const actions = wrapper.findAll(".discord-channel-header-action");
+				expect(actions.length).toBe(5);
+				expect(actions[0]?.attributes("aria-label")).toBe("Favorite channel");
+				expect(actions[1]?.attributes("aria-label")).toBe("Threads");
+				expect(actions[2]?.attributes("aria-label")).toBe("Notification settings");
+				expect(actions[3]?.attributes("aria-label")).toBe("Pinned messages");
+				expect(actions[4]?.attributes("aria-label")).toBe("Hide member list");
+				expect(actions[4]?.attributes("aria-pressed")).toBe("true");
+				expect(actions[4]?.classes()).toContain("discord-channel-header-action-active");
+				expect(wrapper.find(".discord-channel-header-mobile").exists()).toBe(true);
+				expect(wrapper.find(".discord-channel-header-desktop").exists()).toBe(true);
+				expect(wrapper.text()).toContain("19 Online");
+				expect(wrapper.find(".discord-channel-header-badge").text()).toBe("48");
+			});
+
+			it("toggles membersOpen via the users toolbar action", async () => {
+				const wrapper = await mountSuspended(DiscordChannelHeader, {
+					props: {
+						name: "mod-commands",
+						membersOpen: true,
+					},
+				});
+
+				const membersButton = wrapper
+					.findAll(".discord-channel-header-action")
+					.find((action) => action.attributes("aria-pressed") !== undefined);
+				expect(membersButton).toBeDefined();
+				await membersButton!.trigger("click");
+
+				expect(wrapper.emitted("update:membersOpen")?.[0]).toEqual([false]);
+				expect(wrapper.emitted("toggle-members")).toHaveLength(1);
 			});
 		});
 
@@ -128,8 +166,73 @@ describe("component SSR rendering", () => {
 				expect(wrapper.find(".discord-member-list-section-offline").exists()).toBe(true);
 				expect(wrapper.find(".discord-member-list-app").attributes("role")).toBe("img");
 				expect(wrapper.find(".discord-member-list-avatar .discord-presence").exists()).toBe(
-					false,
+					true,
 				);
+			});
+
+			it("groups pinned role-colored members above Online", async () => {
+				const wrapper = await mountSuspended(DiscordMemberList, {
+					props: {
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								description: "/help",
+								app: true,
+								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
+							},
+							{
+								id: "astro",
+								name: "Astro",
+								role: "Applications",
+								description: "/help",
+								app: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+						showRoles: true,
+					},
+				});
+
+				expect(wrapper.text()).toContain("Moderation — 1");
+				expect(wrapper.text()).toContain("Online — 1");
+				expect(wrapper.text()).toContain("Offline — 1");
+				expect(wrapper.find(".discord-member-list-heading-role").exists()).toBe(true);
+				expect(wrapper.find(".discord-member-list-member").attributes("style")).toContain(
+					"--member-name-color: oklch(57.74% 0.2091 273.85)",
+				);
+				expect(
+					wrapper.find(".discord-member-list-section-offline .discord-presence").exists(),
+				).toBe(false);
+			});
+
+			it("renders dnd presence and skips an empty Online section", async () => {
+				const wrapper = await mountSuspended(DiscordMemberList, {
+					props: {
+						online: [
+							{
+								id: "lory",
+								name: "RVG|lory",
+								role: "Developers",
+								presence: "dnd",
+								color: "oklch(68.42% 0.214 350.12)",
+								pinned: true,
+								rowBackground:
+									"linear-gradient(90deg, oklch(42% 0.16 305 / 0.55), transparent)",
+							},
+						],
+						offline: [{ id: "patreon", name: "Patreon", app: true, verified: true }],
+					},
+				});
+
+				expect(wrapper.text()).toContain("Developers — 1");
+				expect(wrapper.text()).not.toContain("Online — ");
+				expect(wrapper.text()).toContain("Offline — 1");
+				expect(wrapper.find(".discord-presence").attributes("data-status")).toBe("dnd");
+				expect(wrapper.find(".discord-member-list-member-decorated").exists()).toBe(true);
 			});
 		});
 
@@ -580,9 +683,39 @@ describe("component SSR rendering", () => {
 
 				expect(input.attributes("placeholder")).toBe("Message #mod-commands");
 				expect(input.attributes()).toHaveProperty("readonly");
-				expect(wrapper.findAll(".discord-message-composer-action")).toHaveLength(4);
+				expect(wrapper.findAll(".discord-message-composer-action")).toHaveLength(5);
+				expect(wrapper.find(".discord-message-composer-field").exists()).toBe(true);
+				expect(wrapper.find(".discord-message-composer-apps-mobile").exists()).toBe(true);
+				expect(wrapper.find(".discord-message-composer-send").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Open attachment menu']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Send a gift']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Open GIF picker']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Open sticker picker']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Select an emoji']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Open apps and commands']").exists()).toBe(true);
 				expect(wrapper.find("[aria-label='Choose an emoji']").exists()).toBe(true);
+				expect(wrapper.find("[aria-label='Send message']").exists()).toBe(true);
 				expect(wrapper.find("[aria-label='Notifiche']").exists()).toBe(false);
+			});
+
+			it("mutes the send control when the composer is empty", async () => {
+				const empty = await mountSuspended(DiscordChatMessageComposer, {
+					props: { channelName: "mod-commands" },
+				});
+
+				expect(empty.find(".discord-message-composer-has-value").exists()).toBe(false);
+				expect(
+					empty.find(".discord-message-composer-send").attributes("disabled"),
+				).toBeDefined();
+
+				const filled = await mountSuspended(DiscordChatMessageComposer, {
+					props: { channelName: "mod-commands", modelValue: "/warn" },
+				});
+
+				expect(filled.find(".discord-message-composer-has-value").exists()).toBe(true);
+				expect(
+					filled.find(".discord-message-composer-send").attributes("disabled"),
+				).toBeUndefined();
 			});
 		});
 
@@ -712,8 +845,89 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("CommandsShowcase", () => {
+		async function openSlashCommandPicker(wrapper: Awaited<ReturnType<typeof mountSuspended>>) {
+			await wrapper.find(".discord-message-composer-apps-mobile").trigger("click");
+			await wrapper.vm.$nextTick();
+		}
+
+		it("renders mobile command browser with an idle composer by default", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			expect(wrapper.find(".showcase-discord-shell").exists()).toBe(true);
+			expect(wrapper.find(".showcase-discord-main").exists()).toBe(true);
+			expect(wrapper.find(".discord-channel-welcome").exists()).toBe(true);
+			expect(wrapper.find(".discord-chat-messages[role='log']").exists()).toBe(true);
+			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
+			expect(wrapper.find(".discord-message-composer-field").exists()).toBe(true);
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("");
+			expect(wrapper.find(".showcase-mobile-command-browser").exists()).toBe(true);
+			expect(wrapper.text()).toContain("Command Browser");
+			expect(wrapper.text()).toContain("All Commands");
+			expect(wrapper.text()).toContain("Select a category to view commands.");
+			expect(wrapper.findAll(".showcase-mobile-command-link").length).toBe(6);
+			expect(wrapper.find(".discord-channel-header-mobile").exists()).toBe(true);
+			expect(wrapper.text()).toContain("10 Online");
+			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
+			expect(wrapper.text()).toContain("Star Network — 4");
+			expect(wrapper.text()).toContain("Developers — 2");
+			expect(wrapper.text()).toContain("External Bots — 4");
+			expect(wrapper.text()).not.toContain("Online — ");
+			expect(wrapper.text()).toContain("Offline — 2");
+			expect(wrapper.text()).toContain("RVG|lory");
+			expect(wrapper.text()).toContain("RedStar");
+			expect(wrapper.text()).toContain("WolfStar Beta");
+			expect(wrapper.text()).toContain("Ko-fi Bot");
+			expect(wrapper.text()).toContain("Patreon");
+			const membersToggle = wrapper
+				.findAll(".discord-channel-header-action")
+				.find((action) => action.attributes("aria-pressed") !== undefined);
+			expect(membersToggle?.attributes("aria-pressed")).toBe("true");
+			expect(membersToggle?.attributes("aria-label")).toBe("Hide member list");
+		});
+
+		it("renders a plain-text moderation success reply on desktop", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			const desktopResponse = wrapper.find(".showcase-desktop-command-response");
+			expect(desktopResponse.exists()).toBe(true);
+			expect(desktopResponse.find(".discord-embed").exists()).toBe(false);
+			expect(desktopResponse.find(".showcase-desktop-text-response").exists()).toBe(true);
+			expect(desktopResponse.text()).toMatch(/Created case 3\s*\|\s*@?baddie/);
+			expect(desktopResponse.text()).toContain("Stella");
+			expect(desktopResponse.text()).toContain("warn");
+			expect(desktopResponse.text()).not.toContain("❯ Type:");
+			expect(desktopResponse.text()).not.toContain("❯ Reason:");
+		});
+
+		it("toggles the member list from the channel header users button", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
+
+			const membersToggle = wrapper
+				.findAll(".discord-channel-header-action")
+				.find((action) => action.attributes("aria-pressed") !== undefined);
+			expect(membersToggle).toBeDefined();
+			await membersToggle!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-member-list").exists()).toBe(false);
+			expect(membersToggle!.attributes("aria-pressed")).toBe("false");
+			expect(membersToggle!.attributes("aria-label")).toBe("Show member list");
+
+			await membersToggle!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
+			expect(membersToggle!.attributes("aria-pressed")).toBe("true");
+		});
+
 		it("renders frequently used and additional command suggestions", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
 
 			expect(wrapper.text()).toContain("Frequently Used");
 			expect(wrapper.text()).not.toContain("Matched Command");
@@ -757,25 +971,17 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/twitch-subscriptions show");
 			expect(wrapper.text()).not.toContain("/twitch-subscriptions add");
 			expect(wrapper.findAll("input[name='matched-command']").length).toBe(0);
-			expect(wrapper.findAll(".discord-channel-header").length).toBe(1);
-			expect(wrapper.find(".showcase-discord-shell").exists()).toBe(true);
-			expect(wrapper.find(".showcase-discord-main").exists()).toBe(true);
-			expect(wrapper.find(".discord-channel-welcome").exists()).toBe(true);
-			expect(wrapper.find(".discord-channel-welcome-edit").exists()).toBe(true);
-			expect(wrapper.find(".discord-chat-messages[role='log']").exists()).toBe(true);
-			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
 			expect(wrapper.find(".discord-slash-command-input").exists()).toBe(false);
-			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
-			expect(wrapper.find(".discord-member-list-summary").exists()).toBe(false);
-			expect(wrapper.text()).toContain("Online — 7");
-			expect(wrapper.text()).toContain("Offline — 2");
 		});
 
 		it("selects a command when clicking a suggestion", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
 
-			expect(wrapper.text()).toContain("spam");
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("/");
 
 			const kickSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
@@ -784,18 +990,77 @@ describe("component SSR rendering", () => {
 			await kickSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.text()).toContain("rule violation");
-			expect(wrapper.text()).not.toContain("spam");
 			expect(wrapper.find(".discord-slash-command-suggestion-active").text()).toContain(
 				"/kick",
 			);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("/kick");
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
 			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(6);
 		});
 
+		it("inserts the full command path into the composer for subcommands", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
+
+			const confSuggestion = wrapper
+				.findAll(".discord-slash-command-suggestion")
+				.find((suggestion) => suggestion.text().includes("/conf"));
+			expect(confSuggestion).toBeDefined();
+			await confSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("/conf menu");
+		});
+
+		it("toggles the command picker from the apps control", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("");
+
+			await openSlashCommandPicker(wrapper);
+
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(true);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("/");
+
+			await wrapper.find(".discord-message-composer-apps-mobile").trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("");
+		});
+
+		it("selects a command from the mobile markdown command browser", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			const muteLink = wrapper
+				.findAll(".showcase-mobile-command-link")
+				.find((link) => link.text().includes("/mute"));
+			expect(muteLink).toBeDefined();
+			await muteLink!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("/mute");
+			expect(wrapper.find(".showcase-mobile-command-link-active").text()).toContain("/mute");
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(true);
+		});
+
 		it("keeps third-party app rows non-selectable", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
 
 			const starylSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
@@ -811,8 +1076,9 @@ describe("component SSR rendering", () => {
 			);
 		});
 
-		it("renders the components-v2 mock for the conf menu command", async () => {
+		it("inserts conf menu into the composer and keeps the command browser active", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
 
 			const confSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
@@ -821,10 +1087,15 @@ describe("component SSR rendering", () => {
 			await confSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.find(".discord-embed").exists()).toBe(false);
-			expect(wrapper.text()).toContain("Currently at");
-			expect(wrapper.text()).toContain("Choose an option...");
-			expect(wrapper.text()).toContain("Stop");
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("/conf menu");
+			expect(wrapper.find(".showcase-mobile-command-link-active").text()).toContain(
+				"/conf menu",
+			);
+			expect(wrapper.find(".discord-slash-command-suggestion-active").text()).toContain(
+				"/conf",
+			);
 		});
 	});
 

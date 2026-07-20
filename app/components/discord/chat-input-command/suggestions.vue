@@ -1,133 +1,138 @@
 <template>
 	<section class="discord-slash-command-suggestions" :aria-label="ariaLabel">
-		<div
-			class="discord-slash-command-suggestions-panel"
-			:class="{
-				'discord-slash-command-suggestions-panel-with-matched':
-					slots['frequently-used'] && slots.matched,
-				'discord-slash-command-suggestions-panel-with-frequently-used':
-					!!slots['frequently-used'],
-			}"
-		>
+		<div class="discord-slash-command-suggestions-container">
 			<div
-				v-if="slots['frequently-used']"
-				class="discord-slash-command-suggestions-frequently-used"
-			>
-				<div class="discord-slash-command-suggestions-inner">
-					<!-- List first in DOM so mobile (column) matches Discord: commands above, app rail below. -->
-					<DiscordScrollbar
-						:key="selectedApp ?? 'frequently-used'"
-						:min-thumb-height="14"
-						:max-thumb-height="40"
-						class="discord-slash-command-suggestions-scroll"
-					>
-						<div
-							role="listbox"
-							:aria-label="listboxLabel"
-							class="discord-slash-command-suggestions-list"
-						>
-							<section
-								v-if="selectedApp === null"
-								class="discord-slash-command-suggestions-recent"
-							>
-								<p
-									class="discord-slash-command-suggestions-header"
-									role="presentation"
-								>
-									<UIcon
-										name="discord:recently-used"
-										class="discord-slash-command-suggestions-header-icon"
-										aria-hidden="true"
-									/>
-									Frequently Used
-								</p>
-								<slot name="frequently-used" />
-							</section>
-							<slot />
-						</div>
-					</DiscordScrollbar>
-
-					<nav
-						class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
-						:aria-label="railLabel"
-					>
-						<div class="discord-slash-command-suggestions-sidebar">
-							<button
-								type="button"
-								class="discord-slash-command-suggestions-sidebar-item"
-								:class="{
-									'discord-slash-command-suggestions-sidebar-item-active':
-										selectedApp === null,
-								}"
-								:aria-pressed="selectedApp === null"
-								title="Frequently Used"
-								aria-label="Frequently Used"
-								@click="selectedApp = null"
-							>
-								<span class="discord-slash-command-suggestions-sidebar-recent">
-									<UIcon
-										name="discord:recently-used"
-										class="discord-slash-command-suggestions-sidebar-icon"
-										aria-hidden="true"
-									/>
-								</span>
-							</button>
-
-							<button
-								v-for="app in SlashCommandRailApps"
-								:key="app"
-								type="button"
-								class="discord-slash-command-suggestions-sidebar-item"
-								:class="{
-									'discord-slash-command-suggestions-sidebar-item-active':
-										selectedApp === app,
-								}"
-								:aria-pressed="selectedApp === app"
-								:title="SlashCommandApps[app].label"
-								:aria-label="`${SlashCommandApps[app].label} commands`"
-								@click="selectedApp = app"
-							>
-								<DiscordChatInputCommandAppIcon :app size="rail" />
-							</button>
-						</div>
-					</nav>
-				</div>
-			</div>
-
-			<div
-				v-if="slots['frequently-used'] && slots.matched"
-				role="listbox"
-				:aria-label="matchedLabel"
-				class="discord-slash-command-suggestions-matched"
-			>
-				<slot name="matched" />
-			</div>
-
-			<DiscordScrollbar
-				v-else-if="slots.matched"
-				:min-thumb-height="14"
-				:max-thumb-height="40"
-				class="discord-slash-command-suggestions-scroll"
+				class="discord-slash-command-suggestions-panel"
+				:class="{
+					'discord-slash-command-suggestions-panel-with-matched':
+						slots['frequently-used'] && slots.matched,
+					'discord-slash-command-suggestions-panel-with-frequently-used':
+						!!slots['frequently-used'],
+				}"
 			>
 				<div
+					v-if="slots['frequently-used']"
+					class="discord-slash-command-suggestions-frequently-used"
+				>
+					<div class="discord-slash-command-suggestions-inner">
+						<!-- List first in DOM so mobile (column) matches Discord: commands above, app rail below. -->
+						<DiscordScrollbar
+							:key="selectedApp ?? 'frequently-used'"
+							always-show-track
+							:min-thumb-height="14"
+							:max-thumb-height="40"
+							class="discord-slash-command-suggestions-scroll"
+						>
+							<div
+								role="listbox"
+								:aria-label="listboxLabel"
+								class="discord-slash-command-suggestions-list"
+							>
+								<section
+									v-if="selectedApp === null"
+									class="discord-slash-command-suggestions-recent"
+								>
+									<p
+										class="discord-slash-command-suggestions-header"
+										role="presentation"
+									>
+										<UIcon
+											name="discord:recently-used"
+											class="discord-slash-command-suggestions-header-icon"
+											aria-hidden="true"
+										/>
+										Frequently Used
+									</p>
+									<slot name="frequently-used" />
+								</section>
+								<slot />
+							</div>
+						</DiscordScrollbar>
+
+						<nav
+							class="discord-slash-command-suggestions-sidebar-scroll no-scrollbar"
+							:aria-label="railLabel"
+						>
+							<div class="discord-slash-command-suggestions-sidebar">
+								<button
+									type="button"
+									class="discord-slash-command-suggestions-sidebar-item"
+									:class="{
+										'discord-slash-command-suggestions-sidebar-item-active':
+											selectedApp === null,
+									}"
+									:aria-pressed="selectedApp === null"
+									title="Frequently Used"
+									aria-label="Frequently Used"
+									@click="selectedApp = null"
+								>
+									<span class="discord-slash-command-suggestions-sidebar-recent">
+										<UIcon
+											name="discord:recently-used"
+											class="discord-slash-command-suggestions-sidebar-icon"
+											aria-hidden="true"
+										/>
+									</span>
+								</button>
+
+								<button
+									v-for="app in SlashCommandRailApps"
+									:key="app"
+									type="button"
+									class="discord-slash-command-suggestions-sidebar-item"
+									:class="{
+										'discord-slash-command-suggestions-sidebar-item-active':
+											selectedApp === app,
+									}"
+									:aria-pressed="selectedApp === app"
+									:title="SlashCommandApps[app].label"
+									:aria-label="`${SlashCommandApps[app].label} commands`"
+									@click="selectedApp = app"
+								>
+									<DiscordChatInputCommandAppIcon :app size="rail" />
+								</button>
+							</div>
+						</nav>
+					</div>
+				</div>
+
+				<div
+					v-if="slots['frequently-used'] && slots.matched"
 					role="listbox"
-					:aria-label="listboxLabel"
-					class="discord-slash-command-suggestions-list"
+					:aria-label="matchedLabel"
+					class="discord-slash-command-suggestions-matched"
 				>
 					<slot name="matched" />
 				</div>
-			</DiscordScrollbar>
 
-			<DiscordScrollbar
-				v-else-if="!slots['frequently-used'] && !slots.matched"
-				:min-thumb-height="14"
-				:max-thumb-height="40"
-				class="discord-slash-command-suggestions-scroll"
-			>
-				<div role="listbox" :aria-label="listboxLabel">
-					<slot />
-				</div>
-			</DiscordScrollbar>
+				<DiscordScrollbar
+					v-else-if="slots.matched"
+					always-show-track
+					:min-thumb-height="14"
+					:max-thumb-height="40"
+					class="discord-slash-command-suggestions-scroll"
+				>
+					<div
+						role="listbox"
+						:aria-label="listboxLabel"
+						class="discord-slash-command-suggestions-list"
+					>
+						<slot name="matched" />
+					</div>
+				</DiscordScrollbar>
+
+				<DiscordScrollbar
+					v-else-if="!slots['frequently-used'] && !slots.matched"
+					always-show-track
+					:min-thumb-height="14"
+					:max-thumb-height="40"
+					class="discord-slash-command-suggestions-scroll"
+				>
+					<div role="listbox" :aria-label="listboxLabel">
+						<slot />
+					</div>
+				</DiscordScrollbar>
+			</div>
 		</div>
 	</section>
 </template>
@@ -171,22 +176,32 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 @reference "@/assets/css/main.css";
 
 .discord-slash-command-suggestions {
-	--discord-slash-command-suggestions-bg: oklch(23.42% 0.0059 264.45);
-	--discord-slash-command-suggestions-sidebar: oklch(20.18% 0.0046 264.47);
-	--discord-slash-command-suggestions-sidebar-active: oklch(35.52% 0.0099 264.44);
-	--discord-slash-command-suggestions-sidebar-hover: oklch(32.11% 0.0094 268.56);
-	--discord-slash-command-suggestions-sidebar-icon: oklch(73.06% 0.0048 264.53);
-	--discord-slash-command-suggestions-header: oklch(73.06% 0.0048 264.53);
-	/* Chunky short thumb; track stays nearly invisible like Discord. */
-	--discord-slash-command-suggestions-scrollbar-track: transparent;
-	--discord-slash-command-suggestions-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.55);
+	/* Discord autocomplete surfaces aligned to desktop dark sidebar / server layers. */
+	--discord-slash-command-suggestions-bg: oklch(23.47% 0.005 272.95);
+	--discord-slash-command-suggestions-sidebar: oklch(19.34% 0.004 273.16);
+	--discord-slash-command-suggestions-sidebar-active: oklch(28.84% 0.007 272.93);
+	--discord-slash-command-suggestions-sidebar-hover: oklch(26.65% 0.006 272.93);
+	--discord-slash-command-suggestions-sidebar-icon: oklch(71.01% 0.01 273.13);
+	--discord-slash-command-suggestions-header: oklch(71.01% 0.01 273.13);
+	/* Chunky short thumb; track nearly invisible so only the pill stands out. */
+	--discord-slash-command-suggestions-scrollbar-track: oklch(71.01% 0.01 273.13 / 0.12);
+	--discord-slash-command-suggestions-scrollbar-thumb: oklch(71.01% 0.01 273.13 / 0.55);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	/* Frequently Used header (~2rem) + 5 suggestion rows (3rem each). */
 	--discord-slash-command-suggestions-height: calc(2rem + 5 * 3rem);
 
-	/* Floating Discord panel: solid fill, inset to match composer, tiny gap below. */
-	@apply mx-3 mb-0.5 overflow-hidden rounded-md font-whitney;
+	/* Floating Discord panel: solid fill, inset to match composer, visible gap below
+	   so channel chrome peeks through (~10px). Radius stays tight (~4px), not pill-like. */
+	@apply mx-3 mb-2.5 overflow-hidden rounded font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);
+}
+
+.discord-slash-command-suggestions-container {
+	@apply relative;
+}
+
+.discord-slash-command-suggestions-container-floating {
+	@apply absolute inset-0;
 }
 
 .discord-slash-command-suggestions-panel {
@@ -205,6 +220,10 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	/* Desktop: list sits to the right of the rail (DOM order is list → rail).
 	   Class is on the DiscordScrollbar root — set columns here, not via :deep(). */
 	@apply h-full max-h-full min-h-0 min-w-0 flex-1 md:order-2;
+}
+
+/* Beat DiscordScrollbar's default 4px column so the list thumb stays chunky. */
+.discord-slash-command-suggestions-scroll.discord-scrollbar {
 	grid-template-columns: minmax(0, 1fr) 8px;
 }
 
@@ -308,8 +327,11 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-header {
-	@apply flex items-center gap-1.5 px-2 py-1.5 font-whitney text-[11px] font-bold tracking-wide uppercase;
+	/* Stick within the Frequently Used section only — unsticks when that
+	   section scrolls out of the DiscordScrollbar viewport (Discord picker). */
+	@apply sticky top-0 z-[1] flex items-center gap-1.5 px-2 py-1.5 font-whitney text-[11px] font-bold tracking-wide uppercase;
 	color: var(--discord-slash-command-suggestions-header);
+	background-color: var(--discord-slash-command-suggestions-bg);
 }
 
 .discord-slash-command-suggestions-header-icon {

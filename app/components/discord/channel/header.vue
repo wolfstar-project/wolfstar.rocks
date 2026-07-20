@@ -1,41 +1,82 @@
 <template>
 	<div class="discord-channel-header">
-		<div class="discord-channel-header-info">
-			<UIcon
-				:name="typeIcon"
-				class="discord-channel-header-icon size-4.5 shrink-0"
-				aria-hidden="true"
-			/>
-			<span class="discord-channel-header-name">{{ name }}</span>
+		<div class="discord-channel-header-mobile">
+			<div class="discord-channel-header-back" aria-hidden="true">
+				<UIcon name="ph:arrow-left-bold" class="size-5" />
+				<span v-if="notificationCount > 0" class="discord-channel-header-badge">{{
+					notificationCount
+				}}</span>
+			</div>
+
+			<div class="discord-channel-header-mobile-title">
+				<div class="discord-channel-header-mobile-name-row">
+					<UIcon
+						:name="typeIcon"
+						class="discord-channel-header-icon size-4 shrink-0"
+						aria-hidden="true"
+					/>
+					<span class="discord-channel-header-name">{{ name }}</span>
+					<UIcon
+						name="ph:caret-right-bold"
+						class="discord-channel-header-chevron size-3 shrink-0"
+						aria-hidden="true"
+					/>
+				</div>
+				<div v-if="onlineCount !== undefined" class="discord-channel-header-online">
+					<span class="discord-channel-header-online-dot" aria-hidden="true" />
+					<span>{{ onlineCount }} Online</span>
+				</div>
+			</div>
+
+			<div class="discord-channel-header-mobile-search" aria-hidden="true">
+				<UIcon name="ph:magnifying-glass" class="size-5" />
+			</div>
 		</div>
 
-		<div class="discord-channel-header-toolbar" aria-hidden="true">
-			<div class="discord-channel-header-actions">
-				<UIcon
-					v-for="action of LeadingToolbarActions"
-					:key="action.icon"
-					:name="action.icon"
-					class="discord-channel-header-action size-5"
-				/>
+		<div class="discord-channel-header-desktop">
+			<div class="discord-channel-header-info">
+				<div class="discord-channel-header-title">
+					<UIcon
+						:name="typeIcon"
+						class="discord-channel-header-icon size-3 shrink-0"
+						aria-hidden="true"
+					/>
+					<span class="discord-channel-header-name">{{ name }}</span>
+				</div>
+
+				<template v-if="topic">
+					<span class="discord-channel-header-divider" aria-hidden="true" />
+					<span class="discord-channel-header-topic">{{ topic }}</span>
+				</template>
 			</div>
 
-			<div class="discord-channel-header-search">
-				<span class="discord-channel-header-search-placeholder">{{
-					searchPlaceholder
-				}}</span>
-				<UIcon
-					name="ph:magnifying-glass"
-					class="discord-channel-header-search-icon size-3.5 shrink-0"
-				/>
-			</div>
+			<div class="discord-channel-header-toolbar">
+				<button
+					v-for="action of ToolbarActions"
+					:key="action.id"
+					type="button"
+					class="discord-channel-header-action"
+					:class="{
+						'discord-channel-header-action-interactive': action.id === 'members',
+						'discord-channel-header-action-active':
+							action.id === 'members' && membersOpen,
+					}"
+					:aria-label="action.id === 'members' ? membersToggleLabel : action.label"
+					:aria-pressed="action.id === 'members' ? membersOpen : undefined"
+					@click="action.id === 'members' ? toggleMembers() : undefined"
+				>
+					<UIcon :name="action.icon" class="size-5" aria-hidden="true" />
+				</button>
 
-			<div class="discord-channel-header-actions">
-				<UIcon
-					v-for="action of TrailingToolbarActions"
-					:key="action.icon"
-					:name="action.icon"
-					class="discord-channel-header-action size-5"
-				/>
+				<div class="discord-channel-header-search" aria-hidden="true">
+					<span class="discord-channel-header-search-placeholder">{{
+						searchPlaceholder
+					}}</span>
+					<UIcon
+						name="ph:magnifying-glass"
+						class="discord-channel-header-search-icon size-3.5 shrink-0"
+					/>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -48,75 +89,206 @@ interface ChannelHeaderProps {
 	name: string;
 	/** Discord channel kind — drives the leading type glyph. */
 	type?: ChannelHeaderType;
+	/** Channel topic shown after the name divider (desktop Discord header). */
+	topic?: string;
 	/** Placeholder shown in the decorative search field. */
 	searchPlaceholder?: string;
+	/** Mobile header “X Online” count (Discord mobile channel chrome). */
+	onlineCount?: number;
+	/** Decorative notification badge on the mobile back control. */
+	notificationCount?: number;
+	/** Whether the member list sidebar is open (desktop Discord). */
+	membersOpen?: boolean;
+}
+
+type ToolbarActionId = "favorite" | "threads" | "notifications" | "pins" | "members";
+
+interface ToolbarAction {
+	id: ToolbarActionId;
+	icon: string;
+	label: string;
 }
 
 const TypeIcons = {
 	text: "discord:text-channel",
 } as const satisfies Record<ChannelHeaderType, string>;
 
-/** Order matches Discord desktop: threads → mute → pins → members, then search, then inbox → help. */
-const LeadingToolbarActions = [
-	{ icon: "ph:chats" },
-	{ icon: "ph:bell-slash" },
-	{ icon: "ph:push-pin" },
-	{ icon: "ph:users" },
-] as const;
-
-const TrailingToolbarActions = [{ icon: "ph:tray" }, { icon: "ph:question" }] as const;
+/**
+ * Order matches Discord desktop / Figma Frame 1087:
+ * favorite → threads → notifications → pins → members, then search.
+ */
+const ToolbarActions = [
+	{ id: "favorite", icon: "ph:star", label: "Favorite channel" },
+	{ id: "threads", icon: "ph:chats", label: "Threads" },
+	{ id: "notifications", icon: "ph:bell", label: "Notification settings" },
+	{ id: "pins", icon: "ph:push-pin", label: "Pinned messages" },
+	{ id: "members", icon: "ph:users", label: "Show member list" },
+] as const satisfies readonly ToolbarAction[];
 </script>
 
 <script setup lang="ts">
-const { name, type = "text", searchPlaceholder = "Search" } = defineProps<ChannelHeaderProps>();
+const {
+	name,
+	type = "text",
+	topic,
+	searchPlaceholder = "Search",
+	onlineCount,
+	notificationCount = 0,
+	membersOpen = true,
+} = defineProps<ChannelHeaderProps>();
+
+const emit = defineEmits<{
+	"update:membersOpen": [value: boolean];
+	"toggle-members": [];
+}>();
 
 const typeIcon = computed(() => TypeIcons[type]);
+
+const membersToggleLabel = computed(() => (membersOpen ? "Hide member list" : "Show member list"));
+
+function toggleMembers() {
+	emit("toggle-members");
+	emit("update:membersOpen", !membersOpen);
+}
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 
 .discord-channel-header {
-	@apply flex h-12 items-center justify-between gap-3 border-b px-4;
-	border-color: var(--home-border-subtle);
-	background-color: var(--color-base-300);
-	box-shadow: 0 1px 0 oklch(from var(--color-base-content) l c h / 0.04);
+	/* Discord-true desktop dark chrome (oklch only). */
+	--discord-channel-header-bg: oklch(26.65% 0.006 272.93);
+	--discord-channel-header-border: oklch(19.34% 0.004 273.16);
+	--discord-channel-header-edge: oklch(0% 0 0 / 0.2);
+	--discord-channel-header-text: oklch(91.56% 0.004 272.93);
+	--discord-channel-header-muted: oklch(71.01% 0.01 273.13);
+	--discord-channel-header-search-bg: oklch(19.34% 0.004 273.16);
+	--discord-channel-header-search-border: oklch(28.84% 0.007 272.93);
+	--discord-channel-header-badge: oklch(63.17% 0.208 24.62);
+	--discord-channel-header-online: oklch(72.27% 0.191 149.58);
+
+	@apply border-b;
+	border-color: var(--discord-channel-header-border);
+	background-color: var(--discord-channel-header-bg);
+	box-shadow: 0 1px 0 var(--discord-channel-header-edge);
+	color: var(--discord-channel-header-text);
+}
+
+.discord-channel-header-desktop {
+	@apply flex h-12 items-center justify-between gap-3 pr-3 pl-4;
+}
+
+.discord-channel-header-mobile {
+	display: none;
 }
 
 .discord-channel-header-info {
-	@apply flex min-w-0 items-center gap-2;
+	@apply flex min-w-0 items-center gap-5;
+}
+
+.discord-channel-header-title {
+	@apply flex min-w-0 shrink-0 items-center gap-2;
 }
 
 .discord-channel-header-icon {
-	@apply text-muted;
+	color: var(--discord-channel-header-muted);
 }
 
 .discord-channel-header-name {
-	@apply truncate text-[15px] font-semibold text-base-content;
+	@apply truncate font-whitney text-base font-medium;
+	color: var(--discord-channel-header-text);
+}
+
+.discord-channel-header-divider {
+	@apply h-4 w-px shrink-0;
+	background-color: var(--discord-channel-header-muted);
+	opacity: 0.45;
+}
+
+.discord-channel-header-topic {
+	@apply min-w-0 truncate font-whitney text-[13px] font-medium;
+	color: var(--discord-channel-header-muted);
 }
 
 .discord-channel-header-toolbar {
-	@apply flex shrink-0 items-center gap-4;
-}
-
-.discord-channel-header-actions {
-	@apply flex items-center gap-4;
+	@apply flex shrink-0 items-center gap-5;
 }
 
 .discord-channel-header-action {
-	@apply text-muted;
+	@apply inline-flex size-5 shrink-0 cursor-default items-center justify-center border-0 bg-transparent p-0;
+	color: var(--discord-channel-header-muted);
+}
+
+.discord-channel-header-action-interactive {
+	@apply cursor-pointer;
+}
+
+.discord-channel-header-action:hover,
+.discord-channel-header-action-active {
+	color: var(--discord-channel-header-text);
+}
+
+.discord-channel-header-action:focus-visible {
+	@apply outline-2 outline-offset-2 outline-primary;
 }
 
 .discord-channel-header-search {
-	@apply flex h-6 w-36 items-center gap-1.5 rounded-sm px-1.5 sm:w-44;
-	background-color: oklch(from var(--color-base-content) l c h / 0.1);
+	@apply flex h-7 w-[14.7rem] items-center justify-between gap-1.5 rounded-lg px-3;
+	background-color: var(--discord-channel-header-search-bg);
+	border: 1px solid var(--discord-channel-header-search-border);
 }
 
 .discord-channel-header-search-placeholder {
-	@apply min-w-0 flex-1 truncate text-xs text-muted;
+	@apply min-w-0 flex-1 truncate text-[13px] font-medium;
+	color: var(--discord-channel-header-muted);
 }
 
 .discord-channel-header-search-icon {
-	@apply text-muted;
+	color: var(--discord-channel-header-muted);
+}
+
+/* Discord mobile channel header (< md): back + badge · #channel / Online · search */
+@media (width < 48rem) {
+	.discord-channel-header-desktop {
+		display: none;
+	}
+
+	.discord-channel-header-mobile {
+		@apply flex h-14 items-center gap-2 px-2;
+	}
+
+	.discord-channel-header-back,
+	.discord-channel-header-mobile-search {
+		@apply relative inline-flex size-10 shrink-0 items-center justify-center;
+		color: var(--discord-channel-header-text);
+	}
+
+	.discord-channel-header-badge {
+		@apply absolute top-0.5 right-0 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-bold;
+		background-color: var(--discord-channel-header-badge);
+		color: oklch(100% 0 0);
+	}
+
+	.discord-channel-header-mobile-title {
+		@apply min-w-0 flex-1;
+	}
+
+	.discord-channel-header-mobile-name-row {
+		@apply flex min-w-0 items-center gap-1;
+	}
+
+	.discord-channel-header-chevron {
+		color: var(--discord-channel-header-muted);
+	}
+
+	.discord-channel-header-online {
+		@apply mt-0.5 flex items-center gap-1.5 text-xs;
+		color: var(--discord-channel-header-muted);
+	}
+
+	.discord-channel-header-online-dot {
+		@apply size-2 shrink-0 rounded-full;
+		background-color: var(--discord-channel-header-online);
+	}
 }
 </style>

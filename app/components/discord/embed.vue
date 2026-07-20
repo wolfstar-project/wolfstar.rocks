@@ -76,7 +76,7 @@ const dtf = new Intl.DateTimeFormat("en-US", { dateStyle: "short", timeStyle: "s
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-embed {
-	--discord-embed-default-border: #1e1f22;
+	--discord-embed-default-border: oklch(23.95% 0.0059 271.17);
 	@apply mt-1 max-w-fit border-l-4 p-3 font-whitney;
 	border-radius: 0.25rem;
 	background-color: var(--color-base-200);

@@ -598,34 +598,45 @@
 											<DiscordMessages
 												class="showcase-discord-feed w-full text-left"
 											>
-												<DiscordMessage name="wolfstar">
+												<DiscordMessage
+													name="wolfstar"
+													:timestamp="moderationMessageTime"
+												>
 													<DiscordEmbed
+														class="moderation-log-embed"
 														:color="moderationActionRender.color"
-														:author="{
-															icon: '/avatars/wolfstar.png',
-															name: 'WolfStar#9286 (854714837388755004)',
-														}"
 														:footer="{
 															icon: '/avatars/wolfstar.png',
 															text: 'Case 3',
 														}"
 														:timestamp
 													>
-														<span
-															><strong>❯ Type:</strong>{{ " "
-															}}{{
-																moderationActionRender.name
-															}}</span
+														<span class="mod-log-field"
+															><span
+																class="mod-log-chevron"
+																aria-hidden="true"
+																>❯</span
+															><strong>Type:</strong
+															>{{ moderationActionRender.name }}</span
 														><br />
-														<span
-															><strong>❯ User:</strong>{{ " "
-															}}<DiscordMention kind="mention"
+														<span class="mod-log-field"
+															><span
+																class="mod-log-chevron"
+																aria-hidden="true"
+																>❯</span
+															><strong>User:</strong
+															><DiscordMention kind="mention"
 																>baddie</DiscordMention
-															>{{ " " }}(541738403230777351)</span
+															><span class="mod-log-id">
+																(541738403230777351)</span
+															></span
 														><br />
-														<span
-															><strong>❯ Reason:</strong
-															>{{ " " }}spam</span
+														<span class="mod-log-field"
+															><span
+																class="mod-log-chevron"
+																aria-hidden="true"
+																>❯</span
+															><strong>Reason:</strong>spam</span
 														>
 													</DiscordEmbed>
 												</DiscordMessage>
@@ -881,6 +892,17 @@ const moderationActionRender = computed(() => {
 	return { color: action.color, name: action.name };
 });
 
+const moderationMessageTime = computed(() => {
+	if (!timestamp.value) {
+		return undefined;
+	}
+	return new Intl.DateTimeFormat("en-GB", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	}).format(timestamp.value);
+});
+
 const location = useBrowserLocation();
 
 function handleHashChange() {
@@ -939,6 +961,39 @@ onUnmounted(cleanup);
 
 :deep(.showcase-discord-feed .discord-message:hover) {
 	background-color: oklch(from var(--color-base-content) l c h / 0.04);
+}
+
+/* Discord mod-log embed: 14px description, 12px muted footer, muted ❯ bullets */
+:deep(.moderation-log-embed) {
+	font-size: 0.875rem;
+	line-height: 1.375;
+}
+
+:deep(.moderation-log-embed .discord-embed) {
+	padding: 0.75rem 1rem 0.75rem 0.75rem;
+}
+
+:deep(.moderation-log-embed .mod-log-chevron) {
+	margin-inline-end: 0.25rem;
+	color: oklch(from var(--color-base-content) l c h / 0.55);
+}
+
+:deep(.moderation-log-embed .mod-log-id) {
+	font-size: 0.8125rem;
+	color: oklch(from var(--color-base-content) l c h / 0.55);
+}
+
+:deep(.moderation-log-embed .discord-embed > .mt-2) {
+	margin-top: 0.5rem;
+	font-size: 0.75rem;
+	line-height: 1.333;
+	color: oklch(from var(--color-base-content) l c h / 0.55);
+}
+
+:deep(.moderation-log-embed .discord-embed > .mt-2 .text-sm) {
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
 }
 
 :deep(.brand-embed .discord-embed) {

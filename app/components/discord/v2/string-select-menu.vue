@@ -22,8 +22,8 @@
 				{{ selectedOption?.label ?? placeholder }}
 			</span>
 			<UIcon
-				name="ph:caret-down-bold"
-				class="discord-v2-string-select-menu-chevron size-4 shrink-0"
+				name="ph:caret-up-bold"
+				class="discord-v2-string-select-menu-chevron size-3.5 shrink-0"
 				:class="{ 'discord-v2-string-select-menu-chevron-open': isOpen }"
 				aria-hidden="true"
 			/>
@@ -74,7 +74,7 @@ interface StringSelectMenuEmits {
 <script setup lang="ts">
 const {
 	options,
-	placeholder = "Make a selection",
+	placeholder = "Choose an option...",
 	disabled = false,
 	ariaLabel = "Select an option",
 } = defineProps<StringSelectMenuProps>();
@@ -224,20 +224,21 @@ onClickOutside(rootRef, () => close());
 }
 
 .discord-v2-string-select-menu-trigger {
-	--discord-v2-string-select-menu-bg: oklch(23.89% 0.0059 271.16);
-	--discord-v2-string-select-menu-border: oklch(23.89% 0.0059 271.16);
-	--discord-v2-string-select-menu-text: oklch(89.95% 0.0052 247.88);
-	--discord-v2-string-select-menu-placeholder-text: oklch(73.06% 0.0048 264.53);
+	--discord-v2-string-select-menu-bg: oklch(26.5% 0.008 264);
+	--discord-v2-string-select-menu-border: oklch(36% 0.01 264);
+	--discord-v2-string-select-menu-text: oklch(92% 0.005 250);
+	--discord-v2-string-select-menu-placeholder-text: oklch(72% 0.01 260);
+	--discord-v2-string-select-menu-chevron: oklch(92% 0.005 250);
 
-	@apply flex h-9 w-full items-center justify-between gap-2 rounded border px-2 text-sm font-medium;
+	@apply flex h-10 w-full items-center justify-between gap-2 rounded-lg border px-3 text-sm font-medium;
 	background-color: var(--discord-v2-string-select-menu-bg);
 	border-color: var(--discord-v2-string-select-menu-border);
 	color: var(--discord-v2-string-select-menu-text);
-	transition: border-color 0.2s ease;
+	transition: border-color 0.15s ease-out;
 }
 
 .discord-v2-string-select-menu-trigger:hover:not(.discord-v2-string-select-menu-trigger-disabled) {
-	border-color: oklch(20% 0 0 / 1);
+	border-color: oklch(44% 0.012 264);
 }
 
 .discord-v2-string-select-menu-trigger:focus-visible {
@@ -258,27 +259,33 @@ onClickOutside(rootRef, () => close());
 }
 
 .discord-v2-string-select-menu-chevron {
-	transition: transform 0.2s ease;
+	color: var(--discord-v2-string-select-menu-chevron);
+	transition: transform 0.15s ease-out;
 }
 
+/* Collapsed matches Discord: caret points up; open rotates to point down. */
 .discord-v2-string-select-menu-chevron-open {
-	transform: rotate(-180deg);
+	transform: rotate(180deg);
 }
 
 .discord-v2-string-select-menu-panel {
-	--discord-v2-string-select-menu-panel-bg: oklch(29.64% 0.0077 264.45);
+	--discord-v2-string-select-menu-panel-bg: oklch(26.5% 0.008 264);
+	--discord-v2-string-select-menu-panel-border: oklch(36% 0.01 264);
+	--discord-v2-string-select-menu-panel-shadow: oklch(0% 0 0 / 0.45);
 	--discord-v2-string-select-menu-panel-scroll-track: oklch(0% 0 0 / 0);
-	--discord-v2-string-select-menu-panel-scroll-thumb: oklch(0% 0 0 / 0.3);
+	--discord-v2-string-select-menu-panel-scroll-thumb: oklch(55% 0.01 264 / 0.55);
 
-	@apply absolute top-full left-0 z-[1002] mt-1 w-full max-w-100 overflow-hidden rounded;
+	@apply absolute top-full left-0 z-[1002] mt-1.5 w-full max-w-100 overflow-hidden rounded-lg border;
 	background-color: var(--discord-v2-string-select-menu-panel-bg);
+	border-color: var(--discord-v2-string-select-menu-panel-border);
+	box-shadow: 0 8px 24px var(--discord-v2-string-select-menu-panel-shadow);
 }
 
 .discord-v2-string-select-menu-scroll {
 	--discord-scrollbar-track: var(--discord-v2-string-select-menu-panel-scroll-track);
 	--discord-scrollbar-thumb: var(--discord-v2-string-select-menu-panel-scroll-thumb);
 
-	@apply max-h-48;
+	@apply max-h-52;
 }
 
 .discord-v2-string-select-menu-scroll :deep(.discord-scrollbar-viewport) {

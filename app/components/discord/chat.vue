@@ -46,20 +46,18 @@ defineSlots<ChatSlots>();
 @reference "@/assets/css/main.css";
 
 .discord-chat {
+	/* Discord-true channel chrome (oklch); showcase may override via --showcase tokens. */
+	--discord-chat-bg: oklch(26.65% 0.006 272.93);
+
 	@apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden font-whitney;
-	background-color: var(--color-base-300);
+	background-color: var(--discord-chat-bg);
 }
 
 .discord-chat-scrollbar {
-	--discord-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.08);
-	--discord-scrollbar-thumb: transparent;
+	--discord-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
+	--discord-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
 
 	@apply h-full max-h-full min-h-0 flex-1;
-}
-
-/* Outer channel scrollbar: thinner / quieter than the slash-command picker list bar. */
-.discord-chat-scrollbar :deep(.discord-scrollbar) {
-	grid-template-columns: minmax(0, 1fr) 2px;
 }
 
 .discord-chat-messages {

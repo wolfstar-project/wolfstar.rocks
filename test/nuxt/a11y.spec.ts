@@ -77,7 +77,8 @@ describe("component accessibility audits", () => {
 					props: {
 						name: "mod-commands",
 						type: "text",
-						searchPlaceholder: "Search WolfStar Laboratory",
+						topic: "WolfStar moderation commands — try a slash command below.",
+						searchPlaceholder: "Search",
 					},
 				});
 				const results = await runAxe(component);
@@ -129,8 +130,11 @@ describe("component accessibility audits", () => {
 								id: "wolfstar",
 								name: "WolfStar",
 								role: "Moderation",
+								description: "/help",
 								app: true,
 								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
 							},
 						],
 						offline: [{ id: "stella", name: "Stella" }],
@@ -380,12 +384,17 @@ describe("component accessibility audits", () => {
 
 		describe("DiscordV2StringSelectMenu", () => {
 			const selectOptions = [
-				{ value: "prefix", label: "prefix", emoji: "⚙️", description: "Command prefix" },
+				{
+					value: "prefix",
+					label: "Root / Prefix",
+					emoji: "ph:gear-six-fill",
+					description: "Currently at: Root / Prefix",
+				},
 				{
 					value: "language",
-					label: "language",
-					emoji: "⚙️",
-					description: "Response language",
+					label: "Root / Language",
+					emoji: "ph:gear-six-fill",
+					description: "Currently at: Root / Language",
 				},
 			];
 

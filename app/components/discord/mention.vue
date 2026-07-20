@@ -1,8 +1,8 @@
 <template>
+	<!-- Single-line children: newlines between tags become text nodes inside the pill. -->
 	<button class="tag" type="button">
-		<span v-if="kind === 'mention'" aria-hidden="true">@</span>
-		<LazyIconsApp v-else-if="kind === 'app'" class="icon" aria-hidden="true" />
-		<slot></slot>
+		<span v-if="kind === 'mention'" aria-hidden="true">@</span
+		><LazyIconsApp v-else-if="kind === 'app'" class="icon" aria-hidden="true" /><slot></slot>
 	</button>
 </template>
 
@@ -28,13 +28,14 @@ const { kind = "mention" } = defineProps<MentionProps>();
 @reference "@/assets/css/main.css";
 .tag {
 	/*
-	 * Mentions are inline-flex components, not text nodes. Vue's whitespace:condense
-	 * drops spaces between tags, so keep a small leading margin for inline flow.
+	 * Mentions are inline-flex chips. Do not add margin-inline-start here:
+	 * callers already space with text / {{ " " }}, and DiscordEmbed restores
+	 * gaps after bold labels via strong::after. A leading margin double-spaces
+	 * showcase copy like "Dear @Baddie" and "❯ User: @baddie".
 	 */
-	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-whitney font-medium;
+	@apply inline-flex items-baseline gap-0 rounded-md px-1 py-0.5 font-whitney font-medium;
 	vertical-align: baseline;
 	margin: 0;
-	margin-inline-start: 0.15em;
 	background-color: oklch(57.7% 0.209 273.88 / 0.5);
 	color: oklch(93.89% 0.027 281.72);
 

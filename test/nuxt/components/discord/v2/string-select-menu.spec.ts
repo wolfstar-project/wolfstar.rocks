@@ -5,9 +5,25 @@ import { describe, expect, it } from "vitest";
 import StringSelectMenu from "~/components/discord/v2/string-select-menu.vue";
 
 const options: StringSelectMenuOption[] = [
-	{ value: "permissions", label: "permissions", emoji: "📁" },
-	{ value: "channels", label: "channels", emoji: "📁", disabled: true },
-	{ value: "prefix", label: "prefix", emoji: "⚙️", description: "Command prefix" },
+	{
+		value: "permissions",
+		label: "Root / Permissions",
+		emoji: "ph:folder-fill",
+		description: "Currently at: Root / Permissions",
+	},
+	{
+		value: "channels",
+		label: "Root / Channels",
+		emoji: "ph:folder-fill",
+		description: "Currently at: Root / Channels",
+		disabled: true,
+	},
+	{
+		value: "prefix",
+		label: "Root / Prefix",
+		emoji: "ph:gear-six-fill",
+		description: "Currently at: Root / Prefix",
+	},
 ];
 
 function mountMenu(props: Partial<{ disabled: boolean; placeholder: string }> = {}) {
@@ -97,7 +113,7 @@ describe("DiscordV2StringSelectMenu", () => {
 		expect(wrapper.emitted("select")).toEqual([["prefix"]]);
 		expect(wrapper.emitted("update:modelValue")).toEqual([["prefix"]]);
 		expect(trigger.attributes("aria-expanded")).toBe("false");
-		expect(trigger.text()).toContain("prefix");
+		expect(trigger.text()).toContain("Root / Prefix");
 	});
 
 	it("opens and selects with Space", async () => {
@@ -110,6 +126,20 @@ describe("DiscordV2StringSelectMenu", () => {
 		await pressKey(trigger, " ");
 		expect(wrapper.emitted("select")).toEqual([["permissions"]]);
 		expect(trigger.attributes("aria-expanded")).toBe("false");
+	});
+
+	it("renders Currently at rows with a path folder icon", async () => {
+		const wrapper = await mountMenu();
+		const trigger = wrapper.find("button[role='combobox']");
+		await trigger.trigger("click");
+
+		const option = wrapper.findAll("[role='option']")[0]!;
+		expect(option.text()).toContain("Root / Permissions");
+		expect(option.text()).toContain("Currently at:");
+		expect(option.find(".discord-v2-string-select-menu-option-path-folder").exists()).toBe(
+			true,
+		);
+		expect(option.find(".discord-v2-string-select-menu-option-check").exists()).toBe(false);
 	});
 
 	it("closes when focus leaves the menu, so Tab is not trapped", async () => {

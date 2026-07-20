@@ -12,7 +12,7 @@
 			title="Attachments"
 		>
 			<UIcon
-				name="ph:plus-bold"
+				name="discord:plus"
 				class="discord-message-composer-add-icon"
 				aria-hidden="true"
 			/>

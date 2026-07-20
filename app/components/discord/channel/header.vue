@@ -29,7 +29,7 @@
 			</div>
 
 			<div class="discord-channel-header-mobile-search" aria-hidden="true">
-				<UIcon name="ph:magnifying-glass" class="size-5" />
+				<UIcon name="discord:search" class="size-5" />
 			</div>
 		</div>
 
@@ -73,7 +73,7 @@
 						searchPlaceholder
 					}}</span>
 					<UIcon
-						name="ph:magnifying-glass"
+						name="discord:search"
 						class="discord-channel-header-search-icon size-3.5 shrink-0"
 					/>
 				</div>
@@ -118,11 +118,11 @@ const TypeIcons = {
  * favorite → threads → notifications → pins → members, then search.
  */
 const ToolbarActions = [
-	{ id: "favorite", icon: "ph:star", label: "Favorite channel" },
-	{ id: "threads", icon: "ph:chats", label: "Threads" },
-	{ id: "notifications", icon: "ph:bell", label: "Notification settings" },
-	{ id: "pins", icon: "ph:push-pin", label: "Pinned messages" },
-	{ id: "members", icon: "ph:users", label: "Show member list" },
+	{ id: "favorite", icon: "discord:star", label: "Favorite channel" },
+	{ id: "threads", icon: "discord:threads", label: "Threads" },
+	{ id: "notifications", icon: "discord:notifications", label: "Notification settings" },
+	{ id: "pins", icon: "discord:pins", label: "Pinned messages" },
+	{ id: "members", icon: "discord:members", label: "Show member list" },
 ] as const satisfies readonly ToolbarAction[];
 </script>
 

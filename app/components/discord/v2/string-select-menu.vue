@@ -226,6 +226,7 @@ onClickOutside(rootRef, () => close());
 .discord-v2-string-select-menu-trigger {
 	--discord-v2-string-select-menu-bg: oklch(26.5% 0.008 264);
 	--discord-v2-string-select-menu-border: oklch(36% 0.01 264);
+	--discord-v2-string-select-menu-border-hover: oklch(44% 0.012 264);
 	--discord-v2-string-select-menu-text: oklch(92% 0.005 250);
 	--discord-v2-string-select-menu-placeholder-text: oklch(72% 0.01 260);
 	--discord-v2-string-select-menu-chevron: oklch(92% 0.005 250);
@@ -238,7 +239,7 @@ onClickOutside(rootRef, () => close());
 }
 
 .discord-v2-string-select-menu-trigger:hover:not(.discord-v2-string-select-menu-trigger-disabled) {
-	border-color: oklch(44% 0.012 264);
+	border-color: var(--discord-v2-string-select-menu-border-hover);
 }
 
 .discord-v2-string-select-menu-trigger:focus-visible {

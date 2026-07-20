@@ -1,6 +1,6 @@
 <template>
 	<aside class="discord-member-list" :aria-label="label">
-		<DiscordScrollbar always-show-track class="discord-member-list-scrollbar">
+		<DiscordScrollbar class="discord-member-list-scrollbar">
 			<div class="discord-member-list-content">
 				<section
 					v-for="section of sections"
@@ -40,10 +40,16 @@
 									class="size-5"
 								/>
 								<span
-									v-if="!section.offline"
+									v-if="showPresence(member, section.offline)"
 									class="discord-presence"
 									:data-status="memberPresence(member)"
-								/>
+								>
+									<UIcon
+										:name="presenceIcon(member)"
+										class="discord-presence-icon"
+										aria-hidden="true"
+									/>
+								</span>
 							</div>
 							<div class="discord-member-list-identity">
 								<div class="discord-member-list-name-row">
@@ -168,8 +174,24 @@ const sections = computed<MemberSection[]>(() => {
 	return next;
 });
 
+const PresenceIcons = {
+	online: "discord:status-online",
+	idle: "discord:status-idle",
+	dnd: "discord:status-dnd",
+	offline: "discord:status-online",
+} as const satisfies Record<DiscordMemberPresence, string>;
+
 function memberPresence(member: DiscordMemberListMember): DiscordMemberPresence {
 	return member.presence ?? "online";
+}
+
+/** Gateway presence pip — hidden for offline rows and HTTP-only (serverless) apps. */
+function showPresence(member: DiscordMemberListMember, sectionOffline: boolean) {
+	return !sectionOffline && !member.http;
+}
+
+function presenceIcon(member: DiscordMemberListMember) {
+	return PresenceIcons[memberPresence(member)];
 }
 
 function memberRowStyle(member: DiscordMemberListMember) {
@@ -209,10 +231,6 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 	--discord-member-list-muted: oklch(71.01% 0.01 273.13);
 	--discord-member-list-hover: oklch(100% 0 0 / 0.04);
 	--discord-member-list-avatar-bg: oklch(100% 0 0 / 0.1);
-	--discord-member-list-presence: oklch(72.27% 0.191 149.58);
-	--discord-member-list-presence-idle: oklch(83.11% 0.1448 82.47);
-	--discord-member-list-presence-dnd: oklch(63.72% 0.208 25.33);
-	--discord-member-list-presence-bar: oklch(23.47% 0.005 272.95);
 	--discord-member-list-presence-ring: oklch(23.47% 0.005 272.95);
 	--discord-member-list-app-bg: oklch(57.74% 0.2091 273.85);
 	--discord-member-list-app-text: oklch(100% 0 0);
@@ -224,7 +242,43 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-scrollbar {
-	@apply h-full max-h-full min-h-0 flex-1;
+	/* Discord member sidebar: thin overlay thumb, no painted track; hidden until hover. */
+	--discord-scrollbar-track: transparent;
+	--discord-scrollbar-thumb: oklch(0% 0 0 / 0.4);
+
+	@apply relative h-full max-h-full min-h-0 flex-1;
+	/* Content uses full width; track overlays the right edge (see track rules below). */
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.discord-member-list-scrollbar :deep(.discord-scrollbar-viewport),
+.discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
+	grid-column: 1;
+}
+
+.discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
+	@apply pointer-events-none absolute inset-y-0 right-0 z-1 w-1 opacity-0;
+	transition: opacity 120ms ease;
+}
+
+.discord-member-list:hover .discord-member-list-scrollbar :deep(.discord-scrollbar-track),
+.discord-member-list-scrollbar:focus-within :deep(.discord-scrollbar-track) {
+	@apply pointer-events-auto opacity-100;
+}
+
+.discord-member-list-scrollbar :deep(.discord-scrollbar-thumb-rail) {
+	@apply my-0.5 w-full rounded-full;
+	background-color: transparent;
+}
+
+.discord-member-list-scrollbar :deep(.discord-scrollbar-thumb) {
+	@apply rounded-full;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
+		transition: none;
+	}
 }
 
 .discord-member-list-content {
@@ -276,26 +330,18 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-presence {
-	@apply absolute right-[-2px] bottom-[-2px] size-3.5 rounded-full;
-	background-color: var(--discord-member-list-presence);
-	box-shadow: 0 0 0 3px var(--discord-member-list-presence-ring);
+	/*
+	 * Discord avatar status pip: sidebar-colored cutout/halo around the glyph.
+	 * Status SVGs use r=6 in a 16×16 viewBox (~75% fill). At 16px the colored
+	 * disk is ~12px; a 17px ring leaves ~2.5px of --discord-member-list-presence-ring
+	 * between fill and avatar (no extra box-shadow — that stacked with SVG pad to ~5px).
+	 */
+	@apply absolute -right-1 -bottom-1 flex size-[17px] items-center justify-center rounded-full;
+	background-color: var(--discord-member-list-presence-ring);
 }
 
-.discord-presence[data-status="idle"] {
-	background-color: var(--discord-member-list-presence-idle);
-}
-
-.discord-presence[data-status="dnd"] {
-	@apply flex items-center justify-center;
-	background-color: var(--discord-member-list-presence-dnd);
-}
-
-.discord-presence[data-status="dnd"]::after {
-	content: "";
-	width: 0.45rem;
-	height: 0.125rem;
-	border-radius: 999px;
-	background-color: var(--discord-member-list-presence-bar);
+.discord-presence-icon {
+	@apply size-4;
 }
 
 .discord-member-list-identity {

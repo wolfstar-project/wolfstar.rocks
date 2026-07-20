@@ -1,0 +1,5 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<!-- Discord StatusDnd — red circle with white horizontal bar (#F23F43 / #FEFEFE). -->
+	<circle cx="8" cy="8" r="6" fill="#F23F43"/>
+	<rect x="4.5" y="7.25" width="7" height="1.5" rx="0.75" fill="#FEFEFE"/>
+</svg>

@@ -217,13 +217,11 @@
 																		? 'true'
 																		: undefined
 																"
-																@click="selectCommand(command.name)"
+																@click="
+																	executeCommand(command.name)
+																"
 															>
-																/{{
-																	frequentlyUsedDisplayName(
-																		command,
-																	)
-																}}
+																/{{ commandDisplayName(command) }}
 															</button>
 														</li>
 													</ol>
@@ -237,18 +235,30 @@
 							<div class="showcase-command-picker">
 								<DiscordChatInputCommandSuggestions
 									v-if="showCommandPicker"
+									id="showcase-slash-suggestions"
 									v-model:selected-app="selectedApp"
 									:prefix="activeSearchPrefix"
 								>
 									<template #frequently-used>
 										<DiscordChatInputCommandSuggestion
 											v-for="command of frequentlyUsedCommands"
+											:id="suggestionOptionId(command.name)"
 											:key="`frequently-used-${command.name}`"
-											:name="frequentlyUsedDisplayName(command)"
+											:name="commandDisplayName(command)"
 											:description="command.description"
 											app-label="WolfStar Beta"
-											:active="activeDisplayCommand.name === command.name"
-											@select="selectCommand(command.name)"
+											:active="isSuggestionActive(command.name)"
+											@select="executeCommand(command.name)"
+										/>
+									</template>
+
+									<template v-if="matchedCommand" #matched>
+										<DiscordChatInputCommandMatched
+											:name="matchedCommand.name"
+											:subcommand="matchedCommand.subcommand"
+											:options="matchedCommand.options"
+											active
+											@select="executeCommand(matchedCommand.name)"
 										/>
 									</template>
 
@@ -259,17 +269,18 @@
 										label="WolfStar Beta"
 									>
 										<DiscordChatInputCommandSuggestion
-											v-for="command of showcaseCommands"
+											v-for="command of filteredShowcaseCommands"
+											:id="suggestionOptionId(command.name)"
 											:key="`wolfstar-${command.name}`"
-											:name="frequentlyUsedDisplayName(command)"
+											:name="commandDisplayName(command)"
 											:description="command.description"
 											app-label="WolfStar Beta"
-											:active="activeDisplayCommand.name === command.name"
-											@select="selectCommand(command.name)"
+											:active="isSuggestionActive(command.name)"
+											@select="executeCommand(command.name)"
 										/>
 									</DiscordChatInputCommandGroup>
 
-									<!-- On Frequently Used, show Staryl (first command) where the WolfStar duplicate used to be. -->
+									<!-- Bot-grouped full list (independent scroll under Frequently Used). -->
 									<DiscordChatInputCommandGroup
 										v-for="app of listedMockApps"
 										:key="app"
@@ -289,8 +300,59 @@
 								<DiscordChatMessageComposer
 									v-model="composerText"
 									channel-name="mod-commands"
+									autocomplete
+									:aria-controls="
+										showCommandPicker ? 'showcase-slash-suggestions' : undefined
+									"
+									:aria-expanded="showCommandPicker"
+									:aria-activedescendant="activeDescendantId"
 									@open-apps="toggleCommandMode"
-								/>
+									@submit="onComposerSubmit"
+									@escape="onComposerEscape"
+									@navigate="onComposerNavigate"
+								>
+									<!--
+										Stable input so focus survives arming. When matched, Discord
+										hides the raw path glyphs and shows composed slash chrome.
+									-->
+									<template #value>
+										<div class="showcase-composer-slash-field">
+											<DiscordChatInputCommand
+												v-if="matchedCommand"
+												class="showcase-composer-slash-composed"
+												:name="matchedCommand.name"
+												:subcommand="matchedCommand.subcommand"
+												:options="matchedCommand.options"
+											/>
+											<input
+												v-model="composerText"
+												type="text"
+												class="discord-message-composer-input"
+												:class="{
+													'showcase-composer-slash-mirror':
+														matchedCommand,
+												}"
+												:placeholder="
+													matchedCommand
+														? undefined
+														: 'Message #mod-commands'
+												"
+												aria-label="Message #mod-commands"
+												:aria-controls="
+													showCommandPicker
+														? 'showcase-slash-suggestions'
+														: undefined
+												"
+												:aria-expanded="showCommandPicker"
+												:aria-activedescendant="activeDescendantId"
+												role="combobox"
+												autocomplete="off"
+												spellcheck="false"
+												@keydown="onComposerInputKeydown"
+											/>
+										</div>
+									</template>
+								</DiscordChatMessageComposer>
 							</div>
 						</div>
 
@@ -314,6 +376,7 @@ import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
 
 const selectedCommandIndex = ref(0);
 const selectedApp = ref<SlashCommandAppName | null>(null);
+const highlightedIndex = ref(0);
 const timestamp = ref(0);
 /** Desktop member list open — matches Discord default (members panel visible). */
 const membersOpen = ref(true);
@@ -335,6 +398,11 @@ const channelDateTime = [
 /** Picker stays open while the composer is in slash-command mode (leading `/`). */
 const showCommandPicker = computed(() => composerText.value.startsWith("/"));
 
+const slashQuery = computed(() => {
+	if (!composerText.value.startsWith("/")) return "";
+	return composerText.value.slice(1).trimStart().toLowerCase();
+});
+
 const activeDisplayCommand = computed(() => {
 	const command = showcaseCommands[selectedCommandIndex.value];
 	return command ?? showcaseCommands[0]!;
@@ -347,7 +415,6 @@ const chatMessages = computed<DiscordChatMessage[]>(() => [
 		timestamp: "Today at 15:49",
 	},
 ]);
-
 /**
  * Support-server role colors (oklch) — Discord-true, no maroon.
  * Pink / scarlet / salmon match Developers + External Bots name tints.
@@ -372,7 +439,7 @@ const onlineMembers = [
 		role: "Star Network",
 		app: true,
 		verified: false,
-		presence: "online",
+		http: true,
 		pinned: true,
 	},
 	{
@@ -382,7 +449,7 @@ const onlineMembers = [
 		role: "Star Network",
 		app: true,
 		verified: true,
-		presence: "online",
+		http: true,
 		pinned: true,
 	},
 	{
@@ -448,7 +515,7 @@ const onlineMembers = [
 		role: "External Bots",
 		app: true,
 		verified: true,
-		presence: "online",
+		http: true,
 		color: DISCORD_ROLE_SALMON,
 		pinned: true,
 	},
@@ -459,7 +526,7 @@ const onlineMembers = [
 		role: "External Bots",
 		app: true,
 		verified: true,
-		presence: "online",
+		http: true,
 		color: DISCORD_ROLE_SALMON,
 		pinned: true,
 	},
@@ -496,22 +563,70 @@ const offlineMembers = [
 ] as const satisfies readonly DiscordMemberListMember[];
 
 const activeSearchPrefix = computed(() => {
-	const name = activeDisplayCommand.value.name;
-	return `/${name.length > 3 ? name.slice(0, 3) : name}`;
+	if (composerText.value.startsWith("/")) return composerText.value;
+	return "/";
 });
 
-/** Cap Frequently Used at 5 rows so the picker viewport shows a full page of commands. */
-const FREQUENTLY_USED_VISIBLE_COUNT = 5;
+/** Discord autocomplete shows command + subcommand as a single path (e.g. `conf menu`). */
+function commandDisplayName(command: (typeof showcaseCommands)[number]) {
+	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
+}
 
-const frequentlyUsedCommands = computed(() =>
-	showcaseCommands
-		.filter((command) => command.frequentlyUsed)
-		.slice(0, FREQUENTLY_USED_VISIBLE_COUNT),
+function matchesSlashQuery(displayName: string, query: string) {
+	if (!query) return true;
+	return displayName.toLowerCase().startsWith(query);
+}
+
+const filteredShowcaseCommands = computed(() =>
+	showcaseCommands.filter((command) =>
+		matchesSlashQuery(commandDisplayName(command), slashQuery.value),
+	),
 );
 
-/** Discord autocomplete shows command + subcommand as a single path (e.g. `conf menu`). */
-function frequentlyUsedDisplayName(command: (typeof showcaseCommands)[number]) {
-	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
+const frequentlyUsedCommands = computed(() =>
+	filteredShowcaseCommands.value.filter((command) => command.frequentlyUsed),
+);
+
+/**
+ * Matched-command chrome: exact path, or a unique prefix match — Discord’s
+ * “armed” state before Enter sends the invocation.
+ */
+const matchedCommand = computed(() => {
+	const query = slashQuery.value;
+	if (!query) return undefined;
+
+	const exact = filteredShowcaseCommands.value.find(
+		(command) => commandDisplayName(command).toLowerCase() === query,
+	);
+	if (exact) return exact;
+
+	if (filteredShowcaseCommands.value.length === 1) {
+		return filteredShowcaseCommands.value[0];
+	}
+
+	return undefined;
+});
+
+const selectableCommands = computed(() => {
+	if (selectedApp.value === "wolfstar") return filteredShowcaseCommands.value;
+	if (selectedApp.value === null) return frequentlyUsedCommands.value;
+	return [];
+});
+
+const activeDescendantId = computed(() => {
+	if (!showCommandPicker.value) return undefined;
+	const command = selectableCommands.value[highlightedIndex.value];
+	return command ? suggestionOptionId(command.name) : undefined;
+});
+
+function suggestionOptionId(name: string) {
+	return `showcase-slash-option-${name}`;
+}
+
+function isSuggestionActive(name: string) {
+	const highlighted = selectableCommands.value[highlightedIndex.value];
+	if (highlighted) return highlighted.name === name;
+	return activeDisplayCommand.value.name === name;
 }
 
 interface MockAppCommand {
@@ -540,28 +655,101 @@ const mockAppCommands: Record<Exclude<SlashCommandAppName, "wolfstar">, MockAppC
 	ring: [{ name: "info", description: "Get information about the bot." }],
 };
 
+/** Rail order for the bot-grouped pane under Frequently Used (WolfStar lives in FU). */
+const MOCK_APP_RAIL_ORDER = [
+	"staryl",
+	"ring",
+	"fmbot",
+	"utilsbot",
+	"catbot",
+	"dyno",
+] as const satisfies readonly Exclude<SlashCommandAppName, "wolfstar">[];
+
 const listedMockApps = computed<Exclude<SlashCommandAppName, "wolfstar">[]>(() => {
-	if (selectedApp.value === null) return ["staryl"];
+	if (selectedApp.value === null) return [...MOCK_APP_RAIL_ORDER];
 	if (selectedApp.value === "wolfstar") return [];
 	return [selectedApp.value];
 });
 
-/** On the Frequently Used rail, only surface Staryl's first command (replaces the old WolfStar duplicate block). */
 function listedCommandsForMockApp(app: Exclude<SlashCommandAppName, "wolfstar">) {
-	const commands = mockAppCommands[app];
-	if (selectedApp.value === null && app === "staryl") {
-		return commands.slice(0, 1);
-	}
-	return commands;
+	return mockAppCommands[app].filter((command) =>
+		matchesSlashQuery(command.name, slashQuery.value),
+	);
 }
 
-function selectCommand(name: string) {
+/** Click / Enter: run the showcase command and refresh the chat mock response. */
+function executeCommand(name: string) {
 	const index = showcaseCommands.findIndex((command) => command.name === name);
 	const command = index !== -1 ? showcaseCommands[index] : undefined;
 	if (command === undefined) return;
 
 	selectedCommandIndex.value = index;
-	composerText.value = `/${frequentlyUsedDisplayName(command)}`;
+	selectedApp.value = null;
+	composerText.value = "/";
+	highlightedIndex.value = 0;
+}
+
+/** Type-ahead arm: fill the composer path so matched-command chrome appears before send. */
+function armCommand(command: (typeof showcaseCommands)[number]) {
+	composerText.value = `/${commandDisplayName(command)}`;
+}
+
+function onComposerSubmit() {
+	if (!composerText.value.startsWith("/")) return;
+
+	if (matchedCommand.value) {
+		executeCommand(matchedCommand.value.name);
+		return;
+	}
+
+	const highlighted = selectableCommands.value[highlightedIndex.value];
+	if (highlighted) {
+		armCommand(highlighted);
+	}
+}
+
+function onComposerEscape() {
+	composerText.value = "";
+	selectedApp.value = null;
+	highlightedIndex.value = 0;
+}
+
+function onComposerNavigate(direction: "up" | "down") {
+	const total = selectableCommands.value.length;
+	if (total === 0) return;
+
+	if (direction === "down") {
+		highlightedIndex.value = (highlightedIndex.value + 1) % total;
+		return;
+	}
+
+	highlightedIndex.value = (highlightedIndex.value - 1 + total) % total;
+}
+
+/** Mirror DiscordChatMessageComposer keyboard handling for the custom value slot. */
+function onComposerInputKeydown(event: KeyboardEvent) {
+	if (event.key === "Enter") {
+		event.preventDefault();
+		onComposerSubmit();
+		return;
+	}
+
+	if (event.key === "Escape") {
+		event.preventDefault();
+		onComposerEscape();
+		return;
+	}
+
+	if (event.key === "ArrowDown") {
+		event.preventDefault();
+		onComposerNavigate("down");
+		return;
+	}
+
+	if (event.key === "ArrowUp") {
+		event.preventDefault();
+		onComposerNavigate("up");
+	}
 }
 
 /** Apps/grid control toggles Discord slash-command mode (idle ↔ `/` + picker). */
@@ -569,11 +757,23 @@ function toggleCommandMode() {
 	if (composerText.value.startsWith("/")) {
 		composerText.value = "";
 		selectedApp.value = null;
+		highlightedIndex.value = 0;
 		return;
 	}
 
 	composerText.value = "/";
+	highlightedIndex.value = 0;
 }
+
+watch([slashQuery, selectedApp], () => {
+	highlightedIndex.value = 0;
+});
+
+watch(selectableCommands, (commands) => {
+	if (highlightedIndex.value >= commands.length) {
+		highlightedIndex.value = Math.max(0, commands.length - 1);
+	}
+});
 
 onMounted(() => {
 	timestamp.value = Date.now();
@@ -676,7 +876,7 @@ onMounted(() => {
 	@apply shrink-0;
 	position: relative;
 	z-index: 1;
-	/* Chat chrome under the floating picker so the composer gap reads as Discord channel bg. */
+	/* Shared bar behind picker + composer (flush stack; no channel peek gap). */
 	background-color: var(--showcase-discord-chrome);
 }
 
@@ -687,6 +887,21 @@ onMounted(() => {
 	--discord-message-composer-hover: var(--showcase-discord-composer-hover);
 	--discord-message-composer-add-bg: oklch(100% 0 0 / 0.1);
 	--discord-message-composer-pill-bg: oklch(100% 0 0 / 0.12);
+}
+
+.showcase-composer-slash-field {
+	@apply relative flex h-full min-w-0 flex-1 items-center;
+}
+
+.showcase-composer-slash-composed {
+	@apply pointer-events-none absolute inset-y-0 left-1 z-0 flex items-center;
+}
+
+.showcase-composer-slash-mirror {
+	position: relative;
+	z-index: 1;
+	color: transparent;
+	caret-color: var(--showcase-discord-composer-text);
 }
 
 .showcase-mobile-command-cards {
@@ -785,7 +1000,8 @@ onMounted(() => {
 	}
 
 	.showcase-command-picker :deep(.discord-slash-command-suggestions) {
-		@apply mx-2 mb-2.5;
+		/* Full-bleed against the shell; composer sits flush below. */
+		@apply mx-0 mb-0;
 	}
 
 	.showcase-command-picker :deep(.discord-message-composer) {

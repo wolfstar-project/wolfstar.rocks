@@ -49,6 +49,11 @@ export interface DiscordMemberListMember {
 	/** Presence indicator on the avatar (defaults to online for non-offline sections). */
 	presence?: DiscordMemberPresence;
 	/**
+	 * HTTP-only / serverless application — Discord does not show a gateway
+	 * presence badge on these avatars (no online/DND/idle pip).
+	 */
+	http?: boolean;
+	/**
 	 * Highest role color as an `oklch(...)` CSS color.
 	 * Colors the member display name (Discord role-colored members).
 	 */

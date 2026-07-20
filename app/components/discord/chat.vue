@@ -1,21 +1,24 @@
 <template>
 	<section class="discord-chat" :aria-label="`${channelName} channel chat`">
 		<DiscordScrollbar always-show-track class="discord-chat-scrollbar">
-			<DiscordChannelWelcome :channel-name :date :date-time />
-			<div
-				class="discord-chat-messages"
-				role="log"
-				aria-live="polite"
-				aria-relevant="additions text"
-				:aria-label="`Messages in ${channelName}`"
-			>
-				<template v-for="(message, index) of messages" :key="message.id">
-					<slot name="message" :message :index>
-						<DiscordMessage :name="message.author" :timestamp="message.timestamp">
-							{{ message.content }}
-						</DiscordMessage>
-					</slot>
-				</template>
+			<!-- Short channels: pin welcome + messages as one block above the composer. -->
+			<div class="discord-chat-scroller-inner mt-auto">
+				<DiscordChannelWelcome :channel-name :date :date-time />
+				<div
+					class="discord-chat-messages"
+					role="log"
+					aria-live="polite"
+					aria-relevant="additions text"
+					:aria-label="`Messages in ${channelName}`"
+				>
+					<template v-for="(message, index) of messages" :key="message.id">
+						<slot name="message" :message :index>
+							<DiscordMessage :name="message.author" :timestamp="message.timestamp">
+								{{ message.content }}
+							</DiscordMessage>
+						</slot>
+					</template>
+				</div>
 			</div>
 		</DiscordScrollbar>
 	</section>
@@ -58,6 +61,15 @@ defineSlots<ChatSlots>();
 	--discord-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
 
 	@apply h-full max-h-full min-h-0 flex-1;
+}
+
+/* Fill the scrollport so mt-auto on the inner block can pin short channels. */
+.discord-chat-scrollbar :deep(.discord-scrollbar-content) {
+	@apply flex min-h-full flex-col;
+}
+
+.discord-chat-scroller-inner {
+	@apply flex w-full min-w-0 flex-col;
 }
 
 .discord-chat-messages {

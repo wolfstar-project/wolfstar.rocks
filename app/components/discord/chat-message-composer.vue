@@ -8,8 +8,8 @@
 		<button
 			type="button"
 			class="discord-message-composer-button discord-message-composer-add"
-			aria-label="Open attachment menu"
-			title="Attachments"
+			tabindex="-1"
+			aria-hidden="true"
 		>
 			<UIcon
 				name="discord:plus"
@@ -18,32 +18,58 @@
 			/>
 		</button>
 
-		<button
-			type="button"
-			class="discord-message-composer-button discord-message-composer-apps discord-message-composer-apps-mobile"
-			aria-label="Open apps and commands"
-			title="Apps"
-			@click="emit('openApps')"
-		>
-			<UIcon name="discord:apps" class="size-5" aria-hidden="true" />
-		</button>
+		<!-- Mobile empty state: apps + gift between + and pill (hidden when typing). -->
+		<div class="discord-message-composer-mobile-leading">
+			<button
+				type="button"
+				class="discord-message-composer-button discord-message-composer-mobile-action discord-message-composer-apps-mobile"
+				aria-label="Open apps and commands"
+				title="Open apps and commands"
+				@click="emit('openApps')"
+			>
+				<UIcon
+					name="discord:apps"
+					class="discord-message-composer-mobile-action-icon"
+					aria-hidden="true"
+				/>
+			</button>
+			<button
+				type="button"
+				class="discord-message-composer-button discord-message-composer-mobile-action discord-message-composer-gift-mobile"
+				tabindex="-1"
+				aria-hidden="true"
+			>
+				<UIcon
+					name="discord:gift"
+					class="discord-message-composer-mobile-action-icon"
+					aria-hidden="true"
+				/>
+			</button>
+		</div>
 
 		<div class="discord-message-composer-field">
-			<input
-				v-model="modelValue"
-				type="text"
-				class="discord-message-composer-input"
-				:placeholder="displayPlaceholder"
-				:aria-label="displayPlaceholder"
-				readonly
-				spellcheck="false"
-			/>
+			<slot name="value">
+				<input
+					v-model="modelValue"
+					type="text"
+					class="discord-message-composer-input"
+					:placeholder="displayPlaceholder"
+					:aria-label="displayPlaceholder"
+					:aria-controls="autocomplete ? ariaControls : undefined"
+					:aria-expanded="autocomplete ? ariaExpanded : undefined"
+					:aria-activedescendant="autocomplete ? ariaActivedescendant : undefined"
+					:role="autocomplete ? 'combobox' : undefined"
+					:autocomplete="autocomplete ? 'off' : undefined"
+					spellcheck="false"
+					@keydown="onKeydown"
+				/>
+			</slot>
 
 			<button
 				type="button"
 				class="discord-message-composer-button discord-message-composer-emoji"
-				aria-label="Choose an emoji"
-				title="Choose an emoji"
+				tabindex="-1"
+				aria-hidden="true"
 			>
 				<UIcon name="discord:emoji" class="size-5" aria-hidden="true" />
 			</button>
@@ -52,7 +78,7 @@
 		<div class="discord-message-composer-actions">
 			<button
 				v-for="action of ComposerActions"
-				:key="action.label"
+				:key="action.label ?? action.icon"
 				type="button"
 				class="discord-message-composer-button discord-message-composer-action"
 				:class="{
@@ -60,6 +86,8 @@
 					'discord-message-composer-action-optional': action.optional,
 				}"
 				:aria-label="action.label"
+				:aria-hidden="action.decorative ? true : undefined"
+				:tabindex="action.decorative ? -1 : undefined"
 				:title="action.label"
 				@click="onComposerAction(action)"
 			>
@@ -74,11 +102,25 @@
 		<button
 			type="button"
 			class="discord-message-composer-button discord-message-composer-send"
-			aria-label="Send message"
-			title="Send message"
+			:aria-label="hasValue ? 'Send message' : undefined"
+			:aria-hidden="hasValue ? undefined : true"
+			:tabindex="hasValue ? undefined : -1"
+			:title="hasValue ? 'Send message' : undefined"
 			:disabled="!hasValue"
+			@click="emit('submit')"
 		>
-			<UIcon name="ph:paper-plane-tilt-fill" class="size-5" aria-hidden="true" />
+			<UIcon
+				v-if="hasValue"
+				name="ph:paper-plane-tilt-fill"
+				class="discord-message-composer-send-icon"
+				aria-hidden="true"
+			/>
+			<UIcon
+				v-else
+				name="discord:mic"
+				class="discord-message-composer-send-icon"
+				aria-hidden="true"
+			/>
 		</button>
 	</div>
 </template>
@@ -87,33 +129,51 @@
 interface MessageComposerProps {
 	channelName: string;
 	placeholder?: string;
+	/** When true, the input acts as a combobox for slash-command autocomplete. */
+	autocomplete?: boolean;
+	ariaControls?: string;
+	ariaExpanded?: boolean;
+	ariaActivedescendant?: string;
 }
 
 interface ComposerAction {
 	icon: string;
-	label: string;
+	/** Accessible name for functional controls; omitted when decorative. */
+	label?: string;
 	secondary?: boolean;
 	optional?: boolean;
 	emitOpenApps?: boolean;
+	/** Non-functional chrome — hidden from AT, not focusable. */
+	decorative?: boolean;
 }
 
 /** Desktop toolbar order matches Discord / Figma: gift · GIF · sticker · emoji · apps. */
 const ComposerActions: readonly ComposerAction[] = [
-	{ icon: "discord:gift", label: "Send a gift", secondary: true },
-	{ icon: "discord:gif", label: "Open GIF picker" },
-	{ icon: "discord:sticker", label: "Open sticker picker", optional: true },
-	{ icon: "discord:emoji", label: "Select an emoji" },
+	{ icon: "discord:gift", secondary: true, decorative: true },
+	{ icon: "discord:gif", decorative: true },
+	{ icon: "discord:sticker", optional: true, decorative: true },
+	{ icon: "discord:emoji", decorative: true },
 	{ icon: "discord:apps", label: "Open apps and commands", optional: true, emitOpenApps: true },
 ];
 </script>
 
 <script setup lang="ts">
-const { channelName, placeholder } = defineProps<MessageComposerProps>();
+const {
+	channelName,
+	placeholder,
+	autocomplete = false,
+	ariaControls,
+	ariaExpanded,
+	ariaActivedescendant,
+} = defineProps<MessageComposerProps>();
 
 const modelValue = defineModel<string>({ default: "" });
 
 const emit = defineEmits<{
 	openApps: [];
+	submit: [];
+	escape: [];
+	navigate: [direction: "up" | "down"];
 }>();
 
 const displayPlaceholder = computed(() => placeholder ?? `Message #${channelName}`);
@@ -123,6 +183,31 @@ const hasValue = computed(() => modelValue.value.trim().length > 0);
 function onComposerAction(action: ComposerAction) {
 	if (action.emitOpenApps) {
 		emit("openApps");
+	}
+}
+
+function onKeydown(event: KeyboardEvent) {
+	if (event.key === "Enter") {
+		event.preventDefault();
+		emit("submit");
+		return;
+	}
+
+	if (event.key === "Escape") {
+		event.preventDefault();
+		emit("escape");
+		return;
+	}
+
+	if (event.key === "ArrowDown") {
+		event.preventDefault();
+		emit("navigate", "down");
+		return;
+	}
+
+	if (event.key === "ArrowUp") {
+		event.preventDefault();
+		emit("navigate", "up");
 	}
 }
 </script>
@@ -139,9 +224,8 @@ function onComposerAction(action: ComposerAction) {
 	--discord-message-composer-add-bg: oklch(19.34% 0.004 273.16);
 	--discord-message-composer-pill-bg: oklch(28.84% 0.007 272.93);
 	--discord-message-composer-send-active: oklch(57.74% 0.2091 273.85);
-	--discord-message-composer-add-ring: oklch(71.01% 0.01 273.13);
 
-	@apply mx-4 mb-4 flex h-11 min-w-0 shrink-0 items-center gap-1 rounded-lg px-3 font-whitney;
+	@apply mx-4 mb-4 flex h-11 min-w-0 shrink-0 items-center gap-0 rounded-lg px-4 font-whitney;
 	background-color: var(--discord-message-composer-bg);
 	color: var(--discord-message-composer-muted);
 }
@@ -161,19 +245,21 @@ function onComposerAction(action: ComposerAction) {
 	@apply outline-2 outline-offset-1 outline-primary;
 }
 
+/*
+ * Desktop attach control: bare thin + (no ring / filled circle).
+ * Mobile keeps a filled circular chip below the md breakpoint.
+ */
 .discord-message-composer-add {
-	@apply size-6 rounded-full;
-	box-shadow: inset 0 0 0 1.5px var(--discord-message-composer-add-ring);
+	@apply size-8;
 }
 
 .discord-message-composer-add:hover {
 	background-color: transparent;
 	color: var(--discord-message-composer-text);
-	box-shadow: inset 0 0 0 1.5px var(--discord-message-composer-text);
 }
 
 .discord-message-composer-add-icon {
-	@apply size-3.5;
+	@apply size-6;
 }
 
 .discord-message-composer-field {
@@ -181,7 +267,8 @@ function onComposerAction(action: ComposerAction) {
 }
 
 .discord-message-composer-input {
-	@apply h-full min-w-0 flex-1 border-0 bg-transparent px-2 text-base leading-none outline-none;
+	/* Tight left pad so `/` sits next to the attach + like Discord desktop. */
+	@apply h-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
 	color: var(--discord-message-composer-text);
 }
 
@@ -198,8 +285,8 @@ function onComposerAction(action: ComposerAction) {
 	@apply size-6;
 }
 
-/* Mobile-only chrome: apps between +, send outside the field. */
-.discord-message-composer-apps-mobile,
+/* Desktop: hide mobile-only chrome (leading apps/gift, pill emoji, send/mic). */
+.discord-message-composer-mobile-leading,
 .discord-message-composer-emoji,
 .discord-message-composer-send {
 	display: none;
@@ -221,39 +308,54 @@ function onComposerAction(action: ComposerAction) {
 	}
 }
 
-/* Discord mobile composer (< md): + · apps · pill(input + emoji) · send */
+/*
+ * Discord mobile composer (< md):
+ * empty:  + · apps · gift · pill(input + emoji) · mic
+ * typed:  + · pill(input + emoji) · blurple squircle send
+ */
 @media (width < 48rem) {
 	.discord-message-composer {
-		@apply mx-0 mb-0 h-auto gap-2 rounded-none px-3 py-2;
+		@apply mx-0 mb-0 h-auto gap-1.5 rounded-none px-2 py-2;
 		background-color: transparent;
 		box-shadow: none;
 	}
 
 	.discord-message-composer-add {
-		@apply size-9;
+		@apply size-9 rounded-full;
 		background-color: var(--discord-message-composer-add-bg);
 		color: var(--discord-message-composer-text);
-		box-shadow: none;
 	}
 
 	.discord-message-composer-add:hover {
 		background-color: var(--discord-message-composer-hover);
 		color: var(--discord-message-composer-text);
-		box-shadow: none;
 	}
 
 	.discord-message-composer-add-icon {
-		@apply size-4.5;
+		@apply size-5;
 	}
 
-	.discord-message-composer-apps-mobile {
-		@apply inline-flex size-8;
-		color: var(--discord-message-composer-muted);
+	.discord-message-composer-mobile-leading {
+		@apply flex shrink-0 items-center gap-1.5;
 	}
 
-	.discord-message-composer-apps-mobile:hover {
-		background-color: transparent;
+	.discord-message-composer-has-value .discord-message-composer-mobile-leading {
+		display: none;
+	}
+
+	.discord-message-composer-mobile-action {
+		@apply size-9 rounded-full;
+		background-color: var(--discord-message-composer-add-bg);
 		color: var(--discord-message-composer-text);
+	}
+
+	.discord-message-composer-mobile-action:hover {
+		background-color: var(--discord-message-composer-hover);
+		color: var(--discord-message-composer-text);
+	}
+
+	.discord-message-composer-mobile-action-icon {
+		@apply size-5;
 	}
 
 	.discord-message-composer-field {
@@ -279,24 +381,38 @@ function onComposerAction(action: ComposerAction) {
 		display: none;
 	}
 
+	/* Empty: circular mic chrome (non-submitting). */
 	.discord-message-composer-send {
-		@apply inline-flex size-8;
-		color: var(--discord-message-composer-muted);
+		@apply inline-flex size-9 rounded-full;
+		background-color: var(--discord-message-composer-add-bg);
+		color: var(--discord-message-composer-text);
 	}
 
 	.discord-message-composer-send:hover:not(:disabled) {
-		background-color: transparent;
+		background-color: var(--discord-message-composer-hover);
 		color: var(--discord-message-composer-text);
 	}
 
 	.discord-message-composer-send:disabled {
-		@apply cursor-default;
-		color: var(--discord-message-composer-muted);
-		opacity: 0.55;
+		@apply cursor-default opacity-100;
+		color: var(--discord-message-composer-text);
 	}
 
+	.discord-message-composer-send-icon {
+		@apply size-5;
+	}
+
+	/* Typed: blurple rounded-square send with paper plane. */
 	.discord-message-composer-has-value .discord-message-composer-send:not(:disabled) {
-		color: var(--discord-message-composer-send-active);
+		border-radius: 10px;
+		background-color: var(--discord-message-composer-send-active);
+		color: oklch(100% 0 0);
+	}
+
+	.discord-message-composer-has-value .discord-message-composer-send:hover:not(:disabled) {
+		background-color: var(--discord-message-composer-send-active);
+		color: oklch(100% 0 0);
+		filter: brightness(1.08);
 	}
 }
 </style>

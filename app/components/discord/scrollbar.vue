@@ -1,8 +1,20 @@
 <template>
-	<div class="discord-scrollbar" :class="{ 'discord-scrollbar-with-arrows': showArrows }">
-		<div ref="viewportRef" class="discord-scrollbar-viewport">
-			<div ref="contentRef" class="discord-scrollbar-content">
-				<slot />
+	<div
+		class="discord-scrollbar"
+		:class="{
+			'discord-scrollbar-with-arrows': showArrows,
+			'discord-scrollbar-with-below-viewport': Boolean(slots['below-viewport']),
+		}"
+	>
+		<div class="discord-scrollbar-body">
+			<div ref="viewportRef" class="discord-scrollbar-viewport">
+				<div ref="contentRef" class="discord-scrollbar-content">
+					<slot />
+				</div>
+			</div>
+
+			<div v-if="slots['below-viewport']" class="discord-scrollbar-below-viewport">
+				<slot name="below-viewport" />
 			</div>
 		</div>
 
@@ -60,7 +72,9 @@ interface DiscordScrollbarProps {
 }
 
 interface DiscordScrollbarSlots {
-	default?(props?: Record<string, never>): VNode[];
+	"default"?(props?: Record<string, never>): VNode[];
+	/** Renders under the viewport in the content column so the track spans full root height. */
+	"below-viewport"?(props?: Record<string, never>): VNode[];
 }
 </script>
 
@@ -75,6 +89,8 @@ const {
 	minThumbHeight = 24,
 	maxThumbHeight,
 } = defineProps<DiscordScrollbarProps>();
+
+const slots = useSlots();
 
 const viewportRef = useTemplateRef<HTMLDivElement>("viewportRef");
 const contentRef = useTemplateRef<HTMLDivElement>("contentRef");
@@ -143,8 +159,12 @@ function scrollByStep(direction: 1 | -1) {
 	@apply grid max-h-[inherit] min-h-0 min-w-0 grid-cols-[minmax(0,1fr)_4px] gap-0;
 }
 
+.discord-scrollbar-body {
+	@apply flex max-h-[inherit] min-h-0 min-w-0 flex-col;
+}
+
 .discord-scrollbar-viewport {
-	@apply max-h-[inherit] min-h-0 min-w-0 overflow-x-hidden overflow-y-auto;
+	@apply max-h-[inherit] min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 }
@@ -157,6 +177,10 @@ function scrollByStep(direction: 1 | -1) {
 	/* Keep overflow visible so position:sticky descendants (e.g. slash-command
 	   section headers) stick against .discord-scrollbar-viewport, not here. */
 	@apply min-w-0 overflow-visible;
+}
+
+.discord-scrollbar-below-viewport {
+	@apply min-h-0 shrink-0;
 }
 
 .discord-scrollbar-track {

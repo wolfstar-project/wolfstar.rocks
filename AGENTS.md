@@ -43,6 +43,7 @@
 - Use the `onError` callback for error logging
 - Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
 - For paginated guild log routes, use stable cache keys that include the guild id, route segment, and `url.search`
+- `defineWrappedResponseHandler`/`defineWrappedCachedResponseHandler` reject outdated browser sessions before auth, rate limiting, or cache resolution: `isClientOutdated()` from `nuxt-skew-protection/server` throws a 409 (with an `x-client-outdated` response header) so stale clients never consume quota or read data shaped for a newer server build
 
 ## Vue Component Patterns
 
@@ -53,8 +54,13 @@
 
 ## Auth and Feedback
 
-- `server/api/auth/discord.get.ts` requests the `guilds.members.read` and `email` scopes and handles both legs of the OAuth flow: with no `code` query param it initiates (sets HMAC-signed nonce/redirect cookies via `createOAuthState()`); with a `code` present it is the callback, which verifies and consumes the CSRF state via `verifyOAuthState()` in `server/utils/oauth-state.ts` **before** any code exchange, then returns `{ redirectUrl }`. There is no separate `verify-state` endpoint — do not reintroduce one
-- The `#auth-utils` `User` type includes `email: string | null`; always handle existing sessions where `user.email` is still `null`
+- Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider (scopes `guilds`, `guilds.members.read`, `email`), rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
+- There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
+- `server/middleware/oauth-callback.ts` + `server/utils/oauth-callback.ts` (`resolveOAuthProviderCallbackRedirect()`) redirect Discord's response at `/oauth/callback` to the better-auth callback path when a `state` query param is present; plain browser navigations to `/oauth/callback` (no `state`) fall through to the Vue callback page at `app/pages/oauth/callback.vue`
+- `server/api/auth/refresh.get.ts` refreshes the Discord access token via `refreshSessionTokens()` in `server/utils/oauth-tokens.ts`, which wraps better-auth's `auth.api.getAccessToken()` / `auth.api.refreshToken()`
+- Server code reads the current user/tokens through `event.context.$authorization` (`resolveServerUser()`, `resolveServerTokens()`), wired up in `server/plugins/authorization-resolver.ts`. The `AuthUser` type comes from `#nuxt-better-auth` (declared in `shared/types/auth.d.ts`) — there is no more `#auth-utils` `User` type
+- Client code still uses the `useUserSession()` composable (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) — `@onmax/nuxt-better-auth` ships a compatible API, so existing call sites didn't need to change shape
+- `useSessionRefresh()` (`app/composables/useSessionRefresh.ts`) calls `/api/auth/refresh` then `fetchSession()` on mount and whenever the tab regains visibility
 - Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
 - Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
 
@@ -189,12 +195,12 @@ Defined in `shared/audit/actions.ts`:
 | --------------------------- | ------------------------------ | --------------------------------------------- |
 | `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds                 |
 | `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws                          |
-| `userLogin`                 | `user.login`                   | Discord OAuth `onSuccess`                     |
-| `userLogout`                | `user.logout`                  | Session cleared due to missing/invalid tokens |
-| `sessionRefresh`            | `session.refresh`              | Token refresh succeeds or fails               |
-| `oauthStateInvalid`         | `oauth.state.invalid`          | CSRF state verification fails                 |
+| `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code |
+| `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code |
+| `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code |
+| `oauthStateInvalid`         | `oauth.state.invalid`          | Not currently invoked anywhere in server code |
 
-Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain.
+Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain. `userLogin`, `userLogout`, `sessionRefresh`, and `oauthStateInvalid` were wired to the pre-migration `nuxt-auth-utils` OAuth flow (`server/api/auth/discord.get.ts`, `server/utils/oauth-state.ts`); both files were deleted by the better-auth migration (#297) and nothing currently calls these action creators outside their own unit test. `server/middleware/evlog-auth-identify.ts` only identifies the request actor for enrichment — it does not emit audit events. Treat these four as a known gap (dead code or a missing re-wire) rather than assuming login/logout/refresh/CSRF-failure events are being recorded.
 
 ### Instrumentation Pattern
 
@@ -229,7 +235,7 @@ log.audit(
 - `shared/audit/actions.ts` — typed action creators
 - `shared/audit/envelope.ts` — canonical hash/envelope helpers
 - `shared/utils/audit-field-metadata.ts` — field labels and render metadata for dashboard-managed guild settings
-- `server/middleware/evlog-session-bridge.ts` — propagates `nuxt-auth-utils` session users into evlog context
+- `server/middleware/evlog-auth-identify.ts` — auto-identifies the request actor from the better-auth session via evlog's `createAuthMiddleware()` (`evlog/better-auth`, excludes `/api/auth/**`) so audit enrichers can resolve the actor without each handler calling `log.set({ user })` manually
 - `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain (P2002 swallowed, P2034 retried 5x)
 - `server/utils/audit/actor-bridge.ts` — resolves actor from request context
 - `server/utils/audit/patch-to-changes.ts` — converts `auditDiff()` JSON patches into dashboard-friendly change groups
@@ -267,7 +273,7 @@ It checks:
 Files added to `ALLOW_LIST` in the test are permanently exempt. Current exemptions:
 
 - `app/components/OgImage/Page.takumi.vue` — Satori does not support `var()` references
-- `app/components/discord/*.vue` (message, embed, mention, reaction) — Discord brand fidelity requires Discord brand colors
+- `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, and the slash-command autocomplete family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
 
 ### Token Reference
 

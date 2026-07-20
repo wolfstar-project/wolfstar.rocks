@@ -418,21 +418,3 @@ skills:
     source: "ungh://sxzz/stale-dep"
     syncedAt: 2026-07-16
     generator: skilld
-  dotenv:
-    packageName: dotenv
-    version: 17.4.2
-    source: shipped
-    syncedAt: 2026-07-19
-    generator: skilld
-  dotenvx:
-    packageName: dotenv
-    version: 17.4.2
-    source: shipped
-    syncedAt: 2026-07-19
-    generator: skilld
-  vite-plus:
-    packageName: vite-plus
-    version: 0.1.19
-    source: shipped
-    syncedAt: 2026-07-19
-    generator: skilld

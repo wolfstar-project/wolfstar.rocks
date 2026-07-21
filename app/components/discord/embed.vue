@@ -33,11 +33,11 @@
 				<div v-if="footer || timestamp" class="discord-embed-footer">
 					<NuxtImg
 						v-if="footer?.icon"
-						src="/avatars/wolfstar.png"
+						:src="footer.icon"
 						class="discord-embed-footer-image"
 						width="16"
 						height="16"
-						alt="WolfStar footer icon"
+						:alt="`Footer icon for ${footer.text}`"
 						decoding="async"
 					/>
 					<span class="discord-embed-footer-content">

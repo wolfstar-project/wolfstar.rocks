@@ -789,8 +789,10 @@ onMounted(() => {
 
 /* SurfaceCard defaults to theme --color-base-300; pin Discord charcoal so the card never reads red/warm. */
 :deep(.commands-showcase-card.home-surface-card) {
-	background-color: oklch(26.65% 0.006 272.93);
-	border-color: oklch(19.34% 0.004 273.16);
+	--commands-showcase-card-bg: oklch(26.65% 0.006 272.93);
+	--commands-showcase-card-border: oklch(19.34% 0.004 273.16);
+	background-color: var(--commands-showcase-card-bg);
+	border-color: var(--commands-showcase-card-border);
 }
 
 .showcase-discord-shell {

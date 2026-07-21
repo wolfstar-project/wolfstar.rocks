@@ -1,0 +1,42 @@
+/* Shared Discord dark chrome for component stories (see discordDecorator). */
+.discord-story-chrome {
+	--showcase-discord-chrome: oklch(26.65% 0.006 272.93);
+	--showcase-discord-sidebar: oklch(23.47% 0.005 272.95);
+	--showcase-discord-server: oklch(19.34% 0.004 273.16);
+	--showcase-discord-chrome-border: oklch(19.34% 0.004 273.16);
+	--showcase-discord-composer: oklch(28.84% 0.007 272.93);
+	--showcase-discord-composer-muted: oklch(71.01% 0.01 273.13);
+	--showcase-discord-composer-text: oklch(91.56% 0.004 272.93);
+	--showcase-discord-composer-hover: oklch(100% 0 0 / 0.06);
+	--showcase-discord-header-edge: oklch(0% 0 0 / 0.2);
+	--showcase-discord-primary-text: oklch(91.56% 0.004 272.93);
+	--showcase-discord-muted-text: oklch(71.01% 0.01 273.13);
+
+	--color-base-100: var(--showcase-discord-chrome);
+	--color-base-200: var(--showcase-discord-sidebar);
+	--color-base-300: var(--showcase-discord-chrome);
+	--discord-surface: var(--showcase-discord-chrome);
+
+	--discord-channel-header-bg: var(--showcase-discord-chrome);
+	--discord-channel-header-border: var(--showcase-discord-chrome-border);
+	--discord-channel-header-edge: var(--showcase-discord-header-edge);
+	--discord-channel-header-text: var(--showcase-discord-primary-text);
+	--discord-channel-header-muted: var(--showcase-discord-muted-text);
+	--discord-channel-header-search-bg: var(--showcase-discord-server);
+	--discord-channel-header-search-border: var(--showcase-discord-composer);
+
+	--discord-chat-bg: var(--showcase-discord-chrome);
+	--discord-member-list-bg: var(--showcase-discord-sidebar);
+	--discord-member-list-border: var(--showcase-discord-server);
+	--discord-member-list-text: var(--showcase-discord-primary-text);
+	--discord-member-list-muted: var(--showcase-discord-muted-text);
+	--discord-member-list-presence-ring: var(--showcase-discord-sidebar);
+
+	--discord-message-composer-bg: var(--showcase-discord-composer);
+	--discord-message-composer-text: var(--showcase-discord-composer-text);
+	--discord-message-composer-muted: var(--showcase-discord-composer-muted);
+	--discord-message-composer-hover: var(--showcase-discord-composer-hover);
+
+	background-color: var(--showcase-discord-chrome);
+	color: var(--showcase-discord-primary-text);
+}

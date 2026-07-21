@@ -8,8 +8,13 @@
 				}}</span>
 			</div>
 
-			<div class="discord-channel-header-mobile-title">
-				<div class="discord-channel-header-mobile-name-row">
+			<button
+				type="button"
+				class="discord-channel-header-mobile-title"
+				:aria-label="`Open channel info for #${name}`"
+				@click="emit('open-channel-info')"
+			>
+				<span class="discord-channel-header-mobile-name-row">
 					<UIcon
 						:name="typeIcon"
 						class="discord-channel-header-icon size-4 shrink-0"
@@ -21,12 +26,12 @@
 						class="discord-channel-header-chevron size-3 shrink-0"
 						aria-hidden="true"
 					/>
-				</div>
-				<div v-if="onlineCount !== undefined" class="discord-channel-header-online">
+				</span>
+				<span v-if="onlineCount !== undefined" class="discord-channel-header-online">
 					<span class="discord-channel-header-online-dot" aria-hidden="true" />
 					<span>{{ onlineCount }} Online</span>
-				</div>
-			</div>
+				</span>
+			</button>
 
 			<div class="discord-channel-header-mobile-search" aria-hidden="true">
 				<UIcon name="discord:search" class="size-5" />
@@ -140,6 +145,8 @@ const {
 const emit = defineEmits<{
 	"update:membersOpen": [value: boolean];
 	"toggle-members": [];
+	/** Mobile: tap channel name to open Members / Media / Pins / … panel. */
+	"open-channel-info": [];
 }>();
 
 const typeIcon = computed(() => TypeIcons[type]);
@@ -270,7 +277,12 @@ function toggleMembers() {
 	}
 
 	.discord-channel-header-mobile-title {
-		@apply min-w-0 flex-1;
+		@apply min-w-0 flex-1 cursor-pointer border-0 bg-transparent p-0 text-left;
+		color: inherit;
+	}
+
+	.discord-channel-header-mobile-title:focus-visible {
+		@apply outline-2 outline-offset-2 outline-primary;
 	}
 
 	.discord-channel-header-mobile-name-row {

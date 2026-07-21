@@ -8,6 +8,7 @@ import {
 	CtaSection,
 	DashboardSection,
 	DiscordChannelHeader,
+	DiscordChannelInfo,
 	DiscordChannelWelcome,
 	DiscordChat,
 	DiscordChatMessageComposer,
@@ -79,6 +80,31 @@ describe("component accessibility audits", () => {
 						type: "text",
 						topic: "WolfStar moderation commands — try a slash command below.",
 						searchPlaceholder: "Search",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelInfo", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelInfo, {
+					props: {
+						name: "mod-commands",
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								description: "/help",
+								app: true,
+								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
 					},
 				});
 				const results = await runAxe(component);

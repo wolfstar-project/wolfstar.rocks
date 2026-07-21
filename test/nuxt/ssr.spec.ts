@@ -94,6 +94,23 @@ describe("component SSR rendering", () => {
 				expect(wrapper.emitted("update:membersOpen")?.[0]).toEqual([false]);
 				expect(wrapper.emitted("toggle-members")).toHaveLength(1);
 			});
+
+			it("emits open-channel-info when the mobile channel title is activated", async () => {
+				const wrapper = await mountSuspended(DiscordChannelHeader, {
+					props: {
+						name: "mod-commands",
+						onlineCount: 10,
+					},
+				});
+
+				const mobileTitle = wrapper.find(
+					"button.discord-channel-header-mobile-title[aria-label='Open channel info for #mod-commands']",
+				);
+				expect(mobileTitle.exists()).toBe(true);
+				await mobileTitle.trigger("click");
+
+				expect(wrapper.emitted("open-channel-info")).toHaveLength(1);
+			});
 		});
 
 		describe("DiscordChannelWelcome", () => {
@@ -1049,6 +1066,62 @@ describe("component SSR rendering", () => {
 			expect(membersToggle!.attributes("aria-pressed")).toBe("true");
 		});
 
+		it("opens mobile channel info from the channel header and closes via back", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+
+			expect(wrapper.find(".discord-channel-info").exists()).toBe(false);
+
+			await wrapper
+				.find(
+					"button.discord-channel-header-mobile-title[aria-label='Open channel info for #mod-commands']",
+				)
+				.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			const channelInfo = wrapper.find(".discord-channel-info");
+			expect(channelInfo.exists()).toBe(true);
+			expect(channelInfo.attributes("role")).toBe("dialog");
+			expect(channelInfo.attributes("aria-label")).toBe(
+				"Channel information for #mod-commands",
+			);
+			expect(channelInfo.text()).toContain("Text Channel");
+			expect(channelInfo.findAll("[role='tab']").map((tab) => tab.text())).toEqual([
+				"Members",
+				"Media",
+				"Pins",
+				"Threads",
+				"Links",
+				"Files",
+			]);
+			expect(channelInfo.find(".discord-channel-info-members").exists()).toBe(true);
+			expect(channelInfo.text()).toContain("Offline — 2");
+
+			const mediaTab = channelInfo
+				.findAll("[role='tab']")
+				.find((tab) => tab.text() === "Media");
+			expect(mediaTab).toBeDefined();
+			await mediaTab!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(channelInfo.text()).toContain("We searched far and wide.");
+			expect(channelInfo.find(".discord-channel-info-members").exists()).toBe(false);
+
+			const threadsTab = channelInfo
+				.findAll("[role='tab']")
+				.find((tab) => tab.text() === "Threads");
+			expect(threadsTab).toBeDefined();
+			await threadsTab!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(channelInfo.text()).toContain("There are no threads.");
+			expect(channelInfo.text()).toContain("Create Thread");
+
+			await channelInfo.find("[aria-label='Back to channel']").trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-channel-info").exists()).toBe(false);
+		});
+
 		it("renders frequently used and additional command suggestions", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 			await openSlashCommandPicker(wrapper);
@@ -1174,6 +1247,7 @@ describe("component SSR rendering", () => {
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("/");
+			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(true);
 
 			await wrapper.find("[aria-label='Open apps and commands']").trigger("click");
 			await wrapper.vm.$nextTick();
@@ -1182,6 +1256,39 @@ describe("component SSR rendering", () => {
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
 			).toBe("");
+			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(false);
+		});
+
+		it("closes the picker and restores idle send chrome when Escape clears slash mode", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
+
+			const input = wrapper.find(".discord-message-composer-input");
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(true);
+			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(true);
+
+			await input.trigger("keydown", { key: "Escape" });
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect((input.element as HTMLInputElement).value).toBe("");
+			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(false);
+			expect(wrapper.find("[aria-label='Send message']").exists()).toBe(false);
+		});
+
+		it("closes the picker when the leading slash is deleted", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+			await openSlashCommandPicker(wrapper);
+
+			const input = wrapper.find(".discord-message-composer-input");
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(true);
+
+			await input.setValue("");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect((input.element as HTMLInputElement).value).toBe("");
+			expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(false);
 		});
 
 		it("selects a command from the mobile markdown command browser", async () => {

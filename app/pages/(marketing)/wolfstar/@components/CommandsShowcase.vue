@@ -11,6 +11,7 @@
 						search-placeholder="Search"
 						:online-count="onlineMembers.length"
 						:notification-count="48"
+						@open-channel-info="openChannelInfo"
 					/>
 
 					<div class="showcase-discord-workspace">
@@ -367,6 +368,15 @@
 							show-roles
 						/>
 					</div>
+
+					<DiscordChannelInfo
+						v-if="channelInfoOpen"
+						class="showcase-discord-channel-info"
+						name="mod-commands"
+						:online="onlineMembers"
+						:offline="offlineMembers"
+						@close="channelInfoOpen = false"
+					/>
 				</div>
 			</SurfaceCard>
 		</div>
@@ -383,8 +393,13 @@ const highlightedIndex = ref(0);
 const timestamp = ref(0);
 /** Desktop member list open — matches Discord default (members panel visible). */
 const membersOpen = ref(true);
-/** Slash-menu open state mirrors Discord (`/` in the composer while suggestions are visible). */
-const composerText = ref("/");
+/** Mobile channel-info overlay (Members / Media / Pins / …). Desktop keeps the side list. */
+const channelInfoOpen = ref(false);
+/**
+ * Slash-menu text. Start empty so SSR + mobile hydrate idle (no picker).
+ * Desktop arms `/` in onMounted — avoids picker-open / empty-input hydration mismatch.
+ */
+const composerText = ref("");
 
 const channelNow = new Date();
 const channelDateLabel = new Intl.DateTimeFormat("en-US", {
@@ -398,7 +413,7 @@ const channelDateTime = [
 	String(channelNow.getDate()).padStart(2, "0"),
 ].join("-");
 
-/** Picker stays open while the composer is in slash-command mode (leading `/`). */
+/** Picker is open only while the composer still has a leading `/` (Discord closes it when `/` is removed). */
 const showCommandPicker = computed(() => composerText.value.startsWith("/"));
 
 const slashQuery = computed(() => {
@@ -724,6 +739,14 @@ function onComposerEscape() {
 	highlightedIndex.value = 0;
 }
 
+/** Any path that clears the leading `/` (Esc, backspace, apps toggle) resets picker chrome. */
+watch(showCommandPicker, (open) => {
+	if (!open) {
+		selectedApp.value = null;
+		highlightedIndex.value = 0;
+	}
+});
+
 function onComposerNavigate(direction: "up" | "down") {
 	const total = selectableCommands.value.length;
 	if (total === 0) return;
@@ -775,6 +798,11 @@ function toggleCommandMode() {
 	highlightedIndex.value = 0;
 }
 
+/** Opens Discord mobile channel-info overlay (CSS hides it at desktop breakpoints). */
+function openChannelInfo() {
+	channelInfoOpen.value = true;
+}
+
 watch([slashQuery, selectedApp], () => {
 	highlightedIndex.value = 0;
 });
@@ -787,9 +815,9 @@ watch(selectableCommands, (commands) => {
 
 onMounted(() => {
 	timestamp.value = Date.now();
-	// Mobile opens like Discord idle: empty composer, Command Browser in chat, no slash panel.
-	if (window.matchMedia("(width < 48rem)").matches) {
-		composerText.value = "";
+	// Desktop opens in slash-command mode; mobile stays idle (Command Browser in chat).
+	if (!window.matchMedia("(width < 48rem)").matches) {
+		composerText.value = "/";
 	}
 });
 </script>
@@ -833,7 +861,7 @@ onMounted(() => {
 	--color-base-300: var(--showcase-discord-chrome);
 	--discord-surface: var(--showcase-discord-chrome);
 
-	@apply flex flex-col overflow-hidden;
+	@apply relative flex flex-col overflow-hidden;
 	background-color: var(--showcase-discord-chrome);
 	color: var(--showcase-discord-primary-text);
 }
@@ -851,8 +879,8 @@ onMounted(() => {
 /* Chat fills the column; composer (+ picker) overlays the bottom like Discord. */
 .showcase-discord-main > :deep(.discord-chat) {
 	@apply min-h-0 flex-1;
-	/* Keep idle messages above the composer bar when the picker is closed. */
-	padding-bottom: 3.5rem;
+	/* Idle messages clear the flush desktop bar (h-11); no extra mb under composer. */
+	padding-bottom: 2.75rem;
 }
 
 .showcase-discord-main-picker-open > :deep(.discord-chat) {
@@ -913,6 +941,31 @@ onMounted(() => {
 
 .showcase-composer-slash-field {
 	@apply relative flex h-full min-w-0 flex-1 items-center;
+	flex-basis: 0;
+}
+
+/*
+ * Input lives in this parent’s `#value` slot — composer scoped CSS may not reach it.
+ * Pin Discord field chrome here so Esc/idle never shows a browser focus ring hugging
+ * the placeholder, and the field fills the pill like Discord mobile.
+ */
+.showcase-composer-slash-field .discord-message-composer-input {
+	@apply h-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
+	appearance: none;
+	flex-basis: 0;
+	width: 100%;
+	color: var(--showcase-discord-composer-text);
+}
+
+.showcase-composer-slash-field .discord-message-composer-input:focus,
+.showcase-composer-slash-field .discord-message-composer-input:focus-visible {
+	outline: none;
+	box-shadow: none;
+}
+
+.showcase-composer-slash-field .discord-message-composer-input::placeholder {
+	color: var(--showcase-discord-composer-muted);
+	opacity: 1;
 }
 
 .showcase-composer-slash-composed {
@@ -1017,6 +1070,11 @@ onMounted(() => {
 		height: 32rem;
 	}
 
+	/* Mobile bar is taller (py-2 + pill row); keep messages clear of the flush stack. */
+	.showcase-discord-main > :deep(.discord-chat) {
+		padding-bottom: 3.5rem;
+	}
+
 	.showcase-command-picker {
 		background-color: var(--showcase-discord-composer-bar);
 	}
@@ -1038,6 +1096,13 @@ onMounted(() => {
 		background-color: transparent;
 		color: var(--showcase-mobile-command-link);
 		@apply px-0;
+	}
+}
+
+/* Channel info is a mobile Discord pattern; never show over the desktop layout. */
+@media (width >= 48rem) {
+	.showcase-discord-shell :deep(.showcase-discord-channel-info) {
+		display: none;
 	}
 }
 </style>

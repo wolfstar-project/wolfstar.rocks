@@ -225,7 +225,8 @@ function onKeydown(event: KeyboardEvent) {
 	--discord-message-composer-pill-bg: oklch(28.84% 0.007 272.93);
 	--discord-message-composer-send-active: oklch(57.74% 0.2091 273.85);
 
-	@apply mx-4 mb-4 flex h-11 min-w-0 shrink-0 items-center gap-0 rounded-lg px-4 font-whitney;
+	/* Desktop: side inset only; flush to chat bottom; modest radius (not pill). */
+	@apply mx-4 mb-0 flex h-11 min-w-0 shrink-0 items-center gap-0 rounded px-4 font-whitney;
 	background-color: var(--discord-message-composer-bg);
 	color: var(--discord-message-composer-muted);
 }
@@ -240,8 +241,7 @@ function onKeydown(event: KeyboardEvent) {
 	color: var(--discord-message-composer-text);
 }
 
-.discord-message-composer-button:focus-visible,
-.discord-message-composer-input:focus-visible {
+.discord-message-composer-button:focus-visible {
 	@apply outline-2 outline-offset-1 outline-primary;
 }
 
@@ -266,13 +266,33 @@ function onKeydown(event: KeyboardEvent) {
 	@apply flex h-full min-w-0 flex-1 items-center;
 }
 
-.discord-message-composer-input {
+/*
+ * Style both the default input and `#value` slot inputs. Vue scoped CSS does not
+ * reach parent-provided slot content without `:deep` / `:slotted` — without these,
+ * Esc/idle keyboard focus paints the browser’s white outline around the placeholder.
+ */
+.discord-message-composer-input,
+:slotted(.discord-message-composer-input),
+.discord-message-composer-field :deep(.discord-message-composer-input) {
 	/* Tight left pad so `/` sits next to the attach + like Discord desktop. */
 	@apply h-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
+	appearance: none;
 	color: var(--discord-message-composer-text);
 }
 
-.discord-message-composer-input::placeholder {
+.discord-message-composer-input:focus,
+.discord-message-composer-input:focus-visible,
+:slotted(.discord-message-composer-input):focus,
+:slotted(.discord-message-composer-input):focus-visible,
+.discord-message-composer-field :deep(.discord-message-composer-input:focus),
+.discord-message-composer-field :deep(.discord-message-composer-input:focus-visible) {
+	outline: none;
+	box-shadow: none;
+}
+
+.discord-message-composer-input::placeholder,
+:slotted(.discord-message-composer-input)::placeholder,
+.discord-message-composer-field :deep(.discord-message-composer-input::placeholder) {
 	color: var(--discord-message-composer-muted);
 	opacity: 1;
 }
@@ -311,7 +331,7 @@ function onKeydown(event: KeyboardEvent) {
 /*
  * Discord mobile composer (< md):
  * empty:  + · apps · gift · pill(input + emoji) · mic
- * typed:  + · pill(input + emoji) · blurple squircle send
+ * typed / slash-open:  + · pill(input + emoji) · blurple circular send
  */
 @media (width < 48rem) {
 	.discord-message-composer {
@@ -363,7 +383,9 @@ function onKeydown(event: KeyboardEvent) {
 		background-color: var(--discord-message-composer-pill-bg);
 	}
 
-	.discord-message-composer-input {
+	.discord-message-composer-input,
+	:slotted(.discord-message-composer-input),
+	.discord-message-composer-field :deep(.discord-message-composer-input) {
 		@apply h-full px-0 text-[15px] leading-none;
 	}
 
@@ -402,9 +424,9 @@ function onKeydown(event: KeyboardEvent) {
 		@apply size-5;
 	}
 
-	/* Typed: blurple rounded-square send with paper plane. */
+	/* Typed / slash-open: blurple circular send with paper plane (Discord mobile). */
 	.discord-message-composer-has-value .discord-message-composer-send:not(:disabled) {
-		border-radius: 10px;
+		@apply rounded-full;
 		background-color: var(--discord-message-composer-send-active);
 		color: oklch(100% 0 0);
 	}

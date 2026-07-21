@@ -21,8 +21,11 @@ Approved baselines are stored in Chromatic and used to catch unintentional regre
 
 ```
 app/
-  components/        # Vue components (auto-imported)
+  components/          # Vue components + co-located *.stories.ts
   storybook/
-    mocks/           # MSW handlers and typed fixtures
-    *.stories.ts     # Story files (co-located with components)
+    mocks/             # MSW handlers and typed fixtures
+    discord-fixtures.ts
+.storybook/            # Storybook config, decorators, Discord chrome CSS
 ```
+
+Discord mock components live under `Components/Discord` in the sidebar.

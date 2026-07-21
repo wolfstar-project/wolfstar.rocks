@@ -187,9 +187,6 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-sidebar-icon: oklch(71.01% 0.01 273.13);
 	--discord-slash-command-suggestions-header: oklch(71.01% 0.01 273.13);
 	--discord-slash-command-suggestions-divider: oklch(71.01% 0.01 273.13 / 0.16);
-	/* Thin short thumb; track blends into the panel. */
-	--discord-slash-command-suggestions-scrollbar-track: oklch(71.01% 0.01 273.13 / 0.12);
-	--discord-slash-command-suggestions-scrollbar-thumb: oklch(71.01% 0.01 273.13 / 0.55);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	/* Continuous list viewport (~header + ~7 rows). */
 	--discord-slash-command-suggestions-height: calc(2rem + 7 * 3rem);
@@ -224,19 +221,12 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-scroll {
-	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
-	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
-
 	@apply h-full max-h-full min-h-0 min-w-0 flex-1;
 }
 
 /* Track lane flush to panel edges (Discord crop); thumb keeps its own geometry. */
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb-rail) {
 	@apply my-0;
-}
-
-.discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb) {
-	@apply rounded-full;
 }
 
 .discord-slash-command-suggestions-panel:not(

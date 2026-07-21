@@ -759,6 +759,15 @@ describe("component SSR rendering", () => {
 				// overflow measurement and is covered by the scrollable-content test above.
 				expect(wrapper.find(".discord-scrollbar-track").exists()).toBe(true);
 			});
+
+			it("applies auto-hide class when autoHide is true", async () => {
+				const wrapper = await mountSuspended(DiscordScrollbar, {
+					props: { autoHide: true },
+					slots: { default: "<p>Scrollable content</p>" },
+				});
+
+				expect(wrapper.find(".discord-scrollbar-auto-hide").exists()).toBe(true);
+			});
 		});
 
 		describe("DiscordChatMessageComposer", () => {

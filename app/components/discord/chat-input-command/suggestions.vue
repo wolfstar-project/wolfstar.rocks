@@ -181,6 +181,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 .discord-slash-command-suggestions {
 	/* Discord autocomplete surfaces aligned to desktop dark sidebar / server layers. */
 	--discord-slash-command-suggestions-bg: oklch(23.47% 0.005 272.95);
+	--discord-slash-command-suggestions-border: oklch(100% 0 0 / 0.06);
 	--discord-slash-command-suggestions-sidebar: oklch(19.34% 0.004 273.16);
 	--discord-slash-command-suggestions-sidebar-active: oklch(28.84% 0.007 272.93);
 	--discord-slash-command-suggestions-sidebar-hover: oklch(26.65% 0.006 272.93);
@@ -191,15 +192,20 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	/* Continuous list viewport (~header + ~7 rows). */
 	--discord-slash-command-suggestions-height: calc(2rem + 7 * 3rem);
 
-	/* Desktop: slight inset + tight radius. Mobile: full-bleed flush stack (see media query). */
-	@apply mx-3 mb-0 overflow-hidden rounded font-whitney;
+	/*
+	 * Desktop: inset floating panel with Discord hairline border + ~8px gap
+	 * above the composer (channel bg peeks through). Mobile: full-bleed flush.
+	 */
+	@apply mx-4 mb-2 overflow-hidden rounded font-whitney;
 	background-color: var(--discord-slash-command-suggestions-bg);
+	border: 1px solid var(--discord-slash-command-suggestions-border);
 }
 
 @media (width < 48rem) {
 	.discord-slash-command-suggestions {
 		/* Edge-to-edge above the composer — no floating side/bottom gaps. */
 		@apply mx-0 mb-0 rounded-none;
+		border: none;
 	}
 }
 
@@ -224,9 +230,9 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	@apply h-full max-h-full min-h-0 min-w-0 flex-1;
 }
 
-/* Track lane flush to panel edges (Discord crop); thumb keeps its own geometry. */
+/* Keep Discord end-inset on the thumb rail (floating pill stops short of corners). */
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb-rail) {
-	@apply my-0;
+	background-color: transparent;
 }
 
 .discord-slash-command-suggestions-panel:not(

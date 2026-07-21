@@ -7,8 +7,8 @@
 						v-model:members-open="membersOpen"
 						name="mod-commands"
 						type="text"
-						topic="WolfStar moderation commands — try a slash command below."
-						search-placeholder="Search"
+						:topic="CHANNEL_TOPIC"
+						search-placeholder="Search Wolfstar HQ"
 						:online-count="onlineMembers.length"
 						:notification-count="48"
 						@open-channel-info="openChannelInfo"
@@ -23,9 +23,14 @@
 								channel-name="mod-commands"
 								:date="channelDateLabel"
 								:date-time="channelDateTime"
+								:topic="CHANNEL_TOPIC"
 								:messages="chatMessages"
 							>
 								<template #message="{ message }">
+									<!--
+										Discord slash execution: interaction “used /command” reply on the
+										bot message only — no separate plain `/command` user bubble.
+									-->
 									<!-- Desktop: slash-command reply + text / embed / components response. -->
 									<div
 										class="showcase-desktop-command-response hidden md:contents"
@@ -62,6 +67,7 @@
 														><DiscordMention
 															v-if="part.type === 'mention'"
 															kind="mention"
+															:avatar="part.avatar"
 															>{{ part.name }}</DiscordMention
 														><template v-else>{{
 															part.content
@@ -78,9 +84,13 @@
 												<ShowcaseTwemojiText
 													:line="activeDisplayCommand.content"
 												/>
-												<DiscordMention kind="mention">{{
-													activeDisplayCommand.mentionUser
-												}}</DiscordMention>
+												<DiscordMention
+													kind="mention"
+													:avatar="activeDisplayCommand.mentionAvatar"
+													>{{
+														activeDisplayCommand.mentionUser
+													}}</DiscordMention
+												>
 											</span>
 											<DiscordV2Container
 												v-else
@@ -97,8 +107,8 @@
 													</div>
 												</DiscordV2TextDisplay>
 												<DiscordV2Separator />
-												<DiscordV2ActionRow>
-													<DiscordV2StringSelectMenu
+												<DiscordActionRow>
+													<DiscordStringSelectMenu
 														:options="
 															activeDisplayCommand.selectOptions
 														"
@@ -107,136 +117,30 @@
 														"
 														aria-label="Server configuration category"
 													/>
-												</DiscordV2ActionRow>
+												</DiscordActionRow>
 												<DiscordV2Separator />
-												<DiscordV2ActionRow>
-													<DiscordV2Button
+												<DiscordActionRow>
+													<DiscordButton
 														variant="danger"
 														icon="ph:stop-fill"
 														:label="activeDisplayCommand.buttonLabel"
 													/>
-												</DiscordV2ActionRow>
+												</DiscordActionRow>
 											</DiscordV2Container>
-										</DiscordMessage>
-									</div>
-
-									<!-- Mobile: Discord /commands-style markdown + Component V2 browser (no slash picker). -->
-									<div class="showcase-mobile-command-browser md:hidden">
-										<DiscordMessage
-											name="wolfstar"
-											timestamp="Today at 12:37"
-											:reply="{
-												kind: 'command',
-												user: 'redstar',
-												commandName: 'commands',
-											}"
-										>
-											<div class="showcase-mobile-command-cards">
-												<DiscordV2Container>
-													<div class="showcase-mobile-browser-header">
-														<div class="showcase-mobile-browser-title">
-															<UIcon
-																name="ph:command-bold"
-																class="size-4 shrink-0"
-																aria-hidden="true"
-															/>
-															<span>Command Browser</span>
-														</div>
-														<div
-															class="showcase-mobile-browser-search"
-															aria-hidden="true"
-														>
-															<UIcon
-																name="ph:magnifying-glass"
-																class="size-4"
-															/>
-														</div>
-													</div>
-													<DiscordV2TextDisplay>
-														<p class="showcase-mobile-browser-subtitle">
-															Select a category to view commands.
-														</p>
-													</DiscordV2TextDisplay>
-													<button
-														type="button"
-														class="showcase-mobile-category-button"
-														aria-label="All Commands category"
-													>
-														<span
-															class="showcase-mobile-category-button-label"
-														>
-															<UIcon
-																name="ph:list-bullets-bold"
-																class="size-4 shrink-0"
-																aria-hidden="true"
-															/>
-															All Commands
-														</span>
-														<UIcon
-															name="ph:caret-right-bold"
-															class="size-3.5 shrink-0"
-															aria-hidden="true"
-														/>
-													</button>
-												</DiscordV2Container>
-
-												<DiscordV2Container>
-													<div
-														class="showcase-mobile-all-commands-header"
-													>
-														<UIcon
-															name="ph:list-bullets-bold"
-															class="size-4 shrink-0"
-															aria-hidden="true"
-														/>
-														<span>All Commands</span>
-													</div>
-													<DiscordV2Separator />
-													<ol
-														class="showcase-mobile-command-list"
-														aria-label="WolfStar commands"
-													>
-														<li
-															v-for="(
-																command, index
-															) of showcaseCommands"
-															:key="command.name"
-														>
-															<span
-																class="showcase-mobile-command-index"
-																aria-hidden="true"
-																>{{ index + 1 }}.
-															</span>
-															<button
-																type="button"
-																class="showcase-mobile-command-link"
-																:class="{
-																	'showcase-mobile-command-link-active':
-																		activeDisplayCommand.name ===
-																		command.name,
-																}"
-																:aria-current="
-																	activeDisplayCommand.name ===
-																	command.name
-																		? 'true'
-																		: undefined
-																"
-																@click="
-																	executeCommand(command.name)
-																"
-															>
-																/{{ commandDisplayName(command) }}
-															</button>
-														</li>
-													</ol>
-												</DiscordV2Container>
-											</div>
 										</DiscordMessage>
 									</div>
 								</template>
 							</DiscordChat>
 
 							<div class="showcase-command-picker">
+								<DiscordAppLauncher
+									v-model:open="appLauncherOpen"
+									class="showcase-app-launcher"
+									:commands="appLauncherCommands"
+									@select="onAppLauncherSelect"
+									@close="appLauncherOpen = false"
+								/>
+
 								<DiscordChatInputCommandSuggestions
 									v-if="showCommandPicker"
 									id="showcase-slash-suggestions"
@@ -310,7 +214,7 @@
 									"
 									:aria-expanded="showCommandPicker"
 									:aria-activedescendant="activeDescendantId"
-									@open-apps="toggleCommandMode"
+									@open-apps="toggleAppLauncher"
 									@submit="onComposerSubmit"
 									@escape="onComposerEscape"
 									@navigate="onComposerNavigate"
@@ -331,7 +235,7 @@
 											<input
 												v-model="composerText"
 												type="text"
-												class="discord-message-composer-input"
+												class="discord-message-composer-input w-full min-w-0 flex-1 outline-none"
 												:class="{
 													'showcase-composer-slash-mirror':
 														matchedCommand,
@@ -384,13 +288,22 @@
 </template>
 
 <script setup lang="ts">
-import type { DiscordChatMessage, DiscordMemberListMember } from "~/types/discord";
+import type {
+	DiscordAppLauncherEntry,
+	DiscordChatMessage,
+	DiscordMemberListMember,
+} from "~/types/discord";
 import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
+
+/** Shared channel topic for header chrome and welcome start copy. */
+const CHANNEL_TOPIC = "WolfStar moderation commands — try a slash command below.";
 
 const selectedCommandIndex = ref(0);
 const selectedApp = ref<SlashCommandAppName | null>(null);
 const highlightedIndex = ref(0);
 const timestamp = ref(0);
+/** Discord App Launcher popover above the composer (Apps toolbar button). */
+const appLauncherOpen = ref(false);
 /** Desktop member list open — matches Discord default (members panel visible). */
 const membersOpen = ref(true);
 /** Mobile channel-info overlay (Members / Media / Pins / …). Desktop keeps the side list. */
@@ -427,13 +340,13 @@ const activeDisplayCommand = computed(() => {
 });
 
 const chatMessages = computed<DiscordChatMessage[]>(() => {
-	// Discord: while the slash picker is open it sits over the channel — messages
-	// stay in the background (hidden here) and a short channel shows no scrollbar.
-	if (showCommandPicker.value) return [];
-
+	// Discord keeps the bot response (with “User used /command” reply) visible
+	// behind the slash picker — the picker overlays the composer, it does not
+	// clear channel history. No separate plain `/command` user bubble.
+	const command = activeDisplayCommand.value;
 	return [
 		{
-			id: `${activeDisplayCommand.value.name}-${activeDisplayCommand.value.subcommand ?? ""}`,
+			id: `response-${command.name}-${command.subcommand ?? ""}`,
 			author: "wolfstar",
 			timestamp: "Today at 15:49",
 		},
@@ -454,7 +367,7 @@ const DEVELOPER_ROW_BG = [
 	"radial-gradient(ellipse 70% 120% at 88% 40%, oklch(48% 0.14 250 / 0.28), transparent 52%)",
 ].join(", ");
 
-/** Real WolfStar support-server member list (hoisted roles + offline). */
+/** Real WolfStar support-server member list (hoisted roles + Offline section). */
 const onlineMembers = [
 	{
 		id: "ring",
@@ -567,6 +480,8 @@ const onlineMembers = [
 	},
 ] as const satisfies readonly DiscordMemberListMember[];
 
+/** Offline — 2 (Ko-fi Bot, Patreon). Kept in the showcase; shell height + compact
+ *  member-list spacing are sized so this section fits without forcing scroll. */
 const offlineMembers = [
 	{
 		id: "kofi-bot",
@@ -595,6 +510,21 @@ const activeSearchPrefix = computed(() => {
 function commandDisplayName(command: (typeof showcaseCommands)[number]) {
 	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
 }
+
+/**
+ * Slash commands for App Launcher search only — selecting one runs `executeCommand`
+ * (interactive send). No `/commands` page or static listing when the launcher is idle.
+ */
+const appLauncherCommands = computed<readonly DiscordAppLauncherEntry[]>(() =>
+	showcaseCommands.map((command) => ({
+		id: `command-${command.name}`,
+		kind: "command" as const,
+		commandName: command.name,
+		name: `/${commandDisplayName(command)}`,
+		description: command.description,
+		avatar: "/avatars/wolfstar.png",
+	})),
+);
 
 function matchesSlashQuery(displayName: string, query: string) {
 	if (!query) return true;
@@ -733,15 +663,40 @@ function onComposerSubmit() {
 	}
 }
 
+/**
+ * Esc exits slash mode (closes picker) without touching channel history.
+ * Blur the slotted input so browsers drop the keyboard `:focus-visible` ring —
+ * scoped composer styles do not reach the nested `#value` slot input via
+ * `:slotted()`, which previously left a white outline hugging the placeholder.
+ */
 function onComposerEscape() {
 	composerText.value = "";
 	selectedApp.value = null;
 	highlightedIndex.value = 0;
+
+	const active = document.activeElement;
+	if (
+		active instanceof HTMLInputElement &&
+		active.classList.contains("discord-message-composer-input")
+	) {
+		active.blur();
+	}
 }
 
 /** Any path that clears the leading `/` (Esc, backspace, apps toggle) resets picker chrome. */
 watch(showCommandPicker, (open) => {
 	if (!open) {
+		selectedApp.value = null;
+		highlightedIndex.value = 0;
+		return;
+	}
+	// Slash autocomplete and App Launcher are mutually exclusive.
+	appLauncherOpen.value = false;
+});
+
+watch(appLauncherOpen, (open) => {
+	if (open && composerText.value.startsWith("/")) {
+		composerText.value = "";
 		selectedApp.value = null;
 		highlightedIndex.value = 0;
 	}
@@ -785,17 +740,28 @@ function onComposerInputKeydown(event: KeyboardEvent) {
 	}
 }
 
-/** Apps/grid control toggles Discord slash-command mode (idle ↔ `/` + picker). */
-function toggleCommandMode() {
+/** Apps toolbar control toggles the Discord App Launcher popover. */
+function toggleAppLauncher() {
+	if (appLauncherOpen.value) {
+		appLauncherOpen.value = false;
+		return;
+	}
+
+	// Close slash autocomplete when opening the launcher (Discord treats them separately).
 	if (composerText.value.startsWith("/")) {
 		composerText.value = "";
 		selectedApp.value = null;
 		highlightedIndex.value = 0;
-		return;
 	}
+	appLauncherOpen.value = true;
+}
 
-	composerText.value = "/";
-	highlightedIndex.value = 0;
+function onAppLauncherSelect(entry: DiscordAppLauncherEntry) {
+	appLauncherOpen.value = false;
+	// Commands execute through the same interactive send path as the slash picker.
+	if (entry.kind === "command" && entry.commandName) {
+		executeCommand(entry.commandName);
+	}
 }
 
 /** Opens Discord mobile channel-info overlay (CSS hides it at desktop breakpoints). */
@@ -815,7 +781,7 @@ watch(selectableCommands, (commands) => {
 
 onMounted(() => {
 	timestamp.value = Date.now();
-	// Desktop opens in slash-command mode; mobile stays idle (Command Browser in chat).
+	// Desktop opens in slash-command mode; mobile stays idle until the user types `/`.
 	if (!window.matchMedia("(width < 48rem)").matches) {
 		composerText.value = "/";
 	}
@@ -848,8 +814,6 @@ onMounted(() => {
 	--showcase-discord-primary-text: oklch(91.56% 0.004 272.93);
 	--showcase-discord-muted-text: oklch(71.01% 0.01 273.13);
 	--showcase-mobile-command-link: oklch(64.78% 0.154 262.35);
-	--showcase-mobile-card-bg: oklch(23.47% 0.005 272.95);
-	--showcase-mobile-card-button: oklch(28.84% 0.007 272.93);
 
 	/*
 	 * Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock so embeds,
@@ -867,8 +831,14 @@ onMounted(() => {
 }
 
 .showcase-discord-workspace {
+	/*
+	 * Tall enough for the full member list — including Offline (Ko-fi Bot,
+	 * Patreon) — without needing a scrollbar. 12 rows + 4 section headings
+	 * (Star Network / Developers / External Bots / Offline) + compact padding.
+	 * DiscordScrollbar stays for overflow; this height avoids forcing it.
+	 */
 	@apply flex min-h-0;
-	height: 38rem;
+	height: 46rem;
 }
 
 .showcase-discord-main {
@@ -879,7 +849,7 @@ onMounted(() => {
 /* Chat fills the column; composer (+ picker) overlays the bottom like Discord. */
 .showcase-discord-main > :deep(.discord-chat) {
 	@apply min-h-0 flex-1;
-	/* Idle messages clear the flush desktop bar (h-11); no extra mb under composer. */
+	/* Idle messages clear the desktop composer (h-11 + hairline); no extra mb. */
 	padding-bottom: 2.75rem;
 }
 
@@ -896,6 +866,8 @@ onMounted(() => {
 	--discord-channel-header-muted: var(--showcase-discord-muted-text);
 	--discord-channel-header-search-bg: var(--showcase-discord-server);
 	--discord-channel-header-search-border: var(--showcase-discord-composer);
+	--discord-channel-header-search-placeholder: var(--showcase-discord-muted-text);
+	--discord-channel-header-search-icon: var(--showcase-discord-primary-text);
 	background-color: var(--discord-channel-header-bg);
 	border-color: var(--discord-channel-header-border);
 	box-shadow: 0 1px 0 var(--discord-channel-header-edge);
@@ -926,8 +898,16 @@ onMounted(() => {
 
 .showcase-command-picker {
 	@apply absolute inset-x-0 bottom-0 z-1;
-	/* Shared bar behind picker + composer (flush stack; no channel peek gap). */
-	background-color: var(--showcase-discord-chrome);
+	/*
+	 * Transparent on desktop so the picker↔composer gap (~8px) reveals the
+	 * channel background. Mobile keeps a solid bar behind the flush stack.
+	 */
+	background-color: transparent;
+}
+
+.showcase-app-launcher {
+	@apply mr-3 mb-2 ml-auto;
+	width: min(31.5rem, calc(100% - 1.5rem));
 }
 
 .showcase-command-picker :deep(.discord-message-composer) {
@@ -979,80 +959,6 @@ onMounted(() => {
 	caret-color: var(--showcase-discord-composer-text);
 }
 
-.showcase-mobile-command-cards {
-	@apply flex flex-col gap-2;
-}
-
-.showcase-mobile-command-browser :deep(.discord-v2-container) {
-	border-left-width: 0;
-	border-radius: 0.75rem;
-	background-color: var(--showcase-mobile-card-bg);
-}
-
-.showcase-mobile-browser-header,
-.showcase-mobile-all-commands-header {
-	@apply flex items-center gap-2 font-whitney text-sm font-semibold text-base-content;
-}
-
-.showcase-mobile-browser-header {
-	@apply justify-between;
-}
-
-.showcase-mobile-browser-title,
-.showcase-mobile-all-commands-header {
-	@apply flex min-w-0 items-center gap-1.5;
-}
-
-.showcase-mobile-browser-search {
-	@apply inline-flex size-8 shrink-0 items-center justify-center rounded-md text-muted;
-	background-color: var(--showcase-mobile-card-button);
-}
-
-.showcase-mobile-browser-subtitle {
-	@apply m-0 text-[13px] text-muted;
-}
-
-.showcase-mobile-category-button {
-	@apply mt-1 flex w-full items-center justify-between gap-2 rounded-full border-0 px-3 py-2 text-left font-whitney text-sm font-medium text-base-content;
-	background-color: var(--showcase-mobile-card-button);
-}
-
-.showcase-mobile-category-button-label {
-	@apply inline-flex min-w-0 items-center gap-2;
-}
-
-.showcase-mobile-command-list {
-	@apply m-0 flex list-none flex-col gap-1.5 p-0 font-whitney text-sm;
-}
-
-.showcase-mobile-command-list > li {
-	@apply flex min-w-0 items-baseline gap-0;
-}
-
-.showcase-mobile-command-index {
-	@apply shrink-0 text-base-content;
-}
-
-.showcase-mobile-command-link {
-	@apply cursor-pointer border-0 bg-transparent p-0 font-whitney text-sm font-medium;
-	color: var(--showcase-mobile-command-link);
-}
-
-.showcase-mobile-command-link:hover,
-.showcase-mobile-command-link:focus-visible {
-	text-decoration: underline;
-	text-underline-offset: 2px;
-}
-
-.showcase-mobile-command-link:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
-}
-
-.showcase-mobile-command-link-active {
-	text-decoration: underline;
-	text-underline-offset: 2px;
-}
-
 @media (width < 48rem) {
 	.showcase-discord-shell {
 		/* Same Discord-true dark palette on mobile; composer bar matches input field. */
@@ -1067,7 +973,7 @@ onMounted(() => {
 	}
 
 	.showcase-discord-workspace {
-		height: 32rem;
+		height: 36rem;
 	}
 
 	/* Mobile bar is taller (py-2 + pill row); keep messages clear of the flush stack. */
@@ -1076,12 +982,14 @@ onMounted(() => {
 	}
 
 	.showcase-command-picker {
+		/* Solid bar behind flush mobile picker + composer (no channel peek gap). */
 		background-color: var(--showcase-discord-composer-bar);
 	}
 
 	.showcase-command-picker :deep(.discord-slash-command-suggestions) {
-		/* Full-bleed against the shell; composer sits flush below. */
+		/* Full-bleed against the shell; composer sits flush below (no desktop gap/border). */
 		@apply mx-0 mb-0;
+		border: none;
 	}
 
 	.showcase-command-picker :deep(.discord-message-composer) {

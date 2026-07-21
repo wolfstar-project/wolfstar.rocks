@@ -236,7 +236,9 @@
 											</DiscordMessage>
 											<DiscordMessage name="wolfstar">
 												Dear
-												<DiscordMention kind="mention"
+												<DiscordMention
+													kind="mention"
+													avatar="/avatars/baddie.png"
 													>Baddie</DiscordMention
 												>,
 												{{ texts[featureIndex]!.alert }}
@@ -443,6 +445,7 @@
 															><DiscordMention
 																v-if="part.type === 'mention'"
 																kind="mention"
+																:avatar="part.avatar"
 																>{{ part.name }}</DiscordMention
 															><DiscordRole
 																v-else-if="part.type === 'role'"
@@ -603,7 +606,6 @@
 													:timestamp="moderationMessageTime"
 												>
 													<DiscordEmbed
-														class="moderation-log-embed"
 														:color="moderationActionRender.color"
 														:footer="{
 															icon: '/avatars/wolfstar.png',
@@ -611,32 +613,23 @@
 														}"
 														:timestamp
 													>
-														<span class="mod-log-field"
-															><span
-																class="mod-log-chevron"
-																aria-hidden="true"
-																>❯</span
-															><strong>Type:</strong
-															>{{ moderationActionRender.name }}</span
+														<span
+															><strong>❯ Type:</strong>{{ " "
+															}}{{
+																moderationActionRender.name
+															}}</span
 														><br />
-														<span class="mod-log-field"
-															><span
-																class="mod-log-chevron"
-																aria-hidden="true"
-																>❯</span
-															><strong>User:</strong
-															><DiscordMention kind="mention"
+														<span>
+															<strong>❯ User:</strong>{{ " "
+															}}<DiscordMention
+																kind="mention"
+																avatar="/avatars/baddie.png"
 																>baddie</DiscordMention
-															><span class="mod-log-id">
-																(541738403230777351)</span
-															></span
+															>{{ " " }}(541738403230777351) </span
 														><br />
-														<span class="mod-log-field"
-															><span
-																class="mod-log-chevron"
-																aria-hidden="true"
-																>❯</span
-															><strong>Reason:</strong>spam</span
+														<span
+															><strong>❯ Reason:</strong
+															>{{ " " }}spam</span
 														>
 													</DiscordEmbed>
 												</DiscordMessage>
@@ -961,44 +954,6 @@ onUnmounted(cleanup);
 
 :deep(.showcase-discord-feed .discord-message:hover) {
 	background-color: oklch(from var(--color-base-content) l c h / 0.04);
-}
-
-/* Discord mod-log embed: 14px description, 12px muted footer, muted ❯ bullets */
-:deep(.moderation-log-embed) {
-	font-size: 0.875rem;
-	line-height: 1.375;
-}
-
-:deep(.moderation-log-embed .discord-embed) {
-	padding: 0.75rem 1rem 0.75rem 0.75rem;
-}
-
-:deep(.moderation-log-embed .mod-log-chevron) {
-	margin-inline-end: 0.25rem;
-	color: oklch(from var(--color-base-content) l c h / 0.55);
-}
-
-:deep(.moderation-log-embed .mod-log-id) {
-	font-size: 0.8125rem;
-	color: oklch(from var(--color-base-content) l c h / 0.55);
-}
-
-:deep(.moderation-log-embed .discord-embed > .mt-2) {
-	margin-top: 0.5rem;
-	font-size: 0.75rem;
-	line-height: 1.333;
-	color: oklch(from var(--color-base-content) l c h / 0.55);
-}
-
-:deep(.moderation-log-embed .discord-embed > .mt-2 .text-sm) {
-	font-size: inherit;
-	line-height: inherit;
-	color: inherit;
-}
-
-:deep(.brand-embed .discord-embed) {
-	border-color: oklch(from var(--color-primary) l c h / 0.35);
-	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h) !important;
 }
 
 .radio-feature-container {

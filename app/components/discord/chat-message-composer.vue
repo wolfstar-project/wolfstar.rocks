@@ -218,6 +218,7 @@ function onKeydown(event: KeyboardEvent) {
 .discord-message-composer {
 	/* Discord-true dark surfaces (Figma / desktop client). */
 	--discord-message-composer-bg: oklch(28.84% 0.007 272.93);
+	--discord-message-composer-border: oklch(100% 0 0 / 0.06);
 	--discord-message-composer-text: oklch(91.56% 0.004 272.93);
 	--discord-message-composer-muted: oklch(71.01% 0.01 273.13);
 	--discord-message-composer-hover: oklch(100% 0 0 / 0.06);
@@ -225,9 +226,10 @@ function onKeydown(event: KeyboardEvent) {
 	--discord-message-composer-pill-bg: oklch(28.84% 0.007 272.93);
 	--discord-message-composer-send-active: oklch(57.74% 0.2091 273.85);
 
-	/* Desktop: side inset only; flush to chat bottom; modest radius (not pill). */
+	/* Desktop: side inset; flush to chat bottom; hairline border + modest radius. */
 	@apply mx-4 mb-0 flex h-11 min-w-0 shrink-0 items-center gap-0 rounded px-4 font-whitney;
 	background-color: var(--discord-message-composer-bg);
+	border: 1px solid var(--discord-message-composer-border);
 	color: var(--discord-message-composer-muted);
 }
 
@@ -267,15 +269,17 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 /*
- * Style both the default input and `#value` slot inputs. Vue scoped CSS does not
- * reach parent-provided slot content without `:deep` / `:slotted` — without these,
- * Esc/idle keyboard focus paints the browser’s white outline around the placeholder.
+ * Style both the default input and `#value` slot inputs. Vue `:slotted()` only
+ * matches the slot root — CommandsShowcase nests the input under a wrapper div,
+ * so `:slotted(.discord-message-composer-input)` never hits. Prefer `:deep` on
+ * the field (and unscoped utilities on the input) so Esc/idle keyboard focus
+ * cannot paint a white outline around a shrink-wrapped placeholder.
  */
 .discord-message-composer-input,
 :slotted(.discord-message-composer-input),
 .discord-message-composer-field :deep(.discord-message-composer-input) {
 	/* Tight left pad so `/` sits next to the attach + like Discord desktop. */
-	@apply h-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
+	@apply h-full w-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
 	appearance: none;
 	color: var(--discord-message-composer-text);
 }
@@ -337,6 +341,7 @@ function onKeydown(event: KeyboardEvent) {
 	.discord-message-composer {
 		@apply mx-0 mb-0 h-auto gap-1.5 rounded-none px-2 py-2;
 		background-color: transparent;
+		border: none;
 		box-shadow: none;
 	}
 

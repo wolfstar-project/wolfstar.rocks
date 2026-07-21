@@ -3,7 +3,7 @@
 		<DiscordScrollbar auto-hide class="discord-chat-scrollbar">
 			<!-- Short channels: pin welcome + messages as one block above the composer. -->
 			<div class="discord-chat-scroller-inner mt-auto">
-				<DiscordChannelWelcome :channel-name :date :date-time />
+				<DiscordChannelWelcome :channel-name :date :date-time :topic />
 				<div
 					class="discord-chat-messages"
 					role="log"
@@ -14,7 +14,14 @@
 					<template v-for="(message, index) of messages" :key="message.id">
 						<slot name="message" :message :index>
 							<DiscordMessage :name="message.author" :timestamp="message.timestamp">
-								{{ message.content }}
+								<DiscordChatInputCommand
+									v-if="message.command"
+									:name="message.command.name"
+									:subcommand="message.command.subcommand"
+									:subcommand-group="message.command.subcommandGroup"
+									:options="message.command.options"
+								/>
+								<template v-else>{{ message.content }}</template>
 							</DiscordMessage>
 						</slot>
 					</template>
@@ -32,6 +39,8 @@ interface ChatProps {
 	channelName: string;
 	date: string;
 	dateTime?: string;
+	/** Forwarded to the channel welcome block (Discord topic after the start sentence). */
+	topic?: string;
 	messages: readonly DiscordChatMessage[];
 }
 

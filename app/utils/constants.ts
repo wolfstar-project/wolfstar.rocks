@@ -87,7 +87,7 @@ export interface ModerationAction {
 }
 
 type LoggingEventDetailPart =
-	| { type: "mention"; name: string }
+	| { type: "mention"; name: string; avatar?: string }
 	| { type: "role"; name: string; color?: string }
 	| { type: "roles"; items: { name: string; color?: string }[] }
 	| { type: "text"; content: string };
@@ -576,7 +576,7 @@ export const SlashCommandRailApps: SlashCommandAppName[] = [
 ];
 
 type ShowcaseCommandEmbedPart =
-	| { type: "mention"; name: string }
+	| { type: "mention"; name: string; avatar?: string }
 	| { type: "text"; content: string };
 
 interface ShowcaseCommandOption {
@@ -614,6 +614,8 @@ interface ShowcaseCommandTextResponse {
 	/** Prefix before the user mention; include trailing " | ". */
 	content: string;
 	mentionUser: string;
+	/** Desktop-only avatar inside the mention pill. */
+	mentionAvatar?: string;
 }
 
 interface ShowcaseCommandComponentsResponse {
@@ -646,6 +648,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		responseType: "text",
 		content: "✅ Created case 3 | ",
 		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Ban",
@@ -660,6 +663,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		responseType: "text",
 		content: "✅ Created case 4 | ",
 		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Kick",
@@ -674,6 +678,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		responseType: "text",
 		content: "✅ Created case 5 | ",
 		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Mute",
@@ -689,6 +694,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		responseType: "text",
 		content: "✅ Created case 6 | ",
 		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Case",
@@ -704,12 +710,15 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{
 				label: "User",
 				parts: [
-					{ type: "mention", name: "baddie" },
+					{ type: "mention", name: "baddie", avatar: "/avatars/baddie.png" },
 					{ type: "text", content: " (541738403230777351)" },
 				],
 			},
 			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
-			{ label: "Moderator", parts: [{ type: "mention", name: "stella" }] },
+			{
+				label: "Moderator",
+				parts: [{ type: "mention", name: "stella", avatar: "/avatars/stella.png" }],
+			},
 		],
 	},
 	{

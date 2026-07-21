@@ -15,6 +15,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const User: Story = {
+	args: {
+		avatar: "/avatars/wolfstar.png",
+	},
+	render: (args) => ({
+		components: { DiscordMention },
+		setup: () => ({ args }),
+		template: `<DiscordMention v-bind="args">Wolfy</DiscordMention>`,
+	}),
+};
+
+export const UserWithoutAvatar: Story = {
 	render: (args) => ({
 		components: { DiscordMention },
 		setup: () => ({ args }),

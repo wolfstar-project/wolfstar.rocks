@@ -24,6 +24,8 @@
 	--discord-channel-header-muted: var(--showcase-discord-muted-text);
 	--discord-channel-header-search-bg: var(--showcase-discord-server);
 	--discord-channel-header-search-border: var(--showcase-discord-composer);
+	--discord-channel-header-search-placeholder: var(--showcase-discord-muted-text);
+	--discord-channel-header-search-icon: var(--showcase-discord-primary-text);
 
 	--discord-chat-bg: var(--showcase-discord-chrome);
 	--discord-member-list-bg: var(--showcase-discord-sidebar);

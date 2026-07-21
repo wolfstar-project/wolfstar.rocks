@@ -242,9 +242,8 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-scrollbar {
-	/* Discord member sidebar: thin overlay thumb, no painted track; hidden until hover. */
+	/* Overlay thumb on content (Discord member sidebar); inherit Discord pill chrome. */
 	--discord-scrollbar-track: transparent;
-	--discord-scrollbar-thumb: oklch(0% 0 0 / 0.4);
 
 	@apply relative h-full max-h-full min-h-0 flex-1;
 	/* Content uses full width; track overlays the right edge (see track rules below). */
@@ -257,22 +256,18 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-scrollbar :deep(.discord-scrollbar-track) {
-	@apply pointer-events-none absolute inset-y-0 right-0 z-1 w-1 opacity-0;
+	/*
+	 * Overlay lane wide enough for thumb + right edge inset (matches Discord floating pill).
+	 * Previous w-1 + 4px thumb centered made the thumb flush to the panel border.
+	 */
+	@apply pointer-events-none absolute inset-y-0 right-0 z-1 opacity-0;
+	width: var(--discord-scrollbar-gutter);
 	transition: opacity 120ms ease;
 }
 
 .discord-member-list:hover .discord-member-list-scrollbar :deep(.discord-scrollbar-track),
 .discord-member-list-scrollbar:focus-within :deep(.discord-scrollbar-track) {
 	@apply pointer-events-auto opacity-100;
-}
-
-.discord-member-list-scrollbar :deep(.discord-scrollbar-thumb-rail) {
-	@apply my-0.5 w-full rounded-full;
-	background-color: transparent;
-}
-
-.discord-member-list-scrollbar :deep(.discord-scrollbar-thumb) {
-	@apply rounded-full;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -282,15 +277,16 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-content {
-	@apply px-2 pt-6 pb-5;
+	/* Compact Discord member sidebar padding so short lists fit without scroll. */
+	@apply px-2 pt-3 pb-3;
 }
 
 .discord-member-list-section + .discord-member-list-section {
-	@apply mt-6;
+	@apply mt-3;
 }
 
 .discord-member-list-heading {
-	@apply px-2 pb-1 text-[12px] leading-4 font-semibold tracking-wide uppercase;
+	@apply px-2 pb-0.5 text-[12px] leading-4 font-semibold tracking-wide uppercase;
 	color: var(--discord-member-list-muted);
 }
 
@@ -299,7 +295,7 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-member {
-	@apply relative flex min-h-[2.625rem] min-w-0 items-center gap-3 overflow-hidden rounded-md px-2 py-1.5;
+	@apply relative flex min-h-10 min-w-0 items-center gap-3 overflow-hidden rounded-md px-2 py-0.5;
 }
 
 .discord-member-list-member:hover {

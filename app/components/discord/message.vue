@@ -10,7 +10,7 @@
 		<DiscordAvatar :user="name" size="medium" class="discord-message-avatar" />
 		<DiscordMessageReply v-if="reply" v-bind="reply" class="discord-message-reply-slot" />
 		<div class="discord-message-content">
-			<header class="mb-0.5 flex flex-row items-center">
+			<header class="mb-0 flex flex-row items-center">
 				<div class="font-bold">{{ profile.name }}</div>
 				<span
 					v-if="profile.app"

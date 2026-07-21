@@ -43,7 +43,7 @@
 					class="discord-scrollbar-thumb"
 					:style="{
 						height: `${thumbHeight}px`,
-						transform: `translate(-50%, ${thumbOffset}px)`,
+						transform: `translateY(${thumbOffset}px)`,
 					}"
 				/>
 			</div>
@@ -182,13 +182,23 @@ function scrollByStep(direction: 1 | -1) {
 @reference "@/assets/css/main.css";
 
 .discord-scrollbar {
-	/* Discord dark: invisible track, thin muted pill thumb (~#4E5058). */
+	/*
+	 * Discord dark scrollbar (floating pill):
+	 * - thumb ~5px, fully rounded
+	 * - ~3px gap from the container’s right edge (not flush)
+	 * - ~4px inset from top/bottom of the scroll area
+	 * - transparent track; color ≈ #4e5058
+	 */
 	--discord-scrollbar-track: oklch(0% 0 0 / 0);
-	--discord-scrollbar-thumb: oklch(44% 0.012 264);
+	--discord-scrollbar-thumb: oklch(44% 0.012 270);
 	--discord-scrollbar-arrow: oklch(73.06% 0.0048 264.53 / 0.7);
-	/* Gutter wide enough for a ~4px thumb with ~2px inset from the edge. */
-	--discord-scrollbar-gutter: 8px;
-	--discord-scrollbar-thumb-width: 4px;
+	--discord-scrollbar-thumb-width: 5px;
+	--discord-scrollbar-edge-inset: 3px;
+	--discord-scrollbar-end-inset: 4px;
+	/* Gutter = thumb + right inset + small left breathing room. */
+	--discord-scrollbar-gutter: calc(
+		var(--discord-scrollbar-thumb-width) + var(--discord-scrollbar-edge-inset) + 2px
+	);
 
 	@apply grid max-h-[inherit] min-h-0 min-w-0 gap-0;
 	/* Collapse the track lane until content overflows (Discord short channels). */
@@ -224,7 +234,8 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-track {
-	@apply relative flex min-h-0 flex-col items-center self-stretch;
+	@apply relative flex min-h-0 flex-col self-stretch;
+	width: var(--discord-scrollbar-gutter);
 }
 
 .discord-scrollbar-with-arrows .discord-scrollbar-track {
@@ -233,11 +244,14 @@ function scrollByStep(direction: 1 | -1) {
 
 .discord-scrollbar-thumb-rail {
 	@apply relative min-h-0 w-full flex-1;
+	margin-block: var(--discord-scrollbar-end-inset);
 	background-color: var(--discord-scrollbar-track);
 }
 
 .discord-scrollbar-thumb {
-	@apply absolute top-0 left-1/2 rounded-full;
+	/* Floating pill: right-aligned with edge inset — never flush to the border. */
+	@apply absolute top-0 rounded-full;
+	right: var(--discord-scrollbar-edge-inset);
 	width: var(--discord-scrollbar-thumb-width);
 	background-color: var(--discord-scrollbar-thumb);
 	will-change: transform;

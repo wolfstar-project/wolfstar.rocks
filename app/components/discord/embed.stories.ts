@@ -9,9 +9,12 @@ const meta = {
 	title: "Components/Discord/Embed",
 	decorators: [discordDecorator],
 	args: {
-		title: "Moderation case",
 		color: caseEmbedColor,
 		theme: "dark",
+		author: {
+			icon: "/avatars/redstar.png",
+			name: "@redstar071 (605162125027049472)",
+		},
 		footer: {
 			icon: "/avatars/wolfstar.png",
 			text: "Case 3",
@@ -32,12 +35,43 @@ export const Case: Story = {
 				<span><strong>❯ Type:</strong>{{ " " }}Warning</span><br />
 				<span>
 					<strong>❯ User:</strong>{{ " " }}
-					<DiscordMention kind="mention">baddie</DiscordMention>
+					<DiscordMention kind="mention" avatar="/avatars/baddie.png"
+						>baddie</DiscordMention
+					>
+					{{ " " }}(957060182561669132)
+				</span><br />
+				<span>
+					<strong>❯ Reason:</strong>{{ " " }}
+					<em>Please use <code>/case edit</code> to set a reason.</em>
+				</span>
+			</DiscordEmbed>
+		`,
+	}),
+};
+
+export const WithTitle: Story = {
+	args: {
+		title: "Moderation case",
+		author: undefined,
+	},
+	render: (args) => ({
+		components: { DiscordEmbed, DiscordMention },
+		setup: () => ({ args }),
+		template: `
+			<DiscordEmbed v-bind="args">
+				<span><strong>❯ Type:</strong>{{ " " }}Warning</span><br />
+				<span>
+					<strong>❯ User:</strong>{{ " " }}
+					<DiscordMention kind="mention" avatar="/avatars/baddie.png"
+						>baddie</DiscordMention
+					>
 				</span><br />
 				<span><strong>❯ Reason:</strong>{{ " " }}spam</span><br />
 				<span>
 					<strong>❯ Moderator:</strong>{{ " " }}
-					<DiscordMention kind="mention">stella</DiscordMention>
+					<DiscordMention kind="mention" avatar="/avatars/stella.png"
+						>stella</DiscordMention
+					>
 				</span>
 			</DiscordEmbed>
 		`,
@@ -58,5 +92,29 @@ export const WithAuthor: Story = {
 		components: { DiscordEmbed },
 		setup: () => ({ args }),
 		template: `<DiscordEmbed v-bind="args">Configuration saved successfully.</DiscordEmbed>`,
+	}),
+};
+
+export const BlockquoteDescription: Story = {
+	args: {
+		title: undefined,
+		author: {
+			icon: "/avatars/redstar.png",
+			name: "@redstar071 (605162125027049472)",
+		},
+	},
+	render: (args) => ({
+		components: { DiscordEmbed },
+		setup: () => ({ args }),
+		template: `
+			<DiscordEmbed v-bind="args">
+				<blockquote><strong>Type:</strong>Warning</blockquote>
+				<blockquote><strong>User:</strong>Linear#8542 (957060182561669132)</blockquote>
+				<blockquote>
+					<strong>Reason:</strong>
+					<em>Please use <code>/case edit</code> to set a reason.</em>
+				</blockquote>
+			</DiscordEmbed>
+		`,
 	}),
 };

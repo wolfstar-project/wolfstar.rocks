@@ -49,7 +49,7 @@ export const WithCommandReply: Story = {
 		template: `
 			<DiscordMessage v-bind="args">
 				✅ Created case 3 |
-				<DiscordMention kind="mention">baddie</DiscordMention>
+				<DiscordMention kind="mention" avatar="/avatars/baddie.png">baddie</DiscordMention>
 			</DiscordMessage>
 		`,
 	}),
@@ -109,7 +109,9 @@ export const WithEmbedAndReactions: Story = {
 					<span><strong>❯ Type:</strong>{{ " " }}Warning</span><br />
 					<span>
 						<strong>❯ User:</strong>{{ " " }}
-						<DiscordMention kind="mention">baddie</DiscordMention>
+						<DiscordMention kind="mention" avatar="/avatars/baddie.png"
+							>baddie</DiscordMention
+						>
 						{{ " " }}(541738403230777351)
 					</span><br />
 					<span><strong>❯ Reason:</strong>{{ " " }}spam</span>

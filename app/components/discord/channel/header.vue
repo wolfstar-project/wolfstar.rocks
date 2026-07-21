@@ -43,7 +43,7 @@
 				<div class="discord-channel-header-title">
 					<UIcon
 						:name="typeIcon"
-						class="discord-channel-header-icon size-3 shrink-0"
+						class="discord-channel-header-icon size-5 shrink-0"
 						aria-hidden="true"
 					/>
 					<span class="discord-channel-header-name">{{ name }}</span>
@@ -70,16 +70,16 @@
 					:aria-pressed="action.id === 'members' ? membersOpen : undefined"
 					@click="action.id === 'members' ? toggleMembers() : undefined"
 				>
-					<UIcon :name="action.icon" class="size-5" aria-hidden="true" />
+					<UIcon :name="action.icon" class="size-6" aria-hidden="true" />
 				</button>
 
 				<div class="discord-channel-header-search" aria-hidden="true">
 					<span class="discord-channel-header-search-placeholder">{{
-						searchPlaceholder
+						searchPlaceholderText
 					}}</span>
 					<UIcon
 						name="discord:search"
-						class="discord-channel-header-search-icon size-3.5 shrink-0"
+						class="discord-channel-header-search-icon size-4 shrink-0"
 					/>
 				</div>
 			</div>
@@ -98,6 +98,8 @@ interface ChannelHeaderProps {
 	topic?: string;
 	/** Placeholder shown in the decorative search field. */
 	searchPlaceholder?: string;
+	/** Guild name shown in the desktop header. */
+	guildName?: string;
 	/** Mobile header “X Online” count (Discord mobile channel chrome). */
 	onlineCount?: number;
 	/** Decorative notification badge on the mobile back control. */
@@ -106,7 +108,7 @@ interface ChannelHeaderProps {
 	membersOpen?: boolean;
 }
 
-type ToolbarActionId = "favorite" | "threads" | "notifications" | "pins" | "members";
+type ToolbarActionId = "threads" | "notifications" | "pins" | "members";
 
 interface ToolbarAction {
 	id: ToolbarActionId;
@@ -119,11 +121,10 @@ const TypeIcons = {
 } as const satisfies Record<ChannelHeaderType, string>;
 
 /**
- * Order matches Discord desktop / Figma Frame 1087:
- * favorite → threads → notifications → pins → members, then search.
+ * Order matches Discord desktop channel header:
+ * threads → notifications → pins → members, then search.
  */
 const ToolbarActions = [
-	{ id: "favorite", icon: "discord:star", label: "Favorite channel" },
 	{ id: "threads", icon: "discord:threads", label: "Threads" },
 	{ id: "notifications", icon: "discord:notifications", label: "Notification settings" },
 	{ id: "pins", icon: "discord:pins", label: "Pinned messages" },
@@ -137,6 +138,7 @@ const {
 	type = "text",
 	topic,
 	searchPlaceholder = "Search",
+	guildName,
 	onlineCount,
 	notificationCount = 0,
 	membersOpen = true,
@@ -150,6 +152,13 @@ const emit = defineEmits<{
 }>();
 
 const typeIcon = computed(() => TypeIcons[type]);
+
+const searchPlaceholderText = computed(() => {
+	if (guildName) {
+		return `Search ${guildName}`;
+	}
+	return searchPlaceholder;
+});
 
 const membersToggleLabel = computed(() => (membersOpen ? "Hide member list" : "Show member list"));
 
@@ -169,8 +178,11 @@ function toggleMembers() {
 	--discord-channel-header-edge: oklch(0% 0 0 / 0.2);
 	--discord-channel-header-text: oklch(91.56% 0.004 272.93);
 	--discord-channel-header-muted: oklch(71.01% 0.01 273.13);
+	/* Search field: Discord #1e1f22 fill, #949ba4 placeholder, brighter icon. */
 	--discord-channel-header-search-bg: oklch(19.34% 0.004 273.16);
 	--discord-channel-header-search-border: oklch(28.84% 0.007 272.93);
+	--discord-channel-header-search-placeholder: oklch(69.5% 0.015 255);
+	--discord-channel-header-search-icon: oklch(91.56% 0.004 272.93);
 	--discord-channel-header-badge: oklch(63.17% 0.208 24.62);
 	--discord-channel-header-online: oklch(72.27% 0.191 149.58);
 
@@ -190,7 +202,7 @@ function toggleMembers() {
 }
 
 .discord-channel-header-info {
-	@apply flex min-w-0 items-center gap-5;
+	@apply flex min-w-0 items-center gap-2;
 }
 
 .discord-channel-header-title {
@@ -202,14 +214,15 @@ function toggleMembers() {
 }
 
 .discord-channel-header-name {
-	@apply truncate font-whitney text-base font-medium;
+	@apply truncate font-whitney text-base font-semibold;
 	color: var(--discord-channel-header-text);
 }
 
+/* Dark gray circular separator between channel name and topic. */
 .discord-channel-header-divider {
-	@apply h-4 w-px shrink-0;
+	@apply size-1 shrink-0 rounded-full;
 	background-color: var(--discord-channel-header-muted);
-	opacity: 0.45;
+	opacity: 0.7;
 }
 
 .discord-channel-header-topic {
@@ -217,12 +230,13 @@ function toggleMembers() {
 	color: var(--discord-channel-header-muted);
 }
 
+/* Discord desktop: 24px icons with 8px margin each side → 16px gap. */
 .discord-channel-header-toolbar {
-	@apply flex shrink-0 items-center gap-5;
+	@apply flex shrink-0 items-center gap-4;
 }
 
 .discord-channel-header-action {
-	@apply inline-flex size-5 shrink-0 cursor-default items-center justify-center border-0 bg-transparent p-0;
+	@apply inline-flex size-6 shrink-0 cursor-default items-center justify-center border-0 bg-transparent p-0;
 	color: var(--discord-channel-header-muted);
 }
 
@@ -239,19 +253,23 @@ function toggleMembers() {
 	@apply outline-2 outline-offset-2 outline-primary;
 }
 
+/*
+ * Discord desktop header search (matches channel-header chrome):
+ * ~28px tall · 4px radius · 8px pad · left placeholder · right magnifier.
+ */
 .discord-channel-header-search {
-	@apply flex h-7 w-[14.7rem] items-center justify-between gap-1.5 rounded-lg px-3;
+	@apply flex h-7 w-60 shrink-0 items-center justify-between gap-3 rounded px-2;
 	background-color: var(--discord-channel-header-search-bg);
 	border: 1px solid var(--discord-channel-header-search-border);
 }
 
 .discord-channel-header-search-placeholder {
-	@apply min-w-0 flex-1 truncate text-[13px] font-medium;
-	color: var(--discord-channel-header-muted);
+	@apply min-w-0 flex-1 truncate font-whitney text-sm leading-none font-medium;
+	color: var(--discord-channel-header-search-placeholder);
 }
 
 .discord-channel-header-search-icon {
-	color: var(--discord-channel-header-muted);
+	color: var(--discord-channel-header-search-icon);
 }
 
 /* Discord mobile channel header (< md): back + badge · #channel / Online · search */

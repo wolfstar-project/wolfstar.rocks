@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
-import { discordDecorator } from "../../../../.storybook/decorators";
-import DiscordV2Button from "./button.vue";
+import { discordDecorator } from "../../../.storybook/decorators";
+import DiscordButton from "./button.vue";
 
 const meta = {
-	component: DiscordV2Button,
-	title: "Components/Discord/V2/Button",
+	component: DiscordButton,
+	title: "Components/Discord/Button",
 	decorators: [discordDecorator],
 	args: {
 		label: "Primary",
@@ -17,7 +17,7 @@ const meta = {
 			options: ["primary", "secondary", "success", "danger", "link"],
 		},
 	},
-} satisfies Meta<typeof DiscordV2Button>;
+} satisfies Meta<typeof DiscordButton>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

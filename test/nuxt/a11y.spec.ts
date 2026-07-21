@@ -25,7 +25,8 @@ import {
 	DiscordChatInputCommandSuggestion,
 	DiscordChatInputCommandMatched,
 	DiscordChatInputCommandSuggestions,
-	DiscordV2StringSelectMenu,
+	DiscordAppLauncher,
+	DiscordStringSelectMenu,
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	FeaturesSection,
@@ -264,6 +265,15 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
+
+			it("should have no accessibility violations with desktop avatar", async () => {
+				const component = await mountSuspended(DiscordMention, {
+					props: { kind: "mention", avatar: "/avatars/baddie.png" },
+					slots: { default: "baddie" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
 		});
 
 		describe("DiscordRole", () => {
@@ -378,6 +388,16 @@ describe("component accessibility audits", () => {
 			});
 		});
 
+		describe("DiscordAppLauncher", () => {
+			it("should have no accessibility violations on the main view", async () => {
+				const component = await mountSuspended(DiscordAppLauncher, {
+					props: { open: true },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
 		describe("DiscordReaction", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordReaction, {
@@ -408,7 +428,7 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordV2StringSelectMenu", () => {
+		describe("DiscordStringSelectMenu", () => {
 			const selectOptions = [
 				{
 					value: "prefix",
@@ -425,7 +445,7 @@ describe("component accessibility audits", () => {
 			];
 
 			it("should have no accessibility violations when closed", async () => {
-				const component = await mountSuspended(DiscordV2StringSelectMenu, {
+				const component = await mountSuspended(DiscordStringSelectMenu, {
 					props: { options: selectOptions, ariaLabel: "Configuration category" },
 				});
 				const results = await runAxe(component);
@@ -433,11 +453,17 @@ describe("component accessibility audits", () => {
 			});
 
 			it("should have no accessibility violations when open", async () => {
-				const component = await mountSuspended(DiscordV2StringSelectMenu, {
+				const component = await mountSuspended(DiscordStringSelectMenu, {
 					props: { options: selectOptions, ariaLabel: "Configuration category" },
+					attachTo: document.body,
 				});
 				await component.find("button[role='combobox']").trigger("click");
-				const results = await runAxe(component);
+				await nextTick();
+				const panel = document.querySelector(".discord-string-select-menu-panel");
+				expect(panel).not.toBeNull();
+				const results = await runAxe(component, {
+					include: panel ? [panel] : [],
+				});
 				expect(results.violations).toEqual([]);
 			});
 		});

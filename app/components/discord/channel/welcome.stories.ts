@@ -10,6 +10,7 @@ const meta = {
 		channelName: "mod-commands",
 		date: "July 16, 2026",
 		dateTime: "2026-07-16",
+		topic: "WolfStar moderation commands — try a slash command below.",
 	},
 } satisfies Meta<typeof DiscordChannelWelcome>;
 

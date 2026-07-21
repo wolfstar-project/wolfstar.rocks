@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
 import { confAccentColor, confSelectOptions } from "~/storybook/discord-fixtures";
 import { discordDecorator } from "../../../../.storybook/decorators";
-import DiscordV2ActionRow from "./action-row.vue";
-import DiscordV2Button from "./button.vue";
+import DiscordActionRow from "../action-row.vue";
+import DiscordButton from "../button.vue";
+import DiscordStringSelectMenu from "../string-select-menu.vue";
 import DiscordV2Container from "./container.vue";
 import DiscordV2Separator from "./separator.vue";
-import DiscordV2StringSelectMenu from "./string-select-menu.vue";
 import DiscordV2TextDisplay from "./text-display.vue";
 
 const meta = {
@@ -26,9 +26,9 @@ export const ConfMenu: Story = {
 			DiscordV2Container,
 			DiscordV2TextDisplay,
 			DiscordV2Separator,
-			DiscordV2ActionRow,
-			DiscordV2StringSelectMenu,
-			DiscordV2Button,
+			DiscordActionRow,
+			DiscordStringSelectMenu,
+			DiscordButton,
 		},
 		setup: () => ({ args, confSelectOptions }),
 		template: `
@@ -42,15 +42,15 @@ Use the menu below to navigate:
 ⚙️ prefix
 				</DiscordV2TextDisplay>
 				<DiscordV2Separator />
-				<DiscordV2ActionRow>
-					<DiscordV2StringSelectMenu
+				<DiscordActionRow>
+					<DiscordStringSelectMenu
 						:options="confSelectOptions"
 						placeholder="Choose an option..."
 					/>
-				</DiscordV2ActionRow>
-				<DiscordV2ActionRow>
-					<DiscordV2Button label="Stop" variant="danger" icon="ph:stop-fill" />
-				</DiscordV2ActionRow>
+				</DiscordActionRow>
+				<DiscordActionRow>
+					<DiscordButton label="Stop" variant="danger" icon="ph:stop-fill" />
+				</DiscordActionRow>
 			</DiscordV2Container>
 		`,
 	}),

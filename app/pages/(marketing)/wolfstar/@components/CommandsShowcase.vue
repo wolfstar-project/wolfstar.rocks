@@ -14,7 +14,10 @@
 					/>
 
 					<div class="showcase-discord-workspace">
-						<div class="showcase-discord-main">
+						<div
+							class="showcase-discord-main"
+							:class="{ 'showcase-discord-main-picker-open': showCommandPicker }"
+						>
 							<DiscordChat
 								channel-name="mod-commands"
 								:date="channelDateLabel"
@@ -408,13 +411,19 @@ const activeDisplayCommand = computed(() => {
 	return command ?? showcaseCommands[0]!;
 });
 
-const chatMessages = computed<DiscordChatMessage[]>(() => [
-	{
-		id: `${activeDisplayCommand.value.name}-${activeDisplayCommand.value.subcommand ?? ""}`,
-		author: "wolfstar",
-		timestamp: "Today at 15:49",
-	},
-]);
+const chatMessages = computed<DiscordChatMessage[]>(() => {
+	// Discord: while the slash picker is open it sits over the channel — messages
+	// stay in the background (hidden here) and a short channel shows no scrollbar.
+	if (showCommandPicker.value) return [];
+
+	return [
+		{
+			id: `${activeDisplayCommand.value.name}-${activeDisplayCommand.value.subcommand ?? ""}`,
+			author: "wolfstar",
+			timestamp: "Today at 15:49",
+		},
+	];
+});
 /**
  * Support-server role colors (oklch) — Discord-true, no maroon.
  * Pink / scarlet / salmon match Developers + External Bots name tints.
@@ -685,8 +694,9 @@ function executeCommand(name: string) {
 
 	selectedCommandIndex.value = index;
 	selectedApp.value = null;
-	composerText.value = "/";
 	highlightedIndex.value = 0;
+	// Discord closes the slash autocomplete after send so the channel response is visible.
+	composerText.value = "";
 }
 
 /** Type-ahead arm: fill the composer path so matched-command chrome appears before send. */
@@ -834,8 +844,20 @@ onMounted(() => {
 }
 
 .showcase-discord-main {
-	@apply flex min-h-0 min-w-0 flex-1 flex-col;
+	@apply relative flex min-h-0 min-w-0 flex-1 flex-col;
 	background-color: var(--showcase-discord-chrome);
+}
+
+/* Chat fills the column; composer (+ picker) overlays the bottom like Discord. */
+.showcase-discord-main > :deep(.discord-chat) {
+	@apply min-h-0 flex-1;
+	/* Keep idle messages above the composer bar when the picker is closed. */
+	padding-bottom: 3.5rem;
+}
+
+.showcase-discord-main-picker-open > :deep(.discord-chat) {
+	/* Picker covers the lower channel; no need to reserve composer padding. */
+	padding-bottom: 0;
 }
 
 .showcase-discord-shell :deep(.discord-channel-header) {
@@ -875,9 +897,7 @@ onMounted(() => {
 }
 
 .showcase-command-picker {
-	@apply shrink-0;
-	position: relative;
-	z-index: 1;
+	@apply absolute inset-x-0 bottom-0 z-1;
 	/* Shared bar behind picker + composer (flush stack; no channel peek gap). */
 	background-color: var(--showcase-discord-chrome);
 }

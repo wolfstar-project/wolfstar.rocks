@@ -1006,6 +1006,15 @@ describe("component SSR rendering", () => {
 		it("renders a plain-text moderation success reply on desktop", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 
+			// Ensure slash mode is closed so the channel response is visible.
+			if (
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement)
+					.value === "/"
+			) {
+				await wrapper.find("[aria-label='Open apps and commands']").trigger("click");
+				await wrapper.vm.$nextTick();
+			}
+
 			const desktopResponse = wrapper.find(".showcase-desktop-command-response");
 			expect(desktopResponse.exists()).toBe(true);
 			expect(desktopResponse.find(".discord-embed").exists()).toBe(false);
@@ -1117,15 +1126,14 @@ describe("component SSR rendering", () => {
 			await kickSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
-			// Click executes: chat mock switches to the kick response; composer stays in slash mode.
+			// Click executes: picker closes and the kick response is shown in the channel.
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect(
+				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
+			).toBe("");
 			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
 				/Created case 5\s*\|\s*@?baddie/,
 			);
-			expect(
-				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
-			).toBe("/");
-			expect(wrapper.find(".discord-slash-command-suggestions-sidebar").exists()).toBe(true);
-			expect(wrapper.findAll(".discord-slash-command-suggestion").length).toBe(13);
 		});
 
 		it("executes a subcommand and shows its component response", async () => {
@@ -1139,9 +1147,10 @@ describe("component SSR rendering", () => {
 			await confSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
-			).toBe("/");
+			).toBe("");
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
 			).toBe(true);
@@ -1185,11 +1194,12 @@ describe("component SSR rendering", () => {
 			await muteLink!.trigger("click");
 			await wrapper.vm.$nextTick();
 
+			// Mobile browser execute closes slash mode and keeps the command browser visible.
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
-			).toBe("/");
+			).toBe("");
 			expect(wrapper.find(".showcase-mobile-command-link-active").text()).toContain("/mute");
-			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(true);
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
 		});
 
 		it("keeps third-party app rows non-selectable", async () => {
@@ -1205,7 +1215,10 @@ describe("component SSR rendering", () => {
 			await starylSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();
 
-			// Default showcase response stays warn; third-party rows do not execute.
+			// Close the picker — default warn response should still be selected.
+			await wrapper.find("[aria-label='Open apps and commands']").trigger("click");
+			await wrapper.vm.$nextTick();
+
 			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
 				/Created case 3\s*\|\s*@?baddie/,
 			);
@@ -1230,14 +1243,14 @@ describe("component SSR rendering", () => {
 			await input.trigger("keydown", { key: "Enter" });
 			await wrapper.vm.$nextTick();
 
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
+			expect((input.element as HTMLInputElement).value).toBe("");
 			expect(wrapper.find(".showcase-desktop-text-response").text()).toMatch(
 				/Created case 5\s*\|\s*@?baddie/,
 			);
-			expect((input.element as HTMLInputElement).value).toBe("/");
-			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
 		});
 
-		it("executes conf menu from the picker and keeps the command browser active", async () => {
+		it("executes conf menu from the picker and reveals the channel response", async () => {
 			const wrapper = await mountSuspended(CommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
@@ -1250,7 +1263,8 @@ describe("component SSR rendering", () => {
 
 			expect(
 				(wrapper.find(".discord-message-composer-input").element as HTMLInputElement).value,
-			).toBe("/");
+			).toBe("");
+			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
 			expect(wrapper.find(".showcase-mobile-command-link-active").text()).toContain(
 				"/conf menu",
 			);

@@ -6,6 +6,7 @@
 			'discord-scrollbar-with-below-viewport': Boolean(slots['below-viewport']),
 			'discord-scrollbar-auto-hide': autoHide,
 			'discord-scrollbar-scrolling': isScrolling,
+			'discord-scrollbar-scrollable': isScrollable || alwaysShowTrack,
 		}"
 	>
 		<div class="discord-scrollbar-body">
@@ -190,6 +191,11 @@ function scrollByStep(direction: 1 | -1) {
 	--discord-scrollbar-thumb-width: 4px;
 
 	@apply grid max-h-[inherit] min-h-0 min-w-0 gap-0;
+	/* Collapse the track lane until content overflows (Discord short channels). */
+	grid-template-columns: minmax(0, 1fr) 0;
+}
+
+.discord-scrollbar-scrollable {
 	grid-template-columns: minmax(0, 1fr) var(--discord-scrollbar-gutter);
 }
 

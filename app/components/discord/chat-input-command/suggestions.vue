@@ -183,9 +183,6 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	--discord-slash-command-suggestions-sidebar-hover: oklch(26.65% 0.006 272.93);
 	--discord-slash-command-suggestions-sidebar-icon: oklch(71.01% 0.01 273.13);
 	--discord-slash-command-suggestions-header: oklch(71.01% 0.01 273.13);
-	/* Chunky short thumb; track nearly invisible so only the pill stands out. */
-	--discord-slash-command-suggestions-scrollbar-track: oklch(71.01% 0.01 273.13 / 0.12);
-	--discord-slash-command-suggestions-scrollbar-thumb: oklch(71.01% 0.01 273.13 / 0.55);
 	--discord-slash-command-suggestions-rail-width: 48px;
 	/* Frequently Used header (~2rem) + 5 suggestion rows (3rem each). */
 	--discord-slash-command-suggestions-height: calc(2rem + 5 * 3rem);
@@ -214,25 +211,13 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-scroll {
-	--discord-scrollbar-track: var(--discord-slash-command-suggestions-scrollbar-track);
-	--discord-scrollbar-thumb: var(--discord-slash-command-suggestions-scrollbar-thumb);
-
 	/* Desktop: list sits to the right of the rail (DOM order is list → rail).
 	   Class is on the DiscordScrollbar root — set columns here, not via :deep(). */
 	@apply h-full max-h-full min-h-0 min-w-0 flex-1 md:order-2;
 }
 
-/* Beat DiscordScrollbar's default 4px column so the list thumb stays chunky. */
-.discord-slash-command-suggestions-scroll.discord-scrollbar {
-	grid-template-columns: minmax(0, 1fr) 8px;
-}
-
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb-rail) {
 	@apply my-1.5;
-}
-
-.discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-thumb) {
-	@apply rounded-full;
 }
 
 .discord-slash-command-suggestions-panel:not(

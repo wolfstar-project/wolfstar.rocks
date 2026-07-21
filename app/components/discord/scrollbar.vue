@@ -1,5 +1,12 @@
 <template>
-	<div class="discord-scrollbar" :class="{ 'discord-scrollbar-with-arrows': showArrows }">
+	<div
+		class="discord-scrollbar"
+		:class="{
+			'discord-scrollbar-with-arrows': showArrows,
+			'discord-scrollbar-auto-hide': autoHide,
+			'discord-scrollbar-scrolling': isScrolling,
+		}"
+	>
 		<div ref="viewportRef" class="discord-scrollbar-viewport">
 			<div ref="contentRef" class="discord-scrollbar-content">
 				<slot />
@@ -28,7 +35,7 @@
 					class="discord-scrollbar-thumb"
 					:style="{
 						height: `${thumbHeight}px`,
-						transform: `translateY(${thumbOffset}px)`,
+						transform: `translate(-50%, ${thumbOffset}px)`,
 					}"
 				/>
 			</div>
@@ -57,6 +64,11 @@ interface DiscordScrollbarProps {
 	minThumbHeight?: number;
 	/** Maximum thumb height in px — keeps Discord picker thumbs short and chunky. */
 	maxThumbHeight?: number;
+	/**
+	 * Discord chat behavior: hide the thumb until the scrollbar is hovered or
+	 * the viewport is actively scrolling.
+	 */
+	autoHide?: boolean;
 }
 
 interface DiscordScrollbarSlots {
@@ -68,12 +80,14 @@ interface DiscordScrollbarSlots {
 defineSlots<DiscordScrollbarSlots>();
 
 const SCROLL_STEP = 40;
+const SCROLLING_IDLE_MS = 800;
 
 const {
 	alwaysShowTrack = false,
 	showArrows = false,
 	minThumbHeight = 24,
 	maxThumbHeight,
+	autoHide = false,
 } = defineProps<DiscordScrollbarProps>();
 
 const viewportRef = useTemplateRef<HTMLDivElement>("viewportRef");
@@ -83,6 +97,19 @@ const thumbRailRef = useTemplateRef<HTMLDivElement>("thumbRailRef");
 const isScrollable = ref(false);
 const thumbHeight = ref(0);
 const thumbOffset = ref(0);
+const isScrolling = ref(false);
+
+let scrollingIdleTimer: ReturnType<typeof setTimeout> | undefined;
+
+function markScrolling() {
+	if (!autoHide) return;
+	isScrolling.value = true;
+	if (scrollingIdleTimer !== undefined) clearTimeout(scrollingIdleTimer);
+	scrollingIdleTimer = setTimeout(() => {
+		isScrolling.value = false;
+		scrollingIdleTimer = undefined;
+	}, SCROLLING_IDLE_MS);
+}
 
 function updateThumb() {
 	const viewport = viewportRef.value;
@@ -120,12 +147,19 @@ function updateThumb() {
 
 const { y } = useScroll(viewportRef, {
 	behavior: "smooth",
-	onScroll: updateThumb,
+	onScroll: () => {
+		updateThumb();
+		markScrolling();
+	},
 });
 
 useResizeObserver(viewportRef, updateThumb);
 useResizeObserver(contentRef, updateThumb);
 useResizeObserver(thumbRailRef, updateThumb);
+
+onBeforeUnmount(() => {
+	if (scrollingIdleTimer !== undefined) clearTimeout(scrollingIdleTimer);
+});
 
 function scrollByStep(direction: 1 | -1) {
 	y.value += direction * SCROLL_STEP;
@@ -136,11 +170,16 @@ function scrollByStep(direction: 1 | -1) {
 @reference "@/assets/css/main.css";
 
 .discord-scrollbar {
-	--discord-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
-	--discord-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
+	/* Discord dark: invisible track, thin muted pill thumb (~#4E5058). */
+	--discord-scrollbar-track: oklch(0% 0 0 / 0);
+	--discord-scrollbar-thumb: oklch(44% 0.012 264);
 	--discord-scrollbar-arrow: oklch(73.06% 0.0048 264.53 / 0.7);
+	/* Gutter wide enough for a ~4px thumb with ~2px inset from the edge. */
+	--discord-scrollbar-gutter: 8px;
+	--discord-scrollbar-thumb-width: 4px;
 
-	@apply grid max-h-[inherit] min-h-0 min-w-0 grid-cols-[minmax(0,1fr)_4px] gap-0;
+	@apply grid max-h-[inherit] min-h-0 min-w-0 gap-0;
+	grid-template-columns: minmax(0, 1fr) var(--discord-scrollbar-gutter);
 }
 
 .discord-scrollbar-viewport {
@@ -168,14 +207,31 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-thumb-rail {
-	@apply relative min-h-0 w-full flex-1 rounded-full;
+	@apply relative min-h-0 w-full flex-1;
 	background-color: var(--discord-scrollbar-track);
 }
 
 .discord-scrollbar-thumb {
-	@apply absolute top-0 left-0 w-full rounded-full;
+	@apply absolute top-0 left-1/2 rounded-full;
+	width: var(--discord-scrollbar-thumb-width);
 	background-color: var(--discord-scrollbar-thumb);
 	will-change: transform;
+}
+
+.discord-scrollbar-auto-hide .discord-scrollbar-thumb {
+	opacity: 0;
+	transition: opacity 0.1s linear;
+}
+
+.discord-scrollbar-auto-hide:hover .discord-scrollbar-thumb,
+.discord-scrollbar-auto-hide.discord-scrollbar-scrolling .discord-scrollbar-thumb {
+	opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.discord-scrollbar-auto-hide .discord-scrollbar-thumb {
+		transition: none;
+	}
 }
 
 .discord-scrollbar-arrow {

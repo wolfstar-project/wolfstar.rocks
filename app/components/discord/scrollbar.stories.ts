@@ -29,3 +29,21 @@ export const Default: Story = {
 		`,
 	}),
 };
+
+export const AutoHide: Story = {
+	args: {
+		alwaysShowTrack: false,
+		autoHide: true,
+	},
+	render: (args) => ({
+		components: { DiscordScrollbar },
+		setup: () => ({ args }),
+		template: `
+			<div class="h-48 w-72 overflow-hidden rounded-md border border-default">
+				<DiscordScrollbar v-bind="args" class="h-full">
+					<p v-for="n in 24" :key="n" class="px-3 py-1">Hover or scroll to reveal — row {{ n }}</p>
+				</DiscordScrollbar>
+			</div>
+		`,
+	}),
+};

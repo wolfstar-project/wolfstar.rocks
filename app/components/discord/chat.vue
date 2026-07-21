@@ -1,6 +1,6 @@
 <template>
 	<section class="discord-chat" :aria-label="`${channelName} channel chat`">
-		<DiscordScrollbar always-show-track class="discord-chat-scrollbar">
+		<DiscordScrollbar auto-hide class="discord-chat-scrollbar">
 			<DiscordChannelWelcome :channel-name :date :date-time />
 			<div
 				class="discord-chat-messages"
@@ -54,9 +54,6 @@ defineSlots<ChatSlots>();
 }
 
 .discord-chat-scrollbar {
-	--discord-scrollbar-track: oklch(73.06% 0.0048 264.53 / 0.12);
-	--discord-scrollbar-thumb: oklch(73.06% 0.0048 264.53 / 0.45);
-
 	@apply h-full max-h-full min-h-0 flex-1;
 }
 

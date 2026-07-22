@@ -1,14 +1,20 @@
 <template>
-	<USelect
-		v-model="currentLocale"
-		:items="localeItems"
-		value-key="value"
-		:aria-label="t('common.language')"
-		size="sm"
-		color="neutral"
-		variant="ghost"
-		class="min-w-28"
-	/>
+	<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
+	<ClientOnly>
+		<USelect
+			v-model="currentLocale"
+			:items="localeItems"
+			value-key="value"
+			:aria-label="t('common.language')"
+			size="sm"
+			color="neutral"
+			variant="ghost"
+			class="min-w-28"
+		/>
+		<template #fallback>
+			<div class="h-8 min-w-28" aria-hidden="true" />
+		</template>
+	</ClientOnly>
 </template>
 
 <script setup lang="ts">

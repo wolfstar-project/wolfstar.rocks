@@ -61,19 +61,6 @@ export const FIXTURE_CHANNEL = FIXTURE_CHANNELS[0]!;
 
 export const FIXTURE_ROLE = createMockRole({ guildId: GUILD_ID, id: "444444444444444440" });
 
-// ─── Settings ────────────────────────────────────────────────────────────────
-
-/**
- * The shape returned by `serializeSettings()`.
- * Keep this in sync with the database schema defaults.
- */
-export const FIXTURE_SERIALIZED_SETTINGS = {
-	language: "en-US",
-	prefix: "!",
-	rolesAdmin: [],
-	rolesModerator: [],
-};
-
 // ─── Users response ──────────────────────────────────────────────────────────
 
 /** Full response shape for `GET /api/users`. */

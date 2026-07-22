@@ -1,4 +1,4 @@
-import type { CommandLogData } from "#server/database";
+import type { CommandLogData } from "#shared/types";
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
 import type { APIGuildMember } from "discord-api-types/v10";
@@ -15,7 +15,7 @@ export const MOCK_COMMAND_ENTRY: CommandLogData = {
 	channelId: "333333333333333330",
 	success: false,
 	errorReason: "User not found",
-	executedAt: new Date("2026-05-15T00:00:00.000Z"),
+	executedAt: "2026-05-15T00:00:00.000Z",
 	latencyMs: 120,
 	metadata: null,
 };

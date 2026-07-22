@@ -3,6 +3,6 @@ export * from "./botApi";
 export * from "./configurableData";
 export * from "./discord";
 export * from "./env";
-export * from "./prisma";
+export * from "./guild-data";
 export * from "./utils";
 export * from "./slash-command";

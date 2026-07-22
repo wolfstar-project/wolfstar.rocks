@@ -56,9 +56,6 @@ jobs:
           cache: true
           sfw: true
 
-      - name: 🔼 Generate Prisma Client
-        run: vp run prisma:generate
-
       - name: 🔎 Typecheck project
         run: vp run typecheck
 
@@ -162,9 +159,6 @@ jobs:
           cache: true
           sfw: true
 
-      - name: 🔼 Generate Prisma Client
-        run: vp run prisma:generate
-
       - name: 🏗️ Build project
         run: vp run build:test
         env:
@@ -225,9 +219,6 @@ jobs:
           cache: true
           sfw: true
 
-      - name: 🔼 Generate Prisma Client
-        run: vp run prisma:generate
-
       - name: 🏗️ Build project
         run: vp run build:test
         env:
@@ -253,9 +244,6 @@ jobs:
           node-version: lts/*
           cache: true
           sfw: true
-
-      - name: 🔼 Generate Prisma Client
-        run: vp run prisma:generate
 
       - name: 🏗️ Build project
         run: vp run build:test

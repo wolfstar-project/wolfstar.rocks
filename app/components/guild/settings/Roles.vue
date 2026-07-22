@@ -125,7 +125,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import {
 	isRoleArrayKey,

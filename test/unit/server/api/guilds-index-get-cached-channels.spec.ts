@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // vi.hoisted() ensures globals are present before the route module is evaluated.
 const {
-	mockReadSettings,
 	mockGetGuild,
 	mockGetCurrentMember,
 	mockCanManage,
@@ -11,7 +10,6 @@ const {
 	mockTransformGuild,
 	mockGetValidatedQuery,
 } = vi.hoisted(() => {
-	const mockReadSettings = vi.fn();
 	const mockGetGuild = vi.fn();
 	const mockGetCurrentMember = vi.fn();
 	const mockCanManage = vi.fn().mockResolvedValue(undefined);
@@ -36,7 +34,6 @@ const {
 	(globalThis as Record<string, unknown>).seconds = (n: number) => n;
 
 	return {
-		mockReadSettings,
 		mockGetGuild,
 		mockGetCurrentMember,
 		mockCanManage,
@@ -46,10 +43,6 @@ const {
 		mockGetValidatedQuery,
 	};
 });
-
-vi.mock("#server/database", () => ({
-	readSettings: mockReadSettings,
-}));
 
 vi.mock("evlog", () => ({
 	useLogger: vi.fn().mockReturnValue({ set: vi.fn(), error: vi.fn() }),
@@ -65,19 +58,17 @@ const callHandler = indexGetHandler as unknown as (event: H3Event) => Promise<un
 
 const mockGuild = { id: "guild-123", owner_id: "owner-456", roles: [] };
 const mockMember = { user: { id: "user-789" }, roles: [], permissions: "8" };
-const mockSettings = { id: "guild-123", rolesAdmin: [] };
 const mockChannels = [{ id: "ch-1", name: "general" }];
 const mockFlatResult = { id: "guild-123", channels: mockChannels };
 const mockTransformResult = { id: "guild-123", manageable: true, wolfstarIsIn: true, channels: [] };
 
-describe("index.get - cached getGuildChannels and readSettings deduplication", () => {
+describe("index.get - cached getGuildChannels", () => {
 	const mockEvent = {} as H3Event;
 
 	beforeEach(() => {
 		vi.clearAllMocks();
 		mockGetGuild.mockResolvedValue(mockGuild);
 		mockGetCurrentMember.mockResolvedValue(mockMember);
-		mockReadSettings.mockResolvedValue(mockSettings);
 		mockGetGuildChannels.mockResolvedValue(mockChannels);
 		mockCanManage.mockResolvedValue(undefined);
 		mockFlattenGuild.mockReturnValue(mockFlatResult);
@@ -93,18 +84,11 @@ describe("index.get - cached getGuildChannels and readSettings deduplication", (
 		expect(mockGetGuildChannels).toHaveBeenCalledWith("guild-123");
 	});
 
-	it("calls readSettings exactly once per request", async () => {
-		await callHandler(mockEvent);
-
-		expect(mockReadSettings).toHaveBeenCalledOnce();
-		expect(mockReadSettings).toHaveBeenCalledWith("guild-123");
-	});
-
-	it("passes pre-fetched settings to canManage as third argument", async () => {
+	it("calls canManage with guild and member only", async () => {
 		await callHandler(mockEvent);
 
 		expect(mockCanManage).toHaveBeenCalledOnce();
-		expect(mockCanManage).toHaveBeenCalledWith(mockGuild, mockMember, mockSettings);
+		expect(mockCanManage).toHaveBeenCalledWith(mockGuild, mockMember);
 	});
 
 	describe("shouldSerialize: false", () => {
@@ -135,7 +119,6 @@ describe("index.get - cached getGuildChannels and readSettings deduplication", (
 				includeChannels: false,
 				prefetchedGuild: mockGuild,
 				prefetchedMember: mockMember,
-				prefetchedSettings: mockSettings,
 			});
 		});
 

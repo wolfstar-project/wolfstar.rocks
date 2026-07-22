@@ -6,8 +6,6 @@ allowedDeprecatedVersions:
     sourcemap-codec: 1.4.8
 
 shamefullyHoist: true
-hoistPattern:
-    - "*prisma*"
 publicHoistPattern:
     - "*import-in-the-middle*"
     - "*require-in-the-middle*"
@@ -54,8 +52,6 @@ shellEmulator: true
 allowBuilds:
     "@google/genai": false
     "@parcel/watcher": false
-    "@prisma/client": true
-    "@prisma/engines": true
     "@sentry/cli": false
     "@tailwindcss/oxide": true
     better-sqlite3: true
@@ -63,7 +59,6 @@ allowBuilds:
     esbuild: false
     msw: true
     onnxruntime-node: false
-    prisma: true
     protobufjs: false
     sharp: true
     unrs-resolver: false

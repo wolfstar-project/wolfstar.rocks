@@ -30,10 +30,12 @@ export function useModerationLog({
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
 	const resolvedFilters = computed(() => (filters !== undefined ? toValue(filters) : undefined));
 
+	const { $api } = useNuxtApp();
+
 	const asyncData = useLazyAsyncData(
 		() =>
 			`guild:${toValue(guildId)}:logs:moderation:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value || {})}`,
-		() => {
+		async () => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
@@ -46,12 +48,11 @@ export function useModerationLog({
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<ModerationLogResponse>(
-				`/api/guilds/${toValue(guildId)}/logs/moderation`,
-				{
-					query,
-				},
+			const { data } = await $api<ModerationLogResponse>(
+				`/guilds/${toValue(guildId)}/moderation-logs`,
+				{ query },
 			);
+			return data;
 		},
 		{
 			immediate: immediate !== false,

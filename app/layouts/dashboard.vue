@@ -137,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { NavigationMenuItem } from "@nuxt/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
@@ -232,7 +232,7 @@ watch(
 				},
 			);
 
-			setGuildSettings(parsedSettings as GuildData);
+			setGuildSettings(parsedSettings as unknown as GuildData);
 
 			if (nuxtError.value) {
 				clearError();

@@ -152,7 +152,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import type { TableColumn } from "@nuxt/ui";
 import {

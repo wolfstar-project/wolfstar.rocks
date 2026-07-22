@@ -1,4 +1,4 @@
-import type { GuildData, GuildDataKey } from "#server/database";
+import type { GuildData, GuildDataKey } from "#shared/types";
 
 /**
  * Assigns a guild-settings value when the form explicitly controls the key.

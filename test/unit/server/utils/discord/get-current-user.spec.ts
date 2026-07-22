@@ -42,11 +42,6 @@ vi.mock("@sentry/nuxt", () => ({
 	startSpan: vi.fn(),
 }));
 
-vi.mock("#server/database", () => ({
-	readSettings: vi.fn().mockResolvedValue({ rolesAdmin: [] }),
-	readSettingsPermissionNodes: vi.fn().mockReturnValue({ run: vi.fn().mockResolvedValue(null) }),
-}));
-
 import type { H3Event } from "h3";
 import { getCurrentUser } from "#server/utils/discord";
 import * as Sentry from "@sentry/nuxt";

@@ -1,4 +1,4 @@
-import type { CommandLogData } from "#server/database";
+import type { CommandLogData } from "#shared/types";
 import type { MaybeRefOrGetter } from "vue";
 
 interface CommandLogResponse {

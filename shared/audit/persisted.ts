@@ -2,9 +2,8 @@ import type { AuditChainEntry, AuditEnvelope } from "./envelope";
 import { verifyChain } from "./envelope";
 
 /**
- * Structural shape of a persisted `AuditEvent` row as written by
- * `server/utils/audit/postgres-drain.ts`. Kept structural (no Prisma import)
- * so the offline verifier and tests can construct rows without a database.
+ * Structural shape of a persisted audit event row for chain verification.
+ * Kept structural so tests can construct rows without a database.
  */
 export interface PersistedAuditRow {
 	action: string;

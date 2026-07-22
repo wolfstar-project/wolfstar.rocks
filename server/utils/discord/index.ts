@@ -1,5 +1,4 @@
 // oxlint-disable no-console
-import type { ReadonlyGuildData } from "#server/database";
 import type {
 	FlattenedCommand,
 	FlattenedGuild,
@@ -16,7 +15,6 @@ import type {
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { readSettings, readSettingsPermissionNodes } from "#server/database";
 import {
 	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
@@ -88,7 +86,7 @@ function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string
 	);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
+function manage(guild: APIGuild, member: APIGuildMember) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -96,20 +94,14 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 		return true;
 	}
 
-	const resolvedSettings = settings ?? (await readSettings(guild.id));
-	const nodes = readSettingsPermissionNodes(resolvedSettings);
-
-	return (
-		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
-		((await nodes.run(member, "conf")) ?? true)
-	);
+	// Dashboard manage access is Discord owner / Administrator / ManageGuild only.
+	return isAdmin(guild, member, []);
 }
 
 async function getManageable(
 	oauthGuild: RESTAPIPartialCurrentUserGuild,
 	guild: APIGuild | undefined,
 	userId: string,
-	settings?: ReadonlyGuildData,
 	prefetchedMember?: APIGuildMember | null,
 ): Promise<boolean> {
 	if (oauthGuild.owner) {
@@ -131,7 +123,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member, settings);
+	return manage(guild, member);
 }
 
 export async function transformGuild(
@@ -143,16 +135,9 @@ export async function transformGuild(
 		prefetchedGuild?: APIGuild | null;
 		/** Pre-fetched member data. `null` = no member. `undefined` = fetch if needed. */
 		prefetchedMember?: APIGuildMember | null;
-		/** Pre-fetched settings — skips the `readSettings` DB call inside `manage()`. */
-		prefetchedSettings?: ReadonlyGuildData;
 	} = {},
 ): Promise<OauthFlattenedGuild> {
-	const {
-		includeChannels = true,
-		prefetchedGuild,
-		prefetchedMember,
-		prefetchedSettings,
-	} = options;
+	const { includeChannels = true, prefetchedGuild, prefetchedMember } = options;
 	const guild =
 		prefetchedGuild !== undefined
 			? prefetchedGuild
@@ -206,13 +191,7 @@ export async function transformGuild(
 
 	return {
 		...serialized,
-		manageable: await getManageable(
-			data,
-			guild ?? undefined,
-			userId,
-			prefetchedSettings,
-			prefetchedMember,
-		),
+		manageable: await getManageable(data, guild ?? undefined, userId, prefetchedMember),
 		permissions: Number(data.permissions),
 		wolfstarIsIn: !isNullOrUndefined(guild),
 	};
@@ -249,8 +228,7 @@ export async function transformOauthGuildsAndUser({
 		},
 	);
 
-	// Phase 3: Transform using pre-fetched data. Each transform now runs without
-	// additional Discord API calls; only readSettings DB calls remain.
+	// Phase 3: Transform using pre-fetched Discord data (no additional Discord API calls).
 	const transformedGuilds: OauthFlattenedGuild[] = await mapWithConcurrency(
 		guilds.map((oauthGuild, i) => ({
 			oauthGuild,
@@ -283,12 +261,8 @@ export async function getCurrentToken(event: H3Event) {
 	return tokens;
 }
 
-export const canManage = async (
-	guild: APIGuild,
-	member: APIGuildMember,
-	settings?: ReadonlyGuildData,
-) => {
-	const shouldManage = await manage(guild, member, settings);
+export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
+	const shouldManage = manage(guild, member);
 	if (!shouldManage) {
 		throw createError({
 			message: "Insufficient permissions",

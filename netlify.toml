@@ -2,7 +2,7 @@
 #  https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-command = "pnpm prisma:generate && pnpm run build" # build command
+command = "pnpm run build" # build command
 publish = "dist" # where the built project lives
 
 [build.environment]

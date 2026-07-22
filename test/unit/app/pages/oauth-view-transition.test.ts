@@ -22,7 +22,8 @@ describe("OAuth pages view transition opt-out", () => {
 		const source = readFileSync(join(rootDir, "app/pages/oauth/callback.vue"), "utf8");
 
 		expect(source).toContain("completeBotOauthCallback");
-		expect(source).toContain("hasBotSession");
-		expect(source).toContain("buildAuthorizeUrl");
+		expect(source).toContain("hasBotOauthSession");
+		expect(source).toContain("buildBotOauthAuthorizeUrl");
+		expect(source).not.toContain("useBotOauth");
 	});
 });

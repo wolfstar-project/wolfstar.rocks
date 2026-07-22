@@ -40,7 +40,6 @@ const { collapsed } = defineProps<{
 const isFeedbackOpen = ref(false);
 const colorMode = useColorMode();
 const { user: authUser, signOut } = useUserSession();
-const { logoutBotOauth } = useBotOauth();
 
 const src = computed(() => authUser.value?.image ?? undefined);
 

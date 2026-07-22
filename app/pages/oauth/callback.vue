@@ -56,7 +56,12 @@
 </template>
 
 <script setup lang="ts">
-import { isBotOauthSilentAuthError } from "#shared/utils/bot-oauth";
+import {
+	consumeBotOauthNext,
+	isBotOauthSilentAuthError,
+	peekBotOauthNext,
+	rememberBotOauthNext,
+} from "#shared/utils/bot-oauth";
 import { promiseTimeout } from "@vueuse/core";
 
 definePageMeta({
@@ -68,15 +73,6 @@ const nextParam = useRouteQuery("next", "/", { transform: String });
 const log = useLogger("oauth:callback");
 const isSessionMissing = ref(false);
 const isRetryingSilentAuth = ref(false);
-
-const {
-	buildAuthorizeUrl,
-	completeBotOauthCallback,
-	consumeNext,
-	hasBotSession,
-	peekNext,
-	rememberNext,
-} = useBotOauth();
 
 // Better Auth has already completed the Discord code exchange and set the
 // session cookie server-side before redirecting the browser here — unless this
@@ -118,7 +114,7 @@ async function completeSignIn() {
 			isSessionLoading.value = false;
 			await promiseTimeout(seconds(2));
 
-			const safeNext = consumeNext(
+			const safeNext = consumeBotOauthNext(
 				isSafeRedirectPath(nextParam.value) ? nextParam.value : "/",
 			);
 			await navigateTo(safeNext, {
@@ -134,9 +130,9 @@ async function completeSignIn() {
 		if (typeof discordError === "string" && discordError.length > 0) {
 			// Silent `prompt=none` often fails once; retry with a consent screen
 			// when we still have a pending post-login redirect.
-			if (isBotOauthSilentAuthError(discordError) && peekNext()) {
+			if (isBotOauthSilentAuthError(discordError) && peekBotOauthNext()) {
 				isRetryingSilentAuth.value = true;
-				await navigateTo(buildAuthorizeUrl("consent"), {
+				await navigateTo(buildBotOauthAuthorizeUrl("consent"), {
 					external: true,
 					replace: true,
 				});
@@ -163,9 +159,9 @@ async function completeSignIn() {
 		// If the browser does not yet have `SAPPHIRE_AUTH` on the bot origin,
 		// run a silent Discord authorize and POST the code to
 		// `${apiBaseUrl}/oauth/callback` (legacy Skyra flow).
-		if (!(await hasBotSession())) {
-			rememberNext(safeNext);
-			await navigateTo(buildAuthorizeUrl("none"), {
+		if (!(await hasBotOauthSession())) {
+			rememberBotOauthNext(safeNext);
+			await navigateTo(buildBotOauthAuthorizeUrl("none"), {
 				external: true,
 				replace: true,
 			});

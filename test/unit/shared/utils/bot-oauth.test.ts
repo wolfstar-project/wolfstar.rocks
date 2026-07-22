@@ -2,7 +2,11 @@ import {
 	BOT_OAUTH_NEXT_STORAGE_KEY,
 	BOT_OAUTH_SCOPES,
 	buildBotDiscordAuthorizeUrl,
+	consumeBotOauthNext,
 	isBotOauthSilentAuthError,
+	normalizeBotApiBaseUrl,
+	peekBotOauthNext,
+	rememberBotOauthNext,
 	resolveBotOauthRedirectUri,
 } from "#shared/utils/bot-oauth";
 import { describe, expect, it } from "vitest";
@@ -43,7 +47,15 @@ describe("bot-oauth utils", () => {
 		expect(isBotOauthSilentAuthError(null)).toBe(false);
 	});
 
-	it("exports a stable sessionStorage key", () => {
+	it("normalizes bot API base URLs", () => {
+		expect(normalizeBotApiBaseUrl("http://localhost:8282/")).toBe("http://localhost:8282");
+		expect(normalizeBotApiBaseUrl(undefined)).toBe("");
+	});
+
+	it("no-ops sessionStorage helpers outside the browser", () => {
 		expect(BOT_OAUTH_NEXT_STORAGE_KEY).toBe("wolfstar:bot-oauth-next");
+		rememberBotOauthNext("/profile");
+		expect(peekBotOauthNext()).toBeNull();
+		expect(consumeBotOauthNext("/guilds")).toBe("/guilds");
 	});
 });

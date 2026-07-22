@@ -7,7 +7,8 @@
  * It is intentionally written as CJS so it can be required from the CJS
  * Lighthouse setup script and imported from ESM test utilities.
  *
- * All patterns target the local preview server (http://localhost:3000).
+ * App routes target the local preview server (http://localhost:3000).
+ * Bot `$api` routes target the local bot mock origin (http://localhost:8282).
  */
 
 "use strict";
@@ -106,12 +107,12 @@ const routes = [
 	},
 	{
 		name: "users API",
-		pattern: "https://api.wolfstar.rocks/users/@me",
+		pattern: "http://localhost:8282/users/@me",
 		match: matchUsersApi,
 	},
 	{
 		name: "bot guilds API",
-		pattern: "https://api.wolfstar.rocks/guilds/**",
+		pattern: "http://localhost:8282/guilds/**",
 		match: matchGuildsApi,
 	},
 	{

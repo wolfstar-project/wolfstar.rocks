@@ -5,7 +5,7 @@ import { createMockOauthFlattenedGuild, createMockUser } from "~~/test/mocks/dis
 
 let mockApiResponse: Record<string, unknown> = { transformedGuilds: [], user: null };
 
-// Nuxt test runtime sets `apiBaseUrl` to "" so `$api("/users/@me")` hits this handler.
+// Under `process.test`, `$api` uses same-origin `/` so this handler is reachable.
 registerEndpoint("/users/@me", {
 	method: "GET",
 	handler: () => mockApiResponse,

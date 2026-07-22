@@ -165,6 +165,7 @@ jobs:
           VALIDATE_HTML: true
           NODE_OPTIONS: --max-old-space-size=4096
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+          NUXT_PUBLIC_API_BASE_URL: http://localhost:8282
 
       - name: 🖥️ Test project (browser)
         run: vp run test:browser:prebuilt
@@ -223,6 +224,7 @@ jobs:
         run: vp run build:test
         env:
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+          NUXT_PUBLIC_API_BASE_URL: http://localhost:8282
 
       - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
         run: vp run test:a11y:prebuilt
@@ -249,6 +251,7 @@ jobs:
         run: vp run build:test
         env:
           NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+          NUXT_PUBLIC_API_BASE_URL: http://localhost:8282
 
       - name: ⚡ Performance audit (Lighthouse)
         run: vp run test:perf:prebuilt

@@ -24,7 +24,7 @@ overrides:
     discord-api-types: 0.38.48
     # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
     # vue copies make VueUse and app refs incompatible during typecheck
-    vue: 3.5.38
+    vue: 3.5.40
     sharp: 0.34.5
     vite: npm:@voidzero-dev/vite-plus-core@0.1.19
     vitest: npm:@voidzero-dev/vite-plus-test@0.1.19

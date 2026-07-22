@@ -333,6 +333,9 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
+		experimental: {
+			bundledDev: true,
+		},
 		define: {
 			"process.test": "false",
 		},

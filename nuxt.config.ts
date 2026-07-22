@@ -219,7 +219,8 @@ export default defineNuxtConfig({
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
 		// Bot API BFF used by `$api` on the client — never CDN-cache (may carry auth).
-		"/api/bot/**": {
+		// More-specific `/api/auth/**` rules above keep auth routes unproxied.
+		"/api/**": {
 			isr: false,
 			cache: false,
 			headers: {

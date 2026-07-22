@@ -2,7 +2,6 @@ export * from "./channels";
 export * from "./disabled-commands";
 export * from "./events";
 export * from "./general";
-export * from "./guild";
 export * from "./log-queries";
 export * from "./moderation-settings";
 export * from "./rate-limit";

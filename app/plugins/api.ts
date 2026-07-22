@@ -6,7 +6,7 @@ import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
  * - Server: calls the bot origin directly and attaches a sapphire `SAPPHIRE_AUTH`
  *   cookie when a Discord session is available.
  * - Client: cannot set cross-origin Cookie headers, so requests go through the
- *   same-origin BFF at `/api/bot/**` which injects auth server-side.
+ *   same-origin BFF at `/api/**` which injects auth server-side.
  *
  * Crypto helpers live in `server/utils/botApi` and are loaded only inside the
  * `import.meta.server` branch so `node:crypto` never enters the client bundle.
@@ -68,7 +68,7 @@ export default defineNuxtPlugin(() => {
 					{
 						...options,
 						// Client BFF injects SAPPHIRE_AUTH; process.test stays same-origin for mocks.
-						baseURL: process.test ? "/" : "/api/bot",
+						baseURL: process.test ? "/" : "/api",
 						credentials: "include",
 						headers: {
 							"Content-Type": "application/json",

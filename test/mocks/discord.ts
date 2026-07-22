@@ -104,25 +104,6 @@ export function createMockRole(overrides?: Partial<FlattenedRole>): FlattenedRol
 }
 
 /**
- * Creates a mock FlattenedEmoji for testing
- * @param overrides - Partial overrides for the default mock emoji
- * @returns A complete FlattenedEmoji object
- */
-function createMockEmoji(overrides?: Partial<FlattenedEmoji>): FlattenedEmoji {
-	const defaultEmoji: FlattenedEmoji = {
-		animated: false,
-		available: true,
-		id: "222222222222222222",
-		managed: false,
-		name: "test_emoji",
-		require_colons: true,
-		roles: [],
-	};
-
-	return { ...defaultEmoji, ...overrides };
-}
-
-/**
  * Creates a mock FlattenedGuildChannel for testing
  * @param overrides - Partial overrides for the default mock channel
  * @returns A complete FlattenedGuildChannel object
@@ -142,60 +123,4 @@ export function createMockChannel(
 	};
 
 	return { ...defaultChannel, ...overrides };
-}
-
-/**
- * Creates a complete mock guild with channels, roles, and emojis
- * @param config - Configuration for the mock guild
- * @param config.guildOverrides - Partial overrides for the guild properties
- * @param config.numChannels - Number of channels to create (default: 3)
- * @param config.numRoles - Number of roles to create (default: 2)
- * @param config.numEmojis - Number of emojis to create (default: 1)
- * @returns A complete OauthFlattenedGuild with nested entities
- */
-export function createMockCompleteGuild(config?: {
-	guildOverrides?: Partial<OauthFlattenedGuild>;
-	numChannels?: number;
-	numRoles?: number;
-	numEmojis?: number;
-}): OauthFlattenedGuild {
-	const { guildOverrides = {}, numChannels = 3, numRoles = 2, numEmojis = 1 } = config || {};
-
-	const guildId = guildOverrides.id || "123456789012345678";
-
-	// Create channels
-	const channels: FlattenedGuildChannel[] = Array.from({ length: numChannels }, (_, i) =>
-		createMockChannel({
-			guildId,
-			id: `33333333333333333${i.toString().padStart(1, "0")}`,
-			name: i === 0 ? "general" : `channel-${i}`,
-			rawPosition: i,
-		}),
-	);
-
-	// Create roles
-	const roles: FlattenedRole[] = Array.from({ length: numRoles }, (_, i) =>
-		createMockRole({
-			guildId,
-			id: `11111111111111111${i.toString().padStart(1, "0")}`,
-			name: i === 0 ? "@everyone" : `Role ${i}`,
-			rawPosition: i,
-		}),
-	);
-
-	// Create emojis
-	const emojis: FlattenedEmoji[] = Array.from({ length: numEmojis }, (_, i) =>
-		createMockEmoji({
-			id: `22222222222222222${i.toString().padStart(1, "0")}`,
-			name: `emoji_${i}`,
-		}),
-	);
-
-	return createMockOauthFlattenedGuild({
-		...guildOverrides,
-		channels,
-		emojis,
-		id: guildId,
-		roles,
-	});
 }

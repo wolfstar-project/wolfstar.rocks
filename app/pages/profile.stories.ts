@@ -4,8 +4,8 @@ import { pageDecorator } from "../../.storybook/decorators";
 import { mockGuildList, mockUser } from "../storybook/mocks/fixtures";
 import ProfilePage from "./profile.vue";
 
-/** Client `$api` uses the same-origin BFF (`/api/bot/**`). */
-const BOT_BFF = "/api/bot";
+/** Client `$api` uses the same-origin BFF (`/api/**`). */
+const BOT_BFF = "/api";
 
 const meta: Meta<typeof ProfilePage> = {
 	component: ProfilePage,

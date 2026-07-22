@@ -9,6 +9,7 @@
  *
  * App / BFF routes target the local preview server (http://localhost:3000).
  * Outbound bot calls from the Nuxt server target http://localhost:8282.
+ * `/api/auth/**` is intentionally not mocked here (owned by better-auth).
  */
 
 "use strict";
@@ -44,7 +45,7 @@ function urlMatchesPattern(url, pattern) {
 		const prefix = pattern.slice(0, -2); // keep trailing /
 		return url.startsWith(prefix);
 	}
-	return url === pattern;
+	return url === pattern || url.startsWith(`${pattern}?`);
 }
 
 // ---------------------------------------------------------------------------
@@ -52,10 +53,7 @@ function urlMatchesPattern(url, pattern) {
 // ---------------------------------------------------------------------------
 
 /**
- * nuxt-auth-utils sealed-session endpoint.
- * Returns an empty session object so every public page renders in the
- * unauthenticated state without triggering redirect loops or hydration
- * mismatches from missing cookies.
+ * Session endpoint stub for logged-out audits.
  *
  * @param {string} _urlString
  * @returns {{ status: number, contentType: string, body: string }}
@@ -65,26 +63,12 @@ function matchAuthSession(_urlString) {
 }
 
 /**
- * Bot `GET /users/@me` consumed by the useUser composable via `$api`.
- * Returns 401 so the app gracefully falls back to the guest state
- * instead of hanging indefinitely waiting for a real auth token.
+ * Authenticated bot/BFF routes — return 401 so logged-out audits don't hang.
  *
  * @param {string} _urlString
  * @returns {{ status: number, contentType: string, body: string }}
  */
-function matchUsersApi(_urlString) {
-	return json({ message: "Unauthorized", statusCode: 401 }, 401);
-}
-
-/**
- * Guild-specific endpoints (settings, channels, roles, members…).
- * All require authentication – return 401 for every sub-path so dashboard
- * pages audited while logged-out don't hang on pending requests.
- *
- * @param {string} _urlString
- * @returns {{ status: number, contentType: string, body: string }}
- */
-function matchGuildsApi(_urlString) {
+function matchUnauthorized(_urlString) {
 	return json({ message: "Unauthorized", statusCode: 401 }, 401);
 }
 
@@ -106,24 +90,44 @@ const routes = [
 		match: matchAuthSession,
 	},
 	{
-		name: "bot BFF",
-		pattern: "http://localhost:3000/api/bot/**",
-		match: matchUsersApi,
+		name: "bot BFF users",
+		pattern: "http://localhost:3000/api/users/**",
+		match: matchUnauthorized,
+	},
+	{
+		name: "bot BFF guilds",
+		pattern: "http://localhost:3000/api/guilds/**",
+		match: matchUnauthorized,
+	},
+	{
+		name: "bot BFF commands",
+		pattern: "http://localhost:3000/api/commands",
+		match: matchUnauthorized,
+	},
+	{
+		name: "bot BFF languages",
+		pattern: "http://localhost:3000/api/languages",
+		match: matchUnauthorized,
 	},
 	{
 		name: "users API",
 		pattern: "http://localhost:8282/users/@me",
-		match: matchUsersApi,
+		match: matchUnauthorized,
 	},
 	{
 		name: "bot guilds API",
 		pattern: "http://localhost:8282/guilds/**",
-		match: matchGuildsApi,
+		match: matchUnauthorized,
 	},
 	{
-		name: "guilds API",
-		pattern: "http://localhost:3000/api/guilds/**",
-		match: matchGuildsApi,
+		name: "bot commands API",
+		pattern: "http://localhost:8282/commands",
+		match: matchUnauthorized,
+	},
+	{
+		name: "bot languages API",
+		pattern: "http://localhost:8282/languages",
+		match: matchUnauthorized,
 	},
 ];
 

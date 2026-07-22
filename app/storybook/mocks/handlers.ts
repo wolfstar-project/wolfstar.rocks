@@ -2,10 +2,10 @@ import { http, HttpResponse } from "msw";
 import { mockCommands, mockGuild, mockGuildList, mockUser } from "./fixtures";
 
 /**
- * Client `$api` goes through the same-origin BFF (`/api/bot/**`).
+ * Client `$api` goes through the same-origin BFF (`/api/**`).
  * Storybook has no Nitro, so MSW serves the bot payload on those paths.
  */
-const BOT_BFF = "/api/bot";
+const BOT_BFF = "/api";
 
 export const handlers = [
 	http.get("/api/auth/session", () =>
@@ -21,8 +21,6 @@ export const handlers = [
 			transformedGuilds: mockGuildList,
 		}),
 	),
-
-	http.get("/api/guilds", () => HttpResponse.json(mockGuildList)),
 
 	http.get(`${BOT_BFF}/guilds/:guildId`, () => HttpResponse.json(mockGuild)),
 	http.get(`${BOT_BFF}/guilds/:guildId/audit-logs`, () =>

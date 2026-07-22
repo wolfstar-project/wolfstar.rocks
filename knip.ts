@@ -90,9 +90,6 @@ const config: KnipConfig = {
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,
-				/** Auto-registered Discord primitives covered by component/a11y tests but not currently referenced in an app template */
-				"app/components/discord/chat-input-command/index.vue",
-				"app/components/discord/chat-input-command/matched.vue",
 			],
 			ignoreMembers: [
 				/** Enum members in app/utils/constants.ts used as color values at runtime */

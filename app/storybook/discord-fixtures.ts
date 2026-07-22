@@ -2,14 +2,6 @@ import type { DiscordChatMessage, DiscordMemberListMember } from "~/types/discor
 import type { StringSelectMenuOption } from "~/types/string-select-menu";
 import { Colors, showcaseCommands } from "~/utils/constants";
 
-export {
-	discordAppLauncherChillTogether,
-	discordAppLauncherListViews,
-	discordAppLauncherPromoted,
-	discordAppLauncherRecents,
-	discordAppLauncherServerApps,
-} from "~/utils/discord-app-launcher";
-
 export const discordChatMessages: readonly DiscordChatMessage[] = [
 	{
 		id: "1",

@@ -40,7 +40,7 @@
 			<div ref="thumbRailRef" class="discord-scrollbar-thumb-rail">
 				<div
 					v-show="isScrollable"
-					class="discord-scrollbar-thumb"
+					class="discord-scrollbar-thumb rounded-full"
 					:style="{
 						height: `${thumbHeight}px`,
 						transform: `translateY(${thumbOffset}px)`,
@@ -249,8 +249,9 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-thumb {
-	/* Floating pill: right-aligned with edge inset — never flush to the border. */
-	@apply absolute top-0 rounded-full;
+	/* Floating pill: right-aligned with edge inset — never flush to the border.
+	   `rounded-full` is applied as a template class so the pill shape is assertable. */
+	@apply absolute top-0;
 	right: var(--discord-scrollbar-edge-inset);
 	width: var(--discord-scrollbar-thumb-width);
 	background-color: var(--discord-scrollbar-thumb);

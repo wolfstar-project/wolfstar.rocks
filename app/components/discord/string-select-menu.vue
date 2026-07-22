@@ -204,6 +204,9 @@ function nextSelectableIndex(from: number, direction: 1 | -1) {
 
 function open() {
 	if (disabled || isOpen.value) return;
+	// Measure before the panel renders so `placement` is resolved from live bounds on
+	// the first frame instead of flashing the default and flipping a tick later.
+	updateTriggerBounds();
 	isOpen.value = true;
 	const selectedIndex = options.findIndex((option) => option.value === selectedValue.value);
 	activeIndex.value =

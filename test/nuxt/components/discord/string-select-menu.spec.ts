@@ -27,17 +27,26 @@ const options: StringSelectMenuOption[] = [
 	},
 ];
 
+// mountSuspended wrappers aren't auto-unmounted, so their window-level side effects
+// (defineShortcuts keydown, the capture-phase scroll listener, onClickOutside) and any
+// open Teleport panel would otherwise leak into later tests and crash Vue on the next
+// patch. Track every wrapper and unmount it before clearing any leftover DOM.
+const mountedWrappers: { unmount: () => void }[] = [];
+
 afterEach(() => {
-	// Teleported panels outlive the wrapper unless unmounted — clear between tests.
+	while (mountedWrappers.length) mountedWrappers.pop()?.unmount();
+	// Teleported panels outlive the wrapper unless unmounted — clear any stragglers.
 	document.querySelectorAll(".discord-string-select-menu-panel").forEach((el) => el.remove());
 	document.querySelectorAll(".discord-string-select-menu").forEach((el) => el.remove());
 });
 
-function mountMenu(props: Partial<{ disabled: boolean; placeholder: string }> = {}) {
-	return mountSuspended(StringSelectMenu, {
+async function mountMenu(props: Partial<{ disabled: boolean; placeholder: string }> = {}) {
+	const wrapper = await mountSuspended(StringSelectMenu, {
 		props: { options, ...props },
 		attachTo: document.body,
 	});
+	mountedWrappers.push(wrapper);
+	return wrapper;
 }
 
 /** Listbox is Teleported to `body`, so query the document rather than the wrapper tree. */
@@ -99,6 +108,9 @@ describe("DiscordStringSelectMenu", () => {
 
 	it("opens the listbox above the trigger by default (Discord near-composer behavior)", async () => {
 		const wrapper = await mountMenu();
+		// Seat the trigger low in the viewport like Discord's near-composer action row,
+		// so there is room above it; flush against the top there is only room below.
+		(wrapper.element as HTMLElement).style.marginTop = "400px";
 		const trigger = wrapper.find("button[role='combobox']");
 		await trigger.trigger("click");
 		await nextTick();
@@ -264,6 +276,7 @@ describe("DiscordStringSelectMenu", () => {
 			},
 			attachTo: document.body,
 		});
+		mountedWrappers.push(wrapper);
 		const trigger = wrapper.find("button[role='combobox']");
 		await trigger.trigger("click");
 		await nextTick();

@@ -72,10 +72,12 @@ describe("DiscordScrollbar", () => {
 	});
 
 	it("exposes Discord floating-pill scrollbar tokens (positive)", async () => {
-		// ARRANGE / ACT
+		// ARRANGE / ACT — attach to the document so getComputedStyle resolves the
+		// scoped tokens; a detached element reports empty computed styles.
 		const wrapper = await mountSuspended(DiscordScrollbar, {
 			props: { alwaysShowTrack: true },
 			slots: { default: "<p>content</p>" },
+			attachTo: document.body,
 		});
 		const root = wrapper.find(".discord-scrollbar").element as HTMLElement;
 		const styles = getComputedStyle(root);
@@ -85,5 +87,7 @@ describe("DiscordScrollbar", () => {
 		expect(styles.getPropertyValue("--discord-scrollbar-edge-inset").trim()).toBe("3px");
 		expect(styles.getPropertyValue("--discord-scrollbar-end-inset").trim()).toBe("4px");
 		expect(wrapper.find(".discord-scrollbar-thumb").classes()).toContain("rounded-full");
+
+		wrapper.unmount();
 	});
 });

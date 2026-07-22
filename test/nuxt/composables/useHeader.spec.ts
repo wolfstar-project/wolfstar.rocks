@@ -64,4 +64,12 @@ describe("useHeader", () => {
 		const labels = mobileLinks.value.map((l: any) => l.label);
 		expect(labels).toContain("GitHub");
 	});
+
+	it("should give Features children destinations on mobile", async () => {
+		const { mobileLinks } = await setup();
+		const features = mobileLinks.value.find((l: any) => l.label === "Features");
+		expect(features?.children?.every((child: any) => typeof child.to === "string")).toBe(
+			true,
+		);
+	});
 });

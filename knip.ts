@@ -67,6 +67,9 @@ const config: KnipConfig = {
 				"@nuxt/icon",
 				"nuxt-security",
 
+				/** Registered as a Nuxt module only in dev via a conditional spread in nuxt.config.ts, so knip can't resolve it statically */
+				"nuxt-studio",
+
 				/** Used in the app in guild/logs components */
 				"@tanstack/table-core",
 

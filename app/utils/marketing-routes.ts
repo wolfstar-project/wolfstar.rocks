@@ -8,6 +8,7 @@ export const MARKETING_PATHS = [
 	"/profile",
 	"/account",
 	"/blog",
+	"/changelog",
 ] as const;
 
 export function isMarketingPath(path: string): boolean {

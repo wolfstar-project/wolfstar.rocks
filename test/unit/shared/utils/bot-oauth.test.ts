@@ -15,13 +15,14 @@ describe("bot-oauth utils", () => {
 			redirectUri: "http://localhost:3000/oauth/callback",
 		});
 
-		expect(url).toContain("https://discord.com/oauth2/authorize?");
-		expect(url).toContain("client_id=123456789012345678");
-		expect(url).toContain("response_type=code");
-		expect(url).toContain("prompt=none");
-		expect(url).toContain(`scope=${encodeURIComponent(BOT_OAUTH_SCOPES)}`);
-		expect(url).toContain(
-			`redirect_uri=${encodeURIComponent("http://localhost:3000/oauth/callback")}`,
+		const parsed = new URL(url);
+		expect(parsed.origin + parsed.pathname).toBe("https://discord.com/oauth2/authorize");
+		expect(parsed.searchParams.get("client_id")).toBe("123456789012345678");
+		expect(parsed.searchParams.get("response_type")).toBe("code");
+		expect(parsed.searchParams.get("prompt")).toBe("none");
+		expect(parsed.searchParams.get("scope")).toBe(BOT_OAUTH_SCOPES);
+		expect(parsed.searchParams.get("redirect_uri")).toBe(
+			"http://localhost:3000/oauth/callback",
 		);
 	});
 

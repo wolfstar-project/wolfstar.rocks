@@ -28,7 +28,12 @@ export function useCommandLog({
 }) {
 	const resolvedLimit = computed(() => (limit !== undefined ? toValue(limit) : undefined));
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
-	const resolvedFilters = computed(() => (filters !== undefined ? toValue(filters) : undefined));
+	// Spread so nested filter mutations invalidate this computed and the
+	// useAsyncData key/watch under Nuxt 4.5.
+	const resolvedFilters = computed(() => {
+		const value = filters !== undefined ? toValue(filters) : undefined;
+		return value ? { ...value } : undefined;
+	});
 
 	const asyncData = useLazyAsyncData(
 		() =>

@@ -132,9 +132,14 @@ useSeoMeta({
 });
 
 if (!post.image) {
-	defineOgImage("Page", {
+	defineOgImage("BlogPost", {
 		title,
 		description,
+		date: post.date,
+		authors: post.authors.map((author) => ({
+			name: author.name,
+			avatar: author.avatar?.src,
+		})),
 	});
 }
 

@@ -17,7 +17,10 @@ import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
 export default defineNuxtPlugin(() => {
 	const cachedFetch = useCachedFetch();
 	const runtimeConfig = useRuntimeConfig();
-	const apiBaseUrl = runtimeConfig.public.apiBaseUrl;
+	// Browser Nuxt tests cannot reach the external bot API; use same-origin so
+	// `registerEndpoint` can mock `$api` paths. `process.test` is defined in
+	// the vitest nuxt project (`vite.config.ts`).
+	const apiBaseUrl = process.test ? "/" : runtimeConfig.public.apiBaseUrl;
 
 	return {
 		provide: {

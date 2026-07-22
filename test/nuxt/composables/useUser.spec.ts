@@ -5,7 +5,8 @@ import { createMockOauthFlattenedGuild, createMockUser } from "~~/test/mocks/dis
 
 let mockApiResponse: Record<string, unknown> = { transformedGuilds: [], user: null };
 
-registerEndpoint("/api/users", {
+// Nuxt test runtime sets `apiBaseUrl` to "" so `$api("/users/@me")` hits this handler.
+registerEndpoint("/users/@me", {
 	method: "GET",
 	handler: () => mockApiResponse,
 });
@@ -14,9 +15,6 @@ describe("useUser", () => {
 	beforeEach(() => {
 		mockApiResponse = { transformedGuilds: [], user: null };
 
-		// Clear Nuxt's async data cache to prevent key reuse between tests.
-		// Without this, useLazyAsyncData reuses stale entries from previous
-		// tests that share the same key, causing the handler to never run.
 		clearNuxtData();
 		const nuxtApp = useNuxtApp();
 		for (const key of Object.keys(nuxtApp._asyncData)) {
@@ -78,7 +76,7 @@ describe("useUser", () => {
 		expect(result.filteredGuilds.value).toStrictEqual([]);
 	});
 
-	it("should transform data to include transformedGuilds after fetch", async () => {
+	it("should call bot /users/@me and expose transformedGuilds", async () => {
 		const mockUser = createMockUser();
 		const mockTransformedGuilds = [
 			createMockOauthFlattenedGuild({ id: "1", name: "Guild 1" }),
@@ -90,6 +88,7 @@ describe("useUser", () => {
 		const result = useUser(mockUser);
 		await result.execute();
 
+		expect(result.status.value).toBe("success");
 		expect(result.data.value).toBeDefined();
 		expect(result.data.value?.transformedGuilds).toStrictEqual(mockTransformedGuilds);
 		expect(result.guilds.value).toHaveLength(2);

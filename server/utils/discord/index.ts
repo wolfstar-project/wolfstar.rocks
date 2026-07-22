@@ -2,10 +2,8 @@
 import type {
 	FlattenedCommand,
 	FlattenedGuild,
-	LoginData,
 	OauthFlattenedGuild,
 	PartialOauthFlattenedGuild,
-	TransformedLoginData,
 } from "#shared/types";
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
@@ -16,16 +14,11 @@ import type {
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
 import {
-	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
 	invalidateGuildCache,
-	shouldRefreshCurrentUserCache,
 	shouldRefreshGuildCache,
 } from "#server/utils/discord/cache";
-import {
-	fetchCurrentUserAndGuildsWithRetry,
-	fetchGuildMemberWithRetry,
-} from "#server/utils/discord/oauth";
+import { fetchGuildMemberWithRetry } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
@@ -197,56 +190,6 @@ export async function transformGuild(
 	};
 }
 
-export async function transformOauthGuildsAndUser({
-	user,
-	guilds,
-}: LoginData): Promise<TransformedLoginData> {
-	if (!user || !guilds) {
-		return { guilds, user };
-	}
-
-	const userId = user.id;
-
-	// Phase 1: Live bot-membership probe for every guild. Cached getGuild can stay
-	// positive for up to an hour after the bot leaves, which caused stale profile lists.
-	const guildData = await mapWithConcurrency(guilds, 16, async (g) => {
-		const { guild, confirmedAbsent } = await probeBotGuildMembership(g.id);
-		if (confirmedAbsent) {
-			await invalidateGuildCache(g.id);
-		}
-		return guild;
-	});
-
-	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
-	// Separates the sequential getGuild→getMember chain into two independent parallel phases.
-	const memberData = await mapWithConcurrency(
-		guilds.map((oauthGuild, i) => ({ oauthGuild, guild: guildData[i] ?? null })),
-		16,
-		async ({ oauthGuild, guild }) => {
-			if (isNullOrUndefined(guild) || oauthGuild.owner) return null;
-			return getMember(guild.id, userId).catch(() => null);
-		},
-	);
-
-	// Phase 3: Transform using pre-fetched Discord data (no additional Discord API calls).
-	const transformedGuilds: OauthFlattenedGuild[] = await mapWithConcurrency(
-		guilds.map((oauthGuild, i) => ({
-			oauthGuild,
-			guild: guildData[i] ?? null,
-			member: memberData[i] ?? null,
-		})),
-		16,
-		({ oauthGuild, guild, member }) =>
-			transformGuild(userId, oauthGuild, {
-				includeChannels: false,
-				prefetchedGuild: guild,
-				prefetchedMember: member,
-			}),
-	);
-
-	return { transformedGuilds, user };
-}
-
 export async function getCurrentToken(event: H3Event) {
 	const tokens = await event.context.$authorization.resolveServerTokens();
 
@@ -272,30 +215,6 @@ export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
 		});
 	}
 };
-
-export const getCurrentUser = defineCachedFunction(
-	async (event: H3Event) => {
-		const tokens = await getCurrentToken(event);
-
-		Sentry.metrics.count("discord_api.call", 1, {
-			attributes: { endpoint: "users.getCurrent" },
-		});
-		Sentry.metrics.count("discord_api.call", 1, {
-			attributes: { endpoint: "users.getGuilds" },
-		});
-
-		return fetchCurrentUserAndGuildsWithRetry(event, tokens);
-	},
-	{
-		name: CURRENT_USER_CACHE_NAME,
-		getKey: async (event: H3Event) => {
-			const userId = await getUserIdFromEvent(event);
-			return userId;
-		},
-		maxAge: hours(1),
-		shouldBypassCache: async (event: H3Event) => shouldRefreshCurrentUserCache(event),
-	},
-);
 
 export const getCurrentMember = defineCachedFunction(
 	async (event: H3Event, guildId: string) => {

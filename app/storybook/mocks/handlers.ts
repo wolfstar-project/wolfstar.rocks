@@ -8,7 +8,7 @@ export const handlers = [
 		}),
 	),
 
-	http.get("/api/users", () =>
+	http.get("*/users/@me", () =>
 		HttpResponse.json({
 			user: mockUser,
 			guilds: mockGuildList,

@@ -8,21 +8,8 @@
  * All factories re-use the canonical mock builders from `test/mocks/discord.ts`
  * to stay consistent with the rest of the test suite.
  */
-import {
-	createMockChannel,
-	createMockCompleteGuild,
-	createMockOauthFlattenedGuild,
-	createMockRole,
-	createMockUser,
-} from "~~/test/mocks/discord";
+import { createMockChannel, createMockCompleteGuild, createMockRole } from "~~/test/mocks/discord";
 import { GUILD_ID, OWNER_USER_ID } from "./_helpers";
-
-// ─── User ───────────────────────────────────────────────────────────────────
-
-export const FIXTURE_USER = createMockUser({
-	id: OWNER_USER_ID,
-	name: "TestOwner",
-});
 
 // ─── Guilds ──────────────────────────────────────────────────────────────────
 
@@ -32,18 +19,6 @@ export const FIXTURE_GUILD = createMockCompleteGuild({
 	numChannels: 2,
 	numEmojis: 1,
 	numRoles: 2,
-});
-
-/**
- * Minimal "partial OAuth guild" that `GET /api/users` returns as part of the
- * user's guild list.
- */
-export const FIXTURE_PARTIAL_GUILD = createMockOauthFlattenedGuild({
-	id: GUILD_ID,
-	manageable: true,
-	name: "Test Guild",
-	ownerId: OWNER_USER_ID,
-	wolfstarIsIn: true,
 });
 
 // ─── Channels ────────────────────────────────────────────────────────────────
@@ -60,12 +35,3 @@ export const FIXTURE_CHANNEL = FIXTURE_CHANNELS[0]!;
 // ─── Roles ───────────────────────────────────────────────────────────────────
 
 export const FIXTURE_ROLE = createMockRole({ guildId: GUILD_ID, id: "444444444444444440" });
-
-// ─── Users response ──────────────────────────────────────────────────────────
-
-/** Full response shape for `GET /api/users`. */
-export const FIXTURE_USERS_RESPONSE = {
-	guilds: [FIXTURE_PARTIAL_GUILD],
-	transformedGuilds: [FIXTURE_PARTIAL_GUILD],
-	user: FIXTURE_USER,
-};

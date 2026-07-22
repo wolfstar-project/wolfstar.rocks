@@ -64,7 +64,7 @@ function matchAuthSession(_urlString) {
 }
 
 /**
- * User + guilds endpoint consumed by the useUser composable.
+ * Bot `GET /users/@me` consumed by the useUser composable via `$api`.
  * Returns 401 so the app gracefully falls back to the guest state
  * instead of hanging indefinitely waiting for a real auth token.
  *
@@ -106,8 +106,13 @@ const routes = [
 	},
 	{
 		name: "users API",
-		pattern: "http://localhost:3000/api/users",
+		pattern: "https://api.wolfstar.rocks/users/@me",
 		match: matchUsersApi,
+	},
+	{
+		name: "bot guilds API",
+		pattern: "https://api.wolfstar.rocks/guilds/**",
+		match: matchGuildsApi,
 	},
 	{
 		name: "guilds API",

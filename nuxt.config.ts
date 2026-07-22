@@ -213,18 +213,11 @@ export default defineNuxtConfig({
 	routeRules: {
 		// API routes — only cache public, non-authenticated proxy routes.
 		// Broad ISR on /api/** is intentionally omitted: authenticated routes
-		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
-		// Globally, as that would serve one user's data to another.
+		// must never be cached globally, as that would serve one user's data to another.
 		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
-		"/api/users": {
-			headers: {
-				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
-				"Vary": "Cookie, Authorization",
-			},
-		},
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {

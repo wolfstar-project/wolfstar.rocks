@@ -25,7 +25,7 @@ export const Authenticated: Story = {
 						user: mockUser,
 					}),
 				),
-				http.get("/api/users", () =>
+				http.get("*/users/@me", () =>
 					HttpResponse.json({
 						user: mockUser,
 						guilds: mockGuildList,
@@ -42,14 +42,14 @@ export const ErrorInternal: Story = {
 		msw: {
 			handlers: [
 				http.get("/api/auth/session", () => HttpResponse.json({ user: null })),
-				http.get("/api/users", () =>
+				http.get("*/users/@me", () =>
 					HttpResponse.json({ error: "Internal Server Error" }, { status: 500 }),
 				),
 			],
 		},
 		docs: {
 			description: {
-				story: "Profile page when the user fetch (/api/users) returns a 500, showing an error message.",
+				story: "Profile page when the bot user fetch (`/users/@me`) returns a 500, showing an error message.",
 			},
 		},
 	},
@@ -60,7 +60,7 @@ export const LoggedOut: Story = {
 		msw: {
 			handlers: [
 				http.get("/api/auth/session", () => HttpResponse.json({ user: null })),
-				http.get("/api/users", () =>
+				http.get("*/users/@me", () =>
 					HttpResponse.json({
 						user: null,
 						guilds: [],

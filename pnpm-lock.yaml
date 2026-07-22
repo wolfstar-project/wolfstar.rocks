@@ -90,9 +90,6 @@ importers:
       '@playwright/test':
         specifier: ^1.61.1
         version: 1.61.1
-      '@sapphire/ratelimits':
-        specifier: ^2.4.11
-        version: 2.4.11
       '@sentry/nuxt':
         specifier: ^10.42.0
         version: 10.63.0(@opentelemetry/api@1.9.1)(@opentelemetry/core@2.9.0)(@opentelemetry/instrumentation@0.214.0)(@opentelemetry/sdk-trace-base@2.9.0)(magicast@0.5.3)(nuxt@4.4.8)(rollup@4.62.2)(vue@3.5.38)
@@ -5307,10 +5304,6 @@ packages:
 
   '@sapphire/duration@1.2.0':
     resolution: {integrity: sha512-LxjOAFXz81WmrI8XX9YaVcAZDjQj/1p78lZCvkAWZB1nphOwz/D0dU3CBejmhOWx5dO5CszTkLJMNR0xuCK+Zg==}
-    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
-
-  '@sapphire/ratelimits@2.4.11':
-    resolution: {integrity: sha512-O6FNA/P0wxU4Ve9gxL948CoZw7+sSpujyUR2CLyLLCNuNvuFGFxPCJVl5crFVLXMIyBIrc2qk+/H9bsqsyQK1Q==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   '@sapphire/snowflake@3.5.5':
@@ -19471,8 +19464,6 @@ snapshots:
       '@sapphire/utilities': 3.18.2
 
   '@sapphire/duration@1.2.0': {}
-
-  '@sapphire/ratelimits@2.4.11': {}
 
   '@sapphire/snowflake@3.5.5': {}
 

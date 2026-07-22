@@ -18,6 +18,8 @@ const ROOT = join(import.meta.dirname, "../../..");
 const ALLOW_LIST = new Set([
 	// Satori/Takumi requires resolved static colors (no var() support)
 	"app/components/OgImage/Page.takumi.vue",
+	"app/components/OgImage/BlogPost.takumi.vue",
+	"app/components/OgImage/Changelog.takumi.vue",
 	// Discord-domain components maintain Discord brand fidelity with scoped vars
 	"app/components/discord/message.vue",
 	"app/components/discord/message-reply.vue",

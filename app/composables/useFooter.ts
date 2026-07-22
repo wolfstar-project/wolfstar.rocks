@@ -19,7 +19,7 @@ export const useFooter = () => {
 				{
 					class: "link-hover",
 					label: t("footer.changelog"),
-					to: "https://github.com/wolfstar-project/wolfstar.rocks/releases",
+					to: "/changelog",
 				},
 			],
 			label: t("footer.product"),

@@ -1,7 +1,7 @@
 import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isTest, provider } from "std-env";
+import { isCI, isDevelopment, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
@@ -17,6 +17,11 @@ export default defineNuxtConfig({
 	modules: [
 		"@nuxt/ui",
 		"@nuxt/content",
+		// Nuxt Studio is a local content-editing tool. It ships multi-MB editor
+		// bundles that overflow the PWA precache (breaking the build) and registers
+		// Vite plugins that break the rolldown-based Vitest environment, so only
+		// load it during local development.
+		...(isDevelopment ? ["nuxt-studio"] : []),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -272,6 +277,9 @@ export default defineNuxtConfig({
 				"Cache-Control": "public, max-age=0, must-revalidate",
 			},
 		},
+		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
+		// ISR (1 hour) rather than prerendering against the external API at build time.
+		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
 	},
 
 	sourcemap: {
@@ -515,6 +523,7 @@ export default defineNuxtConfig({
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
+					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://*.netlify.com",
 					"https://*.netlify.app",
 					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths

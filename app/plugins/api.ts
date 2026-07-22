@@ -1,14 +1,12 @@
 import type { CachedFetchFunction } from "#shared/utils/fetch-cache-config";
 
 /**
- * Provides `$api` for the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`),
- * matching the legacy dashboard `apiFetch` behavior: call the bot origin
- * directly with `credentials: "include"`.
+ * Provides `$api` for the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`).
  *
- * On the server, when a Discord session exists, a sapphire `SAPPHIRE_AUTH`
- * cookie is attached so SSR can authorize guild routes without relying on a
- * browser cookie set on the API domain. The cookie is encrypted with
- * `NUXT_OAUTH_DISCORD_CLIENT_SECRET` (same secret sapphire-plugin-api uses).
+ * - Server: calls the bot origin directly and attaches a sapphire `SAPPHIRE_AUTH`
+ *   cookie when a Discord session is available.
+ * - Client: cannot set cross-origin Cookie headers, so requests go through the
+ *   same-origin BFF at `/api/bot/**` which injects auth server-side.
  *
  * Crypto helpers live in `server/utils/botApi` and are loaded only inside the
  * `import.meta.server` branch so `node:crypto` never enters the client bundle.
@@ -29,12 +27,12 @@ export default defineNuxtPlugin(() => {
 				options?: Parameters<CachedFetchFunction>[1],
 				ttl?: Parameters<CachedFetchFunction>[2],
 			) => {
-				const headers: Record<string, string> = {
-					"Content-Type": "application/json",
-					...(options?.headers as Record<string, string> | undefined),
-				};
-
 				if (import.meta.server) {
+					const headers: Record<string, string> = {
+						"Content-Type": "application/json",
+						...(options?.headers as Record<string, string> | undefined),
+					};
+
 					const event = useRequestEvent();
 					const authorization = event?.context.$authorization;
 					if (authorization) {
@@ -52,15 +50,30 @@ export default defineNuxtPlugin(() => {
 							}),
 						);
 					}
+
+					return cachedFetch<T>(
+						url,
+						{
+							...options,
+							baseURL: apiBaseUrl,
+							credentials: "include",
+							headers,
+						},
+						ttl,
+					);
 				}
 
 				return cachedFetch<T>(
 					url,
 					{
 						...options,
-						baseURL: apiBaseUrl,
+						// Client BFF injects SAPPHIRE_AUTH; process.test stays same-origin for mocks.
+						baseURL: process.test ? "/" : "/api/bot",
 						credentials: "include",
-						headers,
+						headers: {
+							"Content-Type": "application/json",
+							...(options?.headers as Record<string, string> | undefined),
+						},
 					},
 					ttl,
 				);

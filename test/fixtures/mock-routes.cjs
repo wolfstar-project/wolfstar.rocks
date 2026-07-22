@@ -7,8 +7,8 @@
  * It is intentionally written as CJS so it can be required from the CJS
  * Lighthouse setup script and imported from ESM test utilities.
  *
- * App routes target the local preview server (http://localhost:3000).
- * Bot `$api` routes target the local bot mock origin (http://localhost:8282).
+ * App / BFF routes target the local preview server (http://localhost:3000).
+ * Outbound bot calls from the Nuxt server target http://localhost:8282.
  */
 
 "use strict";
@@ -104,6 +104,11 @@ const routes = [
 		name: "auth session",
 		pattern: "http://localhost:3000/_auth/session",
 		match: matchAuthSession,
+	},
+	{
+		name: "bot BFF",
+		pattern: "http://localhost:3000/api/bot/**",
+		match: matchUsersApi,
 	},
 	{
 		name: "users API",

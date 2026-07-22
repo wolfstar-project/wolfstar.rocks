@@ -4,6 +4,7 @@ import {
 	decryptBotApiAuth,
 	encryptBotApiAuth,
 	getOptionalBotApiAuthHeaders,
+	isPublicBotApiPath,
 } from "../../../../server/utils/botApi";
 
 // aes-256-cbc requires a 32-byte key — match Discord client-secret length.
@@ -88,5 +89,17 @@ describe("getOptionalBotApiAuthHeaders", () => {
 		const decrypted = decryptBotApiAuth(token, SECRET);
 		expect(decrypted?.id).toBe("123456789012345678");
 		expect(decrypted?.token).toBe("access-token");
+	});
+});
+
+describe("isPublicBotApiPath", () => {
+	it("treats commands and languages as public", () => {
+		expect(isPublicBotApiPath("/commands")).toBe(true);
+		expect(isPublicBotApiPath("languages")).toBe(true);
+	});
+
+	it("requires auth for user and guild routes", () => {
+		expect(isPublicBotApiPath("/users/@me")).toBe(false);
+		expect(isPublicBotApiPath("/guilds/1/settings")).toBe(false);
 	});
 });

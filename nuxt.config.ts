@@ -218,6 +218,14 @@ export default defineNuxtConfig({
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
+		// Bot API BFF used by `$api` on the client — never CDN-cache (may carry auth).
+		"/api/bot/**": {
+			isr: false,
+			cache: false,
+			headers: {
+				"Cache-Control": "private, no-store",
+			},
+		},
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {

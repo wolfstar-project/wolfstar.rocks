@@ -74,9 +74,8 @@ const log = useLogger("oauth:callback");
 const isSessionMissing = ref(false);
 const isRetryingSilentAuth = ref(false);
 
-// Better Auth has already completed the Discord code exchange and set the
-// session cookie server-side before redirecting the browser here — unless this
-// visit is the sapphire bridge hop (`?code=` without Better Auth `state`).
+// Better Auth already set the session cookie unless this is the sapphire hop
+// (`?code=` without Better Auth `state`).
 const { user, ready, loggedIn, fetchSession } = useUserSession();
 
 const oauthCode = computed(() => {
@@ -100,8 +99,7 @@ onMounted(() => {
 
 async function completeSignIn() {
 	try {
-		// Legacy sapphire hop: Discord returned a code without Better Auth state.
-		// POST it to the bot API so `SAPPHIRE_AUTH` is set on that origin.
+		// Sapphire hop: exchange Discord code for `SAPPHIRE_AUTH` on the bot origin.
 		if (oauthCode.value) {
 			await completeBotOauthCallback(oauthCode.value);
 			await fetchSession({ force: true });
@@ -128,8 +126,7 @@ async function completeSignIn() {
 			? route.query.error[0]
 			: route.query.error;
 		if (typeof discordError === "string" && discordError.length > 0) {
-			// Silent `prompt=none` often fails once; retry with a consent screen
-			// when we still have a pending post-login redirect.
+			// Retry silent-auth failures with consent when a post-login redirect is pending.
 			if (isBotOauthSilentAuthError(discordError) && peekBotOauthNext()) {
 				isRetryingSilentAuth.value = true;
 				await navigateTo(buildBotOauthAuthorizeUrl("consent"), {
@@ -148,17 +145,12 @@ async function completeSignIn() {
 			return;
 		}
 
-		// Session is ready: stop showing the loading state now so the welcome
-		// banner is visible during the delay below, instead of only appearing
-		// after navigation has already started.
+		// Drop loading now so the welcome banner shows during the delay below.
 		isSessionLoading.value = false;
 
 		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
 
-		// Better Auth owns the dashboard session; sapphire owns API auth.
-		// If the browser does not yet have `SAPPHIRE_AUTH` on the bot origin,
-		// run a silent Discord authorize and POST the code to
-		// `${apiBaseUrl}/oauth/callback` (legacy Skyra flow).
+		// Bridge a Discord code to the bot API when `SAPPHIRE_AUTH` is missing.
 		if (!(await hasBotOauthSession())) {
 			rememberBotOauthNext(safeNext);
 			await navigateTo(buildBotOauthAuthorizeUrl("none"), {
@@ -170,8 +162,7 @@ async function completeSignIn() {
 
 		await promiseTimeout(seconds(2));
 
-		// Full page navigation ensures SSR reads the fresh session cookie, so the
-		// target page renders with the correct authenticated state.
+		// Full navigation so SSR sees the fresh session cookie.
 		await navigateTo(safeNext, {
 			external: true,
 			replace: true,

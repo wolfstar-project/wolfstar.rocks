@@ -16,9 +16,11 @@ export default defineServerAuth(() => ({
 			clientId: runtimeConfig.discord.clientId,
 			clientSecret: runtimeConfig.discord.clientSecret,
 			redirectURI: runtimeConfig.discord.redirectURI,
-			// `guilds` is required for GET /users/@me/guilds (the dashboard guild list);
-			// `guilds.members.read` only covers per-guild member lookups.
-			scope: ["guilds", "guilds.members.read", "email"],
+			// Override Better Auth's Discord default (`prompt=none`) so first login /
+			// new scopes get a consent screen. Sapphire bridge still uses prompt=none.
+			prompt: "consent",
+			// On top of Better Auth defaults (`identify`, `email`): guild list + member lookups.
+			scope: ["guilds", "guilds.members.read"],
 			mapProfileToUser: (profile: DiscordProfile) => ({
 				id: profile.id,
 				name: profile.global_name ?? profile.username,

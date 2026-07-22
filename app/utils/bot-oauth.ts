@@ -28,10 +28,6 @@ function requireDiscordClientId(): string {
 	return String(clientId);
 }
 
-/**
- * Discord authorize URL for the sapphire bot OAuth bridge
- * (`POST ${apiBaseUrl}/oauth/callback`).
- */
 export function buildBotOauthAuthorizeUrl(prompt: BotOauthPrompt = "none"): string {
 	return buildBotDiscordAuthorizeUrl({
 		clientId: requireDiscordClientId(),
@@ -40,10 +36,7 @@ export function buildBotOauthAuthorizeUrl(prompt: BotOauthPrompt = "none"): stri
 	});
 }
 
-/**
- * Exchange the Discord OAuth code with the bot API. The response Set-Cookie
- * attaches `SAPPHIRE_AUTH` to the API origin (e.g. localhost:8282).
- */
+/** POST Discord `code` to the bot API; Set-Cookie attaches `SAPPHIRE_AUTH` on that origin. */
 export async function completeBotOauthCallback(code: string) {
 	return await $fetch(`${requireBotApiBaseUrl()}/oauth/callback`, {
 		body: {
@@ -56,7 +49,6 @@ export async function completeBotOauthCallback(code: string) {
 	});
 }
 
-/** True when the browser already has a valid sapphire session cookie. */
 export async function hasBotOauthSession(): Promise<boolean> {
 	const base = normalizeBotApiBaseUrl(getApiBaseUrl());
 	if (!base) {
@@ -73,7 +65,6 @@ export async function hasBotOauthSession(): Promise<boolean> {
 	}
 }
 
-/** Clear the sapphire cookie on the bot API origin. */
 export async function logoutBotOauth(): Promise<void> {
 	const base = normalizeBotApiBaseUrl(getApiBaseUrl());
 	if (!base) {

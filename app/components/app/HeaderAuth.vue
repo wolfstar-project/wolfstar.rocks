@@ -79,6 +79,7 @@ const { mobile = false } = defineProps<{
 }>();
 
 const { signOut } = useUserSession();
+const { logoutBotOauth } = useBotOauth();
 
 const items = ref<DropdownMenuItem[]>([
 	{
@@ -97,6 +98,7 @@ const items = ref<DropdownMenuItem[]>([
 ]);
 
 async function logout() {
+	await logoutBotOauth();
 	await signOut({
 		onSuccess: () => {
 			void navigateTo("/");

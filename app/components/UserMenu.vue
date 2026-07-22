@@ -40,6 +40,7 @@ const { collapsed } = defineProps<{
 const isFeedbackOpen = ref(false);
 const colorMode = useColorMode();
 const { user: authUser, signOut } = useUserSession();
+const { logoutBotOauth } = useBotOauth();
 
 const src = computed(() => authUser.value?.image ?? undefined);
 
@@ -113,6 +114,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			label: "Sign out",
 			async onSelect(e: Event) {
 				e.preventDefault();
+				await logoutBotOauth();
 				await signOut();
 				await navigateTo("/");
 			},

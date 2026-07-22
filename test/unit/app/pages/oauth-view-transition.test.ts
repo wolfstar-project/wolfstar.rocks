@@ -17,4 +17,12 @@ describe("OAuth pages view transition opt-out", () => {
 
 		expect(source).not.toContain("/oauth/complete");
 	});
+
+	it("bridges Discord codes to the bot API oauth/callback", () => {
+		const source = readFileSync(join(rootDir, "app/pages/oauth/callback.vue"), "utf8");
+
+		expect(source).toContain("completeBotOauthCallback");
+		expect(source).toContain("hasBotSession");
+		expect(source).toContain("buildAuthorizeUrl");
+	});
 });

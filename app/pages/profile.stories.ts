@@ -4,8 +4,8 @@ import { pageDecorator } from "../../.storybook/decorators";
 import { mockGuildList, mockUser } from "../storybook/mocks/fixtures";
 import ProfilePage from "./profile.vue";
 
-/** Client `$api` uses the same-origin BFF (`/api/**`). */
-const BOT_BFF = "/api";
+/** Client `$api` hits the bot API origin directly (legacy-style). */
+const BOT_API = "http://localhost:8282";
 
 const meta: Meta<typeof ProfilePage> = {
 	component: ProfilePage,
@@ -28,7 +28,7 @@ export const Authenticated: Story = {
 						user: mockUser,
 					}),
 				),
-				http.get(`${BOT_BFF}/users/@me`, () =>
+				http.get(`${BOT_API}/users/@me`, () =>
 					HttpResponse.json({
 						user: mockUser,
 						guilds: mockGuildList,
@@ -45,7 +45,7 @@ export const ErrorInternal: Story = {
 		msw: {
 			handlers: [
 				http.get("/api/auth/session", () => HttpResponse.json({ user: null })),
-				http.get(`${BOT_BFF}/users/@me`, () =>
+				http.get(`${BOT_API}/users/@me`, () =>
 					HttpResponse.json({ error: "Internal Server Error" }, { status: 500 }),
 				),
 			],
@@ -63,7 +63,7 @@ export const LoggedOut: Story = {
 		msw: {
 			handlers: [
 				http.get("/api/auth/session", () => HttpResponse.json({ user: null })),
-				http.get(`${BOT_BFF}/users/@me`, () =>
+				http.get(`${BOT_API}/users/@me`, () =>
 					HttpResponse.json({
 						user: null,
 						guilds: [],

@@ -17,7 +17,7 @@
 			</UAlert>
 		</template>
 		<ClientOnly v-else>
-			<template v-if="isError">
+			<template v-if="isError && !isRetryingSilentAuth">
 				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
 					<template #description>
 						{{ errorMessage }}
@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { isBotOauthSilentAuthError } from "#shared/utils/bot-oauth";
 import { promiseTimeout } from "@vueuse/core";
 
 definePageMeta({
@@ -66,26 +67,84 @@ const route = useRoute();
 const nextParam = useRouteQuery("next", "/", { transform: String });
 const log = useLogger("oauth:callback");
 const isSessionMissing = ref(false);
+const isRetryingSilentAuth = ref(false);
+
+const {
+	buildAuthorizeUrl,
+	completeBotOauthCallback,
+	consumeNext,
+	hasBotSession,
+	peekNext,
+	rememberNext,
+} = useBotOauth();
 
 // Better Auth has already completed the Discord code exchange and set the
-// session cookie server-side before redirecting the browser here.
+// session cookie server-side before redirecting the browser here — unless this
+// visit is the sapphire bridge hop (`?code=` without Better Auth `state`).
 const { user, ready, loggedIn, fetchSession } = useUserSession();
 
-const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
-const isError = computed(() => Boolean(route.query.error));
+const oauthCode = computed(() => {
+	const value = route.query.code;
+	const code = Array.isArray(value) ? value[0] : value;
+	return typeof code === "string" && code.length > 0 ? code : null;
+});
+
+const hasCallbackParams = computed(() =>
+	Boolean(route.query.next || route.query.error || oauthCode.value),
+);
+const isError = computed(() => Boolean(route.query.error) && !oauthCode.value);
 const isSessionLoading = ref(!isError.value);
 const errorMessage = computed(
 	() => route.query.error ?? "Something went wrong while signing you in. Please try again.",
 );
 
 onMounted(() => {
-	if (!isError.value) {
-		void completeSignIn();
-	}
+	void completeSignIn();
 });
 
 async function completeSignIn() {
 	try {
+		// Legacy sapphire hop: Discord returned a code without Better Auth state.
+		// POST it to the bot API so `SAPPHIRE_AUTH` is set on that origin.
+		if (oauthCode.value) {
+			await completeBotOauthCallback(oauthCode.value);
+			await fetchSession({ force: true });
+
+			if (!loggedIn.value) {
+				isSessionMissing.value = true;
+				return;
+			}
+
+			isSessionLoading.value = false;
+			await promiseTimeout(seconds(2));
+
+			const safeNext = consumeNext(
+				isSafeRedirectPath(nextParam.value) ? nextParam.value : "/",
+			);
+			await navigateTo(safeNext, {
+				external: true,
+				replace: true,
+			});
+			return;
+		}
+
+		const discordError = Array.isArray(route.query.error)
+			? route.query.error[0]
+			: route.query.error;
+		if (typeof discordError === "string" && discordError.length > 0) {
+			// Silent `prompt=none` often fails once; retry with a consent screen
+			// when we still have a pending post-login redirect.
+			if (isBotOauthSilentAuthError(discordError) && peekNext()) {
+				isRetryingSilentAuth.value = true;
+				await navigateTo(buildAuthorizeUrl("consent"), {
+					external: true,
+					replace: true,
+				});
+				return;
+			}
+			return;
+		}
+
 		await fetchSession({ force: true });
 
 		if (!loggedIn.value) {
@@ -98,9 +157,22 @@ async function completeSignIn() {
 		// after navigation has already started.
 		isSessionLoading.value = false;
 
-		await promiseTimeout(seconds(2));
-
 		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
+
+		// Better Auth owns the dashboard session; sapphire owns API auth.
+		// If the browser does not yet have `SAPPHIRE_AUTH` on the bot origin,
+		// run a silent Discord authorize and POST the code to
+		// `${apiBaseUrl}/oauth/callback` (legacy Skyra flow).
+		if (!(await hasBotSession())) {
+			rememberNext(safeNext);
+			await navigateTo(buildAuthorizeUrl("none"), {
+				external: true,
+				replace: true,
+			});
+			return;
+		}
+
+		await promiseTimeout(seconds(2));
 
 		// Full page navigation ensures SSR reads the fresh session cookie, so the
 		// target page renders with the correct authenticated state.

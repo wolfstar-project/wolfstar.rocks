@@ -518,6 +518,11 @@ export default defineNuxtConfig({
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
+					// WolfStar bot API (`$api` + sapphire `POST /oauth/callback`)
+					"http://localhost:8282",
+					"http://127.0.0.1:8282",
+					"https://api.wolfstar.rocks",
+					"https://api.beta.wolfstar.rocks",
 					"https://api.iconify.design",
 					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://*.netlify.com",

@@ -90,26 +90,6 @@ const routes = [
 		match: matchAuthSession,
 	},
 	{
-		name: "bot BFF users",
-		pattern: "http://localhost:3000/api/users/**",
-		match: matchUnauthorized,
-	},
-	{
-		name: "bot BFF guilds",
-		pattern: "http://localhost:3000/api/guilds/**",
-		match: matchUnauthorized,
-	},
-	{
-		name: "bot BFF commands",
-		pattern: "http://localhost:3000/api/commands",
-		match: matchUnauthorized,
-	},
-	{
-		name: "bot BFF languages",
-		pattern: "http://localhost:3000/api/languages",
-		match: matchUnauthorized,
-	},
-	{
 		name: "users API",
 		pattern: "http://localhost:8282/users/@me",
 		match: matchUnauthorized,
@@ -127,6 +107,16 @@ const routes = [
 	{
 		name: "bot languages API",
 		pattern: "http://localhost:8282/languages",
+		match: matchUnauthorized,
+	},
+	{
+		name: "bot oauth callback",
+		pattern: "http://localhost:8282/oauth/callback",
+		match: matchUnauthorized,
+	},
+	{
+		name: "bot oauth logout",
+		pattern: "http://localhost:8282/oauth/logout",
 		match: matchUnauthorized,
 	},
 ];

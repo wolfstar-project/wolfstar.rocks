@@ -37,6 +37,9 @@
 				"blog": {
 					"type": "string"
 				},
+				"changelog": {
+					"type": "string"
+				},
 				"github": {
 					"type": "string"
 				},

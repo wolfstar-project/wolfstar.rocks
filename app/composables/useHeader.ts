@@ -58,7 +58,7 @@ export function useHeader() {
 			to: "/blog",
 		},
 		{
-			label: "Changelog",
+			label: t("nav.changelog"),
 			to: "/changelog",
 		},
 	]);
@@ -102,7 +102,7 @@ export function useHeader() {
 			to: "/blog",
 		},
 		{
-			label: "Changelog",
+			label: t("nav.changelog"),
 			to: "/changelog",
 		},
 		{

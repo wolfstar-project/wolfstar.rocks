@@ -39,6 +39,12 @@ const locales: LocaleObjectData[] = [
 		name: "Español",
 		language: "es-ES",
 	},
+	{
+		code: "it-IT",
+		file: "it-IT.json",
+		name: "Italiano",
+		language: "it-IT",
+	},
 ];
 
 function buildLocales() {

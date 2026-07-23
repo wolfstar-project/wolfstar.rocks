@@ -11,6 +11,10 @@
 		{
 			"label": "Español",
 			"lang": "es-ES"
+		},
+		{
+			"label": "Italiano",
+			"lang": "it-IT"
 		}
 	],
 	"files": [

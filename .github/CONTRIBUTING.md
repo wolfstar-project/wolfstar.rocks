@@ -400,7 +400,7 @@ Make sure to read about [Playwright best practices](https://playwright.dev/docs/
 WolfStar.rocks uses [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for the dashboard UI. Guild bot-response languages (`en-US`, `es-ES`, …) are separate from UI locale preference.
 
 - Source of truth: [`i18n/locales/en.json`](../i18n/locales/en.json)
-- Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, matching WolfStar/Skyra language keys)
+- Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, `it-IT`, matching WolfStar/Skyra language keys)
 - Locale registry: [`config/i18n.ts`](../config/i18n.ts)
 - Lunaria config: [`lunaria.config.json`](../lunaria.config.json)
 

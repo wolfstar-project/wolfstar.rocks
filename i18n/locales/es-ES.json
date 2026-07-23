@@ -11,6 +11,7 @@
 		"applications": "Aplicaciones",
 		"commands": "Comandos",
 		"blog": "Blog",
+		"changelog": "Registro de cambios",
 		"github": "GitHub",
 		"main_navigation": "Navegación principal",
 		"mobile_navigation": "Navegación móvil"
@@ -29,8 +30,8 @@
 		"site_footer": "Pie de página del sitio",
 		"tagline": "Una app de moderación de Discord totalmente personalizable y multilingüe. Gratis para siempre, de código abierto.",
 		"logo": "Logo de WolfStar",
-		"powered_by_netlify": "Powered by Netlify",
-		"powered_by_netlify_aria": "Powered by Netlify - se abre en una pestaña nueva",
+		"powered_by_netlify": "Con tecnología de Netlify",
+		"powered_by_netlify_aria": "Con tecnología de Netlify - se abre en una pestaña nueva",
 		"copyright": "WolfStar Project — Copyright © {year}. Todos los derechos reservados.",
 		"github_aria": "Visita WolfStar en GitHub - se abre en una pestaña nueva",
 		"column_links": "Enlaces del pie de página de {label}",
@@ -42,7 +43,7 @@
 		"support_server": "Servidor de soporte",
 		"github": "GitHub",
 		"blog": "Blog",
-		"legal": "Legal",
+		"legal": "Aviso legal",
 		"terms": "Términos de uso",
 		"privacy": "Política de privacidad"
 	},

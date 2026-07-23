@@ -236,6 +236,13 @@ export default defineConfig({
 			"regexp/strict": "error",
 			"regexp/use-ignore-case": "error",
 			"vitest/require-mock-type-parameters": "off",
+			// Newer Oxlint (via Vite+) expands the default vitest recommended set.
+			// Keep intentional rules in the test override; silence new defaults here
+			// so the upgrade does not require a broad test rewrite.
+			"vitest/expect-expect": "off",
+			"vitest/no-conditional-expect": "off",
+			"vitest/no-disabled-tests": "off",
+			"vitest/require-to-throw-message": "off",
 		},
 		ignorePatterns: [
 			".output/**",
@@ -321,11 +328,18 @@ export default defineConfig({
 							withinDescribe: "it",
 						},
 					],
+					// Newer Oxlint expands vitest recommended defaults; keep prior
+					// intentional rules and silence new ones that need a broader rewrite.
+					"vitest/expect-expect": "off",
+					"vitest/no-conditional-expect": "off",
+					"vitest/no-disabled-tests": "off",
 					"vitest/no-identical-title": "error",
 					"vitest/no-import-node-test": "error",
 					"vitest/prefer-hooks-in-order": "error",
 					"vitest/prefer-lowercase-title": "error",
 					"vitest/require-mock-type-parameters": "off",
+					"vitest/require-to-throw-message": "off",
+					"vitest/valid-title": "error",
 					"no-unused-expressions": "off",
 				},
 			},

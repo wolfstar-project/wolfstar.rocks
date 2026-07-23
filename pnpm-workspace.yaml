@@ -26,8 +26,8 @@ overrides:
     # vue copies make VueUse and app refs incompatible during typecheck
     vue: 3.5.38
     sharp: 0.34.5
-    vite: npm:@voidzero-dev/vite-plus-core@0.1.19
-    vitest: npm:@voidzero-dev/vite-plus-test@0.1.19
+    vite: npm:@voidzero-dev/vite-plus-core@0.1.24
+    vitest: npm:@voidzero-dev/vite-plus-test@0.1.24
 
 patchedDependencies:
     "@nuxt/test-utils": patches/@nuxt__test-utils.patch

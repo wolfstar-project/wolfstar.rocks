@@ -137,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { NavigationMenuItem } from "@nuxt/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
@@ -190,7 +190,7 @@ watch(
 	{ immediate: true },
 );
 
-const requestFetch = useRequestFetch();
+const { $api } = useNuxtApp();
 const route = useRoute();
 const refreshGuildCache = computed(() => route.query.refresh === "true");
 
@@ -200,17 +200,18 @@ const {
 	error,
 } = useAsyncData(
 	() => `dashboard:guild:${guildId.value}`,
-	() => {
+	async () => {
 		const refreshQuery = refreshGuildCache.value ? { refresh: "true" } : undefined;
-		return Promise.all([
-			requestFetch<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
-				`/api/guilds/${guildId.value}`,
+		const [guildResult, settingsResult] = await Promise.all([
+			$api<ValuesType<NonNullable<TransformedLoginData["transformedGuilds"]>>>(
+				`/guilds/${guildId.value}`,
 				{ query: refreshQuery },
 			),
-			requestFetch<string>(`/api/guilds/${guildId.value}/settings`, {
+			$api<string>(`/guilds/${guildId.value}/settings`, {
 				query: refreshQuery,
 			}),
 		]);
+		return [guildResult.data, settingsResult.data] as const;
 	},
 );
 
@@ -231,7 +232,7 @@ watch(
 				},
 			);
 
-			setGuildSettings(parsedSettings as GuildData);
+			setGuildSettings(parsedSettings as unknown as GuildData);
 
 			if (nuxtError.value) {
 				clearError();
@@ -472,44 +473,45 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
+	const { data: response } = await $api<string | GuildData>(`/guilds/${guildId.value}/settings`, {
 		body: {
+			guild_id: guildId.value,
 			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-		},
-		transform: (response: string) => {
-			try {
-				return JSON.parse(response);
-			} catch (error) {
-				logger.error(
-					`Failed to parse response from settings update for guild Id: ${guildId.value}`,
-					parseError(error),
-				);
-				throw createError({
-					message: "Failed to update guild settings",
-					why: "Something went wrong while saving your settings.",
-					status: 500,
-					fix: "Please try again later. If the issue persists, contact support.",
-					cause: error as Error,
-				});
-			}
 		},
 		method: "PATCH",
 	});
 
-	if (!data.value) {
+	let parsed: GuildData;
+	try {
+		parsed = typeof response === "string" ? (JSON.parse(response) as GuildData) : response;
+	} catch (error) {
+		logger.error(
+			`Failed to parse response from settings update for guild Id: ${guildId.value}`,
+			parseError(error),
+		);
+		throw createError({
+			message: "Failed to update guild settings",
+			why: "Something went wrong while saving your settings.",
+			status: 500,
+			fix: "Please try again later. If the issue persists, contact support.",
+			cause: error as Error,
+		});
+	}
+
+	if (!parsed || objectValues(parsed).length === 0) {
 		return;
 	}
 
-	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
+	if (objectValues(parsed).length !== 0) {
 		if (!document.startViewTransition || effectiveReduceMotion.value) {
-			setGuildSettings(data.value!);
+			setGuildSettings(parsed);
 			setGuildSettingsChanges(undefined);
 		} else {
 			if (document.activeViewTransition) {
 				document.activeViewTransition.skipTransition();
 			}
 			document.startViewTransition(async () => {
-				setGuildSettings(data.value!);
+				setGuildSettings(parsed);
 				setGuildSettingsChanges(undefined);
 				await nextTick();
 			});

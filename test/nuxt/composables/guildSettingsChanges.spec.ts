@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport } from "@nuxt/test-utils/runtime";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { createMockOauthFlattenedGuild } from "~~/test/mocks/discord";

@@ -1,6 +1,12 @@
 import { http, HttpResponse } from "msw";
 import { mockCommands, mockGuild, mockGuildList, mockUser } from "./fixtures";
 
+/**
+ * Client `$api` hits `NUXT_PUBLIC_API_BASE_URL` directly (legacy-style).
+ * Storybook pins that origin to `http://localhost:8282`.
+ */
+const BOT_API = "http://localhost:8282";
+
 export const handlers = [
 	http.get("/api/auth/session", () =>
 		HttpResponse.json({
@@ -8,7 +14,7 @@ export const handlers = [
 		}),
 	),
 
-	http.get("/api/users", () =>
+	http.get(`${BOT_API}/users/@me`, () =>
 		HttpResponse.json({
 			user: mockUser,
 			guilds: mockGuildList,
@@ -16,26 +22,26 @@ export const handlers = [
 		}),
 	),
 
-	http.get("/api/guilds", () => HttpResponse.json(mockGuildList)),
+	http.post(`${BOT_API}/oauth/callback`, () =>
+		HttpResponse.json({
+			user: mockUser,
+			guilds: mockGuildList,
+			transformedGuilds: mockGuildList,
+		}),
+	),
+	http.post(`${BOT_API}/oauth/logout`, () => HttpResponse.json({ success: true })),
 
-	// The dashboard layout fetches the single guild to hydrate guild state.
-	http.get("/api/guilds/:guildId", () => HttpResponse.json(mockGuild)),
-
-	// The dashboard activity feed (General.vue) requests the guild audit log.
-	http.get("/api/guilds/:guildId/logs", () => HttpResponse.json({ entries: [], total: 0 })),
-
-	http.get("/api/guilds/:guildId/settings", () =>
+	http.get(`${BOT_API}/guilds/:guildId`, () => HttpResponse.json(mockGuild)),
+	http.get(`${BOT_API}/guilds/:guildId/audit-logs`, () =>
+		HttpResponse.json({ entries: [], total: 0 }),
+	),
+	http.get(`${BOT_API}/guilds/:guildId/settings`, () =>
 		HttpResponse.json({
 			guildId: "123456789012345678",
 			prefix: "!",
 			language: "en-US",
 		}),
 	),
-
-	// External WolfStar bot API — proxied through createApiComposable("/commands")
-	http.get(/\/commands$/, () => HttpResponse.json(mockCommands)),
-
-	// External WolfStar bot API, proxied through createApiComposable("/languages").
-	// The dashboard manage page requests this on mount for the default section.
-	http.get(/\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
+	http.get(`${BOT_API}/commands`, () => HttpResponse.json(mockCommands)),
+	http.get(`${BOT_API}/languages`, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
 ];

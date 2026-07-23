@@ -74,6 +74,17 @@ describe("createAuthSecondaryStorage", () => {
 		expect(count).toBe(1);
 	});
 
+	it("treats corrupt counters without expiresAt as a fresh window", async () => {
+		fake.state.set("key", { value: { count: 159 } });
+
+		const count = await secondaryStorage.increment?.("key", 60);
+		expect(count).toBe(1);
+		expect(fake.state.get("key")?.value).toMatchObject({
+			count: 1,
+			expiresAt: expect.any(Number),
+		});
+	});
+
 	it("serializes concurrent increments for the same key", async () => {
 		const results = await Promise.all(
 			Array.from({ length: 10 }, () => secondaryStorage.increment?.("key", 60)),

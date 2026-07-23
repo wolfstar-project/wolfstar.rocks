@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -10,7 +10,7 @@ const mockGuildSettings = ref<GuildData | undefined>(
 		selfmodCapitalsEnabled: true,
 		selfmodCapitalsSoftAction: 0b110,
 		selfmodCapitalsHardAction: 2,
-		selfmodCapitalsHardActionDuration: 60000n,
+		selfmodCapitalsHardActionDuration: 60000,
 		selfmodCapitalsThresholdMaximum: 15,
 		selfmodCapitalsThresholdDuration: 30_000,
 		selfmodCapitalsMinimum: 20,
@@ -68,7 +68,7 @@ describe("capitals filter guild settings", () => {
 			selfmodCapitalsEnabled: true,
 			selfmodCapitalsSoftAction: 0b110,
 			selfmodCapitalsHardAction: 2,
-			selfmodCapitalsHardActionDuration: 60000n,
+			selfmodCapitalsHardActionDuration: 60000,
 			selfmodCapitalsThresholdMaximum: 15,
 			selfmodCapitalsThresholdDuration: 30_000,
 			selfmodCapitalsMinimum: 20,

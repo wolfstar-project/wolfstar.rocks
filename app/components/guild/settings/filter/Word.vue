@@ -230,7 +230,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { WordFilterSchema, type WordFilter } from "#shared/schemas";
 
@@ -326,8 +326,7 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 		formState.softActionDeletes,
 	);
 
-	const durationMs =
-		formState.hardActionDurationMs > 0 ? BigInt(formState.hardActionDurationMs) : null;
+	const durationMs = formState.hardActionDurationMs > 0 ? formState.hardActionDurationMs : null;
 
 	return {
 		selfmodFilterEnabled: formState.selfmodFilterEnabled,

@@ -1,11 +1,9 @@
 // oxlint-disable no-console
-import type { ReadonlyGuildData } from "#server/database";
 import type {
+	FlattenedCommand,
 	FlattenedGuild,
-	LoginData,
 	OauthFlattenedGuild,
 	PartialOauthFlattenedGuild,
-	TransformedLoginData,
 } from "#shared/types";
 import type { DiscordAPIError } from "@discordjs/rest";
 import type {
@@ -15,18 +13,12 @@ import type {
 	RESTAPIPartialCurrentUserGuild,
 } from "discord-api-types/v10";
 import type { H3Event } from "h3";
-import { readSettings, readSettingsPermissionNodes } from "#server/database";
 import {
-	CURRENT_USER_CACHE_NAME,
 	GUILD_CACHE_NAME,
 	invalidateGuildCache,
-	shouldRefreshCurrentUserCache,
 	shouldRefreshGuildCache,
 } from "#server/utils/discord/cache";
-import {
-	fetchCurrentUserAndGuildsWithRetry,
-	fetchGuildMemberWithRetry,
-} from "#server/utils/discord/oauth";
+import { fetchGuildMemberWithRetry } from "#server/utils/discord/oauth";
 import { PermissionsBits } from "#shared/utils/bits";
 import { hours } from "#shared/utils/times";
 import { cast } from "@sapphire/utilities";
@@ -87,7 +79,7 @@ function isAdmin(guild: APIGuild, member: APIGuildMember, roles: readonly string
 	);
 }
 
-async function manage(guild: APIGuild, member: APIGuildMember, settings?: ReadonlyGuildData) {
+function manage(guild: APIGuild, member: APIGuildMember) {
 	if (!member.user || !member.user.id) {
 		return false;
 	}
@@ -95,20 +87,14 @@ async function manage(guild: APIGuild, member: APIGuildMember, settings?: Readon
 		return true;
 	}
 
-	const resolvedSettings = settings ?? (await readSettings(guild.id));
-	const nodes = readSettingsPermissionNodes(resolvedSettings);
-
-	return (
-		isAdmin(guild, member, resolvedSettings.rolesAdmin) &&
-		((await nodes.run(member, "conf")) ?? true)
-	);
+	// Dashboard manage access is Discord owner / Administrator / ManageGuild only.
+	return isAdmin(guild, member, []);
 }
 
 async function getManageable(
 	oauthGuild: RESTAPIPartialCurrentUserGuild,
 	guild: APIGuild | undefined,
 	userId: string,
-	settings?: ReadonlyGuildData,
 	prefetchedMember?: APIGuildMember | null,
 ): Promise<boolean> {
 	if (oauthGuild.owner) {
@@ -130,7 +116,7 @@ async function getManageable(
 		return hasManageGuild;
 	}
 
-	return manage(guild, member, settings);
+	return manage(guild, member);
 }
 
 export async function transformGuild(
@@ -142,16 +128,9 @@ export async function transformGuild(
 		prefetchedGuild?: APIGuild | null;
 		/** Pre-fetched member data. `null` = no member. `undefined` = fetch if needed. */
 		prefetchedMember?: APIGuildMember | null;
-		/** Pre-fetched settings — skips the `readSettings` DB call inside `manage()`. */
-		prefetchedSettings?: ReadonlyGuildData;
 	} = {},
 ): Promise<OauthFlattenedGuild> {
-	const {
-		includeChannels = true,
-		prefetchedGuild,
-		prefetchedMember,
-		prefetchedSettings,
-	} = options;
+	const { includeChannels = true, prefetchedGuild, prefetchedMember } = options;
 	const guild =
 		prefetchedGuild !== undefined
 			? prefetchedGuild
@@ -205,67 +184,10 @@ export async function transformGuild(
 
 	return {
 		...serialized,
-		manageable: await getManageable(
-			data,
-			guild ?? undefined,
-			userId,
-			prefetchedSettings,
-			prefetchedMember,
-		),
+		manageable: await getManageable(data, guild ?? undefined, userId, prefetchedMember),
 		permissions: Number(data.permissions),
 		wolfstarIsIn: !isNullOrUndefined(guild),
 	};
-}
-
-export async function transformOauthGuildsAndUser({
-	user,
-	guilds,
-}: LoginData): Promise<TransformedLoginData> {
-	if (!user || !guilds) {
-		return { guilds, user };
-	}
-
-	const userId = user.id;
-
-	// Phase 1: Live bot-membership probe for every guild. Cached getGuild can stay
-	// positive for up to an hour after the bot leaves, which caused stale profile lists.
-	const guildData = await mapWithConcurrency(guilds, 16, async (g) => {
-		const { guild, confirmedAbsent } = await probeBotGuildMembership(g.id);
-		if (confirmedAbsent) {
-			await invalidateGuildCache(g.id);
-		}
-		return guild;
-	});
-
-	// Phase 2: Fetch member data only for bot-present guilds where the user is not owner.
-	// Separates the sequential getGuild→getMember chain into two independent parallel phases.
-	const memberData = await mapWithConcurrency(
-		guilds.map((oauthGuild, i) => ({ oauthGuild, guild: guildData[i] ?? null })),
-		16,
-		async ({ oauthGuild, guild }) => {
-			if (isNullOrUndefined(guild) || oauthGuild.owner) return null;
-			return getMember(guild.id, userId).catch(() => null);
-		},
-	);
-
-	// Phase 3: Transform using pre-fetched data. Each transform now runs without
-	// additional Discord API calls; only readSettings DB calls remain.
-	const transformedGuilds: OauthFlattenedGuild[] = await mapWithConcurrency(
-		guilds.map((oauthGuild, i) => ({
-			oauthGuild,
-			guild: guildData[i] ?? null,
-			member: memberData[i] ?? null,
-		})),
-		16,
-		({ oauthGuild, guild, member }) =>
-			transformGuild(userId, oauthGuild, {
-				includeChannels: false,
-				prefetchedGuild: guild,
-				prefetchedMember: member,
-			}),
-	);
-
-	return { transformedGuilds, user };
 }
 
 export async function getCurrentToken(event: H3Event) {
@@ -282,12 +204,8 @@ export async function getCurrentToken(event: H3Event) {
 	return tokens;
 }
 
-export const canManage = async (
-	guild: APIGuild,
-	member: APIGuildMember,
-	settings?: ReadonlyGuildData,
-) => {
-	const shouldManage = await manage(guild, member, settings);
+export const canManage = async (guild: APIGuild, member: APIGuildMember) => {
+	const shouldManage = manage(guild, member);
 	if (!shouldManage) {
 		throw createError({
 			message: "Insufficient permissions",
@@ -297,30 +215,6 @@ export const canManage = async (
 		});
 	}
 };
-
-export const getCurrentUser = defineCachedFunction(
-	async (event: H3Event) => {
-		const tokens = await getCurrentToken(event);
-
-		Sentry.metrics.count("discord_api.call", 1, {
-			attributes: { endpoint: "users.getCurrent" },
-		});
-		Sentry.metrics.count("discord_api.call", 1, {
-			attributes: { endpoint: "users.getGuilds" },
-		});
-
-		return fetchCurrentUserAndGuildsWithRetry(event, tokens);
-	},
-	{
-		name: CURRENT_USER_CACHE_NAME,
-		getKey: async (event: H3Event) => {
-			const userId = await getUserIdFromEvent(event);
-			return userId;
-		},
-		maxAge: hours(1),
-		shouldBypassCache: async (event: H3Event) => shouldRefreshCurrentUserCache(event),
-	},
-);
 
 export const getCurrentMember = defineCachedFunction(
 	async (event: H3Event, guildId: string) => {
@@ -476,21 +370,59 @@ export const fetchCommands = defineCachedFunction(
 		const {
 			public: { apiBaseUrl },
 		} = useRuntimeConfig();
+		if (!apiBaseUrl) {
+			throw createError({
+				message: "Bot API base URL is not configured",
+				status: 500,
+				why: "NUXT_PUBLIC_API_BASE_URL is missing",
+				fix: "Set NUXT_PUBLIC_API_BASE_URL to the WolfStar bot API origin (e.g. https://api.wolfstar.rocks)",
+			});
+		}
 		Sentry.metrics.count("bot_api.call", 1, {
 			attributes: { endpoint: "commands.fetch" },
 		});
-		const commands = await instrumentBotApiCall("commands.fetch", () =>
-			$fetch<WolfCommand[]>(`${apiBaseUrl}/commands`, {
+		return await instrumentBotApiCall("commands.fetch", () =>
+			$fetch<FlattenedCommand[]>(`${apiBaseUrl}/commands`, {
 				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
 				},
 			}),
 		);
-		return commands;
 	},
 	{
 		maxAge: hours(1),
 		getKey: () => "commands",
+	},
+);
+
+export const fetchLanguages = defineCachedFunction(
+	async () => {
+		const {
+			public: { apiBaseUrl },
+		} = useRuntimeConfig();
+		if (!apiBaseUrl) {
+			throw createError({
+				message: "Bot API base URL is not configured",
+				status: 500,
+				why: "NUXT_PUBLIC_API_BASE_URL is missing",
+				fix: "Set NUXT_PUBLIC_API_BASE_URL to the WolfStar bot API origin (e.g. https://api.wolfstar.rocks)",
+			});
+		}
+		Sentry.metrics.count("bot_api.call", 1, {
+			attributes: { endpoint: "languages.fetch" },
+		});
+		return await instrumentBotApiCall("languages.fetch", () =>
+			$fetch<string[]>(`${apiBaseUrl}/languages`, {
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}),
+		);
+	},
+	{
+		maxAge: hours(1),
+		getKey: () => "languages",
 	},
 );

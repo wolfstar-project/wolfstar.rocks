@@ -1,4 +1,4 @@
-import type { CommandLogData } from "#server/database";
+import type { CommandLogData } from "#shared/types";
 import type { MaybeRefOrGetter } from "vue";
 
 interface CommandLogResponse {
@@ -30,10 +30,12 @@ export function useCommandLog({
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
 	const resolvedFilters = computed(() => (filters !== undefined ? toValue(filters) : undefined));
 
+	const { $api } = useNuxtApp();
+
 	const asyncData = useLazyAsyncData(
 		() =>
 			`guild:${toValue(guildId)}:logs:commands:${resolvedLimit.value ?? "default"}:${resolvedOffset.value ?? 0}:${JSON.stringify(resolvedFilters.value || {})}`,
-		() => {
+		async () => {
 			const query: Record<string, string | number> = {};
 			if (resolvedLimit.value !== undefined) query.limit = resolvedLimit.value;
 			if (resolvedOffset.value !== undefined) query.offset = resolvedOffset.value;
@@ -46,9 +48,11 @@ export function useCommandLog({
 				if (f.to) query.to = f.to;
 				if (f.q) query.q = f.q;
 			}
-			return $fetch<CommandLogResponse>(`/api/guilds/${toValue(guildId)}/logs/commands`, {
-				query,
-			});
+			const { data } = await $api<CommandLogResponse>(
+				`/guilds/${toValue(guildId)}/command-logs`,
+				{ query },
+			);
+			return data;
 		},
 		{
 			immediate: immediate !== false,

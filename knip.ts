@@ -21,8 +21,6 @@ const config: KnipConfig = {
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
-				/** Aliased in vite.config.ts for #server/database/generated/client in tests, not imported directly */
-				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
 				"**/*.{ts,vue,cjs,mjs}",

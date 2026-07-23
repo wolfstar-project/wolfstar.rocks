@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import type { CommandLogData } from "#server/database";
+import type { CommandLogData } from "#shared/types";
 import type { TableColumn } from "@nuxt/ui";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { getPaginationRowModel } from "@tanstack/table-core";

@@ -101,3 +101,37 @@ describe("generateRuntimeConfig sentry sampling", () => {
 		expect(generateRuntimeConfig().public.sentry.tracesSampleRate).toBe(0.2);
 	});
 });
+
+describe("generateRuntimeConfig apiBaseUrl", () => {
+	beforeEach(() => {
+		vi.resetModules();
+	});
+
+	afterEach(() => {
+		vi.unstubAllEnvs();
+	});
+
+	it("pins Storybook to the local bot mock origin", async () => {
+		vi.stubEnv("STORYBOOK", "true");
+		vi.stubEnv("NUXT_PUBLIC_API_BASE_URL", "https://api.wolfstar.rocks");
+		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
+		expect(generateRuntimeConfig().public.apiBaseUrl).toBe("http://localhost:8282");
+	});
+
+	it("defaults test builds to the local bot mock origin when unset", async () => {
+		vi.stubEnv("STORYBOOK", undefined);
+		vi.stubEnv("VITEST_STORYBOOK", undefined);
+		vi.stubEnv("NUXT_PUBLIC_API_BASE_URL", undefined);
+		vi.stubEnv("NODE_ENV", "test");
+		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
+		expect(generateRuntimeConfig().public.apiBaseUrl).toBe("http://localhost:8282");
+	});
+
+	it("honors an explicit NUXT_PUBLIC_API_BASE_URL outside Storybook", async () => {
+		vi.stubEnv("STORYBOOK", undefined);
+		vi.stubEnv("VITEST_STORYBOOK", undefined);
+		vi.stubEnv("NUXT_PUBLIC_API_BASE_URL", "https://api.wolfstar.rocks");
+		const { generateRuntimeConfig } = await import("#server/utils/runtimeConfig");
+		expect(generateRuntimeConfig().public.apiBaseUrl).toBe("https://api.wolfstar.rocks");
+	});
+});

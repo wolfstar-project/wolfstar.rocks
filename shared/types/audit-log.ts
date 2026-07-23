@@ -13,7 +13,7 @@ export interface DashboardAuditChanges {
 }
 
 export interface DashboardAuditEntry {
-	/** SHA-256 hash — primary key in AuditEvent table. */
+	/** Stable entry id from the bot API audit log. */
 	id: string;
 	guildId: string;
 	action: DashboardAuditAction;

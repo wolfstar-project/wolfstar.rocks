@@ -29,7 +29,7 @@
 							A fully customizable, multilingual Discord moderation app. Free forever,
 							open source.
 						</p>
-						<div class="mt-4 flex items-center gap-1" aria-label="Social links">
+						<nav class="mt-4 flex items-center gap-1" aria-label="Social links">
 							<UButton
 								v-for="social of socialLinks"
 								:key="social.label"
@@ -42,7 +42,7 @@
 								variant="ghost"
 								size="sm"
 							/>
-						</div>
+						</nav>
 						<div class="mt-6 flex flex-col items-start gap-3">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />

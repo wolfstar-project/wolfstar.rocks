@@ -1,61 +1,68 @@
 import type { FooterColumn } from "@nuxt/ui";
 
 export const useFooter = () => {
+	const { t } = useI18n();
+
 	const columns = computed<FooterColumn[]>(() => [
 		{
 			children: [
 				{
 					class: "link-hover",
-					label: "Features",
+					label: t("footer.features"),
 					to: "/#features",
 				},
 				{
 					class: "link-hover",
-					label: "Other Apps",
+					label: t("footer.other_apps"),
 					to: "/#apps",
 				},
 				{
 					class: "link-hover",
-					label: "Changelog",
+					label: t("footer.changelog"),
 					to: "/changelog",
 				},
 			],
-			label: "Product",
+			label: t("footer.product"),
 		},
 		{
 			children: [
 				{
 					class: "link-hover",
-					label: "Support Server",
+					label: t("footer.support_server"),
 					to: "https://join.wolfstar.rocks",
 				},
 				{
 					class: "link-hover",
-					label: "GitHub",
+					label: t("footer.github"),
 					to: "https://repo.wolfstar.rocks",
 				},
 				{
 					class: "link-hover",
-					label: "Blog",
+					label: t("footer.blog"),
 					to: "/blog",
 				},
+				{
+					class: "link-hover",
+					label: t("translation_status.title"),
+					to: "/translation-status",
+				},
 			],
-			label: "Community",
+			label: t("footer.community"),
 		},
 		{
 			children: [
 				{
 					class: "link-hover",
-					label: "Terms of Use",
+					label: t("footer.terms"),
 					to: "/terms",
 				},
 				{
 					class: "link-hover",
-					label: "Privacy Policy",
+					label: t("footer.privacy"),
 					to: "/privacy",
 				},
 			],
-			label: "Legal",
+			label: t("footer.legal"),
 		},
 	]);
 

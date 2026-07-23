@@ -1,0 +1,52 @@
+{
+	"$schema": "./node_modules/@lunariajs/core/config.schema.json",
+	"repository": {
+		"name": "wolfstar-project/wolfstar.rocks"
+	},
+	"defaultLocale": {
+		"label": "English",
+		"lang": "en"
+	},
+	"locales": [
+		{
+			"label": "Español",
+			"lang": "es-ES"
+		},
+		{
+			"label": "Italiano",
+			"lang": "it-IT"
+		}
+	],
+	"files": [
+		{
+			"location": "i18n/locales/en.json",
+			"pattern": "i18n/locales/@lang.json",
+			"type": "dictionary",
+			"optionalKeys": {
+				"i18n/locales/.json": ["$schema"]
+			}
+		}
+	],
+	"ignoreKeywords": [
+		"lunaria-ignore",
+		"typo",
+		"en-only",
+		"broken link",
+		"i18nReady",
+		"i18nIgnore",
+		"fix typo"
+	],
+	"dashboard": {
+		"title": "WolfStar Translation Status",
+		"description": "Translation progress tracker for wolfstar.rocks. See how much has been translated and get involved!",
+		"site": "https://wolfstar.rocks/lunaria/",
+		"favicon": {
+			"external": [
+				{
+					"link": "https://wolfstar.rocks/favicon.ico",
+					"type": "image/x-icon"
+				}
+			]
+		}
+	}
+}

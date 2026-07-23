@@ -1,0 +1,37 @@
+name: lunaria
+
+on:
+  pull_request_target:
+    types: [opened, synchronize]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  lunaria-overview:
+    name: 🌝 Generate Lunaria Overview
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    permissions:
+      contents: read
+      pull-requests: write # post Lunaria overview comments on pull requests
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          # Necessary for Lunaria to work properly
+          # Makes the action clone the entire git history
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: Generate Lunaria Overview
+        uses: lunariajs/action@4911ad0736d1e3b20af4cb70f5079aea2327ed8e # astro-docs

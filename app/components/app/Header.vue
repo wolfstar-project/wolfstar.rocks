@@ -1,10 +1,10 @@
 <template>
-	<UHeader class="app-navbar" title="WolfStar" aria-label="Site header">
+	<UHeader class="app-navbar" title="WolfStar" :aria-label="t('header.site_header')">
 		<template #left>
 			<NuxtLink
 				class="flex items-center gap-2.5"
 				:to="currentApp.explore"
-				:aria-label="`${currentApp.name} home`"
+				:aria-label="t('header.home', { name: currentApp.name })"
 			>
 				<AppLogoMark v-if="currentApp.name === 'WolfStar'" class="h-20 w-45" />
 				<span v-else class="text-base font-bold text-base-content">{{
@@ -17,7 +17,7 @@
 			<UNavigationMenu
 				:items="desktopLinks"
 				variant="link"
-				aria-label="Main navigation"
+				:aria-label="t('nav.main_navigation')"
 				:ui="{
 					link: 'rounded-full px-4 py-2 text-sm font-medium text-muted hover:text-base-content',
 					root: 'gap-0',
@@ -29,7 +29,7 @@
 			<div class="flex items-center gap-2">
 				<UButton
 					v-if="currentApp.invite !== '#'"
-					label="Add App"
+					:label="t('header.add_app')"
 					size="sm"
 					color="primary"
 					:to="currentApp.invite"
@@ -48,7 +48,7 @@
 							tabindex="-1"
 						/>
 						<UButton
-							label="Sign in"
+							:label="t('header.sign_in')"
 							size="md"
 							color="primary"
 							variant="subtle"
@@ -66,7 +66,7 @@
 				orientation="vertical"
 				:items="mobileLinks"
 				class="-mx-2.5"
-				aria-label="Mobile navigation"
+				:aria-label="t('nav.mobile_navigation')"
 			/>
 
 			<Separator class="my-6" />
@@ -75,7 +75,7 @@
 				<LazyAppHeaderAuth mobile />
 				<template #fallback>
 					<UButton
-						label="Sign in"
+						:label="t('header.sign_in')"
 						size="md"
 						color="primary"
 						variant="subtle"
@@ -91,6 +91,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const { desktopLinks, mobileLinks, currentApp } = useHeader();
 </script>
 

@@ -43,6 +43,10 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
     - [Lighthouse accessibility tests](#lighthouse-accessibility-tests)
     - [Lighthouse performance tests](#lighthouse-performance-tests)
     - [End-to-end tests](#end-to-end-tests)
+- [Localization (i18n)](#localization-i18n)
+    - [i18n commands](#i18n-commands)
+    - [Adding a locale](#adding-a-locale)
+    - [Translation status (Lunaria)](#translation-status-lunaria)
 - [Storybook](#storybook)
 - [Submitting changes](#submitting-changes)
     - [Before submitting](#before-submitting)
@@ -143,6 +147,14 @@ pnpm prisma:push      # Push schema changes (development)
 pnpm prisma:migrate:dev   # Create and apply migration
 pnpm prisma:generate  # Regenerate Prisma client
 pnpm prisma:studio    # Visual database editor (http://localhost:5555)
+
+# Localization (vp tasks + fix scripts)
+pnpm vp run i18n:check    # Audit locale files against en.json
+pnpm i18n:check:fix      # Add missing keys (EN placeholders) / remove extras
+pnpm vp run i18n:report   # Detect missing, unused, or dynamic keys in code
+pnpm i18n:report:fix     # Remove unused keys from all locale files
+pnpm vp run i18n:schema   # Regenerate i18n/schema.json from en.json
+pnpm vp run build:lunaria # Build /lunaria dashboard + status.json
 ```
 
 ### GitHub Actions security analysis
@@ -383,6 +395,47 @@ pnpm test:browser:ui     # Run with Playwright UI
 
 Make sure to read about [Playwright best practices](https://playwright.dev/docs/best-practices) and prefer user-facing locators (`getByRole`, `getByLabel`, `getByText`) over selectors based on classes or IDs.
 
+## Localization (i18n)
+
+WolfStar.rocks uses [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for the dashboard UI. Guild bot-response languages (`en-US`, `es-ES`, …) are separate from UI locale preference.
+
+- Source of truth: [`i18n/locales/en.json`](../i18n/locales/en.json)
+- Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, `it-IT`, matching WolfStar/Skyra language keys)
+- Locale registry: [`config/i18n.ts`](../config/i18n.ts)
+- Lunaria config: [`lunaria.config.json`](../lunaria.config.json)
+
+### i18n commands
+
+| Command                        | Purpose                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| `pnpm vp run i18n:check`       | Compare locales to `en.json` (reports missing/extra keys; removes extras) |
+| `pnpm i18n:check:fix [locale]` | Add missing keys with English placeholders (optionally for one locale)    |
+| `pnpm vp run i18n:report`      | Fail on missing, unused, or dynamic keys used in `app/**`                 |
+| `pnpm i18n:report:fix`         | Remove unused keys from all locale files                                  |
+| `pnpm vp run i18n:schema`      | Regenerate `i18n/schema.json` for IDE validation                          |
+| `pnpm vp run build:lunaria`    | Build `dist/lunaria/` dashboard + `status.json`                           |
+
+CI runs `i18n:report` and checks that `i18n/schema.json` is up to date. Autofix runs `i18n:check` and `build:lunaria`. The Lunaria PR workflow posts a translation overview comment.
+
+### Adding a locale
+
+1. Create `i18n/locales/<code>.json` (start from `en.json`)
+2. Register it in `config/i18n.ts` (`locales` array)
+3. Add it to `lunaria.config.json` → `locales`
+4. Run `pnpm i18n:check:fix` and `pnpm vp run i18n:schema`
+
+Prefer static string keys with `$t('…')` / `t('…')` so `i18n:report` can analyze usage. For HTML inside translations, use [`i18n-t`](https://vue-i18n.intlify.dev/guide/advanced/component.html).
+
+### Translation status (Lunaria)
+
+We track translation progress with [Lunaria](https://lunaria.dev/):
+
+- Built dashboard: `/lunaria/` (generated at build time)
+- JSON status for the app: `/lunaria/status.json`
+- In-app page: `/translation-status`
+
+Use the [i18n-ally](https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally) VS Code extension (recommended in `.vscode/extensions.json`) for editing locale files.
+
 ## Storybook
 
 Stories are co-located with pages as `*.stories.ts` files under `app/pages/`. Storybook configuration lives in `.storybook/`.
@@ -426,7 +479,7 @@ Format: `type(scope): description`
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, `types`
 
-Scopes (optional): `auth`, `api`, `guild`, `ui`, `db`, `deps`
+Scopes (optional): `auth`, `api`, `guild`, `ui`, `db`, `deps`, `i18n`
 
 Examples:
 

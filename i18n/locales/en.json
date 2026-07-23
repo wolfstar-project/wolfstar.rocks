@@ -1,0 +1,81 @@
+{
+	"$schema": "../schema.json",
+	"nav": {
+		"features": "Features",
+		"moderation_tools": "Moderation Tools",
+		"moderation_tools_description": "Tools to help you moderate your server",
+		"advanced_logging": "Advanced Logging",
+		"advanced_logging_description": "Track and log events in your server",
+		"moderation_logs": "Moderation Logs",
+		"moderation_logs_description": "Searchable moderation history for every action",
+		"applications": "Applications",
+		"commands": "Commands",
+		"blog": "Blog",
+		"changelog": "Changelog",
+		"github": "GitHub",
+		"main_navigation": "Main navigation",
+		"mobile_navigation": "Mobile navigation"
+	},
+	"header": {
+		"site_header": "Site header",
+		"home": "{name} home",
+		"add_app": "Add App",
+		"sign_in": "Sign in",
+		"sign_in_discord": "Sign in with Discord",
+		"user_menu": "User menu",
+		"profile": "Profile",
+		"sign_out": "Sign out"
+	},
+	"footer": {
+		"site_footer": "Site footer",
+		"tagline": "A fully customizable, multilingual Discord moderation app. Free forever, open source.",
+		"logo": "WolfStar logo",
+		"powered_by_netlify": "Powered by Netlify",
+		"powered_by_netlify_aria": "Powered by Netlify - opens in new tab",
+		"copyright": "WolfStar Project — Copyright © {year}. All rights reserved.",
+		"github_aria": "Visit WolfStar on GitHub - opens in new tab",
+		"column_links": "Footer {label} links",
+		"product": "Product",
+		"features": "Features",
+		"other_apps": "Other Apps",
+		"changelog": "Changelog",
+		"community": "Community",
+		"support_server": "Support Server",
+		"github": "GitHub",
+		"blog": "Blog",
+		"legal": "Legal",
+		"terms": "Terms of Use",
+		"privacy": "Privacy Policy"
+	},
+	"a11y": {
+		"skip_to_content": "Skip to main content",
+		"main_content": "Main content"
+	},
+	"common": {
+		"language": "Language",
+		"appearance": "Appearance",
+		"light": "Light",
+		"dark": "Dark"
+	},
+	"user_menu": {
+		"account_menu": "User account menu",
+		"user_menu_for": "User menu for {name}",
+		"profile": "Profile",
+		"report_bug": "Report a Bug",
+		"sign_out": "Sign out",
+		"avatar_alt": "{name}'s avatar",
+		"avatar_fallback": "User avatar"
+	},
+	"i18n": {
+		"missing_keys": "No missing keys | 1 missing key | {count} missing keys",
+		"edit_on_github": "Edit on GitHub"
+	},
+	"translation_status": {
+		"title": "Translation Status",
+		"description": "Track how complete each locale is and contribute missing strings.",
+		"generated_at": "Last generated {date}",
+		"source_locale": "Source locale",
+		"progress_by_locale": "Progress by locale",
+		"no_data": "Translation status is not available yet. Build the Lunaria dashboard to generate it."
+	}
+}

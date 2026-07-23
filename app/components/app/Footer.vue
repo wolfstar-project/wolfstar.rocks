@@ -4,7 +4,7 @@
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
 		}"
-		aria-label="Site footer"
+		:aria-label="t('footer.site_footer')"
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
@@ -20,21 +20,24 @@
 				>
 					<div>
 						<div class="mb-3 flex items-center gap-3">
-							<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
+							<div
+								class="w-10 rounded-full"
+								role="img"
+								:aria-label="t('footer.logo')"
+							>
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
 							<span class="font-bold">WolfStar</span>
 						</div>
 						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
-							A fully customizable, multilingual Discord moderation app. Free forever,
-							open source.
+							{{ t("footer.tagline") }}
 						</p>
 						<div class="mt-6 flex flex-col items-start gap-3">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<UButton
-								label="Powered by Netlify"
+								:label="t('footer.powered_by_netlify')"
 								to="https://www.netlify.com"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -42,14 +45,14 @@
 								color="neutral"
 								variant="soft"
 								:ui="{ leadingIcon: 'bg-success' }"
-								aria-label="Powered by Netlify - opens in new tab"
+								:aria-label="t('footer.powered_by_netlify_aria')"
 							/>
 						</div>
 					</div>
 					<nav
 						v-for="column of columns"
 						:key="column.label"
-						:aria-label="`Footer ${column.label} links`"
+						:aria-label="t('footer.column_links', { label: column.label })"
 					>
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
@@ -71,11 +74,29 @@
 
 		<template #left>
 			<p class="text-sm text-base-content/80">
-				WolfStar Project — Copyright © {{ currentYear }}. All rights reserved.
+				{{ t("footer.copyright", { year: currentYear }) }}
 			</p>
 		</template>
 		<template #right>
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
+			<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
+			<ClientOnly>
+				<ULocaleSelect
+					:model-value="locale"
+					:locales="uiLocales"
+					:aria-label="t('common.language')"
+					:content="{ side: 'top', align: 'end', sideOffset: 8 }"
+					size="sm"
+					color="neutral"
+					variant="ghost"
+					class="min-w-28"
+					:ui="{ content: 'min-w-fit' }"
+					@update:model-value="selectLocale"
+				/>
+				<template #fallback>
+					<div class="h-8 min-w-28" aria-hidden="true" />
+				</template>
+			</ClientOnly>
 			<ColorModeButton />
 
 			<UButton
@@ -83,7 +104,7 @@
 				target="_blank"
 				rel="noopener noreferrer"
 				icon="lucide:github"
-				aria-label="Visit WolfStar on GitHub - opens in new tab"
+				:aria-label="t('footer.github_aria')"
 				color="neutral"
 				variant="ghost"
 			/>
@@ -92,8 +113,21 @@
 </template>
 
 <script setup lang="ts">
+import { en, es, it } from "@nuxt/ui/locale";
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+
+const { locale, setLocale, t } = useI18n();
+const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+
+const uiLocales = [en, { ...es, code: "es-ES" }, { ...it, code: "it-IT" }] as const;
+
+function selectLocale(code: string) {
+	if (!isAppLocaleCode(code)) return;
+	setPreferredLocale(code);
+	void setLocale(code);
+}
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

@@ -1,0 +1,81 @@
+{
+	"$schema": "../schema.json",
+	"nav": {
+		"features": "Funciones",
+		"moderation_tools": "Herramientas de moderación",
+		"moderation_tools_description": "Herramientas para ayudarte a moderar tu servidor",
+		"advanced_logging": "Registro avanzado",
+		"advanced_logging_description": "Rastrea y registra eventos en tu servidor",
+		"moderation_logs": "Registros de moderación",
+		"moderation_logs_description": "Historial de moderación con búsqueda para cada acción",
+		"applications": "Aplicaciones",
+		"commands": "Comandos",
+		"blog": "Blog",
+		"changelog": "Registro de cambios",
+		"github": "GitHub",
+		"main_navigation": "Navegación principal",
+		"mobile_navigation": "Navegación móvil"
+	},
+	"header": {
+		"site_header": "Cabecera del sitio",
+		"home": "Inicio de {name}",
+		"add_app": "Añadir app",
+		"sign_in": "Iniciar sesión",
+		"sign_in_discord": "Iniciar sesión con Discord",
+		"user_menu": "Menú de usuario",
+		"profile": "Perfil",
+		"sign_out": "Cerrar sesión"
+	},
+	"footer": {
+		"site_footer": "Pie de página del sitio",
+		"tagline": "Una app de moderación de Discord totalmente personalizable y multilingüe. Gratis para siempre, de código abierto.",
+		"logo": "Logo de WolfStar",
+		"powered_by_netlify": "Con tecnología de Netlify",
+		"powered_by_netlify_aria": "Con tecnología de Netlify - se abre en una pestaña nueva",
+		"copyright": "WolfStar Project — Copyright © {year}. Todos los derechos reservados.",
+		"github_aria": "Visita WolfStar en GitHub - se abre en una pestaña nueva",
+		"column_links": "Enlaces del pie de página de {label}",
+		"product": "Producto",
+		"features": "Funciones",
+		"other_apps": "Otras apps",
+		"changelog": "Registro de cambios",
+		"community": "Comunidad",
+		"support_server": "Servidor de soporte",
+		"github": "GitHub",
+		"blog": "Blog",
+		"legal": "Aviso legal",
+		"terms": "Términos de uso",
+		"privacy": "Política de privacidad"
+	},
+	"a11y": {
+		"skip_to_content": "Saltar al contenido principal",
+		"main_content": "Contenido principal"
+	},
+	"common": {
+		"language": "Idioma",
+		"appearance": "Apariencia",
+		"light": "Claro",
+		"dark": "Oscuro"
+	},
+	"user_menu": {
+		"account_menu": "Menú de cuenta de usuario",
+		"user_menu_for": "Menú de usuario de {name}",
+		"profile": "Perfil",
+		"report_bug": "Informar de un error",
+		"sign_out": "Cerrar sesión",
+		"avatar_alt": "Avatar de {name}",
+		"avatar_fallback": "Avatar de usuario"
+	},
+	"i18n": {
+		"missing_keys": "Ninguna clave faltante | 1 clave faltante | {count} claves faltantes",
+		"edit_on_github": "Editar en GitHub"
+	},
+	"translation_status": {
+		"title": "Estado de las traducciones",
+		"description": "Consulta qué tan completa está cada lengua y contribuye con las cadenas que falten.",
+		"generated_at": "Última generación {date}",
+		"source_locale": "Idioma de origen",
+		"progress_by_locale": "Progreso por idioma",
+		"no_data": "El estado de las traducciones aún no está disponible. Genera el panel de Lunaria para crearlo."
+	}
+}

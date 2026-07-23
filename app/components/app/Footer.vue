@@ -79,7 +79,24 @@
 		</template>
 		<template #right>
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
-			<AppLocaleSelect />
+			<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
+			<ClientOnly>
+				<ULocaleSelect
+					:model-value="locale"
+					:locales="uiLocales"
+					:aria-label="t('common.language')"
+					:content="{ side: 'top', align: 'end', sideOffset: 8 }"
+					size="sm"
+					color="neutral"
+					variant="ghost"
+					class="min-w-28"
+					:ui="{ content: 'min-w-fit' }"
+					@update:model-value="selectLocale"
+				/>
+				<template #fallback>
+					<div class="h-8 min-w-28" aria-hidden="true" />
+				</template>
+			</ClientOnly>
 			<ColorModeButton />
 
 			<UButton
@@ -96,9 +113,21 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+import { en, es, it } from "@nuxt/ui/locale";
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+
+const { locale, setLocale, t } = useI18n();
+const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+
+const uiLocales = [en, { ...es, code: "es-ES" }, { ...it, code: "it-IT" }] as const;
+
+function selectLocale(code: string) {
+	if (!isAppLocaleCode(code)) return;
+	setPreferredLocale(code);
+	void setLocale(code);
+}
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

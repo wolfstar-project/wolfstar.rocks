@@ -66,8 +66,7 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 }
 
 .tag:hover,
-.tag:focus,
-.tag:focus-visible {
+.tag:focus {
 	/* Keep mention colors stable — Discord does not bleach the pill on hover. */
 	background-color: oklch(57.7% 0.209 273.88 / 0.3);
 	color: oklch(83% 0.08 275);
@@ -78,6 +77,15 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 		background-color: oklch(57.7% 0.209 273.88 / 0.15);
 		color: oklch(45.08% 0.281 265.53);
 	}
+}
+
+.tag:focus-visible {
+	/*
+	 * Keep the pill color stable (color/background inherit from :focus above),
+	 * but restore a visible keyboard focus ring for WCAG 2.4.7.
+	 */
+	outline: 2px solid oklch(83% 0.08 275);
+	outline-offset: 2px;
 }
 
 .tag--with-avatar {

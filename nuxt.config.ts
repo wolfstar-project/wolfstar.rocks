@@ -1,10 +1,12 @@
+import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isTest, provider } from "std-env";
+import { isCI, isDevelopment, isTest, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
+const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -13,23 +15,38 @@ export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
 		"@nuxt/ui",
+		"@nuxt/content",
+		// Nuxt Studio is a local content-editing tool. It ships multi-MB editor
+		// bundles that overflow the PWA precache (breaking the build) and registers
+		// Vite plugins that break the rolldown-based Vitest environment, so only
+		// load it during local development.
+		...(isDevelopment ? ["nuxt-studio"] : []),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
 		"@nuxt/a11y",
 		"@nuxtjs/seo",
+		"nuxt-skew-protection",
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
-		"nuxt-auth-utils",
+		"@onmax/nuxt-better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
-		...(isTest || isCI ? [] : ["@netlify/nuxt"]),
+		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
+
+	content: {
+		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
+		// requiring better-sqlite3 as an additional native dependency.
+		experimental: {
+			sqliteConnector: "native",
+		},
+	},
 
 	$development: {
 		site: {
@@ -130,6 +147,10 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
+	auth: {
+		redirectQueryKey: "next",
+	},
+
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -219,14 +240,37 @@ export default defineNuxtConfig({
 		"/oauth/callback": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
-		"/oauth/login": { robots: true },
+		// Redirect-only OAuth entry point: its middleware immediately redirects to
+		// Discord, so prerendering only produces an empty redirect stub that fails
+		// html-validation (no <title>/<body>, missing lang). Never prerender it.
+		"/oauth/login": {
+			robots: true,
+			auth: { only: "guest", redirectTo: "/profile" },
+		},
+		"/login": { prerender: false },
+		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		"/profile": { appLayout: "default", robots: true },
+		// /profile is a per-user authenticated page: never statically prerender it
+		// (crawlLinks would otherwise reach it via links on prerendered pages and
+		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
+		"/profile": {
+			appLayout: "default",
+			prerender: false,
+			robots: true,
+			auth: { only: "user", redirectTo: "/login" },
+		},
 		"/starly": { appLayout: "default", robots: true },
 
 		// Static pages
+		"/commands": { appLayout: "default", prerender: true, robots: true },
+		"/staryl": { appLayout: "default", prerender: true, robots: true },
 		"/terms": { appLayout: "default", prerender: true, robots: true },
-		"/wolfstar": { appLayout: "default", robots: true },
+		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
+		"/blog": { appLayout: "default", prerender: true, robots: true },
+		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
+		// ISR (1 hour) rather than prerendering against the external API at build time.
+		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
 	},
 
 	sourcemap: {
@@ -240,18 +284,27 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		viteEnvironmentApi: true,
+		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
 	},
 
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
+		// Pre-compress prerendered HTML and /_nuxt assets so the server (and any
+		// origin without edge compression) serves gzip/brotli with correct headers.
+		compressPublicAssets: {
+			brotli: true,
+			gzip: true,
+		},
 		future: {
 			nativeSWR: true,
 		},
 		prerender: {
 			crawlLinks: true,
+			// Keep redirect-only and per-user routes out of the prerender crawl;
+			// their auth-redirect stubs do not produce complete HTML documents.
+			ignore: ["/login", "/oauth/login", "/profile"],
 		},
 		publicAssets: [
 			{
@@ -270,6 +323,10 @@ export default defineNuxtConfig({
 			},
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
+				driver: "fsLite",
+			},
+			"wolfstar:auth-ratelimiter": {
+				base: "./.cache/auth-ratelimiter",
 				driver: "fsLite",
 			},
 		},
@@ -360,38 +417,28 @@ export default defineNuxtConfig({
 	},
 
 	fonts: {
+		providers: {
+			fontshare: false,
+		},
 		families: [
 			{
+				display: "swap",
 				global: true,
 				name: "Geist",
-				preload: true,
-				subsets: ["latin"],
+				provider: "local",
+				weights: [400, 500, 600, 700],
+			},
+			{
+				display: "swap",
+				global: true,
+				name: "Geist Mono",
+				provider: "local",
 				weights: [400, 500, 600, 700],
 			},
 			{
 				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Book.woff", format: "woff" }],
-				weight: 400,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Medium.woff", format: "woff" }],
-				weight: 500,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [
-					{ url: "https://cdn.skyra.pw/whitney-font/v2/Semibold.woff", format: "woff" },
-				],
-				weight: 600,
-				display: "swap",
-			},
-			{
-				name: "Whitney",
-				src: [{ url: "https://cdn.skyra.pw/whitney-font/v2/Bold.woff", format: "woff" }],
-				weight: 700,
+				provider: "local",
+				weights: [400, 500, 600, 700],
 				display: "swap",
 			},
 		],
@@ -399,6 +446,61 @@ export default defineNuxtConfig({
 
 	icon: {
 		clientBundle: {
+			// App Launcher fixtures pass icon names dynamically, so scanning cannot detect them.
+			icons: [
+				"ph:flame-fill",
+				"ph:circles-three-fill",
+				"ph:circles-four-fill",
+				"ph:squares-four-fill",
+				"ph:number-circle-eight-fill",
+				"ph:diamond-fill",
+				"ph:grid-nine",
+				"ph:flower-lotus-fill",
+				"ph:plant-fill",
+				"ph:youtube-logo-fill",
+				"ph:flask-fill",
+				"ph:spade-fill",
+				"ph:golf-fill",
+				"ph:waveform-fill",
+				"ph:shield-star-fill",
+				"ph:hand-pointing-fill",
+				"ph:soccer-ball-fill",
+				"ph:rocket-launch-fill",
+				"ph:image-square-fill",
+				"ph:planet-fill",
+				"ph:discord-logo-fill",
+				"ph:cat-fill",
+				"ph:music-notes-fill",
+				"ph:vinyl-record-fill",
+				"ph:terminal-window-fill",
+				"ph:grid-four-fill",
+				"ph:headphones-fill",
+				"ph:microphone-stage-fill",
+				"ph:pencil-simple-fill",
+				"ph:checkerboard-fill",
+				"ph:map-trifold-fill",
+				"ph:phone-fill",
+				"ph:smiley-sticker-fill",
+				"ph:chat-teardrop-dots-fill",
+				"ph:palette-fill",
+				"ph:lightning-fill",
+				"ph:crosshair-fill",
+				"ph:sword-fill",
+				"ph:number-square-one-fill",
+				"ph:hexagon-fill",
+				"ph:number-eight-fill",
+				"ph:cards-three-fill",
+				"ph:dice-five-fill",
+				"ph:horse-fill",
+				"ph:shield-chevron-fill",
+				"ph:detective-fill",
+				"ph:person-simple-run-fill",
+				"ph:crosshair-simple-fill",
+				"ph:car-profile-fill",
+				"ph:target-fill",
+				"ph:smiley-melting-fill",
+				"ph:fish-simple-fill",
+			],
 			includeCustomCollections: true,
 			scan: true,
 		},
@@ -421,6 +523,7 @@ export default defineNuxtConfig({
 	},
 
 	ogImage: {
+		enabled: !isStorybook,
 		security: {
 			strict: !!process.env.NUXT_IMAGE_PROXY_SECRET,
 			secret: process.env.NUXT_IMAGE_PROXY_SECRET,
@@ -429,6 +532,25 @@ export default defineNuxtConfig({
 			restrictRuntimeImagesToOrigin: false,
 		},
 	},
+
+	skewProtection: {
+		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
+		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
+		storage:
+			provider === "netlify"
+				? { driver: "netlify-blobs", name: "skew-protection" }
+				: undefined,
+		// Force polling rather than the SSE/WS default: this app's Netlify deploy
+		// isn't confirmed to support long-lived streaming connections through its
+		// serverless functions, and polling needs no platform-specific handling.
+		updateStrategy: "polling",
+		// The persistent-previous-build-assets feature uploads build output to
+		// storage during `nitro:init`, which on Netlify would need Blobs write
+		// access from the build image itself (unverified) rather than from a
+		// deployed function; keep it off until that's confirmed safe.
+		bundleAssets: false,
+	},
+
 	// PWA configuration
 	pwa,
 
@@ -447,20 +569,16 @@ export default defineNuxtConfig({
 					"https://media.discordapp.net",
 					"https://discord.com",
 					"https://api.iconify.design",
+					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://*.netlify.com",
 					"https://*.netlify.app",
+					"https://wolfstar.rocks", // Better Auth's client calls the configured site URL directly (e.g. /api/auth/get-session), not just relative paths
 					"https://*.wolfstar.rocks",
 					"https://*.ingest.us.sentry.io",
 					"https://*.sentry.io",
 				],
 				"default-src": ["'self'"],
-				"font-src": [
-					"'self'",
-					"https:",
-					"data:",
-					"https://cdn.wolfstar.rocks",
-					"https://rsms.me",
-				],
+				"font-src": ["'self'", "data:"],
 				"form-action": ["'none'"],
 				"frame-ancestors": ["'none'"],
 				"frame-src": ["https:"],
@@ -525,6 +643,9 @@ export default defineNuxtConfig({
 	sentry: {
 		...runtimeConfig.sentry,
 		autoInjectServerSentry: "top-level-import",
+		sourcemaps: {
+			filesToDeleteAfterUpload: [".*/**/public/**/*.map", ".output/**/public/**/*.map"],
+		},
 	},
 
 	seo: {
@@ -561,6 +682,8 @@ export default defineNuxtConfig({
 	},
 
 	vitalizer: {
+		disablePrefetchLinks: true,
+		disablePreloadLinks: true,
 		disableStylesheets: "entry",
 	},
 });

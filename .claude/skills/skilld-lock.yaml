@@ -1,27 +1,27 @@
 skills:
   vue-test-utils-skilld:
     packageName: "@vue/test-utils"
-    version: 2.4.6
-    packages: "@vue/test-utils@2.4.6"
+    version: 2.4.11
+    packages: "@vue/test-utils@2.4.11"
     repo: vuejs/test-utils
-    source: "https://github.com/vuejs/test-utils/tree/v2.4.6/docs"
-    syncedAt: 2026-02-23
+    source: "https://github.com/vuejs/test-utils/tree/v2.4.11/docs"
+    syncedAt: 2026-07-16
     generator: skilld
   vueuse-core-skilld:
     packageName: "@vueuse/core"
-    version: 14.2.1
-    packages: "@vueuse/core@14.2.1"
+    version: 14.3.0
+    packages: "@vueuse/core@14.3.0"
     repo: vueuse/vueuse
-    source: "https://github.com/vueuse/vueuse/tree/v14.2.1/docs"
-    syncedAt: 2026-03-13
+    source: "https://github.com/vueuse/vueuse/tree/v14.3.0/docs"
+    syncedAt: 2026-07-16
     generator: skilld
   vueuse-integrations-skilld:
     packageName: "@vueuse/integrations"
-    version: 14.2.1
-    packages: "@vueuse/integrations@14.2.1"
+    version: 14.3.0
+    packages: "@vueuse/integrations@14.3.0"
     repo: vueuse/vueuse
-    source: "ungh://vueuse/vueuse/packages/integrations@v14.2.1"
-    syncedAt: 2026-03-13
+    source: "ungh://vueuse/vueuse/packages/integrations@v14.3.0"
+    syncedAt: 2026-07-16
     generator: skilld
   vueuse-motion-skilld:
     packageName: "@vueuse/motion"
@@ -40,19 +40,19 @@ skills:
     ref: main
   nuxt-ui-skilld:
     packageName: "@nuxt/ui"
-    version: 4.6.1
-    packages: "@nuxt/ui@4.6.1"
+    version: 4.9.0
+    packages: "@nuxt/ui@4.9.0"
     repo: nuxt/ui
-    source: "https://github.com/nuxt/ui/tree/v4.6.1/docs"
-    syncedAt: 2026-04-23
+    source: "https://ui.nuxt.com/llms.txt"
+    syncedAt: 2026-07-16
     generator: skilld
   evlog-skilld:
     packageName: evlog
-    version: 2.14.0
-    packages: "evlog@2.14.0"
+    version: 2.20.0
+    packages: "evlog@2.20.0"
     repo: HugoRCD/evlog
     source: "https://evlog.dev/llms.txt"
-    syncedAt: 2026-04-26
+    syncedAt: 2026-07-16
     generator: skilld
   vitest-skilld:
     packageName: vitest
@@ -64,11 +64,11 @@ skills:
     generator: skilld
   discord-api-types-skilld:
     packageName: discord-api-types
-    version: 0.38.42
-    packages: "discord-api-types@0.38.42"
+    version: 0.38.48
+    packages: "discord-api-types@0.38.48"
     repo: discordjs/discord-api-types
-    source: "https://github.com/discordjs/discord-api-types/tree/v0.38.42/docs"
-    syncedAt: 2026-04-23
+    source: "https://github.com/discordjs/discord-api-types/tree/v0.38.48/docs"
+    syncedAt: 2026-07-16
     generator: skilld
   sapphire-utilities-skilld:
     packageName: "@sapphire/utilities"
@@ -80,19 +80,19 @@ skills:
     generator: skilld
   nuxt-skilld:
     packageName: nuxt
-    version: 4.4.2
-    packages: "nuxt@4.4.2"
+    version: 4.4.8
+    packages: "nuxt@4.4.8"
     repo: nuxt/nuxt
     source: "https://nuxt.com/llms.txt"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-06-27
     generator: skilld
   valibot-skilld:
     packageName: valibot
-    version: 1.4.0
-    packages: "valibot@1.4.0"
+    version: 1.4.2
+    packages: "valibot@1.4.2"
     repo: open-circle/valibot
-    source: "https://raw.githubusercontent.com/open-circle/valibot/main/README.md"
-    syncedAt: 2026-05-12
+    source: "https://valibot.dev/llms.txt"
+    syncedAt: 2026-07-16
     generator: skilld
   std-env-skilld:
     packageName: std-env
@@ -112,11 +112,11 @@ skills:
     generator: skilld
   nuxt-test-utils-skilld:
     packageName: "@nuxt/test-utils"
-    version: 4.0.0
-    packages: "@nuxt/test-utils@4.0.0"
+    version: 4.0.3
+    packages: "@nuxt/test-utils@4.0.3"
     repo: nuxt/test-utils
     source: "http://nuxt.com/llms.txt"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-06-27
     generator: skilld
   sapphire-time-utilities-skilld:
     packageName: "@sapphire/time-utilities"
@@ -128,19 +128,19 @@ skills:
     generator: skilld
   sentry-nuxt-skilld:
     packageName: "@sentry/nuxt"
-    version: 10.49.0
-    packages: "@sentry/nuxt@10.49.0"
+    version: 10.63.0
+    packages: "@sentry/nuxt@10.63.0"
     repo: getsentry/sentry-javascript
-    source: "https://github.com/getsentry/sentry-javascript/tree/10.49.0/docs"
-    syncedAt: 2026-04-23
+    source: "https://sentry.io/llms.txt"
+    syncedAt: 2026-07-16
     generator: skilld
   vueuse-router-skilld:
     packageName: "@vueuse/router"
-    version: 14.2.1
-    packages: "@vueuse/router@14.2.1"
+    version: 14.3.0
+    packages: "@vueuse/router@14.3.0"
     repo: vueuse/vueuse
-    source: "ungh://vueuse/vueuse/packages/router@v14.2.1"
-    syncedAt: 2026-03-13
+    source: "ungh://vueuse/vueuse/packages/router@v14.3.0"
+    syncedAt: 2026-07-16
     generator: skilld
   dotenv-skilld:
     packageName: dotenv
@@ -200,11 +200,11 @@ skills:
     generator: skilld
   playwright-test-skilld:
     packageName: "@playwright/test"
-    version: 1.59.1
-    packages: "@playwright/test@1.59.1"
+    version: 1.61.1
+    packages: "@playwright/test@1.61.1"
     repo: microsoft/playwright
-    source: "https://github.com/microsoft/playwright/tree/v1.59.1/docs"
-    syncedAt: 2026-04-23
+    source: "ungh://microsoft/playwright@v1.61.1"
+    syncedAt: 2026-07-16
     generator: skilld
   sapphire-ratelimits-skilld:
     packageName: "@sapphire/ratelimits"
@@ -248,27 +248,27 @@ skills:
     generator: skilld
   taze-skilld:
     packageName: taze
-    version: 19.10.0
-    packages: "taze@19.10.0"
+    version: 19.14.1
+    packages: "taze@19.14.1"
     repo: antfu-collective/taze
     source: "ungh://antfu-collective/taze"
-    syncedAt: 2026-03-13
+    syncedAt: 2026-07-16
     generator: skilld
   prisma-skilld:
     packageName: prisma
-    version: 7.7.0
-    packages: "prisma@7.7.0"
+    version: 7.8.0
+    packages: "prisma@7.8.0"
     repo: prisma/prisma
-    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
-    syncedAt: 2026-04-09
+    source: "https://www.prisma.io/llms.txt"
+    syncedAt: 2026-07-16
     generator: skilld
   nuxt-hints-skilld:
     packageName: "@nuxt/hints"
-    version: 1.0.2
-    packages: "@nuxt/hints@1.0.2"
+    version: 1.1.2
+    packages: "@nuxt/hints@1.1.2"
     repo: nuxt/hints
-    source: "https://raw.githubusercontent.com/nuxt/hints/main/README.md"
-    syncedAt: 2026-03-22
+    source: "ungh://nuxt/hints"
+    syncedAt: 2026-07-16
     generator: skilld
   nuxt-image-skilld:
     packageName: "@nuxt/image"
@@ -280,11 +280,11 @@ skills:
     generator: skilld
   vitest-browser-playwright-skilld:
     packageName: "@vitest/browser-playwright"
-    version: 4.1.6
-    packages: "@vitest/browser-playwright@4.1.6"
+    version: 4.1.7
+    packages: "@vitest/browser-playwright@4.1.7"
     repo: vitest-dev/vitest
-    source: "https://raw.githubusercontent.com/vitest-dev/vitest/main/packages/browser-playwright/README.md"
-    syncedAt: 2026-05-12
+    source: "https://github.com/vitest-dev/vitest/tree/v4.1.7/docs"
+    syncedAt: 2026-06-22
     generator: skilld
   nuxt-fonts-skilld:
     packageName: "@nuxt/fonts"
@@ -296,11 +296,11 @@ skills:
     generator: skilld
   vueuse-nuxt-skilld:
     packageName: "@vueuse/nuxt"
-    version: 14.2.1
-    packages: "@vueuse/nuxt@14.2.1"
+    version: 14.3.0
+    packages: "@vueuse/nuxt@14.3.0"
     repo: vueuse/vueuse
-    source: "ungh://vueuse/vueuse/packages/nuxt@v14.2.1"
-    syncedAt: 2026-03-13
+    source: "ungh://vueuse/vueuse/packages/nuxt@v14.3.0"
+    syncedAt: 2026-07-16
     generator: skilld
   nuxt-a11y-skilld:
     packageName: "@nuxt/a11y"
@@ -312,11 +312,11 @@ skills:
     generator: skilld
   netlify-nuxt-skilld:
     packageName: "@netlify/nuxt"
-    version: 0.3.0
-    packages: "@netlify/nuxt@0.3.0"
-    repo: netlify/primitives
-    source: "https://raw.githubusercontent.com/netlify/primitives/main/packages/nuxt-module/README.md"
-    syncedAt: 2026-05-13
+    version: 0.3.6
+    packages: "@netlify/nuxt@0.3.6"
+    repo: netlify/framework-adapters
+    source: "ungh://netlify/framework-adapters/packages/nuxt-module"
+    syncedAt: 2026-07-16
     generator: skilld
   nuxt-auth-utils-skilld:
     packageName: nuxt-auth-utils
@@ -328,11 +328,11 @@ skills:
     generator: skilld
   nuxtjs-seo-skilld:
     packageName: "@nuxtjs/seo"
-    version: 5.1.3
-    packages: "@nuxtjs/seo@5.1.3"
+    version: 5.3.2
+    packages: "@nuxtjs/seo@5.3.2"
     repo: harlan-zw/nuxt-seo
-    source: "https://github.com/harlan-zw/nuxt-seo/tree/v5.1.3/docs"
-    syncedAt: 2026-04-23
+    source: "https://nuxtseo.com/llms.txt"
+    syncedAt: 2026-07-16
     generator: skilld
   nitro-skilld:
     packageName: nitro
@@ -351,11 +351,11 @@ skills:
     generator: skilld
   nuxt-security-skilld:
     packageName: nuxt-security
-    version: 2.5.1
-    packages: "nuxt-security@2.5.1"
+    version: 2.6.0
+    packages: "nuxt-security@2.6.0"
     repo: Baroshem/nuxt-security
-    source: "ungh://Baroshem/nuxt-security@v2.5.1"
-    syncedAt: 2026-03-13
+    source: "ungh://Baroshem/nuxt-security@v2.6.0"
+    syncedAt: 2026-07-16
     generator: skilld
   vue-macros-nuxt-skilld:
     packageName: "@vue-macros/nuxt"
@@ -367,19 +367,19 @@ skills:
     generator: skilld
   nuxt-og-image-skilld:
     packageName: nuxt-og-image
-    version: 6.4.8
-    packages: "nuxt-og-image@6.4.8"
+    version: 6.5.3
+    packages: "nuxt-og-image@6.5.3"
     repo: nuxt-modules/og-image
-    source: "https://raw.githubusercontent.com/nuxt-modules/og-image/main/README.md"
-    syncedAt: 2026-05-12
+    source: "https://nuxtseo.com/llms.txt"
+    syncedAt: 2026-06-27
     generator: skilld
   prisma-client-skilld:
     packageName: "@prisma/client"
-    version: 7.7.0
-    packages: "@prisma/client@7.7.0"
+    version: 7.8.0
+    packages: "@prisma/client@7.8.0"
     repo: prisma/prisma
-    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
-    syncedAt: 2026-04-09
+    source: "https://www.prisma.io/llms.txt"
+    syncedAt: 2026-07-16
     generator: skilld
   changelogen-skilld:
     packageName: changelogen
@@ -396,25 +396,25 @@ skills:
     generator: skilld
   knip-skilld:
     packageName: knip
-    version: 5.88.1
-    packages: "knip@5.88.1"
+    version: 6.14.2
+    packages: "knip@6.14.2"
     repo: webpro-nl/knip
-    source: "https://raw.githubusercontent.com/webpro-nl/knip/main/packages/knip/README.md"
-    syncedAt: 2026-03-22
+    source: "ungh://webpro-nl/knip/packages/knip@knip@6.14.2"
+    syncedAt: 2026-06-22
     generator: skilld
   prisma-adapter-pg-skilld:
     packageName: "@prisma/adapter-pg"
-    version: 7.7.0
-    packages: "@prisma/adapter-pg@7.7.0"
+    version: 7.8.0
+    packages: "@prisma/adapter-pg@7.8.0"
     repo: prisma/prisma
-    source: "https://github.com/prisma/prisma/tree/7.7.0/docs"
-    syncedAt: 2026-04-09
+    source: "https://github.com/prisma/prisma/tree/7.8.0/docs"
+    syncedAt: 2026-06-28
     generator: skilld
   stale-dep-skilld:
     packageName: stale-dep
-    version: 0.8.6
-    packages: "stale-dep@0.8.6"
+    version: 0.9.0
+    packages: "stale-dep@0.9.0"
     repo: sxzz/stale-dep
-    source: "https://raw.githubusercontent.com/sxzz/stale-dep/main/README.md"
-    syncedAt: 2026-05-12
+    source: "ungh://sxzz/stale-dep"
+    syncedAt: 2026-07-16
     generator: skilld

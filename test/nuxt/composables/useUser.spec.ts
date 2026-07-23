@@ -1,5 +1,6 @@
 import { registerEndpoint } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it } from "vitest";
+import { ref } from "vue";
 import { createMockOauthFlattenedGuild, createMockUser } from "~~/test/mocks/discord";
 
 let mockApiResponse: Record<string, unknown> = { transformedGuilds: [], user: null };
@@ -141,6 +142,29 @@ describe("useUser", () => {
 
 		expect(result.status.value).toBe("success");
 		expect(result.error.value).toBeUndefined();
+	});
+
+	it("should filter to manageable guilds when showManageableOnly is true", async () => {
+		const mockUser = createMockUser();
+		const guilds = [
+			createMockOauthFlattenedGuild({ id: "1", name: "Manageable", manageable: true }),
+			createMockOauthFlattenedGuild({ id: "2", name: "Read Only", manageable: false }),
+		];
+
+		mockApiResponse = { transformedGuilds: guilds, user: mockUser };
+
+		const showManageableOnly = ref(true);
+		const result = useUser(mockUser, { search: { showManageableOnly } });
+		await result.execute();
+
+		expect(result.guilds.value).toHaveLength(2);
+		expect(result.filteredGuilds.value).toHaveLength(1);
+		expect(result.filteredGuilds.value[0]?.name).toBe("Manageable");
+
+		showManageableOnly.value = false;
+		await nextTick();
+
+		expect(result.filteredGuilds.value).toHaveLength(2);
 	});
 
 	it("should expose guilds computed separately from data", async () => {

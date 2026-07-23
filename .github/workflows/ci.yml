@@ -1,0 +1,286 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+      - release
+  push:
+    branches:
+      - main
+  merge_group:
+    branches:
+      - main
+
+# cancel in-progress runs on new commits to same PR (gitub.event.number)
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number || github.sha }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: 🔠 Lint project
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          sfw: true
+          # root only, no scripts
+          run-install: |
+            - args: ['--filter', '.', '--ignore-scripts']
+
+      - name: 🔠 Lint project
+        run: vp run lint
+
+  typecheck:
+    name: 🔎 Typecheck project
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🔎 Typecheck project
+        run: vp run typecheck
+
+  unit:
+    name: 🧪 Unit tests
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🧪 Unit tests
+        run: vp test --project unit --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: test-report.junit.xml
+          flags: unit
+          report_type: test_results
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: ⬆︎ Upload coverage reports to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: coverage/clover.xml
+          flags: unit
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  test:
+    name: 🧪 Component tests
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🌐 Install browser
+        run: vp exec playwright install --with-deps chromium-headless-shell
+
+      - name: 🧪 Component tests
+        run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+        env:
+          NODE_OPTIONS: --max-old-space-size=8192
+
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: test-report.junit.xml
+          flags: component
+          report_type: test_results
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: ⬆︎ Upload coverage reports to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: coverage/clover.xml
+          flags: component
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  browser:
+    name: 🖥️ Browser tests
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    container:
+      image: mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🏗️ Build project
+        run: vp run build:test
+        env:
+          VALIDATE_HTML: true
+          NODE_OPTIONS: --max-old-space-size=4096
+          NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+
+      - name: 🖥️ Test project (browser)
+        run: vp run test:browser:prebuilt
+
+      - name: ⬆︎ Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
+        with:
+          disable_search: true
+          files: test-report.junit.xml
+          flags: browser
+          report_type: test_results
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  benchmark:
+    name: ⚡ Benchmarks
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: ⚡ Run benchmarks
+        uses: CodSpeedHQ/action@3194d9a39c4d46684cb44bf7207fc56626aad8fd # v4.15.1
+        with:
+          mode: simulation
+          run: vp run test:bench
+
+  a11y:
+    name: ♿ Accessibility audit
+    runs-on: blacksmith-4vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    strategy:
+      matrix:
+        mode: [dark, light]
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🏗️ Build project
+        run: vp run build:test
+        env:
+          NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+
+      - name: ♿ Accessibility audit (Lighthouse - ${{ matrix.mode }} mode)
+        run: vp run test:a11y:prebuilt
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+          LIGHTHOUSE_COLOR_MODE: ${{ matrix.mode }}
+
+  perf:
+    name: ⚡ Performance
+    runs-on: blacksmith-4vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      - name: 🏗️ Build project
+        run: vp run build:test
+        env:
+          NUXT_PUBLIC_SITE_URL: https://wolfstar.rocks
+
+      - name: ⚡ Performance audit (Lighthouse)
+        run: vp run test:perf:prebuilt
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  knip:
+    name: 🧹 Unused code check
+    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+
+      - name: 🧹 Check for unused code
+        run: vp run knip

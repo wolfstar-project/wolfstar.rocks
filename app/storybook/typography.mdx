@@ -1,0 +1,147 @@
+import { Meta, Typeset } from "@storybook/addon-docs/blocks";
+
+<Meta title="Typography" tags={["hide-toolbar"]} />
+
+export const fontSans = '"Whitney", ui-sans-serif, system-ui, sans-serif';
+export const fontMono = 'ui-monospace, Menlo, Consolas, "Courier New", monospace';
+
+export const fontSizes = {
+	"xs": "0.75rem",
+	"sm": "0.875rem",
+	"base": "1rem",
+	"lg": "1.125rem",
+	"xl": "1.25rem",
+	"2xl": "1.5rem",
+	"3xl": "1.875rem",
+	"4xl": "2.25rem",
+	"5xl": "3rem",
+};
+
+# Typography
+
+The WolfStar typography system uses Whitney for sans-serif text and the system monospace stack for code.
+
+Typography values are defined in `app/assets/css/utilities.css` and configured via `@nuxt/fonts` in `nuxt.config.ts`.
+
+## Font Families
+
+### Sans Serif — Whitney
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={[fontSizes["base"]]}
+	fontWeight={400}
+	sampleText="The quick brown fox jumps over the lazy dog"
+/>
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={[
+		fontSizes["5xl"],
+		fontSizes["4xl"],
+		fontSizes["3xl"],
+		fontSizes["2xl"],
+		fontSizes["xl"],
+		fontSizes["lg"],
+		fontSizes["base"],
+		fontSizes["sm"],
+		fontSizes["xs"],
+	]}
+	fontWeight={400}
+	sampleText="The quick brown fox jumps over the lazy dog"
+/>
+
+### Monospace — System Mono
+
+Code and monospace typography scale:
+
+<Typeset
+	fontFamily={fontMono}
+	fontSizes={[fontSizes["base"]]}
+	fontWeight={400}
+	sampleText="const greeting = 'Hello, World!';"
+/>
+
+<Typeset
+	fontFamily={fontMono}
+	fontSizes={[
+		fontSizes["5xl"],
+		fontSizes["4xl"],
+		fontSizes["3xl"],
+		fontSizes["2xl"],
+		fontSizes["xl"],
+		fontSizes["lg"],
+		fontSizes["base"],
+		fontSizes["sm"],
+		fontSizes["xs"],
+	]}
+	fontWeight={400}
+	sampleText="const greeting = 'Hello, World!';"
+/>
+
+## Font Sizes
+
+The typography scale follows the standard Tailwind/Wind4 preset:
+
+- `xs` = 0.75rem (12px)
+- `sm` = 0.875rem (14px)
+- `base` = 1rem (16px)
+- `lg` = 1.125rem (18px)
+- `xl` = 1.25rem (20px)
+- `2xl` = 1.5rem (24px)
+- `3xl` = 1.875rem (30px)
+- `4xl` = 2.25rem (36px)
+- `5xl` = 3rem (48px)
+
+## Font Weights
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={["1rem"]}
+	fontWeight={300}
+	sampleText="Light (300) — Used sparingly for decorative purposes"
+/>
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={["1rem"]}
+	fontWeight={400}
+	sampleText="Regular (400) — Default weight for body text and most content"
+/>
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={["1rem"]}
+	fontWeight={500}
+	sampleText="Medium (500) — Used for emphasis and section headings"
+/>
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={["1rem"]}
+	fontWeight={600}
+	sampleText="Semibold (600) — Used for strong emphasis and primary actions"
+/>
+
+<Typeset
+	fontFamily={fontSans}
+	fontSizes={["1rem"]}
+	fontWeight={700}
+	sampleText="Bold (700) — Used for headings and important labels"
+/>
+
+## Line Height
+
+Base line height is set to **1.6** for optimal readability. This provides comfortable spacing for multi-line text blocks while maintaining density for UI components.
+
+## Typography Features
+
+- **Font smoothing**: Antialiased rendering (`-webkit-font-smoothing: antialiased`) applied globally
+- **Text rendering**: `optimizeLegibility` applied globally for consistent cross-browser rendering
+
+---
+
+## Related
+
+- [Design System Guidelines](?path=/docs/guidelines--docs) — See typography guidelines and usage
+- [Colors](?path=/docs/colors--docs) — View the color system

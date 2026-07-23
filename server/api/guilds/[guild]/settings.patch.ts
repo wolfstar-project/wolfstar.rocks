@@ -1,8 +1,9 @@
 import { coerceBigIntFields, serializeSettings, writeSettingsTransaction } from "#server/database";
+import { compactSettingsChanges } from "#server/utils/audit/patch-to-changes";
 import { guildSettingsAccessDenied, guildSettingsUpdate } from "#shared/audit/actions";
 import { SettingsUpdateSchema } from "#shared/schemas";
 import { isNullOrUndefined, isNullishOrEmpty } from "@sapphire/utilities";
-import { auditDiff, createError, useLogger, withAuditMethods } from "evlog";
+import { createError, useLogger, withAuditMethods } from "evlog";
 import { parse } from "valibot";
 
 export default defineWrappedResponseHandler(
@@ -63,6 +64,7 @@ export default defineWrappedResponseHandler(
 							displayName: member.user.username,
 						},
 						target: { type: "guild", id: guild.id },
+
 						outcome: "denied",
 						reason: "Insufficient permissions to manage guild settings",
 					}),
@@ -73,7 +75,7 @@ export default defineWrappedResponseHandler(
 
 		using trx = await writeSettingsTransaction(guild.id);
 
-		if (!data.every((entry): entry is [string, any] => entry !== undefined)) {
+		if (!data.every((entry): entry is [string, unknown] => entry !== undefined)) {
 			throw createError({
 				message: "Invalid data entries",
 				status: 400,
@@ -103,7 +105,9 @@ export default defineWrappedResponseHandler(
 				actor: { type: "user", id: member.user.id, displayName: member.user.username },
 				target: { type: "guild", id: guild.id },
 				outcome: "success",
-				changes: auditDiff(beforeSettings, afterSettings),
+				// Persist only the fields that changed (with old and new values)
+				// instead of the two full settings snapshots
+				changes: compactSettingsChanges(beforeSettings, afterSettings),
 			}),
 		);
 

@@ -14,6 +14,7 @@
 - Add comments only to explain complex logic or non-obvious implementations
 - Write unit tests for core functionality using `vitest`
 - Write end-to-end tests using Playwright and `@nuxt/test-utils`
+- Consolidate component accessibility (axe) assertions into `test/nuxt/a11y.spec.ts` instead of scattering `runAxe()` checks across individual component spec files; keep hydration/behavior tests in the component's own spec file
 - Keep functions focused and manageable (generally under 50 lines)
 - Use error handling patterns consistently
 - Ensure you write strictly type-safe code, for example by ensuring you always check when accessing an array value by index
@@ -36,30 +37,97 @@
 - Routes go under `server/api/` with HTTP suffix (`.get.ts`, `.post.ts`)
 - Always wrap handlers with `defineWrappedResponseHandler` for auth + rate limiting
 - Use `defineWrappedCachedResponseHandler` for cached responses
+- Rate limiting (`server/utils/wrappedEventHandler.ts`) reserves a fixed- or sliding-window quota in storage before the handler runs and rolls the reservation back if the handler throws; it fails open (lets the request through) if the rate-limit storage read/write itself errors
+- Use the `authorize` option (not an inline check in the handler body) for per-request permission checks — e.g. `canManage()` — that must run on every request, including warm cache hits on `defineWrappedCachedResponseHandler` routes
 - Use `createError` for error responses with proper status codes
 - Use the `onError` callback for error logging
+- Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
+- For paginated guild log routes, use stable cache keys that include the guild id, route segment, and `url.search`
+- `defineWrappedResponseHandler`/`defineWrappedCachedResponseHandler` reject outdated browser sessions before auth, rate limiting, or cache resolution: `isClientOutdated()` from `nuxt-skew-protection/server` throws a 409 (with an `x-client-outdated` response header) so stale clients never consume quota or read data shaped for a newer server build
 
 ## Vue Component Patterns
 
 - Block order: template -> script -> script setup -> styles
 - Never create reactive state at module scope; use composables in `app/composables/`
+- Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`
+- In guild-settings `mapToGuildData()`/`calculateChanges()` functions, assign values onto `Partial<GuildData>` with `setGuildDataChange()` from `#shared/utils/guild-settings-map` instead of an `as any`/`as never` cast — it skips `undefined` so untouched keys stay out of PATCH payloads while keeping key/value types checked
+
+## Auth and Feedback
+
+- Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider (scopes `guilds`, `guilds.members.read`, `email`), rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
+- There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
+- `server/middleware/oauth-callback.ts` + `server/utils/oauth-callback.ts` (`resolveOAuthProviderCallbackRedirect()`) redirect Discord's response at `/oauth/callback` to the better-auth callback path when a `state` query param is present; plain browser navigations to `/oauth/callback` (no `state`) fall through to the Vue callback page at `app/pages/oauth/callback.vue`
+- `server/api/auth/refresh.get.ts` refreshes the Discord access token via `refreshSessionTokens()` in `server/utils/oauth-tokens.ts`, which wraps better-auth's `auth.api.getAccessToken()` / `auth.api.refreshToken()`
+- Server code reads the current user/tokens through `event.context.$authorization` (`resolveServerUser()`, `resolveServerTokens()`), wired up in `server/plugins/authorization-resolver.ts`. The `AuthUser` type comes from `#nuxt-better-auth` (declared in `shared/types/auth.d.ts`) — there is no more `#auth-utils` `User` type
+- Client code still uses the `useUserSession()` composable (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) — `@onmax/nuxt-better-auth` ships a compatible API, so existing call sites didn't need to change shape
+- `useSessionRefresh()` (`app/composables/useSessionRefresh.ts`) calls `/api/auth/refresh` then `fetchSession()` on mount and whenever the tab regains visibility
+- Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
+- Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
 
 ## Development Commands
 
 ```bash
-pnpm dev              # Development server (http://localhost:3000)
-pnpm build            # Production build
-pnpm preview          # Preview production build locally
-pnpm lint:fix         # Run linter and auto-fix issues (oxlint + oxfmt)
-pnpm typecheck        # TypeScript type checking
-pnpm test             # Run all Vitest tests
-pnpm test:nuxt        # Nuxt component tests
-pnpm test:browser     # Playwright E2E tests
-pnpm prisma:push      # Push schema changes (development)
-pnpm prisma:migrate:dev   # Create and apply migration
-pnpm prisma:generate  # Regenerate Prisma client
-pnpm prisma:studio    # Visual database editor (http://localhost:5555)
+pnpm dev                         # Development server (http://localhost:3000)
+pnpm dev:pwa                     # Development server with local PWA behavior enabled
+pnpm build                       # Production build
+pnpm build:test                  # Test-mode production build through vite-plus
+pnpm generate                    # Static generation
+pnpm generate-pwa-icons          # Regenerate PWA icon assets
+pnpm knip:fix                    # Auto-fix unused files, exports, and dependencies
+pnpm preview                     # Preview production build locally
+pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
+pnpm typecheck                   # TypeScript type checking
+pnpm test                        # Run all Vitest projects
+pnpm test:unit                   # Run unit tests
+pnpm test:nuxt                   # Nuxt component/API tests
+pnpm test:browser                # Playwright E2E tests against a prebuilt app
+pnpm test:browser:prebuilt       # Playwright E2E tests against an existing prebuilt app
+pnpm test:browser:ui             # Playwright UI mode against a prebuilt app
+pnpm test:browser:update         # Update Playwright snapshots
+pnpm test:a11y                   # Lighthouse accessibility checks in dark and light modes
+pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
+pnpm test:perf                   # Lighthouse performance checks
+pnpm test:perf:prebuilt          # Lighthouse performance checks against an existing prebuilt app
+pnpm test:bench                  # Vitest benchmark suite
+pnpm start:playwright:webserver  # Preview a test build on port 5678 for Playwright
+pnpm audit:verify                # Replay and verify the AuditEvent hash chain
+pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
+pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
+pnpm build-storybook             # Build static Storybook output
+pnpm chromatic                   # Publish Storybook to Chromatic for visual review
+pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
+pnpm vp run zizmor:fix           # Auto-fix zizmor findings
+pnpm prisma:push                 # Push schema changes (development)
+pnpm prisma:migrate:dev          # Create and apply migration
+pnpm prisma:migrate:dev:create   # Create a migration without applying it
+pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
+pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
+pnpm prisma:migrate:status       # Inspect migration status
+pnpm prisma:migrate:resolve      # Resolve migration history state
+pnpm prisma:migrate:reset        # Reset the local database
+pnpm prisma:generate             # Regenerate Prisma client
+pnpm prisma:generate:watch       # Regenerate Prisma client in watch mode
+pnpm prisma:seed                 # Seed the database
+pnpm prisma:studio               # Visual database editor (http://localhost:5555)
+pnpm update:interactive          # Interactive dependency updates with taze
 ```
+
+## Prisma and Database Conventions
+
+- Prisma schema lives in `server/database/schema.prisma`; migrations live in `server/database/migrations/`
+- Treat migrations as append-only once merged
+- Use raw SQL migrations for database features Prisma cannot express, such as partial indexes on nullable columns
+- Do not add Prisma `@@index` entries for the manually-managed partial indexes on `Moderation.createdAt`; see migration `20260515000000_command_log_and_moderation_indexes`
+- `AuditEvent` is hash-chained and tamper-evident; `CommandLog` is not hash-chained and is written directly by the bot/shared PostgreSQL producer
+
+## Guild Logs and Activity Patterns
+
+- Guild log routes live under `server/api/guilds/[guild]/logs/`
+- Use `defineWrappedCachedResponseHandler` with `auth: true`, explicit `maxAge`, `swr: false`, `onError`, and route-specific rate limits for log endpoints
+- Validate log route filters with `DashboardActivityQuerySchema`, `CommandLogQuerySchema`, or `ModerationLogQuerySchema` from `shared/schemas/log-queries.ts`
+- Use `resolveGuildMembers()` and `fallbackMember()` from `server/utils/audit/resolve-members.ts` when log rows need Discord member metadata
+- Guild permission checks (`canManage()`) belong in the `authorize` option, not the handler body, so they still run when the response is served from cache
+- Client-side log data access lives in focused composables (`useAuditLog`, `useCommandLog`, `useModerationLog`) that accept `MaybeRefOrGetter` inputs and expose computed `entries` and `total`
 
 ## View Transitions
 
@@ -102,11 +170,18 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 - **Build issues:** Clear `.nuxt`, `.output`, and `node_modules/.cache`, then rebuild
 - **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
-- **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URI` matches Discord Developer Portal exactly
+- **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URL` matches Discord Developer Portal exactly
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
+- **Duplicate/incompatible `vue` or `discord-api-types` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
+
+## Sentry and Source Maps
+
+- Client source maps are hidden via `sourcemap.client: "hidden"` and uploaded to Sentry through `@sentry/nuxt`.
+- Keep `sentry.sourcemaps.filesToDeleteAfterUpload` in `nuxt.config.ts` whenever changing source-map or build-output behavior so uploaded `.map` files are removed from `.output/**/public` and hidden deploy output directories.
+- Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/utils/runtimeConfig.ts`; keep DSNs and sampling in runtime config, not hardcoded values.
 
 ## Audit Logging
 
@@ -120,10 +195,12 @@ Defined in `shared/audit/actions.ts`:
 | --------------------------- | ------------------------------ | --------------------------------------------- |
 | `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds                 |
 | `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws                          |
-| `userLogin`                 | `user.login`                   | Discord OAuth `onSuccess`                     |
-| `userLogout`                | `user.logout`                  | Session cleared due to missing/invalid tokens |
-| `sessionRefresh`            | `session.refresh`              | Token refresh succeeds or fails               |
-| `oauthStateInvalid`         | `oauth.state.invalid`          | CSRF state verification fails                 |
+| `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code |
+| `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code |
+| `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code |
+| `oauthStateInvalid`         | `oauth.state.invalid`          | Not currently invoked anywhere in server code |
+
+Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain. `userLogin`, `userLogout`, `sessionRefresh`, and `oauthStateInvalid` were wired to the pre-migration `nuxt-auth-utils` OAuth flow (`server/api/auth/discord.get.ts`, `server/utils/oauth-state.ts`); both files were deleted by the better-auth migration (#297) and nothing currently calls these action creators outside their own unit test. `server/middleware/evlog-auth-identify.ts` only identifies the request actor for enrichment — it does not emit audit events. Treat these four as a known gap (dead code or a missing re-wire) rather than assuming login/logout/refresh/CSRF-failure events are being recorded.
 
 ### Instrumentation Pattern
 
@@ -157,10 +234,22 @@ log.audit(
 
 - `shared/audit/actions.ts` — typed action creators
 - `shared/audit/envelope.ts` — canonical hash/envelope helpers
+- `shared/utils/audit-field-metadata.ts` — field labels and render metadata for dashboard-managed guild settings
+- `server/middleware/evlog-auth-identify.ts` — auto-identifies the request actor from the better-auth session via evlog's `createAuthMiddleware()` (`evlog/better-auth`, excludes `/api/auth/**`) so audit enrichers can resolve the actor without each handler calling `log.set({ user })` manually
 - `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain (P2002 swallowed, P2034 retried 5x)
 - `server/utils/audit/actor-bridge.ts` — resolves actor from request context
+- `server/utils/audit/patch-to-changes.ts` — converts `auditDiff()` JSON patches into dashboard-friendly change groups
+- `server/utils/audit/resolve-members.ts` — resolves Discord guild members for log display with fallback placeholders
 - `server/plugins/evlog-drain.ts` — routes audit events to the drain
 - `server/plugins/evlog-enrich.ts` — enriches events with UA, trace, and audit context
+- `shared/audit/persisted.ts` — reconstructs chain order from `prevHash` linkage (timestamps are not assumed unique) and reports topology problems (forks, cycles, multiple/no roots, unreachable rows, head mismatch) plus hash/link failures
+- `scripts/audit-verify.ts` — offline hash-chain verifier run with `pnpm audit:verify`; loads all `AuditEvent` rows and the `AuditChainHead` row, then delegates to `verifyPersistedAuditChain()` in `shared/audit/persisted.ts`
+
+### Dashboard Activity Feed
+
+- `DASHBOARD_AUDIT_ACTIONS` controls which audit actions appear in the dashboard activity feed
+- Add new dashboard-visible actions to both the exported action creators and `DASHBOARD_AUDIT_ACTIONS`
+- Keep audit `changes` payloads JSON-serializable; `AuditEnvelope` rejects `BigInt`, `Date`, `Map`, `Set`, circular references, and `undefined` array entries before hashing
 
 ## Design Token Discipline
 
@@ -184,7 +273,7 @@ It checks:
 Files added to `ALLOW_LIST` in the test are permanently exempt. Current exemptions:
 
 - `app/components/OgImage/Page.takumi.vue` — Satori does not support `var()` references
-- `app/components/discord/*.vue` (message, embed, mention, reaction) — Discord brand fidelity requires Discord brand colors
+- `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, and the slash-command autocomplete family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
 
 ### Token Reference
 
@@ -198,3 +287,10 @@ Prefer these semantic classes before reaching for palette colors:
 | Error state          | `text-error`, `border-error`                           |
 | Gradient hero text   | `gradient-text-hero`, `gradient-text-cool`             |
 | Card surfaces        | `card-glass`, `card-glass-soft`, `card-glass-bordered` |
+
+<!-- skilld -->
+
+Before modifying code, evaluate each installed skill against the current task.
+For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+
+<!-- /skilld -->

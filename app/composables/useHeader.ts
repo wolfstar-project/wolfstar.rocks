@@ -24,6 +24,11 @@ export function useHeader() {
 					label: "Advanced Logging",
 					to: "#advanced-logging",
 				},
+				{
+					description: "Searchable moderation history for every action",
+					label: "Moderation Logs",
+					to: "#moderation-logs",
+				},
 			],
 			label: "Features",
 		},
@@ -42,18 +47,17 @@ export function useHeader() {
 			],
 			label: "Applications",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
 		{
 			label: "Commands",
 			to: "/commands",
+		},
+		{
+			label: "Blog",
+			to: "/blog",
+		},
+		{
+			label: "Changelog",
+			to: "/changelog",
 		},
 	]);
 
@@ -66,6 +70,9 @@ export function useHeader() {
 				{
 					label: "Advanced Logging",
 				},
+				{
+					label: "Moderation Logs",
+				},
 			],
 			label: "Features",
 		},
@@ -88,15 +95,14 @@ export function useHeader() {
 			label: "Commands",
 			to: "/commands",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
+		{
+			label: "Blog",
+			to: "/blog",
+		},
+		{
+			label: "Changelog",
+			to: "/changelog",
+		},
 		{
 			icon: "lucide:github",
 			label: "GitHub",

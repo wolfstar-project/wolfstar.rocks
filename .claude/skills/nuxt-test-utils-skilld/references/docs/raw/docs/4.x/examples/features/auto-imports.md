@@ -1,0 +1,33 @@
+# Auto Imports
+
+> This example demonstrates the auto-imports feature in Nuxt.
+
+Example of the auto-imports feature in Nuxt with:
+
+- Vue components in the `components/` directory are auto-imported and can be used directly in your templates.
+- Vue composables in the `composables/` directory are auto-imported and can be used directly in your templates and JS/TS files.
+- JS/TS variables and functions in the `utils/` directory are auto-imported and can be used directly in your templates and JS/TS files.
+
+<read-more to="/docs/guide/directory-structure/components">
+
+
+
+</read-more>
+
+<read-more to="/docs/guide/directory-structure/composables">
+
+
+
+</read-more>
+
+<read-more to="/docs/guide/directory-structure/utils">
+
+
+
+</read-more>
+
+<sandbox branch="main" dir="examples/features/auto-imports" file="app.vue" repo="nuxt/examples">
+
+
+
+</sandbox>

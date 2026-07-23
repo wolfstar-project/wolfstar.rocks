@@ -1,13 +1,14 @@
+import { refreshSessionTokens } from "#server/utils/oauth-tokens";
+
 export default defineNitroPlugin((nitroApp) => {
 	nitroApp.hooks.hook("request", async (event) => {
 		event.context.$authorization = {
 			resolveServerTokens: async () => {
-				const session = await getUserSession(event);
-				return session.secure?.tokens ?? null;
+				return refreshSessionTokens(event);
 			},
 			resolveServerUser: async () => {
 				const session = await getUserSession(event);
-				return session.user ?? null;
+				return session?.user ?? null;
 			},
 		};
 	});

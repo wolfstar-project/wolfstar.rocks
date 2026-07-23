@@ -24,11 +24,17 @@ function getCodspeedV8Flags() {
 export default defineConfig({
 	run: {
 		tasks: {
-			lint: {
+			"lint": {
 				command: "vp lint && vp fmt --check",
 			},
-			knip: {
+			"knip": {
 				command: "knip && knip --production --exclude dependencies",
+			},
+			"zizmor": {
+				command: "zizmor --pedantic .",
+			},
+			"zizmor:fix": {
+				command: "zizmor --pedantic --fix .",
 			},
 		},
 	},
@@ -475,7 +481,12 @@ export default defineConfig({
 	},
 	staged: {
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
-		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": "vp fmt",
+		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
+			const filtered = files.filter(
+				(f) => !f.includes("/.claude/") && !f.startsWith(".claude/"),
+			);
+			return filtered.length ? `vp fmt ${filtered.join(" ")}` : [];
+		},
 	},
 	test: {
 		projects: [

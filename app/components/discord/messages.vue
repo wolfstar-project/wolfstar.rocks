@@ -4,11 +4,22 @@
 	</div>
 </template>
 
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface MessagesSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<MessagesSlots>();
+</script>
+
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-messages {
-	@apply flex flex-col rounded-xl bg-base-300 font-whitney drop-shadow-md;
-	background-color: var(--colors-base-300);
-	background-color: oklch(from var(--colors-base-200) calc(l - 0.03) c h);
+	@apply flex flex-col rounded-xl font-whitney drop-shadow-md;
+	background-color: var(--discord-surface);
 }
 </style>

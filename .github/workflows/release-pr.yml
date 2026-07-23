@@ -5,22 +5,28 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pull-requests: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
 
 jobs:
   release-pr:
     name: 🚀 Create or update release PR
-    runs-on: ubuntu-slim
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
+    permissions:
+      contents: read
+      pull-requests: write # create or update the release pull request
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - uses: voidzero-dev/setup-vp@4f5aa3e38c781f1b01e78fb9255527cee8a6efa6 # v1.8.0
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
         with:
           node-version: lts/*
           run-install: false
@@ -105,7 +111,7 @@ jobs:
           BODY="${BODY}---\n\n"
           BODY="${BODY}> Merging this PR will:\n"
           BODY="${BODY}> - Deploy to \`wolfstar.rocks\` via Netlify\n"
-          BODY="${BODY}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release"
+          BODY="${BODY}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release\n"
 
           # Write body to file, truncating if needed (GitHub limits PR body to 65536 chars)
           echo -e "$BODY" > /tmp/pr-body.md
@@ -119,7 +125,7 @@ jobs:
             TRUNCATED="${TRUNCATED}---\n\n"
             TRUNCATED="${TRUNCATED}> Merging this PR will:\n"
             TRUNCATED="${TRUNCATED}> - Deploy to \`wolfstar.rocks\` via Netlify\n"
-            TRUNCATED="${TRUNCATED}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release"
+            TRUNCATED="${TRUNCATED}> - Create a \`${NEXT_VERSION}\` tag and GitHub Release\n"
             echo -e "$TRUNCATED" > /tmp/pr-body.md
           fi
 

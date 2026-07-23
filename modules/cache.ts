@@ -38,6 +38,16 @@ export default defineNuxtModule({
 				driver: "cloudflareKVHttp",
 				namespaceId: config.cloudflare.namespaceId,
 			};
+
+			// Shares the same KV namespace/credentials as the app rate limiter
+			// above; `base` keeps its keys segregated within that namespace.
+			nitroConfig.storage["wolfstar:auth-ratelimiter"] = {
+				accountId: config.cloudflare.accountId,
+				apiToken: config.cloudflare.apiToken,
+				base: "wolfstar-auth-ratelimiter",
+				driver: "cloudflareKVHttp",
+				namespaceId: config.cloudflare.namespaceId,
+			};
 		});
 	},
 });

@@ -12,13 +12,22 @@
 			<slot></slot>
 		</UMain>
 
-		<div class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2">
-			<ScrollToTopButton />
-		</div>
+		<ClientOnly>
+			<DeferredMount>
+				<div class="fixed right-4 bottom-4 z-50 flex items-center justify-end">
+					<LazyFeedbackButton />
+					<LazyScrollToTopButton />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
 
-		<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
-			<PwaPrompt />
-		</div>
+		<ClientOnly>
+			<DeferredMount>
+				<div class="fixed bottom-4 left-4 z-50 flex flex-col space-y-2">
+					<LazyPwaPrompt />
+				</div>
+			</DeferredMount>
+		</ClientOnly>
 
 		<AppFooter />
 	</div>
@@ -31,7 +40,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-layout {
-	@apply flex min-h-screen flex-col bg-grid-pattern;
+	@apply flex min-h-screen flex-col;
 	position: relative;
 	background-color: var(--color-base-100);
 }
@@ -43,7 +52,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	background-image:
 		radial-gradient(
 			ellipse at 50% 0%,
-			oklch(from var(--color) l c h / 0.15) 0%,
+			oklch(from var(--color) l c h / 0.2) 0%,
 			transparent 80%
 		),
 		linear-gradient(to bottom, var(--color-base-100) 0%, transparent 20%);
@@ -55,7 +64,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	content: "";
 }
 .app-layout.wolfstar {
-	--color: var(--color-branding-wolfstar);
+	--color: var(--color-primary);
 }
 .app-layout.staryl {
 	--color: var(--color-branding-staryl);

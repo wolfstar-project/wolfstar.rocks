@@ -5,25 +5,6 @@
 				<template #leading>
 					<UDashboardSidebarCollapse />
 				</template>
-				<template #right>
-					<UTooltip text="Notifications" :shortcuts="['N']">
-						<UButton
-							color="neutral"
-							variant="ghost"
-							square
-							aria-label="Open notifications panel"
-							@click="isNotificationsSlideoverOpen = true"
-						>
-							<UChip color="error" inset>
-								<UIcon
-									name="lucide:bell"
-									class="size-5 shrink-0"
-									aria-hidden="true"
-								/>
-							</UChip>
-						</UButton>
-					</UTooltip>
-				</template>
 			</UDashboardNavbar>
 		</template>
 
@@ -47,15 +28,12 @@
 import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({
-	auth: {
-		required: true,
-	},
+	auth: "user",
 	layout: "dashboard",
 	path: "/guilds/:id/manage/:slug(.*)*",
 });
 
 const route = useRoute();
-const { isNotificationsSlideoverOpen } = useDashboardLayout();
 const toast = useToast();
 const logger = useLogger("wolfstar:dashboard");
 const { guildData } = useGuildData();
@@ -75,8 +53,9 @@ const slug = route.params.slug as string | string[];
 
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
 
-const title = ref(
-	`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value.name}`,
+const title = computed(
+	() =>
+		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value?.name ?? ""}`,
 );
 
 // Pre-define async components outside of computed to avoid re-creating

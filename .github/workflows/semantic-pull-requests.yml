@@ -20,7 +20,7 @@ jobs:
       pull-requests: read # for amannn/action-semantic-pull-request to analyze PRs
       statuses: write # for amannn/action-semantic-pull-request to mark status of analyzed PR
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
-    runs-on: ubuntu-slim
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     name: 🏷️ Validate PR title
     steps:
       - name: Validate PR title
@@ -29,11 +29,26 @@ jobs:
           scopes: |
             a11y
             agents
+            api
+            audit-log
+            auth
             blog
-            deps
-            docs
+            ci
             cli
+            config
+            dashboard
+            database
+            deps
+            discord
+            docs
+            evlog
+            guild
             i18n
+            oauth
+            pwa
+            sentry
+            seo
+            test
             ui
           subjectPattern: ^(?![A-Z]).+$
           subjectPatternError: |

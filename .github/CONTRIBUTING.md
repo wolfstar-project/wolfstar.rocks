@@ -27,17 +27,23 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
     - [Setup](#setup)
 - [Development workflow](#development-workflow)
     - [Available commands](#available-commands)
+    - [GitHub Actions security analysis](#github-actions-security-analysis)
+    - [Clearing caches during development](#clearing-caches-during-development)
     - [Project structure](#project-structure)
 - [Code style](#code-style)
     - [TypeScript](#typescript)
     - [Server API patterns](#server-api-patterns)
+    - [Import order](#import-order)
     - [Naming conventions](#naming-conventions)
     - [Vue components](#vue-components)
     - [Database changes](#database-changes)
 - [Testing](#testing)
     - [Unit tests](#unit-tests)
     - [Nuxt component tests](#nuxt-component-tests)
+    - [Lighthouse accessibility tests](#lighthouse-accessibility-tests)
+    - [Lighthouse performance tests](#lighthouse-performance-tests)
     - [End-to-end tests](#end-to-end-tests)
+- [Storybook](#storybook)
 - [Submitting changes](#submitting-changes)
     - [Before submitting](#before-submitting)
     - [Pull request process](#pull-request-process)
@@ -84,7 +90,7 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
     - `DATABASE_URL` - PostgreSQL connection string
     - `NUXT_OAUTH_DISCORD_CLIENT_ID` - Discord OAuth client ID
     - `NUXT_OAUTH_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
-    - `NUXT_SESSION_PASSWORD` - Random 32+ character string
+    - `NUXT_BETTER_AUTH_SECRET` - Random 32+ character string
 
 4. Set up the database:
 
@@ -106,27 +112,85 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
 ```bash
 # Development
 pnpm dev              # Start development server
+pnpm dev:pwa          # Development server with local PWA behavior
 pnpm build            # Production build
 pnpm preview          # Preview production build (requires build first)
 
 # Code Quality
 pnpm lint:fix         # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck        # TypeScript type checking
+pnpm vp run zizmor    # GitHub Actions security analysis (see below)
+pnpm vp run zizmor:fix  # Auto-fix zizmor audit findings
+
+# Storybook
+pnpm storybook        # Start Storybook dev server (http://localhost:6006)
+pnpm build-storybook  # Build static Storybook output
+pnpm chromatic        # Publish Storybook to Chromatic for visual review
 
 # Testing
 pnpm test             # Run all Vitest tests
 pnpm test:unit        # Unit tests only
 pnpm test:nuxt        # Nuxt component tests
-pnpm test:browser     # Playwright E2E tests
+pnpm test:browser     # Playwright E2E tests (builds test app first)
 pnpm test:browser:ui  # E2E tests with Playwright UI
-pnpm test:a11y        # Lighthouse accessibility audits
-pnpm test:perf        # Lighthouse performance audits
+pnpm test:a11y        # Build test app, then run Lighthouse a11y in dark + light
+pnpm test:a11y:prebuilt  # Lighthouse accessibility audits (requires prebuilt app)
+pnpm test:perf        # Build test app, then run Lighthouse performance audits
+pnpm test:perf:prebuilt  # Lighthouse performance audits (requires prebuilt app)
 
 # Database
 pnpm prisma:push      # Push schema changes (development)
 pnpm prisma:migrate:dev   # Create and apply migration
 pnpm prisma:generate  # Regenerate Prisma client
 pnpm prisma:studio    # Visual database editor (http://localhost:5555)
+```
+
+### GitHub Actions security analysis
+
+CI runs [zizmor](https://docs.zizmor.sh/) against the repository's GitHub Actions workflows. The shared policy lives in `.github/zizmor.yml`, and the `zizmor` task uses the same pedantic persona as CI.
+
+You may run it locally by [installing `zizmor`](https://docs.zizmor.sh/installation/) and running:
+
+```bash
+pnpm vp run zizmor
+```
+
+Some audits resolve action refs and vulnerability metadata through GitHub. To run those online checks locally, authenticate with the GitHub CLI and pass its token:
+
+```bash
+GH_TOKEN="$(gh auth token)" pnpm vp run zizmor
+```
+
+To fix audit findings automatically, run:
+
+```bash
+GH_TOKEN="$(gh auth token)" pnpm vp run zizmor:fix
+```
+
+### Clearing caches during development
+
+Nitro persists `defineWrappedCachedResponseHandler` results to disk at `.nuxt/cache/nitro/`. This cache **survives dev server restarts**. If you're iterating on a cached API route and want fresh results, delete the relevant cache directory:
+
+```bash
+# Clear all Nitro handler caches
+rm -rf .nuxt/cache/nitro/handlers/
+
+# Clear a specific handler cache (example: guild activity log)
+rm -rf .nuxt/cache/nitro/handlers/guilds-activity/
+```
+
+Alternatively, you can bypass the cache entirely in development by adding `shouldBypassCache: () => import.meta.dev` to your cached handler options:
+
+```typescript
+export default defineWrappedCachedResponseHandler(
+	async (event) => {
+		// ...
+	},
+	{
+		maxAge: 60 * 5,
+		shouldBypassCache: () => import.meta.dev,
+	},
+);
 ```
 
 ### Project structure
@@ -158,6 +222,7 @@ shared/                         # Shared between app and server
 └── utils/                      # Shared utilities (logger, abilities)
 
 modules/                        # Custom Nuxt modules
+.storybook/                     # Storybook configuration
 test/                           # Tests
 ├── unit/                       # Vitest unit tests (*.spec.ts)
 ├── nuxt/                       # Nuxt component tests
@@ -186,16 +251,9 @@ The project uses `oxfmt` to handle formatting via a pre-commit hook. The hook wi
 Always use `defineWrappedResponseHandler` (or `defineWrappedCachedResponseHandler` for cached responses). This provides auth, rate limiting, and consistent error handling:
 
 ```typescript
-// server/api/guilds/[guild]/settings.get.ts
 export default defineWrappedResponseHandler(
 	async (event) => {
-		const guildId = getRouterParam(event, "guild");
-
-		const settings = await prisma.guild.findUnique({
-			where: { id: guildId },
-		});
-
-		return settings;
+		// handler logic...
 	},
 	{
 		auth: true,
@@ -208,7 +266,29 @@ export default defineWrappedResponseHandler(
 );
 ```
 
+Validate query strings and request bodies with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`.
+
 Use `createError` for error responses with proper status codes. Use the `onError` callback for error logging.
+
+### Import order
+
+`oxfmt` (`experimentalSortImports` in `vite.config.ts`) sorts imports into the following groups, with no blank lines between them:
+
+1. External type imports (`import type { ... } from "h3"`)
+2. Internal type imports (`import type { ... } from "#shared/..."`)
+3. Node.js built-ins (`node:crypto`, `node:path`)
+4. External packages
+5. Internal aliases (`#shared/`, `#server/`, `@/`, `~/`)
+6. Relative imports (`./`, `../`)
+
+```typescript
+import type { H3Event } from "h3";
+import type { GuildSettings } from "#shared/types";
+import { createHash } from "node:crypto";
+import { parse } from "valibot";
+import { GuildSettingsSchema } from "#shared/schemas/guild-settings";
+import { resolveMember } from "./resolve-members";
+```
 
 ### Naming conventions
 
@@ -241,20 +321,11 @@ Block order (enforced by oxlint & oxfmt):
 
 ### Database changes
 
-**For prototyping** (development only):
+**For prototyping** (development only), use `pnpm prisma:push` to push schema changes without creating a migration.
 
-```bash
-pnpm prisma:push          # Push schema changes without migration
-```
+**For production-ready changes**, use `pnpm prisma:migrate:dev` to create and apply a migration, then `pnpm prisma:generate` to regenerate the Prisma client after schema edits.
 
-**For production-ready changes**:
-
-```bash
-pnpm prisma:migrate:dev   # Create and apply migration
-pnpm prisma:generate      # Regenerate Prisma client after schema edits
-```
-
-Always commit migration files with descriptive names.
+Always commit migration files with descriptive names. See [Available commands](#available-commands) for the full Prisma script list.
 
 ## Testing
 
@@ -279,6 +350,28 @@ describe("featureName", () => {
 
 Component tests that require Nuxt context (composables, auto-imports, plugins) live in `test/nuxt/`. These run with `@nuxt/test-utils` and have access to the full Nuxt environment.
 
+### Lighthouse accessibility tests
+
+Accessibility audits run against a test build using Lighthouse. The suite runs in both dark and light color modes:
+
+```bash
+pnpm test:a11y              # Build test app, then audit dark + light themes
+pnpm test:a11y:prebuilt     # Run audits only (app must already be built)
+```
+
+Use `test:a11y:prebuilt` when iterating on audit fixes and you already have a current test build.
+
+### Lighthouse performance tests
+
+Performance audits (including CLS checks) run against a test build:
+
+```bash
+pnpm test:perf              # Build test app, then run performance audits
+pnpm test:perf:prebuilt     # Run audits only (app must already be built)
+```
+
+Use `test:perf:prebuilt` for faster iteration when the test build is already up to date.
+
 ### End-to-end tests
 
 Write end-to-end tests using Playwright:
@@ -289,6 +382,20 @@ pnpm test:browser:ui     # Run with Playwright UI
 ```
 
 Make sure to read about [Playwright best practices](https://playwright.dev/docs/best-practices) and prefer user-facing locators (`getByRole`, `getByLabel`, `getByText`) over selectors based on classes or IDs.
+
+## Storybook
+
+Stories are co-located with pages as `*.stories.ts` files under `app/pages/`. Storybook configuration lives in `.storybook/`.
+
+```bash
+pnpm storybook          # Dev server at http://localhost:6006 (sets STORYBOOK=true)
+pnpm build-storybook    # Static Storybook build
+pnpm chromatic          # Visual review via Chromatic
+```
+
+The hosted Storybook is published at [storybook.wolfstar.rocks](https://storybook.wolfstar.rocks). Storybook runs with `STORYBOOK=true` so Nuxt loads a Storybook-specific config without the full app shell.
+
+When adding or changing user-facing pages, include or update stories so reviewers can exercise states and variants without running the full dashboard.
 
 ## Submitting changes
 
@@ -306,7 +413,7 @@ Make sure to read about [Playwright best practices](https://playwright.dev/docs/
 1. Create a feature branch from `main`
 2. Make your changes with clear, descriptive commits
 3. Push your branch and open a pull request
-4. Ensure CI checks pass (lint, typecheck, build, tests)
+4. Ensure CI checks pass (lint, typecheck, build, and tests)
 5. Request review from maintainers
 
 ### Commit messages and PR titles

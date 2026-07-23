@@ -1,0 +1,158 @@
+import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
+
+<Meta title="Colors" tags={["hide-toolbar"]} />
+
+# Colors
+
+The WolfStar color system is built on DaisyUI CSS custom properties with support for light and dark themes.
+
+Colors are defined in `app/assets/css/main.css` using DaisyUI theme variables. Values shown reflect the **dark** theme (default).
+
+## Base (Background) Colors
+
+<ColorPalette>
+	<ColorItem
+		title="Base"
+		subtitle="Background surface layers (dark theme)"
+		colors={{
+			"base-100": "oklch(25% 0.016 252)",
+			"base-200": "oklch(23% 0.014 253)",
+			"base-300": "oklch(20% 0.012 254)",
+		}}
+	/>
+	<ColorItem
+		title="Base"
+		subtitle="Background surface layers (light theme)"
+		colors={{
+			"base-100": "oklch(100% 0 0)",
+			"base-200": "oklch(90% 0 0)",
+			"base-300": "oklch(85% 0 0)",
+		}}
+	/>
+</ColorPalette>
+
+## Content (Text) Colors
+
+<ColorPalette>
+	<ColorItem
+		title="Content"
+		subtitle="Text and foreground — dark theme"
+		colors={{
+			"base-content": "oklch(90% 0 0)",
+		}}
+	/>
+	<ColorItem
+		title="Content"
+		subtitle="Text and foreground — light theme"
+		colors={{
+			"base-content": "oklch(0% 0 0)",
+		}}
+	/>
+</ColorPalette>
+
+## Brand Colors
+
+<ColorPalette>
+	<ColorItem
+		title="Primary"
+		subtitle="Interactive elements and primary actions"
+		colors={{
+			"primary": "oklch(58% 0.233 277.117)",
+			"primary-content": "oklch(100% 0 0)",
+		}}
+	/>
+	<ColorItem
+		title="Secondary"
+		subtitle="Secondary actions and de-emphasized elements"
+		colors={{
+			"secondary": "oklch(58.73% 0.0204 272.13)",
+			"secondary-content": "oklch(100% 0 0)",
+		}}
+	/>
+	<ColorItem
+		title="Accent"
+		subtitle="Accent highlights and decorative elements"
+		colors={{
+			"accent": "oklch(60% 0.152 181.912)",
+			"accent-content": "oklch(100% 0 0)",
+		}}
+	/>
+	<ColorItem
+		title="Neutral"
+		subtitle="Neutral surfaces and dark overlays"
+		colors={{
+			"neutral": "oklch(14% 0.005 285.823)",
+			"neutral-content": "oklch(100% 0 0)",
+		}}
+	/>
+</ColorPalette>
+
+## Status Colors
+
+<ColorPalette>
+	<ColorItem
+		title="Info"
+		subtitle="Informational messages and indicators"
+		colors={{
+			"info": "oklch(55% 0.16 232.661)",
+			"info-content": "oklch(89.04% 0.062 264.052)",
+		}}
+	/>
+	<ColorItem
+		title="Success"
+		subtitle="Success states and confirmations"
+		colors={{
+			"success": "oklch(76% 0.177 163.223)",
+			"success-content": "oklch(37% 0.077 168.94)",
+		}}
+	/>
+	<ColorItem
+		title="Warning"
+		subtitle="Warnings and caution indicators"
+		colors={{
+			"warning": "oklch(82% 0.189 84.429)",
+			"warning-content": "oklch(41% 0.112 45.904)",
+		}}
+	/>
+	<ColorItem
+		title="Error"
+		subtitle="Error states and destructive actions"
+		colors={{
+			"error": "oklch(71% 0.194 13.428)",
+			"error-content": "oklch(28% 0.109 3.907)",
+		}}
+	/>
+</ColorPalette>
+
+## Product Brand Colors
+
+<ColorPalette>
+	<ColorItem
+		title="WolfStar"
+		subtitle="WolfStar moderation bot brand color"
+		colors={{
+			wolfstar: "oklch(63% 0.2502 28.13)",
+		}}
+	/>
+	<ColorItem
+		title="Staryl"
+		subtitle="Staryl social notifications bot brand color"
+		colors={{
+			staryl: "oklch(58.73% 0.0204 272.13)",
+		}}
+	/>
+	<ColorItem
+		title="Discord"
+		subtitle="Discord platform brand color (blurple)"
+		colors={{
+			discord: "#5865f2",
+		}}
+	/>
+</ColorPalette>
+
+---
+
+## Related
+
+- [Design System Guidelines](?path=/docs/guidelines--docs)
+- [Typography](?path=/docs/typography--docs)

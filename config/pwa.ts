@@ -1,10 +1,11 @@
 import type { ModuleOptions } from "@vite-pwa/nuxt";
 import { isCI, isDevelopment } from "std-env";
 
+const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
+
 export const pwa: ModuleOptions = {
 	client: {
 		installPrompt: true,
-		periodicSyncForUpdates: 3600,
 	},
 	devOptions: {
 		enabled: process.env.VITE_DEV_PWA === "true",
@@ -14,6 +15,10 @@ export const pwa: ModuleOptions = {
 	filename: "sw.ts",
 	injectManifest: {
 		globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
+		// Blog post images are runtime content, not app-shell assets. Keep them out
+		// of the precache manifest so large images (e.g. OG images) don't exceed
+		// workbox's file-size limit and fail the build.
+		globIgnores: ["**/assets/blog/**"],
 	},
 	injectRegister: "auto",
 	manifest: {
@@ -137,8 +142,15 @@ export const pwa: ModuleOptions = {
 	},
 	mode: isCI ? "production" : "development",
 	pwaAssets: {
+		disabled: isStorybook,
 		config: false,
 	},
+
+	// New-deployment detection and the reload prompt are owned by
+	// nuxt-skew-protection. Keep the PWA in "prompt" mode so a new service
+	// worker installs but waits instead of auto-reloading the page: "autoUpdate"
+	// would refresh users before they can act on the skew-protection prompt. The
+	// prompt's reload action activates the waiting worker (see Prompt.client.vue).
 	registerType: "prompt",
 	scope: "/",
 	srcDir: "../service-worker",

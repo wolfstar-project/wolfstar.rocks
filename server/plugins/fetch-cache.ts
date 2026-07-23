@@ -7,6 +7,7 @@ import {
 	isAllowedDomain,
 	isCacheEntryStale,
 } from "#shared/utils/fetch-cache-config";
+import { log } from "evlog";
 import { $fetch } from "ofetch";
 
 /**
@@ -26,7 +27,10 @@ function simpleHash(str: string): string {
  * Generate a cache key for a fetch request.
  */
 function generateFetchCacheKey(url: string | URL, method = "GET", body?: unknown): string {
-	const urlObj = typeof url === "string" ? new URL(url) : url;
+	// Relative URLs (e.g. "/api/commands") are same-origin and cache-eligible per
+	// isAllowedDomain; resolve them against a fixed base so `new URL` doesn't throw
+	// (it requires a base for relative inputs). Absolute URLs ignore the base.
+	const urlObj = typeof url === "string" ? new URL(url, "http://localhost") : url;
 	const bodyHash = body ? simpleHash(JSON.stringify(body)) : "";
 	const searchHash = urlObj.search ? simpleHash(urlObj.search) : "";
 
@@ -81,7 +85,7 @@ export default defineNitroPlugin((nitroApp) => {
 				// Storage read failed (e.g., ENOENT on misconfigured storage)
 				// Log and continue without cache
 				import.meta.dev &&
-					logger.warn(`[fetch-cache] Storage read failed for ${url}:`, error);
+					log.warn("fetch-cache", `Storage read failed for ${url}: ${error}`);
 			}
 
 			if (cached) {
@@ -89,13 +93,13 @@ export default defineNitroPlugin((nitroApp) => {
 
 				if (!isStale) {
 					// Cache hit, data is fresh
-					import.meta.dev && logger.info(`[fetch-cache] HIT (fresh): ${url}`);
+					import.meta.dev && log.info("fetch-cache", `HIT (fresh): ${url}`);
 					return { cachedAt: cached.cachedAt, data: cached.data, isStale: false };
 				}
 
 				// Cache hit but stale - return stale data and revalidate in background
 
-				import.meta.dev && logger.info(`[fetch-cache] HIT (stale, revalidating): ${url}`);
+				import.meta.dev && log.info("fetch-cache", `HIT (stale, revalidating): ${url}`);
 
 				// Background revalidation using event.waitUntil()
 				// This ensures the revalidation completes even in serverless environments
@@ -114,10 +118,10 @@ export default defineNitroPlugin((nitroApp) => {
 								ttl,
 							};
 							await storage.setItem(cacheKey, entry);
-							import.meta.dev && logger.info(`[fetch-cache] Revalidated: ${url}`);
+							import.meta.dev && log.info("fetch-cache", `Revalidated: ${url}`);
 						} catch (error) {
 							import.meta.dev &&
-								logger.warn(`[fetch-cache] Revalidation failed: ${url}`, error);
+								log.warn("fetch-cache", `Revalidation failed: ${url}: ${error}`);
 						}
 					})(),
 				);
@@ -127,7 +131,7 @@ export default defineNitroPlugin((nitroApp) => {
 			}
 
 			// Cache miss - fetch and return immediately, cache in background
-			import.meta.dev && logger.info(`[fetch-cache] MISS: ${url}`);
+			import.meta.dev && log.info("fetch-cache", `MISS: ${url}`);
 
 			const data = (await $fetch(url, options as Parameters<typeof $fetch>[1])) as T;
 			const cachedAt = Date.now();
@@ -147,7 +151,7 @@ export default defineNitroPlugin((nitroApp) => {
 					} catch (error) {
 						// Storage write failed - log but don't fail the request
 						import.meta.dev &&
-							logger.warn(`[fetch-cache] Storage write failed for ${url}:`, error);
+							log.warn("fetch-cache", `Storage write failed for ${url}: ${error}`);
 					}
 				})(),
 			);

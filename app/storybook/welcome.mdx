@@ -1,0 +1,31 @@
+import { Meta } from "@storybook/addon-docs/blocks";
+
+<Meta title="Welcome" />
+
+# WolfStar Storybook
+
+Component library and visual regression tests for [wolfstar.rocks](https://wolfstar.rocks).
+
+## How to run
+
+```bash
+pnpm storybook
+```
+
+## How visual tests work
+
+Visual snapshots are captured by [Chromatic](https://www.chromatic.com/) on every pull request.
+Approved baselines are stored in Chromatic and used to catch unintentional regressions.
+
+## Folder structure
+
+```
+app/
+  components/          # Vue components + co-located *.stories.ts
+  storybook/
+    mocks/             # MSW handlers and typed fixtures
+    discord-fixtures.ts
+.storybook/            # Storybook config, decorators, Discord chrome CSS
+```
+
+Discord mock components live under `Components/Discord` in the sidebar.

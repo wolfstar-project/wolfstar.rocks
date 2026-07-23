@@ -1,9 +1,12 @@
 import * as Sentry from "@sentry/nuxt";
 import { isDevelopment } from "std-env";
+import { isMarketingPath } from "~/utils/marketing-routes";
 
 const {
 	public: { sentry, environment },
 } = useRuntimeConfig();
+
+const marketingPage = isMarketingPath(location.pathname);
 
 if (sentry.dsn) {
 	Sentry.init({
@@ -19,32 +22,34 @@ if (sentry.dsn) {
 		// https://docs.sentry.io/platforms/javascript/guides/nuxt/configuration/options/#sendDefaultPii
 		sendDefaultPii: true,
 
-		// Replay may only be enabled for the client-side
-		integrations: [
-			// oxlint-disable-next-line import/namespace
-			Sentry.browserTracingIntegration({
-				beforeStartSpan: (context) => ({
-					...context,
-					name: location.pathname
-						.replace(/\/\d{15,21}/g, "/:id")
-						.replace(/\/[a-f0-9]{32}/gi, "/:id"),
-				}),
-				shouldCreateSpanForRequest: (url) =>
-					!url.includes("_nuxt_icon") &&
-					!url.includes("__nuxt_error") &&
-					!url.includes("/health"),
-				enableInp: true,
-			}),
-			// oxlint-disable-next-line import/namespace
-			Sentry.replayIntegration(),
-		],
+		// Replay is loaded lazily below to keep its rrweb-based bundle out of the
+		// initial critical path. Browser tracing is skipped on marketing pages to
+		// avoid main-thread work competing with LCP hydration.
+		integrations: marketingPage
+			? []
+			: [
+					// oxlint-disable-next-line import/namespace
+					Sentry.browserTracingIntegration({
+						beforeStartSpan: (context) => ({
+							...context,
+							name: location.pathname
+								.replace(/\/\d{15,21}/g, "/:id")
+								.replace(/\/[a-f0-9]{32}/gi, "/:id"),
+						}),
+						shouldCreateSpanForRequest: (url) =>
+							!url.includes("_nuxt_icon") &&
+							!url.includes("__nuxt_error") &&
+							!url.includes("/health"),
+						enableInp: true,
+					}),
+				],
 
 		// Set tracesSampleRate to 1.0 to capture 100%
 		// Of transactions for tracing.
 		// We recommend adjusting this value in production
 		// Learn more at
 		// https://docs.sentry.io/platforms/javascript/configuration/options/#traces-sample-rate
-		tracesSampleRate: isDevelopment ? 1 : sentry.tracesSampleRate,
+		tracesSampleRate: marketingPage ? 0 : isDevelopment ? 1 : sentry.tracesSampleRate,
 
 		// Define what the valid targets for trace propagation are
 		// Learn more at
@@ -65,4 +70,21 @@ if (sentry.dsn) {
 		replaysOnErrorSampleRate: 1,
 		environment,
 	});
+
+	if (!marketingPage) {
+		// Defer Session Replay until the browser is idle so its sizable bundle never
+		// competes with first paint or hydration. Loaded from the Sentry CDN (allowed
+		// by CSP), which also keeps it out of the initial app bundle.
+		const loadReplay = () => {
+			void Sentry.lazyLoadIntegration("replayIntegration").then((replayIntegration) => {
+				Sentry.addIntegration(replayIntegration());
+			});
+		};
+
+		if (typeof window.requestIdleCallback === "function") {
+			window.requestIdleCallback(loadReplay);
+		} else {
+			setTimeout(loadReplay, 2000);
+		}
+	}
 }

@@ -1,75 +1,68 @@
-import type { VueWrapper } from "@vue/test-utils";
-import type { AxeResults, RunOptions } from "axe-core";
-import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { afterEach, describe, expect, it } from "vitest";
-import "axe-core";
-
-// axe-core is a UMD module that exposes itself as window.axe in the browser
-declare const axe: {
-	run: (context: Element, options?: RunOptions) => Promise<AxeResults>;
-};
-
-// Track mounted containers for cleanup
-const mountedContainers: HTMLElement[] = [];
-
-const axeRunOptions: RunOptions = {
-	// Only compute violations to reduce work per run
-	resultTypes: ["violations"],
-	// Disable rules that don't apply to isolated component testing
-	rules: {
-		// These rules check page-level concerns that don't apply to isolated components
-		"landmark-one-main": { enabled: false },
-		"region": { enabled: false },
-		"page-has-heading-one": { enabled: false },
-		// Duplicate landmarks are expected when testing multiple header/footer components
-		"landmark-no-duplicate-banner": { enabled: false },
-		"landmark-no-duplicate-contentinfo": { enabled: false },
-		"landmark-no-duplicate-main": { enabled: false },
-		// Color contrast checks are unreliable in isolated component tests because
-		// DaisyUI/Tailwind theme variables resolve differently without the full page
-		// context (data-theme attribute on <html>). Contrast should be validated via
-		// full-page Lighthouse or manual audits instead.
-		"color-contrast": { enabled: false },
-	},
-};
-
-/**
- * Run axe accessibility audit on a mounted component.
- * Mounts the component in an isolated container to avoid cross-test pollution.
- */
-async function runAxe(wrapper: VueWrapper): Promise<AxeResults> {
-	const container = document.createElement("div");
-	container.id = `test-container-${Date.now()}`;
-	document.body.appendChild(container);
-	mountedContainers.push(container);
-
-	const el = wrapper.element.cloneNode(true) as HTMLElement;
-	container.appendChild(el);
-
-	return axe.run(container, axeRunOptions);
-}
-
-// Clean up mounted containers after each test
-afterEach(() => {
-	for (const container of mountedContainers) {
-		container.remove();
-	}
-	mountedContainers.length = 0;
-});
-
 import {
+	AppFooter,
+	AppHeader,
+	AppHeaderAuth,
+	AppLogoMark,
+	ChangelogContributorMention,
+	ChangelogContributors,
+	UApp,
+	CommandsSection,
+	CommandsShowcase,
+	CtaSection,
+	DashboardSection,
+	DiscordChannelHeader,
+	DiscordChannelInfo,
+	DiscordChannelWelcome,
+	DiscordChat,
+	DiscordChatMessageComposer,
 	DiscordEmbed,
 	DiscordInvite,
 	DiscordMention,
+	DiscordMemberList,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
+	DiscordRole,
+	DiscordChatInputCommand,
+	DiscordChatInputCommandSuggestion,
+	DiscordChatInputCommandMatched,
+	DiscordChatInputCommandSuggestions,
+	DiscordAppLauncher,
+	DiscordStringSelectMenu,
+	ModerationShowcase,
+	ModerationShowcaseSection,
+	FeaturesSection,
 	GuildSettingsSection,
+	HeroSection,
 	IconsApp,
 	IconsWolfstar,
+	SectionHeader,
 	Separator,
+	StatsSection,
+	TestimonialsSection,
 } from "#components";
+import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { describe, expect, it } from "vitest";
+import { bentoFeatures, dashboardMembers, stats, testimonials } from "~/utils/constants";
+import { runAxe } from "./utils/axe";
+
+const inviteUrl =
+	"https://discord.com/oauth2/authorize?client_id=test&permissions=0&scope=bot%20applications.commands";
+
+// Stub used when auditing AppHeader so the header doesn't depend on the lazy auth
+// dropdown's async session fetch. The stub keeps an accessible name so it doesn't
+// introduce its own violations; AppHeaderAuth is audited separately with the real
+// component below.
+const SignInStub = {
+	template: `<button type="button" aria-label="Sign in with Discord">Sign in</button>`,
+};
+
+function mountAppHeader() {
+	return mountSuspended(AppHeader, {
+		global: { stubs: { AppHeaderAuth: SignInStub, LazyAppHeaderAuth: SignInStub } },
+	});
+}
 
 describe("component accessibility audits", () => {
 	describe("Discord components", () => {
@@ -77,6 +70,106 @@ describe("component accessibility audits", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordMessages, {
 					slots: { default: "<p>Hello world</p>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelHeader", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelHeader, {
+					props: {
+						name: "mod-commands",
+						type: "text",
+						topic: "WolfStar moderation commands — try a slash command below.",
+						searchPlaceholder: "Search",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelInfo", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelInfo, {
+					props: {
+						name: "mod-commands",
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								description: "/help",
+								app: true,
+								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelWelcome", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelWelcome, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						dateTime: "2026-07-16",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChat", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChat, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						messages: [
+							{
+								id: "message-1",
+								author: "wolfstar",
+								content: "Saved all changes.",
+								timestamp: "Today at 15:49",
+							},
+						],
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordMemberList", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordMemberList, {
+					props: {
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								description: "/help",
+								app: true,
+								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+						showRoles: true,
+					},
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -106,9 +199,25 @@ describe("component accessibility audits", () => {
 				const component = await mountSuspended(DiscordMessage, {
 					props: {
 						name: "wolfstar",
-						command: { user: "stella", name: "help" },
+						reply: { kind: "command", user: "stella", commandName: "help" },
 					},
 					slots: { default: "Here is your help response." },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations with message reply context", async () => {
+				const component = await mountSuspended(DiscordMessage, {
+					props: {
+						name: "wolfstar",
+						reply: {
+							kind: "message",
+							user: "stella",
+							content: "Can someone help me with moderation?",
+						},
+					},
+					slots: { default: "Sure, here is how to get started." },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -159,6 +268,137 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
+
+			it("should have no accessibility violations with desktop avatar", async () => {
+				const component = await mountSuspended(DiscordMention, {
+					props: { kind: "mention", avatar: "/avatars/baddie.png" },
+					slots: { default: "baddie" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordRole", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordRole, {
+					props: { color: "#5865F2" },
+					slots: { default: "Moderator" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChatInputCommand", () => {
+			it("should have no accessibility violations with composed variant", async () => {
+				const component = await mountSuspended(DiscordChatInputCommand, {
+					props: {
+						name: "warn",
+						options: [
+							{ name: "member", value: "@baddie", focused: true },
+							{ name: "reason", description: "Reason for the warning" },
+						],
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChatInputCommandSuggestion", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended({
+					components: { DiscordChatInputCommandSuggestion },
+					template: `
+						<div role="listbox" aria-label="Slash command suggestions">
+							<DiscordChatInputCommandSuggestion
+								name="warn"
+								description="Warn a member"
+								:active="true"
+							/>
+						</div>
+					`,
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChatInputCommandMatched", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended({
+					components: { DiscordChatInputCommandMatched },
+					template: `
+						<div role="listbox" aria-label="Matched slash commands">
+							<DiscordChatInputCommandMatched
+								name="ban"
+								:options="[
+									{ name: 'user', value: 'baddie' },
+									{ name: 'reason', value: 'repeated infractions', focused: true },
+								]"
+								:active="true"
+							/>
+						</div>
+					`,
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChatInputCommandSuggestions", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended({
+					components: {
+						DiscordChatInputCommandSuggestion,
+						DiscordChatInputCommandMatched,
+						DiscordChatInputCommandSuggestions,
+					},
+					template: `
+						<DiscordChatInputCommandSuggestions prefix="/war">
+							<template #frequently-used>
+								<DiscordChatInputCommandSuggestion
+									name="warn"
+									description="Warn a member"
+								/>
+							</template>
+							<template #matched>
+								<DiscordChatInputCommandMatched
+									name="warn"
+									:options="[
+										{ name: 'user', value: 'baddie' },
+										{ name: 'reason', value: 'spam', focused: true },
+									]"
+									:active="true"
+								/>
+							</template>
+						</DiscordChatInputCommandSuggestions>
+					`,
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChatMessageComposer", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChatMessageComposer, {
+					props: { channelName: "mod-commands" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordAppLauncher", () => {
+			it("should have no accessibility violations on the main view", async () => {
+				const component = await mountSuspended(DiscordAppLauncher, {
+					props: { open: true },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
 		});
 
 		describe("DiscordReaction", () => {
@@ -187,6 +427,46 @@ describe("component accessibility audits", () => {
 					slots: { default: "<span>Reaction slot</span>" },
 				});
 				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordStringSelectMenu", () => {
+			const selectOptions = [
+				{
+					value: "prefix",
+					label: "Root / Prefix",
+					emoji: "ph:gear-six-fill",
+					description: "Currently at: Root / Prefix",
+				},
+				{
+					value: "language",
+					label: "Root / Language",
+					emoji: "ph:gear-six-fill",
+					description: "Currently at: Root / Language",
+				},
+			];
+
+			it("should have no accessibility violations when closed", async () => {
+				const component = await mountSuspended(DiscordStringSelectMenu, {
+					props: { options: selectOptions, ariaLabel: "Configuration category" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations when open", async () => {
+				const component = await mountSuspended(DiscordStringSelectMenu, {
+					props: { options: selectOptions, ariaLabel: "Configuration category" },
+					attachTo: document.body,
+				});
+				await component.find("button[role='combobox']").trigger("click");
+				await nextTick();
+				const panel = document.querySelector(".discord-string-select-menu-panel");
+				expect(panel).not.toBeNull();
+				const results = await runAxe(component, {
+					include: panel ? [panel] : [],
+				});
 				expect(results.violations).toEqual([]);
 			});
 		});
@@ -269,6 +549,258 @@ describe("component accessibility audits", () => {
 			const component = await mountSuspended(IconsWolfstar);
 			const results = await runAxe(component);
 			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("ChangelogContributorMention", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended({
+				components: { ChangelogContributorMention, UApp },
+				template: `
+					<UApp>
+						<ChangelogContributorMention
+							name="RedStar"
+							username="RedStar071"
+							:commits="1847"
+							:has-contributed="true"
+							avatar-src="https://github.com/RedStar071.png"
+						/>
+					</UApp>
+				`,
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("ChangelogContributors", () => {
+		it("should have no accessibility violations", async () => {
+			const component = await mountSuspended({
+				components: { ChangelogContributors, UApp },
+				setup() {
+					return {
+						contributors: [
+							{
+								name: "RedStar",
+								username: "RedStar071",
+								commits: 1847,
+								hasContributed: true,
+								avatarSrc: "https://github.com/RedStar071.png",
+							},
+						],
+					};
+				},
+				template: `
+					<UApp>
+						<ChangelogContributors id-prefix="v1.0.0" :contributors="contributors" />
+					</UApp>
+				`,
+			});
+			const results = await runAxe(component);
+			expect(results.violations).toEqual([]);
+		});
+	});
+
+	describe("AppFooter", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("exposes the footer landmark with an accessible name", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			expect(wrapper.find("[aria-label='Site footer']").exists()).toBe(true);
+		});
+
+		it("marks the decorative logo as an image and hides the inner svg from AT", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			const logo = wrapper.find("[role='img'][aria-label='WolfStar logo']");
+			expect(logo.exists()).toBe(true);
+			expect(logo.find("svg").attributes("aria-hidden")).toBe("true");
+		});
+
+		it("gives the external links accessible names that announce a new tab", async () => {
+			const wrapper = await mountSuspended(AppFooter);
+			expect(
+				wrapper.find("[aria-label='Powered by Netlify - opens in new tab']").exists(),
+			).toBe(true);
+			expect(
+				wrapper.find("[aria-label='Visit WolfStar on GitHub - opens in new tab']").exists(),
+			).toBe(true);
+		});
+	});
+
+	describe("AppHeader", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountAppHeader();
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("renders the banner landmark", async () => {
+			const wrapper = await mountAppHeader();
+			expect(wrapper.find("header").exists()).toBe(true);
+		});
+
+		it("names the primary navigation for assistive tech", async () => {
+			const wrapper = await mountAppHeader();
+			expect(wrapper.find("[aria-label='Main navigation']").exists()).toBe(true);
+		});
+
+		it("renders the WolfStar logo mark with the resized svg hidden from AT", async () => {
+			const wrapper = await mountAppHeader();
+			const svg = wrapper.find("svg");
+			expect(svg.exists()).toBe(true);
+			expect(svg.attributes("aria-hidden")).toBe("true");
+			expect(svg.classes()).toContain("h-20");
+			expect(svg.classes()).toContain("w-45");
+		});
+	});
+
+	describe("AppHeaderAuth", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("renders sign-in buttons that link to /login with an accessible name", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth);
+			const signInLinks = wrapper.findAll("a[href='/login']");
+			expect(signInLinks.length).toBeGreaterThan(0);
+			for (const link of signInLinks) {
+				expect(link.attributes("aria-label")).toBe("Sign in with Discord");
+			}
+		});
+	});
+
+	describe("AppLogoMark", () => {
+		it("has no axe-core violations", async () => {
+			const wrapper = await mountSuspended(AppLogoMark);
+			const results = await runAxe(wrapper);
+			expect(results.violations).toEqual([]);
+		});
+
+		it("marks the decorative logo as aria-hidden so it is ignored by assistive tech", async () => {
+			const wrapper = await mountSuspended(AppLogoMark);
+			const svg = wrapper.find("svg");
+			expect(svg.exists()).toBe(true);
+			expect(svg.attributes("aria-hidden")).toBe("true");
+			expect(svg.attributes("role")).toBeUndefined();
+		});
+	});
+
+	describe("Home page components", () => {
+		describe("SectionHeader", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(SectionHeader, {
+					props: {
+						eyebrow: "Features",
+						title: "And more than moderation.",
+						description: "Every tool your moderation team needs.",
+						headingId: "home-features-heading",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("HeroSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(HeroSection, {
+					props: {
+						buildTime: new Date("2024-06-01T12:00:00Z"),
+						buildVersion: "7.0.0",
+						inviteUrl,
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StatsSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StatsSection, {
+					props: { stats },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("FeaturesSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(FeaturesSection, {
+					props: { features: bentoFeatures },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DashboardSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DashboardSection, {
+					props: { members: dashboardMembers },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("TestimonialsSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(TestimonialsSection, {
+					props: { testimonials },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("CtaSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(CtaSection, {
+					props: { inviteUrl },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("CommandsShowcase", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(CommandsShowcase);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("CommandsSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(CommandsSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("ModerationShowcase", () => {
+			it("should have no accessibility violations with all features visible", async () => {
+				const component = await mountSuspended(ModerationShowcase);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("ModerationShowcaseSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(ModerationShowcaseSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
 		});
 	});
 });

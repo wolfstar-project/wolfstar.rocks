@@ -12,11 +12,15 @@ outline: deep
 <div h-2 />
 <CourseLink href="https://vueschool.io/lessons/your-first-test?friend=vueuse">Learn how to write your first test by Video</CourseLink>
 
+::: tip
+This page is a high-level overview of Vitest's capabilities. If you're new to Vitest, we recommend reading the [Learn](/guide/learn/writing-tests) tutorial first for a hands-on introduction.
+:::
+
 ## Shared Config between Test, Dev and Build
 
 Vite's config, transformers, resolvers, and plugins. Use the same setup from your app to run the tests.
 
-Learn more at [Configuring Vitest](/guide/#configuring-vitest).
+Learn more at [Configuring Vitest](/config/).
 
 ## Watch Mode
 
@@ -104,7 +108,7 @@ Notice that if you are using third-party libraries that add matchers, setting [`
 
 ## Mocking
 
-Tinyspy is built-in for mocking with `jest`-compatible APIs on `vi` object.
+Vitest provides `jest`-compatible APIs on `vi` object.
 
 ```ts
 import { expect, vi } from 'vitest'

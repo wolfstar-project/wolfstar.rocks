@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { VNode } from "vue";
-import { tv } from "tailwind-variants";
+import { tv, type ClassValue } from "tailwind-variants";
 
 const theme = tv({
 	slots: {
@@ -26,7 +26,7 @@ interface SettingsSectionProps {
 	disableTypography?: boolean;
 	headingLevel?: HeadingLevel;
 	forceSemanticHeading?: boolean;
-	class?: any;
+	class?: ClassValue;
 	ui?: Partial<typeof theme.slots>;
 }
 

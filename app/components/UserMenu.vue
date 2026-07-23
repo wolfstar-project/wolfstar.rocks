@@ -1,4 +1,5 @@
 <template>
+	<FeedbackModal v-model:open="isFeedbackOpen" />
 	<UDropdownMenu
 		:items="items"
 		:content="{ align: 'center', collisionPadding: 12 }"
@@ -36,10 +37,11 @@ const { collapsed } = defineProps<{
 	collapsed?: boolean;
 }>();
 
+const isFeedbackOpen = ref(false);
 const colorMode = useColorMode();
-const { user: authUser, clear } = useAuth();
+const { user: authUser, signOut } = useUserSession();
 
-const src = computed(() => avatarURL(authUser.value!, { size: 64 }));
+const src = computed(() => authUser.value?.image ?? undefined);
 
 const user = ref({
 	avatar: {
@@ -62,6 +64,14 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			icon: "lucide:user",
 			label: "Profile",
 			to: "/profile",
+		},
+		{
+			icon: "lucide:bug",
+			label: "Report a Bug",
+			onSelect(e: Event) {
+				e.preventDefault();
+				isFeedbackOpen.value = true;
+			},
 		},
 	],
 	[
@@ -103,7 +113,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			label: "Sign out",
 			async onSelect(e: Event) {
 				e.preventDefault();
-				await clear();
+				await signOut();
 				await navigateTo("/");
 			},
 		},

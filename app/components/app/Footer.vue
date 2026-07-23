@@ -8,9 +8,9 @@
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
-				<!-- Decorative watermark: override IconsWolfstar's baked-in role/aria-label so only the logo mark below is exposed as the "WolfStar logo" image -->
+				<!-- Decorative watermark: keep fully inside the padded brand area so overflow-hidden does not clip it -->
 				<icons-wolfstar
-					class="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 opacity-5"
+					class="pointer-events-none absolute bottom-6 left-6 h-56 w-56 opacity-5"
 					role="presentation"
 					:aria-label="undefined"
 					aria-hidden="true"
@@ -29,6 +29,20 @@
 							A fully customizable, multilingual Discord moderation app. Free forever,
 							open source.
 						</p>
+						<div class="mt-4 flex items-center gap-1" aria-label="Social links">
+							<UButton
+								v-for="social of socialLinks"
+								:key="social.label"
+								:to="social.to"
+								target="_blank"
+								rel="noopener noreferrer"
+								:icon="social.icon"
+								:aria-label="social.ariaLabel"
+								color="neutral"
+								variant="ghost"
+								size="sm"
+							/>
+						</div>
 						<div class="mt-6 flex flex-col items-start gap-3">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
@@ -77,16 +91,6 @@
 		<template #right>
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
 			<ColorModeButton />
-
-			<UButton
-				to="https://repo.wolfstar.rocks"
-				target="_blank"
-				rel="noopener noreferrer"
-				icon="lucide:github"
-				aria-label="Visit WolfStar on GitHub - opens in new tab"
-				color="neutral"
-				variant="ghost"
-			/>
 		</template>
 	</UFooter>
 </template>
@@ -94,6 +98,27 @@
 <script setup lang="ts">
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+
+const socialLinks = [
+	{
+		ariaLabel: "Visit WolfStar on GitHub - opens in new tab",
+		icon: "simple-icons:github",
+		label: "GitHub",
+		to: "https://repo.wolfstar.rocks",
+	},
+	{
+		ariaLabel: "Join the WolfStar Discord - opens in new tab",
+		icon: "simple-icons:discord",
+		label: "Discord",
+		to: "https://join.wolfstar.rocks",
+	},
+	{
+		ariaLabel: "Follow WolfStar on X - opens in new tab",
+		icon: "simple-icons:x",
+		label: "X",
+		to: "https://x.com/wolfstarapp",
+	},
+] as const;
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

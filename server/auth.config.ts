@@ -62,6 +62,9 @@ export default defineServerAuth(() => ({
 			// OAuth sign-in initiation is the only unauthenticated entry point
 			// (Discord-only login, no email/password) worth a tighter window.
 			"/sign-in/social": { window: 10, max: 5 },
+			// Session reads are polled heavily (SSR, client hydration, force
+			// refresh). Rate-limiting them bricks login with "Session Not Found".
+			"/get-session": false,
 		},
 	},
 	session: {

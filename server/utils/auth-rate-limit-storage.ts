@@ -14,6 +14,19 @@ export interface AuthRateLimitStorageDriver {
 	removeItem: (key: string) => Promise<void>;
 }
 
+function isUsableCounter(value: unknown): value is AuthRateLimitCounter {
+	if (!value || typeof value !== "object") {
+		return false;
+	}
+	const candidate = value as Partial<AuthRateLimitCounter>;
+	return (
+		typeof candidate.count === "number" &&
+		Number.isFinite(candidate.count) &&
+		typeof candidate.expiresAt === "number" &&
+		Number.isFinite(candidate.expiresAt)
+	);
+}
+
 /**
  * Adapts a Nitro/unstorage mount to better-auth's `SecondaryStorage` shape,
  * including an atomic-ish `increment` so better-auth's rate limiter can use
@@ -44,7 +57,8 @@ export function createAuthSecondaryStorage(storage: AuthRateLimitStorageDriver):
 
 	return {
 		get: (key) => storage.getItem(key),
-		set: (key, value) => storage.setItem(key, value),
+		set: (key, value, ttl) =>
+			storage.setItem(key, value, typeof ttl === "number" ? { ttl } : undefined),
 		delete: (key) => storage.removeItem(key),
 		// Fixed-window counter: `ttl` (seconds) is only applied when the window
 		// is (re)created, and every write re-derives the remaining time until
@@ -52,8 +66,11 @@ export function createAuthSecondaryStorage(storage: AuthRateLimitStorageDriver):
 		increment: (key, ttl) =>
 			withIncrementLock(key, async () => {
 				const now = Date.now();
-				const existing = await storage.getItem<AuthRateLimitCounter>(key);
-				const isFresh = !existing || existing.expiresAt <= now;
+				const existing = await storage.getItem<unknown>(key);
+				// Missing/corrupt counters (e.g. `{ count }` without expiresAt) must
+				// start a fresh window — otherwise the count grows forever and
+				// Better Auth permanently 429s endpoints like /get-session.
+				const isFresh = !isUsableCounter(existing) || existing.expiresAt <= now;
 				const expiresAt = isFresh ? now + ttl * 1000 : existing.expiresAt;
 				const count = isFresh ? 1 : existing.count + 1;
 				const remainingTtl = Math.max(1, Math.ceil((expiresAt - now) / 1000));

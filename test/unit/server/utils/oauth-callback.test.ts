@@ -1,4 +1,5 @@
 import { resolveOAuthProviderCallbackRedirect } from "#server/utils/oauth-callback";
+import { encodeBotOauthState } from "#shared/utils/bot-oauth";
 import { describe, expect, it } from "vitest";
 
 describe("resolveOAuthProviderCallbackRedirect", () => {
@@ -18,6 +19,15 @@ describe("resolveOAuthProviderCallbackRedirect", () => {
 
 	it("does not forward a callback without OAuth state", () => {
 		const query = new URLSearchParams({ code: "authorization-code", next: "/" });
+
+		expect(resolveOAuthProviderCallbackRedirect(query)).toBeNull();
+	});
+
+	it("does not forward sapphire bot-oauth state to Better Auth", () => {
+		const query = new URLSearchParams({
+			code: "authorization-code",
+			state: encodeBotOauthState("/guilds/123"),
+		});
 
 		expect(resolveOAuthProviderCallbackRedirect(query)).toBeNull();
 	});

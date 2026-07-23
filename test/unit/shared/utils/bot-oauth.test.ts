@@ -3,7 +3,10 @@ import {
 	BOT_OAUTH_SCOPES,
 	buildBotDiscordAuthorizeUrl,
 	consumeBotOauthNext,
+	decodeBotOauthState,
+	encodeBotOauthState,
 	isBotOauthSilentAuthError,
+	isBotOauthState,
 	normalizeBotApiBaseUrl,
 	peekBotOauthNext,
 	rememberBotOauthNext,
@@ -15,6 +18,7 @@ describe("bot-oauth utils", () => {
 	it("builds the Discord authorize URL for the sapphire bridge", () => {
 		const url = buildBotDiscordAuthorizeUrl({
 			clientId: "123456789012345678",
+			next: "/guilds/123",
 			prompt: "none",
 			redirectUri: "http://localhost:3000/oauth/callback",
 		});
@@ -28,6 +32,15 @@ describe("bot-oauth utils", () => {
 		expect(parsed.searchParams.get("redirect_uri")).toBe(
 			"http://localhost:3000/oauth/callback",
 		);
+		expect(parsed.searchParams.get("state")).toBe(encodeBotOauthState("/guilds/123"));
+	});
+
+	it("encodes and decodes the post-login path in Discord state", () => {
+		const state = encodeBotOauthState("/profile");
+		expect(isBotOauthState(state)).toBe(true);
+		expect(decodeBotOauthState(state)).toBe("/profile");
+		expect(decodeBotOauthState("oauth-csrf-state")).toBeNull();
+		expect(decodeBotOauthState(encodeBotOauthState("https://evil.com"))).toBe("/");
 	});
 
 	it("resolves the frontend oauth callback redirect URI", () => {

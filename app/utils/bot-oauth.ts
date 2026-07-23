@@ -5,6 +5,8 @@ import {
 	type BotOauthPrompt,
 } from "#shared/utils/bot-oauth";
 
+const BOT_OAUTH_SESSION_TIMEOUT_MS = 3_000;
+
 function getBotOauthRedirectUri(): string {
 	if (import.meta.client) {
 		return resolveBotOauthRedirectUri(window.location.origin);
@@ -28,9 +30,10 @@ function requireDiscordClientId(): string {
 	return String(clientId);
 }
 
-export function buildBotOauthAuthorizeUrl(prompt: BotOauthPrompt = "none"): string {
+export function buildBotOauthAuthorizeUrl(prompt: BotOauthPrompt = "none", next = "/"): string {
 	return buildBotDiscordAuthorizeUrl({
 		clientId: requireDiscordClientId(),
+		next,
 		prompt,
 		redirectUri: getBotOauthRedirectUri(),
 	});
@@ -58,6 +61,7 @@ export async function hasBotOauthSession(): Promise<boolean> {
 		await $fetch(`${base}/users/@me`, {
 			credentials: "include",
 			method: "GET",
+			signal: AbortSignal.timeout(BOT_OAUTH_SESSION_TIMEOUT_MS),
 		});
 		return true;
 	} catch {
@@ -74,6 +78,7 @@ export async function logoutBotOauth(): Promise<void> {
 		await $fetch(`${base}/oauth/logout`, {
 			credentials: "include",
 			method: "POST",
+			signal: AbortSignal.timeout(BOT_OAUTH_SESSION_TIMEOUT_MS),
 		});
 	} catch {
 		// Best-effort: dashboard sign-out should still clear better-auth.

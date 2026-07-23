@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import {
 	consumeBotOauthNext,
+	decodeBotOauthState,
 	isBotOauthSilentAuthError,
 	peekBotOauthNext,
 	rememberBotOauthNext,
@@ -84,6 +85,12 @@ const oauthCode = computed(() => {
 	return typeof code === "string" && code.length > 0 ? code : null;
 });
 
+const oauthState = computed(() => {
+	const value = route.query.state;
+	const state = Array.isArray(value) ? value[0] : value;
+	return typeof state === "string" && state.length > 0 ? state : null;
+});
+
 const hasCallbackParams = computed(() =>
 	Boolean(route.query.next || route.query.error || oauthCode.value),
 );
@@ -97,11 +104,33 @@ onMounted(() => {
 	void completeSignIn();
 });
 
+function resolvePostLoginNext(): string {
+	const fromState = decodeBotOauthState(oauthState.value);
+	const fromQuery = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
+	return consumeBotOauthNext(fromState ?? fromQuery);
+}
+
+async function redirectToPostLoginNext(): Promise<void> {
+	isSessionLoading.value = false;
+	await promiseTimeout(seconds(2));
+	await navigateTo(resolvePostLoginNext(), {
+		external: true,
+		replace: true,
+	});
+}
+
 async function completeSignIn() {
 	try {
 		// Sapphire hop: exchange Discord code for `SAPPHIRE_AUTH` on the bot origin.
+		// Best-effort — Better Auth already owns the dashboard session, so a bot
+		// cookie failure must not strand the user on this page.
 		if (oauthCode.value) {
-			await completeBotOauthCallback(oauthCode.value);
+			try {
+				await completeBotOauthCallback(oauthCode.value);
+			} catch (error) {
+				log.error(error);
+			}
+
 			await fetchSession({ force: true });
 
 			if (!loggedIn.value) {
@@ -109,16 +138,7 @@ async function completeSignIn() {
 				return;
 			}
 
-			isSessionLoading.value = false;
-			await promiseTimeout(seconds(2));
-
-			const safeNext = consumeBotOauthNext(
-				isSafeRedirectPath(nextParam.value) ? nextParam.value : "/",
-			);
-			await navigateTo(safeNext, {
-				external: true,
-				replace: true,
-			});
+			await redirectToPostLoginNext();
 			return;
 		}
 
@@ -127,9 +147,14 @@ async function completeSignIn() {
 			: route.query.error;
 		if (typeof discordError === "string" && discordError.length > 0) {
 			// Retry silent-auth failures with consent when a post-login redirect is pending.
-			if (isBotOauthSilentAuthError(discordError) && peekBotOauthNext()) {
+			const pendingNext =
+				peekBotOauthNext() ??
+				decodeBotOauthState(oauthState.value) ??
+				(isSafeRedirectPath(nextParam.value) ? nextParam.value : null);
+			if (isBotOauthSilentAuthError(discordError) && pendingNext) {
 				isRetryingSilentAuth.value = true;
-				await navigateTo(buildBotOauthAuthorizeUrl("consent"), {
+				rememberBotOauthNext(pendingNext);
+				await navigateTo(buildBotOauthAuthorizeUrl("consent", pendingNext), {
 					external: true,
 					replace: true,
 				});
@@ -145,31 +170,31 @@ async function completeSignIn() {
 			return;
 		}
 
-		// Drop loading now so the welcome banner shows during the delay below.
-		isSessionLoading.value = false;
-
 		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
 
 		// Bridge a Discord code to the bot API when `SAPPHIRE_AUTH` is missing.
 		if (!(await hasBotOauthSession())) {
 			rememberBotOauthNext(safeNext);
-			await navigateTo(buildBotOauthAuthorizeUrl("none"), {
+			await navigateTo(buildBotOauthAuthorizeUrl("none", safeNext), {
 				external: true,
 				replace: true,
 			});
 			return;
 		}
 
-		await promiseTimeout(seconds(2));
-
-		// Full navigation so SSR sees the fresh session cookie.
-		await navigateTo(safeNext, {
-			external: true,
-			replace: true,
-		});
+		await redirectToPostLoginNext();
 	} catch (error) {
-		isSessionMissing.value = true;
 		log.error(error);
+		// Prefer landing the user over a dead-end Welcome banner when BA session exists.
+		if (loggedIn.value) {
+			try {
+				await redirectToPostLoginNext();
+				return;
+			} catch (redirectError) {
+				log.error(redirectError);
+			}
+		}
+		isSessionMissing.value = true;
 	} finally {
 		isSessionLoading.value = false;
 	}

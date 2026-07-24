@@ -148,6 +148,7 @@
 		"knip": "6.14.2",
 		"msw": "catalog:msw",
 		"msw-storybook-addon": "catalog:storybook",
+		"nuxt-skill-hub": "^0.1.1",
 		"prisma": "7.8.0",
 		"prisma-json-types-generator": "5.1.0",
 		"rolldown": "^1.0.1",
@@ -157,6 +158,7 @@
 		"taze": "19.14.1",
 		"tsx": "4.22.3",
 		"typescript": "6.0.3",
+		"vite-doctor": "^0.0.3",
 		"vitest": "npm:@voidzero-dev/vite-plus-test@0.1.24",
 		"vue-tsc": "3.3.2"
 	},

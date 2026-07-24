@@ -288,6 +288,10 @@ Prefer these semantic classes before reaching for palette colors:
 | Gradient hero text   | `gradient-text-hero`, `gradient-text-cool`             |
 | Card surfaces        | `card-glass`, `card-glass-soft`, `card-glass-bordered` |
 
+<!-- nuxt-skill-hub:start -->
+Use the `nuxt-dashboard` skill as the Nuxt router/entrypoint for tasks in this repository.
+<!-- nuxt-skill-hub:end -->
+
 <!-- skilld -->
 
 Before modifying code, evaluate each installed skill against the current task.

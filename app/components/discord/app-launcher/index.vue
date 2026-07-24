@@ -1476,15 +1476,15 @@ onMounted(() => {
 		--discord-app-launcher-header: oklch(95% 0.004 272);
 		--discord-app-launcher-link: oklch(72% 0.14 264);
 		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
-		--discord-app-launcher-handle: oklch(55% 0.01 272);
+		--discord-app-launcher-handle: oklch(62% 0.01 272);
 		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
 		--discord-app-launcher-help-btn: oklch(38% 0.01 272);
 
-		@apply h-[min(70dvh,36rem)] max-h-[70dvh] w-full max-w-none rounded-t-2xl rounded-b-none border-0 shadow-none;
+		@apply h-[min(55dvh,22rem)] max-h-[55dvh] w-full max-w-none rounded-t-2xl rounded-b-none border-0 shadow-none;
 	}
 
 	.discord-app-launcher-handle {
-		@apply mx-auto mt-2 mb-1 block h-1 w-10 shrink-0 rounded-full;
+		@apply mx-auto mt-2.5 mb-1.5 block h-1.5 w-11 shrink-0 rounded-full;
 		background-color: var(--discord-app-launcher-handle);
 	}
 

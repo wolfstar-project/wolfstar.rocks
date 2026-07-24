@@ -572,8 +572,11 @@ export default defineConfig({
 										},
 									},
 									vue: { runtimeCompiler: true },
+									// Match npmx.dev: keep Vitest browser Nuxt projects off the
+									// Vite Environment API until VTU emit capture is reliable there.
 									experimental: {
 										payloadExtraction: false,
+										viteEnvironmentApi: false,
 									},
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },

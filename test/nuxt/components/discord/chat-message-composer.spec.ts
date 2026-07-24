@@ -121,9 +121,10 @@ describe("DiscordChatMessageComposer", () => {
 			props: { channelName: "mod-commands", appsOpen: true },
 		});
 
-		// ASSERT
+		// ASSERT — mobile control only; desktop toolbar keeps its static open label
 		expect(wrapper.find(".discord-message-composer-apps-open").exists()).toBe(true);
-		expect(wrapper.find("[aria-label='Close apps and commands']").exists()).toBe(true);
-		expect(wrapper.find("[aria-label='Open apps and commands']").exists()).toBe(false);
+		expect(wrapper.find(".discord-message-composer-apps-mobile").attributes("aria-label")).toBe(
+			"Close apps and commands",
+		);
 	});
 });

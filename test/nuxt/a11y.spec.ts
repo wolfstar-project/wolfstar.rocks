@@ -10,20 +10,26 @@ import {
 	CommandsShowcase,
 	CtaSection,
 	DashboardSection,
+	DiscordChannelHeader,
+	DiscordChannelInfo,
+	DiscordChannelWelcome,
+	DiscordChat,
+	DiscordChatMessageComposer,
 	DiscordEmbed,
 	DiscordInvite,
 	DiscordMention,
+	DiscordMemberList,
 	DiscordMessage,
 	DiscordMessages,
 	DiscordReaction,
 	DiscordReactions,
 	DiscordRole,
-	DiscordSlashCommand,
-	DiscordSlashCommandInput,
-	DiscordSlashCommandSuggestion,
-	DiscordSlashCommandSuggestionMatched,
-	DiscordSlashCommandSuggestions,
-	DiscordV2StringSelectMenu,
+	DiscordChatInputCommand,
+	DiscordChatInputCommandSuggestion,
+	DiscordChatInputCommandMatched,
+	DiscordChatInputCommandSuggestions,
+	DiscordAppLauncher,
+	DiscordStringSelectMenu,
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	FeaturesSection,
@@ -64,6 +70,106 @@ describe("component accessibility audits", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(DiscordMessages, {
 					slots: { default: "<p>Hello world</p>" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelHeader", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelHeader, {
+					props: {
+						name: "mod-commands",
+						type: "text",
+						topic: "WolfStar moderation commands — try a slash command below.",
+						searchPlaceholder: "Search",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelInfo", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelInfo, {
+					props: {
+						name: "mod-commands",
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								description: "/help",
+								app: true,
+								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChannelWelcome", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChannelWelcome, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						dateTime: "2026-07-16",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordChat", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordChat, {
+					props: {
+						channelName: "mod-commands",
+						date: "July 16, 2026",
+						messages: [
+							{
+								id: "message-1",
+								author: "wolfstar",
+								content: "Saved all changes.",
+								timestamp: "Today at 15:49",
+							},
+						],
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordMemberList", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(DiscordMemberList, {
+					props: {
+						online: [
+							{
+								id: "wolfstar",
+								name: "WolfStar",
+								role: "Moderation",
+								description: "/help",
+								app: true,
+								verified: true,
+								color: "oklch(57.74% 0.2091 273.85)",
+								pinned: true,
+							},
+						],
+						offline: [{ id: "stella", name: "Stella" }],
+						showRoles: true,
+					},
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -162,6 +268,15 @@ describe("component accessibility audits", () => {
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
+
+			it("should have no accessibility violations with desktop avatar", async () => {
+				const component = await mountSuspended(DiscordMention, {
+					props: { kind: "mention", avatar: "/avatars/baddie.png" },
+					slots: { default: "baddie" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
 		});
 
 		describe("DiscordRole", () => {
@@ -175,9 +290,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommand", () => {
+		describe("DiscordChatInputCommand", () => {
 			it("should have no accessibility violations with composed variant", async () => {
-				const component = await mountSuspended(DiscordSlashCommand, {
+				const component = await mountSuspended(DiscordChatInputCommand, {
 					props: {
 						name: "warn",
 						options: [
@@ -191,13 +306,13 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestion", () => {
+		describe("DiscordChatInputCommandSuggestion", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
-					components: { DiscordSlashCommandSuggestion },
+					components: { DiscordChatInputCommandSuggestion },
 					template: `
 						<div role="listbox" aria-label="Slash command suggestions">
-							<DiscordSlashCommandSuggestion
+							<DiscordChatInputCommandSuggestion
 								name="warn"
 								description="Warn a member"
 								:active="true"
@@ -210,13 +325,13 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestionMatched", () => {
+		describe("DiscordChatInputCommandMatched", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
-					components: { DiscordSlashCommandSuggestionMatched },
+					components: { DiscordChatInputCommandMatched },
 					template: `
 						<div role="listbox" aria-label="Matched slash commands">
-							<DiscordSlashCommandSuggestionMatched
+							<DiscordChatInputCommandMatched
 								name="ban"
 								:options="[
 									{ name: 'user', value: 'baddie' },
@@ -232,24 +347,24 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandSuggestions", () => {
+		describe("DiscordChatInputCommandSuggestions", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended({
 					components: {
-						DiscordSlashCommandSuggestion,
-						DiscordSlashCommandSuggestionMatched,
-						DiscordSlashCommandSuggestions,
+						DiscordChatInputCommandSuggestion,
+						DiscordChatInputCommandMatched,
+						DiscordChatInputCommandSuggestions,
 					},
 					template: `
-						<DiscordSlashCommandSuggestions prefix="/war">
+						<DiscordChatInputCommandSuggestions prefix="/war">
 							<template #frequently-used>
-								<DiscordSlashCommandSuggestion
+								<DiscordChatInputCommandSuggestion
 									name="warn"
 									description="Warn a member"
 								/>
 							</template>
 							<template #matched>
-								<DiscordSlashCommandSuggestionMatched
+								<DiscordChatInputCommandMatched
 									name="warn"
 									:options="[
 										{ name: 'user', value: 'baddie' },
@@ -258,7 +373,7 @@ describe("component accessibility audits", () => {
 									:active="true"
 								/>
 							</template>
-						</DiscordSlashCommandSuggestions>
+						</DiscordChatInputCommandSuggestions>
 					`,
 				});
 				const results = await runAxe(component);
@@ -266,10 +381,20 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordSlashCommandInput", () => {
+		describe("DiscordChatMessageComposer", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DiscordSlashCommandInput, {
-					props: { value: "/warn" },
+				const component = await mountSuspended(DiscordChatMessageComposer, {
+					props: { channelName: "mod-commands" },
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("DiscordAppLauncher", () => {
+			it("should have no accessibility violations on the main view", async () => {
+				const component = await mountSuspended(DiscordAppLauncher, {
+					props: { open: true },
 				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
@@ -306,19 +431,24 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("DiscordV2StringSelectMenu", () => {
+		describe("DiscordStringSelectMenu", () => {
 			const selectOptions = [
-				{ value: "prefix", label: "prefix", emoji: "⚙️", description: "Command prefix" },
+				{
+					value: "prefix",
+					label: "Root / Prefix",
+					emoji: "ph:gear-six-fill",
+					description: "Currently at: Root / Prefix",
+				},
 				{
 					value: "language",
-					label: "language",
-					emoji: "⚙️",
-					description: "Response language",
+					label: "Root / Language",
+					emoji: "ph:gear-six-fill",
+					description: "Currently at: Root / Language",
 				},
 			];
 
 			it("should have no accessibility violations when closed", async () => {
-				const component = await mountSuspended(DiscordV2StringSelectMenu, {
+				const component = await mountSuspended(DiscordStringSelectMenu, {
 					props: { options: selectOptions, ariaLabel: "Configuration category" },
 				});
 				const results = await runAxe(component);
@@ -326,11 +456,17 @@ describe("component accessibility audits", () => {
 			});
 
 			it("should have no accessibility violations when open", async () => {
-				const component = await mountSuspended(DiscordV2StringSelectMenu, {
+				const component = await mountSuspended(DiscordStringSelectMenu, {
 					props: { options: selectOptions, ariaLabel: "Configuration category" },
+					attachTo: document.body,
 				});
 				await component.find("button[role='combobox']").trigger("click");
-				const results = await runAxe(component);
+				await nextTick();
+				const panel = document.querySelector(".discord-string-select-menu-panel");
+				expect(panel).not.toBeNull();
+				const results = await runAxe(component, {
+					include: panel ? [panel] : [],
+				});
 				expect(results.violations).toEqual([]);
 			});
 		});

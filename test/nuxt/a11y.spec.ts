@@ -44,7 +44,6 @@ import {
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
-import { bentoFeatures, dashboardMembers, stats, testimonials } from "~/utils/constants";
 import { runAxe } from "./utils/axe";
 
 const inviteUrl =

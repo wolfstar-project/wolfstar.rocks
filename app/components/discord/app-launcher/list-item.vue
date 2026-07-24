@@ -186,5 +186,13 @@ const ariaLabel = computed(() => {
 	.discord-app-launcher-list-item-icon {
 		@apply rounded-[10px];
 	}
+
+	.discord-app-launcher-list-item-name {
+		@apply text-[15px] font-bold;
+	}
+
+	.discord-app-launcher-list-item-description {
+		@apply text-[13px];
+	}
 }
 </style>

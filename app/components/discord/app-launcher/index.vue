@@ -3,13 +3,37 @@
 		v-if="open"
 		ref="rootRef"
 		class="discord-app-launcher"
+		:class="{
+			'discord-app-launcher--sheet-half': sheetSnap === 'half',
+			'discord-app-launcher--sheet-full': sheetSnap === 'full',
+			'discord-app-launcher--sheet-dragging': sheetDragging,
+			'discord-app-launcher--reduce-motion': effectiveReduceMotion,
+		}"
+		:data-sheet-snap="sheetSnap"
+		:style="sheetDragStyle"
 		role="dialog"
 		aria-modal="true"
 		:aria-label="dialogLabel"
 		@keydown.escape.prevent.stop="onEscape"
 		@keydown.tab="onTab"
 	>
-		<div class="discord-app-launcher-handle" aria-hidden="true" />
+		<button
+			type="button"
+			class="discord-app-launcher-handle"
+			:tabindex="isMobileSheet ? 0 : -1"
+			:aria-hidden="isMobileSheet ? undefined : 'true'"
+			:aria-label="
+				isMobileSheet
+					? sheetSnap === 'full'
+						? 'Collapse Apps sheet'
+						: 'Expand Apps sheet'
+					: undefined
+			"
+			:aria-expanded="isMobileSheet ? sheetSnap === 'full' : undefined"
+			@pointerdown="onHandlePointerDown"
+			@keydown.up.prevent="expandSheet"
+			@keydown.down.prevent="collapseSheet"
+		/>
 
 		<!-- Main launcher -->
 		<template v-if="activeView === null">
@@ -92,6 +116,7 @@
 									/>
 								</h2>
 								<button
+									v-if="showRecentsViewMore"
 									type="button"
 									class="discord-app-launcher-view-more"
 									@click="openListView(recentsListViewId)"
@@ -231,6 +256,7 @@
 									>
 								</h2>
 								<button
+									v-if="showServerAppsViewMore"
 									type="button"
 									class="discord-app-launcher-view-more"
 									@click="openListView(serverAppsListViewId)"
@@ -394,9 +420,18 @@
 											<span
 												class="discord-app-launcher-promo-garden-flower"
 											/>
-											<span class="discord-app-launcher-promo-garden-title"
-												>MAGIC<br />GARDEN</span
-											>
+											<span class="discord-app-launcher-promo-garden-title">
+												<template
+													v-for="(
+														line, lineIndex
+													) of splitDiscordAppLauncherPromoTitle(
+														promo.title,
+													)"
+													:key="`${promo.id}-garden-${lineIndex}`"
+												>
+													<br v-if="lineIndex > 0" />{{ line }}
+												</template>
+											</span>
 										</template>
 										<template v-else-if="promo.variant === 'farm'">
 											<span class="discord-app-launcher-promo-farm-sun" />
@@ -405,18 +440,27 @@
 												name="ph:plant-fill"
 												class="discord-app-launcher-promo-farm-icon"
 											/>
-											<span class="discord-app-launcher-promo-farm-title"
-												>FARM<br />MERGE VALLEY</span
-											>
+											<span class="discord-app-launcher-promo-farm-title">
+												<template
+													v-for="(
+														line, lineIndex
+													) of splitDiscordAppLauncherPromoTitle(
+														promo.title,
+													)"
+													:key="`${promo.id}-farm-${lineIndex}`"
+												>
+													<br v-if="lineIndex > 0" />{{ line }}
+												</template>
+											</span>
 										</template>
 										<template v-else>
 											<UIcon
 												name="ph:youtube-logo-fill"
 												class="discord-app-launcher-promo-watch-icon"
 											/>
-											<span class="discord-app-launcher-promo-watch-title"
-												>YouTube</span
-											>
+											<span class="discord-app-launcher-promo-watch-title">{{
+												promo.title
+											}}</span>
 										</template>
 									</span>
 									<span class="discord-app-launcher-promo-footer">
@@ -468,6 +512,7 @@
 									{{ category.title }}
 								</h2>
 								<button
+									v-if="shouldShowCategoryViewMore(category)"
 									type="button"
 									class="discord-app-launcher-view-more discord-app-launcher-view-more-header"
 									@click="openListView(category.id)"
@@ -477,7 +522,7 @@
 							</div>
 							<div class="discord-app-launcher-server-list">
 								<DiscordAppLauncherListItem
-									v-for="(entry, index) of category.entries.slice(0, 4)"
+									v-for="(entry, index) of categoryPreviewEntries(category)"
 									:key="entry.id"
 									:class="{
 										'discord-app-launcher-server-row-bordered': index > 0,
@@ -492,6 +537,7 @@
 								/>
 							</div>
 							<button
+								v-if="shouldShowCategoryViewMore(category)"
 								type="button"
 								class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
 								@click="openListView(category.id)"
@@ -560,14 +606,8 @@ import type {
 	DiscordAppLauncherEntry,
 	DiscordAppLauncherListView,
 	DiscordAppLauncherPromo,
+	DiscordAppLauncherSheetSnap,
 } from "~/types/discord";
-import {
-	discordAppLauncherCategories,
-	discordAppLauncherListViews,
-	discordAppLauncherPromoted,
-	discordAppLauncherRecents,
-	discordAppLauncherServerApps,
-} from "~/utils/discord-app-launcher";
 
 interface AppLauncherProps {
 	/** Recent activity / app icons shown in the horizontal Recents row. */
@@ -590,6 +630,8 @@ interface AppLauncherProps {
 	recentsListViewId?: string;
 	/** List view id opened by Apps in this Server → View More. */
 	serverAppsListViewId?: string;
+	/** Initial mobile sheet snap when the launcher opens (`half` by default). */
+	initialSheetSnap?: DiscordAppLauncherSheetSnap;
 }
 
 interface AppLauncherEmits {
@@ -622,11 +664,15 @@ const {
 	listViews = discordAppLauncherListViews,
 	recentsListViewId = "recents",
 	serverAppsListViewId = "server-apps",
+	initialSheetSnap = "half",
 } = defineProps<AppLauncherProps>();
 
 const open = defineModel<boolean>("open", { default: false });
 
 const emit = defineEmits<AppLauncherEmits>();
+
+const { effectiveReduceMotion } = useReduceMotion();
+const isMobileSheet = useMediaQuery("(width < 48rem)");
 
 const rootRef = useTemplateRef<HTMLElement>("rootRef");
 const searchRef = useTemplateRef<HTMLInputElement>("searchRef");
@@ -634,7 +680,31 @@ const backRef = useTemplateRef<HTMLButtonElement>("backRef");
 
 const searchQuery = ref("");
 const activeView = ref<string | null>(null);
+const sheetSnap = ref<DiscordAppLauncherSheetSnap>(initialSheetSnap);
+const sheetDragging = ref(false);
+const sheetDragHeightPx = ref<number | null>(null);
 let returnFocusElement: HTMLElement | null = null;
+
+interface SheetDragSession {
+	pointerId: number;
+	startY: number;
+	startHeight: number;
+	halfHeight: number;
+	fullHeight: number;
+	lastY: number;
+	lastTime: number;
+	velocityY: number;
+}
+
+let sheetDragSession: SheetDragSession | null = null;
+
+const sheetDragStyle = computed(() => {
+	if (sheetDragHeightPx.value === null) return undefined;
+	return {
+		height: `${sheetDragHeightPx.value}px`,
+		maxHeight: "none",
+	};
+});
 
 const listViewById = computed(() => {
 	const map = new Map<string, DiscordAppLauncherListView>();
@@ -672,14 +742,33 @@ const filteredRecents = computed(() =>
 );
 
 /** Mobile Recents strip shows two compact command/app tiles. */
-const mobileRecents = computed(() => filteredRecents.value.slice(0, 2));
+const mobileRecents = computed(() =>
+	filteredRecents.value.slice(0, DISCORD_APP_LAUNCHER_MOBILE_TILE_COUNT),
+);
 
 const filteredServerApps = computed(() =>
 	serverApps.filter((entry) => matchesQuery(entry, normalizedQuery.value)),
 );
 
 /** Mobile “In This Server” strip shows two app tiles. */
-const mobileServerApps = computed(() => filteredServerApps.value.slice(0, 2));
+const mobileServerApps = computed(() =>
+	filteredServerApps.value.slice(0, DISCORD_APP_LAUNCHER_MOBILE_TILE_COUNT),
+);
+
+const showRecentsViewMore = computed(() => {
+	const listCount = listViewById.value.get(recentsListViewId)?.entries.length ?? 0;
+	return (
+		shouldShowDiscordAppLauncherViewMore(listCount, filteredRecents.value.length) ||
+		shouldShowDiscordAppLauncherViewMore(recents.length, mobileRecents.value.length)
+	);
+});
+
+const showServerAppsViewMore = computed(() =>
+	shouldShowDiscordAppLauncherViewMore(
+		filteredServerApps.value.length,
+		mobileServerApps.value.length,
+	),
+);
 
 const filteredPromoted = computed(() => {
 	const query = normalizedQuery.value;
@@ -708,6 +797,19 @@ const filteredActiveEntries = computed(() => {
 	return entries.filter((entry) => matchesQuery(entry, normalizedQuery.value));
 });
 
+function categoryPreviewEntries(
+	category: DiscordAppLauncherListView,
+): readonly DiscordAppLauncherEntry[] {
+	return category.entries.slice(0, DISCORD_APP_LAUNCHER_CATEGORY_PREVIEW_COUNT);
+}
+
+function shouldShowCategoryViewMore(category: DiscordAppLauncherListView): boolean {
+	return shouldShowDiscordAppLauncherViewMore(
+		category.entries.length,
+		DISCORD_APP_LAUNCHER_CATEGORY_PREVIEW_COUNT,
+	);
+}
+
 function isWolfstarEntry(entry: DiscordAppLauncherEntry): boolean {
 	return entry.avatar === "/avatars/wolfstar.png" || entry.id.startsWith("wolfstar");
 }
@@ -721,6 +823,107 @@ function recentTileLabel(entry: DiscordAppLauncherEntry): string {
 function promoAriaLabel(promo: DiscordAppLauncherPromo): string {
 	const details = promo.description ?? promo.subtitle;
 	return details ? `${promo.title}. ${details}` : promo.title;
+}
+
+function expandSheet() {
+	sheetSnap.value = "full";
+	sheetDragHeightPx.value = null;
+}
+
+function collapseSheet() {
+	sheetSnap.value = "half";
+	sheetDragHeightPx.value = null;
+}
+
+function resetSheetSnap() {
+	sheetSnap.value = initialSheetSnap;
+	sheetDragging.value = false;
+	sheetDragHeightPx.value = null;
+	sheetDragSession = null;
+}
+
+function resolveSheetHeightBounds(root: HTMLElement): { half: number; full: number } {
+	const styles = getComputedStyle(root);
+	const halfToken = styles.getPropertyValue("--discord-app-launcher-sheet-half").trim();
+	const fullToken = styles.getPropertyValue("--discord-app-launcher-sheet-full").trim();
+	const halfProbe = document.createElement("div");
+	halfProbe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;height:${halfToken || "min(55dvh, 22rem)"};`;
+	const fullProbe = document.createElement("div");
+	fullProbe.style.cssText = `position:absolute;visibility:hidden;pointer-events:none;height:${fullToken || "min(90dvh, 32rem)"};`;
+	document.body.append(halfProbe, fullProbe);
+	const half = halfProbe.getBoundingClientRect().height;
+	const full = fullProbe.getBoundingClientRect().height;
+	halfProbe.remove();
+	fullProbe.remove();
+	return {
+		half: half > 0 ? half : 352,
+		full: full > 0 ? full : 512,
+	};
+}
+
+function onHandlePointerDown(event: PointerEvent) {
+	if (!isMobileSheet.value || event.button !== 0) return;
+	const root = rootRef.value;
+	if (!root) return;
+
+	const bounds = resolveSheetHeightBounds(root);
+	const startHeight = root.getBoundingClientRect().height;
+	sheetDragSession = {
+		pointerId: event.pointerId,
+		startY: event.clientY,
+		startHeight,
+		halfHeight: bounds.half,
+		fullHeight: bounds.full,
+		lastY: event.clientY,
+		lastTime: event.timeStamp,
+		velocityY: 0,
+	};
+	sheetDragging.value = true;
+	sheetDragHeightPx.value = startHeight;
+
+	if (event.currentTarget instanceof HTMLElement) {
+		event.currentTarget.setPointerCapture(event.pointerId);
+	}
+
+	window.addEventListener("pointermove", onHandlePointerMove);
+	window.addEventListener("pointerup", onHandlePointerUp);
+	window.addEventListener("pointercancel", onHandlePointerUp);
+}
+
+function onHandlePointerMove(event: PointerEvent) {
+	const session = sheetDragSession;
+	if (!session || event.pointerId !== session.pointerId) return;
+
+	const deltaY = event.clientY - session.startY;
+	const nextHeight = Math.min(
+		session.fullHeight,
+		Math.max(session.halfHeight, session.startHeight - deltaY),
+	);
+	sheetDragHeightPx.value = nextHeight;
+
+	const elapsed = Math.max(1, event.timeStamp - session.lastTime);
+	session.velocityY = (event.clientY - session.lastY) / elapsed;
+	session.lastY = event.clientY;
+	session.lastTime = event.timeStamp;
+}
+
+function onHandlePointerUp(event: PointerEvent) {
+	const session = sheetDragSession;
+	if (!session || event.pointerId !== session.pointerId) return;
+
+	window.removeEventListener("pointermove", onHandlePointerMove);
+	window.removeEventListener("pointerup", onHandlePointerUp);
+	window.removeEventListener("pointercancel", onHandlePointerUp);
+
+	const deltaY = event.clientY - session.startY;
+	sheetSnap.value = resolveDiscordAppLauncherSheetSnap({
+		current: sheetSnap.value,
+		deltaY,
+		velocityY: session.velocityY,
+	});
+	sheetDragging.value = false;
+	sheetDragHeightPx.value = null;
+	sheetDragSession = null;
 }
 
 function openListView(id: string) {
@@ -758,6 +961,7 @@ function closeLauncher() {
 	open.value = false;
 	activeView.value = null;
 	searchQuery.value = "";
+	resetSheetSnap();
 	emit("close");
 }
 
@@ -775,7 +979,7 @@ function onTab(event: KeyboardEvent) {
 
 	const focusable = Array.from(
 		root.querySelectorAll<HTMLElement>(
-			'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+			'button:not([disabled]):not([tabindex="-1"]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
 		),
 	);
 	const first = focusable[0];
@@ -801,6 +1005,7 @@ watch(open, (isOpen, wasOpen) => {
 	if (!isOpen) {
 		activeView.value = null;
 		searchQuery.value = "";
+		resetSheetSnap();
 		if (wasOpen) {
 			nextTick(() => {
 				returnFocusElement?.focus();
@@ -809,6 +1014,7 @@ watch(open, (isOpen, wasOpen) => {
 		}
 		return;
 	}
+	resetSheetSnap();
 	if (document.activeElement instanceof HTMLElement) {
 		returnFocusElement = document.activeElement;
 	}
@@ -819,6 +1025,12 @@ watch(open, (isOpen, wasOpen) => {
 
 onMounted(() => {
 	if (open.value) searchRef.value?.focus();
+});
+
+onBeforeUnmount(() => {
+	window.removeEventListener("pointermove", onHandlePointerMove);
+	window.removeEventListener("pointerup", onHandlePointerUp);
+	window.removeEventListener("pointercancel", onHandlePointerUp);
 });
 </script>
 
@@ -1005,6 +1217,16 @@ onMounted(() => {
 }
 
 .discord-app-launcher-server-row-bordered {
+	position: relative;
+	border-top: none;
+}
+
+.discord-app-launcher-server-row-bordered::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 3.75rem;
 	border-top: 1px solid var(--discord-app-launcher-divider);
 }
 
@@ -1261,7 +1483,7 @@ onMounted(() => {
 }
 
 .discord-app-launcher-promo-farm-title {
-	@apply relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black;
+	@apply relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black uppercase;
 	color: oklch(96% 0.01 95);
 	text-shadow: 0 2px 0 oklch(43% 0.16 25);
 }
@@ -1356,6 +1578,10 @@ onMounted(() => {
 
 .discord-app-launcher-tile:focus-visible {
 	@apply outline-2 outline-offset-2 outline-primary;
+}
+
+.discord-app-launcher-tile:hover .discord-app-launcher-tile-icon {
+	filter: brightness(1.1);
 }
 
 .discord-app-launcher-tile-icon {
@@ -1477,15 +1703,48 @@ onMounted(() => {
 		--discord-app-launcher-link: oklch(72% 0.14 264);
 		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
 		--discord-app-launcher-handle: oklch(62% 0.01 272);
+		--discord-app-launcher-handle-shadow: oklch(0% 0 0 / 0.35);
+		--discord-app-launcher-sheet-shadow: oklch(0% 0 0 / 0.4);
 		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
 		--discord-app-launcher-help-btn: oklch(38% 0.01 272);
+		--discord-app-launcher-help-btn-text: oklch(92% 0.004 272);
+		--discord-app-launcher-help-btn-shadow: oklch(0% 0 0 / 0.45);
+		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
+		--discord-app-launcher-sheet-full: min(90dvh, 32rem);
 
-		@apply h-[min(55dvh,22rem)] max-h-[55dvh] w-full max-w-none rounded-t-2xl rounded-b-none border-0 shadow-none;
+		@apply w-full max-w-none rounded-t-2xl rounded-b-none border-0;
+		height: var(--discord-app-launcher-sheet-half);
+		max-height: var(--discord-app-launcher-sheet-full);
+		box-shadow: 0 -8px 28px var(--discord-app-launcher-sheet-shadow);
+		transition: height 0.2s ease;
+	}
+
+	.discord-app-launcher--sheet-full {
+		height: var(--discord-app-launcher-sheet-full);
+		max-height: var(--discord-app-launcher-sheet-full);
+	}
+
+	.discord-app-launcher--sheet-dragging {
+		transition: none;
+	}
+
+	.discord-app-launcher--reduce-motion {
+		transition: none;
 	}
 
 	.discord-app-launcher-handle {
-		@apply mx-auto mt-2.5 mb-1.5 block h-1.5 w-11 shrink-0 rounded-full;
+		@apply mx-auto mt-2.5 mb-1.5 block h-1.5 w-11 shrink-0 cursor-grab rounded-full border-0 p-0;
 		background-color: var(--discord-app-launcher-handle);
+		box-shadow: 0 1px 2px var(--discord-app-launcher-handle-shadow);
+		touch-action: none;
+	}
+
+	.discord-app-launcher-handle:active {
+		cursor: grabbing;
+	}
+
+	.discord-app-launcher-handle:focus-visible {
+		@apply outline-2 outline-offset-2 outline-primary;
 	}
 
 	.discord-app-launcher-main-content {
@@ -1536,7 +1795,7 @@ onMounted(() => {
 	}
 
 	.discord-app-launcher-view-more-footer {
-		@apply mt-1 block w-full py-1 text-center text-[15px] font-semibold;
+		@apply mt-1 block w-full py-2.5 text-center text-[15px] font-semibold;
 		color: var(--discord-app-launcher-link);
 		text-decoration: none;
 	}
@@ -1592,12 +1851,16 @@ onMounted(() => {
 		@apply px-0.5;
 	}
 
+	.discord-app-launcher-category .discord-app-launcher-server-list {
+		@apply rounded-[14px];
+	}
+
 	.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
-		@apply px-3 py-3.5;
+		@apply gap-3 px-3 py-3;
 	}
 
 	.discord-app-launcher-help {
-		@apply flex-col items-center gap-3 rounded-[12px] px-4 py-5 text-center;
+		@apply flex-col items-center gap-3 rounded-[14px] px-5 py-6 text-center;
 	}
 
 	.discord-app-launcher-help > span {
@@ -1613,9 +1876,14 @@ onMounted(() => {
 	}
 
 	.discord-app-launcher-help button {
-		@apply w-full rounded-full px-4 py-3 text-[15px] font-bold;
+		@apply w-auto min-w-[8.5rem] rounded-full px-5 py-2 text-[14px] font-bold;
 		background-color: var(--discord-app-launcher-help-btn);
-		color: var(--discord-app-launcher-text);
+		color: var(--discord-app-launcher-help-btn-text);
+		box-shadow: 0 2px 0 var(--discord-app-launcher-help-btn-shadow);
+	}
+
+	.discord-app-launcher-help button:hover {
+		filter: brightness(1.06);
 	}
 
 	.discord-app-launcher-list-header {
@@ -1624,6 +1892,24 @@ onMounted(() => {
 
 	.discord-app-launcher-list-body {
 		@apply mx-3;
+	}
+
+	.discord-app-launcher-list-body :deep(.discord-app-launcher-list-item:not(:first-child)) {
+		border-top: none;
+	}
+
+	.discord-app-launcher-list-body
+		:deep(.discord-app-launcher-list-item:not(:first-child))::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 3.75rem;
+		border-top: 1px solid var(--discord-app-launcher-divider);
+	}
+
+	.discord-app-launcher-list-body :deep(.discord-app-launcher-list-item) {
+		position: relative;
 	}
 }
 </style>

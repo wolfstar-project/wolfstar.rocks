@@ -25,12 +25,11 @@ overrides:
     # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
     # vue copies make VueUse and app refs incompatible during typecheck
     vue: 3.5.40
-    # Nuxt 4.5 migrates to unhead v3; @nuxt/ui still peers unhead v2 which
-    # breaks the build (`legacyPlugins` missing from @unhead/vue/legacy).
+    # Nuxt 4.5 needs unhead v3; @nuxt/ui still peers v2 (missing legacyPlugins).
     "@unhead/vue": 3.2.3
     unhead: 3.2.3
     sharp: 0.34.5
-    # Vite+ 0.2.x: alias vite to core, pin vitest to the version bundled by vite-plus
+    # Vite+ 0.2.x: alias vite to core; pin vitest to the bundled version.
     vite: npm:@voidzero-dev/vite-plus-core@0.2.5
     vitest: 4.1.10
 

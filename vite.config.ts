@@ -236,9 +236,7 @@ export default defineConfig({
 			"regexp/strict": "error",
 			"regexp/use-ignore-case": "error",
 			"vitest/require-mock-type-parameters": "off",
-			// Newer Oxlint (via Vite+) expands the default vitest recommended set.
-			// Keep intentional rules in the test override; silence new defaults here
-			// so the upgrade does not require a broad test rewrite.
+			// Silence new Oxlint vitest defaults; intentional rules stay in the test override.
 			"vitest/expect-expect": "off",
 			"vitest/no-conditional-expect": "off",
 			"vitest/no-disabled-tests": "off",
@@ -328,8 +326,7 @@ export default defineConfig({
 							withinDescribe: "it",
 						},
 					],
-					// Newer Oxlint expands vitest recommended defaults; keep prior
-					// intentional rules and silence new ones that need a broader rewrite.
+					// Silence new Oxlint vitest defaults; keep prior intentional rules.
 					"vitest/expect-expect": "off",
 					"vitest/no-conditional-expect": "off",
 					"vitest/no-disabled-tests": "off",
@@ -571,8 +568,7 @@ export default defineConfig({
 										},
 									},
 									vue: { runtimeCompiler: true },
-									// Match npmx.dev: keep Vitest browser Nuxt projects off the
-									// Vite Environment API until VTU emit capture is reliable there.
+									// Off for Vitest browser: VTU emit capture breaks with viteEnvironmentApi.
 									experimental: {
 										payloadExtraction: false,
 										viteEnvironmentApi: false,

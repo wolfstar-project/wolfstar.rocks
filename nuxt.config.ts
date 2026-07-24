@@ -53,8 +53,7 @@ export default defineNuxtConfig({
 			name: "WolfStar (Dev)",
 			url: "http://localhost:3000",
 		},
-		// Vite 8.1+ experimental bundled dev mode — faster cold starts for large apps.
-		// Keep this development-only; Vitest browser sessions break with bundledDev.
+		// Dev-only: Vitest browser sessions break with bundledDev.
 		vite: {
 			experimental: {
 				bundledDev: true,

@@ -49,7 +49,7 @@ describe("useModerationLog", () => {
 		expect(status.value).toBe("success");
 		const callsBefore = fetchCount;
 
-		// Nested mutation — matches ModerationLogTable.vue filter updates.
+		// Nested mutation (same pattern as ModerationLogTable.vue).
 		filters.value.typeCode = 1;
 		await nextTick();
 		await vi.waitUntil(() => fetchCount > callsBefore, { timeout: 2_000 });

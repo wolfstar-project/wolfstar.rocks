@@ -28,8 +28,7 @@ export function useModerationLog({
 }) {
 	const resolvedLimit = computed(() => (limit !== undefined ? toValue(limit) : undefined));
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
-	// Spread so nested filter mutations (e.g. filters.value.typeCode = 1) invalidate
-	// this computed and the useAsyncData key/watch under Nuxt 4.5.
+	// Nested filter mutations need a new object so Nuxt 4.5 invalidates useAsyncData.
 	const resolvedFilters = computed(() => {
 		const value = filters !== undefined ? toValue(filters) : undefined;
 		return value ? { ...value } : undefined;

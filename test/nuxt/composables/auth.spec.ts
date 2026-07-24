@@ -45,8 +45,13 @@ describe("guildAddURL", () => {
 
 describe("resolveClientUser", () => {
 	it("should delegate to $authorization.resolveClientUser()", () => {
-		const result = resolveClientUser();
-		// The function delegates to the authorization plugin; in test env it returns the resolved client user
-		expect(result).toBeDefined();
+		const app = useNuxtApp();
+		const expectedUser = { id: "test-user", name: "Test" };
+
+		app.provide("authorization", {
+			resolveClientUser: () => expectedUser,
+		});
+
+		expect(resolveClientUser()).toEqual(expectedUser);
 	});
 });

@@ -35,7 +35,7 @@ overrides:
     vitest: 4.1.10
 
 patchedDependencies:
-    "@nuxt/test-utils": patches/@nuxt__test-utils.patch
+    "@nuxt/test-utils@4.0.3": patches/@nuxt__test-utils@4.0.3.patch
 
 catalogs:
     msw:

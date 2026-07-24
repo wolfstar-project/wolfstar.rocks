@@ -48,8 +48,6 @@ describe("resolveClientUser", () => {
 		const app = useNuxtApp();
 		const expectedUser = { id: "test-user", name: "Test" };
 
-		// App plugins may not always register under the Vitest browser runner
-		// (Nuxt 4.5 + viteEnvironmentApi: false). Inject the dependency under test.
 		app.provide("authorization", {
 			resolveClientUser: () => expectedUser,
 		});

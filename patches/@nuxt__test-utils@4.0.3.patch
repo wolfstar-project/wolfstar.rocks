@@ -1,0 +1,32 @@
+diff --git a/dist/config.mjs b/dist/config.mjs
+index e79266c9cfb09761e0dc0ca279484c489fbb4464..38ec577b39be1989be3ed54f3298b87c6751e79f 100644
+--- a/dist/config.mjs
++++ b/dist/config.mjs
+@@ -130,7 +130,7 @@ async function getVitestConfigFromNuxt(options, loadNuxtOptions = {}) {
+       },
+       test: {
+         environmentOptions: {
+-          nuxtRuntimeConfig: applyEnv(structuredClone(options.nuxt.options.runtimeConfig), {
++          nuxtRuntimeConfig: applyEnv(JSON.parse(JSON.stringify(options.nuxt.options.runtimeConfig)), {
+             prefix: "NUXT_",
+             env: await setupDotenv(defu(loadNuxtOptions.dotenv, {
+               cwd: rootDir,
+@@ -318,6 +318,18 @@ async function resolveConfig(config) {
+   );
+   resolvedConfig.plugins.push(NuxtVitestEnvironmentOptionsPlugin(resolvedConfig.test.environmentOptions));
+   if (resolvedConfig.test.browser?.enabled) {
++    resolvedConfig.plugins.push({
++      name: "nuxt:test-utils:browser-client-environment",
++      configEnvironment(name) {
++        if (name === "client") {
++          return {
++            dev: {
++              moduleRunnerTransform: false
++            }
++          };
++        }
++      }
++    });
+     if (resolvedConfig.test.environment === "nuxt") {
+       resolvedConfig.test.setupFiles = Array.isArray(resolvedConfig.test.setupFiles) ? resolvedConfig.test.setupFiles : [resolvedConfig.test.setupFiles].filter(Boolean);
+       const resolver = createResolver(import.meta.url);

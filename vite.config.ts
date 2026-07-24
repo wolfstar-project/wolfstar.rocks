@@ -574,7 +574,6 @@ export default defineConfig({
 									vue: { runtimeCompiler: true },
 									experimental: {
 										payloadExtraction: false,
-										viteEnvironmentApi: false,
 									},
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },

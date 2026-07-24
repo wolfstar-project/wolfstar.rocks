@@ -628,6 +628,14 @@ describe("component accessibility audits", () => {
 			expect(
 				wrapper.find("[aria-label='Visit WolfStar on GitHub - opens in new tab']").exists(),
 			).toBe(true);
+			expect(
+				wrapper
+					.find("[aria-label='Join the WolfStar Discord - opens in new tab']")
+					.exists(),
+			).toBe(true);
+			expect(
+				wrapper.find("[aria-label='Follow WolfStar on X - opens in new tab']").exists(),
+			).toBe(true);
 		});
 	});
 

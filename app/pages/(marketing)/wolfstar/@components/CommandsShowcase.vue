@@ -17,7 +17,10 @@
 					<div class="showcase-discord-workspace">
 						<div
 							class="showcase-discord-main"
-							:class="{ 'showcase-discord-main-picker-open': showCommandPicker }"
+							:class="{
+								'showcase-discord-main-picker-open': showCommandPicker,
+								'showcase-discord-main-apps-open': appLauncherOpen,
+							}"
 						>
 							<DiscordChat
 								channel-name="mod-commands"
@@ -209,6 +212,7 @@
 									v-model="composerText"
 									channel-name="mod-commands"
 									autocomplete
+									:apps-open="appLauncherOpen"
 									:aria-controls="
 										showCommandPicker ? 'showcase-slash-suggestions' : undefined
 									"
@@ -897,7 +901,7 @@ onMounted(() => {
 }
 
 .showcase-command-picker {
-	@apply absolute inset-x-0 bottom-0 z-1;
+	@apply absolute inset-x-0 bottom-0 z-2;
 	/*
 	 * Transparent on desktop so the picker↔composer gap (~8px) reveals the
 	 * channel background. Mobile keeps a solid bar behind the flush stack.
@@ -906,7 +910,7 @@ onMounted(() => {
 }
 
 .showcase-app-launcher {
-	@apply mr-3 mb-2 ml-auto;
+	@apply relative z-2 mr-3 mb-2 ml-auto;
 	width: min(31.5rem, calc(100% - 1.5rem));
 }
 
@@ -981,9 +985,24 @@ onMounted(() => {
 		padding-bottom: 3.5rem;
 	}
 
+	.showcase-discord-main-apps-open {
+		/* Let the half/full sheet stack above messages without clipping under chrome. */
+		overflow: visible;
+	}
+
+	.showcase-discord-main-apps-open > :deep(.discord-chat) {
+		/* Sheet covers the lower messages; reserve only the composer bar. */
+		padding-bottom: 3.5rem;
+	}
+
 	.showcase-command-picker {
 		/* Solid bar behind flush mobile picker + composer (no channel peek gap). */
+		@apply z-3;
 		background-color: var(--showcase-discord-composer-bar);
+	}
+
+	.showcase-app-launcher {
+		@apply relative z-3 mx-0 mb-0 w-full max-w-none;
 	}
 
 	.showcase-command-picker :deep(.discord-slash-command-suggestions) {

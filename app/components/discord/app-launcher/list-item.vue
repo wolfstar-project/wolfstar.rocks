@@ -45,6 +45,12 @@
 				{{ description }}
 			</span>
 		</span>
+
+		<UIcon
+			name="ph:caret-right-bold"
+			class="discord-app-launcher-list-item-chevron"
+			aria-hidden="true"
+		/>
 	</button>
 </template>
 
@@ -56,7 +62,6 @@ interface AppLauncherListItemProps {
 	icon?: string;
 	iconBg?: string;
 	promoted?: boolean;
-	/** Discord eye affordance next to the title (details / preview). */
 	showEye?: boolean;
 }
 
@@ -98,6 +103,7 @@ const ariaLabel = computed(() => {
 	--discord-app-launcher-list-item-wolfstar-bg: oklch(0% 0 0);
 	--discord-app-launcher-list-item-promoted-bg: oklch(91.56% 0.004 272.93);
 	--discord-app-launcher-list-item-promoted-text: oklch(26.65% 0.006 272.93);
+	--discord-app-launcher-list-item-chevron: oklch(68% 0.012 273);
 
 	@apply flex w-full cursor-pointer items-center gap-3 rounded-lg border-0 bg-transparent px-2 py-2 text-left font-whitney;
 }
@@ -159,5 +165,32 @@ const ariaLabel = computed(() => {
 .discord-app-launcher-list-item-description {
 	@apply truncate text-[13px] leading-snug;
 	color: var(--discord-app-launcher-list-item-description);
+}
+
+.discord-app-launcher-list-item-chevron {
+	@apply hidden size-4 shrink-0;
+	color: var(--discord-app-launcher-list-item-chevron);
+}
+
+@media (width < 48rem) {
+	.discord-app-launcher-list-item-eye {
+		display: none;
+	}
+
+	.discord-app-launcher-list-item-chevron {
+		display: block;
+	}
+
+	.discord-app-launcher-list-item-icon {
+		@apply rounded-[10px];
+	}
+
+	.discord-app-launcher-list-item-name {
+		@apply text-[15px] font-bold;
+	}
+
+	.discord-app-launcher-list-item-description {
+		@apply text-[13px];
+	}
 }
 </style>

@@ -1325,6 +1325,7 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(true);
 			expect(wrapper.find('[role="dialog"][aria-label="Apps"]').exists()).toBe(true);
+			expect(wrapper.find("[data-sheet-snap]").exists()).toBe(true);
 			expect(
 				wrapper.find(".discord-app-launcher-search-input").attributes("placeholder"),
 			).toBe("Search Apps & Commands");

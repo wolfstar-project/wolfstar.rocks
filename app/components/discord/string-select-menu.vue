@@ -96,10 +96,7 @@ interface StringSelectMenuEmits {
 </script>
 
 <script setup lang="ts">
-import {
-	resolveStringSelectMenuPlacement,
-	type StringSelectMenuPlacement,
-} from "~/utils/discord-string-select-menu";
+import type { StringSelectMenuPlacement } from "~/types/discord";
 
 const {
 	options,

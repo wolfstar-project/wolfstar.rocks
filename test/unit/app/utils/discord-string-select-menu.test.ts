@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
 	resolveStringSelectMenuPlacement,
 	STRING_SELECT_MENU_PANEL_MAX_HEIGHT,
-} from "~/utils/discord-string-select-menu";
+} from "~/utils/constants";
 
 describe("resolveStringSelectMenuPlacement", () => {
 	const viewport = 800;

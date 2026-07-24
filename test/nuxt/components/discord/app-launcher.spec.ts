@@ -1,7 +1,7 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
 import DiscordAppLauncher from "~/components/discord/app-launcher/index.vue";
-import { discordAppLauncherRecentsList } from "~/utils/discord-app-launcher";
+import { discordAppLauncherRecentsList } from "~/utils/constants";
 
 describe("DiscordAppLauncher", () => {
 	it("renders search, Recents, server apps, and Promoted when open (positive)", async () => {
@@ -19,13 +19,26 @@ describe("DiscordAppLauncher", () => {
 		);
 		expect(wrapper.text()).toContain("Recents");
 		expect(wrapper.text()).toContain("Apps in this Server");
+		expect(wrapper.text()).toContain("In This Server");
 		expect(wrapper.text()).toContain("Promoted");
 		expect(wrapper.text()).toContain("Puzzle Games");
 		expect(wrapper.text()).toContain("Chill Together");
 		expect(wrapper.findAll(".discord-app-launcher-recent").length).toBeGreaterThan(0);
+		expect(wrapper.findAll(".discord-app-launcher-tile").length).toBeGreaterThan(0);
+		expect(wrapper.find(".discord-app-launcher-handle").exists()).toBe(true);
 		expect(wrapper.findAll(".discord-app-launcher-promo")).toHaveLength(4);
 		expect(wrapper.text()).toContain("WolfStar Beta");
+		expect(wrapper.text()).toContain("conf menu");
 		expect(wrapper.text()).toContain("Wordle");
+		expect(wrapper.find(".discord-app-launcher-promo-garden-title").text()).toContain("Magic");
+		expect(wrapper.find(".discord-app-launcher-promo-garden-title").text()).toContain("Garden");
+		expect(wrapper.find(".discord-app-launcher-promo-farm-title").text()).toContain("Farm");
+		expect(wrapper.find(".discord-app-launcher-promo-farm-title").text()).toContain(
+			"Merge Valley",
+		);
+		expect(wrapper.find(".discord-app-launcher-promo-watch-title").text()).toBe(
+			"Watch Together",
+		);
 	});
 
 	it("does not render the dialog when closed (negative)", async () => {
@@ -211,13 +224,37 @@ describe("DiscordAppLauncher", () => {
 
 		// ACT
 		await wrapper
-			.findAll(".discord-app-launcher-server-list .discord-app-launcher-list-item")[0]!
+			.findAll(
+				".discord-app-launcher-server-list-desktop .discord-app-launcher-list-item",
+			)[0]!
 			.trigger("click");
 
 		// ASSERT
 		const selected = wrapper.emitted("select");
 		expect(selected).toHaveLength(1);
 		expect(selected?.[0]?.[0]).toMatchObject({ id: "wolfstar", name: "WolfStar Beta" });
+	});
+
+	it("emits select when a mobile Recents tile is clicked (positive)", async () => {
+		// ARRANGE
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: { open: true },
+		});
+
+		// ACT
+		await wrapper
+			.find(".discord-app-launcher-recents-mobile .discord-app-launcher-tile")
+			.trigger("click");
+
+		// ASSERT
+		const selected = wrapper.emitted("select");
+		expect(selected).toHaveLength(1);
+		expect(selected?.[0]?.[0]).toMatchObject({
+			id: "wolfstar-conf-menu",
+			tileTitle: "conf menu",
+			kind: "command",
+			commandName: "conf",
+		});
 	});
 
 	it("closes on Escape from the main view (positive)", async () => {
@@ -251,5 +288,109 @@ describe("DiscordAppLauncher", () => {
 		expect(wrapper.find(".discord-app-launcher-search-input").exists()).toBe(true);
 		expect(wrapper.emitted("close")).toBeUndefined();
 		expect(wrapper.props("open")).toBe(true);
+	});
+
+	it("opens at the half sheet snap by default (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: { open: true },
+			attachTo: document.body,
+		});
+
+		// ASSERT
+		expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
+		expect(wrapper.find(".discord-app-launcher--sheet-half").exists()).toBe(true);
+	});
+
+	it("expands to full via the handle ArrowUp key and collapses via ArrowDown (positive)", async () => {
+		// ARRANGE
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: { open: true },
+			attachTo: document.body,
+		});
+		const handle = wrapper.find(".discord-app-launcher-handle");
+
+		// ACT
+		await handle.trigger("keydown", { key: "ArrowUp" });
+
+		// ASSERT
+		expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
+		expect(wrapper.find(".discord-app-launcher--sheet-full").exists()).toBe(true);
+
+		// ACT — collapse only, never close
+		await handle.trigger("keydown", { key: "ArrowDown" });
+
+		// ASSERT
+		expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
+		expect(wrapper.props("open")).toBe(true);
+		expect(wrapper.emitted("close")).toBeUndefined();
+	});
+
+	it("honors initialSheetSnap=full when opening (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: { open: true, initialSheetSnap: "full" },
+			attachTo: document.body,
+		});
+
+		// ASSERT
+		expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
+	});
+
+	it("shows category View More only when entries overflow the preview (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: {
+				open: true,
+				categories: [
+					{
+						id: "overflow-games",
+						title: "Overflow Games",
+						entries: [
+							{ id: "a", name: "Alpha" },
+							{ id: "b", name: "Bravo" },
+							{ id: "c", name: "Charlie" },
+							{ id: "d", name: "Delta" },
+							{ id: "e", name: "Echo" },
+						],
+					},
+					{
+						id: "exact-games",
+						title: "Exact Games",
+						entries: [
+							{ id: "f", name: "Foxtrot" },
+							{ id: "g", name: "Golf" },
+							{ id: "h", name: "Hotel" },
+							{ id: "i", name: "India" },
+						],
+					},
+				],
+			},
+		});
+
+		// ASSERT
+		const overflowSection = wrapper
+			.findAll(".discord-app-launcher-category")
+			.find((section) => section.text().includes("Overflow Games"));
+		const exactSection = wrapper
+			.findAll(".discord-app-launcher-category")
+			.find((section) => section.text().includes("Exact Games"));
+		expect(overflowSection).toBeDefined();
+		expect(exactSection).toBeDefined();
+		expect(overflowSection!.find(".discord-app-launcher-view-more-footer").exists()).toBe(true);
+		expect(exactSection!.find(".discord-app-launcher-view-more-footer").exists()).toBe(false);
+	});
+
+	it("emits requestHelp from the Learn More button (positive)", async () => {
+		// ARRANGE
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: { open: true },
+		});
+
+		// ACT
+		await wrapper.find(".discord-app-launcher-help button").trigger("click");
+
+		// ASSERT
+		expect(wrapper.emitted("requestHelp")).toHaveLength(1);
 	});
 });

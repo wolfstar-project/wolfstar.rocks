@@ -1,4 +1,4 @@
-import type { ProfileName } from "@/utils/constants";
+import type { ProfileName } from "~/types/constants";
 
 // #region Message Reply
 type MessageReplyKind = "command" | "message";
@@ -100,6 +100,10 @@ export interface DiscordAppLauncherEntry {
 	 * Parent handlers should call the interactive execute flow with this name.
 	 */
 	commandName?: string;
+	/** Mobile tile primary label; falls back to `name`. */
+	tileTitle?: string;
+	/** Mobile tile secondary label (e.g. app name under a recent command). */
+	tileSubtitle?: string;
 }
 
 /** Promotional card in the launcher’s Promoted grid. */
@@ -120,8 +124,29 @@ export interface DiscordAppLauncherListView {
 	title: string;
 	entries: readonly DiscordAppLauncherEntry[];
 }
+
+/** Mobile App Launcher bottom-sheet snap points. */
+export type DiscordAppLauncherSheetSnap = "half" | "full";
+
+export interface ResolveDiscordAppLauncherSheetSnapOptions {
+	current: DiscordAppLauncherSheetSnap;
+	/** Pointer delta: positive = dragged down, negative = dragged up. */
+	deltaY: number;
+	/** Pointer velocity: positive = downward, negative = upward (px/ms). */
+	velocityY: number;
+}
 // #endregion
 
 // #region String Select Menu
-export type { StringSelectMenuOption } from "./string-select-menu";
+export interface StringSelectMenuOption {
+	value: string;
+	label: string;
+	description?: string;
+	/** Unicode emoji, Iconify name (`ph:folder-fill`, `twemoji:gear`), or image URL/path (`http…`, `/…`, `./…`). */
+	emoji?: string;
+	emojiName?: string;
+	disabled?: boolean;
+}
+
+export type StringSelectMenuPlacement = "above" | "below";
 // #endregion

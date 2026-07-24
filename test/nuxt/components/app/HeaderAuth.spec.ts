@@ -21,4 +21,24 @@ describe("AppHeaderAuth", () => {
 			expect(second.html()).toBe(first.html());
 		});
 	});
+
+	describe("responsive sign-in", () => {
+		it("hides the header sign-in control below md breakpoints", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth);
+			const button = wrapper.get('a[aria-label="Sign in with Discord"]');
+			expect(button.classes().join(" ")).toContain("hidden");
+			expect(button.classes().join(" ")).toContain("md:inline-flex");
+			expect(button.classes().join(" ")).not.toContain("w-full");
+		});
+
+		it("renders a compact non-block sign-in control in the mobile drawer", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth, {
+				props: { mobile: true },
+			});
+			const button = wrapper.get('a[aria-label="Sign in with Discord"]');
+			expect(button.classes().join(" ")).toContain("rounded-lg");
+			expect(button.classes().join(" ")).not.toContain("w-full");
+			expect(button.attributes("href")).toBe("/login");
+		});
+	});
 });

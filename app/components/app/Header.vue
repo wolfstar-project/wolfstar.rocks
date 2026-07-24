@@ -26,34 +26,24 @@
 		</div>
 
 		<template #right>
-			<div class="flex items-center gap-2">
+			<div class="hidden items-center gap-2 md:flex">
 				<UButton
 					v-if="currentApp.invite !== '#'"
 					label="Add App"
 					size="sm"
 					color="primary"
 					:to="currentApp.invite"
-					class="hidden rounded-lg font-semibold md:inline-flex"
+					class="rounded-lg font-semibold"
 				/>
 				<ClientOnly>
 					<LazyAppHeaderAuth />
 					<template #fallback>
 						<UButton
-							size="md"
-							color="primary"
-							variant="subtle"
-							block
-							class="invisible md:hidden"
-							icon="ic:round-discord"
-							tabindex="-1"
-						/>
-						<UButton
 							label="Sign in"
 							size="md"
 							color="primary"
 							variant="subtle"
-							block
-							class="invisible hidden md:inline-flex"
+							class="invisible rounded-lg"
 							icon="ic:round-discord"
 							tabindex="-1"
 						/>
@@ -62,30 +52,46 @@
 			</div>
 		</template>
 		<template #body>
-			<UNavigationMenu
-				orientation="vertical"
-				:items="mobileLinks"
-				class="-mx-2.5"
-				aria-label="Mobile navigation"
-			/>
+			<nav class="flex min-h-0 flex-1 flex-col gap-6" aria-label="Mobile menu">
+				<UNavigationMenu
+					orientation="vertical"
+					:items="mobileLinks"
+					class="-mx-1"
+					aria-label="Mobile navigation"
+					:ui="{
+						link: 'rounded-lg px-3 py-3 text-base font-medium',
+						childLink: 'rounded-lg px-3 py-2.5 text-sm',
+						childList: 'ms-2 border-s border-default ps-2',
+					}"
+				/>
 
-			<Separator class="my-6" />
-
-			<ClientOnly>
-				<LazyAppHeaderAuth mobile />
-				<template #fallback>
+				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
 					<UButton
-						label="Sign in"
+						v-if="currentApp.invite !== '#'"
+						label="Add App"
 						size="md"
 						color="primary"
-						variant="subtle"
-						block
-						class="invisible"
-						icon="ic:round-discord"
-						tabindex="-1"
+						:to="currentApp.invite"
+						class="rounded-lg font-semibold"
 					/>
-				</template>
-			</ClientOnly>
+					<ClientOnly>
+						<LazyAppHeaderAuth mobile />
+						<template #fallback>
+							<div class="flex justify-center">
+								<UButton
+									label="Sign in"
+									size="md"
+									color="primary"
+									variant="subtle"
+									class="invisible rounded-lg"
+									icon="ic:round-discord"
+									tabindex="-1"
+								/>
+							</div>
+						</template>
+					</ClientOnly>
+				</div>
+			</nav>
 		</template>
 	</UHeader>
 </template>

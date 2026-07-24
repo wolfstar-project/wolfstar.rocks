@@ -13,6 +13,11 @@
 			"skillPath": ".agents/skills/create-pull-request/SKILL.md",
 			"computedHash": "d2a0ecdf51b25a15e794156dd2acd179f09783fe92a2ee4f354621fe81ea7313"
 		},
+		"doctor": {
+			"source": "vite-doctor.onmax.me",
+			"sourceType": "well-known",
+			"computedHash": "aaab62d70fc30c3a429749234ffb707ccf334d5bf096fe711e2b4242b823cd13"
+		},
 		"emil-design-eng": {
 			"source": "emilkowalski/skills",
 			"sourceType": "github",
@@ -36,6 +41,11 @@
 			"sourceType": "github",
 			"skillPath": "skills/improve-animations/SKILL.md",
 			"computedHash": "32f23d860467841f5b07cef198fb53efc70f2adaaa6144cf1a3434d782aed246"
+		},
+		"nuxt": {
+			"source": "nuxt-skill.onmax.me",
+			"sourceType": "well-known",
+			"computedHash": "ddb1dc20f01ec76fb8033c41193e6ccd083210749cda3e83979b43fdc9ed267d"
 		},
 		"nuxt-better-auth": {
 			"source": "better-auth.nuxt.dev",

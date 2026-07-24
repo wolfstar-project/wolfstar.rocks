@@ -1,90 +1,53 @@
 ---
 name: nuxt
-description: Use when working on Nuxt 4+ projects - provides server routes, file-based routing, middleware patterns, Nuxt-specific composables, and configuration with latest docs. Covers h3 v1 helpers (validation, WebSocket, SSE) and nitropack v2 patterns.
-license: MIT
+description: "Use Nuxt Skill Hub guidance for Nuxt, Vue, Nitro, runtime config, page metadata, hydration, data fetching, Nuxt UI, Nuxt Content, and installed Nuxt module work."
 ---
 
-# Nuxt 4+ Development
+# Nuxt
 
-Progressive guidance for Nuxt 4+ projects with latest patterns and conventions.
+## Quick Start
 
-## When to Use
+Use this skill before changing a Nuxt project:
 
-Working with:
+```bash
+npx skills add https://nuxt-skill.onmax.me/
+```
 
-- Server routes (API endpoints, server middleware, server utils)
-- File-based routing (pages, layouts, route groups)
-- Nuxt middleware (route guards, navigation)
-- Nuxt plugins (app extensions)
-- Nuxt-specific features (auto-imports, layers, modules)
+For project-specific module guidance, install the Nuxt module in the target app:
 
-## Available Guidance
+```bash
+npx nuxi module add nuxt-skill-hub
+```
 
-Read specific files based on current work:
+Then run the project's prepare step so Skill Hub can generate the local agent skill tree.
 
-- **[references/server.md](references/server.md)** - API routes, server middleware, validation (Zod), WebSocket, SSE
-- **[references/routing.md](references/routing.md)** - File-based routing, route groups, typed router, definePage
-- **[references/middleware-plugins.md](references/middleware-plugins.md)** - Route middleware, plugins, app lifecycle
-- **[references/nuxt-composables.md](references/nuxt-composables.md)** - Nuxt composables (useRequestURL, useFetch, navigation)
-- **[references/nuxt-components.md](references/nuxt-components.md)** - NuxtLink, NuxtImg, NuxtTime (prefer over HTML elements)
-- **[references/nuxt-config.md](references/nuxt-config.md)** - Configuration, modules, auto-imports, layers
+## Workflow
 
-**For Vue composables:** See `vue` skill composables.md (VueUse, Composition API patterns)
-**For UI components:** use `nuxt-ui` skill
-**For database/storage:** use `nuxthub` skill
-**For content-driven sites:** use `nuxt-content` skill
-**For creating modules:** use `nuxt-modules` skill
-**For project scaffolding/CI:** use `personal-ts-setup` skill
+1. Inspect the exact surface first: page, layout, component, composable, server route, plugin, module API, or config file.
+2. Choose the smallest Nuxt-owned abstraction before falling back to generic Vue or raw HTML.
+3. For initial render data, prefer Nuxt payload-backed loading with `useFetch` or `useAsyncData`.
+4. Keep browser-only APIs out of SSR paths unless the code is gated behind client-only execution.
+5. Keep secrets and privileged I/O behind server routes, server utilities, or runtime config private values.
+6. Use module-specific guidance only when an installed module owns the API, component, hook, or runtime behavior being edited.
+7. Verify the intended Nuxt behavior before finishing, not only the visible output.
 
-## Usage Pattern
+## Routing
 
-**Progressive loading - only read what you need:**
+- Page metadata, canonical URLs, Open Graph, layouts, or middleware: use Nuxt page/head patterns.
+- Hydration warnings, time, randomness, browser globals, or client-only rendering: use hydration and SSR consistency guidance.
+- Runtime config, environment variables, API routes, Nitro handlers, caching, or request validation: use Nuxt server guidance.
+- Vue component structure, props, emits, composables, or reactivity after the Nuxt decision is settled: use Vue guidance.
+- Nuxt UI, Nuxt Content, NuxtHub, or other module APIs: start with the broad Nuxt rule, then apply module-specific docs or generated Skill Hub module guidance.
 
-- Creating API endpoint? → [references/server.md](references/server.md)
-- Setting up pages/routing? → [references/routing.md](references/routing.md)
-- Using composables/data fetching? → [references/nuxt-composables.md](references/nuxt-composables.md)
-- Adding middleware/plugins? → [references/middleware-plugins.md](references/middleware-plugins.md)
-- Configuring Nuxt? → [references/nuxt-config.md](references/nuxt-config.md)
-- Setting up CI/ESLint? → [references/project-setup.md](references/project-setup.md)
+## Links
 
-**DO NOT read all files at once.** Load based on context:
+- Docs: https://nuxt-skill.onmax.me/
+- Source: https://github.com/onmax/nuxt-skill-hub
+- Nuxt best practices: https://github.com/onmax/nuxt-skill-hub/tree/main/nuxt-best-practices
 
-- Working in `server/` → read server.md
-- Working in `pages/` or `layouts/` → read routing.md
-- Using `useFetch`, `useRequestURL`, navigation → read nuxt-composables.md
-- Using `<a>`, `<img>`, `<time>` elements → read nuxt-components.md
-- Working in `middleware/` or `plugins/` → read middleware-plugins.md
-- Editing `nuxt.config.ts` → read nuxt-config.md
+## Rules
 
-## Nuxt 4 vs Older Versions
-
-**You are working with Nuxt 4+.** Key differences:
-
-| Old (Nuxt 2/3)    | New (Nuxt 4)                    |
-| ----------------- | ------------------------------- |
-| `<Nuxt />`        | `<NuxtPage />`                  |
-| `context.params`  | `getRouterParam(event, 'name')` |
-| `window.origin`   | `useRequestURL().origin`        |
-| String routes     | Typed router with route names   |
-| Separate layouts/ | Parent routes with `<slot>`     |
-
-**If you're unsure about Nuxt 4 patterns, read the relevant guidance file first.**
-
-## Latest Documentation
-
-**When to fetch latest docs:**
-
-- New Nuxt 4 features not covered here
-- Module-specific configuration
-- Breaking changes or deprecations
-- Advanced use cases
-
-**Official sources:**
-
-- Nuxt: https://nuxt.com/docs
-- h3 (server engine): https://v1.h3.dev/
-- Nitro: https://nitro.build/
-
-## Token Efficiency
-
-Main skill: ~300 tokens. Each sub-file: ~800-1500 tokens. Only load files relevant to current task.
+- Do not replace Nuxt-specific rules with generic framework advice when Nuxt owns the surface.
+- Do not assume a module API shape from memory when the installed version can differ.
+- Do not broaden edits beyond the reported Nuxt surface unless the user asks for broader cleanup.
+- Treat Skill Hub as execution guidance that complements official docs; it does not replace source or version-specific documentation.

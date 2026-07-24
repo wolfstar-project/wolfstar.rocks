@@ -1,2 +1,3 @@
 setups.@nuxt/test-utils="4.0.3"
 setups.@onmax/nuxt-better-auth="0.0.4"
+setups.nuxt-skill-hub="0.1.1"

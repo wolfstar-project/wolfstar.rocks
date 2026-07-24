@@ -137,7 +137,7 @@ interface MessageComposerProps {
 	ariaControls?: string;
 	ariaExpanded?: boolean;
 	ariaActivedescendant?: string;
-	/** Mobile: apps launcher is open — swap the apps glyph for a close (X) control. */
+	/** When true, the mobile apps control shows a close (X) glyph. */
 	appsOpen?: boolean;
 }
 

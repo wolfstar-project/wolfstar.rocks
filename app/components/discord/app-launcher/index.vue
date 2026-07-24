@@ -35,7 +35,6 @@
 			@keydown.down.prevent="collapseSheet"
 		/>
 
-		<!-- Main launcher -->
 		<template v-if="activeView === null">
 			<DiscordScrollbar
 				class="discord-app-launcher-main-scroll"
@@ -129,7 +128,6 @@
 									>
 								</button>
 							</div>
-							<!-- Desktop: icon-only horizontal strip -->
 							<ul
 								class="discord-app-launcher-recents discord-app-launcher-recents-desktop"
 								role="list"
@@ -176,7 +174,6 @@
 									</button>
 								</li>
 							</ul>
-							<!-- Mobile: command/app tiles matching Discord iOS -->
 							<ul
 								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile"
 								role="list"
@@ -561,7 +558,6 @@
 			</DiscordScrollbar>
 		</template>
 
-		<!-- Secondary list view (View More / Chill Together) -->
 		<template v-else>
 			<header class="discord-app-launcher-list-header">
 				<button
@@ -610,25 +606,17 @@ import type {
 } from "~/types/discord";
 
 interface AppLauncherProps {
-	/** Recent activity / app icons shown in the horizontal Recents row. */
 	recents?: readonly DiscordAppLauncherEntry[];
-	/** Vertical “Apps in this Server” list. */
 	serverApps?: readonly DiscordAppLauncherEntry[];
 	/**
-	 * Slash commands searchable from the launcher.
-	 * Shown only while the search query is non-empty; selecting one emits `select`
-	 * so the parent can run the interactive execute/send flow (no `/commands` page).
+	 * Slash commands for search hits only — idle launcher has no static `/commands`
+	 * listing; selecting one emits `select` for the parent execute/send flow.
 	 */
 	commands?: readonly DiscordAppLauncherEntry[];
-	/** Promoted activity cards. */
 	promoted?: readonly DiscordAppLauncherPromo[];
-	/** Category previews rendered below Promoted in the main scroll view. */
 	categories?: readonly DiscordAppLauncherListView[];
-	/** Secondary list destinations opened via View More. */
 	listViews?: readonly DiscordAppLauncherListView[];
-	/** List view id opened by Recents → View More. */
 	recentsListViewId?: string;
-	/** List view id opened by Apps in this Server → View More. */
 	serverAppsListViewId?: string;
 	/** Initial mobile sheet snap when the launcher opens (`half` by default). */
 	initialSheetSnap?: DiscordAppLauncherSheetSnap;
@@ -730,7 +718,6 @@ function matchesQuery(entry: DiscordAppLauncherEntry, query: string): boolean {
 
 const normalizedQuery = computed(() => searchQuery.value.trim().toLowerCase());
 
-/** Commands only surface as search hits — idle launcher has no static commands listing. */
 const filteredCommands = computed(() => {
 	const query = normalizedQuery.value;
 	if (!query || activeView.value !== null) return [];
@@ -741,7 +728,6 @@ const filteredRecents = computed(() =>
 	recents.filter((entry) => matchesQuery(entry, normalizedQuery.value)).slice(0, 8),
 );
 
-/** Mobile Recents strip shows two compact command/app tiles. */
 const mobileRecents = computed(() =>
 	filteredRecents.value.slice(0, DISCORD_APP_LAUNCHER_MOBILE_TILE_COUNT),
 );
@@ -750,7 +736,6 @@ const filteredServerApps = computed(() =>
 	serverApps.filter((entry) => matchesQuery(entry, normalizedQuery.value)),
 );
 
-/** Mobile “In This Server” strip shows two app tiles. */
 const mobileServerApps = computed(() =>
 	filteredServerApps.value.slice(0, DISCORD_APP_LAUNCHER_MOBILE_TILE_COUNT),
 );
@@ -946,7 +931,6 @@ function selectEntry(entry: DiscordAppLauncherEntry) {
 	emit("select", entry);
 }
 
-/** Enter in search runs the first matching command (interactive send), if any. */
 function onSearchEnter() {
 	const firstCommand = filteredCommands.value[0];
 	if (firstCommand) {
@@ -1689,11 +1673,7 @@ onBeforeUnmount(() => {
 	}
 }
 
-/*
- * Discord mobile App Launcher (< md): bottom sheet with grab handle,
- * compact Recents / In This Server tiles, title-bar Promoted cards,
- * category lists with trailing chevrons + centered View More.
- */
+/* Mobile Discord sheet layout (< md). */
 @media (width < 48rem) {
 	.discord-app-launcher {
 		--discord-app-launcher-bg: oklch(22% 0.006 272);
@@ -1805,7 +1785,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-tile {
-		@apply min-h-[3.75rem] gap-3 rounded-[12px] px-3 py-3;
+		@apply min-h-15 gap-3 rounded-xl px-3 py-3;
 	}
 
 	.discord-app-launcher-tile-icon {
@@ -1821,7 +1801,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-promo {
-		@apply overflow-hidden rounded-[12px];
+		@apply overflow-hidden rounded-xl;
 	}
 
 	.discord-app-launcher-promo-visual {

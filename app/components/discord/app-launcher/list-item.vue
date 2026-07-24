@@ -62,7 +62,6 @@ interface AppLauncherListItemProps {
 	icon?: string;
 	iconBg?: string;
 	promoted?: boolean;
-	/** Discord eye affordance next to the title (details / preview). */
 	showEye?: boolean;
 }
 
@@ -168,7 +167,6 @@ const ariaLabel = computed(() => {
 	color: var(--discord-app-launcher-list-item-description);
 }
 
-/* Mobile Discord list rows use a trailing chevron instead of the eye. */
 .discord-app-launcher-list-item-chevron {
 	@apply hidden size-4 shrink-0;
 	color: var(--discord-app-launcher-list-item-chevron);

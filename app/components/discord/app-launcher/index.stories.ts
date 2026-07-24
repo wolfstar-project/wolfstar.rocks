@@ -46,7 +46,7 @@ export const MobileSheet: Story = {
 			return { args, open };
 		},
 		template: `
-			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(26.65%_0.006_272.93)]">
+			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(28%_0.04_25)]">
 				<div class="w-full max-w-[24rem]">
 					<DiscordAppLauncher v-bind="args" v-model:open="open" />
 				</div>
@@ -69,7 +69,7 @@ export const MobileSheetFull: Story = {
 			return { args, open };
 		},
 		template: `
-			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(26.65%_0.006_272.93)]">
+			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(28%_0.04_25)]">
 				<div class="w-full max-w-[24rem]">
 					<DiscordAppLauncher v-bind="args" v-model:open="open" />
 				</div>

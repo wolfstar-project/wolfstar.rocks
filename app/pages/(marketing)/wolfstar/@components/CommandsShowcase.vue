@@ -135,7 +135,10 @@
 								</template>
 							</DiscordChat>
 
-							<div class="showcase-command-picker">
+							<div
+								class="showcase-command-picker"
+								:class="{ 'showcase-command-picker-apps-open': appLauncherOpen }"
+							>
 								<DiscordAppLauncher
 									v-model:open="appLauncherOpen"
 									class="showcase-app-launcher"
@@ -998,6 +1001,15 @@ onMounted(() => {
 	.showcase-command-picker {
 		/* Solid bar behind flush mobile picker + composer (no channel peek gap). */
 		@apply z-3;
+		background-color: var(--showcase-discord-composer-bar);
+	}
+
+	/*
+	 * Match the sheet fill so rounded-corner AA on the launcher does not reveal
+	 * a lighter composer-bar fringe (the “hairline” over the channel).
+	 */
+	.showcase-command-picker-apps-open {
+		--showcase-discord-composer-bar: oklch(22% 0.006 272);
 		background-color: var(--showcase-discord-composer-bar);
 	}
 

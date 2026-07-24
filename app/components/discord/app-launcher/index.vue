@@ -618,7 +618,7 @@ interface AppLauncherProps {
 	listViews?: readonly DiscordAppLauncherListView[];
 	recentsListViewId?: string;
 	serverAppsListViewId?: string;
-	/** Initial mobile sheet snap when the launcher opens (`half` by default). */
+	/** Mobile sheet snap on open (default `half`). */
 	initialSheetSnap?: DiscordAppLauncherSheetSnap;
 }
 
@@ -1682,8 +1682,6 @@ onBeforeUnmount(() => {
 		--discord-app-launcher-link: oklch(72% 0.14 264);
 		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
 		--discord-app-launcher-handle: oklch(62% 0.01 272);
-		--discord-app-launcher-handle-shadow: oklch(0% 0 0 / 0.35);
-		--discord-app-launcher-sheet-shadow: oklch(0% 0 0 / 0.4);
 		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
 		--discord-app-launcher-help-btn: oklch(38% 0.01 272);
 		--discord-app-launcher-help-btn-text: oklch(92% 0.004 272);
@@ -1691,10 +1689,11 @@ onBeforeUnmount(() => {
 		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
 		--discord-app-launcher-sheet-full: min(90dvh, 32rem);
 
-		@apply w-full max-w-none rounded-t-2xl rounded-b-none border-0;
+		@apply relative w-full max-w-none rounded-t-2xl rounded-b-none border-0;
 		height: var(--discord-app-launcher-sheet-half);
 		max-height: var(--discord-app-launcher-sheet-full);
-		box-shadow: 0 -8px 28px var(--discord-app-launcher-sheet-shadow);
+		/* No upward drop-shadow; matching ring seals rounded-corner AA bleed. */
+		box-shadow: 0 0 0 1px var(--discord-app-launcher-bg);
 		transition: height 0.2s ease;
 	}
 
@@ -1714,7 +1713,6 @@ onBeforeUnmount(() => {
 	.discord-app-launcher-handle {
 		@apply mx-auto mt-2.5 mb-1.5 block h-1.5 w-11 shrink-0 cursor-grab rounded-full border-0 p-0;
 		background-color: var(--discord-app-launcher-handle);
-		box-shadow: 0 1px 2px var(--discord-app-launcher-handle-shadow);
 		touch-action: none;
 	}
 
@@ -1731,7 +1729,8 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-search-sticky {
-		@apply pt-2 pb-3;
+		@apply pt-2 pb-3 shadow-none;
+		background-color: var(--discord-app-launcher-bg);
 	}
 
 	.discord-app-launcher-search-input {

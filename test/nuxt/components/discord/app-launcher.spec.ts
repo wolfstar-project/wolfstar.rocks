@@ -215,7 +215,9 @@ describe("DiscordAppLauncher", () => {
 
 		// ACT
 		await wrapper
-			.findAll(".discord-app-launcher-server-list-desktop .discord-app-launcher-list-item")[0]!
+			.findAll(
+				".discord-app-launcher-server-list-desktop .discord-app-launcher-list-item",
+			)[0]!
 			.trigger("click");
 
 		// ASSERT
@@ -231,9 +233,9 @@ describe("DiscordAppLauncher", () => {
 		});
 
 		// ACT
-		await wrapper.find(".discord-app-launcher-recents-mobile .discord-app-launcher-tile").trigger(
-			"click",
-		);
+		await wrapper
+			.find(".discord-app-launcher-recents-mobile .discord-app-launcher-tile")
+			.trigger("click");
 
 		// ASSERT
 		const selected = wrapper.emitted("select");

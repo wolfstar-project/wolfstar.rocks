@@ -156,7 +156,10 @@
 								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile"
 								role="list"
 							>
-								<li v-for="entry of mobileRecents" :key="`mobile-recent-${entry.id}`">
+								<li
+									v-for="entry of mobileRecents"
+									:key="`mobile-recent-${entry.id}`"
+								>
 									<button
 										type="button"
 										class="discord-app-launcher-tile"
@@ -240,7 +243,9 @@
 									>
 								</button>
 							</div>
-							<div class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop">
+							<div
+								class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop"
+							>
 								<DiscordAppLauncherListItem
 									v-for="(entry, index) of filteredServerApps"
 									:key="entry.id"

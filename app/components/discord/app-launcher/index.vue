@@ -20,16 +20,16 @@
 		<button
 			type="button"
 			class="discord-app-launcher-handle"
-			:tabindex="isMobileSheet ? 0 : -1"
-			:aria-hidden="isMobileSheet ? undefined : 'true'"
+			:tabindex="isSmallScreen ? 0 : -1"
+			:aria-hidden="isSmallScreen ? undefined : 'true'"
 			:aria-label="
-				isMobileSheet
+				isSmallScreen
 					? sheetSnap === 'full'
 						? 'Collapse Apps sheet'
 						: 'Expand Apps sheet'
 					: undefined
 			"
-			:aria-expanded="isMobileSheet ? sheetSnap === 'full' : undefined"
+			:aria-expanded="isSmallScreen ? sheetSnap === 'full' : undefined"
 			@pointerdown="onHandlePointerDown"
 			@keydown.up.prevent="expandSheet"
 			@keydown.down.prevent="collapseSheet"
@@ -660,7 +660,6 @@ const open = defineModel<boolean>("open", { default: false });
 const emit = defineEmits<AppLauncherEmits>();
 
 const { effectiveReduceMotion } = useReduceMotion();
-const isMobileSheet = useMediaQuery("(width < 48rem)");
 
 const rootRef = useTemplateRef<HTMLElement>("rootRef");
 const searchRef = useTemplateRef<HTMLInputElement>("searchRef");
@@ -847,7 +846,7 @@ function resolveSheetHeightBounds(root: HTMLElement): { half: number; full: numb
 }
 
 function onHandlePointerDown(event: PointerEvent) {
-	if (!isMobileSheet.value || event.button !== 0) return;
+	if (!isSmallScreen.value || event.button !== 0) return;
 	const root = rootRef.value;
 	if (!root) return;
 
@@ -1343,7 +1342,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-berry-crown {
-	@apply absolute top-[-6px] left-1/2 size-4 -translate-x-1/2 rounded-full;
+	@apply absolute -top-1.5 left-1/2 size-4 -translate-x-1/2 rounded-full;
 	background-color: var(--discord-app-launcher-garden-leaf);
 	box-shadow:
 		-6px 4px 0 -1px var(--discord-app-launcher-garden-leaf),

@@ -640,6 +640,17 @@ const WordleCells = [
 	"absent",
 	"correct",
 ] as const;
+
+interface SheetDragSession {
+	pointerId: number;
+	startY: number;
+	startHeight: number;
+	halfHeight: number;
+	fullHeight: number;
+	lastY: number;
+	lastTime: number;
+	velocityY: number;
+}
 </script>
 
 <script setup lang="ts">
@@ -671,17 +682,6 @@ const sheetSnap = ref<DiscordAppLauncherSheetSnap>(initialSheetSnap);
 const sheetDragging = ref(false);
 const sheetDragHeightPx = ref<number | null>(null);
 let returnFocusElement: HTMLElement | null = null;
-
-interface SheetDragSession {
-	pointerId: number;
-	startY: number;
-	startHeight: number;
-	halfHeight: number;
-	fullHeight: number;
-	lastY: number;
-	lastTime: number;
-	velocityY: number;
-}
 
 let sheetDragSession: SheetDragSession | null = null;
 

@@ -160,6 +160,13 @@ const ComposerActions: readonly ComposerAction[] = [
 	{ icon: "discord:emoji", decorative: true },
 	{ icon: "discord:apps", label: "Open apps and commands", optional: true, emitOpenApps: true },
 ];
+
+interface MessageComposerEmits {
+	openApps: [];
+	submit: [];
+	escape: [];
+	navigate: [direction: "up" | "down"];
+}
 </script>
 
 <script setup lang="ts">
@@ -175,12 +182,7 @@ const {
 
 const modelValue = defineModel<string>({ default: "" });
 
-const emit = defineEmits<{
-	openApps: [];
-	submit: [];
-	escape: [];
-	navigate: [direction: "up" | "down"];
-}>();
+const emit = defineEmits<MessageComposerEmits>();
 
 const displayPlaceholder = computed(() => placeholder ?? `Message #${channelName}`);
 const composerLabel = computed(() => `Message composer for ${channelName}`);

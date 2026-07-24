@@ -1,7 +1,7 @@
 import type { DOMWrapper } from "@vue/test-utils";
 import type { StringSelectMenuOption } from "~/types/discord";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import StringSelectMenu from "~/components/discord/v2/string-select-menu.vue";
 
 const options: StringSelectMenuOption[] = [
@@ -10,7 +10,14 @@ const options: StringSelectMenuOption[] = [
 	{ value: "prefix", label: "prefix", emoji: "⚙️", description: "Command prefix" },
 ];
 
-function mountMenu(props: Partial<{ disabled: boolean; placeholder: string }> = {}) {
+interface MountMenuProps {
+	"disabled"?: boolean;
+	"placeholder"?: string;
+	"onSelect"?: (value: string) => void;
+	"onUpdate:modelValue"?: (value: string | undefined) => void;
+}
+
+function mountMenu(props: MountMenuProps = {}) {
 	return mountSuspended(StringSelectMenu, {
 		props: { options, ...props },
 		attachTo: document.body,
@@ -87,28 +94,34 @@ describe("DiscordV2StringSelectMenu", () => {
 	});
 
 	it("selects the active option with Enter, emits select and closes", async () => {
-		const wrapper = await mountMenu();
+		const onSelect = vi.fn();
+		const onUpdateModelValue = vi.fn();
+		const wrapper = await mountMenu({
+			onSelect,
+			"onUpdate:modelValue": onUpdateModelValue,
+		});
 		const trigger = wrapper.find("button[role='combobox']");
 
 		await pressKey(trigger, "ArrowDown");
 		await pressKey(trigger, "ArrowDown");
 		await pressKey(trigger, "Enter");
 
-		expect(wrapper.emitted("select")).toEqual([["prefix"]]);
-		expect(wrapper.emitted("update:modelValue")).toEqual([["prefix"]]);
+		expect(onSelect).toHaveBeenCalledWith("prefix");
+		expect(onUpdateModelValue).toHaveBeenCalledWith("prefix");
 		expect(trigger.attributes("aria-expanded")).toBe("false");
 		expect(trigger.text()).toContain("prefix");
 	});
 
 	it("opens and selects with Space", async () => {
-		const wrapper = await mountMenu();
+		const onSelect = vi.fn();
+		const wrapper = await mountMenu({ onSelect });
 		const trigger = wrapper.find("button[role='combobox']");
 
 		await pressKey(trigger, " ");
 		expect(trigger.attributes("aria-expanded")).toBe("true");
 
 		await pressKey(trigger, " ");
-		expect(wrapper.emitted("select")).toEqual([["permissions"]]);
+		expect(onSelect).toHaveBeenCalledWith("permissions");
 		expect(trigger.attributes("aria-expanded")).toBe("false");
 	});
 
@@ -128,19 +141,21 @@ describe("DiscordV2StringSelectMenu", () => {
 	});
 
 	it("selects an option on click and marks it as selected", async () => {
-		const wrapper = await mountMenu();
+		const onSelect = vi.fn();
+		const wrapper = await mountMenu({ onSelect });
 		const trigger = wrapper.find("button[role='combobox']");
 		await trigger.trigger("click");
 
 		await wrapper.findAll("[role='option']")[0]!.trigger("click");
 
-		expect(wrapper.emitted("select")).toEqual([["permissions"]]);
+		expect(onSelect).toHaveBeenCalledWith("permissions");
 		await trigger.trigger("click");
 		expect(wrapper.findAll("[role='option']")[0]!.attributes("aria-selected")).toBe("true");
 	});
 
 	it("ignores clicks on disabled options", async () => {
-		const wrapper = await mountMenu();
+		const onSelect = vi.fn();
+		const wrapper = await mountMenu({ onSelect });
 		const trigger = wrapper.find("button[role='combobox']");
 		await trigger.trigger("click");
 
@@ -149,7 +164,7 @@ describe("DiscordV2StringSelectMenu", () => {
 
 		await disabledOption.trigger("click");
 
-		expect(wrapper.emitted("select")).toBeUndefined();
+		expect(onSelect).not.toHaveBeenCalled();
 		expect(trigger.attributes("aria-expanded")).toBe("true");
 	});
 

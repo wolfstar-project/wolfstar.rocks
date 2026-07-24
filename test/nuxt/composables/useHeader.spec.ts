@@ -59,33 +59,15 @@ describe("useHeader", () => {
 		expect(labels).toContain("Commands");
 	});
 
-	it("should include Invite App in desktop links when invite is not '#'", async () => {
-		const { desktopLinks } = await setup("wolfstar");
-		const labels = desktopLinks.value.map((l: any) => l.label);
-		expect(labels).toContain("Invite App");
-	});
-
-	it("should not include Invite App in desktop links when invite is '#'", async () => {
-		const { desktopLinks } = await setup("staryl");
-		const labels = desktopLinks.value.map((l: any) => l.label);
-		expect(labels).not.toContain("Invite App");
-	});
-
 	it("should include GitHub link in mobile links", async () => {
 		const { mobileLinks } = await setup();
 		const labels = mobileLinks.value.map((l: any) => l.label);
 		expect(labels).toContain("GitHub");
 	});
 
-	it("should include Invite App in mobile links when invite is not '#'", async () => {
-		const { mobileLinks } = await setup("wolfstar");
-		const labels = mobileLinks.value.map((l: any) => l.label);
-		expect(labels).toContain("Invite App");
-	});
-
-	it("should not include Invite App in mobile links when invite is '#'", async () => {
-		const { mobileLinks } = await setup("staryl");
-		const labels = mobileLinks.value.map((l: any) => l.label);
-		expect(labels).not.toContain("Invite App");
+	it("should give Features children destinations on mobile", async () => {
+		const { mobileLinks } = await setup();
+		const features = mobileLinks.value.find((l: any) => l.label === "Features");
+		expect(features?.children?.every((child: any) => typeof child.to === "string")).toBe(true);
 	});
 });

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
 
 /**
- * The callback page executes an OAuth token exchange and redirects immediately.
+ * The callback page hydrates the OAuth session and redirects immediately.
  * Stories use inline render functions to display each visual state statically,
  * without mounting the full page and triggering navigation.
  */
@@ -61,6 +61,25 @@ export const SignInError: Story = {
 			<div class="container mx-auto px-4 py-8">
 				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
 					<template #description>The authorization code was invalid or expired. Please try signing in again.</template>
+					<template #actions>
+						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+							Try Again
+						</UButton>
+					</template>
+				</UAlert>
+			</div>
+		`,
+	}),
+};
+
+export const SessionNotFound: Story = {
+	render: () => ({
+		template: `
+			<div class="container mx-auto px-4 py-8">
+				<UAlert color="error" title="Session Not Found" icon="twemoji:cross-mark">
+					<template #description>
+						Your login session could not be loaded. Please sign in again.
+					</template>
 					<template #actions>
 						<UButton color="neutral" variant="ghost" to="/login" size="sm">
 							Try Again

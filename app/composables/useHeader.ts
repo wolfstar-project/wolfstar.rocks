@@ -24,6 +24,11 @@ export function useHeader() {
 					label: "Advanced Logging",
 					to: "#advanced-logging",
 				},
+				{
+					description: "Searchable moderation history for every action",
+					label: "Moderation Logs",
+					to: "#moderation-logs",
+				},
 			],
 			label: "Features",
 		},
@@ -42,15 +47,6 @@ export function useHeader() {
 			],
 			label: "Applications",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
 		{
 			label: "Commands",
 			to: "/commands",
@@ -58,6 +54,10 @@ export function useHeader() {
 		{
 			label: "Blog",
 			to: "/blog",
+		},
+		{
+			label: "Changelog",
+			to: "/changelog",
 		},
 	]);
 
@@ -65,10 +65,19 @@ export function useHeader() {
 		{
 			children: [
 				{
+					description: "Tools to help you moderate your server",
 					label: "Moderation Tools",
+					to: "#moderation-tools",
 				},
 				{
+					description: "Track and log events in your server",
 					label: "Advanced Logging",
+					to: "#advanced-logging",
+				},
+				{
+					description: "Searchable moderation history for every action",
+					label: "Moderation Logs",
+					to: "#moderation-logs",
 				},
 			],
 			label: "Features",
@@ -96,15 +105,10 @@ export function useHeader() {
 			label: "Blog",
 			to: "/blog",
 		},
-		...(currentApp.value.invite !== "#"
-			? [
-					{
-						icon: "ph:plus-circle-duotone",
-						label: "Invite App",
-						to: currentApp.value.invite,
-					},
-				]
-			: []),
+		{
+			label: "Changelog",
+			to: "/changelog",
+		},
 		{
 			icon: "lucide:github",
 			label: "GitHub",

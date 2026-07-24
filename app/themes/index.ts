@@ -5,7 +5,6 @@ import container from "./container";
 import fieldGroup from "./field-group";
 import footer from "./footer";
 import footerColumns from "./footer-columns";
-import header from "./header";
 import link from "./link";
 import main from "./main";
 import navigationMenu from "./navigation-menu";
@@ -21,7 +20,6 @@ const ui = {
 	fieldGroup,
 	footer,
 	footerColumns,
-	header,
 	link,
 	main,
 	navigationMenu,

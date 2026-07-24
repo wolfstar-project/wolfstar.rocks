@@ -8,7 +8,7 @@ import { toValue } from "vue";
 
 /**
  * Minimal user type that can be used for avatar URL generation
- * Compatible with both APIUser and User from #auth-utils
+ * Compatible with Discord API user objects (e.g. guild member fetches)
  */
 export interface AvatarUser {
 	id: string;

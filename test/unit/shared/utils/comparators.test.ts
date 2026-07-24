@@ -11,7 +11,7 @@ import {
 } from "#shared/utils/comparators";
 import { describe, expect, it, vi } from "vitest";
 
-describe(asc, () => {
+describe("asc", () => {
 	it("should return -1 when first number is smaller", () => {
 		expect(asc(1, 2)).toBe(-1);
 		expect(asc(0, 100)).toBe(-1);
@@ -63,7 +63,7 @@ describe(asc, () => {
 	});
 });
 
-describe(desc, () => {
+describe("desc", () => {
 	it("should return 1 when first number is smaller", () => {
 		expect(desc(1, 2)).toBe(1);
 		expect(desc(0, 100)).toBe(1);
@@ -115,7 +115,7 @@ describe(desc, () => {
 	});
 });
 
-describe(max, () => {
+describe("max", () => {
 	it("should return maximum from multiple number values", () => {
 		expect(max(1, 2, 3, 4, 5)).toBe(5);
 		expect(max(10, 5, 8, 3, 12)).toBe(12);
@@ -181,7 +181,7 @@ describe(max, () => {
 	});
 });
 
-describe(differenceBitField, () => {
+describe("differenceBitField", () => {
 	it("should detect added bits", () => {
 		// 0b0101 (5) -> 0b1101 (13): added bit at position 3 (0b1000 = 8)
 		const result = differenceBitField(0b0101, 0b1101);
@@ -245,7 +245,7 @@ describe(differenceBitField, () => {
 	});
 });
 
-describe(differenceArray, () => {
+describe("differenceArray", () => {
 	it("should detect added elements", () => {
 		const previous = [1, 2, 3];
 		const next = [1, 2, 3, 4, 5];
@@ -311,7 +311,7 @@ describe(differenceArray, () => {
 	});
 });
 
-describe(differenceMap, () => {
+describe("differenceMap", () => {
 	it("should detect added entries", () => {
 		const previous = new Map([
 			["a", 1],
@@ -512,7 +512,7 @@ describe(differenceMap, () => {
 	});
 });
 
-describe(bidirectionalReplace, () => {
+describe("bidirectionalReplace", () => {
 	it("should process matched and unmatched portions", () => {
 		const result = bidirectionalReplace(
 			/\d+/g, // Match numbers
@@ -706,7 +706,7 @@ describe(bidirectionalReplace, () => {
 	});
 });
 
-describe(andMix, () => {
+describe("andMix", () => {
 	it("should return true when all functions return true", () => {
 		const fn1 = () => true;
 		const fn2 = () => true;
@@ -793,7 +793,7 @@ describe(andMix, () => {
 	});
 });
 
-describe(orMix, () => {
+describe("orMix", () => {
 	it("should return true when any function returns true", () => {
 		const fn1 = () => false;
 		const fn2 = () => true;

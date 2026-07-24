@@ -2,91 +2,12 @@
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
 		<h1 class="sr-only">User Profile</h1>
-		<section
-			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
-			aria-label="User profile"
-		>
-			<!-- decorative left accent (sidebar-like) -->
-			<div
-				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/40 md:block"
-				aria-hidden="true"
-			></div>
-			<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
-				<USkeleton
-					class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100"
-				/>
-				<div class="space-y-2 text-center">
-					<USkeleton class="h-10 w-48" />
-					<USkeleton class="h-7 w-32" />
-					<div class="flex items-center justify-center gap-2">
-						<USkeleton class="h-6 w-16" />
-						<USkeleton class="h-6 w-32 rounded-md" />
-					</div>
-				</div>
-			</div>
-			<template v-else>
-				<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
-					<div
-						class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
-						:class="{
-							'transition-transform duration-300 group-hover:scale-105':
-								!effectiveReduceMotion,
-						}"
-					>
-						<NuxtImg
-							v-if="isDefault"
-							:src="defaultAvatar"
-							alt="Default Avatar"
-							class="h-full w-full object-cover"
-							:width="128"
-							:height="128"
-							format="png"
-							loading="lazy"
-							decoding="async"
-							crossorigin="anonymous"
-						/>
-						<NuxtImg
-							v-else
-							:src="createUrl(preferredFormat, 256)"
-							:format="preferredFormat === 'gif' ? undefined : 'webp'"
-							:width="128"
-							:height="128"
-							sizes="128px"
-							:alt="`${user?.globalName ?? user?.username} avatar`"
-							class="h-full w-full object-cover"
-							loading="lazy"
-							decoding="async"
-							crossorigin="anonymous"
-						/>
-					</div>
-				</div>
-				<div class="space-y-2 text-center">
-					<h2 class="text-4xl font-bold text-base-content">
-						{{ user.globalName ?? user.username }}
-					</h2>
-					<p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
-					<p class="text-sm text-base-content/60">
-						User ID:
-						<UButton
-							variant="outline"
-							size="xs"
-							color="neutral"
-							class="text-sm text-base-content/60 hover:text-base-content"
-							@click="copyUserId"
-						>
-							<template #leading>
-								<UIcon
-									:name="
-										copied ? 'heroicons:check' : 'heroicons:clipboard-document'
-									"
-								/>
-							</template>
-							{{ user.id }}
-						</UButton>
-					</p>
-				</div>
-			</template>
-		</section>
+		<ProfileHeader
+			:user="user"
+			:copied="copied"
+			:effective-reduce-motion="effectiveReduceMotion"
+			@copy-user-id="copyUserId"
+		/>
 
 		<section
 			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
@@ -587,14 +508,13 @@ useSeoMetadata({
 	title: "Profile",
 });
 
-const { user } = useAuth();
+const { user: authUser } = useUserSession();
+
 const log = useLogger("profile");
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();
 const searchQuery = ref<string | undefined>(undefined);
-const isAnimated = ref(false);
-const isDefault = ref(false);
 
 // Error handling state
 const isRetrying = ref(false);
@@ -662,18 +582,7 @@ function handleSortToggle() {
 	}
 }
 
-const preferredFormat = computed<"gif" | "png">(() => {
-	if (isAnimated.value && !effectiveReduceMotion.value) {
-		return "gif";
-	}
-
-	return "png";
-});
-
-// Use the centralized useUser composable instead of manual useFetch
-// Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
-// Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
+const { user, guilds, filteredGuilds, status, error, refresh } = useUser(authUser, {
 	timeout: 15_000, // 15 seconds timeout
 	retry: 3, // Max retry attempts
 	retryDelay: 1000, // 1 second delay between retries
@@ -726,28 +635,22 @@ const items = computed<TabsItem[]>(() => [
 	}, */
 ]);
 
-watch(activeTab, (tab) => {
-	Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
-	Sentry.addBreadcrumb({ category: "navigation", message: `Profile tab: ${tab}`, level: "info" });
-});
-
-watch(guilds, (value) => {
-	if (Array.isArray(value) && value.length > 0) {
+watch([activeTab, guilds, error], ([tab, value, err], [prevTab, prevValue, prevErr]) => {
+	if (tab !== prevTab) {
+		Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
+		Sentry.addBreadcrumb({
+			category: "navigation",
+			message: `Profile tab: ${tab}`,
+			level: "info",
+		});
+	}
+	if (value !== prevValue && Array.isArray(value) && value.length > 0) {
 		Sentry.metrics.distribution("profile.guilds.count", value.length);
 	}
-});
-
-watch(error, (err) => {
-	if (err) {
+	if (err && err !== prevErr) {
 		Sentry.metrics.count("profile.guild_fetch.error", 1);
 	}
 });
-
-const defaultAvatar = computed(() =>
-	user.value?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
-		: "https://cdn.discordapp.com/embed/avatars/0.png",
-);
 
 function undoSearch() {
 	searchQuery.value = undefined;
@@ -767,22 +670,4 @@ function handleSetReduceMotion(value: boolean) {
 		attributes: { enabled: String(value) },
 	});
 }
-
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
-
-watch(
-	user,
-	(user) => {
-		if (user?.avatar) {
-			isDefault.value = false;
-			isAnimated.value = user.avatar.startsWith("a_");
-		} else {
-			isDefault.value = true;
-			isAnimated.value = false;
-		}
-	},
-	{ immediate: true },
-);
 </script>

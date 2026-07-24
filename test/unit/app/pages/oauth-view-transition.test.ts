@@ -11,4 +11,10 @@ describe("OAuth pages view transition opt-out", () => {
 		const source = readFileSync(join(rootDir, "app/pages/oauth", page), "utf8");
 		expect(source).toMatch(/viewTransition:\s*false/);
 	});
+
+	it("uses the callback route without a separate completion route", () => {
+		const source = readFileSync(join(rootDir, "app/pages/oauth/callback.vue"), "utf8");
+
+		expect(source).not.toContain("/oauth/complete");
+	});
 });

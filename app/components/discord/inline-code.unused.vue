@@ -2,6 +2,18 @@
 	<span class="discord-message-inline-code"><slot></slot></span>
 </template>
 
+<script lang="ts">
+import type { VNode } from "vue";
+
+interface InlineCodeUnusedSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<InlineCodeUnusedSlots>();
+</script>
+
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-message-inline-code {

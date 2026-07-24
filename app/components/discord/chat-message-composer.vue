@@ -1,7 +1,10 @@
 <template>
 	<div
 		class="discord-message-composer"
-		:class="{ 'discord-message-composer-has-value': hasValue }"
+		:class="{
+			'discord-message-composer-has-value': hasValue,
+			'discord-message-composer-apps-open': appsOpen,
+		}"
 		role="group"
 		:aria-label="composerLabel"
 	>
@@ -23,12 +26,12 @@
 			<button
 				type="button"
 				class="discord-message-composer-button discord-message-composer-mobile-action discord-message-composer-apps-mobile"
-				aria-label="Open apps and commands"
-				title="Open apps and commands"
+				:aria-label="appsOpen ? 'Close apps and commands' : 'Open apps and commands'"
+				:title="appsOpen ? 'Close apps and commands' : 'Open apps and commands'"
 				@click="emit('openApps')"
 			>
 				<UIcon
-					name="discord:apps"
+					:name="appsOpen ? 'ph:x-bold' : 'discord:apps'"
 					class="discord-message-composer-mobile-action-icon"
 					aria-hidden="true"
 				/>
@@ -134,6 +137,8 @@ interface MessageComposerProps {
 	ariaControls?: string;
 	ariaExpanded?: boolean;
 	ariaActivedescendant?: string;
+	/** Mobile: apps launcher is open — swap the apps glyph for a close (X) control. */
+	appsOpen?: boolean;
 }
 
 interface ComposerAction {
@@ -165,6 +170,7 @@ const {
 	ariaControls,
 	ariaExpanded,
 	ariaActivedescendant,
+	appsOpen = false,
 } = defineProps<MessageComposerProps>();
 
 const modelValue = defineModel<string>({ default: "" });
@@ -365,6 +371,15 @@ function onKeydown(event: KeyboardEvent) {
 	}
 
 	.discord-message-composer-has-value .discord-message-composer-mobile-leading {
+		display: none;
+	}
+
+	/* Keep the close (X) control visible while the App Launcher sheet is open. */
+	.discord-message-composer-apps-open .discord-message-composer-mobile-leading {
+		@apply flex;
+	}
+
+	.discord-message-composer-apps-open .discord-message-composer-gift-mobile {
 		display: none;
 	}
 

@@ -9,6 +9,8 @@
 		@keydown.escape.prevent.stop="onEscape"
 		@keydown.tab="onTab"
 	>
+		<div class="discord-app-launcher-handle" aria-hidden="true" />
+
 		<!-- Main launcher -->
 		<template v-if="activeView === null">
 			<DiscordScrollbar
@@ -83,29 +85,43 @@
 									class="discord-app-launcher-section-title"
 								>
 									Recents
+									<UIcon
+										name="ph:caret-down-bold"
+										class="discord-app-launcher-section-caret"
+										aria-hidden="true"
+									/>
 								</h2>
 								<button
 									type="button"
 									class="discord-app-launcher-view-more"
 									@click="openListView(recentsListViewId)"
 								>
-									View More
+									<span class="discord-app-launcher-view-more-desktop"
+										>View More</span
+									>
+									<span class="discord-app-launcher-view-more-mobile"
+										>View All</span
+									>
 								</button>
 							</div>
-							<ul class="discord-app-launcher-recents" role="list">
+							<!-- Desktop: icon-only horizontal strip -->
+							<ul
+								class="discord-app-launcher-recents discord-app-launcher-recents-desktop"
+								role="list"
+							>
 								<li v-for="entry of filteredRecents" :key="entry.id">
 									<button
 										type="button"
 										class="discord-app-launcher-recent"
 										:title="entry.name"
-										:aria-label="entry.name"
+										:aria-label="recentTileLabel(entry)"
 										@click="selectEntry(entry)"
 									>
 										<span
 											class="discord-app-launcher-recent-icon"
 											:class="{
 												'discord-app-launcher-recent-icon--wolfstar':
-													entry.id === 'wolfstar',
+													isWolfstarEntry(entry),
 											}"
 											:style="
 												entry.iconBg
@@ -123,7 +139,7 @@
 												class="discord-app-launcher-recent-avatar"
 												:class="{
 													'discord-app-launcher-recent-avatar--wolfstar':
-														entry.id === 'wolfstar',
+														isWolfstarEntry(entry),
 												}"
 											/>
 											<UIcon
@@ -131,6 +147,63 @@
 												:name="entry.icon"
 												class="discord-app-launcher-recent-glyph"
 											/>
+										</span>
+									</button>
+								</li>
+							</ul>
+							<!-- Mobile: command/app tiles matching Discord iOS -->
+							<ul
+								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile"
+								role="list"
+							>
+								<li v-for="entry of mobileRecents" :key="`mobile-recent-${entry.id}`">
+									<button
+										type="button"
+										class="discord-app-launcher-tile"
+										:aria-label="recentTileLabel(entry)"
+										@click="selectEntry(entry)"
+									>
+										<span
+											class="discord-app-launcher-tile-icon discord-app-launcher-tile-icon--round"
+											:class="{
+												'discord-app-launcher-tile-icon--wolfstar':
+													isWolfstarEntry(entry),
+											}"
+											:style="
+												entry.iconBg
+													? { backgroundColor: entry.iconBg }
+													: undefined
+											"
+											aria-hidden="true"
+										>
+											<NuxtImg
+												v-if="entry.avatar"
+												:src="entry.avatar"
+												alt=""
+												width="40"
+												height="40"
+												class="discord-app-launcher-tile-avatar"
+												:class="{
+													'discord-app-launcher-tile-avatar--wolfstar':
+														isWolfstarEntry(entry),
+												}"
+											/>
+											<UIcon
+												v-else-if="entry.icon"
+												:name="entry.icon"
+												class="discord-app-launcher-tile-glyph"
+											/>
+										</span>
+										<span class="discord-app-launcher-tile-copy">
+											<span class="discord-app-launcher-tile-title">{{
+												entry.tileTitle ?? entry.name
+											}}</span>
+											<span
+												v-if="entry.tileSubtitle"
+												class="discord-app-launcher-tile-subtitle"
+											>
+												{{ entry.tileSubtitle }}
+											</span>
 										</span>
 									</button>
 								</li>
@@ -147,17 +220,27 @@
 									id="discord-app-launcher-server-heading"
 									class="discord-app-launcher-section-title"
 								>
-									Apps in this Server
+									<span class="discord-app-launcher-server-title-desktop"
+										>Apps in this Server</span
+									>
+									<span class="discord-app-launcher-server-title-mobile"
+										>In This Server</span
+									>
 								</h2>
 								<button
 									type="button"
 									class="discord-app-launcher-view-more"
 									@click="openListView(serverAppsListViewId)"
 								>
-									View More
+									<span class="discord-app-launcher-view-more-desktop"
+										>View More</span
+									>
+									<span class="discord-app-launcher-view-more-mobile"
+										>View All</span
+									>
 								</button>
 							</div>
-							<div class="discord-app-launcher-server-list">
+							<div class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop">
 								<DiscordAppLauncherListItem
 									v-for="(entry, index) of filteredServerApps"
 									:key="entry.id"
@@ -173,6 +256,59 @@
 									@select="selectEntry(entry)"
 								/>
 							</div>
+							<ul
+								class="discord-app-launcher-tile-grid discord-app-launcher-server-mobile"
+								role="list"
+							>
+								<li
+									v-for="entry of mobileServerApps"
+									:key="`mobile-server-${entry.id}`"
+								>
+									<button
+										type="button"
+										class="discord-app-launcher-tile"
+										:aria-label="entry.name"
+										@click="selectEntry(entry)"
+									>
+										<span
+											class="discord-app-launcher-tile-icon discord-app-launcher-tile-icon--round"
+											:class="{
+												'discord-app-launcher-tile-icon--wolfstar':
+													isWolfstarEntry(entry),
+											}"
+											:style="
+												entry.iconBg
+													? { backgroundColor: entry.iconBg }
+													: undefined
+											"
+											aria-hidden="true"
+										>
+											<NuxtImg
+												v-if="entry.avatar"
+												:src="entry.avatar"
+												alt=""
+												width="40"
+												height="40"
+												class="discord-app-launcher-tile-avatar"
+												:class="{
+													'discord-app-launcher-tile-avatar--wolfstar':
+														isWolfstarEntry(entry),
+												}"
+											/>
+											<UIcon
+												v-else-if="entry.icon"
+												:name="entry.icon"
+												class="discord-app-launcher-tile-glyph"
+											/>
+										</span>
+										<span class="discord-app-launcher-tile-copy">
+											<span class="discord-app-launcher-tile-title">{{
+												entry.name
+											}}</span>
+										</span>
+									</button>
+								</li>
+							</ul>
 						</section>
 
 						<section
@@ -316,7 +452,7 @@
 						<section
 							v-for="category of filteredCategories"
 							:key="category.id"
-							class="discord-app-launcher-section"
+							class="discord-app-launcher-section discord-app-launcher-category"
 							:aria-labelledby="`discord-app-launcher-${category.id}-heading`"
 						>
 							<div class="discord-app-launcher-section-header">
@@ -328,7 +464,7 @@
 								</h2>
 								<button
 									type="button"
-									class="discord-app-launcher-view-more"
+									class="discord-app-launcher-view-more discord-app-launcher-view-more-header"
 									@click="openListView(category.id)"
 								>
 									View More
@@ -350,6 +486,13 @@
 									@select="selectEntry(entry)"
 								/>
 							</div>
+							<button
+								type="button"
+								class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
+								@click="openListView(category.id)"
+							>
+								View More
+							</button>
 						</section>
 
 						<aside v-if="!normalizedQuery" class="discord-app-launcher-help">
@@ -523,9 +666,15 @@ const filteredRecents = computed(() =>
 	recents.filter((entry) => matchesQuery(entry, normalizedQuery.value)).slice(0, 8),
 );
 
+/** Mobile Recents strip shows two compact command/app tiles. */
+const mobileRecents = computed(() => filteredRecents.value.slice(0, 2));
+
 const filteredServerApps = computed(() =>
 	serverApps.filter((entry) => matchesQuery(entry, normalizedQuery.value)),
 );
+
+/** Mobile “In This Server” strip shows two app tiles. */
+const mobileServerApps = computed(() => filteredServerApps.value.slice(0, 2));
 
 const filteredPromoted = computed(() => {
 	const query = normalizedQuery.value;
@@ -553,6 +702,16 @@ const filteredActiveEntries = computed(() => {
 	const entries = activeListView.value?.entries ?? [];
 	return entries.filter((entry) => matchesQuery(entry, normalizedQuery.value));
 });
+
+function isWolfstarEntry(entry: DiscordAppLauncherEntry): boolean {
+	return entry.avatar === "/avatars/wolfstar.png" || entry.id.startsWith("wolfstar");
+}
+
+function recentTileLabel(entry: DiscordAppLauncherEntry): string {
+	const title = entry.tileTitle ?? entry.name;
+	const subtitle = entry.tileSubtitle;
+	return subtitle ? `${title}, ${subtitle}` : title;
+}
 
 function promoAriaLabel(promo: DiscordAppLauncherPromo): string {
 	const details = promo.description ?? promo.subtitle;
@@ -752,7 +911,12 @@ onMounted(() => {
 }
 
 .discord-app-launcher-section-title {
-	@apply m-0 text-sm font-semibold;
+	@apply m-0 inline-flex items-center gap-1 text-sm font-semibold;
+	color: var(--discord-app-launcher-header);
+}
+
+.discord-app-launcher-section-caret {
+	@apply hidden size-3.5;
 	color: var(--discord-app-launcher-header);
 }
 
@@ -767,6 +931,20 @@ onMounted(() => {
 
 .discord-app-launcher-view-more:focus-visible {
 	@apply rounded outline-2 outline-offset-2 outline-primary;
+}
+
+.discord-app-launcher-view-more-mobile,
+.discord-app-launcher-server-title-mobile,
+.discord-app-launcher-view-more-footer,
+.discord-app-launcher-handle,
+.discord-app-launcher-recents-mobile,
+.discord-app-launcher-server-mobile {
+	display: none;
+}
+
+.discord-app-launcher-view-more-desktop,
+.discord-app-launcher-server-title-desktop {
+	display: inline;
 }
 
 .discord-app-launcher-recents {
@@ -1161,6 +1339,59 @@ onMounted(() => {
 	@apply outline-2 outline-offset-2 outline-primary;
 }
 
+.discord-app-launcher-tile-grid {
+	@apply m-0 grid list-none grid-cols-2 gap-2 p-0;
+}
+
+.discord-app-launcher-tile {
+	@apply flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 px-2.5 py-2.5 text-left;
+	background-color: var(--discord-app-launcher-nested);
+	color: var(--discord-app-launcher-text);
+}
+
+.discord-app-launcher-tile:focus-visible {
+	@apply outline-2 outline-offset-2 outline-primary;
+}
+
+.discord-app-launcher-tile-icon {
+	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl;
+	background-color: var(--discord-app-launcher-icon-bg);
+}
+
+.discord-app-launcher-tile-icon--round {
+	@apply rounded-full;
+}
+
+.discord-app-launcher-tile-icon--wolfstar {
+	background-color: var(--discord-app-launcher-wolfstar-bg);
+}
+
+.discord-app-launcher-tile-avatar {
+	@apply size-full object-cover;
+}
+
+.discord-app-launcher-tile-avatar--wolfstar {
+	@apply object-contain p-1;
+}
+
+.discord-app-launcher-tile-glyph {
+	@apply size-5 text-white;
+}
+
+.discord-app-launcher-tile-copy {
+	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+}
+
+.discord-app-launcher-tile-title {
+	@apply truncate text-[15px] leading-tight font-semibold;
+	color: var(--discord-app-launcher-text);
+}
+
+.discord-app-launcher-tile-subtitle {
+	@apply truncate text-[12px] leading-snug;
+	color: var(--discord-app-launcher-muted);
+}
+
 .discord-app-launcher-list-header {
 	@apply grid shrink-0 grid-cols-[2.25rem_1fr_2.25rem] items-center gap-1 px-4 pt-4 pb-2;
 	animation: discord-app-launcher-view-in 0.12s ease-out;
@@ -1227,17 +1458,167 @@ onMounted(() => {
 	}
 }
 
+/*
+ * Discord mobile App Launcher (< md): bottom sheet with grab handle,
+ * compact Recents / In This Server tiles, title-bar Promoted cards,
+ * category lists with trailing chevrons + centered View More.
+ */
 @media (width < 48rem) {
 	.discord-app-launcher {
-		height: min(36rem, calc(100dvh - 1rem));
+		--discord-app-launcher-bg: oklch(22% 0.006 272);
+		--discord-app-launcher-nested: oklch(28% 0.007 272);
+		--discord-app-launcher-search-bg: oklch(18% 0.005 272);
+		--discord-app-launcher-header: oklch(95% 0.004 272);
+		--discord-app-launcher-link: oklch(72% 0.14 264);
+		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
+		--discord-app-launcher-handle: oklch(55% 0.01 272);
+		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
+		--discord-app-launcher-help-btn: oklch(38% 0.01 272);
+
+		@apply h-[min(70dvh,36rem)] max-h-[70dvh] w-full max-w-none rounded-t-2xl rounded-b-none border-0 shadow-none;
+	}
+
+	.discord-app-launcher-handle {
+		@apply mx-auto mt-2 mb-1 block h-1 w-10 shrink-0 rounded-full;
+		background-color: var(--discord-app-launcher-handle);
+	}
+
+	.discord-app-launcher-main-content {
+		@apply px-3 pb-5;
+	}
+
+	.discord-app-launcher-search-sticky {
+		@apply pt-2 pb-3;
+	}
+
+	.discord-app-launcher-search-input {
+		@apply h-11 rounded-full border-0 text-[15px];
 	}
 
 	.discord-app-launcher-main-sections {
 		@apply gap-5;
 	}
 
+	.discord-app-launcher-section {
+		@apply gap-2.5;
+	}
+
+	.discord-app-launcher-section-title {
+		@apply text-[17px] font-bold;
+		color: var(--discord-app-launcher-header);
+	}
+
+	.discord-app-launcher-section-caret {
+		@apply inline-block;
+	}
+
+	.discord-app-launcher-view-more-desktop,
+	.discord-app-launcher-server-title-desktop,
+	.discord-app-launcher-recents-desktop,
+	.discord-app-launcher-server-list-desktop,
+	.discord-app-launcher-category .discord-app-launcher-view-more-header {
+		display: none;
+	}
+
+	.discord-app-launcher-view-more-mobile,
+	.discord-app-launcher-server-title-mobile {
+		display: inline;
+	}
+
+	.discord-app-launcher-recents-mobile,
+	.discord-app-launcher-server-mobile {
+		display: grid;
+	}
+
+	.discord-app-launcher-view-more-footer {
+		@apply mt-1 block w-full py-1 text-center text-[15px] font-semibold;
+		color: var(--discord-app-launcher-link);
+		text-decoration: none;
+	}
+
+	.discord-app-launcher-view-more-footer:hover {
+		text-decoration: underline;
+	}
+
+	.discord-app-launcher-tile {
+		@apply min-h-[3.75rem] gap-3 rounded-[12px] px-3 py-3;
+	}
+
+	.discord-app-launcher-tile-icon {
+		@apply size-11;
+	}
+
+	.discord-app-launcher-tile-title {
+		@apply text-[15px] font-bold;
+	}
+
+	.discord-app-launcher-promoted-grid {
+		@apply gap-2;
+	}
+
+	.discord-app-launcher-promo {
+		@apply overflow-hidden rounded-[12px];
+	}
+
 	.discord-app-launcher-promo-visual {
-		@apply h-24;
+		@apply h-[6.5rem];
+	}
+
+	.discord-app-launcher-promo-footer {
+		@apply min-h-0 gap-0 px-3 py-2.5;
+		background-color: var(--discord-app-launcher-promo-bar);
+	}
+
+	.discord-app-launcher-promo-icon,
+	.discord-app-launcher-promo-eye,
+	.discord-app-launcher-promo-description {
+		display: none;
+	}
+
+	.discord-app-launcher-promo-copy {
+		@apply gap-0;
+	}
+
+	.discord-app-launcher-promo-title {
+		@apply text-[13px] font-bold;
+	}
+
+	.discord-app-launcher-category .discord-app-launcher-section-header {
+		@apply px-0.5;
+	}
+
+	.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
+		@apply px-3 py-3.5;
+	}
+
+	.discord-app-launcher-help {
+		@apply flex-col items-center gap-3 rounded-[12px] px-4 py-5 text-center;
+	}
+
+	.discord-app-launcher-help > span {
+		@apply items-center gap-2;
+	}
+
+	.discord-app-launcher-help strong {
+		@apply text-[17px];
+	}
+
+	.discord-app-launcher-help > span > span {
+		@apply text-[13px] leading-relaxed;
+	}
+
+	.discord-app-launcher-help button {
+		@apply w-full rounded-full px-4 py-3 text-[15px] font-bold;
+		background-color: var(--discord-app-launcher-help-btn);
+		color: var(--discord-app-launcher-text);
+	}
+
+	.discord-app-launcher-list-header {
+		@apply pt-2;
+	}
+
+	.discord-app-launcher-list-body {
+		@apply mx-3;
 	}
 }
 </style>

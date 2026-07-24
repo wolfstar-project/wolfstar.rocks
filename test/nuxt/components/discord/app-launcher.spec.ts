@@ -19,12 +19,16 @@ describe("DiscordAppLauncher", () => {
 		);
 		expect(wrapper.text()).toContain("Recents");
 		expect(wrapper.text()).toContain("Apps in this Server");
+		expect(wrapper.text()).toContain("In This Server");
 		expect(wrapper.text()).toContain("Promoted");
 		expect(wrapper.text()).toContain("Puzzle Games");
 		expect(wrapper.text()).toContain("Chill Together");
 		expect(wrapper.findAll(".discord-app-launcher-recent").length).toBeGreaterThan(0);
+		expect(wrapper.findAll(".discord-app-launcher-tile").length).toBeGreaterThan(0);
+		expect(wrapper.find(".discord-app-launcher-handle").exists()).toBe(true);
 		expect(wrapper.findAll(".discord-app-launcher-promo")).toHaveLength(4);
 		expect(wrapper.text()).toContain("WolfStar Beta");
+		expect(wrapper.text()).toContain("conf menu");
 		expect(wrapper.text()).toContain("Wordle");
 	});
 
@@ -211,13 +215,35 @@ describe("DiscordAppLauncher", () => {
 
 		// ACT
 		await wrapper
-			.findAll(".discord-app-launcher-server-list .discord-app-launcher-list-item")[0]!
+			.findAll(".discord-app-launcher-server-list-desktop .discord-app-launcher-list-item")[0]!
 			.trigger("click");
 
 		// ASSERT
 		const selected = wrapper.emitted("select");
 		expect(selected).toHaveLength(1);
 		expect(selected?.[0]?.[0]).toMatchObject({ id: "wolfstar", name: "WolfStar Beta" });
+	});
+
+	it("emits select when a mobile Recents tile is clicked (positive)", async () => {
+		// ARRANGE
+		const wrapper = await mountSuspended(DiscordAppLauncher, {
+			props: { open: true },
+		});
+
+		// ACT
+		await wrapper.find(".discord-app-launcher-recents-mobile .discord-app-launcher-tile").trigger(
+			"click",
+		);
+
+		// ASSERT
+		const selected = wrapper.emitted("select");
+		expect(selected).toHaveLength(1);
+		expect(selected?.[0]?.[0]).toMatchObject({
+			id: "wolfstar-conf-menu",
+			tileTitle: "conf menu",
+			kind: "command",
+			commandName: "conf",
+		});
 	});
 
 	it("closes on Escape from the main view (positive)", async () => {

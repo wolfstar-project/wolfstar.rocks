@@ -209,6 +209,7 @@
 									v-model="composerText"
 									channel-name="mod-commands"
 									autocomplete
+									:apps-open="appLauncherOpen"
 									:aria-controls="
 										showCommandPicker ? 'showcase-slash-suggestions' : undefined
 									"
@@ -984,6 +985,10 @@ onMounted(() => {
 	.showcase-command-picker {
 		/* Solid bar behind flush mobile picker + composer (no channel peek gap). */
 		background-color: var(--showcase-discord-composer-bar);
+	}
+
+	.showcase-app-launcher {
+		@apply mx-0 mb-0 w-full max-w-none;
 	}
 
 	.showcase-command-picker :deep(.discord-slash-command-suggestions) {

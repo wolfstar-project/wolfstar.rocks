@@ -7,17 +7,23 @@ import type {
 /** Default Recents row for the Discord App Launcher demo. */
 export const discordAppLauncherRecents: readonly DiscordAppLauncherEntry[] = [
 	{
-		id: "wolfstar",
+		id: "wolfstar-conf-menu",
 		name: "WolfStar Beta",
 		description: "> Customizable moderation and more!",
 		avatar: "/avatars/wolfstar.png",
+		kind: "command",
+		commandName: "conf",
+		tileTitle: "conf menu",
+		tileSubtitle: "WolfStar Beta",
 	},
 	{
-		id: "flamey",
+		id: "flamey-commands",
 		name: "Flamey",
 		description: "Flamey is a highly customizable, interactive all-in-one Discord bot.",
 		icon: "ph:flame-fill",
 		iconBg: "oklch(58% 0.2 250)",
+		tileTitle: "commands",
+		tileSubtitle: "Flamey",
 	},
 	{
 		id: "staryl",
@@ -508,7 +514,7 @@ export const discordAppLauncherActionGames: readonly DiscordAppLauncherEntry[] =
 	{
 		id: "smash-karts",
 		name: "Smash Karts",
-		description: "A multiplayer online kart battle arena.",
+		description: "Smash Karts is a MOKBA (Multiplayer Online Kart Battle Arena).",
 		icon: "ph:car-profile-fill",
 		iconBg: "oklch(70% 0.16 305)",
 	},
@@ -565,7 +571,7 @@ export const discordAppLauncherCategories: readonly DiscordAppLauncherListView[]
 	{ id: "card-games", title: "Card Games", entries: discordAppLauncherCardGames },
 	{
 		id: "strategy-games",
-		title: "Strategy and Tabletop Games",
+		title: "Strategy and Board Games",
 		entries: discordAppLauncherStrategyGames,
 	},
 	{

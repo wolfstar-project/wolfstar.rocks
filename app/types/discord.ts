@@ -100,6 +100,15 @@ export interface DiscordAppLauncherEntry {
 	 * Parent handlers should call the interactive execute flow with this name.
 	 */
 	commandName?: string;
+	/**
+	 * Primary label on mobile compact tiles (e.g. recent command path).
+	 * Falls back to `name` when omitted.
+	 */
+	tileTitle?: string;
+	/**
+	 * Secondary label on mobile compact tiles (e.g. app name under a command).
+	 */
+	tileSubtitle?: string;
 }
 
 /** Promotional card in the launcher’s Promoted grid. */

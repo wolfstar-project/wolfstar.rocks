@@ -36,35 +36,28 @@
 					</div>
 				</LazyUDropdownMenu>
 			</div>
-			<div v-else>
-				<UButton
-					v-if="!mobile"
-					size="md"
-					color="primary"
-					variant="subtle"
-					to="/login"
-					block
-					class="md:hidden"
-					icon="ic:round-discord"
-					aria-label="Sign in with Discord"
-				/>
+			<div v-else :class="mobile ? 'flex justify-center' : undefined">
 				<UButton
 					label="Sign in"
 					size="md"
 					color="primary"
 					variant="subtle"
 					to="/login"
-					block
-					:class="mobile ? undefined : 'hidden md:inline-flex'"
+					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="ic:round-discord"
 					aria-label="Sign in with Discord"
 				/>
 			</div>
 		</template>
 		<template #placeholder>
-			<div class="flex items-center gap-2">
-				<USkeleton class="size-6 rounded-full" />
-				<USkeleton class="h-4 w-16" :class="mobile ? undefined : 'hidden sm:block'" />
+			<div class="flex items-center gap-2" :class="mobile ? 'justify-center' : undefined">
+				<template v-if="mobile">
+					<USkeleton class="h-10 w-36 rounded-lg" />
+				</template>
+				<template v-else>
+					<USkeleton class="size-6 rounded-full" />
+					<USkeleton class="hidden h-4 w-16 sm:block" />
+				</template>
 			</div>
 		</template>
 	</BetterAuthState>
@@ -74,7 +67,7 @@
 import type { DropdownMenuItem } from "@nuxt/ui";
 
 const { mobile = false } = defineProps<{
-	/** Renders a full-width variant suited for the mobile navigation drawer. */
+	/** Renders a drawer-friendly variant for the mobile navigation panel. */
 	mobile?: boolean;
 }>();
 

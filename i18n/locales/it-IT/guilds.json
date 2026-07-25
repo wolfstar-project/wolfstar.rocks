@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/guilds.schema.json",
 	"guild_settings": {
 		"save_failed": "Salvataggio non riuscito",
 		"please_try_again": "Riprova.",
@@ -7,13 +8,29 @@
 			"subtitle": "Configura le impostazioni di base del server per WolfStar.",
 			"form_aria": "Modulo impostazioni generali del server",
 			"server_info": "Informazioni server",
+			"server_info_description": "Informazioni di base su questo server Discord.",
+			"server_stats_aria": "Statistiche del server",
+			"stat_members": "Membri",
+			"stat_categories": "Categorie",
+			"stat_text_channels": "Canali di testo",
+			"stat_voice_channels": "Canali vocali",
+			"stat_roles": "Ruoli",
 			"copy_server_id": "Copia ID server",
+			"server_id_copied_title": "ID server copiato",
+			"server_id_copied_description": "L'ID del server è stato copiato negli appunti.",
 			"need_help": "Hai bisogno di aiuto?",
 			"prefix": "Prefisso",
 			"prefix_description": "Prefisso dei comandi del bot",
+			"prefix_placeholder": "!",
+			"prefix_aria": "Prefisso dei comandi del bot",
 			"language": "Lingua",
+			"language_description": "Lingua delle risposte del bot in questo server.",
+			"language_placeholder": "Seleziona lingua",
+			"language_aria": "Lingua del bot",
 			"recent_activity": "Attività recente",
-			"no_activity": "Nessuna modifica alle impostazioni ancora"
+			"no_activity": "Nessuna modifica alle impostazioni ancora",
+			"no_activity_description": "Le modifiche alle impostazioni appariranno qui.",
+			"save_failed_message": "Impossibile salvare le impostazioni generali. {message}"
 		},
 		"roles": {
 			"title": "Ruoli",
@@ -28,12 +45,22 @@
 		"channels": {
 			"title": "Impostazioni canali",
 			"subtitle": "Scegli dove WolfStar pubblica i log e quali canali ignorare.",
-			"form_aria": "Modulo impostazioni canali"
+			"form_aria": "Modulo impostazioni canali",
+			"logging_channels": "Canali di registro",
+			"logging_channels_help": "Scegli dove WolfStar pubblica ogni tipo di registro.",
+			"excluded_channels": "Canali esclusi",
+			"excluded_channels_help": "Canali esclusi da tipi specifici di registro."
 		},
 		"events": {
 			"title": "Impostazioni eventi",
 			"subtitle": "Configura quali eventi devono essere registrati e monitorati",
-			"form_aria": "Modulo impostazioni eventi"
+			"form_aria": "Modulo impostazioni eventi",
+			"moderation_events": "Eventi di moderazione",
+			"moderation_events_help": "Questi eventi riguardano azioni di moderazione. Configura un canale dei registri di moderazione in {channelsPage}.",
+			"message_events": "Eventi dei messaggi",
+			"message_events_help": "Questi eventi tracciano l'attività dei messaggi. I canali richiesti variano in base al tipo di evento e possono essere configurati in {channelsPage}.",
+			"channels_page_link": "la pagina Canali",
+			"toggle_aria": "Attiva o disattiva {title}"
 		},
 		"moderation": {
 			"title": "Impostazioni sanzioni",
@@ -43,7 +70,13 @@
 		"commands": {
 			"title": "Comandi",
 			"subtitle": "Scegli quali comandi abilitare o disabilitare sul tuo server",
-			"form_aria": "Modulo impostazioni comandi disabilitati"
+			"form_aria": "Modulo impostazioni comandi disabilitati",
+			"enable_all": "Attiva tutto",
+			"disable_all": "Disattiva tutto",
+			"reset": "Reimposta",
+			"category_reset": "Reimposta categoria",
+			"category_reset_description": "Reimposta tutti i comandi di questa categoria al valore predefinito.",
+			"save_failed": "Impossibile salvare le impostazioni dei comandi. {message}"
 		},
 		"filter": {
 			"common": {
@@ -52,6 +85,9 @@
 				"punishments": "Sanzioni",
 				"soft_actions": "Azioni soft",
 				"hard_action": "Azione hard",
+				"hard_action_description": "Punizione applicata quando viene raggiunta la soglia.",
+				"select_action_aria": "Seleziona azione di punizione",
+				"options": "Opzioni",
 				"duration": "Durata",
 				"duration_help": "Durata del silenziamento o del ban",
 				"threshold": "Soglia",
@@ -113,6 +149,8 @@
 				"filter_label": "Filtro {state}",
 				"allowed_links": "Link consentiti",
 				"add_link": "Aggiungi link consentito",
+				"add_link_placeholder": "esempio.com",
+				"remove_link": "Rimuovi {link}",
 				"save_failed": "Impossibile salvare le impostazioni del filtro link. {message}"
 			},
 			"messages": {
@@ -130,6 +168,7 @@
 				"toggle_help": "Blocca i messaggi con troppe righe nuove.",
 				"filter_label": "Filtro {state}",
 				"maximum": "Righe massime",
+				"maximum_help": "Numero massimo di nuove righe consentite in un messaggio.",
 				"save_failed": "Impossibile salvare le impostazioni del filtro nuove righe. {message}"
 			},
 			"reactions": {
@@ -338,7 +377,12 @@
 		"manage_server": "Gestisci server",
 		"invite_bot": "Invita bot",
 		"no_permission": "Nessun permesso",
-		"total_members": "Membri totali: {count}"
-	},
-	"$schema": "../../schemas/guilds.schema.json"
+		"total_members": "Membri totali: {count}",
+		"members_online": "Membri online",
+		"manage_aria": "Gestisci {name}",
+		"invite_aria": "Invita il bot su {name}",
+		"no_permission_aria": "Nessun permesso per gestire {name}",
+		"manage_server_aria": "Gestisci server {name}",
+		"invite_bot_aria": "Invita bot su {name}"
+	}
 }

@@ -50,7 +50,7 @@ export default defineConfig({
 				// Format after generate so CI `git diff` matches oxfmt tab output
 				// (JSON.stringify alone emits 2-space indent).
 				command:
-					"node --experimental-transform-types scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json",
+					"node --experimental-transform-types scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json i18n/schemas",
 				// Off: script rewrites schema.json (same rationale as i18n:check).
 				cache: false,
 			},
@@ -512,8 +512,8 @@ export default defineConfig({
 		],
 	},
 	staged: {
-		"i18n/locales/*":
-			"node --experimental-transform-types ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json",
+		"i18n/locales/**/*.json":
+			"node --experimental-transform-types ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json i18n/schemas",
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
 		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
 			const filtered = files.filter(

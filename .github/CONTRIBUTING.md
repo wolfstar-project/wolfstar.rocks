@@ -149,11 +149,11 @@ pnpm prisma:generate  # Regenerate Prisma client
 pnpm prisma:studio    # Visual database editor (http://localhost:5555)
 
 # Localization (vp tasks + fix scripts)
-pnpm vp run i18n:check    # Audit locale files against en.json
+pnpm vp run i18n:check    # Audit locale feature files against en/*
 pnpm i18n:check:fix      # Add missing keys (EN placeholders) / remove extras
 pnpm vp run i18n:report   # Detect missing, unused, or dynamic keys in code
-pnpm i18n:report:fix     # Remove unused keys from all locale files
-pnpm vp run i18n:schema   # Regenerate i18n/schema.json from en.json
+pnpm i18n:report:fix     # Remove unused keys from all locale feature files
+pnpm vp run i18n:schema   # Regenerate i18n/schemas/*.schema.json from en/*
 pnpm vp run build:lunaria # Build /lunaria dashboard + status.json
 ```
 
@@ -399,28 +399,31 @@ Make sure to read about [Playwright best practices](https://playwright.dev/docs/
 
 WolfStar.rocks uses [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for the dashboard UI. Guild bot-response languages (`en-US`, `es-ES`, …) are separate from UI locale preference.
 
-- Source of truth: [`i18n/locales/en.json`](../i18n/locales/en.json)
+Locales are split by feature under `i18n/locales/{locale}/{feature}.json` (for example `en/auth.json`, `es-ES/guilds.json`). Feature file names are listed in [`i18n/locale-features.json`](../i18n/locale-features.json). `@nuxtjs/i18n` v10 always lazy-loads these via the `files` array in [`config/i18n.ts`](../config/i18n.ts).
+
+- Source of truth: [`i18n/locales/en/`](../i18n/locales/en)
 - Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, `it-IT`, matching WolfStar/Skyra language keys)
 - Locale registry: [`config/i18n.ts`](../config/i18n.ts)
+- Per-feature schemas: [`i18n/schemas/`](../i18n/schemas)
 - Lunaria config: [`lunaria.config.json`](../lunaria.config.json)
 
 ### i18n commands
 
-| Command                        | Purpose                                                                   |
-| ------------------------------ | ------------------------------------------------------------------------- |
-| `pnpm vp run i18n:check`       | Compare locales to `en.json` (reports missing/extra keys; removes extras) |
-| `pnpm i18n:check:fix [locale]` | Add missing keys with English placeholders (optionally for one locale)    |
-| `pnpm vp run i18n:report`      | Fail on missing, unused, or dynamic keys used in `app/**`                 |
-| `pnpm i18n:report:fix`         | Remove unused keys from all locale files                                  |
-| `pnpm vp run i18n:schema`      | Regenerate `i18n/schema.json` for IDE validation                          |
-| `pnpm vp run build:lunaria`    | Build `dist/lunaria/` dashboard + `status.json`                           |
+| Command                        | Purpose                                                                |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| `pnpm vp run i18n:check`       | Compare locales to `en/*` (reports missing/extra keys; removes extras) |
+| `pnpm i18n:check:fix [locale]` | Add missing keys with English placeholders (optionally for one locale) |
+| `pnpm vp run i18n:report`      | Fail on missing, unused, or dynamic keys used in `app/**`              |
+| `pnpm i18n:report:fix`         | Remove unused keys from all locale feature files                       |
+| `pnpm vp run i18n:schema`      | Regenerate `i18n/schemas/*.schema.json` for IDE validation             |
+| `pnpm vp run build:lunaria`    | Build `dist/lunaria/` dashboard + `status.json`                        |
 
-CI runs `i18n:report` and checks that `i18n/schema.json` is up to date. Autofix runs `i18n:check` and `build:lunaria`. The Lunaria PR workflow posts a translation overview comment.
+CI runs `i18n:report` and checks that i18n schemas are up to date. Autofix runs `i18n:check` and `build:lunaria`. The Lunaria PR workflow posts a translation overview comment.
 
 ### Adding a locale
 
-1. Create `i18n/locales/<code>.json` (start from `en.json`)
-2. Register it in `config/i18n.ts` (`locales` array)
+1. Copy `i18n/locales/en/*.json` into `i18n/locales/<code>/`
+2. Register it in `config/i18n.ts` (`locales` array) with `files: localeFilesFor("<code>")`
 3. Add it to `lunaria.config.json` → `locales`
 4. Run `pnpm i18n:check:fix` and `pnpm vp run i18n:schema`
 

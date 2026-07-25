@@ -1,6 +1,6 @@
 import type { I18nStatus } from "../shared/types/i18n-status.ts";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
 import { currentLocales } from "../config/i18n.ts";
@@ -54,9 +54,23 @@ function collectMissingKeys(source: NestedRecord, target: NestedRecord, prefix =
 	return missing;
 }
 
+function loadMergedLocaleDirectory(localeCode: string): NestedRecord {
+	const dir = join("i18n/locales", localeCode);
+	if (!existsSync(dir)) return {};
+
+	const merged: NestedRecord = {};
+	for (const file of readdirSync(dir).filter((name) => name.endsWith(".json"))) {
+		const content = JSON.parse(readFileSync(join(dir, file), "utf-8")) as NestedRecord;
+		for (const [key, value] of Object.entries(content)) {
+			if (key === "$schema") continue;
+			merged[key] = value;
+		}
+	}
+	return merged;
+}
+
 function buildJsonStatus(): I18nStatus {
-	const sourceContent = JSON.parse(readFileSync("i18n/locales/en.json", "utf-8")) as NestedRecord;
-	const { $schema: _, ...sourceWithoutMeta } = sourceContent;
+	const sourceWithoutMeta = loadMergedLocaleDirectory("en");
 	const totalKeys = countKeys(sourceWithoutMeta);
 
 	const { defaultLocale, repository } = config;
@@ -77,12 +91,8 @@ function buildJsonStatus(): I18nStatus {
 			totalKeys,
 		},
 		locales: appLocales.map((locale) => {
-			const localeFilePath = `i18n/locales/${locale.code}.json`;
-			let localeContent: NestedRecord = {};
-			if (existsSync(localeFilePath)) {
-				localeContent = JSON.parse(readFileSync(localeFilePath, "utf-8")) as NestedRecord;
-			}
-			const { $schema: __, ...localeWithoutMeta } = localeContent;
+			const localeDirPath = `i18n/locales/${locale.code}`;
+			const localeWithoutMeta = loadMergedLocaleDirectory(locale.code);
 			const missingKeys = collectMissingKeys(sourceWithoutMeta, localeWithoutMeta);
 			const completedKeys = totalKeys - missingKeys.length;
 
@@ -95,8 +105,8 @@ function buildJsonStatus(): I18nStatus {
 				missingKeys,
 				percentComplete:
 					totalKeys > 0 ? Math.round((completedKeys / totalKeys) * 100) : 100,
-				githubEditUrl: `${githubBase}/blob/${branch}/${localeFilePath}`,
-				githubHistoryUrl: `${githubBase}/commits/${branch}/${localeFilePath}`,
+				githubEditUrl: `${githubBase}/tree/${branch}/${localeDirPath}`,
+				githubHistoryUrl: `${githubBase}/commits/${branch}/${localeDirPath}`,
 			};
 		}),
 	};

@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/profile.schema.json",
 	"profile": {
 		"title": "Perfil",
 		"seo_description": "Gestiona tu perfil, servidores y configuración",
@@ -23,7 +24,15 @@
 		"default_avatar": "Avatar predeterminado",
 		"email": "Correo electrónico",
 		"members": "Miembros",
-		"members_online": "Miembros en línea"
-	},
-	"$schema": "../../schemas/profile.schema.json"
+		"members_online": "Miembros en línea",
+		"servers_count": "{count} servidores",
+		"server_list_aria": "Lista de servidores",
+		"servers_list_aria": "Tus servidores",
+		"applying_filters": "Aplicando filtros...",
+		"loading_servers": "Cargando servidores...",
+		"no_servers_description": "No se encontraron servidores asociados a tu cuenta.",
+		"no_matching_description": "Ningún servidor coincide con tu búsqueda.",
+		"reload_page": "Recargar página",
+		"search_matching": "Buscando coincidencias..."
+	}
 }

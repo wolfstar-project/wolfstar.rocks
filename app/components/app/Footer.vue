@@ -121,7 +121,7 @@ const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 
-const uiLocales = [en, { ...es, code: "es-ES" }, { ...it, code: "it-IT" }] as const;
+const uiLocales = [en, { ...es, code: "es-ES" }, { ...it, code: "it-IT" }];
 
 function selectLocale(code: string) {
 	if (!isAppLocaleCode(code)) return;

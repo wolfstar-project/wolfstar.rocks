@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/guilds.schema.json",
 	"guild_settings": {
 		"save_failed": "Error al guardar",
 		"please_try_again": "Por favor, inténtalo de nuevo.",
@@ -7,13 +8,29 @@
 			"subtitle": "Configura los ajustes básicos del servidor para WolfStar.",
 			"form_aria": "Formulario de configuración general del servidor",
 			"server_info": "Información del servidor",
+			"server_info_description": "Información básica sobre este servidor de Discord.",
+			"server_stats_aria": "Estadísticas del servidor",
+			"stat_members": "Miembros",
+			"stat_categories": "Categorías",
+			"stat_text_channels": "Canales de texto",
+			"stat_voice_channels": "Canales de voz",
+			"stat_roles": "Roles",
 			"copy_server_id": "Copiar ID del servidor",
+			"server_id_copied_title": "ID del servidor copiado",
+			"server_id_copied_description": "El ID del servidor se ha copiado al portapapeles.",
 			"need_help": "¿Necesitas ayuda?",
 			"prefix": "Prefijo",
 			"prefix_description": "Prefijo de comando del bot",
+			"prefix_placeholder": "!",
+			"prefix_aria": "Prefijo de comandos del bot",
 			"language": "Idioma",
+			"language_description": "Idioma de las respuestas del bot en este servidor.",
+			"language_placeholder": "Seleccionar idioma",
+			"language_aria": "Idioma del bot",
 			"recent_activity": "Actividad reciente",
-			"no_activity": "Aún no hay cambios en la configuración"
+			"no_activity": "Aún no hay cambios en la configuración",
+			"no_activity_description": "Los cambios de configuración aparecerán aquí.",
+			"save_failed_message": "No se pudieron guardar los ajustes generales. {message}"
 		},
 		"roles": {
 			"title": "Roles",
@@ -28,12 +45,22 @@
 		"channels": {
 			"title": "Configuración de canales",
 			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
-			"form_aria": "Formulario de configuración de canales"
+			"form_aria": "Formulario de configuración de canales",
+			"logging_channels": "Canales de registro",
+			"logging_channels_help": "Elige dónde WolfStar publica cada tipo de registro.",
+			"excluded_channels": "Canales excluidos",
+			"excluded_channels_help": "Canales omitidos por tipos específicos de registro."
 		},
 		"events": {
 			"title": "Configuración de eventos",
 			"subtitle": "Configura qué eventos deben registrarse y rastrearse",
-			"form_aria": "Formulario de configuración de eventos"
+			"form_aria": "Formulario de configuración de eventos",
+			"moderation_events": "Eventos de moderación",
+			"moderation_events_help": "Estos eventos involucran acciones de moderación. Configura un canal de registros de moderación en {channelsPage}.",
+			"message_events": "Eventos de mensajes",
+			"message_events_help": "Estos eventos rastrean la actividad de los mensajes. Los canales necesarios varían según el tipo de evento y se pueden configurar en {channelsPage}.",
+			"channels_page_link": "la página de Canales",
+			"toggle_aria": "Activar o desactivar {title}"
 		},
 		"moderation": {
 			"title": "Configuración de sanciones",
@@ -43,7 +70,13 @@
 		"commands": {
 			"title": "Comandos",
 			"subtitle": "Elige qué comandos activar o desactivar en tu servidor",
-			"form_aria": "Formulario de configuración de comandos desactivados"
+			"form_aria": "Formulario de configuración de comandos desactivados",
+			"enable_all": "Activar todo",
+			"disable_all": "Desactivar todo",
+			"reset": "Restablecer",
+			"category_reset": "Restablecer categoría",
+			"category_reset_description": "Restablece todos los comandos de esta categoría al valor predeterminado.",
+			"save_failed": "No se pudieron guardar los ajustes de comandos. {message}"
 		},
 		"filter": {
 			"common": {
@@ -52,6 +85,9 @@
 				"punishments": "Sanciones",
 				"soft_actions": "Acciones suaves",
 				"hard_action": "Acción dura",
+				"hard_action_description": "Castigo aplicado cuando se alcanza el umbral.",
+				"select_action_aria": "Seleccionar acción de castigo",
+				"options": "Opciones",
 				"duration": "Duración",
 				"duration_help": "Cuánto dura el silencio o el baneo",
 				"threshold": "Umbral",
@@ -113,6 +149,8 @@
 				"filter_label": "Filtro {state}",
 				"allowed_links": "Enlaces permitidos",
 				"add_link": "Añadir enlace permitido",
+				"add_link_placeholder": "ejemplo.com",
+				"remove_link": "Eliminar {link}",
 				"save_failed": "No se pudo guardar la configuración del filtro de enlaces. {message}"
 			},
 			"messages": {
@@ -130,6 +168,7 @@
 				"toggle_help": "Bloquea mensajes con demasiadas líneas nuevas.",
 				"filter_label": "Filtro {state}",
 				"maximum": "Líneas máximas",
+				"maximum_help": "Número máximo de saltos de línea permitidos en un mensaje.",
 				"save_failed": "No se pudo guardar la configuración del filtro de nuevas líneas. {message}"
 			},
 			"reactions": {
@@ -338,7 +377,12 @@
 		"manage_server": "Gestionar servidor",
 		"invite_bot": "Invitar bot",
 		"no_permission": "Sin permiso",
-		"total_members": "Total de miembros: {count}"
-	},
-	"$schema": "../../schemas/guilds.schema.json"
+		"total_members": "Total de miembros: {count}",
+		"members_online": "Miembros en línea",
+		"manage_aria": "Administrar {name}",
+		"invite_aria": "Invitar el bot a {name}",
+		"no_permission_aria": "Sin permiso para administrar {name}",
+		"manage_server_aria": "Administrar servidor {name}",
+		"invite_bot_aria": "Invitar bot a {name}"
+	}
 }

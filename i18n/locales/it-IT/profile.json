@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/profile.schema.json",
 	"profile": {
 		"title": "Profilo",
 		"seo_description": "Gestisci il tuo profilo, server e impostazioni",
@@ -23,7 +24,15 @@
 		"default_avatar": "Avatar predefinito",
 		"email": "Email",
 		"members": "Membri",
-		"members_online": "Membri online"
-	},
-	"$schema": "../../schemas/profile.schema.json"
+		"members_online": "Membri online",
+		"servers_count": "{count} server",
+		"server_list_aria": "Elenco server",
+		"servers_list_aria": "I tuoi server",
+		"applying_filters": "Applicazione filtri...",
+		"loading_servers": "Caricamento server...",
+		"no_servers_description": "Nessun server trovato associato al tuo account.",
+		"no_matching_description": "Nessun server corrisponde alla tua ricerca.",
+		"reload_page": "Ricarica pagina",
+		"search_matching": "Ricerca in corso..."
+	}
 }

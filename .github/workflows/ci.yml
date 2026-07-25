@@ -308,4 +308,4 @@ jobs:
       - name: 🌐 Check i18n schema is up to date
         run: |
           vp run i18n:schema
-          git diff --exit-code i18n/schema.json
+          git diff --exit-code i18n/schema.json i18n/schemas i18n/locales

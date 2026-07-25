@@ -5,11 +5,23 @@ import type {
 	PluralizationRules,
 } from "@intlify/core-base";
 import type { LocaleObject } from "@nuxtjs/i18n";
+import localeFeatures from "../i18n/locale-features.json" with { type: "json" };
 
 interface LocaleObjectData extends LocaleObject {
 	numberFormats?: NumberFormats;
 	dateTimeFormats?: DateTimeFormats;
 	pluralRule?: PluralizationRule;
+}
+
+/**
+ * Feature message files loaded (and deep-merged) per locale via `files`.
+ * Layout: `i18n/locales/{locale}/{feature}.json`
+ * Lazy-loading is always on in @nuxtjs/i18n v10 when using `file`/`files`.
+ */
+export const localeFeatureFiles = localeFeatures.features as readonly string[];
+
+export function localeFilesFor(localeCode: string): string[] {
+	return localeFeatureFiles.map((feature) => `${localeCode}/${feature}`);
 }
 
 /**
@@ -28,20 +40,20 @@ export const countryLocaleVariants: Record<string, (LocaleObjectData & { country
 const locales: LocaleObjectData[] = [
 	{
 		code: "en",
-		file: "en.json",
+		files: localeFilesFor("en"),
 		name: "English",
 		language: "en-US",
 	},
 	{
 		// Matches WolfStar/Skyra bot language keys (e.g. guild settings `language`)
 		code: "es-ES",
-		file: "es-ES.json",
+		files: localeFilesFor("es-ES"),
 		name: "Español",
 		language: "es-ES",
 	},
 	{
 		code: "it-IT",
-		file: "it-IT.json",
+		files: localeFilesFor("it-IT"),
 		name: "Italiano",
 		language: "it-IT",
 	},
@@ -52,11 +64,14 @@ function buildLocales() {
 		const localeVariants = countryLocaleVariants[data.code];
 		if (localeVariants) {
 			for (const variant of localeVariants) {
+				const baseFiles = (data.files ?? []).map((file) =>
+					typeof file === "string" ? file : file.path,
+				);
 				const entry: LocaleObjectData = {
 					...data,
 					code: variant.code,
 					name: variant.name,
-					files: [data.file as string, `${variant.code}.json`],
+					files: [...baseFiles, `${variant.code}.json`],
 				};
 				delete entry.file;
 				acc.push(entry);

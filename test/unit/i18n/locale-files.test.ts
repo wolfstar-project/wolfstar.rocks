@@ -1,10 +1,15 @@
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { currentLocales } from "../../../config/i18n";
-
-const LOCALES_DIR = join(process.cwd(), "i18n/locales");
-const REFERENCE = "en.json";
+import {
+	FEATURE_FILES,
+	LOCALES_DIRECTORY,
+	REFERENCE_LOCALE,
+	listLocaleCodes,
+	loadMergedLocale,
+	localeFeatureAbsolutePath,
+} from "../../../scripts/utils/i18n-locale-files";
 
 type Nested = Record<string, unknown>;
 
@@ -23,33 +28,48 @@ function collectKeys(obj: Nested, prefix = ""): string[] {
 }
 
 describe("i18n locale files", () => {
-	it("has a reference en.json", () => {
-		expect(existsSync(join(LOCALES_DIR, REFERENCE))).toBe(true);
-	});
-
-	it("registers a locale file for every currentLocales entry", () => {
-		for (const locale of currentLocales) {
-			const file = locale.file ?? `${locale.code}.json`;
-			const fileName = typeof file === "string" ? file : file.path;
-			expect(existsSync(join(LOCALES_DIR, fileName)), `missing ${fileName}`).toBe(true);
+	it("has a reference English feature directory", () => {
+		expect(existsSync(join(LOCALES_DIRECTORY, REFERENCE_LOCALE))).toBe(true);
+		for (const feature of FEATURE_FILES) {
+			expect(
+				existsSync(localeFeatureAbsolutePath(REFERENCE_LOCALE, feature)),
+				`missing ${REFERENCE_LOCALE}/${feature}`,
+			).toBe(true);
 		}
 	});
 
-	it("keeps non-English locales in sync with en.json keys", () => {
-		const reference = JSON.parse(readFileSync(join(LOCALES_DIR, REFERENCE), "utf-8")) as Nested;
-		const referenceKeys = new Set(collectKeys(reference));
+	it("registers feature files for every currentLocales entry", () => {
+		for (const locale of currentLocales) {
+			const files = locale.files ?? (locale.file ? [locale.file] : []);
+			expect(files.length).toBeGreaterThan(0);
+			for (const file of files) {
+				const fileName = typeof file === "string" ? file : file.path;
+				expect(existsSync(join(LOCALES_DIRECTORY, fileName)), `missing ${fileName}`).toBe(
+					true,
+				);
+			}
+		}
+	});
 
-		const localeFiles = readdirSync(LOCALES_DIR).filter(
-			(file) => file.endsWith(".json") && file !== REFERENCE,
-		);
+	it("keeps non-English locales in sync with English feature keys", () => {
+		const referenceKeys = new Set(collectKeys(loadMergedLocale(REFERENCE_LOCALE)));
 
-		for (const file of localeFiles) {
-			const content = JSON.parse(readFileSync(join(LOCALES_DIR, file), "utf-8")) as Nested;
-			const keys = new Set(collectKeys(content));
+		for (const locale of listLocaleCodes().filter((code) => code !== REFERENCE_LOCALE)) {
+			const keys = new Set(collectKeys(loadMergedLocale(locale)));
 			const missing = [...referenceKeys].filter((key) => !keys.has(key));
 			const extra = [...keys].filter((key) => !referenceKeys.has(key));
-			expect(missing, `${file} missing keys`).toEqual([]);
-			expect(extra, `${file} extra keys`).toEqual([]);
+			expect(missing, `${locale} missing keys`).toEqual([]);
+			expect(extra, `${locale} extra keys`).toEqual([]);
+		}
+	});
+
+	it("only contains expected feature files per locale directory", () => {
+		const expected = new Set(FEATURE_FILES);
+		for (const locale of listLocaleCodes()) {
+			const files = readdirSync(join(LOCALES_DIRECTORY, locale)).filter((f) =>
+				f.endsWith(".json"),
+			);
+			expect(new Set(files)).toEqual(expected);
 		}
 	});
 });

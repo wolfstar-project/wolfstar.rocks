@@ -19,8 +19,8 @@
 	],
 	"files": [
 		{
-			"location": "i18n/locales/en.json",
-			"pattern": "i18n/locales/@lang.json",
+			"location": "i18n/locales/en/**/*.json",
+			"pattern": "i18n/locales/@lang/@path",
 			"type": "dictionary",
 			"optionalKeys": {
 				"i18n/locales/.json": ["$schema"]

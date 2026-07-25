@@ -1,13 +1,22 @@
 <template>
 	<div class="container mx-auto px-4 py-8">
-		<h1 class="sr-only">Guild OAuth Callback</h1>
-		<h2 class="sr-only">Guild Setup Status</h2>
+		<h1 class="sr-only">{{ t("auth.oauth.guild_sr_title") }}</h1>
+		<h2 class="sr-only">{{ t("auth.oauth.guild_sr_status") }}</h2>
 		<template v-if="!guildId">
-			<UAlert variant="solid" color="error" title="Server Not Found" icon="emojione:warning">
+			<UAlert
+				variant="solid"
+				color="error"
+				:title="t('auth.oauth.guild_not_found_title')"
+				icon="emojione:warning"
+			>
 				<template #description>
-					We couldn't determine which server to set up. Please
-					<NuxtLink to="/login" class="font-medium underline">sign in</NuxtLink>
-					and select a server from your dashboard.
+					<i18n-t keypath="auth.oauth.guild_not_found_description" tag="span">
+						<template #link>
+							<NuxtLink to="/login" class="font-medium underline">{{
+								t("auth.oauth.login_required_link")
+							}}</NuxtLink>
+						</template>
+					</i18n-t>
 				</template>
 			</UAlert>
 		</template>
@@ -16,20 +25,28 @@
 				<UAlert
 					variant="solid"
 					color="error"
-					title="Setup Failed"
+					:title="t('auth.oauth.guild_setup_failed_title')"
 					icon="emojione:cross-mark"
 				>
 					<template #description>
 						{{ error }}
 					</template>
 					<template #actions>
-						<UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
+						<UButton to="/login" size="sm" variant="outline">
+							{{ t("auth.oauth.guild_return_login") }}
+						</UButton>
 					</template>
 				</UAlert>
 			</template>
 			<template v-else>
-				<UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
-					<template #description> Taking you to the server dashboard... </template>
+				<UAlert
+					color="info"
+					icon="emojione:hourglass-done"
+					:title="t('auth.oauth.guild_redirecting_title')"
+				>
+					<template #description>
+						{{ t("auth.oauth.guild_redirecting_description") }}
+					</template>
 				</UAlert>
 			</template>
 		</ClientOnly>
@@ -44,6 +61,8 @@ definePageMeta({
 	viewTransition: false,
 });
 
+const { t } = useI18n();
+
 const guildId = useRouteQuery("guild_id", undefined, { transform: normalizeGuildIdQuery });
 const error = ref<string | null>(null);
 const log = useLogger("oauth:guild");
@@ -54,7 +73,7 @@ if (import.meta.client && guildId.value && !error.value) {
 
 async function navigateToGuild() {
 	if (!guildId.value) {
-		throw createError({ status: 400, statusText: "Guild ID is required." });
+		throw createError({ status: 400, statusText: t("auth.oauth.guild_id_required") });
 	}
 
 	await promiseTimeout(1500);
@@ -64,9 +83,9 @@ async function navigateToGuild() {
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({
-	ogDescription: "A landing page for the OAuth2.0 guild callback flow.",
-	ogTitle: "OAuth Guild Callback",
+	ogDescription: t("auth.oauth.guild_seo_og_description"),
+	ogTitle: t("auth.oauth.guild_seo_og_title"),
 	robots: { none: true },
-	title: "Auth Guild Callback",
+	title: t("auth.oauth.guild_seo_title"),
 });
 </script>

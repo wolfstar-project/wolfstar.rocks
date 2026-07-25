@@ -1,5 +1,4 @@
 {
-	"$schema": "../schema.json",
 	"nav": {
 		"features": "Features",
 		"moderation_tools": "Moderation Tools",
@@ -14,7 +13,8 @@
 		"changelog": "Changelog",
 		"github": "GitHub",
 		"main_navigation": "Main navigation",
-		"mobile_navigation": "Mobile navigation"
+		"mobile_navigation": "Mobile navigation",
+		"mobile_menu": "Mobile menu"
 	},
 	"header": {
 		"site_header": "Site header",
@@ -55,7 +55,21 @@
 		"language": "Language",
 		"appearance": "Appearance",
 		"light": "Light",
-		"dark": "Dark"
+		"dark": "Dark",
+		"enabled": "Enabled",
+		"disabled": "Disabled",
+		"none": "None",
+		"confirm": "Confirm",
+		"cancel": "Cancel",
+		"retry": "Try Again",
+		"learn_more": "Learn more",
+		"search": "Search...",
+		"loading": "Loading...",
+		"error": "Error",
+		"save_failed": "Save Failed",
+		"please_try_again": "Please try again.",
+		"copied": "Copied!",
+		"na": "N/A"
 	},
 	"user_menu": {
 		"account_menu": "User account menu",
@@ -77,5 +91,6 @@
 		"source_locale": "Source locale",
 		"progress_by_locale": "Progress by locale",
 		"no_data": "Translation status is not available yet. Build the Lunaria dashboard to generate it."
-	}
+	},
+	"$schema": "../../schemas/common.schema.json"
 }

@@ -3,10 +3,10 @@ import { join } from "node:path";
 import process from "node:process";
 import { createI18NReport, type I18NItem } from "vue-i18n-extract";
 import { colors } from "./utils/colors.ts";
+import { LOCALES_DIRECTORY, REFERENCE_LOCALE } from "./utils/i18n-locale-files.ts";
 
-const LOCALES_DIRECTORY = join(import.meta.dirname, "../i18n/locales");
-const REFERENCE_FILE_NAME = "en.json";
 const VUE_FILES_GLOB = "./app/**/*.?(vue|ts|js)";
+const LANGUAGE_FILES_GLOB = join(LOCALES_DIRECTORY, REFERENCE_LOCALE, "*.json");
 
 function printSection(
 	title: string,
@@ -41,7 +41,7 @@ async function run(): Promise<void> {
 
 	const { missingKeys, unusedKeys, maybeDynamicKeys } = await createI18NReport({
 		vueFiles: VUE_FILES_GLOB,
-		languageFiles: join(LOCALES_DIRECTORY, REFERENCE_FILE_NAME),
+		languageFiles: LANGUAGE_FILES_GLOB,
 		exclude: ["$schema"],
 	});
 
@@ -65,11 +65,11 @@ async function run(): Promise<void> {
 
 	if (shouldFail) {
 		console.log(colors.red("\n❌ Build failed: missing, unused or dynamic keys detected"));
-		console.log(colors.dim("   Fix missing keys by adding them to the locale file"));
+		console.log(colors.dim("   Fix missing keys by adding them to the locale feature files"));
 		console.log(colors.dim("   Fix dynamic keys by using static translation keys\n"));
 		console.log(
 			colors.dim(
-				"   Fix unused keys by removing them from the locale file (pnpm run i18n:report:fix)\n",
+				"   Fix unused keys by removing them from the locale files (pnpm run i18n:report:fix)\n",
 			),
 		);
 		process.exit(1);

@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/dashboard.schema.json",
 	"dashboard": {
 		"nav": {
 			"home": "Inicio",
@@ -74,12 +75,24 @@
 			"user": "Usuario",
 			"reason": "Motivo",
 			"date": "Fecha",
+			"time": "Time",
+			"when": "When",
 			"duration": "Duración",
 			"command": "Comando",
 			"status": "Estado",
 			"latency": "Latencia"
 		},
-		"no_reason": "No se proporcionó motivo"
-	},
-	"$schema": "../../schemas/dashboard.schema.json"
+		"no_reason": "No se proporcionó motivo",
+		"no_warnings": "No warnings found",
+		"no_moderation_cases": "No moderation cases found",
+		"no_filter_match": "No cases match the current filters.",
+		"no_commands_filter_match": "No commands match the current filters.",
+		"no_activity_filter_match": "No activity matches the current filters.",
+		"status_label": "Status",
+		"status_all": "All",
+		"status_success": "Success",
+		"status_failed": "Fallido",
+		"unknown": "Desconocido",
+		"showing_entries": "Mostrando {from}–{to} de {total}"
+	}
 }

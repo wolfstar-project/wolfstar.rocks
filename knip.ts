@@ -70,6 +70,9 @@ const config: KnipConfig = {
 				"eslint-plugin-regexp",
 				"eslint",
 
+				/** Peer-style dep resolved by @nuxtjs/i18n at prepare time (not imported directly) */
+				"@intlify/shared",
+
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",

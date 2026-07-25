@@ -18,9 +18,9 @@ interface LocaleObjectData extends LocaleObject {
  * Layout: `i18n/locales/{locale}/{feature}.json`
  * Lazy-loading is always on in @nuxtjs/i18n v10 when using `file`/`files`.
  */
-export const localeFeatureFiles = localeFeatures.features as readonly string[];
+const localeFeatureFiles = localeFeatures.features as readonly string[];
 
-export function localeFilesFor(localeCode: string): string[] {
+function localeFilesFor(localeCode: string): string[] {
 	return localeFeatureFiles.map((feature) => `${localeCode}/${feature}`);
 }
 
@@ -29,7 +29,7 @@ export function localeFilesFor(localeCode: string): string[] {
  * e.g. `en` → `en-US` / `en-GB`, mirroring npmx.dev's merge model.
  * Keep empty until a base language gains regional overrides.
  */
-export const countryLocaleVariants: Record<string, (LocaleObjectData & { country?: boolean })[]> = {
+const countryLocaleVariants: Record<string, (LocaleObjectData & { country?: boolean })[]> = {
 	// Example for future expansion:
 	// en: [
 	// 	{ country: true, code: "en-US", name: "English (US)" },

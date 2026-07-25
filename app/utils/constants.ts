@@ -87,7 +87,7 @@ export interface ModerationAction {
 }
 
 type LoggingEventDetailPart =
-	| { type: "mention"; name: string }
+	| { type: "mention"; name: string; avatar?: string }
 	| { type: "role"; name: string; color?: string }
 	| { type: "roles"; items: { name: string; color?: string }[] }
 	| { type: "text"; content: string };
@@ -576,7 +576,7 @@ export const SlashCommandRailApps: SlashCommandAppName[] = [
 ];
 
 type ShowcaseCommandEmbedPart =
-	| { type: "mention"; name: string }
+	| { type: "mention"; name: string; avatar?: string }
 	| { type: "text"; content: string };
 
 interface ShowcaseCommandOption {
@@ -608,6 +608,16 @@ interface ShowcaseCommandEmbedResponse {
 	embedLines: ShowcaseCommandEmbedLine[];
 }
 
+/** Plain success reply, e.g. "✅ Created case 3 | @baddie". */
+interface ShowcaseCommandTextResponse {
+	responseType: "text";
+	/** Prefix before the user mention; include trailing " | ". */
+	content: string;
+	mentionUser: string;
+	/** Desktop-only avatar inside the mention pill. */
+	mentionAvatar?: string;
+}
+
 interface ShowcaseCommandComponentsResponse {
 	responseType: "components";
 	accentColor: string;
@@ -618,7 +628,11 @@ interface ShowcaseCommandComponentsResponse {
 }
 
 export type ShowcaseCommand = ShowcaseCommandBase &
-	(ShowcaseCommandEmbedResponse | ShowcaseCommandComponentsResponse);
+	(
+		| ShowcaseCommandEmbedResponse
+		| ShowcaseCommandTextResponse
+		| ShowcaseCommandComponentsResponse
+	);
 
 export const showcaseCommands: ShowcaseCommand[] = [
 	{
@@ -631,20 +645,10 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "spam", focused: true },
 		],
-		responseType: "embed",
-		embedColor: Colors.Yellow,
-		embedFooter: "Case 3",
-		embedLines: [
-			{ label: "Type", parts: [{ type: "text", content: "Warning" }] },
-			{
-				label: "User",
-				parts: [
-					{ type: "mention", name: "baddie" },
-					{ type: "text", content: " (541738403230777351)" },
-				],
-			},
-			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
-		],
+		responseType: "text",
+		content: "✅ Created case 3 | ",
+		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Ban",
@@ -656,20 +660,10 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "repeated infractions", focused: true },
 		],
-		responseType: "embed",
-		embedColor: Colors.Red,
-		embedFooter: "Case 4",
-		embedLines: [
-			{ label: "Type", parts: [{ type: "text", content: "Ban" }] },
-			{
-				label: "User",
-				parts: [
-					{ type: "mention", name: "baddie" },
-					{ type: "text", content: " (541738403230777351)" },
-				],
-			},
-			{ label: "Reason", parts: [{ type: "text", content: "repeated infractions" }] },
-		],
+		responseType: "text",
+		content: "✅ Created case 4 | ",
+		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Kick",
@@ -681,46 +675,26 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{ name: "user", value: "baddie" },
 			{ name: "reason", value: "rule violation", focused: true },
 		],
-		responseType: "embed",
-		embedColor: Colors.Orange,
-		embedFooter: "Case 5",
-		embedLines: [
-			{ label: "Type", parts: [{ type: "text", content: "Kick" }] },
-			{
-				label: "User",
-				parts: [
-					{ type: "mention", name: "baddie" },
-					{ type: "text", content: " (541738403230777351)" },
-				],
-			},
-			{ label: "Reason", parts: [{ type: "text", content: "rule violation" }] },
-		],
+		responseType: "text",
+		content: "✅ Created case 5 | ",
+		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Mute",
 		name: "mute",
 		description: "Mute a member in the server",
 		invoker: "stella",
+		frequentlyUsed: true,
 		options: [
 			{ name: "user", value: "baddie" },
 			{ name: "duration", value: "1h" },
 			{ name: "reason", value: "excessive noise", focused: true },
 		],
-		responseType: "embed",
-		embedColor: Colors.Amber,
-		embedFooter: "Case 6",
-		embedLines: [
-			{ label: "Type", parts: [{ type: "text", content: "Mute" }] },
-			{
-				label: "User",
-				parts: [
-					{ type: "mention", name: "baddie" },
-					{ type: "text", content: " (541738403230777351)" },
-				],
-			},
-			{ label: "Duration", parts: [{ type: "text", content: "1 hour" }] },
-			{ label: "Reason", parts: [{ type: "text", content: "excessive noise" }] },
-		],
+		responseType: "text",
+		content: "✅ Created case 6 | ",
+		mentionUser: "baddie",
+		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
 		tooltip: "Case",
@@ -736,12 +710,15 @@ export const showcaseCommands: ShowcaseCommand[] = [
 			{
 				label: "User",
 				parts: [
-					{ type: "mention", name: "baddie" },
+					{ type: "mention", name: "baddie", avatar: "/avatars/baddie.png" },
 					{ type: "text", content: " (541738403230777351)" },
 				],
 			},
 			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
-			{ label: "Moderator", parts: [{ type: "mention", name: "stella" }] },
+			{
+				label: "Moderator",
+				parts: [{ type: "mention", name: "stella", avatar: "/avatars/stella.png" }],
+			},
 		],
 	},
 	{
@@ -750,6 +727,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		subcommand: "menu",
 		description: "Browse and edit server configuration",
 		invoker: "redstar",
+		frequentlyUsed: true,
 		options: [],
 		responseType: "components",
 		accentColor: Colors.Red,
@@ -774,65 +752,76 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		selectOptions: [
 			{
 				value: "permissions",
-				label: "permissions",
-				emoji: "twemoji:file-folder",
-				description: "Command permission nodes",
+				label: "Root / Permissions",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / Permissions",
 			},
 			{
 				value: "channels",
-				label: "channels",
-				emoji: "twemoji:file-folder",
-				description: "Logging and ignored channels",
+				label: "Root / Channels",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / Channels",
 			},
 			{
 				value: "events",
-				label: "events",
-				emoji: "twemoji:file-folder",
-				description: "Server event toggles",
+				label: "Root / Events",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / Events",
 			},
 			{
 				value: "messages",
-				label: "messages",
-				emoji: "twemoji:file-folder",
-				description: "Automated message content",
+				label: "Root / Messages",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / Messages",
 			},
 			{
 				value: "roles",
-				label: "roles",
-				emoji: "twemoji:file-folder",
-				description: "Role assignments",
+				label: "Root / Roles",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / Roles",
 			},
 			{
 				value: "selfmod",
-				label: "selfmod",
-				emoji: "twemoji:file-folder",
-				description: "Automatic moderation rules",
+				label: "Root / Selfmod",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / Selfmod",
 			},
 			{
 				value: "no-mention-spam",
-				label: "no-mention-spam",
-				emoji: "twemoji:file-folder",
-				description: "Mention spam protection",
+				label: "Root / No-Mention-Spam",
+				emoji: "ph:folder-fill",
+				description: "Currently at: Root / No-Mention-Spam",
 			},
 			{
 				value: "prefix",
-				label: "prefix",
-				emoji: "twemoji:gear",
-				description: "Command prefix",
+				label: "Root / Prefix",
+				emoji: "ph:gear-six-fill",
+				description: "Currently at: Root / Prefix",
 			},
 			{
 				value: "language",
-				label: "language",
-				emoji: "twemoji:gear",
-				description: "Response language",
+				label: "Root / Language",
+				emoji: "ph:gear-six-fill",
+				description: "Currently at: Root / Language",
 			},
 			{
 				value: "disable-natural-prefix",
-				label: "disable-natural-prefix",
-				emoji: "twemoji:gear",
+				label: "Root / Disable-Natural-Prefix",
+				emoji: "ph:gear-six-fill",
+				description: "Currently at: Root / Disable-Natural-Prefix",
 			},
-			{ value: "disabled-commands", label: "disabled-commands", emoji: "twemoji:gear" },
-			{ value: "disabled-channels", label: "disabled-channels", emoji: "twemoji:gear" },
+			{
+				value: "disabled-commands",
+				label: "Root / Disabled-Commands",
+				emoji: "ph:gear-six-fill",
+				description: "Currently at: Root / Disabled-Commands",
+			},
+			{
+				value: "disabled-channels",
+				label: "Root / Disabled-Channels",
+				emoji: "ph:gear-six-fill",
+				description: "Currently at: Root / Disabled-Channels",
+			},
 		],
 		buttonLabel: "Stop",
 	},

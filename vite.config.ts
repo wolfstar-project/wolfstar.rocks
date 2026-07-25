@@ -257,6 +257,11 @@ export default defineConfig({
 			"regexp/strict": "error",
 			"regexp/use-ignore-case": "error",
 			"vitest/require-mock-type-parameters": "off",
+			// Silence new Oxlint vitest defaults; intentional rules stay in the test override.
+			"vitest/expect-expect": "off",
+			"vitest/no-conditional-expect": "off",
+			"vitest/no-disabled-tests": "off",
+			"vitest/require-to-throw-message": "off",
 		},
 		ignorePatterns: [
 			".output/**",
@@ -342,11 +347,17 @@ export default defineConfig({
 							withinDescribe: "it",
 						},
 					],
+					// Silence new Oxlint vitest defaults; keep prior intentional rules.
+					"vitest/expect-expect": "off",
+					"vitest/no-conditional-expect": "off",
+					"vitest/no-disabled-tests": "off",
 					"vitest/no-identical-title": "error",
 					"vitest/no-import-node-test": "error",
 					"vitest/prefer-hooks-in-order": "error",
 					"vitest/prefer-lowercase-title": "error",
 					"vitest/require-mock-type-parameters": "off",
+					"vitest/require-to-throw-message": "off",
+					"vitest/valid-title": "error",
 					"no-unused-expressions": "off",
 				},
 			},
@@ -580,6 +591,7 @@ export default defineConfig({
 										},
 									},
 									vue: { runtimeCompiler: true },
+									// Off for Vitest browser: VTU emit capture breaks with viteEnvironmentApi.
 									experimental: {
 										payloadExtraction: false,
 										viteEnvironmentApi: false,

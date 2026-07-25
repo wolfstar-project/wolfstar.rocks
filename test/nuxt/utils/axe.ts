@@ -30,11 +30,19 @@ const axeRunOptions: RunOptions = {
  * Run an axe accessibility audit against a mounted component.
  * The element is cloned into a throwaway container appended to the document so
  * axe can traverse a stable subtree, which is removed once the audit resolves.
+ *
+ * Pass `include` for nodes outside the wrapper tree (e.g. Teleport targets).
  */
-export async function runAxe(wrapper: VueWrapper): Promise<AxeResults> {
+export async function runAxe(
+	wrapper: VueWrapper,
+	options?: { include?: Element[] },
+): Promise<AxeResults> {
 	const container = document.createElement("div");
 	document.body.appendChild(container);
 	container.appendChild(wrapper.element.cloneNode(true));
+	for (const element of options?.include ?? []) {
+		container.appendChild(element.cloneNode(true));
+	}
 
 	try {
 		return await axe.run(container, axeRunOptions);

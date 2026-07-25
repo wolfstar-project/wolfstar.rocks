@@ -13,17 +13,19 @@
 			</NuxtLink>
 		</template>
 
-		<div class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex">
+		<nav
+			class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex"
+			aria-label="Main navigation"
+		>
 			<UNavigationMenu
 				:items="desktopLinks"
 				variant="link"
-				aria-label="Main navigation"
 				:ui="{
 					link: 'rounded-full px-4 py-2 text-sm font-medium text-muted hover:text-base-content',
 					root: 'gap-0',
 				}"
 			/>
-		</div>
+		</nav>
 
 		<template #right>
 			<div class="hidden items-center gap-2 md:flex">

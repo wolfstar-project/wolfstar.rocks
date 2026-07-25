@@ -48,6 +48,7 @@ export interface AccordionItemData {
 	label: string;
 	value?: string;
 	content?: string;
+	description?: string;
 	slot?: string;
 	icon?: string;
 	disabled?: boolean;

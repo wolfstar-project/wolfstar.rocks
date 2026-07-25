@@ -8,7 +8,8 @@
 				class="z-50 min-w-48 rounded-md border border-base-200 bg-base-100 p-1 shadow-lg"
 				:align="content?.align ?? 'start'"
 				:collision-padding="content?.collisionPadding ?? 8"
-				:side-offset="4"
+				:side="content?.side ?? 'bottom'"
+				:side-offset="content?.sideOffset ?? 4"
 			>
 				<template v-for="(group, groupIndex) in normalizedGroups" :key="groupIndex">
 					<DropdownMenuSeparator v-if="groupIndex > 0" class="my-1 h-px bg-base-200" />
@@ -109,6 +110,8 @@ const props = defineProps<{
 	content?: {
 		align?: "start" | "center" | "end";
 		collisionPadding?: number;
+		side?: "top" | "right" | "bottom" | "left";
+		sideOffset?: number;
 	};
 	ui?: Record<string, string>;
 }>();

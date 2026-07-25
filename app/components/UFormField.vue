@@ -6,9 +6,13 @@
 			</span>
 			<span v-if="required" class="text-error" aria-hidden="true">*</span>
 		</label>
-		<p v-if="description" class="text-sm text-muted">{{ description }}</p>
+		<slot name="description">
+			<p v-if="description" class="text-sm text-muted">{{ description }}</p>
+		</slot>
 		<slot />
-		<p v-if="errorMessage" class="text-sm text-error" role="alert">{{ errorMessage }}</p>
+		<slot name="error" :error="errorMessage">
+			<p v-if="errorMessage" class="text-sm text-error" role="alert">{{ errorMessage }}</p>
+		</slot>
 		<div v-if="hint || help || $slots.help" class="text-sm text-muted">
 			<slot name="help">{{ hint || help }}</slot>
 		</div>

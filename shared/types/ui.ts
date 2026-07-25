@@ -16,7 +16,7 @@ export type FormSubmitEvent<T> = { data: T };
 
 export interface SelectOption {
 	label: string;
-	value: string | number;
+	value: string | number | null;
 	icon?: string;
 	disabled?: boolean;
 	avatar?: { src?: string; alt?: string };
@@ -32,9 +32,11 @@ export interface NavigationMenuItem {
 	target?: string;
 	active?: boolean;
 	disabled?: boolean;
+	checked?: boolean;
 	children?: NavigationMenuItem[];
 	onSelect?: (e: Event) => void;
-	type?: "label" | "separator" | "link";
+	onUpdateChecked?: (checked: boolean) => void;
+	type?: "label" | "separator" | "link" | "checkbox";
 	slot?: string;
 	class?: string;
 	avatar?: { src?: string; alt?: string };
@@ -58,7 +60,8 @@ export interface FooterColumn {
 
 export type TableColumn<T> = import("@tanstack/vue-table").ColumnDef<T>;
 
-export type ShortcutsConfig = Record<string, { handler: () => void } | (() => void)>;
+export type ShortcutHandler = (() => void) | false | { handler: () => void } | null | undefined;
+export type ShortcutsConfig = Record<string, ShortcutHandler>;
 
 export const dashboardSidebarCollapseKey = Symbol("dashboard-sidebar-collapse") as InjectionKey<{
 	collapsed: Ref<boolean>;

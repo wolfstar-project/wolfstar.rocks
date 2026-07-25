@@ -112,6 +112,31 @@ const mockCommands: FlattenedCommand[] = [
 	},
 ];
 
+type MountedDisabledCommands = Awaited<ReturnType<typeof mountSuspended>>;
+
+function getCommandCard(wrapper: MountedDisabledCommands, commandName: string) {
+	const label = wrapper.findAll("p.font-medium").find((el) => el.text() === commandName);
+	expect(label, `expected command label "${commandName}"`).toBeDefined();
+
+	let current: Element | null = label!.element.parentElement;
+	while (current && !current.classList.contains("rounded-lg")) {
+		current = current.parentElement;
+	}
+
+	expect(current, `expected command card for "${commandName}"`).toBeTruthy();
+	return current!;
+}
+
+function readCommandEnabled(wrapper: MountedDisabledCommands, commandName: string): boolean {
+	const card = getCommandCard(wrapper, commandName);
+	const commandSwitch = wrapper
+		.findAll('[role="switch"]')
+		.find((switchElement) => card.contains(switchElement.element));
+
+	expect(commandSwitch, `expected switch for "${commandName}"`).toBeDefined();
+	return commandSwitch!.attributes("aria-checked") === "true";
+}
+
 describe("disabledCommands", () => {
 	beforeEach(() => {
 		// Clear mocks between tests
@@ -280,6 +305,67 @@ describe("disabledCommands", () => {
 		// General commands should no longer be visible (only one category open)
 		avatarElement = findCommand("avatar");
 		expect(avatarElement!.isVisible()).toBeFalsy();
+	});
+
+	it("category action buttons work (enable all, disable all, reset)", async () => {
+		const wrapper = await mountSuspended(DisabledCommands, {
+			props: {
+				commands: mockCommands,
+			},
+		});
+
+		const categoryButtons = wrapper.findAll("button");
+		const moderationButton = categoryButtons.find((btn) => btn.text().includes("Moderation"));
+		expect(moderationButton).toBeDefined();
+		await moderationButton!.trigger("click");
+		await nextTick();
+
+		// Collapsed panels stay mounted (`unmount-on-hide=false`), so pick the
+		// visible action buttons for the open Moderation category.
+		const enableAllButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Enable all") && btn.isVisible());
+		const disableAllButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Disable all") && btn.isVisible());
+		const resetButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Reset") && btn.isVisible());
+
+		expect(enableAllButton).toBeDefined();
+		expect(disableAllButton).toBeDefined();
+		expect(resetButton).toBeDefined();
+
+		// Initial mock has `ban` disabled and other Moderation commands enabled.
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(true);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(true);
+
+		await disableAllButton!.trigger("click");
+		await nextTick();
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(false);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(false);
+
+		await enableAllButton!.trigger("click");
+		await nextTick();
+		expect(readCommandEnabled(wrapper, "ban")).toBe(true);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(true);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(true);
+
+		await resetButton!.trigger("click");
+		await nextTick();
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(true);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(true);
+
+		expect(mockToastAdd).toHaveBeenCalledWith(
+			expect.objectContaining({
+				color: "info",
+				description: expect.stringContaining("Moderation"),
+				title: "Category Reset",
+			}),
+		);
 	});
 
 	it("does not mark form as changed on initial render", async () => {

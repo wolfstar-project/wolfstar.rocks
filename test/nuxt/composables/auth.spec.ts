@@ -1,4 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { mockAuth } from "../utils/auth";
+
+mockAuth({
+	id: "test-user",
+	name: "Test",
+	email: "test@example.com",
+});
 
 describe("guildAddURL", () => {
 	it("should return a Discord OAuth2 authorize URL", () => {
@@ -45,13 +52,11 @@ describe("guildAddURL", () => {
 
 describe("resolveClientUser", () => {
 	it("should delegate to $authorization.resolveClientUser()", () => {
-		const app = useNuxtApp();
-		const expectedUser = { id: "test-user", name: "Test" };
-
-		app.provide("authorization", {
-			resolveClientUser: () => expectedUser,
+		const result = resolveClientUser();
+		expect(result).toMatchObject({
+			id: "test-user",
+			name: "Test",
+			email: "test@example.com",
 		});
-
-		expect(resolveClientUser()).toEqual(expectedUser);
 	});
 });

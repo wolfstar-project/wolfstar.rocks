@@ -3,17 +3,22 @@
 		<h1 class="sr-only">Guild OAuth Callback</h1>
 		<h2 class="sr-only">Guild Setup Status</h2>
 		<template v-if="!guildId">
-			<UAlert variant="solid" color="error" title="Server Not Found" icon="emojione:warning">
+			<StarAlert
+				variant="solid"
+				color="error"
+				title="Server Not Found"
+				icon="emojione:warning"
+			>
 				<template #description>
 					We couldn't determine which server to set up. Please
 					<NuxtLink to="/login" class="font-medium underline">sign in</NuxtLink>
 					and select a server from your dashboard.
 				</template>
-			</UAlert>
+			</StarAlert>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="error">
-				<UAlert
+				<StarAlert
 					variant="solid"
 					color="error"
 					title="Setup Failed"
@@ -23,14 +28,16 @@
 						{{ error }}
 					</template>
 					<template #actions>
-						<UButton to="/login" size="sm" variant="outline"> Return to Login </UButton>
+						<StarButton to="/login" size="sm" variant="outline">
+							Return to Login
+						</StarButton>
 					</template>
-				</UAlert>
+				</StarAlert>
 			</template>
 			<template v-else>
-				<UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
+				<StarAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
 					<template #description> Taking you to the server dashboard... </template>
-				</UAlert>
+				</StarAlert>
 			</template>
 		</ClientOnly>
 	</div>

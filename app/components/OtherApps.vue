@@ -44,12 +44,17 @@
 					{{ app.description }}
 				</p>
 				<div class="flex flex-wrap justify-center gap-2">
-					<UButton :to="app.explore" color="neutral" variant="outline" size="sm">
+					<StarButton :to="app.explore" color="neutral" variant="outline" size="sm">
 						Explore
-					</UButton>
-					<UButton :to="app.invite" color="primary" size="sm" icon="ph:plus-circle-fill">
+					</StarButton>
+					<StarButton
+						:to="app.invite"
+						color="primary"
+						size="sm"
+						icon="ph:plus-circle-fill"
+					>
 						Add App
-					</UButton>
+					</StarButton>
 				</div>
 			</SurfaceCard>
 

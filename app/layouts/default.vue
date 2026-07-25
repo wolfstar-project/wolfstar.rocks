@@ -8,9 +8,9 @@
 		</a>
 		<AppHeader />
 
-		<UMain id="maincontent" tabindex="-1" aria-label="Main content">
+		<StarMain id="maincontent" tabindex="-1" aria-label="Main content">
 			<slot></slot>
-		</UMain>
+		</StarMain>
 
 		<ClientOnly>
 			<DeferredMount>

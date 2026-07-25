@@ -39,7 +39,7 @@
 							)
 						"
 					>
-						<UIcon
+						<StarIcon
 							:name="feature.icon"
 							:class="feature.big ? 'h-7 w-7 text-primary' : 'h-4 w-4 text-primary'"
 							aria-hidden="true"

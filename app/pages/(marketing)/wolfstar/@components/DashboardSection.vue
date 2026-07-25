@@ -18,7 +18,7 @@
 				class="dashboard-toolbar flex items-center gap-3 border-b px-6 py-4.5"
 				aria-hidden="true"
 			>
-				<UIcon name="ph:magnifying-glass" class="h-4 w-4 text-muted" />
+				<StarIcon name="ph:magnifying-glass" class="h-4 w-4 text-muted" />
 				<div
 					class="dashboard-search flex h-9 flex-1 items-center rounded-md border px-3 text-sm text-muted"
 				>

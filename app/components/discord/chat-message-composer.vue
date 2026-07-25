@@ -14,7 +14,7 @@
 			tabindex="-1"
 			aria-hidden="true"
 		>
-			<UIcon
+			<StarIcon
 				name="discord:plus"
 				class="discord-message-composer-add-icon"
 				aria-hidden="true"
@@ -30,7 +30,7 @@
 				:title="appsOpen ? 'Close apps and commands' : 'Open apps and commands'"
 				@click="emit('openApps')"
 			>
-				<UIcon
+				<StarIcon
 					:name="appsOpen ? 'ph:x-bold' : 'discord:apps'"
 					class="discord-message-composer-mobile-action-icon"
 					aria-hidden="true"
@@ -42,7 +42,7 @@
 				tabindex="-1"
 				aria-hidden="true"
 			>
-				<UIcon
+				<StarIcon
 					name="discord:gift"
 					class="discord-message-composer-mobile-action-icon"
 					aria-hidden="true"
@@ -74,7 +74,7 @@
 				tabindex="-1"
 				aria-hidden="true"
 			>
-				<UIcon name="discord:emoji" class="size-5" aria-hidden="true" />
+				<StarIcon name="discord:emoji" class="size-5" aria-hidden="true" />
 			</button>
 		</div>
 
@@ -94,7 +94,7 @@
 				:title="action.label"
 				@click="onComposerAction(action)"
 			>
-				<UIcon
+				<StarIcon
 					:name="action.icon"
 					class="discord-message-composer-action-icon"
 					aria-hidden="true"
@@ -112,13 +112,13 @@
 			:disabled="!hasValue"
 			@click="emit('submit')"
 		>
-			<UIcon
+			<StarIcon
 				v-if="hasValue"
 				name="ph:paper-plane-tilt-fill"
 				class="discord-message-composer-send-icon"
 				aria-hidden="true"
 			/>
-			<UIcon
+			<StarIcon
 				v-else
 				name="discord:mic"
 				class="discord-message-composer-send-icon"

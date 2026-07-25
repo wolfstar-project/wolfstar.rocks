@@ -5,7 +5,7 @@
 				type="button"
 				class="btn btn-square btn-ghost lg:hidden"
 				aria-label="Open menu"
-				aria-controls="u-header-mobile-menu"
+				aria-controls="star-header-mobile-menu"
 				:aria-expanded="open"
 				@click="open = true"
 			>
@@ -23,7 +23,7 @@
 		</div>
 
 		<dialog
-			id="u-header-mobile-menu"
+			id="star-header-mobile-menu"
 			ref="dialogRef"
 			class="modal lg:hidden"
 			@close="open = false"

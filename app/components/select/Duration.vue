@@ -1,17 +1,17 @@
 <template>
 	<div class="mb-3 flex flex-col gap-1">
 		<div class="flex flex-wrap items-start gap-2">
-			<UFormField :error="error || undefined">
-				<UInput
+			<StarFormField :error="error || undefined">
+				<StarInput
 					v-model="durationString"
 					type="tel"
 					placeholder="10"
 					:color="error ? 'error' : 'primary'"
 					@input="onChangeDuration"
 				/>
-			</UFormField>
+			</StarFormField>
 
-			<USelect
+			<StarSelect
 				v-model="unit"
 				:items="unitItems"
 				value-key="value"

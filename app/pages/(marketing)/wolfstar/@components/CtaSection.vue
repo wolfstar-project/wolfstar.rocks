@@ -20,15 +20,15 @@
 				Add WolfStar to your server in seconds, or drop by the support server first.
 			</p>
 			<div class="flex flex-col justify-center gap-3 sm:flex-row">
-				<UButton
+				<StarButton
 					:to="inviteUrl"
 					color="neutral"
 					size="lg"
 					class="justify-center sm:min-w-45"
 				>
 					Invite WolfStar
-				</UButton>
-				<UButton
+				</StarButton>
+				<StarButton
 					to="https://join.wolfstar.rocks"
 					color="neutral"
 					variant="outline"
@@ -36,7 +36,7 @@
 					class="home-cta-outline justify-center sm:min-w-45"
 				>
 					Support Server
-				</UButton>
+				</StarButton>
 			</div>
 		</Container>
 	</Section>

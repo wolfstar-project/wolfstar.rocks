@@ -1,5 +1,5 @@
 <template>
-	<UAlert
+	<StarAlert
 		v-if="$pwa?.showInstallPrompt && !$pwa?.needRefresh"
 		color="primary"
 		variant="soft"
@@ -13,7 +13,7 @@
 			aria-hidden="true"
 			role="presentation"
 		>
-			<UIcon
+			<StarIcon
 				name="material-symbols-install-desktop-rounded"
 				class="text-[5.5rem] text-muted opacity-10 sm:text-[7.5rem]"
 			/>
@@ -21,11 +21,11 @@
 
 		<template #actions>
 			<div class="mt-2 flex gap-2">
-				<UButton size="sm" @click="$pwa?.install()"> Install </UButton>
-				<UButton size="sm" color="error" variant="ghost" @click="$pwa?.cancelInstall()">
+				<StarButton size="sm" @click="$pwa?.install()"> Install </StarButton>
+				<StarButton size="sm" color="error" variant="ghost" @click="$pwa?.cancelInstall()">
 					Dismiss
-				</UButton>
+				</StarButton>
 			</div>
 		</template>
-	</UAlert>
+	</StarAlert>
 </template>

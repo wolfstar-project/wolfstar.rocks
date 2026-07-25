@@ -2,7 +2,7 @@
 	<span v-if="line.length > 0" class="inline-flex items-center">
 		<template v-for="(part, index) in parts" :key="index">
 			<template v-if="part.type === 'text'">{{ part.content }}</template>
-			<UIcon
+			<StarIcon
 				v-else
 				:name="part.icon"
 				class="mx-0.5 inline-block size-[1.1em] shrink-0 align-[-0.15em]"

@@ -17,7 +17,11 @@
 			draggable="false"
 			class="discord-button-emoji"
 		/>
-		<UIcon v-else-if="icon" :name="icon" class="discord-button-emoji size-[1.375em] shrink-0" />
+		<StarIcon
+			v-else-if="icon"
+			:name="icon"
+			class="discord-button-emoji size-[1.375em] shrink-0"
+		/>
 		<span class="truncate"
 			><slot>{{ label }}</slot></span
 		>

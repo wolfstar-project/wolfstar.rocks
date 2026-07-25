@@ -3,29 +3,29 @@
 		<!-- Skeleton -->
 		<div v-if="loading" class="space-y-6">
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-28" />
+				<StarSkeleton class="h-7 w-28" />
 				<div v-for="i in 4" :key="i" class="flex items-center gap-3">
-					<USkeleton class="h-6 w-11 shrink-0 rounded-full" />
+					<StarSkeleton class="h-6 w-11 shrink-0 rounded-full" />
 					<div class="space-y-1.5">
-						<USkeleton class="h-4 w-32" />
-						<USkeleton class="h-3 w-56" />
+						<StarSkeleton class="h-4 w-32" />
+						<StarSkeleton class="h-3 w-56" />
 					</div>
 				</div>
 			</div>
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-32" />
+				<StarSkeleton class="h-7 w-32" />
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<USkeleton class="h-10 w-full" />
-					<USkeleton class="h-10 w-full" />
+					<StarSkeleton class="h-10 w-full" />
+					<StarSkeleton class="h-10 w-full" />
 				</div>
-				<USkeleton class="h-10 w-full" />
-				<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-10 w-full" />
 			</div>
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-24" />
+				<StarSkeleton class="h-7 w-24" />
 				<div class="flex gap-2">
-					<USkeleton class="h-10 w-48" />
-					<USkeleton class="h-10 w-20" />
+					<StarSkeleton class="h-10 w-48" />
+					<StarSkeleton class="h-10 w-20" />
 				</div>
 			</div>
 		</div>
@@ -43,9 +43,9 @@
 			<!-- Section 1: Link Filter -->
 			<GuildSettingsSection title="Link Filter">
 				<div class="space-y-3">
-					<UFormField name="selfmodLinksEnabled">
+					<StarFormField name="selfmodLinksEnabled">
 						<div class="flex items-start gap-3">
-							<USwitch
+							<StarSwitch
 								v-model="state.selfmodLinksEnabled"
 								class="mt-0.5"
 								aria-label="Toggle link filter"
@@ -59,11 +59,11 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionAlerts">
+					<StarFormField name="softActionAlerts">
 						<div class="flex items-start gap-3">
-							<USwitch
+							<StarSwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
 								aria-label="Toggle alerts soft action"
@@ -77,11 +77,11 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionLogs">
+					<StarFormField name="softActionLogs">
 						<div class="flex items-start gap-3">
-							<USwitch
+							<StarSwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
 								aria-label="Toggle logs soft action"
@@ -95,11 +95,11 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionDeletes">
+					<StarFormField name="softActionDeletes">
 						<div class="flex items-start gap-3">
-							<USwitch
+							<StarSwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
 								aria-label="Toggle deletes soft action"
@@ -113,7 +113,7 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 				</div>
 			</GuildSettingsSection>
 
@@ -122,20 +122,20 @@
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection title="Punishments">
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<UFormField
+					<StarFormField
 						label="Action"
 						name="selfmodLinksHardAction"
 						description="What happens when a member exceeds the limit"
 					>
-						<USelectMenu
+						<StarSelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
 							class="w-full"
 							aria-label="Select punishment action"
 						/>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField
+					<StarFormField
 						label="Duration"
 						name="hardActionDurationMs"
 						description="How long the mute or ban lasts"
@@ -145,7 +145,7 @@
 							:min="1000"
 							:max="31_536_000_000"
 						/>
-					</UFormField>
+					</StarFormField>
 				</div>
 
 				<div class="mt-4 space-y-5">
@@ -156,7 +156,7 @@
 								>({{ state.selfmodLinksThresholdMaximum }})</span
 							>
 						</p>
-						<USlider
+						<StarSlider
 							v-model="state.selfmodLinksThresholdMaximum"
 							:min="0"
 							:max="60"
@@ -175,7 +175,7 @@
 								>({{ state.selfmodLinksThresholdDurationSeconds }}s)</span
 							>
 						</p>
-						<USlider
+						<StarSlider
 							v-model="state.selfmodLinksThresholdDurationSeconds"
 							:min="0"
 							:max="120"
@@ -195,17 +195,17 @@
 			<GuildSettingsSection title="Options">
 				<div class="space-y-4">
 					<form class="flex gap-2" @submit.prevent="addLink">
-						<UInput
+						<StarInput
 							v-model="newLink"
 							placeholder="e.g. example.com"
 							class="w-64"
 							aria-label="Add allowed link"
 						/>
-						<UButton type="submit" color="primary"> Confirm </UButton>
+						<StarButton type="submit" color="primary"> Confirm </StarButton>
 					</form>
 
 					<div v-if="state.selfmodLinksAllowed.length > 0" class="flex flex-wrap gap-2">
-						<UBadge
+						<StarBadge
 							v-for="link in state.selfmodLinksAllowed"
 							:key="link"
 							color="primary"
@@ -219,9 +219,9 @@
 								:aria-label="`Remove ${link}`"
 								@click="removeLink(link)"
 							>
-								<UIcon name="heroicons:x-mark" class="size-3" />
+								<StarIcon name="heroicons:x-mark" class="size-3" />
 							</button>
-						</UBadge>
+						</StarBadge>
 					</div>
 				</div>
 			</GuildSettingsSection>

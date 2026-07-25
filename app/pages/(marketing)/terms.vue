@@ -1,6 +1,9 @@
 <template>
-	<UContainer class="pt-20 sm:pt-24">
-		<UPageHero title="WolfStar Terms of Service" :ui="{ container: 'pb-12 sm:pb-16 lg:pb-20' }">
+	<StarContainer class="pt-20 sm:pt-24">
+		<StarPageHero
+			title="WolfStar Terms of Service"
+			:ui="{ container: 'pb-12 sm:pb-16 lg:pb-20' }"
+		>
 			<template #description>
 				Last updated and effective:
 				<NuxtTime
@@ -18,16 +21,16 @@
 					</p>
 					<p>
 						<span class="font-semibold">Contact email:</span>
-						<ULink to="mailto:contact@wolfstar.rocks" class="ms-1">
+						<StarLink to="mailto:contact@wolfstar.rocks" class="ms-1">
 							contact@wolfstar.rocks
-						</ULink>
+						</StarLink>
 					</p>
 				</div>
 			</template>
-		</UPageHero>
+		</StarPageHero>
 
-		<UPageBody>
-			<UContainer>
+		<StarPageBody>
+			<StarContainer>
 				<article class="prose prose-lg max-w-none space-y-12">
 					<!-- Terms -->
 					<section>
@@ -168,9 +171,9 @@
 						</p>
 					</section>
 				</article>
-			</UContainer>
-		</UPageBody>
-	</UContainer>
+			</StarContainer>
+		</StarPageBody>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

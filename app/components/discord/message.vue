@@ -18,7 +18,7 @@
 					role="img"
 					aria-label="Verified application badge"
 				>
-					<UIcon
+					<StarIcon
 						v-if="profile.verified"
 						name="ph:check-fat-fill"
 						class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3"
@@ -37,7 +37,7 @@
 				role="status"
 				aria-label="Ephemeral message notice"
 			>
-				<UIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
+				<StarIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
 				<button
 					class="discord-message-link"
 					type="button"

@@ -1,16 +1,16 @@
 <template>
-	<UContainer>
-		<UPage
+	<StarContainer>
+		<StarPage
 			v-if="article"
 			:ui="{ root: 'lg:grid-cols-12', center: 'lg:col-span-9', right: 'lg:col-span-3' }"
 		>
-			<UPageHeader
+			<StarPageHeader
 				:title="article.title"
 				:description="article.description"
 				:ui="{ headline: 'flex flex-col gap-y-8 items-start' }"
 			>
 				<template #headline>
-					<UBreadcrumb
+					<StarBreadcrumb
 						:items="[
 							{ label: 'Blog', icon: 'i-lucide-newspaper', to: '/blog' },
 							{ label: article.title },
@@ -28,7 +28,7 @@
 				</template>
 
 				<div class="mt-4 flex flex-wrap items-center gap-6">
-					<UUser
+					<StarUser
 						v-for="(author, index) in article.authors"
 						:key="index"
 						v-bind="author"
@@ -38,15 +38,15 @@
 						"
 					/>
 				</div>
-			</UPageHeader>
+			</StarPageHeader>
 
-			<UPageBody>
+			<StarPageBody>
 				<ContentRenderer v-if="article.body" :value="article" />
 
 				<div class="not-prose mt-12 flex items-center justify-between">
-					<ULink to="/blog" class="text-primary"> ← Back to blog </ULink>
+					<StarLink to="/blog" class="text-primary"> ← Back to blog </StarLink>
 					<div class="flex items-center justify-end gap-1.5">
-						<UButton
+						<StarButton
 							icon="i-lucide-link"
 							variant="ghost"
 							color="neutral"
@@ -54,8 +54,8 @@
 						>
 							<span class="sr-only">Copy URL</span>
 							Copy URL
-						</UButton>
-						<UButton
+						</StarButton>
+						<StarButton
 							v-for="(link, index) in socialLinks"
 							:key="index"
 							v-bind="link"
@@ -64,17 +64,17 @@
 							target="_blank"
 						>
 							<span class="sr-only">WolfStar on {{ link.label }}</span>
-						</UButton>
+						</StarButton>
 					</div>
 				</div>
 
-				<USeparator v-if="surround?.length" />
+				<StarSeparator v-if="surround?.length" />
 
-				<UContentSurround :surround="surround ?? undefined" />
-			</UPageBody>
+				<StarContentSurround :surround="surround ?? undefined" />
+			</StarPageBody>
 
 			<template #right>
-				<UContentToc
+				<StarContentToc
 					v-if="article.body?.toc"
 					:links="article.body.toc.links"
 					title="Table of Contents"
@@ -83,17 +83,17 @@
 				>
 					<template #bottom>
 						<div class="hidden space-y-6 lg:block">
-							<UPageLinks
+							<StarPageLinks
 								title="Links"
 								:links="sidebarLinks"
 								aria-label="Article links"
 							/>
 						</div>
 					</template>
-				</UContentToc>
+				</StarContentToc>
 			</template>
-		</UPage>
-	</UContainer>
+		</StarPage>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

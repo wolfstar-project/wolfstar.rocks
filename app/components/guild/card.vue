@@ -7,28 +7,28 @@
 		<template v-if="loading">
 			<!-- Mobile Skeleton -->
 			<div class="flex flex-col items-center gap-2 md:hidden">
-				<USkeleton class="h-20 w-20 rounded-xl" />
-				<USkeleton class="h-4 w-3/4 rounded" />
+				<StarSkeleton class="h-20 w-20 rounded-xl" />
+				<StarSkeleton class="h-4 w-3/4 rounded" />
 			</div>
 
 			<!-- Desktop Skeleton -->
 			<div class="hidden flex-col items-center space-y-4 md:flex">
-				<USkeleton class="h-20 w-20 rounded-xl" />
+				<StarSkeleton class="h-20 w-20 rounded-xl" />
 				<div class="flex min-h-16 w-full flex-col justify-center space-y-2">
-					<USkeleton class="mx-auto h-4 w-3/4 rounded" />
+					<StarSkeleton class="mx-auto h-4 w-3/4 rounded" />
 					<div class="flex items-center justify-center space-x-4">
 						<div class="flex items-center space-x-1">
-							<USkeleton class="h-3 w-3 rounded opacity-50" />
-							<USkeleton class="h-3 w-8 rounded" />
+							<StarSkeleton class="h-3 w-3 rounded opacity-50" />
+							<StarSkeleton class="h-3 w-8 rounded" />
 						</div>
 						<div class="flex items-center space-x-1">
-							<USkeleton class="h-3 w-3 rounded opacity-50" />
-							<USkeleton class="h-3 w-8 rounded" />
+							<StarSkeleton class="h-3 w-3 rounded opacity-50" />
+							<StarSkeleton class="h-3 w-8 rounded" />
 						</div>
 					</div>
 				</div>
 				<div class="w-full">
-					<USkeleton class="h-8 w-full rounded-lg" />
+					<StarSkeleton class="h-8 w-full rounded-lg" />
 				</div>
 			</div>
 		</template>
@@ -48,7 +48,7 @@
 					<div
 						class="absolute inset-0 flex items-center justify-center rounded-full bg-success/80 opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
 					>
-						<UIcon
+						<StarIcon
 							name="heroicons:adjustments-horizontal"
 							class="size-5 text-success-content"
 							aria-hidden="true"
@@ -66,7 +66,7 @@
 					<div
 						class="absolute inset-0 flex items-center justify-center rounded-full bg-primary/80 opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
 					>
-						<UIcon
+						<StarIcon
 							name="heroicons:rocket-launch"
 							class="size-5 text-primary-content"
 							aria-hidden="true"
@@ -109,7 +109,7 @@
 				<!-- Guild Stats -->
 				<div class="flex items-center justify-center gap-4 text-xs text-base-content/60">
 					<span class="flex items-center gap-1" title="Total members">
-						<UIcon
+						<StarIcon
 							name="heroicons:user-group"
 							class="size-3 text-base-content/70"
 							aria-hidden="true"
@@ -118,7 +118,7 @@
 						<span>{{ approximateMemberCount }}</span>
 					</span>
 					<span class="flex items-center gap-1" title="Members online">
-						<UIcon
+						<StarIcon
 							name="heroicons:signal"
 							class="size-3 text-success"
 							aria-hidden="true"
@@ -136,7 +136,7 @@
 						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
 						:aria-label="`Manage ${guild.name} server settings`"
 					>
-						<UIcon
+						<StarIcon
 							name="heroicons:adjustments-horizontal"
 							class="mr-1 inline size-3"
 							aria-hidden="true"
@@ -150,7 +150,7 @@
 						class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
 						:aria-label="`Invite WolfStar bot to ${guild.name}`"
 					>
-						<UIcon
+						<StarIcon
 							name="heroicons:rocket-launch"
 							class="mr-1 inline size-3"
 							aria-hidden="true"
@@ -161,7 +161,7 @@
 						v-else
 						class="flex h-9 w-full cursor-not-allowed items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 transition-all duration-200"
 					>
-						<UIcon
+						<StarIcon
 							name="heroicons:no-symbol"
 							class="mr-1 inline size-3"
 							aria-hidden="true"

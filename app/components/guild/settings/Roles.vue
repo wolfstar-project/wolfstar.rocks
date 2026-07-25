@@ -7,17 +7,17 @@
 		<div v-if="loading" class="space-y-8">
 			<!-- Toggles Skeleton -->
 			<div class="space-y-4">
-				<USkeleton class="h-8 w-32" />
-				<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-8 w-32" />
+				<StarSkeleton class="h-10 w-full" />
 			</div>
 
 			<!-- Configurable Roles Skeleton -->
 			<div class="space-y-4">
-				<USkeleton class="h-8 w-48" />
+				<StarSkeleton class="h-8 w-48" />
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 					<div v-for="i in 6" :key="`roles-skeleton-${i}`" class="space-y-2">
-						<USkeleton class="h-5 w-32" />
-						<USkeleton class="h-10 w-full" />
+						<StarSkeleton class="h-5 w-32" />
+						<StarSkeleton class="h-10 w-full" />
 					</div>
 				</div>
 			</div>
@@ -36,19 +36,19 @@
 			<!-- Toggles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
+					<StarIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">General Options</h3>
 				</div>
 
-				<UFormField
+				<StarFormField
 					:label="ConfigurableRemoveInitialRole.name"
 					:description="ConfigurableRemoveInitialRole.tooltip"
 					name="rolesRemoveInitial"
 				>
 					<div class="flex items-center gap-2">
-						<USwitch v-model="state.rolesRemoveInitial as boolean" />
+						<StarSwitch v-model="state.rolesRemoveInitial as boolean" />
 					</div>
-				</UFormField>
+				</StarFormField>
 			</div>
 
 			<Separator />
@@ -56,7 +56,7 @@
 			<!-- Configurable Roles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
+					<StarIcon name="heroicons:user-group" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Configurable Roles</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
@@ -91,7 +91,7 @@
 			<!-- Restricted Roles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
+					<StarIcon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Restricted Roles</h3>
 				</div>
 				<p class="text-sm text-base-content/70">

@@ -1,9 +1,9 @@
 <template>
-	<UAlert color="info" variant="soft" class="not-prose my-4">
+	<StarAlert color="info" variant="soft" class="not-prose my-4">
 		<template #description>
 			<slot />
 		</template>
-	</UAlert>
+	</StarAlert>
 </template>
 
 <script setup lang="ts"></script>

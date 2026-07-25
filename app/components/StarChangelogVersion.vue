@@ -7,7 +7,7 @@
 			</div>
 			<div v-if="authors?.length" class="flex flex-wrap gap-2">
 				<slot name="authors">
-					<UUser
+					<StarUser
 						v-for="(author, index) in authors"
 						:key="index"
 						v-bind="author"

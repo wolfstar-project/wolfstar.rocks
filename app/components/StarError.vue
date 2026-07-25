@@ -3,7 +3,7 @@
 		<p class="text-6xl font-bold text-muted">{{ statusCode }}</p>
 		<h1 class="text-2xl font-semibold">{{ statusMessage }}</h1>
 		<p v-if="message" class="max-w-lg text-muted">{{ message }}</p>
-		<UButton color="primary" label="Go back home" @click="onClear" />
+		<StarButton color="primary" label="Go back home" @click="onClear" />
 	</div>
 </template>
 

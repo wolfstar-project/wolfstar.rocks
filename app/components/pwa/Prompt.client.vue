@@ -5,8 +5,8 @@
 		>
 			<span class="text-lg">✨</span>
 			<div class="text-sm font-medium">Update available</div>
-			<UButton color="primary" size="xs" label="Refresh" @click="reload" />
-			<UButton
+			<StarButton color="primary" size="xs" label="Refresh" @click="reload" />
+			<StarButton
 				color="neutral"
 				variant="ghost"
 				size="xs"

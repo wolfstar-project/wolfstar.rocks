@@ -35,7 +35,7 @@ const preview: Preview = {
 	decorators: [
 		// Overlay/tooltip/toast components require the providers that
 		// `<AppProviders>` installs. The real app wraps everything via app.vue,
-		// but stories bypass it, so components like UTooltip throw
+		// but stories bypass it, so components like StarTooltip throw
 		// "Injection TooltipProviderContext not found". Wrap every story in
 		// `<AppProviders>` (registered explicitly so the runtime template
 		// resolves it) to supply that context.

@@ -13,25 +13,25 @@
 				aria-label="Back to channel"
 				@click="emit('close')"
 			>
-				<UIcon name="ph:arrow-left-bold" class="size-5" aria-hidden="true" />
+				<StarIcon name="ph:arrow-left-bold" class="size-5" aria-hidden="true" />
 			</button>
 
 			<div class="discord-channel-info-toolbar-actions" aria-hidden="true">
 				<span class="discord-channel-info-toolbar-btn">
-					<UIcon name="discord:search" class="size-5" />
+					<StarIcon name="discord:search" class="size-5" />
 				</span>
 				<span class="discord-channel-info-toolbar-btn">
-					<UIcon name="discord:notifications" class="size-5" />
+					<StarIcon name="discord:notifications" class="size-5" />
 				</span>
 				<span class="discord-channel-info-toolbar-btn">
-					<UIcon name="ph:gear-six" class="size-5" />
+					<StarIcon name="ph:gear-six" class="size-5" />
 				</span>
 			</div>
 		</div>
 
 		<div class="discord-channel-info-identity">
 			<div class="discord-channel-info-channel-icon" aria-hidden="true">
-				<UIcon name="discord:text-channel" class="size-5" />
+				<StarIcon name="discord:text-channel" class="size-5" />
 			</div>
 			<div class="discord-channel-info-identity-text">
 				<div class="discord-channel-info-name">{{ name }}</div>
@@ -82,7 +82,7 @@
 				class="discord-channel-info-empty discord-channel-info-empty-threads"
 			>
 				<div class="discord-channel-info-empty-icon" aria-hidden="true">
-					<UIcon name="discord:threads" class="size-8" />
+					<StarIcon name="discord:threads" class="size-8" />
 				</div>
 				<p class="discord-channel-info-empty-title">There are no threads.</p>
 				<p class="discord-channel-info-empty-body">

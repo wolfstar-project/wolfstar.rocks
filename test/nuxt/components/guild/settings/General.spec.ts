@@ -183,7 +183,7 @@ describe("general guild settings", () => {
 
 		await nextTick();
 
-		const selectMenu = wrapper.findComponent({ name: "USelectMenu" });
+		const selectMenu = wrapper.findComponent({ name: "StarSelectMenu" });
 
 		expect(selectMenu.exists()).toBeTruthy();
 		expect(selectMenu.props("items")).toStrictEqual([

@@ -1,5 +1,5 @@
 <template>
-	<!-- Guild UIcon - Card or Bare variant -->
+	<!-- Guild StarIcon - Card or Bare variant -->
 	<div
 		ref="icon"
 		:class="[
@@ -14,23 +14,23 @@
 			},
 		]"
 	>
-		<!-- Guild UIcon -->
+		<!-- Guild StarIcon -->
 		<div class="relative" :class="[variant === 'card' ? '' : 'group']">
 			<!-- Status Indicator -->
 			<div v-if="showStatus && guild" class="absolute -top-1 -right-1 z-10">
-				<UTooltip :text="statusIndicator.tooltipText">
+				<StarTooltip :text="statusIndicator.tooltipText">
 					<div
 						class="flex h-7 w-7 items-center justify-center rounded-full text-white shadow-sm transition-all duration-200"
 						:class="statusIndicator.wrapperClasses"
 					>
 						<span class="sr-only">{{ statusIndicator.tooltipText }}</span>
-						<UIcon
+						<StarIcon
 							:name="statusIndicator.iconName"
 							:class="statusIndicator.iconClasses"
 							aria-hidden="true"
 						/>
 					</div>
-				</UTooltip>
+				</StarTooltip>
 			</div>
 			<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 				<div
@@ -82,7 +82,7 @@
 				class="flex items-center space-x-1"
 				title="Total members"
 			>
-				<UIcon name="ph:users-fill" class="h-2 w-2" aria-hidden="true" />
+				<StarIcon name="ph:users-fill" class="h-2 w-2" aria-hidden="true" />
 				<span>{{ formatNumber(guild.approximateMemberCount) }}</span>
 			</span>
 			<span
@@ -90,7 +90,7 @@
 				class="flex items-center space-x-1"
 				title="Members online"
 			>
-				<UIcon name="ph:wifi-high" class="h-2 w-2 text-success" aria-hidden="true" />
+				<StarIcon name="ph:wifi-high" class="h-2 w-2 text-success" aria-hidden="true" />
 				<span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
 			</span>
 		</div>

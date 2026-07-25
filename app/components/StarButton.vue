@@ -11,7 +11,7 @@
 		@click="onClick"
 	>
 		<span v-if="loading" class="loading loading-sm loading-spinner" aria-hidden="true" />
-		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
+		<StarAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">
 			<slot>{{ label }}</slot>
@@ -37,7 +37,7 @@
 		@click="onClick"
 	>
 		<span v-if="loading" class="loading loading-sm loading-spinner" aria-hidden="true" />
-		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
+		<StarAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">
 			<slot>{{ label }}</slot>
@@ -61,7 +61,7 @@
 		@click="onClick"
 	>
 		<span v-if="loading" class="loading loading-sm loading-spinner" aria-hidden="true" />
-		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
+		<StarAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">
 			<slot>{{ label }}</slot>

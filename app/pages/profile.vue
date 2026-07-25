@@ -1,6 +1,6 @@
 <!-- oxlint-disable vue/valid-v-else-if -->
 <template>
-	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
+	<StarContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
 		<h1 class="sr-only">User Profile</h1>
 		<ProfileHeader
 			:user="user"
@@ -18,7 +18,7 @@
 				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-secondary/20 md:block"
 				aria-hidden="true"
 			></div>
-			<UTabs
+			<StarTabs
 				v-model="activeTab"
 				variant="transparent"
 				:items
@@ -31,7 +31,7 @@
 							<div class="mb-4">
 								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
 								<div class="mt-1 text-base-content/60">
-									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
+									<StarSkeleton v-if="isLoading" class="inline-block h-5 w-48" />
 									<span v-else>{{ guilds.length ?? 0 }} servers</span>
 								</div>
 							</div>
@@ -39,8 +39,8 @@
 							<!-- Search and Controls Section -->
 							<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
 								<div class="flex items-end gap-2">
-									<UFieldGroup class="flex items-start gap-2">
-										<UInput
+									<StarFieldGroup class="flex items-start gap-2">
+										<StarInput
 											ref="input"
 											v-model="searchQuery"
 											aria-label="Search servers"
@@ -53,7 +53,7 @@
 											class="flex max-w-xs items-start"
 										>
 											<template v-if="searchQuery?.length" #trailing>
-												<UButton
+												<StarButton
 													color="neutral"
 													variant="link"
 													size="sm"
@@ -62,12 +62,12 @@
 													@click="undoSearch()"
 												/>
 											</template>
-										</UInput>
-									</UFieldGroup>
+										</StarInput>
+									</StarFieldGroup>
 									<!-- Mobile Buttons (no view toggle) -->
-									<UFieldGroup size="sm" class="join flex items-end sm:hidden">
+									<StarFieldGroup size="sm" class="join flex items-end sm:hidden">
 										<!-- Manageable Only Toggle Button -->
-										<UButton
+										<StarButton
 											class="join-item"
 											color="primary"
 											:variant="showManageableOnly ? 'solid' : 'outline'"
@@ -80,7 +80,7 @@
 										/>
 
 										<!-- Sort Button -->
-										<UButton
+										<StarButton
 											class="join-item"
 											color="primary"
 											:is-loading
@@ -88,7 +88,7 @@
 											@click="handleSortToggle()"
 										>
 											<template #leading>
-												<UIcon
+												<StarIcon
 													:name="
 														sortAscending
 															? 'lucide:arrow-up-a-z'
@@ -97,10 +97,10 @@
 													style="view-transition-name: sort-icon-mobile"
 												/>
 											</template>
-										</UButton>
+										</StarButton>
 
 										<!-- Refresh Button -->
-										<UButton
+										<StarButton
 											v-if="filteredGuilds.length === 0"
 											class="join-item"
 											color="primary"
@@ -110,17 +110,17 @@
 											aria-label="Refresh servers"
 											@click="refresh()"
 										/>
-									</UFieldGroup>
+									</StarFieldGroup>
 
 									<!-- Desktop Buttons (with view toggle) -->
-									<UFieldGroup size="sm" class="join hidden items-end sm:flex">
+									<StarFieldGroup size="sm" class="join hidden items-end sm:flex">
 										<!--
                     Manageable
                     Only
                     Toggle
                     Button
                     -->
-										<UButton
+										<StarButton
 											class="join-item"
 											color="primary"
 											:variant="showManageableOnly ? 'solid' : 'outline'"
@@ -131,17 +131,17 @@
 											@click="handleManageableToggle()"
 										>
 											<span>Manageable</span>
-										</UButton>
+										</StarButton>
 
 										<!-- Sort Button -->
-										<UButton
+										<StarButton
 											class="join-item"
 											color="primary"
 											:is-loading
 											@click="handleSortToggle()"
 										>
 											<template #leading>
-												<UIcon
+												<StarIcon
 													:name="
 														sortAscending
 															? 'lucide:arrow-up-a-z'
@@ -150,10 +150,10 @@
 													style="view-transition-name: sort-icon-desktop"
 												/>
 											</template>
-										</UButton>
+										</StarButton>
 
 										<!-- Refresh Button -->
-										<UButton
+										<StarButton
 											v-if="filteredGuilds.length === 0"
 											class="join-item"
 											color="primary"
@@ -163,8 +163,8 @@
 											@click="refresh()"
 										>
 											<span>Refresh</span>
-										</UButton>
-									</UFieldGroup>
+										</StarButton>
+									</StarFieldGroup>
 								</div>
 								<!-- Search Input for Desktop -->
 							</div>
@@ -191,13 +191,13 @@
 							</div>
 
 							<!-- Accessibility Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<StarCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
 										<div
 											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
 										>
-											<UIcon
+											<StarIcon
 												name="heroicons:eye-20-solid"
 												class="size-4 text-primary"
 											/>
@@ -221,7 +221,7 @@
 									>
 										<div class="flex-1">
 											<div class="flex items-center gap-2">
-												<UIcon
+												<StarIcon
 													name="heroicons:arrows-right-left"
 													class="h-5 w-5 text-base-content/70"
 												/>
@@ -234,7 +234,7 @@
 												experience
 											</p>
 										</div>
-										<USwitch
+										<StarSwitch
 											v-model="reduceMotionEnabled"
 											size="lg"
 											:disabled="systemPreferenceActive"
@@ -247,7 +247,7 @@
 										v-if="systemPreferenceActive"
 										class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
 									>
-										<UIcon
+										<StarIcon
 											name="heroicons:information-circle"
 											class="mt-0.5 h-5 w-5 shrink-0 text-info"
 										/>
@@ -265,12 +265,12 @@
 									<!-- Motion Status Indicator -->
 									<div class="flex items-center gap-2 text-sm">
 										<span class="text-base-content/60">Current Status:</span>
-										<UBadge
+										<StarBadge
 											:color="effectiveReduceMotion ? 'primary' : 'neutral'"
 											variant="subtle"
 										>
 											<template #leading>
-												<UIcon
+												<StarIcon
 													:name="
 														effectiveReduceMotion
 															? 'heroicons:check-circle'
@@ -284,19 +284,19 @@
 													? "Motion Reduced"
 													: "Motion Enabled"
 											}}
-										</UBadge>
+										</StarBadge>
 									</div>
 								</div>
-							</UCard>
+							</StarCard>
 
 							<!-- Privacy Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<StarCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
 										<div
 											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
 										>
-											<UIcon
+											<StarIcon
 												name="heroicons:lock-closed-20-solid"
 												class="size-4 text-primary"
 											/>
@@ -313,7 +313,7 @@
 								</template>
 								<div class="flex flex-col items-center justify-center py-12">
 									<div class="space-y-2 text-center">
-										<UIcon
+										<StarIcon
 											name="heroicons:sparkles"
 											class="mx-auto mb-4 size-12 text-base-content/30"
 										/>
@@ -326,16 +326,16 @@
 										</p>
 									</div>
 								</div>
-							</UCard>
+							</StarCard>
 
 							<!-- Notifications Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<StarCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
 										<div
 											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
 										>
-											<UIcon
+											<StarIcon
 												name="heroicons:bell-20-solid"
 												class="size-4 text-primary"
 											/>
@@ -352,7 +352,7 @@
 								</template>
 								<div class="flex flex-col items-center justify-center py-12">
 									<div class="space-y-2 text-center">
-										<UIcon
+										<StarIcon
 											name="heroicons:sparkles"
 											class="mx-auto mb-4 size-12 text-base-content/30"
 										/>
@@ -364,11 +364,11 @@
 										</p>
 									</div>
 								</div>
-							</UCard>
+							</StarCard>
 						</div>
 						<!-- Premium tab (disabled for now)
 						<div v-if="item.value === 'premium'" class="space-y-6">
-							<UCard
+							<StarCard
 								class="border-2 border-primary/30 bg-linear-to-br from-primary/10 via-transparent to-secondary/10 shadow-2xl"
 							>
 								<template #header>
@@ -386,7 +386,7 @@
 										<div
 											class="flex size-18 items-center justify-center rounded-full bg-primary/20"
 										>
-											<UIcon
+											<StarIcon
 												name="heroicons:sparkles-20-solid"
 												class="size-12 text-primary"
 											/>
@@ -406,7 +406,7 @@
 											<div
 												class="flex size-10 items-center justify-center rounded-full bg-success/20"
 											>
-												<UIcon
+												<StarIcon
 													name="heroicons:check-circle"
 													class="mt-0.5 size-7 text-success"
 												/>
@@ -424,7 +424,7 @@
 											<div
 												class="flex size-10 items-center justify-center rounded-full bg-success/20"
 											>
-												<UIcon
+												<StarIcon
 													name="heroicons:check-circle"
 													class="mt-0.5 size-7 text-success"
 												/>
@@ -442,7 +442,7 @@
 											<div
 												class="flex size-10 items-center justify-center rounded-full bg-success/20"
 											>
-												<UIcon
+												<StarIcon
 													name="heroicons:check-circle"
 													class="mt-0.5 size-7 text-success"
 												/>
@@ -460,7 +460,7 @@
 											<div
 												class="flex size-10 items-center justify-center rounded-full bg-success/20"
 											>
-												<UIcon
+												<StarIcon
 													name="heroicons:check-circle"
 													class="mt-0.5 size-7 text-success"
 												/>
@@ -477,24 +477,24 @@
 									</div>
 								</div>
 								<template #footer>
-									<UFieldGroup
+									<StarFieldGroup
 										size="md"
 										class="z-10 flex w-full justify-center pt-4"
 									>
-										<UButton color="primary">Get Premium</UButton>
-										<UButton color="primary" variant="outline">
+										<StarButton color="primary">Get Premium</StarButton>
+										<StarButton color="primary" variant="outline">
 											Learn More
-										</UButton>
-									</UFieldGroup>
+										</StarButton>
+									</StarFieldGroup>
 								</template>
-							</UCard>
+							</StarCard>
 						</div>
 						-->
 					</div>
 				</template>
-			</UTabs>
+			</StarTabs>
 		</section>
-	</UContainer>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

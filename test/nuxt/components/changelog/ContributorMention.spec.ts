@@ -13,7 +13,7 @@ const baseProps: ChangelogContributorItem = {
 	avatarSrc: "https://github.com/RedStar071.png",
 };
 
-/** UTooltip requires TooltipProvider from AppProviders. */
+/** StarTooltip requires TooltipProvider from AppProviders. */
 function mountMention(props: ChangelogContributorItem, open = false) {
 	return mountSuspended({
 		components: { ChangelogContributorMention, AppProviders },

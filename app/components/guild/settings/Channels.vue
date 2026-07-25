@@ -13,7 +13,7 @@
 		>
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
+					<StarIcon name="i-heroicons-document-text" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Logging Channels</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
@@ -38,7 +38,7 @@
 
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
+					<StarIcon name="heroicons:eye-slash" class="size-5 text-warning" />
 					<h3 class="text-lg font-semibold text-base-content">Excluded Channels</h3>
 				</div>
 				<p class="text-sm text-base-content/70">

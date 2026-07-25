@@ -1,5 +1,5 @@
 <template>
-	<UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
+	<StarContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
 		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
 			<h1
 				class="text-4xl font-bold tracking-tight whitespace-nowrap text-base-content/90 md:text-5xl"
@@ -19,7 +19,7 @@
 				class="mx-auto flex max-w-3xl flex-col items-stretch gap-4 sm:flex-row sm:items-center"
 			>
 				<h2 id="search-heading" class="sr-only">Search Commands</h2>
-				<UInput
+				<StarInput
 					v-model="searchValue"
 					placeholder="Search commands..."
 					icon="i-heroicons-magnifying-glass"
@@ -29,7 +29,7 @@
 					:aria-describedby="searchValue ? 'search-results-count' : undefined"
 				>
 					<template v-if="searchValue" #trailing>
-						<UButton
+						<StarButton
 							color="neutral"
 							variant="link"
 							icon="i-heroicons-x-mark-20-solid"
@@ -38,10 +38,10 @@
 							@click="searchValue = ''"
 						/>
 					</template>
-				</UInput>
+				</StarInput>
 
 				<!-- Refresh button -->
-				<UButton
+				<StarButton
 					icon="i-heroicons-arrow-path"
 					color="primary"
 					variant="soft"
@@ -52,7 +52,7 @@
 					@click="refresh()"
 				>
 					<span class="hidden sm:inline">Refresh</span>
-				</UButton>
+				</StarButton>
 			</section>
 
 			<!-- Results count for screen readers -->
@@ -72,7 +72,7 @@
 				<div
 					class="flex min-h-[30rem] flex-col items-center justify-center rounded-xl border border-base-content/10 py-20 text-center"
 				>
-					<UIcon
+					<StarIcon
 						name="i-heroicons-arrow-path"
 						class="mx-auto mb-6 h-10 w-10 animate-spin text-base-content/40"
 					/>
@@ -89,7 +89,7 @@
 				class="flex min-h-[30rem] flex-col items-center justify-center space-y-6 rounded-xl border border-base-content/10 py-20 text-center"
 				role="status"
 			>
-				<UIcon
+				<StarIcon
 					name="i-heroicons-exclamation-circle"
 					class="mx-auto h-12 w-12 text-base-content/30"
 				/>
@@ -99,7 +99,7 @@
 						Couldn't load commands right now. Try refreshing.
 					</p>
 				</div>
-				<UButton
+				<StarButton
 					icon="i-heroicons-arrow-path"
 					color="primary"
 					variant="outline"
@@ -107,7 +107,7 @@
 					@click="refresh()"
 				>
 					Try Again
-				</UButton>
+				</StarButton>
 			</div>
 
 			<!-- Categories -->
@@ -125,7 +125,7 @@
 				/>
 			</section>
 		</div>
-	</UContainer>
+	</StarContainer>
 </template>
 
 <script lang="ts" setup>

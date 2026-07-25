@@ -16,7 +16,7 @@
 				<template v-if="loading">
 					<tr v-for="n in 5" :key="`skeleton-${n}`">
 						<td v-for="col in columns.length || 3" :key="col" :class="ui?.td">
-							<USkeleton class="h-4 w-full" />
+							<StarSkeleton class="h-4 w-full" />
 						</td>
 					</tr>
 				</template>

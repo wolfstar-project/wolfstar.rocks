@@ -34,7 +34,7 @@
 									width="32"
 									height="32"
 								/>
-								<UIcon
+								<StarIcon
 									v-else
 									:name="member.icon ?? 'ph:user-fill'"
 									class="size-5"
@@ -44,7 +44,7 @@
 									class="discord-presence"
 									:data-status="memberPresence(member)"
 								>
-									<UIcon
+									<StarIcon
 										:name="presenceIcon(member)"
 										class="discord-presence-icon"
 										aria-hidden="true"
@@ -62,7 +62,7 @@
 											member.verified ? 'Verified application' : 'Application'
 										"
 									>
-										<UIcon
+										<StarIcon
 											v-if="member.verified"
 											name="ph:check-bold"
 											class="size-2.5"

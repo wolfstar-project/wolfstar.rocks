@@ -12,7 +12,7 @@
 			alt=""
 			class="discord-slash-command-app-icon-image"
 		/>
-		<UIcon
+		<StarIcon
 			v-else-if="resolvedApp.icon"
 			:name="resolvedApp.icon"
 			class="discord-slash-command-app-icon-glyph"

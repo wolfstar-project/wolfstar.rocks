@@ -24,15 +24,15 @@
 		</dl>
 
 		<div class="mt-4 flex flex-col items-start gap-3 md:flex-row">
-			<UButton
+			<StarButton
 				color="neutral"
 				variant="link"
 				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
 				@click="copyServerId"
 			>
 				{{ copied ? "Copied!" : "Copy Server ID" }}
-			</UButton>
-			<UButton
+			</StarButton>
+			<StarButton
 				color="neutral"
 				variant="link"
 				icon="heroicons:question-mark-circle"
@@ -41,7 +41,7 @@
 				rel="noopener noreferrer"
 			>
 				Need Help?
-			</UButton>
+			</StarButton>
 		</div>
 	</GuildSettingsSection>
 
@@ -59,8 +59,8 @@
 			@error="onError"
 		>
 			<div>
-				<UFormField label="Prefix" name="prefix">
-					<UInput
+				<StarFormField label="Prefix" name="prefix">
+					<StarInput
 						id="prefix"
 						v-model="state.prefix"
 						placeholder="Select a command prefix"
@@ -79,7 +79,7 @@
 								{{ state.prefix?.length }}/10
 							</div>
 						</template>
-					</UInput>
+					</StarInput>
 					<template #error="{ error }">
 						<p class="text-sm text-error">{{ error }}</p>
 					</template>
@@ -88,17 +88,17 @@
 							The prefix used to trigger WolfStar commands in this server.
 						</p>
 					</template>
-				</UFormField>
+				</StarFormField>
 			</div>
 
 			<div>
-				<UFormField label="Language" name="language">
+				<StarFormField label="Language" name="language">
 					<template #description>
 						<p id="language-description" class="text-sm text-base-content/70">
 							The language WolfStar uses for responses in this server.
 						</p>
 					</template>
-					<USelectMenu
+					<StarSelectMenu
 						id="language"
 						v-model="state.language"
 						color="primary"
@@ -112,7 +112,7 @@
 					<template #error="{ error }">
 						<p class="text-sm text-error">{{ error }}</p>
 					</template>
-				</UFormField>
+				</StarFormField>
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
@@ -130,7 +130,7 @@
 		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
 		@refresh="refreshAuditLog()"
 	>
-		<UTable
+		<StarTable
 			ref="table"
 			:data="auditEntries"
 			:columns="auditLogColumns"
@@ -173,7 +173,7 @@ const toast = useToast();
 
 const { copy, copied } = useClipboard();
 
-const UAvatar = resolveComponent("UAvatar");
+const StarAvatar = resolveComponent("StarAvatar");
 
 const auditLogPage = ref(1);
 const page = ref(10);
@@ -210,7 +210,7 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 		header: "User",
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
+				h(StarAvatar, {
 					...auditLogMemberAvatar(row.original.member),
 					size: "lg",
 				}),

@@ -25,13 +25,13 @@
 						avatar === '/avatars/wolfstar.png',
 				}"
 			/>
-			<UIcon v-else-if="icon" :name="icon" class="discord-app-launcher-list-item-glyph" />
+			<StarIcon v-else-if="icon" :name="icon" class="discord-app-launcher-list-item-glyph" />
 		</span>
 
 		<span class="discord-app-launcher-list-item-body">
 			<span class="discord-app-launcher-list-item-title-row">
 				<span class="discord-app-launcher-list-item-name">{{ name }}</span>
-				<UIcon
+				<StarIcon
 					v-if="showEye"
 					name="discord:eye"
 					class="discord-app-launcher-list-item-eye"
@@ -46,7 +46,7 @@
 			</span>
 		</span>
 
-		<UIcon
+		<StarIcon
 			name="ph:caret-right-bold"
 			class="discord-app-launcher-list-item-chevron"
 			aria-hidden="true"

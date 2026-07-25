@@ -6,9 +6,9 @@
 	>
 		<nuxt-pwa-manifest />
 		<NuxtLayout>
-			<UMain>
-				<UError :error />
-			</UMain>
+			<StarMain>
+				<StarError :error />
+			</StarMain>
 		</NuxtLayout>
 	</AppProviders>
 </template>

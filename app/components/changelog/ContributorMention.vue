@@ -1,12 +1,12 @@
 <template>
-	<UTooltip
+	<StarTooltip
 		v-model:open="open"
 		:text="cardLabel"
 		:delay-duration="200"
 		:content="{ side: 'top', align: 'start', sideOffset: 8 }"
 		:ui="{ content: 'h-auto max-w-xs items-start p-0' }"
 	>
-		<UButton
+		<StarButton
 			:to="profileUrl"
 			target="_blank"
 			rel="noopener noreferrer"
@@ -14,12 +14,12 @@
 			class="text-highlighted underline decoration-dotted underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
 		>
 			{{ name }} (@{{ username }})
-		</UButton>
+		</StarButton>
 
 		<template #content>
 			<div class="not-prose w-72 p-3" role="group" :aria-label="cardLabel">
 				<div class="flex items-start gap-3">
-					<UAvatar :src="avatarSrc" :alt="`${name} avatar`" size="lg" />
+					<StarAvatar :src="avatarSrc" :alt="`${name} avatar`" size="lg" />
 					<div class="min-w-0 flex-1">
 						<p class="truncate font-semibold text-highlighted">
 							{{ name }}
@@ -55,7 +55,7 @@
 				</dl>
 			</div>
 		</template>
-	</UTooltip>
+	</StarTooltip>
 </template>
 
 <script setup lang="ts">

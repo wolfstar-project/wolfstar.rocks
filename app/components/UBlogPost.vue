@@ -22,7 +22,7 @@
 			<div v-if="badge" class="mb-1">
 				<UBadge v-bind="badge" size="sm" />
 			</div>
-			<h3 class="card-title text-lg">{{ title }}</h3>
+			<h2 class="card-title text-lg">{{ title }}</h2>
 			<p v-if="description" class="text-sm text-muted">{{ description }}</p>
 			<div class="mt-auto flex flex-wrap items-center gap-3 pt-2 text-sm text-muted">
 				<span v-if="date">{{ date }}</span>

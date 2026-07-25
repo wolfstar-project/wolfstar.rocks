@@ -41,7 +41,7 @@
 	</div>
 </template>
 
-<script setup lang="ts" generic="T extends Record<string, unknown>">
+<script setup lang="ts" generic="T extends object">
 import type { ColumnDef, TableOptions } from "@tanstack/vue-table";
 import { FlexRender, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
 

@@ -14,7 +14,7 @@ const props = withDefaults(
 		label?: string;
 		icon?: string;
 		color?: string;
-		variant?: "solid" | "soft" | "subtle" | "outline" | "ghost";
+		variant?: "solid" | "soft" | "subtle" | "outline" | "ghost" | string;
 		size?: UiSize;
 	}>(),
 	{

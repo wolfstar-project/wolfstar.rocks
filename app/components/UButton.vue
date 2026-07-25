@@ -62,6 +62,8 @@ const props = withDefaults(
 		active?: boolean;
 		external?: boolean;
 		avatar?: { src?: string; alt?: string };
+		/** Present when callers spread a user object onto the button. */
+		name?: string;
 		ui?: Record<string, string>;
 	}>(),
 	{

@@ -110,9 +110,10 @@ function onChangeDuration(event: Event) {
 	if (validate(ms)) emit("update:modelValue", ms);
 }
 
-function onChangeUnit(newUnit: string) {
-	unit.value = newUnit;
-	const ms = unitMap[newUnit]! * duration.value;
+function onChangeUnit(newUnit: string | number | null) {
+	const nextUnit = String(newUnit ?? unit.value);
+	unit.value = nextUnit;
+	const ms = unitMap[nextUnit]! * duration.value;
 	if (validate(ms)) emit("update:modelValue", ms);
 }
 </script>

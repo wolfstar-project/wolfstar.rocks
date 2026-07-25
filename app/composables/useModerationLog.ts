@@ -28,7 +28,11 @@ export function useModerationLog({
 }) {
 	const resolvedLimit = computed(() => (limit !== undefined ? toValue(limit) : undefined));
 	const resolvedOffset = computed(() => (offset !== undefined ? toValue(offset) : undefined));
-	const resolvedFilters = computed(() => (filters !== undefined ? toValue(filters) : undefined));
+	// Nested filter mutations need a new object so Nuxt 4.5 invalidates useAsyncData.
+	const resolvedFilters = computed(() => {
+		const value = filters !== undefined ? toValue(filters) : undefined;
+		return value ? { ...value } : undefined;
+	});
 
 	const asyncData = useLazyAsyncData(
 		() =>

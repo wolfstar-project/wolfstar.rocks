@@ -33,7 +33,7 @@
 		"email": "Correo electrónico",
 		"message": "Mensaje",
 		"name_placeholder": "Tu nombre",
-		"email_placeholder": "tu@email.com",
+		"email_placeholder": "tu{'@'}email.com",
 		"message_placeholder": "Cuéntanos qué piensas...",
 		"send_failed_title": "Error al enviar",
 		"send_failed_description": "No se pudo enviar el comentario. Inténtalo de nuevo."

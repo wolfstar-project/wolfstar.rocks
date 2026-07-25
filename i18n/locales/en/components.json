@@ -32,7 +32,7 @@
 		"email": "Email",
 		"message": "Message",
 		"name_placeholder": "Your name",
-		"email_placeholder": "your@email.com",
+		"email_placeholder": "your{'@'}email.com",
 		"message_placeholder": "What happened? What did you expect to happen?",
 		"send_failed_title": "Send Feedback Failed",
 		"send_failed_description": "Couldn't send feedback. {message}"

@@ -33,7 +33,7 @@
 		"email": "Email",
 		"message": "Messaggio",
 		"name_placeholder": "Il tuo nome",
-		"email_placeholder": "tua@email.com",
+		"email_placeholder": "tua{'@'}email.com",
 		"message_placeholder": "Raccontaci cosa ne pensi...",
 		"send_failed_title": "Invio non riuscito",
 		"send_failed_description": "Impossibile inviare il feedback. Riprova."

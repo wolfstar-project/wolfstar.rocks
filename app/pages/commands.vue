@@ -1,7 +1,9 @@
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
 		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
-			<h1 class="text-4xl font-bold tracking-tight text-base-content/90 md:text-5xl">
+			<h1
+				class="whitespace-nowrap text-4xl font-bold tracking-tight text-base-content/90 md:text-5xl"
+			>
 				WolfStar Commands
 			</h1>
 			<p class="max-w-2xl text-lg text-base-content/70">
@@ -67,7 +69,9 @@
 
 			<!-- Loading state -->
 			<div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
-				<div class="rounded-xl border border-base-content/10 py-20 text-center">
+				<div
+					class="flex min-h-[30rem] flex-col items-center justify-center rounded-xl border border-base-content/10 py-20 text-center"
+				>
 					<UIcon
 						name="i-heroicons-arrow-path"
 						class="mx-auto mb-6 h-10 w-10 animate-spin text-base-content/40"
@@ -82,7 +86,7 @@
 			<!-- No results message -->
 			<div
 				v-else-if="commands.length === 0"
-				class="space-y-6 rounded-xl border border-base-content/10 py-20 text-center"
+				class="flex min-h-[30rem] flex-col items-center justify-center space-y-6 rounded-xl border border-base-content/10 py-20 text-center"
 				role="status"
 			>
 				<UIcon

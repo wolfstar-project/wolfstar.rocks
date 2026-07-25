@@ -102,7 +102,11 @@ const { user, ready, loggedIn, fetchSession } = useUserSession();
 const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
 const isError = computed(() => Boolean(route.query.error));
 const isSessionLoading = ref(!isError.value);
-const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
+const errorMessage = computed(() => {
+	const rawError = route.query.error;
+	// Repeated `?error=...` params arrive as an array from Vue Router; take the first value.
+	return localizeAuthError(Array.isArray(rawError) ? rawError[0] : rawError);
+});
 
 onMounted(() => {
 	if (!isError.value) {

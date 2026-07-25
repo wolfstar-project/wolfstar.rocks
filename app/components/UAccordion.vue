@@ -68,12 +68,16 @@ const props = withDefaults(
 
 const openItems = ref<string[] | string>(props.type === "single" ? "" : []);
 
-const normalizedItems = computed(() =>
-	(props.items ?? []).map((item, index) => ({
-		...item,
-		value: item.value ?? String(index),
-	})),
-);
+const normalizedItems = computed<AccordionItemData[]>(() => {
+	const normalized: AccordionItemData[] = [];
+	let index = 0;
+	for (const item of props.items ?? []) {
+		const value = item.value ?? String(index);
+		normalized.push(value === item.value ? item : { ...item, value });
+		index += 1;
+	}
+	return normalized;
+});
 
 function isOpen(value: string) {
 	return Array.isArray(openItems.value)

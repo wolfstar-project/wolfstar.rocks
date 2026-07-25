@@ -1,11 +1,11 @@
 <template>
-	<UDashboardPanel id="home">
+	<StarDashboardPanel id="home">
 		<template #header>
-			<UDashboardNavbar :ui="{ right: 'gap-3' }">
+			<StarDashboardNavbar :ui="{ right: 'gap-3' }">
 				<template #leading>
-					<UDashboardSidebarCollapse />
+					<StarDashboardSidebarCollapse />
 				</template>
-			</UDashboardNavbar>
+			</StarDashboardNavbar>
 		</template>
 
 		<template #body>
@@ -13,7 +13,7 @@
 				<component :is="renderComponent" :commands="commands" :languages="languages" />
 				<template #fallback>
 					<div class="flex h-48 items-center justify-center">
-						<UIcon
+						<StarIcon
 							name="heroicons:arrow-path"
 							class="size-8 animate-spin text-primary"
 						/>
@@ -21,7 +21,7 @@
 				</template>
 			</ClientOnly>
 		</template>
-	</UDashboardPanel>
+	</StarDashboardPanel>
 </template>
 
 <script setup lang="ts">

@@ -1,5 +1,5 @@
 <template>
-	<UHeader class="app-navbar" title="WolfStar" aria-label="Site header">
+	<StarHeader class="app-navbar" title="WolfStar" aria-label="Site header">
 		<template #left>
 			<NuxtLink
 				class="flex items-center gap-2.5"
@@ -17,7 +17,7 @@
 			class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex"
 			aria-label="Main navigation"
 		>
-			<UNavigationMenu
+			<StarNavigationMenu
 				:items="desktopLinks"
 				variant="link"
 				:ui="{
@@ -29,7 +29,7 @@
 
 		<template #right>
 			<div class="hidden items-center gap-2 md:flex">
-				<UButton
+				<StarButton
 					v-if="currentApp.invite !== '#'"
 					label="Add App"
 					size="sm"
@@ -40,7 +40,7 @@
 				<ClientOnly>
 					<LazyAppHeaderAuth />
 					<template #fallback>
-						<UButton
+						<StarButton
 							label="Sign in"
 							size="md"
 							color="primary"
@@ -55,7 +55,7 @@
 		</template>
 		<template #body>
 			<nav class="flex min-h-0 flex-1 flex-col gap-6" aria-label="Mobile menu">
-				<UNavigationMenu
+				<StarNavigationMenu
 					orientation="vertical"
 					:items="mobileLinks"
 					class="-mx-1"
@@ -68,7 +68,7 @@
 				/>
 
 				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
-					<UButton
+					<StarButton
 						v-if="currentApp.invite !== '#'"
 						label="Add App"
 						size="md"
@@ -80,7 +80,7 @@
 						<LazyAppHeaderAuth mobile />
 						<template #fallback>
 							<div class="flex justify-center">
-								<UButton
+								<StarButton
 									label="Sign in"
 									size="md"
 									color="primary"
@@ -95,7 +95,7 @@
 				</div>
 			</nav>
 		</template>
-	</UHeader>
+	</StarHeader>
 </template>
 
 <script setup lang="ts">

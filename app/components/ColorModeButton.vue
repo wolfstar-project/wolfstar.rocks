@@ -1,6 +1,6 @@
 <template>
 	<ClientOnly>
-		<UButton
+		<StarButton
 			:aria-label="`Switch to ${nextTheme} mode`"
 			:icon="`lucide:${nextTheme === 'dark' ? 'sun' : 'moon'}`"
 			color="neutral"

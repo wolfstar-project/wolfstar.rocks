@@ -20,7 +20,7 @@
 				<div class="discord-app-launcher-main-content">
 					<div class="discord-app-launcher-search-sticky">
 						<div class="discord-app-launcher-search">
-							<UIcon
+							<StarIcon
 								name="discord:search"
 								class="discord-app-launcher-search-icon"
 								aria-hidden="true"
@@ -126,7 +126,7 @@
 														entry.id === 'wolfstar',
 												}"
 											/>
-											<UIcon
+											<StarIcon
 												v-else-if="entry.icon"
 												:name="entry.icon"
 												class="discord-app-launcher-recent-glyph"
@@ -260,7 +260,7 @@
 										<template v-else-if="promo.variant === 'farm'">
 											<span class="discord-app-launcher-promo-farm-sun" />
 											<span class="discord-app-launcher-promo-farm-field" />
-											<UIcon
+											<StarIcon
 												name="ph:plant-fill"
 												class="discord-app-launcher-promo-farm-icon"
 											/>
@@ -269,7 +269,7 @@
 											>
 										</template>
 										<template v-else>
-											<UIcon
+											<StarIcon
 												name="ph:youtube-logo-fill"
 												class="discord-app-launcher-promo-watch-icon"
 											/>
@@ -288,14 +288,14 @@
 											"
 											aria-hidden="true"
 										>
-											<UIcon v-if="promo.icon" :name="promo.icon" />
+											<StarIcon v-if="promo.icon" :name="promo.icon" />
 										</span>
 										<span class="discord-app-launcher-promo-copy">
 											<span class="discord-app-launcher-promo-title-row">
 												<span class="discord-app-launcher-promo-title">{{
 													promo.title
 												}}</span>
-												<UIcon
+												<StarIcon
 													name="ph:eye-bold"
 													class="discord-app-launcher-promo-eye"
 													aria-hidden="true"
@@ -377,7 +377,7 @@
 					aria-label="Back to Apps"
 					@click="returnToMainView"
 				>
-					<UIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
+					<StarIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
 				</button>
 				<h2 class="discord-app-launcher-list-title">{{ activeListView?.title }}</h2>
 				<span class="discord-app-launcher-back-spacer" aria-hidden="true" />

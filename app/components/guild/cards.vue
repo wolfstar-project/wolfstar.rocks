@@ -1,5 +1,5 @@
 <template>
-	<UContainer
+	<StarContainer
 		class="w-full max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8"
 		role="region"
 		aria-label="Server list"
@@ -84,7 +84,7 @@
 				>
 					<div class="flex items-start gap-4">
 						<div class="shrink-0">
-							<UIcon :name="errorState.icon" class="size-6" />
+							<StarIcon :name="errorState.icon" class="size-6" />
 						</div>
 						<div class="flex-1 space-y-2">
 							<h3 class="text-lg font-semibold">{{ errorState.title }}</h3>
@@ -95,7 +95,7 @@
 						</div>
 					</div>
 					<div class="mt-4 flex justify-end">
-						<UButton
+						<StarButton
 							v-if="error?.status === 401"
 							color="error"
 							variant="outline"
@@ -104,8 +104,8 @@
 							to="/login"
 						>
 							Reload Page
-						</UButton>
-						<UButton
+						</StarButton>
+						<StarButton
 							v-else-if="onRetry"
 							:color="errorState.color"
 							variant="outline"
@@ -115,7 +115,7 @@
 							@click="onRetry"
 						>
 							{{ isRetrying ? "Retrying..." : "Try Again" }}
-						</UButton>
+						</StarButton>
 					</div>
 				</div>
 			</div>
@@ -136,7 +136,7 @@
 						</p>
 					</div>
 
-					<UButton
+					<StarButton
 						v-if="searchQuery"
 						variant="outline"
 						size="sm"
@@ -146,11 +146,11 @@
 						@click="undoSearch"
 					>
 						Clear Search
-					</UButton>
+					</StarButton>
 				</div>
 			</div>
 		</div>
-	</UContainer>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

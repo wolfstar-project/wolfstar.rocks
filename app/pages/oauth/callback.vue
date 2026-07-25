@@ -3,53 +3,62 @@
 		<h1 class="sr-only">OAuth Callback</h1>
 		<h2 class="sr-only">Authentication Status</h2>
 		<template v-if="!hasCallbackParams">
-			<UAlert variant="solid" color="warning" title="Login Required" icon="twemoji:warning">
+			<StarAlert
+				variant="solid"
+				color="warning"
+				title="Login Required"
+				icon="twemoji:warning"
+			>
 				<template #description>
 					This page can't be accessed directly. Please
-					<ULink to="/login" class="font-medium underline">sign in</ULink>
+					<StarLink to="/login" class="font-medium underline">sign in</StarLink>
 					to continue.
 				</template>
 				<template #actions>
-					<UButton color="neutral" variant="ghost" to="/login" size="sm">
+					<StarButton color="neutral" variant="ghost" to="/login" size="sm">
 						Go to Login
-					</UButton>
+					</StarButton>
 				</template>
-			</UAlert>
+			</StarAlert>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="isError">
-				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
+				<StarAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
 					<template #description>
 						{{ errorMessage }}
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						<StarButton color="neutral" variant="ghost" to="/login" size="sm">
 							Try Again
-						</UButton>
+						</StarButton>
 					</template>
-				</UAlert>
+				</StarAlert>
 			</template>
 			<template v-else-if="isSessionLoading || !ready">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
+				<StarAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
 					<template #description> Connecting to Discord... </template>
-				</UAlert>
+				</StarAlert>
 			</template>
 			<template v-else-if="user">
-				<UAlert color="success" icon="twemoji:check-mark" :title="`Welcome ${user.name}!`">
+				<StarAlert
+					color="success"
+					icon="twemoji:check-mark"
+					:title="`Welcome ${user.name}!`"
+				>
 					<template #description> Redirecting you to the dashboard... </template>
-				</UAlert>
+				</StarAlert>
 			</template>
 			<template v-else-if="isSessionMissing">
-				<UAlert color="error" title="Session Not Found" icon="twemoji:cross-mark">
+				<StarAlert color="error" title="Session Not Found" icon="twemoji:cross-mark">
 					<template #description>
 						Your login session could not be loaded. Please sign in again.
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						<StarButton color="neutral" variant="ghost" to="/login" size="sm">
 							Try Again
-						</UButton>
+						</StarButton>
 					</template>
-				</UAlert>
+				</StarAlert>
 			</template>
 		</ClientOnly>
 	</div>

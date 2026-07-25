@@ -22,7 +22,7 @@
 						{{ toast.description }}
 					</p>
 					<div v-if="toast.actions?.length" class="mt-2 flex flex-wrap gap-2">
-						<UButton
+						<StarButton
 							v-for="(action, index) in toast.actions"
 							:key="index"
 							size="xs"

@@ -18,7 +18,7 @@
 							v-if="item.type === 'label'"
 							class="flex items-center gap-2 px-2 py-1.5 text-sm font-semibold"
 						>
-							<UAvatar v-if="item.avatar" v-bind="item.avatar" size="xs" />
+							<StarAvatar v-if="item.avatar" v-bind="item.avatar" size="xs" />
 							<Icon v-else-if="item.icon" :name="item.icon" class="size-4" />
 							{{ item.label }}
 						</DropdownMenuLabel>
@@ -67,7 +67,7 @@
 							@select="onSelect(item, $event)"
 						>
 							<Icon v-if="item.icon" :name="item.icon" class="size-4" />
-							<UAvatar v-else-if="item.avatar" v-bind="item.avatar" size="xs" />
+							<StarAvatar v-else-if="item.avatar" v-bind="item.avatar" size="xs" />
 							<template v-if="item.to || item.href">
 								<NuxtLink
 									:to="item.to ?? item.href"

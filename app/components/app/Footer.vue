@@ -1,5 +1,5 @@
 <template>
-	<UFooter
+	<StarFooter
 		:ui="{
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
@@ -7,7 +7,7 @@
 		aria-label="Site footer"
 	>
 		<template #top>
-			<UContainer class="relative overflow-hidden">
+			<StarContainer class="relative overflow-hidden">
 				<!-- Decorative watermark: keep fully inside the padded brand area so overflow-hidden does not clip it -->
 				<icons-wolfstar
 					class="pointer-events-none absolute bottom-6 left-6 h-56 w-56 opacity-5"
@@ -30,7 +30,7 @@
 							open source.
 						</p>
 						<nav class="mt-4 flex items-center gap-1" aria-label="Social links">
-							<UButton
+							<StarButton
 								v-for="social of socialLinks"
 								:key="social.label"
 								:to="social.to"
@@ -47,7 +47,7 @@
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
-							<UButton
+							<StarButton
 								label="Powered by Netlify"
 								to="https://www.netlify.com"
 								target="_blank"
@@ -80,7 +80,7 @@
 						</div>
 					</nav>
 				</div>
-			</UContainer>
+			</StarContainer>
 		</template>
 
 		<template #left>
@@ -92,7 +92,7 @@
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
 			<ColorModeButton />
 		</template>
-	</UFooter>
+	</StarFooter>
 </template>
 
 <script setup lang="ts">

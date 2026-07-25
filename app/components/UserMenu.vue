@@ -1,6 +1,6 @@
 <template>
 	<FeedbackModal v-model:open="isFeedbackOpen" />
-	<UDropdownMenu
+	<StarDropdownMenu
 		:items="items"
 		:content="{ align: 'center', collisionPadding: 12 }"
 		:ui="{
@@ -10,7 +10,7 @@
 		}"
 		aria-label="User account menu"
 	>
-		<UButton
+		<StarButton
 			v-bind="{
 				...user,
 				label: collapsed ? undefined : user?.name,
@@ -27,7 +27,7 @@
 			:aria-label="collapsed ? 'User menu' : `User menu for ${user?.name}`"
 			aria-haspopup="true"
 		/>
-	</UDropdownMenu>
+	</StarDropdownMenu>
 </template>
 
 <script setup lang="ts">

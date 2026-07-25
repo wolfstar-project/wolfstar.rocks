@@ -1,11 +1,11 @@
 <template>
-	<UModal
+	<StarModal
 		v-model:open="open"
 		title="Send Feedback"
 		description="Report a bug or share your thoughts with the WolfStar team."
 	>
 		<template #body>
-			<UForm
+			<StarForm
 				id="feedback-form"
 				ref="formRef"
 				:schema
@@ -14,41 +14,41 @@
 				@submit="onSubmit"
 				@error="onError"
 			>
-				<UFormField v-if="!isDashboard" name="name" label="Name" required>
-					<UInput v-model="state.name" placeholder="Your name" class="w-full" />
-				</UFormField>
+				<StarFormField v-if="!isDashboard" name="name" label="Name" required>
+					<StarInput v-model="state.name" placeholder="Your name" class="w-full" />
+				</StarFormField>
 
-				<UFormField v-if="!isDashboard" name="email" label="Email" required>
-					<UInput
+				<StarFormField v-if="!isDashboard" name="email" label="Email" required>
+					<StarInput
 						v-model="state.email"
 						type="email"
 						placeholder="your@email.com"
 						class="w-full"
 					/>
-				</UFormField>
+				</StarFormField>
 
-				<UFormField name="message" label="Message" required>
-					<UTextarea
+				<StarFormField name="message" label="Message" required>
+					<StarTextarea
 						v-model="state.message"
 						placeholder="What happened? What did you expect to happen?"
 						:rows="4"
 						class="w-full"
 					/>
-				</UFormField>
-			</UForm>
+				</StarFormField>
+			</StarForm>
 		</template>
 
 		<template #footer>
 			<div class="flex justify-end gap-2">
-				<UButton
+				<StarButton
 					color="neutral"
 					variant="ghost"
 					:disabled="isSubmitting"
 					@click="open = false"
 				>
 					Cancel
-				</UButton>
-				<UButton
+				</StarButton>
+				<StarButton
 					type="submit"
 					form="feedback-form"
 					color="primary"
@@ -56,10 +56,10 @@
 					icon="i-lucide-send"
 				>
 					Send Feedback
-				</UButton>
+				</StarButton>
 			</div>
 		</template>
-	</UModal>
+	</StarModal>
 </template>
 
 <script setup lang="ts">

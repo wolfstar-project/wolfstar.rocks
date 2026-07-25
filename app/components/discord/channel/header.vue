@@ -2,7 +2,7 @@
 	<div class="discord-channel-header">
 		<div class="discord-channel-header-mobile">
 			<div class="discord-channel-header-back" aria-hidden="true">
-				<UIcon name="ph:arrow-left-bold" class="size-5" />
+				<StarIcon name="ph:arrow-left-bold" class="size-5" />
 				<span v-if="notificationCount > 0" class="discord-channel-header-badge">{{
 					notificationCount
 				}}</span>
@@ -15,13 +15,13 @@
 				@click="emit('open-channel-info')"
 			>
 				<span class="discord-channel-header-mobile-name-row">
-					<UIcon
+					<StarIcon
 						:name="typeIcon"
 						class="discord-channel-header-icon size-4 shrink-0"
 						aria-hidden="true"
 					/>
 					<span class="discord-channel-header-name">{{ name }}</span>
-					<UIcon
+					<StarIcon
 						name="ph:caret-right-bold"
 						class="discord-channel-header-chevron size-3 shrink-0"
 						aria-hidden="true"
@@ -34,14 +34,14 @@
 			</button>
 
 			<div class="discord-channel-header-mobile-search" aria-hidden="true">
-				<UIcon name="discord:search" class="size-5" />
+				<StarIcon name="discord:search" class="size-5" />
 			</div>
 		</div>
 
 		<div class="discord-channel-header-desktop">
 			<div class="discord-channel-header-info">
 				<div class="discord-channel-header-title">
-					<UIcon
+					<StarIcon
 						:name="typeIcon"
 						class="discord-channel-header-icon size-5 shrink-0"
 						aria-hidden="true"
@@ -70,14 +70,14 @@
 					:aria-pressed="action.id === 'members' ? membersOpen : undefined"
 					@click="action.id === 'members' ? toggleMembers() : undefined"
 				>
-					<UIcon :name="action.icon" class="size-6" aria-hidden="true" />
+					<StarIcon :name="action.icon" class="size-6" aria-hidden="true" />
 				</button>
 
 				<div class="discord-channel-header-search" aria-hidden="true">
 					<span class="discord-channel-header-search-placeholder">{{
 						searchPlaceholderText
 					}}</span>
-					<UIcon
+					<StarIcon
 						name="discord:search"
 						class="discord-channel-header-search-icon size-4 shrink-0"
 					/>

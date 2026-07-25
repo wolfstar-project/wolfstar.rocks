@@ -1,6 +1,6 @@
 <template>
-	<UDashboardGroup unit="rem">
-		<UDashboardSidebar
+	<StarDashboardGroup unit="rem">
+		<StarDashboardSidebar
 			id="default"
 			collapsible
 			resizable
@@ -12,18 +12,18 @@
 		>
 			<template #header="{ collapsed }">
 				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-					<UAvatar :src :alt="guildData.name" class="mr-2" />
+					<StarAvatar :src :alt="guildData.name" class="mr-2" />
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
 				<div v-else class="flex h-10 items-center justify-center">
-					<USkeleton class="mr-2 h-10 w-10 rounded-full" />
+					<StarSkeleton class="mr-2 h-10 w-10 rounded-full" />
 					<div v-if="!collapsed" class="ms-2">
-						<USkeleton class="h-4 w-24 rounded" />
+						<StarSkeleton class="h-4 w-24 rounded" />
 					</div>
 				</div>
 			</template>
 			<template #default="{ collapsed }">
-				<UNavigationMenu
+				<StarNavigationMenu
 					:collapsed="collapsed"
 					:items="items[0]"
 					orientation="vertical"
@@ -31,7 +31,7 @@
 					popover
 				/>
 
-				<UNavigationMenu
+				<StarNavigationMenu
 					:collapsed="collapsed"
 					:items="items[1]"
 					orientation="vertical"
@@ -43,7 +43,7 @@
 			<template #footer="{ collapsed }">
 				<UserMenu :collapsed="collapsed" />
 			</template>
-		</UDashboardSidebar>
+		</StarDashboardSidebar>
 
 		<slot v-if="isReadyToRender"></slot>
 		<div
@@ -52,7 +52,7 @@
 			role="alert"
 			aria-label="Error loading dashboard"
 		>
-			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
+			<StarIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
 				<h2 class="text-xl font-semibold text-base-content">
 					{{ nuxtError.statusMessage || "Error Loading Dashboard" }}
@@ -76,7 +76,11 @@
 			aria-label="Loading dashboard"
 		>
 			<div class="flex flex-col items-center space-y-4">
-				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
+				<StarIcon
+					name="ph:warning-duotone"
+					class="size-12 text-primary"
+					aria-hidden="true"
+				/>
 				<div class="space-y-2 text-center">
 					<h2 class="text-xl font-semibold text-base-content">Loading Dashboard</h2>
 					<p class="text-sm text-base-content/60">Loading server settings...</p>
@@ -107,18 +111,18 @@
 				style="view-transition-name: save-changes-bar"
 				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
 			>
-				<UFieldGroup>
-					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+				<StarFieldGroup>
+					<StarButton color="primary" icon="heroicons:check" @click="submitChanges">
 						Save Changes
-					</UButton>
-					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+					</StarButton>
+					<StarButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
 						Reset Changes
-					</UButton>
-				</UFieldGroup>
+					</StarButton>
+				</StarFieldGroup>
 			</div>
 		</Transition>
 
-		<UModal
+		<StarModal
 			v-model:open="showDialog"
 			title="Unsaved Changes"
 			description="You have unsaved changes that will be lost if you leave this page."
@@ -126,14 +130,14 @@
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="cancelLeave">
+					<StarButton color="neutral" variant="ghost" @click="cancelLeave">
 						Stay on Page
-					</UButton>
-					<UButton color="error" @click="confirmLeave"> Discard Changes </UButton>
+					</StarButton>
+					<StarButton color="error" @click="confirmLeave"> Discard Changes </StarButton>
 				</div>
 			</template>
-		</UModal>
-	</UDashboardGroup>
+		</StarModal>
+	</StarDashboardGroup>
 </template>
 
 <script setup lang="ts">

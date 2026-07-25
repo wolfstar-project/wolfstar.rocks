@@ -5,58 +5,58 @@
 			<!-- Command Usage Skeleton -->
 			<section class="space-y-3">
 				<div class="flex items-center gap-2">
-					<USkeleton class="h-5 w-5" />
-					<USkeleton class="h-6 w-32" />
+					<StarSkeleton class="h-5 w-5" />
+					<StarSkeleton class="h-6 w-32" />
 				</div>
 				<div class="space-y-2">
-					<USkeleton class="h-12 w-full" />
-					<USkeleton class="h-12 w-3/4" />
+					<StarSkeleton class="h-12 w-full" />
+					<StarSkeleton class="h-12 w-3/4" />
 				</div>
 			</section>
 
 			<!-- Extended Help Skeleton -->
 			<section class="space-y-3">
 				<div class="flex items-center gap-2">
-					<USkeleton class="h-5 w-5" />
-					<USkeleton class="h-6 w-36" />
+					<StarSkeleton class="h-5 w-5" />
+					<StarSkeleton class="h-6 w-36" />
 				</div>
 				<div class="space-y-2">
-					<USkeleton class="h-4 w-full" />
-					<USkeleton class="h-4 w-full" />
-					<USkeleton class="h-4 w-2/3" />
+					<StarSkeleton class="h-4 w-full" />
+					<StarSkeleton class="h-4 w-full" />
+					<StarSkeleton class="h-4 w-2/3" />
 				</div>
 			</section>
 
 			<!-- Explained Usage Skeleton -->
 			<section class="space-y-3">
 				<div class="flex items-center gap-2">
-					<USkeleton class="h-5 w-5" />
-					<USkeleton class="h-6 w-40" />
+					<StarSkeleton class="h-5 w-5" />
+					<StarSkeleton class="h-6 w-40" />
 				</div>
 				<div class="space-y-2">
-					<USkeleton class="h-5 w-full" />
-					<USkeleton class="h-5 w-5/6" />
-					<USkeleton class="h-5 w-4/5" />
+					<StarSkeleton class="h-5 w-full" />
+					<StarSkeleton class="h-5 w-5/6" />
+					<StarSkeleton class="h-5 w-4/5" />
 				</div>
 			</section>
 
 			<!-- Examples Skeleton -->
 			<section class="space-y-3">
 				<div class="flex items-center gap-2">
-					<USkeleton class="h-5 w-5" />
-					<USkeleton class="h-6 w-28" />
+					<StarSkeleton class="h-5 w-5" />
+					<StarSkeleton class="h-6 w-28" />
 				</div>
 				<div class="space-y-2">
-					<USkeleton class="h-5 w-full" />
-					<USkeleton class="h-5 w-3/4" />
+					<StarSkeleton class="h-5 w-full" />
+					<StarSkeleton class="h-5 w-3/4" />
 				</div>
 			</section>
 
 			<!-- Chips Skeleton -->
 			<div class="flex flex-wrap gap-2">
-				<USkeleton class="h-7 w-20" />
-				<USkeleton class="h-7 w-24" />
-				<USkeleton class="h-7 w-16" />
+				<StarSkeleton class="h-7 w-20" />
+				<StarSkeleton class="h-7 w-24" />
+				<StarSkeleton class="h-7 w-16" />
 			</div>
 		</template>
 
@@ -66,7 +66,7 @@
 			<section v-if="command.extendedHelp.usages?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon
+						<StarIcon
 							name="i-heroicons-pencil-square"
 							class="size-5 text-primary"
 							aria-hidden="true"
@@ -92,7 +92,7 @@
 			<section v-if="command.extendedHelp.extendedHelp" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon
+						<StarIcon
 							name="i-heroicons-question-mark-circle"
 							class="size-5 text-primary"
 							aria-hidden="true"
@@ -118,7 +118,7 @@
 			<section v-if="command.extendedHelp.explainedUsage?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon
+						<StarIcon
 							name="i-heroicons-code-bracket"
 							class="size-5 text-primary"
 							aria-hidden="true"
@@ -148,7 +148,7 @@
 			<section v-if="command.extendedHelp.possibleFormats?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon
+						<StarIcon
 							name="i-heroicons-paint-brush"
 							class="size-5 text-primary"
 							aria-hidden="true"
@@ -176,7 +176,7 @@
 			<section v-if="command.extendedHelp.examples?.length" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon
+						<StarIcon
 							name="i-heroicons-light-bulb"
 							class="size-5 text-primary"
 							aria-hidden="true"
@@ -190,7 +190,7 @@
 						:key="idx"
 						class="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm transition-all"
 					>
-						<UIcon
+						<StarIcon
 							name="i-heroicons-arrow-right"
 							class="mt-0.5 h-4 w-4 shrink-0 text-primary/70"
 							aria-hidden="true"
@@ -208,7 +208,7 @@
 			<section v-if="command.extendedHelp.reminder" class="space-y-4">
 				<h3 class="flex items-center gap-3 text-lg font-bold">
 					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
-						<UIcon
+						<StarIcon
 							name="i-heroicons-bell-alert"
 							class="size-5 text-primary"
 							aria-hidden="true"

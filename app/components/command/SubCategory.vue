@@ -4,7 +4,7 @@
 		role="region"
 		:aria-labelledby="`category-${categoryName.replace(/\s+/g, '-').toLowerCase()}`"
 	>
-		<UAccordion
+		<StarAccordion
 			:items="categoryItems"
 			:ui="{
 				root: 'space-y-3',
@@ -15,7 +15,7 @@
 			class="animate-fade-in"
 		>
 			<template #default="{ item, open }">
-				<UButton
+				<StarButton
 					color="neutral"
 					variant="ghost"
 					class="w-full justify-between rounded-2xl border border-base-content/10 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80"
@@ -31,14 +31,14 @@
 					</span>
 
 					<template #trailing>
-						<UIcon
+						<StarIcon
 							name="i-heroicons-chevron-down-20-solid"
 							class="size-5 shrink-0 transform transition-transform duration-200"
 							:class="[open && 'rotate-180']"
 							aria-hidden="true"
 						/>
 					</template>
-				</UButton>
+				</StarButton>
 			</template>
 
 			<template #body="{ item }">
@@ -46,7 +46,7 @@
 					:id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
 					class="space-y-3 p-4"
 				>
-					<UAccordion
+					<StarAccordion
 						:items="
 							getCommandsByCategory(item.label).map((command) => ({
 								label: command.name,
@@ -84,17 +84,17 @@
 								:loading
 							/>
 						</template>
-					</UAccordion>
+					</StarAccordion>
 				</div>
 			</template>
-		</UAccordion>
+		</StarAccordion>
 	</div>
 	<div
 		v-else-if="searchValue"
 		class="rounded-2xl bg-base-200/30 px-6 py-12 text-center"
 		role="status"
 	>
-		<UIcon
+		<StarIcon
 			name="i-heroicons-magnifying-glass"
 			class="mx-auto mb-4 h-12 w-12 text-base-content/30"
 			aria-hidden="true"

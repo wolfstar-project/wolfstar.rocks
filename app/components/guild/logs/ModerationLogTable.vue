@@ -1,14 +1,14 @@
 <template>
 	<div class="w-full flex-1 divide-y divide-accented">
 		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
+			<StarInput
 				v-model="q"
 				icon="i-lucide-search"
 				placeholder="Search logs..."
 				aria-label="Search logs"
 				class="max-w-sm min-w-48"
 			/>
-			<USelect
+			<StarSelect
 				v-if="!warningsOnly"
 				v-model="selectedTypeCode"
 				:items="actionTypeItems"
@@ -32,14 +32,14 @@
 			record-label="case"
 			@refresh="refresh()"
 		>
-			<UTable
+			<StarTable
 				:data="entries"
 				:columns="columns"
 				:loading="status === 'pending'"
 				class="min-h-100"
 			/>
 			<div class="flex justify-end border-t border-accented px-4 py-3.5">
-				<UPagination
+				<StarPagination
 					v-if="total > limit"
 					v-model:page="page"
 					:total="total"
@@ -56,8 +56,8 @@ import type { TableColumn } from "#shared/types/ui";
 import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
 import { formatTimeAgo } from "@vueuse/core";
 
-const UBadge = resolveComponent("UBadge");
-const UUser = resolveComponent("UUser");
+const StarBadge = resolveComponent("StarBadge");
+const StarUser = resolveComponent("StarUser");
 const { guildData } = useGuildData();
 
 const { warningsOnly } = defineProps<{
@@ -108,7 +108,7 @@ const columns: TableColumn<ModerationLogEntry>[] = [
 		header: "Action",
 		cell: ({ row }) =>
 			h(
-				UBadge,
+				StarBadge,
 				{
 					color: moderationActionVariant(row.original.typeName),
 					variant: "subtle",
@@ -122,7 +122,7 @@ const columns: TableColumn<ModerationLogEntry>[] = [
 		header: "User",
 		cell: ({ row }) => {
 			const member = row.original.targetMember;
-			return h(UUser, {
+			return h(StarUser, {
 				name: member ? auditLogMemberName(member) : "Unknown",
 				avatar: member ? auditLogMemberAvatar(member) : undefined,
 				size: "sm",
@@ -134,7 +134,7 @@ const columns: TableColumn<ModerationLogEntry>[] = [
 		header: "Moderator",
 		cell: ({ row }) => {
 			const member = row.original.moderatorMember;
-			return h(UUser, {
+			return h(StarUser, {
 				name: member ? auditLogMemberName(member) : "Unknown",
 				avatar: member ? auditLogMemberAvatar(member) : undefined,
 				size: "sm",

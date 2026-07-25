@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full flex-1 divide-y divide-accented">
 		<div class="flex items-center justify-between gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
+			<StarInput
 				v-model="query"
 				icon="i-lucide-search"
 				placeholder="Search logs..."
@@ -21,7 +21,7 @@
 			refresh-label="Refresh activity log"
 			@refresh="refresh()"
 		>
-			<UTable
+			<StarTable
 				ref="table"
 				:data="entries"
 				:columns="columns"
@@ -48,7 +48,7 @@
 					{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
 					{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
 				</p>
-				<UPagination
+				<StarPagination
 					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
 					:items-per-page="table?.tableApi?.getState().pagination.pageSize"
 					:total="table?.tableApi?.getFilteredRowModel().rows.length"
@@ -65,7 +65,7 @@ import type { TableColumn } from "#shared/types/ui";
 import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 
-const UAvatar = resolveComponent("UAvatar");
+const StarAvatar = resolveComponent("StarAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
 
@@ -92,7 +92,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 		header: "User",
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
+				h(StarAvatar, {
 					...auditLogMemberAvatar(row.original.member),
 					size: "lg",
 				}),

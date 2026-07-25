@@ -1,5 +1,5 @@
 <template>
-	<UForm
+	<StarForm
 		ref="form-settings"
 		:schema="schema"
 		:state="state"
@@ -8,7 +8,7 @@
 		@submit="handleSubmit"
 	>
 		<slot></slot>
-	</UForm>
+	</StarForm>
 </template>
 
 <script setup lang="ts" generic="T extends Record<string, unknown>">

@@ -30,7 +30,7 @@
 								class="flex size-10 items-center justify-center rounded-lg bg-primary/10"
 								aria-hidden="true"
 							>
-								<UIcon :name="feature.icon" class="size-5 text-primary" />
+								<StarIcon :name="feature.icon" class="size-5 text-primary" />
 							</span>
 							{{ feature.title }}
 						</h3>
@@ -39,9 +39,9 @@
 						>
 							{{ feature.description }}
 						</p>
-						<UButton to="#" color="neutral" variant="outline" class="w-fit">
+						<StarButton to="#" color="neutral" variant="outline" class="w-fit">
 							Learn more about {{ feature.label }}
-						</UButton>
+						</StarButton>
 					</div>
 
 					<template v-if="feature.id === 'moderation-tools'">
@@ -54,7 +54,7 @@
 									class="showcase-surface-shield w-full overflow-hidden shadow-glow"
 								>
 									<div class="showcase-channel-header">
-										<UIcon
+										<StarIcon
 											name="ph:folder-fill"
 											class="size-4.5 shrink-0 text-muted"
 											aria-hidden="true"
@@ -100,7 +100,7 @@
 															:key="placeholder"
 															class="flex aspect-video w-full items-center justify-center card-glass rounded-lg"
 														>
-															<UIcon
+															<StarIcon
 																name="ph:image-duotone"
 																class="size-16 animate-pulse text-base-content/20 sm:size-24"
 																aria-hidden="true"
@@ -203,7 +203,7 @@
 													Hey folks! I have great news to share!
 													<LazyDiscordReactions>
 														<LazyDiscordReaction :count="7" self>
-															<UIcon
+															<StarIcon
 																name="ph:cheers-fill"
 																class="text-success"
 																aria-hidden="true"
@@ -213,7 +213,7 @@
 															:count="1"
 															class="text-error"
 														>
-															<UIcon
+															<StarIcon
 																name="ph:knife-fill"
 																aria-hidden="true"
 															/>
@@ -254,7 +254,7 @@
 										aria-label="Previous automod feature"
 										@click="advanceFeatureIndex(-1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 									<label
 										v-for="(text, automodIndex) of texts"
@@ -277,7 +277,7 @@
 										aria-label="Next automod feature"
 										@click="advanceFeatureIndex(1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
@@ -286,7 +286,7 @@
 								<h3
 									class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
 								>
-									<UIcon
+									<StarIcon
 										name="ph:shield-fill"
 										class="size-6 text-primary"
 										aria-hidden="true"
@@ -308,7 +308,7 @@
 								</p>
 								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:arrow-u-up-left"
 											class="mt-0.5 size-4 shrink-0"
 											aria-hidden="true"
@@ -322,7 +322,7 @@
 										>
 									</li>
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:flag-fill"
 											class="mt-0.5 size-4 shrink-0 text-warning"
 											aria-hidden="true"
@@ -336,7 +336,7 @@
 										>
 									</li>
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:trash-simple-fill"
 											class="mt-0.5 size-4 shrink-0 text-error"
 											aria-hidden="true"
@@ -356,7 +356,7 @@
 								</p>
 								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:shield-check-duotone"
 											class="mt-0.5 size-4 shrink-0 text-primary"
 											aria-hidden="true"
@@ -372,7 +372,7 @@
 										>
 									</li>
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:hourglass-duotone"
 											class="mt-0.5 size-4 shrink-0"
 											aria-hidden="true"
@@ -398,7 +398,7 @@
 									class="showcase-surface-shield w-full overflow-hidden shadow-glow"
 								>
 									<div class="showcase-channel-header">
-										<UIcon
+										<StarIcon
 											name="ph:folder-fill"
 											class="size-4.5 shrink-0 text-muted"
 											aria-hidden="true"
@@ -485,7 +485,7 @@
 										aria-label="Previous logging event"
 										@click="advanceLoggingIndex(-1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 									<label
 										v-for="(event, loggingEventIndex) of loggingEvents"
@@ -508,7 +508,7 @@
 										aria-label="Next logging event"
 										@click="advanceLoggingIndex(1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
@@ -517,7 +517,7 @@
 								<h3
 									class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
 								>
-									<UIcon
+									<StarIcon
 										:name="
 											loggingEvents[loggingIndex]!.icon ??
 											'ph:binoculars-duotone'
@@ -543,7 +543,7 @@
 								</p>
 								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:magnifying-glass-duotone"
 											class="mt-0.5 size-4 shrink-0 text-primary"
 											aria-hidden="true"
@@ -558,7 +558,7 @@
 										>
 									</li>
 									<li class="flex items-start gap-2">
-										<UIcon
+										<StarIcon
 											name="ph:clock-duotone"
 											class="mt-0.5 size-4 shrink-0 text-info"
 											aria-hidden="true"
@@ -586,7 +586,7 @@
 										class="showcase-surface-shield w-full overflow-hidden shadow-glow"
 									>
 										<div class="showcase-channel-header">
-											<UIcon
+											<StarIcon
 												name="ph:folder-fill"
 												class="size-4.5 shrink-0 text-muted"
 												aria-hidden="true"
@@ -637,8 +637,8 @@
 										</div>
 									</SurfaceCard>
 
-									<UFieldGroup class="mt-4 self-start md:self-center">
-										<UButton
+									<StarFieldGroup class="mt-4 self-start md:self-center">
+										<StarButton
 											class="justify-center"
 											:color="moderationTemporary ? 'info' : 'neutral'"
 											:variant="moderationTemporary ? 'solid' : 'outline'"
@@ -650,8 +650,8 @@
 											"
 										>
 											Temporary
-										</UButton>
-										<UButton
+										</StarButton>
+										<StarButton
 											class="justify-center"
 											:color="moderationUndo ? 'success' : 'neutral'"
 											:variant="moderationUndo ? 'solid' : 'outline'"
@@ -663,8 +663,8 @@
 											"
 										>
 											Undo
-										</UButton>
-									</UFieldGroup>
+										</StarButton>
+									</StarFieldGroup>
 								</div>
 
 								<div class="flex flex-row items-center gap-1 lg:flex-col">
@@ -674,7 +674,7 @@
 										aria-label="Previous moderation action"
 										@click="advanceModerationIndex(-1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 									<label
 										v-for="(action, moderationActionIndex) of moderationActions"
@@ -698,7 +698,7 @@
 										aria-label="Next moderation action"
 										@click="advanceModerationIndex(1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
@@ -707,7 +707,7 @@
 								<h3
 									class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
 								>
-									<UIcon
+									<StarIcon
 										name="ph:shield-fill"
 										class="size-6 text-primary"
 										aria-hidden="true"
@@ -726,7 +726,7 @@
 								</p>
 
 								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
-									<UIcon
+									<StarIcon
 										name="ph:binoculars-duotone"
 										class="mr-1 inline size-4 text-primary"
 										aria-hidden="true"

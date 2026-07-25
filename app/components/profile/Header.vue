@@ -9,15 +9,15 @@
 			aria-hidden="true"
 		></div>
 		<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
-			<USkeleton
+			<StarSkeleton
 				class="h-32 w-32 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 md:h-40 md:w-40"
 			/>
 			<div class="space-y-2 text-center">
-				<USkeleton class="h-10 w-48" />
-				<USkeleton class="h-7 w-32" />
+				<StarSkeleton class="h-10 w-48" />
+				<StarSkeleton class="h-7 w-32" />
 				<div class="flex items-center justify-center gap-2">
-					<USkeleton class="h-6 w-16" />
-					<USkeleton class="h-6 w-32 rounded-md" />
+					<StarSkeleton class="h-6 w-16" />
+					<StarSkeleton class="h-6 w-32 rounded-md" />
 				</div>
 			</div>
 		</div>
@@ -30,7 +30,7 @@
 				<p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
 				<p class="text-sm text-base-content/60">
 					User ID:
-					<UButton
+					<StarButton
 						variant="outline"
 						size="xs"
 						color="neutral"
@@ -38,12 +38,12 @@
 						@click="$emit('copyUserId')"
 					>
 						<template #leading>
-							<UIcon
+							<StarIcon
 								:name="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
 							/>
 						</template>
 						{{ user.id }}
-					</UButton>
+					</StarButton>
 				</p>
 			</div>
 		</template>

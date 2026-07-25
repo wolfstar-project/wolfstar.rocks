@@ -1,7 +1,7 @@
 <template>
 	<div class="w-full flex-1 divide-y divide-accented">
 		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
+			<StarInput
 				v-model="query"
 				icon="i-lucide-search"
 				placeholder="Search logs..."
@@ -9,7 +9,7 @@
 				class="max-w-sm min-w-48"
 			/>
 			<span class="text-sm text-muted">Status</span>
-			<USelect
+			<StarSelect
 				v-model="filters.success"
 				:items="[
 					{ label: 'All', value: 'all' },
@@ -32,7 +32,7 @@
 			record-label="command"
 			@refresh="refresh()"
 		>
-			<UTable
+			<StarTable
 				ref="table"
 				:data="entries"
 				:columns="columns"
@@ -59,7 +59,7 @@
 					{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
 					{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
 				</p>
-				<UPagination
+				<StarPagination
 					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
 					:items-per-page="table?.tableApi?.getState().pagination.pageSize"
 					:total="table?.tableApi?.getFilteredRowModel().rows.length"
@@ -77,8 +77,8 @@ import type { APIGuildMember } from "discord-api-types/v10";
 import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 
-const UBadge = resolveComponent("UBadge");
-const UAvatar = resolveComponent("UAvatar");
+const StarBadge = resolveComponent("StarBadge");
+const StarAvatar = resolveComponent("StarAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
 
@@ -121,7 +121,7 @@ const columns: TableColumn<CommandLogData>[] = [
 			const metadata = row.original.metadata as { member: APIGuildMember } | null;
 			const member = metadata?.member;
 			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
+				h(StarAvatar, {
 					...(member ? auditLogMemberAvatar(member) : { src: undefined }),
 					size: "lg",
 				}),
@@ -151,7 +151,7 @@ const columns: TableColumn<CommandLogData>[] = [
 		header: "Status",
 		cell: ({ row }) =>
 			h(
-				UBadge,
+				StarBadge,
 				{
 					color: row.original.success ? "success" : "error",
 					variant: "subtle",

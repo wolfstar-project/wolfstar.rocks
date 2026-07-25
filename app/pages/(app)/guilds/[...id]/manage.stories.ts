@@ -23,8 +23,8 @@ const meta: Meta<typeof ManagePage> = {
 				setGuildSettings(createMockGuildData(MOCK_GUILD_ID));
 			},
 			template: `
-				<UDashboardGroup unit="rem">
-					<UDashboardSidebar
+				<StarDashboardGroup unit="rem">
+					<StarDashboardSidebar
 						id="default"
 						collapsible
 						resizable
@@ -35,7 +35,7 @@ const meta: Meta<typeof ManagePage> = {
 						}"
 					/>
 					<story />
-				</UDashboardGroup>
+				</StarDashboardGroup>
 			`,
 		}),
 	],

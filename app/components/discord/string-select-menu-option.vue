@@ -20,7 +20,7 @@
 			draggable="false"
 			class="discord-string-select-menu-option-emoji"
 		/>
-		<UIcon
+		<StarIcon
 			v-else-if="emojiIsIconify"
 			:name="option.emoji!"
 			class="discord-string-select-menu-option-emoji size-[1.375em]"
@@ -40,7 +40,7 @@
 			<strong class="discord-string-select-menu-option-label">{{ option.label }}</strong>
 			<span v-if="currentlyAtPath" class="discord-string-select-menu-option-description">
 				<span class="discord-string-select-menu-option-currently-at">Currently at:</span>
-				<UIcon
+				<StarIcon
 					name="ph:folder-fill"
 					class="discord-string-select-menu-option-path-folder size-3.5 shrink-0"
 					aria-hidden="true"

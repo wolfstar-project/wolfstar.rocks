@@ -4,7 +4,7 @@
 		:class="isScrolling ? 'ml-2 w-10 opacity-100' : 'pointer-events-none ml-0 w-0 opacity-0'"
 		:aria-hidden="!isScrolling"
 	>
-		<UButton
+		<StarButton
 			aria-label="scroll to top button"
 			icon="heroicons-arrow-up"
 			color="neutral"

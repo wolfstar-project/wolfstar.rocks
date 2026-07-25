@@ -31,7 +31,9 @@
 				</div>
 			</div>
 			<div>
-				<UButton :to="link" color="error" size="sm" class="sm:text-base">Join</UButton>
+				<StarButton :to="link" color="error" size="sm" class="sm:text-base"
+					>Join</StarButton
+				>
 			</div>
 		</div>
 	</div>

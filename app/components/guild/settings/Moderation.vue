@@ -12,7 +12,7 @@
 			@error="onError"
 		>
 			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<UFormField
+				<StarFormField
 					v-for="setting in ConfigurableModerationKeys"
 					:key="`form-field-${setting.key}`"
 					:label="setting.name"
@@ -21,8 +21,11 @@
 					<template #description>
 						<p class="text-sm text-base-content/70">{{ setting.description }}</p>
 					</template>
-					<USwitch v-model="state[setting.key]" :aria-label="`Toggle ${setting.name}`" />
-				</UFormField>
+					<StarSwitch
+						v-model="state[setting.key]"
+						:aria-label="`Toggle ${setting.name}`"
+					/>
+				</StarFormField>
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>

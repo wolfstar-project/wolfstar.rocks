@@ -36,7 +36,7 @@
 										class="discord-slash-command-suggestions-header"
 										role="presentation"
 									>
-										<UIcon
+										<StarIcon
 											name="discord:recently-used"
 											class="discord-slash-command-suggestions-header-icon"
 											aria-hidden="true"
@@ -70,7 +70,7 @@
 											<span
 												class="discord-slash-command-suggestions-sidebar-recent"
 											>
-												<UIcon
+												<StarIcon
 													name="discord:recently-used"
 													class="discord-slash-command-suggestions-sidebar-icon"
 													aria-hidden="true"

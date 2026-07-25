@@ -8,7 +8,12 @@
 				<div
 					class="mb-6 flex animate-fade-in-up-safe flex-wrap items-center justify-center gap-2"
 				>
-					<UBadge color="neutral" variant="subtle" size="sm" class="hero-overlay-badge">
+					<StarBadge
+						color="neutral"
+						variant="subtle"
+						size="sm"
+						class="hero-overlay-badge"
+					>
 						v{{ buildVersion }} ·
 						<NuxtTime
 							:datetime="buildTime"
@@ -16,9 +21,9 @@
 							day="numeric"
 							year="numeric"
 						/>
-					</UBadge>
-					<UBadge color="primary" variant="subtle" size="sm" label="Open Source" />
-					<UBadge color="success" variant="subtle" size="sm" label="Free Forever" />
+					</StarBadge>
+					<StarBadge color="primary" variant="subtle" size="sm" label="Open Source" />
+					<StarBadge color="success" variant="subtle" size="sm" label="Free Forever" />
 				</div>
 
 				<h1
@@ -49,7 +54,7 @@
 				<div
 					class="mt-8 flex animate-fade-in-up-safe flex-col gap-3 [animation-delay:0.15s] sm:flex-row sm:justify-center"
 				>
-					<UButton
+					<StarButton
 						:to="inviteUrl"
 						size="lg"
 						color="primary"
@@ -57,8 +62,8 @@
 						icon="ph:plus-circle-fill"
 					>
 						Add to Discord
-					</UButton>
-					<UButton
+					</StarButton>
+					<StarButton
 						to="#features"
 						size="lg"
 						color="neutral"
@@ -67,7 +72,7 @@
 						icon="ph:magnifying-glass-fill"
 					>
 						Explore features
-					</UButton>
+					</StarButton>
 				</div>
 			</div>
 		</Container>

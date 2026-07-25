@@ -1,16 +1,16 @@
 <template>
-	<UFormField :name="fieldName">
+	<StarFormField :name="fieldName">
 		<template #default>
-			<UTooltip v-if="tooltipTitle" :text="tooltipTitle">
+			<StarTooltip v-if="tooltipTitle" :text="tooltipTitle">
 				<slot></slot>
-			</UTooltip>
+			</StarTooltip>
 			<slot v-else></slot>
 		</template>
 
 		<template #help>
 			<slot name="help"></slot>
 		</template>
-	</UFormField>
+	</StarFormField>
 </template>
 
 <script setup lang="ts">

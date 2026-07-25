@@ -5,7 +5,7 @@
 		role="list"
 		aria-label="Command properties"
 	>
-		<UBadge
+		<StarBadge
 			v-if="command.permissionLevel > 0"
 			color="warning"
 			variant="outline"
@@ -15,12 +15,12 @@
 			class="border-warning-300 bg-warning-50 text-warning-800 dark:border-warning-700 dark:bg-warning-950/30 dark:text-warning-200 font-semibold"
 		>
 			<template #leading>
-				<UIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
+				<StarIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
 			</template>
 			{{ permissionLevelLabel }}
-		</UBadge>
+		</StarBadge>
 
-		<UBadge
+		<StarBadge
 			v-if="isGuildOnly"
 			color="info"
 			variant="outline"
@@ -30,12 +30,12 @@
 			class="border-info-300 bg-info-50 text-info-800 dark:border-info-700 dark:bg-info-950/30 dark:text-info-200 font-semibold"
 		>
 			<template #leading>
-				<UIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
+				<StarIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
 			</template>
 			{{ guildOnlyLabel }}
-		</UBadge>
+		</StarBadge>
 
-		<UBadge
+		<StarBadge
 			v-if="command.guarded"
 			color="error"
 			variant="outline"
@@ -45,10 +45,10 @@
 			class="border-error-300 bg-error-50 text-error-800 dark:border-error-700 dark:bg-error-950/30 dark:text-error-200 font-semibold"
 		>
 			<template #leading>
-				<UIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />
+				<StarIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />
 			</template>
 			Cannot be disabled
-		</UBadge>
+		</StarBadge>
 	</div>
 </template>
 

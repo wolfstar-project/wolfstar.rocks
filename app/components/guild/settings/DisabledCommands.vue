@@ -8,7 +8,7 @@
 			<div v-if="loading" class="space-y-4">
 				<div v-for="i in 3" :key="i" class="space-y-2">
 					<!-- Simulated accordion trigger skeleton -->
-					<USkeleton class="h-12 w-full" />
+					<StarSkeleton class="h-12 w-full" />
 
 					<!-- Commands grid skeleton -->
 					<div
@@ -20,10 +20,10 @@
 							class="flex items-center justify-between rounded-lg border border-base-200 p-3"
 						>
 							<div class="flex-1 space-y-2">
-								<USkeleton class="h-5 w-32" />
-								<USkeleton class="h-4 w-48" />
+								<StarSkeleton class="h-5 w-32" />
+								<StarSkeleton class="h-4 w-48" />
 							</div>
-							<USkeleton class="h-6 w-11 rounded-full" />
+							<StarSkeleton class="h-6 w-11 rounded-full" />
 						</div>
 					</div>
 				</div>
@@ -41,7 +41,7 @@
 				@error="onError"
 			>
 				<div class="space-y-4">
-					<UCollapsible
+					<StarCollapsible
 						v-for="category in categories"
 						:key="category"
 						:open="isCategoryOpen(category)"
@@ -49,7 +49,7 @@
 						@update:open="() => toggleCategory(category)"
 					>
 						<template #default="{ open }">
-							<UButton
+							<StarButton
 								color="neutral"
 								variant="ghost"
 								class="w-full justify-between border-b border-base-200"
@@ -57,13 +57,13 @@
 								<span class="truncate text-xl font-medium">{{ category }}</span>
 
 								<template #trailing>
-									<UIcon
+									<StarIcon
 										name="i-heroicons-chevron-down-20-solid"
 										class="ms-auto size-5 transform transition-transform duration-200"
 										:class="[open && 'rotate-180']"
 									/>
 								</template>
-							</UButton>
+							</StarButton>
 						</template>
 
 						<template #content>
@@ -83,7 +83,7 @@
 											{{ command.description }}
 										</p>
 									</div>
-									<USwitch
+									<StarSwitch
 										v-if="!isNullOrUndefined(getCommand(command.name))"
 										:model-value="getCommand(command.name)?.isEnabled"
 										:value="getCommand(command.name)?.name"
@@ -97,33 +97,33 @@
 
 							<Separator />
 							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
-								<UButton
+								<StarButton
 									color="success"
 									variant="solid"
 									size="sm"
 									@click="toggleAllInCategory(category, true)"
 								>
 									Enable all
-								</UButton>
-								<UButton
+								</StarButton>
+								<StarButton
 									color="warning"
 									variant="solid"
 									size="sm"
 									@click="toggleAllInCategory(category, false)"
 								>
 									Disable all
-								</UButton>
-								<UButton
+								</StarButton>
+								<StarButton
 									color="neutral"
 									variant="outline"
 									size="sm"
 									@click="resetCategory(category)"
 								>
 									Reset
-								</UButton>
+								</StarButton>
 							</div>
 						</template>
-					</UCollapsible>
+					</StarCollapsible>
 				</div>
 			</GuildSettingsForm>
 		</GuildSettingsSection>

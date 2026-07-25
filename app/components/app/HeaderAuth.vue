@@ -2,7 +2,7 @@
 	<BetterAuthState>
 		<template #default="{ loggedIn, user }">
 			<div v-if="loggedIn && user">
-				<LazyUDropdownMenu
+				<LazyStarDropdownMenu
 					:items
 					arrow
 					:content="{
@@ -22,7 +22,7 @@
 						aria-haspopup="menu"
 						tabindex="0"
 					>
-						<LazyUAvatar
+						<LazyStarAvatar
 							:src="user.image ?? undefined"
 							icon="lucide:image"
 							size="2xs"
@@ -34,10 +34,10 @@
 							>{{ user.name }}</span
 						>
 					</div>
-				</LazyUDropdownMenu>
+				</LazyStarDropdownMenu>
 			</div>
 			<div v-else :class="mobile ? 'flex justify-center' : undefined">
-				<UButton
+				<StarButton
 					label="Sign in"
 					size="md"
 					color="primary"
@@ -52,11 +52,11 @@
 		<template #placeholder>
 			<div class="flex items-center gap-2" :class="mobile ? 'justify-center' : undefined">
 				<template v-if="mobile">
-					<USkeleton class="h-10 w-36 rounded-lg" />
+					<StarSkeleton class="h-10 w-36 rounded-lg" />
 				</template>
 				<template v-else>
-					<USkeleton class="size-6 rounded-full" />
-					<USkeleton class="hidden h-4 w-16 sm:block" />
+					<StarSkeleton class="size-6 rounded-full" />
+					<StarSkeleton class="hidden h-4 w-16 sm:block" />
 				</template>
 			</div>
 		</template>

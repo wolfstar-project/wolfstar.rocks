@@ -583,7 +583,6 @@ export default defineConfig({
 						},
 						include: ["test/nuxt/**/*.{test,spec}.ts"],
 						name: "nuxt",
-						setupFiles: ["./test/nuxt/setup.ts"],
 						benchmark: { include: [] },
 					},
 				}),

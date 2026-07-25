@@ -65,9 +65,6 @@ importers:
       '@intlify/core-base':
         specifier: 11.4.6
         version: 11.4.6
-      '@intlify/shared':
-        specifier: 11.4.6
-        version: 11.4.6
       '@lunariajs/core':
         specifier: 0.1.1
         version: 0.1.1

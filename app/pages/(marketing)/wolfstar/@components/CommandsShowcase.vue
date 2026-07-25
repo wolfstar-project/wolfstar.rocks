@@ -1010,7 +1010,17 @@ onMounted(() => {
 	 */
 	.showcase-command-picker-apps-open {
 		--showcase-discord-composer-bar: oklch(22% 0.006 272);
+		@apply flex flex-col;
 		background-color: var(--showcase-discord-composer-bar);
+	}
+
+	/* Discord keeps the composer above the Apps sheet, which owns the bottom edge. */
+	.showcase-command-picker-apps-open :deep(.discord-message-composer) {
+		order: 1;
+	}
+
+	.showcase-command-picker-apps-open :deep(.discord-app-launcher) {
+		order: 2;
 	}
 
 	.showcase-app-launcher {

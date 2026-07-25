@@ -533,15 +533,16 @@
 									:promoted="entry.promoted"
 									@select="selectEntry(entry)"
 								/>
+								<!-- Discord mobile keeps the category View More inside the card. -->
+								<button
+									v-if="shouldShowCategoryViewMore(category)"
+									type="button"
+									class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
+									@click="openListView(category.id)"
+								>
+									View More
+								</button>
 							</div>
-							<button
-								v-if="shouldShowCategoryViewMore(category)"
-								type="button"
-								class="discord-app-launcher-view-more discord-app-launcher-view-more-footer"
-								@click="openListView(category.id)"
-							>
-								View More
-							</button>
 						</section>
 
 						<aside v-if="!normalizedQuery" class="discord-app-launcher-help">
@@ -1687,13 +1688,13 @@ onBeforeUnmount(() => {
 		--discord-app-launcher-nested: oklch(28% 0.007 272);
 		--discord-app-launcher-search-bg: oklch(18% 0.005 272);
 		--discord-app-launcher-header: oklch(95% 0.004 272);
-		--discord-app-launcher-link: oklch(72% 0.14 264);
+		/* Discord mobile links are lavender (#949cf7), not the desktop blue. */
+		--discord-app-launcher-link: oklch(70% 0.125 285);
 		--discord-app-launcher-help-bg: oklch(28% 0.007 272);
 		--discord-app-launcher-handle: oklch(62% 0.01 272);
 		--discord-app-launcher-promo-bar: oklch(12% 0.005 272);
-		--discord-app-launcher-help-btn: oklch(38% 0.01 272);
-		--discord-app-launcher-help-btn-text: oklch(92% 0.004 272);
-		--discord-app-launcher-help-btn-shadow: oklch(0% 0 0 / 0.45);
+		--discord-app-launcher-help-btn: oklch(43% 0.008 272);
+		--discord-app-launcher-help-btn-text: oklch(98% 0.002 272);
 		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
 		--discord-app-launcher-sheet-full: min(90dvh, 32rem);
 
@@ -1733,20 +1734,29 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-main-content {
-		@apply px-3 pb-5;
+		@apply px-4 pb-5;
 	}
 
 	.discord-app-launcher-search-header {
-		@apply px-3 pt-2 pb-3 shadow-none;
+		@apply px-4 pt-2 pb-3 shadow-none;
 		background-color: var(--discord-app-launcher-bg);
 	}
 
 	.discord-app-launcher-search-input {
-		@apply h-11 rounded-full border-0 text-[15px];
+		@apply h-12 rounded-full border-0 text-base;
+	}
+
+	/* The sheet scrolls without Discord's desktop scrollbar chrome. */
+	.discord-app-launcher-main-scroll :deep(.discord-scrollbar) {
+		grid-template-columns: minmax(0, 1fr) 0;
+	}
+
+	.discord-app-launcher-main-scroll :deep(.discord-scrollbar-track) {
+		display: none;
 	}
 
 	.discord-app-launcher-main-sections {
-		@apply gap-5;
+		@apply gap-6;
 	}
 
 	.discord-app-launcher-section {
@@ -1754,7 +1764,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-section-title {
-		@apply text-[17px] font-bold;
+		@apply text-[20px] font-bold;
 		color: var(--discord-app-launcher-header);
 	}
 
@@ -1775,15 +1785,40 @@ onBeforeUnmount(() => {
 		display: inline;
 	}
 
+	/*
+	 * Recents / In This Server are horizontal carousels: two tiles fill the
+	 * content box and the next one peeks through the bled right padding.
+	 */
 	.discord-app-launcher-recents-mobile,
 	.discord-app-launcher-server-mobile {
-		display: grid;
+		@apply -mr-4 flex gap-2 overflow-x-auto pr-4;
+		scrollbar-width: none;
+	}
+
+	.discord-app-launcher-recents-mobile::-webkit-scrollbar,
+	.discord-app-launcher-server-mobile::-webkit-scrollbar {
+		display: none;
+	}
+
+	.discord-app-launcher-recents-mobile > li,
+	.discord-app-launcher-server-mobile > li {
+		@apply shrink-0;
+		width: calc(50% - 0.25rem);
 	}
 
 	.discord-app-launcher-view-more-footer {
-		@apply mt-1 block w-full py-2.5 text-center text-[15px] font-semibold;
+		@apply relative block w-full py-3.5 text-center text-base font-semibold;
 		color: var(--discord-app-launcher-link);
 		text-decoration: none;
+	}
+
+	.discord-app-launcher-view-more-footer::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 3.75rem;
+		border-top: 1px solid var(--discord-app-launcher-divider);
 	}
 
 	.discord-app-launcher-view-more-footer:hover {
@@ -1791,7 +1826,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-tile {
-		@apply min-h-15 gap-2.5 rounded-[12px] px-2.5 py-2.5;
+		@apply min-h-15 gap-2 rounded-[12px] px-2 py-2.5;
 	}
 
 	.discord-app-launcher-tile-icon {
@@ -1799,7 +1834,11 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-tile-title {
-		@apply text-[15px] font-bold;
+		@apply text-[15px] font-semibold;
+	}
+
+	.discord-app-launcher-tile-subtitle {
+		@apply text-[12px];
 	}
 
 	.discord-app-launcher-promoted-grid {
@@ -1845,8 +1884,12 @@ onBeforeUnmount(() => {
 		@apply gap-3 px-3 py-3;
 	}
 
+	.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item-name) {
+		@apply font-semibold;
+	}
+
 	.discord-app-launcher-help {
-		@apply flex-col items-center gap-3 rounded-[12px] px-5 py-6 text-center;
+		@apply flex-col items-center gap-4 rounded-[12px] px-5 py-6 text-center;
 	}
 
 	.discord-app-launcher-help > span {
@@ -1854,18 +1897,17 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-help strong {
-		@apply text-[17px];
+		@apply text-[20px];
 	}
 
 	.discord-app-launcher-help > span > span {
-		@apply text-[13px] leading-relaxed;
+		@apply text-[15px] leading-relaxed;
 	}
 
 	.discord-app-launcher-help button {
-		@apply w-auto min-w-[8.5rem] rounded-full px-5 py-2 text-[14px] font-bold;
+		@apply w-auto min-w-[8.5rem] rounded-full px-6 py-3 text-base font-semibold shadow-none;
 		background-color: var(--discord-app-launcher-help-btn);
 		color: var(--discord-app-launcher-help-btn-text);
-		box-shadow: 0 2px 0 var(--discord-app-launcher-help-btn-shadow);
 	}
 
 	.discord-app-launcher-help button:hover {

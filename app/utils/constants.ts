@@ -710,8 +710,11 @@ export const DISCORD_APP_LAUNCHER_SHEET_DRAG_VELOCITY_PX_MS = 0.35;
  */
 export const DISCORD_APP_LAUNCHER_CATEGORY_PREVIEW_COUNT = 4;
 
-/** Mobile “In This Server” / Recents tile strip length. */
-export const DISCORD_APP_LAUNCHER_MOBILE_TILE_COUNT = 2;
+/**
+ * Mobile “In This Server” / Recents tile carousel length.
+ * Three keeps two tiles fully visible with the next one peeking, like Discord.
+ */
+export const DISCORD_APP_LAUNCHER_MOBILE_TILE_COUNT = 3;
 
 /**
  * Resolve the next sheet snap after a handle drag ends.

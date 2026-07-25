@@ -45,7 +45,7 @@ import {
 	AccordionTrigger,
 } from "reka-ui";
 
-export interface AccordionItemData {
+interface AccordionItemData {
 	label: string;
 	value?: string;
 	content?: string;

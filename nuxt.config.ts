@@ -37,8 +37,20 @@ export default defineNuxtConfig({
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
+		[
+			"vite-doctor/nuxt",
+			{
+				extends: "auto",
+			},
+		],
+		"nuxt-skill-hub",
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
+
+	skillHub: {
+		targets: ["claude-code", "cursor"],
+		generationMode: "prepare",
+	},
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid

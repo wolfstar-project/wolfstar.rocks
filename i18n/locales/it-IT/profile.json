@@ -1,0 +1,29 @@
+{
+	"profile": {
+		"title": "Profilo",
+		"seo_description": "Gestisci il tuo profilo, server e impostazioni",
+		"servers": "Server",
+		"manageable": "Gestibili",
+		"search_servers": "Cerca server...",
+		"search_servers_aria": "Cerca server",
+		"get_premium": "Ottieni Premium",
+		"premium": "Premium",
+		"motion_reduced": "Movimento ridotto",
+		"motion_enabled": "Movimento attivato",
+		"account_management": "Gestione account",
+		"refresh_servers": "Aggiorna server",
+		"clear_search": "Cancella ricerca",
+		"no_servers": "Nessun server trovato",
+		"no_matching_servers": "Nessun server corrispondente",
+		"loading_more": "Caricamento di altri server",
+		"error_loading_title": "Errore nel caricamento dei server",
+		"failed_to_load": "Impossibile caricare i server.",
+		"user_profile": "Profilo utente",
+		"user_id": "ID utente: {id}",
+		"default_avatar": "Avatar predefinito",
+		"email": "Email",
+		"members": "Membri",
+		"members_online": "Membri online"
+	},
+	"$schema": "../../schemas/profile.schema.json"
+}

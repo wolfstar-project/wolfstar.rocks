@@ -1,0 +1,38 @@
+{
+	"errors": {
+		"session_expired": "Sesión caducada",
+		"access_denied": "Acceso denegado",
+		"too_many_requests": "Demasiadas solicitudes",
+		"network_error": "Error de red",
+		"request_timeout": "Tiempo de espera agotado",
+		"unexpected": "Ocurrió un error inesperado.",
+		"check_connection": "Por favor, comprueba tu conexión a internet e inténtalo de nuevo.",
+		"rate_limit": "Se ha aplicado limitación de solicitudes para proteger el servicio.",
+		"server_error": "Algo salió mal en nuestro lado. Por favor, inténtalo más tarde.",
+		"if_persists": "Si el problema persiste, contacta con soporte.",
+		"retrying": "Reintentando..."
+	},
+	"feedback": {
+		"send": "Enviar comentarios",
+		"title": "Enviar comentarios",
+		"description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
+		"sent_title": "Comentarios enviados",
+		"sent_description": "Gracias por ayudar a mejorar WolfStar."
+	},
+	"pwa": {
+		"update_available": "Actualización disponible",
+		"install_app": "Instalar app",
+		"dismiss": "Cerrar",
+		"reload": "Recargar"
+	},
+	"select": {
+		"seconds": "Segundos",
+		"minutes": "Minutos",
+		"hours": "Horas",
+		"days": "Días",
+		"none": "Ninguno",
+		"search": "Buscar...",
+		"clear_selected": "Limpiar selección"
+	},
+	"$schema": "../../schemas/components.schema.json"
+}

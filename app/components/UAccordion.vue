@@ -1,10 +1,5 @@
 <template>
-	<AccordionRoot
-		v-model="openItems"
-		:type="type"
-		:class="cn('space-y-2', ui?.root)"
-		collapsible
-	>
+	<AccordionRoot v-model="openItems" :type="type" :class="cn('space-y-2', ui?.root)" collapsible>
 		<AccordionItem
 			v-for="(item, index) in normalizedItems"
 			:key="item.value"
@@ -41,8 +36,14 @@
 </template>
 
 <script setup lang="ts">
-import { AccordionContent, AccordionHeader, AccordionItem, AccordionRoot, AccordionTrigger } from "reka-ui";
 import { cn } from "cnfast";
+import {
+	AccordionContent,
+	AccordionHeader,
+	AccordionItem,
+	AccordionRoot,
+	AccordionTrigger,
+} from "reka-ui";
 
 export interface AccordionItemData {
 	label: string;

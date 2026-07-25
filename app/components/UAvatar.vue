@@ -1,10 +1,17 @@
 <template>
-	<div class="avatar" :class="{ 'avatar-placeholder': !src, online: chip === true || chip === 'online', offline: chip === 'offline' }">
+	<div
+		class="avatar"
+		:class="{
+			'avatar-placeholder': !src,
+			'online': chip === true || chip === 'online',
+			'offline': chip === 'offline',
+		}"
+	>
 		<div :class="cn('rounded-full', avatarSizeClass(size))">
 			<img v-if="src" :src="src" :alt="alt ?? ''" />
 			<span
 				v-else
-				class="flex h-full w-full items-center justify-center bg-neutral text-neutral-content text-xs font-medium"
+				class="flex h-full w-full items-center justify-center bg-neutral text-xs font-medium text-neutral-content"
 			>
 				{{ initials }}
 			</span>

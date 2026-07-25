@@ -1,6 +1,6 @@
 <template>
 	<div class="w-full">
-		<div role="tablist" class="tabs tabs-box" :class="ui?.list">
+		<div role="tablist" class="tabs-box tabs" :class="ui?.list">
 			<button
 				v-for="item in items"
 				:key="String(item.value)"
@@ -18,16 +18,8 @@
 		</div>
 		<div v-for="item in items" :key="`panel-${String(item.value)}`" class="mt-2">
 			<template v-if="String(item.value) === String(model)">
-				<slot
-					v-if="$slots.content"
-					name="content"
-					:item="item"
-				/>
-				<slot
-					v-else-if="item.slot && $slots[item.slot]"
-					:name="item.slot"
-					:item="item"
-				/>
+				<slot v-if="$slots.content" name="content" :item="item" />
+				<slot v-else-if="item.slot && $slots[item.slot]" :name="item.slot" :item="item" />
 				<slot
 					v-else-if="$slots[String(item.value)]"
 					:name="String(item.value)"

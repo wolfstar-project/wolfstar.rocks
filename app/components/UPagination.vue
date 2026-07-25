@@ -2,7 +2,7 @@
 	<nav class="join" :aria-label="ariaLabel">
 		<button
 			type="button"
-			class="btn btn-sm join-item"
+			class="btn join-item btn-sm"
 			:disabled="currentPage <= 1"
 			aria-label="Previous page"
 			@click="setPage(currentPage - 1)"
@@ -13,7 +13,7 @@
 			v-for="pageNumber in visiblePages"
 			:key="pageNumber"
 			type="button"
-			class="btn btn-sm join-item"
+			class="btn join-item btn-sm"
 			:class="{ 'btn-active': pageNumber === currentPage }"
 			:aria-current="pageNumber === currentPage ? 'page' : undefined"
 			@click="setPage(pageNumber)"
@@ -22,7 +22,7 @@
 		</button>
 		<button
 			type="button"
-			class="btn btn-sm join-item"
+			class="btn join-item btn-sm"
 			:disabled="currentPage >= pageCount"
 			aria-label="Next page"
 			@click="setPage(currentPage + 1)"

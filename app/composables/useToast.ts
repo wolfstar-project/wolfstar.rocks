@@ -26,7 +26,10 @@ let toastIdCounter = 0;
 
 export function useToast() {
 	const toasts = useState<Toast[]>("toasts", () => []);
-	const timers = useState<Record<string, ReturnType<typeof setTimeout>>>("toast-timers", () => ({}));
+	const timers = useState<Record<string, ReturnType<typeof setTimeout>>>(
+		"toast-timers",
+		() => ({}),
+	);
 
 	function clearTimer(id: string | number) {
 		const key = String(id);

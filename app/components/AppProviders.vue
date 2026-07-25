@@ -18,7 +18,9 @@
 				<Icon v-if="toast.icon" :name="toast.icon" class="size-5 shrink-0" />
 				<div class="min-w-0 flex-1">
 					<p v-if="toast.title" class="font-semibold">{{ toast.title }}</p>
-					<p v-if="toast.description" class="text-sm opacity-90">{{ toast.description }}</p>
+					<p v-if="toast.description" class="text-sm opacity-90">
+						{{ toast.description }}
+					</p>
 					<div v-if="toast.actions?.length" class="mt-2 flex flex-wrap gap-2">
 						<UButton
 							v-for="(action, index) in toast.actions"
@@ -35,7 +37,7 @@
 				</div>
 				<button
 					type="button"
-					class="btn btn-ghost btn-xs btn-circle"
+					class="btn btn-circle btn-ghost btn-xs"
 					:aria-label="`Dismiss ${toast.title ?? 'notification'}`"
 					@click="remove(toast.id)"
 				>

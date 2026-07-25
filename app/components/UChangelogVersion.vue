@@ -7,7 +7,12 @@
 			</div>
 			<div v-if="authors?.length" class="flex flex-wrap gap-2">
 				<slot name="authors">
-					<UUser v-for="(author, index) in authors" :key="index" v-bind="author" size="sm" />
+					<UUser
+						v-for="(author, index) in authors"
+						:key="index"
+						v-bind="author"
+						size="sm"
+					/>
 				</slot>
 			</div>
 			<figure v-if="image?.src" class="overflow-hidden rounded-lg">

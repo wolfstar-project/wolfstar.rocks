@@ -17,7 +17,12 @@
 			<li v-else :class="item.class">
 				<details v-if="item.children?.length && !collapsed" :open="item.active">
 					<summary>
-						<Icon v-if="item.icon" :name="item.icon" class="size-4" aria-hidden="true" />
+						<Icon
+							v-if="item.icon"
+							:name="item.icon"
+							class="size-4"
+							aria-hidden="true"
+						/>
 						<span v-if="!collapsed">{{ item.label }}</span>
 					</summary>
 					<ul :class="ui?.childList">
@@ -49,22 +54,44 @@
 					v-else-if="item.to || item.href"
 					:to="item.to ?? item.href"
 					:target="item.target"
-					:class="cn(ui?.link, variant === 'link' && 'btn btn-ghost btn-sm', item.active && 'active')"
+					:class="
+						cn(
+							ui?.link,
+							variant === 'link' && 'btn btn-ghost btn-sm',
+							item.active && 'active',
+						)
+					"
 					:aria-label="collapsed ? item.label : undefined"
 					@click="item.onSelect?.($event)"
 				>
-					<Icon v-if="item.icon" :name="item.icon" class="size-4 shrink-0" aria-hidden="true" />
+					<Icon
+						v-if="item.icon"
+						:name="item.icon"
+						class="size-4 shrink-0"
+						aria-hidden="true"
+					/>
 					<span v-if="!collapsed">{{ item.label }}</span>
 				</NuxtLink>
 				<button
 					v-else
 					type="button"
-					:class="cn(ui?.link, variant === 'link' && 'btn btn-ghost btn-sm', item.active && 'active')"
+					:class="
+						cn(
+							ui?.link,
+							variant === 'link' && 'btn btn-ghost btn-sm',
+							item.active && 'active',
+						)
+					"
 					:disabled="item.disabled || undefined"
 					:aria-label="collapsed ? item.label : undefined"
 					@click="item.onSelect?.($event)"
 				>
-					<Icon v-if="item.icon" :name="item.icon" class="size-4 shrink-0" aria-hidden="true" />
+					<Icon
+						v-if="item.icon"
+						:name="item.icon"
+						class="size-4 shrink-0"
+						aria-hidden="true"
+					/>
 					<span v-if="!collapsed">{{ item.label }}</span>
 				</button>
 			</li>

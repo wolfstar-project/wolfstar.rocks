@@ -5,14 +5,17 @@
 			<li v-for="(link, index) in flatLinks" :key="index">
 				<a
 					:href="`#${link.id}`"
-					class="link link-hover block py-0.5 text-muted"
+					class="block link py-0.5 text-muted link-hover"
 					:class="{ 'font-medium text-primary': highlight }"
 				>
 					{{ link.text }}
 				</a>
-				<ul v-if="link.children?.length" class="ms-3 space-y-1 border-s border-base-200 ps-3">
+				<ul
+					v-if="link.children?.length"
+					class="ms-3 space-y-1 border-s border-base-200 ps-3"
+				>
 					<li v-for="(child, childIndex) in link.children" :key="childIndex">
-						<a :href="`#${child.id}`" class="link link-hover block py-0.5 text-muted">
+						<a :href="`#${child.id}`" class="block link py-0.5 text-muted link-hover">
 							{{ child.text }}
 						</a>
 					</li>

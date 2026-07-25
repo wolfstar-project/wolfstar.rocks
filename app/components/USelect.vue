@@ -1,6 +1,6 @@
 <template>
 	<select
-		class="select select-bordered w-full"
+		class="select-bordered select w-full"
 		:value="normalizedValue"
 		:disabled="disabled"
 		:name="name"
@@ -44,7 +44,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
 	"update:modelValue": [value: string | number | null];
-	change: [value: string | number | null];
+	"change": [value: string | number | null];
 }>();
 
 function flattenItems(

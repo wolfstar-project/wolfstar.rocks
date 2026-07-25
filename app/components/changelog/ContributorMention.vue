@@ -28,7 +28,7 @@
 				</div>
 
 				<dl
-					class="mt-3 grid grid-cols-3 divide-x divide-default border-t border-default pt-3 text-center"
+					class="divide-default mt-3 grid grid-cols-3 divide-x border-t border-default pt-3 text-center"
 				>
 					<div class="px-1.5">
 						<dt class="text-xs leading-tight text-muted">Commits</dt>

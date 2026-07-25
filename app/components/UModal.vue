@@ -6,7 +6,7 @@
 		<DialogPortal>
 			<DialogOverlay class="fixed inset-0 z-50 bg-base-300/60" />
 			<DialogContent
-				class="modal modal-open fixed inset-0 z-50 flex items-center justify-center p-4"
+				class="modal-open modal fixed inset-0 z-50 flex items-center justify-center p-4"
 				:aria-describedby="description ? undefined : undefined"
 				@escape-key-down="onDismiss"
 				@pointer-down-outside="onDismiss"
@@ -15,7 +15,9 @@
 				<div class="modal-box max-h-[90vh] w-full max-w-lg overflow-y-auto">
 					<slot name="content">
 						<slot name="header">
-							<DialogTitle v-if="title" class="text-lg font-bold">{{ title }}</DialogTitle>
+							<DialogTitle v-if="title" class="text-lg font-bold">{{
+								title
+							}}</DialogTitle>
 							<DialogDescription v-if="description" class="py-2 text-sm opacity-80">
 								{{ description }}
 							</DialogDescription>
@@ -29,7 +31,7 @@
 					</slot>
 					<DialogClose
 						v-if="dismissible !== false"
-						class="btn btn-ghost btn-sm btn-circle absolute top-2 right-2"
+						class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm"
 						aria-label="Close"
 					>
 						<Icon name="lucide:x" class="size-4" />

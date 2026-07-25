@@ -1,6 +1,6 @@
 <template>
 	<textarea
-		class="textarea textarea-bordered w-full"
+		class="textarea-bordered textarea w-full"
 		:value="modelValue"
 		:placeholder="placeholder"
 		:disabled="disabled"

@@ -128,7 +128,10 @@ export function defineShortcuts(config: MaybeRefOrGetter<ShortcutsConfig>) {
 			if (event.ctrlKey !== shortcut.ctrlKey) continue;
 			if (event.altKey !== shortcut.altKey) continue;
 			if (
-				(alphabetKey || shiftableKey || shortcut.shiftKey || (event.shiftKey && (event.metaKey || event.ctrlKey))) &&
+				(alphabetKey ||
+					shiftableKey ||
+					shortcut.shiftKey ||
+					(event.shiftKey && (event.metaKey || event.ctrlKey))) &&
 				event.shiftKey !== shortcut.shiftKey
 			) {
 				continue;

@@ -434,9 +434,16 @@ export default defineNuxtConfig({
 		},
 		families: [
 			{
-				display: "swap",
+				// Geist is the global body/heading font and is always above the
+				// fold. font-display: optional stops the browser from swapping the
+				// font in after first paint, which was reflowing text and shifting
+				// layout (CLS 0.174 on /commands, where the reflow pushed the whole
+				// results block). preload keeps Geist available within the short
+				// block period so it still renders instead of falling back.
+				display: "optional",
 				global: true,
 				name: "Geist",
+				preload: true,
 				provider: "local",
 				weights: [400, 500, 600, 700],
 			},

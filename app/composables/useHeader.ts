@@ -65,13 +65,19 @@ export function useHeader() {
 		{
 			children: [
 				{
+					description: "Tools to help you moderate your server",
 					label: "Moderation Tools",
+					to: "#moderation-tools",
 				},
 				{
+					description: "Track and log events in your server",
 					label: "Advanced Logging",
+					to: "#advanced-logging",
 				},
 				{
+					description: "Searchable moderation history for every action",
 					label: "Moderation Logs",
+					to: "#moderation-logs",
 				},
 			],
 			label: "Features",

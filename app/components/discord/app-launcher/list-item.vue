@@ -119,7 +119,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl;
+	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
 	background-color: var(--discord-app-launcher-list-item-icon-bg);
 }
 

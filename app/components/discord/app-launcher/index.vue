@@ -1053,7 +1053,8 @@ onBeforeUnmount(() => {
 	--discord-app-launcher-help-bg: oklch(28.84% 0.007 272.93);
 	--discord-app-launcher-wolfstar-bg: oklch(0% 0 0);
 
-	@apply flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-lg border font-whitney;
+	/* Explicit radii: the app theme remaps Tailwind's rounded-* scale to 16px. */
+	@apply flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-[8px] border font-whitney;
 	background-color: var(--discord-app-launcher-bg);
 	border-color: var(--discord-app-launcher-divider);
 	color: var(--discord-app-launcher-text);
@@ -1088,7 +1089,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-search-input {
-	@apply h-11 w-full rounded-lg border-2 bg-transparent py-0 pr-3 pl-11 text-base outline-none;
+	@apply h-11 w-full rounded-[8px] border-2 bg-transparent py-0 pr-3 pl-11 text-base outline-none;
 	appearance: none;
 	background-color: var(--discord-app-launcher-search-bg);
 	border-color: transparent;
@@ -1192,8 +1193,13 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-server-list {
-	@apply flex flex-col overflow-hidden rounded-lg;
+	@apply flex flex-col overflow-hidden rounded-[8px];
 	background-color: var(--discord-app-launcher-nested);
+}
+
+/* Bots listed for the server use circular avatars; game/activity rows stay squircles. */
+.discord-app-launcher-server-list-desktop :deep(.discord-app-launcher-list-item-icon) {
+	@apply rounded-full;
 }
 
 .discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
@@ -1219,7 +1225,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo {
-	@apply relative flex h-[7.75rem] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-2xl border-0 p-0 text-left;
+	@apply relative flex h-[7.75rem] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-[8px] border-0 p-0 text-left;
 }
 
 .discord-app-launcher-promo:focus-visible {
@@ -1364,7 +1370,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo {
-	@apply h-auto items-stretch justify-start rounded-lg p-0;
+	@apply h-auto items-stretch justify-start rounded-[8px] p-0;
 	background-color: var(--discord-app-launcher-nested);
 }
 
@@ -1492,7 +1498,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl text-xl;
+	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] text-xl;
 	color: var(--discord-app-launcher-wordle-title);
 }
 
@@ -1520,7 +1526,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-help {
-	@apply flex items-center justify-between gap-4 rounded-lg px-4 py-3;
+	@apply flex items-center justify-between gap-4 rounded-[8px] px-4 py-3;
 	background-color: var(--discord-app-launcher-help-bg);
 }
 
@@ -1556,7 +1562,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-tile {
-	@apply flex w-full cursor-pointer items-center gap-2.5 rounded-xl border-0 px-2.5 py-2.5 text-left;
+	@apply flex w-full cursor-pointer items-center gap-2.5 rounded-[12px] border-0 px-2.5 py-2.5 text-left;
 	background-color: var(--discord-app-launcher-nested);
 	color: var(--discord-app-launcher-text);
 }
@@ -1570,7 +1576,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-tile-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-xl;
+	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
 	background-color: var(--discord-app-launcher-icon-bg);
 }
 
@@ -1643,7 +1649,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-list-body {
-	@apply mx-4 mb-4 flex flex-col overflow-hidden rounded-lg;
+	@apply mx-4 mb-4 flex flex-col overflow-hidden rounded-[8px];
 	background-color: var(--discord-app-launcher-nested);
 }
 
@@ -1691,7 +1697,7 @@ onBeforeUnmount(() => {
 		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
 		--discord-app-launcher-sheet-full: min(90dvh, 32rem);
 
-		@apply relative w-full max-w-none rounded-t-2xl rounded-b-none border-0;
+		@apply relative w-full max-w-none rounded-t-[16px] rounded-b-none border-0;
 		height: var(--discord-app-launcher-sheet-half);
 		max-height: var(--discord-app-launcher-sheet-full);
 		/* No upward drop-shadow; matching ring seals rounded-corner AA bleed. */
@@ -1785,11 +1791,11 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-tile {
-		@apply min-h-15 gap-3 rounded-xl px-3 py-3;
+		@apply min-h-15 gap-2.5 rounded-[12px] px-2.5 py-2.5;
 	}
 
 	.discord-app-launcher-tile-icon {
-		@apply size-11;
+		@apply size-10;
 	}
 
 	.discord-app-launcher-tile-title {
@@ -1801,7 +1807,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-promo {
-		@apply overflow-hidden rounded-xl;
+		@apply overflow-hidden rounded-[12px];
 	}
 
 	.discord-app-launcher-promo-visual {
@@ -1832,7 +1838,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-category .discord-app-launcher-server-list {
-		@apply rounded-[14px];
+		@apply rounded-[12px];
 	}
 
 	.discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
@@ -1840,7 +1846,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-help {
-		@apply flex-col items-center gap-3 rounded-[14px] px-5 py-6 text-center;
+		@apply flex-col items-center gap-3 rounded-[12px] px-5 py-6 text-center;
 	}
 
 	.discord-app-launcher-help > span {

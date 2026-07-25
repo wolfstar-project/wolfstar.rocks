@@ -1,5 +1,5 @@
 <template>
-	<header class="navbar bg-base-100 px-4" :class="attrs.class" v-bind="restAttrs">
+	<header class="navbar bg-base-100 px-4" :class="attrClass" v-bind="restAttrs">
 		<div class="navbar-start gap-2">
 			<button
 				type="button"
@@ -61,6 +61,7 @@ watch(open, (isOpen) => {
 });
 
 const attrs = useAttrs();
+const attrClass = computed(() => attrs.class);
 const restAttrs = computed(() => {
 	const { class: _class, ...rest } = attrs;
 	return rest;

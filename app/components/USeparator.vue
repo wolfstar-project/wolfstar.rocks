@@ -7,7 +7,7 @@
 	>
 		<slot />
 	</div>
-	<hr v-else role="separator" class="divider" :class="attrs.class" />
+	<hr v-else class="divider" :class="attrs.class" />
 </template>
 
 <script setup lang="ts">

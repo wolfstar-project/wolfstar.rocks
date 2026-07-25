@@ -2,7 +2,7 @@
 	<UContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
 		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
 			<h1
-				class="whitespace-nowrap text-4xl font-bold tracking-tight text-base-content/90 md:text-5xl"
+				class="text-4xl font-bold tracking-tight whitespace-nowrap text-base-content/90 md:text-5xl"
 			>
 				WolfStar Commands
 			</h1>

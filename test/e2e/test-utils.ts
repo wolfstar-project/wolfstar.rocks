@@ -30,6 +30,33 @@ function failUnmockedRequest(route: Route, apiName: string): never {
 	throw error;
 }
 
+/**
+ * Playwright can dispose in-flight routes during navigation/teardown while an
+ * async handler is still running. Fulfilling that route then throws
+ * "Route is already handled!" — a benign race (request already aborted).
+ */
+function isRouteAlreadyHandledError(error: unknown): boolean {
+	return error instanceof Error && error.message.includes("Route is already handled");
+}
+
+async function fulfillRouteSafely(
+	route: Route,
+	response: { status: number; contentType: string; body: string },
+): Promise<void> {
+	try {
+		await route.fulfill({
+			status: response.status,
+			contentType: response.contentType,
+			body: response.body,
+		});
+	} catch (error) {
+		if (isRouteAlreadyHandledError(error)) {
+			return;
+		}
+		throw error;
+	}
+}
+
 async function setupRouteMocking(page: Page): Promise<void> {
 	for (const routeDef of mockRoutes.routes) {
 		await page.route(routeDef.pattern, async (route: Route) => {
@@ -37,11 +64,7 @@ async function setupRouteMocking(page: Page): Promise<void> {
 			const result = mockRoutes.matchRoute(url);
 
 			if (result) {
-				await route.fulfill({
-					status: result.response.status,
-					contentType: result.response.contentType,
-					body: result.response.body,
-				});
+				await fulfillRouteSafely(route, result.response);
 			} else {
 				failUnmockedRequest(route, routeDef.name);
 			}

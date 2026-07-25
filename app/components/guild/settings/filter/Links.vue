@@ -231,7 +231,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { LinksFilterSchema, type LinksFilter } from "#shared/schemas";
 
 const { guildSettings } = useGuildSettings();

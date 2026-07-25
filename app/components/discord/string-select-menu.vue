@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import type { ShortcutsConfig } from "@nuxt/ui/composables";
+import type { ShortcutsConfig } from "#shared/types/ui";
 import type { CSSProperties } from "vue";
 import type { StringSelectMenuOption } from "~/types/discord";
 

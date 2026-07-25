@@ -64,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-import type { DropdownMenuItem } from "@nuxt/ui";
+import type { DropdownMenuItem } from "#shared/types/ui";
 
 const { mobile = false } = defineProps<{
 	/** Renders a drawer-friendly variant for the mobile navigation panel. */

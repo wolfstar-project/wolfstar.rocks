@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 

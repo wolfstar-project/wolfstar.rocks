@@ -1,5 +1,5 @@
 <template>
-	<UApp
+	<AppProviders
 		:toaster="{
 			expand: true,
 			duration: 5000,
@@ -11,7 +11,7 @@
 		<NuxtLayout>
 			<NuxtPage />
 		</NuxtLayout>
-	</UApp>
+	</AppProviders>
 </template>
 
 <script setup lang="ts">

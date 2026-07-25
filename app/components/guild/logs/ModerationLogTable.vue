@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { TableColumn } from "@nuxt/ui";
+import type { TableColumn } from "#shared/types/ui";
 import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
 import { formatTimeAgo } from "@vueuse/core";
 

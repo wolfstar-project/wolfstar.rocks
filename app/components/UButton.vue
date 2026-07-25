@@ -1,35 +1,80 @@
 <template>
-	<component
-		:is="linkComponent"
-		v-bind="linkBindings"
+	<NuxtLink
+		v-if="to"
+		:to="to"
+		:target="target"
+		:external="external"
+		:class="classes"
+		:aria-disabled="isDisabled || undefined"
+		:aria-busy="loading || undefined"
+		:tabindex="isDisabled ? -1 : undefined"
+		@click="onClick"
+	>
+		<span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
+		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
+		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
+		<span v-if="label || $slots.default" class="truncate">
+			<slot>{{ label }}</slot>
+		</span>
+		<slot name="trailing">
+			<Icon
+				v-if="trailingIcon"
+				:name="trailingIcon"
+				class="size-4 shrink-0"
+				aria-hidden="true"
+			/>
+		</slot>
+	</NuxtLink>
+	<a
+		v-else-if="href"
+		:href="href"
+		:target="target"
+		:rel="target === '_blank' ? 'noopener noreferrer' : undefined"
+		:class="classes"
+		:aria-disabled="isDisabled || undefined"
+		:aria-busy="loading || undefined"
+		:tabindex="isDisabled ? -1 : undefined"
+		@click="onClick"
+	>
+		<span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
+		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
+		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
+		<span v-if="label || $slots.default" class="truncate">
+			<slot>{{ label }}</slot>
+		</span>
+		<slot name="trailing">
+			<Icon
+				v-if="trailingIcon"
+				:name="trailingIcon"
+				class="size-4 shrink-0"
+				aria-hidden="true"
+			/>
+		</slot>
+	</a>
+	<button
+		v-else
+		:type="type"
 		:class="classes"
 		:disabled="isDisabled || undefined"
-		:type="linkComponent === 'button' ? type : undefined"
 		:aria-disabled="isDisabled || undefined"
 		:aria-busy="loading || undefined"
 		@click="onClick"
 	>
 		<span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
-		<UAvatar
-			v-else-if="avatar"
-			v-bind="avatar"
-			size="xs"
-			class="shrink-0"
-		/>
+		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">
 			<slot>{{ label }}</slot>
 		</span>
-		<template v-if="$slots.trailing">
-			<slot name="trailing" />
-		</template>
-		<Icon
-			v-else-if="trailingIcon"
-			:name="trailingIcon"
-			class="size-4 shrink-0"
-			aria-hidden="true"
-		/>
-	</component>
+		<slot name="trailing">
+			<Icon
+				v-if="trailingIcon"
+				:name="trailingIcon"
+				class="size-4 shrink-0"
+				aria-hidden="true"
+			/>
+		</slot>
+	</button>
 </template>
 
 <script setup lang="ts">
@@ -62,8 +107,6 @@ const props = withDefaults(
 		active?: boolean;
 		external?: boolean;
 		avatar?: { src?: string; alt?: string };
-		/** Present when callers spread a user object onto the button. */
-		name?: string;
 		ui?: Record<string, string>;
 	}>(),
 	{
@@ -77,30 +120,6 @@ const props = withDefaults(
 const emit = defineEmits<{ click: [event: MouseEvent] }>();
 
 const isDisabled = computed(() => props.disabled || props.loading);
-
-const linkComponent = computed(() => {
-	if (props.to) return resolveComponent("NuxtLink");
-	if (props.href) return "a";
-	return "button";
-});
-
-const linkBindings = computed(() => {
-	if (props.to) {
-		return {
-			to: props.to,
-			target: props.target,
-			external: props.external,
-		};
-	}
-	if (props.href) {
-		return {
-			href: props.href,
-			target: props.target,
-			rel: props.target === "_blank" ? "noopener noreferrer" : undefined,
-		};
-	}
-	return {};
-});
 
 const classes = computed(() =>
 	cn(

@@ -45,10 +45,20 @@
 						</li>
 					</ul>
 				</details>
-				<component
-					:is="item.to || item.href ? resolveComponent('NuxtLink') : 'button'"
+				<NuxtLink
+					v-else-if="item.to || item.href"
+					:to="item.to ?? item.href"
+					:target="item.target"
+					:class="cn(ui?.link, variant === 'link' && 'btn btn-ghost btn-sm', item.active && 'active')"
+					:aria-label="collapsed ? item.label : undefined"
+					@click="item.onSelect?.($event)"
+				>
+					<Icon v-if="item.icon" :name="item.icon" class="size-4 shrink-0" aria-hidden="true" />
+					<span v-if="!collapsed">{{ item.label }}</span>
+				</NuxtLink>
+				<button
 					v-else
-					v-bind="item.to || item.href ? { to: item.to ?? item.href, target: item.target } : { type: 'button' }"
+					type="button"
 					:class="cn(ui?.link, variant === 'link' && 'btn btn-ghost btn-sm', item.active && 'active')"
 					:disabled="item.disabled || undefined"
 					:aria-label="collapsed ? item.label : undefined"
@@ -56,7 +66,7 @@
 				>
 					<Icon v-if="item.icon" :name="item.icon" class="size-4 shrink-0" aria-hidden="true" />
 					<span v-if="!collapsed">{{ item.label }}</span>
-				</component>
+				</button>
 			</li>
 		</template>
 	</ul>

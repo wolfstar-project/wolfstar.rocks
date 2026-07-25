@@ -158,6 +158,13 @@
 	}
 
 	html {
+		/* Declare the base font as a literal family (not only via the
+		   --default-font-family CSS variable) so @nuxt/fonts injects its
+		   metric-adjusted (size-adjust) fallback @font-face. Without this the
+		   Geist web font swaps in with mismatched glyph metrics, reflowing text
+		   and shifting layout (CLS). @nuxt/ui previously emitted this
+		   declaration; it was lost when the UI stack was migrated. */
+		font-family: "Geist", ui-sans-serif, system-ui, sans-serif;
 		scrollbar-gutter: stable;
 	}
 

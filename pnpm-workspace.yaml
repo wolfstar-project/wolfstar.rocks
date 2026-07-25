@@ -24,13 +24,17 @@ overrides:
     discord-api-types: 0.38.48
     # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
     # vue copies make VueUse and app refs incompatible during typecheck
-    vue: 3.5.38
+    vue: 3.5.40
+    # Nuxt 4.5 needs unhead v3; @nuxt/ui still peers v2 (missing legacyPlugins).
+    "@unhead/vue": 3.2.3
+    unhead: 3.2.3
     sharp: 0.34.5
-    vite: npm:@voidzero-dev/vite-plus-core@0.1.24
-    vitest: npm:@voidzero-dev/vite-plus-test@0.1.24
+    # Vite+ 0.2.x: alias vite to core; pin vitest to the bundled version.
+    vite: npm:@voidzero-dev/vite-plus-core@0.2.5
+    vitest: 4.1.10
 
 patchedDependencies:
-    "@nuxt/test-utils": patches/@nuxt__test-utils.patch
+    "@nuxt/test-utils@4.0.3": patches/@nuxt__test-utils@4.0.3.patch
 
 catalogs:
     msw:
@@ -77,3 +81,7 @@ minimumReleaseAgeExclude:
     - "@nuxtjs/*"
     - "nuxt"
     - "nuxt-*"
+    - "@unhead/*"
+    - "unhead"
+    - "@voidzero-dev/*"
+    - "vite-plus"

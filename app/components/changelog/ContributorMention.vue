@@ -1,5 +1,6 @@
 <template>
 	<UTooltip
+		v-model:open="open"
 		:text="cardLabel"
 		:delay-duration="200"
 		:content="{ side: 'top', align: 'start', sideOffset: 8 }"
@@ -65,6 +66,8 @@ const props = defineProps<{
 	hasContributed: boolean;
 	avatarSrc: string;
 }>();
+
+const open = defineModel<boolean>("open", { default: false });
 
 const profileUrl = computed(() => `https://github.com/${props.username}`);
 const cardLabel = computed(() => `${props.name} (@${props.username}) contributor details`);

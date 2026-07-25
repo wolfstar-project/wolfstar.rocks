@@ -55,6 +55,8 @@ interface AccordionItemData {
 	disabled?: boolean;
 }
 
+type NormalizedAccordionItem = AccordionItemData & { value: string };
+
 const props = withDefaults(
 	defineProps<{
 		items?: AccordionItemData[];
@@ -69,12 +71,12 @@ const props = withDefaults(
 
 const openItems = ref<string[] | string>(props.type === "single" ? "" : []);
 
-const normalizedItems = computed<AccordionItemData[]>(() => {
-	const normalized: AccordionItemData[] = [];
+const normalizedItems = computed<NormalizedAccordionItem[]>(() => {
+	const normalized: NormalizedAccordionItem[] = [];
 	let index = 0;
 	for (const item of props.items ?? []) {
 		const value = item.value ?? String(index);
-		normalized.push(value === item.value ? item : { ...item, value });
+		normalized.push({ ...item, value });
 		index += 1;
 	}
 	return normalized;

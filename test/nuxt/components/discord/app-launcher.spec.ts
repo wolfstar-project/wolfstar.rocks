@@ -316,12 +316,14 @@ describe("DiscordAppLauncher", () => {
 		// ASSERT
 		expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
 		expect(wrapper.find(".discord-app-launcher--sheet-full").exists()).toBe(true);
+		expect(wrapper.emitted("update:sheetSnap")?.at(-1)).toEqual(["full"]);
 
 		// ACT — collapse only, never close
 		await handle.trigger("keydown", { key: "ArrowDown" });
 
 		// ASSERT
 		expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
+		expect(wrapper.emitted("update:sheetSnap")?.at(-1)).toEqual(["half"]);
 		expect(wrapper.props("open")).toBe(true);
 		expect(wrapper.emitted("close")).toBeUndefined();
 	});
@@ -335,6 +337,7 @@ describe("DiscordAppLauncher", () => {
 
 		// ASSERT
 		expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
+		expect(wrapper.emitted("update:sheetSnap")?.at(-1)).toEqual(["full"]);
 	});
 
 	it("shows category View More only when entries overflow the preview (positive)", async () => {

@@ -41,6 +41,21 @@ export interface DiscordChatMessage {
 
 export type DiscordMemberPresence = "online" | "idle" | "dnd" | "offline";
 
+/**
+ * Member-list view-model for Discord UI components.
+ *
+ * Not a raw REST Guild Member object. Marketing fixtures should be authored as
+ * Discord API–shaped data (guild member + user + optional presence) and mapped
+ * via `mapDiscordMemberListMembers` in `~/utils/constants`.
+ *
+ * Field origins (Discord docs):
+ * - `id` / `name` ← User.id + nick | global_name | username
+ * - `app` ← User.bot
+ * - `verified` ← User.public_flags & VerifiedBot (not User.verified / email)
+ * - `http` ← User.public_flags & BotHTTPInteractions
+ * - `presence` / `description` ← Presence Update status + Activity
+ * - `role` / `pinned` / `color` ← Role name, hoist, and showcase uiColor
+ */
 export interface DiscordMemberListMember {
 	id: string;
 	name: string;

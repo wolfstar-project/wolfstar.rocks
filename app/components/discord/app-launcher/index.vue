@@ -669,6 +669,8 @@ const {
 } = defineProps<AppLauncherProps>();
 
 const open = defineModel<boolean>("open", { default: false });
+/** Mobile sheet snap — parent can hide the composer when this is `full`. */
+const sheetSnap = defineModel<DiscordAppLauncherSheetSnap>("sheetSnap", { default: "half" });
 
 const emit = defineEmits<AppLauncherEmits>();
 
@@ -680,7 +682,6 @@ const backRef = useTemplateRef<HTMLButtonElement>("backRef");
 
 const searchQuery = ref("");
 const activeView = ref<string | null>(null);
-const sheetSnap = ref<DiscordAppLauncherSheetSnap>(initialSheetSnap);
 const sheetDragging = ref(false);
 const sheetDragHeightPx = ref<number | null>(null);
 let returnFocusElement: HTMLElement | null = null;
@@ -825,6 +826,11 @@ function resetSheetSnap() {
 	sheetSnap.value = initialSheetSnap;
 	sheetDragging.value = false;
 	sheetDragHeightPx.value = null;
+	if (sheetDragSession) {
+		window.removeEventListener("pointermove", onHandlePointerMove);
+		window.removeEventListener("pointerup", onHandlePointerUp);
+		window.removeEventListener("pointercancel", onHandlePointerUp);
+	}
 	sheetDragSession = null;
 }
 
@@ -843,7 +849,7 @@ function resolveSheetHeightBounds(root: HTMLElement): { half: number; full: numb
 	fullProbe.remove();
 	return {
 		half: half > 0 ? half : 352,
-		full: full > 0 ? full : 512,
+		full: full > 0 ? full : 640,
 	};
 }
 
@@ -986,27 +992,32 @@ onClickOutside(rootRef, () => {
 	if (open.value) closeLauncher();
 });
 
-watch(open, (isOpen, wasOpen) => {
-	if (!isOpen) {
-		activeView.value = null;
-		searchQuery.value = "";
-		resetSheetSnap();
-		if (wasOpen) {
-			nextTick(() => {
-				returnFocusElement?.focus();
-				returnFocusElement = null;
-			});
+watch(
+	open,
+	(isOpen, wasOpen) => {
+		if (!isOpen) {
+			activeView.value = null;
+			searchQuery.value = "";
+			resetSheetSnap();
+			if (wasOpen) {
+				nextTick(() => {
+					returnFocusElement?.focus();
+					returnFocusElement = null;
+				});
+			}
+			return;
 		}
-		return;
-	}
-	resetSheetSnap();
-	if (document.activeElement instanceof HTMLElement) {
-		returnFocusElement = document.activeElement;
-	}
-	nextTick(() => {
-		searchRef.value?.focus();
-	});
-});
+		resetSheetSnap();
+		if (document.activeElement instanceof HTMLElement) {
+			returnFocusElement = document.activeElement;
+		}
+		nextTick(() => {
+			searchRef.value?.focus();
+		});
+	},
+	// Seed `sheetSnap` from `initialSheetSnap` when stories mount with `open` already true.
+	{ immediate: true },
+);
 
 onMounted(() => {
 	if (open.value) searchRef.value?.focus();
@@ -1128,10 +1139,7 @@ onBeforeUnmount(() => {
 .discord-app-launcher-view-more {
 	@apply cursor-pointer border-0 bg-transparent p-0 text-base font-semibold;
 	color: var(--discord-app-launcher-link);
-}
-
-.discord-app-launcher-view-more:hover {
-	text-decoration: underline;
+	text-decoration: none;
 }
 
 .discord-app-launcher-view-more:focus-visible {
@@ -1696,7 +1704,8 @@ onBeforeUnmount(() => {
 		--discord-app-launcher-help-btn: oklch(43% 0.008 272);
 		--discord-app-launcher-help-btn-text: oklch(98% 0.002 272);
 		--discord-app-launcher-sheet-half: min(55dvh, 22rem);
-		--discord-app-launcher-sheet-full: min(90dvh, 32rem);
+		/* Nearly the channel column under the header; parent may hide the composer at full. */
+		--discord-app-launcher-sheet-full: min(92dvh, 40rem);
 
 		@apply relative w-full max-w-none rounded-t-[16px] rounded-b-none border-0;
 		height: var(--discord-app-launcher-sheet-half);
@@ -1819,10 +1828,6 @@ onBeforeUnmount(() => {
 		right: 0;
 		left: 3.75rem;
 		border-top: 1px solid var(--discord-app-launcher-divider);
-	}
-
-	.discord-app-launcher-view-more-footer:hover {
-		text-decoration: underline;
 	}
 
 	.discord-app-launcher-tile {

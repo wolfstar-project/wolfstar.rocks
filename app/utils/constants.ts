@@ -1,5 +1,7 @@
 import type { InjectionKey, Ref } from "vue";
 import type {
+	DiscordMemberListApiFixture,
+	DiscordMemberListRoleFixture,
 	HomeAccent,
 	HomeDashboardMember,
 	HomeFeature,
@@ -17,12 +19,16 @@ import type {
 	DiscordAppLauncherListView,
 	DiscordAppLauncherPromo,
 	DiscordAppLauncherSheetSnap,
+	DiscordMemberListMember,
 	ResolveDiscordAppLauncherSheetSnapOptions,
 	StringSelectMenuPlacement,
 } from "~/types/discord";
+import { ActivityType, UserFlags } from "discord-api-types/v10";
 import { Colors } from "~/types/constants";
 
 export type {
+	DiscordMemberListApiFixture,
+	DiscordMemberListRoleFixture,
 	HomeAccent,
 	HomeDashboardMember,
 	HomeFeature,
@@ -1394,4 +1400,123 @@ export function splitDiscordAppLauncherPromoTitle(title: string): readonly strin
 	if (first === undefined) return [];
 	if (words.length === 1) return [first];
 	return [first, words.slice(1).join(" ")];
+}
+
+/** Convenience bitfield helpers for marketing fixtures. */
+export const MEMBER_LIST_USER_FLAGS = {
+	verifiedBot: UserFlags.VerifiedBot,
+	httpInteractions: UserFlags.BotHTTPInteractions,
+	/** Verified bot that is HTTP-only (no gateway presence pip). */
+	verifiedHttpBot: UserFlags.VerifiedBot | UserFlags.BotHTTPInteractions,
+} as const;
+
+function hasMemberListFlag(flags: number | undefined, bit: UserFlags): boolean {
+	return ((flags ?? 0) & bit) === bit;
+}
+
+function memberListDisplayName(member: DiscordMemberListApiFixture): string {
+	return member.nick ?? member.user.global_name ?? member.user.username;
+}
+
+function formatMemberListActivityLine(
+	activity: NonNullable<
+		NonNullable<DiscordMemberListApiFixture["presence"]>["activities"]
+	>[number],
+): string | undefined {
+	if (activity.type === ActivityType.Custom) {
+		const emoji = activity.emoji?.name;
+		const state = activity.state?.trim();
+		if (!state && !emoji) return undefined;
+		if (emoji && state) return `${emoji} ${state}`;
+		return emoji ?? state;
+	}
+
+	const line = activity.state ?? activity.details ?? activity.name;
+	const trimmed = line.trim();
+	return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function memberListPresenceDescription(
+	presence: DiscordMemberListApiFixture["presence"],
+): string | undefined {
+	const activity = presence?.activities?.[0];
+	if (!activity) return undefined;
+	return formatMemberListActivityLine(activity);
+}
+
+function highestHoistedMemberListRole(
+	roleIds: readonly string[],
+	rolesById: ReadonlyMap<string, DiscordMemberListRoleFixture>,
+): DiscordMemberListRoleFixture | undefined {
+	let best: DiscordMemberListRoleFixture | undefined;
+
+	for (const roleId of roleIds) {
+		const role = rolesById.get(roleId);
+		if (!role?.hoist) continue;
+		if (!best || role.position > best.position) {
+			best = role;
+		}
+	}
+
+	return best;
+}
+
+/**
+ * Maps a Discord API–shaped member fixture (+ role catalog) to the member-list view-model.
+ */
+function mapDiscordMemberListMember(
+	member: DiscordMemberListApiFixture,
+	rolesById: ReadonlyMap<string, DiscordMemberListRoleFixture>,
+): DiscordMemberListMember {
+	const hoisted = highestHoistedMemberListRole(member.roles, rolesById);
+	const publicFlags = member.user.public_flags;
+	const description = memberListPresenceDescription(member.presence);
+	const nameColor = member.showcase?.nameColor ?? hoisted?.uiColor;
+
+	const mapped: DiscordMemberListMember = {
+		id: member.user.id,
+		name: memberListDisplayName(member),
+	};
+
+	if (member.showcase?.avatarUrl) {
+		mapped.avatar = member.showcase.avatarUrl;
+	}
+	if (member.showcase?.icon) {
+		mapped.icon = member.showcase.icon;
+	}
+	if (hoisted) {
+		mapped.role = hoisted.name;
+		mapped.pinned = true;
+	}
+	if (description) {
+		mapped.description = description;
+	}
+	if (member.user.bot) {
+		mapped.app = true;
+	}
+	if (hasMemberListFlag(publicFlags, UserFlags.VerifiedBot)) {
+		mapped.verified = true;
+	}
+	if (hasMemberListFlag(publicFlags, UserFlags.BotHTTPInteractions)) {
+		mapped.http = true;
+	}
+	if (member.presence?.status) {
+		mapped.presence = member.presence.status;
+	}
+	if (nameColor) {
+		mapped.color = nameColor;
+	}
+	if (member.showcase?.rowBackground) {
+		mapped.rowBackground = member.showcase.rowBackground;
+	}
+
+	return mapped;
+}
+
+export function mapDiscordMemberListMembers(
+	members: readonly DiscordMemberListApiFixture[],
+	roles: readonly DiscordMemberListRoleFixture[],
+): DiscordMemberListMember[] {
+	const rolesById = new Map(roles.map((role) => [role.id, role]));
+	return members.map((member) => mapDiscordMemberListMember(member, rolesById));
 }

@@ -1,3 +1,4 @@
+import type { ActivityType } from "discord-api-types/v10";
 import type { StringSelectMenuOption } from "~/types/discord";
 
 /**
@@ -84,13 +85,13 @@ export interface ModerationAction {
 	undo: Colors | null;
 }
 
-export type LoggingEventDetailPart =
+type LoggingEventDetailPart =
 	| { type: "mention"; name: string; avatar?: string }
 	| { type: "role"; name: string; color?: string }
 	| { type: "roles"; items: { name: string; color?: string }[] }
 	| { type: "text"; content: string };
 
-export interface LoggingEventLogDetail {
+interface LoggingEventLogDetail {
 	label: string;
 	parts: LoggingEventDetailPart[];
 }
@@ -130,23 +131,23 @@ export type SlashCommandAppName =
 	| "wolfstar"
 	| "ring";
 
-export type ShowcaseCommandEmbedPart =
+type ShowcaseCommandEmbedPart =
 	| { type: "mention"; name: string; avatar?: string }
 	| { type: "text"; content: string };
 
-export interface ShowcaseCommandOption {
+interface ShowcaseCommandOption {
 	name: string;
 	value?: string;
 	description?: string;
 	focused?: boolean;
 }
 
-export interface ShowcaseCommandEmbedLine {
+interface ShowcaseCommandEmbedLine {
 	label: string;
 	parts: ShowcaseCommandEmbedPart[];
 }
 
-export interface ShowcaseCommandBase {
+interface ShowcaseCommandBase {
 	tooltip: string;
 	name: string;
 	subcommand?: string;
@@ -156,7 +157,7 @@ export interface ShowcaseCommandBase {
 	options: ShowcaseCommandOption[];
 }
 
-export interface ShowcaseCommandEmbedResponse {
+interface ShowcaseCommandEmbedResponse {
 	responseType: "embed";
 	embedColor: string;
 	embedFooter: string;
@@ -164,7 +165,7 @@ export interface ShowcaseCommandEmbedResponse {
 }
 
 /** Plain success reply, e.g. "✅ Created case 3 | @baddie". */
-export interface ShowcaseCommandTextResponse {
+interface ShowcaseCommandTextResponse {
 	responseType: "text";
 	/** Prefix before the user mention; include trailing " | ". */
 	content: string;
@@ -173,7 +174,7 @@ export interface ShowcaseCommandTextResponse {
 	mentionAvatar?: string;
 }
 
-export interface ShowcaseCommandComponentsResponse {
+interface ShowcaseCommandComponentsResponse {
 	responseType: "components";
 	accentColor: string;
 	lines: string[];
@@ -196,4 +197,93 @@ export interface OtherApp {
 	invite: string;
 	purposes: readonly string[];
 	description: string;
+}
+
+/**
+ * Discord Role fields used for member-list grouping/color.
+ * @see https://docs.discord.com/developers/topics/permissions#role-object
+ */
+export interface DiscordMemberListRoleFixture {
+	id: string;
+	name: string;
+	/** Deprecated Discord `Role.color` integer; `0` means no tint. */
+	color: number;
+	/** Discord “Display role members separately”. */
+	hoist: boolean;
+	position: number;
+	/**
+	 * Showcase CSS color for the member display name.
+	 * Discord clients derive name tint from Role.colors; marketing fixtures use
+	 * semantic oklch tokens instead of RGB integers.
+	 */
+	uiColor?: string;
+}
+
+/**
+ * Nested User fields from the Guild Member / User objects.
+ * @see https://docs.discord.com/developers/resources/user#user-object
+ * @see https://docs.discord.com/developers/resources/guild#guild-member-object
+ */
+interface DiscordMemberListUserFixture {
+	id: string;
+	username: string;
+	discriminator: string;
+	global_name: string | null;
+	/** Avatar hash when known; marketing mocks usually leave this null and set `showcase.avatarUrl`. */
+	avatar: string | null;
+	bot?: boolean;
+	/**
+	 * Public user flags bitfield (`UserFlags`).
+	 * Use `VerifiedBot` / `BotHTTPInteractions` — not `user.verified` (email verification).
+	 */
+	public_flags?: number;
+}
+
+/**
+ * Activity fields used for the member-list secondary line.
+ * @see https://docs.discord.com/developers/events/gateway-events#activity-object
+ */
+interface DiscordMemberListActivityFixture {
+	name: string;
+	type: ActivityType;
+	state?: string | null;
+	details?: string | null;
+	emoji?: { name: string } | null;
+}
+
+/**
+ * Presence Update fields attached for the member list.
+ * @see https://docs.discord.com/developers/events/gateway-events#presence-update
+ */
+interface DiscordMemberListPresenceFixture {
+	status: "online" | "idle" | "dnd" | "offline";
+	activities?: readonly DiscordMemberListActivityFixture[];
+}
+
+/**
+ * Guild Member–shaped fixture (+ optional Presence Update) for marketing mocks.
+ * @see https://docs.discord.com/developers/resources/guild#guild-member-object
+ */
+export interface DiscordMemberListApiFixture {
+	user: DiscordMemberListUserFixture;
+	nick?: string | null;
+	/** Guild avatar hash (unused when `showcase.avatarUrl` is set). */
+	avatar?: string | null;
+	roles: readonly string[];
+	joined_at: string;
+	deaf: boolean;
+	mute: boolean;
+	flags: number;
+	presence?: DiscordMemberListPresenceFixture;
+	/**
+	 * Showcase-only presentation. Not part of Discord’s REST/Gateway payloads —
+	 * resolves local assets, Iconify icons, and CSS row decorations.
+	 */
+	showcase?: {
+		avatarUrl?: string;
+		icon?: string;
+		rowBackground?: string;
+		/** Overrides the highest-role `uiColor` when set. */
+		nameColor?: string;
+	};
 }

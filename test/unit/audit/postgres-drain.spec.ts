@@ -256,7 +256,7 @@ describe("createPostgresAuditDrain", () => {
 		});
 		vi.mocked(prisma.$transaction).mockRejectedValue(p2034);
 
-		await expect(drain(makeCtx())).rejects.toThrow();
+		await expect(drain(makeCtx())).rejects.toThrow(/P2034|Serialization|exhaust|retry/i);
 		// Drain documents 5 attempts (MAX_RETRIES). Adjust if the constant changes.
 		expect(prisma.$transaction).toHaveBeenCalledTimes(5);
 	}, 10_000);

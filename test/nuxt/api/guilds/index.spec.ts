@@ -111,6 +111,7 @@ describe(`GET ${GUILD_URL}`, () => {
 
 	describe("rate-limit headers", () => {
 		it("sets x-ratelimit-* headers on authenticated responses", async () => {
+			expect.hasAssertions();
 			const res = await $fetch.raw(GUILD_URL, { headers: authHeaders() });
 			assertRateLimitHeaders(res as unknown as Response);
 		});

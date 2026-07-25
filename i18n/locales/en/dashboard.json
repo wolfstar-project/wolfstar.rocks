@@ -76,7 +76,6 @@
 			"date": "Date",
 			"time": "Time",
 			"when": "When",
-			"duration": "Duration",
 			"command": "Command",
 			"status": "Status",
 			"latency": "Latency"

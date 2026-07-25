@@ -7,42 +7,6 @@
 		"profile": {
 			"type": "object",
 			"properties": {
-				"title": {
-					"type": "string"
-				},
-				"seo_description": {
-					"type": "string"
-				},
-				"servers": {
-					"type": "string"
-				},
-				"manageable": {
-					"type": "string"
-				},
-				"search_servers": {
-					"type": "string"
-				},
-				"search_servers_aria": {
-					"type": "string"
-				},
-				"get_premium": {
-					"type": "string"
-				},
-				"premium": {
-					"type": "string"
-				},
-				"motion_reduced": {
-					"type": "string"
-				},
-				"motion_enabled": {
-					"type": "string"
-				},
-				"account_management": {
-					"type": "string"
-				},
-				"refresh_servers": {
-					"type": "string"
-				},
 				"clear_search": {
 					"type": "string"
 				},
@@ -55,28 +19,7 @@
 				"loading_more": {
 					"type": "string"
 				},
-				"error_loading_title": {
-					"type": "string"
-				},
-				"failed_to_load": {
-					"type": "string"
-				},
-				"user_profile": {
-					"type": "string"
-				},
-				"user_id": {
-					"type": "string"
-				},
-				"default_avatar": {
-					"type": "string"
-				},
-				"email": {
-					"type": "string"
-				},
 				"members": {
-					"type": "string"
-				},
-				"members_online": {
 					"type": "string"
 				},
 				"servers_count": {

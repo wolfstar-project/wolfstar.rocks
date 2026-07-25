@@ -1,12 +1,11 @@
-import { join } from "node:path";
 /* oxlint-disable no-console */
 import process from "node:process";
 import { createI18NReport, type I18NItem } from "vue-i18n-extract";
 import { colors } from "./utils/colors.ts";
-import { LOCALES_DIRECTORY, REFERENCE_LOCALE } from "./utils/i18n-locale-files.ts";
+import { I18N_REPORT_EXCLUDES, writeMergedReferenceLocaleFile } from "./utils/i18n-locale-files.ts";
 
 const VUE_FILES_GLOB = "./app/**/*.?(vue|ts|js)";
-const LANGUAGE_FILES_GLOB = join(LOCALES_DIRECTORY, REFERENCE_LOCALE, "*.json");
+const LANGUAGE_FILES_GLOB = writeMergedReferenceLocaleFile();
 
 function printSection(
 	title: string,
@@ -42,7 +41,7 @@ async function run(): Promise<void> {
 	const { missingKeys, unusedKeys, maybeDynamicKeys } = await createI18NReport({
 		vueFiles: VUE_FILES_GLOB,
 		languageFiles: LANGUAGE_FILES_GLOB,
-		exclude: ["$schema"],
+		exclude: [...I18N_REPORT_EXCLUDES],
 	});
 
 	const hasMissingKeys = missingKeys.length > 0;

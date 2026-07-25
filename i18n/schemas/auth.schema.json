@@ -139,9 +139,6 @@
 						"login_seo_title": {
 							"type": "string"
 						},
-						"login_seo_og_title": {
-							"type": "string"
-						},
 						"login_seo_og_description": {
 							"type": "string"
 						},

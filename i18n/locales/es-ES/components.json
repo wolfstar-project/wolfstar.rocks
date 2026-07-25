@@ -27,7 +27,6 @@
 		"title": "Enviar comentarios",
 		"description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
 		"sent_title": "Comentarios enviados",
-		"sent_description": "Gracias por ayudar a mejorar WolfStar.",
 		"sent_toast_description": "Gracias por ayudar a mejorar WolfStar.",
 		"name": "Nombre",
 		"email": "Correo electrónico",
@@ -38,20 +37,11 @@
 		"send_failed_title": "Error al enviar",
 		"send_failed_description": "No se pudo enviar el comentario. Inténtalo de nuevo."
 	},
-	"pwa": {
-		"update_available": "Actualización disponible",
-		"install_app": "Instalar app",
-		"dismiss": "Cerrar",
-		"reload": "Recargar"
-	},
 	"select": {
 		"seconds": "Segundos",
 		"minutes": "Minutos",
 		"hours": "Horas",
 		"days": "Días",
-		"none": "Ninguno",
-		"search": "Buscar...",
-		"clear_selected": "Limpiar selección",
 		"min_duration": "Duración mínima",
 		"max_duration": "Duración máxima"
 	}

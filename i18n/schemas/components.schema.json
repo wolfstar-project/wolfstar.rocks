@@ -85,9 +85,6 @@
 				"sent_title": {
 					"type": "string"
 				},
-				"sent_description": {
-					"type": "string"
-				},
 				"sent_toast_description": {
 					"type": "string"
 				},
@@ -118,24 +115,6 @@
 			},
 			"additionalProperties": false
 		},
-		"pwa": {
-			"type": "object",
-			"properties": {
-				"update_available": {
-					"type": "string"
-				},
-				"install_app": {
-					"type": "string"
-				},
-				"dismiss": {
-					"type": "string"
-				},
-				"reload": {
-					"type": "string"
-				}
-			},
-			"additionalProperties": false
-		},
 		"select": {
 			"type": "object",
 			"properties": {
@@ -149,15 +128,6 @@
 					"type": "string"
 				},
 				"days": {
-					"type": "string"
-				},
-				"none": {
-					"type": "string"
-				},
-				"search": {
-					"type": "string"
-				},
-				"clear_selected": {
 					"type": "string"
 				},
 				"min_duration": {

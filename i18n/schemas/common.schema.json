@@ -175,15 +175,6 @@
 				"dark": {
 					"type": "string"
 				},
-				"enabled": {
-					"type": "string"
-				},
-				"disabled": {
-					"type": "string"
-				},
-				"none": {
-					"type": "string"
-				},
 				"confirm": {
 					"type": "string"
 				},
@@ -196,16 +187,7 @@
 				"learn_more": {
 					"type": "string"
 				},
-				"search": {
-					"type": "string"
-				},
-				"loading": {
-					"type": "string"
-				},
 				"error": {
-					"type": "string"
-				},
-				"save_failed": {
 					"type": "string"
 				},
 				"please_try_again": {

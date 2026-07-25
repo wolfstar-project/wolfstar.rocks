@@ -235,9 +235,6 @@
 						"when": {
 							"type": "string"
 						},
-						"duration": {
-							"type": "string"
-						},
 						"command": {
 							"type": "string"
 						},

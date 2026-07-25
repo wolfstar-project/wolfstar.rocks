@@ -1,19 +1,18 @@
 import { readFile, writeFile } from "node:fs/promises";
-import { join } from "node:path";
 /* oxlint-disable no-console */
 import process from "node:process";
 import { createI18NReport, type I18NItem } from "vue-i18n-extract";
 import { colors } from "./utils/colors.ts";
 import {
 	FEATURE_FILES,
-	LOCALES_DIRECTORY,
-	REFERENCE_LOCALE,
+	I18N_REPORT_EXCLUDES,
 	listLocaleCodes,
 	localeFeatureAbsolutePath,
+	writeMergedReferenceLocaleFile,
 } from "./utils/i18n-locale-files.ts";
 
 const VUE_FILES_GLOB = "./app/**/*.?(vue|ts|js)";
-const LANGUAGE_FILES_GLOB = join(LOCALES_DIRECTORY, REFERENCE_LOCALE, "*.json");
+const LANGUAGE_FILES_GLOB = writeMergedReferenceLocaleFile();
 
 type NestedObject = Record<string, unknown>;
 
@@ -56,7 +55,7 @@ async function run(): Promise<void> {
 	const { unusedKeys } = await createI18NReport({
 		vueFiles: VUE_FILES_GLOB,
 		languageFiles: LANGUAGE_FILES_GLOB,
-		exclude: ["$schema"],
+		exclude: [...I18N_REPORT_EXCLUDES],
 	});
 
 	if (unusedKeys.length === 0) {

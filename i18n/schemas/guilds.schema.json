@@ -19,9 +19,6 @@
 						"title": {
 							"type": "string"
 						},
-						"subtitle": {
-							"type": "string"
-						},
 						"form_aria": {
 							"type": "string"
 						},
@@ -253,9 +250,6 @@
 								"punishments": {
 									"type": "string"
 								},
-								"soft_actions": {
-									"type": "string"
-								},
 								"hard_action": {
 									"type": "string"
 								},
@@ -272,9 +266,6 @@
 									"type": "string"
 								},
 								"duration_help": {
-									"type": "string"
-								},
-								"threshold": {
 									"type": "string"
 								},
 								"threshold_maximum": {

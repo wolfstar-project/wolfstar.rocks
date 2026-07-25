@@ -8,9 +8,9 @@
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
-				<!-- Decorative watermark: override IconsWolfstar's baked-in role/aria-label so only the logo mark below is exposed as the "WolfStar logo" image -->
+				<!-- Decorative watermark: keep fully inside the padded brand area so overflow-hidden does not clip it -->
 				<icons-wolfstar
-					class="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 opacity-5"
+					class="pointer-events-none absolute bottom-6 left-6 h-56 w-56 opacity-5"
 					role="presentation"
 					:aria-label="undefined"
 					aria-hidden="true"
@@ -32,6 +32,23 @@
 						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
 							{{ t("footer.tagline") }}
 						</p>
+						<nav
+							class="mt-4 flex items-center gap-1"
+							:aria-label="t('footer.social_links')"
+						>
+							<UButton
+								v-for="social of socialLinks"
+								:key="social.label"
+								:to="social.to"
+								target="_blank"
+								rel="noopener noreferrer"
+								:icon="social.icon"
+								:aria-label="social.ariaLabel"
+								color="neutral"
+								variant="ghost"
+								size="sm"
+							/>
+						</nav>
 						<div class="mt-6 flex flex-col items-start gap-3">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
@@ -98,16 +115,6 @@
 				</template>
 			</ClientOnly>
 			<ColorModeButton />
-
-			<UButton
-				to="https://repo.wolfstar.rocks"
-				target="_blank"
-				rel="noopener noreferrer"
-				icon="lucide:github"
-				:aria-label="t('footer.github_aria')"
-				color="neutral"
-				variant="ghost"
-			/>
 		</template>
 	</UFooter>
 </template>
@@ -128,6 +135,27 @@ function selectLocale(code: string) {
 	setPreferredLocale(code);
 	void setLocale(code);
 }
+
+const socialLinks = computed(() => [
+	{
+		ariaLabel: t("footer.github_aria"),
+		icon: "simple-icons:github",
+		label: t("footer.github"),
+		to: "https://repo.wolfstar.rocks",
+	},
+	{
+		ariaLabel: t("footer.discord_aria"),
+		icon: "simple-icons:discord",
+		label: t("footer.support_server"),
+		to: "https://join.wolfstar.rocks",
+	},
+	{
+		ariaLabel: t("footer.x_aria"),
+		icon: "simple-icons:x",
+		label: "X",
+		to: "https://x.com/wolfstarapp",
+	},
+]);
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

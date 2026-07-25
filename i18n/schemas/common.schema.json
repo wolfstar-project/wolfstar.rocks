@@ -109,6 +109,15 @@
 				"github_aria": {
 					"type": "string"
 				},
+				"discord_aria": {
+					"type": "string"
+				},
+				"x_aria": {
+					"type": "string"
+				},
+				"social_links": {
+					"type": "string"
+				},
 				"column_links": {
 					"type": "string"
 				},

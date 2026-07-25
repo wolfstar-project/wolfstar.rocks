@@ -1,12 +1,17 @@
 <template>
-	<TooltipProvider :delay-duration="200">
-		<TooltipRoot>
+	<TooltipProvider :delay-duration="delayDuration">
+		<TooltipRoot v-model:open="open">
 			<TooltipTrigger as-child>
 				<slot />
 			</TooltipTrigger>
 			<TooltipPortal>
 				<TooltipContent
-					class="z-50 rounded-md bg-neutral px-2 py-1 text-xs text-neutral-content shadow"
+					:class="
+						cn(
+							'z-50 rounded-md bg-neutral px-2 py-1 text-xs text-neutral-content shadow',
+							ui?.content,
+						)
+					"
 					:side="content?.side ?? 'top'"
 					:align="content?.align ?? 'center'"
 					:side-offset="content?.sideOffset ?? 4"
@@ -20,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import { cn } from "cnfast";
 import {
 	TooltipArrow,
 	TooltipContent,
@@ -29,13 +35,25 @@ import {
 	TooltipTrigger,
 } from "reka-ui";
 
-defineProps<{
-	text?: string;
-	content?: {
-		side?: "top" | "right" | "bottom" | "left";
-		align?: "start" | "center" | "end";
-		sideOffset?: number;
-	};
-	contentText?: string;
-}>();
+const props = withDefaults(
+	defineProps<{
+		text?: string;
+		contentText?: string;
+		delayDuration?: number;
+		content?: {
+			side?: "top" | "right" | "bottom" | "left";
+			align?: "start" | "center" | "end";
+			sideOffset?: number;
+		};
+		ui?: Record<string, string>;
+	}>(),
+	{
+		delayDuration: 200,
+	},
+);
+
+const open = defineModel<boolean>("open", { default: false });
+
+// Support legacy `delay-duration` attr alias used by callers
+const delayDuration = computed(() => props.delayDuration);
 </script>

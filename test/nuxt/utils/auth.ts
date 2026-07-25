@@ -45,10 +45,15 @@ export function mockAuth(user: Partial<AuthUser> | null = null) {
 		// authorization-resolver does not run here; mockNuxtImport also cannot
 		// replace useUserSession in Vitest browser + viteEnvironmentApi:false.
 		const app = useNuxtApp();
-		if (!app.$authorization) {
-			app.provide("authorization", {
-				resolveClientUser: () => resolvedUser,
-			});
+		const authorization = app.$authorization as
+			| { resolveClientUser?: () => AuthUser | null }
+			| undefined;
+		if (authorization && typeof authorization === "object") {
+			authorization.resolveClientUser = () => resolvedUser;
+			return;
 		}
+		app.provide("authorization", {
+			resolveClientUser: () => resolvedUser,
+		});
 	});
 }

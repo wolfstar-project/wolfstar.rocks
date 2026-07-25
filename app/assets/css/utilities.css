@@ -283,14 +283,14 @@
 	}
 }
 
-/* Navigation panel glass - overrides bg-default's --ui-bg on UHeader mobile panel */
+/* Navigation panel glass — translucent backdrop for the mobile nav panel */
 @utility nav-panel-glass {
-	--ui-bg: oklch(20% 0 0 / 0.85);
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
+	background: oklch(20% 0 0 / 0.85);
 
 	[data-theme="light"] & {
-		--ui-bg: oklch(98% 0 0 / 0.85);
+		background: oklch(98% 0 0 / 0.85);
 	}
 }
 
@@ -459,5 +459,60 @@
 
 	.animate-on-scroll {
 		animation: none !important;
+	}
+}
+
+/* Nuxt-UI-compat semantic color utilities used across templates */
+@utility text-muted {
+	color: color-mix(in oklch, var(--color-base-content) 60%, transparent);
+}
+
+@utility text-dimmed {
+	color: color-mix(in oklch, var(--color-base-content) 40%, transparent);
+}
+
+@utility text-toned {
+	color: color-mix(in oklch, var(--color-base-content) 80%, transparent);
+}
+
+@utility text-highlighted {
+	color: var(--color-base-content);
+}
+
+@utility text-inverted {
+	color: var(--color-base-100);
+}
+
+@utility bg-default {
+	background-color: var(--color-base-100);
+}
+
+@utility bg-muted {
+	background-color: var(--color-base-200);
+}
+
+@utility bg-elevated {
+	background-color: var(--color-base-200);
+}
+
+@utility bg-accented {
+	background-color: var(--color-base-300);
+}
+
+@utility border-default {
+	border-color: var(--color-base-200);
+}
+
+@utility border-muted {
+	border-color: var(--color-base-300);
+}
+
+@utility border-accented {
+	border-color: var(--color-base-300);
+}
+
+@utility divide-accented {
+	& > :not(:last-child) {
+		border-color: var(--color-base-300);
 	}
 }

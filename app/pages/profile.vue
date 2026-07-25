@@ -498,7 +498,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TabsItem } from "@nuxt/ui";
+import type { TabsItem } from "#shared/types/ui";
 import * as Sentry from "@sentry/nuxt";
 
 definePageMeta({ alias: ["/account"] });

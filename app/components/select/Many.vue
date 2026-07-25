@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts">
-import type { SelectItem } from "@nuxt/ui";
+import type { SelectItem } from "#shared/types/ui";
 import { isNullOrUndefined, isNumber, toTitleCase } from "@sapphire/utilities";
 
 export interface SelectManyValue {

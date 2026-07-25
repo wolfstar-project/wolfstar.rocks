@@ -1,5 +1,5 @@
 import type { ChangelogContributorItem } from "~/utils/parse-release-contributors";
-import { UApp } from "#components";
+import { AppProviders } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { describe, expect, it } from "vitest";
 import ChangelogContributorMention from "~/components/changelog/ContributorMention.vue";
@@ -13,31 +13,31 @@ const baseProps: ChangelogContributorItem = {
 	avatarSrc: "https://github.com/RedStar071.png",
 };
 
-/** UTooltip requires TooltipProvider from UApp. */
+/** UTooltip requires TooltipProvider from AppProviders. */
 function mountMention(props: ChangelogContributorItem, open = false) {
 	return mountSuspended({
-		components: { ChangelogContributorMention, UApp },
+		components: { ChangelogContributorMention, AppProviders },
 		setup() {
 			return { props, open: open || undefined };
 		},
 		template: `
-			<UApp>
+			<AppProviders>
 				<ChangelogContributorMention v-bind="props" :open="open" />
-			</UApp>
+			</AppProviders>
 		`,
 	});
 }
 
 function mountContributorsList(contributors: ChangelogContributorItem[], idPrefix: string) {
 	return mountSuspended({
-		components: { ChangelogContributors, UApp },
+		components: { ChangelogContributors, AppProviders },
 		setup() {
 			return { contributors, idPrefix };
 		},
 		template: `
-			<UApp>
+			<AppProviders>
 				<ChangelogContributors :contributors="contributors" :id-prefix="idPrefix" />
-			</UApp>
+			</AppProviders>
 		`,
 	});
 }

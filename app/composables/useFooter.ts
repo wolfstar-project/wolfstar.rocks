@@ -1,4 +1,4 @@
-import type { FooterColumn } from "@nuxt/ui";
+import type { FooterColumn } from "#shared/types/ui";
 
 export const useFooter = () => {
 	const columns = computed<FooterColumn[]>(() => [

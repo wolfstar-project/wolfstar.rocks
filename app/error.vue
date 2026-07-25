@@ -1,5 +1,5 @@
 <template>
-	<UApp
+	<AppProviders
 		:toaster="{
 			position: 'bottom-left',
 		}"
@@ -10,7 +10,7 @@
 				<UError :error />
 			</UMain>
 		</NuxtLayout>
-	</UApp>
+	</AppProviders>
 </template>
 
 <script setup lang="ts">

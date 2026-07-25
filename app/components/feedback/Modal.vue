@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/schemas";
 import { captureFeedback } from "@sentry/nuxt";
 

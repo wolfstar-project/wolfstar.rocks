@@ -61,7 +61,7 @@
 
 <script setup lang="ts">
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
-import type { TableColumn } from "@nuxt/ui";
+import type { TableColumn } from "#shared/types/ui";
 import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 

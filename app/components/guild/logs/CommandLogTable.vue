@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import type { CommandLogData } from "#server/database";
-import type { TableColumn } from "@nuxt/ui";
+import type { TableColumn } from "#shared/types/ui";
 import type { APIGuildMember } from "discord-api-types/v10";
 import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";

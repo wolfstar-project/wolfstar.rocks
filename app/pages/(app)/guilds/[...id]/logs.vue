@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TabsItem } from "@nuxt/ui";
+import type { TabsItem } from "#shared/types/ui";
 import { useRouteParams } from "@vueuse/router";
 
 definePageMeta({

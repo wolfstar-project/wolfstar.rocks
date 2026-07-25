@@ -1,4 +1,5 @@
 import netlifyNuxt from "@netlify/nuxt";
+import tailwindcss from "@tailwindcss/vite";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isDevelopment, isTest, provider } from "std-env";
@@ -14,7 +15,8 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
-		"@nuxt/ui",
+		"@nuxt/icon",
+		"@nuxtjs/color-mode",
 		"@nuxt/content",
 		// Nuxt Studio is a local content-editing tool. It ships multi-MB editor
 		// bundles that overflow the PWA precache (breaking the build) and registers
@@ -201,24 +203,18 @@ export default defineNuxtConfig({
 		},
 	},
 
-	ui: {
-		experimental: {
-			componentDetection: true,
-		},
-	},
-
 	htmlValidator: {
 		enabled: !isCI || (provider !== "netlify" && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
-				// NuxtUI/DaisyUI theme class merging produces duplicate utility classes
+				// DaisyUI theme class merging can produce duplicate utility classes
 				"no-dup-class": "off",
-				// NuxtUI components may render empty id attributes internally
+				// Some UI primitives may render empty id attributes internally
 				"attribute-allowed-values": "off",
-				// NuxtUI UHeader hamburger button is icon-only
+				// Icon-only header controls (e.g. hamburger) omit visible text
 				"text-content": "off",
-				// Reka UI/NuxtUI components use ARIA roles that have native equivalents
+				// Reka UI components use ARIA roles that have native equivalents
 				"prefer-native-element": "off",
 			},
 		},
@@ -351,6 +347,7 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
+		plugins: [tailwindcss()],
 		define: {
 			"process.test": "false",
 		},
@@ -393,10 +390,7 @@ export default defineNuxtConfig({
 				"reka-ui",
 				"reka-ui/namespaced",
 				"std-env",
-				"tailwind-variants",
-				"tailwindcss/colors",
 				"ufo",
-				"vaul-vue",
 				"valibot",
 			],
 		},

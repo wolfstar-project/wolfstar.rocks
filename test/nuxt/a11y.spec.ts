@@ -5,7 +5,7 @@ import {
 	AppLogoMark,
 	ChangelogContributorMention,
 	ChangelogContributors,
-	UApp,
+	AppProviders,
 	CommandsSection,
 	CommandsShowcase,
 	CtaSection,
@@ -554,9 +554,9 @@ describe("component accessibility audits", () => {
 	describe("ChangelogContributorMention", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended({
-				components: { ChangelogContributorMention, UApp },
+				components: { ChangelogContributorMention, AppProviders },
 				template: `
-					<UApp>
+					<AppProviders>
 						<ChangelogContributorMention
 							name="RedStar"
 							username="RedStar071"
@@ -564,7 +564,7 @@ describe("component accessibility audits", () => {
 							:has-contributed="true"
 							avatar-src="https://github.com/RedStar071.png"
 						/>
-					</UApp>
+					</AppProviders>
 				`,
 			});
 			const results = await runAxe(component);
@@ -575,7 +575,7 @@ describe("component accessibility audits", () => {
 	describe("ChangelogContributors", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended({
-				components: { ChangelogContributors, UApp },
+				components: { ChangelogContributors, AppProviders },
 				setup() {
 					return {
 						contributors: [
@@ -590,9 +590,9 @@ describe("component accessibility audits", () => {
 					};
 				},
 				template: `
-					<UApp>
+					<AppProviders>
 						<ChangelogContributors id-prefix="v1.0.0" :contributors="contributors" />
-					</UApp>
+					</AppProviders>
 				`,
 			});
 			const results = await runAxe(component);

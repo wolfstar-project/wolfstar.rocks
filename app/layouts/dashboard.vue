@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { NavigationMenuItem } from "@nuxt/ui";
+import type { NavigationMenuItem } from "#shared/types/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";

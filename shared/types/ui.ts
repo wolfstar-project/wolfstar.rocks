@@ -60,8 +60,23 @@ export interface FooterColumn {
 
 export type TableColumn<T> = import("@tanstack/vue-table").ColumnDef<T>;
 
-export type ShortcutHandler = (() => void) | false | { handler: () => void } | null | undefined;
+export interface ShortcutConfig {
+	handler: (e?: Event) => void;
+	/**
+	 * When `true`, the shortcut also runs while focus is in an input/textarea.
+	 * When a string, it only runs if the focused input's `name` matches.
+	 */
+	usingInput?: string | boolean;
+}
+
+export type ShortcutHandler = ShortcutConfig | ((e?: Event) => void) | false | null | undefined;
+
 export type ShortcutsConfig = Record<string, ShortcutHandler>;
+
+export interface ShortcutsOptions {
+	chainDelay?: number;
+	layoutIndependent?: boolean;
+}
 
 export const dashboardSidebarCollapseKey = Symbol("dashboard-sidebar-collapse") as InjectionKey<{
 	collapsed: Ref<boolean>;

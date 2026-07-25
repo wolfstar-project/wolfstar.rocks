@@ -1,4 +1,16 @@
 import type { SemanticColor } from "#shared/types/ui";
+/**
+ * Extracted from Nuxt UI v4 (`@nuxt/ui` → `src/runtime/composables/useToast.ts`).
+ * Adapted for DaisyUI toast host in `AppProviders` (duration auto-dismiss lives here
+ * because we do not mount Reka UI `ToastRoot` / `ToastProvider`).
+ *
+ * @license MIT — Copyright (c) NuxtHub / Nuxt UI contributors
+ * @see https://github.com/nuxt/ui
+ */
+import type { InjectionKey, Ref } from "vue";
+
+export const toastMaxInjectionKey: InjectionKey<Ref<number | undefined>> =
+	Symbol("nuxt-ui.toast-max");
 
 export interface ToastAction {
 	label: string;
@@ -13,16 +25,29 @@ export interface Toast {
 	id: string | number;
 	title?: string;
 	description?: string;
-	color?: SemanticColor;
 	icon?: string;
+	avatar?: { src?: string; alt?: string };
+	color?: SemanticColor;
+	orientation?: "vertical" | "horizontal";
+	close?: boolean;
 	closeIcon?: string;
-	duration?: number;
 	actions?: ToastAction[];
+	/**
+	 * Milliseconds before auto-dismiss. Overrides the default (5000).
+	 * Set to `0` to keep the toast open until it is manually closed.
+	 */
+	duration?: number;
+	progress?: boolean;
+	/** Whether the toast is visible (set `false` during close before removal). */
+	open?: boolean;
+	onClick?: (toast: Toast) => void;
+	/** @internal */
+	_duplicate?: number;
+	/** @internal */
+	_updated?: boolean;
 }
 
 const DEFAULT_DURATION = 5000;
-
-let toastIdCounter = 0;
 
 export function useToast() {
 	const toasts = useState<Toast[]>("toasts", () => []);
@@ -30,22 +55,27 @@ export function useToast() {
 		"toast-timers",
 		() => ({}),
 	);
+	const max = inject(toastMaxInjectionKey, undefined);
+
+	const running = ref(false);
+	const queue: Toast[] = [];
+
+	const generateId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
 	function clearTimer(id: string | number) {
 		const key = String(id);
 		const timer = timers.value[key];
-		if (timer) {
-			clearTimeout(timer);
-			const next = { ...timers.value };
-			delete next[key];
-			timers.value = next;
-		}
+		if (!timer) return;
+		clearTimeout(timer);
+		const next = { ...timers.value };
+		delete next[key];
+		timers.value = next;
 	}
 
-	function scheduleRemove(toast: Toast) {
+	function scheduleAutoDismiss(toast: Toast) {
 		const duration = toast.duration ?? DEFAULT_DURATION;
-		if (duration <= 0 || !import.meta.client) return;
 		clearTimer(toast.id);
+		if (duration <= 0 || !import.meta.client) return;
 		timers.value = {
 			...timers.value,
 			[String(toast.id)]: setTimeout(() => {
@@ -54,30 +84,119 @@ export function useToast() {
 		};
 	}
 
-	function add(toast: Partial<Toast> & Pick<Toast, never> = {}): Toast {
-		const id = toast.id ?? `toast-${++toastIdCounter}`;
-		const entry: Toast = {
+	function mergeDuplicate(index: number, toast: Toast) {
+		const existing = toasts.value[index];
+		if (!existing) return;
+		const merged: Toast = {
+			...existing,
 			...toast,
-			duration: toast.duration ?? DEFAULT_DURATION,
-			id,
+			_duplicate: (existing._duplicate || 0) + 1,
 		};
-		toasts.value = [...toasts.value, entry];
-		scheduleRemove(entry);
-		return entry;
+		toasts.value[index] = merged;
+		scheduleAutoDismiss(merged);
 	}
 
-	function update(id: string | number, patch: Partial<Toast>) {
-		toasts.value = toasts.value.map((toast) => {
-			if (toast.id !== id) return toast;
-			const next = { ...toast, ...patch, id };
-			scheduleRemove(next);
-			return next;
+	async function processQueue() {
+		if (running.value || queue.length === 0) {
+			return;
+		}
+
+		running.value = true;
+
+		while (queue.length > 0) {
+			await nextTick();
+
+			const toast = queue.shift();
+			if (!toast) continue;
+
+			const maxValue = max?.value ?? 5;
+			if (maxValue <= 0) {
+				if (toasts.value.length) {
+					toasts.value = [];
+				}
+				continue;
+			}
+
+			// Dedupe at display time so duplicate ids merge no matter which `useToast()` instance queued them.
+			const existingIndex = toasts.value.findIndex((entry) => entry.id === toast.id);
+			if (existingIndex !== -1) {
+				mergeDuplicate(existingIndex, toast);
+				continue;
+			}
+
+			toasts.value = [...toasts.value, toast].slice(-maxValue);
+			scheduleAutoDismiss(toast);
+		}
+
+		running.value = false;
+	}
+
+	function add(toast: Partial<Toast> = {}): Toast {
+		const body: Toast = {
+			id: generateId(),
+			open: true,
+			...toast,
+		};
+
+		const existingIndex = toasts.value.findIndex((entry) => entry.id === body.id);
+		if (existingIndex !== -1) {
+			mergeDuplicate(existingIndex, body);
+			return body;
+		}
+
+		queue.push(body);
+		void processQueue();
+
+		return body;
+	}
+
+	function update(id: string | number, toast: Omit<Partial<Toast>, "id">) {
+		const index = toasts.value.findIndex((entry) => entry.id === id);
+		const existing = index === -1 ? undefined : toasts.value[index];
+		if (!existing) return;
+
+		const next: Toast = {
+			...existing,
+			...toast,
+			duration: toast.duration,
+			open: true,
+			_updated: true,
+		};
+		toasts.value[index] = next;
+		scheduleAutoDismiss(next);
+
+		nextTick(() => {
+			const i = toasts.value.findIndex((entry) => entry.id === id);
+			const current = i === -1 ? undefined : toasts.value[i];
+			if (current?._updated) {
+				toasts.value[i] = {
+					...current,
+					_updated: undefined,
+				};
+			}
 		});
 	}
 
 	function remove(id: string | number) {
+		const index = toasts.value.findIndex((entry) => entry.id === id);
+		const existing = index === -1 ? undefined : toasts.value[index];
+		if (existing?._updated) {
+			return;
+		}
+
 		clearTimer(id);
-		toasts.value = toasts.value.filter((toast) => toast.id !== id);
+
+		if (existing) {
+			toasts.value[index] = {
+				...existing,
+				open: false,
+			};
+		}
+
+		setTimeout(() => {
+			toasts.value = toasts.value.filter((entry) => entry.id !== id);
+			clearTimer(id);
+		}, 200);
 	}
 
 	function clear() {
@@ -87,5 +206,11 @@ export function useToast() {
 		toasts.value = [];
 	}
 
-	return { toasts, add, update, remove, clear };
+	return {
+		toasts,
+		add,
+		update,
+		remove,
+		clear,
+	};
 }

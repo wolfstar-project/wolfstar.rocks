@@ -1,4 +1,5 @@
 import type { GuildData } from "#server/database";
+import type { DOMWrapper } from "@vue/test-utils";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
@@ -115,7 +116,9 @@ const mockCommands: FlattenedCommand[] = [
 type MountedDisabledCommands = Awaited<ReturnType<typeof mountSuspended>>;
 
 function getCommandCard(wrapper: MountedDisabledCommands, commandName: string) {
-	const label = wrapper.findAll("p.font-medium").find((el) => el.text() === commandName);
+	const label = wrapper
+		.findAll("p.font-medium")
+		.find((el: DOMWrapper<Element>) => el.text() === commandName);
 	expect(label, `expected command label "${commandName}"`).toBeDefined();
 
 	let current: Element | null = label!.element.parentElement;
@@ -131,7 +134,7 @@ function readCommandEnabled(wrapper: MountedDisabledCommands, commandName: strin
 	const card = getCommandCard(wrapper, commandName);
 	const commandSwitch = wrapper
 		.findAll('[role="switch"]')
-		.find((switchElement) => card.contains(switchElement.element));
+		.find((switchElement: DOMWrapper<Element>) => card.contains(switchElement.element));
 
 	expect(commandSwitch, `expected switch for "${commandName}"`).toBeDefined();
 	return commandSwitch!.attributes("aria-checked") === "true";

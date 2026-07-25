@@ -34,12 +34,11 @@ describe("ModerationLogQuerySchema", () => {
 		const result = safeParse(ModerationLogQuerySchema, { limit: "10" });
 		expect(result).toMatchObject({
 			success: true,
-			output: expect.objectContaining({
-				limit: 10,
-				userId: undefined,
-				moderatorId: undefined,
-			}),
+			output: { limit: 10, offset: 0 },
 		});
+		// Valibot omits absent optional keys rather than setting them to undefined.
+		expect(result.output).not.toHaveProperty("userId");
+		expect(result.output).not.toHaveProperty("moderatorId");
 	});
 });
 

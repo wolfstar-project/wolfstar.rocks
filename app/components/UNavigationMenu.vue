@@ -8,7 +8,6 @@
 				ui?.root,
 			)
 		"
-		:aria-label="ariaLabel"
 	>
 		<template v-for="(item, index) in flatItems" :key="index">
 			<li v-if="item.type === 'separator'" class="divider my-1" />
@@ -76,7 +75,6 @@ const props = withDefaults(
 		tooltip?: boolean | object;
 		popover?: boolean | object;
 		ui?: Record<string, string>;
-		ariaLabel?: string;
 	}>(),
 	{
 		items: () => [],

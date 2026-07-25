@@ -6,7 +6,7 @@
 				<NuxtLink
 					:to="link.to ?? link.href"
 					:target="link.target"
-					class="link link-hover text-sm text-muted"
+					class="link text-sm text-muted link-hover"
 				>
 					<Icon v-if="link.icon" :name="link.icon" class="me-1 inline size-3.5" />
 					{{ link.label }}
@@ -20,7 +20,13 @@
 withDefaults(
 	defineProps<{
 		title?: string;
-		links?: Array<{ label: string; to?: string; href?: string; target?: string; icon?: string }>;
+		links?: Array<{
+			label: string;
+			to?: string;
+			href?: string;
+			target?: string;
+			icon?: string;
+		}>;
 		ariaLabel?: string;
 	}>(),
 	{

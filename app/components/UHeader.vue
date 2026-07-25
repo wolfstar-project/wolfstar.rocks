@@ -3,7 +3,7 @@
 		<div class="navbar-start gap-2">
 			<button
 				type="button"
-				class="btn btn-ghost btn-square lg:hidden"
+				class="btn btn-square btn-ghost lg:hidden"
 				aria-label="Open menu"
 				aria-controls="u-header-mobile-menu"
 				:aria-expanded="open"
@@ -30,7 +30,11 @@
 		>
 			<div class="modal-box flex max-h-[90vh] flex-col">
 				<form method="dialog" class="absolute top-2 right-2">
-					<button type="submit" class="btn btn-ghost btn-sm btn-circle" aria-label="Close menu">
+					<button
+						type="submit"
+						class="btn btn-circle btn-ghost btn-sm"
+						aria-label="Close menu"
+					>
 						<Icon name="lucide:x" class="size-4" />
 					</button>
 				</form>

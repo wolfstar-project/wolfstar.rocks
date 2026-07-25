@@ -1,5 +1,5 @@
 <template>
-	<div class="prose prose-neutral max-w-none dark:prose-invert">
+	<div class="prose max-w-none prose-neutral dark:prose-invert">
 		<slot />
 	</div>
 </template>

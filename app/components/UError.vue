@@ -18,9 +18,7 @@ const props = defineProps<{
 	};
 }>();
 
-const statusCode = computed(
-	() => props.error?.statusCode ?? props.error?.status ?? 500,
-);
+const statusCode = computed(() => props.error?.statusCode ?? props.error?.status ?? 500);
 const statusMessage = computed(
 	() => props.error?.statusMessage ?? props.error?.statusText ?? "Something went wrong",
 );

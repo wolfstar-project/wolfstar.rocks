@@ -1,5 +1,14 @@
 <template>
-	<div role="alert" :class="cn('alert', alertColorClass(color), (variant === 'soft' || variant === 'subtle') && 'alert-soft')">
+	<div
+		role="alert"
+		:class="
+			cn(
+				'alert',
+				alertColorClass(color),
+				(variant === 'soft' || variant === 'subtle') && 'alert-soft',
+			)
+		"
+	>
 		<Icon v-if="icon" :name="icon" class="size-5 shrink-0" aria-hidden="true" />
 		<div class="min-w-0 flex-1">
 			<div v-if="title || $slots.title" class="font-semibold">

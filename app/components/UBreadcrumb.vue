@@ -2,11 +2,16 @@
 	<nav aria-label="Breadcrumb">
 		<ol class="flex flex-wrap items-center gap-2 text-sm">
 			<li v-for="(item, index) in items" :key="index" class="flex items-center gap-2">
-				<Icon v-if="item.icon" :name="item.icon" class="size-4 text-muted" aria-hidden="true" />
+				<Icon
+					v-if="item.icon"
+					:name="item.icon"
+					class="size-4 text-muted"
+					aria-hidden="true"
+				/>
 				<NuxtLink
 					v-if="item.to && index < items.length - 1"
 					:to="item.to"
-					class="link link-hover text-muted"
+					class="link text-muted link-hover"
 				>
 					{{ item.label }}
 				</NuxtLink>

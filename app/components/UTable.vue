@@ -3,11 +3,7 @@
 		<table class="table w-full" :class="ui?.base">
 			<thead :class="ui?.thead">
 				<tr v-for="headerGroup in tableApi.getHeaderGroups()" :key="headerGroup.id">
-					<th
-						v-for="header in headerGroup.headers"
-						:key="header.id"
-						:class="ui?.th"
-					>
+					<th v-for="header in headerGroup.headers" :key="header.id" :class="ui?.th">
 						<FlexRender
 							v-if="!header.isPlaceholder"
 							:render="header.column.columnDef.header"
@@ -27,11 +23,17 @@
 				<template v-else>
 					<tr v-for="row in tableApi.getRowModel().rows" :key="row.id">
 						<td v-for="cell in row.getVisibleCells()" :key="cell.id" :class="ui?.td">
-							<FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+							<FlexRender
+								:render="cell.column.columnDef.cell"
+								:props="cell.getContext()"
+							/>
 						</td>
 					</tr>
 					<tr v-if="tableApi.getRowModel().rows.length === 0">
-						<td :colspan="Math.max(columns.length, 1)" class="py-8 text-center text-muted">
+						<td
+							:colspan="Math.max(columns.length, 1)"
+							class="py-8 text-center text-muted"
+						>
 							No results
 						</td>
 					</tr>

@@ -5,8 +5,13 @@
 </template>
 
 <script setup lang="ts">
-import { formErrorsKey, type FormError, type FormErrorEvent, type FormSubmitEvent } from "#shared/types/ui";
 import type { GenericSchema } from "valibot";
+import {
+	formErrorsKey,
+	type FormError,
+	type FormErrorEvent,
+	type FormSubmitEvent,
+} from "#shared/types/ui";
 import { safeParse } from "valibot";
 
 const props = defineProps<{
@@ -22,11 +27,15 @@ const emit = defineEmits<{
 const errors = ref<FormError[]>([]);
 provide(formErrorsKey, errors);
 
-function mapIssues(issues: Array<{ message: string; path?: Array<{ key?: unknown }> }>): FormError[] {
+function mapIssues(
+	issues: Array<{ message: string; path?: Array<{ key?: unknown }> }>,
+): FormError[] {
 	return issues.map((issue) => {
 		const name =
 			issue.path
-				?.map((part) => (part.key === undefined || part.key === null ? "" : String(part.key)))
+				?.map((part) =>
+					part.key === undefined || part.key === null ? "" : String(part.key),
+				)
 				.filter(Boolean)
 				.join(".") ?? "";
 		return {

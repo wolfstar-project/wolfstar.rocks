@@ -2,7 +2,13 @@
 	<NuxtLink
 		:to="to ?? href"
 		:target="target"
-		:class="cn('link link-hover', color && isSemanticColor(color) ? `link-${color}` : '', attrs.class as string | undefined)"
+		:class="
+			cn(
+				'link link-hover',
+				color && isSemanticColor(color) ? `link-${color}` : '',
+				attrs.class as string | undefined,
+			)
+		"
 		v-bind="restAttrs"
 	>
 		<slot>{{ label }}</slot>

@@ -1,5 +1,5 @@
 <template>
-	<footer :class="cn('footer footer-center p-4', ui?.root)" v-bind="$attrs">
+	<footer :class="cn('footer-center footer p-4', ui?.root)" v-bind="$attrs">
 		<div v-if="$slots.top" :class="cn('w-full', ui?.top)">
 			<slot name="top" />
 		</div>

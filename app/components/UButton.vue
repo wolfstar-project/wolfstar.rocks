@@ -10,7 +10,7 @@
 		:tabindex="isDisabled ? -1 : undefined"
 		@click="onClick"
 	>
-		<span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
+		<span v-if="loading" class="loading loading-sm loading-spinner" aria-hidden="true" />
 		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">
@@ -36,7 +36,7 @@
 		:tabindex="isDisabled ? -1 : undefined"
 		@click="onClick"
 	>
-		<span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
+		<span v-if="loading" class="loading loading-sm loading-spinner" aria-hidden="true" />
 		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">
@@ -60,7 +60,7 @@
 		:aria-busy="loading || undefined"
 		@click="onClick"
 	>
-		<span v-if="loading" class="loading loading-spinner loading-sm" aria-hidden="true" />
+		<span v-if="loading" class="loading loading-sm loading-spinner" aria-hidden="true" />
 		<UAvatar v-else-if="avatar" v-bind="avatar" size="xs" class="shrink-0" />
 		<Icon v-else-if="icon" :name="icon" class="size-4 shrink-0" aria-hidden="true" />
 		<span v-if="label || $slots.default" class="truncate">

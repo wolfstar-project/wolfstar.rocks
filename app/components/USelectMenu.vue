@@ -4,12 +4,12 @@
 			v-if="searchEnabled"
 			v-model="query"
 			type="search"
-			class="input input-bordered input-sm mb-2 w-full"
+			class="input-bordered input input-sm mb-2 w-full"
 			:placeholder="searchPlaceholder"
 			:disabled="disabled"
 		/>
 		<select
-			class="select select-bordered w-full"
+			class="select-bordered select w-full"
 			:multiple="multiple"
 			:disabled="disabled"
 			:size="multiple ? Math.min(8, Math.max(3, filteredItems.length)) : undefined"
@@ -33,7 +33,12 @@
 <script setup lang="ts">
 import type { SelectItem, SelectOption } from "#shared/types/ui";
 
-type SelectModelValue = string | number | SelectOption | Array<string | number | SelectOption> | null;
+type SelectModelValue =
+	| string
+	| number
+	| SelectOption
+	| Array<string | number | SelectOption>
+	| null;
 
 const props = withDefaults(
 	defineProps<{
@@ -66,10 +71,14 @@ const resolvedValueKey = computed(() => props.valueAttribute ?? props.valueKey);
 
 const searchEnabled = computed(() => Boolean(props.searchInput));
 const searchPlaceholder = computed(() =>
-	typeof props.searchInput === "object" ? (props.searchInput.placeholder ?? "Search...") : "Search...",
+	typeof props.searchInput === "object"
+		? (props.searchInput.placeholder ?? "Search...")
+		: "Search...",
 );
 
-function flattenItems(items: SelectItem[] | Array<SelectOption | string | number | null | false | undefined>): Array<SelectOption | string | number> {
+function flattenItems(
+	items: SelectItem[] | Array<SelectOption | string | number | null | false | undefined>,
+): Array<SelectOption | string | number> {
 	const result: Array<SelectOption | string | number> = [];
 	for (const item of items) {
 		if (item === null || item === undefined || item === false) continue;

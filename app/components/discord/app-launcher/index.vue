@@ -36,6 +36,28 @@
 		/>
 
 		<template v-if="activeView === null">
+			<!-- Search sits outside the scroller so the track starts below it, like Discord. -->
+			<div class="discord-app-launcher-search-header">
+				<div class="discord-app-launcher-search">
+					<UIcon
+						name="discord:search"
+						class="discord-app-launcher-search-icon"
+						aria-hidden="true"
+					/>
+					<input
+						ref="searchRef"
+						v-model="searchQuery"
+						type="search"
+						class="discord-app-launcher-search-input"
+						placeholder="Search Apps & Commands"
+						aria-label="Search Apps & Commands"
+						autocomplete="off"
+						spellcheck="false"
+						@keydown.enter.prevent="onSearchEnter"
+					/>
+				</div>
+			</div>
+
 			<DiscordScrollbar
 				class="discord-app-launcher-main-scroll"
 				:min-thumb-height="14"
@@ -43,27 +65,6 @@
 				auto-hide
 			>
 				<div class="discord-app-launcher-main-content">
-					<div class="discord-app-launcher-search-sticky">
-						<div class="discord-app-launcher-search">
-							<UIcon
-								name="discord:search"
-								class="discord-app-launcher-search-icon"
-								aria-hidden="true"
-							/>
-							<input
-								ref="searchRef"
-								v-model="searchQuery"
-								type="search"
-								class="discord-app-launcher-search-input"
-								placeholder="Search Apps & Commands"
-								aria-label="Search Apps & Commands"
-								autocomplete="off"
-								spellcheck="false"
-								@keydown.enter.prevent="onSearchEnter"
-							/>
-						</div>
-					</div>
-
 					<div class="discord-app-launcher-main-sections">
 						<!-- Command hits appear only while searching — never a static /commands page. -->
 						<section
@@ -478,7 +479,7 @@
 													promo.title
 												}}</span>
 												<UIcon
-													name="ph:eye-bold"
+													name="discord:eye"
 													class="discord-app-launcher-promo-eye"
 													aria-hidden="true"
 												/>
@@ -1021,17 +1022,19 @@ onBeforeUnmount(() => {
 @reference "@/assets/css/main.css";
 
 .discord-app-launcher {
-	--discord-app-launcher-bg: rgb(41 40 45);
-	--discord-app-launcher-nested: rgb(50 49 54);
-	--discord-app-launcher-text: oklch(95% 0.004 272);
-	--discord-app-launcher-header: oklch(82% 0.01 272);
-	--discord-app-launcher-muted: oklch(68% 0.012 272);
-	--discord-app-launcher-link: oklch(72% 0.11 264);
-	--discord-app-launcher-focus: oklch(58% 0.21 274);
-	--discord-app-launcher-search-bg: oklch(18% 0.005 272);
+	/* Discord dark theme surfaces: #2b2d31 popout, #313338 cards, #1e1f22 input. */
+	--discord-app-launcher-bg: oklch(26.65% 0.006 272.93);
+	--discord-app-launcher-nested: oklch(28.84% 0.007 272.93);
+	--discord-app-launcher-text: oklch(91.56% 0.004 272.93);
+	--discord-app-launcher-header: oklch(96.2% 0.002 272.93);
+	--discord-app-launcher-muted: oklch(71.01% 0.01 273.13);
+	--discord-app-launcher-interactive: oklch(80.5% 0.008 273.13);
+	--discord-app-launcher-link: oklch(66.5% 0.147 236);
+	--discord-app-launcher-focus: oklch(57.74% 0.2091 273.85);
+	--discord-app-launcher-search-bg: oklch(19.34% 0.004 273.16);
 	--discord-app-launcher-divider: oklch(100% 0 0 / 0.06);
 	--discord-app-launcher-icon-bg: oklch(32% 0.01 264);
-	--discord-app-launcher-shadow: oklch(0% 0 0 / 0.5);
+	--discord-app-launcher-shadow: oklch(0% 0 0 / 0.24);
 	--discord-app-launcher-wordle-bg: oklch(93% 0.008 95);
 	--discord-app-launcher-wordle-title: oklch(22% 0.02 260);
 	--discord-app-launcher-wordle-subtitle: oklch(42% 0.02 260);
@@ -1047,14 +1050,14 @@ onBeforeUnmount(() => {
 	--discord-app-launcher-garden-flower: oklch(78% 0.16 340);
 	--discord-app-launcher-back-bg: oklch(32% 0.01 264);
 	--discord-app-launcher-back-hover: oklch(38% 0.012 268);
-	--discord-app-launcher-help-bg: rgb(50 49 54);
+	--discord-app-launcher-help-bg: oklch(28.84% 0.007 272.93);
 	--discord-app-launcher-wolfstar-bg: oklch(0% 0 0);
 
-	@apply flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-xl border font-whitney shadow-xl;
+	@apply flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-lg border font-whitney;
 	background-color: var(--discord-app-launcher-bg);
 	border-color: var(--discord-app-launcher-divider);
 	color: var(--discord-app-launcher-text);
-	box-shadow: 0 8px 24px var(--discord-app-launcher-shadow);
+	box-shadow: 0 8px 16px var(--discord-app-launcher-shadow);
 }
 
 .discord-app-launcher-main-scroll {
@@ -1066,8 +1069,8 @@ onBeforeUnmount(() => {
 	@apply px-4 pb-4;
 }
 
-.discord-app-launcher-search-sticky {
-	@apply sticky top-0 z-2 pt-4 pb-4;
+.discord-app-launcher-search-header {
+	@apply shrink-0 px-4 pt-4 pb-3;
 	background-color: var(--discord-app-launcher-bg);
 }
 
@@ -1080,12 +1083,12 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-search-icon {
-	@apply pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2;
+	@apply pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2;
 	color: var(--discord-app-launcher-muted);
 }
 
 .discord-app-launcher-search-input {
-	@apply h-10 w-full rounded-lg border-2 bg-transparent py-0 pr-3 pl-10 text-[15px] outline-none;
+	@apply h-11 w-full rounded-lg border-2 bg-transparent py-0 pr-3 pl-11 text-base outline-none;
 	appearance: none;
 	background-color: var(--discord-app-launcher-search-bg);
 	border-color: transparent;
@@ -1111,7 +1114,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-section-title {
-	@apply m-0 inline-flex items-center gap-1 text-sm font-semibold;
+	@apply m-0 inline-flex items-center gap-1 text-base font-medium;
 	color: var(--discord-app-launcher-header);
 }
 
@@ -1121,7 +1124,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-view-more {
-	@apply cursor-pointer border-0 bg-transparent p-0 text-sm font-medium;
+	@apply cursor-pointer border-0 bg-transparent p-0 text-base font-semibold;
 	color: var(--discord-app-launcher-link);
 }
 
@@ -1136,9 +1139,7 @@ onBeforeUnmount(() => {
 .discord-app-launcher-view-more-mobile,
 .discord-app-launcher-server-title-mobile,
 .discord-app-launcher-view-more-footer,
-.discord-app-launcher-handle,
-.discord-app-launcher-recents-mobile,
-.discord-app-launcher-server-mobile {
+.discord-app-launcher-handle {
 	display: none;
 }
 
@@ -1165,7 +1166,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-recent-icon {
-	@apply inline-flex size-12 items-center justify-center overflow-hidden rounded-xl;
+	@apply inline-flex size-12 items-center justify-center overflow-hidden rounded-[14px];
 	background-color: var(--discord-app-launcher-icon-bg);
 	transition: filter 0.12s ease;
 }
@@ -1191,7 +1192,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-server-list {
-	@apply flex flex-col overflow-hidden rounded-xl;
+	@apply flex flex-col overflow-hidden rounded-lg;
 	background-color: var(--discord-app-launcher-nested);
 }
 
@@ -1363,7 +1364,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo {
-	@apply h-auto items-stretch justify-start rounded-xl p-0;
+	@apply h-auto items-stretch justify-start rounded-lg p-0;
 	background-color: var(--discord-app-launcher-nested);
 }
 
@@ -1504,13 +1505,13 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-title {
-	@apply truncate text-sm leading-tight font-semibold;
-	color: var(--discord-app-launcher-text);
+	@apply truncate text-[15px] leading-tight font-medium;
+	color: var(--discord-app-launcher-header);
 }
 
 .discord-app-launcher-promo-eye {
-	@apply size-4 shrink-0;
-	color: var(--discord-app-launcher-muted);
+	@apply size-[18px] shrink-0;
+	color: var(--discord-app-launcher-interactive);
 }
 
 .discord-app-launcher-promo-description {
@@ -1519,7 +1520,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-help {
-	@apply flex items-center justify-between gap-4 rounded-xl px-4 py-3;
+	@apply flex items-center justify-between gap-4 rounded-lg px-4 py-3;
 	background-color: var(--discord-app-launcher-help-bg);
 }
 
@@ -1549,8 +1550,9 @@ onBeforeUnmount(() => {
 	@apply outline-2 outline-offset-2 outline-primary;
 }
 
+/* Tiles are mobile-only; the sheet media query switches them back to `grid`. */
 .discord-app-launcher-tile-grid {
-	@apply m-0 grid list-none grid-cols-2 gap-2 p-0;
+	@apply m-0 hidden list-none grid-cols-2 gap-2 p-0;
 }
 
 .discord-app-launcher-tile {
@@ -1641,7 +1643,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-list-body {
-	@apply mx-4 mb-4 flex flex-col overflow-hidden rounded-xl;
+	@apply mx-4 mb-4 flex flex-col overflow-hidden rounded-lg;
 	background-color: var(--discord-app-launcher-nested);
 }
 
@@ -1728,8 +1730,8 @@ onBeforeUnmount(() => {
 		@apply px-3 pb-5;
 	}
 
-	.discord-app-launcher-search-sticky {
-		@apply pt-2 pb-3 shadow-none;
+	.discord-app-launcher-search-header {
+		@apply px-3 pt-2 pb-3 shadow-none;
 		background-color: var(--discord-app-launcher-bg);
 	}
 

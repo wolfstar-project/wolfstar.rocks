@@ -33,7 +33,7 @@
 				<span class="discord-app-launcher-list-item-name">{{ name }}</span>
 				<UIcon
 					v-if="showEye"
-					name="ph:eye-bold"
+					name="discord:eye"
 					class="discord-app-launcher-list-item-eye"
 					aria-hidden="true"
 				/>
@@ -95,15 +95,16 @@ const ariaLabel = computed(() => {
 @reference "@/assets/css/main.css";
 
 .discord-app-launcher-list-item {
-	--discord-app-launcher-list-item-hover: rgb(59 58 63);
-	--discord-app-launcher-list-item-name: oklch(100% 0 0);
-	--discord-app-launcher-list-item-description: oklch(68% 0.012 273);
-	--discord-app-launcher-list-item-eye: oklch(68% 0.012 273);
+	/* Discord row tokens: #35373c hover, #f2f3f5 name, #949ba4 body, #b5bac1 glyphs. */
+	--discord-app-launcher-list-item-hover: oklch(31.4% 0.006 272.93);
+	--discord-app-launcher-list-item-name: oklch(96.2% 0.002 272.93);
+	--discord-app-launcher-list-item-description: oklch(71.01% 0.01 273.13);
+	--discord-app-launcher-list-item-eye: oklch(80.5% 0.008 273.13);
 	--discord-app-launcher-list-item-icon-bg: oklch(32% 0.01 264);
 	--discord-app-launcher-list-item-wolfstar-bg: oklch(0% 0 0);
 	--discord-app-launcher-list-item-promoted-bg: oklch(91.56% 0.004 272.93);
 	--discord-app-launcher-list-item-promoted-text: oklch(26.65% 0.006 272.93);
-	--discord-app-launcher-list-item-chevron: oklch(68% 0.012 273);
+	--discord-app-launcher-list-item-chevron: oklch(80.5% 0.008 273.13);
 
 	@apply flex w-full cursor-pointer items-center gap-3 rounded-lg border-0 bg-transparent px-2 py-2 text-left font-whitney;
 }
@@ -147,7 +148,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item-name {
-	@apply truncate text-[15px] leading-tight font-semibold;
+	@apply truncate text-base leading-tight font-medium;
 	color: var(--discord-app-launcher-list-item-name);
 }
 
@@ -163,7 +164,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item-description {
-	@apply truncate text-[13px] leading-snug;
+	@apply truncate text-sm leading-snug;
 	color: var(--discord-app-launcher-list-item-description);
 }
 

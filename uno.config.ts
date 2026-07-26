@@ -1,6 +1,7 @@
 import { presetDaisy } from "@ameinhardt/unocss-preset-daisy";
 import daisyTheme from "daisyui/functions/variables.js";
 import { defineConfig, presetWind4, transformerDirectives, transformerVariantGroup } from "unocss";
+import { presetA11y } from "./uno-preset-a11y";
 
 /**
  * UnoCSS + Wind4 alongside Tailwind's Daisy `@plugin` (themes stay in main.css).
@@ -36,6 +37,7 @@ export default defineConfig({
 				reset: false,
 			},
 		}),
+		presetA11y(),
 	],
 	theme: {
 		...daisyTheme,

@@ -13,11 +13,6 @@ function warnOnce(message: string, key: string) {
 	}
 }
 
-/** Reset warning state (for testing) */
-export function resetA11yWarnings() {
-	warnedClasses.clear();
-}
-
 const textPxToClass: Record<number, string> = {
 	11: "text-2xs",
 	10: "text-3xs",

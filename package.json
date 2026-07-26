@@ -90,7 +90,6 @@
 		"@vue/test-utils": "^2.4.6",
 		"@vueuse/core": "^14.2.1",
 		"@vueuse/integrations": "^14.2.1",
-		"@vueuse/motion": "^3.0.3",
 		"@vueuse/nuxt": "^14.2.1",
 		"@vueuse/router": "^14.2.1",
 		"better-auth": "^1.6.23",

@@ -1,8 +1,3 @@
-/**
- * Pure helpers mirrored from the extracted Nuxt UI `useToast` queue behavior.
- * Full composable coverage lives behind Nuxt `useState` / inject; these tests lock the
- * merge / slice rules that drive toast display.
- */
 import { describe, expect, it } from "vitest";
 
 interface ToastLike {

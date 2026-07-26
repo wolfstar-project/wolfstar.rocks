@@ -1,12 +1,11 @@
-import type { ShortcutsConfig, ShortcutsOptions } from "#shared/types/ui";
 /**
- * Extracted from Nuxt UI v4 (`@nuxt/ui` → `src/runtime/composables/defineShortcuts.ts`).
- *
+ * From Nuxt UI v4 `defineShortcuts`.
  * @license MIT — Copyright (c) NuxtHub / Nuxt UI contributors
  * @see https://github.com/nuxt/ui
  */
 /* eslint-disable regexp/no-useless-quantifier */
 /* eslint-disable regexp/no-super-linear-backtracking */
+import type { ShortcutsConfig, ShortcutsOptions } from "#shared/types/ui";
 import type { MaybeRefOrGetter } from "vue";
 import { useActiveElement, useDebounceFn, useEventListener, useTimeoutFn } from "@vueuse/core";
 import { useKbd } from "./useKbd";
@@ -26,7 +25,6 @@ interface Shortcut {
 
 const chainedShortcutRegex = /^[^-]+.*-.*[^-]+$/;
 const combinedShortcutRegex = /^[^_]+.*_.*[^_]+$/;
-/** Keyboard keys which can be combined with Shift (in addition to alphabet keys). */
 const shiftableKeys = new Set([
 	"arrowleft",
 	"arrowright",
@@ -38,7 +36,6 @@ const shiftableKeys = new Set([
 	"backspace",
 ]);
 
-/** Simple key → code conversion for layout independence. */
 function convertKeyToCode(key: string): string {
 	if (/^[a-z]$/i.test(key)) {
 		return `Key${key.toUpperCase()}`;

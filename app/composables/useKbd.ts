@@ -1,6 +1,5 @@
 /**
- * Extracted from Nuxt UI v4 (`@nuxt/ui` → `src/runtime/composables/useKbd.ts`).
- *
+ * From Nuxt UI v4 `useKbd`.
  * @license MIT — Copyright (c) NuxtHub / Nuxt UI contributors
  * @see https://github.com/nuxt/ui
  */

@@ -128,8 +128,5 @@ const normalizedGroups = computed<MenuItem[][]>(() => {
 
 function onSelect(item: MenuItem, event: Event) {
 	item.onSelect?.(event);
-	if (item.to || item.href) {
-		// navigation handled by NuxtLink click
-	}
 }
 </script>

@@ -1,12 +1,9 @@
-import type { SemanticColor } from "#shared/types/ui";
 /**
- * Extracted from Nuxt UI v4 (`@nuxt/ui` → `src/runtime/composables/useToast.ts`).
- * Adapted for DaisyUI toast host in `AppProviders` (duration auto-dismiss lives here
- * because we do not mount Reka UI `ToastRoot` / `ToastProvider`).
- *
+ * From Nuxt UI v4 `useToast`. Duration auto-dismiss lives here (no Reka ToastRoot).
  * @license MIT — Copyright (c) NuxtHub / Nuxt UI contributors
  * @see https://github.com/nuxt/ui
  */
+import type { SemanticColor } from "#shared/types/ui";
 import type { InjectionKey, Ref } from "vue";
 
 export const toastMaxInjectionKey: InjectionKey<Ref<number | undefined>> =

@@ -462,7 +462,7 @@
 	}
 }
 
-/* Nuxt-UI-compat semantic color utilities used across templates */
+/* Former Nuxt UI semantic color utilities used across templates */
 @utility text-muted {
 	color: color-mix(in oklch, var(--color-base-content) 60%, transparent);
 }

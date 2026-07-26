@@ -67,12 +67,6 @@ export default defineNuxtConfig({
 			name: "WolfStar (Dev)",
 			url: "http://localhost:3000",
 		},
-		// Dev-only: Vitest browser sessions break with bundledDev.
-		vite: {
-			experimental: {
-				bundledDev: true,
-			},
-		},
 	},
 
 	$test: {

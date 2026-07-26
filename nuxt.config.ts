@@ -15,8 +15,6 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
-		// UnoCSS alongside Tailwind v4 + DaisyUI (DaisyUI UnoCSS install guide).
-		// Themes and `@plugin "daisyui"` stay in main.css; see uno.config.ts.
 		"@unocss/nuxt",
 		"@nuxt/icon",
 		"@nuxtjs/color-mode",

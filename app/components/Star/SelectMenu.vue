@@ -46,7 +46,7 @@ const props = withDefaults(
 		items?: SelectItem[] | Array<SelectOption | string | number | null | false | undefined>;
 		multiple?: boolean;
 		valueKey?: string;
-		/** Alias for valueKey (Nuxt UI / older call sites). */
+		/** Alias for `valueKey` (older call sites). */
 		valueAttribute?: string;
 		labelKey?: string;
 		searchInput?: boolean | { placeholder?: string };

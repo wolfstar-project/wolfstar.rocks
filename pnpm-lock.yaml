@@ -303,6 +303,9 @@ importers:
       nuxt-skill-hub:
         specifier: ^0.1.1
         version: 0.1.1(@huggingface/transformers@4.2.0)(ai@6.0.228)(magic-string@1.0.0)(magicast@0.5.3)(oxc-parser@0.132.0)(pg@8.22.0)(rolldown@1.1.4)(sqlite-vec@0.1.9)(unplugin@3.3.0)(unstorage@1.17.5)
+      oxlint-tsgolint:
+        specifier: 0.24.0
+        version: 0.24.0
       prisma:
         specifier: 7.8.0
         version: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript@6.0.3)

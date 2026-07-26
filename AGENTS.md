@@ -18,6 +18,7 @@
 - Keep functions focused and manageable (generally under 50 lines)
 - Use error handling patterns consistently
 - Ensure you write strictly type-safe code, for example by ensuring you always check when accessing an array value by index
+- Type-aware Oxlint rules (tsgolint-backed, e.g. `@typescript-eslint/no-floating-promises`) run only via the opt-in `pnpm vp run lint:type-aware` task — they are not part of `pnpm lint:fix` or the CI `lint` gate yet
 - Never cast things to `any`
 
 ## Naming Conventions
@@ -97,6 +98,7 @@ pnpm build-storybook             # Build static Storybook output
 pnpm chromatic                   # Publish Storybook to Chromatic for visual review
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
+pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
 pnpm prisma:migrate:dev:create   # Create a migration without applying it

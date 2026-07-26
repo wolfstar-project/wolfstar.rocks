@@ -27,6 +27,12 @@ export default defineConfig({
 			"lint": {
 				command: "vp lint && vp fmt --check",
 			},
+			"lint:type-aware": {
+				// tsgolint (typescript-go) doesn't resolve `.vue` module imports, so
+				// `--type-check` floods the run with false TS2307 "cannot find module"
+				// errors on every `.vue` import; `--type-aware` alone stays useful.
+				command: "vp lint --type-aware",
+			},
 			"knip": {
 				command: "knip && knip --production --exclude dependencies",
 			},
@@ -236,6 +242,25 @@ export default defineConfig({
 			"regexp/strict": "error",
 			"regexp/use-ignore-case": "error",
 			"vitest/require-mock-type-parameters": "off",
+			// Type-aware (tsgolint) rules: only active under `vp run lint:type-aware`.
+			// Curated starter set; severity is "warn" while the codebase catches up.
+			"@typescript-eslint/await-thenable": "warn",
+			"@typescript-eslint/no-floating-promises": "warn",
+			"@typescript-eslint/no-misused-promises": "warn",
+			"@typescript-eslint/no-unnecessary-type-assertion": "warn",
+			// The rest of the type-aware rule set that `--type-aware` would otherwise
+			// enable via the correctness/suspicious category defaults above; left off
+			// until we've reviewed them individually.
+			"@typescript-eslint/consistent-return": "off",
+			"@typescript-eslint/no-base-to-string": "off",
+			"@typescript-eslint/no-duplicate-type-constituents": "off",
+			"@typescript-eslint/no-misused-spread": "off",
+			"@typescript-eslint/no-redundant-type-constituents": "off",
+			"@typescript-eslint/no-unnecessary-type-conversion": "off",
+			"@typescript-eslint/no-unnecessary-type-parameters": "off",
+			"@typescript-eslint/no-unsafe-type-assertion": "off",
+			"@typescript-eslint/restrict-template-expressions": "off",
+			"@typescript-eslint/unbound-method": "off",
 		},
 		ignorePatterns: [
 			".output/**",

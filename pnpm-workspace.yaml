@@ -42,6 +42,7 @@ overrides:
     vitest: 4.1.10
 
 patchedDependencies:
+    "@ameinhardt/unocss-preset-daisy@1.1.8": patches/@ameinhardt__unocss-preset-daisy@1.1.8.patch
     "@nuxt/test-utils@4.0.3": patches/@nuxt__test-utils@4.0.3.patch
 
 catalogs:

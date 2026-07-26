@@ -52,7 +52,7 @@
 									Filter
 									{{ state.selfmodNewlinesEnabled ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Flags messages with excessive line breaks.
 								</p>
 							</div>
@@ -70,7 +70,7 @@
 								<p class="text-sm leading-none font-medium">
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Posts an alert in the channel where the violation occurred.
 								</p>
 							</div>
@@ -88,7 +88,7 @@
 								<p class="text-sm leading-none font-medium">
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Sends a log entry to the moderation logs channel.
 								</p>
 							</div>
@@ -106,7 +106,7 @@
 								<p class="text-sm leading-none font-medium">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Automatically deletes the offending message.
 								</p>
 							</div>
@@ -150,7 +150,7 @@
 					<div>
 						<p class="mb-2 text-sm font-medium">
 							Violations before punishment
-							<span class="ml-1 text-muted tabular-nums"
+							<span class="ml-1 text-base-content/60 tabular-nums"
 								>({{ state.selfmodNewlinesThresholdMaximum }})</span
 							>
 						</p>
@@ -160,7 +160,7 @@
 							:max="60"
 							aria-label="New lines filter violations before punishment slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 flex justify-between text-xs text-base-content/60">
 							<span>0</span>
 							<span>60</span>
 						</div>
@@ -169,7 +169,7 @@
 					<div>
 						<p class="mb-2 text-sm font-medium">
 							Time window (seconds)
-							<span class="ml-1 text-muted tabular-nums"
+							<span class="ml-1 text-base-content/60 tabular-nums"
 								>({{ state.selfmodNewlinesThresholdDurationSeconds }}s)</span
 							>
 						</p>
@@ -179,7 +179,7 @@
 							:max="120"
 							aria-label="New lines filter time window (seconds) slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 flex justify-between text-xs text-base-content/60">
 							<span>0s</span>
 							<span>120s</span>
 						</div>
@@ -194,11 +194,11 @@
 				<div>
 					<p class="mb-1 text-sm font-medium">
 						Maximum New Lines
-						<span class="ml-1 text-muted tabular-nums"
+						<span class="ml-1 text-base-content/60 tabular-nums"
 							>({{ state.selfmodNewlinesMaximum }})</span
 						>
 					</p>
-					<p class="mb-3 text-xs text-muted">
+					<p class="mb-3 text-xs text-base-content/60">
 						Maximum amount of new lines in a message before filter is applied
 					</p>
 					<StarSlider
@@ -207,7 +207,7 @@
 						:max="2000"
 						aria-label="New lines selfmod filter maximum lines slider"
 					/>
-					<div class="mt-1 flex justify-between text-xs text-muted">
+					<div class="mt-1 flex justify-between text-xs text-base-content/60">
 						<span>10</span>
 						<span>2000</span>
 					</div>

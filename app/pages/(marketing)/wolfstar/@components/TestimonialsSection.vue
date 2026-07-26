@@ -49,7 +49,7 @@
 					>
 						{{ testimonial.name }}
 					</div>
-					<div class="text-xs text-muted">{{ testimonial.role }}</div>
+					<div class="text-xs text-base-content/60">{{ testimonial.role }}</div>
 				</figcaption>
 			</SurfaceCard>
 		</div>

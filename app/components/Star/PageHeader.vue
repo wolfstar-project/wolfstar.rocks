@@ -4,7 +4,7 @@
 			<slot name="headline" />
 		</div>
 		<h1 v-if="title" class="text-3xl font-bold tracking-tight sm:text-4xl">{{ title }}</h1>
-		<p v-if="description" class="text-lg text-muted">{{ description }}</p>
+		<p v-if="description" class="text-lg text-base-content/60">{{ description }}</p>
 		<slot />
 	</header>
 </template>

@@ -87,7 +87,7 @@ const profile = computed(() => Profiles[name.value]);
 }
 
 .discord-message-timestamp {
-	@apply ml-1.5 text-[10px] font-medium text-muted sm:text-xs;
+	@apply ml-1.5 text-[10px] font-medium text-base-content/60 sm:text-xs;
 }
 
 @media (width >= 48rem) {

@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
+	<div class="w-full flex-1 divide-y divide-base-300">
 		<div class="flex items-center justify-between gap-2 overflow-x-auto px-4 py-3.5">
 			<StarInput
 				v-model="query"
@@ -34,16 +34,16 @@
 					base: 'table-fixed border-separate border-spacing-0',
 					thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
 					tbody: '[&>tr]:last:[&>td]:border-b-0',
-					th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
-					td: 'border-b border-default',
+					th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-base-200 first:border-l last:border-r',
+					td: 'border-b border-base-200',
 					separator: 'h-0',
 				}"
 			/>
 			<div
 				v-if="total > page"
-				class="mt-4 flex items-center justify-between border-t border-default pt-4"
+				class="mt-4 flex items-center justify-between border-t border-base-200 pt-4"
 			>
-				<p class="text-sm text-muted">
+				<p class="text-sm text-base-content/60">
 					Showing
 					{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
 					{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
@@ -99,7 +99,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 				h("div", undefined, [
 					h(
 						"p",
-						{ class: "font-medium text-highlighted" },
+						{ class: "font-medium text-base-content" },
 						auditLogMemberName(row.original.member),
 					),
 					h("p", { class: "" }, `@${row.original.member.user?.username ?? "unknown"}`),
@@ -124,7 +124,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 				{
 					datetime: row.original.timestamp,
 					title: new Date(row.original.timestamp).toLocaleString(),
-					class: "whitespace-nowrap text-sm text-muted",
+					class: "whitespace-nowrap text-sm text-base-content/60",
 				},
 				formatTimeAgo(new Date(row.original.timestamp)),
 			),

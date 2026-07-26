@@ -72,7 +72,7 @@
 						<template #trailing>
 							<div
 								id="character-count"
-								class="text-xs text-muted tabular-nums"
+								class="text-xs text-base-content/60 tabular-nums"
 								aria-live="polite"
 								role="status"
 							>
@@ -143,8 +143,8 @@
 				base: 'table-fixed border-separate border-spacing-0',
 				thead: '[&>tr]:bg-base-200/50 [&>tr]:after:content-none',
 				tbody: '[&>tr]:last:[&>td]:border-b-0',
-				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-default first:border-l last:border-r',
-				td: 'border-b border-default',
+				th: 'py-2 first:rounded-l-lg last:rounded-r-lg border-y border-base-200 first:border-l last:border-r',
+				td: 'border-b border-base-200',
 				separator: 'h-0',
 			}"
 		/>
@@ -198,7 +198,7 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 			return h(
 				"time",
 				{
-					class: "whitespace-nowrap text-xs text-highlighted",
+					class: "whitespace-nowrap text-xs text-base-content",
 					datetime: new Date(row.original.timestamp).toISOString(),
 				},
 				new Date(row.original.timestamp).toLocaleString(),
@@ -217,7 +217,7 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 				h("div", undefined, [
 					h(
 						"p",
-						{ class: "font-medium text-highlighted" },
+						{ class: "font-medium text-base-content" },
 						auditLogMemberName(row.original.member),
 					),
 					h("p", { class: "" }, `@${row.original.member.user.username}`),

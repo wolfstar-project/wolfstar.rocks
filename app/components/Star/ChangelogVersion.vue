@@ -3,7 +3,7 @@
 		<header class="space-y-2">
 			<div class="flex flex-wrap items-center gap-3">
 				<h2 v-if="title" class="text-2xl font-bold">{{ title }}</h2>
-				<span v-if="date" class="text-sm text-muted">{{ date }}</span>
+				<span v-if="date" class="text-sm text-base-content/60">{{ date }}</span>
 			</div>
 			<div v-if="authors?.length" class="flex flex-wrap gap-2">
 				<slot name="authors">
@@ -18,7 +18,7 @@
 			<figure v-if="image?.src" class="overflow-hidden rounded-lg">
 				<img :src="image.src" :alt="image.alt ?? title" class="w-full object-cover" />
 			</figure>
-			<p v-if="description" class="text-muted">{{ description }}</p>
+			<p v-if="description" class="text-base-content/60">{{ description }}</p>
 		</header>
 		<div class="prose max-w-none dark:prose-invert">
 			<slot name="body">

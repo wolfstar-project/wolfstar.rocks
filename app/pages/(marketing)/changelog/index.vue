@@ -47,7 +47,7 @@
 				</StarChangelogVersion>
 			</StarChangelogVersions>
 
-			<p v-else class="text-muted">No releases have been published yet.</p>
+			<p v-else class="text-base-content/60">No releases have been published yet.</p>
 		</StarPageBody>
 	</StarContainer>
 </template>

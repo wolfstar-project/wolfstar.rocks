@@ -7,7 +7,7 @@
 					{{ stat.value }}
 				</dd>
 				<dt
-					class="mt-1.5 text-xs font-bold tracking-(--home-ls-label) text-muted uppercase"
+					class="mt-1.5 text-xs font-bold tracking-(--home-ls-label) text-base-content/60 uppercase"
 				>
 					{{ stat.label }}
 				</dt>

@@ -5,18 +5,18 @@
 				<Icon
 					v-if="item.icon"
 					:name="item.icon"
-					class="size-4 text-muted"
+					class="size-4 text-base-content/60"
 					aria-hidden="true"
 				/>
 				<NuxtLink
 					v-if="item.to && index < items.length - 1"
 					:to="item.to"
-					class="link text-muted link-hover"
+					class="link text-base-content/60 link-hover"
 				>
 					{{ item.label }}
 				</NuxtLink>
 				<span v-else class="font-medium">{{ item.label }}</span>
-				<span v-if="index < items.length - 1" class="text-muted" aria-hidden="true">/</span>
+				<span v-if="index < items.length - 1" class="text-base-content/60" aria-hidden="true">/</span>
 			</li>
 		</ol>
 	</nav>

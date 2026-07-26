@@ -21,7 +21,7 @@ export const Default: Story = {
 		components: { DiscordScrollbar },
 		setup: () => ({ args }),
 		template: `
-			<div class="h-48 w-72 overflow-hidden rounded-md border border-default">
+			<div class="h-48 w-72 overflow-hidden rounded-md border border-base-200">
 				<DiscordScrollbar v-bind="args" class="h-full">
 					<p v-for="n in 24" :key="n" class="px-3 py-1">Scrollable row {{ n }}</p>
 				</DiscordScrollbar>
@@ -39,7 +39,7 @@ export const AutoHide: Story = {
 		components: { DiscordScrollbar },
 		setup: () => ({ args }),
 		template: `
-			<div class="h-48 w-72 overflow-hidden rounded-md border border-default">
+			<div class="h-48 w-72 overflow-hidden rounded-md border border-base-200">
 				<DiscordScrollbar v-bind="args" class="h-full">
 					<p v-for="n in 24" :key="n" class="px-3 py-1">Hover or scroll to reveal — row {{ n }}</p>
 				</DiscordScrollbar>

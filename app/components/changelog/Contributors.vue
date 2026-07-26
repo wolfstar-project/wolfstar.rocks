@@ -1,6 +1,6 @@
 <template>
 	<section v-if="contributors.length > 0" class="not-prose mt-8" :aria-label="regionLabel">
-		<h3 :id="headingId" class="mb-3 text-lg font-semibold text-highlighted">Contributors</h3>
+		<h3 :id="headingId" class="mb-3 text-lg font-semibold text-base-content">Contributors</h3>
 		<ul class="list-disc space-y-1 ps-5">
 			<li v-for="contributor in contributors" :key="contributor.username">
 				<ChangelogContributorMention

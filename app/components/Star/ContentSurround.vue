@@ -5,7 +5,7 @@
 			:to="prev.path ?? prev.to"
 			class="card border border-base-200 bg-base-200/40 p-4 transition-colors hover:bg-base-200"
 		>
-			<p class="text-xs text-muted">Previous</p>
+			<p class="text-xs text-base-content/60">Previous</p>
 			<p class="font-medium">{{ prev.title }}</p>
 		</NuxtLink>
 		<NuxtLink
@@ -13,7 +13,7 @@
 			:to="next.path ?? next.to"
 			class="card border border-base-200 bg-base-200/40 p-4 text-end transition-colors hover:bg-base-200 sm:col-start-2"
 		>
-			<p class="text-xs text-muted">Next</p>
+			<p class="text-xs text-base-content/60">Next</p>
 			<p class="font-medium">{{ next.title }}</p>
 		</NuxtLink>
 	</nav>

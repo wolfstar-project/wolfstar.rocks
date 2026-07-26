@@ -18,13 +18,13 @@
 				class="dashboard-toolbar flex items-center gap-3 border-b px-6 py-4.5"
 				aria-hidden="true"
 			>
-				<StarIcon name="ph:magnifying-glass" class="h-4 w-4 text-muted" />
+				<StarIcon name="ph:magnifying-glass" class="h-4 w-4 text-base-content/60" />
 				<div
-					class="dashboard-search flex h-9 flex-1 items-center rounded-md border px-3 text-sm text-muted"
+					class="dashboard-search flex h-9 flex-1 items-center rounded-md border px-3 text-sm text-base-content/60"
 				>
 					Search members…
 				</div>
-				<span class="text-sm whitespace-nowrap text-muted">1,204 members</span>
+				<span class="text-sm whitespace-nowrap text-base-content/60">1,204 members</span>
 			</div>
 			<div class="px-6 py-1" aria-hidden="true">
 				<div
@@ -47,7 +47,7 @@
 						<div :class="cn('text-sm font-semibold', member.nameClass)">
 							{{ member.name }}
 						</div>
-						<div class="text-xs text-muted capitalize">{{ member.status }}</div>
+						<div class="text-xs text-base-content/60 capitalize">{{ member.status }}</div>
 					</div>
 					<span :class="cn('badge badge-soft badge-sm', member.badgeClass)">
 						{{ member.role }}

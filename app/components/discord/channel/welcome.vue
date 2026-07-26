@@ -52,7 +52,7 @@ defineProps<ChannelWelcomeProps>();
 }
 
 .discord-channel-welcome-description {
-	@apply mt-2 text-base text-muted;
+	@apply mt-2 text-base text-base-content/60;
 }
 
 .discord-channel-welcome-edit {
@@ -61,7 +61,7 @@ defineProps<ChannelWelcomeProps>();
 }
 
 .discord-channel-welcome-date {
-	@apply mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-[12px] font-semibold tracking-wide text-muted uppercase;
+	@apply mt-6 grid grid-cols-[1fr_auto_1fr] items-center gap-2 text-[12px] font-semibold tracking-wide text-base-content/60 uppercase;
 }
 
 .discord-channel-welcome-date > span {

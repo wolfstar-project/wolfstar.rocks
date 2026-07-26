@@ -15,7 +15,7 @@
 		>
 			<StarIcon
 				name="material-symbols-install-desktop-rounded"
-				class="text-[5.5rem] text-muted opacity-10 sm:text-[7.5rem]"
+				class="text-[5.5rem] text-base-content/60 opacity-10 sm:text-[7.5rem]"
 			/>
 		</div>
 

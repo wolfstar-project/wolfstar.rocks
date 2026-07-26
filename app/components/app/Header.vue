@@ -21,7 +21,7 @@
 				:items="desktopLinks"
 				variant="link"
 				:ui="{
-					link: 'rounded-full px-4 py-2 text-sm font-medium text-muted hover:text-base-content',
+					link: 'rounded-full px-4 py-2 text-sm font-medium text-base-content/60 hover:text-base-content',
 					root: 'gap-0',
 				}"
 			/>
@@ -63,11 +63,11 @@
 					:ui="{
 						link: 'rounded-lg px-3 py-3 text-base font-medium',
 						childLink: 'rounded-lg px-3 py-2.5 text-sm',
-						childList: 'ms-2 border-s border-default ps-2',
+						childList: 'ms-2 border-s border-base-200 ps-2',
 					}"
 				/>
 
-				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
+				<div class="mt-auto flex flex-col items-center gap-3 border-t border-base-200 pt-5">
 					<StarButton
 						v-if="currentApp.invite !== '#'"
 						label="Add App"
@@ -106,7 +106,6 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 @reference "@/assets/css/main.css";
 
 .app-navbar {
-	--ui-header-height: 5rem;
 	width: 100%;
 	border-radius: 0;
 	border-bottom: 1px solid var(--home-border-subtle);

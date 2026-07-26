@@ -19,7 +19,7 @@
 					/>
 					<div class="flex items-center space-x-2">
 						<span>{{ article.category }}</span>
-						<span class="text-muted"
+						<span class="text-base-content/60"
 							>&middot;&nbsp;&nbsp;<time>{{
 								formatDateByLocale("en", article.date)
 							}}</time></span

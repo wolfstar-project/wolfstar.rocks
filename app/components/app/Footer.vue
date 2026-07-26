@@ -2,7 +2,7 @@
 	<StarFooter
 		:ui="{
 			root: 'p-2 content-visibility-auto bg-base-200',
-			top: 'border-default',
+			top: 'border-base-200',
 		}"
 		aria-label="Site footer"
 	>
@@ -65,7 +65,7 @@
 						:key="column.label"
 						:aria-label="`Footer ${column.label} links`"
 					>
-						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
+						<div class="mb-4 text-xs font-bold tracking-wider text-base-content/60 uppercase">
 							{{ column.label }}
 						</div>
 						<div class="flex flex-col gap-2.5">

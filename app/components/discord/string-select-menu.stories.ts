@@ -36,9 +36,9 @@ export const NearComposer: Story = {
 		components: { DiscordStringSelectMenu },
 		setup: () => ({ args }),
 		template: `
-			<div class="relative flex h-[28rem] max-w-md flex-col justify-end overflow-hidden rounded border border-default p-4">
+			<div class="relative flex h-[28rem] max-w-md flex-col justify-end overflow-hidden rounded border border-base-200 p-4">
 				<DiscordStringSelectMenu v-bind="args" />
-				<p class="mt-3 text-sm text-muted">Message #mod_commands</p>
+				<p class="mt-3 text-sm text-base-content/60">Message #mod_commands</p>
 			</div>
 		`,
 	}),

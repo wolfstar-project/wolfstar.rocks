@@ -3,7 +3,7 @@
 		<StarAvatar :src="avatar?.src ?? src" :alt="avatar?.alt ?? alt ?? name" :size="size" />
 		<div class="min-w-0">
 			<p class="truncate font-medium">{{ name }}</p>
-			<p v-if="description" class="truncate text-sm text-muted">{{ description }}</p>
+			<p v-if="description" class="truncate text-sm text-base-content/60">{{ description }}</p>
 		</div>
 	</div>
 </template>

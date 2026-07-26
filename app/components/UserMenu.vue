@@ -22,7 +22,7 @@
 			:square="collapsed"
 			class="data-[state=open]:bg-primary/10"
 			:ui="{
-				trailingIcon: 'text-dimmed',
+				trailingIcon: 'text-base-content/40',
 			}"
 			:aria-label="collapsed ? 'User menu' : `User menu for ${user?.name}`"
 			aria-haspopup="true"

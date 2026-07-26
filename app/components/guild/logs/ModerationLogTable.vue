@@ -1,5 +1,5 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
+	<div class="w-full flex-1 divide-y divide-base-300">
 		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
 			<StarInput
 				v-model="q"
@@ -38,7 +38,7 @@
 				:loading="status === 'pending'"
 				class="min-h-100"
 			/>
-			<div class="flex justify-end border-t border-accented px-4 py-3.5">
+			<div class="flex justify-end border-t border-base-300 px-4 py-3.5">
 				<StarPagination
 					v-if="total > limit"
 					v-model:page="page"
@@ -148,7 +148,7 @@ const columns: TableColumn<ModerationLogEntry>[] = [
 			h(
 				"span",
 				{
-					class: "line-clamp-1 max-w-xs text-sm text-muted",
+					class: "line-clamp-1 max-w-xs text-sm text-base-content/60",
 					title: row.original.reason ?? "No reason provided",
 				},
 				row.original.reason ?? "No reason provided",
@@ -165,7 +165,7 @@ const columns: TableColumn<ModerationLogEntry>[] = [
 					title: row.original.createdAt
 						? new Date(row.original.createdAt).toLocaleString()
 						: "",
-					class: "whitespace-nowrap text-sm text-muted",
+					class: "whitespace-nowrap text-sm text-base-content/60",
 				},
 				row.original.createdAt ? formatTimeAgo(new Date(row.original.createdAt)) : "—",
 			),

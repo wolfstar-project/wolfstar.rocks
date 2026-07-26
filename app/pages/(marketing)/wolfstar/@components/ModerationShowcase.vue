@@ -56,13 +56,13 @@
 									<div class="showcase-channel-header">
 										<StarIcon
 											name="ph:folder-fill"
-											class="size-4.5 shrink-0 text-muted"
+											class="size-4.5 shrink-0 text-base-content/60"
 											aria-hidden="true"
 										/>
 										<span class="text-[15px] font-semibold text-base-content"
 											>automod-demo</span
 										>
-										<span class="text-xs text-muted">— WolfStar HQ</span>
+										<span class="text-xs text-base-content/60">— WolfStar HQ</span>
 									</div>
 									<div class="showcase-card-body p-5">
 										<DiscordMessages
@@ -400,13 +400,13 @@
 									<div class="showcase-channel-header">
 										<StarIcon
 											name="ph:folder-fill"
-											class="size-4.5 shrink-0 text-muted"
+											class="size-4.5 shrink-0 text-base-content/60"
 											aria-hidden="true"
 										/>
 										<span class="text-[15px] font-semibold text-base-content"
 											>server-logs</span
 										>
-										<span class="text-xs text-muted">— WolfStar HQ</span>
+										<span class="text-xs text-base-content/60">— WolfStar HQ</span>
 									</div>
 									<div class="showcase-card-body p-5">
 										<DiscordMessages
@@ -588,14 +588,14 @@
 										<div class="showcase-channel-header">
 											<StarIcon
 												name="ph:folder-fill"
-												class="size-4.5 shrink-0 text-muted"
+												class="size-4.5 shrink-0 text-base-content/60"
 												aria-hidden="true"
 											/>
 											<span
 												class="text-[15px] font-semibold text-base-content"
 												>mod-log</span
 											>
-											<span class="text-xs text-muted">— WolfStar HQ</span>
+											<span class="text-xs text-base-content/60">— WolfStar HQ</span>
 										</div>
 										<div class="showcase-card-body p-5">
 											<DiscordMessages
@@ -966,7 +966,7 @@ onUnmounted(cleanup);
 }
 
 .radio-feature-arrow {
-	@apply inline-flex size-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-muted transition-colors hover:text-base-content sm:size-4;
+	@apply inline-flex size-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-base-content/60 transition-colors hover:text-base-content sm:size-4;
 }
 
 @media not (hover: hover) {

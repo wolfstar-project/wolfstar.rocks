@@ -14,7 +14,7 @@
 				/>
 			</template>
 			<template #footer>
-				<div class="space-y-2 text-sm text-muted">
+				<div class="space-y-2 text-sm text-base-content/60">
 					<p>
 						<span class="font-semibold">Owner and data controller:</span> WolfStar
 						Project

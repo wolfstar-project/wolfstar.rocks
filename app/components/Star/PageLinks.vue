@@ -6,7 +6,7 @@
 				<NuxtLink
 					:to="link.to ?? link.href"
 					:target="link.target"
-					class="link text-sm text-muted link-hover"
+					class="link text-sm text-base-content/60 link-hover"
 				>
 					<Icon v-if="link.icon" :name="link.icon" class="me-1 inline size-3.5" />
 					{{ link.label }}

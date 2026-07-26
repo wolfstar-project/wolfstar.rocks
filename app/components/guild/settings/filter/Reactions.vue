@@ -48,7 +48,7 @@
 									Filter
 									{{ state.selfmodReactionsEnabled ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Limits how many reactions a member can add.
 								</p>
 							</div>
@@ -66,7 +66,7 @@
 								<p class="text-sm leading-none font-medium">
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Posts an alert in the channel where the violation occurred.
 								</p>
 							</div>
@@ -84,7 +84,7 @@
 								<p class="text-sm leading-none font-medium">
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Sends a log entry to the moderation logs channel.
 								</p>
 							</div>
@@ -102,7 +102,7 @@
 								<p class="text-sm leading-none font-medium">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
-								<p class="mt-1 text-xs text-muted">
+								<p class="mt-1 text-xs text-base-content/60">
 									Automatically deletes the offending message.
 								</p>
 							</div>
@@ -146,7 +146,7 @@
 					<div>
 						<p class="mb-2 text-sm font-medium">
 							Violations before punishment
-							<span class="ml-1 text-muted tabular-nums"
+							<span class="ml-1 text-base-content/60 tabular-nums"
 								>({{ state.selfmodReactionsThresholdMaximum }})</span
 							>
 						</p>
@@ -156,7 +156,7 @@
 							:max="60"
 							aria-label="Reactions filter violations before punishment slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 flex justify-between text-xs text-base-content/60">
 							<span>0</span>
 							<span>60</span>
 						</div>
@@ -165,7 +165,7 @@
 					<div>
 						<p class="mb-2 text-sm font-medium">
 							Time window (seconds)
-							<span class="ml-1 text-muted tabular-nums"
+							<span class="ml-1 text-base-content/60 tabular-nums"
 								>({{ state.selfmodReactionsThresholdDurationSeconds }}s)</span
 							>
 						</p>
@@ -175,7 +175,7 @@
 							:max="120"
 							aria-label="Reactions filter time window (seconds) slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 flex justify-between text-xs text-base-content/60">
 							<span>0s</span>
 							<span>120s</span>
 						</div>

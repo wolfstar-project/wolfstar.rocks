@@ -11,7 +11,7 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			variant="link"
-			class="text-highlighted underline decoration-dotted underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+			class="text-base-content underline decoration-dotted underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
 		>
 			{{ name }} (@{{ username }})
 		</StarButton>
@@ -21,33 +21,33 @@
 				<div class="flex items-start gap-3">
 					<StarAvatar :src="avatarSrc" :alt="`${name} avatar`" size="lg" />
 					<div class="min-w-0 flex-1">
-						<p class="truncate font-semibold text-highlighted">
+						<p class="truncate font-semibold text-base-content">
 							{{ name }}
 						</p>
-						<p class="truncate text-sm text-muted">@{{ username }}</p>
+						<p class="truncate text-sm text-base-content/60">@{{ username }}</p>
 					</div>
 				</div>
 
 				<dl
-					class="divide-default mt-3 grid grid-cols-3 divide-x border-t border-default pt-3 text-center"
+					class="divide-base-200 mt-3 grid grid-cols-3 divide-x border-t border-base-200 pt-3 text-center"
 				>
 					<div class="px-1.5">
-						<dt class="text-xs leading-tight text-muted">Commits</dt>
-						<dd class="mt-1 text-sm font-semibold text-highlighted tabular-nums">
+						<dt class="text-xs leading-tight text-base-content/60">Commits</dt>
+						<dd class="mt-1 text-sm font-semibold text-base-content tabular-nums">
 							{{ formattedCommits }}
 						</dd>
 					</div>
 					<div class="px-1.5">
-						<dt class="text-xs leading-tight text-muted">On this repo</dt>
-						<dd class="mt-1 text-sm font-semibold text-highlighted tabular-nums">
+						<dt class="text-xs leading-tight text-base-content/60">On this repo</dt>
+						<dd class="mt-1 text-sm font-semibold text-base-content tabular-nums">
 							{{ formattedCommits }}
 						</dd>
 					</div>
 					<div class="px-1.5">
-						<dt class="text-xs leading-tight text-muted">Contributed here</dt>
+						<dt class="text-xs leading-tight text-base-content/60">Contributed here</dt>
 						<dd
 							class="mt-1 text-sm font-semibold"
-							:class="hasContributed ? 'text-success' : 'text-muted'"
+							:class="hasContributed ? 'text-success' : 'text-base-content/60'"
 						>
 							{{ hasContributed ? "Yes" : "No" }}
 						</dd>

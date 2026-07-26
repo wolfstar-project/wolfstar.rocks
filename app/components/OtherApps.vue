@@ -65,7 +65,7 @@
 					<div class="mb-1.5 text-base font-semibold text-base-content/80">
 						More apps in the works
 					</div>
-					<div class="text-[13px] text-muted">
+					<div class="text-[13px] text-base-content/60">
 						Follow the
 						<NuxtLink to="/blog" class="link-hover underline">blog</NuxtLink> for what's
 						next.

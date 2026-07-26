@@ -28,7 +28,7 @@ export const Default: Story = {
 	render: () => ({
 		template: `
 			<div class="container mx-auto px-4 py-8">
-				<p class="text-muted text-sm italic">
+				<p class="text-base-content/60 text-sm italic">
 					This page has no visible UI. It redirects to Discord OAuth on mount.
 				</p>
 			</div>

@@ -30,6 +30,7 @@ export default defineConfig({
 		presetDaisy({
 			// Tokens already come from main.css `@plugin "daisyui/theme"`.
 			base: false,
+			// @ts-expect-error - daisyUI accepts `false` to disable themes; preset types only list string[].
 			themes: false,
 		}),
 		presetWind4({

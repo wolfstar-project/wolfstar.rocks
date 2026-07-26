@@ -20,16 +20,16 @@
 		<button
 			type="button"
 			class="discord-app-launcher-handle"
-			:tabindex="isSmallScreen ? 0 : -1"
-			:aria-hidden="isSmallScreen ? undefined : 'true'"
+			:tabindex="isBelowMediumScreen ? 0 : -1"
+			:aria-hidden="isBelowMediumScreen ? undefined : 'true'"
 			:aria-label="
-				isSmallScreen
+				isBelowMediumScreen
 					? sheetSnap === 'full'
 						? 'Collapse Apps sheet'
 						: 'Expand Apps sheet'
 					: undefined
 			"
-			:aria-expanded="isSmallScreen ? sheetSnap === 'full' : undefined"
+			:aria-expanded="isBelowMediumScreen ? sheetSnap === 'full' : undefined"
 			@pointerdown="onHandlePointerDown"
 			@keydown.up.prevent="expandSheet"
 			@keydown.down.prevent="collapseSheet"
@@ -798,7 +798,7 @@ function shouldShowCategoryViewMore(category: DiscordAppLauncherListView): boole
 }
 
 function isWolfstarEntry(entry: DiscordAppLauncherEntry): boolean {
-	return entry.avatar === "/avatars/wolfstar.png" || entry.id.startsWith("wolfstar");
+	return entry.id.startsWith("wolfstar");
 }
 
 function recentTileLabel(entry: DiscordAppLauncherEntry): string {
@@ -854,7 +854,7 @@ function resolveSheetHeightBounds(root: HTMLElement): { half: number; full: numb
 }
 
 function onHandlePointerDown(event: PointerEvent) {
-	if (!isSmallScreen.value || event.button !== 0) return;
+	if (!isBelowMediumScreen.value || event.button !== 0) return;
 	const root = rootRef.value;
 	if (!root) return;
 
@@ -1574,14 +1574,15 @@ onBeforeUnmount(() => {
 	@apply flex w-full cursor-pointer items-center gap-2.5 rounded-[12px] border-0 px-2.5 py-2.5 text-left;
 	background-color: var(--discord-app-launcher-nested);
 	color: var(--discord-app-launcher-text);
+	transition: filter 0.12s ease;
+}
+
+.discord-app-launcher-tile:hover {
+	filter: brightness(1.08);
 }
 
 .discord-app-launcher-tile:focus-visible {
 	@apply outline-2 outline-offset-2 outline-primary;
-}
-
-.discord-app-launcher-tile:hover .discord-app-launcher-tile-icon {
-	filter: brightness(1.1);
 }
 
 .discord-app-launcher-tile-icon {

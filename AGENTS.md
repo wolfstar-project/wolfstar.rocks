@@ -18,6 +18,7 @@
 - Keep functions focused and manageable (generally under 50 lines)
 - Use error handling patterns consistently
 - Ensure you write strictly type-safe code, for example by ensuring you always check when accessing an array value by index
+- Type-aware Oxlint rules (tsgolint-backed, e.g. `@typescript-eslint/no-floating-promises`) run only via the opt-in `pnpm vp run lint:type-aware` task — they are not part of `pnpm lint:fix` or the CI `lint` gate yet
 - Never cast things to `any`
 
 ## Naming Conventions
@@ -55,6 +56,8 @@
 ## Auth and Feedback
 
 - Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider (scopes `guilds`, `guilds.members.read`, `email`), rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
+- `server/auth.config.ts` builds its `secondaryStorage` via `createAuthSecondaryStorage()` from `server/utils/auth-rate-limit-storage.ts`, which adapts a Nitro/unstorage mount to better-auth's `SecondaryStorage` shape and adds an `increment()` with an in-process keyed mutex (mirroring `server/utils/wrappedEventHandler.ts`) so better-auth's fixed-window rate limiter gets a single-step atomic-ish counter instead of its non-atomic get-then-set fallback
+- Mock authentication in Nuxt component tests with `mockAuth()` from `test/nuxt/utils/auth.ts` (wraps `mockNuxtImport("useUserSession", ...)` plus an `$authorization` provide fallback) instead of hand-rolling `useUserSession`/`$authorization` mocks per spec
 - There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
 - `server/middleware/oauth-callback.ts` + `server/utils/oauth-callback.ts` (`resolveOAuthProviderCallbackRedirect()`) redirect Discord's response at `/oauth/callback` to the better-auth callback path when a `state` query param is present; plain browser navigations to `/oauth/callback` (no `state`) fall through to the Vue callback page at `app/pages/oauth/callback.vue`
 - `server/api/auth/refresh.get.ts` refreshes the Discord access token via `refreshSessionTokens()` in `server/utils/oauth-tokens.ts`, which wraps better-auth's `auth.api.getAccessToken()` / `auth.api.refreshToken()`
@@ -97,6 +100,7 @@ pnpm build-storybook             # Build static Storybook output
 pnpm chromatic                   # Publish Storybook to Chromatic for visual review
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
+pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
 pnpm prisma:migrate:dev:create   # Create a migration without applying it
@@ -173,7 +177,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URL` matches Discord Developer Portal exactly
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
-- **Duplicate/incompatible `vue` or `discord-api-types` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
+- **Duplicate/incompatible `vue`, `discord-api-types`, or `@unhead/vue`/`unhead` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
@@ -273,7 +277,7 @@ It checks:
 Files added to `ALLOW_LIST` in the test are permanently exempt. Current exemptions:
 
 - `app/components/OgImage/Page.takumi.vue` — Satori does not support `var()` references
-- `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, and the slash-command autocomplete family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
+- `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, the `chat-input-command/` autocomplete family, and the `app-launcher/` family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
 
 ### Token Reference
 

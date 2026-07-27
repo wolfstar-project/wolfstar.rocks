@@ -73,6 +73,9 @@ const config: KnipConfig = {
 				/** Peer-style dep resolved by @nuxtjs/i18n at prepare time (not imported directly) */
 				"@intlify/shared",
 
+				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
+				"oxlint-tsgolint",
+
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",

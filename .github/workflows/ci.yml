@@ -23,7 +23,7 @@ permissions:
 jobs:
   lint:
     name: 🔠 Lint project
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: depot-ubuntu-24.04-arm-4
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -43,7 +43,7 @@ jobs:
 
   typecheck:
     name: 🔎 Typecheck project
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: depot-ubuntu-24.04-arm-4
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -64,7 +64,7 @@ jobs:
 
   unit:
     name: 🧪 Unit tests
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: depot-ubuntu-24.04-arm-4
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -103,7 +103,7 @@ jobs:
 
   test:
     name: 🧪 Component tests
-    runs-on: blacksmith-8vcpu-ubuntu-2404-arm
+    runs-on: depot-ubuntu-24.04-arm-8
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -147,7 +147,7 @@ jobs:
 
   browser:
     name: 🖥️ Browser tests
-    runs-on: blacksmith-8vcpu-ubuntu-2404-arm
+    runs-on: depot-ubuntu-24.04-arm-8
     container:
       image: mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48
 
@@ -188,7 +188,7 @@ jobs:
 
   benchmark:
     name: ⚡ Benchmarks
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: depot-ubuntu-24.04-4
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -209,7 +209,7 @@ jobs:
 
   a11y:
     name: ♿ Accessibility audit
-    runs-on: blacksmith-8vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: depot-ubuntu-24.04-8 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
     strategy:
       matrix:
         mode: [dark, light]
@@ -241,7 +241,7 @@ jobs:
 
   perf:
     name: ⚡ Performance
-    runs-on: blacksmith-8vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: depot-ubuntu-24.04-8 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -269,7 +269,7 @@ jobs:
 
   knip:
     name: 🧹 Unused code check
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: depot-ubuntu-24.04-arm-4
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2

@@ -1,16 +1,16 @@
 packages: []
 
 allowedDeprecatedVersions:
-    glob: 7.2.3
-    inflight: 1.0.6
-    sourcemap-codec: 1.4.8
+  glob: 7.2.3
+  inflight: 1.0.6
+  sourcemap-codec: 1.4.8
 
 shamefullyHoist: true
 hoistPattern:
-    - "*prisma*"
+  - "*prisma*"
 publicHoistPattern:
-    - "*import-in-the-middle*"
-    - "*require-in-the-middle*"
+  - "*import-in-the-middle*"
+  - "*require-in-the-middle*"
 
 confirmModulesPurge: false
 
@@ -18,70 +18,70 @@ dedupePeers: true
 strictDepBuilds: false
 
 overrides:
-    "@netlify/api": ^14.0.18
-    # Keep a single discord-api-types instance; two copies make structurally
-    # identical Discord payload types nominally incompatible during typecheck
-    discord-api-types: 0.38.48
-    # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
-    # vue copies make VueUse and app refs incompatible during typecheck
-    vue: 3.5.40
-    # Nuxt 4.5 needs unhead v3; @nuxt/ui still peers v2 (missing legacyPlugins).
-    "@unhead/vue": 3.2.3
-    unhead: 3.2.3
-    sharp: 0.34.5
-    # Vite+ 0.2.x: alias vite to core; pin vitest to the bundled version.
-    vite: npm:@voidzero-dev/vite-plus-core@0.2.5
-    vitest: 4.1.10
+  "@netlify/api": ^14.0.19
+  # Keep a single discord-api-types instance; two copies make structurally
+  # identical Discord payload types nominally incompatible during typecheck
+  discord-api-types: 0.38.51
+  # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
+  # vue copies make VueUse and app refs incompatible during typecheck
+  vue: 3.5.40
+  # Nuxt 4.5 needs unhead v3; @nuxt/ui still peers v2 (missing legacyPlugins).
+  "@unhead/vue": 3.2.3
+  unhead: 3.2.3
+  sharp: 0.34.5
+  # Vite+ 0.2.x: alias vite to core; pin vitest to the bundled version.
+  vite: npm:@voidzero-dev/vite-plus-core@0.2.6
+  vitest: 4.1.10
 
 patchedDependencies:
-    "@nuxt/test-utils@4.0.3": patches/@nuxt__test-utils@4.0.3.patch
+  "@nuxt/test-utils@4.0.3": patches/@nuxt__test-utils@4.0.3.patch
 
 catalogs:
-    msw:
-        "msw": "^2.13.2"
+  msw:
+    "msw": "^2.15.0"
 
-    storybook:
-        "@storybook-vue/nuxt": "9.1.0-29411911.f34c865"
-        "@storybook/addon-a11y": "^10.3.5"
-        "@storybook/addon-docs": "^10.3.5"
-        "@storybook/addon-themes": "^10.3.5"
-        "msw-storybook-addon": "^2.0.7"
-        "storybook": "^10.3.1"
+  storybook:
+    "@storybook-vue/nuxt": "9.1.0-29411911.f34c865"
+    "@storybook/addon-a11y": "^10.5.4"
+    "@storybook/addon-docs": "^10.5.4"
+    "@storybook/addon-themes": "^10.5.4"
+    "msw-storybook-addon": "^2.0.7"
+    "storybook": "^10.5.4"
 
 peerDependencyRules:
-    allowAny:
-        - "vite"
-        - "vitest"
+  allowAny:
+    - "vite"
+    - "vitest"
 
 shellEmulator: true
 
 allowBuilds:
-    "@google/genai": false
-    "@parcel/watcher": false
-    "@prisma/client": true
-    "@prisma/engines": true
-    "@sentry/cli": false
-    "@tailwindcss/oxide": true
-    better-sqlite3: true
-    core-js: false
-    esbuild: false
-    msw: true
-    onnxruntime-node: false
-    prisma: true
-    protobufjs: false
-    sharp: true
-    unrs-resolver: false
-    vue-demi: false
+  "@google/genai": false
+  "@parcel/watcher": false
+  "@prisma/client": true
+  "@prisma/engines": true
+  "@sentry/cli": false
+  "@tailwindcss/oxide": true
+  better-sqlite3: true
+  core-js: false
+  esbuild: false
+  msw: true
+  onnxruntime-node: false
+  prisma: true
+  protobufjs: false
+  sharp: true
+  unrs-resolver: false
+  vue-demi: false
 
 minimumReleaseAge: 2880
 
 minimumReleaseAgeExclude:
-    # Nuxt
-    - "@nuxt/*"
-    - "@nuxtjs/*"
-    - "nuxt"
-    - "nuxt-*"
-    - "@unhead/*"
-    - "unhead"
-    - "@voidzero-dev/*"
-    - "vite-plus"
+  # Nuxt
+  - "@nuxt/*"
+  - "@nuxtjs/*"
+  - "nuxt"
+  - "nuxt-*"
+  - "@unhead/*"
+  - "unhead"
+  - "@voidzero-dev/*"
+  - "vite-plus"

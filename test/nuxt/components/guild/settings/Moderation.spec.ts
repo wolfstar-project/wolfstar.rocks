@@ -33,36 +33,33 @@ function getSwitch(wrapper: Awaited<ReturnType<typeof mountSuspended>>, label: s
 	return wrapper.find(`[aria-label="${label}"]`);
 }
 
-function expectSwitchState(
+function readSwitchState(
 	wrapper: Awaited<ReturnType<typeof mountSuspended>>,
 	label: string,
-	expected: boolean,
-) {
+): boolean {
 	const switchElement = getSwitch(wrapper, label);
 
-	expect(switchElement.exists()).toBeTruthy();
+	if (!switchElement.exists()) {
+		throw new Error(`Switch not found for ${label}`);
+	}
 
 	const ariaChecked = switchElement.attributes("aria-checked");
 	if (ariaChecked !== undefined) {
-		expect(ariaChecked === "true").toBe(expected);
-		return;
+		return ariaChecked === "true";
 	}
 
 	const ariaPressed = switchElement.attributes("aria-pressed");
 	if (ariaPressed !== undefined) {
-		expect(ariaPressed === "true").toBe(expected);
-		return;
+		return ariaPressed === "true";
 	}
 
 	const dataState = switchElement.attributes("data-state");
 	if (dataState !== undefined) {
-		expect(dataState === "checked").toBe(expected);
-		return;
+		return dataState === "checked";
 	}
 
 	if (switchElement.element instanceof HTMLInputElement) {
-		expect(switchElement.element.checked).toBe(expected);
-		return;
+		return switchElement.element.checked;
 	}
 
 	throw new Error(`Unable to determine switch state for ${label}`);
@@ -105,15 +102,15 @@ describe("moderation guild settings", () => {
 		await nextTick();
 		await nextTick();
 
-		expectSwitchState(wrapper, "Toggle Hide Message", false);
-		expectSwitchState(wrapper, "Toggle Send Punishment Response", true);
+		expect(readSwitchState(wrapper, "Toggle Hide Message")).toBe(false);
+		expect(readSwitchState(wrapper, "Toggle Send Punishment Response")).toBe(true);
 	});
 
 	it("syncs state when guildSettings change externally", async () => {
 		const wrapper = await mountSuspended(Moderation);
 
 		await nextTick();
-		expectSwitchState(wrapper, "Toggle Hide Message", false);
+		expect(readSwitchState(wrapper, "Toggle Hide Message")).toBe(false);
 
 		mockGuildSettings.value = createMockGuildData("123456789012345678", {
 			messagesModerationAutoDelete: true,
@@ -121,7 +118,7 @@ describe("moderation guild settings", () => {
 		await nextTick();
 		await nextTick();
 
-		expectSwitchState(wrapper, "Toggle Hide Message", true);
+		expect(readSwitchState(wrapper, "Toggle Hide Message")).toBe(true);
 	});
 
 	it("has correct aria-labels for accessibility", async () => {

@@ -63,6 +63,9 @@ const config: KnipConfig = {
 				"eslint-plugin-regexp",
 				"eslint",
 
+				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
+				"oxlint-tsgolint",
+
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
@@ -76,9 +79,6 @@ const config: KnipConfig = {
 				/** Used in the test */
 				"axe-core",
 
-				/** Test utilities (devDependencies flagged in --production mode) */
-				"@vitest/browser-playwright",
-
 				/** Used for cli */
 				"@shelve/cli",
 
@@ -88,8 +88,6 @@ const config: KnipConfig = {
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,
-				/** Auto-registered Discord primitive covered by component/a11y tests but not currently referenced in an app template */
-				"app/components/discord/slash-command-suggestion-matched.vue",
 			],
 			ignoreMembers: [
 				/** Enum members in app/utils/constants.ts used as color values at runtime */

@@ -1,4 +1,5 @@
 import type { GuildData } from "#shared/types";
+import type { DOMWrapper } from "@vue/test-utils";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import DisabledCommands from "~/components/guild/settings/DisabledCommands.vue";
@@ -111,6 +112,33 @@ const mockCommands: FlattenedCommand[] = [
 		preconditions: { entries: [], mode: 0, runCondition: 0 },
 	},
 ];
+
+type MountedDisabledCommands = Awaited<ReturnType<typeof mountSuspended>>;
+
+function getCommandCard(wrapper: MountedDisabledCommands, commandName: string) {
+	const label = wrapper
+		.findAll("p.font-medium")
+		.find((el: DOMWrapper<Element>) => el.text() === commandName);
+	expect(label, `expected command label "${commandName}"`).toBeDefined();
+
+	let current: Element | null = label!.element.parentElement;
+	while (current && !current.classList.contains("rounded-lg")) {
+		current = current.parentElement;
+	}
+
+	expect(current, `expected command card for "${commandName}"`).toBeTruthy();
+	return current!;
+}
+
+function readCommandEnabled(wrapper: MountedDisabledCommands, commandName: string): boolean {
+	const card = getCommandCard(wrapper, commandName);
+	const commandSwitch = wrapper
+		.findAll('[role="switch"]')
+		.find((switchElement: DOMWrapper<Element>) => card.contains(switchElement.element));
+
+	expect(commandSwitch, `expected switch for "${commandName}"`).toBeDefined();
+	return commandSwitch!.attributes("aria-checked") === "true";
+}
 
 describe("disabledCommands", () => {
 	beforeEach(() => {
@@ -282,142 +310,58 @@ describe("disabledCommands", () => {
 		expect(avatarElement!.isVisible()).toBeFalsy();
 	});
 
-	it.skip("category action buttons work (enable all, disable all, reset)", async () => {
+	it("category action buttons work (enable all, disable all, reset)", async () => {
 		const wrapper = await mountSuspended(DisabledCommands, {
 			props: {
 				commands: mockCommands,
 			},
 		});
 
-		// Open Moderation category (contains 'ban' which is disabled in mock data)
 		const categoryButtons = wrapper.findAll("button");
 		const moderationButton = categoryButtons.find((btn) => btn.text().includes("Moderation"));
+		expect(moderationButton).toBeDefined();
 		await moderationButton!.trigger("click");
-		await wrapper.vm.$nextTick();
+		await nextTick();
 
-		// Find action buttons
-		const allButtons = wrapper.findAll("button");
-		const enableAllButton = allButtons.find((btn) => btn.text().includes("Enable all"));
-		const disableAllButton = allButtons.find((btn) => btn.text().includes("Disable all"));
-		const resetButton = allButtons.find((btn) => btn.text().includes("Reset"));
+		// Collapsed panels stay mounted (`unmount-on-hide=false`), so pick the
+		// visible action buttons for the open Moderation category.
+		const enableAllButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Enable all") && btn.isVisible());
+		const disableAllButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Disable all") && btn.isVisible());
+		const resetButton = wrapper
+			.findAll("button")
+			.find((btn) => btn.text().includes("Reset") && btn.isVisible());
 
-		// Buttons should exist
 		expect(enableAllButton).toBeDefined();
 		expect(disableAllButton).toBeDefined();
 		expect(resetButton).toBeDefined();
 
-		// Find all switches in Moderation category (within the currently open panel)
-		const getSwitches = () => wrapper.findAllComponents({ name: "USwitch" });
+		// Initial mock has `ban` disabled and other Moderation commands enabled.
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(true);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(true);
 
-		// Get switches only in the Moderation category
-		const getModerationSwitches = () => {
-			const allSwitches = getSwitches();
-			const moderationSwitches = [];
-
-			for (const switchComp of allSwitches) {
-				// Check if this switch is for a Moderation command
-				// Walk up to find if it's in a grid that contains Moderation commands
-				let parent = switchComp.element.parentElement;
-				while (parent && parent !== wrapper.element) {
-					const commandLabel = parent.querySelector("p.font-medium");
-					if (commandLabel) {
-						const commandName = commandLabel.textContent?.trim();
-						// Check if this command is in Moderation category
-						const isModerationCommand = mockCommands.some(
-							(cmd) => cmd.name === commandName && cmd.category === "Moderation",
-						);
-						if (isModerationCommand) {
-							moderationSwitches.push(switchComp);
-							break;
-						}
-					}
-					parent = parent.parentElement;
-				}
-			}
-
-			return moderationSwitches;
-		};
-
-		// Helper to find the 'ban' switch specifically
-		const getBanSwitch = () => {
-			// Find all command labels
-			const commandLabels = wrapper.findAll("p.font-medium");
-			const banLabel = commandLabels.find((el) => el.text() === "ban");
-
-			if (!banLabel) {
-				return undefined;
-			}
-
-			// Find the parent grid item (div) containing the ban label
-			let parent = banLabel.element.parentElement;
-			while (parent && !parent.classList.contains("grid")) {
-				parent = parent.parentElement;
-			}
-
-			if (!parent) {
-				return undefined;
-			}
-
-			// Find all grid items (children of the grid container)
-			const gridItems = [...parent.children];
-			const banGridItem = gridItems.find(
-				(item) => item.querySelector("p.font-medium")?.textContent === "ban",
-			);
-
-			if (!banGridItem) {
-				return undefined;
-			}
-
-			// Find the switch within this grid item
-			const switches = getSwitches();
-			for (const switchComp of switches) {
-				if (banGridItem.contains(switchComp.element)) {
-					return switchComp;
-				}
-			}
-
-			return undefined;
-		};
-
-		// INITIAL STATE: 'ban' is disabled in mock data, so switch should be unchecked (false)
-		let banSwitch = getBanSwitch();
-		expect(banSwitch).toBeDefined();
-		expect(banSwitch!.props("modelValue")).toBeFalsy();
-
-		// Test "Disable all" - all switches should become unchecked
 		await disableAllButton!.trigger("click");
-		await wrapper.vm.$nextTick();
+		await nextTick();
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(false);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(false);
 
-		let switches = getModerationSwitches();
-		// After "Disable all", all switches in Moderation category should be unchecked
-		for (const switchComp of switches) {
-			expect(switchComp.props("modelValue")).toBeFalsy();
-		}
-
-		// Test "Enable all" - all switches should become checked
 		await enableAllButton!.trigger("click");
-		await wrapper.vm.$nextTick();
+		await nextTick();
+		expect(readCommandEnabled(wrapper, "ban")).toBe(true);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(true);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(true);
 
-		switches = getModerationSwitches();
-		// After "Enable all", all switches in Moderation category should be checked
-		for (const switchComp of switches) {
-			expect(switchComp.props("modelValue")).toBeTruthy();
-		}
-
-		// Verify 'ban' switch is now checked
-		banSwitch = getBanSwitch();
-		expect(banSwitch!.props("modelValue")).toBeTruthy();
-
-		// Test "Reset" - should restore to original saved state
 		await resetButton!.trigger("click");
-		await wrapper.vm.$nextTick();
+		await nextTick();
+		expect(readCommandEnabled(wrapper, "ban")).toBe(false);
+		expect(readCommandEnabled(wrapper, "kick")).toBe(true);
+		expect(readCommandEnabled(wrapper, "mute")).toBe(true);
 
-		// After reset, 'ban' switch should return to unchecked (original disabled state)
-		banSwitch = getBanSwitch();
-		expect(banSwitch).toBeDefined();
-		expect(banSwitch!.props("modelValue")).toBeFalsy();
-
-		// Should also call toast.add with success message
 		expect(mockToastAdd).toHaveBeenCalledWith(
 			expect.objectContaining({
 				color: "info",

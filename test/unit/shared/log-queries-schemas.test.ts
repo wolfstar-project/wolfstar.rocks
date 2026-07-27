@@ -9,11 +9,10 @@ import { describe, expect, it } from "vitest";
 describe("ModerationLogQuerySchema", () => {
 	it("accepts empty object with defaults", () => {
 		const result = safeParse(ModerationLogQuerySchema, {});
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.output.limit).toBe(30);
-			expect(result.output.offset).toBe(0);
-		}
+		expect(result).toMatchObject({
+			success: true,
+			output: { limit: 30, offset: 0 },
+		});
 	});
 
 	it("rejects negative offset", () => {
@@ -33,22 +32,23 @@ describe("ModerationLogQuerySchema", () => {
 
 	it("accepts omitted optional fields", () => {
 		const result = safeParse(ModerationLogQuerySchema, { limit: "10" });
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.output.userId).toBeUndefined();
-			expect(result.output.moderatorId).toBeUndefined();
-		}
+		expect(result).toMatchObject({
+			success: true,
+			output: { limit: 10, offset: 0 },
+		});
+		// Valibot omits absent optional keys rather than setting them to undefined.
+		expect(result.output).not.toHaveProperty("userId");
+		expect(result.output).not.toHaveProperty("moderatorId");
 	});
 });
 
 describe("CommandLogQuerySchema", () => {
 	it("accepts empty object with defaults", () => {
 		const result = safeParse(CommandLogQuerySchema, {});
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.output.limit).toBe(30);
-			expect(result.output.success).toBe("all");
-		}
+		expect(result).toMatchObject({
+			success: true,
+			output: { limit: 30, success: "all" },
+		});
 	});
 
 	it("rejects negative offset", () => {
@@ -60,10 +60,10 @@ describe("CommandLogQuerySchema", () => {
 describe("DashboardActivityQuerySchema", () => {
 	it("accepts empty object with defaults", () => {
 		const result = safeParse(DashboardActivityQuerySchema, {});
-		expect(result.success).toBe(true);
-		if (result.success) {
-			expect(result.output.limit).toBe(10);
-		}
+		expect(result).toMatchObject({
+			success: true,
+			output: { limit: 10 },
+		});
 	});
 
 	it("rejects limit above 100", () => {

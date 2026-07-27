@@ -10,7 +10,7 @@
 		<DiscordAvatar :user="name" size="medium" class="discord-message-avatar" />
 		<DiscordMessageReply v-if="reply" v-bind="reply" class="discord-message-reply-slot" />
 		<div class="discord-message-content">
-			<header class="mb-0.5 flex flex-row items-center">
+			<header class="mb-0 flex flex-row items-center">
 				<div class="font-bold">{{ profile.name }}</div>
 				<span
 					v-if="profile.app"
@@ -26,6 +26,9 @@
 					/>
 					<span>APP</span>
 				</span>
+				<time v-if="timestamp" class="discord-message-timestamp" :datetime>
+					{{ timestamp }}
+				</time>
 			</header>
 			<div class="message-content"><slot></slot></div>
 			<div
@@ -55,6 +58,8 @@ interface MessageProps {
 	name: ProfileName;
 	ephemeral?: boolean;
 	reply?: MessageReply;
+	timestamp?: string;
+	datetime?: string;
 }
 
 interface MessageSlots {
@@ -66,19 +71,23 @@ interface MessageSlots {
 defineSlots<MessageSlots>();
 
 const props = defineProps<MessageProps>();
-const { name, ephemeral, reply } = toRefs(props);
+const { name, ephemeral, reply, timestamp, datetime } = toRefs(props);
 const profile = computed(() => Profiles[name.value]);
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-badge {
-	--blurple: #5865f2;
+	--blurple: oklch(57.74% 0.2091 273.85);
 
 	@apply ml-1 flex flex-row items-center rounded-md px-1 py-0.5 font-bold text-white;
 	background-color: var(--blurple);
 	font-size: 0.625rem;
 	line-height: 0.625rem;
+}
+
+.discord-message-timestamp {
+	@apply ml-1.5 text-[10px] font-medium text-muted sm:text-xs;
 }
 
 @media (width >= 48rem) {

@@ -174,11 +174,9 @@
 													Everyone notice me!
 													<DiscordMention kind="mention"
 														>everyone</DiscordMention
-													>
-													<DiscordMention kind="mention"
+													><DiscordMention kind="mention"
 														>members</DiscordMention
-													>{{ " "
-													}}<DiscordMention kind="mention"
+													><DiscordMention kind="mention"
 														>moderators</DiscordMention
 													>
 												</template>
@@ -238,7 +236,9 @@
 											</DiscordMessage>
 											<DiscordMessage name="wolfstar">
 												Dear
-												<DiscordMention kind="mention"
+												<DiscordMention
+													kind="mention"
+													avatar="/avatars/baddie.png"
 													>Baddie</DiscordMention
 												>,
 												{{ texts[featureIndex]!.alert }}
@@ -426,8 +426,8 @@
 													:timestamp
 												>
 													<span
-														><strong>❯ Action:</strong>
-														{{
+														><strong>❯ Action:</strong>{{ " "
+														}}{{
 															loggingEvents[loggingIndex]!.action
 														}}</span
 													><br />
@@ -437,13 +437,15 @@
 														]!.details"
 														:key="idx"
 													>
-														<strong>❯ {{ detail.label }}:</strong>
-														<template
+														<strong>❯ {{ detail.label }}:</strong
+														>{{ " "
+														}}<template
 															v-for="(part, partIdx) in detail.parts"
 															:key="partIdx"
 															><DiscordMention
 																v-if="part.type === 'mention'"
 																kind="mention"
+																:avatar="part.avatar"
 																>{{ part.name }}</DiscordMention
 															><DiscordRole
 																v-else-if="part.type === 'role'"
@@ -599,13 +601,12 @@
 											<DiscordMessages
 												class="showcase-discord-feed w-full text-left"
 											>
-												<DiscordMessage name="wolfstar">
+												<DiscordMessage
+													name="wolfstar"
+													:timestamp="moderationMessageTime"
+												>
 													<DiscordEmbed
 														:color="moderationActionRender.color"
-														:author="{
-															icon: '/avatars/wolfstar.png',
-															name: 'WolfStar#9286 (854714837388755004)',
-														}"
 														:footer="{
 															icon: '/avatars/wolfstar.png',
 															text: 'Case 3',
@@ -613,17 +614,23 @@
 														:timestamp
 													>
 														<span
-															><strong>❯ Type:</strong>
-															{{ moderationActionRender.name }}</span
+															><strong>❯ Type:</strong>{{ " "
+															}}{{
+																moderationActionRender.name
+															}}</span
+														><br />
+														<span>
+															<strong>❯ User:</strong>{{ " "
+															}}<DiscordMention
+																kind="mention"
+																avatar="/avatars/baddie.png"
+																>baddie</DiscordMention
+															>{{ " " }}(541738403230777351) </span
 														><br />
 														<span
-															><strong>❯ User:</strong>
-															<DiscordMention kind="mention"
-																>baddie</DiscordMention
-															>
-															(541738403230777351)</span
-														><br />
-														<span><strong>❯ Reason:</strong> spam</span>
+															><strong>❯ Reason:</strong
+															>{{ " " }}spam</span
+														>
 													</DiscordEmbed>
 												</DiscordMessage>
 											</DiscordMessages>
@@ -878,6 +885,17 @@ const moderationActionRender = computed(() => {
 	return { color: action.color, name: action.name };
 });
 
+const moderationMessageTime = computed(() => {
+	if (!timestamp.value) {
+		return undefined;
+	}
+	return new Intl.DateTimeFormat("en-GB", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	}).format(timestamp.value);
+});
+
 const location = useBrowserLocation();
 
 function handleHashChange() {
@@ -936,11 +954,6 @@ onUnmounted(cleanup);
 
 :deep(.showcase-discord-feed .discord-message:hover) {
 	background-color: oklch(from var(--color-base-content) l c h / 0.04);
-}
-
-:deep(.brand-embed .discord-embed) {
-	border-color: oklch(from var(--color-primary) l c h / 0.35);
-	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h) !important;
 }
 
 .radio-feature-container {

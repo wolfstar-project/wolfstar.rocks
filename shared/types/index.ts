@@ -5,4 +5,4 @@ export * from "./discord";
 export * from "./env";
 export * from "./guild-data";
 export * from "./utils";
-export * from "./slash-command";
+export * from "./chat-input-command";

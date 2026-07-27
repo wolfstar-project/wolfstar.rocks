@@ -76,7 +76,7 @@
 					<span class="badge badge-soft badge-secondary">Spam</span>
 					<span class="badge badge-soft badge-accent">Line Spam</span>
 					<span class="badge badge-soft badge-success">Reactions</span>
-					<span class="badge badge-soft badge-neutral">Mentions</span>
+					<span class="badge badge-soft badge-warning">Mentions</span>
 				</div>
 			</SurfaceCard>
 		</div>

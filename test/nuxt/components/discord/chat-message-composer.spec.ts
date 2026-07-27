@@ -114,4 +114,17 @@ describe("DiscordChatMessageComposer", () => {
 		// ASSERT
 		expect(wrapper.emitted("openApps")).toHaveLength(2);
 	});
+
+	it("swaps the mobile apps glyph for close when appsOpen (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
+			props: { channelName: "mod-commands", appsOpen: true },
+		});
+
+		// ASSERT — mobile control only; desktop toolbar keeps its static open label
+		expect(wrapper.find(".discord-message-composer-apps-open").exists()).toBe(true);
+		expect(wrapper.find(".discord-message-composer-apps-mobile").attributes("aria-label")).toBe(
+			"Close apps and commands",
+		);
+	});
 });

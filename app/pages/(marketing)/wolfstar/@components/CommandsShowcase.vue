@@ -17,7 +17,11 @@
 					<div class="showcase-discord-workspace">
 						<div
 							class="showcase-discord-main"
-							:class="{ 'showcase-discord-main-picker-open': showCommandPicker }"
+							:class="{
+								'showcase-discord-main-picker-open': showCommandPicker,
+								'showcase-discord-main-apps-open': appLauncherOpen,
+								'showcase-discord-main-apps-full': appLauncherSheetFull,
+							}"
 						>
 							<DiscordChat
 								channel-name="mod-commands"
@@ -132,9 +136,16 @@
 								</template>
 							</DiscordChat>
 
-							<div class="showcase-command-picker">
+							<div
+								class="showcase-command-picker"
+								:class="{
+									'showcase-command-picker-apps-open': appLauncherOpen,
+									'showcase-command-picker-apps-full': appLauncherSheetFull,
+								}"
+							>
 								<DiscordAppLauncher
 									v-model:open="appLauncherOpen"
+									v-model:sheet-snap="appLauncherSheetSnap"
 									class="showcase-app-launcher"
 									:commands="appLauncherCommands"
 									@select="onAppLauncherSelect"
@@ -205,10 +216,13 @@
 									</DiscordChatInputCommandGroup>
 								</DiscordChatInputCommandSuggestions>
 
+								<!-- Discord hides the message bar when the Apps sheet is fully expanded. -->
 								<DiscordChatMessageComposer
+									v-if="!appLauncherSheetFull"
 									v-model="composerText"
 									channel-name="mod-commands"
 									autocomplete
+									:apps-open="appLauncherOpen"
 									:aria-controls="
 										showCommandPicker ? 'showcase-slash-suggestions' : undefined
 									"
@@ -290,9 +304,10 @@
 <script setup lang="ts">
 import type {
 	DiscordAppLauncherEntry,
+	DiscordAppLauncherSheetSnap,
 	DiscordChatMessage,
-	DiscordMemberListMember,
 } from "~/types/discord";
+import { ActivityType } from "discord-api-types/v10";
 import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
 
 /** Shared channel topic for header chrome and welcome start copy. */
@@ -304,6 +319,8 @@ const highlightedIndex = ref(0);
 const timestamp = ref(0);
 /** Discord App Launcher popover above the composer (Apps toolbar button). */
 const appLauncherOpen = ref(false);
+/** Mobile sheet snap — `full` hides the message composer like Discord. */
+const appLauncherSheetSnap = ref<DiscordAppLauncherSheetSnap>("half");
 /** Desktop member list open — matches Discord default (members panel visible). */
 const membersOpen = ref(true);
 /** Mobile channel-info overlay (Members / Media / Pins / …). Desktop keeps the side list. */
@@ -313,6 +330,11 @@ const channelInfoOpen = ref(false);
  * Desktop arms `/` in onMounted — avoids picker-open / empty-input hydration mismatch.
  */
 const composerText = ref("");
+
+/** True while the mobile Apps sheet covers the message bar. */
+const appLauncherSheetFull = computed(
+	() => appLauncherOpen.value && appLauncherSheetSnap.value === "full",
+);
 
 const channelNow = new Date();
 const channelDateLabel = new Intl.DateTimeFormat("en-US", {
@@ -355,6 +377,7 @@ const chatMessages = computed<DiscordChatMessage[]>(() => {
 /**
  * Support-server role colors (oklch) — Discord-true, no maroon.
  * Pink / scarlet / salmon match Developers + External Bots name tints.
+ * (Discord Role.color is an RGB int; showcase uses semantic oklch via `uiColor`.)
  */
 const DISCORD_ROLE_PINK = "oklch(68.42% 0.214 350.12)";
 const DISCORD_ROLE_SCARLET = "oklch(63.72% 0.208 25.33)";
@@ -367,139 +390,316 @@ const DEVELOPER_ROW_BG = [
 	"radial-gradient(ellipse 70% 120% at 88% 40%, oklch(48% 0.14 250 / 0.28), transparent 52%)",
 ].join(", ");
 
-/** Real WolfStar support-server member list (hoisted roles + Offline section). */
-const onlineMembers = [
+const SHOWCASE_ROLE_IDS = {
+	starNetwork: "1000000000000000001",
+	developers: "1000000000000000002",
+	externalBots: "1000000000000000003",
+} as const;
+
+/** Hoisted roles for the support-server mock (Role object + showcase uiColor). */
+const showcaseRoles = [
 	{
-		id: "ring",
-		name: "Ring",
-		icon: "ph:discord-logo-fill",
-		role: "Star Network",
-		app: true,
-		verified: false,
-		http: true,
-		pinned: true,
+		id: SHOWCASE_ROLE_IDS.starNetwork,
+		name: "Star Network",
+		color: 0,
+		hoist: true,
+		position: 30,
 	},
 	{
-		id: "staryl",
-		name: "Staryl",
-		avatar: "/avatars/staryl.png",
-		role: "Star Network",
-		app: true,
-		verified: true,
-		http: true,
-		pinned: true,
+		id: SHOWCASE_ROLE_IDS.developers,
+		name: "Developers",
+		color: 0,
+		hoist: true,
+		position: 20,
+		uiColor: DISCORD_ROLE_PINK,
 	},
 	{
-		id: "wolfstar",
-		name: "WolfStar",
-		avatar: "/avatars/wolfstar.png",
-		role: "Star Network",
-		description: "WolfStar, help",
-		app: true,
-		verified: true,
-		presence: "online",
-		pinned: true,
+		id: SHOWCASE_ROLE_IDS.externalBots,
+		name: "External Bots",
+		color: 0,
+		hoist: true,
+		position: 10,
+		uiColor: DISCORD_ROLE_SALMON,
+	},
+] as const satisfies readonly DiscordMemberListRoleFixture[];
+
+const JOINED_AT = "2020-01-01T00:00:00.000+00:00";
+
+/**
+ * Guild Member + User + optional Presence Update fixtures (Discord API shape).
+ * Mapped to `DiscordMemberListMember` for the UI via `mapDiscordMemberListMembers`.
+ */
+const onlineMemberFixtures = [
+	{
+		user: {
+			id: "2000000000000000001",
+			username: "Ring",
+			discriminator: "0",
+			global_name: "Ring",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.httpInteractions,
+		},
+		roles: [SHOWCASE_ROLE_IDS.starNetwork],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		showcase: { icon: "ph:discord-logo-fill" },
 	},
 	{
-		id: "wolfstar-beta",
-		name: "WolfStar Beta",
-		avatar: "/avatars/wolfstar.png",
-		role: "Star Network",
-		description: "WolfStar, help",
-		app: true,
-		verified: true,
-		presence: "online",
-		pinned: true,
+		user: {
+			id: "2000000000000000002",
+			username: "Staryl",
+			discriminator: "0",
+			global_name: "Staryl",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedHttpBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.starNetwork],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		showcase: { avatarUrl: "/avatars/staryl.png" },
 	},
 	{
-		id: "lory",
-		name: "RVG|lory",
-		avatar: "/avatars/lory.png",
-		role: "Developers",
-		description: "🐺 Are you sure? 🐺",
-		presence: "dnd",
-		color: DISCORD_ROLE_PINK,
-		pinned: true,
-		rowBackground: DEVELOPER_ROW_BG,
+		user: {
+			id: "2000000000000000003",
+			username: "WolfStar",
+			discriminator: "0",
+			global_name: "WolfStar",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.starNetwork],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: {
+			status: "online",
+			activities: [
+				{
+					name: "Custom Status",
+					type: ActivityType.Custom,
+					state: "WolfStar, help",
+				},
+			],
+		},
+		showcase: { avatarUrl: "/avatars/wolfstar.png" },
 	},
 	{
-		id: "redstar",
-		name: "RedStar",
-		avatar: "/avatars/redstar.png",
-		role: "Developers",
-		description: "🎮+1 • Am I stuck in a rut, doi...",
-		presence: "dnd",
-		color: DISCORD_ROLE_SCARLET,
-		pinned: true,
-		rowBackground: DEVELOPER_ROW_BG,
+		user: {
+			id: "2000000000000000004",
+			username: "WolfStarBeta",
+			discriminator: "0",
+			global_name: "WolfStar Beta",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.starNetwork],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: {
+			status: "online",
+			activities: [
+				{
+					name: "Custom Status",
+					type: ActivityType.Custom,
+					state: "WolfStar, help",
+				},
+			],
+		},
+		showcase: { avatarUrl: "/avatars/wolfstar.png" },
 	},
 	{
-		id: "discohook-utils",
-		name: "Discohook Utils",
-		icon: "ph:link-simple-horizontal-bold",
-		role: "External Bots",
-		description: "discohook.app/guide",
-		app: true,
-		verified: true,
-		presence: "online",
-		color: DISCORD_ROLE_SALMON,
-		pinned: true,
+		user: {
+			id: "2000000000000000005",
+			username: "lory",
+			discriminator: "0",
+			global_name: "RVG|lory",
+			avatar: null,
+		},
+		roles: [SHOWCASE_ROLE_IDS.developers],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: {
+			status: "dnd",
+			activities: [
+				{
+					name: "Custom Status",
+					type: ActivityType.Custom,
+					state: "🐺 Are you sure? 🐺",
+				},
+			],
+		},
+		showcase: {
+			avatarUrl: "/avatars/lory.png",
+			rowBackground: DEVELOPER_ROW_BG,
+		},
 	},
 	{
-		id: "linear",
-		name: "Linear",
-		icon: "ph:line-segments-bold",
-		role: "External Bots",
-		app: true,
-		verified: true,
-		http: true,
-		color: DISCORD_ROLE_SALMON,
-		pinned: true,
+		user: {
+			id: "2000000000000000006",
+			username: "RedStar",
+			discriminator: "0",
+			global_name: "RedStar",
+			avatar: null,
+		},
+		roles: [SHOWCASE_ROLE_IDS.developers],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: {
+			status: "dnd",
+			activities: [
+				{
+					name: "Custom Status",
+					type: ActivityType.Custom,
+					// Emoji kept in `state` so the secondary line matches the live server copy.
+					state: "🎮+1 • Am I stuck in a rut, doi...",
+				},
+			],
+		},
+		showcase: {
+			avatarUrl: "/avatars/redstar.png",
+			nameColor: DISCORD_ROLE_SCARLET,
+			rowBackground: DEVELOPER_ROW_BG,
+		},
 	},
 	{
-		id: "teryl",
-		name: "Teryl",
-		icon: "ph:user-circle-fill",
-		role: "External Bots",
-		app: true,
-		verified: true,
-		http: true,
-		color: DISCORD_ROLE_SALMON,
-		pinned: true,
+		user: {
+			id: "2000000000000000007",
+			username: "DiscohookUtils",
+			discriminator: "0",
+			global_name: "Discohook Utils",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.externalBots],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: {
+			status: "online",
+			activities: [
+				{
+					name: "Custom Status",
+					type: ActivityType.Custom,
+					state: "discohook.app/guide",
+				},
+			],
+		},
+		showcase: { icon: "ph:link-simple-horizontal-bold" },
 	},
 	{
-		id: "topgg",
-		name: "Top.gg",
-		icon: "ph:chart-bar-fill",
-		role: "External Bots",
-		app: true,
-		verified: true,
-		presence: "online",
-		color: DISCORD_ROLE_SALMON,
-		pinned: true,
+		user: {
+			id: "2000000000000000008",
+			username: "Linear",
+			discriminator: "0",
+			global_name: "Linear",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedHttpBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.externalBots],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		showcase: { icon: "ph:line-segments-bold" },
 	},
-] as const satisfies readonly DiscordMemberListMember[];
+	{
+		user: {
+			id: "2000000000000000009",
+			username: "Teryl",
+			discriminator: "0",
+			global_name: "Teryl",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedHttpBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.externalBots],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		showcase: { icon: "ph:user-circle-fill" },
+	},
+	{
+		user: {
+			id: "2000000000000000010",
+			username: "topgg",
+			discriminator: "0",
+			global_name: "Top.gg",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedBot,
+		},
+		roles: [SHOWCASE_ROLE_IDS.externalBots],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: { status: "online" },
+		showcase: { icon: "ph:chart-bar-fill" },
+	},
+] as const satisfies readonly DiscordMemberListApiFixture[];
 
 /** Offline — 2 (Ko-fi Bot, Patreon). Kept in the showcase; shell height + compact
  *  member-list spacing are sized so this section fits without forcing scroll. */
-const offlineMembers = [
+const offlineMemberFixtures = [
 	{
-		id: "kofi-bot",
-		name: "Ko-fi Bot",
-		icon: "ph:coffee-fill",
-		app: true,
-		verified: true,
-		presence: "offline",
+		user: {
+			id: "2000000000000000011",
+			username: "KoFiBot",
+			discriminator: "0",
+			global_name: "Ko-fi Bot",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedBot,
+		},
+		roles: [],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: { status: "offline" },
+		showcase: { icon: "ph:coffee-fill" },
 	},
 	{
-		id: "patreon",
-		name: "Patreon",
-		icon: "ph:handshake-fill",
-		app: true,
-		verified: true,
-		presence: "offline",
+		user: {
+			id: "2000000000000000012",
+			username: "Patreon",
+			discriminator: "0",
+			global_name: "Patreon",
+			avatar: null,
+			bot: true,
+			public_flags: MEMBER_LIST_USER_FLAGS.verifiedBot,
+		},
+		roles: [],
+		joined_at: JOINED_AT,
+		deaf: false,
+		mute: false,
+		flags: 0,
+		presence: { status: "offline" },
+		showcase: { icon: "ph:handshake-fill" },
 	},
-] as const satisfies readonly DiscordMemberListMember[];
+] as const satisfies readonly DiscordMemberListApiFixture[];
+
+const onlineMembers = mapDiscordMemberListMembers(onlineMemberFixtures, showcaseRoles);
+const offlineMembers = mapDiscordMemberListMembers(offlineMemberFixtures, showcaseRoles);
 
 const activeSearchPrefix = computed(() => {
 	if (composerText.value.startsWith("/")) return composerText.value;
@@ -897,7 +1097,7 @@ onMounted(() => {
 }
 
 .showcase-command-picker {
-	@apply absolute inset-x-0 bottom-0 z-1;
+	@apply absolute inset-x-0 bottom-0 z-2;
 	/*
 	 * Transparent on desktop so the picker↔composer gap (~8px) reveals the
 	 * channel background. Mobile keeps a solid bar behind the flush stack.
@@ -906,7 +1106,7 @@ onMounted(() => {
 }
 
 .showcase-app-launcher {
-	@apply mr-3 mb-2 ml-auto;
+	@apply relative z-2 mr-3 mb-2 ml-auto;
 	width: min(31.5rem, calc(100% - 1.5rem));
 }
 
@@ -981,9 +1181,61 @@ onMounted(() => {
 		padding-bottom: 3.5rem;
 	}
 
+	.showcase-discord-main-apps-open {
+		/* Let the half/full sheet stack above messages without clipping under chrome. */
+		overflow: visible;
+	}
+
+	.showcase-discord-main-apps-open > :deep(.discord-chat) {
+		/* Sheet covers the lower messages; reserve only the composer bar. */
+		padding-bottom: 3.5rem;
+	}
+
+	.showcase-discord-main-apps-full > :deep(.discord-chat) {
+		/* Full sheet owns the column under the header — no composer gutter. */
+		padding-bottom: 0;
+	}
+
 	.showcase-command-picker {
 		/* Solid bar behind flush mobile picker + composer (no channel peek gap). */
+		@apply z-3;
 		background-color: var(--showcase-discord-composer-bar);
+	}
+
+	/*
+	 * Match the sheet fill so rounded-corner AA on the launcher does not reveal
+	 * a lighter composer-bar fringe (the “hairline” over the channel).
+	 */
+	.showcase-command-picker-apps-open {
+		--showcase-discord-composer-bar: oklch(22% 0.006 272);
+		@apply flex flex-col;
+		background-color: var(--showcase-discord-composer-bar);
+	}
+
+	/* Discord keeps the composer above the Apps sheet, which owns the bottom edge. */
+	.showcase-command-picker-apps-open :deep(.discord-message-composer) {
+		order: 1;
+	}
+
+	.showcase-command-picker-apps-open :deep(.discord-app-launcher) {
+		order: 2;
+	}
+
+	/*
+	 * Full snap: sheet fills the channel column under the header and the
+	 * message bar is unmounted (v-if on the composer).
+	 */
+	.showcase-command-picker-apps-full {
+		@apply inset-y-0;
+	}
+
+	.showcase-command-picker-apps-full :deep(.discord-app-launcher) {
+		height: 100%;
+		max-height: none;
+	}
+
+	.showcase-app-launcher {
+		@apply relative z-3 mx-0 mb-0 w-full max-w-none;
 	}
 
 	.showcase-command-picker :deep(.discord-slash-command-suggestions) {

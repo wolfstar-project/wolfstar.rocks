@@ -32,6 +32,52 @@ export const Main: Story = {
 	}),
 };
 
+export const MobileSheet: Story = {
+	parameters: {
+		viewport: { defaultViewport: "mobile1" },
+	},
+	args: {
+		initialSheetSnap: "half",
+	},
+	render: (args) => ({
+		components: { DiscordAppLauncher },
+		setup: () => {
+			const open = ref(args.open ?? true);
+			return { args, open };
+		},
+		template: `
+			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(28%_0.04_25)]">
+				<div class="w-full max-w-[24rem]">
+					<DiscordAppLauncher v-bind="args" v-model:open="open" />
+				</div>
+			</div>
+		`,
+	}),
+};
+
+export const MobileSheetFull: Story = {
+	parameters: {
+		viewport: { defaultViewport: "mobile1" },
+	},
+	args: {
+		initialSheetSnap: "full",
+	},
+	render: (args) => ({
+		components: { DiscordAppLauncher },
+		setup: () => {
+			const open = ref(args.open ?? true);
+			return { args, open };
+		},
+		template: `
+			<div class="flex min-h-[100dvh] items-end justify-center bg-[oklch(28%_0.04_25)]">
+				<div class="w-full max-w-[24rem]">
+					<DiscordAppLauncher v-bind="args" v-model:open="open" />
+				</div>
+			</div>
+		`,
+	}),
+};
+
 export const Closed: Story = {
 	args: {
 		open: false,

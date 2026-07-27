@@ -1,5 +1,8 @@
-import type { DiscordChatMessage, DiscordMemberListMember } from "~/types/discord";
-import type { StringSelectMenuOption } from "~/types/string-select-menu";
+import type {
+	DiscordChatMessage,
+	DiscordMemberListMember,
+	StringSelectMenuOption,
+} from "~/types/discord";
 import { Colors, showcaseCommands } from "~/utils/constants";
 
 export const discordChatMessages: readonly DiscordChatMessage[] = [

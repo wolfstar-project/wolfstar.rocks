@@ -10,8 +10,8 @@ The full generated skill tree lives in the Nuxt build directory so the checked-i
 
 ## Generated content
 
-- Entry: [../../../.nuxt/skill-hub/nuxt-dashboard/SKILL.md](../../../.nuxt/skill-hub/nuxt-dashboard/SKILL.md)
-- Root: [../../../.nuxt/skill-hub/nuxt-dashboard](../../../.nuxt/skill-hub/nuxt-dashboard)
+- Entry: [../../../node_modules/.cache/nuxt/.nuxt/skill-hub/nuxt-dashboard/SKILL.md](../../../node_modules/.cache/nuxt/.nuxt/skill-hub/nuxt-dashboard/SKILL.md)
+- Root: [../../../node_modules/.cache/nuxt/.nuxt/skill-hub/nuxt-dashboard](../../../node_modules/.cache/nuxt/.nuxt/skill-hub/nuxt-dashboard)
 
 ## Required workflow
 

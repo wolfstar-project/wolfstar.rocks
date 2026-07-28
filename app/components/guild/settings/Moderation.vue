@@ -33,6 +33,7 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
+import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();

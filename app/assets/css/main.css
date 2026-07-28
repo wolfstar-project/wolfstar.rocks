@@ -139,8 +139,6 @@
 		--home-shadow-glow: 0 0 0 3px var(--home-blurple-soft);
 		--home-ls-label: 0.04em;
 		--home-ls-tight: -0.02em;
-
-		scroll-behavior: smooth;
 	}
 
 	html {

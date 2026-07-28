@@ -76,6 +76,11 @@ export default defineNuxtPlugin((nuxtApp) => {
 			finishTransition = resolve;
 		});
 
+		// Let Nuxt's scrollBehavior wait for the VT to settle before scrolling to top.
+		// Without this, page:loading:end scrolls during the old-page snapshot and mobile
+		// navigations (e.g. Changelog) keep the previous scroll offset.
+		nuxtApp["~transitionPromise"] = promise;
+
 		let changeRoute: () => void;
 		const ready = new Promise<void>((resolve) => (changeRoute = resolve));
 
@@ -88,6 +93,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 			// If startViewTransition still throws, clean up and let navigation
 			// proceed without a transition so the router does not hang.
 			finishTransition?.();
+			nuxtApp["~transitionPromise"] = undefined;
 			resetTransitionState();
 			return;
 		}
@@ -101,7 +107,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 		// destination route throws, the browser skips the transition and rejects with
 		// "AbortError: Transition was skipped". Settle on both outcomes so it never
 		// surfaces as an unhandled rejection.
-		void Promise.allSettled([transition.ready, transition.finished]).then(resetTransitionState);
+		void Promise.allSettled([transition.ready, transition.finished]).then(() => {
+			nuxtApp["~transitionPromise"] = undefined;
+			resetTransitionState();
+		});
 
 		return ready;
 	});
@@ -110,19 +119,21 @@ export default defineNuxtPlugin((nuxtApp) => {
 	router.onError(() => {
 		transition?.skipTransition();
 		finishTransition?.();
+		nuxtApp["~transitionPromise"] = undefined;
 		resetTransitionState();
 	});
 	nuxtApp.hook("app:error", () => {
 		finishTransition?.();
+		nuxtApp["~transitionPromise"] = undefined;
 		resetTransitionState();
 	});
 	nuxtApp.hook("vue:error", () => {
 		finishTransition?.();
+		nuxtApp["~transitionPromise"] = undefined;
 		resetTransitionState();
 	});
 
 	nuxtApp.hook("page:finish", () => {
 		finishTransition?.();
-		resetTransitionState();
 	});
 });

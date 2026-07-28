@@ -5,7 +5,8 @@ import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vite
 describe("view-transition.client plugin", () => {
 	type SetupFn = (nuxtApp: MockNuxtApp) => void;
 	interface MockNuxtApp {
-		hook: ReturnType<typeof vi.fn>;
+		"hook": ReturnType<typeof vi.fn>;
+		"~transitionPromise"?: Promise<void>;
 	}
 
 	let setupPlugin: SetupFn;
@@ -18,8 +19,10 @@ describe("view-transition.client plugin", () => {
 	let capturedOnError: (() => void) | undefined;
 	const capturedHooks: Record<string, () => void> = {};
 	let capturedPopstateHandler: ((e: Event) => void) | undefined;
+	let mockNuxtApp: MockNuxtApp;
 	let mockVT: {
 		types: Set<string>;
+		ready: Promise<void>;
 		finished: Promise<void>;
 		skipTransition: ReturnType<typeof vi.fn>;
 	};
@@ -42,6 +45,7 @@ describe("view-transition.client plugin", () => {
 
 		mockVT = {
 			types: new Set<string>(),
+			ready: Promise.resolve(),
 			finished: new Promise<void>(() => {}),
 			skipTransition: vi.fn(),
 		};
@@ -79,7 +83,7 @@ describe("view-transition.client plugin", () => {
 		};
 		vi.stubGlobal("useRouter", () => mockRouter);
 
-		const mockNuxtApp: MockNuxtApp = {
+		mockNuxtApp = {
 			hook: vi.fn((name: string, fn: () => void) => {
 				capturedHooks[name] = fn;
 			}),
@@ -171,11 +175,17 @@ describe("view-transition.client plugin", () => {
 		expect(released).toBe(true);
 	});
 
-	it("resets transition state after page:finish so a subsequent error finds no active transition", async () => {
+	it("exposes ~transitionPromise so Nuxt scrollBehavior can wait for the VT update", async () => {
 		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
+		expect(mockNuxtApp["~transitionPromise"]).toBeInstanceOf(Promise);
+
+		let released = false;
+		void mockNuxtApp["~transitionPromise"]!.then(() => {
+			released = true;
+		});
 		capturedHooks["page:finish"]!();
-		capturedOnError!();
-		expect(mockVT.skipTransition).not.toHaveBeenCalled();
+		await Promise.resolve();
+		expect(released).toBe(true);
 	});
 
 	it("clears pendingPopstate flags before checking matched so they never leak to the next navigation", async () => {

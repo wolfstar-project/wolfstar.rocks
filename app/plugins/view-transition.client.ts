@@ -19,12 +19,17 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 	let transition: ViewTransition | undefined;
 	let finishTransition: (() => void) | undefined;
+	// Only true between the current navigation's route change committing (inside the
+	// VT update callback) and its page:finish. A stale page:finish from a superseded
+	// page must not release a gate whose destination page has not even mounted yet.
+	let pageFinishReleasesGate = false;
 	let hasUAVisualTransition = false;
 	let pendingPopstate = false;
 
 	const resetTransitionState = () => {
 		transition = undefined;
 		finishTransition = undefined;
+		pageFinishReleasesGate = false;
 		hasUAVisualTransition = false;
 	};
 
@@ -75,6 +80,10 @@ export default defineNuxtPlugin((nuxtApp) => {
 			finishTransition?.();
 		}
 
+		// Disarm before taking ownership: the superseded page's Suspense tree may
+		// still emit page:finish, and it must not release this navigation's gate.
+		pageFinishReleasesGate = false;
+
 		const promise = new Promise<void>((resolve) => {
 			finishTransition = resolve;
 		});
@@ -89,6 +98,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 		try {
 			transition = document.startViewTransition(() => {
+				// The route change commits now, so the next page:finish belongs to
+				// this navigation's destination page: arm the gate release.
+				pageFinishReleasesGate = true;
 				changeRoute!();
 				return promise;
 			});
@@ -142,6 +154,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 	});
 
 	nuxtApp.hook("page:finish", () => {
+		if (!pageFinishReleasesGate) return;
+		pageFinishReleasesGate = false;
 		finishTransition?.();
 	});
 });

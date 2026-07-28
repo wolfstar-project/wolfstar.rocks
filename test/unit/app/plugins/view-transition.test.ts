@@ -241,6 +241,46 @@ describe("view-transition.client plugin", () => {
 		expect(released).toBe(true);
 	});
 
+	it("ignores a stale page:finish from the superseded page until the new route change commits", async () => {
+		// First navigation: transition starts and its route change commits.
+		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
+
+		// Second navigation supersedes the first before the first page emitted page:finish.
+		(
+			document as { activeViewTransition?: { skipTransition: () => void } }
+		).activeViewTransition = { skipTransition: vi.fn() };
+		let commitSecond: (() => Promise<void> | void) | undefined;
+		mockStartVT.mockImplementationOnce((callback: () => Promise<void> | void) => {
+			// Defer the update callback so the second route change has not committed yet.
+			commitSecond = callback;
+			return mockVT;
+		});
+		const secondNavigation = capturedBeforeResolve!(
+			makeRoute("/commands"),
+			makeRoute("/wolfstar"),
+		);
+
+		const secondPromise = mockNuxtApp["~transitionPromise"];
+		expect(secondPromise).toBeInstanceOf(Promise);
+		let released = false;
+		void secondPromise!.then(() => {
+			released = true;
+		});
+
+		// The stale first page finally emits page:finish before the second route commits.
+		// It must not release the second navigation's gate.
+		capturedHooks["page:finish"]!();
+		await Promise.resolve();
+		expect(released).toBe(false);
+
+		// The second route change commits, then its own page finishes: gate releases.
+		void commitSecond!();
+		await secondNavigation;
+		capturedHooks["page:finish"]!();
+		await Promise.resolve();
+		expect(released).toBe(true);
+	});
+
 	it("clears pendingPopstate flags before checking matched so they never leak to the next navigation", async () => {
 		capturedPopstateHandler!(new PopStateEvent("popstate"));
 		// Unmatched route: beforeResolve returns early, but flags must be cleared first.

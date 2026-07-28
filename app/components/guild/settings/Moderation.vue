@@ -33,6 +33,9 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
+// Explicit import: unimport misses identifiers referenced only inside nested
+// functions and the template, leaving them unbound in the compiled module.
+import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();

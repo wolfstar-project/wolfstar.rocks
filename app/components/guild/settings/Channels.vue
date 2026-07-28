@@ -65,6 +65,12 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
+// Explicit import: unimport misses identifiers referenced only inside nested
+// functions and the template, leaving them unbound in the compiled module.
+import {
+	ConfigurableIgnoreChannels,
+	ConfigurableLoggingChannels,
+} from "#shared/utils/settingsDataEntries";
 
 const { guildData } = useGuildData();
 const { guildSettings: _guildSettings } = useGuildSettings();

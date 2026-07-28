@@ -482,7 +482,14 @@ export default defineNuxtConfig({
 	icon: {
 		clientBundle: {
 			includeCustomCollections: true,
-			scan: true,
+			// App Launcher fixtures pass icon names dynamically from .ts data
+			// (app/utils/constants.ts), which the default scan globs
+			// (vue/jsx/tsx/md/mdc/mdx/yml/yaml) miss — include .ts so those
+			// icons stay in the client bundle instead of falling back to
+			// runtime fetches.
+			scan: {
+				globInclude: ["**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml,ts}"],
+			},
 		},
 		customCollections: [
 			{

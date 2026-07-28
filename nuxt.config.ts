@@ -60,6 +60,15 @@ export default defineNuxtConfig({
 		},
 	},
 
+	studio: {
+		repository: {
+			provider: "github",
+			owner: "wolfstar-project",
+			repo: "wolfstar.rocks",
+			branch: "main",
+		},
+	},
+
 	$development: {
 		site: {
 			name: "WolfStar (Dev)",

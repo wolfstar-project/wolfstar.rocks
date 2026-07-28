@@ -70,6 +70,9 @@ export default defineNuxtPlugin((nuxtApp) => {
 		// startViewTransition does not throw when one is already active.
 		if (document.activeViewTransition) {
 			document.activeViewTransition.skipTransition();
+			// Settle the superseded transition's update-callback gate so the skipped
+			// transition can finish instead of waiting on a promise nobody resolves.
+			finishTransition?.();
 		}
 
 		const promise = new Promise<void>((resolve) => {
@@ -107,7 +110,12 @@ export default defineNuxtPlugin((nuxtApp) => {
 		// destination route throws, the browser skips the transition and rejects with
 		// "AbortError: Transition was skipped". Settle on both outcomes so it never
 		// surfaces as an unhandled rejection.
-		void Promise.allSettled([transition.ready, transition.finished]).then(() => {
+		const currentTransition = transition;
+		void Promise.allSettled([currentTransition.ready, currentTransition.finished]).then(() => {
+			// A newer navigation may own the state by now; only clear state that still
+			// belongs to this transition, otherwise a superseded transition's cleanup
+			// would drop the new ~transitionPromise before Nuxt awaits it.
+			if (transition !== currentTransition) return;
 			nuxtApp["~transitionPromise"] = undefined;
 			resetTransitionState();
 		});

@@ -188,6 +188,59 @@ describe("view-transition.client plugin", () => {
 		expect(released).toBe(true);
 	});
 
+	it("does not let a superseded transition's cleanup clear the new ~transitionPromise", async () => {
+		const makeVT = () => {
+			let resolveFinished!: () => void;
+			const finished = new Promise<void>((resolve) => {
+				resolveFinished = resolve;
+			});
+			return {
+				vt: {
+					types: new Set<string>(),
+					ready: Promise.resolve(),
+					finished,
+					skipTransition: vi.fn(),
+				},
+				resolveFinished,
+			};
+		};
+		const first = makeVT();
+		const second = makeVT();
+		mockStartVT
+			.mockImplementationOnce((callback: () => Promise<void> | void) => {
+				void callback();
+				return first.vt;
+			})
+			.mockImplementationOnce((callback: () => Promise<void> | void) => {
+				void callback();
+				return second.vt;
+			});
+
+		await capturedBeforeResolve!(makeRoute("/wolfstar"), makeRoute("/"));
+		// A second navigation starts while the first transition is still in flight.
+		(
+			document as { activeViewTransition?: { skipTransition: () => void } }
+		).activeViewTransition = { skipTransition: vi.fn() };
+		await capturedBeforeResolve!(makeRoute("/commands"), makeRoute("/wolfstar"));
+		const secondPromise = mockNuxtApp["~transitionPromise"];
+		expect(secondPromise).toBeInstanceOf(Promise);
+
+		// The first (skipped) transition settles; it must not clear the second's state.
+		first.resolveFinished();
+		await Promise.allSettled([first.vt.ready, first.vt.finished]);
+		await Promise.resolve();
+		expect(mockNuxtApp["~transitionPromise"]).toBe(secondPromise);
+
+		// page:finish still releases the second transition's timing gate.
+		let released = false;
+		void secondPromise!.then(() => {
+			released = true;
+		});
+		capturedHooks["page:finish"]!();
+		await Promise.resolve();
+		expect(released).toBe(true);
+	});
+
 	it("clears pendingPopstate flags before checking matched so they never leak to the next navigation", async () => {
 		capturedPopstateHandler!(new PopStateEvent("popstate"));
 		// Unmatched route: beforeResolve returns early, but flags must be cleared first.

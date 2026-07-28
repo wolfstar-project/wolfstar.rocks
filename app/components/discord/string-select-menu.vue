@@ -81,7 +81,7 @@
 <script lang="ts">
 import type { ShortcutsConfig } from "@nuxt/ui/composables";
 import type { CSSProperties } from "vue";
-import type { StringSelectMenuOption } from "~/types/discord";
+import type { StringSelectMenuOption, StringSelectMenuPlacement } from "~/types/discord";
 
 interface StringSelectMenuProps {
 	options: StringSelectMenuOption[];
@@ -96,11 +96,6 @@ interface StringSelectMenuEmits {
 </script>
 
 <script setup lang="ts">
-import {
-	resolveStringSelectMenuPlacement,
-	type StringSelectMenuPlacement,
-} from "~/utils/discord-string-select-menu";
-
 const {
 	options,
 	placeholder = "Make a selection",

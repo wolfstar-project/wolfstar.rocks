@@ -92,7 +92,6 @@ const { localizeAuthError } = useAuthErrorMessage();
 
 const route = useRoute();
 const nextParam = useRouteQuery("next", "/", { transform: String });
-const log = useLogger("oauth:callback");
 const isSessionMissing = ref(false);
 
 // Better Auth has already completed the Discord code exchange and set the
@@ -136,7 +135,10 @@ async function completeSignIn() {
 		});
 	} catch (error) {
 		isSessionMissing.value = true;
-		log.error(error);
+		log.error({
+			tag: "oauth:callback",
+			error: error instanceof Error ? error.message : String(error),
+		});
 	} finally {
 		isSessionLoading.value = false;
 	}

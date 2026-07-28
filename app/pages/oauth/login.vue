@@ -7,7 +7,6 @@
 
 <script setup lang="ts">
 const { t } = useI18n();
-const log = useLogger("oauth:login");
 
 definePageMeta({
 	alias: ["/login"],
@@ -23,7 +22,7 @@ onMounted(async () => {
 	const queryNext = route.query.next;
 	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
-	log.info({ action: "login_redirect", next: safeNext });
+	log.info({ tag: "oauth:login", action: "login_redirect", next: safeNext });
 	await useAuthClient()?.signIn.social({
 		provider: "discord",
 		callbackURL: `/oauth/callback?next=${encodeURIComponent(safeNext)}`,

@@ -348,6 +348,10 @@ export default defineNuxtConfig({
 				base: "./.cache/fetch",
 				driver: "fsLite",
 			},
+			"skew-protection": {
+				base: "./.cache/skew-protection",
+				driver: "fsLite",
+			},
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",

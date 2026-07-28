@@ -2,6 +2,7 @@ import { defineNuxtModule, useRuntimeConfig } from "nuxt/kit";
 import { provider } from "std-env";
 // Storage key for fetch cache - must match shared/utils/fetch-cache-config.ts
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
+const SKEW_PROTECTION_STORAGE_BASE = "skew-protection";
 
 export default defineNuxtModule({
 	meta: {
@@ -30,6 +31,12 @@ export default defineNuxtModule({
 				...nitroConfig.storage[FETCH_CACHE_STORAGE_BASE],
 				driver: "netlifyBlobs",
 				name: FETCH_CACHE_STORAGE_BASE,
+			};
+
+			nitroConfig.storage[SKEW_PROTECTION_STORAGE_BASE] = {
+				...nitroConfig.storage[SKEW_PROTECTION_STORAGE_BASE],
+				driver: "netlifyBlobs",
+				name: SKEW_PROTECTION_STORAGE_BASE,
 			};
 
 			nitroConfig.storage["wolfstar:ratelimiter"] = {

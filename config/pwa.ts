@@ -18,7 +18,9 @@ export const pwa: ModuleOptions = {
 		// Blog post images are runtime content, not app-shell assets. Keep them out
 		// of the precache manifest so large images (e.g. OG images) don't exceed
 		// workbox's file-size limit and fail the build.
-		globIgnores: ["**/assets/blog/**"],
+		// Nuxt Studio editor/auth chunks are multi-MB and only needed on /_studio —
+		// exclude them so production builds with nuxt-studio don't blow the precache.
+		globIgnores: ["**/assets/blog/**", "**/*studio*", "**/*monaco*", "**/*tiptap*"],
 	},
 	injectRegister: "auto",
 	manifest: {

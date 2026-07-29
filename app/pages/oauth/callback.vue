@@ -1,52 +1,77 @@
 <template>
 	<div class="container mx-auto px-4 py-8">
-		<h1 class="sr-only">OAuth Callback</h1>
-		<h2 class="sr-only">Authentication Status</h2>
+		<h1 class="sr-only">{{ t("auth.oauth.callback_sr_title") }}</h1>
+		<h2 class="sr-only">{{ t("auth.oauth.callback_sr_status") }}</h2>
 		<template v-if="!hasCallbackParams">
-			<UAlert variant="solid" color="warning" title="Login Required" icon="twemoji:warning">
+			<UAlert
+				variant="solid"
+				color="warning"
+				:title="t('auth.oauth.login_required_title')"
+				icon="twemoji:warning"
+			>
 				<template #description>
-					This page can't be accessed directly. Please
-					<ULink to="/login" class="font-medium underline">sign in</ULink>
-					to continue.
+					<i18n-t keypath="auth.oauth.login_required_description" tag="span">
+						<template #link>
+							<ULink to="/login" class="font-medium underline">{{
+								t("auth.oauth.login_required_link")
+							}}</ULink>
+						</template>
+					</i18n-t>
 				</template>
 				<template #actions>
 					<UButton color="neutral" variant="ghost" to="/login" size="sm">
-						Go to Login
+						{{ t("auth.oauth.go_to_login") }}
 					</UButton>
 				</template>
 			</UAlert>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="isError">
-				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
+				<UAlert
+					color="error"
+					:title="t('auth.oauth.sign_in_failed_title')"
+					icon="twemoji:cross-mark"
+				>
 					<template #description>
 						{{ errorMessage }}
 					</template>
 					<template #actions>
 						<UButton color="neutral" variant="ghost" to="/login" size="sm">
-							Try Again
+							{{ t("auth.oauth.try_again") }}
 						</UButton>
 					</template>
 				</UAlert>
 			</template>
 			<template v-else-if="isSessionLoading || !ready">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
-					<template #description> Connecting to Discord... </template>
+				<UAlert
+					color="info"
+					icon="emojione:hourglass-done"
+					:title="t('auth.oauth.signing_in_title')"
+				>
+					<template #description> {{ t("auth.oauth.connecting_discord") }} </template>
 				</UAlert>
 			</template>
 			<template v-else-if="user">
-				<UAlert color="success" icon="twemoji:check-mark" :title="`Welcome ${user.name}!`">
-					<template #description> Redirecting you to the dashboard... </template>
+				<UAlert
+					color="success"
+					icon="twemoji:check-mark"
+					:title="t('auth.oauth.welcome_title', { name: user.name })"
+				>
+					<template #description> {{ t("auth.oauth.redirecting_dashboard") }} </template>
 				</UAlert>
 			</template>
 			<template v-else-if="isSessionMissing">
-				<UAlert color="error" title="Session Not Found" icon="twemoji:cross-mark">
+				<UAlert
+					color="error"
+					:title="t('auth.oauth.session_not_found_title')"
+					icon="twemoji:cross-mark"
+				>
 					<template #description>
-						Your login session could not be loaded. Please sign in again.
+						{{ t("auth.oauth.session_not_found_description") }}
 					</template>
 					<template #actions>
 						<UButton color="neutral" variant="ghost" to="/login" size="sm">
-							Try Again
+							{{ t("auth.oauth.try_again") }}
 						</UButton>
 					</template>
 				</UAlert>
@@ -62,6 +87,9 @@ definePageMeta({
 	viewTransition: false,
 });
 
+const { t } = useI18n();
+const { localizeAuthError } = useAuthErrorMessage();
+
 const route = useRoute();
 const nextParam = useRouteQuery("next", "/", { transform: String });
 const isSessionMissing = ref(false);
@@ -73,9 +101,7 @@ const { user, ready, loggedIn, fetchSession } = useUserSession();
 const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
 const isError = computed(() => Boolean(route.query.error));
 const isSessionLoading = ref(!isError.value);
-const errorMessage = computed(
-	() => route.query.error ?? "Something went wrong while signing you in. Please try again.",
-);
+const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
 
 onMounted(() => {
 	if (!isError.value) {
@@ -120,9 +146,9 @@ async function completeSignIn() {
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({
-	ogDescription: "A landing page for the OAuth callback flow, use the Login button instead.",
-	ogTitle: "OAuth Callback",
+	ogDescription: t("auth.oauth.seo_og_description"),
+	ogTitle: t("auth.oauth.seo_og_title"),
 	robots: { none: true },
-	title: "Auth Callback",
+	title: t("auth.oauth.seo_title"),
 });
 </script>

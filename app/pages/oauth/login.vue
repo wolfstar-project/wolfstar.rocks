@@ -6,8 +6,6 @@
 </template>
 
 <script setup lang="ts">
-const log = useLogger("oauth:login");
-
 definePageMeta({
 	alias: ["/login"],
 	auth: { only: "guest", redirectTo: "/profile" },

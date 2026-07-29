@@ -155,8 +155,6 @@ function isSafeUrl(url: unknown): url is string {
 	}
 }
 
-const log = useLogger("wolfstar:dashboard");
-
 const guildId = useRouteParams("id", null, { transform: String });
 
 if (!isValidGuildId(guildId.value)) {

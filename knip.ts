@@ -21,8 +21,8 @@ const config: KnipConfig = {
 				"shared/types/auth.d.ts",
 			],
 			project: [
-				/** css/mdx/prisma are handled by registered compilers, so include them here */
-				"**/*.{ts,vue,cjs,mjs,css,mdx,prisma}",
+				/** css/mdx are handled by registered compilers, so include them here */
+				"**/*.{ts,vue,cjs,mjs,css,mdx}",
 				"!test/fixtures/**",
 				"!test/test-utils/**",
 				"!test/e2e/helpers/**",

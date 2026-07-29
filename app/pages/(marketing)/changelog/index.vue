@@ -5,9 +5,7 @@
 			:description="description"
 			:ui="{ container: 'pb-12 sm:pb-16 lg:pb-20' }"
 		>
-			<template #description>
-				{{ description }}
-
+			<template #links>
 				<UButton
 					to="https://github.com/wolfstar-project/wolfstar.rocks/releases"
 					color="neutral"

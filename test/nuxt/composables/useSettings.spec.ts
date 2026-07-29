@@ -19,11 +19,13 @@ describe("useSettings", () => {
 
 	async function setup() {
 		const settingsModule = await import("~/composables/useSettings");
-		let composable: {
-			useAppColorMode: typeof settingsModule.useAppColorMode;
-			usePreferredLocale: typeof settingsModule.usePreferredLocale;
-			useSettings: typeof settingsModule.useSettings;
-		} | undefined;
+		let composable:
+			| {
+					useAppColorMode: typeof settingsModule.useAppColorMode;
+					usePreferredLocale: typeof settingsModule.usePreferredLocale;
+					useSettings: typeof settingsModule.useSettings;
+			  }
+			| undefined;
 
 		const TestComponent = defineComponent({
 			setup() {
@@ -49,7 +51,9 @@ describe("useSettings", () => {
 			reduceMotion: false,
 			selectedLocale: null,
 		});
-		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toEqual(settings.value);
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toEqual(
+			settings.value,
+		);
 	});
 
 	it("migrates legacy keys into wolfstar-settings", async () => {

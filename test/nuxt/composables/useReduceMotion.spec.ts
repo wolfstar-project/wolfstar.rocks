@@ -73,6 +73,8 @@ describe("useReduceMotion", () => {
 
 		expect(reduceMotionEnabled.value).toBe(true);
 		expect(localStorage.getItem("user-prefers-reduced-motion")).toBeNull();
-		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}").reduceMotion).toBe(true);
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}").reduceMotion).toBe(
+			true,
+		);
 	});
 });

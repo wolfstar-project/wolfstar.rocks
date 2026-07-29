@@ -85,7 +85,10 @@ describe("ColorModeButton", () => {
 	it("swaps theme and does not call startViewTransition when effectiveReduceMotion is true", async () => {
 		mockEffectiveReduceMotion.value = true;
 		// Also set localStorage so the real composable returns true if mockNuxtImport doesn't intercept
-		localStorage.setItem("wolfstar-settings", JSON.stringify({ colorMode: "dark", reduceMotion: true, selectedLocale: null }));
+		localStorage.setItem(
+			"wolfstar-settings",
+			JSON.stringify({ colorMode: "dark", reduceMotion: true, selectedLocale: null }),
+		);
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).not.toHaveBeenCalled();

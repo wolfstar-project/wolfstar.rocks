@@ -1,10 +1,17 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, nextTick } from "vue";
 
 describe("useReduceMotion", () => {
 	beforeEach(() => {
 		vi.resetModules();
+		localStorage.clear();
+	});
+
+	afterEach(async () => {
+		// Flush the pending settings persistence before clearing so stored
+		// preferences do not leak into the app boot of later test files.
+		await nextTick();
 		localStorage.clear();
 	});
 

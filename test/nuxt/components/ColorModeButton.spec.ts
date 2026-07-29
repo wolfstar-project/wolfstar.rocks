@@ -38,8 +38,12 @@ describe("ColorModeButton", () => {
 		});
 	});
 
-	afterEach(() => {
+	afterEach(async () => {
 		vi.clearAllMocks();
+		// Flush the pending settings persistence before clearing so the seeded
+		// theme does not leak into the app boot of later test files.
+		await nextTick();
+		localStorage.clear();
 	});
 
 	async function mountButton() {

@@ -1,5 +1,5 @@
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, nextTick } from "vue";
 
 const mockColorMode = {
@@ -15,6 +15,13 @@ describe("useSettings", () => {
 		localStorage.clear();
 		mockColorMode.preference = "system";
 		mockColorMode.value = "light";
+	});
+
+	afterEach(async () => {
+		// Flush the pending settings persistence before clearing so stored locale
+		// preferences do not leak into the app boot of later test files.
+		await nextTick();
+		localStorage.clear();
 	});
 
 	async function setupSettings() {

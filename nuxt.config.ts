@@ -2,6 +2,7 @@ import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
+import { currentLocales } from "./config/i18n";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -30,6 +31,7 @@ export default defineNuxtConfig({
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
+		"@nuxtjs/i18n",
 		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
@@ -118,7 +120,7 @@ export default defineNuxtConfig({
 	app: {
 		head: {
 			charset: "utf-8",
-			htmlAttrs: { lang: "en" },
+			htmlAttrs: { lang: "en-US" },
 			link: [
 				// Preconnect for external domains (faster than dns-prefetch: includes TLS handshake)
 				{ href: "https://cdn.discordapp.com", rel: "preconnect", crossorigin: "anonymous" },
@@ -295,6 +297,13 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+		"/translation-status": { appLayout: "default", prerender: true, robots: true },
+		// lunaria status.json — always revalidate so the app sees fresh progress
+		"/lunaria/status.json": {
+			headers: {
+				"Cache-Control": "public, max-age=0, must-revalidate",
+			},
+		},
 		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
 		// ISR (1 hour) rather than prerendering against the external API at build time.
 		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
@@ -672,6 +681,17 @@ export default defineNuxtConfig({
 		disablePrefetchLinks: true,
 		disablePreloadLinks: true,
 		disableStylesheets: "entry",
+	},
+
+	i18n: {
+		locales: currentLocales,
+		defaultLocale: "en",
+		strategy: "no_prefix",
+		detectBrowserLanguage: false,
+		// Paths are resolved relative to `restructureDir` (default "i18n/"), so this
+		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
+		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
+		langDir: "locales",
 	},
 });
 

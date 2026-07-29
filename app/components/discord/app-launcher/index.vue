@@ -121,16 +121,18 @@
 									class="discord-app-launcher-view-more"
 									@click="openListView(recentsListViewId)"
 								>
-									<span class="discord-app-launcher-view-more-desktop"
+									<span
+										class="discord-app-launcher-view-more-desktop max-md:hidden"
 										>View More</span
 									>
-									<span class="discord-app-launcher-view-more-mobile"
+									<span
+										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
 										>View All</span
 									>
 								</button>
 							</div>
 							<ul
-								class="discord-app-launcher-recents discord-app-launcher-recents-desktop"
+								class="discord-app-launcher-recents discord-app-launcher-recents-desktop max-md:hidden"
 								role="list"
 							>
 								<li v-for="entry of filteredRecents" :key="entry.id">
@@ -176,7 +178,7 @@
 								</li>
 							</ul>
 							<ul
-								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile"
+								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile hidden max-md:flex"
 								role="list"
 							>
 								<li
@@ -246,10 +248,12 @@
 									id="discord-app-launcher-server-heading"
 									class="discord-app-launcher-section-title"
 								>
-									<span class="discord-app-launcher-server-title-desktop"
+									<span
+										class="discord-app-launcher-server-title-desktop max-md:hidden"
 										>Apps in this Server</span
 									>
-									<span class="discord-app-launcher-server-title-mobile"
+									<span
+										class="discord-app-launcher-server-title-mobile hidden max-md:inline"
 										>In This Server</span
 									>
 								</h2>
@@ -259,16 +263,18 @@
 									class="discord-app-launcher-view-more"
 									@click="openListView(serverAppsListViewId)"
 								>
-									<span class="discord-app-launcher-view-more-desktop"
+									<span
+										class="discord-app-launcher-view-more-desktop max-md:hidden"
 										>View More</span
 									>
-									<span class="discord-app-launcher-view-more-mobile"
+									<span
+										class="discord-app-launcher-view-more-mobile hidden max-md:inline"
 										>View All</span
 									>
 								</button>
 							</div>
 							<div
-								class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop"
+								class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop max-md:hidden"
 							>
 								<DiscordAppLauncherListItem
 									v-for="(entry, index) of filteredServerApps"
@@ -286,7 +292,7 @@
 								/>
 							</div>
 							<ul
-								class="discord-app-launcher-tile-grid discord-app-launcher-server-mobile"
+								class="discord-app-launcher-tile-grid discord-app-launcher-server-mobile hidden max-md:flex"
 								role="list"
 							>
 								<li
@@ -1565,9 +1571,10 @@ onBeforeUnmount(() => {
 	@apply outline-2 outline-offset-2 outline-primary;
 }
 
-/* Tiles are mobile-only; the sheet media query switches them back to `grid`. */
+/* Tiles are mobile-only; the sheet media query restores display on the same selector. */
 .discord-app-launcher-tile-grid {
-	@apply m-0 hidden list-none grid-cols-2 gap-2 p-0;
+	@apply m-0 list-none grid-cols-2 gap-2 p-0;
+	display: none;
 }
 
 .discord-app-launcher-tile {
@@ -1690,8 +1697,9 @@ onBeforeUnmount(() => {
 	}
 }
 
-/* Mobile Discord sheet layout (< md). */
-@media (width < 48rem) {
+/* Mobile Discord sheet layout (< md / 768px). Use px so rem root changes cannot
+ * keep the desktop popover chrome on phones/tablets that still show the site hamburger. */
+@media (max-width: 767.98px) {
 	.discord-app-launcher {
 		--discord-app-launcher-bg: oklch(22% 0.006 272);
 		--discord-app-launcher-nested: oklch(28% 0.007 272);
@@ -1782,10 +1790,11 @@ onBeforeUnmount(() => {
 		@apply inline-block;
 	}
 
+	/* Compound selectors beat the base single-class display rules. */
 	.discord-app-launcher-view-more-desktop,
 	.discord-app-launcher-server-title-desktop,
-	.discord-app-launcher-recents-desktop,
-	.discord-app-launcher-server-list-desktop,
+	.discord-app-launcher-recents.discord-app-launcher-recents-desktop,
+	.discord-app-launcher-server-list.discord-app-launcher-server-list-desktop,
 	.discord-app-launcher-category .discord-app-launcher-view-more-header {
 		display: none;
 	}
@@ -1798,20 +1807,22 @@ onBeforeUnmount(() => {
 	/*
 	 * Recents / In This Server are horizontal carousels: two tiles fill the
 	 * content box and the next one peeks through the bled right padding.
+	 * Target .tile-grid itself so this overrides the base `display: none`.
 	 */
-	.discord-app-launcher-recents-mobile,
-	.discord-app-launcher-server-mobile {
-		@apply -mr-4 flex gap-2 overflow-x-auto pr-4;
+	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile,
+	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile {
+		@apply -mr-4 gap-2 overflow-x-auto pr-4;
+		display: flex;
 		scrollbar-width: none;
 	}
 
-	.discord-app-launcher-recents-mobile::-webkit-scrollbar,
-	.discord-app-launcher-server-mobile::-webkit-scrollbar {
+	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile::-webkit-scrollbar,
+	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile::-webkit-scrollbar {
 		display: none;
 	}
 
-	.discord-app-launcher-recents-mobile > li,
-	.discord-app-launcher-server-mobile > li {
+	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile > li,
+	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile > li {
 		@apply shrink-0;
 		width: calc(50% - 0.25rem);
 	}

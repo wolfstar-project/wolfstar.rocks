@@ -4,11 +4,11 @@
 			href="#maincontent"
 			class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-content focus:shadow-lg focus:outline focus:outline-2 focus:outline-transparent"
 		>
-			Skip to main content
+			{{ t("a11y.skip_to_content") }}
 		</a>
 		<AppHeader />
 
-		<UMain id="maincontent" tabindex="-1" aria-label="Main content">
+		<UMain id="maincontent" tabindex="-1" :aria-label="t('a11y.main_content')">
 			<slot></slot>
 		</UMain>
 
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 </script>
 

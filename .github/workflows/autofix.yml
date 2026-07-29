@@ -32,6 +32,12 @@ jobs:
           cache: true
           sfw: true
 
+      - name: 🌐 Compare translations
+        run: vp run i18n:check
+
+      - name: 🌍 Update lunaria data
+        run: vp run build:lunaria
+
       - name: 🔠 Fix lint errors
         run: vp run lint:fix
 

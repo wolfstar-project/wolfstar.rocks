@@ -112,23 +112,32 @@ function buildJsonStatus(): I18nStatus {
 	};
 }
 
+function escapeHtml(value: string): string {
+	return value
+		.replaceAll("&", "&amp;")
+		.replaceAll("<", "&lt;")
+		.replaceAll(">", "&gt;")
+		.replaceAll('"', "&quot;")
+		.replaceAll("'", "&#39;");
+}
+
 function fallbackDashboardHtml(status: I18nStatus): string {
 	const rows = status.locales
 		.map(
 			(locale) => `
       <details class="progress-details">
         <summary>
-          <strong>${locale.label} <span class="lang-code">${locale.lang}</span></strong>
+          <strong>${escapeHtml(locale.label)} <span class="lang-code">${escapeHtml(locale.lang)}</span></strong>
           <hr />
           <div class="progress-summary">
             <span>${locale.missingKeys.length ? `${locale.missingKeys.length} missing keys` : "✔"}</span>
             <span>${locale.completedKeys} / ${locale.totalKeys}</span>
           </div>
         </summary>
-        <p><a href="${locale.githubEditUrl}">Edit on GitHub</a></p>
+        <p><a href="${escapeHtml(locale.githubEditUrl)}">Edit on GitHub</a></p>
         ${
 			locale.missingKeys.length
-				? `<ul>${locale.missingKeys.map((key) => `<li>${key}</li>`).join("")}</ul>`
+				? `<ul>${locale.missingKeys.map((key) => `<li>${escapeHtml(key)}</li>`).join("")}</ul>`
 				: "<p>This translation is complete.</p>"
 		}
       </details>`,
@@ -152,7 +161,7 @@ function fallbackDashboardHtml(status: I18nStatus): string {
   <main>
     <h1>WolfStar Translation Status</h1>
     <p>Fallback dashboard (Lunaria git status unavailable — usually due to uncommitted locale changes).</p>
-    <p>Source: ${status.sourceLocale.label} (${status.sourceLocale.lang}) — ${status.sourceLocale.totalKeys} keys</p>
+    <p>Source: ${escapeHtml(status.sourceLocale.label)} (${escapeHtml(status.sourceLocale.lang)}) — ${status.sourceLocale.totalKeys} keys</p>
     ${rows}
   </main>
 </body>

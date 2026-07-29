@@ -3,20 +3,24 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ref } from "vue";
 import ColorModeButton from "~/components/ColorModeButton.vue";
 
-const mockColorMode = { preference: "dark", value: "dark" };
+const mockColorModePreference = ref<"system" | "light" | "dark">("dark");
 const mockEffectiveReduceMotion = ref(false);
 
-mockNuxtImport("useColorMode", () => () => mockColorMode);
+mockNuxtImport("useAppColorMode", () => () => ({
+	preference: mockColorModePreference,
+	setColorMode(value: "system" | "light" | "dark") {
+		mockColorModePreference.value = value;
+	},
+}));
 mockNuxtImport("useReduceMotion", () => () => ({
 	effectiveReduceMotion: mockEffectiveReduceMotion,
 }));
 
 describe("ColorModeButton", () => {
 	beforeEach(() => {
-		mockColorMode.preference = "dark";
-		mockColorMode.value = "dark";
+		mockColorModePreference.value = "dark";
 		mockEffectiveReduceMotion.value = false;
-		localStorage.removeItem("user-prefers-reduced-motion");
+		localStorage.clear();
 
 		Object.defineProperty(document, "startViewTransition", {
 			configurable: true,
@@ -59,7 +63,7 @@ describe("ColorModeButton", () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(svtSpy).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorModePreference.value).toBe("light");
 	});
 
 	it("swaps theme and does not call startViewTransition when activeViewTransition is truthy", async () => {
@@ -75,23 +79,23 @@ describe("ColorModeButton", () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorModePreference.value).toBe("light");
 	});
 
 	it("swaps theme and does not call startViewTransition when effectiveReduceMotion is true", async () => {
 		mockEffectiveReduceMotion.value = true;
 		// Also set localStorage so the real composable returns true if mockNuxtImport doesn't intercept
-		localStorage.setItem("user-prefers-reduced-motion", "true");
+		localStorage.setItem("wolfstar-settings", JSON.stringify({ colorMode: "dark", reduceMotion: true, selectedLocale: null }));
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorModePreference.value).toBe("light");
 	});
 
 	it("calls startViewTransition exactly once on happy path", async () => {
 		const wrapper = await mountSuspended(ColorModeButton);
 		await wrapper.find("button").trigger("click");
 		expect(document.startViewTransition).toHaveBeenCalledTimes(1);
-		expect(mockColorMode.preference).toBe("light");
+		expect(mockColorModePreference.value).toBe("light");
 	});
 });

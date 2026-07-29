@@ -42,6 +42,27 @@ export default defineConfig({
 			"zizmor:fix": {
 				command: "zizmor --pedantic --fix .",
 			},
+			"i18n:check": {
+				command: "node --experimental-transform-types scripts/compare-translations.ts",
+				// Off because the script rewrites locale files (never cacheable), and
+				// caching triggers a vp spawn failure on the CI arm runner.
+				// See https://github.com/voidzero-dev/vite-task/issues/506
+				cache: false,
+			},
+			"i18n:report": {
+				command: "node --experimental-transform-types scripts/find-invalid-translations.ts",
+			},
+			"i18n:schema": {
+				// Format after generate so CI `git diff` matches oxfmt tab output
+				// (JSON.stringify alone emits 2-space indent).
+				command:
+					"node --experimental-transform-types scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json i18n/schemas",
+				// Off: script rewrites schema.json (same rationale as i18n:check).
+				cache: false,
+			},
+			"build:lunaria": {
+				command: "node --experimental-transform-types ./lunaria/lunaria.ts",
+			},
 		},
 	},
 	lint: {
@@ -506,6 +527,8 @@ export default defineConfig({
 		],
 	},
 	staged: {
+		"i18n/locales/**/*.json":
+			"node --experimental-transform-types ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json i18n/schemas",
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
 		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
 			const filtered = files.filter(

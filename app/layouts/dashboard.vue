@@ -50,22 +50,18 @@
 			v-else-if="nuxtError"
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
 			role="alert"
-			aria-label="Error loading dashboard"
+			:aria-label="t('dashboard.error_aria')"
 		>
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
 				<h2 class="text-xl font-semibold text-base-content">
-					{{ nuxtError.statusMessage || "Error Loading Dashboard" }}
+					{{ nuxtError.statusMessage || t("dashboard.error_title") }}
 				</h2>
 				<p v-if="nuxtError.status === 403">
-					You don't have permission to access this server's dashboard. Make sure you have
-					the Manage Server permission and try again.
+					{{ t("dashboard.error_forbidden") }}
 				</p>
 				<p class="text-sm text-base-content/60">
-					{{
-						nuxtError.message ||
-						"Something went wrong while loading the dashboard. Please try again, or contact support if the problem continues."
-					}}
+					{{ nuxtError.message || t("dashboard.error_fallback") }}
 				</p>
 			</div>
 		</div>
@@ -73,13 +69,17 @@
 			v-else
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
 			role="status"
-			aria-label="Loading dashboard"
+			:aria-label="t('dashboard.loading_aria')"
 		>
 			<div class="flex flex-col items-center space-y-4">
 				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
-					<h2 class="text-xl font-semibold text-base-content">Loading Dashboard</h2>
-					<p class="text-sm text-base-content/60">Loading server settings...</p>
+					<h2 class="text-xl font-semibold text-base-content">
+						{{ t("dashboard.loading_title") }}
+					</h2>
+					<p class="text-sm text-base-content/60">
+						{{ t("dashboard.loading_description") }}
+					</p>
 				</div>
 				<div class="flex items-center space-x-2">
 					<div
@@ -109,10 +109,10 @@
 			>
 				<UFieldGroup>
 					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-						Save Changes
+						{{ t("dashboard.save_changes") }}
 					</UButton>
 					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-						Reset Changes
+						{{ t("dashboard.reset_changes") }}
 					</UButton>
 				</UFieldGroup>
 			</div>
@@ -120,16 +120,18 @@
 
 		<UModal
 			v-model:open="showDialog"
-			title="Unsaved Changes"
-			description="You have unsaved changes that will be lost if you leave this page."
+			:title="t('dashboard.unsaved_title')"
+			:description="t('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
 					<UButton color="neutral" variant="ghost" @click="cancelLeave">
-						Stay on Page
+						{{ t("dashboard.stay_on_page") }}
 					</UButton>
-					<UButton color="error" @click="confirmLeave"> Discard Changes </UButton>
+					<UButton color="error" @click="confirmLeave">
+						{{ t("dashboard.discard_changes") }}
+					</UButton>
 				</div>
 			</template>
 		</UModal>
@@ -155,14 +157,16 @@ function isSafeUrl(url: unknown): url is string {
 	}
 }
 
+const { t } = useI18n();
+
 const guildId = useRouteParams("id", null, { transform: String });
 
 if (!isValidGuildId(guildId.value)) {
 	throw createError({
-		why: "Guild IDs must be 17-19 digit numbers.",
+		why: t("dashboard.invalid_guild_why"),
 		status: 400,
-		message: "The provided guild ID is not valid.",
-		fix: "Please check the URL and ensure the guild ID is correct.",
+		message: t("dashboard.invalid_guild_message"),
+		fix: t("dashboard.invalid_guild_fix"),
 	});
 }
 
@@ -256,9 +260,8 @@ watch(
 				case "forbidden": {
 					if (import.meta.client) {
 						toast.add({
-							title: "Access Denied",
-							description:
-								"You don't have permission to access this server's dashboard.",
+							title: t("dashboard.access_denied_title"),
+							description: t("dashboard.access_denied_description"),
 							color: "error",
 							icon: "heroicons:x-circle",
 						});
@@ -273,9 +276,8 @@ watch(
 				case "unauthorized": {
 					if (import.meta.client) {
 						toast.add({
-							title: "Unauthorized",
-							description:
-								"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
+							title: t("dashboard.unauthorized_title"),
+							description: t("dashboard.unauthorized_description"),
 							color: "error",
 							icon: "heroicons:x-circle",
 						});
@@ -297,7 +299,7 @@ watch(
 							actions: link
 								? [
 										{
-											label: "Learn more",
+											label: t("common.learn_more"),
 											onClick: () => {
 												window.open(link, "_blank", "noopener,noreferrer");
 											},
@@ -330,7 +332,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		{
 			exact: true,
 			icon: "heroicons:home",
-			label: "Home",
+			label: t("dashboard.nav.home"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -338,56 +340,56 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "lucide:shield",
-			label: "Moderation",
+			label: t("dashboard.nav.moderation"),
 			onSelect: () => {
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/moderation`,
 			children: [
 				{
-					label: "Bad Words",
+					label: t("dashboard.nav.bad_words"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/word`,
 				},
 				{
-					label: "Capitals",
+					label: t("dashboard.nav.capitals"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
 				},
 				{
-					label: "Invites",
+					label: t("dashboard.nav.invites"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/invites`,
 				},
 				{
-					label: "Links",
+					label: t("dashboard.nav.links"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/links`,
 				},
 				{
-					label: "Message Duplication",
+					label: t("dashboard.nav.message_duplication"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/messages`,
 				},
 				{
-					label: "Line Spam",
+					label: t("dashboard.nav.line_spam"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/lines`,
 				},
 				{
-					label: "Reactions",
+					label: t("dashboard.nav.reactions"),
 					onSelect: () => {
 						open.value = false;
 					},
@@ -397,7 +399,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:hashtag",
-			label: "Channels",
+			label: t("dashboard.nav.channels"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -405,7 +407,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:user-group",
-			label: "Roles",
+			label: t("dashboard.nav.roles"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -413,7 +415,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:bell",
-			label: "Events",
+			label: t("dashboard.nav.events"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -421,7 +423,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:command-line",
-			label: "Commands",
+			label: t("dashboard.nav.commands"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -429,7 +431,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "lucide:logs",
-			label: "Logs",
+			label: t("dashboard.nav.logs"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -485,10 +487,10 @@ async function submitChanges() {
 					error: parseError(error),
 				});
 				throw createError({
-					message: "Failed to update guild settings",
-					why: "Something went wrong while saving your settings.",
+					message: t("dashboard.update_failed_message"),
+					why: t("dashboard.update_failed_why"),
 					status: 500,
-					fix: "Please try again later. If the issue persists, contact support.",
+					fix: t("dashboard.update_failed_fix"),
 					cause: error as Error,
 				});
 			}
@@ -522,9 +524,9 @@ async function submitChanges() {
 
 		toast.add({
 			color: "success",
-			description: "Your server settings have been saved.",
+			description: t("dashboard.settings_saved_description"),
 			icon: "i-heroicons-check-circle",
-			title: "Settings Saved",
+			title: t("dashboard.settings_saved_title"),
 		});
 	}
 }
@@ -546,9 +548,9 @@ function resetChanges() {
 
 	toast.add({
 		color: "info",
-		description: "All changes have been reverted to the last saved state.",
+		description: t("dashboard.changes_reset_description"),
 		icon: "heroicons:arrow-path",
-		title: "Changes Reset",
+		title: t("dashboard.changes_reset_title"),
 	});
 }
 

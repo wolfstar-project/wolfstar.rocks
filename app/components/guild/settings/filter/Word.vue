@@ -37,25 +37,31 @@
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
 			class="space-y-6"
-			aria-label="Word filter settings form"
+			:aria-label="t('guild_settings.filter.word.form_aria')"
 			@error="onError"
 		>
 			<!-- Section 1: Word Filter -->
-			<GuildSettingsSection title="Word Filter">
+			<GuildSettingsSection :title="t('guild_settings.filter.word.title')">
 				<div class="space-y-3">
 					<UFormField name="selfmodFilterEnabled">
 						<div class="flex items-start gap-3">
 							<USwitch
 								v-model="state.selfmodFilterEnabled"
 								class="mt-0.5"
-								aria-label="Toggle word filter"
+								:aria-label="t('guild_settings.filter.word.toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Filter {{ state.selfmodFilterEnabled ? "Enabled" : "Disabled" }}
+									{{
+										t("guild_settings.filter.word.filter_label", {
+											state: state.selfmodFilterEnabled
+												? t("guild_settings.filter.common.enabled")
+												: t("guild_settings.filter.common.disabled"),
+										})
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Blocks messages containing specific words or phrases.
+									{{ t("guild_settings.filter.word.toggle_help") }}
 								</p>
 							</div>
 						</div>
@@ -66,14 +72,19 @@
 							<USwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
-								aria-label="Toggle alerts soft action"
+								:aria-label="t('guild_settings.filter.word.alerts_toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.alerts") }}
+									{{
+										state.softActionAlerts
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Posts an alert in the channel where the violation occurred.
+									{{ t("guild_settings.filter.common.alerts_help") }}
 								</p>
 							</div>
 						</div>
@@ -84,14 +95,19 @@
 							<USwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
-								aria-label="Toggle logs soft action"
+								:aria-label="t('guild_settings.filter.word.logging_toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.logging") }}
+									{{
+										state.softActionLogs
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Sends a log entry to the moderation logs channel.
+									{{ t("guild_settings.filter.common.logging_help") }}
 								</p>
 							</div>
 						</div>
@@ -102,14 +118,19 @@
 							<USwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
-								aria-label="Toggle deletes soft action"
+								:aria-label="t('guild_settings.filter.word.delete_toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.delete_message") }}
+									{{
+										state.softActionDeletes
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Automatically deletes the offending message.
+									{{ t("guild_settings.filter.common.delete_message_help") }}
 								</p>
 							</div>
 						</div>
@@ -120,25 +141,25 @@
 			<Separator />
 
 			<!-- Section 2: Punishments -->
-			<GuildSettingsSection title="Punishments">
+			<GuildSettingsSection :title="t('guild_settings.filter.common.punishments')">
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<UFormField
-						label="Action"
+						:label="t('guild_settings.filter.common.hard_action')"
 						name="selfmodFilterHardAction"
-						description="What happens when a member exceeds the limit"
+						:description="t('guild_settings.filter.common.hard_action_description')"
 					>
 						<USelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
 							class="w-full"
-							aria-label="Select punishment action"
+							:aria-label="t('guild_settings.filter.common.select_action_aria')"
 						/>
 					</UFormField>
 
 					<UFormField
-						label="Duration"
+						:label="t('guild_settings.filter.common.duration')"
 						name="hardActionDurationMs"
-						description="How long the mute or ban lasts"
+						:description="t('guild_settings.filter.common.duration_help')"
 					>
 						<SelectDuration
 							v-model="state.hardActionDurationMs"
@@ -151,7 +172,7 @@
 				<div class="mt-4 space-y-5">
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Violations before punishment
+							{{ t("guild_settings.filter.common.threshold_maximum") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodFilterThresholdMaximum }})</span
 							>
@@ -160,7 +181,7 @@
 							v-model="state.selfmodFilterThresholdMaximum"
 							:min="0"
 							:max="60"
-							aria-label="Words filter violations before punishment slider"
+							:aria-label="t('guild_settings.filter.common.threshold_maximum')"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0</span>
@@ -170,7 +191,7 @@
 
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Time window (seconds)
+							{{ t("guild_settings.filter.common.threshold_duration") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodFilterThresholdDurationSeconds }}s)</span
 							>
@@ -179,7 +200,7 @@
 							v-model="state.selfmodFilterThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Word filter time window (seconds) slider"
+							:aria-label="t('guild_settings.filter.common.threshold_duration')"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>
@@ -192,16 +213,18 @@
 			<Separator />
 
 			<!-- Section 3: Filtered Words -->
-			<GuildSettingsSection title="Filtered Words">
+			<GuildSettingsSection :title="t('guild_settings.filter.word.filtered_words')">
 				<div class="space-y-4">
 					<form class="flex gap-2" @submit.prevent="addWord">
 						<UInput
 							v-model="newWord"
-							placeholder="e.g. badword"
+							:placeholder="t('guild_settings.filter.word.add_placeholder')"
 							class="w-64"
-							aria-label="Add filtered word"
+							:aria-label="t('guild_settings.filter.word.add_word')"
 						/>
-						<UButton type="submit" color="primary"> Confirm </UButton>
+						<UButton type="submit" color="primary">
+							{{ t("common.confirm") }}
+						</UButton>
 					</form>
 
 					<div v-if="state.selfmodFilterRaw.length > 0" class="flex flex-wrap gap-2">
@@ -216,7 +239,7 @@
 							<button
 								type="button"
 								class="ml-1 rounded-full hover:opacity-70"
-								:aria-label="`Remove ${word}`"
+								:aria-label="t('guild_settings.filter.word.remove_word', { word })"
 								@click="removeWord(word)"
 							>
 								<UIcon name="heroicons:x-mark" class="size-3" />
@@ -238,6 +261,7 @@ function sanitizeWord(raw: string): string {
 	return raw.replace(/[^0-9a-z]/gi, "").toLowerCase();
 }
 
+const { t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
@@ -245,14 +269,14 @@ const loading = computed(() => !guildSettings.value);
 
 const newWord = ref("");
 
-const hardActionItems = [
-	{ label: "None", value: 0 },
-	{ label: "Warning", value: 1 },
-	{ label: "Kick", value: 2 },
-	{ label: "Mute", value: 3 },
-	{ label: "Softban", value: 4 },
-	{ label: "Ban", value: 5 },
-];
+const hardActionItems = computed(() => [
+	{ label: t("guild_settings.filter.common.actions.none"), value: 0 },
+	{ label: t("guild_settings.filter.common.actions.warning"), value: 1 },
+	{ label: t("guild_settings.filter.common.actions.kick"), value: 2 },
+	{ label: t("guild_settings.filter.common.actions.mute"), value: 3 },
+	{ label: t("guild_settings.filter.common.actions.softban"), value: 4 },
+	{ label: t("guild_settings.filter.common.actions.ban"), value: 5 },
+]);
 
 const schema = WordFilterSchema;
 type Schema = WordFilter;
@@ -282,8 +306,8 @@ const state = reactive<Schema>(createDefaultState());
 
 const selectedHardAction = computed({
 	get: () =>
-		hardActionItems.find((item) => item.value === state.selfmodFilterHardAction) ??
-		hardActionItems[0]!,
+		hardActionItems.value.find((item) => item.value === state.selfmodFilterHardAction) ??
+		hardActionItems.value[0]!,
 	set: (item) => {
 		state.selfmodFilterHardAction = item.value;
 	},
@@ -347,9 +371,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't save word filter settings. ${errorMessage ?? "Please try again."}`,
+		description: t("guild_settings.filter.word.save_failed", {
+			message: errorMessage ?? t("guild_settings.please_try_again"),
+		}),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 </script>

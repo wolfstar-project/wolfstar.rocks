@@ -3,5 +3,5 @@
   description: Release the version
 - name: stale
   color: "ededed"
-- name: Bug
+- name: bug
   color: "EB5757"

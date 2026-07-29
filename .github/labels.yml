@@ -1,0 +1,7 @@
+- name: release
+  color: "68D7F0"
+  description: Release the version
+- name: stale
+  color: "ededed"
+- name: Bug
+  color: "EB5757"

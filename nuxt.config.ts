@@ -688,6 +688,9 @@ export default defineNuxtConfig({
 		defaultLocale: "en",
 		strategy: "no_prefix",
 		detectBrowserLanguage: false,
+		// Paths are resolved relative to `restructureDir` (default "i18n/"), so this
+		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
+		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
 		langDir: "locales",
 	},
 });

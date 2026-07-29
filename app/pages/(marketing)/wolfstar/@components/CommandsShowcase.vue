@@ -982,7 +982,7 @@ watch(selectableCommands, (commands) => {
 onMounted(() => {
 	timestamp.value = Date.now();
 	// Desktop opens in slash-command mode; mobile stays idle until the user types `/`.
-	if (!window.matchMedia("(width < 48rem)").matches) {
+	if (!window.matchMedia("(max-width: 767.98px)").matches) {
 		composerText.value = "/";
 	}
 });
@@ -1159,7 +1159,7 @@ onMounted(() => {
 	caret-color: var(--showcase-discord-composer-text);
 }
 
-@media (width < 48rem) {
+@media (max-width: 767.98px) {
 	.showcase-discord-shell {
 		/* Same Discord-true dark palette on mobile; composer bar matches input field. */
 		--showcase-discord-composer-bar: oklch(26.65% 0.006 272.93);
@@ -1260,7 +1260,7 @@ onMounted(() => {
 }
 
 /* Channel info is a mobile Discord pattern; never show over the desktop layout. */
-@media (width >= 48rem) {
+@media (min-width: 768px) {
 	.showcase-discord-shell :deep(.showcase-discord-channel-info) {
 		display: none;
 	}

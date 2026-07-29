@@ -43,7 +43,9 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 	if (localStorage.getItem(STORAGE_KEY)) return;
 
 	const legacyColorMode = parseStoredColorMode(localStorage.getItem("wolfstar-theme"));
-	const legacyReduceMotion = parseStoredReduceMotion(localStorage.getItem(LEGACY_REDUCE_MOTION_KEY));
+	const legacyReduceMotion = parseStoredReduceMotion(
+		localStorage.getItem(LEGACY_REDUCE_MOTION_KEY),
+	);
 	const legacyLocale = parseStoredLocale(localStorage.getItem(LEGACY_LOCALE_KEY));
 
 	settings.value = {

@@ -1,6 +1,6 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { defineComponent } from "vue";
+import { defineComponent, nextTick } from "vue";
 
 describe("useReduceMotion", () => {
 	beforeEach(() => {
@@ -10,6 +10,7 @@ describe("useReduceMotion", () => {
 
 	async function setup() {
 		const settingsModule = await import("~/composables/useSettings");
+		settingsModule.resetSettingsStateForTests();
 		let composable: ReturnType<typeof settingsModule.useReduceMotion> | undefined;
 
 		const TestComponent = defineComponent({
@@ -70,6 +71,7 @@ describe("useReduceMotion", () => {
 		localStorage.setItem("user-prefers-reduced-motion", "true");
 
 		const { reduceMotionEnabled } = await setup();
+		await nextTick();
 
 		expect(reduceMotionEnabled.value).toBe(true);
 		expect(localStorage.getItem("user-prefers-reduced-motion")).toBeNull();

@@ -20,10 +20,11 @@ interface DocumentWithActiveVT extends Document {
 	readonly activeViewTransition: ViewTransition | null;
 }
 
-const { preference: colorModePreference, setColorMode } = useAppColorMode();
+const colorMode = useColorMode();
+const { setColorMode } = useAppColorMode();
 const { effectiveReduceMotion } = useReduceMotion();
 
-const nextTheme = computed(() => (colorModePreference.value === "dark" ? "light" : "dark"));
+const nextTheme = computed(() => (colorMode.value === "dark" ? "light" : "dark"));
 
 const switchTheme = () => {
 	setColorMode(nextTheme.value);

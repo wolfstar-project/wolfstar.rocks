@@ -45,7 +45,8 @@ const { collapsed } = defineProps<{
 const { t, locale, locales, setLocale } = useI18n();
 const { setPreferredLocale } = usePreferredLocale();
 const isFeedbackOpen = ref(false);
-const { preference: colorModePreference, setColorMode } = useAppColorMode();
+const colorMode = useColorMode();
+const { setColorMode } = useAppColorMode();
 const { user: authUser, signOut } = useUserSession();
 
 const src = computed(() => authUser.value?.image ?? undefined);
@@ -112,7 +113,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 		{
 			children: [
 				{
-					checked: colorModePreference.value === "light",
+					checked: colorMode.value === "light",
 					icon: "lucide:sun",
 					label: t("common.light"),
 					onSelect(e: Event) {
@@ -122,7 +123,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 					type: "checkbox",
 				},
 				{
-					checked: colorModePreference.value === "dark",
+					checked: colorMode.value === "dark",
 					icon: "lucide:moon",
 					label: t("common.dark"),
 					onSelect(e: Event) {

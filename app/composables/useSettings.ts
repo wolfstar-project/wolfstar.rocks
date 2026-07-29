@@ -22,6 +22,12 @@ const DEFAULT_SETTINGS: AppSettings = {
 let settingsRef: RemovableRef<AppSettings> | null = null;
 let legacyMigrationApplied = false;
 
+export function resetSettingsStateForTests() {
+	if (!import.meta.test) return;
+	settingsRef = null;
+	legacyMigrationApplied = false;
+}
+
 function parseStoredColorMode(value: string | null): ColorModePreference | null {
 	return value === "system" || value === "light" || value === "dark" ? value : null;
 }
@@ -40,8 +46,6 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 	if (!import.meta.client || legacyMigrationApplied) return;
 	legacyMigrationApplied = true;
 
-	if (localStorage.getItem(STORAGE_KEY)) return;
-
 	const legacyColorMode = parseStoredColorMode(localStorage.getItem("wolfstar-theme"));
 	const legacyReduceMotion = parseStoredReduceMotion(
 		localStorage.getItem(LEGACY_REDUCE_MOTION_KEY),
@@ -59,13 +63,24 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 }
 
 export function useSettings() {
+	const shouldMigrateLegacySettings =
+		import.meta.client &&
+		!legacyMigrationApplied &&
+		(localStorage.getItem("wolfstar-theme") !== null ||
+			localStorage.getItem(LEGACY_REDUCE_MOTION_KEY) !== null ||
+			localStorage.getItem(LEGACY_LOCALE_KEY) !== null);
+
 	if (!settingsRef) {
 		settingsRef = useLocalStorage<AppSettings>(STORAGE_KEY, DEFAULT_SETTINGS, {
 			mergeDefaults: true,
 		});
 	}
 
-	applyLegacySettingsMigration(settingsRef);
+	if (shouldMigrateLegacySettings) {
+		applyLegacySettingsMigration(settingsRef);
+	} else if (import.meta.client) {
+		legacyMigrationApplied = true;
+	}
 
 	return {
 		settings: settingsRef,

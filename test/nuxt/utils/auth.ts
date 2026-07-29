@@ -43,9 +43,9 @@ export function mockAuth(user: Partial<AuthUser> | null = null) {
 
 	beforeEach(() => {
 		// mockNuxtImport cannot replace useUserSession in Vitest browser +
-		// viteEnvironmentApi:false, so force $authorization to the mocked user.
-		// When the authorization-resolver plugin already ran, its provide is a
-		// non-configurable getter, so patch the provided object instead.
+		// viteEnvironmentApi:false, so when the authorization-resolver plugin ran
+		// its resolveClientUser reads the real (empty) session — override the
+		// method on the provided object; otherwise provide the mock ourselves.
 		const app = useNuxtApp();
 		if (app.$authorization) {
 			app.$authorization.resolveClientUser = () => resolvedUser;

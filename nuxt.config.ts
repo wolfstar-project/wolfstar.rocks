@@ -1,7 +1,7 @@
 import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isDevelopment, isTest, provider } from "std-env";
+import { isCI, isTest, provider } from "std-env";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -16,11 +16,11 @@ export default defineNuxtConfig({
 	modules: [
 		"@nuxt/ui",
 		"@nuxt/content",
-		// Nuxt Studio is a local content-editing tool. It ships multi-MB editor
-		// bundles that overflow the PWA precache (breaking the build) and registers
-		// Vite plugins that break the rolldown-based Vitest environment, so only
-		// load it during local development.
-		...(isDevelopment ? ["nuxt-studio"] : []),
+		// Nuxt Studio works in development and production (Git publish needs prod).
+		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
+		// test environment. Studio editor chunks are also excluded from the PWA
+		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
+		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -57,6 +57,15 @@ export default defineNuxtConfig({
 		// requiring better-sqlite3 as an additional native dependency.
 		experimental: {
 			sqliteConnector: "native",
+		},
+	},
+
+	studio: {
+		repository: {
+			provider: "github",
+			owner: "wolfstar-project",
+			repo: "wolfstar.rocks",
+			branch: "main",
 		},
 	},
 
@@ -289,6 +298,10 @@ export default defineNuxtConfig({
 		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
 		// ISR (1 hour) rather than prerendering against the external API at build time.
 		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
+		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
+		"/_studio": { prerender: false, robots: false },
+		"/_studio/**": { prerender: false, robots: false },
+		"/__nuxt_studio/**": { prerender: false, robots: false },
 	},
 
 	sourcemap: {
@@ -322,7 +335,7 @@ export default defineNuxtConfig({
 			crawlLinks: true,
 			// Keep redirect-only and per-user routes out of the prerender crawl;
 			// their auth-redirect stubs do not produce complete HTML documents.
-			ignore: ["/login", "/oauth/login", "/profile"],
+			ignore: ["/login", "/oauth/login", "/profile", "/_studio", "/__nuxt_studio"],
 		},
 		publicAssets: [
 			{
@@ -468,63 +481,15 @@ export default defineNuxtConfig({
 
 	icon: {
 		clientBundle: {
-			// App Launcher fixtures pass icon names dynamically, so scanning cannot detect them.
-			icons: [
-				"ph:flame-fill",
-				"ph:circles-three-fill",
-				"ph:circles-four-fill",
-				"ph:squares-four-fill",
-				"ph:number-circle-eight-fill",
-				"ph:diamond-fill",
-				"ph:grid-nine",
-				"ph:flower-lotus-fill",
-				"ph:plant-fill",
-				"ph:youtube-logo-fill",
-				"ph:flask-fill",
-				"ph:spade-fill",
-				"ph:golf-fill",
-				"ph:waveform-fill",
-				"ph:shield-star-fill",
-				"ph:hand-pointing-fill",
-				"ph:soccer-ball-fill",
-				"ph:rocket-launch-fill",
-				"ph:image-square-fill",
-				"ph:planet-fill",
-				"ph:discord-logo-fill",
-				"ph:cat-fill",
-				"ph:music-notes-fill",
-				"ph:vinyl-record-fill",
-				"ph:terminal-window-fill",
-				"ph:grid-four-fill",
-				"ph:headphones-fill",
-				"ph:microphone-stage-fill",
-				"ph:pencil-simple-fill",
-				"ph:checkerboard-fill",
-				"ph:map-trifold-fill",
-				"ph:phone-fill",
-				"ph:smiley-sticker-fill",
-				"ph:chat-teardrop-dots-fill",
-				"ph:palette-fill",
-				"ph:lightning-fill",
-				"ph:crosshair-fill",
-				"ph:sword-fill",
-				"ph:number-square-one-fill",
-				"ph:hexagon-fill",
-				"ph:number-eight-fill",
-				"ph:cards-three-fill",
-				"ph:dice-five-fill",
-				"ph:horse-fill",
-				"ph:shield-chevron-fill",
-				"ph:detective-fill",
-				"ph:person-simple-run-fill",
-				"ph:crosshair-simple-fill",
-				"ph:car-profile-fill",
-				"ph:target-fill",
-				"ph:smiley-melting-fill",
-				"ph:fish-simple-fill",
-			],
 			includeCustomCollections: true,
-			scan: true,
+			// App Launcher fixtures pass icon names dynamically from .ts data
+			// (app/utils/constants.ts), which the default scan globs
+			// (vue/jsx/tsx/md/mdc/mdx/yml/yaml) miss — include .ts so those
+			// icons stay in the client bundle instead of falling back to
+			// runtime fetches.
+			scan: {
+				globInclude: ["**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml,ts}"],
+			},
 		},
 		customCollections: [
 			{

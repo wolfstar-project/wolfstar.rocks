@@ -24,6 +24,7 @@ const config: KnipConfig = {
 				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
+				/** css/mdx/prisma are handled by registered compilers, so include them here */
 				"**/*.{ts,vue,cjs,mjs,css,mdx,prisma}",
 				"!test/fixtures/**",
 				"!test/test-utils/**",
@@ -63,9 +64,6 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-
-				/** Registered as a Nuxt module only in dev via a conditional spread in nuxt.config.ts, so knip can't resolve it statically */
-				"nuxt-studio",
 
 				/** Used in the app in guild/logs components */
 				"@tanstack/table-core",

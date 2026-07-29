@@ -88,9 +88,10 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
 
     Required variables:
     - `DATABASE_URL` - PostgreSQL connection string
-    - `NUXT_OAUTH_DISCORD_CLIENT_ID` - Discord OAuth client ID
-    - `NUXT_OAUTH_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
-    - `NUXT_BETTER_AUTH_SECRET` - Random 32+ character string
+    - `NUXT_PUBLIC_API_BASE_URL` - WolfStar bot API origin (Better Auth + `$api`)
+    - `NUXT_PUBLIC_SITE_URL` - Frontend origin (not the auth backend)
+    - `NUXT_OAUTH_DISCORD_BOT_TOKEN` - Discord bot token for server-side Discord API calls
+    - Discord OAuth client ID/secret and Better Auth secret are configured on the bot (clientOnly auth)
 
 4. Set up the database:
 

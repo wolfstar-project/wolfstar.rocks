@@ -16,9 +16,8 @@ const config: KnipConfig = {
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
 				"app/components/content/**/*.vue",
-				/** Loaded by @onmax/nuxt-better-auth via #auth/server and #auth/client virtual aliases */
+				/** Loaded by @onmax/nuxt-better-auth via #auth/client (clientOnly mode) */
 				"app/auth.config.ts",
-				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
 			],

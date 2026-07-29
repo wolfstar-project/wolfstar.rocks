@@ -89,10 +89,17 @@ function normalizeRateLimitOptions(
 
 async function getUserSession(
 	options: DefinedWrappedResponseHandlerOptions,
-	event: H3Event,
+	_event: H3Event,
 ): Promise<AppSession | null> {
 	if (options.auth) {
-		return await requireUserSession(event);
+		// Auth is client-only against the bot Better Auth server — Nuxt has no
+		// local `requireUserSession` / session cookie to enforce here.
+		throw createError({
+			message: "Unauthorized",
+			status: 401,
+			why: "This Nuxt server does not host Better Auth sessions (clientOnly mode)",
+			fix: "Call authenticated APIs on the bot origin from the browser after sign-in",
+		});
 	}
 	return null;
 }

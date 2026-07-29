@@ -11,19 +11,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
  * 2. Rollback after a handler error removes only the failing request's own
  *    reservation (identified by a reservation token).
  *
- * The critical section is an in-process keyed mutex: the production storage
- * driver (Cloudflare KV over HTTP) has no atomic primitive, so cross-instance
- * races remain a documented limitation.
+ * Auth is clientOnly — these tests use `auth: false` and IP-scoped keys.
  */
 
-const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
+const { storageState, gate } = vi.hoisted(() => {
 	const storageState = new Map<string, unknown>();
 
 	// Gate lets tests pause storage reads so two requests interleave
 	// deterministically: both read before either writes.
 	const gate: { pending: (() => void)[]; hold: boolean } = { pending: [], hold: false };
-
-	const mockRequireUserSession = vi.fn();
 
 	const g = globalThis as Record<string, unknown>;
 	g.useStorage = () => ({
@@ -40,7 +36,6 @@ const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
 			storageState.set(key, value);
 		},
 	});
-	g.requireUserSession = mockRequireUserSession;
 	g.getRequestIP = () => "203.0.113.10";
 	g.getRequestURL = () => new URL("http://localhost/api/test");
 	g.setResponseHeader = vi.fn();
@@ -54,7 +49,7 @@ const { storageState, gate, mockRequireUserSession } = vi.hoisted(() => {
 		return clone;
 	};
 
-	return { storageState, gate, mockRequireUserSession };
+	return { storageState, gate };
 });
 
 vi.mock("evlog", () => ({
@@ -89,6 +84,8 @@ vi.mock("nuxt-skew-protection/server", () => ({
 
 import { defineWrappedResponseHandler } from "#server/utils/wrappedEventHandler";
 
+const RATE_LIMIT_KEY = "rate-limiter-state:203.0.113.10";
+
 function makeEvent(): H3Event {
 	return {
 		node: { req: { method: "GET", socket: {} } },
@@ -108,7 +105,6 @@ describe("rate-limit reservations under concurrency", () => {
 		storageState.clear();
 		gate.pending = [];
 		gate.hold = false;
-		mockRequireUserSession.mockResolvedValue({ user: { id: "user-1" } });
 	});
 
 	afterEach(() => {
@@ -118,7 +114,7 @@ describe("rate-limit reservations under concurrency", () => {
 	it("allows exactly `limit` concurrent requests through", async () => {
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 10_000 },
 		});
 
@@ -145,7 +141,7 @@ describe("rate-limit reservations under concurrency", () => {
 		expect(fulfilled).toHaveLength(1);
 		expect(rejected).toHaveLength(1);
 		expect(innerHandler).toHaveBeenCalledTimes(1);
-		expect(storageState.get("rate-limiter-state:user-1")).toMatchObject({ count: 1 });
+		expect(storageState.get(RATE_LIMIT_KEY)).toMatchObject({ count: 1 });
 	});
 
 	it("rolls back only the failing request's own reservation", async () => {
@@ -162,7 +158,7 @@ describe("rate-limit reservations under concurrency", () => {
 			.mockResolvedValueOnce("ok");
 
 		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			rateLimit: { enabled: true, limit: 5, type: "sliding", window: 60_000 },
 		});
 
@@ -177,7 +173,7 @@ describe("rate-limit reservations under concurrency", () => {
 
 		// Request A (t=1000) failed and must be the one removed; request B's
 		// successful reservation (t=2000) must survive.
-		expect(storageState.get("rate-limiter-state:user-1")).toEqual({ timestamps: [2_000] });
+		expect(storageState.get(RATE_LIMIT_KEY)).toEqual({ timestamps: [2_000] });
 	});
 
 	it("does not rate limit when disabled", async () => {
@@ -202,7 +198,7 @@ describe("rate-limit reservations under concurrency", () => {
 
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 10_000 },
 		});
 
@@ -217,7 +213,7 @@ describe("rate-limit reservations under concurrency", () => {
 	it("fails open when the rate-limit storage cannot be read", async () => {
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			rateLimit: { enabled: true, limit: 1, type: "fixed", window: 10_000 },
 		});
 

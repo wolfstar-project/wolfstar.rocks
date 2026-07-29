@@ -23,10 +23,14 @@ onMounted(async () => {
 	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
 	log.info({ action: "login_redirect", next: safeNext });
+
+	// Cross-origin auth backend: callback URLs must be absolute frontend paths,
+	// otherwise Better Auth resolves them against the bot API origin.
+	const origin = window.location.origin;
 	await useAuthClient()?.signIn.social({
 		provider: "discord",
-		callbackURL: `/oauth/callback?next=${encodeURIComponent(safeNext)}`,
-		errorCallbackURL: "/oauth/callback",
+		callbackURL: `${origin}/oauth/callback?next=${encodeURIComponent(safeNext)}`,
+		errorCallbackURL: `${origin}/oauth/callback`,
 	});
 });
 

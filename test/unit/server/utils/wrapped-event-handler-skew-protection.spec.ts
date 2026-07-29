@@ -12,14 +12,12 @@ const {
 	storageState,
 	mockIsClientOutdated,
 	stdEnv,
-	mockRequireUserSession,
 	mockCreateError,
 	mockSetResponseHeader,
 } = vi.hoisted(() => {
 	const storageState = new Map<string, unknown>();
 	const mockIsClientOutdated = vi.fn(() => false);
 	const stdEnv = { isDevelopment: false };
-	const mockRequireUserSession = vi.fn();
 	const mockSetResponseHeader = vi.fn();
 
 	const mockCreateError = vi.fn((opts: Record<string, unknown>) =>
@@ -33,7 +31,6 @@ const {
 			storageState.set(key, value);
 		},
 	});
-	g.requireUserSession = mockRequireUserSession;
 	g.getRequestIP = () => "203.0.113.10";
 	g.getRequestURL = () => new URL("http://localhost/api/test");
 	g.setResponseHeader = mockSetResponseHeader;
@@ -51,7 +48,6 @@ const {
 		storageState,
 		mockIsClientOutdated,
 		stdEnv,
-		mockRequireUserSession,
 		mockCreateError,
 		mockSetResponseHeader,
 	};
@@ -103,14 +99,13 @@ describe("skew protection in wrapped handler", () => {
 		storageState.clear();
 		stdEnv.isDevelopment = false;
 		mockIsClientOutdated.mockReturnValue(false);
-		mockRequireUserSession.mockResolvedValue({ user: { id: "user-1" } });
 	});
 
 	it("rejects outdated clients with 409 before the handler runs", async () => {
 		mockIsClientOutdated.mockReturnValue(true);
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			rateLimit: { enabled: true, limit: 5, type: "fixed", window: 10_000 },
 		});
 
@@ -130,7 +125,6 @@ describe("skew protection in wrapped handler", () => {
 			"true",
 		);
 		expect(innerHandler).not.toHaveBeenCalled();
-		expect(mockRequireUserSession).not.toHaveBeenCalled();
 	});
 
 	it("allows current clients through to the handler", async () => {
@@ -163,7 +157,7 @@ describe("skew protection in wrapped handler", () => {
 		mockIsClientOutdated.mockReturnValue(true);
 		const innerHandler = vi.fn().mockResolvedValue("ok");
 		const handler = defineWrappedResponseHandler(innerHandler, {
-			auth: true,
+			auth: false,
 			rateLimit: { enabled: true, limit: 5, type: "fixed", window: 10_000 },
 		});
 

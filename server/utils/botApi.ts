@@ -1,7 +1,6 @@
 import type { BotApiAuthPayload, BotApiAuthSessionInput } from "#shared/types/botApi";
 import type { H3Event } from "h3";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
-import { refreshSessionTokens } from "#server/utils/oauth-tokens";
 import { createError } from "evlog";
 import { $fetch, FetchError } from "ofetch";
 
@@ -13,7 +12,12 @@ interface FetchBotApiOptions {
 	body?: Record<string, unknown> | unknown[] | string | null;
 	method?: BotHttpMethod;
 	query?: Record<string, unknown>;
-	/** When false, skip sapphire auth cookie (public bot routes). Default true. */
+	/**
+	 * When true (default for non-public paths historically), requires a browser
+	 * sapphire/better-auth cookie on the bot origin. Nuxt is clientOnly for auth,
+	 * so server-side calls must not synthesize cookies — pass `auth: false` for
+	 * public routes, or call the bot from the browser via `$api`.
+	 */
 	auth?: boolean;
 }
 
@@ -52,7 +56,7 @@ export function decryptBotApiAuth(token: string, secret: string): BotApiAuthPayl
 }
 
 /**
- * Build outbound Cookie headers for sapphire-plugin-api when session credentials exist.
+ * Build outbound Cookie headers for sapphire-plugin-api when credentials exist.
  * Returns an empty object when the user/token/secret is missing.
  */
 export function getOptionalBotApiAuthHeaders(
@@ -93,70 +97,7 @@ function getBotApiBaseUrl(): string {
 	return apiBaseUrl.replace(/\/$/, "");
 }
 
-function getBotOauthSecret(): string {
-	const secret = useRuntimeConfig().discord?.clientSecret || "";
-	if (!secret) {
-		throw createError({
-			message: "Bot API OAuth secret is not configured",
-			status: 500,
-			why: "NUXT_OAUTH_DISCORD_CLIENT_SECRET is not set",
-			fix: "Set the Discord OAuth client secret shared with the WolfStar bot API",
-		});
-	}
-	return secret;
-}
-
-async function buildBotAuthCookie(event: H3Event): Promise<string> {
-	const session = await getUserSession(event);
-	const userId = session?.user?.id;
-	if (!userId) {
-		throw createError({
-			message: "Unauthorized",
-			status: 401,
-			why: "No authenticated session is available for the bot API request",
-			fix: "Sign in with Discord and retry",
-		});
-	}
-
-	const tokens = await refreshSessionTokens(event);
-	if (!tokens?.access_token) {
-		throw createError({
-			message: "Unauthorized",
-			status: 401,
-			why: "Discord access token could not be resolved for the current session",
-			fix: "Sign out and sign in again to refresh Discord OAuth tokens",
-		});
-	}
-
-	return encryptBotApiAuth(
-		{
-			expires: Date.now() + 60 * 60 * 1000,
-			id: userId,
-			refresh: "",
-			token: tokens.access_token,
-		},
-		getBotOauthSecret(),
-	);
-}
-
-/**
- * Build outbound Cookie header for sapphire-plugin-api when a Discord session exists.
- * Returns an empty object when the user is anonymous (public bot routes).
- */
-export async function getOptionalBotAuthHeaders(event: H3Event): Promise<Record<string, string>> {
-	const session = await getUserSession(event);
-	if (!session?.user?.id) {
-		return {};
-	}
-	try {
-		const cookieValue = await buildBotAuthCookie(event);
-		return { Cookie: `${getBotApiAuthCookieName()}=${cookieValue}` };
-	} catch {
-		return {};
-	}
-}
-
-/** Bot API paths that do not require a sapphire auth cookie. */
+/** Bot API paths that do not require auth cookies. */
 export function isPublicBotApiPath(path: string): boolean {
 	const normalized = path.startsWith("/") ? path : `/${path}`;
 	return normalized === "/commands" || normalized === "/languages";
@@ -198,29 +139,31 @@ function mapBotFetchError(error: unknown, path: string): never {
 
 /**
  * Call the WolfStar bot API (`NUXT_PUBLIC_API_BASE_URL`).
- * Authenticated routes receive a sapphire-compatible `SAPPHIRE_AUTH` cookie
- * built from the current better-auth Discord session.
+ * Auth is owned by the bot (Better Auth / sapphire cookies on that origin);
+ * Nuxt does not synthesize session cookies in clientOnly mode.
  */
 export async function fetchBotApi<T = unknown>(
-	event: H3Event,
+	_event: H3Event,
 	path: string,
 	options: FetchBotApiOptions = {},
 ): Promise<T> {
 	const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-	const url = `${getBotApiBaseUrl()}${normalizedPath}`;
-	const headers: Record<string, string> = {
-		"Content-Type": "application/json",
-	};
-
-	if (options.auth !== false) {
-		const cookieValue = await buildBotAuthCookie(event);
-		headers.Cookie = `${getBotApiAuthCookieName()}=${cookieValue}`;
+	if (options.auth !== false && !isPublicBotApiPath(normalizedPath)) {
+		throw createError({
+			message: "Unauthorized",
+			status: 401,
+			why: "Authenticated bot API calls must run in the browser against the bot origin",
+			fix: "Use `$api` on the client after signing in via the bot Better Auth server",
+		});
 	}
 
+	const url = `${getBotApiBaseUrl()}${normalizedPath}`;
 	try {
 		return await $fetch<T>(url, {
 			body: options.body,
-			headers,
+			headers: {
+				"Content-Type": "application/json",
+			},
 			method: options.method,
 			query: options.query,
 		});

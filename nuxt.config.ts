@@ -166,6 +166,7 @@ export default defineNuxtConfig({
 	},
 
 	auth: {
+		clientOnly: true,
 		redirectQueryKey: "next",
 	},
 

@@ -8,7 +8,14 @@ import { mockCommands, mockGuild, mockGuildList, mockUser } from "./fixtures";
 const BOT_API = "http://localhost:8282";
 
 export const handlers = [
-	http.get("/api/auth/session", () =>
+	// Better Auth session lives on the bot origin (clientOnly)
+	http.get(`${BOT_API}/api/auth/get-session`, () =>
+		HttpResponse.json({
+			user: mockUser,
+			session: { id: "storybook-session" },
+		}),
+	),
+	http.get(`${BOT_API}/api/auth/session`, () =>
 		HttpResponse.json({
 			user: mockUser,
 		}),

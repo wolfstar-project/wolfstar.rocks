@@ -38,8 +38,8 @@ import {
 import { createError } from "evlog";
 
 async function getUserIdFromEvent(event: H3Event): Promise<string> {
-	const session = await getUserSession(event);
-	const userId = session?.user?.id;
+	const user = await event.context.$authorization.resolveServerUser();
+	const userId = user?.id;
 	if (!userId) {
 		throw errors.unauthorized();
 	}

@@ -4,7 +4,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { join } from "node:path";
 import process from "node:process";
 import { currentLocales } from "../config/i18n.ts";
-import config from "../lunaria.config.ts";
+import { stableConfig as config } from "../lunaria.config.ts";
 
 // Skip during git merges — history may be inconsistent.
 if (existsSync(".git/MERGE_HEAD")) {

@@ -567,6 +567,7 @@ export default defineConfig({
 									fonts: { providers: { fontshare: false } },
 									runtimeConfig: {
 										public: {
+											apiBaseUrl: "http://localhost:8282",
 											clientId: "test-discord-client-id",
 										},
 										session: {

@@ -16,7 +16,7 @@ permissions:
 jobs:
   chromatic:
     name: 📚 Chromatic
-    runs-on: depot-ubuntu-24.04-arm-4
+    runs-on: ubuntu-24.04-arm
 
     steps:
       - name: ☑️ Checkout

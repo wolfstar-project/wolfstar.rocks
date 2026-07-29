@@ -18,7 +18,7 @@
 						class="flex cursor-pointer items-center gap-2"
 						:class="mobile ? 'w-full' : undefined"
 						role="button"
-						aria-label="User menu"
+						:aria-label="t('header.user_menu')"
 						aria-haspopup="menu"
 						tabindex="0"
 					>
@@ -38,14 +38,14 @@
 			</div>
 			<div v-else :class="mobile ? 'flex justify-center' : undefined">
 				<UButton
-					label="Sign in"
+					:label="t('header.sign_in')"
 					size="md"
 					color="primary"
 					variant="subtle"
 					to="/login"
 					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
 					icon="ic:round-discord"
-					aria-label="Sign in with Discord"
+					:aria-label="t('header.sign_in_discord')"
 				/>
 			</div>
 		</template>
@@ -71,17 +71,18 @@ const { mobile = false } = defineProps<{
 	mobile?: boolean;
 }>();
 
+const { t } = useI18n();
 const { signOut } = useUserSession();
 
-const items = ref<DropdownMenuItem[]>([
+const items = computed<DropdownMenuItem[]>(() => [
 	{
 		icon: "lucide:user",
-		label: "Profile",
+		label: t("header.profile"),
 		to: "/profile",
 	},
 	{
 		icon: "lucide:log-out",
-		label: "Sign out",
+		label: t("header.sign_out"),
 		onSelect: logout,
 		ui: {
 			itemLeadingIcon: "text-error",

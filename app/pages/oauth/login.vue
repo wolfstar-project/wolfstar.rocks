@@ -1,11 +1,13 @@
 <template>
 	<div>
-		<h1 class="sr-only">Login</h1>
-		<h2 class="sr-only">Redirecting to Discord</h2>
+		<h1 class="sr-only">{{ t("auth.oauth.login_seo_title") }}</h1>
+		<h2 class="sr-only">{{ t("auth.oauth.login_redirecting") }}</h2>
 	</div>
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
+
 definePageMeta({
 	alias: ["/login"],
 	auth: { only: "guest", redirectTo: "/profile" },
@@ -34,11 +36,11 @@ onMounted(async () => {
 });
 
 useSeoMetadata({
-	description: "A landing page for the OAuth2.0 login flow",
+	description: t("auth.oauth.login_seo_og_description"),
 	ogImage: {
 		theme: Colors.Red,
 	},
 	shouldOgImage: true,
-	title: "Login",
+	title: t("auth.oauth.login_seo_title"),
 });
 </script>

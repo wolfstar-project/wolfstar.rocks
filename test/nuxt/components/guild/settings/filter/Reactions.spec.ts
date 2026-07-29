@@ -82,8 +82,8 @@ describe("reaction filter guild settings", () => {
 
 		expect(getSwitch(wrapper, "Toggle reaction filter").exists()).toBeTruthy();
 		expect(getSwitch(wrapper, "Toggle alerts soft action").exists()).toBeTruthy();
-		expect(getSwitch(wrapper, "Toggle logs soft action").exists()).toBeTruthy();
-		expect(getSwitch(wrapper, "Toggle deletes soft action").exists()).toBeTruthy();
+		expect(getSwitch(wrapper, "Toggle logging soft action").exists()).toBeTruthy();
+		expect(getSwitch(wrapper, "Toggle delete soft action").exists()).toBeTruthy();
 	});
 
 	it("initializes state from guildSettings with bitwise soft actions", async () => {

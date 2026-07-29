@@ -1,30 +1,34 @@
 <template>
 	<GuildSettingsSection
-		title="Event Settings"
-		description="Configure which events should be logged and tracked"
+		:title="t('guild_settings.events.title')"
+		:description="t('guild_settings.events.subtitle')"
 	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			aria-label="Events settings form"
+			:aria-label="t('guild_settings.events.form_aria')"
 			class="space-y-8"
 			@error="onError"
 		>
 			<div class="space-y-2">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Moderation Events</h3>
+					<h3 class="text-lg font-semibold text-base-content">
+						{{ t("guild_settings.events.moderation_events") }}
+					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					These events involve moderation actions. Please set up a Moderation Logs channel
-					on
-					<NuxtLink
-						:to="channelsPageLink"
-						class="text-primary underline hover:no-underline"
-					>
-						the Channels page</NuxtLink
-					>.
+					<i18n-t keypath="guild_settings.events.moderation_events_help" tag="span">
+						<template #channelsPage>
+							<NuxtLink
+								:to="channelsPageLink"
+								class="text-primary underline hover:no-underline"
+							>
+								{{ t("guild_settings.events.channels_page_link") }}
+							</NuxtLink>
+						</template>
+					</i18n-t>
 				</p>
 			</div>
 
@@ -32,13 +36,22 @@
 				<UFormField
 					v-for="event in ConfigurableModerationEvents"
 					:key="`form-field-${event.key}`"
-					:label="event.title"
+					:label="translateEntry(event, 'title')"
 					:name="event.key"
 				>
 					<template #description>
-						<p class="text-sm text-base-content/70">{{ event.description }}</p>
+						<p class="text-sm text-base-content/70">
+							{{ translateEntry(event, "description") }}
+						</p>
 					</template>
-					<USwitch v-model="state[event.key]" :aria-label="`Toggle ${event.title}`" />
+					<USwitch
+						v-model="state[event.key]"
+						:aria-label="
+							t('guild_settings.events.toggle_aria', {
+								title: translateEntry(event, 'title'),
+							})
+						"
+					/>
 				</UFormField>
 			</div>
 
@@ -47,17 +60,21 @@
 			<div class="space-y-2">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:chat-bubble-left-right" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Message Events</h3>
+					<h3 class="text-lg font-semibold text-base-content">
+						{{ t("guild_settings.events.message_events") }}
+					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					These events track message activity. The required channels vary by event type
-					and can be configured on
-					<NuxtLink
-						:to="channelsPageLink"
-						class="text-primary underline hover:no-underline"
-					>
-						the Channels page</NuxtLink
-					>.
+					<i18n-t keypath="guild_settings.events.message_events_help" tag="span">
+						<template #channelsPage>
+							<NuxtLink
+								:to="channelsPageLink"
+								class="text-primary underline hover:no-underline"
+							>
+								{{ t("guild_settings.events.channels_page_link") }}
+							</NuxtLink>
+						</template>
+					</i18n-t>
 				</p>
 			</div>
 
@@ -65,13 +82,22 @@
 				<UFormField
 					v-for="event in ConfigurableMessageEvents"
 					:key="`form-field-${event.key}`"
-					:label="event.title"
+					:label="translateEntry(event, 'title')"
 					:name="event.key"
 				>
 					<template #description>
-						<p class="text-sm text-base-content/70">{{ event.description }}</p>
+						<p class="text-sm text-base-content/70">
+							{{ translateEntry(event, "description") }}
+						</p>
 					</template>
-					<USwitch v-model="state[event.key]" :aria-label="`Toggle ${event.title}`" />
+					<USwitch
+						v-model="state[event.key]"
+						:aria-label="
+							t('guild_settings.events.toggle_aria', {
+								title: translateEntry(event, 'title'),
+							})
+						"
+					/>
 				</UFormField>
 			</div>
 		</GuildSettingsForm>
@@ -83,6 +109,9 @@ import type { GuildData } from "#shared/types";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
+
+const { t } = useI18n();
+const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
@@ -117,9 +146,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't save event settings. ${errorMessage ?? "Please try again."}`,
+		description: errorMessage ?? t("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 

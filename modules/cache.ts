@@ -4,6 +4,7 @@ import { provider } from "std-env";
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
 // Storage key for payload cache - must match server/plugins/payload-cache.ts
 const PAYLOAD_CACHE_STORAGE_KEY = "payload-cache";
+const SKEW_PROTECTION_STORAGE_BASE = "skew-protection";
 
 export default defineNuxtModule({
 	meta: {
@@ -39,6 +40,12 @@ export default defineNuxtModule({
 				...nitroConfig.storage[PAYLOAD_CACHE_STORAGE_KEY],
 				driver: "netlifyBlobs",
 				name: PAYLOAD_CACHE_STORAGE_KEY,
+			};
+
+			nitroConfig.storage[SKEW_PROTECTION_STORAGE_BASE] = {
+				...nitroConfig.storage[SKEW_PROTECTION_STORAGE_BASE],
+				driver: "netlifyBlobs",
+				name: SKEW_PROTECTION_STORAGE_BASE,
 			};
 
 			nitroConfig.storage["wolfstar:ratelimiter"] = {

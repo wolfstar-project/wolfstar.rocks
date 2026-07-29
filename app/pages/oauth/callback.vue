@@ -71,7 +71,6 @@ definePageMeta({
 
 const route = useRoute();
 const nextParam = useRouteQuery("next", "/", { transform: String });
-const log = useLogger("oauth:callback");
 const isSessionMissing = ref(false);
 const isRetryingSilentAuth = ref(false);
 
@@ -128,7 +127,10 @@ async function completeSignIn() {
 			try {
 				await completeBotOauthCallback(oauthCode.value);
 			} catch (error) {
-				log.error(error);
+				log.error({
+					tag: "oauth:callback",
+					error: error instanceof Error ? error.message : String(error),
+				});
 			}
 
 			await fetchSession({ force: true });
@@ -184,14 +186,23 @@ async function completeSignIn() {
 
 		await redirectToPostLoginNext();
 	} catch (error) {
-		log.error(error);
+		log.error({
+			tag: "oauth:callback",
+			error: error instanceof Error ? error.message : String(error),
+		});
 		// Prefer landing the user over a dead-end Welcome banner when BA session exists.
 		if (loggedIn.value) {
 			try {
 				await redirectToPostLoginNext();
 				return;
 			} catch (redirectError) {
-				log.error(redirectError);
+				log.error({
+					tag: "oauth:callback",
+					error:
+						redirectError instanceof Error
+							? redirectError.message
+							: String(redirectError),
+				});
 			}
 		}
 		isSessionMissing.value = true;

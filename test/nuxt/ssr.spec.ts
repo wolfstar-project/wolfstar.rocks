@@ -1325,6 +1325,7 @@ describe("component SSR rendering", () => {
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(true);
 			expect(wrapper.find('[role="dialog"][aria-label="Apps"]').exists()).toBe(true);
+			expect(wrapper.find("[data-sheet-snap]").exists()).toBe(true);
 			expect(
 				wrapper.find(".discord-app-launcher-search-input").attributes("placeholder"),
 			).toBe("Search Apps & Commands");
@@ -1339,6 +1340,31 @@ describe("component SSR rendering", () => {
 			await wrapper.vm.$nextTick();
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(false);
+		});
+
+		it("hides the message composer when the Apps sheet expands to full (positive)", async () => {
+			const wrapper = await mountSuspended(CommandsShowcase);
+			await openAppLauncher(wrapper);
+
+			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
+			expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
+
+			await wrapper.find(".discord-app-launcher-handle").trigger("keydown", {
+				key: "ArrowUp",
+			});
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find('[data-sheet-snap="full"]').exists()).toBe(true);
+			expect(wrapper.find(".showcase-command-picker-apps-full").exists()).toBe(true);
+			expect(wrapper.find(".discord-message-composer").exists()).toBe(false);
+
+			await wrapper.find(".discord-app-launcher-handle").trigger("keydown", {
+				key: "ArrowDown",
+			});
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find('[data-sheet-snap="half"]').exists()).toBe(true);
+			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
 		});
 
 		it("closes the App Launcher when slash command mode opens", async () => {

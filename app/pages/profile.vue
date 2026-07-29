@@ -513,7 +513,6 @@ useSeoMetadata({
 
 const { user: authUser } = useUserSession();
 
-const log = useLogger("profile");
 // Tab Management - inspired by Dyno.gg tab system
 const activeTab = ref("servers");
 const { copy, copied } = useClipboard();
@@ -601,7 +600,7 @@ const isLoading = computed(() => status.value === "idle" || status.value === "pe
 // Retry handler
 async function handleRetry() {
 	isRetrying.value = true;
-	log.info({ action: "retry_guild_fetch" });
+	log.info({ tag: "profile", action: "retry_guild_fetch" });
 	Sentry.metrics.count("profile.guild_fetch.retry", 1);
 	try {
 		await Sentry.startSpan({ name: "profile.guild_fetch.retry", op: "ui.action" }, () =>
@@ -662,7 +661,7 @@ function undoSearch() {
 async function copyUserId() {
 	if (user.value?.id) {
 		await copy(user.value.id);
-		log.info({ action: "copy_user_id" });
+		log.info({ tag: "profile", action: "copy_user_id" });
 		Sentry.metrics.count("profile.user_id.copy", 1);
 	}
 }

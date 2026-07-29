@@ -46,10 +46,14 @@ definePageMeta({
 
 const guildId = useRouteQuery("guild_id", undefined, { transform: normalizeGuildIdQuery });
 const error = ref<string | null>(null);
-const log = useLogger("oauth:guild");
 
 if (import.meta.client && guildId.value && !error.value) {
-	navigateToGuild().catch(log.error);
+	navigateToGuild().catch((err: unknown) => {
+		log.error({
+			tag: "oauth:guild",
+			error: err instanceof Error ? err.message : String(err),
+		});
+	});
 }
 
 async function navigateToGuild() {

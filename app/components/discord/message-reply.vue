@@ -24,9 +24,11 @@
 	</div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
 import type { MessageReplyComponentProps } from "~/types/discord";
+</script>
 
+<script setup lang="ts">
 const { kind, user, commandName, subcommand, subcommandGroup, content } =
 	defineProps<MessageReplyComponentProps>();
 

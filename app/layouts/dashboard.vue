@@ -155,7 +155,7 @@ function isSafeUrl(url: unknown): url is string {
 	}
 }
 
-const logger = useLogger("wolfstar:dashboard");
+const log = useLogger("wolfstar:dashboard");
 
 const guildId = useRouteParams("id", null, { transform: String });
 
@@ -225,10 +225,11 @@ watch(
 				newData[1],
 				guildSettings.value ?? {},
 				(parseErr) => {
-					logger.error(
-						`Failed to parse guild settings payload for guild Id: ${guildId.value}`,
-						parseError(parseErr),
-					);
+					log.error({
+						tag: "wolfstar:dashboard",
+						message: `Failed to parse guild settings payload for guild Id: ${guildId.value}`,
+						error: parseError(parseErr),
+					});
 				},
 			);
 
@@ -248,10 +249,11 @@ watch(
 		if (err) {
 			const parsedError = parseError(err);
 
-			logger.error(
-				`Error loading guild data or settings for guild Id: ${guildId.value}`,
-				parsedError,
-			);
+			log.error({
+				tag: "wolfstar:dashboard",
+				message: `Error loading guild data or settings for guild Id: ${guildId.value}`,
+				error: parsedError,
+			});
 
 			switch (classifyGuildError(parsedError.status)) {
 				case "forbidden": {
@@ -457,11 +459,10 @@ const isReadyToSubmit = computed(
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const src = computed(
-	() =>
-		guildIconURL(guildData as unknown as OauthFlattenedGuild, {
-			size: 64,
-		})!,
+const src = computed(() =>
+	guildIconURL(guildData as unknown as OauthFlattenedGuild, {
+		size: 64,
+	})!,
 );
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
@@ -485,10 +486,11 @@ async function submitChanges() {
 	try {
 		parsed = typeof response === "string" ? (JSON.parse(response) as GuildData) : response;
 	} catch (error) {
-		logger.error(
-			`Failed to parse response from settings update for guild Id: ${guildId.value}`,
-			parseError(error),
-		);
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: `Failed to parse response from settings update for guild Id: ${guildId.value}`,
+			error: parseError(error),
+		});
 		throw createError({
 			message: "Failed to update guild settings",
 			why: "Something went wrong while saving your settings.",
@@ -517,7 +519,10 @@ async function submitChanges() {
 			});
 		}
 
-		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
+		log.info(
+			"wolfstar:dashboard",
+			`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+		);
 
 		toast.add({
 			color: "success",
@@ -541,7 +546,7 @@ function resetChanges() {
 		});
 	}
 
-	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
+	log.info("wolfstar:dashboard", `Guild settings changes reset for guild Id: ${guildId.value}`);
 
 	toast.add({
 		color: "info",
@@ -555,7 +560,8 @@ function resetChanges() {
 watch(guildId, (newGuildId, oldGuildId) => {
 	if (oldGuildId && newGuildId !== oldGuildId) {
 		resetGuildSettingsChanges();
-		logger.info(
+		log.info(
+			"wolfstar:dashboard",
 			`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`,
 		);
 	}

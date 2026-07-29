@@ -35,7 +35,6 @@ definePageMeta({
 
 const route = useRoute();
 const toast = useToast();
-const logger = useLogger("wolfstar:dashboard");
 const { guildData } = useGuildData();
 
 const {
@@ -143,7 +142,11 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 			icon: "heroicons:exclamation-triangle",
 			title: "Commands Unavailable",
 		});
-		logger.error("Error fetching commands:", commandsErr);
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: "Error fetching commands",
+			error: commandsErr.message,
+		});
 	}
 
 	if (languagesErr) {
@@ -158,7 +161,11 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 			icon: "heroicons:exclamation-triangle",
 			title: "Languages Unavailable",
 		});
-		logger.error("Error fetching languages:", languagesErr);
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: "Error fetching languages",
+			error: languagesErr.message,
+		});
 	}
 });
 

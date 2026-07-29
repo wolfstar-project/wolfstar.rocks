@@ -129,14 +129,16 @@ const ChannelInfoTabs = [
 	{ id: "links", label: "Links" },
 	{ id: "files", label: "Files" },
 ] as const satisfies readonly ChannelInfoTab[];
+
+interface ChannelInfoEmits {
+	close: [];
+}
 </script>
 
 <script setup lang="ts">
 const { name, online, offline, initialTab = "members" } = defineProps<ChannelInfoProps>();
 
-const emit = defineEmits<{
-	close: [];
-}>();
+const emit = defineEmits<ChannelInfoEmits>();
 
 const activeTab = ref<ChannelInfoTabId>(initialTab);
 const backButton = useTemplateRef<HTMLButtonElement>("backButton");

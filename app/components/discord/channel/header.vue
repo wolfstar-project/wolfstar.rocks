@@ -130,6 +130,13 @@ const ToolbarActions = [
 	{ id: "pins", icon: "discord:pins", label: "Pinned messages" },
 	{ id: "members", icon: "discord:members", label: "Show member list" },
 ] as const satisfies readonly ToolbarAction[];
+
+interface ChannelHeaderEmits {
+	"update:membersOpen": [value: boolean];
+	"toggle-members": [];
+	/** Mobile: tap channel name to open Members / Media / Pins / … panel. */
+	"open-channel-info": [];
+}
 </script>
 
 <script setup lang="ts">
@@ -144,12 +151,7 @@ const {
 	membersOpen = true,
 } = defineProps<ChannelHeaderProps>();
 
-const emit = defineEmits<{
-	"update:membersOpen": [value: boolean];
-	"toggle-members": [];
-	/** Mobile: tap channel name to open Members / Media / Pins / … panel. */
-	"open-channel-info": [];
-}>();
+const emit = defineEmits<ChannelHeaderEmits>();
 
 const typeIcon = computed(() => TypeIcons[type]);
 

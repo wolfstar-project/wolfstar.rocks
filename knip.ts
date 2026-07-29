@@ -6,7 +6,6 @@ const config: KnipConfig = {
 		".": {
 			entry: [
 				"service-worker/sw.ts",
-				"pwa-assets.config.ts",
 				"taze.config.ts",
 				"modules/**/*.ts",
 				".lighthouserc.cjs",
@@ -22,7 +21,8 @@ const config: KnipConfig = {
 				"shared/types/auth.d.ts",
 			],
 			project: [
-				"**/*.{ts,vue,cjs,mjs}",
+				/** css/mdx/prisma are handled by registered compilers, so include them here */
+				"**/*.{ts,vue,cjs,mjs,css,mdx,prisma}",
 				"!test/fixtures/**",
 				"!test/test-utils/**",
 				"!test/e2e/helpers/**",
@@ -51,16 +51,9 @@ const config: KnipConfig = {
 				"@discordjs/rest",
 				"@sapphire/async-queue",
 				"@codspeed/core",
-				"nuxt-og-image",
-				"@takumi-rs/core",
-				"@takumi-rs/wasm",
+				"nuxt-site-config",
 				"workbox-*",
 				"rolldown",
-
-				/** Oxlint plugins don't get picked up yet */
-				"@e18e/eslint-plugin",
-				"eslint-plugin-regexp",
-				"eslint",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
 				"oxlint-tsgolint",
@@ -68,9 +61,6 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"@nuxt/icon",
 				"nuxt-security",
-
-				/** Registered as a Nuxt module only in dev via a conditional spread in nuxt.config.ts, so knip can't resolve it statically */
-				"nuxt-studio",
 
 				/** Used in the app in guild/logs components */
 				"@tanstack/table-core",

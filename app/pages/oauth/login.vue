@@ -23,7 +23,7 @@ onMounted(async () => {
 	const queryNext = route.query.next;
 	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
-	log.info({ action: "login_redirect", next: safeNext });
+	log.info({ tag: "oauth:login", action: "login_redirect", next: safeNext });
 
 	// Cross-origin auth backend: callback URLs must be absolute frontend paths,
 	// otherwise Better Auth resolves them against the bot API origin.

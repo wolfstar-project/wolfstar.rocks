@@ -63,9 +63,15 @@ function applyLegacySettingsMigration(settings: RemovableRef<AppSettings>) {
 }
 
 export function useSettings() {
+	// Only migrate while wolfstar-settings has never been persisted. The check must
+	// happen before the storage ref is created because useLocalStorage writes the
+	// defaults synchronously when the key is absent. Without it, the ever-present
+	// wolfstar-theme key (owned by the color-mode module) would re-trigger the
+	// migration on every page load and reset the stored preferences to defaults.
 	const shouldMigrateLegacySettings =
 		import.meta.client &&
 		!legacyMigrationApplied &&
+		localStorage.getItem(STORAGE_KEY) === null &&
 		(localStorage.getItem("wolfstar-theme") !== null ||
 			localStorage.getItem(LEGACY_REDUCE_MOTION_KEY) !== null ||
 			localStorage.getItem(LEGACY_LOCALE_KEY) !== null);

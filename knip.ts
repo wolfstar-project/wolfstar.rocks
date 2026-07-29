@@ -11,11 +11,11 @@ const config: KnipConfig = {
 				".lighthouserc.cjs",
 				"lighthouse-setup.cjs",
 				"scripts/**/*.ts",
-				/** i18n / Lunaria entrypoints (not statically imported by the app) */
+				/** i18n / Lunaria entrypoints (not statically imported by the app).
+				 * lunaria/lunaria.ts is already discovered via vite.config.ts build:lunaria. */
 				"i18n/**/*.ts",
 				"lunaria.config.ts",
 				"lunaria.config.json",
-				"lunaria/lunaria.ts",
 				/** Loaded by @nuxt/content at build time, not imported directly */
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */

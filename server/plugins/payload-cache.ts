@@ -36,12 +36,15 @@ function getRouteFromPayloadUrl(url: string): string {
 
 /**
  * Only cache public ISR/cache routes — never authenticated dashboard payloads.
+ * Auth lives on the bot (clientOnly); skip known private path prefixes instead
+ * of routeRules.auth (not typed in clientOnly server templates).
  */
 function shouldCachePayload(event: H3Event): boolean {
-	const rules = getRouteRules(event);
-	if (rules.auth) {
+	const path = event.path.split("?")[0] ?? event.path;
+	if (path.startsWith("/guilds") || path.startsWith("/profile") || path.startsWith("/account")) {
 		return false;
 	}
+	const rules = getRouteRules(event);
 	return Boolean(rules.isr || rules.cache);
 }
 

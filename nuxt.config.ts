@@ -265,10 +265,8 @@ export default defineNuxtConfig({
 		// html-validation (no <title>/<body>, missing lang). Never prerender it.
 		"/oauth/login": {
 			robots: true,
-			auth: { only: "guest", redirectTo: "/profile" },
 		},
 		"/login": { prerender: false },
-		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// /profile is a per-user authenticated page: never statically prerender it
 		// (crawlLinks would otherwise reach it via links on prerendered pages and
@@ -277,7 +275,6 @@ export default defineNuxtConfig({
 			appLayout: "default",
 			prerender: false,
 			robots: true,
-			auth: { only: "user", redirectTo: "/login" },
 		},
 		"/starly": { appLayout: "default", robots: true },
 

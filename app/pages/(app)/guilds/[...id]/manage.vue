@@ -49,7 +49,8 @@ const {
 	error: languagesError,
 } = useLanguages({ immediate: false });
 
-const slug = route.params.slug as string | string[];
+const slugParam = (route.params as { slug?: string | string[] }).slug;
+const slug = slugParam;
 
 const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
 

@@ -10,6 +10,7 @@ const log = useLogger("oauth:login");
 
 definePageMeta({
 	alias: ["/login"],
+	auth: { only: "guest", redirectTo: "/profile" },
 	viewTransition: false,
 });
 

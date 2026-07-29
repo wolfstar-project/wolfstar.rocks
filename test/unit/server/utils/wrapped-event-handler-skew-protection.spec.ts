@@ -8,50 +8,45 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * session resolution, authorization, rate limiting, or handler execution.
  */
 
-const {
-	storageState,
-	mockIsClientOutdated,
-	stdEnv,
-	mockCreateError,
-	mockSetResponseHeader,
-} = vi.hoisted(() => {
-	const storageState = new Map<string, unknown>();
-	const mockIsClientOutdated = vi.fn(() => false);
-	const stdEnv = { isDevelopment: false };
-	const mockSetResponseHeader = vi.fn();
+const { storageState, mockIsClientOutdated, stdEnv, mockCreateError, mockSetResponseHeader } =
+	vi.hoisted(() => {
+		const storageState = new Map<string, unknown>();
+		const mockIsClientOutdated = vi.fn(() => false);
+		const stdEnv = { isDevelopment: false };
+		const mockSetResponseHeader = vi.fn();
 
-	const mockCreateError = vi.fn((opts: Record<string, unknown>) =>
-		Object.assign(new Error(String(opts["message"])), opts),
-	);
+		const mockCreateError = vi.fn((opts: Record<string, unknown>) =>
+			Object.assign(new Error(String(opts["message"])), opts),
+		);
 
-	const g = globalThis as Record<string, unknown>;
-	g.useStorage = () => ({
-		getItem: async (key: string) => storageState.get(key) ?? null,
-		setItem: async (key: string, value: unknown) => {
-			storageState.set(key, value);
-		},
+		const g = globalThis as Record<string, unknown>;
+		g.useStorage = () => ({
+			getItem: async (key: string) => storageState.get(key) ?? null,
+			setItem: async (key: string, value: unknown) => {
+				storageState.set(key, value);
+			},
+		});
+		g.getRequestIP = () => "203.0.113.10";
+		g.getRequestURL = () => new URL("http://localhost/api/test");
+		g.setResponseHeader = mockSetResponseHeader;
+		g.defineEventHandler = (fn: unknown) => fn;
+		g.cachedEventHandler = (fn: unknown) => fn;
+		g.omit = <T extends object>(keys: (keyof T)[], obj: T) => {
+			const clone = { ...obj };
+			for (const key of keys) {
+				delete clone[key];
+			}
+			return clone;
+		};
+
+		return {
+			storageState,
+			mockIsClientOutdated,
+			stdEnv,
+			mockCreateError,
+			mockSetResponseHeader,
+		};
 	});
-	g.getRequestIP = () => "203.0.113.10";
-	g.getRequestURL = () => new URL("http://localhost/api/test");
-	g.setResponseHeader = mockSetResponseHeader;
-	g.defineEventHandler = (fn: unknown) => fn;
-	g.cachedEventHandler = (fn: unknown) => fn;
-	g.omit = <T extends object>(keys: (keyof T)[], obj: T) => {
-		const clone = { ...obj };
-		for (const key of keys) {
-			delete clone[key];
-		}
-		return clone;
-	};
-
-	return {
-		storageState,
-		mockIsClientOutdated,
-		stdEnv,
-		mockCreateError,
-		mockSetResponseHeader,
-	};
-});
 
 vi.mock("nuxt-skew-protection/server", () => ({
 	isClientOutdated: mockIsClientOutdated,

@@ -12,7 +12,7 @@ const BOT_OAUTH_STATE_PREFIX = "ws_next.";
 export type BotOauthPrompt = "none" | "consent";
 
 /** True when Discord `state` belongs to the sapphire bot OAuth bridge (not Better Auth). */
-export function isBotOauthState(state: string | null | undefined): boolean {
+export function isBotOauthState(state: string | null | undefined): state is string {
 	return typeof state === "string" && state.startsWith(BOT_OAUTH_STATE_PREFIX);
 }
 

@@ -326,6 +326,8 @@ export default defineNuxtConfig({
 		typescriptPlugin: true,
 		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
+		// Reuses Vite's own file watcher instead of starting a second one.
+		watcher: "builder",
 	},
 
 	compatibilityDate: "2025-09-20",

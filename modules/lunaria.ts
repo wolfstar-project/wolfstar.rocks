@@ -5,10 +5,7 @@ import { defineNuxtModule, useNuxt } from "nuxt/kit";
 import { isCI, isTest } from "std-env";
 import { getEnv } from "../config/env.ts";
 
-/**
- * Serves the Lunaria translation dashboard and status.json from `dist/lunaria/`.
- * Based on: https://github.com/npmx-dev/npmx.dev/blob/main/modules/lunaria.ts
- */
+/** Serves the Lunaria translation dashboard and status.json from `dist/lunaria/`. */
 export default defineNuxtModule({
 	meta: {
 		name: "wolfstar:lunaria",

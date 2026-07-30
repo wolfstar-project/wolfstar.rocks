@@ -26,8 +26,7 @@ function localeFilesFor(localeCode: string): string[] {
 
 /**
  * Country / regional variants that inherit from a base language directory.
- * Adapted from npmx.dev's merge model for our feature-file layout:
- * each variant loads `locales/{base}/*.json` then `locales/{variant}/*.json`.
+ * Each variant loads `locales/{base}/*.json` then `locales/{variant}/*.json`.
  *
  * e.g. `en` (US copy) → `en-US` / `en-GB`; `es` (Spain copy) → `es-ES` / `es-419`.
  */
@@ -68,10 +67,10 @@ function createPluralRule(locale: string, mapping: Record<string, number>) {
 /**
  * Base locales registered with Nuxt i18n.
  * Codes that appear in `countryLocaleVariants` expand into regional variants
- * and are not themselves selectable (npmx.dev model).
+ * and are not themselves selectable.
  *
- * Base codes like `en` / `es` are typed loosely (npmx.dev pattern) because
- * `@nuxtjs/i18n` generates its Locale union from the *expanded* currentLocales.
+ * Base codes like `en` / `es` are typed loosely because `@nuxtjs/i18n`
+ * generates its Locale union from the *expanded* currentLocales.
  */
 const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: string }))[] = [
 	{
@@ -235,8 +234,8 @@ const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: str
 ];
 
 /**
- * Expand base locales into country variants (npmx.dev model), adapted for
- * feature-file directories: `[...baseFeatures, ...variantFeatures]`.
+ * Expand base locales into country variants:
+ * `[...baseFeatures, ...variantFeatures]`.
  */
 function buildLocales() {
 	const useLocales = locales.reduce((acc, data) => {

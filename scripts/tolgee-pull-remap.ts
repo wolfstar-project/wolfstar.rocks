@@ -32,7 +32,9 @@ const mappedTags = readdirSync(pullRoot).filter((tag) => {
 // Validate the pull is complete before touching i18n/locales/, so a partial
 // pull cannot silently leave some namespaces stale while updating others.
 const missing = mappedTags.flatMap((tag) =>
-	config.namespaces.filter((ns) => !existsSync(join(pullRoot, tag, `${ns}.json`))).map((ns) => `${tag}/${ns}.json`),
+	config.namespaces
+		.filter((ns) => !existsSync(join(pullRoot, tag, `${ns}.json`)))
+		.map((ns) => `${tag}/${ns}.json`),
 );
 if (missing.length > 0) {
 	console.error("Incomplete Tolgee pull; missing namespace files:");

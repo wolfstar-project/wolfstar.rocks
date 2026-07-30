@@ -2,8 +2,8 @@
 	<div class="flex min-h-[50dvh] items-center justify-center px-4 py-8">
 		<div
 			:class="panelClass"
-			:role="loading ? 'status' : undefined"
-			:aria-live="loading || tone === 'success' ? 'polite' : undefined"
+			:role="panelRole"
+			:aria-live="panelAriaLive"
 			:aria-busy="loading || undefined"
 		>
 			<div :class="iconWrapClass" aria-hidden="true">
@@ -82,6 +82,26 @@ const defaultIcons: Record<OAuthStatusTone, string> = {
 };
 
 const resolvedIcon = computed(() => icon ?? defaultIcons[tone]);
+
+const panelRole = computed(() => {
+	if (loading || tone === "success" || tone === "info") {
+		return "status";
+	}
+	if (tone === "error" || tone === "warning") {
+		return "alert";
+	}
+	return undefined;
+});
+
+const panelAriaLive = computed(() => {
+	if (loading || tone === "success") {
+		return "polite";
+	}
+	if (tone === "error" || tone === "warning") {
+		return "assertive";
+	}
+	return undefined;
+});
 
 const toneIconClass = computed(() => {
 	switch (tone) {

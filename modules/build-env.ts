@@ -5,8 +5,8 @@ import { getEnv, getFileLastUpdated } from "../config/env";
 
 const { resolve } = createResolver(import.meta.url);
 /**
- * This module provides build-time environment information and serves different public assets based on the environment.
- * based on: https://github.com/npmx-dev/npmx.dev/blob/main/modules/build-env.ts
+ * Provides build-time environment information and serves different public
+ * assets based on the environment.
  */
 
 export default defineNuxtModule({

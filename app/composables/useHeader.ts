@@ -19,17 +19,17 @@ export function useHeader() {
 				{
 					description: t("nav.moderation_tools_description"),
 					label: t("nav.moderation_tools"),
-					to: "#moderation-tools",
+					to: "/wolfstar#moderation-tools",
 				},
 				{
 					description: t("nav.advanced_logging_description"),
 					label: t("nav.advanced_logging"),
-					to: "#advanced-logging",
+					to: "/wolfstar#advanced-logging",
 				},
 				{
 					description: t("nav.moderation_logs_description"),
 					label: t("nav.moderation_logs"),
-					to: "#moderation-logs",
+					to: "/wolfstar#moderation-logs",
 				},
 			],
 			label: t("nav.features"),
@@ -69,17 +69,17 @@ export function useHeader() {
 				{
 					description: t("nav.moderation_tools_description"),
 					label: t("nav.moderation_tools"),
-					to: "#moderation-tools",
+					to: "/wolfstar#moderation-tools",
 				},
 				{
 					description: t("nav.advanced_logging_description"),
 					label: t("nav.advanced_logging"),
-					to: "#advanced-logging",
+					to: "/wolfstar#advanced-logging",
 				},
 				{
 					description: t("nav.moderation_logs_description"),
 					label: t("nav.moderation_logs"),
-					to: "#moderation-logs",
+					to: "/wolfstar#moderation-logs",
 				},
 			],
 			label: t("nav.features"),

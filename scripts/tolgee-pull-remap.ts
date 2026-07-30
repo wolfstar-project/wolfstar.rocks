@@ -27,10 +27,23 @@ for (const tag of readdirSync(pullRoot)) {
 	if (!config.tolgeeToLocal[tag]) console.warn(`Skipping unmapped Tolgee language tag: ${tag}`);
 }
 
-// Validate the pull is complete before touching i18n/locales/, so a partial
-// pull cannot silently leave some languages or namespaces stale while updating others.
-// Every tag configured in tolgeeToLocal must be present with all namespace files.
-const mappedTags = Object.keys(config.tolgeeToLocal);
+// Pulls may legitimately contain a subset of the configured languages
+// (e.g. `tolgee pull --languages en es it`), so remap only the mapped
+// language directories actually present in staging. Absent configured
+// languages are reported but do not fail the pull.
+const mappedTags = readdirSync(pullRoot).filter((tag) => Boolean(config.tolgeeToLocal[tag]));
+if (mappedTags.length === 0) {
+	console.error(`No mapped Tolgee language directories found in ${pullRoot}`);
+	process.exit(1);
+}
+const absentTags = Object.keys(config.tolgeeToLocal).filter((tag) => !mappedTags.includes(tag));
+if (absentTags.length > 0) {
+	console.warn(`Configured languages absent from this pull (left untouched): ${absentTags.join(", ")}`);
+}
+
+// Validate each present language is complete before touching i18n/locales/,
+// so a partial export cannot silently leave some namespaces stale while
+// updating others.
 const missing = mappedTags.flatMap((tag) =>
 	config.namespaces
 		.filter((ns) => !existsSync(join(pullRoot, tag, `${ns}.json`)))

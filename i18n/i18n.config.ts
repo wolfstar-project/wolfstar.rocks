@@ -3,7 +3,7 @@ import { currentLocales, datetimeFormats, numberFormats, pluralRules } from "../
 export default defineI18nConfig(() => {
 	return {
 		availableLocales: currentLocales.map((l) => l.code),
-		fallbackLocale: "en",
+		fallbackLocale: "en-US",
 		fallbackWarn: true,
 		missingWarn: true,
 		datetimeFormats,

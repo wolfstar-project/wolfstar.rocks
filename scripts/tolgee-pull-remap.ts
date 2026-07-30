@@ -38,7 +38,9 @@ if (mappedTags.length === 0) {
 }
 const absentTags = Object.keys(config.tolgeeToLocal).filter((tag) => !mappedTags.includes(tag));
 if (absentTags.length > 0) {
-	console.warn(`Configured languages absent from this pull (left untouched): ${absentTags.join(", ")}`);
+	console.warn(
+		`Configured languages absent from this pull (left untouched): ${absentTags.join(", ")}`,
+	);
 }
 
 // Validate each present language is complete before touching i18n/locales/,

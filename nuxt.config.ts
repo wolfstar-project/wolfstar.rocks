@@ -693,7 +693,8 @@ export default defineNuxtConfig({
 
 	i18n: {
 		locales: currentLocales,
-		defaultLocale: "en",
+		// Expanded from base `en` via countryLocaleVariants
+		defaultLocale: "en-US",
 		strategy: "no_prefix",
 		detectBrowserLanguage: false,
 		// Paths are resolved relative to `restructureDir` (default "i18n/"), so this

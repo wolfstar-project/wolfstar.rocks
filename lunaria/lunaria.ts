@@ -1,5 +1,4 @@
 import type { I18nStatus } from "../shared/types/i18n-status.ts";
-import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import process from "node:process";
@@ -73,7 +72,7 @@ function buildJsonStatus(): I18nStatus {
 	const sourceWithoutMeta = loadMergedLocaleDirectory("en");
 	const totalKeys = countKeys(sourceWithoutMeta);
 
-	const { defaultLocale, repository } = config;
+	const { sourceLocale, repository } = config;
 	const repoName = repository.name;
 	const branch =
 		"branch" in repository && typeof repository.branch === "string"
@@ -81,13 +80,13 @@ function buildJsonStatus(): I18nStatus {
 			: "main";
 	const githubBase = `https://github.com/${repoName}`;
 
-	const appLocales = currentLocales.filter((l) => l.code !== defaultLocale.lang && l.name);
+	const appLocales = currentLocales.filter((l) => l.code !== sourceLocale.lang && l.name);
 
 	return {
 		generatedAt: new Date().toISOString(),
 		sourceLocale: {
-			lang: defaultLocale.lang,
-			label: defaultLocale.label,
+			lang: sourceLocale.lang,
+			label: sourceLocale.label,
 			totalKeys,
 		},
 		locales: appLocales.map((locale) => {
@@ -121,7 +120,7 @@ function escapeHtml(value: string): string {
 		.replaceAll("'", "&#39;");
 }
 
-function fallbackDashboardHtml(status: I18nStatus): string {
+function dashboardHtml(status: I18nStatus): string {
 	const rows = status.locales
 		.map(
 			(locale) => `
@@ -160,7 +159,6 @@ function fallbackDashboardHtml(status: I18nStatus): string {
 <body>
   <main>
     <h1>WolfStar Translation Status</h1>
-    <p>Fallback dashboard (Lunaria git status unavailable — usually due to uncommitted locale changes).</p>
     <p>Source: ${escapeHtml(status.sourceLocale.label)} (${escapeHtml(status.sourceLocale.lang)}) — ${status.sourceLocale.totalKeys} keys</p>
     ${rows}
   </main>
@@ -173,22 +171,6 @@ const jsonStatus = buildJsonStatus();
 const outDir = "dist/lunaria";
 mkdirSync(outDir, { recursive: true });
 writeFileSync(join(outDir, "status.json"), `${JSON.stringify(jsonStatus, null, 2)}\n`);
-
-// Lunaria calls process.exit(1) on dirty working trees, so run the official
-// dashboard build in a child process and keep a fallback HTML if it fails.
-try {
-	execFileSync(join("node_modules", ".bin", "lunaria"), ["build"], {
-		stdio: "inherit",
-		cwd: process.cwd(),
-	});
-	// Preserve our nested-key status.json (CLI build may not write it).
-	writeFileSync(join(outDir, "status.json"), `${JSON.stringify(jsonStatus, null, 2)}\n`);
-	// eslint-disable-next-line no-console
-	console.log("Generated dist/lunaria/index.html and dist/lunaria/status.json");
-} catch {
-	writeFileSync(join(outDir, "index.html"), fallbackDashboardHtml(jsonStatus));
-	// eslint-disable-next-line no-console
-	console.warn(
-		"Lunaria git dashboard failed; wrote fallback HTML + status.json (commit locale files for the full dashboard).",
-	);
-}
+writeFileSync(join(outDir, "index.html"), dashboardHtml(jsonStatus));
+// eslint-disable-next-line no-console
+console.log("Generated dist/lunaria/index.html and dist/lunaria/status.json");

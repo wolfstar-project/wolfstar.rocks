@@ -148,6 +148,9 @@
 						"login_redirecting": {
 							"type": "string"
 						},
+						"redirecting_discord_description": {
+							"type": "string"
+						},
 						"guild_sr_title": {
 							"type": "string"
 						},

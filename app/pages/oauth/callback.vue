@@ -1,13 +1,12 @@
 <template>
-	<div class="container mx-auto px-4 py-8">
+	<div>
 		<h1 class="sr-only">{{ t("auth.oauth.callback_sr_title") }}</h1>
 		<h2 class="sr-only">{{ t("auth.oauth.callback_sr_status") }}</h2>
 		<template v-if="!hasCallbackParams">
-			<UAlert
-				variant="solid"
-				color="warning"
+			<OauthStatusPanel
+				tone="warning"
 				:title="t('auth.oauth.login_required_title')"
-				icon="twemoji:warning"
+				icon="heroicons:exclamation-triangle"
 			>
 				<template #description>
 					<i18n-t keypath="auth.oauth.login_required_description" tag="span">
@@ -19,62 +18,67 @@
 					</i18n-t>
 				</template>
 				<template #actions>
-					<UButton color="neutral" variant="ghost" to="/login" size="sm">
+					<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 						{{ t("auth.oauth.go_to_login") }}
 					</UButton>
 				</template>
-			</UAlert>
+			</OauthStatusPanel>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="isError">
-				<UAlert
-					color="error"
+				<OauthStatusPanel
+					tone="error"
 					:title="t('auth.oauth.sign_in_failed_title')"
-					icon="twemoji:cross-mark"
+					icon="heroicons:x-circle"
 				>
 					<template #description>
 						{{ errorMessage }}
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							{{ t("auth.oauth.try_again") }}
 						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</template>
 			<template v-else-if="isSessionLoading || !ready">
-				<UAlert
-					color="info"
-					icon="emojione:hourglass-done"
+				<OauthStatusPanel
+					tone="info"
+					loading
 					:title="t('auth.oauth.signing_in_title')"
+					icon="ph:discord-logo-fill"
 				>
-					<template #description> {{ t("auth.oauth.connecting_discord") }} </template>
-				</UAlert>
+					<template #description>
+						{{ t("auth.oauth.connecting_discord") }}
+					</template>
+				</OauthStatusPanel>
 			</template>
 			<template v-else-if="user">
-				<UAlert
-					color="success"
-					icon="twemoji:check-mark"
+				<OauthStatusPanel
+					tone="success"
 					:title="t('auth.oauth.welcome_title', { name: user.name })"
+					icon="heroicons:check-circle"
 				>
-					<template #description> {{ t("auth.oauth.redirecting_dashboard") }} </template>
-				</UAlert>
+					<template #description>
+						{{ t("auth.oauth.redirecting_dashboard") }}
+					</template>
+				</OauthStatusPanel>
 			</template>
 			<template v-else-if="isSessionMissing">
-				<UAlert
-					color="error"
+				<OauthStatusPanel
+					tone="error"
 					:title="t('auth.oauth.session_not_found_title')"
-					icon="twemoji:cross-mark"
+					icon="heroicons:x-circle"
 				>
 					<template #description>
 						{{ t("auth.oauth.session_not_found_description") }}
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							{{ t("auth.oauth.try_again") }}
 						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</template>
 		</ClientOnly>
 	</div>

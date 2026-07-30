@@ -23,20 +23,33 @@ if (!existsSync(pullRoot)) {
 	process.exit(1);
 }
 
+const mappedTags = readdirSync(pullRoot).filter((tag) => {
+	if (config.tolgeeToLocal[tag]) return true;
+	console.warn(`Skipping unmapped Tolgee language tag: ${tag}`);
+	return false;
+});
+
+// Validate the pull is complete before touching i18n/locales/, so a partial
+// pull cannot silently leave some namespaces stale while updating others.
+const missing = mappedTags.flatMap((tag) =>
+	config.namespaces.filter((ns) => !existsSync(join(pullRoot, tag, `${ns}.json`))).map((ns) => `${tag}/${ns}.json`),
+);
+if (missing.length > 0) {
+	console.error("Incomplete Tolgee pull; missing namespace files:");
+	for (const file of missing) console.error(`  - ${file}`);
+	console.error(`Staging directory preserved for inspection: ${pullRoot}`);
+	process.exit(1);
+}
+
 let copied = 0;
-for (const tag of readdirSync(pullRoot)) {
+for (const tag of mappedTags) {
 	const localDir = config.tolgeeToLocal[tag];
-	if (!localDir) {
-		console.warn(`Skipping unmapped Tolgee language tag: ${tag}`);
-		continue;
-	}
+	if (!localDir) continue;
 	const srcDir = join(pullRoot, tag);
 	const destDir = join(localesRoot, localDir);
 	mkdirSync(destDir, { recursive: true });
 	for (const ns of config.namespaces) {
-		const src = join(srcDir, `${ns}.json`);
-		if (!existsSync(src)) continue;
-		copyFileSync(src, join(destDir, `${ns}.json`));
+		copyFileSync(join(srcDir, `${ns}.json`), join(destDir, `${ns}.json`));
 		copied++;
 	}
 	// Keep en-US / es-ES mirrors in sync with base dirs when present.

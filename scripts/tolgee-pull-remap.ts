@@ -3,7 +3,15 @@
  *
  * Reads i18n/.tolgee-pull/{tag}/{namespace}.json → i18n/locales/{nuxtLocale}/{namespace}.json
  */
-import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import {
+	existsSync,
+	mkdirSync,
+	readFileSync,
+	readdirSync,
+	renameSync,
+	rmSync,
+	writeFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
 
@@ -86,28 +94,72 @@ for (const tag of mappedTags) {
 	}
 }
 
-// Promote the replacement tree; if any write fails, restore every destination
-// already touched so the live locales never stay in a mixed state.
-const backups = new Map<string, Buffer | null>();
+// Stage new content next to each destination first: staging is the only phase
+// that writes data, so a persistent filesystem failure (full disk, unwritable
+// tree) aborts before any live locale file is touched. Promotion and rollback
+// are then rename-only metadata operations, which cannot re-fail from the same
+// data-write condition, so a failed promotion cannot strand mixed content.
+const NEW_SUFFIX = ".tolgee-new";
+const BACKUP_SUFFIX = ".tolgee-backup";
+
+function tryRmSync(path: string): void {
+	try {
+		rmSync(path, { force: true });
+	} catch {
+		// Best-effort cleanup; leftover temp files are harmless.
+	}
+}
+
 try {
 	for (const { dest, content } of writes) {
-		backups.set(dest, existsSync(dest) ? readFileSync(dest) : null);
 		mkdirSync(dirname(dest), { recursive: true });
-		writeFileSync(dest, content);
+		writeFileSync(dest + NEW_SUFFIX, content);
 	}
 } catch (error) {
-	for (const [dest, backup] of backups) {
-		try {
-			if (backup === null) rmSync(dest, { force: true });
-			else writeFileSync(dest, backup);
-		} catch {
-			console.error(`Rollback failed for ${dest}; restore it manually.`);
-		}
-	}
-	console.error("Failed to promote pulled locales; previously written files were rolled back.");
+	for (const { dest } of writes) tryRmSync(dest + NEW_SUFFIX);
+	console.error("Failed to stage pulled locales; live locale files were not touched.");
 	console.error(String(error));
 	console.error(`Staging directory preserved for inspection: ${pullRoot}`);
 	process.exit(1);
+}
+
+// Promote via rename; if any rename fails, rename every backup back so the
+// live locales never stay in a mixed state.
+const backups = new Map<string, string | null>();
+try {
+	for (const { dest } of writes) {
+		if (!backups.has(dest)) {
+			if (existsSync(dest)) {
+				renameSync(dest, dest + BACKUP_SUFFIX);
+				backups.set(dest, dest + BACKUP_SUFFIX);
+			} else {
+				backups.set(dest, null);
+			}
+		}
+		renameSync(dest + NEW_SUFFIX, dest);
+	}
+} catch (error) {
+	const unrestored: string[] = [];
+	for (const [dest, backup] of backups) {
+		try {
+			if (backup === null) rmSync(dest, { force: true });
+			else renameSync(backup, dest);
+		} catch {
+			unrestored.push(backup === null ? dest : `${dest} (backup preserved at ${backup})`);
+		}
+	}
+	for (const { dest } of writes) tryRmSync(dest + NEW_SUFFIX);
+	if (unrestored.length > 0) {
+		console.error("Rollback failed for the following files; restore them manually:");
+		for (const entry of unrestored) console.error(`  - ${entry}`);
+	}
+	console.error("Failed to promote pulled locales; previously promoted files were rolled back.");
+	console.error(String(error));
+	console.error(`Staging directory preserved for inspection: ${pullRoot}`);
+	process.exit(1);
+}
+for (const backup of backups.values()) {
+	if (backup !== null) tryRmSync(backup);
 }
 
 rmSync(pullRoot, { recursive: true, force: true });

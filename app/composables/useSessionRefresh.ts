@@ -8,13 +8,13 @@ export function useSessionRefresh() {
 	}
 
 	onMounted(() => {
-		if (process.env.TEST) return;
+		if (import.meta.test) return;
 		void refreshAndSync();
 	});
 
 	if (import.meta.client) {
 		watch(documentVisibility, (visibility) => {
-			if (visibility !== "visible" || process.env.TEST) return;
+			if (visibility !== "visible" || import.meta.test) return;
 			void refreshAndSync();
 		});
 	}

@@ -371,12 +371,12 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
-		// Nuxt's Vite define covers client/server/browser/nitro/prerender but not
-		// import.meta.test — without this, the flag is undefined in Vitest browser
-		// and client bundles (nitro.replace only affects the server build).
-		define: {
-			"import.meta.test": isTest,
-		},
+		// Do NOT define import.meta.test here: Nuxt's schema already defines it
+		// from nuxt.options.test (Boolean(std-env isTest) by default, and forced
+		// true by @nuxt/test-utils in the Vitest environment). A user-level define
+		// overrides that and, in CI, bakes in "false" because this config is
+		// evaluated before Vitest sets NODE_ENV=test — breaking mountSuspended's
+		// import.meta.test-gated SingleRenderer branch in nuxt-root.vue.
 		css: {
 			transformer: "lightningcss",
 		},

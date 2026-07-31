@@ -331,12 +331,6 @@ export default defineNuxtConfig({
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
-		// Pre-compress prerendered HTML and /_nuxt assets so the server (and any
-		// origin without edge compression) serves gzip/brotli with correct headers.
-		compressPublicAssets: {
-			brotli: true,
-			gzip: true,
-		},
 		future: {
 			nativeSWR: true,
 		},

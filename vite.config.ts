@@ -528,9 +528,9 @@ export default defineConfig({
 	},
 	staged: {
 		"i18n/locales/**/*.json":
-			"node --experimental-transform-types ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json i18n/schemas",
+			"node ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json i18n/schemas",
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
-		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
+		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files) => {
 			const filtered = files.filter(
 				(f) => !f.includes("/.claude/") && !f.startsWith(".claude/"),
 			);
@@ -540,7 +540,6 @@ export default defineConfig({
 	test: {
 		projects: [
 			{
-				define: { "process.test": "true" },
 				plugins: isCI ? [codspeedPlugin()] : [],
 				resolve: {
 					alias: {
@@ -558,7 +557,6 @@ export default defineConfig({
 				},
 			},
 			{
-				define: { "process.test": "true" },
 				resolve: {
 					alias: {
 						"~": `${rootDir}/app`,
@@ -583,7 +581,6 @@ export default defineConfig({
 			},
 			() =>
 				defineVitestProject({
-					define: { "process.test": "true" },
 					test: {
 						browser: {
 							enabled: true,
@@ -594,8 +591,6 @@ export default defineConfig({
 						environmentOptions: {
 							nuxt: {
 								overrides: {
-									// @ts-expect-error -- @nuxt/fonts config is not in the base NuxtConfig type
-									fonts: { providers: { fontshare: false } },
 									runtimeConfig: {
 										public: {
 											clientId: "test-discord-client-id",
@@ -611,6 +606,7 @@ export default defineConfig({
 										payloadExtraction: false,
 										viteEnvironmentApi: false,
 									},
+									// @ts-expect-error -- pwa config is not in the base NuxtConfig type
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },
 									sitemap: { enabled: false },
@@ -627,7 +623,7 @@ export default defineConfig({
 		],
 		coverage: {
 			enabled: true,
-			exclude: ["**/node_modules/**"],
+			include: ["{app,server,shared}/**/*.{ts,vue}"],
 			provider: "v8",
 		},
 	},

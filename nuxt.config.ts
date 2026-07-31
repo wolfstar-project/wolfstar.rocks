@@ -32,7 +32,6 @@ export default defineNuxtConfig({
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
 		"@nuxtjs/i18n",
-		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
 		"@onmax/nuxt-better-auth",
@@ -342,6 +341,11 @@ export default defineNuxtConfig({
 		future: {
 			nativeSWR: true,
 		},
+		esbuild: {
+			options: {
+				target: "es2024",
+			},
+		},
 		prerender: {
 			crawlLinks: true,
 			// Keep redirect-only and per-user routes out of the prerender crawl;
@@ -363,10 +367,6 @@ export default defineNuxtConfig({
 				base: "./.cache/fetch",
 				driver: "fsLite",
 			},
-			"skew-protection": {
-				base: "./.cache/skew-protection",
-				driver: "fsLite",
-			},
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",
@@ -379,8 +379,8 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
-		define: {
-			"process.test": "false",
+		css: {
+			transformer: "lightningcss",
 		},
 		optimizeDeps: {
 			include: [
@@ -456,12 +456,6 @@ export default defineNuxtConfig({
 		},
 	},
 
-	postcss: {
-		plugins: {
-			"postcss-nested": {},
-		},
-	},
-
 	fonts: {
 		providers: {
 			fontshare: false,
@@ -534,19 +528,11 @@ export default defineNuxtConfig({
 	skewProtection: {
 		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
 		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
-		storage:
-			provider === "netlify"
-				? { driver: "netlify-blobs", name: "skew-protection" }
-				: undefined,
-		// Force polling rather than the SSE/WS default: this app's Netlify deploy
-		// isn't confirmed to support long-lived streaming connections through its
-		// serverless functions, and polling needs no platform-specific handling.
-		updateStrategy: "polling",
-		// The persistent-previous-build-assets feature uploads build output to
-		// storage during `nitro:init`, which on Netlify would need Blobs write
-		// access from the build image itself (unverified) rather than from a
-		// deployed function; keep it off until that's confirmed safe.
-		bundleAssets: false,
+		storage: {
+			base: "./.cache/skew-protection",
+			driver: "fsLite",
+		},
+		updateStrategy: "sse",
 	},
 
 	// PWA configuration
@@ -665,12 +651,6 @@ export default defineNuxtConfig({
 				{ content: "#121212", media: "(prefers-color-scheme: dark)" },
 				{ content: "#ffffff", media: "(prefers-color-scheme: light)" },
 			],
-			twitterCard: "summary_large_image",
-			twitterCreator: "@RedStar071",
-			twitterDescription:
-				"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
-			twitterSite: "@WolfStarBot",
-			twitterTitle: "WolfStar",
 		},
 	},
 
@@ -700,8 +680,14 @@ export default defineNuxtConfig({
 
 interface ISRConfigOptions {
 	fallback?: "html" | "json";
+	allowQuery?: string[];
+	passQuery?: boolean;
 }
 function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {}) {
+	const extraISR = {
+		...(options.passQuery ? { passQuery: true } : {}),
+		...(options.allowQuery ? { allowQuery: options.allowQuery } : {}),
+	};
 	if (options.fallback) {
 		return {
 			isr: {
@@ -712,12 +698,14 @@ function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {})
 						: "payload-fallback.json",
 				initialHeaders:
 					options.fallback === "json" ? { "content-type": "application/json" } : {},
+				...extraISR,
 			} as { expiration: number },
 		};
 	}
 	return {
 		isr: {
 			expiration: expirationSeconds,
+			...extraISR,
 		},
 	};
 }

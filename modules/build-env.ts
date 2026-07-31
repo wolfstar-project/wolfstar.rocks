@@ -17,7 +17,9 @@ export default defineNuxtModule({
 		let env: EnvType = "dev";
 		nuxt.options.appConfig = nuxt.options.appConfig || {};
 		nuxt.options.appConfig.env = env;
-		if (isTest) {
+		// isTest covers NODE_ENV=test (Vitest) and an explicit TEST env var;
+		// nuxt.options.test covers @nuxt/test-utils runtime loads.
+		if (isTest || nuxt.options.test) {
 			const time = new Date();
 			nuxt.options.appConfig.buildInfo = {
 				env,

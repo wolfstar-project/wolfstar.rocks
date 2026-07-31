@@ -371,6 +371,12 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
+		// Nuxt's Vite define covers client/server/browser/nitro/prerender but not
+		// import.meta.test — without this, the flag is undefined in Vitest browser
+		// and client bundles (nitro.replace only affects the server build).
+		define: {
+			"import.meta.test": isTest,
+		},
 		css: {
 			transformer: "lightningcss",
 		},

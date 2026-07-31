@@ -531,6 +531,13 @@ export default defineNuxtConfig({
 			driver: "fs-lite",
 		},
 		updateStrategy: "sse",
+		// Keep the persistent-previous-build-assets feature off: with storage now
+		// always configured, the module's default (true) runs augmentBuildMetadata,
+		// which rewrites _nuxt/builds/meta/<buildId>.json after the build but only
+		// patches the Nitro server's embedded size/etag for latest.json. The node
+		// preview server then serves the app manifest with stale content-length,
+		// and clients fail with NUXT_E5004/NUXT_E5002 on client-side navigation.
+		bundleAssets: false,
 	},
 
 	// PWA configuration

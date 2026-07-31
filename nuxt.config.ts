@@ -47,11 +47,6 @@ export default defineNuxtConfig({
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
-	skillHub: {
-		targets: ["claude-code", "cursor"],
-		generationMode: "prepare",
-	},
-
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
 		// requiring better-sqlite3 as an additional native dependency.
@@ -527,7 +522,10 @@ export default defineNuxtConfig({
 		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
 		storage: {
 			base: "./.cache/skew-protection",
-			driver: "fsLite",
+			// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
+			// so this must be the kebab-case file name (fs-lite.mjs), unlike the
+			// Nitro storage mounts above where "fsLite" is a registered driver name.
+			driver: "fs-lite",
 		},
 		updateStrategy: "sse",
 	},

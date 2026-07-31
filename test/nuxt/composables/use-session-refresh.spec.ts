@@ -18,10 +18,10 @@ describe("useSessionRefresh", () => {
 		await expect(setup()).resolves.toBeDefined();
 	});
 
-	it("should not call $fetch during test environment (import.meta.test guard)", async () => {
+	it("should not call $fetch during test environment (process.env.TEST guard)", async () => {
 		const fetchSpy = vi.spyOn(globalThis, "fetch");
 		await setup();
-		// The import.meta.test guard in onMounted prevents any $fetch calls
+		// The process.env.TEST guard in onMounted prevents any $fetch calls
 		expect(fetchSpy).not.toHaveBeenCalledWith("/api/auth/refresh", expect.anything());
 		fetchSpy.mockRestore();
 	});

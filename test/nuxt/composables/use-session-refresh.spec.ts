@@ -25,7 +25,8 @@ describe("useSessionRefresh", () => {
 		await expect(setup()).resolves.toBeDefined();
 	});
 
-	it("should not call $fetch during test environment (import.meta.test guard)", async () => {
+	it("should not call $fetch during test environment (session refresh guard)", async () => {
+		// Vite define rewrites the import.meta.test identifier; assert the compiled flag.
 		expect(import.meta.test).toBe(true);
 
 		const fetchSpy = vi.spyOn(globalThis, "fetch");

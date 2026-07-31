@@ -11,7 +11,7 @@
 			<img v-if="src" :src="src" :alt="alt ?? ''" />
 			<span
 				v-else
-				class="flex h-full w-full items-center justify-center bg-neutral text-xs font-medium text-neutral-content"
+				class="bg-neutral text-xs font-medium text-neutral-content flex h-full w-full items-center justify-center"
 			>
 				{{ initials }}
 			</span>

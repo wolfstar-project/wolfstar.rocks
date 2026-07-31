@@ -1,6 +1,6 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
+	<div class="divide-accented w-full flex-1 divide-y">
+		<div class="gap-2 px-4 py-3.5 flex items-center overflow-x-auto">
 			<StarInput
 				v-model="q"
 				icon="i-lucide-search"
@@ -38,7 +38,7 @@
 				:loading="status === 'pending'"
 				class="min-h-100"
 			/>
-			<div class="flex justify-end border-t border-accented px-4 py-3.5">
+			<div class="border-accented px-4 py-3.5 flex justify-end border-t">
 				<StarPagination
 					v-if="total > limit"
 					v-model:page="page"

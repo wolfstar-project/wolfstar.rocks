@@ -6,7 +6,7 @@
 		<div
 			:class="
 				plain
-					? 'flex items-center justify-between px-4 py-3'
+					? 'px-4 py-3 flex items-center justify-between'
 					: 'mb-3 flex items-center justify-between'
 			"
 		>

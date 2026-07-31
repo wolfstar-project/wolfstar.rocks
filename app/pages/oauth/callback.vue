@@ -1,5 +1,5 @@
 <template>
-	<div class="container mx-auto px-4 py-8">
+	<div class="px-4 py-8 container mx-auto">
 		<h1 class="sr-only">OAuth Callback</h1>
 		<h2 class="sr-only">Authentication Status</h2>
 		<template v-if="!hasCallbackParams">

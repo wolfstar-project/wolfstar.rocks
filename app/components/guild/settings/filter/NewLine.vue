@@ -4,7 +4,7 @@
 		<div v-if="loading" class="space-y-6">
 			<div class="space-y-3">
 				<StarSkeleton class="h-7 w-40" />
-				<div v-for="i in 4" :key="i" class="flex items-center gap-3">
+				<div v-for="i in 4" :key="i" class="gap-3 flex items-center">
 					<StarSkeleton class="h-6 w-11 shrink-0 rounded-full" />
 					<div class="space-y-1.5">
 						<StarSkeleton class="h-4 w-32" />
@@ -14,7 +14,7 @@
 			</div>
 			<div class="space-y-3">
 				<StarSkeleton class="h-7 w-32" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 					<StarSkeleton class="h-10 w-full" />
 					<StarSkeleton class="h-10 w-full" />
 				</div>
@@ -41,14 +41,14 @@
 			<GuildSettingsSection title="Line Spam Filter">
 				<div class="space-y-3">
 					<StarFormField name="selfmodNewlinesEnabled">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.selfmodNewlinesEnabled"
 								class="mt-0.5"
 								aria-label="Toggle line spam filter"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Filter
 									{{ state.selfmodNewlinesEnabled ? "Enabled" : "Disabled" }}
 								</p>
@@ -60,14 +60,14 @@
 					</StarFormField>
 
 					<StarFormField name="softActionAlerts">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
 								aria-label="Toggle alerts soft action"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -78,14 +78,14 @@
 					</StarFormField>
 
 					<StarFormField name="softActionLogs">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
 								aria-label="Toggle logs soft action"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -96,14 +96,14 @@
 					</StarFormField>
 
 					<StarFormField name="softActionDeletes">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
 								aria-label="Toggle deletes soft action"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -119,7 +119,7 @@
 
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection title="Punishments">
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 					<StarFormField
 						label="Action"
 						name="selfmodNewlinesHardAction"
@@ -160,7 +160,7 @@
 							:max="60"
 							aria-label="New lines filter violations before punishment slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0</span>
 							<span>60</span>
 						</div>
@@ -179,7 +179,7 @@
 							:max="120"
 							aria-label="New lines filter time window (seconds) slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0s</span>
 							<span>120s</span>
 						</div>
@@ -207,7 +207,7 @@
 						:max="2000"
 						aria-label="New lines selfmod filter maximum lines slider"
 					/>
-					<div class="mt-1 flex justify-between text-xs text-muted">
+					<div class="mt-1 text-xs text-muted flex justify-between">
 						<span>10</span>
 						<span>2000</span>
 					</div>

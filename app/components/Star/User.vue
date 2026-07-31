@@ -1,9 +1,9 @@
 <template>
-	<div class="flex items-center gap-3">
+	<div class="gap-3 flex items-center">
 		<StarAvatar :src="avatar?.src ?? src" :alt="avatar?.alt ?? alt ?? name" :size="size" />
 		<div class="min-w-0">
-			<p class="truncate font-medium">{{ name }}</p>
-			<p v-if="description" class="truncate text-sm text-muted">{{ description }}</p>
+			<p class="font-medium truncate">{{ name }}</p>
+			<p v-if="description" class="text-sm text-muted truncate">{{ description }}</p>
 		</div>
 	</div>
 </template>

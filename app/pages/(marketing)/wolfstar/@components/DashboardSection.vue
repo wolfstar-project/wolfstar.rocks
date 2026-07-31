@@ -10,32 +10,32 @@
 
 		<SurfaceCard
 			padding="none"
-			class="dashboard-preview mx-auto max-w-250 overflow-hidden shadow-glow"
+			class="dashboard-preview max-w-250 shadow-glow mx-auto overflow-hidden"
 			role="img"
 			aria-label="Preview of the WolfStar dashboard member list with roles and statuses"
 		>
 			<div
-				class="dashboard-toolbar flex items-center gap-3 border-b px-6 py-4.5"
+				class="dashboard-toolbar gap-3 px-6 py-4.5 flex items-center border-b"
 				aria-hidden="true"
 			>
 				<StarIcon name="ph:magnifying-glass" class="h-4 w-4 text-muted" />
 				<div
-					class="dashboard-search flex h-9 flex-1 items-center rounded-md border px-3 text-sm text-muted"
+					class="dashboard-search h-9 rounded-md px-3 text-sm text-muted flex flex-1 items-center border"
 				>
 					Search members…
 				</div>
-				<span class="text-sm whitespace-nowrap text-muted">1,204 members</span>
+				<span class="text-sm text-muted whitespace-nowrap">1,204 members</span>
 			</div>
 			<div class="px-6 py-1" aria-hidden="true">
 				<div
 					v-for="member of members"
 					:key="member.name"
-					class="dashboard-member-row flex items-center gap-3 border-t py-3 first:border-t-0"
+					class="dashboard-member-row gap-3 py-3 flex items-center border-t first:border-t-0"
 				>
 					<div
 						:class="
 							cn(
-								'flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold',
+								'size-9 text-xs font-bold flex shrink-0 items-center justify-center rounded-full',
 								member.avatarClass,
 							)
 						"
@@ -67,8 +67,6 @@ const { members } = defineProps<{
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .dashboard-toolbar {
 	border-color: var(--home-border-subtle);
 }

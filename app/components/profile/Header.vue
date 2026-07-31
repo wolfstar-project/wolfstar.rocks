@@ -1,21 +1,21 @@
 <template>
 	<section
-		class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:border-4 md:p-12"
+		class="gap-6 rounded-xl border-base-200 bg-base-200/30 p-8 md:border-4 md:p-12 relative flex flex-col items-center justify-center overflow-hidden border-2"
 		aria-label="User profile"
 	>
 		<!-- decorative left accent (sidebar-like) -->
 		<div
-			class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/40 md:block"
+			class="inset-y-2 left-0 w-1 rounded-r-md bg-primary/40 md:block absolute hidden"
 			aria-hidden="true"
 		></div>
-		<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
+		<div v-if="!user" class="space-y-6 flex flex-col items-center justify-center">
 			<StarSkeleton
-				class="h-32 w-32 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100 md:h-40 md:w-40"
+				class="h-32 w-32 ring-base-200 ring-offset-base-100 md:h-40 md:w-40 rounded-full ring-2 ring-offset-4"
 			/>
 			<div class="space-y-2 text-center">
 				<StarSkeleton class="h-10 w-48" />
 				<StarSkeleton class="h-7 w-32" />
-				<div class="flex items-center justify-center gap-2">
+				<div class="gap-2 flex items-center justify-center">
 					<StarSkeleton class="h-6 w-16" />
 					<StarSkeleton class="h-6 w-32 rounded-md" />
 				</div>

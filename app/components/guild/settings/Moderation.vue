@@ -11,7 +11,7 @@
 			class="space-y-4"
 			@error="onError"
 		>
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 				<StarFormField
 					v-for="setting in ConfigurableModerationKeys"
 					:key="`form-field-${setting.key}`"

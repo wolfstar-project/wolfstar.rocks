@@ -6,24 +6,24 @@
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<dl
-			class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4"
+			class="gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4 grid grid-cols-2"
 			aria-label="Server statistics"
 		>
 			<div
 				v-for="stat in serverStats"
 				:key="stat.label"
-				class="flex min-w-0 items-baseline justify-between md:justify-start md:gap-2"
+				class="min-w-0 md:justify-start md:gap-2 flex items-baseline justify-between"
 			>
-				<dt class="truncate text-sm font-semibold text-base-content/70 md:text-base">
+				<dt class="text-sm font-semibold text-base-content/70 md:text-base truncate">
 					{{ stat.label }}:
 				</dt>
-				<dd class="shrink-0 text-base font-bold text-base-content md:text-lg">
+				<dd class="text-base font-bold text-base-content md:text-lg shrink-0">
 					{{ stat.value.toLocaleString() }}
 				</dd>
 			</div>
 		</dl>
 
-		<div class="mt-4 flex flex-col items-start gap-3 md:flex-row">
+		<div class="mt-4 gap-3 md:flex-row flex flex-col items-start">
 			<StarButton
 				color="neutral"
 				variant="link"
@@ -47,14 +47,14 @@
 
 	<GuildSettingsSection
 		title="General Settings"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="rounded-md border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6 border"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			class="grid grid-cols-1 gap-6 md:grid-cols-2"
+			class="gap-6 md:grid-cols-2 grid grid-cols-1"
 			aria-label="General guild settings form"
 			@error="onError"
 		>
@@ -127,7 +127,7 @@
 		empty-title="No settings changes yet"
 		empty-description="Changes you make to this server's settings will appear here so you can track who changed what."
 		refresh-label="Refresh audit log"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="rounded-md border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6 border"
 		@refresh="refreshAuditLog()"
 	>
 		<StarTable

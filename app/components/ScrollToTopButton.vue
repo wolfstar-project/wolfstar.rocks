@@ -1,7 +1,7 @@
 <template>
 	<div
-		class="shrink-0 overflow-hidden transition-[width,opacity,margin] duration-300 ease-in-out"
-		:class="isScrolling ? 'ml-2 w-10 opacity-100' : 'pointer-events-none ml-0 w-0 opacity-0'"
+		class="ease-in-out shrink-0 overflow-hidden transition-[width,opacity,margin] duration-300"
+		:class="isScrolling ? 'ml-2 w-10 opacity-100' : 'ml-0 w-0 pointer-events-none opacity-0'"
 		:aria-hidden="!isScrolling"
 	>
 		<StarButton

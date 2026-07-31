@@ -1,118 +1,7 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import "./daisy-themes.css";
 @import "./keyframes.css";
 @import "./utilities.css";
 @import "./view-transitions.css";
-
-@source "../../../content/**/*";
-
-@plugin "@tailwindcss/typography";
-@plugin "daisyui";
-
-@plugin "daisyui/theme" {
-	name: "light";
-	default: true;
-	prefersdark: false;
-	color-scheme: "light";
-	--color-base-100: oklch(100% 0 0);
-	--color-base-200: oklch(90% 0 0);
-	--color-base-300: oklch(85% 0 0);
-	--color-base-content: oklch(0% 0 0);
-	--color-primary: oklch(58% 0.233 277.117);
-	--color-primary-content: oklch(100% 0 0);
-	--color-secondary: oklch(0.5873 0.0204 272.13);
-	--color-secondary-content: oklch(100% 0 0);
-	--color-accent: oklch(60% 0.152 181.912);
-	--color-accent-content: oklch(100% 0 0);
-	--color-neutral: oklch(14% 0.005 285.823);
-	--color-neutral-content: oklch(100% 0 0);
-	--color-info: oklch(55% 0.16 232.661);
-	--color-info-content: oklch(89.04% 0.062 264.052);
-	--color-success: oklch(76% 0.177 163.223);
-	--color-success-content: oklch(37% 0.077 168.94);
-	--color-warning: oklch(82% 0.189 84.429);
-	--color-warning-content: oklch(41% 0.112 45.904);
-	--color-error: oklch(71% 0.194 13.428);
-	--color-error-content: oklch(28% 0.109 3.907);
-	--radius-selector: 0.5rem;
-	--radius-field: 0.5rem;
-	--radius-box: 0.5rem;
-	--size-selector: 0.25rem;
-	--size-field: 0.21875rem;
-	--border: 1.5px;
-	--depth: 0;
-	--noise: 0;
-}
-
-@plugin "daisyui/theme" {
-	name: "dark";
-	default: true;
-	prefersdark: true;
-	color-scheme: "dark";
-	--color-base-100: oklch(25% 0.016 252);
-	--color-base-200: oklch(23% 0.014 253);
-	--color-base-300: oklch(20% 0.012 254);
-	--color-base-content: oklch(90% 0 0);
-	--color-primary: oklch(58% 0.233 277.117);
-	--color-primary-content: oklch(100% 0 0);
-	--color-secondary: oklch(0.5873 0.0204 272.13);
-	--color-secondary-content: oklch(100% 0 0);
-	--color-accent: oklch(60% 0.152 181.912);
-	--color-accent-content: oklch(100% 0 0);
-	--color-neutral: oklch(14% 0.005 285.823);
-	--color-neutral-content: oklch(100% 0 0);
-	--color-info: oklch(55% 0.16 232.661);
-	--color-info-content: oklch(89.04% 0.062 264.052);
-	--color-success: oklch(76% 0.177 163.223);
-	--color-success-content: oklch(37% 0.077 168.94);
-	--color-warning: oklch(82% 0.189 84.429);
-	--color-warning-content: oklch(41% 0.112 45.904);
-	--color-error: oklch(71% 0.194 13.428);
-	--color-error-content: oklch(28% 0.109 3.907);
-	--radius-selector: 0.5rem;
-	--radius-field: 0.5rem;
-	--radius-box: 0.5rem;
-	--size-selector: 0.25rem;
-	--size-field: 0.21875rem;
-	--border: 1.5px;
-	--depth: 0;
-	--noise: 0;
-}
-
-@plugin "daisyui/theme" {
-	name: "midnight";
-	default: false;
-	prefersdark: false;
-	color-scheme: "dark";
-	--color-base-100: oklch(0% 0 0);
-	--color-base-200: oklch(10% 0 0);
-	--color-base-300: oklch(27% 0 0);
-	--color-base-content: oklch(87.609% 0 0);
-	--color-primary: oklch(58% 0.233 277.117);
-	--color-primary-content: oklch(100% 0 0);
-	--color-secondary: oklch(0.5873 0.0204 272.13);
-	--color-secondary-content: oklch(100% 0 0);
-	--color-accent: oklch(60% 0.152 181.912);
-	--color-accent-content: oklch(100% 0 0);
-	--color-neutral: oklch(14% 0.005 285.823);
-	--color-neutral-content: oklch(100% 0 0);
-	--color-info: oklch(55% 0.16 232.661);
-	--color-info-content: oklch(89.04% 0.062 264.052);
-	--color-success: oklch(76% 0.177 163.223);
-	--color-success-content: oklch(37% 0.077 168.94);
-	--color-warning: oklch(82% 0.189 84.429);
-	--color-warning-content: oklch(41% 0.112 45.904);
-	--color-error: oklch(71% 0.194 13.428);
-	--color-error-content: oklch(28% 0.109 3.907);
-	--radius-selector: 0.5rem;
-	--radius-field: 0.5rem;
-	--radius-box: 0.5rem;
-	--size-selector: 0.25rem;
-	--size-field: 0.21875rem;
-	--border: 1.5px;
-	--depth: 0;
-	--noise: 0;
-}
 
 @layer base {
 	:root {
@@ -121,9 +10,7 @@
 		--branding-wolfstar: oklch(63% 0.2502 28.13);
 		--branding-staryl: oklch(0.5873 0.0204 272.13);
 
-		/* Spectrum ring — boost / badge accents from the WolfStar design system.
-		   Mirrors the design's --spectrum-* tokens (#FD0000, #FC8B00, #FEE400,
-		   #119E0B, #0644B2, #C12EDB) and the Nitro boost pink (#FF73FA). */
+		/* Spectrum ring — design-system --spectrum-* tokens */
 		--spectrum-red: oklch(62.4% 0.256 29.2);
 		--spectrum-orange: oklch(74.5% 0.177 58.6);
 		--spectrum-yellow: oklch(91.2% 0.19 101);
@@ -132,12 +19,25 @@
 		--spectrum-purple: oklch(60.3% 0.257 320.9);
 		--boost-pink: oklch(76.9% 0.229 328.9);
 
-		/* WolfStar home redesign aliases (from _ds/tokens/colors.css + spacing.css) */
+		/* WolfStar home redesign aliases */
 		--home-border-subtle: oklch(from var(--color-base-content) l c h / 0.05);
 		--home-blurple-soft: oklch(from var(--color-primary) l c h / 0.12);
 		--home-shadow-glow: 0 0 0 3px var(--home-blurple-soft);
 		--home-ls-label: 0.04em;
 		--home-ls-tight: -0.02em;
+
+		/* Bridge branding into the Daisy/Uno --color-* namespace */
+		--color-branding-wolfstar: var(--branding-wolfstar);
+		--color-branding-staryl: var(--branding-staryl);
+		--color-spectrum-red: var(--spectrum-red);
+		--color-spectrum-orange: var(--spectrum-orange);
+		--color-spectrum-yellow: var(--spectrum-yellow);
+		--color-spectrum-green: var(--spectrum-green);
+		--color-spectrum-blue: var(--spectrum-blue);
+		--color-spectrum-purple: var(--spectrum-purple);
+		--color-boost-pink: var(--boost-pink);
+
+		--font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
 
 		scroll-behavior: smooth;
 	}
@@ -158,6 +58,7 @@
 	}
 
 	html {
+		font-family: var(--font-geist);
 		scrollbar-gutter: stable;
 	}
 
@@ -179,28 +80,12 @@
 		scrollbar-width: none;
 		-ms-overflow-style: none;
 	}
-}
 
-@theme inline {
-	--color-branding-wolfstar: oklch(var(--branding-wolfstar) / <alpha-value>);
-	--color-branding-staryl: oklch(var(--branding-staryl) / <alpha-value>);
-}
-
-@theme {
-	--font-geist: "Geist", ui-sans-serif, system-ui, sans-serif;
-	--default-font-family: var(--font-geist);
-	--color-branding-wolfstar: var(--branding-wolfstar);
-	--color-branding-staryl: var(--branding-staryl);
-}
-
-@layer base {
 	input::placeholder,
 	textarea::placeholder {
-		color: var(--color-gray-400);
+		color: color-mix(in oklch, var(--color-base-content) 40%, transparent);
 	}
-}
 
-@layer base {
 	*,
 	::after,
 	::before,

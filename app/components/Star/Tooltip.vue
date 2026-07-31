@@ -8,7 +8,7 @@
 				<TooltipContent
 					:class="
 						cn(
-							'z-50 rounded-md bg-neutral px-2 py-1 text-xs text-neutral-content shadow',
+							'rounded-md bg-neutral px-2 py-1 text-xs text-neutral-content shadow z-50',
 							ui?.content,
 						)
 					"

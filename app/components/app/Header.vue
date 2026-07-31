@@ -2,7 +2,7 @@
 	<StarHeader class="app-navbar" title="WolfStar" aria-label="Site header">
 		<template #left>
 			<NuxtLink
-				class="flex items-center gap-2.5"
+				class="gap-2.5 flex items-center"
 				:to="currentApp.explore"
 				:aria-label="`${currentApp.name} home`"
 			>
@@ -14,7 +14,7 @@
 		</template>
 
 		<nav
-			class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex"
+			class="gap-1 bg-base-200 p-1 lg:inline-flex hidden rounded-full"
 			aria-label="Main navigation"
 		>
 			<StarNavigationMenu
@@ -28,7 +28,7 @@
 		</nav>
 
 		<template #right>
-			<div class="hidden items-center gap-2 md:flex">
+			<div class="gap-2 md:flex hidden items-center">
 				<StarButton
 					v-if="currentApp.invite !== '#'"
 					label="Add App"
@@ -45,7 +45,7 @@
 							size="md"
 							color="primary"
 							variant="subtle"
-							class="invisible rounded-lg"
+							class="rounded-lg invisible"
 							icon="ic:round-discord"
 							tabindex="-1"
 						/>
@@ -54,7 +54,7 @@
 			</div>
 		</template>
 		<template #body>
-			<nav class="flex min-h-0 flex-1 flex-col gap-6" aria-label="Mobile menu">
+			<nav class="min-h-0 gap-6 flex flex-1 flex-col" aria-label="Mobile menu">
 				<StarNavigationMenu
 					orientation="vertical"
 					:items="mobileLinks"
@@ -67,7 +67,7 @@
 					}"
 				/>
 
-				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
+				<div class="gap-3 border-default pt-5 mt-auto flex flex-col items-center border-t">
 					<StarButton
 						v-if="currentApp.invite !== '#'"
 						label="Add App"
@@ -85,7 +85,7 @@
 									size="md"
 									color="primary"
 									variant="subtle"
-									class="invisible rounded-lg"
+									class="rounded-lg invisible"
 									icon="ic:round-discord"
 									tabindex="-1"
 								/>
@@ -103,8 +103,6 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .app-navbar {
 	--ui-header-height: 5rem;
 	width: 100%;

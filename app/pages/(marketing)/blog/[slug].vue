@@ -17,7 +17,7 @@
 						]"
 						class="max-w-full"
 					/>
-					<div class="flex items-center space-x-2">
+					<div class="space-x-2 flex items-center">
 						<span>{{ article.category }}</span>
 						<span class="text-muted"
 							>&middot;&nbsp;&nbsp;<time>{{
@@ -27,7 +27,7 @@
 					</div>
 				</template>
 
-				<div class="mt-4 flex flex-wrap items-center gap-6">
+				<div class="mt-4 gap-6 flex flex-wrap items-center">
 					<StarUser
 						v-for="(author, index) in article.authors"
 						:key="index"
@@ -45,7 +45,7 @@
 
 				<div class="not-prose mt-12 flex items-center justify-between">
 					<StarLink to="/blog" class="text-primary"> ← Back to blog </StarLink>
-					<div class="flex items-center justify-end gap-1.5">
+					<div class="gap-1.5 flex items-center justify-end">
 						<StarButton
 							icon="i-lucide-link"
 							variant="ghost"
@@ -82,7 +82,7 @@
 					highlight
 				>
 					<template #bottom>
-						<div class="hidden space-y-6 lg:block">
+						<div class="space-y-6 lg:block hidden">
 							<StarPageLinks
 								title="Links"
 								:links="sidebarLinks"

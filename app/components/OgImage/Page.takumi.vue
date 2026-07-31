@@ -14,7 +14,7 @@
 				<IconComponent :name="icon" size="120px" style="opacity: 0.85" />
 			</div>
 			<h1
-				class="m-0 text-[75px] leading-none font-extrabold tracking-tight"
+				class="m-0 font-extrabold tracking-tight text-[75px] leading-none"
 				style="display: block; text-overflow: ellipsis"
 				:style="{ lineClamp: description ? 2 : 3 }"
 			>
@@ -22,7 +22,7 @@
 			</h1>
 			<p
 				v-if="description"
-				class="mt-6 text-[35px] leading-12 font-semibold tracking-wide"
+				class="mt-6 leading-12 font-semibold tracking-wide text-[35px]"
 				:class="[colorMode === 'light' ? ['text-gray-600'] : ['text-white/75']]"
 				style="display: block; line-clamp: 2; text-overflow: ellipsis"
 			>
@@ -30,7 +30,7 @@
 			</p>
 		</div>
 		<div
-			class="absolute bottom-15 flex w-full flex-row items-center justify-center"
+			class="bottom-15 absolute flex w-full flex-row items-center justify-center"
 			style="left: 0"
 		>
 			<IconsWolfstar class="h-14 w-14" aria-hidden="true" />

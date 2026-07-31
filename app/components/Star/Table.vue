@@ -32,7 +32,7 @@
 					<tr v-if="tableApi.getRowModel().rows.length === 0">
 						<td
 							:colspan="Math.max(columns.length, 1)"
-							class="py-8 text-center text-muted"
+							class="py-8 text-muted text-center"
 						>
 							No results
 						</td>

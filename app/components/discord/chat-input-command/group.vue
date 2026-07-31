@@ -31,8 +31,6 @@ const label = computed(() => labelOverride ?? SlashCommandApps[app].label);
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-slash-command-suggestion-group {
 	@apply min-w-0;
 }
@@ -43,7 +41,7 @@ const label = computed(() => labelOverride ?? SlashCommandApps[app].label);
 	/* Same sticky section-header pattern as Frequently Used — pins while this
 	   app group is in view, then scrolls away with the group. Background uses
 	   the picker token when nested under DiscordChatInputCommandSuggestions. */
-	@apply sticky top-0 z-[1] flex items-center gap-1.5 px-2 py-1.5 font-whitney text-sm font-semibold;
+	@apply top-0 gap-1.5 px-2 py-1.5 font-whitney text-sm font-semibold sticky z-[1] flex items-center;
 	color: var(--discord-slash-command-suggestion-group-header);
 	background-color: var(--discord-slash-command-suggestions-bg, oklch(23.47% 0.005 272.95));
 }

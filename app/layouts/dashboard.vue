@@ -11,11 +11,11 @@
 			}"
 		>
 			<template #header="{ collapsed }">
-				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
+				<div v-if="guildData" class="gap-0.5 flex cursor-pointer items-center">
 					<StarAvatar :src :alt="guildData.name" class="mr-2" />
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
-				<div v-else class="flex h-10 items-center justify-center">
+				<div v-else class="h-10 flex items-center justify-center">
 					<StarSkeleton class="mr-2 h-10 w-10 rounded-full" />
 					<div v-if="!collapsed" class="ms-2">
 						<StarSkeleton class="h-4 w-24 rounded" />
@@ -48,7 +48,7 @@
 		<slot v-if="isReadyToRender"></slot>
 		<div
 			v-else-if="nuxtError"
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
+			class="space-y-4 px-4 flex min-h-screen w-full flex-col items-center justify-center text-center"
 			role="alert"
 			aria-label="Error loading dashboard"
 		>
@@ -71,11 +71,11 @@
 		</div>
 		<div
 			v-else
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
+			class="space-y-4 px-4 flex min-h-screen w-full flex-col items-center justify-center"
 			role="status"
 			aria-label="Loading dashboard"
 		>
-			<div class="flex flex-col items-center space-y-4">
+			<div class="space-y-4 flex flex-col items-center">
 				<StarIcon
 					name="ph:warning-duotone"
 					class="size-12 text-primary"
@@ -85,15 +85,15 @@
 					<h2 class="text-xl font-semibold text-base-content">Loading Dashboard</h2>
 					<p class="text-sm text-base-content/60">Loading server settings...</p>
 				</div>
-				<div class="flex items-center space-x-2">
+				<div class="space-x-2 flex items-center">
 					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
+						class="h-2 w-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full"
 					></div>
 					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
+						class="h-2 w-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full [animation-delay:200ms]"
 					></div>
 					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
+						class="h-2 w-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full [animation-delay:400ms]"
 					></div>
 				</div>
 			</div>
@@ -109,7 +109,7 @@
 			<div
 				v-if="isReadyToSubmit"
 				style="view-transition-name: save-changes-bar"
-				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+				class="right-4 bottom-4 space-y-2 fixed z-50 flex flex-col"
 			>
 				<StarFieldGroup>
 					<StarButton color="primary" icon="heroicons:check" @click="submitChanges">
@@ -129,7 +129,7 @@
 			:dismissible="false"
 		>
 			<template #footer>
-				<div class="flex justify-end gap-2">
+				<div class="gap-2 flex justify-end">
 					<StarButton color="neutral" variant="ghost" @click="cancelLeave">
 						Stay on Page
 					</StarButton>

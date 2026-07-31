@@ -29,7 +29,7 @@
 					<p v-if="toast.description" class="text-sm opacity-90">
 						{{ toast.description }}
 					</p>
-					<div v-if="toast.actions?.length" class="mt-2 flex flex-wrap gap-2">
+					<div v-if="toast.actions?.length" class="mt-2 gap-2 flex flex-wrap">
 						<StarButton
 							v-for="(action, index) in toast.actions"
 							:key="index"

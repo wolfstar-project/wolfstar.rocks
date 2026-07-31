@@ -10,16 +10,16 @@
 			<StarContainer class="relative overflow-hidden">
 				<!-- Decorative watermark: keep fully inside the padded brand area so overflow-hidden does not clip it -->
 				<icons-wolfstar
-					class="pointer-events-none absolute bottom-6 left-6 h-56 w-56 opacity-5"
+					class="bottom-6 left-6 h-56 w-56 pointer-events-none absolute opacity-5"
 					role="presentation"
 					:aria-label="undefined"
 					aria-hidden="true"
 				/>
 				<div
-					class="relative grid grid-cols-1 gap-10 p-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]"
+					class="gap-10 p-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] relative grid grid-cols-1"
 				>
 					<div>
-						<div class="mb-3 flex items-center gap-3">
+						<div class="mb-3 gap-3 flex items-center">
 							<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
@@ -29,7 +29,7 @@
 							A fully customizable, multilingual Discord moderation app. Free forever,
 							open source.
 						</p>
-						<nav class="mt-4 flex items-center gap-1" aria-label="Social links">
+						<nav class="mt-4 gap-1 flex items-center" aria-label="Social links">
 							<StarButton
 								v-for="social of socialLinks"
 								:key="social.label"
@@ -43,7 +43,7 @@
 								size="sm"
 							/>
 						</nav>
-						<div class="mt-6 flex flex-col items-start gap-3">
+						<div class="mt-6 gap-3 flex flex-col items-start">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
@@ -68,7 +68,7 @@
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
 						</div>
-						<div class="flex flex-col gap-2.5">
+						<div class="gap-2.5 flex flex-col">
 							<NuxtLink
 								v-for="link of column.children"
 								:key="link.label"

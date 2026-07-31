@@ -12,7 +12,7 @@
 			@error="onError"
 		>
 			<div class="space-y-2">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Moderation Events</h3>
 				</div>
@@ -28,7 +28,7 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 				<StarFormField
 					v-for="event in ConfigurableModerationEvents"
 					:key="`form-field-${event.key}`"
@@ -45,7 +45,7 @@
 			<Separator />
 
 			<div class="space-y-2">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="heroicons:chat-bubble-left-right" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Message Events</h3>
 				</div>
@@ -61,7 +61,7 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+			<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 				<StarFormField
 					v-for="event in ConfigurableMessageEvents"
 					:key="`form-field-${event.key}`"

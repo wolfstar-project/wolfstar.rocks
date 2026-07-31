@@ -1,34 +1,34 @@
 <template>
 	<div
-		class="relative flex h-full transform-gpu flex-col rounded-xl border border-base-300/70 bg-base-100 p-2 shadow-lg transition-all duration-300 ease-out motion-reduce:transform-none motion-reduce:transition-none md:p-4"
+		class="rounded-xl border-base-300/70 bg-base-100 p-2 shadow-lg ease-out md:p-4 relative flex h-full transform-gpu flex-col border transition-all duration-300 motion-reduce:transform-none motion-reduce:transition-none"
 		:class="cardClasses"
 	>
 		<!-- Skeleton Loading State -->
 		<template v-if="loading">
 			<!-- Mobile Skeleton -->
-			<div class="flex flex-col items-center gap-2 md:hidden">
+			<div class="gap-2 md:hidden flex flex-col items-center">
 				<StarSkeleton class="h-20 w-20 rounded-xl" />
-				<StarSkeleton class="h-4 w-3/4 rounded" />
+				<StarSkeleton class="h-4 rounded w-3/4" />
 			</div>
 
 			<!-- Desktop Skeleton -->
-			<div class="hidden flex-col items-center space-y-4 md:flex">
+			<div class="space-y-4 md:flex hidden flex-col items-center">
 				<StarSkeleton class="h-20 w-20 rounded-xl" />
-				<div class="flex min-h-16 w-full flex-col justify-center space-y-2">
-					<StarSkeleton class="mx-auto h-4 w-3/4 rounded" />
-					<div class="flex items-center justify-center space-x-4">
-						<div class="flex items-center space-x-1">
+				<div class="min-h-16 space-y-2 flex w-full flex-col justify-center">
+					<StarSkeleton class="h-4 rounded mx-auto w-3/4" />
+					<div class="space-x-4 flex items-center justify-center">
+						<div class="space-x-1 flex items-center">
 							<StarSkeleton class="h-3 w-3 rounded opacity-50" />
 							<StarSkeleton class="h-3 w-8 rounded" />
 						</div>
-						<div class="flex items-center space-x-1">
+						<div class="space-x-1 flex items-center">
 							<StarSkeleton class="h-3 w-3 rounded opacity-50" />
 							<StarSkeleton class="h-3 w-8 rounded" />
 						</div>
 					</div>
 				</div>
 				<div class="w-full">
-					<StarSkeleton class="h-8 w-full rounded-lg" />
+					<StarSkeleton class="h-8 rounded-lg w-full" />
 				</div>
 			</div>
 		</template>
@@ -36,7 +36,7 @@
 		<!-- Actual Content -->
 		<template v-if="!loading && guild">
 			<!-- Mobile: Compact vertical layout (icon + name) -->
-			<div class="flex flex-col items-center gap-2 md:hidden">
+			<div class="gap-2 md:hidden flex flex-col items-center">
 				<!-- Guild Icon with action overlay -->
 				<NuxtLink
 					v-if="guild.wolfstarIsIn && guild.manageable"
@@ -46,7 +46,7 @@
 				>
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 					<div
-						class="absolute inset-0 flex items-center justify-center rounded-full bg-success/80 opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
+						class="inset-0 bg-success/80 absolute flex items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
 					>
 						<StarIcon
 							name="heroicons:adjustments-horizontal"
@@ -64,7 +64,7 @@
 				>
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 					<div
-						class="absolute inset-0 flex items-center justify-center rounded-full bg-primary/80 opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
+						class="inset-0 bg-primary/80 absolute flex items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
 					>
 						<StarIcon
 							name="heroicons:rocket-launch"
@@ -83,7 +83,7 @@
 				</div>
 				<!-- Guild Name -->
 				<span
-					class="w-full truncate text-center text-xs font-medium"
+					class="text-xs font-medium w-full truncate text-center"
 					:class="guild.manageable ? 'text-base-content' : 'text-base-content/50'"
 				>
 					{{ guild.name }}
@@ -91,7 +91,7 @@
 			</div>
 
 			<!-- Desktop: Vertical layout (original) -->
-			<div class="hidden h-full w-full flex-col items-center gap-3 text-center md:flex">
+			<div class="gap-3 md:flex hidden h-full w-full flex-col items-center text-center">
 				<div
 					class="flex flex-col items-center"
 					:class="{ 'opacity-60': !guild.manageable }"
@@ -100,15 +100,15 @@
 				</div>
 				<!-- Guild Name -->
 				<h3
-					class="line-clamp-2 min-h-12 text-base font-bold"
+					class="min-h-12 text-base font-bold line-clamp-2"
 					:class="guild.manageable ? 'text-base-content' : 'text-base-content/50'"
 				>
 					{{ guild.name }}
 				</h3>
 
 				<!-- Guild Stats -->
-				<div class="flex items-center justify-center gap-4 text-xs text-base-content/60">
-					<span class="flex items-center gap-1" title="Total members">
+				<div class="gap-4 text-xs text-base-content/60 flex items-center justify-center">
+					<span class="gap-1 flex items-center" title="Total members">
 						<StarIcon
 							name="heroicons:user-group"
 							class="size-3 text-base-content/70"
@@ -117,7 +117,7 @@
 						<span class="sr-only">Total members:</span>
 						<span>{{ approximateMemberCount }}</span>
 					</span>
-					<span class="flex items-center gap-1" title="Members online">
+					<span class="gap-1 flex items-center" title="Members online">
 						<StarIcon
 							name="heroicons:signal"
 							class="size-3 text-success"
@@ -129,16 +129,16 @@
 				</div>
 
 				<!-- Action Button -->
-				<div class="mt-auto w-full pt-2">
+				<div class="pt-2 mt-auto w-full">
 					<NuxtLink
 						v-if="guild.wolfstarIsIn && guild.manageable"
 						:to="`/guilds/${guild.id}/manage`"
-						class="flex h-9 w-full items-center justify-center rounded-lg border border-success/20 bg-success/10 px-3 text-xs font-medium text-success transition-all duration-200 hover:bg-success/20 hover:shadow-md"
+						class="h-9 rounded-lg border-success/20 bg-success/10 px-3 text-xs font-medium text-success hover:bg-success/20 hover:shadow-md flex w-full items-center justify-center border transition-all duration-200"
 						:aria-label="`Manage ${guild.name} server settings`"
 					>
 						<StarIcon
 							name="heroicons:adjustments-horizontal"
-							class="mr-1 inline size-3"
+							class="mr-1 size-3 inline"
 							aria-hidden="true"
 						/>
 						Manage Server
@@ -147,23 +147,23 @@
 						v-else-if="guild.manageable"
 						:to="guildAddURL(guild.id)"
 						external
-						class="flex h-9 w-full items-center justify-center rounded-lg border border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary transition-all duration-200 group-hover:bg-primary/20 hover:shadow-md"
+						class="h-9 rounded-lg border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary group-hover:bg-primary/20 hover:shadow-md flex w-full items-center justify-center border transition-all duration-200"
 						:aria-label="`Invite WolfStar bot to ${guild.name}`"
 					>
 						<StarIcon
 							name="heroicons:rocket-launch"
-							class="mr-1 inline size-3"
+							class="mr-1 size-3 inline"
 							aria-hidden="true"
 						/>
 						Invite Bot
 					</NuxtLink>
 					<div
 						v-else
-						class="flex h-9 w-full cursor-not-allowed items-center justify-center rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 transition-all duration-200"
+						class="h-9 rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 flex w-full cursor-not-allowed items-center justify-center transition-all duration-200"
 					>
 						<StarIcon
 							name="heroicons:no-symbol"
-							class="mr-1 inline size-3"
+							class="mr-1 size-3 inline"
 							aria-hidden="true"
 						/>
 						No Permission

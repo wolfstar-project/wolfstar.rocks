@@ -1,6 +1,6 @@
 <!-- oxlint-disable vue/valid-v-else-if -->
 <template>
-	<StarContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
+	<StarContainer class="max-w-7xl space-y-8 px-4 py-8 mx-auto">
 		<h1 class="sr-only">User Profile</h1>
 		<ProfileHeader
 			:user="user"
@@ -10,12 +10,12 @@
 		/>
 
 		<section
-			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
+			class="divide-base-200/50 rounded-xl border-base-200 bg-base-200/20 shadow-lg md:border-4 relative flex flex-col items-center justify-center divide-y overflow-hidden border-2"
 			aria-label="Account management"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
 			<div
-				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-secondary/20 md:block"
+				class="inset-y-2 left-0 w-1 rounded-r-md bg-secondary/20 md:block absolute hidden"
 				aria-hidden="true"
 			></div>
 			<StarTabs
@@ -31,15 +31,15 @@
 							<div class="mb-4">
 								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
 								<div class="mt-1 text-base-content/60">
-									<StarSkeleton v-if="isLoading" class="inline-block h-5 w-48" />
+									<StarSkeleton v-if="isLoading" class="h-5 w-48 inline-block" />
 									<span v-else>{{ guilds.length ?? 0 }} servers</span>
 								</div>
 							</div>
 
 							<!-- Search and Controls Section -->
-							<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
-								<div class="flex items-end gap-2">
-									<StarFieldGroup class="flex items-start gap-2">
+							<div class="mb-4 gap-4 flex flex-wrap items-center justify-between">
+								<div class="gap-2 flex items-end">
+									<StarFieldGroup class="gap-2 flex items-start">
 										<StarInput
 											ref="input"
 											v-model="searchQuery"
@@ -50,7 +50,7 @@
 											icon="heroicons:magnifying-glass-circle"
 											:is-loading
 											is-loading-icon="lucide:loader"
-											class="flex max-w-xs items-start"
+											class="max-w-xs flex items-start"
 										>
 											<template v-if="searchQuery?.length" #trailing>
 												<StarButton
@@ -65,7 +65,7 @@
 										</StarInput>
 									</StarFieldGroup>
 									<!-- Mobile Buttons (no view toggle) -->
-									<StarFieldGroup size="sm" class="join flex items-end sm:hidden">
+									<StarFieldGroup size="sm" class="join sm:hidden flex items-end">
 										<!-- Manageable Only Toggle Button -->
 										<StarButton
 											class="join-item"
@@ -113,7 +113,7 @@
 									</StarFieldGroup>
 
 									<!-- Desktop Buttons (with view toggle) -->
-									<StarFieldGroup size="sm" class="join hidden items-end sm:flex">
+									<StarFieldGroup size="sm" class="join sm:flex hidden items-end">
 										<!--
                     Manageable
                     Only
@@ -191,11 +191,11 @@
 							</div>
 
 							<!-- Accessibility Settings Card -->
-							<StarCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<StarCard class="border-base-200/60 bg-base-100 shadow-sm border">
 								<template #header>
-									<div class="flex items-center gap-3">
+									<div class="gap-3 flex items-center">
 										<div
-											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+											class="size-7 bg-primary/10 flex items-center justify-center rounded-full"
 										>
 											<StarIcon
 												name="heroicons:eye-20-solid"
@@ -217,10 +217,10 @@
 								<div class="space-y-4">
 									<!-- Reduce Motion Toggle -->
 									<div
-										class="flex items-center justify-between rounded-lg border border-base-300 bg-base-200/50 p-4"
+										class="rounded-lg border-base-300 bg-base-200/50 p-4 flex items-center justify-between border"
 									>
 										<div class="flex-1">
-											<div class="flex items-center gap-2">
+											<div class="gap-2 flex items-center">
 												<StarIcon
 													name="heroicons:arrows-right-left"
 													class="h-5 w-5 text-base-content/70"
@@ -245,11 +245,11 @@
 									<!-- System Preference Info -->
 									<div
 										v-if="systemPreferenceActive"
-										class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
+										class="gap-3 rounded-lg border-info/30 bg-info/10 p-4 flex items-start border"
 									>
 										<StarIcon
 											name="heroicons:information-circle"
-											class="mt-0.5 h-5 w-5 shrink-0 text-info"
+											class="mt-0.5 h-5 w-5 text-info shrink-0"
 										/>
 										<div class="text-sm">
 											<p class="font-medium text-info">
@@ -263,7 +263,7 @@
 									</div>
 
 									<!-- Motion Status Indicator -->
-									<div class="flex items-center gap-2 text-sm">
+									<div class="gap-2 text-sm flex items-center">
 										<span class="text-base-content/60">Current Status:</span>
 										<StarBadge
 											:color="effectiveReduceMotion ? 'primary' : 'neutral'"
@@ -290,11 +290,11 @@
 							</StarCard>
 
 							<!-- Privacy Settings Card -->
-							<StarCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<StarCard class="border-base-200/60 bg-base-100 shadow-sm border">
 								<template #header>
-									<div class="flex items-center gap-3">
+									<div class="gap-3 flex items-center">
 										<div
-											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+											class="size-7 bg-primary/10 flex items-center justify-center rounded-full"
 										>
 											<StarIcon
 												name="heroicons:lock-closed-20-solid"
@@ -311,11 +311,11 @@
 										</div>
 									</div>
 								</template>
-								<div class="flex flex-col items-center justify-center py-12">
+								<div class="py-12 flex flex-col items-center justify-center">
 									<div class="space-y-2 text-center">
 										<StarIcon
 											name="heroicons:sparkles"
-											class="mx-auto mb-4 size-12 text-base-content/30"
+											class="mb-4 size-12 text-base-content/30 mx-auto"
 										/>
 										<h4 class="text-xl font-semibold text-base-content/60">
 											Coming Soon
@@ -329,11 +329,11 @@
 							</StarCard>
 
 							<!-- Notifications Settings Card -->
-							<StarCard class="border border-base-200/60 bg-base-100 shadow-sm">
+							<StarCard class="border-base-200/60 bg-base-100 shadow-sm border">
 								<template #header>
-									<div class="flex items-center gap-3">
+									<div class="gap-3 flex items-center">
 										<div
-											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+											class="size-7 bg-primary/10 flex items-center justify-center rounded-full"
 										>
 											<StarIcon
 												name="heroicons:bell-20-solid"
@@ -350,11 +350,11 @@
 										</div>
 									</div>
 								</template>
-								<div class="flex flex-col items-center justify-center py-12">
+								<div class="py-12 flex flex-col items-center justify-center">
 									<div class="space-y-2 text-center">
 										<StarIcon
 											name="heroicons:sparkles"
-											class="mx-auto mb-4 size-12 text-base-content/30"
+											class="mb-4 size-12 text-base-content/30 mx-auto"
 										/>
 										<h4 class="text-xl font-semibold text-base-content/60">
 											Coming Soon

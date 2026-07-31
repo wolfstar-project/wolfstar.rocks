@@ -1,6 +1,6 @@
 <template>
 	<label
-		class="input-bordered input flex w-full items-center gap-2"
+		class="input-bordered input gap-2 flex w-full items-center"
 		:class="[inputSizeClass(size), color && isSemanticColor(color) ? `input-${color}` : '']"
 	>
 		<Icon v-if="icon" :name="icon" class="size-4 opacity-60" aria-hidden="true" />

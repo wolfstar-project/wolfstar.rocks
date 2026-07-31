@@ -11,7 +11,7 @@
 		<BuildEnvironment :footer="false" class="mt-16" />
 	</section>
 	<section
-		class="join mt-16 flex animate-fade-in-up items-center justify-center animate-fade-in-delay-2"
+		class="join mt-16 animate-fade-in-up animate-fade-in-delay-2 flex items-center justify-center"
 	>
 		<NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
 			<StarIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
@@ -22,7 +22,7 @@
 		</NuxtLink>
 	</section>
 
-	<h2 class="mt-72 animate-on-scroll text-center text-5xl font-bold">COMING SOON...</h2>
+	<h2 class="mt-72 animate-on-scroll text-5xl font-bold text-center">COMING SOON...</h2>
 
 	<OtherApps :apps="[OtherApps.WolfStar]" />
 </template>
@@ -40,8 +40,7 @@ const Invites = useInvites();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .title {
-	@apply bg-linear-to-b from-white to-branding-staryl bg-clip-text text-4xl leading-[3.05rem] font-bold text-transparent md:text-5xl md:leading-[3.8rem];
+	@apply from-white to-branding-staryl text-4xl font-bold md:text-5xl md:leading-[3.8rem] bg-linear-to-b bg-clip-text leading-[3.05rem] text-transparent;
 }
 </style>

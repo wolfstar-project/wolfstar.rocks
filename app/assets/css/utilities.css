@@ -1,58 +1,29 @@
-@utility font-whitney {
+.font-whitney {
 	font-family: "Whitney", ui-sans-serif, system-ui, sans-serif;
 }
 
-@utility container {
+.container {
 	margin-inline: auto;
 	padding-inline: 2rem;
 }
 
-@utility icon {
+.icon {
 	vertical-align: text-bottom !important;
 }
 
 /* Performance: Skip rendering of below-fold content until needed */
-@utility content-visibility-auto {
+.content-visibility-auto {
 	content-visibility: auto;
 	contain-intrinsic-size: auto 500px;
 }
 
 /* Performance: Optimize paint for fixed elements */
-@utility will-change-transform {
+.will-change-transform {
 	will-change: transform;
 }
 
-@utility prose {
-	@apply max-w-none;
-}
-
-@utility tab-* {
-	tab-size: --value(--tab-size-*);
-}
-
-/* Spectrum accent fills — drive the hero rule and card accent stripes from the
-   design system's --spectrum-* tokens (declared in main.css). */
-@utility bg-spectrum-red {
-	background-color: var(--spectrum-red);
-}
-@utility bg-spectrum-orange {
-	background-color: var(--spectrum-orange);
-}
-@utility bg-spectrum-yellow {
-	background-color: var(--spectrum-yellow);
-}
-@utility bg-spectrum-green {
-	background-color: var(--spectrum-green);
-}
-@utility bg-spectrum-blue {
-	background-color: var(--spectrum-blue);
-}
-@utility bg-spectrum-purple {
-	background-color: var(--spectrum-purple);
-}
-
-@utility shadow-glow {
-	box-shadow: var(--home-shadow-glow);
+.prose {
+	max-width: none;
 }
 
 /* =============================================================================
@@ -64,7 +35,7 @@
    Background Patterns
    ----------------------------------------------------------------------------- */
 
-@utility bg-grid-pattern {
+.bg-grid-pattern {
 	background-image:
 		linear-gradient(to right, oklch(50% 0 0 / 0.05) 1px, transparent 1px),
 		linear-gradient(to bottom, oklch(50% 0 0 / 0.05) 1px, transparent 1px);
@@ -72,13 +43,13 @@
 }
 
 /* Dot mask for patterns */
-@utility bg-dot-pattern {
+.bg-dot-pattern {
 	background-image: radial-gradient(oklch(50% 0 0 / 0.15) 1px, transparent 1px);
 	background-size: 1.5rem 1.5rem;
 }
 
 /* Fade mask for patterns */
-@utility bg-fade-pattern {
+.bg-fade-pattern {
 	mask-image: linear-gradient(to bottom, white 0%, transparent 100%);
 	-webkit-mask-image: linear-gradient(to bottom, white 0%, transparent 100%);
 }
@@ -88,7 +59,7 @@
    ----------------------------------------------------------------------------- */
 
 /* Hero gradient - vibrant pink to orange */
-@utility gradient-text-hero {
+.gradient-text-hero {
 	background: linear-gradient(
 		to bottom right,
 		oklch(100% 0 45) 0%,
@@ -101,7 +72,7 @@
 }
 
 /* Alternative: Blue to purple gradient */
-@utility gradient-text-cool {
+.gradient-text-cool {
 	background: linear-gradient(to bottom right, oklch(70% 0.2 260) 0%, oklch(65% 0.25 300) 100%);
 	background-clip: text;
 	-webkit-background-clip: text;
@@ -109,7 +80,7 @@
 }
 
 /* Shimmer animation for text */
-@utility animate-shimmer {
+.animate-shimmer {
 	animation: shimmer 3s ease-in-out infinite;
 	background-size: 200% 100%;
 }
@@ -118,7 +89,7 @@
    Button Glow Effects
    ----------------------------------------------------------------------------- */
 
-@utility btn-glow {
+.btn-glow {
 	position: relative;
 	transition: all 0.3s ease;
 
@@ -175,7 +146,7 @@
    Glassmorphism Cards
    ----------------------------------------------------------------------------- */
 
-@utility card-glass {
+.card-glass {
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 	border: 1px solid oklch(100% 0 0 / 0.1);
@@ -248,7 +219,7 @@
 	}
 }
 
-@utility card-glass-soft {
+.card-glass-soft {
 	backdrop-filter: blur(12px) saturate(150%);
 	-webkit-backdrop-filter: blur(12px) saturate(150%);
 	border-radius: var(--radius-box, 0.5rem);
@@ -259,7 +230,7 @@
 	}
 }
 
-@utility card-glass-bordered {
+.card-glass-bordered {
 	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
 	border: 1px solid oklch(100% 0 0 / 0.15);
 	border-radius: var(--radius-box, 0.5rem);
@@ -272,7 +243,7 @@
 	}
 }
 
-@utility card-glass-subtle {
+.card-glass-subtle {
 	backdrop-filter: blur(8px) saturate(120%);
 	-webkit-backdrop-filter: blur(8px) saturate(120%);
 	border-radius: var(--radius-box, 0.5rem);
@@ -284,7 +255,7 @@
 }
 
 /* Navigation panel glass — translucent backdrop for the mobile nav panel */
-@utility nav-panel-glass {
+.nav-panel-glass {
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
 	background: oklch(20% 0 0 / 0.85);
@@ -295,7 +266,7 @@
 }
 
 /* Glass effect for overlays and menus - more subtle, preserves existing background */
-@utility glass-overlay {
+.glass-overlay {
 	backdrop-filter: blur(16px) saturate(180%);
 	-webkit-backdrop-filter: blur(16px) saturate(180%);
 
@@ -306,13 +277,13 @@
 }
 
 /* Pure blur effect without background override */
-@utility glass-blur {
+.glass-blur {
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 }
 
 /* Bordered variant - add visible borders to glass effects */
-@utility glass-card-bordered {
+.glass-card-bordered {
 	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
 	border: 1px solid oklch(100% 0 0 / 0.15);
 
@@ -326,18 +297,18 @@
    Entrance Animations
    ----------------------------------------------------------------------------- */
 
-@utility animate-fade-in {
+.animate-fade-in {
 	animation: fade-in 0.6s ease-out forwards;
 }
 
-@utility animate-fade-in-up {
+.animate-fade-in-up {
 	animation: fade-in-up 0.6s ease-out forwards;
 }
 
 /* Scroll-driven reveal: animates fade-in-up tied to the element's viewport entry.
    Wrapped in @supports so browsers without scroll-driven animations show the element
    immediately (no opacity:0 stuck state). */
-@utility animate-on-scroll {
+.animate-on-scroll {
 	@supports (animation-timeline: view()) {
 		animation: fade-in-up linear both;
 		animation-timeline: view();
@@ -347,21 +318,21 @@
 
 /* LCP-safe entrance: animates transform only (no opacity), so above-the-fold
    hero text paints immediately and does not delay Largest Contentful Paint. */
-@utility animate-fade-in-up-safe {
+.animate-fade-in-up-safe {
 	animation: fade-in-up-safe 0.6s ease-out both;
 }
 
-@utility animate-fade-in-delay-1 {
+.animate-fade-in-delay-1 {
 	opacity: 0;
 	animation-delay: 0.1s;
 }
 
-@utility animate-fade-in-delay-2 {
+.animate-fade-in-delay-2 {
 	opacity: 0;
 	animation-delay: 0.2s;
 }
 
-@utility animate-fade-in-delay-3 {
+.animate-fade-in-delay-3 {
 	opacity: 0;
 	animation-delay: 0.3s;
 }
@@ -370,7 +341,7 @@
    Interactive Hover Effects
    ----------------------------------------------------------------------------- */
 
-@utility hover-lift {
+.hover-lift {
 	transition:
 		transform 0.3s ease,
 		box-shadow 0.3s ease;
@@ -386,7 +357,7 @@
 }
 
 /* Subtle scale on hover */
-@utility hover-scale {
+.hover-scale {
 	transition: transform 0.2s ease;
 
 	&:hover {
@@ -395,7 +366,7 @@
 }
 
 /* Border glow on hover */
-@utility hover-border-glow {
+.hover-border-glow {
 	transition:
 		border-color 0.3s ease,
 		box-shadow 0.3s ease;
@@ -459,60 +430,5 @@
 
 	.animate-on-scroll {
 		animation: none !important;
-	}
-}
-
-/* Former Nuxt UI semantic color utilities used across templates */
-@utility text-muted {
-	color: color-mix(in oklch, var(--color-base-content) 60%, transparent);
-}
-
-@utility text-dimmed {
-	color: color-mix(in oklch, var(--color-base-content) 40%, transparent);
-}
-
-@utility text-toned {
-	color: color-mix(in oklch, var(--color-base-content) 80%, transparent);
-}
-
-@utility text-highlighted {
-	color: var(--color-base-content);
-}
-
-@utility text-inverted {
-	color: var(--color-base-100);
-}
-
-@utility bg-default {
-	background-color: var(--color-base-100);
-}
-
-@utility bg-muted {
-	background-color: var(--color-base-200);
-}
-
-@utility bg-elevated {
-	background-color: var(--color-base-200);
-}
-
-@utility bg-accented {
-	background-color: var(--color-base-300);
-}
-
-@utility border-default {
-	border-color: var(--color-base-200);
-}
-
-@utility border-muted {
-	border-color: var(--color-base-300);
-}
-
-@utility border-accented {
-	border-color: var(--color-base-300);
-}
-
-@utility divide-accented {
-	& > :not(:last-child) {
-		border-color: var(--color-base-300);
 	}
 }

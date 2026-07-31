@@ -179,8 +179,6 @@ function scrollByStep(direction: 1 | -1) {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-scrollbar {
 	/*
 	 * Discord dark scrollbar (floating pill):
@@ -200,7 +198,7 @@ function scrollByStep(direction: 1 | -1) {
 		var(--discord-scrollbar-thumb-width) + var(--discord-scrollbar-edge-inset) + 2px
 	);
 
-	@apply grid max-h-[inherit] min-h-0 min-w-0 gap-0;
+	@apply min-h-0 min-w-0 gap-0 grid max-h-[inherit];
 	/* Collapse the track lane until content overflows (Discord short channels). */
 	grid-template-columns: minmax(0, 1fr) 0;
 }
@@ -210,11 +208,11 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-body {
-	@apply flex max-h-[inherit] min-h-0 min-w-0 flex-col;
+	@apply min-h-0 min-w-0 flex max-h-[inherit] flex-col;
 }
 
 .discord-scrollbar-viewport {
-	@apply max-h-[inherit] min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto;
+	@apply min-h-0 min-w-0 max-h-[inherit] flex-1 overflow-x-hidden overflow-y-auto;
 	scrollbar-width: none;
 	-ms-overflow-style: none;
 }
@@ -234,7 +232,7 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-track {
-	@apply relative flex min-h-0 flex-col self-stretch;
+	@apply min-h-0 relative flex flex-col self-stretch;
 	width: var(--discord-scrollbar-gutter);
 }
 
@@ -243,7 +241,7 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-thumb-rail {
-	@apply relative min-h-0 w-full flex-1;
+	@apply min-h-0 relative w-full flex-1;
 	margin-block: var(--discord-scrollbar-end-inset);
 	background-color: var(--discord-scrollbar-track);
 }
@@ -251,7 +249,7 @@ function scrollByStep(direction: 1 | -1) {
 .discord-scrollbar-thumb {
 	/* Floating pill: right-aligned with edge inset — never flush to the border.
 	   `rounded-full` is applied as a template class so the pill shape is assertable. */
-	@apply absolute top-0;
+	@apply top-0 absolute;
 	right: var(--discord-scrollbar-edge-inset);
 	width: var(--discord-scrollbar-thumb-width);
 	background-color: var(--discord-scrollbar-thumb);
@@ -275,11 +273,11 @@ function scrollByStep(direction: 1 | -1) {
 }
 
 .discord-scrollbar-arrow {
-	@apply flex size-3 shrink-0 items-center justify-center border-0 bg-transparent p-0;
+	@apply size-3 p-0 flex shrink-0 items-center justify-center border-0 bg-transparent;
 }
 
 .discord-scrollbar-arrow-icon {
-	@apply block size-0 border-x-[3px] border-x-transparent;
+	@apply size-0 block border-x-[3px] border-x-transparent;
 }
 
 .discord-scrollbar-arrow-up .discord-scrollbar-arrow-icon {

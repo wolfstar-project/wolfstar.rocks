@@ -15,7 +15,7 @@
 				<span v-if="title" class="text-lg font-bold">{{ title }}</span>
 			</slot>
 		</div>
-		<div class="navbar-center hidden lg:flex">
+		<div class="navbar-center lg:flex hidden">
 			<slot />
 		</div>
 		<div class="navbar-end gap-2">
@@ -29,7 +29,7 @@
 			@close="open = false"
 		>
 			<div class="modal-box flex max-h-[90vh] flex-col">
-				<form method="dialog" class="absolute top-2 right-2">
+				<form method="dialog" class="top-2 right-2 absolute">
 					<button
 						type="submit"
 						class="btn btn-circle btn-ghost btn-sm"

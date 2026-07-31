@@ -31,7 +31,7 @@
 
 		<StarPageBody>
 			<StarContainer>
-				<article class="prose prose-lg max-w-none space-y-12">
+				<article class="prose prose-lg space-y-12 max-w-none">
 					<!-- Terms -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
@@ -63,7 +63,7 @@
 							To view what license applies to the Service please consult their
 							respective LICENSE documents:
 						</p>
-						<ul class="list-disc space-y-2 pl-6 text-base-content">
+						<ul class="space-y-2 pl-6 text-base-content list-disc">
 							<li>
 								<NuxtLink
 									to="https://github.com/wolfstar-project/wolfstar/blob/main/LICENSE"

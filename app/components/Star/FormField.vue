@@ -1,6 +1,6 @@
 <template>
-	<div class="fieldset w-full gap-1.5">
-		<label v-if="label || $slots.label" class="label justify-start gap-1 px-0" :for="fieldId">
+	<div class="fieldset gap-1.5 w-full">
+		<label v-if="label || $slots.label" class="label gap-1 px-0 justify-start" :for="fieldId">
 			<span class="label-text font-medium">
 				<slot name="label">{{ label }}</slot>
 			</span>

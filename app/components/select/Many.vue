@@ -20,7 +20,7 @@
 				</StarSelectMenu>
 
 				<template #help>
-					<div class="flex items-center justify-between gap-2">
+					<div class="gap-2 flex items-center justify-between">
 						<StarBadge color="neutral" variant="subtle" size="sm">
 							{{ selectedValues.length }} selected
 						</StarBadge>

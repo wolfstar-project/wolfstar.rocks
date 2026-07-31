@@ -43,8 +43,6 @@ const dimension = computed(() => Dimensions[size]);
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-slash-command-app-icon {
 	--discord-slash-command-app-icon-bg: oklch(35.52% 0.0099 264.44);
 	--discord-slash-command-app-icon-glyph: oklch(73.06% 0.0048 264.53);

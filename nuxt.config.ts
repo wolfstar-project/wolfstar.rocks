@@ -1,5 +1,4 @@
 import netlifyNuxt from "@netlify/nuxt";
-import tailwindcss from "@tailwindcss/vite";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isDevelopment, isTest, provider } from "std-env";
@@ -341,7 +340,6 @@ export default defineNuxtConfig({
 	},
 
 	vite: {
-		plugins: [tailwindcss()],
 		define: {
 			"process.test": "false",
 		},

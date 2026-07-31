@@ -1,6 +1,6 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
+	<div class="divide-accented w-full flex-1 divide-y">
+		<div class="gap-2 px-4 py-3.5 flex items-center overflow-x-auto">
 			<StarInput
 				v-model="query"
 				icon="i-lucide-search"
@@ -52,7 +52,7 @@
 			/>
 			<div
 				v-if="total > page"
-				class="mt-4 flex items-center justify-between border-t border-default pt-4"
+				class="mt-4 border-default pt-4 flex items-center justify-between border-t"
 			>
 				<p class="text-sm text-muted">
 					Showing

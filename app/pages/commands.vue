@@ -1,8 +1,8 @@
 <template>
-	<StarContainer class="mx-auto max-w-7xl space-y-12 px-4 py-8">
-		<header class="mt-8 flex flex-col items-center space-y-6 text-center">
+	<StarContainer class="max-w-7xl space-y-12 px-4 py-8 mx-auto">
+		<header class="mt-8 space-y-6 flex flex-col items-center text-center">
 			<h1
-				class="text-4xl font-bold tracking-tight whitespace-nowrap text-base-content/90 md:text-5xl"
+				class="text-4xl font-bold tracking-tight text-base-content/90 md:text-5xl whitespace-nowrap"
 			>
 				WolfStar Commands
 			</h1>
@@ -16,7 +16,7 @@
 			<!-- Search bar -->
 			<section
 				aria-labelledby="search-heading"
-				class="mx-auto flex max-w-3xl flex-col items-stretch gap-4 sm:flex-row sm:items-center"
+				class="max-w-3xl gap-4 sm:flex-row sm:items-center mx-auto flex flex-col items-stretch"
 			>
 				<h2 id="search-heading" class="sr-only">Search Commands</h2>
 				<StarInput
@@ -46,12 +46,12 @@
 					color="primary"
 					variant="soft"
 					size="xl"
-					class="self-start sm:self-auto"
+					class="sm:self-auto self-start"
 					:loading="status === 'pending'"
 					aria-label="Refresh commands list"
 					@click="refresh()"
 				>
-					<span class="hidden sm:inline">Refresh</span>
+					<span class="sm:inline hidden">Refresh</span>
 				</StarButton>
 			</section>
 
@@ -70,11 +70,11 @@
 			<!-- Loading state -->
 			<div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
 				<div
-					class="flex min-h-[30rem] flex-col items-center justify-center rounded-xl border border-base-content/10 py-20 text-center"
+					class="rounded-xl border-base-content/10 py-20 flex min-h-[30rem] flex-col items-center justify-center border text-center"
 				>
 					<StarIcon
 						name="i-heroicons-arrow-path"
-						class="mx-auto mb-6 h-10 w-10 animate-spin text-base-content/40"
+						class="mb-6 h-10 w-10 animate-spin text-base-content/40 mx-auto"
 					/>
 					<p class="mb-2 text-lg font-semibold text-base-content/80">
 						Loading commands...
@@ -86,16 +86,16 @@
 			<!-- No results message -->
 			<div
 				v-else-if="commands.length === 0"
-				class="flex min-h-[30rem] flex-col items-center justify-center space-y-6 rounded-xl border border-base-content/10 py-20 text-center"
+				class="space-y-6 rounded-xl border-base-content/10 py-20 flex min-h-[30rem] flex-col items-center justify-center border text-center"
 				role="status"
 			>
 				<StarIcon
 					name="i-heroicons-exclamation-circle"
-					class="mx-auto h-12 w-12 text-base-content/30"
+					class="h-12 w-12 text-base-content/30 mx-auto"
 				/>
 				<div>
 					<h2 class="mb-3 text-2xl font-bold">No commands available</h2>
-					<p class="mx-auto max-w-md text-base-content/70">
+					<p class="max-w-md text-base-content/70 mx-auto">
 						Couldn't load commands right now. Try refreshing.
 					</p>
 				</div>
@@ -114,7 +114,7 @@
 			<section
 				v-else
 				aria-labelledby="categories-heading"
-				class="rounded-xl border border-base-content/10 bg-base-200/80 p-6 sm:p-8"
+				class="rounded-xl border-base-content/10 bg-base-200/80 p-6 sm:p-8 border"
 			>
 				<h2 id="categories-heading" class="sr-only">Command Categories</h2>
 				<LazyCommandCategory

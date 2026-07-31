@@ -3,14 +3,14 @@
 		<div v-if="$slots.top" :class="cn('w-full', ui?.top)">
 			<slot name="top" />
 		</div>
-		<div class="flex w-full flex-wrap items-center justify-between gap-4 px-4">
+		<div class="gap-4 px-4 flex w-full flex-wrap items-center justify-between">
 			<div>
 				<slot name="left" />
 			</div>
 			<div>
 				<slot />
 			</div>
-			<div class="flex items-center gap-2">
+			<div class="gap-2 flex items-center">
 				<slot name="right" />
 			</div>
 		</div>

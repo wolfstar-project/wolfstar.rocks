@@ -207,8 +207,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-channel-info {
 	--discord-channel-info-bg: oklch(26.65% 0.006 272.93);
 	--discord-channel-info-text: oklch(91.56% 0.004 272.93);
@@ -220,7 +218,7 @@ onBeforeUnmount(() => {
 	--discord-channel-info-cta-text: oklch(100% 0 0);
 	--discord-channel-info-tab-border: oklch(100% 0 0 / 0.06);
 
-	@apply absolute inset-0 z-20 flex flex-col overflow-hidden font-whitney;
+	@apply inset-0 font-whitney absolute z-20 flex flex-col overflow-hidden;
 	background-color: var(--discord-channel-info-bg);
 	color: var(--discord-channel-info-text);
 	animation: discord-channel-info-enter 180ms ease-out;
@@ -244,7 +242,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-channel-info-toolbar {
-	@apply flex shrink-0 items-center justify-between px-2 pt-2;
+	@apply px-2 pt-2 flex shrink-0 items-center justify-between;
 }
 
 .discord-channel-info-toolbar-actions {
@@ -252,7 +250,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-channel-info-toolbar-btn {
-	@apply inline-flex size-10 shrink-0 items-center justify-center border-0 bg-transparent p-0;
+	@apply size-10 p-0 inline-flex shrink-0 items-center justify-center border-0 bg-transparent;
 	color: var(--discord-channel-info-text);
 }
 
@@ -261,15 +259,15 @@ button.discord-channel-info-toolbar-btn {
 }
 
 button.discord-channel-info-toolbar-btn:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
+	@apply outline-primary outline-2 outline-offset-2;
 }
 
 .discord-channel-info-identity {
-	@apply flex shrink-0 items-center gap-3 px-4 pt-3 pb-4;
+	@apply gap-3 px-4 pt-3 pb-4 flex shrink-0 items-center;
 }
 
 .discord-channel-info-channel-icon {
-	@apply flex size-12 shrink-0 items-center justify-center rounded-2xl;
+	@apply size-12 rounded-2xl flex shrink-0 items-center justify-center;
 	background-color: var(--discord-channel-info-icon-bg);
 	color: var(--discord-channel-info-text);
 }
@@ -279,7 +277,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-name {
-	@apply truncate text-xl leading-tight font-semibold;
+	@apply text-xl leading-tight font-semibold truncate;
 	color: var(--discord-channel-info-text);
 }
 
@@ -289,7 +287,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-tabs {
-	@apply flex shrink-0 gap-5 overflow-x-auto border-b px-4;
+	@apply gap-5 px-4 flex shrink-0 overflow-x-auto border-b;
 	border-color: var(--discord-channel-info-tab-border);
 	scrollbar-width: none;
 }
@@ -299,7 +297,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-tab {
-	@apply relative shrink-0 border-0 bg-transparent px-0 pt-1 pb-3 font-whitney text-sm font-medium;
+	@apply px-0 pt-1 pb-3 font-whitney text-sm font-medium relative shrink-0 border-0 bg-transparent;
 	color: var(--discord-channel-info-muted);
 	cursor: pointer;
 }
@@ -310,12 +308,12 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 
 .discord-channel-info-tab-active::after {
 	content: "";
-	@apply absolute inset-x-0 bottom-0 h-0.5 rounded-full;
+	@apply inset-x-0 bottom-0 h-0.5 absolute rounded-full;
 	background-color: var(--discord-channel-info-accent);
 }
 
 .discord-channel-info-tab:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
+	@apply outline-primary outline-2 outline-offset-2;
 }
 
 .discord-channel-info-panel {
@@ -323,7 +321,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-members {
-	@apply h-full min-h-0 w-full border-0;
+	@apply min-h-0 h-full w-full border-0;
 }
 
 .discord-channel-info :deep(.discord-channel-info-members.discord-member-list) {
@@ -340,7 +338,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-empty {
-	@apply flex h-full min-h-0 flex-col items-center justify-center px-8 text-center;
+	@apply min-h-0 px-8 flex h-full flex-col items-center justify-center text-center;
 }
 
 .discord-channel-info-empty-search {
@@ -353,7 +351,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-empty-icon {
-	@apply mb-1 flex size-16 items-center justify-center rounded-full;
+	@apply mb-1 size-16 flex items-center justify-center rounded-full;
 	background-color: var(--discord-channel-info-empty-icon-bg);
 	color: var(--discord-channel-info-text);
 }
@@ -369,7 +367,7 @@ button.discord-channel-info-toolbar-btn:focus-visible {
 }
 
 .discord-channel-info-create-thread {
-	@apply mt-2 rounded-full border-0 px-5 py-2.5 font-whitney text-sm font-medium;
+	@apply mt-2 px-5 py-2.5 font-whitney text-sm font-medium rounded-full border-0;
 	background-color: var(--discord-channel-info-cta);
 	color: var(--discord-channel-info-cta-text);
 	cursor: default;

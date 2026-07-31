@@ -1,5 +1,5 @@
 <template>
-	<div :class="cn('grid gap-8', ui?.root ?? 'lg:grid-cols-12')">
+	<div :class="cn('gap-8 grid', ui?.root ?? 'lg:grid-cols-12')">
 		<div :class="ui?.center ?? 'lg:col-span-9'">
 			<slot />
 		</div>

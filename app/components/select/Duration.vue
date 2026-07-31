@@ -1,6 +1,6 @@
 <template>
-	<div class="mb-3 flex flex-col gap-1">
-		<div class="flex flex-wrap items-start gap-2">
+	<div class="mb-3 gap-1 flex flex-col">
+		<div class="gap-2 flex flex-wrap items-start">
 			<StarFormField :error="error || undefined">
 				<StarInput
 					v-model="durationString"

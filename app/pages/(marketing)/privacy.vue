@@ -31,7 +31,7 @@
 
 		<StarPageBody>
 			<StarContainer>
-				<article class="prose prose-lg max-w-none space-y-12">
+				<article class="prose prose-lg space-y-12 max-w-none">
 					<!-- Welcome Section -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
@@ -105,9 +105,9 @@
 							for the site's functionality. We do not use third-party advertising
 							cookies.
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-3 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">h3 (Session Cookie):</span> This is
 									our secure session cookie. It stores the OAuth access token when
@@ -116,8 +116,8 @@
 									and encrypted for your security.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Sentry (error monitoring):</span>
 									Sentry may set first‑party cookies or use local storage to
@@ -127,8 +127,8 @@
 									possible.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold"
 										>Hosting provider cookies (Netlify):</span
@@ -172,9 +172,9 @@
 							Below are links with instructions for cookie management in the most
 							commonly used browsers:
 						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-2 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<NuxtLink
 									to="https://support.google.com/chrome/answer/95647?hl=en"
 									target="_blank"
@@ -183,8 +183,8 @@
 									Google Chrome
 								</NuxtLink>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<NuxtLink
 									to="https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox"
 									target="_blank"
@@ -193,8 +193,8 @@
 									Mozilla Firefox
 								</NuxtLink>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<NuxtLink
 									to="https://support.microsoft.com/en-us/windows/manage-cookies-in-microsoft-edge-168dab11-0753-043d-7c16-ede5947fc64d"
 									target="_blank"
@@ -203,8 +203,8 @@
 									Microsoft Edge
 								</NuxtLink>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<NuxtLink
 									to="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac"
 									target="_blank"
@@ -228,25 +228,25 @@
 						<p class="mb-3 leading-relaxed text-base-content">
 							Netlify Analytics is designed with privacy in mind:
 						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-2 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>It does not use cookies</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>It does not collect personal identifiers</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>It does not track users across websites</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>All data is aggregated and anonymised</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Data is collected server-side, not from your browser</span>
 							</li>
 						</ul>
@@ -271,29 +271,29 @@
 						<p class="mb-3 leading-relaxed text-base-content">
 							Sentry may collect the following information when errors occur:
 						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-2 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Error messages and stack traces</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Browser type and version</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Operating system</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>IP address (anonymized)</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Page URL where the error occurred</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span
 									>Session replay data (for 10% of sessions and 100% of sessions
 									with errors)</span
@@ -328,21 +328,21 @@
 						<p class="mb-3 leading-relaxed text-base-content">
 							The information we collect from Discord includes:
 						</p>
-						<ul class="list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-2 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Discord User ID</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Username and discriminator</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Avatar</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>List of guilds (servers) where you have permissions</span>
 							</li>
 						</ul>
@@ -363,9 +363,9 @@
 							When you interact with us through the Services, we automatically receive
 							and store certain information to provide and improve our services:
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-3 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">IP Address:</span> Used for
 									security, rate limiting, and general location (country/region)
@@ -373,16 +373,16 @@
 									error tracking.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Device Information:</span> Browser
 									type, operating system, device type, and screen resolution to
 									optimize the user experience and identify compatibility issues.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Usage Data:</span> Pages visited,
 									time spent on pages, referrer URLs, and interaction patterns to
@@ -390,8 +390,8 @@
 									functionality.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Bot Interactions:</span> When using
 									the Discord bot, we may collect message content, command usage,
@@ -456,9 +456,9 @@
 							legal ground they rely on to use or disclose your personal data. To the
 							extent those laws apply, our legal grounds are as follows:
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-3 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									Users have given their consent for one or more specific
 									purposes. Note: Under some legislations the Owner may be allowed
@@ -469,31 +469,31 @@
 									European data protection law.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									Provision of Data is necessary for the performance of an
 									agreement with the User and/or for any pre-contractual
 									obligations thereof.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									Processing is necessary for compliance with a legal obligation
 									to which the Owner is subject.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									Processing is related to a task that is carried out in the
 									public interest or in the exercise of official authority vested
 									in the Owner.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									Processing is necessary for the purposes of the legitimate
 									interests pursued by the Owner or by a third party.
@@ -519,16 +519,16 @@
 							you. There are, however, certain circumstances in which we may share
 							your information with certain third parties, as set forth below:
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-3 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold text-base-content">Consent</span>: We
 									may transfer your information with your consent.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold text-base-content"
 										>Consultants and outside collaborators</span
@@ -541,8 +541,8 @@
 									full data and any data will always be anonymized where required.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold text-base-content"
 										>Legal Requirements</span
@@ -621,49 +621,49 @@
 							We retain different types of data for different periods, based on the
 							purpose of collection and legal requirements:
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="space-y-3 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Session Cookies:</span>
 									Automatically deleted when you close your browser or after a
 									period of inactivity (typically 7 days).
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Local Storage Preferences:</span>
 									Remain on your device until you clear your browser data or
 									manually reset preferences.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Analytics Data:</span> Retained in
 									aggregate form by Netlify and cannot be linked to individual
 									users. Retained according to Netlify's data retention policy.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Error Tracking Data:</span> Retained
 									by Sentry for up to 90 days for debugging purposes, then
 									automatically deleted.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">User Account Data:</span> Retained
 									while your account is active and for a reasonable period after
 									account deletion to comply with legal obligations.
 								</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>
 									<span class="font-semibold">Backups:</span> Database backups are
 									created regularly and automatically deleted after 7 days (168
@@ -705,29 +705,29 @@
 							available to all users, regardless of their location.
 						</p>
 						<p class="mb-4 leading-relaxed text-base-content">You have the right to:</p>
-						<ul class="mb-4 list-none space-y-2 pl-0 text-base-content">
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+						<ul class="mb-4 space-y-2 pl-0 text-base-content list-none">
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Access information about what data we collect</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Clear your local storage and cookies at any time</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Disconnect your authenticated session</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Request deletion of your personal data</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Request a copy of your data</span>
 							</li>
-							<li class="flex items-start gap-3 leading-relaxed">
-								<span class="shrink-0 text-base-content/50">&mdash;</span>
+							<li class="gap-3 leading-relaxed flex items-start">
+								<span class="text-base-content/50 shrink-0">&mdash;</span>
 								<span>Request information about our data practices</span>
 							</li>
 						</ul>
@@ -743,7 +743,7 @@
 							not have retroactive effect. They also will not affect our ability to
 							continue processing data in lawful ways.
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
+						<ul class="space-y-3 pl-0 text-base-content list-none">
 							<li class="text-base font-semibold text-base-content">
 								How can I access the personal data you have about me?
 							</li>
@@ -760,7 +760,7 @@
 							access the personal data the Services has on you within 30 standard
 							working days.
 						</p>
-						<ul class="list-none space-y-3 pl-0 text-base-content">
+						<ul class="space-y-3 pl-0 text-base-content list-none">
 							<li class="text-base font-semibold text-base-content">
 								How do I correct, update, amend, or delete the personal data you
 								have about me?

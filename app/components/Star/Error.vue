@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-col items-center justify-center gap-4 py-16 text-center" role="alert">
+	<div class="gap-4 py-16 flex flex-col items-center justify-center text-center" role="alert">
 		<p class="text-6xl font-bold text-muted">{{ statusCode }}</p>
 		<h1 class="text-2xl font-semibold">{{ statusMessage }}</h1>
 		<p v-if="message" class="max-w-lg text-muted">{{ message }}</p>

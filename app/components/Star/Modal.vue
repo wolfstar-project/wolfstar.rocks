@@ -4,15 +4,15 @@
 			<slot />
 		</DialogTrigger>
 		<DialogPortal>
-			<DialogOverlay class="fixed inset-0 z-50 bg-base-300/60" />
+			<DialogOverlay class="inset-0 bg-base-300/60 fixed z-50" />
 			<DialogContent
-				class="modal-open modal fixed inset-0 z-50 flex items-center justify-center p-4"
+				class="modal-open modal inset-0 p-4 fixed z-50 flex items-center justify-center"
 				:aria-describedby="description ? undefined : undefined"
 				@escape-key-down="onDismiss"
 				@pointer-down-outside="onDismiss"
 				@interact-outside="onDismiss"
 			>
-				<div class="modal-box max-h-[90vh] w-full max-w-lg overflow-y-auto">
+				<div class="modal-box max-w-lg max-h-[90vh] w-full overflow-y-auto">
 					<slot name="content">
 						<slot name="header">
 							<DialogTitle v-if="title" class="text-lg font-bold">{{
@@ -31,7 +31,7 @@
 					</slot>
 					<DialogClose
 						v-if="dismissible !== false"
-						class="btn absolute top-2 right-2 btn-circle btn-ghost btn-sm"
+						class="btn top-2 right-2 btn-circle btn-ghost btn-sm absolute"
 						aria-label="Close"
 					>
 						<Icon name="lucide:x" class="size-4" />

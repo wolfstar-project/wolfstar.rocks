@@ -1,7 +1,7 @@
 <template>
 	<div v-if="visible" style="view-transition-name: pwa-update-prompt">
 		<div
-			class="flex items-center gap-3 rounded-full bg-base-200 px-4 py-3 shadow-lg ring-1 ring-base-100"
+			class="gap-3 bg-base-200 px-4 py-3 shadow-lg ring-base-100 flex items-center rounded-full ring-1"
 		>
 			<span class="text-lg">✨</span>
 			<div class="text-sm font-medium">Update available</div>

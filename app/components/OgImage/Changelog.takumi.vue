@@ -21,7 +21,7 @@
 			<!-- Title + Description -->
 			<div class="flex w-full flex-col items-start">
 				<h1
-					class="m-0 font-mono text-[80px] leading-none font-extrabold tracking-tight"
+					class="m-0 font-mono font-extrabold tracking-tight text-[80px] leading-none"
 					style="display: block; text-overflow: ellipsis"
 					:style="{ lineClamp: description ? 2 : 3 }"
 				>
@@ -29,7 +29,7 @@
 				</h1>
 				<p
 					v-if="description"
-					class="mt-6 text-[36px] leading-12 font-semibold tracking-wide"
+					class="mt-6 leading-12 font-semibold tracking-wide text-[36px]"
 					:class="[colorMode === 'light' ? ['text-gray-600'] : ['text-white/75']]"
 					style="display: block; text-overflow: ellipsis"
 					:style="{ lineClamp: 2 }"

@@ -4,7 +4,7 @@
 		<template v-if="loading">
 			<!-- Command Usage Skeleton -->
 			<section class="space-y-3">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarSkeleton class="h-5 w-5" />
 					<StarSkeleton class="h-6 w-32" />
 				</div>
@@ -16,7 +16,7 @@
 
 			<!-- Extended Help Skeleton -->
 			<section class="space-y-3">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarSkeleton class="h-5 w-5" />
 					<StarSkeleton class="h-6 w-36" />
 				</div>
@@ -29,7 +29,7 @@
 
 			<!-- Explained Usage Skeleton -->
 			<section class="space-y-3">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarSkeleton class="h-5 w-5" />
 					<StarSkeleton class="h-6 w-40" />
 				</div>
@@ -42,7 +42,7 @@
 
 			<!-- Examples Skeleton -->
 			<section class="space-y-3">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarSkeleton class="h-5 w-5" />
 					<StarSkeleton class="h-6 w-28" />
 				</div>
@@ -53,7 +53,7 @@
 			</section>
 
 			<!-- Chips Skeleton -->
-			<div class="flex flex-wrap gap-2">
+			<div class="gap-2 flex flex-wrap">
 				<StarSkeleton class="h-7 w-20" />
 				<StarSkeleton class="h-7 w-24" />
 				<StarSkeleton class="h-7 w-16" />
@@ -64,8 +64,8 @@
 		<template v-else>
 			<!-- Command Usage -->
 			<section v-if="command.extendedHelp.usages?.length" class="space-y-4">
-				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
+				<h3 class="gap-3 text-lg font-bold flex items-center">
+					<div class="size-8 bg-primary/30 flex items-center justify-center rounded-full">
 						<StarIcon
 							name="i-heroicons-pencil-square"
 							class="size-5 text-primary"
@@ -79,7 +79,7 @@
 						v-for="(usage, idx) in command.extendedHelp.usages"
 						:key="idx"
 						role="listitem"
-						class="block rounded-xl border border-base-content/10 bg-base-300/70 px-5 py-4 font-mono text-sm text-base-content transition-all"
+						class="rounded-xl border-base-content/10 bg-base-300/70 px-5 py-4 font-mono text-sm text-base-content block border transition-all"
 					>
 						<span class="text-primary">WolfStar</span>,
 						<span class="text-primary/80">{{ command.name }}</span>
@@ -90,8 +90,8 @@
 
 			<!-- Extended Help -->
 			<section v-if="command.extendedHelp.extendedHelp" class="space-y-4">
-				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
+				<h3 class="gap-3 text-lg font-bold flex items-center">
+					<div class="size-8 bg-primary/30 flex items-center justify-center rounded-full">
 						<StarIcon
 							name="i-heroicons-question-mark-circle"
 							class="size-5 text-primary"
@@ -100,8 +100,8 @@
 					</div>
 					<span>Extended Help</span>
 				</h3>
-				<div class="rounded-xl border border-base-content/10 bg-base-200/30 px-5 py-4">
-					<div class="prose max-w-none dark:prose-invert prose-p:leading-relaxed">
+				<div class="rounded-xl border-base-content/10 bg-base-200/30 px-5 py-4 border">
+					<div class="prose dark:prose-invert prose-p:leading-relaxed max-w-none">
 						<div
 							class="text-base leading-7 whitespace-pre-line"
 							v-html="
@@ -116,8 +116,8 @@
 
 			<!-- Explained Usage -->
 			<section v-if="command.extendedHelp.explainedUsage?.length" class="space-y-4">
-				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
+				<h3 class="gap-3 text-lg font-bold flex items-center">
+					<div class="size-8 bg-primary/30 flex items-center justify-center rounded-full">
 						<StarIcon
 							name="i-heroicons-code-bracket"
 							class="size-5 text-primary"
@@ -130,13 +130,13 @@
 					<div
 						v-for="([arg, desc], idx) in command.extendedHelp.explainedUsage"
 						:key="idx"
-						class="rounded-r-xl border-l-4 border-primary/50 bg-primary/5 py-3 pr-4 pl-5 transition-all"
+						class="rounded-r-xl border-primary/50 bg-primary/5 py-3 pr-4 pl-5 border-l-4 transition-all"
 					>
 						<dt class="mb-1 text-base font-semibold text-primary">
 							{{ arg }}
 						</dt>
 						<dd
-							class="prose max-w-none text-sm leading-relaxed text-base-content/80 dark:prose-invert prose-p:m-0"
+							class="prose text-sm leading-relaxed text-base-content/80 dark:prose-invert prose-p:m-0 max-w-none"
 						>
 							<div v-html="sanitizeAndFormat(resolveMultilineString(desc))"></div>
 						</dd>
@@ -146,8 +146,8 @@
 
 			<!-- Possible Formats -->
 			<section v-if="command.extendedHelp.possibleFormats?.length" class="space-y-4">
-				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
+				<h3 class="gap-3 text-lg font-bold flex items-center">
+					<div class="size-8 bg-primary/30 flex items-center justify-center rounded-full">
 						<StarIcon
 							name="i-heroicons-paint-brush"
 							class="size-5 text-primary"
@@ -160,7 +160,7 @@
 					<div
 						v-for="([type, example], idx) in command.extendedHelp.possibleFormats"
 						:key="idx"
-						class="rounded-r-xl border-l-4 border-primary/50 bg-primary/5 py-3 pr-4 pl-5 transition-all"
+						class="rounded-r-xl border-primary/50 bg-primary/5 py-3 pr-4 pl-5 border-l-4 transition-all"
 					>
 						<dt class="mb-1 text-base font-semibold text-primary">
 							{{ type }}
@@ -174,8 +174,8 @@
 
 			<!-- Examples -->
 			<section v-if="command.extendedHelp.examples?.length" class="space-y-4">
-				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
+				<h3 class="gap-3 text-lg font-bold flex items-center">
+					<div class="size-8 bg-primary/30 flex items-center justify-center rounded-full">
 						<StarIcon
 							name="i-heroicons-light-bulb"
 							class="size-5 text-primary"
@@ -188,11 +188,11 @@
 					<li
 						v-for="(example, idx) in command.extendedHelp.examples"
 						:key="idx"
-						class="flex items-start gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm transition-all"
+						class="gap-3 rounded-xl border-primary/20 bg-primary/5 p-4 text-sm flex items-start border transition-all"
 					>
 						<StarIcon
 							name="i-heroicons-arrow-right"
-							class="mt-0.5 h-4 w-4 shrink-0 text-primary/70"
+							class="mt-0.5 h-4 w-4 text-primary/70 shrink-0"
 							aria-hidden="true"
 						/>
 						<span class="font-mono">
@@ -206,8 +206,8 @@
 
 			<!-- Reminder -->
 			<section v-if="command.extendedHelp.reminder" class="space-y-4">
-				<h3 class="flex items-center gap-3 text-lg font-bold">
-					<div class="flex size-8 items-center justify-center rounded-full bg-primary/30">
+				<h3 class="gap-3 text-lg font-bold flex items-center">
+					<div class="size-8 bg-primary/30 flex items-center justify-center rounded-full">
 						<StarIcon
 							name="i-heroicons-bell-alert"
 							class="size-5 text-primary"
@@ -216,9 +216,9 @@
 					</div>
 					<span>Reminder</span>
 				</h3>
-				<div class="rounded-xl border border-primary/20 bg-primary/5 p-5 transition-all">
+				<div class="rounded-xl border-primary/20 bg-primary/5 p-5 border transition-all">
 					<div
-						class="prose max-w-none text-sm leading-relaxed text-base-content/90 dark:prose-invert prose-p:m-0"
+						class="prose text-sm leading-relaxed text-base-content/90 dark:prose-invert prose-p:m-0 max-w-none"
 						v-html="sanitizeAndFormat(command.extendedHelp.reminder)"
 					></div>
 				</div>

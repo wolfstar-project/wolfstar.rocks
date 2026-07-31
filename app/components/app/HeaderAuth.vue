@@ -15,7 +15,7 @@
 					}"
 				>
 					<div
-						class="flex cursor-pointer items-center gap-2"
+						class="gap-2 flex cursor-pointer items-center"
 						:class="mobile ? 'w-full' : undefined"
 						role="button"
 						aria-label="User menu"
@@ -30,7 +30,7 @@
 						/>
 						<span
 							class="font-semibold"
-							:class="mobile ? 'inline' : 'hidden sm:inline'"
+							:class="mobile ? 'inline' : 'sm:inline hidden'"
 							>{{ user.name }}</span
 						>
 					</div>
@@ -43,20 +43,20 @@
 					color="primary"
 					variant="subtle"
 					to="/login"
-					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
+					:class="mobile ? 'rounded-lg' : 'rounded-lg md:inline-flex hidden'"
 					icon="ic:round-discord"
 					aria-label="Sign in with Discord"
 				/>
 			</div>
 		</template>
 		<template #placeholder>
-			<div class="flex items-center gap-2" :class="mobile ? 'justify-center' : undefined">
+			<div class="gap-2 flex items-center" :class="mobile ? 'justify-center' : undefined">
 				<template v-if="mobile">
 					<StarSkeleton class="h-10 w-36 rounded-lg" />
 				</template>
 				<template v-else>
 					<StarSkeleton class="size-6 rounded-full" />
-					<StarSkeleton class="hidden h-4 w-16 sm:block" />
+					<StarSkeleton class="h-4 w-16 sm:block hidden" />
 				</template>
 			</div>
 		</template>

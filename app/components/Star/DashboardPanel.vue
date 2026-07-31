@@ -1,5 +1,5 @@
 <template>
-	<div class="flex min-h-0 min-w-0 flex-1 flex-col">
+	<div class="min-h-0 min-w-0 flex flex-1 flex-col">
 		<header v-if="$slots.header" class="shrink-0">
 			<slot name="header" />
 		</header>

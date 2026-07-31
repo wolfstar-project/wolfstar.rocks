@@ -5,18 +5,18 @@
 		</DropdownMenuTrigger>
 		<DropdownMenuPortal>
 			<DropdownMenuContent
-				class="z-50 min-w-48 rounded-md border border-base-200 bg-base-100 p-1 shadow-lg"
+				class="min-w-48 rounded-md border-base-200 bg-base-100 p-1 shadow-lg z-50 border"
 				:align="content?.align ?? 'start'"
 				:collision-padding="content?.collisionPadding ?? 8"
 				:side="content?.side ?? 'bottom'"
 				:side-offset="content?.sideOffset ?? 4"
 			>
 				<template v-for="(group, groupIndex) in normalizedGroups" :key="groupIndex">
-					<DropdownMenuSeparator v-if="groupIndex > 0" class="my-1 h-px bg-base-200" />
+					<DropdownMenuSeparator v-if="groupIndex > 0" class="my-1 bg-base-200 h-px" />
 					<template v-for="(item, itemIndex) in group" :key="itemIndex">
 						<DropdownMenuLabel
 							v-if="item.type === 'label'"
-							class="flex items-center gap-2 px-2 py-1.5 text-sm font-semibold"
+							class="gap-2 px-2 py-1.5 text-sm font-semibold flex items-center"
 						>
 							<StarAvatar v-if="item.avatar" v-bind="item.avatar" size="xs" />
 							<Icon v-else-if="item.icon" :name="item.icon" class="size-4" />
@@ -24,25 +24,25 @@
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator
 							v-else-if="item.type === 'separator'"
-							class="my-1 h-px bg-base-200"
+							class="my-1 bg-base-200 h-px"
 						/>
 						<DropdownMenuSub v-else-if="item.children?.length">
 							<DropdownMenuSubTrigger
-								class="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-base-200"
+								class="gap-2 rounded-sm px-2 py-1.5 text-sm data-[highlighted]:bg-base-200 flex cursor-pointer items-center outline-none"
 								:disabled="item.disabled"
 							>
 								<Icon v-if="item.icon" :name="item.icon" class="size-4" />
 								{{ item.label }}
-								<Icon name="lucide:chevron-right" class="ms-auto size-4" />
+								<Icon name="lucide:chevron-right" class="size-4 ms-auto" />
 							</DropdownMenuSubTrigger>
 							<DropdownMenuPortal>
 								<DropdownMenuSubContent
-									class="z-50 min-w-40 rounded-md border border-base-200 bg-base-100 p-1 shadow-lg"
+									class="min-w-40 rounded-md border-base-200 bg-base-100 p-1 shadow-lg z-50 border"
 								>
 									<DropdownMenuItem
 										v-for="(child, childIndex) in item.children"
 										:key="childIndex"
-										class="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-base-200"
+										class="gap-2 rounded-sm px-2 py-1.5 text-sm data-[highlighted]:bg-base-200 flex cursor-pointer items-center outline-none"
 										:disabled="child.disabled"
 										@select="onSelect(child, $event)"
 									>
@@ -51,7 +51,7 @@
 											v-if="child.to || child.href"
 											:to="child.to ?? child.href"
 											:target="child.target"
-											class="flex flex-1 items-center gap-2"
+											class="gap-2 flex flex-1 items-center"
 										>
 											{{ child.label }}
 										</NuxtLink>
@@ -62,7 +62,7 @@
 						</DropdownMenuSub>
 						<DropdownMenuItem
 							v-else
-							class="flex cursor-pointer items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-base-200"
+							class="gap-2 rounded-sm px-2 py-1.5 text-sm data-[highlighted]:bg-base-200 flex cursor-pointer items-center outline-none"
 							:disabled="item.disabled"
 							@select="onSelect(item, $event)"
 						>
@@ -72,14 +72,14 @@
 								<NuxtLink
 									:to="item.to ?? item.href"
 									:target="item.target"
-									class="flex flex-1 items-center gap-2"
+									class="gap-2 flex flex-1 items-center"
 									@click.stop
 								>
 									{{ item.label }}
 								</NuxtLink>
 							</template>
 							<span v-else class="flex-1">{{ item.label }}</span>
-							<span v-if="item.kbds?.length" class="ms-auto text-xs opacity-60">
+							<span v-if="item.kbds?.length" class="text-xs ms-auto opacity-60">
 								{{ item.kbds.join(" ") }}
 							</span>
 						</DropdownMenuItem>

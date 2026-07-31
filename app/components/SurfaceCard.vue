@@ -2,7 +2,7 @@
 	<component :is="tag" :class="rootClass">
 		<span
 			v-if="accent"
-			:class="cn('absolute inset-x-0 top-0 h-0.75', homeAccentClass(accent))"
+			:class="cn('inset-x-0 top-0 h-0.75 absolute', homeAccentClass(accent))"
 			aria-hidden="true"
 		></span>
 		<slot />
@@ -27,7 +27,7 @@ const {
 
 const rootClass = computed(() =>
 	cn(
-		"home-surface-card relative overflow-hidden rounded-xl",
+		"home-surface-card rounded-xl relative overflow-hidden",
 		padding === "lg" ? "p-8" : padding === "none" ? "p-0" : "p-6",
 		className ?? surfaceClass,
 	),
@@ -35,8 +35,6 @@ const rootClass = computed(() =>
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .home-surface-card {
 	background-color: var(--color-base-300);
 	border: 1px solid var(--home-border-subtle);

@@ -1,9 +1,9 @@
 <template>
-	<nav v-if="prev || next" class="mt-8 grid gap-4 sm:grid-cols-2" aria-label="Surrounding pages">
+	<nav v-if="prev || next" class="mt-8 gap-4 sm:grid-cols-2 grid" aria-label="Surrounding pages">
 		<NuxtLink
 			v-if="prev"
 			:to="prev.path ?? prev.to"
-			class="card border border-base-200 bg-base-200/40 p-4 transition-colors hover:bg-base-200"
+			class="card border-base-200 bg-base-200/40 p-4 hover:bg-base-200 border transition-colors"
 		>
 			<p class="text-xs text-muted">Previous</p>
 			<p class="font-medium">{{ prev.title }}</p>
@@ -11,7 +11,7 @@
 		<NuxtLink
 			v-if="next"
 			:to="next.path ?? next.to"
-			class="card border border-base-200 bg-base-200/40 p-4 text-end transition-colors hover:bg-base-200 sm:col-start-2"
+			class="card border-base-200 bg-base-200/40 p-4 hover:bg-base-200 sm:col-start-2 border text-end transition-colors"
 		>
 			<p class="text-xs text-muted">Next</p>
 			<p class="font-medium">{{ next.title }}</p>

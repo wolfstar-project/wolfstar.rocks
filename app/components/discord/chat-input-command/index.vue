@@ -73,8 +73,6 @@ const ariaLabel = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-slash-command-composed {
 	--discord-slash-command-composed-name: oklch(100% 0 0);
 	--discord-slash-command-option-name: oklch(73.06% 0.0048 264.53);
@@ -82,7 +80,7 @@ const ariaLabel = computed(() => {
 	--discord-slash-command-option-focused: oklch(57.7% 0.209 273.88 / 0.35);
 	--discord-slash-command-option-placeholder: oklch(59.38% 0.0075 264.51);
 
-	@apply inline font-whitney text-sm whitespace-nowrap;
+	@apply font-whitney text-sm inline whitespace-nowrap;
 }
 
 .discord-slash-command-composed-name,

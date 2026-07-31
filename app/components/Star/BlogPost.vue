@@ -3,8 +3,8 @@
 		:to="to"
 		:class="
 			cn(
-				'card overflow-hidden transition-shadow hover:shadow-md',
-				variant === 'outline' ? 'border border-base-300 bg-transparent' : 'bg-base-200',
+				'card hover:shadow-md overflow-hidden transition-shadow',
+				variant === 'outline' ? 'border-base-300 border bg-transparent' : 'bg-base-200',
 				orientation === 'horizontal' ? 'md:card-side' : '',
 			)
 		"
@@ -24,9 +24,9 @@
 			</div>
 			<h2 class="card-title text-lg">{{ title }}</h2>
 			<p v-if="description" class="text-sm text-muted">{{ description }}</p>
-			<div class="mt-auto flex flex-wrap items-center gap-3 pt-2 text-sm text-muted">
+			<div class="gap-3 pt-2 text-sm text-muted mt-auto flex flex-wrap items-center">
 				<span v-if="date">{{ date }}</span>
-				<div v-if="authors?.length" class="flex flex-wrap gap-2">
+				<div v-if="authors?.length" class="gap-2 flex flex-wrap">
 					<StarUser
 						v-for="(author, index) in authors"
 						:key="index"

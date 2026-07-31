@@ -75,8 +75,6 @@ const ariaLabel = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-slash-command-suggestion {
 	/* Hover/active match Discord charcoal picker rows. */
 	--discord-slash-command-suggestion-hover: oklch(33.68% 0.0092 268.39);
@@ -85,7 +83,7 @@ const ariaLabel = computed(() => {
 	--discord-slash-command-suggestion-description: oklch(78.71% 0.0114 256.71);
 	--discord-slash-command-suggestion-app: oklch(78.71% 0.0114 256.71);
 
-	@apply grid min-h-12 cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 rounded-md px-2 py-1.5 max-md:items-start max-md:gap-x-2.5 max-md:gap-y-0 max-md:py-2;
+	@apply min-h-12 gap-3 rounded-md px-2 py-1.5 max-md:items-start max-md:gap-x-2.5 max-md:gap-y-0 max-md:py-2 grid cursor-pointer grid-cols-[auto_minmax(0,1fr)_auto] items-center;
 }
 
 .discord-slash-command-suggestion:not(.discord-slash-command-suggestion-disabled):hover,
@@ -102,15 +100,15 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-avatar {
-	@apply shrink-0 max-md:mt-0.5;
+	@apply max-md:mt-0.5 shrink-0;
 }
 
 .discord-slash-command-suggestion-content {
-	@apply flex min-w-0 flex-col gap-0.5 max-md:gap-0;
+	@apply min-w-0 gap-0.5 max-md:gap-0 flex flex-col;
 }
 
 .discord-slash-command-suggestion-name {
-	@apply font-whitney text-[15px] leading-tight font-semibold;
+	@apply font-whitney leading-tight font-semibold text-[15px];
 	color: var(--discord-slash-command-suggestion-name);
 }
 
@@ -120,12 +118,12 @@ const ariaLabel = computed(() => {
 }
 
 .discord-slash-command-suggestion-description {
-	@apply truncate font-whitney text-[13px] leading-snug;
+	@apply font-whitney leading-snug truncate text-[13px];
 	color: var(--discord-slash-command-suggestion-description);
 }
 
 .discord-slash-command-suggestion-app {
-	@apply shrink-0 font-whitney text-[13px] max-md:self-start max-md:pt-0.5 max-md:text-[11px] max-md:leading-tight max-md:font-bold max-md:tracking-wide max-md:uppercase;
+	@apply font-whitney max-md:self-start max-md:pt-0.5 max-md:text-[11px] max-md:leading-tight max-md:font-bold max-md:tracking-wide max-md:uppercase shrink-0 text-[13px];
 	color: var(--discord-slash-command-suggestion-app);
 }
 </style>

@@ -14,7 +14,7 @@
 			<!-- Configurable Roles Skeleton -->
 			<div class="space-y-4">
 				<StarSkeleton class="h-8 w-48" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<div v-for="i in 6" :key="`roles-skeleton-${i}`" class="space-y-2">
 						<StarSkeleton class="h-5 w-32" />
 						<StarSkeleton class="h-10 w-full" />
@@ -35,7 +35,7 @@
 		>
 			<!-- Toggles Section -->
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">General Options</h3>
 				</div>
@@ -45,7 +45,7 @@
 					:description="ConfigurableRemoveInitialRole.tooltip"
 					name="rolesRemoveInitial"
 				>
-					<div class="flex items-center gap-2">
+					<div class="gap-2 flex items-center">
 						<StarSwitch v-model="state.rolesRemoveInitial as boolean" />
 					</div>
 				</StarFormField>
@@ -55,7 +55,7 @@
 
 			<!-- Configurable Roles Section -->
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="heroicons:user-group" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Configurable Roles</h3>
 				</div>
@@ -63,7 +63,7 @@
 					Assign roles for core bot functions like moderation and auto-assignment.
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<template v-for="roleConfig in standardRoles" :key="roleConfig.key">
 						<!-- Many (Array) -->
 						<SelectRoles
@@ -90,7 +90,7 @@
 
 			<!-- Restricted Roles Section -->
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Restricted Roles</h3>
 				</div>
@@ -98,7 +98,7 @@
 					Roles applied when a restriction command is used.
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<template v-for="roleConfig in restrictedRoles" :key="roleConfig.key">
 						<!-- Many (Array) -->
 						<SelectRoles

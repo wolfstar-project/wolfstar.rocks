@@ -12,7 +12,7 @@
 			<ClientOnly>
 				<component :is="renderComponent" :commands="commands" :languages="languages" />
 				<template #fallback>
-					<div class="flex h-48 items-center justify-center">
+					<div class="h-48 flex items-center justify-center">
 						<StarIcon
 							name="heroicons:arrow-path"
 							class="size-8 animate-spin text-primary"

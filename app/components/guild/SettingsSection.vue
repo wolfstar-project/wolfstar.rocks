@@ -4,7 +4,7 @@ import { tv, type ClassValue } from "tailwind-variants";
 
 const theme = tv({
 	slots: {
-		root: "w-full space-y-6",
+		root: "space-y-6 w-full",
 		header: "space-y-1",
 		heading: "",
 		description: "text-sm text-base-content/70",

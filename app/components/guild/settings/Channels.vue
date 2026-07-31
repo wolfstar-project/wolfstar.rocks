@@ -12,7 +12,7 @@
 			@error="onError"
 		>
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="i-heroicons-document-text" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">Logging Channels</h3>
 				</div>
@@ -21,7 +21,7 @@
 					logging for that event.
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<div v-for="config in ConfigurableLoggingChannels" :key="config.key">
 						<SelectChannel
 							v-model="state[config.key] as string | null"
@@ -37,7 +37,7 @@
 			<Separator />
 
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
+				<div class="gap-2 flex items-center">
 					<StarIcon name="heroicons:eye-slash" class="size-5 text-warning" />
 					<h3 class="text-lg font-semibold text-base-content">Excluded Channels</h3>
 				</div>
@@ -46,7 +46,7 @@
 					events in these channels won't be logged.
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<div v-for="config in ConfigurableIgnoreChannels" :key="config.key">
 						<SelectChannels
 							v-model="state[config.key] as string[]"

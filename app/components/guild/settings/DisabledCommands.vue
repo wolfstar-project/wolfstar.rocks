@@ -12,14 +12,14 @@
 
 					<!-- Commands grid skeleton -->
 					<div
-						class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+						class="gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid grid-cols-1"
 					>
 						<div
 							v-for="j in 8"
 							:key="j"
-							class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+							class="rounded-lg border-base-200 p-3 flex items-center justify-between border"
 						>
-							<div class="flex-1 space-y-2">
+							<div class="space-y-2 flex-1">
 								<StarSkeleton class="h-5 w-32" />
 								<StarSkeleton class="h-4 w-48" />
 							</div>
@@ -52,14 +52,14 @@
 							<StarButton
 								color="neutral"
 								variant="ghost"
-								class="w-full justify-between border-b border-base-200"
+								class="border-base-200 w-full justify-between border-b"
 							>
-								<span class="truncate text-xl font-medium">{{ category }}</span>
+								<span class="text-xl font-medium truncate">{{ category }}</span>
 
 								<template #trailing>
 									<StarIcon
 										name="i-heroicons-chevron-down-20-solid"
-										class="ms-auto size-5 transform transition-transform duration-200"
+										class="size-5 ms-auto transform transition-transform duration-200"
 										:class="[open && 'rotate-180']"
 									/>
 								</template>
@@ -68,18 +68,18 @@
 
 						<template #content>
 							<div
-								class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+								class="gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid grid-cols-1"
 							>
 								<div
 									v-for="command in getCommandsByCategory(category)"
 									:key="command.name"
-									class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+									class="rounded-lg border-base-200 p-3 flex items-center justify-between border"
 								>
 									<div class="min-w-0 flex-1">
-										<p class="truncate font-medium text-base-content">
+										<p class="font-medium text-base-content truncate">
 											{{ command.name }}
 										</p>
-										<p class="truncate text-sm text-base-content/60">
+										<p class="text-sm text-base-content/60 truncate">
 											{{ command.description }}
 										</p>
 									</div>
@@ -96,7 +96,7 @@
 							</div>
 
 							<Separator />
-							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
+							<div class="gap-2 p-4 flex flex-wrap items-center justify-end">
 								<StarButton
 									color="success"
 									variant="solid"

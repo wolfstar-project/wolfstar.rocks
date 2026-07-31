@@ -70,7 +70,6 @@ allowBuilds:
     "@prisma/client": true
     "@prisma/engines": true
     "@sentry/cli": false
-    "@tailwindcss/oxide": true
     better-sqlite3: true
     core-js: false
     esbuild: false

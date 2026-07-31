@@ -12,7 +12,7 @@
 					<slot name="default" :item="item" :open="isOpen(item.value)">
 						<button
 							type="button"
-							class="flex w-full items-center justify-between px-4 py-3 text-left font-medium"
+							class="px-4 py-3 font-medium flex w-full items-center justify-between text-left"
 							:class="ui?.trigger"
 						>
 							{{ item.label }}

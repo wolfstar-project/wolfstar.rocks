@@ -25,11 +25,10 @@ defineProps<ContainerProps>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .discord-v2-container {
 	--discord-v2-container-default-accent: oklch(23.95% 0.0059 271.17);
 
-	@apply mt-1 flex max-w-130 flex-col gap-2 border-l-4 p-3 text-sm leading-relaxed;
+	@apply mt-1 max-w-130 gap-2 p-3 text-sm leading-relaxed flex flex-col border-l-4;
 	border-radius: 0.25rem;
 	background-color: var(--color-base-200);
 	background-color: oklch(from var(--color-base-200) calc(l - 0.02) c h);

@@ -1031,8 +1031,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-app-launcher {
 	/* Discord dark theme surfaces: #2b2d31 popout, #313338 cards, #1e1f22 input. */
 	--discord-app-launcher-bg: oklch(26.65% 0.006 272.93);
@@ -1066,7 +1064,7 @@ onBeforeUnmount(() => {
 	--discord-app-launcher-wolfstar-bg: oklch(0% 0 0);
 
 	/* Explicit radii: the app theme remaps Tailwind's rounded-* scale to 16px. */
-	@apply flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-[8px] border font-whitney;
+	@apply font-whitney flex h-[min(42.5rem,calc(100dvh-2rem))] max-h-[42.5rem] w-full max-w-[31.5rem] flex-col overflow-hidden rounded-[8px] border;
 	background-color: var(--discord-app-launcher-bg);
 	border-color: var(--discord-app-launcher-divider);
 	color: var(--discord-app-launcher-text);
@@ -1083,12 +1081,12 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-search-header {
-	@apply shrink-0 px-4 pt-4 pb-3;
+	@apply px-4 pt-4 pb-3 shrink-0;
 	background-color: var(--discord-app-launcher-bg);
 }
 
 .discord-app-launcher-main-sections {
-	@apply flex flex-col gap-6;
+	@apply gap-6 flex flex-col;
 }
 
 .discord-app-launcher-search {
@@ -1096,12 +1094,12 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-search-icon {
-	@apply pointer-events-none absolute top-1/2 left-3.5 size-5 -translate-y-1/2;
+	@apply left-3.5 size-5 pointer-events-none absolute top-1/2 -translate-y-1/2;
 	color: var(--discord-app-launcher-muted);
 }
 
 .discord-app-launcher-search-input {
-	@apply h-11 w-full rounded-[8px] border-2 bg-transparent py-0 pr-3 pl-11 text-base outline-none;
+	@apply h-11 py-0 pr-3 pl-11 text-base w-full rounded-[8px] border-2 bg-transparent outline-none;
 	appearance: none;
 	background-color: var(--discord-app-launcher-search-bg);
 	border-color: transparent;
@@ -1119,31 +1117,31 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-section {
-	@apply flex flex-col gap-2;
+	@apply gap-2 flex flex-col;
 }
 
 .discord-app-launcher-section-header {
-	@apply flex items-center justify-between gap-2 px-0.5;
+	@apply gap-2 px-0.5 flex items-center justify-between;
 }
 
 .discord-app-launcher-section-title {
-	@apply m-0 inline-flex items-center gap-1 text-base font-medium;
+	@apply m-0 gap-1 text-base font-medium inline-flex items-center;
 	color: var(--discord-app-launcher-header);
 }
 
 .discord-app-launcher-section-caret {
-	@apply hidden size-3.5;
+	@apply size-3.5 hidden;
 	color: var(--discord-app-launcher-header);
 }
 
 .discord-app-launcher-view-more {
-	@apply cursor-pointer border-0 bg-transparent p-0 text-base font-semibold;
+	@apply p-0 text-base font-semibold cursor-pointer border-0 bg-transparent;
 	color: var(--discord-app-launcher-link);
 	text-decoration: none;
 }
 
 .discord-app-launcher-view-more:focus-visible {
-	@apply rounded outline-2 outline-offset-2 outline-primary;
+	@apply rounded outline-primary outline-2 outline-offset-2;
 }
 
 .discord-app-launcher-view-more-mobile,
@@ -1159,7 +1157,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-recents {
-	@apply m-0 flex list-none gap-3 overflow-x-auto p-0;
+	@apply m-0 gap-3 p-0 flex list-none overflow-x-auto;
 	scrollbar-width: none;
 }
 
@@ -1168,15 +1166,15 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-recent {
-	@apply inline-flex cursor-pointer border-0 bg-transparent p-0;
+	@apply p-0 inline-flex cursor-pointer border-0 bg-transparent;
 }
 
 .discord-app-launcher-recent:focus-visible {
-	@apply rounded-xl outline-2 outline-offset-2 outline-primary;
+	@apply rounded-xl outline-primary outline-2 outline-offset-2;
 }
 
 .discord-app-launcher-recent-icon {
-	@apply inline-flex size-12 items-center justify-center overflow-hidden rounded-[14px];
+	@apply size-12 inline-flex items-center justify-center overflow-hidden rounded-[14px];
 	background-color: var(--discord-app-launcher-icon-bg);
 	transition: filter 0.12s ease;
 }
@@ -1194,7 +1192,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-recent-avatar--wolfstar {
-	@apply object-contain p-1;
+	@apply p-1 object-contain;
 }
 
 .discord-app-launcher-recent-glyph {
@@ -1212,7 +1210,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-server-list :deep(.discord-app-launcher-list-item) {
-	@apply rounded-none px-3 py-3;
+	@apply px-3 py-3 rounded-none;
 }
 
 .discord-app-launcher-server-row-bordered {
@@ -1230,19 +1228,19 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promoted-grid {
-	@apply grid grid-cols-2 gap-2.5;
+	@apply gap-2.5 grid grid-cols-2;
 }
 
 .discord-app-launcher-promo {
-	@apply relative flex h-[7.75rem] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-[8px] border-0 p-0 text-left;
+	@apply p-0 relative flex h-[7.75rem] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-[8px] border-0 text-left;
 }
 
 .discord-app-launcher-promo:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
+	@apply outline-primary outline-2 outline-offset-2;
 }
 
 .discord-app-launcher-promo-wordle {
-	@apply items-center justify-center gap-2 p-3;
+	@apply gap-2 p-3 items-center justify-center;
 	background-color: var(--discord-app-launcher-wordle-bg);
 	color: var(--discord-app-launcher-wordle-title);
 }
@@ -1272,17 +1270,17 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-wordle-copy {
-	@apply flex flex-col items-center gap-1 text-center;
+	@apply gap-1 flex flex-col items-center text-center;
 }
 
 .discord-app-launcher-promo-wordle-title {
-	@apply text-[1.35rem] leading-none font-bold tracking-tight;
+	@apply font-bold tracking-tight text-[1.35rem] leading-none;
 	font-family: var(--font-whitney), "Helvetica Neue", Arial, sans-serif;
 	letter-spacing: 0.02em;
 }
 
 .discord-app-launcher-promo-wordle-subtitle {
-	@apply text-[10px] leading-tight font-semibold tracking-[0.04em];
+	@apply leading-tight font-semibold text-[10px] tracking-[0.04em];
 	color: var(--discord-app-launcher-wordle-subtitle);
 }
 
@@ -1291,7 +1289,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-scene {
-	@apply absolute inset-0 overflow-hidden;
+	@apply inset-0 absolute overflow-hidden;
 	background-image: linear-gradient(
 		180deg,
 		var(--discord-app-launcher-garden-sky-from),
@@ -1301,16 +1299,16 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-sky {
-	@apply absolute inset-x-0 top-0 h-1/2;
+	@apply inset-x-0 top-0 absolute h-1/2;
 }
 
 .discord-app-launcher-promo-garden-hill {
-	@apply absolute inset-x-[-10%] bottom-0 h-[48%] rounded-t-[50%];
+	@apply bottom-0 absolute inset-x-[-10%] h-[48%] rounded-t-[50%];
 	background-color: var(--discord-app-launcher-garden-hill);
 }
 
 .discord-app-launcher-promo-garden-leaf {
-	@apply absolute block size-7 rounded-[40%_60%_55%_45%];
+	@apply size-7 absolute block rounded-[40%_60%_55%_45%];
 	background-color: var(--discord-app-launcher-garden-leaf);
 	transform: rotate(-25deg);
 }
@@ -1327,18 +1325,18 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-berry {
-	@apply absolute left-1/2 size-11 -translate-x-1/2;
+	@apply size-11 absolute left-1/2 -translate-x-1/2;
 	bottom: 34%;
 }
 
 .discord-app-launcher-promo-garden-berry-body {
-	@apply absolute inset-0 rounded-[45%_45%_50%_50%];
+	@apply inset-0 absolute rounded-[45%_45%_50%_50%];
 	background-color: var(--discord-app-launcher-garden-berry);
 	box-shadow: inset -4px -6px 0 oklch(0% 0 0 / 0.12);
 }
 
 .discord-app-launcher-promo-garden-berry-seed {
-	@apply absolute size-1 rounded-full;
+	@apply size-1 absolute rounded-full;
 	background-color: var(--discord-app-launcher-garden-seed);
 }
 
@@ -1358,7 +1356,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-berry-crown {
-	@apply absolute -top-1.5 left-1/2 size-4 -translate-x-1/2 rounded-full;
+	@apply -top-1.5 size-4 absolute left-1/2 -translate-x-1/2 rounded-full;
 	background-color: var(--discord-app-launcher-garden-leaf);
 	box-shadow:
 		-6px 4px 0 -1px var(--discord-app-launcher-garden-leaf),
@@ -1366,7 +1364,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-flower {
-	@apply absolute size-3 rounded-full;
+	@apply size-3 absolute rounded-full;
 	right: 22%;
 	bottom: 28%;
 	background-color: var(--discord-app-launcher-garden-flower);
@@ -1374,12 +1372,12 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-title {
-	@apply relative z-1 mb-2.5 text-[11px] font-extrabold tracking-[0.12em] uppercase;
+	@apply mb-2.5 font-extrabold relative z-1 text-[11px] tracking-[0.12em] uppercase;
 	text-shadow: 0 1px 3px oklch(0% 0 0 / 0.45);
 }
 
 .discord-app-launcher-promo {
-	@apply h-auto items-stretch justify-start rounded-[8px] p-0;
+	@apply p-0 h-auto items-stretch justify-start rounded-[8px];
 	background-color: var(--discord-app-launcher-nested);
 }
 
@@ -1389,17 +1387,17 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-visual {
-	@apply relative flex h-32 w-full shrink-0 items-center justify-center overflow-hidden;
+	@apply h-32 relative flex w-full shrink-0 items-center justify-center overflow-hidden;
 }
 
 .discord-app-launcher-promo-visual-wordle {
-	@apply flex-col gap-2;
+	@apply gap-2 flex-col;
 	background-color: var(--discord-app-launcher-wordle-bg);
 	color: var(--discord-app-launcher-wordle-title);
 }
 
 .discord-app-launcher-promo-wordle-title {
-	@apply text-3xl leading-none font-bold tracking-tight;
+	@apply text-3xl font-bold tracking-tight leading-none;
 	font-family: Georgia, "Times New Roman", serif;
 }
 
@@ -1419,7 +1417,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-vine {
-	@apply absolute -top-7 left-1/2 h-20 w-32 -translate-x-1/2 rounded-[50%];
+	@apply -top-7 h-20 w-32 absolute left-1/2 -translate-x-1/2 rounded-[50%];
 	border-bottom: 10px solid var(--discord-app-launcher-garden-leaf);
 	transform: translateX(-50%) rotate(-7deg);
 }
@@ -1440,12 +1438,12 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-garden-face {
-	@apply absolute inset-0 z-1 flex items-center justify-center text-sm font-black;
+	@apply inset-0 text-sm font-black absolute z-1 flex items-center justify-center;
 	color: var(--discord-app-launcher-wordle-title);
 }
 
 .discord-app-launcher-promo-garden-title {
-	@apply absolute right-5 bottom-2 z-1 m-0 -rotate-3 text-center text-lg leading-[0.78] font-black tracking-[-0.04em];
+	@apply right-5 bottom-2 m-0 text-lg font-black absolute z-1 -rotate-3 text-center leading-[0.78] tracking-[-0.04em];
 	color: oklch(78% 0.2 90);
 	-webkit-text-stroke: 1px oklch(42% 0.2 305);
 	text-shadow: 0 2px 0 oklch(42% 0.2 305);
@@ -1462,12 +1460,12 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-farm-sun {
-	@apply absolute top-3 right-5 size-8 rounded-full;
+	@apply top-3 right-5 size-8 absolute rounded-full;
 	background-color: oklch(88% 0.17 85);
 }
 
 .discord-app-launcher-promo-farm-field {
-	@apply absolute inset-x-0 bottom-0 h-12;
+	@apply inset-x-0 bottom-0 h-12 absolute;
 	background-image: repeating-linear-gradient(
 		-15deg,
 		oklch(57% 0.18 145) 0 10px,
@@ -1476,13 +1474,13 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-farm-icon {
-	@apply relative z-1 ml-5 size-16;
+	@apply ml-5 size-16 relative z-1;
 	color: oklch(52% 0.18 145);
 	filter: drop-shadow(0 2px 0 oklch(100% 0 0 / 0.65));
 }
 
 .discord-app-launcher-promo-farm-title {
-	@apply relative z-1 ml-2 -rotate-6 text-xl leading-[0.85] font-black uppercase;
+	@apply ml-2 text-xl font-black relative z-1 -rotate-6 leading-[0.85] uppercase;
 	color: oklch(96% 0.01 95);
 	text-shadow: 0 2px 0 oklch(43% 0.16 25);
 }
@@ -1503,24 +1501,24 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-footer {
-	@apply flex min-h-14 items-center gap-2.5 px-2.5 py-2;
+	@apply min-h-14 gap-2.5 px-2.5 py-2 flex items-center;
 }
 
 .discord-app-launcher-promo-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px] text-xl;
+	@apply size-10 text-xl inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[10px];
 	color: var(--discord-app-launcher-wordle-title);
 }
 
 .discord-app-launcher-promo-copy {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+	@apply min-w-0 gap-0.5 flex flex-1 flex-col;
 }
 
 .discord-app-launcher-promo-title-row {
-	@apply flex min-w-0 items-center gap-1;
+	@apply min-w-0 gap-1 flex items-center;
 }
 
 .discord-app-launcher-promo-title {
-	@apply truncate text-[15px] leading-tight font-medium;
+	@apply leading-tight font-medium truncate text-[15px];
 	color: var(--discord-app-launcher-header);
 }
 
@@ -1530,17 +1528,17 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-promo-description {
-	@apply truncate text-xs leading-snug;
+	@apply text-xs leading-snug truncate;
 	color: var(--discord-app-launcher-muted);
 }
 
 .discord-app-launcher-help {
-	@apply flex items-center justify-between gap-4 rounded-[8px] px-4 py-3;
+	@apply gap-4 px-4 py-3 flex items-center justify-between rounded-[8px];
 	background-color: var(--discord-app-launcher-help-bg);
 }
 
 .discord-app-launcher-help > span {
-	@apply flex min-w-0 flex-col gap-1;
+	@apply min-w-0 gap-1 flex flex-col;
 }
 
 .discord-app-launcher-help strong {
@@ -1553,7 +1551,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-help button {
-	@apply shrink-0 cursor-pointer rounded-lg border-0 px-4 py-2.5 text-sm font-semibold text-white;
+	@apply rounded-lg px-4 py-2.5 text-sm font-semibold text-white shrink-0 cursor-pointer border-0;
 	background-color: var(--discord-app-launcher-focus);
 }
 
@@ -1562,16 +1560,16 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-help button:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
+	@apply outline-primary outline-2 outline-offset-2;
 }
 
 /* Tiles are mobile-only; the sheet media query switches them back to `grid`. */
 .discord-app-launcher-tile-grid {
-	@apply m-0 hidden list-none grid-cols-2 gap-2 p-0;
+	@apply m-0 gap-2 p-0 hidden list-none grid-cols-2;
 }
 
 .discord-app-launcher-tile {
-	@apply flex w-full cursor-pointer items-center gap-2.5 rounded-[12px] border-0 px-2.5 py-2.5 text-left;
+	@apply gap-2.5 px-2.5 py-2.5 flex w-full cursor-pointer items-center rounded-[12px] border-0 text-left;
 	background-color: var(--discord-app-launcher-nested);
 	color: var(--discord-app-launcher-text);
 	transition: filter 0.12s ease;
@@ -1582,11 +1580,11 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-tile:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
+	@apply outline-primary outline-2 outline-offset-2;
 }
 
 .discord-app-launcher-tile-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
+	@apply size-10 inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[10px];
 	background-color: var(--discord-app-launcher-icon-bg);
 }
 
@@ -1603,7 +1601,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-tile-avatar--wolfstar {
-	@apply object-contain p-1;
+	@apply p-1 object-contain;
 }
 
 .discord-app-launcher-tile-glyph {
@@ -1611,26 +1609,26 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-tile-copy {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+	@apply min-w-0 gap-0.5 flex flex-1 flex-col;
 }
 
 .discord-app-launcher-tile-title {
-	@apply truncate text-[15px] leading-tight font-semibold;
+	@apply leading-tight font-semibold truncate text-[15px];
 	color: var(--discord-app-launcher-text);
 }
 
 .discord-app-launcher-tile-subtitle {
-	@apply truncate text-[12px] leading-snug;
+	@apply leading-snug truncate text-[12px];
 	color: var(--discord-app-launcher-muted);
 }
 
 .discord-app-launcher-list-header {
-	@apply grid shrink-0 grid-cols-[2.25rem_1fr_2.25rem] items-center gap-1 px-4 pt-4 pb-2;
+	@apply gap-1 px-4 pt-4 pb-2 grid shrink-0 grid-cols-[2.25rem_1fr_2.25rem] items-center;
 	animation: discord-app-launcher-view-in 0.12s ease-out;
 }
 
 .discord-app-launcher-back {
-	@apply inline-flex size-9 cursor-pointer items-center justify-center rounded-full border-0;
+	@apply size-9 inline-flex cursor-pointer items-center justify-center rounded-full border-0;
 	background-color: var(--discord-app-launcher-back-bg);
 	color: var(--discord-app-launcher-text);
 }
@@ -1640,11 +1638,11 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-back:focus-visible {
-	@apply outline-2 outline-offset-2 outline-primary;
+	@apply outline-primary outline-2 outline-offset-2;
 }
 
 .discord-app-launcher-list-title {
-	@apply m-0 text-center text-base font-semibold;
+	@apply m-0 text-base font-semibold text-center;
 	color: var(--discord-app-launcher-text);
 }
 
@@ -1664,7 +1662,7 @@ onBeforeUnmount(() => {
 }
 
 .discord-app-launcher-list-body :deep(.discord-app-launcher-list-item) {
-	@apply rounded-none px-3 py-2.5;
+	@apply px-3 py-2.5 rounded-none;
 }
 
 .discord-app-launcher-list-body :deep(.discord-app-launcher-list-item:not(:first-child)) {
@@ -1730,7 +1728,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-handle {
-		@apply mx-auto mt-2.5 mb-1.5 block h-1.5 w-11 shrink-0 cursor-grab rounded-full border-0 p-0;
+		@apply mt-2.5 mb-1.5 h-1.5 w-11 p-0 mx-auto block shrink-0 cursor-grab rounded-full border-0;
 		background-color: var(--discord-app-launcher-handle);
 		touch-action: none;
 	}
@@ -1740,7 +1738,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-handle:focus-visible {
-		@apply outline-2 outline-offset-2 outline-primary;
+		@apply outline-primary outline-2 outline-offset-2;
 	}
 
 	.discord-app-launcher-main-content {
@@ -1753,7 +1751,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-search-input {
-		@apply h-12 rounded-full border-0 text-base;
+		@apply h-12 text-base rounded-full border-0;
 	}
 
 	/* The sheet scrolls without Discord's desktop scrollbar chrome. */
@@ -1774,7 +1772,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-section-title {
-		@apply text-[20px] font-bold;
+		@apply font-bold text-[20px];
 		color: var(--discord-app-launcher-header);
 	}
 
@@ -1801,7 +1799,7 @@ onBeforeUnmount(() => {
 	 */
 	.discord-app-launcher-recents-mobile,
 	.discord-app-launcher-server-mobile {
-		@apply -mr-4 flex gap-2 overflow-x-auto pr-4;
+		@apply -mr-4 gap-2 pr-4 flex overflow-x-auto;
 		scrollbar-width: none;
 	}
 
@@ -1817,7 +1815,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-view-more-footer {
-		@apply relative block w-full py-3.5 text-center text-base font-semibold;
+		@apply py-3.5 text-base font-semibold relative block w-full text-center;
 		color: var(--discord-app-launcher-link);
 		text-decoration: none;
 	}
@@ -1832,7 +1830,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-tile {
-		@apply min-h-15 gap-2 rounded-[12px] px-2 py-2.5;
+		@apply min-h-15 gap-2 px-2 py-2.5 rounded-[12px];
 	}
 
 	.discord-app-launcher-tile-icon {
@@ -1840,7 +1838,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-tile-title {
-		@apply text-[15px] font-semibold;
+		@apply font-semibold text-[15px];
 	}
 
 	.discord-app-launcher-tile-subtitle {
@@ -1875,7 +1873,7 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-promo-title {
-		@apply text-[13px] font-bold;
+		@apply font-bold text-[13px];
 	}
 
 	.discord-app-launcher-category .discord-app-launcher-section-header {
@@ -1895,11 +1893,11 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-help {
-		@apply flex-col items-center gap-4 rounded-[12px] px-5 py-6 text-center;
+		@apply gap-4 px-5 py-6 flex-col items-center rounded-[12px] text-center;
 	}
 
 	.discord-app-launcher-help > span {
-		@apply items-center gap-2;
+		@apply gap-2 items-center;
 	}
 
 	.discord-app-launcher-help strong {
@@ -1907,11 +1905,11 @@ onBeforeUnmount(() => {
 	}
 
 	.discord-app-launcher-help > span > span {
-		@apply text-[15px] leading-relaxed;
+		@apply leading-relaxed text-[15px];
 	}
 
 	.discord-app-launcher-help button {
-		@apply w-auto min-w-[8.5rem] rounded-full px-6 py-3 text-base font-semibold shadow-none;
+		@apply px-6 py-3 text-base font-semibold w-auto min-w-[8.5rem] rounded-full shadow-none;
 		background-color: var(--discord-app-launcher-help-btn);
 		color: var(--discord-app-launcher-help-btn-text);
 	}

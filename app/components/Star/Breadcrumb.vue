@@ -1,7 +1,7 @@
 <template>
 	<nav aria-label="Breadcrumb">
-		<ol class="flex flex-wrap items-center gap-2 text-sm">
-			<li v-for="(item, index) in items" :key="index" class="flex items-center gap-2">
+		<ol class="gap-2 text-sm flex flex-wrap items-center">
+			<li v-for="(item, index) in items" :key="index" class="gap-2 flex items-center">
 				<Icon
 					v-if="item.icon"
 					:name="item.icon"

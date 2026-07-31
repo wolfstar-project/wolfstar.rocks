@@ -1,7 +1,7 @@
 <template>
 	<div
 		v-if="hasChips"
-		class="flex animate-fade-in flex-wrap gap-3"
+		class="animate-fade-in gap-3 flex flex-wrap"
 		role="list"
 		aria-label="Command properties"
 	>

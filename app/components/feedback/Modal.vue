@@ -39,7 +39,7 @@
 		</template>
 
 		<template #footer>
-			<div class="flex justify-end gap-2">
+			<div class="gap-2 flex justify-end">
 				<StarButton
 					color="neutral"
 					variant="ghost"

@@ -11,25 +11,25 @@
 			target="_blank"
 			rel="noopener noreferrer"
 			variant="link"
-			class="text-highlighted underline decoration-dotted underline-offset-2 transition-colors hover:text-primary focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+			class="text-highlighted hover:text-primary focus-visible:rounded-sm focus-visible:ring-primary underline decoration-dotted underline-offset-2 transition-colors focus-visible:ring-2 focus-visible:outline-none"
 		>
 			{{ name }} (@{{ username }})
 		</StarButton>
 
 		<template #content>
 			<div class="not-prose w-72 p-3" role="group" :aria-label="cardLabel">
-				<div class="flex items-start gap-3">
+				<div class="gap-3 flex items-start">
 					<StarAvatar :src="avatarSrc" :alt="`${name} avatar`" size="lg" />
 					<div class="min-w-0 flex-1">
-						<p class="truncate font-semibold text-highlighted">
+						<p class="font-semibold text-highlighted truncate">
 							{{ name }}
 						</p>
-						<p class="truncate text-sm text-muted">@{{ username }}</p>
+						<p class="text-sm text-muted truncate">@{{ username }}</p>
 					</div>
 				</div>
 
 				<dl
-					class="divide-default mt-3 grid grid-cols-3 divide-x border-t border-default pt-3 text-center"
+					class="divide-default mt-3 border-default pt-3 grid grid-cols-3 divide-x border-t text-center"
 				>
 					<div class="px-1.5">
 						<dt class="text-xs leading-tight text-muted">Commits</dt>

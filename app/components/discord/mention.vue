@@ -40,7 +40,6 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .tag {
 	/*
 	 * Mentions are inline-flex chips. Do not add margin-inline-start here:
@@ -50,7 +49,7 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 	 *
 	 * Stable Discord mention look: no hover/focus lighten or white outline.
 	 */
-	@apply inline-flex items-baseline gap-0 rounded-sm px-1 py-0.5 font-whitney font-medium;
+	@apply gap-0 rounded-sm px-1 py-0.5 font-whitney font-medium inline-flex items-baseline;
 	vertical-align: baseline;
 	margin: 0;
 	border: 0;
@@ -121,6 +120,6 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 }
 
 .tag > .icon {
-	@apply mr-0.5 inline-block h-3 w-3 -translate-y-0.5;
+	@apply mr-0.5 h-3 w-3 -translate-y-0.5 inline-block;
 }
 </style>

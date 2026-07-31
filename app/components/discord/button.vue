@@ -80,8 +80,6 @@ const emojiIsImage = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 /* Sizing/typography mirror Skyra discord-button; colors use oklch Discord brand tokens. */
 .discord-button {
 	--discord-button-primary: oklch(57.7% 0.209 273.88);
@@ -95,7 +93,7 @@ const emojiIsImage = computed(() => {
 	--discord-button-link: oklch(57.7% 0.209 273.88);
 	--discord-button-text: oklch(100% 0 0);
 
-	@apply box-border flex h-8 min-h-8 w-fit min-w-[60px] items-center justify-center gap-1 rounded-sm px-4 py-0.5 text-sm leading-4 font-medium;
+	@apply h-8 min-h-8 gap-1 rounded-sm px-4 py-0.5 text-sm leading-4 font-medium box-border flex w-fit min-w-[60px] items-center justify-center;
 	font-family:
 		Whitney, "gg sans", "Noto Sans", "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
 	color: var(--discord-button-text);

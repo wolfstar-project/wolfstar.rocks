@@ -4,7 +4,7 @@
 		<div v-if="loading" class="space-y-6">
 			<div class="space-y-3">
 				<StarSkeleton class="h-7 w-28" />
-				<div v-for="i in 4" :key="i" class="flex items-center gap-3">
+				<div v-for="i in 4" :key="i" class="gap-3 flex items-center">
 					<StarSkeleton class="h-6 w-11 shrink-0 rounded-full" />
 					<div class="space-y-1.5">
 						<StarSkeleton class="h-4 w-32" />
@@ -14,7 +14,7 @@
 			</div>
 			<div class="space-y-3">
 				<StarSkeleton class="h-7 w-32" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 					<StarSkeleton class="h-10 w-full" />
 					<StarSkeleton class="h-10 w-full" />
 				</div>
@@ -23,7 +23,7 @@
 			</div>
 			<div class="space-y-3">
 				<StarSkeleton class="h-7 w-32" />
-				<div class="flex gap-2">
+				<div class="gap-2 flex">
 					<StarSkeleton class="h-10 w-48" />
 					<StarSkeleton class="h-10 w-20" />
 				</div>
@@ -44,14 +44,14 @@
 			<GuildSettingsSection title="Word Filter">
 				<div class="space-y-3">
 					<StarFormField name="selfmodFilterEnabled">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.selfmodFilterEnabled"
 								class="mt-0.5"
 								aria-label="Toggle word filter"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Filter {{ state.selfmodFilterEnabled ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -62,14 +62,14 @@
 					</StarFormField>
 
 					<StarFormField name="softActionAlerts">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
 								aria-label="Toggle alerts soft action"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -80,14 +80,14 @@
 					</StarFormField>
 
 					<StarFormField name="softActionLogs">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
 								aria-label="Toggle logs soft action"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -98,14 +98,14 @@
 					</StarFormField>
 
 					<StarFormField name="softActionDeletes">
-						<div class="flex items-start gap-3">
+						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
 								aria-label="Toggle deletes soft action"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
 								</p>
 								<p class="mt-1 text-xs text-muted">
@@ -121,7 +121,7 @@
 
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection title="Punishments">
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 					<StarFormField
 						label="Action"
 						name="selfmodFilterHardAction"
@@ -162,7 +162,7 @@
 							:max="60"
 							aria-label="Words filter violations before punishment slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0</span>
 							<span>60</span>
 						</div>
@@ -181,7 +181,7 @@
 							:max="120"
 							aria-label="Word filter time window (seconds) slider"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0s</span>
 							<span>120s</span>
 						</div>
@@ -194,7 +194,7 @@
 			<!-- Section 3: Filtered Words -->
 			<GuildSettingsSection title="Filtered Words">
 				<div class="space-y-4">
-					<form class="flex gap-2" @submit.prevent="addWord">
+					<form class="gap-2 flex" @submit.prevent="addWord">
 						<StarInput
 							v-model="newWord"
 							placeholder="e.g. badword"
@@ -204,13 +204,13 @@
 						<StarButton type="submit" color="primary"> Confirm </StarButton>
 					</form>
 
-					<div v-if="state.selfmodFilterRaw.length > 0" class="flex flex-wrap gap-2">
+					<div v-if="state.selfmodFilterRaw.length > 0" class="gap-2 flex flex-wrap">
 						<StarBadge
 							v-for="word in state.selfmodFilterRaw"
 							:key="word"
 							color="primary"
 							variant="soft"
-							class="flex items-center gap-1"
+							class="gap-1 flex items-center"
 						>
 							{{ word }}
 							<button

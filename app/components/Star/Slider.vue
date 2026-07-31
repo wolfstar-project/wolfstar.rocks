@@ -5,16 +5,16 @@
 		:max="max"
 		:step="step"
 		:disabled="disabled"
-		class="relative flex w-full touch-none items-center py-2 select-none"
+		class="py-2 relative flex w-full touch-none items-center select-none"
 		:class="{ 'opacity-50': disabled }"
 	>
-		<SliderTrack class="relative h-2 w-full grow overflow-hidden rounded-full bg-base-300">
-			<SliderRange class="absolute h-full bg-primary" />
+		<SliderTrack class="h-2 bg-base-300 relative w-full grow overflow-hidden rounded-full">
+			<SliderRange class="bg-primary absolute h-full" />
 		</SliderTrack>
 		<SliderThumb
 			v-for="(_, index) in thumbCount"
 			:key="index"
-			class="block size-4 rounded-full border-2 border-primary bg-base-100 shadow focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+			class="size-4 border-primary bg-base-100 shadow focus-visible:ring-primary block rounded-full border-2 focus-visible:ring-2 focus-visible:outline-none"
 			:aria-label="`Value ${index + 1}`"
 		/>
 	</SliderRoot>

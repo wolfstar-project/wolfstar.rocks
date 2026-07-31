@@ -8,7 +8,7 @@
 					:target="link.target"
 					class="link text-sm text-muted link-hover"
 				>
-					<Icon v-if="link.icon" :name="link.icon" class="me-1 inline size-3.5" />
+					<Icon v-if="link.icon" :name="link.icon" class="me-1 size-3.5 inline" />
 					{{ link.label }}
 				</NuxtLink>
 			</li>

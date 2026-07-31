@@ -44,7 +44,6 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		"nuxt-skill-hub",
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 

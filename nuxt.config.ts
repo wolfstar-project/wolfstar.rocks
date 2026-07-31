@@ -38,6 +38,11 @@ export default defineNuxtConfig({
 		"@nuxtjs/i18n",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
+		// Must run before @onmax/nuxt-better-auth: that module throws in
+		// non-dev builds when betterAuthSecret is empty. Nuxt's modules/
+		// directory scan loads after this array, which is too late for
+		// TEST=1 / CI build:test flows.
+		resolve("./modules/test-secrets"),
 		"@onmax/nuxt-better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",

@@ -1,6 +1,6 @@
 import type { BuildInfo, EnvType } from "../shared/types";
 import { createResolver, defineNuxtModule } from "nuxt/kit";
-import { isCI } from "std-env";
+import { isCI, isTest } from "std-env";
 import { getEnv, getFileLastUpdated } from "../config/env";
 
 const { resolve } = createResolver(import.meta.url);
@@ -17,7 +17,7 @@ export default defineNuxtModule({
 		let env: EnvType = "dev";
 		nuxt.options.appConfig = nuxt.options.appConfig || {};
 		nuxt.options.appConfig.env = env;
-		if (process.env.TEST) {
+		if (isTest) {
 			const time = new Date();
 			nuxt.options.appConfig.buildInfo = {
 				env,

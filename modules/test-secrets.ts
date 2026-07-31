@@ -20,7 +20,10 @@ export default defineNuxtModule({
 		name: "wolfstar:test-secrets",
 	},
 	setup(_options, nuxt) {
-		if (!isTest && !isCI) return;
+		// Prefer VITEST too: CI may invoke vp test / build helpers without NODE_ENV=test
+		// yet, matching nuxt.config isTestEnv.
+		const isTestEnv = isTest || Boolean(process.env.VITEST);
+		if (!isTestEnv && !isCI) return;
 
 		const envPath = join(nuxt.options.rootDir, ".env");
 		const envContent = existsSync(envPath) ? readFileSync(envPath, "utf-8") : "";

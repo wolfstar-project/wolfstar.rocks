@@ -462,6 +462,9 @@ export default defineNuxtConfig({
 		providers: {
 			fontshare: false,
 		},
+		experimental: {
+			disableLocalFallbacks: true,
+		},
 		families: [
 			{
 				display: "swap",

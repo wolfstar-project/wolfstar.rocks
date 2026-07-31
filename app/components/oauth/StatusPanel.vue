@@ -9,11 +9,13 @@
 			<div :class="iconWrapClass" aria-hidden="true">
 				<UIcon
 					:name="resolvedIcon"
-					:class="[
-						'size-8 sm:size-10',
-						toneIconClass,
-						!loading && tone === 'success' ? 'oauth-status-icon-enter' : undefined,
-					]"
+					:class="
+						cn(
+							'size-8 sm:size-10',
+							toneIconClass,
+							!loading && tone === 'success' && 'oauth-status-icon-enter',
+						)
+					"
 				/>
 				<UIcon
 					v-if="loading"
@@ -60,6 +62,8 @@
 </template>
 
 <script setup lang="ts">
+import { cn } from "cnfast";
+
 type OAuthStatusTone = "info" | "success" | "warning" | "error";
 
 const {
@@ -129,14 +133,18 @@ const toneSurfaceClass = computed(() => {
 	}
 });
 
-const panelClass = computed(
-	() =>
-		`oauth-status-panel animate-fade-in-up flex w-full max-w-md flex-col items-center gap-3 rounded-xl border p-5 text-center sm:gap-4 sm:p-8 ${toneSurfaceClass.value}`,
+const panelClass = computed(() =>
+	cn(
+		"oauth-status-panel flex w-full max-w-md animate-fade-in-up flex-col items-center gap-3 rounded-xl border p-5 text-center sm:gap-4 sm:p-8",
+		toneSurfaceClass.value,
+	),
 );
 
-const iconWrapClass = computed(
-	() =>
-		`relative mb-1 flex size-14 items-center justify-center rounded-full sm:size-16 ${toneSurfaceClass.value}`,
+const iconWrapClass = computed(() =>
+	cn(
+		"relative mb-1 flex size-14 items-center justify-center rounded-full sm:size-16",
+		toneSurfaceClass.value,
+	),
 );
 </script>
 

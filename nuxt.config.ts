@@ -8,6 +8,10 @@ import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
+// CI invokes `vp test` directly (bypassing package.json TEST=1). Vitest sets
+// VITEST before config load; std-env isTest alone can still be false if
+// NODE_ENV isn't "test" yet when this module is first evaluated.
+const isTestEnv = isTest || Boolean(process.env.VITEST);
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -21,7 +25,7 @@ export default defineNuxtConfig({
 		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
 		// test environment. Studio editor chunks are also excluded from the PWA
 		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
-		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
+		...(isTestEnv || isStorybook ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -44,7 +48,7 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
+		...(isTestEnv || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
 	skillHub: {
@@ -367,12 +371,22 @@ export default defineNuxtConfig({
 				driver: "fsLite",
 			},
 		},
+		// build:test must set TEST=1: nuxi build forces NODE_ENV=production before
+		// config load, so NODE_ENV=test alone never makes std-env isTest (or this
+		// replace) true in Playwright bundles. Prefer isTestEnv so VITEST-only
+		// runners (CI `vp test`) still get a true replace without waiting on NODE_ENV.
 		replace: {
-			"import.meta.test": isTest,
+			"import.meta.test": isTestEnv,
 		},
 	},
 
 	vite: {
+		// Do NOT define import.meta.test here: Nuxt's schema already defines it
+		// from nuxt.options.test (Boolean(std-env isTest) by default, and forced
+		// true by @nuxt/test-utils in the Vitest environment). A user-level define
+		// overrides that and, in CI, bakes in "false" because this config is
+		// evaluated before Vitest sets NODE_ENV=test — breaking mountSuspended's
+		// import.meta.test-gated SingleRenderer branch in nuxt-root.vue.
 		css: {
 			transformer: "lightningcss",
 		},

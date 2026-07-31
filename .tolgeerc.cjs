@@ -56,7 +56,7 @@ const pushFiles = Object.entries(LOCALE_MAP).flatMap(([localDir, language]) =>
 
 module.exports = {
 	$schema: "https://docs.tolgee.io/cli-schema.json",
-	projectId: 33602,
+	projectId: 33768,
 	format: "JSON_TOLGEE",
 	parser: "vue",
 	// App deep-merges feature files; keys are used without vue-i18n namespaces.

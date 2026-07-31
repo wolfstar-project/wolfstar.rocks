@@ -25,7 +25,7 @@
 		"tolgee:push": "tolgee push",
 		"tolgee:pull": "tolgee pull && node --experimental-transform-types scripts/tolgee-pull-remap.ts",
 		"tolgee:extract": "tolgee extract print",
-		"build:test": "NODE_ENV=test vp run build",
+		"build:test": "TEST=1 vp run build",
 		"dev": "nuxt dev",
 		"dev:pwa": "VITE_DEV_PWA=true nuxt dev",
 		"knip:fix": "knip --fix",

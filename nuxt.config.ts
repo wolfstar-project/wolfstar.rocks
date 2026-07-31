@@ -362,6 +362,9 @@ export default defineNuxtConfig({
 				driver: "fsLite",
 			},
 		},
+		// build:test must set TEST=1: nuxi build forces NODE_ENV=production before
+		// config load, so NODE_ENV=test alone never makes std-env isTest (or this
+		// replace / Vite's import.meta.test define) true in Playwright bundles.
 		replace: {
 			"import.meta.test": isTest,
 		},

@@ -26,7 +26,7 @@ describe("useSessionRefresh", () => {
 	});
 
 	it("should not call $fetch during test environment (session refresh guard)", async () => {
-		// Vite define rewrites the import.meta.test identifier; assert the compiled flag.
+		// Nuxt defines import.meta.test from nuxt.options.test in the Vitest env.
 		expect(import.meta.test).toBe(true);
 
 		const fetchSpy = vi.spyOn(globalThis, "fetch");

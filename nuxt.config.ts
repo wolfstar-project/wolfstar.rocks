@@ -375,6 +375,9 @@ export default defineNuxtConfig({
 				driver: "fsLite",
 			},
 		},
+		replace: {
+			"import.meta.test": isTest,
+		},
 	},
 
 	vite: {

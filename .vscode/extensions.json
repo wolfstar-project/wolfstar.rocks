@@ -11,6 +11,7 @@
 		"formulahendry.auto-rename-tag",
 		"vitest.explorer",
 		"coderabbit.coderabbit-vscode",
-		"VoidZero.vite-plus-extension-pack"
+		"VoidZero.vite-plus-extension-pack",
+		"lokalise.i18n-ally"
 	]
 }

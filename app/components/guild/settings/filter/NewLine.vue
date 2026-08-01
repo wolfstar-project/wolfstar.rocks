@@ -24,6 +24,7 @@
 			<div class="space-y-3">
 				<USkeleton class="h-7 w-24" />
 				<USkeleton class="h-10 w-full" />
+				<USkeleton class="h-10 w-full" />
 			</div>
 		</div>
 
@@ -34,26 +35,31 @@
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
 			class="space-y-6"
-			aria-label="New line filter settings form"
+			:aria-label="t('guild_settings.filter.lines.form_aria')"
 			@error="onError"
 		>
-			<!-- Section 1: Line Spam Filter -->
-			<GuildSettingsSection title="Line Spam Filter">
+			<!-- Section 1: Capital Letters Filter -->
+			<GuildSettingsSection :title="t('guild_settings.filter.lines.title')">
 				<div class="space-y-3">
 					<UFormField name="selfmodNewlinesEnabled">
 						<div class="flex items-start gap-3">
 							<USwitch
 								v-model="state.selfmodNewlinesEnabled"
 								class="mt-0.5"
-								aria-label="Toggle line spam filter"
+								:aria-label="t('guild_settings.filter.lines.toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Filter
-									{{ state.selfmodNewlinesEnabled ? "Enabled" : "Disabled" }}
+									{{
+										t("guild_settings.filter.lines.filter_label", {
+											state: state.selfmodNewlinesEnabled
+												? t("guild_settings.filter.common.enabled")
+												: t("guild_settings.filter.common.disabled"),
+										})
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Flags messages with excessive line breaks.
+									{{ t("guild_settings.filter.lines.toggle_help") }}
 								</p>
 							</div>
 						</div>
@@ -64,14 +70,19 @@
 							<USwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
-								aria-label="Toggle alerts soft action"
+								:aria-label="t('guild_settings.filter.word.alerts_toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.alerts") }}
+									{{
+										state.softActionAlerts
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Posts an alert in the channel where the violation occurred.
+									{{ t("guild_settings.filter.common.alerts_help") }}
 								</p>
 							</div>
 						</div>
@@ -82,14 +93,19 @@
 							<USwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
-								aria-label="Toggle logs soft action"
+								:aria-label="t('guild_settings.filter.word.logging_toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.logging") }}
+									{{
+										state.softActionLogs
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Sends a log entry to the moderation logs channel.
+									{{ t("guild_settings.filter.common.logging_help") }}
 								</p>
 							</div>
 						</div>
@@ -100,14 +116,19 @@
 							<USwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
-								aria-label="Toggle deletes soft action"
+								:aria-label="t('guild_settings.filter.word.delete_toggle')"
 							/>
 							<div>
 								<p class="text-sm leading-none font-medium">
-									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.delete_message") }}
+									{{
+										state.softActionDeletes
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Automatically deletes the offending message.
+									{{ t("guild_settings.filter.common.delete_message_help") }}
 								</p>
 							</div>
 						</div>
@@ -118,25 +139,25 @@
 			<Separator />
 
 			<!-- Section 2: Punishments -->
-			<GuildSettingsSection title="Punishments">
+			<GuildSettingsSection :title="t('guild_settings.filter.common.punishments')">
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
 					<UFormField
-						label="Action"
+						:label="t('guild_settings.filter.common.hard_action')"
 						name="selfmodNewlinesHardAction"
-						description="What happens when a member exceeds the limit"
+						:description="t('guild_settings.filter.common.hard_action_description')"
 					>
 						<USelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
 							class="w-full"
-							aria-label="Select punishment action"
+							:aria-label="t('guild_settings.filter.common.select_action_aria')"
 						/>
 					</UFormField>
 
 					<UFormField
-						label="Duration"
+						:label="t('guild_settings.filter.common.duration')"
 						name="hardActionDurationMs"
-						description="How long the mute or ban lasts"
+						:description="t('guild_settings.filter.common.duration_help')"
 					>
 						<SelectDuration
 							v-model="state.hardActionDurationMs"
@@ -149,7 +170,7 @@
 				<div class="mt-4 space-y-5">
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Violations before punishment
+							{{ t("guild_settings.filter.common.threshold_maximum") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodNewlinesThresholdMaximum }})</span
 							>
@@ -158,7 +179,7 @@
 							v-model="state.selfmodNewlinesThresholdMaximum"
 							:min="0"
 							:max="60"
-							aria-label="New lines filter violations before punishment slider"
+							:aria-label="t('guild_settings.filter.common.threshold_maximum')"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0</span>
@@ -168,7 +189,7 @@
 
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Time window (seconds)
+							{{ t("guild_settings.filter.common.threshold_duration") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodNewlinesThresholdDurationSeconds }}s)</span
 							>
@@ -177,7 +198,7 @@
 							v-model="state.selfmodNewlinesThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="New lines filter time window (seconds) slider"
+							:aria-label="t('guild_settings.filter.common.threshold_duration')"
 						/>
 						<div class="mt-1 flex justify-between text-xs text-muted">
 							<span>0s</span>
@@ -190,26 +211,28 @@
 			<Separator />
 
 			<!-- Section 3: Options -->
-			<GuildSettingsSection title="Options">
-				<div>
-					<p class="mb-1 text-sm font-medium">
-						Maximum New Lines
-						<span class="ml-1 text-muted tabular-nums"
-							>({{ state.selfmodNewlinesMaximum }})</span
-						>
-					</p>
-					<p class="mb-3 text-xs text-muted">
-						Maximum amount of new lines in a message before filter is applied
-					</p>
-					<USlider
-						v-model="state.selfmodNewlinesMaximum"
-						:min="10"
-						:max="2000"
-						aria-label="New lines selfmod filter maximum lines slider"
-					/>
-					<div class="mt-1 flex justify-between text-xs text-muted">
-						<span>10</span>
-						<span>2000</span>
+			<GuildSettingsSection :title="t('guild_settings.filter.common.options')">
+				<div class="space-y-5">
+					<div>
+						<p class="mb-1 text-sm font-medium">
+							{{ t("guild_settings.filter.lines.maximum") }}
+							<span class="ml-1 text-muted tabular-nums"
+								>({{ state.selfmodNewlinesMaximum }})</span
+							>
+						</p>
+						<p class="mb-3 text-xs text-muted">
+							{{ t("guild_settings.filter.lines.maximum_help") }}
+						</p>
+						<USlider
+							v-model="state.selfmodNewlinesMaximum"
+							:min="10"
+							:max="2000"
+							:aria-label="t('guild_settings.filter.lines.maximum')"
+						/>
+						<div class="mt-1 flex justify-between text-xs text-muted">
+							<span>10</span>
+							<span>2000</span>
+						</div>
 					</div>
 				</div>
 			</GuildSettingsSection>
@@ -222,19 +245,20 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { NewlinesFilterSchema, type NewlinesFilter } from "#shared/schemas";
 
+const { t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
 const loading = computed(() => !guildSettings.value);
 
-const hardActionItems = [
-	{ label: "None", value: 0 },
-	{ label: "Warning", value: 1 },
-	{ label: "Kick", value: 2 },
-	{ label: "Mute", value: 3 },
-	{ label: "Softban", value: 4 },
-	{ label: "Ban", value: 5 },
-];
+const hardActionItems = computed(() => [
+	{ label: t("guild_settings.filter.common.actions.none"), value: 0 },
+	{ label: t("guild_settings.filter.common.actions.warning"), value: 1 },
+	{ label: t("guild_settings.filter.common.actions.kick"), value: 2 },
+	{ label: t("guild_settings.filter.common.actions.mute"), value: 3 },
+	{ label: t("guild_settings.filter.common.actions.softban"), value: 4 },
+	{ label: t("guild_settings.filter.common.actions.ban"), value: 5 },
+]);
 
 const schema = NewlinesFilterSchema;
 type Schema = NewlinesFilter;
@@ -264,8 +288,8 @@ const state = reactive<Schema>(createDefaultState());
 
 const selectedHardAction = computed({
 	get: () =>
-		hardActionItems.find((item) => item.value === state.selfmodNewlinesHardAction) ??
-		hardActionItems[0]!,
+		hardActionItems.value.find((item) => item.value === state.selfmodNewlinesHardAction) ??
+		hardActionItems.value[0]!,
 	set: (item) => {
 		state.selfmodNewlinesHardAction = item.value;
 	},
@@ -313,9 +337,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't save line spam filter settings. ${errorMessage ?? "Please try again."}`,
+		description: t("guild_settings.filter.lines.save_failed", {
+			message: errorMessage ?? t("guild_settings.please_try_again"),
+		}),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 </script>

@@ -1,4 +1,6 @@
 export function useHeader() {
+	const { t } = useI18n();
+
 	// Safely inject appName with fallback to prevent SSR issues
 	const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 
@@ -15,22 +17,22 @@ export function useHeader() {
 		{
 			children: [
 				{
-					description: "Tools to help you moderate your server",
-					label: "Moderation Tools",
-					to: "#moderation-tools",
+					description: t("nav.moderation_tools_description"),
+					label: t("nav.moderation_tools"),
+					to: "/wolfstar#moderation-tools",
 				},
 				{
-					description: "Track and log events in your server",
-					label: "Advanced Logging",
-					to: "#advanced-logging",
+					description: t("nav.advanced_logging_description"),
+					label: t("nav.advanced_logging"),
+					to: "/wolfstar#advanced-logging",
 				},
 				{
-					description: "Searchable moderation history for every action",
-					label: "Moderation Logs",
-					to: "#moderation-logs",
+					description: t("nav.moderation_logs_description"),
+					label: t("nav.moderation_logs"),
+					to: "/wolfstar#moderation-logs",
 				},
 			],
-			label: "Features",
+			label: t("nav.features"),
 		},
 		{
 			children: [
@@ -45,18 +47,18 @@ export function useHeader() {
 					to: "/staryl",
 				},
 			],
-			label: "Applications",
+			label: t("nav.applications"),
 		},
 		{
-			label: "Commands",
+			label: t("nav.commands"),
 			to: "/commands",
 		},
 		{
-			label: "Blog",
+			label: t("nav.blog"),
 			to: "/blog",
 		},
 		{
-			label: "Changelog",
+			label: t("nav.changelog"),
 			to: "/changelog",
 		},
 	]);
@@ -65,22 +67,22 @@ export function useHeader() {
 		{
 			children: [
 				{
-					description: "Tools to help you moderate your server",
-					label: "Moderation Tools",
-					to: "#moderation-tools",
+					description: t("nav.moderation_tools_description"),
+					label: t("nav.moderation_tools"),
+					to: "/wolfstar#moderation-tools",
 				},
 				{
-					description: "Track and log events in your server",
-					label: "Advanced Logging",
-					to: "#advanced-logging",
+					description: t("nav.advanced_logging_description"),
+					label: t("nav.advanced_logging"),
+					to: "/wolfstar#advanced-logging",
 				},
 				{
-					description: "Searchable moderation history for every action",
-					label: "Moderation Logs",
-					to: "#moderation-logs",
+					description: t("nav.moderation_logs_description"),
+					label: t("nav.moderation_logs"),
+					to: "/wolfstar#moderation-logs",
 				},
 			],
-			label: "Features",
+			label: t("nav.features"),
 		},
 		{
 			children: [
@@ -95,23 +97,23 @@ export function useHeader() {
 					to: "/staryl",
 				},
 			],
-			label: "Applications",
+			label: t("nav.applications"),
 		},
 		{
-			label: "Commands",
+			label: t("nav.commands"),
 			to: "/commands",
 		},
 		{
-			label: "Blog",
+			label: t("nav.blog"),
 			to: "/blog",
 		},
 		{
-			label: "Changelog",
+			label: t("nav.changelog"),
 			to: "/changelog",
 		},
 		{
 			icon: "lucide:github",
-			label: "GitHub",
+			label: t("nav.github"),
 			rel: "noopener noreferrer",
 			target: "_blank",
 			to: "https://github.com/wolfstar-project/wolfstar.rocks",

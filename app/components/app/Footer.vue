@@ -4,7 +4,7 @@
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
 		}"
-		aria-label="Site footer"
+		:aria-label="t('footer.site_footer')"
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
@@ -20,16 +20,22 @@
 				>
 					<div>
 						<div class="mb-3 flex items-center gap-3">
-							<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
+							<div
+								class="w-10 rounded-full"
+								role="img"
+								:aria-label="t('footer.logo')"
+							>
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
 							<span class="font-bold">WolfStar</span>
 						</div>
 						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
-							A fully customizable, multilingual Discord moderation app. Free forever,
-							open source.
+							{{ t("footer.tagline") }}
 						</p>
-						<nav class="mt-4 flex items-center gap-1" aria-label="Social links">
+						<nav
+							class="mt-4 flex items-center gap-1"
+							:aria-label="t('footer.social_links')"
+						>
 							<UButton
 								v-for="social of socialLinks"
 								:key="social.label"
@@ -48,7 +54,7 @@
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<UButton
-								label="Powered by Netlify"
+								:label="t('footer.powered_by_netlify')"
 								to="https://www.netlify.com"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -56,14 +62,14 @@
 								color="neutral"
 								variant="soft"
 								:ui="{ leadingIcon: 'bg-success' }"
-								aria-label="Powered by Netlify - opens in new tab"
+								:aria-label="t('footer.powered_by_netlify_aria')"
 							/>
 						</div>
 					</div>
 					<nav
 						v-for="column of columns"
 						:key="column.label"
-						:aria-label="`Footer ${column.label} links`"
+						:aria-label="t('footer.column_links', { label: column.label })"
 					>
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
@@ -85,40 +91,129 @@
 
 		<template #left>
 			<p class="text-sm text-base-content/80">
-				WolfStar Project — Copyright © {{ currentYear }}. All rights reserved.
+				{{ t("footer.copyright", { year: currentYear }) }}
 			</p>
 		</template>
 		<template #right>
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
+			<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
+			<ClientOnly>
+				<ULocaleSelect
+					:model-value="locale"
+					:locales="uiLocales"
+					:aria-label="t('common.language')"
+					:content="{ side: 'top', align: 'end', sideOffset: 8 }"
+					size="sm"
+					color="neutral"
+					variant="ghost"
+					class="min-w-28"
+					:ui="{ content: 'min-w-fit' }"
+					@update:model-value="selectLocale"
+				/>
+				<template #fallback>
+					<div class="h-8 min-w-28" aria-hidden="true" />
+				</template>
+			</ClientOnly>
 			<ColorModeButton />
 		</template>
 	</UFooter>
 </template>
 
 <script setup lang="ts">
+import {
+	cs,
+	da,
+	de,
+	el,
+	en,
+	en_gb,
+	es,
+	fi,
+	fr,
+	hi,
+	hr,
+	hu,
+	id,
+	it,
+	ko,
+	lt,
+	nl,
+	pt,
+	ro,
+	ru,
+	tr,
+	uk,
+} from "@nuxt/ui/locale";
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+import { currentLocales } from "~~/config/i18n";
+
+const { locale, setLocale, t } = useI18n();
+const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 
-const socialLinks = [
+/** Map app locale codes → Nuxt UI locale packs (codes remapped to match i18n). */
+const nuxtUiLocaleByCode: Record<string, typeof en> = {
+	"cs-CZ": { ...cs, code: "cs-CZ" },
+	"da-DK": { ...da, code: "da-DK" },
+	"de-DE": { ...de, code: "de-DE" },
+	"el-GR": { ...el, code: "el-GR" },
+	"en-GB": { ...en_gb, code: "en-GB" },
+	"en-US": { ...en, code: "en-US" },
+	"es-419": { ...es, code: "es-419" },
+	"es-ES": { ...es, code: "es-ES" },
+	"fi-FI": { ...fi, code: "fi-FI" },
+	"fr-FR": { ...fr, code: "fr-FR" },
+	"hi-IN": { ...hi, code: "hi-IN" },
+	"hr-HR": { ...hr, code: "hr-HR" },
+	"hu-HU": { ...hu, code: "hu-HU" },
+	"id-ID": { ...id, code: "id-ID" },
+	"it-IT": { ...it, code: "it-IT" },
+	"ko-KR": { ...ko, code: "ko-KR" },
+	"lt-LT": { ...lt, code: "lt-LT" },
+	"nl-NL": { ...nl, code: "nl-NL" },
+	"pt-PT": { ...pt, code: "pt-PT" },
+	"ro-RO": { ...ro, code: "ro-RO" },
+	"ru-RU": { ...ru, code: "ru-RU" },
+	"tr-TR": { ...tr, code: "tr-TR" },
+	"uk-UA": { ...uk, code: "uk-UA" },
+};
+
+const uiLocales = currentLocales.map((appLocale) => {
+	const pack = nuxtUiLocaleByCode[appLocale.code];
+	if (pack) return pack;
+	return Object.assign({}, en, {
+		code: appLocale.code,
+		name: appLocale.name ?? appLocale.code,
+	});
+});
+
+function selectLocale(code: string) {
+	if (!isAppLocaleCode(code)) return;
+	setPreferredLocale(code);
+	void setLocale(code);
+}
+
+const socialLinks = computed(() => [
 	{
-		ariaLabel: "Visit WolfStar on GitHub - opens in new tab",
+		ariaLabel: t("footer.github_aria"),
 		icon: "simple-icons:github",
-		label: "GitHub",
+		label: t("footer.github"),
 		to: "https://repo.wolfstar.rocks",
 	},
 	{
-		ariaLabel: "Join the WolfStar Discord - opens in new tab",
+		ariaLabel: t("footer.discord_aria"),
 		icon: "simple-icons:discord",
-		label: "Discord",
+		label: t("footer.support_server"),
 		to: "https://join.wolfstar.rocks",
 	},
 	{
-		ariaLabel: "Follow WolfStar on X - opens in new tab",
+		ariaLabel: t("footer.x_aria"),
 		icon: "simple-icons:x",
 		label: "X",
 		to: "https://x.com/wolfstarapp",
 	},
-] as const;
+]);
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

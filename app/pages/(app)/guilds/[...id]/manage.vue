@@ -33,6 +33,7 @@ definePageMeta({
 	path: "/guilds/:id/manage/:slug(.*)*",
 });
 
+const { t } = useI18n();
 const route = useRoute();
 const toast = useToast();
 const { guildData } = useGuildData();
@@ -53,7 +54,7 @@ const joinedPath = computed(() => (Array.isArray(idParam) ? idParam.join("/") : 
 
 const title = computed(
 	() =>
-		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value?.name ?? ""}`,
+		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || t("guild_manage.general")} · ${guildData.value?.name ?? ""}`,
 );
 
 // Pre-define async components outside of computed to avoid re-creating
@@ -135,10 +136,10 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: commandsErr.message || "Couldn't load the command list. Try refreshing.",
+			description: commandsErr.message || t("guild_manage.commands_unavailable_description"),
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Commands Unavailable",
+			title: t("guild_manage.commands_unavailable_title"),
 		});
 		log.error({
 			tag: "wolfstar:dashboard",
@@ -154,10 +155,11 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: languagesErr.message || "Couldn't load the language list. Try refreshing.",
+			description:
+				languagesErr.message || t("guild_manage.languages_unavailable_description"),
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Languages Unavailable",
+			title: t("guild_manage.languages_unavailable_title"),
 		});
 		log.error({
 			tag: "wolfstar:dashboard",

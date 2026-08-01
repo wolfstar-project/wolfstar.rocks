@@ -139,7 +139,7 @@ export class PermissionNodeManager {
 			id: typeof target === "object" && "id" in target ? target.id : target.user.id,
 		};
 
-		return node.allow.length === 0 && node.deny.length === 0 //
+		return node.allow.length === 0 && node.deny.length === 0
 			? nodes.toSpliced(nodeIndex, 1)
 			: nodes.with(nodeIndex, node);
 	}

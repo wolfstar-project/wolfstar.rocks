@@ -287,7 +287,8 @@ function flattenChannelCategory(channel: APIGuildCategoryChannel): FlattenedCate
 		guildId: channel.guild_id ?? null,
 		name: channel.name,
 		rawPosition: channel.position ?? 0,
-		parentId: channel.parent_id ?? null, // Categories cannot have parents,
+		// Categories cannot have a parent category, so Discord never sends parent_id for them
+		parentId: channel.parent_id ?? null,
 		permissionOverwrites: transformPermissionOverwrites(channel.permission_overwrites),
 		createdTimestamp: DiscordSnowflake.timestampFrom(channel.id),
 	};

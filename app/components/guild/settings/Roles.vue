@@ -33,7 +33,6 @@
 			class="space-y-8"
 			@error="onError"
 		>
-			<!-- Toggles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
@@ -53,7 +52,6 @@
 
 			<Separator />
 
-			<!-- Configurable Roles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
@@ -88,7 +86,6 @@
 
 			<Separator />
 
-			<!-- Restricted Roles Section -->
 			<div class="space-y-4">
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
@@ -150,7 +147,6 @@ function isArrayKey(key: string): boolean {
 const restrictedRoles = ConfigurableRoles.filter((r) => r.key.startsWith("rolesRestricted"));
 const standardRoles = ConfigurableRoles.filter((r) => !r.key.startsWith("rolesRestricted"));
 
-// Initialize form state with defaults
 const createDefaultState = (): Schema => {
 	const defaults: Schema = { rolesRemoveInitial: false };
 	for (const roleConfig of ConfigurableRoles) {
@@ -161,7 +157,6 @@ const createDefaultState = (): Schema => {
 
 const state = reactive<Schema>(createDefaultState());
 
-// Loading state
 const loading = computed(() => !guildData.value?.roles || !guildSettings.value);
 
 // Compute original values from initialized state (snapshot)
@@ -172,12 +167,10 @@ const originalValues = computed(() => {
 
 	const values = createDefaultState();
 
-	// Bool toggle
 	if (guildSettings.value && !isNullOrUndefined(guildSettings.value.rolesRemoveInitial)) {
 		values.rolesRemoveInitial = guildSettings.value.rolesRemoveInitial;
 	}
 
-	// Roles
 	for (const roleConfig of ConfigurableRoles) {
 		const key = roleConfig.key;
 		if (guildSettings.value && !isNullOrUndefined(guildSettings.value[key])) {
@@ -193,7 +186,6 @@ const originalValues = computed(() => {
 	return values;
 });
 
-// Watch for loading state change to populate local state
 watch(
 	loading,
 	(isLoading) => {
@@ -205,7 +197,6 @@ watch(
 	{ immediate: true },
 );
 
-// Map form state to GuildData changes
 function mapToGuildData(formState: Schema): Partial<GuildData> {
 	const changes: Partial<GuildData> = {};
 
@@ -231,7 +222,6 @@ function mapToGuildData(formState: Schema): Partial<GuildData> {
 	return changes;
 }
 
-// Form error handler
 async function onError(event: FormErrorEvent) {
 	const element =
 		event.errors[0] && event.errors[0].id ? document.getElementById(event.errors[0].id) : null;

@@ -29,7 +29,6 @@
 		<UPageBody>
 			<UContainer>
 				<article class="prose prose-lg max-w-none space-y-12">
-					<!-- Welcome Section -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Welcome to WolfStar Project
@@ -62,7 +61,6 @@
 						</p>
 					</section>
 
-					<!-- Information We Collect -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Information we collect
@@ -80,7 +78,6 @@
 						</p>
 					</section>
 
-					<!-- What Are Cookies -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							What are cookies?
@@ -92,7 +89,6 @@
 						</p>
 					</section>
 
-					<!-- What Cookies Do We Use -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							What cookies do we use?
@@ -139,7 +135,6 @@
 						</ul>
 					</section>
 
-					<!-- Local Storage -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Local storage
@@ -155,7 +150,6 @@
 						</p>
 					</section>
 
-					<!-- Managing Cookies -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Managing cookies
@@ -213,7 +207,6 @@
 						</ul>
 					</section>
 
-					<!-- Analytics -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Analytics
@@ -255,7 +248,6 @@
 						</p>
 					</section>
 
-					<!-- Error Tracking -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Error tracking and monitoring
@@ -311,7 +303,6 @@
 						</p>
 					</section>
 
-					<!-- Authenticated Users -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Authenticated users
@@ -351,7 +342,6 @@
 						</p>
 					</section>
 
-					<!-- Data We Collect Automatically -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Data we collect automatically
@@ -400,7 +390,6 @@
 						</ul>
 					</section>
 
-					<!-- Where Information is Processed -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Where information is processed
@@ -415,7 +404,6 @@
 						</p>
 					</section>
 
-					<!-- Our Use of Your Information -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Our use of your information
@@ -443,7 +431,6 @@
 						</p>
 					</section>
 
-					<!-- Legal Bases -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Our legal bases for handling of your personal data
@@ -505,7 +492,6 @@
 						</p>
 					</section>
 
-					<!-- Our Disclosure of Your Information -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Our disclosure of your information
@@ -554,7 +540,6 @@
 						</ul>
 					</section>
 
-					<!-- Unsolicited Information -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Unsolicited information
@@ -569,7 +554,6 @@
 						</p>
 					</section>
 
-					<!-- Children -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Children
@@ -593,7 +577,6 @@
 						</p>
 					</section>
 
-					<!-- Links to Other Websites -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Links to other web sites
@@ -609,7 +592,6 @@
 						</p>
 					</section>
 
-					<!-- Data Retention -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Data retention
@@ -675,7 +657,6 @@
 						</p>
 					</section>
 
-					<!-- Security -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Security
@@ -691,7 +672,6 @@
 						</p>
 					</section>
 
-					<!-- Your Data Rights and Choices -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Your data rights and choices
@@ -779,7 +759,6 @@
 						</p>
 					</section>
 
-					<!-- EEA Representative -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Who is WolfStar Project's EEA representative?
@@ -795,7 +774,6 @@
 						</p>
 					</section>
 
-					<!-- California Privacy Rights -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Your California Privacy Rights
@@ -854,7 +832,6 @@
 						<p class="text-base-content/80 italic">No requests to date</p>
 					</section>
 
-					<!-- Changes to Privacy Policy -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Changes to this Privacy Policy
@@ -870,7 +847,6 @@
 						</p>
 					</section>
 
-					<!-- Contact -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Contacting us

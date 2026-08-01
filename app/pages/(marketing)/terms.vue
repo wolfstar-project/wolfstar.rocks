@@ -29,7 +29,6 @@
 		<UPageBody>
 			<UContainer>
 				<article class="prose prose-lg max-w-none space-y-12">
-					<!-- Terms -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Terms
@@ -51,7 +50,6 @@
 						</p>
 					</section>
 
-					<!-- Use License -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Use License
@@ -73,7 +71,6 @@
 						</ul>
 					</section>
 
-					<!-- Disclaimer -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Disclaimer
@@ -88,7 +85,6 @@
 						</p>
 					</section>
 
-					<!-- Limitations -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Limitations
@@ -104,7 +100,6 @@
 						</p>
 					</section>
 
-					<!-- Revisions and Errata -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Revisions and errata
@@ -119,7 +114,6 @@
 						</p>
 					</section>
 
-					<!-- Links -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Links
@@ -132,7 +126,6 @@
 						</p>
 					</section>
 
-					<!-- Terms of Service Modifications -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Terms of Service modifications
@@ -144,7 +137,6 @@
 						</p>
 					</section>
 
-					<!-- Your Privacy -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Your Privacy
@@ -157,7 +149,6 @@
 						</p>
 					</section>
 
-					<!-- Governing Law -->
 					<section>
 						<h2 class="mb-4 text-lg tracking-wider text-base-content/60 uppercase">
 							Governing law

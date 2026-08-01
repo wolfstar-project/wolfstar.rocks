@@ -4,12 +4,10 @@ import DiscordChatMessageComposer from "~/components/discord/chat-message-compos
 
 describe("DiscordChatMessageComposer", () => {
 	it("renders the composer group, placeholder, and desktop actions (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: { channelName: "mod-commands" },
 		});
 
-		// ASSERT
 		const root = wrapper.find("[role='group']");
 		expect(root.attributes("aria-label")).toBe("Message composer for mod-commands");
 		const input = wrapper.find(".discord-message-composer-input");
@@ -20,16 +18,13 @@ describe("DiscordChatMessageComposer", () => {
 	});
 
 	it("enables send and emits submit when the composer has a value (positive)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: { channelName: "general", modelValue: "hello" },
 		});
 
-		// ACT
 		await wrapper.find(".discord-message-composer-send").trigger("click");
 		await wrapper.find(".discord-message-composer-input").trigger("keydown", { key: "Enter" });
 
-		// ASSERT
 		expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(true);
 		expect(
 			wrapper.find(".discord-message-composer-send").attributes("disabled"),
@@ -41,12 +36,10 @@ describe("DiscordChatMessageComposer", () => {
 	});
 
 	it("keeps send disabled and decorative when the value is only whitespace (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: { channelName: "general", modelValue: "   " },
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-message-composer-has-value").exists()).toBe(false);
 		expect(wrapper.find(".discord-message-composer-send").attributes("disabled")).toBeDefined();
 		expect(wrapper.find(".discord-message-composer-send").attributes("aria-hidden")).toBe(
@@ -58,7 +51,6 @@ describe("DiscordChatMessageComposer", () => {
 	});
 
 	it("exposes combobox ARIA and emits navigation keys when autocomplete is on (positive)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: {
 				channelName: "mod-commands",
@@ -71,12 +63,10 @@ describe("DiscordChatMessageComposer", () => {
 		});
 		const input = wrapper.find(".discord-message-composer-input");
 
-		// ACT
 		await input.trigger("keydown", { key: "ArrowDown" });
 		await input.trigger("keydown", { key: "ArrowUp" });
 		await input.trigger("keydown", { key: "Escape" });
 
-		// ASSERT
 		expect(input.attributes("role")).toBe("combobox");
 		expect(input.attributes("aria-controls")).toBe("slash-listbox");
 		expect(input.attributes("aria-expanded")).toBe("true");
@@ -86,42 +76,36 @@ describe("DiscordChatMessageComposer", () => {
 	});
 
 	it("does not set combobox ARIA when autocomplete is off (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: { channelName: "general", autocomplete: false },
 		});
 		const input = wrapper.find(".discord-message-composer-input");
 
-		// ASSERT
 		expect(input.attributes("role")).toBeUndefined();
 		expect(input.attributes("aria-controls")).toBeUndefined();
 		expect(input.attributes("aria-expanded")).toBeUndefined();
 	});
 
 	it("emits openApps from the apps toolbar action (positive)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: { channelName: "mod-commands" },
 		});
 
-		// ACT
 		await wrapper
 			.findAll(".discord-message-composer-action")
 			.find((btn) => btn.attributes("aria-label") === "Open apps and commands")!
 			.trigger("click");
 		await wrapper.find(".discord-message-composer-apps-mobile").trigger("click");
 
-		// ASSERT
 		expect(wrapper.emitted("openApps")).toHaveLength(2);
 	});
 
 	it("swaps the mobile apps glyph for close when appsOpen (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatMessageComposer, {
 			props: { channelName: "mod-commands", appsOpen: true },
 		});
 
-		// ASSERT — mobile control only; desktop toolbar keeps its static open label
+		// Mobile control only; desktop toolbar keeps its static open label
 		expect(wrapper.find(".discord-message-composer-apps-open").exists()).toBe(true);
 		expect(wrapper.find(".discord-message-composer-apps-mobile").attributes("aria-label")).toBe(
 			"Close apps and commands",

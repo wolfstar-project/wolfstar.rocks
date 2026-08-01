@@ -4,7 +4,6 @@ import DiscordChatInputCommandSuggestion from "~/components/discord/chat-input-c
 
 describe("DiscordChatInputCommandSuggestion", () => {
 	it("renders as a selectable option and emits select on click or Enter (positive)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChatInputCommandSuggestion, {
 			props: {
 				name: "warn",
@@ -15,11 +14,9 @@ describe("DiscordChatInputCommandSuggestion", () => {
 		});
 		const option = wrapper.find("[role='option']");
 
-		// ACT
 		await option.trigger("click");
 		await option.trigger("keydown", { key: "Enter" });
 
-		// ASSERT
 		expect(option.attributes("aria-selected")).toBe("true");
 		expect(option.attributes("aria-label")).toContain("warn");
 		expect(wrapper.text()).toContain("/warn");
@@ -28,7 +25,6 @@ describe("DiscordChatInputCommandSuggestion", () => {
 	});
 
 	it("ignores activation when the suggestion is disabled (negative)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChatInputCommandSuggestion, {
 			props: {
 				name: "third-party",
@@ -38,11 +34,9 @@ describe("DiscordChatInputCommandSuggestion", () => {
 		});
 		const option = wrapper.find("[role='option']");
 
-		// ACT
 		await option.trigger("click");
 		await option.trigger("keydown", { key: " " });
 
-		// ASSERT
 		expect(option.attributes("aria-disabled")).toBe("true");
 		expect(option.attributes("tabindex")).toBe("-1");
 		expect(option.classes()).toContain("discord-slash-command-suggestion-disabled");

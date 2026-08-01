@@ -5,7 +5,6 @@ import DiscordButton from "~/components/discord/button.vue";
 
 describe("DiscordActionRow", () => {
 	it("renders slotted children in a flex action row (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended({
 			components: { DiscordActionRow, DiscordButton },
 			template: `
@@ -16,7 +15,6 @@ describe("DiscordActionRow", () => {
 			`,
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-action-row").exists()).toBe(true);
 		expect(wrapper.findAll(".discord-button")).toHaveLength(2);
 		expect(wrapper.text()).toContain("Confirm");
@@ -24,10 +22,8 @@ describe("DiscordActionRow", () => {
 	});
 
 	it("renders an empty row when no children are slotted (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordActionRow);
 
-		// ASSERT
 		expect(wrapper.find(".discord-action-row").exists()).toBe(true);
 		expect(wrapper.find(".discord-button").exists()).toBe(false);
 		expect(wrapper.find(".discord-action-row").text().trim()).toBe("");

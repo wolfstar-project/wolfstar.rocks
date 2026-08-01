@@ -4,7 +4,6 @@ import DiscordChannelHeader from "~/components/discord/channel/header.vue";
 
 describe("DiscordChannelHeader", () => {
 	it("renders channel name, topic, online count, and toolbar labels (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: {
 				name: "mod-commands",
@@ -17,7 +16,6 @@ describe("DiscordChannelHeader", () => {
 			},
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-channel-header").exists()).toBe(true);
 		expect(wrapper.text()).toContain("mod-commands");
 		expect(wrapper.text()).toContain("Try a slash command below.");
@@ -31,7 +29,6 @@ describe("DiscordChannelHeader", () => {
 	});
 
 	it("emits members toggle events when the members toolbar button is clicked (positive)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: { name: "mod-commands", membersOpen: true },
 		});
@@ -39,21 +36,17 @@ describe("DiscordChannelHeader", () => {
 			.findAll(".discord-channel-header-action")
 			.find((action) => action.attributes("aria-pressed") !== undefined);
 
-		// ACT
 		await membersButton!.trigger("click");
 
-		// ASSERT
 		expect(wrapper.emitted("update:membersOpen")?.[0]).toEqual([false]);
 		expect(wrapper.emitted("toggle-members")).toHaveLength(1);
 	});
 
 	it("shows Show member list when membersOpen is false (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: { name: "mod-commands", membersOpen: false },
 		});
 
-		// ASSERT
 		const membersButton = wrapper
 			.findAll(".discord-channel-header-action")
 			.find((action) => action.attributes("aria-pressed") !== undefined);
@@ -63,15 +56,12 @@ describe("DiscordChannelHeader", () => {
 	});
 
 	it("emits open-channel-info from the mobile title button (positive)", async () => {
-		// ARRANGE
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: { name: "mod-commands" },
 		});
 
-		// ACT
 		await wrapper.find("button.discord-channel-header-mobile-title").trigger("click");
 
-		// ASSERT
 		expect(wrapper.emitted("open-channel-info")).toHaveLength(1);
 		expect(
 			wrapper.find("button.discord-channel-header-mobile-title").attributes("aria-label"),
@@ -79,23 +69,20 @@ describe("DiscordChannelHeader", () => {
 	});
 
 	it("hides the notification badge when notificationCount is zero (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: { name: "general", notificationCount: 0 },
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-channel-header-badge").exists()).toBe(false);
 		expect(wrapper.find(".discord-channel-header-topic").exists()).toBe(false);
 	});
 
 	it("uses Discord desktop toolbar icon size (24px) on action glyphs (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: { name: "mod-commands" },
 		});
 
-		// ASSERT — Discord iconWrapper is 24×24; Tailwind size-6
+		// Discord iconWrapper is 24×24; Tailwind size-6
 		const actionIcons = wrapper
 			.findAll(".discord-channel-header-action")
 			.map((action) => action.find("[class*='size-6']"));
@@ -106,7 +93,6 @@ describe("DiscordChannelHeader", () => {
 	});
 
 	it("renders desktop search with left placeholder and right magnifier (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChannelHeader, {
 			props: {
 				name: "mod-commands",
@@ -116,7 +102,7 @@ describe("DiscordChannelHeader", () => {
 		const search = wrapper.find(".discord-channel-header-search");
 		const children = search.element.children;
 
-		// ASSERT — placeholder text left, magnifier icon right (Discord order)
+		// Placeholder text left, magnifier icon right (Discord order)
 		expect(search.exists()).toBe(true);
 		expect(wrapper.find(".discord-channel-header-search-placeholder").text()).toBe(
 			"Search WolfStar Laboratory",

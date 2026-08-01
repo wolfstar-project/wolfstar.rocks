@@ -4,7 +4,6 @@ import DiscordChatInputCommand from "~/components/discord/chat-input-command/ind
 
 describe("DiscordChatInputCommand", () => {
 	it("renders the composed slash command path and options (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatInputCommand, {
 			props: {
 				name: "conf",
@@ -17,7 +16,6 @@ describe("DiscordChatInputCommand", () => {
 			},
 		});
 
-		// ASSERT
 		const group = wrapper.find("[role='group']");
 		expect(group.exists()).toBe(true);
 		expect(group.attributes("aria-label")).toContain("Slash command /conf menu save");
@@ -30,7 +28,6 @@ describe("DiscordChatInputCommand", () => {
 	});
 
 	it("uses the option name as placeholder when value and description are missing (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatInputCommand, {
 			props: {
 				name: "warn",
@@ -38,19 +35,16 @@ describe("DiscordChatInputCommand", () => {
 			},
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-slash-command-option-value").exists()).toBe(false);
 		expect(wrapper.find(".discord-slash-command-option-placeholder").text()).toBe("user");
 		expect(wrapper.find(".discord-slash-command-option-focused").exists()).toBe(false);
 	});
 
 	it("renders without options chrome when options are empty (negative)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordChatInputCommand, {
 			props: { name: "help" },
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-slash-command-option").exists()).toBe(false);
 		expect(wrapper.find("[role='group']").attributes("aria-label")).toBe("Slash command /help");
 	});

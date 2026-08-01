@@ -4,7 +4,6 @@ import DiscordMessageReply from "~/components/discord/message-reply.vue";
 
 describe("DiscordMessageReply", () => {
 	it("renders a command reply with formatted path and accessible label (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMessageReply, {
 			props: {
 				kind: "command",
@@ -15,7 +14,6 @@ describe("DiscordMessageReply", () => {
 			},
 		});
 
-		// ASSERT
 		const reply = wrapper.find("[role='complementary']");
 		expect(reply.exists()).toBe(true);
 		expect(reply.classes()).toContain("discord-message-reply-kind-command");
@@ -26,7 +24,6 @@ describe("DiscordMessageReply", () => {
 	});
 
 	it("renders a message reply preview instead of a command chip (positive)", async () => {
-		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordMessageReply, {
 			props: {
 				kind: "message",
@@ -35,7 +32,6 @@ describe("DiscordMessageReply", () => {
 			},
 		});
 
-		// ASSERT
 		const reply = wrapper.find("[role='complementary']");
 		expect(reply.classes()).not.toContain("discord-message-reply-kind-command");
 		expect(reply.attributes("aria-label")).toBe(
@@ -49,12 +45,11 @@ describe("DiscordMessageReply", () => {
 	});
 
 	it("does not invent a command name when command props are missing (negative)", async () => {
-		// ARRANGE / ACT — kind is command but commandName is omitted
+		// Kind is command but commandName is omitted
 		const wrapper = await mountSuspended(DiscordMessageReply, {
 			props: { kind: "command", user: "stella" },
 		});
 
-		// ASSERT
 		expect(wrapper.find(".discord-message-reply-command-name").text()).toBe("");
 		expect(wrapper.find("[role='complementary']").attributes("aria-label")).toBe(
 			"Stella used the  slash command",

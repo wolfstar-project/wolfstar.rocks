@@ -1,16 +1,20 @@
 /**
- * Tolgee CLI config for WolfStar.rocks (project "Wolfstar Site", id 33602).
+ * Tolgee CLI config for WolfStar.rocks (project "Wolfstar Website", id 33768).
  *
  * Local layout: i18n/locales/{nuxtLocale}/{namespace}.json
  * Tolgee tags are shorter (cs-CZ → cs, zh-CN → zh-Hans, …). Base English
  * lives in `en/` (same content as en-US); base Spanish in `es/` (≈ es-ES).
+ *
+ * Push maps each file via `push.files[*].language` to those short tags. The
+ * platform must already have matching languages — run
+ * `node scripts/tolgee-ensure-languages.mjs` after creating/cloning a project.
  *
  * Free plan key limit is 500; this repo has ~552 string keys across namespaces.
  * Prefer pushing only languages with real translations until the plan is upgraded:
  *   pnpm tolgee:push -- --languages en es it
  *
  * Set TOLGEE_API_KEY (Project API Key or PAT) in the environment — never commit it.
- * The same key is configured on the Tolgee MCP server in Cursor.
+ * `tolgee login` PAT also works. MCP may still point at the older Wolfstar (33602) PAK.
  */
 const NAMESPACES = ["common", "auth", "dashboard", "guilds", "profile", "components"];
 

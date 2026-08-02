@@ -1,8 +1,21 @@
-import { defineNuxtModule, useRuntimeConfig } from "nuxt/kit";
+import { createResolver, defineNuxtModule, useRuntimeConfig } from "nuxt/kit";
 import { provider } from "std-env";
+
 // Storage key for fetch cache - must match shared/utils/fetch-cache-config.ts
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
 const SKEW_PROTECTION_STORAGE_BASE = "skew-protection";
+
+const { resolve } = createResolver(import.meta.url);
+const resilientNetlifyBlobsDriver = resolve(
+	"../server/utils/storage/netlify-blobs-resilient",
+);
+
+function netlifyBlobsMount(name: string) {
+	return {
+		driver: resilientNetlifyBlobsDriver,
+		name,
+	};
+}
 
 export default defineNuxtModule({
 	meta: {
@@ -19,24 +32,23 @@ export default defineNuxtModule({
 		nuxt.hook("nitro:config", (nitroConfig) => {
 			nitroConfig.storage = nitroConfig.storage || {};
 
-			// Main cache storage (for defineCachedFunction, etc.)
+			// Main cache storage (for defineCachedFunction, i18n handler cache, etc.)
+			// Uses a resilient Blobs driver so cold-start `getKeys("nitro:handlers:i18n")`
+			// survives mid-body TCP resets from edge.netlifyblobs.com.
 			nitroConfig.storage.cache = {
 				...nitroConfig.storage.cache,
-				driver: "netlifyBlobs",
-				name: "cache",
+				...netlifyBlobsMount("cache"),
 			};
 
 			// Fetch cache storage (for SWR fetch caching)
 			nitroConfig.storage[FETCH_CACHE_STORAGE_BASE] = {
 				...nitroConfig.storage[FETCH_CACHE_STORAGE_BASE],
-				driver: "netlifyBlobs",
-				name: FETCH_CACHE_STORAGE_BASE,
+				...netlifyBlobsMount(FETCH_CACHE_STORAGE_BASE),
 			};
 
 			nitroConfig.storage[SKEW_PROTECTION_STORAGE_BASE] = {
 				...nitroConfig.storage[SKEW_PROTECTION_STORAGE_BASE],
-				driver: "netlifyBlobs",
-				name: SKEW_PROTECTION_STORAGE_BASE,
+				...netlifyBlobsMount(SKEW_PROTECTION_STORAGE_BASE),
 			};
 
 			nitroConfig.storage["wolfstar:ratelimiter"] = {

@@ -17,7 +17,8 @@ type ResilientNetlifyBlobsOptions = {
  *    or get reported as unhandled by Sentry's storage instrumentation
  */
 export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {
-	const { driver: _driver, name = "cache" } = options;
+	// Omit Nitro's serialized `driver` path key before forwarding store options.
+	const name = options.name ?? "cache";
 	const base = netlifyBlobsDriver({
 		name,
 		deployScoped: false,

@@ -2,7 +2,7 @@ import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
-import { currentLocales } from "./config/i18n";
+import { currentLocales, i18nExperimental } from "./config/i18n";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -691,6 +691,7 @@ export default defineNuxtConfig({
 		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
 		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
 		langDir: "locales",
+		experimental: i18nExperimental,
 	},
 });
 

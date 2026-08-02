@@ -3,9 +3,11 @@ import netlifyBlobsDriver from "unstorage/drivers/netlify-blobs";
 import { createResilientNetlifyBlobsFetch } from "./resilient-fetch";
 import { isTransientNetworkError } from "./transient-network-error";
 
-type NetlifyBlobsDriverOptions = Parameters<typeof netlifyBlobsDriver>[0] & {
+type ResilientNetlifyBlobsOptions = {
 	/** Present when Nitro JSON-serializes the mount config into the driver factory. */
 	driver?: string;
+	/** Blob store name (required for site-scoped stores). */
+	name?: string;
 };
 
 /**
@@ -14,10 +16,11 @@ type NetlifyBlobsDriverOptions = Parameters<typeof netlifyBlobsDriver>[0] & {
  * 2. Fail-open `getKeys` so `@nuxtjs/i18n` bootstrap cache clears never crash cold starts
  *    or get reported as unhandled by Sentry's storage instrumentation
  */
-export default defineDriver((options: NetlifyBlobsDriverOptions = {}) => {
-	const { driver: _driver, ...rest } = options;
+export default defineDriver((options: ResilientNetlifyBlobsOptions = {}) => {
+	const { driver: _driver, name = "cache" } = options;
 	const base = netlifyBlobsDriver({
-		...rest,
+		name,
+		deployScoped: false,
 		fetch: createResilientNetlifyBlobsFetch(),
 	});
 

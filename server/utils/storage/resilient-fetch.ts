@@ -45,8 +45,7 @@ export function createResilientNetlifyBlobsFetch(
 				});
 			} catch (error) {
 				lastError = error;
-				const canRetry =
-					attempt < maxAttempts - 1 && isTransientNetworkError(error);
+				const canRetry = attempt < maxAttempts - 1 && isTransientNetworkError(error);
 				if (!canRetry) {
 					throw error;
 				}

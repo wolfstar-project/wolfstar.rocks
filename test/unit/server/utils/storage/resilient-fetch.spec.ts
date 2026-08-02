@@ -1,5 +1,5 @@
-import { describe, expect, it, vi } from "vitest";
 import { createResilientNetlifyBlobsFetch } from "#server/utils/storage/resilient-fetch";
+import { describe, expect, it, vi } from "vitest";
 
 describe("createResilientNetlifyBlobsFetch", () => {
 	it("returns a buffered response on success", async () => {

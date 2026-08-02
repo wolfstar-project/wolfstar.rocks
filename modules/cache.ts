@@ -6,9 +6,7 @@ const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
 const SKEW_PROTECTION_STORAGE_BASE = "skew-protection";
 
 const { resolve } = createResolver(import.meta.url);
-const resilientNetlifyBlobsDriver = resolve(
-	"../server/utils/storage/netlify-blobs-resilient",
-);
+const resilientNetlifyBlobsDriver = resolve("../server/utils/storage/netlify-blobs-resilient");
 
 function netlifyBlobsMount(name: string) {
 	return {

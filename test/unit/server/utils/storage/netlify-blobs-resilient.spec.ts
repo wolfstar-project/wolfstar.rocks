@@ -25,9 +25,8 @@ describe("netlify-blobs-resilient driver", () => {
 	});
 
 	it("passes a resilient fetch into the base netlify-blobs driver", async () => {
-		const { default: createDriver } = await import(
-			"#server/utils/storage/netlify-blobs-resilient"
-		);
+		const { default: createDriver } =
+			await import("#server/utils/storage/netlify-blobs-resilient");
 		createDriver({ name: "cache", driver: "/virtual/driver" });
 
 		expect(netlifyBlobsDriverMock).toHaveBeenCalledOnce();
@@ -45,9 +44,8 @@ describe("netlify-blobs-resilient driver", () => {
 		const hangUp = Object.assign(new Error("socket hang up"), { code: "ECONNRESET" });
 		getKeysMock.mockRejectedValueOnce(hangUp);
 
-		const { default: createDriver } = await import(
-			"#server/utils/storage/netlify-blobs-resilient"
-		);
+		const { default: createDriver } =
+			await import("#server/utils/storage/netlify-blobs-resilient");
 		const driver = createDriver({ name: "cache" });
 
 		await expect(driver.getKeys?.("nitro:handlers:i18n")).resolves.toEqual([]);
@@ -56,9 +54,8 @@ describe("netlify-blobs-resilient driver", () => {
 	it("rethrows non-transient getKeys errors", async () => {
 		getKeysMock.mockRejectedValueOnce(new Error("unauthorized"));
 
-		const { default: createDriver } = await import(
-			"#server/utils/storage/netlify-blobs-resilient"
-		);
+		const { default: createDriver } =
+			await import("#server/utils/storage/netlify-blobs-resilient");
 		const driver = createDriver({ name: "cache" });
 
 		await expect(driver.getKeys?.("nitro:handlers:i18n")).rejects.toThrow("unauthorized");

@@ -8,6 +8,10 @@ import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
+// CI invokes `vp test` directly (bypassing package.json TEST=1). Vitest sets
+// VITEST before config load; std-env isTest alone can still be false if
+// NODE_ENV isn't "test" yet when this module is first evaluated.
+const isTestEnv = isTest || Boolean(process.env.VITEST);
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -21,7 +25,7 @@ export default defineNuxtConfig({
 		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
 		// test environment. Studio editor chunks are also excluded from the PWA
 		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
-		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
+		...(isTestEnv || isStorybook ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -32,7 +36,6 @@ export default defineNuxtConfig({
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
 		"@nuxtjs/i18n",
-		"@vueuse/motion/nuxt",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
 		"@onmax/nuxt-better-auth",
@@ -45,14 +48,8 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		"nuxt-skill-hub",
-		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
+		...(isTestEnv || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
-
-	skillHub: {
-		targets: ["claude-code", "cursor"],
-		generationMode: "prepare",
-	},
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
@@ -273,6 +270,7 @@ export default defineNuxtConfig({
 		// Discord, so prerendering only produces an empty redirect stub that fails
 		// html-validation (no <title>/<body>, missing lang). Never prerender it.
 		"/oauth/login": {
+			prerender: false,
 			robots: true,
 			auth: { only: "guest", redirectTo: "/profile" },
 		},
@@ -326,25 +324,23 @@ export default defineNuxtConfig({
 		typescriptPlugin: true,
 		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
+		// Reuses Vite's own file watcher instead of starting a second one.
+		watcher: "builder",
 	},
 
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
-		// Pre-compress prerendered HTML and /_nuxt assets so the server (and any
-		// origin without edge compression) serves gzip/brotli with correct headers.
-		compressPublicAssets: {
-			brotli: true,
-			gzip: true,
-		},
 		future: {
 			nativeSWR: true,
 		},
+		esbuild: {
+			options: {
+				target: "es2024",
+			},
+		},
 		prerender: {
 			crawlLinks: true,
-			// Keep redirect-only and per-user routes out of the prerender crawl;
-			// their auth-redirect stubs do not produce complete HTML documents.
-			ignore: ["/login", "/oauth/login", "/profile", "/_studio", "/__nuxt_studio"],
 		},
 		publicAssets: [
 			{
@@ -361,10 +357,6 @@ export default defineNuxtConfig({
 				base: "./.cache/fetch",
 				driver: "fsLite",
 			},
-			"skew-protection": {
-				base: "./.cache/skew-protection",
-				driver: "fsLite",
-			},
 			"wolfstar:ratelimiter": {
 				base: "./.cache/ratelimiter",
 				driver: "fsLite",
@@ -374,11 +366,24 @@ export default defineNuxtConfig({
 				driver: "fsLite",
 			},
 		},
+		// build:test must set TEST=1: nuxi build forces NODE_ENV=production before
+		// config load, so NODE_ENV=test alone never makes std-env isTest (or this
+		// replace) true in Playwright bundles. Prefer isTestEnv so VITEST-only
+		// runners (CI `vp test`) still get a true replace without waiting on NODE_ENV.
+		replace: {
+			"import.meta.test": isTestEnv,
+		},
 	},
 
 	vite: {
-		define: {
-			"process.test": "false",
+		// Do NOT define import.meta.test here: Nuxt's schema already defines it
+		// from nuxt.options.test (Boolean(std-env isTest) by default, and forced
+		// true by @nuxt/test-utils in the Vitest environment). A user-level define
+		// overrides that and, in CI, bakes in "false" because this config is
+		// evaluated before Vitest sets NODE_ENV=test — breaking mountSuspended's
+		// import.meta.test-gated SingleRenderer branch in nuxt-root.vue.
+		css: {
+			transformer: "lightningcss",
 		},
 		optimizeDeps: {
 			include: [
@@ -454,15 +459,12 @@ export default defineNuxtConfig({
 		},
 	},
 
-	postcss: {
-		plugins: {
-			"postcss-nested": {},
-		},
-	},
-
 	fonts: {
 		providers: {
 			fontshare: false,
+		},
+		experimental: {
+			disableLocalFallbacks: true,
 		},
 		families: [
 			{
@@ -532,18 +534,20 @@ export default defineNuxtConfig({
 	skewProtection: {
 		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
 		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
-		storage:
-			provider === "netlify"
-				? { driver: "netlify-blobs", name: "skew-protection" }
-				: undefined,
-		// Force polling rather than the SSE/WS default: this app's Netlify deploy
-		// isn't confirmed to support long-lived streaming connections through its
-		// serverless functions, and polling needs no platform-specific handling.
-		updateStrategy: "polling",
-		// The persistent-previous-build-assets feature uploads build output to
-		// storage during `nitro:init`, which on Netlify would need Blobs write
-		// access from the build image itself (unverified) rather than from a
-		// deployed function; keep it off until that's confirmed safe.
+		storage: {
+			base: "./.cache/skew-protection",
+			// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
+			// so this must be the kebab-case file name (fs-lite.mjs), unlike the
+			// Nitro storage mounts above where "fsLite" is a registered driver name.
+			driver: "fs-lite",
+		},
+		updateStrategy: "sse",
+		// Keep the persistent-previous-build-assets feature off: with storage now
+		// always configured, the module's default (true) runs augmentBuildMetadata,
+		// which rewrites _nuxt/builds/meta/<buildId>.json after the build but only
+		// patches the Nitro server's embedded size/etag for latest.json. The node
+		// preview server then serves the app manifest with stale content-length,
+		// and clients fail with NUXT_E5004/NUXT_E5002 on client-side navigation.
 		bundleAssets: false,
 	},
 
@@ -663,12 +667,6 @@ export default defineNuxtConfig({
 				{ content: "#121212", media: "(prefers-color-scheme: dark)" },
 				{ content: "#ffffff", media: "(prefers-color-scheme: light)" },
 			],
-			twitterCard: "summary_large_image",
-			twitterCreator: "@RedStar071",
-			twitterDescription:
-				"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
-			twitterSite: "@WolfStarBot",
-			twitterTitle: "WolfStar",
 		},
 	},
 
@@ -698,8 +696,14 @@ export default defineNuxtConfig({
 
 interface ISRConfigOptions {
 	fallback?: "html" | "json";
+	allowQuery?: string[];
+	passQuery?: boolean;
 }
 function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {}) {
+	const extraISR = {
+		...(options.passQuery ? { passQuery: true } : {}),
+		...(options.allowQuery ? { allowQuery: options.allowQuery } : {}),
+	};
 	if (options.fallback) {
 		return {
 			isr: {
@@ -710,12 +714,14 @@ function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {})
 						: "payload-fallback.json",
 				initialHeaders:
 					options.fallback === "json" ? { "content-type": "application/json" } : {},
+				...extraISR,
 			} as { expiration: number },
 		};
 	}
 	return {
 		isr: {
 			expiration: expirationSeconds,
+			...extraISR,
 		},
 	};
 }

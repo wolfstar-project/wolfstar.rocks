@@ -1,3 +1,4 @@
+import type { UserFlags } from "discord-api-types/v10";
 import type { InjectionKey, Ref } from "vue";
 import type {
 	DiscordMemberListApiFixture,
@@ -23,8 +24,23 @@ import type {
 	ResolveDiscordAppLauncherSheetSnapOptions,
 	StringSelectMenuPlacement,
 } from "~/types/discord";
-import { ActivityType, UserFlags } from "discord-api-types/v10";
 import { Colors } from "~/types/constants";
+
+// Inline discord-api-types enum values. Vite SSR (vite-plus) can evaluate
+// `discord-api-types/v10` twice: once with real ESM exports, once with a broken
+// CJS interop stub where named enum bindings exist as keys but are `undefined`
+// (and `.default` is empty). Module-scope `UserFlags.VerifiedBot` then throws.
+const UserFlagBits = {
+	VerifiedBot: 65536,
+	BotHTTPInteractions: 524_288,
+} as const satisfies {
+	VerifiedBot: UserFlags;
+	BotHTTPInteractions: UserFlags;
+};
+/** Subset of discord-api-types ActivityType used by marketing fixtures. */
+export const ActivityType = {
+	Custom: 4,
+} as const;
 
 export type {
 	DiscordMemberListApiFixture,
@@ -1404,10 +1420,10 @@ export function splitDiscordAppLauncherPromoTitle(title: string): readonly strin
 
 /** Convenience bitfield helpers for marketing fixtures. */
 export const MEMBER_LIST_USER_FLAGS = {
-	verifiedBot: UserFlags.VerifiedBot,
-	httpInteractions: UserFlags.BotHTTPInteractions,
+	verifiedBot: UserFlagBits.VerifiedBot,
+	httpInteractions: UserFlagBits.BotHTTPInteractions,
 	/** Verified bot that is HTTP-only (no gateway presence pip). */
-	verifiedHttpBot: UserFlags.VerifiedBot | UserFlags.BotHTTPInteractions,
+	verifiedHttpBot: UserFlagBits.VerifiedBot | UserFlagBits.BotHTTPInteractions,
 } as const;
 
 function hasMemberListFlag(flags: number | undefined, bit: UserFlags): boolean {
@@ -1494,10 +1510,10 @@ function mapDiscordMemberListMember(
 	if (member.user.bot) {
 		mapped.app = true;
 	}
-	if (hasMemberListFlag(publicFlags, UserFlags.VerifiedBot)) {
+	if (hasMemberListFlag(publicFlags, UserFlagBits.VerifiedBot)) {
 		mapped.verified = true;
 	}
-	if (hasMemberListFlag(publicFlags, UserFlags.BotHTTPInteractions)) {
+	if (hasMemberListFlag(publicFlags, UserFlagBits.BotHTTPInteractions)) {
 		mapped.http = true;
 	}
 	if (member.presence?.status) {

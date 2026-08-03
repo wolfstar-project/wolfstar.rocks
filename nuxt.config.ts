@@ -309,9 +309,9 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		viteEnvironmentApi: !isStorybook,
+		// viteEnvironmentApi: !isStorybook, // TODO: remove this once the issue is fixed
 		typedPages: true,
-		watcher: "builder",
+		// watcher: "builder", // TODO: remove this once the issue is fixed
 		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
 	},
 
@@ -405,7 +405,6 @@ export default defineNuxtConfig({
 				"@vueuse/integrations/useFuse",
 				"@vueuse/shared",
 				"deepmerge",
-				"discord-api-types/v10",
 				"motion-v",
 				"ohash/utils",
 				"reka-ui",
@@ -417,10 +416,12 @@ export default defineNuxtConfig({
 				"vaul-vue",
 				"valibot",
 			],
+			// Prebundling discord-api-types yields a broken CJS interop stub under
+			// Vite SSR (enum named exports become undefined). Keep it external.
+			exclude: ["discord-api-types"],
 		},
-
-		experimental: {
-			bundledDev: true,
+		ssr: {
+			external: ["discord-api-types"],
 		},
 	},
 

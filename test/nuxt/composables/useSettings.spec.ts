@@ -1,5 +1,6 @@
+import type { MockInstance } from "vitest";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineComponent, nextTick } from "vue";
 
 const mockColorMode = {
@@ -9,10 +10,32 @@ const mockColorMode = {
 
 mockNuxtImport("useColorMode", () => () => mockColorMode);
 
+const STORAGE_KEY = "wolfstar-settings";
+
+// Vitest browser mode runs test files in parallel same-origin iframes that all
+// share one localStorage. StorageEvents coming from those sibling documents are
+// always trusted, and VueUse's listenToStorageChanges sync would let them reset
+// this file's settings ref mid-test. Same-document sync dispatches synthetic
+// (untrusted) events, so it keeps working.
+function blockCrossDocumentStorageEvents(event: StorageEvent) {
+	if (event.isTrusted) event.stopImmediatePropagation();
+}
+
 describe("useSettings", () => {
+	let setItemSpy: MockInstance<(key: string, value: string) => void>;
+
+	beforeAll(() => {
+		window.addEventListener("storage", blockCrossDocumentStorageEvents, true);
+	});
+
+	afterAll(() => {
+		window.removeEventListener("storage", blockCrossDocumentStorageEvents, true);
+	});
+
 	beforeEach(() => {
 		vi.resetModules();
 		localStorage.clear();
+		setItemSpy = vi.spyOn(Storage.prototype, "setItem");
 		mockColorMode.preference = "system";
 		mockColorMode.value = "light";
 	});
@@ -21,8 +44,17 @@ describe("useSettings", () => {
 		// Flush the pending settings persistence before clearing so stored locale
 		// preferences do not leak into the app boot of later test files.
 		await nextTick();
+		setItemSpy.mockRestore();
 		localStorage.clear();
 	});
+
+	// Sibling test files can clobber the shared localStorage at any time, so
+	// persistence assertions read this document's own writes from the spy
+	// instead of reading the storage back.
+	function lastPersistedSettings(): unknown {
+		const lastWrite = setItemSpy.mock.calls.filter(([key]) => key === STORAGE_KEY).at(-1);
+		return lastWrite ? JSON.parse(lastWrite[1]) : undefined;
+	}
 
 	async function setupSettings() {
 		const settingsModule = await import("~/composables/useSettings");
@@ -49,9 +81,7 @@ describe("useSettings", () => {
 			selectedLocale: null,
 		});
 		await nextTick();
-		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toEqual(
-			settings.value,
-		);
+		expect(lastPersistedSettings()).toEqual(settings.value);
 	});
 
 	it("migrates legacy keys into wolfstar-settings", async () => {
@@ -100,9 +130,7 @@ describe("useSettings", () => {
 		await nextTick();
 
 		expect(colorMode!.preference.value).toBe("light");
-		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
-			colorMode: "light",
-		});
+		expect(lastPersistedSettings()).toMatchObject({ colorMode: "light" });
 	});
 
 	it("updates preferred locale through the shared settings object", async () => {
@@ -151,8 +179,6 @@ describe("useSettings", () => {
 		await nextTick();
 
 		expect(colorModeApi!.preference.value).toBe("midnight");
-		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
-			colorMode: "midnight",
-		});
+		expect(lastPersistedSettings()).toMatchObject({ colorMode: "midnight" });
 	});
 });

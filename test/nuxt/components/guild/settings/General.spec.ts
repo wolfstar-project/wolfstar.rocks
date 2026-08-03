@@ -96,7 +96,7 @@ describe("general guild settings", () => {
 	it("renders prefix input and language select", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
-				languages: ["en-US", "es-ES", "de-DE"],
+				languages: ["en-US", "es-ES", "de"],
 			},
 		});
 
@@ -113,7 +113,7 @@ describe("general guild settings", () => {
 	it("initializes state from guildSettings", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
-				languages: ["en-US", "es-ES", "de-DE"],
+				languages: ["en-US", "es-ES", "de"],
 			},
 		});
 
@@ -133,7 +133,7 @@ describe("general guild settings", () => {
 	it("mapToGuildData correctly transforms form state", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
-				languages: ["en-US", "es-ES", "de-DE"],
+				languages: ["en-US", "es-ES", "de"],
 			},
 		});
 
@@ -158,7 +158,7 @@ describe("general guild settings", () => {
 	it("maps language keys to display names correctly", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
-				languages: ["en-US", "de-DE", "unknown-key"],
+				languages: ["en-US", "de", "unknown-key"],
 			},
 		});
 
@@ -170,14 +170,14 @@ describe("general guild settings", () => {
 			"American English",
 			"English, United States",
 		]);
-		expect(mapLanguageKeysToNames("de-DE")).toStrictEqual(["Deutsch", "German"]);
+		expect(mapLanguageKeysToNames("de")).toStrictEqual(["Deutsch", "German"]);
 		expect(mapLanguageKeysToNames("unknown-key")).toStrictEqual(["unknown-key"]);
 	});
 
 	it("renders language options from prop", async () => {
 		const wrapper = await mountSuspended(General, {
 			props: {
-				languages: ["en-US", "es-ES", "de-DE"],
+				languages: ["en-US", "es-ES", "de"],
 			},
 		});
 
@@ -197,7 +197,7 @@ describe("general guild settings", () => {
 			},
 			{
 				label: "German",
-				value: "de-DE",
+				value: "de",
 			},
 		]);
 	});

@@ -37,5 +37,5 @@ export const handlers = [
 
 	// External WolfStar bot API, proxied through createApiComposable("/languages").
 	// The dashboard manage page requests this on mount for the default section.
-	http.get(/\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr-FR"])),
+	http.get(/\/languages$/, () => HttpResponse.json(["en-US", "es-ES", "fr"])),
 ];

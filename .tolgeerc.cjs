@@ -2,8 +2,10 @@
  * Tolgee CLI config for WolfStar.rocks (project "Wolfstar Website", id 33768).
  *
  * Local layout: i18n/locales/{nuxtLocale}/{namespace}.json
- * Tolgee tags are shorter (cs-CZ → cs, zh-CN → zh-Hans, …). Base English
- * lives in `en/` (same content as en-US); base Spanish in `es/` (≈ es-ES).
+ * Regional English/Spanish keep base dirs (`en/`, `es/`) plus variants via
+ * `countryLocaleVariants`. Other locales use wolfstar `src/languages/` names
+ * (`de`, `it`, `pt-BR`, …). Tolgee tags stay short (`cs-CZ`→`cs` era → now
+ * local `cs`→`cs`; `pt-BR`→`pt`).
  *
  * Push maps each file via `push.files[*].language` to those short tags. The
  * platform must already have matching languages — run
@@ -20,29 +22,29 @@ const NAMESPACES = ["common", "auth", "dashboard", "guilds", "profile", "compone
 
 /** Local directory → Tolgee language tag (canonical sources only). */
 const LOCALE_MAP = {
-	"en": "en",
+	en: "en",
 	"en-GB": "en-GB",
-	"es": "es",
+	es: "es",
 	"es-419": "es-419",
-	"cs-CZ": "cs",
-	"da-DK": "da",
-	"de-DE": "de",
-	"el-GR": "el",
-	"fi-FI": "fi",
-	"fr-FR": "fr",
-	"hi-IN": "hi",
-	"hr-HR": "hr",
-	"hu-HU": "hu",
-	"id-ID": "id",
-	"it-IT": "it",
-	"ko-KR": "ko",
-	"lt-LT": "lt",
-	"nl-NL": "nl",
-	"pt-PT": "pt",
-	"ro-RO": "ro",
-	"ru-RU": "ru",
-	"tr-TR": "tr",
-	"uk-UA": "uk",
+	cs: "cs",
+	da: "da",
+	de: "de",
+	el: "el",
+	fi: "fi",
+	fr: "fr",
+	hi: "hi",
+	hr: "hr",
+	hu: "hu",
+	id: "id",
+	it: "it",
+	ko: "ko",
+	lt: "lt",
+	nl: "nl",
+	"pt-BR": "pt",
+	ro: "ro",
+	ru: "ru",
+	tr: "tr",
+	uk: "uk",
 };
 
 /** Tolgee language tag → Nuxt locale directory (for pull remapping). */

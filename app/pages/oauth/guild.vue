@@ -1,13 +1,12 @@
 <template>
-	<div class="container mx-auto px-4 py-8">
+	<div>
 		<h1 class="sr-only">{{ t("auth.oauth.guild_sr_title") }}</h1>
 		<h2 class="sr-only">{{ t("auth.oauth.guild_sr_status") }}</h2>
 		<template v-if="!guildId">
-			<UAlert
-				variant="solid"
-				color="error"
+			<OauthStatusPanel
+				tone="error"
 				:title="t('auth.oauth.guild_not_found_title')"
-				icon="emojione:warning"
+				icon="heroicons:exclamation-triangle"
 			>
 				<template #description>
 					<i18n-t keypath="auth.oauth.guild_not_found_description" tag="span">
@@ -18,36 +17,36 @@
 						</template>
 					</i18n-t>
 				</template>
-			</UAlert>
+			</OauthStatusPanel>
 		</template>
 		<ClientOnly v-else>
 			<template v-if="error">
-				<UAlert
-					variant="solid"
-					color="error"
+				<OauthStatusPanel
+					tone="error"
 					:title="t('auth.oauth.guild_setup_failed_title')"
-					icon="emojione:cross-mark"
+					icon="heroicons:x-circle"
 				>
 					<template #description>
 						{{ error }}
 					</template>
 					<template #actions>
-						<UButton to="/login" size="sm" variant="outline">
+						<UButton to="/login" size="sm" variant="outline" class="w-full sm:w-auto">
 							{{ t("auth.oauth.guild_return_login") }}
 						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</template>
 			<template v-else>
-				<UAlert
-					color="info"
-					icon="emojione:hourglass-done"
+				<OauthStatusPanel
+					tone="info"
+					loading
 					:title="t('auth.oauth.guild_redirecting_title')"
+					icon="ph:discord-logo-fill"
 				>
 					<template #description>
 						{{ t("auth.oauth.guild_redirecting_description") }}
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</template>
 		</ClientOnly>
 	</div>

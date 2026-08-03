@@ -24,6 +24,7 @@
 		"i18n:report:fix": "node --experimental-transform-types scripts/remove-unused-translations.ts",
 		"tolgee:push": "tolgee push",
 		"tolgee:pull": "tolgee pull && node --experimental-transform-types scripts/tolgee-pull-remap.ts",
+		"tolgee:ensure-languages": "node scripts/tolgee-ensure-languages.mjs",
 		"tolgee:extract": "tolgee extract print",
 		"build:test": "TEST=1 vp run build",
 		"dev": "nuxt dev",

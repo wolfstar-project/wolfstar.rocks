@@ -19,15 +19,19 @@ type Story = StoryObj<typeof meta>;
 export const NoGuildId: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
+			<div>
 				<h1 class="sr-only">Guild OAuth Callback</h1>
-				<UAlert variant="solid" color="error" title="Server Not Found" icon="emojione:warning">
+				<OauthStatusPanel
+					tone="error"
+					title="Server Not Found"
+					icon="heroicons:exclamation-triangle"
+				>
 					<template #description>
 						We couldn't determine which server to set up. Please
 						<NuxtLink to="/login" class="font-medium underline">sign in</NuxtLink>
 						and select a server from your dashboard.
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -36,15 +40,21 @@ export const NoGuildId: Story = {
 export const SetupError: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<UAlert variant="solid" color="error" title="Setup Failed" icon="emojione:cross-mark">
+			<div>
+				<OauthStatusPanel
+					tone="error"
+					title="Setup Failed"
+					icon="heroicons:x-circle"
+				>
 					<template #description>
 						Failed to add WolfStar to the server. The bot may already be present, or you may not have the required permissions.
 					</template>
 					<template #actions>
-						<UButton to="/login" size="sm" variant="outline">Return to Login</UButton>
+						<UButton to="/login" size="sm" variant="outline" class="w-full sm:w-auto">
+							Return to Login
+						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -53,10 +63,15 @@ export const SetupError: Story = {
 export const Redirecting: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Redirecting">
+			<div>
+				<OauthStatusPanel
+					tone="info"
+					loading
+					title="Redirecting"
+					icon="ph:discord-logo-fill"
+				>
 					<template #description>Taking you to the server dashboard...</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),

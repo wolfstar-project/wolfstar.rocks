@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
 
 /**
- * The login page immediately redirects to Discord OAuth. It contains no
- * visible UI — only sr-only headings. This story documents the page exists
- * and disables Chromatic snapshotting since the redirect fires on mount.
+ * The login page initiates Discord OAuth on mount and shows a loading status
+ * panel while the browser redirects.
  */
 const meta: Meta = {
 	title: "Pages/OAuth/Login",
@@ -13,9 +12,8 @@ const meta: Meta = {
 		docs: {
 			description: {
 				component:
-					"Redirect-only page. On mount, the `login` middleware initiates the Discord OAuth flow. " +
-					"There is no visible UI — only screen-reader headings. " +
-					"This story exists to document the page in the design system.",
+					"On mount, the page initiates the Discord OAuth flow via Better Auth. " +
+					"While redirecting, it shows a centered loading status panel.",
 			},
 		},
 	},
@@ -27,10 +25,18 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<p class="text-muted text-sm italic">
-					This page has no visible UI. It redirects to Discord OAuth on mount.
-				</p>
+			<div>
+				<h1 class="sr-only">Login</h1>
+				<OauthStatusPanel
+					tone="info"
+					loading
+					title="Redirecting to Discord"
+					icon="ph:discord-logo-fill"
+				>
+					<template #description>
+						Opening Discord so you can authorize WolfStar...
+					</template>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),

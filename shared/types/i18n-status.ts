@@ -23,9 +23,7 @@ export interface I18nLocaleStatus {
 	lang: Locale;
 	/** Display name (e.g. 'Español') */
 	label: string;
-	/** locale direction - rtl | ltr */
 	dir: Directions;
-	/** Total number of translation keys */
 	totalKeys: number;
 	/** Number of completed translations */
 	completedKeys: number;

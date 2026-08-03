@@ -1,6 +1,6 @@
 import type { BuildInfo, EnvType } from "../shared/types";
 import { createResolver, defineNuxtModule } from "nuxt/kit";
-import { isCI } from "std-env";
+import { isCI, isTest } from "std-env";
 import { getEnv, getFileLastUpdated } from "../config/env";
 
 const { resolve } = createResolver(import.meta.url);
@@ -17,7 +17,9 @@ export default defineNuxtModule({
 		let env: EnvType = "dev";
 		nuxt.options.appConfig = nuxt.options.appConfig || {};
 		nuxt.options.appConfig.env = env;
-		if (import.meta.test) {
+		// isTest covers NODE_ENV=test (Vitest) and an explicit TEST env var;
+		// nuxt.options.test covers @nuxt/test-utils runtime loads.
+		if (isTest || nuxt.options.test) {
 			const time = new Date();
 			nuxt.options.appConfig.buildInfo = {
 				env,
@@ -25,6 +27,19 @@ export default defineNuxtModule({
 				commit: "704987bba88909f3782d792c224bde989569acb9",
 				shortCommit: "704987b",
 				branch: "xxx",
+				time: time.getTime(),
+				privacyPolicyDate: time.toISOString(),
+				termsDate: time.toISOString(),
+				prNumber: null,
+			} satisfies BuildInfo;
+		} else if (process.env.STORYBOOK === "true") {
+			const time = new Date("2026-01-22T10:07:07Z");
+			nuxt.options.appConfig.buildInfo = {
+				env: "release",
+				version: "x.x.x",
+				commit: "e39e56c08fd1e7bdb556c8565c6b11b3c34c8934",
+				shortCommit: "e39e56c0",
+				branch: "main",
 				time: time.getTime(),
 				privacyPolicyDate: time.toISOString(),
 				termsDate: time.toISOString(),

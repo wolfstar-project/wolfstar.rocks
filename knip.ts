@@ -81,9 +81,6 @@ const config: KnipConfig = {
 
 				/** Used for cli */
 				"@shelve/cli",
-
-				/** Used in nuxt.config.ts for postcss */
-				"postcss-nested",
 			],
 			ignoreFiles: [
 				"**/*.unused.*",

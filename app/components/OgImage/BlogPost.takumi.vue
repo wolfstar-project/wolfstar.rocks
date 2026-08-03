@@ -10,7 +10,6 @@
 		}"
 	>
 		<div class="flex h-full w-full flex-col items-start justify-between">
-			<!-- Brand -->
 			<div class="flex flex-row items-center">
 				<IconsWolfstar class="h-14 w-14" aria-hidden="true" />
 				<p style="font-size: 32px" class="ml-3 font-bold">
@@ -18,7 +17,6 @@
 				</p>
 			</div>
 
-			<!-- Date + Title + Description -->
 			<div class="flex w-full flex-col items-start">
 				<span
 					v-if="formattedDate"
@@ -45,7 +43,6 @@
 				</p>
 			</div>
 
-			<!-- Authors -->
 			<div v-if="authors.length" class="flex flex-row items-center">
 				<div class="flex flex-row items-center">
 					<span

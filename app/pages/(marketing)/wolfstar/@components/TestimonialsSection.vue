@@ -3,7 +3,7 @@
 		labelled-by="home-testimonials-heading"
 		spacing="none"
 		band
-		class="home-testimonials-band py-20 pb-22"
+		class="home-testimonials-band home-testimonials py-20 pb-22"
 	>
 		<SectionHeader
 			eyebrow="Loved by mods"
@@ -66,6 +66,13 @@ const { testimonials } = defineProps<{
 
 <style scoped>
 @reference "@/assets/css/main.css";
+
+/* Full-bleed out of UMain's max-width; page overflow clipped on .app-layout */
+.home-testimonials {
+	width: 100vw;
+	max-width: 100vw;
+	margin-inline: calc(50% - 50vw);
+}
 
 .home-testimonials-band {
 	background-color: var(--color-base-200);

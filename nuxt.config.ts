@@ -405,6 +405,7 @@ export default defineNuxtConfig({
 				"@vueuse/integrations/useFuse",
 				"@vueuse/shared",
 				"deepmerge",
+				"discord-api-types/v10",
 				"motion-v",
 				"ohash/utils",
 				"reka-ui",
@@ -416,11 +417,13 @@ export default defineNuxtConfig({
 				"vaul-vue",
 				"valibot",
 			],
-			// Prebundling discord-api-types yields a broken CJS interop stub under
-			// Vite SSR (enum named exports become undefined). Keep it external.
-			exclude: ["discord-api-types"],
 		},
 		ssr: {
+			// Vite SSR prebundling yields a broken CJS interop stub of
+			// discord-api-types (enum named exports become undefined). Keep it
+			// external so Node loads the real package. The client optimizer keeps
+			// prebundling discord-api-types/v10 (see include above); excluding it
+			// there breaks browser-mode Vitest with raw CJS served to chromium.
 			external: ["discord-api-types"],
 		},
 	},

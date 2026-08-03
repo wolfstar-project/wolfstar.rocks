@@ -399,10 +399,10 @@ Make sure to read about [Playwright best practices](https://playwright.dev/docs/
 
 WolfStar.rocks uses [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for the dashboard UI. Guild bot-response languages (`en-US`, `es-ES`, …) are separate from UI locale preference.
 
-Locales are split by feature under `i18n/locales/{locale}/{feature}.json` (for example `en/auth.json`, `es-ES/guilds.json`). English/Spanish use base dirs (`en/`, `es/`) expanded via `countryLocaleVariants` into regional codes (`en-US` / `en-GB`, `es-ES` / `es-419`). Other locales use [wolfstar](https://github.com/wolfstar-project/wolfstar) `src/languages/` names (`de`, `it`, `pt-BR`, …). Feature file names are listed in [`i18n/locale-features.json`](../i18n/locale-features.json). `@nuxtjs/i18n` v10 always lazy-loads these via the `files` array in [`config/i18n.ts`](../config/i18n.ts).
+Locales are split by feature under `i18n/locales/{locale}/{feature}.json` (for example `en/auth.json`, `es-ES/guilds.json`). Feature file names are listed in [`i18n/locale-features.json`](../i18n/locale-features.json). `@nuxtjs/i18n` v10 always lazy-loads these via the `files` array in [`config/i18n.ts`](../config/i18n.ts).
 
 - Source of truth: [`i18n/locales/en/`](../i18n/locales/en)
-- Other locales: [`i18n/locales/`](../i18n/locales) (wolfstar codes such as `es-ES`, `it`, `de`)
+- Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, `it-IT`, matching WolfStar/Skyra language keys)
 - Locale registry: [`config/i18n.ts`](../config/i18n.ts)
 - Per-feature schemas: [`i18n/schemas/`](../i18n/schemas)
 - Lunaria config: [`lunaria.config.ts`](../lunaria.config.ts)
@@ -422,9 +422,9 @@ CI runs `i18n:report` and checks that i18n schemas are up to date. Autofix runs 
 
 ### Adding a locale
 
-1. Copy `i18n/locales/en/*.json` into `i18n/locales/<code>/` (use a wolfstar `src/languages/` code, e.g. `de`, `ja`, `pt-BR`)
+1. Copy `i18n/locales/en/*.json` into `i18n/locales/<code>/`
 2. Register it in `config/i18n.ts` (`locales` array) with `files: ["<code>/common.json", "<code>/auth.json", …]` (same feature set as existing locales)
-3. Add it to `lunaria.config.ts` → `locales` (or rely on `currentLocales` / `countryLocaleVariants`)
+3. Add it to `lunaria.config.ts` → `locales`
 4. Run `pnpm i18n:check:fix` and `pnpm vp run i18n:schema`
 
 Prefer static string keys with `$t('…')` / `t('…')` so `i18n:report` can analyze usage. For HTML inside translations, use [`i18n-t`](https://vue-i18n.intlify.dev/guide/advanced/component.html).

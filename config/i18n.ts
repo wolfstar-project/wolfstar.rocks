@@ -69,9 +69,8 @@ function createPluralRule(locale: string, mapping: Record<string, number>) {
  * Codes that appear in `countryLocaleVariants` expand into regional variants
  * and are not themselves selectable.
  *
- * Non-regional codes match wolfstar-project/wolfstar `src/languages/` (`de`,
- * `it`, `pt-BR`, …). Base codes like `en` / `es` are typed loosely because
- * `@nuxtjs/i18n` generates its Locale union from the *expanded* currentLocales.
+ * Base codes like `en` / `es` are typed loosely because `@nuxtjs/i18n`
+ * generates its Locale union from the *expanded* currentLocales.
  */
 const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: string }))[] = [
 	{
@@ -87,17 +86,17 @@ const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: str
 		language: "es-ES",
 	},
 	{
-		code: "it",
-		files: localeFilesFor("it"),
+		code: "it-IT",
+		files: localeFilesFor("it-IT"),
 		name: "Italiano",
-		language: "it",
+		language: "it-IT",
 	},
 	{
-		code: "cs",
-		files: localeFilesFor("cs"),
+		code: "cs-CZ",
+		files: localeFilesFor("cs-CZ"),
 		name: "Čeština",
-		language: "cs",
-		pluralRule: createPluralRule("cs", {
+		language: "cs-CZ",
+		pluralRule: createPluralRule("cs-CZ", {
 			zero: 2,
 			one: 0,
 			two: 1,
@@ -107,53 +106,53 @@ const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: str
 		}),
 	},
 	{
-		code: "da",
-		files: localeFilesFor("da"),
+		code: "da-DK",
+		files: localeFilesFor("da-DK"),
 		name: "Dansk",
-		language: "da",
+		language: "da-DK",
 	},
 	{
-		code: "de",
-		files: localeFilesFor("de"),
+		code: "de-DE",
+		files: localeFilesFor("de-DE"),
 		name: "Deutsch",
-		language: "de",
+		language: "de-DE",
 	},
 	{
-		code: "el",
-		files: localeFilesFor("el"),
+		code: "el-GR",
+		files: localeFilesFor("el-GR"),
 		name: "Ελληνικά",
-		language: "el",
+		language: "el-GR",
 	},
 	{
-		code: "fi",
-		files: localeFilesFor("fi"),
+		code: "fi-FI",
+		files: localeFilesFor("fi-FI"),
 		name: "Suomi",
-		language: "fi",
+		language: "fi-FI",
 	},
 	{
-		code: "fr",
-		files: localeFilesFor("fr"),
+		code: "fr-FR",
+		files: localeFilesFor("fr-FR"),
 		name: "Français",
-		language: "fr",
+		language: "fr-FR",
 	},
 	{
-		code: "hi",
-		files: localeFilesFor("hi"),
+		code: "hi-IN",
+		files: localeFilesFor("hi-IN"),
 		name: "हिंदी",
-		language: "hi",
+		language: "hi-IN",
 	},
 	{
-		code: "hr",
-		files: localeFilesFor("hr"),
+		code: "hr-HR",
+		files: localeFilesFor("hr-HR"),
 		name: "Hrvatski",
-		language: "hr",
+		language: "hr-HR",
 	},
 	{
-		code: "hu",
-		files: localeFilesFor("hu"),
+		code: "hu-HU",
+		files: localeFilesFor("hu-HU"),
 		name: "Magyar",
-		language: "hu",
-		pluralRule: createPluralRule("hu", {
+		language: "hu-HU",
+		pluralRule: createPluralRule("hu-HU", {
 			zero: 0,
 			one: 0,
 			two: 1,
@@ -163,47 +162,47 @@ const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: str
 		}),
 	},
 	{
-		code: "id",
-		files: localeFilesFor("id"),
+		code: "id-ID",
+		files: localeFilesFor("id-ID"),
 		name: "Indonesia",
-		language: "id",
+		language: "id-ID",
 	},
 	{
-		code: "ko",
-		files: localeFilesFor("ko"),
+		code: "ko-KR",
+		files: localeFilesFor("ko-KR"),
 		name: "한국어",
-		language: "ko",
+		language: "ko-KR",
 	},
 	{
-		code: "lt",
-		files: localeFilesFor("lt"),
+		code: "lt-LT",
+		files: localeFilesFor("lt-LT"),
 		name: "Lietuvių",
-		language: "lt",
+		language: "lt-LT",
 	},
 	{
-		code: "nl",
-		files: localeFilesFor("nl"),
+		code: "nl-NL",
+		files: localeFilesFor("nl-NL"),
 		name: "Nederlands",
-		language: "nl",
+		language: "nl-NL",
 	},
 	{
-		code: "pt-BR",
-		files: localeFilesFor("pt-BR"),
-		name: "Português (Brasil)",
-		language: "pt-BR",
+		code: "pt-PT",
+		files: localeFilesFor("pt-PT"),
+		name: "Português (Portugal)",
+		language: "pt-PT",
 	},
 	{
-		code: "ro",
-		files: localeFilesFor("ro"),
+		code: "ro-RO",
+		files: localeFilesFor("ro-RO"),
 		name: "Română",
-		language: "ro",
+		language: "ro-RO",
 	},
 	{
-		code: "ru",
-		files: localeFilesFor("ru"),
+		code: "ru-RU",
+		files: localeFilesFor("ru-RU"),
 		name: "Русский",
-		language: "ru",
-		pluralRule: createPluralRule("ru", {
+		language: "ru-RU",
+		pluralRule: createPluralRule("ru-RU", {
 			zero: 2,
 			one: 0,
 			two: 1,
@@ -213,17 +212,17 @@ const locales: (LocaleObjectData | (Omit<LocaleObjectData, "code"> & { code: str
 		}),
 	},
 	{
-		code: "tr",
-		files: localeFilesFor("tr"),
+		code: "tr-TR",
+		files: localeFilesFor("tr-TR"),
 		name: "Türkçe",
-		language: "tr",
+		language: "tr-TR",
 	},
 	{
-		code: "uk",
-		files: localeFilesFor("uk"),
+		code: "uk-UA",
+		files: localeFilesFor("uk-UA"),
 		name: "Українська",
-		language: "uk",
-		pluralRule: createPluralRule("uk", {
+		language: "uk-UA",
+		pluralRule: createPluralRule("uk-UA", {
 			zero: 2,
 			one: 0,
 			two: 1,

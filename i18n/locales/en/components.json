@@ -19,7 +19,12 @@
 		"request_timeout_suggestion": "This might be due to slow network connection or server load. Try again in a moment.",
 		"network_error_description": "Unable to connect to the server.",
 		"loading_servers": "Error Loading Servers",
-		"failed_to_load_servers": "Failed to load servers."
+		"failed_to_load_servers": "Failed to load servers.",
+		"not_found_title": "Page not found",
+		"not_found_description": "The page you are looking for doesn't exist or may have been moved. Check the link or head back home.",
+		"generic_title": "Unexpected error",
+		"generic_description": "Something didn't go as planned. You can try again or head back home.",
+		"back_to_home": "Back to home"
 	},
 	"feedback": {
 		"send": "Send Feedback",

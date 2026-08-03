@@ -20,7 +20,12 @@
 		"request_timeout_suggestion": "Comprueba tu conexión e inténtalo de nuevo.",
 		"network_error_description": "No se pudo conectar al servidor.",
 		"loading_servers": "Cargando servidores...",
-		"failed_to_load_servers": "No se pudieron cargar los servidores."
+		"failed_to_load_servers": "No se pudieron cargar los servidores.",
+		"not_found_title": "Page not found",
+		"not_found_description": "The page you are looking for doesn't exist or may have been moved. Check the link or head back home.",
+		"generic_title": "Unexpected error",
+		"generic_description": "Something didn't go as planned. You can try again or head back home.",
+		"back_to_home": "Back to home"
 	},
 	"feedback": {
 		"send": "Enviar comentarios",

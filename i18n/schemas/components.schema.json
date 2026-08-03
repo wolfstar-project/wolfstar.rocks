@@ -66,6 +66,21 @@
 				},
 				"failed_to_load_servers": {
 					"type": "string"
+				},
+				"not_found_title": {
+					"type": "string"
+				},
+				"not_found_description": {
+					"type": "string"
+				},
+				"generic_title": {
+					"type": "string"
+				},
+				"generic_description": {
+					"type": "string"
+				},
+				"back_to_home": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false

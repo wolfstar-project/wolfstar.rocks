@@ -20,7 +20,12 @@
 		"request_timeout_suggestion": "Controlla la connessione e riprova.",
 		"network_error_description": "Impossibile connettersi al server.",
 		"loading_servers": "Caricamento server...",
-		"failed_to_load_servers": "Impossibile caricare i server."
+		"failed_to_load_servers": "Impossibile caricare i server.",
+		"not_found_title": "Pagina non trovata",
+		"not_found_description": "La pagina che stai cercando non esiste o potrebbe essere stata spostata. Controlla il link o torna alla home.",
+		"generic_title": "Errore imprevisto",
+		"generic_description": "Qualcosa non è andato come previsto. Puoi riprovare o tornare alla home.",
+		"back_to_home": "Torna alla home"
 	},
 	"feedback": {
 		"send": "Invia feedback",

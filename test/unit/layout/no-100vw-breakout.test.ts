@@ -24,7 +24,7 @@ describe("no 100vw full-bleed breakout", () => {
 		...globSync("app/layouts/**/*.vue", { cwd: ROOT }),
 	]
 		.map((file) => relative(ROOT, join(ROOT, file)).replaceAll("\\", "/"))
-		.sort();
+		.toSorted();
 
 	it("scans marketing/layout Vue files", () => {
 		expect(files.length).toBeGreaterThan(0);
@@ -32,7 +32,8 @@ describe("no 100vw full-bleed breakout", () => {
 
 	it.each(files)("%s does not use a 100vw breakout", (relPath) => {
 		const source = readFileSync(join(ROOT, relPath), "utf8");
-		const styleBlocks = [...source.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi)].map(
+		const styleBlocks = Array.from(
+			source.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/gi),
 			(match) => match[1] ?? "",
 		);
 

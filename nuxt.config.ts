@@ -309,7 +309,7 @@ export default defineNuxtConfig({
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
-		// viteEnvironmentApi: !isStorybook, // TODO: remove this once the issue is fixed
+		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
 		// watcher: "builder", // TODO: remove this once the issue is fixed
 		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
@@ -425,6 +425,9 @@ export default defineNuxtConfig({
 			// prebundling discord-api-types/v10 (see include above); excluding it
 			// there breaks browser-mode Vitest with raw CJS served to chromium.
 			external: ["discord-api-types"],
+		},
+		experimental: {
+			bundledDev: false,
 		},
 	},
 

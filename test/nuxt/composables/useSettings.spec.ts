@@ -99,10 +99,10 @@ describe("useSettings", () => {
 		colorMode!.setColorMode("light");
 		await nextTick();
 
+		expect(colorMode!.preference.value).toBe("light");
 		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
 			colorMode: "light",
 		});
-		expect(mockColorMode.preference).toBe("light");
 	});
 
 	it("updates preferred locale through the shared settings object", async () => {

@@ -51,12 +51,6 @@ defineProps<{
 <style scoped>
 @reference "@/assets/css/main.css";
 
-.home-cta {
-	width: 100vw;
-	max-width: 100vw;
-	margin-inline: calc(50% - 50vw);
-}
-
 .home-cta-outline {
 	border-color: oklch(from var(--color-primary-content) l c h / 0.35);
 	color: var(--color-primary-content);

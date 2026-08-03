@@ -307,7 +307,6 @@ import type {
 	DiscordAppLauncherSheetSnap,
 	DiscordChatMessage,
 } from "~/types/discord";
-import { ActivityType } from "discord-api-types/v10";
 import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
 
 /** Shared channel topic for header chrome and welcome start copy. */

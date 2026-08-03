@@ -1,4 +1,5 @@
 import type { RemovableRef } from "@vueuse/core";
+import type { EffectScope } from "vue";
 import type { AppLocaleCode } from "~/utils/is-app-locale";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
 
@@ -19,11 +20,14 @@ const DEFAULT_SETTINGS: AppSettings = {
 	selectedLocale: null,
 };
 
+let settingsScope: EffectScope | null = null;
 let settingsRef: RemovableRef<AppSettings> | null = null;
 let legacyMigrationApplied = false;
 
 export function resetSettingsStateForTests() {
 	if (!import.meta.test) return;
+	settingsScope?.stop();
+	settingsScope = null;
 	settingsRef = null;
 	legacyMigrationApplied = false;
 }
@@ -77,9 +81,23 @@ export function useSettings() {
 			localStorage.getItem(LEGACY_LOCALE_KEY) !== null);
 
 	if (!settingsRef) {
-		settingsRef = useLocalStorage<AppSettings>(STORAGE_KEY, DEFAULT_SETTINGS, {
-			mergeDefaults: true,
-		});
+		// Create the storage ref in a detached effect scope. useLocalStorage
+		// registers its persistence watcher in the active scope, so creating it
+		// directly in the first consumer's setup would dispose the watcher when
+		// that component unmounts and later writes would silently stop reaching
+		// localStorage (leaving e.g. colorMode stale on the next page load).
+		const scope = effectScope(true);
+		const created = scope.run(() =>
+			useLocalStorage<AppSettings>(STORAGE_KEY, DEFAULT_SETTINGS, {
+				mergeDefaults: true,
+			}),
+		);
+		if (!created) {
+			scope.stop();
+			throw new Error("Failed to initialize the shared settings state");
+		}
+		settingsScope = scope;
+		settingsRef = created;
 	}
 
 	if (shouldMigrateLegacySettings) {

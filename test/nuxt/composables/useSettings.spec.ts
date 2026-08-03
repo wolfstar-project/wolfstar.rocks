@@ -70,6 +70,41 @@ describe("useSettings", () => {
 		expect(localStorage.getItem("user-prefers-locale")).toBeNull();
 	});
 
+	it("persists color-mode changes after the first consumer unmounts", async () => {
+		const settingsModule = await import("~/composables/useSettings");
+		settingsModule.resetSettingsStateForTests();
+
+		// The first consumer creates the shared settings ref, then unmounts. Its
+		// disposal must not tear down the localStorage persistence watcher.
+		const first = await mountSuspended(
+			defineComponent({
+				setup() {
+					settingsModule.useSettings();
+					return () => null;
+				},
+			}),
+		);
+		first.unmount();
+
+		let colorMode: ReturnType<typeof settingsModule.useAppColorMode> | undefined;
+		await mountSuspended(
+			defineComponent({
+				setup() {
+					colorMode = settingsModule.useAppColorMode();
+					return () => null;
+				},
+			}),
+		);
+
+		colorMode!.setColorMode("light");
+		await nextTick();
+
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
+			colorMode: "light",
+		});
+		expect(mockColorMode.preference).toBe("light");
+	});
+
 	it("updates preferred locale through the shared settings object", async () => {
 		const settingsModule = await import("~/composables/useSettings");
 		settingsModule.resetSettingsStateForTests();

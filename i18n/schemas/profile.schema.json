@@ -31,10 +31,64 @@
 				"premium": {
 					"type": "string"
 				},
+				"settings_title": {
+					"type": "string"
+				},
+				"settings_tagline": {
+					"type": "string"
+				},
+				"guest_profile": {
+					"type": "string"
+				},
+				"guest_tagline": {
+					"type": "string"
+				},
+				"appearance_description": {
+					"type": "string"
+				},
+				"theme": {
+					"type": "string"
+				},
+				"theme_description": {
+					"type": "string"
+				},
+				"language_description": {
+					"type": "string"
+				},
+				"language_help": {
+					"type": "string"
+				},
+				"accessibility": {
+					"type": "string"
+				},
+				"accessibility_description": {
+					"type": "string"
+				},
+				"reduce_motion": {
+					"type": "string"
+				},
+				"reduce_motion_description": {
+					"type": "string"
+				},
+				"system_preference_detected": {
+					"type": "string"
+				},
+				"system_preference_description": {
+					"type": "string"
+				},
+				"current_status": {
+					"type": "string"
+				},
 				"motion_reduced": {
 					"type": "string"
 				},
 				"motion_enabled": {
+					"type": "string"
+				},
+				"servers_guest_description": {
+					"type": "string"
+				},
+				"servers_sign_in_prompt": {
 					"type": "string"
 				},
 				"account_management": {
@@ -65,6 +119,9 @@
 					"type": "string"
 				},
 				"user_id": {
+					"type": "string"
+				},
+				"user_id_label": {
 					"type": "string"
 				},
 				"default_avatar": {

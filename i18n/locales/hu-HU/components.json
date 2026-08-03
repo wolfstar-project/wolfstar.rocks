@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/components.schema.json",
 	"errors": {
 		"session_expired": "Session Expired",
 		"access_denied": "Access Denied",
@@ -53,6 +54,5 @@
 		"clear_selected": "Clear selected",
 		"min_duration": "The minimum duration is {value} {unit}.",
 		"max_duration": "The maximum duration is {value} {unit}."
-	},
-	"$schema": "../../schemas/components.schema.json"
+	}
 }

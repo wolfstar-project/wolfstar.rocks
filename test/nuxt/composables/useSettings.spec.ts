@@ -132,4 +132,33 @@ describe("useSettings", () => {
 		expect(composable!.preferredLocale.preferredLocale.value).toBe("es-ES");
 		expect(composable!.settings.settings.value.selectedLocale).toBe("es-ES");
 	});
+
+	it("persists color mode into wolfstar-settings when setColorMode runs", async () => {
+		const settingsModule = await import("~/composables/useSettings");
+		settingsModule.resetSettingsStateForTests();
+		let colorModeApi: ReturnType<typeof settingsModule.useAppColorMode> | undefined;
+		let settingsApi: ReturnType<typeof settingsModule.useSettings> | undefined;
+
+		const TestComponent = defineComponent({
+			setup() {
+				settingsApi = settingsModule.useSettings();
+				colorModeApi = settingsModule.useAppColorMode();
+				return () => null;
+			},
+		});
+
+		await mountSuspended(TestComponent);
+
+		expect(settingsApi).toBeDefined();
+		expect(colorModeApi).toBeDefined();
+
+		colorModeApi!.setColorMode("dark");
+		await nextTick();
+
+		expect(colorModeApi!.preference.value).toBe("dark");
+		expect(settingsApi!.settings.value.colorMode).toBe("dark");
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
+			colorMode: "dark",
+		});
+	});
 });

@@ -79,6 +79,9 @@
 				"profile": {
 					"type": "string"
 				},
+				"settings": {
+					"type": "string"
+				},
 				"sign_out": {
 					"type": "string"
 				}
@@ -176,6 +179,9 @@
 					"type": "string"
 				},
 				"appearance": {
+					"type": "string"
+				},
+				"system": {
 					"type": "string"
 				},
 				"light": {

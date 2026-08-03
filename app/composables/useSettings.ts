@@ -89,6 +89,7 @@ export function useSettings() {
 		const scope = effectScope(true);
 		const created = scope.run(() =>
 			useLocalStorage<AppSettings>(STORAGE_KEY, DEFAULT_SETTINGS, {
+				deep: true,
 				mergeDefaults: true,
 			}),
 		);
@@ -118,7 +119,7 @@ export function useReduceMotion() {
 	const reduceMotionEnabled = computed({
 		get: () => settings.value.reduceMotion,
 		set: (value: boolean) => {
-			settings.value.reduceMotion = value;
+			settings.value = { ...settings.value, reduceMotion: value };
 		},
 	});
 
@@ -129,7 +130,7 @@ export function useReduceMotion() {
 	const systemPreferenceActive = computed(() => systemPrefersReducedMotion.value === "reduce");
 
 	function setReduceMotion(value: boolean) {
-		settings.value.reduceMotion = value;
+		settings.value = { ...settings.value, reduceMotion: value };
 	}
 
 	if (import.meta.client) {
@@ -161,12 +162,12 @@ export function usePreferredLocale() {
 	const preferredLocale = computed({
 		get: () => settings.value.selectedLocale,
 		set: (value: AppLocaleCode | null) => {
-			settings.value.selectedLocale = value;
+			settings.value = { ...settings.value, selectedLocale: value };
 		},
 	});
 
 	function setPreferredLocale(code: AppLocaleCode | null) {
-		settings.value.selectedLocale = code;
+		settings.value = { ...settings.value, selectedLocale: code };
 	}
 
 	return {
@@ -182,7 +183,8 @@ export function useAppColorMode() {
 	const preference = computed({
 		get: () => settings.value.colorMode,
 		set: (value: ColorModePreference) => {
-			settings.value.colorMode = value;
+			// Replace the object so useLocalStorage reliably persists nested updates.
+			settings.value = { ...settings.value, colorMode: value };
 			colorMode.preference = value;
 		},
 	});

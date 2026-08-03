@@ -89,4 +89,15 @@ describe("ColorModeButton", () => {
 		await nextTick();
 		expect(document.startViewTransition).toHaveBeenCalledTimes(1);
 	});
+
+	it("persists the toggled theme into wolfstar-settings", async () => {
+		const wrapper = await mountButton();
+		await nextTick();
+		await wrapper.find("button").trigger("click");
+		await nextTick();
+
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
+			colorMode: "light",
+		});
+	});
 });

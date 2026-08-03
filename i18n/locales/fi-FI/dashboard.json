@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/dashboard.schema.json",
 	"dashboard": {
 		"nav": {
 			"home": "Home",
@@ -93,6 +94,5 @@
 		"status_failed": "Failed",
 		"unknown": "Unknown",
 		"showing_entries": "Showing {shown} of {total} entries"
-	},
-	"$schema": "../../schemas/dashboard.schema.json"
+	}
 }

@@ -25,6 +25,7 @@
 		"sign_in_discord": "Accedi con Discord",
 		"user_menu": "Menu utente",
 		"profile": "Profilo",
+		"settings": "Settings",
 		"sign_out": "Esci"
 	},
 	"footer": {
@@ -58,6 +59,7 @@
 	"common": {
 		"language": "Lingua",
 		"appearance": "Aspetto",
+		"system": "System",
 		"light": "Chiaro",
 		"dark": "Scuro",
 		"enabled": "Attivato",

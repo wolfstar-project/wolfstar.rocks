@@ -680,7 +680,6 @@ const isLoading = computed(
 // Retry handler
 async function handleRetry() {
 	isRetrying.value = true;
-	const log = useLogger();
 	log.info({ tag: "profile", action: "retry_guild_fetch" });
 	Sentry.metrics.count("profile.guild_fetch.retry", 1);
 	try {
@@ -739,7 +738,6 @@ function undoSearch() {
 async function copyUserId() {
 	if (user.value?.id) {
 		await copy(user.value.id);
-		const log = useLogger();
 		log.info({ tag: "profile", action: "copy_user_id" });
 		Sentry.metrics.count("profile.user_id.copy", 1);
 	}

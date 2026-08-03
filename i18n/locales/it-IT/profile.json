@@ -16,6 +16,7 @@
 		"appearance_description": "Choose how WolfStar looks on this device",
 		"theme": "Theme",
 		"theme_description": "Follow your system preference or pick light/dark manually",
+		"theme_menu_aria": "Choose color theme",
 		"language_description": "Choose the dashboard language",
 		"language_help": "Stored locally and restored on your next visit",
 		"accessibility": "Accessibility",

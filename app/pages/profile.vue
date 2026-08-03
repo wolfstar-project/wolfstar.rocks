@@ -272,26 +272,7 @@
 												{{ t("profile.theme_description") }}
 											</p>
 										</div>
-										<ClientOnly>
-											<UFieldGroup size="sm" class="shrink-0">
-												<UButton
-													v-for="option in themeOptions"
-													:key="option.value"
-													:label="option.label"
-													:icon="option.icon"
-													color="neutral"
-													:variant="
-														colorModePreference === option.value
-															? 'solid'
-															: 'outline'
-													"
-													@click="setColorMode(option.value)"
-												/>
-											</UFieldGroup>
-											<template #fallback>
-												<USkeleton class="h-8 w-56" />
-											</template>
-										</ClientOnly>
+										<ColorModeButton show-label size="sm" variant="outline" />
 									</div>
 								</div>
 							</UCard>
@@ -584,8 +565,6 @@ definePageMeta({ alias: ["/account"] });
 const { t, locale, setLocale } = useI18n();
 const { loggedIn, user: authUser, ready } = useUserSession();
 const { setPreferredLocale } = usePreferredLocale();
-const { preference: colorModePreference, setColorMode } = useAppColorMode();
-
 useSeoMetadata({
 	description: () => t("profile.seo_description"),
 	shouldOgImage: true,
@@ -615,24 +594,6 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 // Local preferences (work for guests and signed-in users)
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
-
-const themeOptions = computed(() => [
-	{
-		value: "system" as const,
-		label: t("common.system"),
-		icon: "lucide:monitor",
-	},
-	{
-		value: "light" as const,
-		label: t("common.light"),
-		icon: "lucide:sun",
-	},
-	{
-		value: "dark" as const,
-		label: t("common.dark"),
-		icon: "lucide:moon",
-	},
-]);
 
 const uiLocales = [en, { ...es, code: "es-ES" }, { ...it, code: "it-IT" }];
 const currentLocale = computed({

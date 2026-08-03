@@ -44,6 +44,7 @@ const preview: Preview = {
 			themes: {
 				Light: "light",
 				Dark: "dark",
+				Midnight: "midnight",
 			},
 			defaultTheme: "Dark",
 			attributeName: "data-theme",

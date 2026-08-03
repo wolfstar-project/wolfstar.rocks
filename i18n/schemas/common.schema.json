@@ -190,6 +190,15 @@
 				"dark": {
 					"type": "string"
 				},
+				"midnight": {
+					"type": "string"
+				},
+				"midnight_experimental": {
+					"type": "string"
+				},
+				"experimental": {
+					"type": "string"
+				},
 				"enabled": {
 					"type": "string"
 				},

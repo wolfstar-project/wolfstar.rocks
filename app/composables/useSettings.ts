@@ -3,13 +3,20 @@ import type { EffectScope } from "vue";
 import type { AppLocaleCode } from "~/utils/is-app-locale";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
 
-type ColorModePreference = "system" | "light" | "dark";
+export type ColorModePreference = "system" | "light" | "dark" | "midnight";
 
 export interface AppSettings {
 	colorMode: ColorModePreference;
 	reduceMotion: boolean;
 	selectedLocale: AppLocaleCode | null;
 }
+
+export const COLOR_MODE_PREFERENCES = [
+	"system",
+	"light",
+	"dark",
+	"midnight",
+] as const satisfies readonly ColorModePreference[];
 
 const STORAGE_KEY = "wolfstar-settings";
 const LEGACY_LOCALE_KEY = "user-prefers-locale";
@@ -33,7 +40,9 @@ export function resetSettingsStateForTests() {
 }
 
 function parseStoredColorMode(value: string | null): ColorModePreference | null {
-	return value === "system" || value === "light" || value === "dark" ? value : null;
+	return value === "system" || value === "light" || value === "dark" || value === "midnight"
+		? value
+		: null;
 }
 
 function parseStoredReduceMotion(value: string | null): boolean | null {

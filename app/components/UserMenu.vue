@@ -45,8 +45,7 @@ const { collapsed } = defineProps<{
 const { t, locale, locales, setLocale } = useI18n();
 const { setPreferredLocale } = usePreferredLocale();
 const isFeedbackOpen = ref(false);
-const colorMode = useColorMode();
-const { setColorMode } = useAppColorMode();
+const { preference: colorModePreference, setColorMode } = useAppColorMode();
 const { user: authUser, signOut } = useUserSession();
 
 const src = computed(() => authUser.value?.image ?? undefined);
@@ -113,26 +112,54 @@ const items = computed<DropdownMenuItem[][]>(() => [
 		{
 			children: [
 				{
-					checked: colorMode.value === "light",
+					checked: colorModePreference.value === "system",
+					icon: "lucide:monitor",
+					label: t("common.system"),
+					onSelect(e: Event) {
+						e.preventDefault();
+						setColorMode("system");
+					},
+					onUpdateChecked(checked: boolean) {
+						if (checked) setColorMode("system");
+					},
+					type: "checkbox",
+				},
+				{
+					checked: colorModePreference.value === "light",
 					icon: "lucide:sun",
 					label: t("common.light"),
 					onSelect(e: Event) {
 						e.preventDefault();
 						setColorMode("light");
 					},
+					onUpdateChecked(checked: boolean) {
+						if (checked) setColorMode("light");
+					},
 					type: "checkbox",
 				},
 				{
-					checked: colorMode.value === "dark",
+					checked: colorModePreference.value === "dark",
 					icon: "lucide:moon",
 					label: t("common.dark"),
 					onSelect(e: Event) {
 						e.preventDefault();
+						setColorMode("dark");
 					},
 					onUpdateChecked(checked: boolean) {
-						if (checked) {
-							setColorMode("dark");
-						}
+						if (checked) setColorMode("dark");
+					},
+					type: "checkbox",
+				},
+				{
+					checked: colorModePreference.value === "midnight",
+					icon: "lucide:sparkles",
+					label: t("common.midnight_experimental"),
+					onSelect(e: Event) {
+						e.preventDefault();
+						setColorMode("midnight");
+					},
+					onUpdateChecked(checked: boolean) {
+						if (checked) setColorMode("midnight");
 					},
 					type: "checkbox",
 				},

@@ -3,13 +3,16 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
 
 describe("ColorModeButton", () => {
-	beforeEach(() => {
+	beforeEach(async () => {
 		vi.resetModules();
 		localStorage.setItem(
 			"wolfstar-settings",
 			JSON.stringify({ colorMode: "dark", reduceMotion: false, selectedLocale: null }),
 		);
 		localStorage.setItem("wolfstar-theme", "dark");
+
+		const { resetSettingsStateForTests } = await import("~/composables/useSettings");
+		resetSettingsStateForTests();
 
 		Object.defineProperty(document, "startViewTransition", {
 			configurable: true,
@@ -29,75 +32,48 @@ describe("ColorModeButton", () => {
 			writable: true,
 			value: null,
 		});
-
-		// Stub animate so the clip-path animation inside transition.ready.then() does not throw
-		Object.defineProperty(document.documentElement, "animate", {
-			configurable: true,
-			writable: true,
-			value: vi.fn(() => ({ finished: Promise.resolve() })),
-		});
 	});
 
 	afterEach(async () => {
 		vi.clearAllMocks();
-		// Flush the pending settings persistence before clearing so the seeded
-		// theme does not leak into the app boot of later test files.
 		await nextTick();
 		localStorage.clear();
+		const { resetSettingsStateForTests } = await import("~/composables/useSettings");
+		resetSettingsStateForTests();
 	});
 
-	async function mountButton() {
+	async function mountButton(props?: Record<string, unknown>) {
 		const { default: ColorModeButton } = await import("~/components/ColorModeButton.vue");
-		return mountSuspended(ColorModeButton);
+		return mountSuspended(ColorModeButton, { props });
 	}
 
-	it("swaps theme and does not call startViewTransition when startViewTransition is undefined", async () => {
-		const svtSpy = document.startViewTransition as ReturnType<typeof vi.fn>;
-		Object.defineProperty(document, "startViewTransition", {
-			configurable: true,
-			writable: true,
-			value: undefined,
-		});
+	it("renders a theme menu trigger with the current preference label", async () => {
 		const wrapper = await mountButton();
 		await nextTick();
-		await wrapper.find("button").trigger("click");
-		await nextTick();
-		expect(svtSpy).not.toHaveBeenCalled();
+		const trigger = wrapper.get('button[aria-label="Choose color theme"]');
+		expect(trigger.text()).toContain("Dark");
+		expect(trigger.attributes("aria-haspopup")).toBe("menu");
 	});
 
-	it("swaps theme and does not call startViewTransition when activeViewTransition is truthy", async () => {
-		Object.defineProperty(document, "activeViewTransition", {
-			configurable: true,
-			writable: true,
-			value: {
-				ready: Promise.resolve(),
-				finished: Promise.resolve(),
-				skipTransition: vi.fn(),
-			},
-		});
-		const wrapper = await mountButton();
+	it("can render an icon-only trigger when showLabel is false", async () => {
+		const wrapper = await mountButton({ showLabel: false });
 		await nextTick();
-		await wrapper.find("button").trigger("click");
-		await nextTick();
-		expect(document.startViewTransition).not.toHaveBeenCalled();
+		const trigger = wrapper.get('button[aria-label="Choose color theme"]');
+		expect(trigger.text()).not.toContain("Dark");
 	});
 
-	it("calls startViewTransition exactly once on happy path", async () => {
-		const wrapper = await mountButton();
-		await nextTick();
-		await wrapper.find("button").trigger("click");
-		await nextTick();
-		expect(document.startViewTransition).toHaveBeenCalledTimes(1);
-	});
-
-	it("persists the toggled theme into wolfstar-settings", async () => {
-		const wrapper = await mountButton();
-		await nextTick();
-		await wrapper.find("button").trigger("click");
+	it("persists midnight when selected via useAppColorMode", async () => {
+		await mountButton();
 		await nextTick();
 
+		const { useAppColorMode } = await import("~/composables/useSettings");
+		const { setColorMode, preference } = useAppColorMode();
+		setColorMode("midnight");
+		await nextTick();
+
+		expect(preference.value).toBe("midnight");
 		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
-			colorMode: "light",
+			colorMode: "midnight",
 		});
 	});
 });

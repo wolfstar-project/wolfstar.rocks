@@ -52,6 +52,9 @@
 				"theme_description": {
 					"type": "string"
 				},
+				"theme_menu_aria": {
+					"type": "string"
+				},
 				"language_description": {
 					"type": "string"
 				},

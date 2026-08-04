@@ -1,73 +1,82 @@
 <template>
-	<section class="error-page" aria-labelledby="error-page-title">
-		<div
-			class="error-page-badge animate-fade-in-up-safe"
-			:class="toneSurfaceClass"
-			aria-hidden="true"
-		>
-			<UIcon :name="icon" class="size-8 sm:size-10" :class="toneIconClass" />
-		</div>
+	<UError
+		as="section"
+		:error="displayError"
+		:clear="false"
+		aria-labelledby="error-page-title"
+		:ui="errorUi"
+	>
+		<template #leading>
+			<UBadge
+				:color="toneColor"
+				variant="subtle"
+				size="xl"
+				square
+				:icon
+				aria-hidden="true"
+				:ui="{
+					base: 'size-16 sm:size-20 rounded-full justify-center',
+					leadingIcon: 'size-8 sm:size-10',
+				}"
+			/>
+		</template>
 
-		<p
-			class="error-page-code animate-fade-in-up-safe gradient-text-hero [animation-delay:0.05s]"
-		>
+		<template #statusCode>
 			<span class="sr-only">{{ t("common.error") }}&nbsp;</span>{{ statusCode }}
-		</p>
+		</template>
 
-		<h1
-			id="error-page-title"
-			class="error-page-title animate-fade-in-up-safe text-balance [animation-delay:0.1s]"
-		>
-			{{ title }}
-		</h1>
+		<template #statusMessage>
+			<span id="error-page-title">{{ title }}</span>
+		</template>
 
-		<p
-			class="error-page-description animate-fade-in-up-safe text-pretty [animation-delay:0.15s]"
-		>
-			{{ description }}
-		</p>
+		<template #message>
+			<span class="block">{{ description }}</span>
+			<UBadge
+				v-if="detail"
+				color="neutral"
+				variant="subtle"
+				size="md"
+				:label="detail"
+				class="mt-6 max-w-full"
+				:ui="{
+					base: 'h-auto max-w-full whitespace-normal py-1.5 font-mono',
+					label: 'whitespace-normal break-all',
+				}"
+			/>
+		</template>
 
-		<p v-if="detail" class="error-page-detail animate-fade-in-up-safe [animation-delay:0.2s]">
-			{{ detail }}
-		</p>
-
-		<div
-			class="mt-10 flex animate-fade-in-up-safe flex-col gap-3 [animation-delay:0.25s] sm:flex-row sm:justify-center"
-		>
+		<template #links>
 			<UButton
 				v-if="isNotFound"
 				size="lg"
 				color="primary"
 				icon="ph:house-fill"
 				class="btn-glow justify-center sm:min-w-45"
+				:label="t('errors.back_to_home')"
 				@click="goHome"
-			>
-				{{ t("errors.back_to_home") }}
-			</UButton>
+			/>
 			<template v-else>
 				<UButton
 					size="lg"
 					color="primary"
 					icon="ph:arrow-counter-clockwise-bold"
 					class="btn-glow justify-center sm:min-w-45"
-					:loading="retrying"
-					@click="handleRetry"
-				>
-					{{ t("common.retry") }}
-				</UButton>
+					:label="t('common.retry')"
+					loading-auto
+					@click="retry"
+				/>
 				<UButton
 					size="lg"
 					color="neutral"
 					variant="outline"
 					icon="ph:house-fill"
 					class="justify-center sm:min-w-45"
+					:label="t('errors.back_to_home')"
 					@click="goHome"
-				>
-					{{ t("errors.back_to_home") }}
-				</UButton>
+				/>
 			</template>
-		</div>
-	</section>
+		</template>
+	</UError>
 </template>
 
 <script setup lang="ts">
@@ -79,8 +88,6 @@ const { error } = defineProps<{
 
 const { t } = useI18n();
 const { goHome, retry } = useErrorActions();
-
-const retrying = ref(false);
 
 // Reads both Nuxt-normalized (`status`) and raw h3 (`statusCode`) shapes so the
 // error page stays correct no matter which layer produced the error.
@@ -126,58 +133,31 @@ const icon = computed(() => {
 	return "ph:warning-circle";
 });
 
-const toneIconClass = computed(() => {
+const toneColor = computed(() => {
 	if (isServerError.value) {
-		return "text-error";
+		return "error" as const;
 	}
 	if (isNotFound.value) {
-		return "text-primary";
+		return "primary" as const;
 	}
-	return "text-warning";
+	return "warning" as const;
 });
 
-const toneSurfaceClass = computed(() => {
-	if (isServerError.value) {
-		return "border-error/30 bg-error/10";
-	}
-	if (isNotFound.value) {
-		return "border-primary/30 bg-primary/10";
-	}
-	return "border-warning/30 bg-warning/10";
-});
+// Shaped for UError's built-in field checks; slots override the visible copy.
+const displayError = computed(() => ({
+	statusCode: statusCode.value,
+	statusMessage: title.value,
+	message: description.value,
+}));
 
-async function handleRetry() {
-	retrying.value = true;
-	await retry();
-}
+const errorUi = {
+	// Mirrors --ui-header-height set on .app-navbar (variable is not inherited by siblings).
+	root: "min-h-[calc(100dvh-5rem)] px-4 py-16",
+	leading: "mb-6",
+	statusCode:
+		"text-7xl leading-none font-extrabold tracking-tight gradient-text-hero sm:text-8xl md:text-9xl",
+	statusMessage: "mt-4 text-3xl font-bold text-highlighted text-balance sm:text-4xl",
+	message: "mt-4 max-w-xl text-lg text-pretty text-muted",
+	links: "mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center",
+};
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-
-.error-page {
-	@apply relative flex flex-col items-center justify-center px-4 py-16 text-center;
-	/* Mirrors --ui-header-height set on .app-navbar so the page fills the viewport below the header */
-	min-height: calc(100dvh - 5rem);
-}
-
-.error-page-badge {
-	@apply mb-6 flex size-16 items-center justify-center rounded-full border sm:size-20;
-}
-
-.error-page-code {
-	@apply text-7xl leading-none font-extrabold tracking-tight sm:text-8xl md:text-9xl;
-}
-
-.error-page-title {
-	@apply mt-4 text-3xl font-bold text-highlighted sm:text-4xl;
-}
-
-.error-page-description {
-	@apply mt-4 max-w-xl text-lg text-muted;
-}
-
-.error-page-detail {
-	@apply mt-6 max-w-full rounded-md border border-default bg-elevated/50 px-3 py-1.5 font-mono text-xs break-all text-muted;
-}
-</style>

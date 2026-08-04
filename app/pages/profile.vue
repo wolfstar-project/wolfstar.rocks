@@ -36,24 +36,22 @@
 										{{ t("profile.servers_guest_description") }}
 									</p>
 								</div>
-								<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
-									<div class="flex flex-col items-center gap-4 py-10 text-center">
-										<UIcon
-											name="heroicons:server"
-											class="size-12 text-base-content/30"
-										/>
-										<p class="max-w-md text-base-content/70">
-											{{ t("profile.servers_sign_in_prompt") }}
-										</p>
-										<UButton
-											:label="t('header.sign_in')"
-											color="primary"
-											icon="ic:round-discord"
-											to="/login?next=/profile"
-											:aria-label="t('header.sign_in_discord')"
-										/>
-									</div>
-								</UCard>
+								<div class="flex flex-col items-center gap-4 py-10 text-center">
+									<UIcon
+										name="heroicons:server"
+										class="size-12 text-base-content/30"
+									/>
+									<p class="max-w-md text-base-content/70">
+										{{ t("profile.servers_sign_in_prompt") }}
+									</p>
+									<UButton
+										:label="t('header.sign_in')"
+										color="primary"
+										icon="ic:round-discord"
+										to="/login?next=/profile"
+										:aria-label="t('header.sign_in_discord')"
+									/>
+								</div>
 							</template>
 							<template v-else>
 								<!-- Server Section Header -->

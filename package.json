@@ -161,7 +161,7 @@
 		"prisma": "7.8.0",
 		"prisma-json-types-generator": "5.1.0",
 		"rolldown": "^1.2.0",
-		"skilld": "1.7.4",
+		"skilld": "2.0.0",
 		"storybook": "catalog:storybook",
 		"tailwindcss": "4.3.3",
 		"taze": "19.16.0",

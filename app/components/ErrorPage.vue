@@ -1,7 +1,5 @@
 <template>
 	<section class="error-page" aria-labelledby="error-page-title">
-		<div class="error-page-glow" aria-hidden="true"></div>
-
 		<div
 			class="error-page-badge animate-fade-in-up-safe"
 			:class="toneSurfaceClass"
@@ -158,21 +156,9 @@ async function handleRetry() {
 @reference "@/assets/css/main.css";
 
 .error-page {
-	@apply relative isolate flex flex-col items-center justify-center overflow-hidden px-4 py-16 text-center;
+	@apply relative flex flex-col items-center justify-center px-4 py-16 text-center;
 	/* Mirrors --ui-header-height set on .app-navbar so the page fills the viewport below the header */
 	min-height: calc(100dvh - 5rem);
-}
-
-.error-page-glow {
-	position: absolute;
-	z-index: -1;
-	inset: 0;
-	background-image: radial-gradient(
-		ellipse 42rem 22rem at 50% 32%,
-		oklch(from var(--color-primary) l c h / 0.16) 0%,
-		transparent 70%
-	);
-	pointer-events: none;
 }
 
 .error-page-badge {

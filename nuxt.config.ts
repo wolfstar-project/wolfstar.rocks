@@ -8,10 +8,6 @@ import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
 const runtimeConfig = generateRuntimeConfig();
 const isStorybook = process.env.STORYBOOK === "true" || process.env.VITEST_STORYBOOK === "true";
-// CI invokes `vp test` directly (bypassing package.json TEST=1). Vitest sets
-// VITEST before config load; std-env isTest alone can still be false if
-// NODE_ENV isn't "test" yet when this module is first evaluated.
-const isTestEnv = isTest || Boolean(process.env.VITEST);
 
 const { resolve } = createResolver(import.meta.url);
 
@@ -25,7 +21,7 @@ export default defineNuxtConfig({
 		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
 		// test environment. Studio editor chunks are also excluded from the PWA
 		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
-		...(isTestEnv || isStorybook ? [] : ["nuxt-studio"]),
+		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -48,7 +44,7 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		...(isTestEnv || isCI || isStorybook ? [] : [netlifyNuxt]),
+		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
 
 	content: {
@@ -72,12 +68,6 @@ export default defineNuxtConfig({
 		site: {
 			name: "WolfStar (Dev)",
 			url: "http://localhost:3000",
-		},
-		// Dev-only: Vitest browser sessions break with bundledDev.
-		vite: {
-			experimental: {
-				bundledDev: true,
-			},
 		},
 	},
 
@@ -109,9 +99,6 @@ export default defineNuxtConfig({
 
 	devtools: {
 		enabled: true,
-		timeline: {
-			enabled: true,
-		},
 	},
 
 	app: {
@@ -324,8 +311,7 @@ export default defineNuxtConfig({
 		typescriptPlugin: true,
 		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
-		// Reuses Vite's own file watcher instead of starting a second one.
-		watcher: "builder",
+		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
 	},
 
 	compatibilityDate: "2025-09-20",
@@ -368,10 +354,10 @@ export default defineNuxtConfig({
 		},
 		// build:test must set TEST=1: nuxi build forces NODE_ENV=production before
 		// config load, so NODE_ENV=test alone never makes std-env isTest (or this
-		// replace) true in Playwright bundles. Prefer isTestEnv so VITEST-only
+		// replace) true in Playwright bundles. Prefer isTest so VITEST-only
 		// runners (CI `vp test`) still get a true replace without waiting on NODE_ENV.
 		replace: {
-			"import.meta.test": isTestEnv,
+			"import.meta.test": isTest,
 		},
 	},
 
@@ -430,6 +416,17 @@ export default defineNuxtConfig({
 				"vaul-vue",
 				"valibot",
 			],
+		},
+		ssr: {
+			// Vite SSR prebundling yields a broken CJS interop stub of
+			// discord-api-types (enum named exports become undefined). Keep it
+			// external so Node loads the real package. The client optimizer keeps
+			// prebundling discord-api-types/v10 (see include above); excluding it
+			// there breaks browser-mode Vitest with raw CJS served to chromium.
+			external: ["discord-api-types"],
+		},
+		experimental: {
+			bundledDev: false,
 		},
 	},
 
@@ -541,7 +538,7 @@ export default defineNuxtConfig({
 			// Nitro storage mounts above where "fsLite" is a registered driver name.
 			driver: "fs-lite",
 		},
-		updateStrategy: "sse",
+		updateStrategy: "polling",
 		// Keep the persistent-previous-build-assets feature off: with storage now
 		// always configured, the module's default (true) runs augmentBuildMetadata,
 		// which rewrites _nuxt/builds/meta/<buildId>.json after the build but only

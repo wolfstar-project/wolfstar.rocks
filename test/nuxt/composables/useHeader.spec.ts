@@ -59,10 +59,24 @@ describe("useHeader", () => {
 		expect(labels).toContain("Commands");
 	});
 
+	it("should not include Blog or Changelog in desktop links", async () => {
+		const { desktopLinks } = await setup();
+		const labels = desktopLinks.value.map((l: any) => l.label);
+		expect(labels).not.toContain("Blog");
+		expect(labels).not.toContain("Changelog");
+	});
+
 	it("should include GitHub link in mobile links", async () => {
 		const { mobileLinks } = await setup();
 		const labels = mobileLinks.value.map((l: any) => l.label);
 		expect(labels).toContain("GitHub");
+	});
+
+	it("should not include Blog or Changelog in mobile links", async () => {
+		const { mobileLinks } = await setup();
+		const labels = mobileLinks.value.map((l: any) => l.label);
+		expect(labels).not.toContain("Blog");
+		expect(labels).not.toContain("Changelog");
 	});
 
 	it("should give Features children destinations on mobile", async () => {

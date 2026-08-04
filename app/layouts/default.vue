@@ -44,6 +44,9 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	@apply flex min-h-screen flex-col;
 	position: relative;
 	background-color: var(--color-base-100);
+	/* Clip 100vw full-bleed bands (CTA/testimonials) that exceed the layout
+	   when a scrollbar/gutter is present. DaisyUI owns html/overflow, so clip here. */
+	overflow-x: clip;
 }
 
 .app-layout::before {

@@ -5,6 +5,7 @@
 		"dashboard.json",
 		"guilds.json",
 		"profile.json",
-		"components.json"
+		"components.json",
+		"errors.json"
 	]
 }

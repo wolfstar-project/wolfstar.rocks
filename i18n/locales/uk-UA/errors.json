@@ -1,0 +1,30 @@
+{
+	"$schema": "../../schemas/errors.schema.json",
+	"errors": {
+		"session_expired": "Session Expired",
+		"access_denied": "Access Denied",
+		"too_many_requests": "Too Many Requests",
+		"network_error": "Network Error",
+		"request_timeout": "Request Timeout",
+		"unexpected": "An unexpected error occurred.",
+		"check_connection": "Please check your internet connection and try again.",
+		"rate_limit": "Rate limiting is in effect to protect the service.",
+		"server_error": "Something went wrong on our end. Please try again later.",
+		"server_error_title": "Server Error",
+		"if_persists": "If this persists, please contact support.",
+		"retrying": "Retrying...",
+		"session_expired_description": "Your session has expired. Please log in again.",
+		"access_denied_description": "You don't have permission to access this resource.",
+		"too_many_requests_description": "You've made too many requests. Please wait a moment before trying again.",
+		"request_timeout_description": "The request took too long to complete.",
+		"request_timeout_suggestion": "This might be due to slow network connection or server load. Try again in a moment.",
+		"network_error_description": "Unable to connect to the server.",
+		"loading_servers": "Error Loading Servers",
+		"failed_to_load_servers": "Failed to load servers.",
+		"not_found_title": "Page not found",
+		"not_found_description": "The page you are looking for doesn't exist or may have been moved. Check the link or head back home.",
+		"generic_title": "Unexpected error",
+		"generic_description": "Something didn't go as planned. You can try again or head back home.",
+		"back_to_home": "Back to home"
+	}
+}

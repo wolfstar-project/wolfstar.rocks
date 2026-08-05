@@ -42,6 +42,7 @@ describe("ProfileHeader", () => {
 			},
 		});
 
+		expect(wrapper.get("section").attributes("aria-label")).toBe("Loading...");
 		expect(wrapper.find("[aria-busy='true']").exists()).toBe(true);
 		expect(wrapper.find('a[href="/login?next=/profile"]').exists()).toBe(false);
 	});

@@ -1,7 +1,7 @@
 <template>
 	<section
 		class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:border-4 md:p-12"
-		:aria-label="user ? t('profile.user_profile') : t('profile.guest_profile')"
+		:aria-label="sectionLabel"
 	>
 		<!-- decorative left accent (sidebar-like) -->
 		<div
@@ -88,9 +88,15 @@ interface ProfileHeaderProps {
 	pending?: boolean;
 }
 
-const { pending = false } = defineProps<ProfileHeaderProps>();
+const { pending = false, user } = defineProps<ProfileHeaderProps>();
 defineEmits<{ copyUserId: [] }>();
 
 const { t } = useI18n();
 const loginTo = "/login?next=/profile";
+
+const sectionLabel = computed(() => {
+	if (pending) return t("common.loading");
+	if (user) return t("profile.user_profile");
+	return t("profile.guest_profile");
+});
 </script>

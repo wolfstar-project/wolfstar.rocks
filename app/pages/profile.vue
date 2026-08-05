@@ -556,9 +556,9 @@
 
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
-import { en, es, it } from "@nuxt/ui/locale";
 import * as Sentry from "@sentry/nuxt";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
+import { getNuxtUiLocales } from "~/utils/nuxt-ui-locales";
 
 definePageMeta({ alias: ["/account"] });
 
@@ -595,7 +595,7 @@ const [sortAscending, toggleSortOrder] = useToggle(true);
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
 
-const uiLocales = [en, { ...es, code: "es-ES" }, { ...it, code: "it-IT" }];
+const uiLocales = getNuxtUiLocales();
 const currentLocale = computed({
 	get: () => locale.value,
 	set: (code: string) => {

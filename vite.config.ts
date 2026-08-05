@@ -581,14 +581,6 @@ export default defineConfig({
 			},
 			() =>
 				defineVitestProject({
-					resolve: {
-						alias: {
-							// Same stub as the unit project: nuxt browser coverage remaps
-							// uncovered server files and would otherwise fail to resolve the
-							// Prisma-generated client (not checked in).
-							"#server/database/generated/client": `${rootDir}/test/__stubs__/prisma-generated-client`,
-						},
-					},
 					test: {
 						browser: {
 							enabled: true,

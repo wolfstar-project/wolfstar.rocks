@@ -27,7 +27,6 @@ for (const l of currentLocales) {
 for (const baseLang of Object.keys(countryLocaleVariants)) {
 	if (baseLang === sourceLocale.lang) continue;
 	if (!localeSet.has(baseLang)) {
-		// Use the first variant's name or the base code as label
 		const variants = countryLocaleVariants[baseLang]!;
 		const label = variants[0]?.name ?? baseLang;
 		localeSet.add(baseLang);

@@ -25,14 +25,11 @@ export interface I18nLocaleStatus {
 	label: string;
 	dir: Directions;
 	totalKeys: number;
-	/** Number of completed translations */
 	completedKeys: number;
 	/** List of missing key paths (dot notation) */
 	missingKeys: string[];
 	/** Completion percentage (0-100) */
 	percentComplete: number;
-	/** GitHub URL to edit this locale's translation file */
 	githubEditUrl: string;
-	/** GitHub URL to view history of this locale's translation file */
 	githubHistoryUrl: string;
 }

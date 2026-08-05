@@ -406,7 +406,7 @@ Locales are split by feature under `i18n/locales/{locale}/{feature}.json` (for e
 - Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, `it-IT`, matching WolfStar/Skyra language keys)
 - Locale registry: [`config/i18n.ts`](../config/i18n.ts)
 - Per-feature schemas: [`i18n/schemas/`](../i18n/schemas)
-- Lunaria config: [`lunaria.config.json`](../lunaria.config.json)
+- Lunaria config: [`lunaria.config.ts`](../lunaria.config.ts)
 
 ### i18n commands
 
@@ -425,7 +425,7 @@ CI runs `i18n:report` and checks that i18n schemas are up to date. Autofix runs 
 
 1. Copy `i18n/locales/en/*.json` into `i18n/locales/<code>/`
 2. Register it in `config/i18n.ts` (`locales` array) with `files: ["<code>/common.json", "<code>/auth.json", …]` (same feature set as existing locales)
-3. Add it to `lunaria.config.json` → `locales`
+3. Add it to `lunaria.config.ts` → `locales`
 4. Run `pnpm i18n:check:fix` and `pnpm vp run i18n:schema`
 
 Prefer static string keys with `$t('…')` / `t('…')` so `i18n:report` can analyze usage. For HTML inside translations, use [`i18n-t`](https://vue-i18n.intlify.dev/guide/advanced/component.html).

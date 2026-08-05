@@ -10,7 +10,6 @@
 		}"
 	>
 		<div class="flex h-full w-full flex-col items-start justify-between">
-			<!-- Brand -->
 			<div class="flex flex-row items-center">
 				<IconsWolfstar class="h-14 w-14" aria-hidden="true" />
 				<p style="font-size: 32px" class="ml-3 font-bold">
@@ -18,7 +17,6 @@
 				</p>
 			</div>
 
-			<!-- Title + Description -->
 			<div class="flex w-full flex-col items-start">
 				<h1
 					class="m-0 font-mono text-[80px] leading-none font-extrabold tracking-tight"

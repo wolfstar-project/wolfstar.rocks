@@ -32,6 +32,7 @@ import {
 	DiscordStringSelectMenu,
 	ModerationShowcase,
 	ModerationShowcaseSection,
+	OauthStatusPanel,
 	FeaturesSection,
 	GuildSettingsSection,
 	HeroSection,
@@ -805,6 +806,41 @@ describe("component accessibility audits", () => {
 		describe("ModerationShowcaseSection", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(ModerationShowcaseSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+	});
+
+	describe("OAuth components", () => {
+		describe("OauthStatusPanel", () => {
+			it("should have no accessibility violations in the loading state", async () => {
+				const component = await mountSuspended(OauthStatusPanel, {
+					props: {
+						tone: "info",
+						title: "Signing You In",
+						loading: true,
+						icon: "ph:discord-logo-fill",
+					},
+					slots: {
+						description: "Connecting to Discord...",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations in the success state", async () => {
+				const component = await mountSuspended(OauthStatusPanel, {
+					props: {
+						tone: "success",
+						title: "Welcome redstar!",
+						icon: "heroicons:check-circle",
+					},
+					slots: {
+						description: "Redirecting you to the dashboard...",
+					},
+				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

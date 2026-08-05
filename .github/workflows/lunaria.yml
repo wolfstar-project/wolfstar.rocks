@@ -13,14 +13,14 @@ permissions: {}
 jobs:
   lunaria-overview:
     name: 🌝 Generate Lunaria Overview
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
     permissions:
       contents: read
       pull-requests: write # post Lunaria overview comments on pull requests
 
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Necessary for Lunaria to work properly
           # Makes the action clone the entire git history
@@ -34,4 +34,4 @@ jobs:
           sfw: true
 
       - name: Generate Lunaria Overview
-        uses: lunariajs/action@4911ad0736d1e3b20af4cb70f5079aea2327ed8e # astro-docs
+        uses: lunariajs/action@a0594f1c5b8d55fb367d8df607d5e2541c99e77d # v1-prerelease

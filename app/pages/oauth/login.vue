@@ -1,7 +1,16 @@
 <template>
 	<div>
 		<h1 class="sr-only">{{ t("auth.oauth.login_seo_title") }}</h1>
-		<h2 class="sr-only">{{ t("auth.oauth.login_redirecting") }}</h2>
+		<OauthStatusPanel
+			tone="info"
+			loading
+			:title="t('auth.oauth.login_redirecting')"
+			icon="ph:discord-logo-fill"
+		>
+			<template #description>
+				{{ t("auth.oauth.redirecting_discord_description") }}
+			</template>
+		</OauthStatusPanel>
 	</div>
 </template>
 

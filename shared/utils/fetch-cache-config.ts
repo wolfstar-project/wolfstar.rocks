@@ -151,10 +151,18 @@ export function generateFetchCacheKey(url: string, options: FetchCacheKeyOptions
 /**
  * Whether a fetch URL should use the SSR fetch cache.
  *
+ * Only safe read methods are cached. Mutations (PATCH/POST/PUT/DELETE) must
+ * always hit the network — `$api` settings saves go through this path.
+ *
  * Relative URLs without `baseURL` are treated as same-origin and allowed.
  * Relative URLs with `baseURL` (e.g. `$api`) are checked against the resolved host.
  */
 export function shouldCacheFetch(url: string, options: FetchCacheKeyOptions = {}): boolean {
+	const method = (options.method || "GET").toUpperCase();
+	if (method !== "GET" && method !== "HEAD") {
+		return false;
+	}
+
 	if (typeof url === "string" && url.startsWith("/") && !options.baseURL) {
 		return true;
 	}

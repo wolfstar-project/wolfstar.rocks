@@ -161,6 +161,31 @@ describe("shouldCacheFetch", () => {
 	it("should reject relative URLs when baseURL is disallowed", () => {
 		expect(shouldCacheFetch("/commands", { baseURL: "https://evil.com" })).toBe(false);
 	});
+
+	it("should reject mutation methods even for allowed bot hosts", () => {
+		expect(
+			shouldCacheFetch("/guilds/1/settings", {
+				baseURL: "https://api.wolfstar.rocks",
+				method: "PATCH",
+				body: { data: [] },
+			}),
+		).toBe(false);
+		expect(
+			shouldCacheFetch("/guilds/1/settings", {
+				baseURL: "https://api.wolfstar.rocks",
+				method: "POST",
+			}),
+		).toBe(false);
+	});
+
+	it("should allow HEAD against an allowed bot baseURL", () => {
+		expect(
+			shouldCacheFetch("/commands", {
+				baseURL: "https://api.wolfstar.rocks",
+				method: "HEAD",
+			}),
+		).toBe(true);
+	});
 });
 
 describe("generateFetchCacheKey", () => {

@@ -1,9 +1,13 @@
-import { resolveOAuthProviderCallbackRedirect } from "#server/utils/oauth-callback";
+import {
+	isOAuthCallbackPath,
+	resolveOAuthProviderCallbackRedirect,
+} from "#server/utils/oauth-callback";
 
 export default defineEventHandler((event) => {
 	// Gate on `event.path` first: `getRequestURL()` can throw `TypeError: Invalid URL`
 	// during Nitro prerender (and some h3 v2 request shapes) when Host/url are incomplete.
-	if (event.path !== "/oauth/callback") {
+	// Strip the query string — h3 v1 includes it in `event.path`.
+	if (!isOAuthCallbackPath(event.path)) {
 		return;
 	}
 

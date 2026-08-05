@@ -7,7 +7,6 @@
 			<DialogOverlay class="inset-0 bg-base-300/60 fixed z-50" />
 			<DialogContent
 				class="modal-open modal inset-0 p-4 fixed z-50 flex items-center justify-center"
-				:aria-describedby="description ? undefined : undefined"
 				@escape-key-down="onDismiss"
 				@pointer-down-outside="onDismiss"
 				@interact-outside="onDismiss"

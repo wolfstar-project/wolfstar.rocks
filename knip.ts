@@ -29,8 +29,8 @@ const config: KnipConfig = {
 				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
-				/** css/mdx/prisma are handled by registered compilers, so include them here */
-				"**/*.{ts,vue,cjs,mjs,css,mdx,prisma}",
+				/** mdx/prisma are handled by registered compilers, so include them here */
+				"**/*.{ts,vue,cjs,mjs,mdx,prisma}",
 				"!test/fixtures/**",
 				"!test/test-utils/**",
 				"!test/e2e/helpers/**",
@@ -47,8 +47,6 @@ const config: KnipConfig = {
 				"puppeteer",
 				"vue-tsc",
 				"cz-conventional-changelog",
-				"tailwind-variants",
-
 				/** Framework-provided: re-exported or bundled by Nuxt/Nitro/Vite */
 				"ufo",
 				"ohash/*",
@@ -71,12 +69,6 @@ const config: KnipConfig = {
 
 				/** Used in the app but not imported directly */
 				"nuxt-security",
-
-				/** Registered as a Nuxt module only in some environments via a conditional spread in nuxt.config.ts, so knip can't resolve it statically */
-				"nuxt-studio",
-
-				/** Used in the app in guild/logs components */
-				"@tanstack/table-core",
 
 				/** Used in the test */
 				"axe-core",

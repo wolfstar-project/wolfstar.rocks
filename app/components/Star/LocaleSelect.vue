@@ -15,11 +15,7 @@
 </template>
 
 <script setup lang="ts">
-/**
- * Drop-in for Nuxt UI `ULocaleSelect` used by the footer language switcher.
- * Daisy-native `<select>` — no Reka portal (keeps prerender html-validator happy).
- */
-export interface LocaleSelectItem {
+interface LocaleSelectItem {
 	code: string;
 	name: string;
 	dir?: "ltr" | "rtl";

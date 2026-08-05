@@ -14,6 +14,7 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
+import { isNotFoundStatus, isServerErrorStatus, resolveErrorStatus } from "#shared/utils/error-status";
 
 const { error } = defineProps<{
 	error: NuxtError;
@@ -21,9 +22,9 @@ const { error } = defineProps<{
 
 const { t } = useI18n();
 
-const statusCode = computed(() => error.status ?? error.statusCode ?? 500);
-const isNotFound = computed(() => statusCode.value === 404);
-const isServerError = computed(() => statusCode.value >= 500);
+const statusCode = computed(() => resolveErrorStatus(error));
+const isNotFound = computed(() => isNotFoundStatus(statusCode.value));
+const isServerError = computed(() => isServerErrorStatus(statusCode.value));
 
 const seoTitle = computed(() => {
 	const label = isNotFound.value

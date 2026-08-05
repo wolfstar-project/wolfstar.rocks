@@ -75,6 +75,7 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
+import { isNotFoundStatus, isServerErrorStatus, resolveErrorStatus } from "#shared/utils/error-status";
 
 const { error: errorRaw } = defineProps<{
 	error: NuxtError;
@@ -82,11 +83,9 @@ const { error: errorRaw } = defineProps<{
 
 const { t } = useI18n();
 
-// Reads both Nuxt-normalized (`status`) and raw h3 (`statusCode`) shapes so the
-// error page stays correct no matter which layer produced the error.
-const status = computed(() => errorRaw.status ?? 500);
-const isNotFound = computed(() => status.value === 404);
-const isServerError = computed(() => status.value >= 500);
+const status = computed(() => resolveErrorStatus(errorRaw));
+const isNotFound = computed(() => isNotFoundStatus(status.value));
+const isServerError = computed(() => isServerErrorStatus(status.value));
 
 const title = computed(() => {
 	if (isNotFound.value) {
@@ -111,6 +110,11 @@ const description = computed(() => {
 const detail = computed(() => {
 	// 404 already has friendly copy; Nuxt's default message is just the missing path.
 	if (isNotFound.value) {
+		return undefined;
+	}
+	// Server errors may carry raw internal messages (stack traces, DB errors, etc.);
+	// only surface them to users outside of dev, keep them hidden in production.
+	if (isServerError.value && !import.meta.dev) {
 		return undefined;
 	}
 	const message = errorRaw.message?.trim();

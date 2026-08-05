@@ -5,10 +5,11 @@ import { createError } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ErrorPage from "~/components/ErrorPage.vue";
 
-const goHomeSpy = vi.fn();
-const retrySpy = vi.fn();
+const clearErrorSpy = vi.fn();
+const reloadNuxtAppSpy = vi.fn();
 
-mockNuxtImport("useErrorActions", () => () => ({ goHome: goHomeSpy, retry: retrySpy }));
+mockNuxtImport("clearError", () => clearErrorSpy);
+mockNuxtImport("reloadNuxtApp", () => reloadNuxtAppSpy);
 
 function makeError(input: { status: number; statusText?: string; message?: string }): NuxtError {
 	return createError(input);
@@ -47,8 +48,8 @@ describe("ErrorPage", () => {
 			expect(wrapper.findAll("button")).toHaveLength(1);
 
 			await buttonByText(wrapper, "Back to home").trigger("click");
-			expect(goHomeSpy).toHaveBeenCalledTimes(1);
-			expect(retrySpy).not.toHaveBeenCalled();
+			expect(clearErrorSpy).toHaveBeenCalledTimes(1);
+			expect(reloadNuxtAppSpy).not.toHaveBeenCalled();
 		});
 	});
 
@@ -72,14 +73,14 @@ describe("ErrorPage", () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
 
 			await buttonByText(wrapper, "Try Again").trigger("click");
-			expect(retrySpy).toHaveBeenCalledTimes(1);
+			expect(reloadNuxtAppSpy).toHaveBeenCalledTimes(1);
 		});
 
 		it("still offers a home action that clears the error", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
 
 			await buttonByText(wrapper, "Back to home").trigger("click");
-			expect(goHomeSpy).toHaveBeenCalledTimes(1);
+			expect(clearErrorSpy).toHaveBeenCalledTimes(1);
 		});
 	});
 

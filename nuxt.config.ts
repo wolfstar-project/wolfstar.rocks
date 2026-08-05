@@ -315,7 +315,6 @@ export default defineNuxtConfig({
 		typescriptPlugin: true,
 		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
-		// watcher: "builder", // TODO: remove this once the issue is fixed
 		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
 	},
 

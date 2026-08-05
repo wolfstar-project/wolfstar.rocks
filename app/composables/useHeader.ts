@@ -53,14 +53,6 @@ export function useHeader() {
 			label: t("nav.commands"),
 			to: "/commands",
 		},
-		{
-			label: t("nav.blog"),
-			to: "/blog",
-		},
-		{
-			label: t("nav.changelog"),
-			to: "/changelog",
-		},
 	]);
 
 	const mobileLinks = computed(() => [
@@ -102,14 +94,6 @@ export function useHeader() {
 		{
 			label: t("nav.commands"),
 			to: "/commands",
-		},
-		{
-			label: t("nav.blog"),
-			to: "/blog",
-		},
-		{
-			label: t("nav.changelog"),
-			to: "/changelog",
 		},
 		{
 			icon: "lucide:github",

@@ -4,7 +4,7 @@
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
 		}"
-		aria-label="Site footer"
+		:aria-label="t('footer.site_footer')"
 	>
 		<template #top>
 			<StarContainer class="relative overflow-hidden">
@@ -20,16 +20,22 @@
 				>
 					<div>
 						<div class="mb-3 gap-3 flex items-center">
-							<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
+							<div
+								class="w-10 rounded-full"
+								role="img"
+								:aria-label="t('footer.logo')"
+							>
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
 							<span class="font-bold">WolfStar</span>
 						</div>
 						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
-							A fully customizable, multilingual Discord moderation app. Free forever,
-							open source.
+							{{ t("footer.tagline") }}
 						</p>
-						<nav class="mt-4 gap-1 flex items-center" aria-label="Social links">
+						<nav
+							class="mt-4 gap-1 flex items-center"
+							:aria-label="t('footer.social_links')"
+						>
 							<StarButton
 								v-for="social of socialLinks"
 								:key="social.label"
@@ -48,7 +54,7 @@
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<StarButton
-								label="Powered by Netlify"
+								:label="t('footer.powered_by_netlify')"
 								to="https://www.netlify.com"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -56,14 +62,14 @@
 								color="neutral"
 								variant="soft"
 								:ui="{ leadingIcon: 'bg-success' }"
-								aria-label="Powered by Netlify - opens in new tab"
+								:aria-label="t('footer.powered_by_netlify_aria')"
 							/>
 						</div>
 					</div>
 					<nav
 						v-for="column of columns"
 						:key="column.label"
-						:aria-label="`Footer ${column.label} links`"
+						:aria-label="t('footer.column_links', { label: column.label })"
 					>
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
@@ -85,40 +91,74 @@
 
 		<template #left>
 			<p class="text-sm text-base-content/80">
-				WolfStar Project — Copyright © {{ currentYear }}. All rights reserved.
+				{{ t("footer.copyright", { year: currentYear }) }}
 			</p>
 		</template>
 		<template #right>
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
+			<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
+			<ClientOnly>
+				<StarLocaleSelect
+					:model-value="locale"
+					:locales="uiLocales"
+					:aria-label="t('common.language')"
+					:content="{ side: 'top', align: 'end', sideOffset: 8 }"
+					size="sm"
+					color="neutral"
+					variant="ghost"
+					class="min-w-28"
+					:ui="{ content: 'min-w-fit' }"
+					@update:model-value="selectLocale"
+				/>
+				<template #fallback>
+					<div class="h-8 min-w-28" aria-hidden="true" />
+				</template>
+			</ClientOnly>
 			<ColorModeButton />
 		</template>
 	</StarFooter>
 </template>
 
 <script setup lang="ts">
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+import { currentLocales } from "~~/config/i18n";
+
+const { locale, setLocale, t } = useI18n();
+const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 
-const socialLinks = [
+const uiLocales = currentLocales.map((appLocale) => ({
+	code: appLocale.code,
+	name: appLocale.name ?? appLocale.code,
+}));
+
+function selectLocale(code: string) {
+	if (!isAppLocaleCode(code)) return;
+	setPreferredLocale(code);
+	void setLocale(code);
+}
+
+const socialLinks = computed(() => [
 	{
-		ariaLabel: "Visit WolfStar on GitHub - opens in new tab",
+		ariaLabel: t("footer.github_aria"),
 		icon: "simple-icons:github",
-		label: "GitHub",
+		label: t("footer.github"),
 		to: "https://repo.wolfstar.rocks",
 	},
 	{
-		ariaLabel: "Join the WolfStar Discord - opens in new tab",
+		ariaLabel: t("footer.discord_aria"),
 		icon: "simple-icons:discord",
-		label: "Discord",
+		label: t("footer.support_server"),
 		to: "https://join.wolfstar.rocks",
 	},
 	{
-		ariaLabel: "Follow WolfStar on X - opens in new tab",
+		ariaLabel: t("footer.x_aria"),
 		icon: "simple-icons:x",
 		label: "X",
 		to: "https://x.com/wolfstarapp",
 	},
-] as const;
+]);
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

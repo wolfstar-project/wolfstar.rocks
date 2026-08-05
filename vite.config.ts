@@ -42,6 +42,27 @@ export default defineConfig({
 			"zizmor:fix": {
 				command: "zizmor --pedantic --fix .",
 			},
+			"i18n:check": {
+				command: "node --experimental-transform-types scripts/compare-translations.ts",
+				// Off because the script rewrites locale files (never cacheable), and
+				// caching triggers a vp spawn failure on the CI arm runner.
+				// See https://github.com/voidzero-dev/vite-task/issues/506
+				cache: false,
+			},
+			"i18n:report": {
+				command: "node --experimental-transform-types scripts/find-invalid-translations.ts",
+			},
+			"i18n:schema": {
+				// Format after generate so CI `git diff` matches oxfmt tab output
+				// (JSON.stringify alone emits 2-space indent).
+				command:
+					"node --experimental-transform-types scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json i18n/schemas",
+				// Off: script rewrites schema.json (same rationale as i18n:check).
+				cache: false,
+			},
+			"build:lunaria": {
+				command: "node --experimental-transform-types ./lunaria/lunaria.ts",
+			},
 		},
 	},
 	lint: {
@@ -506,8 +527,10 @@ export default defineConfig({
 		],
 	},
 	staged: {
+		"i18n/locales/**/*.json":
+			"node ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json i18n/schemas",
 		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
-		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files: string[]) => {
+		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files) => {
 			const filtered = files.filter(
 				(f) => !f.includes("/.claude/") && !f.startsWith(".claude/"),
 			);
@@ -517,7 +540,6 @@ export default defineConfig({
 	test: {
 		projects: [
 			{
-				define: { "process.test": "true" },
 				plugins: isCI ? [codspeedPlugin()] : [],
 				resolve: {
 					alias: {
@@ -535,7 +557,6 @@ export default defineConfig({
 				},
 			},
 			{
-				define: { "process.test": "true" },
 				resolve: {
 					alias: {
 						"~": `${rootDir}/app`,
@@ -560,7 +581,6 @@ export default defineConfig({
 			},
 			() =>
 				defineVitestProject({
-					define: { "process.test": "true" },
 					test: {
 						browser: {
 							enabled: true,
@@ -571,8 +591,6 @@ export default defineConfig({
 						environmentOptions: {
 							nuxt: {
 								overrides: {
-									// @ts-expect-error -- @nuxt/fonts config is not in the base NuxtConfig type
-									fonts: { providers: { fontshare: false } },
 									runtimeConfig: {
 										public: {
 											clientId: "test-discord-client-id",
@@ -588,6 +606,7 @@ export default defineConfig({
 										payloadExtraction: false,
 										viteEnvironmentApi: false,
 									},
+									// @ts-expect-error -- pwa config is not in the base NuxtConfig type
 									pwa: { pwaAssets: { disabled: true } },
 									sentry: { enabled: false },
 									sitemap: { enabled: false },
@@ -604,7 +623,7 @@ export default defineConfig({
 		],
 		coverage: {
 			enabled: true,
-			exclude: ["**/node_modules/**"],
+			include: ["{app,server,shared}/**/*.{ts,vue}"],
 			provider: "v8",
 		},
 	},

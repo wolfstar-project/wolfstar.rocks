@@ -131,7 +131,8 @@ const { stop } = useIntersectionObserver(
 	},
 	{ rootMargin: "150px" },
 );
-// Make these computed to avoid SSR hydration issues
+// Synced from `guild` via the immediate watcher below (not computed) so the
+// server-rendered value and the client's first render agree before hydration.
 const isDefault = ref(false);
 const isAnimated = ref(false);
 // Size-based classes for DaisyUI Avatar

@@ -19,12 +19,17 @@ export default defineNuxtPlugin((nuxtApp) => {
 
 	let transition: ViewTransition | undefined;
 	let finishTransition: (() => void) | undefined;
+	// Only true between the current navigation's route change committing (inside the
+	// VT update callback) and its page:finish. A stale page:finish from a superseded
+	// page must not release a gate whose destination page has not even mounted yet.
+	let pageFinishReleasesGate = false;
 	let hasUAVisualTransition = false;
 	let pendingPopstate = false;
 
 	const resetTransitionState = () => {
 		transition = undefined;
 		finishTransition = undefined;
+		pageFinishReleasesGate = false;
 		hasUAVisualTransition = false;
 	};
 
@@ -70,17 +75,32 @@ export default defineNuxtPlugin((nuxtApp) => {
 		// startViewTransition does not throw when one is already active.
 		if (document.activeViewTransition) {
 			document.activeViewTransition.skipTransition();
+			// Settle the superseded transition's update-callback gate so the skipped
+			// transition can finish instead of waiting on a promise nobody resolves.
+			finishTransition?.();
 		}
+
+		// Disarm before taking ownership: the superseded page's Suspense tree may
+		// still emit page:finish, and it must not release this navigation's gate.
+		pageFinishReleasesGate = false;
 
 		const promise = new Promise<void>((resolve) => {
 			finishTransition = resolve;
 		});
+
+		// Let Nuxt's scrollBehavior wait for the VT to settle before scrolling to top.
+		// Without this, page:loading:end scrolls during the old-page snapshot and mobile
+		// navigations (e.g. Changelog) keep the previous scroll offset.
+		nuxtApp["~transitionPromise"] = promise;
 
 		let changeRoute: () => void;
 		const ready = new Promise<void>((resolve) => (changeRoute = resolve));
 
 		try {
 			transition = document.startViewTransition(() => {
+				// The route change commits now, so the next page:finish belongs to
+				// this navigation's destination page: arm the gate release.
+				pageFinishReleasesGate = true;
 				changeRoute!();
 				return promise;
 			});
@@ -88,6 +108,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 			// If startViewTransition still throws, clean up and let navigation
 			// proceed without a transition so the router does not hang.
 			finishTransition?.();
+			nuxtApp["~transitionPromise"] = undefined;
 			resetTransitionState();
 			return;
 		}
@@ -101,7 +122,15 @@ export default defineNuxtPlugin((nuxtApp) => {
 		// destination route throws, the browser skips the transition and rejects with
 		// "AbortError: Transition was skipped". Settle on both outcomes so it never
 		// surfaces as an unhandled rejection.
-		void Promise.allSettled([transition.ready, transition.finished]).then(resetTransitionState);
+		const currentTransition = transition;
+		void Promise.allSettled([currentTransition.ready, currentTransition.finished]).then(() => {
+			// A newer navigation may own the state by now; only clear state that still
+			// belongs to this transition, otherwise a superseded transition's cleanup
+			// would drop the new ~transitionPromise before Nuxt awaits it.
+			if (transition !== currentTransition) return;
+			nuxtApp["~transitionPromise"] = undefined;
+			resetTransitionState();
+		});
 
 		return ready;
 	});
@@ -110,19 +139,23 @@ export default defineNuxtPlugin((nuxtApp) => {
 	router.onError(() => {
 		transition?.skipTransition();
 		finishTransition?.();
+		nuxtApp["~transitionPromise"] = undefined;
 		resetTransitionState();
 	});
 	nuxtApp.hook("app:error", () => {
 		finishTransition?.();
+		nuxtApp["~transitionPromise"] = undefined;
 		resetTransitionState();
 	});
 	nuxtApp.hook("vue:error", () => {
 		finishTransition?.();
+		nuxtApp["~transitionPromise"] = undefined;
 		resetTransitionState();
 	});
 
 	nuxtApp.hook("page:finish", () => {
+		if (!pageFinishReleasesGate) return;
+		pageFinishReleasesGate = false;
 		finishTransition?.();
-		resetTransitionState();
 	});
 });

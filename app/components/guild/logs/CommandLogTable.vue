@@ -4,19 +4,15 @@
 			<StarInput
 				v-model="query"
 				icon="i-lucide-search"
-				placeholder="Search logs..."
-				aria-label="Search logs"
+				:placeholder="t('guild_logs.search_placeholder')"
+				:aria-label="t('guild_logs.search_aria')"
 				class="max-w-sm min-w-48"
 			/>
-			<span class="text-sm text-muted">Status</span>
+			<span class="text-sm text-muted">{{ t("guild_logs.status_label") }}</span>
 			<StarSelect
 				v-model="filters.success"
-				:items="[
-					{ label: 'All', value: 'all' },
-					{ label: 'Success', value: 'success' },
-					{ label: 'Failed', value: 'failure' },
-				]"
-				aria-label="Filter by status"
+				:items="statusItems"
+				:aria-label="t('guild_logs.filter_status')"
 			/>
 		</div>
 		<ActivitySection
@@ -26,9 +22,9 @@
 			:item-count="entries.length"
 			:max-visible="total"
 			empty-icon="i-lucide-terminal"
-			empty-title="No logs found"
-			:empty-description="debouncedQ ? 'No commands match the current filters.' : undefined"
-			refresh-label="Refresh command log"
+			:empty-title="t('guild_logs.no_logs')"
+			:empty-description="debouncedQ ? t('guild_logs.no_commands_filter_match') : undefined"
+			:refresh-label="t('guild_logs.refresh_command')"
 			record-label="command"
 			@refresh="refresh()"
 		>
@@ -55,9 +51,12 @@
 				class="mt-4 border-default pt-4 flex items-center justify-between border-t"
 			>
 				<p class="text-sm text-muted">
-					Showing
-					{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-					{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
+					{{
+						t("guild_logs.showing_entries", {
+							shown: table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0,
+							total: table?.tableApi?.getFilteredRowModel().rows.length || 0,
+						})
+					}}
 				</p>
 				<StarPagination
 					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
@@ -81,6 +80,7 @@ const StarBadge = resolveComponent("StarBadge");
 const StarAvatar = resolveComponent("StarAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
+const { t } = useI18n();
 
 const page = ref(1);
 const limit = ref(20);
@@ -92,6 +92,12 @@ const offset = computed(() => (page.value - 1) * limit.value);
 
 const guildId = computed(() => guildData.value.id);
 
+const statusItems = computed(() => [
+	{ label: t("guild_logs.status_all"), value: "all" },
+	{ label: t("guild_logs.status_success"), value: "success" },
+	{ label: t("guild_logs.status_failed"), value: "failure" },
+]);
+
 const { entries, total, status, refresh } = useCommandLog({
 	guildId,
 	limit,
@@ -99,10 +105,10 @@ const { entries, total, status, refresh } = useCommandLog({
 	filters,
 });
 
-const columns: TableColumn<CommandLogData>[] = [
+const columns = computed<TableColumn<CommandLogData>[]>(() => [
 	{
 		accessorKey: "executedAt",
-		header: "Time",
+		header: t("guild_logs.columns.time"),
 		cell: ({ row }) =>
 			h(
 				"time",
@@ -116,7 +122,7 @@ const columns: TableColumn<CommandLogData>[] = [
 	},
 	{
 		id: "actor",
-		header: "User",
+		header: t("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			const metadata = row.original.metadata as { member: APIGuildMember } | null;
 			const member = metadata?.member;
@@ -138,7 +144,7 @@ const columns: TableColumn<CommandLogData>[] = [
 	},
 	{
 		accessorKey: "commandName",
-		header: "Command",
+		header: t("guild_logs.columns.command"),
 		cell: ({ row }) => {
 			const label = row.original.subcommand
 				? `/${row.original.commandName} ${row.original.subcommand}`
@@ -148,7 +154,7 @@ const columns: TableColumn<CommandLogData>[] = [
 	},
 	{
 		accessorKey: "success",
-		header: "Status",
+		header: t("guild_logs.columns.status"),
 		cell: ({ row }) =>
 			h(
 				StarBadge,
@@ -157,12 +163,15 @@ const columns: TableColumn<CommandLogData>[] = [
 					variant: "subtle",
 					size: "sm",
 				},
-				() => (row.original.success ? "Success" : "Failed"),
+				() =>
+					row.original.success
+						? t("guild_logs.status_success")
+						: t("guild_logs.status_failed"),
 			),
 	},
 	{
 		accessorKey: "latencyMs",
-		header: "Latency",
+		header: t("guild_logs.columns.latency"),
 		cell: ({ row }) =>
 			h(
 				"span",
@@ -170,7 +179,11 @@ const columns: TableColumn<CommandLogData>[] = [
 				row.original.latencyMs !== null ? `${row.original.latencyMs}ms` : "—",
 			),
 	},
-];
+]);
+
+watch(debouncedQ, (val) => {
+	filters.value.q = val || undefined;
+});
 
 watch(
 	[filters],

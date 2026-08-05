@@ -122,16 +122,6 @@ const selectedLabel = computed(() => {
 	return current?.label;
 });
 
-// Watchers for name are likely not needed if using modelValue, but keep for backward compat if name is used
-watch(
-	() => name,
-	(newName) => {
-		if (!modelValue) {
-			// Direct update only if modelValue is not controlling it (though computed getter handles this)
-		}
-	},
-);
-
 function resolveValueFromName(name?: string) {
 	if (!name) {
 		return undefined;

@@ -1,7 +1,8 @@
 import netlifyNuxt from "@netlify/nuxt";
 import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
-import { isCI, isDevelopment, isTest, provider } from "std-env";
+import { isCI, isTest, provider } from "std-env";
+import { currentLocales } from "./config/i18n";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -18,11 +19,11 @@ export default defineNuxtConfig({
 		"@nuxt/icon",
 		"@nuxtjs/color-mode",
 		"@nuxt/content",
-		// Nuxt Studio is a local content-editing tool. It ships multi-MB editor
-		// bundles that overflow the PWA precache (breaking the build) and registers
-		// Vite plugins that break the rolldown-based Vitest environment, so only
-		// load it during local development.
-		...(isDevelopment ? ["nuxt-studio"] : []),
+		// Nuxt Studio works in development and production (Git publish needs prod).
+		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
+		// test environment. Studio editor chunks are also excluded from the PWA
+		// precache in config/pwa.ts so multi-MB bundles don't fail the build.
+		...(isTest || isStorybook ? [] : ["nuxt-studio"]),
 		"@nuxt/image",
 		"@nuxt/hints",
 		"@nuxt/fonts",
@@ -32,6 +33,7 @@ export default defineNuxtConfig({
 		"@vueuse/nuxt",
 		"@vite-pwa/nuxt",
 		"@nuxtjs/html-validator",
+		"@nuxtjs/i18n",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
 		"@onmax/nuxt-better-auth",
@@ -44,20 +46,23 @@ export default defineNuxtConfig({
 				extends: "auto",
 			},
 		],
-		"nuxt-skill-hub",
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
-
-	skillHub: {
-		targets: ["claude-code", "cursor"],
-		generationMode: "prepare",
-	},
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
 		// requiring better-sqlite3 as an additional native dependency.
 		experimental: {
 			sqliteConnector: "native",
+		},
+	},
+
+	studio: {
+		repository: {
+			provider: "github",
+			owner: "wolfstar-project",
+			repo: "wolfstar.rocks",
+			branch: "main",
 		},
 	},
 
@@ -96,15 +101,12 @@ export default defineNuxtConfig({
 
 	devtools: {
 		enabled: true,
-		timeline: {
-			enabled: true,
-		},
 	},
 
 	app: {
 		head: {
 			charset: "utf-8",
-			htmlAttrs: { lang: "en" },
+			htmlAttrs: { lang: "en-US" },
 			link: [
 				// Preconnect for external domains (faster than dns-prefetch: includes TLS handshake)
 				{ href: "https://cdn.discordapp.com", rel: "preconnect", crossorigin: "anonymous" },
@@ -251,6 +253,7 @@ export default defineNuxtConfig({
 		// Discord, so prerendering only produces an empty redirect stub that fails
 		// html-validation (no <title>/<body>, missing lang). Never prerender it.
 		"/oauth/login": {
+			prerender: false,
 			robots: true,
 			auth: { only: "guest", redirectTo: "/profile" },
 		},
@@ -275,9 +278,20 @@ export default defineNuxtConfig({
 		"/wolfstar": { appLayout: "default", prerender: true, robots: true },
 		"/blog": { appLayout: "default", prerender: true, robots: true },
 		"/blog/**": { appLayout: "default", prerender: true, robots: true },
+		"/translation-status": { appLayout: "default", prerender: true, robots: true },
+		// lunaria status.json — always revalidate so the app sees fresh progress
+		"/lunaria/status.json": {
+			headers: {
+				"Cache-Control": "public, max-age=0, must-revalidate",
+			},
+		},
 		// Changelog pulls live GitHub releases from ungh.cc, so it revalidates via
 		// ISR (1 hour) rather than prerendering against the external API at build time.
 		"/changelog": { appLayout: "default", robots: true, ...getISRConfig(60 * 60) },
+		// Nuxt Studio admin UI + auth callbacks — SSR-only, never index or prerender.
+		"/_studio": { prerender: false, robots: false },
+		"/_studio/**": { prerender: false, robots: false },
+		"/__nuxt_studio/**": { prerender: false, robots: false },
 	},
 
 	sourcemap: {
@@ -293,25 +307,22 @@ export default defineNuxtConfig({
 		typescriptPlugin: true,
 		viteEnvironmentApi: !isStorybook,
 		typedPages: true,
+		checkOutdatedBuildInterval: 5 * 60 * 1000, // 5 minutes
 	},
 
 	compatibilityDate: "2025-09-20",
 
 	nitro: {
-		// Pre-compress prerendered HTML and /_nuxt assets so the server (and any
-		// origin without edge compression) serves gzip/brotli with correct headers.
-		compressPublicAssets: {
-			brotli: true,
-			gzip: true,
-		},
 		future: {
 			nativeSWR: true,
 		},
+		esbuild: {
+			options: {
+				target: "es2024",
+			},
+		},
 		prerender: {
 			crawlLinks: true,
-			// Keep redirect-only and per-user routes out of the prerender crawl;
-			// their auth-redirect stubs do not produce complete HTML documents.
-			ignore: ["/login", "/oauth/login", "/profile"],
 		},
 		publicAssets: [
 			{
@@ -337,11 +348,24 @@ export default defineNuxtConfig({
 				driver: "fsLite",
 			},
 		},
+		// build:test must set TEST=1: nuxi build forces NODE_ENV=production before
+		// config load, so NODE_ENV=test alone never makes std-env isTest (or this
+		// replace) true in Playwright bundles. Prefer isTest so VITEST-only
+		// runners (CI `vp test`) still get a true replace without waiting on NODE_ENV.
+		replace: {
+			"import.meta.test": isTest,
+		},
 	},
 
 	vite: {
-		define: {
-			"process.test": "false",
+		// Do NOT define import.meta.test here: Nuxt's schema already defines it
+		// from nuxt.options.test (Boolean(std-env isTest) by default, and forced
+		// true by @nuxt/test-utils in the Vitest environment). A user-level define
+		// overrides that and, in CI, bakes in "false" because this config is
+		// evaluated before Vitest sets NODE_ENV=test — breaking mountSuspended's
+		// import.meta.test-gated SingleRenderer branch in nuxt-root.vue.
+		css: {
+			transformer: "lightningcss",
 		},
 		optimizeDeps: {
 			include: [
@@ -386,6 +410,17 @@ export default defineNuxtConfig({
 				"valibot",
 			],
 		},
+		ssr: {
+			// Vite SSR prebundling yields a broken CJS interop stub of
+			// discord-api-types (enum named exports become undefined). Keep it
+			// external so Node loads the real package. The client optimizer keeps
+			// prebundling discord-api-types/v10 (see include above); excluding it
+			// there breaks browser-mode Vitest with raw CJS served to chromium.
+			external: ["discord-api-types"],
+		},
+		experimental: {
+			bundledDev: false,
+		},
 	},
 
 	typescript: {
@@ -414,15 +449,12 @@ export default defineNuxtConfig({
 		},
 	},
 
-	postcss: {
-		plugins: {
-			"postcss-nested": {},
-		},
-	},
-
 	fonts: {
 		providers: {
 			fontshare: false,
+		},
+		experimental: {
+			disableLocalFallbacks: true,
 		},
 		families: [
 			{
@@ -457,63 +489,15 @@ export default defineNuxtConfig({
 
 	icon: {
 		clientBundle: {
-			// App Launcher fixtures pass icon names dynamically, so scanning cannot detect them.
-			icons: [
-				"ph:flame-fill",
-				"ph:circles-three-fill",
-				"ph:circles-four-fill",
-				"ph:squares-four-fill",
-				"ph:number-circle-eight-fill",
-				"ph:diamond-fill",
-				"ph:grid-nine",
-				"ph:flower-lotus-fill",
-				"ph:plant-fill",
-				"ph:youtube-logo-fill",
-				"ph:flask-fill",
-				"ph:spade-fill",
-				"ph:golf-fill",
-				"ph:waveform-fill",
-				"ph:shield-star-fill",
-				"ph:hand-pointing-fill",
-				"ph:soccer-ball-fill",
-				"ph:rocket-launch-fill",
-				"ph:image-square-fill",
-				"ph:planet-fill",
-				"ph:discord-logo-fill",
-				"ph:cat-fill",
-				"ph:music-notes-fill",
-				"ph:vinyl-record-fill",
-				"ph:terminal-window-fill",
-				"ph:grid-four-fill",
-				"ph:headphones-fill",
-				"ph:microphone-stage-fill",
-				"ph:pencil-simple-fill",
-				"ph:checkerboard-fill",
-				"ph:map-trifold-fill",
-				"ph:phone-fill",
-				"ph:smiley-sticker-fill",
-				"ph:chat-teardrop-dots-fill",
-				"ph:palette-fill",
-				"ph:lightning-fill",
-				"ph:crosshair-fill",
-				"ph:sword-fill",
-				"ph:number-square-one-fill",
-				"ph:hexagon-fill",
-				"ph:number-eight-fill",
-				"ph:cards-three-fill",
-				"ph:dice-five-fill",
-				"ph:horse-fill",
-				"ph:shield-chevron-fill",
-				"ph:detective-fill",
-				"ph:person-simple-run-fill",
-				"ph:crosshair-simple-fill",
-				"ph:car-profile-fill",
-				"ph:target-fill",
-				"ph:smiley-melting-fill",
-				"ph:fish-simple-fill",
-			],
 			includeCustomCollections: true,
-			scan: true,
+			// App Launcher fixtures pass icon names dynamically from .ts data
+			// (app/utils/constants.ts), which the default scan globs
+			// (vue/jsx/tsx/md/mdc/mdx/yml/yaml) miss — include .ts so those
+			// icons stay in the client bundle instead of falling back to
+			// runtime fetches.
+			scan: {
+				globInclude: ["**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml,ts}"],
+			},
 		},
 		customCollections: [
 			{
@@ -547,18 +531,20 @@ export default defineNuxtConfig({
 	skewProtection: {
 		// Same Netlify Blobs backend as the cache/fetch-cache Nitro storage mounts
 		// (see modules/cache.ts); falls back to the module's fs cache elsewhere.
-		storage:
-			provider === "netlify"
-				? { driver: "netlify-blobs", name: "skew-protection" }
-				: undefined,
-		// Force polling rather than the SSE/WS default: this app's Netlify deploy
-		// isn't confirmed to support long-lived streaming connections through its
-		// serverless functions, and polling needs no platform-specific handling.
+		storage: {
+			base: "./.cache/skew-protection",
+			// nuxt-skew-protection imports `unstorage/drivers/${driver}` verbatim,
+			// so this must be the kebab-case file name (fs-lite.mjs), unlike the
+			// Nitro storage mounts above where "fsLite" is a registered driver name.
+			driver: "fs-lite",
+		},
 		updateStrategy: "polling",
-		// The persistent-previous-build-assets feature uploads build output to
-		// storage during `nitro:init`, which on Netlify would need Blobs write
-		// access from the build image itself (unverified) rather than from a
-		// deployed function; keep it off until that's confirmed safe.
+		// Keep the persistent-previous-build-assets feature off: with storage now
+		// always configured, the module's default (true) runs augmentBuildMetadata,
+		// which rewrites _nuxt/builds/meta/<buildId>.json after the build but only
+		// patches the Nitro server's embedded size/etag for latest.json. The node
+		// preview server then serves the app manifest with stale content-length,
+		// and clients fail with NUXT_E5004/NUXT_E5002 on client-side navigation.
 		bundleAssets: false,
 	},
 
@@ -678,12 +664,6 @@ export default defineNuxtConfig({
 				{ content: "#121212", media: "(prefers-color-scheme: dark)" },
 				{ content: "#ffffff", media: "(prefers-color-scheme: light)" },
 			],
-			twitterCard: "summary_large_image",
-			twitterCreator: "@RedStar071",
-			twitterDescription:
-				"WolfStar is a multipurpose Discord bot designed to handle most tasks, helping users manage their servers easily.",
-			twitterSite: "@WolfStarBot",
-			twitterTitle: "WolfStar",
 		},
 	},
 
@@ -697,12 +677,30 @@ export default defineNuxtConfig({
 		disablePreloadLinks: true,
 		disableStylesheets: "entry",
 	},
+
+	i18n: {
+		locales: currentLocales,
+		// Expanded from base `en` via countryLocaleVariants
+		defaultLocale: "en-US",
+		strategy: "no_prefix",
+		detectBrowserLanguage: false,
+		// Paths are resolved relative to `restructureDir` (default "i18n/"), so this
+		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
+		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
+		langDir: "locales",
+	},
 });
 
 interface ISRConfigOptions {
 	fallback?: "html" | "json";
+	allowQuery?: string[];
+	passQuery?: boolean;
 }
 function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {}) {
+	const extraISR = {
+		...(options.passQuery ? { passQuery: true } : {}),
+		...(options.allowQuery ? { allowQuery: options.allowQuery } : {}),
+	};
 	if (options.fallback) {
 		return {
 			isr: {
@@ -713,12 +711,14 @@ function getISRConfig(expirationSeconds: number, options: ISRConfigOptions = {})
 						: "payload-fallback.json",
 				initialHeaders:
 					options.fallback === "json" ? { "content-type": "application/json" } : {},
+				...extraISR,
 			} as { expiration: number },
 		};
 	}
 	return {
 		isr: {
 			expiration: expirationSeconds,
+			...extraISR,
 		},
 	};
 }

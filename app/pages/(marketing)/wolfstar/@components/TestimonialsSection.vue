@@ -65,6 +65,7 @@ const { testimonials } = defineProps<{
 </script>
 
 <style scoped>
+/* Full-bleed out of StarMain's max-width; page overflow clipped on .app-layout */
 .home-testimonials {
 	width: 100vw;
 	max-width: 100vw;

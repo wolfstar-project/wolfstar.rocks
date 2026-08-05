@@ -39,7 +39,7 @@
 			<!-- Search sits outside the scroller so the track starts below it, like Discord. -->
 			<div class="discord-app-launcher-search-header">
 				<div class="discord-app-launcher-search">
-					<StarIcon
+					<Icon
 						name="discord:search"
 						class="discord-app-launcher-search-icon"
 						aria-hidden="true"
@@ -109,7 +109,7 @@
 									class="discord-app-launcher-section-title"
 								>
 									Recents
-									<StarIcon
+									<Icon
 										name="ph:caret-down-bold"
 										class="discord-app-launcher-section-caret"
 										aria-hidden="true"
@@ -121,16 +121,18 @@
 									class="discord-app-launcher-view-more"
 									@click="openListView(recentsListViewId)"
 								>
-									<span class="discord-app-launcher-view-more-desktop"
+									<span
+										class="discord-app-launcher-view-more-desktop max-md:hidden"
 										>View More</span
 									>
-									<span class="discord-app-launcher-view-more-mobile"
+									<span
+										class="discord-app-launcher-view-more-mobile max-md:inline hidden"
 										>View All</span
 									>
 								</button>
 							</div>
 							<ul
-								class="discord-app-launcher-recents discord-app-launcher-recents-desktop"
+								class="discord-app-launcher-recents discord-app-launcher-recents-desktop max-md:hidden"
 								role="list"
 							>
 								<li v-for="entry of filteredRecents" :key="entry.id">
@@ -166,7 +168,7 @@
 														isWolfstarEntry(entry),
 												}"
 											/>
-											<StarIcon
+											<Icon
 												v-else-if="entry.icon"
 												:name="entry.icon"
 												class="discord-app-launcher-recent-glyph"
@@ -176,7 +178,7 @@
 								</li>
 							</ul>
 							<ul
-								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile"
+								class="discord-app-launcher-tile-grid discord-app-launcher-recents-mobile max-md:flex hidden"
 								role="list"
 							>
 								<li
@@ -214,7 +216,7 @@
 														isWolfstarEntry(entry),
 												}"
 											/>
-											<StarIcon
+											<Icon
 												v-else-if="entry.icon"
 												:name="entry.icon"
 												class="discord-app-launcher-tile-glyph"
@@ -246,10 +248,12 @@
 									id="discord-app-launcher-server-heading"
 									class="discord-app-launcher-section-title"
 								>
-									<span class="discord-app-launcher-server-title-desktop"
+									<span
+										class="discord-app-launcher-server-title-desktop max-md:hidden"
 										>Apps in this Server</span
 									>
-									<span class="discord-app-launcher-server-title-mobile"
+									<span
+										class="discord-app-launcher-server-title-mobile max-md:inline hidden"
 										>In This Server</span
 									>
 								</h2>
@@ -259,16 +263,18 @@
 									class="discord-app-launcher-view-more"
 									@click="openListView(serverAppsListViewId)"
 								>
-									<span class="discord-app-launcher-view-more-desktop"
+									<span
+										class="discord-app-launcher-view-more-desktop max-md:hidden"
 										>View More</span
 									>
-									<span class="discord-app-launcher-view-more-mobile"
+									<span
+										class="discord-app-launcher-view-more-mobile max-md:inline hidden"
 										>View All</span
 									>
 								</button>
 							</div>
 							<div
-								class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop"
+								class="discord-app-launcher-server-list discord-app-launcher-server-list-desktop max-md:hidden"
 							>
 								<DiscordAppLauncherListItem
 									v-for="(entry, index) of filteredServerApps"
@@ -286,7 +292,7 @@
 								/>
 							</div>
 							<ul
-								class="discord-app-launcher-tile-grid discord-app-launcher-server-mobile"
+								class="discord-app-launcher-tile-grid discord-app-launcher-server-mobile max-md:flex hidden"
 								role="list"
 							>
 								<li
@@ -324,7 +330,7 @@
 														isWolfstarEntry(entry),
 												}"
 											/>
-											<StarIcon
+											<Icon
 												v-else-if="entry.icon"
 												:name="entry.icon"
 												class="discord-app-launcher-tile-glyph"
@@ -434,7 +440,7 @@
 										<template v-else-if="promo.variant === 'farm'">
 											<span class="discord-app-launcher-promo-farm-sun" />
 											<span class="discord-app-launcher-promo-farm-field" />
-											<StarIcon
+											<Icon
 												name="ph:plant-fill"
 												class="discord-app-launcher-promo-farm-icon"
 											/>
@@ -452,7 +458,7 @@
 											</span>
 										</template>
 										<template v-else>
-											<StarIcon
+											<Icon
 												name="ph:youtube-logo-fill"
 												class="discord-app-launcher-promo-watch-icon"
 											/>
@@ -471,14 +477,14 @@
 											"
 											aria-hidden="true"
 										>
-											<StarIcon v-if="promo.icon" :name="promo.icon" />
+											<Icon v-if="promo.icon" :name="promo.icon" />
 										</span>
 										<span class="discord-app-launcher-promo-copy">
 											<span class="discord-app-launcher-promo-title-row">
 												<span class="discord-app-launcher-promo-title">{{
 													promo.title
 												}}</span>
-												<StarIcon
+												<Icon
 													name="discord:eye"
 													class="discord-app-launcher-promo-eye"
 													aria-hidden="true"
@@ -569,7 +575,7 @@
 					aria-label="Back to Apps"
 					@click="returnToMainView"
 				>
-					<StarIcon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
+					<Icon name="ph:caret-left-bold" class="size-4" aria-hidden="true" />
 				</button>
 				<h2 class="discord-app-launcher-list-title">{{ activeListView?.title }}</h2>
 				<span class="discord-app-launcher-back-spacer" aria-hidden="true" />
@@ -1563,9 +1569,10 @@ onBeforeUnmount(() => {
 	@apply outline-primary outline-2 outline-offset-2;
 }
 
-/* Tiles are mobile-only; the sheet media query switches them back to `grid`. */
+/* Tiles are mobile-only; the sheet media query restores display on the same selector. */
 .discord-app-launcher-tile-grid {
-	@apply m-0 gap-2 p-0 hidden list-none grid-cols-2;
+	@apply m-0 gap-2 p-0 list-none grid-cols-2;
+	display: none;
 }
 
 .discord-app-launcher-tile {
@@ -1688,8 +1695,9 @@ onBeforeUnmount(() => {
 	}
 }
 
-/* Mobile Discord sheet layout (< md). */
-@media (width < 48rem) {
+/* Mobile Discord sheet layout (< md / 768px). Use px so rem root changes cannot
+ * keep the desktop popover chrome on phones/tablets that still show the site hamburger. */
+@media (max-width: 767.98px) {
 	.discord-app-launcher {
 		--discord-app-launcher-bg: oklch(22% 0.006 272);
 		--discord-app-launcher-nested: oklch(28% 0.007 272);
@@ -1780,10 +1788,11 @@ onBeforeUnmount(() => {
 		@apply inline-block;
 	}
 
+	/* Compound selectors beat the base single-class display rules. */
 	.discord-app-launcher-view-more-desktop,
 	.discord-app-launcher-server-title-desktop,
-	.discord-app-launcher-recents-desktop,
-	.discord-app-launcher-server-list-desktop,
+	.discord-app-launcher-recents.discord-app-launcher-recents-desktop,
+	.discord-app-launcher-server-list.discord-app-launcher-server-list-desktop,
 	.discord-app-launcher-category .discord-app-launcher-view-more-header {
 		display: none;
 	}
@@ -1796,20 +1805,22 @@ onBeforeUnmount(() => {
 	/*
 	 * Recents / In This Server are horizontal carousels: two tiles fill the
 	 * content box and the next one peeks through the bled right padding.
+	 * Target .tile-grid itself so this overrides the base `display: none`.
 	 */
-	.discord-app-launcher-recents-mobile,
-	.discord-app-launcher-server-mobile {
-		@apply -mr-4 gap-2 pr-4 flex overflow-x-auto;
+	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile,
+	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile {
+		@apply -mr-4 gap-2 pr-4 overflow-x-auto;
+		display: flex;
 		scrollbar-width: none;
 	}
 
-	.discord-app-launcher-recents-mobile::-webkit-scrollbar,
-	.discord-app-launcher-server-mobile::-webkit-scrollbar {
+	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile::-webkit-scrollbar,
+	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile::-webkit-scrollbar {
 		display: none;
 	}
 
-	.discord-app-launcher-recents-mobile > li,
-	.discord-app-launcher-server-mobile > li {
+	.discord-app-launcher-tile-grid.discord-app-launcher-recents-mobile > li,
+	.discord-app-launcher-tile-grid.discord-app-launcher-server-mobile > li {
 		@apply shrink-0;
 		width: calc(50% - 0.25rem);
 	}

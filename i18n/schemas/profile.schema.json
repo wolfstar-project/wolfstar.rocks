@@ -1,0 +1,117 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (profile.json)",
+	"description": "Schema for profile.json. Generated from en/profile.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"profile": {
+			"type": "object",
+			"properties": {
+				"title": {
+					"type": "string"
+				},
+				"seo_description": {
+					"type": "string"
+				},
+				"servers": {
+					"type": "string"
+				},
+				"manageable": {
+					"type": "string"
+				},
+				"search_servers": {
+					"type": "string"
+				},
+				"search_servers_aria": {
+					"type": "string"
+				},
+				"get_premium": {
+					"type": "string"
+				},
+				"premium": {
+					"type": "string"
+				},
+				"motion_reduced": {
+					"type": "string"
+				},
+				"motion_enabled": {
+					"type": "string"
+				},
+				"account_management": {
+					"type": "string"
+				},
+				"refresh_servers": {
+					"type": "string"
+				},
+				"clear_search": {
+					"type": "string"
+				},
+				"no_servers": {
+					"type": "string"
+				},
+				"no_matching_servers": {
+					"type": "string"
+				},
+				"loading_more": {
+					"type": "string"
+				},
+				"error_loading_title": {
+					"type": "string"
+				},
+				"failed_to_load": {
+					"type": "string"
+				},
+				"user_profile": {
+					"type": "string"
+				},
+				"user_id": {
+					"type": "string"
+				},
+				"default_avatar": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"members": {
+					"type": "string"
+				},
+				"members_online": {
+					"type": "string"
+				},
+				"servers_count": {
+					"type": "string"
+				},
+				"server_list_aria": {
+					"type": "string"
+				},
+				"servers_list_aria": {
+					"type": "string"
+				},
+				"applying_filters": {
+					"type": "string"
+				},
+				"loading_servers": {
+					"type": "string"
+				},
+				"no_servers_description": {
+					"type": "string"
+				},
+				"no_matching_description": {
+					"type": "string"
+				},
+				"reload_page": {
+					"type": "string"
+				},
+				"search_matching": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

@@ -1,13 +1,13 @@
 <template>
 	<GuildSettingsSection
 		headingLevel="h1"
-		title="Server Info"
-		description="Your server at a glance. Adjust settings below or explore sections in the sidebar."
+		:title="t('guild_settings.general.server_info')"
+		:description="t('guild_settings.general.server_info_description')"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<dl
 			class="gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4 grid grid-cols-2"
-			aria-label="Server statistics"
+			:aria-label="t('guild_settings.general.server_stats_aria')"
 		>
 			<div
 				v-for="stat in serverStats"
@@ -30,7 +30,7 @@
 				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
 				@click="copyServerId"
 			>
-				{{ copied ? "Copied!" : "Copy Server ID" }}
+				{{ copied ? t("common.copied") : t("guild_settings.general.copy_server_id") }}
 			</StarButton>
 			<StarButton
 				color="neutral"
@@ -40,13 +40,13 @@
 				target="_blank"
 				rel="noopener noreferrer"
 			>
-				Need Help?
+				{{ t("guild_settings.general.need_help") }}
 			</StarButton>
 		</div>
 	</GuildSettingsSection>
 
 	<GuildSettingsSection
-		title="General Settings"
+		:title="t('guild_settings.general.title')"
 		class="rounded-md border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6 border"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
@@ -55,19 +55,19 @@
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
 			class="gap-6 md:grid-cols-2 grid grid-cols-1"
-			aria-label="General guild settings form"
+			:aria-label="t('guild_settings.general.form_aria')"
 			@error="onError"
 		>
 			<div>
-				<StarFormField label="Prefix" name="prefix">
+				<StarFormField :label="t('guild_settings.general.prefix')" name="prefix">
 					<StarInput
 						id="prefix"
 						v-model="state.prefix"
-						placeholder="Select a command prefix"
+						:placeholder="t('guild_settings.general.prefix_placeholder')"
 						color="primary"
 						class="w-full"
 						aria-describedby="prefix-description character-count"
-						aria-label="Bot command prefix"
+						:aria-label="t('guild_settings.general.prefix_aria')"
 					>
 						<template #trailing>
 							<div
@@ -85,28 +85,28 @@
 					</template>
 					<template #description>
 						<p id="prefix-description" class="text-sm text-base-content/70">
-							The prefix used to trigger WolfStar commands in this server.
+							{{ t("guild_settings.general.prefix_description") }}
 						</p>
 					</template>
 				</StarFormField>
 			</div>
 
 			<div>
-				<StarFormField label="Language" name="language">
+				<StarFormField :label="t('guild_settings.general.language')" name="language">
 					<template #description>
 						<p id="language-description" class="text-sm text-base-content/70">
-							The language WolfStar uses for responses in this server.
+							{{ t("guild_settings.general.language_description") }}
 						</p>
 					</template>
 					<StarSelectMenu
 						id="language"
 						v-model="state.language"
 						color="primary"
-						placeholder="Select language..."
+						:placeholder="t('guild_settings.general.language_placeholder')"
 						class="w-full"
 						:items="items"
 						value-attribute="value"
-						aria-label="Select bot language"
+						:aria-label="t('guild_settings.general.language_aria')"
 						aria-describedby="language-description"
 					/>
 					<template #error="{ error }">
@@ -118,15 +118,15 @@
 	</GuildSettingsSection>
 
 	<ActivitySection
-		title="Recent Activity"
+		:title="t('guild_settings.general.recent_activity')"
 		:total="auditLogTotal"
 		:status="auditLogStatus"
 		:item-count="auditEntries.length"
 		:max-visible="0"
 		empty-icon="heroicons:clipboard-document-list"
-		empty-title="No settings changes yet"
-		empty-description="Changes you make to this server's settings will appear here so you can track who changed what."
-		refresh-label="Refresh audit log"
+		:empty-title="t('guild_settings.general.no_activity')"
+		:empty-description="t('guild_settings.general.no_activity_description')"
+		:refresh-label="t('guild_logs.refresh_audit')"
 		class="rounded-md border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6 border"
 		@refresh="refreshAuditLog()"
 	>
@@ -166,6 +166,7 @@ const { languages } = defineProps<{
 	languages: string[];
 }>();
 
+const { t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
 
@@ -190,10 +191,10 @@ const {
 	offset,
 });
 
-const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
+const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]>[]>(() => [
 	{
 		accessorKey: "timestamp",
-		header: "Date",
+		header: t("guild_logs.columns.date"),
 		cell: ({ row }) => {
 			return h(
 				"time",
@@ -207,7 +208,7 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 	},
 	{
 		accessorKey: "member",
-		header: "User",
+		header: t("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(StarAvatar, {
@@ -227,33 +228,36 @@ const auditLogColumns: TableColumn<(typeof auditEntries.value)[number]>[] = [
 	},
 	{
 		id: "description",
-		header: "Action",
+		header: t("guild_logs.columns.action"),
 		cell: ({ row }) => auditLogActionDescription(row.original),
 	},
-];
+]);
 
 const serverStats = computed(() => {
 	const guild = guildData.value;
 	const channels = guild?.channels ?? [];
 	return [
-		{ label: "Members", value: guild?.approximateMemberCount ?? 0 },
 		{
-			label: "Categories",
+			label: t("guild_settings.general.stat_members"),
+			value: guild?.approximateMemberCount ?? 0,
+		},
+		{
+			label: t("guild_settings.general.stat_categories"),
 			value: channels.filter((c) => c.type === ChannelType.GuildCategory).length,
 		},
 		{
-			label: "Text Channels",
+			label: t("guild_settings.general.stat_text_channels"),
 			value: channels.filter(
 				(c) => c.type === ChannelType.GuildText || c.type === ChannelType.GuildAnnouncement,
 			).length,
 		},
 		{
-			label: "Voice Channels",
+			label: t("guild_settings.general.stat_voice_channels"),
 			value: channels.filter(
 				(c) => c.type === ChannelType.GuildVoice || c.type === ChannelType.GuildStageVoice,
 			).length,
 		},
-		{ label: "Roles", value: guild?.roles.length ?? 0 },
+		{ label: t("guild_settings.general.stat_roles"), value: guild?.roles.length ?? 0 },
 	];
 });
 
@@ -261,8 +265,8 @@ function copyServerId() {
 	const id = guildData.value?.id;
 	if (id) {
 		copy(id, {
-			title: "Server ID Copied",
-			description: "The server ID has been copied to your clipboard.",
+			title: t("guild_settings.general.server_id_copied_title"),
+			description: t("guild_settings.general.server_id_copied_description"),
 			icon: "heroicons:check",
 			color: "success",
 		});
@@ -300,8 +304,8 @@ const items = computed(() =>
 		const englishName = mapping[1];
 
 		return {
-			value: langKey, // Use the actual language key
-			label: englishName ?? nativeName, // Use English name if available, otherwise native name
+			value: langKey,
+			label: englishName ?? nativeName,
 		};
 	}),
 );
@@ -339,9 +343,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't save general settings. ${errorMessage ?? "Please try again."}`,
+		description: t("guild_settings.general.save_failed_message", {
+			message: errorMessage ?? t("guild_settings.please_try_again"),
+		}),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 </script>

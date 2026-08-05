@@ -1,69 +1,5 @@
 packages: []
 
-allowedDeprecatedVersions:
-    glob: 7.2.3
-    inflight: 1.0.6
-    sourcemap-codec: 1.4.8
-
-shamefullyHoist: true
-hoistPattern:
-    - "*prisma*"
-publicHoistPattern:
-    - "*import-in-the-middle*"
-    - "*require-in-the-middle*"
-
-confirmModulesPurge: false
-
-dedupePeers: true
-strictDepBuilds: false
-
-overrides:
-    "@netlify/api": ^14.0.18
-    # Keep a single discord-api-types instance; two copies make structurally
-    # identical Discord payload types nominally incompatible during typecheck
-    discord-api-types: 0.38.48
-    # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
-    # vue copies make VueUse and app refs incompatible during typecheck
-    vue: 3.5.40
-    # Nuxt 4.5 needs unhead v3; @nuxt/ui still peers v2 (missing legacyPlugins).
-    "@unhead/vue": 3.2.3
-    unhead: 3.2.3
-    # Keep a single Nuxt schema/kit and vue-router hoisted at the root. Removing
-    # @nuxt/ui flipped pnpm's hoist choice to older transitive copies, so
-    # `DefineNuxtConfig` lost its call signature, the `prepare:types` hook payload
-    # dropped `nodeReferences`, and vue-router typed routes stopped matching
-    # `RouteLocationNormalized`. Pin to the versions nuxt@4.5.0 itself resolves.
-    "@nuxt/schema": 4.5.0
-    "@nuxt/kit": 4.5.0
-    vue-router: 5.2.0
-    sharp: 0.34.5
-    # Vite+ 0.2.x: alias vite to core; pin vitest to the bundled version.
-    vite: npm:@voidzero-dev/vite-plus-core@0.2.5
-    vitest: 4.1.10
-
-patchedDependencies:
-    "@ameinhardt/unocss-preset-daisy@1.1.8": patches/@ameinhardt__unocss-preset-daisy@1.1.8.patch
-    "@nuxt/test-utils@4.0.3": patches/@nuxt__test-utils@4.0.3.patch
-
-catalogs:
-    msw:
-        "msw": "^2.13.2"
-
-    storybook:
-        "@storybook-vue/nuxt": "9.1.0-29411911.f34c865"
-        "@storybook/addon-a11y": "^10.3.5"
-        "@storybook/addon-docs": "^10.3.5"
-        "@storybook/addon-themes": "^10.3.5"
-        "msw-storybook-addon": "^2.0.7"
-        "storybook": "^10.3.1"
-
-peerDependencyRules:
-    allowAny:
-        - "vite"
-        - "vitest"
-
-shellEmulator: true
-
 allowBuilds:
     "@google/genai": false
     "@parcel/watcher": false
@@ -81,15 +17,69 @@ allowBuilds:
     unrs-resolver: false
     vue-demi: false
 
-minimumReleaseAge: 2880
+catalogs:
+    msw:
+        msw: ^2.15.0
+
+    storybook:
+        "@storybook-vue/nuxt": 9.1.0-29411911.f34c865
+        "@storybook/addon-a11y": ^10.5.4
+        "@storybook/addon-docs": ^10.5.4
+        "@storybook/addon-themes": ^10.5.4
+        msw-storybook-addon: ^2.0.7
+        storybook: ^10.5.4
+
+    vite-plus:
+        vite: npm:@voidzero-dev/vite-plus-core@0.2.6
+        vite-plus: 0.2.7
+        vitest: 4.1.10
+        "@vitest/browser-playwright": 4.1.10
+        "@vitest/coverage-v8": 4.1.10
+        "@vitest/ui": 4.1.10
+
+dedupePeers: true
+
+# Prisma client resolution + Sentry OpenTelemetry instrumentation loaders
+hoistPattern:
+    - "*prisma*"
+publicHoistPattern:
+    - "*import-in-the-middle*"
+    - "*require-in-the-middle*"
+shamefullyHoist: true
 
 minimumReleaseAgeExclude:
-    # Nuxt
     - "@nuxt/*"
     - "@nuxtjs/*"
-    - "nuxt"
-    - "nuxt-*"
+    - nuxt
+    - nuxt-*
     - "@unhead/*"
-    - "unhead"
+    - unhead
     - "@voidzero-dev/*"
-    - "vite-plus"
+    - vite-plus
+
+overrides:
+    "@netlify/api": ^14.0.19
+    # Keep a single discord-api-types instance; two copies make structurally
+    # identical Discord payload types nominally incompatible during typecheck
+    discord-api-types: 0.38.51
+    # Same reason: `Ref` and friends are nominal (symbol-branded), so two
+    # vue copies make VueUse and app refs incompatible during typecheck
+    vue: 3.5.40
+    # Keep a single Nuxt schema/kit and vue-router hoisted at the root. Without
+    # @nuxt/ui, pnpm may hoist older transitive copies so `DefineNuxtConfig`
+    # loses its call signature and `prepare:types` drops `nodeReferences`.
+    "@nuxt/schema": 4.5.0
+    "@nuxt/kit": 4.5.0
+    vue-router: 5.2.0
+    sharp: 0.34.5
+    typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
+    vite: catalog:vite-plus
+    vitest: catalog:vite-plus
+
+patchedDependencies:
+    "@ameinhardt/unocss-preset-daisy@1.1.8": patches/@ameinhardt__unocss-preset-daisy@1.1.8.patch
+    "@nuxt/test-utils": patches/@nuxt__test-utils.patch
+
+savePrefix: ""
+
+shellEmulator: true

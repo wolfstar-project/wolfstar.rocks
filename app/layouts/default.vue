@@ -4,11 +4,11 @@
 			href="#maincontent"
 			class="focus:top-4 focus:left-4 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-content focus:shadow-lg sr-only focus:not-sr-only focus:fixed focus:z-[100] focus:outline focus:outline-2 focus:outline-transparent"
 		>
-			Skip to main content
+			{{ t("a11y.skip_to_content") }}
 		</a>
 		<AppHeader />
 
-		<StarMain id="maincontent" tabindex="-1" aria-label="Main content">
+		<StarMain id="maincontent" tabindex="-1" :aria-label="t('a11y.main_content')">
 			<slot></slot>
 		</StarMain>
 
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 </script>
 
@@ -42,6 +43,9 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	@apply flex min-h-screen flex-col;
 	position: relative;
 	background-color: var(--color-base-100);
+	/* Clip 100vw full-bleed bands (CTA/testimonials) that exceed the layout
+	   when a scrollbar/gutter is present. DaisyUI owns html/overflow, so clip here. */
+	overflow-x: clip;
 }
 
 .app-layout::before {

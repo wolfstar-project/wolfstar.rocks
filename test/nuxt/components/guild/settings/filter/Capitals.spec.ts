@@ -86,10 +86,10 @@ describe("capitals filter guild settings", () => {
 		await nextTick();
 		await nextTick();
 
-		expect(getSwitch(wrapper, "Toggle capital letters filter").exists()).toBeTruthy();
+		expect(getSwitch(wrapper, "Toggle capitals filter").exists()).toBeTruthy();
 		expect(getSwitch(wrapper, "Toggle alerts soft action").exists()).toBeTruthy();
-		expect(getSwitch(wrapper, "Toggle logs soft action").exists()).toBeTruthy();
-		expect(getSwitch(wrapper, "Toggle deletes soft action").exists()).toBeTruthy();
+		expect(getSwitch(wrapper, "Toggle logging soft action").exists()).toBeTruthy();
+		expect(getSwitch(wrapper, "Toggle delete soft action").exists()).toBeTruthy();
 	});
 
 	it("initializes state from guildSettings with bitwise soft actions", async () => {

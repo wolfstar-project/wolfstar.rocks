@@ -33,9 +33,9 @@ definePageMeta({
 	path: "/guilds/:id/manage/:slug(.*)*",
 });
 
+const { t } = useI18n();
 const route = useRoute();
 const toast = useToast();
-const logger = useLogger("wolfstar:dashboard");
 const { guildData } = useGuildData();
 
 const {
@@ -49,13 +49,12 @@ const {
 	error: languagesError,
 } = useLanguages({ immediate: false });
 
-const slug = route.params.slug as string | string[];
-
-const joinedPath = computed(() => (Array.isArray(slug) ? slug.join("/") : slug || ""));
+const idParam = route.params.id;
+const joinedPath = computed(() => (Array.isArray(idParam) ? idParam.join("/") : idParam || ""));
 
 const title = computed(
 	() =>
-		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || "General"} · ${guildData.value?.name ?? ""}`,
+		`${joinedPath.value.startsWith("moderation/") ? joinedPath.value.replace("moderation/", "") : joinedPath.value || t("guild_manage.general")} · ${guildData.value?.name ?? ""}`,
 );
 
 // Pre-define async components outside of computed to avoid re-creating
@@ -137,12 +136,16 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: commandsErr.message || "Couldn't load the command list. Try refreshing.",
+			description: commandsErr.message || t("guild_manage.commands_unavailable_description"),
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Commands Unavailable",
+			title: t("guild_manage.commands_unavailable_title"),
 		});
-		logger.error("Error fetching commands:", commandsErr);
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: "Error fetching commands",
+			error: commandsErr.message,
+		});
 	}
 
 	if (languagesErr) {
@@ -152,12 +155,17 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 		toast.add({
 			closeIcon: "heroicons:x-mark",
 			color: "error",
-			description: languagesErr.message || "Couldn't load the language list. Try refreshing.",
+			description:
+				languagesErr.message || t("guild_manage.languages_unavailable_description"),
 			duration: 3000,
 			icon: "heroicons:exclamation-triangle",
-			title: "Languages Unavailable",
+			title: t("guild_manage.languages_unavailable_title"),
 		});
-		logger.error("Error fetching languages:", languagesErr);
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: "Error fetching languages",
+			error: languagesErr.message,
+		});
 	}
 });
 

@@ -2,7 +2,7 @@
 	<StarContainer
 		class="max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8 w-full"
 		role="region"
-		aria-label="Server list"
+		:aria-label="t('profile.server_list_aria')"
 	>
 		<div class="mb-4 gap-4 sm:flex-row flex flex-col justify-between">
 			<div class="flex items-start">
@@ -20,8 +20,15 @@
 					aria-live="polite"
 					aria-atomic="true"
 				>
-					<span>{{ filteredGuilds.length }} of {{ guilds?.length || 0 }} servers</span>
-					<span v-if="searchQuery" class="sr-only">matching "{{ searchQuery }}"</span>
+					<span>{{
+						t("profile.servers_count", {
+							filtered: filteredGuilds.length,
+							total: guilds?.length || 0,
+						})
+					}}</span>
+					<span v-if="searchQuery" class="sr-only">{{
+						t("profile.search_matching", { query: searchQuery })
+					}}</span>
 				</div>
 			</div>
 		</div>
@@ -34,7 +41,9 @@
 					v-if="loading || filterLoading"
 					class="gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5 grid grid-cols-2"
 					role="status"
-					:aria-label="filterLoading ? 'Applying filters' : 'Loading servers'"
+					:aria-label="
+						filterLoading ? t('profile.applying_filters') : t('profile.loading_servers')
+					"
 				>
 					<guild-card v-for="n in INITIAL_COUNT" :key="n" :loading="true" />
 				</div>
@@ -47,7 +56,7 @@
 					tag="div"
 					class="gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5 grid grid-cols-2"
 					role="list"
-					aria-label="Servers list"
+					:aria-label="t('profile.servers_list_aria')"
 				>
 					<guild-card
 						v-for="guild in paginatedGuilds"
@@ -64,7 +73,7 @@
 				v-if="!loading && loadingMore"
 				class="py-4 flex justify-center"
 				role="status"
-				aria-label="Loading more servers"
+				:aria-label="t('profile.loading_more')"
 			>
 				<span
 					class="loading loading-lg loading-spinner text-primary"
@@ -84,7 +93,7 @@
 				>
 					<div class="gap-4 flex items-start">
 						<div class="shrink-0">
-							<StarIcon :name="errorState.icon" class="size-6" />
+							<Icon :name="errorState.icon" class="size-6" />
 						</div>
 						<div class="space-y-2 flex-1">
 							<h3 class="text-lg font-semibold">{{ errorState.title }}</h3>
@@ -103,7 +112,7 @@
 							icon="heroicons:arrow-path"
 							to="/login"
 						>
-							Reload Page
+							{{ t("profile.reload_page") }}
 						</StarButton>
 						<StarButton
 							v-else-if="onRetry"
@@ -114,7 +123,7 @@
 							:loading="isRetrying"
 							@click="onRetry"
 						>
-							{{ isRetrying ? "Retrying..." : "Try Again" }}
+							{{ isRetrying ? t("errors.retrying") : t("common.retry") }}
 						</StarButton>
 					</div>
 				</div>
@@ -125,13 +134,17 @@
 				<div class="space-y-6 py-16 flex flex-col items-center justify-center">
 					<div class="py-16 text-center" role="status" aria-live="polite">
 						<h2 class="mb-2 text-xl font-bold text-base-content/80">
-							{{ searchQuery ? "No matching servers" : "No servers found" }}
+							{{
+								searchQuery
+									? t("profile.no_matching_servers")
+									: t("profile.no_servers")
+							}}
 						</h2>
 						<p class="max-w-md text-base-content/60 mx-auto">
 							{{
 								searchQuery
-									? "Try adjusting your search terms or filters."
-									: "Start by inviting WolfStar to your Discord servers."
+									? t("profile.no_matching_description")
+									: t("profile.no_servers_description")
 							}}
 						</p>
 					</div>
@@ -142,10 +155,10 @@
 						size="sm"
 						class="gap-2 transition-all duration-200 hover:scale-105"
 						icon="heroicons:x-mark"
-						aria-label="Clear search filter"
+						:aria-label="t('profile.clear_search')"
 						@click="undoSearch"
 					>
-						Clear Search
+						{{ t("profile.clear_search") }}
 					</StarButton>
 				</div>
 			</div>
@@ -187,6 +200,7 @@ const {
 	onRetry,
 } = defineProps<GuildCardsProps>();
 
+const { t } = useI18n();
 const { effectiveReduceMotion } = useReduceMotion();
 
 // Error handling computed properties
@@ -208,27 +222,27 @@ const errorState = computed(() => ({
 	})() as "error" | "warning",
 	description: (() => {
 		if (!error) {
-			return "An unexpected error occurred.";
+			return t("errors.unexpected");
 		}
 		if (isTimeoutError.value) {
-			return "The request took too long to complete.";
+			return t("errors.request_timeout_description");
 		}
 		if (error.status === 401) {
-			return "Your session has expired. Please log in again.";
+			return t("errors.session_expired_description");
 		}
 		if (error.status === 403) {
-			return "You don't have permission to access this resource.";
+			return t("errors.access_denied_description");
 		}
 		if (error.status === 429) {
-			return "You've made too many requests. Please wait a moment before trying again.";
+			return t("errors.too_many_requests_description");
 		}
 		if (error.status && error.status >= 500) {
-			return "Something went wrong on our end. Please try again later.";
+			return t("errors.server_error");
 		}
 		if (isNetworkError.value) {
-			return "Unable to connect to the server.";
+			return t("errors.network_error_description");
 		}
-		return error.statusText ?? error.message ?? "Failed to load servers.";
+		return error.statusText ?? error.message ?? t("errors.failed_to_load_servers");
 	})(),
 	icon: (() => {
 		if (isTimeoutError.value) {
@@ -253,42 +267,42 @@ const errorState = computed(() => ({
 	})(),
 	suggestion: (() => {
 		if (isTimeoutError.value) {
-			return "This might be due to slow network connection or server load. Try again in a moment.";
+			return t("errors.request_timeout_suggestion");
 		}
 		if (error?.status === 429) {
-			return "Rate limiting is in effect to protect the service.";
+			return t("errors.rate_limit");
 		}
 		if (error?.status && error.status >= 500) {
-			return "If this persists, please contact support.";
+			return t("errors.if_persists");
 		}
 		if (isNetworkError.value) {
-			return "Please check your internet connection and try again.";
+			return t("errors.check_connection");
 		}
 		return undefined;
 	})(),
 	title: (() => {
 		if (!error) {
-			return "Error";
+			return t("common.error");
 		}
 		if (isTimeoutError.value) {
-			return "Request Timeout";
+			return t("errors.request_timeout");
 		}
 		if (error.status === 401) {
-			return "Session Expired";
+			return t("errors.session_expired");
 		}
 		if (error.status === 403) {
-			return "Access Denied";
+			return t("errors.access_denied");
 		}
 		if (error.status === 429) {
-			return "Too Many Requests";
+			return t("errors.too_many_requests");
 		}
 		if (error.status && error.status >= 500) {
-			return "Server Error";
+			return t("errors.server_error_title");
 		}
 		if (isNetworkError.value) {
-			return "Network Error";
+			return t("errors.network_error");
 		}
-		return "Error Loading Servers";
+		return t("errors.loading_servers");
 	})(),
 }));
 

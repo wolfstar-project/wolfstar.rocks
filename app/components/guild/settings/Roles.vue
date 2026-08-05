@@ -1,7 +1,7 @@
 <template>
 	<GuildSettingsSection
-		title="Roles"
-		subtitle="Configure the roles WolfStar uses for moderation, permissions, and automation."
+		:title="t('guild_settings.roles.title')"
+		:description="t('guild_settings.roles.subtitle')"
 	>
 		<!-- Loading Skeleton -->
 		<div v-if="loading" class="space-y-8">
@@ -29,20 +29,22 @@
 			:state="state"
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
-			aria-label="Roles settings form"
+			:aria-label="t('guild_settings.roles.form_aria')"
 			class="space-y-8"
 			@error="onError"
 		>
 			<!-- Toggles Section -->
 			<div class="space-y-4">
 				<div class="gap-2 flex items-center">
-					<StarIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">General Options</h3>
+					<Icon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
+					<h3 class="text-lg font-semibold text-base-content">
+						{{ t("guild_settings.roles.general_options") }}
+					</h3>
 				</div>
 
 				<StarFormField
-					:label="ConfigurableRemoveInitialRole.name"
-					:description="ConfigurableRemoveInitialRole.tooltip"
+					:label="translateEntry(ConfigurableRemoveInitialRole, 'name')"
+					:description="translateEntry(ConfigurableRemoveInitialRole, 'tooltip')"
 					name="rolesRemoveInitial"
 				>
 					<div class="gap-2 flex items-center">
@@ -56,11 +58,13 @@
 			<!-- Configurable Roles Section -->
 			<div class="space-y-4">
 				<div class="gap-2 flex items-center">
-					<StarIcon name="heroicons:user-group" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Configurable Roles</h3>
+					<Icon name="heroicons:user-group" class="size-5 text-primary" />
+					<h3 class="text-lg font-semibold text-base-content">
+						{{ t("guild_settings.roles.configurable") }}
+					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					Assign roles for core bot functions like moderation and auto-assignment.
+					{{ t("guild_settings.roles.configurable_help") }}
 				</p>
 
 				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
@@ -69,18 +73,18 @@
 						<SelectRoles
 							v-if="isArrayKey(roleConfig.key)"
 							v-model="state[roleConfig.key] as string[]"
-							:label="roleConfig.name"
+							:label="translateEntry(roleConfig, 'name')"
 							:guild="guildData"
-							:tooltip-title="roleConfig.tooltip"
+							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
 						/>
 
 						<!-- One (Single) -->
 						<SelectRole
 							v-else
 							v-model="state[roleConfig.key] as string | null"
-							:label="roleConfig.name"
+							:label="translateEntry(roleConfig, 'name')"
 							:guild="guildData"
-							:tooltip-title="roleConfig.tooltip"
+							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
 						/>
 					</template>
 				</div>
@@ -91,11 +95,13 @@
 			<!-- Restricted Roles Section -->
 			<div class="space-y-4">
 				<div class="gap-2 flex items-center">
-					<StarIcon name="heroicons:shield-check" class="size-5 text-primary" />
-					<h3 class="text-lg font-semibold text-base-content">Restricted Roles</h3>
+					<Icon name="heroicons:shield-check" class="size-5 text-primary" />
+					<h3 class="text-lg font-semibold text-base-content">
+						{{ t("guild_settings.roles.restricted") }}
+					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					Roles applied when a restriction command is used.
+					{{ t("guild_settings.roles.restricted_help") }}
 				</p>
 
 				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
@@ -104,18 +110,18 @@
 						<SelectRoles
 							v-if="isArrayKey(roleConfig.key)"
 							v-model="state[roleConfig.key] as string[]"
-							:label="roleConfig.name"
+							:label="translateEntry(roleConfig, 'name')"
 							:guild="guildData"
-							:tooltip-title="roleConfig.tooltip"
+							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
 						/>
 
 						<!-- One (Single) -->
 						<SelectRole
 							v-else
 							v-model="state[roleConfig.key] as string | null"
-							:label="roleConfig.name"
+							:label="translateEntry(roleConfig, 'name')"
 							:guild="guildData"
-							:tooltip-title="roleConfig.tooltip"
+							:tooltip-title="translateEntry(roleConfig, 'tooltip')"
 						/>
 					</template>
 				</div>
@@ -138,6 +144,9 @@ import {
 	ConfigurableRemoveInitialRole,
 	ConfigurableRoles,
 } from "~~/shared/utils/settingsDataEntries";
+
+const { t } = useI18n();
+const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();
 const { guildSettings } = useGuildSettings();
@@ -239,9 +248,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save role settings. ${errorMessage ?? "Please try again."}`,
+		description: errorMessage ?? t("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 </script>

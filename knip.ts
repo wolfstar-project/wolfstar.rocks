@@ -6,12 +6,16 @@ const config: KnipConfig = {
 		".": {
 			entry: [
 				"service-worker/sw.ts",
-				"pwa-assets.config.ts",
 				"taze.config.ts",
 				"modules/**/*.ts",
 				".lighthouserc.cjs",
 				"lighthouse-setup.cjs",
 				"scripts/**/*.ts",
+				/** i18n / Lunaria entrypoints (not statically imported by the app).
+				 * lunaria/lunaria.ts is already discovered via vite.config.ts build:lunaria.
+				 * lunaria.config.ts is also read externally by the lunariajs/action GitHub Action. */
+				"i18n/**/*.ts",
+				"lunaria.config.ts",
 				/** Loaded by @nuxt/content at build time, not imported directly */
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
@@ -25,7 +29,8 @@ const config: KnipConfig = {
 				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
-				"**/*.{ts,vue,cjs,mjs}",
+				/** css/mdx/prisma are handled by registered compilers, so include them here */
+				"**/*.{ts,vue,cjs,mjs,css,mdx,prisma}",
 				"!test/fixtures/**",
 				"!test/test-utils/**",
 				"!test/e2e/helpers/**",
@@ -54,16 +59,12 @@ const config: KnipConfig = {
 				"@discordjs/rest",
 				"@sapphire/async-queue",
 				"@codspeed/core",
-				"nuxt-og-image",
-				"@takumi-rs/core",
-				"@takumi-rs/wasm",
+				"nuxt-site-config",
 				"workbox-*",
 				"rolldown",
 
-				/** Oxlint plugins don't get picked up yet */
-				"@e18e/eslint-plugin",
-				"eslint-plugin-regexp",
-				"eslint",
+				/** Peer-style dep resolved by @nuxtjs/i18n at prepare time (not imported directly) */
+				"@intlify/shared",
 
 				/** Provides the tsgolint binary for oxlint's opt-in type-aware pass (`vp lint --type-aware`), not imported directly */
 				"oxlint-tsgolint",
@@ -71,17 +72,17 @@ const config: KnipConfig = {
 				/** Used in the app but not imported directly */
 				"nuxt-security",
 
-				/** Registered as a Nuxt module only in dev via a conditional spread in nuxt.config.ts, so knip can't resolve it statically */
+				/** Registered as a Nuxt module only in some environments via a conditional spread in nuxt.config.ts, so knip can't resolve it statically */
 				"nuxt-studio",
+
+				/** Used in the app in guild/logs components */
+				"@tanstack/table-core",
 
 				/** Used in the test */
 				"axe-core",
 
 				/** Used for cli */
 				"@shelve/cli",
-
-				/** Used in nuxt.config.ts for postcss */
-				"postcss-nested",
 			],
 			ignoreFiles: [
 				"**/*.unused.*",

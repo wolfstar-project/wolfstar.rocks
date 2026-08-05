@@ -171,7 +171,7 @@ const ariaLabel = computed(() => {
 	color: var(--discord-app-launcher-list-item-chevron);
 }
 
-@media (width < 48rem) {
+@media (max-width: 767.98px) {
 	.discord-app-launcher-list-item-eye {
 		display: none;
 	}

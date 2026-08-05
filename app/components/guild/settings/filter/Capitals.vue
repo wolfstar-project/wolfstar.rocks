@@ -35,26 +35,31 @@
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
 			class="space-y-6"
-			aria-label="Capital letters filter settings form"
+			:aria-label="t('guild_settings.filter.capitals.form_aria')"
 			@error="onError"
 		>
 			<!-- Section 1: Capital Letters Filter -->
-			<GuildSettingsSection title="Capital Letters Filter">
+			<GuildSettingsSection :title="t('guild_settings.filter.capitals.title')">
 				<div class="space-y-3">
 					<StarFormField name="selfmodCapitalsEnabled">
 						<div class="gap-3 flex items-start">
 							<StarSwitch
 								v-model="state.selfmodCapitalsEnabled"
 								class="mt-0.5"
-								aria-label="Toggle capital letters filter"
+								:aria-label="t('guild_settings.filter.capitals.toggle')"
 							/>
 							<div>
 								<p class="text-sm font-medium leading-none">
-									Filter
-									{{ state.selfmodCapitalsEnabled ? "Enabled" : "Disabled" }}
+									{{
+										t("guild_settings.filter.capitals.filter_label", {
+											state: state.selfmodCapitalsEnabled
+												? t("guild_settings.filter.common.enabled")
+												: t("guild_settings.filter.common.disabled"),
+										})
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Flags messages with excessive capital letters.
+									{{ t("guild_settings.filter.capitals.toggle_help") }}
 								</p>
 							</div>
 						</div>
@@ -65,14 +70,19 @@
 							<StarSwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
-								aria-label="Toggle alerts soft action"
+								:aria-label="t('guild_settings.filter.word.alerts_toggle')"
 							/>
 							<div>
 								<p class="text-sm font-medium leading-none">
-									Alerts {{ state.softActionAlerts ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.alerts") }}
+									{{
+										state.softActionAlerts
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Posts an alert in the channel where the violation occurred.
+									{{ t("guild_settings.filter.common.alerts_help") }}
 								</p>
 							</div>
 						</div>
@@ -83,14 +93,19 @@
 							<StarSwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
-								aria-label="Toggle logs soft action"
+								:aria-label="t('guild_settings.filter.word.logging_toggle')"
 							/>
 							<div>
 								<p class="text-sm font-medium leading-none">
-									Logs {{ state.softActionLogs ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.logging") }}
+									{{
+										state.softActionLogs
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Sends a log entry to the moderation logs channel.
+									{{ t("guild_settings.filter.common.logging_help") }}
 								</p>
 							</div>
 						</div>
@@ -101,14 +116,19 @@
 							<StarSwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
-								aria-label="Toggle deletes soft action"
+								:aria-label="t('guild_settings.filter.word.delete_toggle')"
 							/>
 							<div>
 								<p class="text-sm font-medium leading-none">
-									Deletes {{ state.softActionDeletes ? "Enabled" : "Disabled" }}
+									{{ t("guild_settings.filter.common.delete_message") }}
+									{{
+										state.softActionDeletes
+											? t("guild_settings.filter.common.enabled")
+											: t("guild_settings.filter.common.disabled")
+									}}
 								</p>
 								<p class="mt-1 text-xs text-muted">
-									Automatically deletes the offending message.
+									{{ t("guild_settings.filter.common.delete_message_help") }}
 								</p>
 							</div>
 						</div>
@@ -119,25 +139,25 @@
 			<Separator />
 
 			<!-- Section 2: Punishments -->
-			<GuildSettingsSection title="Punishments">
+			<GuildSettingsSection :title="t('guild_settings.filter.common.punishments')">
 				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
 					<StarFormField
-						label="Action"
+						:label="t('guild_settings.filter.common.hard_action')"
 						name="selfmodCapitalsHardAction"
-						description="What happens when a member exceeds the limit"
+						:description="t('guild_settings.filter.common.hard_action_description')"
 					>
 						<StarSelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
 							class="w-full"
-							aria-label="Select punishment action"
+							:aria-label="t('guild_settings.filter.common.select_action_aria')"
 						/>
 					</StarFormField>
 
 					<StarFormField
-						label="Duration"
+						:label="t('guild_settings.filter.common.duration')"
 						name="hardActionDurationMs"
-						description="How long the mute or ban lasts"
+						:description="t('guild_settings.filter.common.duration_help')"
 					>
 						<SelectDuration
 							v-model="state.hardActionDurationMs"
@@ -150,7 +170,7 @@
 				<div class="mt-4 space-y-5">
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Violations before punishment
+							{{ t("guild_settings.filter.common.threshold_maximum") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodCapitalsThresholdMaximum }})</span
 							>
@@ -159,7 +179,7 @@
 							v-model="state.selfmodCapitalsThresholdMaximum"
 							:min="0"
 							:max="60"
-							aria-label="Capitals filter violations before punishment slider"
+							:aria-label="t('guild_settings.filter.common.threshold_maximum')"
 						/>
 						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0</span>
@@ -169,7 +189,7 @@
 
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Time window (seconds)
+							{{ t("guild_settings.filter.common.threshold_duration") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodCapitalsThresholdDurationSeconds }}s)</span
 							>
@@ -178,7 +198,7 @@
 							v-model="state.selfmodCapitalsThresholdDurationSeconds"
 							:min="0"
 							:max="120"
-							aria-label="Capitals filter time window (seconds) slider"
+							:aria-label="t('guild_settings.filter.common.threshold_duration')"
 						/>
 						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0s</span>
@@ -191,11 +211,11 @@
 			<Separator />
 
 			<!-- Section 3: Options -->
-			<GuildSettingsSection title="Options">
+			<GuildSettingsSection :title="t('guild_settings.filter.common.options')">
 				<div class="space-y-5">
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Minimum Characters
+							{{ t("guild_settings.filter.capitals.minimum") }}
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodCapitalsMinimum }})</span
 							>
@@ -204,7 +224,7 @@
 							v-model="state.selfmodCapitalsMinimum"
 							:min="5"
 							:max="2000"
-							aria-label="Capitals selfmod filter minimum characters slider"
+							:aria-label="t('guild_settings.filter.capitals.minimum')"
 						/>
 						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>5</span>
@@ -214,7 +234,7 @@
 
 					<div>
 						<p class="mb-2 text-sm font-medium">
-							Maximum Uppercase Characters (%)
+							{{ t("guild_settings.filter.capitals.maximum") }} (%)
 							<span class="ml-1 text-muted tabular-nums"
 								>({{ state.selfmodCapitalsMaximum }}%)</span
 							>
@@ -223,7 +243,7 @@
 							v-model="state.selfmodCapitalsMaximum"
 							:min="10"
 							:max="100"
-							aria-label="Capitals selfmod filter maximum uppercase characters slider"
+							:aria-label="t('guild_settings.filter.capitals.maximum')"
 						/>
 						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>10%</span>
@@ -241,19 +261,20 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "#shared/types/ui";
 import { CapitalsFilterSchema, type CapitalsFilter } from "#shared/schemas";
 
+const { t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 
 const loading = computed(() => !guildSettings.value);
 
-const hardActionItems = [
-	{ label: "None", value: 0 },
-	{ label: "Warning", value: 1 },
-	{ label: "Kick", value: 2 },
-	{ label: "Mute", value: 3 },
-	{ label: "Softban", value: 4 },
-	{ label: "Ban", value: 5 },
-];
+const hardActionItems = computed(() => [
+	{ label: t("guild_settings.filter.common.actions.none"), value: 0 },
+	{ label: t("guild_settings.filter.common.actions.warning"), value: 1 },
+	{ label: t("guild_settings.filter.common.actions.kick"), value: 2 },
+	{ label: t("guild_settings.filter.common.actions.mute"), value: 3 },
+	{ label: t("guild_settings.filter.common.actions.softban"), value: 4 },
+	{ label: t("guild_settings.filter.common.actions.ban"), value: 5 },
+]);
 
 const schema = CapitalsFilterSchema;
 type Schema = CapitalsFilter;
@@ -284,8 +305,8 @@ const state = reactive<Schema>(createDefaultState());
 
 const selectedHardAction = computed({
 	get: () =>
-		hardActionItems.find((item) => item.value === state.selfmodCapitalsHardAction) ??
-		hardActionItems[0]!,
+		hardActionItems.value.find((item) => item.value === state.selfmodCapitalsHardAction) ??
+		hardActionItems.value[0]!,
 	set: (item) => {
 		state.selfmodCapitalsHardAction = item.value;
 	},
@@ -334,9 +355,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't save capitals filter settings. ${errorMessage ?? "Please try again."}`,
+		description: t("guild_settings.filter.capitals.save_failed", {
+			message: errorMessage ?? t("guild_settings.please_try_again"),
+		}),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 </script>

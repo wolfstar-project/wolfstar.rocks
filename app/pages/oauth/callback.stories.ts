@@ -19,13 +19,12 @@ type Story = StoryObj<typeof meta>;
 export const NoCode: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
+			<div>
 				<h1 class="sr-only">OAuth Callback</h1>
-				<StarAlert
-					variant="solid"
-					color="warning"
+				<OauthStatusPanel
+					tone="warning"
 					title="Login Required"
-					icon="twemoji:warning"
+					icon="heroicons:exclamation-triangle"
 				>
 					<template #description>
 						This page can't be accessed directly. Please
@@ -33,11 +32,11 @@ export const NoCode: Story = {
 						to continue.
 					</template>
 					<template #actions>
-						<StarButton color="neutral" variant="ghost" to="/login" size="sm">
+						<StarButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Go to Login
 						</StarButton>
 					</template>
-				</StarAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -46,10 +45,15 @@ export const NoCode: Story = {
 export const SigningIn: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<StarAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
+			<div>
+				<OauthStatusPanel
+					tone="info"
+					loading
+					title="Signing You In"
+					icon="ph:discord-logo-fill"
+				>
 					<template #description>Connecting to Discord...</template>
-				</StarAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -58,15 +62,21 @@ export const SigningIn: Story = {
 export const SignInError: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<StarAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
-					<template #description>The authorization code was invalid or expired. Please try signing in again.</template>
+			<div>
+				<OauthStatusPanel
+					tone="error"
+					title="Sign-In Failed"
+					icon="heroicons:x-circle"
+				>
+					<template #description>
+						The authorization code was invalid or expired. Please try signing in again.
+					</template>
 					<template #actions>
-						<StarButton color="neutral" variant="ghost" to="/login" size="sm">
+						<StarButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Try Again
 						</StarButton>
 					</template>
-				</StarAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -75,17 +85,21 @@ export const SignInError: Story = {
 export const SessionNotFound: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<StarAlert color="error" title="Session Not Found" icon="twemoji:cross-mark">
+			<div>
+				<OauthStatusPanel
+					tone="error"
+					title="Session Not Found"
+					icon="heroicons:x-circle"
+				>
 					<template #description>
 						Your login session could not be loaded. Please sign in again.
 					</template>
 					<template #actions>
-						<StarButton color="neutral" variant="ghost" to="/login" size="sm">
+						<StarButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Try Again
 						</StarButton>
 					</template>
-				</StarAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -94,10 +108,14 @@ export const SessionNotFound: Story = {
 export const SignInSuccess: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<StarAlert color="success" icon="twemoji:check-mark" title="Welcome redstar!">
+			<div>
+				<OauthStatusPanel
+					tone="success"
+					title="Welcome redstar!"
+					icon="heroicons:check-circle"
+				>
 					<template #description>Redirecting you to the dashboard...</template>
-				</StarAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),

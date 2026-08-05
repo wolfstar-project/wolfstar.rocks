@@ -42,13 +42,13 @@
 					v-if="guild.wolfstarIsIn && guild.manageable"
 					:to="`/guilds/${guild.id}/manage`"
 					class="group relative"
-					:aria-label="`Manage ${guild.name}`"
+					:aria-label="t('guild_card.manage_aria', { name: guild.name })"
 				>
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 					<div
 						class="inset-0 bg-success/80 absolute flex items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
 					>
-						<StarIcon
+						<Icon
 							name="heroicons:adjustments-horizontal"
 							class="size-5 text-success-content"
 							aria-hidden="true"
@@ -60,13 +60,13 @@
 					:to="guildAddURL(guild.id)"
 					external
 					class="group relative"
-					:aria-label="`Invite bot to ${guild.name}`"
+					:aria-label="t('guild_card.invite_aria', { name: guild.name })"
 				>
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 					<div
 						class="inset-0 bg-primary/80 absolute flex items-center justify-center rounded-full opacity-0 transition-opacity group-hover:opacity-100 group-active:opacity-100"
 					>
-						<StarIcon
+						<Icon
 							name="heroicons:rocket-launch"
 							class="size-5 text-primary-content"
 							aria-hidden="true"
@@ -77,7 +77,7 @@
 					v-else
 					class="relative cursor-not-allowed opacity-60"
 					role="img"
-					:aria-label="`${guild.name} - No permission`"
+					:aria-label="t('guild_card.no_permission_aria', { name: guild.name })"
 				>
 					<guild-icon :guild variant="bare" size="lg" :show-status="true" />
 				</div>
@@ -108,22 +108,25 @@
 
 				<!-- Guild Stats -->
 				<div class="gap-4 text-xs text-base-content/60 flex items-center justify-center">
-					<span class="gap-1 flex items-center" title="Total members">
-						<StarIcon
+					<span
+						class="gap-1 flex items-center"
+						:title="t('guild_card.total_members', { count: approximateMemberCount })"
+					>
+						<Icon
 							name="heroicons:user-group"
 							class="size-3 text-base-content/70"
 							aria-hidden="true"
 						/>
-						<span class="sr-only">Total members:</span>
+						<span class="sr-only">{{ t("profile.members") }}:</span>
 						<span>{{ approximateMemberCount }}</span>
 					</span>
-					<span class="gap-1 flex items-center" title="Members online">
-						<StarIcon
+					<span class="gap-1 flex items-center" :title="t('guild_card.members_online')">
+						<Icon
 							name="heroicons:signal"
 							class="size-3 text-success"
 							aria-hidden="true"
 						/>
-						<span class="sr-only">Members online:</span>
+						<span class="sr-only">{{ t("guild_card.members_online") }}:</span>
 						<span>{{ approximatePresenceCount }}</span>
 					</span>
 				</div>
@@ -134,39 +137,39 @@
 						v-if="guild.wolfstarIsIn && guild.manageable"
 						:to="`/guilds/${guild.id}/manage`"
 						class="h-9 rounded-lg border-success/20 bg-success/10 px-3 text-xs font-medium text-success hover:bg-success/20 hover:shadow-md flex w-full items-center justify-center border transition-all duration-200"
-						:aria-label="`Manage ${guild.name} server settings`"
+						:aria-label="t('guild_card.manage_server_aria', { name: guild.name })"
 					>
-						<StarIcon
+						<Icon
 							name="heroicons:adjustments-horizontal"
 							class="mr-1 size-3 inline"
 							aria-hidden="true"
 						/>
-						Manage Server
+						{{ t("guild_card.manage_server") }}
 					</NuxtLink>
 					<NuxtLink
 						v-else-if="guild.manageable"
 						:to="guildAddURL(guild.id)"
 						external
 						class="h-9 rounded-lg border-primary/20 bg-primary/10 px-3 text-xs font-medium text-primary group-hover:bg-primary/20 hover:shadow-md flex w-full items-center justify-center border transition-all duration-200"
-						:aria-label="`Invite WolfStar bot to ${guild.name}`"
+						:aria-label="t('guild_card.invite_bot_aria', { name: guild.name })"
 					>
-						<StarIcon
+						<Icon
 							name="heroicons:rocket-launch"
 							class="mr-1 size-3 inline"
 							aria-hidden="true"
 						/>
-						Invite Bot
+						{{ t("guild_card.invite_bot") }}
 					</NuxtLink>
 					<div
 						v-else
 						class="h-9 rounded-lg bg-base-300/50 px-3 text-xs font-medium text-base-content/50 flex w-full cursor-not-allowed items-center justify-center transition-all duration-200"
 					>
-						<StarIcon
+						<Icon
 							name="heroicons:no-symbol"
 							class="mr-1 size-3 inline"
 							aria-hidden="true"
 						/>
-						No Permission
+						{{ t("guild_card.no_permission") }}
 					</div>
 				</div>
 			</div>
@@ -184,6 +187,8 @@ interface GuildCardProps {
 
 const { guild, loading = false } = defineProps<GuildCardProps>();
 
+const { t } = useI18n();
+
 const cardClasses = computed(() => {
 	if (loading || !guild) {
 		return {};
@@ -200,19 +205,19 @@ const cardClasses = computed(() => {
 
 const approximatePresenceCount = computed(() => {
 	if (!guild) {
-		return "N/A";
+		return t("common.na");
 	}
 	return !isNullOrUndefinedOrZero(guild.approximatePresenceCount)
 		? formatNumber(guild.approximatePresenceCount)
-		: "N/A";
+		: t("common.na");
 });
 
 const approximateMemberCount = computed(() => {
 	if (!guild) {
-		return "N/A";
+		return t("common.na");
 	}
 	return !isNullOrUndefinedOrZero(guild.approximateMemberCount)
 		? formatNumber(guild.approximateMemberCount)
-		: "N/A";
+		: t("common.na");
 });
 </script>

@@ -12,7 +12,7 @@
 		<Container class="relative">
 			<h2
 				id="home-cta-heading"
-				class="mb-3 text-4xl font-bold tracking-home-ls-tight leading-[1.1]"
+				class="mb-3 text-4xl font-bold leading-[1.1] tracking-[var(--home-ls-tight)]"
 			>
 				Liking what you see?
 			</h2>
@@ -49,6 +49,7 @@ defineProps<{
 </script>
 
 <style scoped>
+/* Full-bleed out of StarMain's max-width; page overflow clipped on .app-layout */
 .home-cta {
 	width: 100vw;
 	max-width: 100vw;

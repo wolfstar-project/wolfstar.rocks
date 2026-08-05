@@ -1,11 +1,5 @@
 <template>
-	<UError
-		as="section"
-		:error="displayError"
-		:clear="false"
-		aria-labelledby="error-page-title"
-		:ui="errorUi"
-	>
+	<UError as="section" :error :clear="false" aria-labelledby="error-page-title" :ui>
 		<template #leading>
 			<UBadge
 				:color="toneColor"
@@ -22,7 +16,7 @@
 		</template>
 
 		<template #statusCode>
-			<span class="sr-only">{{ t("common.error") }}&nbsp;</span>{{ statusCode }}
+			<span class="sr-only">{{ t("common.error") }}&nbsp;</span>{{ status }}
 		</template>
 
 		<template #statusMessage>
@@ -82,18 +76,17 @@
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
 
-const { error } = defineProps<{
+const { error: errorRaw } = defineProps<{
 	error: NuxtError;
 }>();
 
 const { t } = useI18n();
-const { goHome, retry } = useErrorActions();
 
 // Reads both Nuxt-normalized (`status`) and raw h3 (`statusCode`) shapes so the
 // error page stays correct no matter which layer produced the error.
-const statusCode = computed(() => error.status ?? error.statusCode ?? 500);
-const isNotFound = computed(() => statusCode.value === 404);
-const isServerError = computed(() => statusCode.value >= 500);
+const status = computed(() => errorRaw.status ?? 500);
+const isNotFound = computed(() => status.value === 404);
+const isServerError = computed(() => status.value >= 500);
 
 const title = computed(() => {
 	if (isNotFound.value) {
@@ -102,7 +95,7 @@ const title = computed(() => {
 	if (isServerError.value) {
 		return t("errors.server_error_title");
 	}
-	return error.statusText || error.statusMessage || t("errors.generic_title");
+	return errorRaw.statusText || errorRaw.statusMessage || t("errors.generic_title");
 });
 
 const description = computed(() => {
@@ -116,7 +109,11 @@ const description = computed(() => {
 });
 
 const detail = computed(() => {
-	const message = error.message?.trim();
+	// 404 already has friendly copy; Nuxt's default message is just the missing path.
+	if (isNotFound.value) {
+		return undefined;
+	}
+	const message = errorRaw.message?.trim();
 	if (!message || message === title.value || message === description.value) {
 		return undefined;
 	}
@@ -144,20 +141,27 @@ const toneColor = computed(() => {
 });
 
 // Shaped for UError's built-in field checks; slots override the visible copy.
-const displayError = computed(() => ({
-	statusCode: statusCode.value,
+const error = computed(() => ({
+	status: status.value,
 	statusMessage: title.value,
 	message: description.value,
 }));
 
-const errorUi = {
+const ui = computed(() => ({
 	// Mirrors --ui-header-height set on .app-navbar (variable is not inherited by siblings).
 	root: "min-h-[calc(100dvh-5rem)] px-4 py-16",
 	leading: "mb-6",
-	statusCode:
-		"text-7xl leading-none font-extrabold tracking-tight gradient-text-hero sm:text-8xl md:text-9xl",
+	status: "text-7xl leading-none font-extrabold tracking-tight gradient-text-hero sm:text-8xl md:text-9xl",
 	statusMessage: "mt-4 text-3xl font-bold text-highlighted text-balance sm:text-4xl",
 	message: "mt-4 max-w-xl text-lg text-pretty text-muted",
 	links: "mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center",
-};
+}));
+
+async function goHome() {
+	await clearError({ redirect: "/" });
+}
+
+async function retry() {
+	await reloadNuxtApp();
+}
 </script>

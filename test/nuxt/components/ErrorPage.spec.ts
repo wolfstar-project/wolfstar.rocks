@@ -34,12 +34,11 @@ describe("ErrorPage", () => {
 			message: "Page not found: /missing-page",
 		});
 
-		it("renders the status code, localized title, and error detail", async () => {
+		it("renders the status code and localized title", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
 
 			expect(wrapper.text()).toContain("404");
 			expect(wrapper.text()).toContain("Page not found");
-			expect(wrapper.text()).toContain("Page not found: /missing-page");
 		});
 
 		it("shows only the home action and clears the error towards home on click", async () => {

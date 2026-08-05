@@ -75,7 +75,11 @@
 
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
-import { isNotFoundStatus, isServerErrorStatus, resolveErrorStatus } from "#shared/utils/error-status";
+import {
+	isNotFoundStatus,
+	isServerErrorStatus,
+	resolveErrorStatus,
+} from "#shared/utils/error-status";
 
 const { error: errorRaw } = defineProps<{
 	error: NuxtError;

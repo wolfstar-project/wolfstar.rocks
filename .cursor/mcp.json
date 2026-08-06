@@ -4,13 +4,13 @@
 			"type": "http",
 			"url": "https://nuxt.com/mcp"
 		},
+		"nuxtUI": {
+			"type": "http",
+			"url": "https://ui.nuxt.com/mcp"
+		},
 		"daisyUI": {
 			"type": "http",
 			"url": "https://gitmcp.io/saadeghi/daisyui"
-		},
-		"nuxt-ui": {
-			"type": "http",
-			"url": "https://ui.nuxt.com/mcp"
 		},
 		"sentry": {
 			"url": "https://mcp.sentry.dev/mcp"

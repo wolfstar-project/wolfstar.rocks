@@ -86,7 +86,7 @@ describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 });
 
 describe("resolveGuildIconSrc", () => {
-	const guild = { id: "111", icon: "iconhash123", acronym: "TG", name: "Test Guild" };
+	const guild = { id: "111", icon: "iconhash123", acronym: "TG" };
 
 	it("resolves a CDN URL from unwrapped guild data", () => {
 		const url = resolveGuildIconSrc(guild, { size: 64 });
@@ -100,9 +100,7 @@ describe("resolveGuildIconSrc", () => {
 	});
 
 	it("returns undefined when the guild has no icon hash", () => {
-		expect(
-			resolveGuildIconSrc({ id: "111", icon: null, acronym: "TG", name: "Test Guild" }),
-		).toBeUndefined();
+		expect(resolveGuildIconSrc({ id: "111", icon: null, acronym: "TG" })).toBeUndefined();
 	});
 
 	it("does not treat a ref wrapper as guild data (historical dashboard bug)", () => {

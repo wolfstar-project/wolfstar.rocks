@@ -1,5 +1,6 @@
 {
 	"statusCommentsEnabled": true,
+	"shouldUpdateDescription": true,
 	"includeConfidenceScore": true,
 	"includeIssuesTable": true,
 	"summarySection": {

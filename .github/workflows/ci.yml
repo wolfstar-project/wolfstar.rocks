@@ -125,8 +125,26 @@ jobs:
       - name: 🌐 Install browser
         run: vp exec playwright install --with-deps chromium-headless-shell
 
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      # Vitest browser-playwright occasionally drops the Chromium session mid-suite
+      # (`Browser connection was closed` / `route.fulfill: Route is already handled!`)
+      # after most or all assertions already passed. Retry the whole project so files
+      # interrupted by the provider flake still run.
       - name: 🧪 Component tests
-        run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+        run: |
+          set -euo pipefail
+          max_attempts=2
+          attempt=1
+          until vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml; do
+            if [ "${attempt}" -ge "${max_attempts}" ]; then
+              exit 1
+            fi
+            echo "::warning::Component tests failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
+            attempt=$((attempt + 1))
+            sleep 5
+          done
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 

@@ -624,6 +624,8 @@ export default defineConfig({
 		coverage: {
 			enabled: true,
 			include: ["{app,server,shared}/**/*.{ts,vue}"],
+			// Satori OG templates are not Vue SFCs Vitest's V8 remapper can parse.
+			exclude: ["app/components/OgImage/**"],
 			provider: "v8",
 		},
 	},

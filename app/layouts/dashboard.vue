@@ -458,11 +458,13 @@ const isReadyToSubmit = computed(
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const src = computed(() =>
-	guildIconURL(guildData as unknown as OauthFlattenedGuild, {
-		size: 64,
-	})!,
-);
+const src = computed(() => {
+	const guild = guildData.value;
+	if (isNullOrUndefined(guild)) {
+		return undefined;
+	}
+	return guildIconURL(guild, { size: 64 }) ?? undefined;
+});
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
 	if (isNullOrUndefined(id)) {

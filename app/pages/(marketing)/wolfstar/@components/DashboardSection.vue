@@ -1,84 +1,118 @@
 <template>
-	<Section labelled-by="home-dashboard-heading" spacing="none" class="py-22">
-		<SectionHeader
-			eyebrow="Dashboard"
-			title="Manage every member, precisely."
-			description="Search, sort, and act on any member without leaving the dashboard."
-			heading-id="home-dashboard-heading"
-			class="mb-10"
-		/>
-
-		<SurfaceCard
-			padding="none"
-			class="dashboard-preview mx-auto max-w-250 overflow-hidden shadow-glow"
-			role="img"
-			aria-label="Preview of the WolfStar dashboard member list with roles and statuses"
-		>
-			<div
-				class="dashboard-toolbar flex items-center gap-3 border-b px-6 py-4.5"
-				aria-hidden="true"
-			>
-				<UIcon name="ph:magnifying-glass" class="h-4 w-4 text-muted" />
-				<div
-					class="dashboard-search flex h-9 flex-1 items-center rounded-md border px-3 text-sm text-muted"
+	<Section
+		id="dashboard"
+		labelled-by="home-dashboard-heading"
+		scroll-margin
+		spacing="none"
+		class="py-28"
+	>
+		<div class="grid items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20">
+			<div class="lg:sticky lg:top-28">
+				<p
+					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					Search members…
-				</div>
-				<span class="text-sm whitespace-nowrap text-muted">1,204 members</span>
-			</div>
-			<div class="px-6 py-1" aria-hidden="true">
-				<div
-					v-for="member of members"
-					:key="member.name"
-					class="dashboard-member-row flex items-center gap-3 border-t py-3 first:border-t-0"
+					Dashboard
+				</p>
+				<h2
+					id="home-dashboard-heading"
+					class="text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					<div
-						:class="
-							cn(
-								'flex size-9 shrink-0 items-center justify-center rounded-full text-xs font-bold',
-								member.avatarClass,
-							)
-						"
-						aria-hidden="true"
+					The control room is part of the product.
+				</h2>
+				<p class="mt-5 max-w-135 text-base leading-relaxed text-base-content/65">
+					Sign in with Discord, choose a server you manage, and configure WolfStar without
+					editing files or memorizing setup commands.
+				</p>
+				<div class="mt-7 flex flex-col gap-3 sm:flex-row">
+					<UButton
+						to="/oauth/login"
+						color="primary"
+						size="lg"
+						class="justify-center"
+						icon="ic:round-discord"
 					>
-						{{ member.initials }}
-					</div>
-					<div class="flex-1">
-						<div :class="cn('text-sm font-semibold', member.nameClass)">
-							{{ member.name }}
-						</div>
-						<div class="text-xs text-muted capitalize">{{ member.status }}</div>
-					</div>
-					<span :class="cn('badge badge-soft badge-sm', member.badgeClass)">
-						{{ member.role }}
-					</span>
+						Sign in to dashboard
+					</UButton>
+					<UButton
+						to="/commands"
+						color="neutral"
+						variant="outline"
+						size="lg"
+						class="justify-center"
+					>
+						Browse commands
+					</UButton>
 				</div>
 			</div>
-		</SurfaceCard>
+
+			<div class="dashboard-index border-t">
+				<div class="dashboard-index-header">
+					<span class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase">
+						Inside the dashboard
+					</span>
+					<span class="font-mono text-xs text-muted">04 views</span>
+				</div>
+				<ol>
+					<li class="dashboard-index-row">
+						<span class="dashboard-index-number">01</span>
+						<div>
+							<h3>Server settings</h3>
+							<p>General behavior, channels, roles, events, and command access.</p>
+						</div>
+					</li>
+					<li class="dashboard-index-row">
+						<span class="dashboard-index-number">02</span>
+						<div>
+							<h3>Moderation history</h3>
+							<p>Filter by member, moderator, action, date, or search text.</p>
+						</div>
+					</li>
+					<li class="dashboard-index-row">
+						<span class="dashboard-index-number">03</span>
+						<div>
+							<h3>Command history</h3>
+							<p>Review command names, outcomes, members, dates, and search matches.</p>
+						</div>
+					</li>
+					<li class="dashboard-index-row">
+						<span class="dashboard-index-number">04</span>
+						<div>
+							<h3>Settings activity</h3>
+							<p>See who changed dashboard-managed settings and what changed.</p>
+						</div>
+					</li>
+				</ol>
+			</div>
+		</div>
 	</Section>
 </template>
-
-<script setup lang="ts">
-import { cn } from "cnfast";
-
-const { members } = defineProps<{
-	members: HomeDashboardMember[];
-}>();
-</script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 
-.dashboard-toolbar {
+.dashboard-index {
 	border-color: var(--home-border-subtle);
 }
 
-.dashboard-search {
-	border-color: oklch(from var(--color-base-content) l c h / 0.15);
-	background-color: var(--color-base-100);
+.dashboard-index-header {
+	@apply flex items-center justify-between border-b py-4;
+	border-color: var(--home-border-subtle);
 }
 
-.dashboard-member-row {
+.dashboard-index-row {
+	@apply grid grid-cols-[2.5rem_1fr] gap-4 border-b py-7 sm:grid-cols-[3.5rem_1fr] sm:gap-6;
 	border-color: var(--home-border-subtle);
+}
+
+.dashboard-index-number {
+	@apply pt-1 font-mono text-xs text-primary;
+}
+
+.dashboard-index-row h3 {
+	@apply text-lg font-semibold text-base-content;
+}
+
+.dashboard-index-row p {
+	@apply mt-1.5 text-base leading-relaxed text-base-content/60;
 }
 </style>

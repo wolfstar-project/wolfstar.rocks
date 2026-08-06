@@ -4,7 +4,7 @@ export const useApp = () => {
 		Staryl: {
 			avatar: "/avatars/staryl.png",
 			description:
-				"An app to help you manage your server's social notifications (Twitch, Instragram and etc.).",
+				"Staryl brings social updates into Discord. Its public invite is not available yet.",
 			explore: "/staryl",
 			invite: Invites.Staryl,
 			name: "Staryl",
@@ -12,7 +12,8 @@ export const useApp = () => {
 		},
 		WolfStar: {
 			avatar: "/avatars/wolfstar.png",
-			description: "An app to help you manage your server's moderation and logging.",
+			description:
+				"WolfStar combines configurable moderation, server event logging, and dashboard-managed settings.",
 			explore: "/",
 			invite: Invites.WolfStar,
 			name: "WolfStar",

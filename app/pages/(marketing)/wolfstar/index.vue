@@ -6,17 +6,13 @@
 			:invite-url="Invites.WolfStar"
 		/>
 
-		<StatsSection :stats />
+		<ProductProofSection />
 
 		<ModerationShowcaseSection />
 
 		<CommandsSection />
 
-		<FeaturesSection :features="bentoFeatures" />
-
-		<DashboardSection :members="dashboardMembers" />
-
-		<TestimonialsSection :testimonials />
+		<DashboardSection />
 
 		<OtherApps :apps="[otherApps.Staryl]" />
 
@@ -31,7 +27,7 @@ definePageMeta({
 
 useSeoMetadata({
 	description:
-		"Discover WolfStar, a fully customizable multilingual Discord moderation application designed to help you manage and protect your server.",
+		"WolfStar gives Discord moderation teams configurable AutoMod, searchable moderation and command history, and one dashboard for server settings.",
 	shouldOgImage: true,
 	title: "Home",
 });

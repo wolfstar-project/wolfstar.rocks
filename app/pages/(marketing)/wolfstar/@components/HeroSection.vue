@@ -1,73 +1,90 @@
 <template>
 	<section
-		class="home-hero relative overflow-hidden pt-25 pb-14"
+		class="home-hero relative overflow-hidden pt-20 pb-24 md:pt-28 md:pb-30"
 		aria-labelledby="home-hero-heading"
 	>
-		<Container class="relative z-10">
-			<div class="mx-auto flex max-w-200 flex-col items-center text-center">
-				<div
-					class="mb-6 flex animate-fade-in-up-safe flex-wrap items-center justify-center gap-2"
-				>
-					<UBadge color="neutral" variant="subtle" size="sm" class="hero-overlay-badge">
-						v{{ buildVersion }} ·
+		<Container>
+			<div class="grid items-end gap-16 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
+				<div class="max-w-190 animate-fade-in-up-safe">
+					<p class="home-hero-kicker mb-6 font-mono text-sm font-medium text-primary">
+						Open-source Discord moderation
+					</p>
+
+					<h1 id="home-hero-heading" class="home-hero-title text-balance">
+						Moderation, with a paper trail.
+					</h1>
+
+					<p class="home-hero-subtitle mt-7 max-w-165 text-pretty">
+						WolfStar filters disruptive messages, records moderation and command
+						history, and gives your team one place to manage server settings.
+					</p>
+
+					<div class="mt-9 flex flex-col gap-3 sm:flex-row">
+						<UButton
+							:to="inviteUrl"
+							size="xl"
+							color="primary"
+							class="justify-center sm:min-w-48"
+							icon="ph:plus-circle-fill"
+						>
+							Invite WolfStar
+						</UButton>
+						<UButton
+							to="#showcase"
+							size="xl"
+							color="neutral"
+							variant="outline"
+							class="hero-outline-btn justify-center sm:min-w-48"
+							trailing-icon="ph:arrow-down"
+						>
+							See WolfStar work
+						</UButton>
+					</div>
+
+					<p class="mt-6 text-sm text-muted">
+						Release v{{ buildVersion }} ·
 						<NuxtTime
 							:datetime="buildTime"
 							month="short"
 							day="numeric"
 							year="numeric"
 						/>
-					</UBadge>
-					<UBadge color="primary" variant="subtle" size="sm" label="Open Source" />
-					<UBadge color="success" variant="subtle" size="sm" label="Free Forever" />
+						·
+						<NuxtLink
+							to="https://github.com/wolfstar-project/wolfstar.rocks"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="font-medium text-base-content underline decoration-base-content/25 underline-offset-4 hover:decoration-base-content"
+						>
+							View source
+						</NuxtLink>
+					</p>
 				</div>
 
-				<h1
-					id="home-hero-heading"
-					class="home-hero-title animate-fade-in-up-safe text-balance"
-				>
-					Imagine a moderation app.
-				</h1>
-
 				<div
-					class="my-5 flex animate-fade-in-up-safe justify-center gap-1 [animation-delay:0.05s]"
-					aria-hidden="true"
+					class="home-hero-brief animate-fade-in-up-safe [animation-delay:0.08s]"
+					aria-label="WolfStar capability summary"
 				>
-					<span
-						v-for="color of spectrumBar"
-						:key="color"
-						:class="cn('h-1 w-7 rounded-full', homeAccentClass(color))"
-					></span>
-				</div>
-
-				<p
-					class="home-hero-subtitle max-w-140 animate-fade-in-up-safe text-pretty [animation-delay:0.1s]"
-				>
-					A fully customizable, multilingual Discord moderation app — complete logging,
-					AutoMod, and role tools, 100% free.
-				</p>
-
-				<div
-					class="mt-8 flex animate-fade-in-up-safe flex-col gap-3 [animation-delay:0.15s] sm:flex-row sm:justify-center"
-				>
-					<UButton
-						:to="inviteUrl"
-						size="lg"
-						color="primary"
-						class="btn-glow justify-center sm:min-w-45"
-						icon="ph:plus-circle-fill"
-					>
-						Add to Discord
-					</UButton>
-					<UButton
-						to="#features"
-						size="lg"
-						color="neutral"
-						variant="outline"
-						class="hero-outline-btn justify-center sm:min-w-45"
-						icon="ph:magnifying-glass-fill"
-					>
-						Explore features
-					</UButton>
+					<div class="home-hero-brief-header">
+						<IconsWolfstar class="size-11 text-primary" aria-hidden="true" />
+						<span class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase">
+							What your team gets
+						</span>
+					</div>
+					<dl>
+						<div class="home-hero-brief-row">
+							<dt>AutoMod</dt>
+							<dd>Configurable message filters and escalation rules</dd>
+						</div>
+						<div class="home-hero-brief-row">
+							<dt>History</dt>
+							<dd>Moderation, command, and settings activity</dd>
+						</div>
+						<div class="home-hero-brief-row">
+							<dt>Dashboard</dt>
+							<dd>Roles, channels, events, commands, and filters</dd>
+						</div>
+					</dl>
 				</div>
 			</div>
 		</Container>
@@ -75,44 +92,59 @@
 </template>
 
 <script setup lang="ts">
-import { cn } from "cnfast";
-
 const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	buildTime: Date;
 	buildVersion: string;
 	inviteUrl: string;
 }>();
-
-const spectrumBar = [
-	"spectrum-red",
-	"spectrum-orange",
-	"spectrum-yellow",
-	"spectrum-green",
-	"spectrum-blue",
-	"spectrum-purple",
-] as const satisfies HomeAccent[];
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 
 .home-hero-title {
-	@apply text-4xl leading-[1.1] font-bold md:text-[3.75rem];
+	font-size: clamp(3.25rem, 8vw, 6.75rem);
+	@apply max-w-190 leading-[0.95] font-bold;
 	letter-spacing: var(--home-ls-tight);
 }
 
 .home-hero-subtitle {
-	@apply text-xl leading-relaxed font-normal text-base-content/80;
+	@apply text-lg leading-relaxed font-normal text-base-content/70 md:text-xl;
 }
 
-.hero-overlay-badge {
-	--hero-badge-bg: oklch(100% 0 0 / 0.06);
-	backdrop-filter: blur(8px);
-	background: var(--hero-badge-bg);
+.home-hero-kicker::before {
+	display: inline-block;
+	width: 2.5rem;
+	height: 1px;
+	margin-right: 0.75rem;
+	vertical-align: middle;
+	background: currentColor;
+	content: "";
 }
 
 .hero-outline-btn {
 	border-color: oklch(from var(--color-base-content) l c h / 0.2);
 	color: var(--color-base-content);
+}
+
+.home-hero-brief {
+	border-block: 1px solid var(--home-border-subtle);
+}
+
+.home-hero-brief-header {
+	@apply flex items-center gap-4 py-5;
+}
+
+.home-hero-brief-row {
+	@apply grid gap-2 border-t py-5 sm:grid-cols-[6.5rem_1fr];
+	border-color: var(--home-border-subtle);
+}
+
+.home-hero-brief-row dt {
+	@apply font-mono text-sm font-semibold text-base-content;
+}
+
+.home-hero-brief-row dd {
+	@apply text-base leading-relaxed text-base-content/65;
 }
 </style>

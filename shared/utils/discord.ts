@@ -94,7 +94,7 @@ export function guildIconURL(
 	options?: Readonly<ImageURLOptions>,
 ): string | null {
 	if (isNullOrUndefined(guild.icon)) {
-		return guild.acronym;
+		return null;
 	}
 
 	return dynamicMakeURL(`/icons/${guild.id}/${guild.icon}`, guild.icon, options);

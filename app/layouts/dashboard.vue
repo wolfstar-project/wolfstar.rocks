@@ -12,7 +12,12 @@
 		>
 			<template #header="{ collapsed }">
 				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-					<UAvatar :src :alt="guildData.name" class="mr-2" />
+					<UAvatar
+						:src="guildIconSrc"
+						:text="guildData.acronym"
+						:alt="guildData.name"
+						class="mr-2"
+					/>
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
 				<div v-else class="flex h-10 items-center justify-center">
@@ -458,7 +463,7 @@ const isReadyToSubmit = computed(
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const src = computed(() => {
+const guildIconSrc = computed(() => {
 	const guild = guildData.value;
 	if (isNullOrUndefined(guild)) {
 		return undefined;

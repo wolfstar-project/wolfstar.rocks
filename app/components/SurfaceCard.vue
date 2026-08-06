@@ -1,10 +1,5 @@
 <template>
 	<component :is="tag" :class="rootClass">
-		<span
-			v-if="accent"
-			:class="cn('absolute inset-x-0 top-0 h-0.75', homeAccentClass(accent))"
-			aria-hidden="true"
-		></span>
 		<slot />
 	</component>
 </template>
@@ -12,13 +7,11 @@
 <script setup lang="ts">
 import { cn } from "cnfast";
 const {
-	accent,
 	class: className,
 	padding = "md",
 	surfaceClass,
 	tag = "div",
 } = defineProps<{
-	accent?: HomeAccent;
 	class?: string;
 	padding?: "none" | "md" | "lg";
 	surfaceClass?: string;

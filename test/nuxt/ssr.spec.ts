@@ -20,9 +20,11 @@ import {
 	DiscordChatInputCommandSuggestions,
 	DiscordScrollbar,
 	GuildSettingsSection,
+	HeroSection,
 	IconsApp,
 	IconsWolfstar,
 	ModerationShowcaseSection,
+	ProductProofSection,
 	Separator,
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
@@ -997,8 +999,29 @@ describe("component SSR rendering", () => {
 		it("renders section header in full section mode", async () => {
 			const wrapper = await mountSuspended(CommandsSection);
 
-			expect(wrapper.text()).toContain("Moderation at your fingertips.");
+			expect(wrapper.text()).toContain("The demo below behaves like Discord.");
 			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
+		});
+	});
+
+	describe("Homepage product narrative", () => {
+		it("renders a specific hero proposition and product evidence on SSR", async () => {
+			const hero = await mountSuspended(HeroSection, {
+				props: {
+					buildTime: new Date("2026-08-06T12:00:00Z"),
+					buildVersion: "7.0.0",
+					inviteUrl: "https://discord.com/oauth2/authorize?client_id=test",
+				},
+			});
+			const proof = await mountSuspended(ProductProofSection);
+
+			expect(hero.text()).toContain("Moderation, with a paper trail.");
+			expect(hero.text()).toContain("Invite WolfStar");
+			expect(hero.find("a[href='#showcase']").exists()).toBe(true);
+			expect(proof.text()).toContain("One system from first warning to final review.");
+			expect(proof.find("a[href='#moderation-tools']").exists()).toBe(true);
+			expect(proof.find("a[href='#advanced-logging']").exists()).toBe(true);
+			expect(proof.find("a[href='#dashboard']").exists()).toBe(true);
 		});
 	});
 
@@ -1531,13 +1554,12 @@ describe("component SSR rendering", () => {
 		it("renders all three moderation feature areas on SSR", async () => {
 			const wrapper = await mountSuspended(ModerationShowcaseSection);
 
-			expect(wrapper.text()).toContain("In Action");
-			expect(wrapper.text()).toContain("Moderation that shows its work.");
-			expect(wrapper.text()).toContain("Advanced Auto Moderator");
-			expect(wrapper.text()).toContain("Advanced Logging");
+			expect(wrapper.text()).toContain("Follow a rule from trigger to review.");
+			expect(wrapper.text()).toContain("Configure the rule before it fires");
+			expect(wrapper.text()).toContain("Keep live events and reviewable history");
+			expect(wrapper.text()).toContain("Every action keeps its context.");
 			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
 			expect(wrapper.findAll("#home-showcase-heading")).toHaveLength(1);
-			expect(wrapper.find("#home-logging-showcase-heading").exists()).toBe(true);
 			expect(wrapper.find("#moderation-tools").exists()).toBe(true);
 			expect(wrapper.find("#advanced-logging").exists()).toBe(true);
 			expect(wrapper.find("#moderation-logs").exists()).toBe(true);

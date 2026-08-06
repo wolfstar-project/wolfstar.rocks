@@ -34,15 +34,13 @@ import {
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	OauthStatusPanel,
-	FeaturesSection,
 	GuildSettingsSection,
 	HeroSection,
 	IconsApp,
 	IconsWolfstar,
+	ProductProofSection,
 	SectionHeader,
 	Separator,
-	StatsSection,
-	TestimonialsSection,
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
@@ -731,21 +729,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("StatsSection", () => {
+		describe("ProductProofSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(StatsSection, {
-					props: { stats },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
-		describe("FeaturesSection", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(FeaturesSection, {
-					props: { features: bentoFeatures },
-				});
+				const component = await mountSuspended(ProductProofSection);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
@@ -753,19 +739,7 @@ describe("component accessibility audits", () => {
 
 		describe("DashboardSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DashboardSection, {
-					props: { members: dashboardMembers },
-				});
-				const results = await runAxe(component);
-				expect(results.violations).toEqual([]);
-			});
-		});
-
-		describe("TestimonialsSection", () => {
-			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(TestimonialsSection, {
-					props: { testimonials },
-				});
+				const component = await mountSuspended(DashboardSection);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

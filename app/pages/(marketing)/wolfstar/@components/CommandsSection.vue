@@ -1,10 +1,11 @@
 <template>
 	<Section labelled-by="home-commands-heading" spacing="none" class="commands-section pb-24">
 		<SectionHeader
-			eyebrow="Commands"
-			title="Moderation at your fingertips."
-			description="Slash commands with autocomplete, rich options, and instant feedback — right in Discord."
+			eyebrow="Try the command flow"
+			title="The demo below behaves like Discord."
+			description="Type a slash command, move through autocomplete with the keyboard, and submit it to see WolfStar’s response."
 			heading-id="home-commands-heading"
+			align="start"
 			class="mb-10"
 		/>
 		<LazyCommandsShowcase />

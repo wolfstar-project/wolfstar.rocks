@@ -117,7 +117,7 @@ const detail = computed(() => {
 		return undefined;
 	}
 	// Server errors may carry raw internal messages (stack traces, DB errors, etc.);
-	// only surface them to users outside of dev, keep them hidden in production.
+	// surface them only in development — hide in production / CI.
 	if (isServerError.value && !import.meta.dev) {
 		return undefined;
 	}
@@ -127,6 +127,7 @@ const detail = computed(() => {
 	}
 	return message;
 });
+
 
 const icon = computed(() => {
 	if (isNotFound.value) {
@@ -165,11 +166,5 @@ const ui = computed(() => ({
 	links: "mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center",
 }));
 
-async function goHome() {
-	await clearError({ redirect: "/" });
-}
-
-async function retry() {
-	await reloadNuxtApp();
-}
+const { goHome, retry } = useErrorActions();
 </script>

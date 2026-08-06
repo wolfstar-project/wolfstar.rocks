@@ -5,11 +5,10 @@ import { createError } from "h3";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ErrorPage from "~/components/ErrorPage.vue";
 
-const clearErrorSpy = vi.fn();
-const reloadNuxtAppSpy = vi.fn();
+const goHomeSpy = vi.fn();
+const retrySpy = vi.fn();
 
-mockNuxtImport("clearError", () => clearErrorSpy);
-mockNuxtImport("reloadNuxtApp", () => reloadNuxtAppSpy);
+mockNuxtImport("useErrorActions", () => () => ({ goHome: goHomeSpy, retry: retrySpy }));
 
 function makeError(input: { status: number; statusText?: string; message?: string }): NuxtError {
 	return createError(input);
@@ -48,8 +47,8 @@ describe("ErrorPage", () => {
 			expect(wrapper.findAll("button")).toHaveLength(1);
 
 			await buttonByText(wrapper, "Back to home").trigger("click");
-			expect(clearErrorSpy).toHaveBeenCalledTimes(1);
-			expect(reloadNuxtAppSpy).not.toHaveBeenCalled();
+			expect(goHomeSpy).toHaveBeenCalledTimes(1);
+			expect(retrySpy).not.toHaveBeenCalled();
 		});
 	});
 
@@ -60,27 +59,29 @@ describe("ErrorPage", () => {
 			message: "fetch failed",
 		});
 
-		it("renders the localized server error title with the technical detail", async () => {
+		it("renders the localized server error title without leaking the technical detail", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
 
 			expect(wrapper.text()).toContain("500");
 			expect(wrapper.text()).toContain("Server Error");
 			expect(wrapper.text()).toContain("Something went wrong on our end");
-			expect(wrapper.text()).toContain("fetch failed");
+			// Vitest browser / CI runs with import.meta.dev === false; raw 5xx
+			// messages stay hidden outside development.
+			expect(wrapper.text()).not.toContain("fetch failed");
 		});
 
 		it("offers a retry action that reloads the app", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
 
 			await buttonByText(wrapper, "Try Again").trigger("click");
-			expect(reloadNuxtAppSpy).toHaveBeenCalledTimes(1);
+			expect(retrySpy).toHaveBeenCalledTimes(1);
 		});
 
 		it("still offers a home action that clears the error", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
 
 			await buttonByText(wrapper, "Back to home").trigger("click");
-			expect(clearErrorSpy).toHaveBeenCalledTimes(1);
+			expect(goHomeSpy).toHaveBeenCalledTimes(1);
 		});
 	});
 

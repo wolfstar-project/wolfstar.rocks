@@ -150,7 +150,12 @@ import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError, createError } from "evlog";
-import { parseGuildSettings, classifyGuildError } from "~/utils/guild-dashboard";
+import {
+	parseGuildSettings,
+	classifyGuildError,
+	parseGuildSettingsSaveResponse,
+	guildSettingsSaveFailureToast,
+} from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
 	if (typeof url !== "string") return false;
@@ -488,19 +493,15 @@ async function submitChanges() {
 			},
 			method: "PATCH",
 		});
-		data = (typeof response === "string" ? JSON.parse(response) : response) as GuildData;
+		data = parseGuildSettingsSaveResponse(response) as GuildData;
 	} catch (error) {
 		log.error({
 			tag: "wolfstar:dashboard",
 			message: `Failed to save settings update for guild Id: ${guildId.value}`,
 			error: parseError(error),
 		});
-		toast.add({
-			color: "error",
-			title: t("dashboard.update_failed_message"),
-			description: `${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
-			icon: "heroicons:x-circle",
-		});
+		// Preserve staged edits; only notify so the admin can retry.
+		toast.add(guildSettingsSaveFailureToast(t));
 		return;
 	}
 

@@ -35,3 +35,66 @@ skills:
     source: "https://github.com/pbakaus/impeccable/tree/skill-v4.0.4/docs"
     syncedAt: 2026-08-06
     generator: skilld
+  vue-best-practices:
+    repo: vuejs-ai/skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/vue-best-practices
+    ref: main
+  vue-testing-best-practices:
+    repo: vuejs-ai/skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/vue-testing-best-practices
+    ref: main
+  nuxt:
+    repo: onmax/nuxt-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/nuxt
+    ref: main
+  pinia:
+    repo: antfu/skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/pinia
+    ref: main
+  vue:
+    repo: antfu/skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/vue
+    ref: main
+  nuxt-ui-skilld:
+    packageName: nuxt-ui
+    version: 4.10.0
+    repo: nuxt/ui
+    source: "https://github.com/nuxt/ui/tree/v4.10.0/docs"
+    syncedAt: 2026-08-06
+    generator: skilld
+  vueuse-functions:
+    repo: vueuse/skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/vueuse-functions
+    ref: main
+  nuxt-frontend-design:
+    repo: harlan-zw/harlan-agent-kit
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: harlan-agent-kit/skills/nuxt-frontend-design
+    ref: main
+  nuxt-frontend-review:
+    repo: harlan-zw/harlan-agent-kit
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: harlan-agent-kit/skills/nuxt-frontend-review
+    ref: main

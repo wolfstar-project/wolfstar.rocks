@@ -1,9 +1,5 @@
 <template>
-	<Section
-		labelled-by="home-cta-heading"
-		spacing="none"
-		class="pb-28"
-	>
+	<Section labelled-by="home-cta-heading" spacing="none" class="pb-28">
 		<div
 			class="home-cta grid overflow-hidden bg-neutral p-8 text-neutral-content sm:p-12 lg:grid-cols-[1fr_auto] lg:items-end lg:p-16"
 		>
@@ -62,6 +58,7 @@ defineProps<{
 
 .home-cta-outline {
 	border-color: oklch(from var(--color-neutral-content) l c h / 0.3);
+	background-color: transparent;
 	color: var(--color-neutral-content);
 }
 </style>

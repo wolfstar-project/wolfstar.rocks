@@ -29,9 +29,7 @@
 							</span>
 							{{ feature.title }}
 						</h3>
-						<p
-							class="max-w-prose text-base leading-relaxed text-base-content/70"
-						>
+						<p class="max-w-prose text-base leading-relaxed text-base-content/70">
 							{{ feature.description }}
 						</p>
 					</div>
@@ -255,6 +253,7 @@
 										:data-tip="text.tooltip"
 									>
 										<input
+											:id="`automod-feature-${automodIndex}`"
 											v-model="featureIndex"
 											type="radio"
 											name="automod-feature"
@@ -353,11 +352,13 @@
 											class="mt-0.5 size-4 shrink-0 text-primary"
 											aria-hidden="true"
 										/>
-											<span>
-												<strong class="text-base-content">Set the action:</strong>
-												warn, timeout, kick, or ban, with a temporary or permanent
-												duration where supported.
-											</span>
+										<span>
+											<strong class="text-base-content"
+												>Set the action:</strong
+											>
+											warn, timeout, kick, or ban, with a temporary or
+											permanent duration where supported.
+										</span>
 									</li>
 									<li class="flex items-start gap-2">
 										<UIcon
@@ -365,11 +366,13 @@
 											class="mt-0.5 size-4 shrink-0"
 											aria-hidden="true"
 										/>
-											<span>
-												<strong class="text-base-content">Set the threshold:</strong>
-												choose how many infractions within a time window trigger the
-												action.
-											</span>
+										<span>
+											<strong class="text-base-content"
+												>Set the threshold:</strong
+											>
+											choose how many infractions within a time window trigger
+											the action.
+										</span>
 									</li>
 								</ul>
 							</div>
@@ -480,6 +483,7 @@
 										:data-tip="event.tooltip"
 									>
 										<input
+											:id="`logging-feature-${loggingEventIndex}`"
 											v-model="loggingIndex"
 											type="radio"
 											name="logging-feature"
@@ -519,8 +523,8 @@
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									Send member, channel, role, message, and moderation events to the
-									Discord channels your team already watches.
+									Send member, channel, role, message, and moderation events to
+									the Discord channels your team already watches.
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
@@ -533,10 +537,10 @@
 											class="mt-0.5 size-4 shrink-0 text-primary"
 											aria-hidden="true"
 										/>
-											<span>
-												Filter moderation history by member, moderator, action,
-												date, or search text.
-											</span>
+										<span>
+											Filter moderation history by member, moderator, action,
+											date, or search text.
+										</span>
 									</li>
 									<li class="flex items-start gap-2">
 										<UIcon
@@ -544,10 +548,10 @@
 											class="mt-0.5 size-4 shrink-0 text-info"
 											aria-hidden="true"
 										/>
-											<span>
-												Keep command outcomes and dashboard settings activity in
-												their own reviewable views.
-											</span>
+										<span>
+											Keep command outcomes and dashboard settings activity in
+											their own reviewable views.
+										</span>
 									</li>
 								</ul>
 							</div>

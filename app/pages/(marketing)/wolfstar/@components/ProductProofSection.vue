@@ -21,14 +21,15 @@
 				</h2>
 			</div>
 
-			<div class="border-t home-proof-list">
+			<div class="home-proof-list border-t">
 				<article class="home-proof-row">
 					<span class="home-proof-index" aria-hidden="true">01</span>
 					<div>
 						<h3 class="text-xl font-semibold text-base-content">Set the rule</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							Choose which messages WolfStar should catch, what happens to the message,
-							and when repeated infractions become a warning, timeout, kick, or ban.
+							Choose which messages WolfStar should catch, what happens to the
+							message, and when repeated infractions become a warning, timeout, kick,
+							or ban.
 						</p>
 						<UButton
 							to="#moderation-tools"
@@ -47,8 +48,8 @@
 					<div>
 						<h3 class="text-xl font-semibold text-base-content">Keep the record</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							Send live events to Discord and review moderation, warnings, commands, and
-							settings activity later in the dashboard.
+							Send live events to Discord and review moderation, warnings, commands,
+							and settings activity later in the dashboard.
 						</p>
 						<UButton
 							to="#advanced-logging"
@@ -67,8 +68,8 @@
 					<div>
 						<h3 class="text-xl font-semibold text-base-content">Review it together</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							Manage channels, roles, events, command access, and moderation filters from
-							the same authenticated dashboard.
+							Manage channels, roles, events, command access, and moderation filters
+							from the same authenticated dashboard.
 						</p>
 						<UButton
 							to="#dashboard"

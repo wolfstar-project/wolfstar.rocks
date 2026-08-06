@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
+import { ref } from "vue";
 import {
 	classifyGuildError,
 	guildSettingsSaveFailureToast,
 	parseGuildSettings,
 	parseGuildSettingsSaveResponse,
+	resolveGuildIconSrc,
 } from "~/utils/guild-dashboard";
 
 describe("guild-dashboard utilities - guild switch watcher simulation", () => {
@@ -80,6 +82,34 @@ describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 
 		// Changes should NOT be cleared (no old guild ID)
 		expect(stagedChanges).toStrictEqual({ some: "changes" });
+	});
+});
+
+describe("resolveGuildIconSrc", () => {
+	const guild = { id: "111", icon: "iconhash123", acronym: "TG", name: "Test Guild" };
+
+	it("resolves a CDN URL from unwrapped guild data", () => {
+		const url = resolveGuildIconSrc(guild, { size: 64 });
+		expect(url).toContain("/icons/111/iconhash123");
+		expect(url).toContain("size=64");
+	});
+
+	it("returns undefined when the guild is missing", () => {
+		expect(resolveGuildIconSrc(undefined)).toBeUndefined();
+		expect(resolveGuildIconSrc(null)).toBeUndefined();
+	});
+
+	it("returns undefined when the guild has no icon hash", () => {
+		expect(
+			resolveGuildIconSrc({ id: "111", icon: null, acronym: "TG", name: "Test Guild" }),
+		).toBeUndefined();
+	});
+
+	it("does not treat a ref wrapper as guild data (historical dashboard bug)", () => {
+		const guildRef = ref(guild);
+		// Passing the ref itself (instead of guildRef.value) must not produce a URL.
+		expect(resolveGuildIconSrc(guildRef as unknown as typeof guild)).toBeUndefined();
+		expect(resolveGuildIconSrc(guildRef.value)).toContain("/icons/111/iconhash123");
 	});
 });
 

@@ -155,6 +155,7 @@ import {
 	classifyGuildError,
 	parseGuildSettingsSaveResponse,
 	guildSettingsSaveFailureToast,
+	resolveGuildIconSrc,
 } from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
@@ -468,13 +469,7 @@ const isReadyToSubmit = computed(
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const guildIconSrc = computed(() => {
-	const guild = guildData.value;
-	if (isNullOrUndefined(guild)) {
-		return undefined;
-	}
-	return guildIconURL(guild, { size: 64 }) ?? undefined;
-});
+const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
 	if (isNullOrUndefined(id)) {

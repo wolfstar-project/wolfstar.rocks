@@ -1,30 +1,39 @@
 <template>
 	<Section
 		labelled-by="home-cta-heading"
-		:contained="false"
 		spacing="none"
-		class="home-cta relative overflow-hidden bg-primary py-20 text-center text-primary-content"
+		class="pb-28"
 	>
-		<IconsWolfstar
-			class="pointer-events-none absolute -top-10 -right-10 h-55 w-55 text-primary-content opacity-10"
-			aria-hidden="true"
-		/>
-		<Container class="relative">
-			<h2
-				id="home-cta-heading"
-				class="mb-3 text-4xl leading-[1.1] font-bold tracking-[var(--home-ls-tight)]"
-			>
-				Liking what you see?
-			</h2>
-			<p class="mb-8 text-[15px] text-primary-content">
-				Add WolfStar to your server in seconds, or drop by the support server first.
-			</p>
-			<div class="flex flex-col justify-center gap-3 sm:flex-row">
+		<div
+			class="home-cta grid overflow-hidden bg-neutral p-8 text-neutral-content sm:p-12 lg:grid-cols-[1fr_auto] lg:items-end lg:p-16"
+		>
+			<div>
+				<div class="mb-8 flex items-center gap-4">
+					<IconsWolfstar class="size-12 text-primary" aria-hidden="true" />
+					<span
+						class="font-mono text-xs tracking-(--home-ls-label) text-neutral-content/60 uppercase"
+					>
+						WolfStar for Discord
+					</span>
+				</div>
+				<h2
+					id="home-cta-heading"
+					class="max-w-180 text-4xl leading-[1.02] font-bold tracking-(--home-ls-tight) md:text-5xl"
+				>
+					Put the rules and the record in one place.
+				</h2>
+				<p class="mt-5 max-w-145 text-base leading-relaxed text-neutral-content/70">
+					Invite WolfStar now, or join the support server if you want to ask a question
+					first.
+				</p>
+			</div>
+			<div class="mt-9 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
 				<UButton
 					:to="inviteUrl"
-					color="neutral"
-					size="lg"
-					class="justify-center sm:min-w-45"
+					color="primary"
+					size="xl"
+					class="justify-center lg:min-w-52"
+					icon="ph:plus-circle-fill"
 				>
 					Invite WolfStar
 				</UButton>
@@ -32,13 +41,13 @@
 					to="https://join.wolfstar.rocks"
 					color="neutral"
 					variant="outline"
-					size="lg"
-					class="home-cta-outline justify-center sm:min-w-45"
+					size="xl"
+					class="home-cta-outline justify-center lg:min-w-52"
 				>
-					Support Server
+					Ask in support
 				</UButton>
 			</div>
-		</Container>
+		</div>
 	</Section>
 </template>
 
@@ -51,15 +60,8 @@ defineProps<{
 <style scoped>
 @reference "@/assets/css/main.css";
 
-/* Full-bleed out of UMain's max-width; page overflow clipped on .app-layout */
-.home-cta {
-	width: 100vw;
-	max-width: 100vw;
-	margin-inline: calc(50% - 50vw);
-}
-
 .home-cta-outline {
-	border-color: oklch(from var(--color-primary-content) l c h / 0.35);
-	color: var(--color-primary-content);
+	border-color: oklch(from var(--color-neutral-content) l c h / 0.3);
+	color: var(--color-neutral-content);
 }
 </style>

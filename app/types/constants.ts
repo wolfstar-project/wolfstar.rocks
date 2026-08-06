@@ -16,21 +16,6 @@ export type UIColors =
 	| "accent"
 	| "neutral";
 
-export type HomeAccent =
-	| "primary"
-	| "secondary"
-	| "success"
-	| "error"
-	| "info"
-	| "warning"
-	| "accent"
-	| "spectrum-red"
-	| "spectrum-orange"
-	| "spectrum-yellow"
-	| "spectrum-green"
-	| "spectrum-blue"
-	| "spectrum-purple";
-
 export enum BrandingColors {
 	Secondary = "#fd171b",
 }
@@ -45,37 +30,6 @@ export enum Colors {
 	Red300 = "#e57373",
 	Yellow = "#ffeb3b",
 	Yellow300 = "#fff176",
-}
-
-export interface HomeStat {
-	accent: HomeAccent;
-	label: string;
-	value: string;
-}
-
-export interface HomeFeature {
-	accent?: HomeAccent;
-	big: boolean;
-	description: string;
-	icon: string;
-	title: string;
-}
-
-export interface HomeDashboardMember {
-	avatarClass: string;
-	badgeClass: string;
-	initials: string;
-	name: string;
-	nameClass: string;
-	role: string;
-	status: string;
-}
-
-export interface HomeTestimonial {
-	big?: boolean;
-	name: string;
-	quote: string;
-	role: string;
 }
 
 export interface ModerationAction {

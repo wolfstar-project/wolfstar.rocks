@@ -435,6 +435,15 @@ Use these terms consistently in all user-facing text (templates, toast messages,
 - **Stripe** — Uses elegant typography, crisp surfaces, and a well-defined achromatic palette with controlled accent colors.
 - **Intercom** — Balanced white space, crisp typography, and strategic color accents against light backgrounds.
 
+## Design Decisions
+
+- Marketing pages prove product value with working demonstrations and repository-verifiable
+  capabilities. Do not invent testimonials, usage metrics, member data, or reliability claims.
+- Homepage hierarchy is editorial rather than card-led: ruled rows, direct product language, and
+  controlled asymmetry take priority over badge clusters, stat strips, and generic bento grids.
+- One prominent CTA per decision point is enough. Secondary actions answer a distinct question
+  (inspect the product, read the source, or ask support) rather than repeating the primary action.
+
 ## Quick Start
 
 ### CSS Custom Properties

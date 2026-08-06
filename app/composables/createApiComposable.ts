@@ -2,6 +2,10 @@ export interface ApiComposableOptions {
 	immediate?: boolean;
 }
 
+/**
+ * Lazy-fetch composable for WolfStar bot API routes via `$api`
+ * (e.g. `/commands`, `/languages`, `/guilds/:id`).
+ */
 export function createApiComposable<T>(
 	key: string,
 	endpoint: string,

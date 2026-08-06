@@ -6,6 +6,18 @@ const MARKETING_PAGES = ["/", "/staryl"] as const;
 /** Netlify image-proxy path prefix — 404s from this path are CDN infra noise, not app errors. */
 const NETLIFY_IMAGE_PROXY_PATH = "/.netlify/images";
 
+/**
+ * Client-only Better Auth has no Nuxt `/api/auth/*` routes. Playwright previews
+ * against a build without the external bot auth backend, so session bootstrap
+ * 404/CORS noise is expected and not a hydration regression.
+ */
+function isExpectedAuthSessionNoise(text: string): boolean {
+	return (
+		text.includes("/api/auth/get-session") ||
+		text.includes("[nuxt-better-auth] Failed to fetch session")
+	);
+}
+
 test.describe("Hydration", () => {
 	test.describe("responds 200", () => {
 		for (const page of PAGES) {
@@ -51,6 +63,7 @@ test.describe("Hydration", () => {
 					// Ignore Netlify image-proxy 404s — these are infra noise, not app errors
 					const text = msg.text();
 					if (text.includes(NETLIFY_IMAGE_PROXY_PATH)) return;
+					if (isExpectedAuthSessionNoise(text)) return;
 					consoleErrors.push(text);
 				}
 			});

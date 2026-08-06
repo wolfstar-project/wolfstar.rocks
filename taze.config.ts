@@ -9,10 +9,6 @@ export default defineConfig({
 	includeLocked: true,
 	interactive: true,
 	packageMode: {
-		"@prisma/client": "ignore",
-		"@prisma/adapter-pg": "ignore",
-		"prisma-json-types-generator": "ignore",
-		"prisma": "ignore",
 		// Regex starts and ends with '/'
 		"/vue/": "latest",
 		"/@vueuse/": "latest",

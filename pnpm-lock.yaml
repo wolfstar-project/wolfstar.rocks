@@ -46,6 +46,9 @@ catalogs:
 overrides:
   '@netlify/api': ^14.0.19
   discord-api-types: 0.38.51
+  vue: 3.5.40
+  '@unhead/vue': 3.2.3
+  unhead: 3.2.3
   sharp: 0.34.5
   typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
   vite: npm:@voidzero-dev/vite-plus-core@0.2.6
@@ -99,7 +102,7 @@ importers:
         version: 2.0.0(@netlify/blobs@10.7.9)(db0@0.3.4)(ioredis@5.11.1)(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.0)(srvx@0.11.22)(unplugin@3.3.0)
       '@nuxt/ui':
         specifier: ^4.10.0
-        version: 4.10.0(79858a735f1463f52cecae8fb47aa5d2)
+        version: 4.10.0(1b1a9a0fb2d7cc19974913f2af89408a)
       '@nuxtjs/html-validator':
         specifier: 2.1.0
         version: 2.1.0(magicast@0.5.3)(vitest@4.1.10)
@@ -115,15 +118,6 @@ importers:
       '@playwright/test':
         specifier: ^1.62.0
         version: 1.62.0
-      '@prisma/adapter-pg':
-        specifier: ^7.8.0
-        version: 7.8.0
-      '@prisma/client':
-        specifier: ^7.8.0
-        version: 7.8.0(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-      '@sapphire/ratelimits':
-        specifier: ^2.4.11
-        version: 2.4.11
       '@sentry/nuxt':
         specifier: ^10.68.0
         version: 10.68.0(@opentelemetry/api@1.9.1)(@opentelemetry/core@2.9.0)(@opentelemetry/instrumentation@0.220.0)(@opentelemetry/sdk-trace-base@2.9.0)(magicast@0.5.3)(nuxt@4.5.1)(rollup@4.62.2)(supports-color@10.2.2)(vue@3.5.40)
@@ -156,13 +150,16 @@ importers:
         version: 14.3.0(vue-router@5.2.0)(vue@3.5.40)
       better-auth:
         specifier: ^1.6.25
-        version: 1.6.25(@opentelemetry/api@1.9.1)(@prisma/client@7.8.0)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(vitest@4.1.10)(vue@3.5.40)
+        version: 1.6.25(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(vitest@4.1.10)(vue@3.5.40)
       chromatic:
         specifier: ^17.8.0
         version: 17.8.0
       cnfast:
         specifier: ^0.0.8
         version: 0.0.8
+      devalue:
+        specifier: ^5.8.1
+        version: 5.8.2
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -323,12 +320,6 @@ importers:
       oxlint-tsgolint:
         specifier: 0.24.0
         version: 0.24.0
-      prisma:
-        specifier: 7.8.0
-        version: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-      prisma-json-types-generator:
-        specifier: 5.1.0
-        version: 5.1.0(@prisma/client@7.8.0)(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
       rolldown:
         specifier: 1.2.0
         version: 1.2.0
@@ -388,7 +379,7 @@ packages:
     resolution: {integrity: sha512-8+t7DEJt97r7ZmYR641oxr0KLes27tnx3TybYhi/KQm/UUtuq66nhMKealZY6y6Tq3Yg9+gsOgcoCAu13YWtWA==}
     engines: {node: '>=18'}
     peerDependencies:
-      vue: ^3.3.4
+      vue: 3.5.40
 
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
@@ -2333,7 +2324,7 @@ packages:
   '@iconify/vue@5.0.1':
     resolution: {integrity: sha512-aumwwooJlFJ5H5qYWB6ZTAyM0C8hpfcSVLB9/a3qnH1GGvIJ+FEbpEs4s/HfErYe/M5qZeLjwmESR5fFm3lXEw==}
     peerDependencies:
-      vue: '>=3.0.0'
+      vue: 3.5.40
 
   '@img/colour@1.1.0':
     resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
@@ -2599,7 +2590,7 @@ packages:
     peerDependencies:
       petite-vue-i18n: '*'
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.2.25
+      vue: 3.5.40
       vue-i18n: '*'
     peerDependenciesMeta:
       petite-vue-i18n:
@@ -2623,7 +2614,7 @@ packages:
     peerDependencies:
       '@intlify/shared': ^9.0.0 || ^10.0.0 || ^11.0.0
       '@vue/compiler-dom': ^3.0.0
-      vue: ^3.0.0
+      vue: 3.5.40
       vue-i18n: ^9.0.0 || ^10.0.0 || ^11.0.0
     peerDependenciesMeta:
       '@intlify/shared':
@@ -3278,7 +3269,7 @@ packages:
       nuxt: 3.21.8
       rolldown: ^1.0.0-beta.38
       rollup-plugin-visualizer: ^6.0.0 || ^7.0.1
-      vue: ^3.3.4
+      vue: 3.5.40
     peerDependenciesMeta:
       rolldown:
         optional: true
@@ -3294,7 +3285,7 @@ packages:
       nuxt: 4.5.1
       rolldown: ^1.0.0
       rollup-plugin-visualizer: ^6.0.0 || ^7.0.1
-      vue: ^3.3.4
+      vue: 3.5.40
     peerDependenciesMeta:
       '@babel/plugin-proposal-decorators':
         optional: true
@@ -5153,12 +5144,6 @@ packages:
   '@poppinss/exception@1.2.3':
     resolution: {integrity: sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==}
 
-  '@prisma/adapter-pg@7.8.0':
-    resolution: {integrity: sha512-ygb3UkerK3v8MDpXVgCISdRNDozpxh6+JVJgiIGbSr5KBgz10LLf5ejUskPGoXlsIjxsOu6nuy1JVQr2EKGSlg==}
-
-  '@prisma/client-runtime-utils@7.8.0':
-    resolution: {integrity: sha512-5NQZztQ0oY/ADFkmd9gPuweH5A1/CCY8YQPorLLO0Mu6a87mY5gsnDkzmFmIHs9NFaLnZojzgddFVN4RpKYrdw==}
-
   '@prisma/client@5.22.0':
     resolution: {integrity: sha512-M0SVXfyHnQREBKxCgyo7sffrKttwE6R8PMq330MIUF0pTwjUhLbW84pFDlf06B27XyCR++VtjugEnIHdr07SVA==}
     engines: {node: '>=16.13'}
@@ -5166,18 +5151,6 @@ packages:
       prisma: '*'
     peerDependenciesMeta:
       prisma:
-        optional: true
-
-  '@prisma/client@7.8.0':
-    resolution: {integrity: sha512-HFp3Dawv/3sU3JtlPha90IB+48lS7zHiH4LKZPjmcE8YH5P9DOXGPvo8dqOtO7MqLDd1p2hOWMcFlRT1DMblHw==}
-    engines: {node: ^20.19 || ^22.12 || >=24.0}
-    peerDependencies:
-      prisma: '*'
-      typescript: '>=5.4.0'
-    peerDependenciesMeta:
-      prisma:
-        optional: true
-      typescript:
         optional: true
 
   '@prisma/config@7.8.0':
@@ -5192,12 +5165,6 @@ packages:
   '@prisma/dev@0.24.3':
     resolution: {integrity: sha512-ffHlQuKXZiaDt9Go0OnCTdJZrHxK0k7omJKNV86/VjpsXu5EIHZLK0T7JSWgvNlJwh56kW9JFu9v0qJciFzepg==}
 
-  '@prisma/dmmf@7.8.0':
-    resolution: {integrity: sha512-7xzcSFWO6J+dFUgIX7jL7QqUhEDfaa8GSZGsjjHyZct1Su+6KrvMl3S2+fnRkuKUIoTPg3Mj02oZuUdaNSfsaw==}
-
-  '@prisma/driver-adapter-utils@7.8.0':
-    resolution: {integrity: sha512-/Q13o0ZT0rjc1Xk0Q9KhZYwuq2EW/vSbWUBKfgEKkaCuB/Sg6bqnjmTZqC5cD4d6y1vfFAEwBRzfzoSMIVJ55A==}
-
   '@prisma/engines-version@7.8.0-6.3c6e192761c0362d496ed980de936e2f3cebcd3a':
     resolution: {integrity: sha512-fJPQxCkLgA5EayWaW8eArgCvjJ+N+Kz3VyeNKMEeYiQC4alNkxRKFVAGxv/ZUzuJISKqdw+zGeDbS6mn6RCPOA==}
 
@@ -5206,12 +5173,6 @@ packages:
 
   '@prisma/fetch-engine@7.8.0':
     resolution: {integrity: sha512-gwB0Euiz/DDRyxFRpLXYlK3RfaZUj1c5dAYMuhZYfApg7arknJlcb9bIsOHDppJmbqYaVA+yBIiFMDBfprsNPQ==}
-
-  '@prisma/generator-helper@7.8.0':
-    resolution: {integrity: sha512-i+2Gad6D/0dS0YHKFdYX3M8KYN1gwNkET813WXKfW2HeWmgipmSJsNSzOA44kTM+Rx6Dev3yBQwx5sZXXdtgtQ==}
-
-  '@prisma/generator@7.8.0':
-    resolution: {integrity: sha512-KHGB0b8/9pNWyiK9EPJNE2/v1bMtqJgJldqjNNVvoE4uOhNSSWTmhHhPVfRsiuOVybzHCdCUQ/gdidCbpYAD5w==}
 
   '@prisma/get-platform@7.2.0':
     resolution: {integrity: sha512-k1V0l0Td1732EHpAfi2eySTezyllok9dXb6UQanajkJQzPUGi3vO2z7jdkz67SypFTdmbnyGYxvEvYZdZsMAVA==}
@@ -5684,10 +5645,6 @@ packages:
     resolution: {integrity: sha512-LxjOAFXz81WmrI8XX9YaVcAZDjQj/1p78lZCvkAWZB1nphOwz/D0dU3CBejmhOWx5dO5CszTkLJMNR0xuCK+Zg==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
-  '@sapphire/ratelimits@2.4.11':
-    resolution: {integrity: sha512-O6FNA/P0wxU4Ve9gxL948CoZw7+sSpujyUR2CLyLLCNuNvuFGFxPCJVl5crFVLXMIyBIrc2qk+/H9bsqsyQK1Q==}
-    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
-
   '@sapphire/snowflake@3.5.5':
     resolution: {integrity: sha512-xzvBr1Q1c4lCe7i6sRnrofxeO1QTP/LKQ6A6qy0iB4x5yfiSfARMEQEghojzTNALDTcv8En04qYNIco9/K9eZQ==}
     engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
@@ -5874,7 +5831,7 @@ packages:
     peerDependencies:
       '@tanstack/vue-router': ^1.64.0
       pinia: 2.x || 3.x || 4.x
-      vue: 2.x || 3.x
+      vue: 3.5.40
     peerDependenciesMeta:
       '@tanstack/vue-router':
         optional: true
@@ -6008,7 +5965,7 @@ packages:
       nuxt: ^3.18.1 || ^4.0.0
       storybook: ~10.0.2
       vite: ^5.2.0 || ^6.0.0 || ^7.0.0
-      vue: ^3.4.0
+      vue: 3.5.40
 
   '@storybook/addon-a11y@10.5.4':
     resolution: {integrity: sha512-UWdZtB7Dh1GjqxTPOrisUNDhDGF5pKGzZdzW9DSSHMBcAOx2dsTmXGzLSFprAz4LTT0OHCtKhxNqKK0JZJ0Y8g==}
@@ -6092,7 +6049,7 @@ packages:
     engines: {node: '>=20.0.0'}
     peerDependencies:
       storybook: ^9.1.16
-      vue: ^3.0.0
+      vue: 3.5.40
 
   '@sveltejs/acorn-typescript@1.0.10':
     resolution: {integrity: sha512-4WfKk68eTih+MiJD4fSbxN7E8kVBmTMPWHUPYjvl2N0rMs53YLTT8/YjKU5Dtnz5LqDjl7LEw4U7lXR2W3J5WA==}
@@ -6285,12 +6242,12 @@ packages:
     resolution: {integrity: sha512-rusRyd77c5tDPloPskctMyPLFEQUeBzxdQ+2Eow4F7gDPlPOB1UnnhzfpdvqZ8ZyX2rRNGmqNnQWm87OI2OQPw==}
     engines: {node: '>=12'}
     peerDependencies:
-      vue: '>=3.2'
+      vue: 3.5.40
 
   '@tanstack/vue-virtual@3.13.34':
     resolution: {integrity: sha512-CBqbCcnVsKpl9IJ7frPnbBmAqmc7JttSySg04kgLYJ4yYuC8JsAbtUHP0yLtWGLyByjihN3SwaDCgHQ+Z4iPoA==}
     peerDependencies:
-      vue: ^2.7.0 || ^3.0.0
+      vue: 3.5.40
 
   '@testing-library/dom@10.4.1':
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
@@ -6362,7 +6319,7 @@ packages:
       '@tiptap/extension-drag-handle': 3.27.2
       '@tiptap/pm': 3.27.2
       '@tiptap/vue-3': 3.27.2
-      vue: ^3.0.0
+      vue: 3.5.40
 
   '@tiptap/extension-drag-handle@3.27.2':
     resolution: {integrity: sha512-LNajWH8tLW2fgnPxYnJWt8GjBCWwhkK5H9xxcuG1RUMBvjFXTcIWhVxwSXwusXNDlUWCFAVNEM6PdEr6S++gIw==}
@@ -6512,7 +6469,7 @@ packages:
       '@floating-ui/dom': ^1.0.0
       '@tiptap/core': 3.27.2
       '@tiptap/pm': 3.27.2
-      vue: ^3.0.0
+      vue: 3.5.40
 
   '@tiptap/y-tiptap@3.0.6':
     resolution: {integrity: sha512-kcGeVGKtq/cPGVseNKjtmtcY2WXUAEm1SqS5x0Smubj4nOCRyPiHg6kY4QuuZhmXjTK7hdo8chokkPUKWXPE9Q==}
@@ -6723,7 +6680,7 @@ packages:
       esbuild: '>=0.17.0'
       lightningcss: '>=1.20.0'
       rolldown: '>=1.0.0-beta.0'
-      unhead: ^3.2.1
+      unhead: 3.2.3
       vite: '>=6.4.2'
       webpack: '>=5.0.0'
     peerDependenciesMeta:
@@ -6747,7 +6704,7 @@ packages:
       esbuild: '>=0.17.0'
       lightningcss: '>=1.20.0'
       rolldown: '>=1.0.0-beta.0'
-      unhead: ^3.2.3
+      unhead: 3.2.3
       vite: '>=6.4.2'
       webpack: '>=5.0.0'
     peerDependenciesMeta:
@@ -6764,16 +6721,11 @@ packages:
       webpack:
         optional: true
 
-  '@unhead/vue@2.1.16':
-    resolution: {integrity: sha512-t6QykImeMJcrUTbFB0Coy0cB/OZItHdQFRFLoH8GAVXKWmQORGPrwvueP9me7adOCuMH2uVvrv0nCkbi6zksaA==}
-    peerDependencies:
-      vue: '>=3.5.18'
-
   '@unhead/vue@3.2.3':
     resolution: {integrity: sha512-u1qi/0tDyytDSAex8+JMgeDMDlBh3RuzFmTaPOEmbAIx4BG9ej/18ChfM962DC0G7kKhOiuqiSpCfWR5S3XKGg==}
     peerDependencies:
       vite: '>=6.4.2'
-      vue: '>=3.5.18'
+      vue: 3.5.40
       webpack: '>=5.0.0'
     peerDependenciesMeta:
       vite:
@@ -6834,14 +6786,14 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.0.0
+      vue: 3.5.40
 
   '@vitejs/plugin-vue@6.0.8':
     resolution: {integrity: sha512-0ZjgOg7oO6farnNGup7yvoM/YXZV84OZxHAwtflItNa/6zzQyVb5LNxyea3FEKEX2XlagIKzrlH7wwxkKgtiew==}
     engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0
-      vue: ^3.2.25
+      vue: 3.5.40
 
   '@vitest/browser-playwright@4.1.10':
     resolution: {integrity: sha512-nMoXGEiRpT7m3W7NsbvrM2aKNwiNHZf+zEpUCvMteGjZFvfT96Q9fh7QyB98dvDWXiKvrLxA7bJ1mCOOv+JQPw==}
@@ -7106,7 +7058,7 @@ packages:
     resolution: {integrity: sha512-/5Fv+6DgIcM9ajY05ZmKBv+LMX1M9A0X+IUwDRVdt67ciw8OV9bvG2r34p3RiEadlsQybjhKPRKNXDC8Bp23cw==}
     engines: {node: '>=20.19.0'}
     peerDependencies:
-      vue: ^2.7.0 || ^3.2.25
+      vue: 3.5.40
     peerDependenciesMeta:
       vue:
         optional: true
@@ -7151,7 +7103,7 @@ packages:
   '@vue/devtools-core@8.1.5':
     resolution: {integrity: sha512-5e5jQOEssCdZA1wlFEUkIDtb+cAOWuLNWJ52fm4PBWbF7e3oTnM2fneaL42E5lJoolAaUQ678tv/XEb3h4e86Q==}
     peerDependencies:
-      vue: ^3.0.0
+      vue: 3.5.40
 
   '@vue/devtools-kit@8.1.5':
     resolution: {integrity: sha512-FcSAxsi4eWuXLCB7Rv9lj0aIVHHPNVQ2BazGf4RJTc2JCqb4BQg0hk87ZFhminCfl+mD5OUI0rX2cgyu4kJOGA==}
@@ -7193,7 +7145,7 @@ packages:
     peerDependencies:
       '@vue/compiler-dom': 3.x
       '@vue/server-renderer': 3.x
-      vue: 3.x
+      vue: 3.5.40
     peerDependenciesMeta:
       '@vue/server-renderer':
         optional: true
@@ -7204,7 +7156,7 @@ packages:
   '@vueuse/core@14.3.0':
     resolution: {integrity: sha512-aHfz47g0ZhMtTVHmIzMVpJy8ePhhOy68GY5bv110+5DVtZ+W7BsOx+m61UNQqfrWyPztIHIanWa3E2tib3NFIw==}
     peerDependencies:
-      vue: ^3.5.0
+      vue: 3.5.40
 
   '@vueuse/integrations@14.3.0':
     resolution: {integrity: sha512-76I5FT2ESvCmCaSwapI+a/u/CFtNXmzl9f9lNp1hRtx8vKB8hfiokJr8IvQqcQG5ckGXElyXK516b54ozV3MvA==}
@@ -7221,7 +7173,7 @@ packages:
       qrcode: ^1.5
       sortablejs: ^1
       universal-cookie: ^7 || ^8
-      vue: ^3.5.0
+      vue: 3.5.40
     peerDependenciesMeta:
       async-validator:
         optional: true
@@ -7258,12 +7210,12 @@ packages:
     resolution: {integrity: sha512-Uxaz/DsNa3i7vHTSjZin5R17R5pt+MtpAifsfqhV1qiBZti1wYv+/S3xysCMHuuiWyLIbbignKxIsgG9ul5kEA==}
     peerDependencies:
       nuxt: ^3.0.0 || ^4.0.0-0
-      vue: ^3.5.0
+      vue: 3.5.40
 
   '@vueuse/router@14.3.0':
     resolution: {integrity: sha512-MK7YETFDPyDDF9aSP4W3TzUIHLZ+uq0n/t4VMxOP39e0qGbCZ21ZRsGE93ML84teKtCtPDlN+73CTk2e3xVl9w==}
     peerDependencies:
-      vue: ^3.5.0
+      vue: 3.5.40
       vue-router: ^4.0.0 || ^5.0.0
 
   '@vueuse/shared@10.11.1':
@@ -7272,7 +7224,7 @@ packages:
   '@vueuse/shared@14.3.0':
     resolution: {integrity: sha512-bZpge9eSXwa4ToSiqJ7j6KRwhAsneMFoSz3LMWKQDkqimm3D/tbFlrklrs/IOqC8tEcYmXQZJ6N0UrjhBirVCg==}
     peerDependencies:
-      vue: ^3.5.0
+      vue: 3.5.40
 
   '@webcontainer/env@1.1.1':
     resolution: {integrity: sha512-6aN99yL695Hi9SuIk1oC88l9o0gmxL1nGWWQ/kNy81HigJ0FoaoTXpytCj6ItzgyCEwA9kF1wixsTuv5cjsgng==}
@@ -7768,7 +7720,7 @@ packages:
       solid-js: ^1.0.0
       svelte: ^4.0.0 || ^5.0.0
       vitest: 4.1.10
-      vue: ^3.0.0
+      vue: 3.5.40
     peerDependenciesMeta:
       '@lynx-js/react':
         optional: true
@@ -7830,7 +7782,7 @@ packages:
       solid-js: ^1.0.0
       svelte: ^4.0.0 || ^5.0.0
       vitest: 4.1.10
-      vue: ^3.0.0
+      vue: 3.5.40
     peerDependenciesMeta:
       '@lynx-js/react':
         optional: true
@@ -8919,7 +8871,7 @@ packages:
   embla-carousel-vue@8.6.0:
     resolution: {integrity: sha512-v8UO5UsyLocZnu/LbfQA7Dn2QHuZKurJY93VUmZYP//QRWoCWOsionmvLLAlibkET3pGPs7++03VhJKbWD7vhQ==}
     peerDependencies:
-      vue: ^3.2.37
+      vue: 3.5.40
 
   embla-carousel-wheel-gestures@8.1.0:
     resolution: {integrity: sha512-J68jkYrxbWDmXOm2n2YHl+uMEXzkGSKjWmjaEgL9xVvPb3HqVmg6rJSKfI3sqIDVvm7mkeTy87wtG/5263XqHQ==}
@@ -11265,7 +11217,7 @@ packages:
     resolution: {integrity: sha512-J0CCfXtICCni9RjotDUBOs57xNpYI9yyBSohEOxaRHrmjwOtlw291fhRu/mdgEdSasys96R028YDDOAtWBbRaA==}
     peerDependencies:
       '@vueuse/core': '>=10.0.0'
-      vue: '>=3.0.0'
+      vue: 3.5.40
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -11480,7 +11432,7 @@ packages:
       '@resvg/resvg-wasm': ^2.6.0
       '@takumi-rs/core': ^1.0.0-beta.3 || ^2.0.0
       '@takumi-rs/wasm': ^1.0.0-beta.3 || ^2.0.0
-      '@unhead/vue': ^2.0.5 || ^3.0.0
+      '@unhead/vue': 3.2.3
       fontless: ^0.2.0
       nitropack: ^2.13.4
       playwright-core: ^1.50.0
@@ -11519,8 +11471,8 @@ packages:
   nuxt-schema-org@6.2.7:
     resolution: {integrity: sha512-ayf4f1TOx2OELNAH4oFP/G9q1BriTCDvNf9Unu604GyicUptJd6SXAVcxCYgOmXx+16T2xNxjYqqaf4AtXKKWQ==}
     peerDependencies:
-      '@unhead/vue': ^2.0.7 || ^3.0.0
-      unhead: ^2.0.7 || ^3.0.0
+      '@unhead/vue': 3.2.3
+      unhead: 3.2.3
       zod: '>=3'
     peerDependenciesMeta:
       '@unhead/vue':
@@ -11538,12 +11490,12 @@ packages:
     resolution: {integrity: sha512-oslXL7Nfl59fJS4Q62lrrzLIu9l+WFg6pt5GQaPlQUzWB3/+/Y/92aNkcGGD4wG+TgEXkVmJ6UgenJsgkK2zYQ==}
     hasBin: true
     peerDependencies:
-      '@unhead/vue': ^2.0.7 || ^3.0.0
+      '@unhead/vue': 3.2.3
       esbuild: '>=0.17.0'
       lightningcss: '>=1.20.0'
       nuxt: ^3.0.0 || ^4.0.0
       rolldown: '>=1.0.0-beta.0'
-      unhead: ^2.0.7 || ^3.0.0
+      unhead: 3.2.3
     peerDependenciesMeta:
       '@unhead/vue':
         optional: true
@@ -11600,7 +11552,7 @@ packages:
       '@nuxt/schema': ^3.16.0 || ^4.0.0
       nuxt: ^3.16.0 || ^4.0.0
       nuxt-site-config: ^3.2.0 || ^4.0.0
-      vue: ^3.5.0
+      vue: 3.5.40
       zod: ^3.23.0 || ^4.0.0
     peerDependenciesMeta:
       nuxt-site-config:
@@ -12435,10 +12387,6 @@ packages:
     resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==}
     engines: {node: '>=4'}
 
-  postgres-array@3.0.4:
-    resolution: {integrity: sha512-nAUSGfSDGOaOAEGwqsRY27GPOea7CNipJPOA7lPbdEpx5Kg3qzdP0AaWC5MlhTWV9s4hFX39nomVZ+C4tnGOJQ==}
-    engines: {node: '>=12'}
-
   postgres-bytea@1.0.1:
     resolution: {integrity: sha512-5+5HqXnsZPE65IJZSMkZtURARZelel2oXUEO8rH83VS/hxH5vv1uHquPg5wZs8yMAfdv971IU+kcPUczi7NVBQ==}
     engines: {node: '>=0.10.0'}
@@ -12488,15 +12436,6 @@ packages:
   pretty-format@27.5.1:
     resolution: {integrity: sha512-Qb1gy5OrP5+zDf2Bvnzdl3jsTf1qXVMazbvCoKhtKqVs4/YK4ozX4gKQJJVyNe+cajNPn0KoC0MC3FUmaHWEmQ==}
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
-
-  prisma-json-types-generator@5.1.0:
-    resolution: {integrity: sha512-nUYP3UoR/wXjXWiD3IwhaVMadkWuQBU1pxSvRkWq8mxx7uGexhDPwaP9f5q2rHXm9OgUZ73/zdQrtlRg3Aoqsg==}
-    engines: {node: '>=14.0'}
-    hasBin: true
-    peerDependencies:
-      '@prisma/client': ^7.8.0
-      prisma: ^7.8.0
-      typescript: ^6.0.3
 
   prisma@7.8.0:
     resolution: {integrity: sha512-yfN4yrw7HV9kEJhoy1+jgah0jafEIQsf7uWouSsM8MvJtlubsk+kM7AIBWZ8+GJl74Yj3c+nbYqBkMOxtsZ3Lw==}
@@ -12798,7 +12737,7 @@ packages:
   reka-ui@2.10.1:
     resolution: {integrity: sha512-drcOQ4rQtDYAcGCsyQBqQg8QQ+H3B+zDaMJU0h8KPEPMa7g9BHu3zcOi4OB39XJSWizceFoNO0Z9tctSGLOXqg==}
     peerDependencies:
-      vue: '>= 3.4.0'
+      vue: 3.5.40
 
   remark-emoji@5.0.2:
     resolution: {integrity: sha512-IyIqGELcyK5AVdLFafoiNww+Eaw/F+rGrNSXoKucjo95uL267zrddgxGM83GN1wFIb68pyDuAsY3m5t2Cav1pQ==}
@@ -13183,7 +13122,7 @@ packages:
   site-config-stack@4.1.2:
     resolution: {integrity: sha512-EK9v2x50WEFlZ32Trf2o3F4ycHLzfVhcTqjvF1TaM3LQlh5g6vB6hF8efYpU2ll59MgX46LQDATSVuP0/PqVSg==}
     peerDependencies:
-      vue: ^3.5.30
+      vue: 3.5.40
 
   skilld-protocol@2.0.0:
     resolution: {integrity: sha512-CwNcxEz2mkIcxfhxyYm1ifWE00Q+Xz/JWqG+KFefz3FylpqUfHjqMSGMahP0aVCm9D5mykhkYH9gGHIkO3jHyA==}
@@ -13523,7 +13462,7 @@ packages:
   swrv@1.2.0:
     resolution: {integrity: sha512-lH/g4UcNyj+7lzK4eRGT4C68Q4EhQ6JtM9otPRIASfhhzfLWtbZPHcMuhuba7S9YVYuxkMUGImwMyGpfbkH07A==}
     peerDependencies:
-      vue: '>=3.2.26 < 4'
+      vue: 3.5.40
 
   symbol-tree@3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
@@ -13712,9 +13651,6 @@ packages:
 
   trough@2.2.0:
     resolution: {integrity: sha512-tmMpK00BjZiUyVyvrBK7knerNgmgvcV/KLVyuma/SC+TQN167GrMRciANTz09+k3zW8L8t60jWO1GpfkZdjTaw==}
-
-  try@1.0.3:
-    resolution: {integrity: sha512-AHA8khVCII6zKyRkyPo6pRwoR9v5jb7QFw6e5avtaVSkxVfaEucYIo06xnwB+pJaEarfYNbs7W3Vq+LZLZiWyA==}
 
   ts-algebra@2.0.0:
     resolution: {integrity: sha512-FPAhNPFMrkwz76P7cdjdmiShwMynZYN6SgOujD1urY4oNm80Ou9oMdmbR45LotcKOXoy7wSmHkRFE6Mxbrhefw==}
@@ -13940,9 +13876,6 @@ packages:
   unescape-js@1.1.4:
     resolution: {integrity: sha512-42SD8NOQEhdYntEiUQdYq/1V/YHwr1HLwlHuTJB5InVVdOSbgI6xu8jK5q65yIzuFCfczzyDF/7hbGzVbyCw0g==}
 
-  unhead@2.1.16:
-    resolution: {integrity: sha512-cD2Q4a6SQHhW9/bPp17NT4GJ1yS0DSLe75WEHKQ8bKa/wjB6cIki3KeL86hhllNBcpv8i6bxdwtwQunneXPqKQ==}
-
   unhead@3.2.3:
     resolution: {integrity: sha512-BBkKvthUOufEJzG4C4u5NCdxnGMNaQdb//oPDI8lkv/6qj0faEqnPIvIPejt3FnSE501LX25Gbe2MVgKDuFnyQ==}
     peerDependencies:
@@ -14065,7 +13998,7 @@ packages:
     engines: {node: '>=20.19.0'}
     peerDependencies:
       '@nuxt/kit': ^3.2.2 || ^4.0.0
-      vue: ^3.0.0
+      vue: 3.5.40
     peerDependenciesMeta:
       '@nuxt/kit':
         optional: true
@@ -14257,7 +14190,7 @@ packages:
     resolution: {integrity: sha512-A6jOWOZX5yvyo1qMn7IveoWN91mJI5L3BUKsIwkg6qrTGgHs1Sb1JF/vyLJgnbN1rH4OOOxFbtqL9A46bOyGUQ==}
     peerDependencies:
       reka-ui: ^2.0.0
-      vue: ^3.3.0
+      vue: 3.5.40
 
   verkit@0.1.2:
     resolution: {integrity: sha512-WqkT8n3hqizuCu71W3bUzf5fjBmkbXcudsehe/NbxA8PgqoKnSOY5K0Ba2ckg1qaRaSpSz7as/n9K1R9JXjQKg==}
@@ -14403,7 +14336,7 @@ packages:
     resolution: {integrity: sha512-0tQCjCqZWVSK6UeRW9S4ABbf47lKQ68zvrT2FNvZmiL+alDydCVyH/T3Jlfbdc3T3C2Iuyyl5aVsMbF8IQIoxA==}
     peerDependencies:
       vite: ^6.0.0 || ^7.0.0 || ^8.0.0-0
-      vue: ^3.5.0
+      vue: 3.5.40
 
   vite-plus@0.2.7:
     resolution: {integrity: sha512-4xFo1nDtH/isWBdJaCgmctMiNohbuxa0uiKA/cbpL8jT18Ax73Lt6rK20/LkqPG5a/HpvPNhDCS1QK58pH4txA==}
@@ -14506,7 +14439,7 @@ packages:
     hasBin: true
     peerDependencies:
       '@vue/composition-api': ^1.0.0-rc.1
-      vue: ^3.0.0-0 || ^2.6.0
+      vue: 3.5.40
     peerDependenciesMeta:
       '@vue/composition-api':
         optional: true
@@ -14517,7 +14450,7 @@ packages:
   vue-docgen-api@4.79.2:
     resolution: {integrity: sha512-n9ENAcs+40awPZMsas7STqjkZiVlIjxIKgiJr5rSohDP0/JCrD9VtlzNojafsA1MChm/hz2h3PDtUedx3lbgfA==}
     peerDependencies:
-      vue: '>=2'
+      vue: 3.5.40
 
   vue-eslint-parser@10.4.1:
     resolution: {integrity: sha512-Gk6gRDj0n/fkRa3C3l0bBheoBckUq/Rs0F/TvMWIS6nzzx67amAViMe9CkNgsP2tXyQONvGiHQESHwFtZ3aYDA==}
@@ -14533,17 +14466,17 @@ packages:
     resolution: {integrity: sha512-0ULeHP6Z9CGvAm67S77ZEp41cfGXIREGL8qfhos2BMgcQQewtQcDKuojt6jjasAD/S8GwfTp2ySPmDSpwvrCMQ==}
     engines: {node: '>= 22'}
     peerDependencies:
-      vue: ^3.0.0
+      vue: 3.5.40
 
   vue-inbrowser-compiler-independent-utils@4.71.1:
     resolution: {integrity: sha512-K3wt3iVmNGaFEOUR4JIThQRWfqokxLfnPslD41FDZB2ajXp789+wCqJyGYlIFsvEQ2P61PInw6/ph5iiqg51gg==}
     peerDependencies:
-      vue: '>=2'
+      vue: 3.5.40
 
   vue-router@4.6.4:
     resolution: {integrity: sha512-Hz9q5sa33Yhduglwz6g9skT8OBPii+4bFn88w6J+J4MfEo4KRRpmiNG/hHHkdbRFlLBOqxN8y8gf2Fb0MTUgVg==}
     peerDependencies:
-      vue: ^3.5.0
+      vue: 3.5.40
 
   vue-router@5.2.0:
     resolution: {integrity: sha512-QAC5i0LEb1GLG0LXDQmHu8L7FX12j0KwU/JTKmLQUJMrn04gQdKP6Du+p0QwpHb3iy71vBlqnHQ8WAfOSAWhqw==}
@@ -14552,7 +14485,7 @@ packages:
       '@vue/compiler-sfc': ^3.5.34 || ^4.0.0
       pinia: ^3.0.4 || ^4.0.2
       vite: ^7.3.0 || ^8.0.0
-      vue: ^3.5.34 || ^4.0.0
+      vue: 3.5.40
     peerDependenciesMeta:
       '@pinia/colada':
         optional: true
@@ -16126,12 +16059,12 @@ snapshots:
       '@prisma/client': 5.22.0(prisma@7.8.0)
       prisma: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
 
-  '@better-auth/prisma-adapter@1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(@prisma/client@7.8.0)(prisma@7.8.0)':
+  '@better-auth/prisma-adapter@1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(@prisma/client@5.22.0)(prisma@7.8.0)':
     dependencies:
       '@better-auth/core': 1.6.25(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.3.7)(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/utils': 0.4.2
     optionalDependencies:
-      '@prisma/client': 7.8.0(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
+      '@prisma/client': 5.22.0(prisma@7.8.0)
       prisma: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
 
   '@better-auth/telemetry@1.5.0-beta.13(@better-auth/core@1.5.0-beta.13)':
@@ -18797,7 +18730,7 @@ snapshots:
       - vite
       - webpack
 
-  '@nuxt/ui@4.10.0(79858a735f1463f52cecae8fb47aa5d2)':
+  '@nuxt/ui@4.10.0(1b1a9a0fb2d7cc19974913f2af89408a)':
     dependencies:
       '@floating-ui/dom': 1.8.0
       '@iconify/vue': 5.0.1(vue@3.5.40)
@@ -18828,7 +18761,7 @@ snapshots:
       '@tiptap/starter-kit': 3.27.2
       '@tiptap/suggestion': 3.27.2(@floating-ui/dom@1.8.0)(@tiptap/core@3.27.2)(@tiptap/pm@3.27.2)
       '@tiptap/vue-3': 3.27.2(@floating-ui/dom@1.8.0)(@tiptap/core@3.27.2)(@tiptap/pm@3.27.2)(vue@3.5.40)
-      '@unhead/vue': 2.1.16(vue@3.5.40)
+      '@unhead/vue': 3.2.3(@voidzero-dev/vite-plus-core@0.2.6)(esbuild@0.28.1)(lightningcss@1.33.0)(rolldown@1.2.0)(rollup@4.62.2)(srvx@0.11.22)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)(vue@3.5.40)
       '@vueuse/core': 14.3.0(vue@3.5.40)
       '@vueuse/integrations': 14.3.0(axios@1.18.1)(fuse.js@7.5.0)(jwt-decode@4.0.0)(vue@3.5.40)
       '@vueuse/shared': 14.3.0(vue@3.5.40)
@@ -18882,9 +18815,11 @@ snapshots:
       - '@deno/kv'
       - '@emotion/is-prop-valid'
       - '@farmfe/core'
+      - '@modelcontextprotocol/sdk'
       - '@netlify/blobs'
       - '@planetscale/database'
       - '@rspack/core'
+      - '@unhead/cli'
       - '@upstash/redis'
       - '@vercel/blob'
       - '@vercel/functions'
@@ -18903,6 +18838,7 @@ snapshots:
       - idb-keyval
       - ioredis
       - jwt-decode
+      - lightningcss
       - magicast
       - nprogress
       - oxc-parser
@@ -18912,6 +18848,7 @@ snapshots:
       - rolldown
       - rollup
       - sortablejs
+      - srvx
       - universal-cookie
       - unloader
       - uploadthing
@@ -19388,7 +19325,7 @@ snapshots:
     dependencies:
       '@better-auth/cli': 1.5.0-beta.13(@better-fetch/fetch@1.1.21)(@electric-sql/pglite@0.4.1)(@opentelemetry/api@1.9.1)(better-call@1.2.1)(jose@6.2.3)(kysely@0.28.17)(magicast@0.5.3)(mongodb@7.5.0)(mysql2@3.15.3)(nanostores@1.4.0)(postgres@3.4.7)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(supports-color@10.2.2)(vitest@4.1.10)(vue@3.5.40)
       '@nuxt/kit': 4.5.1(magic-string@1.1.0)(magicast@0.5.3)(oxc-parser@0.140.0)(rolldown@1.2.0)(unplugin@3.3.0)
-      better-auth: 1.6.25(@opentelemetry/api@1.9.1)(@prisma/client@7.8.0)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(vitest@4.1.10)(vue@3.5.40)
+      better-auth: 1.6.25(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(vitest@4.1.10)(vue@3.5.40)
       defu: 6.1.7
       h3: 1.15.11
       jiti: 2.7.0
@@ -20440,27 +20377,9 @@ snapshots:
 
   '@poppinss/exception@1.2.3': {}
 
-  '@prisma/adapter-pg@7.8.0':
-    dependencies:
-      '@prisma/driver-adapter-utils': 7.8.0
-      '@types/pg': 8.20.0
-      pg: 8.22.0
-      postgres-array: 3.0.4
-    transitivePeerDependencies:
-      - pg-native
-
-  '@prisma/client-runtime-utils@7.8.0': {}
-
   '@prisma/client@5.22.0(prisma@7.8.0)':
     optionalDependencies:
       prisma: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-
-  '@prisma/client@7.8.0(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)':
-    dependencies:
-      '@prisma/client-runtime-utils': 7.8.0
-    optionalDependencies:
-      prisma: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-      typescript: typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
 
   '@prisma/config@7.8.0(magicast@0.5.3)':
     dependencies:
@@ -20497,12 +20416,6 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@prisma/dmmf@7.8.0': {}
-
-  '@prisma/driver-adapter-utils@7.8.0':
-    dependencies:
-      '@prisma/debug': 7.8.0
-
   '@prisma/engines-version@7.8.0-6.3c6e192761c0362d496ed980de936e2f3cebcd3a': {}
 
   '@prisma/engines@7.8.0':
@@ -20517,14 +20430,6 @@ snapshots:
       '@prisma/debug': 7.8.0
       '@prisma/engines-version': 7.8.0-6.3c6e192761c0362d496ed980de936e2f3cebcd3a
       '@prisma/get-platform': 7.8.0
-
-  '@prisma/generator-helper@7.8.0':
-    dependencies:
-      '@prisma/debug': 7.8.0
-      '@prisma/dmmf': 7.8.0
-      '@prisma/generator': 7.8.0
-
-  '@prisma/generator@7.8.0': {}
 
   '@prisma/get-platform@7.2.0':
     dependencies:
@@ -20847,8 +20752,6 @@ snapshots:
       '@sapphire/utilities': 3.18.2
 
   '@sapphire/duration@1.2.0': {}
-
-  '@sapphire/ratelimits@2.4.11': {}
 
   '@sapphire/snowflake@3.5.5': {}
 
@@ -22015,12 +21918,6 @@ snapshots:
       - typescript
       - unloader
 
-  '@unhead/vue@2.1.16(vue@3.5.40)':
-    dependencies:
-      hookable: 6.1.1
-      unhead: 2.1.16
-      vue: 3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-
   '@unhead/vue@3.2.3(@voidzero-dev/vite-plus-core@0.2.6)(esbuild@0.28.1)(lightningcss@1.33.0)(rolldown@1.2.0)(rollup@4.62.2)(srvx@0.11.22)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)(vue@3.5.40)':
     dependencies:
       '@unhead/bundler': 3.2.3(@voidzero-dev/vite-plus-core@0.2.6)(esbuild@0.28.1)(lightningcss@1.33.0)(rolldown@1.2.0)(rollup@4.62.2)(srvx@0.11.22)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)(unhead@3.2.3)
@@ -23066,14 +22963,14 @@ snapshots:
       vitest: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.6)(jsdom@29.1.1)(msw@2.15.0)
       vue: 3.5.40(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
 
-  better-auth@1.6.25(@opentelemetry/api@1.9.1)(@prisma/client@7.8.0)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(vitest@4.1.10)(vue@3.5.40):
+  better-auth@1.6.25(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(drizzle-orm@0.41.0)(mongodb@7.5.0)(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0)(react-dom@19.2.7)(react@19.2.7)(vitest@4.1.10)(vue@3.5.40):
     dependencies:
       '@better-auth/core': 1.6.25(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)(@opentelemetry/api@1.9.1)(better-call@1.3.7)(jose@6.2.3)(kysely@0.29.3)(nanostores@1.4.0)
       '@better-auth/drizzle-adapter': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(drizzle-orm@0.41.0)
       '@better-auth/kysely-adapter': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(kysely@0.29.3)
       '@better-auth/memory-adapter': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)
       '@better-auth/mongo-adapter': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(mongodb@7.5.0)
-      '@better-auth/prisma-adapter': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(@prisma/client@7.8.0)(prisma@7.8.0)
+      '@better-auth/prisma-adapter': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(@prisma/client@5.22.0)(prisma@7.8.0)
       '@better-auth/telemetry': 1.6.25(@better-auth/core@1.6.25)(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.1)
       '@better-auth/utils': 0.4.2
       '@better-fetch/fetch': 1.3.1
@@ -23086,7 +22983,7 @@ snapshots:
       nanostores: 1.4.0
       zod: 4.4.3
     optionalDependencies:
-      '@prisma/client': 7.8.0(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
+      '@prisma/client': 5.22.0(prisma@7.8.0)
       drizzle-orm: 0.41.0(@electric-sql/pglite@0.4.1)(@opentelemetry/api@1.9.1)(@prisma/client@5.22.0)(@types/pg@8.20.0)(kysely@0.28.17)(mysql2@3.15.3)(pg@8.22.0)(postgres@3.4.7)(prisma@7.8.0)
       mongodb: 7.5.0(socks@2.8.9)
       mysql2: 3.15.3
@@ -28937,8 +28834,6 @@ snapshots:
 
   postgres-array@2.0.0: {}
 
-  postgres-array@3.0.4: {}
-
   postgres-bytea@1.0.1: {}
 
   postgres-date@1.0.7: {}
@@ -28986,16 +28881,6 @@ snapshots:
       ansi-regex: 5.0.1
       ansi-styles: 5.2.0
       react-is: 17.0.2
-
-  prisma-json-types-generator@5.1.0(@prisma/client@7.8.0)(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2):
-    dependencies:
-      '@prisma/client': 7.8.0(prisma@7.8.0)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-      '@prisma/generator-helper': 7.8.0
-      prisma: 7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2)
-      semver: 7.8.5
-      try: 1.0.3
-      tslib: 2.8.1
-      typescript: typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
 
   prisma@7.8.0(@types/react@19.2.17)(magicast@0.5.3)(react-dom@19.2.7)(react@19.2.7)(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2):
     dependencies:
@@ -30528,8 +30413,6 @@ snapshots:
 
   trough@2.2.0: {}
 
-  try@1.0.3: {}
-
   ts-algebra@2.0.0: {}
 
   ts-api-utils@2.5.0(typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2):
@@ -30713,10 +30596,6 @@ snapshots:
   unescape-js@1.1.4:
     dependencies:
       string.fromcodepoint: 0.2.1
-
-  unhead@2.1.16:
-    dependencies:
-      hookable: 6.1.1
 
   unhead@3.2.3(@voidzero-dev/vite-plus-core@0.2.6)(esbuild@0.28.1)(rolldown@1.2.0)(rollup@4.62.2):
     dependencies:

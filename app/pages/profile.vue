@@ -501,7 +501,10 @@
 import type { TabsItem } from "@nuxt/ui";
 import * as Sentry from "@sentry/nuxt";
 
-definePageMeta({ alias: ["/account"] });
+definePageMeta({
+	alias: ["/account"],
+	auth: { only: "user", redirectTo: "/login" },
+});
 useSeoMetadata({
 	description: "Manage your profile, servers and settings",
 	shouldOgImage: true,

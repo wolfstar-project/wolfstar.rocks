@@ -161,6 +161,7 @@ export default defineNuxtConfig({
 	},
 
 	auth: {
+		clientOnly: true,
 		redirectQueryKey: "next",
 	},
 
@@ -226,19 +227,20 @@ export default defineNuxtConfig({
 	routeRules: {
 		// API routes — only cache public, non-authenticated proxy routes.
 		// Broad ISR on /api/** is intentionally omitted: authenticated routes
-		// (e.g. /api/users, /api/guilds/:id/settings) must never be cached
-		// Globally, as that would serve one user's data to another.
+		// must never be cached globally, as that would serve one user's data to another.
 		"/sitemap.xml": { prerender: true },
 		"/": { appLayout: "default", prerender: true, robots: true },
 		"/_og/d/**": getISRConfig(60 * 60 * 24), // 1 day
 		"/api/auth/**": { isr: false, cache: false },
-		"/api/users": {
+		// Bot API BFF used by `$api` on the client — never CDN-cache (may carry auth).
+		// More-specific `/api/auth/**` rules above keep auth routes unproxied.
+		"/api/**": {
+			isr: false,
+			cache: false,
 			headers: {
-				"Cache-Control": "private, max-age=30, stale-while-revalidate=300",
-				"Vary": "Cookie, Authorization",
+				"Cache-Control": "private, no-store",
 			},
 		},
-
 		"/oauth/**": {
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 			security: {
@@ -259,10 +261,8 @@ export default defineNuxtConfig({
 		"/oauth/login": {
 			prerender: false,
 			robots: true,
-			auth: { only: "guest", redirectTo: "/profile" },
 		},
 		"/login": { prerender: false },
-		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// /profile is a per-user authenticated page: never statically prerender it
 		// (crawlLinks would otherwise reach it via links on prerendered pages and
@@ -271,7 +271,6 @@ export default defineNuxtConfig({
 			appLayout: "default",
 			prerender: false,
 			robots: true,
-			auth: { only: "user", redirectTo: "/login" },
 		},
 		"/starly": { appLayout: "default", robots: true },
 
@@ -341,6 +340,10 @@ export default defineNuxtConfig({
 		storage: {
 			"fetch-cache": {
 				base: "./.cache/fetch",
+				driver: "fsLite",
+			},
+			"payload-cache": {
+				base: "./.cache/payload",
 				driver: "fsLite",
 			},
 			"wolfstar:ratelimiter": {
@@ -565,6 +568,11 @@ export default defineNuxtConfig({
 					"https://cdn.discordapp.com",
 					"https://media.discordapp.net",
 					"https://discord.com",
+					// WolfStar bot API (`$api` + sapphire `POST /oauth/callback`)
+					"http://localhost:8282",
+					"http://127.0.0.1:8282",
+					"https://api.wolfstar.rocks",
+					"https://api.beta.wolfstar.rocks",
 					"https://api.iconify.design",
 					"https://ungh.cc", // Changelog page fetches GitHub releases from ungh.cc on client-side navigation
 					"https://*.netlify.com",

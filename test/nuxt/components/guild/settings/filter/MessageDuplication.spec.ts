@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -10,7 +10,7 @@ const mockGuildSettings = ref<GuildData | undefined>(
 		selfmodMessagesEnabled: true,
 		selfmodMessagesSoftAction: 0b011,
 		selfmodMessagesHardAction: 3,
-		selfmodMessagesHardActionDuration: 300000n,
+		selfmodMessagesHardActionDuration: 300000,
 		selfmodMessagesThresholdMaximum: 25,
 		selfmodMessagesThresholdDuration: 45_000,
 	}),
@@ -64,7 +64,7 @@ describe("message duplication filter guild settings", () => {
 			selfmodMessagesEnabled: true,
 			selfmodMessagesSoftAction: 0b011,
 			selfmodMessagesHardAction: 3,
-			selfmodMessagesHardActionDuration: 300000n,
+			selfmodMessagesHardActionDuration: 300000,
 			selfmodMessagesThresholdMaximum: 25,
 			selfmodMessagesThresholdDuration: 45_000,
 		});

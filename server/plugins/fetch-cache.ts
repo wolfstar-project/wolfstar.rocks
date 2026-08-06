@@ -1,50 +1,18 @@
-import type { CachedFetchEntry, CachedFetchResult } from "#shared/utils/fetch-cache-config";
+import type {
+	CachedFetchEntry,
+	CachedFetchFunction,
+	CachedFetchResult,
+} from "#shared/utils/fetch-cache-config";
 import type { H3Event } from "h3";
 import {
 	FETCH_CACHE_DEFAULT_TTL,
 	FETCH_CACHE_STORAGE_BASE,
-	FETCH_CACHE_VERSION,
-	isAllowedDomain,
+	generateFetchCacheKey,
 	isCacheEntryStale,
+	shouldCacheFetch,
 } from "#shared/utils/fetch-cache-config";
 import { log } from "evlog";
 import { $fetch } from "ofetch";
-
-/**
- * Simple hash function for cache keys.
- */
-function simpleHash(str: string): string {
-	let hash = 0;
-	for (let i = 0; i < str.length; i++) {
-		const char = str.charCodeAt(i);
-		hash = (hash << 5) - hash + char;
-		hash &= hash;
-	}
-	return Math.abs(hash).toString(36);
-}
-
-/**
- * Generate a cache key for a fetch request.
- */
-function generateFetchCacheKey(url: string | URL, method = "GET", body?: unknown): string {
-	// Relative URLs (e.g. "/api/commands") are same-origin and cache-eligible per
-	// isAllowedDomain; resolve them against a fixed base so `new URL` doesn't throw
-	// (it requires a base for relative inputs). Absolute URLs ignore the base.
-	const urlObj = typeof url === "string" ? new URL(url, "http://localhost") : url;
-	const bodyHash = body ? simpleHash(JSON.stringify(body)) : "";
-	const searchHash = urlObj.search ? simpleHash(urlObj.search) : "";
-
-	const parts = [
-		FETCH_CACHE_VERSION,
-		urlObj.host,
-		method.toUpperCase(),
-		urlObj.pathname,
-		searchHash,
-		bodyHash,
-	].filter(Boolean);
-
-	return parts.join(":");
-}
 
 /**
  * Server plugin that attaches a cachedFetch function to the event context.
@@ -68,14 +36,21 @@ export default defineNitroPlugin((nitroApp) => {
 			options: Parameters<typeof $fetch>[1] = {},
 			ttl: number = FETCH_CACHE_DEFAULT_TTL,
 		): Promise<CachedFetchResult<T>> => {
+			const cacheOptions = {
+				baseURL: typeof options.baseURL === "string" ? options.baseURL : undefined,
+				body: options.body,
+				headers: options.headers,
+				method: options.method,
+				query: options.query as Record<string, unknown> | undefined,
+			};
+
 			// Check if this URL should be cached
-			if (!isAllowedDomain(url)) {
+			if (!shouldCacheFetch(url, cacheOptions)) {
 				const data = (await $fetch(url, options)) as T;
 				return { cachedAt: null, data, isStale: false };
 			}
 
-			const method = options.method || "GET";
-			const cacheKey = generateFetchCacheKey(url, method, options.body);
+			const cacheKey = generateFetchCacheKey(url, cacheOptions);
 
 			// Try to get cached response (with error handling for storage failures)
 			let cached: CachedFetchEntry<T> | null = null;

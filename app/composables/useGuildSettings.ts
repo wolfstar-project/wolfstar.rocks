@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import type { Options as DeepMergeOptions } from "deepmerge";
 import { useRouteParams } from "@vueuse/router";
 import deepMerge from "deepmerge";

@@ -147,6 +147,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			label: t("user_menu.sign_out"),
 			async onSelect(e: Event) {
 				e.preventDefault();
+				await logoutBotOauth();
 				await signOut();
 				await navigateTo("/");
 			},

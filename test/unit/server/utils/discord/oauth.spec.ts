@@ -1,24 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { mockGetCurrent, mockGetGuilds, mockGetGuildMember, mockRefreshSessionTokens } = vi.hoisted(
-	() => {
-		const mockGetCurrent = vi.fn();
-		const mockGetGuilds = vi.fn();
-		const mockGetGuildMember = vi.fn();
-		const mockRefreshSessionTokens = vi.fn();
+const { mockGetCurrent, mockGetGuilds, mockGetGuildMember } = vi.hoisted(() => {
+	const mockGetCurrent = vi.fn();
+	const mockGetGuilds = vi.fn();
+	const mockGetGuildMember = vi.fn();
 
-		return {
-			mockGetCurrent,
-			mockGetGuildMember,
-			mockGetGuilds,
-			mockRefreshSessionTokens,
-		};
-	},
-);
-
-vi.mock("#server/utils/oauth-tokens", () => ({
-	refreshSessionTokens: mockRefreshSessionTokens,
-}));
+	return {
+		mockGetCurrent,
+		mockGetGuildMember,
+		mockGetGuilds,
+	};
+});
 
 (globalThis as Record<string, unknown>).useApi = () => ({
 	users: {
@@ -45,7 +37,7 @@ import {
 const fakeEvent = {} as H3Event;
 
 const tokens = {
-	access_token: "stale-access-token",
+	access_token: "access-token",
 	refresh_token: "refresh-token",
 	expires_in: 604_800,
 	token_type: "Bearer",
@@ -74,31 +66,14 @@ describe("fetchCurrentUserAndGuildsWithRetry", () => {
 		mockGetGuilds.mockResolvedValue(mockGuilds);
 	});
 
-	it("returns user and guilds without refreshing when the token is valid", async () => {
+	it("returns user and guilds when the token is valid", async () => {
 		const result = await fetchCurrentUserAndGuildsWithRetry(fakeEvent, tokens);
 
 		expect(result).toEqual({ user: mockUser, guilds: mockGuilds });
-		expect(mockRefreshSessionTokens).not.toHaveBeenCalled();
 	});
 
-	it("refreshes the token and retries after a Discord 401", async () => {
-		mockGetGuilds
-			.mockRejectedValueOnce(Object.assign(new Error("Unauthorized"), { status: 401 }))
-			.mockResolvedValueOnce(mockGuilds);
-		mockRefreshSessionTokens.mockResolvedValue({
-			...tokens,
-			access_token: "fresh-access-token",
-		});
-
-		const result = await fetchCurrentUserAndGuildsWithRetry(fakeEvent, tokens);
-
-		expect(mockRefreshSessionTokens).toHaveBeenCalledWith(fakeEvent, { force: true });
-		expect(result).toEqual({ user: mockUser, guilds: mockGuilds });
-	});
-
-	it("throws unauthorized when refresh does not produce a new token", async () => {
+	it("throws unauthorized on Discord 401 without local token refresh", async () => {
 		mockGetGuilds.mockRejectedValue(Object.assign(new Error("Unauthorized"), { status: 401 }));
-		mockRefreshSessionTokens.mockResolvedValue(null);
 
 		await expect(fetchCurrentUserAndGuildsWithRetry(fakeEvent, tokens)).rejects.toMatchObject({
 			status: 401,
@@ -112,18 +87,21 @@ describe("fetchGuildMemberWithRetry", () => {
 		mockGetGuildMember.mockResolvedValue(mockMember);
 	});
 
-	it("retries guild member fetch after a Discord 401", async () => {
-		mockGetGuildMember
-			.mockRejectedValueOnce(Object.assign(new Error("Unauthorized"), { status: 401 }))
-			.mockResolvedValueOnce(mockMember);
-		mockRefreshSessionTokens.mockResolvedValue({
-			...tokens,
-			access_token: "fresh-access-token",
-		});
-
+	it("returns the guild member when the token is valid", async () => {
 		const result = await fetchGuildMemberWithRetry(fakeEvent, tokens, "guild-1");
 
-		expect(mockRefreshSessionTokens).toHaveBeenCalledWith(fakeEvent, { force: true });
 		expect(result).toEqual(mockMember);
+	});
+
+	it("throws unauthorized on Discord 401 without local token refresh", async () => {
+		mockGetGuildMember.mockRejectedValue(
+			Object.assign(new Error("Unauthorized"), { status: 401 }),
+		);
+
+		await expect(fetchGuildMemberWithRetry(fakeEvent, tokens, "guild-1")).rejects.toMatchObject(
+			{
+				status: 401,
+			},
+		);
 	});
 });

@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { ChannelType } from "discord-api-types/v10";
 import { beforeEach, describe, expect, it, vi } from "vitest";

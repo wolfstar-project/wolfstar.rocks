@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";

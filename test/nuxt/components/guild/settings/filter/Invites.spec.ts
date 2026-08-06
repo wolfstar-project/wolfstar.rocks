@@ -1,4 +1,4 @@
-import type { GuildData } from "#server/database";
+import type { GuildData } from "#shared/types";
 import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { nextTick } from "vue";
@@ -10,7 +10,7 @@ const mockGuildSettings = ref<GuildData | undefined>(
 		selfmodInvitesEnabled: true,
 		selfmodInvitesSoftAction: 0b110,
 		selfmodInvitesHardAction: 2,
-		selfmodInvitesHardActionDuration: 60000n,
+		selfmodInvitesHardActionDuration: 60000,
 		selfmodInvitesThresholdMaximum: 15,
 		selfmodInvitesThresholdDuration: 30_000,
 	}),
@@ -64,7 +64,7 @@ describe("invite link filter guild settings", () => {
 			selfmodInvitesEnabled: true,
 			selfmodInvitesSoftAction: 0b110,
 			selfmodInvitesHardAction: 2,
-			selfmodInvitesHardActionDuration: 60000n,
+			selfmodInvitesHardActionDuration: 60000,
 			selfmodInvitesThresholdMaximum: 15,
 			selfmodInvitesThresholdDuration: 30_000,
 		});

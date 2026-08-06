@@ -91,6 +91,7 @@ const items = computed<DropdownMenuItem[]>(() => [
 ]);
 
 async function logout() {
+	await logoutBotOauth();
 	await signOut({
 		onSuccess: () => {
 			void navigateTo("/");

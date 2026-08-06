@@ -3,8 +3,9 @@ packages: []
 allowBuilds:
     "@google/genai": false
     "@parcel/watcher": false
-    "@prisma/client": true
-    "@prisma/engines": true
+    # Optional peers pulled by better-auth; not used by this app (Prisma removed).
+    "@prisma/client": false
+    "@prisma/engines": false
     "@sentry/cli": false
     "@tailwindcss/oxide": true
     better-sqlite3: true
@@ -12,7 +13,7 @@ allowBuilds:
     esbuild: false
     msw: true
     onnxruntime-node: false
-    prisma: true
+    prisma: false
     protobufjs: false
     sharp: true
     unrs-resolver: false
@@ -40,9 +41,7 @@ catalogs:
 
 dedupePeers: true
 
-# Prisma client resolution + Sentry OpenTelemetry instrumentation loaders
-hoistPattern:
-    - "*prisma*"
+# Sentry OpenTelemetry instrumentation loaders
 publicHoistPattern:
     - "*import-in-the-middle*"
     - "*require-in-the-middle*"
@@ -63,6 +62,12 @@ overrides:
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.51
+    # Same reason as above: `Ref` and friends are nominal (symbol-branded), so two
+    # vue copies make VueUse and app refs incompatible during typecheck
+    vue: 3.5.40
+    # Nuxt 4.5 needs unhead v3; @nuxt/ui still peers v2 (missing legacyPlugins).
+    "@unhead/vue": 3.2.3
+    unhead: 3.2.3
     sharp: 0.34.5
     typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
     vite: catalog:vite-plus

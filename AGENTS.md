@@ -55,15 +55,13 @@
 
 ## Auth and Feedback
 
-- Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider (scopes `guilds`, `guilds.members.read`, `email`), rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
-- `server/auth.config.ts` builds its `secondaryStorage` via `createAuthSecondaryStorage()` from `server/utils/auth-rate-limit-storage.ts`, which adapts a Nitro/unstorage mount to better-auth's `SecondaryStorage` shape and adds an `increment()` with an in-process keyed mutex (mirroring `server/utils/wrappedEventHandler.ts`) so better-auth's fixed-window rate limiter gets a single-step atomic-ish counter instead of its non-atomic get-then-set fallback
+- Authentication is **clientOnly** against the WolfStar bot Better Auth server (`auth.clientOnly: true`). There is no local `server/auth.config.ts`, no Nuxt `/api/auth/**`, and no `serverAuth()` / `requireUserSession()` — see https://better-auth.nuxt.dev/guides/external-auth-backend
+- `app/auth.config.ts` uses `defineClientAuth()` with `baseURL` = `runtimeConfig.public.apiBaseUrl` (bot origin). Keep `NUXT_PUBLIC_SITE_URL` as the frontend origin
+- Login (`app/pages/oauth/login.vue`) calls `useAuthClient().signIn.social({ provider: "discord" })` with absolute frontend `callbackURL` / `errorCallbackURL` so redirects land on this site, not the bot
 - Mock authentication in Nuxt component tests with `mockAuth()` from `test/nuxt/utils/auth.ts` (wraps `mockNuxtImport("useUserSession", ...)` plus an `$authorization` provide fallback) instead of hand-rolling `useUserSession`/`$authorization` mocks per spec
-- There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
-- `server/middleware/oauth-callback.ts` + `server/utils/oauth-callback.ts` (`resolveOAuthProviderCallbackRedirect()`) redirect Discord's response at `/oauth/callback` to the better-auth callback path when a `state` query param is present; plain browser navigations to `/oauth/callback` (no `state`) fall through to the Vue callback page at `app/pages/oauth/callback.vue`
-- `server/api/auth/refresh.get.ts` refreshes the Discord access token via `refreshSessionTokens()` in `server/utils/oauth-tokens.ts`, which wraps better-auth's `auth.api.getAccessToken()` / `auth.api.refreshToken()`
-- Server code reads the current user/tokens through `event.context.$authorization` (`resolveServerUser()`, `resolveServerTokens()`), wired up in `server/plugins/authorization-resolver.ts`. The `AuthUser` type comes from `#nuxt-better-auth` (declared in `shared/types/auth.d.ts`) — there is no more `#auth-utils` `User` type
-- Client code still uses the `useUserSession()` composable (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) — `@onmax/nuxt-better-auth` ships a compatible API, so existing call sites didn't need to change shape
-- `useSessionRefresh()` (`app/composables/useSessionRefresh.ts`) calls `/api/auth/refresh` then `fetchSession()` on mount and whenever the tab regains visibility
+- `server/plugins/authorization-resolver.ts` always resolves `null` user/tokens (no SSR session hydration). Authenticated bot data is fetched from the browser via `$api` with `credentials: "include"`
+- Client code uses `useUserSession()` (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) against the bot auth origin
+- `useSessionRefresh()` only calls `fetchSession()` (no Nuxt `/api/auth/refresh`)
 - Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
 - Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
 
@@ -184,7 +182,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 
 - **Build issues:** Clear `.nuxt`, `.output`, and `node_modules/.cache`, then rebuild
 - **Prisma types stale:** Run `pnpm prisma:generate` after schema changes
-- **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URL` matches Discord Developer Portal exactly
+- **OAuth redirect fails:** Discord callback must hit the bot Better Auth URL (e.g. `http://localhost:8282/api/auth/callback/discord`); the bot must list this frontend origin in `trustedOrigins` / CORS with credentials
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
 - **Duplicate/incompatible `vue`, `discord-api-types`, or `@unhead/vue`/`unhead` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck

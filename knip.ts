@@ -20,17 +20,14 @@ const config: KnipConfig = {
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
 				"app/components/content/**/*.vue",
-				/** Loaded by @onmax/nuxt-better-auth via #auth/server and #auth/client virtual aliases */
+				/** Loaded by @onmax/nuxt-better-auth via #auth/client (clientOnly mode) */
 				"app/auth.config.ts",
-				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
 				"shared/types/auth.d.ts",
-				/** Aliased in vite.config.ts for #server/database/generated/client in tests, not imported directly */
-				"test/__stubs__/prisma-generated-client.ts",
 			],
 			project: [
-				/** css/mdx/prisma are handled by registered compilers, so include them here */
-				"**/*.{ts,vue,cjs,mjs,css,mdx,prisma}",
+				/** css/mdx are handled by registered compilers, so include them here */
+				"**/*.{ts,vue,cjs,mjs,css,mdx}",
 				"!test/fixtures/**",
 				"!test/test-utils/**",
 				"!test/e2e/helpers/**",

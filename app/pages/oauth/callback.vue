@@ -25,7 +25,7 @@
 			</OauthStatusPanel>
 		</template>
 		<ClientOnly v-else>
-			<template v-if="isError">
+			<template v-if="isError && !isRetryingSilentAuth">
 				<OauthStatusPanel
 					tone="error"
 					:title="t('auth.oauth.sign_in_failed_title')"
@@ -85,6 +85,13 @@
 </template>
 
 <script setup lang="ts">
+import {
+	consumeBotOauthNext,
+	decodeBotOauthState,
+	isBotOauthSilentAuthError,
+	peekBotOauthNext,
+	rememberBotOauthNext,
+} from "#shared/utils/bot-oauth";
 import { promiseTimeout } from "@vueuse/core";
 
 definePageMeta({
@@ -97,24 +104,97 @@ const { localizeAuthError } = useAuthErrorMessage();
 const route = useRoute();
 const nextParam = useRouteQuery("next", "/", { transform: String });
 const isSessionMissing = ref(false);
+const isRetryingSilentAuth = ref(false);
 
-// Better Auth has already completed the Discord code exchange and set the
-// session cookie server-side before redirecting the browser here.
+// Better Auth already set the session cookie unless this is the sapphire hop
+// (`?code=` without Better Auth `state`).
 const { user, ready, loggedIn, fetchSession } = useUserSession();
 
-const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
-const isError = computed(() => Boolean(route.query.error));
+const oauthCode = computed(() => {
+	const value = route.query.code;
+	const code = Array.isArray(value) ? value[0] : value;
+	return typeof code === "string" && code.length > 0 ? code : null;
+});
+
+const oauthState = computed(() => {
+	const value = route.query.state;
+	const state = Array.isArray(value) ? value[0] : value;
+	return typeof state === "string" && state.length > 0 ? state : null;
+});
+
+const hasCallbackParams = computed(() =>
+	Boolean(route.query.next || route.query.error || oauthCode.value),
+);
+const isError = computed(() => Boolean(route.query.error) && !oauthCode.value);
 const isSessionLoading = ref(!isError.value);
 const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
 
 onMounted(() => {
-	if (!isError.value) {
-		void completeSignIn();
-	}
+	void completeSignIn();
 });
+
+function resolvePostLoginNext(): string {
+	const fromState = decodeBotOauthState(oauthState.value);
+	const fromQuery = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
+	return consumeBotOauthNext(fromState ?? fromQuery);
+}
+
+async function redirectToPostLoginNext(): Promise<void> {
+	isSessionLoading.value = false;
+	await promiseTimeout(seconds(2));
+	await navigateTo(resolvePostLoginNext(), {
+		external: true,
+		replace: true,
+	});
+}
 
 async function completeSignIn() {
 	try {
+		// Sapphire hop: exchange Discord code for `SAPPHIRE_AUTH` on the bot origin.
+		// Best-effort — Better Auth already owns the dashboard session, so a bot
+		// cookie failure must not strand the user on this page.
+		if (oauthCode.value) {
+			try {
+				await completeBotOauthCallback(oauthCode.value);
+			} catch (error) {
+				log.error({
+					tag: "oauth:callback",
+					error: error instanceof Error ? error.message : String(error),
+				});
+			}
+
+			await fetchSession({ force: true });
+
+			if (!loggedIn.value) {
+				isSessionMissing.value = true;
+				return;
+			}
+
+			await redirectToPostLoginNext();
+			return;
+		}
+
+		const discordError = Array.isArray(route.query.error)
+			? route.query.error[0]
+			: route.query.error;
+		if (typeof discordError === "string" && discordError.length > 0) {
+			// Retry silent-auth failures with consent when a post-login redirect is pending.
+			const pendingNext =
+				peekBotOauthNext() ??
+				decodeBotOauthState(oauthState.value) ??
+				(isSafeRedirectPath(nextParam.value) ? nextParam.value : null);
+			if (isBotOauthSilentAuthError(discordError) && pendingNext) {
+				isRetryingSilentAuth.value = true;
+				rememberBotOauthNext(pendingNext);
+				await navigateTo(buildBotOauthAuthorizeUrl("consent", pendingNext), {
+					external: true,
+					replace: true,
+				});
+				return;
+			}
+			return;
+		}
+
 		await fetchSession({ force: true });
 
 		if (!loggedIn.value) {
@@ -122,27 +202,40 @@ async function completeSignIn() {
 			return;
 		}
 
-		// Session is ready: stop showing the loading state now so the welcome
-		// banner is visible during the delay below, instead of only appearing
-		// after navigation has already started.
-		isSessionLoading.value = false;
-
-		await promiseTimeout(seconds(2));
-
 		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
 
-		// Full page navigation ensures SSR reads the fresh session cookie, so the
-		// target page renders with the correct authenticated state.
-		await navigateTo(safeNext, {
-			external: true,
-			replace: true,
-		});
+		// Bridge a Discord code to the bot API when `SAPPHIRE_AUTH` is missing.
+		if (!(await hasBotOauthSession())) {
+			rememberBotOauthNext(safeNext);
+			await navigateTo(buildBotOauthAuthorizeUrl("none", safeNext), {
+				external: true,
+				replace: true,
+			});
+			return;
+		}
+
+		await redirectToPostLoginNext();
 	} catch (error) {
-		isSessionMissing.value = true;
 		log.error({
 			tag: "oauth:callback",
 			error: error instanceof Error ? error.message : String(error),
 		});
+		// Prefer landing the user over a dead-end Welcome banner when BA session exists.
+		if (loggedIn.value) {
+			try {
+				await redirectToPostLoginNext();
+				return;
+			} catch (redirectError) {
+				log.error({
+					tag: "oauth:callback",
+					error:
+						redirectError instanceof Error
+							? redirectError.message
+							: String(redirectError),
+				});
+			}
+		}
+		isSessionMissing.value = true;
 	} finally {
 		isSessionLoading.value = false;
 	}

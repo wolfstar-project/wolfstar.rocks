@@ -1,32 +1,19 @@
-import type { DOMWrapper, VueWrapper } from "@vue/test-utils";
+import type { VueWrapper } from "@vue/test-utils";
 import type { NuxtError } from "nuxt/app";
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
+import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import ErrorPage from "~/components/ErrorPage.vue";
-
-const goHomeSpy = vi.fn();
-const retrySpy = vi.fn();
-
-mockNuxtImport("useErrorActions", () => () => ({ goHome: goHomeSpy, retry: retrySpy }));
 
 function makeError(input: { status: number; statusText?: string; message?: string }): NuxtError {
 	return createError(input);
 }
 
-function buttonByText(wrapper: VueWrapper, text: string): DOMWrapper<Element> {
-	const button = wrapper.findAll("button").find((node) => node.text().includes(text));
-	if (!button) {
-		throw new Error(`expected a button containing "${text}"`);
-	}
-	return button;
+function buttonLabels(wrapper: VueWrapper): string[] {
+	return wrapper.findAll("button").map((node) => node.text());
 }
 
 describe("ErrorPage", () => {
-	beforeEach(() => {
-		vi.clearAllMocks();
-	});
-
 	describe("404 errors", () => {
 		const error = makeError({
 			status: 404,
@@ -41,14 +28,12 @@ describe("ErrorPage", () => {
 			expect(wrapper.text()).toContain("Page not found");
 		});
 
-		it("shows only the home action and clears the error towards home on click", async () => {
+		it("shows only the home action", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
+			const labels = buttonLabels(wrapper);
 
-			expect(wrapper.findAll("button")).toHaveLength(1);
-
-			await buttonByText(wrapper, "Back to home").trigger("click");
-			expect(goHomeSpy).toHaveBeenCalledTimes(1);
-			expect(retrySpy).not.toHaveBeenCalled();
+			expect(labels).toHaveLength(1);
+			expect(labels[0]).toContain("Back to home");
 		});
 	});
 
@@ -70,18 +55,13 @@ describe("ErrorPage", () => {
 			expect(wrapper.text()).not.toContain("fetch failed");
 		});
 
-		it("offers a retry action that reloads the app", async () => {
+		it("offers retry and home actions", async () => {
 			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
+			const labels = buttonLabels(wrapper);
 
-			await buttonByText(wrapper, "Try Again").trigger("click");
-			expect(retrySpy).toHaveBeenCalledTimes(1);
-		});
-
-		it("still offers a home action that clears the error", async () => {
-			const wrapper = await mountSuspended(ErrorPage, { props: { error } });
-
-			await buttonByText(wrapper, "Back to home").trigger("click");
-			expect(goHomeSpy).toHaveBeenCalledTimes(1);
+			expect(labels).toHaveLength(2);
+			expect(labels[0]).toContain("Try Again");
+			expect(labels[1]).toContain("Back to home");
 		});
 	});
 

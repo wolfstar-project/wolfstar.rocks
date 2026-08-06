@@ -128,7 +128,6 @@ const detail = computed(() => {
 	return message;
 });
 
-
 const icon = computed(() => {
 	if (isNotFound.value) {
 		return "ph:compass";
@@ -166,5 +165,11 @@ const ui = computed(() => ({
 	links: "mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center",
 }));
 
-const { goHome, retry } = useErrorActions();
+async function goHome() {
+	await clearError({ redirect: "/" });
+}
+
+async function retry() {
+	await reloadNuxtApp();
+}
 </script>

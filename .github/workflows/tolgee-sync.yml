@@ -27,24 +27,22 @@ jobs:
           # The push step sets an authenticated remote from WOLFSTAR_TOKEN
           persist-credentials: false
 
-      - name: Install pnpm and Node.js v24
-        uses: pnpm/setup@c9883cc79df532ad1a7b81bf9ab944ceb090d65c # v2.0.0
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
         with:
-          runtime: node@24
+          node-version: lts/*
           cache: true
-          # Install is run explicitly below so it can skip lifecycle scripts
-          install: false
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
+          sfw: true
+          # root only, no scripts
+          run-install: |
+            - args: ["--filter", ".", "--ignore-scripts"]
 
       - name: Pull translations from Tolgee
         env:
           TOLGEE_API_KEY: ${{ secrets.TOLGEE_API_KEY }}
-        # `pnpm tolgee:pull` runs the CLI (config: .tolgeerc.cjs) and then
+        # `tolgee:pull` runs the CLI (config: .tolgeerc.cjs) and then
         # scripts/tolgee-pull-remap.ts, which remaps Tolgee language tags
         # (cs, zh-Hans, …) onto the Nuxt locale directories under i18n/locales.
-        run: pnpm tolgee:pull
+        run: vp run tolgee:pull
 
       - name: Commit any changes and create a pull request
         env:

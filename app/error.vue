@@ -24,7 +24,10 @@ const { error } = defineProps<{
 	error: NuxtError;
 }>();
 
-const { t } = useI18n();
+// error.vue replaces the app root on fatal errors — ensure the active locale
+// (including the dedicated errors feature file) is loaded before we translate.
+const { t, locale, loadLocaleMessages } = useI18n({ useScope: "global" });
+await loadLocaleMessages(locale.value);
 
 const statusCode = computed(() => resolveErrorStatus(error));
 const isNotFound = computed(() => isNotFoundStatus(statusCode.value));

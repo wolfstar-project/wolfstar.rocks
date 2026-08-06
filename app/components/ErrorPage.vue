@@ -85,7 +85,7 @@ const { error: errorRaw } = defineProps<{
 	error: NuxtError;
 }>();
 
-const { t } = useI18n();
+const { t } = useI18n({ useScope: "global" });
 
 const status = computed(() => resolveErrorStatus(errorRaw));
 const isNotFound = computed(() => isNotFoundStatus(status.value));

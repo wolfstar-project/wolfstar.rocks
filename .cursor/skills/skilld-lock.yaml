@@ -73,8 +73,9 @@ skills:
   nuxt-ui-skilld:
     packageName: nuxt-ui
     version: 4.10.0
+    packages: "nuxt-ui@4.10.0"
     repo: nuxt/ui
-    source: "https://github.com/nuxt/ui/tree/v4.10.0/docs"
+    source: "https://ui.nuxt.com/llms.txt"
     syncedAt: 2026-08-06
     generator: skilld
   vueuse-functions:
@@ -97,4 +98,46 @@ skills:
     syncedAt: 2026-08-06
     generator: external
     path: harlan-agent-kit/skills/nuxt-frontend-review
+    ref: main
+  accessibility:
+    repo: addyosmani/web-quality-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/accessibility
+    ref: main
+  best-practices:
+    repo: addyosmani/web-quality-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/best-practices
+    ref: main
+  core-web-vitals:
+    repo: addyosmani/web-quality-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/core-web-vitals
+    ref: main
+  performance:
+    repo: addyosmani/web-quality-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/performance
+    ref: main
+  seo:
+    repo: addyosmani/web-quality-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/seo
+    ref: main
+  web-quality-audit:
+    repo: addyosmani/web-quality-skills
+    source: github
+    syncedAt: 2026-08-06
+    generator: external
+    path: skills/web-quality-audit
     ref: main

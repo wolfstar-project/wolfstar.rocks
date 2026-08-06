@@ -61,13 +61,15 @@
 					</p>
 				</div>
 
-				<div
+				<aside
 					class="home-hero-brief animate-fade-in-up-safe [animation-delay:0.08s]"
 					aria-label="WolfStar capability summary"
 				>
 					<div class="home-hero-brief-header">
 						<IconsWolfstar class="size-11 text-primary" aria-hidden="true" />
-						<span class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase">
+						<span
+							class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase"
+						>
 							What your team gets
 						</span>
 					</div>
@@ -85,7 +87,7 @@
 							<dd>Roles, channels, events, commands, and filters</dd>
 						</div>
 					</dl>
-				</div>
+				</aside>
 			</div>
 		</Container>
 	</section>

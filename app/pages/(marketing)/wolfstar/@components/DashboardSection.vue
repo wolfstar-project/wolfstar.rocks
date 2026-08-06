@@ -6,7 +6,9 @@
 		spacing="none"
 		class="py-28"
 	>
-		<div class="grid items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20">
+		<div
+			class="grid items-start gap-14 lg:grid-cols-[minmax(0,0.8fr)_minmax(28rem,1.2fr)] lg:gap-20"
+		>
 			<div class="lg:sticky lg:top-28">
 				<p
 					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
@@ -71,7 +73,9 @@
 						<span class="dashboard-index-number">03</span>
 						<div>
 							<h3>Command history</h3>
-							<p>Review command names, outcomes, members, dates, and search matches.</p>
+							<p>
+								Review command names, outcomes, members, dates, and search matches.
+							</p>
 						</div>
 					</li>
 					<li class="dashboard-index-row">

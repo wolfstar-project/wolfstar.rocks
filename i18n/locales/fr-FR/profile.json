@@ -1,4 +1,5 @@
 {
+	"$schema": "../../schemas/profile.schema.json",
 	"profile": {
 		"title": "Profile",
 		"seo_description": "Manage your profile, servers and settings",
@@ -33,6 +34,5 @@
 		"no_matching_description": "Try adjusting your search terms or filters.",
 		"reload_page": "Reload Page",
 		"search_matching": "matching \"{query}\""
-	},
-	"$schema": "../../schemas/profile.schema.json"
+	}
 }

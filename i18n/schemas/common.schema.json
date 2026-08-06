@@ -58,6 +58,9 @@
 		"header": {
 			"type": "object",
 			"properties": {
+				"brand": {
+					"type": "string"
+				},
 				"site_header": {
 					"type": "string"
 				},
@@ -165,6 +168,9 @@
 				},
 				"main_content": {
 					"type": "string"
+				},
+				"scroll_to_top": {
+					"type": "string"
 				}
 			},
 			"additionalProperties": false
@@ -224,6 +230,15 @@
 					"type": "string"
 				},
 				"na": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"blog": {
+			"type": "object",
+			"properties": {
+				"rss": {
 					"type": "string"
 				}
 			},

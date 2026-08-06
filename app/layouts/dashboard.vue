@@ -473,62 +473,61 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
+	const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
 		body: {
 			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-		},
-		transform: (response: string) => {
-			try {
-				return JSON.parse(response);
-			} catch (error) {
-				log.error({
-					tag: "wolfstar:dashboard",
-					message: `Failed to parse response from settings update for guild Id: ${guildId.value}`,
-					error: parseError(error),
-				});
-				throw createError({
-					message: t("dashboard.update_failed_message"),
-					why: t("dashboard.update_failed_why"),
-					status: 500,
-					fix: t("dashboard.update_failed_fix"),
-					cause: error as Error,
-				});
-			}
 		},
 		method: "PATCH",
 	});
 
-	if (!data.value) {
+	let data: GuildData;
+	try {
+		data = (typeof response === "string" ? JSON.parse(response) : response) as GuildData;
+	} catch (error) {
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: `Failed to parse response from settings update for guild Id: ${guildId.value}`,
+			error: parseError(error),
+		});
+		throw createError({
+			message: t("dashboard.update_failed_message"),
+			why: t("dashboard.update_failed_why"),
+			status: 500,
+			fix: t("dashboard.update_failed_fix"),
+			cause: error as Error,
+		});
+	}
+
+	if (isNullOrUndefined(data) || objectValues(data).length === 0) {
 		return;
 	}
 
-	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
-		if (!document.startViewTransition || effectiveReduceMotion.value) {
-			setGuildSettings(data.value!);
-			setGuildSettingsChanges(undefined);
-		} else {
-			if (document.activeViewTransition) {
-				document.activeViewTransition.skipTransition();
-			}
-			document.startViewTransition(async () => {
-				setGuildSettings(data.value!);
-				setGuildSettingsChanges(undefined);
-				await nextTick();
-			});
+	const savedSettings = data;
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		setGuildSettings(savedSettings);
+		setGuildSettingsChanges(undefined);
+	} else {
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
 		}
-
-		log.info(
-			"wolfstar:dashboard",
-			`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
-		);
-
-		toast.add({
-			color: "success",
-			description: t("dashboard.settings_saved_description"),
-			icon: "i-heroicons-check-circle",
-			title: t("dashboard.settings_saved_title"),
+		document.startViewTransition(async () => {
+			setGuildSettings(savedSettings);
+			setGuildSettingsChanges(undefined);
+			await nextTick();
 		});
 	}
+
+	log.info(
+		"wolfstar:dashboard",
+		`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+	);
+
+	toast.add({
+		color: "success",
+		description: t("dashboard.settings_saved_description"),
+		icon: "i-heroicons-check-circle",
+		title: t("dashboard.settings_saved_title"),
+	});
 }
 
 function resetChanges() {

@@ -480,29 +480,28 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
-		body: {
-			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-		},
-		method: "PATCH",
-	});
-
 	let data: GuildData;
 	try {
+		const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
+			body: {
+				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
+			},
+			method: "PATCH",
+		});
 		data = (typeof response === "string" ? JSON.parse(response) : response) as GuildData;
 	} catch (error) {
 		log.error({
 			tag: "wolfstar:dashboard",
-			message: `Failed to parse response from settings update for guild Id: ${guildId.value}`,
+			message: `Failed to save settings update for guild Id: ${guildId.value}`,
 			error: parseError(error),
 		});
-		throw createError({
-			message: t("dashboard.update_failed_message"),
-			why: t("dashboard.update_failed_why"),
-			status: 500,
-			fix: t("dashboard.update_failed_fix"),
-			cause: error as Error,
+		toast.add({
+			color: "error",
+			title: t("dashboard.update_failed_message"),
+			description: `${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
+			icon: "heroicons:x-circle",
 		});
+		return;
 	}
 
 	if (isNullOrUndefined(data) || objectValues(data).length === 0) {

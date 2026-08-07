@@ -1,47 +1,84 @@
 <template>
-	<div class="container mx-auto px-4 py-8">
-		<h1 class="sr-only">OAuth Callback</h1>
-		<h2 class="sr-only">Authentication Status</h2>
-		<template v-if="!code">
-			<UAlert variant="solid" color="warning" title="Login Required" icon="twemoji:warning">
+	<div>
+		<h1 class="sr-only">{{ t("auth.oauth.callback_sr_title") }}</h1>
+		<h2 class="sr-only">{{ t("auth.oauth.callback_sr_status") }}</h2>
+		<template v-if="!hasCallbackParams">
+			<OauthStatusPanel
+				tone="warning"
+				:title="t('auth.oauth.login_required_title')"
+				icon="heroicons:exclamation-triangle"
+			>
 				<template #description>
-					This page can't be accessed directly. Please
-					<ULink to="/login" class="font-medium underline">sign in</ULink>
-					to continue.
+					<i18n-t keypath="auth.oauth.login_required_description" tag="span">
+						<template #link>
+							<ULink to="/login" class="font-medium underline">{{
+								t("auth.oauth.login_required_link")
+							}}</ULink>
+						</template>
+					</i18n-t>
 				</template>
 				<template #actions>
-					<UButton color="neutral" variant="ghost" to="/login" size="sm">
-						Go to Login
+					<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+						{{ t("auth.oauth.go_to_login") }}
 					</UButton>
 				</template>
-			</UAlert>
+			</OauthStatusPanel>
 		</template>
 		<ClientOnly v-else>
-			<template v-if="isPending">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
-					<template #description> Connecting to Discord... </template>
-				</UAlert>
-			</template>
-			<template v-else-if="isError">
-				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
+			<template v-if="isError">
+				<OauthStatusPanel
+					tone="error"
+					:title="t('auth.oauth.sign_in_failed_title')"
+					icon="heroicons:x-circle"
+				>
 					<template #description>
 						{{ errorMessage }}
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
-							Try Again
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+							{{ t("auth.oauth.try_again") }}
 						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</template>
-			<template v-else-if="isSuccess">
-				<UAlert
-					color="success"
-					icon="twemoji:check-mark"
-					:title="`Welcome ${user!.username}!`"
+			<template v-else-if="isSessionLoading || !ready">
+				<OauthStatusPanel
+					tone="info"
+					loading
+					:title="t('auth.oauth.signing_in_title')"
+					icon="ph:discord-logo-fill"
 				>
-					<template #description> Redirecting you to the dashboard... </template>
-				</UAlert>
+					<template #description>
+						{{ t("auth.oauth.connecting_discord") }}
+					</template>
+				</OauthStatusPanel>
+			</template>
+			<template v-else-if="user">
+				<OauthStatusPanel
+					tone="success"
+					:title="t('auth.oauth.welcome_title', { name: user.name })"
+					icon="heroicons:check-circle"
+				>
+					<template #description>
+						{{ t("auth.oauth.redirecting_dashboard") }}
+					</template>
+				</OauthStatusPanel>
+			</template>
+			<template v-else-if="isSessionMissing">
+				<OauthStatusPanel
+					tone="error"
+					:title="t('auth.oauth.session_not_found_title')"
+					icon="heroicons:x-circle"
+				>
+					<template #description>
+						{{ t("auth.oauth.session_not_found_description") }}
+					</template>
+					<template #actions>
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+							{{ t("auth.oauth.try_again") }}
+						</UButton>
+					</template>
+				</OauthStatusPanel>
 			</template>
 		</ClientOnly>
 	</div>
@@ -54,74 +91,68 @@ definePageMeta({
 	viewTransition: false,
 });
 
-const code = useRouteQuery("code", null, { transform: String });
-const state = useRouteQuery("state", undefined, { transform: String });
-const { user, refreshSession } = useAuth();
-const log = useLogger("oauth:callback");
+const { t } = useI18n();
+const { localizeAuthError } = useAuthErrorMessage();
 
 const route = useRoute();
+const nextParam = useRouteQuery("next", "/", { transform: String });
+const isSessionMissing = ref(false);
 
-const { data, error, status, execute } = useFetch<{ redirectUrl: string }>("/api/auth/discord", {
-	immediate: false,
-	key: "callback",
-	method: "GET",
-	query: {
-		code,
-		state,
-	},
-	server: false,
+// Better Auth has already completed the Discord code exchange and set the
+// session cookie server-side before redirecting the browser here.
+const { user, ready, loggedIn, fetchSession } = useUserSession();
+
+const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
+const isError = computed(() => Boolean(route.query.error));
+const isSessionLoading = ref(!isError.value);
+const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
+
+onMounted(() => {
+	if (!isError.value) {
+		void completeSignIn();
+	}
 });
 
-if (import.meta.client && code) {
-	void performCall().catch(log.error);
-}
+async function completeSignIn() {
+	try {
+		await fetchSession({ force: true });
 
-async function performCall() {
-	// The exchange endpoint atomically verifies the CSRF state BEFORE trading
-	// the code for tokens and creating a session, and returns the safe
-	// destination URL stored during initiation.
-	await execute();
+		if (!loggedIn.value) {
+			isSessionMissing.value = true;
+			return;
+		}
 
-	// Stop if state validation or the token exchange failed — the error UI
-	// will be shown and no session was created
-	if (error.value) {
-		return;
+		// Session is ready: stop showing the loading state now so the welcome
+		// banner is visible during the delay below, instead of only appearing
+		// after navigation has already started.
+		isSessionLoading.value = false;
+
+		await promiseTimeout(seconds(2));
+
+		const safeNext = isSafeRedirectPath(nextParam.value) ? nextParam.value : "/";
+
+		// Full page navigation ensures SSR reads the fresh session cookie, so the
+		// target page renders with the correct authenticated state.
+		await navigateTo(safeNext, {
+			external: true,
+			replace: true,
+		});
+	} catch (error) {
+		isSessionMissing.value = true;
+		log.error({
+			tag: "oauth:callback",
+			error: error instanceof Error ? error.message : String(error),
+		});
+	} finally {
+		isSessionLoading.value = false;
 	}
-
-	// Refresh client-side session state so the user data is reactive immediately
-	await refreshSession();
-
-	await promiseTimeout(seconds(2));
-
-	const redirectUrl = data.value?.redirectUrl ?? "/";
-
-	// Full page navigation ensures SSR reads the fresh session cookie,
-	// so the target page renders with the correct authenticated state.
-	await navigateTo(redirectUrl, {
-		external: true,
-		replace: true,
-	});
 }
-
-const errorMessage = computed(() => {
-	if (route.query.error) {
-		return route.query.error;
-	}
-
-	return error.value
-		? (error.value.message ?? error.value.cause)
-		: "Something went wrong while signing you in. Please try again.";
-});
-
-const isPending = computed(() => status.value === "pending");
-const isError = computed(() => status.value === "error");
-const isSuccess = computed(() => status.value === "success");
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({
-	ogDescription: "A landing page for the OAuth2.0 callback flow, use the Login button instead.",
-	ogTitle: "OAuth Callback",
+	ogDescription: t("auth.oauth.seo_og_description"),
+	ogTitle: t("auth.oauth.seo_og_title"),
 	robots: { none: true },
-	title: "Auth Callback",
+	title: t("auth.oauth.seo_title"),
 });
 </script>

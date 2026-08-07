@@ -18,6 +18,7 @@
 - Keep functions focused and manageable (generally under 50 lines)
 - Use error handling patterns consistently
 - Ensure you write strictly type-safe code, for example by ensuring you always check when accessing an array value by index
+- Type-aware Oxlint rules (tsgolint-backed, e.g. `@typescript-eslint/no-floating-promises`) run only via the opt-in `pnpm vp run lint:type-aware` task — they are not part of `pnpm lint:fix` or the CI `lint` gate yet
 - Never cast things to `any`
 
 ## Naming Conventions
@@ -43,6 +44,7 @@
 - Use the `onError` callback for error logging
 - Validate query strings with shared Valibot schemas from `shared/schemas/` via `getValidatedQuery(event, (body) => parse(Schema, body))`
 - For paginated guild log routes, use stable cache keys that include the guild id, route segment, and `url.search`
+- `defineWrappedResponseHandler`/`defineWrappedCachedResponseHandler` reject outdated browser sessions before auth, rate limiting, or cache resolution: `isClientOutdated()` from `nuxt-skew-protection/server` throws a 409 (with an `x-client-outdated` response header) so stale clients never consume quota or read data shaped for a newer server build
 
 ## Vue Component Patterns
 
@@ -53,8 +55,15 @@
 
 ## Auth and Feedback
 
-- `server/api/auth/discord.get.ts` requests the `guilds.members.read` and `email` scopes and handles both legs of the OAuth flow: with no `code` query param it initiates (sets HMAC-signed nonce/redirect cookies via `createOAuthState()`); with a `code` present it is the callback, which verifies and consumes the CSRF state via `verifyOAuthState()` in `server/utils/oauth-state.ts` **before** any code exchange, then returns `{ redirectUrl }`. There is no separate `verify-state` endpoint — do not reintroduce one
-- The `#auth-utils` `User` type includes `email: string | null`; always handle existing sessions where `user.email` is still `null`
+- Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider (scopes `guilds`, `guilds.members.read`, `email`), rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
+- `server/auth.config.ts` builds its `secondaryStorage` via `createAuthSecondaryStorage()` from `server/utils/auth-rate-limit-storage.ts`, which adapts a Nitro/unstorage mount to better-auth's `SecondaryStorage` shape and adds an `increment()` with an in-process keyed mutex (mirroring `server/utils/wrappedEventHandler.ts`) so better-auth's fixed-window rate limiter gets a single-step atomic-ish counter instead of its non-atomic get-then-set fallback
+- Mock authentication in Nuxt component tests with `mockAuth()` from `test/nuxt/utils/auth.ts` (wraps `mockNuxtImport("useUserSession", ...)` plus an `$authorization` provide fallback) instead of hand-rolling `useUserSession`/`$authorization` mocks per spec
+- There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
+- `server/middleware/oauth-callback.ts` + `server/utils/oauth-callback.ts` (`resolveOAuthProviderCallbackRedirect()`) redirect Discord's response at `/oauth/callback` to the better-auth callback path when a `state` query param is present; plain browser navigations to `/oauth/callback` (no `state`) fall through to the Vue callback page at `app/pages/oauth/callback.vue`
+- `server/api/auth/refresh.get.ts` refreshes the Discord access token via `refreshSessionTokens()` in `server/utils/oauth-tokens.ts`, which wraps better-auth's `auth.api.getAccessToken()` / `auth.api.refreshToken()`
+- Server code reads the current user/tokens through `event.context.$authorization` (`resolveServerUser()`, `resolveServerTokens()`), wired up in `server/plugins/authorization-resolver.ts`. The `AuthUser` type comes from `#nuxt-better-auth` (declared in `shared/types/auth.d.ts`) — there is no more `#auth-utils` `User` type
+- Client code still uses the `useUserSession()` composable (`user`, `loggedIn`, `ready`, `fetchSession()`, `signOut()`) — `@onmax/nuxt-better-auth` ships a compatible API, so existing call sites didn't need to change shape
+- `useSessionRefresh()` (`app/composables/useSessionRefresh.ts`) calls `/api/auth/refresh` then `fetchSession()` on mount and whenever the tab regains visibility
 - Feedback UI uses the custom Sentry feedback flow under `app/components/feedback/`
 - Keep feedback validation in `shared/schemas/feedback.ts` so forms and submit handlers share the same Valibot schema
 
@@ -71,6 +80,16 @@ pnpm knip:fix                    # Auto-fix unused files, exports, and dependenc
 pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
+pnpm vp run i18n:check           # Audit locale feature files against en/*
+pnpm i18n:check:fix              # Sync locale keys (empty placeholders for missing)
+pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
+pnpm i18n:report:fix             # Remove unused keys from all locale feature files
+pnpm vp run i18n:schema          # Regenerate i18n/schemas/*.schema.json from en/*
+pnpm vp run build:lunaria        # Build Lunaria dashboard + status.json
+pnpm tolgee:push                 # Push extracted strings to Tolgee (project 33768)
+pnpm tolgee:pull                 # Pull translations from Tolgee and remap into i18n/locales/
+pnpm tolgee:ensure-languages     # Create any Tolgee project languages missing from .tolgeerc.cjs
+pnpm tolgee:extract              # Print strings the Tolgee CLI would extract (dry run)
 pnpm test                        # Run all Vitest projects
 pnpm test:unit                   # Run unit tests
 pnpm test:nuxt                   # Nuxt component/API tests
@@ -91,6 +110,7 @@ pnpm build-storybook             # Build static Storybook output
 pnpm chromatic                   # Publish Storybook to Chromatic for visual review
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
+pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
 pnpm prisma:migrate:dev:create   # Create a migration without applying it
@@ -105,6 +125,14 @@ pnpm prisma:seed                 # Seed the database
 pnpm prisma:studio               # Visual database editor (http://localhost:5555)
 pnpm update:interactive          # Interactive dependency updates with taze
 ```
+
+## Localization (i18n)
+
+- `i18n/locales/en/*.json` is the source of truth; every other locale carries the same key set
+- **Untranslated keys are empty strings, never a copy of the English text** — an English copy is indistinguishable from a real translation for Tolgee, Lunaria and translators, and it hides regional variants (`es-419` merges `es/*` then `es-419/*`)
+- `config/i18n-empty-placeholders.ts` provides the Vite plugin (registered in `nuxt.config.ts` under `vite.plugins`) that drops empty leaves from `i18n/locales/**/*.json` at build time, so vue-i18n falls back to `en-US` instead of rendering `""`. Locale _types_ are still generated from the on-disk files, so stripped keys stay valid in `$t()` call sites
+- `pnpm i18n:check:fix` (`scripts/compare-translations.ts`) adds missing keys as `""` and removes extra keys
+- `.tolgeerc.cjs` pulls `states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"]`; without `UNTRANSLATED`, `scripts/tolgee-pull-remap.ts` would wipe untranslated keys from disk on every sync (see wolfstar-project/wolfstar#240)
 
 ## Prisma and Database Conventions
 
@@ -167,7 +195,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - **OAuth redirect fails:** Ensure `.env` `NUXT_OAUTH_DISCORD_REDIRECT_URL` matches Discord Developer Portal exactly
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
-- **Duplicate/incompatible `vue` or `discord-api-types` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
+- **Duplicate/incompatible `vue`, `discord-api-types`, or `@unhead/vue`/`unhead` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
@@ -189,12 +217,12 @@ Defined in `shared/audit/actions.ts`:
 | --------------------------- | ------------------------------ | --------------------------------------------- |
 | `guildSettingsUpdate`       | `guild.settings.update`        | PATCH guild settings succeeds                 |
 | `guildSettingsAccessDenied` | `guild.settings.access-denied` | `canManage()` throws                          |
-| `userLogin`                 | `user.login`                   | Discord OAuth `onSuccess`                     |
-| `userLogout`                | `user.logout`                  | Session cleared due to missing/invalid tokens |
-| `sessionRefresh`            | `session.refresh`              | Token refresh succeeds or fails               |
-| `oauthStateInvalid`         | `oauth.state.invalid`          | CSRF state verification fails                 |
+| `userLogin`                 | `user.login`                   | Not currently invoked anywhere in server code |
+| `userLogout`                | `user.logout`                  | Not currently invoked anywhere in server code |
+| `sessionRefresh`            | `session.refresh`              | Not currently invoked anywhere in server code |
+| `oauthStateInvalid`         | `oauth.state.invalid`          | Not currently invoked anywhere in server code |
 
-Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain.
+Only exported action creators are listed above. `command.executed` is currently an internal action-name constant; command history is read from `CommandLog`, not emitted through the audit hash chain. `userLogin`, `userLogout`, `sessionRefresh`, and `oauthStateInvalid` were wired to the pre-migration `nuxt-auth-utils` OAuth flow (`server/api/auth/discord.get.ts`, `server/utils/oauth-state.ts`); both files were deleted by the better-auth migration (#297) and nothing currently calls these action creators outside their own unit test. `server/middleware/evlog-auth-identify.ts` only identifies the request actor for enrichment — it does not emit audit events. Treat these four as a known gap (dead code or a missing re-wire) rather than assuming login/logout/refresh/CSRF-failure events are being recorded.
 
 ### Instrumentation Pattern
 
@@ -229,7 +257,7 @@ log.audit(
 - `shared/audit/actions.ts` — typed action creators
 - `shared/audit/envelope.ts` — canonical hash/envelope helpers
 - `shared/utils/audit-field-metadata.ts` — field labels and render metadata for dashboard-managed guild settings
-- `server/middleware/evlog-session-bridge.ts` — propagates `nuxt-auth-utils` session users into evlog context
+- `server/middleware/evlog-auth-identify.ts` — auto-identifies the request actor from the better-auth session via evlog's `createAuthMiddleware()` (`evlog/better-auth`, excludes `/api/auth/**`) so audit enrichers can resolve the actor without each handler calling `log.set({ user })` manually
 - `server/utils/audit/postgres-drain.ts` — Postgres sink with hash-chain (P2002 swallowed, P2034 retried 5x)
 - `server/utils/audit/actor-bridge.ts` — resolves actor from request context
 - `server/utils/audit/patch-to-changes.ts` — converts `auditDiff()` JSON patches into dashboard-friendly change groups
@@ -267,7 +295,7 @@ It checks:
 Files added to `ALLOW_LIST` in the test are permanently exempt. Current exemptions:
 
 - `app/components/OgImage/Page.takumi.vue` — Satori does not support `var()` references
-- `app/components/discord/*.vue` (message, embed, mention, reaction) — Discord brand fidelity requires Discord brand colors
+- `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, the `chat-input-command/` autocomplete family, and the `app-launcher/` family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
 
 ### Token Reference
 
@@ -281,6 +309,12 @@ Prefer these semantic classes before reaching for palette colors:
 | Error state          | `text-error`, `border-error`                           |
 | Gradient hero text   | `gradient-text-hero`, `gradient-text-cool`             |
 | Card surfaces        | `card-glass`, `card-glass-soft`, `card-glass-bordered` |
+
+<!-- nuxt-skill-hub:start -->
+
+Use the `nuxt-dashboard` skill as the Nuxt router/entrypoint for tasks in this repository.
+
+<!-- nuxt-skill-hub:end -->
 
 <!-- skilld -->
 

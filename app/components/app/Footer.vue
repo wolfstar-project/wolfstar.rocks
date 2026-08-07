@@ -1,78 +1,219 @@
 <template>
-	<USeparator
-		size="lg"
-		icon="custom:wolfstar"
-		:ui="{ border: 'border-[1px] border-base-300' }"
-		class="mt-24 p-10 content-visibility-auto"
-	/>
 	<UFooter
-		:ui="{ root: 'p-2 content-visibility-auto', top: 'border-default' }"
-		aria-label="Site footer"
+		:ui="{
+			root: 'p-2 content-visibility-auto bg-base-200',
+			top: 'border-default',
+		}"
+		:aria-label="t('footer.site_footer')"
 	>
 		<template #top>
-			<UContainer>
-				<UFooterColumns class="p-10" :columns aria-label="Footer navigation">
-					<template #right>
-						<ClientOnly>
-							<PwaInstallPrompt class="xl:hidden" />
-						</ClientOnly>
-						<div class="flex-auto"></div>
-						<UButton
-							label="Powered by Netlify"
-							to="https://www.netlify.com"
-							target="_blank"
-							rel="noopener noreferrer"
-							icon="simple-icons:netlify"
-							color="neutral"
-							variant="soft"
-							:ui="{ leadingIcon: 'bg-success' }"
-							aria-label="Powered by Netlify - opens in new tab"
-						/>
-					</template>
-				</UFooterColumns>
+			<UContainer class="relative overflow-hidden">
+				<!-- Decorative watermark: keep fully inside the padded brand area so overflow-hidden does not clip it -->
+				<icons-wolfstar
+					class="pointer-events-none absolute bottom-6 left-6 h-56 w-56 opacity-5"
+					role="presentation"
+					:aria-label="undefined"
+					aria-hidden="true"
+				/>
+				<div
+					class="relative grid grid-cols-1 gap-10 p-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]"
+				>
+					<div>
+						<div class="mb-3 flex items-center gap-3">
+							<div
+								class="w-10 rounded-full"
+								role="img"
+								:aria-label="t('footer.logo')"
+							>
+								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
+							</div>
+							<span class="font-bold">WolfStar</span>
+						</div>
+						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
+							{{ t("footer.tagline") }}
+						</p>
+						<nav
+							class="mt-4 flex items-center gap-1"
+							:aria-label="t('footer.social_links')"
+						>
+							<UButton
+								v-for="social of socialLinks"
+								:key="social.label"
+								:to="social.to"
+								target="_blank"
+								rel="noopener noreferrer"
+								:icon="social.icon"
+								:aria-label="social.ariaLabel"
+								color="neutral"
+								variant="ghost"
+								size="sm"
+							/>
+						</nav>
+						<div class="mt-6 flex flex-col items-start gap-3">
+							<ClientOnly>
+								<PwaInstallPrompt class="xl:hidden" />
+							</ClientOnly>
+							<UButton
+								:label="t('footer.powered_by_netlify')"
+								to="https://www.netlify.com"
+								target="_blank"
+								rel="noopener noreferrer"
+								icon="simple-icons:netlify"
+								color="neutral"
+								variant="soft"
+								:ui="{ leadingIcon: 'bg-success' }"
+								:aria-label="t('footer.powered_by_netlify_aria')"
+							/>
+						</div>
+					</div>
+					<nav
+						v-for="column of columns"
+						:key="column.label"
+						:aria-label="t('footer.column_links', { label: column.label })"
+					>
+						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
+							{{ column.label }}
+						</div>
+						<div class="flex flex-col gap-2.5">
+							<NuxtLink
+								v-for="link of column.children"
+								:key="link.label"
+								:to="link.to"
+								class="text-sm text-base-content/70 link-hover"
+							>
+								{{ link.label }}
+							</NuxtLink>
+						</div>
+					</nav>
+				</div>
 			</UContainer>
 		</template>
 
 		<template #left>
-			<div>
-				<div class="flex items-center gap-4">
-					<div class="w-10 rounded-full" role="img" aria-label="WolfStar logo">
-						<icons-wolfstar class="h-12 w-12" aria-hidden="true" />
-					</div>
-					<div>
-						<p class="font-semibold">WolfStar Project</p>
-					</div>
-					<div>
-						<p class="text-sm text-base-content/80">
-							Copyright © {{ currentYear }}. All rights reserved.
-						</p>
-					</div>
-				</div>
-
-				<div class="pl-14 sm:pl-12">
-					<BuildEnvironment :footer="true" :buildInfo />
-				</div>
-			</div>
+			<p class="text-sm text-base-content/80">
+				{{ t("footer.copyright", { year: currentYear }) }}
+			</p>
 		</template>
 		<template #right>
+			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
+			<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
+			<ClientOnly>
+				<ULocaleSelect
+					:model-value="locale"
+					:locales="uiLocales"
+					:aria-label="t('common.language')"
+					:content="{ side: 'top', align: 'end', sideOffset: 8 }"
+					size="sm"
+					color="neutral"
+					variant="ghost"
+					class="min-w-28"
+					:ui="{ content: 'min-w-fit' }"
+					@update:model-value="selectLocale"
+				/>
+				<template #fallback>
+					<div class="h-8 min-w-28" aria-hidden="true" />
+				</template>
+			</ClientOnly>
 			<ColorModeButton />
-
-			<UButton
-				to="https://repo.wolfstar.rocks"
-				target="_blank"
-				rel="noopener noreferrer"
-				icon="lucide:github"
-				aria-label="Visit WolfStar on GitHub - opens in new tab"
-				color="neutral"
-				variant="ghost"
-			/>
 		</template>
 	</UFooter>
 </template>
 
 <script setup lang="ts">
+import {
+	cs,
+	da,
+	de,
+	el,
+	en,
+	en_gb,
+	es,
+	fi,
+	fr,
+	hi,
+	hr,
+	hu,
+	id,
+	it,
+	ko,
+	lt,
+	nl,
+	pt,
+	ro,
+	ru,
+	tr,
+	uk,
+} from "@nuxt/ui/locale";
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+import { currentLocales } from "~~/config/i18n";
+
+const { locale, setLocale, t } = useI18n();
+const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
+
+/** Map app locale codes → Nuxt UI locale packs (codes remapped to match i18n). */
+const nuxtUiLocaleByCode: Record<string, typeof en> = {
+	"cs-CZ": { ...cs, code: "cs-CZ" },
+	"da-DK": { ...da, code: "da-DK" },
+	"de-DE": { ...de, code: "de-DE" },
+	"el-GR": { ...el, code: "el-GR" },
+	"en-GB": { ...en_gb, code: "en-GB" },
+	"en-US": { ...en, code: "en-US" },
+	"es-419": { ...es, code: "es-419" },
+	"es-ES": { ...es, code: "es-ES" },
+	"fi-FI": { ...fi, code: "fi-FI" },
+	"fr-FR": { ...fr, code: "fr-FR" },
+	"hi-IN": { ...hi, code: "hi-IN" },
+	"hr-HR": { ...hr, code: "hr-HR" },
+	"hu-HU": { ...hu, code: "hu-HU" },
+	"id-ID": { ...id, code: "id-ID" },
+	"it-IT": { ...it, code: "it-IT" },
+	"ko-KR": { ...ko, code: "ko-KR" },
+	"lt-LT": { ...lt, code: "lt-LT" },
+	"nl-NL": { ...nl, code: "nl-NL" },
+	"pt-PT": { ...pt, code: "pt-PT" },
+	"ro-RO": { ...ro, code: "ro-RO" },
+	"ru-RU": { ...ru, code: "ru-RU" },
+	"tr-TR": { ...tr, code: "tr-TR" },
+	"uk-UA": { ...uk, code: "uk-UA" },
+};
+
+const uiLocales = currentLocales.map((appLocale) => {
+	const pack = nuxtUiLocaleByCode[appLocale.code];
+	if (pack) return pack;
+	return Object.assign({}, en, {
+		code: appLocale.code,
+		name: appLocale.name ?? appLocale.code,
+	});
+});
+
+function selectLocale(code: string) {
+	if (!isAppLocaleCode(code)) return;
+	setPreferredLocale(code);
+	void setLocale(code);
+}
+
+const socialLinks = computed(() => [
+	{
+		ariaLabel: t("footer.github_aria"),
+		icon: "simple-icons:github",
+		label: t("footer.github"),
+		to: "https://repo.wolfstar.rocks",
+	},
+	{
+		ariaLabel: t("footer.discord_aria"),
+		icon: "simple-icons:discord",
+		label: t("footer.support_server"),
+		to: "https://join.wolfstar.rocks",
+	},
+	{
+		ariaLabel: t("footer.x_aria"),
+		icon: "simple-icons:x",
+		label: "X",
+		to: "https://x.com/wolfstarapp",
+	},
+]);
 
 // Use computed for year to ensure SSR consistency
 const currentYear = computed(() => new Date().getFullYear());

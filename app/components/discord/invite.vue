@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="mt-2 rounded-md bg-base-200 px-2 pt-2 pb-2 text-base-content drop-shadow-lg sm:px-4 sm:pb-4"
+		class="mt-2 rounded-md bg-base-200 px-2 pt-2 pb-2 font-whitney text-base-content drop-shadow-lg sm:px-4 sm:pb-4"
 	>
 		<span class="text-xs font-extrabold uppercase">You've been invited to join a server</span>
 		<div class="mt-2 flex">
@@ -37,10 +37,14 @@
 	</div>
 </template>
 
+<script lang="ts">
+interface InviteProps {
+	link: string;
+	online?: number;
+	members?: number;
+}
+</script>
+
 <script setup lang="ts">
-const {
-	link,
-	online = 0,
-	members = 0,
-} = defineProps<{ link: string; online?: number; members?: number }>();
+const { link, online = 0, members = 0 } = defineProps<InviteProps>();
 </script>

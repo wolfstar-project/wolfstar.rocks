@@ -1,4 +1,4 @@
-import type { UIColors } from "~/utils/constants";
+import type { UIColors } from "~/types/constants";
 import { colors } from "~/utils/constants";
 
 export default {

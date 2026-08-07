@@ -18,11 +18,24 @@ const ROOT = join(import.meta.dirname, "../../..");
 const ALLOW_LIST = new Set([
 	// Satori/Takumi requires resolved static colors (no var() support)
 	"app/components/OgImage/Page.takumi.vue",
+	"app/components/OgImage/BlogPost.takumi.vue",
+	"app/components/OgImage/Changelog.takumi.vue",
 	// Discord-domain components maintain Discord brand fidelity with scoped vars
 	"app/components/discord/message.vue",
+	"app/components/discord/message-reply.vue",
 	"app/components/discord/embed.vue",
 	"app/components/discord/mention.vue",
+	"app/components/discord/role.vue",
 	"app/components/discord/reaction.vue",
+	"app/components/discord/chat-input-command/index.vue",
+	"app/components/discord/chat-input-command/app-icon.vue",
+	"app/components/discord/chat-input-command/suggestion.vue",
+	"app/components/discord/chat-input-command/group.vue",
+	"app/components/discord/chat-input-command/matched.vue",
+	"app/components/discord/chat-input-command/suggestions.vue",
+	"app/components/discord/scrollbar.vue",
+	"app/components/discord/app-launcher/index.vue",
+	"app/components/discord/app-launcher/list-item.vue",
 ]);
 
 /** Tailwind color palette names that map to raw colors (not semantic tokens). */
@@ -118,34 +131,39 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 		const { templates, scripts, styles } = extractBlocks(source);
 
 		it(`${relPath} — no raw Tailwind palette classes in <template>`, () => {
+			const violations: string[] = [];
 			for (const { content, startLine } of templates) {
 				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
 					const match = line.match(TAILWIND_RAW_COLOR_RE);
 					if (match) {
-						expect.fail(
+						violations.push(
 							`${relPath}:${startLine + i} — raw Tailwind color class "${match[0]}" found. Use a semantic token (text-primary, bg-success, etc.) instead.`,
 						);
 					}
 				}
 			}
+			expect(violations).toEqual([]);
 		});
 
 		it(`${relPath} — no raw Tailwind palette classes in <script> string literals`, () => {
+			const violations: string[] = [];
 			for (const { content, startLine } of scripts) {
 				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
 					const match = line.match(TAILWIND_RAW_COLOR_RE);
 					if (match) {
-						expect.fail(
+						violations.push(
 							`${relPath}:${startLine + i} — raw Tailwind color class "${match[0]}" found in <script>. Use a semantic token (text-primary, bg-success, etc.) instead.`,
 						);
 					}
 				}
 			}
+			expect(violations).toEqual([]);
 		});
 
 		it(`${relPath} — no hex literals in <style>`, () => {
+			const violations: string[] = [];
 			for (const { content, startLine } of styles) {
 				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
@@ -153,15 +171,17 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 					if (isCssVarDecl) continue;
 
 					if (HEX_IN_STYLE_RE.test(line)) {
-						expect.fail(
+						violations.push(
 							`${relPath}:${startLine + i} — hardcoded hex color in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,
 						);
 					}
 				}
 			}
+			expect(violations).toEqual([]);
 		});
 
 		it(`${relPath} — no inline oklch/rgb/rgba in <style> (outside CSS var declarations)`, () => {
+			const violations: string[] = [];
 			for (const { content, startLine } of styles) {
 				const lines = content.split("\n");
 				for (const [i, line] of lines.entries()) {
@@ -184,11 +204,12 @@ describe("design-token guardrail: no hardcoded colors in .vue files", () => {
 					const isZeroChromaNeutral = /oklch\(\s*\d+(?:\.\d+)?%?\s+0\s+\d/.test(line);
 					if (isZeroChromaNeutral) continue;
 
-					expect.fail(
+					violations.push(
 						`${relPath}:${startLine + i} — inline color function in <style>: "${line.trim()}". Use a CSS custom property or semantic token instead.`,
 					);
 				}
 			}
+			expect(violations).toEqual([]);
 		});
 	}
 });

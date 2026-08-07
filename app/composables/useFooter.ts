@@ -1,84 +1,68 @@
 import type { FooterColumn } from "@nuxt/ui";
 
 export const useFooter = () => {
+	const { t } = useI18n();
+
 	const columns = computed<FooterColumn[]>(() => [
 		{
 			children: [
 				{
 					class: "link-hover",
-					icon: "ph:discord-logo-duotone",
-					label: "Support Server",
-					to: "https://chat.wolfstar.rocks",
-					ui: { linkLeadingIcon: "bg-indigo-500" },
+					label: t("footer.features"),
+					to: "/#features",
 				},
 				{
 					class: "link-hover",
-					icon: "ph:twitter-logo-duotone",
-					label: "Twitter",
-					to: "https://social.wolfstar.rocks/twitter",
-					ui: { linkLeadingIcon: "bg-sky-400" },
+					label: t("footer.other_apps"),
+					to: "/#apps",
 				},
 				{
 					class: "link-hover",
-					icon: "ph:github-logo-duotone",
-					label: "GitHub",
+					label: t("footer.changelog"),
+					to: "/changelog",
+				},
+			],
+			label: t("footer.product"),
+		},
+		{
+			children: [
+				{
+					class: "link-hover",
+					label: t("footer.support_server"),
+					to: "https://join.wolfstar.rocks",
+				},
+				{
+					class: "link-hover",
+					label: t("footer.github"),
 					to: "https://repo.wolfstar.rocks",
-					ui: { linkLeadingIcon: "bg-indigo-500" },
 				},
 				{
 					class: "link-hover",
-					icon: "ph:newspaper-clipping-duotone",
-					label: "Blog",
+					label: t("footer.blog"),
 					to: "/blog",
-					ui: { linkLeadingIcon: "bg-primary" },
+				},
+				{
+					class: "link-hover",
+					label: t("translation_status.title"),
+					to: "/translation-status",
 				},
 			],
-			label: "Links",
+			label: t("footer.community"),
 		},
 		{
 			children: [
 				{
 					class: "link-hover",
-					icon: "ph:patreon-logo-duotone",
-					label: "Patreon",
-					to: "https://donate.wolfstar.rocks/patreon",
-					ui: { linkLeadingIcon: "bg-rose-600" },
-				},
-				{
-					class: "link-hover",
-					icon: "ph:paypal-logo-duotone",
-					label: "PayPal",
-					to: "https://donate.wolfstar.rocks/paypal",
-					ui: { linkLeadingIcon: "bg-sky-600" },
-				},
-				{
-					class: "link-hover",
-					icon: "ph:coffee-duotone",
-					label: "Ko-fi",
-					to: "https://donate.wolfstar.rocks/ko-fi",
-					ui: { linkLeadingIcon: "bg-pink-500" },
-				},
-			],
-			label: "Donate",
-		},
-		{
-			children: [
-				{
-					class: "link-hover",
-					icon: "ph:file-text-fill",
-					label: "Terms of Use",
+					label: t("footer.terms"),
 					to: "/terms",
-					ui: { linkLeadingIcon: "bg-warning" },
 				},
 				{
 					class: "link-hover",
-					icon: "ph:shield-check-fill",
-					label: "Privacy Policy",
+					label: t("footer.privacy"),
 					to: "/privacy",
-					ui: { linkLeadingIcon: "bg-warning" },
 				},
 			],
-			label: "Legal",
+			label: t("footer.legal"),
 		},
 	]);
 

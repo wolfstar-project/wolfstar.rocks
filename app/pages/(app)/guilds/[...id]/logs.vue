@@ -1,7 +1,7 @@
 <template>
 	<UDashboardPanel id="home">
 		<template #header>
-			<UDashboardNavbar title="Logs" :ui="{ right: 'gap-3' }">
+			<UDashboardNavbar :title="t('guild_logs.title')" :ui="{ right: 'gap-3' }">
 				<template #leading>
 					<UDashboardSidebarCollapse />
 				</template>
@@ -37,21 +37,22 @@ import type { TabsItem } from "@nuxt/ui";
 import { useRouteParams } from "@vueuse/router";
 
 definePageMeta({
-	auth: { required: true },
+	auth: "user",
 	layout: "dashboard",
 	path: "/guilds/:id/logs/:tab(moderation|warnings|commands|activity)?",
 });
 
+const { t } = useI18n();
 const router = useRouter();
 
 const tab = useRouteParams("tab", "moderation", { transform: String });
 const guildId = useRouteParams("id", undefined, { transform: String });
 
 const tabs = computed<TabsItem[]>(() => [
-	{ value: "moderation", label: "Moderation" },
-	{ value: "warnings", label: "Warnings" },
-	{ value: "commands", label: "Commands" },
-	{ value: "activity", label: "Dashboard Activity" },
+	{ value: "moderation", label: t("guild_logs.tab_moderation") },
+	{ value: "warnings", label: t("guild_logs.tab_warnings") },
+	{ value: "commands", label: t("guild_logs.tab_commands") },
+	{ value: "activity", label: t("guild_logs.tab_activity") },
 ]);
 
 const activeTab = computed({
@@ -67,6 +68,6 @@ const activeTab = computed({
 });
 
 useSeoMetadata({
-	title: "Logs",
+	title: () => t("guild_logs.title"),
 });
 </script>

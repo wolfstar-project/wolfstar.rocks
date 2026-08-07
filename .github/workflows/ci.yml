@@ -23,10 +23,10 @@ permissions:
 jobs:
   lint:
     name: 🔠 Lint project
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -43,10 +43,10 @@ jobs:
 
   typecheck:
     name: 🔎 Typecheck project
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -64,10 +64,13 @@ jobs:
 
   unit:
     name: 🧪 Unit tests
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
+    env:
+      # Match package.json test scripts; CI calls `vp test` directly.
+      TEST: "1"
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -103,10 +106,13 @@ jobs:
 
   test:
     name: 🧪 Component tests
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
+    env:
+      # Match package.json test scripts; CI calls `vp test` directly.
+      TEST: "1"
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -119,8 +125,26 @@ jobs:
       - name: 🌐 Install browser
         run: vp exec playwright install --with-deps chromium-headless-shell
 
+      - name: 🔼 Generate Prisma Client
+        run: vp run prisma:generate
+
+      # Vitest browser-playwright occasionally drops the Chromium session mid-suite
+      # (`Browser connection was closed` / `route.fulfill: Route is already handled!`)
+      # after most or all assertions already passed. Retry the whole project so files
+      # interrupted by the provider flake still run.
       - name: 🧪 Component tests
-        run: vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml
+        run: |
+          set -euo pipefail
+          max_attempts=2
+          attempt=1
+          until vp test --project nuxt --coverage --reporter=default --reporter=junit --outputFile=test-report.junit.xml; do
+            if [ "${attempt}" -ge "${max_attempts}" ]; then
+              exit 1
+            fi
+            echo "::warning::Component tests failed (attempt ${attempt}/${max_attempts}); retrying after Vitest browser flake"
+            attempt=$((attempt + 1))
+            sleep 5
+          done
         env:
           NODE_OPTIONS: --max-old-space-size=8192
 
@@ -147,12 +171,12 @@ jobs:
 
   browser:
     name: 🖥️ Browser tests
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
     container:
-      image: mcr.microsoft.com/playwright:v1.60.0-noble@sha256:9bd26ad900bb5e0f4dee75839e957a89ae89c2b7ab1e76050e559790e946b948
+      image: mcr.microsoft.com/playwright:v1.62.0-noble@sha256:baed2032d533817f3dbe6425de795788430ba345e819a1201337009ba17c9d07
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -188,10 +212,10 @@ jobs:
 
   benchmark:
     name: ⚡ Benchmarks
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -209,13 +233,13 @@ jobs:
 
   a11y:
     name: ♿ Accessibility audit
-    runs-on: blacksmith-4vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
     strategy:
       matrix:
         mode: [dark, light]
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -241,10 +265,10 @@ jobs:
 
   perf:
     name: ⚡ Performance
-    runs-on: blacksmith-4vcpu-ubuntu-2404 # See https://github.com/GoogleChrome/lighthouse/discussions/16834
+    runs-on: ubuntu-latest # See https://github.com/GoogleChrome/lighthouse/discussions/16834
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -269,10 +293,10 @@ jobs:
 
   knip:
     name: 🧹 Unused code check
-    runs-on: blacksmith-4vcpu-ubuntu-2404-arm
+    runs-on: ubuntu-24.04-arm
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
@@ -284,3 +308,28 @@ jobs:
 
       - name: 🧹 Check for unused code
         run: vp run knip
+
+  i18n:
+    name: 🌐 i18n validation
+    runs-on: ubuntu-24.04-arm
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          sfw: true
+          # root only, no scripts
+          run-install: |
+            - args: ["--filter", ".", "--ignore-scripts"]
+
+      - name: 🌐 Check for missing or dynamic i18n keys
+        run: vp run i18n:report
+
+      - name: 🌐 Check i18n schema is up to date
+        run: |
+          vp run i18n:schema
+          git diff --exit-code i18n/schema.json i18n/schemas i18n/locales

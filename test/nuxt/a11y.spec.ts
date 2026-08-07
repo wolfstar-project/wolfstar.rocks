@@ -42,8 +42,6 @@ import {
 	// #endregion
 
 	ErrorPage,
-	ModerationShowcase,
-	ModerationShowcaseSection,
 	OauthStatusPanel,
 	GuildSettingsSection,
 	HeroSection,
@@ -757,7 +755,7 @@ describe("component accessibility audits", () => {
 
 		describe("DashboardSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(DashboardSection);
+				const component = await mountSuspended(WolfstarDashboardSection);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
@@ -765,7 +763,7 @@ describe("component accessibility audits", () => {
 
 		describe("CtaSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(CtaSection, {
+				const component = await mountSuspended(WolfstarCtaSection, {
 					props: { inviteUrl },
 				});
 				const results = await runAxe(component);
@@ -775,7 +773,7 @@ describe("component accessibility audits", () => {
 
 		describe("CommandsShowcase", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(CommandsShowcase);
+				const component = await mountSuspended(WolfstarCommandsShowcase);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
@@ -783,7 +781,7 @@ describe("component accessibility audits", () => {
 
 		describe("CommandsSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(CommandsSection);
+				const component = await mountSuspended(WolfstarCommandsSection);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
@@ -839,7 +837,7 @@ describe("component accessibility audits", () => {
 
 		describe("ModerationShowcase", () => {
 			it("should have no accessibility violations with all features visible", async () => {
-				const component = await mountSuspended(ModerationShowcase);
+				const component = await mountSuspended(WolfstarModerationShowcase);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
@@ -847,7 +845,7 @@ describe("component accessibility audits", () => {
 
 		describe("ModerationShowcaseSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(ModerationShowcaseSection);
+				const component = await mountSuspended(WolfstarModerationShowcaseSection);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

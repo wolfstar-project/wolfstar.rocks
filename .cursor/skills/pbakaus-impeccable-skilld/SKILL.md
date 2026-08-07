@@ -1,9 +1,9 @@
 ---
 name: pbakaus-impeccable-skilld
-description: "The design language that makes your AI harness better at design. ALWAYS use when writing code importing \"pbakaus-impeccable\". Consult for debugging, best practices, or modifying pbakaus-impeccable, pbakaus impeccable, impeccable."
+description: 'The design language that makes your AI harness better at design. ALWAYS use when writing code importing "pbakaus-impeccable". Consult for debugging, best practices, or modifying pbakaus-impeccable, pbakaus impeccable, impeccable.'
 metadata:
-  version: skill-v4.0.4
-  generated_at: 2026-08-06
+    version: skill-v4.0.4
+    generated_at: 2026-08-06
 ---
 
 # pbakaus/impeccable `pbakaus-impeccable@skill-v4.0.4`

@@ -1,12 +1,13 @@
 ---
 name: nuxt-og-image-skilld
-description: "Enlightened OG Image generation for Nuxt. ALWAYS use when writing code importing \"nuxt-og-image\". Consult for debugging, best practices, or modifying nuxt-og-image, nuxt og image, og-image, og image."
+description: 'Enlightened OG Image generation for Nuxt. ALWAYS use when writing code importing "nuxt-og-image". Consult for debugging, best practices, or modifying nuxt-og-image, nuxt og image, og-image, og image.'
 metadata:
-  version: 6.7.4
-  generated_at: 2026-08-06
+    version: 6.7.4
+    generated_at: 2026-08-06
 ---
 
 # nuxt-modules/og-image `nuxt-og-image@6.7.4`
+
 **Tags:** beta: 6.0.0, latest: 6.7.6
 
 **References:** [package.json](./.skilld/pkg/package.json) • [README](./.skilld/pkg/README.md) • [Docs](./.skilld/docs/_INDEX.md) • [Issues](./.skilld/issues/_INDEX.md) • [Releases](./.skilld/releases/_INDEX.md)

@@ -56,7 +56,7 @@ jobs:
             git remote set-url origin "https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GITHUB_REPOSITORY}.git";
             # Commit as the account behind WOLFSTAR_TOKEN
             git config --local user.name "wolfstarbot";
-            git config --local user.email "169603024+wolfstarbot@users.noreply.github.com";
+            git config --local user.email "git@wolfstar.rocks";
             # Reuse a single fixed branch so re-runs update the existing PR
             # instead of spawning a new one each time.
             git checkout -B i18n;

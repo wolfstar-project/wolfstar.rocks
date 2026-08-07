@@ -17,6 +17,7 @@
 		"mobile_menu": "Mobile menu"
 	},
 	"header": {
+		"brand": "WolfStar",
 		"site_header": "Site header",
 		"home": "{name} home",
 		"add_app": "Add App",
@@ -52,7 +53,8 @@
 	},
 	"a11y": {
 		"skip_to_content": "Skip to main content",
-		"main_content": "Main content"
+		"main_content": "Main content",
+		"scroll_to_top": "Scroll to top"
 	},
 	"common": {
 		"language": "Language",
@@ -73,6 +75,9 @@
 		"please_try_again": "Please try again.",
 		"copied": "Copied!",
 		"na": "N/A"
+	},
+	"blog": {
+		"rss": "RSS"
 	},
 	"user_menu": {
 		"account_menu": "User account menu",

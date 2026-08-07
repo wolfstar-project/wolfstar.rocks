@@ -195,15 +195,12 @@ function onDocumentKeydown(event: KeyboardEvent) {
 }
 
 onMounted(() => {
-	document.addEventListener("keydown", onDocumentKeydown);
 	void nextTick(() => {
 		backButton.value?.focus();
 	});
 });
 
-onBeforeUnmount(() => {
-	document.removeEventListener("keydown", onDocumentKeydown);
-});
+useEventListener(document, "keydown", onDocumentKeydown);
 </script>
 
 <style scoped>

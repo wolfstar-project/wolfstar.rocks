@@ -1,58 +1,36 @@
 {
-	"$schema": "../../schemas/components.schema.json",
-	"errors": {
-		"session_expired": "Sesión caducada",
-		"access_denied": "Acceso denegado",
-		"too_many_requests": "Demasiadas solicitudes",
-		"network_error": "Error de red",
-		"request_timeout": "Tiempo de espera agotado",
-		"unexpected": "Ocurrió un error inesperado.",
-		"check_connection": "Por favor, comprueba tu conexión a internet e inténtalo de nuevo.",
-		"rate_limit": "Se ha aplicado limitación de solicitudes para proteger el servicio.",
-		"server_error": "Algo salió mal en nuestro lado. Por favor, inténtalo más tarde.",
-		"server_error_title": "Error del servidor",
-		"if_persists": "Si el problema persiste, contacta con soporte.",
-		"retrying": "Reintentando...",
-		"session_expired_description": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
-		"access_denied_description": "No tienes permiso para ver estos servidores.",
-		"too_many_requests_description": "Has realizado demasiadas solicitudes. Espera un momento e inténtalo de nuevo.",
-		"request_timeout_description": "La solicitud ha tardado demasiado.",
-		"request_timeout_suggestion": "Comprueba tu conexión e inténtalo de nuevo.",
-		"network_error_description": "No se pudo conectar al servidor.",
-		"loading_servers": "Cargando servidores...",
-		"failed_to_load_servers": "No se pudieron cargar los servidores."
-	},
-	"feedback": {
-		"send": "Enviar comentarios",
-		"title": "Enviar comentarios",
-		"description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
-		"sent_title": "Comentarios enviados",
-		"sent_description": "Gracias por ayudar a mejorar WolfStar.",
-		"sent_toast_description": "Gracias por ayudar a mejorar WolfStar.",
-		"name": "Nombre",
-		"email": "Correo electrónico",
-		"message": "Mensaje",
-		"name_placeholder": "Tu nombre",
-		"email_placeholder": "tu{'@'}email.com",
-		"message_placeholder": "Cuéntanos qué piensas...",
-		"send_failed_title": "Error al enviar",
-		"send_failed_description": "No se pudo enviar el comentario. Inténtalo de nuevo."
-	},
-	"pwa": {
-		"update_available": "Actualización disponible",
-		"install_app": "Instalar app",
-		"dismiss": "Cerrar",
-		"reload": "Recargar"
-	},
-	"select": {
-		"seconds": "Segundos",
-		"minutes": "Minutos",
-		"hours": "Horas",
-		"days": "Días",
-		"none": "Ninguno",
-		"search": "Buscar...",
-		"clear_selected": "Limpiar selección",
-		"min_duration": "Duración mínima",
-		"max_duration": "Duración máxima"
-	}
+  "$schema": "../../schemas/components.schema.json",
+  "feedback": {
+    "description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
+    "email": "Correo electrónico",
+    "email_placeholder": "tu{'@'}email.com",
+    "message": "Mensaje",
+    "message_placeholder": "Cuéntanos qué piensas...",
+    "name": "Nombre",
+    "name_placeholder": "Tu nombre",
+    "send": "Enviar comentarios",
+    "send_failed_description": "No se pudo enviar el comentario. Inténtalo de nuevo.",
+    "send_failed_title": "Error al enviar",
+    "sent_description": "Gracias por ayudar a mejorar WolfStar.",
+    "sent_title": "Comentarios enviados",
+    "sent_toast_description": "Gracias por ayudar a mejorar WolfStar.",
+    "title": "Enviar comentarios"
+  },
+  "pwa": {
+    "dismiss": "Cerrar",
+    "install_app": "Instalar app",
+    "reload": "Recargar",
+    "update_available": "Actualización disponible"
+  },
+  "select": {
+    "clear_selected": "Limpiar selección",
+    "days": "Días",
+    "hours": "Horas",
+    "max_duration": "Duración máxima",
+    "min_duration": "Duración mínima",
+    "minutes": "Minutos",
+    "none": "Ninguno",
+    "search": "Buscar...",
+    "seconds": "Segundos"
+  }
 }

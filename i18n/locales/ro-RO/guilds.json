@@ -1,388 +1,388 @@
 {
-	"guild_settings": {
-		"save_failed": "Save Failed",
-		"please_try_again": "Please try again.",
-		"general": {
-			"title": "General Settings",
-			"subtitle": "Configure basic server settings for WolfStar.",
-			"form_aria": "General guild settings form",
-			"server_info": "Server Info",
-			"server_info_description": "Your server at a glance. Adjust settings below or explore sections in the sidebar.",
-			"server_stats_aria": "Server statistics",
-			"stat_members": "Members",
-			"stat_categories": "Categories",
-			"stat_text_channels": "Text Channels",
-			"stat_voice_channels": "Voice Channels",
-			"stat_roles": "Roles",
-			"copy_server_id": "Copy Server ID",
-			"server_id_copied_title": "Server ID Copied",
-			"server_id_copied_description": "The server ID has been copied to your clipboard.",
-			"need_help": "Need Help?",
-			"prefix": "Prefix",
-			"prefix_description": "The prefix used to trigger WolfStar commands in this server.",
-			"prefix_placeholder": "Select a command prefix",
-			"prefix_aria": "Bot command prefix",
-			"language": "Language",
-			"language_description": "The language WolfStar uses for responses in this server.",
-			"language_placeholder": "Select language...",
-			"language_aria": "Select bot language",
-			"recent_activity": "Recent Activity",
-			"no_activity": "No settings changes yet",
-			"no_activity_description": "Changes you make to this server's settings will appear here so you can track who changed what.",
-			"save_failed_message": "Couldn't save general settings. {message}"
-		},
-		"roles": {
-			"title": "Roles",
-			"subtitle": "Configure the roles WolfStar uses for moderation, permissions, and automation.",
-			"form_aria": "Roles settings form",
-			"general_options": "General Options",
-			"configurable": "Configurable Roles",
-			"configurable_help": "Assign roles for core bot functions like moderation and auto-assignment.",
-			"restricted": "Restricted Roles",
-			"restricted_help": "Roles applied when a restriction command is used."
-		},
-		"channels": {
-			"title": "Channel Settings",
-			"subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
-			"form_aria": "Channel settings form",
-			"logging_channels": "Logging Channels",
-			"logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
-			"excluded_channels": "Excluded Channels",
-			"excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged."
-		},
-		"events": {
-			"title": "Event Settings",
-			"subtitle": "Configure which events should be logged and tracked",
-			"form_aria": "Events settings form",
-			"moderation_events": "Moderation Events",
-			"moderation_events_help": "These events involve moderation actions. Please set up a Moderation Logs channel on {channelsPage}.",
-			"message_events": "Message Events",
-			"message_events_help": "These events track message activity. The required channels vary by event type and can be configured on {channelsPage}.",
-			"channels_page_link": "the Channels page",
-			"toggle_aria": "Toggle {title}"
-		},
-		"moderation": {
-			"title": "Punishment Settings",
-			"subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
-			"form_aria": "Moderation settings form"
-		},
-		"commands": {
-			"title": "Commands",
-			"subtitle": "Choose which commands to enable or disable on your server",
-			"form_aria": "Disabled commands settings form",
-			"enable_all": "Enable all",
-			"disable_all": "Disable all",
-			"reset": "Reset",
-			"category_reset": "Category Reset",
-			"category_reset_description": "{category} commands reverted to saved values.",
-			"save_failed": "Could not save command settings. {message}"
-		},
-		"filter": {
-			"common": {
-				"enabled": "Enabled",
-				"disabled": "Disabled",
-				"punishments": "Punishments",
-				"soft_actions": "Soft Actions",
-				"hard_action": "Hard Action",
-				"hard_action_description": "What happens when a member exceeds the limit",
-				"select_action_aria": "Select punishment action",
-				"options": "Options",
-				"duration": "Duration",
-				"duration_help": "How long the mute or ban lasts",
-				"threshold": "Threshold",
-				"threshold_maximum": "Violations before punishment",
-				"threshold_duration": "Time window (seconds)",
-				"alerts": "Alerts",
-				"alerts_help": "Posts an alert in the channel where the violation occurred.",
-				"logging": "Logging",
-				"logging_help": "Sends a log message to the configured moderation log channel.",
-				"delete_message": "Delete Message",
-				"delete_message_help": "Deletes the message that triggered the filter.",
-				"actions": {
-					"none": "None",
-					"warning": "Warning",
-					"kick": "Kick",
-					"mute": "Mute",
-					"softban": "Softban",
-					"ban": "Ban"
-				}
-			},
-			"word": {
-				"title": "Word Filter",
-				"form_aria": "Word filter settings form",
-				"toggle": "Toggle word filter",
-				"toggle_help": "Blocks messages containing specific words or phrases.",
-				"filter_label": "Filter {state}",
-				"alerts_toggle": "Toggle alerts soft action",
-				"logging_toggle": "Toggle logging soft action",
-				"delete_toggle": "Toggle delete soft action",
-				"filtered_words": "Filtered Words",
-				"add_word": "Add filtered word",
-				"add_placeholder": "e.g. badword",
-				"remove_word": "Remove {word}",
-				"save_failed": "Couldn't save word filter settings. {message}"
-			},
-			"capitals": {
-				"title": "Capital Letters Filter",
-				"form_aria": "Capital letters filter settings form",
-				"toggle": "Toggle capitals filter",
-				"toggle_help": "Blocks messages with too many uppercase characters.",
-				"filter_label": "Filter {state}",
-				"minimum": "Minimum characters",
-				"maximum": "Maximum uppercase characters",
-				"save_failed": "Couldn't save capitals filter settings. {message}"
-			},
-			"invites": {
-				"title": "Invite Link Filter",
-				"form_aria": "Invite link filter settings form",
-				"toggle": "Toggle invite filter",
-				"toggle_help": "Blocks Discord invite links posted in chat.",
-				"filter_label": "Filter {state}",
-				"save_failed": "Couldn't save invite filter settings. {message}"
-			},
-			"links": {
-				"title": "Link Filter",
-				"form_aria": "Link filter settings form",
-				"toggle": "Toggle link filter",
-				"toggle_help": "Blocks messages containing links.",
-				"filter_label": "Filter {state}",
-				"allowed_links": "Allowed Links",
-				"add_link": "Add allowed link",
-				"add_link_placeholder": "e.g. example.com",
-				"remove_link": "Remove {link}",
-				"save_failed": "Couldn't save link filter settings. {message}"
-			},
-			"messages": {
-				"title": "Message Duplication Filter",
-				"form_aria": "Message duplication filter settings form",
-				"toggle": "Toggle message duplication filter",
-				"toggle_help": "Blocks repeated identical messages.",
-				"filter_label": "Filter {state}",
-				"save_failed": "Couldn't save message duplication filter settings. {message}"
-			},
-			"lines": {
-				"title": "Line Spam Filter",
-				"form_aria": "New line filter settings form",
-				"toggle": "Toggle new line filter",
-				"toggle_help": "Blocks messages with too many new lines.",
-				"filter_label": "Filter {state}",
-				"maximum": "Maximum lines",
-				"maximum_help": "Maximum amount of new lines in a message before filter is applied",
-				"save_failed": "Couldn't save new line filter settings. {message}"
-			},
-			"reactions": {
-				"title": "Reaction Filter",
-				"form_aria": "Reaction filter settings form",
-				"toggle": "Toggle reaction filter",
-				"toggle_help": "Blocks specific emoji reactions.",
-				"filter_label": "Filter {state}",
-				"save_failed": "Couldn't save reaction filter settings. {message}"
-			}
-		}
-	},
-	"settings": {
-		"entries": {
-			"rolesRemoveInitial": {
-				"name": "Remove Initial",
-				"tooltip": "When enabled, claiming a public role automatically removes the initial role."
-			},
-			"rolesAdmin": {
-				"name": "Administrator",
-				"tooltip": "The administrator roles. Administrators have access to all moderation and management commands. Defaults to anyone with the \"Manage Server\" permission."
-			},
-			"rolesInitial": {
-				"name": "Initial",
-				"tooltip": "The initial role, if configured, is assigned to users as soon as they join."
-			},
-			"rolesModerator": {
-				"name": "Moderator",
-				"tooltip": "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members"
-			},
-			"rolesMuted": {
-				"name": "Muted",
-				"tooltip": "The muted role, if configured, is assigned to muted users. If no muted role is set, you are prompted to create one."
-			},
-			"rolesRestrictedReaction": {
-				"name": "Restricted Reaction",
-				"tooltip": "Assigned to members whose reactions are restricted."
-			},
-			"rolesRestrictedEmbed": {
-				"name": "Restricted Embed",
-				"tooltip": "Assigned to members who are restricted from embedding links."
-			},
-			"rolesRestrictedAttachment": {
-				"name": "Restricted Attachment",
-				"tooltip": "Assigned to members who are restricted from uploading attachments."
-			},
-			"rolesRestrictedEmoji": {
-				"name": "Restricted Emoji",
-				"tooltip": "Assigned to members who are restricted from using external emojis."
-			},
-			"rolesRestrictedVoice": {
-				"name": "Restricted Voice",
-				"tooltip": "Assigned to members who are restricted from joining voice channels."
-			},
-			"rolesPublic": {
-				"name": "Public Roles",
-				"tooltip": "The public roles. These can be claimed by any user using the \"roles\" command."
-			},
-			"messagesModerationAutoDelete": {
-				"name": "Hide Message",
-				"description": "Deletes the command message to keep the moderator anonymous."
-			},
-			"messagesModerationDm": {
-				"name": "Message User",
-				"description": "Sends the punished member a DM with the reason and duration."
-			},
-			"messagesModerationMessageDisplay": {
-				"name": "Send Punishment Response",
-				"description": "Posts a confirmation message after a punishment is applied."
-			},
-			"messagesModerationReasonDisplay": {
-				"name": "Show Reason",
-				"description": "Includes the reason in the punishment response message."
-			},
-			"messagesModeratorNameDisplay": {
-				"name": "Show Mod Name",
-				"description": "Includes the moderator's name in the DM sent to the punished member."
-			},
-			"eventsBanAdd": {
-				"title": "Ban Added",
-				"description": "An anonymous moderation log is posted when a member is banned."
-			},
-			"eventsBanRemove": {
-				"title": "Ban Revoked",
-				"description": "An anonymous moderation log is posted when a member is unbanned."
-			},
-			"eventsTwemojiReactions": {
-				"title": "Twemoji Reactions",
-				"description": "When a member reacts with a Twemoji, the reaction is sent to the Reaction Logs channel."
-			},
-			"channelsLogsMemberAdd": {
-				"name": "Member Add Logs",
-				"description": "Receives a log message when a member joins the server."
-			},
-			"channelsLogsMemberRemove": {
-				"name": "Member Remove Logs",
-				"description": "Receives a log message when a member leaves, is kicked, or is banned."
-			},
-			"channelsLogsMemberNicknameUpdate": {
-				"name": "Member Nickname Update Logs",
-				"description": "Receives a log message when a member changes their nickname."
-			},
-			"channelsLogsMemberUsernameUpdate": {
-				"name": "Member Username Update Logs",
-				"description": "Receives a log message when a member changes their username."
-			},
-			"channelsLogsMemberRolesUpdate": {
-				"name": "Member Role Logs",
-				"description": "Receives a log message when a member gains or loses a role."
-			},
-			"channelsLogsMessageDelete": {
-				"name": "Message Delete Logs",
-				"description": "Receives a log message when a message is deleted."
-			},
-			"channelsLogsMessageDeleteNsfw": {
-				"name": "NSFW Message Delete Logs",
-				"description": "Receives a log message when a message from an NSFW channel is deleted."
-			},
-			"channelsLogsMessageUpdate": {
-				"name": "Message Update Logs",
-				"description": "Receives a log message when a message is edited."
-			},
-			"channelsLogsMessageUpdateNsfw": {
-				"name": "NSFW Message Update Logs",
-				"description": "Receives a log message when a message from an NSFW channel is edited."
-			},
-			"channelsLogsModeration": {
-				"name": "Moderation Logs",
-				"description": "Receives all moderation case logs. Required for moderation events to work."
-			},
-			"channelsLogsImage": {
-				"name": "Image Logs",
-				"description": "Receives re-uploaded copies of images posted in the server."
-			},
-			"channelsLogsPrune": {
-				"name": "Prune Logs",
-				"description": "Receives a log message when messages are bulk-deleted (pruned)."
-			},
-			"channelsLogsReaction": {
-				"name": "Reaction Logs",
-				"description": "Receives a log message when a reaction is added to a message."
-			},
-			"channelsLogsChannelCreate": {
-				"name": "Channel Create Logs",
-				"description": "Receives a log message when a new channel is created."
-			},
-			"channelsLogsChannelUpdate": {
-				"name": "Channel Update Logs",
-				"description": "Receives a log message when any channel is updated, including the changes made."
-			},
-			"channelsLogsChannelDelete": {
-				"name": "Channel Delete Logs",
-				"description": "Receives a log message when a channel is deleted."
-			},
-			"channelsLogsEmojiCreate": {
-				"name": "Emoji Create Logs",
-				"description": "Receives a log message when a new emoji is created."
-			},
-			"channelsLogsEmojiUpdate": {
-				"name": "Emoji Update Logs",
-				"description": "Receives a log message when an emoji is updated, including the changes made."
-			},
-			"channelsLogsEmojiDelete": {
-				"name": "Emoji Delete Logs",
-				"description": "Receives a log message when an emoji is deleted."
-			},
-			"channelsLogsRoleCreate": {
-				"name": "Role Create Logs",
-				"description": "Receives a log message when a new role is created."
-			},
-			"channelsLogsRoleUpdate": {
-				"name": "Role Update Logs",
-				"description": "Receives a log message when a role is updated, including the changes made."
-			},
-			"channelsLogsRoleDelete": {
-				"name": "Role Delete Logs",
-				"description": "Receives a log message when a role is deleted."
-			},
-			"channelsLogsServerUpdate": {
-				"name": "Server Update Logs",
-				"description": "Receives a log message when the server settings are updated, including the changes made."
-			},
-			"channelsIgnoreAll": {
-				"name": "All logs",
-				"description": "Channels excluded from all types of logging."
-			},
-			"channelsIgnoreMessageDelete": {
-				"name": "Message delete logs",
-				"description": "Channels excluded from deleted-message logging."
-			},
-			"channelsIgnoreMessageEdit": {
-				"name": "Message edit logs",
-				"description": "Channels excluded from edited-message logging."
-			},
-			"channelsIgnoreReactionAdd": {
-				"name": "Reaction add logs",
-				"description": "Channels excluded from reaction logging."
-			},
-			"messagesIgnoreChannels": {
-				"name": "Message Delete, Edit and Reaction Add logs",
-				"description": "Channels excluded from message-delete, message-edit, and reaction-add logging."
-			}
-		}
-	},
-	"guild_card": {
-		"manage_server": "Manage Server",
-		"invite_bot": "Invite Bot",
-		"no_permission": "No Permission",
-		"total_members": "Total members: {count}",
-		"members_online": "Members online",
-		"manage_aria": "Manage {name}",
-		"invite_aria": "Invite bot to {name}",
-		"no_permission_aria": "{name} - No permission",
-		"manage_server_aria": "Manage {name} server settings",
-		"invite_bot_aria": "Invite WolfStar bot to {name}"
-	},
-	"$schema": "../../schemas/guilds.schema.json"
+  "$schema": "../../schemas/guilds.schema.json",
+  "guild_card": {
+    "invite_aria": "Invite bot to {name}",
+    "invite_bot": "Invite Bot",
+    "invite_bot_aria": "Invite WolfStar bot to {name}",
+    "manage_aria": "Manage {name}",
+    "manage_server": "Manage Server",
+    "manage_server_aria": "Manage {name} server settings",
+    "members_online": "Members online",
+    "no_permission": "No Permission",
+    "no_permission_aria": "{name} - No permission",
+    "total_members": "Total members: {count}"
+  },
+  "guild_settings": {
+    "channels": {
+      "excluded_channels": "Excluded Channels",
+      "excluded_channels_help": "Select channels that should be ignored for specific logging events. Messages and events in these channels won't be logged.",
+      "form_aria": "Channel settings form",
+      "logging_channels": "Logging Channels",
+      "logging_channels_help": "Select which channels should receive specific log events. Leave empty to disable logging for that event.",
+      "subtitle": "Choose where WolfStar posts logs and which channels to ignore.",
+      "title": "Channel Settings"
+    },
+    "commands": {
+      "category_reset": "Category Reset",
+      "category_reset_description": "{category} commands reverted to saved values.",
+      "disable_all": "Disable all",
+      "enable_all": "Enable all",
+      "form_aria": "Disabled commands settings form",
+      "reset": "Reset",
+      "save_failed": "Could not save command settings. {message}",
+      "subtitle": "Choose which commands to enable or disable on your server",
+      "title": "Commands"
+    },
+    "events": {
+      "channels_page_link": "the Channels page",
+      "form_aria": "Events settings form",
+      "message_events": "Message Events",
+      "message_events_help": "These events track message activity. The required channels vary by event type and can be configured on {channelsPage}.",
+      "moderation_events": "Moderation Events",
+      "moderation_events_help": "These events involve moderation actions. Please set up a Moderation Logs channel on {channelsPage}.",
+      "subtitle": "Configure which events should be logged and tracked",
+      "title": "Event Settings",
+      "toggle_aria": "Toggle {title}"
+    },
+    "filter": {
+      "capitals": {
+        "filter_label": "Filter {state}",
+        "form_aria": "Capital letters filter settings form",
+        "maximum": "Maximum uppercase characters",
+        "minimum": "Minimum characters",
+        "save_failed": "Couldn't save capitals filter settings. {message}",
+        "title": "Capital Letters Filter",
+        "toggle": "Toggle capitals filter",
+        "toggle_help": "Blocks messages with too many uppercase characters."
+      },
+      "common": {
+        "actions": {
+          "ban": "Ban",
+          "kick": "Kick",
+          "mute": "Mute",
+          "none": "None",
+          "softban": "Softban",
+          "warning": "Warning"
+        },
+        "alerts": "Alerts",
+        "alerts_help": "Posts an alert in the channel where the violation occurred.",
+        "delete_message": "Delete Message",
+        "delete_message_help": "Deletes the message that triggered the filter.",
+        "disabled": "Disabled",
+        "duration": "Duration",
+        "duration_help": "How long the mute or ban lasts",
+        "enabled": "Enabled",
+        "hard_action": "Hard Action",
+        "hard_action_description": "What happens when a member exceeds the limit",
+        "logging": "Logging",
+        "logging_help": "Sends a log message to the configured moderation log channel.",
+        "options": "Options",
+        "punishments": "Punishments",
+        "select_action_aria": "Select punishment action",
+        "soft_actions": "Soft Actions",
+        "threshold": "Threshold",
+        "threshold_duration": "Time window (seconds)",
+        "threshold_maximum": "Violations before punishment"
+      },
+      "invites": {
+        "filter_label": "Filter {state}",
+        "form_aria": "Invite link filter settings form",
+        "save_failed": "Couldn't save invite filter settings. {message}",
+        "title": "Invite Link Filter",
+        "toggle": "Toggle invite filter",
+        "toggle_help": "Blocks Discord invite links posted in chat."
+      },
+      "lines": {
+        "filter_label": "Filter {state}",
+        "form_aria": "New line filter settings form",
+        "maximum": "Maximum lines",
+        "maximum_help": "Maximum amount of new lines in a message before filter is applied",
+        "save_failed": "Couldn't save new line filter settings. {message}",
+        "title": "Line Spam Filter",
+        "toggle": "Toggle new line filter",
+        "toggle_help": "Blocks messages with too many new lines."
+      },
+      "links": {
+        "add_link": "Add allowed link",
+        "add_link_placeholder": "e.g. example.com",
+        "allowed_links": "Allowed Links",
+        "filter_label": "Filter {state}",
+        "form_aria": "Link filter settings form",
+        "remove_link": "Remove {link}",
+        "save_failed": "Couldn't save link filter settings. {message}",
+        "title": "Link Filter",
+        "toggle": "Toggle link filter",
+        "toggle_help": "Blocks messages containing links."
+      },
+      "messages": {
+        "filter_label": "Filter {state}",
+        "form_aria": "Message duplication filter settings form",
+        "save_failed": "Couldn't save message duplication filter settings. {message}",
+        "title": "Message Duplication Filter",
+        "toggle": "Toggle message duplication filter",
+        "toggle_help": "Blocks repeated identical messages."
+      },
+      "reactions": {
+        "filter_label": "Filter {state}",
+        "form_aria": "Reaction filter settings form",
+        "save_failed": "Couldn't save reaction filter settings. {message}",
+        "title": "Reaction Filter",
+        "toggle": "Toggle reaction filter",
+        "toggle_help": "Blocks specific emoji reactions."
+      },
+      "word": {
+        "add_placeholder": "e.g. badword",
+        "add_word": "Add filtered word",
+        "alerts_toggle": "Toggle alerts soft action",
+        "delete_toggle": "Toggle delete soft action",
+        "filtered_words": "Filtered Words",
+        "filter_label": "Filter {state}",
+        "form_aria": "Word filter settings form",
+        "logging_toggle": "Toggle logging soft action",
+        "remove_word": "Remove {word}",
+        "save_failed": "Couldn't save word filter settings. {message}",
+        "title": "Word Filter",
+        "toggle": "Toggle word filter",
+        "toggle_help": "Blocks messages containing specific words or phrases."
+      }
+    },
+    "general": {
+      "copy_server_id": "Copy Server ID",
+      "form_aria": "General guild settings form",
+      "language": "Language",
+      "language_aria": "Select bot language",
+      "language_description": "The language WolfStar uses for responses in this server.",
+      "language_placeholder": "Select language...",
+      "need_help": "Need Help?",
+      "no_activity": "No settings changes yet",
+      "no_activity_description": "Changes you make to this server's settings will appear here so you can track who changed what.",
+      "prefix": "Prefix",
+      "prefix_aria": "Bot command prefix",
+      "prefix_description": "The prefix used to trigger WolfStar commands in this server.",
+      "prefix_placeholder": "Select a command prefix",
+      "recent_activity": "Recent Activity",
+      "save_failed_message": "Couldn't save general settings. {message}",
+      "server_id_copied_description": "The server ID has been copied to your clipboard.",
+      "server_id_copied_title": "Server ID Copied",
+      "server_info": "Server Info",
+      "server_info_description": "Your server at a glance. Adjust settings below or explore sections in the sidebar.",
+      "server_stats_aria": "Server statistics",
+      "stat_categories": "Categories",
+      "stat_members": "Members",
+      "stat_roles": "Roles",
+      "stat_text_channels": "Text Channels",
+      "stat_voice_channels": "Voice Channels",
+      "subtitle": "Configure basic server settings for WolfStar.",
+      "title": "General Settings"
+    },
+    "moderation": {
+      "form_aria": "Moderation settings form",
+      "subtitle": "Configure how WolfStar handles moderation actions like bans, kicks, and mutes.",
+      "title": "Punishment Settings"
+    },
+    "please_try_again": "Please try again.",
+    "roles": {
+      "configurable": "Configurable Roles",
+      "configurable_help": "Assign roles for core bot functions like moderation and auto-assignment.",
+      "form_aria": "Roles settings form",
+      "general_options": "General Options",
+      "restricted": "Restricted Roles",
+      "restricted_help": "Roles applied when a restriction command is used.",
+      "subtitle": "Configure the roles WolfStar uses for moderation, permissions, and automation.",
+      "title": "Roles"
+    },
+    "save_failed": "Save Failed"
+  },
+  "settings": {
+    "entries": {
+      "channelsIgnoreAll": {
+        "description": "Channels excluded from all types of logging.",
+        "name": "All logs"
+      },
+      "channelsIgnoreMessageDelete": {
+        "description": "Channels excluded from deleted-message logging.",
+        "name": "Message delete logs"
+      },
+      "channelsIgnoreMessageEdit": {
+        "description": "Channels excluded from edited-message logging.",
+        "name": "Message edit logs"
+      },
+      "channelsIgnoreReactionAdd": {
+        "description": "Channels excluded from reaction logging.",
+        "name": "Reaction add logs"
+      },
+      "channelsLogsChannelCreate": {
+        "description": "Receives a log message when a new channel is created.",
+        "name": "Channel Create Logs"
+      },
+      "channelsLogsChannelDelete": {
+        "description": "Receives a log message when a channel is deleted.",
+        "name": "Channel Delete Logs"
+      },
+      "channelsLogsChannelUpdate": {
+        "description": "Receives a log message when any channel is updated, including the changes made.",
+        "name": "Channel Update Logs"
+      },
+      "channelsLogsEmojiCreate": {
+        "description": "Receives a log message when a new emoji is created.",
+        "name": "Emoji Create Logs"
+      },
+      "channelsLogsEmojiDelete": {
+        "description": "Receives a log message when an emoji is deleted.",
+        "name": "Emoji Delete Logs"
+      },
+      "channelsLogsEmojiUpdate": {
+        "description": "Receives a log message when an emoji is updated, including the changes made.",
+        "name": "Emoji Update Logs"
+      },
+      "channelsLogsImage": {
+        "description": "Receives re-uploaded copies of images posted in the server.",
+        "name": "Image Logs"
+      },
+      "channelsLogsMemberAdd": {
+        "description": "Receives a log message when a member joins the server.",
+        "name": "Member Add Logs"
+      },
+      "channelsLogsMemberNicknameUpdate": {
+        "description": "Receives a log message when a member changes their nickname.",
+        "name": "Member Nickname Update Logs"
+      },
+      "channelsLogsMemberRemove": {
+        "description": "Receives a log message when a member leaves, is kicked, or is banned.",
+        "name": "Member Remove Logs"
+      },
+      "channelsLogsMemberRolesUpdate": {
+        "description": "Receives a log message when a member gains or loses a role.",
+        "name": "Member Role Logs"
+      },
+      "channelsLogsMemberUsernameUpdate": {
+        "description": "Receives a log message when a member changes their username.",
+        "name": "Member Username Update Logs"
+      },
+      "channelsLogsMessageDelete": {
+        "description": "Receives a log message when a message is deleted.",
+        "name": "Message Delete Logs"
+      },
+      "channelsLogsMessageDeleteNsfw": {
+        "description": "Receives a log message when a message from an NSFW channel is deleted.",
+        "name": "NSFW Message Delete Logs"
+      },
+      "channelsLogsMessageUpdate": {
+        "description": "Receives a log message when a message is edited.",
+        "name": "Message Update Logs"
+      },
+      "channelsLogsMessageUpdateNsfw": {
+        "description": "Receives a log message when a message from an NSFW channel is edited.",
+        "name": "NSFW Message Update Logs"
+      },
+      "channelsLogsModeration": {
+        "description": "Receives all moderation case logs. Required for moderation events to work.",
+        "name": "Moderation Logs"
+      },
+      "channelsLogsPrune": {
+        "description": "Receives a log message when messages are bulk-deleted (pruned).",
+        "name": "Prune Logs"
+      },
+      "channelsLogsReaction": {
+        "description": "Receives a log message when a reaction is added to a message.",
+        "name": "Reaction Logs"
+      },
+      "channelsLogsRoleCreate": {
+        "description": "Receives a log message when a new role is created.",
+        "name": "Role Create Logs"
+      },
+      "channelsLogsRoleDelete": {
+        "description": "Receives a log message when a role is deleted.",
+        "name": "Role Delete Logs"
+      },
+      "channelsLogsRoleUpdate": {
+        "description": "Receives a log message when a role is updated, including the changes made.",
+        "name": "Role Update Logs"
+      },
+      "channelsLogsServerUpdate": {
+        "description": "Receives a log message when the server settings are updated, including the changes made.",
+        "name": "Server Update Logs"
+      },
+      "eventsBanAdd": {
+        "description": "An anonymous moderation log is posted when a member is banned.",
+        "title": "Ban Added"
+      },
+      "eventsBanRemove": {
+        "description": "An anonymous moderation log is posted when a member is unbanned.",
+        "title": "Ban Revoked"
+      },
+      "eventsTwemojiReactions": {
+        "description": "When a member reacts with a Twemoji, the reaction is sent to the Reaction Logs channel.",
+        "title": "Twemoji Reactions"
+      },
+      "messagesIgnoreChannels": {
+        "description": "Channels excluded from message-delete, message-edit, and reaction-add logging.",
+        "name": "Message Delete, Edit and Reaction Add logs"
+      },
+      "messagesModerationAutoDelete": {
+        "description": "Deletes the command message to keep the moderator anonymous.",
+        "name": "Hide Message"
+      },
+      "messagesModerationDm": {
+        "description": "Sends the punished member a DM with the reason and duration.",
+        "name": "Message User"
+      },
+      "messagesModerationMessageDisplay": {
+        "description": "Posts a confirmation message after a punishment is applied.",
+        "name": "Send Punishment Response"
+      },
+      "messagesModerationReasonDisplay": {
+        "description": "Includes the reason in the punishment response message.",
+        "name": "Show Reason"
+      },
+      "messagesModeratorNameDisplay": {
+        "description": "Includes the moderator's name in the DM sent to the punished member.",
+        "name": "Show Mod Name"
+      },
+      "rolesAdmin": {
+        "name": "Administrator",
+        "tooltip": "The administrator roles. Administrators have access to all moderation and management commands. Defaults to anyone with the \"Manage Server\" permission."
+      },
+      "rolesInitial": {
+        "name": "Initial",
+        "tooltip": "The initial role, if configured, is assigned to users as soon as they join."
+      },
+      "rolesModerator": {
+        "name": "Moderator",
+        "tooltip": "The moderator roles. Moderators have access to almost all moderation commands. Defaults to anyone who can ban members"
+      },
+      "rolesMuted": {
+        "name": "Muted",
+        "tooltip": "The muted role, if configured, is assigned to muted users. If no muted role is set, you are prompted to create one."
+      },
+      "rolesPublic": {
+        "name": "Public Roles",
+        "tooltip": "The public roles. These can be claimed by any user using the \"roles\" command."
+      },
+      "rolesRemoveInitial": {
+        "name": "Remove Initial",
+        "tooltip": "When enabled, claiming a public role automatically removes the initial role."
+      },
+      "rolesRestrictedAttachment": {
+        "name": "Restricted Attachment",
+        "tooltip": "Assigned to members who are restricted from uploading attachments."
+      },
+      "rolesRestrictedEmbed": {
+        "name": "Restricted Embed",
+        "tooltip": "Assigned to members who are restricted from embedding links."
+      },
+      "rolesRestrictedEmoji": {
+        "name": "Restricted Emoji",
+        "tooltip": "Assigned to members who are restricted from using external emojis."
+      },
+      "rolesRestrictedReaction": {
+        "name": "Restricted Reaction",
+        "tooltip": "Assigned to members whose reactions are restricted."
+      },
+      "rolesRestrictedVoice": {
+        "name": "Restricted Voice",
+        "tooltip": "Assigned to members who are restricted from joining voice channels."
+      }
+    }
+  }
 }

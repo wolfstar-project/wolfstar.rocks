@@ -1,7 +1,10 @@
 import { expect, test } from "./test-utils";
 
 const PAGES = ["/", "/staryl", "/terms", "/privacy"] as const;
-const MARKETING_PAGES = ["/", "/staryl"] as const;
+const MARKETING_PAGES = [
+	{ path: "/", heading: /moderation, with a paper trail/i },
+	{ path: "/staryl", heading: /social updates, where your server already is/i },
+] as const;
 
 /** Netlify image-proxy path prefix — 404s from this path are CDN infra noise, not app errors. */
 const NETLIFY_IMAGE_PROXY_PATH = "/.netlify/images";
@@ -19,13 +22,11 @@ test.describe("Hydration", () => {
 	});
 
 	test.describe("renders the hero heading on marketing pages", () => {
-		for (const page of MARKETING_PAGES) {
-			test(`${page}`, async ({ page: pw, goto }) => {
-				await goto(page, { waitUntil: "domcontentloaded" });
+		for (const { path, heading } of MARKETING_PAGES) {
+			test(`${path}`, async ({ page: pw, goto }) => {
+				await goto(path, { waitUntil: "domcontentloaded" });
 
-				await expect(
-					pw.getByRole("heading", { name: /imagine a/i, level: 1 }),
-				).toBeVisible();
+				await expect(pw.getByRole("heading", { name: heading, level: 1 })).toBeVisible();
 			});
 		}
 	});

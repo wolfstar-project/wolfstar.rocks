@@ -1,14 +1,18 @@
 <template>
 	<div class="text-base-content">
-		<HeroSection :build-time :build-version="buildInfo.version" :invite-url="Invites.Staryl" />
+		<StarylHeroSection
+			:build-time
+			:build-version="buildInfo.version"
+			:invite-url="Invites.Staryl"
+		/>
 
-		<ProductProofSection />
+		<StarylProductProofSection />
 
-		<CommandsSection />
+		<StarylCommandsSection />
 
 		<OtherApps :apps="[otherApps.WolfStar]" />
 
-		<CtaSection :invite-url="Invites.Staryl" />
+		<StarylCtaSection :invite-url="Invites.Staryl" />
 	</div>
 </template>
 

@@ -10,7 +10,13 @@
 		}"
 	>
 		<div class="discord-scrollbar-body">
-			<div ref="viewportRef" class="discord-scrollbar-viewport">
+			<div
+				ref="viewportRef"
+				class="discord-scrollbar-viewport"
+				:tabindex="focusable ? 0 : undefined"
+				:role="focusable ? 'group' : undefined"
+				:aria-label="focusable ? viewportLabel : undefined"
+			>
 				<div ref="contentRef" class="discord-scrollbar-content">
 					<slot />
 				</div>
@@ -77,6 +83,14 @@ interface DiscordScrollbarProps {
 	 * the viewport is actively scrolling.
 	 */
 	autoHide?: boolean;
+	/**
+	 * Make the viewport keyboard-focusable so scrollable content without
+	 * focusable children stays keyboard-accessible (WCAG 2.1.1,
+	 * axe `scrollable-region-focusable`).
+	 */
+	focusable?: boolean;
+	/** Accessible name for the focusable viewport; pair with `focusable`. */
+	viewportLabel?: string;
 }
 
 interface DiscordScrollbarSlots {
@@ -98,6 +112,8 @@ const {
 	minThumbHeight = 24,
 	maxThumbHeight,
 	autoHide = false,
+	focusable = false,
+	viewportLabel,
 } = defineProps<DiscordScrollbarProps>();
 
 const slots = useSlots();
@@ -221,6 +237,12 @@ function scrollByStep(direction: 1 | -1) {
 
 .discord-scrollbar-viewport::-webkit-scrollbar {
 	display: none;
+}
+
+.discord-scrollbar-viewport:focus-visible {
+	/* Inset so the ring stays visible inside overflow-hidden card chrome. */
+	outline: 2px solid var(--color-primary);
+	outline-offset: -2px;
 }
 
 .discord-scrollbar-content {

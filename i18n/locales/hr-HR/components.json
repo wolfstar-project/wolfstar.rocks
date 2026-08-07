@@ -1,36 +1,36 @@
 {
-  "$schema": "../../schemas/components.schema.json",
-  "feedback": {
-    "description": "Prijavite grešku ili podijelite svoje mišljenje s timom WolfStar.",
-    "email": "E-pošta",
-    "email_placeholder": "vaš{'@'}email.com",
-    "message": "Poruka",
-    "message_placeholder": "Što se dogodilo? Što ste očekivali da će se dogoditi?",
-    "name": "Ime",
-    "name_placeholder": "Vaše ime",
-    "send": "Pošalji povratne informacije",
-    "send_failed_description": "Nije bilo moguće poslati povratne informacije. {message}",
-    "send_failed_title": "Slanje povratnih informacija nije uspjelo",
-    "sent_description": "Hvala vam na pomoći u poboljšanju WolfStar-a.",
-    "sent_title": "Povratne informacije poslane",
-    "sent_toast_description": "Vaša povratna informacija je poslana. Hvala Vam!",
-    "title": "Pošalji povratne informacije"
-  },
-  "pwa": {
-    "dismiss": "Odbaciti",
-    "install_app": "Instaliraj aplikaciju",
-    "reload": "Ponovno učitaj",
-    "update_available": "Ažuriranje dostupno"
-  },
-  "select": {
-    "clear_selected": "Očisti odabrano",
-    "days": "Dani",
-    "hours": "Sati",
-    "max_duration": "Maksimalno trajanje je {value} {unit}.",
-    "min_duration": "Minimalno trajanje je {value} {unit}.",
-    "minutes": "Minute",
-    "none": "Ništa",
-    "search": "Pretraži...",
-    "seconds": "Sekunde"
-  }
+	"$schema": "../../schemas/components.schema.json",
+	"feedback": {
+		"description": "Prijavite grešku ili podijelite svoje mišljenje s timom WolfStar.",
+		"email": "E-pošta",
+		"email_placeholder": "vaš{'@'}email.com",
+		"message": "Poruka",
+		"message_placeholder": "Što se dogodilo? Što ste očekivali da će se dogoditi?",
+		"name": "Ime",
+		"name_placeholder": "Vaše ime",
+		"send": "Pošalji povratne informacije",
+		"send_failed_description": "Nije bilo moguće poslati povratne informacije. {message}",
+		"send_failed_title": "Slanje povratnih informacija nije uspjelo",
+		"sent_description": "Hvala vam na pomoći u poboljšanju WolfStar-a.",
+		"sent_title": "Povratne informacije poslane",
+		"sent_toast_description": "Vaša povratna informacija je poslana. Hvala Vam!",
+		"title": "Pošalji povratne informacije"
+	},
+	"pwa": {
+		"dismiss": "Odbaciti",
+		"install_app": "Instaliraj aplikaciju",
+		"reload": "Ponovno učitaj",
+		"update_available": "Ažuriranje dostupno"
+	},
+	"select": {
+		"clear_selected": "Očisti odabrano",
+		"days": "Dani",
+		"hours": "Sati",
+		"max_duration": "Maksimalno trajanje je {value} {unit}.",
+		"min_duration": "Minimalno trajanje je {value} {unit}.",
+		"minutes": "Minute",
+		"none": "Ništa",
+		"search": "Pretraži...",
+		"seconds": "Sekunde"
+	}
 }

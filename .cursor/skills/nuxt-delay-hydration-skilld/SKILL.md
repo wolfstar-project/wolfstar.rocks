@@ -1,12 +1,13 @@
 ---
 name: nuxt-delay-hydration-skilld
-description: "Improve your Nuxt.js Google Lighthouse score by delaying hydration . ALWAYS use when writing code importing \"nuxt-delay-hydration\". Consult for debugging, best practices, or modifying nuxt-delay-hydration, nuxt delay hydration."
+description: 'Improve your Nuxt.js Google Lighthouse score by delaying hydration . ALWAYS use when writing code importing "nuxt-delay-hydration". Consult for debugging, best practices, or modifying nuxt-delay-hydration, nuxt delay hydration.'
 metadata:
-  version: 1.3.8
-  generated_at: 2026-08-06
+    version: 1.3.8
+    generated_at: 2026-08-06
 ---
 
 # harlan-zw/nuxt-delay-hydration `nuxt-delay-hydration@1.3.8`
+
 **Tags:** latest: 1.3.8
 
 **References:** [package.json](./.skilld/pkg/package.json) • [README](./.skilld/pkg/README.md) • [Issues](./.skilld/issues/_INDEX.md) • [Releases](./.skilld/releases/_INDEX.md)

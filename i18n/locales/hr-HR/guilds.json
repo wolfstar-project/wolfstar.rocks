@@ -1,388 +1,388 @@
 {
-  "$schema": "../../schemas/guilds.schema.json",
-  "guild_card": {
-    "invite_aria": "Pozovite bota u {name}",
-    "invite_bot": "Pozovi Bota",
-    "invite_bot_aria": "Pozovite WolfStar bota u {name}",
-    "manage_aria": "Upravljaj {name}",
-    "manage_server": "Upravljaj poslužiteljem",
-    "manage_server_aria": "Upravljaj postavkama poslužitelja {name}",
-    "members_online": "Članovi online",
-    "no_permission": "Nema dopuštenja",
-    "no_permission_aria": "{name} - Nema dopuštenja",
-    "total_members": "Ukupno članova: {count}"
-  },
-  "guild_settings": {
-    "channels": {
-      "excluded_channels": "Isključeni Kanali",
-      "excluded_channels_help": "Odaberite kanale koje treba zanemariti za određene događaje zapisivanja. Poruke i događaji u tim kanalima neće biti zabilježeni.",
-      "form_aria": "Postavke kanala oblik",
-      "logging_channels": "Kanali za evidentiranje",
-      "logging_channels_help": "Odaberite koje kanale treba primati određene zapisnike događaja. Ostavite prazno za onemogućiti zapisivanje tog događaja.",
-      "subtitle": "Odaberite gdje WolfStar objavljuje zapise i koje kanale ignorirati.",
-      "title": "Postavke Kanala"
-    },
-    "commands": {
-      "category_reset": "Resetiranje Kategorije",
-      "category_reset_description": "Naredbe za {category} vraćene na spremljene vrijednosti.",
-      "disable_all": "Onemogući sve",
-      "enable_all": "Omogući sve",
-      "form_aria": "Postavke onemogućenih naredbi",
-      "reset": "Poništi",
-      "save_failed": "Nije moguće spremiti postavke naredbe. {message}",
-      "subtitle": "Odaberite koje naredbe uključiti ili isključiti na svom poslužitelju",
-      "title": "Naredbe"
-    },
-    "events": {
-      "channels_page_link": "stranica Kanali",
-      "form_aria": "Postavke događaja oblik",
-      "message_events": "Poruke događaja",
-      "message_events_help": "Ovi događaji prate aktivnost poruka. Potrebni kanali razlikuju se po tipu događaja i mogu se konfigurirati na {channelsPage}.",
-      "moderation_events": "Moderacijski događaji",
-      "moderation_events_help": "Ovi događaji uključuju radnje moderiranja.\nMolimo postavite kanal za zapise moderiranja na {channelsPage}.",
-      "subtitle": "Postavite koje događaje treba bilježiti i pratiti",
-      "title": "Postavke događaja",
-      "toggle_aria": "Uključi/isključi {title}"
-    },
-    "filter": {
-      "capitals": {
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrazaca za filtriranje velikih slova",
-        "maximum": "Maksimalan broj velikih slova",
-        "minimum": "Minimalan broj znakova",
-        "save_failed": "Nije moguće spremiti postavke filtra velikih slova. {message}",
-        "title": "Postavke filtra za velika slova",
-        "toggle": "Prebaci filter velikih slova",
-        "toggle_help": "Blokira poruke s previše velikih slova."
-      },
-      "common": {
-        "actions": {
-          "ban": "Zabrani",
-          "kick": "Izbacivanje",
-          "mute": "Utišaj",
-          "none": "Ništa",
-          "softban": "Privremena zabrana",
-          "warning": "Upozorenje"
-        },
-        "alerts": "Upozorenja",
-        "alerts_help": "Objavi upozorenje u kanalu u kojem je došlo do prekršaja.",
-        "delete_message": "Izbriši poruku",
-        "delete_message_help": "Briše poruku koja je pokrenula filter.",
-        "disabled": "Onemogućeno",
-        "duration": "Trajanje",
-        "duration_help": "Koliko dugo traje utišavanje ili zabrana",
-        "enabled": "Omogućen",
-        "hard_action": "Teška Akcija",
-        "hard_action_description": "Što se događa kada član premaši ograničenje",
-        "logging": "Zapisivanje",
-        "logging_help": "Šalje poruku dnevnika na konfigurirani kanal za moderiranje.",
-        "options": "Postavke",
-        "punishments": "Kazne",
-        "select_action_aria": "Odaberite kaznenu radnju",
-        "soft_actions": "Meke akcije",
-        "threshold": "Prag",
-        "threshold_duration": "Vremenski okvir (sekunde)",
-        "threshold_maximum": "Kršenja prije kazne"
-      },
-      "invites": {
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrasca filtra pozivnih linkova",
-        "save_failed": "Nije moguće spremiti postavke filtra za pozivnice. {message}",
-        "title": "Filter pozivnih linkova",
-        "toggle": "Prebaci filter za pozive",
-        "toggle_help": "Blokira Discord pozivnice objavljene u chatu."
-      },
-      "lines": {
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrazaca za filtriranje novih linija",
-        "maximum": "Najviše linija",
-        "maximum_help": "Maksimalan broj novih redaka u poruci prije nego što se primijeni filtar",
-        "save_failed": "Nije moguće spremiti postavke filtra za nove linije. {message}",
-        "title": "Filtar za neželjene linije",
-        "toggle": "Uključi isključivanje linijskog filtera",
-        "toggle_help": "Blokira poruke s previše novih redaka."
-      },
-      "links": {
-        "add_link": "Dodaj dopuštenu poveznicu",
-        "add_link_placeholder": "npr. example.com",
-        "allowed_links": "Dopuštene poveznice",
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrazaca za filtriranje linkova",
-        "remove_link": "Ukloni {link}",
-        "save_failed": "Nije moguće spremiti postavke filtra za linkove. {message}",
-        "title": "Filter za linkove",
-        "toggle": "Prebaci filter za linkove",
-        "toggle_help": "Blokira poruke koje sadrže poveznice."
-      },
-      "messages": {
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrasca za filtriranje dupliciranja poruka",
-        "save_failed": "Nije moguće spremiti postavke filtra za dupliciranje poruka. {message}",
-        "title": "Filter poruka dupliciranja",
-        "toggle": "Prebaci filter poruka dupliciranja",
-        "toggle_help": "Blokira ponovljene identične poruke."
-      },
-      "reactions": {
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrazaca za filtriranje reakcija",
-        "save_failed": "Nije moguće spremiti postavke filtra za reakcije. {message}",
-        "title": "Filter reakcija",
-        "toggle": "Prebaci filter reakcija",
-        "toggle_help": "Blokira određene reakcije emojijima."
-      },
-      "word": {
-        "add_placeholder": "npr. riječuvrijedjanje",
-        "add_word": "Dodaj filtriranu riječ",
-        "alerts_toggle": "Prebacivanje upozorenja soft action",
-        "delete_toggle": "Prebaci brisanje softver akciju",
-        "filtered_words": "Filtrovane Riječi",
-        "filter_label": "Filtriraj {state}",
-        "form_aria": "Postavke obrazaca za filtriranje riječi",
-        "logging_toggle": "Prebaci zapisivanje soft action",
-        "remove_word": "Ukloni {word}",
-        "save_failed": "Nije moguće spremiti postavke filtra za riječi. {message}",
-        "title": "Filter Riječi",
-        "toggle": "Prebaci filter riječi",
-        "toggle_help": "Blokira poruke koje sadrže određene riječi ili izraze."
-      }
-    },
-    "general": {
-      "copy_server_id": "Kopiraj ID poslužitelja",
-      "form_aria": "Obrazac za opće postavke ceha",
-      "language": "Jezik",
-      "language_aria": "Odaberi jezik bota",
-      "language_description": "Jezik koji WolfStar koristi za odgovore na ovom poslužitelju.",
-      "language_placeholder": "Odaberi jezik...",
-      "need_help": "Trebate pomoć?",
-      "no_activity": "Još nema promjena postavki",
-      "no_activity_description": "Promjene koje napravite u postavkama ovog poslužitelja pojavit će se ovdje kako biste mogli pratiti tko je što promijenio.",
-      "prefix": "Prefiks",
-      "prefix_aria": "Prefiks naredbe bota",
-      "prefix_description": "Prefiks korišten za pokretanje WolfStar naredbi na ovom poslužitelju.",
-      "prefix_placeholder": "Odaberite prefiks naredbe",
-      "recent_activity": "Nedavna aktivnost",
-      "save_failed_message": "Nije moguće spremiti opće postavke. {message}",
-      "server_id_copied_description": "ID poslužitelja je kopiran u vašu međuspremnik.",
-      "server_id_copied_title": "ID poslužitelja kopiran",
-      "server_info": "Informacije o serveru",
-      "server_info_description": "Vaš poslužitelj na prvi pogled. Podesite postavke ispod ili istražite odjeljke u bočnoj traci.",
-      "server_stats_aria": "Statistike poslužitelja",
-      "stat_categories": "Kategorije",
-      "stat_members": "Članovi",
-      "stat_roles": "Uloge",
-      "stat_text_channels": "Tekstualni kanali",
-      "stat_voice_channels": "Glasovni kanali",
-      "subtitle": "Postavite osnovne postavke poslužitelja za WolfStar",
-      "title": "Opće postavke"
-    },
-    "moderation": {
-      "form_aria": "Obrazac postavki moderiranja",
-      "subtitle": "Konfigurirajte kako WolfStar upravlja radnjama moderiranja poput zabrana, izbacivanja i utišavanja.",
-      "title": "Postavke Kazni"
-    },
-    "please_try_again": "Pokušajte ponovo.",
-    "roles": {
-      "configurable": "Konfigurabilne Uloge",
-      "configurable_help": "Dodijelite uloge za osnovne funkcije bota, poput moderiranja i automatskog dodjeljivanja.",
-      "form_aria": "Postavke uloga oblik",
-      "general_options": "Opće Opcije",
-      "restricted": "Ograničeni Uloge",
-      "restricted_help": "Uloge primijenjene kada se upotrijebi naredba ograničenja",
-      "subtitle": "Postavite uloge koje WolfStar koristi za moderiranje, dopuštenja i automatizaciju.",
-      "title": "Uloge"
-    },
-    "save_failed": "Spremanje nije uspjelo"
-  },
-  "settings": {
-    "entries": {
-      "channelsIgnoreAll": {
-        "description": "Kanali isključeni iz svih vrsta zapisivanja.",
-        "name": "Sve zapisnike"
-      },
-      "channelsIgnoreMessageDelete": {
-        "description": "Kanali isključeni iz evidentiranja brisanja poruka.",
-        "name": "Zapisnici brisanja poruka"
-      },
-      "channelsIgnoreMessageEdit": {
-        "description": "Kanali isključeni iz evidentiranja uređivanja poruka.",
-        "name": "Ignoriranje Uređivanja Poruka Zapis"
-      },
-      "channelsIgnoreReactionAdd": {
-        "description": "Kanali isključeni iz evidentiranja reakcija.",
-        "name": "Evidencije dodavanja reakcije"
-      },
-      "channelsLogsChannelCreate": {
-        "description": "Prima zapis o evidentiranju kada je stvoren novi kanal.",
-        "name": "Kreiranje Kanala Dnevnik"
-      },
-      "channelsLogsChannelDelete": {
-        "description": "Kada se izbriše kanal, prima zapis o evidentiranju.",
-        "name": "Channel Delete Logs"
-      },
-      "channelsLogsChannelUpdate": {
-        "description": "Prima poruku zapisnika kada je bilo koji kanal ažuriran, uključujući izvršene promjene.",
-        "name": "Channel Update Logs"
-      },
-      "channelsLogsEmojiCreate": {
-        "description": "Prima zapis o evidentiranju kada je stvoren novi emoji.",
-        "name": "Dnevnici stvaranja emotikona"
-      },
-      "channelsLogsEmojiDelete": {
-        "description": "Prima poruku zapisnika kada se emoji obriše.",
-        "name": "Izbrisati dnevnike emotikona"
-      },
-      "channelsLogsEmojiUpdate": {
-        "description": "Prima poruku zapisnika kada je ažurirana emoji, uključujući izvršene promjene.",
-        "name": "Ažuriranje zapisa emoji"
-      },
-      "channelsLogsImage": {
-        "description": "Prima ponovno učitane kopije slika objavljenih na poslužitelju.",
-        "name": "Zapisnici o slikama"
-      },
-      "channelsLogsMemberAdd": {
-        "description": "Prima dnevnik poruku kada se član pridruži poslužitelju.",
-        "name": "Dnevnik Dodavanja Članova"
-      },
-      "channelsLogsMemberNicknameUpdate": {
-        "description": "Prima dnevnik poruku kada član promijeni svoj nadimak.",
-        "name": "Dnevnici ažuriranja nadimka člana"
-      },
-      "channelsLogsMemberRemove": {
-        "description": "Prima poruku zapisnika kada član napusti, bude izbačen ili zabrana.",
-        "name": "Evidencije uklanjanja članova"
-      },
-      "channelsLogsMemberRolesUpdate": {
-        "description": "Prima zapis o evidentiranju kada član dobije ili izgubi ulogu.",
-        "name": "Dnevnik Uloga Članova"
-      },
-      "channelsLogsMemberUsernameUpdate": {
-        "description": "Receives a log message when a member changes their username.",
-        "name": "Dnevnici ažuriranja korisničkog imena člana"
-      },
-      "channelsLogsMessageDelete": {
-        "description": "Prima poruku zapisnika kada se poruka obriše.",
-        "name": "Zapisnici brisanja poruka"
-      },
-      "channelsLogsMessageDeleteNsfw": {
-        "description": "Prima poruku zapisnika kada se poruka iz NSFW kanala obriše.",
-        "name": "NSFW zapisnici brisanja poruka"
-      },
-      "channelsLogsMessageUpdate": {
-        "description": "Prima poruku zapisnika kada se poruka uređuje.",
-        "name": "Ažuriranje Poruka Zapisnici"
-      },
-      "channelsLogsMessageUpdateNsfw": {
-        "description": "Prima poruku zapisnika kada se poruka iz NSFW kanala uređuje.",
-        "name": "NSFW ažuriranje zapisa poruka"
-      },
-      "channelsLogsModeration": {
-        "description": "Prima sve zapise o slučajevima moderiranja. Potrebno da bi događaji moderiranja radili.",
-        "name": "Dnevnici moderacije"
-      },
-      "channelsLogsPrune": {
-        "description": "Prima poruku zapisnika kada su poruke masovno obrisane (skraćene).",
-        "name": "Ukloni zapise"
-      },
-      "channelsLogsReaction": {
-        "description": "Prima poruku zapisnika kada se reakcija doda na poruku.",
-        "name": "Evidencije reakcija"
-      },
-      "channelsLogsRoleCreate": {
-        "description": "Prima zapis o evidentiranju kada je stvorena nova uloga.",
-        "name": "Kreiranje Uloga Dnevnik"
-      },
-      "channelsLogsRoleDelete": {
-        "description": "Prima zapis o evidentiranju kada je uloga obrisana.",
-        "name": "Izbrisati dnevnike uloga"
-      },
-      "channelsLogsRoleUpdate": {
-        "description": "Prima poruku zapisnika kada je uloga ažurirana, uključujući izvršene promjene.",
-        "name": "Ažuriranje zapisa uloga"
-      },
-      "channelsLogsServerUpdate": {
-        "description": "Prima poruku zapisnika kada su ažurirane postavke poslužitelja, uključujući izvršene promjene.",
-        "name": "Ažuriranje zapisa servera"
-      },
-      "eventsBanAdd": {
-        "description": "Anonimni zapisnik o moderiranju se objavljuje kad je član banovan.",
-        "title": "Zabrana Dodana"
-      },
-      "eventsBanRemove": {
-        "description": "Anonimni zapisnik o moderiranju se objavljuje kad je član odbanovan.",
-        "title": "Zabrana poništena"
-      },
-      "eventsTwemojiReactions": {
-        "description": "Kada član reagira s Twemoji, reakcija se šalje u kanal Dnevnika reakcija.",
-        "title": "Reakcije s Twemojijem"
-      },
-      "messagesIgnoreChannels": {
-        "description": "Kanali isključeni iz evidentiranja brisanja poruka, uređivanja poruka i dodavanja reakcija.",
-        "name": "Evidentiranje brisanja poruka, uređivanja i dodavanja reakcija"
-      },
-      "messagesModerationAutoDelete": {
-        "description": "Briše poruku naredbe kako bi moderator ostao anoniman.",
-        "name": "Sakrij Poruku"
-      },
-      "messagesModerationDm": {
-        "description": "Šalje kažnjenom članu DM s razlogom i trajanjem.",
-        "name": "Poruka korisniku"
-      },
-      "messagesModerationMessageDisplay": {
-        "description": "Označava potvrdu nakon što se izvrši kazna.",
-        "name": "Pošalji odgovor na kaznu"
-      },
-      "messagesModerationReasonDisplay": {
-        "description": "Uključuje razlog u poruci reakcije na kaznu.",
-        "name": "Prikaži razlog"
-      },
-      "messagesModeratorNameDisplay": {
-        "description": "Uključuje ime moderatora u DM poslan kažnjenom članu.",
-        "name": "Prikazati Ime Moda"
-      },
-      "rolesAdmin": {
-        "name": "Administrator",
-        "tooltip": "Uloge administratora. Administratori imaju pristup svim naredbama za moderiranje i upravljanje. Prema zadanim postavkama za svakoga s dozvolom \"Upravljaj serverom\"."
-      },
-      "rolesInitial": {
-        "name": "Početno",
-        "tooltip": "Početna uloga, ako je konfigurirana, dodjeljuje se korisnicima čim se pridruže."
-      },
-      "rolesModerator": {
-        "name": "Moderator",
-        "tooltip": "Uloge moderatora. Moderatori imaju pristup gotovo svim naredbama za moderiranje. Prema zadanim postavkama za svakoga tko može zabraniti članove"
-      },
-      "rolesMuted": {
-        "name": "Utišano",
-        "tooltip": "Ako je konfigurirana, prigušena uloga dodjeljuje se prigušenim korisnicima. Ako nije postavljena prigušena uloga, od vas će se tražiti da stvorite jednu."
-      },
-      "rolesPublic": {
-        "name": "Javne Uloge",
-        "tooltip": "Javne uloge. Ove uloge može preuzeti bilo koji korisnik pomoću naredbe \"roles\"."
-      },
-      "rolesRemoveInitial": {
-        "name": "Ukloni Početno",
-        "tooltip": "Ako je omogućeno, preuzimanje javne uloge automatski uklanja početnu ulogu."
-      },
-      "rolesRestrictedAttachment": {
-        "name": "Ograničena privitak",
-        "tooltip": "Dodijeljeno članovima kojima je onemogućeno prijenos priloga."
-      },
-      "rolesRestrictedEmbed": {
-        "name": "Ograničeni Ugrađivanje",
-        "tooltip": "Dodijeljeno članovima kojima je onemogućeno ugrađivanje poveznica."
-      },
-      "rolesRestrictedEmoji": {
-        "name": "Ograničeni Emoji",
-        "tooltip": "Dodijeljeno članovima kojima je onemogućeno korištenje vanjskih emojija."
-      },
-      "rolesRestrictedReaction": {
-        "name": "Ograničena Reakcija",
-        "tooltip": "Dodijeljeno članovima čije su reakcije ograničene."
-      },
-      "rolesRestrictedVoice": {
-        "name": "Ograničeni Glas",
-        "tooltip": "Dodijeljeno članovima kojima je ograničen pristup glasovnim kanalima."
-      }
-    }
-  }
+	"$schema": "../../schemas/guilds.schema.json",
+	"guild_card": {
+		"invite_aria": "Pozovite bota u {name}",
+		"invite_bot": "Pozovi Bota",
+		"invite_bot_aria": "Pozovite WolfStar bota u {name}",
+		"manage_aria": "Upravljaj {name}",
+		"manage_server": "Upravljaj poslužiteljem",
+		"manage_server_aria": "Upravljaj postavkama poslužitelja {name}",
+		"members_online": "Članovi online",
+		"no_permission": "Nema dopuštenja",
+		"no_permission_aria": "{name} - Nema dopuštenja",
+		"total_members": "Ukupno članova: {count}"
+	},
+	"guild_settings": {
+		"channels": {
+			"excluded_channels": "Isključeni Kanali",
+			"excluded_channels_help": "Odaberite kanale koje treba zanemariti za određene događaje zapisivanja. Poruke i događaji u tim kanalima neće biti zabilježeni.",
+			"form_aria": "Postavke kanala oblik",
+			"logging_channels": "Kanali za evidentiranje",
+			"logging_channels_help": "Odaberite koje kanale treba primati određene zapisnike događaja. Ostavite prazno za onemogućiti zapisivanje tog događaja.",
+			"subtitle": "Odaberite gdje WolfStar objavljuje zapise i koje kanale ignorirati.",
+			"title": "Postavke Kanala"
+		},
+		"commands": {
+			"category_reset": "Resetiranje Kategorije",
+			"category_reset_description": "Naredbe za {category} vraćene na spremljene vrijednosti.",
+			"disable_all": "Onemogući sve",
+			"enable_all": "Omogući sve",
+			"form_aria": "Postavke onemogućenih naredbi",
+			"reset": "Poništi",
+			"save_failed": "Nije moguće spremiti postavke naredbe. {message}",
+			"subtitle": "Odaberite koje naredbe uključiti ili isključiti na svom poslužitelju",
+			"title": "Naredbe"
+		},
+		"events": {
+			"channels_page_link": "stranica Kanali",
+			"form_aria": "Postavke događaja oblik",
+			"message_events": "Poruke događaja",
+			"message_events_help": "Ovi događaji prate aktivnost poruka. Potrebni kanali razlikuju se po tipu događaja i mogu se konfigurirati na {channelsPage}.",
+			"moderation_events": "Moderacijski događaji",
+			"moderation_events_help": "Ovi događaji uključuju radnje moderiranja.\nMolimo postavite kanal za zapise moderiranja na {channelsPage}.",
+			"subtitle": "Postavite koje događaje treba bilježiti i pratiti",
+			"title": "Postavke događaja",
+			"toggle_aria": "Uključi/isključi {title}"
+		},
+		"filter": {
+			"capitals": {
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrazaca za filtriranje velikih slova",
+				"maximum": "Maksimalan broj velikih slova",
+				"minimum": "Minimalan broj znakova",
+				"save_failed": "Nije moguće spremiti postavke filtra velikih slova. {message}",
+				"title": "Postavke filtra za velika slova",
+				"toggle": "Prebaci filter velikih slova",
+				"toggle_help": "Blokira poruke s previše velikih slova."
+			},
+			"common": {
+				"actions": {
+					"ban": "Zabrani",
+					"kick": "Izbacivanje",
+					"mute": "Utišaj",
+					"none": "Ništa",
+					"softban": "Privremena zabrana",
+					"warning": "Upozorenje"
+				},
+				"alerts": "Upozorenja",
+				"alerts_help": "Objavi upozorenje u kanalu u kojem je došlo do prekršaja.",
+				"delete_message": "Izbriši poruku",
+				"delete_message_help": "Briše poruku koja je pokrenula filter.",
+				"disabled": "Onemogućeno",
+				"duration": "Trajanje",
+				"duration_help": "Koliko dugo traje utišavanje ili zabrana",
+				"enabled": "Omogućen",
+				"hard_action": "Teška Akcija",
+				"hard_action_description": "Što se događa kada član premaši ograničenje",
+				"logging": "Zapisivanje",
+				"logging_help": "Šalje poruku dnevnika na konfigurirani kanal za moderiranje.",
+				"options": "Postavke",
+				"punishments": "Kazne",
+				"select_action_aria": "Odaberite kaznenu radnju",
+				"soft_actions": "Meke akcije",
+				"threshold": "Prag",
+				"threshold_duration": "Vremenski okvir (sekunde)",
+				"threshold_maximum": "Kršenja prije kazne"
+			},
+			"invites": {
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrasca filtra pozivnih linkova",
+				"save_failed": "Nije moguće spremiti postavke filtra za pozivnice. {message}",
+				"title": "Filter pozivnih linkova",
+				"toggle": "Prebaci filter za pozive",
+				"toggle_help": "Blokira Discord pozivnice objavljene u chatu."
+			},
+			"lines": {
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrazaca za filtriranje novih linija",
+				"maximum": "Najviše linija",
+				"maximum_help": "Maksimalan broj novih redaka u poruci prije nego što se primijeni filtar",
+				"save_failed": "Nije moguće spremiti postavke filtra za nove linije. {message}",
+				"title": "Filtar za neželjene linije",
+				"toggle": "Uključi isključivanje linijskog filtera",
+				"toggle_help": "Blokira poruke s previše novih redaka."
+			},
+			"links": {
+				"add_link": "Dodaj dopuštenu poveznicu",
+				"add_link_placeholder": "npr. example.com",
+				"allowed_links": "Dopuštene poveznice",
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrazaca za filtriranje linkova",
+				"remove_link": "Ukloni {link}",
+				"save_failed": "Nije moguće spremiti postavke filtra za linkove. {message}",
+				"title": "Filter za linkove",
+				"toggle": "Prebaci filter za linkove",
+				"toggle_help": "Blokira poruke koje sadrže poveznice."
+			},
+			"messages": {
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrasca za filtriranje dupliciranja poruka",
+				"save_failed": "Nije moguće spremiti postavke filtra za dupliciranje poruka. {message}",
+				"title": "Filter poruka dupliciranja",
+				"toggle": "Prebaci filter poruka dupliciranja",
+				"toggle_help": "Blokira ponovljene identične poruke."
+			},
+			"reactions": {
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrazaca za filtriranje reakcija",
+				"save_failed": "Nije moguće spremiti postavke filtra za reakcije. {message}",
+				"title": "Filter reakcija",
+				"toggle": "Prebaci filter reakcija",
+				"toggle_help": "Blokira određene reakcije emojijima."
+			},
+			"word": {
+				"add_placeholder": "npr. riječuvrijedjanje",
+				"add_word": "Dodaj filtriranu riječ",
+				"alerts_toggle": "Prebacivanje upozorenja soft action",
+				"delete_toggle": "Prebaci brisanje softver akciju",
+				"filtered_words": "Filtrovane Riječi",
+				"filter_label": "Filtriraj {state}",
+				"form_aria": "Postavke obrazaca za filtriranje riječi",
+				"logging_toggle": "Prebaci zapisivanje soft action",
+				"remove_word": "Ukloni {word}",
+				"save_failed": "Nije moguće spremiti postavke filtra za riječi. {message}",
+				"title": "Filter Riječi",
+				"toggle": "Prebaci filter riječi",
+				"toggle_help": "Blokira poruke koje sadrže određene riječi ili izraze."
+			}
+		},
+		"general": {
+			"copy_server_id": "Kopiraj ID poslužitelja",
+			"form_aria": "Obrazac za opće postavke ceha",
+			"language": "Jezik",
+			"language_aria": "Odaberi jezik bota",
+			"language_description": "Jezik koji WolfStar koristi za odgovore na ovom poslužitelju.",
+			"language_placeholder": "Odaberi jezik...",
+			"need_help": "Trebate pomoć?",
+			"no_activity": "Još nema promjena postavki",
+			"no_activity_description": "Promjene koje napravite u postavkama ovog poslužitelja pojavit će se ovdje kako biste mogli pratiti tko je što promijenio.",
+			"prefix": "Prefiks",
+			"prefix_aria": "Prefiks naredbe bota",
+			"prefix_description": "Prefiks korišten za pokretanje WolfStar naredbi na ovom poslužitelju.",
+			"prefix_placeholder": "Odaberite prefiks naredbe",
+			"recent_activity": "Nedavna aktivnost",
+			"save_failed_message": "Nije moguće spremiti opće postavke. {message}",
+			"server_id_copied_description": "ID poslužitelja je kopiran u vašu međuspremnik.",
+			"server_id_copied_title": "ID poslužitelja kopiran",
+			"server_info": "Informacije o serveru",
+			"server_info_description": "Vaš poslužitelj na prvi pogled. Podesite postavke ispod ili istražite odjeljke u bočnoj traci.",
+			"server_stats_aria": "Statistike poslužitelja",
+			"stat_categories": "Kategorije",
+			"stat_members": "Članovi",
+			"stat_roles": "Uloge",
+			"stat_text_channels": "Tekstualni kanali",
+			"stat_voice_channels": "Glasovni kanali",
+			"subtitle": "Postavite osnovne postavke poslužitelja za WolfStar",
+			"title": "Opće postavke"
+		},
+		"moderation": {
+			"form_aria": "Obrazac postavki moderiranja",
+			"subtitle": "Konfigurirajte kako WolfStar upravlja radnjama moderiranja poput zabrana, izbacivanja i utišavanja.",
+			"title": "Postavke Kazni"
+		},
+		"please_try_again": "Pokušajte ponovo.",
+		"roles": {
+			"configurable": "Konfigurabilne Uloge",
+			"configurable_help": "Dodijelite uloge za osnovne funkcije bota, poput moderiranja i automatskog dodjeljivanja.",
+			"form_aria": "Postavke uloga oblik",
+			"general_options": "Opće Opcije",
+			"restricted": "Ograničeni Uloge",
+			"restricted_help": "Uloge primijenjene kada se upotrijebi naredba ograničenja",
+			"subtitle": "Postavite uloge koje WolfStar koristi za moderiranje, dopuštenja i automatizaciju.",
+			"title": "Uloge"
+		},
+		"save_failed": "Spremanje nije uspjelo"
+	},
+	"settings": {
+		"entries": {
+			"channelsIgnoreAll": {
+				"description": "Kanali isključeni iz svih vrsta zapisivanja.",
+				"name": "Sve zapisnike"
+			},
+			"channelsIgnoreMessageDelete": {
+				"description": "Kanali isključeni iz evidentiranja brisanja poruka.",
+				"name": "Zapisnici brisanja poruka"
+			},
+			"channelsIgnoreMessageEdit": {
+				"description": "Kanali isključeni iz evidentiranja uređivanja poruka.",
+				"name": "Ignoriranje Uređivanja Poruka Zapis"
+			},
+			"channelsIgnoreReactionAdd": {
+				"description": "Kanali isključeni iz evidentiranja reakcija.",
+				"name": "Evidencije dodavanja reakcije"
+			},
+			"channelsLogsChannelCreate": {
+				"description": "Prima zapis o evidentiranju kada je stvoren novi kanal.",
+				"name": "Kreiranje Kanala Dnevnik"
+			},
+			"channelsLogsChannelDelete": {
+				"description": "Kada se izbriše kanal, prima zapis o evidentiranju.",
+				"name": "Channel Delete Logs"
+			},
+			"channelsLogsChannelUpdate": {
+				"description": "Prima poruku zapisnika kada je bilo koji kanal ažuriran, uključujući izvršene promjene.",
+				"name": "Channel Update Logs"
+			},
+			"channelsLogsEmojiCreate": {
+				"description": "Prima zapis o evidentiranju kada je stvoren novi emoji.",
+				"name": "Dnevnici stvaranja emotikona"
+			},
+			"channelsLogsEmojiDelete": {
+				"description": "Prima poruku zapisnika kada se emoji obriše.",
+				"name": "Izbrisati dnevnike emotikona"
+			},
+			"channelsLogsEmojiUpdate": {
+				"description": "Prima poruku zapisnika kada je ažurirana emoji, uključujući izvršene promjene.",
+				"name": "Ažuriranje zapisa emoji"
+			},
+			"channelsLogsImage": {
+				"description": "Prima ponovno učitane kopije slika objavljenih na poslužitelju.",
+				"name": "Zapisnici o slikama"
+			},
+			"channelsLogsMemberAdd": {
+				"description": "Prima dnevnik poruku kada se član pridruži poslužitelju.",
+				"name": "Dnevnik Dodavanja Članova"
+			},
+			"channelsLogsMemberNicknameUpdate": {
+				"description": "Prima dnevnik poruku kada član promijeni svoj nadimak.",
+				"name": "Dnevnici ažuriranja nadimka člana"
+			},
+			"channelsLogsMemberRemove": {
+				"description": "Prima poruku zapisnika kada član napusti, bude izbačen ili zabrana.",
+				"name": "Evidencije uklanjanja članova"
+			},
+			"channelsLogsMemberRolesUpdate": {
+				"description": "Prima zapis o evidentiranju kada član dobije ili izgubi ulogu.",
+				"name": "Dnevnik Uloga Članova"
+			},
+			"channelsLogsMemberUsernameUpdate": {
+				"description": "Receives a log message when a member changes their username.",
+				"name": "Dnevnici ažuriranja korisničkog imena člana"
+			},
+			"channelsLogsMessageDelete": {
+				"description": "Prima poruku zapisnika kada se poruka obriše.",
+				"name": "Zapisnici brisanja poruka"
+			},
+			"channelsLogsMessageDeleteNsfw": {
+				"description": "Prima poruku zapisnika kada se poruka iz NSFW kanala obriše.",
+				"name": "NSFW zapisnici brisanja poruka"
+			},
+			"channelsLogsMessageUpdate": {
+				"description": "Prima poruku zapisnika kada se poruka uređuje.",
+				"name": "Ažuriranje Poruka Zapisnici"
+			},
+			"channelsLogsMessageUpdateNsfw": {
+				"description": "Prima poruku zapisnika kada se poruka iz NSFW kanala uređuje.",
+				"name": "NSFW ažuriranje zapisa poruka"
+			},
+			"channelsLogsModeration": {
+				"description": "Prima sve zapise o slučajevima moderiranja. Potrebno da bi događaji moderiranja radili.",
+				"name": "Dnevnici moderacije"
+			},
+			"channelsLogsPrune": {
+				"description": "Prima poruku zapisnika kada su poruke masovno obrisane (skraćene).",
+				"name": "Ukloni zapise"
+			},
+			"channelsLogsReaction": {
+				"description": "Prima poruku zapisnika kada se reakcija doda na poruku.",
+				"name": "Evidencije reakcija"
+			},
+			"channelsLogsRoleCreate": {
+				"description": "Prima zapis o evidentiranju kada je stvorena nova uloga.",
+				"name": "Kreiranje Uloga Dnevnik"
+			},
+			"channelsLogsRoleDelete": {
+				"description": "Prima zapis o evidentiranju kada je uloga obrisana.",
+				"name": "Izbrisati dnevnike uloga"
+			},
+			"channelsLogsRoleUpdate": {
+				"description": "Prima poruku zapisnika kada je uloga ažurirana, uključujući izvršene promjene.",
+				"name": "Ažuriranje zapisa uloga"
+			},
+			"channelsLogsServerUpdate": {
+				"description": "Prima poruku zapisnika kada su ažurirane postavke poslužitelja, uključujući izvršene promjene.",
+				"name": "Ažuriranje zapisa servera"
+			},
+			"eventsBanAdd": {
+				"description": "Anonimni zapisnik o moderiranju se objavljuje kad je član banovan.",
+				"title": "Zabrana Dodana"
+			},
+			"eventsBanRemove": {
+				"description": "Anonimni zapisnik o moderiranju se objavljuje kad je član odbanovan.",
+				"title": "Zabrana poništena"
+			},
+			"eventsTwemojiReactions": {
+				"description": "Kada član reagira s Twemoji, reakcija se šalje u kanal Dnevnika reakcija.",
+				"title": "Reakcije s Twemojijem"
+			},
+			"messagesIgnoreChannels": {
+				"description": "Kanali isključeni iz evidentiranja brisanja poruka, uređivanja poruka i dodavanja reakcija.",
+				"name": "Evidentiranje brisanja poruka, uređivanja i dodavanja reakcija"
+			},
+			"messagesModerationAutoDelete": {
+				"description": "Briše poruku naredbe kako bi moderator ostao anoniman.",
+				"name": "Sakrij Poruku"
+			},
+			"messagesModerationDm": {
+				"description": "Šalje kažnjenom članu DM s razlogom i trajanjem.",
+				"name": "Poruka korisniku"
+			},
+			"messagesModerationMessageDisplay": {
+				"description": "Označava potvrdu nakon što se izvrši kazna.",
+				"name": "Pošalji odgovor na kaznu"
+			},
+			"messagesModerationReasonDisplay": {
+				"description": "Uključuje razlog u poruci reakcije na kaznu.",
+				"name": "Prikaži razlog"
+			},
+			"messagesModeratorNameDisplay": {
+				"description": "Uključuje ime moderatora u DM poslan kažnjenom članu.",
+				"name": "Prikazati Ime Moda"
+			},
+			"rolesAdmin": {
+				"name": "Administrator",
+				"tooltip": "Uloge administratora. Administratori imaju pristup svim naredbama za moderiranje i upravljanje. Prema zadanim postavkama za svakoga s dozvolom \"Upravljaj serverom\"."
+			},
+			"rolesInitial": {
+				"name": "Početno",
+				"tooltip": "Početna uloga, ako je konfigurirana, dodjeljuje se korisnicima čim se pridruže."
+			},
+			"rolesModerator": {
+				"name": "Moderator",
+				"tooltip": "Uloge moderatora. Moderatori imaju pristup gotovo svim naredbama za moderiranje. Prema zadanim postavkama za svakoga tko može zabraniti članove"
+			},
+			"rolesMuted": {
+				"name": "Utišano",
+				"tooltip": "Ako je konfigurirana, prigušena uloga dodjeljuje se prigušenim korisnicima. Ako nije postavljena prigušena uloga, od vas će se tražiti da stvorite jednu."
+			},
+			"rolesPublic": {
+				"name": "Javne Uloge",
+				"tooltip": "Javne uloge. Ove uloge može preuzeti bilo koji korisnik pomoću naredbe \"roles\"."
+			},
+			"rolesRemoveInitial": {
+				"name": "Ukloni Početno",
+				"tooltip": "Ako je omogućeno, preuzimanje javne uloge automatski uklanja početnu ulogu."
+			},
+			"rolesRestrictedAttachment": {
+				"name": "Ograničena privitak",
+				"tooltip": "Dodijeljeno članovima kojima je onemogućeno prijenos priloga."
+			},
+			"rolesRestrictedEmbed": {
+				"name": "Ograničeni Ugrađivanje",
+				"tooltip": "Dodijeljeno članovima kojima je onemogućeno ugrađivanje poveznica."
+			},
+			"rolesRestrictedEmoji": {
+				"name": "Ograničeni Emoji",
+				"tooltip": "Dodijeljeno članovima kojima je onemogućeno korištenje vanjskih emojija."
+			},
+			"rolesRestrictedReaction": {
+				"name": "Ograničena Reakcija",
+				"tooltip": "Dodijeljeno članovima čije su reakcije ograničene."
+			},
+			"rolesRestrictedVoice": {
+				"name": "Ograničeni Glas",
+				"tooltip": "Dodijeljeno članovima kojima je ograničen pristup glasovnim kanalima."
+			}
+		}
+	}
 }

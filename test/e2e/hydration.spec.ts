@@ -31,6 +31,16 @@ test.describe("Hydration", () => {
 		}
 	});
 
+	test.describe("renders the Staryl command composer", () => {
+		test("/staryl", async ({ page: pw, goto }) => {
+			await goto("/staryl", { waitUntil: "networkidle" });
+
+			await expect(
+				pw.getByRole("combobox", { name: "Message #staryl-notifications" }),
+			).toBeVisible();
+		});
+	});
+
 	test.describe("does not produce hydration mismatches", () => {
 		for (const page of PAGES) {
 			test(`${page}`, async ({ goto, hydrationErrors }) => {

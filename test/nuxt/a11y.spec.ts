@@ -6,10 +6,18 @@ import {
 	ChangelogContributorMention,
 	ChangelogContributors,
 	UApp,
-	CommandsSection,
-	CommandsShowcase,
-	CtaSection,
-	DashboardSection,
+
+	// #region Wolfstar components
+	CommandsSection as WolfstarCommandsSection,
+	CommandsShowcase as WolfstarCommandsShowcase,
+	CtaSection as WolfstarCtaSection,
+	DashboardSection as WolfstarDashboardSection,
+	ModerationShowcase as WolfstarModerationShowcase,
+	ModerationShowcaseSection as WolfstarModerationShowcaseSection,
+	ProductProofSection as WolfstarProductProofSection,
+	// #endregion
+
+	// #region Discord components
 	DiscordChannelHeader,
 	DiscordChannelInfo,
 	DiscordChannelWelcome,
@@ -30,6 +38,9 @@ import {
 	DiscordChatInputCommandSuggestions,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
+
+	// #endregion
+
 	ErrorPage,
 	ModerationShowcase,
 	ModerationShowcaseSection,
@@ -38,9 +49,16 @@ import {
 	HeroSection,
 	IconsApp,
 	IconsWolfstar,
-	ProductProofSection,
 	SectionHeader,
 	Separator,
+
+	// #region Staryl components
+	ProductProofSection as StarylProductProofSection,
+	CommandsSection as StarylCommandsSection,
+	CommandsShowcase as StarylCommandsShowcase,
+	CtaSection as StarylCtaSection,
+	HeroSection as StarylHeroSection,
+	// #endregion
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { createError } from "h3";
@@ -729,9 +747,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("ProductProofSection", () => {
+		describe("WolfstarProductProofSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(ProductProofSection);
+				const component = await mountSuspended(WolfstarProductProofSection);
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});
@@ -766,6 +784,54 @@ describe("component accessibility audits", () => {
 		describe("CommandsSection", () => {
 			it("should have no accessibility violations", async () => {
 				const component = await mountSuspended(CommandsSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StarylHeroSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylHeroSection, {
+					props: {
+						buildTime: new Date("2024-06-01T12:00:00Z"),
+						buildVersion: "7.0.0",
+						inviteUrl: "#",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StarylProductProofSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylProductProofSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StarylCommandsShowcase", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylCommandsShowcase);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StarylCommandsSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylCommandsSection);
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("StarylCtaSection", () => {
+			it("should have no accessibility violations", async () => {
+				const component = await mountSuspended(StarylCtaSection, {
+					props: { inviteUrl: "#" },
+				});
 				const results = await runAxe(component);
 				expect(results.violations).toEqual([]);
 			});

@@ -344,6 +344,7 @@ export const Profiles = {
 	baddie: { app: false, name: "Baddie", verified: false },
 	louduser: { app: false, name: "Loud User", verified: false },
 	redstar: { app: false, name: "RedStar", verified: false },
+	staryl: { app: true, name: "Staryl", verified: true },
 	stella: { app: false, name: "Stella", verified: false },
 	wolfstar: { app: true, name: "WolfStar", verified: true },
 } as const satisfies Record<string, Profile>;

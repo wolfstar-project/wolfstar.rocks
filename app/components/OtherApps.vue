@@ -7,6 +7,13 @@
 		spacing="none"
 		class="py-24"
 	>
+		<SectionHeader
+			eyebrow="Other Apps"
+			title="Want more? We've got you covered."
+			heading-id="home-apps-heading"
+			class="mb-10"
+		/>
+
 		<div
 			v-for="app of apps"
 			:key="app.name"
@@ -26,9 +33,9 @@
 				>
 					Also from WolfStar Project
 				</p>
-				<h2 id="home-apps-heading" class="text-3xl font-bold text-base-content">
+				<h3 class="text-3xl font-bold text-base-content">
 					{{ app.name }}
-				</h2>
+				</h3>
 				<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
 					{{ app.description }}
 				</p>

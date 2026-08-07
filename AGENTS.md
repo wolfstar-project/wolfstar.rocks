@@ -81,7 +81,7 @@ pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
 pnpm vp run i18n:check           # Audit locale feature files against en/*
-pnpm i18n:check:fix              # Sync locale keys (EN placeholders for missing)
+pnpm i18n:check:fix              # Sync locale keys (empty placeholders for missing)
 pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
 pnpm i18n:report:fix             # Remove unused keys from all locale feature files
 pnpm vp run i18n:schema          # Regenerate i18n/schemas/*.schema.json from en/*
@@ -125,6 +125,14 @@ pnpm prisma:seed                 # Seed the database
 pnpm prisma:studio               # Visual database editor (http://localhost:5555)
 pnpm update:interactive          # Interactive dependency updates with taze
 ```
+
+## Localization (i18n)
+
+- `i18n/locales/en/*.json` is the source of truth; every other locale carries the same key set
+- **Untranslated keys are empty strings, never a copy of the English text** — an English copy is indistinguishable from a real translation for Tolgee, Lunaria and translators, and it hides regional variants (`es-419` merges `es/*` then `es-419/*`)
+- `config/i18n-empty-placeholders.ts` provides the Vite plugin (registered in `nuxt.config.ts` under `vite.plugins`) that drops empty leaves from `i18n/locales/**/*.json` at build time, so vue-i18n falls back to `en-US` instead of rendering `""`. Locale _types_ are still generated from the on-disk files, so stripped keys stay valid in `$t()` call sites
+- `pnpm i18n:check:fix` (`scripts/compare-translations.ts`) adds missing keys as `""` and removes extra keys
+- `.tolgeerc.cjs` pulls `states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"]`; without `UNTRANSLATED`, `scripts/tolgee-pull-remap.ts` would wipe untranslated keys from disk on every sync (see wolfstar-project/wolfstar#240)
 
 ## Prisma and Database Conventions
 

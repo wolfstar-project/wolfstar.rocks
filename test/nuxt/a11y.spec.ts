@@ -51,11 +51,11 @@ import {
 	Separator,
 
 	// #region Staryl components
-	ProductProofSection as StarylProductProofSection,
-	CommandsSection as StarylCommandsSection,
-	CommandsShowcase as StarylCommandsShowcase,
-	CtaSection as StarylCtaSection,
-	HeroSection as StarylHeroSection,
+	StarylCommandsSection,
+	StarylCommandsShowcase,
+	StarylCtaSection,
+	StarylHeroSection,
+	StarylProductProofSection,
 	// #endregion
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";

@@ -1,6 +1,11 @@
 <template>
 	<section class="discord-chat" :aria-label="`${channelName} channel chat`">
-		<DiscordScrollbar auto-hide class="discord-chat-scrollbar">
+		<DiscordScrollbar
+			auto-hide
+			focusable
+			:viewport-label="`${channelName} channel messages`"
+			class="discord-chat-scrollbar"
+		>
 			<!-- Short channels: pin welcome + messages as one block above the composer. -->
 			<div class="discord-chat-scroller-inner mt-auto">
 				<DiscordChannelWelcome :channel-name :date :date-time :topic />

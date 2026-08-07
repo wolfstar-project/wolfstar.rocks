@@ -67,6 +67,11 @@ storybook-static
 .claude/state
 .claude/context/jobs/
 
+# Agent build job artifacts
+build-contract.md
+build-handoff.json
+build-progress.md
+
 # Tolgee
 i18n/.tolgee-pull/
 .tmp/

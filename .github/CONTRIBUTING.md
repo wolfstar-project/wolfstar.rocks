@@ -150,7 +150,7 @@ pnpm prisma:studio    # Visual database editor (http://localhost:5555)
 
 # Localization (vp tasks + fix scripts)
 pnpm vp run i18n:check    # Audit locale feature files against en/*
-pnpm i18n:check:fix      # Add missing keys (EN placeholders) / remove extras
+pnpm i18n:check:fix      # Add missing keys (empty placeholders) / remove extras
 pnpm vp run i18n:report   # Detect missing, unused, or dynamic keys in code
 pnpm i18n:report:fix     # Remove unused keys from all locale feature files
 pnpm vp run i18n:schema   # Regenerate i18n/schemas/*.schema.json from en/*
@@ -407,12 +407,18 @@ Locales are split by feature under `i18n/locales/{locale}/{feature}.json` (for e
 - Per-feature schemas: [`i18n/schemas/`](../i18n/schemas)
 - Lunaria config: [`lunaria.config.ts`](../lunaria.config.ts)
 
+#### Untranslated keys are empty, never English
+
+Every locale carries the full English key set, but a key that has not been translated yet holds an **empty string** — never a copy of the English text. An English copy looks like a finished translation to Tolgee, Lunaria and translators, and in a regional variant (`es-419` loads `es/*` then `es-419/*`) it also overwrites the base translation.
+
+Empty leaves are stripped from the bundle at build time by the Vite plugin in [`config/i18n-empty-placeholders.ts`](../config/i18n-empty-placeholders.ts) (registered under `vite.plugins` in `nuxt.config.ts`), so the key is genuinely absent at runtime and vue-i18n falls back to `en-US` instead of rendering an empty string. Locale types are generated from the on-disk files, so stripped keys remain valid in `$t()` call sites.
+
 ### i18n commands
 
 | Command                        | Purpose                                                                |
 | ------------------------------ | ---------------------------------------------------------------------- |
 | `pnpm vp run i18n:check`       | Compare locales to `en/*` (reports missing/extra keys; removes extras) |
-| `pnpm i18n:check:fix [locale]` | Add missing keys with English placeholders (optionally for one locale) |
+| `pnpm i18n:check:fix [locale]` | Add missing keys as empty placeholders (optionally for one locale)     |
 | `pnpm vp run i18n:report`      | Fail on missing, unused, or dynamic keys used in `app/**`              |
 | `pnpm i18n:report:fix`         | Remove unused keys from all locale feature files                       |
 | `pnpm vp run i18n:schema`      | Regenerate `i18n/schemas/*.schema.json` for IDE validation             |
@@ -422,10 +428,10 @@ CI runs `i18n:report` and checks that i18n schemas are up to date. Autofix runs 
 
 ### Adding a locale
 
-1. Copy `i18n/locales/en/*.json` into `i18n/locales/<code>/`
+1. Create `i18n/locales/<code>/` with one file per feature listed in [`i18n/locale-features.json`](../i18n/locale-features.json), each containing only its schema pointer — for example `{ "$schema": "../../schemas/common.schema.json" }`. Do **not** copy `i18n/locales/en/*.json`: that ships English text as if it were translated
 2. Register it in `config/i18n.ts` (`locales` array) with `files: ["<code>/common.json", "<code>/auth.json", …]` (same feature set as existing locales)
 3. Add it to `lunaria.config.ts` → `locales`
-4. Run `pnpm i18n:check:fix` and `pnpm vp run i18n:schema`
+4. Run `pnpm i18n:check:fix` (fills the full key set with empty placeholders) and `pnpm vp run i18n:schema`
 
 Prefer static string keys with `$t('…')` / `t('…')` so `i18n:report` can analyze usage. For HTML inside translations, use [`i18n-t`](https://vue-i18n.intlify.dev/guide/advanced/component.html).
 

@@ -1,27 +1,5 @@
 {
 	"$schema": "../../schemas/components.schema.json",
-	"errors": {
-		"session_expired": "Sessione scaduta",
-		"access_denied": "Accesso negato",
-		"too_many_requests": "Troppe richieste",
-		"network_error": "Errore di rete",
-		"request_timeout": "Timeout della richiesta",
-		"unexpected": "Si è verificato un errore imprevisto.",
-		"check_connection": "Controlla la tua connessione internet e riprova.",
-		"rate_limit": "Il rate limiting è attivo per proteggere il servizio.",
-		"server_error": "Qualcosa è andato storto dal nostro lato. Riprova più tardi.",
-		"server_error_title": "Errore del server",
-		"if_persists": "Se il problema persiste, contatta il supporto.",
-		"retrying": "Nuovo tentativo...",
-		"session_expired_description": "La sessione è scaduta. Accedi di nuovo.",
-		"access_denied_description": "Non hai il permesso di visualizzare questi server.",
-		"too_many_requests_description": "Hai effettuato troppe richieste. Attendi un momento e riprova.",
-		"request_timeout_description": "La richiesta ha impiegato troppo tempo.",
-		"request_timeout_suggestion": "Controlla la connessione e riprova.",
-		"network_error_description": "Impossibile connettersi al server.",
-		"loading_servers": "Caricamento server...",
-		"failed_to_load_servers": "Impossibile caricare i server."
-	},
 	"feedback": {
 		"send": "Invia feedback",
 		"title": "Invia feedback",

@@ -65,7 +65,7 @@ export interface Profile {
 	verified: boolean;
 }
 
-export type ProfileName = "baddie" | "louduser" | "redstar" | "stella" | "wolfstar";
+export type ProfileName = "baddie" | "louduser" | "redstar" | "staryl" | "stella" | "wolfstar";
 
 /** Applications rendered inside the Discord slash-command suggestion panel. */
 export interface SlashCommandApp {

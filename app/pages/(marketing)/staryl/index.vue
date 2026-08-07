@@ -1,47 +1,27 @@
 <template>
-	<section class="mt-28 flex flex-col items-center text-center">
-		<h1 class="title animate-fade-in-up-safe pb-4">Imagine a<br />social and feeder network</h1>
-		<p class="max-w-120 animate-fade-in-up-safe [animation-delay:0.1s]">
-			A very customizable multilanguage application to cover your members' social and feeder
-			network needs, with a few entertainment features and more,
-			<span class="font-bold underline underline-offset-2">100% for free</span>!
-		</p>
-	</section>
-	<section>
-		<BuildEnvironment :footer="false" class="mt-16" />
-	</section>
-	<section
-		class="join mt-16 flex animate-fade-in-up items-center justify-center animate-fade-in-delay-2"
-	>
-		<NuxtLink class="btn join-item sm:btn-wide" :to="Invites.Staryl">
-			<UIcon name="ph:plus-circle-fill" class="h-5 w-5" aria-hidden="true" /> Add App
-		</NuxtLink>
-		<NuxtLink class="btn join-item sm:btn-wide" to="#explore">
-			<UIcon name="ph:magnifying-glass-fill" class="h-5 w-5" aria-hidden="true" />
-			Explore
-		</NuxtLink>
-	</section>
+	<div class="text-base-content">
+		<HeroSection :build-time :build-version="buildInfo.version" :invite-url="Invites.Staryl" />
 
-	<h2 class="mt-72 animate-on-scroll text-center text-5xl font-bold">COMING SOON...</h2>
+		<ProductProofSection />
 
-	<OtherApps :apps="[OtherApps.WolfStar]" />
+		<CommandsSection />
+
+		<OtherApps :apps="[otherApps.WolfStar]" />
+
+		<CtaSection :invite-url="Invites.Staryl" />
+	</div>
 </template>
 
 <script setup lang="ts">
 useSeoMetadata({
 	description:
-		"Staryl's landing page. A very customizable multilanguage application to cover your members' social and feeder network needs, with a few entertainment features and more, 100% for free!",
+		"Staryl is an in-development Discord app for social notifications from the WolfStar Project. Its public invite is not available yet.",
 	shouldOgImage: true,
 	title: "Staryl",
 });
 
-const OtherApps = useApp();
+const otherApps = useApp();
 const Invites = useInvites();
+const { buildInfo } = useAppConfig();
+const buildTime = computed(() => new Date(buildInfo.time));
 </script>
-
-<style scoped>
-@reference "@/assets/css/main.css";
-.title {
-	@apply bg-linear-to-b from-white to-branding-staryl bg-clip-text text-4xl leading-[3.05rem] font-bold text-transparent md:text-5xl md:leading-[3.8rem];
-}
-</style>

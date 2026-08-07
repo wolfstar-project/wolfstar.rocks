@@ -19,6 +19,7 @@
 	"pwa": {
 		"update_available": "Aggiornamento disponibile",
 		"install_app": "Installa app",
+		"install": "Install",
 		"dismiss": "Chiudi",
 		"reload": "Ricarica"
 	},

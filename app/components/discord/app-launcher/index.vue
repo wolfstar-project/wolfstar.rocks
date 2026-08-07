@@ -882,11 +882,11 @@ function onHandlePointerDown(event: PointerEvent) {
 	if (event.currentTarget instanceof HTMLElement) {
 		event.currentTarget.setPointerCapture(event.pointerId);
 	}
-
-	window.addEventListener("pointermove", onHandlePointerMove);
-	window.addEventListener("pointerup", onHandlePointerUp);
-	window.addEventListener("pointercancel", onHandlePointerUp);
 }
+
+useEventListener(() => (sheetDragging.value ? window : null), "pointermove", onHandlePointerMove);
+useEventListener(() => (sheetDragging.value ? window : null), "pointerup", onHandlePointerUp);
+useEventListener(() => (sheetDragging.value ? window : null), "pointercancel", onHandlePointerUp);
 
 function onHandlePointerMove(event: PointerEvent) {
 	const session = sheetDragSession;
@@ -908,10 +908,6 @@ function onHandlePointerMove(event: PointerEvent) {
 function onHandlePointerUp(event: PointerEvent) {
 	const session = sheetDragSession;
 	if (!session || event.pointerId !== session.pointerId) return;
-
-	window.removeEventListener("pointermove", onHandlePointerMove);
-	window.removeEventListener("pointerup", onHandlePointerUp);
-	window.removeEventListener("pointercancel", onHandlePointerUp);
 
 	const deltaY = event.clientY - session.startY;
 	sheetSnap.value = resolveDiscordAppLauncherSheetSnap({

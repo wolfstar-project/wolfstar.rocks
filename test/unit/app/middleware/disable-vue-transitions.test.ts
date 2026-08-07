@@ -9,7 +9,7 @@ describe("disable-vue-transitions middleware", () => {
 		// defineNuxtRouteMiddleware is a Nuxt runtime auto-import unavailable in plain unit tests;
 		// stub it as an identity wrapper so the module can be loaded and evaluated.
 		vi.stubGlobal("defineNuxtRouteMiddleware", (fn: MiddlewareFn) => fn);
-		const mod = await import("~/middleware/disable-vue-transitions.global");
+		const mod = await import("~/middleware/disable-vue-transitions.global.client");
 		middleware = mod.default as MiddlewareFn;
 	});
 

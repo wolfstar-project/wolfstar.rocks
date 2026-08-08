@@ -8,8 +8,8 @@
 	>
 		<SectionHeader
 			eyebrow="Command flow preview"
-			title="A preview of how Staryl will respond."
-			description="Staryl is still in development. The commands and responses below are placeholders that demonstrate the interaction, not shipped behaviour."
+			title="Configure Twitch notifications with Staryl."
+			description="Use Staryl’s Twitch subscription commands to send live and offline stream notifications to the right channel."
 			heading-id="staryl-commands-heading"
 			align="start"
 			class="mb-10"

@@ -70,6 +70,10 @@ defineSlots<ChatSlots>();
 	background-color: var(--discord-chat-bg);
 }
 
+:global([data-theme="light"]) .discord-chat {
+	--discord-chat-bg: oklch(98.17% 0.002 264);
+}
+
 .discord-chat-scrollbar {
 	@apply h-full max-h-full min-h-0 flex-1;
 }

@@ -1,6 +1,7 @@
 import {
 	WolfstarCommandsSection,
 	WolfstarCommandsShowcase,
+	StarylCommandsShowcase,
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
@@ -1547,6 +1548,35 @@ describe("component SSR rendering", () => {
 			expect(
 				wrapper.find(".showcase-desktop-command-response .discord-v2-container").exists(),
 			).toBe(true);
+		});
+	});
+
+	describe("StarylCommandsShowcase", () => {
+		it("uses the shipped Twitch commands and renders their response formats", async () => {
+			const wrapper = await mountSuspended(StarylCommandsShowcase);
+
+			expect(wrapper.text()).toContain("/twitch-subscriptions add");
+			expect(wrapper.text()).toContain("/twitch-subscriptions remove");
+			expect(wrapper.text()).toContain("/twitch-subscriptions reset");
+			expect(wrapper.text()).toContain("/twitch-subscriptions show");
+			expect(wrapper.text()).toContain("/twitch-subscriptions test");
+			expect(wrapper.text()).not.toContain("Placeholder");
+			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
+			expect(wrapper.find(".staryl-command-response").text()).toContain(
+				"Whenever shroud goes live",
+			);
+
+			const showSuggestion = wrapper
+				.findAll(".discord-slash-command-suggestion")
+				.find((suggestion) => suggestion.text().includes("/twitch-subscriptions show"));
+			expect(showSuggestion).toBeDefined();
+			await showSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-embed").text()).toContain("Twitch Subscriptions");
+			expect(wrapper.find(".discord-embed").text()).toContain(
+				"shroud — #staryl-notifications → Live",
+			);
 		});
 	});
 

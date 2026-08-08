@@ -8,12 +8,25 @@ const {
 
 const EXPECTED_HTTP_STATUSES = new Set([400, 401, 403, 404, 409, 429]);
 
+/**
+ * Matches only application-generated H3 errors (created via `createError()`),
+ * mirroring h3's own `isError()` marker check. Upstream dependency failures
+ * (e.g. ofetch `FetchError`s from the bot API) also carry a numeric
+ * `status`/`statusCode` but must stay visible in Sentry.
+ */
+function isApplicationHttpError(exception: unknown): exception is { statusCode: unknown } {
+	return (
+		typeof exception === "object" &&
+		exception !== null &&
+		(exception.constructor as { __h3_error__?: boolean } | undefined)?.__h3_error__ === true
+	);
+}
+
 function getHttpStatus(event: Sentry.ErrorEvent, hint: Sentry.EventHint): number | undefined {
 	const originalException = hint.originalException;
 
-	if (originalException && typeof originalException === "object") {
-		const exception = originalException as Record<string, unknown>;
-		const status = exception.statusCode ?? exception.status;
+	if (isApplicationHttpError(originalException)) {
+		const status = originalException.statusCode;
 
 		if (typeof status === "number") return status;
 	}

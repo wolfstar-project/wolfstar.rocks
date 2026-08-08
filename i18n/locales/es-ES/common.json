@@ -26,6 +26,7 @@
 		"sign_in_discord": "Iniciar sesión con Discord",
 		"user_menu": "Menú de usuario",
 		"profile": "Perfil",
+		"settings": "Settings",
 		"sign_out": "Cerrar sesión"
 	},
 	"footer": {
@@ -60,8 +61,12 @@
 	"common": {
 		"language": "Idioma",
 		"appearance": "Apariencia",
+		"system": "System",
 		"light": "Claro",
 		"dark": "Oscuro",
+		"midnight": "Midnight",
+		"midnight_experimental": "Midnight (experimental)",
+		"experimental": "Experimental",
 		"enabled": "Activado",
 		"disabled": "Desactivado",
 		"none": "Ninguno",

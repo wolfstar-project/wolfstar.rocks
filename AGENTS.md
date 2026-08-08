@@ -175,7 +175,7 @@ Router-driven View Transitions are enabled via a **manual plugin** (not `experim
 
 - **OAuth pages** and any page that redirects on mount **must** have `definePageMeta({ viewTransition: false })`. Transitions freeze DOM updates mid-flight.
 - **Do not add `view-transition-name`** to elements shared across pages without a per-page uniqueness audit. Duplicate names cause silent VT skip.
-- Reduced-motion is honored at two layers: system (`prefers-reduced-motion: reduce` checked in plugin, CSS `@media` kill-switch) and user-override (`localStorage` key `user-prefers-reduced-motion` via `useReduceMotion()`).
+- Reduced-motion is honored at two layers: system (`prefers-reduced-motion: reduce` checked in plugin, CSS `@media` kill-switch) and user override (`wolfstar-settings.reduceMotion` via `useReduceMotion()`; legacy `user-prefers-reduced-motion` is migrated on first load).
 
 ## Pre-commit Checklist
 

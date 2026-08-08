@@ -525,7 +525,7 @@ describe("component SSR rendering", () => {
 				expect(button.classes()).toContain("tag");
 			});
 
-			it("renders desktop avatar when avatar prop is provided", async () => {
+			it("renders the avatar when avatar prop is provided", async () => {
 				const wrapper = await mountSuspended(DiscordMention, {
 					props: { kind: "mention", avatar: "/avatars/baddie.png" },
 					slots: { default: "baddie" },

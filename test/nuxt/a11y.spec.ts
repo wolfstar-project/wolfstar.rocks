@@ -285,7 +285,7 @@ describe("component accessibility audits", () => {
 				expect(results.violations).toEqual([]);
 			});
 
-			it("should have no accessibility violations with desktop avatar", async () => {
+			it("should have no accessibility violations with an avatar", async () => {
 				const component = await mountSuspended(DiscordMention, {
 					props: { kind: "mention", avatar: "/avatars/baddie.png" },
 					slots: { default: "baddie" },

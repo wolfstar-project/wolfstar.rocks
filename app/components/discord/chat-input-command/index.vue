@@ -39,29 +39,27 @@ interface SlashCommandSlots {
 <script setup lang="ts">
 defineSlots<SlashCommandSlots>();
 
-const props = withDefaults(defineProps<SlashCommandProps>(), {
-	options: () => [],
-});
+const { name, subcommand, subcommandGroup, options = [] } = defineProps<SlashCommandProps>();
 
 const commandPath = computed(() => {
 	try {
 		return validateSlashCommandDisplayParts({
-			commandName: props.name,
-			subcommand: props.subcommand,
-			subcommandGroup: props.subcommandGroup,
+			commandName: name,
+			subcommand,
+			subcommandGroup,
 		});
 	} catch {
-		return { commandName: props.name };
+		return { commandName: name };
 	}
 });
 
 const ariaLabel = computed(() => {
 	const path = formatSlashCommandDisplayName({
-		commandName: props.name,
-		subcommand: props.subcommand,
-		subcommandGroup: props.subcommandGroup,
+		commandName: name,
+		subcommand,
+		subcommandGroup,
 	});
-	const optionText = props.options
+	const optionText = options
 		.map((option) => {
 			const valueText = option.value ?? option.description ?? option.name;
 			return `${option.name}: ${valueText}`;

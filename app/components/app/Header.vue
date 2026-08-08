@@ -1,5 +1,5 @@
 <template>
-	<StarHeader class="app-navbar" title="WolfStar" :aria-label="t('header.site_header')">
+	<StarHeader class="app-navbar" :title="t('header.brand')" :aria-label="t('header.site_header')">
 		<template #left>
 			<NuxtLink
 				class="gap-2.5 flex items-center"

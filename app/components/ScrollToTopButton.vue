@@ -5,7 +5,7 @@
 		:aria-hidden="!isScrolling"
 	>
 		<StarButton
-			aria-label="scroll to top button"
+			:aria-label="t('a11y.scroll_to_top')"
 			icon="heroicons:arrow-up"
 			color="neutral"
 			variant="ghost"
@@ -18,6 +18,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const isScrolling = ref(false);
 
 function scrollToTop() {

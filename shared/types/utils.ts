@@ -1,6 +1,4 @@
-import type { Ref } from "vue";
-
-export type RefType<T extends Ref> = T extends Ref<infer V> ? V : never;
+export type RefType<T> = T extends { value: infer V } ? V : never;
 
 export type DeepPartial<T> = {
 	[P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P] | undefined;

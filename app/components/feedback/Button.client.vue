@@ -6,7 +6,7 @@
 			variant="soft"
 			size="lg"
 			class="rounded-full"
-			aria-label="Send feedback"
+			:aria-label="t('feedback.send')"
 			@click="isOpen = true"
 		/>
 		<FeedbackModal v-model:open="isOpen" />
@@ -14,5 +14,6 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const isOpen = ref(false);
 </script>

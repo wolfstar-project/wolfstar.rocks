@@ -12,7 +12,12 @@
 		>
 			<template #header="{ collapsed }">
 				<div v-if="guildData" class="gap-0.5 flex cursor-pointer items-center">
-					<StarAvatar :src :alt="guildData.name" class="mr-2" />
+					<StarAvatar
+						:src="guildIconSrc"
+						:text="guildData.acronym"
+						:alt="guildData.name"
+						class="mr-2"
+					/>
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
 				<div v-else class="h-10 flex items-center justify-center">
@@ -145,7 +150,13 @@ import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError, createError } from "evlog";
-import { parseGuildSettings, classifyGuildError } from "~/utils/guild-dashboard";
+import {
+	parseGuildSettings,
+	classifyGuildError,
+	parseGuildSettingsSaveResponse,
+	guildSettingsSaveFailureToast,
+	resolveGuildIconSrc,
+} from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
 	if (typeof url !== "string") return false;
@@ -458,11 +469,7 @@ const isReadyToSubmit = computed(
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const src = computed(() =>
-	guildIconURL(guildData as unknown as OauthFlattenedGuild, {
-		size: 64,
-	})!,
-);
+const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
 	if (isNullOrUndefined(id)) {
@@ -473,62 +480,56 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
-		body: {
-			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-		},
-		transform: (response: string) => {
-			try {
-				return JSON.parse(response);
-			} catch (error) {
-				log.error({
-					tag: "wolfstar:dashboard",
-					message: `Failed to parse response from settings update for guild Id: ${guildId.value}`,
-					error: parseError(error),
-				});
-				throw createError({
-					message: t("dashboard.update_failed_message"),
-					why: t("dashboard.update_failed_why"),
-					status: 500,
-					fix: t("dashboard.update_failed_fix"),
-					cause: error as Error,
-				});
-			}
-		},
-		method: "PATCH",
-	});
-
-	if (!data.value) {
+	let data: GuildData;
+	try {
+		const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
+			body: {
+				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
+			},
+			method: "PATCH",
+		});
+		data = parseGuildSettingsSaveResponse(response) as GuildData;
+	} catch (error) {
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: `Failed to save settings update for guild Id: ${guildId.value}`,
+			error: parseError(error),
+		});
+		// Preserve staged edits; only notify so the admin can retry.
+		toast.add(guildSettingsSaveFailureToast(t));
 		return;
 	}
 
-	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
-		if (!document.startViewTransition || effectiveReduceMotion.value) {
-			setGuildSettings(data.value!);
-			setGuildSettingsChanges(undefined);
-		} else {
-			if (document.activeViewTransition) {
-				document.activeViewTransition.skipTransition();
-			}
-			document.startViewTransition(async () => {
-				setGuildSettings(data.value!);
-				setGuildSettingsChanges(undefined);
-				await nextTick();
-			});
+	if (isNullOrUndefined(data) || objectValues(data).length === 0) {
+		return;
+	}
+
+	const savedSettings = data;
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		setGuildSettings(savedSettings);
+		setGuildSettingsChanges(undefined);
+	} else {
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
 		}
-
-		log.info(
-			"wolfstar:dashboard",
-			`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
-		);
-
-		toast.add({
-			color: "success",
-			description: t("dashboard.settings_saved_description"),
-			icon: "i-heroicons-check-circle",
-			title: t("dashboard.settings_saved_title"),
+		document.startViewTransition(async () => {
+			setGuildSettings(savedSettings);
+			setGuildSettingsChanges(undefined);
+			await nextTick();
 		});
 	}
+
+	log.info(
+		"wolfstar:dashboard",
+		`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+	);
+
+	toast.add({
+		color: "success",
+		description: t("dashboard.settings_saved_description"),
+		icon: "i-heroicons-check-circle",
+		title: t("dashboard.settings_saved_title"),
+	});
 }
 
 function resetChanges() {

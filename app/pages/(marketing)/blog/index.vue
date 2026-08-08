@@ -17,7 +17,7 @@
 					size="xs"
 					target="_blank"
 				>
-					RSS
+					{{ t("blog.rss") }}
 				</StarButton>
 			</template>
 		</StarPageHero>
@@ -63,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const { data: page } = await useAsyncData("blog-landing", () =>
 	queryCollection("landing").path("/blog").first(),
 );

@@ -1,0 +1,17 @@
+{
+	"statusCommentsEnabled": true,
+	"shouldUpdateDescription": true,
+	"includeConfidenceScore": true,
+	"includeIssuesTable": true,
+	"summarySection": {
+		"included": true,
+		"collapsible": false,
+		"defaultOpen": true
+	},
+	"confidenceScoreSection": {
+		"included": true,
+		"collapsible": false,
+		"defaultOpen": true
+	},
+	"fileChangeLimit": 300
+}

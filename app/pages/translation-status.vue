@@ -11,7 +11,7 @@
 				<i18n-t keypath="translation_status.generated_at" tag="span" scope="global">
 					<template #date>
 						<NuxtTime
-							:locale="locale"
+							:locale
 							:datetime="status.generatedAt"
 							date-style="long"
 							time-style="medium"

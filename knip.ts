@@ -60,6 +60,7 @@ const config: KnipConfig = {
 				"nuxt-site-config",
 				"workbox-*",
 				"rolldown",
+				"vue-i18n" /* Provided by @nuxtjs/i18n; imported directly in test/unit/i18n/empty-placeholders.test.ts */,
 
 				/** Peer-style dep resolved by @nuxtjs/i18n at prepare time (not imported directly) */
 				"@intlify/shared",

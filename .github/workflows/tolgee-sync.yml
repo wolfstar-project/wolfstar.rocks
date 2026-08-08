@@ -1,0 +1,70 @@
+name: tolgee-sync
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Every day at 02:00 UTC
+    - cron: "0 2 * * *"
+
+concurrency:
+  group: tolgee-sync
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  sync-translations:
+    name: 🌐 Sync translations from Tolgee
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read # checkout repository; the sync branch is pushed with WOLFSTAR_TOKEN
+
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          # The push step sets an authenticated remote from WOLFSTAR_TOKEN
+          persist-credentials: false
+
+      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+        with:
+          node-version: lts/*
+          cache: true
+          sfw: true
+          # root only, no scripts
+          run-install: |
+            - args: ["--filter", ".", "--ignore-scripts"]
+
+      - name: Pull translations from Tolgee
+        env:
+          TOLGEE_API_KEY: ${{ secrets.TOLGEE_API_KEY }}
+        # `tolgee:pull` runs the CLI (config: .tolgeerc.cjs) and then
+        # scripts/tolgee-pull-remap.ts, which remaps Tolgee language tags
+        # (cs, zh-Hans, …) onto the Nuxt locale directories under i18n/locales.
+        run: vp run tolgee:pull
+
+      - name: Commit any changes and create a pull request
+        env:
+          GITHUB_TOKEN: ${{ secrets.WOLFSTAR_TOKEN }}
+        run: |
+          git add i18n/locales;
+          if git diff-index --quiet HEAD --; then
+            echo "No translation changes to commit, exiting with code 0"
+            exit 0;
+          else
+            git remote set-url origin "https://${GITHUB_TOKEN}:x-oauth-basic@github.com/${GITHUB_REPOSITORY}.git";
+            # Commit as the account behind WOLFSTAR_TOKEN
+            git config --local user.name "wolfstarbot";
+            git config --local user.email "169603024+wolfstarbot@users.noreply.github.com";
+            # Reuse a single fixed branch so re-runs update the existing PR
+            # instead of spawning a new one each time.
+            git checkout -B i18n;
+            git commit -sam "chore(i18n): update translations from Tolgee";
+            git push --force --set-upstream origin i18n;
+            if [ "$(gh pr list --head i18n --state open --json number --jq 'length')" = "0" ]; then
+              gh pr create -t "chore(i18n): update translations from Tolgee" -b "*bleep bloop* I synced the translations from Tolgee" -B main -H i18n;
+            else
+              echo "An open PR for the i18n branch already exists, skipping PR creation";
+            fi
+          fi

@@ -30,7 +30,7 @@ export default defineNuxtModule({
 			mkdirSync(lunariaDistPath, { recursive: true });
 			nuxt.hook("nitro:build:before", async () => {
 				try {
-					execSync("node --experimental-transform-types ./lunaria/lunaria.ts", {
+					execSync("node ./lunaria/lunaria.ts", {
 						cwd: nuxt.options.rootDir,
 						stdio: "inherit",
 					});

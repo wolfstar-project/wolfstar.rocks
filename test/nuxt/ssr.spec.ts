@@ -1595,6 +1595,11 @@ describe("component SSR rendering", () => {
 		it("uses the shipped Twitch commands and renders their response formats", async () => {
 			const wrapper = await mountSuspended(StarylCommandsShowcase);
 
+			// Desktop-only mount arming (`/`) is skipped on narrow test viewports; open the
+			// picker the same way the Wolfstar showcase specs do.
+			await wrapper.find(".discord-message-composer-input").setValue("/");
+			await wrapper.vm.$nextTick();
+
 			expect(wrapper.text()).toContain("/twitch-subscriptions add");
 			expect(wrapper.text()).toContain("/twitch-subscriptions remove");
 			expect(wrapper.text()).toContain("/twitch-subscriptions reset");

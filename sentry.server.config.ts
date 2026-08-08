@@ -6,7 +6,7 @@ const {
 	public: { sentry, environment },
 } = generateRuntimeConfig();
 
-const expectedHttpStatuses = new Set([400, 401, 403, 404, 409, 429]);
+const EXPECTED_HTTP_STATUSES = new Set([400, 401, 403, 404, 409, 429]);
 
 function getHttpStatus(event: Sentry.ErrorEvent, hint: Sentry.EventHint): number | undefined {
 	const originalException = hint.originalException;
@@ -27,7 +27,7 @@ if (sentry.dsn) {
 		dsn: sentry.dsn,
 		beforeSend(event, hint) {
 			const status = getHttpStatus(event, hint);
-			return status !== undefined && expectedHttpStatuses.has(status) ? null : event;
+			return status !== undefined && EXPECTED_HTTP_STATUSES.has(status) ? null : event;
 		},
 		// Set tracesSampleRate to 1.0 to capture 100%
 		// Of transactions for tracing.

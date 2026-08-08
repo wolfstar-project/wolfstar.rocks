@@ -8,7 +8,7 @@
 			align="start"
 			class="mb-10"
 		/>
-		<LazyCommandsShowcase />
+		<LazyWolfstarCommandsShowcase />
 	</Section>
 </template>
 

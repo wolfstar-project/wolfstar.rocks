@@ -1,22 +1,22 @@
 <template>
 	<div class="text-base-content">
-		<HeroSection
+		<WolfstarHeroSection
 			:build-time
 			:build-version="buildInfo.version"
 			:invite-url="Invites.WolfStar"
 		/>
 
-		<ProductProofSection />
+		<WolfstarProductProofSection />
 
-		<ModerationShowcaseSection />
+		<WolfstarModerationShowcaseSection />
 
-		<CommandsSection />
+		<WolfstarCommandsSection />
 
-		<DashboardSection />
+		<WolfstarDashboardSection />
 
 		<OtherApps :apps="[otherApps.Staryl]" />
 
-		<CtaSection :invite-url="Invites.WolfStar" />
+		<WolfstarCtaSection :invite-url="Invites.WolfStar" />
 	</div>
 </template>
 

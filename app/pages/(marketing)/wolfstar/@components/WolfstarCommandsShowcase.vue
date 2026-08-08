@@ -307,7 +307,7 @@ import type {
 	DiscordAppLauncherSheetSnap,
 	DiscordChatMessage,
 } from "~/types/discord";
-import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
+import ShowcaseTwemojiText from "./WolfstarShowcaseTwemojiText.vue";
 
 /** Shared channel topic for header chrome and welcome start copy. */
 const CHANNEL_TOPIC = "WolfStar moderation commands — try a slash command below.";

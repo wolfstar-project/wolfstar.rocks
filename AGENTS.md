@@ -53,6 +53,7 @@
 - Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`, OAuth status UI in `app/components/oauth/` (`StatusPanel.vue`, shared by all `app/pages/oauth/*.vue` for loading/success/error states)
 - In guild-settings `mapToGuildData()`/`calculateChanges()` functions, assign values onto `Partial<GuildData>` with `setGuildDataChange()` from `#shared/utils/guild-settings-map` instead of an `as any`/`as never` cast — it skips `undefined` so untouched keys stay out of PATCH payloads while keeping key/value types checked
 - Fatal errors render through `app/error.vue` → `app/components/ErrorPage.vue` (built on Nuxt UI's `UError`), with copy sourced from a dedicated `errors` i18n feature file (not `common`/`components`). Because `error.vue` replaces the app root on fatal errors, it must `await loadLocaleMessages(locale.value)` itself before translating — the normal per-route locale preloading doesn't run
+- `DiscordEmbed`'s `theme` prop (`app/components/discord/embed.vue`) wins over the ambient app-wide `data-theme` selector: `.discord-embed--light` applies whenever `theme === "light"`, and `:global([data-theme="light"] .discord-embed):not(.discord-embed--dark)` applies the same light colors when `theme` is omitted and the ambient theme is light — both selectors share one light color-variable declaration block so there's a single place to update Discord light-theme colors. Omitting `theme` follows the ambient theme instead of defaulting to dark.
 
 ## Auth and Feedback
 

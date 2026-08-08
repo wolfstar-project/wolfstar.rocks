@@ -11,8 +11,8 @@ const buildTime = computed(() => new Date(buildInfo.value.time));
 
 <template>
 	<div
-		class="motion-safe:animate-fill-both flex font-mono text-xs text-muted motion-safe:animate-fade-in"
-		:class="footer ? 'mt-4 items-end gap-4' : 'mb-8 items-center justify-center gap-2'"
+		class="motion-safe:animate-fill-both font-mono text-xs text-muted motion-safe:animate-fade-in flex"
+		:class="footer ? 'mt-4 gap-4 items-end' : 'mb-8 gap-2 items-center justify-center'"
 		style="animation-delay: 0.05s"
 	>
 		<NuxtTime

@@ -18,7 +18,7 @@
 					role="img"
 					aria-label="Verified application badge"
 				>
-					<UIcon
+					<StarIcon
 						v-if="profile.verified"
 						name="ph:check-fat-fill"
 						class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3"
@@ -37,7 +37,7 @@
 				role="status"
 				aria-label="Ephemeral message notice"
 			>
-				<UIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
+				<StarIcon name="ph:eye-duotone" aria-hidden="true" /> Only you can see this •
 				<button
 					class="discord-message-link"
 					type="button"
@@ -76,18 +76,17 @@ const profile = computed(() => Profiles[name.value]);
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .app-badge {
 	--blurple: oklch(57.74% 0.2091 273.85);
 
-	@apply ml-1 flex flex-row items-center rounded-md px-1 py-0.5 font-bold text-white;
+	@apply ml-1 rounded-md px-1 py-0.5 font-bold text-white flex flex-row items-center;
 	background-color: var(--blurple);
 	font-size: 0.625rem;
 	line-height: 0.625rem;
 }
 
 .discord-message-timestamp {
-	@apply ml-1.5 text-[10px] font-medium text-muted sm:text-xs;
+	@apply ml-1.5 font-medium text-muted sm:text-xs text-[10px];
 }
 
 @media (width >= 48rem) {
@@ -98,7 +97,7 @@ const profile = computed(() => Profiles[name.value]);
 }
 
 .discord-message {
-	@apply flex w-full flex-row gap-2 rounded-xl p-2 align-top font-whitney sm:gap-4 sm:p-4;
+	@apply gap-2 rounded-xl p-2 font-whitney sm:gap-4 sm:p-4 flex w-full flex-row align-top;
 	background-color: var(--discord-surface);
 }
 
@@ -123,11 +122,11 @@ const profile = computed(() => Profiles[name.value]);
 }
 
 .discord-message-reply-slot {
-	@apply col-start-2 row-start-1 min-w-0;
+	@apply min-w-0 col-start-2 row-start-1;
 }
 
 .discord-message-with-reply > .discord-message-content {
-	@apply col-start-2 row-start-2 min-w-0;
+	@apply min-w-0 col-start-2 row-start-2;
 }
 
 .discord-message:not(.discord-message-ephemeral):hover {
@@ -136,14 +135,14 @@ const profile = computed(() => Profiles[name.value]);
 }
 
 .discord-message-ephemeral {
-	@apply border-l-2 border-blue-500/40 bg-blue-500/10 hover:bg-blue-500/15;
+	@apply border-blue-500/40 bg-blue-500/10 hover:bg-blue-500/15 border-l-2;
 }
 
 .discord-message-ephemeral-footer {
-	@apply mt-1.5 flex items-center gap-1 text-sm text-base-content/60;
+	@apply mt-1.5 gap-1 text-sm text-base-content/60 flex items-center;
 }
 
 .discord-message-ephemeral-footer > .discord-message-link {
-	@apply cursor-pointer border-0 bg-transparent p-0 text-info hover:underline hover:underline-offset-1;
+	@apply p-0 text-info cursor-pointer border-0 bg-transparent hover:underline hover:underline-offset-1;
 }
 </style>

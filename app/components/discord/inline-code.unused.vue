@@ -15,9 +15,8 @@ defineSlots<InlineCodeUnusedSlots>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .discord-message-inline-code {
-	@apply rounded-md border bg-base-200 px-1 font-mono;
+	@apply rounded-md bg-base-200 px-1 font-mono border;
 	border-color: var(--colors-base-300);
 	border-color: oklch(from var(--colors-base-300) calc(l - 0.05) c h);
 }

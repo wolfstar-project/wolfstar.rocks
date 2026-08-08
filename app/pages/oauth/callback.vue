@@ -11,16 +11,16 @@
 				<template #description>
 					<i18n-t keypath="auth.oauth.login_required_description" tag="span">
 						<template #link>
-							<ULink to="/login" class="font-medium underline">{{
+							<StarLink to="/login" class="font-medium underline">{{
 								t("auth.oauth.login_required_link")
-							}}</ULink>
+							}}</StarLink>
 						</template>
 					</i18n-t>
 				</template>
 				<template #actions>
-					<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+					<StarButton color="primary" to="/login" size="sm" class="sm:w-auto w-full">
 						{{ t("auth.oauth.go_to_login") }}
-					</UButton>
+					</StarButton>
 				</template>
 			</OauthStatusPanel>
 		</template>
@@ -35,9 +35,9 @@
 						{{ errorMessage }}
 					</template>
 					<template #actions>
-						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+						<StarButton color="primary" to="/login" size="sm" class="sm:w-auto w-full">
 							{{ t("auth.oauth.try_again") }}
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</template>
@@ -74,9 +74,9 @@
 						{{ t("auth.oauth.session_not_found_description") }}
 					</template>
 					<template #actions>
-						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+						<StarButton color="primary" to="/login" size="sm" class="sm:w-auto w-full">
 							{{ t("auth.oauth.try_again") }}
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</template>

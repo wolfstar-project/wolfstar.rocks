@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import type { ShortcutsConfig } from "@nuxt/ui/composables";
+import type { ShortcutsConfig } from "#shared/types/ui";
 import type { CSSProperties } from "vue";
 import type { StringSelectMenuOption, StringSelectMenuPlacement } from "~/types/discord";
 
@@ -310,11 +310,9 @@ useEventListener(
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 /* Dimensions and layout mirror Skyra discord-string-select-menu; colors use oklch tokens. */
 .discord-string-select-menu {
-	@apply relative w-full max-w-100 font-whitney;
+	@apply max-w-100 font-whitney relative w-full;
 }
 
 .discord-string-select-menu-trigger {
@@ -326,7 +324,7 @@ useEventListener(
 	--discord-string-select-menu-placeholder-text: oklch(72% 0.01 260);
 	--discord-string-select-menu-chevron: oklch(90% 0.012 250);
 
-	@apply box-border flex h-9 min-h-9 w-full items-center justify-between gap-2 rounded border px-2 text-sm font-medium;
+	@apply h-9 min-h-9 gap-2 rounded px-2 text-sm font-medium box-border flex w-full items-center justify-between border;
 	background-color: var(--discord-string-select-menu-bg);
 	border-color: var(--discord-string-select-menu-border);
 	color: var(--discord-string-select-menu-text);
@@ -374,7 +372,7 @@ useEventListener(
 	--discord-string-select-menu-panel-scroll-thumb: oklch(0% 0 0 / 0.3);
 
 	/* Position/size come from fixed inline styles after Teleport to body. */
-	@apply max-w-100 overflow-hidden rounded font-whitney;
+	@apply max-w-100 rounded font-whitney overflow-hidden;
 	background-color: var(--discord-string-select-menu-panel-bg);
 	border: 1px solid var(--discord-string-select-menu-panel-border);
 	box-shadow: 0 8px 24px var(--discord-string-select-menu-panel-shadow);

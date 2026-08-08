@@ -1,54 +1,54 @@
 <template>
 	<div
 		v-if="hasChips"
-		class="flex animate-fade-in flex-wrap gap-3"
+		class="animate-fade-in gap-3 flex flex-wrap"
 		role="list"
 		aria-label="Command properties"
 	>
-		<UBadge
+		<StarBadge
 			v-if="command.permissionLevel > 0"
 			color="warning"
 			variant="outline"
 			size="md"
 			role="listitem"
 			:aria-label="`Permission level: ${permissionLevelLabel}`"
-			class="border-warning-300 bg-warning-50 font-semibold text-warning-800 dark:border-warning-700 dark:bg-warning-950/30 dark:text-warning-200"
+			class="border-warning-300 bg-warning-50 text-warning-800 dark:border-warning-700 dark:bg-warning-950/30 dark:text-warning-200 font-semibold"
 		>
 			<template #leading>
-				<UIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
+				<StarIcon name="i-heroicons-chevron-double-up" class="size-4" aria-hidden="true" />
 			</template>
 			{{ permissionLevelLabel }}
-		</UBadge>
+		</StarBadge>
 
-		<UBadge
+		<StarBadge
 			v-if="isGuildOnly"
 			color="info"
 			variant="outline"
 			size="md"
 			role="listitem"
 			:aria-label="`Server requirement: ${guildOnlyLabel}`"
-			class="border-info-300 bg-info-50 font-semibold text-info-800 dark:border-info-700 dark:bg-info-950/30 dark:text-info-200"
+			class="border-info-300 bg-info-50 text-info-800 dark:border-info-700 dark:bg-info-950/30 dark:text-info-200 font-semibold"
 		>
 			<template #leading>
-				<UIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
+				<StarIcon name="i-custom-discord" class="size-4" aria-hidden="true" />
 			</template>
 			{{ guildOnlyLabel }}
-		</UBadge>
+		</StarBadge>
 
-		<UBadge
+		<StarBadge
 			v-if="command.guarded"
 			color="error"
 			variant="outline"
 			size="md"
 			role="listitem"
 			aria-label="This command cannot be disabled"
-			class="border-error-300 bg-error-50 font-semibold text-error-800 dark:border-error-700 dark:bg-error-950/30 dark:text-error-200"
+			class="border-error-300 bg-error-50 text-error-800 dark:border-error-700 dark:bg-error-950/30 dark:text-error-200 font-semibold"
 		>
 			<template #leading>
-				<UIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />
+				<StarIcon name="i-heroicons-lock-closed" class="size-4" aria-hidden="true" />
 			</template>
 			Cannot be disabled
-		</UBadge>
+		</StarBadge>
 	</div>
 </template>
 

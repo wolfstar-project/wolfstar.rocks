@@ -1,5 +1,5 @@
 <template>
-	<UApp
+	<AppProviders
 		:toaster="{
 			position: 'bottom-left',
 		}"
@@ -7,9 +7,11 @@
 		<NuxtPwaManifest />
 		<NuxtRouteAnnouncer />
 		<NuxtLayout>
-			<ErrorPage :error />
+			<StarMain>
+				<StarError :error />
+			</StarMain>
 		</NuxtLayout>
-	</UApp>
+	</AppProviders>
 </template>
 
 <script setup lang="ts">

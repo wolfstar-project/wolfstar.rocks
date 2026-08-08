@@ -15,7 +15,6 @@ defineSlots<TextDisplaySlots>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .discord-v2-text-display {
 	@apply font-whitney whitespace-pre-line;
 }

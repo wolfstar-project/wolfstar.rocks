@@ -36,7 +36,7 @@
 										class="discord-slash-command-suggestions-header"
 										role="presentation"
 									>
-										<UIcon
+										<StarIcon
 											name="discord:recently-used"
 											class="discord-slash-command-suggestions-header-icon"
 											aria-hidden="true"
@@ -70,7 +70,7 @@
 											<span
 												class="discord-slash-command-suggestions-sidebar-recent"
 											>
-												<UIcon
+												<StarIcon
 													name="discord:recently-used"
 													class="discord-slash-command-suggestions-sidebar-icon"
 													aria-hidden="true"
@@ -176,8 +176,6 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-slash-command-suggestions {
 	/* Discord autocomplete surfaces aligned to desktop dark sidebar / server layers. */
 	--discord-slash-command-suggestions-bg: oklch(23.47% 0.005 272.95);
@@ -196,7 +194,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 	 * Desktop: inset floating panel with Discord hairline border + ~8px gap
 	 * above the composer (channel bg peeks through). Mobile: full-bleed flush.
 	 */
-	@apply mx-4 mb-2 overflow-hidden rounded font-whitney;
+	@apply mx-4 mb-2 rounded font-whitney overflow-hidden;
 	background-color: var(--discord-slash-command-suggestions-bg);
 	border: 1px solid var(--discord-slash-command-suggestions-border);
 }
@@ -214,7 +212,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-container-floating {
-	@apply absolute inset-0;
+	@apply inset-0 absolute;
 }
 
 .discord-slash-command-suggestions-panel {
@@ -222,12 +220,12 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-panel-with-matched {
-	@apply flex min-h-0 flex-col;
+	@apply min-h-0 flex flex-col;
 	max-height: var(--discord-slash-command-suggestions-height);
 }
 
 .discord-slash-command-suggestions-scroll {
-	@apply h-full max-h-full min-h-0 min-w-0 flex-1;
+	@apply min-h-0 min-w-0 h-full max-h-full flex-1;
 }
 
 /* Keep Discord end-inset on the thumb rail (floating pill stops short of corners). */
@@ -245,16 +243,16 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 
 /* Content column: mobile stacks list → rail; desktop puts rail left of list. */
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-body) {
-	@apply h-full min-h-0 max-md:flex-col md:flex-row;
+	@apply min-h-0 max-md:flex-col md:flex-row h-full;
 }
 
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-viewport) {
-	@apply h-full min-h-0 flex-1 md:order-2;
+	@apply min-h-0 md:order-2 h-full flex-1;
 	overscroll-behavior: contain;
 }
 
 .discord-slash-command-suggestions-scroll :deep(.discord-scrollbar-below-viewport) {
-	@apply flex min-h-0 shrink-0 self-stretch max-md:w-full md:order-1 md:h-full;
+	@apply min-h-0 max-md:w-full md:order-1 md:h-full flex shrink-0 self-stretch;
 	width: var(--discord-slash-command-suggestions-rail-width);
 
 	@media (width < 48rem) {
@@ -278,19 +276,19 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-inner {
-	@apply flex h-full min-h-0;
+	@apply min-h-0 flex h-full;
 }
 
 .discord-slash-command-suggestions-sidebar-scroll {
 	/* Never h-full on mobile: in a column flex that ate the list viewport (empty panel + rail-only look).
 	   Scroll remains via wheel/touch; native browser scrollbar is hidden (no-scrollbar). */
-	@apply h-auto min-h-0 w-full shrink-0 self-stretch overflow-x-auto overflow-y-hidden md:h-full md:overflow-x-hidden md:overflow-y-auto;
+	@apply min-h-0 md:h-full md:overflow-x-hidden md:overflow-y-auto h-auto w-full shrink-0 self-stretch overflow-x-auto overflow-y-hidden;
 	overscroll-behavior: contain;
 	background-color: var(--discord-slash-command-suggestions-sidebar);
 }
 
 .discord-slash-command-suggestions-sidebar {
-	@apply flex w-full flex-col items-center gap-0.5 py-2 max-md:w-max max-md:min-w-full max-md:flex-row max-md:gap-1 max-md:px-2 max-md:py-1.5;
+	@apply gap-0.5 py-2 max-md:w-max max-md:min-w-full max-md:flex-row max-md:gap-1 max-md:px-2 max-md:py-1.5 flex w-full flex-col items-center;
 }
 
 .discord-slash-command-suggestions-panel-with-matched .discord-slash-command-suggestions-scroll {
@@ -298,7 +296,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-sidebar-item {
-	@apply flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-lg border-0 bg-transparent p-0 max-md:size-9;
+	@apply size-10 rounded-lg p-0 max-md:size-9 flex shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent;
 	transition: background-color 120ms ease;
 }
 
@@ -326,7 +324,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 .discord-slash-command-suggestions-sidebar-recent {
 	/* Same 32px footprint as DiscordChatInputCommandAppIcon rail so the active
 	   squircle (40px / radius 12px) frames the clock like the app icons. */
-	@apply flex size-8 items-center justify-center max-md:size-7;
+	@apply size-8 max-md:size-7 flex items-center justify-center;
 }
 
 .discord-slash-command-suggestions-sidebar-icon {
@@ -337,7 +335,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 .discord-slash-command-suggestions-header {
 	/* Stick within the Frequently Used section only — unsticks when that
 	   section scrolls out of the DiscordScrollbar viewport (Discord picker). */
-	@apply sticky top-0 z-[1] flex items-center gap-1.5 px-2 py-1.5 font-whitney text-[11px] font-bold tracking-wide uppercase;
+	@apply top-0 gap-1.5 px-2 py-1.5 font-whitney font-bold tracking-wide sticky z-[1] flex items-center text-[11px] uppercase;
 	color: var(--discord-slash-command-suggestions-header);
 	background-color: var(--discord-slash-command-suggestions-bg);
 }
@@ -355,7 +353,7 @@ const ariaLabel = computed(() => `Slash command suggestions for ${prefix}`);
 }
 
 .discord-slash-command-suggestions-matched {
-	@apply shrink-0 px-1 pb-1;
+	@apply px-1 pb-1 shrink-0;
 	border-top: 1px solid var(--discord-slash-command-suggestions-divider);
 }
 </style>

@@ -20,7 +20,6 @@ const { spacing = "small", divider = true } = defineProps<SeparatorProps>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .discord-v2-separator {
 	@apply flex items-center;
 }

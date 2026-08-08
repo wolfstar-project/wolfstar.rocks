@@ -1,17 +1,17 @@
 <template>
-	<div class="mb-3 flex flex-col gap-1">
-		<div class="flex flex-wrap items-start gap-2">
-			<UFormField :error="error || undefined">
-				<UInput
+	<div class="mb-3 gap-1 flex flex-col">
+		<div class="gap-2 flex flex-wrap items-start">
+			<StarFormField :error="error || undefined">
+				<StarInput
 					v-model="durationString"
 					type="tel"
 					placeholder="10"
 					:color="error ? 'error' : 'primary'"
 					@input="onChangeDuration"
 				/>
-			</UFormField>
+			</StarFormField>
 
-			<USelect
+			<StarSelect
 				v-model="unit"
 				:items="unitItems"
 				value-key="value"
@@ -124,9 +124,10 @@ function onChangeDuration(event: Event) {
 	if (validate(ms)) emit("update:modelValue", ms);
 }
 
-function onChangeUnit(newUnit: string) {
-	unit.value = newUnit;
-	const ms = unitMap[newUnit]! * duration.value;
+function onChangeUnit(newUnit: string | number | null) {
+	const nextUnit = String(newUnit ?? unit.value);
+	unit.value = nextUnit;
+	const ms = unitMap[nextUnit]! * duration.value;
 	if (validate(ms)) emit("update:modelValue", ms);
 }
 </script>

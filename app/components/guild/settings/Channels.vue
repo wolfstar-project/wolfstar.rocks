@@ -12,8 +12,8 @@
 			@error="onError"
 		>
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
+				<div class="gap-2 flex items-center">
+					<Icon name="i-heroicons-document-text" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.channels.logging_channels") }}
 					</h3>
@@ -22,7 +22,7 @@
 					{{ t("guild_settings.channels.logging_channels_help") }}
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<div v-for="config in ConfigurableLoggingChannels" :key="config.key">
 						<SelectChannel
 							v-model="state[config.key] as string | null"
@@ -38,8 +38,8 @@
 			<Separator />
 
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
+				<div class="gap-2 flex items-center">
+					<Icon name="heroicons:eye-slash" class="size-5 text-warning" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.channels.excluded_channels") }}
 					</h3>
@@ -48,7 +48,7 @@
 					{{ t("guild_settings.channels.excluded_channels_help") }}
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<div v-for="config in ConfigurableIgnoreChannels" :key="config.key">
 						<SelectChannels
 							v-model="state[config.key] as string[]"
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { ChannelsSettingsSchema, type ChannelsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 // Explicit import: unimport misses identifiers referenced only inside nested

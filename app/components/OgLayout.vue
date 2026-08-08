@@ -1,5 +1,5 @@
 <template>
-	<div class="relative flex h-full w-full flex-col items-center justify-center p-15">
+	<div class="p-15 relative flex h-full w-full flex-col items-center justify-center">
 		<slot />
 	</div>
 </template>

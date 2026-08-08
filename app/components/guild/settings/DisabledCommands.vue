@@ -8,22 +8,22 @@
 			<div v-if="loading" class="space-y-4">
 				<div v-for="i in 3" :key="i" class="space-y-2">
 					<!-- Simulated accordion trigger skeleton -->
-					<USkeleton class="h-12 w-full" />
+					<StarSkeleton class="h-12 w-full" />
 
 					<!-- Commands grid skeleton -->
 					<div
-						class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+						class="gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid grid-cols-1"
 					>
 						<div
 							v-for="j in 8"
 							:key="j"
-							class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+							class="rounded-lg border-base-200 p-3 flex items-center justify-between border"
 						>
-							<div class="flex-1 space-y-2">
-								<USkeleton class="h-5 w-32" />
-								<USkeleton class="h-4 w-48" />
+							<div class="space-y-2 flex-1">
+								<StarSkeleton class="h-5 w-32" />
+								<StarSkeleton class="h-4 w-48" />
 							</div>
-							<USkeleton class="h-6 w-11 rounded-full" />
+							<StarSkeleton class="h-6 w-11 rounded-full" />
 						</div>
 					</div>
 				</div>
@@ -41,7 +41,7 @@
 				@error="onError"
 			>
 				<div class="space-y-4">
-					<UCollapsible
+					<StarCollapsible
 						v-for="category in categories"
 						:key="category"
 						:open="isCategoryOpen(category)"
@@ -49,41 +49,41 @@
 						@update:open="() => toggleCategory(category)"
 					>
 						<template #default="{ open }">
-							<UButton
+							<StarButton
 								color="neutral"
 								variant="ghost"
-								class="w-full justify-between border-b border-base-200"
+								class="border-base-200 w-full justify-between border-b"
 							>
-								<span class="truncate text-xl font-medium">{{ category }}</span>
+								<span class="text-xl font-medium truncate">{{ category }}</span>
 
 								<template #trailing>
-									<UIcon
+									<Icon
 										name="i-heroicons-chevron-down-20-solid"
-										class="ms-auto size-5 transform transition-transform duration-200"
+										class="size-5 ms-auto transform transition-transform duration-200"
 										:class="[open && 'rotate-180']"
 									/>
 								</template>
-							</UButton>
+							</StarButton>
 						</template>
 
 						<template #content>
 							<div
-								class="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+								class="gap-4 p-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid grid-cols-1"
 							>
 								<div
 									v-for="command in getCommandsByCategory(category)"
 									:key="command.name"
-									class="flex items-center justify-between rounded-lg border border-base-200 p-3"
+									class="rounded-lg border-base-200 p-3 flex items-center justify-between border"
 								>
 									<div class="min-w-0 flex-1">
-										<p class="truncate font-medium text-base-content">
+										<p class="font-medium text-base-content truncate">
 											{{ command.name }}
 										</p>
-										<p class="truncate text-sm text-base-content/60">
+										<p class="text-sm text-base-content/60 truncate">
 											{{ command.description }}
 										</p>
 									</div>
-									<USwitch
+									<StarSwitch
 										v-if="!isNullOrUndefined(getCommand(command.name))"
 										:model-value="getCommand(command.name)?.isEnabled"
 										:value="getCommand(command.name)?.name"
@@ -96,34 +96,34 @@
 							</div>
 
 							<Separator />
-							<div class="flex flex-wrap items-center justify-end gap-2 p-4">
-								<UButton
+							<div class="gap-2 p-4 flex flex-wrap items-center justify-end">
+								<StarButton
 									color="success"
 									variant="solid"
 									size="sm"
 									@click="toggleAllInCategory(category, true)"
 								>
 									{{ t("guild_settings.commands.enable_all") }}
-								</UButton>
-								<UButton
+								</StarButton>
+								<StarButton
 									color="warning"
 									variant="solid"
 									size="sm"
 									@click="toggleAllInCategory(category, false)"
 								>
 									{{ t("guild_settings.commands.disable_all") }}
-								</UButton>
-								<UButton
+								</StarButton>
+								<StarButton
 									color="neutral"
 									variant="outline"
 									size="sm"
 									@click="resetCategory(category)"
 								>
 									{{ t("guild_settings.commands.reset") }}
-								</UButton>
+								</StarButton>
 							</div>
 						</template>
-					</UCollapsible>
+					</StarCollapsible>
 				</div>
 			</GuildSettingsForm>
 		</GuildSettingsSection>
@@ -133,7 +133,7 @@
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
 import type { DisableCommands } from "#shared/types";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import type * as v from "valibot";
 // oxlint-disable-next-line typescript/consistent-type-imports
 import { disabledCommandsSchema } from "#shared/schemas";

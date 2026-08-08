@@ -4,7 +4,7 @@
 		role="region"
 		:aria-labelledby="`category-${categoryName.replace(/\s+/g, '-').toLowerCase()}`"
 	>
-		<UAccordion
+		<StarAccordion
 			:items="categoryItems"
 			:ui="{
 				root: 'space-y-3',
@@ -15,30 +15,30 @@
 			class="animate-fade-in"
 		>
 			<template #default="{ item, open }">
-				<UButton
+				<StarButton
 					color="neutral"
 					variant="ghost"
-					class="w-full justify-between rounded-2xl border border-base-content/10 bg-base-200/50 px-6 py-4 transition-all hover:bg-base-200/80"
+					class="rounded-2xl border-base-content/10 bg-base-200/50 px-6 py-4 hover:bg-base-200/80 w-full justify-between border transition-all"
 					:class="{ 'rounded-b-none': open }"
 					:aria-expanded="open"
 					:aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
 				>
 					<span
 						:id="`category-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
-						class="truncate text-xl font-bold"
+						class="text-xl font-bold truncate"
 					>
 						{{ item.label }}
 					</span>
 
 					<template #trailing>
-						<UIcon
+						<StarIcon
 							name="i-heroicons-chevron-down-20-solid"
 							class="size-5 shrink-0 transform transition-transform duration-200"
 							:class="[open && 'rotate-180']"
 							aria-hidden="true"
 						/>
 					</template>
-				</UButton>
+				</StarButton>
 			</template>
 
 			<template #body="{ item }">
@@ -46,7 +46,7 @@
 					:id="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
 					class="space-y-3 p-4"
 				>
-					<UAccordion
+					<StarAccordion
 						:items="
 							getCommandsByCategory(item.label).map((command) => ({
 								label: command.name,
@@ -65,11 +65,11 @@
 						}"
 					>
 						<template #default="{ item: commandItem }">
-							<div class="min-w-fit font-mono text-base font-bold">
+							<div class="font-mono text-base font-bold min-w-fit">
 								{{ commandItem.label }}
 							</div>
 
-							<div class="ml-4 flex-1 truncate text-sm text-base-content/70">
+							<div class="ml-4 text-sm text-base-content/70 flex-1 truncate">
 								{{ commandItem.description || "No description yet" }}
 							</div>
 						</template>
@@ -84,19 +84,19 @@
 								:loading
 							/>
 						</template>
-					</UAccordion>
+					</StarAccordion>
 				</div>
 			</template>
-		</UAccordion>
+		</StarAccordion>
 	</div>
 	<div
 		v-else-if="searchValue"
 		class="rounded-2xl bg-base-200/30 px-6 py-12 text-center"
 		role="status"
 	>
-		<UIcon
+		<StarIcon
 			name="i-heroicons-magnifying-glass"
-			class="mx-auto mb-4 h-12 w-12 text-base-content/30"
+			class="mb-4 h-12 w-12 text-base-content/30 mx-auto"
 			aria-hidden="true"
 		/>
 		<h3 class="mb-2 text-lg font-bold">No commands found in {{ categoryName }}</h3>

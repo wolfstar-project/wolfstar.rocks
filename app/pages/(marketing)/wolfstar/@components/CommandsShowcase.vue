@@ -1,7 +1,7 @@
 <template>
-	<div class="mx-auto w-full max-w-250">
-		<div class="flex flex-col items-stretch gap-4">
-			<SurfaceCard padding="none" class="commands-showcase-card overflow-hidden shadow-glow">
+	<div class="max-w-250 mx-auto w-full">
+		<div class="gap-4 flex flex-col items-stretch">
+			<SurfaceCard padding="none" class="commands-showcase-card shadow-glow overflow-hidden">
 				<div class="showcase-discord-shell">
 					<DiscordChannelHeader
 						v-model:members-open="membersOpen"
@@ -37,7 +37,7 @@
 									-->
 									<!-- Desktop: slash-command reply + text / embed / components response. -->
 									<div
-										class="showcase-desktop-command-response hidden md:contents"
+										class="showcase-desktop-command-response md:contents hidden"
 									>
 										<DiscordMessage
 											:name="message.author"
@@ -249,7 +249,7 @@
 											<input
 												v-model="composerText"
 												type="text"
-												class="discord-message-composer-input w-full min-w-0 flex-1 outline-none"
+												class="discord-message-composer-input min-w-0 w-full flex-1 outline-none"
 												:class="{
 													'showcase-composer-slash-mirror':
 														matchedCommand,
@@ -280,7 +280,7 @@
 
 						<DiscordMemberList
 							v-if="membersOpen"
-							class="showcase-discord-members hidden md:flex"
+							class="showcase-discord-members md:flex hidden"
 							:online="onlineMembers"
 							:offline="offlineMembers"
 							show-roles
@@ -988,8 +988,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 /* SurfaceCard defaults to theme --color-base-300; pin Discord charcoal so the card never reads red/warm. */
 :deep(.commands-showcase-card.home-surface-card) {
 	--commands-showcase-card-bg: oklch(26.65% 0.006 272.93);
@@ -1036,12 +1034,12 @@ onMounted(() => {
 	 * (Star Network / Developers / External Bots / Offline) + compact padding.
 	 * DiscordScrollbar stays for overflow; this height avoids forcing it.
 	 */
-	@apply flex min-h-0;
+	@apply min-h-0 flex;
 	height: 46rem;
 }
 
 .showcase-discord-main {
-	@apply relative flex min-h-0 min-w-0 flex-1 flex-col;
+	@apply min-h-0 min-w-0 relative flex flex-1 flex-col;
 	background-color: var(--showcase-discord-chrome);
 }
 
@@ -1096,7 +1094,7 @@ onMounted(() => {
 }
 
 .showcase-command-picker {
-	@apply absolute inset-x-0 bottom-0 z-2;
+	@apply inset-x-0 bottom-0 absolute z-2;
 	/*
 	 * Transparent on desktop so the picker↔composer gap (~8px) reveals the
 	 * channel background. Mobile keeps a solid bar behind the flush stack.
@@ -1105,7 +1103,7 @@ onMounted(() => {
 }
 
 .showcase-app-launcher {
-	@apply relative z-2 mr-3 mb-2 ml-auto;
+	@apply mr-3 mb-2 relative z-2 ml-auto;
 	width: min(31.5rem, calc(100% - 1.5rem));
 }
 
@@ -1119,7 +1117,7 @@ onMounted(() => {
 }
 
 .showcase-composer-slash-field {
-	@apply relative flex h-full min-w-0 flex-1 items-center;
+	@apply min-w-0 relative flex h-full flex-1 items-center;
 	flex-basis: 0;
 }
 
@@ -1129,7 +1127,7 @@ onMounted(() => {
  * the placeholder, and the field fills the pill like Discord mobile.
  */
 .showcase-composer-slash-field .discord-message-composer-input {
-	@apply h-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
+	@apply min-w-0 py-0 pr-2 pl-1 text-base h-full flex-1 border-0 bg-transparent leading-none outline-none;
 	appearance: none;
 	flex-basis: 0;
 	width: 100%;
@@ -1148,7 +1146,7 @@ onMounted(() => {
 }
 
 .showcase-composer-slash-composed {
-	@apply pointer-events-none absolute inset-y-0 left-1 z-0 flex items-center;
+	@apply inset-y-0 left-1 pointer-events-none absolute z-0 flex items-center;
 }
 
 .showcase-composer-slash-mirror {
@@ -1234,7 +1232,7 @@ onMounted(() => {
 	}
 
 	.showcase-app-launcher {
-		@apply relative z-3 mx-0 mb-0 w-full max-w-none;
+		@apply mx-0 mb-0 relative z-3 w-full max-w-none;
 	}
 
 	.showcase-command-picker :deep(.discord-slash-command-suggestions) {

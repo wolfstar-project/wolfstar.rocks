@@ -20,7 +20,7 @@
 			draggable="false"
 			class="discord-string-select-menu-option-emoji"
 		/>
-		<UIcon
+		<StarIcon
 			v-else-if="emojiIsIconify"
 			:name="option.emoji!"
 			class="discord-string-select-menu-option-emoji size-[1.375em]"
@@ -40,7 +40,7 @@
 			<strong class="discord-string-select-menu-option-label">{{ option.label }}</strong>
 			<span v-if="currentlyAtPath" class="discord-string-select-menu-option-description">
 				<span class="discord-string-select-menu-option-currently-at">Currently at:</span>
-				<UIcon
+				<StarIcon
 					name="ph:folder-fill"
 					class="discord-string-select-menu-option-path-folder size-3.5 shrink-0"
 					aria-hidden="true"
@@ -110,8 +110,6 @@ const currentlyAtPath = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 /* Layout mirrors Skyra discord-string-select-menu-option (flex row, 8/12 padding, 10px gap). */
 .discord-string-select-menu-option {
 	--discord-string-select-menu-option-hover: oklch(100% 0 0 / 0.1);
@@ -121,7 +119,7 @@ const currentlyAtPath = computed(() => {
 	--discord-string-select-menu-option-path-folder: oklch(78% 0.12 85);
 	--discord-string-select-menu-option-gear: oklch(78% 0.01 260);
 
-	@apply flex max-w-100 cursor-pointer items-center gap-2.5 py-2 pr-2 pl-3 text-sm;
+	@apply max-w-100 gap-2.5 py-2 pr-2 pl-3 text-sm flex cursor-pointer items-center;
 	color: var(--discord-string-select-menu-option-label);
 }
 
@@ -150,15 +148,15 @@ const currentlyAtPath = computed(() => {
 }
 
 .discord-string-select-menu-option-ellipsis-text {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5 overflow-hidden;
+	@apply min-w-0 gap-0.5 flex flex-1 flex-col overflow-hidden;
 }
 
 .discord-string-select-menu-option-label {
-	@apply block overflow-hidden leading-snug font-semibold text-ellipsis whitespace-nowrap;
+	@apply leading-snug font-semibold block overflow-hidden text-ellipsis whitespace-nowrap;
 }
 
 .discord-string-select-menu-option-description {
-	@apply flex min-w-0 items-center gap-1 overflow-hidden text-xs leading-snug text-ellipsis whitespace-nowrap;
+	@apply min-w-0 gap-1 text-xs leading-snug flex items-center overflow-hidden text-ellipsis whitespace-nowrap;
 	color: var(--discord-string-select-menu-option-description);
 }
 

@@ -1,6 +1,6 @@
 <template>
-	<UContainer v-if="page" class="pt-20 sm:pt-24">
-		<UPageHero
+	<StarContainer v-if="page" class="pt-20 sm:pt-24">
+		<StarPageHero
 			:title="page.title"
 			:description="page.description"
 			:ui="{ container: 'pb-12 sm:pb-16 lg:pb-20' }"
@@ -8,7 +8,7 @@
 			<template #description>
 				{{ page.description }}
 
-				<UButton
+				<StarButton
 					to="/blog/rss.xml"
 					color="neutral"
 					external
@@ -18,14 +18,14 @@
 					target="_blank"
 				>
 					{{ t("blog.rss") }}
-				</UButton>
+				</StarButton>
 			</template>
-		</UPageHero>
+		</StarPageHero>
 
-		<UPageBody>
-			<UContainer>
-				<UBlogPosts class="mb-12 md:grid-cols-2 lg:grid-cols-3">
-					<UBlogPost
+		<StarPageBody>
+			<StarContainer>
+				<StarBlogPosts class="mb-12 md:grid-cols-2 lg:grid-cols-3">
+					<StarBlogPost
 						v-for="(article, index) in articles"
 						:key="article.path"
 						:to="article.path"
@@ -56,10 +56,10 @@
 						:orientation="index === 0 ? 'horizontal' : 'vertical'"
 						:class="[index === 0 && 'col-span-full']"
 					/>
-				</UBlogPosts>
-			</UContainer>
-		</UPageBody>
-	</UContainer>
+				</StarBlogPosts>
+			</StarContainer>
+		</StarPageBody>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

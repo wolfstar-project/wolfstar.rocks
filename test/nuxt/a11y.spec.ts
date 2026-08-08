@@ -5,7 +5,7 @@ import {
 	AppLogoMark,
 	ChangelogContributorMention,
 	ChangelogContributors,
-	UApp,
+	AppProviders,
 	CommandsSection,
 	CommandsShowcase,
 	CtaSection,
@@ -30,7 +30,6 @@ import {
 	DiscordChatInputCommandSuggestions,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
-	ErrorPage,
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	OauthStatusPanel,
@@ -41,6 +40,7 @@ import {
 	IconsWolfstar,
 	SectionHeader,
 	Separator,
+	StarError,
 	StatsSection,
 	TestimonialsSection,
 } from "#components";
@@ -557,9 +557,9 @@ describe("component accessibility audits", () => {
 	describe("ChangelogContributorMention", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended({
-				components: { ChangelogContributorMention, UApp },
+				components: { ChangelogContributorMention, AppProviders },
 				template: `
-					<UApp>
+					<AppProviders>
 						<ChangelogContributorMention
 							name="RedStar"
 							username="RedStar071"
@@ -567,7 +567,7 @@ describe("component accessibility audits", () => {
 							:has-contributed="true"
 							avatar-src="https://github.com/RedStar071.png"
 						/>
-					</UApp>
+					</AppProviders>
 				`,
 			});
 			const results = await runAxe(component);
@@ -578,7 +578,7 @@ describe("component accessibility audits", () => {
 	describe("ChangelogContributors", () => {
 		it("should have no accessibility violations", async () => {
 			const component = await mountSuspended({
-				components: { ChangelogContributors, UApp },
+				components: { ChangelogContributors, AppProviders },
 				setup() {
 					return {
 						contributors: [
@@ -593,9 +593,9 @@ describe("component accessibility audits", () => {
 					};
 				},
 				template: `
-					<UApp>
+					<AppProviders>
 						<ChangelogContributors id-prefix="v1.0.0" :contributors="contributors" />
-					</UApp>
+					</AppProviders>
 				`,
 			});
 			const results = await runAxe(component);
@@ -848,9 +848,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("ErrorPage", () => {
+		describe("StarError", () => {
 			it("should have no accessibility violations for a 404 error", async () => {
-				const component = await mountSuspended(ErrorPage, {
+				const component = await mountSuspended(StarError, {
 					props: {
 						error: createError({
 							status: 404,
@@ -864,7 +864,7 @@ describe("component accessibility audits", () => {
 			});
 
 			it("should have no accessibility violations for a 500 error", async () => {
-				const component = await mountSuspended(ErrorPage, {
+				const component = await mountSuspended(StarError, {
 					props: {
 						error: createError({
 							status: 500,

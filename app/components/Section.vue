@@ -41,8 +41,6 @@ const {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .home-section--band {
 	background-color: oklch(from var(--color-base-100) l c h / 0.35);
 }

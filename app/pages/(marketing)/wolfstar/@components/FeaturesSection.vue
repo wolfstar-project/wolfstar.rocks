@@ -14,7 +14,7 @@
 		/>
 
 		<div
-			class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-flow-dense lg:auto-rows-[minmax(12.5rem,auto)] lg:grid-cols-4"
+			class="gap-5 sm:grid-cols-2 lg:grid-flow-dense lg:auto-rows-[minmax(12.5rem,auto)] lg:grid-cols-4 grid grid-cols-1"
 		>
 			<SurfaceCard
 				v-for="feature of features"
@@ -25,7 +25,7 @@
 					cn(
 						'flex flex-col',
 						feature.big
-							? 'justify-between sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:h-full'
+							? 'sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:h-full justify-between'
 							: 'justify-start',
 					)
 				"
@@ -34,12 +34,12 @@
 					<div
 						:class="
 							cn(
-								'flex items-center justify-center bg-primary/10',
+								'bg-primary/10 flex items-center justify-center',
 								feature.big ? 'mb-5 size-14 rounded-lg' : 'mb-3 size-8 rounded-md',
 							)
 						"
 					>
-						<UIcon
+						<StarIcon
 							:name="feature.icon"
 							:class="feature.big ? 'h-7 w-7 text-primary' : 'h-4 w-4 text-primary'"
 							aria-hidden="true"
@@ -50,8 +50,8 @@
 							cn(
 								'text-base-content',
 								feature.big
-									? 'text-[1.375rem] font-bold'
-									: 'text-[15px] font-semibold',
+									? 'font-bold text-[1.375rem]'
+									: 'font-semibold text-[15px]',
 							)
 						"
 					>
@@ -68,7 +68,7 @@
 						{{ feature.description }}
 					</p>
 				</div>
-				<div v-if="feature.big" class="mt-5 flex flex-wrap gap-2">
+				<div v-if="feature.big" class="mt-5 gap-2 flex flex-wrap">
 					<span class="badge badge-soft badge-error">Bad Words</span>
 					<span class="badge badge-soft badge-warning">Capitals</span>
 					<span class="badge badge-soft badge-primary">Invites</span>

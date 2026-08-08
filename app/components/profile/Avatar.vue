@@ -1,7 +1,7 @@
 <template>
 	<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 		<div
-			class="flex h-32 w-32 shrink-0 items-center justify-center rounded-full ring-base-300 ring-offset-base-100 md:h-40 md:w-40"
+			class="h-32 w-32 ring-base-300 ring-offset-base-100 md:h-40 md:w-40 flex shrink-0 items-center justify-center rounded-full"
 			:class="{
 				'transition-transform duration-300 group-hover:scale-105': !effectiveReduceMotion,
 			}"

@@ -11,8 +11,6 @@
 </template>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .showcase-section {
 	position: relative;
 }

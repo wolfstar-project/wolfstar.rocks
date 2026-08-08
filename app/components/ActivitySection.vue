@@ -6,14 +6,14 @@
 		<div
 			:class="
 				plain
-					? 'flex items-center justify-between px-4 py-3'
+					? 'px-4 py-3 flex items-center justify-between'
 					: 'mb-3 flex items-center justify-between'
 			"
 		>
 			<p class="text-sm text-base-content/70">
 				{{ itemCount }} {{ recordLabel }}{{ itemCount === 1 ? "" : "s" }} recorded
 			</p>
-			<UButton
+			<StarButton
 				color="neutral"
 				variant="ghost"
 				icon="heroicons:arrow-path"
@@ -25,7 +25,7 @@
 		</div>
 
 		<LoadingSpinner v-if="status === 'pending' && itemCount === 0" />
-		<UEmpty
+		<StarEmpty
 			v-else-if="itemCount === 0"
 			:icon="emptyIcon"
 			:title="emptyTitle"

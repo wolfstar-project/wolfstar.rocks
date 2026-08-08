@@ -1,13 +1,13 @@
 <template>
-	<UContainer
-		class="w-full max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8"
+	<StarContainer
+		class="max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8 w-full"
 		role="region"
 		:aria-label="t('profile.server_list_aria')"
 	>
-		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row">
+		<div class="mb-4 gap-4 sm:flex-row flex flex-col justify-between">
 			<div class="flex items-start">
 				<div v-if="loading || filterLoading" class="text-sm text-base-content/60 sm:block">
-					<div class="flex animate-pulse items-center">
+					<div class="animate-pulse flex items-center">
 						<div class="h-4 w-24 rounded bg-base-content/20"></div>
 						<div class="mx-1 h-4 w-4 rounded bg-base-content/20"></div>
 						<div class="h-4 w-24 rounded bg-base-content/20"></div>
@@ -39,7 +39,7 @@
 				<!-- Loading Skeleton Grid -->
 				<div
 					v-if="loading || filterLoading"
-					class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
+					class="gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5 grid grid-cols-2"
 					role="status"
 					:aria-label="
 						filterLoading ? t('profile.applying_filters') : t('profile.loading_servers')
@@ -54,7 +54,7 @@
 					:key="String(filterKey)"
 					name="guild-list"
 					tag="div"
-					class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
+					class="gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5 grid grid-cols-2"
 					role="list"
 					:aria-label="t('profile.servers_list_aria')"
 				>
@@ -71,7 +71,7 @@
 			<!-- Loading Indicator for Infinite Scroll -->
 			<div
 				v-if="!loading && loadingMore"
-				class="flex justify-center py-4"
+				class="py-4 flex justify-center"
 				role="status"
 				:aria-label="t('profile.loading_more')"
 			>
@@ -84,18 +84,18 @@
 			<!-- Error State with Enhanced UX -->
 			<div v-if="errorVisible" style="view-transition-name: guild-error-state" class="py-8">
 				<div
-					class="mx-auto max-w-2xl rounded-xl border p-6"
+					class="max-w-2xl rounded-xl p-6 mx-auto border"
 					:class="[
 						errorState.color === 'warning'
 							? 'border-warning/30 bg-warning/10 text-warning'
 							: 'border-error/30 bg-error/10 text-error',
 					]"
 				>
-					<div class="flex items-start gap-4">
+					<div class="gap-4 flex items-start">
 						<div class="shrink-0">
-							<UIcon :name="errorState.icon" class="size-6" />
+							<Icon :name="errorState.icon" class="size-6" />
 						</div>
-						<div class="flex-1 space-y-2">
+						<div class="space-y-2 flex-1">
 							<h3 class="text-lg font-semibold">{{ errorState.title }}</h3>
 							<p class="opacity-90">{{ errorState.description }}</p>
 							<p v-if="errorState.suggestion" class="text-sm opacity-70">
@@ -104,7 +104,7 @@
 						</div>
 					</div>
 					<div class="mt-4 flex justify-end">
-						<UButton
+						<StarButton
 							v-if="error?.status === 401"
 							color="error"
 							variant="outline"
@@ -113,8 +113,8 @@
 							to="/login"
 						>
 							{{ t("profile.reload_page") }}
-						</UButton>
-						<UButton
+						</StarButton>
+						<StarButton
 							v-else-if="onRetry"
 							:color="errorState.color"
 							variant="outline"
@@ -124,14 +124,14 @@
 							@click="onRetry"
 						>
 							{{ isRetrying ? t("errors.retrying") : t("common.retry") }}
-						</UButton>
+						</StarButton>
 					</div>
 				</div>
 			</div>
 
 			<!-- Empty State -->
 			<div v-if="!loading && !error && filteredGuilds.length === 0">
-				<div class="flex flex-col items-center justify-center space-y-6 py-16">
+				<div class="space-y-6 py-16 flex flex-col items-center justify-center">
 					<div class="py-16 text-center" role="status" aria-live="polite">
 						<h2 class="mb-2 text-xl font-bold text-base-content/80">
 							{{
@@ -140,7 +140,7 @@
 									: t("profile.no_servers")
 							}}
 						</h2>
-						<p class="mx-auto max-w-md text-base-content/60">
+						<p class="max-w-md text-base-content/60 mx-auto">
 							{{
 								searchQuery
 									? t("profile.no_matching_description")
@@ -149,7 +149,7 @@
 						</p>
 					</div>
 
-					<UButton
+					<StarButton
 						v-if="searchQuery"
 						variant="outline"
 						size="sm"
@@ -159,11 +159,11 @@
 						@click="undoSearch"
 					>
 						{{ t("profile.clear_search") }}
-					</UButton>
+					</StarButton>
 				</div>
 			</div>
 		</div>
-	</UContainer>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

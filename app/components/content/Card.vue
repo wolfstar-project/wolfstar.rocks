@@ -1,9 +1,9 @@
 <template>
-	<UAlert :color="alertColor" variant="soft" class="not-prose my-4">
+	<StarAlert :color="alertColor" variant="soft" class="not-prose my-4">
 		<template #description>
 			<slot />
 		</template>
-	</UAlert>
+	</StarAlert>
 </template>
 
 <script setup lang="ts">

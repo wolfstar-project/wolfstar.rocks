@@ -1,9 +1,9 @@
 <template>
-	<UModal :title="formattedLabel" :description>
-		<UButton :label="buttonLabel" :disabled variant="soft" />
+	<StarModal :title="formattedLabel" :description>
+		<StarButton :label="buttonLabel" :disabled variant="soft" />
 		<template #body>
 			<SelectFieldWrapper :field-name :tooltip-title>
-				<USelectMenu
+				<StarSelectMenu
 					v-model="selectedValues"
 					:items
 					:disabled
@@ -15,17 +15,17 @@
 					class="w-full"
 				>
 					<template v-if="imageInName" #trailing>
-						<UAvatar :src="imageInName" alt="Emoji" size="2xs" />
+						<StarAvatar :src="imageInName" alt="Emoji" size="2xs" />
 					</template>
-				</USelectMenu>
+				</StarSelectMenu>
 
 				<template #help>
-					<div class="flex items-center justify-between gap-2">
-						<UBadge color="neutral" variant="subtle" size="sm">
+					<div class="gap-2 flex items-center justify-between">
+						<StarBadge color="neutral" variant="subtle" size="sm">
 							{{ selectedValues.length }} selected
-						</UBadge>
+						</StarBadge>
 
-						<UButton
+						<StarButton
 							variant="ghost"
 							color="error"
 							size="sm"
@@ -33,16 +33,16 @@
 							@click="clearSelected"
 						>
 							Clear selected
-						</UButton>
+						</StarButton>
 					</div>
 				</template>
 			</SelectFieldWrapper>
 		</template>
-	</UModal>
+	</StarModal>
 </template>
 
 <script lang="ts">
-import type { SelectItem } from "@nuxt/ui";
+import type { SelectItem } from "#shared/types/ui";
 import { isNullOrUndefined, isNumber, toTitleCase } from "@sapphire/utilities";
 
 export interface SelectManyValue {

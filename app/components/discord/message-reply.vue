@@ -64,8 +64,6 @@ const ariaLabel = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-message-reply {
 	--message-reply-spine-width: 2px;
 	--message-reply-spine-color: oklch(from var(--color-base-content) l c h / 0.2);
@@ -74,7 +72,7 @@ const ariaLabel = computed(() => {
 	--discord-command-chip-text: oklch(93.89% 0.027 281.72);
 	--discord-interaction-muted: oklch(73.06% 0.0048 264.53);
 
-	@apply relative mb-0 flex min-w-0 flex-nowrap items-center gap-x-1 font-whitney text-xs leading-4;
+	@apply mb-0 min-w-0 gap-x-1 font-whitney text-xs leading-4 relative flex flex-nowrap items-center;
 }
 
 @media (width >= 48rem) {
@@ -88,7 +86,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-message-reply-username {
-	@apply shrink-0 font-medium;
+	@apply font-medium shrink-0;
 }
 
 .discord-message-reply-username-emphasis {
@@ -96,12 +94,12 @@ const ariaLabel = computed(() => {
 }
 
 .discord-message-reply-action {
-	@apply shrink-0 font-normal;
+	@apply font-normal shrink-0;
 	color: var(--discord-interaction-muted);
 }
 
 .discord-message-reply-command {
-	@apply inline-flex max-w-full min-w-0 shrink items-center gap-0.5 px-1 font-medium;
+	@apply min-w-0 gap-0.5 px-1 font-medium inline-flex max-w-full shrink items-center;
 	border-radius: 3px;
 	background-color: var(--discord-command-chip-bg);
 	color: var(--discord-command-chip-text);
@@ -116,7 +114,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-message-reply-preview {
-	@apply min-w-0 truncate font-normal;
+	@apply min-w-0 font-normal truncate;
 	color: var(--discord-interaction-muted);
 }
 

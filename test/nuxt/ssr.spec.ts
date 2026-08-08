@@ -1281,6 +1281,46 @@ describe("component SSR rendering", () => {
 			);
 		});
 
+		it("lists and executes WolfStar's real slash-only subcommands", async () => {
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
+			await openSlashCommandPicker(wrapper);
+
+			await wrapper.find("[aria-label='WolfStar commands']").trigger("click");
+			await wrapper.vm.$nextTick();
+
+			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
+			expect(suggestions).toHaveLength(15);
+			for (const command of [
+				"/case view",
+				"/case list",
+				"/case edit",
+				"/case archive",
+				"/case delete",
+				"/conf menu",
+				"/conf show",
+				"/conf set",
+				"/conf remove",
+				"/conf reset",
+			]) {
+				expect(wrapper.text()).toContain(command);
+			}
+
+			const archiveSuggestion = suggestions.find((suggestion) =>
+				suggestion.text().includes("/case archive"),
+			);
+			expect(archiveSuggestion).toBeDefined();
+			await archiveSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
+				/used the case archive slash command/i,
+			);
+			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
+			expect(wrapper.find(".showcase-desktop-text-response").text()).toBe(
+				"Successfully archived case 3.",
+			);
+		});
+
 		it("executes a command when clicking a suggestion", async () => {
 			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);

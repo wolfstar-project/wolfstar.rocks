@@ -8,13 +8,14 @@ import {
 	UApp,
 
 	// #region Wolfstar components
-	CommandsSection as WolfstarCommandsSection,
-	CommandsShowcase as WolfstarCommandsShowcase,
-	CtaSection as WolfstarCtaSection,
-	DashboardSection as WolfstarDashboardSection,
-	ModerationShowcase as WolfstarModerationShowcase,
-	ModerationShowcaseSection as WolfstarModerationShowcaseSection,
-	ProductProofSection as WolfstarProductProofSection,
+	WolfstarCommandsSection,
+	WolfstarCommandsShowcase,
+	WolfstarCtaSection,
+	WolfstarDashboardSection,
+	WolfstarHeroSection,
+	WolfstarModerationShowcase,
+	WolfstarModerationShowcaseSection,
+	WolfstarProductProofSection,
 	// #endregion
 
 	// #region Discord components
@@ -44,7 +45,6 @@ import {
 	ErrorPage,
 	OauthStatusPanel,
 	GuildSettingsSection,
-	HeroSection,
 	IconsApp,
 	IconsWolfstar,
 	SectionHeader,
@@ -731,9 +731,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("HeroSection", () => {
+		describe("WolfstarHeroSection", () => {
 			it("should have no accessibility violations", async () => {
-				const component = await mountSuspended(HeroSection, {
+				const component = await mountSuspended(WolfstarHeroSection, {
 					props: {
 						buildTime: new Date("2024-06-01T12:00:00Z"),
 						buildVersion: "7.0.0",

@@ -6,7 +6,7 @@
 		spacing="none"
 		class="showcase-section pb-24"
 	>
-		<LazyModerationShowcase />
+		<LazyWolfstarModerationShowcase />
 	</Section>
 </template>
 

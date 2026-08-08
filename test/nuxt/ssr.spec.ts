@@ -1,6 +1,6 @@
 import {
-	CommandsSection,
-	CommandsShowcase,
+	WolfstarCommandsSection,
+	WolfstarCommandsShowcase,
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
@@ -20,11 +20,11 @@ import {
 	DiscordChatInputCommandSuggestions,
 	DiscordScrollbar,
 	GuildSettingsSection,
-	HeroSection,
+	WolfstarHeroSection,
 	IconsApp,
 	IconsWolfstar,
-	ModerationShowcaseSection,
-	ProductProofSection,
+	WolfstarModerationShowcaseSection,
+	WolfstarProductProofSection,
 	Separator,
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
@@ -997,7 +997,7 @@ describe("component SSR rendering", () => {
 
 	describe("CommandsSection", () => {
 		it("renders section header in full section mode", async () => {
-			const wrapper = await mountSuspended(CommandsSection);
+			const wrapper = await mountSuspended(WolfstarCommandsSection);
 
 			expect(wrapper.text()).toContain("The demo below behaves like Discord.");
 			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
@@ -1006,14 +1006,14 @@ describe("component SSR rendering", () => {
 
 	describe("Homepage product narrative", () => {
 		it("renders a specific hero proposition and product evidence on SSR", async () => {
-			const hero = await mountSuspended(HeroSection, {
+			const hero = await mountSuspended(WolfstarHeroSection, {
 				props: {
 					buildTime: new Date("2026-08-06T12:00:00Z"),
 					buildVersion: "7.0.0",
 					inviteUrl: "https://discord.com/oauth2/authorize?client_id=test",
 				},
 			});
-			const proof = await mountSuspended(ProductProofSection);
+			const proof = await mountSuspended(WolfstarProductProofSection);
 
 			expect(hero.text()).toContain("Moderation, with a paper trail.");
 			expect(hero.text()).toContain("Invite WolfStar");
@@ -1038,7 +1038,7 @@ describe("component SSR rendering", () => {
 		}
 
 		it("renders mobile command browser with an idle composer by default", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".showcase-discord-shell").exists()).toBe(true);
 			expect(wrapper.find(".showcase-discord-main").exists()).toBe(true);
@@ -1082,7 +1082,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("renders a plain-text moderation success reply on desktop", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			// Ensure slash mode is closed so the channel response is visible.
 			if (
@@ -1105,7 +1105,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("toggles the member list from the channel header users button", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
 
@@ -1128,7 +1128,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("opens mobile channel info from the channel header and closes via back", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".discord-channel-info").exists()).toBe(false);
 
@@ -1184,7 +1184,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("renders frequently used and additional command suggestions", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			expect(wrapper.text()).toContain("Frequently Used");
@@ -1245,7 +1245,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("keeps the executed response visible when the slash picker reopens", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const kickSuggestion = wrapper
@@ -1281,7 +1281,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes a command when clicking a suggestion", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
@@ -1312,7 +1312,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes a subcommand and shows its component response", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const confSuggestion = wrapper
@@ -1336,7 +1336,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("toggles the App Launcher from the apps control", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
@@ -1366,7 +1366,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("hides the message composer when the Apps sheet expands to full (positive)", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 
 			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
@@ -1391,7 +1391,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("closes the App Launcher when slash command mode opens", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(true);
 
@@ -1402,7 +1402,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes a slash command from App Launcher search without opening /commands", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 
 			const search = wrapper.find(".discord-app-launcher-search-input");
@@ -1433,7 +1433,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("closes the picker and restores idle send chrome when Escape clears slash mode", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const input = wrapper.find(".discord-message-composer-input");
@@ -1458,7 +1458,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("closes the picker when the leading slash is deleted", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const input = wrapper.find(".discord-message-composer-input");
@@ -1473,7 +1473,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("keeps third-party app rows non-selectable", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const starylSuggestion = wrapper
@@ -1495,7 +1495,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("shows matched-command chrome while typing and executes on Enter", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const input = wrapper.find(".discord-message-composer-input");
@@ -1525,7 +1525,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes conf menu from the picker and reveals the channel response", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const confSuggestion = wrapper
@@ -1552,7 +1552,7 @@ describe("component SSR rendering", () => {
 
 	describe("ModerationShowcaseSection", () => {
 		it("renders all three moderation feature areas on SSR", async () => {
-			const wrapper = await mountSuspended(ModerationShowcaseSection);
+			const wrapper = await mountSuspended(WolfstarModerationShowcaseSection);
 
 			expect(wrapper.text()).toContain("Follow a rule from trigger to review.");
 			expect(wrapper.text()).toContain("Configure the rule before it fires");

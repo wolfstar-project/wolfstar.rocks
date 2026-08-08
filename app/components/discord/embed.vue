@@ -1,7 +1,10 @@
 <template>
 	<div
 		class="discord-embed"
-		:class="{ 'discord-embed--light': !isDarkTheme }"
+		:class="{
+			'discord-embed--light': theme === 'light',
+			'discord-embed--dark': theme === 'dark',
+		}"
 		role="complementary"
 		:aria-label="embedAriaLabel"
 	>
@@ -88,9 +91,7 @@ interface EmbedSlots {
 <script setup lang="ts">
 defineSlots<EmbedSlots>();
 
-const { title, color, author, footer, timestamp, theme = "dark" } = defineProps<EmbedProps>();
-
-const isDarkTheme = computed(() => theme !== "light");
+const { title, color, author, footer, timestamp, theme } = defineProps<EmbedProps>();
 
 const timestampDate = computed(() => {
 	if (timestamp === undefined) return undefined;
@@ -153,7 +154,7 @@ const embedAriaLabel = computed(() => {
 }
 
 .discord-embed--light,
-:global([data-theme="light"] .discord-embed) {
+:global([data-theme="light"] .discord-embed):not(.discord-embed--dark) {
 	--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
 	--discord-embed-bg: oklch(96.4% 0.0029 264.54);
 	--discord-embed-border: oklch(92.12% 0.0046 258.33);

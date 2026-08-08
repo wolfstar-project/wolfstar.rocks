@@ -56,8 +56,33 @@ describe("DiscordEmbed", () => {
 		});
 
 		// ASSERT
-		expect(wrapper.find(".discord-embed--light").exists()).toBe(true);
-		expect(wrapper.find(".discord-embed").classes()).toContain("discord-embed--light");
+		const classes = wrapper.find(".discord-embed").classes();
+		expect(classes).toContain("discord-embed--light");
+		expect(classes).not.toContain("discord-embed--dark");
+	});
+
+	it("applies the dark theme class when theme is dark, to override an ambient light theme (positive)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordEmbed, {
+			props: { title: "Dark embed", theme: "dark" },
+		});
+
+		// ASSERT
+		const classes = wrapper.find(".discord-embed").classes();
+		expect(classes).toContain("discord-embed--dark");
+		expect(classes).not.toContain("discord-embed--light");
+	});
+
+	it("applies no theme modifier class when theme is omitted, to follow the ambient app theme (negative)", async () => {
+		// ARRANGE / ACT
+		const wrapper = await mountSuspended(DiscordEmbed, {
+			props: { title: "Ambient embed" },
+		});
+
+		// ASSERT
+		const classes = wrapper.find(".discord-embed").classes();
+		expect(classes).not.toContain("discord-embed--light");
+		expect(classes).not.toContain("discord-embed--dark");
 	});
 
 	it("does not render footer chrome when only a timestamp is provided (negative)", async () => {

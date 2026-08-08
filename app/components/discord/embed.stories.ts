@@ -10,7 +10,6 @@ const meta = {
 	decorators: [discordDecorator],
 	args: {
 		color: caseEmbedColor,
-		theme: "dark",
 		author: {
 			icon: "/avatars/redstar.png",
 			name: "@redstar071 (605162125027049472)",

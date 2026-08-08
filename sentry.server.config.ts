@@ -19,7 +19,8 @@ const EXPECTED_HTTP_STATUSES = new Set([400, 401, 403, 404, 409, 429]);
  */
 function isApplicationHttpError(exception: unknown): exception is { statusCode: unknown } {
 	if (typeof exception !== "object" || exception === null) return false;
-	if ((exception.constructor as { __h3_error__?: boolean } | undefined)?.__h3_error__ !== true) return false;
+	if ((exception.constructor as { __h3_error__?: boolean } | undefined)?.__h3_error__ !== true)
+		return false;
 	return (exception as { unhandled?: unknown }).unhandled !== true;
 }
 

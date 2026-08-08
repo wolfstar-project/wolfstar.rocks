@@ -30,7 +30,6 @@ import {
 	DiscordChatInputCommandSuggestions,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
-	ErrorPage,
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	OauthStatusPanel,
@@ -41,6 +40,7 @@ import {
 	IconsWolfstar,
 	SectionHeader,
 	Separator,
+	StarError,
 	StatsSection,
 	TestimonialsSection,
 } from "#components";
@@ -848,9 +848,9 @@ describe("component accessibility audits", () => {
 			});
 		});
 
-		describe("ErrorPage", () => {
+		describe("StarError", () => {
 			it("should have no accessibility violations for a 404 error", async () => {
-				const component = await mountSuspended(ErrorPage, {
+				const component = await mountSuspended(StarError, {
 					props: {
 						error: createError({
 							status: 404,
@@ -864,7 +864,7 @@ describe("component accessibility audits", () => {
 			});
 
 			it("should have no accessibility violations for a 500 error", async () => {
-				const component = await mountSuspended(ErrorPage, {
+				const component = await mountSuspended(StarError, {
 					props: {
 						error: createError({
 							status: 500,

@@ -124,7 +124,7 @@ interface ShowcaseCommandTextResponse {
 	responseType: "text";
 	content: string;
 	mentionUser?: string;
-	/** Avatar inside the mention pill, shown at every viewport size when provided. */
+	/** Desktop-only avatar inside the mention pill. */
 	mentionAvatar?: string;
 }
 

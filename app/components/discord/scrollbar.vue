@@ -221,6 +221,11 @@ function scrollByStep(direction: 1 | -1) {
 	grid-template-columns: minmax(0, 1fr) 0;
 }
 
+:global([data-theme="light"]) .discord-scrollbar {
+	--discord-scrollbar-thumb: oklch(47.12% 0.012 264);
+	--discord-scrollbar-arrow: oklch(47.12% 0.012 264 / 0.7);
+}
+
 .discord-scrollbar-scrollable {
 	grid-template-columns: minmax(0, 1fr) var(--discord-scrollbar-gutter);
 }

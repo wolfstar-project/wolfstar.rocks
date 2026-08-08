@@ -167,6 +167,20 @@ const embedAriaLabel = computed(() => {
 	--discord-embed-link: oklch(62% 0.16 230);
 }
 
+:global([data-theme="light"]) .discord-embed {
+	--discord-embed-default-border: oklch(92.64% 0.006 264);
+	--discord-embed-bg: oklch(95.74% 0.004 264);
+	--discord-embed-border: oklch(21.15% 0.009 264 / 0.08);
+	--discord-embed-text: oklch(21.15% 0.009 264);
+	--discord-embed-title: oklch(21.15% 0.009 264);
+	--discord-embed-author: oklch(21.15% 0.009 264);
+	--discord-embed-footer: oklch(47.12% 0.012 264);
+	--discord-embed-footer-separator: oklch(47.12% 0.012 264);
+	--discord-embed-code-bg: oklch(93.74% 0.005 264);
+	--discord-embed-code-text: oklch(21.15% 0.009 264);
+	--discord-embed-quote-bar: oklch(92.64% 0.006 264);
+}
+
 .discord-embed-left-border {
 	flex-shrink: 0;
 	width: 4px;

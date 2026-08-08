@@ -26,6 +26,7 @@
 								<DiscordMessage
 									:name="message.author"
 									:timestamp="message.timestamp"
+									ephemeral
 									:reply="{
 										kind: 'command',
 										user: activeCommand.invoker,
@@ -34,21 +35,19 @@
 									}"
 								>
 									<DiscordEmbed
-										:color="activeCommand.embedColor"
-										:footer="{
-											icon: '/avatars/staryl.png',
-											text: activeCommand.embedFooter,
-										}"
-										:timestamp
+										v-if="activeCommand.response.type === 'embed'"
+										:title="activeCommand.response.title"
 									>
 										<span
-											v-for="line of activeCommand.embedLines"
-											:key="line.label"
+											v-for="line of activeCommand.response.lines"
+											:key="line"
 										>
-											<strong>❯ {{ line.label }}:</strong>
-											{{ line.value }}<br />
+											{{ line }}<br />
 										</span>
 									</DiscordEmbed>
+									<p v-else class="staryl-command-response">
+										{{ activeCommand.response.content }}
+									</p>
 								</DiscordMessage>
 							</template>
 						</DiscordChat>
@@ -151,60 +150,89 @@ interface StarylShowcaseCommand {
 	description: string;
 	invoker: ProfileName;
 	options: SlashCommandOption[];
-	embedColor: string;
-	embedFooter: string;
-	embedLines: { label: string; value: string }[];
+	response: { type: "embed"; title: string; lines: string[] } | { type: "text"; content: string };
 }
 
-/**
- * PLACEHOLDER COMMAND SET.
- *
- * Staryl has no public invite and no published command specification yet, so
- * nothing below describes shipped behaviour. Replace this array (and the
- * section copy) with Staryl's real commands and real responses before this
- * page is treated as product marketing.
- */
 const starylCommands: StarylShowcaseCommand[] = [
 	{
-		name: "subscriptions",
-		subcommand: "list",
-		description: "Placeholder — list the server's configured subscriptions.",
-		invoker: "redstar",
-		options: [],
-		embedColor: Colors.LightBlue,
-		embedFooter: "Placeholder response",
-		embedLines: [
-			{ label: "Status", value: "Example output — not a shipped command" },
-			{ label: "Subscriptions", value: "0" },
-		],
-	},
-	{
-		name: "subscriptions",
+		name: "twitch-subscriptions",
 		subcommand: "add",
-		description: "Placeholder — add a subscription for a creator.",
+		description: "Add a new Twitch subscription for a streamer.",
 		invoker: "redstar",
-		options: [{ name: "source", value: "example", focused: true }],
-		embedColor: Colors.LightBlue,
-		embedFooter: "Placeholder response",
-		embedLines: [
-			{ label: "Status", value: "Example output — not a shipped command" },
-			{ label: "Source", value: "example" },
+		options: [
+			{ name: "streamer", value: "shroud" },
+			{ name: "channel", value: "#staryl-notifications" },
+			{ name: "type", value: "Stream Online", focused: true },
 		],
+		response: {
+			type: "text",
+			content:
+				"✅ Success! Whenever shroud goes live, I will post a new message in #staryl-notifications.",
+		},
 	},
 	{
-		name: "settings",
-		description: "Placeholder — review Staryl's per-server settings.",
+		name: "twitch-subscriptions",
+		subcommand: "remove",
+		description: "Remove a Twitch subscription for a streamer.",
+		invoker: "redstar",
+		options: [
+			{ name: "streamer", value: "shroud" },
+			{ name: "channel", value: "#staryl-notifications" },
+			{ name: "type", value: "Stream Online", focused: true },
+		],
+		response: {
+			type: "text",
+			content:
+				"✅ Success! I will no longer post messages to #staryl-notifications whenever shroud goes live.",
+		},
+	},
+	{
+		name: "twitch-subscriptions",
+		subcommand: "reset",
+		description: "Remove all Twitch subscriptions from this server.",
 		invoker: "redstar",
 		options: [],
-		embedColor: Colors.LightBlue,
-		embedFooter: "Placeholder response",
-		embedLines: [{ label: "Status", value: "Example output — not a shipped command" }],
+		response: {
+			type: "text",
+			content: "✅ Success! 3 subscriptions have been removed from this server.",
+		},
+	},
+	{
+		name: "twitch-subscriptions",
+		subcommand: "show",
+		description: "Show all Twitch subscriptions for this server.",
+		invoker: "redstar",
+		options: [],
+		response: {
+			type: "embed",
+			title: "Twitch Subscriptions",
+			lines: [
+				"shroud — #staryl-notifications → Live",
+				"ninja — #staryl-notifications → Offline",
+			],
+		},
+	},
+	{
+		name: "twitch-subscriptions",
+		subcommand: "test",
+		description: "Send a test notification to check that an existing subscription works.",
+		invoker: "redstar",
+		options: [
+			{ name: "streamer", value: "shroud" },
+			{ name: "channel", value: "#staryl-notifications" },
+			{ name: "type", value: "Stream Online", focused: true },
+		],
+		response: {
+			type: "text",
+			content:
+				"✅ Sent! Check #staryl-notifications — that is exactly what the notification will look like.",
+		},
 	},
 ];
 
 type StarylCommand = StarylShowcaseCommand;
 
-const CHANNEL_TOPIC = "Staryl is in development — the commands below are placeholders.";
+const CHANNEL_TOPIC = "Configure Twitch stream notifications with Staryl.";
 
 const selectedCommandIndex = ref(0);
 const highlightedIndex = ref(0);
@@ -400,6 +428,11 @@ onMounted(() => {
 	border-color: var(--staryl-showcase-card-border);
 }
 
+:global([data-theme="light"]) :deep(.staryl-showcase-card.home-surface-card) {
+	--staryl-showcase-card-bg: oklch(97.31% 0.003 264);
+	--staryl-showcase-card-border: oklch(89.75% 0.008 264);
+}
+
 .staryl-discord-shell {
 	--staryl-discord-chrome: oklch(26.65% 0.006 272.93);
 	--staryl-discord-sidebar: oklch(23.47% 0.005 272.95);
@@ -412,6 +445,8 @@ onMounted(() => {
 	--staryl-discord-message-hover: oklch(100% 0 0 / 0.03);
 	--staryl-discord-primary-text: oklch(91.56% 0.004 272.93);
 	--staryl-discord-muted-text: oklch(71.01% 0.01 273.13);
+	--staryl-discord-composer-add: oklch(19.34% 0.004 273.16);
+	--staryl-discord-composer-pill: oklch(28.84% 0.007 272.93);
 
 	/* Neutralize DaisyUI / Nuxt UI theme surfaces inside the mock. */
 	--color-base-100: var(--staryl-discord-chrome);
@@ -422,6 +457,23 @@ onMounted(() => {
 	@apply relative flex flex-col overflow-hidden;
 	background-color: var(--staryl-discord-chrome);
 	color: var(--staryl-discord-primary-text);
+}
+
+/* Discord's light client: a cool off-white canvas, distinct side surfaces, and near-black copy. */
+:global([data-theme="light"]) .staryl-discord-shell {
+	--staryl-discord-chrome: oklch(98.17% 0.002 264);
+	--staryl-discord-sidebar: oklch(95.74% 0.004 264);
+	--staryl-discord-server: oklch(92.64% 0.006 264);
+	--staryl-discord-composer: oklch(93.74% 0.005 264);
+	--staryl-discord-composer-muted: oklch(47.12% 0.012 264);
+	--staryl-discord-composer-text: oklch(21.15% 0.009 264);
+	--staryl-discord-composer-hover: oklch(21.15% 0.009 264 / 0.08);
+	--staryl-discord-header-edge: oklch(21.15% 0.009 264 / 0.08);
+	--staryl-discord-message-hover: oklch(21.15% 0.009 264 / 0.035);
+	--staryl-discord-primary-text: oklch(21.15% 0.009 264);
+	--staryl-discord-muted-text: oklch(47.12% 0.012 264);
+	--staryl-discord-composer-add: var(--staryl-discord-composer-muted);
+	--staryl-discord-composer-pill: var(--staryl-discord-chrome);
 }
 
 .staryl-discord-workspace {
@@ -477,8 +529,8 @@ onMounted(() => {
 	--discord-message-composer-text: var(--staryl-discord-composer-text);
 	--discord-message-composer-muted: var(--staryl-discord-composer-muted);
 	--discord-message-composer-hover: var(--staryl-discord-composer-hover);
-	--discord-message-composer-add-bg: oklch(100% 0 0 / 0.1);
-	--discord-message-composer-pill-bg: oklch(100% 0 0 / 0.12);
+	--discord-message-composer-add-bg: var(--staryl-discord-composer-add);
+	--discord-message-composer-pill-bg: var(--staryl-discord-composer-pill);
 }
 
 .staryl-composer-slash-field {
@@ -514,6 +566,11 @@ onMounted(() => {
 	z-index: 1;
 	color: transparent;
 	caret-color: var(--staryl-discord-composer-text);
+}
+
+.staryl-command-response {
+	@apply m-0 text-base;
+	color: var(--staryl-discord-primary-text);
 }
 
 @media (max-width: 767.98px) {

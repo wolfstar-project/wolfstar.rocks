@@ -1,10 +1,5 @@
 <template>
-	<div
-		class="discord-embed"
-		:class="{ 'discord-embed--light': !isDarkTheme }"
-		role="complementary"
-		:aria-label="embedAriaLabel"
-	>
+	<div class="discord-embed" role="complementary" :aria-label="embedAriaLabel">
 		<div
 			class="discord-embed-left-border"
 			:style="{ backgroundColor: color ?? 'var(--discord-embed-default-border)' }"
@@ -77,7 +72,6 @@ interface EmbedProps {
 	author?: EmbedAuthor;
 	footer?: EmbedFooter;
 	timestamp?: number | Date;
-	theme?: "light" | "dark";
 }
 
 interface EmbedSlots {
@@ -88,9 +82,7 @@ interface EmbedSlots {
 <script setup lang="ts">
 defineSlots<EmbedSlots>();
 
-const { title, color, author, footer, timestamp, theme = "dark" } = defineProps<EmbedProps>();
-
-const isDarkTheme = computed(() => theme !== "light");
+const { title, color, author, footer, timestamp } = defineProps<EmbedProps>();
 
 const timestampDate = computed(() => {
 	if (timestamp === undefined) return undefined;
@@ -152,21 +144,6 @@ const embedAriaLabel = computed(() => {
 	line-height: 1.125rem;
 }
 
-.discord-embed--light {
-	--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
-	--discord-embed-bg: oklch(96.4% 0.0029 264.54);
-	--discord-embed-border: oklch(92.12% 0.0046 258.33);
-	--discord-embed-text: oklch(43.23% 0.0134 274.64);
-	--discord-embed-title: oklch(32.11% 0.0093 268.38);
-	--discord-embed-author: oklch(32.11% 0.0093 268.38);
-	--discord-embed-footer: oklch(43.23% 0.0134 274.64);
-	--discord-embed-footer-separator: oklch(43.23% 0.0134 274.64);
-	--discord-embed-code-bg: oklch(92.12% 0.0046 258.33);
-	--discord-embed-code-text: oklch(32.11% 0.0093 268.38);
-	--discord-embed-quote-bar: oklch(78.71% 0.0114 256.71);
-	--discord-embed-link: oklch(62% 0.16 230);
-}
-
 :global([data-theme="light"] .discord-embed) {
 	--discord-embed-default-border: oklch(92.12% 0.0046 258.33);
 	--discord-embed-bg: oklch(96.4% 0.0029 264.54);
@@ -179,6 +156,7 @@ const embedAriaLabel = computed(() => {
 	--discord-embed-code-bg: oklch(92.12% 0.0046 258.33);
 	--discord-embed-code-text: oklch(32.11% 0.0093 268.38);
 	--discord-embed-quote-bar: oklch(78.71% 0.0114 256.71);
+	--discord-embed-link: oklch(62% 0.16 230);
 }
 
 .discord-embed-left-border {

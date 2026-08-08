@@ -28,7 +28,7 @@ import type { VNode } from "vue";
 
 interface MentionProps {
 	kind?: "mention" | "app";
-	/** User avatar URL. Shown whenever it is provided. */
+	/** User avatar URL. Shown on desktop (≥48rem) and hidden on mobile. */
 	avatar?: string;
 }
 
@@ -105,17 +105,26 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 
 .tag--with-avatar {
 	@apply items-center;
-	padding: 0.0625rem 0.1875rem 0.0625rem 0.0625rem;
 }
 
 .tag > .avatar {
-	display: block;
+	display: none;
 	flex-shrink: 0;
 	width: 1.25rem;
 	height: 1.25rem;
-	margin-inline-end: 0.1875rem;
 	border-radius: 9999px;
 	object-fit: cover;
+}
+
+@media (width >= 48rem) {
+	.tag > .avatar {
+		display: block;
+		margin-inline-end: 0.1875rem;
+	}
+
+	.tag--with-avatar {
+		padding: 0.0625rem 0.1875rem 0.0625rem 0.0625rem;
+	}
 }
 
 .tag > .icon {

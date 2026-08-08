@@ -48,16 +48,17 @@ const isFeedbackOpen = ref(false);
 const { preference: colorModePreference, setColorMode } = useAppColorMode();
 const { user: authUser, signOut } = useUserSession();
 
-const src = computed(() => authUser.value?.image ?? undefined);
-
-const user = ref({
-	avatar: {
-		alt: authUser.value?.name
-			? t("user_menu.avatar_alt", { name: authUser.value.name })
-			: t("user_menu.avatar_fallback"),
-		src: src.value,
-	},
-	name: authUser.value?.name,
+const user = computed(() => {
+	const current = authUser.value;
+	return {
+		avatar: {
+			alt: current?.name
+				? t("user_menu.avatar_alt", { name: current.name })
+				: t("user_menu.avatar_fallback"),
+			src: current?.image ?? undefined,
+		},
+		name: current?.name,
+	};
 });
 
 const languageChildren = computed<DropdownMenuItem[]>(() =>

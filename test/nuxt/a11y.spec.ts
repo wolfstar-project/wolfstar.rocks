@@ -31,6 +31,7 @@ import {
 	ProfileHeader,
 	DiscordAppLauncher,
 	DiscordStringSelectMenu,
+	ErrorPage,
 	ModerationShowcase,
 	ModerationShowcaseSection,
 	OauthStatusPanel,
@@ -45,6 +46,7 @@ import {
 	TestimonialsSection,
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
+import { createError } from "h3";
 import { describe, expect, it } from "vitest";
 import { runAxe } from "./utils/axe";
 
@@ -875,6 +877,36 @@ describe("component accessibility audits", () => {
 					},
 					slots: {
 						description: "Redirecting you to the dashboard...",
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+		});
+
+		describe("ErrorPage", () => {
+			it("should have no accessibility violations for a 404 error", async () => {
+				const component = await mountSuspended(ErrorPage, {
+					props: {
+						error: createError({
+							status: 404,
+							statusText: "Page not found",
+							message: "Page not found: /missing-page",
+						}),
+					},
+				});
+				const results = await runAxe(component);
+				expect(results.violations).toEqual([]);
+			});
+
+			it("should have no accessibility violations for a 500 error", async () => {
+				const component = await mountSuspended(ErrorPage, {
+					props: {
+						error: createError({
+							status: 500,
+							statusText: "Internal Server Error",
+							message: "fetch failed",
+						}),
 					},
 				});
 				const results = await runAxe(component);

@@ -3,6 +3,7 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
+import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -375,6 +376,11 @@ export default defineNuxtConfig({
 		css: {
 			transformer: "lightningcss",
 		},
+		plugins: [
+			// Untranslated keys are stored as empty strings; drop them so vue-i18n
+			// falls back to English instead of rendering "".
+			stripEmptyI18nMessagesPlugin(),
+		],
 		optimizeDeps: {
 			include: [
 				"@discordjs/core/http-only",

@@ -43,25 +43,25 @@ export default defineConfig({
 				command: "zizmor --pedantic --fix .",
 			},
 			"i18n:check": {
-				command: "node --experimental-transform-types scripts/compare-translations.ts",
+				command: "node scripts/compare-translations.ts",
 				// Off because the script rewrites locale files (never cacheable), and
 				// caching triggers a vp spawn failure on the CI arm runner.
 				// See https://github.com/voidzero-dev/vite-task/issues/506
 				cache: false,
 			},
 			"i18n:report": {
-				command: "node --experimental-transform-types scripts/find-invalid-translations.ts",
+				command: "node scripts/find-invalid-translations.ts",
 			},
 			"i18n:schema": {
 				// Format after generate so CI `git diff` matches oxfmt tab output
 				// (JSON.stringify alone emits 2-space indent).
 				command:
-					"node --experimental-transform-types scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json i18n/schemas",
+					"node scripts/generate-i18n-schema.ts && vp fmt i18n/schema.json i18n/schemas",
 				// Off: script rewrites schema.json (same rationale as i18n:check).
 				cache: false,
 			},
 			"build:lunaria": {
-				command: "node --experimental-transform-types ./lunaria/lunaria.ts",
+				command: "node ./lunaria/lunaria.ts",
 			},
 		},
 	},

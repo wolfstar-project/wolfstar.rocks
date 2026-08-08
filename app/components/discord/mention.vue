@@ -1,6 +1,10 @@
 <template>
 	<!-- Single-line children: newlines between tags become text nodes inside the pill. -->
-	<button class="tag" type="button" :class="{ 'tag--with-avatar': Boolean(avatar) }">
+	<button
+		class="discord-mention tag"
+		type="button"
+		:class="{ 'tag--with-avatar': Boolean(avatar) }"
+	>
 		<img
 			v-if="avatar"
 			class="avatar"
@@ -24,7 +28,7 @@ import type { VNode } from "vue";
 
 interface MentionProps {
 	kind?: "mention" | "app";
-	/** User avatar URL. Shown on desktop (≥48rem) only; hidden on mobile. */
+	/** User avatar URL. Shown whenever it is provided. */
 	avatar?: string;
 }
 
@@ -48,34 +52,45 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 	 * gaps after bold labels via strong::after. A leading margin double-spaces
 	 * showcase copy like "Dear @Baddie" and "❯ User: @baddie".
 	 *
-	 * Stable Discord mention look: no hover/focus lighten or white outline.
+	 * The compact shape and solid hover state mirror Discord's user pills.
 	 */
-	@apply inline-flex items-baseline gap-0 rounded-sm px-1 py-0.5 font-whitney font-medium;
+	@apply inline-flex items-center gap-0 font-whitney font-medium;
 	vertical-align: baseline;
 	margin: 0;
+	min-height: 1.375rem;
+	padding: 0 0.1875rem;
 	border: 0;
+	border-radius: 3px;
 	outline: none;
 	box-shadow: none;
-	background-color: oklch(57.7% 0.209 273.88 / 0.3);
-	color: oklch(83% 0.08 275);
+	--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.3);
+	--discord-mention-text: oklch(83% 0.08 275);
+	--discord-mention-hover-bg: oklch(57.74% 0.2091 273.85);
+	--discord-mention-hover-text: oklch(100% 0 0);
+	--discord-mention-focus: oklch(83% 0.08 275);
 
-	@media (prefers-color-scheme: light) {
-		background-color: oklch(57.7% 0.209 273.88 / 0.15);
-		color: oklch(45.08% 0.281 265.53);
-	}
+	background-color: var(--discord-mention-bg);
+	color: var(--discord-mention-text);
+	line-height: 1.25rem;
 }
 
-.tag:hover,
+:global([data-theme="light"] .discord-mention) {
+	--discord-mention-bg: oklch(57.7% 0.209 273.88 / 0.25);
+	--discord-mention-text: oklch(45.08% 0.281 265.53);
+	--discord-mention-focus: oklch(45.08% 0.281 265.53);
+}
+
 .tag:focus {
-	/* Keep mention colors stable — Discord does not bleach the pill on hover. */
-	background-color: oklch(57.7% 0.209 273.88 / 0.3);
-	color: oklch(83% 0.08 275);
+	background-color: var(--discord-mention-bg);
+	color: var(--discord-mention-text);
 	outline: none;
 	box-shadow: none;
+}
 
-	@media (prefers-color-scheme: light) {
-		background-color: oklch(57.7% 0.209 273.88 / 0.15);
-		color: oklch(45.08% 0.281 265.53);
+@media (hover: hover) and (pointer: fine) {
+	.tag:hover {
+		background-color: var(--discord-mention-hover-bg);
+		color: var(--discord-mention-hover-text);
 	}
 }
 
@@ -84,40 +99,23 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 	 * Keep the pill color stable (color/background inherit from :focus above),
 	 * but restore a visible keyboard focus ring for WCAG 2.4.7.
 	 */
-	outline: 2px solid oklch(83% 0.08 275);
+	outline: 2px solid var(--discord-mention-focus);
 	outline-offset: 2px;
 }
 
 .tag--with-avatar {
 	@apply items-center;
+	padding: 0.0625rem 0.1875rem 0.0625rem 0.0625rem;
 }
 
-/*
- * Avatar is desktop-only (same 48rem breakpoint as channel header / message).
- * Kept in the DOM on mobile but visually hidden so layout stays CSS-driven.
- */
 .tag > .avatar {
-	display: none;
+	display: block;
 	flex-shrink: 0;
-	width: 1rem;
-	height: 1rem;
+	width: 1.25rem;
+	height: 1.25rem;
+	margin-inline-end: 0.1875rem;
 	border-radius: 9999px;
 	object-fit: cover;
-}
-
-@media (width >= 48rem) {
-	.tag > .avatar {
-		display: block;
-		/* ~4px gap between avatar and @Username */
-		margin-inline-end: 0.25rem;
-	}
-
-	.tag--with-avatar {
-		/* Avatar flush/near-flush with left pill edge; keep right padding after text. */
-		padding-inline-start: 0;
-		padding-inline-end: 0.25rem;
-		padding-block: 0;
-	}
 }
 
 .tag > .icon {

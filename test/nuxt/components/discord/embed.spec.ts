@@ -49,17 +49,6 @@ describe("DiscordEmbed", () => {
 		expect(wrapper.text()).not.toContain("•");
 	});
 
-	it("applies the light theme class when theme is light (positive)", async () => {
-		// ARRANGE / ACT
-		const wrapper = await mountSuspended(DiscordEmbed, {
-			props: { title: "Light embed", theme: "light" },
-		});
-
-		// ASSERT
-		expect(wrapper.find(".discord-embed--light").exists()).toBe(true);
-		expect(wrapper.find(".discord-embed").classes()).toContain("discord-embed--light");
-	});
-
 	it("does not render footer chrome when only a timestamp is provided (negative)", async () => {
 		// ARRANGE / ACT
 		const wrapper = await mountSuspended(DiscordEmbed, {

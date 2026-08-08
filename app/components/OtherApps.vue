@@ -5,7 +5,7 @@
 		scroll-margin
 		contained
 		spacing="none"
-		class="py-22"
+		class="py-24"
 	>
 		<SectionHeader
 			eyebrow="Other Apps"
@@ -14,58 +14,53 @@
 			class="mb-10"
 		/>
 
-		<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-			<SurfaceCard
-				v-for="app of apps"
-				:key="app.name"
-				tag="article"
-				padding="lg"
-				class="flex flex-col items-center text-center"
-			>
-				<NuxtImg
-					:src="app.avatar"
-					width="64"
-					height="64"
-					:alt="`${app.name}'s avatar`"
-					loading="lazy"
-					class="mb-4 h-16 w-16 rounded-lg"
-				/>
-				<div class="mb-2 flex flex-wrap items-center justify-center gap-2">
-					<span class="text-xl font-bold text-base-content">{{ app.name }}</span>
-					<span
-						v-for="purpose of app.purposes"
-						:key="purpose"
-						class="badge badge-soft badge-sm badge-primary"
-					>
-						{{ purpose }}
-					</span>
-				</div>
-				<p class="mb-5 text-sm leading-relaxed text-base-content/60">
+		<div
+			v-for="app of apps"
+			:key="app.name"
+			class="other-app grid items-center gap-8 border-y py-10 md:grid-cols-[auto_1fr_auto] md:gap-10"
+		>
+			<NuxtImg
+				:src="app.avatar"
+				width="80"
+				height="80"
+				:alt="`${app.name} logo`"
+				loading="lazy"
+				class="size-20 rounded-xl"
+			/>
+			<div>
+				<p
+					class="mb-2 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
+				>
+					Also from WolfStar Project
+				</p>
+				<h3 class="text-3xl font-bold text-base-content">
+					{{ app.name }}
+				</h3>
+				<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
 					{{ app.description }}
 				</p>
-				<div class="flex flex-wrap justify-center gap-2">
-					<UButton :to="app.explore" color="neutral" variant="outline" size="sm">
-						Explore
-					</UButton>
-					<UButton :to="app.invite" color="primary" size="sm" icon="ph:plus-circle-fill">
-						Add App
-					</UButton>
-				</div>
-			</SurfaceCard>
-
-			<div
-				class="home-apps-placeholder flex items-center justify-center rounded-xl p-10 text-center"
-			>
-				<div>
-					<div class="mb-1.5 text-base font-semibold text-base-content/80">
-						More apps in the works
-					</div>
-					<div class="text-[13px] text-muted">
-						Follow the
-						<NuxtLink to="/blog" class="link-hover underline">blog</NuxtLink> for what's
-						next.
-					</div>
-				</div>
+			</div>
+			<div class="flex flex-col gap-3 sm:flex-row md:flex-col">
+				<UButton
+					:to="app.explore"
+					color="neutral"
+					variant="outline"
+					size="lg"
+					class="justify-center"
+				>
+					Explore {{ app.name }}
+				</UButton>
+				<UButton
+					v-if="app.invite !== '#'"
+					:to="app.invite"
+					color="primary"
+					size="lg"
+					icon="ph:plus-circle-fill"
+					class="justify-center"
+				>
+					Invite {{ app.name }}
+				</UButton>
+				<span v-else class="font-mono text-xs text-muted">Invite access coming later</span>
 			</div>
 		</div>
 	</Section>
@@ -80,7 +75,7 @@ const { apps } = defineProps<{
 <style scoped>
 @reference "@/assets/css/main.css";
 
-.home-apps-placeholder {
-	border: 1px dashed oklch(from var(--color-base-content) l c h / 0.2);
+.other-app {
+	border-color: var(--home-border-subtle);
 }
 </style>

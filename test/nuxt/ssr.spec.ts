@@ -1,6 +1,7 @@
 import {
-	CommandsSection,
-	CommandsShowcase,
+	WolfstarCommandsSection,
+	WolfstarCommandsShowcase,
+	StarylCommandsShowcase,
 	DiscordChannelHeader,
 	DiscordChannelWelcome,
 	DiscordChat,
@@ -20,9 +21,11 @@ import {
 	DiscordChatInputCommandSuggestions,
 	DiscordScrollbar,
 	GuildSettingsSection,
+	WolfstarHeroSection,
 	IconsApp,
 	IconsWolfstar,
-	ModerationShowcaseSection,
+	WolfstarModerationShowcaseSection,
+	WolfstarProductProofSection,
 	Separator,
 } from "#components";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
@@ -522,7 +525,7 @@ describe("component SSR rendering", () => {
 				expect(button.classes()).toContain("tag");
 			});
 
-			it("renders desktop avatar when avatar prop is provided", async () => {
+			it("renders the avatar when avatar prop is provided", async () => {
 				const wrapper = await mountSuspended(DiscordMention, {
 					props: { kind: "mention", avatar: "/avatars/baddie.png" },
 					slots: { default: "baddie" },
@@ -995,10 +998,31 @@ describe("component SSR rendering", () => {
 
 	describe("CommandsSection", () => {
 		it("renders section header in full section mode", async () => {
-			const wrapper = await mountSuspended(CommandsSection);
+			const wrapper = await mountSuspended(WolfstarCommandsSection);
 
-			expect(wrapper.text()).toContain("Moderation at your fingertips.");
+			expect(wrapper.text()).toContain("The demo below behaves like Discord.");
 			expect(wrapper.find("#home-commands-heading").exists()).toBe(true);
+		});
+	});
+
+	describe("Homepage product narrative", () => {
+		it("renders a specific hero proposition and product evidence on SSR", async () => {
+			const hero = await mountSuspended(WolfstarHeroSection, {
+				props: {
+					buildTime: new Date("2026-08-06T12:00:00Z"),
+					buildVersion: "7.0.0",
+					inviteUrl: "https://discord.com/oauth2/authorize?client_id=test",
+				},
+			});
+			const proof = await mountSuspended(WolfstarProductProofSection);
+
+			expect(hero.text()).toContain("Moderation, with a paper trail.");
+			expect(hero.text()).toContain("Invite WolfStar");
+			expect(hero.find("a[href='#showcase']").exists()).toBe(true);
+			expect(proof.text()).toContain("One system from first warning to final review.");
+			expect(proof.find("a[href='#moderation-tools']").exists()).toBe(true);
+			expect(proof.find("a[href='#advanced-logging']").exists()).toBe(true);
+			expect(proof.find("a[href='#dashboard']").exists()).toBe(true);
 		});
 	});
 
@@ -1015,7 +1039,7 @@ describe("component SSR rendering", () => {
 		}
 
 		it("renders mobile command browser with an idle composer by default", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".showcase-discord-shell").exists()).toBe(true);
 			expect(wrapper.find(".showcase-discord-main").exists()).toBe(true);
@@ -1059,7 +1083,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("renders a plain-text moderation success reply on desktop", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			// Ensure slash mode is closed so the channel response is visible.
 			if (
@@ -1082,7 +1106,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("toggles the member list from the channel header users button", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".discord-member-list").exists()).toBe(true);
 
@@ -1105,7 +1129,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("opens mobile channel info from the channel header and closes via back", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".discord-channel-info").exists()).toBe(false);
 
@@ -1161,7 +1185,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("renders frequently used and additional command suggestions", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			expect(wrapper.text()).toContain("Frequently Used");
@@ -1222,7 +1246,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("keeps the executed response visible when the slash picker reopens", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const kickSuggestion = wrapper
@@ -1257,8 +1281,48 @@ describe("component SSR rendering", () => {
 			);
 		});
 
+		it("lists and executes WolfStar's real slash-only subcommands", async () => {
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
+			await openSlashCommandPicker(wrapper);
+
+			await wrapper.find("[aria-label='WolfStar commands']").trigger("click");
+			await wrapper.vm.$nextTick();
+
+			const suggestions = wrapper.findAll(".discord-slash-command-suggestion");
+			expect(suggestions).toHaveLength(15);
+			for (const command of [
+				"/case view",
+				"/case list",
+				"/case edit",
+				"/case archive",
+				"/case delete",
+				"/conf menu",
+				"/conf show",
+				"/conf set",
+				"/conf remove",
+				"/conf reset",
+			]) {
+				expect(wrapper.text()).toContain(command);
+			}
+
+			const archiveSuggestion = suggestions.find((suggestion) =>
+				suggestion.text().includes("/case archive"),
+			);
+			expect(archiveSuggestion).toBeDefined();
+			await archiveSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-message-reply").attributes("aria-label")).toMatch(
+				/used the case archive slash command/i,
+			);
+			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
+			expect(wrapper.find(".showcase-desktop-text-response").text()).toBe(
+				"Successfully archived case 3.",
+			);
+		});
+
 		it("executes a command when clicking a suggestion", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			expect(wrapper.find(".discord-slash-command-suggestion-matched").exists()).toBe(false);
@@ -1289,7 +1353,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes a subcommand and shows its component response", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const confSuggestion = wrapper
@@ -1313,7 +1377,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("toggles the App Launcher from the apps control", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(false);
 			expect(wrapper.find(".discord-slash-command-suggestions").exists()).toBe(false);
@@ -1343,7 +1407,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("hides the message composer when the Apps sheet expands to full (positive)", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 
 			expect(wrapper.find(".discord-message-composer").exists()).toBe(true);
@@ -1368,7 +1432,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("closes the App Launcher when slash command mode opens", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 			expect(wrapper.find(".discord-app-launcher").exists()).toBe(true);
 
@@ -1379,7 +1443,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes a slash command from App Launcher search without opening /commands", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openAppLauncher(wrapper);
 
 			const search = wrapper.find(".discord-app-launcher-search-input");
@@ -1410,7 +1474,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("closes the picker and restores idle send chrome when Escape clears slash mode", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const input = wrapper.find(".discord-message-composer-input");
@@ -1435,7 +1499,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("closes the picker when the leading slash is deleted", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const input = wrapper.find(".discord-message-composer-input");
@@ -1450,7 +1514,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("keeps third-party app rows non-selectable", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const starylSuggestion = wrapper
@@ -1472,7 +1536,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("shows matched-command chrome while typing and executes on Enter", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const input = wrapper.find(".discord-message-composer-input");
@@ -1502,7 +1566,7 @@ describe("component SSR rendering", () => {
 		});
 
 		it("executes conf menu from the picker and reveals the channel response", async () => {
-			const wrapper = await mountSuspended(CommandsShowcase);
+			const wrapper = await mountSuspended(WolfstarCommandsShowcase);
 			await openSlashCommandPicker(wrapper);
 
 			const confSuggestion = wrapper
@@ -1527,17 +1591,50 @@ describe("component SSR rendering", () => {
 		});
 	});
 
+	describe("StarylCommandsShowcase", () => {
+		it("uses the shipped Twitch commands and renders their response formats", async () => {
+			const wrapper = await mountSuspended(StarylCommandsShowcase);
+
+			// Desktop-only mount arming (`/`) is skipped on narrow test viewports; open the
+			// picker the same way the Wolfstar showcase specs do.
+			await wrapper.find(".discord-message-composer-input").setValue("/");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.text()).toContain("/twitch-subscriptions add");
+			expect(wrapper.text()).toContain("/twitch-subscriptions remove");
+			expect(wrapper.text()).toContain("/twitch-subscriptions reset");
+			expect(wrapper.text()).toContain("/twitch-subscriptions show");
+			expect(wrapper.text()).toContain("/twitch-subscriptions test");
+			expect(wrapper.text()).not.toContain("Placeholder");
+			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
+			expect(wrapper.find(".staryl-command-response").text()).toContain(
+				"Whenever shroud goes live",
+			);
+
+			const showSuggestion = wrapper
+				.findAll(".discord-slash-command-suggestion")
+				.find((suggestion) => suggestion.text().includes("/twitch-subscriptions show"));
+			expect(showSuggestion).toBeDefined();
+			await showSuggestion!.trigger("click");
+			await wrapper.vm.$nextTick();
+
+			expect(wrapper.find(".discord-embed").text()).toContain("Twitch Subscriptions");
+			expect(wrapper.find(".discord-embed").text()).toContain(
+				"shroud — #staryl-notifications → Live",
+			);
+		});
+	});
+
 	describe("ModerationShowcaseSection", () => {
 		it("renders all three moderation feature areas on SSR", async () => {
-			const wrapper = await mountSuspended(ModerationShowcaseSection);
+			const wrapper = await mountSuspended(WolfstarModerationShowcaseSection);
 
-			expect(wrapper.text()).toContain("In Action");
-			expect(wrapper.text()).toContain("Moderation that shows its work.");
-			expect(wrapper.text()).toContain("Advanced Auto Moderator");
-			expect(wrapper.text()).toContain("Advanced Logging");
+			expect(wrapper.text()).toContain("Follow a rule from trigger to review.");
+			expect(wrapper.text()).toContain("Configure the rule before it fires");
+			expect(wrapper.text()).toContain("Keep live events and reviewable history");
+			expect(wrapper.text()).toContain("Every action keeps its context.");
 			expect(wrapper.find("#home-showcase-heading").exists()).toBe(true);
 			expect(wrapper.findAll("#home-showcase-heading")).toHaveLength(1);
-			expect(wrapper.find("#home-logging-showcase-heading").exists()).toBe(true);
 			expect(wrapper.find("#moderation-tools").exists()).toBe(true);
 			expect(wrapper.find("#advanced-logging").exists()).toBe(true);
 			expect(wrapper.find("#moderation-logs").exists()).toBe(true);

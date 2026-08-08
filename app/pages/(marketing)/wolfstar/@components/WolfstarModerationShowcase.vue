@@ -2,6 +2,14 @@
 <template>
 	<div class="w-full">
 		<div class="relative mx-auto min-h-100 w-full max-w-7xl">
+			<SectionHeader
+				eyebrow="Product walkthrough"
+				title="Follow a rule from trigger to review."
+				description="Use the controls to inspect the same moderation flow your team configures and reviews."
+				heading-id="home-showcase-heading"
+				align="start"
+				class="mb-12"
+			/>
 			<div
 				v-for="(feature, index) in features"
 				:key="feature.id"
@@ -9,21 +17,8 @@
 				:class="{ 'mt-12': index > 0 }"
 			>
 				<div :id="feature.id" class="scroll-mt-24">
-					<SectionHeader
-						v-if="feature.id === 'moderation-logs'"
-						eyebrow="In Action"
-						title="Moderation that shows its work."
-						description="Every action WolfStar takes is visible in the channel, and logged for later."
-						heading-id="home-showcase-heading"
-						class="mb-10"
-					/>
-					<div v-else class="mb-8 text-left">
+					<div class="mb-8 text-left">
 						<h3
-							:id="
-								feature.id === 'advanced-logging'
-									? 'home-logging-showcase-heading'
-									: undefined
-							"
 							class="mb-4 flex items-center gap-3 text-2xl font-bold text-base-content"
 						>
 							<span
@@ -34,14 +29,9 @@
 							</span>
 							{{ feature.title }}
 						</h3>
-						<p
-							class="mb-6 max-w-prose text-[15px] leading-relaxed text-base-content/80"
-						>
+						<p class="max-w-prose text-base leading-relaxed text-base-content/70">
 							{{ feature.description }}
 						</p>
-						<UButton to="#" color="neutral" variant="outline" class="w-fit">
-							Learn more about {{ feature.label }}
-						</UButton>
 					</div>
 
 					<template v-if="feature.id === 'moderation-tools'">
@@ -263,6 +253,7 @@
 										:data-tip="text.tooltip"
 									>
 										<input
+											:id="`automod-feature-${automodIndex}`"
 											v-model="featureIndex"
 											type="radio"
 											name="automod-feature"
@@ -298,15 +289,15 @@
 									>
 								</h3>
 
-								<p class="text-[15px] leading-relaxed text-base-content/80">
-									Enjoy the power of moderation with WolfStar, a fully
-									customizable moderation bot for your server.
+								<p class="text-base leading-relaxed text-base-content/70">
+									Choose which messages trigger a rule, then decide how WolfStar
+									responds.
 								</p>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
-									You can define what WolfStar should do on every infraction:
+								<p class="mt-4 text-base leading-relaxed text-base-content/70">
+									For each infraction, WolfStar can:
 								</p>
-								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
+								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
 										<UIcon
 											name="ph:arrow-u-up-left"
@@ -351,25 +342,23 @@
 									</li>
 								</ul>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
-									And even what WolfStar should do after repeated infractions!
+								<p class="mt-4 text-base leading-relaxed text-base-content/70">
+									Repeated infractions can trigger a separate escalation rule:
 								</p>
-								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
+								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
 										<UIcon
 											name="ph:shield-check-duotone"
 											class="mt-0.5 size-4 shrink-0 text-primary"
 											aria-hidden="true"
 										/>
-										<span
-											><strong class="text-base-content"
-												>Define the punishment action:</strong
+										<span>
+											<strong class="text-base-content"
+												>Set the action:</strong
 											>
-											from a simple warning to a full ban, and everything in
-											between, with a customizable
-											<strong>punishment duration</strong> ranging from
-											seconds to even years, or permanent.</span
-										>
+											warn, timeout, kick, or ban, with a temporary or
+											permanent duration where supported.
+										</span>
 									</li>
 									<li class="flex items-start gap-2">
 										<UIcon
@@ -377,13 +366,13 @@
 											class="mt-0.5 size-4 shrink-0"
 											aria-hidden="true"
 										/>
-										<span
-											><strong class="text-base-content"
-												>Define the threshold:</strong
+										<span>
+											<strong class="text-base-content"
+												>Set the threshold:</strong
 											>
-											how many infractions are needed within a period of time
-											before the punishment is applied.</span
-										>
+											choose how many infractions within a time window trigger
+											the action.
+										</span>
 									</li>
 								</ul>
 							</div>
@@ -494,6 +483,7 @@
 										:data-tip="event.tooltip"
 									>
 										<input
+											:id="`logging-feature-${loggingEventIndex}`"
 											v-model="loggingIndex"
 											type="radio"
 											name="logging-feature"
@@ -532,30 +522,25 @@
 									>
 								</h3>
 
-								<p class="text-[15px] leading-relaxed text-base-content/80">
-									WolfStar can log almost everything that happens in your server,
-									from members joining and leaving, to channel and role updates,
-									message edits and deletions, and much more.
+								<p class="text-base leading-relaxed text-base-content/70">
+									Send member, channel, role, message, and moderation events to
+									the Discord channels your team already watches.
 								</p>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
-									And even what WolfStar should be logging:
+								<p class="mt-4 text-base leading-relaxed text-base-content/70">
+									In the dashboard, you can:
 								</p>
-								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
+								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
 										<UIcon
 											name="ph:magnifying-glass-duotone"
 											class="mt-0.5 size-4 shrink-0 text-primary"
 											aria-hidden="true"
 										/>
-										<span
-											>All logs are
-											<strong class="text-base-content"
-												>fully searchable</strong
-											>
-											and can be filtered by user, action, channel, and more.
-											Keep a complete history of your server's activity.</span
-										>
+										<span>
+											Filter moderation history by member, moderator, action,
+											date, or search text.
+										</span>
 									</li>
 									<li class="flex items-start gap-2">
 										<UIcon
@@ -563,12 +548,10 @@
 											class="mt-0.5 size-4 shrink-0 text-info"
 											aria-hidden="true"
 										/>
-										<span
-											>Logs are sent to your server
-											<strong class="text-base-content">in real-time</strong>,
-											so you can stay up to date with everything that's
-											happening.</span
-										>
+										<span>
+											Keep command outcomes and dashboard settings activity in
+											their own reviewable views.
+										</span>
 									</li>
 								</ul>
 							</div>
@@ -719,22 +702,19 @@
 									>
 								</h3>
 
-								<p class="text-[15px] leading-relaxed text-base-content/80">
-									Easily searchable moderation logs, with a complete history of
-									every action taken by WolfStar in your server, and with the
-									ability to filter them later by user, action, and more!
+								<p class="text-base leading-relaxed text-base-content/70">
+									Search moderation history by member, moderator, action, date, or
+									text. Each entry keeps the action and reason together.
 								</p>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
+								<p class="mt-4 text-base leading-relaxed text-base-content/70">
 									<UIcon
 										name="ph:binoculars-duotone"
 										class="mr-1 inline size-4 text-primary"
 										aria-hidden="true"
 									/>
-									WolfStar can also listen for external moderation actions. You
-									prefer banning by hand than by bot? Good news, WolfStar can be
-									configured to listen and log external bans, retrieving the
-									reason from audit logs!
+									WolfStar can also record supported moderation actions performed
+									directly in Discord, including their audit-log reason.
 								</p>
 							</div>
 						</div>
@@ -763,27 +743,27 @@ enum AutomodFeature {
 const features = [
 	{
 		description:
-			"WolfStar's auto-moderation system is a powerful tool that can help you keep your server safe and clean. It can automatically detect and remove unwanted content, such as spam, bad words, and more.",
+			"Move through real filter examples and see the message, response, and escalation controls together.",
 		icon: "ph:shield-fill",
 		id: "moderation-tools",
 		label: "Automod",
-		title: "Advanced Auto Moderator",
+		title: "Configure the rule before it fires",
 	},
 	{
 		description:
-			"WolfStar not only comes with a very complete moderation suite, but also advanced logging capabilities to keep track of everything that happens in your server.",
+			"Choose which server events reach Discord, then search moderation, command, and settings history in the dashboard.",
 		icon: "ph:binoculars-duotone",
 		id: "advanced-logging",
 		label: "Logging",
-		title: "Advanced Logging",
+		title: "Keep live events and reviewable history",
 	},
 	{
-		description: "Every action WolfStar takes is visible in the channel, and logged for later.",
-		eyebrow: "In Action",
+		description: "Every moderation action keeps the details your team needs to review it.",
+		eyebrow: "Moderation history",
 		icon: "ph:shield-fill",
 		id: "moderation-logs",
 		label: "Moderation Logs",
-		title: "Moderation that shows its work.",
+		title: "Every action keeps its context.",
 	},
 ] satisfies {
 	id: string;

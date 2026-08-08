@@ -108,6 +108,7 @@ interface ShowcaseCommandBase {
 	description: string;
 	invoker: ProfileName;
 	frequentlyUsed?: boolean;
+	ephemeral?: boolean;
 	options: ShowcaseCommandOption[];
 }
 
@@ -121,9 +122,8 @@ interface ShowcaseCommandEmbedResponse {
 /** Plain success reply, e.g. "✅ Created case 3 | @baddie". */
 interface ShowcaseCommandTextResponse {
 	responseType: "text";
-	/** Prefix before the user mention; include trailing " | ". */
 	content: string;
-	mentionUser: string;
+	mentionUser?: string;
 	/** Desktop-only avatar inside the mention pill. */
 	mentionAvatar?: string;
 }

@@ -42,6 +42,7 @@
 										<DiscordMessage
 											:name="message.author"
 											:timestamp="message.timestamp"
+											:ephemeral="activeDisplayCommand.ephemeral"
 											:reply="{
 												kind: 'command',
 												user: activeDisplayCommand.invoker,
@@ -89,6 +90,7 @@
 													:line="activeDisplayCommand.content"
 												/>
 												<DiscordMention
+													v-if="activeDisplayCommand.mentionUser"
 													kind="mention"
 													:avatar="activeDisplayCommand.mentionAvatar"
 													>{{
@@ -161,13 +163,15 @@
 									<template #frequently-used>
 										<DiscordChatInputCommandSuggestion
 											v-for="command of frequentlyUsedCommands"
-											:id="suggestionOptionId(command.name)"
-											:key="`frequently-used-${command.name}`"
+											:id="suggestionOptionId(commandDisplayName(command))"
+											:key="`frequently-used-${commandDisplayName(command)}`"
 											:name="commandDisplayName(command)"
 											:description="command.description"
 											app-label="WolfStar Beta"
-											:active="isSuggestionActive(command.name)"
-											@select="executeCommand(command.name)"
+											:active="
+												isSuggestionActive(commandDisplayName(command))
+											"
+											@select="executeCommand(commandDisplayName(command))"
 										/>
 									</template>
 
@@ -177,7 +181,9 @@
 											:subcommand="matchedCommand.subcommand"
 											:options="matchedCommand.options"
 											active
-											@select="executeCommand(matchedCommand.name)"
+											@select="
+												executeCommand(commandDisplayName(matchedCommand))
+											"
 										/>
 									</template>
 
@@ -189,13 +195,15 @@
 									>
 										<DiscordChatInputCommandSuggestion
 											v-for="command of filteredShowcaseCommands"
-											:id="suggestionOptionId(command.name)"
-											:key="`wolfstar-${command.name}`"
+											:id="suggestionOptionId(commandDisplayName(command))"
+											:key="`wolfstar-${commandDisplayName(command)}`"
 											:name="commandDisplayName(command)"
 											:description="command.description"
 											app-label="WolfStar Beta"
-											:active="isSuggestionActive(command.name)"
-											@select="executeCommand(command.name)"
+											:active="
+												isSuggestionActive(commandDisplayName(command))
+											"
+											@select="executeCommand(commandDisplayName(command))"
 										/>
 									</DiscordChatInputCommandGroup>
 
@@ -716,9 +724,9 @@ function commandDisplayName(command: (typeof showcaseCommands)[number]) {
  */
 const appLauncherCommands = computed<readonly DiscordAppLauncherEntry[]>(() =>
 	showcaseCommands.map((command) => ({
-		id: `command-${command.name}`,
+		id: `command-${commandDisplayName(command).replaceAll(" ", "-")}`,
 		kind: "command" as const,
-		commandName: command.name,
+		commandName: commandDisplayName(command),
 		name: `/${commandDisplayName(command)}`,
 		description: command.description,
 		avatar: "/avatars/wolfstar.png",
@@ -769,17 +777,17 @@ const selectableCommands = computed(() => {
 const activeDescendantId = computed(() => {
 	if (!showCommandPicker.value) return undefined;
 	const command = selectableCommands.value[highlightedIndex.value];
-	return command ? suggestionOptionId(command.name) : undefined;
+	return command ? suggestionOptionId(commandDisplayName(command)) : undefined;
 });
 
 function suggestionOptionId(name: string) {
 	return `showcase-slash-option-${name}`;
 }
 
-function isSuggestionActive(name: string) {
+function isSuggestionActive(displayName: string) {
 	const highlighted = selectableCommands.value[highlightedIndex.value];
-	if (highlighted) return highlighted.name === name;
-	return activeDisplayCommand.value.name === name;
+	if (highlighted) return commandDisplayName(highlighted) === displayName;
+	return commandDisplayName(activeDisplayCommand.value) === displayName;
 }
 
 interface MockAppCommand {
@@ -831,8 +839,10 @@ function listedCommandsForMockApp(app: Exclude<SlashCommandAppName, "wolfstar">)
 }
 
 /** Click / Enter: run the showcase command and refresh the chat mock response. */
-function executeCommand(name: string) {
-	const index = showcaseCommands.findIndex((command) => command.name === name);
+function executeCommand(displayName: string) {
+	const index = showcaseCommands.findIndex(
+		(command) => commandDisplayName(command) === displayName,
+	);
 	const command = index !== -1 ? showcaseCommands[index] : undefined;
 	if (command === undefined) return;
 
@@ -852,7 +862,7 @@ function onComposerSubmit() {
 	if (!composerText.value.startsWith("/")) return;
 
 	if (matchedCommand.value) {
-		executeCommand(matchedCommand.value.name);
+		executeCommand(commandDisplayName(matchedCommand.value));
 		return;
 	}
 

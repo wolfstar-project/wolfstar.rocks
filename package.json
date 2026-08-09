@@ -20,6 +20,7 @@
 		"audit:verify": "tsx scripts/audit-verify.ts",
 		"design:lint": "designmd lint .claude/DESIGN.md",
 		"build": "nuxt build",
+		"build:lunaria": "lunaria build",
 		"i18n:check:fix": "node scripts/compare-translations.ts --fix",
 		"i18n:report:fix": "node scripts/remove-unused-translations.ts",
 		"tolgee:push": "tolgee push",

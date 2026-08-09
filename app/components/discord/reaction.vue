@@ -25,9 +25,8 @@ const { count, self } = defineProps<ReactionProps>();
 </script>
 
 <style>
-@reference "@/assets/css/main.css";
 .discord-reaction {
-	@apply flex w-fit cursor-pointer items-center gap-1 rounded-md border px-1 font-whitney;
+	@apply gap-1 rounded-md px-1 font-whitney flex w-fit cursor-pointer items-center border;
 	border-color: transparent;
 	background-color: oklch(29.64% 0.0077 264.45);
 }

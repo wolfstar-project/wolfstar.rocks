@@ -16,7 +16,9 @@ const { resolve } = createResolver(import.meta.url);
 export default defineNuxtConfig({
 	// Modules configuration
 	modules: [
-		"@nuxt/ui",
+		"@unocss/nuxt",
+		"@nuxt/icon",
+		"@nuxtjs/color-mode",
 		"@nuxt/content",
 		// Nuxt Studio works in development and production (Git publish needs prod).
 		// Skip it in Vitest/Storybook: its Vite plugins break the rolldown-based
@@ -197,24 +199,18 @@ export default defineNuxtConfig({
 		},
 	},
 
-	ui: {
-		experimental: {
-			componentDetection: true,
-		},
-	},
-
 	htmlValidator: {
 		enabled: !isCI || (provider !== "netlify" && !!process.env.VALIDATE_HTML),
 		options: {
 			rules: {
 				"meta-refresh": "off",
-				// NuxtUI/DaisyUI theme class merging produces duplicate utility classes
+				// DaisyUI theme class merging can produce duplicate utility classes
 				"no-dup-class": "off",
-				// NuxtUI components may render empty id attributes internally
+				// Some UI primitives may render empty id attributes internally
 				"attribute-allowed-values": "off",
-				// NuxtUI UHeader hamburger button is icon-only
+				// Icon-only header controls (e.g. hamburger) omit visible text
 				"text-content": "off",
-				// Reka UI/NuxtUI components use ARIA roles that have native equivalents
+				// Reka UI components use ARIA roles that have native equivalents
 				"prefer-native-element": "off",
 			},
 		},
@@ -416,10 +412,7 @@ export default defineNuxtConfig({
 				"reka-ui",
 				"reka-ui/namespaced",
 				"std-env",
-				"tailwind-variants",
-				"tailwindcss/colors",
 				"ufo",
-				"vaul-vue",
 				"valibot",
 			],
 		},
@@ -471,9 +464,16 @@ export default defineNuxtConfig({
 		},
 		families: [
 			{
-				display: "swap",
+				// Geist is the global body/heading font and is always above the
+				// fold. font-display: optional stops the browser from swapping the
+				// font in after first paint, which was reflowing text and shifting
+				// layout (CLS 0.174 on /commands, where the reflow pushed the whole
+				// results block). preload keeps Geist available within the short
+				// block period so it still renders instead of falling back.
+				display: "optional",
 				global: true,
 				name: "Geist",
+				preload: true,
 				provider: "local",
 				weights: [400, 500, 600, 700],
 			},

@@ -1,5 +1,5 @@
 <template>
-	<div class="flex min-h-[50dvh] items-center justify-center px-4 py-8">
+	<div class="px-4 py-8 flex min-h-[50dvh] items-center justify-center">
 		<div
 			:class="panelClass"
 			:role="panelRole"
@@ -7,7 +7,7 @@
 			:aria-busy="loading || undefined"
 		>
 			<div :class="iconWrapClass" aria-hidden="true">
-				<UIcon
+				<Icon
 					:name="resolvedIcon"
 					:class="
 						cn(
@@ -17,43 +17,43 @@
 						)
 					"
 				/>
-				<UIcon
+				<Icon
 					v-if="loading"
 					name="heroicons:arrow-path"
-					class="absolute -right-1 -bottom-1 size-5 animate-spin text-primary sm:size-6"
+					class="-right-1 -bottom-1 size-5 animate-spin text-primary sm:size-6 absolute"
 				/>
 			</div>
 
-			<p class="text-lg font-semibold text-balance text-base-content sm:text-xl">
+			<p class="text-lg font-semibold text-base-content sm:text-xl text-balance">
 				{{ title }}
 			</p>
 
 			<div
 				v-if="$slots.description"
-				class="text-sm text-pretty text-base-content/70 sm:text-base"
+				class="text-sm text-base-content/70 sm:text-base text-pretty"
 			>
 				<slot name="description" />
 			</div>
 
 			<div
 				v-if="loading"
-				class="flex items-center justify-center gap-2 pt-1"
+				class="gap-2 pt-1 flex items-center justify-center"
 				aria-hidden="true"
 			>
 				<span
-					class="size-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
+					class="size-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full"
 				/>
 				<span
-					class="size-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
+					class="size-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full [animation-delay:200ms]"
 				/>
 				<span
-					class="size-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
+					class="size-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full [animation-delay:400ms]"
 				/>
 			</div>
 
 			<div
 				v-if="$slots.actions"
-				class="flex flex-col items-stretch justify-center gap-2 pt-2 sm:flex-row sm:items-center"
+				class="gap-2 pt-2 sm:flex-row sm:items-center flex flex-col items-stretch justify-center"
 			>
 				<slot name="actions" />
 			</div>
@@ -135,22 +135,20 @@ const toneSurfaceClass = computed(() => {
 
 const panelClass = computed(() =>
 	cn(
-		"oauth-status-panel flex w-full max-w-md animate-fade-in-up flex-col items-center gap-3 rounded-xl border p-5 text-center sm:gap-4 sm:p-8",
+		"oauth-status-panel max-w-md animate-fade-in-up gap-3 rounded-xl p-5 sm:gap-4 sm:p-8 flex w-full flex-col items-center border text-center",
 		toneSurfaceClass.value,
 	),
 );
 
 const iconWrapClass = computed(() =>
 	cn(
-		"relative mb-1 flex size-14 items-center justify-center rounded-full sm:size-16",
+		"mb-1 size-14 sm:size-16 relative flex items-center justify-center rounded-full",
 		toneSurfaceClass.value,
 	),
 );
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .oauth-status-icon-enter {
 	animation: oauth-status-scale-in 280ms ease-out both;
 }

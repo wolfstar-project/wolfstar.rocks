@@ -14,7 +14,7 @@
 			tabindex="-1"
 			aria-hidden="true"
 		>
-			<UIcon
+			<StarIcon
 				name="discord:plus"
 				class="discord-message-composer-add-icon"
 				aria-hidden="true"
@@ -30,7 +30,7 @@
 				:title="appsOpen ? 'Close apps and commands' : 'Open apps and commands'"
 				@click="emit('openApps')"
 			>
-				<UIcon
+				<StarIcon
 					:name="appsOpen ? 'ph:x-bold' : 'discord:apps'"
 					class="discord-message-composer-mobile-action-icon"
 					aria-hidden="true"
@@ -42,7 +42,7 @@
 				tabindex="-1"
 				aria-hidden="true"
 			>
-				<UIcon
+				<StarIcon
 					name="discord:gift"
 					class="discord-message-composer-mobile-action-icon"
 					aria-hidden="true"
@@ -74,7 +74,7 @@
 				tabindex="-1"
 				aria-hidden="true"
 			>
-				<UIcon name="discord:emoji" class="size-5" aria-hidden="true" />
+				<StarIcon name="discord:emoji" class="size-5" aria-hidden="true" />
 			</button>
 		</div>
 
@@ -94,7 +94,7 @@
 				:title="action.label"
 				@click="onComposerAction(action)"
 			>
-				<UIcon
+				<StarIcon
 					:name="action.icon"
 					class="discord-message-composer-action-icon"
 					aria-hidden="true"
@@ -112,13 +112,13 @@
 			:disabled="!hasValue"
 			@click="emit('submit')"
 		>
-			<UIcon
+			<StarIcon
 				v-if="hasValue"
 				name="ph:paper-plane-tilt-fill"
 				class="discord-message-composer-send-icon"
 				aria-hidden="true"
 			/>
-			<UIcon
+			<StarIcon
 				v-else
 				name="discord:mic"
 				class="discord-message-composer-send-icon"
@@ -221,8 +221,6 @@ function onKeydown(event: KeyboardEvent) {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-message-composer {
 	/* Discord-true dark surfaces (Figma / desktop client). */
 	--discord-message-composer-bg: oklch(28.84% 0.007 272.93);
@@ -235,14 +233,14 @@ function onKeydown(event: KeyboardEvent) {
 	--discord-message-composer-send-active: oklch(57.74% 0.2091 273.85);
 
 	/* Desktop: side inset; flush to chat bottom; hairline border + modest radius. */
-	@apply mx-4 mb-0 flex h-11 min-w-0 shrink-0 items-center gap-0 rounded px-4 font-whitney;
+	@apply mx-4 mb-0 h-11 min-w-0 gap-0 rounded px-4 font-whitney flex shrink-0 items-center;
 	background-color: var(--discord-message-composer-bg);
 	border: 1px solid var(--discord-message-composer-border);
 	color: var(--discord-message-composer-muted);
 }
 
 .discord-message-composer-button {
-	@apply inline-flex size-8 shrink-0 cursor-pointer items-center justify-center rounded border-0 bg-transparent p-0;
+	@apply size-8 rounded p-0 inline-flex shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent;
 	color: inherit;
 }
 
@@ -252,7 +250,7 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .discord-message-composer-button:focus-visible {
-	@apply outline-2 outline-offset-1 outline-primary;
+	@apply outline-primary outline-2 outline-offset-1;
 }
 
 /*
@@ -273,7 +271,7 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .discord-message-composer-field {
-	@apply flex h-full min-w-0 flex-1 items-center;
+	@apply min-w-0 flex h-full flex-1 items-center;
 }
 
 /*
@@ -287,7 +285,7 @@ function onKeydown(event: KeyboardEvent) {
 :slotted(.discord-message-composer-input),
 .discord-message-composer-field :deep(.discord-message-composer-input) {
 	/* Tight left pad so `/` sits next to the attach + like Discord desktop. */
-	@apply h-full w-full min-w-0 flex-1 border-0 bg-transparent py-0 pr-2 pl-1 text-base leading-none outline-none;
+	@apply min-w-0 py-0 pr-2 pl-1 text-base h-full w-full flex-1 border-0 bg-transparent leading-none outline-none;
 	appearance: none;
 	color: var(--discord-message-composer-text);
 }
@@ -310,7 +308,7 @@ function onKeydown(event: KeyboardEvent) {
 }
 
 .discord-message-composer-actions {
-	@apply flex shrink-0 items-center gap-0.5;
+	@apply gap-0.5 flex shrink-0 items-center;
 }
 
 .discord-message-composer-action-icon {
@@ -347,7 +345,7 @@ function onKeydown(event: KeyboardEvent) {
  */
 @media (width < 48rem) {
 	.discord-message-composer {
-		@apply mx-0 mb-0 h-auto gap-1.5 rounded-none px-2 py-2;
+		@apply mx-0 mb-0 gap-1.5 px-2 py-2 h-auto rounded-none;
 		background-color: transparent;
 		border: none;
 		box-shadow: none;
@@ -369,7 +367,7 @@ function onKeydown(event: KeyboardEvent) {
 	}
 
 	.discord-message-composer-mobile-leading {
-		@apply flex shrink-0 items-center gap-1.5;
+		@apply gap-1.5 flex shrink-0 items-center;
 	}
 
 	.discord-message-composer-has-value .discord-message-composer-mobile-leading {
@@ -401,18 +399,18 @@ function onKeydown(event: KeyboardEvent) {
 	}
 
 	.discord-message-composer-field {
-		@apply h-9 min-w-0 flex-1 gap-0.5 rounded-full py-0 pr-1.5 pl-3;
+		@apply h-9 min-w-0 gap-0.5 py-0 pr-1.5 pl-3 flex-1 rounded-full;
 		background-color: var(--discord-message-composer-pill-bg);
 	}
 
 	.discord-message-composer-input,
 	:slotted(.discord-message-composer-input),
 	.discord-message-composer-field :deep(.discord-message-composer-input) {
-		@apply h-full px-0 text-[15px] leading-none;
+		@apply px-0 h-full text-[15px] leading-none;
 	}
 
 	.discord-message-composer-emoji {
-		@apply inline-flex size-8 shrink-0;
+		@apply size-8 inline-flex shrink-0;
 		color: var(--discord-message-composer-muted);
 	}
 
@@ -427,7 +425,7 @@ function onKeydown(event: KeyboardEvent) {
 
 	/* Empty: circular mic chrome (non-submitting). */
 	.discord-message-composer-send {
-		@apply inline-flex size-9 rounded-full;
+		@apply size-9 inline-flex rounded-full;
 		background-color: var(--discord-message-composer-add-bg);
 		color: var(--discord-message-composer-text);
 	}

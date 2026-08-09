@@ -34,7 +34,7 @@
 									width="32"
 									height="32"
 								/>
-								<UIcon
+								<StarIcon
 									v-else
 									:name="member.icon ?? 'ph:user-fill'"
 									class="size-5"
@@ -44,7 +44,7 @@
 									class="discord-presence"
 									:data-status="memberPresence(member)"
 								>
-									<UIcon
+									<StarIcon
 										:name="presenceIcon(member)"
 										class="discord-presence-icon"
 										aria-hidden="true"
@@ -62,7 +62,7 @@
 											member.verified ? 'Verified application' : 'Application'
 										"
 									>
-										<UIcon
+										<StarIcon
 											v-if="member.verified"
 											name="ph:check-bold"
 											class="size-2.5"
@@ -221,8 +221,6 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-member-list {
 	/* Discord member sidebar surfaces (oklch only). */
 	--discord-member-list-bg: oklch(23.47% 0.005 272.95);
@@ -235,7 +233,7 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 	--discord-member-list-app-bg: oklch(57.74% 0.2091 273.85);
 	--discord-member-list-app-text: oklch(100% 0 0);
 
-	@apply flex min-h-0 w-60 shrink-0 flex-col overflow-hidden border-l font-whitney;
+	@apply min-h-0 w-60 font-whitney flex shrink-0 flex-col overflow-hidden border-l;
 	border-color: var(--discord-member-list-border);
 	background-color: var(--discord-member-list-bg);
 	color: var(--discord-member-list-text);
@@ -245,7 +243,7 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 	/* Overlay thumb on content (Discord member sidebar); inherit Discord pill chrome. */
 	--discord-scrollbar-track: transparent;
 
-	@apply relative h-full max-h-full min-h-0 flex-1;
+	@apply min-h-0 relative h-full max-h-full flex-1;
 	/* Content uses full width; track overlays the right edge (see track rules below). */
 	grid-template-columns: minmax(0, 1fr);
 }
@@ -260,7 +258,7 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 	 * Overlay lane wide enough for thumb + right edge inset (matches Discord floating pill).
 	 * Previous w-1 + 4px thumb centered made the thumb flush to the panel border.
 	 */
-	@apply pointer-events-none absolute inset-y-0 right-0 z-1 opacity-0;
+	@apply inset-y-0 right-0 pointer-events-none absolute z-1 opacity-0;
 	width: var(--discord-scrollbar-gutter);
 	transition: opacity 120ms ease;
 }
@@ -286,16 +284,16 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-heading {
-	@apply px-2 pb-0.5 text-[12px] leading-4 font-semibold tracking-wide uppercase;
+	@apply px-2 pb-0.5 leading-4 font-semibold tracking-wide text-[12px] uppercase;
 	color: var(--discord-member-list-muted);
 }
 
 .discord-member-list-members {
-	@apply m-0 flex list-none flex-col p-0;
+	@apply m-0 p-0 flex list-none flex-col;
 }
 
 .discord-member-list-member {
-	@apply relative flex min-h-10 min-w-0 items-center gap-3 overflow-hidden rounded-md px-2 py-0.5;
+	@apply min-h-10 min-w-0 gap-3 rounded-md px-2 py-0.5 relative flex items-center overflow-hidden;
 }
 
 .discord-member-list-member:hover {
@@ -316,7 +314,7 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-avatar {
-	@apply relative flex size-8 shrink-0 items-center justify-center overflow-visible rounded-full;
+	@apply size-8 relative flex shrink-0 items-center justify-center overflow-visible rounded-full;
 	color: var(--discord-member-list-muted);
 	background-color: var(--discord-member-list-avatar-bg);
 }
@@ -332,7 +330,7 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 	 * disk is ~12px; a 17px ring leaves ~2.5px of --discord-member-list-presence-ring
 	 * between fill and avatar (no extra box-shadow — that stacked with SVG pad to ~5px).
 	 */
-	@apply absolute -right-1 -bottom-1 flex size-[17px] items-center justify-center rounded-full;
+	@apply -right-1 -bottom-1 absolute flex size-[17px] items-center justify-center rounded-full;
 	background-color: var(--discord-member-list-presence-ring);
 }
 
@@ -341,26 +339,26 @@ function secondaryText(member: DiscordMemberListMember, inPinnedRoleSection: boo
 }
 
 .discord-member-list-identity {
-	@apply relative z-1 min-w-0 flex-1;
+	@apply min-w-0 relative z-1 flex-1;
 }
 
 .discord-member-list-name-row {
-	@apply flex min-w-0 items-center gap-1;
+	@apply min-w-0 gap-1 flex items-center;
 }
 
 .discord-member-list-name {
-	@apply truncate text-base leading-5 font-medium;
+	@apply text-base leading-5 font-medium truncate;
 	color: var(--member-name-color, var(--discord-member-list-text));
 }
 
 .discord-member-list-app {
-	@apply inline-flex shrink-0 items-center gap-0.5 rounded-sm px-1 py-px text-[9px] leading-none font-bold;
+	@apply gap-0.5 rounded-sm px-1 font-bold inline-flex shrink-0 items-center py-px text-[9px] leading-none;
 	background-color: var(--discord-member-list-app-bg);
 	color: var(--discord-member-list-app-text);
 }
 
 .discord-member-list-description {
-	@apply block truncate text-xs leading-4;
+	@apply text-xs leading-4 block truncate;
 	color: var(--discord-member-list-muted);
 }
 

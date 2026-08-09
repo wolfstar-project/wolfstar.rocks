@@ -3,23 +3,23 @@
 		<!-- Skeleton -->
 		<div v-if="loading" class="space-y-6">
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-56" />
-				<div v-for="i in 4" :key="i" class="flex items-center gap-3">
-					<USkeleton class="h-6 w-11 shrink-0 rounded-full" />
+				<StarSkeleton class="h-7 w-56" />
+				<div v-for="i in 4" :key="i" class="gap-3 flex items-center">
+					<StarSkeleton class="h-6 w-11 shrink-0 rounded-full" />
 					<div class="space-y-1.5">
-						<USkeleton class="h-4 w-32" />
-						<USkeleton class="h-3 w-56" />
+						<StarSkeleton class="h-4 w-32" />
+						<StarSkeleton class="h-3 w-56" />
 					</div>
 				</div>
 			</div>
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-32" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<USkeleton class="h-10 w-full" />
-					<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-7 w-32" />
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+					<StarSkeleton class="h-10 w-full" />
+					<StarSkeleton class="h-10 w-full" />
 				</div>
-				<USkeleton class="h-10 w-full" />
-				<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-10 w-full" />
 			</div>
 		</div>
 
@@ -36,15 +36,15 @@
 			<!-- Section 1: Message Duplication Filter -->
 			<GuildSettingsSection :title="t('guild_settings.filter.messages.title')">
 				<div class="space-y-3">
-					<UFormField name="selfmodMessagesEnabled">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="selfmodMessagesEnabled">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.selfmodMessagesEnabled"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.messages.toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{
 										t("guild_settings.filter.messages.filter_label", {
 											state: state.selfmodMessagesEnabled
@@ -58,17 +58,17 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionAlerts">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="softActionAlerts">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.alerts_toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{ t("guild_settings.filter.common.alerts") }}
 									{{
 										state.softActionAlerts
@@ -81,17 +81,17 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionLogs">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="softActionLogs">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.logging_toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{ t("guild_settings.filter.common.logging") }}
 									{{
 										state.softActionLogs
@@ -104,17 +104,17 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionDeletes">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="softActionDeletes">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.delete_toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{ t("guild_settings.filter.common.delete_message") }}
 									{{
 										state.softActionDeletes
@@ -127,7 +127,7 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 				</div>
 			</GuildSettingsSection>
 
@@ -135,21 +135,21 @@
 
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection :title="t('guild_settings.filter.common.punishments')">
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<UFormField
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+					<StarFormField
 						:label="t('guild_settings.filter.common.hard_action')"
 						name="selfmodMessagesHardAction"
 						:description="t('guild_settings.filter.common.hard_action_description')"
 					>
-						<USelectMenu
+						<StarSelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
 							class="w-full"
 							:aria-label="t('guild_settings.filter.common.select_action_aria')"
 						/>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField
+					<StarFormField
 						:label="t('guild_settings.filter.common.duration')"
 						name="hardActionDurationMs"
 						:description="t('guild_settings.filter.common.duration_help')"
@@ -159,7 +159,7 @@
 							:min="1000"
 							:max="31_536_000_000"
 						/>
-					</UFormField>
+					</StarFormField>
 				</div>
 
 				<div class="mt-4 space-y-5">
@@ -170,13 +170,13 @@
 								>({{ state.selfmodMessagesThresholdMaximum }})</span
 							>
 						</p>
-						<USlider
+						<StarSlider
 							v-model="state.selfmodMessagesThresholdMaximum"
 							:min="0"
 							:max="60"
 							:aria-label="t('guild_settings.filter.common.threshold_maximum')"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0</span>
 							<span>60</span>
 						</div>
@@ -189,13 +189,13 @@
 								>({{ state.selfmodMessagesThresholdDurationSeconds }}s)</span
 							>
 						</p>
-						<USlider
+						<StarSlider
 							v-model="state.selfmodMessagesThresholdDurationSeconds"
 							:min="0"
 							:max="120"
 							:aria-label="t('guild_settings.filter.common.threshold_duration')"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0s</span>
 							<span>120s</span>
 						</div>
@@ -208,7 +208,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { MessagesFilterSchema, type MessagesFilter } from "#shared/schemas";
 
 const { t } = useI18n();

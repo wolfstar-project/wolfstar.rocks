@@ -7,17 +7,17 @@
 		<div v-if="loading" class="space-y-8">
 			<!-- Toggles Skeleton -->
 			<div class="space-y-4">
-				<USkeleton class="h-8 w-32" />
-				<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-8 w-32" />
+				<StarSkeleton class="h-10 w-full" />
 			</div>
 
 			<!-- Configurable Roles Skeleton -->
 			<div class="space-y-4">
-				<USkeleton class="h-8 w-48" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<StarSkeleton class="h-8 w-48" />
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<div v-for="i in 6" :key="`roles-skeleton-${i}`" class="space-y-2">
-						<USkeleton class="h-5 w-32" />
-						<USkeleton class="h-10 w-full" />
+						<StarSkeleton class="h-5 w-32" />
+						<StarSkeleton class="h-10 w-full" />
 					</div>
 				</div>
 			</div>
@@ -35,30 +35,30 @@
 		>
 			<!-- Toggles Section -->
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
+				<div class="gap-2 flex items-center">
+					<Icon name="heroicons:adjustments-horizontal" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.roles.general_options") }}
 					</h3>
 				</div>
 
-				<UFormField
+				<StarFormField
 					:label="translateEntry(ConfigurableRemoveInitialRole, 'name')"
 					:description="translateEntry(ConfigurableRemoveInitialRole, 'tooltip')"
 					name="rolesRemoveInitial"
 				>
-					<div class="flex items-center gap-2">
-						<USwitch v-model="state.rolesRemoveInitial as boolean" />
+					<div class="gap-2 flex items-center">
+						<StarSwitch v-model="state.rolesRemoveInitial as boolean" />
 					</div>
-				</UFormField>
+				</StarFormField>
 			</div>
 
 			<Separator />
 
 			<!-- Configurable Roles Section -->
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:user-group" class="size-5 text-primary" />
+				<div class="gap-2 flex items-center">
+					<Icon name="heroicons:user-group" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.roles.configurable") }}
 					</h3>
@@ -67,7 +67,7 @@
 					{{ t("guild_settings.roles.configurable_help") }}
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<template v-for="roleConfig in standardRoles" :key="roleConfig.key">
 						<!-- Many (Array) -->
 						<SelectRoles
@@ -94,8 +94,8 @@
 
 			<!-- Restricted Roles Section -->
 			<div class="space-y-4">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
+				<div class="gap-2 flex items-center">
+					<Icon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.roles.restricted") }}
 					</h3>
@@ -104,7 +104,7 @@
 					{{ t("guild_settings.roles.restricted_help") }}
 				</p>
 
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+				<div class="gap-4 md:grid-cols-2 lg:grid-cols-3 grid grid-cols-1">
 					<template v-for="roleConfig in restrictedRoles" :key="roleConfig.key">
 						<!-- Many (Array) -->
 						<SelectRoles
@@ -132,7 +132,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import {
 	isRoleArrayKey,
 	RolesSettingsSchema as schema,

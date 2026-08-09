@@ -1,12 +1,12 @@
 <template>
-	<UContainer class="pt-20 sm:pt-24">
-		<UPageHero
+	<StarContainer class="pt-20 sm:pt-24">
+		<StarPageHero
 			title="Changelog"
 			:description="description"
 			:ui="{ container: 'pb-12 sm:pb-16 lg:pb-20' }"
 		>
 			<template #links>
-				<UButton
+				<StarButton
 					to="https://github.com/wolfstar-project/wolfstar.rocks/releases"
 					color="neutral"
 					external
@@ -16,13 +16,13 @@
 					target="_blank"
 				>
 					GitHub Releases
-				</UButton>
+				</StarButton>
 			</template>
-		</UPageHero>
+		</StarPageHero>
 
-		<UPageBody>
-			<UChangelogVersions v-if="versions.length">
-				<UChangelogVersion
+		<StarPageBody>
+			<StarChangelogVersions v-if="versions.length">
+				<StarChangelogVersion
 					v-for="version in versions"
 					:key="version.tag"
 					:title="version.title"
@@ -42,12 +42,12 @@
 							:contributors="version.contributors"
 						/>
 					</template>
-				</UChangelogVersion>
-			</UChangelogVersions>
+				</StarChangelogVersion>
+			</StarChangelogVersions>
 
 			<p v-else class="text-muted">No releases have been published yet.</p>
-		</UPageBody>
-	</UContainer>
+		</StarPageBody>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

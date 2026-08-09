@@ -15,9 +15,8 @@ defineSlots<ActionRowSlots>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 /* Skyra discord-action-row: display flex; flex-wrap wrap. */
 .discord-action-row {
-	@apply flex flex-row flex-wrap items-center gap-2 font-whitney;
+	@apply gap-2 font-whitney flex flex-row flex-wrap items-center;
 }
 </style>

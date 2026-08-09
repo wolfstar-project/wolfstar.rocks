@@ -17,9 +17,8 @@ defineSlots<MessagesSlots>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .discord-messages {
-	@apply flex flex-col rounded-xl font-whitney drop-shadow-md;
+	@apply rounded-xl font-whitney drop-shadow-md flex flex-col;
 	background-color: var(--discord-surface);
 }
 </style>

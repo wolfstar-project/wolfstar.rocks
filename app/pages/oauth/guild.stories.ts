@@ -50,9 +50,9 @@ export const SetupError: Story = {
 						Failed to add WolfStar to the server. The bot may already be present, or you may not have the required permissions.
 					</template>
 					<template #actions>
-						<UButton to="/login" size="sm" variant="outline" class="w-full sm:w-auto">
+						<StarButton to="/login" size="sm" variant="outline" class="w-full sm:w-auto">
 							Return to Login
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</div>

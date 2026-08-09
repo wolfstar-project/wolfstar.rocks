@@ -1,22 +1,5 @@
 <script lang="ts">
 import type { VNode } from "vue";
-import { tv, type ClassValue } from "tailwind-variants";
-
-const theme = tv({
-	slots: {
-		root: "w-full space-y-6",
-		header: "space-y-1",
-		heading: "",
-		description: "text-sm text-base-content/70",
-		content: "space-y-4",
-	},
-	variants: {
-		disableTypography: {
-			true: { heading: "" },
-			false: { heading: "divider divider-start text-xl font-semibold" },
-		},
-	},
-});
 
 type HeadingLevel = "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 
@@ -26,8 +9,14 @@ interface SettingsSectionProps {
 	disableTypography?: boolean;
 	headingLevel?: HeadingLevel;
 	forceSemanticHeading?: boolean;
-	class?: ClassValue;
-	ui?: Partial<typeof theme.slots>;
+	class?: string | string[] | Record<string, boolean>;
+	ui?: Partial<{
+		root: string;
+		header: string;
+		heading: string;
+		description: string;
+		content: string;
+	}>;
 }
 
 interface SettingsSectionSlots {
@@ -36,56 +25,75 @@ interface SettingsSectionSlots {
 </script>
 
 <script setup lang="ts">
-const {
-	description,
-	title,
-	disableTypography,
-	headingLevel = "h2",
-	forceSemanticHeading = false,
-	class: className,
-	ui: uiProp,
-} = defineProps<SettingsSectionProps>();
+const props = withDefaults(defineProps<SettingsSectionProps>(), {
+	headingLevel: "h2",
+	forceSemanticHeading: false,
+});
 
 defineSlots<SettingsSectionSlots>();
 
-const ui = computed(() =>
-	theme({
-		disableTypography,
-	}),
+function mergeClass(
+	base: string,
+	...extras: Array<string | string[] | Record<string, boolean> | undefined>
+) {
+	const parts: string[] = [base];
+	for (const extra of extras) {
+		if (!extra) continue;
+		if (typeof extra === "string") {
+			parts.push(extra);
+			continue;
+		}
+		if (Array.isArray(extra)) {
+			parts.push(...extra.filter(Boolean));
+			continue;
+		}
+		for (const [key, on] of Object.entries(extra)) {
+			if (on) parts.push(key);
+		}
+	}
+	return parts.filter(Boolean).join(" ");
+}
+
+const rootClass = computed(() => mergeClass("space-y-6 w-full", props.class, props.ui?.root));
+const headerClass = computed(() => mergeClass("space-y-1", props.ui?.header));
+const headingClass = computed(() =>
+	mergeClass(
+		props.disableTypography ? "" : "divider divider-start text-xl font-semibold",
+		props.ui?.heading,
+	),
 );
+const descriptionClass = computed(() =>
+	mergeClass("text-sm text-base-content/70", props.ui?.description),
+);
+const contentClass = computed(() => mergeClass("space-y-4", props.ui?.content));
 </script>
 
 <template>
-	<div data-slot="root" :class="ui.root({ class: [className, uiProp?.root] })">
-		<header
-			v-if="title || description"
-			data-slot="header"
-			:class="ui.header({ class: uiProp?.header })"
-		>
-			<template v-if="title">
-				<div v-if="disableTypography && !forceSemanticHeading" data-slot="heading">
-					{{ title }}
+	<div data-slot="root" :class="rootClass">
+		<header v-if="props.title || props.description" data-slot="header" :class="headerClass">
+			<template v-if="props.title">
+				<div
+					v-if="props.disableTypography && !props.forceSemanticHeading"
+					data-slot="heading"
+				>
+					{{ props.title }}
 				</div>
 				<component
-					:is="headingLevel"
+					:is="props.headingLevel"
 					v-else
 					data-slot="heading"
-					:class="ui.heading({ class: uiProp?.heading })"
+					:class="headingClass"
 				>
-					{{ title }}
+					{{ props.title }}
 				</component>
 			</template>
 
-			<p
-				v-if="description"
-				data-slot="description"
-				:class="ui.description({ class: uiProp?.description })"
-			>
-				{{ description }}
+			<p v-if="props.description" data-slot="description" :class="descriptionClass">
+				{{ props.description }}
 			</p>
 		</header>
 
-		<div data-slot="content" :class="ui.content({ class: uiProp?.content })">
+		<div data-slot="content" :class="contentClass">
 			<slot />
 		</div>
 	</div>

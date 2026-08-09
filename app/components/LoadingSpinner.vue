@@ -5,7 +5,7 @@
 		role="status"
 		:aria-label="label"
 	>
-		<UIcon
+		<StarIcon
 			name="heroicons:arrow-path"
 			class="animate-spin text-primary"
 			:class="iconSizeClass"

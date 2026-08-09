@@ -1,0 +1,56 @@
+diff --git a/dist/index.mjs b/dist/index.mjs
+@@ -78,14 +78,20 @@
+     if (node.type === "comment") {
+       continue;
+     } else if (node.type === "rule") {
++      // daisyUI 5.2+ can emit rules that mix declarations with nested atrules
++      // (@layer, @starting-style). Yield decls for class selectors only; skip
++      // relative combinators (e.g. `> .card-body`) which need a parent context
++      // Tailwind's `@plugin "daisyui"` already emits correctly.
+       const declarations = node.nodes.filter(({ type }) => type === "decl");
+-      if (declarations.length !== node.nodes.filter(({ type }) => type !== "comment").length) {
+-        throw new Error("unexpected mixed declarations node");
+-      }
+-      if (declarations.length) {
+-        node.nodes = declarations;
++      const nested = node.nodes.filter(({ type }) => type === "rule" || type === "atrule");
++      const selector = node.selector?.trim() ?? "";
++      const isRelative = selector === "" || /^[>+~]/.test(selector) || selector.includes("&");
++      if (declarations.length && !isRelative) {
+         yield [parents, node.selector, declarations];
+       }
++      if (nested.length) {
++        yield* flattenRules(nested, parents);
++      }
+     } else if (node.type === "atrule") {
+       if (node.nodes == null || node.nodes.length === 0) {
+         continue;
+@@ -95,6 +101,9 @@
+       } else {
+         yield* flattenRules(node.nodes, [...parents, `@${node.name}${node.raws.afterName ?? " "}${node.params ?? ""}`]);
+       }
++    } else if (node.type === "decl") {
++      // daisyUI 5 nested atrules (e.g. @starting-style) may contain bare decls
++      continue;
+     } else {
+       console.warn("skipping", node.type);
+     }
+@@ -112,7 +121,8 @@
+     }
+     const [parents, selector, declarations] = rawElement, classTokens = new Set(Array.from(selector.matchAll(CSSCLASS), ([, name]) => name));
+     if (classTokens.size === 0) {
+-      throw new Error("why include this rule?");
++      // Nested/relative selectors without a class token (e.g. `& > li`) — skip
++      return;
+     }
+     for (const classToken of classTokens) {
+       let cssObjectInputs = cssObjectInputsByClassToken.get(classToken);
+@@ -175,6 +185,8 @@
+         processor.process(parse(jsCss), { from: "utilities", to: "utilities" }).then((ast) => getUnoCssElements(ast.root.nodes, cssObjectInputsByClassToken, "daisy-utilities"))
+       );
+     },
++    // daisyUI 5.2+ registers drawer variants via addVariant; stub until upstream supports it
++    addVariant() {},
+     config: (key) => options?.[key.split(".")[1]]
+     // for daisyui v4
+   });

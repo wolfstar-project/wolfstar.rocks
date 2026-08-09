@@ -12,6 +12,7 @@
 		"vitest.explorer",
 		"coderabbit.coderabbit-vscode",
 		"VoidZero.vite-plus-extension-pack",
+		"antfu.unocss",
 		"lokalise.i18n-ally"
 	]
 }

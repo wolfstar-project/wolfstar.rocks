@@ -6,7 +6,6 @@ allowBuilds:
     "@prisma/client": true
     "@prisma/engines": true
     "@sentry/cli": false
-    "@tailwindcss/oxide": true
     better-sqlite3: true
     core-js: false
     esbuild: false
@@ -63,12 +62,22 @@ overrides:
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.51
+    # Same reason: `Ref` and friends are nominal (symbol-branded), so two
+    # vue copies make VueUse and app refs incompatible during typecheck
+    vue: 3.5.40
+    # Keep a single Nuxt schema/kit and vue-router hoisted at the root. Without
+    # @nuxt/ui, pnpm may hoist older transitive copies so `DefineNuxtConfig`
+    # loses its call signature and `prepare:types` drops `nodeReferences`.
+    "@nuxt/schema": 4.5.0
+    "@nuxt/kit": 4.5.0
+    vue-router: 5.2.0
     sharp: 0.34.5
     typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus
 
 patchedDependencies:
+    "@ameinhardt/unocss-preset-daisy@1.1.8": patches/@ameinhardt__unocss-preset-daisy@1.1.8.patch
     "@nuxt/test-utils": patches/@nuxt__test-utils.patch
 
 savePrefix: ""

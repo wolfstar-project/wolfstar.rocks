@@ -1,14 +1,14 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
+	<div class="divide-accented w-full flex-1 divide-y">
+		<div class="gap-2 px-4 py-3.5 flex items-center overflow-x-auto">
+			<StarInput
 				v-model="q"
 				icon="i-lucide-search"
 				:placeholder="t('guild_logs.search_placeholder')"
 				:aria-label="t('guild_logs.search_aria')"
 				class="max-w-sm min-w-48"
 			/>
-			<USelect
+			<StarSelect
 				v-if="!warningsOnly"
 				v-model="selectedTypeCode"
 				:items="actionTypeItems"
@@ -34,14 +34,14 @@
 			record-label="case"
 			@refresh="refresh()"
 		>
-			<UTable
+			<StarTable
 				:data="entries"
 				:columns="columns"
 				:loading="status === 'pending'"
 				class="min-h-100"
 			/>
-			<div class="flex justify-end border-t border-accented px-4 py-3.5">
-				<UPagination
+			<div class="border-accented px-4 py-3.5 flex justify-end border-t">
+				<StarPagination
 					v-if="total > limit"
 					v-model:page="page"
 					:total="total"
@@ -54,12 +54,12 @@
 
 <script setup lang="ts">
 import type { ModerationLogEntry } from "#shared/types/moderation-log";
-import type { TableColumn } from "@nuxt/ui";
+import type { TableColumn } from "#shared/types/ui";
 import { MODERATION_TYPE_FILTER_VALUES } from "#shared/types/moderation-types";
 import { formatTimeAgo } from "@vueuse/core";
 
-const UBadge = resolveComponent("UBadge");
-const UUser = resolveComponent("UUser");
+const StarBadge = resolveComponent("StarBadge");
+const StarUser = resolveComponent("StarUser");
 const { guildData } = useGuildData();
 const { t } = useI18n();
 
@@ -111,7 +111,7 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 		header: t("guild_logs.columns.action"),
 		cell: ({ row }) =>
 			h(
-				UBadge,
+				StarBadge,
 				{
 					color: moderationActionVariant(row.original.typeName),
 					variant: "subtle",
@@ -125,7 +125,7 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 		header: t("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			const member = row.original.targetMember;
-			return h(UUser, {
+			return h(StarUser, {
 				name: member ? auditLogMemberName(member) : t("guild_logs.unknown"),
 				avatar: member ? auditLogMemberAvatar(member) : undefined,
 				size: "sm",
@@ -137,7 +137,7 @@ const columns = computed<TableColumn<ModerationLogEntry>[]>(() => [
 		header: t("guild_logs.columns.moderator"),
 		cell: ({ row }) => {
 			const member = row.original.moderatorMember;
-			return h(UUser, {
+			return h(StarUser, {
 				name: member ? auditLogMemberName(member) : t("guild_logs.unknown"),
 				avatar: member ? auditLogMemberAvatar(member) : undefined,
 				size: "sm",

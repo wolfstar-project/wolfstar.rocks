@@ -1,7 +1,7 @@
 <template>
-	<div class="w-full flex-1 divide-y divide-accented">
-		<div class="flex items-center justify-between gap-2 overflow-x-auto px-4 py-3.5">
-			<UInput
+	<div class="divide-accented w-full flex-1 divide-y">
+		<div class="gap-2 px-4 py-3.5 flex items-center justify-between overflow-x-auto">
+			<StarInput
 				v-model="query"
 				icon="i-lucide-search"
 				:placeholder="t('guild_logs.search_placeholder')"
@@ -21,7 +21,7 @@
 			:refresh-label="t('guild_logs.refresh_activity')"
 			@refresh="refresh()"
 		>
-			<UTable
+			<StarTable
 				ref="table"
 				:data="entries"
 				:columns="columns"
@@ -41,7 +41,7 @@
 			/>
 			<div
 				v-if="total > page"
-				class="mt-4 flex items-center justify-between border-t border-default pt-4"
+				class="mt-4 border-default pt-4 flex items-center justify-between border-t"
 			>
 				<p class="text-sm text-muted">
 					{{
@@ -51,7 +51,7 @@
 						})
 					}}
 				</p>
-				<UPagination
+				<StarPagination
 					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
 					:items-per-page="table?.tableApi?.getState().pagination.pageSize"
 					:total="table?.tableApi?.getFilteredRowModel().rows.length"
@@ -64,11 +64,11 @@
 
 <script setup lang="ts">
 import type { DashboardAuditEntry } from "#shared/types/audit-log";
-import type { TableColumn } from "@nuxt/ui";
+import type { TableColumn } from "#shared/types/ui";
 import { getPaginationRowModel } from "@tanstack/table-core";
 import { formatTimeAgo } from "@vueuse/core";
 
-const UAvatar = resolveComponent("UAvatar");
+const StarAvatar = resolveComponent("StarAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
 const { t } = useI18n();
@@ -96,7 +96,7 @@ const columns = computed<TableColumn<DashboardAuditEntry>[]>(() => [
 		header: t("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
+				h(StarAvatar, {
 					...auditLogMemberAvatar(row.original.member),
 					size: "lg",
 				}),

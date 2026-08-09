@@ -12,8 +12,8 @@
 			@error="onError"
 		>
 			<div class="space-y-2">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:shield-check" class="size-5 text-primary" />
+				<div class="gap-2 flex items-center">
+					<Icon name="heroicons:shield-check" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.events.moderation_events") }}
 					</h3>
@@ -32,8 +32,8 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<UFormField
+			<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+				<StarFormField
 					v-for="event in ConfigurableModerationEvents"
 					:key="`form-field-${event.key}`"
 					:label="translateEntry(event, 'title')"
@@ -44,7 +44,7 @@
 							{{ translateEntry(event, "description") }}
 						</p>
 					</template>
-					<USwitch
+					<StarSwitch
 						v-model="state[event.key]"
 						:aria-label="
 							t('guild_settings.events.toggle_aria', {
@@ -52,14 +52,14 @@
 							})
 						"
 					/>
-				</UFormField>
+				</StarFormField>
 			</div>
 
 			<Separator />
 
 			<div class="space-y-2">
-				<div class="flex items-center gap-2">
-					<UIcon name="heroicons:chat-bubble-left-right" class="size-5 text-primary" />
+				<div class="gap-2 flex items-center">
+					<Icon name="heroicons:chat-bubble-left-right" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
 						{{ t("guild_settings.events.message_events") }}
 					</h3>
@@ -78,8 +78,8 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<UFormField
+			<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+				<StarFormField
 					v-for="event in ConfigurableMessageEvents"
 					:key="`form-field-${event.key}`"
 					:label="translateEntry(event, 'title')"
@@ -90,7 +90,7 @@
 							{{ translateEntry(event, "description") }}
 						</p>
 					</template>
-					<USwitch
+					<StarSwitch
 						v-model="state[event.key]"
 						:aria-label="
 							t('guild_settings.events.toggle_aria', {
@@ -98,7 +98,7 @@
 							})
 						"
 					/>
-				</UFormField>
+				</StarFormField>
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
@@ -106,7 +106,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 

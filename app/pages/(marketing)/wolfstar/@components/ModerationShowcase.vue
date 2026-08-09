@@ -1,7 +1,7 @@
 <!-- oxlint-disable vue/no-template-shadow -->
 <template>
 	<div class="w-full">
-		<div class="relative mx-auto min-h-100 w-full max-w-7xl">
+		<div class="min-h-100 max-w-7xl relative mx-auto w-full">
 			<div
 				v-for="(feature, index) in features"
 				:key="feature.id"
@@ -24,42 +24,42 @@
 									? 'home-logging-showcase-heading'
 									: undefined
 							"
-							class="mb-4 flex items-center gap-3 text-2xl font-bold text-base-content"
+							class="mb-4 gap-3 text-2xl font-bold text-base-content flex items-center"
 						>
 							<span
-								class="flex size-10 items-center justify-center rounded-lg bg-primary/10"
+								class="size-10 rounded-lg bg-primary/10 flex items-center justify-center"
 								aria-hidden="true"
 							>
-								<UIcon :name="feature.icon" class="size-5 text-primary" />
+								<StarIcon :name="feature.icon" class="size-5 text-primary" />
 							</span>
 							{{ feature.title }}
 						</h3>
 						<p
-							class="mb-6 max-w-prose text-[15px] leading-relaxed text-base-content/80"
+							class="mb-6 max-w-prose leading-relaxed text-base-content/80 text-[15px]"
 						>
 							{{ feature.description }}
 						</p>
-						<UButton to="#" color="neutral" variant="outline" class="w-fit">
+						<StarButton to="#" color="neutral" variant="outline" class="w-fit">
 							Learn more about {{ feature.label }}
-						</UButton>
+						</StarButton>
 					</div>
 
 					<template v-if="feature.id === 'moderation-tools'">
-						<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+						<div class="gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12 grid items-center">
 							<div
-								class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
+								class="gap-4 max-lg:order-last lg:flex-row flex flex-col-reverse items-center"
 							>
 								<SurfaceCard
 									padding="none"
-									class="showcase-surface-shield w-full overflow-hidden shadow-glow"
+									class="showcase-surface-shield shadow-glow w-full overflow-hidden"
 								>
 									<div class="showcase-channel-header">
-										<UIcon
+										<StarIcon
 											name="ph:folder-fill"
-											class="size-4.5 shrink-0 text-muted"
+											class="size-4.5 text-muted shrink-0"
 											aria-hidden="true"
 										/>
-										<span class="text-[15px] font-semibold text-base-content"
+										<span class="font-semibold text-base-content text-[15px]"
 											>automod-demo</span
 										>
 										<span class="text-xs text-muted">— WolfStar HQ</span>
@@ -94,13 +94,13 @@
 													"
 												>
 													Have you seen this????
-													<div class="grid max-w-96 grid-cols-2 gap-2">
+													<div class="max-w-96 gap-2 grid grid-cols-2">
 														<div
 															v-for="placeholder in 4"
 															:key="placeholder"
-															class="flex aspect-video w-full items-center justify-center card-glass rounded-lg"
+															class="aspect-video card-glass rounded-lg flex w-full items-center justify-center"
 														>
-															<UIcon
+															<StarIcon
 																name="ph:image-duotone"
 																class="size-16 animate-pulse text-base-content/20 sm:size-24"
 																aria-hidden="true"
@@ -203,7 +203,7 @@
 													Hey folks! I have great news to share!
 													<LazyDiscordReactions>
 														<LazyDiscordReaction :count="7" self>
-															<UIcon
+															<StarIcon
 																name="ph:cheers-fill"
 																class="text-success"
 																aria-hidden="true"
@@ -213,7 +213,7 @@
 															:count="1"
 															class="text-error"
 														>
-															<UIcon
+															<StarIcon
 																name="ph:knife-fill"
 																aria-hidden="true"
 															/>
@@ -247,14 +247,14 @@
 									</div>
 								</SurfaceCard>
 
-								<div class="flex flex-row items-center gap-1 lg:flex-col">
+								<div class="gap-1 lg:flex-col flex flex-row items-center">
 									<button
 										type="button"
-										class="radio-feature-arrow rotate-90 lg:rotate-180"
+										class="radio-feature-arrow lg:rotate-180 rotate-90"
 										aria-label="Previous automod feature"
 										@click="advanceFeatureIndex(-1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 									<label
 										v-for="(text, automodIndex) of texts"
@@ -273,42 +273,42 @@
 									</label>
 									<button
 										type="button"
-										class="radio-feature-arrow -rotate-90 lg:rotate-0"
+										class="radio-feature-arrow lg:rotate-0 -rotate-90"
 										aria-label="Next automod feature"
 										@click="advanceFeatureIndex(1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
 
 							<div class="showcase-copy text-left">
 								<h3
-									class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
+									class="mb-4 gap-2 text-xl font-bold text-base-content flex items-center"
 								>
-									<UIcon
+									<StarIcon
 										name="ph:shield-fill"
 										class="size-6 text-primary"
 										aria-hidden="true"
 									/>
 									WolfStar can act on
 									<span
-										class="text-primary underline decoration-primary/30 underline-offset-4"
+										class="text-primary decoration-primary/30 underline underline-offset-4"
 										>{{ texts[featureIndex]!.title }}</span
 									>
 								</h3>
 
-								<p class="text-[15px] leading-relaxed text-base-content/80">
+								<p class="leading-relaxed text-base-content/80 text-[15px]">
 									Enjoy the power of moderation with WolfStar, a fully
 									customizable moderation bot for your server.
 								</p>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
+								<p class="mt-4 leading-relaxed text-base-content/80 text-[15px]">
 									You can define what WolfStar should do on every infraction:
 								</p>
-								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
-									<li class="flex items-start gap-2">
-										<UIcon
+								<ul class="mt-3 space-y-2 text-base-content/80 text-[15px]">
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:arrow-u-up-left"
 											class="mt-0.5 size-4 shrink-0"
 											aria-hidden="true"
@@ -321,10 +321,10 @@
 											infraction.</span
 										>
 									</li>
-									<li class="flex items-start gap-2">
-										<UIcon
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:flag-fill"
-											class="mt-0.5 size-4 shrink-0 text-warning"
+											class="mt-0.5 size-4 text-warning shrink-0"
 											aria-hidden="true"
 										/>
 										<span
@@ -335,10 +335,10 @@
 											moderators to see.</span
 										>
 									</li>
-									<li class="flex items-start gap-2">
-										<UIcon
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:trash-simple-fill"
-											class="mt-0.5 size-4 shrink-0 text-error"
+											class="mt-0.5 size-4 text-error shrink-0"
 											aria-hidden="true"
 										/>
 										<span
@@ -351,14 +351,14 @@
 									</li>
 								</ul>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
+								<p class="mt-4 leading-relaxed text-base-content/80 text-[15px]">
 									And even what WolfStar should do after repeated infractions!
 								</p>
-								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
-									<li class="flex items-start gap-2">
-										<UIcon
+								<ul class="mt-3 space-y-2 text-base-content/80 text-[15px]">
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:shield-check-duotone"
-											class="mt-0.5 size-4 shrink-0 text-primary"
+											class="mt-0.5 size-4 text-primary shrink-0"
 											aria-hidden="true"
 										/>
 										<span
@@ -371,8 +371,8 @@
 											seconds to even years, or permanent.</span
 										>
 									</li>
-									<li class="flex items-start gap-2">
-										<UIcon
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:hourglass-duotone"
 											class="mt-0.5 size-4 shrink-0"
 											aria-hidden="true"
@@ -391,19 +391,19 @@
 					</template>
 
 					<template v-else-if="feature.id === 'advanced-logging'">
-						<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
-							<div class="flex flex-col items-center gap-4 lg:flex-row">
+						<div class="gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12 grid items-center">
+							<div class="gap-4 lg:flex-row flex flex-col items-center">
 								<SurfaceCard
 									padding="none"
-									class="showcase-surface-shield w-full overflow-hidden shadow-glow"
+									class="showcase-surface-shield shadow-glow w-full overflow-hidden"
 								>
 									<div class="showcase-channel-header">
-										<UIcon
+										<StarIcon
 											name="ph:folder-fill"
-											class="size-4.5 shrink-0 text-muted"
+											class="size-4.5 text-muted shrink-0"
 											aria-hidden="true"
 										/>
-										<span class="text-[15px] font-semibold text-base-content"
+										<span class="font-semibold text-base-content text-[15px]"
 											>server-logs</span
 										>
 										<span class="text-xs text-muted">— WolfStar HQ</span>
@@ -478,14 +478,14 @@
 									</div>
 								</SurfaceCard>
 
-								<div class="flex flex-row items-center gap-1 lg:flex-col">
+								<div class="gap-1 lg:flex-col flex flex-row items-center">
 									<button
 										type="button"
-										class="radio-feature-arrow rotate-90 lg:rotate-180"
+										class="radio-feature-arrow lg:rotate-180 rotate-90"
 										aria-label="Previous logging event"
 										@click="advanceLoggingIndex(-1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 									<label
 										v-for="(event, loggingEventIndex) of loggingEvents"
@@ -504,20 +504,20 @@
 									</label>
 									<button
 										type="button"
-										class="radio-feature-arrow -rotate-90 lg:rotate-0"
+										class="radio-feature-arrow lg:rotate-0 -rotate-90"
 										aria-label="Next logging event"
 										@click="advanceLoggingIndex(1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
 
 							<div class="showcase-copy text-left">
 								<h3
-									class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
+									class="mb-4 gap-2 text-xl font-bold text-base-content flex items-center"
 								>
-									<UIcon
+									<StarIcon
 										:name="
 											loggingEvents[loggingIndex]!.icon ??
 											'ph:binoculars-duotone'
@@ -527,25 +527,25 @@
 									/>
 									Keep track of
 									<span
-										class="text-primary underline decoration-primary/30 underline-offset-4"
+										class="text-primary decoration-primary/30 underline underline-offset-4"
 										>{{ loggingEvents[loggingIndex]!.title }}</span
 									>
 								</h3>
 
-								<p class="text-[15px] leading-relaxed text-base-content/80">
+								<p class="leading-relaxed text-base-content/80 text-[15px]">
 									WolfStar can log almost everything that happens in your server,
 									from members joining and leaving, to channel and role updates,
 									message edits and deletions, and much more.
 								</p>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
+								<p class="mt-4 leading-relaxed text-base-content/80 text-[15px]">
 									And even what WolfStar should be logging:
 								</p>
-								<ul class="mt-3 space-y-2 text-[15px] text-base-content/80">
-									<li class="flex items-start gap-2">
-										<UIcon
+								<ul class="mt-3 space-y-2 text-base-content/80 text-[15px]">
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:magnifying-glass-duotone"
-											class="mt-0.5 size-4 shrink-0 text-primary"
+											class="mt-0.5 size-4 text-primary shrink-0"
 											aria-hidden="true"
 										/>
 										<span
@@ -557,10 +557,10 @@
 											Keep a complete history of your server's activity.</span
 										>
 									</li>
-									<li class="flex items-start gap-2">
-										<UIcon
+									<li class="gap-2 flex items-start">
+										<StarIcon
 											name="ph:clock-duotone"
-											class="mt-0.5 size-4 shrink-0 text-info"
+											class="mt-0.5 size-4 text-info shrink-0"
 											aria-hidden="true"
 										/>
 										<span
@@ -576,23 +576,23 @@
 					</template>
 
 					<template v-else-if="feature.id === 'moderation-logs'">
-						<div class="grid items-center gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12">
+						<div class="gap-8 md:gap-12 lg:grid-cols-2 lg:gap-12 grid items-center">
 							<div
-								class="flex flex-col-reverse items-center gap-4 max-lg:order-last lg:flex-row"
+								class="gap-4 max-lg:order-last lg:flex-row flex flex-col-reverse items-center"
 							>
 								<div class="flex w-full flex-col items-start">
 									<SurfaceCard
 										padding="none"
-										class="showcase-surface-shield w-full overflow-hidden shadow-glow"
+										class="showcase-surface-shield shadow-glow w-full overflow-hidden"
 									>
 										<div class="showcase-channel-header">
-											<UIcon
+											<StarIcon
 												name="ph:folder-fill"
-												class="size-4.5 shrink-0 text-muted"
+												class="size-4.5 text-muted shrink-0"
 												aria-hidden="true"
 											/>
 											<span
-												class="text-[15px] font-semibold text-base-content"
+												class="font-semibold text-base-content text-[15px]"
 												>mod-log</span
 											>
 											<span class="text-xs text-muted">— WolfStar HQ</span>
@@ -637,8 +637,8 @@
 										</div>
 									</SurfaceCard>
 
-									<UFieldGroup class="mt-4 self-start md:self-center">
-										<UButton
+									<StarFieldGroup class="mt-4 md:self-center self-start">
+										<StarButton
 											class="justify-center"
 											:color="moderationTemporary ? 'info' : 'neutral'"
 											:variant="moderationTemporary ? 'solid' : 'outline'"
@@ -650,8 +650,8 @@
 											"
 										>
 											Temporary
-										</UButton>
-										<UButton
+										</StarButton>
+										<StarButton
 											class="justify-center"
 											:color="moderationUndo ? 'success' : 'neutral'"
 											:variant="moderationUndo ? 'solid' : 'outline'"
@@ -663,18 +663,18 @@
 											"
 										>
 											Undo
-										</UButton>
-									</UFieldGroup>
+										</StarButton>
+									</StarFieldGroup>
 								</div>
 
-								<div class="flex flex-row items-center gap-1 lg:flex-col">
+								<div class="gap-1 lg:flex-col flex flex-row items-center">
 									<button
 										type="button"
-										class="radio-feature-arrow rotate-90 lg:rotate-180"
+										class="radio-feature-arrow lg:rotate-180 rotate-90"
 										aria-label="Previous moderation action"
 										@click="advanceModerationIndex(-1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 									<label
 										v-for="(action, moderationActionIndex) of moderationActions"
@@ -694,41 +694,41 @@
 									</label>
 									<button
 										type="button"
-										class="radio-feature-arrow -rotate-90 lg:rotate-0"
+										class="radio-feature-arrow lg:rotate-0 -rotate-90"
 										aria-label="Next moderation action"
 										@click="advanceModerationIndex(1)"
 									>
-										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
+										<StarIcon name="ph:caret-down-bold" aria-hidden="true" />
 									</button>
 								</div>
 							</div>
 
 							<div class="showcase-copy text-left">
 								<h3
-									class="mb-4 flex items-center gap-2 text-xl font-bold text-base-content"
+									class="mb-4 gap-2 text-xl font-bold text-base-content flex items-center"
 								>
-									<UIcon
+									<StarIcon
 										name="ph:shield-fill"
 										class="size-6 text-primary"
 										aria-hidden="true"
 									/>
 									A complete suite for
 									<span
-										class="text-primary underline decoration-primary/30 underline-offset-4"
+										class="text-primary decoration-primary/30 underline underline-offset-4"
 										>moderation logs</span
 									>
 								</h3>
 
-								<p class="text-[15px] leading-relaxed text-base-content/80">
+								<p class="leading-relaxed text-base-content/80 text-[15px]">
 									Easily searchable moderation logs, with a complete history of
 									every action taken by WolfStar in your server, and with the
 									ability to filter them later by user, action, and more!
 								</p>
 
-								<p class="mt-4 text-[15px] leading-relaxed text-base-content/80">
-									<UIcon
+								<p class="mt-4 leading-relaxed text-base-content/80 text-[15px]">
+									<StarIcon
 										name="ph:binoculars-duotone"
-										class="mr-1 inline size-4 text-primary"
+										class="mr-1 size-4 text-primary inline"
 										aria-hidden="true"
 									/>
 									WolfStar can also listen for external moderation actions. You
@@ -925,8 +925,6 @@ onUnmounted(cleanup);
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .showcase-surface-shield {
 	position: relative;
 	z-index: 1;
@@ -934,7 +932,7 @@ onUnmounted(cleanup);
 }
 
 .showcase-channel-header {
-	@apply flex items-center gap-2.5 border-b px-5 py-3.5;
+	@apply gap-2.5 px-5 py-3.5 flex items-center border-b;
 	border-color: var(--home-border-subtle);
 }
 
@@ -962,11 +960,11 @@ onUnmounted(cleanup);
 }
 
 .radio-feature {
-	@apply size-3.5 cursor-pointer appearance-none rounded-full bg-base-content/15 sm:size-4;
+	@apply size-3.5 bg-base-content/15 sm:size-4 cursor-pointer appearance-none rounded-full;
 }
 
 .radio-feature-arrow {
-	@apply inline-flex size-4 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-muted transition-colors hover:text-base-content sm:size-4;
+	@apply size-4 p-0 text-muted hover:text-base-content sm:size-4 inline-flex cursor-pointer items-center justify-center border-0 bg-transparent transition-colors;
 }
 
 @media not (hover: hover) {

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<UButton
+		<StarButton
 			icon="lucide:message-square"
 			color="primary"
 			variant="soft"

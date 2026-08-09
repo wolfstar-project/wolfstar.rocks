@@ -937,7 +937,7 @@ describe("component SSR rendering", () => {
 	});
 
 	describe("Separator", () => {
-		it("renders horizontal separator with two USeparator elements", async () => {
+		it("renders horizontal separator with two StarSeparator elements", async () => {
 			const wrapper = await mountSuspended(Separator, {
 				props: { orientation: "horizontal" },
 			});

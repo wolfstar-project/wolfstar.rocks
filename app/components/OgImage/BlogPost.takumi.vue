@@ -20,13 +20,13 @@
 			<div class="flex w-full flex-col items-start">
 				<span
 					v-if="formattedDate"
-					class="mb-4 text-[30px] font-semibold tracking-wide"
+					class="mb-4 font-semibold tracking-wide text-[30px]"
 					:class="[colorMode === 'light' ? ['text-gray-600'] : ['text-white/75']]"
 				>
 					{{ formattedDate }}
 				</span>
 				<h1
-					class="m-0 font-mono text-[70px] leading-none font-extrabold tracking-tight"
+					class="m-0 font-mono font-extrabold tracking-tight text-[70px] leading-none"
 					style="display: block; text-overflow: ellipsis"
 					:style="{ lineClamp: 2 }"
 				>
@@ -34,7 +34,7 @@
 				</h1>
 				<p
 					v-if="description"
-					class="mt-6 text-[34px] leading-11 font-semibold tracking-wide"
+					class="mt-6 leading-11 font-semibold tracking-wide text-[34px]"
 					:class="[colorMode === 'light' ? ['text-gray-600'] : ['text-white/75']]"
 					style="display: block; text-overflow: ellipsis"
 					:style="{ lineClamp: 2 }"
@@ -48,7 +48,7 @@
 					<span
 						v-for="(author, index) in visibleAuthors"
 						:key="author.name"
-						class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full"
+						class="h-16 w-16 flex items-center justify-center overflow-hidden rounded-full"
 						:class="[colorMode === 'light' ? ['bg-gray-200'] : ['bg-white/15']]"
 						:style="{
 							marginLeft: index > 0 ? '-20px' : '0',
@@ -64,13 +64,13 @@
 							height="64"
 							style="width: 100%; height: 100%; object-fit: cover"
 						/>
-						<span v-else class="text-[24px] font-semibold">
+						<span v-else class="font-semibold text-[24px]">
 							{{ getInitials(author.name) }}
 						</span>
 					</span>
 					<span
 						v-if="extraCount > 0"
-						class="flex h-16 w-16 items-center justify-center overflow-hidden rounded-full text-[24px] font-semibold"
+						class="h-16 w-16 font-semibold flex items-center justify-center overflow-hidden rounded-full text-[24px]"
 						:class="[colorMode === 'light' ? ['bg-gray-200'] : ['bg-white/15']]"
 						:style="{
 							marginLeft: '-20px',
@@ -82,7 +82,7 @@
 					</span>
 				</div>
 				<span
-					class="ml-5 text-[30px] font-semibold"
+					class="ml-5 font-semibold text-[30px]"
 					:class="[colorMode === 'light' ? ['text-gray-700'] : ['text-white/80']]"
 				>
 					{{ formattedAuthorNames }}

@@ -28,10 +28,8 @@ const tagStyle = computed(() => ({
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .tag {
-	@apply inline-flex items-baseline gap-1 rounded-md px-1 py-0.5 font-whitney font-medium transition-colors duration-150;
+	@apply gap-1 rounded-md px-1 py-0.5 font-whitney font-medium inline-flex items-baseline transition-colors duration-150;
 	/* Roles are components, not text nodes — restore the gap Vue strips between tags. */
 	vertical-align: baseline;
 	margin: 0;

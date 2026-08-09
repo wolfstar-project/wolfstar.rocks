@@ -119,8 +119,6 @@ const embedAriaLabel = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 /*
  * Structure mirrors skyra-project/discord-components DiscordEmbed:
  * left 4px accent bar + rounded content card (max 520px).
@@ -146,7 +144,7 @@ const embedAriaLabel = computed(() => {
 	 * skyra’s my-2 (8px) outer gap — keep only a small bottom margin for
 	 * “(edited)” / stacked content under the card.
 	 */
-	@apply mt-0 mb-1 flex max-w-[520px] font-whitney;
+	@apply mt-0 mb-1 font-whitney flex max-w-[520px];
 	color: var(--discord-embed-text);
 	font-size: 0.875rem;
 	line-height: 1.125rem;

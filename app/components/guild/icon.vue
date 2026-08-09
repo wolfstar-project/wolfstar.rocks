@@ -1,36 +1,36 @@
 <template>
-	<!-- Guild UIcon - Card or Bare variant -->
+	<!-- Guild StarIcon - Card or Bare variant -->
 	<div
 		ref="icon"
 		:class="[
 			variant === 'card'
-				? 'group relative flex flex-col items-center space-y-3 rounded-xl border border-base-300 bg-base-100 p-4 shadow-sm transition-all duration-300 hover:scale-[1.02] hover:bg-base-200/50 hover:shadow-lg'
+				? 'group space-y-3 rounded-xl border-base-300 bg-base-100 p-4 shadow-sm hover:bg-base-200/50 hover:shadow-lg relative flex flex-col items-center border transition-all duration-300 hover:scale-[1.02]'
 				: 'relative',
 			{
-				'ring-2 ring-primary/20':
+				'ring-primary/20 ring-2':
 					variant === 'card' && guild.wolfstarIsIn && guild.manageable,
-				'ring-2 ring-error/20': variant === 'card' && !guild.manageable,
+				'ring-error/20 ring-2': variant === 'card' && !guild.manageable,
 				'opacity-75': variant === 'card' && !guild.manageable,
 			},
 		]"
 	>
-		<!-- Guild UIcon -->
+		<!-- Guild StarIcon -->
 		<div class="relative" :class="[variant === 'card' ? '' : 'group']">
 			<!-- Status Indicator -->
-			<div v-if="showStatus && guild" class="absolute -top-1 -right-1 z-10">
-				<UTooltip :text="statusIndicator.tooltipText">
+			<div v-if="showStatus && guild" class="-top-1 -right-1 absolute z-10">
+				<StarTooltip :text="statusIndicator.tooltipText">
 					<div
-						class="flex h-7 w-7 items-center justify-center rounded-full text-white shadow-sm transition-all duration-200"
+						class="h-7 w-7 text-white shadow-sm flex items-center justify-center rounded-full transition-all duration-200"
 						:class="statusIndicator.wrapperClasses"
 					>
 						<span class="sr-only">{{ statusIndicator.tooltipText }}</span>
-						<UIcon
+						<StarIcon
 							:name="statusIndicator.iconName"
 							:class="statusIndicator.iconClasses"
 							aria-hidden="true"
 						/>
 					</div>
-				</UTooltip>
+				</StarTooltip>
 			</div>
 			<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
 				<div
@@ -38,7 +38,7 @@
 					:class="iconSizeClasses"
 					role="img"
 				>
-					<div v-if="!loaded" class="h-full w-full skeleton"></div>
+					<div v-if="!loaded" class="skeleton h-full w-full"></div>
 					<NuxtImg
 						v-if="!isDefault && loaded"
 						:src="createUrl(preferredFormat, iconPixelSize)"
@@ -54,7 +54,7 @@
 					/>
 					<div
 						v-else-if="isDefault && loaded"
-						class="flex items-center justify-center rounded-full bg-linear-to-br from-primary/20 to-secondary/20 text-base-content"
+						class="from-primary/20 to-secondary/20 text-base-content flex items-center justify-center rounded-full bg-linear-to-br"
 						:class="iconSizeClasses"
 					>
 						<span :class="acronymSizeClasses">{{ guild.acronym }}</span>
@@ -66,7 +66,7 @@
 		<!-- Guild Name (optional) - only in card variant -->
 		<div v-if="variant === 'card' && showName && guild" class="w-full text-center">
 			<h3
-				class="line-clamp-1 text-xs font-medium text-base-content transition-colors group-hover:text-primary"
+				class="text-xs font-medium text-base-content group-hover:text-primary line-clamp-1 transition-colors"
 			>
 				{{ guild.name }}
 			</h3>
@@ -75,22 +75,22 @@
 		<!-- Guild Stats (optional) - only in card variant -->
 		<div
 			v-if="variant === 'card' && showStats && guild"
-			class="flex items-center justify-center space-x-2 text-xs text-base-content/60"
+			class="space-x-2 text-xs text-base-content/60 flex items-center justify-center"
 		>
 			<span
 				v-if="guild.approximateMemberCount"
-				class="flex items-center space-x-1"
+				class="space-x-1 flex items-center"
 				title="Total members"
 			>
-				<UIcon name="ph:users-fill" class="h-2 w-2" aria-hidden="true" />
+				<StarIcon name="ph:users-fill" class="h-2 w-2" aria-hidden="true" />
 				<span>{{ formatNumber(guild.approximateMemberCount) }}</span>
 			</span>
 			<span
 				v-if="guild.approximatePresenceCount"
-				class="flex items-center space-x-1"
+				class="space-x-1 flex items-center"
 				title="Members online"
 			>
-				<UIcon name="ph:wifi-high" class="h-2 w-2 text-success" aria-hidden="true" />
+				<StarIcon name="ph:wifi-high" class="h-2 w-2 text-success" aria-hidden="true" />
 				<span>{{ formatNumber(guild.approximatePresenceCount) }}</span>
 			</span>
 		</div>

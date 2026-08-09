@@ -1,5 +1,5 @@
 <template>
-	<UFooter
+	<StarFooter
 		:ui="{
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
@@ -7,19 +7,19 @@
 		:aria-label="t('footer.site_footer')"
 	>
 		<template #top>
-			<UContainer class="relative overflow-hidden">
+			<StarContainer class="relative overflow-hidden">
 				<!-- Decorative watermark: keep fully inside the padded brand area so overflow-hidden does not clip it -->
 				<icons-wolfstar
-					class="pointer-events-none absolute bottom-6 left-6 h-56 w-56 opacity-5"
+					class="bottom-6 left-6 h-56 w-56 pointer-events-none absolute opacity-5"
 					role="presentation"
 					:aria-label="undefined"
 					aria-hidden="true"
 				/>
 				<div
-					class="relative grid grid-cols-1 gap-10 p-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]"
+					class="gap-10 p-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] relative grid grid-cols-1"
 				>
 					<div>
-						<div class="mb-3 flex items-center gap-3">
+						<div class="mb-3 gap-3 flex items-center">
 							<div
 								class="w-10 rounded-full"
 								role="img"
@@ -33,10 +33,10 @@
 							{{ t("footer.tagline") }}
 						</p>
 						<nav
-							class="mt-4 flex items-center gap-1"
+							class="mt-4 gap-1 flex items-center"
 							:aria-label="t('footer.social_links')"
 						>
-							<UButton
+							<StarButton
 								v-for="social of socialLinks"
 								:key="social.label"
 								:to="social.to"
@@ -49,11 +49,11 @@
 								size="sm"
 							/>
 						</nav>
-						<div class="mt-6 flex flex-col items-start gap-3">
+						<div class="mt-6 gap-3 flex flex-col items-start">
 							<ClientOnly>
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
-							<UButton
+							<StarButton
 								:label="t('footer.powered_by_netlify')"
 								to="https://www.netlify.com"
 								target="_blank"
@@ -74,7 +74,7 @@
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
 						</div>
-						<div class="flex flex-col gap-2.5">
+						<div class="gap-2.5 flex flex-col">
 							<NuxtLink
 								v-for="link of column.children"
 								:key="link.label"
@@ -86,7 +86,7 @@
 						</div>
 					</nav>
 				</div>
-			</UContainer>
+			</StarContainer>
 		</template>
 
 		<template #left>
@@ -98,7 +98,7 @@
 			<BuildEnvironment :footer="true" :buildInfo class="mr-2" />
 			<!-- ClientOnly avoids Reka portal IDs that fail html-validator on prerender. -->
 			<ClientOnly>
-				<ULocaleSelect
+				<StarLocaleSelect
 					:model-value="locale"
 					:locales="uiLocales"
 					:aria-label="t('common.language')"
@@ -116,34 +116,10 @@
 			</ClientOnly>
 			<ColorModeButton />
 		</template>
-	</UFooter>
+	</StarFooter>
 </template>
 
 <script setup lang="ts">
-import {
-	cs,
-	da,
-	de,
-	el,
-	en,
-	en_gb,
-	es,
-	fi,
-	fr,
-	hi,
-	hr,
-	hu,
-	id,
-	it,
-	ko,
-	lt,
-	nl,
-	pt,
-	ro,
-	ru,
-	tr,
-	uk,
-} from "@nuxt/ui/locale";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
 import { currentLocales } from "~~/config/i18n";
 
@@ -152,41 +128,10 @@ const { setPreferredLocale } = usePreferredLocale();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 
-/** Map app locale codes → Nuxt UI locale packs (codes remapped to match i18n). */
-const nuxtUiLocaleByCode: Record<string, typeof en> = {
-	"cs-CZ": { ...cs, code: "cs-CZ" },
-	"da-DK": { ...da, code: "da-DK" },
-	"de-DE": { ...de, code: "de-DE" },
-	"el-GR": { ...el, code: "el-GR" },
-	"en-GB": { ...en_gb, code: "en-GB" },
-	"en-US": { ...en, code: "en-US" },
-	"es-419": { ...es, code: "es-419" },
-	"es-ES": { ...es, code: "es-ES" },
-	"fi-FI": { ...fi, code: "fi-FI" },
-	"fr-FR": { ...fr, code: "fr-FR" },
-	"hi-IN": { ...hi, code: "hi-IN" },
-	"hr-HR": { ...hr, code: "hr-HR" },
-	"hu-HU": { ...hu, code: "hu-HU" },
-	"id-ID": { ...id, code: "id-ID" },
-	"it-IT": { ...it, code: "it-IT" },
-	"ko-KR": { ...ko, code: "ko-KR" },
-	"lt-LT": { ...lt, code: "lt-LT" },
-	"nl-NL": { ...nl, code: "nl-NL" },
-	"pt-PT": { ...pt, code: "pt-PT" },
-	"ro-RO": { ...ro, code: "ro-RO" },
-	"ru-RU": { ...ru, code: "ru-RU" },
-	"tr-TR": { ...tr, code: "tr-TR" },
-	"uk-UA": { ...uk, code: "uk-UA" },
-};
-
-const uiLocales = currentLocales.map((appLocale) => {
-	const pack = nuxtUiLocaleByCode[appLocale.code];
-	if (pack) return pack;
-	return Object.assign({}, en, {
-		code: appLocale.code,
-		name: appLocale.name ?? appLocale.code,
-	});
-});
+const uiLocales = currentLocales.map((appLocale) => ({
+	code: appLocale.code,
+	name: appLocale.name ?? appLocale.code,
+}));
 
 function selectLocale(code: string) {
 	if (!isAppLocaleCode(code)) return;

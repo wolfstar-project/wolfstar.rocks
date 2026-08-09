@@ -1,8 +1,8 @@
 <template>
-	<UHeader class="app-navbar" :title="t('header.brand')" :aria-label="t('header.site_header')">
+	<StarHeader class="app-navbar" :title="t('header.brand')" :aria-label="t('header.site_header')">
 		<template #left>
 			<NuxtLink
-				class="flex items-center gap-2.5"
+				class="gap-2.5 flex items-center"
 				:to="currentApp.explore"
 				:aria-label="t('header.home', { name: currentApp.name })"
 			>
@@ -13,21 +13,23 @@
 			</NuxtLink>
 		</template>
 
-		<div class="hidden gap-1 rounded-full bg-base-200 p-1 lg:inline-flex">
-			<UNavigationMenu
+		<nav
+			class="gap-1 bg-base-200 p-1 lg:inline-flex hidden rounded-full"
+			:aria-label="t('nav.main_navigation')"
+		>
+			<StarNavigationMenu
 				:items="desktopLinks"
 				variant="link"
-				:aria-label="t('nav.main_navigation')"
 				:ui="{
 					link: 'rounded-full px-4 py-2 text-sm font-medium text-muted hover:text-base-content',
 					root: 'gap-0',
 				}"
 			/>
-		</div>
+		</nav>
 
 		<template #right>
-			<div class="hidden items-center gap-2 md:flex">
-				<UButton
+			<div class="gap-2 md:flex hidden items-center">
+				<StarButton
 					v-if="currentApp.invite !== '#'"
 					:label="t('header.add_app')"
 					size="sm"
@@ -38,12 +40,12 @@
 				<ClientOnly>
 					<LazyAppHeaderAuth />
 					<template #fallback>
-						<UButton
+						<StarButton
 							:label="t('header.sign_in')"
 							size="md"
 							color="primary"
 							variant="subtle"
-							class="invisible rounded-lg"
+							class="rounded-lg invisible"
 							icon="ic:round-discord"
 							tabindex="-1"
 						/>
@@ -52,8 +54,8 @@
 			</div>
 		</template>
 		<template #body>
-			<nav class="flex min-h-0 flex-1 flex-col gap-6" :aria-label="t('nav.mobile_menu')">
-				<UNavigationMenu
+			<nav class="min-h-0 gap-6 flex flex-1 flex-col" :aria-label="t('nav.mobile_menu')">
+				<StarNavigationMenu
 					orientation="vertical"
 					:items="mobileLinks"
 					class="-mx-1"
@@ -65,8 +67,8 @@
 					}"
 				/>
 
-				<div class="mt-auto flex flex-col items-center gap-3 border-t border-default pt-5">
-					<UButton
+				<div class="gap-3 border-default pt-5 mt-auto flex flex-col items-center border-t">
+					<StarButton
 						v-if="currentApp.invite !== '#'"
 						:label="t('header.add_app')"
 						size="md"
@@ -78,12 +80,12 @@
 						<LazyAppHeaderAuth mobile />
 						<template #fallback>
 							<div class="flex justify-center">
-								<UButton
+								<StarButton
 									:label="t('header.sign_in')"
 									size="md"
 									color="primary"
 									variant="subtle"
-									class="invisible rounded-lg"
+									class="rounded-lg invisible"
 									icon="ic:round-discord"
 									tabindex="-1"
 								/>
@@ -93,7 +95,7 @@
 				</div>
 			</nav>
 		</template>
-	</UHeader>
+	</StarHeader>
 </template>
 
 <script setup lang="ts">
@@ -102,8 +104,6 @@ const { desktopLinks, mobileLinks, currentApp } = useHeader();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .app-navbar {
 	--ui-header-height: 5rem;
 	width: 100%;

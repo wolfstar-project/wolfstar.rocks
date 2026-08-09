@@ -11,8 +11,8 @@
 			class="space-y-4"
 			@error="onError"
 		>
-			<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-				<UFormField
+			<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+				<StarFormField
 					v-for="setting in ConfigurableModerationKeys"
 					:key="`form-field-${setting.key}`"
 					:label="translateEntry(setting, 'name')"
@@ -23,7 +23,7 @@
 							{{ translateEntry(setting, "description") }}
 						</p>
 					</template>
-					<USwitch
+					<StarSwitch
 						v-model="state[setting.key]"
 						:aria-label="
 							t('guild_settings.events.toggle_aria', {
@@ -31,7 +31,7 @@
 							})
 						"
 					/>
-				</UFormField>
+				</StarFormField>
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";

@@ -25,13 +25,13 @@
 						avatar === '/avatars/wolfstar.png',
 				}"
 			/>
-			<UIcon v-else-if="icon" :name="icon" class="discord-app-launcher-list-item-glyph" />
+			<StarIcon v-else-if="icon" :name="icon" class="discord-app-launcher-list-item-glyph" />
 		</span>
 
 		<span class="discord-app-launcher-list-item-body">
 			<span class="discord-app-launcher-list-item-title-row">
 				<span class="discord-app-launcher-list-item-name">{{ name }}</span>
-				<UIcon
+				<StarIcon
 					v-if="showEye"
 					name="discord:eye"
 					class="discord-app-launcher-list-item-eye"
@@ -46,7 +46,7 @@
 			</span>
 		</span>
 
-		<UIcon
+		<StarIcon
 			name="ph:caret-right-bold"
 			class="discord-app-launcher-list-item-chevron"
 			aria-hidden="true"
@@ -92,8 +92,6 @@ const ariaLabel = computed(() => {
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-app-launcher-list-item {
 	/* Discord row tokens: #35373c hover, #f2f3f5 name, #949ba4 body, #b5bac1 glyphs. */
 	--discord-app-launcher-list-item-hover: oklch(31.4% 0.006 272.93);
@@ -106,7 +104,7 @@ const ariaLabel = computed(() => {
 	--discord-app-launcher-list-item-promoted-text: oklch(26.65% 0.006 272.93);
 	--discord-app-launcher-list-item-chevron: oklch(80.5% 0.008 273.13);
 
-	@apply flex w-full cursor-pointer items-center gap-3 rounded-lg border-0 bg-transparent px-2 py-2 text-left font-whitney;
+	@apply gap-3 rounded-lg px-2 py-2 font-whitney flex w-full cursor-pointer items-center border-0 bg-transparent text-left;
 }
 
 .discord-app-launcher-list-item:hover,
@@ -115,11 +113,11 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item:focus-visible {
-	@apply outline-2 outline-offset-1 outline-primary;
+	@apply outline-primary outline-2 outline-offset-1;
 }
 
 .discord-app-launcher-list-item-icon {
-	@apply inline-flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-[10px];
+	@apply size-10 inline-flex shrink-0 items-center justify-center overflow-hidden rounded-[10px];
 	background-color: var(--discord-app-launcher-list-item-icon-bg);
 }
 
@@ -132,7 +130,7 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item-avatar--wolfstar {
-	@apply object-contain p-1;
+	@apply p-1 object-contain;
 }
 
 .discord-app-launcher-list-item-glyph {
@@ -140,15 +138,15 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item-body {
-	@apply flex min-w-0 flex-1 flex-col gap-0.5;
+	@apply min-w-0 gap-0.5 flex flex-1 flex-col;
 }
 
 .discord-app-launcher-list-item-title-row {
-	@apply flex min-w-0 items-center gap-1.5;
+	@apply min-w-0 gap-1.5 flex items-center;
 }
 
 .discord-app-launcher-list-item-name {
-	@apply truncate text-base leading-tight font-medium;
+	@apply text-base leading-tight font-medium truncate;
 	color: var(--discord-app-launcher-list-item-name);
 }
 
@@ -158,18 +156,18 @@ const ariaLabel = computed(() => {
 }
 
 .discord-app-launcher-list-item-promoted {
-	@apply shrink-0 rounded-full px-1.5 py-0.5 text-[10px] leading-none font-bold tracking-wide uppercase;
+	@apply px-1.5 py-0.5 font-bold tracking-wide shrink-0 rounded-full text-[10px] leading-none uppercase;
 	background-color: var(--discord-app-launcher-list-item-promoted-bg);
 	color: var(--discord-app-launcher-list-item-promoted-text);
 }
 
 .discord-app-launcher-list-item-description {
-	@apply truncate text-sm leading-snug;
+	@apply text-sm leading-snug truncate;
 	color: var(--discord-app-launcher-list-item-description);
 }
 
 .discord-app-launcher-list-item-chevron {
-	@apply hidden size-4 shrink-0;
+	@apply size-4 hidden shrink-0;
 	color: var(--discord-app-launcher-list-item-chevron);
 }
 
@@ -187,7 +185,7 @@ const ariaLabel = computed(() => {
 	}
 
 	.discord-app-launcher-list-item-name {
-		@apply text-[15px] font-bold;
+		@apply font-bold text-[15px];
 	}
 
 	.discord-app-launcher-list-item-description {

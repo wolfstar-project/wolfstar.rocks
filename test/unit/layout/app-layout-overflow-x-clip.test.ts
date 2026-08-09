@@ -1,5 +1,5 @@
 /**
- * Full-bleed sections inside the width-constrained UMain use:
+ * Full-bleed sections inside the width-constrained StarMain use:
  *
  *   width: 100vw;
  *   margin-inline: calc(50% - 50vw);

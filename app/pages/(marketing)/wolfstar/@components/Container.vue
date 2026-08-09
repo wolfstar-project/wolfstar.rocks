@@ -5,9 +5,7 @@
 </template>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .home-container {
-	@apply mx-auto w-full max-w-275 px-4 sm:px-6 lg:px-8;
+	@apply max-w-275 px-4 sm:px-6 lg:px-8 mx-auto w-full;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<UContainer class="mx-auto max-w-3xl space-y-8 px-4 py-12">
+	<StarContainer class="max-w-3xl space-y-8 px-4 py-12 mx-auto">
 		<header class="space-y-2">
 			<h1 class="text-3xl font-bold text-base-content">
 				{{ t("translation_status.title") }}
@@ -38,11 +38,11 @@
 				<li
 					v-for="localeStatus of status.locales"
 					:key="localeStatus.lang"
-					class="rounded-lg border border-base-200 bg-base-200/30 p-4"
+					class="rounded-lg border-base-200 bg-base-200/30 p-4 border"
 					:lang="localeStatus.lang"
 					:dir="localeStatus.dir"
 				>
-					<div class="mb-2 flex flex-wrap items-center justify-between gap-2">
+					<div class="mb-2 gap-2 flex flex-wrap items-center justify-between">
 						<div>
 							<strong class="text-base-content">{{ localeStatus.label }}</strong>
 							<span class="ms-2 text-sm text-muted">{{ localeStatus.lang }}</span>
@@ -54,7 +54,7 @@
 						</span>
 					</div>
 					<div
-						class="h-2 overflow-hidden rounded-full bg-base-300"
+						class="h-2 bg-base-300 overflow-hidden rounded-full"
 						role="progressbar"
 						:aria-valuenow="localeStatus.percentComplete"
 						aria-valuemin="0"
@@ -62,12 +62,12 @@
 						:aria-label="`${localeStatus.label}: ${localeStatus.percentComplete}%`"
 					>
 						<div
-							class="h-full rounded-full bg-primary transition-[width]"
+							class="bg-primary h-full rounded-full transition-[width]"
 							:style="{ width: `${localeStatus.percentComplete}%` }"
 						/>
 					</div>
-					<div class="mt-3 flex flex-wrap gap-3 text-sm">
-						<UButton
+					<div class="mt-3 gap-3 text-sm flex flex-wrap">
+						<StarButton
 							:to="localeStatus.githubEditUrl"
 							target="_blank"
 							rel="noopener noreferrer"
@@ -93,7 +93,7 @@
 		<p v-else class="text-base-content/70">
 			{{ t("translation_status.no_data") }}
 		</p>
-	</UContainer>
+	</StarContainer>
 </template>
 
 <script setup lang="ts">

@@ -55,18 +55,16 @@ defineSlots<ChatSlots>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-chat {
 	/* Discord-true channel chrome (oklch); showcase may override via --showcase tokens. */
 	--discord-chat-bg: oklch(26.65% 0.006 272.93);
 
-	@apply flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden font-whitney;
+	@apply min-h-0 min-w-0 font-whitney flex flex-1 flex-col overflow-hidden;
 	background-color: var(--discord-chat-bg);
 }
 
 .discord-chat-scrollbar {
-	@apply h-full max-h-full min-h-0 flex-1;
+	@apply min-h-0 h-full max-h-full flex-1;
 }
 
 /* Fill the scrollport so mt-auto on the inner block can pin short channels. */
@@ -75,15 +73,15 @@ defineSlots<ChatSlots>();
 }
 
 .discord-chat-scroller-inner {
-	@apply flex w-full min-w-0 flex-col;
+	@apply min-w-0 flex w-full flex-col;
 }
 
 .discord-chat-messages {
-	@apply flex flex-col gap-0 px-2 pt-1 pb-4 sm:px-4;
+	@apply gap-0 px-2 pt-1 pb-4 sm:px-4 flex flex-col;
 }
 
 .discord-chat-messages :deep(.discord-message) {
-	@apply rounded-none px-2 py-1.5 sm:px-2 sm:py-1.5;
+	@apply px-2 py-1.5 sm:px-2 sm:py-1.5 rounded-none;
 	background-color: transparent;
 }
 

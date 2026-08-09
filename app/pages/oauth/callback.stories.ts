@@ -28,13 +28,13 @@ export const NoCode: Story = {
 				>
 					<template #description>
 						This page can't be accessed directly. Please
-						<ULink to="/login" class="font-medium underline">sign in</ULink>
+						<StarLink to="/login" class="font-medium underline">sign in</StarLink>
 						to continue.
 					</template>
 					<template #actions>
-						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+						<StarButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Go to Login
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</div>
@@ -72,9 +72,9 @@ export const SignInError: Story = {
 						The authorization code was invalid or expired. Please try signing in again.
 					</template>
 					<template #actions>
-						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+						<StarButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Try Again
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</div>
@@ -95,9 +95,9 @@ export const SessionNotFound: Story = {
 						Your login session could not be loaded. Please sign in again.
 					</template>
 					<template #actions>
-						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+						<StarButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Try Again
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</div>

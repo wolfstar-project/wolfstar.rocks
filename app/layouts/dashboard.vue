@@ -1,6 +1,6 @@
 <template>
-	<UDashboardGroup unit="rem">
-		<UDashboardSidebar
+	<StarDashboardGroup unit="rem">
+		<StarDashboardSidebar
 			id="default"
 			collapsible
 			resizable
@@ -11,8 +11,8 @@
 			}"
 		>
 			<template #header="{ collapsed }">
-				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-					<UAvatar
+				<div v-if="guildData" class="gap-0.5 flex cursor-pointer items-center">
+					<StarAvatar
 						:src="guildIconSrc"
 						:text="guildData.acronym"
 						:alt="guildData.name"
@@ -20,15 +20,15 @@
 					/>
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
-				<div v-else class="flex h-10 items-center justify-center">
-					<USkeleton class="mr-2 h-10 w-10 rounded-full" />
+				<div v-else class="h-10 flex items-center justify-center">
+					<StarSkeleton class="mr-2 h-10 w-10 rounded-full" />
 					<div v-if="!collapsed" class="ms-2">
-						<USkeleton class="h-4 w-24 rounded" />
+						<StarSkeleton class="h-4 w-24 rounded" />
 					</div>
 				</div>
 			</template>
 			<template #default="{ collapsed }">
-				<UNavigationMenu
+				<StarNavigationMenu
 					:collapsed="collapsed"
 					:items="items[0]"
 					orientation="vertical"
@@ -36,7 +36,7 @@
 					popover
 				/>
 
-				<UNavigationMenu
+				<StarNavigationMenu
 					:collapsed="collapsed"
 					:items="items[1]"
 					orientation="vertical"
@@ -48,16 +48,16 @@
 			<template #footer="{ collapsed }">
 				<UserMenu :collapsed="collapsed" />
 			</template>
-		</UDashboardSidebar>
+		</StarDashboardSidebar>
 
 		<slot v-if="isReadyToRender"></slot>
 		<div
 			v-else-if="nuxtError"
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
+			class="space-y-4 px-4 flex min-h-screen w-full flex-col items-center justify-center text-center"
 			role="alert"
 			:aria-label="t('dashboard.error_aria')"
 		>
-			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
+			<Icon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
 				<h2 class="text-xl font-semibold text-base-content">
 					{{ nuxtError.statusMessage || t("dashboard.error_title") }}
@@ -72,12 +72,12 @@
 		</div>
 		<div
 			v-else
-			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
+			class="space-y-4 px-4 flex min-h-screen w-full flex-col items-center justify-center"
 			role="status"
 			:aria-label="t('dashboard.loading_aria')"
 		>
-			<div class="flex flex-col items-center space-y-4">
-				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
+			<div class="space-y-4 flex flex-col items-center">
+				<Icon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
 					<h2 class="text-xl font-semibold text-base-content">
 						{{ t("dashboard.loading_title") }}
@@ -86,15 +86,15 @@
 						{{ t("dashboard.loading_description") }}
 					</p>
 				</div>
-				<div class="flex items-center space-x-2">
+				<div class="space-x-2 flex items-center">
 					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary"
+						class="h-2 w-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full"
 					></div>
 					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:200ms]"
+						class="h-2 w-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full [animation-delay:200ms]"
 					></div>
 					<div
-						class="h-2 w-2 animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full bg-primary [animation-delay:400ms]"
+						class="h-2 w-2 bg-primary animate-[dot-pulse_600ms_ease-in-out_infinite] rounded-full [animation-delay:400ms]"
 					></div>
 				</div>
 			</div>
@@ -110,42 +110,42 @@
 			<div
 				v-if="isReadyToSubmit"
 				style="view-transition-name: save-changes-bar"
-				class="fixed right-4 bottom-4 z-50 flex flex-col space-y-2"
+				class="right-4 bottom-4 space-y-2 fixed z-50 flex flex-col"
 			>
-				<UFieldGroup>
-					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
+				<StarFieldGroup>
+					<StarButton color="primary" icon="heroicons:check" @click="submitChanges">
 						{{ t("dashboard.save_changes") }}
-					</UButton>
-					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
+					</StarButton>
+					<StarButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
 						{{ t("dashboard.reset_changes") }}
-					</UButton>
-				</UFieldGroup>
+					</StarButton>
+				</StarFieldGroup>
 			</div>
 		</Transition>
 
-		<UModal
+		<StarModal
 			v-model:open="showDialog"
 			:title="t('dashboard.unsaved_title')"
 			:description="t('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
-				<div class="flex justify-end gap-2">
-					<UButton color="neutral" variant="ghost" @click="cancelLeave">
+				<div class="gap-2 flex justify-end">
+					<StarButton color="neutral" variant="ghost" @click="cancelLeave">
 						{{ t("dashboard.stay_on_page") }}
-					</UButton>
-					<UButton color="error" @click="confirmLeave">
+					</StarButton>
+					<StarButton color="error" @click="confirmLeave">
 						{{ t("dashboard.discard_changes") }}
-					</UButton>
+					</StarButton>
 				</div>
 			</template>
-		</UModal>
-	</UDashboardGroup>
+		</StarModal>
+	</StarDashboardGroup>
 </template>
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { NavigationMenuItem } from "@nuxt/ui";
+import type { NavigationMenuItem } from "#shared/types/ui";
 import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";

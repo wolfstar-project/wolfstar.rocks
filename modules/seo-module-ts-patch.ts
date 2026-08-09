@@ -6,7 +6,13 @@ export default defineNuxtModule({
 		name: "seo-module-ts-patch",
 	},
 	async setup(_options, nuxt) {
-		nuxt.hook("prepare:types", ({ nodeReferences }) => {
+		nuxt.hook("prepare:types", (payload) => {
+			const nodeReferences = (
+				payload as {
+					nodeReferences?: Array<{ path: string }>;
+				}
+			).nodeReferences;
+			if (!nodeReferences) return;
 			nodeReferences.push(
 				...[
 					"module/nuxt-site-config.d.ts",

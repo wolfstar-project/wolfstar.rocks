@@ -30,9 +30,14 @@
 						{{ error }}
 					</template>
 					<template #actions>
-						<UButton to="/login" size="sm" variant="outline" class="w-full sm:w-auto">
+						<StarButton
+							to="/login"
+							size="sm"
+							variant="outline"
+							class="sm:w-auto w-full"
+						>
 							{{ t("auth.oauth.guild_return_login") }}
-						</UButton>
+						</StarButton>
 					</template>
 				</OauthStatusPanel>
 			</template>

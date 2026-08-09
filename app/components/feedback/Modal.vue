@@ -1,11 +1,11 @@
 <template>
-	<UModal
+	<StarModal
 		v-model:open="open"
 		:title="t('feedback.title')"
 		:description="t('feedback.description')"
 	>
 		<template #body>
-			<UForm
+			<StarForm
 				id="feedback-form"
 				ref="formRef"
 				:schema
@@ -14,45 +14,50 @@
 				@submit="onSubmit"
 				@error="onError"
 			>
-				<UFormField v-if="!isDashboard" name="name" :label="t('feedback.name')" required>
-					<UInput
+				<StarFormField v-if="!isDashboard" name="name" :label="t('feedback.name')" required>
+					<StarInput
 						v-model="state.name"
 						:placeholder="t('feedback.name_placeholder')"
 						class="w-full"
 					/>
-				</UFormField>
+				</StarFormField>
 
-				<UFormField v-if="!isDashboard" name="email" :label="t('feedback.email')" required>
-					<UInput
+				<StarFormField
+					v-if="!isDashboard"
+					name="email"
+					:label="t('feedback.email')"
+					required
+				>
+					<StarInput
 						v-model="state.email"
 						type="email"
 						:placeholder="t('feedback.email_placeholder')"
 						class="w-full"
 					/>
-				</UFormField>
+				</StarFormField>
 
-				<UFormField name="message" :label="t('feedback.message')" required>
-					<UTextarea
+				<StarFormField name="message" :label="t('feedback.message')" required>
+					<StarTextarea
 						v-model="state.message"
 						:placeholder="t('feedback.message_placeholder')"
 						:rows="4"
 						class="w-full"
 					/>
-				</UFormField>
-			</UForm>
+				</StarFormField>
+			</StarForm>
 		</template>
 
 		<template #footer>
-			<div class="flex justify-end gap-2">
-				<UButton
+			<div class="gap-2 flex justify-end">
+				<StarButton
 					color="neutral"
 					variant="ghost"
 					:disabled="isSubmitting"
 					@click="open = false"
 				>
 					{{ t("common.cancel") }}
-				</UButton>
-				<UButton
+				</StarButton>
+				<StarButton
 					type="submit"
 					form="feedback-form"
 					color="primary"
@@ -60,14 +65,14 @@
 					icon="i-lucide-send"
 				>
 					{{ t("feedback.send") }}
-				</UButton>
+				</StarButton>
 			</div>
 		</template>
-	</UModal>
+	</StarModal>
 </template>
 
 <script setup lang="ts">
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/schemas";
 import { captureFeedback } from "@sentry/nuxt";
 

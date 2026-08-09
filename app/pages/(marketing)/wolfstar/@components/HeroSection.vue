@@ -1,14 +1,19 @@
 <template>
 	<section
-		class="home-hero relative overflow-hidden pt-25 pb-14"
+		class="home-hero pt-25 pb-14 relative overflow-hidden"
 		aria-labelledby="home-hero-heading"
 	>
 		<Container class="relative z-10">
-			<div class="mx-auto flex max-w-200 flex-col items-center text-center">
+			<div class="max-w-200 mx-auto flex flex-col items-center text-center">
 				<div
-					class="mb-6 flex animate-fade-in-up-safe flex-wrap items-center justify-center gap-2"
+					class="mb-6 animate-fade-in-up-safe gap-2 flex flex-wrap items-center justify-center"
 				>
-					<UBadge color="neutral" variant="subtle" size="sm" class="hero-overlay-badge">
+					<StarBadge
+						color="neutral"
+						variant="subtle"
+						size="sm"
+						class="hero-overlay-badge"
+					>
 						v{{ buildVersion }} ·
 						<NuxtTime
 							:datetime="buildTime"
@@ -16,9 +21,9 @@
 							day="numeric"
 							year="numeric"
 						/>
-					</UBadge>
-					<UBadge color="primary" variant="subtle" size="sm" label="Open Source" />
-					<UBadge color="success" variant="subtle" size="sm" label="Free Forever" />
+					</StarBadge>
+					<StarBadge color="primary" variant="subtle" size="sm" label="Open Source" />
+					<StarBadge color="success" variant="subtle" size="sm" label="Free Forever" />
 				</div>
 
 				<h1
@@ -29,7 +34,7 @@
 				</h1>
 
 				<div
-					class="my-5 flex animate-fade-in-up-safe justify-center gap-1 [animation-delay:0.05s]"
+					class="my-5 animate-fade-in-up-safe gap-1 flex justify-center [animation-delay:0.05s]"
 					aria-hidden="true"
 				>
 					<span
@@ -47,27 +52,27 @@
 				</p>
 
 				<div
-					class="mt-8 flex animate-fade-in-up-safe flex-col gap-3 [animation-delay:0.15s] sm:flex-row sm:justify-center"
+					class="mt-8 animate-fade-in-up-safe gap-3 sm:flex-row sm:justify-center flex flex-col [animation-delay:0.15s]"
 				>
-					<UButton
+					<StarButton
 						:to="inviteUrl"
 						size="lg"
 						color="primary"
-						class="btn-glow justify-center sm:min-w-45"
+						class="btn-glow sm:min-w-45 justify-center"
 						icon="ph:plus-circle-fill"
 					>
 						Add to Discord
-					</UButton>
-					<UButton
+					</StarButton>
+					<StarButton
 						to="#features"
 						size="lg"
 						color="neutral"
 						variant="outline"
-						class="hero-outline-btn justify-center sm:min-w-45"
+						class="hero-outline-btn sm:min-w-45 justify-center"
 						icon="ph:magnifying-glass-fill"
 					>
 						Explore features
-					</UButton>
+					</StarButton>
 				</div>
 			</div>
 		</Container>
@@ -94,10 +99,8 @@ const spectrumBar = [
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .home-hero-title {
-	@apply text-4xl leading-[1.1] font-bold md:text-[3.75rem];
+	@apply text-4xl font-bold md:text-[3.75rem] leading-[1.1];
 	letter-spacing: var(--home-ls-tight);
 }
 

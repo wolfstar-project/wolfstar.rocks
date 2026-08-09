@@ -1,15 +1,15 @@
 <template>
-	<UDashboardPanel id="home">
+	<StarDashboardPanel id="home">
 		<template #header>
-			<UDashboardNavbar :title="t('guild_logs.title')" :ui="{ right: 'gap-3' }">
+			<StarDashboardNavbar :title="t('guild_logs.title')" :ui="{ right: 'gap-3' }">
 				<template #leading>
-					<UDashboardSidebarCollapse />
+					<StarDashboardSidebarCollapse />
 				</template>
-			</UDashboardNavbar>
+			</StarDashboardNavbar>
 		</template>
 
 		<template #body>
-			<UTabs
+			<StarTabs
 				v-model="activeTab"
 				:items="tabs"
 				:unmount-on-hide="false"
@@ -27,13 +27,13 @@
 						<GuildLogsDashboardActivityTable v-else-if="item.value === 'activity'" />
 					</div>
 				</template>
-			</UTabs>
+			</StarTabs>
 		</template>
-	</UDashboardPanel>
+	</StarDashboardPanel>
 </template>
 
 <script setup lang="ts">
-import type { TabsItem } from "@nuxt/ui";
+import type { TabsItem } from "#shared/types/ui";
 import { useRouteParams } from "@vueuse/router";
 
 definePageMeta({

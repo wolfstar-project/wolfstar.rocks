@@ -3,29 +3,29 @@
 		<!-- Skeleton -->
 		<div v-if="loading" class="space-y-6">
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-28" />
-				<div v-for="i in 4" :key="i" class="flex items-center gap-3">
-					<USkeleton class="h-6 w-11 shrink-0 rounded-full" />
+				<StarSkeleton class="h-7 w-28" />
+				<div v-for="i in 4" :key="i" class="gap-3 flex items-center">
+					<StarSkeleton class="h-6 w-11 shrink-0 rounded-full" />
 					<div class="space-y-1.5">
-						<USkeleton class="h-4 w-32" />
-						<USkeleton class="h-3 w-56" />
+						<StarSkeleton class="h-4 w-32" />
+						<StarSkeleton class="h-3 w-56" />
 					</div>
 				</div>
 			</div>
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-32" />
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<USkeleton class="h-10 w-full" />
-					<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-7 w-32" />
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+					<StarSkeleton class="h-10 w-full" />
+					<StarSkeleton class="h-10 w-full" />
 				</div>
-				<USkeleton class="h-10 w-full" />
-				<USkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-10 w-full" />
+				<StarSkeleton class="h-10 w-full" />
 			</div>
 			<div class="space-y-3">
-				<USkeleton class="h-7 w-32" />
-				<div class="flex gap-2">
-					<USkeleton class="h-10 w-48" />
-					<USkeleton class="h-10 w-20" />
+				<StarSkeleton class="h-7 w-32" />
+				<div class="gap-2 flex">
+					<StarSkeleton class="h-10 w-48" />
+					<StarSkeleton class="h-10 w-20" />
 				</div>
 			</div>
 		</div>
@@ -43,15 +43,15 @@
 			<!-- Section 1: Word Filter -->
 			<GuildSettingsSection :title="t('guild_settings.filter.word.title')">
 				<div class="space-y-3">
-					<UFormField name="selfmodFilterEnabled">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="selfmodFilterEnabled">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.selfmodFilterEnabled"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{
 										t("guild_settings.filter.word.filter_label", {
 											state: state.selfmodFilterEnabled
@@ -65,17 +65,17 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionAlerts">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="softActionAlerts">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.softActionAlerts"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.alerts_toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{ t("guild_settings.filter.common.alerts") }}
 									{{
 										state.softActionAlerts
@@ -88,17 +88,17 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionLogs">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="softActionLogs">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.softActionLogs"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.logging_toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{ t("guild_settings.filter.common.logging") }}
 									{{
 										state.softActionLogs
@@ -111,17 +111,17 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField name="softActionDeletes">
-						<div class="flex items-start gap-3">
-							<USwitch
+					<StarFormField name="softActionDeletes">
+						<div class="gap-3 flex items-start">
+							<StarSwitch
 								v-model="state.softActionDeletes"
 								class="mt-0.5"
 								:aria-label="t('guild_settings.filter.word.delete_toggle')"
 							/>
 							<div>
-								<p class="text-sm leading-none font-medium">
+								<p class="text-sm font-medium leading-none">
 									{{ t("guild_settings.filter.common.delete_message") }}
 									{{
 										state.softActionDeletes
@@ -134,7 +134,7 @@
 								</p>
 							</div>
 						</div>
-					</UFormField>
+					</StarFormField>
 				</div>
 			</GuildSettingsSection>
 
@@ -142,21 +142,21 @@
 
 			<!-- Section 2: Punishments -->
 			<GuildSettingsSection :title="t('guild_settings.filter.common.punishments')">
-				<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-					<UFormField
+				<div class="gap-4 md:grid-cols-2 grid grid-cols-1">
+					<StarFormField
 						:label="t('guild_settings.filter.common.hard_action')"
 						name="selfmodFilterHardAction"
 						:description="t('guild_settings.filter.common.hard_action_description')"
 					>
-						<USelectMenu
+						<StarSelectMenu
 							v-model="selectedHardAction"
 							:items="hardActionItems"
 							class="w-full"
 							:aria-label="t('guild_settings.filter.common.select_action_aria')"
 						/>
-					</UFormField>
+					</StarFormField>
 
-					<UFormField
+					<StarFormField
 						:label="t('guild_settings.filter.common.duration')"
 						name="hardActionDurationMs"
 						:description="t('guild_settings.filter.common.duration_help')"
@@ -166,7 +166,7 @@
 							:min="1000"
 							:max="31_536_000_000"
 						/>
-					</UFormField>
+					</StarFormField>
 				</div>
 
 				<div class="mt-4 space-y-5">
@@ -177,13 +177,13 @@
 								>({{ state.selfmodFilterThresholdMaximum }})</span
 							>
 						</p>
-						<USlider
+						<StarSlider
 							v-model="state.selfmodFilterThresholdMaximum"
 							:min="0"
 							:max="60"
 							:aria-label="t('guild_settings.filter.common.threshold_maximum')"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0</span>
 							<span>60</span>
 						</div>
@@ -196,13 +196,13 @@
 								>({{ state.selfmodFilterThresholdDurationSeconds }}s)</span
 							>
 						</p>
-						<USlider
+						<StarSlider
 							v-model="state.selfmodFilterThresholdDurationSeconds"
 							:min="0"
 							:max="120"
 							:aria-label="t('guild_settings.filter.common.threshold_duration')"
 						/>
-						<div class="mt-1 flex justify-between text-xs text-muted">
+						<div class="mt-1 text-xs text-muted flex justify-between">
 							<span>0s</span>
 							<span>120s</span>
 						</div>
@@ -215,25 +215,25 @@
 			<!-- Section 3: Filtered Words -->
 			<GuildSettingsSection :title="t('guild_settings.filter.word.filtered_words')">
 				<div class="space-y-4">
-					<form class="flex gap-2" @submit.prevent="addWord">
-						<UInput
+					<form class="gap-2 flex" @submit.prevent="addWord">
+						<StarInput
 							v-model="newWord"
 							:placeholder="t('guild_settings.filter.word.add_placeholder')"
 							class="w-64"
 							:aria-label="t('guild_settings.filter.word.add_word')"
 						/>
-						<UButton type="submit" color="primary">
+						<StarButton type="submit" color="primary">
 							{{ t("common.confirm") }}
-						</UButton>
+						</StarButton>
 					</form>
 
-					<div v-if="state.selfmodFilterRaw.length > 0" class="flex flex-wrap gap-2">
-						<UBadge
+					<div v-if="state.selfmodFilterRaw.length > 0" class="gap-2 flex flex-wrap">
+						<StarBadge
 							v-for="word in state.selfmodFilterRaw"
 							:key="word"
 							color="primary"
 							variant="soft"
-							class="flex items-center gap-1"
+							class="gap-1 flex items-center"
 						>
 							{{ word }}
 							<button
@@ -242,9 +242,9 @@
 								:aria-label="t('guild_settings.filter.word.remove_word', { word })"
 								@click="removeWord(word)"
 							>
-								<UIcon name="heroicons:x-mark" class="size-3" />
+								<Icon name="heroicons:x-mark" class="size-3" />
 							</button>
-						</UBadge>
+						</StarBadge>
 					</div>
 				</div>
 			</GuildSettingsSection>
@@ -254,7 +254,7 @@
 
 <script setup lang="ts">
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
 import { WordFilterSchema, type WordFilter } from "#shared/schemas";
 
 function sanitizeWord(raw: string): string {

@@ -1,5 +1,5 @@
 <template>
-	<div class="discord-reactions mt-1 flex gap-1">
+	<div class="discord-reactions mt-1 gap-1 flex">
 		<slot></slot>
 	</div>
 </template>
@@ -17,8 +17,6 @@ defineSlots<ReactionsSlots>();
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
 .discord-reactions {
 	@apply font-whitney;
 }

@@ -12,16 +12,16 @@
 			:height="size.dimensions"
 			:alt="`${profile.name} avatar`"
 		/>
-		<UIcon
+		<StarIcon
 			v-else-if="user === 'baddie'"
 			name="ph:smiley-angry-fill"
 			class="discord-message-avatar baddie size-full"
 			aria-hidden="true"
 		/>
-		<UIcon
+		<StarIcon
 			v-else
 			name="ph:shooting-star-fill"
-			class="h-full w-full text-info"
+			class="text-info h-full w-full"
 			aria-hidden="true"
 		/>
 	</div>
@@ -49,7 +49,6 @@ const size = computed(() => Sizes[sizeKey]);
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
 .discord-message-avatar-wrapper {
 	@apply flex-none overflow-hidden rounded-full select-none;
 }

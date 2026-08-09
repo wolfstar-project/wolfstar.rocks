@@ -6,33 +6,33 @@
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<dl
-			class="grid grid-cols-2 gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4"
+			class="gap-x-4 gap-y-3 md:grid-cols-3 md:gap-x-8 md:gap-y-4 grid grid-cols-2"
 			:aria-label="t('guild_settings.general.server_stats_aria')"
 		>
 			<div
 				v-for="stat in serverStats"
 				:key="stat.label"
-				class="flex min-w-0 items-baseline justify-between md:justify-start md:gap-2"
+				class="min-w-0 md:justify-start md:gap-2 flex items-baseline justify-between"
 			>
-				<dt class="truncate text-sm font-semibold text-base-content/70 md:text-base">
+				<dt class="text-sm font-semibold text-base-content/70 md:text-base truncate">
 					{{ stat.label }}:
 				</dt>
-				<dd class="shrink-0 text-base font-bold text-base-content md:text-lg">
+				<dd class="text-base font-bold text-base-content md:text-lg shrink-0">
 					{{ stat.value.toLocaleString() }}
 				</dd>
 			</div>
 		</dl>
 
-		<div class="mt-4 flex flex-col items-start gap-3 md:flex-row">
-			<UButton
+		<div class="mt-4 gap-3 md:flex-row flex flex-col items-start">
+			<StarButton
 				color="neutral"
 				variant="link"
 				:icon="copied ? 'heroicons:check' : 'heroicons:clipboard-document'"
 				@click="copyServerId"
 			>
 				{{ copied ? t("common.copied") : t("guild_settings.general.copy_server_id") }}
-			</UButton>
-			<UButton
+			</StarButton>
+			<StarButton
 				color="neutral"
 				variant="link"
 				icon="heroicons:question-mark-circle"
@@ -41,26 +41,26 @@
 				rel="noopener noreferrer"
 			>
 				{{ t("guild_settings.general.need_help") }}
-			</UButton>
+			</StarButton>
 		</div>
 	</GuildSettingsSection>
 
 	<GuildSettingsSection
 		:title="t('guild_settings.general.title')"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="rounded-md border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6 border"
 		:ui="{ heading: 'text-xl font-bold tracking-wide' }"
 	>
 		<GuildSettingsForm
 			:schema="schema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			class="grid grid-cols-1 gap-6 md:grid-cols-2"
+			class="gap-6 md:grid-cols-2 grid grid-cols-1"
 			:aria-label="t('guild_settings.general.form_aria')"
 			@error="onError"
 		>
 			<div>
-				<UFormField :label="t('guild_settings.general.prefix')" name="prefix">
-					<UInput
+				<StarFormField :label="t('guild_settings.general.prefix')" name="prefix">
+					<StarInput
 						id="prefix"
 						v-model="state.prefix"
 						:placeholder="t('guild_settings.general.prefix_placeholder')"
@@ -79,7 +79,7 @@
 								{{ state.prefix?.length }}/10
 							</div>
 						</template>
-					</UInput>
+					</StarInput>
 					<template #error="{ error }">
 						<p class="text-sm text-error">{{ error }}</p>
 					</template>
@@ -88,17 +88,17 @@
 							{{ t("guild_settings.general.prefix_description") }}
 						</p>
 					</template>
-				</UFormField>
+				</StarFormField>
 			</div>
 
 			<div>
-				<UFormField :label="t('guild_settings.general.language')" name="language">
+				<StarFormField :label="t('guild_settings.general.language')" name="language">
 					<template #description>
 						<p id="language-description" class="text-sm text-base-content/70">
 							{{ t("guild_settings.general.language_description") }}
 						</p>
 					</template>
-					<USelectMenu
+					<StarSelectMenu
 						id="language"
 						v-model="state.language"
 						color="primary"
@@ -112,7 +112,7 @@
 					<template #error="{ error }">
 						<p class="text-sm text-error">{{ error }}</p>
 					</template>
-				</UFormField>
+				</StarFormField>
 			</div>
 		</GuildSettingsForm>
 	</GuildSettingsSection>
@@ -127,10 +127,10 @@
 		:empty-title="t('guild_settings.general.no_activity')"
 		:empty-description="t('guild_settings.general.no_activity_description')"
 		:refresh-label="t('guild_logs.refresh_audit')"
-		class="rounded-md border border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6"
+		class="rounded-md border-base-200 bg-base-200/30 p-3 sm:border-2 sm:p-4 md:p-6 border"
 		@refresh="refreshAuditLog()"
 	>
-		<UTable
+		<StarTable
 			ref="table"
 			:data="auditEntries"
 			:columns="auditLogColumns"
@@ -153,8 +153,8 @@
 
 <script lang="ts" setup>
 import type { GuildData } from "#server/database";
-import type { FormErrorEvent } from "@nuxt/ui";
-import type { TableColumn } from "@nuxt/ui";
+import type { FormErrorEvent } from "#shared/types/ui";
+import type { TableColumn } from "#shared/types/ui";
 import {
 	GeneralSettingsSchema as schema,
 	type GeneralSettingsSchemaType as Schema,
@@ -174,7 +174,7 @@ const toast = useToast();
 
 const { copy, copied } = useClipboard();
 
-const UAvatar = resolveComponent("UAvatar");
+const StarAvatar = resolveComponent("StarAvatar");
 
 const auditLogPage = ref(1);
 const page = ref(10);
@@ -211,7 +211,7 @@ const auditLogColumns = computed<TableColumn<(typeof auditEntries.value)[number]
 		header: t("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
-				h(UAvatar, {
+				h(StarAvatar, {
 					...auditLogMemberAvatar(row.original.member),
 					size: "lg",
 				}),

@@ -132,7 +132,7 @@ describe("invite link filter guild settings", () => {
 		expect(wrapper.find('form[aria-label="Invite link filter settings form"]').exists()).toBe(
 			false,
 		);
-		expect(wrapper.findAllComponents({ name: "USkeleton" }).length).toBeGreaterThan(0);
+		expect(wrapper.findAllComponents({ name: "StarSkeleton" }).length).toBeGreaterThan(0);
 	});
 
 	it("shows form when guildSettings is loaded", async () => {
@@ -144,6 +144,6 @@ describe("invite link filter guild settings", () => {
 		expect(wrapper.find('form[aria-label="Invite link filter settings form"]').exists()).toBe(
 			true,
 		);
-		expect(wrapper.findAllComponents({ name: "USkeleton" })).toHaveLength(0);
+		expect(wrapper.findAllComponents({ name: "StarSkeleton" })).toHaveLength(0);
 	});
 });

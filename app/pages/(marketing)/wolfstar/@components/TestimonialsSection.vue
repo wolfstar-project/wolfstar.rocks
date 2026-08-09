@@ -13,7 +13,7 @@
 		/>
 
 		<div
-			class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-flow-dense lg:auto-rows-[minmax(12.5rem,auto)] lg:grid-cols-4"
+			class="gap-5 sm:grid-cols-2 lg:grid-flow-dense lg:auto-rows-[minmax(12.5rem,auto)] lg:grid-cols-4 grid grid-cols-1"
 		>
 			<SurfaceCard
 				v-for="testimonial of testimonials"
@@ -32,7 +32,7 @@
 					:class="
 						cn(
 							'leading-relaxed text-base-content',
-							testimonial.big ? 'text-[1.375rem] font-medium' : 'text-[15px]',
+							testimonial.big ? 'font-medium text-[1.375rem]' : 'text-[15px]',
 						)
 					"
 				>
@@ -65,9 +65,7 @@ const { testimonials } = defineProps<{
 </script>
 
 <style scoped>
-@reference "@/assets/css/main.css";
-
-/* Full-bleed out of UMain's max-width; page overflow clipped on .app-layout */
+/* Full-bleed out of StarMain's max-width; page overflow clipped on .app-layout */
 .home-testimonials {
 	width: 100vw;
 	max-width: 100vw;

@@ -50,8 +50,9 @@
 
 - Block order: template -> script -> script setup -> styles
 - Never create reactive state at module scope; use composables in `app/composables/`
-- Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`
+- Place feature-specific components in grouped directories once a feature has multiple pieces, e.g. feedback UI in `app/components/feedback/`, OAuth status UI in `app/components/oauth/` (`StatusPanel.vue`, shared by all `app/pages/oauth/*.vue` for loading/success/error states)
 - In guild-settings `mapToGuildData()`/`calculateChanges()` functions, assign values onto `Partial<GuildData>` with `setGuildDataChange()` from `#shared/utils/guild-settings-map` instead of an `as any`/`as never` cast — it skips `undefined` so untouched keys stay out of PATCH payloads while keeping key/value types checked
+- Fatal errors render through `app/error.vue` → `app/components/ErrorPage.vue` (built on Nuxt UI's `UError`), with copy sourced from a dedicated `errors` i18n feature file (not `common`/`components`). Because `error.vue` replaces the app root on fatal errors, it must `await loadLocaleMessages(locale.value)` itself before translating — the normal per-route locale preloading doesn't run
 
 ## Auth and Feedback
 
@@ -196,6 +197,8 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - **Hot reload broken:** Check file watcher limits on Linux, restart dev server
 - **Type errors after updates:** Run `pnpm nuxt prepare && pnpm prisma:generate`
 - **Duplicate/incompatible `vue`, `discord-api-types`, or `@unhead/vue`/`unhead` types after a dependency update:** Check the `overrides` in `pnpm-workspace.yaml` still pin a single version of each — two copies make structurally identical (nominally-branded) types incompatible during typecheck
+- **SSR crash reading a `discord-api-types` enum member (e.g. `Cannot read properties of undefined (reading 'VerifiedBot')`):** Vite SSR prebundling can produce a broken CJS interop stub of `discord-api-types/v10` where named enum exports are `undefined`. `vite.ssr.external: ["discord-api-types"]` in `nuxt.config.ts` keeps it external for Node/SSR; the client optimizer still prebundles `discord-api-types/v10` via `vite.optimizeDeps.include` (excluding it there breaks browser-mode Vitest). Module-scope code that reads enum members (e.g. marketing fixtures in `app/utils/constants.ts`) should inline the numeric values instead of importing the enum, so it's safe under either bundling path
+- **`pnpm typecheck` reports unfamiliar diagnostics or behaves differently from stock `tsc`:** `pnpm-workspace.yaml` overrides `typescript` to `typescript-native-bridge` (the `tsgo` native-compiler bridge) — this is an intentional adoption for faster typechecking, not a stray pin, but diagnostic wording/coverage can differ subtly from stock `tsc`
 
 **When in doubt:** Copy existing patterns from similar files (e.g., `server/api/guilds/**`, `app/components/discord/**`) before inventing new ones.
 
@@ -204,6 +207,7 @@ Commit messages must follow Conventional Commits: `<type>(<scope>): <subject>`
 - Client source maps are hidden via `sourcemap.client: "hidden"` and uploaded to Sentry through `@sentry/nuxt`.
 - Keep `sentry.sourcemaps.filesToDeleteAfterUpload` in `nuxt.config.ts` whenever changing source-map or build-output behavior so uploaded `.map` files are removed from `.output/**/public` and hidden deploy output directories.
 - Sentry runtime configuration lives in `sentry.client.config.ts`, `sentry.server.config.ts`, and `server/utils/runtimeConfig.ts`; keep DSNs and sampling in runtime config, not hardcoded values.
+- `sentry.server.config.ts`'s `Sentry.init` `beforeSend` drops events for expected `createError()` HTTP statuses (400/401/403/404/409/429). It distinguishes deliberate application errors from h3-normalized upstream failures (e.g. an ofetch `FetchError` from the bot API) via h3's `unhandled` flag on the `__h3_error__`-marked exception — only `unhandled: false` (deliberate) errors are filtered, so unexpected upstream failures still reach Sentry.
 
 ## Audit Logging
 

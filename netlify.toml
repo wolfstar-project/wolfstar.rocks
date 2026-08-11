@@ -2,7 +2,9 @@
 #  https://docs.netlify.com/configure-builds/file-based-configuration/
 
 [build]
-command = "pnpm prisma:generate && pnpm run build" # build command
+# Lunaria failures only block production/canary deploys (CONTEXT=production, non-PR);
+# previews continue and modules/lunaria.ts retries with its preview-tolerant handling.
+command = "pnpm prisma:generate && (pnpm vp run build:lunaria || [ \"$PULL_REQUEST\" = \"true\" ] || [ \"$CONTEXT\" != \"production\" ]) && pnpm run build" # build command
 publish = "dist" # where the built project lives
 
 [build.environment]

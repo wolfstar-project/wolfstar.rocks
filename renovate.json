@@ -3,9 +3,37 @@
 	"prCreation": "immediate",
 	"extends": ["github>wolfstar-project/.github:wolfstar-renovate"],
 	"packageRules": [
-		{ "groupName": "vite dependencies", "groupSlug": "vite", "matchPackageNames": ["vite", "/^@vitejs//", "/^vite-/"] },
-		{ "extends": ["packages:test"], "matchPackageNames": ["c8", "happy-dom", "jsdom", "/vitest/", "/^@vitest//"], "groupName": "test packages" },
-		{ "extends": ["packages:linters"], "matchPackageNames": ["commitlint", "knip", "publint"], "groupName": "all linters" },
-		{ "groupName": "nuxt core", "groupSlug": "nuxt", "matchPackageNames": ["@nuxt/cli","@nuxt/kit","@nuxt/module-builder","@nuxt/schema","@nuxt/test-utils","@nuxt/vite-builder","@nuxt/webpack-builder","nuxi","nuxt","vue"], "schedule": ["at any time"] }
+		{
+			"groupName": "vite dependencies",
+			"groupSlug": "vite",
+			"matchPackageNames": ["vite", "/^@vitejs//", "/^vite-/"]
+		},
+		{
+			"extends": ["packages:test"],
+			"matchPackageNames": ["c8", "happy-dom", "jsdom", "/vitest/", "/^@vitest//"],
+			"groupName": "test packages"
+		},
+		{
+			"extends": ["packages:linters"],
+			"matchPackageNames": ["commitlint", "knip", "publint"],
+			"groupName": "all linters"
+		},
+		{
+			"groupName": "nuxt core",
+			"groupSlug": "nuxt",
+			"matchPackageNames": [
+				"@nuxt/cli",
+				"@nuxt/kit",
+				"@nuxt/module-builder",
+				"@nuxt/schema",
+				"@nuxt/test-utils",
+				"@nuxt/vite-builder",
+				"@nuxt/webpack-builder",
+				"nuxi",
+				"nuxt",
+				"vue"
+			],
+			"schedule": ["at any time"]
+		}
 	]
 }

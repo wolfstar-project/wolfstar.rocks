@@ -301,6 +301,12 @@ Files added to `ALLOW_LIST` in the test are permanently exempt. Current exemptio
 - `app/components/OgImage/Page.takumi.vue` — Satori does not support `var()` references
 - `app/components/discord/*.vue` (message, embed, mention, role, reaction, scrollbar, the `chat-input-command/` autocomplete family, and the `app-launcher/` family) — Discord brand fidelity requires Discord brand colors; see `ALLOW_LIST` in the test for the exact, growing file list
 
+### Theme Selectors
+
+`@nuxtjs/color-mode` applies `data-theme` (and the matching class) from an inline script, so with JavaScript disabled the html element carries no theme at all. Theme-conditional CSS must therefore go through the `theme-light`/`theme-dark` custom variants declared in `app/assets/css/main.css` — `@variant theme-dark { … }`, never a bare `[data-theme="dark"] & { … }` — because those variants also resolve the attribute-less state from `prefers-color-scheme`. Tailwind's own `dark:` variant is redefined alongside them and must stay identical to `theme-dark`.
+
+Only one DaisyUI theme may declare `default: true` (`light`): two defaults both emit `:where(:root)`, so the last one silently wins wherever no `data-theme` is set. `dark` stays reachable through `prefersdark: true`. `test/unit/design-tokens/theme-fallback.test.ts` enforces all of the above.
+
 ### Token Reference
 
 Prefer these semantic classes before reaching for palette colors:

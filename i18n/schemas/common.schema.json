@@ -82,6 +82,9 @@
 				"profile": {
 					"type": "string"
 				},
+				"settings": {
+					"type": "string"
+				},
 				"sign_out": {
 					"type": "string"
 				}
@@ -184,10 +187,22 @@
 				"appearance": {
 					"type": "string"
 				},
+				"system": {
+					"type": "string"
+				},
 				"light": {
 					"type": "string"
 				},
 				"dark": {
+					"type": "string"
+				},
+				"midnight": {
+					"type": "string"
+				},
+				"midnight_experimental": {
+					"type": "string"
+				},
+				"experimental": {
 					"type": "string"
 				},
 				"enabled": {

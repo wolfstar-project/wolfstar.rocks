@@ -27,6 +27,20 @@ function collectKeys(obj: Nested, prefix = ""): string[] {
 	return keys;
 }
 
+function collectEntries(obj: Nested, prefix = ""): [string, unknown][] {
+	const entries: [string, unknown][] = [];
+	for (const [key, value] of Object.entries(obj)) {
+		if (key === "$schema") continue;
+		const path = prefix ? `${prefix}.${key}` : key;
+		if (typeof value === "object" && value !== null && !Array.isArray(value)) {
+			entries.push(...collectEntries(value as Nested, path));
+		} else {
+			entries.push([path, value]);
+		}
+	}
+	return entries;
+}
+
 describe("i18n locale files", () => {
 	it("has a reference English feature directory", () => {
 		expect(existsSync(join(LOCALES_DIRECTORY, REFERENCE_LOCALE))).toBe(true);
@@ -60,6 +74,31 @@ describe("i18n locale files", () => {
 			const extra = [...keys].filter((key) => !referenceKeys.has(key));
 			expect(missing, `${locale} missing keys`).toEqual([]);
 			expect(extra, `${locale} extra keys`).toEqual([]);
+		}
+	});
+
+	it("never bulk-copies the English source into another language", () => {
+		// `en-US` / `en-GB` are English variants layered on top of `en/*`, so their
+		// values are legitimately identical to the reference.
+		const englishVariants = new Set(["en-US", "en-GB"]);
+		const reference = loadMergedLocale(REFERENCE_LOCALE) as Nested;
+		const referenceValues = new Map(
+			collectEntries(reference).map(([key, value]) => [key, value]),
+		);
+
+		for (const locale of listLocaleCodes()) {
+			if (locale === REFERENCE_LOCALE || englishVariants.has(locale)) continue;
+
+			const entries = collectEntries(loadMergedLocale(locale) as Nested);
+			const copied = entries.filter(
+				([key, value]) => value !== "" && value === referenceValues.get(key),
+			);
+
+			// Untranslated keys belong in the locale file as empty placeholders;
+			// a locale whose every value equals `en/*` is a wholesale English copy.
+			expect(copied.length, `${locale} duplicates every English source string`).toBeLessThan(
+				entries.length,
+			);
 		}
 	});
 

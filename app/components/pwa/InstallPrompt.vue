@@ -3,7 +3,7 @@
 		v-if="$pwa?.showInstallPrompt && !$pwa?.needRefresh"
 		color="primary"
 		variant="soft"
-		title="Install App"
+		:title="t('pwa.install_app')"
 		class="relative m-2 overflow-hidden pr-28 sm:pr-36"
 		v-bind="$attrs"
 	>
@@ -21,11 +21,15 @@
 
 		<template #actions>
 			<div class="mt-2 flex gap-2">
-				<UButton size="sm" @click="$pwa?.install()"> Install </UButton>
+				<UButton size="sm" @click="$pwa?.install()">{{ t("pwa.install") }}</UButton>
 				<UButton size="sm" color="error" variant="ghost" @click="$pwa?.cancelInstall()">
-					Dismiss
+					{{ t("pwa.dismiss") }}
 				</UButton>
 			</div>
 		</template>
 	</UAlert>
 </template>
+
+<script setup lang="ts">
+const { t } = useI18n();
+</script>

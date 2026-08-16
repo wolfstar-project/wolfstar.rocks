@@ -17,6 +17,7 @@
 		"mobile_menu": "Mobile menu"
 	},
 	"header": {
+		"brand": "WolfStar",
 		"site_header": "Site header",
 		"home": "{name} home",
 		"add_app": "Add App",
@@ -24,6 +25,7 @@
 		"sign_in_discord": "Sign in with Discord",
 		"user_menu": "User menu",
 		"profile": "Profile",
+		"settings": "Settings",
 		"sign_out": "Sign out"
 	},
 	"footer": {
@@ -52,13 +54,18 @@
 	},
 	"a11y": {
 		"skip_to_content": "Skip to main content",
-		"main_content": "Main content"
+		"main_content": "Main content",
+		"scroll_to_top": "Scroll to top"
 	},
 	"common": {
 		"language": "Language",
 		"appearance": "Appearance",
+		"system": "System",
 		"light": "Light",
 		"dark": "Dark",
+		"midnight": "Midnight",
+		"midnight_experimental": "Midnight (experimental)",
+		"experimental": "Experimental",
 		"enabled": "Enabled",
 		"disabled": "Disabled",
 		"none": "None",
@@ -73,6 +80,9 @@
 		"please_try_again": "Please try again.",
 		"copied": "Copied!",
 		"na": "N/A"
+	},
+	"blog": {
+		"rss": "RSS"
 	},
 	"user_menu": {
 		"account_menu": "User account menu",

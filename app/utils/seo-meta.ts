@@ -26,10 +26,6 @@ export function useSeoMetadata({
 	const route = useRoute();
 	const ogUrl = `${url}${route.fullPath}`;
 
-	useHead({
-		meta: [{ content: description, name: "description" }],
-	});
-
 	if (shouldOgImage) {
 		defineOgImage("Page", {
 			description: ogImage?.description ?? description,
@@ -38,19 +34,17 @@ export function useSeoMetadata({
 		});
 	}
 
-	if (import.meta.server) {
-		useSeoMeta({
-			description,
-			ogDescription: description,
-			ogSiteName: ogSiteName ?? siteName,
-			ogTitle: title,
-			ogType,
-			ogUrl,
-			title,
-			twitterCard,
-			twitterDescription: description,
-			twitterSite,
-			twitterTitle: title,
-		});
-	}
+	useSeoMeta({
+		description,
+		ogDescription: description,
+		ogSiteName: ogSiteName ?? siteName,
+		ogTitle: title,
+		ogType,
+		ogUrl,
+		title,
+		twitterCard,
+		twitterDescription: description,
+		twitterSite,
+		twitterTitle: title,
+	});
 }

@@ -28,6 +28,15 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 			return userValue ? `user:${userValue.id}:data` : "user:anonymous:data";
 		},
 		async (_nuxtApp, { signal }) => {
+			const userValue = toValue(authUser);
+			if (!userValue) {
+				return {
+					user: null,
+					transformedGuilds: [] as OauthFlattenedGuild[],
+					isStale: false,
+				};
+			}
+
 			const { search, ...fetchOptions } = options ?? {};
 			const refreshGuilds = forceGuildRefresh.value;
 			forceGuildRefresh.value = false;
@@ -40,7 +49,10 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 
 			return { ...data, isStale };
 		},
-		{ server: false },
+		{
+			server: false,
+			watch: [() => toValue(authUser)?.id ?? null],
+		},
 	);
 
 	async function refreshGuildList() {

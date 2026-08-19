@@ -42,9 +42,12 @@ if (locales.length === 0) {
 // Build merge config from countryLocaleVariants:
 // Each variant locale merges keys from its base locale, so keys present in
 // the base file count as covered for the variant.
-// e.g. { 'en-US': ['en'], 'en-GB': ['en'], 'ar-EG': ['ar'], 'es-ES': ['es'], 'es-419': ['es'] }
+// e.g. { 'ar-EG': ['ar'], 'es-ES': ['es'], 'es-419': ['es'] }
 const merge: Merge = {};
 for (const [baseLang, variants] of Object.entries(countryLocaleVariants)) {
+	// Merging from the source locale is implicit via normal Lunaria tracking,
+	// and Lunaria cannot resolve the source locale as a `merge` entry.
+	if (baseLang === sourceLocale.lang) continue;
 	for (const variant of variants) {
 		// Each variant merges from its base language and (if not the source) implicitly
 		// from the source via normal Lunaria tracking.

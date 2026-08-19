@@ -4,6 +4,7 @@
 	"description": "Locales are split by feature under i18n/locales/{locale}/*.json. See i18n/schemas/*.schema.json.",
 	"features": [
 		"common.json",
+		"errors.json",
 		"auth.json",
 		"dashboard.json",
 		"guilds.json",

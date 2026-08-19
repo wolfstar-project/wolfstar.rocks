@@ -3,6 +3,7 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
+import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -264,14 +265,18 @@ export default defineNuxtConfig({
 		"/login": { prerender: false },
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile is a per-user authenticated page: never statically prerender it
-		// (crawlLinks would otherwise reach it via links on prerendered pages and
-		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
+		// /profile hosts local UI settings (theme/locale/motion) for guests and the
+		// Discord account/servers view for signed-in users. Never statically prerender
+		// it (crawlLinks would otherwise reach it via links on prerendered pages).
 		"/profile": {
 			appLayout: "default",
 			prerender: false,
 			robots: true,
-			auth: { only: "user", redirectTo: "/login" },
+		},
+		"/account": {
+			appLayout: "default",
+			prerender: false,
+			robots: true,
 		},
 		"/starly": { appLayout: "default", robots: true },
 
@@ -371,6 +376,11 @@ export default defineNuxtConfig({
 		css: {
 			transformer: "lightningcss",
 		},
+		plugins: [
+			// Untranslated keys are stored as empty strings; drop them so vue-i18n
+			// falls back to English instead of rendering "".
+			stripEmptyI18nMessagesPlugin(),
+		],
 		optimizeDeps: {
 			include: [
 				"@discordjs/core/http-only",
@@ -688,6 +698,22 @@ export default defineNuxtConfig({
 		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
 		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
 		langDir: "locales",
+		/**
+		 * Nitro-side locale detection runs in `render:before` and calls
+		 * `useI18nContext()` before checking whether the path is a Nuxt page.
+		 * On Netlify/serverless, static asset requests (e.g. GET /app.js) can hit the
+		 * render handler without `event.context.nuxtI18n` being initialized by the
+		 * `request` hook, which throws "Nuxt I18n server context has not been set up yet"
+		 * (WOLFSTAR-ROCKS-4K / nuxt-modules/i18n#3901).
+		 *
+		 * Safe here: `strategy: "no_prefix"` and `detectBrowserLanguage: false` mean
+		 * Nitro-side redirects are unused. Re-enable when upstream guards static assets.
+		 *
+		 * @see https://i18n.nuxtjs.org/docs/guide/new-features#nitro-side-language-detection-and-redirection
+		 */
+		experimental: {
+			nitroContextDetection: false,
+		},
 	},
 });
 

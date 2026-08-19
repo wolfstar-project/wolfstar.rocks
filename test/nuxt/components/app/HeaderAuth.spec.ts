@@ -41,4 +41,23 @@ describe("AppHeaderAuth", () => {
 			expect(button.attributes("href")).toBe("/login");
 		});
 	});
+
+	describe("guest settings link", () => {
+		it("links guests to /profile for local settings", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth);
+			const settings = wrapper.get('a[aria-label="Settings"]');
+			expect(settings.attributes("href")).toBe("/profile");
+			expect(settings.classes().join(" ")).toContain("hidden");
+			expect(settings.classes().join(" ")).toContain("md:inline-flex");
+		});
+
+		it("shows the settings link in the mobile drawer", async () => {
+			const wrapper = await mountSuspended(AppHeaderAuth, {
+				props: { mobile: true },
+			});
+			const settings = wrapper.get('a[aria-label="Settings"]');
+			expect(settings.attributes("href")).toBe("/profile");
+			expect(settings.classes().join(" ")).toContain("rounded-lg");
+		});
+	});
 });

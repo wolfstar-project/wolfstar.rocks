@@ -1,4 +1,29 @@
+import { guildIconURL, type IconGuild } from "#shared/utils/discord";
+import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
+
 export type GuildErrorClass = "forbidden" | "unauthorized" | "default";
+
+export type GuildSettingsSaveFailureToast = {
+	color: "error";
+	title: string;
+	description: string;
+	icon: "heroicons:x-circle";
+};
+
+/**
+ * Resolves a Discord CDN guild-icon URL for dashboard avatars.
+ * Callers must pass the unwrapped guild value (`guildData.value`), not the
+ * readonly ref wrapper — reading `icon`/`acronym` off the ref returns undefined.
+ */
+export function resolveGuildIconSrc(
+	guild: IconGuild | null | undefined,
+	options: { size?: number } = {},
+): string | undefined {
+	if (isNullOrUndefined(guild)) {
+		return undefined;
+	}
+	return guildIconURL(guild, { size: options.size ?? 64 }) ?? undefined;
+}
 
 /**
  * Maps an HTTP status code from a guild dashboard fetch error to one of three
@@ -9,6 +34,30 @@ export function classifyGuildError(status: number | undefined): GuildErrorClass 
 	if (status === 403) return "forbidden";
 	if (status === 401) return "unauthorized";
 	return "default";
+}
+
+/**
+ * Normalizes a guild-settings PATCH response body into `GuildData`.
+ * Throws when the payload is a malformed JSON string so callers can treat
+ * transport failures and parse failures the same way.
+ */
+export function parseGuildSettingsSaveResponse(response: unknown): unknown {
+	return typeof response === "string" ? JSON.parse(response) : response;
+}
+
+/**
+ * Localized toast payload shown when saving guild settings fails.
+ * Staged edits must be left intact by the caller so the admin can retry.
+ */
+export function guildSettingsSaveFailureToast(
+	t: (key: string) => string,
+): GuildSettingsSaveFailureToast {
+	return {
+		color: "error",
+		title: t("dashboard.update_failed_message"),
+		description: `${t("dashboard.update_failed_why")} ${t("dashboard.update_failed_fix")}`,
+		icon: "heroicons:x-circle",
+	};
 }
 
 /**

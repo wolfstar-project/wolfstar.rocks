@@ -32,7 +32,7 @@ catalogs:
 
     vite-plus:
         vite: npm:@voidzero-dev/vite-plus-core@0.2.6
-        vite-plus: 0.2.6
+        vite-plus: 0.2.7
         vitest: 4.1.10
         "@vitest/browser-playwright": 4.1.10
         "@vitest/coverage-v8": 4.1.10
@@ -64,6 +64,7 @@ overrides:
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.51
     sharp: 0.34.5
+    typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus
 

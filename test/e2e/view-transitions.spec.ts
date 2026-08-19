@@ -89,7 +89,14 @@ test.describe("View Transitions", () => {
 		goto,
 	}) => {
 		await context.addInitScript(() => {
-			localStorage.setItem("user-prefers-reduced-motion", "true");
+			localStorage.setItem(
+				"wolfstar-settings",
+				JSON.stringify({
+					colorMode: "system",
+					reduceMotion: true,
+					selectedLocale: null,
+				}),
+			);
 		});
 
 		await page.addInitScript(() => {

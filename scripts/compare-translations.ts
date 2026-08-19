@@ -53,7 +53,12 @@ const syncLocaleData = (
 		if (!(key in target)) {
 			stats.missing.push(propertyPath);
 			if (fix) {
-				result[key] = refValue;
+				// Empty placeholder, never the English source string: copying the
+				// reference text makes an untranslated key indistinguishable from a
+				// real translation for Tolgee, Lunaria and translators. Empty leaves
+				// are stripped at build time (config/i18n-empty-placeholders.ts), so
+				// the runtime falls back to English.
+				result[key] = "";
 			}
 		} else {
 			result[key] = target[key];
@@ -137,7 +142,7 @@ const runSingleLocale = (locale: string, fix = false): void => {
 	if (missing.length > 0) {
 		if (fix) {
 			console.log(
-				`\n${COLORS.green}Added ${missing.length} missing key(s) with EN placeholder:${COLORS.reset}`,
+				`\n${COLORS.green}Added ${missing.length} missing key(s) as empty placeholders (EN is used as runtime fallback):${COLORS.reset}`,
 			);
 		} else {
 			console.log(`\n${COLORS.yellow}Missing ${missing.length} key(s):${COLORS.reset}`);
@@ -204,7 +209,12 @@ const runAllLocales = (fix = false): void => {
 		console.log(`\n${COLORS.cyan}--- ${locale} ---${COLORS.reset}`);
 		if (missing.length > 0) {
 			if (fix) {
-				logSection("ADDED MISSING KEYS (with EN placeholder)", missing, COLORS.green, "");
+				logSection(
+					"ADDED MISSING KEYS (empty placeholders, EN used as runtime fallback)",
+					missing,
+					COLORS.green,
+					"",
+				);
 			} else {
 				logSection(
 					"MISSING KEYS (in en/* but not in this locale)",
@@ -227,7 +237,7 @@ const runAllLocales = (fix = false): void => {
 	console.log(`\n${COLORS.cyan}=== Summary ===${COLORS.reset}`);
 	if (totalAdded > 0) {
 		console.log(
-			`${COLORS.green}  Added missing keys (EN placeholder): ${totalAdded}${COLORS.reset}`,
+			`${COLORS.green}  Added missing keys (empty placeholders, EN used as runtime fallback): ${totalAdded}${COLORS.reset}`,
 		);
 	}
 	if (totalMissing > 0) {

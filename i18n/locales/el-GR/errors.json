@@ -1,0 +1,30 @@
+{
+	"$schema": "../../schemas/errors.schema.json",
+	"errors": {
+		"session_expired": "",
+		"access_denied": "",
+		"too_many_requests": "",
+		"network_error": "",
+		"request_timeout": "",
+		"unexpected": "",
+		"check_connection": "",
+		"rate_limit": "",
+		"server_error": "",
+		"server_error_title": "",
+		"if_persists": "",
+		"retrying": "",
+		"session_expired_description": "",
+		"access_denied_description": "",
+		"too_many_requests_description": "",
+		"request_timeout_description": "",
+		"request_timeout_suggestion": "",
+		"network_error_description": "",
+		"loading_servers": "",
+		"failed_to_load_servers": "",
+		"not_found_title": "",
+		"not_found_description": "",
+		"generic_title": "",
+		"generic_description": "",
+		"back_to_home": ""
+	}
+}

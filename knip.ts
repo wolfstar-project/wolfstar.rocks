@@ -83,6 +83,12 @@ const config: KnipConfig = {
 				/** Used for cli */
 				"@shelve/cli",
 			],
+			ignoreUnresolved: [
+				/** Since @onmax/nuxt-better-auth 0.1.x this is an ambient `declare module` in
+				 * .nuxt/types/*.d.ts rather than a tsconfig path alias, so knip's resolver
+				 * cannot follow it. Type-only imports resolve fine under tsc. */
+				"#nuxt-better-auth",
+			],
 			ignoreFiles: [
 				"**/*.unused.*",
 				"shared/utils/index.ts" /* Used for type exports only, not imported directly */,

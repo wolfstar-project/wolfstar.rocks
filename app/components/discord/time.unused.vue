@@ -2,15 +2,21 @@
 	<span class="discord-message-time">{{ formatter.format(date) }}</span>
 </template>
 
-<script setup lang="ts">
-const { date = Date.now(), format } = defineProps<{
+<script lang="ts">
+type TimeFormat = "long";
+
+interface TimeUnusedProps {
 	date?: number;
-	format: keyof typeof TimeFormatters;
-}>();
+	format: TimeFormat;
+}
+</script>
+
+<script setup lang="ts">
+const { date = Date.now(), format } = defineProps<TimeUnusedProps>();
 
 const TimeFormatters = {
 	long: new Intl.DateTimeFormat("en-US", { dateStyle: "full", timeStyle: "short" }),
-};
+} as const;
 
 const formatter = computed(() => TimeFormatters[format]);
 </script>
@@ -18,6 +24,6 @@ const formatter = computed(() => TimeFormatters[format]);
 <style scoped>
 @reference "@/assets/css/main.css";
 .discord-message-time {
-	@apply rounded-md bg-base-content/10 px-0.5;
+	@apply rounded-md bg-base-content/10 px-0.5 font-whitney;
 }
 </style>

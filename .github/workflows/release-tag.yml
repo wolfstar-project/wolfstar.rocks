@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   tag:
     name: 🏷️ Tag release and create GitHub Release
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     if: github.repository == 'wolfstar-project/wolfstar.rocks'
     permissions:
       contents: write # create release tags and GitHub releases
@@ -23,7 +23,7 @@ jobs:
       skipped: ${{ steps.check.outputs.skip }}
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: true

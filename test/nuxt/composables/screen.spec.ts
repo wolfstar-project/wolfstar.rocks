@@ -10,6 +10,11 @@ describe("screen composable exports", () => {
 		expect(typeof isSmallScreen.value).toBe("boolean");
 	});
 
+	it("should export isBelowMediumScreen as a ref-like value", () => {
+		expect(isBelowMediumScreen).toBeDefined();
+		expect(typeof isBelowMediumScreen.value).toBe("boolean");
+	});
+
 	it("should export isMediumOrLargeScreen as a ref-like value", () => {
 		expect(isMediumOrLargeScreen).toBeDefined();
 		expect(typeof isMediumOrLargeScreen.value).toBe("boolean");

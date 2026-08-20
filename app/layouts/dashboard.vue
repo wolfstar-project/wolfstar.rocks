@@ -12,7 +12,12 @@
 		>
 			<template #header="{ collapsed }">
 				<div v-if="guildData" class="flex cursor-pointer items-center gap-0.5">
-					<UAvatar :src :alt="guildData.name" class="mr-2" />
+					<UAvatar
+						:src="guildIconSrc"
+						:text="guildData.acronym"
+						:alt="guildData.name"
+						class="mr-2"
+					/>
 					<h1 v-if="!collapsed" class="text-lg font-semibold">{{ guildData.name }}</h1>
 				</div>
 				<div v-else class="flex h-10 items-center justify-center">
@@ -50,22 +55,18 @@
 			v-else-if="nuxtError"
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
 			role="alert"
-			aria-label="Error loading dashboard"
+			:aria-label="t('dashboard.error_aria')"
 		>
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
 				<h2 class="text-xl font-semibold text-base-content">
-					{{ nuxtError.statusMessage || "Error Loading Dashboard" }}
+					{{ nuxtError.statusMessage || t("dashboard.error_title") }}
 				</h2>
 				<p v-if="nuxtError.status === 403">
-					You don't have permission to access this server's dashboard. Make sure you have
-					the Manage Server permission and try again.
+					{{ t("dashboard.error_forbidden") }}
 				</p>
 				<p class="text-sm text-base-content/60">
-					{{
-						nuxtError.message ||
-						"Something went wrong while loading the dashboard. Please try again, or contact support if the problem continues."
-					}}
+					{{ nuxtError.message || t("dashboard.error_fallback") }}
 				</p>
 			</div>
 		</div>
@@ -73,13 +74,17 @@
 			v-else
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
 			role="status"
-			aria-label="Loading dashboard"
+			:aria-label="t('dashboard.loading_aria')"
 		>
 			<div class="flex flex-col items-center space-y-4">
 				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
-					<h2 class="text-xl font-semibold text-base-content">Loading Dashboard</h2>
-					<p class="text-sm text-base-content/60">Loading server settings...</p>
+					<h2 class="text-xl font-semibold text-base-content">
+						{{ t("dashboard.loading_title") }}
+					</h2>
+					<p class="text-sm text-base-content/60">
+						{{ t("dashboard.loading_description") }}
+					</p>
 				</div>
 				<div class="flex items-center space-x-2">
 					<div
@@ -109,10 +114,10 @@
 			>
 				<UFieldGroup>
 					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-						Save Changes
+						{{ t("dashboard.save_changes") }}
 					</UButton>
 					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-						Reset Changes
+						{{ t("dashboard.reset_changes") }}
 					</UButton>
 				</UFieldGroup>
 			</div>
@@ -120,16 +125,18 @@
 
 		<UModal
 			v-model:open="showDialog"
-			title="Unsaved Changes"
-			description="You have unsaved changes that will be lost if you leave this page."
+			:title="t('dashboard.unsaved_title')"
+			:description="t('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
 					<UButton color="neutral" variant="ghost" @click="cancelLeave">
-						Stay on Page
+						{{ t("dashboard.stay_on_page") }}
 					</UButton>
-					<UButton color="error" @click="confirmLeave"> Discard Changes </UButton>
+					<UButton color="error" @click="confirmLeave">
+						{{ t("dashboard.discard_changes") }}
+					</UButton>
 				</div>
 			</template>
 		</UModal>
@@ -143,7 +150,13 @@ import { isNullOrUndefinedOrZero, objectValues } from "@sapphire/utilities";
 import { isNullOrUndefined } from "@sapphire/utilities/isNullish";
 import { objectToTuples } from "@sapphire/utilities/objectToTuples";
 import { parseError, createError } from "evlog";
-import { parseGuildSettings, classifyGuildError } from "~/utils/guild-dashboard";
+import {
+	parseGuildSettings,
+	classifyGuildError,
+	parseGuildSettingsSaveResponse,
+	guildSettingsSaveFailureToast,
+	resolveGuildIconSrc,
+} from "~/utils/guild-dashboard";
 
 function isSafeUrl(url: unknown): url is string {
 	if (typeof url !== "string") return false;
@@ -155,16 +168,16 @@ function isSafeUrl(url: unknown): url is string {
 	}
 }
 
-const logger = useLogger("wolfstar:dashboard");
+const { t } = useI18n();
 
 const guildId = useRouteParams("id", null, { transform: String });
 
 if (!isValidGuildId(guildId.value)) {
 	throw createError({
-		why: "Guild IDs must be 17-19 digit numbers.",
+		why: t("dashboard.invalid_guild_why"),
 		status: 400,
-		message: "The provided guild ID is not valid.",
-		fix: "Please check the URL and ensure the guild ID is correct.",
+		message: t("dashboard.invalid_guild_message"),
+		fix: t("dashboard.invalid_guild_fix"),
 	});
 }
 
@@ -224,10 +237,11 @@ watch(
 				newData[1],
 				guildSettings.value ?? {},
 				(parseErr) => {
-					logger.error(
-						`Failed to parse guild settings payload for guild Id: ${guildId.value}`,
-						parseError(parseErr),
-					);
+					log.error({
+						tag: "wolfstar:dashboard",
+						message: `Failed to parse guild settings payload for guild Id: ${guildId.value}`,
+						error: parseError(parseErr),
+					});
 				},
 			);
 
@@ -247,18 +261,18 @@ watch(
 		if (err) {
 			const parsedError = parseError(err);
 
-			logger.error(
-				`Error loading guild data or settings for guild Id: ${guildId.value}`,
-				parsedError,
-			);
+			log.error({
+				tag: "wolfstar:dashboard",
+				message: `Error loading guild data or settings for guild Id: ${guildId.value}`,
+				error: parsedError,
+			});
 
 			switch (classifyGuildError(parsedError.status)) {
 				case "forbidden": {
 					if (import.meta.client) {
 						toast.add({
-							title: "Access Denied",
-							description:
-								"You don't have permission to access this server's dashboard.",
+							title: t("dashboard.access_denied_title"),
+							description: t("dashboard.access_denied_description"),
 							color: "error",
 							icon: "heroicons:x-circle",
 						});
@@ -273,9 +287,8 @@ watch(
 				case "unauthorized": {
 					if (import.meta.client) {
 						toast.add({
-							title: "Unauthorized",
-							description:
-								"Your session has expired or you are not authorized. Please log in again to access the dashboard.",
+							title: t("dashboard.unauthorized_title"),
+							description: t("dashboard.unauthorized_description"),
 							color: "error",
 							icon: "heroicons:x-circle",
 						});
@@ -297,7 +310,7 @@ watch(
 							actions: link
 								? [
 										{
-											label: "Learn more",
+											label: t("common.learn_more"),
 											onClick: () => {
 												window.open(link, "_blank", "noopener,noreferrer");
 											},
@@ -330,7 +343,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		{
 			exact: true,
 			icon: "heroicons:home",
-			label: "Home",
+			label: t("dashboard.nav.home"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -338,56 +351,56 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "lucide:shield",
-			label: "Moderation",
+			label: t("dashboard.nav.moderation"),
 			onSelect: () => {
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/moderation`,
 			children: [
 				{
-					label: "Bad Words",
+					label: t("dashboard.nav.bad_words"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/word`,
 				},
 				{
-					label: "Capitals",
+					label: t("dashboard.nav.capitals"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
 				},
 				{
-					label: "Invites",
+					label: t("dashboard.nav.invites"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/invites`,
 				},
 				{
-					label: "Links",
+					label: t("dashboard.nav.links"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/links`,
 				},
 				{
-					label: "Message Duplication",
+					label: t("dashboard.nav.message_duplication"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/messages`,
 				},
 				{
-					label: "Line Spam",
+					label: t("dashboard.nav.line_spam"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/lines`,
 				},
 				{
-					label: "Reactions",
+					label: t("dashboard.nav.reactions"),
 					onSelect: () => {
 						open.value = false;
 					},
@@ -397,7 +410,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:hashtag",
-			label: "Channels",
+			label: t("dashboard.nav.channels"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -405,7 +418,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:user-group",
-			label: "Roles",
+			label: t("dashboard.nav.roles"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -413,7 +426,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:bell",
-			label: "Events",
+			label: t("dashboard.nav.events"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -421,7 +434,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:command-line",
-			label: "Commands",
+			label: t("dashboard.nav.commands"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -429,7 +442,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "lucide:logs",
-			label: "Logs",
+			label: t("dashboard.nav.logs"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -456,12 +469,7 @@ const isReadyToSubmit = computed(
 
 const { showDialog, confirmLeave, cancelLeave } = useUnsavedChanges(isReadyToSubmit);
 
-const src = computed(
-	() =>
-		guildIconURL(guildData as unknown as OauthFlattenedGuild, {
-			size: 64,
-		})!,
-);
+const guildIconSrc = computed(() => resolveGuildIconSrc(guildData.value, { size: 64 }));
 // Validate Guild ID format (Discord Snowflake: 17-19 digit string)
 function isValidGuildId(id: string | undefined | null): boolean {
 	if (isNullOrUndefined(id)) {
@@ -472,58 +480,56 @@ function isValidGuildId(id: string | undefined | null): boolean {
 }
 
 async function submitChanges() {
-	const { data } = await useFetch(`/api/guilds/${guildId.value}/settings`, {
-		body: {
-			data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
-		},
-		transform: (response: string) => {
-			try {
-				return JSON.parse(response);
-			} catch (error) {
-				logger.error(
-					`Failed to parse response from settings update for guild Id: ${guildId.value}`,
-					parseError(error),
-				);
-				throw createError({
-					message: "Failed to update guild settings",
-					why: "Something went wrong while saving your settings.",
-					status: 500,
-					fix: "Please try again later. If the issue persists, contact support.",
-					cause: error as Error,
-				});
-			}
-		},
-		method: "PATCH",
-	});
-
-	if (!data.value) {
+	let data: GuildData;
+	try {
+		const response = await $fetch(`/api/guilds/${guildId.value}/settings`, {
+			body: {
+				data: objectToTuples(guildSettingsChanges.value as Partial<GuildData>),
+			},
+			method: "PATCH",
+		});
+		data = parseGuildSettingsSaveResponse(response) as GuildData;
+	} catch (error) {
+		log.error({
+			tag: "wolfstar:dashboard",
+			message: `Failed to save settings update for guild Id: ${guildId.value}`,
+			error: parseError(error),
+		});
+		// Preserve staged edits; only notify so the admin can retry.
+		toast.add(guildSettingsSaveFailureToast(t));
 		return;
 	}
 
-	if (!isNullOrUndefined(data.value) && objectValues(data.value).length !== 0) {
-		if (!document.startViewTransition || effectiveReduceMotion.value) {
-			setGuildSettings(data.value!);
-			setGuildSettingsChanges(undefined);
-		} else {
-			if (document.activeViewTransition) {
-				document.activeViewTransition.skipTransition();
-			}
-			document.startViewTransition(async () => {
-				setGuildSettings(data.value!);
-				setGuildSettingsChanges(undefined);
-				await nextTick();
-			});
+	if (isNullOrUndefined(data) || objectValues(data).length === 0) {
+		return;
+	}
+
+	const savedSettings = data;
+	if (!document.startViewTransition || effectiveReduceMotion.value) {
+		setGuildSettings(savedSettings);
+		setGuildSettingsChanges(undefined);
+	} else {
+		if (document.activeViewTransition) {
+			document.activeViewTransition.skipTransition();
 		}
-
-		logger.info(`Guild settings changes saved successfully for guild Id: ${guildId.value}`);
-
-		toast.add({
-			color: "success",
-			description: "Your server settings have been saved.",
-			icon: "i-heroicons-check-circle",
-			title: "Settings Saved",
+		document.startViewTransition(async () => {
+			setGuildSettings(savedSettings);
+			setGuildSettingsChanges(undefined);
+			await nextTick();
 		});
 	}
+
+	log.info(
+		"wolfstar:dashboard",
+		`Guild settings changes saved successfully for guild Id: ${guildId.value}`,
+	);
+
+	toast.add({
+		color: "success",
+		description: t("dashboard.settings_saved_description"),
+		icon: "i-heroicons-check-circle",
+		title: t("dashboard.settings_saved_title"),
+	});
 }
 
 function resetChanges() {
@@ -539,13 +545,13 @@ function resetChanges() {
 		});
 	}
 
-	logger.info(`Guild settings changes reset for guild Id: ${guildId.value}`);
+	log.info("wolfstar:dashboard", `Guild settings changes reset for guild Id: ${guildId.value}`);
 
 	toast.add({
 		color: "info",
-		description: "All changes have been reverted to the last saved state.",
+		description: t("dashboard.changes_reset_description"),
 		icon: "heroicons:arrow-path",
-		title: "Changes Reset",
+		title: t("dashboard.changes_reset_title"),
 	});
 }
 
@@ -553,7 +559,8 @@ function resetChanges() {
 watch(guildId, (newGuildId, oldGuildId) => {
 	if (oldGuildId && newGuildId !== oldGuildId) {
 		resetGuildSettingsChanges();
-		logger.info(
+		log.info(
+			"wolfstar:dashboard",
 			`Cleared staged changes due to guild switch from ${oldGuildId} to ${newGuildId}`,
 		);
 	}

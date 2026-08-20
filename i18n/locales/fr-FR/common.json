@@ -1,0 +1,109 @@
+{
+	"$schema": "../../schemas/common.schema.json",
+	"nav": {
+		"features": "",
+		"moderation_tools": "",
+		"moderation_tools_description": "",
+		"advanced_logging": "",
+		"advanced_logging_description": "",
+		"moderation_logs": "",
+		"moderation_logs_description": "",
+		"applications": "",
+		"commands": "",
+		"blog": "",
+		"changelog": "",
+		"github": "",
+		"main_navigation": "",
+		"mobile_navigation": "",
+		"mobile_menu": ""
+	},
+	"header": {
+		"brand": "",
+		"site_header": "",
+		"home": "",
+		"add_app": "",
+		"sign_in": "",
+		"sign_in_discord": "",
+		"user_menu": "",
+		"profile": "",
+		"settings": "",
+		"sign_out": ""
+	},
+	"footer": {
+		"site_footer": "",
+		"tagline": "",
+		"logo": "",
+		"powered_by_netlify": "",
+		"powered_by_netlify_aria": "",
+		"copyright": "",
+		"github_aria": "",
+		"discord_aria": "",
+		"x_aria": "",
+		"social_links": "",
+		"column_links": "",
+		"product": "",
+		"features": "",
+		"other_apps": "",
+		"changelog": "",
+		"community": "",
+		"support_server": "",
+		"github": "",
+		"blog": "",
+		"legal": "",
+		"terms": "",
+		"privacy": ""
+	},
+	"a11y": {
+		"skip_to_content": "",
+		"main_content": "",
+		"scroll_to_top": ""
+	},
+	"common": {
+		"language": "",
+		"appearance": "",
+		"system": "",
+		"light": "",
+		"dark": "",
+		"midnight": "",
+		"midnight_experimental": "",
+		"experimental": "",
+		"enabled": "",
+		"disabled": "",
+		"none": "",
+		"confirm": "",
+		"cancel": "",
+		"retry": "",
+		"learn_more": "",
+		"search": "",
+		"loading": "",
+		"error": "",
+		"save_failed": "",
+		"please_try_again": "",
+		"copied": "",
+		"na": ""
+	},
+	"blog": {
+		"rss": ""
+	},
+	"user_menu": {
+		"account_menu": "",
+		"user_menu_for": "",
+		"profile": "",
+		"report_bug": "",
+		"sign_out": "",
+		"avatar_alt": "",
+		"avatar_fallback": ""
+	},
+	"i18n": {
+		"missing_keys": "",
+		"edit_on_github": ""
+	},
+	"translation_status": {
+		"title": "",
+		"description": "",
+		"generated_at": "",
+		"source_locale": "",
+		"progress_by_locale": "",
+		"no_data": ""
+	}
+}

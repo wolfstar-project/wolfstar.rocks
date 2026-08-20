@@ -1,0 +1,37 @@
+{
+	"$schema": "../../schemas/components.schema.json",
+	"feedback": {
+		"send": "",
+		"title": "",
+		"description": "",
+		"sent_title": "",
+		"sent_description": "",
+		"sent_toast_description": "",
+		"name": "",
+		"email": "",
+		"message": "",
+		"name_placeholder": "",
+		"email_placeholder": "",
+		"message_placeholder": "",
+		"send_failed_title": "",
+		"send_failed_description": ""
+	},
+	"pwa": {
+		"update_available": "",
+		"install_app": "",
+		"install": "",
+		"dismiss": "",
+		"reload": ""
+	},
+	"select": {
+		"seconds": "",
+		"minutes": "",
+		"hours": "",
+		"days": "",
+		"none": "",
+		"search": "",
+		"clear_selected": "",
+		"min_duration": "",
+		"max_duration": ""
+	}
+}

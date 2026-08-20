@@ -1,26 +1,17 @@
 <template>
 	<article
 		class="discord-message"
-		:class="{ 'discord-message-ephemeral': ephemeral }"
+		:class="{
+			'discord-message-ephemeral': ephemeral,
+			'discord-message-with-reply': reply,
+		}"
 		:aria-label="`Message from ${profile.name}`"
 	>
-		<DiscordAvatar :user="name" size="medium" :class="{ 'mt-6': command }" />
-		<div class="grow gap-2 max-sm:text-xs">
-			<div
-				v-if="command"
-				class="discord-message-reply"
-				role="complementary"
-				aria-label="Reply context"
-			>
-				<span class="flex items-center gap-1 font-bold">
-					<DiscordAvatar :user="command.user" size="tiny" />
-					{{ command.user }}
-				</span>
-				used
-				<LazyDiscordMention kind="app">{{ command.name }}</LazyDiscordMention>
-			</div>
-			<header class="mb-0.5 flex flex-row items-center">
-				<div class="font-whitney font-bold">{{ profile.name }}</div>
+		<DiscordAvatar :user="name" size="medium" class="discord-message-avatar" />
+		<DiscordMessageReply v-if="reply" v-bind="reply" class="discord-message-reply-slot" />
+		<div class="discord-message-content">
+			<header class="mb-0 flex flex-row items-center">
+				<div class="font-bold">{{ profile.name }}</div>
 				<span
 					v-if="profile.app"
 					class="app-badge"
@@ -33,8 +24,11 @@
 						class="mr-0.5 h-2 w-2 sm:h-3 sm:w-3"
 						aria-hidden="true"
 					/>
-					<span class="font-whitney">APP</span>
+					<span>APP</span>
 				</span>
+				<time v-if="timestamp" class="discord-message-timestamp" :datetime>
+					{{ timestamp }}
+				</time>
 			</header>
 			<div class="message-content"><slot></slot></div>
 			<div
@@ -56,24 +50,44 @@
 	</article>
 </template>
 
-<script setup lang="ts">
-const { name, ephemeral, command } = defineProps<{
+<script lang="ts">
+import type { VNode } from "vue";
+import type { MessageReply } from "~/types/discord";
+
+interface MessageProps {
 	name: ProfileName;
 	ephemeral?: boolean;
-	command?: { user: ProfileName; name: string };
-}>();
-const profile = computed(() => Profiles[name]);
+	reply?: MessageReply;
+	timestamp?: string;
+	datetime?: string;
+}
+
+interface MessageSlots {
+	default?(props?: Record<string, never>): VNode[];
+}
+</script>
+
+<script setup lang="ts">
+defineSlots<MessageSlots>();
+
+const props = defineProps<MessageProps>();
+const { name, ephemeral, reply, timestamp, datetime } = toRefs(props);
+const profile = computed(() => Profiles[name.value]);
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-badge {
-	--blurple: #5865f2;
+	--blurple: oklch(57.74% 0.2091 273.85);
 
 	@apply ml-1 flex flex-row items-center rounded-md px-1 py-0.5 font-bold text-white;
 	background-color: var(--blurple);
 	font-size: 0.625rem;
 	line-height: 0.625rem;
+}
+
+.discord-message-timestamp {
+	@apply ml-1.5 text-[10px] font-medium text-muted sm:text-xs;
 }
 
 @media (width >= 48rem) {
@@ -84,8 +98,36 @@ const profile = computed(() => Profiles[name]);
 }
 
 .discord-message {
-	@apply flex w-full flex-row gap-2 rounded-xl p-2 align-top sm:gap-4 sm:p-4;
+	@apply flex w-full flex-row gap-2 rounded-xl p-2 align-top font-whitney sm:gap-4 sm:p-4;
 	background-color: var(--discord-surface);
+}
+
+.discord-message-with-reply {
+	--message-reply-avatar-size: 32px;
+	--message-reply-gutter: 8px;
+
+	@apply grid items-start;
+	grid-template-columns: auto minmax(0, 1fr);
+	grid-template-rows: auto auto;
+}
+
+@media (width >= 48rem) {
+	.discord-message-with-reply {
+		--message-reply-avatar-size: 48px;
+		--message-reply-gutter: 16px;
+	}
+}
+
+.discord-message-with-reply > .discord-message-avatar {
+	@apply col-start-1 row-start-2 self-start;
+}
+
+.discord-message-reply-slot {
+	@apply col-start-2 row-start-1 min-w-0;
+}
+
+.discord-message-with-reply > .discord-message-content {
+	@apply col-start-2 row-start-2 min-w-0;
 }
 
 .discord-message:not(.discord-message-ephemeral):hover {
@@ -103,36 +145,5 @@ const profile = computed(() => Profiles[name]);
 
 .discord-message-ephemeral-footer > .discord-message-link {
 	@apply cursor-pointer border-0 bg-transparent p-0 text-info hover:underline hover:underline-offset-1;
-}
-
-.discord-message-reply {
-	--avatar-size: 48px;
-	--gutter: 16px;
-
-	@apply relative mb-1 flex items-center gap-1 text-sm;
-}
-
-.discord-message-reply::before {
-	--spine-width: 2px;
-	--reply-spacing: 4px;
-	--custom-message-spacing-vertical-container-cozy: 0.125rem;
-
-	content: "";
-	@apply absolute box-border block;
-
-	top: 50%;
-	right: 100%;
-	bottom: 0;
-	left: calc(-1 * (0.5 * var(--avatar-size) + var(--gutter)));
-	margin-top: calc(-0.5 * var(--spine-width));
-
-	margin-right: var(--reply-spacing);
-	margin-bottom: calc(-4px + var(--custom-message-spacing-vertical-container-cozy));
-	margin-left: calc(-0.5 * var(--spine-width));
-
-	@apply border-base-content/20;
-	border-width: var(--spine-width) 0 0 var(--spine-width);
-	border-style: solid;
-	border-top-left-radius: 6px;
 }
 </style>

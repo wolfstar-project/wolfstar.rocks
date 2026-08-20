@@ -56,6 +56,15 @@ export interface TransformedLoginData extends LoginData {
 	transformedGuilds?: OauthFlattenedGuild[];
 }
 
+/**
+ * The dashboard's own Discord user, augmented with a display-ready `name`
+ * (falls back from `global_name` to `username`) so profile UI doesn't have
+ * to repeat that fallback at every call site.
+ */
+export interface DiscordProfileUser extends RESTGetAPICurrentUserResult {
+	name: string;
+}
+
 // #region Guild
 export interface FlattenedGuild {
 	afkChannelId: APIGuild["afk_channel_id"];

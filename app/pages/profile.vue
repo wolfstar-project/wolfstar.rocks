@@ -1,96 +1,17 @@
-<!-- oxlint-disable vue/valid-v-else-if -->
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
-		<h1 class="sr-only">User Profile</h1>
-		<section
-			class="relative flex flex-col items-center justify-center gap-6 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/30 p-8 md:flex-row md:border-4 md:p-12"
-			aria-label="User profile"
-		>
-			<!-- decorative left accent (sidebar-like) -->
-			<div
-				class="absolute inset-y-2 left-0 hidden w-1 rounded-r-md bg-primary/40 md:block"
-				aria-hidden="true"
-			></div>
-			<div v-if="!user" class="flex flex-col items-center justify-center space-y-6">
-				<USkeleton
-					class="h-24 w-24 rounded-full ring-2 ring-base-200 ring-offset-4 ring-offset-base-100"
-				/>
-				<div class="space-y-2 text-center">
-					<USkeleton class="h-10 w-48" />
-					<USkeleton class="h-7 w-32" />
-					<div class="flex items-center justify-center gap-2">
-						<USkeleton class="h-6 w-16" />
-						<USkeleton class="h-6 w-32 rounded-md" />
-					</div>
-				</div>
-			</div>
-			<template v-else>
-				<div class="avatar" :class="{ 'avatar-placeholder': isDefault }">
-					<div
-						class="flex items-center justify-center rounded-full ring-base-300 ring-offset-base-100"
-						:class="{
-							'transition-transform duration-300 group-hover:scale-105':
-								!effectiveReduceMotion,
-						}"
-					>
-						<NuxtImg
-							v-if="isDefault"
-							:src="defaultAvatar"
-							alt="Default Avatar"
-							class="h-full w-full object-cover"
-							:width="128"
-							:height="128"
-							format="png"
-							loading="lazy"
-							decoding="async"
-							crossorigin="anonymous"
-						/>
-						<NuxtImg
-							v-else
-							:src="createUrl(preferredFormat, 256)"
-							:format="preferredFormat === 'gif' ? undefined : 'webp'"
-							:width="128"
-							:height="128"
-							sizes="128px"
-							:alt="`${user?.globalName ?? user?.username} avatar`"
-							class="h-full w-full object-cover"
-							loading="lazy"
-							decoding="async"
-							crossorigin="anonymous"
-						/>
-					</div>
-				</div>
-				<div class="space-y-2 text-center">
-					<h2 class="text-4xl font-bold text-base-content">
-						{{ user.globalName ?? user.username }}
-					</h2>
-					<p class="text-lg font-medium text-base-content/80">@{{ user.username }}</p>
-					<p class="text-sm text-base-content/60">
-						User ID:
-						<UButton
-							variant="outline"
-							size="xs"
-							color="neutral"
-							class="text-sm text-base-content/60 hover:text-base-content"
-							@click="copyUserId"
-						>
-							<template #leading>
-								<UIcon
-									:name="
-										copied ? 'heroicons:check' : 'heroicons:clipboard-document'
-									"
-								/>
-							</template>
-							{{ user.id }}
-						</UButton>
-					</p>
-				</div>
-			</template>
-		</section>
+		<h1 class="sr-only">{{ t("profile.title") }}</h1>
+		<ProfileHeader
+			:user="user"
+			:copied="copied"
+			:pending="loggedIn && isLoading && !user"
+			:effective-reduce-motion="effectiveReduceMotion"
+			@copy-user-id="copyUserId"
+		/>
 
 		<section
 			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
-			aria-label="Account management"
+			:aria-label="t('profile.account_management')"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
 			<div
@@ -106,170 +27,308 @@
 				<template #content="{ item }">
 					<div class="p-8">
 						<div v-if="item.value === 'servers'" class="space-y-6">
-							<!-- Server Section Header -->
-							<div class="mb-4">
-								<h2 class="text-2xl font-bold text-base-content">Servers</h2>
-								<div class="mt-1 text-base-content/60">
-									<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
-									<span v-else>{{ guilds.length ?? 0 }} servers</span>
+							<template v-if="!loggedIn">
+								<div class="mb-4">
+									<h2 class="text-2xl font-bold text-base-content">
+										{{ t("profile.servers") }}
+									</h2>
+									<p class="mt-1 text-base-content/60">
+										{{ t("profile.servers_guest_description") }}
+									</p>
 								</div>
-							</div>
-
-							<!-- Search and Controls Section -->
-							<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
-								<div class="flex items-end gap-2">
-									<UFieldGroup class="flex items-start gap-2">
-										<UInput
-											ref="input"
-											v-model="searchQuery"
-											aria-label="Search servers"
-											name="search"
-											type="text"
-											placeholder="Search servers..."
-											icon="heroicons:magnifying-glass-circle"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											class="flex max-w-xs items-start"
-										>
-											<template v-if="searchQuery?.length" #trailing>
-												<UButton
-													color="neutral"
-													variant="link"
-													size="sm"
-													icon="lucide:circle-x"
-													aria-label="Clear input"
-													@click="undoSearch()"
-												/>
-											</template>
-										</UInput>
-									</UFieldGroup>
-									<!-- Mobile Buttons (no view toggle) -->
-									<UFieldGroup size="sm" class="join flex items-end sm:hidden">
-										<!-- Manageable Only Toggle Button -->
-										<UButton
-											class="join-item"
-											color="primary"
-											:variant="showManageableOnly ? 'solid' : 'outline'"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:shield-check"
-											aria-label="Toggle manageable servers only"
-											:aria-pressed="showManageableOnly"
-											@click="handleManageableToggle()"
+								<UCard class="border border-base-200/60 bg-transparent shadow-none">
+									<div class="flex flex-col items-center gap-4 py-10 text-center">
+										<UIcon
+											name="heroicons:server"
+											class="size-12 text-base-content/30"
 										/>
-
-										<!-- Sort Button -->
+										<p class="max-w-md text-base-content/70">
+											{{ t("profile.servers_sign_in_prompt") }}
+										</p>
 										<UButton
-											class="join-item"
+											:label="t('header.sign_in')"
 											color="primary"
-											:is-loading
-											aria-label="Toggle sort order"
-											@click="handleSortToggle()"
-										>
-											<template #leading>
-												<UIcon
-													:name="
-														sortAscending
-															? 'lucide:arrow-up-a-z'
-															: 'lucide:arrow-down-z-a'
-													"
-													style="view-transition-name: sort-icon-mobile"
-												/>
-											</template>
-										</UButton>
-
-										<!-- Refresh Button -->
-										<UButton
-											v-if="filteredGuilds.length === 0"
-											class="join-item"
-											color="primary"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:arrow-path-20-solid"
-											aria-label="Refresh servers"
-											@click="refresh()"
+											icon="ic:round-discord"
+											to="/login?next=/profile"
+											:aria-label="t('header.sign_in_discord')"
 										/>
-									</UFieldGroup>
+									</div>
+								</UCard>
+							</template>
+							<template v-else>
+								<!-- Server Section Header -->
+								<div class="mb-4">
+									<h2 class="text-2xl font-bold text-base-content">
+										{{ t("profile.servers") }}
+									</h2>
+									<div class="mt-1 text-base-content/60">
+										<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
+										<span v-else
+											>{{ guilds.length ?? 0 }}
+											{{ t("profile.servers").toLowerCase() }}</span
+										>
+									</div>
+								</div>
 
-									<!-- Desktop Buttons (with view toggle) -->
-									<UFieldGroup size="sm" class="join hidden items-end sm:flex">
-										<!--
+								<!-- Search and Controls Section -->
+								<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
+									<div class="flex items-end gap-2">
+										<UFieldGroup class="flex items-start gap-2">
+											<UInput
+												ref="input"
+												v-model="searchQuery"
+												aria-label="Search servers"
+												name="search"
+												type="text"
+												placeholder="Search servers..."
+												icon="heroicons:magnifying-glass-circle"
+												:is-loading
+												is-loading-icon="lucide:loader"
+												class="flex max-w-xs items-start"
+											>
+												<template v-if="searchQuery?.length" #trailing>
+													<UButton
+														color="neutral"
+														variant="link"
+														size="sm"
+														icon="lucide:circle-x"
+														aria-label="Clear input"
+														@click="undoSearch()"
+													/>
+												</template>
+											</UInput>
+										</UFieldGroup>
+										<!-- Mobile Buttons (no view toggle) -->
+										<UFieldGroup
+											size="sm"
+											class="join flex items-end sm:hidden"
+										>
+											<!-- Manageable Only Toggle Button -->
+											<UButton
+												class="join-item"
+												color="primary"
+												:variant="showManageableOnly ? 'solid' : 'outline'"
+												:is-loading
+												is-loading-icon="lucide:loader"
+												icon="heroicons:shield-check"
+												aria-label="Toggle manageable servers only"
+												:aria-pressed="showManageableOnly"
+												@click="handleManageableToggle()"
+											/>
+
+											<!-- Sort Button -->
+											<UButton
+												class="join-item"
+												color="primary"
+												:is-loading
+												aria-label="Toggle sort order"
+												@click="handleSortToggle()"
+											>
+												<template #leading>
+													<UIcon
+														:name="
+															sortAscending
+																? 'lucide:arrow-up-a-z'
+																: 'lucide:arrow-down-z-a'
+														"
+														style="
+															view-transition-name: sort-icon-mobile;
+														"
+													/>
+												</template>
+											</UButton>
+
+											<!-- Refresh Button -->
+											<UButton
+												v-if="filteredGuilds.length === 0"
+												class="join-item"
+												color="primary"
+												:is-loading
+												is-loading-icon="lucide:loader"
+												icon="heroicons:arrow-path-20-solid"
+												aria-label="Refresh servers"
+												@click="refresh()"
+											/>
+										</UFieldGroup>
+
+										<!-- Desktop Buttons (with view toggle) -->
+										<UFieldGroup
+											size="sm"
+											class="join hidden items-end sm:flex"
+										>
+											<!--
                     Manageable
                     Only
                     Toggle
                     Button
                     -->
-										<UButton
-											class="join-item"
-											color="primary"
-											:variant="showManageableOnly ? 'solid' : 'outline'"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:shield-check"
-											:aria-pressed="showManageableOnly"
-											@click="handleManageableToggle()"
-										>
-											<span>Manageable</span>
-										</UButton>
+											<UButton
+												class="join-item"
+												color="primary"
+												:variant="showManageableOnly ? 'solid' : 'outline'"
+												:is-loading
+												is-loading-icon="lucide:loader"
+												icon="heroicons:shield-check"
+												:aria-pressed="showManageableOnly"
+												@click="handleManageableToggle()"
+											>
+												<span>Manageable</span>
+											</UButton>
 
-										<!-- Sort Button -->
-										<UButton
-											class="join-item"
-											color="primary"
-											:is-loading
-											@click="handleSortToggle()"
-										>
-											<template #leading>
-												<UIcon
-													:name="
-														sortAscending
-															? 'lucide:arrow-up-a-z'
-															: 'lucide:arrow-down-z-a'
-													"
-													style="view-transition-name: sort-icon-desktop"
-												/>
-											</template>
-										</UButton>
+											<!-- Sort Button -->
+											<UButton
+												class="join-item"
+												color="primary"
+												:is-loading
+												@click="handleSortToggle()"
+											>
+												<template #leading>
+													<UIcon
+														:name="
+															sortAscending
+																? 'lucide:arrow-up-a-z'
+																: 'lucide:arrow-down-z-a'
+														"
+														style="
+															view-transition-name: sort-icon-desktop;
+														"
+													/>
+												</template>
+											</UButton>
 
-										<!-- Refresh Button -->
-										<UButton
-											v-if="filteredGuilds.length === 0"
-											class="join-item"
-											color="primary"
-											:is-loading
-											is-loading-icon="lucide:loader"
-											icon="heroicons:arrow-path-20-solid"
-											@click="refresh()"
-										>
-											<span>Refresh</span>
-										</UButton>
-									</UFieldGroup>
+											<!-- Refresh Button -->
+											<UButton
+												v-if="filteredGuilds.length === 0"
+												class="join-item"
+												color="primary"
+												:is-loading
+												is-loading-icon="lucide:loader"
+												icon="heroicons:arrow-path-20-solid"
+												@click="refresh()"
+											>
+												<span>Refresh</span>
+											</UButton>
+										</UFieldGroup>
+									</div>
+									<!-- Search Input for Desktop -->
 								</div>
-								<!-- Search Input for Desktop -->
-							</div>
-							<div class="space-y-4 md:space-y-2">
-								<GuildCards
-									:error
-									:guilds
-									:filtered-guilds
-									:undo-search
-									:search-query
-									:loading="isLoading"
-									:filter-key="showManageableOnly"
-									:is-retrying
-									:on-retry="handleRetry"
-								/>
-							</div>
+								<div class="space-y-4 md:space-y-2">
+									<GuildCards
+										:error
+										:guilds
+										:filtered-guilds
+										:undo-search
+										:search-query
+										:loading="isLoading"
+										:filter-key="showManageableOnly"
+										:is-retrying
+										:on-retry="handleRetry"
+									/>
+								</div>
+							</template>
 						</div>
 						<div v-if="item.value === 'settings'" class="space-y-6">
 							<div class="mb-6">
-								<h2 class="text-2xl font-bold text-base-content">Settings</h2>
+								<h2 class="text-2xl font-bold text-base-content">
+									{{ t("profile.settings_title") }}
+								</h2>
 								<p class="mt-1 text-base-content/60">
-									Manage your profile settings and preferences
+									{{ t("profile.settings_tagline") }}
 								</p>
 							</div>
 
-							<!-- Accessibility Settings Card -->
+							<!-- Appearance -->
+							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+								<template #header>
+									<div class="flex items-center gap-3">
+										<div
+											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+										>
+											<UIcon
+												name="lucide:sun-moon"
+												class="size-4 text-primary"
+											/>
+										</div>
+										<div>
+											<h3 class="text-lg font-semibold text-base-content">
+												{{ t("common.appearance") }}
+											</h3>
+											<p class="text-sm text-base-content/60">
+												{{ t("profile.appearance_description") }}
+											</p>
+										</div>
+									</div>
+								</template>
+
+								<div class="space-y-4">
+									<div
+										class="flex flex-col gap-3 rounded-lg border border-base-300 bg-base-200/50 p-4 sm:flex-row sm:items-center sm:justify-between"
+									>
+										<div>
+											<h4 class="font-medium text-base-content">
+												{{ t("profile.theme") }}
+											</h4>
+											<p class="mt-1 text-sm text-base-content/60">
+												{{ t("profile.theme_description") }}
+											</p>
+										</div>
+										<ColorModeButton show-label size="sm" variant="outline" />
+									</div>
+								</div>
+							</UCard>
+
+							<!-- Language -->
+							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
+								<template #header>
+									<div class="flex items-center gap-3">
+										<div
+											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
+										>
+											<UIcon
+												name="lucide:languages"
+												class="size-4 text-primary"
+											/>
+										</div>
+										<div>
+											<h3 class="text-lg font-semibold text-base-content">
+												{{ t("common.language") }}
+											</h3>
+											<p class="text-sm text-base-content/60">
+												{{ t("profile.language_description") }}
+											</p>
+										</div>
+									</div>
+								</template>
+
+								<div
+									class="flex flex-col gap-3 rounded-lg border border-base-300 bg-base-200/50 p-4 sm:flex-row sm:items-center sm:justify-between"
+								>
+									<div>
+										<h4 class="font-medium text-base-content">
+											{{ t("common.language") }}
+										</h4>
+										<p class="mt-1 text-sm text-base-content/60">
+											{{ t("profile.language_help") }}
+										</p>
+									</div>
+									<ClientOnly>
+										<ULocaleSelect
+											v-model="currentLocale"
+											:locales="uiLocales"
+											color="neutral"
+											variant="outline"
+											class="w-48"
+											:ui="{ content: 'min-w-fit' }"
+											@update:model-value="selectLocale"
+										/>
+										<template #fallback>
+											<USkeleton class="h-8 w-48" />
+										</template>
+									</ClientOnly>
+								</div>
+							</UCard>
+
+							<!-- Accessibility -->
 							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
 								<template #header>
 									<div class="flex items-center gap-3">
@@ -281,20 +340,18 @@
 												class="size-4 text-primary"
 											/>
 										</div>
-
 										<div>
 											<h3 class="text-lg font-semibold text-base-content">
-												Accessibility
+												{{ t("profile.accessibility") }}
 											</h3>
 											<p class="text-sm text-base-content/60">
-												Customize your viewing experience
+												{{ t("profile.accessibility_description") }}
 											</p>
 										</div>
 									</div>
 								</template>
 
 								<div class="space-y-4">
-									<!-- Reduce Motion Toggle -->
 									<div
 										class="flex items-center justify-between rounded-lg border border-base-300 bg-base-200/50 p-4"
 									>
@@ -305,12 +362,11 @@
 													class="h-5 w-5 text-base-content/70"
 												/>
 												<h4 class="font-medium text-base-content">
-													Reduce Motion
+													{{ t("profile.reduce_motion") }}
 												</h4>
 											</div>
 											<p class="mt-1 text-sm text-base-content/60">
-												Minimize animations and transitions for a calmer
-												experience
+												{{ t("profile.reduce_motion_description") }}
 											</p>
 										</div>
 										<USwitch
@@ -321,7 +377,6 @@
 										/>
 									</div>
 
-									<!-- System Preference Info -->
 									<div
 										v-if="systemPreferenceActive"
 										class="flex items-start gap-3 rounded-lg border border-info/30 bg-info/10 p-4"
@@ -332,18 +387,18 @@
 										/>
 										<div class="text-sm">
 											<p class="font-medium text-info">
-												System Preference Detected
+												{{ t("profile.system_preference_detected") }}
 											</p>
 											<p class="mt-1 text-info/80">
-												Your system prefers reduced motion. This setting is
-												applied automatically to respect your preference.
+												{{ t("profile.system_preference_description") }}
 											</p>
 										</div>
 									</div>
 
-									<!-- Motion Status Indicator -->
 									<div class="flex items-center gap-2 text-sm">
-										<span class="text-base-content/60">Current Status:</span>
+										<span class="text-base-content/60">{{
+											t("profile.current_status")
+										}}</span>
 										<UBadge
 											:color="effectiveReduceMotion ? 'primary' : 'neutral'"
 											variant="subtle"
@@ -360,87 +415,10 @@
 											</template>
 											{{
 												effectiveReduceMotion
-													? "Motion Reduced"
-													: "Motion Enabled"
+													? t("profile.motion_reduced")
+													: t("profile.motion_enabled")
 											}}
 										</UBadge>
-									</div>
-								</div>
-							</UCard>
-
-							<!-- Privacy Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
-								<template #header>
-									<div class="flex items-center gap-3">
-										<div
-											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
-										>
-											<UIcon
-												name="heroicons:lock-closed-20-solid"
-												class="size-4 text-primary"
-											/>
-										</div>
-										<div>
-											<h3 class="text-lg font-semibold text-base-content">
-												Privacy
-											</h3>
-											<p class="text-sm text-base-content/60">
-												Manage your privacy preferences
-											</p>
-										</div>
-									</div>
-								</template>
-								<div class="flex flex-col items-center justify-center py-12">
-									<div class="space-y-2 text-center">
-										<UIcon
-											name="heroicons:sparkles"
-											class="mx-auto mb-4 size-12 text-base-content/30"
-										/>
-										<h4 class="text-xl font-semibold text-base-content/60">
-											Coming Soon
-										</h4>
-										<p class="text-sm text-base-content/40">
-											Privacy controls and data management will be available
-											here soon.
-										</p>
-									</div>
-								</div>
-							</UCard>
-
-							<!-- Notifications Settings Card -->
-							<UCard class="border border-base-200/60 bg-base-100 shadow-sm">
-								<template #header>
-									<div class="flex items-center gap-3">
-										<div
-											class="flex size-7 items-center justify-center rounded-full bg-primary/10"
-										>
-											<UIcon
-												name="heroicons:bell-20-solid"
-												class="size-4 text-primary"
-											/>
-										</div>
-										<div>
-											<h3 class="text-lg font-semibold text-base-content">
-												Notifications
-											</h3>
-											<p class="text-sm text-base-content/60">
-												Configure notification preferences
-											</p>
-										</div>
-									</div>
-								</template>
-								<div class="flex flex-col items-center justify-center py-12">
-									<div class="space-y-2 text-center">
-										<UIcon
-											name="heroicons:sparkles"
-											class="mx-auto mb-4 size-12 text-base-content/30"
-										/>
-										<h4 class="text-xl font-semibold text-base-content/60">
-											Coming Soon
-										</h4>
-										<p class="text-sm text-base-content/40">
-											Notification preferences will be available here soon.
-										</p>
 									</div>
 								</div>
 							</UCard>
@@ -579,22 +557,30 @@
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
 import * as Sentry from "@sentry/nuxt";
+import { isAppLocaleCode } from "~/utils/is-app-locale";
+import { getNuxtUiLocales } from "~/utils/nuxt-ui-locales";
 
 definePageMeta({ alias: ["/account"] });
+
+const { t, locale, setLocale } = useI18n();
+const { loggedIn, user: authUser, ready } = useUserSession();
+const { setPreferredLocale } = usePreferredLocale();
 useSeoMetadata({
-	description: "Manage your profile, servers and settings",
+	description: () => t("profile.seo_description"),
 	shouldOgImage: true,
-	title: "Profile",
+	title: () => t("profile.title"),
 });
 
-const { user } = useAuth();
-const log = useLogger("profile");
 // Tab Management - inspired by Dyno.gg tab system
-const activeTab = ref("servers");
+const activeTab = ref(loggedIn.value ? "servers" : "settings");
+watch(loggedIn, (isLoggedIn) => {
+	if (!isLoggedIn && activeTab.value === "servers") {
+		activeTab.value = "settings";
+	}
+});
+
 const { copy, copied } = useClipboard();
 const searchQuery = ref<string | undefined>(undefined);
-const isAnimated = ref(false);
-const isDefault = ref(false);
 
 // Error handling state
 const isRetrying = ref(false);
@@ -605,9 +591,23 @@ const [showManageableOnly, toggleShowManageableOnly] = useToggle(true);
 // Sort order: true for ascending, false for descending
 const [sortAscending, toggleSortOrder] = useToggle(true);
 
-// Accessibility - Reduce Motion
+// Local preferences (work for guests and signed-in users)
 const { reduceMotionEnabled, effectiveReduceMotion, setReduceMotion, systemPreferenceActive } =
 	useReduceMotion();
+
+const uiLocales = getNuxtUiLocales();
+const currentLocale = computed({
+	get: () => locale.value,
+	set: (code: string) => {
+		selectLocale(code);
+	},
+});
+
+function selectLocale(code: string) {
+	if (!isAppLocaleCode(code)) return;
+	setPreferredLocale(code);
+	void setLocale(code);
+}
 
 const isTransitioning = ref(false);
 const isFilterTransitioning = ref(false);
@@ -662,18 +662,7 @@ function handleSortToggle() {
 	}
 }
 
-const preferredFormat = computed<"gif" | "png">(() => {
-	if (isAnimated.value && !effectiveReduceMotion.value) {
-		return "gif";
-	}
-
-	return "png";
-});
-
-// Use the centralized useUser composable instead of manual useFetch
-// Note: Logging hooks from Phase 3 were skipped, so logging is temporarily lost
-// Transform and getCachedData are handled internally by useUser (from Phase 2)
-const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
+const { user, guilds, filteredGuilds, status, error, refresh } = useUser(authUser, {
 	timeout: 15_000, // 15 seconds timeout
 	retry: 3, // Max retry attempts
 	retryDelay: 1000, // 1 second delay between retries
@@ -684,12 +673,14 @@ const { guilds, filteredGuilds, status, error, refresh } = useUser(user, {
 	},
 });
 
-const isLoading = computed(() => status.value === "idle" || status.value === "pending");
+const isLoading = computed(
+	() => loggedIn.value && (status.value === "idle" || status.value === "pending"),
+);
 
 // Retry handler
 async function handleRetry() {
 	isRetrying.value = true;
-	log.info({ action: "retry_guild_fetch" });
+	log.info({ tag: "profile", action: "retry_guild_fetch" });
 	Sentry.metrics.count("profile.guild_fetch.retry", 1);
 	try {
 		await Sentry.startSpan({ name: "profile.guild_fetch.retry", op: "ui.action" }, () =>
@@ -703,51 +694,42 @@ async function handleRetry() {
 // Enhanced tabs configuration
 const items = computed<TabsItem[]>(() => [
 	{
-		badge: isLoading.value
-			? {
-					color: "primary",
-					trailingIcon: "lucide:loader",
-					ui: { trailingIcon: "animate-spin" },
-				}
-			: { color: "primary", label: `${guilds.value?.length ?? "N/A"}` },
+		badge: loggedIn.value
+			? isLoading.value
+				? {
+						color: "primary",
+						trailingIcon: "lucide:loader",
+						ui: { trailingIcon: "animate-spin" },
+					}
+				: { color: "primary", label: `${guilds.value?.length ?? "N/A"}` }
+			: undefined,
 		icon: "heroicons:server",
-		label: "Servers",
+		label: t("profile.servers"),
 		value: "servers",
 	},
 	{
 		icon: "heroicons:cog-6-tooth",
-		label: "Settings",
+		label: t("profile.settings_title"),
 		value: "settings",
 	},
-	/* {
-		icon: "heroicons:star",
-		label: "Premium",
-		value: "premium",
-	}, */
 ]);
 
-watch(activeTab, (tab) => {
-	Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
-	Sentry.addBreadcrumb({ category: "navigation", message: `Profile tab: ${tab}`, level: "info" });
-});
-
-watch(guilds, (value) => {
-	if (Array.isArray(value) && value.length > 0) {
+watch([activeTab, guilds, error], ([tab, value, err], [prevTab, prevValue, prevErr]) => {
+	if (tab !== prevTab) {
+		Sentry.metrics.count("profile.tab.switch", 1, { attributes: { tab } });
+		Sentry.addBreadcrumb({
+			category: "navigation",
+			message: `Profile tab: ${tab}`,
+			level: "info",
+		});
+	}
+	if (value !== prevValue && Array.isArray(value) && value.length > 0) {
 		Sentry.metrics.distribution("profile.guilds.count", value.length);
 	}
-});
-
-watch(error, (err) => {
-	if (err) {
+	if (err && err !== prevErr) {
 		Sentry.metrics.count("profile.guild_fetch.error", 1);
 	}
 });
-
-const defaultAvatar = computed(() =>
-	user.value?.id
-		? `https://cdn.discordapp.com/embed/avatars/${BigInt(user.value.id) % 5n}.png`
-		: "https://cdn.discordapp.com/embed/avatars/0.png",
-);
 
 function undoSearch() {
 	searchQuery.value = undefined;
@@ -756,7 +738,7 @@ function undoSearch() {
 async function copyUserId() {
 	if (user.value?.id) {
 		await copy(user.value.id);
-		log.info({ action: "copy_user_id" });
+		log.info({ tag: "profile", action: "copy_user_id" });
 		Sentry.metrics.count("profile.user_id.copy", 1);
 	}
 }
@@ -768,19 +750,12 @@ function handleSetReduceMotion(value: boolean) {
 	});
 }
 
-function createUrl(format: "webp" | "png" | "gif", size: number) {
-	return `https://cdn.discordapp.com/avatars/${user.value!.id}/${user.value!.avatar}.${format}?size=${size}`;
-}
-
 watch(
-	user,
-	(user) => {
-		if (user?.avatar) {
-			isDefault.value = false;
-			isAnimated.value = user.avatar.startsWith("a_");
-		} else {
-			isDefault.value = true;
-			isAnimated.value = false;
+	ready,
+	(isReady) => {
+		if (!isReady) return;
+		if (!loggedIn.value && activeTab.value === "servers") {
+			activeTab.value = "settings";
 		}
 	},
 	{ immediate: true },

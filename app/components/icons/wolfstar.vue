@@ -6,7 +6,7 @@
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
 		role="img"
-		aria-label="WolfStar logo"
+		:aria-label="t('footer.logo')"
 	>
 		<path
 			fill-rule="evenodd"
@@ -23,3 +23,7 @@
 		/>
 	</svg>
 </template>
+
+<script setup lang="ts">
+const { t } = useI18n();
+</script>

@@ -65,3 +65,11 @@ storybook-static
 
 # Claude misc
 .claude/state
+
+# Tolgee
+i18n/.tolgee-pull/
+.tmp/
+
+# Vitest failure screenshots
+.vitest-attachments/
+test/**/__screenshots__/

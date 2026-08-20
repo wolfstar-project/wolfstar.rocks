@@ -21,7 +21,7 @@ import { GUILD_ID, OWNER_USER_ID } from "./_helpers";
 
 export const FIXTURE_USER = createMockUser({
 	id: OWNER_USER_ID,
-	username: "TestOwner",
+	name: "TestOwner",
 });
 
 // ─── Guilds ──────────────────────────────────────────────────────────────────

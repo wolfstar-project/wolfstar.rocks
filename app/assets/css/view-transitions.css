@@ -68,3 +68,12 @@ html:active-view-transition-type(route-dashboard) {
 ::view-transition-new(guild-error-state) {
 	animation: vt-fade-scale-in 300ms ease-out;
 }
+
+/* PWA/skew-protection update prompt */
+::view-transition-old(pwa-update-prompt) {
+	animation: vt-slide-out-down 200ms ease-in;
+}
+
+::view-transition-new(pwa-update-prompt) {
+	animation: vt-slide-in-up 300ms ease-out;
+}

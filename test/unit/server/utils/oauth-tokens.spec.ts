@@ -30,7 +30,7 @@ describe("refreshSessionTokens", () => {
 		const result = await refreshSessionTokens(fakeEvent);
 
 		expect(mockGetAccessToken).toHaveBeenCalledWith({
-			body: { providerId: "discord" },
+			body: { useAccountCookie: true },
 			headers: fakeEvent.headers,
 		});
 		expect(mockRefreshToken).not.toHaveBeenCalled();
@@ -43,7 +43,7 @@ describe("refreshSessionTokens", () => {
 		const result = await refreshSessionTokens(fakeEvent, { force: true });
 
 		expect(mockRefreshToken).toHaveBeenCalledWith({
-			body: { providerId: "discord" },
+			body: { useAccountCookie: true },
 			headers: fakeEvent.headers,
 		});
 		expect(mockGetAccessToken).not.toHaveBeenCalled();

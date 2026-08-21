@@ -49,6 +49,12 @@ export default defineServerAuth(() => ({
 	},
 	advanced: {
 		cookiePrefix: runtimeConfig.session.name,
+		ipAddress: {
+			// Netlify supplies a single, trusted client IP. Keep Cloudflare as a
+			// fallback for deployments where it is the application runtime rather
+			// than the CDN in front of Netlify.
+			ipAddressHeaders: ["x-nf-client-connection-ip", "cf-connecting-ip"],
+		},
 	},
 	secondaryStorage: authSecondaryStorage,
 	rateLimit: {
@@ -57,6 +63,10 @@ export default defineServerAuth(() => ({
 		max: 100,
 		storage: "secondary-storage",
 		customRules: {
+			// Session reads happen during hydration, callback recovery, and tab
+			// refreshes. They are cookie-bound and must not prevent a completed
+			// OAuth flow from loading its newly-created session.
+			"/get-session": false,
 			// OAuth sign-in initiation is the only unauthenticated entry point
 			// (Discord-only login, no email/password) worth a tighter window.
 			"/sign-in/social": { window: 10, max: 5 },

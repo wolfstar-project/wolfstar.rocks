@@ -1,6 +1,6 @@
-import type { DiscordProfile } from "better-auth/social-providers";
 import { createAuthSecondaryStorage } from "#server/utils/auth-rate-limit-storage";
 import { invalidateCurrentUserCache } from "#server/utils/discord/cache";
+import { createDiscordProviderOptions } from "#server/utils/discord/provider";
 import { runtimeConfig } from "#server/utils/runtimeConfig";
 import { defineServerAuth } from "@onmax/nuxt-better-auth/config";
 import { createAuthMiddleware } from "better-auth/api";
@@ -12,21 +12,11 @@ const authSecondaryStorage = createAuthSecondaryStorage(useStorage("wolfstar:aut
 
 export default defineServerAuth(() => ({
 	socialProviders: {
-		discord: {
+		discord: createDiscordProviderOptions({
 			clientId: runtimeConfig.discord.clientId,
 			clientSecret: runtimeConfig.discord.clientSecret,
 			redirectURI: runtimeConfig.discord.redirectURI,
-			// `guilds` is required for GET /users/@me/guilds (the dashboard guild list);
-			// `guilds.members.read` only covers per-guild member lookups.
-			scope: ["guilds", "guilds.members.read", "email"],
-			mapProfileToUser: (profile: DiscordProfile) => ({
-				id: profile.id,
-				name: profile.global_name ?? profile.username,
-				email: profile.email ?? "",
-				image: profile.image_url,
-			}),
-			overrideUserInfoOnSignIn: true,
-		},
+		}),
 	},
 	trustedOrigins: [
 		"http://localhost:3000",

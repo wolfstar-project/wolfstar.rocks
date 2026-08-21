@@ -252,6 +252,10 @@ export default defineNuxtConfig({
 			},
 		},
 		"/oauth/callback": {
+			// Discord returns through this route before the server middleware forwards
+			// the OAuth response to Better Auth. A prerendered copy bypasses that
+			// middleware and leaves the browser on the callback status page.
+			prerender: false,
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
 		// Redirect-only OAuth entry point: its middleware immediately redirects to

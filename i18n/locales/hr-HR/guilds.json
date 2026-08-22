@@ -1,387 +1,387 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
 	"guild_card": {
-		"invite_aria": null,
-		"invite_bot": null,
-		"invite_bot_aria": null,
-		"manage_aria": null,
-		"manage_server": null,
-		"manage_server_aria": null,
-		"members_online": null,
-		"no_permission": null,
-		"no_permission_aria": null,
-		"total_members": null
+		"invite_aria": "",
+		"invite_bot": "",
+		"invite_bot_aria": "",
+		"manage_aria": "",
+		"manage_server": "",
+		"manage_server_aria": "",
+		"members_online": "",
+		"no_permission": "",
+		"no_permission_aria": "",
+		"total_members": ""
 	},
 	"guild_settings": {
 		"channels": {
-			"excluded_channels": null,
-			"excluded_channels_help": null,
-			"form_aria": null,
-			"logging_channels": null,
-			"logging_channels_help": null,
-			"subtitle": null,
-			"title": null
+			"excluded_channels": "",
+			"excluded_channels_help": "",
+			"form_aria": "",
+			"logging_channels": "",
+			"logging_channels_help": "",
+			"subtitle": "",
+			"title": ""
 		},
 		"commands": {
-			"category_reset": null,
-			"category_reset_description": null,
-			"disable_all": null,
-			"enable_all": null,
-			"form_aria": null,
-			"reset": null,
-			"save_failed": null,
-			"subtitle": null,
-			"title": null
+			"category_reset": "",
+			"category_reset_description": "",
+			"disable_all": "",
+			"enable_all": "",
+			"form_aria": "",
+			"reset": "",
+			"save_failed": "",
+			"subtitle": "",
+			"title": ""
 		},
 		"events": {
-			"channels_page_link": null,
-			"form_aria": null,
-			"message_events": null,
-			"message_events_help": null,
-			"moderation_events": null,
-			"moderation_events_help": null,
-			"subtitle": null,
-			"title": null,
-			"toggle_aria": null
+			"channels_page_link": "",
+			"form_aria": "",
+			"message_events": "",
+			"message_events_help": "",
+			"moderation_events": "",
+			"moderation_events_help": "",
+			"subtitle": "",
+			"title": "",
+			"toggle_aria": ""
 		},
 		"filter": {
 			"capitals": {
-				"filter_label": null,
-				"form_aria": null,
-				"maximum": null,
-				"minimum": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"filter_label": "",
+				"form_aria": "",
+				"maximum": "",
+				"minimum": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			},
 			"common": {
 				"actions": {
-					"ban": null,
-					"kick": null,
-					"mute": null,
-					"none": null,
-					"softban": null,
-					"warning": null
+					"ban": "",
+					"kick": "",
+					"mute": "",
+					"none": "",
+					"softban": "",
+					"warning": ""
 				},
-				"alerts": null,
-				"alerts_help": null,
-				"delete_message": null,
-				"delete_message_help": null,
-				"disabled": null,
-				"duration": null,
-				"duration_help": null,
-				"enabled": null,
-				"hard_action": null,
-				"hard_action_description": null,
-				"logging": null,
-				"logging_help": null,
-				"options": null,
-				"punishments": null,
-				"select_action_aria": null,
-				"soft_actions": null,
-				"threshold": null,
-				"threshold_duration": null,
-				"threshold_maximum": null
+				"alerts": "",
+				"alerts_help": "",
+				"delete_message": "",
+				"delete_message_help": "",
+				"disabled": "",
+				"duration": "",
+				"duration_help": "",
+				"enabled": "",
+				"hard_action": "",
+				"hard_action_description": "",
+				"logging": "",
+				"logging_help": "",
+				"options": "",
+				"punishments": "",
+				"select_action_aria": "",
+				"soft_actions": "",
+				"threshold": "",
+				"threshold_duration": "",
+				"threshold_maximum": ""
 			},
 			"invites": {
-				"filter_label": null,
-				"form_aria": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"filter_label": "",
+				"form_aria": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			},
 			"lines": {
-				"filter_label": null,
-				"form_aria": null,
-				"maximum": null,
-				"maximum_help": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"filter_label": "",
+				"form_aria": "",
+				"maximum": "",
+				"maximum_help": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			},
 			"links": {
-				"add_link": null,
-				"add_link_placeholder": null,
-				"allowed_links": null,
-				"filter_label": null,
-				"form_aria": null,
-				"remove_link": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"add_link": "",
+				"add_link_placeholder": "",
+				"allowed_links": "",
+				"filter_label": "",
+				"form_aria": "",
+				"remove_link": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			},
 			"messages": {
-				"filter_label": null,
-				"form_aria": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"filter_label": "",
+				"form_aria": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			},
 			"reactions": {
-				"filter_label": null,
-				"form_aria": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"filter_label": "",
+				"form_aria": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			},
 			"word": {
-				"add_placeholder": null,
-				"add_word": null,
-				"alerts_toggle": null,
-				"delete_toggle": null,
-				"filtered_words": null,
-				"filter_label": null,
-				"form_aria": null,
-				"logging_toggle": null,
-				"remove_word": null,
-				"save_failed": null,
-				"title": null,
-				"toggle": null,
-				"toggle_help": null
+				"add_placeholder": "",
+				"add_word": "",
+				"alerts_toggle": "",
+				"delete_toggle": "",
+				"filtered_words": "",
+				"filter_label": "",
+				"form_aria": "",
+				"logging_toggle": "",
+				"remove_word": "",
+				"save_failed": "",
+				"title": "",
+				"toggle": "",
+				"toggle_help": ""
 			}
 		},
 		"general": {
-			"copy_server_id": null,
-			"form_aria": null,
-			"language": null,
-			"language_aria": null,
-			"language_description": null,
-			"language_placeholder": null,
-			"need_help": null,
-			"no_activity": null,
-			"no_activity_description": null,
-			"prefix": null,
-			"prefix_aria": null,
-			"prefix_description": null,
-			"prefix_placeholder": null,
-			"recent_activity": null,
-			"save_failed_message": null,
-			"server_id_copied_description": null,
-			"server_id_copied_title": null,
-			"server_info": null,
-			"server_info_description": null,
-			"server_stats_aria": null,
-			"stat_categories": null,
-			"stat_members": null,
-			"stat_roles": null,
-			"stat_text_channels": null,
-			"stat_voice_channels": null,
-			"subtitle": null,
-			"title": null
+			"copy_server_id": "",
+			"form_aria": "",
+			"language": "",
+			"language_aria": "",
+			"language_description": "",
+			"language_placeholder": "",
+			"need_help": "",
+			"no_activity": "",
+			"no_activity_description": "",
+			"prefix": "",
+			"prefix_aria": "",
+			"prefix_description": "",
+			"prefix_placeholder": "",
+			"recent_activity": "",
+			"save_failed_message": "",
+			"server_id_copied_description": "",
+			"server_id_copied_title": "",
+			"server_info": "",
+			"server_info_description": "",
+			"server_stats_aria": "",
+			"stat_categories": "",
+			"stat_members": "",
+			"stat_roles": "",
+			"stat_text_channels": "",
+			"stat_voice_channels": "",
+			"subtitle": "",
+			"title": ""
 		},
 		"moderation": {
-			"form_aria": null,
-			"subtitle": null,
-			"title": null
+			"form_aria": "",
+			"subtitle": "",
+			"title": ""
 		},
-		"please_try_again": null,
+		"please_try_again": "",
 		"roles": {
-			"configurable": null,
-			"configurable_help": null,
-			"form_aria": null,
-			"general_options": null,
-			"restricted": null,
-			"restricted_help": null,
-			"subtitle": null,
-			"title": null
+			"configurable": "",
+			"configurable_help": "",
+			"form_aria": "",
+			"general_options": "",
+			"restricted": "",
+			"restricted_help": "",
+			"subtitle": "",
+			"title": ""
 		},
-		"save_failed": null
+		"save_failed": ""
 	},
 	"settings": {
 		"entries": {
 			"channelsIgnoreAll": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsIgnoreMessageDelete": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsIgnoreMessageEdit": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsIgnoreReactionAdd": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsChannelCreate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsChannelDelete": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsChannelUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsEmojiCreate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsEmojiDelete": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsEmojiUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsImage": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMemberAdd": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMemberNicknameUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMemberRemove": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMemberRolesUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMemberUsernameUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMessageDelete": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMessageDeleteNsfw": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMessageUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsMessageUpdateNsfw": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsModeration": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsPrune": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsReaction": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsRoleCreate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsRoleDelete": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsRoleUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"channelsLogsServerUpdate": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"eventsBanAdd": {
-				"description": null,
-				"title": null
+				"description": "",
+				"title": ""
 			},
 			"eventsBanRemove": {
-				"description": null,
-				"title": null
+				"description": "",
+				"title": ""
 			},
 			"eventsTwemojiReactions": {
-				"description": null,
-				"title": null
+				"description": "",
+				"title": ""
 			},
 			"messagesIgnoreChannels": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"messagesModerationAutoDelete": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"messagesModerationDm": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"messagesModerationMessageDisplay": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"messagesModerationReasonDisplay": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"messagesModeratorNameDisplay": {
-				"description": null,
-				"name": null
+				"description": "",
+				"name": ""
 			},
 			"rolesAdmin": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesInitial": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesModerator": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesMuted": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesPublic": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesRemoveInitial": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesRestrictedAttachment": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesRestrictedEmbed": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesRestrictedEmoji": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesRestrictedReaction": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			},
 			"rolesRestrictedVoice": {
-				"name": null,
-				"tooltip": null
+				"name": "",
+				"tooltip": ""
 			}
 		}
 	}

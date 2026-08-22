@@ -171,7 +171,7 @@ watch([commandsError, languagesError], ([commandsErr, languagesErr]) => {
 	}
 });
 
-useHead({
+useSeoMeta({
 	title: () => title.value,
 });
 </script>

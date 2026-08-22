@@ -59,6 +59,7 @@ const config: KnipConfig = {
 				"nuxt-site-config",
 				"workbox-*",
 				"rolldown",
+				"vue-i18n" /* Provided by @nuxtjs/i18n; imported directly in test/unit/i18n/empty-placeholders.test.ts */,
 
 				/** Peer-style dep resolved by @nuxtjs/i18n at prepare time (not imported directly) */
 				"@intlify/shared",
@@ -78,6 +79,12 @@ const config: KnipConfig = {
 
 				/** Used for cli */
 				"@shelve/cli",
+			],
+			ignoreUnresolved: [
+				/** Since @onmax/nuxt-better-auth 0.1.x this is an ambient `declare module` in
+				 * .nuxt/types/*.d.ts rather than a tsconfig path alias, so knip's resolver
+				 * cannot follow it. Type-only imports resolve fine under tsc. */
+				"#nuxt-better-auth",
 			],
 			ignoreFiles: [
 				"**/*.unused.*",

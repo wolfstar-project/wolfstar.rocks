@@ -1,5 +1,12 @@
 import { describe, expect, it, vi } from "vitest";
-import { classifyGuildError, parseGuildSettings } from "~/utils/guild-dashboard";
+import { ref } from "vue";
+import {
+	classifyGuildError,
+	guildSettingsSaveFailureToast,
+	parseGuildSettings,
+	parseGuildSettingsSaveResponse,
+	resolveGuildIconSrc,
+} from "~/utils/guild-dashboard";
 
 describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 	it("should clear staged changes when guild ID changes", () => {
@@ -75,6 +82,69 @@ describe("guild-dashboard utilities - guild switch watcher simulation", () => {
 
 		// Changes should NOT be cleared (no old guild ID)
 		expect(stagedChanges).toStrictEqual({ some: "changes" });
+	});
+});
+
+describe("resolveGuildIconSrc", () => {
+	const guild = { id: "111", icon: "iconhash123", acronym: "TG" };
+
+	it("resolves a CDN URL from unwrapped guild data", () => {
+		const url = resolveGuildIconSrc(guild, { size: 64 });
+		expect(url).toContain("/icons/111/iconhash123");
+		expect(url).toContain("size=64");
+	});
+
+	it("returns undefined when the guild is missing", () => {
+		expect(resolveGuildIconSrc(undefined)).toBeUndefined();
+		expect(resolveGuildIconSrc(null)).toBeUndefined();
+	});
+
+	it("returns undefined when the guild has no icon hash", () => {
+		expect(resolveGuildIconSrc({ id: "111", icon: null, acronym: "TG" })).toBeUndefined();
+	});
+
+	it("does not treat a ref wrapper as guild data (historical dashboard bug)", () => {
+		const guildRef = ref(guild);
+		// Passing the ref itself (instead of guildRef.value) must not produce a URL.
+		expect(resolveGuildIconSrc(guildRef as unknown as typeof guild)).toBeUndefined();
+		expect(resolveGuildIconSrc(guildRef.value)).toContain("/icons/111/iconhash123");
+	});
+});
+
+describe("guild settings save failure feedback", () => {
+	it("builds a localized error toast without clearing staged edits", () => {
+		const stagedChanges: Record<string, unknown> = { prefix: "!" };
+		const toasts: Array<ReturnType<typeof guildSettingsSaveFailureToast>> = [];
+		const t = (key: string) => key;
+
+		function onSaveFailure() {
+			toasts.push(guildSettingsSaveFailureToast(t));
+			// Intentionally do not clear stagedChanges — admin must be able to retry.
+		}
+
+		onSaveFailure();
+
+		expect(stagedChanges).toStrictEqual({ prefix: "!" });
+		expect(toasts).toHaveLength(1);
+		expect(toasts[0]).toStrictEqual({
+			color: "error",
+			title: "dashboard.update_failed_message",
+			description: "dashboard.update_failed_why dashboard.update_failed_fix",
+			icon: "heroicons:x-circle",
+		});
+	});
+
+	it("parses object PATCH responses as-is", () => {
+		const payload = { prefix: "?" };
+		expect(parseGuildSettingsSaveResponse(payload)).toBe(payload);
+	});
+
+	it("parses JSON string PATCH responses", () => {
+		expect(parseGuildSettingsSaveResponse('{"prefix":"!"}')).toStrictEqual({ prefix: "!" });
+	});
+
+	it("throws on malformed JSON string PATCH responses so callers toast and keep edits", () => {
+		expect(() => parseGuildSettingsSaveResponse("{bad")).toThrow(SyntaxError);
 	});
 });
 

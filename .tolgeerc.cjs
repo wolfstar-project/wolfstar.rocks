@@ -82,6 +82,12 @@ module.exports = {
 		path: "./i18n/.tolgee-pull",
 		fileStructureTemplate: "{languageTag}/{namespace}.{extension}",
 		delimiter: ".",
+		// `tolgee pull` defaults to TRANSLATED + REVIEWED, and the remap script
+		// overwrites each locale file wholesale — so untranslated keys would be
+		// dropped from disk on every sync. Export them too (as empty strings) so
+		// they survive as placeholders instead of disappearing or being refilled
+		// with English. See wolfstar-project/wolfstar#240.
+		states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"],
 	},
 	// Exported for scripts/tolgee-pull-remap.ts
 	tolgeeToLocal: TOLGEE_TO_LOCAL,

@@ -45,6 +45,25 @@ describe("useUser", () => {
 		}).not.toThrow();
 	});
 
+	it("should skip /api/users and return empty data for anonymous guests", async () => {
+		mockApiResponse = {
+			transformedGuilds: [createMockOauthFlattenedGuild({ id: "should-not-appear" })],
+			user: createMockUser(),
+		};
+
+		const result = useUser(null);
+		await result.execute();
+
+		expect(result.user.value).toBeNull();
+		expect(result.guilds.value).toStrictEqual([]);
+		expect(result.filteredGuilds.value).toStrictEqual([]);
+		expect(result.data.value).toMatchObject({
+			user: null,
+			transformedGuilds: [],
+			isStale: false,
+		});
+	});
+
 	it("should work without options parameter (backwards compatibility)", () => {
 		const mockUser = createMockUser();
 		expect(() => {

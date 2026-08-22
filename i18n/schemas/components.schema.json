@@ -4,115 +4,49 @@
 	"description": "Schema for components.json. Generated from en/components.json — do not edit manually.",
 	"type": "object",
 	"properties": {
-		"errors": {
-			"type": "object",
-			"properties": {
-				"session_expired": {
-					"type": "string"
-				},
-				"access_denied": {
-					"type": "string"
-				},
-				"too_many_requests": {
-					"type": "string"
-				},
-				"network_error": {
-					"type": "string"
-				},
-				"request_timeout": {
-					"type": "string"
-				},
-				"unexpected": {
-					"type": "string"
-				},
-				"check_connection": {
-					"type": "string"
-				},
-				"rate_limit": {
-					"type": "string"
-				},
-				"server_error": {
-					"type": "string"
-				},
-				"server_error_title": {
-					"type": "string"
-				},
-				"if_persists": {
-					"type": "string"
-				},
-				"retrying": {
-					"type": "string"
-				},
-				"session_expired_description": {
-					"type": "string"
-				},
-				"access_denied_description": {
-					"type": "string"
-				},
-				"too_many_requests_description": {
-					"type": "string"
-				},
-				"request_timeout_description": {
-					"type": "string"
-				},
-				"request_timeout_suggestion": {
-					"type": "string"
-				},
-				"network_error_description": {
-					"type": "string"
-				},
-				"loading_servers": {
-					"type": "string"
-				},
-				"failed_to_load_servers": {
-					"type": "string"
-				}
-			},
-			"additionalProperties": false
-		},
 		"feedback": {
 			"type": "object",
 			"properties": {
-				"send": {
-					"type": "string"
-				},
-				"title": {
-					"type": "string"
-				},
 				"description": {
-					"type": "string"
-				},
-				"sent_title": {
-					"type": "string"
-				},
-				"sent_description": {
-					"type": "string"
-				},
-				"sent_toast_description": {
-					"type": "string"
-				},
-				"name": {
 					"type": "string"
 				},
 				"email": {
 					"type": "string"
 				},
-				"message": {
-					"type": "string"
-				},
-				"name_placeholder": {
-					"type": "string"
-				},
 				"email_placeholder": {
+					"type": "string"
+				},
+				"message": {
 					"type": "string"
 				},
 				"message_placeholder": {
 					"type": "string"
 				},
-				"send_failed_title": {
+				"name": {
+					"type": "string"
+				},
+				"name_placeholder": {
+					"type": "string"
+				},
+				"send": {
 					"type": "string"
 				},
 				"send_failed_description": {
+					"type": "string"
+				},
+				"send_failed_title": {
+					"type": "string"
+				},
+				"sent_description": {
+					"type": "string"
+				},
+				"sent_title": {
+					"type": "string"
+				},
+				"sent_toast_description": {
+					"type": "string"
+				},
+				"title": {
 					"type": "string"
 				}
 			},
@@ -121,16 +55,19 @@
 		"pwa": {
 			"type": "object",
 			"properties": {
-				"update_available": {
+				"dismiss": {
+					"type": "string"
+				},
+				"install": {
 					"type": "string"
 				},
 				"install_app": {
 					"type": "string"
 				},
-				"dismiss": {
+				"reload": {
 					"type": "string"
 				},
-				"reload": {
+				"update_available": {
 					"type": "string"
 				}
 			},
@@ -139,16 +76,22 @@
 		"select": {
 			"type": "object",
 			"properties": {
-				"seconds": {
+				"clear_selected": {
 					"type": "string"
 				},
-				"minutes": {
+				"days": {
 					"type": "string"
 				},
 				"hours": {
 					"type": "string"
 				},
-				"days": {
+				"max_duration": {
+					"type": "string"
+				},
+				"min_duration": {
+					"type": "string"
+				},
+				"minutes": {
 					"type": "string"
 				},
 				"none": {
@@ -157,13 +100,7 @@
 				"search": {
 					"type": "string"
 				},
-				"clear_selected": {
-					"type": "string"
-				},
-				"min_duration": {
-					"type": "string"
-				},
-				"max_duration": {
+				"seconds": {
 					"type": "string"
 				}
 			},

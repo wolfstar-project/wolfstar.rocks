@@ -33,7 +33,8 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 			return userValue ? `user:${userValue.id}:data` : "user:anonymous:data";
 		},
 		async (_nuxtApp, { signal }) => {
-			if (!toValue(authUser)) {
+			const userValue = toValue(authUser);
+			if (!userValue) {
 				return {
 					user: null,
 					transformedGuilds: [] as OauthFlattenedGuild[],
@@ -52,6 +53,10 @@ export function useUser(authUser: MaybeRefOrGetter<AuthUser | null>, options?: U
 			});
 
 			return { ...data, isStale };
+		},
+		{
+			server: false,
+			watch: [() => toValue(authUser)?.id ?? null],
 		},
 	);
 

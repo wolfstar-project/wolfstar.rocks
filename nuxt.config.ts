@@ -3,6 +3,7 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
+import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -253,6 +254,10 @@ export default defineNuxtConfig({
 			},
 		},
 		"/oauth/callback": {
+			// Discord returns through this route before the server middleware forwards
+			// the OAuth response to Better Auth. A prerendered copy bypasses that
+			// middleware and leaves the browser on the callback status page.
+			prerender: false,
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
 		// Redirect-only OAuth entry point: its middleware immediately redirects to
@@ -264,10 +269,15 @@ export default defineNuxtConfig({
 		},
 		"/login": { prerender: false },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile is a per-user authenticated page: never statically prerender it
-		// (crawlLinks would otherwise reach it via links on prerendered pages and
-		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
+		// /profile hosts local UI settings (theme/locale/motion) for guests and the
+		// Discord account/servers view for signed-in users. Never statically prerender
+		// it (crawlLinks would otherwise reach it via links on prerendered pages).
 		"/profile": {
+			appLayout: "default",
+			prerender: false,
+			robots: true,
+		},
+		"/account": {
 			appLayout: "default",
 			prerender: false,
 			robots: true,
@@ -374,6 +384,11 @@ export default defineNuxtConfig({
 		css: {
 			transformer: "lightningcss",
 		},
+		plugins: [
+			// Untranslated keys are stored as empty strings; drop them so vue-i18n
+			// falls back to English instead of rendering "".
+			stripEmptyI18nMessagesPlugin(),
+		],
 		optimizeDeps: {
 			include: [
 				"@discordjs/core/http-only",

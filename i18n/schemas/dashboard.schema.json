@@ -7,154 +7,133 @@
 		"dashboard": {
 			"type": "object",
 			"properties": {
+				"access_denied_description": {
+					"type": "string"
+				},
+				"access_denied_title": {
+					"type": "string"
+				},
+				"changes_reset_description": {
+					"type": "string"
+				},
+				"changes_reset_title": {
+					"type": "string"
+				},
+				"discard_changes": {
+					"type": "string"
+				},
+				"error_aria": {
+					"type": "string"
+				},
+				"error_fallback": {
+					"type": "string"
+				},
+				"error_forbidden": {
+					"type": "string"
+				},
+				"error_title": {
+					"type": "string"
+				},
+				"invalid_guild_fix": {
+					"type": "string"
+				},
+				"invalid_guild_message": {
+					"type": "string"
+				},
+				"invalid_guild_why": {
+					"type": "string"
+				},
+				"loading_aria": {
+					"type": "string"
+				},
+				"loading_description": {
+					"type": "string"
+				},
+				"loading_title": {
+					"type": "string"
+				},
 				"nav": {
 					"type": "object",
 					"properties": {
-						"home": {
-							"type": "string"
-						},
-						"moderation": {
-							"type": "string"
-						},
 						"bad_words": {
 							"type": "string"
 						},
 						"capitals": {
 							"type": "string"
 						},
-						"invites": {
-							"type": "string"
-						},
-						"links": {
-							"type": "string"
-						},
-						"message_duplication": {
-							"type": "string"
-						},
-						"line_spam": {
-							"type": "string"
-						},
-						"reactions": {
-							"type": "string"
-						},
 						"channels": {
-							"type": "string"
-						},
-						"roles": {
-							"type": "string"
-						},
-						"events": {
 							"type": "string"
 						},
 						"commands": {
 							"type": "string"
 						},
+						"events": {
+							"type": "string"
+						},
+						"home": {
+							"type": "string"
+						},
+						"invites": {
+							"type": "string"
+						},
+						"line_spam": {
+							"type": "string"
+						},
+						"links": {
+							"type": "string"
+						},
 						"logs": {
+							"type": "string"
+						},
+						"message_duplication": {
+							"type": "string"
+						},
+						"moderation": {
+							"type": "string"
+						},
+						"reactions": {
+							"type": "string"
+						},
+						"roles": {
 							"type": "string"
 						}
 					},
 					"additionalProperties": false
 				},
-				"loading_title": {
-					"type": "string"
-				},
-				"loading_description": {
-					"type": "string"
-				},
-				"loading_aria": {
-					"type": "string"
-				},
-				"error_title": {
-					"type": "string"
-				},
-				"error_aria": {
-					"type": "string"
-				},
-				"error_forbidden": {
-					"type": "string"
-				},
-				"error_fallback": {
+				"reset_changes": {
 					"type": "string"
 				},
 				"save_changes": {
 					"type": "string"
 				},
-				"reset_changes": {
-					"type": "string"
-				},
-				"unsaved_title": {
-					"type": "string"
-				},
-				"unsaved_description": {
-					"type": "string"
-				},
-				"stay_on_page": {
-					"type": "string"
-				},
-				"discard_changes": {
-					"type": "string"
-				},
-				"access_denied_title": {
-					"type": "string"
-				},
-				"access_denied_description": {
-					"type": "string"
-				},
-				"unauthorized_title": {
-					"type": "string"
-				},
-				"unauthorized_description": {
+				"settings_saved_description": {
 					"type": "string"
 				},
 				"settings_saved_title": {
 					"type": "string"
 				},
-				"settings_saved_description": {
+				"stay_on_page": {
 					"type": "string"
 				},
-				"changes_reset_title": {
+				"unauthorized_description": {
 					"type": "string"
 				},
-				"changes_reset_description": {
+				"unauthorized_title": {
+					"type": "string"
+				},
+				"unsaved_description": {
+					"type": "string"
+				},
+				"unsaved_title": {
+					"type": "string"
+				},
+				"update_failed_fix": {
 					"type": "string"
 				},
 				"update_failed_message": {
 					"type": "string"
 				},
 				"update_failed_why": {
-					"type": "string"
-				},
-				"update_failed_fix": {
-					"type": "string"
-				},
-				"invalid_guild_why": {
-					"type": "string"
-				},
-				"invalid_guild_message": {
-					"type": "string"
-				},
-				"invalid_guild_fix": {
-					"type": "string"
-				}
-			},
-			"additionalProperties": false
-		},
-		"guild_manage": {
-			"type": "object",
-			"properties": {
-				"general": {
-					"type": "string"
-				},
-				"commands_unavailable_title": {
-					"type": "string"
-				},
-				"commands_unavailable_description": {
-					"type": "string"
-				},
-				"languages_unavailable_title": {
-					"type": "string"
-				},
-				"languages_unavailable_description": {
 					"type": "string"
 				}
 			},
@@ -163,32 +142,50 @@
 		"guild_logs": {
 			"type": "object",
 			"properties": {
-				"title": {
-					"type": "string"
-				},
-				"tab_moderation": {
-					"type": "string"
-				},
-				"tab_warnings": {
-					"type": "string"
-				},
-				"tab_commands": {
-					"type": "string"
-				},
-				"tab_activity": {
-					"type": "string"
-				},
-				"search_placeholder": {
-					"type": "string"
-				},
-				"search_aria": {
-					"type": "string"
-				},
-				"no_logs": {
-					"type": "string"
-				},
 				"all_actions": {
 					"type": "string"
+				},
+				"columns": {
+					"type": "object",
+					"properties": {
+						"action": {
+							"type": "string"
+						},
+						"case": {
+							"type": "string"
+						},
+						"command": {
+							"type": "string"
+						},
+						"date": {
+							"type": "string"
+						},
+						"duration": {
+							"type": "string"
+						},
+						"latency": {
+							"type": "string"
+						},
+						"moderator": {
+							"type": "string"
+						},
+						"reason": {
+							"type": "string"
+						},
+						"status": {
+							"type": "string"
+						},
+						"time": {
+							"type": "string"
+						},
+						"user": {
+							"type": "string"
+						},
+						"when": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
 				},
 				"filter_action": {
 					"type": "string"
@@ -196,10 +193,25 @@
 				"filter_status": {
 					"type": "string"
 				},
-				"refresh_moderation": {
+				"no_activity_filter_match": {
 					"type": "string"
 				},
-				"refresh_command": {
+				"no_commands_filter_match": {
+					"type": "string"
+				},
+				"no_filter_match": {
+					"type": "string"
+				},
+				"no_logs": {
+					"type": "string"
+				},
+				"no_moderation_cases": {
+					"type": "string"
+				},
+				"no_reason": {
+					"type": "string"
+				},
+				"no_warnings": {
 					"type": "string"
 				},
 				"refresh_activity": {
@@ -208,82 +220,70 @@
 				"refresh_audit": {
 					"type": "string"
 				},
-				"columns": {
-					"type": "object",
-					"properties": {
-						"case": {
-							"type": "string"
-						},
-						"action": {
-							"type": "string"
-						},
-						"moderator": {
-							"type": "string"
-						},
-						"user": {
-							"type": "string"
-						},
-						"reason": {
-							"type": "string"
-						},
-						"date": {
-							"type": "string"
-						},
-						"time": {
-							"type": "string"
-						},
-						"when": {
-							"type": "string"
-						},
-						"duration": {
-							"type": "string"
-						},
-						"command": {
-							"type": "string"
-						},
-						"status": {
-							"type": "string"
-						},
-						"latency": {
-							"type": "string"
-						}
-					},
-					"additionalProperties": false
-				},
-				"no_reason": {
+				"refresh_command": {
 					"type": "string"
 				},
-				"no_warnings": {
+				"refresh_moderation": {
 					"type": "string"
 				},
-				"no_moderation_cases": {
+				"search_aria": {
 					"type": "string"
 				},
-				"no_filter_match": {
+				"search_placeholder": {
 					"type": "string"
 				},
-				"no_commands_filter_match": {
-					"type": "string"
-				},
-				"no_activity_filter_match": {
-					"type": "string"
-				},
-				"status_label": {
+				"showing_entries": {
 					"type": "string"
 				},
 				"status_all": {
 					"type": "string"
 				},
+				"status_failed": {
+					"type": "string"
+				},
+				"status_label": {
+					"type": "string"
+				},
 				"status_success": {
 					"type": "string"
 				},
-				"status_failed": {
+				"tab_activity": {
+					"type": "string"
+				},
+				"tab_commands": {
+					"type": "string"
+				},
+				"tab_moderation": {
+					"type": "string"
+				},
+				"tab_warnings": {
+					"type": "string"
+				},
+				"title": {
 					"type": "string"
 				},
 				"unknown": {
 					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"guild_manage": {
+			"type": "object",
+			"properties": {
+				"commands_unavailable_description": {
+					"type": "string"
 				},
-				"showing_entries": {
+				"commands_unavailable_title": {
+					"type": "string"
+				},
+				"general": {
+					"type": "string"
+				},
+				"languages_unavailable_description": {
+					"type": "string"
+				},
+				"languages_unavailable_title": {
 					"type": "string"
 				}
 			},

@@ -14,6 +14,7 @@ import {
 } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
+import { normalizeTolgeeDictionary } from "./utils/tolgee-dictionary.ts";
 
 const require = createRequire(import.meta.url);
 const config = require("../.tolgeerc.cjs") as {
@@ -77,8 +78,9 @@ for (const tag of mappedTags) {
 	for (const ns of config.namespaces) {
 		let content: Buffer;
 		try {
-			content = readFileSync(join(pullRoot, tag, `${ns}.json`));
-			JSON.parse(content.toString("utf8"));
+			const source = readFileSync(join(pullRoot, tag, `${ns}.json`), "utf8");
+			const dictionary = normalizeTolgeeDictionary(JSON.parse(source));
+			content = Buffer.from(`${JSON.stringify(dictionary, null, "\t")}\n`);
 		} catch (error) {
 			console.error(`Invalid or unreadable staging file: ${tag}/${ns}.json`);
 			console.error(String(error));

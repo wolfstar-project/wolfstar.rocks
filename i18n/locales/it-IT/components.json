@@ -1,37 +1,37 @@
 {
-	"$schema": "../../schemas/components.schema.json",
-	"feedback": {
-		"send": "Invia feedback",
-		"title": "Invia feedback",
-		"description": "Segnala un bug o condividi i tuoi pensieri con il team di WolfStar.",
-		"sent_title": "Feedback inviato",
-		"sent_description": "Grazie per aiutare a migliorare WolfStar.",
-		"sent_toast_description": "Grazie per aver aiutato a migliorare WolfStar.",
-		"name": "Nome",
-		"email": "Email",
-		"message": "Messaggio",
-		"name_placeholder": "Il tuo nome",
-		"email_placeholder": "tua{'@'}email.com",
-		"message_placeholder": "Raccontaci cosa ne pensi...",
-		"send_failed_title": "Invio non riuscito",
-		"send_failed_description": "Impossibile inviare il feedback. Riprova."
-	},
-	"pwa": {
-		"update_available": "Aggiornamento disponibile",
-		"install_app": "Installa app",
-		"install": "Install",
-		"dismiss": "Chiudi",
-		"reload": "Ricarica"
-	},
-	"select": {
-		"seconds": "Secondi",
-		"minutes": "Minuti",
-		"hours": "Ore",
-		"days": "Giorni",
-		"none": "Nessuno",
-		"search": "Cerca...",
-		"clear_selected": "Cancella selezione",
-		"min_duration": "Durata minima",
-		"max_duration": "Durata massima"
-	}
+  "$schema": "../../schemas/components.schema.json",
+  "feedback": {
+    "description": "Segnala un bug o condividi i tuoi pensieri con il team di WolfStar.",
+    "email": "Email",
+    "email_placeholder": "tua{'@'}email.com",
+    "message": "Messaggio",
+    "message_placeholder": "Raccontaci cosa ne pensi...",
+    "name": "Nome",
+    "name_placeholder": "Il tuo nome",
+    "send": "Invia feedback",
+    "send_failed_description": "Impossibile inviare il feedback. Riprova.",
+    "send_failed_title": "Invio non riuscito",
+    "sent_description": "Grazie per aiutare a migliorare WolfStar.",
+    "sent_title": "Feedback inviato",
+    "sent_toast_description": "Grazie per aver aiutato a migliorare WolfStar.",
+    "title": "Invia feedback"
+  },
+  "pwa": {
+    "dismiss": "Chiudi",
+    "install": "Install",
+    "install_app": "Installa app",
+    "reload": "Ricarica",
+    "update_available": "Aggiornamento disponibile"
+  },
+  "select": {
+    "clear_selected": "Cancella selezione",
+    "days": "Giorni",
+    "hours": "Ore",
+    "max_duration": "Durata massima",
+    "min_duration": "Durata minima",
+    "minutes": "Minuti",
+    "none": "Nessuno",
+    "search": "Cerca...",
+    "seconds": "Secondi"
+  }
 }

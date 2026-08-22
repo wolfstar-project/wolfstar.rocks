@@ -16,21 +16,6 @@ export type UIColors =
 	| "accent"
 	| "neutral";
 
-export type HomeAccent =
-	| "primary"
-	| "secondary"
-	| "success"
-	| "error"
-	| "info"
-	| "warning"
-	| "accent"
-	| "spectrum-red"
-	| "spectrum-orange"
-	| "spectrum-yellow"
-	| "spectrum-green"
-	| "spectrum-blue"
-	| "spectrum-purple";
-
 export enum BrandingColors {
 	Secondary = "#fd171b",
 }
@@ -45,37 +30,6 @@ export enum Colors {
 	Red300 = "#e57373",
 	Yellow = "#ffeb3b",
 	Yellow300 = "#fff176",
-}
-
-export interface HomeStat {
-	accent: HomeAccent;
-	label: string;
-	value: string;
-}
-
-export interface HomeFeature {
-	accent?: HomeAccent;
-	big: boolean;
-	description: string;
-	icon: string;
-	title: string;
-}
-
-export interface HomeDashboardMember {
-	avatarClass: string;
-	badgeClass: string;
-	initials: string;
-	name: string;
-	nameClass: string;
-	role: string;
-	status: string;
-}
-
-export interface HomeTestimonial {
-	big?: boolean;
-	name: string;
-	quote: string;
-	role: string;
 }
 
 export interface ModerationAction {
@@ -111,7 +65,7 @@ export interface Profile {
 	verified: boolean;
 }
 
-export type ProfileName = "baddie" | "louduser" | "redstar" | "stella" | "wolfstar";
+export type ProfileName = "baddie" | "louduser" | "redstar" | "staryl" | "stella" | "wolfstar";
 
 /** Applications rendered inside the Discord slash-command suggestion panel. */
 export interface SlashCommandApp {
@@ -154,6 +108,7 @@ interface ShowcaseCommandBase {
 	description: string;
 	invoker: ProfileName;
 	frequentlyUsed?: boolean;
+	ephemeral?: boolean;
 	options: ShowcaseCommandOption[];
 }
 
@@ -167,9 +122,8 @@ interface ShowcaseCommandEmbedResponse {
 /** Plain success reply, e.g. "✅ Created case 3 | @baddie". */
 interface ShowcaseCommandTextResponse {
 	responseType: "text";
-	/** Prefix before the user mention; include trailing " | ". */
 	content: string;
-	mentionUser: string;
+	mentionUser?: string;
 	/** Desktop-only avatar inside the mention pill. */
 	mentionAvatar?: string;
 }

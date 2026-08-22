@@ -253,7 +253,7 @@ describe("DiscordAppLauncher", () => {
 			id: "wolfstar-conf-menu",
 			tileTitle: "conf menu",
 			kind: "command",
-			commandName: "conf",
+			commandName: "conf menu",
 		});
 	});
 

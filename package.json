@@ -153,6 +153,7 @@
 		"discord-api-types": "0.38.51",
 		"eslint": "10.8.0",
 		"eslint-plugin-regexp": "3.1.1",
+		"h3-next": "npm:h3@2.0.1-rc.22",
 		"jsdom": "29.1.1",
 		"knip": "6.31.0",
 		"msw": "catalog:msw",

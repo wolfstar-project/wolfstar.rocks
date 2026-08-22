@@ -10,22 +10,61 @@
 				"errors": {
 					"type": "object",
 					"properties": {
-						"USER_NOT_FOUND": {
+						"ACCOUNT_NOT_FOUND": {
 							"type": "string"
 						},
-						"INVALID_PASSWORD": {
+						"CREDENTIAL_ACCOUNT_NOT_FOUND": {
 							"type": "string"
 						},
-						"INVALID_EMAIL_OR_PASSWORD": {
+						"EMAIL_CAN_NOT_BE_UPDATED": {
 							"type": "string"
 						},
 						"EMAIL_NOT_VERIFIED": {
 							"type": "string"
 						},
-						"SESSION_EXPIRED": {
+						"FAILED_TO_CREATE_SESSION": {
+							"type": "string"
+						},
+						"FAILED_TO_CREATE_USER": {
+							"type": "string"
+						},
+						"FAILED_TO_GET_SESSION": {
+							"type": "string"
+						},
+						"FAILED_TO_UPDATE_USER": {
+							"type": "string"
+						},
+						"GENERIC": {
+							"type": "string"
+						},
+						"INVALID_CALLBACK_REQUEST": {
+							"type": "string"
+						},
+						"INVALID_EMAIL": {
+							"type": "string"
+						},
+						"INVALID_EMAIL_OR_PASSWORD": {
+							"type": "string"
+						},
+						"INVALID_PASSWORD": {
+							"type": "string"
+						},
+						"INVALID_SESSION_TOKEN": {
 							"type": "string"
 						},
 						"INVALID_TOKEN": {
+							"type": "string"
+						},
+						"PASSWORD_TOO_SHORT": {
+							"type": "string"
+						},
+						"PROVIDER_NOT_FOUND": {
+							"type": "string"
+						},
+						"SESSION_EXPIRED": {
+							"type": "string"
+						},
+						"SOCIAL_ACCOUNT_ALREADY_LINKED": {
 							"type": "string"
 						},
 						"TOKEN_EXPIRED": {
@@ -34,49 +73,10 @@
 						"USER_ALREADY_EXISTS": {
 							"type": "string"
 						},
-						"INVALID_EMAIL": {
-							"type": "string"
-						},
-						"PASSWORD_TOO_SHORT": {
-							"type": "string"
-						},
-						"FAILED_TO_CREATE_USER": {
-							"type": "string"
-						},
-						"FAILED_TO_CREATE_SESSION": {
-							"type": "string"
-						},
-						"FAILED_TO_UPDATE_USER": {
-							"type": "string"
-						},
-						"FAILED_TO_GET_SESSION": {
-							"type": "string"
-						},
-						"INVALID_SESSION_TOKEN": {
-							"type": "string"
-						},
-						"SOCIAL_ACCOUNT_ALREADY_LINKED": {
-							"type": "string"
-						},
-						"PROVIDER_NOT_FOUND": {
-							"type": "string"
-						},
-						"INVALID_CALLBACK_REQUEST": {
-							"type": "string"
-						},
-						"ACCOUNT_NOT_FOUND": {
-							"type": "string"
-						},
 						"USER_EMAIL_NOT_FOUND": {
 							"type": "string"
 						},
-						"EMAIL_CAN_NOT_BE_UPDATED": {
-							"type": "string"
-						},
-						"CREDENTIAL_ACCOUNT_NOT_FOUND": {
-							"type": "string"
-						},
-						"GENERIC": {
+						"USER_NOT_FOUND": {
 							"type": "string"
 						}
 					},
@@ -85,13 +85,55 @@
 				"oauth": {
 					"type": "object",
 					"properties": {
-						"callback_sr_title": {
-							"type": "string"
-						},
 						"callback_sr_status": {
 							"type": "string"
 						},
-						"login_required_title": {
+						"callback_sr_title": {
+							"type": "string"
+						},
+						"connecting_discord": {
+							"type": "string"
+						},
+						"go_to_login": {
+							"type": "string"
+						},
+						"guild_id_required": {
+							"type": "string"
+						},
+						"guild_not_found_description": {
+							"type": "string"
+						},
+						"guild_not_found_title": {
+							"type": "string"
+						},
+						"guild_redirecting_description": {
+							"type": "string"
+						},
+						"guild_redirecting_title": {
+							"type": "string"
+						},
+						"guild_return_login": {
+							"type": "string"
+						},
+						"guild_seo_og_description": {
+							"type": "string"
+						},
+						"guild_seo_og_title": {
+							"type": "string"
+						},
+						"guild_seo_title": {
+							"type": "string"
+						},
+						"guild_setup_failed_title": {
+							"type": "string"
+						},
+						"guild_sr_status": {
+							"type": "string"
+						},
+						"guild_sr_title": {
+							"type": "string"
+						},
+						"login_redirecting": {
 							"type": "string"
 						},
 						"login_required_description": {
@@ -100,91 +142,49 @@
 						"login_required_link": {
 							"type": "string"
 						},
-						"go_to_login": {
-							"type": "string"
-						},
-						"sign_in_failed_title": {
-							"type": "string"
-						},
-						"try_again": {
-							"type": "string"
-						},
-						"signing_in_title": {
-							"type": "string"
-						},
-						"connecting_discord": {
-							"type": "string"
-						},
-						"welcome_title": {
-							"type": "string"
-						},
-						"redirecting_dashboard": {
-							"type": "string"
-						},
-						"session_not_found_title": {
-							"type": "string"
-						},
-						"session_not_found_description": {
-							"type": "string"
-						},
-						"seo_title": {
-							"type": "string"
-						},
-						"seo_og_title": {
-							"type": "string"
-						},
-						"seo_og_description": {
-							"type": "string"
-						},
-						"login_seo_title": {
-							"type": "string"
-						},
-						"login_seo_og_title": {
+						"login_required_title": {
 							"type": "string"
 						},
 						"login_seo_og_description": {
 							"type": "string"
 						},
-						"login_redirecting": {
+						"login_seo_og_title": {
+							"type": "string"
+						},
+						"login_seo_title": {
+							"type": "string"
+						},
+						"redirecting_dashboard": {
 							"type": "string"
 						},
 						"redirecting_discord_description": {
 							"type": "string"
 						},
-						"guild_sr_title": {
+						"seo_og_description": {
 							"type": "string"
 						},
-						"guild_sr_status": {
+						"seo_og_title": {
 							"type": "string"
 						},
-						"guild_not_found_title": {
+						"seo_title": {
 							"type": "string"
 						},
-						"guild_not_found_description": {
+						"session_not_found_description": {
 							"type": "string"
 						},
-						"guild_setup_failed_title": {
+						"session_not_found_title": {
 							"type": "string"
 						},
-						"guild_return_login": {
+						"sign_in_failed_title": {
 							"type": "string"
 						},
-						"guild_redirecting_title": {
+						"signing_in_title": {
 							"type": "string"
 						},
-						"guild_redirecting_description": {
+						"try_again": {
 							"type": "string"
 						},
-						"guild_seo_title": {
-							"type": "string"
-						},
-						"guild_seo_og_title": {
-							"type": "string"
-						},
-						"guild_seo_og_description": {
-							"type": "string"
-						},
-						"guild_id_required": {
+						"welcome_title": {
 							"type": "string"
 						}
 					},

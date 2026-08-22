@@ -1,37 +1,37 @@
 {
 	"$schema": "../../schemas/components.schema.json",
 	"feedback": {
-		"send": "",
-		"title": "",
 		"description": "",
-		"sent_title": "",
-		"sent_description": "",
-		"sent_toast_description": "",
-		"name": "",
 		"email": "",
-		"message": "",
-		"name_placeholder": "",
 		"email_placeholder": "",
+		"message": "",
 		"message_placeholder": "",
+		"name": "",
+		"name_placeholder": "",
+		"send": "",
+		"send_failed_description": "",
 		"send_failed_title": "",
-		"send_failed_description": ""
+		"sent_description": "",
+		"sent_title": "",
+		"sent_toast_description": "",
+		"title": ""
 	},
 	"pwa": {
-		"update_available": "",
-		"install_app": "",
-		"install": "",
 		"dismiss": "",
-		"reload": ""
+		"install": "",
+		"install_app": "",
+		"reload": "",
+		"update_available": ""
 	},
 	"select": {
-		"seconds": "",
-		"minutes": "",
-		"hours": "",
+		"clear_selected": "",
 		"days": "",
+		"hours": "",
+		"max_duration": "",
+		"min_duration": "",
+		"minutes": "",
 		"none": "",
 		"search": "",
-		"clear_selected": "",
-		"min_duration": "",
-		"max_duration": ""
+		"seconds": ""
 	}
 }

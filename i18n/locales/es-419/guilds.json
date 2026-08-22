@@ -1,388 +1,388 @@
 {
 	"$schema": "../../schemas/guilds.schema.json",
+	"guild_card": {
+		"invite_aria": null,
+		"invite_bot": null,
+		"invite_bot_aria": null,
+		"manage_aria": null,
+		"manage_server": null,
+		"manage_server_aria": null,
+		"members_online": null,
+		"no_permission": null,
+		"no_permission_aria": null,
+		"total_members": null
+	},
 	"guild_settings": {
-		"save_failed": "",
-		"please_try_again": "",
-		"general": {
-			"title": "",
-			"subtitle": "",
-			"form_aria": "",
-			"server_info": "",
-			"server_info_description": "",
-			"server_stats_aria": "",
-			"stat_members": "",
-			"stat_categories": "",
-			"stat_text_channels": "",
-			"stat_voice_channels": "",
-			"stat_roles": "",
-			"copy_server_id": "",
-			"server_id_copied_title": "",
-			"server_id_copied_description": "",
-			"need_help": "",
-			"prefix": "",
-			"prefix_description": "",
-			"prefix_placeholder": "",
-			"prefix_aria": "",
-			"language": "",
-			"language_description": "",
-			"language_placeholder": "",
-			"language_aria": "",
-			"recent_activity": "",
-			"no_activity": "",
-			"no_activity_description": "",
-			"save_failed_message": ""
-		},
-		"roles": {
-			"title": "",
-			"subtitle": "",
-			"form_aria": "",
-			"general_options": "",
-			"configurable": "",
-			"configurable_help": "",
-			"restricted": "",
-			"restricted_help": ""
-		},
 		"channels": {
-			"title": "",
-			"subtitle": "",
-			"form_aria": "",
-			"logging_channels": "",
-			"logging_channels_help": "",
-			"excluded_channels": "",
-			"excluded_channels_help": ""
-		},
-		"events": {
-			"title": "",
-			"subtitle": "",
-			"form_aria": "",
-			"moderation_events": "",
-			"moderation_events_help": "",
-			"message_events": "",
-			"message_events_help": "",
-			"channels_page_link": "",
-			"toggle_aria": ""
-		},
-		"moderation": {
-			"title": "",
-			"subtitle": "",
-			"form_aria": ""
+			"excluded_channels": null,
+			"excluded_channels_help": null,
+			"form_aria": null,
+			"logging_channels": null,
+			"logging_channels_help": null,
+			"subtitle": null,
+			"title": null
 		},
 		"commands": {
-			"title": "",
-			"subtitle": "",
-			"form_aria": "",
-			"enable_all": "",
-			"disable_all": "",
-			"reset": "",
-			"category_reset": "",
-			"category_reset_description": "",
-			"save_failed": ""
+			"category_reset": null,
+			"category_reset_description": null,
+			"disable_all": null,
+			"enable_all": null,
+			"form_aria": null,
+			"reset": null,
+			"save_failed": null,
+			"subtitle": null,
+			"title": null
+		},
+		"events": {
+			"channels_page_link": null,
+			"form_aria": null,
+			"message_events": null,
+			"message_events_help": null,
+			"moderation_events": null,
+			"moderation_events_help": null,
+			"subtitle": null,
+			"title": null,
+			"toggle_aria": null
 		},
 		"filter": {
-			"common": {
-				"enabled": "",
-				"disabled": "",
-				"punishments": "",
-				"soft_actions": "",
-				"hard_action": "",
-				"hard_action_description": "",
-				"select_action_aria": "",
-				"options": "",
-				"duration": "",
-				"duration_help": "",
-				"threshold": "",
-				"threshold_maximum": "",
-				"threshold_duration": "",
-				"alerts": "",
-				"alerts_help": "",
-				"logging": "",
-				"logging_help": "",
-				"delete_message": "",
-				"delete_message_help": "",
-				"actions": {
-					"none": "",
-					"warning": "",
-					"kick": "",
-					"mute": "",
-					"softban": "",
-					"ban": ""
-				}
-			},
-			"word": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"alerts_toggle": "",
-				"logging_toggle": "",
-				"delete_toggle": "",
-				"filtered_words": "",
-				"add_word": "",
-				"add_placeholder": "",
-				"remove_word": "",
-				"save_failed": ""
-			},
 			"capitals": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"minimum": "",
-				"maximum": "",
-				"save_failed": ""
+				"filter_label": null,
+				"form_aria": null,
+				"maximum": null,
+				"minimum": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
+			},
+			"common": {
+				"actions": {
+					"ban": null,
+					"kick": null,
+					"mute": null,
+					"none": null,
+					"softban": null,
+					"warning": null
+				},
+				"alerts": null,
+				"alerts_help": null,
+				"delete_message": null,
+				"delete_message_help": null,
+				"disabled": null,
+				"duration": null,
+				"duration_help": null,
+				"enabled": null,
+				"hard_action": null,
+				"hard_action_description": null,
+				"logging": null,
+				"logging_help": null,
+				"options": null,
+				"punishments": null,
+				"select_action_aria": null,
+				"soft_actions": null,
+				"threshold": null,
+				"threshold_duration": null,
+				"threshold_maximum": null
 			},
 			"invites": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"save_failed": ""
-			},
-			"links": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"allowed_links": "",
-				"add_link": "",
-				"add_link_placeholder": "",
-				"remove_link": "",
-				"save_failed": ""
-			},
-			"messages": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"save_failed": ""
+				"filter_label": null,
+				"form_aria": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
 			},
 			"lines": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"maximum": "",
-				"maximum_help": "",
-				"save_failed": ""
+				"filter_label": null,
+				"form_aria": null,
+				"maximum": null,
+				"maximum_help": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
+			},
+			"links": {
+				"add_link": null,
+				"add_link_placeholder": null,
+				"allowed_links": null,
+				"filter_label": null,
+				"form_aria": null,
+				"remove_link": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
+			},
+			"messages": {
+				"filter_label": null,
+				"form_aria": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
 			},
 			"reactions": {
-				"title": "",
-				"form_aria": "",
-				"toggle": "",
-				"toggle_help": "",
-				"filter_label": "",
-				"save_failed": ""
+				"filter_label": null,
+				"form_aria": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
+			},
+			"word": {
+				"add_placeholder": null,
+				"add_word": null,
+				"alerts_toggle": null,
+				"delete_toggle": null,
+				"filtered_words": null,
+				"filter_label": null,
+				"form_aria": null,
+				"logging_toggle": null,
+				"remove_word": null,
+				"save_failed": null,
+				"title": null,
+				"toggle": null,
+				"toggle_help": null
 			}
-		}
+		},
+		"general": {
+			"copy_server_id": null,
+			"form_aria": null,
+			"language": null,
+			"language_aria": null,
+			"language_description": null,
+			"language_placeholder": null,
+			"need_help": null,
+			"no_activity": null,
+			"no_activity_description": null,
+			"prefix": null,
+			"prefix_aria": null,
+			"prefix_description": null,
+			"prefix_placeholder": null,
+			"recent_activity": null,
+			"save_failed_message": null,
+			"server_id_copied_description": null,
+			"server_id_copied_title": null,
+			"server_info": null,
+			"server_info_description": null,
+			"server_stats_aria": null,
+			"stat_categories": null,
+			"stat_members": null,
+			"stat_roles": null,
+			"stat_text_channels": null,
+			"stat_voice_channels": null,
+			"subtitle": null,
+			"title": null
+		},
+		"moderation": {
+			"form_aria": null,
+			"subtitle": null,
+			"title": null
+		},
+		"please_try_again": null,
+		"roles": {
+			"configurable": null,
+			"configurable_help": null,
+			"form_aria": null,
+			"general_options": null,
+			"restricted": null,
+			"restricted_help": null,
+			"subtitle": null,
+			"title": null
+		},
+		"save_failed": null
 	},
 	"settings": {
 		"entries": {
-			"rolesRemoveInitial": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesAdmin": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesInitial": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesModerator": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesMuted": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesRestrictedReaction": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesRestrictedEmbed": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesRestrictedAttachment": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesRestrictedEmoji": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesRestrictedVoice": {
-				"name": "",
-				"tooltip": ""
-			},
-			"rolesPublic": {
-				"name": "",
-				"tooltip": ""
-			},
-			"messagesModerationAutoDelete": {
-				"name": "",
-				"description": ""
-			},
-			"messagesModerationDm": {
-				"name": "",
-				"description": ""
-			},
-			"messagesModerationMessageDisplay": {
-				"name": "",
-				"description": ""
-			},
-			"messagesModerationReasonDisplay": {
-				"name": "",
-				"description": ""
-			},
-			"messagesModeratorNameDisplay": {
-				"name": "",
-				"description": ""
-			},
-			"eventsBanAdd": {
-				"title": "",
-				"description": ""
-			},
-			"eventsBanRemove": {
-				"title": "",
-				"description": ""
-			},
-			"eventsTwemojiReactions": {
-				"title": "",
-				"description": ""
-			},
-			"channelsLogsMemberAdd": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMemberRemove": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMemberNicknameUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMemberUsernameUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMemberRolesUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMessageDelete": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMessageDeleteNsfw": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMessageUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsMessageUpdateNsfw": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsModeration": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsImage": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsPrune": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsReaction": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsChannelCreate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsChannelUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsChannelDelete": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsEmojiCreate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsEmojiUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsEmojiDelete": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsRoleCreate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsRoleUpdate": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsRoleDelete": {
-				"name": "",
-				"description": ""
-			},
-			"channelsLogsServerUpdate": {
-				"name": "",
-				"description": ""
-			},
 			"channelsIgnoreAll": {
-				"name": "",
-				"description": ""
+				"description": null,
+				"name": null
 			},
 			"channelsIgnoreMessageDelete": {
-				"name": "",
-				"description": ""
+				"description": null,
+				"name": null
 			},
 			"channelsIgnoreMessageEdit": {
-				"name": "",
-				"description": ""
+				"description": null,
+				"name": null
 			},
 			"channelsIgnoreReactionAdd": {
-				"name": "",
-				"description": ""
+				"description": null,
+				"name": null
+			},
+			"channelsLogsChannelCreate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsChannelDelete": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsChannelUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsEmojiCreate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsEmojiDelete": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsEmojiUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsImage": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMemberAdd": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMemberNicknameUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMemberRemove": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMemberRolesUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMemberUsernameUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMessageDelete": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMessageDeleteNsfw": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMessageUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsMessageUpdateNsfw": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsModeration": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsPrune": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsReaction": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsRoleCreate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsRoleDelete": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsRoleUpdate": {
+				"description": null,
+				"name": null
+			},
+			"channelsLogsServerUpdate": {
+				"description": null,
+				"name": null
+			},
+			"eventsBanAdd": {
+				"description": null,
+				"title": null
+			},
+			"eventsBanRemove": {
+				"description": null,
+				"title": null
+			},
+			"eventsTwemojiReactions": {
+				"description": null,
+				"title": null
 			},
 			"messagesIgnoreChannels": {
-				"name": "",
-				"description": ""
+				"description": null,
+				"name": null
+			},
+			"messagesModerationAutoDelete": {
+				"description": null,
+				"name": null
+			},
+			"messagesModerationDm": {
+				"description": null,
+				"name": null
+			},
+			"messagesModerationMessageDisplay": {
+				"description": null,
+				"name": null
+			},
+			"messagesModerationReasonDisplay": {
+				"description": null,
+				"name": null
+			},
+			"messagesModeratorNameDisplay": {
+				"description": null,
+				"name": null
+			},
+			"rolesAdmin": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesInitial": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesModerator": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesMuted": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesPublic": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesRemoveInitial": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesRestrictedAttachment": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesRestrictedEmbed": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesRestrictedEmoji": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesRestrictedReaction": {
+				"name": null,
+				"tooltip": null
+			},
+			"rolesRestrictedVoice": {
+				"name": null,
+				"tooltip": null
 			}
 		}
-	},
-	"guild_card": {
-		"manage_server": "",
-		"invite_bot": "",
-		"no_permission": "",
-		"total_members": "",
-		"members_online": "",
-		"manage_aria": "",
-		"invite_aria": "",
-		"no_permission_aria": "",
-		"manage_server_aria": "",
-		"invite_bot_aria": ""
 	}
 }

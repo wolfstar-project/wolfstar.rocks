@@ -1,37 +1,37 @@
 {
 	"$schema": "../../schemas/components.schema.json",
 	"feedback": {
-		"send": "",
-		"title": "",
-		"description": "",
-		"sent_title": "",
-		"sent_description": "",
-		"sent_toast_description": "",
-		"name": "",
-		"email": "",
-		"message": "",
-		"name_placeholder": "",
-		"email_placeholder": "",
-		"message_placeholder": "",
-		"send_failed_title": "",
-		"send_failed_description": ""
+		"description": null,
+		"email": null,
+		"email_placeholder": null,
+		"message": null,
+		"message_placeholder": null,
+		"name": null,
+		"name_placeholder": null,
+		"send": null,
+		"send_failed_description": null,
+		"send_failed_title": null,
+		"sent_description": null,
+		"sent_title": null,
+		"sent_toast_description": null,
+		"title": null
 	},
 	"pwa": {
-		"update_available": "",
-		"install_app": "",
-		"install": "",
-		"dismiss": "",
-		"reload": ""
+		"dismiss": null,
+		"install": null,
+		"install_app": null,
+		"reload": null,
+		"update_available": null
 	},
 	"select": {
-		"seconds": "",
-		"minutes": "",
-		"hours": "",
-		"days": "",
-		"none": "",
-		"search": "",
-		"clear_selected": "",
-		"min_duration": "",
-		"max_duration": ""
+		"clear_selected": null,
+		"days": null,
+		"hours": null,
+		"max_duration": null,
+		"min_duration": null,
+		"minutes": null,
+		"none": null,
+		"search": null,
+		"seconds": null
 	}
 }

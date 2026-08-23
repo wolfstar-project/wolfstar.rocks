@@ -38,10 +38,7 @@
 					:class="iconSizeClasses"
 					role="img"
 				>
-					<div
-						v-if="!loaded"
-						class="h-full w-full animate-pulse rounded-[inherit] bg-elevated"
-					></div>
+					<USkeleton v-if="!loaded" class="h-full w-full rounded-[inherit]" />
 					<NuxtImg
 						v-if="!isDefault && loaded"
 						:src="createUrl(preferredFormat, iconPixelSize)"

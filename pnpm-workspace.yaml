@@ -66,6 +66,7 @@ overrides:
     # Nuxt 4.5 imports unhead/legacy; keep one version so Nitro cannot link the
     # server bundle to a different traced package copy that omits legacy.mjs.
     "@unhead/vue": 3.2.3
+    "@unhead/bundler": 3.2.3
     unhead: 3.2.3
     sharp: 0.35.3
     typescript: npm:typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2

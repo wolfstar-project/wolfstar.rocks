@@ -17,6 +17,7 @@ import type { Plugin, PluginOption } from "vite";
  */
 const LOCALES_SEGMENT = "/i18n/locales/";
 const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
+const ALREADY_ES_MODULE = /^\s*export\b/;
 const prioritizedResourcePlugins = new WeakSet<Plugin>();
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
@@ -111,7 +112,7 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 				if (
 					path?.endsWith(".json") &&
 					path.includes(LOCALES_SEGMENT) &&
-					/^\s*export\b/.test(code)
+					ALREADY_ES_MODULE.test(code)
 				) {
 					return null;
 				}
@@ -142,11 +143,27 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 				const path = id.split("?")[0]?.replaceAll("\\", "/");
 				if (!path?.endsWith(".json") || !path.includes(LOCALES_SEGMENT)) return null;
 
+				// Losing the `pre` position lets Vite's own JSON transform run
+				// first; fail loudly with the locale path instead of a bare
+				// `SyntaxError` from `JSON.parse`.
+				if (ALREADY_ES_MODULE.test(code)) {
+					throw new Error(
+						`[wolfstar:i18n-empty-placeholders] ${id} was already transformed into an ES module before empty placeholders could be stripped; the plugin lost its "pre" transform position.`,
+					);
+				}
+
 				// `$schema` is editor tooling metadata, not a translatable message.
-				const { $schema: _schema, ...messages } = JSON.parse(code) as Record<
-					string,
-					JsonValue
-				>;
+				let parsed: Record<string, JsonValue>;
+				try {
+					parsed = JSON.parse(code) as Record<string, JsonValue>;
+				} catch (error) {
+					throw new Error(
+						`[wolfstar:i18n-empty-placeholders] failed to parse locale JSON ${id}: ${error instanceof Error ? error.message : String(error)}`,
+						{ cause: error },
+					);
+				}
+
+				const { $schema: _schema, ...messages } = parsed;
 				const stripped = stripEmptyMessages(messages) ?? {};
 				return { code: JSON.stringify(stripped), map: null };
 			},

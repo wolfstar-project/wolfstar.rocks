@@ -1,4 +1,4 @@
-import type { Plugin } from "vite";
+import type { Plugin, PluginOption } from "vite";
 
 /**
  * Untranslated keys live in `i18n/locales/{locale}/*.json` as empty strings, so
@@ -16,6 +16,7 @@ import type { Plugin } from "vite";
  * type-safe in `$t()` call sites.
  */
 const LOCALES_SEGMENT = "/i18n/locales/";
+const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 
@@ -36,19 +37,58 @@ export function stripEmptyMessages(value: JsonValue): JsonValue | undefined {
 	return Object.keys(result).length > 0 ? result : undefined;
 }
 
+/**
+ * Vite+ uses Rolldown's per-hook ordering for its built-in JSON transform.
+ * `enforce: "pre"` on unplugin-vue-i18n is therefore not sufficient to keep
+ * that resource compiler ahead of `vite:json`; without this explicit order it
+ * receives the JSON plugin's `export default` output and tries to parse it as
+ * JSON. This can be removed once unplugin-vue-i18n sets the hook order itself.
+ */
+export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOption[]): void {
+	for (const candidate of plugins) {
+		if (
+			!candidate ||
+			Array.isArray(candidate) ||
+			typeof candidate !== "object" ||
+			!("name" in candidate)
+		) {
+			continue;
+		}
+
+		const plugin = candidate;
+		if (plugin.name !== VUE_I18N_RESOURCE_PLUGIN || !plugin.transform) continue;
+
+		const transform = plugin.transform;
+		plugin.transform =
+			typeof transform === "function"
+				? { order: "pre", handler: transform }
+				: { ...transform, order: "pre" };
+	}
+}
+
 export function stripEmptyI18nMessagesPlugin(): Plugin {
 	return {
 		name: "wolfstar:i18n-empty-placeholders",
-		// Must run before Vite's JSON plugin turns the file into an ES module.
+		// Registration order keeps this before the resource compiler; hook order
+		// keeps both transforms before Vite+'s built-in JSON transform.
 		enforce: "pre",
-		transform(code, id) {
-			const path = id.split("?")[0]?.replaceAll("\\", "/");
-			if (!path?.endsWith(".json") || !path.includes(LOCALES_SEGMENT)) return null;
+		config(config) {
+			prioritizeVueI18nResourceTransform(config.plugins ?? []);
+		},
+		transform: {
+			order: "pre",
+			handler(code, id) {
+				const path = id.split("?")[0]?.replaceAll("\\", "/");
+				if (!path?.endsWith(".json") || !path.includes(LOCALES_SEGMENT)) return null;
 
-			// `$schema` is editor tooling metadata, not a translatable message.
-			const { $schema: _schema, ...messages } = JSON.parse(code) as Record<string, JsonValue>;
-			const stripped = stripEmptyMessages(messages) ?? {};
-			return { code: JSON.stringify(stripped), map: null };
+				// `$schema` is editor tooling metadata, not a translatable message.
+				const { $schema: _schema, ...messages } = JSON.parse(code) as Record<
+					string,
+					JsonValue
+				>;
+				const stripped = stripEmptyMessages(messages) ?? {};
+				return { code: JSON.stringify(stripped), map: null };
+			},
 		},
 	};
 }

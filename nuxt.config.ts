@@ -3,7 +3,10 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
-import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
+import {
+	prioritizeVueI18nResourceTransform,
+	stripEmptyI18nMessagesPlugin,
+} from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -317,10 +320,11 @@ export default defineNuxtConfig({
 
 	hooks: {
 		"vite:extendConfig"(config) {
-			// This must precede @nuxtjs/i18n's pre-transform so it receives JSON,
-			// not the JavaScript module emitted by another resource transform.
 			config.plugins ??= [];
 			config.plugins.unshift(stripEmptyI18nMessagesPlugin());
+			// Vite+ snapshots transform hooks before configResolved, so prioritize
+			// vue-i18n here while the inline plugin list is still mutable.
+			prioritizeVueI18nResourceTransform(config.plugins);
 		},
 	},
 

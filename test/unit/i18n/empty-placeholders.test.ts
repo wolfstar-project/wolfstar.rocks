@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createI18n } from "vue-i18n";
 import {
+	prioritizeVueI18nResourceTransform,
 	stripEmptyI18nMessagesPlugin,
 	stripEmptyMessages,
 } from "../../../config/i18n-empty-placeholders";
@@ -13,7 +14,10 @@ type TransformHook = (
 
 function transform(code: string, id: string): { code: string; map: null } | null {
 	const plugin = stripEmptyI18nMessagesPlugin();
-	const hook = plugin.transform as unknown as TransformHook;
+	const transform = plugin.transform;
+	const hook = (typeof transform === "function"
+		? transform
+		: transform?.handler) as unknown as TransformHook;
 	return hook.call({}, code, id);
 }
 
@@ -45,6 +49,27 @@ describe("stripEmptyMessages", () => {
 });
 
 describe("stripEmptyI18nMessagesPlugin", () => {
+	it("runs before Vite's JSON transform", () => {
+		const plugin = stripEmptyI18nMessagesPlugin();
+		expect(plugin.enforce).toBe("pre");
+		expect(plugin.transform).toMatchObject({ order: "pre" });
+	});
+
+	it("prioritizes the vue-i18n resource transform for Vite+", () => {
+		const resourceTransform = () => null;
+		const resourcePlugin = {
+			name: "unplugin-vue-i18n:resource",
+			transform: resourceTransform,
+		};
+
+		prioritizeVueI18nResourceTransform([resourcePlugin]);
+
+		expect(resourcePlugin.transform).toMatchObject({
+			order: "pre",
+			handler: resourceTransform,
+		});
+	});
+
 	it("strips empty placeholders and the $schema pointer from locale files", () => {
 		const result = transform(
 			JSON.stringify({

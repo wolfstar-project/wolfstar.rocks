@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { createI18n } from "vue-i18n";
 import {
 	prioritizeVueI18nResourceTransform,
@@ -55,19 +55,29 @@ describe("stripEmptyI18nMessagesPlugin", () => {
 		expect(plugin.transform).toMatchObject({ order: "pre" });
 	});
 
-	it("prioritizes the vue-i18n resource transform for Vite+", () => {
-		const resourceTransform = () => null;
+	it("prioritizes and deduplicates wrapped vue-i18n resource transforms", async () => {
+		const resourceTransform = vi.fn((code: string) => ({ code, map: null }));
 		const resourcePlugin = {
 			name: "unplugin-vue-i18n:resource",
 			transform: resourceTransform,
 		};
+		const wrapperPlugin = {
+			name: "unplugin-vue-i18n:resource:wrapper",
+			applyToEnvironment: vi.fn(() => [resourcePlugin]),
+		};
 
-		prioritizeVueI18nResourceTransform([resourcePlugin]);
+		prioritizeVueI18nResourceTransform([wrapperPlugin]);
+		await wrapperPlugin.applyToEnvironment();
 
-		expect(resourcePlugin.transform).toMatchObject({
-			order: "pre",
-			handler: resourceTransform,
-		});
+		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
+		const hook = resourcePlugin.transform as unknown as {
+			handler: TransformHook;
+		};
+		const id = "/repo/i18n/locales/en/common.json";
+
+		expect(await hook.handler.call({}, "{}", id)).toEqual({ code: "{}", map: null });
+		expect(await hook.handler.call({}, "export default {}", id)).toBeNull();
+		expect(resourceTransform).toHaveBeenCalledTimes(1);
 	});
 
 	it("strips empty placeholders and the $schema pointer from locale files", () => {

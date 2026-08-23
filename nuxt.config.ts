@@ -320,8 +320,19 @@ export default defineNuxtConfig({
 
 	hooks: {
 		"vite:extendConfig"(config) {
-			config.plugins ??= [];
-			config.plugins.unshift(stripEmptyI18nMessagesPlugin());
+			if (!config.plugins) return;
+			if (
+				!config.plugins.some(
+					(plugin) =>
+						typeof plugin === "object" &&
+						plugin !== null &&
+						!Array.isArray(plugin) &&
+						"name" in plugin &&
+						plugin.name === "wolfstar:i18n-empty-placeholders",
+				)
+			) {
+				config.plugins.unshift(stripEmptyI18nMessagesPlugin());
+			}
 			// Vite+ snapshots transform hooks before configResolved, so prioritize
 			// vue-i18n here while the inline plugin list is still mutable.
 			prioritizeVueI18nResourceTransform(config.plugins);

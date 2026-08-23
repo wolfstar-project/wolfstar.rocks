@@ -17,8 +17,18 @@ import type { Plugin, PluginOption } from "vite";
  */
 const LOCALES_SEGMENT = "/i18n/locales/";
 const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
+const prioritizedResourcePlugins = new WeakSet<Plugin>();
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+
+function isVitePlugin(candidate: PluginOption): candidate is Plugin {
+	return (
+		!!candidate &&
+		!Array.isArray(candidate) &&
+		typeof candidate === "object" &&
+		"name" in candidate
+	);
+}
 
 /**
  * Recursively remove empty-string leaves, and any object left empty by that
@@ -46,23 +56,51 @@ export function stripEmptyMessages(value: JsonValue): JsonValue | undefined {
  */
 export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOption[]): void {
 	for (const candidate of plugins) {
+		if (!isVitePlugin(candidate)) continue;
+
+		const plugin = candidate;
 		if (
-			!candidate ||
-			Array.isArray(candidate) ||
-			typeof candidate !== "object" ||
-			!("name" in candidate)
+			!plugin.name.startsWith(VUE_I18N_RESOURCE_PLUGIN) ||
+			prioritizedResourcePlugins.has(plugin)
 		) {
 			continue;
 		}
 
-		const plugin = candidate;
-		if (plugin.name !== VUE_I18N_RESOURCE_PLUGIN || !plugin.transform) continue;
+		if (plugin.applyToEnvironment) {
+			const applyToEnvironment = plugin.applyToEnvironment;
+			plugin.applyToEnvironment = function (environment) {
+				const applied = applyToEnvironment.call(this, environment);
+				if (applied && !(applied instanceof Promise) && typeof applied !== "boolean") {
+					prioritizeVueI18nResourceTransform(
+						Array.isArray(applied) ? applied : [applied],
+					);
+				}
+				return applied;
+			};
+			prioritizedResourcePlugins.add(plugin);
+			continue;
+		}
 
+		if (!plugin.transform) continue;
 		const transform = plugin.transform;
-		plugin.transform =
-			typeof transform === "function"
-				? { order: "pre", handler: transform }
-				: { ...transform, order: "pre" };
+		const handler = typeof transform === "function" ? transform : transform.handler;
+		plugin.transform = {
+			...(typeof transform === "function" ? {} : transform),
+			order: "pre",
+			async handler(code, id, options) {
+				const path = id.split("?")[0]?.replaceAll("\\", "/");
+				if (
+					path?.endsWith(".json") &&
+					path.includes(LOCALES_SEGMENT) &&
+					/^\s*export\b/.test(code)
+				) {
+					return null;
+				}
+
+				return handler.call(this, code, id, options);
+			},
+		};
+		prioritizedResourcePlugins.add(plugin);
 	}
 }
 

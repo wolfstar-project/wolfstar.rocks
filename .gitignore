@@ -73,3 +73,6 @@ i18n/.tolgee-pull/
 # Vitest failure screenshots
 .vitest-attachments/
 test/**/__screenshots__/
+
+# TypeScript incremental build info
+*.tsbuildinfo

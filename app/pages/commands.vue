@@ -27,6 +27,7 @@
 							<UButton
 								color="neutral"
 								variant="link"
+								size="md"
 								icon="i-heroicons-x-mark-20-solid"
 								:padded="false"
 								aria-label="Clear search"

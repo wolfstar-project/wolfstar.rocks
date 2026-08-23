@@ -80,6 +80,79 @@ describe("stripEmptyI18nMessagesPlugin", () => {
 		expect(resourceTransform).toHaveBeenCalledTimes(1);
 	});
 
+	it("matches a wrapper whose name joins the tree-shaking plugin first", async () => {
+		const resourcePlugin = {
+			name: "unplugin-vue-i18n:resource",
+			transform: vi.fn((code: string) => ({ code, map: null })),
+		};
+		const wrapperPlugin = {
+			name: "unplugin-vue-i18n:tree-shaking|unplugin-vue-i18n:resource:wrapper",
+			applyToEnvironment: vi.fn(() => [resourcePlugin]),
+		};
+
+		prioritizeVueI18nResourceTransform([wrapperPlugin]);
+		await wrapperPlugin.applyToEnvironment();
+
+		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
+	});
+
+	it("prioritizes plugins injected after the nuxt hook via the config hook", async () => {
+		const resourcePlugin = {
+			name: "unplugin-vue-i18n:resource",
+			transform: vi.fn((code: string) => ({ code, map: null })),
+		};
+		const plugin = stripEmptyI18nMessagesPlugin();
+		const config = plugin.config;
+		const hook = typeof config === "function" ? config : config?.handler;
+
+		await hook?.call(
+			{} as never,
+			{ plugins: [resourcePlugin] },
+			{
+				command: "build",
+				mode: "production",
+			},
+		);
+
+		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
+	});
+
+	it("prioritizes plugins returned from an async applyToEnvironment wrapper", async () => {
+		const resourcePlugin = {
+			name: "unplugin-vue-i18n:resource",
+			transform: vi.fn((code: string) => ({ code, map: null })),
+		};
+		const wrapperPlugin = {
+			name: "unplugin-vue-i18n:resource:wrapper",
+			applyToEnvironment: vi.fn(() => Promise.resolve(resourcePlugin)),
+		};
+
+		prioritizeVueI18nResourceTransform([wrapperPlugin]);
+		await wrapperPlugin.applyToEnvironment();
+
+		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
+	});
+
+	it("still prioritizes the transform of a gating applyToEnvironment plugin", async () => {
+		const resourceTransform = vi.fn((code: string) => ({ code, map: null }));
+		const resourcePlugin = {
+			name: "unplugin-vue-i18n:resource",
+			applyToEnvironment: vi.fn(() => true),
+			transform: resourceTransform,
+		};
+
+		prioritizeVueI18nResourceTransform([[resourcePlugin]]);
+
+		expect(resourcePlugin.applyToEnvironment()).toBe(true);
+		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
+		const hook = resourcePlugin.transform as unknown as { handler: TransformHook };
+		const id = "/repo/i18n/locales/en/common.json";
+
+		expect(await hook.handler.call({}, "export default {}", id)).toBeNull();
+		expect(await hook.handler.call({}, "{}", id)).toEqual({ code: "{}", map: null });
+		expect(resourceTransform).toHaveBeenCalledTimes(1);
+	});
+
 	it("strips empty placeholders and the $schema pointer from locale files", () => {
 		const result = transform(
 			JSON.stringify({

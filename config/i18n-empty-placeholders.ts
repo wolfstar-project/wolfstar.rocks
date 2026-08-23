@@ -20,6 +20,8 @@ const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
 const prioritizedResourcePlugins = new WeakSet<Plugin>();
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+type ApplyToEnvironment = NonNullable<Plugin["applyToEnvironment"]>;
+type AppliedPlugins = Awaited<ReturnType<ApplyToEnvironment>>;
 
 function isVitePlugin(candidate: PluginOption): candidate is Plugin {
 	return (
@@ -48,6 +50,16 @@ export function stripEmptyMessages(value: JsonValue): JsonValue | undefined {
 }
 
 /**
+ * `applyToEnvironment` may either gate the plugin (boolean) or return the
+ * plugin(s) that actually run in that environment; only the latter carries
+ * transforms that still need prioritizing.
+ */
+function prioritizeAppliedPlugins(applied: AppliedPlugins): void {
+	if (typeof applied === "boolean") return;
+	prioritizeVueI18nResourceTransform(Array.isArray(applied) ? applied : [applied]);
+}
+
+/**
  * Vite+ uses Rolldown's per-hook ordering for its built-in JSON transform.
  * `enforce: "pre"` on unplugin-vue-i18n is therefore not sufficient to keep
  * that resource compiler ahead of `vite:json`; without this explicit order it
@@ -56,29 +68,36 @@ export function stripEmptyMessages(value: JsonValue): JsonValue | undefined {
  */
 export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOption[]): void {
 	for (const candidate of plugins) {
+		if (Array.isArray(candidate)) {
+			prioritizeVueI18nResourceTransform(candidate);
+			continue;
+		}
 		if (!isVitePlugin(candidate)) continue;
 
 		const plugin = candidate;
 		if (
-			!plugin.name.startsWith(VUE_I18N_RESOURCE_PLUGIN) ||
+			!plugin.name.includes(VUE_I18N_RESOURCE_PLUGIN) ||
 			prioritizedResourcePlugins.has(plugin)
 		) {
 			continue;
 		}
 
-		if (plugin.applyToEnvironment) {
-			const applyToEnvironment = plugin.applyToEnvironment;
+		prioritizedResourcePlugins.add(plugin);
+
+		const applyToEnvironment = plugin.applyToEnvironment;
+		if (applyToEnvironment) {
 			plugin.applyToEnvironment = function (environment) {
 				const applied = applyToEnvironment.call(this, environment);
-				if (applied && !(applied instanceof Promise) && typeof applied !== "boolean") {
-					prioritizeVueI18nResourceTransform(
-						Array.isArray(applied) ? applied : [applied],
-					);
+				if (!(applied instanceof Promise)) {
+					prioritizeAppliedPlugins(applied);
+					return applied;
 				}
-				return applied;
+
+				return applied.then((resolved: AppliedPlugins) => {
+					prioritizeAppliedPlugins(resolved);
+					return resolved;
+				}) as ReturnType<ApplyToEnvironment>;
 			};
-			prioritizedResourcePlugins.add(plugin);
-			continue;
 		}
 
 		if (!plugin.transform) continue;
@@ -100,7 +119,6 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 				return handler.call(this, code, id, options);
 			},
 		};
-		prioritizedResourcePlugins.add(plugin);
 	}
 }
 
@@ -110,6 +128,11 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 		// Registration order keeps this before the resource compiler; hook order
 		// keeps both transforms before Vite+'s built-in JSON transform.
 		enforce: "pre",
+		// Modules that inject their Vite plugins from a later `vite:extendConfig`
+		// hook (@nuxt/kit's env-injection path, used whenever `config.environments`
+		// is missing — Storybook builds) land after nuxt.config's own hook, so
+		// prioritize again here: plugin `config()` hooks run once the inline plugin
+		// list is complete. `prioritizedResourcePlugins` keeps this idempotent.
 		config(config) {
 			prioritizeVueI18nResourceTransform(config.plugins ?? []);
 		},

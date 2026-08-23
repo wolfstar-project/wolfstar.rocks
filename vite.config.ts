@@ -8,6 +8,12 @@ import { playwright } from "vite-plus/test/browser-playwright";
 const rootDir = import.meta.dirname;
 const require = createRequire(import.meta.url);
 
+const AGENT_TOOLING_DIRS = [".claude/", ".agents/", ".agent/", ".skills/", ".skilld/"];
+
+function isAgentToolingPath(file: string) {
+	return AGENT_TOOLING_DIRS.some((dir) => file.startsWith(dir) || file.includes(`/${dir}`));
+}
+
 function getCodspeedV8Flags() {
 	if (!isCI) {
 		return undefined;
@@ -300,6 +306,7 @@ export default defineConfig({
 			".agent/**/*",
 			".agents/**/*",
 			".skilld/**/*",
+			".skills/**/*",
 			".claude/**/*",
 		],
 		overrides: [
@@ -523,17 +530,19 @@ export default defineConfig({
 			".agents/",
 			".agent/",
 			".skilld",
+			".skills/",
 			".claude/",
 		],
 	},
 	staged: {
 		"i18n/locales/**/*.json":
 			"node ./lunaria/lunaria.ts && vp run i18n:schema && git add i18n/schema.json i18n/schemas",
-		"*.{js,ts,mjs,cjs,vue}": "vp lint --fix",
+		"*.{js,ts,mjs,cjs,vue}": (files) => {
+			const filtered = files.filter((f) => !isAgentToolingPath(f));
+			return filtered.length ? `vp lint --fix ${filtered.join(" ")}` : [];
+		},
 		"*.{js,ts,mjs,cjs,vue,json,yml,md,html,css}": (files) => {
-			const filtered = files.filter(
-				(f) => !f.includes("/.claude/") && !f.startsWith(".claude/"),
-			);
+			const filtered = files.filter((f) => !isAgentToolingPath(f));
 			return filtered.length ? `vp fmt ${filtered.join(" ")}` : [];
 		},
 	},

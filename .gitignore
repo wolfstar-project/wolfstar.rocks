@@ -55,6 +55,7 @@ test-results/
 
 # Skilld references (recreated by `skilld install`)
 .skilld
+.skills/.skilld-store-lock
 package-lock.json
 
 .nvmrc

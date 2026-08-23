@@ -337,13 +337,13 @@ Prefer these semantic classes before reaching for palette colors:
 
 <!-- nuxt-skill-hub:start -->
 
-Use the `nuxt-dashboard` skill as the Nuxt router/entrypoint for tasks in this repository.
+Use the `nuxt` skill as the Nuxt router/entrypoint for tasks in this repository.
 
 <!-- nuxt-skill-hub:end -->
 
 <!-- skilld -->
 
-Before modifying code, evaluate each installed skill against the current task.
-For each skill, determine YES/NO relevance and invoke all YES skills before proceeding.
+Before modifying code, check .agents/skills/ for relevant skills.
+Read the SKILL.md for any matching package before proceeding.
 
 <!-- /skilld -->

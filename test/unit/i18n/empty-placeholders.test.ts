@@ -92,7 +92,6 @@ describe("stripEmptyI18nMessagesPlugin", () => {
 
 		prioritizeVueI18nResourceTransform([wrapperPlugin]);
 		await wrapperPlugin.applyToEnvironment();
-		await Promise.resolve();
 
 		expect(resourcePlugin.transform).toMatchObject({ order: "pre" });
 	});

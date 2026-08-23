@@ -320,7 +320,11 @@ export default defineNuxtConfig({
 
 	hooks: {
 		"vite:extendConfig"(config) {
-			if (!config.plugins) return;
+			if (!config.plugins) {
+				throw new Error(
+					"vite:extendConfig exposed no plugin list, so the i18n empty-placeholder transform could not be registered.",
+				);
+			}
 			if (
 				!config.plugins.some(
 					(plugin) =>

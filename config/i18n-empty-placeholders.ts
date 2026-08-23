@@ -20,7 +20,8 @@ const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
 const prioritizedResourcePlugins = new WeakSet<Plugin>();
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
-type AppliedPlugins = boolean | PluginOption;
+type ApplyToEnvironment = NonNullable<Plugin["applyToEnvironment"]>;
+type AppliedPlugins = Awaited<ReturnType<ApplyToEnvironment>>;
 
 function isVitePlugin(candidate: PluginOption): candidate is Plugin {
 	return (
@@ -87,12 +88,15 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 		if (applyToEnvironment) {
 			plugin.applyToEnvironment = function (environment) {
 				const applied = applyToEnvironment.call(this, environment);
-				if (applied instanceof Promise) {
-					void Promise.resolve(applied).then(prioritizeAppliedPlugins, () => {});
+				if (!(applied instanceof Promise)) {
+					prioritizeAppliedPlugins(applied);
 					return applied;
 				}
-				prioritizeAppliedPlugins(applied);
-				return applied;
+
+				return applied.then((resolved: AppliedPlugins) => {
+					prioritizeAppliedPlugins(resolved);
+					return resolved;
+				}) as ReturnType<ApplyToEnvironment>;
 			};
 		}
 

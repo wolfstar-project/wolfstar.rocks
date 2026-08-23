@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<GuildSettingsSection
-			title="Commands"
-			description="Choose which commands to enable or disable on your server"
+			:title="t('guild_settings.commands.title')"
+			:description="t('guild_settings.commands.subtitle')"
 		>
 			<!-- Unified Form wrapper to match skeleton and content -->
 			<div v-if="loading" class="space-y-4">
@@ -35,7 +35,7 @@
 				:schema="disabledCommandsSchema"
 				:map-to-guild-data="mapToGuildData"
 				class="space-y-4"
-				aria-label="Disabled commands settings form"
+				:aria-label="t('guild_settings.commands.form_aria')"
 				:aria-busy="loading"
 				:aria-disabled="loading"
 				@error="onError"
@@ -102,21 +102,21 @@
 									variant="solid"
 									@click="toggleAllInCategory(category, true)"
 								>
-									Enable all
+									{{ t("guild_settings.commands.enable_all") }}
 								</UButton>
 								<UButton
 									color="warning"
 									variant="solid"
 									@click="toggleAllInCategory(category, false)"
 								>
-									Disable all
+									{{ t("guild_settings.commands.disable_all") }}
 								</UButton>
 								<UButton
 									color="neutral"
 									variant="outline"
 									@click="resetCategory(category)"
 								>
-									Reset
+									{{ t("guild_settings.commands.reset") }}
 								</UButton>
 							</UFieldGroup>
 						</template>
@@ -142,6 +142,7 @@ const { commands } = defineProps<{
 
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
+const { t } = useI18n();
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
@@ -239,9 +240,9 @@ function resetCategory(category: string) {
 
 	toast.add({
 		color: "info",
-		description: `${category} commands reverted to saved values.`,
+		description: t("guild_settings.commands.category_reset_description", { category }),
 		icon: "i-heroicons-arrow-path",
-		title: "Category Reset",
+		title: t("guild_settings.commands.category_reset"),
 	});
 }
 
@@ -252,9 +253,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Could not save command settings. ${errorMessage ?? "Please try again."}`,
+		description: t("guild_settings.commands.save_failed", {
+			message: errorMessage ?? t("guild_settings.please_try_again"),
+		}),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 

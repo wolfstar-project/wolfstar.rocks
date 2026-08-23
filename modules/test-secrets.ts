@@ -7,10 +7,10 @@ import { isCI, isTest } from "std-env";
 /**
  * Auto-generates ephemeral secrets required for test and CI builds.
  *
- * nuxt-auth-utils requires a non-empty session password; nuxt-og-image requires
- * an HMAC secret when strict mode is enabled. In production both are supplied via
- * environment variables. In CI the prebuilt server runs without those env vars,
- * so this module bakes random values into the build output at build time.
+ * @onmax/nuxt-better-auth requires a non-empty, 32+ character secret; nuxt-og-image
+ * requires an HMAC secret when strict mode is enabled. In production both are
+ * supplied via environment variables. In CI the prebuilt server runs without those
+ * env vars, so this module bakes random values into the build output at build time.
  *
  * Guards preserve any value already present (e.g. from a local .env file) so
  * local development is unaffected.
@@ -33,15 +33,15 @@ export default defineNuxtModule({
 			return value;
 		}
 
-		const sessionPassword = resolveSecret("NUXT_SESSION_PASSWORD");
+		const betterAuthSecret = resolveSecret("NUXT_BETTER_AUTH_SECRET");
 		const imageProxySecret = resolveSecret("NUXT_IMAGE_PROXY_SECRET");
 
-		// nuxt-auth-utils merges process.env.NUXT_SESSION_PASSWORD at runtime via
-		// defu, falling back to runtimeConfig.session.password. Baking it here
+		// @onmax/nuxt-better-auth reads nuxt.options.runtimeConfig.betterAuthSecret
+		// first, falling back to process.env.NUXT_BETTER_AUTH_SECRET. Baking it here
 		// ensures the prebuilt server starts without the env var in the test process.
-		const rc = nuxt.options.runtimeConfig as Record<string, Record<string, unknown>>;
-		if (!rc.session?.password) {
-			rc.session = { ...rc.session, password: sessionPassword };
+		const rc = nuxt.options.runtimeConfig as Record<string, unknown>;
+		if (!rc.betterAuthSecret) {
+			rc.betterAuthSecret = betterAuthSecret;
 		}
 
 		// nuxt.config.ts evaluated process.env.NUXT_IMAGE_PROXY_SECRET at config-eval

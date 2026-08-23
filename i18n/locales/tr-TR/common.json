@@ -1,0 +1,109 @@
+{
+	"$schema": "../../schemas/common.schema.json",
+	"a11y": {
+		"main_content": "",
+		"scroll_to_top": "",
+		"skip_to_content": ""
+	},
+	"blog": {
+		"rss": ""
+	},
+	"common": {
+		"appearance": "",
+		"cancel": "",
+		"confirm": "",
+		"copied": "",
+		"dark": "",
+		"disabled": "",
+		"enabled": "",
+		"error": "",
+		"experimental": "",
+		"language": "",
+		"learn_more": "",
+		"light": "",
+		"loading": "",
+		"midnight": "",
+		"midnight_experimental": "",
+		"na": "",
+		"none": "",
+		"please_try_again": "",
+		"retry": "",
+		"save_failed": "",
+		"search": "",
+		"system": ""
+	},
+	"footer": {
+		"blog": "",
+		"changelog": "",
+		"column_links": "",
+		"community": "",
+		"copyright": "",
+		"discord_aria": "",
+		"features": "",
+		"github": "",
+		"github_aria": "",
+		"legal": "",
+		"logo": "",
+		"other_apps": "",
+		"powered_by_netlify": "",
+		"powered_by_netlify_aria": "",
+		"privacy": "",
+		"product": "",
+		"site_footer": "",
+		"social_links": "",
+		"support_server": "",
+		"tagline": "",
+		"terms": "",
+		"x_aria": ""
+	},
+	"header": {
+		"add_app": "",
+		"brand": "",
+		"home": "",
+		"profile": "",
+		"settings": "",
+		"sign_in": "",
+		"sign_in_discord": "",
+		"sign_out": "",
+		"site_header": "",
+		"user_menu": ""
+	},
+	"i18n": {
+		"edit_on_github": "",
+		"missing_keys": ""
+	},
+	"nav": {
+		"advanced_logging": "",
+		"advanced_logging_description": "",
+		"applications": "",
+		"blog": "",
+		"changelog": "",
+		"commands": "",
+		"features": "",
+		"github": "",
+		"main_navigation": "",
+		"mobile_menu": "",
+		"mobile_navigation": "",
+		"moderation_logs": "",
+		"moderation_logs_description": "",
+		"moderation_tools": "",
+		"moderation_tools_description": ""
+	},
+	"translation_status": {
+		"description": "",
+		"generated_at": "",
+		"no_data": "",
+		"progress_by_locale": "",
+		"source_locale": "",
+		"title": ""
+	},
+	"user_menu": {
+		"account_menu": "",
+		"avatar_alt": "",
+		"avatar_fallback": "",
+		"profile": "",
+		"report_bug": "",
+		"sign_out": "",
+		"user_menu_for": ""
+	}
+}

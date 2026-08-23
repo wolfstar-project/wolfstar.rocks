@@ -1,32 +1,50 @@
 <template>
 	<div>
-		<h1 class="sr-only">Login</h1>
-		<h2 class="sr-only">Redirecting to Discord</h2>
+		<h1 class="sr-only">{{ t("auth.oauth.login_seo_title") }}</h1>
+		<OauthStatusPanel
+			tone="info"
+			loading
+			:title="t('auth.oauth.login_redirecting')"
+			icon="ph:discord-logo-fill"
+		>
+			<template #description>
+				{{ t("auth.oauth.redirecting_discord_description") }}
+			</template>
+		</OauthStatusPanel>
 	</div>
 </template>
 
 <script setup lang="ts">
-const log = useLogger("oauth:login");
+const { t } = useI18n();
 
 definePageMeta({
 	alias: ["/login"],
 	viewTransition: false,
-	middleware: async (to) => {
-		const { login } = useAuth();
-		const queryNext = to.query.next;
-		const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
-		const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
-		log.info({ action: "login_redirect", next: safeNext });
-		return login(safeNext);
-	},
+});
+
+// Better Auth's `signIn.social` performs a client-side redirect and its client is
+// null during SSR, so start sign-in on mount (client-only). Running it in route
+// middleware would no-op on a direct visit and leave the user on a blank shell.
+const route = useRoute();
+
+onMounted(async () => {
+	const queryNext = route.query.next;
+	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
+	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
+	log.info({ tag: "oauth:login", action: "login_redirect", next: safeNext });
+	await useAuthClient()?.signIn.social({
+		provider: "discord",
+		callbackURL: `/oauth/callback?next=${encodeURIComponent(safeNext)}`,
+		errorCallbackURL: "/oauth/callback",
+	});
 });
 
 useSeoMetadata({
-	description: "A landing page for the OAuth2.0 login flow",
+	description: t("auth.oauth.login_seo_og_description"),
 	ogImage: {
 		theme: Colors.Red,
 	},
 	shouldOgImage: true,
-	title: "Login",
+	title: t("auth.oauth.login_seo_title"),
 });
 </script>

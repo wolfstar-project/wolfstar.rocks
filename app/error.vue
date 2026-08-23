@@ -4,26 +4,57 @@
 			position: 'bottom-left',
 		}"
 	>
-		<nuxt-pwa-manifest />
+		<NuxtPwaManifest />
+		<NuxtRouteAnnouncer />
 		<NuxtLayout>
-			<UMain>
-				<UError :error />
-			</UMain>
+			<ErrorPage :error />
 		</NuxtLayout>
 	</UApp>
 </template>
 
 <script setup lang="ts">
 import type { NuxtError } from "nuxt/app";
+import {
+	isNotFoundStatus,
+	isServerErrorStatus,
+	resolveErrorStatus,
+} from "#shared/utils/error-status";
 
 const { error } = defineProps<{
 	error: NuxtError;
 }>();
 
-// SEO and meta configuration
+// error.vue replaces the app root on fatal errors — ensure the active locale
+// (including the dedicated errors feature file) is loaded before we translate.
+const { t, locale, loadLocaleMessages } = useI18n({ useScope: "global" });
+await loadLocaleMessages(locale.value);
+
+const statusCode = computed(() => resolveErrorStatus(error));
+const isNotFound = computed(() => isNotFoundStatus(statusCode.value));
+const isServerError = computed(() => isServerErrorStatus(statusCode.value));
+
+const seoTitle = computed(() => {
+	const label = isNotFound.value
+		? t("errors.not_found_title")
+		: error.statusText || error.statusMessage || t("errors.server_error_title");
+	return `${statusCode.value} · ${label}`;
+});
+
+const seoDescription = computed(() => {
+	if (isNotFound.value) {
+		return t("errors.not_found_description");
+	}
+	if (isServerError.value) {
+		return t("errors.server_error");
+	}
+	return t("errors.generic_description");
+});
+
+useRobotsRule(robotBlockingPageProps);
+
 useSeoMetadata({
-	description: error.statusText || "Something went wrong. Please try again.",
+	description: seoDescription,
 	shouldOgImage: true,
-	title: error.status?.toString(),
+	title: seoTitle,
 });
 </script>

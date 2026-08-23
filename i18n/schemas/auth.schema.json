@@ -1,0 +1,201 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (auth.json)",
+	"description": "Schema for auth.json. Generated from en/auth.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"auth": {
+			"type": "object",
+			"properties": {
+				"errors": {
+					"type": "object",
+					"properties": {
+						"ACCOUNT_NOT_FOUND": {
+							"type": "string"
+						},
+						"CREDENTIAL_ACCOUNT_NOT_FOUND": {
+							"type": "string"
+						},
+						"EMAIL_CAN_NOT_BE_UPDATED": {
+							"type": "string"
+						},
+						"EMAIL_NOT_VERIFIED": {
+							"type": "string"
+						},
+						"FAILED_TO_CREATE_SESSION": {
+							"type": "string"
+						},
+						"FAILED_TO_CREATE_USER": {
+							"type": "string"
+						},
+						"FAILED_TO_GET_SESSION": {
+							"type": "string"
+						},
+						"FAILED_TO_UPDATE_USER": {
+							"type": "string"
+						},
+						"GENERIC": {
+							"type": "string"
+						},
+						"INVALID_CALLBACK_REQUEST": {
+							"type": "string"
+						},
+						"INVALID_EMAIL": {
+							"type": "string"
+						},
+						"INVALID_EMAIL_OR_PASSWORD": {
+							"type": "string"
+						},
+						"INVALID_PASSWORD": {
+							"type": "string"
+						},
+						"INVALID_SESSION_TOKEN": {
+							"type": "string"
+						},
+						"INVALID_TOKEN": {
+							"type": "string"
+						},
+						"PASSWORD_TOO_SHORT": {
+							"type": "string"
+						},
+						"PROVIDER_NOT_FOUND": {
+							"type": "string"
+						},
+						"SESSION_EXPIRED": {
+							"type": "string"
+						},
+						"SOCIAL_ACCOUNT_ALREADY_LINKED": {
+							"type": "string"
+						},
+						"TOKEN_EXPIRED": {
+							"type": "string"
+						},
+						"USER_ALREADY_EXISTS": {
+							"type": "string"
+						},
+						"USER_EMAIL_NOT_FOUND": {
+							"type": "string"
+						},
+						"USER_NOT_FOUND": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"oauth": {
+					"type": "object",
+					"properties": {
+						"callback_sr_status": {
+							"type": "string"
+						},
+						"callback_sr_title": {
+							"type": "string"
+						},
+						"connecting_discord": {
+							"type": "string"
+						},
+						"go_to_login": {
+							"type": "string"
+						},
+						"guild_id_required": {
+							"type": "string"
+						},
+						"guild_not_found_description": {
+							"type": "string"
+						},
+						"guild_not_found_title": {
+							"type": "string"
+						},
+						"guild_redirecting_description": {
+							"type": "string"
+						},
+						"guild_redirecting_title": {
+							"type": "string"
+						},
+						"guild_return_login": {
+							"type": "string"
+						},
+						"guild_seo_og_description": {
+							"type": "string"
+						},
+						"guild_seo_og_title": {
+							"type": "string"
+						},
+						"guild_seo_title": {
+							"type": "string"
+						},
+						"guild_setup_failed_title": {
+							"type": "string"
+						},
+						"guild_sr_status": {
+							"type": "string"
+						},
+						"guild_sr_title": {
+							"type": "string"
+						},
+						"login_redirecting": {
+							"type": "string"
+						},
+						"login_required_description": {
+							"type": "string"
+						},
+						"login_required_link": {
+							"type": "string"
+						},
+						"login_required_title": {
+							"type": "string"
+						},
+						"login_seo_og_description": {
+							"type": "string"
+						},
+						"login_seo_og_title": {
+							"type": "string"
+						},
+						"login_seo_title": {
+							"type": "string"
+						},
+						"redirecting_dashboard": {
+							"type": "string"
+						},
+						"redirecting_discord_description": {
+							"type": "string"
+						},
+						"seo_og_description": {
+							"type": "string"
+						},
+						"seo_og_title": {
+							"type": "string"
+						},
+						"seo_title": {
+							"type": "string"
+						},
+						"session_not_found_description": {
+							"type": "string"
+						},
+						"session_not_found_title": {
+							"type": "string"
+						},
+						"sign_in_failed_title": {
+							"type": "string"
+						},
+						"signing_in_title": {
+							"type": "string"
+						},
+						"try_again": {
+							"type": "string"
+						},
+						"welcome_title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

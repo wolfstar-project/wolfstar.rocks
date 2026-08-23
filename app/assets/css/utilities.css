@@ -23,11 +23,36 @@
 }
 
 @utility prose {
-	@apply max-w-none text-default prose-headings:text-highlighted prose-p:text-toned prose-strong:text-highlighted prose-li:text-toned;
+	@apply max-w-none;
 }
 
 @utility tab-* {
 	tab-size: --value(--tab-size-*);
+}
+
+/* Spectrum accent fills — drive the hero rule and card accent stripes from the
+   design system's --spectrum-* tokens (declared in main.css). */
+@utility bg-spectrum-red {
+	background-color: var(--spectrum-red);
+}
+@utility bg-spectrum-orange {
+	background-color: var(--spectrum-orange);
+}
+@utility bg-spectrum-yellow {
+	background-color: var(--spectrum-yellow);
+}
+@utility bg-spectrum-green {
+	background-color: var(--spectrum-green);
+}
+@utility bg-spectrum-blue {
+	background-color: var(--spectrum-blue);
+}
+@utility bg-spectrum-purple {
+	background-color: var(--spectrum-purple);
+}
+
+@utility shadow-glow {
+	box-shadow: var(--home-shadow-glow);
 }
 
 /* =============================================================================
@@ -114,27 +139,35 @@
 		opacity: 0.6;
 	}
 
-	/* Adaptive glow colors for Nuxt UI semantic button backgrounds */
-	&:where(.bg-primary)::before {
-		background: var(--ui-primary);
+	/* Adaptive colors based on DaisyUI button classes */
+	&.btn-primary::before {
+		background: var(--color-primary);
 	}
-	&:where(.bg-secondary)::before {
-		background: var(--ui-secondary);
+	&.btn-secondary::before {
+		background: var(--color-secondary);
 	}
-	&:where(.bg-neutral, .bg-inverted)::before {
-		background: var(--ui-bg-inverted);
+	&.btn-accent::before {
+		background: var(--color-accent);
 	}
-	&:where(.bg-info)::before {
-		background: var(--ui-info);
+	&.btn-neutral::before {
+		background: var(--color-neutral);
 	}
-	&:where(.bg-success)::before {
-		background: var(--ui-success);
+	&.btn-info::before {
+		background: var(--color-info);
 	}
-	&:where(.bg-warning)::before {
-		background: var(--ui-warning);
+	&.btn-success::before {
+		background: var(--color-success);
 	}
-	&:where(.bg-error)::before {
-		background: var(--ui-error);
+	&.btn-warning::before {
+		background: var(--color-warning);
+	}
+	&.btn-error::before {
+		background: var(--color-error);
+	}
+
+	/* Custom branding override if needed */
+	&.btn-branding::before {
+		background: var(--branding-wolfstar);
 	}
 }
 
@@ -146,78 +179,82 @@
 	backdrop-filter: blur(12px);
 	-webkit-backdrop-filter: blur(12px);
 	border: 1px solid oklch(100% 0 0 / 0.1);
-	border-radius: var(--radius-wolfstar-box, 0.5rem);
+	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(50% 0 0 / 0.05);
 
-	[data-theme="dark"] &,
-	.dark &,
-	[data-theme="midnight"] &,
-	.midnight & {
+	@variant theme-dark {
 		border-color: oklch(100% 0 0 / 0.08);
 		background: oklch(20% 0 0 / 0.3);
 	}
 
-	/* Adaptive colors based on Nuxt UI semantic background classes */
+	/* Adaptive colors based on DaisyUI background classes */
 	&.bg-primary {
-		border-color: var(--ui-primary);
-		background: color-mix(in oklch, var(--ui-primary) 30%, transparent);
+		border-color: var(--color-primary);
+		background: color-mix(in oklch, var(--color-primary) 30%, transparent);
 	}
 	&.bg-secondary {
-		border-color: var(--ui-secondary);
-		background: color-mix(in oklch, var(--ui-secondary) 30%, transparent);
+		border-color: var(--color-secondary);
+		background: color-mix(in oklch, var(--color-secondary) 30%, transparent);
+	}
+	&.bg-accent {
+		border-color: var(--color-accent);
+		background: color-mix(in oklch, var(--color-accent) 30%, transparent);
 	}
 	&.bg-neutral {
-		border-color: var(--ui-bg-inverted);
-		background: color-mix(in oklch, var(--ui-bg-inverted) 30%, transparent);
+		border-color: var(--color-neutral);
+		background: color-mix(in oklch, var(--color-neutral) 30%, transparent);
 	}
 	&.bg-info {
-		border-color: var(--ui-info);
-		background: color-mix(in oklch, var(--ui-info) 30%, transparent);
+		border-color: var(--color-info);
+		background: color-mix(in oklch, var(--color-info) 30%, transparent);
 	}
 	&.bg-success {
-		border-color: var(--ui-success);
-		background: color-mix(in oklch, var(--ui-success) 30%, transparent);
+		border-color: var(--color-success);
+		background: color-mix(in oklch, var(--color-success) 30%, transparent);
 	}
 	&.bg-warning {
-		border-color: var(--ui-warning);
-		background: color-mix(in oklch, var(--ui-warning) 30%, transparent);
+		border-color: var(--color-warning);
+		background: color-mix(in oklch, var(--color-warning) 30%, transparent);
 	}
 	&.bg-error {
-		border-color: var(--ui-error);
-		background: color-mix(in oklch, var(--ui-error) 30%, transparent);
+		border-color: var(--color-error);
+		background: color-mix(in oklch, var(--color-error) 30%, transparent);
 	}
 
 	/* Hover states for colored variants */
 	&.bg-primary:hover {
-		background: color-mix(in oklch, var(--ui-primary) 40%, transparent);
+		background: color-mix(in oklch, var(--color-primary) 40%, transparent);
 	}
 	&.bg-secondary:hover {
-		background: color-mix(in oklch, var(--ui-secondary) 40%, transparent);
+		background: color-mix(in oklch, var(--color-secondary) 40%, transparent);
+	}
+	&.bg-accent:hover {
+		background: color-mix(in oklch, var(--color-accent) 40%, transparent);
 	}
 	&.bg-neutral:hover {
-		background: color-mix(in oklch, var(--ui-bg-inverted) 40%, transparent);
+		background: color-mix(in oklch, var(--color-neutral) 40%, transparent);
 	}
 	&.bg-info:hover {
-		background: color-mix(in oklch, var(--ui-info) 40%, transparent);
+		background: color-mix(in oklch, var(--color-info) 40%, transparent);
 	}
 	&.bg-success:hover {
-		background: color-mix(in oklch, var(--ui-success) 40%, transparent);
+		background: color-mix(in oklch, var(--color-success) 40%, transparent);
 	}
 	&.bg-warning:hover {
-		background: color-mix(in oklch, var(--ui-warning) 40%, transparent);
+		background: color-mix(in oklch, var(--color-warning) 40%, transparent);
 	}
 	&.bg-error:hover {
-		background: color-mix(in oklch, var(--ui-error) 40%, transparent);
+		background: color-mix(in oklch, var(--color-error) 40%, transparent);
 	}
 }
 
 @utility card-glass-soft {
 	backdrop-filter: blur(12px) saturate(150%);
 	-webkit-backdrop-filter: blur(12px) saturate(150%);
-	border-radius: var(--radius-wolfstar-box, 0.5rem);
+	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(30% 0.01 250 / 0.6);
 
-	[data-theme="light"] & {
+	@variant theme-light {
 		background: oklch(95% 0.01 250 / 0.6);
 	}
 }
@@ -225,10 +262,10 @@
 @utility card-glass-bordered {
 	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
 	border: 1px solid oklch(100% 0 0 / 0.15);
-	border-radius: var(--radius-wolfstar-box, 0.5rem);
+	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(25% 0.016 252 / 0.8);
 
-	[data-theme="light"] & {
+	@variant theme-light {
 		box-shadow: 0 4px 30px oklch(0% 0 0 / 0.05);
 		border-color: oklch(0% 0 0 / 0.1);
 		background: oklch(98% 0 0 / 0.8);
@@ -238,10 +275,10 @@
 @utility card-glass-subtle {
 	backdrop-filter: blur(8px) saturate(120%);
 	-webkit-backdrop-filter: blur(8px) saturate(120%);
-	border-radius: var(--radius-wolfstar-box, 0.5rem);
+	border-radius: var(--radius-box, 0.5rem);
 	background: oklch(40% 0.008 250 / 0.4);
 
-	[data-theme="light"] & {
+	@variant theme-light {
 		background: oklch(90% 0.008 250 / 0.4);
 	}
 }
@@ -252,7 +289,7 @@
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
 
-	[data-theme="light"] & {
+	@variant theme-light {
 		--ui-bg: oklch(98% 0 0 / 0.85);
 	}
 }
@@ -262,10 +299,7 @@
 	backdrop-filter: blur(16px) saturate(180%);
 	-webkit-backdrop-filter: blur(16px) saturate(180%);
 
-	[data-theme="dark"] &,
-	.dark &,
-	[data-theme="midnight"] &,
-	.midnight & {
+	@variant theme-dark {
 		backdrop-filter: blur(20px) saturate(180%);
 		-webkit-backdrop-filter: blur(20px) saturate(180%);
 	}
@@ -282,7 +316,7 @@
 	box-shadow: 0 4px 30px oklch(0% 0 0 / 0.1);
 	border: 1px solid oklch(100% 0 0 / 0.15);
 
-	[data-theme="light"] & {
+	@variant theme-light {
 		box-shadow: 0 4px 30px oklch(0% 0 0 / 0.05);
 		border-color: oklch(0% 0 0 / 0.1);
 	}
@@ -346,9 +380,10 @@
 		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.1);
 	}
 
-	[data-theme="dark"] &:hover,
-	.dark &:hover {
-		box-shadow: 0 12px 40px oklch(0% 0 0 / 0.3);
+	@variant theme-dark {
+		&:hover {
+			box-shadow: 0 12px 40px oklch(0% 0 0 / 0.3);
+		}
 	}
 }
 

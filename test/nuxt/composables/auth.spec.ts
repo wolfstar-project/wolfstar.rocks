@@ -1,4 +1,11 @@
 import { describe, expect, it } from "vitest";
+import { mockAuth } from "../utils/auth";
+
+mockAuth({
+	id: "test-user",
+	name: "Test",
+	email: "test@example.com",
+});
 
 describe("guildAddURL", () => {
 	it("should return a Discord OAuth2 authorize URL", () => {
@@ -46,7 +53,10 @@ describe("guildAddURL", () => {
 describe("resolveClientUser", () => {
 	it("should delegate to $authorization.resolveClientUser()", () => {
 		const result = resolveClientUser();
-		// The function delegates to the authorization plugin; in test env it returns the resolved client user
-		expect(result).toBeDefined();
+		expect(result).toMatchObject({
+			id: "test-user",
+			name: "Test",
+			email: "test@example.com",
+		});
 	});
 });

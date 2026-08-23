@@ -1,22 +1,18 @@
-import { mockNuxtImport, mountSuspended } from "@nuxt/test-utils/runtime";
+import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { ref } from "vue";
-import ColorModeButton from "~/components/ColorModeButton.vue";
-
-const mockColorMode = { preference: "dark", value: "dark" };
-const mockEffectiveReduceMotion = ref(false);
-
-mockNuxtImport("useColorMode", () => () => mockColorMode);
-mockNuxtImport("useReduceMotion", () => () => ({
-	effectiveReduceMotion: mockEffectiveReduceMotion,
-}));
+import { nextTick } from "vue";
 
 describe("ColorModeButton", () => {
-	beforeEach(() => {
-		mockColorMode.preference = "dark";
-		mockColorMode.value = "dark";
-		mockEffectiveReduceMotion.value = false;
-		localStorage.removeItem("user-prefers-reduced-motion");
+	beforeEach(async () => {
+		vi.resetModules();
+		localStorage.setItem(
+			"wolfstar-settings",
+			JSON.stringify({ colorMode: "dark", reduceMotion: false, selectedLocale: null }),
+		);
+		localStorage.setItem("wolfstar-theme", "dark");
+
+		const { resetSettingsStateForTests } = await import("~/composables/useSettings");
+		resetSettingsStateForTests();
 
 		Object.defineProperty(document, "startViewTransition", {
 			configurable: true,
@@ -36,62 +32,48 @@ describe("ColorModeButton", () => {
 			writable: true,
 			value: null,
 		});
-
-		// Stub animate so the clip-path animation inside transition.ready.then() does not throw
-		Object.defineProperty(document.documentElement, "animate", {
-			configurable: true,
-			writable: true,
-			value: vi.fn(() => ({ finished: Promise.resolve() })),
-		});
 	});
 
-	afterEach(() => {
+	afterEach(async () => {
 		vi.clearAllMocks();
+		await nextTick();
+		localStorage.clear();
+		const { resetSettingsStateForTests } = await import("~/composables/useSettings");
+		resetSettingsStateForTests();
 	});
 
-	it("swaps theme and does not call startViewTransition when startViewTransition is undefined", async () => {
-		const svtSpy = document.startViewTransition as ReturnType<typeof vi.fn>;
-		Object.defineProperty(document, "startViewTransition", {
-			configurable: true,
-			writable: true,
-			value: undefined,
+	async function mountButton(props?: Record<string, unknown>) {
+		const { default: ColorModeButton } = await import("~/components/ColorModeButton.vue");
+		return mountSuspended(ColorModeButton, { props });
+	}
+
+	it("renders a theme menu trigger with the current preference label", async () => {
+		const wrapper = await mountButton();
+		await nextTick();
+		const trigger = wrapper.get('button[aria-label="Choose color theme"]');
+		expect(trigger.text()).toContain("Dark");
+		expect(trigger.attributes("aria-haspopup")).toBe("menu");
+	});
+
+	it("can render an icon-only trigger when showLabel is false", async () => {
+		const wrapper = await mountButton({ showLabel: false });
+		await nextTick();
+		const trigger = wrapper.get('button[aria-label="Choose color theme"]');
+		expect(trigger.text()).not.toContain("Dark");
+	});
+
+	it("persists midnight when selected via useAppColorMode", async () => {
+		await mountButton();
+		await nextTick();
+
+		const { useAppColorMode } = await import("~/composables/useSettings");
+		const { setColorMode, preference } = useAppColorMode();
+		setColorMode("midnight");
+		await nextTick();
+
+		expect(preference.value).toBe("midnight");
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}")).toMatchObject({
+			colorMode: "midnight",
 		});
-		const wrapper = await mountSuspended(ColorModeButton);
-		await wrapper.find("button").trigger("click");
-		expect(svtSpy).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("midnight");
-	});
-
-	it("swaps theme and does not call startViewTransition when activeViewTransition is truthy", async () => {
-		Object.defineProperty(document, "activeViewTransition", {
-			configurable: true,
-			writable: true,
-			value: {
-				ready: Promise.resolve(),
-				finished: Promise.resolve(),
-				skipTransition: vi.fn(),
-			},
-		});
-		const wrapper = await mountSuspended(ColorModeButton);
-		await wrapper.find("button").trigger("click");
-		expect(document.startViewTransition).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("midnight");
-	});
-
-	it("swaps theme and does not call startViewTransition when effectiveReduceMotion is true", async () => {
-		mockEffectiveReduceMotion.value = true;
-		// Also set localStorage so the real composable returns true if mockNuxtImport doesn't intercept
-		localStorage.setItem("user-prefers-reduced-motion", "true");
-		const wrapper = await mountSuspended(ColorModeButton);
-		await wrapper.find("button").trigger("click");
-		expect(document.startViewTransition).not.toHaveBeenCalled();
-		expect(mockColorMode.preference).toBe("midnight");
-	});
-
-	it("calls startViewTransition exactly once on happy path", async () => {
-		const wrapper = await mountSuspended(ColorModeButton);
-		await wrapper.find("button").trigger("click");
-		expect(document.startViewTransition).toHaveBeenCalledTimes(1);
-		expect(mockColorMode.preference).toBe("midnight");
 	});
 });

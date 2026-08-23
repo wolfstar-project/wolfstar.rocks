@@ -4,22 +4,16 @@
 			"type": "http",
 			"url": "https://nuxt.com/mcp"
 		},
-		"nuxt-ui": {
+		"nuxtUI": {
 			"type": "http",
 			"url": "https://ui.nuxt.com/mcp"
 		},
-		"browsermcp": {
-			"type": "stdio",
-			"command": "npx",
-			"args": ["-y", "@browsermcp/mcp@latest"]
+		"daisyUI": {
+			"type": "http",
+			"url": "https://gitmcp.io/saadeghi/daisyui"
 		},
 		"sentry": {
 			"url": "https://mcp.sentry.dev/mcp"
-		},
-		"chrome-devtools": {
-			"type": "stdio",
-			"command": "npx",
-			"args": ["-y", "chrome-devtools-mcp@latest"]
 		}
 	}
 }

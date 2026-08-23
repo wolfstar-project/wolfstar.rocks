@@ -1,4 +1,4 @@
-import type { UserSessionRequired } from "#auth-utils";
+import type { AppSession } from "#nuxt-better-auth";
 import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
@@ -8,6 +8,7 @@ import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
 import * as Sentry from "@sentry/nuxt";
 import { useLogger, createError } from "evlog";
+import { isClientOutdated } from "nuxt-skew-protection/server";
 import { isDevelopment } from "std-env";
 import { ValiError, parse } from "valibot";
 import { instrumentCacheGet, instrumentCachePut, withApiMetrics } from "./sentry-metrics";
@@ -33,7 +34,7 @@ interface DefinedWrappedResponseHandlerOptions {
 	 * on EVERY request — including warm cache hits — so revoked permissions are
 	 * always enforced.
 	 */
-	authorize?: (event: H3Event, session: UserSessionRequired | null) => Promise<void> | void;
+	authorize?: (event: H3Event, session: AppSession | null) => Promise<void> | void;
 }
 
 interface DefinedWrappedCachedResponseHandlerOptions
@@ -46,11 +47,7 @@ interface DefinedWrappedCachedResponseHandlerOptions
  * @param ipHeader - Custom header to use for IP detection (optional)
  * @returns User ID if authenticated, otherwise IP address
  */
-function getIdentifier(
-	event: H3Event,
-	session: UserSessionRequired | null,
-	ipHeader?: string,
-): string {
+function getIdentifier(event: H3Event, session: AppSession | null, ipHeader?: string): string {
 	if (session) {
 		return session.user.id;
 	}
@@ -93,7 +90,7 @@ function normalizeRateLimitOptions(
 async function getUserSession(
 	options: DefinedWrappedResponseHandlerOptions,
 	event: H3Event,
-): Promise<UserSessionRequired | null> {
+): Promise<AppSession | null> {
 	if (options.auth) {
 		return await requireUserSession(event);
 	}
@@ -317,12 +314,31 @@ function throwRateLimited(
 	});
 }
 
+function throwClientOutdated(event: H3Event, log: WrappedLogger): never {
+	log.info("Outdated client rejected before handler execution");
+	setResponseHeader(event, "x-client-outdated", "true");
+
+	throw createError({
+		message: "Client version outdated. Please refresh.",
+		why: "The browser session is running a build that no longer matches the deployed server",
+		fix: "Refresh the page to load the latest version",
+		status: 409,
+	});
+}
+
 async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 	event: H3Event<T>,
 	handler: EventHandler<T, D>,
 	options: DefinedWrappedResponseHandlerOptions,
 ) {
 	const log = useLogger(event, "wrappedHandler");
+
+	// Reject outdated browser sessions before auth, rate limiting, or cached
+	// resolution so stale clients never consume quota or receive new-server data
+	if (!isDevelopment && isClientOutdated(event)) {
+		throwClientOutdated(event, log);
+	}
+
 	const session = await getUserSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 

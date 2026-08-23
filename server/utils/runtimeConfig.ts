@@ -43,6 +43,7 @@ export function generateRuntimeConfig() {
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
+			redirectURI: process.env.NUXT_OAUTH_DISCORD_REDIRECT_URL,
 		},
 		public: {
 			apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
@@ -63,7 +64,6 @@ export function generateRuntimeConfig() {
 		session: {
 			maxAge: 60 * 60 * 24 * 7, // 1 week
 			name: process.env.NUXT_SESSION_COOKIE_NAME || "wolfstar-session",
-			password: process.env.NUXT_SESSION_PASSWORD ?? "",
 			cookie: {
 				sameSite: "strict" as "lax" | "strict" | "none",
 				secure: true,

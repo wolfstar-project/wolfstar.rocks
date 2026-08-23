@@ -1,14 +1,12 @@
 import type { ImageURLOptions, MakeURLOptions } from "@discordjs/rest";
 import type { APIUser } from "discord-api-types/v10";
-import type { MaybeRef } from "vue";
 import type { OauthFlattenedGuild } from "../types/discord";
 import { ALLOWED_EXTENSIONS, ALLOWED_SIZES, DefaultRestOptions } from "@discordjs/rest";
 import { isNullOrUndefined } from "@sapphire/utilities";
-import { toValue } from "vue";
 
 /**
  * Minimal user type that can be used for avatar URL generation
- * Compatible with both APIUser and User from #auth-utils
+ * Compatible with Discord API user objects (e.g. guild member fetches)
  */
 export interface AvatarUser {
 	id: string;
@@ -69,21 +67,16 @@ function defaultAvatar(index: number, options?: Readonly<ImageURLOptions>): stri
 
 /**
  * Generate avatar URL for a Discord user
- * @param user - User object or ref to user object (APIUser or minimal AvatarUser)
+ * @param user - User object (APIUser or minimal AvatarUser)
  * @param options - Image URL options (size, format, etc.)
  * @returns Avatar URL string
  */
-export function avatarURL(
-	user: MaybeRef<AvatarUser | APIUser>,
-	options?: Readonly<ImageURLOptions>,
-): string {
-	const userData = toValue(user);
-
-	if (isNullOrUndefined(userData.avatar)) {
-		return defaultAvatar(Number(BigInt(userData.id) >> 22n) % 5, options);
+export function avatarURL(user: AvatarUser | APIUser, options?: Readonly<ImageURLOptions>): string {
+	if (isNullOrUndefined(user.avatar)) {
+		return defaultAvatar(Number(BigInt(user.id) >> 22n) % 5, options);
 	}
 
-	return dynamicMakeURL(`/avatars/${userData.id}/${userData.avatar}`, userData.avatar, options);
+	return dynamicMakeURL(`/avatars/${user.id}/${user.avatar}`, user.avatar, options);
 }
 
 /**
@@ -97,13 +90,12 @@ export interface IconGuild {
 }
 
 export function guildIconURL(
-	guild: MaybeRef<IconGuild | OauthFlattenedGuild>,
+	guild: IconGuild | OauthFlattenedGuild,
 	options?: Readonly<ImageURLOptions>,
 ): string | null {
-	const guildData = toValue(guild);
-	if (isNullOrUndefined(guildData.icon)) {
-		return guildData.acronym;
+	if (isNullOrUndefined(guild.icon)) {
+		return null;
 	}
 
-	return dynamicMakeURL(`/icons/${guildData.id}/${guildData.icon}`, guildData.icon, options);
+	return dynamicMakeURL(`/icons/${guild.id}/${guild.icon}`, guild.icon, options);
 }

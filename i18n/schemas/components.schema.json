@@ -1,0 +1,114 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (components.json)",
+	"description": "Schema for components.json. Generated from en/components.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"feedback": {
+			"type": "object",
+			"properties": {
+				"description": {
+					"type": "string"
+				},
+				"email": {
+					"type": "string"
+				},
+				"email_placeholder": {
+					"type": "string"
+				},
+				"message": {
+					"type": "string"
+				},
+				"message_placeholder": {
+					"type": "string"
+				},
+				"name": {
+					"type": "string"
+				},
+				"name_placeholder": {
+					"type": "string"
+				},
+				"send": {
+					"type": "string"
+				},
+				"send_failed_description": {
+					"type": "string"
+				},
+				"send_failed_title": {
+					"type": "string"
+				},
+				"sent_description": {
+					"type": "string"
+				},
+				"sent_title": {
+					"type": "string"
+				},
+				"sent_toast_description": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"pwa": {
+			"type": "object",
+			"properties": {
+				"dismiss": {
+					"type": "string"
+				},
+				"install": {
+					"type": "string"
+				},
+				"install_app": {
+					"type": "string"
+				},
+				"reload": {
+					"type": "string"
+				},
+				"update_available": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"select": {
+			"type": "object",
+			"properties": {
+				"clear_selected": {
+					"type": "string"
+				},
+				"days": {
+					"type": "string"
+				},
+				"hours": {
+					"type": "string"
+				},
+				"max_duration": {
+					"type": "string"
+				},
+				"min_duration": {
+					"type": "string"
+				},
+				"minutes": {
+					"type": "string"
+				},
+				"none": {
+					"type": "string"
+				},
+				"search": {
+					"type": "string"
+				},
+				"seconds": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

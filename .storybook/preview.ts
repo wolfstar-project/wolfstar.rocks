@@ -9,6 +9,7 @@ import { initialize, mswLoader } from "msw-storybook-addon";
 import { fn } from "storybook/test";
 import { handlers } from "~/storybook/mocks/handlers";
 import wolfstarDark from "./theme";
+import "./discord-chrome.css";
 
 initialize();
 
@@ -43,6 +44,7 @@ const preview: Preview = {
 			themes: {
 				Light: "light",
 				Dark: "dark",
+				Midnight: "midnight",
 			},
 			defaultTheme: "Dark",
 			attributeName: "data-theme",

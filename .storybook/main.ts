@@ -44,6 +44,50 @@ const config = {
 			},
 		});
 
+		// unhead v3 builds `head.hooks` from hookable's `HookableCore`, a trimmed
+		// base class that implements only `hook`/`removeHook`/`callHook` and omits
+		// `hookOnce`. @nuxt/ui's colors plugin calls
+		// `injectHead().hooks.hookOnce("dom:rendered", …)` (without optional
+		// chaining) on the client-only hydration path
+		// (`isHydrating && !payload.serverRendered`). The real app is server
+		// rendered so that branch never runs, but @storybook-vue/nuxt renders every
+		// story with `serverRendered: false`, so all stories throw
+		// "hookOnce is not a function" during Chromatic snapshot capture. Backfill
+		// `hookOnce` onto `HookableCore` (v6 is the only hookable that defines it;
+		// the id/code guards leave other modules untouched) so the hook registers
+		// and the temporary color style is cleaned up after render.
+		newConfig.plugins.unshift({
+			name: "storybook-hookable-core-hook-once",
+			enforce: "pre",
+			transform(code: string, id: string) {
+				if (!id.includes("hookable") || !code.includes("HookableCore = class")) {
+					return null;
+				}
+				if (code.includes("__sb_hookOnce_polyfilled")) return null;
+				return `${code}
+try {
+	if (
+		typeof HookableCore !== "undefined" &&
+		HookableCore?.prototype &&
+		typeof HookableCore.prototype.hookOnce !== "function"
+	) {
+		HookableCore.prototype.__sb_hookOnce_polyfilled = true;
+		HookableCore.prototype.hookOnce = function (name, fn) {
+			let unregister;
+			const once = (...args) => {
+				if (typeof unregister === "function") unregister();
+				unregister = void 0;
+				return fn(...args);
+			};
+			unregister = this.hook(name, once);
+			return unregister;
+		};
+	}
+} catch {}
+`;
+			},
+		});
+
 		// Fix: nuxt:components:imports-alias relies on internal Nuxt state that is
 		// cleaned up after nuxt.close() in @storybook-vue/nuxt's loadNuxtViteConfig.
 		// When that state is gone, `import X from '#components'` is left unresolved
@@ -140,6 +184,33 @@ const config = {
 								"window.__STORYBOOK_MODULE_CHANNELS__ = {",
 								"  Channel: class { on() {} off() {} emit() {} once() {} },",
 								"  createBrowserChannel: () => new window.__STORYBOOK_MODULE_CHANNELS__.Channel()",
+								"};",
+								"// storybook/internal/preview-errors is externalized to this global by the",
+								"// v10 builder; the rolldown-vite build references it in the preview before",
+								"// the runtime loads. Back it with Error subclasses so constructing any",
+								"// preview error does not throw a ReferenceError during story extraction.",
+								"window.__STORYBOOK_MODULE_CORE_EVENTS_PREVIEW_ERRORS__ = (function () {",
+								"  var cache = {};",
+								"  return new Proxy({}, {",
+								"    get: function (_target, prop) {",
+								"      if (typeof prop !== 'string') return undefined;",
+								"      if (!cache[prop]) cache[prop] = class extends Error {};",
+								"      return cache[prop];",
+								"    }",
+								"  });",
+								"})();",
+								"// Nuxt's asset-path helpers (__publicAssetsURL/__buildAssetsURL) and the",
+								"// global $fetch bootstrap read window.__NUXT__.config.app at module-eval",
+								"// time. @storybook-vue/nuxt only sets __NUXT__ inside its render-time",
+								"// setup(), so during Chromatic story extraction (no story renders) it is",
+								"// undefined and reading `.app` throws, aborting extraction. Seed a minimal",
+								"// config here; the render-time setup() later overwrites it with the full",
+								"// runtime config.",
+								"window.__NUXT__ = window.__NUXT__ || {",
+								"  serverRendered: false,",
+								"  config: { public: {}, app: { baseURL: '/', buildAssetsDir: '/_nuxt/', cdnURL: '' } },",
+								"  data: {},",
+								"  state: {}",
 								"};",
 							].join("\n"),
 						},

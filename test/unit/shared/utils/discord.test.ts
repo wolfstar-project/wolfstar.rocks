@@ -74,10 +74,10 @@ describe("guildIconURL", () => {
 		expect(url).toContain(".gif");
 	});
 
-	it("should return acronym when icon is null", () => {
+	it("should return null when icon is null", () => {
 		const guild = { id: "111", name: "Test Guild", icon: null, acronym: "TG" };
 		const result = guildIconURL(guild);
-		expect(result).toBe("TG");
+		expect(result).toBeNull();
 	});
 
 	it("should respect size option", () => {

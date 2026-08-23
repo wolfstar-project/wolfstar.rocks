@@ -1,0 +1,297 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (dashboard.json)",
+	"description": "Schema for dashboard.json. Generated from en/dashboard.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"dashboard": {
+			"type": "object",
+			"properties": {
+				"access_denied_description": {
+					"type": "string"
+				},
+				"access_denied_title": {
+					"type": "string"
+				},
+				"changes_reset_description": {
+					"type": "string"
+				},
+				"changes_reset_title": {
+					"type": "string"
+				},
+				"discard_changes": {
+					"type": "string"
+				},
+				"error_aria": {
+					"type": "string"
+				},
+				"error_fallback": {
+					"type": "string"
+				},
+				"error_forbidden": {
+					"type": "string"
+				},
+				"error_title": {
+					"type": "string"
+				},
+				"invalid_guild_fix": {
+					"type": "string"
+				},
+				"invalid_guild_message": {
+					"type": "string"
+				},
+				"invalid_guild_why": {
+					"type": "string"
+				},
+				"loading_aria": {
+					"type": "string"
+				},
+				"loading_description": {
+					"type": "string"
+				},
+				"loading_title": {
+					"type": "string"
+				},
+				"nav": {
+					"type": "object",
+					"properties": {
+						"bad_words": {
+							"type": "string"
+						},
+						"capitals": {
+							"type": "string"
+						},
+						"channels": {
+							"type": "string"
+						},
+						"commands": {
+							"type": "string"
+						},
+						"events": {
+							"type": "string"
+						},
+						"home": {
+							"type": "string"
+						},
+						"invites": {
+							"type": "string"
+						},
+						"line_spam": {
+							"type": "string"
+						},
+						"links": {
+							"type": "string"
+						},
+						"logs": {
+							"type": "string"
+						},
+						"message_duplication": {
+							"type": "string"
+						},
+						"moderation": {
+							"type": "string"
+						},
+						"reactions": {
+							"type": "string"
+						},
+						"roles": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"reset_changes": {
+					"type": "string"
+				},
+				"save_changes": {
+					"type": "string"
+				},
+				"settings_saved_description": {
+					"type": "string"
+				},
+				"settings_saved_title": {
+					"type": "string"
+				},
+				"stay_on_page": {
+					"type": "string"
+				},
+				"unauthorized_description": {
+					"type": "string"
+				},
+				"unauthorized_title": {
+					"type": "string"
+				},
+				"unsaved_description": {
+					"type": "string"
+				},
+				"unsaved_title": {
+					"type": "string"
+				},
+				"update_failed_fix": {
+					"type": "string"
+				},
+				"update_failed_message": {
+					"type": "string"
+				},
+				"update_failed_why": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"guild_logs": {
+			"type": "object",
+			"properties": {
+				"all_actions": {
+					"type": "string"
+				},
+				"columns": {
+					"type": "object",
+					"properties": {
+						"action": {
+							"type": "string"
+						},
+						"case": {
+							"type": "string"
+						},
+						"command": {
+							"type": "string"
+						},
+						"date": {
+							"type": "string"
+						},
+						"duration": {
+							"type": "string"
+						},
+						"latency": {
+							"type": "string"
+						},
+						"moderator": {
+							"type": "string"
+						},
+						"reason": {
+							"type": "string"
+						},
+						"status": {
+							"type": "string"
+						},
+						"time": {
+							"type": "string"
+						},
+						"user": {
+							"type": "string"
+						},
+						"when": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"filter_action": {
+					"type": "string"
+				},
+				"filter_status": {
+					"type": "string"
+				},
+				"no_activity_filter_match": {
+					"type": "string"
+				},
+				"no_commands_filter_match": {
+					"type": "string"
+				},
+				"no_filter_match": {
+					"type": "string"
+				},
+				"no_logs": {
+					"type": "string"
+				},
+				"no_moderation_cases": {
+					"type": "string"
+				},
+				"no_reason": {
+					"type": "string"
+				},
+				"no_warnings": {
+					"type": "string"
+				},
+				"refresh_activity": {
+					"type": "string"
+				},
+				"refresh_audit": {
+					"type": "string"
+				},
+				"refresh_command": {
+					"type": "string"
+				},
+				"refresh_moderation": {
+					"type": "string"
+				},
+				"search_aria": {
+					"type": "string"
+				},
+				"search_placeholder": {
+					"type": "string"
+				},
+				"showing_entries": {
+					"type": "string"
+				},
+				"status_all": {
+					"type": "string"
+				},
+				"status_failed": {
+					"type": "string"
+				},
+				"status_label": {
+					"type": "string"
+				},
+				"status_success": {
+					"type": "string"
+				},
+				"tab_activity": {
+					"type": "string"
+				},
+				"tab_commands": {
+					"type": "string"
+				},
+				"tab_moderation": {
+					"type": "string"
+				},
+				"tab_warnings": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"unknown": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"guild_manage": {
+			"type": "object",
+			"properties": {
+				"commands_unavailable_description": {
+					"type": "string"
+				},
+				"commands_unavailable_title": {
+					"type": "string"
+				},
+				"general": {
+					"type": "string"
+				},
+				"languages_unavailable_description": {
+					"type": "string"
+				},
+				"languages_unavailable_title": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

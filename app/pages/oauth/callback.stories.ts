@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook-vue/nuxt";
 
 /**
- * The callback page executes an OAuth token exchange and redirects immediately.
+ * The callback page hydrates the OAuth session and redirects immediately.
  * Stories use inline render functions to display each visual state statically,
  * without mounting the full page and triggering navigation.
  */
@@ -19,13 +19,12 @@ type Story = StoryObj<typeof meta>;
 export const NoCode: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
+			<div>
 				<h1 class="sr-only">OAuth Callback</h1>
-				<UAlert
-					variant="solid"
-					color="warning"
+				<OauthStatusPanel
+					tone="warning"
 					title="Login Required"
-					icon="twemoji:warning"
+					icon="heroicons:exclamation-triangle"
 				>
 					<template #description>
 						This page can't be accessed directly. Please
@@ -33,11 +32,11 @@ export const NoCode: Story = {
 						to continue.
 					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Go to Login
 						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -46,10 +45,15 @@ export const NoCode: Story = {
 export const SigningIn: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<UAlert color="info" icon="emojione:hourglass-done" title="Signing You In">
+			<div>
+				<OauthStatusPanel
+					tone="info"
+					loading
+					title="Signing You In"
+					icon="ph:discord-logo-fill"
+				>
 					<template #description>Connecting to Discord...</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -58,15 +62,44 @@ export const SigningIn: Story = {
 export const SignInError: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<UAlert color="error" title="Sign-In Failed" icon="twemoji:cross-mark">
-					<template #description>The authorization code was invalid or expired. Please try signing in again.</template>
+			<div>
+				<OauthStatusPanel
+					tone="error"
+					title="Sign-In Failed"
+					icon="heroicons:x-circle"
+				>
+					<template #description>
+						The authorization code was invalid or expired. Please try signing in again.
+					</template>
 					<template #actions>
-						<UButton color="neutral" variant="ghost" to="/login" size="sm">
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
 							Try Again
 						</UButton>
 					</template>
-				</UAlert>
+				</OauthStatusPanel>
+			</div>
+		`,
+	}),
+};
+
+export const SessionNotFound: Story = {
+	render: () => ({
+		template: `
+			<div>
+				<OauthStatusPanel
+					tone="error"
+					title="Session Not Found"
+					icon="heroicons:x-circle"
+				>
+					<template #description>
+						Your login session could not be loaded. Please sign in again.
+					</template>
+					<template #actions>
+						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
+							Try Again
+						</UButton>
+					</template>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),
@@ -75,10 +108,14 @@ export const SignInError: Story = {
 export const SignInSuccess: Story = {
 	render: () => ({
 		template: `
-			<div class="container mx-auto px-4 py-8">
-				<UAlert color="success" icon="twemoji:check-mark" title="Welcome redstar!">
+			<div>
+				<OauthStatusPanel
+					tone="success"
+					title="Welcome redstar!"
+					icon="heroicons:check-circle"
+				>
 					<template #description>Redirecting you to the dashboard...</template>
-				</UAlert>
+				</OauthStatusPanel>
 			</div>
 		`,
 	}),

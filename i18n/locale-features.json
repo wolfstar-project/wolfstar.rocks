@@ -1,0 +1,11 @@
+{
+	"features": [
+		"common.json",
+		"errors.json",
+		"auth.json",
+		"dashboard.json",
+		"guilds.json",
+		"profile.json",
+		"components.json"
+	]
+}

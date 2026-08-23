@@ -18,3 +18,15 @@ export const pageDecorator = () => ({
     </div>
   `,
 });
+
+/**
+ * Pins Discord desktop dark chrome tokens so Discord mock components do not
+ * inherit the marketing page’s warm/red DaisyUI base surfaces.
+ */
+export const discordDecorator = () => ({
+	template: `
+    <div class="discord-story-chrome p-4 font-whitney text-sm">
+      <story />
+    </div>
+  `,
+});

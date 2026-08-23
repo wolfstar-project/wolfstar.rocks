@@ -1,0 +1,388 @@
+{
+	"$schema": "../../schemas/guilds.schema.json",
+	"guild_card": {
+		"invite_aria": "Invitar el bot a {name}",
+		"invite_bot": "Invitar bot",
+		"invite_bot_aria": "Invitar bot a {name}",
+		"manage_aria": "Administrar {name}",
+		"manage_server": "Gestionar servidor",
+		"manage_server_aria": "Administrar servidor {name}",
+		"members_online": "Miembros en línea",
+		"no_permission": "Sin permiso",
+		"no_permission_aria": "Sin permiso para administrar {name}",
+		"total_members": "Total de miembros: {count}"
+	},
+	"guild_settings": {
+		"channels": {
+			"excluded_channels": "Canales excluidos",
+			"excluded_channels_help": "Canales omitidos por tipos específicos de registro.",
+			"form_aria": "Formulario de configuración de canales",
+			"logging_channels": "Canales de registro",
+			"logging_channels_help": "Elige dónde WolfStar publica cada tipo de registro.",
+			"subtitle": "Elige dónde publica WolfStar los registros y qué canales ignorar.",
+			"title": "Configuración de canales"
+		},
+		"commands": {
+			"category_reset": "Restablecer categoría",
+			"category_reset_description": "Restablece todos los comandos de esta categoría al valor predeterminado.",
+			"disable_all": "Desactivar todo",
+			"enable_all": "Activar todo",
+			"form_aria": "Formulario de configuración de comandos desactivados",
+			"reset": "Restablecer",
+			"save_failed": "No se pudieron guardar los ajustes de comandos. {message}",
+			"subtitle": "Elige qué comandos activar o desactivar en tu servidor",
+			"title": "Comandos"
+		},
+		"events": {
+			"channels_page_link": "la página de Canales",
+			"form_aria": "Formulario de configuración de eventos",
+			"message_events": "Eventos de mensajes",
+			"message_events_help": "Estos eventos rastrean la actividad de los mensajes. Los canales necesarios varían según el tipo de evento y se pueden configurar en {channelsPage}.",
+			"moderation_events": "Eventos de moderación",
+			"moderation_events_help": "Estos eventos involucran acciones de moderación. Configura un canal de registros de moderación en {channelsPage}.",
+			"subtitle": "Configura qué eventos deben registrarse y rastrearse",
+			"title": "Configuración de eventos",
+			"toggle_aria": "Activar o desactivar {title}"
+		},
+		"filter": {
+			"capitals": {
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de mayúsculas",
+				"maximum": "Caracteres en mayúscula máximos",
+				"minimum": "Caracteres mínimos",
+				"save_failed": "No se pudo guardar la configuración del filtro de mayúsculas. {message}",
+				"title": "Filtro de letras mayúsculas",
+				"toggle": "Activar/desactivar filtro de mayúsculas",
+				"toggle_help": "Bloquea mensajes con demasiados caracteres en mayúscula."
+			},
+			"common": {
+				"actions": {
+					"ban": "Banear",
+					"kick": "Expulsar",
+					"mute": "Silenciar",
+					"none": "Ninguna",
+					"softban": "Baneo suave",
+					"warning": "Advertencia"
+				},
+				"alerts": "Alertas",
+				"alerts_help": "Publica una alerta en el canal donde ocurrió la infracción.",
+				"delete_message": "Eliminar mensaje",
+				"delete_message_help": "Elimina el mensaje que activó el filtro.",
+				"disabled": "Desactivado",
+				"duration": "Duración",
+				"duration_help": "Cuánto dura el silencio o el baneo",
+				"enabled": "Activado",
+				"hard_action": "Acción dura",
+				"hard_action_description": "Castigo aplicado cuando se alcanza el umbral.",
+				"logging": "Registro",
+				"logging_help": "Envía un mensaje de registro al canal de registros de moderación configurado.",
+				"options": "Opciones",
+				"punishments": "Sanciones",
+				"select_action_aria": "Seleccionar acción de castigo",
+				"soft_actions": "Acciones suaves",
+				"threshold": "Umbral",
+				"threshold_duration": "Ventana de tiempo (segundos)",
+				"threshold_maximum": "Infracciones antes de la sanción"
+			},
+			"invites": {
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de invitaciones",
+				"save_failed": "No se pudo guardar la configuración del filtro de invitaciones. {message}",
+				"title": "Filtro de enlaces de invitación",
+				"toggle": "Activar/desactivar filtro de invitaciones",
+				"toggle_help": "Bloquea los enlaces de invitación de Discord publicados en el chat."
+			},
+			"lines": {
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de nuevas líneas",
+				"maximum": "Líneas máximas",
+				"maximum_help": "Número máximo de saltos de línea permitidos en un mensaje.",
+				"save_failed": "No se pudo guardar la configuración del filtro de nuevas líneas. {message}",
+				"title": "Filtro de spam de líneas",
+				"toggle": "Activar/desactivar filtro de nuevas líneas",
+				"toggle_help": "Bloquea mensajes con demasiadas líneas nuevas."
+			},
+			"links": {
+				"add_link": "Añadir enlace permitido",
+				"add_link_placeholder": "ejemplo.com",
+				"allowed_links": "Enlaces permitidos",
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de enlaces",
+				"remove_link": "Eliminar {link}",
+				"save_failed": "No se pudo guardar la configuración del filtro de enlaces. {message}",
+				"title": "Filtro de enlaces",
+				"toggle": "Activar/desactivar filtro de enlaces",
+				"toggle_help": "Bloquea mensajes que contengan enlaces."
+			},
+			"messages": {
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de duplicación de mensajes",
+				"save_failed": "No se pudo guardar la configuración del filtro de duplicación de mensajes. {message}",
+				"title": "Filtro de duplicación de mensajes",
+				"toggle": "Activar/desactivar filtro de duplicación de mensajes",
+				"toggle_help": "Bloquea mensajes idénticos repetidos."
+			},
+			"reactions": {
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de reacciones",
+				"save_failed": "No se pudo guardar la configuración del filtro de reacciones. {message}",
+				"title": "Filtro de reacciones",
+				"toggle": "Activar/desactivar filtro de reacciones",
+				"toggle_help": "Bloquea reacciones de emoji específicas."
+			},
+			"word": {
+				"add_placeholder": "ej. palabrota",
+				"add_word": "Añadir palabra filtrada",
+				"alerts_toggle": "Activar/desactivar acción suave de alertas",
+				"delete_toggle": "Activar/desactivar acción suave de eliminación",
+				"filtered_words": "Palabras filtradas",
+				"filter_label": "Filtro {state}",
+				"form_aria": "Formulario de configuración del filtro de palabras",
+				"logging_toggle": "Activar/desactivar acción suave de registro",
+				"remove_word": "Eliminar {word}",
+				"save_failed": "No se pudo guardar la configuración del filtro de palabras. {message}",
+				"title": "Filtro de palabras",
+				"toggle": "Activar/desactivar filtro de palabras",
+				"toggle_help": "Bloquea mensajes que contengan palabras o frases específicas."
+			}
+		},
+		"general": {
+			"copy_server_id": "Copiar ID del servidor",
+			"form_aria": "Formulario de configuración general del servidor",
+			"language": "Idioma",
+			"language_aria": "Idioma del bot",
+			"language_description": "Idioma de las respuestas del bot en este servidor.",
+			"language_placeholder": "Seleccionar idioma",
+			"need_help": "¿Necesitas ayuda?",
+			"no_activity": "Aún no hay cambios en la configuración",
+			"no_activity_description": "Los cambios de configuración aparecerán aquí.",
+			"prefix": "Prefijo",
+			"prefix_aria": "Prefijo de comandos del bot",
+			"prefix_description": "Prefijo de comando del bot",
+			"prefix_placeholder": "!",
+			"recent_activity": "Actividad reciente",
+			"save_failed_message": "No se pudieron guardar los ajustes generales. {message}",
+			"server_id_copied_description": "El ID del servidor se ha copiado al portapapeles.",
+			"server_id_copied_title": "ID del servidor copiado",
+			"server_info": "Información del servidor",
+			"server_info_description": "Información básica sobre este servidor de Discord.",
+			"server_stats_aria": "Estadísticas del servidor",
+			"stat_categories": "Categorías",
+			"stat_members": "Miembros",
+			"stat_roles": "Roles",
+			"stat_text_channels": "Canales de texto",
+			"stat_voice_channels": "Canales de voz",
+			"subtitle": "Configura los ajustes básicos del servidor para WolfStar.",
+			"title": "Configuración general"
+		},
+		"moderation": {
+			"form_aria": "Formulario de configuración de moderación",
+			"subtitle": "Configura cómo gestiona WolfStar las acciones de moderación como baneos, expulsiones y silencios.",
+			"title": "Configuración de sanciones"
+		},
+		"please_try_again": "Por favor, inténtalo de nuevo.",
+		"roles": {
+			"configurable": "Roles configurables",
+			"configurable_help": "Asigna roles para las funciones principales del bot, como moderación y asignación automática.",
+			"form_aria": "Formulario de configuración de roles",
+			"general_options": "Opciones generales",
+			"restricted": "Roles restringidos",
+			"restricted_help": "Roles aplicados cuando se utiliza un comando de restricción.",
+			"subtitle": "Configura los roles que WolfStar usa para moderación, permisos y automatización.",
+			"title": "Roles"
+		},
+		"save_failed": "Error al guardar"
+	},
+	"settings": {
+		"entries": {
+			"channelsIgnoreAll": {
+				"description": "Canales excluidos de todos los tipos de registro.",
+				"name": "Todos los registros"
+			},
+			"channelsIgnoreMessageDelete": {
+				"description": "Canales excluidos del registro de mensajes eliminados.",
+				"name": "Registros de mensajes eliminados"
+			},
+			"channelsIgnoreMessageEdit": {
+				"description": "Canales excluidos del registro de mensajes editados.",
+				"name": "Registros de mensajes editados"
+			},
+			"channelsIgnoreReactionAdd": {
+				"description": "Canales excluidos del registro de reacciones.",
+				"name": "Registros de reacciones añadidas"
+			},
+			"channelsLogsChannelCreate": {
+				"description": "Recibe un mensaje de registro cuando se crea un nuevo canal.",
+				"name": "Registros de canal creado"
+			},
+			"channelsLogsChannelDelete": {
+				"description": "Recibe un mensaje de registro cuando se elimina un canal.",
+				"name": "Registros de canal eliminado"
+			},
+			"channelsLogsChannelUpdate": {
+				"description": "Recibe un mensaje de registro cuando se actualiza cualquier canal, incluyendo los cambios realizados.",
+				"name": "Registros de canal actualizado"
+			},
+			"channelsLogsEmojiCreate": {
+				"description": "Recibe un mensaje de registro cuando se crea un nuevo emoji.",
+				"name": "Registros de emoji creado"
+			},
+			"channelsLogsEmojiDelete": {
+				"description": "Recibe un mensaje de registro cuando se elimina un emoji.",
+				"name": "Registros de emoji eliminado"
+			},
+			"channelsLogsEmojiUpdate": {
+				"description": "Recibe un mensaje de registro cuando se actualiza un emoji, incluyendo los cambios realizados.",
+				"name": "Registros de emoji actualizado"
+			},
+			"channelsLogsImage": {
+				"description": "Recibe copias resubidas de las imágenes publicadas en el servidor.",
+				"name": "Registros de imágenes"
+			},
+			"channelsLogsMemberAdd": {
+				"description": "Recibe un mensaje de registro cuando un miembro se une al servidor.",
+				"name": "Registros de miembro añadido"
+			},
+			"channelsLogsMemberNicknameUpdate": {
+				"description": "Recibe un mensaje de registro cuando un miembro cambia su apodo.",
+				"name": "Registros de cambio de apodo"
+			},
+			"channelsLogsMemberRemove": {
+				"description": "Recibe un mensaje de registro cuando un miembro abandona el servidor, es expulsado o baneado.",
+				"name": "Registros de miembro eliminado"
+			},
+			"channelsLogsMemberRolesUpdate": {
+				"description": "Recibe un mensaje de registro cuando un miembro obtiene o pierde un rol.",
+				"name": "Registros de roles de miembro"
+			},
+			"channelsLogsMemberUsernameUpdate": {
+				"description": "Recibe un mensaje de registro cuando un miembro cambia su nombre de usuario.",
+				"name": "Registros de cambio de nombre de usuario"
+			},
+			"channelsLogsMessageDelete": {
+				"description": "Recibe un mensaje de registro cuando se elimina un mensaje.",
+				"name": "Registros de mensaje eliminado"
+			},
+			"channelsLogsMessageDeleteNsfw": {
+				"description": "Recibe un mensaje de registro cuando se elimina un mensaje de un canal NSFW.",
+				"name": "Registros de mensaje NSFW eliminado"
+			},
+			"channelsLogsMessageUpdate": {
+				"description": "Recibe un mensaje de registro cuando se edita un mensaje.",
+				"name": "Registros de mensaje editado"
+			},
+			"channelsLogsMessageUpdateNsfw": {
+				"description": "Recibe un mensaje de registro cuando se edita un mensaje de un canal NSFW.",
+				"name": "Registros de mensaje NSFW editado"
+			},
+			"channelsLogsModeration": {
+				"description": "Recibe todos los registros de casos de moderación. Necesario para que funcionen los eventos de moderación.",
+				"name": "Registros de moderación"
+			},
+			"channelsLogsPrune": {
+				"description": "Recibe un mensaje de registro cuando se eliminan mensajes en masa (purga).",
+				"name": "Registros de purga"
+			},
+			"channelsLogsReaction": {
+				"description": "Recibe un mensaje de registro cuando se añade una reacción a un mensaje.",
+				"name": "Registros de reacciones"
+			},
+			"channelsLogsRoleCreate": {
+				"description": "Recibe un mensaje de registro cuando se crea un nuevo rol.",
+				"name": "Registros de rol creado"
+			},
+			"channelsLogsRoleDelete": {
+				"description": "Recibe un mensaje de registro cuando se elimina un rol.",
+				"name": "Registros de rol eliminado"
+			},
+			"channelsLogsRoleUpdate": {
+				"description": "Recibe un mensaje de registro cuando se actualiza un rol, incluyendo los cambios realizados.",
+				"name": "Registros de rol actualizado"
+			},
+			"channelsLogsServerUpdate": {
+				"description": "Recibe un mensaje de registro cuando se actualiza la configuración del servidor, incluyendo los cambios realizados.",
+				"name": "Registros de servidor actualizado"
+			},
+			"eventsBanAdd": {
+				"description": "Se publica un registro de moderación anónimo cuando se banea a un miembro.",
+				"title": "Baneo añadido"
+			},
+			"eventsBanRemove": {
+				"description": "Se publica un registro de moderación anónimo cuando se levanta el baneo de un miembro.",
+				"title": "Baneo revocado"
+			},
+			"eventsTwemojiReactions": {
+				"description": "Cuando un miembro reacciona con un Twemoji, la reacción se envía al canal de registros de reacciones.",
+				"title": "Reacciones Twemoji"
+			},
+			"messagesIgnoreChannels": {
+				"description": "Canales excluidos del registro de mensajes eliminados, mensajes editados y reacciones añadidas.",
+				"name": "Registros de eliminar, editar mensajes y añadir reacciones"
+			},
+			"messagesModerationAutoDelete": {
+				"description": "Elimina el mensaje del comando para mantener el anonimato del moderador.",
+				"name": "Ocultar mensaje"
+			},
+			"messagesModerationDm": {
+				"description": "Envía al miembro sancionado un mensaje directo con el motivo y la duración.",
+				"name": "Mensaje al usuario"
+			},
+			"messagesModerationMessageDisplay": {
+				"description": "Publica un mensaje de confirmación después de aplicar una sanción.",
+				"name": "Enviar respuesta de sanción"
+			},
+			"messagesModerationReasonDisplay": {
+				"description": "Incluye el motivo en el mensaje de respuesta de la sanción.",
+				"name": "Mostrar motivo"
+			},
+			"messagesModeratorNameDisplay": {
+				"description": "Incluye el nombre del moderador en el mensaje directo enviado al miembro sancionado.",
+				"name": "Mostrar nombre del moderador"
+			},
+			"rolesAdmin": {
+				"name": "Administrador",
+				"tooltip": "Los roles de administrador. Los administradores tienen acceso a todos los comandos de moderación y gestión. Por defecto, cualquiera con el permiso \"Gestionar servidor\"."
+			},
+			"rolesInitial": {
+				"name": "Inicial",
+				"tooltip": "El rol inicial, si está configurado, se asigna a los usuarios en cuanto se unen."
+			},
+			"rolesModerator": {
+				"name": "Moderador",
+				"tooltip": "Los roles de moderador. Los moderadores tienen acceso a casi todos los comandos de moderación. Por defecto, cualquiera que pueda banear miembros."
+			},
+			"rolesMuted": {
+				"name": "Silenciado",
+				"tooltip": "El rol silenciado, si está configurado, se asigna a los usuarios silenciados. Si no se establece ningún rol de silencio, se te pedirá que crees uno."
+			},
+			"rolesPublic": {
+				"name": "Roles públicos",
+				"tooltip": "Los roles públicos. Cualquier usuario puede reclamarlos mediante el comando \"roles\"."
+			},
+			"rolesRemoveInitial": {
+				"name": "Eliminar rol inicial",
+				"tooltip": "Cuando está activado, reclamar un rol público elimina automáticamente el rol inicial."
+			},
+			"rolesRestrictedAttachment": {
+				"name": "Adjunto restringido",
+				"tooltip": "Asignado a miembros a quienes se les restringe subir archivos adjuntos."
+			},
+			"rolesRestrictedEmbed": {
+				"name": "Embed restringido",
+				"tooltip": "Asignado a miembros a quienes se les restringe incrustar enlaces."
+			},
+			"rolesRestrictedEmoji": {
+				"name": "Emoji restringido",
+				"tooltip": "Asignado a miembros a quienes se les restringe el uso de emojis externos."
+			},
+			"rolesRestrictedReaction": {
+				"name": "Reacción restringida",
+				"tooltip": "Asignado a miembros cuyas reacciones están restringidas."
+			},
+			"rolesRestrictedVoice": {
+				"name": "Voz restringida",
+				"tooltip": "Asignado a miembros a quienes se les restringe unirse a canales de voz."
+			}
+		}
+	}
+}

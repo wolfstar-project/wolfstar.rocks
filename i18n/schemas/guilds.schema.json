@@ -1,0 +1,1167 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (guilds.json)",
+	"description": "Schema for guilds.json. Generated from en/guilds.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"guild_card": {
+			"type": "object",
+			"properties": {
+				"invite_aria": {
+					"type": "string"
+				},
+				"invite_bot": {
+					"type": "string"
+				},
+				"invite_bot_aria": {
+					"type": "string"
+				},
+				"manage_aria": {
+					"type": "string"
+				},
+				"manage_server": {
+					"type": "string"
+				},
+				"manage_server_aria": {
+					"type": "string"
+				},
+				"members_online": {
+					"type": "string"
+				},
+				"no_permission": {
+					"type": "string"
+				},
+				"no_permission_aria": {
+					"type": "string"
+				},
+				"total_members": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"guild_settings": {
+			"type": "object",
+			"properties": {
+				"channels": {
+					"type": "object",
+					"properties": {
+						"excluded_channels": {
+							"type": "string"
+						},
+						"excluded_channels_help": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"logging_channels": {
+							"type": "string"
+						},
+						"logging_channels_help": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"commands": {
+					"type": "object",
+					"properties": {
+						"category_reset": {
+							"type": "string"
+						},
+						"category_reset_description": {
+							"type": "string"
+						},
+						"disable_all": {
+							"type": "string"
+						},
+						"enable_all": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"reset": {
+							"type": "string"
+						},
+						"save_failed": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"events": {
+					"type": "object",
+					"properties": {
+						"channels_page_link": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"message_events": {
+							"type": "string"
+						},
+						"message_events_help": {
+							"type": "string"
+						},
+						"moderation_events": {
+							"type": "string"
+						},
+						"moderation_events_help": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"toggle_aria": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"filter": {
+					"type": "object",
+					"properties": {
+						"capitals": {
+							"type": "object",
+							"properties": {
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"maximum": {
+									"type": "string"
+								},
+								"minimum": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"common": {
+							"type": "object",
+							"properties": {
+								"actions": {
+									"type": "object",
+									"properties": {
+										"ban": {
+											"type": "string"
+										},
+										"kick": {
+											"type": "string"
+										},
+										"mute": {
+											"type": "string"
+										},
+										"none": {
+											"type": "string"
+										},
+										"softban": {
+											"type": "string"
+										},
+										"warning": {
+											"type": "string"
+										}
+									},
+									"additionalProperties": false
+								},
+								"alerts": {
+									"type": "string"
+								},
+								"alerts_help": {
+									"type": "string"
+								},
+								"delete_message": {
+									"type": "string"
+								},
+								"delete_message_help": {
+									"type": "string"
+								},
+								"disabled": {
+									"type": "string"
+								},
+								"duration": {
+									"type": "string"
+								},
+								"duration_help": {
+									"type": "string"
+								},
+								"enabled": {
+									"type": "string"
+								},
+								"hard_action": {
+									"type": "string"
+								},
+								"hard_action_description": {
+									"type": "string"
+								},
+								"logging": {
+									"type": "string"
+								},
+								"logging_help": {
+									"type": "string"
+								},
+								"options": {
+									"type": "string"
+								},
+								"punishments": {
+									"type": "string"
+								},
+								"select_action_aria": {
+									"type": "string"
+								},
+								"soft_actions": {
+									"type": "string"
+								},
+								"threshold": {
+									"type": "string"
+								},
+								"threshold_duration": {
+									"type": "string"
+								},
+								"threshold_maximum": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"invites": {
+							"type": "object",
+							"properties": {
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"lines": {
+							"type": "object",
+							"properties": {
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"maximum": {
+									"type": "string"
+								},
+								"maximum_help": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"links": {
+							"type": "object",
+							"properties": {
+								"add_link": {
+									"type": "string"
+								},
+								"add_link_placeholder": {
+									"type": "string"
+								},
+								"allowed_links": {
+									"type": "string"
+								},
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"remove_link": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messages": {
+							"type": "object",
+							"properties": {
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"reactions": {
+							"type": "object",
+							"properties": {
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"word": {
+							"type": "object",
+							"properties": {
+								"add_placeholder": {
+									"type": "string"
+								},
+								"add_word": {
+									"type": "string"
+								},
+								"alerts_toggle": {
+									"type": "string"
+								},
+								"delete_toggle": {
+									"type": "string"
+								},
+								"filtered_words": {
+									"type": "string"
+								},
+								"filter_label": {
+									"type": "string"
+								},
+								"form_aria": {
+									"type": "string"
+								},
+								"logging_toggle": {
+									"type": "string"
+								},
+								"remove_word": {
+									"type": "string"
+								},
+								"save_failed": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"toggle": {
+									"type": "string"
+								},
+								"toggle_help": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				},
+				"general": {
+					"type": "object",
+					"properties": {
+						"copy_server_id": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"language": {
+							"type": "string"
+						},
+						"language_aria": {
+							"type": "string"
+						},
+						"language_description": {
+							"type": "string"
+						},
+						"language_placeholder": {
+							"type": "string"
+						},
+						"need_help": {
+							"type": "string"
+						},
+						"no_activity": {
+							"type": "string"
+						},
+						"no_activity_description": {
+							"type": "string"
+						},
+						"prefix": {
+							"type": "string"
+						},
+						"prefix_aria": {
+							"type": "string"
+						},
+						"prefix_description": {
+							"type": "string"
+						},
+						"prefix_placeholder": {
+							"type": "string"
+						},
+						"recent_activity": {
+							"type": "string"
+						},
+						"save_failed_message": {
+							"type": "string"
+						},
+						"server_id_copied_description": {
+							"type": "string"
+						},
+						"server_id_copied_title": {
+							"type": "string"
+						},
+						"server_info": {
+							"type": "string"
+						},
+						"server_info_description": {
+							"type": "string"
+						},
+						"server_stats_aria": {
+							"type": "string"
+						},
+						"stat_categories": {
+							"type": "string"
+						},
+						"stat_members": {
+							"type": "string"
+						},
+						"stat_roles": {
+							"type": "string"
+						},
+						"stat_text_channels": {
+							"type": "string"
+						},
+						"stat_voice_channels": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"moderation": {
+					"type": "object",
+					"properties": {
+						"form_aria": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"please_try_again": {
+					"type": "string"
+				},
+				"roles": {
+					"type": "object",
+					"properties": {
+						"configurable": {
+							"type": "string"
+						},
+						"configurable_help": {
+							"type": "string"
+						},
+						"form_aria": {
+							"type": "string"
+						},
+						"general_options": {
+							"type": "string"
+						},
+						"restricted": {
+							"type": "string"
+						},
+						"restricted_help": {
+							"type": "string"
+						},
+						"subtitle": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"save_failed": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"settings": {
+			"type": "object",
+			"properties": {
+				"entries": {
+					"type": "object",
+					"properties": {
+						"channelsIgnoreAll": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsIgnoreMessageDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsIgnoreMessageEdit": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsIgnoreReactionAdd": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsChannelCreate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsChannelDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsChannelUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsEmojiCreate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsEmojiDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsEmojiUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsImage": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMemberAdd": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMemberNicknameUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMemberRemove": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMemberRolesUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMemberUsernameUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMessageDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMessageDeleteNsfw": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMessageUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsMessageUpdateNsfw": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsModeration": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsPrune": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsReaction": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsRoleCreate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsRoleDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsRoleUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"channelsLogsServerUpdate": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"eventsBanAdd": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"eventsBanRemove": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"eventsTwemojiReactions": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesIgnoreChannels": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesModerationAutoDelete": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesModerationDm": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesModerationMessageDisplay": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesModerationReasonDisplay": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"messagesModeratorNameDisplay": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesAdmin": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesInitial": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesModerator": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesMuted": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesPublic": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesRemoveInitial": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesRestrictedAttachment": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesRestrictedEmbed": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesRestrictedEmoji": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesRestrictedReaction": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"rolesRestrictedVoice": {
+							"type": "object",
+							"properties": {
+								"name": {
+									"type": "string"
+								},
+								"tooltip": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

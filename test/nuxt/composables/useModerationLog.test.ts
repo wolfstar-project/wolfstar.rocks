@@ -1,6 +1,29 @@
-import { describe, expect, it, vi } from "vitest";
+import { registerEndpoint } from "@nuxt/test-utils/runtime";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+let fetchCount = 0;
+
+registerEndpoint("/api/guilds/123/logs/moderation", {
+	method: "GET",
+	handler: () => {
+		fetchCount += 1;
+		return { entries: [], total: 0 };
+	},
+});
 
 describe("useModerationLog", () => {
+	beforeEach(() => {
+		fetchCount = 0;
+		clearNuxtData();
+		const nuxtApp = useNuxtApp();
+		for (const key of Object.keys(nuxtApp._asyncData)) {
+			delete nuxtApp._asyncData[key];
+		}
+		for (const key of Object.keys(nuxtApp._asyncDataPromises)) {
+			delete nuxtApp._asyncDataPromises[key];
+		}
+	});
+
 	it("produces different cache keys for different typeCode filters", () => {
 		const guildId = "123456789";
 
@@ -12,22 +35,25 @@ describe("useModerationLog", () => {
 	});
 
 	it("refetches on filter change", async () => {
-		const fetchMock = vi.fn().mockResolvedValue({ entries: [], total: 0 });
-		vi.stubGlobal("$fetch", fetchMock);
-
 		const filters = ref<{ typeCode?: number }>({});
 		const limit = ref(10);
 
-		useModerationLog({ guildId: "123", immediate: true, filters, limit });
+		const { status, execute } = useModerationLog({
+			guildId: "123",
+			immediate: false,
+			filters,
+			limit,
+		});
 
-		// wait for initial fetch
-		await nextTick();
-		const callsBefore = fetchMock.mock.calls.length;
+		await execute();
+		expect(status.value).toBe("success");
+		const callsBefore = fetchCount;
 
-		// change filter — watch should trigger a refetch
+		// Nested mutation (same pattern as ModerationLogTable.vue).
 		filters.value.typeCode = 1;
 		await nextTick();
+		await vi.waitUntil(() => fetchCount > callsBefore, { timeout: 2_000 });
 
-		expect(fetchMock.mock.calls.length).toBeGreaterThan(callsBefore);
+		expect(fetchCount).toBeGreaterThan(callsBefore);
 	});
 });

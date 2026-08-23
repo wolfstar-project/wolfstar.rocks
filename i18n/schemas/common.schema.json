@@ -1,0 +1,330 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (common.json)",
+	"description": "Schema for common.json. Generated from en/common.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"a11y": {
+			"type": "object",
+			"properties": {
+				"main_content": {
+					"type": "string"
+				},
+				"scroll_to_top": {
+					"type": "string"
+				},
+				"skip_to_content": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"blog": {
+			"type": "object",
+			"properties": {
+				"rss": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"common": {
+			"type": "object",
+			"properties": {
+				"appearance": {
+					"type": "string"
+				},
+				"cancel": {
+					"type": "string"
+				},
+				"confirm": {
+					"type": "string"
+				},
+				"copied": {
+					"type": "string"
+				},
+				"dark": {
+					"type": "string"
+				},
+				"disabled": {
+					"type": "string"
+				},
+				"enabled": {
+					"type": "string"
+				},
+				"error": {
+					"type": "string"
+				},
+				"experimental": {
+					"type": "string"
+				},
+				"language": {
+					"type": "string"
+				},
+				"learn_more": {
+					"type": "string"
+				},
+				"light": {
+					"type": "string"
+				},
+				"loading": {
+					"type": "string"
+				},
+				"midnight": {
+					"type": "string"
+				},
+				"midnight_experimental": {
+					"type": "string"
+				},
+				"na": {
+					"type": "string"
+				},
+				"none": {
+					"type": "string"
+				},
+				"please_try_again": {
+					"type": "string"
+				},
+				"retry": {
+					"type": "string"
+				},
+				"save_failed": {
+					"type": "string"
+				},
+				"search": {
+					"type": "string"
+				},
+				"system": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"footer": {
+			"type": "object",
+			"properties": {
+				"blog": {
+					"type": "string"
+				},
+				"changelog": {
+					"type": "string"
+				},
+				"column_links": {
+					"type": "string"
+				},
+				"community": {
+					"type": "string"
+				},
+				"copyright": {
+					"type": "string"
+				},
+				"discord_aria": {
+					"type": "string"
+				},
+				"features": {
+					"type": "string"
+				},
+				"github": {
+					"type": "string"
+				},
+				"github_aria": {
+					"type": "string"
+				},
+				"legal": {
+					"type": "string"
+				},
+				"logo": {
+					"type": "string"
+				},
+				"other_apps": {
+					"type": "string"
+				},
+				"powered_by_netlify": {
+					"type": "string"
+				},
+				"powered_by_netlify_aria": {
+					"type": "string"
+				},
+				"privacy": {
+					"type": "string"
+				},
+				"product": {
+					"type": "string"
+				},
+				"site_footer": {
+					"type": "string"
+				},
+				"social_links": {
+					"type": "string"
+				},
+				"support_server": {
+					"type": "string"
+				},
+				"tagline": {
+					"type": "string"
+				},
+				"terms": {
+					"type": "string"
+				},
+				"x_aria": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"header": {
+			"type": "object",
+			"properties": {
+				"add_app": {
+					"type": "string"
+				},
+				"brand": {
+					"type": "string"
+				},
+				"home": {
+					"type": "string"
+				},
+				"profile": {
+					"type": "string"
+				},
+				"settings": {
+					"type": "string"
+				},
+				"sign_in": {
+					"type": "string"
+				},
+				"sign_in_discord": {
+					"type": "string"
+				},
+				"sign_out": {
+					"type": "string"
+				},
+				"site_header": {
+					"type": "string"
+				},
+				"user_menu": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"i18n": {
+			"type": "object",
+			"properties": {
+				"edit_on_github": {
+					"type": "string"
+				},
+				"missing_keys": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"nav": {
+			"type": "object",
+			"properties": {
+				"advanced_logging": {
+					"type": "string"
+				},
+				"advanced_logging_description": {
+					"type": "string"
+				},
+				"applications": {
+					"type": "string"
+				},
+				"blog": {
+					"type": "string"
+				},
+				"changelog": {
+					"type": "string"
+				},
+				"commands": {
+					"type": "string"
+				},
+				"features": {
+					"type": "string"
+				},
+				"github": {
+					"type": "string"
+				},
+				"main_navigation": {
+					"type": "string"
+				},
+				"mobile_menu": {
+					"type": "string"
+				},
+				"mobile_navigation": {
+					"type": "string"
+				},
+				"moderation_logs": {
+					"type": "string"
+				},
+				"moderation_logs_description": {
+					"type": "string"
+				},
+				"moderation_tools": {
+					"type": "string"
+				},
+				"moderation_tools_description": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"translation_status": {
+			"type": "object",
+			"properties": {
+				"description": {
+					"type": "string"
+				},
+				"generated_at": {
+					"type": "string"
+				},
+				"no_data": {
+					"type": "string"
+				},
+				"progress_by_locale": {
+					"type": "string"
+				},
+				"source_locale": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"user_menu": {
+			"type": "object",
+			"properties": {
+				"account_menu": {
+					"type": "string"
+				},
+				"avatar_alt": {
+					"type": "string"
+				},
+				"avatar_fallback": {
+					"type": "string"
+				},
+				"profile": {
+					"type": "string"
+				},
+				"report_bug": {
+					"type": "string"
+				},
+				"sign_out": {
+					"type": "string"
+				},
+				"user_menu_for": {
+					"type": "string"
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

@@ -1,17 +1,20 @@
+import type { AuthUser } from "#nuxt-better-auth";
 import type { ChannelType } from "discord-api-types/v10";
 
 /**
- * Creates a mock User for testing
+ * Creates a mock AuthUser (Better Auth session user) for testing
  * @param overrides - Partial overrides for the default mock user
- * @returns A complete User object
+ * @returns A complete AuthUser object
  */
-export function createMockUser(overrides?: Partial<User>): User {
-	const defaultUser: User = {
-		avatar: "a1b2c3d4e5f6g7h8i9j0",
-		globalName: "Test User",
+export function createMockUser(overrides?: Partial<AuthUser>): AuthUser {
+	const defaultUser: AuthUser = {
+		createdAt: new Date("2024-01-01T00:00:00.000Z"),
+		email: "test-user@example.com",
+		emailVerified: true,
 		id: "123456789012345678",
+		image: "https://cdn.discordapp.com/avatars/123456789012345678/a1b2c3d4e5f6g7h8i9j0.png",
 		name: "Test User",
-		username: "testuser",
+		updatedAt: new Date("2024-01-01T00:00:00.000Z"),
 	};
 
 	return { ...defaultUser, ...overrides };

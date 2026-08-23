@@ -43,6 +43,10 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
     - [Lighthouse accessibility tests](#lighthouse-accessibility-tests)
     - [Lighthouse performance tests](#lighthouse-performance-tests)
     - [End-to-end tests](#end-to-end-tests)
+- [Localization (i18n)](#localization-i18n)
+    - [i18n commands](#i18n-commands)
+    - [Adding a locale](#adding-a-locale)
+    - [Translation status (Lunaria)](#translation-status-lunaria)
 - [Storybook](#storybook)
 - [Submitting changes](#submitting-changes)
     - [Before submitting](#before-submitting)
@@ -90,7 +94,7 @@ WolfStar.rocks is built for Discord server administrators and bot users who need
     - `DATABASE_URL` - PostgreSQL connection string
     - `NUXT_OAUTH_DISCORD_CLIENT_ID` - Discord OAuth client ID
     - `NUXT_OAUTH_DISCORD_CLIENT_SECRET` - Discord OAuth client secret
-    - `NUXT_SESSION_PASSWORD` - Random 32+ character string
+    - `NUXT_BETTER_AUTH_SECRET` - Random 32+ character string
 
 4. Set up the database:
 
@@ -125,14 +129,13 @@ pnpm vp run zizmor:fix  # Auto-fix zizmor audit findings
 # Storybook
 pnpm storybook        # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook  # Build static Storybook output
-pnpm chromatic        # Publish Storybook to Chromatic for visual review
 
 # Testing
 pnpm test             # Run all Vitest tests
 pnpm test:unit        # Unit tests only
 pnpm test:nuxt        # Nuxt component tests
 pnpm test:browser     # Playwright E2E tests (builds test app first)
-pnpm test:browser:ui  # E2E tests with Playwright UI
+pnpm test:browser:prebuilt  # Playwright E2E tests (requires prebuilt app)
 pnpm test:a11y        # Build test app, then run Lighthouse a11y in dark + light
 pnpm test:a11y:prebuilt  # Lighthouse accessibility audits (requires prebuilt app)
 pnpm test:perf        # Build test app, then run Lighthouse performance audits
@@ -143,6 +146,14 @@ pnpm prisma:push      # Push schema changes (development)
 pnpm prisma:migrate:dev   # Create and apply migration
 pnpm prisma:generate  # Regenerate Prisma client
 pnpm prisma:studio    # Visual database editor (http://localhost:5555)
+
+# Localization (vp tasks + fix scripts)
+pnpm vp run i18n:check    # Audit locale feature files against en/*
+pnpm i18n:check:fix      # Add missing keys (empty placeholders) / remove extras
+pnpm vp run i18n:report   # Detect missing, unused, or dynamic keys in code
+pnpm i18n:report:fix     # Remove unused keys from all locale feature files
+pnpm vp run i18n:schema   # Regenerate i18n/schemas/*.schema.json from en/*
+pnpm vp run build:lunaria # Build /lunaria dashboard + status.json
 ```
 
 ### GitHub Actions security analysis
@@ -377,11 +388,61 @@ Use `test:perf:prebuilt` for faster iteration when the test build is already up 
 Write end-to-end tests using Playwright:
 
 ```bash
-pnpm test:browser        # Run tests
-pnpm test:browser:ui     # Run with Playwright UI
+pnpm test:browser                # Run tests
+pnpm test:browser:prebuilt --ui  # Run with Playwright UI against a prebuilt app
 ```
 
 Make sure to read about [Playwright best practices](https://playwright.dev/docs/best-practices) and prefer user-facing locators (`getByRole`, `getByLabel`, `getByText`) over selectors based on classes or IDs.
+
+## Localization (i18n)
+
+WolfStar.rocks uses [@nuxtjs/i18n](https://i18n.nuxtjs.org/) for the dashboard UI. Guild bot-response languages (`en-US`, `es-ES`, …) are separate from UI locale preference.
+
+Locales are split by feature under `i18n/locales/{locale}/{feature}.json` (for example `en/auth.json`, `es-ES/guilds.json`). Feature file names are listed in [`i18n/locale-features.json`](../i18n/locale-features.json). `@nuxtjs/i18n` v10 always lazy-loads these via the `files` array in [`config/i18n.ts`](../config/i18n.ts).
+
+- Source of truth: [`i18n/locales/en/`](../i18n/locales/en)
+- Other locales: [`i18n/locales/`](../i18n/locales) (currently `es-ES`, `it-IT`, matching WolfStar/Skyra language keys)
+- Locale registry: [`config/i18n.ts`](../config/i18n.ts)
+- Per-feature schemas: [`i18n/schemas/`](../i18n/schemas)
+- Lunaria config: [`lunaria.config.ts`](../lunaria.config.ts)
+
+#### Untranslated keys are empty, never English
+
+Every locale carries the full English key set, but a key that has not been translated yet holds an **empty string** — never a copy of the English text. An English copy looks like a finished translation to Tolgee, Lunaria and translators, and in a regional variant (`es-419` loads `es/*` then `es-419/*`) it also overwrites the base translation.
+
+Empty leaves are stripped from the bundle at build time by the Vite plugin in [`config/i18n-empty-placeholders.ts`](../config/i18n-empty-placeholders.ts) (registered under `vite.plugins` in `nuxt.config.ts`), so the key is genuinely absent at runtime and vue-i18n falls back to `en-US` instead of rendering an empty string. Locale types are generated from the on-disk files, so stripped keys remain valid in `$t()` call sites.
+
+### i18n commands
+
+| Command                        | Purpose                                                                |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| `pnpm vp run i18n:check`       | Compare locales to `en/*` (reports missing/extra keys; removes extras) |
+| `pnpm i18n:check:fix [locale]` | Add missing keys as empty placeholders (optionally for one locale)     |
+| `pnpm vp run i18n:report`      | Fail on missing, unused, or dynamic keys used in `app/**`              |
+| `pnpm i18n:report:fix`         | Remove unused keys from all locale feature files                       |
+| `pnpm vp run i18n:schema`      | Regenerate `i18n/schemas/*.schema.json` for IDE validation             |
+| `pnpm vp run build:lunaria`    | Build `dist/lunaria/` dashboard + `status.json`                        |
+
+CI runs `i18n:report` and checks that i18n schemas are up to date. Autofix runs `i18n:check` and `build:lunaria`. The Lunaria PR workflow posts a translation overview comment.
+
+### Adding a locale
+
+1. Create `i18n/locales/<code>/` with one file per feature listed in [`i18n/locale-features.json`](../i18n/locale-features.json), each containing only its schema pointer — for example `{ "$schema": "../../schemas/common.schema.json" }`. Do **not** copy `i18n/locales/en/*.json`: that ships English text as if it were translated
+2. Register it in `config/i18n.ts` (`locales` array) with `files: ["<code>/common.json", "<code>/auth.json", …]` (same feature set as existing locales)
+3. Add it to `lunaria.config.ts` → `locales`
+4. Run `pnpm i18n:check:fix` (fills the full key set with empty placeholders) and `pnpm vp run i18n:schema`
+
+Prefer static string keys with `$t('…')` / `t('…')` so `i18n:report` can analyze usage. For HTML inside translations, use [`i18n-t`](https://vue-i18n.intlify.dev/guide/advanced/component.html).
+
+### Translation status (Lunaria)
+
+We track translation progress with [Lunaria](https://lunaria.dev/):
+
+- Built dashboard: `/lunaria/` (generated at build time)
+- JSON status for the app: `/lunaria/status.json`
+- In-app page: `/translation-status`
+
+Use the [i18n-ally](https://marketplace.visualstudio.com/items?itemName=lokalise.i18n-ally) VS Code extension (recommended in `.vscode/extensions.json`) for editing locale files.
 
 ## Storybook
 
@@ -390,8 +451,9 @@ Stories are co-located with pages as `*.stories.ts` files under `app/pages/`. St
 ```bash
 pnpm storybook          # Dev server at http://localhost:6006 (sets STORYBOOK=true)
 pnpm build-storybook    # Static Storybook build
-pnpm chromatic          # Visual review via Chromatic
 ```
+
+Chromatic visual review runs in CI (`.github/workflows/chromatic.yml`) — there is no local `chromatic` script.
 
 The hosted Storybook is published at [storybook.wolfstar.rocks](https://storybook.wolfstar.rocks). Storybook runs with `STORYBOOK=true` so Nuxt loads a Storybook-specific config without the full app shell.
 
@@ -426,7 +488,7 @@ Format: `type(scope): description`
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`, `types`
 
-Scopes (optional): `auth`, `api`, `guild`, `ui`, `db`, `deps`
+Scopes (optional): `auth`, `api`, `guild`, `ui`, `db`, `deps`, `i18n`
 
 Examples:
 

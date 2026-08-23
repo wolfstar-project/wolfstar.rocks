@@ -2,13 +2,13 @@
 	<div class="app-layout" :class="appName">
 		<a
 			href="#maincontent"
-			class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-inverted focus:shadow-lg focus:outline focus:outline-2 focus:outline-transparent"
+			class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-content focus:shadow-lg focus:outline focus:outline-2 focus:outline-transparent"
 		>
-			Skip to main content
+			{{ t("a11y.skip_to_content") }}
 		</a>
 		<AppHeader />
 
-		<UMain id="maincontent" tabindex="-1" aria-label="Main content">
+		<UMain id="maincontent" tabindex="-1" :aria-label="t('a11y.main_content')">
 			<slot></slot>
 		</UMain>
 
@@ -34,15 +34,19 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
 const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
 </script>
 
 <style scoped>
 @reference "@/assets/css/main.css";
 .app-layout {
-	@apply flex min-h-screen flex-col bg-grid-pattern;
+	@apply flex min-h-screen flex-col;
 	position: relative;
-	background-color: var(--wolfstar-surface-100);
+	background-color: var(--color-base-100);
+	/* Clip 100vw full-bleed bands (CTA/testimonials) that exceed the layout
+	   when a scrollbar/gutter is present. DaisyUI owns html/overflow, so clip here. */
+	overflow-x: clip;
 }
 
 .app-layout::before {
@@ -52,10 +56,10 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	background-image:
 		radial-gradient(
 			ellipse at 50% 0%,
-			oklch(from var(--color) l c h / 0.15) 0%,
+			oklch(from var(--color) l c h / 0.2) 0%,
 			transparent 80%
 		),
-		linear-gradient(to bottom, var(--wolfstar-surface-100) 0%, transparent 20%);
+		linear-gradient(to bottom, var(--color-base-100) 0%, transparent 20%);
 	background-size:
 		max(100vw, 600px) 50rem,
 		100% 100%;
@@ -64,7 +68,7 @@ const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"
 	content: "";
 }
 .app-layout.wolfstar {
-	--color: var(--color-branding-wolfstar);
+	--color: var(--color-primary);
 }
 .app-layout.staryl {
 	--color: var(--color-branding-staryl);

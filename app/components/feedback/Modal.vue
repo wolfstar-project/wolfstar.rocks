@@ -1,8 +1,8 @@
 <template>
 	<UModal
 		v-model:open="open"
-		title="Send Feedback"
-		description="Report a bug or share your thoughts with the WolfStar team."
+		:title="t('feedback.title')"
+		:description="t('feedback.description')"
 	>
 		<template #body>
 			<UForm
@@ -14,23 +14,27 @@
 				@submit="onSubmit"
 				@error="onError"
 			>
-				<UFormField v-if="!isDashboard" name="name" label="Name" required>
-					<UInput v-model="state.name" placeholder="Your name" class="w-full" />
-				</UFormField>
-
-				<UFormField v-if="!isDashboard" name="email" label="Email" required>
+				<UFormField v-if="!isDashboard" name="name" :label="t('feedback.name')" required>
 					<UInput
-						v-model="state.email"
-						type="email"
-						placeholder="your@email.com"
+						v-model="state.name"
+						:placeholder="t('feedback.name_placeholder')"
 						class="w-full"
 					/>
 				</UFormField>
 
-				<UFormField name="message" label="Message" required>
+				<UFormField v-if="!isDashboard" name="email" :label="t('feedback.email')" required>
+					<UInput
+						v-model="state.email"
+						type="email"
+						:placeholder="t('feedback.email_placeholder')"
+						class="w-full"
+					/>
+				</UFormField>
+
+				<UFormField name="message" :label="t('feedback.message')" required>
 					<UTextarea
 						v-model="state.message"
-						placeholder="What happened? What did you expect to happen?"
+						:placeholder="t('feedback.message_placeholder')"
 						:rows="4"
 						class="w-full"
 					/>
@@ -46,7 +50,7 @@
 					:disabled="isSubmitting"
 					@click="open = false"
 				>
-					Cancel
+					{{ t("common.cancel") }}
 				</UButton>
 				<UButton
 					type="submit"
@@ -55,7 +59,7 @@
 					:loading="isSubmitting"
 					icon="i-lucide-send"
 				>
-					Send Feedback
+					{{ t("feedback.send") }}
 				</UButton>
 			</UFieldGroup>
 		</template>
@@ -68,6 +72,7 @@ import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/
 import { captureFeedback } from "@sentry/nuxt";
 
 const open = defineModel<boolean>("open", { default: false });
+const { t } = useI18n();
 const toast = useToast();
 const route = useRoute();
 const { user } = useUserSession();
@@ -100,9 +105,9 @@ async function onSubmit() {
 
 		toast.add({
 			color: "success",
-			description: "Your feedback has been sent. Thank you!",
+			description: t("feedback.sent_toast_description"),
 			icon: "heroicons:check-circle",
-			title: "Feedback Sent",
+			title: t("feedback.sent_title"),
 		});
 	} finally {
 		isSubmitting.value = false;
@@ -119,9 +124,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't send feedback. ${errorMessage ?? "Please try again."}`,
+		description: t("feedback.send_failed_description", {
+			message: errorMessage ?? t("common.please_try_again"),
+		}),
 		icon: "heroicons:x-circle",
-		title: "Send Feedback Failed",
+		title: t("feedback.send_failed_title"),
 	});
 }
 </script>

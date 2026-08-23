@@ -41,13 +41,11 @@ function determineUnit(ms: number): readonly [number, string] {
 	for (let i = 0; i < unitEntries.length; i++) {
 		const next = unitEntries[i + 1];
 		if (!next || ms < next[1] || i === unitEntries.length - 2) {
-			// The loop guard keeps `i` in bounds, so the index access cannot be undefined
 			const entry = unitEntries[i]!;
 			return [Math.floor(ms / entry[1]), entry[0]] as const;
 		}
 	}
 
-	// `unitMap` is a non-empty literal, so the first entry always exists
 	const first = unitEntries[0]!;
 	return [Math.floor(ms / first[1]), first[0]] as const;
 }
@@ -66,13 +64,14 @@ interface Emits {
 <script setup lang="ts">
 const { modelValue, min, max } = defineProps<SelectDurationProps>();
 const emit = defineEmits<Emits>();
+const { t } = useI18n();
 
-const unitItems = [
-	{ label: "Seconds", value: "seconds" },
-	{ label: "Minutes", value: "minutes" },
-	{ label: "Hours", value: "hours" },
-	{ label: "Days", value: "days" },
-];
+const unitItems = computed(() => [
+	{ label: t("select.seconds"), value: "seconds" },
+	{ label: t("select.minutes"), value: "minutes" },
+	{ label: t("select.hours"), value: "hours" },
+	{ label: t("select.days"), value: "days" },
+]);
 
 const [inputDuration, inputUnit] = determineUnit(modelValue ?? 0);
 const unit = ref(inputUnit);
@@ -86,16 +85,31 @@ const durationString = computed({
 	},
 });
 
+function localizedUnit(unitKey: string): string {
+	switch (unitKey) {
+		case "seconds":
+			return t("select.seconds");
+		case "minutes":
+			return t("select.minutes");
+		case "hours":
+			return t("select.hours");
+		case "days":
+			return t("select.days");
+		default:
+			return unitKey;
+	}
+}
+
 function validate(ms: number): boolean {
 	if (ms < min) {
 		const [val, u] = determineUnit(min);
-		error.value = `The minimum duration is ${val} ${u}.`;
+		error.value = t("select.min_duration", { value: val, unit: localizedUnit(u) });
 		return false;
 	}
 
 	if (typeof max === "number" && ms > max) {
 		const [val, u] = determineUnit(max);
-		error.value = `The maximum duration is ${val} ${u}.`;
+		error.value = t("select.max_duration", { value: val, unit: localizedUnit(u) });
 		return false;
 	}
 

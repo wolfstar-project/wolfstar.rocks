@@ -36,54 +36,56 @@ interface SettingsSectionSlots {
 </script>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<SettingsSectionProps>(), {
-	headingLevel: "h2",
-	forceSemanticHeading: false,
-});
+const {
+	description,
+	title,
+	disableTypography,
+	headingLevel = "h2",
+	forceSemanticHeading = false,
+	class: className,
+	ui: uiProp,
+} = defineProps<SettingsSectionProps>();
 
 defineSlots<SettingsSectionSlots>();
 
 const ui = computed(() =>
 	theme({
-		disableTypography: props.disableTypography,
+		disableTypography,
 	}),
 );
 </script>
 
 <template>
-	<div data-slot="root" :class="ui.root({ class: [props.class, props.ui?.root] })">
+	<div data-slot="root" :class="ui.root({ class: [className, uiProp?.root] })">
 		<header
-			v-if="props.title || props.description"
+			v-if="title || description"
 			data-slot="header"
-			:class="ui.header({ class: props.ui?.header })"
+			:class="ui.header({ class: uiProp?.header })"
 		>
-			<template v-if="props.title">
-				<div
-					v-if="props.disableTypography && !props.forceSemanticHeading"
-					data-slot="heading"
-				>
-					{{ props.title }}
+			<template v-if="title">
+				<div v-if="disableTypography && !forceSemanticHeading" data-slot="heading">
+					{{ title }}
 				</div>
 				<component
-					:is="props.headingLevel"
+					:is="headingLevel"
 					v-else
 					data-slot="heading"
-					:class="ui.heading({ class: props.ui?.heading })"
+					:class="ui.heading({ class: uiProp?.heading })"
 				>
-					{{ props.title }}
+					{{ title }}
 				</component>
 			</template>
 
 			<p
-				v-if="props.description"
+				v-if="description"
 				data-slot="description"
-				:class="ui.description({ class: props.ui?.description })"
+				:class="ui.description({ class: uiProp?.description })"
 			>
-				{{ props.description }}
+				{{ description }}
 			</p>
 		</header>
 
-		<div data-slot="content" :class="ui.content({ class: props.ui?.content })">
+		<div data-slot="content" :class="ui.content({ class: uiProp?.content })">
 			<slot />
 		</div>
 	</div>

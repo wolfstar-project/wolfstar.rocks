@@ -1,0 +1,37 @@
+{
+	"$schema": "../../schemas/components.schema.json",
+	"feedback": {
+		"description": "Informa de un error o comparte tus opiniones con el equipo de WolfStar.",
+		"email": "Correo electrónico",
+		"email_placeholder": "tu{'@'}email.com",
+		"message": "Mensaje",
+		"message_placeholder": "Cuéntanos qué piensas...",
+		"name": "Nombre",
+		"name_placeholder": "Tu nombre",
+		"send": "Enviar comentarios",
+		"send_failed_description": "No se pudo enviar el comentario. Inténtalo de nuevo.",
+		"send_failed_title": "Error al enviar",
+		"sent_description": "Gracias por ayudar a mejorar WolfStar.",
+		"sent_title": "Comentarios enviados",
+		"sent_toast_description": "Gracias por ayudar a mejorar WolfStar.",
+		"title": "Enviar comentarios"
+	},
+	"pwa": {
+		"dismiss": "Cerrar",
+		"install": "Install",
+		"install_app": "Instalar app",
+		"reload": "Recargar",
+		"update_available": "Actualización disponible"
+	},
+	"select": {
+		"clear_selected": "Limpiar selección",
+		"days": "Días",
+		"hours": "Horas",
+		"max_duration": "Duración máxima",
+		"min_duration": "Duración mínima",
+		"minutes": "Minutos",
+		"none": "Ninguno",
+		"search": "Buscar...",
+		"seconds": "Segundos"
+	}
+}

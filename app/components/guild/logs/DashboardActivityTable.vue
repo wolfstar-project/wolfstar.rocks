@@ -4,8 +4,8 @@
 			<UInput
 				v-model="query"
 				icon="i-lucide-search"
-				placeholder="Search logs..."
-				aria-label="Search logs"
+				:placeholder="t('guild_logs.search_placeholder')"
+				:aria-label="t('guild_logs.search_aria')"
 				class="max-w-sm min-w-48"
 			/>
 		</div>
@@ -16,9 +16,9 @@
 			:item-count="entries.length"
 			:max-visible="total"
 			empty-icon="i-lucide-activity"
-			empty-title="No logs found"
-			:empty-description="debouncedQ ? 'No activity matches the current filters.' : undefined"
-			refresh-label="Refresh activity log"
+			:empty-title="t('guild_logs.no_logs')"
+			:empty-description="debouncedQ ? t('guild_logs.no_activity_filter_match') : undefined"
+			:refresh-label="t('guild_logs.refresh_activity')"
 			@refresh="refresh()"
 		>
 			<UTable
@@ -44,9 +44,12 @@
 				class="mt-4 flex items-center justify-between border-t border-default pt-4"
 			>
 				<p class="text-sm text-muted">
-					Showing
-					{{ table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0 }} of
-					{{ table?.tableApi?.getFilteredRowModel().rows.length || 0 }} entries
+					{{
+						t("guild_logs.showing_entries", {
+							shown: table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0,
+							total: table?.tableApi?.getFilteredRowModel().rows.length || 0,
+						})
+					}}
 				</p>
 				<UPagination
 					:default-page="(table?.tableApi?.getState().pagination.pageIndex || 0) + 1"
@@ -68,6 +71,7 @@ import { formatTimeAgo } from "@vueuse/core";
 const UAvatar = resolveComponent("UAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
+const { t } = useI18n();
 
 const page = ref(1);
 const limit = ref(20);
@@ -86,10 +90,10 @@ const { entries, total, status, refresh } = useAuditLog({
 	filters,
 });
 
-const columns: TableColumn<DashboardAuditEntry>[] = [
+const columns = computed<TableColumn<DashboardAuditEntry>[]>(() => [
 	{
 		id: "actor",
-		header: "User",
+		header: t("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(UAvatar, {
@@ -109,7 +113,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 	},
 	{
 		id: "description",
-		header: "Action",
+		header: t("guild_logs.columns.action"),
 		cell: ({ row }) => {
 			const text = auditLogActionDescription(row.original);
 			return h("span", { class: "line-clamp-2 text-sm", title: text }, text);
@@ -117,7 +121,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 	},
 	{
 		accessorKey: "timestamp",
-		header: "When",
+		header: t("guild_logs.columns.when"),
 		cell: ({ row }) =>
 			h(
 				"time",
@@ -129,7 +133,7 @@ const columns: TableColumn<DashboardAuditEntry>[] = [
 				formatTimeAgo(new Date(row.original.timestamp)),
 			),
 	},
-];
+]);
 
 watch(debouncedQ, (val) => {
 	filters.value.q = val || undefined;

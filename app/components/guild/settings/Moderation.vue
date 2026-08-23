@@ -1,13 +1,13 @@
 <template>
 	<GuildSettingsSection
-		title="Punishment Settings"
-		description="Configure how WolfStar handles moderation actions like bans, kicks, and mutes."
+		:title="t('guild_settings.moderation.title')"
+		:description="t('guild_settings.moderation.subtitle')"
 	>
 		<GuildSettingsForm
 			:schema="ModerationSettingsSchema"
 			:state="state"
 			:map-to-guild-data="mapToGuildData"
-			aria-label="Moderation settings form"
+			:aria-label="t('guild_settings.moderation.form_aria')"
 			class="space-y-4"
 			@error="onError"
 		>
@@ -15,13 +15,22 @@
 				<UFormField
 					v-for="setting in ConfigurableModerationKeys"
 					:key="`form-field-${setting.key}`"
-					:label="setting.name"
+					:label="translateEntry(setting, 'name')"
 					:name="setting.key"
 				>
 					<template #description>
-						<p class="text-sm text-toned">{{ setting.description }}</p>
+						<p class="text-sm text-base-content/70">
+							{{ translateEntry(setting, "description") }}
+						</p>
 					</template>
-					<USwitch v-model="state[setting.key]" :aria-label="`Toggle ${setting.name}`" />
+					<USwitch
+						v-model="state[setting.key]"
+						:aria-label="
+							t('guild_settings.events.toggle_aria', {
+								title: translateEntry(setting, 'name'),
+							})
+						"
+					/>
 				</UFormField>
 			</div>
 		</GuildSettingsForm>
@@ -33,6 +42,10 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
+import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
+
+const { t } = useI18n();
+const { translateEntry } = useSettingsEntryI18n();
 
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
@@ -62,9 +75,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: `Couldn't save moderation settings. ${errorMessage ?? "Please try again."}`,
+		description: errorMessage ?? t("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: "Save Failed",
+		title: t("guild_settings.save_failed"),
 	});
 }
 

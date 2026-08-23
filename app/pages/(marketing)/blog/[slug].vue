@@ -132,7 +132,7 @@ useSeoMeta({
 });
 
 if (!post.image) {
-	defineOgImage("BlogPost", {
+	defineOgImage("ImageBlogPost", {
 		title,
 		description,
 		date: post.date,

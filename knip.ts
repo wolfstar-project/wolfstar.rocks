@@ -35,6 +35,7 @@ const config: KnipConfig = {
 				"!test/test-utils/**",
 				"!test/e2e/helpers/**",
 				"!.agents/**",
+				"!.skills/**",
 				"!.agent/**",
 				"!.claude/**",
 			],

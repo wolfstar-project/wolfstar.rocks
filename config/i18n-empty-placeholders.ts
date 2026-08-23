@@ -1,5 +1,5 @@
-import MagicString from "magic-string";
 import type { Plugin, PluginOption } from "vite";
+import MagicString from "magic-string";
 
 /**
  * Untranslated keys live in `i18n/locales/{locale}/*.json` as empty strings, so

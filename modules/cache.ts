@@ -9,7 +9,7 @@ const { resolve } = createResolver(import.meta.url);
 // Nitro `import()`s custom driver paths verbatim while building its build-time storage,
 // so the mount needs an explicit `.ts` extension (and the driver chain needs extensioned
 // relative imports) for plain Node ESM resolution + type stripping to load it.
-const resilientNetlifyBlobsDriver = resolve("../server/utils/storage/netlify-blobs-resilient.ts");
+const resilientNetlifyBlobsDriver = resolve("../shared/utils/storage/netlify-blobs-resilient.ts");
 
 function netlifyBlobsMount(name: string) {
 	return {

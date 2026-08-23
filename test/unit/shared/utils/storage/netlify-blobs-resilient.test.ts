@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { getKeysMock, netlifyBlobsDriverMock } = vi.hoisted(() => {
 	const getKeysMock = vi.fn();
-	const netlifyBlobsDriverMock = vi.fn(() => ({
+	const netlifyBlobsDriverMock = vi.fn((_options?: { name?: string; fetch?: unknown }) => ({
 		name: "netlify-blobs",
 		getKeys: getKeysMock,
 		getItem: vi.fn(),
@@ -14,7 +14,7 @@ vi.mock("unstorage/drivers/netlify-blobs", () => ({
 	default: netlifyBlobsDriverMock,
 }));
 
-vi.mock("#server/utils/storage/resilient-fetch", () => ({
+vi.mock("#shared/utils/storage/resilient-fetch", () => ({
 	createResilientNetlifyBlobsFetch: () => vi.fn(),
 }));
 
@@ -26,7 +26,7 @@ describe("netlify-blobs-resilient driver", () => {
 
 	it("passes a resilient fetch into the base netlify-blobs driver", async () => {
 		const { default: createDriver } =
-			await import("#server/utils/storage/netlify-blobs-resilient");
+			await import("#shared/utils/storage/netlify-blobs-resilient");
 		createDriver({ name: "cache", driver: "/virtual/driver" });
 
 		expect(netlifyBlobsDriverMock).toHaveBeenCalledOnce();
@@ -45,19 +45,19 @@ describe("netlify-blobs-resilient driver", () => {
 		getKeysMock.mockRejectedValueOnce(hangUp);
 
 		const { default: createDriver } =
-			await import("#server/utils/storage/netlify-blobs-resilient");
+			await import("#shared/utils/storage/netlify-blobs-resilient");
 		const driver = createDriver({ name: "cache" });
 
-		await expect(driver.getKeys?.("nitro:handlers:i18n")).resolves.toEqual([]);
+		await expect(driver.getKeys?.("nitro:handlers:i18n", {})).resolves.toEqual([]);
 	});
 
 	it("rethrows non-transient getKeys errors", async () => {
 		getKeysMock.mockRejectedValueOnce(new Error("unauthorized"));
 
 		const { default: createDriver } =
-			await import("#server/utils/storage/netlify-blobs-resilient");
+			await import("#shared/utils/storage/netlify-blobs-resilient");
 		const driver = createDriver({ name: "cache" });
 
-		await expect(driver.getKeys?.("nitro:handlers:i18n")).rejects.toThrow("unauthorized");
+		await expect(driver.getKeys?.("nitro:handlers:i18n", {})).rejects.toThrow("unauthorized");
 	});
 });

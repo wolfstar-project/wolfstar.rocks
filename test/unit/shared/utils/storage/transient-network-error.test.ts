@@ -1,4 +1,4 @@
-import { isTransientNetworkError } from "#server/utils/storage/transient-network-error";
+import { isTransientNetworkError } from "#shared/utils/storage/transient-network-error";
 import { describe, expect, it } from "vitest";
 
 describe("isTransientNetworkError", () => {

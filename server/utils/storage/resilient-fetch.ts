@@ -1,4 +1,4 @@
-import { isTransientNetworkError } from "./transient-network-error";
+import { isTransientNetworkError } from "./transient-network-error.ts";
 
 export interface ResilientFetchOptions {
 	/** Total attempts including the first try. Defaults to 3. */

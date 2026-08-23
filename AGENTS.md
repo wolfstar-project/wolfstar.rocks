@@ -56,7 +56,8 @@
 
 ## Auth and Feedback
 
-- Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider (scopes `guilds`, `guilds.members.read`, `email`), rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
+- Authentication runs on `better-auth` + `@onmax/nuxt-better-auth` — `nuxt-auth-utils` was fully removed in #297. Server config lives in `server/auth.config.ts`, built with `defineServerAuth()` from `@onmax/nuxt-better-auth/config`; it registers the Discord social provider, rate limiting through `secondaryStorage`, and a `jwe`-strategy session cookie cache
+- The Discord social-provider options come from `createDiscordProviderOptions()` in `server/utils/discord/provider.ts` (unit-tested in `test/unit/server/utils/discord-provider.spec.ts`; `server/auth.config.ts` itself reads Nitro auto-imports at module scope and can't be imported outside a Nitro runtime). Two invariants live there: `prompt: "consent"` must stay set — Better Auth's Discord provider otherwise sends `prompt=none`, which Discord only honours when the user already approved exactly the requested scopes, so every sign-in fails once the scope set changes — and `scope` lists only the extras (`guilds` for GET /users/@me/guilds, `guilds.members.read` for per-guild member lookups) on top of Better Auth's own `identify`/`email` defaults. `mapProfileToUser()` must not return `id`: since better-auth 1.7 the provider account id comes from `accountSubject` and `OAuthMappedUser` types `id` as `never`, so the session user id is a generated id, not the Discord snowflake (read the snowflake from `/api/users`, never from `session.user.id`)
 - `server/auth.config.ts` builds its `secondaryStorage` via `createAuthSecondaryStorage()` from `server/utils/auth-rate-limit-storage.ts`, which adapts a Nitro/unstorage mount to better-auth's `SecondaryStorage` shape and adds an `increment()` with an in-process keyed mutex (mirroring `server/utils/wrappedEventHandler.ts`) so better-auth's fixed-window rate limiter gets a single-step atomic-ish counter instead of its non-atomic get-then-set fallback. The same keyed mutex backs `getAndDelete()`, which better-auth 1.7 requires on `SecondaryStorage` to consume single-use verification values in one step. Neither is atomic across instances — the production driver (Cloudflare KV over HTTP) has no such primitive — which is an accepted limitation of the storage backend
 - Mock authentication in Nuxt component tests with `mockAuth()` from `test/nuxt/utils/auth.ts` (wraps `mockNuxtImport("useUserSession", ...)` plus an `$authorization` provide fallback) instead of hand-rolling `useUserSession`/`$authorization` mocks per spec
 - There is no `server/api/auth/discord.get.ts` or `server/utils/oauth-state.ts` anymore. Better-auth's own `/api/auth/sign-in/social` and `/api/auth/callback/discord` routes own the OAuth flow and its CSRF state — do not reintroduce a custom `oauth-state`/`verify-state` endpoint
@@ -84,11 +85,10 @@ pnpm dev:pwa                     # Development server with local PWA behavior en
 pnpm build                       # Production build
 pnpm build:test                  # Test-mode production build through vite-plus
 pnpm generate                    # Static generation
-pnpm generate-pwa-icons          # Regenerate PWA icon assets
-pnpm knip:fix                    # Auto-fix unused files, exports, and dependencies
 pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
+pnpm vp run knip                 # Report unused files, exports, and dependencies
 pnpm vp run i18n:check           # Audit locale feature files against en/*
 pnpm i18n:check:fix              # Sync locale keys (empty placeholders for missing)
 pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
@@ -98,14 +98,11 @@ pnpm vp run build:lunaria        # Build Lunaria dashboard + status.json
 pnpm tolgee:push                 # Push extracted strings to Tolgee (project 33768)
 pnpm tolgee:pull                 # Pull translations from Tolgee and remap into i18n/locales/
 pnpm tolgee:ensure-languages     # Create any Tolgee project languages missing from .tolgeerc.cjs
-pnpm tolgee:extract              # Print strings the Tolgee CLI would extract (dry run)
 pnpm test                        # Run all Vitest projects
 pnpm test:unit                   # Run unit tests
 pnpm test:nuxt                   # Nuxt component/API tests
 pnpm test:browser                # Playwright E2E tests against a prebuilt app
 pnpm test:browser:prebuilt       # Playwright E2E tests against an existing prebuilt app
-pnpm test:browser:ui             # Playwright UI mode against a prebuilt app
-pnpm test:browser:update         # Update Playwright snapshots
 pnpm test:a11y                   # Lighthouse accessibility checks in dark and light modes
 pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
 pnpm test:perf                   # Lighthouse performance checks
@@ -116,23 +113,33 @@ pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
 pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook             # Build static Storybook output
-pnpm chromatic                   # Publish Storybook to Chromatic for visual review
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
 pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
-pnpm prisma:migrate:dev:create   # Create a migration without applying it
 pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
 pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
-pnpm prisma:migrate:status       # Inspect migration status
-pnpm prisma:migrate:resolve      # Resolve migration history state
-pnpm prisma:migrate:reset        # Reset the local database
 pnpm prisma:generate             # Regenerate Prisma client
-pnpm prisma:generate:watch       # Regenerate Prisma client in watch mode
 pnpm prisma:seed                 # Seed the database
 pnpm prisma:studio               # Visual database editor (http://localhost:5555)
-pnpm update:interactive          # Interactive dependency updates with taze
+```
+
+Rarely-used tasks are no longer wrapped in `package.json`; run the underlying
+binary through `pnpm exec` instead:
+
+```bash
+pnpm exec prisma migrate dev --create-only  # Create a migration without applying it
+pnpm exec prisma migrate status             # Inspect migration status
+pnpm exec prisma migrate resolve            # Resolve migration history state
+pnpm exec prisma migrate reset              # Reset the local database
+pnpm exec prisma generate --watch           # Regenerate Prisma client in watch mode
+pnpm exec knip --fix                        # Auto-fix unused files, exports, and dependencies
+pnpm exec taze                              # Interactive dependency updates
+pnpm exec tolgee extract print              # Print strings the Tolgee CLI would extract (dry run)
+pnpm exec pwa-assets-generator              # Regenerate PWA icon assets
+pnpm test:browser:prebuilt --ui             # Playwright UI mode against a prebuilt app
+pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 ```
 
 ## Localization (i18n)

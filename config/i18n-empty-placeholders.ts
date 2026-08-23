@@ -76,7 +76,7 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 
 		const plugin = candidate;
 		if (
-			!plugin.name.startsWith(VUE_I18N_RESOURCE_PLUGIN) ||
+			!plugin.name.includes(VUE_I18N_RESOURCE_PLUGIN) ||
 			prioritizedResourcePlugins.has(plugin)
 		) {
 			continue;
@@ -128,6 +128,14 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 		// Registration order keeps this before the resource compiler; hook order
 		// keeps both transforms before Vite+'s built-in JSON transform.
 		enforce: "pre",
+		// Modules that inject their Vite plugins from a later `vite:extendConfig`
+		// hook (@nuxt/kit's env-injection path, used whenever `config.environments`
+		// is missing — Storybook builds) land after nuxt.config's own hook, so
+		// prioritize again here: plugin `config()` hooks run once the inline plugin
+		// list is complete. `prioritizedResourcePlugins` keeps this idempotent.
+		config(config) {
+			prioritizeVueI18nResourceTransform(config.plugins ?? []);
+		},
 		transform: {
 			order: "pre",
 			handler(code, id) {

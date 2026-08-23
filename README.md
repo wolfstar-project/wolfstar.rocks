@@ -257,7 +257,6 @@ results visible on the [CodSpeed dashboard][codspeed-link].
 - **Prisma** - Database ORM
 - **Tailwind CSS** - Utility-first CSS framework
 - **Nuxt UI** - Vue component library and design tokens
-- **NuxtUI** - Components
 
 ### AI Development Assistant
 

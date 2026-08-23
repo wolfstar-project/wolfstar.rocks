@@ -1,15 +1,15 @@
-import { defineNuxtModule, useRuntimeConfig } from "nuxt/kit";
+import { createResolver, defineNuxtModule, useRuntimeConfig } from "nuxt/kit";
 import { provider } from "std-env";
 
 // Storage key for fetch cache - must match shared/utils/fetch-cache-config.ts
 const FETCH_CACHE_STORAGE_BASE = "fetch-cache";
 const SKEW_PROTECTION_STORAGE_BASE = "skew-protection";
 
+const { resolve } = createResolver(import.meta.url);
 // Nitro `import()`s custom driver paths verbatim while building its build-time storage,
 // so the mount needs an explicit `.ts` extension (and the driver chain needs extensioned
 // relative imports) for plain Node ESM resolution + type stripping to load it.
-const resilientNetlifyBlobsDriver = import.meta
-	.resolve("../shared/utils/storage/netlify-blobs-resilient.ts");
+const resilientNetlifyBlobsDriver = resolve("../shared/utils/storage/netlify-blobs-resilient.ts");
 
 function netlifyBlobsMount(name: string) {
 	return {

@@ -62,7 +62,7 @@
 
 			<!-- Loading state -->
 			<div v-if="loading" class="space-y-4" role="status" aria-label="Loading commands">
-				<div class="rounded-xl border border-default/10 py-20 text-center">
+				<div class="rounded-xl border border-inverted/10 py-20 text-center">
 					<UIcon
 						name="i-heroicons-arrow-path"
 						class="mx-auto mb-6 h-10 w-10 animate-spin text-dimmed"
@@ -75,7 +75,7 @@
 			<!-- No results message -->
 			<div
 				v-else-if="commands.length === 0"
-				class="space-y-6 rounded-xl border border-default/10 py-20 text-center"
+				class="space-y-6 rounded-xl border border-inverted/10 py-20 text-center"
 				role="status"
 			>
 				<UIcon
@@ -103,7 +103,7 @@
 			<section
 				v-else
 				aria-labelledby="categories-heading"
-				class="rounded-xl border border-default/10 bg-muted/80 p-6 sm:p-8"
+				class="rounded-xl border border-inverted/10 bg-muted/80 p-6 sm:p-8"
 			>
 				<h2 id="categories-heading" class="sr-only">Command Categories</h2>
 				<LazyCommandCategory

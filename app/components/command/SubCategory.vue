@@ -10,7 +10,7 @@
 				root: 'space-y-3',
 				item: '',
 				content:
-					'rounded-2xl rounded-t-none overflow-hidden transition-all border border-t-0 border-default/10 bg-muted/30',
+					'rounded-2xl rounded-t-none overflow-hidden transition-all border border-t-0 border-inverted/10 bg-muted/30',
 			}"
 			class="animate-fade-in"
 		>
@@ -18,7 +18,7 @@
 				<UButton
 					color="neutral"
 					variant="ghost"
-					class="w-full justify-between rounded-2xl border border-default/10 bg-muted/50 px-6 py-4 transition-all hover:bg-muted/80"
+					class="w-full justify-between rounded-2xl border border-inverted/10 bg-muted/50 px-6 py-4 transition-all hover:bg-muted/80"
 					:class="{ 'rounded-b-none': open }"
 					:aria-expanded="open"
 					:aria-controls="`category-content-${item.value.replace(/\s+/g, '-').toLowerCase()}`"
@@ -59,7 +59,7 @@
 							item: 'border-0',
 							content: 'border-0 pt-4',
 							trigger:
-								'bg-default/10 hover:bg-default/15 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-default/10',
+								'bg-inverted/10 hover:bg-inverted/15 px-5 py-4 rounded-xl hover-lift transition-all w-full border border-inverted/10',
 							trailingIcon: 'text-muted size-5 shrink-0',
 							label: 'flex items-center gap-4 flex-1 min-w-0',
 						}"

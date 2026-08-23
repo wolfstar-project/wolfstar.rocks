@@ -79,7 +79,7 @@
 						v-for="(usage, idx) in command.extendedHelp.usages"
 						:key="idx"
 						role="listitem"
-						class="block rounded-xl border border-default/10 bg-accented/70 px-5 py-4 font-mono text-sm text-default transition-all"
+						class="block rounded-xl border border-inverted/10 bg-accented/70 px-5 py-4 font-mono text-sm text-default transition-all"
 					>
 						<span class="text-primary">WolfStar</span>,
 						<span class="text-primary/80">{{ command.name }}</span>
@@ -100,7 +100,7 @@
 					</div>
 					<span>Extended Help</span>
 				</h3>
-				<div class="rounded-xl border border-default/10 bg-muted/30 px-5 py-4">
+				<div class="rounded-xl border border-inverted/10 bg-muted/30 px-5 py-4">
 					<div class="prose max-w-none dark:prose-invert prose-p:leading-relaxed">
 						<div
 							class="text-base leading-7 whitespace-pre-line"

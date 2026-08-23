@@ -146,7 +146,7 @@ pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 
 - `i18n/locales/en/*.json` is the source of truth; every other locale carries the same key set
 - **Untranslated keys are empty strings, never a copy of the English text** — an English copy is indistinguishable from a real translation for Tolgee, Lunaria and translators, and it hides regional variants (`es-419` merges `es/*` then `es-419/*`)
-- `config/i18n-empty-placeholders.ts` provides the Vite plugin (registered in `nuxt.config.ts` under `vite.plugins`) that drops empty leaves from `i18n/locales/**/*.json` at build time, so vue-i18n falls back to `en-US` instead of rendering `""`. Locale _types_ are still generated from the on-disk files, so stripped keys stay valid in `$t()` call sites
+- `config/i18n-empty-placeholders.ts` provides the Vite plugin (registered from the `vite:extendConfig` hook in `nuxt.config.ts`) that drops empty leaves from `i18n/locales/**/*.json` at build time, so vue-i18n falls back to `en-US` instead of rendering `""`. Locale _types_ are still generated from the on-disk files, so stripped keys stay valid in `$t()` call sites
 - `pnpm i18n:check:fix` (`scripts/compare-translations.ts`) adds missing keys as `""` and removes extra keys
 - `.tolgeerc.cjs` pulls `states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"]`; without `UNTRANSLATED`, `scripts/tolgee-pull-remap.ts` would wipe untranslated keys from disk on every sync (see wolfstar-project/wolfstar#240)
 
@@ -302,7 +302,7 @@ All styling must use semantic tokens or CSS custom properties — no hardcoded c
 
 It checks:
 
-1. **Raw Tailwind palette classes** in `<template>` — e.g. `text-red-500`, `bg-blue-700`. Use semantic Nuxt UI classes (`text-primary`, `text-muted`, `bg-success`) or DaisyUI tokens instead.
+1. **Raw Tailwind palette classes** in `<template>` — e.g. `text-red-500`, `bg-blue-700`. Use semantic Nuxt UI classes (`text-primary`, `text-muted`, `bg-success`) instead.
 2. **Hex literals** in `<style>` — e.g. `#5865f2`. Move to a scoped CSS custom property declaration.
 3. **Color functions with literal arguments** in `<style>` — e.g. `hsla(235, 85.6%, 64.7%, 0.5)`. Move to a scoped CSS custom property. Allowed patterns:
     - `oklch(from var(--token) l c h / alpha)` — relative-color syntax

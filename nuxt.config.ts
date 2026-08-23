@@ -3,7 +3,10 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
-import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
+import {
+	prioritizeVueI18nResourceTransform,
+	stripEmptyI18nMessagesPlugin,
+} from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -208,7 +211,7 @@ export default defineNuxtConfig({
 		options: {
 			rules: {
 				"meta-refresh": "off",
-				// NuxtUI/DaisyUI theme class merging produces duplicate utility classes
+				// Nuxt UI theme class merging produces duplicate utility classes
 				"no-dup-class": "off",
 				// NuxtUI components may render empty id attributes internally
 				"attribute-allowed-values": "off",
@@ -315,6 +318,31 @@ export default defineNuxtConfig({
 		inlineStyles: true,
 	},
 
+	hooks: {
+		"vite:extendConfig"(config) {
+			if (!config.plugins) {
+				throw new Error(
+					"vite:extendConfig exposed no plugin list, so the i18n empty-placeholder transform could not be registered.",
+				);
+			}
+			if (
+				!config.plugins.some(
+					(plugin) =>
+						typeof plugin === "object" &&
+						plugin !== null &&
+						!Array.isArray(plugin) &&
+						"name" in plugin &&
+						plugin.name === "wolfstar:i18n-empty-placeholders",
+				)
+			) {
+				config.plugins.unshift(stripEmptyI18nMessagesPlugin());
+			}
+			// Vite+ snapshots transform hooks before configResolved, so prioritize
+			// vue-i18n here while the inline plugin list is still mutable.
+			prioritizeVueI18nResourceTransform(config.plugins);
+		},
+	},
+
 	experimental: {
 		clientNodeCompat: true,
 		typescriptPlugin: true,
@@ -380,11 +408,6 @@ export default defineNuxtConfig({
 		css: {
 			transformer: "lightningcss",
 		},
-		plugins: [
-			// Untranslated keys are stored as empty strings; drop them so vue-i18n
-			// falls back to English instead of rendering "".
-			stripEmptyI18nMessagesPlugin(),
-		],
 		optimizeDeps: {
 			include: [
 				"@discordjs/core/http-only",

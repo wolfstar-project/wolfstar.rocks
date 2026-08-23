@@ -256,8 +256,7 @@ results visible on the [CodSpeed dashboard][codspeed-link].
 - **Oxfmt** - Code formatting
 - **Prisma** - Database ORM
 - **Tailwind CSS** - Utility-first CSS framework
-- **DaisyUI** - Tailwind CSS component library
-- **NuxtUI** - Components
+- **Nuxt UI** - Vue component library and design tokens
 
 ### AI Development Assistant
 

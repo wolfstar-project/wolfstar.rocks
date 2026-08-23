@@ -43,7 +43,7 @@
 		</template>
 
 		<template #footer>
-			<div class="flex justify-end gap-2">
+			<UFieldGroup class="justify-end">
 				<UButton
 					color="neutral"
 					variant="ghost"
@@ -61,7 +61,7 @@
 				>
 					{{ t("feedback.send") }}
 				</UButton>
-			</div>
+			</UFieldGroup>
 		</template>
 	</UModal>
 </template>

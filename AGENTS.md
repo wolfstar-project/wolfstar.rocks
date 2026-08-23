@@ -85,11 +85,10 @@ pnpm dev:pwa                     # Development server with local PWA behavior en
 pnpm build                       # Production build
 pnpm build:test                  # Test-mode production build through vite-plus
 pnpm generate                    # Static generation
-pnpm generate-pwa-icons          # Regenerate PWA icon assets
-pnpm knip:fix                    # Auto-fix unused files, exports, and dependencies
 pnpm preview                     # Preview production build locally
 pnpm lint:fix                    # Run linter and auto-fix issues (oxlint + oxfmt)
 pnpm typecheck                   # TypeScript type checking
+pnpm vp run knip                 # Report unused files, exports, and dependencies
 pnpm vp run i18n:check           # Audit locale feature files against en/*
 pnpm i18n:check:fix              # Sync locale keys (empty placeholders for missing)
 pnpm vp run i18n:report          # Fail on missing/unused/dynamic i18n keys in app/**
@@ -99,14 +98,11 @@ pnpm vp run build:lunaria        # Build Lunaria dashboard + status.json
 pnpm tolgee:push                 # Push extracted strings to Tolgee (project 33768)
 pnpm tolgee:pull                 # Pull translations from Tolgee and remap into i18n/locales/
 pnpm tolgee:ensure-languages     # Create any Tolgee project languages missing from .tolgeerc.cjs
-pnpm tolgee:extract              # Print strings the Tolgee CLI would extract (dry run)
 pnpm test                        # Run all Vitest projects
 pnpm test:unit                   # Run unit tests
 pnpm test:nuxt                   # Nuxt component/API tests
 pnpm test:browser                # Playwright E2E tests against a prebuilt app
 pnpm test:browser:prebuilt       # Playwright E2E tests against an existing prebuilt app
-pnpm test:browser:ui             # Playwright UI mode against a prebuilt app
-pnpm test:browser:update         # Update Playwright snapshots
 pnpm test:a11y                   # Lighthouse accessibility checks in dark and light modes
 pnpm test:a11y:prebuilt          # Lighthouse accessibility checks against an existing prebuilt app
 pnpm test:perf                   # Lighthouse performance checks
@@ -117,23 +113,33 @@ pnpm audit:verify                # Replay and verify the AuditEvent hash chain
 pnpm design:lint                 # Lint .claude/DESIGN.md with designmd
 pnpm storybook                   # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook             # Build static Storybook output
-pnpm chromatic                   # Publish Storybook to Chromatic for visual review
 pnpm vp run zizmor               # Lint GitHub Actions workflows for security issues (zizmor)
 pnpm vp run zizmor:fix           # Auto-fix zizmor findings
 pnpm vp run lint:type-aware      # Opt-in Oxlint type-aware linting (tsgolint); not part of the default lint/CI gate
 pnpm prisma:push                 # Push schema changes (development)
 pnpm prisma:migrate:dev          # Create and apply migration
-pnpm prisma:migrate:dev:create   # Create a migration without applying it
 pnpm prisma:migrate:diff         # Check migration drift against the Prisma schema
 pnpm prisma:migrate:deploy       # Apply migrations in deployment environments
-pnpm prisma:migrate:status       # Inspect migration status
-pnpm prisma:migrate:resolve      # Resolve migration history state
-pnpm prisma:migrate:reset        # Reset the local database
 pnpm prisma:generate             # Regenerate Prisma client
-pnpm prisma:generate:watch       # Regenerate Prisma client in watch mode
 pnpm prisma:seed                 # Seed the database
 pnpm prisma:studio               # Visual database editor (http://localhost:5555)
-pnpm update:interactive          # Interactive dependency updates with taze
+```
+
+Rarely-used tasks are no longer wrapped in `package.json`; run the underlying
+binary through `pnpm exec` instead:
+
+```bash
+pnpm exec prisma migrate dev --create-only  # Create a migration without applying it
+pnpm exec prisma migrate status             # Inspect migration status
+pnpm exec prisma migrate resolve            # Resolve migration history state
+pnpm exec prisma migrate reset              # Reset the local database
+pnpm exec prisma generate --watch           # Regenerate Prisma client in watch mode
+pnpm exec knip --fix                        # Auto-fix unused files, exports, and dependencies
+pnpm exec taze                              # Interactive dependency updates
+pnpm exec tolgee extract print              # Print strings the Tolgee CLI would extract (dry run)
+pnpm exec pwa-assets-generator              # Regenerate PWA icon assets
+pnpm test:browser:prebuilt --ui             # Playwright UI mode against a prebuilt app
+pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 ```
 
 ## Localization (i18n)

@@ -1,4 +1,4 @@
-import { createResilientNetlifyBlobsFetch } from "#server/utils/storage/resilient-fetch";
+import { createResilientNetlifyBlobsFetch } from "#shared/utils/storage/resilient-fetch";
 import { describe, expect, it, vi } from "vitest";
 
 describe("createResilientNetlifyBlobsFetch", () => {

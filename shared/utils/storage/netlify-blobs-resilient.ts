@@ -1,7 +1,7 @@
 import { defineDriver } from "unstorage";
 import netlifyBlobsDriver from "unstorage/drivers/netlify-blobs";
-import { createResilientNetlifyBlobsFetch } from "./resilient-fetch";
-import { isTransientNetworkError } from "./transient-network-error";
+import { createResilientNetlifyBlobsFetch } from "./resilient-fetch.ts";
+import { isTransientNetworkError } from "./transient-network-error.ts";
 
 type ResilientNetlifyBlobsOptions = {
 	/** Present when Nitro JSON-serializes the mount config into the driver factory. */

@@ -1,3 +1,4 @@
+import MagicString from "magic-string";
 import type { Plugin, PluginOption } from "vite";
 
 /**
@@ -17,12 +18,24 @@ import type { Plugin, PluginOption } from "vite";
  */
 const LOCALES_SEGMENT = "/i18n/locales/";
 const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
+const EMPTY_PLACEHOLDERS_PLUGIN = "wolfstar:i18n-empty-placeholders";
 const ALREADY_ES_MODULE = /^\s*export\b/;
 const prioritizedResourcePlugins = new WeakSet<Plugin>();
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 type ApplyToEnvironment = NonNullable<Plugin["applyToEnvironment"]>;
 type AppliedPlugins = Awaited<ReturnType<ApplyToEnvironment>>;
+
+/**
+ * Both transforms depend on running before Vite's built-in JSON transform: the
+ * resource compiler cannot parse `export default {…}` as JSON, and skipping it
+ * silently would ship an uncompiled locale module that only fails at render
+ * time under a runtime-only vue-i18n build. Fail loudly with the locale path
+ * from either guard instead.
+ */
+function alreadyEsModuleMessage(plugin: string, id: string): string {
+	return `[${plugin}] ${id} was already transformed into an ES module before empty placeholders could be stripped; the plugin lost its "pre" transform position.`;
+}
 
 function isVitePlugin(candidate: PluginOption): candidate is Plugin {
 	return (
@@ -114,7 +127,7 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 					path.includes(LOCALES_SEGMENT) &&
 					ALREADY_ES_MODULE.test(code)
 				) {
-					return null;
+					throw new Error(alreadyEsModuleMessage(VUE_I18N_RESOURCE_PLUGIN, id));
 				}
 
 				return handler.call(this, code, id, options);
@@ -125,7 +138,7 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 
 export function stripEmptyI18nMessagesPlugin(): Plugin {
 	return {
-		name: "wolfstar:i18n-empty-placeholders",
+		name: EMPTY_PLACEHOLDERS_PLUGIN,
 		// Registration order keeps this before the resource compiler; hook order
 		// keeps both transforms before Vite+'s built-in JSON transform.
 		enforce: "pre",
@@ -147,9 +160,7 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 				// first; fail loudly with the locale path instead of a bare
 				// `SyntaxError` from `JSON.parse`.
 				if (ALREADY_ES_MODULE.test(code)) {
-					throw new Error(
-						`[wolfstar:i18n-empty-placeholders] ${id} was already transformed into an ES module before empty placeholders could be stripped; the plugin lost its "pre" transform position.`,
-					);
+					throw new Error(alreadyEsModuleMessage(EMPTY_PLACEHOLDERS_PLUGIN, id));
 				}
 
 				// `$schema` is editor tooling metadata, not a translatable message.
@@ -158,14 +169,20 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 					parsed = JSON.parse(code) as Record<string, JsonValue>;
 				} catch (error) {
 					throw new Error(
-						`[wolfstar:i18n-empty-placeholders] failed to parse locale JSON ${id}: ${error instanceof Error ? error.message : String(error)}`,
+						`[${EMPTY_PLACEHOLDERS_PLUGIN}] failed to parse locale JSON ${id}: ${error instanceof Error ? error.message : String(error)}`,
 						{ cause: error },
 					);
 				}
 
 				const { $schema: _schema, ...messages } = parsed;
 				const stripped = stripEmptyMessages(messages) ?? {};
-				return { code: JSON.stringify(stripped), map: null };
+				const rewritten = new MagicString(code);
+				rewritten.overwrite(0, code.length, JSON.stringify(stripped));
+
+				return {
+					code: rewritten.toString(),
+					map: rewritten.generateMap({ source: id, includeContent: true, hires: true }),
+				};
 			},
 		},
 	};

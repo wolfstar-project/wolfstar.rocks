@@ -6,13 +6,17 @@ import {
 	stripEmptyMessages,
 } from "../../../config/i18n-empty-placeholders";
 
-type TransformHook = (
-	this: unknown,
-	code: string,
-	id: string,
-) => { code: string; map: null } | null;
+type TransformResult = { code: string; map: EncodedSourceMap | null };
+type TransformHook = (this: unknown, code: string, id: string) => TransformResult | null;
 
-function transform(code: string, id: string): { code: string; map: null } | null {
+interface EncodedSourceMap {
+	version: number;
+	mappings: string;
+	sources: (string | null)[];
+	sourcesContent?: (string | null)[];
+}
+
+function transform(code: string, id: string): TransformResult | null {
 	const plugin = stripEmptyI18nMessagesPlugin();
 	const transform = plugin.transform;
 	const hook = (typeof transform === "function"
@@ -76,7 +80,7 @@ describe("stripEmptyI18nMessagesPlugin", () => {
 		const id = "/repo/i18n/locales/en/common.json";
 
 		expect(await hook.handler.call({}, "{}", id)).toEqual({ code: "{}", map: null });
-		expect(await hook.handler.call({}, "export default {}", id)).toBeNull();
+		await expect(hook.handler.call({}, "export default {}", id)).rejects.toThrow(id);
 		expect(resourceTransform).toHaveBeenCalledTimes(1);
 	});
 
@@ -148,7 +152,7 @@ describe("stripEmptyI18nMessagesPlugin", () => {
 		const hook = resourcePlugin.transform as unknown as { handler: TransformHook };
 		const id = "/repo/i18n/locales/en/common.json";
 
-		expect(await hook.handler.call({}, "export default {}", id)).toBeNull();
+		await expect(hook.handler.call({}, "export default {}", id)).rejects.toThrow(id);
 		expect(await hook.handler.call({}, "{}", id)).toEqual({ code: "{}", map: null });
 		expect(resourceTransform).toHaveBeenCalledTimes(1);
 	});
@@ -181,6 +185,30 @@ describe("stripEmptyI18nMessagesPlugin", () => {
 		);
 
 		expect(result?.code).toBe(JSON.stringify({ nav: { commands: "Команди" } }));
+	});
+
+	it("returns a source map that points back at the locale file", () => {
+		const source = JSON.stringify({ nav: { blog: "", commands: "Befehle" } });
+		const id = "/repo/i18n/locales/de-DE/common.json";
+		const result = transform(source, id);
+
+		expect(result?.map).not.toBeNull();
+		expect(result?.map?.version).toBe(3);
+		expect(result?.map?.sources).toEqual([id]);
+		expect(result?.map?.sourcesContent).toEqual([source]);
+		expect(result?.map?.mappings.length).toBeGreaterThan(0);
+	});
+
+	it("fails loudly when the locale file was already transformed into an ES module", () => {
+		expect(() =>
+			transform("export default {}", "/repo/i18n/locales/en/common.json"),
+		).toThrowError(/\/repo\/i18n\/locales\/en\/common\.json/);
+	});
+
+	it("reports the locale path when the file is not valid JSON", () => {
+		expect(() => transform("{invalid", "/repo/i18n/locales/en/common.json")).toThrowError(
+			/failed to parse locale JSON \/repo\/i18n\/locales\/en\/common\.json/,
+		);
 	});
 
 	it("ignores JSON outside i18n/locales and non-JSON files", () => {

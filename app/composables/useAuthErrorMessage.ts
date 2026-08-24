@@ -57,7 +57,10 @@ export function useAuthErrorMessage() {
 			}
 
 			// Some providers pass `error_description` style snake_case already uppercased.
-			const upperKey = `auth.errors.${normalized.toUpperCase()}`;
+			const upperCode = normalized.toUpperCase();
+			const localizedCode =
+				upperCode === "INVALID_CODE" ? "INVALID_CALLBACK_REQUEST" : upperCode;
+			const upperKey = `auth.errors.${localizedCode}`;
 			if (te(upperKey)) {
 				return t(upperKey);
 			}

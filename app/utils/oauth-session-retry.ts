@@ -18,8 +18,20 @@ export interface FetchSessionWithRetryOptions {
 	delays?: readonly number[];
 }
 
+/**
+ * `setTimeout` promisified with the global timer, not `node:timers/promises`:
+ * this module ships in the OAuth callback page's client bundle, and Nitro's
+ * client-side polyfill of `timers/promises` resolves immediately without
+ * actually waiting, silently turning the retry backoff into a tight loop.
+ */
 function sleep(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/** Yields 0 for the initial attempt, then each retry delay in order. */
+function* attemptDelays(delays: readonly number[]): Generator<number> {
+	yield 0;
+	yield* delays;
 }
 
 /**
@@ -34,21 +46,16 @@ export async function fetchSessionWithRetry(
 ): Promise<boolean> {
 	const { fetchSession, hasSession, wait = sleep, delays = DEFAULT_RETRY_DELAYS } = options;
 
-	async function attempt(): Promise<boolean> {
+	for (const delay of attemptDelays(delays)) {
+		if (delay > 0) {
+			await wait(delay);
+		}
 		try {
 			await fetchSession();
 		} catch {
-			return false;
+			continue;
 		}
-		return hasSession();
-	}
-
-	if (await attempt()) {
-		return true;
-	}
-	for (const delay of delays) {
-		await wait(delay);
-		if (await attempt()) {
+		if (hasSession()) {
 			return true;
 		}
 	}

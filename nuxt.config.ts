@@ -38,7 +38,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/i18n",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
-		"@onmax/nuxt-better-auth",
+		"@nuxtjs/better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
@@ -50,6 +50,27 @@ export default defineNuxtConfig({
 		],
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
+
+	// @nuxtjs/better-auth. Redirect targets are centralised here so route rules,
+	// page meta, `useSignIn('social')` and `signOut()` all agree on where users
+	// land, instead of each call site hardcoding its own path.
+	auth: {
+		redirects: {
+			// Aliased to /oauth/login, which immediately hands off to Discord.
+			login: "/login",
+			// Signed-in users who open a guest-only route (the login hand-off).
+			guest: "/profile",
+			// Fallback landing page after a completed sign-in, used when no safe
+			// `?next=` is present and no explicit onSuccess/callbackURL is given.
+			authenticated: "/profile",
+			logout: "/",
+		},
+		preserveRedirect: true,
+		// The app has used `next` since before the module owned redirects; keeping
+		// the module on the same key means a module-issued redirect to /login is
+		// readable by the login page instead of being silently dropped.
+		redirectQueryKey: "next",
+	},
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
@@ -164,10 +185,6 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
-	auth: {
-		redirectQueryKey: "next",
-	},
-
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -269,7 +286,13 @@ export default defineNuxtConfig({
 			robots: true,
 			auth: { only: "guest", redirectTo: "/profile" },
 		},
-		"/login": { prerender: false },
+		// `/login` is an alias of `/oauth/login`, but route rules match on the
+		// requested path, so the guest rule has to be repeated here or signed-in
+		// users hitting /login get bounced back to Discord.
+		"/login": {
+			prerender: false,
+			auth: { only: "guest", redirectTo: "/profile" },
+		},
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
 		// /profile hosts local UI settings (theme/locale/motion) for guests and the

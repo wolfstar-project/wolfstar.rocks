@@ -5,8 +5,8 @@
 		:content="{ align: 'center', collisionPadding: 12 }"
 		:ui="{
 			content: collapsed
-				? 'w-48 bg-base-200/90 border border-base-200 shadow-md rounded-md'
-				: 'w-(--reka-dropdown-menu-trigger-width) bg-base-200/90 border border-base-200 shadow-md rounded-md',
+				? 'w-48 bg-muted/90 border border-muted shadow-md rounded-md'
+				: 'w-(--reka-dropdown-menu-trigger-width) bg-muted/90 border border-muted shadow-md rounded-md',
 		}"
 		:aria-label="t('user_menu.account_menu')"
 	>
@@ -175,8 +175,8 @@ const items = computed<DropdownMenuItem[][]>(() => [
 			label: t("user_menu.sign_out"),
 			async onSelect(e: Event) {
 				e.preventDefault();
+				// `auth.redirects.logout` in nuxt.config sends the user home afterwards.
 				await signOut();
-				await navigateTo("/");
 			},
 		},
 	],

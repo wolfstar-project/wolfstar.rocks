@@ -7,7 +7,10 @@ export default defineNitroPlugin((nitroApp) => {
 				return refreshSessionTokens(event);
 			},
 			resolveServerUser: async () => {
-				const session = await getUserSession(event);
+				// `getRequestSession` memoizes on `event.context` for the lifetime of
+				// the request; `getUserSession` re-runs `auth.api.getSession()` on
+				// every call, and several handlers resolve the user per request.
+				const session = await getRequestSession(event);
 				return session?.user ?? null;
 			},
 		};

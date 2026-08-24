@@ -5,11 +5,6 @@
 			"url": "https://nuxt.com/mcp",
 			"tools": ["*"]
 		},
-		"daisyUI": {
-			"type": "http",
-			"url": "https://gitmcp.io/saadeghi/daisyui",
-			"tools": ["*"]
-		},
 		"nuxt-ui": {
 			"type": "http",
 			"url": "https://ui.nuxt.com/mcp",

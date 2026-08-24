@@ -3,174 +3,174 @@ version: alpha
 name: WolfStar.rocks
 description: Architectural Night Sky — a sophisticated dashboard aesthetic blending an evocative dark hero with a minimalist, architectural light UI. Calm authority and advanced technology through precise achromatic forms and a cool indigo accent.
 colors:
-  primary: oklch(58% 0.233 277.117)
-  secondary: oklch(0.5873 0.0204 272.13)
-  accent: oklch(60% 0.152 181.912)
-  neutral: oklch(14% 0.005 285.823)
-  branding-wolfstar: oklch(63% 0.2502 28.13)
-  branding-staryl: oklch(0.5873 0.0204 272.13)
-  base-100: oklch(100% 0 0)
-  base-200: oklch(90% 0 0)
-  base-300: oklch(85% 0 0)
-  base-content: oklch(0% 0 0)
-  info: oklch(55% 0.16 232.661)
-  success: oklch(76% 0.177 163.223)
-  warning: oklch(82% 0.189 84.429)
-  error: oklch(71% 0.194 13.428)
+    primary: oklch(58% 0.233 277.117)
+    secondary: oklch(0.5873 0.0204 272.13)
+    accent: oklch(60% 0.152 181.912)
+    neutral: oklch(14% 0.005 285.823)
+    branding-wolfstar: oklch(63% 0.2502 28.13)
+    branding-staryl: oklch(0.5873 0.0204 272.13)
+    base-100: oklch(100% 0 0)
+    base-200: oklch(90% 0 0)
+    base-300: oklch(85% 0 0)
+    base-content: oklch(0% 0 0)
+    info: oklch(55% 0.16 232.661)
+    success: oklch(76% 0.177 163.223)
+    warning: oklch(82% 0.189 84.429)
+    error: oklch(71% 0.194 13.428)
 typography:
-  caption:
-    fontFamily: Inter
-    fontSize: 13px
-    fontWeight: 400
-    lineHeight: 1.5
-    letterSpacing: -0.13px
-  button-label:
-    fontFamily: Inter
-    fontSize: 16px
-    fontWeight: 500
-    lineHeight: 1
-    letterSpacing: -0.19px
-  subheading:
-    fontFamily: Inter
-    fontSize: 18px
-    fontWeight: 400
-    lineHeight: 1.2
-    letterSpacing: -0.18px
-  heading:
-    fontFamily: Inter
-    fontSize: 40px
-    fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: -0.8px
-  heading-lg:
-    fontFamily: Inter
-    fontSize: 48px
-    fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: -0.96px
-  display:
-    fontFamily: Inter
-    fontSize: 54px
-    fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: -1.08px
+    caption:
+        fontFamily: Inter
+        fontSize: 13px
+        fontWeight: 400
+        lineHeight: 1.5
+        letterSpacing: -0.13px
+    button-label:
+        fontFamily: Inter
+        fontSize: 16px
+        fontWeight: 500
+        lineHeight: 1
+        letterSpacing: -0.19px
+    subheading:
+        fontFamily: Inter
+        fontSize: 18px
+        fontWeight: 400
+        lineHeight: 1.2
+        letterSpacing: -0.18px
+    heading:
+        fontFamily: Inter
+        fontSize: 40px
+        fontWeight: 700
+        lineHeight: 1.1
+        letterSpacing: -0.8px
+    heading-lg:
+        fontFamily: Inter
+        fontSize: 48px
+        fontWeight: 700
+        lineHeight: 1.1
+        letterSpacing: -0.96px
+    display:
+        fontFamily: Inter
+        fontSize: 54px
+        fontWeight: 700
+        lineHeight: 1.1
+        letterSpacing: -1.08px
 spacing:
-  xs: 4px
-  sm: 8px
-  md: 16px
-  lg: 32px
-  xl: 64px
-  section-gap: 32px
-  card-padding: 16px
-  element-gap: 8px
+    xs: 4px
+    sm: 8px
+    md: 16px
+    lg: 32px
+    xl: 64px
+    section-gap: 32px
+    card-padding: 16px
+    element-gap: 8px
 rounded:
-  sm: 6px
-  md: 8px
-  lg: 12px
-  full: 9999px
+    sm: 6px
+    md: 8px
+    lg: 12px
+    full: 9999px
 components:
-  ghost-button:
-    backgroundColor: "{colors.base-100}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.button-label}"
-    rounded: 0px
-    padding: 5px 12px
-  subtle-nav-button:
-    backgroundColor: "rgba(255, 255, 255, 0.06)"
-    textColor: "{colors.base-content}"
-    typography: "{typography.button-label}"
-    rounded: "{rounded.md}"
-    padding: 5px 12px
-  solid-dark-button:
-    backgroundColor: "{colors.neutral}"
-    textColor: "{colors.base-100}"
-    typography: "{typography.button-label}"
-    rounded: "{rounded.md}"
-    padding: 7px 16px 8px 12px
-  outlined-action-button:
-    backgroundColor: "{colors.base-100}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.button-label}"
-    rounded: "{rounded.sm}"
-    padding: 5px 12px
-  blurred-nav-item:
-    backgroundColor: "{colors.base-300}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 8px
-  elevated-content-card:
-    backgroundColor: "{colors.base-200}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.subheading}"
-    rounded: "{rounded.lg}"
-    padding: "{spacing.card-padding}"
-  hero-overlay-card:
-    backgroundColor: "rgba(222, 226, 222, 0.16)"
-    textColor: "{colors.base-content}"
-    typography: "{typography.subheading}"
-    rounded: 24px
-    padding: "{spacing.card-padding}"
-  wolf-indigo-featured-card:
-    backgroundColor: "{colors.primary}"
-    textColor: "{colors.base-100}"
-    typography: "{typography.heading}"
-    rounded: 24px
-    padding: 128px 80px
-  ghost-input-field:
-    backgroundColor: "{colors.base-300}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.button-label}"
-    rounded: 0px
-    padding: 8px 12px
-  badge-info:
-    backgroundColor: "{colors.info}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-success:
-    backgroundColor: "{colors.success}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-warning:
-    backgroundColor: "{colors.warning}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-error:
-    backgroundColor: "{colors.error}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-wolfstar:
-    backgroundColor: "{colors.branding-wolfstar}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-staryl:
-    backgroundColor: "{colors.branding-staryl}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-accent:
-    backgroundColor: "{colors.accent}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
-  badge-secondary:
-    backgroundColor: "{colors.secondary}"
-    textColor: "{colors.base-content}"
-    typography: "{typography.caption}"
-    rounded: "{rounded.full}"
-    padding: 2px 8px
+    ghost-button:
+        backgroundColor: "{colors.base-100}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.button-label}"
+        rounded: 0px
+        padding: 5px 12px
+    subtle-nav-button:
+        backgroundColor: "rgba(255, 255, 255, 0.06)"
+        textColor: "{colors.base-content}"
+        typography: "{typography.button-label}"
+        rounded: "{rounded.md}"
+        padding: 5px 12px
+    solid-dark-button:
+        backgroundColor: "{colors.neutral}"
+        textColor: "{colors.base-100}"
+        typography: "{typography.button-label}"
+        rounded: "{rounded.md}"
+        padding: 7px 16px 8px 12px
+    outlined-action-button:
+        backgroundColor: "{colors.base-100}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.button-label}"
+        rounded: "{rounded.sm}"
+        padding: 5px 12px
+    blurred-nav-item:
+        backgroundColor: "{colors.base-300}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 8px
+    elevated-content-card:
+        backgroundColor: "{colors.base-200}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.subheading}"
+        rounded: "{rounded.lg}"
+        padding: "{spacing.card-padding}"
+    hero-overlay-card:
+        backgroundColor: "rgba(222, 226, 222, 0.16)"
+        textColor: "{colors.base-content}"
+        typography: "{typography.subheading}"
+        rounded: 24px
+        padding: "{spacing.card-padding}"
+    wolf-indigo-featured-card:
+        backgroundColor: "{colors.primary}"
+        textColor: "{colors.base-100}"
+        typography: "{typography.heading}"
+        rounded: 24px
+        padding: 128px 80px
+    ghost-input-field:
+        backgroundColor: "{colors.base-300}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.button-label}"
+        rounded: 0px
+        padding: 8px 12px
+    badge-info:
+        backgroundColor: "{colors.info}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-success:
+        backgroundColor: "{colors.success}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-warning:
+        backgroundColor: "{colors.warning}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-error:
+        backgroundColor: "{colors.error}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-wolfstar:
+        backgroundColor: "{colors.branding-wolfstar}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-staryl:
+        backgroundColor: "{colors.branding-staryl}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-accent:
+        backgroundColor: "{colors.accent}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
+    badge-secondary:
+        backgroundColor: "{colors.secondary}"
+        textColor: "{colors.base-content}"
+        typography: "{typography.caption}"
+        rounded: "{rounded.full}"
+        padding: 2px 8px
 ---
 
 ## Overview
@@ -198,27 +198,27 @@ The light theme palette anchors on high-contrast achromatic surfaces with a cool
 
 ### Dark and midnight themes
 
-Surface tokens shift across three DaisyUI themes. Semantic colors (primary, secondary, accent, info, success, warning, error) remain constant; only base surfaces and content invert.
+Surface tokens shift across three Nuxt UI themes (light, dark, midnight). Semantic colors (primary, secondary, info, success, warning, error) remain constant; only base surfaces and content invert.
 
-| Token | Light | Dark | Midnight |
-| ----- | ----- | ---- | -------- |
-| base-100 | `oklch(100% 0 0)` Canvas White | `oklch(25% 0.016 252)` Midnight | `oklch(0% 0 0)` Pitch |
-| base-200 | `oklch(90% 0 0)` Ash Gray | `oklch(23% 0.014 253)` Deep Navy | `oklch(10% 0 0)` Coal |
-| base-300 | `oklch(85% 0 0)` Cool Gray | `oklch(20% 0.012 254)` Abyss | `oklch(27% 0 0)` Charcoal |
-| base-content | `oklch(0% 0 0)` Pitch Black | `oklch(90% 0 0)` Snow | `oklch(87.609% 0 0)` Silver |
+| Token        | Light                          | Dark                             | Midnight                    |
+| ------------ | ------------------------------ | -------------------------------- | --------------------------- |
+| base-100     | `oklch(100% 0 0)` Canvas White | `oklch(25% 0.016 252)` Midnight  | `oklch(0% 0 0)` Pitch       |
+| base-200     | `oklch(90% 0 0)` Ash Gray      | `oklch(23% 0.014 253)` Deep Navy | `oklch(10% 0 0)` Coal       |
+| base-300     | `oklch(85% 0 0)` Cool Gray     | `oklch(20% 0.012 254)` Abyss     | `oklch(27% 0 0)` Charcoal   |
+| base-content | `oklch(0% 0 0)` Pitch Black    | `oklch(90% 0 0)` Snow            | `oklch(87.609% 0 0)` Silver |
 
 ## Typography
 
 Inter is the universal typeface — configured via `@nuxt/fonts`, latin subset, preloaded (weights 400, 500, 600, 700). Vary weight and size according to the type scale; never introduce additional font families.
 
-| Role | Size | Line Height | Letter Spacing | Use |
-| ---- | ---- | ----------- | -------------- | --- |
-| caption | 13px | 1.5 | -0.13px | Metadata, timestamps, fine print |
-| button-label | 16px | 1 | -0.19px | Buttons, form labels, navigation links |
-| subheading | 18px | 1.2 | -0.18px | Card titles, section intros |
-| heading | 40px | 1.1 | -0.8px | Page section headlines |
-| heading-lg | 48px | 1.1 | -0.96px | Prominent section headlines |
-| display | 54px | 1.1 | -1.08px | Hero headlines and maximum emphasis |
+| Role         | Size | Line Height | Letter Spacing | Use                                    |
+| ------------ | ---- | ----------- | -------------- | -------------------------------------- |
+| caption      | 13px | 1.5         | -0.13px        | Metadata, timestamps, fine print       |
+| button-label | 16px | 1           | -0.19px        | Buttons, form labels, navigation links |
+| subheading   | 18px | 1.2         | -0.18px        | Card titles, section intros            |
+| heading      | 40px | 1.1         | -0.8px         | Page section headlines                 |
+| heading-lg   | 48px | 1.1         | -0.96px        | Prominent section headlines            |
+| display      | 54px | 1.1         | -1.08px        | Hero headlines and maximum emphasis    |
 
 ## Layout
 
@@ -226,40 +226,40 @@ The page structure features an initial full-bleed hero section with a dark, illu
 
 **Base unit:** 4px. **Density:** comfortable.
 
-| Token | Value | Role |
-| ----- | ----- | ---- |
-| xs | 4px | Micro-adjustments |
-| sm | 8px | Element gap between related controls |
-| md | 16px | Card padding, standard internal spacing |
-| lg | 32px | Section gap between major blocks |
-| xl | 64px | Large section breaks and hero spacing |
-| section-gap | 32px | Vertical rhythm between page sections |
-| card-padding | 16px | Internal padding for card containers |
-| element-gap | 8px | Gap between sibling UI elements |
+| Token        | Value | Role                                    |
+| ------------ | ----- | --------------------------------------- |
+| xs           | 4px   | Micro-adjustments                       |
+| sm           | 8px   | Element gap between related controls    |
+| md           | 16px  | Card padding, standard internal spacing |
+| lg           | 32px  | Section gap between major blocks        |
+| xl           | 64px  | Large section breaks and hero spacing   |
+| section-gap  | 32px  | Vertical rhythm between page sections   |
+| card-padding | 16px  | Internal padding for card containers    |
+| element-gap  | 8px   | Gap between sibling UI elements         |
 
 ## Elevation & Depth
 
 Depth is conveyed through tonal layering and soft, multi-layered shadows rather than heavy drop shadows.
 
-| Context | Shadow |
-| ------- | ------ |
-| Nav items | `rgba(0, 0, 0, 0.15) 0px 2px 6px 0px` |
-| Cards | `rgba(0, 0, 0, 0.08) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 4px 5px 0px` |
-| Wolf Indigo featured card | `rgba(0, 0, 0, 0.06) 0px 2px 2px 0px, rgba(0, 0, 0, 0) 0px 6px 6px 0px, rgba(0, 0, 0, 0.04) 0px 0px 0px 5px` |
-| Input fields and subtle UI | `rgba(0, 0, 0, 0.05) 0px 1px 8px 0px` |
+| Context                    | Shadow                                                                                                       |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| Nav items                  | `rgba(0, 0, 0, 0.15) 0px 2px 6px 0px`                                                                        |
+| Cards                      | `rgba(0, 0, 0, 0.08) 0px 1px 1px 0px, rgba(0, 0, 0, 0.08) 0px 4px 5px 0px`                                   |
+| Wolf Indigo featured card  | `rgba(0, 0, 0, 0.06) 0px 2px 2px 0px, rgba(0, 0, 0, 0) 0px 6px 6px 0px, rgba(0, 0, 0, 0.04) 0px 0px 0px 5px` |
+| Input fields and subtle UI | `rgba(0, 0, 0, 0.05) 0px 1px 8px 0px`                                                                        |
 
 Glass utilities (`card-glass`, `nav-panel-glass`) add frosted translucency for navigation and overlay surfaces. Hero overlay cards use `rgba(222, 226, 222, 0.16)` for minimal visual intrusion over imagery.
 
 ## Shapes
 
-DaisyUI base radius is `0.5rem` (8px). The app applies a slightly larger card radius for hierarchy:
+Nuxt UI base radius is `0.5rem` (8px). The app applies a slightly larger card radius for hierarchy:
 
-| Token | Value | Context |
-| ----- | ----- | ------- |
-| sm | 6px | Small UI elements, outlined buttons |
-| md | 8px | Interactive blocks, nav buttons |
-| lg | 12px | Cards (`rounded-xl`) |
-| full | 9999px | Avatars, pills, badges |
+| Token | Value  | Context                             |
+| ----- | ------ | ----------------------------------- |
+| sm    | 6px    | Small UI elements, outlined buttons |
+| md    | 8px    | Interactive blocks, nav buttons     |
+| lg    | 12px   | Cards (`rounded-xl`)                |
+| full  | 9999px | Avatars, pills, badges              |
 
 Apply consistently: cards → `rounded-xl` (lg), interactive blocks → `rounded-lg` (md), avatars/pills → `rounded-full`.
 
@@ -600,7 +600,7 @@ Reusable `@utility` classes defined in `app/assets/css/utilities.css`. Prefer th
 | ------------------------- | -------------------------------------------------------------------- |
 | `gradient-text-hero`      | Pink-to-orange-to-WolfStar-Ember gradient as text fill               |
 | `gradient-text-cool`      | Blue-to-purple gradient text fill                                    |
-| `animate-shimmer`           | Looping shimmer animation (3s, ease-in-out)                          |
+| `animate-shimmer`         | Looping shimmer animation (3s, ease-in-out)                          |
 | `btn-glow`                | Glow pseudo-element on hover; adapts to btn-primary/secondary/accent |
 | `card-glass`              | Frosted glass card with themed backdrop-filter                       |
 | `card-glass-soft`         | Lighter frosted glass variant                                        |

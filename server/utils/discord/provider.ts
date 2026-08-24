@@ -4,7 +4,12 @@ import type { DiscordOptions, DiscordProfile } from "better-auth/social-provider
 export interface DiscordProviderCredentials {
 	clientId: string;
 	clientSecret: string;
-	redirectURI: string;
+	/**
+	 * Absolute redirect URI registered on the Discord application, built by
+	 * `resolveDiscordRedirectURI()` from the resolved site origin. Omitted only
+	 * outside a request context, where Better Auth's own default applies.
+	 */
+	redirectURI?: string | undefined;
 }
 
 /**
@@ -28,7 +33,12 @@ export function createDiscordProviderOptions(
 	return {
 		clientId: credentials.clientId,
 		clientSecret: credentials.clientSecret,
-		redirectURI: credentials.redirectURI,
+		// Spread, not a plain assignment: Better Auth resolves the redirect URI as
+		// `options.redirectURI || redirectURI`, so an explicit `undefined` is fine
+		// but an empty string would silently fall back to
+		// `/api/auth/callback/discord` — a URL Discord has not registered, which
+		// fails the authorization request instead of erroring here.
+		...(credentials.redirectURI ? { redirectURI: credentials.redirectURI } : {}),
 		// Better Auth's Discord provider sends `prompt=none` unless overridden.
 		// Discord can only skip the authorization screen when the user has already
 		// approved exactly the scopes being requested; otherwise it answers the

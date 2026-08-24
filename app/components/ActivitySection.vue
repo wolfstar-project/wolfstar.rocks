@@ -10,7 +10,7 @@
 					: 'mb-3 flex items-center justify-between'
 			"
 		>
-			<p class="text-sm text-base-content/70">
+			<p class="text-sm text-toned">
 				{{ itemCount }} {{ recordLabel }}{{ itemCount === 1 ? "" : "s" }} recorded
 			</p>
 			<UButton

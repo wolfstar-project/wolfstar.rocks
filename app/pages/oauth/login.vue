@@ -2,6 +2,22 @@
 	<div>
 		<h1 class="sr-only">{{ t("auth.oauth.login_seo_title") }}</h1>
 		<OauthStatusPanel
+			v-if="signInDiscord.status.value === 'error'"
+			tone="error"
+			:title="t('auth.oauth.sign_in_failed_title')"
+			icon="heroicons:x-circle"
+		>
+			<template #description>
+				{{ errorMessage }}
+			</template>
+			<template #actions>
+				<UButton color="primary" size="sm" class="w-full sm:w-auto" @click="startSignIn">
+					{{ t("auth.oauth.try_again") }}
+				</UButton>
+			</template>
+		</OauthStatusPanel>
+		<OauthStatusPanel
+			v-else
 			tone="info"
 			loading
 			:title="t('auth.oauth.login_redirecting')"
@@ -16,28 +32,39 @@
 
 <script setup lang="ts">
 const { t } = useI18n();
+const { localizeAuthError } = useAuthErrorMessage();
 
 definePageMeta({
 	alias: ["/login"],
 	viewTransition: false,
 });
 
-// Better Auth's `signIn.social` performs a client-side redirect and its client is
-// null during SSR, so start sign-in on mount (client-only). Running it in route
+// Better Auth performs a browser redirect to Discord, and its client is null
+// during SSR, so sign-in starts on mount (client-only). Running it in route
 // middleware would no-op on a direct visit and leave the user on a blank shell.
 const route = useRoute();
+const signInDiscord = useSignIn("social");
 
-onMounted(async () => {
+const errorMessage = computed(() => localizeAuthError(signInDiscord.error.value));
+
+onMounted(() => {
+	void startSignIn();
+});
+
+async function startSignIn() {
 	const queryNext = route.query.next;
 	const nextUrl = (Array.isArray(queryNext) ? queryNext[0] : queryNext) || "/";
 	const safeNext = isSafeRedirectPath(nextUrl) ? nextUrl : "/";
 	log.info({ tag: "oauth:login", action: "login_redirect", next: safeNext });
-	await useAuthClient()?.signIn.social({
+
+	// `execute` never throws: a failed hand-off lands in `signInDiscord.error`
+	// and renders the retry panel instead of leaving a spinner up forever.
+	await signInDiscord.execute({
 		provider: "discord",
 		callbackURL: `/oauth/callback?next=${encodeURIComponent(safeNext)}`,
 		errorCallbackURL: "/oauth/callback",
 	});
-});
+}
 
 useSeoMetadata({
 	description: t("auth.oauth.login_seo_og_description"),

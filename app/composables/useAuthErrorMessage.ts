@@ -12,6 +12,10 @@ export type AuthErrorInput =
 	| null
 	| undefined;
 
+const AUTH_ERROR_CODE_MISMATCHES: ReadonlyMap<string, string> = new Map([
+	["INVALID_CODE", "INVALID_CALLBACK_REQUEST"],
+]);
+
 /**
  * Better Auth reports a machine-readable `code` alongside a human message.
  * The code is the stable translation key; the message is only a fallback for
@@ -58,8 +62,7 @@ export function useAuthErrorMessage() {
 
 			// Some providers pass `error_description` style snake_case already uppercased.
 			const upperCode = normalized.toUpperCase();
-			const localizedCode =
-				upperCode === "INVALID_CODE" ? "INVALID_CALLBACK_REQUEST" : upperCode;
+			const localizedCode = AUTH_ERROR_CODE_MISMATCHES.get(upperCode) ?? upperCode;
 			const upperKey = `auth.errors.${localizedCode}`;
 			if (te(upperKey)) {
 				return t(upperKey);

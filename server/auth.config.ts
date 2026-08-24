@@ -48,7 +48,7 @@ export default defineServerAuth(() => ({
 	},
 	secondaryStorage: authSecondaryStorage,
 	rateLimit: {
-		enabled: true,
+		enabled: !isDevelopment,
 		window: 60,
 		max: 100,
 		storage: "secondary-storage",

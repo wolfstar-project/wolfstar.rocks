@@ -20,7 +20,7 @@ const config: KnipConfig = {
 				"content.config.ts",
 				/** MDC components rendered from Markdown (e.g. ::card, ::note), so usage isn't statically visible */
 				"app/components/content/**/*.vue",
-				/** Loaded by @onmax/nuxt-better-auth via #auth/server and #auth/client virtual aliases */
+				/** Loaded by @nuxtjs/better-auth via #auth/server and #auth/client virtual aliases */
 				"app/auth.config.ts",
 				"server/auth.config.ts",
 				/** Ambient H3EventContext augmentation, never imported directly */
@@ -85,7 +85,7 @@ const config: KnipConfig = {
 				"@shelve/cli",
 			],
 			ignoreUnresolved: [
-				/** Since @onmax/nuxt-better-auth 0.1.x this is an ambient `declare module` in
+				/** Since @nuxtjs/better-auth 0.1.x this is an ambient `declare module` in
 				 * .nuxt/types/*.d.ts rather than a tsconfig path alias, so knip's resolver
 				 * cannot follow it. Type-only imports resolve fine under tsc. */
 				"#nuxt-better-auth",

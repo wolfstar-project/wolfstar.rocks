@@ -3,10 +3,16 @@ import { createDiscordProviderOptions } from "#server/utils/discord/provider";
 import { discord } from "better-auth/social-providers";
 import { describe, expect, it } from "vitest";
 
+/** The app-side callback URL registered on the Discord application. */
+const REGISTERED_URI = "https://wolfstar.rocks/oauth/callback";
+
+/** What Better Auth would use on its own, absent an explicit `redirectURI`. */
+const BETTER_AUTH_DEFAULT_URI = "https://wolfstar.rocks/api/auth/callback/discord";
+
 const credentials = {
 	clientId: "discord-client-id",
 	clientSecret: "discord-client-secret",
-	redirectURI: "https://wolfstar.rocks/oauth/callback",
+	redirectURI: REGISTERED_URI,
 };
 
 /**
@@ -14,12 +20,13 @@ const credentials = {
  * `POST /api/auth/sign-in/social`, so these assertions cover what the browser
  * is actually sent to Discord with.
  */
-async function createAuthorizationURL() {
-	const provider = discord(createDiscordProviderOptions(credentials));
+async function createAuthorizationURL(overrides: Partial<typeof credentials> = {}) {
+	const provider = discord(createDiscordProviderOptions({ ...credentials, ...overrides }));
 
+	// Better Auth passes its own default here; `options.redirectURI` wins when set.
 	return provider.createAuthorizationURL({
 		state: "oauth-state",
-		redirectURI: "https://wolfstar.rocks/api/auth/callback/discord",
+		redirectURI: BETTER_AUTH_DEFAULT_URI,
 	});
 }
 
@@ -43,11 +50,33 @@ describe("createDiscordProviderOptions", () => {
 		expect(scopes).toStrictEqual([...new Set(scopes)]);
 	});
 
-	it("keeps the configured redirect URI Discord has registered", async () => {
+	it("sends the app-side redirect URI Discord has registered", async () => {
+		// `/oauth/callback` is an app page, forwarded into Better Auth by
+		// `server/middleware/oauth-callback.ts`. Better Auth replays the same
+		// `options.redirectURI` during the token exchange, so both legs agree.
 		const url = await createAuthorizationURL();
 
-		expect(url.searchParams.get("redirect_uri")).toBe(credentials.redirectURI);
+		expect(url.searchParams.get("redirect_uri")).toBe(REGISTERED_URI);
 		expect(url.searchParams.get("client_id")).toBe(credentials.clientId);
+	});
+
+	it("falls back to Better Auth's own callback when no redirect URI is resolvable", async () => {
+		// Only reachable outside a request context, where no origin exists.
+		expect(
+			createDiscordProviderOptions({ ...credentials, redirectURI: undefined }),
+		).not.toHaveProperty("redirectURI");
+
+		const url = await createAuthorizationURL({ redirectURI: undefined });
+
+		expect(url.searchParams.get("redirect_uri")).toBe(BETTER_AUTH_DEFAULT_URI);
+	});
+
+	it("never sends an empty redirect URI", async () => {
+		// An empty string is falsy for Better Auth, so it would silently swap in
+		// `/api/auth/callback/discord` — a URL Discord has not registered.
+		const url = await createAuthorizationURL({ redirectURI: "" });
+
+		expect(url.searchParams.get("redirect_uri")).toBe(BETTER_AUTH_DEFAULT_URI);
 	});
 
 	it("maps the Discord profile onto the session user", () => {

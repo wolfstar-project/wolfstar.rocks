@@ -1,10 +1,8 @@
-import { defineClientAuth } from "@onmax/nuxt-better-auth/config";
+import { defineClientAuth } from "@nuxtjs/better-auth/config";
 
-// The auth client must target the same origin the app is served from so that
-// /api/auth/* calls stay same-origin (localhost during tests/preview, the site URL
-// in production). Read window.location.origin only on the client; fall back to the
-// module-injected site URL on the server so this never touches a browser global
-// during SSR/server setup (import.meta.client is compiled out of the server bundle).
-export default defineClientAuth((ctx) => ({
-	baseURL: import.meta.client ? window.location.origin : ctx.siteUrl,
-}));
+// No `baseURL` and no plugins: the server config registers only the Discord
+// social provider, and the module already builds the client against the
+// resolved site URL (runtimeConfig.public.siteUrl, falling back to the current
+// request origin), which keeps /api/auth/* calls same-origin everywhere.
+// Any plugin added to `server/auth.config.ts` needs its client counterpart here.
+export default defineClientAuth({});

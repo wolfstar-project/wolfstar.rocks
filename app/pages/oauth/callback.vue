@@ -105,7 +105,7 @@ const { user, ready, loggedIn, fetchSession } = useUserSession();
 const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
 const isError = computed(() => Boolean(route.query.error));
 const isSessionLoading = ref(!isError.value);
-const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
+const errorMessage = computed(() => localizeAuthError(route.query.error));
 
 onMounted(() => {
 	if (!isError.value) {

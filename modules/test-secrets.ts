@@ -7,7 +7,7 @@ import { isCI, isTest } from "std-env";
 /**
  * Auto-generates ephemeral secrets required for test and CI builds.
  *
- * @onmax/nuxt-better-auth requires a non-empty, 32+ character secret; nuxt-og-image
+ * @nuxtjs/better-auth requires a non-empty, 32+ character secret; nuxt-og-image
  * requires an HMAC secret when strict mode is enabled. In production both are
  * supplied via environment variables. In CI the prebuilt server runs without those
  * env vars, so this module bakes random values into the build output at build time.
@@ -36,7 +36,7 @@ export default defineNuxtModule({
 		const betterAuthSecret = resolveSecret("NUXT_BETTER_AUTH_SECRET");
 		const imageProxySecret = resolveSecret("NUXT_IMAGE_PROXY_SECRET");
 
-		// @onmax/nuxt-better-auth reads nuxt.options.runtimeConfig.betterAuthSecret
+		// @nuxtjs/better-auth reads nuxt.options.runtimeConfig.betterAuthSecret
 		// first, falling back to process.env.NUXT_BETTER_AUTH_SECRET. Baking it here
 		// ensures the prebuilt server starts without the env var in the test process.
 		const rc = nuxt.options.runtimeConfig as Record<string, unknown>;

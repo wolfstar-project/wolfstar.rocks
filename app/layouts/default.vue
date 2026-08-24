@@ -8,7 +8,12 @@
 		</a>
 		<AppHeader />
 
-		<UMain id="maincontent" tabindex="-1" :aria-label="t('a11y.main_content')">
+		<UMain
+			id="maincontent"
+			tabindex="-1"
+			class="focus:outline-none"
+			:aria-label="t('a11y.main_content')"
+		>
 			<slot></slot>
 		</UMain>
 

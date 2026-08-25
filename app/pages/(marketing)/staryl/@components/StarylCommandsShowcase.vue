@@ -31,6 +31,7 @@
 										kind: 'command',
 										user: activeCommand.invoker,
 										commandName: activeCommand.name,
+										subcommandGroup: activeCommand.subcommandGroup,
 										subcommand: activeCommand.subcommand,
 									}"
 								>
@@ -74,6 +75,7 @@
 								<template v-if="matchedCommand" #matched>
 									<DiscordChatInputCommandMatched
 										:name="matchedCommand.name"
+										:subcommand-group="matchedCommand.subcommandGroup"
 										:subcommand="matchedCommand.subcommand"
 										:options="matchedCommand.options"
 										active
@@ -101,6 +103,7 @@
 											v-if="matchedCommand"
 											class="staryl-composer-slash-composed"
 											:name="matchedCommand.name"
+											:subcommand-group="matchedCommand.subcommandGroup"
 											:subcommand="matchedCommand.subcommand"
 											:options="matchedCommand.options"
 										/>
@@ -146,6 +149,7 @@ import type { DiscordChatMessage } from "~/types/discord";
 
 interface StarylShowcaseCommand {
 	name: string;
+	subcommandGroup?: string;
 	subcommand?: string;
 	description: string;
 	invoker: ProfileName;
@@ -155,7 +159,8 @@ interface StarylShowcaseCommand {
 
 const starylCommands: StarylShowcaseCommand[] = [
 	{
-		name: "twitch-subscriptions",
+		name: "subscriptions",
+		subcommandGroup: "twitch",
 		subcommand: "add",
 		description: "Add a new Twitch subscription for a streamer.",
 		invoker: "redstar",
@@ -171,7 +176,8 @@ const starylCommands: StarylShowcaseCommand[] = [
 		},
 	},
 	{
-		name: "twitch-subscriptions",
+		name: "subscriptions",
+		subcommandGroup: "twitch",
 		subcommand: "remove",
 		description: "Remove a Twitch subscription for a streamer.",
 		invoker: "redstar",
@@ -187,7 +193,8 @@ const starylCommands: StarylShowcaseCommand[] = [
 		},
 	},
 	{
-		name: "twitch-subscriptions",
+		name: "subscriptions",
+		subcommandGroup: "twitch",
 		subcommand: "reset",
 		description: "Remove all Twitch subscriptions from this server.",
 		invoker: "redstar",
@@ -198,7 +205,8 @@ const starylCommands: StarylShowcaseCommand[] = [
 		},
 	},
 	{
-		name: "twitch-subscriptions",
+		name: "subscriptions",
+		subcommandGroup: "twitch",
 		subcommand: "show",
 		description: "Show all Twitch subscriptions for this server.",
 		invoker: "redstar",
@@ -213,7 +221,8 @@ const starylCommands: StarylShowcaseCommand[] = [
 		},
 	},
 	{
-		name: "twitch-subscriptions",
+		name: "subscriptions",
+		subcommandGroup: "twitch",
 		subcommand: "test",
 		description: "Send a test notification to check that an existing subscription works.",
 		invoker: "redstar",
@@ -267,7 +276,7 @@ const chatMessages = computed<DiscordChatMessage[]>(() => {
 	const command = activeCommand.value;
 	return [
 		{
-			id: `response-${command.name}-${command.subcommand ?? ""}`,
+			id: `response-${commandDisplayName(command).replaceAll(" ", "-")}`,
 			author: "staryl",
 			timestamp: "Today at 15:49",
 		},
@@ -279,7 +288,7 @@ const activeSearchPrefix = computed(() =>
 );
 
 function commandDisplayName(command: StarylCommand) {
-	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
+	return formatSlashCommandDisplayName(toSlashCommandDisplayInput(command));
 }
 
 function matchesSlashQuery(displayName: string, query: string) {

@@ -805,11 +805,11 @@ const mockAppCommands: Record<Exclude<SlashCommandAppName, "wolfstar">, MockAppC
 	utilsbot: [{ name: "poll", description: "Start a poll in this channel." }],
 	staryl: [
 		{
-			name: "twitch-subscriptions show",
+			name: "subscriptions twitch show",
 			description: "Show all Twitch subscriptions for this server.",
 		},
 		{
-			name: "twitch-subscriptions add",
+			name: "subscriptions twitch add",
 			description: "Add a new Twitch subscription for a streamer.",
 		},
 	],

@@ -1238,8 +1238,8 @@ describe("component SSR rendering", () => {
 			expect(wrapper.text()).toContain("/kick");
 			expect(wrapper.text()).toContain("/mute");
 			expect(wrapper.text()).toContain("/conf");
-			expect(wrapper.text()).toContain("/twitch-subscriptions show");
-			expect(wrapper.text()).toContain("/twitch-subscriptions add");
+			expect(wrapper.text()).toContain("/subscriptions twitch show");
+			expect(wrapper.text()).toContain("/subscriptions twitch add");
 			expect(wrapper.text()).toContain("/addfriend");
 			expect(wrapper.findAll("input[name='matched-command']").length).toBe(0);
 			expect(wrapper.find(".discord-slash-command-input").exists()).toBe(false);
@@ -1519,7 +1519,7 @@ describe("component SSR rendering", () => {
 
 			const starylSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/twitch-subscriptions show"));
+				.find((suggestion) => suggestion.text().includes("/subscriptions twitch show"));
 			expect(starylSuggestion).toBeDefined();
 			expect(starylSuggestion!.attributes("aria-disabled")).toBe("true");
 
@@ -1600,11 +1600,11 @@ describe("component SSR rendering", () => {
 			await wrapper.find(".discord-message-composer-input").setValue("/");
 			await wrapper.vm.$nextTick();
 
-			expect(wrapper.text()).toContain("/twitch-subscriptions add");
-			expect(wrapper.text()).toContain("/twitch-subscriptions remove");
-			expect(wrapper.text()).toContain("/twitch-subscriptions reset");
-			expect(wrapper.text()).toContain("/twitch-subscriptions show");
-			expect(wrapper.text()).toContain("/twitch-subscriptions test");
+			expect(wrapper.text()).toContain("/subscriptions twitch add");
+			expect(wrapper.text()).toContain("/subscriptions twitch remove");
+			expect(wrapper.text()).toContain("/subscriptions twitch reset");
+			expect(wrapper.text()).toContain("/subscriptions twitch show");
+			expect(wrapper.text()).toContain("/subscriptions twitch test");
 			expect(wrapper.text()).not.toContain("Placeholder");
 			expect(wrapper.find(".discord-message-ephemeral").exists()).toBe(true);
 			expect(wrapper.find(".staryl-command-response").text()).toContain(
@@ -1613,7 +1613,7 @@ describe("component SSR rendering", () => {
 
 			const showSuggestion = wrapper
 				.findAll(".discord-slash-command-suggestion")
-				.find((suggestion) => suggestion.text().includes("/twitch-subscriptions show"));
+				.find((suggestion) => suggestion.text().includes("/subscriptions twitch show"));
 			expect(showSuggestion).toBeDefined();
 			await showSuggestion!.trigger("click");
 			await wrapper.vm.$nextTick();

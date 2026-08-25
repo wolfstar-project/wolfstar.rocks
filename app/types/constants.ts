@@ -51,6 +51,8 @@ interface LoggingEventLogDetail {
 }
 
 export interface LoggingEventDetail {
+	/** Stable key for translated copy; see `useMarketingFixtures`. */
+	id: string;
 	tooltip: string;
 	title: string;
 	icon: string;
@@ -85,7 +87,7 @@ export type SlashCommandAppName =
 	| "wolfstar"
 	| "ring";
 
-type ShowcaseCommandEmbedPart =
+export type ShowcaseCommandPart =
 	| { type: "mention"; name: string; avatar?: string }
 	| { type: "text"; content: string };
 
@@ -98,10 +100,12 @@ interface ShowcaseCommandOption {
 
 interface ShowcaseCommandEmbedLine {
 	label: string;
-	parts: ShowcaseCommandEmbedPart[];
+	parts: ShowcaseCommandPart[];
 }
 
 interface ShowcaseCommandBase {
+	/** Stable key for translated copy; see `useMarketingFixtures`. */
+	id: string;
 	tooltip: string;
 	name: string;
 	subcommand?: string;

@@ -314,6 +314,7 @@
 </template>
 
 <script setup lang="ts">
+import type { ShowcaseCommand } from "~/types/constants";
 import type {
 	DiscordAppLauncherEntry,
 	DiscordAppLauncherSheetSnap,
@@ -324,6 +325,8 @@ import ShowcaseTwemojiText from "./WolfstarShowcaseTwemojiText.vue";
 const { t } = useI18n();
 
 const CHANNEL_NAME = "mod-commands";
+
+const commands = useShowcaseCommands();
 
 /** Shared channel topic for header chrome and welcome start copy. */
 const channelTopic = computed(() => t("marketing.wolfstar.commands_showcase.channel_topic"));
@@ -375,8 +378,8 @@ const slashQuery = computed(() => {
 });
 
 const activeDisplayCommand = computed(() => {
-	const command = showcaseCommands[selectedCommandIndex.value];
-	return command ?? showcaseCommands[0]!;
+	const command = commands.value[selectedCommandIndex.value];
+	return command ?? commands.value[0]!;
 });
 
 const chatMessages = computed<DiscordChatMessage[]>(() => {
@@ -725,7 +728,7 @@ const activeSearchPrefix = computed(() => {
 });
 
 /** Discord autocomplete shows command + subcommand as a single path (e.g. `conf menu`). */
-function commandDisplayName(command: (typeof showcaseCommands)[number]) {
+function commandDisplayName(command: ShowcaseCommand) {
 	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
 }
 
@@ -734,7 +737,7 @@ function commandDisplayName(command: (typeof showcaseCommands)[number]) {
  * (interactive send). No `/commands` page or static listing when the launcher is idle.
  */
 const appLauncherCommands = computed<readonly DiscordAppLauncherEntry[]>(() =>
-	showcaseCommands.map((command) => ({
+	commands.value.map((command) => ({
 		id: `command-${commandDisplayName(command).replaceAll(" ", "-")}`,
 		kind: "command" as const,
 		commandName: commandDisplayName(command),
@@ -750,7 +753,7 @@ function matchesSlashQuery(displayName: string, query: string) {
 }
 
 const filteredShowcaseCommands = computed(() =>
-	showcaseCommands.filter((command) =>
+	commands.value.filter((command) =>
 		matchesSlashQuery(commandDisplayName(command), slashQuery.value),
 	),
 );
@@ -865,10 +868,10 @@ function listedCommandsForMockApp(app: Exclude<SlashCommandAppName, "wolfstar">)
 
 /** Click / Enter: run the showcase command and refresh the chat mock response. */
 function executeCommand(displayName: string) {
-	const index = showcaseCommands.findIndex(
+	const index = commands.value.findIndex(
 		(command) => commandDisplayName(command) === displayName,
 	);
-	const command = index !== -1 ? showcaseCommands[index] : undefined;
+	const command = index !== -1 ? commands.value[index] : undefined;
 	if (command === undefined) return;
 
 	selectedCommandIndex.value = index;
@@ -879,7 +882,7 @@ function executeCommand(displayName: string) {
 }
 
 /** Type-ahead arm: fill the composer path so matched-command chrome appears before send. */
-function armCommand(command: (typeof showcaseCommands)[number]) {
+function armCommand(command: ShowcaseCommand) {
 	composerText.value = `/${commandDisplayName(command)}`;
 }
 

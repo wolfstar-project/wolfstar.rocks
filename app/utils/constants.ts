@@ -74,6 +74,7 @@ export const colors = [
 
 export const loggingEvents: LoggingEventDetail[] = [
 	{
+		id: "member_join",
 		action: "User Joined",
 		color: "#FFA500",
 		details: [
@@ -94,6 +95,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Member Join",
 	},
 	{
+		id: "member_leave",
 		action: "User Left",
 		color: "#FF6B6B",
 		details: [
@@ -120,6 +122,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Member Leave",
 	},
 	{
+		id: "message_delete",
 		action: "Message Deleted",
 		color: "#E74C3C",
 		details: [
@@ -141,6 +144,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Message Delete",
 	},
 	{
+		id: "message_edit",
 		action: "Message Edited",
 		color: "#3498DB",
 		details: [
@@ -160,6 +164,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Message Edit",
 	},
 	{
+		id: "channel_create",
 		action: "Channel Created",
 		color: "#2ECC71",
 		details: [
@@ -178,6 +183,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Channel Create",
 	},
 	{
+		id: "channel_delete",
 		action: "Channel Deleted",
 		color: "#E67E22",
 		details: [
@@ -196,6 +202,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Channel Delete",
 	},
 	{
+		id: "channel_update",
 		action: "Channel Updated",
 		color: "#F39C12",
 		details: [
@@ -217,6 +224,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Channel Update",
 	},
 	{
+		id: "role_create",
 		action: "Role Created",
 		color: "#9B59B6",
 		details: [
@@ -235,6 +243,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Role Create",
 	},
 	{
+		id: "role_update",
 		action: "Role Updated",
 		color: "#1ABC9C",
 		details: [
@@ -253,6 +262,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Role Update",
 	},
 	{
+		id: "role_delete",
 		action: "Role Deleted",
 		color: "#E91E63",
 		details: [
@@ -372,6 +382,7 @@ export const SlashCommandRailApps: SlashCommandAppName[] = [
 
 export const showcaseCommands: ShowcaseCommand[] = [
 	{
+		id: "warn",
 		tooltip: "Warn",
 		name: "warn",
 		description: "Warn a member in the server",
@@ -387,6 +398,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "ban",
 		tooltip: "Ban",
 		name: "ban",
 		description: "Ban a member from the server",
@@ -402,6 +414,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "kick",
 		tooltip: "Kick",
 		name: "kick",
 		description: "Kick a member from the server",
@@ -417,6 +430,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "mute",
 		tooltip: "Mute",
 		name: "mute",
 		description: "Mute a member in the server",
@@ -433,6 +447,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "case",
 		tooltip: "Case",
 		name: "case",
 		description: "View or manage moderation cases",
@@ -458,6 +473,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		],
 	},
 	{
+		id: "conf_menu",
 		tooltip: "Conf Menu",
 		name: "conf",
 		subcommand: "menu",
@@ -562,6 +578,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		buttonLabel: "Stop",
 	},
 	{
+		id: "case_view",
 		tooltip: "View Case",
 		name: "case",
 		subcommand: "view",
@@ -585,6 +602,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		],
 	},
 	{
+		id: "case_list",
 		tooltip: "List Cases",
 		name: "case",
 		subcommand: "list",
@@ -596,6 +614,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "There are no moderation cases with the selected filters.",
 	},
 	{
+		id: "case_edit",
 		tooltip: "Edit Case",
 		name: "case",
 		subcommand: "edit",
@@ -610,6 +629,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "Successfully edited case 3.",
 	},
 	{
+		id: "case_archive",
 		tooltip: "Archive Case",
 		name: "case",
 		subcommand: "archive",
@@ -621,6 +641,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "Successfully archived case 3.",
 	},
 	{
+		id: "case_delete",
 		tooltip: "Delete Case",
 		name: "case",
 		subcommand: "delete",
@@ -632,6 +653,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "Successfully deleted case 3.",
 	},
 	{
+		id: "conf_show",
 		tooltip: "Show Settings",
 		name: "conf",
 		subcommand: "show",
@@ -643,6 +665,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "The value for the key channels.logs.moderation is: #mod-logs",
 	},
 	{
+		id: "conf_set",
 		tooltip: "Set Setting",
 		name: "conf",
 		subcommand: "set",
@@ -657,6 +680,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "Successfully updated the key language: en-GB",
 	},
 	{
+		id: "conf_remove",
 		tooltip: "Remove Setting",
 		name: "conf",
 		subcommand: "remove",
@@ -671,6 +695,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		content: "Successfully updated the key disabled-commands: Not Set",
 	},
 	{
+		id: "conf_reset",
 		tooltip: "Reset Setting",
 		name: "conf",
 		subcommand: "reset",

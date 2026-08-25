@@ -952,23 +952,26 @@ const moderationTemporary = ref(false);
 const moderationUndo = ref(false);
 const moderationIndex = ref(0);
 
-const moderationActions = Object.values(ModerationActions);
+const loggingEvents = useLoggingEvents();
+const moderationActions = useModerationActions();
 
 function advanceFeatureIndex(value: -1 | 1) {
 	featureIndex.value = (featureIndex.value + value + texts.value.length) % texts.value.length;
 }
 
 function advanceLoggingIndex(value: -1 | 1) {
-	loggingIndex.value = (loggingIndex.value + value + loggingEvents.length) % loggingEvents.length;
+	loggingIndex.value =
+		(loggingIndex.value + value + loggingEvents.value.length) % loggingEvents.value.length;
 }
 
 function advanceModerationIndex(value: -1 | 1) {
 	moderationIndex.value =
-		(moderationIndex.value + value + moderationActions.length) % moderationActions.length;
+		(moderationIndex.value + value + moderationActions.value.length) %
+		moderationActions.value.length;
 }
 
 const moderationAction = cast<NonNullable<ComputedRef<ModerationAction>>>(
-	computed(() => moderationActions[moderationIndex.value]),
+	computed(() => moderationActions.value[moderationIndex.value]),
 );
 
 const moderationActionRender = computed(() => {

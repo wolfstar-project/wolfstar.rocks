@@ -20,7 +20,7 @@
 			v-if="description"
 			:class="
 				cn(
-					'mt-3 text-[15px] leading-relaxed text-base-content/80',
+					'mt-4 text-base leading-relaxed text-base-content/65',
 					align === 'center' ? 'mx-auto max-w-140' : 'max-w-prose',
 				)
 			"
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { cn } from "cnfast";
 const {
-	align = "center",
+	align = "start",
 	class: className,
 	description,
 	eyebrow,

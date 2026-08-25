@@ -3,11 +3,6 @@ import type { InjectionKey, Ref } from "vue";
 import type {
 	DiscordMemberListApiFixture,
 	DiscordMemberListRoleFixture,
-	HomeAccent,
-	HomeDashboardMember,
-	HomeFeature,
-	HomeStat,
-	HomeTestimonial,
 	LoggingEventDetail,
 	ModerationAction,
 	Profile,
@@ -45,11 +40,6 @@ export const ActivityType = {
 export type {
 	DiscordMemberListApiFixture,
 	DiscordMemberListRoleFixture,
-	HomeAccent,
-	HomeDashboardMember,
-	HomeFeature,
-	HomeStat,
-	HomeTestimonial,
 	LoggingEventDetail,
 	ModerationAction,
 	OtherApp,
@@ -82,135 +72,9 @@ export const colors = [
 	"neutral",
 ] as const;
 
-export const bentoFeatures: HomeFeature[] = [
-	{
-		accent: "primary",
-		big: true,
-		description:
-			"Configurable spam, invite, and mass-mention filters catch trouble before your team has to.",
-		icon: "ph:shield-check-fill",
-		title: "Smart AutoMod",
-	},
-	{
-		big: false,
-		description:
-			"Moderation actions, message edits, channel and role changes, voice moves — logged straight to your server.",
-		icon: "ph:scroll-fill",
-		title: "Complete Logging Suite",
-	},
-	{
-		big: false,
-		description: "Give staff exactly the access they need, down to the command.",
-		icon: "ph:users-three-fill",
-		title: "Granular Roles & Permissions",
-	},
-	{
-		big: false,
-		description:
-			"A fully translated interface and command set, so every member reads WolfStar in their own language.",
-		icon: "ph:translate-fill",
-		title: "Multilingual by Default",
-	},
-	{
-		big: false,
-		description:
-			"Search a complete history of every action taken on your server, and who took it.",
-		icon: "ph:clock-counter-clockwise-fill",
-		title: "Full Audit History",
-	},
-	{
-		big: false,
-		description: "Every feature is free forever. The full source is open for anyone to read.",
-		icon: "ph:heart-fill",
-		title: "No Paywalls, Ever",
-	},
-];
-
-export const stats: HomeStat[] = [
-	{ accent: "spectrum-blue", label: "Free forever", value: "100%" },
-	{ accent: "spectrum-green", label: "Paywalled features", value: "0" },
-	{ accent: "spectrum-purple", label: "Live logging", value: "24/7" },
-	{ accent: "spectrum-red", label: "Source code", value: "OSS" },
-];
-
-export const dashboardMembers: HomeDashboardMember[] = [
-	{
-		avatarClass: "bg-error/15 text-error",
-		badgeClass: "badge-error",
-		initials: "RF",
-		name: "redstar071",
-		nameClass: "text-base-content",
-		role: "Owner",
-		status: "online",
-	},
-	{
-		avatarClass: "bg-primary/15 text-primary",
-		badgeClass: "badge-primary",
-		initials: "ST",
-		name: "staryl",
-		nameClass: "text-base-content",
-		role: "Admin",
-		status: "online",
-	},
-	{
-		avatarClass: "bg-success/15 text-success",
-		badgeClass: "badge-success",
-		initials: "SD",
-		name: "stella.dev",
-		nameClass: "text-base-content",
-		role: "Moderator",
-		status: "idle",
-	},
-	{
-		avatarClass: "bg-secondary/15 text-secondary",
-		badgeClass: "badge-secondary",
-		initials: "NW",
-		name: "nightwolf",
-		nameClass: "text-base-content",
-		role: "Booster",
-		status: "dnd",
-	},
-	{
-		avatarClass: "bg-base-content/10 text-base-content/70",
-		badgeClass: "badge-neutral",
-		initials: "LC",
-		name: "lumacore",
-		nameClass: "text-base-content",
-		role: "Member",
-		status: "online",
-	},
-	{
-		avatarClass: "bg-base-content/10 text-base-content/70",
-		badgeClass: "badge-neutral",
-		initials: "BD",
-		name: "baddie",
-		nameClass: "text-base-content",
-		role: "Member",
-		status: "offline",
-	},
-];
-
-export const testimonials: HomeTestimonial[] = [
-	{
-		big: true,
-		name: "redstar071",
-		quote: "WolfStar replaced three other bots for us — the logging alone is worth it.",
-		role: "Owner · WolfStar HQ",
-	},
-	{
-		name: "lumacore",
-		quote: "Setup took five minutes. AutoMod has caught every raid since.",
-		role: "Moderator · Dev Lab",
-	},
-	{
-		name: "stella.dev",
-		quote: "Finally a mod bot that ships in our language.",
-		role: "Community Manager · Art Club",
-	},
-];
-
 export const loggingEvents: LoggingEventDetail[] = [
 	{
+		id: "member_join",
 		action: "User Joined",
 		color: "#FFA500",
 		details: [
@@ -231,6 +95,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Member Join",
 	},
 	{
+		id: "member_leave",
 		action: "User Left",
 		color: "#FF6B6B",
 		details: [
@@ -257,6 +122,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Member Leave",
 	},
 	{
+		id: "message_delete",
 		action: "Message Deleted",
 		color: "#E74C3C",
 		details: [
@@ -278,6 +144,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Message Delete",
 	},
 	{
+		id: "message_edit",
 		action: "Message Edited",
 		color: "#3498DB",
 		details: [
@@ -297,6 +164,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Message Edit",
 	},
 	{
+		id: "channel_create",
 		action: "Channel Created",
 		color: "#2ECC71",
 		details: [
@@ -315,6 +183,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Channel Create",
 	},
 	{
+		id: "channel_delete",
 		action: "Channel Deleted",
 		color: "#E67E22",
 		details: [
@@ -333,6 +202,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Channel Delete",
 	},
 	{
+		id: "channel_update",
 		action: "Channel Updated",
 		color: "#F39C12",
 		details: [
@@ -354,6 +224,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Channel Update",
 	},
 	{
+		id: "role_create",
 		action: "Role Created",
 		color: "#9B59B6",
 		details: [
@@ -372,6 +243,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Role Create",
 	},
 	{
+		id: "role_update",
 		action: "Role Updated",
 		color: "#1ABC9C",
 		details: [
@@ -390,6 +262,7 @@ export const loggingEvents: LoggingEventDetail[] = [
 		tooltip: "Role Update",
 	},
 	{
+		id: "role_delete",
 		action: "Role Deleted",
 		color: "#E91E63",
 		details: [
@@ -474,25 +347,6 @@ export function moderationActionVariant(typeName: string): string {
 	return MODERATION_VARIANT_MAP[typeName] ?? "neutral";
 }
 
-export function homeAccentClass(accent: HomeAccent): string {
-	const map: Record<HomeAccent, string> = {
-		"accent": "bg-accent",
-		"error": "bg-error",
-		"info": "bg-info",
-		"primary": "bg-primary",
-		"secondary": "bg-secondary",
-		"success": "bg-success",
-		"warning": "bg-warning",
-		"spectrum-blue": "bg-spectrum-blue",
-		"spectrum-green": "bg-spectrum-green",
-		"spectrum-orange": "bg-spectrum-orange",
-		"spectrum-purple": "bg-spectrum-purple",
-		"spectrum-red": "bg-spectrum-red",
-		"spectrum-yellow": "bg-spectrum-yellow",
-	};
-	return map[accent];
-}
-
 // oxlint-disable-next-line symbol-description
 export const ProviderAppNameKey = Symbol() as InjectionKey<Ref<"wolfstar" | "staryl">>;
 
@@ -500,6 +354,7 @@ export const Profiles = {
 	baddie: { app: false, name: "Baddie", verified: false },
 	louduser: { app: false, name: "Loud User", verified: false },
 	redstar: { app: false, name: "RedStar", verified: false },
+	staryl: { app: true, name: "Staryl", verified: true },
 	stella: { app: false, name: "Stella", verified: false },
 	wolfstar: { app: true, name: "WolfStar", verified: true },
 } as const satisfies Record<string, Profile>;
@@ -527,6 +382,7 @@ export const SlashCommandRailApps: SlashCommandAppName[] = [
 
 export const showcaseCommands: ShowcaseCommand[] = [
 	{
+		id: "warn",
 		tooltip: "Warn",
 		name: "warn",
 		description: "Warn a member in the server",
@@ -542,6 +398,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "ban",
 		tooltip: "Ban",
 		name: "ban",
 		description: "Ban a member from the server",
@@ -557,6 +414,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "kick",
 		tooltip: "Kick",
 		name: "kick",
 		description: "Kick a member from the server",
@@ -572,6 +430,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "mute",
 		tooltip: "Mute",
 		name: "mute",
 		description: "Mute a member in the server",
@@ -588,6 +447,7 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		mentionAvatar: "/avatars/baddie.png",
 	},
 	{
+		id: "case",
 		tooltip: "Case",
 		name: "case",
 		description: "View or manage moderation cases",
@@ -613,10 +473,11 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		],
 	},
 	{
+		id: "conf_menu",
 		tooltip: "Conf Menu",
 		name: "conf",
 		subcommand: "menu",
-		description: "Browse and edit server configuration",
+		description: "Open an interactive settings menu",
 		invoker: "redstar",
 		frequentlyUsed: true,
 		options: [],
@@ -716,6 +577,135 @@ export const showcaseCommands: ShowcaseCommand[] = [
 		],
 		buttonLabel: "Stop",
 	},
+	{
+		id: "case_view",
+		tooltip: "View Case",
+		name: "case",
+		subcommand: "view",
+		description: "Retrieve a moderation case's information.",
+		invoker: "redstar",
+		options: [
+			{ name: "case", value: "3", focused: true },
+			{ name: "show", value: "False" },
+		],
+		ephemeral: true,
+		responseType: "embed",
+		embedColor: Colors.LightBlue,
+		embedFooter: "Case 3",
+		embedLines: [
+			{ label: "Type", parts: [{ type: "text", content: "Warning" }] },
+			{
+				label: "User",
+				parts: [{ type: "text", content: "baddie (541738403230777351)" }],
+			},
+			{ label: "Reason", parts: [{ type: "text", content: "spam" }] },
+		],
+	},
+	{
+		id: "case_list",
+		tooltip: "List Cases",
+		name: "case",
+		subcommand: "list",
+		description: "List the moderation cases.",
+		invoker: "redstar",
+		options: [{ name: "pending-only", value: "True", focused: true }],
+		ephemeral: true,
+		responseType: "text",
+		content: "There are no moderation cases with the selected filters.",
+	},
+	{
+		id: "case_edit",
+		tooltip: "Edit Case",
+		name: "case",
+		subcommand: "edit",
+		description: "Edit a moderation case.",
+		invoker: "redstar",
+		options: [
+			{ name: "case", value: "3" },
+			{ name: "reason", value: "Repeated spam", focused: true },
+		],
+		ephemeral: true,
+		responseType: "text",
+		content: "Successfully edited case 3.",
+	},
+	{
+		id: "case_archive",
+		tooltip: "Archive Case",
+		name: "case",
+		subcommand: "archive",
+		description: "Archive a moderation case.",
+		invoker: "redstar",
+		options: [{ name: "case", value: "3", focused: true }],
+		ephemeral: true,
+		responseType: "text",
+		content: "Successfully archived case 3.",
+	},
+	{
+		id: "case_delete",
+		tooltip: "Delete Case",
+		name: "case",
+		subcommand: "delete",
+		description: "Delete a moderation case.",
+		invoker: "redstar",
+		options: [{ name: "case", value: "3", focused: true }],
+		ephemeral: true,
+		responseType: "text",
+		content: "Successfully deleted case 3.",
+	},
+	{
+		id: "conf_show",
+		tooltip: "Show Settings",
+		name: "conf",
+		subcommand: "show",
+		description: "Show current settings or a specific key",
+		invoker: "redstar",
+		options: [{ name: "key", value: "channels.logs.moderation", focused: true }],
+		ephemeral: true,
+		responseType: "text",
+		content: "The value for the key channels.logs.moderation is: #mod-logs",
+	},
+	{
+		id: "conf_set",
+		tooltip: "Set Setting",
+		name: "conf",
+		subcommand: "set",
+		description: "Set a value for a configuration key",
+		invoker: "redstar",
+		options: [
+			{ name: "key", value: "language" },
+			{ name: "value", value: "en-GB", focused: true },
+		],
+		ephemeral: true,
+		responseType: "text",
+		content: "Successfully updated the key language: en-GB",
+	},
+	{
+		id: "conf_remove",
+		tooltip: "Remove Setting",
+		name: "conf",
+		subcommand: "remove",
+		description: "Remove a value from a configuration key",
+		invoker: "redstar",
+		options: [
+			{ name: "key", value: "disabled-commands" },
+			{ name: "value", value: "ban", focused: true },
+		],
+		ephemeral: true,
+		responseType: "text",
+		content: "Successfully updated the key disabled-commands: Not Set",
+	},
+	{
+		id: "conf_reset",
+		tooltip: "Reset Setting",
+		name: "conf",
+		subcommand: "reset",
+		description: "Reset a configuration key to its default value",
+		invoker: "redstar",
+		options: [{ name: "key", value: "prefix", focused: true }],
+		ephemeral: true,
+		responseType: "text",
+		content: "The key prefix has been reset to: w!",
+	},
 ];
 
 export const EmojiRegexExtractName = /<?a?:(\w{2,32}):\d{17,21}>?/gi;
@@ -795,7 +785,7 @@ export const discordAppLauncherRecents: readonly DiscordAppLauncherEntry[] = [
 		description: "> Customizable moderation and more!",
 		avatar: "/avatars/wolfstar.png",
 		kind: "command",
-		commandName: "conf",
+		commandName: "conf menu",
 		tileTitle: "conf menu",
 		tileSubtitle: "WolfStar Beta",
 	},

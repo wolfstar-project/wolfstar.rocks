@@ -168,7 +168,7 @@ importers:
         version: 17.4.2
       evlog:
         specifier: ^2.22.3
-        version: 2.24.0(@nuxt/kit@4.5.1)(@voidzero-dev/vite-plus-core@0.2.8)(ai@6.0.228)(h3@1.15.11)(nitropack@2.13.4)(ofetch@1.5.1)(react@19.2.8)
+        version: 2.24.0(@nuxt/kit@4.5.1)(@voidzero-dev/vite-plus-core@0.2.8)(ai@6.0.228)(h3@2.0.1-rc.22)(nitropack@2.13.4)(ofetch@1.5.1)(react@19.2.8)
       feed:
         specifier: ^5.2.1
         version: 5.2.1
@@ -244,7 +244,7 @@ importers:
         version: 1.1.4(@electric-sql/pglite@0.4.3)(@netlify/blobs@10.7.9)(@vitest/expect@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(db0@0.3.4)(drizzle-orm@0.41.0)(esbuild@0.28.1)(ioredis@5.11.1)(magicast@0.5.4)(mysql2@3.15.3)(rolldown@1.2.3)(rollup@4.62.2)(srvx@0.12.5)(supports-color@10.2.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)(vue@3.5.40)
       '@nuxt/test-utils':
         specifier: 4.1.0
-        version: 4.1.0(patch_hash=962b491d08124918382d72a83a0d24a3eb74fd5eb64c495c8df85a8b37ffdb25)(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)
+        version: 4.1.0(patch_hash=962b491d08124918382d72a83a0d24a3eb74fd5eb64c495c8df85a8b37ffdb25)(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(h3@2.0.1-rc.22)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)
       '@sapphire/bitfield':
         specifier: 1.2.4
         version: 1.2.4
@@ -308,6 +308,9 @@ importers:
       eslint-plugin-regexp:
         specifier: 3.1.1
         version: 3.1.1(eslint@10.8.0)
+      h3-next:
+        specifier: npm:h3@2.0.1-rc.22
+        version: h3@2.0.1-rc.22(crossws@0.4.10)
       jsdom:
         specifier: 29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
@@ -12573,10 +12576,12 @@ packages:
   srvx@0.11.22:
     resolution: {integrity: sha512-LqZxxBDMKuMAZzFzJnDCkFOrs9MZQZr0LvHiO/SuSZVdQaXD7xQ5UWTUxheJrQPve1qk9MG2B/yttUvJxw8egQ==}
     engines: {node: '>=20.16.0'}
+    hasBin: true
 
   srvx@0.12.5:
     resolution: {integrity: sha512-IuvtDNQg5EIwv3c6dleyau7u8hCyGQ7D6+V/QM799Aud07z0wCUcurKLTRfyG33C8oUY+UWcVBFkfHMcbtmRLA==}
     engines: {node: '>=20.16.0'}
+    hasBin: true
 
   ssri@13.0.1:
     resolution: {integrity: sha512-QUiRf1+u9wPTL/76GTYlKttDEBWV1ga9ZXW8BG6kfdeyyM8LGPix9gROyg9V2+P0xNyF3X2Go526xKFdMZrHSQ==}
@@ -17453,7 +17458,7 @@ snapshots:
       rc9: 3.0.1
       std-env: 4.2.0
 
-  '@nuxt/test-utils@4.1.0(patch_hash=962b491d08124918382d72a83a0d24a3eb74fd5eb64c495c8df85a8b37ffdb25)(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)':
+  '@nuxt/test-utils@4.1.0(patch_hash=962b491d08124918382d72a83a0d24a3eb74fd5eb64c495c8df85a8b37ffdb25)(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(h3@2.0.1-rc.22)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)':
     dependencies:
       '@clack/prompts': 1.7.0
       '@nuxt/devtools-kit': 2.7.0(@voidzero-dev/vite-plus-core@0.2.8)(magicast@0.5.4)
@@ -17481,12 +17486,13 @@ snapshots:
       tinyexec: 1.3.0
       ufo: 1.6.4
       unplugin: 3.3.0(@voidzero-dev/vite-plus-core@0.2.8)(esbuild@0.28.1)(rolldown@1.2.3)(rollup@4.62.2)
-      vitest-environment-nuxt: 2.0.0(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)
+      vitest-environment-nuxt: 2.0.0(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(h3@2.0.1-rc.22)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)
       vue: 3.5.40(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)
     optionalDependencies:
       '@playwright/test': 1.62.1
       '@vitest/ui': 4.1.10(vitest@4.1.10)
       '@vue/test-utils': 2.4.11(@vue/compiler-dom@3.5.40)(@vue/server-renderer@3.5.40)(vue@3.5.40)
+      h3-next: h3@2.0.1-rc.22(crossws@0.4.10)
       jsdom: 29.1.1(@noble/hashes@2.2.0)
       playwright-core: 1.62.1
       vitest: 4.1.10(@opentelemetry/api@1.9.1)(@types/node@24.13.3)(@vitest/browser-playwright@4.1.10)(@vitest/browser-preview@4.1.10)(@vitest/coverage-v8@4.1.10)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(jsdom@29.1.1)(msw@2.15.0)
@@ -23182,11 +23188,11 @@ snapshots:
 
   eventsource@2.0.2: {}
 
-  evlog@2.24.0(@nuxt/kit@4.5.1)(@voidzero-dev/vite-plus-core@0.2.8)(ai@6.0.228)(h3@1.15.11)(nitropack@2.13.4)(ofetch@1.5.1)(react@19.2.8):
+  evlog@2.24.0(@nuxt/kit@4.5.1)(@voidzero-dev/vite-plus-core@0.2.8)(ai@6.0.228)(h3@2.0.1-rc.22)(nitropack@2.13.4)(ofetch@1.5.1)(react@19.2.8):
     optionalDependencies:
       '@nuxt/kit': 4.5.1(magic-string@1.2.2)(magicast@0.5.4)(oxc-parser@0.142.0)(rolldown@1.2.3)(unplugin@3.3.0)
       ai: 6.0.228(zod@4.4.3)
-      h3: 1.15.11
+      h3: 2.0.1-rc.22(crossws@0.4.10)
       nitropack: 2.13.4(@electric-sql/pglite@0.4.3)(@netlify/blobs@10.7.9)(@voidzero-dev/vite-plus-core@0.2.8)(drizzle-orm@0.41.0)(mysql2@3.15.3)(oxc-parser@0.142.0)(rolldown@1.2.3)(srvx@0.12.5)(supports-color@10.2.2)
       ofetch: 1.5.1
       react: 19.2.8
@@ -29784,9 +29790,9 @@ snapshots:
       - vite
       - yaml
 
-  vitest-environment-nuxt@2.0.0(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10):
+  vitest-environment-nuxt@2.0.0(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(h3@2.0.1-rc.22)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10):
     dependencies:
-      '@nuxt/test-utils': 4.1.0(patch_hash=962b491d08124918382d72a83a0d24a3eb74fd5eb64c495c8df85a8b37ffdb25)(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)
+      '@nuxt/test-utils': 4.1.0(patch_hash=962b491d08124918382d72a83a0d24a3eb74fd5eb64c495c8df85a8b37ffdb25)(@playwright/test@1.62.1)(@vitest/ui@4.1.10)(@voidzero-dev/vite-plus-core@0.2.8)(@vue/test-utils@2.4.11)(esbuild@0.28.1)(h3@2.0.1-rc.22)(jsdom@29.1.1)(magicast@0.5.4)(playwright-core@1.62.1)(rolldown@1.2.3)(rollup@4.62.2)(typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2)(vitest@4.1.10)
     transitivePeerDependencies:
       - '@cucumber/cucumber'
       - '@farmfe/core'

@@ -95,6 +95,54 @@ export const WithAuthor: Story = {
 	}),
 };
 
+/**
+ * Explicit `theme="dark"` must win even when the Storybook toolbar theme
+ * (the `data-theme` ambient attribute) is switched to Light.
+ */
+export const ForcedDark: Story = {
+	args: {
+		theme: "dark",
+		title: "Forced dark under light ambient",
+	},
+	render: (args) => ({
+		components: { DiscordEmbed },
+		setup: () => ({ args }),
+		template: `<DiscordEmbed v-bind="args">Switch the toolbar theme to Light — this stays dark.</DiscordEmbed>`,
+	}),
+};
+
+/**
+ * Explicit `theme="light"` must win even when the Storybook toolbar theme
+ * (the `data-theme` ambient attribute) is switched to Dark.
+ */
+export const ForcedLight: Story = {
+	args: {
+		theme: "light",
+		title: "Forced light under dark ambient",
+	},
+	render: (args) => ({
+		components: { DiscordEmbed },
+		setup: () => ({ args }),
+		template: `<DiscordEmbed v-bind="args">Switch the toolbar theme to Dark — this stays light.</DiscordEmbed>`,
+	}),
+};
+
+/**
+ * Omitting `theme` should follow the ambient `data-theme` set by the
+ * Storybook toolbar instead of a fixed default.
+ */
+export const FollowsAmbientTheme: Story = {
+	args: {
+		theme: undefined,
+		title: "Follows ambient theme",
+	},
+	render: (args) => ({
+		components: { DiscordEmbed },
+		setup: () => ({ args }),
+		template: `<DiscordEmbed v-bind="args">Toggle the toolbar theme — this follows it.</DiscordEmbed>`,
+	}),
+};
+
 export const BlockquoteDescription: Story = {
 	args: {
 		title: undefined,

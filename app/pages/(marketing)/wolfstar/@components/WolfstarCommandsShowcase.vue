@@ -5,10 +5,12 @@
 				<div class="showcase-discord-shell">
 					<DiscordChannelHeader
 						v-model:members-open="membersOpen"
-						name="mod-commands"
+						:name="CHANNEL_NAME"
 						type="text"
-						:topic="CHANNEL_TOPIC"
-						search-placeholder="Search Wolfstar HQ"
+						:topic="channelTopic"
+						:search-placeholder="
+							t('marketing.wolfstar.commands_showcase.search_placeholder')
+						"
 						:online-count="onlineMembers.length"
 						:notification-count="48"
 						@open-channel-info="openChannelInfo"
@@ -24,10 +26,10 @@
 							}"
 						>
 							<DiscordChat
-								channel-name="mod-commands"
+								:channel-name="CHANNEL_NAME"
 								:date="channelDateLabel"
 								:date-time="channelDateTime"
-								:topic="CHANNEL_TOPIC"
+								:topic="channelTopic"
 								:messages="chatMessages"
 							>
 								<template #message="{ message }">
@@ -42,6 +44,7 @@
 										<DiscordMessage
 											:name="message.author"
 											:timestamp="message.timestamp"
+											:ephemeral="activeDisplayCommand.ephemeral"
 											:reply="{
 												kind: 'command',
 												user: activeDisplayCommand.invoker,
@@ -89,6 +92,7 @@
 													:line="activeDisplayCommand.content"
 												/>
 												<DiscordMention
+													v-if="activeDisplayCommand.mentionUser"
 													kind="mention"
 													:avatar="activeDisplayCommand.mentionAvatar"
 													>{{
@@ -119,7 +123,11 @@
 														:placeholder="
 															activeDisplayCommand.selectPlaceholder
 														"
-														aria-label="Server configuration category"
+														:aria-label="
+															t(
+																'marketing.wolfstar.commands_showcase.select_aria',
+															)
+														"
 													/>
 												</DiscordActionRow>
 												<DiscordV2Separator />
@@ -161,13 +169,15 @@
 									<template #frequently-used>
 										<DiscordChatInputCommandSuggestion
 											v-for="command of frequentlyUsedCommands"
-											:id="suggestionOptionId(command.name)"
-											:key="`frequently-used-${command.name}`"
+											:id="suggestionOptionId(commandDisplayName(command))"
+											:key="`frequently-used-${commandDisplayName(command)}`"
 											:name="commandDisplayName(command)"
 											:description="command.description"
 											app-label="WolfStar Beta"
-											:active="isSuggestionActive(command.name)"
-											@select="executeCommand(command.name)"
+											:active="
+												isSuggestionActive(commandDisplayName(command))
+											"
+											@select="executeCommand(commandDisplayName(command))"
 										/>
 									</template>
 
@@ -177,7 +187,9 @@
 											:subcommand="matchedCommand.subcommand"
 											:options="matchedCommand.options"
 											active
-											@select="executeCommand(matchedCommand.name)"
+											@select="
+												executeCommand(commandDisplayName(matchedCommand))
+											"
 										/>
 									</template>
 
@@ -189,13 +201,15 @@
 									>
 										<DiscordChatInputCommandSuggestion
 											v-for="command of filteredShowcaseCommands"
-											:id="suggestionOptionId(command.name)"
-											:key="`wolfstar-${command.name}`"
+											:id="suggestionOptionId(commandDisplayName(command))"
+											:key="`wolfstar-${commandDisplayName(command)}`"
 											:name="commandDisplayName(command)"
 											:description="command.description"
 											app-label="WolfStar Beta"
-											:active="isSuggestionActive(command.name)"
-											@select="executeCommand(command.name)"
+											:active="
+												isSuggestionActive(commandDisplayName(command))
+											"
+											@select="executeCommand(commandDisplayName(command))"
 										/>
 									</DiscordChatInputCommandGroup>
 
@@ -220,7 +234,7 @@
 								<DiscordChatMessageComposer
 									v-if="!appLauncherSheetFull"
 									v-model="composerText"
-									channel-name="mod-commands"
+									:channel-name="CHANNEL_NAME"
 									autocomplete
 									:apps-open="appLauncherOpen"
 									:aria-controls="
@@ -255,11 +269,9 @@
 														matchedCommand,
 												}"
 												:placeholder="
-													matchedCommand
-														? undefined
-														: 'Message #mod-commands'
+													matchedCommand ? undefined : composerLabel
 												"
-												aria-label="Message #mod-commands"
+												:aria-label="composerLabel"
 												:aria-controls="
 													showCommandPicker
 														? 'showcase-slash-suggestions'
@@ -290,7 +302,7 @@
 					<DiscordChannelInfo
 						v-if="channelInfoOpen"
 						class="showcase-discord-channel-info"
-						name="mod-commands"
+						:name="CHANNEL_NAME"
 						:online="onlineMembers"
 						:offline="offlineMembers"
 						@close="channelInfoOpen = false"
@@ -302,15 +314,25 @@
 </template>
 
 <script setup lang="ts">
+import type { ShowcaseCommand } from "~/types/constants";
 import type {
 	DiscordAppLauncherEntry,
 	DiscordAppLauncherSheetSnap,
 	DiscordChatMessage,
 } from "~/types/discord";
-import ShowcaseTwemojiText from "./ShowcaseTwemojiText.vue";
+import ShowcaseTwemojiText from "./WolfstarShowcaseTwemojiText.vue";
+
+const { t } = useI18n();
+
+const CHANNEL_NAME = "mod-commands";
+
+const commands = useShowcaseCommands();
 
 /** Shared channel topic for header chrome and welcome start copy. */
-const CHANNEL_TOPIC = "WolfStar moderation commands — try a slash command below.";
+const channelTopic = computed(() => t("marketing.wolfstar.commands_showcase.channel_topic"));
+const composerLabel = computed(() =>
+	t("marketing.wolfstar.commands_showcase.composer_placeholder", { channel: CHANNEL_NAME }),
+);
 
 const selectedCommandIndex = ref(0);
 const selectedApp = ref<SlashCommandAppName | null>(null);
@@ -356,8 +378,8 @@ const slashQuery = computed(() => {
 });
 
 const activeDisplayCommand = computed(() => {
-	const command = showcaseCommands[selectedCommandIndex.value];
-	return command ?? showcaseCommands[0]!;
+	const command = commands.value[selectedCommandIndex.value];
+	return command ?? commands.value[0]!;
 });
 
 const chatMessages = computed<DiscordChatMessage[]>(() => {
@@ -369,7 +391,7 @@ const chatMessages = computed<DiscordChatMessage[]>(() => {
 		{
 			id: `response-${command.name}-${command.subcommand ?? ""}`,
 			author: "wolfstar",
-			timestamp: "Today at 15:49",
+			timestamp: t("marketing.wolfstar.commands_showcase.timestamp"),
 		},
 	];
 });
@@ -706,7 +728,7 @@ const activeSearchPrefix = computed(() => {
 });
 
 /** Discord autocomplete shows command + subcommand as a single path (e.g. `conf menu`). */
-function commandDisplayName(command: (typeof showcaseCommands)[number]) {
+function commandDisplayName(command: ShowcaseCommand) {
 	return command.subcommand ? `${command.name} ${command.subcommand}` : command.name;
 }
 
@@ -715,10 +737,10 @@ function commandDisplayName(command: (typeof showcaseCommands)[number]) {
  * (interactive send). No `/commands` page or static listing when the launcher is idle.
  */
 const appLauncherCommands = computed<readonly DiscordAppLauncherEntry[]>(() =>
-	showcaseCommands.map((command) => ({
-		id: `command-${command.name}`,
+	commands.value.map((command) => ({
+		id: `command-${commandDisplayName(command).replaceAll(" ", "-")}`,
 		kind: "command" as const,
-		commandName: command.name,
+		commandName: commandDisplayName(command),
 		name: `/${commandDisplayName(command)}`,
 		description: command.description,
 		avatar: "/avatars/wolfstar.png",
@@ -731,7 +753,7 @@ function matchesSlashQuery(displayName: string, query: string) {
 }
 
 const filteredShowcaseCommands = computed(() =>
-	showcaseCommands.filter((command) =>
+	commands.value.filter((command) =>
 		matchesSlashQuery(commandDisplayName(command), slashQuery.value),
 	),
 );
@@ -769,17 +791,17 @@ const selectableCommands = computed(() => {
 const activeDescendantId = computed(() => {
 	if (!showCommandPicker.value) return undefined;
 	const command = selectableCommands.value[highlightedIndex.value];
-	return command ? suggestionOptionId(command.name) : undefined;
+	return command ? suggestionOptionId(commandDisplayName(command)) : undefined;
 });
 
 function suggestionOptionId(name: string) {
 	return `showcase-slash-option-${name}`;
 }
 
-function isSuggestionActive(name: string) {
+function isSuggestionActive(displayName: string) {
 	const highlighted = selectableCommands.value[highlightedIndex.value];
-	if (highlighted) return highlighted.name === name;
-	return activeDisplayCommand.value.name === name;
+	if (highlighted) return commandDisplayName(highlighted) === displayName;
+	return commandDisplayName(activeDisplayCommand.value) === displayName;
 }
 
 interface MockAppCommand {
@@ -787,26 +809,40 @@ interface MockAppCommand {
 	description: string;
 }
 
-const mockAppCommands: Record<Exclude<SlashCommandAppName, "wolfstar">, MockAppCommand[]> = {
-	catbot: [{ name: "cat", description: "Send a random cat picture." }],
-	dyno: [{ name: "modlogs", description: "View moderation logs for a member." }],
-	fmbot: [
-		{ name: "fm", description: "Show what you are listening to right now." },
-		{ name: "addfriend", description: "Add a friend to your .fmbot friends." },
+const mockAppCommands = computed<
+	Record<Exclude<SlashCommandAppName, "wolfstar">, MockAppCommand[]>
+>(() => ({
+	catbot: [
+		{ name: "cat", description: t("marketing.wolfstar.commands_showcase.mock_catbot_cat") },
 	],
-	utilsbot: [{ name: "poll", description: "Start a poll in this channel." }],
+	dyno: [
+		{
+			name: "modlogs",
+			description: t("marketing.wolfstar.commands_showcase.mock_dyno_modlogs"),
+		},
+	],
+	fmbot: [
+		{ name: "fm", description: t("marketing.wolfstar.commands_showcase.mock_fmbot_fm") },
+		{
+			name: "addfriend",
+			description: t("marketing.wolfstar.commands_showcase.mock_fmbot_addfriend"),
+		},
+	],
+	utilsbot: [
+		{ name: "poll", description: t("marketing.wolfstar.commands_showcase.mock_utilsbot_poll") },
+	],
 	staryl: [
 		{
-			name: "twitch-subscriptions show",
-			description: "Show all Twitch subscriptions for this server.",
+			name: "subscriptions twitch show",
+			description: t("marketing.staryl.showcase.show_description"),
 		},
 		{
-			name: "twitch-subscriptions add",
-			description: "Add a new Twitch subscription for a streamer.",
+			name: "subscriptions twitch add",
+			description: t("marketing.staryl.showcase.add_description"),
 		},
 	],
-	ring: [{ name: "info", description: "Get information about the bot." }],
-};
+	ring: [{ name: "info", description: t("marketing.wolfstar.commands_showcase.mock_ring_info") }],
+}));
 
 /** Rail order for the bot-grouped pane under Frequently Used (WolfStar lives in FU). */
 const MOCK_APP_RAIL_ORDER = [
@@ -825,15 +861,17 @@ const listedMockApps = computed<Exclude<SlashCommandAppName, "wolfstar">[]>(() =
 });
 
 function listedCommandsForMockApp(app: Exclude<SlashCommandAppName, "wolfstar">) {
-	return mockAppCommands[app].filter((command) =>
+	return mockAppCommands.value[app].filter((command) =>
 		matchesSlashQuery(command.name, slashQuery.value),
 	);
 }
 
 /** Click / Enter: run the showcase command and refresh the chat mock response. */
-function executeCommand(name: string) {
-	const index = showcaseCommands.findIndex((command) => command.name === name);
-	const command = index !== -1 ? showcaseCommands[index] : undefined;
+function executeCommand(displayName: string) {
+	const index = commands.value.findIndex(
+		(command) => commandDisplayName(command) === displayName,
+	);
+	const command = index !== -1 ? commands.value[index] : undefined;
 	if (command === undefined) return;
 
 	selectedCommandIndex.value = index;
@@ -844,7 +882,7 @@ function executeCommand(name: string) {
 }
 
 /** Type-ahead arm: fill the composer path so matched-command chrome appears before send. */
-function armCommand(command: (typeof showcaseCommands)[number]) {
+function armCommand(command: ShowcaseCommand) {
 	composerText.value = `/${commandDisplayName(command)}`;
 }
 
@@ -852,7 +890,7 @@ function onComposerSubmit() {
 	if (!composerText.value.startsWith("/")) return;
 
 	if (matchedCommand.value) {
-		executeCommand(matchedCommand.value.name);
+		executeCommand(commandDisplayName(matchedCommand.value));
 		return;
 	}
 

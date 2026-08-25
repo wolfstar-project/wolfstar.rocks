@@ -25,11 +25,12 @@ definePageMeta({
 	alias: ["/"],
 });
 
+const { t } = useI18n();
+
 useSeoMetadata({
-	description:
-		"WolfStar gives Discord moderation teams configurable AutoMod, searchable moderation and command history, and one dashboard for server settings.",
+	description: () => t("marketing.wolfstar.seo.description"),
 	shouldOgImage: true,
-	title: "Home",
+	title: () => t("marketing.wolfstar.seo.title"),
 });
 
 const otherApps = useApp();

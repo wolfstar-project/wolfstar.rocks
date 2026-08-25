@@ -9,18 +9,17 @@
 					<span
 						class="font-mono text-xs tracking-(--home-ls-label) text-neutral-content/60 uppercase"
 					>
-						WolfStar for Discord
+						{{ t("marketing.wolfstar.cta.eyebrow") }}
 					</span>
 				</div>
 				<h2
 					id="home-cta-heading"
 					class="max-w-180 text-4xl leading-[1.02] font-bold tracking-(--home-ls-tight) md:text-5xl"
 				>
-					Put the rules and the record in one place.
+					{{ t("marketing.wolfstar.cta.title") }}
 				</h2>
 				<p class="mt-5 max-w-145 text-base leading-relaxed text-neutral-content/70">
-					Invite WolfStar now, or join the support server if you want to ask a question
-					first.
+					{{ t("marketing.wolfstar.cta.subtitle") }}
 				</p>
 			</div>
 			<div class="mt-9 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
@@ -31,7 +30,7 @@
 					class="justify-center lg:min-w-52"
 					icon="ph:plus-circle-fill"
 				>
-					Invite WolfStar
+					{{ t("marketing.wolfstar.cta.invite") }}
 				</UButton>
 				<UButton
 					to="https://join.wolfstar.rocks"
@@ -40,7 +39,7 @@
 					size="xl"
 					class="home-cta-outline justify-center lg:min-w-52"
 				>
-					Ask in support
+					{{ t("marketing.wolfstar.cta.ask_in_support") }}
 				</UButton>
 			</div>
 		</div>
@@ -51,6 +50,8 @@
 defineProps<{
 	inviteUrl: string;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <style scoped>

@@ -3,10 +3,10 @@
 		<SurfaceCard padding="none" class="staryl-showcase-card overflow-hidden shadow-glow">
 			<div class="staryl-discord-shell">
 				<DiscordChannelHeader
-					name="staryl-notifications"
+					:name="CHANNEL_NAME"
 					type="text"
-					:topic="CHANNEL_TOPIC"
-					search-placeholder="Search Wolfstar HQ"
+					:topic="channelTopic"
+					:search-placeholder="t('marketing.staryl.showcase.search_placeholder')"
 					:online-count="0"
 				/>
 
@@ -16,10 +16,10 @@
 						:class="{ 'staryl-discord-main-picker-open': showCommandPicker }"
 					>
 						<DiscordChat
-							channel-name="staryl-notifications"
+							:channel-name="CHANNEL_NAME"
 							:date="channelDateLabel"
 							:date-time="channelDateTime"
-							:topic="CHANNEL_TOPIC"
+							:topic="channelTopic"
 							:messages="chatMessages"
 						>
 							<template #message="{ message }">
@@ -86,7 +86,7 @@
 
 							<DiscordChatMessageComposer
 								v-model="composerText"
-								channel-name="staryl-notifications"
+								:channel-name="CHANNEL_NAME"
 								autocomplete
 								:aria-controls="
 									showCommandPicker ? 'staryl-slash-suggestions' : undefined
@@ -115,11 +115,9 @@
 												'staryl-composer-slash-mirror': matchedCommand,
 											}"
 											:placeholder="
-												matchedCommand
-													? undefined
-													: 'Message #staryl-notifications'
+												matchedCommand ? undefined : composerLabel
 											"
-											aria-label="Message #staryl-notifications"
+											:aria-label="composerLabel"
 											:aria-controls="
 												showCommandPicker
 													? 'staryl-slash-suggestions'
@@ -157,66 +155,71 @@ interface StarylShowcaseCommand {
 	response: { type: "embed"; title: string; lines: string[] } | { type: "text"; content: string };
 }
 
-const starylCommands: StarylShowcaseCommand[] = [
+const { t } = useI18n();
+
+const CHANNEL_NAME = "staryl-notifications";
+
+const channelTopic = computed(() => t("marketing.staryl.showcase.channel_topic"));
+const composerLabel = computed(() =>
+	t("marketing.staryl.showcase.composer_placeholder", { channel: CHANNEL_NAME }),
+);
+
+const twitchOptions = computed<SlashCommandOption[]>(() => [
+	{ name: "streamer", value: "shroud" },
+	{ name: "channel", value: `#${CHANNEL_NAME}` },
+	{ name: "type", value: "Stream Online", focused: true },
+]);
+
+const starylCommands = computed<StarylShowcaseCommand[]>(() => [
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "add",
-		description: "Add a new Twitch subscription for a streamer.",
+		description: t("marketing.staryl.showcase.add_description"),
 		invoker: "redstar",
-		options: [
-			{ name: "streamer", value: "shroud" },
-			{ name: "channel", value: "#staryl-notifications" },
-			{ name: "type", value: "Stream Online", focused: true },
-		],
+		options: twitchOptions.value,
 		response: {
 			type: "text",
-			content:
-				"✅ Success! Whenever shroud goes live, I will post a new message in #staryl-notifications.",
+			content: t("marketing.staryl.showcase.add_response"),
 		},
 	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "remove",
-		description: "Remove a Twitch subscription for a streamer.",
+		description: t("marketing.staryl.showcase.remove_description"),
 		invoker: "redstar",
-		options: [
-			{ name: "streamer", value: "shroud" },
-			{ name: "channel", value: "#staryl-notifications" },
-			{ name: "type", value: "Stream Online", focused: true },
-		],
+		options: twitchOptions.value,
 		response: {
 			type: "text",
-			content:
-				"✅ Success! I will no longer post messages to #staryl-notifications whenever shroud goes live.",
+			content: t("marketing.staryl.showcase.remove_response"),
 		},
 	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "reset",
-		description: "Remove all Twitch subscriptions from this server.",
+		description: t("marketing.staryl.showcase.reset_description"),
 		invoker: "redstar",
 		options: [],
 		response: {
 			type: "text",
-			content: "✅ Success! 3 subscriptions have been removed from this server.",
+			content: t("marketing.staryl.showcase.reset_response"),
 		},
 	},
 	{
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "show",
-		description: "Show all Twitch subscriptions for this server.",
+		description: t("marketing.staryl.showcase.show_description"),
 		invoker: "redstar",
 		options: [],
 		response: {
 			type: "embed",
-			title: "Twitch Subscriptions",
+			title: t("marketing.staryl.showcase.show_embed_title"),
 			lines: [
-				"shroud — #staryl-notifications → Live",
-				"ninja — #staryl-notifications → Offline",
+				t("marketing.staryl.showcase.show_embed_online"),
+				t("marketing.staryl.showcase.show_embed_offline"),
 			],
 		},
 	},
@@ -224,24 +227,17 @@ const starylCommands: StarylShowcaseCommand[] = [
 		name: "subscriptions",
 		subcommandGroup: "twitch",
 		subcommand: "test",
-		description: "Send a test notification to check that an existing subscription works.",
+		description: t("marketing.staryl.showcase.test_description"),
 		invoker: "redstar",
-		options: [
-			{ name: "streamer", value: "shroud" },
-			{ name: "channel", value: "#staryl-notifications" },
-			{ name: "type", value: "Stream Online", focused: true },
-		],
+		options: twitchOptions.value,
 		response: {
 			type: "text",
-			content:
-				"✅ Sent! Check #staryl-notifications — that is exactly what the notification will look like.",
+			content: t("marketing.staryl.showcase.test_response"),
 		},
 	},
-];
+]);
 
 type StarylCommand = StarylShowcaseCommand;
-
-const CHANNEL_TOPIC = "Configure Twitch stream notifications with Staryl.";
 
 const selectedCommandIndex = ref(0);
 const highlightedIndex = ref(0);
@@ -269,7 +265,7 @@ const slashQuery = computed(() => {
 });
 
 const activeCommand = computed(
-	() => starylCommands[selectedCommandIndex.value] ?? starylCommands[0]!,
+	() => starylCommands.value[selectedCommandIndex.value] ?? starylCommands.value[0]!,
 );
 
 const chatMessages = computed<DiscordChatMessage[]>(() => {
@@ -278,7 +274,7 @@ const chatMessages = computed<DiscordChatMessage[]>(() => {
 		{
 			id: `response-${commandDisplayName(command).replaceAll(" ", "-")}`,
 			author: "staryl",
-			timestamp: "Today at 15:49",
+			timestamp: t("marketing.staryl.showcase.timestamp"),
 		},
 	];
 });
@@ -297,7 +293,7 @@ function matchesSlashQuery(displayName: string, query: string) {
 }
 
 const filteredCommands = computed(() =>
-	starylCommands.filter((command) =>
+	starylCommands.value.filter((command) =>
 		matchesSlashQuery(commandDisplayName(command), slashQuery.value),
 	),
 );
@@ -334,7 +330,7 @@ function isSuggestionActive(command: StarylCommand) {
 }
 
 function executeCommand(command: StarylCommand) {
-	const index = starylCommands.indexOf(command);
+	const index = starylCommands.value.indexOf(command);
 	if (index === -1) return;
 
 	selectedCommandIndex.value = index;

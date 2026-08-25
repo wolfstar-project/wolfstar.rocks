@@ -11,13 +11,13 @@
 				<p
 					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					What WolfStar does
+					{{ t("marketing.wolfstar.proof.eyebrow") }}
 				</p>
 				<h2
 					id="home-product-heading"
 					class="max-w-120 text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					One system from first warning to final review.
+					{{ t("marketing.wolfstar.proof.title") }}
 				</h2>
 			</div>
 
@@ -25,11 +25,11 @@
 				<article class="home-proof-row">
 					<span class="home-proof-index" aria-hidden="true">01</span>
 					<div>
-						<h3 class="text-xl font-semibold text-base-content">Set the rule</h3>
+						<h3 class="text-xl font-semibold text-base-content">
+							{{ t("marketing.wolfstar.proof.step_1_title") }}
+						</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							Choose which messages WolfStar should catch, what happens to the
-							message, and when repeated infractions become a warning, timeout, kick,
-							or ban.
+							{{ t("marketing.wolfstar.proof.step_1_body") }}
 						</p>
 						<UButton
 							to="#moderation-tools"
@@ -38,7 +38,7 @@
 							class="mt-3 px-0"
 							trailing-icon="ph:arrow-down-right"
 						>
-							Test an AutoMod rule
+							{{ t("marketing.wolfstar.proof.step_1_cta") }}
 						</UButton>
 					</div>
 				</article>
@@ -46,10 +46,11 @@
 				<article class="home-proof-row">
 					<span class="home-proof-index" aria-hidden="true">02</span>
 					<div>
-						<h3 class="text-xl font-semibold text-base-content">Keep the record</h3>
+						<h3 class="text-xl font-semibold text-base-content">
+							{{ t("marketing.wolfstar.proof.step_2_title") }}
+						</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							Send live events to Discord and review moderation, warnings, commands,
-							and settings activity later in the dashboard.
+							{{ t("marketing.wolfstar.proof.step_2_body") }}
 						</p>
 						<UButton
 							to="#advanced-logging"
@@ -58,7 +59,7 @@
 							class="mt-3 px-0"
 							trailing-icon="ph:arrow-down-right"
 						>
-							Inspect the logging flow
+							{{ t("marketing.wolfstar.proof.step_2_cta") }}
 						</UButton>
 					</div>
 				</article>
@@ -66,10 +67,11 @@
 				<article class="home-proof-row">
 					<span class="home-proof-index" aria-hidden="true">03</span>
 					<div>
-						<h3 class="text-xl font-semibold text-base-content">Review it together</h3>
+						<h3 class="text-xl font-semibold text-base-content">
+							{{ t("marketing.wolfstar.proof.step_3_title") }}
+						</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							Manage channels, roles, events, command access, and moderation filters
-							from the same authenticated dashboard.
+							{{ t("marketing.wolfstar.proof.step_3_body") }}
 						</p>
 						<UButton
 							to="#dashboard"
@@ -78,7 +80,7 @@
 							class="mt-3 px-0"
 							trailing-icon="ph:arrow-down-right"
 						>
-							See the dashboard scope
+							{{ t("marketing.wolfstar.proof.step_3_cta") }}
 						</UButton>
 					</div>
 				</article>
@@ -86,6 +88,10 @@
 		</div>
 	</Section>
 </template>
+
+<script setup lang="ts">
+const { t } = useI18n();
+</script>
 
 <style scoped>
 @reference "@/assets/css/main.css";

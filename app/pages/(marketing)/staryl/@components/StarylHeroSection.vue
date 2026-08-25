@@ -7,19 +7,15 @@
 			<div class="grid items-end gap-16 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
 				<div class="max-w-190 animate-fade-in-up-safe">
 					<p class="staryl-hero-kicker mb-6 font-mono text-sm font-medium text-primary">
-						<!-- PLACEHOLDER: replace with Staryl's real positioning line. -->
-						Open-source social notifications
+						{{ t("marketing.staryl.hero.kicker") }}
 					</p>
 
 					<h1 id="staryl-hero-heading" class="staryl-hero-title text-balance">
-						<!-- PLACEHOLDER: replace with Staryl's real headline. -->
-						Social updates, where your server already is.
+						{{ t("marketing.staryl.hero.title") }}
 					</h1>
 
 					<p class="staryl-hero-subtitle mt-7 max-w-165 text-pretty">
-						<!-- PLACEHOLDER: replace with a description of what Staryl actually does. -->
-						Staryl is in development. This page is a placeholder while its notification
-						sources and command set are finalised.
+						{{ t("marketing.staryl.hero.subtitle") }}
 					</p>
 
 					<div class="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -31,7 +27,7 @@
 							class="justify-center sm:min-w-48"
 							icon="ph:plus-circle-fill"
 						>
-							Invite Staryl
+							{{ t("marketing.staryl.hero.invite") }}
 						</UButton>
 						<UButton
 							to="#staryl-showcase"
@@ -41,7 +37,7 @@
 							class="staryl-hero-outline-btn justify-center sm:min-w-48"
 							trailing-icon="ph:arrow-down"
 						>
-							See Staryl work
+							{{ t("marketing.staryl.hero.see_work") }}
 						</UButton>
 					</div>
 
@@ -51,10 +47,10 @@
 							class="font-medium text-base-content/80"
 							data-testid="staryl-hero-availability"
 						>
-							Public invite not available yet
+							{{ t("marketing.staryl.hero.no_invite") }}
 						</span>
 						<template v-else>
-							Release v{{ buildVersion }} ·
+							{{ t("marketing.staryl.hero.release", { version: buildVersion }) }} ·
 							<NuxtTime
 								:datetime="buildTime"
 								month="short"
@@ -69,14 +65,14 @@
 							rel="noopener noreferrer"
 							class="font-medium text-base-content underline decoration-base-content/25 underline-offset-4 hover:decoration-base-content"
 						>
-							View source
+							{{ t("marketing.staryl.hero.view_source") }}
 						</NuxtLink>
 					</p>
 				</div>
 
 				<aside
 					class="staryl-hero-brief animate-fade-in-up-safe [animation-delay:0.08s]"
-					aria-label="Staryl capability summary"
+					:aria-label="t('marketing.staryl.hero.brief_aria')"
 				>
 					<div class="staryl-hero-brief-header">
 						<NuxtImg
@@ -90,21 +86,27 @@
 						<span
 							class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase"
 						>
-							What your server gets
+							{{ t("marketing.staryl.hero.brief_label") }}
 						</span>
 					</div>
 					<dl>
 						<div class="staryl-hero-brief-row">
-							<dt>Sources</dt>
-							<dd>Twitch live and offline alerts today, more sources planned</dd>
+							<dt>{{ t("marketing.staryl.hero.sources_term") }}</dt>
+							<dd>{{ t("marketing.staryl.hero.sources_value") }}</dd>
 						</div>
 						<div class="staryl-hero-brief-row">
-							<dt>Routing</dt>
-							<dd>One streamer, one channel, one alert type per subscription</dd>
+							<dt>{{ t("marketing.staryl.hero.routing_term") }}</dt>
+							<dd>{{ t("marketing.staryl.hero.routing_value") }}</dd>
 						</div>
 						<div class="staryl-hero-brief-row">
-							<dt>Setup</dt>
-							<dd>Runs on <code>/subscriptions twitch</code>, no dashboard needed</dd>
+							<dt>{{ t("marketing.staryl.hero.setup_term") }}</dt>
+							<dd>
+								<i18n-t keypath="marketing.staryl.hero.setup_value" tag="span">
+									<template #command>
+										<code>{{ SETUP_COMMAND }}</code>
+									</template>
+								</i18n-t>
+							</dd>
 						</div>
 					</dl>
 				</aside>
@@ -119,6 +121,10 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	buildVersion: string;
 	inviteUrl: string;
 }>();
+
+const { t } = useI18n();
+
+const SETUP_COMMAND = "/subscriptions twitch";
 </script>
 
 <style scoped>

@@ -7,9 +7,9 @@
 		class="staryl-commands-section pb-24"
 	>
 		<SectionHeader
-			eyebrow="Command flow preview"
-			title="Configure Twitch notifications with Staryl."
-			description="Use Staryl’s Twitch subscription commands to send live and offline stream notifications to the right channel."
+			:eyebrow="t('marketing.staryl.commands.eyebrow')"
+			:title="t('marketing.staryl.commands.title')"
+			:description="t('marketing.staryl.commands.description')"
 			heading-id="staryl-commands-heading"
 			align="start"
 			class="mb-10"
@@ -17,6 +17,10 @@
 		<LazyStarylCommandsShowcase />
 	</Section>
 </template>
+
+<script setup lang="ts">
+const { t } = useI18n();
+</script>
 
 <style scoped>
 .staryl-commands-section {

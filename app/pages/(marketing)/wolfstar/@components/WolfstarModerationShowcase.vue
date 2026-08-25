@@ -3,9 +3,9 @@
 	<div class="w-full">
 		<div class="relative mx-auto min-h-100 w-full max-w-7xl">
 			<SectionHeader
-				eyebrow="Product walkthrough"
-				title="Follow a rule from trigger to review."
-				description="Use the controls to inspect the same moderation flow your team configures and reviews."
+				:eyebrow="t('marketing.wolfstar.showcase.header_eyebrow')"
+				:title="t('marketing.wolfstar.showcase.header_title')"
+				:description="t('marketing.wolfstar.showcase.header_description')"
 				heading-id="home-showcase-heading"
 				align="start"
 				class="mb-12"
@@ -49,10 +49,12 @@
 											class="size-4.5 shrink-0 text-muted"
 											aria-hidden="true"
 										/>
-										<span class="text-[15px] font-semibold text-base-content"
-											>automod-demo</span
-										>
-										<span class="text-xs text-muted">— WolfStar HQ</span>
+										<span class="text-[15px] font-semibold text-base-content">{{
+											t("marketing.wolfstar.showcase.channel_automod")
+										}}</span>
+										<span class="text-xs text-muted">{{
+											t("marketing.wolfstar.showcase.server_suffix")
+										}}</span>
 									</div>
 									<div class="showcase-card-body p-5">
 										<DiscordMessages
@@ -64,7 +66,7 @@
 													:key="n"
 													name="baddie"
 												>
-													Guys look at me!
+													{{ t("marketing.wolfstar.showcase.msg_spam") }}
 												</DiscordMessage>
 											</template>
 											<DiscordMessage
@@ -83,7 +85,11 @@
 														featureIndex === AutomodFeature.Attachments
 													"
 												>
-													Have you seen this????
+													{{
+														t(
+															"marketing.wolfstar.showcase.msg_attachments",
+														)
+													}}
 													<div class="grid max-w-96 grid-cols-2 gap-2">
 														<div
 															v-for="placeholder in 4"
@@ -103,15 +109,25 @@
 														featureIndex === AutomodFeature.Capitals
 													"
 												>
-													I CAN TALK IN ALL UPPER CASES,
-													<strong>AND WOLFSTAR WILL NOT STOP ME!</strong>
+													{{
+														t(
+															"marketing.wolfstar.showcase.msg_capitals",
+														)
+													}}
+													<strong>{{
+														t(
+															"marketing.wolfstar.showcase.msg_capitals_strong",
+														)
+													}}</strong>
 												</template>
 												<template
 													v-else-if="
 														featureIndex === AutomodFeature.Invites
 													"
 												>
-													Everyone join my server!
+													{{
+														t("marketing.wolfstar.showcase.msg_invites")
+													}}
 													<NuxtLink
 														to="https://discord.gg/gqAnRyUXG8"
 														class="text-info"
@@ -127,7 +143,7 @@
 														featureIndex === AutomodFeature.Links
 													"
 												>
-													Everyone check out those links!
+													{{ t("marketing.wolfstar.showcase.msg_links") }}
 													<ul class="ml-5 list-disc">
 														<li>
 															<span class="text-info"
@@ -161,7 +177,11 @@
 														featureIndex === AutomodFeature.Mentions
 													"
 												>
-													Everyone notice me!
+													{{
+														t(
+															"marketing.wolfstar.showcase.msg_mentions",
+														)
+													}}
 													<DiscordMention kind="mention"
 														>everyone</DiscordMention
 													><DiscordMention kind="mention"
@@ -175,7 +195,11 @@
 														featureIndex === AutomodFeature.Newlines
 													"
 												>
-													Hehehehe
+													{{
+														t(
+															"marketing.wolfstar.showcase.msg_newlines",
+														)
+													}}
 													<br />
 													<br />
 													<br />
@@ -183,14 +207,22 @@
 													<br />
 													<br />
 													<br />
-													So many lines!
+													{{
+														t(
+															"marketing.wolfstar.showcase.msg_newlines_end",
+														)
+													}}
 												</template>
 												<template
 													v-else-if="
 														featureIndex === AutomodFeature.Reactions
 													"
 												>
-													Hey folks! I have great news to share!
+													{{
+														t(
+															"marketing.wolfstar.showcase.msg_reactions",
+														)
+													}}
 													<LazyDiscordReactions>
 														<LazyDiscordReaction :count="7" self>
 															<UIcon
@@ -213,25 +245,43 @@
 												<template
 													v-else-if="featureIndex === AutomodFeature.Spam"
 												>
-													Guys look at me!
+													{{ t("marketing.wolfstar.showcase.msg_spam") }}
 												</template>
 												<template
 													v-else-if="
 														featureIndex === AutomodFeature.Words
 													"
 												>
-													I would like to say that you're a
-													<strong>disgusting</strong> person.
+													<i18n-t
+														keypath="marketing.wolfstar.showcase.msg_words"
+														tag="span"
+													>
+														<template #word>
+															<strong>{{
+																t(
+																	"marketing.wolfstar.showcase.msg_words_strong",
+																)
+															}}</strong>
+														</template>
+													</i18n-t>
 												</template>
 											</DiscordMessage>
 											<DiscordMessage name="wolfstar">
-												Dear
-												<DiscordMention
-													kind="mention"
-													avatar="/avatars/baddie.png"
-													>Baddie</DiscordMention
-												>,
-												{{ texts[featureIndex]!.alert }}
+												<i18n-t
+													keypath="marketing.wolfstar.showcase.alert"
+													tag="span"
+												>
+													<template #user>
+														<DiscordMention
+															kind="mention"
+															avatar="/avatars/baddie.png"
+															>Baddie</DiscordMention
+														>
+													</template>
+													<template #reason>
+														{{ texts[featureIndex]!.alert }}
+													</template>
+												</i18n-t>
 											</DiscordMessage>
 										</DiscordMessages>
 									</div>
@@ -241,7 +291,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow rotate-90 lg:rotate-180"
-										aria-label="Previous automod feature"
+										:aria-label="t('marketing.wolfstar.showcase.prev_automod')"
 										@click="advanceFeatureIndex(-1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -265,7 +315,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow -rotate-90 lg:rotate-0"
-										aria-label="Next automod feature"
+										:aria-label="t('marketing.wolfstar.showcase.next_automod')"
 										@click="advanceFeatureIndex(1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -282,20 +332,26 @@
 										class="size-6 text-primary"
 										aria-hidden="true"
 									/>
-									WolfStar can act on
-									<span
-										class="text-primary underline decoration-primary/30 underline-offset-4"
-										>{{ texts[featureIndex]!.title }}</span
+									<i18n-t
+										keypath="marketing.wolfstar.showcase.act_on"
+										tag="span"
+										class="contents"
 									>
+										<template #subject>
+											<span
+												class="text-primary underline decoration-primary/30 underline-offset-4"
+												>{{ texts[featureIndex]!.title }}</span
+											>
+										</template>
+									</i18n-t>
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									Choose which messages trigger a rule, then decide how WolfStar
-									responds.
+									{{ t("marketing.wolfstar.showcase.automod_intro") }}
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
-									For each infraction, WolfStar can:
+									{{ t("marketing.wolfstar.showcase.automod_actions_intro") }}
 								</p>
 								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
@@ -305,11 +361,12 @@
 											aria-hidden="true"
 										/>
 										<span
-											><strong class="text-base-content"
-												>Alert the user:</strong
-											>
-											send a message notifying the user of their
-											infraction.</span
+											><strong class="text-base-content">{{
+												t("marketing.wolfstar.showcase.action_alert_label")
+											}}</strong>
+											{{
+												t("marketing.wolfstar.showcase.action_alert_body")
+											}}</span
 										>
 									</li>
 									<li class="flex items-start gap-2">
@@ -319,11 +376,12 @@
 											aria-hidden="true"
 										/>
 										<span
-											><strong class="text-base-content"
-												>Post moderation log:</strong
-											>
-											send a message to the moderation log channel for
-											moderators to see.</span
+											><strong class="text-base-content">{{
+												t("marketing.wolfstar.showcase.action_log_label")
+											}}</strong>
+											{{
+												t("marketing.wolfstar.showcase.action_log_body")
+											}}</span
 										>
 									</li>
 									<li class="flex items-start gap-2">
@@ -333,17 +391,18 @@
 											aria-hidden="true"
 										/>
 										<span
-											><strong class="text-base-content"
-												>Delete the message:</strong
-											>
-											delete the message that triggered the infraction,
-											keeping your channels clean.</span
+											><strong class="text-base-content">{{
+												t("marketing.wolfstar.showcase.action_delete_label")
+											}}</strong>
+											{{
+												t("marketing.wolfstar.showcase.action_delete_body")
+											}}</span
 										>
 									</li>
 								</ul>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
-									Repeated infractions can trigger a separate escalation rule:
+									{{ t("marketing.wolfstar.showcase.escalation_intro") }}
 								</p>
 								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
@@ -353,11 +412,16 @@
 											aria-hidden="true"
 										/>
 										<span>
-											<strong class="text-base-content"
-												>Set the action:</strong
-											>
-											warn, timeout, kick, or ban, with a temporary or
-											permanent duration where supported.
+											<strong class="text-base-content">{{
+												t(
+													"marketing.wolfstar.showcase.escalation_action_label",
+												)
+											}}</strong>
+											{{
+												t(
+													"marketing.wolfstar.showcase.escalation_action_body",
+												)
+											}}
 										</span>
 									</li>
 									<li class="flex items-start gap-2">
@@ -367,11 +431,16 @@
 											aria-hidden="true"
 										/>
 										<span>
-											<strong class="text-base-content"
-												>Set the threshold:</strong
-											>
-											choose how many infractions within a time window trigger
-											the action.
+											<strong class="text-base-content">{{
+												t(
+													"marketing.wolfstar.showcase.escalation_threshold_label",
+												)
+											}}</strong>
+											{{
+												t(
+													"marketing.wolfstar.showcase.escalation_threshold_body",
+												)
+											}}
 										</span>
 									</li>
 								</ul>
@@ -392,10 +461,12 @@
 											class="size-4.5 shrink-0 text-muted"
 											aria-hidden="true"
 										/>
-										<span class="text-[15px] font-semibold text-base-content"
-											>server-logs</span
-										>
-										<span class="text-xs text-muted">— WolfStar HQ</span>
+										<span class="text-[15px] font-semibold text-base-content">{{
+											t("marketing.wolfstar.showcase.channel_logs")
+										}}</span>
+										<span class="text-xs text-muted">{{
+											t("marketing.wolfstar.showcase.server_suffix")
+										}}</span>
 									</div>
 									<div class="showcase-card-body p-5">
 										<DiscordMessages
@@ -410,12 +481,22 @@
 													}"
 													:footer="{
 														icon: '/avatars/wolfstar.png',
-														text: `Log #${123456 + loggingIndex}`,
+														text: t(
+															'marketing.wolfstar.showcase.embed_log',
+															{ id: 123456 + loggingIndex },
+														),
 													}"
 													:timestamp
 												>
 													<span
-														><strong>❯ Action:</strong>{{ " "
+														><strong
+															>❯
+															{{
+																t(
+																	"marketing.wolfstar.showcase.embed_action",
+																)
+															}}:</strong
+														>{{ " "
 														}}{{
 															loggingEvents[loggingIndex]!.action
 														}}</span
@@ -471,7 +552,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow rotate-90 lg:rotate-180"
-										aria-label="Previous logging event"
+										:aria-label="t('marketing.wolfstar.showcase.prev_logging')"
 										@click="advanceLoggingIndex(-1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -495,7 +576,7 @@
 									<button
 										type="button"
 										class="radio-feature-arrow -rotate-90 lg:rotate-0"
-										aria-label="Next logging event"
+										:aria-label="t('marketing.wolfstar.showcase.next_logging')"
 										@click="advanceLoggingIndex(1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -515,20 +596,26 @@
 										class="size-6 text-primary"
 										aria-hidden="true"
 									/>
-									Keep track of
-									<span
-										class="text-primary underline decoration-primary/30 underline-offset-4"
-										>{{ loggingEvents[loggingIndex]!.title }}</span
+									<i18n-t
+										keypath="marketing.wolfstar.showcase.keep_track_of"
+										tag="span"
+										class="contents"
 									>
+										<template #subject>
+											<span
+												class="text-primary underline decoration-primary/30 underline-offset-4"
+												>{{ loggingEvents[loggingIndex]!.title }}</span
+											>
+										</template>
+									</i18n-t>
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									Send member, channel, role, message, and moderation events to
-									the Discord channels your team already watches.
+									{{ t("marketing.wolfstar.showcase.logging_intro") }}
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
-									In the dashboard, you can:
+									{{ t("marketing.wolfstar.showcase.logging_dashboard_intro") }}
 								</p>
 								<ul class="mt-3 space-y-2 text-base text-base-content/70">
 									<li class="flex items-start gap-2">
@@ -538,8 +625,9 @@
 											aria-hidden="true"
 										/>
 										<span>
-											Filter moderation history by member, moderator, action,
-											date, or search text.
+											{{
+												t("marketing.wolfstar.showcase.logging_item_filter")
+											}}
 										</span>
 									</li>
 									<li class="flex items-start gap-2">
@@ -549,8 +637,9 @@
 											aria-hidden="true"
 										/>
 										<span>
-											Keep command outcomes and dashboard settings activity in
-											their own reviewable views.
+											{{
+												t("marketing.wolfstar.showcase.logging_item_views")
+											}}
 										</span>
 									</li>
 								</ul>
@@ -576,9 +665,13 @@
 											/>
 											<span
 												class="text-[15px] font-semibold text-base-content"
-												>mod-log</span
+												>{{
+													t("marketing.wolfstar.showcase.channel_modlog")
+												}}</span
 											>
-											<span class="text-xs text-muted">— WolfStar HQ</span>
+											<span class="text-xs text-muted">{{
+												t("marketing.wolfstar.showcase.server_suffix")
+											}}</span>
 										</div>
 										<div class="showcase-card-body p-5">
 											<DiscordMessages
@@ -592,18 +685,37 @@
 														:color="moderationActionRender.color"
 														:footer="{
 															icon: '/avatars/wolfstar.png',
-															text: 'Case 3',
+															text: t(
+																'marketing.wolfstar.showcase.embed_case',
+																{
+																	id: 3,
+																},
+															),
 														}"
 														:timestamp
 													>
 														<span
-															><strong>❯ Type:</strong>{{ " "
+															><strong
+																>❯
+																{{
+																	t(
+																		"marketing.wolfstar.showcase.embed_type",
+																	)
+																}}:</strong
+															>{{ " "
 															}}{{
 																moderationActionRender.name
 															}}</span
 														><br />
 														<span>
-															<strong>❯ User:</strong>{{ " "
+															<strong
+																>❯
+																{{
+																	t(
+																		"marketing.wolfstar.showcase.embed_user",
+																	)
+																}}:</strong
+															>{{ " "
 															}}<DiscordMention
 																kind="mention"
 																avatar="/avatars/baddie.png"
@@ -611,8 +723,19 @@
 															>{{ " " }}(541738403230777351) </span
 														><br />
 														<span
-															><strong>❯ Reason:</strong
-															>{{ " " }}spam</span
+															><strong
+																>❯
+																{{
+																	t(
+																		"marketing.wolfstar.showcase.embed_reason",
+																	)
+																}}:</strong
+															>{{ " "
+															}}{{
+																t(
+																	"marketing.wolfstar.showcase.embed_reason_value",
+																)
+															}}</span
 														>
 													</DiscordEmbed>
 												</DiscordMessage>
@@ -632,7 +755,7 @@
 												(moderationUndo = false))
 											"
 										>
-											Temporary
+											{{ t("marketing.wolfstar.showcase.btn_temporary") }}
 										</UButton>
 										<UButton
 											class="justify-center"
@@ -645,7 +768,7 @@
 												(moderationTemporary = false))
 											"
 										>
-											Undo
+											{{ t("marketing.wolfstar.showcase.btn_undo") }}
 										</UButton>
 									</UFieldGroup>
 								</div>
@@ -654,7 +777,9 @@
 									<button
 										type="button"
 										class="radio-feature-arrow rotate-90 lg:rotate-180"
-										aria-label="Previous moderation action"
+										:aria-label="
+											t('marketing.wolfstar.showcase.prev_moderation')
+										"
 										@click="advanceModerationIndex(-1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -678,7 +803,9 @@
 									<button
 										type="button"
 										class="radio-feature-arrow -rotate-90 lg:rotate-0"
-										aria-label="Next moderation action"
+										:aria-label="
+											t('marketing.wolfstar.showcase.next_moderation')
+										"
 										@click="advanceModerationIndex(1)"
 									>
 										<UIcon name="ph:caret-down-bold" aria-hidden="true" />
@@ -695,16 +822,24 @@
 										class="size-6 text-primary"
 										aria-hidden="true"
 									/>
-									A complete suite for
-									<span
-										class="text-primary underline decoration-primary/30 underline-offset-4"
-										>moderation logs</span
+									<i18n-t
+										keypath="marketing.wolfstar.showcase.suite_for"
+										tag="span"
+										class="contents"
 									>
+										<template #subject>
+											<span
+												class="text-primary underline decoration-primary/30 underline-offset-4"
+												>{{
+													t("marketing.wolfstar.showcase.suite_subject")
+												}}</span
+											>
+										</template>
+									</i18n-t>
 								</h3>
 
 								<p class="text-base leading-relaxed text-base-content/70">
-									Search moderation history by member, moderator, action, date, or
-									text. Each entry keeps the action and reason together.
+									{{ t("marketing.wolfstar.showcase.mod_copy_search") }}
 								</p>
 
 								<p class="mt-4 text-base leading-relaxed text-base-content/70">
@@ -713,8 +848,7 @@
 										class="mr-1 inline size-4 text-primary"
 										aria-hidden="true"
 									/>
-									WolfStar can also record supported moderation actions performed
-									directly in Discord, including their audit-log reason.
+									{{ t("marketing.wolfstar.showcase.mod_copy_audit") }}
 								</p>
 							</div>
 						</div>
@@ -740,91 +874,76 @@ enum AutomodFeature {
 	Words,
 }
 
-const features = [
+const { t } = useI18n();
+
+const features = computed(() => [
 	{
-		description:
-			"Move through real filter examples and see the message, response, and escalation controls together.",
+		description: t("marketing.wolfstar.showcase.feature_automod_description"),
 		icon: "ph:shield-fill",
 		id: "moderation-tools",
-		label: "Automod",
-		title: "Configure the rule before it fires",
+		title: t("marketing.wolfstar.showcase.feature_automod_title"),
 	},
 	{
-		description:
-			"Choose which server events reach Discord, then search moderation, command, and settings history in the dashboard.",
+		description: t("marketing.wolfstar.showcase.feature_logging_description"),
 		icon: "ph:binoculars-duotone",
 		id: "advanced-logging",
-		label: "Logging",
-		title: "Keep live events and reviewable history",
+		title: t("marketing.wolfstar.showcase.feature_logging_title"),
 	},
 	{
-		description: "Every moderation action keeps the details your team needs to review it.",
-		eyebrow: "Moderation history",
+		description: t("marketing.wolfstar.showcase.feature_moderation_description"),
 		icon: "ph:shield-fill",
 		id: "moderation-logs",
-		label: "Moderation Logs",
-		title: "Every action keeps its context.",
+		title: t("marketing.wolfstar.showcase.feature_moderation_title"),
 	},
-] satisfies {
-	id: string;
-	title: string;
-	label: string;
-	description: string;
-	icon: string;
-	eyebrow?: string;
-}[];
+]);
 
-const texts = [
+const texts = computed(() => [
 	{
-		alert: "file attachments aren't allowed in this channel.",
-		title: "attachments",
-		tooltip: "Attachments",
+		alert: t("marketing.wolfstar.showcase.automod_attachments_alert"),
+		title: t("marketing.wolfstar.showcase.automod_attachments_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_attachments_tooltip"),
 	},
 	{
-		alert: "please reduce your use of capital letters.",
-		title: "capital letters",
-		tooltip: "Capitals",
+		alert: t("marketing.wolfstar.showcase.automod_capitals_alert"),
+		title: t("marketing.wolfstar.showcase.automod_capitals_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_capitals_tooltip"),
 	},
 	{
-		alert: "invite links aren't allowed in this channel.",
-		title: "invites",
-		tooltip: "Invites",
+		alert: t("marketing.wolfstar.showcase.automod_invites_alert"),
+		title: t("marketing.wolfstar.showcase.automod_invites_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_invites_tooltip"),
 	},
 	{
-		alert: "you sent links that aren't allowed here.",
-		title: "bad links",
-		tooltip: "Links",
+		alert: t("marketing.wolfstar.showcase.automod_links_alert"),
+		title: t("marketing.wolfstar.showcase.automod_links_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_links_tooltip"),
 	},
 	{
-		alert: "you mentioned too many people.",
-		title: "excessive mentions",
-		tooltip: "Mentions",
+		alert: t("marketing.wolfstar.showcase.automod_mentions_alert"),
+		title: t("marketing.wolfstar.showcase.automod_mentions_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_mentions_tooltip"),
 	},
 	{
-		alert: "your message contains too many lines.",
-		title: "excessive lines",
-		tooltip: "Lines",
+		alert: t("marketing.wolfstar.showcase.automod_newlines_alert"),
+		title: t("marketing.wolfstar.showcase.automod_newlines_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_newlines_tooltip"),
 	},
 	{
-		alert: "you cannot react with that emoji.",
-		title: "bad reactions",
-		tooltip: "Reactions",
+		alert: t("marketing.wolfstar.showcase.automod_reactions_alert"),
+		title: t("marketing.wolfstar.showcase.automod_reactions_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_reactions_tooltip"),
 	},
 	{
-		alert: "please refrain from reposting the same message multiple times.",
-		title: "spam",
-		tooltip: "Spam",
+		alert: t("marketing.wolfstar.showcase.automod_spam_alert"),
+		title: t("marketing.wolfstar.showcase.automod_spam_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_spam_tooltip"),
 	},
 	{
-		alert: "you said something that is not allowed in this server.",
-		title: "bad words",
-		tooltip: "Words",
+		alert: t("marketing.wolfstar.showcase.automod_words_alert"),
+		title: t("marketing.wolfstar.showcase.automod_words_title"),
+		tooltip: t("marketing.wolfstar.showcase.automod_words_tooltip"),
 	},
-] satisfies {
-	tooltip: string;
-	title: string;
-	alert: string;
-}[];
+]);
 
 const timestamp = ref(0);
 const featureIndex = ref(0);
@@ -836,7 +955,7 @@ const moderationIndex = ref(0);
 const moderationActions = Object.values(ModerationActions);
 
 function advanceFeatureIndex(value: -1 | 1) {
-	featureIndex.value = (featureIndex.value + value + texts.length) % texts.length;
+	featureIndex.value = (featureIndex.value + value + texts.value.length) % texts.value.length;
 }
 
 function advanceLoggingIndex(value: -1 | 1) {
@@ -883,7 +1002,7 @@ function handleHashChange() {
 	if (!hash) {
 		return;
 	}
-	const featureIndexFromHash = features.findIndex((f) => f.id === hash);
+	const featureIndexFromHash = features.value.findIndex((f) => f.id === hash);
 	if (featureIndexFromHash !== -1) {
 		setTimeout(() => {
 			const element = document.getElementById(hash);

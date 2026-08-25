@@ -16,21 +16,20 @@
 					<span
 						class="font-mono text-xs tracking-(--home-ls-label) text-neutral-content/60 uppercase"
 					>
-						Staryl for Discord
+						{{ t("marketing.staryl.cta.eyebrow") }}
 					</span>
 				</div>
 				<h2
 					id="staryl-cta-heading"
 					class="max-w-180 text-4xl leading-[1.02] font-bold tracking-(--home-ls-tight) md:text-5xl"
 				>
-					<!-- PLACEHOLDER: replace once Staryl ships. -->
-					Staryl is still being built.
+					{{ t("marketing.staryl.cta.title") }}
 				</h2>
 				<p class="mt-5 max-w-145 text-base leading-relaxed text-neutral-content/70">
 					{{
 						inviteUrl === "#"
-							? "There is no public invite yet. Join the support server to follow progress or ask a question."
-							: "Invite Staryl now, or join the support server if you want to ask a question first."
+							? t("marketing.staryl.cta.subtitle_no_invite")
+							: t("marketing.staryl.cta.subtitle")
 					}}
 				</p>
 			</div>
@@ -43,7 +42,7 @@
 					class="justify-center lg:min-w-52"
 					icon="ph:plus-circle-fill"
 				>
-					Invite Staryl
+					{{ t("marketing.staryl.cta.invite") }}
 				</UButton>
 				<UButton
 					to="https://join.wolfstar.rocks"
@@ -52,7 +51,7 @@
 					size="xl"
 					class="staryl-cta-outline justify-center lg:min-w-52"
 				>
-					Ask in support
+					{{ t("marketing.staryl.cta.ask_in_support") }}
 				</UButton>
 			</div>
 		</div>
@@ -63,6 +62,8 @@
 const { inviteUrl } = defineProps<{
 	inviteUrl: string;
 }>();
+
+const { t } = useI18n();
 </script>
 
 <style scoped>

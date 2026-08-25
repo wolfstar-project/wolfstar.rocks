@@ -8,8 +8,8 @@
 		class="py-24"
 	>
 		<SectionHeader
-			eyebrow="Other Apps"
-			title="Want more? We've got you covered."
+			:eyebrow="t('marketing.other_apps.eyebrow')"
+			:title="t('marketing.other_apps.title')"
 			heading-id="home-apps-heading"
 			class="mb-10"
 		/>
@@ -23,7 +23,7 @@
 				:src="app.avatar"
 				width="80"
 				height="80"
-				:alt="`${app.name} logo`"
+				:alt="t('marketing.other_apps.logo_alt', { app: app.name })"
 				loading="lazy"
 				class="size-20 rounded-xl"
 			/>
@@ -31,7 +31,7 @@
 				<p
 					class="mb-2 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					Also from WolfStar Project
+					{{ t("marketing.other_apps.also_from") }}
 				</p>
 				<h3 class="text-3xl font-bold text-base-content">
 					{{ app.name }}
@@ -48,7 +48,7 @@
 					size="lg"
 					class="justify-center"
 				>
-					Explore {{ app.name }}
+					{{ t("marketing.other_apps.explore", { app: app.name }) }}
 				</UButton>
 				<UButton
 					v-if="app.invite !== '#'"
@@ -58,9 +58,11 @@
 					icon="ph:plus-circle-fill"
 					class="justify-center"
 				>
-					Invite {{ app.name }}
+					{{ t("marketing.other_apps.invite", { app: app.name }) }}
 				</UButton>
-				<span v-else class="font-mono text-xs text-muted">Invite access coming later</span>
+				<span v-else class="font-mono text-xs text-muted">{{
+					t("marketing.other_apps.invite_pending")
+				}}</span>
 			</div>
 		</div>
 	</Section>
@@ -70,6 +72,8 @@
 const { apps } = defineProps<{
 	apps: readonly OtherApp[];
 }>();
+
+const { t } = useI18n();
 </script>
 
 <style scoped>

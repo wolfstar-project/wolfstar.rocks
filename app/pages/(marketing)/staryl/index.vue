@@ -17,11 +17,12 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n();
+
 useSeoMetadata({
-	description:
-		"Staryl is an in-development Discord app for social notifications from the WolfStar Project. Its public invite is not available yet.",
+	description: () => t("marketing.staryl.seo.description"),
 	shouldOgImage: true,
-	title: "Staryl",
+	title: () => t("marketing.staryl.seo.title"),
 });
 
 const otherApps = useApp();

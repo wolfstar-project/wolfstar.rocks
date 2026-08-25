@@ -11,22 +11,20 @@
 				<p
 					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					What Staryl does
+					{{ t("marketing.staryl.proof.eyebrow") }}
 				</p>
 				<h2
 					id="staryl-product-heading"
 					class="max-w-120 text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					<!-- PLACEHOLDER: replace with Staryl's real product narrative headline. -->
-					From source to server, in one hop.
+					{{ t("marketing.staryl.proof.title") }}
 				</h2>
 			</div>
 
 			<!--
-				PLACEHOLDER CONTENT.
-				Each row below describes a step Staryl has not shipped yet. Replace the
-				headings, copy, and anchor targets once the feature set is locked — and
-				only claim behaviour that actually exists.
+				The three rows still describe unshipped work: their copy is deliberately
+				vague. Replace the message values in marketing.json once the feature set
+				is locked — and only claim behaviour that actually exists.
 			-->
 			<div class="staryl-proof-list border-t">
 				<article v-for="step of proofSteps" :key="step.index" class="staryl-proof-row">
@@ -44,26 +42,25 @@
 </template>
 
 <script setup lang="ts">
-const proofSteps = [
+const { t } = useI18n();
+
+const proofSteps = computed(() => [
 	{
 		index: "01",
-		title: "Pick the source",
-		description:
-			"Placeholder — describe which platforms Staryl watches once the supported source list is confirmed.",
+		title: t("marketing.staryl.proof.step_1_title"),
+		description: t("marketing.staryl.proof.step_1_body"),
 	},
 	{
 		index: "02",
-		title: "Route the update",
-		description:
-			"Placeholder — describe how updates reach a channel, and what can be customised per subscription.",
+		title: t("marketing.staryl.proof.step_2_title"),
+		description: t("marketing.staryl.proof.step_2_body"),
 	},
 	{
 		index: "03",
-		title: "Manage it together",
-		description:
-			"Placeholder — describe what a server team can configure, and where they configure it.",
+		title: t("marketing.staryl.proof.step_3_title"),
+		description: t("marketing.staryl.proof.step_3_body"),
 	},
-] as const;
+]);
 </script>
 
 <style scoped>

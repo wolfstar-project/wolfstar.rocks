@@ -7,7 +7,7 @@ const theme = tv({
 		root: "w-full space-y-6",
 		header: "space-y-1",
 		heading: "",
-		description: "text-sm text-base-content/70",
+		description: "text-sm text-toned",
 		content: "space-y-4",
 	},
 	variants: {

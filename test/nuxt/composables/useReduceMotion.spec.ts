@@ -1,18 +1,28 @@
 import { mountSuspended } from "@nuxt/test-utils/runtime";
-import { beforeEach, describe, expect, it } from "vitest";
-import { defineComponent } from "vue";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { defineComponent, nextTick } from "vue";
 
 describe("useReduceMotion", () => {
 	beforeEach(() => {
-		localStorage.removeItem("user-prefers-reduced-motion");
+		vi.resetModules();
+		localStorage.clear();
+	});
+
+	afterEach(async () => {
+		// Flush the pending settings persistence before clearing so stored
+		// preferences do not leak into the app boot of later test files.
+		await nextTick();
+		localStorage.clear();
 	});
 
 	async function setup() {
-		let composable: ReturnType<typeof useReduceMotion> | undefined;
+		const settingsModule = await import("~/composables/useSettings");
+		settingsModule.resetSettingsStateForTests();
+		let composable: ReturnType<typeof settingsModule.useReduceMotion> | undefined;
 
 		const TestComponent = defineComponent({
 			setup() {
-				composable = useReduceMotion();
+				composable = settingsModule.useReduceMotion();
 				return () => null;
 			},
 		});
@@ -62,5 +72,18 @@ describe("useReduceMotion", () => {
 		const { systemPrefersReducedMotion } = await setup();
 		expect(systemPrefersReducedMotion).toBeDefined();
 		expect(systemPrefersReducedMotion.value).toBeDefined();
+	});
+
+	it("migrates the legacy reduced-motion key into wolfstar-settings", async () => {
+		localStorage.setItem("user-prefers-reduced-motion", "true");
+
+		const { reduceMotionEnabled } = await setup();
+		await nextTick();
+
+		expect(reduceMotionEnabled.value).toBe(true);
+		expect(localStorage.getItem("user-prefers-reduced-motion")).toBeNull();
+		expect(JSON.parse(localStorage.getItem("wolfstar-settings") ?? "{}").reduceMotion).toBe(
+			true,
+		);
 	});
 });

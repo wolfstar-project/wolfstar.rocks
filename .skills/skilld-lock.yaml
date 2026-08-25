@@ -1,0 +1,557 @@
+{
+  "version": 1,
+  "transactionId": "1787434904553328327-0",
+  "skills": {
+    "accessibility": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/web-quality-skills/skills/accessibility",
+        "commit_sha": "95d6e255afe1596b557d7a8498517884438f5b3a",
+        "skill_path": "skills/accessibility"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "91368081c1dfe3c17cda59832e1200da01c9b85798f9d66eb42a33d31335a80c",
+        "installed_sha256": "91368081c1dfe3c17cda59832e1200da01c9b85798f9d66eb42a33d31335a80c"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "baseline-ui": {
+      "source": {
+        "type": "remote",
+        "source": "github:ibelick/ui-skills/skills/baseline-ui",
+        "commit_sha": "b5be117f9cc3371caef7d3869f5c650f2033f14c",
+        "skill_path": "skills/baseline-ui"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "f2967ee7bd537104069cd0ba3bde752c81be7506a0a850eeccd6953d1b0a61ef",
+        "installed_sha256": "f2967ee7bd537104069cd0ba3bde752c81be7506a0a850eeccd6953d1b0a61ef"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "best-practices": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/web-quality-skills/skills/best-practices",
+        "commit_sha": "95d6e255afe1596b557d7a8498517884438f5b3a",
+        "skill_path": "skills/best-practices"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "96cfdee8d8be68e45d336b9d61ebdf74f2b38050ff42401b8771030eeff24d2c",
+        "installed_sha256": "96cfdee8d8be68e45d336b9d61ebdf74f2b38050ff42401b8771030eeff24d2c"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "core-web-vitals": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/web-quality-skills/skills/core-web-vitals",
+        "commit_sha": "95d6e255afe1596b557d7a8498517884438f5b3a",
+        "skill_path": "skills/core-web-vitals"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "1070d7aa800957419f14bf1491a73e166ac29171f9c55f04fd6e9462201b11a8",
+        "installed_sha256": "1070d7aa800957419f14bf1491a73e166ac29171f9c55f04fd6e9462201b11a8"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "domain-modeling": {
+      "source": {
+        "type": "remote",
+        "source": "github:mattpocock/skills/skills/engineering/domain-modeling",
+        "commit_sha": "5b15a47f2d7150f545fbcacbfe381787fc0230dc",
+        "skill_path": "skills/engineering/domain-modeling"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "731ecd11825453ec3d813ac26e7a082bb458bc332781c6dba18d7004468139d7",
+        "installed_sha256": "731ecd11825453ec3d813ac26e7a082bb458bc332781c6dba18d7004468139d7"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "find-skills": {
+      "source": {
+        "type": "remote",
+        "source": "github:vercel-labs/skills/skills/find-skills",
+        "commit_sha": "435076e78988e1e6ec40d00b0b1d76bdbbc5419a",
+        "skill_path": "skills/find-skills"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "5a99b2977e82cb952e4f4887ceccfa6dd62b8f36908d6667db13e2a756f93028",
+        "installed_sha256": "5a99b2977e82cb952e4f4887ceccfa6dd62b8f36908d6667db13e2a756f93028"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "fixing-motion-performance": {
+      "source": {
+        "type": "remote",
+        "source": "github:ibelick/ui-skills/skills/fixing-motion-performance",
+        "commit_sha": "b5be117f9cc3371caef7d3869f5c650f2033f14c",
+        "skill_path": "skills/fixing-motion-performance"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "5f023d388394ad72a1f7a09aab28f40bbb7945d920e38b5dd63a94e437219370",
+        "installed_sha256": "5f023d388394ad72a1f7a09aab28f40bbb7945d920e38b5dd63a94e437219370"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "frontend-design": {
+      "source": {
+        "type": "remote",
+        "source": "github:anthropics/skills/skills/frontend-design",
+        "commit_sha": "3b3fad96af16a10759d930941b4520ba0c40edae",
+        "skill_path": "skills/frontend-design"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "06da9541f7807692c162286422c8852fd1cf6d43a84e7ecf6829a32d46532c7f",
+        "installed_sha256": "06da9541f7807692c162286422c8852fd1cf6d43a84e7ecf6829a32d46532c7f"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "grill-me": {
+      "source": {
+        "type": "remote",
+        "source": "github:mattpocock/skills/skills/productivity/grill-me",
+        "commit_sha": "5b15a47f2d7150f545fbcacbfe381787fc0230dc",
+        "skill_path": "skills/productivity/grill-me"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "1d7b1f48eb68647a94058d75d80902c351adb013a93bdb98c1218fffb2896bc3",
+        "installed_sha256": "1d7b1f48eb68647a94058d75d80902c351adb013a93bdb98c1218fffb2896bc3"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "hallmark": {
+      "source": {
+        "type": "remote",
+        "source": "github:nutlope/hallmark/skills/hallmark",
+        "commit_sha": "13ac0ec7e148655948100b6396439e481361d690",
+        "skill_path": "skills/hallmark"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "71e4eabd530ba03c1e07366f30e14f8991fd7ba6c7755169a7dad8385202876c",
+        "installed_sha256": "71e4eabd530ba03c1e07366f30e14f8991fd7ba6c7755169a7dad8385202876c"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "impeccable": {
+      "source": {
+        "type": "remote",
+        "source": "github:pbakaus/impeccable/.agents/skills/impeccable",
+        "commit_sha": "56f44523f76efdcec813e67b38ee550e49b16f48",
+        "skill_path": ".agents/skills/impeccable"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "dc6857d1e75a15f4306ccfbf61c3e69d26d1de071af41a1b9a38e492a848964b",
+        "installed_sha256": "dc6857d1e75a15f4306ccfbf61c3e69d26d1de071af41a1b9a38e492a848964b"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "improve-codebase-architecture": {
+      "source": {
+        "type": "remote",
+        "source": "github:mattpocock/skills/skills/engineering/improve-codebase-architecture",
+        "commit_sha": "5b15a47f2d7150f545fbcacbfe381787fc0230dc",
+        "skill_path": "skills/engineering/improve-codebase-architecture"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "8a77ed0f81ceba79ca525d9cae9e517304cd7f772295f83ef11efe15d1e81428",
+        "installed_sha256": "8a77ed0f81ceba79ca525d9cae9e517304cd7f772295f83ef11efe15d1e81428"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "nitro": {
+      "source": {
+        "type": "remote",
+        "source": "github:antfu/skills/skills/nitro",
+        "commit_sha": "a74f281a27dadc02397bc1a174b0f2c97531b6ae",
+        "skill_path": "skills/nitro"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "d768bebc7a1f13a855248a297a6378a174bcd9c9315930aea6426878cae5b362",
+        "installed_sha256": "d768bebc7a1f13a855248a297a6378a174bcd9c9315930aea6426878cae5b362"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "nuxt": {
+      "source": {
+        "type": "remote",
+        "source": "github:onmax/nuxt-skills/skills/nuxt",
+        "commit_sha": "ebc0fce6228d1383aa826725bb8d04774adda70a",
+        "skill_path": "skills/nuxt"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "07bdcdab174a3673d280d62c4e8a5b08f1216ab222db1b1964c8b9745ca8d327",
+        "installed_sha256": "07bdcdab174a3673d280d62c4e8a5b08f1216ab222db1b1964c8b9745ca8d327"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "nuxt-content": {
+      "source": {
+        "type": "remote",
+        "source": "github:onmax/nuxt-skills/skills/nuxt-content",
+        "commit_sha": "ebc0fce6228d1383aa826725bb8d04774adda70a",
+        "skill_path": "skills/nuxt-content"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "953e6782f1809a9dbac843923083080437208d4e76206be07dfd15e7ab315f8f",
+        "installed_sha256": "953e6782f1809a9dbac843923083080437208d4e76206be07dfd15e7ab315f8f"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "nuxt-i18n": {
+      "source": {
+        "type": "remote",
+        "source": "github:onmax/nuxt-skills/skills/nuxt-i18n",
+        "commit_sha": "ebc0fce6228d1383aa826725bb8d04774adda70a",
+        "skill_path": "skills/nuxt-i18n"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "d98603f409d52e79a51285fd361149a91653886643bdac75ba91eb02a3f14ee0",
+        "installed_sha256": "d98603f409d52e79a51285fd361149a91653886643bdac75ba91eb02a3f14ee0"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "nuxt-modules": {
+      "source": {
+        "type": "remote",
+        "source": "github:onmax/nuxt-skills/skills/nuxt-modules",
+        "commit_sha": "ebc0fce6228d1383aa826725bb8d04774adda70a",
+        "skill_path": "skills/nuxt-modules"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "47e83e2a77b4801e2285137b651bf393c80e4de4a20de1f080e5b6fc361d328d",
+        "installed_sha256": "47e83e2a77b4801e2285137b651bf393c80e4de4a20de1f080e5b6fc361d328d"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "nuxt-seo": {
+      "source": {
+        "type": "remote",
+        "source": "github:onmax/nuxt-skills/skills/nuxt-seo",
+        "commit_sha": "ebc0fce6228d1383aa826725bb8d04774adda70a",
+        "skill_path": "skills/nuxt-seo"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "bd1d38e961de09cb363eb18163a9d713ef90f2a6d7cdf44845c9e6600f78b18a",
+        "installed_sha256": "bd1d38e961de09cb363eb18163a9d713ef90f2a6d7cdf44845c9e6600f78b18a"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "performance": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/web-quality-skills/skills/performance",
+        "commit_sha": "95d6e255afe1596b557d7a8498517884438f5b3a",
+        "skill_path": "skills/performance"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "9485818e602c01592e4acb792889fa851957fedaf0a426aa88bbf67687a483e1",
+        "installed_sha256": "9485818e602c01592e4acb792889fa851957fedaf0a426aa88bbf67687a483e1"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "planning-with-files": {
+      "source": {
+        "type": "remote",
+        "source": "github:othmanadi/planning-with-files/skills/planning-with-files",
+        "commit_sha": "9e94390e5912b1ff296556505cd999ff84838160",
+        "skill_path": "skills/planning-with-files"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "f42025f65808bf6931dff066c2ac58ff05f5deec79bd01f3606e7684574659b9",
+        "installed_sha256": "f42025f65808bf6931dff066c2ac58ff05f5deec79bd01f3606e7684574659b9"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "seo": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/web-quality-skills/skills/seo",
+        "commit_sha": "95d6e255afe1596b557d7a8498517884438f5b3a",
+        "skill_path": "skills/seo"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "e16792b0ef4dce48efc1e9fed6b4d84277e7db2354e3cc7cb1c53f10d6267c7c",
+        "installed_sha256": "e16792b0ef4dce48efc1e9fed6b4d84277e7db2354e3cc7cb1c53f10d6267c7c"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "skill-creator": {
+      "source": {
+        "type": "remote",
+        "source": "github:anthropics/skills/skills/skill-creator",
+        "commit_sha": "3b3fad96af16a10759d930941b4520ba0c40edae",
+        "skill_path": "skills/skill-creator"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "30cc965e2b792f285bbd1e00c5f93f50609c8fc9c9f04e96fd98b6cad605703d",
+        "installed_sha256": "30cc965e2b792f285bbd1e00c5f93f50609c8fc9c9f04e96fd98b6cad605703d"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "systematic-debugging": {
+      "source": {
+        "type": "remote",
+        "source": "github:obra/superpowers/skills/systematic-debugging",
+        "commit_sha": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+        "skill_path": "skills/systematic-debugging"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "3e508cc361eddc9e3c4a0cda0cad60eafa3650ea4d23c673ba1b370f19cb68b1",
+        "installed_sha256": "3e508cc361eddc9e3c4a0cda0cad60eafa3650ea4d23c673ba1b370f19cb68b1"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "tdd": {
+      "source": {
+        "type": "remote",
+        "source": "github:mattpocock/skills/skills/engineering/tdd",
+        "commit_sha": "5b15a47f2d7150f545fbcacbfe381787fc0230dc",
+        "skill_path": "skills/engineering/tdd"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "eef2fe20ae9372fea0a6bb083c65582e6c41089e0897e28274c49f05ccc97dd2",
+        "installed_sha256": "eef2fe20ae9372fea0a6bb083c65582e6c41089e0897e28274c49f05ccc97dd2"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "test-driven-development": {
+      "source": {
+        "type": "remote",
+        "source": "github:obra/superpowers/skills/test-driven-development",
+        "commit_sha": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+        "skill_path": "skills/test-driven-development"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "8b19199fa6fc4f85918a16aac17fd0d69a396feb074f13175dee7562bc00b2d7",
+        "installed_sha256": "8b19199fa6fc4f85918a16aac17fd0d69a396feb074f13175dee7562bc00b2d7"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "web-design-guidelines": {
+      "source": {
+        "type": "remote",
+        "source": "github:vercel-labs/agent-skills/skills/web-design-guidelines",
+        "commit_sha": "dd089a8c752c966dee8bf0f27cb625ba193ffd9e",
+        "skill_path": "skills/web-design-guidelines"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "43dd4bccf0d365a2817fb47d7c71ff2297a71495d0ec302a33997adcc5201dba",
+        "installed_sha256": "43dd4bccf0d365a2817fb47d7c71ff2297a71495d0ec302a33997adcc5201dba"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "web-quality-audit": {
+      "source": {
+        "type": "remote",
+        "source": "github:addyosmani/web-quality-skills/skills/web-quality-audit",
+        "commit_sha": "95d6e255afe1596b557d7a8498517884438f5b3a",
+        "skill_path": "skills/web-quality-audit"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "342d6b2ca0e4528cc97e9c6c7ab0917db13d1a38d69a020c9969aaab80b22d6d",
+        "installed_sha256": "342d6b2ca0e4528cc97e9c6c7ab0917db13d1a38d69a020c9969aaab80b22d6d"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "webapp-testing": {
+      "source": {
+        "type": "remote",
+        "source": "github:anthropics/skills/skills/webapp-testing",
+        "commit_sha": "3b3fad96af16a10759d930941b4520ba0c40edae",
+        "skill_path": "skills/webapp-testing"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "74c37efb492030319a1d1f3c4e6b34369dba9365cab044537882bfe996250e68",
+        "installed_sha256": "74c37efb492030319a1d1f3c4e6b34369dba9365cab044537882bfe996250e68"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    },
+    "writing-plans": {
+      "source": {
+        "type": "remote",
+        "source": "github:obra/superpowers/skills/writing-plans",
+        "commit_sha": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+        "skill_path": "skills/writing-plans"
+      },
+      "sourceStatus": {
+        "type": "unverified",
+        "content_sha256": "c8ddb7138afc93a902b44f7224f2a25f9c29b8dd22ebba7b8023488cb8512bd5",
+        "installed_sha256": "c8ddb7138afc93a902b44f7224f2a25f9c29b8dd22ebba7b8023488cb8512bd5"
+      },
+      "targets": [
+        {
+          "agent": "codex",
+          "mode": "copy"
+        }
+      ]
+    }
+  }
+}

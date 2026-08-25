@@ -163,25 +163,33 @@ multi-purpose Discord bot for moderation and community management.
 - `pnpm preview` - Preview production build.
 - `pnpm lint:fix` - Run Oxlint & Oxfmt and fix issues.
 - `pnpm prisma:migrate:dev` - Create and apply a new migration in development.
-- `pnpm prisma:migrate:dev:create` - Create a new migration in development.
 - `pnpm prisma:migrate:diff` - Check for schema drift between migrations and
   schema (exits with error if differences found).
 - `pnpm prisma:migrate:deploy` - Apply all pending migrations to the database.
-- `pnpm prisma:migrate:status` - Check the status of migrations.
-- `pnpm prisma:migrate:resolve` - Mark a migration as applied or rolled back.
 - `pnpm prisma:push` - Push the Prisma schema to the database without generating
   a migration.
 - `pnpm prisma:seed` - Seed the database with initial data.
 - `pnpm prisma:studio` - Open Prisma Studio for database management.
 - `pnpm prisma:generate` - Generate Prisma client.
-- `pnpm prisma:generate:watch` - Watch for changes and regenerate Prisma client.
-- `pnpm generate-pwa-icons` - Generate PWA icons and assets.
 - `pnpm test` - Run all tests.
 - `pnpm test:unit` - Run unit tests.
 - `pnpm test:nuxt` - Run Nuxt environment tests.
 - `pnpm test:browser` - Run browser tests with Playwright.
 - `pnpm test:bench` - Run performance benchmarks.
 - `pnpm typecheck` - Run TypeScript checks.
+
+Occasional one-off tasks are not wrapped in `package.json`. Run their binary
+directly instead:
+
+- `pnpm exec prisma migrate dev --create-only` - Create a migration without
+  applying it.
+- `pnpm exec prisma migrate status` - Check the status of migrations.
+- `pnpm exec prisma migrate resolve` - Mark a migration as applied or rolled
+  back.
+- `pnpm exec prisma migrate reset` - Reset the local database.
+- `pnpm exec prisma generate --watch` - Regenerate the Prisma client on change.
+- `pnpm exec pwa-assets-generator` - Generate PWA icons and assets.
+- `pnpm exec taze` - Interactive dependency updates.
 
 ### Testing & Benchmarks
 
@@ -248,8 +256,7 @@ results visible on the [CodSpeed dashboard][codspeed-link].
 - **Oxfmt** - Code formatting
 - **Prisma** - Database ORM
 - **Tailwind CSS** - Utility-first CSS framework
-- **DaisyUI** - Tailwind CSS component library
-- **NuxtUI** - Components
+- **Nuxt UI** - Vue component library and design tokens
 
 ### AI Development Assistant
 

@@ -48,13 +48,13 @@ Text casing:
 
 To visually separate content blocks (grouped content, cards, settings sections), use subtle background variations:
 
-- `bg-base-200` — subtle section background
-- `bg-base-300` — deeper background for nested surfaces
+- `bg-muted` — subtle section background
+- `bg-accented` — deeper background for nested surfaces
 - `card-glass` / `card-glass-soft` / `card-glass-bordered` — glass-morphism card surfaces (see `app/assets/css/utilities.css`)
 
 ## Borders & Radius
 
-- Use DaisyUI `border` or `border-base-300` for subtle separators
+- Use `border-default` or `border-muted` for subtle separators
 - Prefer small to medium border radius for most UI elements
 - Cards and panels use a soft "glass-like" appearance
 
@@ -62,8 +62,8 @@ Only avatars should have fully circular shapes.
 
 ## Colors
 
-- Primary surfaces: `bg-base-100`
-- Secondary or less important content: `bg-base-200` or `text-muted`
+- Primary surfaces: `bg-default`
+- Secondary or less important content: `bg-muted` or `text-muted`
 - Semantic utility classes: `text-primary`, `text-success`, `text-error`, `text-warning`, `text-info`
 
 [See Colors](?path=/docs/colors--docs)

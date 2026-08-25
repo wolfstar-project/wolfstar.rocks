@@ -3,7 +3,10 @@ import { auditRedactPreset } from "evlog";
 import { createResolver } from "nuxt/kit";
 import { isCI, isTest, provider } from "std-env";
 import { currentLocales } from "./config/i18n";
-import { stripEmptyI18nMessagesPlugin } from "./config/i18n-empty-placeholders";
+import {
+	prioritizeVueI18nResourceTransform,
+	stripEmptyI18nMessagesPlugin,
+} from "./config/i18n-empty-placeholders";
 import { pwa } from "./config/pwa";
 import { generateRuntimeConfig } from "./server/utils/runtimeConfig";
 
@@ -35,7 +38,7 @@ export default defineNuxtConfig({
 		"@nuxtjs/i18n",
 		"@sentry/nuxt/module",
 		"evlog/nuxt",
-		"@onmax/nuxt-better-auth",
+		"@nuxtjs/better-auth",
 		"nuxt-vitalizer",
 		"stale-dep/nuxt",
 		"@nuxt/test-utils/module",
@@ -47,6 +50,27 @@ export default defineNuxtConfig({
 		],
 		...(isTest || isCI || isStorybook ? [] : [netlifyNuxt]),
 	],
+
+	// @nuxtjs/better-auth. Redirect targets are centralised here so route rules,
+	// page meta, `useSignIn('social')` and `signOut()` all agree on where users
+	// land, instead of each call site hardcoding its own path.
+	auth: {
+		redirects: {
+			// Aliased to /oauth/login, which immediately hands off to Discord.
+			login: "/login",
+			// Signed-in users who open a guest-only route (the login hand-off).
+			guest: "/profile",
+			// Fallback landing page after a completed sign-in, used when no safe
+			// `?next=` is present and no explicit onSuccess/callbackURL is given.
+			authenticated: "/profile",
+			logout: "/",
+		},
+		preserveRedirect: true,
+		// The app has used `next` since before the module owned redirects; keeping
+		// the module on the same key means a module-issued redirect to /login is
+		// readable by the login page instead of being silently dropped.
+		redirectQueryKey: "next",
+	},
 
 	content: {
 		// Use Node.js built-in sqlite (available in Node v22.5+) to avoid
@@ -161,10 +185,6 @@ export default defineNuxtConfig({
 		name: "WolfStar",
 	},
 
-	auth: {
-		redirectQueryKey: "next",
-	},
-
 	colorMode: {
 		preference: "system", // Default theme
 		dataValue: "theme", // Activate data-theme in <html> tag
@@ -208,7 +228,7 @@ export default defineNuxtConfig({
 		options: {
 			rules: {
 				"meta-refresh": "off",
-				// NuxtUI/DaisyUI theme class merging produces duplicate utility classes
+				// Nuxt UI theme class merging produces duplicate utility classes
 				"no-dup-class": "off",
 				// NuxtUI components may render empty id attributes internally
 				"attribute-allowed-values": "off",
@@ -252,6 +272,10 @@ export default defineNuxtConfig({
 			},
 		},
 		"/oauth/callback": {
+			// Discord returns through this route before the server middleware forwards
+			// the OAuth response to Better Auth. A prerendered copy bypasses that
+			// middleware and leaves the browser on the callback status page.
+			prerender: false,
 			robots: "nosnippet,notranslate,noimageindex,noarchive,max-snippet:-1,max-image-preview:none,max-video-preview:-1",
 		},
 		// Redirect-only OAuth entry point: its middleware immediately redirects to
@@ -262,17 +286,27 @@ export default defineNuxtConfig({
 			robots: true,
 			auth: { only: "guest", redirectTo: "/profile" },
 		},
-		"/login": { prerender: false },
+		// `/login` is an alias of `/oauth/login`, but route rules match on the
+		// requested path, so the guest rule has to be repeated here or signed-in
+		// users hitting /login get bounced back to Discord.
+		"/login": {
+			prerender: false,
+			auth: { only: "guest", redirectTo: "/profile" },
+		},
 		"/guilds/**": { auth: { only: "user", redirectTo: "/login" } },
 		"/privacy": { appLayout: "default", prerender: true, robots: true },
-		// /profile is a per-user authenticated page: never statically prerender it
-		// (crawlLinks would otherwise reach it via links on prerendered pages and
-		// fail html-validation on the empty auth-redirect stub, same as /oauth/login above).
+		// /profile hosts local UI settings (theme/locale/motion) for guests and the
+		// Discord account/servers view for signed-in users. Never statically prerender
+		// it (crawlLinks would otherwise reach it via links on prerendered pages).
 		"/profile": {
 			appLayout: "default",
 			prerender: false,
 			robots: true,
-			auth: { only: "user", redirectTo: "/login" },
+		},
+		"/account": {
+			appLayout: "default",
+			prerender: false,
+			robots: true,
 		},
 		"/starly": { appLayout: "default", robots: true },
 
@@ -305,6 +339,31 @@ export default defineNuxtConfig({
 
 	features: {
 		inlineStyles: true,
+	},
+
+	hooks: {
+		"vite:extendConfig"(config) {
+			if (!config.plugins) {
+				throw new Error(
+					"vite:extendConfig exposed no plugin list, so the i18n empty-placeholder transform could not be registered.",
+				);
+			}
+			if (
+				!config.plugins.some(
+					(plugin) =>
+						typeof plugin === "object" &&
+						plugin !== null &&
+						!Array.isArray(plugin) &&
+						"name" in plugin &&
+						plugin.name === "wolfstar:i18n-empty-placeholders",
+				)
+			) {
+				config.plugins.unshift(stripEmptyI18nMessagesPlugin());
+			}
+			// Vite+ snapshots transform hooks before configResolved, so prioritize
+			// vue-i18n here while the inline plugin list is still mutable.
+			prioritizeVueI18nResourceTransform(config.plugins);
+		},
 	},
 
 	experimental: {
@@ -372,11 +431,6 @@ export default defineNuxtConfig({
 		css: {
 			transformer: "lightningcss",
 		},
-		plugins: [
-			// Untranslated keys are stored as empty strings; drop them so vue-i18n
-			// falls back to English instead of rendering "".
-			stripEmptyI18nMessagesPlugin(),
-		],
 		optimizeDeps: {
 			include: [
 				"@discordjs/core/http-only",

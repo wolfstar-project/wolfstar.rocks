@@ -43,12 +43,18 @@ export function generateRuntimeConfig() {
 			botToken: process.env.NUXT_OAUTH_DISCORD_BOT_TOKEN,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			clientSecret: process.env.NUXT_OAUTH_DISCORD_CLIENT_SECRET,
-			redirectURI: process.env.NUXT_OAUTH_DISCORD_REDIRECT_URL,
 		},
 		public: {
 			apiBaseUrl: process.env.NUXT_PUBLIC_API_BASE_URL,
 			clientId: process.env.NUXT_OAUTH_DISCORD_CLIENT_ID,
 			environment: process.env.NODE_ENV ?? "production",
+			// Declared so `NUXT_PUBLIC_SITE_URL` can override it at runtime: Nuxt only
+			// applies env overrides to keys that already exist in runtimeConfig.
+			// @nuxtjs/better-auth reads this first when resolving Better Auth's
+			// `baseURL`, which is what OAuth callback URLs are built from — without it
+			// the base URL is inferred per request and Discord callbacks drift between
+			// the apex domain, deploy previews, and platform-generated hostnames.
+			siteUrl: process.env.NUXT_PUBLIC_SITE_URL || "",
 			sentry: {
 				dsn: process.env.SENTRY_DSN,
 				tracesSampleRate: parseTracesSampleRate(
@@ -61,13 +67,12 @@ export function generateRuntimeConfig() {
 			org: process.env.SENTRY_ORG,
 			project: process.env.SENTRY_PROJECT,
 		},
+		// Consumed by `server/auth.config.ts`. Cookie attributes are deliberately
+		// absent: Better Auth owns them, and forcing `sameSite: "strict"` would drop
+		// the OAuth state cookie on the cross-site redirect back from Discord.
 		session: {
 			maxAge: 60 * 60 * 24 * 7, // 1 week
 			name: process.env.NUXT_SESSION_COOKIE_NAME || "wolfstar-session",
-			cookie: {
-				sameSite: "strict" as "lax" | "strict" | "none",
-				secure: true,
-			},
 		},
 	};
 }

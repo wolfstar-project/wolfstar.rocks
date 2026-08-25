@@ -84,7 +84,8 @@ module.exports = {
 		delimiter: ".",
 		// `tolgee pull` defaults to TRANSLATED + REVIEWED, and the remap script
 		// overwrites each locale file wholesale — so untranslated keys would be
-		// dropped from disk on every sync. Export them too (as empty strings) so
+		// dropped from disk on every sync. Export them too; Tolgee represents them
+		// as null and scripts/tolgee-pull-remap.ts converts them to empty strings so
 		// they survive as placeholders instead of disappearing or being refilled
 		// with English. See wolfstar-project/wolfstar#240.
 		states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"],

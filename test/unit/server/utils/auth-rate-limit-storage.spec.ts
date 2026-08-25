@@ -14,6 +14,8 @@ import { beforeEach, describe, expect, it } from "vitest";
  *    it further out.
  * 3. Concurrent increments for the same key are serialized by an in-process
  *    keyed mutex, so none are lost to a stale read.
+ * 4. `getAndDelete()` — required by better-auth 1.7 for single-use
+ *    verification values — consumes a key exactly once, even concurrently.
  */
 
 function createFakeStorage() {
@@ -88,6 +90,25 @@ describe("createAuthSecondaryStorage", () => {
 		const b = await secondaryStorage.increment?.("key-b", 60);
 		expect(a).toBe(1);
 		expect(b).toBe(1);
+	});
+
+	it("returns and removes the stored value in getAndDelete", async () => {
+		await secondaryStorage.set("verification:abc", "token");
+
+		expect(await secondaryStorage.getAndDelete("verification:abc")).toBe("token");
+		expect(fake.state.has("verification:abc")).toBe(false);
+		expect(await secondaryStorage.getAndDelete("verification:abc")).toBeNull();
+	});
+
+	it("hands the value to exactly one concurrent getAndDelete caller", async () => {
+		await secondaryStorage.set("verification:abc", "token");
+
+		const results = await Promise.all(
+			Array.from({ length: 5 }, () => secondaryStorage.getAndDelete("verification:abc")),
+		);
+
+		expect(results.filter((value) => value === "token")).toHaveLength(1);
+		expect(results.filter((value) => value === null)).toHaveLength(4);
 	});
 
 	it("still supports get/set/delete for non-consume storage reads", async () => {

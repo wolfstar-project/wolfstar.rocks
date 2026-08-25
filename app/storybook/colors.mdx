@@ -4,48 +4,48 @@ import { Meta, ColorPalette, ColorItem } from "@storybook/addon-docs/blocks";
 
 # Colors
 
-The WolfStar color system is built on DaisyUI CSS custom properties with support for light and dark themes.
+The WolfStar color system uses Nuxt UI semantic tokens with support for light, dark, and midnight themes.
 
-Colors are defined in `app/assets/css/main.css` using DaisyUI theme variables. Values shown reflect the **dark** theme (default).
+Colors are defined in `app/assets/css/main.css` using `@theme` scales and `--ui-*` CSS variables. Values shown reflect the **dark** theme (default).
 
-## Base (Background) Colors
+## Surface Colors
 
 <ColorPalette>
 	<ColorItem
-		title="Base"
+		title="Surfaces"
 		subtitle="Background surface layers (dark theme)"
 		colors={{
-			"base-100": "oklch(25% 0.016 252)",
-			"base-200": "oklch(23% 0.014 253)",
-			"base-300": "oklch(20% 0.012 254)",
+			"surface-100": "oklch(25% 0.016 252)",
+			"surface-200": "oklch(23% 0.014 253)",
+			"surface-300": "oklch(20% 0.012 254)",
 		}}
 	/>
 	<ColorItem
-		title="Base"
+		title="Surfaces"
 		subtitle="Background surface layers (light theme)"
 		colors={{
-			"base-100": "oklch(100% 0 0)",
-			"base-200": "oklch(90% 0 0)",
-			"base-300": "oklch(85% 0 0)",
+			"surface-100": "oklch(100% 0 0)",
+			"surface-200": "oklch(90% 0 0)",
+			"surface-300": "oklch(85% 0 0)",
 		}}
 	/>
 </ColorPalette>
 
-## Content (Text) Colors
+## Text Colors
 
 <ColorPalette>
 	<ColorItem
 		title="Content"
 		subtitle="Text and foreground — dark theme"
 		colors={{
-			"base-content": "oklch(90% 0 0)",
+			content: "oklch(90% 0 0)",
 		}}
 	/>
 	<ColorItem
 		title="Content"
 		subtitle="Text and foreground — light theme"
 		colors={{
-			"base-content": "oklch(0% 0 0)",
+			content: "oklch(0% 0 0)",
 		}}
 	/>
 </ColorPalette>
@@ -57,32 +57,21 @@ Colors are defined in `app/assets/css/main.css` using DaisyUI theme variables. V
 		title="Primary"
 		subtitle="Interactive elements and primary actions"
 		colors={{
-			"primary": "oklch(58% 0.233 277.117)",
-			"primary-content": "oklch(100% 0 0)",
+			primary: "oklch(58% 0.233 277.117)",
 		}}
 	/>
 	<ColorItem
 		title="Secondary"
 		subtitle="Secondary actions and de-emphasized elements"
 		colors={{
-			"secondary": "oklch(58.73% 0.0204 272.13)",
-			"secondary-content": "oklch(100% 0 0)",
-		}}
-	/>
-	<ColorItem
-		title="Accent"
-		subtitle="Accent highlights and decorative elements"
-		colors={{
-			"accent": "oklch(60% 0.152 181.912)",
-			"accent-content": "oklch(100% 0 0)",
+			secondary: "oklch(58.73% 0.0204 272.13)",
 		}}
 	/>
 	<ColorItem
 		title="Neutral"
 		subtitle="Neutral surfaces and dark overlays"
 		colors={{
-			"neutral": "oklch(14% 0.005 285.823)",
-			"neutral-content": "oklch(100% 0 0)",
+			neutral: "oklch(14% 0.005 285.823)",
 		}}
 	/>
 </ColorPalette>
@@ -94,32 +83,28 @@ Colors are defined in `app/assets/css/main.css` using DaisyUI theme variables. V
 		title="Info"
 		subtitle="Informational messages and indicators"
 		colors={{
-			"info": "oklch(55% 0.16 232.661)",
-			"info-content": "oklch(89.04% 0.062 264.052)",
+			info: "oklch(55% 0.16 232.661)",
 		}}
 	/>
 	<ColorItem
 		title="Success"
 		subtitle="Success states and confirmations"
 		colors={{
-			"success": "oklch(76% 0.177 163.223)",
-			"success-content": "oklch(37% 0.077 168.94)",
+			success: "oklch(76% 0.177 163.223)",
 		}}
 	/>
 	<ColorItem
 		title="Warning"
 		subtitle="Warnings and caution indicators"
 		colors={{
-			"warning": "oklch(82% 0.189 84.429)",
-			"warning-content": "oklch(41% 0.112 45.904)",
+			warning: "oklch(82% 0.189 84.429)",
 		}}
 	/>
 	<ColorItem
 		title="Error"
 		subtitle="Error states and destructive actions"
 		colors={{
-			"error": "oklch(71% 0.194 13.428)",
-			"error-content": "oklch(28% 0.109 3.907)",
+			error: "oklch(71% 0.194 13.428)",
 		}}
 	/>
 </ColorPalette>

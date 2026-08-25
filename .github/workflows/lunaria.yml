@@ -19,7 +19,7 @@ jobs:
       pull-requests: write # post Lunaria overview comments on pull requests
 
     steps:
-      - name: Checkout
+      - name: Checkout trusted base
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           # Necessary for Lunaria to work properly
@@ -27,7 +27,23 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - uses: voidzero-dev/setup-vp@2dec1e33f4ab2c6d5bce1b0c4607961bb1a3f7a1 # v1.12.0
+      # pull_request_target checks out the base branch by default. Keep the
+      # executable config and dependencies trusted, but overlay the PR's locale
+      # JSON so Lunaria evaluates the translations that would actually merge.
+      - name: Checkout PR locale data
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.sha }}
+          path: .lunaria-pr
+          sparse-checkout: i18n/locales
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Use PR locale data
+        run: rsync --archive --delete .lunaria-pr/i18n/locales/ i18n/locales/
+
+      - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
         with:
           node-version: lts/*
           cache: true

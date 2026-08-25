@@ -1,78 +1,117 @@
 <template>
 	<ClientOnly>
-		<UButton
-			:aria-label="`Switch to ${nextTheme} mode`"
-			:icon="`lucide:${nextTheme === 'dark' ? 'sun' : 'moon'}`"
-			color="neutral"
-			variant="ghost"
-			size="sm"
-			class="rounded-full"
-			@click="startViewTransition"
-		/>
+		<UDropdownMenu
+			:items="themeItems"
+			:content="{ align: 'end', sideOffset: 8 }"
+			:ui="{ content: 'min-w-48' }"
+		>
+			<UButton
+				:aria-label="t('profile.theme_menu_aria')"
+				:icon="currentOption.icon"
+				:label="showLabel ? currentOption.label : undefined"
+				:trailing-icon="showLabel ? 'lucide:chevron-down' : undefined"
+				color="neutral"
+				:variant
+				:size
+				:class="showLabel ? undefined : 'rounded-full'"
+				aria-haspopup="menu"
+			/>
+		</UDropdownMenu>
 		<template #fallback>
-			<div class="size-4"></div>
+			<USkeleton :class="showLabel ? 'h-8 w-40' : 'size-8 rounded-full'" />
 		</template>
 	</ClientOnly>
 </template>
 
 <script setup lang="ts">
+import type { DropdownMenuItem } from "@nuxt/ui";
+import type { ColorModePreference } from "~/composables/useSettings";
+import { COLOR_MODE_PREFERENCES } from "~/composables/useSettings";
+
+const {
+	showLabel = true,
+	size = "sm",
+	variant = "outline",
+} = defineProps<{
+	/** Show the current theme label next to the icon (settings surfaces). */
+	showLabel?: boolean;
+	size?: "xs" | "sm" | "md" | "lg" | "xl";
+	variant?: "solid" | "outline" | "soft" | "subtle" | "ghost" | "link";
+}>();
+
 interface DocumentWithActiveVT extends Document {
 	readonly activeViewTransition: ViewTransition | null;
 }
 
-const colorMode = useColorMode();
+const { t } = useI18n();
+const { preference, setColorMode } = useAppColorMode();
 const { effectiveReduceMotion } = useReduceMotion();
 
-const nextTheme = computed(() => (colorMode.value === "dark" ? "light" : "dark"));
+const themeMeta = computed(() => ({
+	system: {
+		icon: "lucide:monitor",
+		label: t("common.system"),
+	},
+	light: {
+		icon: "lucide:sun",
+		label: t("common.light"),
+	},
+	dark: {
+		icon: "lucide:moon",
+		label: t("common.dark"),
+	},
+	midnight: {
+		icon: "lucide:sparkles",
+		label: t("common.midnight_experimental"),
+	},
+}));
 
-const switchTheme = () => {
-	colorMode.preference = nextTheme.value;
-};
+const currentOption = computed(() => {
+	const selected = preference.value;
+	return themeMeta.value[selected] ?? themeMeta.value.system;
+});
 
-const startViewTransition = (event: MouseEvent) => {
-	if (!document.startViewTransition) {
-		switchTheme();
-		return;
-	}
+const themeItems = computed<DropdownMenuItem[]>(() =>
+	COLOR_MODE_PREFERENCES.map((value) => {
+		const meta = themeMeta.value[value];
+		return {
+			checked: preference.value === value,
+			icon: meta.icon,
+			label: meta.label,
+			onSelect(e: Event) {
+				e.preventDefault();
+				selectTheme(value);
+			},
+			onUpdateChecked(checked: boolean) {
+				if (checked) {
+					selectTheme(value);
+				}
+			},
+			type: "checkbox" as const,
+		};
+	}),
+);
 
-	if (effectiveReduceMotion.value) {
-		switchTheme();
+function selectTheme(value: ColorModePreference) {
+	if (preference.value === value) return;
+	startViewTransition(() => {
+		setColorMode(value);
+	});
+}
+
+function startViewTransition(apply: () => void) {
+	if (!import.meta.client || !document.startViewTransition || effectiveReduceMotion.value) {
+		apply();
 		return;
 	}
 
 	if ((document as DocumentWithActiveVT).activeViewTransition) {
-		switchTheme();
+		apply();
 		return;
 	}
 
-	const x = event.clientX;
-	const y = event.clientY;
-	const endRadius = Math.hypot(
-		Math.max(x, window.innerWidth - x),
-		Math.max(y, window.innerHeight - y),
-	);
-
-	const transition = document.startViewTransition(() => {
-		switchTheme();
-	});
-
-	transition.ready.then(() => {
-		const duration = 600;
-		document.documentElement.animate(
-			{
-				clipPath: [
-					`circle(0px at ${x}px ${y}px)`,
-					`circle(${endRadius}px at ${x}px ${y}px)`,
-				],
-			},
-			{
-				duration,
-				easing: "cubic-bezier(.76,.32,.29,.99)",
-				pseudoElement: "::view-transition-new(root)",
-			},
-		);
-	});
-};
+	document.startViewTransition(apply);
+}
 </script>
 
 <style>

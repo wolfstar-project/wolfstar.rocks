@@ -87,7 +87,12 @@ function normalizeRateLimitOptions(
 	}
 }
 
-async function getUserSession(
+/**
+ * Named `resolveHandlerSession`, not `getUserSession`: @nuxtjs/better-auth
+ * auto-imports a server util of that name into every `server/` file, and a
+ * local declaration silently shadows it for the whole module.
+ */
+async function resolveHandlerSession(
 	options: DefinedWrappedResponseHandlerOptions,
 	event: H3Event,
 ): Promise<AppSession | null> {
@@ -339,7 +344,7 @@ async function applyWrappedHandlerLogic<T extends EventHandlerRequest, D>(
 		throwClientOutdated(event, log);
 	}
 
-	const session = await getUserSession(options, event);
+	const session = await resolveHandlerSession(options, event);
 	const id = getIdentifier(event, session, options.rateLimit?.ipHeader);
 
 	// Run per-request authorization before rate limiting and the (possibly

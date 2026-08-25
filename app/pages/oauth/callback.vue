@@ -105,7 +105,7 @@ const { user, ready, loggedIn, fetchSession } = useUserSession();
 const hasCallbackParams = computed(() => Boolean(route.query.next || route.query.error));
 const isError = computed(() => Boolean(route.query.error));
 const isSessionLoading = ref(!isError.value);
-const errorMessage = computed(() => localizeAuthError(route.query.error as string | undefined));
+const errorMessage = computed(() => localizeAuthError(route.query.error));
 
 onMounted(() => {
 	if (!isError.value) {
@@ -115,9 +115,19 @@ onMounted(() => {
 
 async function completeSignIn() {
 	try {
-		await fetchSession({ force: true });
+		// Better Auth's callback has just written both the session cookie and the
+		// jwe cookie-cache cookie, so a plain fetch (cookie cache allowed) is the
+		// most reliable read right now: `force: true` would bypass that cache and
+		// race the eventually-consistent secondary storage (Cloudflare KV) it was
+		// written to moments ago, surfacing a false "session not found" after a
+		// successful sign-in. Retries cover the storage-read fallback while the
+		// write propagates.
+		const signedIn = await fetchSessionWithRetry({
+			fetchSession: () => fetchSession(),
+			hasSession: () => loggedIn.value,
+		});
 
-		if (!loggedIn.value) {
+		if (!signedIn) {
 			isSessionMissing.value = true;
 			return;
 		}

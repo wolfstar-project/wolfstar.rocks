@@ -7,46 +7,46 @@
 		"feedback": {
 			"type": "object",
 			"properties": {
-				"send": {
-					"type": "string"
-				},
-				"title": {
-					"type": "string"
-				},
 				"description": {
-					"type": "string"
-				},
-				"sent_title": {
-					"type": "string"
-				},
-				"sent_description": {
-					"type": "string"
-				},
-				"sent_toast_description": {
-					"type": "string"
-				},
-				"name": {
 					"type": "string"
 				},
 				"email": {
 					"type": "string"
 				},
-				"message": {
-					"type": "string"
-				},
-				"name_placeholder": {
-					"type": "string"
-				},
 				"email_placeholder": {
+					"type": "string"
+				},
+				"message": {
 					"type": "string"
 				},
 				"message_placeholder": {
 					"type": "string"
 				},
-				"send_failed_title": {
+				"name": {
+					"type": "string"
+				},
+				"name_placeholder": {
+					"type": "string"
+				},
+				"send": {
 					"type": "string"
 				},
 				"send_failed_description": {
+					"type": "string"
+				},
+				"send_failed_title": {
+					"type": "string"
+				},
+				"sent_description": {
+					"type": "string"
+				},
+				"sent_title": {
+					"type": "string"
+				},
+				"sent_toast_description": {
+					"type": "string"
+				},
+				"title": {
 					"type": "string"
 				}
 			},
@@ -55,19 +55,19 @@
 		"pwa": {
 			"type": "object",
 			"properties": {
-				"update_available": {
-					"type": "string"
-				},
-				"install_app": {
+				"dismiss": {
 					"type": "string"
 				},
 				"install": {
 					"type": "string"
 				},
-				"dismiss": {
+				"install_app": {
 					"type": "string"
 				},
 				"reload": {
+					"type": "string"
+				},
+				"update_available": {
 					"type": "string"
 				}
 			},
@@ -76,16 +76,22 @@
 		"select": {
 			"type": "object",
 			"properties": {
-				"seconds": {
+				"clear_selected": {
 					"type": "string"
 				},
-				"minutes": {
+				"days": {
 					"type": "string"
 				},
 				"hours": {
 					"type": "string"
 				},
-				"days": {
+				"max_duration": {
+					"type": "string"
+				},
+				"min_duration": {
+					"type": "string"
+				},
+				"minutes": {
 					"type": "string"
 				},
 				"none": {
@@ -94,13 +100,7 @@
 				"search": {
 					"type": "string"
 				},
-				"clear_selected": {
-					"type": "string"
-				},
-				"min_duration": {
-					"type": "string"
-				},
-				"max_duration": {
+				"seconds": {
 					"type": "string"
 				}
 			},

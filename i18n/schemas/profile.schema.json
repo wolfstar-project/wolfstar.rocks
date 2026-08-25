@@ -7,64 +7,25 @@
 		"profile": {
 			"type": "object",
 			"properties": {
-				"title": {
+				"accessibility": {
 					"type": "string"
 				},
-				"seo_description": {
-					"type": "string"
-				},
-				"servers": {
-					"type": "string"
-				},
-				"manageable": {
-					"type": "string"
-				},
-				"search_servers": {
-					"type": "string"
-				},
-				"search_servers_aria": {
-					"type": "string"
-				},
-				"get_premium": {
-					"type": "string"
-				},
-				"premium": {
-					"type": "string"
-				},
-				"motion_reduced": {
-					"type": "string"
-				},
-				"motion_enabled": {
+				"accessibility_description": {
 					"type": "string"
 				},
 				"account_management": {
 					"type": "string"
 				},
-				"refresh_servers": {
+				"appearance_description": {
+					"type": "string"
+				},
+				"applying_filters": {
 					"type": "string"
 				},
 				"clear_search": {
 					"type": "string"
 				},
-				"no_servers": {
-					"type": "string"
-				},
-				"no_matching_servers": {
-					"type": "string"
-				},
-				"loading_more": {
-					"type": "string"
-				},
-				"error_loading_title": {
-					"type": "string"
-				},
-				"failed_to_load": {
-					"type": "string"
-				},
-				"user_profile": {
-					"type": "string"
-				},
-				"user_id": {
+				"current_status": {
 					"type": "string"
 				},
 				"default_avatar": {
@@ -73,37 +34,136 @@
 				"email": {
 					"type": "string"
 				},
+				"error_loading_title": {
+					"type": "string"
+				},
+				"failed_to_load": {
+					"type": "string"
+				},
+				"get_premium": {
+					"type": "string"
+				},
+				"guest_profile": {
+					"type": "string"
+				},
+				"guest_tagline": {
+					"type": "string"
+				},
+				"language_description": {
+					"type": "string"
+				},
+				"language_help": {
+					"type": "string"
+				},
+				"loading_more": {
+					"type": "string"
+				},
+				"loading_servers": {
+					"type": "string"
+				},
+				"manageable": {
+					"type": "string"
+				},
 				"members": {
 					"type": "string"
 				},
 				"members_online": {
 					"type": "string"
 				},
-				"servers_count": {
+				"motion_enabled": {
 					"type": "string"
 				},
-				"server_list_aria": {
+				"motion_reduced": {
 					"type": "string"
 				},
-				"servers_list_aria": {
+				"no_matching_description": {
 					"type": "string"
 				},
-				"applying_filters": {
+				"no_matching_servers": {
 					"type": "string"
 				},
-				"loading_servers": {
+				"no_servers": {
 					"type": "string"
 				},
 				"no_servers_description": {
 					"type": "string"
 				},
-				"no_matching_description": {
+				"premium": {
+					"type": "string"
+				},
+				"reduce_motion": {
+					"type": "string"
+				},
+				"reduce_motion_description": {
+					"type": "string"
+				},
+				"refresh_servers": {
 					"type": "string"
 				},
 				"reload_page": {
 					"type": "string"
 				},
 				"search_matching": {
+					"type": "string"
+				},
+				"search_servers": {
+					"type": "string"
+				},
+				"search_servers_aria": {
+					"type": "string"
+				},
+				"seo_description": {
+					"type": "string"
+				},
+				"server_list_aria": {
+					"type": "string"
+				},
+				"servers": {
+					"type": "string"
+				},
+				"servers_count": {
+					"type": "string"
+				},
+				"servers_guest_description": {
+					"type": "string"
+				},
+				"servers_list_aria": {
+					"type": "string"
+				},
+				"servers_sign_in_prompt": {
+					"type": "string"
+				},
+				"settings_tagline": {
+					"type": "string"
+				},
+				"settings_title": {
+					"type": "string"
+				},
+				"system_preference_description": {
+					"type": "string"
+				},
+				"system_preference_detected": {
+					"type": "string"
+				},
+				"theme": {
+					"type": "string"
+				},
+				"theme_description": {
+					"type": "string"
+				},
+				"theme_menu_aria": {
+					"type": "string"
+				},
+				"title": {
+					"type": "string"
+				},
+				"user_id": {
+					"type": "string"
+				},
+				"user_id_label": {
+					"type": "string"
+				},
+				"user_profile": {
 					"type": "string"
 				}
 			},

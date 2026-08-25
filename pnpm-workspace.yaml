@@ -31,7 +31,7 @@ catalogs:
         storybook: ^10.5.4
 
     vite-plus:
-        vite: npm:@voidzero-dev/vite-plus-core@0.2.6
+        vite: npm:@voidzero-dev/vite-plus-core@0.2.8
         vite-plus: 0.2.7
         vitest: 4.1.10
         "@vitest/browser-playwright": 4.1.10
@@ -62,9 +62,14 @@ overrides:
     "@netlify/api": ^14.0.19
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
-    discord-api-types: 0.38.51
-    sharp: 0.34.5
-    typescript: npm:typescript-native-bridge@6.0.3-bridge.7.tsgo.7.0.2
+    discord-api-types: 0.38.52
+    # Nuxt 4.5 imports unhead/legacy; keep one version so Nitro cannot link the
+    # server bundle to a different traced package copy that omits legacy.mjs.
+    "@unhead/vue": 3.2.3
+    "@unhead/bundler": 3.2.3
+    unhead: 3.2.3
+    sharp: 0.35.3
+    typescript: npm:typescript-native-bridge@6.0.3-bridge.10.tsgo.7.0.2
     vite: catalog:vite-plus
     vitest: catalog:vite-plus
 

@@ -13,6 +13,12 @@ export interface DiscordAccessToken {
  * Returns the current user's Discord access token, transparently refreshed by
  * Better Auth if expired. `null` when the user has no linked Discord account
  * (not signed in, or the account/session is no longer valid).
+ *
+ * Better Auth 1.7 replaced the `providerId` account selector with an explicit
+ * union of `{ accountId }` (a database row id) and `{ useAccountCookie: true }`.
+ * This deployment runs database-less — `account.storeAccountCookie` in
+ * `server/auth.config.ts` keeps the Discord account in a signed cookie — so the
+ * cookie is the only account source there is.
  */
 export async function refreshSessionTokens(
 	event: H3Event,
@@ -23,11 +29,11 @@ export async function refreshSessionTokens(
 	try {
 		const result = options.force
 			? await auth.api.refreshToken({
-					body: { providerId: "discord" },
+					body: { useAccountCookie: true },
 					headers: event.headers,
 				})
 			: await auth.api.getAccessToken({
-					body: { providerId: "discord" },
+					body: { useAccountCookie: true },
 					headers: event.headers,
 				});
 

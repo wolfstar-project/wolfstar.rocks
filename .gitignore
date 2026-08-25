@@ -55,6 +55,7 @@ test-results/
 
 # Skilld references (recreated by `skilld install`)
 .skilld
+.skills/.skilld-store-lock
 package-lock.json
 
 .nvmrc
@@ -75,3 +76,10 @@ build-progress.md
 # Tolgee
 i18n/.tolgee-pull/
 .tmp/
+
+# Vitest failure screenshots
+.vitest-attachments/
+test/**/__screenshots__/
+
+# TypeScript incremental build info
+*.tsbuildinfo

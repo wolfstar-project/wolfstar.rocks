@@ -129,14 +129,13 @@ pnpm vp run zizmor:fix  # Auto-fix zizmor audit findings
 # Storybook
 pnpm storybook        # Start Storybook dev server (http://localhost:6006)
 pnpm build-storybook  # Build static Storybook output
-pnpm chromatic        # Publish Storybook to Chromatic for visual review
 
 # Testing
 pnpm test             # Run all Vitest tests
 pnpm test:unit        # Unit tests only
 pnpm test:nuxt        # Nuxt component tests
 pnpm test:browser     # Playwright E2E tests (builds test app first)
-pnpm test:browser:ui  # E2E tests with Playwright UI
+pnpm test:browser:prebuilt  # Playwright E2E tests (requires prebuilt app)
 pnpm test:a11y        # Build test app, then run Lighthouse a11y in dark + light
 pnpm test:a11y:prebuilt  # Lighthouse accessibility audits (requires prebuilt app)
 pnpm test:perf        # Build test app, then run Lighthouse performance audits
@@ -389,8 +388,8 @@ Use `test:perf:prebuilt` for faster iteration when the test build is already up 
 Write end-to-end tests using Playwright:
 
 ```bash
-pnpm test:browser        # Run tests
-pnpm test:browser:ui     # Run with Playwright UI
+pnpm test:browser                # Run tests
+pnpm test:browser:prebuilt --ui  # Run with Playwright UI against a prebuilt app
 ```
 
 Make sure to read about [Playwright best practices](https://playwright.dev/docs/best-practices) and prefer user-facing locators (`getByRole`, `getByLabel`, `getByText`) over selectors based on classes or IDs.
@@ -452,8 +451,9 @@ Stories are co-located with pages as `*.stories.ts` files under `app/pages/`. St
 ```bash
 pnpm storybook          # Dev server at http://localhost:6006 (sets STORYBOOK=true)
 pnpm build-storybook    # Static Storybook build
-pnpm chromatic          # Visual review via Chromatic
 ```
+
+Chromatic visual review runs in CI (`.github/workflows/chromatic.yml`) — there is no local `chromatic` script.
 
 The hosted Storybook is published at [storybook.wolfstar.rocks](https://storybook.wolfstar.rocks). Storybook runs with `STORYBOOK=true` so Nuxt loads a Storybook-specific config without the full app shell.
 

@@ -36,7 +36,17 @@
 					</div>
 				</LazyUDropdownMenu>
 			</div>
-			<div v-else :class="mobile ? 'flex justify-center' : undefined">
+			<div v-else :class="mobile ? 'flex justify-center gap-2' : 'flex items-center gap-2'">
+				<UButton
+					:label="t('header.settings')"
+					size="md"
+					color="neutral"
+					variant="ghost"
+					to="/profile"
+					:class="mobile ? 'rounded-lg' : 'hidden rounded-lg md:inline-flex'"
+					icon="lucide:sliders-horizontal"
+					:aria-label="t('header.settings')"
+				/>
 				<UButton
 					:label="t('header.sign_in')"
 					size="md"
@@ -83,18 +93,11 @@ const items = computed<DropdownMenuItem[]>(() => [
 	{
 		icon: "lucide:log-out",
 		label: t("header.sign_out"),
-		onSelect: logout,
+		// `auth.redirects.logout` in nuxt.config sends the user home afterwards.
+		onSelect: () => signOut(),
 		ui: {
 			itemLeadingIcon: "text-error",
 		},
 	},
 ]);
-
-async function logout() {
-	await signOut({
-		onSuccess: () => {
-			void navigateTo("/");
-		},
-	});
-}
 </script>

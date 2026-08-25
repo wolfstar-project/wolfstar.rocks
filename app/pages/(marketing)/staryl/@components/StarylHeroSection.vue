@@ -93,19 +93,18 @@
 							What your server gets
 						</span>
 					</div>
-					<!-- PLACEHOLDER: replace all three rows with Staryl's real capabilities. -->
 					<dl>
 						<div class="staryl-hero-brief-row">
 							<dt>Sources</dt>
-							<dd>Notification sources to be confirmed</dd>
+							<dd>Twitch live and offline alerts today, more sources planned</dd>
 						</div>
 						<div class="staryl-hero-brief-row">
 							<dt>Routing</dt>
-							<dd>Per-channel delivery rules to be confirmed</dd>
+							<dd>One streamer, one channel, one alert type per subscription</dd>
 						</div>
 						<div class="staryl-hero-brief-row">
-							<dt>Dashboard</dt>
-							<dd>Dashboard scope to be confirmed</dd>
+							<dt>Setup</dt>
+							<dd>Runs on <code>/subscriptions twitch</code>, no dashboard needed</dd>
 						</div>
 					</dl>
 				</aside>
@@ -169,5 +168,10 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 
 .staryl-hero-brief-row dd {
 	@apply text-base leading-relaxed text-base-content/65;
+}
+
+.staryl-hero-brief-row dd code {
+	@apply rounded px-1 py-0.5 font-mono text-[0.9em] text-base-content;
+	background-color: var(--home-border-subtle);
 }
 </style>

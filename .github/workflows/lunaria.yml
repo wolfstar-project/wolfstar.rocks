@@ -43,6 +43,19 @@ jobs:
       - name: Use PR locale data
         run: rsync --archive --delete .lunaria-pr/i18n/locales/ i18n/locales/
 
+      # A PR that introduces a brand-new tracked locale file (e.g. a new i18n
+      # feature file) has no history in this checkout: the base branch never
+      # had it, and the rsync overlay above only touches the working tree, not
+      # the index. Lunaria's source-file lookup needs `git log` to return at
+      # least one commit or it hard-fails with "no commits have been found".
+      # This commit is local to the ephemeral runner and is never pushed.
+      - name: Commit PR locale overlay for Lunaria
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add i18n/locales
+          git diff --cached --quiet || git commit --quiet -m "chore: overlay PR locale data for Lunaria (ephemeral, not pushed)"
+
       - uses: voidzero-dev/setup-vp@143f5f385f39b1b753ffed1a01ad443811855c8b # v1.16.1
         with:
           node-version: lts/*

@@ -32,7 +32,6 @@ const serverVersion = skewProtection.serverVersion;
 const manifest = skewProtection.manifest;
 const nuxtApp = useNuxtApp();
 const { $pwa } = nuxtApp;
-const isPrerendered = !!nuxtApp.payload.prerenderedAt;
 
 const chunksOutdated = ref(false);
 // Identifies the deployment currently being advertised. The SSE/WS strategies
@@ -47,14 +46,16 @@ const dismissedVersion = ref<string | undefined>(undefined);
 skewProtection.onCurrentChunksOutdated(() => {
 	chunksOutdated.value = true;
 });
-// isAppOutdated only reacts to the polling path once something registers
-// this hook -- it's what populates `manifest` in the first place.
-skewProtection.onAppOutdated(() => {});
 
+// `manifest` is populated by the `app:manifest:update` hook that
+// `plugins/skew-protection.client.ts` registers at boot, so this component sees
+// an update that landed before it was mounted -- it is lazy behind DeferredMount.
+// Prerendered routes are deliberately not excluded: their HTML ships with the
+// deployment, so a build id older than `builds/latest.json` there means the
+// browser really is holding a stale copy and a reload does resolve it.
 const isOpen = computed(() => {
 	if (!isOnline.value) return false;
 	if (chunksOutdated.value) return true;
-	if (isPrerendered) return false;
 	return isAppOutdated.value && currentVersion.value !== dismissedVersion.value;
 });
 

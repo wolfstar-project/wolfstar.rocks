@@ -745,9 +745,13 @@ export default defineNuxtConfig({
 		strategy: "no_prefix",
 		detectBrowserLanguage: false,
 		// Paths are resolved relative to `restructureDir` (default "i18n/"), so this
-		// points at i18n/locales/. The vue-i18n runtime config (fallbackLocale,
-		// datetime/number formats) is auto-loaded from i18n/i18n.config.ts.
-		langDir: "locales",
+		// points at i18n/.locales-build/ — the generated, placeholder-free mirror of
+		// i18n/locales/ written by modules/i18n-strip-empty-messages.ts. Pointing the
+		// module at the sources instead would ship untranslated `""` placeholders,
+		// which vue-i18n renders verbatim instead of falling back to en-US. The
+		// vue-i18n runtime config (fallbackLocale, datetime/number formats) is
+		// auto-loaded from i18n/i18n.config.ts.
+		langDir: ".locales-build",
 		/**
 		 * Nitro-side locale detection runs in `render:before` and calls
 		 * `useI18nContext()` before checking whether the path is a Nuxt page.

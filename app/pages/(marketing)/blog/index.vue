@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { data: page } = await useAsyncData("blog-landing", () =>
 	queryCollection("landing").path("/blog").first(),
 );

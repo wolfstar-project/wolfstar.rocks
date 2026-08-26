@@ -81,7 +81,7 @@ const { mobile = false } = defineProps<{
 	mobile?: boolean;
 }>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { signOut } = useUserSession();
 
 const items = computed<DropdownMenuItem[]>(() => [

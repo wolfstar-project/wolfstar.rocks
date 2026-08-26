@@ -142,7 +142,7 @@ const { commands } = defineProps<{
 
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 

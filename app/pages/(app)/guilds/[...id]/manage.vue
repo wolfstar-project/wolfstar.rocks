@@ -33,7 +33,7 @@ definePageMeta({
 	path: "/guilds/:id/manage/:slug(.*)*",
 });
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const route = useRoute();
 const toast = useToast();
 const { guildData } = useGuildData();

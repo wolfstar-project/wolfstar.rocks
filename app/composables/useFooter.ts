@@ -1,7 +1,7 @@
 import type { FooterColumn } from "@nuxt/ui";
 
 export const useFooter = () => {
-	const { t } = useI18n();
+	const { ts: t } = useI18n();
 
 	const columns = computed<FooterColumn[]>(() => [
 		{

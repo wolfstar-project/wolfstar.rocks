@@ -64,7 +64,7 @@ interface Emits {
 <script setup lang="ts">
 const { modelValue, min, max } = defineProps<SelectDurationProps>();
 const emit = defineEmits<Emits>();
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const unitItems = computed(() => [
 	{ label: t("select.seconds"), value: "seconds" },

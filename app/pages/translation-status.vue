@@ -77,13 +77,7 @@
 							:label="t('i18n.edit_on_github')"
 						/>
 						<span class="text-muted">
-							{{
-								t(
-									"i18n.missing_keys",
-									{ count: localeStatus.missingKeys.length },
-									localeStatus.missingKeys.length,
-								)
-							}}
+							{{ tc("i18n.missing_keys", localeStatus.missingKeys.length) }}
 						</span>
 					</div>
 				</li>
@@ -97,7 +91,8 @@
 </template>
 
 <script setup lang="ts">
-const { t, locale } = useI18n();
+const { ts: t, tc } = useI18n();
+const { locale } = useAppLocale();
 const { status } = useI18nStatus();
 
 useSeoMeta({

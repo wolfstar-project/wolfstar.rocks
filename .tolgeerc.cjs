@@ -63,7 +63,7 @@ module.exports = {
 	projectId: 33768,
 	format: "JSON_TOLGEE",
 	parser: "vue",
-	// App deep-merges feature files; keys are used without vue-i18n namespaces.
+	// App deep-merges feature files; keys are used without i18n namespaces.
 	strictNamespace: false,
 	patterns: [
 		"./app/components/**/*.vue",

@@ -166,7 +166,7 @@ const { languages } = defineProps<{
 	languages: string[];
 }>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const { guildData } = useGuildData();
 

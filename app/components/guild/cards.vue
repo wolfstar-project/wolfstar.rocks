@@ -200,7 +200,7 @@ const {
 	onRetry,
 } = defineProps<GuildCardsProps>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { effectiveReduceMotion } = useReduceMotion();
 
 // Error handling computed properties

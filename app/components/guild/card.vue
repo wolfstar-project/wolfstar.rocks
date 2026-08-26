@@ -187,7 +187,7 @@ interface GuildCardProps {
 
 const { guild, loading = false } = defineProps<GuildCardProps>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const cardClasses = computed(() => {
 	if (loading || !guild) {

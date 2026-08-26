@@ -110,7 +110,7 @@ import type { FormErrorEvent } from "@nuxt/ui";
 import { EventsSettingsSchema, type EventsSettingsSchemaType } from "#shared/schemas";
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();

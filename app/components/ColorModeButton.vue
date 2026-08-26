@@ -43,7 +43,7 @@ interface DocumentWithActiveVT extends Document {
 	readonly activeViewTransition: ViewTransition | null;
 }
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { preference, setColorMode } = useAppColorMode();
 const { effectiveReduceMotion } = useReduceMotion();
 

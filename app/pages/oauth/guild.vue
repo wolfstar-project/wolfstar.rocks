@@ -60,7 +60,7 @@ definePageMeta({
 	viewTransition: false,
 });
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const guildId = useRouteQuery("guild_id", undefined, { transform: normalizeGuildIdQuery });
 const error = ref<string | null>(null);

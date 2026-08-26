@@ -254,7 +254,7 @@ import type { GuildData } from "#server/database";
 import type { FormErrorEvent } from "@nuxt/ui";
 import { LinksFilterSchema, type LinksFilter } from "#shared/schemas";
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 

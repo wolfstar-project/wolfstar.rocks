@@ -33,6 +33,7 @@
 						</p>
 						<UButton
 							to="#moderation-tools"
+							:locale="false"
 							color="neutral"
 							variant="link"
 							class="mt-3 px-0"
@@ -54,6 +55,7 @@
 						</p>
 						<UButton
 							to="#advanced-logging"
+							:locale="false"
 							color="neutral"
 							variant="link"
 							class="mt-3 px-0"
@@ -75,6 +77,7 @@
 						</p>
 						<UButton
 							to="#dashboard"
+							:locale="false"
 							color="neutral"
 							variant="link"
 							class="mt-3 px-0"
@@ -90,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts: t } = useI18n();
 </script>
 
 <style scoped>

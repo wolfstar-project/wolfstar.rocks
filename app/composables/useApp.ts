@@ -1,9 +1,9 @@
 export const useApp = () => {
 	const Invites = useInvites();
-	// `$i18n` rather than `useI18n()`: `useApp()` is also called outside a setup
-	// context (unit tests, plain helpers), where `useI18n()` throws. Descriptions
-	// are getters so a locale switch re-resolves them on the next render.
-	const { t } = useNuxtApp().$i18n;
+	// The Nuxt app's injected `$ts` rather than `useI18n()`: `useApp()` is also
+	// called outside a setup context (unit tests, plain helpers). Descriptions are
+	// getters so a locale switch re-resolves them on the next render.
+	const { $ts: t } = useNuxtApp();
 	const OtherApps = {
 		Staryl: {
 			avatar: "/avatars/staryl.png",

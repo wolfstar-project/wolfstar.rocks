@@ -36,14 +36,13 @@
 
 <script setup lang="ts">
 import type { DropdownMenuItem } from "@nuxt/ui";
-import { isAppLocaleCode } from "~/utils/is-app-locale";
 
 const { collapsed } = defineProps<{
 	collapsed?: boolean;
 }>();
 
-const { t, locale, locales, setLocale } = useI18n();
-const { setPreferredLocale } = usePreferredLocale();
+const { ts: t } = useI18n();
+const { locale, locales, localeLabel, selectLocale } = useAppLocale();
 const isFeedbackOpen = ref(false);
 const { preference: colorModePreference, setColorMode } = useAppColorMode();
 const { user: authUser, signOut } = useUserSession();
@@ -64,18 +63,13 @@ const user = computed(() => {
 const languageChildren = computed<DropdownMenuItem[]>(() =>
 	locales.value.map((entry) => ({
 		checked: locale.value === entry.code,
-		label: entry.name ?? entry.code,
+		label: localeLabel(entry),
 		onSelect(e: Event) {
 			e.preventDefault();
-			if (!isAppLocaleCode(entry.code)) return;
-			setPreferredLocale(entry.code);
-			void setLocale(entry.code);
+			void selectLocale(entry.code);
 		},
 		onUpdateChecked(checked: boolean) {
-			if (checked && isAppLocaleCode(entry.code)) {
-				setPreferredLocale(entry.code);
-				void setLocale(entry.code);
-			}
+			if (checked) void selectLocale(entry.code);
 		},
 		type: "checkbox" as const,
 	})),

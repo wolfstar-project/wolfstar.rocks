@@ -91,7 +91,7 @@ interface ProfileHeaderProps {
 const { pending = false, user } = defineProps<ProfileHeaderProps>();
 defineEmits<{ copyUserId: [] }>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const loginTo = "/login?next=/profile";
 
 const sectionLabel = computed(() => {

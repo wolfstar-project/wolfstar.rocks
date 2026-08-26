@@ -61,7 +61,7 @@ import { formatTimeAgo } from "@vueuse/core";
 const UBadge = resolveComponent("UBadge");
 const UUser = resolveComponent("UUser");
 const { guildData } = useGuildData();
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const { warningsOnly } = defineProps<{
 	warningsOnly?: boolean;

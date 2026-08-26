@@ -73,7 +73,7 @@ const { apps } = defineProps<{
 	apps: readonly OtherApp[];
 }>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 </script>
 
 <style scoped>

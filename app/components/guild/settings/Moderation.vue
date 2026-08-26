@@ -44,7 +44,7 @@ import { ModerationSettingsSchema, type ModerationSettingsSchemaType } from "#sh
 import { setGuildDataChange } from "#shared/utils/guild-settings-map";
 import { ConfigurableModerationKeys } from "#shared/utils/settingsDataEntries";
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildSettings } = useGuildSettings();

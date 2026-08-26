@@ -3,7 +3,7 @@
  * Provides information about translation progress for each locale.
  */
 export function useI18nStatus() {
-	const { locale: currentLocale } = useI18n();
+	const { locale: currentLocale } = useAppLocale();
 
 	const {
 		data: status,

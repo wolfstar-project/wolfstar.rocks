@@ -74,7 +74,7 @@ import {
 	ConfigurableLoggingChannels,
 } from "#shared/utils/settingsDataEntries";
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();

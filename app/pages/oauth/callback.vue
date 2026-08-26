@@ -91,7 +91,7 @@ definePageMeta({
 	viewTransition: false,
 });
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { localizeAuthError } = useAuthErrorMessage();
 
 const route = useRoute();

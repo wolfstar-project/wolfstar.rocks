@@ -1,5 +1,5 @@
 export function useHeader() {
-	const { t } = useI18n();
+	const { ts: t } = useI18n();
 
 	// Safely inject appName with fallback to prevent SSR issues
 	const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));

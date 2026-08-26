@@ -874,7 +874,7 @@ enum AutomodFeature {
 	Words,
 }
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const features = computed(() => [
 	{

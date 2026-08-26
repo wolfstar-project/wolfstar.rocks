@@ -261,7 +261,7 @@ function sanitizeWord(raw: string): string {
 	return raw.replace(/[^0-9a-z]/gi, "").toLowerCase();
 }
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { guildSettings } = useGuildSettings();
 const toast = useToast();
 

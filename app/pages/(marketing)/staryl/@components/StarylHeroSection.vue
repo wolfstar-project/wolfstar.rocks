@@ -31,6 +31,7 @@
 						</UButton>
 						<UButton
 							to="#staryl-showcase"
+							:locale="false"
 							size="xl"
 							color="neutral"
 							variant="outline"
@@ -122,7 +123,7 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	inviteUrl: string;
 }>();
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const SETUP_COMMAND = "/subscriptions twitch";
 </script>

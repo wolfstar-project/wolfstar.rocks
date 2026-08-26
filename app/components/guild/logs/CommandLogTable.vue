@@ -80,7 +80,7 @@ const UBadge = resolveComponent("UBadge");
 const UAvatar = resolveComponent("UAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const page = ref(1);
 const limit = ref(20);

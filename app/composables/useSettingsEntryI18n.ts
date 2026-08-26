@@ -13,7 +13,7 @@ interface SettingsEntryLike {
  * keyed by the entry's stable `key` field. Falls back to the English source string.
  */
 export function useSettingsEntryI18n() {
-	const { t, te } = useI18n();
+	const { ts: t, has: te } = useI18n();
 
 	function translateEntry(entry: SettingsEntryLike, field: SettingsEntryField): string {
 		const i18nKey = `settings.entries.${entry.key}.${field}`;

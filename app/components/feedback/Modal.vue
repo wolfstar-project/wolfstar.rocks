@@ -72,7 +72,7 @@ import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/
 import { captureFeedback } from "@sentry/nuxt";
 
 const open = defineModel<boolean>("open", { default: false });
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const toast = useToast();
 const route = useRoute();
 const { user } = useUserSession();

@@ -557,14 +557,13 @@
 <script setup lang="ts">
 import type { TabsItem } from "@nuxt/ui";
 import * as Sentry from "@sentry/nuxt";
-import { isAppLocaleCode } from "~/utils/is-app-locale";
 import { getNuxtUiLocales } from "~/utils/nuxt-ui-locales";
 
 definePageMeta({ alias: ["/account"] });
 
-const { t, locale, setLocale } = useI18n();
+const { ts: t } = useI18n();
+const { locale, selectLocale } = useAppLocale();
 const { loggedIn, user: authUser, ready } = useUserSession();
-const { setPreferredLocale } = usePreferredLocale();
 useSeoMetadata({
 	description: () => t("profile.seo_description"),
 	shouldOgImage: true,
@@ -599,15 +598,9 @@ const uiLocales = getNuxtUiLocales();
 const currentLocale = computed({
 	get: () => locale.value,
 	set: (code: string) => {
-		selectLocale(code);
+		void selectLocale(code);
 	},
 });
-
-function selectLocale(code: string) {
-	if (!isAppLocaleCode(code)) return;
-	setPreferredLocale(code);
-	void setLocale(code);
-}
 
 const isTransitioning = ref(false);
 const isFilterTransitioning = ref(false);

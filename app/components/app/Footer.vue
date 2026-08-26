@@ -101,7 +101,7 @@
 </template>
 
 <script setup lang="ts">
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 

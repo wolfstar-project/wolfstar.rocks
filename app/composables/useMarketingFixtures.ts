@@ -14,7 +14,7 @@ import type { LoggingEventDetail, ShowcaseCommand, ShowcaseCommandPart } from "~
 
 /** Free-text values inside logging-event details, keyed by their English source. */
 function useLoggingDetailText() {
-	const { t } = useI18n();
+	const { ts: t } = useI18n();
 
 	const labels = computed<Record<string, string>>(() => ({
 		"Account Created": t("marketing.wolfstar.fixtures.label_account_created"),
@@ -54,7 +54,7 @@ function useLoggingDetailText() {
 }
 
 export function useLoggingEvents() {
-	const { t } = useI18n();
+	const { ts: t } = useI18n();
 	const { contents, labels } = useLoggingDetailText();
 
 	const copy = computed<Record<string, { action: string; title: string; tooltip: string }>>(
@@ -139,7 +139,7 @@ export function useLoggingEvents() {
 }
 
 export function useModerationActions() {
-	const { t } = useI18n();
+	const { ts: t } = useI18n();
 
 	const names = computed<Record<string, string>>(() => ({
 		"Ban": t("marketing.wolfstar.fixtures.action_ban"),
@@ -163,7 +163,7 @@ export function useModerationActions() {
 }
 
 export function useShowcaseCommands() {
-	const { t } = useI18n();
+	const { ts: t } = useI18n();
 	const { contents, labels } = useLoggingDetailText();
 
 	const copy = computed<Record<string, { description: string; tooltip: string }>>(() => ({

@@ -41,7 +41,7 @@ function toCandidates(input: AuthErrorInput): string[] {
  * Prefer `auth.errors.<CODE>` when present; otherwise fall back to the message.
  */
 export function useAuthErrorMessage() {
-	const { t, te } = useI18n();
+	const { ts: t, has: te } = useI18n();
 
 	function localizeAuthError(error: AuthErrorInput, fallbackKey = "auth.errors.GENERIC"): string {
 		const candidates = toCandidates(error);

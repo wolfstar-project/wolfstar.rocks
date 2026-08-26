@@ -42,7 +42,7 @@ definePageMeta({
 	path: "/guilds/:id/logs/:tab(moderation|warnings|commands|activity)?",
 });
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 const router = useRouter();
 
 const tab = useRouteParams("tab", "moderation", { transform: String });

@@ -89,6 +89,10 @@
 		"moderation_tools": "Herramientas de moderación",
 		"moderation_tools_description": "Herramientas para ayudarte a moderar tu servidor"
 	},
+	"nuxtSiteConfig": {
+		"description": "",
+		"name": ""
+	},
 	"translation_status": {
 		"description": "Consulta qué tan completa está cada lengua y contribuye con las cadenas que falten.",
 		"generated_at": "Última generación {date}",

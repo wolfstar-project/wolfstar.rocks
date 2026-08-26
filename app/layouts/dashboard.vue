@@ -168,7 +168,7 @@ function isSafeUrl(url: unknown): url is string {
 	}
 }
 
-const { t } = useI18n();
+const { ts: t } = useI18n();
 
 const guildId = useRouteParams("id", null, { transform: String });
 

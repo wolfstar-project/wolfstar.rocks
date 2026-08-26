@@ -15,12 +15,26 @@ import MagicString from "magic-string";
  *
  * Locale *types* are generated from the on-disk files, so stripped keys stay
  * type-safe in `$t()` call sites.
+ *
+ * @nuxtjs/i18n reads plain-JSON locale files from disk rather than through the
+ * bundlers, so this transform alone is not enough: the files it loads are the
+ * already-stripped mirror written by `modules/i18n-strip-empty-messages.ts`.
  */
-const LOCALES_SEGMENT = "/i18n/locales/";
+// Both the translator-facing sources and the generated, placeholder-free mirror
+// `i18n.langDir` points at (see `modules/i18n-strip-empty-messages.ts`).
+const LOCALES_SEGMENTS = ["/i18n/locales/", "/i18n/.locales-build/"];
 const VUE_I18N_RESOURCE_PLUGIN = "unplugin-vue-i18n:resource";
 const EMPTY_PLACEHOLDERS_PLUGIN = "wolfstar:i18n-empty-placeholders";
 const ALREADY_ES_MODULE = /^\s*export\b/;
 const prioritizedResourcePlugins = new WeakSet<Plugin>();
+
+function isLocaleResource(path: string | undefined): path is string {
+	return (
+		!!path &&
+		path.endsWith(".json") &&
+		LOCALES_SEGMENTS.some((segment) => path.includes(segment))
+	);
+}
 
 type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
 type ApplyToEnvironment = NonNullable<Plugin["applyToEnvironment"]>;
@@ -122,11 +136,7 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 			order: "pre",
 			async handler(code, id, options) {
 				const path = id.split("?")[0]?.replaceAll("\\", "/");
-				if (
-					path?.endsWith(".json") &&
-					path.includes(LOCALES_SEGMENT) &&
-					ALREADY_ES_MODULE.test(code)
-				) {
+				if (isLocaleResource(path) && ALREADY_ES_MODULE.test(code)) {
 					throw new Error(alreadyEsModuleMessage(VUE_I18N_RESOURCE_PLUGIN, id));
 				}
 
@@ -134,6 +144,28 @@ export function prioritizeVueI18nResourceTransform(plugins: readonly PluginOptio
 			},
 		};
 	}
+}
+
+/**
+ * Parse a locale JSON source, drop the `$schema` tooling pointer and every empty
+ * placeholder, and serialize what is left. Shared with the Nuxt module that
+ * writes the locale mirror, so bundled and disk-read locale files are stripped
+ * by exactly the same rules.
+ */
+export function stripEmptyLocaleJson(code: string, source: string, plugin: string): string {
+	let parsed: Record<string, JsonValue>;
+	try {
+		parsed = JSON.parse(code) as Record<string, JsonValue>;
+	} catch (error) {
+		throw new Error(
+			`[${plugin}] failed to parse locale JSON ${source}: ${error instanceof Error ? error.message : String(error)}`,
+			{ cause: error },
+		);
+	}
+
+	// `$schema` is editor tooling metadata, not a translatable message.
+	const { $schema: _schema, ...messages } = parsed;
+	return JSON.stringify(stripEmptyMessages(messages) ?? {});
 }
 
 export function stripEmptyI18nMessagesPlugin(): Plugin {
@@ -154,7 +186,7 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 			order: "pre",
 			handler(code, id) {
 				const path = id.split("?")[0]?.replaceAll("\\", "/");
-				if (!path?.endsWith(".json") || !path.includes(LOCALES_SEGMENT)) return null;
+				if (!isLocaleResource(path)) return null;
 
 				// Losing the `pre` position lets Vite's own JSON transform run
 				// first; fail loudly with the locale path instead of a bare
@@ -163,21 +195,12 @@ export function stripEmptyI18nMessagesPlugin(): Plugin {
 					throw new Error(alreadyEsModuleMessage(EMPTY_PLACEHOLDERS_PLUGIN, id));
 				}
 
-				// `$schema` is editor tooling metadata, not a translatable message.
-				let parsed: Record<string, JsonValue>;
-				try {
-					parsed = JSON.parse(code) as Record<string, JsonValue>;
-				} catch (error) {
-					throw new Error(
-						`[${EMPTY_PLACEHOLDERS_PLUGIN}] failed to parse locale JSON ${id}: ${error instanceof Error ? error.message : String(error)}`,
-						{ cause: error },
-					);
-				}
-
-				const { $schema: _schema, ...messages } = parsed;
-				const stripped = stripEmptyMessages(messages) ?? {};
 				const rewritten = new MagicString(code);
-				rewritten.overwrite(0, code.length, JSON.stringify(stripped));
+				rewritten.overwrite(
+					0,
+					code.length,
+					stripEmptyLocaleJson(code, id, EMPTY_PLACEHOLDERS_PLUGIN),
+				);
 
 				return {
 					code: rewritten.toString(),

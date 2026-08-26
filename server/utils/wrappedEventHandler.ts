@@ -3,6 +3,7 @@ import type { EventHandler, EventHandlerRequest, H3Error, H3Event } from "h3";
 import type { CacheOptions } from "nitropack/types";
 import { createHash } from "node:crypto";
 import { type PartialRateLimit, type RateLimit, RateLimitSchema } from "#shared/schemas";
+import { CLIENT_OUTDATED_HEADER } from "#shared/utils/skew-protection";
 import { Collection } from "@discordjs/collection";
 import { AsyncQueue } from "@sapphire/async-queue";
 import { cast, isObject } from "@sapphire/utilities";
@@ -321,7 +322,7 @@ function throwRateLimited(
 
 function throwClientOutdated(event: H3Event, log: WrappedLogger): never {
 	log.info("Outdated client rejected before handler execution");
-	setResponseHeader(event, "x-client-outdated", "true");
+	setResponseHeader(event, CLIENT_OUTDATED_HEADER, "true");
 
 	throw createError({
 		message: "Client version outdated. Please refresh.",

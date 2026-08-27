@@ -9,6 +9,12 @@
  * platform must already have matching languages — run
  * `node scripts/tolgee-ensure-languages.mjs` after creating/cloning a project.
  *
+ * The `$schema` pointer in each locale file is editor tooling metadata and never
+ * migrates: push reads a stripped staging mirror (see PUSH_STAGING_DIR below) and
+ * `scripts/tolgee-pull-remap.ts` restores the local pointer on the way back. A
+ * `$schema` key left on the platform from an earlier push is inert but should be
+ * deleted once in the Tolgee UI.
+ *
  * Free plan key limit is 500; this repo has ~907 string keys across all eight
  * namespaces (up from ~562 across the original six, before `errors` and
  * `marketing` were added — `marketing` alone contributes ~320). The key limit
@@ -58,9 +64,17 @@ const TOLGEE_TO_LOCAL = Object.fromEntries(
 	Object.entries(LOCALE_MAP).map(([local, tag]) => [tag, local]),
 );
 
-const pushFiles = Object.entries(LOCALE_MAP).flatMap(([localDir, language]) =>
+/**
+ * Push reads a staging mirror instead of `i18n/locales/` so the `$schema`
+ * tooling pointer never reaches the platform as a translatable key.
+ * `scripts/tolgee-push-prepare.ts` rebuilds it before every push.
+ */
+const PUSH_STAGING_DIR = "./i18n/.tolgee-push";
+
+const pushEntries = Object.entries(LOCALE_MAP).flatMap(([localDir, language]) =>
 	NAMESPACES.map((namespace) => ({
-		path: `./i18n/locales/${localDir}/${namespace}.json`,
+		source: `./i18n/locales/${localDir}/${namespace}.json`,
+		path: `${PUSH_STAGING_DIR}/${localDir}/${namespace}.json`,
 		language,
 		namespace,
 	})),
@@ -83,7 +97,7 @@ module.exports = {
 	push: {
 		forceMode: "KEEP",
 		tagNewKeys: ["migrated"],
-		files: pushFiles,
+		files: pushEntries.map(({ source: _source, ...file }) => file),
 	},
 	pull: {
 		// Pull into a staging dir; `pnpm tolgee:pull` remaps tags → Nuxt folders.
@@ -101,4 +115,9 @@ module.exports = {
 	// Exported for scripts/tolgee-pull-remap.ts
 	tolgeeToLocal: TOLGEE_TO_LOCAL,
 	namespaces: NAMESPACES,
+	// Exported for scripts/tolgee-push-prepare.ts
+	pushStaging: {
+		path: PUSH_STAGING_DIR,
+		files: pushEntries.map(({ source, path }) => ({ source, path })),
+	},
 };

@@ -14,7 +14,7 @@ import {
 } from "node:fs";
 import { createRequire } from "node:module";
 import { dirname, join } from "node:path";
-import { normalizeTolgeeDictionary } from "./utils/tolgee-dictionary.ts";
+import { normalizeTolgeeDictionary, withLocaleSchemaPointer } from "./utils/tolgee-dictionary.ts";
 
 const require = createRequire(import.meta.url);
 const config = require("../.tolgeerc.cjs") as {
@@ -80,7 +80,11 @@ for (const tag of mappedTags) {
 		try {
 			const source = readFileSync(join(pullRoot, tag, `${ns}.json`), "utf8");
 			const dictionary = normalizeTolgeeDictionary(JSON.parse(source));
-			content = Buffer.from(`${JSON.stringify(dictionary, null, "\t")}\n`);
+			// `$schema` is local editor tooling metadata: restore the
+			// repository's own pointer instead of trusting whatever the
+			// platform returns (a stale pushed key, or nothing at all).
+			const document = withLocaleSchemaPointer(dictionary, ns);
+			content = Buffer.from(`${JSON.stringify(document, null, "\t")}\n`);
 		} catch (error) {
 			console.error(`Invalid or unreadable staging file: ${tag}/${ns}.json`);
 			console.error(String(error));

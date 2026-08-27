@@ -19,8 +19,11 @@ export function useAppLocale() {
 
 	async function selectLocale(code: string): Promise<void> {
 		if (!isAppLocaleCode(code) || code === locale.value) return;
-		setPreferredLocale(code);
+		// Persist only once the switch has actually resolved: doing this first
+		// would leave a failed locale stored in `wolfstar-settings`, which the
+		// client startup flow would then keep retrying on every future visit.
 		await switchLocale(code);
+		setPreferredLocale(code);
 	}
 
 	function localeLabel(entry: Locale): string {

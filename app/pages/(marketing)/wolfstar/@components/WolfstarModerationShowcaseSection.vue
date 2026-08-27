@@ -1,6 +1,6 @@
 <template>
 	<Section
-		id="showcase"
+		id="features"
 		labelled-by="home-showcase-heading"
 		scroll-margin
 		spacing="none"

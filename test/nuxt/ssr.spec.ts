@@ -1018,7 +1018,7 @@ describe("component SSR rendering", () => {
 
 			expect(hero.text()).toContain("Moderation, with a paper trail.");
 			expect(hero.text()).toContain("Invite WolfStar");
-			expect(hero.find("a[href='#showcase']").exists()).toBe(true);
+			expect(hero.find("a[href='#features']").exists()).toBe(true);
 			expect(proof.text()).toContain("One system from first warning to final review.");
 			expect(proof.find("a[href='#moderation-tools']").exists()).toBe(true);
 			expect(proof.find("a[href='#advanced-logging']").exists()).toBe(true);

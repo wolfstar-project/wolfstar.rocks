@@ -139,4 +139,35 @@ describe("createLocaleSelector", () => {
 		await expect(newerSelection).rejects.toThrow("network error");
 		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("de-DE");
 	});
+
+	it("persists an older request's success once a newer request that failed first is out of the running", async () => {
+		const older = deferred(); // de-DE, resolves last
+		const newer = deferred(); // fr-FR, rejects first
+		const switchLocale = vi.fn((code: string) =>
+			code === "de-DE" ? older.promise : newer.promise,
+		);
+		const setPreferredLocale = vi.fn();
+		const selectLocale = createLocaleSelector({
+			getLocale: () => "en-US",
+			switchLocale,
+			setPreferredLocale,
+		});
+
+		const olderSelection = selectLocale("de-DE");
+		const newerSelection = selectLocale("fr-FR");
+
+		// The newest request fails while the older one is still pending: there
+		// is no way yet to know whether de-DE will end up as the final word, so
+		// nothing should persist.
+		newer.reject(new Error("network error"));
+		await expect(newerSelection).rejects.toThrow("network error");
+		expect(setPreferredLocale).not.toHaveBeenCalled();
+
+		// The older request then succeeds. Its requestId is stale relative to
+		// the newer one, but the newer one is no longer a contender — it already
+		// failed — so de-DE's success is the final, and only, word.
+		older.resolve();
+		await olderSelection;
+		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("de-DE");
+	});
 });

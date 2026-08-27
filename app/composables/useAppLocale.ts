@@ -20,19 +20,22 @@ export interface LocaleSelectorDeps {
  * so a mounted-component test has no way to substitute `switchLocale` and
  * control its timing.
  *
- * Guards two races on rapid re-selection: a switch that resolves after a newer
- * one was already requested must not overwrite the newer choice, and a switch
- * that fails must not persist the locale it was attempting. `requestId`
- * captures which call was the most recently issued; only that call is allowed
- * to write to `wolfstar-settings` once (and if) its own switch settles.
+ * Guards rapid re-selection, where several switches can be in flight at once
+ * and settle (resolve or reject) in any order: the persisted preference must
+ * always end up matching the most recently *requested* switch that actually
+ * succeeded, ignoring both older successes it supersedes and newer failures
+ * that never took effect.
  *
- * A failing newest request still needs to reconcile: an older, already-
- * resolved request may have changed the active locale while this one was in
- * flight, and that change was skipped above (its `requestId` was stale by
- * then). Re-reading `getLocale()` after the newest request rejects — and
- * persisting it only if it moved from the locale seen when this call
- * started — picks that up without re-persisting on a lone, unaccompanied
- * failure.
+ * Each call gets a monotonic `requestId` and records its own outcome once
+ * `switchLocale()` settles. `reconcile()` then walks outcomes from the
+ * newest `requestId` down: the first pending (not-yet-settled) id it meets
+ * means the true winner isn't known yet, so it stops and waits — a still
+ * in-flight newer request could still succeed and supersede everything
+ * below it. The first *settled* id it meets that succeeded is the winner
+ * (everything newer than it already failed, or there was nothing newer),
+ * and gets persisted, at most once. This naturally covers a newer request
+ * failing either before or after an older one resolves, without special-
+ * casing either order.
  */
 export function createLocaleSelector({
 	getLocale,
@@ -40,24 +43,38 @@ export function createLocaleSelector({
 	setPreferredLocale,
 }: LocaleSelectorDeps) {
 	let latestRequestId = 0;
+	let lastPersistedRequestId = 0;
+	const attemptedCode = new Map<number, string>();
+	const outcome = new Map<number, "success" | "failure">();
+
+	function reconcile() {
+		for (let id = latestRequestId; id >= 1; id--) {
+			const result = outcome.get(id);
+			if (result === undefined) return;
+			if (result === "success") {
+				if (id > lastPersistedRequestId) {
+					lastPersistedRequestId = id;
+					const code = attemptedCode.get(id);
+					if (code !== undefined) setPreferredLocale(code);
+				}
+				return;
+			}
+		}
+	}
 
 	return async function selectLocale(code: string): Promise<void> {
-		const localeBeforeSwitch = getLocale();
-		if (!isAppLocaleCode(code) || code === localeBeforeSwitch) return;
+		if (!isAppLocaleCode(code) || code === getLocale()) return;
 		const requestId = ++latestRequestId;
+		attemptedCode.set(requestId, code);
 		try {
 			await switchLocale(code);
+			outcome.set(requestId, "success");
 		} catch (error) {
-			if (requestId === latestRequestId) {
-				const active = getLocale();
-				if (active !== localeBeforeSwitch && isAppLocaleCode(active)) {
-					setPreferredLocale(active);
-				}
-			}
+			outcome.set(requestId, "failure");
+			reconcile();
 			throw error;
 		}
-		if (requestId !== latestRequestId) return;
-		setPreferredLocale(code);
+		reconcile();
 	};
 }
 

@@ -22,9 +22,17 @@ export interface LocaleSelectorDeps {
  *
  * Guards two races on rapid re-selection: a switch that resolves after a newer
  * one was already requested must not overwrite the newer choice, and a switch
- * that fails must not persist at all. `requestId` captures which call was the
- * most recently issued; only that call is allowed to write to
- * `wolfstar-settings` once (and if) its own switch resolves.
+ * that fails must not persist the locale it was attempting. `requestId`
+ * captures which call was the most recently issued; only that call is allowed
+ * to write to `wolfstar-settings` once (and if) its own switch settles.
+ *
+ * A failing newest request still needs to reconcile: an older, already-
+ * resolved request may have changed the active locale while this one was in
+ * flight, and that change was skipped above (its `requestId` was stale by
+ * then). Re-reading `getLocale()` after the newest request rejects — and
+ * persisting it only if it moved from the locale seen when this call
+ * started — picks that up without re-persisting on a lone, unaccompanied
+ * failure.
  */
 export function createLocaleSelector({
 	getLocale,
@@ -34,9 +42,20 @@ export function createLocaleSelector({
 	let latestRequestId = 0;
 
 	return async function selectLocale(code: string): Promise<void> {
-		if (!isAppLocaleCode(code) || code === getLocale()) return;
+		const localeBeforeSwitch = getLocale();
+		if (!isAppLocaleCode(code) || code === localeBeforeSwitch) return;
 		const requestId = ++latestRequestId;
-		await switchLocale(code);
+		try {
+			await switchLocale(code);
+		} catch (error) {
+			if (requestId === latestRequestId) {
+				const active = getLocale();
+				if (active !== localeBeforeSwitch && isAppLocaleCode(active)) {
+					setPreferredLocale(active);
+				}
+			}
+			throw error;
+		}
 		if (requestId !== latestRequestId) return;
 		setPreferredLocale(code);
 	};

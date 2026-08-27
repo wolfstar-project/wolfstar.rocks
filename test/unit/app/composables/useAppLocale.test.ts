@@ -105,4 +105,38 @@ describe("createLocaleSelector", () => {
 		await olderSelection;
 		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("fr-FR");
 	});
+
+	it("persists the locale an older request already applied when the newest request fails", async () => {
+		let currentLocale = "en-US";
+		const older = deferred(); // de-DE
+		const newer = deferred(); // fr-FR, rejects
+		const switchLocale = vi.fn((code: string) =>
+			(code === "de-DE" ? older.promise : newer.promise).then(() => {
+				currentLocale = code;
+			}),
+		);
+		const setPreferredLocale = vi.fn();
+		const selectLocale = createLocaleSelector({
+			getLocale: () => currentLocale,
+			switchLocale,
+			setPreferredLocale,
+		});
+
+		const olderSelection = selectLocale("de-DE");
+		const newerSelection = selectLocale("fr-FR");
+
+		// The older request succeeds first and actually becomes the active
+		// locale, but its own requestId is already stale, so it must not persist.
+		older.resolve();
+		await olderSelection;
+		expect(setPreferredLocale).not.toHaveBeenCalled();
+
+		// The newest request then fails without ever taking effect. Its failure
+		// must reconcile by persisting the locale that is actually active now
+		// (de-DE), not silently leave `wolfstar-settings` on the pre-selection
+		// value.
+		newer.reject(new Error("network error"));
+		await expect(newerSelection).rejects.toThrow("network error");
+		expect(setPreferredLocale).toHaveBeenCalledExactlyOnceWith("de-DE");
+	});
 });

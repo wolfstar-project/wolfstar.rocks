@@ -75,6 +75,7 @@ build-progress.md
 
 # Tolgee
 i18n/.tolgee-pull/
+i18n/.tolgee-push/
 
 # Generated placeholder-free locale mirror (modules/i18n-strip-empty-messages.ts)
 i18n/.locales-build/

@@ -15,14 +15,22 @@
  * `$schema` key left on the platform from an earlier push is inert but should be
  * deleted once in the Tolgee UI.
  *
- * Free plan key limit is 500; this repo has ~552 string keys across namespaces.
- * Prefer pushing only languages with real translations until the plan is upgraded:
- *   pnpm tolgee:push -- --languages en es it
+ * Free plan key limit is 500; this repo has ~907 string keys across all eight
+ * namespaces (up from ~562 across the original six, before `errors` and
+ * `marketing` were added — `marketing` alone contributes ~320). The key limit
+ * is per-project, not per-language, so scoping a push with `--languages` does
+ * NOT reduce the key count pushed. Confirm the plan has been upgraded before
+ * pushing for real; until then, keep pushes to a scratch/staging project or
+ * push a reduced namespace/pattern subset.
+ *
+ * NAMESPACES is derived from i18n/locale-features.json so the two sources
+ * can't drift; `.json` suffixes are stripped to get Tolgee namespace names.
  *
  * Set TOLGEE_API_KEY (Project API Key or PAT) in the environment — never commit it.
  * `tolgee login` PAT also works. MCP may still point at the older Wolfstar (33602) PAK.
  */
-const NAMESPACES = ["common", "auth", "dashboard", "guilds", "profile", "components"];
+const localeFeatures = require("./i18n/locale-features.json");
+const NAMESPACES = localeFeatures.features.map((file) => file.replace(/\.json$/, ""));
 
 /** Local directory → Tolgee language tag (canonical sources only). */
 const LOCALE_MAP = {

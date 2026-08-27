@@ -1,6 +1,47 @@
 import type { Locale } from "nuxt-i18n-micro";
 import { isAppLocaleCode } from "~/utils/is-app-locale";
 
+export interface LocaleSelectorDeps {
+	getLocale: () => string;
+	// Nuxt I18n Micro's own type declarations disagree with its runtime
+	// behavior here: `useI18n().switchLocale` is typed as returning `void`,
+	// but the implementation is async and genuinely worth awaiting (it drives
+	// the loaded chunk before resolving). `await` accepts a non-promise value
+	// as already-resolved, so the wider signature stays correct either way.
+	switchLocale: (code: string) => void | Promise<void>;
+	setPreferredLocale: (code: string) => void;
+}
+
+/**
+ * Pure `selectLocale()` implementation, factored out of `useAppLocale()` so it
+ * can be unit-tested without a Nuxt app instance: Nuxt I18n Micro injects
+ * `useI18n()`'s properties as non-configurable getters
+ * (`Object.defineProperty(nuxtApp, "$switchLocale", { get: () => value })`),
+ * so a mounted-component test has no way to substitute `switchLocale` and
+ * control its timing.
+ *
+ * Guards two races on rapid re-selection: a switch that resolves after a newer
+ * one was already requested must not overwrite the newer choice, and a switch
+ * that fails must not persist at all. `requestId` captures which call was the
+ * most recently issued; only that call is allowed to write to
+ * `wolfstar-settings` once (and if) its own switch resolves.
+ */
+export function createLocaleSelector({
+	getLocale,
+	switchLocale,
+	setPreferredLocale,
+}: LocaleSelectorDeps) {
+	let latestRequestId = 0;
+
+	return async function selectLocale(code: string): Promise<void> {
+		if (!isAppLocaleCode(code) || code === getLocale()) return;
+		const requestId = ++latestRequestId;
+		await switchLocale(code);
+		if (requestId !== latestRequestId) return;
+		setPreferredLocale(code);
+	};
+}
+
 /**
  * Reactive view of the active locale on top of Nuxt I18n Micro, whose runtime
  * API exposes plain getters (`$getLocale()`, `$getLocales()`) rather than refs.
@@ -17,14 +58,11 @@ export function useAppLocale() {
 	const locale = computed<string>(() => getLocale());
 	const locales = computed<Locale[]>(() => getLocales());
 
-	async function selectLocale(code: string): Promise<void> {
-		if (!isAppLocaleCode(code) || code === locale.value) return;
-		// Persist only once the switch has actually resolved: doing this first
-		// would leave a failed locale stored in `wolfstar-settings`, which the
-		// client startup flow would then keep retrying on every future visit.
-		await switchLocale(code);
-		setPreferredLocale(code);
-	}
+	const selectLocale = createLocaleSelector({
+		getLocale: () => locale.value,
+		switchLocale,
+		setPreferredLocale,
+	});
 
 	function localeLabel(entry: Locale): string {
 		return entry.displayName ?? entry.code;

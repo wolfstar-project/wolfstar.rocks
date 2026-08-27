@@ -68,6 +68,11 @@ const ariaLabel = computed(() => {
 	@apply min-h-11 cursor-pointer rounded-md px-3 py-2;
 }
 
+:global([data-theme="light"]) .discord-slash-command-suggestion-matched {
+	--discord-slash-command-suggestion-matched-hover: oklch(95.74% 0.004 264);
+	--discord-slash-command-suggestion-matched-active: oklch(92.64% 0.006 264);
+}
+
 .discord-slash-command-suggestion-matched:hover,
 .discord-slash-command-suggestion-matched-active {
 	background-color: var(--discord-slash-command-suggestion-matched-hover);

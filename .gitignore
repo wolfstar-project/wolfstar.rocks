@@ -66,9 +66,18 @@ storybook-static
 
 # Claude misc
 .claude/state
+.claude/context/jobs/
+
+# Agent build job artifacts
+build-contract.md
+build-handoff.json
+build-progress.md
 
 # Tolgee
 i18n/.tolgee-pull/
+
+# Generated placeholder-free locale mirror (modules/i18n-strip-empty-messages.ts)
+i18n/.locales-build/
 .tmp/
 
 # Vitest failure screenshots

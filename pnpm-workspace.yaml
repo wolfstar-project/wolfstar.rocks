@@ -60,6 +60,10 @@ minimumReleaseAgeExclude:
 
 overrides:
     "@netlify/api": ^14.0.19
+    # Opt in to the Nuxt CLI v4 alpha ahead of nuxt depending on it directly:
+    # interactive dev server, leaner install, and Nuxt 2/bridge support dropped.
+    # https://github.com/nuxt/cli/releases/tag/v4.0.0-alpha.0
+    "@nuxt/cli": 4.0.0-alpha.0
     # Keep a single discord-api-types instance; two copies make structurally
     # identical Discord payload types nominally incompatible during typecheck
     discord-api-types: 0.38.52

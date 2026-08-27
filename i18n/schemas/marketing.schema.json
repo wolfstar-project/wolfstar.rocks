@@ -1,0 +1,1086 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"title": "WolfStar i18n locale file (marketing.json)",
+	"description": "Schema for marketing.json. Generated from en/marketing.json — do not edit manually.",
+	"type": "object",
+	"properties": {
+		"marketing": {
+			"type": "object",
+			"properties": {
+				"other_apps": {
+					"type": "object",
+					"properties": {
+						"also_from": {
+							"type": "string"
+						},
+						"explore": {
+							"type": "string"
+						},
+						"eyebrow": {
+							"type": "string"
+						},
+						"invite": {
+							"type": "string"
+						},
+						"invite_pending": {
+							"type": "string"
+						},
+						"logo_alt": {
+							"type": "string"
+						},
+						"staryl_description": {
+							"type": "string"
+						},
+						"title": {
+							"type": "string"
+						},
+						"wolfstar_description": {
+							"type": "string"
+						}
+					},
+					"additionalProperties": false
+				},
+				"staryl": {
+					"type": "object",
+					"properties": {
+						"commands": {
+							"type": "object",
+							"properties": {
+								"eyebrow": {
+									"type": "string"
+								},
+								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"cta": {
+							"type": "object",
+							"properties": {
+								"ask_in_support": {
+									"type": "string"
+								},
+								"eyebrow": {
+									"type": "string"
+								},
+								"invite": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"subtitle_no_invite": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"hero": {
+							"type": "object",
+							"properties": {
+								"brief_aria": {
+									"type": "string"
+								},
+								"brief_label": {
+									"type": "string"
+								},
+								"invite": {
+									"type": "string"
+								},
+								"kicker": {
+									"type": "string"
+								},
+								"no_invite": {
+									"type": "string"
+								},
+								"release": {
+									"type": "string"
+								},
+								"routing_term": {
+									"type": "string"
+								},
+								"routing_value": {
+									"type": "string"
+								},
+								"see_work": {
+									"type": "string"
+								},
+								"setup_term": {
+									"type": "string"
+								},
+								"setup_value": {
+									"type": "string"
+								},
+								"sources_term": {
+									"type": "string"
+								},
+								"sources_value": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"view_source": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"proof": {
+							"type": "object",
+							"properties": {
+								"eyebrow": {
+									"type": "string"
+								},
+								"step_1_body": {
+									"type": "string"
+								},
+								"step_1_title": {
+									"type": "string"
+								},
+								"step_2_body": {
+									"type": "string"
+								},
+								"step_2_title": {
+									"type": "string"
+								},
+								"step_3_body": {
+									"type": "string"
+								},
+								"step_3_title": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"seo": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"showcase": {
+							"type": "object",
+							"properties": {
+								"add_description": {
+									"type": "string"
+								},
+								"add_response": {
+									"type": "string"
+								},
+								"channel_topic": {
+									"type": "string"
+								},
+								"composer_placeholder": {
+									"type": "string"
+								},
+								"remove_description": {
+									"type": "string"
+								},
+								"remove_response": {
+									"type": "string"
+								},
+								"reset_description": {
+									"type": "string"
+								},
+								"reset_response": {
+									"type": "string"
+								},
+								"search_placeholder": {
+									"type": "string"
+								},
+								"show_description": {
+									"type": "string"
+								},
+								"show_embed_offline": {
+									"type": "string"
+								},
+								"show_embed_online": {
+									"type": "string"
+								},
+								"show_embed_title": {
+									"type": "string"
+								},
+								"test_description": {
+									"type": "string"
+								},
+								"test_response": {
+									"type": "string"
+								},
+								"timestamp": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				},
+				"wolfstar": {
+					"type": "object",
+					"properties": {
+						"commands": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"eyebrow": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"commands_showcase": {
+							"type": "object",
+							"properties": {
+								"channel_topic": {
+									"type": "string"
+								},
+								"composer_placeholder": {
+									"type": "string"
+								},
+								"mock_catbot_cat": {
+									"type": "string"
+								},
+								"mock_dyno_modlogs": {
+									"type": "string"
+								},
+								"mock_fmbot_addfriend": {
+									"type": "string"
+								},
+								"mock_fmbot_fm": {
+									"type": "string"
+								},
+								"mock_ring_info": {
+									"type": "string"
+								},
+								"mock_utilsbot_poll": {
+									"type": "string"
+								},
+								"search_placeholder": {
+									"type": "string"
+								},
+								"select_aria": {
+									"type": "string"
+								},
+								"timestamp": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"cta": {
+							"type": "object",
+							"properties": {
+								"ask_in_support": {
+									"type": "string"
+								},
+								"eyebrow": {
+									"type": "string"
+								},
+								"invite": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"dashboard": {
+							"type": "object",
+							"properties": {
+								"browse_commands": {
+									"type": "string"
+								},
+								"eyebrow": {
+									"type": "string"
+								},
+								"index_label": {
+									"type": "string"
+								},
+								"row_1_body": {
+									"type": "string"
+								},
+								"row_1_title": {
+									"type": "string"
+								},
+								"row_2_body": {
+									"type": "string"
+								},
+								"row_2_title": {
+									"type": "string"
+								},
+								"row_3_body": {
+									"type": "string"
+								},
+								"row_3_title": {
+									"type": "string"
+								},
+								"row_4_body": {
+									"type": "string"
+								},
+								"row_4_title": {
+									"type": "string"
+								},
+								"sign_in": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"views_count": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"fixtures": {
+							"type": "object",
+							"properties": {
+								"action_ban": {
+									"type": "string"
+								},
+								"action_kick": {
+									"type": "string"
+								},
+								"action_mute": {
+									"type": "string"
+								},
+								"action_softban": {
+									"type": "string"
+								},
+								"action_timeout": {
+									"type": "string"
+								},
+								"action_voice_kick": {
+									"type": "string"
+								},
+								"action_voice_mute": {
+									"type": "string"
+								},
+								"action_warning": {
+									"type": "string"
+								},
+								"button_stop": {
+									"type": "string"
+								},
+								"channel_create_action": {
+									"type": "string"
+								},
+								"channel_create_title": {
+									"type": "string"
+								},
+								"channel_create_tooltip": {
+									"type": "string"
+								},
+								"channel_delete_action": {
+									"type": "string"
+								},
+								"channel_delete_title": {
+									"type": "string"
+								},
+								"channel_delete_tooltip": {
+									"type": "string"
+								},
+								"channel_update_action": {
+									"type": "string"
+								},
+								"channel_update_title": {
+									"type": "string"
+								},
+								"channel_update_tooltip": {
+									"type": "string"
+								},
+								"cmd_ban_description": {
+									"type": "string"
+								},
+								"cmd_ban_tooltip": {
+									"type": "string"
+								},
+								"cmd_case_archive_description": {
+									"type": "string"
+								},
+								"cmd_case_archive_tooltip": {
+									"type": "string"
+								},
+								"cmd_case_delete_description": {
+									"type": "string"
+								},
+								"cmd_case_delete_tooltip": {
+									"type": "string"
+								},
+								"cmd_case_description": {
+									"type": "string"
+								},
+								"cmd_case_edit_description": {
+									"type": "string"
+								},
+								"cmd_case_edit_tooltip": {
+									"type": "string"
+								},
+								"cmd_case_list_description": {
+									"type": "string"
+								},
+								"cmd_case_list_tooltip": {
+									"type": "string"
+								},
+								"cmd_case_tooltip": {
+									"type": "string"
+								},
+								"cmd_case_view_description": {
+									"type": "string"
+								},
+								"cmd_case_view_tooltip": {
+									"type": "string"
+								},
+								"cmd_conf_menu_description": {
+									"type": "string"
+								},
+								"cmd_conf_menu_tooltip": {
+									"type": "string"
+								},
+								"cmd_conf_remove_description": {
+									"type": "string"
+								},
+								"cmd_conf_remove_tooltip": {
+									"type": "string"
+								},
+								"cmd_conf_reset_description": {
+									"type": "string"
+								},
+								"cmd_conf_reset_tooltip": {
+									"type": "string"
+								},
+								"cmd_conf_set_description": {
+									"type": "string"
+								},
+								"cmd_conf_set_tooltip": {
+									"type": "string"
+								},
+								"cmd_conf_show_description": {
+									"type": "string"
+								},
+								"cmd_conf_show_tooltip": {
+									"type": "string"
+								},
+								"cmd_kick_description": {
+									"type": "string"
+								},
+								"cmd_kick_tooltip": {
+									"type": "string"
+								},
+								"cmd_mute_description": {
+									"type": "string"
+								},
+								"cmd_mute_tooltip": {
+									"type": "string"
+								},
+								"cmd_warn_description": {
+									"type": "string"
+								},
+								"cmd_warn_tooltip": {
+									"type": "string"
+								},
+								"embed_case": {
+									"type": "string"
+								},
+								"label_account_created": {
+									"type": "string"
+								},
+								"label_after": {
+									"type": "string"
+								},
+								"label_before": {
+									"type": "string"
+								},
+								"label_changes": {
+									"type": "string"
+								},
+								"label_channel": {
+									"type": "string"
+								},
+								"label_color": {
+									"type": "string"
+								},
+								"label_content": {
+									"type": "string"
+								},
+								"label_created_by": {
+									"type": "string"
+								},
+								"label_deleted_by": {
+									"type": "string"
+								},
+								"label_joined_at": {
+									"type": "string"
+								},
+								"label_moderator": {
+									"type": "string"
+								},
+								"label_reason": {
+									"type": "string"
+								},
+								"label_role": {
+									"type": "string"
+								},
+								"label_roles": {
+									"type": "string"
+								},
+								"label_type": {
+									"type": "string"
+								},
+								"label_updated_by": {
+									"type": "string"
+								},
+								"label_user": {
+									"type": "string"
+								},
+								"member_join_action": {
+									"type": "string"
+								},
+								"member_join_title": {
+									"type": "string"
+								},
+								"member_join_tooltip": {
+									"type": "string"
+								},
+								"member_leave_action": {
+									"type": "string"
+								},
+								"member_leave_title": {
+									"type": "string"
+								},
+								"member_leave_tooltip": {
+									"type": "string"
+								},
+								"menu_currently_at": {
+									"type": "string"
+								},
+								"menu_navigate": {
+									"type": "string"
+								},
+								"message_delete_action": {
+									"type": "string"
+								},
+								"message_delete_title": {
+									"type": "string"
+								},
+								"message_delete_tooltip": {
+									"type": "string"
+								},
+								"message_edit_action": {
+									"type": "string"
+								},
+								"message_edit_title": {
+									"type": "string"
+								},
+								"message_edit_tooltip": {
+									"type": "string"
+								},
+								"reply_case_archived": {
+									"type": "string"
+								},
+								"reply_case_created": {
+									"type": "string"
+								},
+								"reply_case_deleted": {
+									"type": "string"
+								},
+								"reply_case_edited": {
+									"type": "string"
+								},
+								"reply_key_reset": {
+									"type": "string"
+								},
+								"reply_key_updated": {
+									"type": "string"
+								},
+								"reply_key_value": {
+									"type": "string"
+								},
+								"reply_no_cases": {
+									"type": "string"
+								},
+								"role_create_action": {
+									"type": "string"
+								},
+								"role_create_title": {
+									"type": "string"
+								},
+								"role_create_tooltip": {
+									"type": "string"
+								},
+								"role_delete_action": {
+									"type": "string"
+								},
+								"role_delete_title": {
+									"type": "string"
+								},
+								"role_delete_tooltip": {
+									"type": "string"
+								},
+								"role_update_action": {
+									"type": "string"
+								},
+								"role_update_title": {
+									"type": "string"
+								},
+								"role_update_tooltip": {
+									"type": "string"
+								},
+								"select_placeholder": {
+									"type": "string"
+								},
+								"text_edited_message": {
+									"type": "string"
+								},
+								"text_message_deleted": {
+									"type": "string"
+								},
+								"text_name_changed": {
+									"type": "string"
+								},
+								"text_original_message": {
+									"type": "string"
+								},
+								"text_permissions_updated": {
+									"type": "string"
+								},
+								"text_spam": {
+									"type": "string"
+								},
+								"text_text_channel": {
+									"type": "string"
+								},
+								"text_warning": {
+									"type": "string"
+								},
+								"value_not_set": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"hero": {
+							"type": "object",
+							"properties": {
+								"automod_term": {
+									"type": "string"
+								},
+								"automod_value": {
+									"type": "string"
+								},
+								"brief_aria": {
+									"type": "string"
+								},
+								"brief_label": {
+									"type": "string"
+								},
+								"dashboard_term": {
+									"type": "string"
+								},
+								"dashboard_value": {
+									"type": "string"
+								},
+								"history_term": {
+									"type": "string"
+								},
+								"history_value": {
+									"type": "string"
+								},
+								"invite": {
+									"type": "string"
+								},
+								"kicker": {
+									"type": "string"
+								},
+								"release": {
+									"type": "string"
+								},
+								"see_work": {
+									"type": "string"
+								},
+								"subtitle": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"view_source": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"proof": {
+							"type": "object",
+							"properties": {
+								"eyebrow": {
+									"type": "string"
+								},
+								"step_1_body": {
+									"type": "string"
+								},
+								"step_1_cta": {
+									"type": "string"
+								},
+								"step_1_title": {
+									"type": "string"
+								},
+								"step_2_body": {
+									"type": "string"
+								},
+								"step_2_cta": {
+									"type": "string"
+								},
+								"step_2_title": {
+									"type": "string"
+								},
+								"step_3_body": {
+									"type": "string"
+								},
+								"step_3_cta": {
+									"type": "string"
+								},
+								"step_3_title": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"seo": {
+							"type": "object",
+							"properties": {
+								"description": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						},
+						"showcase": {
+							"type": "object",
+							"properties": {
+								"act_on": {
+									"type": "string"
+								},
+								"action_alert_body": {
+									"type": "string"
+								},
+								"action_alert_label": {
+									"type": "string"
+								},
+								"action_delete_body": {
+									"type": "string"
+								},
+								"action_delete_label": {
+									"type": "string"
+								},
+								"action_log_body": {
+									"type": "string"
+								},
+								"action_log_label": {
+									"type": "string"
+								},
+								"alert": {
+									"type": "string"
+								},
+								"automod_actions_intro": {
+									"type": "string"
+								},
+								"automod_attachments_alert": {
+									"type": "string"
+								},
+								"automod_attachments_title": {
+									"type": "string"
+								},
+								"automod_attachments_tooltip": {
+									"type": "string"
+								},
+								"automod_capitals_alert": {
+									"type": "string"
+								},
+								"automod_capitals_title": {
+									"type": "string"
+								},
+								"automod_capitals_tooltip": {
+									"type": "string"
+								},
+								"automod_intro": {
+									"type": "string"
+								},
+								"automod_invites_alert": {
+									"type": "string"
+								},
+								"automod_invites_title": {
+									"type": "string"
+								},
+								"automod_invites_tooltip": {
+									"type": "string"
+								},
+								"automod_links_alert": {
+									"type": "string"
+								},
+								"automod_links_title": {
+									"type": "string"
+								},
+								"automod_links_tooltip": {
+									"type": "string"
+								},
+								"automod_mentions_alert": {
+									"type": "string"
+								},
+								"automod_mentions_title": {
+									"type": "string"
+								},
+								"automod_mentions_tooltip": {
+									"type": "string"
+								},
+								"automod_newlines_alert": {
+									"type": "string"
+								},
+								"automod_newlines_title": {
+									"type": "string"
+								},
+								"automod_newlines_tooltip": {
+									"type": "string"
+								},
+								"automod_reactions_alert": {
+									"type": "string"
+								},
+								"automod_reactions_title": {
+									"type": "string"
+								},
+								"automod_reactions_tooltip": {
+									"type": "string"
+								},
+								"automod_spam_alert": {
+									"type": "string"
+								},
+								"automod_spam_title": {
+									"type": "string"
+								},
+								"automod_spam_tooltip": {
+									"type": "string"
+								},
+								"automod_words_alert": {
+									"type": "string"
+								},
+								"automod_words_title": {
+									"type": "string"
+								},
+								"automod_words_tooltip": {
+									"type": "string"
+								},
+								"btn_temporary": {
+									"type": "string"
+								},
+								"btn_undo": {
+									"type": "string"
+								},
+								"channel_automod": {
+									"type": "string"
+								},
+								"channel_logs": {
+									"type": "string"
+								},
+								"channel_modlog": {
+									"type": "string"
+								},
+								"embed_action": {
+									"type": "string"
+								},
+								"embed_case": {
+									"type": "string"
+								},
+								"embed_log": {
+									"type": "string"
+								},
+								"embed_reason": {
+									"type": "string"
+								},
+								"embed_reason_value": {
+									"type": "string"
+								},
+								"embed_type": {
+									"type": "string"
+								},
+								"embed_user": {
+									"type": "string"
+								},
+								"escalation_action_body": {
+									"type": "string"
+								},
+								"escalation_action_label": {
+									"type": "string"
+								},
+								"escalation_intro": {
+									"type": "string"
+								},
+								"escalation_threshold_body": {
+									"type": "string"
+								},
+								"escalation_threshold_label": {
+									"type": "string"
+								},
+								"feature_automod_description": {
+									"type": "string"
+								},
+								"feature_automod_title": {
+									"type": "string"
+								},
+								"feature_logging_description": {
+									"type": "string"
+								},
+								"feature_logging_title": {
+									"type": "string"
+								},
+								"feature_moderation_description": {
+									"type": "string"
+								},
+								"feature_moderation_title": {
+									"type": "string"
+								},
+								"header_description": {
+									"type": "string"
+								},
+								"header_eyebrow": {
+									"type": "string"
+								},
+								"header_title": {
+									"type": "string"
+								},
+								"keep_track_of": {
+									"type": "string"
+								},
+								"logging_dashboard_intro": {
+									"type": "string"
+								},
+								"logging_intro": {
+									"type": "string"
+								},
+								"logging_item_filter": {
+									"type": "string"
+								},
+								"logging_item_views": {
+									"type": "string"
+								},
+								"mod_copy_audit": {
+									"type": "string"
+								},
+								"mod_copy_search": {
+									"type": "string"
+								},
+								"msg_attachments": {
+									"type": "string"
+								},
+								"msg_capitals": {
+									"type": "string"
+								},
+								"msg_capitals_strong": {
+									"type": "string"
+								},
+								"msg_invites": {
+									"type": "string"
+								},
+								"msg_links": {
+									"type": "string"
+								},
+								"msg_mentions": {
+									"type": "string"
+								},
+								"msg_newlines": {
+									"type": "string"
+								},
+								"msg_newlines_end": {
+									"type": "string"
+								},
+								"msg_reactions": {
+									"type": "string"
+								},
+								"msg_spam": {
+									"type": "string"
+								},
+								"msg_words": {
+									"type": "string"
+								},
+								"msg_words_strong": {
+									"type": "string"
+								},
+								"next_automod": {
+									"type": "string"
+								},
+								"next_logging": {
+									"type": "string"
+								},
+								"next_moderation": {
+									"type": "string"
+								},
+								"prev_automod": {
+									"type": "string"
+								},
+								"prev_logging": {
+									"type": "string"
+								},
+								"prev_moderation": {
+									"type": "string"
+								},
+								"server_suffix": {
+									"type": "string"
+								},
+								"suite_for": {
+									"type": "string"
+								},
+								"suite_subject": {
+									"type": "string"
+								}
+							},
+							"additionalProperties": false
+						}
+					},
+					"additionalProperties": false
+				}
+			},
+			"additionalProperties": false
+		},
+		"$schema": {
+			"type": "string"
+		}
+	},
+	"additionalProperties": false
+}

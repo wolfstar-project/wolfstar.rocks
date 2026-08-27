@@ -1,26 +1,22 @@
 <template>
 	<div class="text-base-content">
-		<HeroSection
+		<WolfstarHeroSection
 			:build-time
 			:build-version="buildInfo.version"
 			:invite-url="Invites.WolfStar"
 		/>
 
-		<StatsSection :stats />
+		<WolfstarProductProofSection />
 
-		<ModerationShowcaseSection />
+		<WolfstarModerationShowcaseSection />
 
-		<CommandsSection />
+		<WolfstarCommandsSection />
 
-		<FeaturesSection :features="bentoFeatures" />
-
-		<DashboardSection :members="dashboardMembers" />
-
-		<TestimonialsSection :testimonials />
+		<WolfstarDashboardSection />
 
 		<OtherApps :apps="[otherApps.Staryl]" />
 
-		<CtaSection :invite-url="Invites.WolfStar" />
+		<WolfstarCtaSection :invite-url="Invites.WolfStar" />
 	</div>
 </template>
 
@@ -29,11 +25,12 @@ definePageMeta({
 	alias: ["/"],
 });
 
+const { t } = useI18n();
+
 useSeoMetadata({
-	description:
-		"Discover WolfStar, a fully customizable multilingual Discord moderation application designed to help you manage and protect your server.",
+	description: () => t("marketing.wolfstar.seo.description"),
 	shouldOgImage: true,
-	title: "Home",
+	title: () => t("marketing.wolfstar.seo.title"),
 });
 
 const otherApps = useApp();

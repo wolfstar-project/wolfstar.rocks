@@ -1,15 +1,20 @@
 <template>
 	<Section labelled-by="home-commands-heading" spacing="none" class="commands-section pb-24">
 		<SectionHeader
-			eyebrow="Commands"
-			title="Moderation at your fingertips."
-			description="Slash commands with autocomplete, rich options, and instant feedback — right in Discord."
+			:eyebrow="t('marketing.wolfstar.commands.eyebrow')"
+			:title="t('marketing.wolfstar.commands.title')"
+			:description="t('marketing.wolfstar.commands.description')"
 			heading-id="home-commands-heading"
+			align="start"
 			class="mb-10"
 		/>
-		<LazyCommandsShowcase />
+		<LazyWolfstarCommandsShowcase />
 	</Section>
 </template>
+
+<script setup lang="ts">
+const { t } = useI18n();
+</script>
 
 <style scoped>
 .commands-section {

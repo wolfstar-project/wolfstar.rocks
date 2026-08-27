@@ -64,13 +64,13 @@ interface Emits {
 <script setup lang="ts">
 const { modelValue, min, max } = defineProps<SelectDurationProps>();
 const emit = defineEmits<Emits>();
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 
 const unitItems = computed(() => [
-	{ label: t("select.seconds"), value: "seconds" },
-	{ label: t("select.minutes"), value: "minutes" },
-	{ label: t("select.hours"), value: "hours" },
-	{ label: t("select.days"), value: "days" },
+	{ label: ts("select.seconds"), value: "seconds" },
+	{ label: ts("select.minutes"), value: "minutes" },
+	{ label: ts("select.hours"), value: "hours" },
+	{ label: ts("select.days"), value: "days" },
 ]);
 
 const [inputDuration, inputUnit] = determineUnit(modelValue ?? 0);
@@ -88,13 +88,13 @@ const durationString = computed({
 function localizedUnit(unitKey: string): string {
 	switch (unitKey) {
 		case "seconds":
-			return t("select.seconds");
+			return ts("select.seconds");
 		case "minutes":
-			return t("select.minutes");
+			return ts("select.minutes");
 		case "hours":
-			return t("select.hours");
+			return ts("select.hours");
 		case "days":
-			return t("select.days");
+			return ts("select.days");
 		default:
 			return unitKey;
 	}
@@ -103,13 +103,13 @@ function localizedUnit(unitKey: string): string {
 function validate(ms: number): boolean {
 	if (ms < min) {
 		const [val, u] = determineUnit(min);
-		error.value = t("select.min_duration", { value: val, unit: localizedUnit(u) });
+		error.value = ts("select.min_duration", { value: val, unit: localizedUnit(u) });
 		return false;
 	}
 
 	if (typeof max === "number" && ms > max) {
 		const [val, u] = determineUnit(max);
-		error.value = t("select.max_duration", { value: val, unit: localizedUnit(u) });
+		error.value = ts("select.max_duration", { value: val, unit: localizedUnit(u) });
 		return false;
 	}
 

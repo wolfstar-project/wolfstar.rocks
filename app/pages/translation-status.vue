@@ -2,10 +2,10 @@
 	<UContainer class="mx-auto max-w-3xl space-y-8 px-4 py-12">
 		<header class="space-y-2">
 			<h1 class="text-3xl font-bold text-base-content">
-				{{ t("translation_status.title") }}
+				{{ ts("translation_status.title") }}
 			</h1>
 			<p class="text-base-content/70">
-				{{ t("translation_status.description") }}
+				{{ ts("translation_status.description") }}
 			</p>
 			<p v-if="status?.generatedAt" class="text-sm text-muted">
 				<i18n-t keypath="translation_status.generated_at" tag="span" scope="global">
@@ -24,10 +24,10 @@
 		<section
 			v-if="status"
 			class="space-y-4"
-			:aria-label="t('translation_status.progress_by_locale')"
+			:aria-label="ts('translation_status.progress_by_locale')"
 		>
 			<p class="text-sm text-muted">
-				{{ t("translation_status.source_locale") }}:
+				{{ ts("translation_status.source_locale") }}:
 				<strong class="text-base-content">
 					{{ status.sourceLocale.label }} ({{ status.sourceLocale.lang }})
 				</strong>
@@ -74,7 +74,7 @@
 							size="xs"
 							color="neutral"
 							variant="soft"
-							:label="t('i18n.edit_on_github')"
+							:label="ts('i18n.edit_on_github')"
 						/>
 						<span class="text-muted">
 							{{ tc("i18n.missing_keys", localeStatus.missingKeys.length) }}
@@ -85,18 +85,18 @@
 		</section>
 
 		<p v-else class="text-base-content/70">
-			{{ t("translation_status.no_data") }}
+			{{ ts("translation_status.no_data") }}
 		</p>
 	</UContainer>
 </template>
 
 <script setup lang="ts">
-const { ts: t, tc } = useI18n();
+const { ts, tc } = useI18n();
 const { locale } = useAppLocale();
 const { status } = useI18nStatus();
 
 useSeoMeta({
-	title: () => t("translation_status.title"),
-	description: () => t("translation_status.description"),
+	title: () => ts("translation_status.title"),
+	description: () => ts("translation_status.description"),
 });
 </script>

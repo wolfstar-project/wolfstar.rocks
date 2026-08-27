@@ -1,7 +1,7 @@
 <template>
 	<UDashboardPanel id="home">
 		<template #header>
-			<UDashboardNavbar :title="t('guild_logs.title')" :ui="{ right: 'gap-3' }">
+			<UDashboardNavbar :title="ts('guild_logs.title')" :ui="{ right: 'gap-3' }">
 				<template #leading>
 					<UDashboardSidebarCollapse />
 				</template>
@@ -42,17 +42,17 @@ definePageMeta({
 	path: "/guilds/:id/logs/:tab(moderation|warnings|commands|activity)?",
 });
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const router = useRouter();
 
 const tab = useRouteParams("tab", "moderation", { transform: String });
 const guildId = useRouteParams("id", undefined, { transform: String });
 
 const tabs = computed<TabsItem[]>(() => [
-	{ value: "moderation", label: t("guild_logs.tab_moderation") },
-	{ value: "warnings", label: t("guild_logs.tab_warnings") },
-	{ value: "commands", label: t("guild_logs.tab_commands") },
-	{ value: "activity", label: t("guild_logs.tab_activity") },
+	{ value: "moderation", label: ts("guild_logs.tab_moderation") },
+	{ value: "warnings", label: ts("guild_logs.tab_warnings") },
+	{ value: "commands", label: ts("guild_logs.tab_commands") },
+	{ value: "activity", label: ts("guild_logs.tab_activity") },
 ]);
 
 const activeTab = computed({
@@ -68,6 +68,6 @@ const activeTab = computed({
 });
 
 useSeoMetadata({
-	title: () => t("guild_logs.title"),
+	title: () => ts("guild_logs.title"),
 });
 </script>

@@ -17,7 +17,7 @@
 					size="xs"
 					target="_blank"
 				>
-					{{ t("blog.rss") }}
+					{{ ts("blog.rss") }}
 				</UButton>
 			</template>
 		</UPageHero>
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const { data: page } = await useAsyncData("blog-landing", () =>
 	queryCollection("landing").path("/blog").first(),
 );

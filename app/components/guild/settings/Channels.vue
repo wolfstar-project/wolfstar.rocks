@@ -1,13 +1,13 @@
 <template>
 	<GuildSettingsSection
-		:title="t('guild_settings.channels.title')"
-		:description="t('guild_settings.channels.subtitle')"
+		:title="ts('guild_settings.channels.title')"
+		:description="ts('guild_settings.channels.subtitle')"
 	>
 		<GuildSettingsForm
 			:state="state"
 			:schema="schema"
 			:map-to-guild-data="mapToGuildData"
-			:aria-label="t('guild_settings.channels.form_aria')"
+			:aria-label="ts('guild_settings.channels.form_aria')"
 			class="space-y-8"
 			@error="onError"
 		>
@@ -15,11 +15,11 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="i-heroicons-document-text" class="size-5 text-primary" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.channels.logging_channels") }}
+						{{ ts("guild_settings.channels.logging_channels") }}
 					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					{{ t("guild_settings.channels.logging_channels_help") }}
+					{{ ts("guild_settings.channels.logging_channels_help") }}
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -41,11 +41,11 @@
 				<div class="flex items-center gap-2">
 					<UIcon name="heroicons:eye-slash" class="size-5 text-warning" />
 					<h3 class="text-lg font-semibold text-base-content">
-						{{ t("guild_settings.channels.excluded_channels") }}
+						{{ ts("guild_settings.channels.excluded_channels") }}
 					</h3>
 				</div>
 				<p class="text-sm text-base-content/70">
-					{{ t("guild_settings.channels.excluded_channels_help") }}
+					{{ ts("guild_settings.channels.excluded_channels_help") }}
 				</p>
 
 				<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -74,7 +74,7 @@ import {
 	ConfigurableLoggingChannels,
 } from "#shared/utils/settingsDataEntries";
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const { translateEntry } = useSettingsEntryI18n();
 
 const { guildData } = useGuildData();
@@ -126,9 +126,9 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: errorMessage ?? t("guild_settings.please_try_again"),
+		description: errorMessage ?? ts("guild_settings.please_try_again"),
 		icon: "heroicons:x-circle",
-		title: t("guild_settings.save_failed"),
+		title: ts("guild_settings.save_failed"),
 	});
 }
 </script>

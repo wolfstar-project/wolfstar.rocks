@@ -2,7 +2,7 @@
 	<UContainer
 		class="w-full max-w-7xl px-4 py-4 text-base-content sm:px-6 sm:py-6 lg:px-8"
 		role="region"
-		:aria-label="t('profile.server_list_aria')"
+		:aria-label="ts('profile.server_list_aria')"
 	>
 		<div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row">
 			<div class="flex items-start">
@@ -21,13 +21,13 @@
 					aria-atomic="true"
 				>
 					<span>{{
-						t("profile.servers_count", {
+						ts("profile.servers_count", {
 							filtered: filteredGuilds.length,
 							total: guilds?.length || 0,
 						})
 					}}</span>
 					<span v-if="searchQuery" class="sr-only">{{
-						t("profile.search_matching", { query: searchQuery })
+						ts("profile.search_matching", { query: searchQuery })
 					}}</span>
 				</div>
 			</div>
@@ -42,7 +42,9 @@
 					class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
 					role="status"
 					:aria-label="
-						filterLoading ? t('profile.applying_filters') : t('profile.loading_servers')
+						filterLoading
+							? ts('profile.applying_filters')
+							: ts('profile.loading_servers')
 					"
 				>
 					<guild-card v-for="n in INITIAL_COUNT" :key="n" :loading="true" />
@@ -56,7 +58,7 @@
 					tag="div"
 					class="grid grid-cols-2 gap-8 sm:grid-cols-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4 xl:grid-cols-5"
 					role="list"
-					:aria-label="t('profile.servers_list_aria')"
+					:aria-label="ts('profile.servers_list_aria')"
 				>
 					<guild-card
 						v-for="guild in paginatedGuilds"
@@ -73,7 +75,7 @@
 				v-if="!loading && loadingMore"
 				class="flex justify-center py-4"
 				role="status"
-				:aria-label="t('profile.loading_more')"
+				:aria-label="ts('profile.loading_more')"
 			>
 				<span
 					class="loading loading-lg loading-spinner text-primary"
@@ -112,7 +114,7 @@
 							icon="heroicons:arrow-path"
 							to="/login"
 						>
-							{{ t("profile.reload_page") }}
+							{{ ts("profile.reload_page") }}
 						</UButton>
 						<UButton
 							v-else-if="onRetry"
@@ -123,7 +125,7 @@
 							:loading="isRetrying"
 							@click="onRetry"
 						>
-							{{ isRetrying ? t("errors.retrying") : t("common.retry") }}
+							{{ isRetrying ? ts("errors.retrying") : ts("common.retry") }}
 						</UButton>
 					</div>
 				</div>
@@ -136,15 +138,15 @@
 						<h2 class="mb-2 text-xl font-bold text-base-content/80">
 							{{
 								searchQuery
-									? t("profile.no_matching_servers")
-									: t("profile.no_servers")
+									? ts("profile.no_matching_servers")
+									: ts("profile.no_servers")
 							}}
 						</h2>
 						<p class="mx-auto max-w-md text-base-content/60">
 							{{
 								searchQuery
-									? t("profile.no_matching_description")
-									: t("profile.no_servers_description")
+									? ts("profile.no_matching_description")
+									: ts("profile.no_servers_description")
 							}}
 						</p>
 					</div>
@@ -155,10 +157,10 @@
 						size="sm"
 						class="gap-2 transition-all duration-200 hover:scale-105"
 						icon="heroicons:x-mark"
-						:aria-label="t('profile.clear_search')"
+						:aria-label="ts('profile.clear_search')"
 						@click="undoSearch"
 					>
-						{{ t("profile.clear_search") }}
+						{{ ts("profile.clear_search") }}
 					</UButton>
 				</div>
 			</div>
@@ -200,7 +202,7 @@ const {
 	onRetry,
 } = defineProps<GuildCardsProps>();
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const { effectiveReduceMotion } = useReduceMotion();
 
 // Error handling computed properties
@@ -222,27 +224,27 @@ const errorState = computed(() => ({
 	})() as "error" | "warning",
 	description: (() => {
 		if (!error) {
-			return t("errors.unexpected");
+			return ts("errors.unexpected");
 		}
 		if (isTimeoutError.value) {
-			return t("errors.request_timeout_description");
+			return ts("errors.request_timeout_description");
 		}
 		if (error.status === 401) {
-			return t("errors.session_expired_description");
+			return ts("errors.session_expired_description");
 		}
 		if (error.status === 403) {
-			return t("errors.access_denied_description");
+			return ts("errors.access_denied_description");
 		}
 		if (error.status === 429) {
-			return t("errors.too_many_requests_description");
+			return ts("errors.too_many_requests_description");
 		}
 		if (error.status && error.status >= 500) {
-			return t("errors.server_error");
+			return ts("errors.server_error");
 		}
 		if (isNetworkError.value) {
-			return t("errors.network_error_description");
+			return ts("errors.network_error_description");
 		}
-		return error.statusText ?? error.message ?? t("errors.failed_to_load_servers");
+		return error.statusText ?? error.message ?? ts("errors.failed_to_load_servers");
 	})(),
 	icon: (() => {
 		if (isTimeoutError.value) {
@@ -267,42 +269,42 @@ const errorState = computed(() => ({
 	})(),
 	suggestion: (() => {
 		if (isTimeoutError.value) {
-			return t("errors.request_timeout_suggestion");
+			return ts("errors.request_timeout_suggestion");
 		}
 		if (error?.status === 429) {
-			return t("errors.rate_limit");
+			return ts("errors.rate_limit");
 		}
 		if (error?.status && error.status >= 500) {
-			return t("errors.if_persists");
+			return ts("errors.if_persists");
 		}
 		if (isNetworkError.value) {
-			return t("errors.check_connection");
+			return ts("errors.check_connection");
 		}
 		return undefined;
 	})(),
 	title: (() => {
 		if (!error) {
-			return t("common.error");
+			return ts("common.error");
 		}
 		if (isTimeoutError.value) {
-			return t("errors.request_timeout");
+			return ts("errors.request_timeout");
 		}
 		if (error.status === 401) {
-			return t("errors.session_expired");
+			return ts("errors.session_expired");
 		}
 		if (error.status === 403) {
-			return t("errors.access_denied");
+			return ts("errors.access_denied");
 		}
 		if (error.status === 429) {
-			return t("errors.too_many_requests");
+			return ts("errors.too_many_requests");
 		}
 		if (error.status && error.status >= 500) {
-			return t("errors.server_error_title");
+			return ts("errors.server_error_title");
 		}
 		if (isNetworkError.value) {
-			return t("errors.network_error");
+			return ts("errors.network_error");
 		}
-		return t("errors.loading_servers");
+		return ts("errors.loading_servers");
 	})(),
 }));
 

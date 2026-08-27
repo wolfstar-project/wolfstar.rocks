@@ -7,15 +7,15 @@
 			<div class="grid items-end gap-16 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
 				<div class="max-w-190 animate-fade-in-up-safe">
 					<p class="staryl-hero-kicker mb-6 font-mono text-sm font-medium text-primary">
-						{{ t("marketing.staryl.hero.kicker") }}
+						{{ ts("marketing.staryl.hero.kicker") }}
 					</p>
 
 					<h1 id="staryl-hero-heading" class="staryl-hero-title text-balance">
-						{{ t("marketing.staryl.hero.title") }}
+						{{ ts("marketing.staryl.hero.title") }}
 					</h1>
 
 					<p class="staryl-hero-subtitle mt-7 max-w-165 text-pretty">
-						{{ t("marketing.staryl.hero.subtitle") }}
+						{{ ts("marketing.staryl.hero.subtitle") }}
 					</p>
 
 					<div class="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -27,7 +27,7 @@
 							class="justify-center sm:min-w-48"
 							icon="ph:plus-circle-fill"
 						>
-							{{ t("marketing.staryl.hero.invite") }}
+							{{ ts("marketing.staryl.hero.invite") }}
 						</UButton>
 						<UButton
 							to="#staryl-showcase"
@@ -38,7 +38,7 @@
 							class="staryl-hero-outline-btn justify-center sm:min-w-48"
 							trailing-icon="ph:arrow-down"
 						>
-							{{ t("marketing.staryl.hero.see_work") }}
+							{{ ts("marketing.staryl.hero.see_work") }}
 						</UButton>
 					</div>
 
@@ -48,10 +48,10 @@
 							class="font-medium text-base-content/80"
 							data-testid="staryl-hero-availability"
 						>
-							{{ t("marketing.staryl.hero.no_invite") }}
+							{{ ts("marketing.staryl.hero.no_invite") }}
 						</span>
 						<template v-else>
-							{{ t("marketing.staryl.hero.release", { version: buildVersion }) }} ·
+							{{ ts("marketing.staryl.hero.release", { version: buildVersion }) }} ·
 							<NuxtTime
 								:datetime="buildTime"
 								month="short"
@@ -66,14 +66,14 @@
 							rel="noopener noreferrer"
 							class="font-medium text-base-content underline decoration-base-content/25 underline-offset-4 hover:decoration-base-content"
 						>
-							{{ t("marketing.staryl.hero.view_source") }}
+							{{ ts("marketing.staryl.hero.view_source") }}
 						</NuxtLink>
 					</p>
 				</div>
 
 				<aside
 					class="staryl-hero-brief animate-fade-in-up-safe [animation-delay:0.08s]"
-					:aria-label="t('marketing.staryl.hero.brief_aria')"
+					:aria-label="ts('marketing.staryl.hero.brief_aria')"
 				>
 					<div class="staryl-hero-brief-header">
 						<NuxtImg
@@ -87,20 +87,20 @@
 						<span
 							class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase"
 						>
-							{{ t("marketing.staryl.hero.brief_label") }}
+							{{ ts("marketing.staryl.hero.brief_label") }}
 						</span>
 					</div>
 					<dl>
 						<div class="staryl-hero-brief-row">
-							<dt>{{ t("marketing.staryl.hero.sources_term") }}</dt>
-							<dd>{{ t("marketing.staryl.hero.sources_value") }}</dd>
+							<dt>{{ ts("marketing.staryl.hero.sources_term") }}</dt>
+							<dd>{{ ts("marketing.staryl.hero.sources_value") }}</dd>
 						</div>
 						<div class="staryl-hero-brief-row">
-							<dt>{{ t("marketing.staryl.hero.routing_term") }}</dt>
-							<dd>{{ t("marketing.staryl.hero.routing_value") }}</dd>
+							<dt>{{ ts("marketing.staryl.hero.routing_term") }}</dt>
+							<dd>{{ ts("marketing.staryl.hero.routing_value") }}</dd>
 						</div>
 						<div class="staryl-hero-brief-row">
-							<dt>{{ t("marketing.staryl.hero.setup_term") }}</dt>
+							<dt>{{ ts("marketing.staryl.hero.setup_term") }}</dt>
 							<dd>
 								<i18n-t keypath="marketing.staryl.hero.setup_value" tag="span">
 									<template #command>
@@ -123,7 +123,7 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	inviteUrl: string;
 }>();
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 
 const SETUP_COMMAND = "/subscriptions twitch";
 </script>

@@ -4,7 +4,7 @@
 			root: 'p-2 content-visibility-auto bg-base-200',
 			top: 'border-default',
 		}"
-		:aria-label="t('footer.site_footer')"
+		:aria-label="ts('footer.site_footer')"
 	>
 		<template #top>
 			<UContainer class="relative overflow-hidden">
@@ -23,18 +23,18 @@
 							<div
 								class="w-10 rounded-full"
 								role="img"
-								:aria-label="t('footer.logo')"
+								:aria-label="ts('footer.logo')"
 							>
 								<icons-wolfstar class="h-10 w-10" aria-hidden="true" />
 							</div>
 							<span class="font-bold">WolfStar</span>
 						</div>
 						<p class="max-w-70 text-sm leading-relaxed text-base-content/70">
-							{{ t("footer.tagline") }}
+							{{ ts("footer.tagline") }}
 						</p>
 						<nav
 							class="mt-4 flex items-center gap-1"
-							:aria-label="t('footer.social_links')"
+							:aria-label="ts('footer.social_links')"
 						>
 							<UButton
 								v-for="social of socialLinks"
@@ -54,7 +54,7 @@
 								<PwaInstallPrompt class="xl:hidden" />
 							</ClientOnly>
 							<UButton
-								:label="t('footer.powered_by_netlify')"
+								:label="ts('footer.powered_by_netlify')"
 								to="https://www.netlify.com"
 								target="_blank"
 								rel="noopener noreferrer"
@@ -62,14 +62,14 @@
 								color="neutral"
 								variant="soft"
 								:ui="{ leadingIcon: 'bg-success' }"
-								:aria-label="t('footer.powered_by_netlify_aria')"
+								:aria-label="ts('footer.powered_by_netlify_aria')"
 							/>
 						</div>
 					</div>
 					<nav
 						v-for="column of columns"
 						:key="column.label"
-						:aria-label="t('footer.column_links', { label: column.label })"
+						:aria-label="ts('footer.column_links', { label: column.label })"
 					>
 						<div class="mb-4 text-xs font-bold tracking-wider text-muted uppercase">
 							{{ column.label }}
@@ -91,7 +91,7 @@
 
 		<template #left>
 			<p class="text-sm text-base-content/80">
-				{{ t("footer.copyright", { year: currentYear }) }}
+				{{ ts("footer.copyright", { year: currentYear }) }}
 			</p>
 		</template>
 		<template #right>
@@ -101,25 +101,25 @@
 </template>
 
 <script setup lang="ts">
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const { buildInfo } = useAppConfig();
 const { columns } = useFooter();
 
 const socialLinks = computed(() => [
 	{
-		ariaLabel: t("footer.github_aria"),
+		ariaLabel: ts("footer.github_aria"),
 		icon: "simple-icons:github",
-		label: t("footer.github"),
+		label: ts("footer.github"),
 		to: "https://repo.wolfstar.rocks",
 	},
 	{
-		ariaLabel: t("footer.discord_aria"),
+		ariaLabel: ts("footer.discord_aria"),
 		icon: "simple-icons:discord",
-		label: t("footer.support_server"),
+		label: ts("footer.support_server"),
 		to: "https://join.wolfstar.rocks",
 	},
 	{
-		ariaLabel: t("footer.x_aria"),
+		ariaLabel: ts("footer.x_aria"),
 		icon: "simple-icons:x",
 		label: "X",
 		to: "https://x.com/wolfstarapp",

@@ -7,15 +7,15 @@
 			<div class="grid items-end gap-16 lg:grid-cols-[minmax(0,1.25fr)_minmax(20rem,0.75fr)]">
 				<div class="max-w-190 animate-fade-in-up-safe">
 					<p class="home-hero-kicker mb-6 font-mono text-sm font-medium text-primary">
-						{{ t("marketing.wolfstar.hero.kicker") }}
+						{{ ts("marketing.wolfstar.hero.kicker") }}
 					</p>
 
 					<h1 id="home-hero-heading" class="home-hero-title text-balance">
-						{{ t("marketing.wolfstar.hero.title") }}
+						{{ ts("marketing.wolfstar.hero.title") }}
 					</h1>
 
 					<p class="home-hero-subtitle mt-7 max-w-165 text-pretty">
-						{{ t("marketing.wolfstar.hero.subtitle") }}
+						{{ ts("marketing.wolfstar.hero.subtitle") }}
 					</p>
 
 					<div class="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -26,7 +26,7 @@
 							class="justify-center sm:min-w-48"
 							icon="ph:plus-circle-fill"
 						>
-							{{ t("marketing.wolfstar.hero.invite") }}
+							{{ ts("marketing.wolfstar.hero.invite") }}
 						</UButton>
 						<UButton
 							to="#showcase"
@@ -37,12 +37,12 @@
 							class="hero-outline-btn justify-center sm:min-w-48"
 							trailing-icon="ph:arrow-down"
 						>
-							{{ t("marketing.wolfstar.hero.see_work") }}
+							{{ ts("marketing.wolfstar.hero.see_work") }}
 						</UButton>
 					</div>
 
 					<p class="mt-6 text-sm text-muted">
-						{{ t("marketing.wolfstar.hero.release", { version: buildVersion }) }} ·
+						{{ ts("marketing.wolfstar.hero.release", { version: buildVersion }) }} ·
 						<NuxtTime
 							:datetime="buildTime"
 							month="short"
@@ -56,35 +56,35 @@
 							rel="noopener noreferrer"
 							class="font-medium text-base-content underline decoration-base-content/25 underline-offset-4 hover:decoration-base-content"
 						>
-							{{ t("marketing.wolfstar.hero.view_source") }}
+							{{ ts("marketing.wolfstar.hero.view_source") }}
 						</NuxtLink>
 					</p>
 				</div>
 
 				<aside
 					class="home-hero-brief animate-fade-in-up-safe [animation-delay:0.08s]"
-					:aria-label="t('marketing.wolfstar.hero.brief_aria')"
+					:aria-label="ts('marketing.wolfstar.hero.brief_aria')"
 				>
 					<div class="home-hero-brief-header">
 						<IconsWolfstar class="size-11 text-primary" aria-hidden="true" />
 						<span
 							class="font-mono text-xs tracking-(--home-ls-label) text-muted uppercase"
 						>
-							{{ t("marketing.wolfstar.hero.brief_label") }}
+							{{ ts("marketing.wolfstar.hero.brief_label") }}
 						</span>
 					</div>
 					<dl>
 						<div class="home-hero-brief-row">
-							<dt>{{ t("marketing.wolfstar.hero.automod_term") }}</dt>
-							<dd>{{ t("marketing.wolfstar.hero.automod_value") }}</dd>
+							<dt>{{ ts("marketing.wolfstar.hero.automod_term") }}</dt>
+							<dd>{{ ts("marketing.wolfstar.hero.automod_value") }}</dd>
 						</div>
 						<div class="home-hero-brief-row">
-							<dt>{{ t("marketing.wolfstar.hero.history_term") }}</dt>
-							<dd>{{ t("marketing.wolfstar.hero.history_value") }}</dd>
+							<dt>{{ ts("marketing.wolfstar.hero.history_term") }}</dt>
+							<dd>{{ ts("marketing.wolfstar.hero.history_value") }}</dd>
 						</div>
 						<div class="home-hero-brief-row">
-							<dt>{{ t("marketing.wolfstar.hero.dashboard_term") }}</dt>
-							<dd>{{ t("marketing.wolfstar.hero.dashboard_value") }}</dd>
+							<dt>{{ ts("marketing.wolfstar.hero.dashboard_term") }}</dt>
+							<dd>{{ ts("marketing.wolfstar.hero.dashboard_value") }}</dd>
 						</div>
 					</dl>
 				</aside>
@@ -100,7 +100,7 @@ const { buildTime, buildVersion, inviteUrl } = defineProps<{
 	inviteUrl: string;
 }>();
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

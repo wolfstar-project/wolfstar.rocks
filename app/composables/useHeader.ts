@@ -1,5 +1,5 @@
 export function useHeader() {
-	const { ts: t } = useI18n();
+	const { ts } = useI18n();
 
 	// Safely inject appName with fallback to prevent SSR issues
 	const appName = inject(ProviderAppNameKey, ref<"wolfstar" | "staryl">("wolfstar"));
@@ -17,22 +17,22 @@ export function useHeader() {
 		{
 			children: [
 				{
-					description: t("nav.moderation_tools_description"),
-					label: t("nav.moderation_tools"),
+					description: ts("nav.moderation_tools_description"),
+					label: ts("nav.moderation_tools"),
 					to: "/wolfstar#moderation-tools",
 				},
 				{
-					description: t("nav.advanced_logging_description"),
-					label: t("nav.advanced_logging"),
+					description: ts("nav.advanced_logging_description"),
+					label: ts("nav.advanced_logging"),
 					to: "/wolfstar#advanced-logging",
 				},
 				{
-					description: t("nav.moderation_logs_description"),
-					label: t("nav.moderation_logs"),
+					description: ts("nav.moderation_logs_description"),
+					label: ts("nav.moderation_logs"),
 					to: "/wolfstar#moderation-logs",
 				},
 			],
-			label: t("nav.features"),
+			label: ts("nav.features"),
 		},
 		{
 			children: [
@@ -47,10 +47,10 @@ export function useHeader() {
 					to: "/staryl",
 				},
 			],
-			label: t("nav.applications"),
+			label: ts("nav.applications"),
 		},
 		{
-			label: t("nav.commands"),
+			label: ts("nav.commands"),
 			to: "/commands",
 		},
 	]);
@@ -59,22 +59,22 @@ export function useHeader() {
 		{
 			children: [
 				{
-					description: t("nav.moderation_tools_description"),
-					label: t("nav.moderation_tools"),
+					description: ts("nav.moderation_tools_description"),
+					label: ts("nav.moderation_tools"),
 					to: "/wolfstar#moderation-tools",
 				},
 				{
-					description: t("nav.advanced_logging_description"),
-					label: t("nav.advanced_logging"),
+					description: ts("nav.advanced_logging_description"),
+					label: ts("nav.advanced_logging"),
 					to: "/wolfstar#advanced-logging",
 				},
 				{
-					description: t("nav.moderation_logs_description"),
-					label: t("nav.moderation_logs"),
+					description: ts("nav.moderation_logs_description"),
+					label: ts("nav.moderation_logs"),
 					to: "/wolfstar#moderation-logs",
 				},
 			],
-			label: t("nav.features"),
+			label: ts("nav.features"),
 		},
 		{
 			children: [
@@ -89,15 +89,15 @@ export function useHeader() {
 					to: "/staryl",
 				},
 			],
-			label: t("nav.applications"),
+			label: ts("nav.applications"),
 		},
 		{
-			label: t("nav.commands"),
+			label: ts("nav.commands"),
 			to: "/commands",
 		},
 		{
 			icon: "lucide:github",
-			label: t("nav.github"),
+			label: ts("nav.github"),
 			rel: "noopener noreferrer",
 			target: "_blank",
 			to: "https://github.com/wolfstar-project/wolfstar.rocks",

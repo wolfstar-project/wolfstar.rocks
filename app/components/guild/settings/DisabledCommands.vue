@@ -1,8 +1,8 @@
 <template>
 	<div>
 		<GuildSettingsSection
-			:title="t('guild_settings.commands.title')"
-			:description="t('guild_settings.commands.subtitle')"
+			:title="ts('guild_settings.commands.title')"
+			:description="ts('guild_settings.commands.subtitle')"
 		>
 			<!-- Unified Form wrapper to match skeleton and content -->
 			<div v-if="loading" class="space-y-4">
@@ -35,7 +35,7 @@
 				:schema="disabledCommandsSchema"
 				:map-to-guild-data="mapToGuildData"
 				class="space-y-4"
-				:aria-label="t('guild_settings.commands.form_aria')"
+				:aria-label="ts('guild_settings.commands.form_aria')"
 				:aria-busy="loading"
 				:aria-disabled="loading"
 				@error="onError"
@@ -102,21 +102,21 @@
 									variant="solid"
 									@click="toggleAllInCategory(category, true)"
 								>
-									{{ t("guild_settings.commands.enable_all") }}
+									{{ ts("guild_settings.commands.enable_all") }}
 								</UButton>
 								<UButton
 									color="warning"
 									variant="solid"
 									@click="toggleAllInCategory(category, false)"
 								>
-									{{ t("guild_settings.commands.disable_all") }}
+									{{ ts("guild_settings.commands.disable_all") }}
 								</UButton>
 								<UButton
 									color="neutral"
 									variant="outline"
 									@click="resetCategory(category)"
 								>
-									{{ t("guild_settings.commands.reset") }}
+									{{ ts("guild_settings.commands.reset") }}
 								</UButton>
 							</UFieldGroup>
 						</template>
@@ -142,7 +142,7 @@ const { commands } = defineProps<{
 
 type Schema = v.InferOutput<typeof disabledCommandsSchema>;
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const toast = useToast();
 const { guildSettings } = useGuildSettings();
 
@@ -240,9 +240,9 @@ function resetCategory(category: string) {
 
 	toast.add({
 		color: "info",
-		description: t("guild_settings.commands.category_reset_description", { category }),
+		description: ts("guild_settings.commands.category_reset_description", { category }),
 		icon: "i-heroicons-arrow-path",
-		title: t("guild_settings.commands.category_reset"),
+		title: ts("guild_settings.commands.category_reset"),
 	});
 }
 
@@ -253,11 +253,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: t("guild_settings.commands.save_failed", {
-			message: errorMessage ?? t("guild_settings.please_try_again"),
+		description: ts("guild_settings.commands.save_failed", {
+			message: errorMessage ?? ts("guild_settings.please_try_again"),
 		}),
 		icon: "heroicons:x-circle",
-		title: t("guild_settings.save_failed"),
+		title: ts("guild_settings.save_failed"),
 	});
 }
 

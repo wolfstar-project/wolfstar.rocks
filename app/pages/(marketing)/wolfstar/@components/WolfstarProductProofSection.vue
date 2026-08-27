@@ -11,13 +11,13 @@
 				<p
 					class="mb-4 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					{{ t("marketing.wolfstar.proof.eyebrow") }}
+					{{ ts("marketing.wolfstar.proof.eyebrow") }}
 				</p>
 				<h2
 					id="home-product-heading"
 					class="max-w-120 text-4xl leading-[1.05] font-bold tracking-(--home-ls-tight) text-base-content md:text-5xl"
 				>
-					{{ t("marketing.wolfstar.proof.title") }}
+					{{ ts("marketing.wolfstar.proof.title") }}
 				</h2>
 			</div>
 
@@ -26,10 +26,10 @@
 					<span class="home-proof-index" aria-hidden="true">01</span>
 					<div>
 						<h3 class="text-xl font-semibold text-base-content">
-							{{ t("marketing.wolfstar.proof.step_1_title") }}
+							{{ ts("marketing.wolfstar.proof.step_1_title") }}
 						</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							{{ t("marketing.wolfstar.proof.step_1_body") }}
+							{{ ts("marketing.wolfstar.proof.step_1_body") }}
 						</p>
 						<UButton
 							to="#moderation-tools"
@@ -39,7 +39,7 @@
 							class="mt-3 px-0"
 							trailing-icon="ph:arrow-down-right"
 						>
-							{{ t("marketing.wolfstar.proof.step_1_cta") }}
+							{{ ts("marketing.wolfstar.proof.step_1_cta") }}
 						</UButton>
 					</div>
 				</article>
@@ -48,10 +48,10 @@
 					<span class="home-proof-index" aria-hidden="true">02</span>
 					<div>
 						<h3 class="text-xl font-semibold text-base-content">
-							{{ t("marketing.wolfstar.proof.step_2_title") }}
+							{{ ts("marketing.wolfstar.proof.step_2_title") }}
 						</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							{{ t("marketing.wolfstar.proof.step_2_body") }}
+							{{ ts("marketing.wolfstar.proof.step_2_body") }}
 						</p>
 						<UButton
 							to="#advanced-logging"
@@ -61,7 +61,7 @@
 							class="mt-3 px-0"
 							trailing-icon="ph:arrow-down-right"
 						>
-							{{ t("marketing.wolfstar.proof.step_2_cta") }}
+							{{ ts("marketing.wolfstar.proof.step_2_cta") }}
 						</UButton>
 					</div>
 				</article>
@@ -70,10 +70,10 @@
 					<span class="home-proof-index" aria-hidden="true">03</span>
 					<div>
 						<h3 class="text-xl font-semibold text-base-content">
-							{{ t("marketing.wolfstar.proof.step_3_title") }}
+							{{ ts("marketing.wolfstar.proof.step_3_title") }}
 						</h3>
 						<p class="mt-2 max-w-150 text-base leading-relaxed text-base-content/65">
-							{{ t("marketing.wolfstar.proof.step_3_body") }}
+							{{ ts("marketing.wolfstar.proof.step_3_body") }}
 						</p>
 						<UButton
 							to="#dashboard"
@@ -83,7 +83,7 @@
 							class="mt-3 px-0"
 							trailing-icon="ph:arrow-down-right"
 						>
-							{{ t("marketing.wolfstar.proof.step_3_cta") }}
+							{{ ts("marketing.wolfstar.proof.step_3_cta") }}
 						</UButton>
 					</div>
 				</article>
@@ -93,7 +93,7 @@
 </template>
 
 <script setup lang="ts">
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

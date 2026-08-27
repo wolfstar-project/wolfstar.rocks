@@ -9,17 +9,17 @@
 					<span
 						class="font-mono text-xs tracking-(--home-ls-label) text-neutral-content/60 uppercase"
 					>
-						{{ t("marketing.wolfstar.cta.eyebrow") }}
+						{{ ts("marketing.wolfstar.cta.eyebrow") }}
 					</span>
 				</div>
 				<h2
 					id="home-cta-heading"
 					class="max-w-180 text-4xl leading-[1.02] font-bold tracking-(--home-ls-tight) md:text-5xl"
 				>
-					{{ t("marketing.wolfstar.cta.title") }}
+					{{ ts("marketing.wolfstar.cta.title") }}
 				</h2>
 				<p class="mt-5 max-w-145 text-base leading-relaxed text-neutral-content/70">
-					{{ t("marketing.wolfstar.cta.subtitle") }}
+					{{ ts("marketing.wolfstar.cta.subtitle") }}
 				</p>
 			</div>
 			<div class="mt-9 flex flex-col gap-3 sm:flex-row lg:mt-0 lg:flex-col">
@@ -30,7 +30,7 @@
 					class="justify-center lg:min-w-52"
 					icon="ph:plus-circle-fill"
 				>
-					{{ t("marketing.wolfstar.cta.invite") }}
+					{{ ts("marketing.wolfstar.cta.invite") }}
 				</UButton>
 				<UButton
 					to="https://join.wolfstar.rocks"
@@ -39,7 +39,7 @@
 					size="xl"
 					class="home-cta-outline justify-center lg:min-w-52"
 				>
-					{{ t("marketing.wolfstar.cta.ask_in_support") }}
+					{{ ts("marketing.wolfstar.cta.ask_in_support") }}
 				</UButton>
 			</div>
 		</div>
@@ -51,7 +51,7 @@ defineProps<{
 	inviteUrl: string;
 }>();
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

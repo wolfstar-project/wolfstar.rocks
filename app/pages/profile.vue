@@ -1,6 +1,6 @@
 <template>
 	<UContainer class="mx-auto max-w-7xl space-y-8 px-4 py-8">
-		<h1 class="sr-only">{{ t("profile.title") }}</h1>
+		<h1 class="sr-only">{{ ts("profile.title") }}</h1>
 		<ProfileHeader
 			:user="user"
 			:copied="copied"
@@ -11,7 +11,7 @@
 
 		<section
 			class="relative flex flex-col items-center justify-center divide-y divide-base-200/50 overflow-hidden rounded-xl border-2 border-base-200 bg-base-200/20 shadow-lg md:border-4"
-			:aria-label="t('profile.account_management')"
+			:aria-label="ts('profile.account_management')"
 		>
 			<!-- subtle left accent to mirror dashboard sidebar -->
 			<div
@@ -30,10 +30,10 @@
 							<template v-if="!loggedIn">
 								<div class="mb-4">
 									<h2 class="text-2xl font-bold text-base-content">
-										{{ t("profile.servers") }}
+										{{ ts("profile.servers") }}
 									</h2>
 									<p class="mt-1 text-base-content/60">
-										{{ t("profile.servers_guest_description") }}
+										{{ ts("profile.servers_guest_description") }}
 									</p>
 								</div>
 								<UCard class="border border-base-200/60 bg-transparent shadow-none">
@@ -43,14 +43,14 @@
 											class="size-12 text-base-content/30"
 										/>
 										<p class="max-w-md text-base-content/70">
-											{{ t("profile.servers_sign_in_prompt") }}
+											{{ ts("profile.servers_sign_in_prompt") }}
 										</p>
 										<UButton
-											:label="t('header.sign_in')"
+											:label="ts('header.sign_in')"
 											color="primary"
 											icon="ic:round-discord"
 											to="/login?next=/profile"
-											:aria-label="t('header.sign_in_discord')"
+											:aria-label="ts('header.sign_in_discord')"
 										/>
 									</div>
 								</UCard>
@@ -59,13 +59,13 @@
 								<!-- Server Section Header -->
 								<div class="mb-4">
 									<h2 class="text-2xl font-bold text-base-content">
-										{{ t("profile.servers") }}
+										{{ ts("profile.servers") }}
 									</h2>
 									<div class="mt-1 text-base-content/60">
 										<USkeleton v-if="isLoading" class="inline-block h-5 w-48" />
 										<span v-else
 											>{{ guilds.length ?? 0 }}
-											{{ t("profile.servers").toLowerCase() }}</span
+											{{ ts("profile.servers").toLowerCase() }}</span
 										>
 									</div>
 								</div>
@@ -230,10 +230,10 @@
 						<div v-if="item.value === 'settings'" class="space-y-6">
 							<div class="mb-6">
 								<h2 class="text-2xl font-bold text-base-content">
-									{{ t("profile.settings_title") }}
+									{{ ts("profile.settings_title") }}
 								</h2>
 								<p class="mt-1 text-base-content/60">
-									{{ t("profile.settings_tagline") }}
+									{{ ts("profile.settings_tagline") }}
 								</p>
 							</div>
 
@@ -251,10 +251,10 @@
 										</div>
 										<div>
 											<h3 class="text-lg font-semibold text-base-content">
-												{{ t("common.appearance") }}
+												{{ ts("common.appearance") }}
 											</h3>
 											<p class="text-sm text-base-content/60">
-												{{ t("profile.appearance_description") }}
+												{{ ts("profile.appearance_description") }}
 											</p>
 										</div>
 									</div>
@@ -266,10 +266,10 @@
 									>
 										<div>
 											<h4 class="font-medium text-base-content">
-												{{ t("profile.theme") }}
+												{{ ts("profile.theme") }}
 											</h4>
 											<p class="mt-1 text-sm text-base-content/60">
-												{{ t("profile.theme_description") }}
+												{{ ts("profile.theme_description") }}
 											</p>
 										</div>
 										<ColorModeButton show-label size="sm" variant="outline" />
@@ -291,10 +291,10 @@
 										</div>
 										<div>
 											<h3 class="text-lg font-semibold text-base-content">
-												{{ t("common.language") }}
+												{{ ts("common.language") }}
 											</h3>
 											<p class="text-sm text-base-content/60">
-												{{ t("profile.language_description") }}
+												{{ ts("profile.language_description") }}
 											</p>
 										</div>
 									</div>
@@ -305,10 +305,10 @@
 								>
 									<div>
 										<h4 class="font-medium text-base-content">
-											{{ t("common.language") }}
+											{{ ts("common.language") }}
 										</h4>
 										<p class="mt-1 text-sm text-base-content/60">
-											{{ t("profile.language_help") }}
+											{{ ts("profile.language_help") }}
 										</p>
 									</div>
 									<ClientOnly>
@@ -342,10 +342,10 @@
 										</div>
 										<div>
 											<h3 class="text-lg font-semibold text-base-content">
-												{{ t("profile.accessibility") }}
+												{{ ts("profile.accessibility") }}
 											</h3>
 											<p class="text-sm text-base-content/60">
-												{{ t("profile.accessibility_description") }}
+												{{ ts("profile.accessibility_description") }}
 											</p>
 										</div>
 									</div>
@@ -362,11 +362,11 @@
 													class="h-5 w-5 text-base-content/70"
 												/>
 												<h4 class="font-medium text-base-content">
-													{{ t("profile.reduce_motion") }}
+													{{ ts("profile.reduce_motion") }}
 												</h4>
 											</div>
 											<p class="mt-1 text-sm text-base-content/60">
-												{{ t("profile.reduce_motion_description") }}
+												{{ ts("profile.reduce_motion_description") }}
 											</p>
 										</div>
 										<USwitch
@@ -387,17 +387,17 @@
 										/>
 										<div class="text-sm">
 											<p class="font-medium text-info">
-												{{ t("profile.system_preference_detected") }}
+												{{ ts("profile.system_preference_detected") }}
 											</p>
 											<p class="mt-1 text-info/80">
-												{{ t("profile.system_preference_description") }}
+												{{ ts("profile.system_preference_description") }}
 											</p>
 										</div>
 									</div>
 
 									<div class="flex items-center gap-2 text-sm">
 										<span class="text-base-content/60">{{
-											t("profile.current_status")
+											ts("profile.current_status")
 										}}</span>
 										<UBadge
 											:color="effectiveReduceMotion ? 'primary' : 'neutral'"
@@ -415,8 +415,8 @@
 											</template>
 											{{
 												effectiveReduceMotion
-													? t("profile.motion_reduced")
-													: t("profile.motion_enabled")
+													? ts("profile.motion_reduced")
+													: ts("profile.motion_enabled")
 											}}
 										</UBadge>
 									</div>
@@ -561,13 +561,13 @@ import { getNuxtUiLocales } from "~/utils/nuxt-ui-locales";
 
 definePageMeta({ alias: ["/account"] });
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const { locale, selectLocale } = useAppLocale();
 const { loggedIn, user: authUser, ready } = useUserSession();
 useSeoMetadata({
-	description: () => t("profile.seo_description"),
+	description: () => ts("profile.seo_description"),
 	shouldOgImage: true,
-	title: () => t("profile.title"),
+	title: () => ts("profile.title"),
 });
 
 // Tab Management - inspired by Dyno.gg tab system
@@ -697,12 +697,12 @@ const items = computed<TabsItem[]>(() => [
 				: { color: "primary", label: `${guilds.value?.length ?? "N/A"}` }
 			: undefined,
 		icon: "heroicons:server",
-		label: t("profile.servers"),
+		label: ts("profile.servers"),
 		value: "servers",
 	},
 	{
 		icon: "heroicons:cog-6-tooth",
-		label: t("profile.settings_title"),
+		label: ts("profile.settings_title"),
 		value: "settings",
 	},
 ]);

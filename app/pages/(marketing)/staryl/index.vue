@@ -17,12 +17,12 @@
 </template>
 
 <script setup lang="ts">
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 
 useSeoMetadata({
-	description: () => t("marketing.staryl.seo.description"),
+	description: () => ts("marketing.staryl.seo.description"),
 	shouldOgImage: true,
-	title: () => t("marketing.staryl.seo.title"),
+	title: () => ts("marketing.staryl.seo.title"),
 });
 
 const otherApps = useApp();

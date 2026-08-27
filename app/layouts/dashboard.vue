@@ -55,18 +55,18 @@
 			v-else-if="nuxtError"
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4 text-center"
 			role="alert"
-			:aria-label="t('dashboard.error_aria')"
+			:aria-label="ts('dashboard.error_aria')"
 		>
 			<UIcon name="ph:warning-duotone" class="size-12 text-error" aria-hidden="true" />
 			<div class="space-y-2">
 				<h2 class="text-xl font-semibold text-base-content">
-					{{ nuxtError.statusMessage || t("dashboard.error_title") }}
+					{{ nuxtError.statusMessage || ts("dashboard.error_title") }}
 				</h2>
 				<p v-if="nuxtError.status === 403">
-					{{ t("dashboard.error_forbidden") }}
+					{{ ts("dashboard.error_forbidden") }}
 				</p>
 				<p class="text-sm text-base-content/60">
-					{{ nuxtError.message || t("dashboard.error_fallback") }}
+					{{ nuxtError.message || ts("dashboard.error_fallback") }}
 				</p>
 			</div>
 		</div>
@@ -74,16 +74,16 @@
 			v-else
 			class="flex min-h-screen w-full flex-col items-center justify-center space-y-4 px-4"
 			role="status"
-			:aria-label="t('dashboard.loading_aria')"
+			:aria-label="ts('dashboard.loading_aria')"
 		>
 			<div class="flex flex-col items-center space-y-4">
 				<UIcon name="ph:warning-duotone" class="size-12 text-primary" aria-hidden="true" />
 				<div class="space-y-2 text-center">
 					<h2 class="text-xl font-semibold text-base-content">
-						{{ t("dashboard.loading_title") }}
+						{{ ts("dashboard.loading_title") }}
 					</h2>
 					<p class="text-sm text-base-content/60">
-						{{ t("dashboard.loading_description") }}
+						{{ ts("dashboard.loading_description") }}
 					</p>
 				</div>
 				<div class="flex items-center space-x-2">
@@ -114,10 +114,10 @@
 			>
 				<UFieldGroup>
 					<UButton color="primary" icon="heroicons:check" @click="submitChanges">
-						{{ t("dashboard.save_changes") }}
+						{{ ts("dashboard.save_changes") }}
 					</UButton>
 					<UButton color="error" icon="heroicons:arrow-path" @click="resetChanges">
-						{{ t("dashboard.reset_changes") }}
+						{{ ts("dashboard.reset_changes") }}
 					</UButton>
 				</UFieldGroup>
 			</div>
@@ -125,17 +125,17 @@
 
 		<UModal
 			v-model:open="showDialog"
-			:title="t('dashboard.unsaved_title')"
-			:description="t('dashboard.unsaved_description')"
+			:title="ts('dashboard.unsaved_title')"
+			:description="ts('dashboard.unsaved_description')"
 			:dismissible="false"
 		>
 			<template #footer>
 				<div class="flex justify-end gap-2">
 					<UButton color="neutral" variant="ghost" @click="cancelLeave">
-						{{ t("dashboard.stay_on_page") }}
+						{{ ts("dashboard.stay_on_page") }}
 					</UButton>
 					<UButton color="error" @click="confirmLeave">
-						{{ t("dashboard.discard_changes") }}
+						{{ ts("dashboard.discard_changes") }}
 					</UButton>
 				</div>
 			</template>
@@ -168,16 +168,16 @@ function isSafeUrl(url: unknown): url is string {
 	}
 }
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 
 const guildId = useRouteParams("id", null, { transform: String });
 
 if (!isValidGuildId(guildId.value)) {
 	throw createError({
-		why: t("dashboard.invalid_guild_why"),
+		why: ts("dashboard.invalid_guild_why"),
 		status: 400,
-		message: t("dashboard.invalid_guild_message"),
-		fix: t("dashboard.invalid_guild_fix"),
+		message: ts("dashboard.invalid_guild_message"),
+		fix: ts("dashboard.invalid_guild_fix"),
 	});
 }
 
@@ -271,8 +271,8 @@ watch(
 				case "forbidden": {
 					if (import.meta.client) {
 						toast.add({
-							title: t("dashboard.access_denied_title"),
-							description: t("dashboard.access_denied_description"),
+							title: ts("dashboard.access_denied_title"),
+							description: ts("dashboard.access_denied_description"),
 							color: "error",
 							icon: "heroicons:x-circle",
 						});
@@ -287,8 +287,8 @@ watch(
 				case "unauthorized": {
 					if (import.meta.client) {
 						toast.add({
-							title: t("dashboard.unauthorized_title"),
-							description: t("dashboard.unauthorized_description"),
+							title: ts("dashboard.unauthorized_title"),
+							description: ts("dashboard.unauthorized_description"),
 							color: "error",
 							icon: "heroicons:x-circle",
 						});
@@ -310,7 +310,7 @@ watch(
 							actions: link
 								? [
 										{
-											label: t("common.learn_more"),
+											label: ts("common.learn_more"),
 											onClick: () => {
 												window.open(link, "_blank", "noopener,noreferrer");
 											},
@@ -343,7 +343,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		{
 			exact: true,
 			icon: "heroicons:home",
-			label: t("dashboard.nav.home"),
+			label: ts("dashboard.nav.home"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -351,56 +351,56 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "lucide:shield",
-			label: t("dashboard.nav.moderation"),
+			label: ts("dashboard.nav.moderation"),
 			onSelect: () => {
 				open.value = false;
 			},
 			to: `/guilds/${guildId.value}/manage/moderation`,
 			children: [
 				{
-					label: t("dashboard.nav.bad_words"),
+					label: ts("dashboard.nav.bad_words"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/word`,
 				},
 				{
-					label: t("dashboard.nav.capitals"),
+					label: ts("dashboard.nav.capitals"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/capitals`,
 				},
 				{
-					label: t("dashboard.nav.invites"),
+					label: ts("dashboard.nav.invites"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/invites`,
 				},
 				{
-					label: t("dashboard.nav.links"),
+					label: ts("dashboard.nav.links"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/links`,
 				},
 				{
-					label: t("dashboard.nav.message_duplication"),
+					label: ts("dashboard.nav.message_duplication"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/messages`,
 				},
 				{
-					label: t("dashboard.nav.line_spam"),
+					label: ts("dashboard.nav.line_spam"),
 					onSelect: () => {
 						open.value = false;
 					},
 					to: `/guilds/${guildId.value}/manage/moderation/lines`,
 				},
 				{
-					label: t("dashboard.nav.reactions"),
+					label: ts("dashboard.nav.reactions"),
 					onSelect: () => {
 						open.value = false;
 					},
@@ -410,7 +410,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:hashtag",
-			label: t("dashboard.nav.channels"),
+			label: ts("dashboard.nav.channels"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -418,7 +418,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:user-group",
-			label: t("dashboard.nav.roles"),
+			label: ts("dashboard.nav.roles"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -426,7 +426,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:bell",
-			label: t("dashboard.nav.events"),
+			label: ts("dashboard.nav.events"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -434,7 +434,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "heroicons:command-line",
-			label: t("dashboard.nav.commands"),
+			label: ts("dashboard.nav.commands"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -442,7 +442,7 @@ const items = computed<NavigationMenuItem[][]>(() => [
 		},
 		{
 			icon: "lucide:logs",
-			label: t("dashboard.nav.logs"),
+			label: ts("dashboard.nav.logs"),
 			onSelect: () => {
 				open.value = false;
 			},
@@ -496,7 +496,7 @@ async function submitChanges() {
 			error: parseError(error),
 		});
 		// Preserve staged edits; only notify so the admin can retry.
-		toast.add(guildSettingsSaveFailureToast(t));
+		toast.add(guildSettingsSaveFailureToast(ts));
 		return;
 	}
 
@@ -526,9 +526,9 @@ async function submitChanges() {
 
 	toast.add({
 		color: "success",
-		description: t("dashboard.settings_saved_description"),
+		description: ts("dashboard.settings_saved_description"),
 		icon: "i-heroicons-check-circle",
-		title: t("dashboard.settings_saved_title"),
+		title: ts("dashboard.settings_saved_title"),
 	});
 }
 
@@ -549,9 +549,9 @@ function resetChanges() {
 
 	toast.add({
 		color: "info",
-		description: t("dashboard.changes_reset_description"),
+		description: ts("dashboard.changes_reset_description"),
 		icon: "heroicons:arrow-path",
-		title: t("dashboard.changes_reset_title"),
+		title: ts("dashboard.changes_reset_title"),
 	});
 }
 

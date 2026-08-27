@@ -1,8 +1,8 @@
 <template>
 	<UModal
 		v-model:open="open"
-		:title="t('feedback.title')"
-		:description="t('feedback.description')"
+		:title="ts('feedback.title')"
+		:description="ts('feedback.description')"
 	>
 		<template #body>
 			<UForm
@@ -14,27 +14,27 @@
 				@submit="onSubmit"
 				@error="onError"
 			>
-				<UFormField v-if="!isDashboard" name="name" :label="t('feedback.name')" required>
+				<UFormField v-if="!isDashboard" name="name" :label="ts('feedback.name')" required>
 					<UInput
 						v-model="state.name"
-						:placeholder="t('feedback.name_placeholder')"
+						:placeholder="ts('feedback.name_placeholder')"
 						class="w-full"
 					/>
 				</UFormField>
 
-				<UFormField v-if="!isDashboard" name="email" :label="t('feedback.email')" required>
+				<UFormField v-if="!isDashboard" name="email" :label="ts('feedback.email')" required>
 					<UInput
 						v-model="state.email"
 						type="email"
-						:placeholder="t('feedback.email_placeholder')"
+						:placeholder="ts('feedback.email_placeholder')"
 						class="w-full"
 					/>
 				</UFormField>
 
-				<UFormField name="message" :label="t('feedback.message')" required>
+				<UFormField name="message" :label="ts('feedback.message')" required>
 					<UTextarea
 						v-model="state.message"
-						:placeholder="t('feedback.message_placeholder')"
+						:placeholder="ts('feedback.message_placeholder')"
 						:rows="4"
 						class="w-full"
 					/>
@@ -50,7 +50,7 @@
 					:disabled="isSubmitting"
 					@click="open = false"
 				>
-					{{ t("common.cancel") }}
+					{{ ts("common.cancel") }}
 				</UButton>
 				<UButton
 					type="submit"
@@ -59,7 +59,7 @@
 					:loading="isSubmitting"
 					icon="i-lucide-send"
 				>
-					{{ t("feedback.send") }}
+					{{ ts("feedback.send") }}
 				</UButton>
 			</UFieldGroup>
 		</template>
@@ -72,7 +72,7 @@ import { FeedbackSchema as schema, type FeedbackState as Schema } from "#shared/
 import { captureFeedback } from "@sentry/nuxt";
 
 const open = defineModel<boolean>("open", { default: false });
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const toast = useToast();
 const route = useRoute();
 const { user } = useUserSession();
@@ -105,9 +105,9 @@ async function onSubmit() {
 
 		toast.add({
 			color: "success",
-			description: t("feedback.sent_toast_description"),
+			description: ts("feedback.sent_toast_description"),
 			icon: "heroicons:check-circle",
-			title: t("feedback.sent_title"),
+			title: ts("feedback.sent_title"),
 		});
 	} finally {
 		isSubmitting.value = false;
@@ -124,11 +124,11 @@ async function onError(event: FormErrorEvent) {
 	const errorMessage = event.errors[0]?.message;
 	toast.add({
 		color: "error",
-		description: t("feedback.send_failed_description", {
-			message: errorMessage ?? t("common.please_try_again"),
+		description: ts("feedback.send_failed_description", {
+			message: errorMessage ?? ts("common.please_try_again"),
 		}),
 		icon: "heroicons:x-circle",
-		title: t("feedback.send_failed_title"),
+		title: ts("feedback.send_failed_title"),
 	});
 }
 </script>

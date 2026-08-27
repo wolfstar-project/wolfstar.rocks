@@ -6,7 +6,7 @@
 		fill="none"
 		xmlns="http://www.w3.org/2000/svg"
 		role="img"
-		:aria-label="t('footer.logo')"
+		:aria-label="ts('footer.logo')"
 	>
 		<path
 			fill-rule="evenodd"
@@ -25,5 +25,5 @@
 </template>
 
 <script setup lang="ts">
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 </script>

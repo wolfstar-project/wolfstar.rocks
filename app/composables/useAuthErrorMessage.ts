@@ -41,12 +41,12 @@ function toCandidates(input: AuthErrorInput): string[] {
  * Prefer `auth.errors.<CODE>` when present; otherwise fall back to the message.
  */
 export function useAuthErrorMessage() {
-	const { ts: t, has: te } = useI18n();
+	const { ts, has } = useI18n();
 
 	function localizeAuthError(error: AuthErrorInput, fallbackKey = "auth.errors.GENERIC"): string {
 		const candidates = toCandidates(error);
 		if (candidates.length === 0) {
-			return t(fallbackKey);
+			return ts(fallbackKey);
 		}
 
 		for (const candidate of candidates) {
@@ -56,22 +56,22 @@ export function useAuthErrorMessage() {
 			}
 
 			const codeKey = `auth.errors.${normalized}`;
-			if (te(codeKey)) {
-				return t(codeKey);
+			if (has(codeKey)) {
+				return ts(codeKey);
 			}
 
 			// Some providers pass `error_description` style snake_case already uppercased.
 			const upperCode = normalized.toUpperCase();
 			const localizedCode = AUTH_ERROR_CODE_MISMATCHES.get(upperCode) ?? upperCode;
 			const upperKey = `auth.errors.${localizedCode}`;
-			if (te(upperKey)) {
-				return t(upperKey);
+			if (has(upperKey)) {
+				return ts(upperKey);
 			}
 		}
 
 		// Nothing matched a translation key: show the most human-readable value,
 		// which is the last candidate (the message) when one was supplied.
-		return candidates[candidates.length - 1]?.trim() || t(fallbackKey);
+		return candidates[candidates.length - 1]?.trim() || ts(fallbackKey);
 	}
 
 	return { localizeAuthError };

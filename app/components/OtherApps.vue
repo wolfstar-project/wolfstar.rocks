@@ -8,8 +8,8 @@
 		class="py-24"
 	>
 		<SectionHeader
-			:eyebrow="t('marketing.other_apps.eyebrow')"
-			:title="t('marketing.other_apps.title')"
+			:eyebrow="ts('marketing.other_apps.eyebrow')"
+			:title="ts('marketing.other_apps.title')"
 			heading-id="home-apps-heading"
 			class="mb-10"
 		/>
@@ -23,7 +23,7 @@
 				:src="app.avatar"
 				width="80"
 				height="80"
-				:alt="t('marketing.other_apps.logo_alt', { app: app.name })"
+				:alt="ts('marketing.other_apps.logo_alt', { app: app.name })"
 				loading="lazy"
 				class="size-20 rounded-xl"
 			/>
@@ -31,7 +31,7 @@
 				<p
 					class="mb-2 font-mono text-xs font-semibold tracking-(--home-ls-label) text-primary uppercase"
 				>
-					{{ t("marketing.other_apps.also_from") }}
+					{{ ts("marketing.other_apps.also_from") }}
 				</p>
 				<h3 class="text-3xl font-bold text-base-content">
 					{{ app.name }}
@@ -48,7 +48,7 @@
 					size="lg"
 					class="justify-center"
 				>
-					{{ t("marketing.other_apps.explore", { app: app.name }) }}
+					{{ ts("marketing.other_apps.explore", { app: app.name }) }}
 				</UButton>
 				<UButton
 					v-if="app.invite !== '#'"
@@ -58,10 +58,10 @@
 					icon="ph:plus-circle-fill"
 					class="justify-center"
 				>
-					{{ t("marketing.other_apps.invite", { app: app.name }) }}
+					{{ ts("marketing.other_apps.invite", { app: app.name }) }}
 				</UButton>
 				<span v-else class="font-mono text-xs text-muted">{{
-					t("marketing.other_apps.invite_pending")
+					ts("marketing.other_apps.invite_pending")
 				}}</span>
 			</div>
 		</div>
@@ -73,7 +73,7 @@ const { apps } = defineProps<{
 	apps: readonly OtherApp[];
 }>();
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 </script>
 
 <style scoped>

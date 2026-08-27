@@ -5,7 +5,7 @@
 		:aria-hidden="!isScrolling"
 	>
 		<UButton
-			:aria-label="t('a11y.scroll_to_top')"
+			:aria-label="ts('a11y.scroll_to_top')"
 			icon="heroicons:arrow-up"
 			color="neutral"
 			variant="ghost"
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const isScrolling = ref(false);
 
 function scrollToTop() {

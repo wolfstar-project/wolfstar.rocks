@@ -1,25 +1,25 @@
 <template>
 	<div>
-		<h1 class="sr-only">{{ t("auth.oauth.callback_sr_title") }}</h1>
-		<h2 class="sr-only">{{ t("auth.oauth.callback_sr_status") }}</h2>
+		<h1 class="sr-only">{{ ts("auth.oauth.callback_sr_title") }}</h1>
+		<h2 class="sr-only">{{ ts("auth.oauth.callback_sr_status") }}</h2>
 		<template v-if="!hasCallbackParams">
 			<OauthStatusPanel
 				tone="warning"
-				:title="t('auth.oauth.login_required_title')"
+				:title="ts('auth.oauth.login_required_title')"
 				icon="heroicons:exclamation-triangle"
 			>
 				<template #description>
 					<i18n-t keypath="auth.oauth.login_required_description" tag="span">
 						<template #link>
 							<ULink to="/login" class="font-medium underline">{{
-								t("auth.oauth.login_required_link")
+								ts("auth.oauth.login_required_link")
 							}}</ULink>
 						</template>
 					</i18n-t>
 				</template>
 				<template #actions>
 					<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
-						{{ t("auth.oauth.go_to_login") }}
+						{{ ts("auth.oauth.go_to_login") }}
 					</UButton>
 				</template>
 			</OauthStatusPanel>
@@ -28,7 +28,7 @@
 			<template v-if="isError">
 				<OauthStatusPanel
 					tone="error"
-					:title="t('auth.oauth.sign_in_failed_title')"
+					:title="ts('auth.oauth.sign_in_failed_title')"
 					icon="heroicons:x-circle"
 				>
 					<template #description>
@@ -36,7 +36,7 @@
 					</template>
 					<template #actions>
 						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
-							{{ t("auth.oauth.try_again") }}
+							{{ ts("auth.oauth.try_again") }}
 						</UButton>
 					</template>
 				</OauthStatusPanel>
@@ -45,37 +45,37 @@
 				<OauthStatusPanel
 					tone="info"
 					loading
-					:title="t('auth.oauth.signing_in_title')"
+					:title="ts('auth.oauth.signing_in_title')"
 					icon="ph:discord-logo-fill"
 				>
 					<template #description>
-						{{ t("auth.oauth.connecting_discord") }}
+						{{ ts("auth.oauth.connecting_discord") }}
 					</template>
 				</OauthStatusPanel>
 			</template>
 			<template v-else-if="user">
 				<OauthStatusPanel
 					tone="success"
-					:title="t('auth.oauth.welcome_title', { name: user.name })"
+					:title="ts('auth.oauth.welcome_title', { name: user.name })"
 					icon="heroicons:check-circle"
 				>
 					<template #description>
-						{{ t("auth.oauth.redirecting_dashboard") }}
+						{{ ts("auth.oauth.redirecting_dashboard") }}
 					</template>
 				</OauthStatusPanel>
 			</template>
 			<template v-else-if="isSessionMissing">
 				<OauthStatusPanel
 					tone="error"
-					:title="t('auth.oauth.session_not_found_title')"
+					:title="ts('auth.oauth.session_not_found_title')"
 					icon="heroicons:x-circle"
 				>
 					<template #description>
-						{{ t("auth.oauth.session_not_found_description") }}
+						{{ ts("auth.oauth.session_not_found_description") }}
 					</template>
 					<template #actions>
 						<UButton color="primary" to="/login" size="sm" class="w-full sm:w-auto">
-							{{ t("auth.oauth.try_again") }}
+							{{ ts("auth.oauth.try_again") }}
 						</UButton>
 					</template>
 				</OauthStatusPanel>
@@ -91,7 +91,7 @@ definePageMeta({
 	viewTransition: false,
 });
 
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 const { localizeAuthError } = useAuthErrorMessage();
 
 const route = useRoute();
@@ -160,9 +160,9 @@ async function completeSignIn() {
 
 useRobotsRule(robotBlockingPageProps);
 useSeoMeta({
-	ogDescription: t("auth.oauth.seo_og_description"),
-	ogTitle: t("auth.oauth.seo_og_title"),
+	ogDescription: ts("auth.oauth.seo_og_description"),
+	ogTitle: ts("auth.oauth.seo_og_title"),
 	robots: { none: true },
-	title: t("auth.oauth.seo_title"),
+	title: ts("auth.oauth.seo_title"),
 });
 </script>

@@ -4,8 +4,8 @@
 			<UInput
 				v-model="query"
 				icon="i-lucide-search"
-				:placeholder="t('guild_logs.search_placeholder')"
-				:aria-label="t('guild_logs.search_aria')"
+				:placeholder="ts('guild_logs.search_placeholder')"
+				:aria-label="ts('guild_logs.search_aria')"
 				class="max-w-sm min-w-48"
 			/>
 		</div>
@@ -16,9 +16,9 @@
 			:item-count="entries.length"
 			:max-visible="total"
 			empty-icon="i-lucide-activity"
-			:empty-title="t('guild_logs.no_logs')"
-			:empty-description="debouncedQ ? t('guild_logs.no_activity_filter_match') : undefined"
-			:refresh-label="t('guild_logs.refresh_activity')"
+			:empty-title="ts('guild_logs.no_logs')"
+			:empty-description="debouncedQ ? ts('guild_logs.no_activity_filter_match') : undefined"
+			:refresh-label="ts('guild_logs.refresh_activity')"
 			@refresh="refresh()"
 		>
 			<UTable
@@ -45,7 +45,7 @@
 			>
 				<p class="text-sm text-muted">
 					{{
-						t("guild_logs.showing_entries", {
+						ts("guild_logs.showing_entries", {
 							shown: table?.tableApi?.getFilteredSelectedRowModel().rows.length || 0,
 							total: table?.tableApi?.getFilteredRowModel().rows.length || 0,
 						})
@@ -71,7 +71,7 @@ import { formatTimeAgo } from "@vueuse/core";
 const UAvatar = resolveComponent("UAvatar");
 const table = useTemplateRef("table");
 const { guildData } = useGuildData();
-const { ts: t } = useI18n();
+const { ts } = useI18n();
 
 const page = ref(1);
 const limit = ref(20);
@@ -93,7 +93,7 @@ const { entries, total, status, refresh } = useAuditLog({
 const columns = computed<TableColumn<DashboardAuditEntry>[]>(() => [
 	{
 		id: "actor",
-		header: t("guild_logs.columns.user"),
+		header: ts("guild_logs.columns.user"),
 		cell: ({ row }) => {
 			return h("div", { class: "flex items-center gap-3" }, [
 				h(UAvatar, {
@@ -113,7 +113,7 @@ const columns = computed<TableColumn<DashboardAuditEntry>[]>(() => [
 	},
 	{
 		id: "description",
-		header: t("guild_logs.columns.action"),
+		header: ts("guild_logs.columns.action"),
 		cell: ({ row }) => {
 			const text = auditLogActionDescription(row.original);
 			return h("span", { class: "line-clamp-2 text-sm", title: text }, text);
@@ -121,7 +121,7 @@ const columns = computed<TableColumn<DashboardAuditEntry>[]>(() => [
 	},
 	{
 		accessorKey: "timestamp",
-		header: t("guild_logs.columns.when"),
+		header: ts("guild_logs.columns.when"),
 		cell: ({ row }) =>
 			h(
 				"time",

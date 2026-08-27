@@ -53,7 +53,7 @@
 		"test:unit": "TEST=1 vp test --project unit",
 		"tolgee:ensure-languages": "node scripts/tolgee-ensure-languages.mjs",
 		"tolgee:pull": "tolgee pull && node scripts/tolgee-pull-remap.ts",
-		"tolgee:push": "tolgee push",
+		"tolgee:push": "node scripts/tolgee-push-prepare.ts && tolgee push",
 		"typecheck": "stale-dep && nuxt typecheck"
 	},
 	"dependencies": {

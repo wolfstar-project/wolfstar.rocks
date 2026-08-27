@@ -29,7 +29,7 @@
 							{{ ts("marketing.wolfstar.hero.invite") }}
 						</UButton>
 						<UButton
-							to="#showcase"
+							to="#features"
 							:locale="false"
 							size="xl"
 							color="neutral"

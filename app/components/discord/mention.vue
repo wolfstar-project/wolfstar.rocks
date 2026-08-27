@@ -55,7 +55,16 @@ const { kind = "mention", avatar } = defineProps<MentionProps>();
 	 * The compact shape and solid hover state mirror Discord's user pills.
 	 */
 	@apply inline-flex items-center gap-0 font-whitney font-medium;
-	vertical-align: baseline;
+	/*
+	 * `middle`, not `baseline`: this is an inline-flex box, so a `baseline`
+	 * alignment is resolved from the first flex item. With an avatar that item
+	 * is the <img>, whose synthesized baseline is its bottom edge, so the pill
+	 * gets pushed ~5px above the text baseline and inflates the line box —
+	 * embed rows with an avatar mention ended up taller than rows without one.
+	 * `middle` aligns against the parent's x-height instead of the pill's own
+	 * contents, so both variants occupy exactly the same line box.
+	 */
+	vertical-align: middle;
 	margin: 0;
 	min-height: 1.375rem;
 	padding: 0 0.1875rem;

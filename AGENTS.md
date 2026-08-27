@@ -171,6 +171,7 @@ pnpm test:browser:prebuilt --update-snapshots  # Update Playwright snapshots
 - nuxt-seo-utils' fallback title calls `t('pages.<route>.title', fallback, { missingWarn: false })` — vue-i18n's signature, where micro reads the third argument as the default value and returns that options _object_ when the key is missing. Nothing renders it today because every page sets its own title through `useSeoMetadata()`; keep it that way
 - `pnpm i18n:check:fix` (`scripts/compare-translations.ts`) adds missing keys as `""` and removes extra keys
 - `.tolgeerc.cjs` pulls `states: ["TRANSLATED", "REVIEWED", "UNTRANSLATED"]`; without `UNTRANSLATED`, `scripts/tolgee-pull-remap.ts` would wipe untranslated keys from disk on every sync (see wolfstar-project/wolfstar#240)
+- The `$schema` pointer in each locale file is editor tooling metadata and never migrates through Tolgee in either direction. `pnpm tolgee:push` runs `scripts/tolgee-push-prepare.ts` first, which mirrors `i18n/locales/**` into the gitignored `i18n/.tolgee-push/` with `$schema` stripped — `.tolgeerc.cjs` points `push.files[*].path` at that mirror, never at `i18n/locales/`, so the pointer cannot become a platform key translators see and edit. On the way back, `scripts/tolgee-pull-remap.ts` discards whatever `$schema` the export carries and re-inserts `localeSchemaPointer(namespace)` (`../../schemas/{namespace}.schema.json`) as the first key, so a stale key left on the platform from an earlier push can never overwrite the local pointer
 
 ## Prisma and Database Conventions
 

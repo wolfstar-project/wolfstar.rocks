@@ -21,22 +21,26 @@
 		</UPageHero>
 
 		<UPageBody>
-			<UChangelogVersions v-if="versions?.length">
-				<UChangelogVersion
+			<UBlogPosts v-if="versions?.length" class="md:grid-cols-2">
+				<UBlogPost
 					v-for="version in versions"
 					:key="version.path"
+					:to="version.path"
 					:title="version.title"
-					:description="version.description"
 					:date="formatDateByLocale('en', version.date)"
-					:image="version.image"
+					:image="
+						version.image
+							? {
+									src: version.image,
+									width: 1200,
+									height: 630,
+									alt: `${version.title} cover`,
+								}
+							: undefined
+					"
 					:badge="version.badge"
-					:authors="version.authors"
-				>
-					<template #body>
-						<ContentRenderer v-if="version" :value="version" />
-					</template>
-				</UChangelogVersion>
-			</UChangelogVersions>
+				/>
+			</UBlogPosts>
 
 			<p v-else class="text-muted">No releases have been published yet.</p>
 		</UPageBody>
